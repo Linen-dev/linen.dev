@@ -15,4 +15,18 @@ model Message {
   createdAt DateTime @default(now())
   body      String
   sentAt    DateTime
+
+  channel   Channel @relation(fields: [channelId], references: [id])
+  channelId String
+
+  @@unique([body, sentAt])
+}
+
+model Channel {
+  id             String       @id @default(uuid())
+  channelName    String
+  messages       Message[]
+  slackChannelId String
+
+  @@unique([slackChannelId])
 }

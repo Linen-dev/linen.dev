@@ -1,4 +1,9 @@
+import prisma from "../client";
 import { createSlackMessage } from "../pages/api/webhook";
+
+beforeEach(async () => {
+  await Promise.all([prisma.message.deleteMany(), prisma.channel.deleteMany()]);
+});
 
 const slackNewMessageEvent = {
   token: "vDJW8zxjB280BnHi84Z19YfU",
@@ -52,12 +57,17 @@ const slackNewMessageEvent = {
 };
 
 test("Creates a message when Slack sends a slack event", async () => {
+  const channel = await prisma.channel.create({
+    data: {
+      slackChannelId: slackNewMessageEvent.event.channel,
+      channelName: "someChannel",
+    },
+  });
   const sentAt = new Date(parseFloat(slackNewMessageEvent.event.ts) * 1000);
-  await expect(createSlackMessage(slackNewMessageEvent)).resolves.toMatchObject(
-    {
-      body: slackNewMessageEvent.event.text,
-      sentAt: sentAt,
-    }
-  );
-  expect();
+  await expect(
+    createSlackMessage(slackNewMessageEvent, channel.id)
+  ).resolves.toMatchObject({
+    body: slackNewMessageEvent.event.text,
+    sentAt: sentAt,
+  });
 });

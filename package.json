@@ -12,17 +12,17 @@
   "dependencies": {
     "@headlessui/react": "^1.4.3",
     "@prisma/client": "^3.9.1",
-    "@slack/events-api": "^3.0.1",
-    "@slack/webhook": "^6.1.0",
     "next": "12.0.10",
     "react": "17.0.2",
-    "react-dom": "17.0.2"
+    "react-dom": "17.0.2",
+    "superagent": "^7.1.1"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.2",
     "@testing-library/react": "^12.1.2",
     "@types/node": "17.0.14",
     "@types/react": "17.0.38",
+    "@types/superagent": "^4.1.15",
     "autoprefixer": "^10.4.2",
     "eslint": "8.8.0",
     "eslint-config-next": "12.0.10",
