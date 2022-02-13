@@ -11,7 +11,7 @@ datasource db {
 }
 
 model Message {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   body      String
   sentAt    DateTime
@@ -19,14 +19,29 @@ model Message {
   channel   Channel @relation(fields: [channelId], references: [id])
   channelId String
 
+  slackThread SlackThread? @relation(fields: [slackThreadId], references: [id])
+
+  slackThreadId String?
   @@unique([body, sentAt])
 }
 
+model SlackThread {
+  id            String  @id @default(uuid())
+  channel       Channel @relation(fields: [channelId], references: [id])
+  slackThreadTs String
+
+  Message   Message[]
+  channelId String
+
+  @@unique([slackThreadTs])
+}
+
 model Channel {
-  id             String       @id @default(uuid())
+  id             String    @id @default(uuid())
   channelName    String
   messages       Message[]
   slackChannelId String
 
+  SlackThread SlackThread[]
   @@unique([slackChannelId])
 }
