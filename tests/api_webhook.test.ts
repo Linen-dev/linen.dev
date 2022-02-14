@@ -1,5 +1,6 @@
 import prisma from "../client";
-import { createSlackMessage } from "../pages/api/webhook";
+
+import { handleWebhook } from "../pages/api/webhook";
 
 beforeEach(async () => {
   await Promise.all([prisma.message.deleteMany(), prisma.channel.deleteMany()]);
@@ -63,11 +64,7 @@ test("Creates a message when Slack sends a slack event", async () => {
       channelName: "someChannel",
     },
   });
-  const sentAt = new Date(parseFloat(slackNewMessageEvent.event.ts) * 1000);
-  await expect(
-    createSlackMessage(slackNewMessageEvent, channel.id)
-  ).resolves.toMatchObject({
-    body: slackNewMessageEvent.event.text,
-    sentAt: sentAt,
-  });
+
+  const res = await handleWebhook(slackNewMessageEvent);
+  expect(res.status).toEqual(200);
 });

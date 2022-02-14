@@ -1,13 +1,23 @@
 import prisma from "../../client";
 
 import type { NextApiRequest, NextApiResponse } from "next";
+import { createMessage, createSlackMessage, Message } from "../../lib/slack";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const event = req.body;
-  const channelId = req.body.channel;
+  const result = await handleWebhook(req.body);
+  if (result.error) {
+    res.status(result.status).json({ error: result.error });
+    return;
+  }
+  res.status(result.status).json({});
+}
+
+export const handleWebhook = async (body: any) => {
+  const event = body.event;
+  const channelId = body.event.channel;
 
   const channel = await prisma.channel.findUnique({
     where: {
@@ -17,37 +27,35 @@ export default async function handler(
 
   if (channel === null) {
     console.error("Channel does not exist in db ");
-    res.status(403).json({ error: "Channel not found" });
-    return;
+    return { status: 403, error: "Channel not found" };
   }
 
-  const message = await createSlackMessage(event, channel.id);
-  res.status(200).json({ message });
-}
+  const param: Message = {
+    body: event.text,
+    channelId: channel.id,
+    sentAt: new Date(parseFloat(event.ts) * 1000),
+  };
 
-export const createSlackMessage = async (event: any, channelId: string) => {
-  const body = event.event.text;
-  const timestamp = event.event.ts;
-  const sentAt = new Date(parseFloat(timestamp) * 1000);
+  const message = await createMessage(param);
 
-  return await prisma.message.create({
-    data: {
-      body: body,
-      sentAt: sentAt,
-      channelId: channelId,
+  return {
+    status: 200,
+    message,
+  };
+};
+
+export const findOrCreateChannel = async (
+  channelId: string,
+  channelName: string
+) => {
+  prisma.channel.upsert({
+    where: {
+      slackChannelId: channelId,
+    },
+    update: {},
+    create: {
+      slackChannelId: channelId,
+      channelName: channelName,
     },
   });
 };
-
-// export const findOrCreateChannel = async (channelId: string) => {
-//   prisma.channel.upsert({
-//     where: {
-//       slackChannelId: channelId,
-//     },
-//     update: {},
-//     create: {
-//       slackChannelId: channelId,
-//       channelName: channelName,
-//     },
-//   });
-// };

@@ -6,8 +6,6 @@ const communities = {
   description: "The product analytics suite you can host yourself",
 };
 
-console.log((posthogConversations as any)[0]);
-
 export const Community = () => {
   return <h1>Posthog</h1>;
 };
