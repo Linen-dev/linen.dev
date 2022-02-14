@@ -1,7 +1,7 @@
 import prisma from "../../client";
 
 import type { NextApiRequest, NextApiResponse } from "next";
-import { createMessage, createSlackMessage, Message } from "../../lib/slack";
+import { createMessage, MessageParam } from "../../lib/slack";
 
 export default async function handler(
   req: NextApiRequest,
@@ -30,7 +30,7 @@ export const handleWebhook = async (body: any) => {
     return { status: 403, error: "Channel not found" };
   }
 
-  const param: Message = {
+  const param: MessageParam = {
     body: event.text,
     channelId: channel.id,
     sentAt: new Date(parseFloat(event.ts) * 1000),

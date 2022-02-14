@@ -14,14 +14,14 @@ export const createSlackMessage = async (event: any, channelId: string) => {
   });
 };
 
-export type Message = {
+export type MessageParam = {
   body: string;
   sentAt: Date;
   channelId: string;
   slackThreadTs?: string;
 };
 
-export const createMessage = async (message: Message) => {
+export const createMessage = async (message: MessageParam) => {
   let slackThreadTs = message.slackThreadTs;
   let slackThreadId: string | null = null;
   if (!!slackThreadTs) {
