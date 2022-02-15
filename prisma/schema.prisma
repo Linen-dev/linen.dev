@@ -43,5 +43,17 @@ model Channel {
   slackChannelId String
 
   SlackThread SlackThread[]
+  Account     Account?      @relation(fields: [accountId], references: [id])
+  accountId   String?
+
   @@unique([slackChannelId])
+}
+
+model Account {
+  id          String    @id @default(uuid())
+  name        String
+  channels    Channel[]
+  slackTeamId String
+
+  @@unique([slackTeamId])
 }

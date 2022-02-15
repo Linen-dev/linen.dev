@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import prisma from "../client";
 
 export const createSlackMessage = async (event: any, channelId: string) => {
@@ -63,5 +64,17 @@ export const findOrCreateThread = async (thread: Thread) => {
     },
     update: {},
     create: thread,
+  });
+};
+
+export const findOrCreateAccount = async (
+  account: Prisma.AccountCreateInput
+) => {
+  return await prisma.account.upsert({
+    where: {
+      slackTeamId: account.slackTeamId,
+    },
+    update: {},
+    create: account,
   });
 };

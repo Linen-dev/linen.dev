@@ -6,7 +6,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const channelId = req.body.channel_id;
-  const limit = req.body.limit;
+  const limit = req.body.limit || 100;
   const offSet = req.body.off_set || 0;
 
   const threads = await prisma.slackThread.findMany({
