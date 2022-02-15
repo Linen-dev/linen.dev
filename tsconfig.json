@@ -15,6 +15,11 @@
     "jsx": "preserve",
     "incremental": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "baseUrl": ".", // this must be specified if "paths" is specified.
+  "paths": {
+    "@/components/*": ["components/*"],
+    "@/styles/*": ["styles/*"]
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.js", "**/*.css"],
   "exclude": ["node_modules"]
 }
