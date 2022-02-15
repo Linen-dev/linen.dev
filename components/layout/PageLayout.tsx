@@ -10,8 +10,9 @@ import {
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { channels } from '../../constants/examples';
+import SEO from './SEO';
 
-function PageLayout({ children }) {
+function PageLayout({ seo = {}, children }) {
   const {
     query: { channelId },
   } = useRouter();
@@ -98,6 +99,7 @@ function PageLayout({ children }) {
         },
       })}
     >
+      <SEO {...seo} />
       {children}
     </AppShell>
   );

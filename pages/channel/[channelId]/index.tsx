@@ -14,6 +14,8 @@ import TableHeader from '../../../components/table/TableHeader';
 const EXCERPT_LENGTH = 220;
 
 function Channel({ channelId, threads }) {
+  const channelName = channels.find((c) => c.id === channelId).name;
+
   const rows = useMemo(() => {
     return threads.map(({ messages, id: threadId }) => {
       const sortedMessages = messages.sort((a, b) => b.sentAt - a.sentAt);
@@ -65,7 +67,7 @@ function Channel({ channelId, threads }) {
   }, [channelId, threads]);
 
   return (
-    <PageLayout>
+    <PageLayout seo={{ title: channelName }}>
       {/* <Container> */}
       <Paper
         shadow="md"
