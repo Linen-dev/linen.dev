@@ -15,12 +15,13 @@ describe("When a message belongs to a thread", () => {
     const channelName = "someChannelName";
     const channel = await findOrCreateChannel(slackChannelId, channelName);
     const channelId = channel.id;
-    const threadId = Date.now();
+    const threadTs = Date.now();
 
     const firstMessage = {
       body: "First message",
-      sentAt: new Date(threadId),
+      sentAt: new Date(threadTs),
       channelId,
+      slackThreadTs: (threadTs / 1000).toString(),
     };
 
     await createMessage(firstMessage);
@@ -29,12 +30,12 @@ describe("When a message belongs to a thread", () => {
       body: "creating a new thread",
       sentAt: new Date(),
       channelId,
-      slackThreadTs: threadId.toString(),
+      slackThreadTs: threadTs.toString(),
     };
 
     await createMessage(responseMessage);
     const slackThread = await prisma.slackThread.findUnique({
-      where: { slackThreadTs: threadId.toString() },
+      where: { slackThreadTs: threadTs.toString() },
     });
 
     expect(slackThread).not.toBeNull;

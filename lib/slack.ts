@@ -18,24 +18,21 @@ export type MessageParam = {
   body: string;
   sentAt: Date;
   channelId: string;
-  slackThreadTs?: string;
+  slackThreadTs: string;
 };
 
 export const createMessage = async (message: MessageParam) => {
   let slackThreadTs = message.slackThreadTs;
-  let slackThreadId: string | null = null;
-  if (!!slackThreadTs) {
-    // find or create Slack thread
-    let thread = await findOrCreateThread({
-      slackThreadTs: slackThreadTs,
-      channelId: message.channelId,
-    });
-    slackThreadId = thread.id;
-  }
+
+  let thread = await findOrCreateThread({
+    slackThreadTs: slackThreadTs,
+    channelId: message.channelId,
+  });
+
   return await prisma.message.create({
     data: {
       body: message.body,
-      slackThreadId: slackThreadId,
+      slackThreadId: thread.id,
       channelId: message.channelId,
       sentAt: message.sentAt,
     },

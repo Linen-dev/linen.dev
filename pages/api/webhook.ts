@@ -34,6 +34,7 @@ export const handleWebhook = async (body: any) => {
     body: event.text,
     channelId: channel.id,
     sentAt: new Date(parseFloat(event.ts) * 1000),
+    slackThreadTs: event.ts,
   };
 
   const message = await createMessage(param);
