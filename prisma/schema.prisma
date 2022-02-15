@@ -30,7 +30,7 @@ model SlackThread {
   channel       Channel @relation(fields: [channelId], references: [id])
   slackThreadTs String
 
-  Message   Message[]
+  messages  Message[]
   channelId String
 
   @@unique([slackThreadTs])

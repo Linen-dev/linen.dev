@@ -10,6 +10,9 @@ export default async function handler(
   const threads = await prisma.slackThread.findMany({
     take: limit,
     skip: offSet,
+    include: {
+      messages: true,
+    },
   });
 
   res.status(200).json({ threads });
