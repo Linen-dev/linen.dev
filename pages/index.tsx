@@ -1,4 +1,4 @@
-import { Paper, Text } from '@mantine/core';
+import { Paper, Text, Title } from '@mantine/core';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
@@ -31,14 +31,14 @@ const Home: NextPage = ({ channels }) => {
     <PageLayout navItems={channels}>
       <Paper
         shadow="md"
+        padding="xl"
         style={{
-          padding: '24px 0',
           width: '100%',
           border: '1px solid #e9ecef',
           minHeight: '400px',
         }}
       >
-        <Text>Landing Page Dashboard</Text>
+        <Title order={4}>Landing Page Dashboard</Title>
       </Paper>
     </PageLayout>
   );

@@ -66,31 +66,31 @@ function Channel({ channelId, threads }) {
 
   return (
     <PageLayout>
-      <Container>
-        <Paper
-          shadow="md"
-          padding="xl"
-          style={{
-            width: '100%',
-            border: '1px solid #e9ecef',
-          }}
-        >
-          <Title order={3}>
-            {channels.find((c) => c.id === channelId).name} ({rows.length})
-          </Title>
-          <Table clickable>
-            <thead>
-              <tr>
-                <TableHeader>Topic</TableHeader>
-                <TableHeader />
-                <TableHeader>Replies</TableHeader>
-                <TableHeader>Activity</TableHeader>
-              </tr>
-            </thead>
-            <tbody>{rows}</tbody>
-          </Table>
-        </Paper>
-      </Container>
+      {/* <Container> */}
+      <Paper
+        shadow="md"
+        padding="xl"
+        style={{
+          width: '100%',
+          border: '1px solid #e9ecef',
+        }}
+      >
+        <Title order={3}>
+          {channels.find((c) => c.id === channelId).name} ({rows.length})
+        </Title>
+        <Table clickable>
+          <thead>
+            <tr>
+              <TableHeader>Topic</TableHeader>
+              <TableHeader />
+              <TableHeader>Replies</TableHeader>
+              <TableHeader>Activity</TableHeader>
+            </tr>
+          </thead>
+          <tbody>{rows}</tbody>
+        </Table>
+      </Paper>
+      {/* </Container> */}
     </PageLayout>
   );
 }

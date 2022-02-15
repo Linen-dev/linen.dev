@@ -93,6 +93,8 @@ function PageLayout({ children }) {
       styles={(theme) => ({
         main: {
           backgroundColor: '#fef9f5',
+          paddingRight: 20,
+          paddingBottom: 20,
         },
       })}
     >

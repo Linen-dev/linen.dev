@@ -1,4 +1,4 @@
-import { Avatar, Container, Group, Text } from '@mantine/core';
+import { Avatar, Container, Group, Paper, Text } from '@mantine/core';
 import Link from 'next/link';
 import { useMemo } from 'react';
 import { format } from 'timeago.js';
@@ -7,7 +7,6 @@ import Table from '../../../../components/table/Table';
 import { threads as exampleThreads } from '../../../../constants/examples';
 
 function Thread({ threadId, messages }) {
-  console.log('messages :>> ', messages);
   const elements = useMemo(() => {
     return messages
       .sort((a, b) => b.sentAt - a.sentAt)
@@ -22,11 +21,15 @@ function Thread({ threadId, messages }) {
             <Group position="apart">
               <Group>
                 <Avatar radius="xl" alt={author.name} src={author.img} />
-                <Text weight={700}>{author.name}</Text>
+                <Text size="sm" weight={700}>
+                  {author.name}
+                </Text>
               </Group>
-              <Text color="gray">{format(sentAt)}</Text>
+              <Text size="sm" color="gray">
+                {format(sentAt)}
+              </Text>
             </Group>
-            <Text>{body}</Text>
+            <Text size="sm">{body}</Text>
           </Group>
         );
       });
@@ -34,11 +37,20 @@ function Thread({ threadId, messages }) {
 
   return (
     <PageLayout>
-      <Container>
+      {/* <Container> */}
+      <Paper
+        shadow="md"
+        padding="xl"
+        style={{
+          width: '100%',
+          border: '1px solid #e9ecef',
+        }}
+      >
         <Group grow direction="column">
           {elements}
         </Group>
-      </Container>
+      </Paper>
+      {/* </Container> */}
     </PageLayout>
   );
 }
