@@ -5,8 +5,8 @@ beforeEach(async () => {
   await Promise.all([
     prisma.message.deleteMany(),
     prisma.slackThread.deleteMany(),
-    prisma.channel.deleteMany(),
   ]);
+  await prisma.channel.deleteMany();
 });
 
 describe("When a message belongs to a thread", () => {

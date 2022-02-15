@@ -1,5 +1,6 @@
 import request from "superagent";
 import prisma from "./client";
+import { createMessage } from "./lib/slack";
 
 const channels = {};
 
@@ -28,17 +29,22 @@ export const saveMessages = async (messages: any[], channelId: string) => {
     .filter((message) => message.type === "message")
     .filter((message) => message.subtype === undefined)
     .map((message) => {
+      const slackThreadTs = message.thread_ts || message.ts;
       return {
         body: message.text,
         sentAt: new Date(parseFloat(message.ts) * 1000),
         channelId: channelId,
+        slackThreadTs,
       };
     });
 
   try {
-    return await prisma.message.createMany({
-      data: params,
-    });
+    const messages = [];
+    for (let param of params) {
+      messages.push(await createMessage(param));
+    }
+
+    return messages;
   } catch (e) {
     console.log(e);
     return null;

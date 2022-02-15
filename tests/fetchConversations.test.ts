@@ -7,19 +7,18 @@ import {
   saveMessages,
 } from "../fetch_all_conversations";
 
+const channel = "C030HFK836C";
+
 beforeEach(async () => {
   await prisma.message.deleteMany();
-  await prisma.channel.deleteMany();
 });
 
 test("joins a channel", async () => {
-  const channel = "C030HFK836C";
   const response = await joinChannel(channel);
   expect(response.status).toEqual(200);
 });
 
 test("lists all conversations", async () => {
-  const channel = "C030HFK836C";
   const response = await fetchConversations(channel);
   expect(response.status).toEqual(200);
 });
@@ -102,7 +101,7 @@ test("save messages that are not ", async () => {
     },
   });
   const savedMessages = await saveMessages(messages, channel.id);
-  expect(savedMessages?.count).toEqual(2);
+  expect(savedMessages?.length).toEqual(2);
   const sentAt = new Date(parseFloat("1644526520.323539") * 1000);
   const body = "this is a message";
 });

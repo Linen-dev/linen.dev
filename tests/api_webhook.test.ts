@@ -3,7 +3,8 @@ import prisma from "../client";
 import { handleWebhook } from "../pages/api/webhook";
 
 beforeEach(async () => {
-  await Promise.all([prisma.message.deleteMany(), prisma.channel.deleteMany()]);
+  await Promise.all([prisma.message.deleteMany()]);
+  await prisma.channel.deleteMany();
 });
 
 const slackNewMessageEvent = {
