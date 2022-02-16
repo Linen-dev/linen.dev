@@ -52,6 +52,12 @@ export const channelIndex = async (accountId: string) => {
   });
 };
 
+export const createManyChannel = async (
+  channels: Prisma.ChannelCreateManyInput
+) => {
+  return await prisma.channel.createMany({ data: channels });
+};
+
 export const findOrCreateChannel = async (
   channel: Prisma.ChannelUncheckedCreateInput
 ) => {
