@@ -23,7 +23,7 @@ function PageLayout({ seo = {}, children }) {
       fixed
       navbar={
         <Navbar
-          sx={(theme) => ({ backgroundColor: '#fef9f5' })}
+          sx={(theme) => ({ backgroundColor: '#FEF9F4' })}
           width={{ base: 300 }}
           padding="lg"
         >
@@ -49,15 +49,12 @@ function PageLayout({ seo = {}, children }) {
                       width: '100%',
                       padding: '12px 24px',
                       backgroundColor: 'white',
-                      color:
-                        channelId === c.id ? theme.colors.indigo[9] : 'black',
+                      color: channelId === c.id ? '#1B194E' : 'black',
                       borderLeft: `3px solid ${
-                        channelId === c.id
-                          ? theme.colors.indigo[9]
-                          : 'transparent'
+                        channelId === c.id ? '#1B194E' : 'transparent'
                       }`,
                       '&:hover': {
-                        color: theme.colors.indigo[9],
+                        color: '#1B194E',
                       },
                     })}
                     order={6}
@@ -73,7 +70,7 @@ function PageLayout({ seo = {}, children }) {
       header={
         <Header
           sx={(theme) => ({
-            backgroundColor: theme.colors.indigo[9],
+            backgroundColor: '#1B194E',
           })}
           height={76}
           padding="lg"
