@@ -117,3 +117,10 @@ export const threadIndex = async (
     },
   });
 };
+
+export const findThreadById = async (threadId: string) => {
+  return await prisma.slackThread.findUnique({
+    where: { id: threadId },
+    include: { messages: true },
+  });
+};

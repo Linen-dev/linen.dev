@@ -5,10 +5,16 @@ import { format } from 'timeago.js';
 import PageLayout from '../../../../components/layout/PageLayout';
 import Table from '../../../../components/table/Table';
 import { threads as exampleThreads } from '../../../../constants/examples';
-import { threadIndex } from '../../../../lib/slack';
+import {
+  channelIndex,
+  findThreadById,
+  threadIndex,
+} from '../../../../lib/slack';
 
-function Thread({ threadId, messages }) {
+function Thread({ threadId, messages, channels }) {
   const elements = useMemo(() => {
+    const img =
+      'https://media-exp1.licdn.com/dms/image/C4E03AQHB_3pem0I_gg/profile-displayphoto-shrink_100_100/0/1542209174093?e=1650499200&v=beta&t=GMX8clmk9wSvKGvrQ4u3IDJQGHaoBz3KQQC9lw3AJuI';
     return messages
       .sort((a, b) => b.sentAt - a.sentAt)
       .map(({ body, author, id: messageId, sentAt }) => {
@@ -21,9 +27,9 @@ function Thread({ threadId, messages }) {
           >
             <Group position="apart">
               <Group>
-                <Avatar radius="xl" alt={author.name} src={author.img} />
+                <Avatar radius="xl" alt={'kam'} src={img} />
                 <Text size="sm" weight={700}>
-                  {author.name}
+                  {'kam'}
                 </Text>
               </Group>
               <Text size="sm" color="gray">
@@ -37,7 +43,7 @@ function Thread({ threadId, messages }) {
   }, [messages]);
 
   return (
-    <PageLayout>
+    <PageLayout navItems={{ channels: channels }}>
       {/* <Container> */}
       <Paper
         shadow="md"
@@ -59,14 +65,21 @@ function Thread({ threadId, messages }) {
 export default Thread;
 
 export async function getServerSideProps({ params: { threadId } }) {
-  // const messages = await getMessagesForThread()
+  const channels = await channelIndex('00573063-2b96-4a20-a7d0-9324550035a6');
+  const thread = (await findThreadById(threadId as string)) || { messages: [] };
 
   return {
     props: {
       threadId,
-      messages: Array(15)
-        .fill(exampleThreads[0].messages[0])
-        .map((m, idx) => ({ ...m, id: `${m.id}${idx}` })),
+      messages: thread.messages.map((m) => {
+        return {
+          body: m.body,
+          // Have to convert to string b/c Nextjs doesn't support date hydration -
+          // see: https://github.com/vercel/next.js/discussions/11498
+          sentAt: m.sentAt.toString(),
+        };
+      }),
+      channels,
     },
   };
 }
