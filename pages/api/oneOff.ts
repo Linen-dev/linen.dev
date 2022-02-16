@@ -51,6 +51,19 @@ export default async function handler(
       console.log({ messages });
     } catch (e) {}
   }
+  // const channels = await channelIndex(account.id);
+  // for (let channel of channels) {
+  //   try {
+  //     // const joined = await joinChannel(channel.slackChannelId);
+  //     // console.log(joined.body);
+  //     const conversations = await fetchConversations(channel.slackChannelId);
+  //     const messages = await saveMessages(
+  //       conversations.body.messages,
+  //       channel.id
+  //     );
+  //     console.log({ messages });
+  //   } catch (e) {}
+  // }
 
   res.status(200).json({ channels });
 }

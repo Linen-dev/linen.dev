@@ -6,7 +6,7 @@ export const createSlackMessage = async (event: any, channelId: string) => {
   const timestamp = event.event.ts;
   const sentAt = new Date(parseFloat(timestamp) * 1000);
 
-  return await prisma.message.create({
+  return await prisma.messages.create({
     data: {
       body: body,
       sentAt: sentAt,
@@ -22,30 +22,30 @@ export type MessageParam = {
   slackThreadTs: string;
 };
 
-export const createMessage = async (message: MessageParam) => {
-  let slackThreadTs = message.slackThreadTs;
+export const createMessage = async (messages: MessageParam) => {
+  let slackThreadTs = messages.slackThreadTs;
 
   let thread = await findOrCreateThread({
     slackThreadTs: slackThreadTs,
-    channelId: message.channelId,
+    channelId: messages.channelId,
   });
 
-  return await prisma.message.create({
+  return await prisma.messages.create({
     data: {
-      body: message.body,
+      body: messages.body,
       slackThreadId: thread.id,
-      channelId: message.channelId,
-      sentAt: message.sentAt,
+      channelId: messages.channelId,
+      sentAt: messages.sentAt,
     },
   });
 };
 
-export const findAccount = async (account: Prisma.AccountFindUniqueArgs) => {
-  return await prisma.account.findUnique(account);
+export const findAccount = async (accounts: Prisma.accountsFindUniqueArgs) => {
+  return await prisma.accounts.findUnique(accounts);
 };
 
 export const channelIndex = async (accountId: string) => {
-  return await prisma.channel.findMany({
+  return await prisma.channels.findMany({
     where: {
       accountId,
     },
@@ -53,23 +53,23 @@ export const channelIndex = async (accountId: string) => {
 };
 
 export const createManyChannel = async (
-  channels: Prisma.ChannelCreateManyInput
+  channels: Prisma.channelsCreateManyInput
 ) => {
-  return await prisma.channel.createMany({ data: channels });
+  return await prisma.channels.createMany({ data: channels });
 };
 
 export const findOrCreateChannel = async (
-  channel: Prisma.ChannelUncheckedCreateInput
+  channels: Prisma.channelsUncheckedCreateInput
 ) => {
-  return await prisma.channel.upsert({
+  return await prisma.channels.upsert({
     where: {
-      slackChannelId: channel.slackChannelId,
+      slackChannelId: channels.slackChannelId,
     },
     update: {},
     create: {
-      accountId: channel.accountId,
-      channelName: channel.channelName,
-      slackChannelId: channel.slackChannelId,
+      accountId: channels.accountId,
+      channelName: channels.channelName,
+      slackChannelId: channels.slackChannelId,
     },
   });
 };
@@ -80,7 +80,7 @@ export type Thread = {
 };
 
 export const findOrCreateThread = async (thread: Thread) => {
-  return await prisma.slackThread.upsert({
+  return await prisma.slackThreads.upsert({
     where: {
       slackThreadTs: thread.slackThreadTs,
     },
@@ -90,14 +90,14 @@ export const findOrCreateThread = async (thread: Thread) => {
 };
 
 export const findOrCreateAccount = async (
-  account: Prisma.AccountCreateInput
+  accounts: Prisma.accountsCreateInput
 ) => {
-  return await prisma.account.upsert({
+  return await prisma.accounts.upsert({
     where: {
-      slackTeamId: account.slackTeamId,
+      slackTeamId: accounts.slackTeamId,
     },
     update: {},
-    create: account,
+    create: accounts,
   });
 };
 
@@ -106,7 +106,7 @@ export const threadIndex = async (
   take: number = 20,
   skip: number = 0
 ) => {
-  return await prisma.slackThread.findMany({
+  return await prisma.slackThreads.findMany({
     take: take,
     skip: skip,
     include: {
@@ -119,8 +119,20 @@ export const threadIndex = async (
 };
 
 export const findThreadById = async (threadId: string) => {
-  return await prisma.slackThread.findUnique({
+  return await prisma.slackThreads.findUnique({
     where: { id: threadId },
     include: { messages: true },
   });
 };
+
+export const getThreadWithMultipleMessages = async (channelId: string) => {
+  return await prisma.slackThreads;
+};
+
+// `select st.id
+// from "slackThreads" st
+// inner join "messages" m on st.id = m.slackThreadId
+// group by 1
+// having count(distinct m.id) > 1`
+
+// `select * from slackThreads where id in ()`

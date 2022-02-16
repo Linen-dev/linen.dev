@@ -10,49 +10,49 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Message {
+model messages {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   body      String
   sentAt    DateTime
 
-  channel   Channel @relation(fields: [channelId], references: [id])
+  channel   channels @relation(fields: [channelId], references: [id])
   channelId String
 
-  slackThread SlackThread? @relation(fields: [slackThreadId], references: [id])
+  slackThreads slackThreads? @relation(fields: [slackThreadId], references: [id])
 
   slackThreadId String?
   @@unique([body, sentAt])
 }
 
-model SlackThread {
-  id            String  @id @default(uuid())
-  channel       Channel @relation(fields: [channelId], references: [id])
+model slackThreads {
+  id            String   @id @default(uuid())
+  channel      channels @relation(fields: [channelId], references: [id])
   slackThreadTs String
 
-  messages  Message[]
+  messages  messages[]
   channelId String
 
   @@unique([slackThreadTs])
 }
 
-model Channel {
-  id             String    @id @default(uuid())
+model channels {
+  id             String     @id @default(uuid())
   channelName    String
-  messages       Message[]
+  messages       messages[]
   slackChannelId String
 
-  SlackThread SlackThread[]
-  Account     Account?      @relation(fields: [accountId], references: [id])
-  accountId   String?
+  slackThreads slackThreads[]
+  account      accounts?      @relation(fields: [accountId], references: [id])
+  accountId    String?
 
   @@unique([slackChannelId])
 }
 
-model Account {
-  id          String    @id @default(uuid())
+model accounts {
+  id          String     @id @default(uuid())
   name        String
-  channels    Channel[]
+  channels    channels[]
   slackTeamId String
 
   @@unique([slackTeamId])
