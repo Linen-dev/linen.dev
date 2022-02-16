@@ -170,3 +170,5 @@ export const channels = [
   { id: 'asdfasd', name: 'Questions' },
   { id: 'asdfa', name: 'Bug Reports' },
 ];
+
+export const accountId = '048f5bdc-51e6-408b-9b10-e44789a0b6f8';

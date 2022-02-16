@@ -35,7 +35,6 @@ export default async function handler(
 
   try {
     const createdChannel = await createManyChannel(channelsParam);
-    console.log(createdChannel);
   } catch (e) {
     console.log(e);
   }
@@ -43,8 +42,8 @@ export default async function handler(
   for (let channel of channels) {
     try {
       const joined = await joinChannel(channel.slackChannelId);
-      console.log(joined.body);
       const conversations = await fetchConversations(channel.slackChannelId);
+      console.log({ body: conversations.body });
       const messages = await saveMessages(
         conversations.body.messages,
         channel.id

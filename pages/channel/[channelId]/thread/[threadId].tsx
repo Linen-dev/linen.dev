@@ -4,7 +4,10 @@ import { useMemo } from 'react';
 import { format } from 'timeago.js';
 import PageLayout from '../../../../components/layout/PageLayout';
 import Table from '../../../../components/table/Table';
-import { threads as exampleThreads } from '../../../../constants/examples';
+import {
+  accountId,
+  threads as exampleThreads,
+} from '../../../../constants/examples';
 import {
   channelIndex,
   findThreadById,
@@ -12,6 +15,7 @@ import {
 } from '../../../../lib/slack';
 
 function Thread({ threadId, messages, channels }) {
+  console.log({ messages });
   const elements = useMemo(() => {
     const img =
       'https://media-exp1.licdn.com/dms/image/C4E03AQHB_3pem0I_gg/profile-displayphoto-shrink_100_100/0/1542209174093?e=1650499200&v=beta&t=GMX8clmk9wSvKGvrQ4u3IDJQGHaoBz3KQQC9lw3AJuI';
@@ -65,7 +69,7 @@ function Thread({ threadId, messages, channels }) {
 export default Thread;
 
 export async function getServerSideProps({ params: { threadId } }) {
-  const channels = await channelIndex('00573063-2b96-4a20-a7d0-9324550035a6');
+  const channels = await channelIndex(accountId);
   const thread = (await findThreadById(threadId as string)) || { messages: [] };
 
   return {

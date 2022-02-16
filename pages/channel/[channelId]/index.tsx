@@ -6,6 +6,7 @@ import Table from '../../../components/table/Table';
 import TableRow from '../../../components/table/TableRow';
 import TableElement from '../../../components/table/TableElement';
 import {
+  accountId,
   channels,
   threads as exampleThreads,
 } from '../../../constants/examples';
@@ -106,8 +107,7 @@ export default Channel;
 export async function getServerSideProps({ params: { channelId } }) {
   // export async function getServerSideProps(channelId: string) {
   const threads = await threadIndex(channelId, 100);
-  const channels = await channelIndex('00573063-2b96-4a20-a7d0-9324550035a6');
-
+  const channels = await channelIndex(accountId);
   return {
     props: {
       channelId,

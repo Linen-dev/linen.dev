@@ -4,6 +4,7 @@ import Head from 'next/head';
 import Image from 'next/image';
 import prisma from '../client';
 import PageLayout from '../components/layout/PageLayout';
+import { accountId } from '../constants/examples';
 import { channelIndex } from '../lib/slack';
 // import { channels, threads } from '../constants/examples';
 
@@ -46,7 +47,7 @@ const Home: NextPage = (channels) => {
 };
 
 export const getServerSideProps = async () => {
-  const channels = await channelIndex('00573063-2b96-4a20-a7d0-9324550035a6');
+  const channels = await channelIndex(accountId);
   return { props: { channels } };
 };
 
