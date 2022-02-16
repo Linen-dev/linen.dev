@@ -44,6 +44,14 @@ export const findAccount = async (account: Prisma.AccountFindUniqueArgs) => {
   return await prisma.account.findUnique(account);
 };
 
+export const channelIndex = async (accountId: string) => {
+  return await prisma.channel.findMany({
+    where: {
+      accountId,
+    },
+  });
+};
+
 export const findOrCreateChannel = async (
   channel: Prisma.ChannelUncheckedCreateInput
 ) => {
