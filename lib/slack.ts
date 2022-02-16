@@ -1,5 +1,5 @@
-import { Prisma } from "@prisma/client";
-import prisma from "../client";
+import { Prisma } from '@prisma/client';
+import prisma from '../client';
 
 export const createSlackMessage = async (event: any, channelId: string) => {
   const body = event.event.text;
@@ -40,14 +40,22 @@ export const createMessage = async (message: MessageParam) => {
   });
 };
 
+export const findAccount = async (account: Prisma.AccountFindUniqueArgs) => {
+  return await prisma.account.findUnique(account);
+};
+
 export const findOrCreateChannel = async (
-  slackChannelId: string,
-  channelName: string
+  channel: Prisma.ChannelUncheckedCreateInput
 ) => {
-  return prisma.channel.create({
-    data: {
-      slackChannelId: slackChannelId,
-      channelName: channelName,
+  return await prisma.channel.upsert({
+    where: {
+      slackChannelId: channel.slackChannelId,
+    },
+    update: {},
+    create: {
+      accountId: channel.accountId,
+      channelName: channel.channelName,
+      slackChannelId: channel.slackChannelId,
     },
   });
 };
