@@ -9,13 +9,13 @@ import {
 } from '@mantine/core';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { channels } from '../../constants/examples';
 import SEO from './SEO';
 
-function PageLayout({ seo = {}, children }) {
+function PageLayout({ seo = {}, children, navItems }) {
   const {
     query: { channelId },
   } = useRouter();
+  const channels = navItems.channels;
 
   return (
     <AppShell
@@ -59,7 +59,7 @@ function PageLayout({ seo = {}, children }) {
                     })}
                     order={6}
                   >
-                    # {c.name}
+                    # {c.channelName}
                   </Text>
                 </Link>
               ))}

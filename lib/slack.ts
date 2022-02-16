@@ -100,3 +100,20 @@ export const findOrCreateAccount = async (
     create: account,
   });
 };
+
+export const threadIndex = async (
+  channelId: string,
+  take: number = 20,
+  skip: number = 0
+) => {
+  return await prisma.slackThread.findMany({
+    take: take,
+    skip: skip,
+    include: {
+      messages: true,
+    },
+    where: {
+      channelId,
+    },
+  });
+};

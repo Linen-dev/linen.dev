@@ -5,6 +5,7 @@ import { format } from 'timeago.js';
 import PageLayout from '../../../../components/layout/PageLayout';
 import Table from '../../../../components/table/Table';
 import { threads as exampleThreads } from '../../../../constants/examples';
+import { threadIndex } from '../../../../lib/slack';
 
 function Thread({ threadId, messages }) {
   const elements = useMemo(() => {

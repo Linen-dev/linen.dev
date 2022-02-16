@@ -10,11 +10,16 @@ import {
   threads as exampleThreads,
 } from '../../../constants/examples';
 import TableHeader from '../../../components/table/TableHeader';
+import { channelIndex, threadIndex } from '../../../lib/slack';
 
 const EXCERPT_LENGTH = 220;
 
-function Channel({ channelId, threads }) {
+function Channel({ channelId, threads, channels }) {
+  console.log({ channels });
   const channelName = channels.find((c) => c.id === channelId).name;
+  // const channelName = 'something';
+  const img =
+    'https://media-exp1.licdn.com/dms/image/C4E03AQHB_3pem0I_gg/profile-displayphoto-shrink_100_100/0/1542209174093?e=1650499200&v=beta&t=GMX8clmk9wSvKGvrQ4u3IDJQGHaoBz3KQQC9lw3AJuI';
 
   const rows = useMemo(() => {
     return threads.map(({ messages, id: threadId }) => {
@@ -51,8 +56,8 @@ function Channel({ channelId, threads }) {
                   size={24}
                   radius="xl"
                   key={idx} //p.id || p.name}
-                  src={p.img}
-                  alt={p.name}
+                  src={img}
+                  alt={'gabe'}
                 />
               ))}
             </Group>
@@ -67,7 +72,7 @@ function Channel({ channelId, threads }) {
   }, [channelId, threads]);
 
   return (
-    <PageLayout seo={{ title: channelName }}>
+    <PageLayout seo={{ title: channelName }} navItems={{ channels: channels }}>
       {/* <Container> */}
       <Paper
         shadow="md"
@@ -100,15 +105,25 @@ function Channel({ channelId, threads }) {
 export default Channel;
 
 export async function getServerSideProps({ params: { channelId } }) {
-  // const threads = await getThreadsForChannel()
+  // export async function getServerSideProps(channelId: string) {
+  const threads = await threadIndex(channelId, 100);
+  const channels = await channelIndex('00573063-2b96-4a20-a7d0-9324550035a6');
 
   return {
     props: {
       channelId,
-      threads: exampleThreads.map((t) => ({
+      threads: threads.map((t) => ({
         ...t,
-        messages: Array(15).fill(t.messages[0]),
+        messages: t.messages.map((m) => {
+          return {
+            body: m.body,
+            // Have to convert to string b/c Nextjs doesn't support date hydration -
+            // see: https://github.com/vercel/next.js/discussions/11498
+            sentAt: m.sentAt.toString(),
+          };
+        }),
       })),
+      channels,
     },
   };
 }
