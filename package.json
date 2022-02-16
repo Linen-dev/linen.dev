@@ -11,11 +11,17 @@
   },
   "dependencies": {
     "@headlessui/react": "^1.4.3",
+    "@mantine/core": "^3.6.7",
+    "@mantine/hooks": "^3.6.7",
+    "@mantine/next": "^3.6.7",
     "@prisma/client": "^3.9.1",
+    "axios": "^0.26.0",
     "next": "12.0.10",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "superagent": "^7.1.1"
+    "superagent": "^7.1.1",
+    "swr": "^1.2.1",
+    "timeago.js": "^4.0.2"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.2",
