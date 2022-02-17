@@ -1,7 +1,7 @@
-import prisma from "../../client";
+import prisma from '../../client';
 
-import type { NextApiRequest, NextApiResponse } from "next";
-import { createMessage, MessageParam } from "../../lib/slack";
+import type { NextApiRequest, NextApiResponse } from 'next';
+import { createMessage, MessageParam } from '../../lib/slack';
 
 export default async function handler(
   req: NextApiRequest,
@@ -19,15 +19,15 @@ export const handleWebhook = async (body: any) => {
   const event = body.event;
   const channelId = body.event.channel;
 
-  const channel = await prisma.channel.findUnique({
+  const channel = await prisma.channels.findUnique({
     where: {
       slackChannelId: channelId,
     },
   });
 
   if (channel === null) {
-    console.error("Channel does not exist in db ");
-    return { status: 403, error: "Channel not found" };
+    console.error('Channel does not exist in db ');
+    return { status: 403, error: 'Channel not found' };
   }
 
   const param: MessageParam = {
@@ -49,7 +49,7 @@ export const findOrCreateChannel = async (
   channelId: string,
   channelName: string
 ) => {
-  prisma.channel.upsert({
+  prisma.channels.upsert({
     where: {
       slackChannelId: channelId,
     },

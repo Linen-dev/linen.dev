@@ -1,5 +1,5 @@
-import { NextApiRequest, NextApiResponse } from "next/types";
-import prisma from "../../client";
+import { NextApiRequest, NextApiResponse } from 'next/types';
+import prisma from '../../client';
 
 export default async function handler(
   req: NextApiRequest,
@@ -9,7 +9,7 @@ export default async function handler(
   const limit = req.body.limit || 100;
   const offSet = req.body.off_set || 0;
 
-  const threads = await prisma.slackThread.findMany({
+  const threads = await prisma.slackThreads.findMany({
     take: limit,
     skip: offSet,
     include: {
