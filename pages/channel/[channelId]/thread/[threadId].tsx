@@ -30,9 +30,9 @@ function Thread({ threadId, messages, channels }) {
           >
             <Group position="apart">
               <Group>
-                <Avatar radius="xl" alt={'kam'} src={img} />
+                <Avatar radius="xl" alt={'kam'} src={author?.profileImageUrl} />
                 <Text size="sm" weight={700}>
-                  {'kam'}
+                  {author?.displayName}
                 </Text>
               </Group>
               <Text size="sm" color="gray">
@@ -80,6 +80,7 @@ export async function getServerSideProps({ params: { threadId } }) {
           // Have to convert to string b/c Nextjs doesn't support date hydration -
           // see: https://github.com/vercel/next.js/discussions/11498
           sentAt: m.sentAt.toString(),
+          author: m.author,
         };
       }),
       channels,

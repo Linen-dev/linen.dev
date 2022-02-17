@@ -54,8 +54,8 @@ function Channel({ channelId, threads, channels }) {
                   size={24}
                   radius="xl"
                   key={idx} //p.id || p.name}
-                  src={img}
-                  alt={'gabe'}
+                  src={p?.profileImageUrl} // set placeholder with a U sign
+                  alt={p?.name} // Set placeholder of a slack user if missing
                 />
               ))}
             </Group>
@@ -116,9 +116,7 @@ export async function getServerSideProps({ params: { channelId } }) {
             // Have to convert to string b/c Nextjs doesn't support date hydration -
             // see: https://github.com/vercel/next.js/discussions/11498
             sentAt: m.sentAt.toString(),
-            author: {
-              name: 'Kam',
-            },
+            author: m.author,
           };
         }),
       })),
