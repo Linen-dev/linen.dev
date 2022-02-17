@@ -28,7 +28,6 @@ import { Community } from './community';
 // }
 
 const Home: NextPage = (channels) => {
-  console.log('channels :>> ', channels);
   return (
     <PageLayout navItems={channels}>
       <Paper
@@ -40,15 +39,29 @@ const Home: NextPage = (channels) => {
           minHeight: '400px',
         }}
       >
-        <Title order={4}>Landing Page Dashboard</Title>
+        <Title order={4}>Select a channel on the left.</Title>
       </Paper>
     </PageLayout>
   );
 };
 
 export const getServerSideProps = async () => {
-  const channels = await channelIndex(accountId);
-  return { props: { channels } };
+  const channels = (await channelIndex(accountId)) || [];
+  let channelId;
+  const result = { props: { channels } };
+  const general = channels.find((c) => c.channelName === 'general');
+  if (general) {
+    channelId = general.id;
+  } else if (channels.length > 0) {
+    channelId = channels[0].id;
+  }
+  if (channelId) {
+    result.redirect = {
+      permanent: false,
+      destination: `/channel/${channelId}`,
+    };
+  }
+  return result;
 };
 
 export default Home;
