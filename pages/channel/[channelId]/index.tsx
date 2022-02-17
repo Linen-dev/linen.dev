@@ -76,7 +76,10 @@ function Channel({ channelId, users, threads, channels }) {
   }, [channelId, threads, users]);
 
   return (
-    <PageLayout seo={{ title: channelName }} navItems={{ channels: channels }}>
+    <PageLayout
+      seo={{ title: `${channelName} threads` }}
+      navItems={{ channels: channels }}
+    >
       <Paper
         shadow="md"
         padding="xl"

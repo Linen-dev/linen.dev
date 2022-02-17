@@ -17,7 +17,6 @@ import {
 } from '../../../../lib/slack';
 
 function Thread({ threadId, messages, channels, users }) {
-  console.log('messages :>> ', messages);
   const elements = useMemo(() => {
     const img =
       'https://media-exp1.licdn.com/dms/image/C4E03AQHB_3pem0I_gg/profile-displayphoto-shrink_100_100/0/1542209174093?e=1650499200&v=beta&t=GMX8clmk9wSvKGvrQ4u3IDJQGHaoBz3KQQC9lw3AJuI';
@@ -51,7 +50,10 @@ function Thread({ threadId, messages, channels, users }) {
   }, [messages, users]);
 
   return (
-    <PageLayout navItems={{ channels: channels }}>
+    <PageLayout
+      seo={{ title: messages[0].body.slice(0, 30) }}
+      navItems={{ channels: channels }}
+    >
       <Paper
         shadow="md"
         padding="xl"

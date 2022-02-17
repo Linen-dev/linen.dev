@@ -1,7 +1,13 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 
-function SEO({ description, image, url, noIndex = false, title = 'Linen' }) {
+function SEO({
+  description,
+  image,
+  url,
+  noIndex = false,
+  title = 'Airbyte Community',
+}) {
   const { pathname } = useRouter();
   // If pathname includes a slug, we won't use that.
   const relativePath =
