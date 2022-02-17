@@ -128,11 +128,3 @@ export const findThreadById = async (threadId: string) => {
 export const getThreadWithMultipleMessages = async (channelId: string) => {
   return await prisma.slackThreads;
 };
-
-// `select st.id
-// from "slackThreads" st
-// inner join "messages" m on st.id = m.slackThreadId
-// group by 1
-// having count(distinct m.id) > 1`
-
-// `select * from slackThreads where id in ()`
