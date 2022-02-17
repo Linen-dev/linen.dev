@@ -10,7 +10,7 @@ import { findOrCreateChannel } from '../lib/slack';
 const channel = 'C030HFK836C';
 
 beforeEach(async () => {
-  await prisma.message.deleteMany();
+  await prisma.messages.deleteMany();
   // await prisma.channel.deleteMany();
 });
 
@@ -122,7 +122,7 @@ const messages = [
 ];
 
 test('save messages with same threadTs ', async () => {
-  const channel = await prisma.channel.create({
+  const channel = await prisma.channels.create({
     data: {
       slackChannelId: 'someChannelID' + Date.now().toString(),
       channelName: 'someChannel',
@@ -132,7 +132,7 @@ test('save messages with same threadTs ', async () => {
   expect(savedMessages?.length).toEqual(3);
   const sentAt = new Date(parseFloat('1644526520.323539') * 1000);
   const body = 'this is a message';
-  const slackThread = await prisma.slackThread.findUnique({
+  const slackThread = await prisma.slackThreads.findUnique({
     where: {
       slackThreadTs: threadTs,
     },
