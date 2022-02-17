@@ -19,22 +19,15 @@ export type MessageParam = {
   body: string;
   sentAt: Date;
   channelId: string;
-  slackThreadTs: string;
+  slackThreadId: string;
   usersId: string;
 };
 
 export const createMessage = async (messages: MessageParam) => {
-  let slackThreadTs = messages.slackThreadTs;
-
-  let thread = await findOrCreateThread({
-    slackThreadTs: slackThreadTs,
-    channelId: messages.channelId,
-  });
-
   return await prisma.messages.create({
     data: {
       body: messages.body,
-      slackThreadId: thread.id,
+      slackThreadId: messages.slackThreadId,
       channelId: messages.channelId,
       sentAt: messages.sentAt,
       usersId: messages.usersId,

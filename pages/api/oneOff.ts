@@ -48,9 +48,11 @@ export default async function handler(
     try {
       const joined = await joinChannel(channel.slackChannelId);
       const conversations = await fetchConversations(channel.slackChannelId);
+
       const messages = await saveMessages(
         conversations.body.messages,
-        channel.id
+        channel.id,
+        channel.slackChannelId
       );
     } catch (e) {}
   }
