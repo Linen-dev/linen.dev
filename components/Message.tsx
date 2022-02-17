@@ -33,6 +33,10 @@ function Message({ text, truncate, users }) {
       }
       return `<link href=${url}>${text}</link>`;
     });
+    // Replace codeblocks
+    str = str.replace(/```(.*?)```/, (replacedStr, code) => {
+      return `<code>${code}</code>`;
+    });
     return str;
   }, [text, truncate, users]);
 

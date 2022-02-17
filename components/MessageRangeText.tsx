@@ -5,12 +5,9 @@ import LinkRangeText from './LinkRangeText';
 export default function MessageRangeText({ text, boldIndicator }) {
   const textArray = text.split(boldIndicator);
   if (textArray.length < 3) {
-    return (
-      <Text compoent="span" size="sm">
-        {text}
-      </Text>
-    );
+    return <LinkRangeText text={text} />;
   }
+
   return (
     <Text component="span" size="sm">
       {textArray.map((item, index) => {

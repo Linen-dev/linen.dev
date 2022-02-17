@@ -33,7 +33,10 @@ function Channel({ channelId, users, threads, channels }) {
       const oldestMessage = sortedMessages[sortedMessages.length - 1];
       const newestMessage = sortedMessages[0];
       const participants = messages.reduce((agg, { author }) => {
-        if (!agg.find((a) => a.profileImageUrl === author.profileImageUrl)) {
+        if (
+          author &&
+          !agg.find((a) => a.profileImageUrl === author.profileImageUrl)
+        ) {
           agg.push(author);
         }
         return agg;

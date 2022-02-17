@@ -2,6 +2,7 @@ import { Anchor, Text } from '@mantine/core';
 import React from 'react';
 import Link from 'next/link';
 import styled from 'styled-components';
+import CodeRangeText from './CodeRangeText';
 
 const linkify = (item) => {
   const href = item.match(/href=(.*?)>/)[1];
@@ -17,11 +18,7 @@ const linkify = (item) => {
 export default function LinkRangeText({ text }) {
   const textArray = text.split(/(<link.*?\/link>)/);
   if (textArray.length < 3) {
-    return (
-      <Text component="span" size="sm">
-        {text}
-      </Text>
-    );
+    return <CodeRangeText text={text} />;
   }
 
   return (
@@ -29,7 +26,7 @@ export default function LinkRangeText({ text }) {
       {textArray.map((item, index) => {
         return (
           <React.Fragment key={index}>
-            {index % 2 === 0 && item}
+            {index % 2 === 0 && <CodeRangeText text={item} />}
             {index % 2 === 1 && linkify(item)}
           </React.Fragment>
         );
