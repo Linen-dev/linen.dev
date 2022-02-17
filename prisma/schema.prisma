@@ -23,7 +23,7 @@ model messages {
 
   slackThreadId String?
 
-  users   users?  @relation(fields: [usersId], references: [id])
+  author  users?  @relation(fields: [usersId], references: [id])
   usersId String?
   @@unique([body, sentAt])
 }

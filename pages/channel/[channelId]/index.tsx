@@ -103,7 +103,6 @@ function Channel({ channelId, threads, channels }) {
 export default Channel;
 
 export async function getServerSideProps({ params: { channelId } }) {
-  // export async function getServerSideProps(channelId: string) {
   const threads = await threadIndex(channelId, 100);
   const channels = await channelIndex(accountId);
   return {

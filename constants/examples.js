@@ -171,4 +171,4 @@ export const channels = [
   { id: 'asdfa', name: 'Bug Reports' },
 ];
 
-export const accountId = '3ec6d40d-2098-4a86-a3f1-7f2739f2bf4f';
+export const accountId = '23fa8325-ef9f-47a2-be88-88fc9644b059';

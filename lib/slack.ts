@@ -112,7 +112,11 @@ export const threadIndex = async (
     take: take,
     skip: skip,
     include: {
-      messages: true,
+      messages: {
+        include: {
+          author: true,
+        },
+      },
     },
     where: {
       channelId,
