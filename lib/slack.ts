@@ -160,3 +160,7 @@ export const findUser = async (userId: string) => {
 export const createManyUsers = async (users: Prisma.usersCreateManyArgs) => {
   return await prisma.users.createMany(users);
 };
+
+export const listUsers = async (accountId: string) => {
+  return await prisma.users.findMany({ where: { accountsId: accountId } });
+};
