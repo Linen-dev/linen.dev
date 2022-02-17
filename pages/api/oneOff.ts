@@ -3,7 +3,9 @@ import { NextApiRequest, NextApiResponse } from 'next/types';
 import {
   fetchConversations,
   joinChannel,
+  listUsers,
   saveMessages,
+  saveUsers,
 } from '../../fetch_all_conversations';
 import {
   channelIndex,
@@ -33,6 +35,9 @@ export default async function handler(
     }
   );
 
+  const usersListResponse = await listUsers();
+  const users = await saveUsers(usersListResponse.body.members, account.id);
+
   try {
     const createdChannel = await createManyChannel(channelsParam);
   } catch (e) {
@@ -43,27 +48,12 @@ export default async function handler(
     try {
       const joined = await joinChannel(channel.slackChannelId);
       const conversations = await fetchConversations(channel.slackChannelId);
-      console.log({ body: conversations.body });
       const messages = await saveMessages(
         conversations.body.messages,
         channel.id
       );
-      console.log({ messages });
     } catch (e) {}
   }
-  // const channels = await channelIndex(account.id);
-  // for (let channel of channels) {
-  //   try {
-  //     // const joined = await joinChannel(channel.slackChannelId);
-  //     // console.log(joined.body);
-  //     const conversations = await fetchConversations(channel.slackChannelId);
-  //     const messages = await saveMessages(
-  //       conversations.body.messages,
-  //       channel.id
-  //     );
-  //     console.log({ messages });
-  //   } catch (e) {}
-  // }
 
   res.status(200).json({ channels });
 }

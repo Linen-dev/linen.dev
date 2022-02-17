@@ -22,12 +22,15 @@ model messages {
   slackThreads slackThreads? @relation(fields: [slackThreadId], references: [id])
 
   slackThreadId String?
+
+  users   users?  @relation(fields: [usersId], references: [id])
+  usersId String?
   @@unique([body, sentAt])
 }
 
 model slackThreads {
   id            String   @id @default(uuid())
-  channel      channels @relation(fields: [channelId], references: [id])
+  channel       channels @relation(fields: [channelId], references: [id])
   slackThreadTs String
 
   messages  messages[]
@@ -55,5 +58,19 @@ model accounts {
   channels    channels[]
   slackTeamId String
 
+  users users[]
   @@unique([slackTeamId])
+}
+
+model users {
+  id              String     @id @default(uuid())
+  messages        messages[]
+  slackUserId     String
+  displayName     String?
+  profileImageUrl String?
+
+  account    accounts @relation(fields: [accountsId], references: [id])
+  accountsId String
+
+  @@unique([slackUserId])
 }

@@ -20,6 +20,7 @@ export type MessageParam = {
   sentAt: Date;
   channelId: string;
   slackThreadTs: string;
+  usersId: string;
 };
 
 export const createMessage = async (messages: MessageParam) => {
@@ -36,6 +37,7 @@ export const createMessage = async (messages: MessageParam) => {
       slackThreadId: thread.id,
       channelId: messages.channelId,
       sentAt: messages.sentAt,
+      usersId: messages.usersId,
     },
   });
 };
@@ -127,4 +129,24 @@ export const findThreadById = async (threadId: string) => {
 
 export const getThreadWithMultipleMessages = async (channelId: string) => {
   return await prisma.slackThreads;
+};
+
+export const findOrCreateUser = async (
+  user: Prisma.usersUncheckedCreateInput
+) => {
+  return await prisma.users.upsert({
+    where: {
+      slackUserId: user.slackUserId,
+    },
+    update: {},
+    create: user,
+  });
+};
+
+export const findUser = async (userId: string) => {
+  return await prisma.users.findUnique({ where: { slackUserId: userId } });
+};
+
+export const createManyUsers = async (users: Prisma.usersCreateManyArgs) => {
+  return await prisma.users.createMany(users);
 };

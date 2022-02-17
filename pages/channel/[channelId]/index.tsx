@@ -27,7 +27,6 @@ function Channel({ channelId, threads, channels }) {
       const newestMessage = sortedMessages[0];
       const participants = messages
         .reduce((agg, { author }) => {
-          console.log('author :>> ', author);
           // if (!agg.find((a) => a.img === author.img)) {
           agg.push(author);
           // }
