@@ -32,3 +32,16 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+## Set up postgres
+
+```bash
+npx prisma migrate dev
+```
+
+## Seed the database
+
+Load: http://localhost:3000/api/oneOff
+This will fetch all the conversations from Papercups and it will return all the conversations and save the account_id from one of the channels
+
+Update `accountId` const in constants/example.js
