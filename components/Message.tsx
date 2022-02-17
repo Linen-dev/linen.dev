@@ -47,9 +47,7 @@ function Message({ text, truncate, users }) {
     return str;
   }, [text, truncate, users]);
 
-  return (
-    <MessageRangeText text={textToRender} boldIndicator={/<b>(.*)?<\/b>/} />
-  );
+  return <MessageRangeText text={textToRender} />;
 }
 
 export default Message;

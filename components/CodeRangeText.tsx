@@ -2,6 +2,7 @@ import { Anchor, Code, Text } from '@mantine/core';
 import React from 'react';
 import Link from 'next/link';
 import styled from 'styled-components';
+import Emoji from 'react-emoji-render';
 
 const codeify = (item) => {
   const [_, inner] = item.match(/<code>(.*?)<\/code>/);
@@ -14,7 +15,7 @@ export default function LinkRangeText({ text }) {
   if (textArray.length < 3) {
     return (
       <Text component="span" size="sm">
-        {text}
+        <Emoji text={text} />
       </Text>
     );
   }

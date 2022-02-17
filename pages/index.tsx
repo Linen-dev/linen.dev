@@ -47,7 +47,6 @@ const Home: NextPage = (channels) => {
 
 export const getServerSideProps = async () => {
   const channels = (await channelIndex(accountId)) || [];
-  console.log('channels :>> ', channels);
   let channelId;
   const result = { props: { channels } };
   const general = channels.find((c) => c.channelName === 'general');
