@@ -4,16 +4,13 @@ import Link from 'next/link';
 import styled from 'styled-components';
 
 const codeify = (item) => {
-  // const href = item.match(/href=(.*?)>/)[1];
-  // const text = item.match(/>(.*?)<\/link>/)[1];
-  console.log('codify item :>> ', item);
+  const [_, inner] = item.match(/<code>(.*?)<\/code>/);
 
-  return <Code size="sm">{'lol'}</Code>;
+  return <Code size="sm">{inner}</Code>;
 };
 
 export default function LinkRangeText({ text }) {
   const textArray = text.split(/(<code>.*?\/code>)/);
-  console.log('textArray :>> ', textArray);
   if (textArray.length < 3) {
     return (
       <Text component="span" size="sm">

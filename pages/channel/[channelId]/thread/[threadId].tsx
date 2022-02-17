@@ -1,5 +1,6 @@
-import { Avatar, Container, Group, Paper, Text } from '@mantine/core';
+import { Anchor, Avatar, Container, Group, Paper, Text } from '@mantine/core';
 import Link from 'next/link';
+import { AiOutlineLink } from 'react-icons/ai';
 import { useMemo } from 'react';
 import { format } from 'timeago.js';
 import PageLayout from '../../../../components/layout/PageLayout';
@@ -65,6 +66,10 @@ function Thread({ threadId, messages, channels, users }) {
         <Group grow direction="column">
           {elements}
         </Group>
+        <Anchor style={{ display: 'flex', alignItems: 'center' }} size="sm">
+          <AiOutlineLink size={18} />{' '}
+          <div style={{ marginLeft: '4px' }}>Join thread in Slack</div>
+        </Anchor>
       </Paper>
     </PageLayout>
   );

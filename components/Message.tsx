@@ -37,6 +37,13 @@ function Message({ text, truncate, users }) {
     str = str.replace(/```(.*?)```/, (replacedStr, code) => {
       return `<code>${code}</code>`;
     });
+    // Replace inline codeblocks after others are gone
+    str = str.replace(/`(.*?)`/, (replacedStr, code) => {
+      return `<code>${code}</code>`;
+    });
+    // Hack to replace at least these entities
+    str = str.replace(/&gt;/g, '>');
+    str = str.replace(/&lt;/g, '<');
     return str;
   }, [text, truncate, users]);
 
