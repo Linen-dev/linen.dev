@@ -15,7 +15,6 @@ import {
 } from '../../../../lib/slack';
 
 function Thread({ threadId, messages, channels }) {
-  console.log({ messages });
   const elements = useMemo(() => {
     const img =
       'https://media-exp1.licdn.com/dms/image/C4E03AQHB_3pem0I_gg/profile-displayphoto-shrink_100_100/0/1542209174093?e=1650499200&v=beta&t=GMX8clmk9wSvKGvrQ4u3IDJQGHaoBz3KQQC9lw3AJuI';

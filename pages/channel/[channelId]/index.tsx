@@ -16,7 +16,6 @@ import { channelIndex, threadIndex } from '../../../lib/slack';
 const EXCERPT_LENGTH = 220;
 
 function Channel({ channelId, threads, channels }) {
-  console.log({ channels });
   const channelName = channels.find((c) => c.id === channelId).name;
   const img =
     'https://media-exp1.licdn.com/dms/image/C4E03AQHB_3pem0I_gg/profile-displayphoto-shrink_100_100/0/1542209174093?e=1650499200&v=beta&t=GMX8clmk9wSvKGvrQ4u3IDJQGHaoBz3KQQC9lw3AJuI';
