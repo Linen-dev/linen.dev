@@ -3,10 +3,10 @@ import { createMessage, findOrCreateChannel } from '../../lib/slack';
 
 beforeEach(async () => {
   await Promise.all([
-    prisma.message.deleteMany(),
-    prisma.slackThread.deleteMany(),
+    prisma.messages.deleteMany(),
+    prisma.slackThreads.deleteMany(),
   ]);
-  await prisma.channel.deleteMany();
+  await prisma.channels.deleteMany();
 });
 
 describe('When a message belongs to a thread', () => {
@@ -37,7 +37,7 @@ describe('When a message belongs to a thread', () => {
     };
 
     await createMessage(responseMessage);
-    const slackThread = await prisma.slackThread.findUnique({
+    const slackThread = await prisma.slackThreads.findUnique({
       where: { slackThreadTs: threadTs.toString() },
     });
 
