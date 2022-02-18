@@ -1,4 +1,4 @@
-import { Avatar, AvatarsGroup, Group, Paper, Text, Title } from '@mantine/core';
+import { Avatar, AvatarsGroup, Paper, Text, Title } from '@mantine/core';
 import { useMemo } from 'react';
 import styled from 'styled-components';
 import { format } from 'timeago.js';
@@ -7,11 +7,7 @@ import Table from '../../../components/table/Table';
 import Message from '../../../components/Message';
 import TableRow from '../../../components/table/TableRow';
 import TableElement from '../../../components/table/TableElement';
-import {
-  accountId,
-  channels,
-  threads as exampleThreads,
-} from '../../../constants/examples';
+import { accountId } from '../../../constants/examples';
 import TableHeader from '../../../components/table/TableHeader';
 import { channelIndex, listUsers, threadIndex } from '../../../lib/slack';
 
@@ -22,7 +18,14 @@ const Wrapper = styled.div({
   overflowY: 'auto',
 });
 
-function Channel({ channelId, users, threads, channels }) {
+type Props = {
+  channelId: string;
+  users: any[];
+  channels: any[];
+  threads: any[];
+};
+
+function Channel({ channelId, users, threads, channels }: Props) {
   const channelName = channels.find((c) => c.id === channelId).channelName;
   const img =
     'https://media-exp1.licdn.com/dms/image/C4E03AQHB_3pem0I_gg/profile-displayphoto-shrink_100_100/0/1542209174093?e=1650499200&v=beta&t=GMX8clmk9wSvKGvrQ4u3IDJQGHaoBz3KQQC9lw3AJuI';
@@ -112,7 +115,13 @@ function Channel({ channelId, users, threads, channels }) {
 
 export default Channel;
 
-export async function getServerSideProps({ params: { channelId } }) {
+type Params = {
+  params: {
+    channelId: string;
+  };
+};
+
+export async function getServerSideProps({ params: { channelId } }: Params) {
   const threads = await threadIndex(channelId, 100);
   const channels = await channelIndex(accountId);
   const users = await listUsers(accountId);
