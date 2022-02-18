@@ -17,7 +17,14 @@ import {
   threadIndex,
 } from '../../../../lib/slack';
 
-function Thread({ threadId, messages, channels, users }) {
+type Props = {
+  threadId: string;
+  messages: any[];
+  channels: any[];
+  users: any[];
+};
+
+function Thread({ threadId, messages, channels, users }: Props) {
   const elements = useMemo(() => {
     const img =
       'https://media-exp1.licdn.com/dms/image/C4E03AQHB_3pem0I_gg/profile-displayphoto-shrink_100_100/0/1542209174093?e=1650499200&v=beta&t=GMX8clmk9wSvKGvrQ4u3IDJQGHaoBz3KQQC9lw3AJuI';
@@ -77,7 +84,11 @@ function Thread({ threadId, messages, channels, users }) {
 
 export default Thread;
 
-export async function getServerSideProps({ params: { threadId } }) {
+export async function getServerSideProps({
+  params: { threadId },
+}: {
+  params: { threadId: string };
+}) {
   const channels = await channelIndex(accountId);
   const thread = (await findThreadById(threadId as string)) || { messages: [] };
   const users = await listUsers(accountId);
