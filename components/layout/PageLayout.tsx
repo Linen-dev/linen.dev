@@ -78,7 +78,6 @@ function PageLayout({ seo = {}, children, navItems }) {
                           color: '#1B194E',
                         },
                       })}
-                      order={6}
                     >
                       # {c.channelName}
                     </Text>
@@ -124,7 +123,7 @@ function PageLayout({ seo = {}, children, navItems }) {
         },
       })}
     >
-      <SEO {...seo} />
+      <SEO image={undefined} url={undefined} {...seo} />
       {children}
     </AppShell>
   );

@@ -2,7 +2,15 @@ import { Text } from '@mantine/core';
 import { useMemo } from 'react';
 import MessageRangeText from './MessageRangeText';
 
-function Message({ text, truncate, users }) {
+function Message({
+  text,
+  truncate,
+  users,
+}: {
+  text: string;
+  truncate?: any;
+  users: any;
+}) {
   const textToRender = useMemo(() => {
     let str = text;
     if (truncate) {

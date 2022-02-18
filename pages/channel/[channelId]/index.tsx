@@ -101,7 +101,6 @@ function Channel({ channelId, users, threads, channels }: Props) {
           <thead>
             <tr>
               <TableHeader>Topic</TableHeader>
-              <TableHeader />
               <TableHeader>Replies</TableHeader>
               <TableHeader>Activity</TableHeader>
             </tr>

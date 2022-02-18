@@ -20,7 +20,7 @@ export type MessageParam = {
   sentAt: Date;
   channelId: string;
   slackThreadId?: string;
-  usersId: string;
+  usersId?: string;
 };
 
 export const createMessage = async (messages: MessageParam) => {
