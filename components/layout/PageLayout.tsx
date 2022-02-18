@@ -106,12 +106,12 @@ function PageLayout({ seo = {}, children, navItems }) {
             />
           </Link>
           <Group>
-            <NavLink href="https://airbyte.com/" target="_blank">
+            {/* <NavLink href="https://airbyte.com/" target="_blank">
               Home
             </NavLink>
             <NavLink href="https://docs.airbyte.com/" target="_blank">
               Docs
-            </NavLink>
+            </NavLink> */}
             <Button variant="white">Join the Conversation</Button>
           </Group>
         </Header>
