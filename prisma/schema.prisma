@@ -68,6 +68,8 @@ model users {
   slackUserId     String
   displayName     String?
   profileImageUrl String?
+  isBot Boolean
+  isAdmin Boolean
 
   account    accounts @relation(fields: [accountsId], references: [id])
   accountsId String

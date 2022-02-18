@@ -19,7 +19,7 @@ export type MessageParam = {
   body: string;
   sentAt: Date;
   channelId: string;
-  slackThreadId: string;
+  slackThreadId?: string;
   usersId: string;
 };
 
@@ -156,4 +156,14 @@ export const createManyUsers = async (users: Prisma.usersCreateManyArgs) => {
 
 export const listUsers = async (accountId: string) => {
   return await prisma.users.findMany({ where: { accountsId: accountId } });
+};
+
+export const findMessagesWithThreads = async () => {
+  return await prisma.messages.findMany({
+    where: { NOT: [{ slackThreadId: null }] },
+    include: {
+      slackThreads: true,
+      channel: true,
+    },
+  });
 };

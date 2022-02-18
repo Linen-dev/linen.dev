@@ -1,6 +1,7 @@
 import { prisma } from '@prisma/client';
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import {
+  fetchAndSaveThreadMessages,
   fetchConversations,
   joinChannel,
   listUsers,
@@ -10,6 +11,7 @@ import {
 import {
   channelIndex,
   createManyChannel,
+  findMessagesWithThreads,
   findOrCreateAccount,
 } from '../../lib/slack';
 import { getSlackChannels } from './slack';
@@ -44,12 +46,13 @@ export default async function handler(
     console.log(e);
   }
   const channels = await channelIndex(account.id);
+  let messages: any;
   for (let channel of channels) {
     try {
       const joined = await joinChannel(channel.slackChannelId);
       const conversations = await fetchConversations(channel.slackChannelId);
 
-      const messages = await saveMessages(
+      messages = await saveMessages(
         conversations.body.messages,
         channel.id,
         channel.slackChannelId
@@ -57,7 +60,21 @@ export default async function handler(
     } catch (e) {}
   }
 
-  res.status(200).json({ channels });
+  const messageWithThreads = await findMessagesWithThreads();
+  console.log({ messageWithThreads });
+  await fetchAndSaveThreadMessages(messageWithThreads);
+
+  res.status(200).json({ messageWithThreads });
 }
+
+// export default async function handler(
+//   req: NextApiRequest,
+//   res: NextApiResponse
+// ) {
+//   const messageWithThreads = await findMessagesWithThreads();
+//   await fetchAndSaveThreadMessages(messageWithThreads);
+
+//   res.status(200).json({ messageWithThreads });
+// }
 
 export const syncChannel = () => {};
