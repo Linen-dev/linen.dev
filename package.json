@@ -7,7 +7,6 @@
     "start": "next start",
     "lint": "next lint",
     "prepare": "husky install",
-    "vercel-buid": "prisma generate && prisma migrate deploy && next build",
     "test": "jest --watch"
   },
   "dependencies": {
