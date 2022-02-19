@@ -1,4 +1,3 @@
-import { prisma } from '@prisma/client';
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import {
   fetchAndSaveThreadMessages,
@@ -11,8 +10,8 @@ import {
 import {
   channelIndex,
   createManyChannel,
+  findAccountById,
   findMessagesWithThreads,
-  findOrCreateAccount,
 } from '../../lib/slack';
 import { getSlackChannels } from './slack';
 
@@ -20,37 +19,54 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const slackTeamId = 'T017CSH2R70';
-  const slackTeamName = 'Papercups';
-  const account = await findOrCreateAccount({
-    slackTeamId,
-    name: slackTeamName,
-  });
-  const channelsResponse = await getSlackChannels(slackTeamId);
+  const accountId = req.query.account_id as string;
+  const account = await findAccountById(accountId);
+  console.log({ account });
+
+  const messageWithThreads = await fetchAllMessages(
+    account.slackTeamId,
+    account.slackAuthorization.accessToken,
+    accountId
+  );
+
+  res.status(200).json({ messageWithThreads });
+}
+
+export async function fetchAllMessages(
+  slackTeamId: string,
+  token: string,
+  accountId: string
+) {
+  const channelsResponse = await getSlackChannels(slackTeamId, token);
+  console.log({ channelResponse: channelsResponse.body });
   const channelsParam = channelsResponse.body.channels.map(
     (channel: { id: any; name: any }) => {
       return {
         slackChannelId: channel.id,
         channelName: channel.name,
-        accountId: account.id,
+        accountId,
       };
     }
   );
 
-  const usersListResponse = await listUsers();
-  const users = await saveUsers(usersListResponse.body.members, account.id);
+  const usersListResponse = await listUsers(token);
+  const users = await saveUsers(usersListResponse.body.members, accountId);
 
   try {
     const createdChannel = await createManyChannel(channelsParam);
   } catch (e) {
     console.log(e);
   }
-  const channels = await channelIndex(account.id);
+  const channels = await channelIndex(accountId);
+  console.log({ channels });
   let messages: any;
   for (let channel of channels) {
     try {
-      const joined = await joinChannel(channel.slackChannelId);
-      const conversations = await fetchConversations(channel.slackChannelId);
+      const joined = await joinChannel(channel.slackChannelId, token);
+      const conversations = await fetchConversations(
+        channel.slackChannelId,
+        token
+      );
 
       messages = await saveMessages(
         conversations.body.messages,
@@ -62,19 +78,6 @@ export default async function handler(
 
   const messageWithThreads = await findMessagesWithThreads();
   console.log({ messageWithThreads });
-  await fetchAndSaveThreadMessages(messageWithThreads);
-
-  res.status(200).json({ messageWithThreads });
+  await fetchAndSaveThreadMessages(messageWithThreads, token);
+  return messageWithThreads;
 }
-
-// export default async function handler(
-//   req: NextApiRequest,
-//   res: NextApiResponse
-// ) {
-//   const messageWithThreads = await findMessagesWithThreads();
-//   await fetchAndSaveThreadMessages(messageWithThreads);
-
-//   res.status(200).json({ messageWithThreads });
-// }
-
-export const syncChannel = () => {};

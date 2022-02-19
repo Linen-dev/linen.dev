@@ -58,7 +58,9 @@ model accounts {
   channels    channels[]
   slackTeamId String
 
-  users users[]
+  users                 users[]
+  slackAuthorization    slackAuthorizations @relation(fields: [slackAuthorizationsId], references: [id])
+  slackAuthorizationsId String
   @@unique([slackTeamId])
 }
 
@@ -68,11 +70,21 @@ model users {
   slackUserId     String
   displayName     String?
   profileImageUrl String?
-  isBot Boolean
-  isAdmin Boolean
+  isBot           Boolean
+  isAdmin         Boolean
 
   account    accounts @relation(fields: [accountsId], references: [id])
   accountsId String
 
   @@unique([slackUserId])
+}
+
+model slackAuthorizations {
+  id          String @id @default(uuid())
+  accessToken String
+  botUserId   String
+  scope       String
+
+  // accountsId String
+  account accounts?
 }

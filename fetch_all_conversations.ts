@@ -1,7 +1,5 @@
 import { channels, messages, Prisma, slackThreads } from '@prisma/client';
-import { create } from 'domain';
 import request from 'superagent';
-import prisma from './client';
 import {
   createManyUsers,
   createMessage,
@@ -9,9 +7,8 @@ import {
   findUser,
 } from './lib/slack';
 
-export const fetchConversations = async (channel: string) => {
+export const fetchConversations = async (channel: string, token: string) => {
   const url = 'https://slack.com/api/conversations.history';
-  const token = 'xoxb-1250901093238-2993798261235-TWOsfgXd7ptiO6tyvjjNChfn';
 
   const response = await request
     .get(url + '?channel=' + channel)
@@ -66,13 +63,15 @@ export async function fetchAndSaveThreadMessages(
   messages: (messages & {
     channel: channels;
     slackThreads: slackThreads | null;
-  })[]
+  })[],
+  token: string
 ) {
   const repliesPromises = messages.map((m) => {
     if (!!m.slackThreads?.slackThreadTs) {
       return fetchReplies(
         m.slackThreads.slackThreadTs,
-        m.channel.slackChannelId
+        m.channel.slackChannelId,
+        token
       ).then((response) => {
         if (!!response?.body && m.slackThreads?.slackThreadTs) {
           const replyMessages = response?.body;
@@ -127,9 +126,12 @@ export async function saveThreadedMessages(
   }
 }
 
-export const fetchReplies = async (threadTs: string, channel: string) => {
+export const fetchReplies = async (
+  threadTs: string,
+  channel: string,
+  token: string
+) => {
   const url = 'https://slack.com/api/conversations.replies';
-  const token = 'xoxb-1250901093238-2993798261235-TWOsfgXd7ptiO6tyvjjNChfn';
 
   const response = await request
     .get(url + '?channel=' + channel + '&ts=' + threadTs)
@@ -160,23 +162,20 @@ export const saveUsers = async (users: any[], accountId: string) => {
   const result = await createManyUsers({ data: params, skipDuplicates: true });
 };
 
-export const listUsers = async () => {
+export const listUsers = async (token: string) => {
   const url = 'https://slack.com/api/users.list';
-  const token = 'xoxb-1250901093238-2993798261235-TWOsfgXd7ptiO6tyvjjNChfn';
 
   return await request.get(url).set('Authorization', 'Bearer ' + token);
 };
 
-export const getUserProfile = async (userId: string) => {
+export const getUserProfile = async (userId: string, token: string) => {
   const url = 'https://slack.com/api/users.info?user=' + userId;
-  const token = 'xoxb-1250901093238-2993798261235-TWOsfgXd7ptiO6tyvjjNChfn';
 
   return await request.get(url).set('Authorization', 'Bearer ' + token);
 };
 
-export const joinChannel = async (channel: string) => {
+export const joinChannel = async (channel: string, token: string) => {
   const url = 'https://slack.com/api/conversations.join';
-  const token = 'xoxb-1250901093238-2993798261235-TWOsfgXd7ptiO6tyvjjNChfn';
 
   const response = await request
     .post(url)

@@ -1,8 +1,7 @@
 import request from 'superagent';
 
-export const getSlackChannelInfo = async (channelId: string) => {
+export const getSlackChannelInfo = async (channelId: string, token: string) => {
   const url = 'https://slack.com/api/conversations.info';
-  const token = 'xoxb-1250901093238-2993798261235-TWOsfgXd7ptiO6tyvjjNChfn';
 
   const response = await request
     .get(url + 'channel=' + channelId)
@@ -13,9 +12,8 @@ export const getSlackChannelInfo = async (channelId: string) => {
 
 // example response:
 
-export const getSlackChannels = async (teamId: string) => {
+export const getSlackChannels = async (teamId: string, token: string) => {
   const url = 'https://slack.com/api/conversations.list?exclude_archived=true&';
-  const token = 'xoxb-1250901093238-2993798261235-TWOsfgXd7ptiO6tyvjjNChfn';
 
   const response = await request
     .get(url + 'team_id=' + teamId)

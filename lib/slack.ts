@@ -35,8 +35,23 @@ export const createMessage = async (messages: MessageParam) => {
   });
 };
 
+export const createAccount = async (account: Prisma.accountsCreateArgs) => {
+  return prisma.accounts.create(account);
+};
+
 export const findAccount = async (accounts: Prisma.accountsFindUniqueArgs) => {
   return await prisma.accounts.findUnique(accounts);
+};
+
+export const findAccountById = async (accountId: string) => {
+  return await prisma.accounts.findUnique({
+    where: {
+      id: accountId,
+    },
+    include: {
+      slackAuthorization: true,
+    },
+  });
 };
 
 export const channelIndex = async (accountId: string) => {
@@ -91,7 +106,7 @@ export const findOrCreateAccount = async (
     where: {
       slackTeamId: accounts.slackTeamId,
     },
-    update: {},
+    update: accounts,
     create: accounts,
   });
 };
