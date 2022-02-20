@@ -4,8 +4,6 @@ export default function middleware(req) {
   const url = req.nextUrl.clone(); // clone the request url
   const { pathname } = req.nextUrl; // get pathname of request (e.g. /blog-slug)
   const hostname = req.headers.get('host'); // get hostname of request (e.g. demo.vercel.pub)
-  console.log({ url });
-  console.log({ headers: req.headers });
 
   const currentHost =
     process.env.NODE_ENV === 'production' && process.env.VERCEL === '1'
@@ -14,9 +12,6 @@ export default function middleware(req) {
           .replace(`*.linene.dev`, '') // you can use wildcard subdomains on .vercel.app links that are associated with your Vercel team slug
       : // in this case, our team slug is "platformize", thus *.platformize.vercel.app works
         hostname.replace(`.localhost:3000`, '');
-
-  console.log(currentHost);
-  console.log({ pathname });
 
   //   if (pathname.startsWith(`/_sites`)) {
   //     return new Response(null, { status: 404 });

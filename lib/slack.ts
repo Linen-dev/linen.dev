@@ -69,9 +69,18 @@ export const findChannel = async (channelId: string) => {
   });
 };
 
-export const findAccountByName = async (name: string) => {
+export const findAccountByPath = async (path: string) => {
   return await prisma.accounts.findFirst({
-    where: { name },
+    where: {
+      OR: [
+        {
+          redirectDomain: path,
+        },
+        {
+          name: path,
+        },
+      ],
+    },
     include: {
       channels: true,
     },

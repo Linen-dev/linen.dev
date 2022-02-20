@@ -10,7 +10,7 @@ import TableElement from '../../../components/table/TableElement';
 import TableHeader from '../../../components/table/TableHeader';
 import {
   channelIndex,
-  findAccountByName,
+  findAccountByPath,
   findChannel,
   listUsers,
   threadIndex,
@@ -135,7 +135,7 @@ type Params = {
 export async function getServerSideProps({
   params: { communityName },
 }: Params) {
-  const account = await findAccountByName(communityName);
+  const account = await findAccountByPath(communityName);
   console.log({ account });
   const channels = account.channels;
   const channel = channels[0];

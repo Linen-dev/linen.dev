@@ -53,14 +53,15 @@ model channels {
 }
 
 model accounts {
-  id          String     @id @default(uuid())
-  name        String
-  channels    channels[]
-  slackTeamId String
+  id             String     @id @default(uuid())
+  name           String
+  channels       channels[]
+  slackTeamId    String
+  redirectDomain String?
 
   users                 users[]
   slackAuthorization    slackAuthorizations @relation(fields: [slackAuthorizationsId], references: [id])
-  slackAuthorizationsId String
+  slackAuthorizationsId String              @unique
   @@unique([slackTeamId])
 }
 
