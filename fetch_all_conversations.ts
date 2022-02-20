@@ -89,8 +89,8 @@ export async function fetchAndSaveThreadMessages(
   return await Promise.all(repliesPromises);
 }
 
-export async function fetchAndSaveUser(slackUserId: string) {
-  const profile = await getUserProfile(slackUserId);
+export async function fetchAndSaveUser(slackUserId: string, token) {
+  const profile = await getUserProfile(slackUserId, token);
   profile.body;
 }
 
