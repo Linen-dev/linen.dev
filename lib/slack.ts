@@ -149,6 +149,9 @@ export const threadIndex = async (
         include: {
           author: true,
         },
+        orderBy: {
+          sentAt: 'desc',
+        },
       },
     },
     where: {

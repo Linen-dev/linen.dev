@@ -43,9 +43,8 @@ function Channel({
 
   const rows = useMemo(() => {
     return threads.map(({ messages, id: threadId }) => {
-      const sortedMessages = messages.sort((a, b) => b.sentAt - a.sentAt);
-      const oldestMessage = sortedMessages[sortedMessages.length - 1];
-      const newestMessage = sortedMessages[0];
+      const oldestMessage = messages[messages.length - 1];
+      const newestMessage = messages[0];
       const participants = messages.reduce((agg, { author }) => {
         if (
           author &&
