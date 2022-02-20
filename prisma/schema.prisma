@@ -58,6 +58,7 @@ model accounts {
   channels       channels[]
   slackTeamId    String
   redirectDomain String?
+  slackUrl       String?
 
   users                 users[]
   slackAuthorization    slackAuthorizations @relation(fields: [slackAuthorizationsId], references: [id])

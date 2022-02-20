@@ -13,7 +13,8 @@ export default function middleware(req) {
       : // in this case, our team slug is "platformize", thus *.platformize.vercel.app works
         hostname.replace(`.localhost:3000`, '');
 
-  url.pathname = `/community/${currentHost}${pathname}`;
-
-  return NextResponse.rewrite(url);
+  if (!pathname.startsWith('/api')) {
+    url.pathname = `/community/${currentHost}${pathname}`;
+    return NextResponse.rewrite(url);
+  }
 }
