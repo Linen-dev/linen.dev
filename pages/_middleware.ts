@@ -13,10 +13,7 @@ export default function middleware(req) {
       : // in this case, our team slug is "platformize", thus *.platformize.vercel.app works
         hostname.replace(`.localhost:3000`, '');
 
-  //   if (pathname.startsWith(`/_sites`)) {
-  //     return new Response(null, { status: 404 });
-  //   }
   url.pathname = `/community/${currentHost}${pathname}`;
-  console.log({ pathname: url.pathname });
+
   return NextResponse.rewrite(url);
 }
