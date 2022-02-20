@@ -13,10 +13,10 @@ const nextConfig = {
           has: [
             {
               type: 'host',
-              value: 'papercups.linen.dev',
+              value: 'papercups-io.linen.dev',
             },
           ],
-          destination: '/community/papercups/:path*',
+          destination: '/community/papercups-io/:path*',
         },
       ],
     };
