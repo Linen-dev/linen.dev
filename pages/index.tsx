@@ -6,7 +6,7 @@ import { channelIndex } from '../lib/slack';
 
 const Home: NextPage = (channels) => {
   return (
-    <PageLayout navItems={channels}>
+    <PageLayout navItems={channels} communityName={undefined}>
       <Paper
         shadow="md"
         padding="xl"
