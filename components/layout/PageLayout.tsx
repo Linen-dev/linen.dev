@@ -61,11 +61,7 @@ function PageLayout({ seo = {}, children, navItems, communityName }) {
                 }}
               >
                 {channels.map((c) => (
-                  <Link
-                    key={c.id}
-                    href={`/community/${communityName}/channel/${c.id}`}
-                    passHref
-                  >
+                  <Link key={c.id} href={`/channel/${c.id}`} passHref>
                     <Text
                       size="sm"
                       weight={channelId === c.id ? 700 : 500}

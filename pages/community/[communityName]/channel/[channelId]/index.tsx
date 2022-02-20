@@ -57,7 +57,7 @@ function Channel({
       return (
         <TableRow
           key={threadId}
-          href={`/community/${communityName}/channel/${channelId}/thread/${threadId}`}
+          href={`/channel/${channelId}/thread/${threadId}`}
         >
           <TableElement style={{ paddingRight: '60px' }}>
             <Message users={users} text={oldestMessage.body} truncate />
