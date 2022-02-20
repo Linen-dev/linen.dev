@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import request from 'superagent';
-import { findOrCreateAccount } from '../../lib/slack';
+import { createSlackAuthorization, findOrCreateAccount } from '../../lib/slack';
 
 export default async function handler(
   req: NextApiRequest,
@@ -16,16 +16,16 @@ export default async function handler(
   );
   console.log({ body: resp.body });
   const body: SlackAuthorizationResponse = resp.body;
-  const accountWithSlackAuthorization = await findOrCreateAccount({
+  const account = await findOrCreateAccount({
     slackTeamId: body.team.id,
     name: body.team.name,
-    slackAuthorization: {
-      create: {
-        accessToken: body.access_token,
-        botUserId: body.bot_user_id,
-        scope: body.scope,
-      },
-    },
+  });
+
+  const slackAuthorization = await createSlackAuthorization({
+    accessToken: body.access_token,
+    botUserId: body.bot_user_id,
+    scope: body.scope,
+    accountsId: account.id,
   });
 
   res.status(200).json({ ok: true });

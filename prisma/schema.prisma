@@ -30,6 +30,7 @@ model messages {
 
 model slackThreads {
   id            String   @id @default(uuid())
+  createdAt     DateTime @default(now())
   channel       channels @relation(fields: [channelId], references: [id])
   slackThreadTs String
 
@@ -41,6 +42,7 @@ model slackThreads {
 
 model channels {
   id             String     @id @default(uuid())
+  createdAt      DateTime   @default(now())
   channelName    String
   messages       messages[]
   slackChannelId String
@@ -54,20 +56,21 @@ model channels {
 
 model accounts {
   id             String     @id @default(uuid())
+  createdAt      DateTime   @default(now())
   name           String
   channels       channels[]
   slackTeamId    String
   redirectDomain String?
   slackUrl       String?
 
-  users                 users[]
-  slackAuthorization    slackAuthorizations @relation(fields: [slackAuthorizationsId], references: [id])
-  slackAuthorizationsId String              @unique
+  users               users[]
+  slackAuthorizations slackAuthorizations[]
   @@unique([slackTeamId])
 }
 
 model users {
   id              String     @id @default(uuid())
+  createdAt       DateTime   @default(now())
   messages        messages[]
   slackUserId     String
   displayName     String?
@@ -82,11 +85,13 @@ model users {
 }
 
 model slackAuthorizations {
-  id          String @id @default(uuid())
+  id          String   @id @default(uuid())
+  createdAt   DateTime @default(now())
   accessToken String
   botUserId   String
   scope       String
 
   // accountsId String
-  account accounts?
+  account    accounts? @relation(fields: [accountsId], references: [id])
+  accountsId String?
 }

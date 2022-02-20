@@ -25,7 +25,7 @@ export default async function handler(
 
   const messageWithThreads = await fetchAllMessages(
     account.slackTeamId,
-    account.slackAuthorization.accessToken,
+    account.slackAuthorizations[0].accessToken,
     accountId
   );
 

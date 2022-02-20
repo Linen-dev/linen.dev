@@ -49,7 +49,11 @@ export const findAccountById = async (accountId: string) => {
       id: accountId,
     },
     include: {
-      slackAuthorization: true,
+      slackAuthorizations: {
+        orderBy: {
+          createdAt: 'desc',
+        },
+      },
     },
   });
 };
@@ -134,6 +138,12 @@ export const findOrCreateAccount = async (
     update: accounts,
     create: accounts,
   });
+};
+
+export const createSlackAuthorization = async (
+  slackAuthorization: Prisma.slackAuthorizationsCreateManyInput
+) => {
+  return await prisma.slackAuthorizations.create({ data: slackAuthorization });
 };
 
 export const threadIndex = async (
