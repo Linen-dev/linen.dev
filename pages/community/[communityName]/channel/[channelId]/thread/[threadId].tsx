@@ -16,9 +16,10 @@ type Props = {
   messages: any[];
   channels: any[];
   users: any[];
+  slackUrl: string;
 };
 
-function Thread({ threadId, messages, channels, users }: Props) {
+function Thread({ threadId, messages, channels, users, slackUrl }: Props) {
   const elements = useMemo(() => {
     const img =
       'https://media-exp1.licdn.com/dms/image/C4E03AQHB_3pem0I_gg/profile-displayphoto-shrink_100_100/0/1542209174093?e=1650499200&v=beta&t=GMX8clmk9wSvKGvrQ4u3IDJQGHaoBz3KQQC9lw3AJuI';
@@ -53,9 +54,9 @@ function Thread({ threadId, messages, channels, users }: Props) {
 
   return (
     <PageLayout
-      communityName={useRouter().query.communityName}
       seo={{ title: messages[0].body.slice(0, 30) }}
       navItems={{ channels: channels }}
+      slackUrl={slackUrl}
     >
       <Paper
         shadow="md"
@@ -102,6 +103,7 @@ export async function getServerSideProps({
         };
       }),
       channels,
+      slackUrl: channels[0].account.slackUrl,
     },
   };
 }

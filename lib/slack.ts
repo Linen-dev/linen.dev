@@ -74,6 +74,9 @@ export const channelIndex = async (accountId: string) => {
     where: {
       accountId,
     },
+    include: {
+      account: true,
+    },
   });
 };
 

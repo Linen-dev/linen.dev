@@ -25,7 +25,7 @@ const NavLink = styled(Anchor)({
   marginRight: '24px',
 });
 
-function PageLayout({ seo = {}, children, navItems, communityName }) {
+function PageLayout({ seo = {}, children, navItems, slackUrl }) {
   const {
     query: { channelId },
   } = useRouter();
@@ -111,7 +111,9 @@ function PageLayout({ seo = {}, children, navItems, communityName }) {
             <NavLink href="https://docs.airbyte.com/" target="_blank">
               Docs
             </NavLink> */}
-            <Button variant="white">Join the Conversation</Button>
+            <Button variant="white" component="a" href={slackUrl}>
+              Join the Conversation
+            </Button>
           </Group>
         </Header>
       }

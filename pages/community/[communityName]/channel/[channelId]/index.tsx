@@ -28,16 +28,10 @@ type Props = {
   users: any[];
   channels: any[];
   threads: any[];
-  communityName: string;
+  slackUrl: string;
 };
 
-function Channel({
-  channelId,
-  users,
-  threads,
-  channels,
-  communityName,
-}: Props) {
+function Channel({ channelId, users, threads, channels, slackUrl }: Props) {
   const channelName = channels.find((c) => c.id === channelId).channelName;
   const rows = useMemo(() => {
     return threads.map(({ messages, id: threadId }) => {
@@ -90,11 +84,9 @@ function Channel({
   }, [channelId, threads, users]);
 
   return (
-    // const { pid } = router.query
-
     <PageLayout
+      slackUrl={slackUrl}
       seo={{ title: `${channelName} threads` }}
-      communityName={useRouter().query.communityName}
       navItems={{ channels: channels }}
     >
       <Paper
@@ -158,6 +150,7 @@ export async function getServerSideProps({
       })),
       channels,
       communityName,
+      slackUrl: channel.account.slackUrl,
     },
   };
 }

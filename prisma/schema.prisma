@@ -30,7 +30,6 @@ model messages {
 
 model slackThreads {
   id            String   @id @default(uuid())
-  createdAt     DateTime @default(now())
   channel       channels @relation(fields: [channelId], references: [id])
   slackThreadTs String
 
@@ -42,7 +41,6 @@ model slackThreads {
 
 model channels {
   id             String     @id @default(uuid())
-  createdAt      DateTime   @default(now())
   channelName    String
   messages       messages[]
   slackChannelId String
@@ -70,7 +68,6 @@ model accounts {
 
 model users {
   id              String     @id @default(uuid())
-  createdAt       DateTime   @default(now())
   messages        messages[]
   slackUserId     String
   displayName     String?
