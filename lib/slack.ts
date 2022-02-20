@@ -62,6 +62,10 @@ export const channelIndex = async (accountId: string) => {
   });
 };
 
+export const findChannel = async (channelId: string) => {
+  return await prisma.channels.findUnique({ where: { id: channelId } });
+};
+
 export const createManyChannel = async (
   channels: Prisma.channelsCreateManyInput
 ) => {
@@ -141,6 +145,7 @@ export const findThreadById = async (threadId: string) => {
           author: true,
         },
       },
+      channel: true,
     },
   });
 };

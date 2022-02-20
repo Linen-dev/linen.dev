@@ -1,21 +1,10 @@
 import { Anchor, Avatar, Container, Group, Paper, Text } from '@mantine/core';
-import Link from 'next/link';
 import { AiOutlineLink } from 'react-icons/ai';
 import { useMemo } from 'react';
 import { format } from 'timeago.js';
 import PageLayout from '../../../../components/layout/PageLayout';
 import Message from '../../../../components/Message';
-import Table from '../../../../components/table/Table';
-import {
-  accountId,
-  threads as exampleThreads,
-} from '../../../../constants/examples';
-import {
-  channelIndex,
-  findThreadById,
-  listUsers,
-  threadIndex,
-} from '../../../../lib/slack';
+import { channelIndex, findThreadById, listUsers } from '../../../../lib/slack';
 
 type Props = {
   threadId: string;
@@ -89,9 +78,9 @@ export async function getServerSideProps({
 }: {
   params: { threadId: string };
 }) {
-  const channels = await channelIndex(accountId);
-  const thread = (await findThreadById(threadId as string)) || { messages: [] };
-  const users = await listUsers(accountId);
+  const thread = await findThreadById(threadId);
+  const channels = await channelIndex(thread.channel.accountId);
+  const users = await listUsers(thread.channel.accountId);
 
   return {
     props: {

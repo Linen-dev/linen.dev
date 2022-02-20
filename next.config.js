@@ -16,7 +16,7 @@ const nextConfig = {
               value: 'papercups.linen.dev',
             },
           ],
-          destination: '/papercups/:path*',
+          destination: '/community/papercups/:path*',
         },
       ],
     };

@@ -7,9 +7,13 @@ import Table from '../../../components/table/Table';
 import Message from '../../../components/Message';
 import TableRow from '../../../components/table/TableRow';
 import TableElement from '../../../components/table/TableElement';
-import { accountId } from '../../../constants/examples';
 import TableHeader from '../../../components/table/TableHeader';
-import { channelIndex, listUsers, threadIndex } from '../../../lib/slack';
+import {
+  channelIndex,
+  findChannel,
+  listUsers,
+  threadIndex,
+} from '../../../lib/slack';
 
 const EXCERPT_LENGTH = 220;
 
@@ -121,9 +125,10 @@ type Params = {
 };
 
 export async function getServerSideProps({ params: { channelId } }: Params) {
+  const channel = await findChannel(channelId);
   const threads = await threadIndex(channelId, 100);
-  const channels = await channelIndex(accountId);
-  const users = await listUsers(accountId);
+  const channels = await channelIndex(channel.accountId);
+  const users = await listUsers(channel.accountId);
 
   return {
     props: {
