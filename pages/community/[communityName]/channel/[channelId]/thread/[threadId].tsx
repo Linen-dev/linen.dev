@@ -6,6 +6,7 @@ import PageLayout from '../../../../../../components/layout/PageLayout';
 import Message from '../../../../../../components/Message';
 import {
   channelIndex,
+  findAccountById,
   findThreadById,
   listUsers,
 } from '../../../../../../lib/slack';
@@ -88,6 +89,7 @@ export async function getServerSideProps({
   const thread = await findThreadById(threadId);
   const channels = await channelIndex(thread.channel.accountId);
   const users = await listUsers(thread.channel.accountId);
+  const account = await findAccountById(thread.channel.accountId);
 
   return {
     props: {
@@ -103,7 +105,7 @@ export async function getServerSideProps({
         };
       }),
       channels,
-      slackUrl: channels[0].account.slackUrl,
+      slackUrl: account.slackUrl,
     },
   };
 }

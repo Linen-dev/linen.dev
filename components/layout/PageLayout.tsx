@@ -37,7 +37,7 @@ function PageLayout({ seo = {}, children, navItems, slackUrl }) {
       fixed
       navbar={
         <Navbar
-          sx={(theme) => ({ backgroundColor: '#FEF9F4' })}
+          sx={(theme) => ({ backgroundColor: '#white' })}
           width={{ base: 300 }}
           padding="lg"
         >
@@ -119,7 +119,7 @@ function PageLayout({ seo = {}, children, navItems, slackUrl }) {
       }
       styles={(theme) => ({
         main: {
-          backgroundColor: '#fef9f5',
+          backgroundColor: 'white',
           paddingRight: 20,
           paddingBottom: 20,
         },

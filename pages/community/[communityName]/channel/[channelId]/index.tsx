@@ -10,6 +10,8 @@ import TableElement from '../../../../../components/table/TableElement';
 import TableHeader from '../../../../../components/table/TableHeader';
 import {
   channelIndex,
+  findAccount,
+  findAccountById,
   findChannel,
   listUsers,
   threadIndex,
@@ -131,6 +133,7 @@ export async function getServerSideProps({
   const threads = await threadIndex(channelId, 100);
   const channels = await channelIndex(channel.accountId);
   const users = await listUsers(channel.accountId);
+  const account = await findAccountById(channel.accountId);
 
   return {
     props: {
@@ -150,7 +153,7 @@ export async function getServerSideProps({
       })),
       channels,
       communityName,
-      slackUrl: channel.account.slackUrl,
+      slackUrl: account.slackUrl,
     },
   };
 }
