@@ -63,7 +63,10 @@ export const channelIndex = async (accountId: string) => {
 };
 
 export const findChannel = async (channelId: string) => {
-  return await prisma.channels.findUnique({ where: { id: channelId } });
+  return await prisma.channels.findUnique({
+    where: { id: channelId },
+    include: { account: true },
+  });
 };
 
 export const findAccountByName = async (name: string) => {

@@ -2,18 +2,19 @@ import { Avatar, AvatarsGroup, Paper, Text, Title } from '@mantine/core';
 import { useMemo } from 'react';
 import styled from 'styled-components';
 import { format } from 'timeago.js';
-import PageLayout from '../../../components/layout/PageLayout';
-import Table from '../../../components/table/Table';
-import Message from '../../../components/Message';
-import TableRow from '../../../components/table/TableRow';
-import TableElement from '../../../components/table/TableElement';
-import TableHeader from '../../../components/table/TableHeader';
+import PageLayout from '../../../../../components/layout/PageLayout';
+import Table from '../../../../../components/table/Table';
+import Message from '../../../../../components/Message';
+import TableRow from '../../../../../components/table/TableRow';
+import TableElement from '../../../../../components/table/TableElement';
+import TableHeader from '../../../../../components/table/TableHeader';
 import {
   channelIndex,
   findChannel,
   listUsers,
   threadIndex,
-} from '../../../lib/slack';
+} from '../../../../../lib/slack';
+import { useRouter } from 'next/router';
 
 const EXCERPT_LENGTH = 220;
 
@@ -27,13 +28,17 @@ type Props = {
   users: any[];
   channels: any[];
   threads: any[];
+  communityName: string;
 };
 
-function Channel({ channelId, users, threads, channels }: Props) {
+function Channel({
+  channelId,
+  users,
+  threads,
+  channels,
+  communityName,
+}: Props) {
   const channelName = channels.find((c) => c.id === channelId).channelName;
-  const img =
-    'https://media-exp1.licdn.com/dms/image/C4E03AQHB_3pem0I_gg/profile-displayphoto-shrink_100_100/0/1542209174093?e=1650499200&v=beta&t=GMX8clmk9wSvKGvrQ4u3IDJQGHaoBz3KQQC9lw3AJuI';
-
   const rows = useMemo(() => {
     return threads.map(({ messages, id: threadId }) => {
       const sortedMessages = messages.sort((a, b) => b.sentAt - a.sentAt);
@@ -52,7 +57,7 @@ function Channel({ channelId, users, threads, channels }: Props) {
       return (
         <TableRow
           key={threadId}
-          href={`/channel/${channelId}/thread/${threadId}`}
+          href={`/community/${communityName}/channel/${channelId}/thread/${threadId}`}
         >
           <TableElement style={{ paddingRight: '60px' }}>
             <Message users={users} text={oldestMessage.body} truncate />
@@ -86,8 +91,11 @@ function Channel({ channelId, users, threads, channels }: Props) {
   }, [channelId, threads, users]);
 
   return (
+    // const { pid } = router.query
+
     <PageLayout
       seo={{ title: `${channelName} threads` }}
+      communityName={useRouter().query.communityName}
       navItems={{ channels: channels }}
     >
       <Paper
@@ -121,10 +129,13 @@ export default Channel;
 type Params = {
   params: {
     channelId: string;
+    communityName: string;
   };
 };
 
-export async function getServerSideProps({ params: { channelId } }: Params) {
+export async function getServerSideProps({
+  params: { channelId, communityName },
+}: Params) {
   const channel = await findChannel(channelId);
   const threads = await threadIndex(channelId, 100);
   const channels = await channelIndex(channel.accountId);
@@ -147,6 +158,7 @@ export async function getServerSideProps({ params: { channelId } }: Params) {
         }),
       })),
       channels,
+      communityName,
     },
   };
 }

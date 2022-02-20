@@ -18,6 +18,16 @@ const nextConfig = {
           ],
           destination: '/community/papercups-io/:path*',
         },
+        {
+          source: '/:path*',
+          has: [
+            {
+              type: 'host',
+              value: 'papercups-io.localhost:3000',
+            },
+          ],
+          destination: '/community/papercups-io/:path*',
+        },
       ],
     };
   },

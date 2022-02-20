@@ -25,7 +25,7 @@ const NavLink = styled(Anchor)({
   marginRight: '24px',
 });
 
-function PageLayout({ seo = {}, children, navItems }) {
+function PageLayout({ seo = {}, children, navItems, communityName }) {
   const {
     query: { channelId },
   } = useRouter();
@@ -61,7 +61,11 @@ function PageLayout({ seo = {}, children, navItems }) {
                 }}
               >
                 {channels.map((c) => (
-                  <Link key={c.id} href={`/channel/${c.id}`} passHref>
+                  <Link
+                    key={c.id}
+                    href={`/community/${communityName}/channel/${c.id}`}
+                    passHref
+                  >
                     <Text
                       size="sm"
                       weight={channelId === c.id ? 700 : 500}

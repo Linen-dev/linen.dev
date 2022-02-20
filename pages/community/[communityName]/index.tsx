@@ -15,6 +15,7 @@ import {
   listUsers,
   threadIndex,
 } from '../../../lib/slack';
+import { useRouter } from 'next/router';
 
 const EXCERPT_LENGTH = 220;
 
@@ -28,12 +29,17 @@ type Props = {
   users: any[];
   channels: any[];
   threads: any[];
+  communityName: string;
 };
 
-function Channel({ channelId, users, threads, channels }: Props) {
+function Channel({
+  channelId,
+  users,
+  threads,
+  channels,
+  communityName,
+}: Props) {
   const channelName = channels.find((c) => c.id === channelId).channelName;
-  const img =
-    'https://media-exp1.licdn.com/dms/image/C4E03AQHB_3pem0I_gg/profile-displayphoto-shrink_100_100/0/1542209174093?e=1650499200&v=beta&t=GMX8clmk9wSvKGvrQ4u3IDJQGHaoBz3KQQC9lw3AJuI';
 
   const rows = useMemo(() => {
     return threads.map(({ messages, id: threadId }) => {
@@ -53,7 +59,7 @@ function Channel({ channelId, users, threads, channels }: Props) {
       return (
         <TableRow
           key={threadId}
-          href={`/channel/${channelId}/thread/${threadId}`}
+          href={`/community/${communityName}/channel/${channelId}/thread/${threadId}`}
         >
           <TableElement style={{ paddingRight: '60px' }}>
             <Message users={users} text={oldestMessage.body} truncate />
@@ -88,6 +94,7 @@ function Channel({ channelId, users, threads, channels }: Props) {
 
   return (
     <PageLayout
+      communityName={useRouter().query.communityName}
       seo={{ title: `${channelName} threads` }}
       navItems={{ channels: channels }}
     >
@@ -154,6 +161,7 @@ export async function getServerSideProps({
         }),
       })),
       channels,
+      communityName,
     },
   };
 }

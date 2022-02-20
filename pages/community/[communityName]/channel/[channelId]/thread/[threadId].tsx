@@ -2,9 +2,14 @@ import { Anchor, Avatar, Container, Group, Paper, Text } from '@mantine/core';
 import { AiOutlineLink } from 'react-icons/ai';
 import { useMemo } from 'react';
 import { format } from 'timeago.js';
-import PageLayout from '../../../../components/layout/PageLayout';
-import Message from '../../../../components/Message';
-import { channelIndex, findThreadById, listUsers } from '../../../../lib/slack';
+import PageLayout from '../../../../../../components/layout/PageLayout';
+import Message from '../../../../../../components/Message';
+import {
+  channelIndex,
+  findThreadById,
+  listUsers,
+} from '../../../../../../lib/slack';
+import { useRouter } from 'next/router';
 
 type Props = {
   threadId: string;
@@ -48,6 +53,7 @@ function Thread({ threadId, messages, channels, users }: Props) {
 
   return (
     <PageLayout
+      communityName={useRouter().query.communityName}
       seo={{ title: messages[0].body.slice(0, 30) }}
       navItems={{ channels: channels }}
     >
