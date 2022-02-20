@@ -38,7 +38,7 @@ function PageLayout({ seo = {}, children, navItems, slackUrl }) {
       navbar={
         <Navbar
           sx={(theme) => ({ backgroundColor: '#white' })}
-          width={{ base: 300 }}
+          width={{ base: 250 }}
           padding="lg"
         >
           <Group direction="column">
@@ -105,13 +105,21 @@ function PageLayout({ seo = {}, children, navItems, slackUrl }) {
             />
           </Link>
           <Group>
-            {/* <NavLink href="https://airbyte.com/" target="_blank">
-              Home
-            </NavLink>
-            <NavLink href="https://docs.airbyte.com/" target="_blank">
-              Docs
-            </NavLink> */}
+            <Link href="https://airbyte.com/">
+              <a style={{ color: 'white' }} target="blank">
+                Home
+              </a>
+            </Link>
+            <Link href="https://docs.airbyte.com/">
+              <a style={{ color: 'white' }} target="blank">
+                Docs
+              </a>
+            </Link>
             <Button variant="white" component="a" href={slackUrl}>
+              <img
+                src="https://cdn.bfldr.com/5H442O3W/at/pl546j-7le8zk-afym5u/Slack_Mark_Web.png?auto=webp&format=svg&width=30&height=30"
+                height="30px"
+              ></img>
               Join the Conversation
             </Button>
           </Group>
