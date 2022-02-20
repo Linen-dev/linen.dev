@@ -121,7 +121,7 @@ export default Channel;
 
 type Params = {
   params: {
-    channelId: string;
+    communityName: string;
   };
 };
 
