@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next/types';
 import {
   fetchAndSaveThreadMessages,
   fetchConversations,
+  fetchTeamInfo,
   joinChannel,
   listUsers,
   saveMessages,
@@ -12,6 +13,7 @@ import {
   createManyChannel,
   findAccountById,
   findMessagesWithThreads,
+  updateAccountRedirectDomain,
 } from '../../lib/slack';
 import { getSlackChannels } from './slack';
 
@@ -20,8 +22,18 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const accountId = req.query.account_id as string;
+  const domain = req.query.domain as string;
+
   const account = await findAccountById(accountId);
-  console.log({ account });
+  //TODO test multiple slack authorization or reauthorization
+  const token = account.slackAuthorizations[0].accessToken;
+
+  const teamInfoResponse = await fetchTeamInfo(token);
+  const slackUrl = teamInfoResponse.body.team.url;
+
+  if (!!domain && !!slackUrl) {
+    await updateAccountRedirectDomain(accountId, domain, slackUrl);
+  }
 
   const messageWithThreads = await fetchAllMessages(
     account.slackTeamId,

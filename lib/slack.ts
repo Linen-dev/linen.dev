@@ -58,6 +58,17 @@ export const findAccountById = async (accountId: string) => {
   });
 };
 
+export const updateAccountRedirectDomain = async (
+  accountId: string,
+  domain: string,
+  slackUrl: string
+) => {
+  return await prisma.accounts.update({
+    where: { id: accountId },
+    data: { redirectDomain: domain, slackUrl },
+  });
+};
+
 export const channelIndex = async (accountId: string) => {
   return await prisma.channels.findMany({
     where: {

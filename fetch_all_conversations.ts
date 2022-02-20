@@ -17,6 +17,16 @@ export const fetchConversations = async (channel: string, token: string) => {
   return response;
 };
 
+export const fetchTeamInfo = async (token) => {
+  const url = 'https://slack.com/api/team.info';
+
+  const response = await request
+    .get(url)
+    .set('Authorization', 'Bearer ' + token);
+
+  return response;
+};
+
 export const saveMessages = async (
   messages: any[],
   channelId: string,
