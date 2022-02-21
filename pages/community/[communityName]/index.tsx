@@ -104,6 +104,7 @@ function Channel({ channelId, users, threads, channels, slackUrl }: Props) {
           <thead>
             <tr>
               <TableHeader>Topic</TableHeader>
+              <TableHeader>Authors</TableHeader>
               <TableHeader>Replies</TableHeader>
               <TableHeader>Activity</TableHeader>
             </tr>
