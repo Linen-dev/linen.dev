@@ -92,7 +92,6 @@ function Channel({ channelId, users, threads, channels, slackUrl }: Props) {
       navItems={{ channels: channels }}
     >
       <Paper
-        shadow="md"
         padding="xl"
         style={{
           width: '100%',
