@@ -99,9 +99,7 @@ function Channel({ channelId, users, threads, channels, slackUrl }: Props) {
           border: '1px solid #e9ecef',
         }}
       >
-        <Title order={3}>
-          {channelName} ({rows.length})
-        </Title>
+        <Title order={3}>{channelName}</Title>
         <Table clickable>
           <thead>
             <tr>
