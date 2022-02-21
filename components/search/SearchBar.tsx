@@ -8,6 +8,7 @@ import { forwardRef, useState } from 'react';
 import { AiOutlineSearch } from 'react-icons/ai';
 import Message from '../Message';
 
+// eslint-disable-next-line react/display-name
 const AutoCompleteItem = forwardRef(
   ({ users, channels, channelId, slackThreadId, usersId, ...rest }, ref) => {
     const user = users.find((u) => u.id === usersId);
@@ -19,7 +20,7 @@ const AutoCompleteItem = forwardRef(
           <Avatar
             radius="xl"
             size="sm"
-            key={user.id || user.displayName}
+            key={user?.id || user?.displayName}
             color="indigo"
             src={user?.profileImageUrl} // set placeholder with a U sign
             alt={user?.displayName} // Set placeholder of a slack user if missing
@@ -54,11 +55,13 @@ const AutoCompleteItem = forwardRef(
 export default function SearchBar({ channels = [], users = [] }) {
   const [value, setValue] = useState('');
   const [data, setData] = useState([]);
-  const [debouncedValue] = useDebouncedValue(value, 150);
+  const [isLoading, setIsLoading] = useState(false);
+  const [debouncedValue] = useDebouncedValue(value, 0);
   const router = useRouter();
 
   useEffect(() => {
     const fetchResults = async () => {
+      setIsLoading(true);
       const trimmedVal = debouncedValue.trim();
       if (trimmedVal) {
         const res = await fetch(
@@ -70,16 +73,18 @@ export default function SearchBar({ channels = [], users = [] }) {
             .map((r) => ({ ...r, value: r.body }))
             .filter((r) => !!r.slackThreadId)
         );
+        setIsLoading(false);
       } else {
         setData([]);
+        setIsLoading(false);
       }
     };
     fetchResults();
   }, [setData, debouncedValue]);
 
   const handleSelect = useCallback(
-    ({ slackThreadId, channelId }) => {
-      router.push(`/channel/${channelId}/thread/${slackThreadId}`);
+    ({ slackThreadId, channelId, id }) => {
+      router.push(`/channel/${channelId}/thread/${slackThreadId}#${id}`);
       setValue('');
     },
     [setValue, router]
@@ -92,11 +97,19 @@ export default function SearchBar({ channels = [], users = [] }) {
       limit={5}
       nothingFound={
         value.length > 0 ? (
-          <Text size="sm">No search results found.</Text>
+          <Text size="sm">
+            {isLoading ? 'Searching...' : 'No search results found.'}
+          </Text>
         ) : null
       }
       icon={<AiOutlineSearch />}
-      style={{ marginLeft: '24px', marginRight: '24px', width: '600px' }}
+      style={{
+        marginLeft: '40px',
+        marginRight: '24px',
+        width: '600px',
+        maxWidth: '1000px',
+        flex: '1 0 600px',
+      }}
       itemComponent={({ ...rest }) => (
         <AutoCompleteItem channels={channels} users={users} {...rest} />
       )}

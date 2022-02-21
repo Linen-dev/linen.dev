@@ -21,12 +21,6 @@ const LogoImg = styled.img({
   cursor: 'pointer',
 });
 
-const NavLink = styled(Anchor)({
-  color: 'white',
-  fontWeight: 500,
-  marginRight: '24px',
-});
-
 function PageLayout({ seo = {}, users, children, navItems, slackUrl }) {
   const {
     query: { channelId },
@@ -105,14 +99,30 @@ function PageLayout({ seo = {}, users, children, navItems, slackUrl }) {
               src="https://aws1.discourse-cdn.com/business7/uploads/airbyte/original/1X/04c9487f21ddc41f65ccac9e3d75b4bf8ea64d15.png"
             />
           </Link>
-          <Group style={{ minWidth: '1044px' }}>
+          <Group
+            style={{
+              minWidth: '1044px',
+              flex: '1 0 auto',
+              justifyContent: 'flex-end',
+            }}
+          >
             <SearchBar channels={channels} users={users} />
-            <NavLink target="_blank" href="https://airbyte.com/">
+            <a
+              style={{ color: 'white', fontWeight: 500, marginRight: '24px' }}
+              rel="noreferrer"
+              target="_blank"
+              href="https://airbyte.com/"
+            >
               Home
-            </NavLink>
-            <NavLink target="_blank" href="https://docs.airbyte.com/">
+            </a>
+            <a
+              style={{ color: 'white', fontWeight: 500, marginRight: '24px' }}
+              rel="noreferrer"
+              target="_blank"
+              href="https://docs.airbyte.com/"
+            >
               Docs
-            </NavLink>
+            </a>
             <Button variant="white" component="a" href={slackUrl}>
               <SlackIcon style={{ marginRight: '10px' }} />
               Join the Conversation
