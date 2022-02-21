@@ -4,9 +4,14 @@ import { SWRConfig } from 'swr';
 import { AppProps } from 'next/app';
 import Head from 'next/head';
 import { MantineProvider } from '@mantine/core';
+import { useEffect } from 'react';
+import { configureAnchors } from 'react-scrollable-anchor';
 
 export default function App(props: AppProps) {
   const { Component, pageProps } = props;
+  useEffect(() => {
+    configureAnchors({ offset: 76 });
+  }, []);
 
   return (
     <>
