@@ -10,7 +10,10 @@ import Message from '../Message';
 
 // eslint-disable-next-line react/display-name
 const AutoCompleteItem = forwardRef(
-  ({ users, channels, channelId, slackThreadId, usersId, ...rest }, ref) => {
+  (
+    { users, channels, channelId, slackThreadId, usersId, ...rest }: any,
+    ref
+  ) => {
     const user = users.find((u) => u.id === usersId);
     const channel = channels.find((c) => c.id === channelId);
     const channelName = channel?.channelName;

@@ -1,5 +1,6 @@
 import axios from 'axios';
 import useSWR from 'swr';
+import isBrowser from '../utils/isBrowser';
 
 // const baseUrl = 'https://papercups-io.linen.dev/api'; // set this
 const baseUrl = '/api/'; // set this
