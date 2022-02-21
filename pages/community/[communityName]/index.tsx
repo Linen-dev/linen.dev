@@ -96,7 +96,6 @@ function Channel({ channelId, users, threads, channels, slackUrl }: Props) {
         padding="xl"
         style={{
           width: '100%',
-          border: '1px solid #e9ecef',
         }}
       >
         <Title order={3}>{channelName}</Title>

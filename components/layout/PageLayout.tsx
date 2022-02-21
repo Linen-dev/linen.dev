@@ -47,7 +47,6 @@ function PageLayout({ seo = {}, children, navItems, slackUrl }) {
               style={{
                 padding: '24px 0',
                 width: '100%',
-                border: '1px solid #e9ecef',
               }}
             >
               <Title style={{ paddingLeft: 24, marginBottom: 8 }} order={5}>

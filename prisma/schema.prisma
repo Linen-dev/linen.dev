@@ -88,7 +88,6 @@ model slackAuthorizations {
   botUserId   String
   scope       String
 
-  // accountsId String
   account    accounts? @relation(fields: [accountsId], references: [id])
   accountsId String?
 }

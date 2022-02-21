@@ -64,7 +64,6 @@ function Thread({ threadId, messages, channels, users, slackUrl }: Props) {
         padding="xl"
         style={{
           width: '100%',
-          border: '1px solid #e9ecef',
         }}
       >
         <Group grow direction="column">
