@@ -23,6 +23,10 @@ function Message({
         users.find((u) => u.slackUserId === userId)?.displayName || 'User';
       return `<b>@${userDisplayName}</b>`;
     });
+    // Replace @channel, @here
+    str = str.replace(/<!(.*?)>/g, (replacedStr, innerTag) => {
+      return `<b>@${innerTag}</b>`;
+    });
     // Replace channel names
     str = str.replace(
       /<#(.*?)\|(.*?)>/g,
