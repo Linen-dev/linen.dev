@@ -55,6 +55,8 @@ function Thread({ threadId, messages, channels, users, slackUrl }: Props) {
 
   return (
     <PageLayout
+      channels={channels}
+      users={users}
       seo={{ title: messages[0].body.slice(0, 30) }}
       navItems={{ channels: channels }}
       slackUrl={slackUrl}

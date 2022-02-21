@@ -13,6 +13,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
+import SlackIcon from '../icons/SlackIcon';
+import SearchBar from '../search/SearchBar';
 import SEO from './SEO';
 
 const LogoImg = styled.img({
@@ -25,7 +27,7 @@ const NavLink = styled(Anchor)({
   marginRight: '24px',
 });
 
-function PageLayout({ seo = {}, children, navItems, slackUrl }) {
+function PageLayout({ seo = {}, users, children, navItems, slackUrl }) {
   const {
     query: { channelId },
   } = useRouter();
@@ -103,22 +105,16 @@ function PageLayout({ seo = {}, children, navItems, slackUrl }) {
               src="https://aws1.discourse-cdn.com/business7/uploads/airbyte/original/1X/04c9487f21ddc41f65ccac9e3d75b4bf8ea64d15.png"
             />
           </Link>
-          <Group>
-            <Link href="https://airbyte.com/">
-              <a style={{ color: 'white' }} target="blank">
-                Home
-              </a>
-            </Link>
-            <Link href="https://docs.airbyte.com/">
-              <a style={{ color: 'white' }} target="blank">
-                Docs
-              </a>
-            </Link>
+          <Group style={{ minWidth: '1044px' }}>
+            <SearchBar channels={channels} users={users} />
+            <NavLink target="_blank" href="https://airbyte.com/">
+              Home
+            </NavLink>
+            <NavLink target="_blank" href="https://docs.airbyte.com/">
+              Docs
+            </NavLink>
             <Button variant="white" component="a" href={slackUrl}>
-              <img
-                src="https://cdn.bfldr.com/5H442O3W/at/pl546j-7le8zk-afym5u/Slack_Mark_Web.png?auto=webp&format=svg&width=30&height=30"
-                height="30px"
-              ></img>
+              <SlackIcon style={{ marginRight: '10px' }} />
               Join the Conversation
             </Button>
           </Group>
