@@ -106,9 +106,8 @@ export default function SearchBar({ channels = [], users = [] }) {
       style={{
         marginLeft: '40px',
         marginRight: '24px',
-        width: '600px',
         maxWidth: '1000px',
-        flex: '1 0 600px',
+        flex: '1 0 auto',
       }}
       itemComponent={({ ...rest }) => (
         <AutoCompleteItem channels={channels} users={users} {...rest} />
