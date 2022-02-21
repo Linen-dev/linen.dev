@@ -87,6 +87,8 @@ function Channel({ channelId, users, threads, channels, slackUrl }: Props) {
 
   return (
     <PageLayout
+      users={users}
+      channels={channels}
       slackUrl={slackUrl}
       seo={{ title: `${channelName} threads` }}
       navItems={{ channels: channels }}

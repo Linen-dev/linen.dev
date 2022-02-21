@@ -4,7 +4,7 @@ import Emoji from 'react-emoji-render';
 import LinkRangeText from './LinkRangeText';
 
 export default function MessageRangeText({ text }) {
-  const textArray = text.split(/<b>(.*)?<\/b>/);
+  const textArray = text.split(/<b>(.*?)<\/b>/);
   if (textArray.length < 3) {
     return <LinkRangeText text={text} />;
   }

@@ -18,20 +18,24 @@ function Message({
       str = `${excerpt}${excerpt.length === 220 ? '...' : ''}`;
     }
     // Replace @mentions
-    str = str.replace(/<@(.*?)>/, (replacedStr, userId) => {
+    str = str.replace(/<@(.*?)>/g, (replacedStr, userId) => {
       const userDisplayName =
         users.find((u) => u.slackUserId === userId)?.displayName || 'User';
       return `<b>@${userDisplayName}</b>`;
     });
+    // Replace @channel, @here
+    str = str.replace(/<!(.*?)>/g, (replacedStr, innerTag) => {
+      return `<b>@${innerTag}</b>`;
+    });
     // Replace channel names
     str = str.replace(
-      /<#(.*?)\|(.*?)>/,
+      /<#(.*?)\|(.*?)>/g,
       (replacedStr, channelId, channelName) => {
         return `<b>#${channelName}</b>`;
       }
     );
     // Replace links
-    str = str.replace(/<http(.*?)>/, (replacedStr, urlWithPotentialText) => {
+    str = str.replace(/<http(.*?)>/g, (replacedStr, urlWithPotentialText) => {
       const initialUrl = `http${urlWithPotentialText}`;
       let url = initialUrl;
       let text = initialUrl;
@@ -42,11 +46,11 @@ function Message({
       return `<link href=${url}>${text}</link>`;
     });
     // Replace codeblocks
-    str = str.replace(/```(.*?)```/, (replacedStr, code) => {
+    str = str.replace(/```(.*?)```/g, (replacedStr, code) => {
       return `<code>${code}</code>`;
     });
     // Replace inline codeblocks after others are gone
-    str = str.replace(/`(.*?)`/, (replacedStr, code) => {
+    str = str.replace(/`(.*?)`/g, (replacedStr, code) => {
       return `<code>${code}</code>`;
     });
     // Hack to replace at least these entities

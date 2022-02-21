@@ -1,7 +1,8 @@
 import axios from 'axios';
 import useSWR from 'swr';
 
-const baseURL = 'https://localhost:1234'; // set this
+// const baseUrl = 'https://papercups-io.linen.dev/api'; // set this
+const baseUrl = '/api/'; // set this
 
 const catchError = (e) => {
   const { response } = e;
