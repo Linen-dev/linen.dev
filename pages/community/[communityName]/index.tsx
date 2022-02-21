@@ -130,8 +130,10 @@ export async function getServerSideProps({
   const channel = channels[0];
 
   const channelId = channel.id;
-  const threads = await threadIndex(channelId, 100);
-  const users = await listUsers(channel.accountId);
+
+  const threadsPromise = threadIndex(channelId, 100);
+  const usersPromise = listUsers(channel.accountId);
+  const [threads, users] = await Promise.all([threadsPromise, usersPromise]);
 
   return {
     props: {

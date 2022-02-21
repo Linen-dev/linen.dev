@@ -126,11 +126,15 @@ type Params = {
 export async function getServerSideProps({
   params: { channelId, communityName },
 }: Params) {
-  const channel = await findChannel(channelId);
-  const threads = await threadIndex(channelId, 100);
-  const channels = await channelIndex(channel.accountId);
-  const users = await listUsers(channel.accountId);
-  const account = await findAccountById(channel.accountId);
+  const [channel, threads] = await Promise.all([
+    findChannel(channelId),
+    threadIndex(channelId, 100),
+  ]);
+  const [channels, users, account] = await Promise.all([
+    channelIndex(channel.accountId),
+    listUsers(channel.accountId),
+    findAccountById(channel.accountId),
+  ]);
 
   return {
     props: {
