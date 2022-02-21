@@ -178,6 +178,9 @@ export const threadIndex = async (
     where: {
       channelId,
     },
+    orderBy: {
+      slackThreadTs: 'desc',
+    },
   });
 };
 
