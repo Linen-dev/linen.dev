@@ -58,6 +58,13 @@ export const findAccountById = async (accountId: string) => {
   });
 };
 
+export const udpateAccountName = async (accountId: string, name: string) => {
+  return await prisma.accounts.update({
+    where: { id: accountId },
+    data: { name },
+  });
+};
+
 export const updateAccountRedirectDomain = async (
   accountId: string,
   domain: string,

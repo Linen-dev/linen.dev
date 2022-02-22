@@ -58,6 +58,7 @@ model accounts {
   id             String     @id @default(uuid())
   createdAt      DateTime   @default(now())
   name           String
+  slackDomain    String?
   channels       channels[]
   slackTeamId    String
   redirectDomain String?

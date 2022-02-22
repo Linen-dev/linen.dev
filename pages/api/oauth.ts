@@ -1,24 +1,37 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import request from 'superagent';
-import { createSlackAuthorization, findOrCreateAccount } from '../../lib/slack';
+import { fetchTeamInfo } from '../../fetch_all_conversations';
+import {
+  createSlackAuthorization,
+  findOrCreateAccount,
+  updateAccountRedirectDomain,
+} from '../../lib/slack';
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   const code = req.query.code;
+  const redirectDomain = req.query.state as string;
   const clientId = process.env.SLACK_CLIENT_ID;
   const clientSecret = process.env.SLACK_CLIENT_SECRET;
+
   const resp = await getSlackAccessToken(
     code as string,
     clientId,
     clientSecret
   );
-  console.log({ body: resp.body });
+
   const body: SlackAuthorizationResponse = resp.body;
+  const teamInfoResponse = await fetchTeamInfo(body.access_token);
+  const slackUrl = teamInfoResponse?.body?.team?.url;
+
   const account = await findOrCreateAccount({
     slackTeamId: body.team.id,
     name: body.team.name,
+    slackDomain: slackUrl.replace('https://', '').split('.')[0],
+    redirectDomain,
+    slackUrl,
   });
 
   const slackAuthorization = await createSlackAuthorization({
@@ -28,7 +41,7 @@ export default async function handler(
     accountsId: account.id,
   });
 
-  res.status(200).json({ ok: true });
+  res.status(200).json({ ok: 'Slack has been authenticated syncing now' });
 }
 
 export const getSlackAccessToken = async (
