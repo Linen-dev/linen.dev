@@ -26,7 +26,10 @@ export const getServerSideProps = async () => {
   const channels = (await channelIndex(accountId)) || [];
   let channelId;
   const result = { props: { channels } } as any;
-  const general = channels.find((c) => c.channelName === 'general');
+  const general = channels.find(
+    (c) =>
+      c.channelName === 'general' || c.channelName === 'feedback-and-requests'
+  );
   if (general) {
     channelId = general.id;
   } else if (channels.length > 0) {
