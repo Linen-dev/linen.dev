@@ -29,7 +29,7 @@ export default async function handler(
   const account = await findOrCreateAccount({
     slackTeamId: body.team.id,
     name: body.team.name,
-    slackDomain: slackUrl.replace('https://', '').split('.')[0],
+    slackDomain: slackUrl.replace('https://', '').split('.')[0] as string,
     redirectDomain,
     slackUrl,
   });
