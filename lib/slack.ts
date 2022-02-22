@@ -99,7 +99,7 @@ export const findAccountByPath = async (path: string) => {
           redirectDomain: path,
         },
         {
-          name: path,
+          slackDomain: path,
         },
       ],
     },
