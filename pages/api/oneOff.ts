@@ -70,7 +70,6 @@ export async function fetchAllMessages(
     console.log(e);
   }
   const channels = await channelIndex(accountId);
-  console.log({ channels });
   let messages: any;
   for (let channel of channels) {
     try {

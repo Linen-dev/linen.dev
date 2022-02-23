@@ -172,8 +172,14 @@ export const saveUsers = async (users: any[], accountId: string) => {
   const result = await createManyUsers({ data: params, skipDuplicates: true });
 };
 
-export const listUsers = async (token: string) => {
-  const url = 'https://slack.com/api/users.list';
+export const listUsers = async (
+  token: string,
+  userCursor: string | null = null
+) => {
+  let url: string = 'https://slack.com/api/users.list';
+  if (!!userCursor) {
+    url += '?cursor=' + userCursor;
+  }
 
   return await request.get(url).set('Authorization', 'Bearer ' + token);
 };
