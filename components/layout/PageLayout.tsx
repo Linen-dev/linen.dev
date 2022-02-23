@@ -123,7 +123,12 @@ function PageLayout({ seo = {}, users, children, navItems, slackUrl }) {
             >
               Docs
             </a>
-            <Button variant="white" component="a" href={slackUrl}>
+            <Button
+              variant="white"
+              style={{ backgroundColor: 'white' }}
+              component="a"
+              href={slackUrl}
+            >
               <SlackIcon style={{ marginRight: '10px' }} />
               Join the Conversation
             </Button>
