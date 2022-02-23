@@ -35,7 +35,10 @@ export const handleWebhook = async (body: any) => {
     return { status: 403, error: 'Channel not found' };
   }
 
-  const thread = await findOrCreateThread(event.ts);
+  const thread = await findOrCreateThread({
+    slackThreadTs: event.ts,
+    channelId: channel.id,
+  });
 
   const param: MessageParam = {
     body: event.text,
