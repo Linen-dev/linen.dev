@@ -50,7 +50,6 @@ export async function fetchAllMessages(
   accountId: string
 ) {
   const channelsResponse = await getSlackChannels(slackTeamId, token);
-  console.log({ channelResponse: channelsResponse.body });
   const channelsParam = channelsResponse.body.channels.map(
     (channel: { id: any; name: any }) => {
       return {
@@ -88,7 +87,6 @@ export async function fetchAllMessages(
   }
 
   const messageWithThreads = await findMessagesWithThreads();
-  console.log({ messageWithThreads });
   await fetchAndSaveThreadMessages(messageWithThreads, token);
   return messageWithThreads;
 }

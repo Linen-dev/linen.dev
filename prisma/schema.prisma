@@ -20,6 +20,7 @@ model messages {
 
   channel   channels @relation(fields: [channelId], references: [id])
   channelId String
+  slackMessageId String?
 
   slackThreads slackThreads? @relation(fields: [slackThreadId], references: [id])
 

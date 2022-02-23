@@ -7,11 +7,18 @@ import {
   findUser,
 } from './lib/slack';
 
-export const fetchConversations = async (channel: string, token: string) => {
-  const url = 'https://slack.com/api/conversations.history';
+export const fetchConversations = async (
+  channel: string,
+  token: string,
+  userCursor: string | null = null
+) => {
+  let url = 'https://slack.com/api/conversations.history?channel=' + channel;
+  if (!!userCursor) {
+    url += '&cursor=' + userCursor;
+  }
 
   const response = await request
-    .get(url + '?channel=' + channel)
+    .get(url)
     .set('Authorization', 'Bearer ' + token);
 
   return response;
