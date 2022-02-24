@@ -120,7 +120,7 @@ export async function getServerSideProps({
 
   const foundLink =
     links.find((l) => {
-      l.accountId === account.id;
+      return l.accountId === account.id;
     }) || links[0];
 
   // "https://papercups-test.slack.com/archives/C01JSB67DTJ/p1627841694000600"

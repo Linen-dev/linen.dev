@@ -147,7 +147,7 @@ export async function getServerSideProps({
   const [threads, users] = await Promise.all([threadsPromise, usersPromise]);
   const foundLink =
     links.find((l) => {
-      l.accountId === account.id;
+      return l.accountId === account.id;
     }) || links[0];
   console.log({ foundLink });
 

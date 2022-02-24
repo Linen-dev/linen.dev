@@ -149,7 +149,7 @@ export async function getServerSideProps({
 
   const foundLink =
     links.find((l) => {
-      l.accountId === account.id;
+      return l.accountId === account.id;
     }) || links[0];
 
   return {
