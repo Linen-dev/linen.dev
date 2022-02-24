@@ -2,14 +2,14 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 
 const getFullPath = (relativePath) => `https://linen.dev${relativePath}`;
-const siteName = 'Airbyte Community';
+const siteName = 'Linen Community';
 
 function SEO({
-  description = 'Airbyte Community Conversations',
+  description = 'Community Conversations',
   image,
   url,
   noIndex = false,
-  title = 'Airbyte Community',
+  title = 'Linen Community',
 }) {
   const { pathname } = useRouter();
   // If pathname includes a slug, we won't use that.
