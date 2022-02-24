@@ -93,7 +93,7 @@ function PageLayout({
       header={
         <Header
           sx={(theme) => ({
-            backgroundColor: '#1B194E',
+            backgroundColor: foundLink.navBarColor,
             display: 'flex',
             justifyContent: 'space-between',
           })}
@@ -101,7 +101,7 @@ function PageLayout({
           padding="lg"
         >
           <Link href={'/'} passHref>
-            <LogoImg height="100%" src={foundLink.logoUrl} />
+            <LogoImg height="200%" src={foundLink.logoUrl} />
           </Link>
           <Group
             style={{
