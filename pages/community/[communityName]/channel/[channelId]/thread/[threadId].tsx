@@ -20,9 +20,17 @@ type Props = {
   channels: any[];
   users: any[];
   slackUrl: string;
+  threadUrl: string;
 };
 
-function Thread({ threadId, messages, channels, users, slackUrl }: Props) {
+function Thread({
+  threadId,
+  messages,
+  channels,
+  users,
+  slackUrl,
+  threadUrl,
+}: Props) {
   const elements = useMemo(() => {
     const img =
       'https://media-exp1.licdn.com/dms/image/C4E03AQHB_3pem0I_gg/profile-displayphoto-shrink_100_100/0/1542209174093?e=1650499200&v=beta&t=GMX8clmk9wSvKGvrQ4u3IDJQGHaoBz3KQQC9lw3AJuI';
@@ -77,7 +85,12 @@ function Thread({ threadId, messages, channels, users, slackUrl }: Props) {
         <Group grow direction="column">
           {elements}
         </Group>
-        <Anchor style={{ display: 'flex', alignItems: 'center' }} size="sm">
+        <Anchor
+          style={{ display: 'flex', alignItems: 'center' }}
+          href={threadUrl}
+          size="sm"
+          target="_blank"
+        >
           <AiOutlineLink size={18} />{' '}
           <div style={{ marginLeft: '4px' }}>Join thread in Slack</div>
         </Anchor>
@@ -101,6 +114,14 @@ export async function getServerSideProps({
     findAccountById(thread.channel.accountId),
   ]);
 
+  // "https://papercups-test.slack.com/archives/C01JSB67DTJ/p1627841694000600"
+  const threadUrl =
+    account.slackUrl +
+    '/archives/' +
+    thread.channel.slackChannelId +
+    '/p' +
+    (parseFloat(thread.slackThreadTs) * 1000000).toString();
+
   return {
     props: {
       threadId,
@@ -117,6 +138,7 @@ export async function getServerSideProps({
       }),
       channels,
       slackUrl: account.slackUrl,
+      threadUrl,
     },
   };
 }
