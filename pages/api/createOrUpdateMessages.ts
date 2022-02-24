@@ -72,13 +72,13 @@ export async function saveMessagesSyncronous(
         },
       },
       update: {
-        slackMessageId: m.ts,
+        slackMessageId: m.ts as string,
       },
       create: {
         body: m.text,
         sentAt: new Date(parseFloat(m.ts) * 1000),
         channelId,
-        slackMessageId: m.ts,
+        slackMessageId: m.ts as string,
         usersId: null,
       },
     });

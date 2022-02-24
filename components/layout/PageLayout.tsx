@@ -21,7 +21,14 @@ const LogoImg = styled.img({
   cursor: 'pointer',
 });
 
-function PageLayout({ seo = {}, users, children, navItems, slackUrl }) {
+function PageLayout({
+  seo = {},
+  users,
+  children,
+  navItems,
+  slackUrl,
+  foundLink,
+}) {
   const {
     query: { channelId },
   } = useRouter();
@@ -94,10 +101,7 @@ function PageLayout({ seo = {}, users, children, navItems, slackUrl }) {
           padding="lg"
         >
           <Link href={'/'} passHref>
-            <LogoImg
-              height="100%"
-              src="https://aws1.discourse-cdn.com/business7/uploads/airbyte/original/1X/04c9487f21ddc41f65ccac9e3d75b4bf8ea64d15.png"
-            />
+            <LogoImg height="100%" src={foundLink.logoUrl} />
           </Link>
           <Group
             style={{
@@ -111,7 +115,7 @@ function PageLayout({ seo = {}, users, children, navItems, slackUrl }) {
               style={{ color: 'white', fontWeight: 500, marginRight: '24px' }}
               rel="noreferrer"
               target="_blank"
-              href="https://airbyte.com/"
+              href={foundLink.homeUrl}
             >
               Home
             </a>
@@ -119,7 +123,7 @@ function PageLayout({ seo = {}, users, children, navItems, slackUrl }) {
               style={{ color: 'white', fontWeight: 500, marginRight: '24px' }}
               rel="noreferrer"
               target="_blank"
-              href="https://docs.airbyte.com/"
+              href={foundLink.docsUrl}
             >
               Docs
             </a>

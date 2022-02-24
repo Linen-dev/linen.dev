@@ -16,6 +16,7 @@ import {
   threadIndex,
 } from '../../../lib/slack';
 import { useRouter } from 'next/router';
+import { links } from '../../../constants/examples';
 
 const EXCERPT_LENGTH = 220;
 
@@ -30,9 +31,17 @@ type Props = {
   channels: any[];
   threads: any[];
   slackUrl: string;
+  foundLink: any;
 };
 
-function Channel({ channelId, users, threads, channels, slackUrl }: Props) {
+function Channel({
+  channelId,
+  users,
+  threads,
+  channels,
+  slackUrl,
+  foundLink,
+}: Props) {
   const channelName = channels.find((c) => c.id === channelId).channelName;
 
   const rows = useMemo(() => {
@@ -91,6 +100,7 @@ function Channel({ channelId, users, threads, channels, slackUrl }: Props) {
       slackUrl={slackUrl}
       seo={{ title: `${channelName} threads` }}
       navItems={{ channels: channels }}
+      foundLink={foundLink}
     >
       <Paper
         padding="xl"
@@ -135,6 +145,11 @@ export async function getServerSideProps({
   const threadsPromise = threadIndex(channelId, 50);
   const usersPromise = listUsers(channel.accountId);
   const [threads, users] = await Promise.all([threadsPromise, usersPromise]);
+  const foundLink =
+    links.find((l) => {
+      l.accountId === account.id;
+    }) || links[0];
+  console.log({ foundLink });
 
   return {
     props: {
@@ -155,6 +170,7 @@ export async function getServerSideProps({
       channels,
       communityName,
       slackUrl: account.slackUrl,
+      foundLink,
     },
   };
 }

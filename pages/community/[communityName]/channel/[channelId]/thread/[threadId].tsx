@@ -13,6 +13,7 @@ import {
   listUsers,
 } from '../../../../../../lib/slack';
 import { useRouter } from 'next/router';
+import { links } from '../../../../../../constants/examples';
 
 type Props = {
   threadId: string;
@@ -21,6 +22,7 @@ type Props = {
   users: any[];
   slackUrl: string;
   threadUrl: string;
+  foundLink: any;
 };
 
 function Thread({
@@ -30,6 +32,7 @@ function Thread({
   users,
   slackUrl,
   threadUrl,
+  foundLink,
 }: Props) {
   const elements = useMemo(() => {
     const img =
@@ -74,6 +77,7 @@ function Thread({
       seo={{ title: messages[0].body.slice(0, 30) }}
       navItems={{ channels: channels }}
       slackUrl={slackUrl}
+      foundLink={foundLink}
     >
       <Paper
         shadow="md"
@@ -114,6 +118,11 @@ export async function getServerSideProps({
     findAccountById(thread.channel.accountId),
   ]);
 
+  const foundLink =
+    links.find((l) => {
+      l.accountId === account.id;
+    }) || links[0];
+
   // "https://papercups-test.slack.com/archives/C01JSB67DTJ/p1627841694000600"
   const threadUrl =
     account.slackUrl +
@@ -139,6 +148,7 @@ export async function getServerSideProps({
       channels,
       slackUrl: account.slackUrl,
       threadUrl,
+      foundLink,
     },
   };
 }

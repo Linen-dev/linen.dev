@@ -1,6 +1,5 @@
 import React from 'react';
 import { channelIndex, threadIndex } from '../lib/slack';
-import { accountId } from '../constants/examples';
 
 const Sitemap = () => {};
 
@@ -26,7 +25,7 @@ export const getServerSideProps = async ({ res }) => {
 
   const staticPages = [];
 
-  const channels = await channelIndex(accountId);
+  const channels = await channelIndex('');
   const channelsWithThreads = await Promise.all(
     channels.map(async (c) => {
       const threads = await threadIndex(c.id, 100);

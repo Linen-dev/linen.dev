@@ -1,12 +1,16 @@
 import { Paper, Title } from '@mantine/core';
 import type { NextPage } from 'next';
 import PageLayout from '../components/layout/PageLayout';
-import { accountId } from '../constants/examples';
 import { channelIndex } from '../lib/slack';
 
 const Home: NextPage = (channels) => {
   return (
-    <PageLayout navItems={channels} slackUrl={undefined} users={undefined}>
+    <PageLayout
+      navItems={channels}
+      slackUrl={undefined}
+      users={undefined}
+      foundLink={null}
+    >
       <Paper
         shadow="md"
         padding="xl"
@@ -23,7 +27,7 @@ const Home: NextPage = (channels) => {
 };
 
 export const getServerSideProps = async () => {
-  const channels = (await channelIndex(accountId)) || [];
+  const channels = (await channelIndex('')) || [];
   let channelId;
   const result = { props: { channels } } as any;
   const general = channels.find(
