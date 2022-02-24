@@ -117,7 +117,7 @@ export default function SearchBar({ channels = [], users = [] }) {
       )}
       value={value}
       onChange={setValue}
-      placeholder="Search Airbyte messages"
+      placeholder="Search messages"
       data={data}
     />
   );
