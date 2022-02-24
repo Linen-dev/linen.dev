@@ -86,7 +86,7 @@ export async function fetchAllMessages(
     } catch (e) {}
   }
 
-  const messageWithThreads = await findMessagesWithThreads();
+  const messageWithThreads = await findMessagesWithThreads(accountId);
   await fetchAndSaveThreadMessages(messageWithThreads, token);
   return messageWithThreads;
 }

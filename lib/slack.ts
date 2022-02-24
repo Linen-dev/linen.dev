@@ -233,9 +233,12 @@ export const listUsers = async (accountId: string) => {
   return await prisma.users.findMany({ where: { accountsId: accountId } });
 };
 
-export const findMessagesWithThreads = async () => {
+export const findMessagesWithThreads = async (accountId: string) => {
   return await prisma.messages.findMany({
-    where: { NOT: [{ slackThreadId: null }] },
+    where: {
+      NOT: [{ slackThreadId: null }],
+      channel: { accountId: accountId },
+    },
     include: {
       slackThreads: true,
       channel: true,

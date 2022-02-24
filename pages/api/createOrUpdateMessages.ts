@@ -1,23 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import prisma from '../../client';
-import {
-  fetchAndSaveThreadMessages,
-  fetchConversations,
-  fetchReplies,
-  saveThreadedMessages,
-} from '../../fetch_all_conversations';
-import {
-  channelIndex,
-  createMessage,
-  createSlackAuthorization,
-  findAccountById,
-  findChannel,
-  findOrCreateAccount,
-  findOrCreateThread,
-  findOrCreateUser,
-  findUser,
-  threadIndex,
-} from '../../lib/slack';
+import { fetchConversations } from '../../fetch_all_conversations';
+import { channelIndex, findAccountById } from '../../lib/slack';
 
 // fetches all conversations with paginated results and saves the messages
 // This happens after the slack channels have been created and joined
@@ -60,30 +44,43 @@ export default async function handler(
         nextCursor = null;
       }
     }
+
     //save all messages
-    for (let j = 0; j < messages.length - 1; j++) {
-      const m = messages[j];
-      const text = m.text as string;
-      await prisma.messages.upsert({
-        where: {
-          body_sentAt: {
-            body: text,
-            sentAt: new Date(parseFloat(m.ts) * 1000),
-          },
-        },
-        update: {
-          slackMessageId: m.ts,
-        },
-        create: {
-          body: m.text,
-          sentAt: new Date(parseFloat(m.ts) * 1000),
-          channelId: c.id,
-          slackMessageId: m.ts,
-          usersId: null,
-        },
-      });
-    }
+    await saveMessagesSyncronous(messages, c.id);
   }
 
   res.status(200).json('ok');
+}
+
+type MessageParam = {
+  ts: string;
+  text: string;
+};
+
+export async function saveMessagesSyncronous(
+  messages: MessageParam[],
+  channelId: string
+) {
+  for (let j = 0; j < messages.length - 1; j++) {
+    const m = messages[j];
+    const text = m.text as string;
+    await prisma.messages.upsert({
+      where: {
+        body_sentAt: {
+          body: text,
+          sentAt: new Date(parseFloat(m.ts) * 1000),
+        },
+      },
+      update: {
+        slackMessageId: m.ts,
+      },
+      create: {
+        body: m.text,
+        sentAt: new Date(parseFloat(m.ts) * 1000),
+        channelId,
+        slackMessageId: m.ts,
+        usersId: null,
+      },
+    });
+  }
 }

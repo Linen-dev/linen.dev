@@ -27,6 +27,9 @@ const fetchChannelThreads = async (channelId: string) => {
       slackThreads: true,
       channel: true,
     },
+    orderBy: {
+      sentAt: 'desc',
+    },
   });
 
   const messagesWithThreads = [];
