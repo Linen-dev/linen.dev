@@ -101,7 +101,7 @@ function PageLayout({
           padding="lg"
         >
           <Link href={'/'} passHref>
-            <LogoImg height="100%" src={foundLink.logoUrl} />
+            <LogoImg width="150px" src={foundLink.logoUrl} />
           </Link>
           <Group
             style={{
