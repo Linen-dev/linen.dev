@@ -87,11 +87,14 @@ model users {
 }
 
 model slackAuthorizations {
-  id          String   @id @default(uuid())
-  createdAt   DateTime @default(now())
-  accessToken String
-  botUserId   String
-  scope       String
+  id              String   @id @default(uuid())
+  createdAt       DateTime @default(now())
+  accessToken     String
+  botUserId       String
+  scope           String
+  userScope       String?
+  authedUserId    String?
+  userAccessToken String?
 
   account    accounts? @relation(fields: [accountsId], references: [id])
   accountsId String?

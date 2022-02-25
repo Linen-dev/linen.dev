@@ -10,6 +10,23 @@ export const getSlackChannelInfo = async (channelId: string, token: string) => {
   return response;
 };
 
+//Search only accepts user tokens
+export const slackSearch = async ({
+  query,
+  token,
+}: {
+  query: string;
+  token: string;
+}) => {
+  const url = 'https://slack.com/api/search.messages?';
+
+  const response = await request
+    .get(url + 'query=' + query)
+    .set('Authorization', 'Bearer ' + token);
+
+  return response;
+};
+
 // example response:
 
 export const getSlackChannels = async (teamId: string, token: string) => {

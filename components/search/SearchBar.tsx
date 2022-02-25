@@ -71,7 +71,7 @@ export default function SearchBar({ channels = [], users = [] }) {
         const res = await fetch(
           `/api/search?query=${encodeURIComponent(
             trimmedVal
-          )}&accountId=${accountId}`
+          )}&account_id=${accountId}`
         );
         const { results = [] } = await res.json();
         setData(

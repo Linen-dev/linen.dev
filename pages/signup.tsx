@@ -37,12 +37,14 @@ export default function AuthenticationForm({
     setError(null);
   };
   const redirectDomain = 'linen.papercups.io';
-  const redirectUri = 'https://linen.dev/api/oauth';
+  // const redirectUri = 'https://linen.dev/api/oauth';
+  const redirectUri = 'https://papercups.ngrok.io/api/oauth';
+
   const url =
     'https://slack.com/oauth/v2/' +
     'authorize?client_id=1250901093238.3006399856353&' +
-    'scope=channels:history,channels:join,channels:read,incoming-webhook,reactions:read,users:read,team:read' +
-    '&user_scope=channels:history' +
+    '&scope=channels:history,channels:join,channels:read,incoming-webhook,reactions:read,users:read,team:read' +
+    '&user_scope=channels:history,search:read' +
     '&state=' +
     redirectDomain +
     '&redirect_uri=' +
