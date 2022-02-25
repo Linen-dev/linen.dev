@@ -3,6 +3,7 @@ import request from 'superagent';
 import {
   createManyUsers,
   createMessage,
+  createOrUpdateMessage,
   findOrCreateThread,
   findUser,
 } from './lib/slack';
@@ -120,6 +121,7 @@ export async function saveThreadedMessages(
     return {
       body: m.text,
       sentAt: new Date(parseFloat(m.ts) * 1000),
+      slackMessageId: m.ts,
       slackUserId: m.user || m.bot_id,
       channelId: channelId,
     };
@@ -135,7 +137,7 @@ export async function saveThreadedMessages(
     replyParam.usersId = user?.id;
     replyParam.slackThreadId = thread.id;
     try {
-      await createMessage(replyParam);
+      await createOrUpdateMessage(replyParam);
     } catch (e) {
       console.log(e);
       continue;

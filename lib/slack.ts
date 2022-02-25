@@ -15,22 +15,41 @@ export const createSlackMessage = async (event: any, channelId: string) => {
   });
 };
 
-export type MessageParam = {
-  body: string;
-  sentAt: Date;
-  channelId: string;
-  slackThreadId?: string;
-  usersId?: string;
-};
-
-export const createMessage = async (messages: MessageParam) => {
+export const createMessage = async (
+  message: Prisma.messagesUncheckedCreateInput
+) => {
   return await prisma.messages.create({
     data: {
-      body: messages.body,
-      slackThreadId: messages.slackThreadId,
-      channelId: messages.channelId,
-      sentAt: messages.sentAt,
-      usersId: messages.usersId,
+      body: message.body,
+      slackThreadId: message.slackThreadId,
+      slackMessageId: message.slackMessageId,
+      channelId: message.channelId,
+      sentAt: message.sentAt,
+      usersId: message.usersId,
+    },
+  });
+};
+
+export const createOrUpdateMessage = async (
+  message: Prisma.messagesUncheckedCreateInput
+) => {
+  const sentAt = new Date(parseFloat(message.slackMessageId) * 1000);
+  return await prisma.messages.upsert({
+    where: {
+      body_sentAt: {
+        body: message.body,
+        sentAt,
+      },
+    },
+    update: {
+      slackMessageId: message.slackMessageId,
+    },
+    create: {
+      body: message.body,
+      sentAt,
+      channelId: message.channelId,
+      slackMessageId: message.slackMessageId,
+      usersId: null,
     },
   });
 };
