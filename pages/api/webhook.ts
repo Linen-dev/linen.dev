@@ -5,7 +5,6 @@ import {
   createMessage,
   findOrCreateThread,
   findThreadById,
-  MessageParam,
 } from '../../lib/slack';
 
 export default async function handler(
@@ -40,7 +39,7 @@ export const handleWebhook = async (body: any) => {
     channelId: channel.id,
   });
 
-  const param: MessageParam = {
+  const param = {
     body: event.text,
     channelId: channel.id,
     sentAt: new Date(parseFloat(event.ts) * 1000),
