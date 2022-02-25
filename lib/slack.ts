@@ -199,6 +199,9 @@ export const findThreadById = async (threadId: string) => {
         include: {
           author: true,
         },
+        orderBy: {
+          sentAt: 'desc',
+        },
       },
       channel: true,
     },

@@ -18,8 +18,8 @@ model messages {
   body      String
   sentAt    DateTime
 
-  channel   channels @relation(fields: [channelId], references: [id])
-  channelId String
+  channel        channels @relation(fields: [channelId], references: [id])
+  channelId      String
   slackMessageId String?
 
   slackThreads slackThreads? @relation(fields: [slackThreadId], references: [id])
@@ -51,6 +51,7 @@ model channels {
   slackThreads slackThreads[]
   account      accounts?      @relation(fields: [accountId], references: [id])
   accountId    String?
+  hidden       Boolean        @default(false)
 
   @@unique([slackChannelId])
 }
