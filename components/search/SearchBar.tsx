@@ -60,7 +60,7 @@ export default function SearchBar({ channels = [], users = [] }) {
   const [value, setValue] = useState('');
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [debouncedValue] = useDebouncedValue(value, 0);
+  const [debouncedValue] = useDebouncedValue(value, 200);
   const router = useRouter();
 
   useEffect(() => {
