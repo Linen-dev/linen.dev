@@ -6,10 +6,15 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const query = req.query.query as string;
+  const accountId = req.query.account_id as string;
+
   const response = await prisma.messages.findMany({
     where: {
       body: {
         search: query,
+      },
+      channel: {
+        accountId: accountId,
       },
     },
     take: 20,

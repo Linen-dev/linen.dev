@@ -56,6 +56,7 @@ const AutoCompleteItem = forwardRef(
 );
 
 export default function SearchBar({ channels = [], users = [] }) {
+  const accountId = channels[0].accountId;
   const [value, setValue] = useState('');
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -68,7 +69,9 @@ export default function SearchBar({ channels = [], users = [] }) {
       const trimmedVal = debouncedValue.trim();
       if (trimmedVal) {
         const res = await fetch(
-          `/api/search?query=${encodeURIComponent(trimmedVal)}`
+          `/api/search?query=${encodeURIComponent(
+            trimmedVal
+          )}&accountId=${accountId}`
         );
         const { results = [] } = await res.json();
         setData(
