@@ -204,7 +204,7 @@ export const findThreadById = async (threadId: string) => {
           author: true,
         },
         orderBy: {
-          sentAt: 'desc',
+          sentAt: 'asc',
         },
       },
       channel: true,
