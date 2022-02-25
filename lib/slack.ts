@@ -104,7 +104,11 @@ export const findAccountByPath = async (path: string) => {
       ],
     },
     include: {
-      channels: true,
+      channels: {
+        where: {
+          hidden: false,
+        },
+      },
     },
   });
 };

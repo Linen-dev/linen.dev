@@ -32,7 +32,7 @@ function PageLayout({
   const {
     query: { channelId },
   } = useRouter();
-  const channels = navItems.channels;
+  const channels = navItems.channels.filter((c) => !c.hidden);
 
   return (
     <AppShell
