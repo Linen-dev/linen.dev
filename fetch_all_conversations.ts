@@ -25,6 +25,25 @@ export const fetchConversations = async (
   return response;
 };
 
+export const fetchMessage = async (
+  channel: string,
+  token: string,
+  messageTs
+) => {
+  let url =
+    'https://slack.com/api/conversations.history?channel=' +
+    channel +
+    '&latest=' +
+    messageTs +
+    '&limit=1';
+
+  const response = await request
+    .get(url)
+    .set('Authorization', 'Bearer ' + token);
+
+  return response;
+};
+
 export const fetchTeamInfo = async (token) => {
   const url = 'https://slack.com/api/team.info';
 
