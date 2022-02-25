@@ -9,7 +9,7 @@ const Home: NextPage = (channels) => {
       navItems={channels}
       slackUrl={undefined}
       users={undefined}
-      foundLink={null}
+      settings={null}
     >
       <Paper
         shadow="md"

@@ -22,7 +22,7 @@ type Props = {
   users: any[];
   slackUrl: string;
   threadUrl: string;
-  foundLink: any;
+  settings: any;
 };
 
 function Thread({
@@ -32,7 +32,7 @@ function Thread({
   users,
   slackUrl,
   threadUrl,
-  foundLink,
+  settings,
 }: Props) {
   const elements = useMemo(() => {
     const img =
@@ -77,7 +77,7 @@ function Thread({
       seo={{ title: messages[0].body.slice(0, 30) }}
       navItems={{ channels: channels }}
       slackUrl={slackUrl}
-      foundLink={foundLink}
+      settings={settings}
     >
       <Paper
         shadow="md"
@@ -118,7 +118,7 @@ export async function getServerSideProps({
     findAccountById(thread.channel.accountId),
   ]);
 
-  const foundLink =
+  const settings =
     links.find((l) => {
       return l.accountId === account.id;
     }) || links[0];
@@ -148,7 +148,7 @@ export async function getServerSideProps({
       channels,
       slackUrl: account.slackUrl,
       threadUrl,
-      foundLink,
+      settings,
     },
   };
 }

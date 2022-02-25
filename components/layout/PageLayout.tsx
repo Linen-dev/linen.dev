@@ -27,7 +27,7 @@ function PageLayout({
   children,
   navItems,
   slackUrl,
-  foundLink,
+  settings,
 }) {
   const {
     query: { channelId },
@@ -93,7 +93,7 @@ function PageLayout({
       header={
         <Header
           sx={(theme) => ({
-            backgroundColor: foundLink.navBarColor,
+            backgroundColor: settings.navBarColor,
             display: 'flex',
             justifyContent: 'space-between',
           })}
@@ -101,7 +101,7 @@ function PageLayout({
           padding="lg"
         >
           <Link href={'/'} passHref>
-            <LogoImg width="130px" src={foundLink.logoUrl} />
+            <LogoImg width="130px" src={settings.logoUrl} />
           </Link>
           <Group
             style={{
@@ -115,7 +115,7 @@ function PageLayout({
               style={{ color: 'white', fontWeight: 500, marginRight: '24px' }}
               rel="noreferrer"
               target="_blank"
-              href={foundLink.homeUrl}
+              href={settings.homeUrl}
             >
               Home
             </a>
@@ -123,7 +123,7 @@ function PageLayout({
               style={{ color: 'white', fontWeight: 500, marginRight: '24px' }}
               rel="noreferrer"
               target="_blank"
-              href={foundLink.docsUrl}
+              href={settings.docsUrl}
             >
               Docs
             </a>

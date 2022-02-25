@@ -32,7 +32,7 @@ type Props = {
   channels: any[];
   threads: any[];
   slackUrl: string;
-  foundLink: any;
+  settings: any;
 };
 
 function Channel({
@@ -41,7 +41,7 @@ function Channel({
   threads,
   channels,
   slackUrl,
-  foundLink,
+  settings,
 }: Props) {
   const channelName = channels.find((c) => c.id === channelId).channelName;
   const rows = useMemo(() => {
@@ -100,7 +100,7 @@ function Channel({
       seo={{ title: `${channelName} threads` }}
       navItems={{ channels: channels }}
       users={users}
-      foundLink={foundLink}
+      settings={settings}
     >
       <Paper
         padding="xl"
@@ -147,7 +147,7 @@ export async function getServerSideProps({
     findAccountById(channel.accountId),
   ]);
 
-  const foundLink =
+  const settings =
     links.find((l) => {
       return l.accountId === account.id;
     }) || links[0];
@@ -171,7 +171,7 @@ export async function getServerSideProps({
       channels,
       communityName,
       slackUrl: account.slackUrl,
-      foundLink,
+      settings,
     },
   };
 }
