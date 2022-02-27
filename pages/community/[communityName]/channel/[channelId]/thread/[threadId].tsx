@@ -1,6 +1,6 @@
-import { Anchor, Avatar, Container, Group, Paper, Text } from '@mantine/core';
+import { Anchor, Avatar, Group, Paper, Text } from '@mantine/core';
 import { AiOutlineLink } from 'react-icons/ai';
-import { useMemo } from 'react';
+import { useMemo, useEffect } from 'react';
 import { format } from 'timeago.js';
 import ScrollableAnchor from 'react-scrollable-anchor';
 import PageLayout from '../../../../../../components/layout/PageLayout';
@@ -12,8 +12,9 @@ import {
   findThreadById,
   listUsers,
 } from '../../../../../../lib/slack';
-import { useRouter } from 'next/router';
 import { links } from '../../../../../../constants/examples';
+
+import styles from './index.module.css';
 
 type Props = {
   threadId: string;
@@ -23,6 +24,7 @@ type Props = {
   slackUrl: string;
   threadUrl: string;
   settings: any;
+  viewCount: number;
 };
 
 function Thread({
@@ -33,10 +35,9 @@ function Thread({
   slackUrl,
   threadUrl,
   settings,
+  viewCount,
 }: Props) {
   const elements = useMemo(() => {
-    const img =
-      'https://media-exp1.licdn.com/dms/image/C4E03AQHB_3pem0I_gg/profile-displayphoto-shrink_100_100/0/1542209174093?e=1650499200&v=beta&t=GMX8clmk9wSvKGvrQ4u3IDJQGHaoBz3KQQC9lw3AJuI';
     return messages
       .sort((a, b) => b.sentAt - a.sentAt)
       .map(({ body, author, id: messageId, sentAt, ...rest }) => {
@@ -71,6 +72,10 @@ function Thread({
       });
   }, [messages, users]);
 
+  useEffect(() => {
+    fetch(`/api/threads?id=${threadId}`, { method: 'PUT' });
+  }, []);
+
   return (
     <PageLayout
       users={users}
@@ -89,15 +94,21 @@ function Thread({
         <Group grow direction="column">
           {elements}
         </Group>
-        <Anchor
-          style={{ display: 'flex', alignItems: 'center' }}
-          href={threadUrl}
-          size="sm"
-          target="_blank"
-        >
-          <AiOutlineLink size={18} />{' '}
-          <div style={{ marginLeft: '4px' }}>Join thread in Slack</div>
-        </Anchor>
+
+        <div className={styles.buttons}>
+          <Anchor
+            className={styles.join}
+            href={threadUrl}
+            size="sm"
+            target="_blank"
+          >
+            <AiOutlineLink className={styles.icon} size={18} /> Join thread in
+            Slack
+          </Anchor>
+          <div className={styles.count}>
+            <span className={styles.subtext}>View count:</span> {viewCount + 1}
+          </div>
+        </div>
       </Paper>
     </PageLayout>
   );
@@ -149,6 +160,7 @@ export async function getServerSideProps({
       slackUrl: account.slackUrl,
       threadUrl,
       settings,
+      viewCount: thread.viewCount,
     },
   };
 }

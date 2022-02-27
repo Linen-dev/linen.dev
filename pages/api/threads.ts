@@ -1,22 +1,21 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import prisma from '../../client';
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  const channelId = req.body.channel_id;
-  const limit = req.body.limit || 100;
-  const offSet = req.body.off_set || 0;
-
-  const threads = await prisma.slackThreads.findMany({
-    take: limit,
-    skip: offSet,
-    include: {
-      messages: true,
-    },
-    where: { channelId },
+async function update(request: NextApiRequest, response: NextApiResponse) {
+  const id = request.query.id as string;
+  await prisma.slackThreads.update({
+    where: { id },
+    data: { viewCount: { increment: 1 } },
   });
+  return response.status(200).json({});
+}
 
-  res.status(200).json({ threads });
+export default async function handler(
+  request: NextApiRequest,
+  response: NextApiResponse
+) {
+  if (request.method === 'PUT') {
+    return update(request, response);
+  }
+  return response.status(404);
 }
