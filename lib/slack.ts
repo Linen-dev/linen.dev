@@ -207,6 +207,7 @@ export const threadIndex = async (
     },
     where: {
       channelId,
+      messages: { some: {} },
     },
     orderBy: {
       slackThreadTs: 'desc',
