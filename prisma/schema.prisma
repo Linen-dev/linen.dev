@@ -35,6 +35,7 @@ model slackThreads {
   id            String   @id @default(uuid())
   channel       channels @relation(fields: [channelId], references: [id])
   slackThreadTs String
+  viewCount     Int      @default(0)
 
   messages  messages[]
   channelId String
