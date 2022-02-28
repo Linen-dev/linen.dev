@@ -1,4 +1,5 @@
 import React from 'react';
+import styles from './index.module.css';
 
 export default function SignUpForm() {
   const redirectDomain = 'linen.papercups.io';
@@ -15,18 +16,28 @@ export default function SignUpForm() {
     redirectUri;
 
   return (
-    <>
-      <label htmlFor="domain">Redirect domain</label>
-      <input type="text" id="domain" placeholder="discuss.airbyte.com" />
-      <a href={url} style={{ marginTop: 10 }}>
-        <img
-          alt="Add to Slack"
-          height="40"
-          width="139"
-          src="https://platform.slack-edge.com/img/add_to_slack.png"
-          srcSet="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x"
+    <div className={styles.page}>
+      <h1 className={styles.header}>Sign Up</h1>
+      <div className={styles.container}>
+        <label className={styles.label} htmlFor="domain">
+          Redirect domain
+        </label>
+        <input
+          className={styles.input}
+          type="text"
+          id="domain"
+          placeholder="discuss.airbyte.com"
         />
-      </a>
-    </>
+        <a className={styles.link} href={url} rel="noopener">
+          <img
+            alt="Add to Slack"
+            height="40"
+            width="139"
+            src="https://platform.slack-edge.com/img/add_to_slack.png"
+            srcSet="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x"
+          />
+        </a>
+      </div>
+    </div>
   );
 }
