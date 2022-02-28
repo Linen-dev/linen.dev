@@ -1,6 +1,7 @@
 import { Autocomplete, Avatar, Group, Text } from '@mantine/core';
-import { useDebouncedValue } from '@mantine/hooks';
+import { useDebouncedCallback } from 'use-debounce';
 import Link from 'next/link';
+import axios from 'axios';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo } from 'react';
 import { useCallback } from 'react';
@@ -55,38 +56,56 @@ const AutoCompleteItem = forwardRef(
   }
 );
 
+let lastReqTS;
+const fetchResults = async (input, accountId) => {
+  if (!input) return [];
+  const reqTS = new Date().getTime();
+  try {
+    lastReqTS = reqTS;
+    const res = await axios.get(
+      `/api/search?query=${encodeURIComponent(input)}&account_id=${accountId}`
+    );
+
+    // We can get duplicate message ids back for some reason.
+    const allIds = new Set();
+
+    return {
+      data: res.data.results
+        .map((r) => ({ ...r, value: r.body }))
+        .filter((r) => {
+          if (!r.slackThreadId) return false;
+          if (allIds.has(r.id)) return false;
+          allIds.add(r.id);
+          return true;
+        }),
+      reqTS,
+    };
+  } catch (e) {
+    return { data: [], reqTS };
+  }
+};
+
 export default function SearchBar({ channels = [], users = [] }) {
   const accountId = channels[0].accountId;
   const [value, setValue] = useState('');
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [debouncedValue] = useDebouncedValue(value, 200);
   const router = useRouter();
 
-  useEffect(() => {
-    const fetchResults = async () => {
-      setIsLoading(true);
-      const trimmedVal = debouncedValue.trim();
-      if (trimmedVal) {
-        const res = await fetch(
-          `/api/search?query=${encodeURIComponent(
-            trimmedVal
-          )}&account_id=${accountId}`
-        );
-        const { results = [] } = await res.json();
-        setData(
-          results
-            .map((r) => ({ ...r, value: r.body }))
-            .filter((r) => !!r.slackThreadId)
-        );
-        setIsLoading(false);
-      } else {
-        setData([]);
-        setIsLoading(false);
-      }
-    };
-    fetchResults();
-  }, [setData, debouncedValue]);
+  const getNewData = useDebouncedCallback(async (input) => {
+    setIsLoading(true);
+    const { data: newData = [], reqTS } =
+      (await fetchResults(input, accountId)) || [];
+    if (reqTS === lastReqTS) {
+      setData(newData);
+    }
+    setIsLoading(false);
+  }, 200);
+
+  const handleInputChange = async (newValue) => {
+    setValue(newValue);
+    getNewData(newValue);
+  };
 
   const handleSelect = useCallback(
     ({ slackThreadId, channelId, id }) => {
@@ -119,7 +138,7 @@ export default function SearchBar({ channels = [], users = [] }) {
         <AutoCompleteItem channels={channels} users={users} {...rest} />
       )}
       value={value}
-      onChange={setValue}
+      onChange={handleInputChange}
       placeholder="Search messages"
       data={data}
     />
