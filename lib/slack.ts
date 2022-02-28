@@ -73,6 +73,7 @@ export const findAccountById = async (accountId: string) => {
           createdAt: 'desc',
         },
       },
+      channels: true,
     },
   });
 };
@@ -269,6 +270,9 @@ export const findMessagesWithThreads = async (accountId: string) => {
     include: {
       slackThreads: true,
       channel: true,
+    },
+    orderBy: {
+      sentAt: 'desc',
     },
   });
 };

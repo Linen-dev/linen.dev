@@ -17,17 +17,23 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const accountId = req.query.account_id as string;
-  const channelId = req.query.channel_id as string;
   const account = await findAccountById(accountId);
-  const slackChannel = await findChannel(channelId);
+  const channels = account.channels;
 
   const messages = await prisma.messages.findMany({
     where: {
       usersId: null,
-      channelId: channelId,
-      NOT: {
-        slackMessageId: null,
+      channelId: {
+        in: channels.map((c) => c.id),
       },
+      NOT: [
+        {
+          slackMessageId: null,
+        },
+        {
+          body: '',
+        },
+      ],
     },
     orderBy: {
       slackMessageId: 'desc',
@@ -37,11 +43,13 @@ export default async function handler(
   for (let i = 0; i < messages.length - 1; i++) {
     try {
       const m = messages[i];
+      const channel = channels.find((c) => c.id === m.channelId);
       const foundMesssage = await fetchMessage(
-        slackChannel.slackChannelId,
+        channel.slackChannelId,
         account.slackAuthorizations[0].accessToken,
         m.slackMessageId
       );
+
       const message = foundMesssage.body.messages[0];
       const user = await prisma.users.findUnique({
         where: {

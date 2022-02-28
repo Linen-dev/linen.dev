@@ -1,10 +1,20 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import prisma from '../../client';
 import { fetchConversations } from '../../fetch_all_conversations';
-import { channelIndex, findAccountById } from '../../lib/slack';
+import {
+  channelIndex,
+  findAccountById,
+  findOrCreateThread,
+} from '../../lib/slack';
 
 // fetches all conversations with paginated results and saves the messages
 // This happens after the slack channels have been created and joined
+
+//SYNC ORDER:
+// createOrUpdateMessages
+// syncMessageThreads
+// syncUsers
+// syncUsersAndMessages
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -55,6 +65,7 @@ export default async function handler(
 type MessageParam = {
   ts: string;
   text: string;
+  thread_ts: string;
 };
 
 export async function saveMessagesSyncronous(
@@ -63,6 +74,16 @@ export async function saveMessagesSyncronous(
 ) {
   for (let j = 0; j < messages.length - 1; j++) {
     const m = messages[j];
+    let threadId: string | null;
+    let thread: any | null;
+    if (!!m.thread_ts) {
+      thread = await findOrCreateThread({
+        slackThreadTs: m.thread_ts,
+        channelId: channelId,
+      });
+    }
+
+    threadId = thread?.id;
     const text = m.text as string;
     await prisma.messages.upsert({
       where: {
@@ -73,12 +94,14 @@ export async function saveMessagesSyncronous(
       },
       update: {
         slackMessageId: m.ts as string,
+        slackThreadId: threadId,
       },
       create: {
         body: m.text,
         sentAt: new Date(parseFloat(m.ts) * 1000),
         channelId,
         slackMessageId: m.ts as string,
+        slackThreadId: threadId,
         usersId: null,
       },
     });

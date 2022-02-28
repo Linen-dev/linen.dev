@@ -29,7 +29,11 @@ export default async function handler(
     );
 
     const replyMessages = replies?.body;
-    await saveMessagesSyncronous(replyMessages.messages, m.channelId);
+    try {
+      await saveMessagesSyncronous(replyMessages.messages, m.channelId);
+    } catch (e) {
+      console.log(e);
+    }
   }
   res.status(200).json('ok');
 }
