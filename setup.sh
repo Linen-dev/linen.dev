@@ -5,6 +5,8 @@ yarn
 createuser linendev
 createdb linendev
 
+# seed database
+psql linendev < db_seed.sql
 
 # setup the environment
 cp .env.example .env
