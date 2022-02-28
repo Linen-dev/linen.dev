@@ -69,7 +69,7 @@ export default async function handler(
     const separateQueryPromise = prisma.messages.findMany({
       where: {
         body: {
-          search: query,
+          search: query.split(' ').join(' & '),
         },
         channel: {
           accountId: accountId,
@@ -99,7 +99,7 @@ export default async function handler(
   const response = await prisma.messages.findMany({
     where: {
       body: {
-        search: query,
+        search: query.split(' ').join(' & '),
       },
       channel: {
         accountId: accountId,
