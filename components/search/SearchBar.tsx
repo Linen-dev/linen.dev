@@ -62,9 +62,12 @@ const fetchResults = async (input, accountId) => {
   const reqTS = new Date().getTime();
   try {
     lastReqTS = reqTS;
-    const res = await axios.get(
-      `/api/search?query=${encodeURIComponent(input)}&account_id=${accountId}`
-    );
+    const res = await axios.get('/api/search', {
+      params: {
+        query: input,
+        account_id: accountId,
+      },
+    });
 
     // We can get duplicate message ids back for some reason.
     const allIds = new Set();
@@ -117,8 +120,15 @@ export default function SearchBar({ channels = [], users = [] }) {
 
   return (
     <Autocomplete
+      placeholder="Search messages"
       shadow="none"
       onItemSubmit={handleSelect}
+      value={value}
+      onChange={handleInputChange}
+      itemComponent={({ ...rest }) => (
+        <AutoCompleteItem channels={channels} users={users} {...rest} />
+      )}
+      filter={() => true}
       limit={5}
       nothingFound={
         value.length > 0 ? (
@@ -134,12 +144,6 @@ export default function SearchBar({ channels = [], users = [] }) {
         maxWidth: '1000px',
         flex: '1 0 auto',
       }}
-      itemComponent={({ ...rest }) => (
-        <AutoCompleteItem channels={channels} users={users} {...rest} />
-      )}
-      value={value}
-      onChange={handleInputChange}
-      placeholder="Search messages"
       data={data}
     />
   );
