@@ -45,7 +45,7 @@ function Channel({
 }: Props) {
   const channelName = channels.find((c) => c.id === channelId).channelName;
   const rows = useMemo(() => {
-    return threads.map(({ messages, id: threadId }) => {
+    return threads.map(({ messages, id: threadId, viewCount }) => {
       const oldestMessage = messages[messages.length - 1];
       const newestMessage = messages[0];
       const participants = messages.reduce((agg, { author }) => {
@@ -83,6 +83,7 @@ function Channel({
               ))}
             </AvatarsGroup>
           </TableElement>
+          <TableElement style={{ minWidth: '120px' }}>{viewCount}</TableElement>
           <TableElement style={{ minWidth: '120px' }}>
             {messages.length}
           </TableElement>
@@ -114,6 +115,7 @@ function Channel({
             <tr>
               <TableHeader>Topic</TableHeader>
               <TableHeader>Authors</TableHeader>
+              <TableHeader>Views</TableHeader>
               <TableHeader>Replies</TableHeader>
               <TableHeader>Activity</TableHeader>
             </tr>
