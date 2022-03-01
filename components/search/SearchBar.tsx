@@ -97,7 +97,7 @@ export default function SearchBar({ channels = [], users = [] }) {
 
   const getNewData = useDebouncedCallback(async (input) => {
     setIsLoading(true);
-    const { data: newData = [], reqTS } =
+    const { data: newData = [], reqTS }: any =
       (await fetchResults(input, accountId)) || [];
     if (reqTS === lastReqTS) {
       setData(newData);
