@@ -11,7 +11,7 @@
   text-align: center;
 }
 
-.container {
+.card {
   background: white;
   border-radius: 0.5rem;
   box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px,
@@ -21,25 +21,8 @@
   padding: 2rem 2.5rem;
 }
 
-.label {
-  display: block;
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-  margin-bottom: 0.25rem;
-}
-
-.input {
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
-  padding-left: 0.75rem;
-  padding-right: 0.75rem;
-  border-width: 1px;
-  border-radius: 0.375rem;
-  width: 100%;
-  display: block;
-  border-color: light-gray;
+.field {
+  margin-bottom: 10px;
 }
 
 .link {

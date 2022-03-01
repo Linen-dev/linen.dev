@@ -1,4 +1,7 @@
 import React from 'react';
+import Label from '../../components/Label';
+import ColorInput from '../../components/ColorInput';
+import TextInput from '../../components/TextInput';
 import styles from './index.module.css';
 
 export default function SignUpForm() {
@@ -18,16 +21,23 @@ export default function SignUpForm() {
   return (
     <div className={styles.page}>
       <h1 className={styles.header}>Sign Up</h1>
-      <div className={styles.container}>
-        <label className={styles.label} htmlFor="domain">
-          Redirect domain
-        </label>
-        <input
-          className={styles.input}
-          type="text"
-          id="domain"
-          placeholder="discuss.airbyte.com"
-        />
+      <div className={styles.card}>
+        <div className={styles.field}>
+          <Label htmlFor="homeUrl">Home url</Label>
+          <TextInput id="homeUrl" />
+        </div>
+        <div className={styles.field}>
+          <Label htmlFor="docsUrl">Docs url</Label>
+          <TextInput id="docsUrl" />
+        </div>
+        <div className={styles.field}>
+          <Label htmlFor="redirectUrl">Redirect url</Label>
+          <TextInput id="redirectUrl" />
+        </div>
+        <div className={styles.field}>
+          <Label htmlFor="color">Brand color</Label>
+          <ColorInput id="color" defaultValue="#1B194E" />
+        </div>
         <a className={styles.link} href={url} rel="noopener">
           <img
             alt="Add to Slack"
