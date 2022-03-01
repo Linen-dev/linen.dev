@@ -21,7 +21,7 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
--- Name: _prisma_migrations; Type: TABLE; Schema: public; Owner: postgres
+-- Name: _prisma_migrations; Type: TABLE; Schema: public; Owner: linendev
 --
 
 CREATE TABLE public._prisma_migrations (
@@ -36,10 +36,10 @@ CREATE TABLE public._prisma_migrations (
 );
 
 
-ALTER TABLE public._prisma_migrations OWNER TO postgres;
+ALTER TABLE public._prisma_migrations OWNER TO linendev;
 
 --
--- Name: accounts; Type: TABLE; Schema: public; Owner: postgres
+-- Name: accounts; Type: TABLE; Schema: public; Owner: linendev
 --
 
 CREATE TABLE public.accounts (
@@ -53,10 +53,10 @@ CREATE TABLE public.accounts (
 );
 
 
-ALTER TABLE public.accounts OWNER TO postgres;
+ALTER TABLE public.accounts OWNER TO linendev;
 
 --
--- Name: channels; Type: TABLE; Schema: public; Owner: postgres
+-- Name: channels; Type: TABLE; Schema: public; Owner: linendev
 --
 
 CREATE TABLE public.channels (
@@ -68,10 +68,10 @@ CREATE TABLE public.channels (
 );
 
 
-ALTER TABLE public.channels OWNER TO postgres;
+ALTER TABLE public.channels OWNER TO linendev;
 
 --
--- Name: messages; Type: TABLE; Schema: public; Owner: postgres
+-- Name: messages; Type: TABLE; Schema: public; Owner: linendev
 --
 
 CREATE TABLE public.messages (
@@ -86,10 +86,10 @@ CREATE TABLE public.messages (
 );
 
 
-ALTER TABLE public.messages OWNER TO postgres;
+ALTER TABLE public.messages OWNER TO linendev;
 
 --
--- Name: slackAuthorizations; Type: TABLE; Schema: public; Owner: postgres
+-- Name: slackAuthorizations; Type: TABLE; Schema: public; Owner: linendev
 --
 
 CREATE TABLE public."slackAuthorizations" (
@@ -105,10 +105,10 @@ CREATE TABLE public."slackAuthorizations" (
 );
 
 
-ALTER TABLE public."slackAuthorizations" OWNER TO postgres;
+ALTER TABLE public."slackAuthorizations" OWNER TO linendev;
 
 --
--- Name: slackThreads; Type: TABLE; Schema: public; Owner: postgres
+-- Name: slackThreads; Type: TABLE; Schema: public; Owner: linendev
 --
 
 CREATE TABLE public."slackThreads" (
@@ -119,10 +119,10 @@ CREATE TABLE public."slackThreads" (
 );
 
 
-ALTER TABLE public."slackThreads" OWNER TO postgres;
+ALTER TABLE public."slackThreads" OWNER TO linendev;
 
 --
--- Name: users; Type: TABLE; Schema: public; Owner: postgres
+-- Name: users; Type: TABLE; Schema: public; Owner: linendev
 --
 
 CREATE TABLE public.users (
@@ -136,10 +136,10 @@ CREATE TABLE public.users (
 );
 
 
-ALTER TABLE public.users OWNER TO postgres;
+ALTER TABLE public.users OWNER TO linendev;
 
 --
--- Data for Name: _prisma_migrations; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: _prisma_migrations; Type: TABLE DATA; Schema: public; Owner: linendev
 --
 
 COPY public._prisma_migrations (id, checksum, finished_at, migration_name, logs, rolled_back_at, started_at, applied_steps_count) FROM stdin;
@@ -167,7 +167,7 @@ c4f3ba26-bb95-45c9-a317-40986110c8f5	55dacaf8ddbec5cb9577dd6eab6587140bf0314f082
 
 
 --
--- Data for Name: accounts; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: accounts; Type: TABLE DATA; Schema: public; Owner: linendev
 --
 
 COPY public.accounts (id, name, "slackTeamId", "redirectDomain", "slackUrl", "createdAt", "slackDomain") FROM stdin;
@@ -176,7 +176,7 @@ COPY public.accounts (id, name, "slackTeamId", "redirectDomain", "slackUrl", "cr
 
 
 --
--- Data for Name: channels; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: channels; Type: TABLE DATA; Schema: public; Owner: linendev
 --
 
 COPY public.channels (id, "channelName", "slackChannelId", "accountId", hidden) FROM stdin;
@@ -199,7 +199,7 @@ c6bfb739-24a7-49f3-b502-cbee0f712599	design	C01SNJG92LR	5ddb6bbf-b4b0-419c-8cfb-
 
 
 --
--- Data for Name: messages; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: messages; Type: TABLE DATA; Schema: public; Owner: linendev
 --
 
 COPY public.messages (id, "createdAt", body, "sentAt", "channelId", "slackThreadId", "usersId", "slackMessageId") FROM stdin;
@@ -4240,7 +4240,7 @@ c45bb3ba-1ca3-47d9-b7c0-8cec8b26d47a	2022-02-28 21:05:25.396	I can publish it if
 
 
 --
--- Data for Name: slackAuthorizations; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: slackAuthorizations; Type: TABLE DATA; Schema: public; Owner: linendev
 --
 
 COPY public."slackAuthorizations" (id, "accessToken", "botUserId", scope, "accountsId", "createdAt", "authedUserId", "userAccessToken", "userScope") FROM stdin;
@@ -4249,7 +4249,7 @@ a3d30ba7-542a-4fe9-b684-a242404dfc31	xoxb-1274174590981-3133774725604-jyFB4X6esR
 
 
 --
--- Data for Name: slackThreads; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: slackThreads; Type: TABLE DATA; Schema: public; Owner: linendev
 --
 
 COPY public."slackThreads" (id, "slackThreadTs", "channelId", "viewCount") FROM stdin;
@@ -4477,7 +4477,7 @@ bf95e973-a0f3-4d90-b992-4c150c221c74	1607386750.159900	3e43ddfb-f01a-4b98-8909-7
 
 
 --
--- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: linendev
 --
 
 COPY public.users (id, "slackUserId", "displayName", "profileImageUrl", "accountsId", "isAdmin", "isBot") FROM stdin;
@@ -4853,7 +4853,7 @@ b3af3e4a-18a2-4fd6-ad15-b9e2557a269f	U033KS2SJQ1	Gabe Grazier G'Sell	https://ava
 
 
 --
--- Name: _prisma_migrations _prisma_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: _prisma_migrations _prisma_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: linendev
 --
 
 ALTER TABLE ONLY public._prisma_migrations
@@ -4861,7 +4861,7 @@ ALTER TABLE ONLY public._prisma_migrations
 
 
 --
--- Name: accounts accounts_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: accounts accounts_pkey; Type: CONSTRAINT; Schema: public; Owner: linendev
 --
 
 ALTER TABLE ONLY public.accounts
@@ -4869,7 +4869,7 @@ ALTER TABLE ONLY public.accounts
 
 
 --
--- Name: channels channels_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: channels channels_pkey; Type: CONSTRAINT; Schema: public; Owner: linendev
 --
 
 ALTER TABLE ONLY public.channels
@@ -4877,7 +4877,7 @@ ALTER TABLE ONLY public.channels
 
 
 --
--- Name: messages messages_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: messages messages_pkey; Type: CONSTRAINT; Schema: public; Owner: linendev
 --
 
 ALTER TABLE ONLY public.messages
@@ -4885,7 +4885,7 @@ ALTER TABLE ONLY public.messages
 
 
 --
--- Name: slackAuthorizations slackAuthorizations_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: slackAuthorizations slackAuthorizations_pkey; Type: CONSTRAINT; Schema: public; Owner: linendev
 --
 
 ALTER TABLE ONLY public."slackAuthorizations"
@@ -4893,7 +4893,7 @@ ALTER TABLE ONLY public."slackAuthorizations"
 
 
 --
--- Name: slackThreads slackThreads_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: slackThreads slackThreads_pkey; Type: CONSTRAINT; Schema: public; Owner: linendev
 --
 
 ALTER TABLE ONLY public."slackThreads"
@@ -4901,7 +4901,7 @@ ALTER TABLE ONLY public."slackThreads"
 
 
 --
--- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: linendev
 --
 
 ALTER TABLE ONLY public.users
@@ -4909,42 +4909,42 @@ ALTER TABLE ONLY public.users
 
 
 --
--- Name: accounts_slackTeamId_key; Type: INDEX; Schema: public; Owner: postgres
+-- Name: accounts_slackTeamId_key; Type: INDEX; Schema: public; Owner: linendev
 --
 
 CREATE UNIQUE INDEX "accounts_slackTeamId_key" ON public.accounts USING btree ("slackTeamId");
 
 
 --
--- Name: channels_slackChannelId_key; Type: INDEX; Schema: public; Owner: postgres
+-- Name: channels_slackChannelId_key; Type: INDEX; Schema: public; Owner: linendev
 --
 
 CREATE UNIQUE INDEX "channels_slackChannelId_key" ON public.channels USING btree ("slackChannelId");
 
 
 --
--- Name: messages_body_sentAt_key; Type: INDEX; Schema: public; Owner: postgres
+-- Name: messages_body_sentAt_key; Type: INDEX; Schema: public; Owner: linendev
 --
 
 CREATE UNIQUE INDEX "messages_body_sentAt_key" ON public.messages USING btree (body, "sentAt");
 
 
 --
--- Name: slackThreads_slackThreadTs_key; Type: INDEX; Schema: public; Owner: postgres
+-- Name: slackThreads_slackThreadTs_key; Type: INDEX; Schema: public; Owner: linendev
 --
 
 CREATE UNIQUE INDEX "slackThreads_slackThreadTs_key" ON public."slackThreads" USING btree ("slackThreadTs");
 
 
 --
--- Name: users_slackUserId_key; Type: INDEX; Schema: public; Owner: postgres
+-- Name: users_slackUserId_key; Type: INDEX; Schema: public; Owner: linendev
 --
 
 CREATE UNIQUE INDEX "users_slackUserId_key" ON public.users USING btree ("slackUserId");
 
 
 --
--- Name: channels channels_accountId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: channels channels_accountId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: linendev
 --
 
 ALTER TABLE ONLY public.channels
@@ -4952,7 +4952,7 @@ ALTER TABLE ONLY public.channels
 
 
 --
--- Name: messages messages_channelId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: messages messages_channelId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: linendev
 --
 
 ALTER TABLE ONLY public.messages
@@ -4960,7 +4960,7 @@ ALTER TABLE ONLY public.messages
 
 
 --
--- Name: messages messages_slackThreadId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: messages messages_slackThreadId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: linendev
 --
 
 ALTER TABLE ONLY public.messages
@@ -4968,7 +4968,7 @@ ALTER TABLE ONLY public.messages
 
 
 --
--- Name: messages messages_usersId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: messages messages_usersId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: linendev
 --
 
 ALTER TABLE ONLY public.messages
@@ -4976,7 +4976,7 @@ ALTER TABLE ONLY public.messages
 
 
 --
--- Name: slackAuthorizations slackAuthorizations_accountsId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: slackAuthorizations slackAuthorizations_accountsId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: linendev
 --
 
 ALTER TABLE ONLY public."slackAuthorizations"
@@ -4984,7 +4984,7 @@ ALTER TABLE ONLY public."slackAuthorizations"
 
 
 --
--- Name: slackThreads slackThreads_channelId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: slackThreads slackThreads_channelId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: linendev
 --
 
 ALTER TABLE ONLY public."slackThreads"
@@ -4992,7 +4992,7 @@ ALTER TABLE ONLY public."slackThreads"
 
 
 --
--- Name: users users_accountsId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: users users_accountsId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: linendev
 --
 
 ALTER TABLE ONLY public.users
@@ -5002,4 +5002,3 @@ ALTER TABLE ONLY public.users
 --
 -- PostgreSQL database dump complete
 --
-
