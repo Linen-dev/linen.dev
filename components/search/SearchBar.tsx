@@ -120,8 +120,15 @@ export default function SearchBar({ channels = [], users = [] }) {
 
   return (
     <Autocomplete
+      placeholder="Search messages"
       shadow="none"
       onItemSubmit={handleSelect}
+      value={value}
+      onChange={handleInputChange}
+      itemComponent={({ ...rest }) => (
+        <AutoCompleteItem channels={channels} users={users} {...rest} />
+      )}
+      filter={() => true}
       limit={5}
       nothingFound={
         value.length > 0 ? (
@@ -137,12 +144,6 @@ export default function SearchBar({ channels = [], users = [] }) {
         maxWidth: '1000px',
         flex: '1 0 auto',
       }}
-      itemComponent={({ ...rest }) => (
-        <AutoCompleteItem channels={channels} users={users} {...rest} />
-      )}
-      value={value}
-      onChange={handleInputChange}
-      placeholder="Search messages"
       data={data}
     />
   );
