@@ -2,6 +2,8 @@ import React from 'react';
 import Label from '../../components/Label';
 import ColorInput from '../../components/ColorInput';
 import TextInput from '../../components/TextInput';
+import Field from '../../components/Field';
+import Card from '../../components/Card';
 import styles from './index.module.css';
 
 export default function SignUpForm() {
@@ -21,23 +23,23 @@ export default function SignUpForm() {
   return (
     <div className={styles.page}>
       <h1 className={styles.header}>Sign Up</h1>
-      <div className={styles.card}>
-        <div className={styles.field}>
+      <Card>
+        <Field>
           <Label htmlFor="homeUrl">Home url</Label>
           <TextInput id="homeUrl" />
-        </div>
-        <div className={styles.field}>
+        </Field>
+        <Field>
           <Label htmlFor="docsUrl">Docs url</Label>
           <TextInput id="docsUrl" />
-        </div>
-        <div className={styles.field}>
+        </Field>
+        <Field>
           <Label htmlFor="redirectUrl">Redirect url</Label>
           <TextInput id="redirectUrl" />
-        </div>
-        <div className={styles.field}>
+        </Field>
+        <Field>
           <Label htmlFor="color">Brand color</Label>
           <ColorInput id="color" defaultValue="#1B194E" />
-        </div>
+        </Field>
         <a className={styles.link} href={url} rel="noopener">
           <img
             alt="Add to Slack"
@@ -47,7 +49,7 @@ export default function SignUpForm() {
             srcSet="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x"
           />
         </a>
-      </div>
+      </Card>
     </div>
   );
 }
