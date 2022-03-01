@@ -57,14 +57,14 @@ const AutoCompleteItem = forwardRef(
 );
 
 let lastReqTS;
-const fetchResults = async (input, accountId) => {
-  if (!input) return [];
+const fetchResults = async (input = '', accountId) => {
   const reqTS = new Date().getTime();
+  lastReqTS = reqTS;
+  if (!input.trim()) return { data: [], reqTS };
   try {
-    lastReqTS = reqTS;
     const res = await axios.get('/api/search', {
       params: {
-        query: input,
+        query: input.trim(),
         account_id: accountId,
       },
     });
