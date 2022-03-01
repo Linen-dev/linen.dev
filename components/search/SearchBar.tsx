@@ -62,9 +62,12 @@ const fetchResults = async (input, accountId) => {
   const reqTS = new Date().getTime();
   try {
     lastReqTS = reqTS;
-    const res = await axios.get(
-      `/api/search?query=${encodeURIComponent(input)}&account_id=${accountId}`
-    );
+    const res = await axios.get('/api/search', {
+      params: {
+        query: input,
+        account_id: accountId,
+      },
+    });
 
     // We can get duplicate message ids back for some reason.
     const allIds = new Set();
