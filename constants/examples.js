@@ -1,5 +1,12 @@
 export const links = [
   {
+    accountId: 'some-accountID',
+    logoUrl: 'https://fleetdm.com/images/logo-white-118x48@2x.png',
+    homeUrl: 'https://fleetdm.com',
+    docsUrl: 'https://fleetdm.com/docs',
+    navBarColor: '#1E1E43',
+  },
+  {
     accountId: '39c35aef-71eb-43d1-b198-25a9454260fb',
     logoUrl:
       'https://aws1.discourse-cdn.com/business7/uploads/airbyte/original/1X/04c9487f21ddc41f65ccac9e3d75b4bf8ea64d15.png',
