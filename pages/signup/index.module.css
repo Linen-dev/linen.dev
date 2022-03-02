@@ -1,0 +1,22 @@
+.page {
+  background: #f9fafb;
+  height: 100vh;
+  width: 100%;
+  padding-top: 4rem;
+}
+
+.header {
+  font-weight: bold;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.link {
+  display: flex;
+  margin-top: 1rem;
+}
+
+.link img {
+  display: inline-block;
+  margin: 0 auto;
+}
