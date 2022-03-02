@@ -83,7 +83,7 @@ function Channel({
               ))}
             </AvatarsGroup>
           </TableElement>
-          <TableElement style={{ minWidth: '120px' }}>{viewCount}</TableElement>
+          <TableElement style={{ minWidth: '50px' }}>{viewCount}</TableElement>
           <TableElement style={{ minWidth: '120px' }}>
             {messages.length}
           </TableElement>

@@ -37,15 +37,18 @@ export default function SignUpForm() {
         <form onSubmit={onSubmit}>
           <Field>
             <Label htmlFor="homeUrl">Home url</Label>
-            <TextInput id="homeUrl" />
+            <TextInput placeholder="yourwebsite.com" id="homeUrl" />
           </Field>
           <Field>
             <Label htmlFor="docsUrl">Docs url</Label>
-            <TextInput id="docsUrl" />
+            <TextInput placeholder="docs.yourwebsite.com" id="docsUrl" />
           </Field>
           <Field>
             <Label htmlFor="redirectDomain">Redirect domain</Label>
-            <TextInput id="redirectDomain" />
+            <TextInput
+              placeholder="linen.yourwebsite.com"
+              id="redirectDomain"
+            />
           </Field>
           <Field>
             <Label htmlFor="brandColor">Brand color</Label>
