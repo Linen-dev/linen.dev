@@ -7,7 +7,8 @@
     "start": "next start",
     "lint": "next lint",
     "prepare": "husky install",
-    "test": "jest --watch"
+    "test": "jest --watch",
+    "migrate": "npx prisma migrate dev && npx prisma generate dev"
   },
   "dependencies": {
     "@headlessui/react": "^1.4.3",

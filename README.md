@@ -53,3 +53,16 @@ Load: http://localhost:3000/api/oneOff
 This will fetch all the conversations from Papercups and it will return all the conversations and save the account_id from one of the channels
 
 Update `accountId` const in constants/example.js
+
+## How to run a migration?
+
+```bash
+npx prisma migrate dev
+npx prisma generate dev
+```
+
+or
+
+```bash
+yarn run migrate
+```
