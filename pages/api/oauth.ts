@@ -12,7 +12,6 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const code = req.query.code;
-  const redirectDomain = req.query.state as string;
   const clientId = process.env.SLACK_CLIENT_ID;
   const clientSecret = process.env.SLACK_CLIENT_SECRET;
 
@@ -30,7 +29,6 @@ export default async function handler(
     slackTeamId: body.team.id,
     name: body.team.name,
     slackDomain: slackUrl.replace('https://', '').split('.')[0] as string,
-    redirectDomain,
     slackUrl,
   });
 
