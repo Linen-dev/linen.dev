@@ -13,10 +13,9 @@
 
 .link {
   display: flex;
-  margin-top: 1rem;
+  margin: 1rem auto 0;
 }
 
 .link img {
   display: inline-block;
-  margin: 0 auto;
 }

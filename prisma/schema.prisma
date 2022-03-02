@@ -60,12 +60,15 @@ model channels {
 model accounts {
   id             String     @id @default(uuid())
   createdAt      DateTime   @default(now())
-  name           String
+  name           String?
   slackDomain    String?
   channels       channels[]
-  slackTeamId    String
+  slackTeamId    String?
   redirectDomain String?
   slackUrl       String?
+  brandColor     String?
+  homeUrl        String?
+  docsUrl        String?
 
   users               users[]
   slackAuthorizations slackAuthorizations[]
