@@ -66,6 +66,9 @@ model accounts {
   slackTeamId    String
   redirectDomain String?
   slackUrl       String?
+  brandColor     String?
+  homeUrl        String?
+  docsUrl        String?
 
   users               users[]
   slackAuthorizations slackAuthorizations[]
