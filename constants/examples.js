@@ -14,4 +14,11 @@ export const links = [
     docsUrl: 'https://docs.flyte.org',
     navBarColor: '#651DF1',
   },
+  {
+    accountId: '3590a347-03ee-4b2d-8d98-6e3a75f0f513',
+    logoUrl: 'https://cal.com/logo-white.svg',
+    homeUrl: 'https://cal.com/',
+    docsUrl: 'https://docs.cal.com',
+    navBarColor: '#292929',
+  },
 ];
