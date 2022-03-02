@@ -37,8 +37,8 @@ export default function SignUpForm() {
           <TextInput id="redirectUrl" />
         </Field>
         <Field>
-          <Label htmlFor="color">Brand color</Label>
-          <ColorInput id="color" defaultValue="#1B194E" />
+          <Label htmlFor="brandColor">Brand color</Label>
+          <ColorInput id="brandColor" defaultValue="#1B194E" />
         </Field>
         <a className={styles.link} href={url} rel="noopener">
           <img
