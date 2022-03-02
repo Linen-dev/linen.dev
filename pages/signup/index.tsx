@@ -8,7 +8,7 @@ import styles from './index.module.css';
 
 export default function SignUpForm() {
   const redirectDomain = 'linen.papercups.io';
-  const redirectUri = 'https://papercups.ngrok.io/api/oauth';
+  const redirectUri = 'https://linen.dev/api/oauth';
 
   const url =
     'https://slack.com/oauth/v2/' +
