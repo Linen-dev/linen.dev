@@ -1,6 +1,6 @@
-import { Avatar, AvatarsGroup, Paper, Text, Title } from '@mantine/core';
+import { AvatarsGroup, Paper, Text, Title } from '@mantine/core';
+import Avatar from '../../../../../components/Avatar';
 import { useMemo } from 'react';
-import styled from 'styled-components';
 import { format } from 'timeago.js';
 import PageLayout from '../../../../../components/layout/PageLayout';
 import Table from '../../../../../components/table/Table';
@@ -16,15 +16,7 @@ import {
   listUsers,
   threadIndex,
 } from '../../../../../lib/slack';
-import { useRouter } from 'next/router';
 import { links } from '../../../../../constants/examples';
-
-const EXCERPT_LENGTH = 220;
-
-const Wrapper = styled.div({
-  height: 'calc(100vh - 98px)',
-  overflowY: 'auto',
-});
 
 type Props = {
   channelId: string;

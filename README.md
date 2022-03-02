@@ -66,3 +66,7 @@ or
 ```bash
 yarn run migrate
 ```
+
+## Front-end components
+
+Third party UI component specific libraries should not be used directly, instead use/add a thin abstraction on top of them.

@@ -1,4 +1,5 @@
-import { Anchor, Avatar, Group, Paper, Text } from '@mantine/core';
+import { Anchor, Group, Paper, Text } from '@mantine/core';
+import Avatar from '../../../../../../components/Avatar';
 import { AiOutlineLink } from 'react-icons/ai';
 import { useMemo, useEffect } from 'react';
 import { format } from 'timeago.js';
