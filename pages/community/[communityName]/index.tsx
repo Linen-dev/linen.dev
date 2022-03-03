@@ -144,7 +144,6 @@ export async function getServerSideProps({
     links.find((l) => {
       return l.accountId === account.id;
     }) || links[0];
-  console.log({ settings });
 
   return {
     props: {
