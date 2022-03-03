@@ -93,7 +93,7 @@ function PageLayout({
       header={
         <Header
           sx={(theme) => ({
-            backgroundColor: settings.navBarColor,
+            backgroundColor: settings.brandColor,
             display: 'flex',
             justifyContent: 'space-between',
           })}
