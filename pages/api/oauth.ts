@@ -4,6 +4,7 @@ import { fetchTeamInfo } from '../../fetch_all_conversations';
 import {
   createSlackAuthorization,
   findOrCreateAccount,
+  updateAccount,
   updateAccountRedirectDomain,
 } from '../../lib/slack';
 
@@ -12,6 +13,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const code = req.query.code;
+  const accountId = req.query.state as string;
   const clientId = process.env.SLACK_CLIENT_ID;
   const clientSecret = process.env.SLACK_CLIENT_SECRET;
 
@@ -25,7 +27,7 @@ export default async function handler(
   const teamInfoResponse = await fetchTeamInfo(body.access_token);
   const slackUrl = teamInfoResponse?.body?.team?.url;
 
-  const account = await findOrCreateAccount({
+  const account = await updateAccount(accountId, {
     slackTeamId: body.team.id,
     name: body.team.name,
     slackDomain: slackUrl.replace('https://', '').split('.')[0] as string,

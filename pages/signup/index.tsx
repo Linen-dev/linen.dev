@@ -19,15 +19,19 @@ export default function SignUpForm() {
     fetch('/api/accounts', {
       method: 'POST',
       body: JSON.stringify({ homeUrl, docsUrl, redirectDomain, brandColor }),
-    }).then(() => {
-      window.location.href =
-        'https://slack.com/oauth/v2/' +
-        'authorize?client_id=1250901093238.3006399856353&' +
-        '&scope=channels:history,channels:join,channels:read,incoming-webhook,reactions:read,users:read,team:read' +
-        '&user_scope=channels:history,search:read' +
-        '&redirect_uri=' +
-        REDIRECT_URI;
-    });
+    })
+      .then((response) => response.json())
+      .then((account) => {
+        window.location.href =
+          'https://slack.com/oauth/v2/' +
+          'authorize?client_id=1250901093238.3006399856353&' +
+          '&scope=channels:history,channels:join,channels:read,incoming-webhook,reactions:read,users:read,team:read' +
+          '&user_scope=channels:history,search:read' +
+          '&state=' +
+          account.id +
+          '&redirect_uri=' +
+          REDIRECT_URI;
+      });
   };
 
   return (

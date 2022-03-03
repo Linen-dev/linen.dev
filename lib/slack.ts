@@ -182,6 +182,18 @@ export const findOrCreateAccount = async (
   });
 };
 
+export const updateAccount = async (
+  accountId: string,
+  account: Prisma.accountsUpdateInput
+) => {
+  return await prisma.accounts.update({
+    where: {
+      id: accountId,
+    },
+    data: account,
+  });
+};
+
 export const createSlackAuthorization = async (
   slackAuthorization: Prisma.slackAuthorizationsCreateManyInput
 ) => {
