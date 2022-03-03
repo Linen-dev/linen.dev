@@ -10,13 +10,11 @@ import TableElement from '../../../../../components/table/TableElement';
 import TableHeader from '../../../../../components/table/TableHeader';
 import {
   channelIndex,
-  findAccount,
   findAccountById,
   findChannel,
   listUsers,
   threadIndex,
 } from '../../../../../lib/slack';
-import { useRouter } from 'next/router';
 import { links } from '../../../../../constants/examples';
 
 const EXCERPT_LENGTH = 220;
