@@ -26,8 +26,7 @@
     "styled-components": "^5.3.3",
     "superagent": "^7.1.1",
     "swr": "^1.2.1",
-    "timeago.js": "^4.0.2",
-    "use-debounce": "^7.0.1"
+    "timeago.js": "^4.0.2"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.2",
