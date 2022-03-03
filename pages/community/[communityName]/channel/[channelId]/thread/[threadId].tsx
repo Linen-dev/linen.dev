@@ -133,9 +133,9 @@ export async function getServerSideProps({
     links.find(({ accountId }) => accountId === account.id) || links[0];
 
   const settings = {
-    brandColor: account.brandColor || defaultSettings.brandColor,
-    homeUrl: account.homeUrl || defaultSettings.homeUrl,
-    docsUrl: account.docsUrl || defaultSettings.docsUrl,
+    brandColor: account.brandColor,
+    homeUrl: account.homeUrl,
+    docsUrl: account.docsUrl,
     logoUrl: defaultSettings.logoUrl,
   };
 
