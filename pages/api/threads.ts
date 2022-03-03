@@ -1,25 +1,20 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import prisma from '../../client';
-import { findChannel, listUsers, threadIndex } from '../../lib/slack';
+import { threadIndex } from '../../lib/slack';
+import serializeThread from '../../serializers/thread';
 
 async function index(request: NextApiRequest, response: NextApiResponse) {
   const channelId = request.query.channelId as string;
+  const take = request.query.take as string;
   const skip = request.query.skip as string;
-  const threads = await threadIndex(channelId, 5, Number(skip) || 0);
+  const threads = await threadIndex(
+    channelId,
+    Number(take) || 50,
+    Number(skip) || 0
+  );
 
   return response.status(200).json({
-    threads: threads.map((t) => ({
-      ...t,
-      messages: t.messages.map((m) => {
-        return {
-          body: m.body,
-          // Have to convert to string b/c Nextjs doesn't support date hydration -
-          // see: https://github.com/vercel/next.js/discussions/11498
-          sentAt: m.sentAt.toString(),
-          author: m.author,
-        };
-      }),
-    })),
+    threads: threads.map(serializeThread),
   });
 }
 

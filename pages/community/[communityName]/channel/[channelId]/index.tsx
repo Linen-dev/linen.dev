@@ -15,6 +15,7 @@ import {
   listUsers,
   threadIndex,
 } from '../../../../../lib/slack';
+import serializeThread from '../../../../../serializers/thread';
 import { links } from '../../../../../constants/examples';
 
 const EXCERPT_LENGTH = 220;
@@ -156,18 +157,7 @@ export async function getServerSideProps({
     props: {
       channelId,
       users,
-      threads: threads.map((t) => ({
-        ...t,
-        messages: t.messages.map((m) => {
-          return {
-            body: m.body,
-            // Have to convert to string b/c Nextjs doesn't support date hydration -
-            // see: https://github.com/vercel/next.js/discussions/11498
-            sentAt: m.sentAt.toString(),
-            author: m.author,
-          };
-        }),
-      })),
+      threads: threads.map(serializeThread),
       channels,
       communityName,
       slackUrl: account.slackUrl,
