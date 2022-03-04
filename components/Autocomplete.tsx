@@ -16,10 +16,10 @@ const IconWrapper = styled.div({
 
 export default function Autocomplete({
   icon,
-  makeURL = () => '',
-  onSelect = () => {},
+  makeURL = (debounceValue: string) => '',
+  onSelect = (any) => {},
   resultParser = (data) => data,
-  renderSuggestion = () => null,
+  renderSuggestion = (any) => null,
   placeholder = 'Search',
   debounce = 150,
   limit = 5,
