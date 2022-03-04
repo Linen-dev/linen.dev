@@ -21,6 +21,22 @@ const LogoImg = styled.img({
   cursor: 'pointer',
 });
 
+interface Settings {
+  brandColor: string;
+  docsUrl: string;
+  homeUrl: string;
+  logoUrl: string;
+}
+
+interface Props {
+  seo?: any;
+  users?: any[];
+  children: React.ReactNode;
+  navItems?: any;
+  slackUrl?: string;
+  settings?: Settings;
+}
+
 function PageLayout({
   seo = {},
   users,
@@ -28,7 +44,7 @@ function PageLayout({
   navItems,
   slackUrl,
   settings,
-}) {
+}: Props) {
   const {
     query: { channelId },
   } = useRouter();
@@ -93,7 +109,7 @@ function PageLayout({
       header={
         <Header
           sx={(theme) => ({
-            backgroundColor: settings.navBarColor,
+            backgroundColor: settings.brandColor,
             display: 'flex',
             justifyContent: 'space-between',
           })}

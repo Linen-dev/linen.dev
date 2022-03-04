@@ -141,10 +141,16 @@ export async function getServerSideProps({
   const threadsPromise = threadIndex(channelId, 50);
   const usersPromise = listUsers(channel.accountId);
   const [threads, users] = await Promise.all([threadsPromise, usersPromise]);
-  const settings =
-    links.find((l) => {
-      return l.accountId === account.id;
-    }) || links[0];
+
+  const defaultSettings =
+    links.find(({ accountId }) => accountId === account.id) || links[0];
+
+  const settings = {
+    brandColor: account.brandColor || defaultSettings.brandColor,
+    homeUrl: account.homeUrl || defaultSettings.homeUrl,
+    docsUrl: account.docsUrl || defaultSettings.docsUrl,
+    logoUrl: defaultSettings.logoUrl,
+  };
 
   return {
     props: {

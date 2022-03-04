@@ -148,10 +148,15 @@ export async function getServerSideProps({
     findAccountById(channel.accountId),
   ]);
 
-  const settings =
-    links.find((l) => {
-      return l.accountId === account.id;
-    }) || links[0];
+  const defaultSettings =
+    links.find(({ accountId }) => accountId === account.id) || links[0];
+
+  const settings = {
+    brandColor: account.brandColor || defaultSettings.brandColor,
+    homeUrl: account.homeUrl || defaultSettings.homeUrl,
+    docsUrl: account.docsUrl || defaultSettings.docsUrl,
+    logoUrl: defaultSettings.logoUrl,
+  };
 
   return {
     props: {
