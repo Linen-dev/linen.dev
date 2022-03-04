@@ -200,6 +200,14 @@ export const createSlackAuthorization = async (
   return await prisma.slackAuthorizations.create({ data: slackAuthorization });
 };
 
+export const threadCount = async (channelId: string) => {
+  return await prisma.slackThreads.count({
+    where: {
+      channelId,
+    },
+  });
+};
+
 export const threadIndex = async (
   channelId: string,
   take: number = 20,

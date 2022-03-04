@@ -8,16 +8,16 @@ import Message from '../../../components/Message';
 import TableRow from '../../../components/table/TableRow';
 import TableElement from '../../../components/table/TableElement';
 import TableHeader from '../../../components/table/TableHeader';
-import { findAccountByPath, listUsers, threadIndex } from '../../../lib/slack';
-import serializeThread from '../../../serializers/thread';
+import { findAccountByPath, listUsers } from '../../../lib/slack';
 import { links } from '../../../constants/examples';
+import { index as fetchThreads } from '../../../services/threads';
 
-const EXCERPT_LENGTH = 220;
-
-const Wrapper = styled.div({
-  height: 'calc(100vh - 98px)',
-  overflowY: 'auto',
-});
+interface Pagination {
+  totalCount: number;
+  pageCount: number;
+  currentPage: number;
+  perPage: number;
+}
 
 type Props = {
   channelId: string;
@@ -26,6 +26,7 @@ type Props = {
   threads: any[];
   slackUrl: string;
   settings: any;
+  pagination: Pagination;
 };
 
 function Channel({
@@ -35,6 +36,7 @@ function Channel({
   channels,
   slackUrl,
   settings,
+  pagination,
 }: Props) {
   const channelName = channels.find((c) => c.id === channelId).channelName;
 
@@ -138,9 +140,13 @@ export async function getServerSideProps({
 
   const channelId = channel.id;
 
-  const threadsPromise = threadIndex(channelId, 50);
+  const threadsPromise = fetchThreads({ channelId, page: 1 });
   const usersPromise = listUsers(channel.accountId);
-  const [threads, users] = await Promise.all([threadsPromise, usersPromise]);
+  const [{ data, pagination }, users] = await Promise.all([
+    threadsPromise,
+    usersPromise,
+  ]);
+  const { threads } = data;
 
   const defaultSettings =
     links.find(({ accountId }) => accountId === account.id) || links[0];
@@ -156,11 +162,12 @@ export async function getServerSideProps({
     props: {
       channelId,
       users,
-      threads: threads.map(serializeThread),
       channels,
       communityName,
       slackUrl: account.slackUrl,
       settings,
+      threads,
+      pagination,
     },
   };
 }
