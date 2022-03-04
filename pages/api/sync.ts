@@ -19,6 +19,7 @@ import {
   findAccountById,
   findMessagesWithThreads,
   findOrCreateThread,
+  findSlackThreadsWithOnlyOneMessage,
   findUser,
   updateAccountRedirectDomain,
 } from '../../lib/slack';
@@ -29,6 +30,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const accountId = req.query.account_id as string;
+  const channelId = req.query.channel_id as string;
   const domain = req.query.domain as string;
 
   const account = await findAccountById(accountId);
@@ -43,7 +45,12 @@ export default async function handler(
   }
 
   // create and join channels
-  const channels = await createChannels(account.slackTeamId, token, accountId);
+  let channels = await createChannels(account.slackTeamId, token, accountId);
+
+  // If channelId is part of parameter only sync the specific channel
+  if (!!channelId) {
+    channels = [channels.find((c) => c.id === channelId)];
+  }
 
   //paginate and find all the users
   console.log('Syncing users for account: ', accountId);
@@ -112,8 +119,16 @@ export default async function handler(
           messages.push(...additionaMessages);
         }
         nextCursor = additionalConversations.response_metadata?.next_cursor;
+        await new Promise((resolve) => {
+          setTimeout(resolve, 1000);
+        });
       } catch (e) {
         console.log('fetching messages failed', e.message);
+        await new Promise((resolve) => {
+          console.log('waiting 10 seconds');
+          setTimeout(resolve, 10000);
+        });
+
         nextCursor = null;
       }
     }
@@ -123,15 +138,20 @@ export default async function handler(
   }
 
   //Save all threads
-  const messageWithThreads = await findMessagesWithThreads(account.id);
+  // only fetch threads with single message
+  // There will be edge cases where not all the threads are sync'd if you cancel the script
+  const messageWithThreads = await findSlackThreadsWithOnlyOneMessage(
+    channels.map((c) => c.id)
+  );
   console.log('syncing threads: ', messageWithThreads.length);
 
   for (let i = 0; i < messageWithThreads.length - 1; i++) {
     console.log(i);
     const m = messageWithThreads[i];
+    const channel = account.channels.find((c) => c.id === m.channelId);
     const replies = await fetchReplies(
-      m.slackThreads.slackThreadTs,
-      m.channel.slackChannelId,
+      m.slackThreadTs,
+      channel.slackChannelId,
       token
     );
 

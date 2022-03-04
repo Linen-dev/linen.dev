@@ -4,7 +4,11 @@ import {
   fetchReplies,
   saveThreadedMessages,
 } from '../../fetch_all_conversations';
-import { findAccountById, findMessagesWithThreads } from '../../lib/slack';
+import {
+  findAccountById,
+  findMessagesWithThreads,
+  findSlackThreadsWithOnlyOneMessage,
+} from '../../lib/slack';
 import { saveMessagesSyncronous } from './createOrUpdateMessages';
 
 //gets thread messages after createOrUpdateMessages
@@ -14,17 +18,20 @@ export default async function handler(
 ) {
   const accountId = req.query.account_id as string;
   const account = await findAccountById(accountId);
-  console.log({ account });
-
-  const messageWithThreads = await findMessagesWithThreads(account.id);
   const token = account.slackAuthorizations[0].accessToken;
 
-  for (let i = 0; i < messageWithThreads.length - 1; i++) {
-    console.log(i);
-    const m = messageWithThreads[i];
+  const slackThreadsWithOneMessage = await findSlackThreadsWithOnlyOneMessage(
+    account.channels.map((c) => c.id)
+  );
+
+  console.log({ num: slackThreadsWithOneMessage.length });
+
+  for (let i = 0; i < slackThreadsWithOneMessage.length - 1; i++) {
+    const m = slackThreadsWithOneMessage[i];
+    const channel = account.channels.find((c) => c.id === m.channelId);
     const replies = await fetchReplies(
-      m.slackThreads.slackThreadTs,
-      m.channel.slackChannelId,
+      m.slackThreadTs,
+      channel.slackChannelId,
       token
     );
 

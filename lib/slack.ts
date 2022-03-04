@@ -288,3 +288,20 @@ export const findMessagesWithThreads = async (accountId: string) => {
     },
   });
 };
+
+// using unsafe because prisma query raw does not play well with string interpolation
+export const findSlackThreadsWithOnlyOneMessage = async (
+  channelIds: string[]
+): Promise<{ id: string; slackThreadTs: string; channelId: string }[]> => {
+  const ids = channelIds.map((id) => `'${id}'`).join(' , ');
+  const query = `
+  select "slackThreads".id as id , "slackThreads"."slackThreadTs", "slackThreads"."channelId"
+  from "slackThreads" join messages on messages."slackThreadId" = "slackThreads".id 
+  where "slackThreads"."channelId" in (${ids})
+  group by "slackThreads".id
+  having count(*) = 1
+  order by "slackThreads"."slackThreadTs" desc
+  ;`;
+
+  return await prisma.$queryRawUnsafe(query);
+};
