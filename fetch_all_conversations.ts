@@ -25,6 +25,74 @@ export const fetchConversations = async (
   return response;
 };
 
+type ConversationHistoryBody = {
+  ok: boolean;
+  messages: ConvesrationHistoryMessage[];
+  has_more: boolean;
+  pin_count: number;
+  channel_actions_ts: any;
+  channel_actions_count: number;
+  response_metadata?: ResponseMetadata;
+};
+
+export type ConvesrationHistoryMessage = {
+  type: string;
+  subtype?: string;
+  ts: string;
+  user?: string;
+  text: string;
+  bot_id?: string;
+  bot_link?: string;
+  client_msg_id?: string;
+  team?: string;
+  blocks?: Block[];
+  thread_ts?: string;
+  reply_count?: number;
+  reply_users_count?: number;
+  latest_reply?: string;
+  reply_users?: string[];
+  is_locked?: boolean;
+  subscribed?: boolean;
+  inviter?: string;
+};
+
+type Block = {
+  type: string;
+  block_id: string;
+  elements: Element[];
+};
+
+type Element = {
+  type: string;
+  elements: Element2[];
+};
+
+type Element2 = {
+  type: string;
+  text: string;
+};
+
+type ResponseMetadata = {
+  next_cursor: string;
+};
+
+export const fetchConversationsTyped = async (
+  channel: string,
+  token: string,
+  userCursor: string | null = null
+): Promise<ConversationHistoryBody> => {
+  let url = 'https://slack.com/api/conversations.history?channel=' + channel;
+  if (!!userCursor) {
+    url += '&cursor=' + userCursor;
+  }
+
+  const response = await request
+    .get(url)
+    .set('Authorization', 'Bearer ' + token);
+
+  return response.body;
+};
+
 export const fetchMessage = async (
   channel: string,
   token: string,
@@ -176,6 +244,76 @@ export const fetchReplies = async (
     .set('Authorization', 'Bearer ' + token);
 
   return response;
+};
+
+export interface ConversationRepliesBody {
+  ok: boolean;
+  messages: ConversationRepliesMessage[];
+  has_more: boolean;
+}
+
+export interface ConversationRepliesMessage {
+  client_msg_id?: string;
+  type: string;
+  text: string;
+  user?: string;
+  ts: string;
+  team?: string;
+  blocks?: Block[];
+  thread_ts: string;
+  reply_count?: number;
+  reply_users_count?: number;
+  latest_reply?: string;
+  reply_users?: string[];
+  is_locked?: boolean;
+  subscribed?: boolean;
+  parent_user_id?: string;
+  subtype?: string;
+  username?: string;
+  icons?: Icons;
+  bot_id?: string;
+  attachments?: Attachment[];
+}
+
+export interface Style {
+  code: boolean;
+}
+
+export interface Icons {
+  image_48: string;
+}
+
+export interface Attachment {
+  title: string;
+  title_link?: string;
+  text: string;
+  fallback: string;
+  from_url?: string;
+  service_name?: string;
+  id: number;
+  original_url?: string;
+  footer?: string;
+  footer_icon?: string;
+  color?: string;
+  mrkdwn_in?: string[];
+  bot_id?: string;
+  app_unfurl_url?: string;
+  is_app_unfurl?: boolean;
+  app_id?: string;
+}
+
+export const fetchRepliesTyped = async (
+  threadTs: string,
+  channel: string,
+  token: string
+): Promise<ConversationRepliesBody> => {
+  const url = 'https://slack.com/api/conversations.replies';
+
+  const response = await request
+    .get(url + '?channel=' + channel + '&ts=' + threadTs)
+    .set('Authorization', 'Bearer ' + token);
+
+  return response.body;
 };
 
 export const saveUsers = async (users: any[], accountId: string) => {

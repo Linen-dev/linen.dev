@@ -1,0 +1,249 @@
+import { users } from '@prisma/client';
+import { NextApiRequest, NextApiResponse } from 'next/types';
+import prisma from '../../client';
+import {
+  ConvesrationHistoryMessage,
+  fetchAndSaveThreadMessages,
+  fetchConversations,
+  fetchConversationsTyped,
+  fetchReplies,
+  fetchTeamInfo,
+  joinChannel,
+  listUsers,
+  saveMessages,
+  saveUsers,
+} from '../../fetch_all_conversations';
+import {
+  channelIndex,
+  createManyChannel,
+  findAccountById,
+  findMessagesWithThreads,
+  findOrCreateThread,
+  findUser,
+  updateAccountRedirectDomain,
+} from '../../lib/slack';
+import { getSlackChannels } from './slack';
+
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  const accountId = req.query.account_id as string;
+  const domain = req.query.domain as string;
+
+  const account = await findAccountById(accountId);
+  //TODO test multiple slack authorization or reauthorization
+  const token = account.slackAuthorizations[0].accessToken;
+
+  const teamInfoResponse = await fetchTeamInfo(token);
+  const slackUrl = teamInfoResponse.body.team.url;
+
+  if (!!domain && !!slackUrl) {
+    await updateAccountRedirectDomain(accountId, domain, slackUrl);
+  }
+
+  // create and join channels
+  const channels = await createChannels(account.slackTeamId, token, accountId);
+
+  //paginate and find all the users
+  console.log('Syncing users for account: ', accountId);
+  const usersListResponse = await listUsers(token);
+  const members: any[] = usersListResponse.body.members;
+
+  let userCursor: string | null =
+    usersListResponse?.body?.response_metadata?.next_cursor;
+
+  while (!!userCursor) {
+    try {
+      console.log({ userCursor });
+      const usersListResponse = await listUsers(token, userCursor);
+      const additionalMembers = usersListResponse?.body?.members;
+      if (!!additionalMembers) {
+        members.push(...additionalMembers);
+      }
+      userCursor = usersListResponse?.body?.response_metadata?.next_cursor;
+    } catch (e) {
+      console.log('fetching user failed', e.message);
+      userCursor = null;
+    }
+  }
+
+  //Only save new users
+  const usersSlackIds = await prisma.users.findMany({
+    where: { accountsId: account.id },
+    select: {
+      slackUserId: true,
+    },
+  });
+
+  const ids = usersSlackIds.map((u) => u.slackUserId);
+
+  const newMembers = members.filter((m) => {
+    return !ids.includes(m.id);
+  });
+
+  await saveUsers(newMembers, accountId);
+
+  //fetch and save all top level conversations
+  for (let i = 0; i < channels.length; i++) {
+    const c = channels[i];
+    console.log('Syncing channel: ', c.channelName);
+
+    const conversations = await fetchConversationsTyped(
+      c.slackChannelId,
+      token
+    );
+
+    let nextCursor: string | null =
+      conversations.response_metadata?.next_cursor;
+    const messages = conversations.messages;
+
+    //fetch all messages by paginating
+    while (!!nextCursor) {
+      try {
+        const additionalConversations = await fetchConversationsTyped(
+          c.slackChannelId,
+          account.slackAuthorizations[0].accessToken,
+          nextCursor
+        );
+
+        const additionaMessages = additionalConversations.messages;
+        if (!!additionaMessages) {
+          messages.push(...additionaMessages);
+        }
+        nextCursor = additionalConversations.response_metadata?.next_cursor;
+      } catch (e) {
+        console.log('fetching messages failed', e.message);
+        nextCursor = null;
+      }
+    }
+
+    //save all messages
+    await saveMessagesSyncronous(messages, c.id);
+  }
+
+  //Save all threads
+  const messageWithThreads = await findMessagesWithThreads(account.id);
+  console.log('syncing threads: ', messageWithThreads.length);
+
+  for (let i = 0; i < messageWithThreads.length - 1; i++) {
+    console.log(i);
+    const m = messageWithThreads[i];
+    const replies = await fetchReplies(
+      m.slackThreads.slackThreadTs,
+      m.channel.slackChannelId,
+      token
+    );
+
+    const replyMessages = replies?.body;
+    try {
+      await saveMessagesSyncronous(replyMessages.messages, m.channelId);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  res.status(200).json({});
+}
+
+export async function fetchAllMessages(
+  token: string,
+  accountId: string,
+  channels: any[]
+) {
+  for (let channel of channels) {
+    try {
+      const conversations = await fetchConversations(
+        channel.slackChannelId,
+        token
+      );
+
+      let messages = await saveMessages(
+        conversations.body.messages,
+        channel.id,
+        channel.slackChannelId
+      );
+    } catch (e) {}
+  }
+
+  const messageWithThreads = await findMessagesWithThreads(accountId);
+  await fetchAndSaveThreadMessages(messageWithThreads, token);
+  return messageWithThreads;
+}
+
+async function createChannels(
+  slackTeamId: string,
+  token: string,
+  accountId: string
+) {
+  const channelsResponse = await getSlackChannels(slackTeamId, token);
+  const channelsParam = channelsResponse.body.channels.map(
+    (channel: { id: any; name: any }) => {
+      return {
+        slackChannelId: channel.id,
+        channelName: channel.name,
+        accountId,
+      };
+    }
+  );
+
+  try {
+    await createManyChannel(channelsParam);
+  } catch (e) {
+    console.log('Error creating Channels:', e);
+  }
+
+  const channels = await channelIndex(accountId);
+
+  for (let channel of channels) {
+    await joinChannel(channel.slackChannelId, token);
+  }
+
+  return channels;
+}
+
+export async function saveMessagesSyncronous(
+  messages: ConvesrationHistoryMessage[],
+  channelId: string
+) {
+  for (let j = 0; j < messages.length - 1; j++) {
+    const m = messages[j];
+    let threadId: string | null;
+    let thread: any | null;
+    if (!!m.thread_ts) {
+      thread = await findOrCreateThread({
+        slackThreadTs: m.thread_ts,
+        channelId: channelId,
+      });
+    }
+
+    let user: users | null = null;
+    if (!!m.user) {
+      user = await findUser(m.user);
+    }
+
+    threadId = thread?.id;
+    const text = m.text as string;
+    await prisma.messages.upsert({
+      where: {
+        body_sentAt: {
+          body: text,
+          sentAt: new Date(parseFloat(m.ts) * 1000),
+        },
+      },
+      update: {
+        slackMessageId: m.ts as string,
+        slackThreadId: threadId,
+        usersId: user?.id,
+      },
+      create: {
+        body: m.text,
+        sentAt: new Date(parseFloat(m.ts) * 1000),
+        channelId,
+        slackMessageId: m.ts as string,
+        slackThreadId: threadId,
+        usersId: user?.id,
+      },
+    });
+  }
+}
