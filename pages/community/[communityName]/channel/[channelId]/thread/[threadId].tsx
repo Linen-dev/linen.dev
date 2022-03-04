@@ -12,6 +12,7 @@ import {
   findThreadById,
   listUsers,
 } from '../../../../../../lib/slack';
+import serializeThread from '../../../../../../serializers/thread';
 import { links } from '../../../../../../constants/examples';
 
 import styles from './index.module.css';
@@ -144,18 +145,9 @@ export async function getServerSideProps({
 
   return {
     props: {
+      ...serializeThread(thread),
       threadId,
       users,
-      messages: thread.messages.map((m) => {
-        return {
-          body: m.body,
-          // Have to convert to string b/c Nextjs doesn't support date hydration -
-          // see: https://github.com/vercel/next.js/discussions/11498
-          sentAt: m.sentAt.toString(),
-          author: m.author,
-          id: m.id,
-        };
-      }),
       channels,
       slackUrl: account.slackUrl,
       threadUrl,
