@@ -1,4 +1,3 @@
-import { users } from '@prisma/client';
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import prisma from '../../client';
 import {
@@ -20,7 +19,6 @@ import {
   findMessagesWithThreads,
   findOrCreateThread,
   findSlackThreadsWithOnlyOneMessage,
-  findUser,
   updateAccountRedirectDomain,
 } from '../../lib/slack';
 import { getSlackChannels } from './slack';
@@ -29,6 +27,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  console.log(new Date());
   const accountId = req.query.account_id as string;
   const channelId = req.query.channel_id as string;
   const domain = req.query.domain as string;
@@ -76,6 +75,7 @@ export default async function handler(
   }
 
   //Only save new users
+  console.log('Saving users');
   const usersSlackIds = await prisma.users.findMany({
     where: { accountsId: account.id },
     select: {
@@ -91,6 +91,13 @@ export default async function handler(
 
   await saveUsers(newMembers, accountId);
 
+  const usersInDb = await prisma.users.findMany({
+    where: { accountsId: account.id },
+    select: {
+      slackUserId: true,
+      id: true,
+    },
+  });
   //fetch and save all top level conversations
   for (let i = 0; i < channels.length; i++) {
     const c = channels[i];
@@ -134,7 +141,10 @@ export default async function handler(
     }
 
     //save all messages
-    await saveMessagesSyncronous(messages, c.id);
+    console.log(new Date());
+    console.log('saving messages syncronous');
+    await saveMessagesTransaction(messages, c.id, usersInDb);
+    // await saveMessagesSyncronous(messages, c.id, usersInDb);
   }
 
   //Save all threads
@@ -157,7 +167,11 @@ export default async function handler(
 
     const replyMessages = replies?.body;
     try {
-      await saveMessagesSyncronous(replyMessages.messages, m.channelId);
+      await saveMessagesSyncronous(
+        replyMessages.messages,
+        m.channelId,
+        usersInDb
+      );
     } catch (e) {
       console.log(e);
     }
@@ -222,14 +236,89 @@ async function createChannels(
   return channels;
 }
 
+type UserMap = {
+  slackUserId: string;
+  id: string;
+};
+
+export async function saveMessagesTransaction(
+  messages: ConvesrationHistoryMessage[],
+  channelId: string,
+  users: UserMap[]
+) {
+  console.log('saving messages: ', messages.length);
+  console.log('Starting to save threads: ', new Date());
+  const threadsTransaction = messages
+    .map((m) => {
+      if (!!m.thread_ts) {
+        return prisma.slackThreads.upsert({
+          where: {
+            slackThreadTs: m.thread_ts,
+          },
+          update: {},
+          create: { slackThreadTs: m.thread_ts, channelId },
+        });
+      } else {
+      }
+      return null;
+    })
+    .filter((e) => e);
+
+  const threads = await prisma.$transaction(threadsTransaction);
+  console.log('Finished saving Threads: ', new Date());
+
+  const createMessagesTransaction = messages.map((m) => {
+    let threadId: string | null;
+    let thread: any | null;
+
+    if (!!m.thread_ts) {
+      thread = threads.find((t) => t.slackThreadTs === m.thread_ts);
+    }
+
+    let user: UserMap | null = null;
+    if (!!m.user) {
+      user = users.find((u) => u.slackUserId === m.user);
+    }
+
+    threadId = thread?.id;
+    const text = m.text as string;
+    return prisma.messages.upsert({
+      where: {
+        body_sentAt: {
+          body: text,
+          sentAt: new Date(parseFloat(m.ts) * 1000),
+        },
+      },
+      update: {
+        slackMessageId: m.ts as string,
+        slackThreadId: threadId,
+        usersId: user?.id,
+      },
+      create: {
+        body: m.text,
+        sentAt: new Date(parseFloat(m.ts) * 1000),
+        channelId,
+        slackMessageId: m.ts as string,
+        slackThreadId: threadId,
+        usersId: user?.id,
+      },
+    });
+  });
+  console.log('Starting to save messages: ', new Date());
+  await prisma.$transaction(createMessagesTransaction);
+  console.log('Finished saving messages', new Date());
+}
+
 export async function saveMessagesSyncronous(
   messages: ConvesrationHistoryMessage[],
-  channelId: string
+  channelId: string,
+  users: UserMap[]
 ) {
   for (let j = 0; j < messages.length - 1; j++) {
     const m = messages[j];
     let threadId: string | null;
     let thread: any | null;
+
     if (!!m.thread_ts) {
       thread = await findOrCreateThread({
         slackThreadTs: m.thread_ts,
@@ -237,9 +326,9 @@ export async function saveMessagesSyncronous(
       });
     }
 
-    let user: users | null = null;
+    let user: UserMap | null = null;
     if (!!m.user) {
-      user = await findUser(m.user);
+      user = users.find((u) => u.slackUserId === m.user);
     }
 
     threadId = thread?.id;
