@@ -56,7 +56,7 @@ function PageLayout({
       fixed
       navbar={
         <Navbar
-          sx={(theme) => ({ backgroundColor: '#white' })}
+          sx={(theme) => ({ backgroundColor: 'white', zIndex: 1 })}
           width={{ base: 250 }}
           padding="lg"
         >
