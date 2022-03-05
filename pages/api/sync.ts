@@ -120,8 +120,6 @@ export default async function handler(
         const additionaMessages = additionalConversations.messages;
 
         //save all messages
-        console.log(new Date());
-        console.log('saving messages bulk');
         await saveMessagesTransaction(additionaMessages, c.id, usersInDb);
         nextCursor = additionalConversations.response_metadata?.next_cursor;
       } catch (e) {
@@ -236,8 +234,6 @@ export async function saveMessagesTransaction(
   channelId: string,
   users: UserMap[]
 ) {
-  console.log('saving messages: ', messages.length);
-  console.log('Starting to save threads: ', new Date());
   const threadsTransaction = messages
     .map((m) => {
       if (!!m.thread_ts) {
@@ -255,7 +251,6 @@ export async function saveMessagesTransaction(
     .filter((e) => e);
 
   const threads = await prisma.$transaction(threadsTransaction);
-  console.log('Finished saving Threads: ', new Date());
 
   const createMessagesTransaction = messages.map((m) => {
     let threadId: string | null;
