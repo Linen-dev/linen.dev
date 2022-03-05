@@ -98,22 +98,18 @@ export default async function handler(
       id: true,
     },
   });
+
   //fetch and save all top level conversations
   for (let i = 0; i < channels.length; i++) {
     const c = channels[i];
     console.log('Syncing channel: ', c.channelName);
 
-    const conversations = await fetchConversationsTyped(
-      c.slackChannelId,
-      token
-    );
-
-    let nextCursor: string | null =
-      conversations.response_metadata?.next_cursor;
-    const messages = conversations.messages;
+    let nextCursor: string | null = null;
+    let firstLoop = true;
 
     //fetch all messages by paginating
-    while (!!nextCursor) {
+    while (!!nextCursor || firstLoop) {
+      console.log('Messages cursor: ', nextCursor);
       try {
         const additionalConversations = await fetchConversationsTyped(
           c.slackChannelId,
@@ -122,13 +118,12 @@ export default async function handler(
         );
 
         const additionaMessages = additionalConversations.messages;
-        if (!!additionaMessages) {
-          messages.push(...additionaMessages);
-        }
+
+        //save all messages
+        console.log(new Date());
+        console.log('saving messages bulk');
+        await saveMessagesTransaction(additionaMessages, c.id, usersInDb);
         nextCursor = additionalConversations.response_metadata?.next_cursor;
-        await new Promise((resolve) => {
-          setTimeout(resolve, 1000);
-        });
       } catch (e) {
         console.log('fetching messages failed', e.message);
         await new Promise((resolve) => {
@@ -138,13 +133,8 @@ export default async function handler(
 
         nextCursor = null;
       }
+      firstLoop = false;
     }
-
-    //save all messages
-    console.log(new Date());
-    console.log('saving messages syncronous');
-    await saveMessagesTransaction(messages, c.id, usersInDb);
-    // await saveMessagesSyncronous(messages, c.id, usersInDb);
   }
 
   //Save all threads
