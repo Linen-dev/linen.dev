@@ -289,6 +289,20 @@ export const findMessagesWithThreads = async (accountId: string) => {
   });
 };
 
+export const updateNextPageCursor = async (
+  channelId: string,
+  slackNextPageCursor: string
+) => {
+  return await prisma.channels.update({
+    where: {
+      id: channelId,
+    },
+    data: {
+      slackNextPageCursor,
+    },
+  });
+};
+
 // using unsafe because prisma query raw does not play well with string interpolation
 export const findSlackThreadsWithOnlyOneMessage = async (
   channelIds: string[]

@@ -49,10 +49,11 @@ model channels {
   messages       messages[]
   slackChannelId String
 
-  slackThreads slackThreads[]
-  account      accounts?      @relation(fields: [accountId], references: [id])
-  accountId    String?
-  hidden       Boolean        @default(false)
+  slackThreads        slackThreads[]
+  account             accounts?      @relation(fields: [accountId], references: [id])
+  accountId           String?
+  hidden              Boolean        @default(false)
+  slackNextPageCursor String?
 
   @@unique([slackChannelId])
 }

@@ -20,6 +20,7 @@ import {
   findOrCreateThread,
   findSlackThreadsWithOnlyOneMessage,
   updateAccountRedirectDomain,
+  updateNextPageCursor,
 } from '../../lib/slack';
 import { getSlackChannels } from './slack';
 
@@ -103,9 +104,12 @@ export default async function handler(
   for (let i = 0; i < channels.length; i++) {
     const c = channels[i];
     console.log('Syncing channel: ', c.channelName);
-
-    let nextCursor: string | null = null;
+    let nextCursor = c.slackNextPageCursor;
     let firstLoop = true;
+    if (nextCursor === 'completed') {
+      console.log('channel completed syncing: ', c.channelName);
+      continue;
+    }
 
     //fetch all messages by paginating
     while (!!nextCursor || firstLoop) {
@@ -122,6 +126,10 @@ export default async function handler(
         //save all messages
         await saveMessagesTransaction(additionaMessages, c.id, usersInDb);
         nextCursor = additionalConversations.response_metadata?.next_cursor;
+
+        // save cursor in database so don't have
+        //to refetch same conversation if script fails
+        await updateNextPageCursor(c.id, nextCursor);
       } catch (e) {
         console.log('fetching messages failed', e.message);
         await new Promise((resolve) => {
@@ -133,6 +141,8 @@ export default async function handler(
       }
       firstLoop = false;
     }
+    await updateNextPageCursor(c.id, 'completed');
+    console.log('channel completed syncing: ', c.channelName);
   }
 
   //Save all threads
