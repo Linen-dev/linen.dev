@@ -62,7 +62,7 @@ function Channel({
           key={threadId}
           href={`/channel/${channelId}/thread/${threadId}`}
         >
-          <TableElement style={{ paddingRight: '60px' }}>
+          <TableElement style={{ paddingRight: '60px', display: 'flex' }}>
             <Message users={users} text={oldestMessage.body} truncate />
           </TableElement>
           <TableElement style={{ minWidth: '140px' }}>

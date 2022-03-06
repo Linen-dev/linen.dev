@@ -20,17 +20,7 @@ export default function App(props: AppProps) {
       </Head>
 
       <SWRConfig>
-        <MantineProvider
-          withGlobalStyles
-          withNormalizeCSS
-          theme={{
-            /** Put your mantine theme override here */
-            colorScheme: 'light',
-            primaryColor: 'violet',
-          }}
-        >
-          <Component {...pageProps} />
-        </MantineProvider>
+        <Component {...pageProps} />
       </SWRConfig>
     </>
   );
