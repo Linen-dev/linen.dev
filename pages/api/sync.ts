@@ -154,7 +154,9 @@ export default async function handler(
   console.log('syncing threads: ', messageWithThreads.length);
 
   for (let i = 0; i < messageWithThreads.length - 1; i++) {
-    console.log(i);
+    if (i % 10 === 0) {
+      console.log(i);
+    }
     const m = messageWithThreads[i];
     const channel = account.channels.find((c) => c.id === m.channelId);
     const replies = await fetchReplies(

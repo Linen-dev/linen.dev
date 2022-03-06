@@ -2,7 +2,6 @@ import { Anchor, Avatar, Group, Paper, Text } from '@mantine/core';
 import { AiOutlineLink } from 'react-icons/ai';
 import { useMemo, useEffect } from 'react';
 import { format } from 'timeago.js';
-import ScrollableAnchor from 'react-scrollable-anchor';
 import PageLayout from '../../../../../../components/layout/PageLayout';
 import Message from '../../../../../../components/Message';
 
@@ -43,7 +42,7 @@ function Thread({
       .sort((a, b) => b.sentAt - a.sentAt)
       .map(({ body, author, id: messageId, sentAt, ...rest }) => {
         return (
-          <ScrollableAnchor key={messageId} id={messageId}>
+          <div key={messageId} id={messageId}>
             <Group
               style={{ marginBottom: 24 }}
               direction="column"
@@ -68,7 +67,7 @@ function Thread({
                 <Message text={body} users={users} />
               </div>
             </Group>
-          </ScrollableAnchor>
+          </div>
         );
       });
   }, [messages, users]);
