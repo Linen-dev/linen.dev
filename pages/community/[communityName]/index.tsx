@@ -1,4 +1,5 @@
 import { Avatar, AvatarsGroup, Paper, Text, Title } from '@mantine/core';
+import Link from 'next/link';
 import { useMemo } from 'react';
 import styled from 'styled-components';
 import { format } from 'timeago.js';
@@ -51,40 +52,58 @@ function Channel({
         }
         return agg;
       }, []);
+      const author = participants[0];
 
       return (
-        <TableRow
-          key={threadId}
-          href={`/channel/${channelId}/thread/${threadId}`}
-        >
-          <TableElement style={{ paddingRight: '60px' }}>
-            <Message users={users} text={oldestMessage.body} truncate />
-          </TableElement>
-          <TableElement style={{ minWidth: '140px' }}>
-            <AvatarsGroup size={36} limit={3}>
-              {participants.map((p, idx) => (
+        <li className="px-4 py-4 hover:bg-gray-50 border-solid border-gray-200">
+          <Link
+            key={threadId}
+            href={`/channel/${channelId}/thread/${threadId}`}
+            passHref
+          >
+            <div className="flex">
+              <div className="flex pr-4 items-center sm:hidden">
                 <Avatar
                   radius="xl"
-                  key={p.id || p.displayName}
+                  key={author?.id || author?.displayName}
                   color="indigo"
-                  src={p?.profileImageUrl} // set placeholder with a U sign
-                  alt={p?.displayName} // Set placeholder of a slack user if missing
+                  src={author?.profileImageUrl} // set placeholder with a U sign
+                  alt={author?.displayName} // Set placeholder of a slack user if missing
                 >
                   <Text style={{ marginTop: '-2px', fontSize: '14px' }}>
-                    {(p?.displayName || '?').slice(0, 1).toLowerCase()}
+                    {(author?.displayName || '?').slice(0, 1).toLowerCase()}
                   </Text>
                 </Avatar>
-              ))}
-            </AvatarsGroup>
-          </TableElement>
-          <TableElement style={{ minWidth: '50px' }}>{viewCount}</TableElement>
-          <TableElement style={{ minWidth: '120px' }}>
-            {messages.length}
-          </TableElement>
-          <TableElement style={{ minWidth: '120px', whiteSpace: 'nowrap' }}>
-            {format(new Date(newestMessage.sentAt))}
-          </TableElement>
-        </TableRow>
+              </div>
+              <div className="flex flex-col">
+                <div className="pb-2 sm:px-6">
+                  <Message users={users} text={oldestMessage.body} truncate />
+                </div>
+                <div className="hidden sm:block">
+                  <AvatarsGroup size={36} limit={3}>
+                    {participants.map((p, idx) => (
+                      <Avatar
+                        radius="xl"
+                        key={p.id || p.displayName}
+                        color="indigo"
+                        src={p?.profileImageUrl} // set placeholder with a U sign
+                        alt={p?.displayName} // Set placeholder of a slack user if missing
+                      >
+                        <Text style={{ marginTop: '-2px', fontSize: '14px' }}>
+                          {(p?.displayName || '?').slice(0, 1).toLowerCase()}
+                        </Text>
+                      </Avatar>
+                    ))}
+                  </AvatarsGroup>
+                </div>
+                <div className="text-sm text-gray-400 flex flex-row justify-between">
+                  <p>{messages.length} Views</p>
+                  {format(new Date(newestMessage.sentAt))}
+                </div>
+              </div>
+            </div>
+          </Link>
+        </li>
       );
     });
   }, [channelId, threads, users]);
@@ -97,26 +116,17 @@ function Channel({
       navItems={{ channels: channels }}
       settings={settings}
     >
-      <Paper
-        padding="xl"
-        style={{
-          width: '100%',
-        }}
-      >
-        <Title order={3}>{channelName}</Title>
-        <Table clickable>
-          <thead>
-            <tr>
-              <TableHeader>Topic</TableHeader>
-              <TableHeader>Authors</TableHeader>
-              <TableHeader>Views</TableHeader>
-              <TableHeader>Replies</TableHeader>
-              <TableHeader>Activity</TableHeader>
-            </tr>
-          </thead>
-          <tbody>{rows}</tbody>
-        </Table>
-      </Paper>
+      <div>
+        <ul className="divide-y">
+          {/* <li className="hidden">
+            <div>Authors</div>
+            <div>Views</div>
+            <div>Replies</div>
+            <div>Activities</div>
+          </li> */}
+          {rows}
+        </ul>
+      </div>
     </PageLayout>
   );
 }

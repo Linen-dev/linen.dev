@@ -110,8 +110,9 @@ function Channel({
       >
         <Title order={3}>{channelName}</Title>
         <Table clickable>
-          <thead>
+          <thead className="bg-gray-50" style={{ color: 'red' }}>
             <tr>
+              <th style={{ padding: '20px' }}>Topic</th>
               <TableHeader>Topic</TableHeader>
               <TableHeader>Authors</TableHeader>
               <TableHeader>Views</TableHeader>

@@ -1,9 +1,5 @@
 function TableElement({ children, style, ...rest }) {
-  return (
-    <td {...rest} style={{ verticalAlign: 'middle', ...style }}>
-      {children}
-    </td>
-  );
+  return <td {...rest}>{children}</td>;
 }
 
 export default TableElement;

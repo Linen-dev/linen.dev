@@ -1,4 +1,3 @@
-import { Text } from '@mantine/core';
 import { useMemo } from 'react';
 import MessageRangeText from './MessageRangeText';
 

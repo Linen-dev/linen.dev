@@ -18,11 +18,6 @@ a {
 * {
   box-sizing: border-box;
 }
-/* 
-@tailwind base;
-@tailwind components;
-@tailwind utilities; 
-*/
 
 tbody tr:hover {
   /* background-color: #fafafa !important; */

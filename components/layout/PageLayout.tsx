@@ -1,5 +1,6 @@
 import { AppShell, Header, Group, Anchor, Button } from '@mantine/core';
 import Image from 'next/image';
+// import {Header} from 'react'
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
@@ -52,7 +53,7 @@ function PageLayout({
     // })}
     >
       {/* {NavBar(channels, channelId)} */}
-      <Header
+      {/* <Header
         sx={(theme) => ({
           backgroundColor: settings.brandColor,
           display: 'flex',
@@ -98,8 +99,8 @@ function PageLayout({
             Join the Conversation
           </Button>
         </Group>
-      </Header>
-      <SEO image={undefined} url={undefined} {...seo} />
+      </Header> */}
+      {/* <SEO image={undefined} url={undefined} {...seo} /> */}
       {children}
     </div>
     // <AppShell
