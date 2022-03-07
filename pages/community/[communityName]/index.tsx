@@ -89,50 +89,67 @@ function Channel({
               </div>
             </Link>
           </li>
-
-          <tr className="hidden sm:block">
-            <td className="px-6 py-4 max-w-[360px]">
-              <Link
-                key={threadId}
-                href={`/channel/${channelId}/thread/${threadId}`}
-                passHref
-              >
-                <Message users={users} text={oldestMessage.body} truncate />
-              </Link>
-            </td>
-            <td className="px-6 py-4 whitespace-nowrap text-sm min-w-[140px]">
-              <AvatarsGroup size={36} limit={3}>
-                {participants.map((p, idx) => (
-                  <Avatar
-                    radius="xl"
-                    key={p.id || p.displayName}
-                    color="indigo"
-                    src={p?.profileImageUrl} // set placeholder with a U sign
-                    alt={p?.displayName} // Set placeholder of a slack user if missing
-                  >
-                    <Text style={{ marginTop: '-2px', fontSize: '14px' }}>
-                      {(p?.displayName || '?').slice(0, 1).toLowerCase()}
-                    </Text>
-                  </Avatar>
-                ))}
-              </AvatarsGroup>
-            </td>
-            <td className="px-6 py-4 whitespace-nowrap text-sm min-w-[60px]">
-              {viewCount}
-            </td>
-            <td className="px-6 py-4 whitespace-nowrap text-sm min-w-[60px]">
-              {messages.length}
-            </td>
-            <td className="px-6 py-4 whitespace-nowrap text-sm">
-              {format(new Date(newestMessage.sentAt))}
-            </td>
-          </tr>
         </div>
       );
     });
   }, [channelId, threads, users]);
 
+  const tableRows = useMemo(() => {
+    return threads.map(({ messages, id: threadId, viewCount }) => {
+      const oldestMessage = messages[messages.length - 1];
+      const newestMessage = messages[0];
+      const participants = messages.reduce((agg, { author }) => {
+        if (
+          author &&
+          !agg.find((a) => a.profileImageUrl === author.profileImageUrl)
+        ) {
+          agg.push(author);
+        }
+        return agg;
+      }, []);
+      const author = participants[0];
+
+      return (
+        <tr className="border-solid border-gray-200">
+          <td className="px-6 py-3 max-w-[600px]">
+            <Link
+              key={threadId}
+              href={`/channel/${channelId}/thread/${threadId}`}
+              passHref
+            >
+              <Message users={users} text={oldestMessage.body} truncate />
+            </Link>
+          </td>
+          <td className="px-6 py-3 align-middle">
+            <AvatarsGroup size={36} limit={3}>
+              {participants.map((p, idx) => (
+                <Avatar
+                  radius="xl"
+                  key={p.id || p.displayName}
+                  color="indigo"
+                  src={p?.profileImageUrl} // set placeholder with a U sign
+                  alt={p?.displayName} // Set placeholder of a slack user if missing
+                >
+                  <Text style={{ marginTop: '-2px', fontSize: '14px' }}>
+                    {(p?.displayName || '?').slice(0, 1).toLowerCase()}
+                  </Text>
+                </Avatar>
+              ))}
+            </AvatarsGroup>
+          </td>
+          <td className="px-6 py-3 text-sm">{viewCount}</td>
+          <td className="px-6 py-3 text-sm">{messages.length}</td>
+          <td className="px-6 py-3 text-sm">
+            {format(new Date(newestMessage.sentAt))}
+          </td>
+        </tr>
+      );
+    });
+  }, [channelId, threads, users]);
+
   return (
+    //Super hacky mobile friendly - different component gets
+    //rendered when it is smaller than a specific size and gets unhidden
     <PageLayout
       users={users}
       slackUrl={slackUrl}
@@ -141,31 +158,29 @@ function Channel({
       settings={settings}
     >
       <div>
-        <ul className="divide-y sm:hidden">{rows}</ul>
         <table className="hidden sm:block sm:table-fixed">
-          <thead>
-            <tr className="flex flex-row ">
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 align-left">
+          <thead className="divide-y">
+            <tr>
+              <th className="px-6 py-3 text-left font-medium text-gray-500">
                 Topic
               </th>
-              <div className="justify-end">
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 align-right">
-                  Authors
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
-                  Views
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
-                  Replies
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 relative">
-                  Activity
-                </th>
-              </div>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
+                Authors
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
+                Views
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
+                Replies
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
+                Activity
+              </th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">{rows}</tbody>
+          <tbody className="divide-y">{tableRows}</tbody>
         </table>
+        <ul className="divide-y sm:hidden">{rows}</ul>
       </div>
     </PageLayout>
   );
