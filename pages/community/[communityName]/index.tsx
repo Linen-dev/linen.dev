@@ -4,14 +4,11 @@ import { useMemo } from 'react';
 import styled from 'styled-components';
 import { format } from 'timeago.js';
 import PageLayout from '../../../components/layout/PageLayout';
-import Table from '../../../components/table/Table';
 import Message from '../../../components/Message';
-import TableRow from '../../../components/table/TableRow';
-import TableElement from '../../../components/table/TableElement';
-import TableHeader from '../../../components/table/TableHeader';
 import { findAccountByPath, listUsers, threadIndex } from '../../../lib/slack';
 import serializeThread from '../../../serializers/thread';
 import { links } from '../../../constants/examples';
+import { channels, slackThreads, users } from '@prisma/client';
 
 const EXCERPT_LENGTH = 220;
 
@@ -22,8 +19,8 @@ const Wrapper = styled.div({
 
 type Props = {
   channelId: string;
-  users: any[];
-  channels: any[];
+  users: users[];
+  channels: channels[];
   threads: any[];
   slackUrl: string;
   settings: any;
@@ -157,9 +154,9 @@ function Channel({
       navItems={{ channels: channels }}
       settings={settings}
     >
-      <div>
-        <table className="hidden sm:block sm:table-fixed">
-          <thead className="divide-y">
+      <div className="pt-8 sm:flex sm:justify-center">
+        <table className="hidden sm:block sm:table-fixed ">
+          <thead>
             <tr>
               <th className="px-6 py-3 text-left font-medium text-gray-500">
                 Topic

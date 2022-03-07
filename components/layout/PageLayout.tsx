@@ -53,7 +53,7 @@ function PageLayout({
     // })}
     >
       {/* {NavBar(channels, channelId)} */}
-      {/* <Header
+      <Header
         sx={(theme) => ({
           backgroundColor: settings.brandColor,
           display: 'flex',
@@ -63,17 +63,18 @@ function PageLayout({
         padding="lg"
       >
         <Link href={'/'} passHref>
-          <LogoImg width="130px" src={settings.logoUrl} />
+          <LogoImg className="h-full" src={settings.logoUrl} />
         </Link>
         <Group
           style={{
-            minWidth: '1044px',
+            minWidth: '300px',
             flex: '1 0 auto',
             justifyContent: 'flex-end',
           }}
         >
           <SearchBar channels={channels} users={users} />
           <a
+            className="hidden sm:block"
             style={{ color: 'white', fontWeight: 500, marginRight: '24px' }}
             rel="noreferrer"
             target="_blank"
@@ -99,30 +100,10 @@ function PageLayout({
             Join the Conversation
           </Button>
         </Group>
-      </Header> */}
-      {/* <SEO image={undefined} url={undefined} {...seo} /> */}
+      </Header>
+      <SEO image={undefined} url={undefined} {...seo} />
       {children}
     </div>
-    // <AppShell
-    //   padding="lg"
-    //   fixed
-    //   navbar={
-    //     NavBar(channels, channelId)
-    //   }
-    //   header={
-
-    //   }
-    //   styles={(theme) => ({
-    //     main: {
-    //       backgroundColor: 'white',
-    //       paddingRight: 20,
-    //       paddingBottom: 20,
-    //     },
-    //   })}
-    // >
-    //   <SEO image={undefined} url={undefined} {...seo} />
-    //   {children}
-    // </AppShell>
   );
 }
 
