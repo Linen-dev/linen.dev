@@ -11,7 +11,8 @@
     "migrate": "npx prisma migrate dev && npx prisma generate dev"
   },
   "dependencies": {
-    "@headlessui/react": "^1.4.3",
+    "@headlessui/react": "^1.5.0",
+    "@heroicons/react": "^1.0.6",
     "@mantine/core": "^3.6.7",
     "@mantine/hooks": "^3.6.7",
     "@mantine/next": "^3.6.7",

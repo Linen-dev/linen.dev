@@ -1,30 +1,35 @@
 import { links } from '../../../../../constants/examples';
 import {
+  channelIndex,
+  findAccountById,
   findAccountByPath,
+  findChannel,
   listUsers,
   threadIndex,
 } from '../../../../../lib/slack';
 import Channel from '../../../[communityName]/index';
 import serializeThread from '../../../../../serializers/thread';
+
 type Params = {
   params: {
+    channelId: string;
     communityName: string;
   };
 };
 
-//TODO: Remove getServerSideProp duplicate code
+//Remove getServerSideProp duplicate code
 export async function getServerSideProps({
-  params: { communityName },
+  params: { channelId, communityName },
 }: Params) {
-  const account = await findAccountByPath(communityName);
-  const channels = account.channels;
-  const channel = channels[0];
-
-  const channelId = channel.id;
-
-  const threadsPromise = threadIndex(channelId, 50);
-  const usersPromise = listUsers(channel.accountId);
-  const [threads, users] = await Promise.all([threadsPromise, usersPromise]);
+  const [channel, threads] = await Promise.all([
+    findChannel(channelId),
+    threadIndex(channelId, 50),
+  ]);
+  const [channels, users, account] = await Promise.all([
+    channelIndex(channel.accountId),
+    listUsers(channel.accountId),
+    findAccountById(channel.accountId),
+  ]);
 
   const defaultSettings =
     links.find(({ accountId }) => accountId === account.id) || links[0];

@@ -43,16 +43,7 @@ function PageLayout({
   const channels = navItems.channels.filter((c) => !c.hidden);
 
   return (
-    <div
-    // styles={(theme) => ({
-    //   main: {
-    //     backgroundColor: 'white',
-    //     paddingRight: 20,
-    //     paddingBottom: 20,
-    //   },
-    // })}
-    >
-      {/* {NavBar(channels, channelId)} */}
+    <div>
       <Header
         sx={(theme) => ({
           backgroundColor: settings.brandColor,
@@ -102,7 +93,10 @@ function PageLayout({
         </Group>
       </Header>
       <SEO image={undefined} url={undefined} {...seo} />
-      {children}
+      <div className="sm:flex sm:justify-center">
+        <div className="hidden lg:flex">{NavBar(channels, channelId)}</div>
+        <div className="">{children}</div>
+      </div>
     </div>
   );
 }
