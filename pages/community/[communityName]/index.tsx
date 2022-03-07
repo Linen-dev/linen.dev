@@ -113,7 +113,7 @@ function Channel({
           passHref
         >
           <tr className="border-solid border-gray-200 cursor-pointer">
-            <td className="px-6 py-3 max-w-[600px]">
+            <td className="px-6 py-3 md:max-w-[1100px] lg">
               <Message users={users} text={oldestMessage.body} truncate />
             </td>
             <td className="px-6 py-3 align-middle">
@@ -135,7 +135,7 @@ function Channel({
             </td>
             <td className="px-6 py-3 text-sm">{viewCount}</td>
             <td className="px-6 py-3 text-sm">{messages.length}</td>
-            <td className="px-6 py-3 text-sm">
+            <td className="px-6 py-3 text-sm min-w-[120px]">
               {format(new Date(newestMessage.sentAt))}
             </td>
           </tr>
@@ -154,7 +154,7 @@ function Channel({
       navItems={{ channels: channels }}
       settings={settings}
     >
-      <div className="pt-8 sm:flex sm:justify-center">
+      <div className="pt-8 px-8 sm:flex sm:justify-center">
         <table className="hidden sm:block sm:table-fixed ">
           <thead>
             <tr>
