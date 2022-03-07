@@ -115,7 +115,7 @@ function Channel({
           passHref
         >
           <tr className="border-solid border-gray-200 cursor-pointer">
-            <td className="px-6 py-3 md:min-w-[600px]">
+            <td className="px-6 py-3 md:max-w-[800px]">
               <Message users={users} text={oldestMessage.body} truncate />
             </td>
             <td className="px-6 py-3 align-middle">
