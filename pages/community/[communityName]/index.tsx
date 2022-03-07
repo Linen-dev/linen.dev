@@ -52,7 +52,7 @@ function Channel({
       const author = participants[0];
 
       return (
-        <div className="border-solid border-gray-200">
+        <div key={threadId} className="border-solid border-gray-200">
           <li className="px-4 py-4 hover:bg-gray-50  sm:hidden cursor-pointer">
             <Link
               key={threadId}
