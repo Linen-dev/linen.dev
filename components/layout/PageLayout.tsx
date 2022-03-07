@@ -97,7 +97,7 @@ function PageLayout({
       <SEO
         image={undefined}
         url={undefined}
-        title={communityName.split('.')[0]}
+        title={communityName?.split('.')[0]}
         {...seo}
       />
       <div className="sm:flex">
