@@ -93,9 +93,9 @@ function PageLayout({
         </Group>
       </Header>
       <SEO image={undefined} url={undefined} {...seo} />
-      <div className="sm:flex sm:justify-center">
+      <div className="sm:flex sm:justify-center ">
         <div className="hidden lg:flex">{NavBar(channels, channelId)}</div>
-        <div className="">{children}</div>
+        <div className="lg:w-full">{children}</div>
       </div>
     </div>
   );
