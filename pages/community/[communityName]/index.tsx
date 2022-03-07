@@ -107,39 +107,39 @@ function Channel({
       const author = participants[0];
 
       return (
-        <tr className="border-solid border-gray-200">
-          <td className="px-6 py-3 max-w-[600px]">
-            <Link
-              key={threadId}
-              href={`/channel/${channelId}/thread/${threadId}`}
-              passHref
-            >
+        <Link
+          key={threadId}
+          href={`/channel/${channelId}/thread/${threadId}`}
+          passHref
+        >
+          <tr className="border-solid border-gray-200 cursor-pointer">
+            <td className="px-6 py-3 max-w-[600px]">
               <Message users={users} text={oldestMessage.body} truncate />
-            </Link>
-          </td>
-          <td className="px-6 py-3 align-middle">
-            <AvatarsGroup size={36} limit={3}>
-              {participants.map((p, idx) => (
-                <Avatar
-                  radius="xl"
-                  key={p.id || p.displayName}
-                  color="indigo"
-                  src={p?.profileImageUrl} // set placeholder with a U sign
-                  alt={p?.displayName} // Set placeholder of a slack user if missing
-                >
-                  <Text style={{ marginTop: '-2px', fontSize: '14px' }}>
-                    {(p?.displayName || '?').slice(0, 1).toLowerCase()}
-                  </Text>
-                </Avatar>
-              ))}
-            </AvatarsGroup>
-          </td>
-          <td className="px-6 py-3 text-sm">{viewCount}</td>
-          <td className="px-6 py-3 text-sm">{messages.length}</td>
-          <td className="px-6 py-3 text-sm">
-            {format(new Date(newestMessage.sentAt))}
-          </td>
-        </tr>
+            </td>
+            <td className="px-6 py-3 align-middle">
+              <AvatarsGroup size={36} limit={3}>
+                {participants.map((p, idx) => (
+                  <Avatar
+                    radius="xl"
+                    key={p.id || p.displayName}
+                    color="indigo"
+                    src={p?.profileImageUrl} // set placeholder with a U sign
+                    alt={p?.displayName} // Set placeholder of a slack user if missing
+                  >
+                    <Text style={{ marginTop: '-2px', fontSize: '14px' }}>
+                      {(p?.displayName || '?').slice(0, 1).toLowerCase()}
+                    </Text>
+                  </Avatar>
+                ))}
+              </AvatarsGroup>
+            </td>
+            <td className="px-6 py-3 text-sm">{viewCount}</td>
+            <td className="px-6 py-3 text-sm">{messages.length}</td>
+            <td className="px-6 py-3 text-sm">
+              {format(new Date(newestMessage.sentAt))}
+            </td>
+          </tr>
+        </Link>
       );
     });
   }, [channelId, threads, users]);
