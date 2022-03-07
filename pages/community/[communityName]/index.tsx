@@ -160,7 +160,7 @@ function Channel({
       settings={settings}
       communityName={communityName}
     >
-      <div className="pt-8 px-8 sm:flex sm:justify-center">
+      <div className="sm:pt-8 sm:px-8 sm:flex sm:justify-center">
         <table className="hidden sm:block sm:table-fixed ">
           <thead>
             <tr>
