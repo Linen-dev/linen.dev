@@ -55,55 +55,79 @@ function Channel({
       const author = participants[0];
 
       return (
-        <li className="px-4 py-4 hover:bg-gray-50 border-solid border-gray-200">
-          <Link
-            key={threadId}
-            href={`/channel/${channelId}/thread/${threadId}`}
-            passHref
-          >
-            <div className="flex">
-              <div className="flex pr-4 items-center sm:hidden">
-                <Avatar
-                  radius="xl"
-                  key={author?.id || author?.displayName}
-                  color="indigo"
-                  src={author?.profileImageUrl} // set placeholder with a U sign
-                  alt={author?.displayName} // Set placeholder of a slack user if missing
-                >
-                  <Text style={{ marginTop: '-2px', fontSize: '14px' }}>
-                    {(author?.displayName || '?').slice(0, 1).toLowerCase()}
-                  </Text>
-                </Avatar>
-              </div>
-              <div className="flex flex-col">
-                <div className="pb-2 sm:px-6">
-                  <Message users={users} text={oldestMessage.body} truncate />
+        <div className="border-solid border-gray-200">
+          <li className="px-4 py-4 hover:bg-gray-50  sm:hidden">
+            <Link
+              key={threadId}
+              href={`/channel/${channelId}/thread/${threadId}`}
+              passHref
+            >
+              <div className="flex">
+                <div className="flex pr-4 items-center sm:hidden">
+                  <Avatar
+                    radius="xl"
+                    key={author?.id || author?.displayName}
+                    color="indigo"
+                    src={author?.profileImageUrl} // set placeholder with a U sign
+                    alt={author?.displayName} // Set placeholder of a slack user if missing
+                  >
+                    <Text style={{ marginTop: '-2px', fontSize: '14px' }}>
+                      {(author?.displayName || '?').slice(0, 1).toLowerCase()}
+                    </Text>
+                  </Avatar>
                 </div>
-                <div className="hidden sm:block">
-                  <AvatarsGroup size={36} limit={3}>
-                    {participants.map((p, idx) => (
-                      <Avatar
-                        radius="xl"
-                        key={p.id || p.displayName}
-                        color="indigo"
-                        src={p?.profileImageUrl} // set placeholder with a U sign
-                        alt={p?.displayName} // Set placeholder of a slack user if missing
-                      >
-                        <Text style={{ marginTop: '-2px', fontSize: '14px' }}>
-                          {(p?.displayName || '?').slice(0, 1).toLowerCase()}
-                        </Text>
-                      </Avatar>
-                    ))}
-                  </AvatarsGroup>
-                </div>
-                <div className="text-sm text-gray-400 flex flex-row justify-between">
-                  <p>{messages.length} Views</p>
-                  {format(new Date(newestMessage.sentAt))}
+                <div className="flex flex-col">
+                  <div className="pb-2 sm:px-6">
+                    <Message users={users} text={oldestMessage.body} truncate />
+                  </div>
+                  <div className="hidden sm:block"></div>
+                  <div className="text-sm text-gray-400 flex flex-row justify-between">
+                    <p>{messages.length} Views</p>
+                    {format(new Date(newestMessage.sentAt))}
+                  </div>
                 </div>
               </div>
-            </div>
-          </Link>
-        </li>
+            </Link>
+          </li>
+
+          <tr className="hidden sm:block">
+            <td className="px-6 py-4 max-w-[360px]">
+              <Link
+                key={threadId}
+                href={`/channel/${channelId}/thread/${threadId}`}
+                passHref
+              >
+                <Message users={users} text={oldestMessage.body} truncate />
+              </Link>
+            </td>
+            <td className="px-6 py-4 whitespace-nowrap text-sm min-w-[140px]">
+              <AvatarsGroup size={36} limit={3}>
+                {participants.map((p, idx) => (
+                  <Avatar
+                    radius="xl"
+                    key={p.id || p.displayName}
+                    color="indigo"
+                    src={p?.profileImageUrl} // set placeholder with a U sign
+                    alt={p?.displayName} // Set placeholder of a slack user if missing
+                  >
+                    <Text style={{ marginTop: '-2px', fontSize: '14px' }}>
+                      {(p?.displayName || '?').slice(0, 1).toLowerCase()}
+                    </Text>
+                  </Avatar>
+                ))}
+              </AvatarsGroup>
+            </td>
+            <td className="px-6 py-4 whitespace-nowrap text-sm min-w-[60px]">
+              {viewCount}
+            </td>
+            <td className="px-6 py-4 whitespace-nowrap text-sm min-w-[60px]">
+              {messages.length}
+            </td>
+            <td className="px-6 py-4 whitespace-nowrap text-sm">
+              {format(new Date(newestMessage.sentAt))}
+            </td>
+          </tr>
+        </div>
       );
     });
   }, [channelId, threads, users]);
@@ -117,15 +141,31 @@ function Channel({
       settings={settings}
     >
       <div>
-        <ul className="divide-y">
-          {/* <li className="hidden">
-            <div>Authors</div>
-            <div>Views</div>
-            <div>Replies</div>
-            <div>Activities</div>
-          </li> */}
-          {rows}
-        </ul>
+        <ul className="divide-y sm:hidden">{rows}</ul>
+        <table className="hidden sm:block sm:table-fixed">
+          <thead>
+            <tr className="flex flex-row ">
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 align-left">
+                Topic
+              </th>
+              <div className="justify-end">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 align-right">
+                  Authors
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
+                  Views
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
+                  Replies
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 relative">
+                  Activity
+                </th>
+              </div>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">{rows}</tbody>
+        </table>
       </div>
     </PageLayout>
   );
