@@ -5,10 +5,11 @@ import styled from 'styled-components';
 import { format } from 'timeago.js';
 import PageLayout from '../../../components/layout/PageLayout';
 import Message from '../../../components/Message';
-import { findAccountByPath, listUsers, threadIndex } from '../../../lib/slack';
+import { findAccountByPath, listUsers } from '../../../lib/slack';
 import serializeThread from '../../../serializers/thread';
 import { links } from '../../../constants/examples';
 import { channels, slackThreads, users } from '@prisma/client';
+import { index as fetchThreads } from '../../../services/threads';
 
 const EXCERPT_LENGTH = 220;
 
@@ -16,6 +17,13 @@ const Wrapper = styled.div({
   height: 'calc(100vh - 98px)',
   overflowY: 'auto',
 });
+
+interface Pagination {
+  totalCount: number;
+  pageCount: number;
+  currentPage: number;
+  perPage: number;
+}
 
 type Props = {
   channelId: string;
@@ -25,6 +33,7 @@ type Props = {
   slackUrl: string;
   settings: any;
   communityName: string;
+  pagination: Pagination;
 };
 
 function Channel({
@@ -35,6 +44,7 @@ function Channel({
   slackUrl,
   settings,
   communityName,
+  pagination,
 }: Props) {
   const channelName = channels.find((c) => c.id === channelId).channelName;
 
@@ -205,12 +215,12 @@ export async function getServerSideProps({
 
   const channelId = channel.id;
 
-  const threads = await threadIndex(channelId, 50);
+  const { data, pagination } = await fetchThreads({ channelId, page: 1 });
+  const { threads } = data;
   const users = threads
-    .map((t) => t.messages.map((m) => m.author))
+    .map(({ messages }) => messages.map(({ author }) => author))
     .flat()
-    .filter((u) => u);
-
+    .filter(Boolean);
   const defaultSettings =
     links.find(({ accountId }) => accountId === account.id) || links[0];
 
@@ -225,11 +235,12 @@ export async function getServerSideProps({
     props: {
       channelId,
       users,
-      threads: threads.map(serializeThread),
       channels,
       communityName,
       slackUrl: account.slackUrl,
       settings,
+      threads,
+      pagination,
     },
   };
 }

@@ -1,20 +1,17 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import prisma from '../../client';
-import { threadIndex } from '../../lib/slack';
-import serializeThread from '../../serializers/thread';
+import { index as fetchThreads } from '../../services/threads';
 
 async function index(request: NextApiRequest, response: NextApiResponse) {
-  const channelId = request.query.channelId as string;
-  const take = request.query.take as string;
-  const skip = request.query.skip as string;
-  const threads = await threadIndex(
-    channelId,
-    Number(take) || 50,
-    Number(skip) || 0
-  );
+  type PermittedParams = { channelId?: string; page?: string };
+  const query = request.query as PermittedParams;
+  const channelId = query.channelId;
+  const page = query.page ? parseInt(query.page, 10) : 1;
+  const { data, pagination } = await fetchThreads({ channelId, page });
 
   return response.status(200).json({
-    threads: threads.map(serializeThread),
+    data,
+    pagination,
   });
 }
 
