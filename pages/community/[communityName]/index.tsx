@@ -24,6 +24,7 @@ type Props = {
   threads: any[];
   slackUrl: string;
   settings: any;
+  communityName: string;
 };
 
 function Channel({
@@ -33,6 +34,7 @@ function Channel({
   channels,
   slackUrl,
   settings,
+  communityName,
 }: Props) {
   const channelName = channels.find((c) => c.id === channelId).channelName;
 
@@ -153,6 +155,7 @@ function Channel({
       seo={{ title: `${channelName} threads` }}
       navItems={{ channels: channels }}
       settings={settings}
+      communityName={communityName}
     >
       <div className="pt-8 px-8 sm:flex sm:justify-center">
         <table className="hidden sm:block sm:table-fixed ">

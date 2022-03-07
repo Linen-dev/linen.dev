@@ -27,6 +27,7 @@ interface Props {
   navItems?: any;
   slackUrl?: string;
   settings?: Settings;
+  communityName?: string;
 }
 
 function PageLayout({
@@ -36,6 +37,7 @@ function PageLayout({
   navItems,
   slackUrl,
   settings,
+  communityName,
 }: Props) {
   const {
     query: { channelId },
@@ -92,7 +94,7 @@ function PageLayout({
           </Button>
         </Group>
       </Header>
-      <SEO image={undefined} url={undefined} {...seo} />
+      <SEO image={undefined} url={undefined} title={communityName} {...seo} />
       <div className="sm:flex sm:justify-center ">
         <div className="hidden lg:flex">{NavBar(channels, channelId)}</div>
         <div className="lg:w-full">{children}</div>
