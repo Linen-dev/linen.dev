@@ -94,7 +94,12 @@ function PageLayout({
           </Button>
         </Group>
       </Header>
-      <SEO image={undefined} url={undefined} title={communityName} {...seo} />
+      <SEO
+        image={undefined}
+        url={undefined}
+        title={communityName.split('.')[0]}
+        {...seo}
+      />
       <div className="sm:flex">
         <div className="hidden lg:flex">{NavBar(channels, channelId)}</div>
         <div className="lg:w-full">{children}</div>
