@@ -7,7 +7,7 @@ interface IndexProps {
 }
 
 export async function index({ channelId, page }: IndexProps) {
-  const take = 50;
+  const take = 10;
   const skip = (page - 1) * take;
   const [threads, total] = await Promise.all([
     threadIndex(channelId, take, skip),

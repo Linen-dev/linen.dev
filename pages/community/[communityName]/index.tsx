@@ -1,22 +1,15 @@
 import { Avatar, AvatarsGroup, Paper, Text, Title } from '@mantine/core';
 import Link from 'next/link';
-import { useMemo } from 'react';
+import { useEffect, useState } from 'react';
+import ReactPaginate from 'react-paginate';
 import styled from 'styled-components';
 import { format } from 'timeago.js';
 import PageLayout from '../../../components/layout/PageLayout';
 import Message from '../../../components/Message';
 import { findAccountByPath, listUsers } from '../../../lib/slack';
-import serializeThread from '../../../serializers/thread';
 import { links } from '../../../constants/examples';
-import { channels, slackThreads, users } from '@prisma/client';
+import { channels, users } from '@prisma/client';
 import { index as fetchThreads } from '../../../services/threads';
-
-const EXCERPT_LENGTH = 220;
-
-const Wrapper = styled.div({
-  height: 'calc(100vh - 98px)',
-  overflowY: 'auto',
-});
 
 interface Pagination {
   totalCount: number;
@@ -47,63 +40,85 @@ function Channel({
   pagination,
 }: Props) {
   const channelName = channels.find((c) => c.id === channelId).channelName;
+  const [currentThreads, setCurrentThreads] = useState(threads);
+  const [pageCount, setPageCount] = useState(pagination.pageCount);
+  const [page, setPage] = useState(1);
+  const [initial, setInitial] = useState(true);
 
-  const rows = useMemo(() => {
-    return threads.map(({ messages, id: threadId, viewCount }) => {
-      const oldestMessage = messages[messages.length - 1];
-      const newestMessage = messages[0];
-      const participants = messages.reduce((agg, { author }) => {
-        if (
-          author &&
-          !agg.find((a) => a.profileImageUrl === author.profileImageUrl)
-        ) {
-          agg.push(author);
-        }
-        return agg;
-      }, []);
-      const author = participants[0];
+  useEffect(() => {
+    if (initial) {
+      return setInitial(false);
+    }
+    fetch(`/api/threads?channelId=${channelId}&page=${page}`)
+      .then((response) => response.json())
+      .then((response) => {
+        const { data, pagination } = response;
+        console.log(response);
+        setCurrentThreads(data.threads);
+        setPageCount(pagination.pageCount);
+      });
+  }, [page]);
 
-      return (
-        <div key={threadId} className="border-solid border-gray-200">
-          <li className="px-4 py-4 hover:bg-gray-50  sm:hidden cursor-pointer">
-            <Link
-              key={threadId}
-              href={`/channel/${channelId}/thread/${threadId}`}
-              passHref
-            >
-              <div className="flex">
-                <div className="flex pr-4 items-center sm:hidden">
-                  <Avatar
-                    radius="xl"
-                    key={author?.id || author?.displayName}
-                    color="indigo"
-                    src={author?.profileImageUrl} // set placeholder with a U sign
-                    alt={author?.displayName} // Set placeholder of a slack user if missing
-                  >
-                    <Text style={{ marginTop: '-2px', fontSize: '14px' }}>
-                      {(author?.displayName || '?').slice(0, 1).toLowerCase()}
-                    </Text>
-                  </Avatar>
+  const handlePageClick = ({ selected }) => {
+    setPage(selected + 1);
+  };
+
+  const rows = currentThreads.map(({ messages, id: threadId, viewCount }) => {
+    const oldestMessage = messages[messages.length - 1];
+    const newestMessage = messages[0];
+    const participants = messages.reduce((agg, { author }) => {
+      if (
+        author &&
+        !agg.find((a) => a.profileImageUrl === author.profileImageUrl)
+      ) {
+        agg.push(author);
+      }
+      return agg;
+    }, []);
+    const author = participants[0];
+
+
+    
+    return (
+      <div key={threadId} className="border-solid border-gray-200">
+        <li className="px-4 py-4 hover:bg-gray-50  sm:hidden cursor-pointer">
+          <Link
+            key={threadId}
+            href={`/channel/${channelId}/thread/${threadId}`}
+            passHref
+          >
+            <div className="flex">
+              <div className="flex pr-4 items-center sm:hidden">
+                <Avatar
+                  radius="xl"
+                  key={author?.id || author?.displayName}
+                  color="indigo"
+                  src={author?.profileImageUrl} // set placeholder with a U sign
+                  alt={author?.displayName} // Set placeholder of a slack user if missing
+                >
+                  <Text style={{ marginTop: '-2px', fontSize: '14px' }}>
+                    {(author?.displayName || '?').slice(0, 1).toLowerCase()}
+                  </Text>
+                </Avatar>
+              </div>
+              <div className="flex flex-col w-full">
+                <div className="pb-2 sm:px-6">
+                  <Message users={users} text={oldestMessage.body} truncate />
                 </div>
-                <div className="flex flex-col w-full">
-                  <div className="pb-2 sm:px-6">
-                    <Message users={users} text={oldestMessage.body} truncate />
-                  </div>
-                  <div className="text-sm text-gray-400 flex flex-row justify-between">
-                    <p>{messages.length} Replies</p>
-                    {format(new Date(newestMessage.sentAt))}
-                  </div>
+                <div className="text-sm text-gray-400 flex flex-row justify-between">
+                  <p>{messages.length} Replies</p>
+                  {format(new Date(newestMessage.sentAt))}
                 </div>
               </div>
-            </Link>
-          </li>
-        </div>
-      );
-    });
-  }, [channelId, threads, users]);
+            </div>
+          </Link>
+        </li>
+      </div>
+    );
+  });
 
-  const tableRows = useMemo(() => {
-    return threads.map(({ messages, id: threadId, viewCount }) => {
+  const tableRows = currentThreads.map(
+    ({ messages, id: threadId, viewCount }) => {
       const oldestMessage = messages[messages.length - 1];
       const newestMessage = messages[0];
       const participants = messages.reduce((agg, { author }) => {
@@ -152,8 +167,8 @@ function Channel({
           </tr>
         </Link>
       );
-    });
-  }, [channelId, threads, users]);
+    }
+  );
 
   return (
     //Super hacky mobile friendly - different component gets
@@ -194,6 +209,54 @@ function Channel({
         </table>
         <ul className="divide-y sm:hidden">{rows}</ul>
       </div>
+      <ReactPaginate
+        breakLabel="..."
+        onPageChange={handlePageClick}
+        pageRangeDisplayed={5}
+        pageCount={pageCount}
+        containerClassName="flex justify-center py-5"
+        breakClassName="flex items-center p-2"
+        previousClassName="flex items-center p-2"
+        previousLabel={
+          <>
+            <span className="sr-only">Previous</span>
+            <svg
+              className="h-5 w-5"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </>
+        }
+        pageClassName="flex items-center p-2"
+        nextClassName="flex items-center p-2"
+        nextLabel={
+          <>
+            <span className="sr-only">Next</span>
+            <svg
+              className="h-5 w-5"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </>
+        }
+        renderOnZeroPageCount={null}
+      />
     </PageLayout>
   );
 }
