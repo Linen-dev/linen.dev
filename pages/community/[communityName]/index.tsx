@@ -53,7 +53,7 @@ function Channel({
 
       return (
         <div className="border-solid border-gray-200">
-          <li className="px-4 py-4 hover:bg-gray-50  sm:hidden">
+          <li className="px-4 py-4 hover:bg-gray-50  sm:hidden cursor-pointer">
             <Link
               key={threadId}
               href={`/channel/${channelId}/thread/${threadId}`}
@@ -73,7 +73,7 @@ function Channel({
                     </Text>
                   </Avatar>
                 </div>
-                <div className="flex flex-col">
+                <div className="flex flex-col w-full">
                   <div className="pb-2 sm:px-6">
                     <Message users={users} text={oldestMessage.body} truncate />
                   </div>
