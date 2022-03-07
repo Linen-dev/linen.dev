@@ -152,7 +152,10 @@ function Channel({
     <PageLayout
       users={users}
       slackUrl={slackUrl}
-      seo={{ title: `${channelName} threads` }}
+      seo={{
+        title: `${communityName} questions`,
+        description: `${channelName} threads`,
+      }}
       navItems={{ channels: channels }}
       settings={settings}
       communityName={communityName}
