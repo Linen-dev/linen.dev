@@ -205,9 +205,11 @@ export async function getServerSideProps({
 
   const channelId = channel.id;
 
-  const threadsPromise = threadIndex(channelId, 50);
-  const usersPromise = listUsers(channel.accountId);
-  const [threads, users] = await Promise.all([threadsPromise, usersPromise]);
+  const threads = await threadIndex(channelId, 50);
+  const users = threads
+    .map((t) => t.messages.map((m) => m.author))
+    .flat()
+    .filter((u) => u);
 
   const defaultSettings =
     links.find(({ accountId }) => accountId === account.id) || links[0];

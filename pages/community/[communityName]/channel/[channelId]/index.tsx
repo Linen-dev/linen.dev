@@ -25,9 +25,8 @@ export async function getServerSideProps({
     findChannel(channelId),
     threadIndex(channelId, 50),
   ]);
-  const [channels, users, account] = await Promise.all([
+  const [channels, account] = await Promise.all([
     channelIndex(channel.accountId),
-    listUsers(channel.accountId),
     findAccountById(channel.accountId),
   ]);
 
@@ -40,6 +39,11 @@ export async function getServerSideProps({
     docsUrl: account.docsUrl || defaultSettings.docsUrl,
     logoUrl: defaultSettings.logoUrl,
   };
+
+  const users = threads
+    .map((t) => t.messages.map((m) => m.author))
+    .flat()
+    .filter((u) => u);
 
   return {
     props: {
