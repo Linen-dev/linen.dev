@@ -80,7 +80,7 @@ function Channel({
                     <Message users={users} text={oldestMessage.body} truncate />
                   </div>
                   <div className="text-sm text-gray-400 flex flex-row justify-between">
-                    <p>{messages.length} Views</p>
+                    <p>{messages.length} Replies</p>
                     {format(new Date(newestMessage.sentAt))}
                   </div>
                 </div>
