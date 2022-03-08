@@ -48,11 +48,15 @@ export default async function handler(
       .join(' ');
 
     const searchQuery = `${query} ${channelNames}`;
+
+    //This is limited to 20 search per minute per workspace
+    //Use pg search if slack search hits rate limit or fails
+    //Eventually the plan is to host Elastic search
     const result = await slackSearch({
       query: searchQuery,
       token: auth.userAccessToken,
     });
-    const slackfoundMessages = result.body.messages;
+    const slackfoundMessages = result.body?.messages || [];
     const matches: Match[] = slackfoundMessages.matches.filter((m) => {
       // removes dm messages
       return !m.channel.is_im;
@@ -71,6 +75,21 @@ export default async function handler(
       const matchB = matches.find((m) => m.ts === b.slackMessageId);
       return matchB.score - matchA.score;
     });
+
+    if (slackfoundMessages.length === 0) {
+      const messages = await prisma.messages.findMany({
+        where: {
+          body: {
+            search: query.split(' ').join(' & '),
+          },
+          channel: {
+            accountId: accountId,
+          },
+        },
+        take: 20,
+      });
+      sortedMatches.push(...messages);
+    }
 
     res.status(200).json({ results: sortedMatches });
     return;
