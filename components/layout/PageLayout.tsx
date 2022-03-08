@@ -58,16 +58,19 @@ function PageLayout({
         <Link href={'/'} passHref>
           <LogoImg className="h-full" src={settings.logoUrl} />
         </Link>
-        <Group
+        <div
+          className="flex"
           style={{
-            minWidth: '300px',
+            minWidth: '250px',
             flex: '1 0 auto',
             justifyContent: 'flex-end',
           }}
         >
-          <SearchBar channels={channels} users={users} />
+          <div className="hidden sm:flex w-full">
+            <SearchBar channels={channels} users={users} />
+          </div>
           <a
-            className="hidden sm:block"
+            className="hidden sm:block md:block"
             style={{ color: 'white', fontWeight: 500, marginRight: '24px' }}
             rel="noreferrer"
             target="_blank"
@@ -76,6 +79,7 @@ function PageLayout({
             Home
           </a>
           <a
+            className="hidden sm:block"
             style={{ color: 'white', fontWeight: 500, marginRight: '24px' }}
             rel="noreferrer"
             target="_blank"
@@ -84,6 +88,7 @@ function PageLayout({
             Docs
           </a>
           <Button
+            className="hidden sm:block"
             variant="white"
             style={{ backgroundColor: 'white' }}
             component="a"
@@ -92,8 +97,23 @@ function PageLayout({
             <SlackIcon style={{ marginRight: '10px' }} />
             Join the Conversation
           </Button>
-        </Group>
+          <Button
+            className=" sm:hidden"
+            variant="white"
+            style={{ backgroundColor: 'white' }}
+            component="a"
+            href={slackUrl}
+          >
+            <div className="px-1">
+              <SlackIcon />
+            </div>
+            Join Slack
+          </Button>
+        </div>
       </Header>
+      <div className="pt-3 sm:hidden w-full">
+        <SearchBar channels={channels} users={users} />
+      </div>
       <SEO
         image={undefined}
         url={undefined}
