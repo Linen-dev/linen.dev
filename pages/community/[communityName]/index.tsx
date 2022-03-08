@@ -2,7 +2,6 @@ import { Avatar, AvatarsGroup, Paper, Text, Title } from '@mantine/core';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import ReactPaginate from 'react-paginate';
-import styled from 'styled-components';
 import { format } from 'timeago.js';
 import PageLayout from '../../../components/layout/PageLayout';
 import Message from '../../../components/Message';
@@ -27,6 +26,7 @@ type Props = {
   settings: any;
   communityName: string;
   pagination: Pagination;
+  page: number;
 };
 
 function Channel({
@@ -38,29 +38,31 @@ function Channel({
   settings,
   communityName,
   pagination,
+  page,
 }: Props) {
   const channelName = channels.find((c) => c.id === channelId).channelName;
   const [currentThreads, setCurrentThreads] = useState(threads);
   const [pageCount, setPageCount] = useState(pagination.pageCount);
-  const [page, setPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(page);
   const [initial, setInitial] = useState(true);
 
   useEffect(() => {
     if (initial) {
       return setInitial(false);
     }
-    fetch(`/api/threads?channelId=${channelId}&page=${page}`)
+    fetch(`/api/threads?channelId=${channelId}&page=${currentPage}`)
       .then((response) => response.json())
       .then((response) => {
         const { data, pagination } = response;
-        console.log(response);
         setCurrentThreads(data.threads);
         setPageCount(pagination.pageCount);
       });
-  }, [page]);
+  }, [currentPage]);
 
   const handlePageClick = ({ selected }) => {
-    setPage(selected + 1);
+    const newPage = selected + 1;
+    window.history.pushState({}, null, `?page=${newPage}`);
+    setCurrentPage(newPage);
   };
 
   const rows = currentThreads.map(({ messages, id: threadId, viewCount }) => {
@@ -217,6 +219,9 @@ function Channel({
         containerClassName="flex justify-center py-5"
         breakClassName="flex items-center p-2"
         previousClassName="flex items-center p-2"
+        hrefBuilder={(pageNumber) => {
+          return `?page=${pageNumber}`;
+        }}
         previousLabel={
           <>
             <span className="sr-only">Previous</span>
@@ -267,11 +272,15 @@ type Params = {
   params: {
     communityName: string;
   };
+  query: {
+    page?: string;
+  };
 };
 
-export async function getServerSideProps({
-  params: { communityName },
-}: Params) {
+export async function getServerSideProps(context: Params) {
+  const { params, query } = context;
+  const page = Number(query.page) || 1;
+  const { communityName } = params;
   const account = await findAccountByPath(communityName);
   const channels = account.channels;
   const channel = channels[0];
@@ -304,6 +313,7 @@ export async function getServerSideProps({
       settings,
       threads,
       pagination,
+      page,
     },
   };
 }
