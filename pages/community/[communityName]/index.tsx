@@ -56,6 +56,7 @@ function Channel({
         const { data, pagination } = response;
         setCurrentThreads(data.threads);
         setPageCount(pagination.pageCount);
+        window.scrollTo(0, 0);
       });
   }, [currentPage]);
 
@@ -217,11 +218,13 @@ function Channel({
         pageRangeDisplayed={5}
         pageCount={pageCount}
         containerClassName="flex justify-center py-5"
-        breakClassName="flex items-center p-2"
-        previousClassName="flex items-center p-2"
+        breakClassName="flex items-center"
+        breakLinkClassName="block py-2 px-4"
+        previousClassName="flex items-center"
         hrefBuilder={(pageNumber) => {
           return `?page=${pageNumber}`;
         }}
+        previousLinkClassName="block py-2 px-4"
         previousLabel={
           <>
             <span className="sr-only">Previous</span>
@@ -240,8 +243,10 @@ function Channel({
             </svg>
           </>
         }
-        pageClassName="flex items-center p-2"
-        nextClassName="flex items-center p-2"
+        pageClassName="flex items-center"
+        pageLinkClassName="block py-2 px-4"
+        nextClassName="flex items-center"
+        nextLinkClassName="block py-2 px-4"
         nextLabel={
           <>
             <span className="sr-only">Next</span>
