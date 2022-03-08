@@ -123,6 +123,7 @@ export default function Autocomplete({
         position: 'relative',
         flex: '1 1 auto',
         margin: '0 24px 0 40px',
+        zIndex: 100,
       }}
       grow
       noWrap
