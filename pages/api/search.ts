@@ -60,30 +60,11 @@ export default async function handler(
 
     const ts = matches.map((m) => m.ts);
 
-    const matchedMessagesPromise = prisma.messages.findMany({
+    const matchedMessages = await prisma.messages.findMany({
       where: {
         slackMessageId: { in: ts },
       },
     });
-
-    const separateQueryPromise = prisma.messages.findMany({
-      where: {
-        body: {
-          search: query.split(' ').join(' & '),
-        },
-        channel: {
-          accountId: accountId,
-        },
-      },
-      take: 20,
-    });
-
-    // probably want to dedupe this. I m not eve sure
-    // if you want to do both queries...
-    const [matchedMessages, separateQuery] = await Promise.all([
-      matchedMessagesPromise,
-      separateQueryPromise,
-    ]);
 
     const sortedMatches = matchedMessages.sort((a, b) => {
       const matchA = matches.find((m) => m.ts === a.slackMessageId);
@@ -91,7 +72,6 @@ export default async function handler(
       return matchB.score - matchA.score;
     });
 
-    sortedMatches.push(...separateQuery);
     res.status(200).json({ results: sortedMatches });
     return;
   }
