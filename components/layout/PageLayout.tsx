@@ -107,7 +107,7 @@ function PageLayout({
             <div className="px-1">
               <SlackIcon />
             </div>
-            Join Slack
+            Join the Conversation
           </Button>
         </div>
       </Header>
@@ -121,7 +121,7 @@ function PageLayout({
         {...seo}
       />
       <div className="sm:flex">
-        <div className="hidden lg:flex">{NavBar(channels, channelId)}</div>
+        <div className="hidden md:flex">{NavBar(channels, channelId)}</div>
         <div className="lg:w-full">{children}</div>
       </div>
     </div>

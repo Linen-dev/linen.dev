@@ -79,7 +79,6 @@ function Channel({
                   <div className="pb-2 sm:px-6">
                     <Message users={users} text={oldestMessage.body} truncate />
                   </div>
-                  <div className="hidden sm:block"></div>
                   <div className="text-sm text-gray-400 flex flex-row justify-between">
                     <p>{messages.length} Views</p>
                     {format(new Date(newestMessage.sentAt))}
