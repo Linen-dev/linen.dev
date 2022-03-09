@@ -1,7 +1,7 @@
-import { Avatar, AvatarsGroup, Paper, Text, Title } from '@mantine/core';
+import { Avatar, AvatarsGroup, Text } from '@mantine/core';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import ReactPaginate from 'react-paginate';
+import Pagination from '../../../components/Pagination';
 import { format } from 'timeago.js';
 import PageLayout from '../../../components/layout/PageLayout';
 import Message from '../../../components/Message';
@@ -9,9 +9,8 @@ import { findAccountByPath, listUsers } from '../../../lib/slack';
 import { links } from '../../../constants/examples';
 import { channels, users } from '@prisma/client';
 import { index as fetchThreads } from '../../../services/threads';
-import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/solid';
 
-interface Pagination {
+interface PaginationType {
   totalCount: number;
   pageCount: number;
   currentPage: number;
@@ -26,7 +25,7 @@ type Props = {
   slackUrl: string;
   settings: any;
   communityName: string;
-  pagination: Pagination;
+  pagination: PaginationType;
   page: number;
 };
 
@@ -209,33 +208,7 @@ function Channel({
         </table>
         <ul className="divide-y sm:hidden">{rows}</ul>
       </div>
-      <div className="flex justify-center p-5 m-5">
-        <ReactPaginate
-          breakLabel="..."
-          onPageChange={handlePageClick}
-          pageRangeDisplayed={5}
-          pageCount={pageCount}
-          containerClassName="relative z-0 inline-flex rounded-md shadow-lg -space-x-px"
-          breakLinkClassName="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium"
-          hrefBuilder={(page: number) => `?page=${page}`}
-          activeLinkClassName="z-10 bg-indigo-50 border-indigo-500 text-indigo-600 relative inline-flex items-center px-4 py-2 border text-sm font-medium"
-          pageLinkClassName="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium"
-          previousLinkClassName="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
-          previousLabel={
-            <>
-              <span className="sr-only">Previous</span>
-              <ChevronLeftIcon className="h-5 w-5" />
-            </>
-          }
-          nextLinkClassName="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
-          nextLabel={
-            <>
-              <ChevronRightIcon className="h-5 w-5" />
-            </>
-          }
-          renderOnZeroPageCount={null}
-        />
-      </div>
+      <Pagination onClick={handlePageClick} pageCount={pageCount} />
     </PageLayout>
   );
 }
