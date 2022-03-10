@@ -9,22 +9,29 @@ import {
 } from '../../../../../lib/slack';
 import Channel from '../../../[communityName]/index';
 import serializeThread from '../../../../../serializers/thread';
+import { index as fetchThreads } from '../../../../../services/threads';
 
 type Params = {
   params: {
-    channelId: string;
     communityName: string;
+    channelId: string;
+  };
+  query: {
+    page?: string;
   };
 };
-
 //Remove getServerSideProp duplicate code
-export async function getServerSideProps({
-  params: { channelId, communityName },
-}: Params) {
-  const [channel, threads] = await Promise.all([
+export async function getServerSideProps(context: Params) {
+  const { params, query } = context;
+  const { channelId, communityName } = params;
+  const page = Number(query.page) || 1;
+
+  const [channel, { data, pagination }] = await Promise.all([
     findChannel(channelId),
-    threadIndex(channelId, 50),
+    fetchThreads({ channelId, page: 1 }),
   ]);
+
+  const { threads } = data;
   const [channels, account] = await Promise.all([
     channelIndex(channel.accountId),
     findAccountById(channel.accountId),
@@ -54,6 +61,8 @@ export async function getServerSideProps({
       communityName,
       slackUrl: account.slackUrl,
       settings,
+      pagination,
+      page,
     },
   };
 }
