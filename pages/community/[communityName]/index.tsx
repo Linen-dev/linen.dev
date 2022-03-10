@@ -58,7 +58,7 @@ function Channel({
         setPageCount(pagination.pageCount);
         window.scrollTo(0, 0);
       });
-  }, [currentPage]);
+  }, [currentPage, channelId]);
 
   const handlePageClick = ({ selected }) => {
     const newPage = selected + 1;
@@ -80,8 +80,6 @@ function Channel({
     }, []);
     const author = participants[0];
 
-
-    
     return (
       <div key={threadId} className="border-solid border-gray-200">
         <li className="px-4 py-4 hover:bg-gray-50  sm:hidden cursor-pointer">

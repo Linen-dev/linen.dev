@@ -9,6 +9,9 @@ interface Props {
 }
 
 export default function Pagination({ onClick, pageCount }: Props) {
+  if (pageCount === 1) {
+    return null;
+  }
   return (
     <div className={styles.pagination}>
       <div className="flex justify-center p-5 m-5">
