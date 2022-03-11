@@ -1,7 +1,7 @@
 import { Navbar, Group, Title, Text, Paper } from '@mantine/core';
 import Link from 'next/link';
 
-export function NavBar(channels: any, channelId: string | string[]) {
+export function NavBar(channels: any, channelName: string | string[]) {
   return (
     <Navbar
       sx={(theme) => ({ backgroundColor: 'white', zIndex: 1 })}
@@ -27,18 +27,18 @@ export function NavBar(channels: any, channelId: string | string[]) {
             }}
           >
             {channels.map((c) => (
-              <Link key={c.id} href={`/c/${c.channelName}`} passHref>
+              <Link key={c.channelName} href={`/c/${c.channelName}`} passHref>
                 <Text
                   className="hover:bg-gray-50 px-4 py-2"
                   size="sm"
-                  weight={channelId === c.channelName ? 700 : 500}
+                  weight={channelName === c.channelName ? 700 : 500}
                   sx={(theme) => ({
                     cursor: 'pointer',
                     width: '100%',
                     backgroundColor: 'white',
-                    color: channelId === c.channelName ? '#1B194E' : 'black',
+                    color: channelName === c.channelName ? '#1B194E' : 'black',
                     borderLeft: `3px solid ${
-                      channelId === c.channelName ? '#1B194E' : 'transparent'
+                      channelName === c.channelName ? '#1B194E' : 'transparent'
                     }`,
                     '&:hover': {
                       color: '#1B194E',

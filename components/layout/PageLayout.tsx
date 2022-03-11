@@ -40,7 +40,7 @@ function PageLayout({
   communityName,
 }: Props) {
   const {
-    query: { channelId },
+    query: { channelName },
   } = useRouter();
   const channels = navItems.channels.filter((c) => !c.hidden);
 
@@ -121,7 +121,7 @@ function PageLayout({
         {...seo}
       />
       <div className="sm:flex">
-        <div className="hidden md:flex">{NavBar(channels, channelId)}</div>
+        <div className="hidden md:flex">{NavBar(channels, channelName)}</div>
         <div className="lg:w-full">{children}</div>
       </div>
     </div>
