@@ -14,7 +14,7 @@ import { index as fetchThreads } from '../../../../../services/threads';
 type Params = {
   params: {
     communityName: string;
-    channelId: string;
+    channelName: string;
   };
   query: {
     page?: string;
@@ -23,13 +23,13 @@ type Params = {
 //Remove getServerSideProp duplicate code
 export async function getServerSideProps(context: Params) {
   const { params, query } = context;
-  const { channelId, communityName } = params;
+  const { channelName, communityName } = params;
 
   const account = await findAccountByPath(communityName);
 
   const channels = account.channels;
   const channel = account.channels.find((c) => {
-    return c.id === channelId || c.channelName === channelId;
+    return c.channelName === channelName;
   });
 
   const page = Number(query.page) || 1;
