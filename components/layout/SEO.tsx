@@ -29,16 +29,10 @@ function SEO({
         content={getFullPath(relativePath)}
         key="ogurl"
       />
-      {/* <meta
-        name="og:image"
-        property="og:image"
-        content={getFullPath(image)}
-        key="ogimage"
-      /> */}
       <meta
         name="og:site_name"
         property="og:site_name"
-        content={siteName}
+        content={title}
         key="ogsitename"
       />
       <meta name="og:title" property="og:title" content={title} key="ogtitle" />
