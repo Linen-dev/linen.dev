@@ -73,7 +73,7 @@ function Thread({
   }, [messages, users]);
 
   useEffect(() => {
-    fetch(`/api/threads?id=${threadId}`, { method: 'PUT' });
+    fetch(`/api/threads?incrementId=${threadId}`, { method: 'PUT' });
   }, []);
 
   return (
@@ -121,7 +121,8 @@ export async function getServerSideProps({
 }: {
   params: { threadId: string };
 }) {
-  const thread = await findThreadById(threadId);
+  const id = parseInt(threadId);
+  const thread = await findThreadById(id);
 
   const [channels, users, account] = await Promise.all([
     channelIndex(thread.channel.accountId),

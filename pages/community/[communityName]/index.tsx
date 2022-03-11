@@ -66,56 +66,8 @@ function Channel({
     setCurrentPage(newPage);
   };
 
-  const rows = currentThreads.map(({ messages, id: threadId, viewCount }) => {
-    const oldestMessage = messages[messages.length - 1];
-    const newestMessage = messages[0];
-    const participants = messages.reduce((agg, { author }) => {
-      if (
-        author &&
-        !agg.find((a) => a.profileImageUrl === author.profileImageUrl)
-      ) {
-        agg.push(author);
-      }
-      return agg;
-    }, []);
-    const author = participants[0];
-
-    return (
-      <div key={threadId} className="border-solid border-gray-200">
-        <li className="px-4 py-4 hover:bg-gray-50  sm:hidden cursor-pointer">
-          <Link href={`/thread/${threadId}`} passHref>
-            <div className="flex">
-              <div className="flex pr-4 items-center sm:hidden">
-                <Avatar
-                  radius="xl"
-                  key={author?.id || author?.displayName}
-                  color="indigo"
-                  src={author?.profileImageUrl} // set placeholder with a U sign
-                  alt={author?.displayName} // Set placeholder of a slack user if missing
-                >
-                  <Text style={{ marginTop: '-2px', fontSize: '14px' }}>
-                    {(author?.displayName || '?').slice(0, 1).toLowerCase()}
-                  </Text>
-                </Avatar>
-              </div>
-              <div className="flex flex-col w-full">
-                <div className="pb-2 sm:px-6">
-                  <Message users={users} text={oldestMessage.body} truncate />
-                </div>
-                <div className="text-sm text-gray-400 flex flex-row justify-between">
-                  <p>{messages.length} Replies</p>
-                  {format(new Date(newestMessage.sentAt))}
-                </div>
-              </div>
-            </div>
-          </Link>
-        </li>
-      </div>
-    );
-  });
-
-  const tableRows = currentThreads.map(
-    ({ messages, id: threadId, viewCount }) => {
+  const rows = currentThreads.map(
+    ({ messages, incrementId: threadId, viewCount }) => {
       const oldestMessage = messages[messages.length - 1];
       const newestMessage = messages[0];
       const participants = messages.reduce((agg, { author }) => {
@@ -130,7 +82,57 @@ function Channel({
       const author = participants[0];
 
       return (
-        <Link key={threadId} href={`/thread/${threadId}`} passHref>
+        <div key={threadId} className="border-solid border-gray-200">
+          <li className="px-4 py-4 hover:bg-gray-50  sm:hidden cursor-pointer">
+            <Link href={`/t/${threadId}`} passHref>
+              <div className="flex">
+                <div className="flex pr-4 items-center sm:hidden">
+                  <Avatar
+                    radius="xl"
+                    key={author?.id || author?.displayName}
+                    color="indigo"
+                    src={author?.profileImageUrl} // set placeholder with a U sign
+                    alt={author?.displayName} // Set placeholder of a slack user if missing
+                  >
+                    <Text style={{ marginTop: '-2px', fontSize: '14px' }}>
+                      {(author?.displayName || '?').slice(0, 1).toLowerCase()}
+                    </Text>
+                  </Avatar>
+                </div>
+                <div className="flex flex-col w-full">
+                  <div className="pb-2 sm:px-6">
+                    <Message users={users} text={oldestMessage.body} truncate />
+                  </div>
+                  <div className="text-sm text-gray-400 flex flex-row justify-between">
+                    <p>{messages.length} Replies</p>
+                    {format(new Date(newestMessage.sentAt))}
+                  </div>
+                </div>
+              </div>
+            </Link>
+          </li>
+        </div>
+      );
+    }
+  );
+
+  const tableRows = currentThreads.map(
+    ({ messages, incrementId: threadId, viewCount }) => {
+      const oldestMessage = messages[messages.length - 1];
+      const newestMessage = messages[0];
+      const participants = messages.reduce((agg, { author }) => {
+        if (
+          author &&
+          !agg.find((a) => a.profileImageUrl === author.profileImageUrl)
+        ) {
+          agg.push(author);
+        }
+        return agg;
+      }, []);
+      const author = participants[0];
+
+      return (
+        <Link key={threadId} href={`/t/${threadId}`} passHref>
           <tr className="border-solid border-gray-200 cursor-pointer">
             <td className="px-6 py-3 md:max-w-[800px]">
               <Message users={users} text={oldestMessage.body} truncate />

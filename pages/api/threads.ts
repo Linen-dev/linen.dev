@@ -16,9 +16,9 @@ async function index(request: NextApiRequest, response: NextApiResponse) {
 }
 
 async function update(request: NextApiRequest, response: NextApiResponse) {
-  const id = request.query.id as string;
+  const incrementId = request.query.incrementId as string;
   await prisma.slackThreads.update({
-    where: { id },
+    where: { incrementId: parseInt(incrementId) },
     data: { viewCount: { increment: 1 } },
   });
   return response.status(200).json({});

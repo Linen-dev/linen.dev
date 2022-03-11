@@ -236,9 +236,9 @@ export const threadIndex = async (
   });
 };
 
-export const findThreadById = async (threadId: string) => {
+export const findThreadById = async (threadId: number) => {
   return await prisma.slackThreads.findUnique({
-    where: { id: threadId },
+    where: { incrementId: threadId },
     include: {
       messages: {
         include: {

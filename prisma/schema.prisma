@@ -42,6 +42,7 @@ model slackThreads {
   channelId String
 
   @@unique([slackThreadTs])
+  @@unique([incrementId])
 }
 
 model channels {
