@@ -83,7 +83,7 @@ function Channel({
     return (
       <div key={threadId} className="border-solid border-gray-200">
         <li className="px-4 py-4 hover:bg-gray-50  sm:hidden cursor-pointer">
-          <Link href={`/channel/${channelId}/thread/${threadId}`} passHref>
+          <Link href={`/thread/${threadId}`} passHref>
             <div className="flex">
               <div className="flex pr-4 items-center sm:hidden">
                 <Avatar
@@ -130,11 +130,7 @@ function Channel({
       const author = participants[0];
 
       return (
-        <Link
-          key={threadId}
-          href={`/channel/${channelId}/thread/${threadId}`}
-          passHref
-        >
+        <Link key={threadId} href={`/thread/${threadId}`} passHref>
           <tr className="border-solid border-gray-200 cursor-pointer">
             <td className="px-6 py-3 md:max-w-[800px]">
               <Message users={users} text={oldestMessage.body} truncate />

@@ -2,17 +2,17 @@ import { Anchor, Avatar, Group, Paper, Text } from '@mantine/core';
 import { AiOutlineLink } from 'react-icons/ai';
 import { useMemo, useEffect } from 'react';
 import { format } from 'timeago.js';
-import PageLayout from '../../../../../../components/layout/PageLayout';
-import Message from '../../../../../../components/Message';
+import PageLayout from '../../../../components/layout/PageLayout';
+import Message from '../../../../components/Message';
 
 import {
   channelIndex,
   findAccountById,
   findThreadById,
   listUsers,
-} from '../../../../../../lib/slack';
-import serializeThread from '../../../../../../serializers/thread';
-import { links } from '../../../../../../constants/examples';
+} from '../../../../lib/slack';
+import serializeThread from '../../../../serializers/thread';
+import { links } from '../../../../constants/examples';
 
 import styles from './index.module.css';
 
