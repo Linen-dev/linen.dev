@@ -1,10 +1,23 @@
 import { SitemapStream, streamToPromise } from 'sitemap';
 import { Readable } from 'stream';
 
-export async function createXMLSitemap(links, hostname) {
-  const stream = new SitemapStream({ hostname });
+const PROTOCOL = 'https';
+const DOMAIN = process.env.DOMAIN || 'localhost:3000';
+
+export async function createXMLSitemap(links) {
+  const stream = new SitemapStream({ hostname: `${PROTOCOL}://${DOMAIN}` });
 
   return streamToPromise(Readable.from(links).pipe(stream)).then((data) =>
     data.toString()
+  );
+}
+
+export async function createXMLSitemapForSubdomain(subdomain) {
+  const stream = new SitemapStream({
+    hostname: `${PROTOCOL}://${subdomain}.${DOMAIN}`,
+  });
+
+  return streamToPromise(Readable.from([{ url: '/' }]).pipe(stream)).then(
+    (data) => data.toString()
   );
 }

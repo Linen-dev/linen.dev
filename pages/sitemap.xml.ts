@@ -1,10 +1,19 @@
-const { createXMLSitemap } = require('../utilities/sitemap');
+const {
+  createXMLSitemapForSubdomain,
+  createXMLSitemap,
+} = require('../utilities/sitemap');
 
-const HOSTNAME = process.env.HOSTNAME || 'https://localhost:3000';
+function getSubdomain(hostname) {
+  return hostname.includes('.') ? hostname.split('.')[0] : null;
+}
 
-export const getServerSideProps = async ({ res }) => {
-  const links = [{ url: '/signup' }];
-  const sitemap = await createXMLSitemap(links, HOSTNAME);
+export const getServerSideProps = async ({ req, res }) => {
+  const { host } = req.headers;
+  const subdomain = getSubdomain(host);
+
+  const sitemap = subdomain
+    ? await createXMLSitemapForSubdomain(subdomain)
+    : await createXMLSitemap([{ url: '/signup' }]);
 
   res.setHeader('Content-Type', 'application/xml');
   res.write(sitemap);
