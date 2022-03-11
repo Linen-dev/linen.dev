@@ -33,6 +33,7 @@ model messages {
 
 model slackThreads {
   id            String   @id @default(uuid())
+  incrementId   Int      @default(autoincrement())
   channel       channels @relation(fields: [channelId], references: [id])
   slackThreadTs String
   viewCount     Int      @default(0)
