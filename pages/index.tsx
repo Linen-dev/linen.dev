@@ -42,7 +42,7 @@ export const getServerSideProps = async () => {
   if (channelId) {
     result.redirect = {
       permanent: false,
-      destination: `/channel/${channelId}`,
+      destination: `/c/${channelId}`,
     };
   }
   return result;

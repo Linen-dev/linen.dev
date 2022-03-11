@@ -27,7 +27,7 @@ export function NavBar(channels: any, channelId: string | string[]) {
             }}
           >
             {channels.map((c) => (
-              <Link key={c.id} href={`/channel/${c.channelName}`} passHref>
+              <Link key={c.id} href={`/c/${c.channelName}`} passHref>
                 <Text
                   className="hover:bg-gray-50 px-4 py-2"
                   size="sm"
