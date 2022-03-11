@@ -27,18 +27,18 @@ export function NavBar(channels: any, channelId: string | string[]) {
             }}
           >
             {channels.map((c) => (
-              <Link key={c.id} href={`/channel/${c.id}`} passHref>
+              <Link key={c.id} href={`/channel/${c.channelName}`} passHref>
                 <Text
                   className="hover:bg-gray-50 px-4 py-2"
                   size="sm"
-                  weight={channelId === c.id ? 700 : 500}
+                  weight={channelId === c.channelName ? 700 : 500}
                   sx={(theme) => ({
                     cursor: 'pointer',
                     width: '100%',
                     backgroundColor: 'white',
-                    color: channelId === c.id ? '#1B194E' : 'black',
+                    color: channelId === c.channelName ? '#1B194E' : 'black',
                     borderLeft: `3px solid ${
-                      channelId === c.id ? '#1B194E' : 'transparent'
+                      channelId === c.channelName ? '#1B194E' : 'transparent'
                     }`,
                     '&:hover': {
                       color: '#1B194E',

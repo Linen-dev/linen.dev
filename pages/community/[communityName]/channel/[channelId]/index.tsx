@@ -24,18 +24,20 @@ type Params = {
 export async function getServerSideProps(context: Params) {
   const { params, query } = context;
   const { channelId, communityName } = params;
+
+  const account = await findAccountByPath(communityName);
+
+  const channels = account.channels;
+  const channel = account.channels.find((c) => {
+    return c.id === channelId || c.channelName === channelId;
+  });
+
   const page = Number(query.page) || 1;
-
-  const [channel, { data, pagination }] = await Promise.all([
-    findChannel(channelId),
-    fetchThreads({ channelId, page: 1 }),
-  ]);
-
+  const { data, pagination } = await fetchThreads({
+    channelId: channel.id,
+    page: 1,
+  });
   const { threads } = data;
-  const [channels, account] = await Promise.all([
-    channelIndex(channel.accountId),
-    findAccountById(channel.accountId),
-  ]);
 
   const defaultSettings =
     links.find(({ accountId }) => accountId === account.id) || links[0];
@@ -54,7 +56,7 @@ export async function getServerSideProps(context: Params) {
 
   return {
     props: {
-      channelId,
+      channelId: channel.id,
       users,
       threads: threads.map(serializeThread),
       channels,
