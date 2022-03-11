@@ -14,7 +14,7 @@ export default function Pagination({ onClick, pageCount }: Props) {
   }
   return (
     <div className={styles.pagination}>
-      <div className="flex justify-center p-5 m-5">
+      <div className="md:flex justify-center p-5 m-5 hidden">
         <ReactPaginate
           breakLabel="..."
           onPageChange={onClick}
