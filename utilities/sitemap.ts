@@ -27,11 +27,37 @@ export async function createXMLSitemap() {
 }
 
 export async function createXMLSitemapForSubdomain(subdomain) {
+  const account = await prisma.accounts.findFirst({
+    where: { name: subdomain },
+    select: {
+      channels: {
+        select: {
+          slackThreads: {
+            select: {
+              incrementId: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  const threads = account.channels.reduce((array, item) => {
+    return [
+      ...array,
+      ...item.slackThreads.map(({ incrementId }) => incrementId),
+    ];
+  }, []);
+
   const stream = new SitemapStream({
     hostname: `${PROTOCOL}://${subdomain}.${DOMAIN}`,
   });
 
-  return streamToPromise(Readable.from([{ url: '/' }]).pipe(stream)).then(
-    (data) => data.toString()
+  const urls = threads.map((id) => {
+    return `/t/${id}`;
+  });
+
+  return streamToPromise(Readable.from(urls).pipe(stream)).then((data) =>
+    data.toString()
   );
 }
