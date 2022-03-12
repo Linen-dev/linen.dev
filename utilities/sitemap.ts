@@ -42,6 +42,8 @@ export async function createXMLSitemapForSubdomain(subdomain) {
     },
   });
 
+  // TODO What should happen if the account is not present?
+
   const threads = account.channels.reduce((array, item) => {
     return [
       ...array,
