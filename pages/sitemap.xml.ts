@@ -13,7 +13,7 @@ export const getServerSideProps = async ({ req, res }) => {
 
   const sitemap = subdomain
     ? await createXMLSitemapForSubdomain(subdomain)
-    : await createXMLSitemap([{ url: '/signup' }]);
+    : await createXMLSitemap();
 
   res.setHeader('Content-Type', 'application/xml');
   res.write(sitemap);

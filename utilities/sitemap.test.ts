@@ -2,8 +2,10 @@ import { createXMLSitemap, createXMLSitemapForSubdomain } from './sitemap';
 
 describe('#createXMLSitemap', () => {
   it('creates a sitemap', async () => {
-    const sitemap = await createXMLSitemap([{ url: '/' }]);
-    expect(sitemap).toContain('<url><loc>https://localhost:3000/</loc></url>');
+    const sitemap = await createXMLSitemap();
+    expect(sitemap).toContain(
+      '<url><loc>https://localhost:3000/signup</loc></url>'
+    );
   });
 });
 
