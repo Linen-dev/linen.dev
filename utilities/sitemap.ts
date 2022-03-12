@@ -1,11 +1,11 @@
 import { SitemapStream, SitemapIndexStream, streamToPromise } from 'sitemap';
 import { Readable } from 'stream';
 import prisma from '../client';
+import { DOMAIN } from './domain';
 
 const PROTOCOL = 'https';
-const DOMAIN = process.env.DOMAIN || 'localhost:3000';
 
-export async function createXMLSitemap() {
+export async function createXMLSitemap(): Promise<string> {
   const subdomains = await prisma.accounts.findMany({
     where: {
       NOT: {
@@ -26,7 +26,7 @@ export async function createXMLSitemap() {
   );
 }
 
-export async function createXMLSitemapForSubdomain(subdomain) {
+export async function createXMLSitemapForSubdomain(subdomain): Promise<string> {
   const account = await prisma.accounts.findFirst({
     where: { name: subdomain },
     select: {
@@ -42,7 +42,9 @@ export async function createXMLSitemapForSubdomain(subdomain) {
     },
   });
 
-  // TODO What should happen if the account is not present?
+  if (!account) {
+    return Promise.reject();
+  }
 
   const threads = account.channels.reduce((array, item) => {
     return [

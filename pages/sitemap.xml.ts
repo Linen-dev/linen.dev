@@ -1,23 +1,25 @@
-const {
+import {
   createXMLSitemapForSubdomain,
   createXMLSitemap,
-} = require('../utilities/sitemap');
-
-function getSubdomain(hostname) {
-  return hostname.includes('.') ? hostname.split('.')[0] : null;
-}
+} from '../utilities/sitemap';
+import { getSubdomain } from '../utilities/domain';
 
 export const getServerSideProps = async ({ req, res }) => {
   const { host } = req.headers;
   const subdomain = getSubdomain(host);
 
-  const sitemap = subdomain
-    ? await createXMLSitemapForSubdomain(subdomain)
-    : await createXMLSitemap();
+  try {
+    const sitemap = subdomain
+      ? await createXMLSitemapForSubdomain(subdomain)
+      : await createXMLSitemap();
 
-  res.setHeader('Content-Type', 'application/xml');
-  res.write(sitemap);
-  res.end();
+    res.setHeader('Content-Type', 'application/xml');
+    res.write(sitemap);
+    res.end();
+  } catch (exception) {
+    res.statusCode = 404;
+    res.end();
+  }
 
   return {
     props: {},
