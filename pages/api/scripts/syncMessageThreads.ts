@@ -1,14 +1,14 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
-import prisma from '../../client';
+import prisma from '../../../client';
 import {
   fetchReplies,
   saveThreadedMessages,
-} from '../../fetch_all_conversations';
+} from '../../../fetch_all_conversations';
 import {
   findAccountById,
   findMessagesWithThreads,
   findSlackThreadsWithOnlyOneMessage,
-} from '../../lib/slack';
+} from '../../../lib/slack';
 import { saveMessagesSyncronous } from './createOrUpdateMessages';
 
 //gets thread messages after createOrUpdateMessages

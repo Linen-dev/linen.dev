@@ -1,11 +1,11 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
-import prisma from '../../client';
-import { fetchConversations } from '../../fetch_all_conversations';
+import prisma from '../../../client';
+import { fetchConversations } from '../../../fetch_all_conversations';
 import {
   channelIndex,
   findAccountById,
   findOrCreateThread,
-} from '../../lib/slack';
+} from '../../../lib/slack';
 
 // fetches all conversations with paginated results and saves the messages
 // This happens after the slack channels have been created and joined

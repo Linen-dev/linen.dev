@@ -7,15 +7,15 @@ import {
   listUsers,
   saveMessages,
   saveUsers,
-} from '../../fetch_all_conversations';
+} from '../../../fetch_all_conversations';
 import {
   channelIndex,
   createManyChannel,
   findAccountById,
   findMessagesWithThreads,
   updateAccountRedirectDomain,
-} from '../../lib/slack';
-import { getSlackChannels } from './slack';
+} from '../../../lib/slack';
+import { getSlackChannels } from '../slack';
 
 export default async function handler(
   req: NextApiRequest,

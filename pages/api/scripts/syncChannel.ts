@@ -1,11 +1,11 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
-import prisma from '../../client';
+import prisma from '../../../client';
 import {
   fetchAndSaveThreadMessages,
   fetchReplies,
   saveThreadedMessages,
-} from '../../fetch_all_conversations';
-import { findAccountById, findChannel } from '../../lib/slack';
+} from '../../../fetch_all_conversations';
+import { findAccountById, findChannel } from '../../../lib/slack';
 
 export default async function handler(
   req: NextApiRequest,
