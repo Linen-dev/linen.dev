@@ -16,7 +16,8 @@ export default function middleware(req) {
   if (
     !pathname.startsWith('/api') &&
     !pathname.startsWith('/signup') &&
-    !pathname.startsWith('/sitemap')
+    !pathname.startsWith('/sitemap.xml') &&
+    !pathname.startsWith('/robots.txt')
   ) {
     url.pathname = `/community/${currentHost}${pathname}`;
     return NextResponse.rewrite(url);

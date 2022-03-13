@@ -7,7 +7,8 @@
     "start": "next start",
     "lint": "next lint",
     "prepare": "husky install",
-    "test": "jest --watch",
+    "test": "jest",
+    "test:watch": "jest --watch",
     "migrate": "npx prisma migrate dev && npx prisma generate dev"
   },
   "dependencies": {
@@ -24,6 +25,7 @@
     "react-emoji-render": "^1.2.4",
     "react-icons": "^4.3.1",
     "react-paginate": "^8.1.2",
+    "sitemap": "^7.1.1",
     "styled-components": "^5.3.3",
     "superagent": "^7.1.1",
     "swr": "^1.2.1",
