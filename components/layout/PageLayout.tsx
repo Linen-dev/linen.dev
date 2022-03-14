@@ -1,17 +1,10 @@
-import { AppShell, Header, Group, Anchor, Button } from '@mantine/core';
-import Image from 'next/image';
-// import {Header} from 'react'
+import { Header, Button } from '@mantine/core';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import styled from 'styled-components';
 import SlackIcon from '../icons/SlackIcon';
 import SearchBar from '../search/SearchBar';
 import { NavBar } from '../NavBar/NavBar';
 import SEO from './SEO';
-
-const LogoImg = styled.img({
-  cursor: 'pointer',
-});
 
 interface Settings {
   brandColor: string;
@@ -47,7 +40,7 @@ function PageLayout({
   return (
     <div>
       <Header
-        sx={(theme) => ({
+        sx={() => ({
           backgroundColor: settings.brandColor,
           display: 'flex',
           justifyContent: 'space-between',
@@ -56,7 +49,11 @@ function PageLayout({
         padding="lg"
       >
         <Link href={'/'} passHref>
-          <LogoImg className="h-full" src={settings.logoUrl} />
+          <img
+            className="cursor-pointer h-full"
+            src={settings.logoUrl}
+            alt={`${settings.homeUrl} logo`}
+          />
         </Link>
         <div
           className="flex"
