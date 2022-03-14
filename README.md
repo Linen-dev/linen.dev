@@ -64,3 +64,17 @@ or
 ```bash
 npm run migrate
 ```
+
+## How to run integration tests
+
+Install dot env
+
+```
+npm install -g dotenv-cli
+```
+
+Run tests:
+
+```bash
+npm run integration-tests
+```

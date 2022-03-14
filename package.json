@@ -9,6 +9,10 @@
     "prepare": "husky install",
     "test": "jest",
     "test:watch": "jest --watch",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "migrate:test": "dotenv -e .env.test -- npx prisma migrate deploy",
+    "integration-test": "dotenv -e .env.test -- npm run docker:up && npm run migrate:test && jest -i",
     "migrate": "npx prisma migrate dev && npx prisma generate dev"
   },
   "dependencies": {
