@@ -1,4 +1,4 @@
-import { Avatar, AvatarsGroup, Text } from '@mantine/core';
+import Avatar from '../../../components/Avatar';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import Pagination from '../../../components/Pagination';
@@ -99,17 +99,16 @@ function Channel({
           <Link href={`/t/${incrementId}/${slug || 'topic'}`} passHref>
             <div className="flex">
               <div className="flex pr-4 items-center sm:hidden">
-                <Avatar
-                  radius="xl"
-                  key={author?.id || author?.displayName}
-                  color="indigo"
-                  src={author?.profileImageUrl} // set placeholder with a U sign
-                  alt={author?.displayName} // Set placeholder of a slack user if missing
-                >
-                  <Text style={{ marginTop: '-2px', fontSize: '14px' }}>
-                    {(author?.displayName || '?').slice(0, 1).toLowerCase()}
-                  </Text>
-                </Avatar>
+                {author && (
+                  <Avatar
+                    key={`${threadId}-${
+                      author.id || author.displayName
+                    }-avatar-mobile}`}
+                    src={author.profileImageUrl} // set placeholder with a U sign
+                    alt={author.displayName} // Set placeholder of a slack user if missing
+                    text={(author.displayName || '?').slice(0, 1).toLowerCase()}
+                  />
+                )}
               </div>
               <div className="flex flex-col w-full">
                 <div className="pb-2 sm:px-6">
@@ -143,31 +142,24 @@ function Channel({
       const author = participants[0];
 
       return (
-        <Link
-          key={incrementId}
-          href={`/t/${incrementId}/${slug || 'topic'}`}
-          passHref
-        >
+        <Link key={`${incrementId}-desktop`} href={`/t/${incrementId}/${slug || 'topic'}`} passHref>
           <tr className="border-solid border-gray-200 cursor-pointer">
             <td className="px-6 py-3 md:max-w-[800px]">
               <Message users={users} text={oldestMessage.body} truncate />
             </td>
             <td className="px-6 py-3 align-middle">
-              <AvatarsGroup size={36} limit={3}>
-                {participants.map((p, idx) => (
+              <div className="avatar-groups">
+                {participants.map((p, index) => (
                   <Avatar
-                    radius="xl"
-                    key={p.id || p.displayName}
-                    color="indigo"
-                    src={p?.profileImageUrl} // set placeholder with a U sign
-                    alt={p?.displayName} // Set placeholder of a slack user if missing
-                  >
-                    <Text style={{ marginTop: '-2px', fontSize: '14px' }}>
-                      {(p?.displayName || '?').slice(0, 1).toLowerCase()}
-                    </Text>
-                  </Avatar>
+                    key={`${incrementId}-${
+                      p.id || p.displayName
+                    }-${index}-avatar-desktop`}
+                    src={p.profileImageUrl} // set placeholder with a U sign
+                    alt={p.displayName} // Set placeholder of a slack user if missing
+                    text={(p.displayName || '?').slice(0, 1).toLowerCase()}
+                  />
                 ))}
-              </AvatarsGroup>
+              </div>
             </td>
             <td className="px-6 py-3 text-sm">{viewCount}</td>
             <td className="px-6 py-3 text-sm">{messages.length}</td>

@@ -1,0 +1,30 @@
+.avatar {
+  border-radius: 50%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: 2px solid #fff;
+  width: 36px;
+  height: 36px;
+}
+
+.image {
+  display: block;
+  border-radius: 50%;
+  height: 32px;
+  height: 32px;
+}
+
+.placeholder {
+  border-radius: 50%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: 2px solid #fff;
+  width: 36px;
+  height: 36px;
+  text-align: center;
+  text-transform: uppercase;
+  line-height: 32px;
+  background-color: darkgray;
+}
