@@ -92,36 +92,37 @@ function Channel({
       const author = participants[0];
 
       return (
-        <div key={incrementId} className="border-solid border-gray-200">
-          <li className="px-4 py-4 hover:bg-gray-50  sm:hidden cursor-pointer">
-            <Link href={`/t/${incrementId}/${slug || 'topic'}`} passHref>
-              <div className="flex">
-                <div className="flex pr-4 items-center sm:hidden">
-                  <Avatar
-                    radius="xl"
-                    key={author?.id || author?.displayName}
-                    color="indigo"
-                    src={author?.profileImageUrl} // set placeholder with a U sign
-                    alt={author?.displayName} // Set placeholder of a slack user if missing
-                  >
-                    <Text style={{ marginTop: '-2px', fontSize: '14px' }}>
-                      {(author?.displayName || '?').slice(0, 1).toLowerCase()}
-                    </Text>
-                  </Avatar>
+        <li
+          key={incrementId}
+          className="px-4 py-4 hover:bg-gray-50 border-solid border-gray-200 sm:hidden cursor-pointer"
+        >
+          <Link href={`/t/${incrementId}/${slug || 'topic'}`} passHref>
+            <div className="flex">
+              <div className="flex pr-4 items-center sm:hidden">
+                <Avatar
+                  radius="xl"
+                  key={author?.id || author?.displayName}
+                  color="indigo"
+                  src={author?.profileImageUrl} // set placeholder with a U sign
+                  alt={author?.displayName} // Set placeholder of a slack user if missing
+                >
+                  <Text style={{ marginTop: '-2px', fontSize: '14px' }}>
+                    {(author?.displayName || '?').slice(0, 1).toLowerCase()}
+                  </Text>
+                </Avatar>
+              </div>
+              <div className="flex flex-col w-full">
+                <div className="pb-2 sm:px-6">
+                  <Message users={users} text={oldestMessage.body} truncate />
                 </div>
-                <div className="flex flex-col w-full">
-                  <div className="pb-2 sm:px-6">
-                    <Message users={users} text={oldestMessage.body} truncate />
-                  </div>
-                  <div className="text-sm text-gray-400 flex flex-row justify-between">
-                    <p>{messages.length} Replies</p>
-                    {format(new Date(newestMessage.sentAt))}
-                  </div>
+                <div className="text-sm text-gray-400 flex flex-row justify-between">
+                  <p>{messages.length} Replies</p>
+                  {format(new Date(newestMessage.sentAt))}
                 </div>
               </div>
-            </Link>
-          </li>
-        </div>
+            </div>
+          </Link>
+        </li>
       );
     }
   );
