@@ -68,6 +68,9 @@ export default async function handler(
       where: {
         slackMessageId: { in: ts },
       },
+      include: {
+        slackThreads: true,
+      },
     });
 
     const sortedMatches = matchedMessages.sort((a, b) => {
