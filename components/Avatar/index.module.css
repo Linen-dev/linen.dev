@@ -24,7 +24,10 @@
   width: 36px;
   height: 36px;
   text-align: center;
-  text-transform: uppercase;
+  text-transform: lowercase;
   line-height: 32px;
-  background-color: darkgray;
+  background-color: #edf2ff;
+  color: #4c6ef5;
+  font-weight: bold;
+  font-size: 14px;
 }
