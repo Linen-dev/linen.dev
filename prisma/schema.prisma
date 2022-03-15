@@ -38,6 +38,7 @@ model slackThreads {
   slackThreadTs String
   viewCount     Int      @default(0)
   slug          String?
+  messageCount  Int      @default(1)
 
   messages  messages[]
   channelId String

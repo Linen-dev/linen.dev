@@ -6,7 +6,7 @@ import {
   createOrUpdateMessage,
   findOrCreateThread,
   findUser,
-} from './lib/slack';
+} from './lib/models';
 
 export const fetchConversations = async (
   channel: string,

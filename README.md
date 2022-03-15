@@ -67,14 +67,24 @@ npm run migrate
 
 ## How to run integration tests
 
-Install dot env
+Setup:
+
+Add SLACK_TOKEN to .env.test - the integration tests uses a real Slack account
 
 ```
 npm install -g dotenv-cli
+npm run setup:integration
+
 ```
 
 Run tests:
 
 ```bash
-npm run integration-tests
+npm run test:integration
+```
+
+Run specific test example:
+
+```bash
+npm run test:integration webhook.test.ts
 ```

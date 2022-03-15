@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
-import { channelIndex, findOrCreateChannel } from '../../lib/slack';
+import { channelIndex, findOrCreateChannel } from '../../lib/models';
 
 //example post body:
 // {

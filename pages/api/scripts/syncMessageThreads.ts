@@ -8,7 +8,7 @@ import {
   findAccountById,
   findMessagesWithThreads,
   findSlackThreadsWithOnlyOneMessage,
-} from '../../../lib/slack';
+} from '../../../lib/models';
 import { saveMessagesSyncronous } from './createOrUpdateMessages';
 
 //gets thread messages after createOrUpdateMessages

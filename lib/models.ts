@@ -1,5 +1,6 @@
-import { Prisma } from '@prisma/client';
+import { Prisma, slackThreads, users } from '@prisma/client';
 import prisma from '../client';
+import { UserInfo } from '../interfaces/slackUserInfoInterface';
 
 export const createSlackMessage = async (event: any, channelId: string) => {
   const body = event.event.text;
@@ -54,6 +55,18 @@ export const createOrUpdateMessage = async (
   });
 };
 
+export const updateMessageSlackThreadId = async (
+  messageId: string,
+  slackThreadId: string
+) => {
+  return prisma.messages.update({
+    where: { id: messageId },
+    data: {
+      slackThreadId,
+    },
+  });
+};
+
 export const createAccount = async (account: Prisma.accountsCreateArgs) => {
   return prisma.accounts.create(account);
 };
@@ -75,6 +88,15 @@ export const findAccountById = async (accountId: string) => {
       },
       channels: true,
     },
+  });
+};
+
+export const updateSlackThread = async (thread: slackThreads) => {
+  return await prisma.slackThreads.update({
+    where: {
+      id: thread.id,
+    },
+    data: thread,
   });
 };
 
@@ -273,6 +295,33 @@ export const findUser = async (userId: string) => {
   return await prisma.users.findUnique({ where: { slackUserId: userId } });
 };
 
+export const createUser = async (user: Prisma.usersUncheckedCreateInput) => {
+  return await prisma.users.create({ data: user });
+};
+
+export const createUserFromUserInfo = async (
+  user: UserInfo,
+  accountId: string
+) => {
+  const profile = user.profile;
+  const name =
+    profile.display_name ||
+    profile.display_name_normalized ||
+    profile.real_name ||
+    profile.real_name_normalized;
+  const profileImageUrl = profile.image_original;
+  const param = {
+    displayName: name,
+    slackUserId: user.id,
+    profileImageUrl,
+    accountsId: accountId,
+    isBot: user.is_bot,
+    isAdmin: user.is_admin || false,
+  };
+
+  return await createUser(param);
+};
+
 export const createManyUsers = async (users: Prisma.usersCreateManyArgs) => {
   return await prisma.users.createMany(users);
 };
@@ -295,6 +344,10 @@ export const findMessagesWithThreads = async (accountId: string) => {
       sentAt: 'desc',
     },
   });
+};
+
+export const findMessageByTs = async (ts: string) => {
+  return prisma.messages.findFirst({ where: { slackMessageId: ts } });
 };
 
 export const updateNextPageCursor = async (

@@ -12,3 +12,7 @@ export const createSlug = (message: string) => {
   }
   return slug;
 };
+
+export const tsToSentAt = (ts: string) => {
+  return new Date(parseFloat(ts) * 1000);
+};

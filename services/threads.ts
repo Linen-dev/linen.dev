@@ -1,4 +1,4 @@
-import { threadIndex, threadCount } from '../lib/slack';
+import { threadIndex, threadCount } from '../lib/models';
 import serializeThread from '../serializers/thread';
 
 interface IndexProps {

@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
-import prisma from '../../client';
-import { listUsers, saveUsers } from '../../fetch_all_conversations';
-import { findAccountById, findOrCreateUser } from '../../lib/slack';
+import prisma from '../../../client';
+import { listUsers, saveUsers } from '../../../fetch_all_conversations';
+import { findAccountById, findOrCreateUser } from '../../../lib/models';
 
 export default async function handler(
   req: NextApiRequest,

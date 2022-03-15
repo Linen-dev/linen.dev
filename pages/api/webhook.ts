@@ -3,9 +3,13 @@ import prisma from '../../client';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import {
   createMessage,
+  createUserFromUserInfo,
   findOrCreateThread,
-  findThreadById,
-} from '../../lib/slack';
+  findUser,
+  updateSlackThread,
+} from '../../lib/models';
+import { SlackMessageEvent } from '../../interfaces/slackMessageEventInterface';
+import { getSlackUser } from './slack';
 
 export default async function handler(
   req: NextApiRequest,
@@ -19,13 +23,20 @@ export default async function handler(
   res.status(result.status).json({});
 }
 
-export const handleWebhook = async (body: any) => {
+export const handleWebhook = async (body: SlackMessageEvent) => {
   const event = body.event;
   const channelId = body.event.channel;
 
   const channel = await prisma.channels.findUnique({
     where: {
       slackChannelId: channelId,
+    },
+    include: {
+      account: {
+        include: {
+          slackAuthorizations: true,
+        },
+      },
     },
   });
 
@@ -34,18 +45,33 @@ export const handleWebhook = async (body: any) => {
     return { status: 403, error: 'Channel not found' };
   }
 
+  const thread_ts = event.thread_ts || event.ts;
   const thread = await findOrCreateThread({
-    slackThreadTs: event.ts,
+    slackThreadTs: thread_ts,
     channelId: channel.id,
   });
+
+  if (!!event.thread_ts) {
+    thread.messageCount += 1;
+    await updateSlackThread(thread);
+  }
+
+  let user = await findUser(event.user);
+  if (user === null) {
+    const accessToken = channel.account?.slackAuthorizations[0]?.accessToken;
+    if (!!accessToken) {
+      const slackUser = await getSlackUser(event.user, accessToken);
+      user = await createUserFromUserInfo(slackUser, channel.accountId);
+    }
+  }
 
   const param = {
     body: event.text,
     channelId: channel.id,
     sentAt: new Date(parseFloat(event.ts) * 1000),
-    slackThreadId: thread.id,
-    //TODO fix this later
-    usersId: undefined,
+    slackThreadId: thread?.id,
+    slackMessageId: event.ts,
+    usersId: user?.id,
   };
 
   const message = await createMessage(param);
@@ -54,20 +80,4 @@ export const handleWebhook = async (body: any) => {
     status: 200,
     message,
   };
-};
-
-export const findOrCreateChannel = async (
-  channelId: string,
-  channelName: string
-) => {
-  prisma.channels.upsert({
-    where: {
-      slackChannelId: channelId,
-    },
-    update: {},
-    create: {
-      slackChannelId: channelId,
-      channelName: channelName,
-    },
-  });
 };

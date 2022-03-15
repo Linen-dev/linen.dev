@@ -5,7 +5,7 @@ import {
   channelIndex,
   findAccountById,
   findOrCreateThread,
-} from '../../../lib/slack';
+} from '../../../lib/models';
 
 // fetches all conversations with paginated results and saves the messages
 // This happens after the slack channels have been created and joined

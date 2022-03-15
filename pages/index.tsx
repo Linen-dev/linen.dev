@@ -1,7 +1,7 @@
 import { Paper, Title } from '@mantine/core';
 import type { NextPage } from 'next';
 import PageLayout from '../components/layout/PageLayout';
-import { channelIndex } from '../lib/slack';
+import { channelIndex } from '../lib/models';
 
 const Home: NextPage = (channels) => {
   return (

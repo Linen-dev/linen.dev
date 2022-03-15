@@ -6,7 +6,7 @@ import {
   findOrCreateAccount,
   updateAccount,
   updateAccountRedirectDomain,
-} from '../../lib/slack';
+} from '../../lib/models';
 
 export default async function handler(
   req: NextApiRequest,

@@ -1,5 +1,5 @@
 # install dependencies
-yarn
+npm
 
 # setup postgres
 createuser linendev

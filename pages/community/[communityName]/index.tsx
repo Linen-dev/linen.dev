@@ -5,7 +5,7 @@ import Pagination from '../../../components/Pagination';
 import { format } from 'timeago.js';
 import PageLayout from '../../../components/layout/PageLayout';
 import Message from '../../../components/Message';
-import { findAccountByPath, listUsers } from '../../../lib/slack';
+import { findAccountByPath, listUsers } from '../../../lib/models';
 import { links } from '../../../constants/examples';
 import { channels, users } from '@prisma/client';
 import { index as fetchThreads } from '../../../services/threads';

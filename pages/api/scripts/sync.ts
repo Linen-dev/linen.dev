@@ -21,7 +21,8 @@ import {
   findSlackThreadsWithOnlyOneMessage,
   updateAccountRedirectDomain,
   updateNextPageCursor,
-} from '../../../lib/slack';
+  updateSlackThread,
+} from '../../../lib/models';
 import { getSlackChannels } from '../slack';
 
 export default async function handler(
@@ -321,6 +322,11 @@ export async function saveMessagesSyncronous(
         slackThreadTs: m.thread_ts,
         channelId: channelId,
       });
+    }
+
+    if (!!m.thread_ts) {
+      thread.messageCount += 1;
+      await updateSlackThread(thread);
     }
 
     let user: UserMap | null = null;

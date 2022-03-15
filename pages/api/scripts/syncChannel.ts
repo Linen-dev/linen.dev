@@ -5,7 +5,7 @@ import {
   fetchReplies,
   saveThreadedMessages,
 } from '../../../fetch_all_conversations';
-import { findAccountById, findChannel } from '../../../lib/slack';
+import { findAccountById, findChannel } from '../../../lib/models';
 
 export default async function handler(
   req: NextApiRequest,

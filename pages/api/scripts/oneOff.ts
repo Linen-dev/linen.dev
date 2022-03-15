@@ -14,7 +14,7 @@ import {
   findAccountById,
   findMessagesWithThreads,
   updateAccountRedirectDomain,
-} from '../../../lib/slack';
+} from '../../../lib/models';
 import { getSlackChannels } from '../slack';
 
 export default async function handler(

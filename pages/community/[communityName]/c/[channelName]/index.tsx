@@ -6,7 +6,7 @@ import {
   findChannel,
   listUsers,
   threadIndex,
-} from '../../../../../lib/slack';
+} from '../../../../../lib/models';
 import Channel from '../../index';
 import serializeThread from '../../../../../serializers/thread';
 import { index as fetchThreads } from '../../../../../services/threads';

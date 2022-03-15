@@ -10,7 +10,7 @@ import {
   findAccountById,
   findThreadById,
   listUsers,
-} from '../../../../lib/slack';
+} from '../../../../lib/models';
 import serializeThread from '../../../../serializers/thread';
 import { links } from '../../../../constants/examples';
 

@@ -12,8 +12,9 @@
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down",
     "migrate:test": "dotenv -e .env.test -- npx prisma migrate deploy",
-    "integration-test": "dotenv -e .env.test -- npm run docker:up && npm run migrate:test && jest -i",
-    "migrate": "npx prisma migrate dev && npx prisma generate dev"
+    "setup:integration": "dotenv -e .env.test -- npm run docker:up && npm run migrate:test ",
+    "test:integration": "dotenv -e .env.test -- jest -i",
+    "migrate": "npx prisma generate dev && npx prisma migrate dev"
   },
   "dependencies": {
     "@headlessui/react": "^1.5.0",
