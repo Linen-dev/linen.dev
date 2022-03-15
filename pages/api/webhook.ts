@@ -16,12 +16,17 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  if (!!req.body.challenge) {
+    res.send(req.body.challenge);
+    return;
+  }
+
   const result = await handleWebhook(req.body);
   if (result.error) {
     res.status(result.status).json({ error: result.error });
     return;
   }
-  res.status(result.status).json(req.body);
+  res.status(result.status).json({});
 }
 
 export const handleWebhook = async (body: SlackMessageEvent) => {
