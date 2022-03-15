@@ -1,7 +1,8 @@
-import { useEffect, useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
-import { Avatar, Group, Text } from '@mantine/core';
+import { Group, Text } from '@mantine/core';
+import Avatar from '../../components/Avatar';
 import Message from '../Message';
 import Autocomplete from '../Autocomplete';
 
@@ -45,17 +46,11 @@ const SearchBar = ({ channels = [], users = [] }) => {
         <Suggestion>
           <Group style={{ width: '100%', marginBottom: '12px' }}>
             <Avatar
-              radius="xl"
               size="sm"
-              key={user?.id || user?.displayName}
-              color="indigo"
               src={user?.profileImageUrl} // set placeholder with a U sign
               alt={user?.displayName} // Set placeholder of a slack user if missing
-            >
-              <Text style={{ marginTop: '-2px', fontSize: '14px' }}>
-                {(user?.displayName || '?').slice(0, 1).toLowerCase()}
-              </Text>
-            </Avatar>
+              text={(user?.displayName || '?').slice(0, 1).toLowerCase()}
+            />
             <Group style={{ alignSelf: 'stretch' }} position="apart">
               <Text size="sm" weight="bold">
                 {user?.displayName}

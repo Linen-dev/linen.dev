@@ -1,26 +1,49 @@
 import React from 'react';
+import classNames from 'classnames';
 import Image from 'next/image';
 import styles from './index.module.css';
 
 interface Props {
+  size?: 'sm' | 'md' | 'lg';
   src?: string;
   alt?: string;
   text: string;
 }
 
-export default function Avatar({ src, alt, text }: Props) {
+function dimensions(size) {
+  switch (size) {
+    case 'sm':
+      return 26;
+    case 'md':
+      return 32;
+    case 'lg':
+      return 38;
+    default:
+      return 32;
+  }
+}
+
+function Avatar({ src, alt, text, size }: Props) {
   if (!src) {
-    return <div className={styles.placeholder}>{text}</div>;
+    return (
+      <div className={classNames(styles.placeholder, styles[size])}>{text}</div>
+    );
   }
   return (
-    <div className={styles.avatar}>
+    <div className={classNames(styles.avatar, styles[size])}>
       <Image
-        className={styles.image}
+        className={classNames(styles.image, styles[size])}
         src={src}
         alt={alt}
-        height="32"
-        width="32"
+        height={dimensions(size)}
+        width={dimensions(size)}
       />
     </div>
   );
 }
+
+Avatar.defaultProps = {
+  size: 'md',
+};
+
+export default Avatar;

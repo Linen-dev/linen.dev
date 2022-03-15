@@ -1,4 +1,5 @@
 import Avatar from '../../../components/Avatar';
+import Avatars from '../../../components/Avatars';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import Pagination from '../../../components/Pagination';
@@ -80,16 +81,16 @@ function Channel({
     ({ messages, incrementId, slug, viewCount }) => {
       const oldestMessage = messages[messages.length - 1];
       const newestMessage = messages[0];
-      const participants = messages.reduce((agg, { author }) => {
+      const authors = messages.reduce((array, { author }) => {
         if (
           author &&
-          !agg.find((a) => a.profileImageUrl === author.profileImageUrl)
+          !array.find((a) => a.profileImageUrl === author.profileImageUrl)
         ) {
-          agg.push(author);
+          array.push(author);
         }
-        return agg;
+        return array;
       }, []);
-      const author = participants[0];
+      const author = authors[0];
 
       return (
         <li
@@ -101,7 +102,7 @@ function Channel({
               <div className="flex pr-4 items-center sm:hidden">
                 {author && (
                   <Avatar
-                    key={`${threadId}-${
+                    key={`${incrementId}-${
                       author.id || author.displayName
                     }-avatar-mobile}`}
                     src={author.profileImageUrl} // set placeholder with a U sign
@@ -130,36 +131,35 @@ function Channel({
     ({ messages, incrementId, slug, viewCount }) => {
       const oldestMessage = messages[messages.length - 1];
       const newestMessage = messages[0];
-      const participants = messages.reduce((agg, { author }) => {
+      const authors = messages.reduce((array, { author }) => {
         if (
           author &&
-          !agg.find((a) => a.profileImageUrl === author.profileImageUrl)
+          !array.find(
+            ({ profileImageUrl }) => profileImageUrl === author.profileImageUrl
+          )
         ) {
-          agg.push(author);
+          array.push(author);
         }
-        return agg;
+        return array;
       }, []);
-      const author = participants[0];
-
       return (
-        <Link key={`${incrementId}-desktop`} href={`/t/${incrementId}/${slug || 'topic'}`} passHref>
+        <Link
+          key={`${incrementId}-desktop`}
+          href={`/t/${incrementId}/${slug || 'topic'}`}
+          passHref
+        >
           <tr className="border-solid border-gray-200 cursor-pointer">
             <td className="px-6 py-3 md:max-w-[800px]">
               <Message users={users} text={oldestMessage.body} truncate />
             </td>
             <td className="px-6 py-3 align-middle">
-              <div className="avatar-groups">
-                {participants.map((p, index) => (
-                  <Avatar
-                    key={`${incrementId}-${
-                      p.id || p.displayName
-                    }-${index}-avatar-desktop`}
-                    src={p.profileImageUrl} // set placeholder with a U sign
-                    alt={p.displayName} // Set placeholder of a slack user if missing
-                    text={(p.displayName || '?').slice(0, 1).toLowerCase()}
-                  />
-                ))}
-              </div>
+              <Avatars
+                users={authors.map((p) => ({
+                  src: p.profileImageUrl,
+                  alt: p.displayNam,
+                  text: (p.displayName || '?').slice(0, 1).toLowerCase(),
+                }))}
+              />
             </td>
             <td className="px-6 py-3 text-sm">{viewCount}</td>
             <td className="px-6 py-3 text-sm">{messages.length}</td>
