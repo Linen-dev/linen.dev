@@ -82,7 +82,9 @@ const SearchBar = ({ channels = [], users = [] }) => {
 
   const handleSelect = useCallback(
     ({ slackThreads }) => {
-      router.push(`/t/${slackThreads.incrementId}`);
+      router.push(
+        `/t/${slackThreads.incrementId}/${slackThreads.slug || 'topic'}`
+      );
     },
     [router]
   );

@@ -7,7 +7,7 @@ import PageLayout from '../../../components/layout/PageLayout';
 import Message from '../../../components/Message';
 import { findAccountByPath, listUsers } from '../../../lib/models';
 import { links } from '../../../constants/examples';
-import { channels, users } from '@prisma/client';
+import { channels, slackThreads, users, messages } from '@prisma/client';
 import { index as fetchThreads } from '../../../services/threads';
 
 interface PaginationType {
@@ -17,11 +17,21 @@ interface PaginationType {
   perPage: number;
 }
 
+// The default types doesn't include associatons
+// maybe look into getting prisma handle association generation
+interface message extends messages {
+  author: users;
+}
+
+interface threads extends slackThreads {
+  messages: message[];
+}
+
 type Props = {
   channelId: string;
   users: users[];
   channels: channels[];
-  threads: any[];
+  threads: threads[];
   slackUrl: string;
   settings: any;
   communityName: string;
@@ -67,7 +77,7 @@ function Channel({
   };
 
   const rows = currentThreads.map(
-    ({ messages, incrementId: threadId, viewCount }) => {
+    ({ messages, incrementId, slug, viewCount }) => {
       const oldestMessage = messages[messages.length - 1];
       const newestMessage = messages[0];
       const participants = messages.reduce((agg, { author }) => {
@@ -82,9 +92,9 @@ function Channel({
       const author = participants[0];
 
       return (
-        <div key={threadId} className="border-solid border-gray-200">
+        <div key={incrementId} className="border-solid border-gray-200">
           <li className="px-4 py-4 hover:bg-gray-50  sm:hidden cursor-pointer">
-            <Link href={`/t/${threadId}`} passHref>
+            <Link href={`/t/${incrementId}/${slug || 'topic'}`} passHref>
               <div className="flex">
                 <div className="flex pr-4 items-center sm:hidden">
                   <Avatar
@@ -117,7 +127,7 @@ function Channel({
   );
 
   const tableRows = currentThreads.map(
-    ({ messages, incrementId: threadId, viewCount }) => {
+    ({ messages, incrementId, slug, viewCount }) => {
       const oldestMessage = messages[messages.length - 1];
       const newestMessage = messages[0];
       const participants = messages.reduce((agg, { author }) => {
@@ -132,7 +142,11 @@ function Channel({
       const author = participants[0];
 
       return (
-        <Link key={threadId} href={`/t/${threadId}`} passHref>
+        <Link
+          key={incrementId}
+          href={`/t/${incrementId}/${slug || 'topic'}`}
+          passHref
+        >
           <tr className="border-solid border-gray-200 cursor-pointer">
             <td className="px-6 py-3 md:max-w-[800px]">
               <Message users={users} text={oldestMessage.body} truncate />
