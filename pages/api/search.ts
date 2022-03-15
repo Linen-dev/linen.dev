@@ -89,6 +89,9 @@ export default async function handler(
             accountId: accountId,
           },
         },
+        include: {
+          slackThreads: true,
+        },
         take: 20,
       });
       sortedMatches.push(...messages);
