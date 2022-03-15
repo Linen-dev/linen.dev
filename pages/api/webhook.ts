@@ -17,7 +17,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (!!req.body.challenge) {
-    res.send(req.body.challenge);
+    res.status(200).json(req.body.challenge);
     return;
   }
 
