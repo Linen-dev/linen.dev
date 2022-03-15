@@ -319,7 +319,7 @@ export async function saveMessagesSyncronous(
 
     let ts = m.thread_ts || m.ts;
     const thread = await findOrCreateThread({
-      slackThreadTs: m.thread_ts,
+      slackThreadTs: ts,
       channelId: channelId,
     });
 
