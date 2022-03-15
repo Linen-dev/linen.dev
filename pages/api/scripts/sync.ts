@@ -324,7 +324,7 @@ export async function saveMessagesSyncronous(
     });
 
     if (!!m.thread_ts) {
-      thread.messageCount += 1;
+      thread.messageCount = thread.messages.length + 1;
     } else {
       //create slug based on the first message
       thread.slug = createSlug(m.text);

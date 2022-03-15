@@ -7,10 +7,37 @@ export default async function handler(
   res: NextApiResponse
 ) {
   let skip = 0;
-  let threadsWithNoSlug = await prisma.slackThreads.findMany({
+  let threadsWithNoSlug = await findThreadsWithNoSlugs(skip);
+
+  while (threadsWithNoSlug.length > 0) {
+    console.log('looping');
+    skip += 100;
+    const slugsTransaction = threadsWithNoSlug.map((t) => {
+      const message = t.messages[0];
+      const slug = createSlug(message?.body || '');
+      return prisma.slackThreads.update({
+        where: {
+          id: t.id,
+        },
+        data: {
+          slug,
+        },
+      });
+    });
+
+    await prisma.$transaction(slugsTransaction);
+
+    threadsWithNoSlug = await findThreadsWithNoSlugs(skip);
+  }
+
+  console.log(threadsWithNoSlug[0]);
+  res.status(200).json(threadsWithNoSlug[0]);
+}
+
+const findThreadsWithNoSlugs = (skip: number) => {
+  return prisma.slackThreads.findMany({
     where: {
       slug: null,
-      messages: { some: {} },
     },
     include: {
       messages: {
@@ -22,46 +49,4 @@ export default async function handler(
     skip,
     take: 100,
   });
-
-  while (threadsWithNoSlug.length > 0) {
-    console.log('looping');
-    skip += 100;
-    for (let i = 0; i < threadsWithNoSlug.length; i++) {
-      const thread = threadsWithNoSlug[i];
-      if (thread.messages.length === 0) {
-        console.log({ thread });
-        continue;
-      }
-      const message = thread.messages[0];
-      const slug = createSlug(message.body);
-      await prisma.slackThreads.update({
-        where: {
-          id: thread.id,
-        },
-        data: {
-          slug,
-        },
-      });
-    }
-    threadsWithNoSlug = await prisma.slackThreads.findMany({
-      where: {
-        slug: null,
-      },
-      include: {
-        messages: {
-          orderBy: {
-            sentAt: 'asc',
-          },
-        },
-      },
-      skip,
-      take: 100,
-    });
-  }
-
-  console.log(threadsWithNoSlug[0]);
-
-  res.status(200).json(threadsWithNoSlug[0]);
-}
-
-const get = () => {};
+};

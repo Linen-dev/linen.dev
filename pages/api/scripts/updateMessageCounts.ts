@@ -6,11 +6,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   let skip = 0;
-  let threadsWIthOneMessage = await prisma.slackThreads.findMany({
-    where: {
-      messageCount: 1,
-      messages: { some: {} },
-    },
+  let threadsToUpdate = await prisma.slackThreads.findMany({
     include: {
       messages: {
         orderBy: {
@@ -22,29 +18,21 @@ export default async function handler(
     take: 100,
   });
 
-  while (threadsWIthOneMessage.length > 0) {
+  while (threadsToUpdate.length > 0) {
     console.log('looping');
     skip += 100;
-    for (let i = 0; i < threadsWIthOneMessage.length; i++) {
-      const thread = threadsWIthOneMessage[i];
-      if (thread.messages.length === 0) {
-        console.log({ thread });
-        continue;
-      }
-      await prisma.slackThreads.update({
+    const threadsTransaction = threadsToUpdate.map((t) => {
+      return prisma.slackThreads.update({
         where: {
-          id: thread.id,
+          id: t.id,
         },
         data: {
-          messageCount: thread.messages.length,
+          messageCount: t.messages.length,
         },
       });
-    }
-    threadsWIthOneMessage = await prisma.slackThreads.findMany({
-      where: {
-        messageCount: 1,
-        messages: { some: {} },
-      },
+    });
+    await prisma.$transaction(threadsTransaction);
+    threadsToUpdate = await prisma.slackThreads.findMany({
       include: {
         messages: {
           orderBy: {
@@ -57,7 +45,5 @@ export default async function handler(
     });
   }
 
-  console.log(threadsWIthOneMessage[0]);
-
-  res.status(200).json(threadsWIthOneMessage[0]);
+  res.status(200).json(threadsToUpdate[0]);
 }

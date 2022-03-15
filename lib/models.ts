@@ -189,6 +189,9 @@ export const findOrCreateThread = async (thread: Thread) => {
     },
     update: {},
     create: thread,
+    include: {
+      messages: true,
+    },
   });
 };
 
@@ -250,7 +253,9 @@ export const threadIndex = async (
     },
     where: {
       channelId,
-      messages: { some: {} },
+      messageCount: {
+        gt: 1,
+      },
     },
     orderBy: {
       slackThreadTs: 'desc',
