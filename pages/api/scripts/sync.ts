@@ -23,6 +23,7 @@ import {
   updateNextPageCursor,
   updateSlackThread,
 } from '../../../lib/models';
+import { createSlug } from '../../../lib/util';
 import { getSlackChannels } from '../slack';
 
 export default async function handler(
@@ -326,8 +327,12 @@ export async function saveMessagesSyncronous(
 
     if (!!m.thread_ts) {
       thread.messageCount += 1;
-      await updateSlackThread(thread);
+    } else {
+      //create slug based on the first message
+      thread.slug = createSlug(m.text);
     }
+
+    await updateSlackThread(thread);
 
     let user: UserMap | null = null;
     if (!!m.user) {

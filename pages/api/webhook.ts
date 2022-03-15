@@ -10,6 +10,7 @@ import {
 } from '../../lib/models';
 import { SlackMessageEvent } from '../../interfaces/slackMessageEventInterface';
 import { getSlackUser } from './slack';
+import { createSlug } from '../../lib/util';
 
 export default async function handler(
   req: NextApiRequest,
@@ -53,9 +54,12 @@ export const handleWebhook = async (body: SlackMessageEvent) => {
 
   if (!!event.thread_ts) {
     thread.messageCount += 1;
-    await updateSlackThread(thread);
+  } else {
+    //create slug based on the first message
+    thread.slug = createSlug(event.text);
   }
 
+  await updateSlackThread(thread);
   let user = await findUser(event.user);
   if (user === null) {
     const accessToken = channel.account?.slackAuthorizations[0]?.accessToken;

@@ -200,6 +200,7 @@ describe('when there is no existing thread ', () => {
       expect(message?.slackMessageId).toEqual(messageNoThread.event.ts);
       expect(message?.slackThreads.messageCount).toEqual(1);
       expect(message?.author?.slackUserId).toEqual(messageNoThread.event.user);
+      expect(message.slackThreads.slug).toEqual('This-is-the-first-message');
 
       await handleWebhook(firstReply);
       const savedFirstReply = await findMessage(firstReply);
@@ -207,6 +208,9 @@ describe('when there is no existing thread ', () => {
       expect(savedFirstReply?.body).toEqual(firstReply.event.text);
       expect(savedFirstReply?.slackThreads).not.toBeNull();
       expect(savedFirstReply?.slackThreads.messageCount).toEqual(2);
+      expect(savedFirstReply.slackThreads.slug).toEqual(
+        'This-is-the-first-message'
+      );
       expect(savedFirstReply?.author?.slackUserId).toEqual(
         firstReply.event.user
       );
