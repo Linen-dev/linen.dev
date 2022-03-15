@@ -316,14 +316,12 @@ export async function saveMessagesSyncronous(
   for (let j = 0; j < messages.length - 1; j++) {
     const m = messages[j];
     let threadId: string | null;
-    let thread: any | null;
 
-    if (!!m.thread_ts) {
-      thread = await findOrCreateThread({
-        slackThreadTs: m.thread_ts,
-        channelId: channelId,
-      });
-    }
+    let ts = m.thread_ts || m.ts;
+    const thread = await findOrCreateThread({
+      slackThreadTs: m.thread_ts,
+      channelId: channelId,
+    });
 
     if (!!m.thread_ts) {
       thread.messageCount += 1;
