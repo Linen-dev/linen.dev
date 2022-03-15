@@ -1,0 +1,28 @@
+.group {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.item + .item {
+  margin-left: -0.75rem;
+  z-index: 1;
+}
+
+.placeholder {
+  border-radius: 50%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: 2px solid #fff;
+  width: 36px;
+  height: 36px;
+  text-align: center;
+  text-transform: lowercase;
+  line-height: 32px;
+  background-color: #f8f9fa;
+  color: #000;
+  font-weight: bold;
+  font-size: 14px;
+}

@@ -1,9 +1,10 @@
 .avatar {
+  display: flex;
+  align-items: center;
   border-radius: 50%;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  border: 2px solid #fff;
   width: 36px;
   height: 36px;
 }
@@ -11,8 +12,9 @@
 .image {
   display: block;
   border-radius: 50%;
-  height: 32px;
-  height: 32px;
+  height: 36px;
+  height: 36px;
+  border: 1px solid #fff !important;
 }
 
 .placeholder {
@@ -30,4 +32,18 @@
   color: #4c6ef5;
   font-weight: bold;
   font-size: 14px;
+}
+
+.sm {
+  width: 26px;
+  height: 26px;
+  line-height: 26px;
+  border: none;
+}
+
+.lg {
+  width: 38px;
+  height: 38px;
+  line-height: 38px;
+  border: none;
 }
