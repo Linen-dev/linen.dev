@@ -1,9 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
-import prisma from '../../../client';
+import prisma from '../../client';
 import superagent from 'superagent';
 import fs from 'fs';
-
-import Message from '../../../components/Message';
 
 // async function update(request: NextApiRequest, response: NextApiResponse) {
 //   const id = request.query.id as string;
