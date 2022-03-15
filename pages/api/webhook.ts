@@ -21,7 +21,7 @@ export default async function handler(
     res.status(result.status).json({ error: result.error });
     return;
   }
-  res.status(result.status).json({});
+  res.status(result.status).json(req.body);
 }
 
 export const handleWebhook = async (body: SlackMessageEvent) => {
