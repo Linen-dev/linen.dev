@@ -330,7 +330,10 @@ export async function saveMessagesSyncronous(
       thread.slug = createSlug(m.text);
     }
 
-    await updateSlackThread(thread);
+    await updateSlackThread(thread.id, {
+      messageCount: thread.messageCount,
+      slug: thread.slug,
+    });
 
     let user: UserMap | null = null;
     if (!!m.user) {

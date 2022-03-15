@@ -64,7 +64,11 @@ export const handleWebhook = async (body: SlackMessageEvent) => {
     thread.slug = createSlug(event.text);
   }
 
-  await updateSlackThread(thread);
+  await updateSlackThread(thread.id, {
+    messageCount: thread.messageCount,
+    slug: thread.slug,
+  });
+
   let user = await findUser(event.user);
   if (user === null) {
     const accessToken = channel.account?.slackAuthorizations[0]?.accessToken;

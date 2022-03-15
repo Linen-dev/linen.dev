@@ -91,10 +91,13 @@ export const findAccountById = async (accountId: string) => {
   });
 };
 
-export const updateSlackThread = async (thread: slackThreads) => {
+export const updateSlackThread = async (
+  id: string,
+  thread: Prisma.slackThreadsUpdateInput
+) => {
   return await prisma.slackThreads.update({
     where: {
-      id: thread.id,
+      id: id,
     },
     data: thread,
   });
