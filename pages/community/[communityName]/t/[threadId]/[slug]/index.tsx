@@ -1,4 +1,4 @@
-import { getThread } from '../getThread';
+import { getThread } from '../../../../../../lib/getThread';
 import Thread from '../index';
 
 export default Thread;

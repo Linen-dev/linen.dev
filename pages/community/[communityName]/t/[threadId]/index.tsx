@@ -6,7 +6,7 @@ import PageLayout from '../../../../../components/layout/PageLayout';
 import Message from '../../../../../components/Message';
 
 import styles from './index.module.css';
-import { getThread } from './getThread';
+import { getThread } from '../../../../../lib/getThread';
 
 type Props = {
   threadId: string;
