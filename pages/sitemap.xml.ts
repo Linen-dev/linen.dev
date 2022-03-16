@@ -11,7 +11,7 @@ export const getServerSideProps = async ({ req, res }) => {
 
   try {
     const sitemap = subdomain
-      ? await createXMLSitemapForSubdomain(domain, subdomain)
+      ? await createXMLSitemapForSubdomain(host, subdomain)
       : await createXMLSitemap(domain);
 
     res.setHeader('Content-Type', 'application/xml');

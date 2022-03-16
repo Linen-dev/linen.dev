@@ -26,11 +26,20 @@ export async function createXMLSitemap(domain): Promise<string> {
 }
 
 export async function createXMLSitemapForSubdomain(
-  domain,
+  host,
   subdomain
 ): Promise<string> {
   const account = await prisma.accounts.findFirst({
-    where: { name: subdomain },
+    where: {
+      OR: [
+        {
+          redirectDomain: host,
+        },
+        {
+          slackDomain: subdomain,
+        },
+      ],
+    },
     select: {
       channels: {
         select: {
@@ -60,7 +69,7 @@ export async function createXMLSitemapForSubdomain(
   }, []);
 
   const stream = new SitemapStream({
-    hostname: `${PROTOCOL}://${subdomain}.${domain}`,
+    hostname: `${PROTOCOL}://${host}`,
   });
 
   const urls = threads.map(({ incrementId, slug }) => {

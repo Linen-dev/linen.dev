@@ -88,3 +88,11 @@ Run specific test example:
 ```bash
 npm run test:integration webhook.test.ts
 ```
+
+## Local domain redirect testing
+
+1. Ask for invite for ngrock account
+2. Setup [ngrok](https://ngrok.io/)
+3. pick subdomain i.e kam-test.ngrok.io
+4. Update dev database to have the redirect url `update accounts set "redirectDomain"='kam-test.ngrok.io' where id = '9677cb41-033e-4c1a-9ae5-ef178606cad3';` - replace with your subdomain that you chose
+5. run ngrok tunnel `ngrok http --region=us --hostname=kam-test.ngrok.io 3000`
