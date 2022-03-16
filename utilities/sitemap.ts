@@ -4,27 +4,6 @@ import prisma from '../client';
 
 const PROTOCOL = 'https';
 
-export async function createXMLSitemap(domain): Promise<string> {
-  const subdomains = await prisma.accounts.findMany({
-    where: {
-      NOT: {
-        name: null,
-      },
-    },
-    select: { name: true },
-  });
-  const sitemaps = [
-    ...subdomains.map(
-      (subdomain) => `${PROTOCOL}://${subdomain.name}.${domain}/sitemap.xml`
-    ),
-  ];
-
-  const stream = new SitemapIndexStream();
-  return streamToPromise(Readable.from(sitemaps).pipe(stream)).then((data) =>
-    data.toString()
-  );
-}
-
 export async function createXMLSitemapForSubdomain(
   host,
   subdomain
