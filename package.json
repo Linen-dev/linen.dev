@@ -11,10 +11,11 @@
     "test:watch": "jest --watch",
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down",
-    "migrate:test": "dotenv -e .env.test -- npx prisma migrate deploy",
     "setup:integration": "dotenv -e .env.test -- npm run docker:up && npm run migrate:test ",
     "test:integration": "dotenv -e .env.test -- jest -i",
-    "migrate": "npx prisma generate dev && npx prisma migrate dev"
+    "db:migrate": "npx prisma generate dev && npx prisma migrate dev",
+    "db:migrate:test": "dotenv -e .env.test -- npx prisma migrate deploy",
+    "db:seed": "psql linendev < db_seed.sql"
   },
   "dependencies": {
     "@headlessui/react": "^1.5.0",

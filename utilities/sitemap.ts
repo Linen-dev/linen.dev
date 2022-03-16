@@ -35,6 +35,7 @@ export async function createXMLSitemapForSubdomain(subdomain): Promise<string> {
           slackThreads: {
             select: {
               incrementId: true,
+              slug: true,
             },
           },
         },
@@ -49,7 +50,10 @@ export async function createXMLSitemapForSubdomain(subdomain): Promise<string> {
   const threads = account.channels.reduce((array, item) => {
     return [
       ...array,
-      ...item.slackThreads.map(({ incrementId }) => incrementId),
+      ...item.slackThreads.map(({ incrementId, slug }) => ({
+        incrementId,
+        slug,
+      })),
     ];
   }, []);
 
@@ -57,8 +61,8 @@ export async function createXMLSitemapForSubdomain(subdomain): Promise<string> {
     hostname: `${PROTOCOL}://${subdomain}.${DOMAIN}`,
   });
 
-  const urls = threads.map((id) => {
-    return `/t/${id}`;
+  const urls = threads.map(({ incrementId, slug }) => {
+    return `/t/${incrementId}/${slug}`;
   });
 
   return streamToPromise(Readable.from(urls).pipe(stream)).then((data) =>
