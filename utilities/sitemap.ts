@@ -73,7 +73,7 @@ export async function createXMLSitemapForSubdomain(
   });
 
   const urls = threads.map(({ incrementId, slug }) => {
-    return `/t/${incrementId}/${slug}`;
+    return `/t/${incrementId}/${slug || 'topic'}`;
   });
 
   return streamToPromise(Readable.from(urls).pipe(stream)).then((data) =>
