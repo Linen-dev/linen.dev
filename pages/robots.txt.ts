@@ -1,4 +1,4 @@
-import { getSubdomain } from '../utilities/domain';
+import { getDomain, getSubdomain } from '../utilities/domain';
 import {
   createRobotsTxt,
   createRobotsTxtForSubdomain,
@@ -7,6 +7,7 @@ import prisma from '../client';
 
 export const getServerSideProps = async ({ req, res }) => {
   const { host } = req.headers;
+  const domain = getDomain(host);
   const subdomain = getSubdomain(host);
 
   if (subdomain) {
@@ -14,7 +15,7 @@ export const getServerSideProps = async ({ req, res }) => {
       where: { name: subdomain },
     });
     if (account) {
-      const robots = createRobotsTxtForSubdomain(subdomain);
+      const robots = createRobotsTxtForSubdomain(domain, subdomain);
       res.setHeader('Content-Type', 'text/plain');
       res.write(robots);
       res.end();
@@ -23,7 +24,7 @@ export const getServerSideProps = async ({ req, res }) => {
       res.end();
     }
   } else {
-    const robots = createRobotsTxt();
+    const robots = createRobotsTxt(domain);
     res.setHeader('Content-Type', 'text/plain');
     res.write(robots);
     res.end();

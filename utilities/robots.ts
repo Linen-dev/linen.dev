@@ -1,19 +1,17 @@
-import { DOMAIN } from './domain';
-
-export function createRobotsTxt() {
+export function createRobotsTxt(domain) {
   return `
 User-agent: *
 Allow: /
 
-Sitemap: https://${DOMAIN}/sitemap.xml
+Sitemap: https://${domain}/sitemap.xml
   `.trimStart();
 }
 
-export function createRobotsTxtForSubdomain(subdomain) {
+export function createRobotsTxtForSubdomain(domain, subdomain) {
   return `
 User-agent: *
 Allow: /
 
-Sitemap: https://${subdomain}.${DOMAIN}/sitemap.xml
+Sitemap: https://${subdomain}.${domain}/sitemap.xml
 `.trimStart();
 }

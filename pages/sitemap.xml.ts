@@ -2,16 +2,17 @@ import {
   createXMLSitemapForSubdomain,
   createXMLSitemap,
 } from '../utilities/sitemap';
-import { getSubdomain } from '../utilities/domain';
+import { getDomain, getSubdomain } from '../utilities/domain';
 
 export const getServerSideProps = async ({ req, res }) => {
   const { host } = req.headers;
+  const domain = getDomain(host);
   const subdomain = getSubdomain(host);
 
   try {
     const sitemap = subdomain
-      ? await createXMLSitemapForSubdomain(subdomain)
-      : await createXMLSitemap();
+      ? await createXMLSitemapForSubdomain(domain, subdomain)
+      : await createXMLSitemap(domain);
 
     res.setHeader('Content-Type', 'application/xml');
     res.write(sitemap);

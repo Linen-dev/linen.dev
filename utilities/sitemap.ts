@@ -1,11 +1,10 @@
 import { SitemapStream, SitemapIndexStream, streamToPromise } from 'sitemap';
 import { Readable } from 'stream';
 import prisma from '../client';
-import { DOMAIN } from './domain';
 
 const PROTOCOL = 'https';
 
-export async function createXMLSitemap(): Promise<string> {
+export async function createXMLSitemap(domain): Promise<string> {
   const subdomains = await prisma.accounts.findMany({
     where: {
       NOT: {
@@ -16,7 +15,7 @@ export async function createXMLSitemap(): Promise<string> {
   });
   const sitemaps = [
     ...subdomains.map(
-      (subdomain) => `${PROTOCOL}://${subdomain.name}.${DOMAIN}/sitemap.xml`
+      (subdomain) => `${PROTOCOL}://${subdomain.name}.${domain}/sitemap.xml`
     ),
   ];
 
@@ -26,7 +25,10 @@ export async function createXMLSitemap(): Promise<string> {
   );
 }
 
-export async function createXMLSitemapForSubdomain(subdomain): Promise<string> {
+export async function createXMLSitemapForSubdomain(
+  domain,
+  subdomain
+): Promise<string> {
   const account = await prisma.accounts.findFirst({
     where: { name: subdomain },
     select: {
@@ -58,7 +60,7 @@ export async function createXMLSitemapForSubdomain(subdomain): Promise<string> {
   }, []);
 
   const stream = new SitemapStream({
-    hostname: `${PROTOCOL}://${subdomain}.${DOMAIN}`,
+    hostname: `${PROTOCOL}://${subdomain}.${domain}`,
   });
 
   const urls = threads.map(({ incrementId, slug }) => {
