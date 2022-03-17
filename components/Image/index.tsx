@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 interface Props {
   className?: string;
@@ -8,7 +8,25 @@ interface Props {
   height: number;
 }
 
-export default function Image({ className, src, alt, width, height }) {
+export default function Image({ className, src, alt, width, height }: Props) {
+  const [loaded, setLoaded] = useState(false);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const img = document.createElement('img');
+    img.onload = () => setLoaded(true);
+    img.onerror = (err) => setError(err);
+    img.src = src;
+  }, []);
+
+  if (error) {
+    return <></>;
+  }
+
+  if (!loaded) {
+    return <></>;
+  }
+
   return (
     <img
       className={className}
