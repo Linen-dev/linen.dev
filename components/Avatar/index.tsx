@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import Image from 'next/image';
+import Image from '../Image';
 import styles from './index.module.css';
 
 interface Props {
@@ -15,7 +15,7 @@ function dimensions(size) {
     case 'sm':
       return 26;
     case 'md':
-      return 32;
+      return 36;
     case 'lg':
       return 38;
     default:
