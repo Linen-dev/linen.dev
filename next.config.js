@@ -6,9 +6,6 @@ const nextConfig = {
     locales: ['en'],
     defaultLocale: 'en',
   },
-  images: {
-    domains: ['avatars.slack-edge.com'],
-  },
   reactStrictMode: true,
 };
 
