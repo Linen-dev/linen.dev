@@ -245,7 +245,8 @@ export async function getServerSideProps(context: Params) {
   const channelId = channel.id;
 
   const { data, pagination } = await fetchThreads({ channelId, page: 1 });
-  const { threads } = data;
+  let { threads } = data;
+  threads = threads.filter((t) => t.messages.length > 0);
   const users = threads
     .map(({ messages }) => messages.map(({ author }) => author))
     .flat()

@@ -37,7 +37,8 @@ export async function getServerSideProps(context: Params) {
     channelId: channel.id,
     page: 1,
   });
-  const { threads } = data;
+  let { threads } = data;
+  threads = threads.filter((t) => t.messages.length > 0);
 
   const defaultSettings =
     links.find(({ accountId }) => accountId === account.id) || links[0];
