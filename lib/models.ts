@@ -241,7 +241,7 @@ export const threadIndex = async (
   take: number = 20,
   skip: number = 0
 ) => {
-  return await prisma.slackThreads.findMany({
+  const threads = await prisma.slackThreads.findMany({
     take: take,
     skip: skip,
     include: {
@@ -264,6 +264,7 @@ export const threadIndex = async (
       slackThreadTs: 'desc',
     },
   });
+  return threads.filter((t) => t.messages.length > 0);
 };
 
 export const findThreadById = async (threadId: number) => {

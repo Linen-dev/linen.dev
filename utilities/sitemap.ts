@@ -26,6 +26,7 @@ export async function createXMLSitemapForSubdomain(
             select: {
               incrementId: true,
               slug: true,
+              messages: true,
             },
           },
         },
@@ -40,10 +41,14 @@ export async function createXMLSitemapForSubdomain(
   const threads = account.channels.reduce((array, item) => {
     return [
       ...array,
-      ...item.slackThreads.map(({ incrementId, slug }) => ({
-        incrementId,
-        slug,
-      })),
+      ...item.slackThreads
+        .filter((t) => {
+          return t.messages.length > 0;
+        })
+        .map(({ incrementId, slug }) => ({
+          incrementId,
+          slug,
+        })),
     ];
   }, []);
 
