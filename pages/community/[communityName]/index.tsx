@@ -1,4 +1,5 @@
-import { Avatar, AvatarsGroup, Text } from '@mantine/core';
+import Avatar from '../../../components/Avatar';
+import Avatars from '../../../components/Avatars';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import Pagination from '../../../components/Pagination';
@@ -80,48 +81,48 @@ function Channel({
     ({ messages, incrementId, slug, viewCount }) => {
       const oldestMessage = messages[messages.length - 1];
       const newestMessage = messages[0];
-      const participants = messages.reduce((agg, { author }) => {
+      const authors = messages.reduce((array, { author }) => {
         if (
           author &&
-          !agg.find((a) => a.profileImageUrl === author.profileImageUrl)
+          !array.find((a) => a.profileImageUrl === author.profileImageUrl)
         ) {
-          agg.push(author);
+          array.push(author);
         }
-        return agg;
+        return array;
       }, []);
-      const author = participants[0];
+      const author = authors[0];
 
       return (
-        <div key={incrementId} className="border-solid border-gray-200">
-          <li className="px-4 py-4 hover:bg-gray-50  sm:hidden cursor-pointer">
-            <Link href={`/t/${incrementId}/${slug || 'topic'}`} passHref>
-              <div className="flex">
-                <div className="flex pr-4 items-center sm:hidden">
+        <li
+          key={incrementId}
+          className="px-4 py-4 hover:bg-gray-50 border-solid border-gray-200 sm:hidden cursor-pointer"
+        >
+          <Link href={`/t/${incrementId}/${slug || 'topic'}`} passHref>
+            <div className="flex">
+              <div className="flex pr-4 items-center sm:hidden">
+                {author && (
                   <Avatar
-                    radius="xl"
-                    key={author?.id || author?.displayName}
-                    color="indigo"
-                    src={author?.profileImageUrl} // set placeholder with a U sign
-                    alt={author?.displayName} // Set placeholder of a slack user if missing
-                  >
-                    <Text style={{ marginTop: '-2px', fontSize: '14px' }}>
-                      {(author?.displayName || '?').slice(0, 1).toLowerCase()}
-                    </Text>
-                  </Avatar>
+                    key={`${incrementId}-${
+                      author.id || author.displayName
+                    }-avatar-mobile}`}
+                    src={author.profileImageUrl} // set placeholder with a U sign
+                    alt={author.displayName} // Set placeholder of a slack user if missing
+                    text={(author.displayName || '?').slice(0, 1).toLowerCase()}
+                  />
+                )}
+              </div>
+              <div className="flex flex-col w-full">
+                <div className="pb-2 sm:px-6">
+                  <Message users={users} text={oldestMessage.body} truncate />
                 </div>
-                <div className="flex flex-col w-full">
-                  <div className="pb-2 sm:px-6">
-                    <Message users={users} text={oldestMessage.body} truncate />
-                  </div>
-                  <div className="text-sm text-gray-400 flex flex-row justify-between">
-                    <p>{messages.length} Replies</p>
-                    {format(new Date(newestMessage.sentAt))}
-                  </div>
+                <div className="text-sm text-gray-400 flex flex-row justify-between">
+                  <p>{messages.length} Replies</p>
+                  {format(new Date(newestMessage.sentAt))}
                 </div>
               </div>
-            </Link>
-          </li>
-        </div>
+            </div>
+          </Link>
+        </li>
       );
     }
   );
@@ -130,20 +131,20 @@ function Channel({
     ({ messages, incrementId, slug, viewCount }) => {
       const oldestMessage = messages[messages.length - 1];
       const newestMessage = messages[0];
-      const participants = messages.reduce((agg, { author }) => {
+      const authors = messages.reduce((array, { author }) => {
         if (
           author &&
-          !agg.find((a) => a.profileImageUrl === author.profileImageUrl)
+          !array.find(
+            ({ profileImageUrl }) => profileImageUrl === author.profileImageUrl
+          )
         ) {
-          agg.push(author);
+          array.push(author);
         }
-        return agg;
+        return array;
       }, []);
-      const author = participants[0];
-
       return (
         <Link
-          key={incrementId}
+          key={`${incrementId}-desktop`}
           href={`/t/${incrementId}/${slug || 'topic'}`}
           passHref
         >
@@ -152,21 +153,13 @@ function Channel({
               <Message users={users} text={oldestMessage.body} truncate />
             </td>
             <td className="px-6 py-3 align-middle">
-              <AvatarsGroup size={36} limit={3}>
-                {participants.map((p, idx) => (
-                  <Avatar
-                    radius="xl"
-                    key={p.id || p.displayName}
-                    color="indigo"
-                    src={p?.profileImageUrl} // set placeholder with a U sign
-                    alt={p?.displayName} // Set placeholder of a slack user if missing
-                  >
-                    <Text style={{ marginTop: '-2px', fontSize: '14px' }}>
-                      {(p?.displayName || '?').slice(0, 1).toLowerCase()}
-                    </Text>
-                  </Avatar>
-                ))}
-              </AvatarsGroup>
+              <Avatars
+                users={authors.map((p) => ({
+                  src: p.profileImageUrl,
+                  alt: p.displayNam,
+                  text: (p.displayName || '?').slice(0, 1).toLowerCase(),
+                }))}
+              />
             </td>
             <td className="px-6 py-3 text-sm">{viewCount}</td>
             <td className="px-6 py-3 text-sm">{messages.length}</td>
