@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import Image from '../Image';
+import Image from 'next/image';
 import styles from './index.module.css';
 
 interface Props {

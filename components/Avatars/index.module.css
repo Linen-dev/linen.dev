@@ -1,8 +1,9 @@
 .group {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: left;
   align-items: center;
+  min-width: 36px;
 }
 
 .item + .item {

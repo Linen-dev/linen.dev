@@ -12,10 +12,16 @@ interface Props {
   users: AvatarType[];
 }
 
-export default function AvatarsGroup({ users }: Props) {
+export default function Avatars({ users }: Props) {
   const avatars = users.slice(0, 3);
+  if (avatars.length === 0) {
+    return <></>;
+  }
   return (
-    <div className={styles.group}>
+    <div
+      className={styles.group}
+      style={{ width: 36 + (avatars.length - 1) * 36 }}
+    >
       {avatars.map((user, index) => (
         <div key={`${user.text}-${index}`} className={styles.item}>
           <Avatar key={`${index}-avatar`} {...user} />
