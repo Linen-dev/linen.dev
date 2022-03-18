@@ -65,7 +65,9 @@ function Channel({
       .then((response) => response.json())
       .then((response) => {
         const { data, pagination } = response;
-        setCurrentThreads(data.threads);
+        let { threads } = data;
+        threads = threads.filter((t) => t.messages.length > 0);
+        setCurrentThreads(threads);
         setPageCount(pagination.pageCount);
         window.scrollTo(0, 0);
       });
