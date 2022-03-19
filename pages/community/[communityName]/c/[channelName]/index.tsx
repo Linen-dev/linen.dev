@@ -12,6 +12,7 @@ type Params = {
   query: {
     page?: string;
   };
+  res: any;
 };
 //Remove getServerSideProp duplicate code
 export async function getServerSideProps(context: Params) {

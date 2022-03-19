@@ -14,6 +14,12 @@ export async function getThread(threadId: string) {
   const id = parseInt(threadId);
   const thread = await findThreadById(id);
 
+  if (!thread) {
+    return {
+      notFound: true,
+    };
+  }
+
   const [channels, users, account] = await Promise.all([
     channelIndex(thread.channel.accountId),
     listUsers(thread.channel.accountId),
