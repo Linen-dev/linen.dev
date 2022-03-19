@@ -1,17 +1,8 @@
 import { useState, useCallback, useMemo } from 'react';
-import styled from 'styled-components';
 import { useRouter } from 'next/router';
-import { Text } from '@mantine/core';
 import Avatar from '../../components/Avatar';
 import Message from '../Message';
 import Autocomplete from '../Autocomplete';
-
-const Suggestion = styled.div({
-  cursor: 'pointer',
-  position: 'relative',
-  borderBottom: '1px solid #eee',
-  padding: '12px',
-});
 
 const parseResults = (data) => {
   const allIds = new Set();
@@ -43,50 +34,30 @@ const SearchBar = ({ channels = [], users = [] }) => {
       const channelName = channel?.channelName;
 
       return (
-        <Suggestion>
-          <div
-            style={{
-              width: '100%',
-              marginBottom: '12px',
-              display: 'flex',
-              alignContent: 'center',
-            }}
-          >
+        <div
+          className="p-3 cursor-pointer relative"
+          style={{ borderBottom: '1px solid #eee' }}
+        >
+          <div className="flex items-center w-full mb-3">
             <Avatar
               size="sm"
               src={user?.profileImageUrl} // set placeholder with a U sign
               alt={user?.displayName} // Set placeholder of a slack user if missing
               text={(user?.displayName || '?').slice(0, 1).toLowerCase()}
             />
-            <div
-              style={{
-                fontWeight: 'bold',
-                fontSize: '14px',
-                display: 'flex',
-                alignItems: 'center',
-                marginLeft: '10px',
-              }}
-            >
+            <div className="font-bold text-sm flex items-center ml-2">
               {user?.displayName || 'John Doe'}
             </div>
             {channelName && (
-              <div
-                style={{
-                  fontWeight: 'bold',
-                  fontSize: '14px',
-                  position: 'absolute',
-                  right: '12px',
-                  top: '15px',
-                }}
-              >
+              <div className="font-bold text-sm absolute right-3 top-4">
                 #{channelName}
               </div>
             )}
           </div>
-          <div style={{ borderLeft: '3px solid #dfdfdf', paddingLeft: '16px' }}>
+          <div className="pl-4" style={{ borderLeft: '3px solid #dfdfdf' }}>
             <Message text={body} truncate users={users} />
           </div>
-        </Suggestion>
+        </div>
       );
     },
     [users, channels]
