@@ -1,4 +1,5 @@
 import { Header, Button } from '@mantine/core';
+import { ErrorBoundary } from 'react-error-boundary';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import SlackIcon from '../icons/SlackIcon';
@@ -119,7 +120,26 @@ function PageLayout({
       />
       <div className="sm:flex">
         <div className="hidden md:flex">{NavBar(channels, channelName)}</div>
-        <div className="lg:w-full">{children}</div>
+        <div className="lg:w-full">
+          <ErrorBoundary
+            FallbackComponent={() => (
+              <>
+                <h1 className="font-bold text-blue-600 text-center text-9xl pt-6">
+                  500
+                </h1>
+                <h6 className="mb-2 text-2xl font-bold text-center text-gray-800 md:text-3xl">
+                  <span className="text-red-500">Oops!</span> Something went
+                  wrong
+                </h6>
+                <p className="mb-8 text-center text-gray-500 md:text-lg">
+                  Please try again or contact us
+                </p>
+              </>
+            )}
+          >
+            {children}
+          </ErrorBoundary>
+        </div>
       </div>
     </div>
   );

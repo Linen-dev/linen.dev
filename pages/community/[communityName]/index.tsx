@@ -51,6 +51,27 @@ function Channel({
   pagination,
   page,
 }: Props) {
+  const [currentThreads, setCurrentThreads] = useState(threads);
+  const [pageCount, setPageCount] = useState(pagination.pageCount);
+  const [currentPage, setCurrentPage] = useState(page);
+  const [initial, setInitial] = useState(true);
+
+  useEffect(() => {
+    if (initial && channelId) {
+      return setInitial(false);
+    }
+    fetch(`/api/threads?channelId=${channelId}&page=${currentPage}`)
+      .then((response) => response.json())
+      .then((response) => {
+        const { data, pagination } = response;
+        let { threads } = data;
+        threads = threads.filter((t) => t.messages.length > 0);
+        setCurrentThreads(threads);
+        setPageCount(pagination.pageCount);
+        window.scrollTo(0, 0);
+      });
+  }, [currentPage, channelId]);
+
   if (!channelId) {
     return (
       <PageLayout
@@ -76,26 +97,6 @@ function Channel({
     );
   }
   const channelName = channels.find((c) => c.id === channelId).channelName;
-  const [currentThreads, setCurrentThreads] = useState(threads);
-  const [pageCount, setPageCount] = useState(pagination.pageCount);
-  const [currentPage, setCurrentPage] = useState(page);
-  const [initial, setInitial] = useState(true);
-
-  useEffect(() => {
-    if (initial) {
-      return setInitial(false);
-    }
-    fetch(`/api/threads?channelId=${channelId}&page=${currentPage}`)
-      .then((response) => response.json())
-      .then((response) => {
-        const { data, pagination } = response;
-        let { threads } = data;
-        threads = threads.filter((t) => t.messages.length > 0);
-        setCurrentThreads(threads);
-        setPageCount(pagination.pageCount);
-        window.scrollTo(0, 0);
-      });
-  }, [currentPage, channelId]);
 
   const handlePageClick = ({ selected }) => {
     const newPage = selected + 1;
