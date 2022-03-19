@@ -1,7 +1,7 @@
 import { useState, useCallback, useMemo } from 'react';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
-import { Group, Text } from '@mantine/core';
+import { Text } from '@mantine/core';
 import Avatar from '../../components/Avatar';
 import Message from '../Message';
 import Autocomplete from '../Autocomplete';
@@ -44,28 +44,45 @@ const SearchBar = ({ channels = [], users = [] }) => {
 
       return (
         <Suggestion>
-          <Group style={{ width: '100%', marginBottom: '12px' }}>
+          <div
+            style={{
+              width: '100%',
+              marginBottom: '12px',
+              display: 'flex',
+              alignContent: 'center',
+            }}
+          >
             <Avatar
               size="sm"
               src={user?.profileImageUrl} // set placeholder with a U sign
               alt={user?.displayName} // Set placeholder of a slack user if missing
               text={(user?.displayName || '?').slice(0, 1).toLowerCase()}
             />
-            <Group style={{ alignSelf: 'stretch' }} position="apart">
-              <Text size="sm" weight="bold">
-                {user?.displayName}
-              </Text>
-              {channelName && (
-                <Text
-                  style={{ position: 'absolute', right: '12px' }}
-                  size="sm"
-                  weight="bold"
-                >
-                  #{channelName}
-                </Text>
-              )}
-            </Group>
-          </Group>
+            <div
+              style={{
+                fontWeight: 'bold',
+                fontSize: '14px',
+                display: 'flex',
+                alignItems: 'center',
+                marginLeft: '10px',
+              }}
+            >
+              {user?.displayName || 'John Doe'}
+            </div>
+            {channelName && (
+              <div
+                style={{
+                  fontWeight: 'bold',
+                  fontSize: '14px',
+                  position: 'absolute',
+                  right: '12px',
+                  top: '15px',
+                }}
+              >
+                #{channelName}
+              </div>
+            )}
+          </div>
           <div style={{ borderLeft: '3px solid #dfdfdf', paddingLeft: '16px' }}>
             <Message text={body} truncate users={users} />
           </div>

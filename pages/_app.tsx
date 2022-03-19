@@ -3,8 +3,6 @@ import '../styles/globals.css';
 import { SWRConfig } from 'swr';
 import { AppProps } from 'next/app';
 import Head from 'next/head';
-import { MantineProvider } from '@mantine/core';
-import { useEffect } from 'react';
 
 export default function App(props: AppProps) {
   const { Component, pageProps } = props;

@@ -2,15 +2,20 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 
 const getFullPath = (relativePath) => `https://linen.dev${relativePath}`;
-const siteName = 'Linen Community';
+
+interface Props {
+  description: string;
+  url: string;
+  noIndex: boolean;
+  title: string;
+}
 
 function SEO({
   description = 'Community Conversations',
-  image,
   url,
   noIndex = false,
   title = 'Linen Community',
-}) {
+}: Props) {
   const { pathname } = useRouter();
   // If pathname includes a slug, we won't use that.
   const relativePath =
