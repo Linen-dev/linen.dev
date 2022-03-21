@@ -2,7 +2,7 @@ import { FunctionComponent, ReactNode } from 'react';
 
 interface Props {
   type?: 'button' | 'submit' | 'reset';
-  children: ReactNode;
+  children?: ReactNode;
   onClick?(): void;
 }
 

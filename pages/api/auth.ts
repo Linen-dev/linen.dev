@@ -1,6 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
 
 async function create(request: NextApiRequest, response: NextApiResponse) {
+  // TODO generate salt
+  // TODO hash password
+  // TODO save auth
   return response.status(200).json({});
 }
 

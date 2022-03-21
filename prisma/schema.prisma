@@ -81,6 +81,14 @@ model accounts {
   @@unique([slackTeamId])
 }
 
+model auths {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  email     String
+  password    String
+  salt        String
+}
+
 model users {
   id              String     @id @default(uuid())
   messages        messages[]
