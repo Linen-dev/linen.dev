@@ -1,8 +1,9 @@
 import request from 'superagent';
+import { SlackSearchResponseBody } from '../../types/slackResponses/slackSearchInterface';
 import {
   UserInfo,
   UserInfoResponseBody,
-} from '../../interfaces/slackUserInfoInterface';
+} from '../../types/slackResponses/slackUserInfoInterface';
 
 export const getSlackChannelInfo = async (channelId: string, token: string) => {
   const url = 'https://slack.com/api/conversations.info';
@@ -21,14 +22,14 @@ export const slackSearch = async ({
 }: {
   query: string;
   token: string;
-}) => {
+}): Promise<SlackSearchResponseBody> => {
   const url = 'https://slack.com/api/search.messages?';
 
   const response = await request
     .get(url + 'query=' + query)
     .set('Authorization', 'Bearer ' + token);
 
-  return response;
+  return response.body as SlackSearchResponseBody;
 };
 
 export const getSlackUser = async (

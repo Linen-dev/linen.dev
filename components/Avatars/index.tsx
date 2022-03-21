@@ -3,8 +3,8 @@ import Avatar from '../Avatar';
 import styles from './index.module.css';
 
 interface AvatarType {
-  src?: string;
-  alt?: string;
+  src?: string | null;
+  alt?: string | null;
   text: string;
 }
 

@@ -1,6 +1,6 @@
-import { Prisma, slackThreads, users } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import prisma from '../client';
-import { UserInfo } from '../interfaces/slackUserInfoInterface';
+import { UserInfo } from '../types/slackResponses//slackUserInfoInterface';
 
 export const createSlackMessage = async (event: any, channelId: string) => {
   const body = event.event.text;
@@ -34,7 +34,8 @@ export const createMessage = async (
 export const createOrUpdateMessage = async (
   message: Prisma.messagesUncheckedCreateInput
 ) => {
-  const sentAt = new Date(parseFloat(message.slackMessageId) * 1000);
+  //TODO: Make sure slackMessageId exists
+  const sentAt = new Date(parseFloat(message.slackMessageId!) * 1000);
   return await prisma.messages.upsert({
     where: {
       body_sentAt: {
@@ -203,7 +204,8 @@ export const findOrCreateAccount = async (
 ) => {
   return await prisma.accounts.upsert({
     where: {
-      slackTeamId: accounts.slackTeamId,
+      //TODO: Make sure slackTeamID exists
+      slackTeamId: accounts.slackTeamId!,
     },
     update: accounts,
     create: accounts,

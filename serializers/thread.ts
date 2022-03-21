@@ -1,3 +1,8 @@
+import {
+  SlackThreadsWithMessages,
+  MessageWithAuthor,
+} from '../types/partialTypes';
+
 interface SerializedMessage {
   body: string;
   sentAt: string;
@@ -8,10 +13,12 @@ interface SerializedThread {
   messages: SerializedMessage[];
 }
 
-export default function serialize(thread): SerializedThread {
+export default function serialize(
+  thread: SlackThreadsWithMessages
+): SerializedThread {
   return {
     ...thread,
-    messages: thread.messages.map((message) => {
+    messages: thread.messages.map((message: MessageWithAuthor) => {
       return {
         body: message.body,
         // Have to convert to string b/c Nextjs doesn't support date hydration -

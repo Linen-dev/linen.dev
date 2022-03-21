@@ -4,7 +4,7 @@ import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/solid';
 import styles from './index.module.css';
 
 interface Props {
-  onClick({ selected }): void;
+  onClick({ selected }: { selected: number }): void;
   pageCount: number;
 }
 

@@ -1,6 +1,6 @@
 import { accounts } from '@prisma/client';
 import prisma from '../../client';
-import { SlackMessageEvent } from '../../interfaces/slackMessageEventInterface';
+import { SlackMessageEvent } from '../../types/slackResponses/slackMessageEventInterface';
 import { tsToSentAt } from '../../lib/util';
 
 import { handleWebhook } from '../../pages/api/webhook';

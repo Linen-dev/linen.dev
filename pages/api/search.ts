@@ -30,6 +30,15 @@ export default async function handler(
     },
   });
 
+  if (
+    account === null ||
+    account === undefined ||
+    account.slackAuthorizations.length === 0
+  ) {
+    res.status(404).json({ error: 'Account not found' });
+    return;
+  }
+
   const auth = account.slackAuthorizations[0];
 
   if (!!auth.userAccessToken) {
@@ -56,7 +65,7 @@ export default async function handler(
       query: searchQuery,
       token: auth.userAccessToken,
     });
-    const slackfoundMessages = result.body?.messages || [];
+    const slackfoundMessages = result?.messages || [];
     const matches: Match[] = slackfoundMessages.matches.filter((m) => {
       // removes dm messages
       return !m.channel.is_im;
@@ -76,10 +85,11 @@ export default async function handler(
     const sortedMatches = matchedMessages.sort((a, b) => {
       const matchA = matches.find((m) => m.ts === a.slackMessageId);
       const matchB = matches.find((m) => m.ts === b.slackMessageId);
-      return matchB.score - matchA.score;
+      // matches will existing since it is based on find many where slack Message id
+      return matchB!.score - matchA!.score;
     });
 
-    if (slackfoundMessages.length === 0) {
+    if (slackfoundMessages.matches.length === 0) {
       const messages = await prisma.messages.findMany({
         where: {
           body: {

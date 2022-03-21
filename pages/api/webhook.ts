@@ -8,7 +8,7 @@ import {
   findUser,
   updateSlackThread,
 } from '../../lib/models';
-import { SlackMessageEvent } from '../../interfaces/slackMessageEventInterface';
+import { SlackMessageEvent } from '../../types/slackResponses/slackMessageEventInterface';
 import { getSlackUser } from './slack';
 import { createSlug } from '../../lib/util';
 
@@ -46,7 +46,7 @@ export const handleWebhook = async (body: SlackMessageEvent) => {
     },
   });
 
-  if (channel === null) {
+  if (channel === null || channel.account === null) {
     console.error('Channel does not exist in db ');
     return { status: 403, error: 'Channel not found' };
   }
@@ -74,7 +74,8 @@ export const handleWebhook = async (body: SlackMessageEvent) => {
     const accessToken = channel.account?.slackAuthorizations[0]?.accessToken;
     if (!!accessToken) {
       const slackUser = await getSlackUser(event.user, accessToken);
-      user = await createUserFromUserInfo(slackUser, channel.accountId);
+      //check done above in channel check
+      user = await createUserFromUserInfo(slackUser, channel.accountId!);
     }
   }
 

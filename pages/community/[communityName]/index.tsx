@@ -52,7 +52,7 @@ function Channel({
   page,
 }: Props) {
   const [currentThreads, setCurrentThreads] = useState(threads);
-  const [pageCount, setPageCount] = useState(pagination.pageCount);
+  const [pageCount, setPageCount] = useState(pagination?.pageCount);
   const [currentPage, setCurrentPage] = useState(page);
   const [initial, setInitial] = useState(true);
 
@@ -65,7 +65,7 @@ function Channel({
       .then((response) => {
         const { data, pagination } = response;
         let { threads } = data;
-        threads = threads.filter((t) => t.messages.length > 0);
+        threads = threads.filter((t: threads) => t.messages.length > 0);
         setCurrentThreads(threads);
         setPageCount(pagination.pageCount);
         window.scrollTo(0, 0);
@@ -96,69 +96,70 @@ function Channel({
       </PageLayout>
     );
   }
-  const channelName = channels.find((c) => c.id === channelId).channelName;
 
-  const handlePageClick = ({ selected }) => {
+  // Todo: handle missing channels
+  const channelName = channels?.find((c) => c.id === channelId)?.channelName;
+
+  const handlePageClick = ({ selected }: { selected: number }) => {
     const newPage = selected + 1;
-    window.history.pushState({}, null, `?page=${newPage}`);
+    window.history.pushState({}, '', `?page=${newPage}`);
     setCurrentPage(newPage);
   };
 
-  const rows = currentThreads.map(
-    ({ messages, incrementId, slug, viewCount }) => {
-      const oldestMessage = messages[messages.length - 1];
-      const newestMessage = messages[0];
-      const authors = messages.reduce((array, { author }) => {
-        if (
-          author &&
-          !array.find((a) => a.profileImageUrl === author.profileImageUrl)
-        ) {
-          array.push(author);
-        }
-        return array;
-      }, []);
-      const author = authors[0];
+  const rows = currentThreads?.map(({ messages, incrementId, slug }) => {
+    const oldestMessage = messages[messages.length - 1];
+    const newestMessage = messages[0];
+    const authors = messages.reduce((array: users[], { author }) => {
+      if (
+        author &&
+        !array.find((a: users) => a.profileImageUrl === author.profileImageUrl)
+      ) {
+        array.push(author);
+      }
+      return array;
+    }, []);
 
-      return (
-        <li
-          key={incrementId}
-          className="px-4 py-4 hover:bg-gray-50 border-solid border-gray-200 sm:hidden cursor-pointer"
-        >
-          <Link href={`/t/${incrementId}/${slug || 'topic'}`} passHref>
-            <div className="flex">
-              <div className="flex pr-4 items-center sm:hidden">
-                {author && (
-                  <Avatar
-                    key={`${incrementId}-${
-                      author.id || author.displayName
-                    }-avatar-mobile}`}
-                    src={author.profileImageUrl} // set placeholder with a U sign
-                    alt={author.displayName} // Set placeholder of a slack user if missing
-                    text={(author.displayName || '?').slice(0, 1).toLowerCase()}
-                  />
-                )}
+    const author = authors[0];
+
+    return (
+      <li
+        key={incrementId}
+        className="px-4 py-4 hover:bg-gray-50 border-solid border-gray-200 sm:hidden cursor-pointer"
+      >
+        <Link href={`/t/${incrementId}/${slug || 'topic'}`} passHref>
+          <div className="flex">
+            <div className="flex pr-4 items-center sm:hidden">
+              {author && (
+                <Avatar
+                  key={`${incrementId}-${
+                    author.id || author.displayName
+                  }-avatar-mobile}`}
+                  src={author.profileImageUrl || ''} // set placeholder with a U sign
+                  alt={author.displayName || ''} // Set placeholder of a slack user if missing
+                  text={(author.displayName || '?').slice(0, 1).toLowerCase()}
+                />
+              )}
+            </div>
+            <div className="flex flex-col w-full">
+              <div className="pb-2 sm:px-6">
+                <Message users={users} text={oldestMessage.body} truncate />
               </div>
-              <div className="flex flex-col w-full">
-                <div className="pb-2 sm:px-6">
-                  <Message users={users} text={oldestMessage.body} truncate />
-                </div>
-                <div className="text-sm text-gray-400 flex flex-row justify-between">
-                  <p>{messages.length} Replies</p>
-                  {format(new Date(newestMessage.sentAt))}
-                </div>
+              <div className="text-sm text-gray-400 flex flex-row justify-between">
+                <p>{messages.length} Replies</p>
+                {format(new Date(newestMessage.sentAt))}
               </div>
             </div>
-          </Link>
-        </li>
-      );
-    }
-  );
+          </div>
+        </Link>
+      </li>
+    );
+  });
 
-  const tableRows = currentThreads.map(
+  const tableRows = currentThreads?.map(
     ({ messages, incrementId, slug, viewCount }) => {
       const oldestMessage = messages[messages.length - 1];
       const newestMessage = messages[0];
-      const authors = messages.reduce((array, { author }) => {
+      const authors = messages.reduce((array: users[], { author }) => {
         if (
           author &&
           !array.find(
@@ -183,7 +184,7 @@ function Channel({
               <Avatars
                 users={authors.map((p) => ({
                   src: p.profileImageUrl,
-                  alt: p.displayNam,
+                  alt: p.displayName,
                   text: (p.displayName || '?').slice(0, 1).toLowerCase(),
                 }))}
               />
@@ -238,7 +239,9 @@ function Channel({
         </table>
         <ul className="divide-y sm:hidden">{rows}</ul>
       </div>
-      <Pagination onClick={handlePageClick} pageCount={pageCount} />
+      {pageCount && (
+        <Pagination onClick={handlePageClick} pageCount={pageCount} />
+      )}
     </PageLayout>
   );
 }
@@ -259,6 +262,9 @@ export async function getServerSideProps(context: Params) {
   const page = Number(query.page) || 1;
   const { communityName } = params;
   const account = await findAccountByPath(communityName);
+  if (account === null) {
+    return { props: { statusCode: 404 } };
+  }
   const channels = account.channels;
   const channel = channels[0];
 
