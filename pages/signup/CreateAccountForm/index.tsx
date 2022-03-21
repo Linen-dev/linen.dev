@@ -1,9 +1,8 @@
-import React from 'react';
+import Layout from '../Layout';
 import Label from '../../../components/Label';
 import ColorInput from '../../../components/ColorInput';
 import TextInput from '../../../components/TextInput';
 import Field from '../../../components/Field';
-import Card from '../../../components/Card';
 import styles from './index.module.css';
 
 const REDIRECT_URI = 'https://linen.dev/api/oauth';
@@ -35,40 +34,34 @@ export default function CreateAccountForm() {
   };
 
   return (
-    <div className={styles.page}>
-      <h1 className={styles.header}>Sign Up</h1>
-      <Card>
-        <form onSubmit={onSubmit}>
-          <Field>
-            <Label htmlFor="homeUrl">Home url</Label>
-            <TextInput placeholder="yourwebsite.com" id="homeUrl" />
-          </Field>
-          <Field>
-            <Label htmlFor="docsUrl">Docs url</Label>
-            <TextInput placeholder="docs.yourwebsite.com" id="docsUrl" />
-          </Field>
-          <Field>
-            <Label htmlFor="redirectDomain">Redirect domain</Label>
-            <TextInput
-              placeholder="linen.yourwebsite.com"
-              id="redirectDomain"
-            />
-          </Field>
-          <Field>
-            <Label htmlFor="brandColor">Brand color</Label>
-            <ColorInput id="brandColor" defaultValue="#1B194E" />
-          </Field>
-          <button className={styles.link} type="submit">
-            <img
-              alt="Add to Slack"
-              height="40"
-              width="139"
-              src="https://platform.slack-edge.com/img/add_to_slack.png"
-              srcSet="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x"
-            />
-          </button>
-        </form>
-      </Card>
-    </div>
+    <Layout>
+      <form onSubmit={onSubmit}>
+        <Field>
+          <Label htmlFor="homeUrl">Home url</Label>
+          <TextInput placeholder="yourwebsite.com" id="homeUrl" />
+        </Field>
+        <Field>
+          <Label htmlFor="docsUrl">Docs url</Label>
+          <TextInput placeholder="docs.yourwebsite.com" id="docsUrl" />
+        </Field>
+        <Field>
+          <Label htmlFor="redirectDomain">Redirect domain</Label>
+          <TextInput placeholder="linen.yourwebsite.com" id="redirectDomain" />
+        </Field>
+        <Field>
+          <Label htmlFor="brandColor">Brand color</Label>
+          <ColorInput id="brandColor" defaultValue="#1B194E" />
+        </Field>
+        <button className={styles.link} type="submit">
+          <img
+            alt="Add to Slack"
+            height="40"
+            width="139"
+            src="https://platform.slack-edge.com/img/add_to_slack.png"
+            srcSet="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x"
+          />
+        </button>
+      </form>
+    </Layout>
   );
 }

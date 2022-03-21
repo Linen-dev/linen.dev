@@ -1,0 +1,12 @@
+.page {
+  background: #f9fafb;
+  height: 100vh;
+  width: 100%;
+  padding-top: 4rem;
+}
+
+.header {
+  font-weight: bold;
+  margin-bottom: 2rem;
+  text-align: center;
+}
