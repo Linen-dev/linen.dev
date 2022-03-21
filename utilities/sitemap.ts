@@ -5,8 +5,8 @@ import prisma from '../client';
 const PROTOCOL = 'https';
 
 export async function createXMLSitemapForSubdomain(
-  host,
-  subdomain
+  host: string,
+  subdomain: string
 ): Promise<string> {
   const account = await prisma.accounts.findFirst({
     where: {
@@ -38,7 +38,7 @@ export async function createXMLSitemapForSubdomain(
     return Promise.reject();
   }
 
-  const threads = account.channels.reduce((array, item) => {
+  const threads = account.channels.reduce((array: any[], item) => {
     return [
       ...array,
       ...item.slackThreads

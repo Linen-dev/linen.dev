@@ -7,6 +7,9 @@ async function index(request: NextApiRequest, response: NextApiResponse) {
   const query = request.query as PermittedParams;
   const channelId = query.channelId;
   const page = query.page ? parseInt(query.page, 10) : 1;
+  if (!channelId) {
+    return response.status(400).json({ error: 'channelId is required' });
+  }
   const { data, pagination } = await fetchThreads({ channelId, page });
 
   return response.status(200).json({

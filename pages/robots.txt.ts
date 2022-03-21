@@ -4,9 +4,16 @@ import {
   createRobotsTxtForSubdomain,
 } from '../utilities/robots';
 import prisma from '../client';
+import { GetServerSideProps } from 'next/types';
 
-export const getServerSideProps = async ({ req, res }) => {
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   const { host } = req.headers;
+  if (!host) {
+    res.statusCode = 404;
+    res.end();
+    return { props: {} };
+  }
+
   const domain = getDomain(host);
   const subdomain = getSubdomain(host);
 

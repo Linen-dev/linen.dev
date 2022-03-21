@@ -2,7 +2,7 @@ import { threadIndex, threadCount } from '../lib/models';
 import serializeThread from '../serializers/thread';
 
 interface IndexProps {
-  channelId?: string;
+  channelId: string;
   page: number;
 }
 

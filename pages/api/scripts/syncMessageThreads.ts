@@ -18,6 +18,9 @@ export default async function handler(
 ) {
   const accountId = req.query.account_id as string;
   const account = await findAccountById(accountId);
+  if (!account) {
+    return res.status(404).json({ error: 'Account not found' });
+  }
   const token = account.slackAuthorizations[0].accessToken;
 
   const slackThreadsWithOneMessage = await findSlackThreadsWithOnlyOneMessage(
@@ -31,7 +34,7 @@ export default async function handler(
     const channel = account.channels.find((c) => c.id === m.channelId);
     const replies = await fetchReplies(
       m.slackThreadTs,
-      channel.slackChannelId,
+      channel!.slackChannelId,
       token
     );
 

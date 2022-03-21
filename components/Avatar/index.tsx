@@ -4,13 +4,19 @@ import Image from 'next/image';
 import styles from './index.module.css';
 
 interface Props {
-  size?: 'sm' | 'md' | 'lg';
+  size?: Size;
   src?: string;
   alt?: string;
   text: string;
 }
 
-function dimensions(size) {
+export enum Size {
+  sm = 'sm',
+  md = 'md',
+  lg = 'lg',
+}
+
+function dimensions(size?: Size) {
   switch (size) {
     case 'sm':
       return 26;
@@ -26,13 +32,15 @@ function dimensions(size) {
 function Avatar({ src, alt, text, size }: Props) {
   if (!src) {
     return (
-      <div className={classNames(styles.placeholder, styles[size])}>{text}</div>
+      <div className={classNames(styles.placeholder, size && styles[size])}>
+        {text}
+      </div>
     );
   }
   return (
-    <div className={classNames(styles.avatar, styles[size])}>
+    <div className={classNames(styles.avatar, size && styles[size])}>
       <Image
-        className={classNames(styles.image, styles[size])}
+        className={classNames(styles.image, size && styles[size])}
         src={src}
         alt={alt}
         height={dimensions(size)}

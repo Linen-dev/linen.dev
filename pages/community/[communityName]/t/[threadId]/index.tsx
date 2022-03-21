@@ -1,5 +1,5 @@
 import { Anchor, Group, Paper, Text } from '@mantine/core';
-import Avatar from '../../../../../components/Avatar';
+import Avatar, { Size } from '../../../../../components/Avatar';
 import { AiOutlineLink } from 'react-icons/ai';
 import { useMemo, useEffect } from 'react';
 import { format } from 'timeago.js';
@@ -44,7 +44,7 @@ function Thread({
               <Group position="apart">
                 <Group>
                   <Avatar
-                    size="lg"
+                    size={Size.lg}
                     alt={'kam'}
                     src={author?.profileImageUrl}
                     text={(author?.displayName || '?')
