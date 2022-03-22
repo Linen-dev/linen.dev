@@ -2,9 +2,10 @@ import { useState, useCallback, useMemo } from 'react';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
 import { Group, Text } from '@mantine/core';
-import Avatar from '../../components/Avatar';
+import Avatar, { Size } from '../../components/Avatar';
 import Message from '../Message';
 import Autocomplete from '../Autocomplete';
+import { messages, channels, users } from '@prisma/client';
 
 const Suggestion = styled.div({
   cursor: 'pointer',
@@ -13,9 +14,9 @@ const Suggestion = styled.div({
   padding: '12px',
 });
 
-const parseResults = (data) => {
+const parseResults = (data: messages[]) => {
   const allIds = new Set();
-  return data.results
+  return data
     .map((r) => ({ ...r, value: r.body }))
     .filter((r) => {
       if (!r.slackThreadId) return false;
@@ -25,7 +26,13 @@ const parseResults = (data) => {
     });
 };
 
-const SearchBar = ({ channels = [], users = [] }) => {
+const SearchBar = ({
+  channels = [],
+  users = [],
+}: {
+  channels: channels[];
+  users?: users[];
+}) => {
   const accountId = channels[0]?.accountId;
   const [value, setValue] = useState('');
   const [selection, setSelection] = useState(null);
@@ -37,7 +44,7 @@ const SearchBar = ({ channels = [], users = [] }) => {
     )}&account_id=${accountId}`;
 
   const renderSuggestion = useCallback(
-    ({ body, channelId, slackThreadId, usersId }) => {
+    ({ body, channelId, usersId }) => {
       const user = users.find((u) => u.id === usersId);
       const channel = channels.find((c) => c.id === channelId);
       const channelName = channel?.channelName;
@@ -46,9 +53,9 @@ const SearchBar = ({ channels = [], users = [] }) => {
         <Suggestion>
           <Group style={{ width: '100%', marginBottom: '12px' }}>
             <Avatar
-              size="sm"
-              src={user?.profileImageUrl} // set placeholder with a U sign
-              alt={user?.displayName} // Set placeholder of a slack user if missing
+              size={Size.sm}
+              src={user?.profileImageUrl || ''} // set placeholder with a U sign
+              alt={user?.displayName || ''} // Set placeholder of a slack user if missing
               text={(user?.displayName || '?').slice(0, 1).toLowerCase()}
             />
             <Group style={{ alignSelf: 'stretch' }} position="apart">
@@ -92,6 +99,8 @@ const SearchBar = ({ channels = [], users = [] }) => {
       resultParser={parseResults}
       renderSuggestion={renderSuggestion}
       placeholder={'Search messages'}
+      // debounce={null}
+      // limit={null}
     />
   );
 };

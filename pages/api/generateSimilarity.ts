@@ -40,8 +40,9 @@ export default async function handler(
   const data: embeddingResponse[] = res.body.data;
 
   for (let i = 0; i < trimmedMessages.length - 1; i++) {
-    trimmedMessages[i].embedding = data[i].embedding;
-    trimmedMessages[i].id = i;
+    const message = trimmedMessages[i] as any;
+    message.embedding = data[i].embedding;
+    message.id = i;
   }
 
   fs.writeFile(

@@ -23,15 +23,24 @@ export default function Autocomplete({
   placeholder = 'Search',
   debounce = 150,
   limit = 5,
+}: {
+  icon: React.ReactNode;
+  makeURL: (debounceValue: string) => string;
+  onSelect: (any: any) => any;
+  resultParser: (data: any) => any;
+  renderSuggestion: (any: any) => any;
+  placeholder: string;
+  debounce?: number;
+  limit?: number;
 }) {
   const [value, setValue] = useState('');
   const [results, setResults] = useState([]);
   const [isFocused, setFocused] = useState(false);
   const [isSearching, setSearching] = useState(false);
   const [activeResult, setActiveResult] = useState(-1);
-  const lastRequest = useRef(null);
+  const lastRequest: any = useRef(null);
   const [debouncedValue] = useDebouncedValue(value, debounce);
-  const inputRef = useRef(null);
+  const inputRef: any = useRef(null);
 
   // this effect will be fired every time debounced changes
   useEffect(() => {
@@ -163,7 +172,7 @@ export default function Autocomplete({
           direction="column"
         >
           {results.length > 0 &&
-            results.slice(0, limit).map((r, idx) => (
+            results.slice(0, limit).map((r: any, idx) => (
               <div
                 key={r.id || idx}
                 onMouseEnter={() => setActiveResult(idx)}

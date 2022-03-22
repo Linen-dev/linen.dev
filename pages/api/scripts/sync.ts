@@ -36,6 +36,11 @@ export default async function handler(
   const domain = req.query.domain as string;
 
   const account = await findAccountById(accountId);
+
+  if (!account || !account.slackTeamId) {
+    return res.status(404).json({ error: 'Account not found' });
+  }
+
   //TODO test multiple slack authorization or reauthorization
   const token = account.slackAuthorizations[0].accessToken;
 
@@ -51,7 +56,10 @@ export default async function handler(
 
   // If channelId is part of parameter only sync the specific channel
   if (!!channelId) {
-    channels = [channels.find((c) => c.id === channelId)];
+    const channel = channels.find((c) => c.id === channelId);
+    if (!!channel) {
+      channels = [channel];
+    }
   }
 
   //paginate and find all the users
@@ -72,7 +80,7 @@ export default async function handler(
       }
       userCursor = usersListResponse?.body?.response_metadata?.next_cursor;
     } catch (e) {
-      console.log('fetching user failed', e.message);
+      console.log('fetching user failed', (e as Error).message);
       userCursor = null;
     }
   }
@@ -106,7 +114,7 @@ export default async function handler(
   for (let i = 0; i < channels.length; i++) {
     const c = channels[i];
     console.log('Syncing channel: ', c.channelName);
-    let nextCursor = c.slackNextPageCursor;
+    let nextCursor: any = c.slackNextPageCursor;
     let firstLoop = true;
     if (nextCursor === 'completed') {
       console.log('channel completed syncing: ', c.channelName);
@@ -133,7 +141,7 @@ export default async function handler(
         //to refetch same conversation if script fails
         await updateNextPageCursor(c.id, nextCursor);
       } catch (e) {
-        console.log('fetching messages failed', e.message);
+        console.log('fetching messages failed', (e as Error).message);
         await new Promise((resolve) => {
           console.log('waiting 10 seconds');
           setTimeout(resolve, 10000);
@@ -163,7 +171,7 @@ export default async function handler(
     const channel = account.channels.find((c) => c.id === m.channelId);
     const replies = await fetchReplies(
       m.slackThreadTs,
-      channel.slackChannelId,
+      channel!.slackChannelId,
       token
     );
 
@@ -248,7 +256,7 @@ export async function saveMessagesTransaction(
   channelId: string,
   users: UserMap[]
 ) {
-  const threadsTransaction = messages
+  const threadsTransaction: any = messages
     .map((m) => {
       if (!!m.thread_ts) {
         return prisma.slackThreads.upsert({
@@ -274,7 +282,7 @@ export async function saveMessagesTransaction(
       thread = threads.find((t) => t.slackThreadTs === m.thread_ts);
     }
 
-    let user: UserMap | null = null;
+    let user: UserMap | undefined;
     if (!!m.user) {
       user = users.find((u) => u.slackUserId === m.user);
     }
@@ -335,7 +343,7 @@ export async function saveMessagesSyncronous(
       slug: thread.slug,
     });
 
-    let user: UserMap | null = null;
+    let user: UserMap | undefined;
     if (!!m.user) {
       user = users.find((u) => u.slackUserId === m.user);
     }

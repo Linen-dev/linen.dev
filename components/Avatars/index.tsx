@@ -1,18 +1,15 @@
 import React from 'react';
-import Avatar from '../Avatar';
+import Avatar, { Size } from '../Avatar';
 import styles from './index.module.css';
 
 interface AvatarType {
   src?: string | null;
   alt?: string | null;
   text: string;
+  size?: Size;
 }
 
-interface Props {
-  users: AvatarType[];
-}
-
-export default function Avatars({ users }: Props) {
+export default function Avatars({ users }: { users: AvatarType[] }) {
   const avatars = users.slice(0, 3);
   if (avatars.length === 0) {
     return <></>;

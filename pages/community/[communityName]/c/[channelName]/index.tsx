@@ -20,6 +20,14 @@ export async function getServerSideProps(context: Params) {
   const { channelName, communityName } = params;
 
   const account = await findAccountByPath(communityName);
+  if (!account) {
+    res.statusCode = 404;
+    return {
+      props: {
+        communityName,
+      },
+    };
+  }
 
   const channels = account.channels;
   const channel = account.channels.find((c) => {

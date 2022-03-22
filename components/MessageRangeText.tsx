@@ -3,7 +3,7 @@ import React from 'react';
 import Emoji from 'react-emoji-render';
 import LinkRangeText from './LinkRangeText';
 
-export default function MessageRangeText({ text }) {
+export default function MessageRangeText({ text }: { text: string }) {
   const textArray = text.split(/<b>(.*?)<\/b>/);
   if (textArray.length < 3) {
     return <LinkRangeText text={text} />;
@@ -11,7 +11,7 @@ export default function MessageRangeText({ text }) {
 
   return (
     <Text component="span" size="sm">
-      {textArray.map((item, index) => {
+      {textArray.map((item: string, index: number) => {
         return (
           <React.Fragment key={index}>
             {index % 2 === 0 && <LinkRangeText text={item} />}

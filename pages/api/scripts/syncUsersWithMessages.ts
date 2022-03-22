@@ -17,6 +17,9 @@ export default async function handler(
 ) {
   const accountId = req.query.account_id as string;
   const account = await findAccountById(accountId);
+  if (!account || !account.slackTeamId) {
+    return res.status(404).json({ error: 'Account not found' });
+  }
   const channels = account.channels;
 
   const messages = await prisma.messages.findMany({
@@ -44,9 +47,9 @@ export default async function handler(
       const m = messages[i];
       const channel = channels.find((c) => c.id === m.channelId);
       const foundMesssage = await fetchMessage(
-        channel.slackChannelId,
+        channel!.slackChannelId,
         account.slackAuthorizations[0].accessToken,
-        m.slackMessageId
+        m.slackMessageId!
       );
 
       const message = foundMesssage.body.messages[0];
@@ -61,7 +64,7 @@ export default async function handler(
           id: m.id,
         },
         data: {
-          usersId: user.id,
+          usersId: user!.id,
         },
       });
     } catch (e) {

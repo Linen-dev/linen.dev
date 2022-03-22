@@ -18,8 +18,8 @@ export default async function handler(
 
 const fetchChannelThreads = async (channelId: string) => {
   const channel = await findChannel(channelId);
-  const account = await findAccountById(channel.accountId);
-  const slackAuthorization = account.slackAuthorizations[0];
+  const account = await findAccountById(channel?.accountId!);
+  const slackAuthorization = account!.slackAuthorizations[0];
 
   const messages = await prisma.messages.findMany({
     where: { NOT: [{ slackThreadId: null }], channelId: channelId },
@@ -37,7 +37,7 @@ const fetchChannelThreads = async (channelId: string) => {
   for (let i = 0; i < messages.length; i++) {
     try {
       const result = await fetchReplies(
-        messages[i].slackThreads.slackThreadTs,
+        messages[i].slackThreads!.slackThreadTs,
         messages[i].channel.slackChannelId,
         slackAuthorization.accessToken
       ).then((response) => {
@@ -45,14 +45,14 @@ const fetchChannelThreads = async (channelId: string) => {
           const replyMessages = response?.body;
           return saveThreadedMessages(
             replyMessages,
-            channel.id,
-            messages[i].slackThreads.slackThreadTs
+            channel!.id,
+            messages[i].slackThreads!.slackThreadTs
           );
         }
       });
       messagesWithThreads.push(result);
     } catch (e) {
-      console.error('Failed to fetch message threads: ', e.message);
+      console.error('Failed to fetch message threads: ', (e as Error).message);
     }
   }
 

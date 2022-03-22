@@ -96,7 +96,7 @@ export const fetchConversationsTyped = async (
 export const fetchMessage = async (
   channel: string,
   token: string,
-  messageTs
+  messageTs: string
 ) => {
   let url =
     'https://slack.com/api/conversations.history?channel=' +
@@ -112,7 +112,7 @@ export const fetchMessage = async (
   return response;
 };
 
-export const fetchTeamInfo = async (token) => {
+export const fetchTeamInfo = async (token: string) => {
   const url = 'https://slack.com/api/team.info';
 
   const response = await request
@@ -194,7 +194,7 @@ export async function fetchAndSaveThreadMessages(
   return await Promise.all(repliesPromises);
 }
 
-export async function fetchAndSaveUser(slackUserId: string, token) {
+export async function fetchAndSaveUser(slackUserId: string, token: string) {
   const profile = await getUserProfile(slackUserId, token);
   profile.body;
 }
@@ -204,7 +204,7 @@ export async function saveThreadedMessages(
   channelId: string,
   slackThreadTs: string
 ) {
-  const repliesParams = replies.messages.map((m) => {
+  const repliesParams = replies.messages.map((m: any) => {
     return {
       body: m.text,
       sentAt: new Date(parseFloat(m.ts) * 1000),

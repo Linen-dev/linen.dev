@@ -25,6 +25,10 @@ export default async function handler(
   const domain = req.query.domain as string;
 
   const account = await findAccountById(accountId);
+  if (!account || !account.slackTeamId) {
+    return res.status(404).json({ error: 'Account not found' });
+  }
+
   //TODO test multiple slack authorization or reauthorization
   const token = account.slackAuthorizations[0].accessToken;
 

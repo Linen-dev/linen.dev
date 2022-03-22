@@ -107,7 +107,7 @@ export default async function handler(
       sortedMatches.push(...messages);
     }
 
-    res.status(200).json({ results: sortedMatches });
+    res.status(200).json(sortedMatches);
     return;
   }
 
@@ -123,7 +123,7 @@ export default async function handler(
     take: 20,
   });
 
-  res.status(200).json({ results: response });
+  res.status(200).json(response);
 }
 
 //example get query:

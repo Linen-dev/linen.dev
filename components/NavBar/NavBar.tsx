@@ -1,4 +1,5 @@
 import { Navbar, Group, Title, Text, Paper } from '@mantine/core';
+import { channels } from '@prisma/client';
 import Link from 'next/link';
 
 export function NavBar(channels: any, channelName: string | string[]) {
@@ -26,7 +27,7 @@ export function NavBar(channels: any, channelName: string | string[]) {
               overflowY: 'auto',
             }}
           >
-            {channels.map((c) => (
+            {channels.map((c: channels) => (
               <Link key={c.channelName} href={`/c/${c.channelName}`} passHref>
                 <Text
                   className="hover:bg-gray-50 px-4 py-2"

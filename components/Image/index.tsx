@@ -15,7 +15,7 @@ export default function Image({ className, src, alt, width, height }: Props) {
   useEffect(() => {
     const img = document.createElement('img');
     img.onload = () => setLoaded(true);
-    img.onerror = (err) => setError(err);
+    img.onerror = (err: any) => setError(err);
     img.src = src;
   }, []);
 

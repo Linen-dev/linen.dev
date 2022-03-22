@@ -4,10 +4,10 @@ import Image from 'next/image';
 import styles from './index.module.css';
 
 interface Props {
+  src?: string | null;
+  alt?: string | null;
+  text?: string;
   size?: Size;
-  src?: string;
-  alt?: string;
-  text: string;
 }
 
 export enum Size {
@@ -29,7 +29,7 @@ function dimensions(size?: Size) {
   }
 }
 
-function Avatar({ src, alt, text, size }: Props) {
+function Avatar({ src, alt, text = 'u', size }: Props) {
   if (!src) {
     return (
       <div className={classNames(styles.placeholder, size && styles[size])}>
@@ -42,7 +42,7 @@ function Avatar({ src, alt, text, size }: Props) {
       <Image
         className={classNames(styles.image, size && styles[size])}
         src={src}
-        alt={alt}
+        alt={alt || 'avatar'}
         height={dimensions(size)}
         width={dimensions(size)}
       />

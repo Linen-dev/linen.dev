@@ -9,6 +9,10 @@ export default async function handler(
 ) {
   const accountId = req.query.account_id as string;
   const account = await findAccountById(accountId);
+  if (!account) {
+    return res.status(404).json({ error: 'Account not found' });
+  }
+
   const usersListResponse = await listUsers(
     account.slackAuthorizations[0].accessToken
   );
@@ -31,7 +35,7 @@ export default async function handler(
       }
       userCursor = usersListResponse?.body?.response_metadata?.next_cursor;
     } catch (e) {
-      console.log('fetching user failed', e.message);
+      console.log('fetching user failed', (e as Error).message);
       userCursor = null;
     }
   }
@@ -80,7 +84,7 @@ export const saveUsersSyncronous = async (users: any[], accountId: string) => {
       const user = await findOrCreateUser(param);
       createdUsers.push(user);
     } catch (e) {
-      console.error('failed to create user:', e.message);
+      console.error('failed to create user:', (e as Error).message);
     }
   }
 

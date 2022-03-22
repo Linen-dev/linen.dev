@@ -1,4 +1,4 @@
-import Avatar from '../../../components/Avatar';
+import Avatar, { Size } from '../../../components/Avatar';
 import Avatars from '../../../components/Avatars';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
@@ -33,7 +33,7 @@ type Props = {
   settings: any;
   communityName: string;
   channelId?: string;
-  users?: users[];
+  users: users[];
   channels?: channels[];
   threads?: threads[];
   pagination?: PaginationType;
@@ -182,11 +182,13 @@ function Channel({
             </td>
             <td className="px-6 py-3 align-middle">
               <Avatars
-                users={authors.map((p) => ({
-                  src: p.profileImageUrl,
-                  alt: p.displayName,
-                  text: (p.displayName || '?').slice(0, 1).toLowerCase(),
-                }))}
+                users={
+                  authors.map((p) => ({
+                    src: p.profileImageUrl,
+                    alt: p.displayName,
+                    text: (p.displayName || '?').slice(0, 1).toLowerCase(),
+                  })) || []
+                }
               />
             </td>
             <td className="px-6 py-3 text-sm">{viewCount}</td>

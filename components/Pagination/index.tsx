@@ -38,7 +38,7 @@ export default function Pagination({ onClick, pageCount }: Props) {
               <ChevronRightIcon className="h-5 w-5" />
             </>
           }
-          renderOnZeroPageCount={null}
+          renderOnZeroPageCount={() => null}
         />
       </div>
     </div>

@@ -19,8 +19,8 @@ export default async function handler(
 
   const resp = await getSlackAccessToken(
     code as string,
-    clientId,
-    clientSecret
+    clientId as string,
+    clientSecret as string
   );
 
   const body: SlackAuthorizationResponse = resp.body;

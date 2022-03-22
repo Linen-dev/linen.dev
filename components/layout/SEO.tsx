@@ -1,7 +1,8 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 
-const getFullPath = (relativePath) => `https://linen.dev${relativePath}`;
+const getFullPath = (relativePath: string) =>
+  `https://linen.dev${relativePath}`;
 const siteName = 'Linen Community';
 
 function SEO({
@@ -10,6 +11,12 @@ function SEO({
   url,
   noIndex = false,
   title = 'Linen Community',
+}: {
+  description: string;
+  image: string;
+  url: string;
+  noIndex: boolean;
+  title: string;
 }) {
   const { pathname } = useRouter();
   // If pathname includes a slug, we won't use that.

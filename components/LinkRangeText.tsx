@@ -4,9 +4,9 @@ import Link from 'next/link';
 import styled from 'styled-components';
 import CodeRangeText from './CodeRangeText';
 
-const linkify = (item) => {
-  const href = item.match(/href=(.*?)>/)[1];
-  const text = item.match(/>(.*?)<\/link>/)[1];
+const linkify = (item: string) => {
+  const [_, href]: any = item.match(/href=(.*?)>/);
+  const [__, text]: any = item.match(/>(.*?)<\/link>/);
 
   return (
     <Anchor underline size="sm" href={href} target="_blank">
@@ -15,7 +15,7 @@ const linkify = (item) => {
   );
 };
 
-export default function LinkRangeText({ text }) {
+export default function LinkRangeText({ text }: { text: string }) {
   const textArray = text.split(/(<link.*?\/link>)/);
   if (textArray.length < 3) {
     return <CodeRangeText text={text} />;

@@ -177,7 +177,7 @@ describe('when there is no existing thread ', () => {
 
       await prisma.slackAuthorizations.create({
         data: {
-          accessToken: process.env.SLACK_TOKEN,
+          accessToken: process.env.SLACK_TOKEN!,
           scope:
             'channels:history,channels:join,channels:read,incoming-webhook,reactions:read,users:read,team:read',
           botUserId: 'U0SOMEBOTUSERID',
@@ -198,17 +198,17 @@ describe('when there is no existing thread ', () => {
 
       expect(message?.body).toEqual(messageNoThread.event.text);
       expect(message?.slackMessageId).toEqual(messageNoThread.event.ts);
-      expect(message?.slackThreads.messageCount).toEqual(1);
+      expect(message?.slackThreads?.messageCount).toEqual(1);
       expect(message?.author?.slackUserId).toEqual(messageNoThread.event.user);
-      expect(message.slackThreads.slug).toEqual('This-is-the-first-message');
+      expect(message?.slackThreads?.slug).toEqual('This-is-the-first-message');
 
       await handleWebhook(firstReply);
       const savedFirstReply = await findMessage(firstReply);
 
       expect(savedFirstReply?.body).toEqual(firstReply.event.text);
       expect(savedFirstReply?.slackThreads).not.toBeNull();
-      expect(savedFirstReply?.slackThreads.messageCount).toEqual(2);
-      expect(savedFirstReply.slackThreads.slug).toEqual(
+      expect(savedFirstReply?.slackThreads?.messageCount).toEqual(2);
+      expect(savedFirstReply?.slackThreads?.slug).toEqual(
         'This-is-the-first-message'
       );
       expect(savedFirstReply?.author?.slackUserId).toEqual(
@@ -216,13 +216,13 @@ describe('when there is no existing thread ', () => {
       );
 
       const originalMessage = await findMessage(messageNoThread);
-      expect(originalMessage?.slackThreads.messageCount).toEqual(2);
+      expect(originalMessage?.slackThreads?.messageCount).toEqual(2);
 
       await handleWebhook(secondReply);
       const savedSecondReply = await findMessage(secondReply);
       expect(savedSecondReply?.body).toEqual(secondReply.event.text);
       expect(savedSecondReply?.slackThreads).not.toBeNull();
-      expect(savedSecondReply?.slackThreads.messageCount).toEqual(3);
+      expect(savedSecondReply?.slackThreads?.messageCount).toEqual(3);
       expect(savedSecondReply?.author?.slackUserId).toEqual(
         secondReply.event.user
       );
@@ -230,7 +230,7 @@ describe('when there is no existing thread ', () => {
   });
 });
 
-async function findMessage(message) {
+async function findMessage(message: any) {
   return await prisma.messages.findUnique({
     where: {
       body_sentAt: {

@@ -14,7 +14,7 @@ export async function getThread(threadId: string) {
   const id = parseInt(threadId);
   const thread = await findThreadById(id);
 
-  if (!thread) {
+  if (!thread || !thread.channel.accountId) {
     return {
       notFound: true,
     };
@@ -25,6 +25,12 @@ export async function getThread(threadId: string) {
     listUsers(thread.channel.accountId),
     findAccountById(thread.channel.accountId),
   ]);
+
+  if (!account) {
+    return {
+      notFound: true,
+    };
+  }
 
   const defaultSettings =
     links.find(({ accountId }) => accountId === account.id) || links[0];

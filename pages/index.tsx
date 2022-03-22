@@ -5,24 +5,25 @@ import { channelIndex } from '../lib/models';
 
 const Home: NextPage = (channels) => {
   return (
-    <PageLayout
-      navItems={channels}
-      slackUrl={undefined}
-      users={undefined}
-      settings={undefined}
-    >
-      <Paper
-        shadow="md"
-        padding="xl"
-        style={{
-          width: '100%',
-          border: '1px solid #e9ecef',
-          minHeight: '400px',
-        }}
-      >
-        <Title order={4}>Select a channel on the left.</Title>
-      </Paper>
-    </PageLayout>
+    <div>Coming soon</div>
+    // <PageLayout
+    //   navItems={channels}
+    //   slackUrl={undefined}
+    //   users={[]}
+    //   settings={}
+    // >
+    //   <Paper
+    //     shadow="md"
+    //     padding="xl"
+    //     style={{
+    //       width: '100%',
+    //       border: '1px solid #e9ecef',
+    //       minHeight: '400px',
+    //     }}
+    //   >
+    //     <Title order={4}>Select a channel on the left.</Title>
+    //   </Paper>
+    // </PageLayout>
   );
 };
 

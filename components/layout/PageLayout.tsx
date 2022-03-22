@@ -6,6 +6,7 @@ import SlackIcon from '../icons/SlackIcon';
 import SearchBar from '../search/SearchBar';
 import { NavBar } from '../NavBar/NavBar';
 import SEO from './SEO';
+import { channels, users } from '@prisma/client';
 
 interface Settings {
   brandColor: string;
@@ -16,11 +17,11 @@ interface Settings {
 
 interface Props {
   seo?: any;
-  users?: any[];
+  users?: users[];
   children: React.ReactNode;
   navItems?: any;
   slackUrl?: string;
-  settings?: Settings;
+  settings: Settings;
   communityName?: string;
 }
 
@@ -36,7 +37,7 @@ function PageLayout({
   const {
     query: { channelName },
   } = useRouter();
-  const channels = navItems.channels.filter((c) => !c.hidden);
+  const channels = navItems.channels.filter((c: channels) => !c.hidden);
 
   return (
     <div>
@@ -119,7 +120,9 @@ function PageLayout({
         {...seo}
       />
       <div className="sm:flex">
-        <div className="hidden md:flex">{NavBar(channels, channelName)}</div>
+        <div className="hidden md:flex">
+          {NavBar(channels, channelName || '')}
+        </div>
         <div className="lg:w-full">
           <ErrorBoundary
             FallbackComponent={() => (

@@ -22,6 +22,9 @@ export default async function handler(
   const accountId = req.query.account_id as string;
   const account = await findAccountById(accountId);
   const channels = await channelIndex(accountId);
+  if (!account) {
+    return res.status(404).json({ error: 'Account not found' });
+  }
 
   for (let i = 0; i < channels.length; i++) {
     const c = channels[i];
@@ -50,7 +53,7 @@ export default async function handler(
         nextCursor =
           additionalConversations.body.response_metadata?.next_cursor;
       } catch (e) {
-        console.log('fetching user failed', e.message);
+        console.log('fetching user failed', (e as Error).message);
         nextCursor = null;
       }
     }

@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import MessageRangeText from './MessageRangeText';
+import { users } from '@prisma/client';
 
 function Message({
   text,
@@ -8,7 +9,7 @@ function Message({
 }: {
   text: string;
   truncate?: any;
-  users: any;
+  users: users[];
 }) {
   const textToRender = useMemo(() => {
     let str = text;
@@ -19,7 +20,8 @@ function Message({
     // Replace @mentions
     str = str.replace(/<@(.*?)>/g, (replacedStr, userId) => {
       const userDisplayName =
-        users.find((u) => u.slackUserId === userId)?.displayName || 'User';
+        users.find((u: users) => u.slackUserId === userId)?.displayName ||
+        'User';
       return `<b>@${userDisplayName}</b>`;
     });
     // Replace @channel, @here

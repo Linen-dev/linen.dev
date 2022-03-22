@@ -5,7 +5,8 @@ import styled from 'styled-components';
 import Emoji from 'react-emoji-render';
 
 const codeify = (item: string) => {
-  const [_, inner] = item.match(/<code>(.*?)<\/code>/);
+  // console.log({item})
+  const [_, inner] = item.match(/<code>(.*?)<\/code>/) || [];
   return <Code>{inner}</Code>;
 };
 
