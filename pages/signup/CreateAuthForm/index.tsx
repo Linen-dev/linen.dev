@@ -10,11 +10,17 @@ interface Props {
 }
 
 export default function CreateAuthForm({ onSuccess }: Props) {
-  const onSubmit = (event) => {
+  const onSubmit = (event: any) => {
     event.preventDefault();
     const form = event.target;
     const email = form.email.value;
     const password = form.password.value;
+    if (!email) {
+      return alert('Email is required');
+    }
+    if (!password) {
+      return alert('Password is required');
+    }
     fetch('/api/auth', {
       method: 'POST',
       body: JSON.stringify({ email, password }),

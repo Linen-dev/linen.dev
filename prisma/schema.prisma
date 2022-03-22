@@ -87,6 +87,8 @@ model auths {
   email     String
   password    String
   salt        String
+
+  @@unique([email])
 }
 
 model users {

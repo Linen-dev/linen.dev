@@ -1,9 +1,28 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
+import prisma from '../../client';
+import { generateHash, generateSalt } from '../../utilities/password';
 
 async function create(request: NextApiRequest, response: NextApiResponse) {
-  // TODO generate salt
-  // TODO hash password
-  // TODO save auth
+  const { email, password } = JSON.parse(request.body);
+  if (!email) {
+    return response.status(400).json({
+      error: 'Please provide email',
+    });
+  }
+  if (!password) {
+    return response.status(400).json({
+      error: 'Please provide password',
+    });
+  }
+  const salt = generateSalt();
+  const hash = generateHash(password, salt);
+  await prisma.auths.create({
+    data: {
+      salt,
+      password: hash,
+      email,
+    },
+  });
   return response.status(200).json({});
 }
 
