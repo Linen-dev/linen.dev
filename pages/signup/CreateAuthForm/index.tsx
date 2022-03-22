@@ -26,8 +26,11 @@ export default function CreateAuthForm({ onSuccess }: Props) {
       body: JSON.stringify({ email, password }),
     })
       .then((response) => response.json())
-      .then(() => {
-        onSuccess();
+      .then(({ error }) => {
+        if (error) {
+          return alert(error);
+        }
+        return onSuccess();
       })
       .catch(() => {
         alert('Something went wrong. Please try again.');

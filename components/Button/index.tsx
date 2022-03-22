@@ -1,4 +1,4 @@
-import { FunctionComponent, ReactNode } from 'react';
+import { ReactNode } from 'react';
 
 interface Props {
   type?: 'button' | 'submit' | 'reset';
@@ -6,7 +6,7 @@ interface Props {
   onClick?(): void;
 }
 
-const Button: FunctionComponent = ({ type, children, onClick }: Props) => {
+const Button = ({ type, children, onClick }: Props) => {
   return (
     <button
       type={type}

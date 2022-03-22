@@ -3,7 +3,7 @@ import styles from './index.module.css';
 import Card from '../../../components/Card';
 
 interface Props {
-  children: ReactNode;
+  children?: ReactNode;
 }
 
 const Layout: FunctionComponent = ({ children }: Props) => {

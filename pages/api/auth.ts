@@ -14,6 +14,15 @@ async function create(request: NextApiRequest, response: NextApiResponse) {
       error: 'Please provide password',
     });
   }
+  if (password.length < 6) {
+    return response.status(400).json({
+      error: 'Password too short',
+    });
+  }
+  const auth = await prisma.auths.findFirst({ where: { email } });
+  if (auth) {
+    return response.status(200).json({});
+  }
   const salt = generateSalt();
   const hash = generateHash(password, salt);
   await prisma.auths.create({

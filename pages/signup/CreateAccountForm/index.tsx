@@ -8,7 +8,7 @@ import styles from './index.module.css';
 const REDIRECT_URI = 'https://linen.dev/api/oauth';
 
 export default function CreateAccountForm() {
-  const onSubmit = (event) => {
+  const onSubmit = (event: any) => {
     event.preventDefault();
     const form = event.target;
     const homeUrl = form.homeUrl.value;
