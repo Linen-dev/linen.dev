@@ -55,7 +55,7 @@ export async function createXMLSitemapForSubdomain(
         })
         .map(({ incrementId, slug }) => ({
           incrementId,
-          slug,
+          slug: slug?.toLowerCase(),
         })),
     ];
   }, []);
