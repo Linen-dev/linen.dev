@@ -10,12 +10,3 @@
   margin-bottom: 2rem;
   text-align: center;
 }
-
-.link {
-  display: flex;
-  margin: 1rem auto 0;
-}
-
-.link img {
-  display: inline-block;
-}

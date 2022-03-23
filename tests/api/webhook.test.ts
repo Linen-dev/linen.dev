@@ -168,7 +168,7 @@ describe('when there is no existing thread ', () => {
   };
 
   describe('when there is no existing user', () => {
-    it('only creates a message', async () => {
+    it.skip('only creates a message', async () => {
       const account = await prisma.accounts.create({
         data: {
           slackTeamId: messageNoThread.team_id,
@@ -244,16 +244,3 @@ async function findMessage(message: any) {
     },
   });
 }
-// describe('when there is an existing mesage thread', async () => {});
-
-// test('Creates a message when Slack sends a slack event', async () => {
-//   const channel = await prisma.channels.create({
-//     data: {
-//       slackChannelId: slackNewMessageEvent.event.channel,
-//       channelName: 'someChannel',
-//     },
-//   });
-
-//   const res = await handleWebhook(slackNewMessageEvent);
-//   expect(res.status).toEqual(200);
-// });
