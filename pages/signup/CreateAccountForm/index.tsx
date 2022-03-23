@@ -1,4 +1,4 @@
-import Layout from '../Layout';
+import Layout from '../../../components/layout/CardLayout';
 import Label from '../../../components/Label';
 import ColorInput from '../../../components/ColorInput';
 import TextInput from '../../../components/TextInput';
@@ -34,7 +34,7 @@ export default function CreateAccountForm() {
   };
 
   return (
-    <Layout>
+    <Layout header="Sign Up">
       <form onSubmit={onSubmit}>
         <Field>
           <Label htmlFor="homeUrl">Home url</Label>

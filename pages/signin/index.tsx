@@ -1,15 +1,11 @@
-import Layout from '../../../components/layout/CardLayout';
-import Label from '../../../components/Label';
-import TextInput from '../../../components/TextInput';
-import PasswordInput from '../../../components/PasswordInput';
-import Field from '../../../components/Field';
-import Button from '../../../components/Button';
+import Layout from '../../components/layout/CardLayout';
+import Label from '../../components/Label';
+import TextInput from '../../components/TextInput';
+import PasswordInput from '../../components/PasswordInput';
+import Field from '../../components/Field';
+import Button from '../../components/Button';
 
-interface Props {
-  onSuccess: () => void;
-}
-
-export default function CreateAuthForm({ onSuccess }: Props) {
+export default function SignIn() {
   const onSubmit = (event: any) => {
     event.preventDefault();
     const form = event.target;
@@ -21,7 +17,7 @@ export default function CreateAuthForm({ onSuccess }: Props) {
     if (!password) {
       return alert('Password is required');
     }
-    fetch('/api/auth', {
+    fetch('/api/sessions', {
       method: 'POST',
       body: JSON.stringify({ email, password }),
     })
@@ -30,7 +26,7 @@ export default function CreateAuthForm({ onSuccess }: Props) {
         if (error) {
           return alert(error);
         }
-        return onSuccess();
+        return alert('SUCCESS!');
       })
       .catch(() => {
         alert('Something went wrong. Please try again.');
@@ -38,7 +34,7 @@ export default function CreateAuthForm({ onSuccess }: Props) {
   };
 
   return (
-    <Layout header="Sign Up">
+    <Layout header="Sign In">
       <form onSubmit={onSubmit}>
         <Field>
           <Label htmlFor="email">Email</Label>

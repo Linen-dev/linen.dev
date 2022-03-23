@@ -24,6 +24,7 @@ export default function middleware(req: NextRequest) {
   if (
     !pathname.startsWith('/api') &&
     !pathname.startsWith('/signup') &&
+    !pathname.startsWith('/signin') &&
     !pathname.startsWith('/sitemap.xml') &&
     !pathname.startsWith('/robots.txt')
   ) {
