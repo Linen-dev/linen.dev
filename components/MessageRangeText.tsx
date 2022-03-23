@@ -10,7 +10,7 @@ export default function MessageRangeText({ text }: { text: string }) {
   }
 
   return (
-    <Text component="span" size="sm">
+    <p className="break-words">
       {textArray.map((item: string, index: number) => {
         return (
           <React.Fragment key={index}>
@@ -23,6 +23,6 @@ export default function MessageRangeText({ text }: { text: string }) {
           </React.Fragment>
         );
       })}
-    </Text>
+    </p>
   );
 }

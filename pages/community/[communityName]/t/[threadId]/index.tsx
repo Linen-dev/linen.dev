@@ -1,4 +1,4 @@
-import { Anchor, Group, Paper, Text } from '@mantine/core';
+import { Anchor, Text } from '@mantine/core';
 import Avatar, { Size } from '../../../../../components/Avatar';
 import { AiOutlineLink } from 'react-icons/ai';
 import { useMemo, useEffect } from 'react';
@@ -35,35 +35,29 @@ function Thread({
       .sort((a, b) => b.sentAt - a.sentAt)
       .map(({ body, author, id: messageId, sentAt, ...rest }) => {
         return (
-          <div key={messageId} id={messageId}>
-            <Group
-              style={{ marginBottom: 24 }}
-              direction="column"
-              align="stretch"
-            >
-              <Group position="apart">
-                <Group>
-                  <Avatar
-                    size={Size.lg}
-                    alt={'kam'}
-                    src={author?.profileImageUrl}
-                    text={(author?.displayName || '?')
-                      .slice(0, 1)
-                      .toLowerCase()}
-                  />
-                  <Text size="sm" weight={700}>
+          <li className="pb-8" key={messageId} id={messageId}>
+            <div className="flex justify-between">
+              <div className="flex pb-4">
+                <Avatar
+                  size={Size.lg}
+                  alt={author?.displayName || 'avatar'}
+                  src={author?.profileImageUrl}
+                  text={(author?.displayName || '?').slice(0, 1).toLowerCase()}
+                />
+                <div className="pl-3">
+                  <p className="font-semibold text-sm inline-block">
                     {author?.displayName}
-                  </Text>
-                </Group>
-                <Text size="sm" color="gray">
-                  {format(new Date(sentAt))}
-                </Text>
-              </Group>
-              <div style={{ maxWidth: '900px' }}>
-                <Message text={body} users={users} />
+                  </p>
+                </div>
               </div>
-            </Group>
-          </div>
+              <Text size="sm" color="gray">
+                {format(new Date(sentAt))}
+              </Text>
+            </div>
+            <div style={{ maxWidth: '700px' }}>
+              <Message text={body} users={users} />
+            </div>
+          </li>
         );
       });
   }, [messages, users]);
@@ -80,16 +74,8 @@ function Thread({
       slackUrl={slackUrl}
       settings={settings}
     >
-      <Paper
-        shadow="md"
-        padding="xl"
-        style={{
-          width: '100%',
-        }}
-      >
-        <Group grow direction="column">
-          {elements}
-        </Group>
+      <div className="px-10 py-8 shadow-md">
+        <ul>{elements}</ul>
 
         <div className={styles.buttons}>
           <Anchor
@@ -105,7 +91,7 @@ function Thread({
             <span className={styles.subtext}>View count:</span> {viewCount + 1}
           </div>
         </div>
-      </Paper>
+      </div>
     </PageLayout>
   );
 }
