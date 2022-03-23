@@ -48,7 +48,9 @@ export default function CreateAuthForm({ onSuccess }: Props) {
           <Label htmlFor="password">Password</Label>
           <PasswordInput id="password" />
         </Field>
-        <Button type="submit">Submit</Button>
+        <Button type="submit" block>
+          Submit
+        </Button>
       </form>
     </Layout>
   );
