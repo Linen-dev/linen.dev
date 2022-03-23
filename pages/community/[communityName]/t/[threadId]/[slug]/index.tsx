@@ -1,4 +1,4 @@
-import { getThread } from '../../../../../../lib/getThread';
+import { getThreadById } from '../../../../../../services/threads';
 import Thread from '../index';
 
 export default Thread;
@@ -9,5 +9,5 @@ export async function getServerSideProps({
 }: {
   params: { threadId: string };
 }) {
-  return await getThread(threadId);
+  return await getThreadById(threadId);
 }

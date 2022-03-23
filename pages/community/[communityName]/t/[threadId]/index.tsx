@@ -7,7 +7,7 @@ import PageLayout from '../../../../../components/layout/PageLayout';
 import Message from '../../../../../components/Message';
 
 import styles from './index.module.css';
-import { getThread } from '../../../../../lib/getThread';
+import { getThreadById } from '../../../../../services/threads';
 
 type Props = {
   threadId: string;
@@ -103,5 +103,5 @@ export async function getServerSideProps({
 }: {
   params: { threadId: string };
 }) {
-  return await getThread(threadId);
+  return await getThreadById(threadId);
 }
