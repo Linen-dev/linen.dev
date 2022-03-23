@@ -1,5 +1,7 @@
 import { Anchor, Text } from '@mantine/core';
 import React from 'react';
+import Link from 'next/link';
+import styled from 'styled-components';
 import CodeRangeText from './CodeRangeText';
 
 const linkify = (item: string) => {
@@ -20,7 +22,7 @@ export default function LinkRangeText({ text }: { text: string }) {
   }
 
   return (
-    <p className="break-words">
+    <Text component="span" size="sm">
       {textArray.map((item, index) => {
         return (
           <React.Fragment key={index}>
@@ -29,6 +31,6 @@ export default function LinkRangeText({ text }: { text: string }) {
           </React.Fragment>
         );
       })}
-    </p>
+    </Text>
   );
 }

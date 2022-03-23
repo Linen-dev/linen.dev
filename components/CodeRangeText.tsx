@@ -1,8 +1,11 @@
-import { Code } from '@mantine/core';
+import { Anchor, Code, Text } from '@mantine/core';
 import React from 'react';
+import Link from 'next/link';
+import styled from 'styled-components';
 import Emoji from 'react-emoji-render';
 
 const codeify = (item: string) => {
+  // console.log({item})
   const [_, inner] = item.match(/<code>(.*?)<\/code>/) || [];
   return <Code>{inner}</Code>;
 };
@@ -11,14 +14,14 @@ export default function LinkRangeText({ text }: { text: string }) {
   const textArray = text.split(/(<code>.*?\/code>)/);
   if (textArray.length < 3) {
     return (
-      <p className="break-words text-sm">
+      <Text component="span" size="sm">
         <Emoji text={text} />
-      </p>
+      </Text>
     );
   }
 
   return (
-    <p className="break-words text-sm">
+    <Text component="span" size="sm">
       {textArray.map((item, index) => {
         return (
           <React.Fragment key={index}>
@@ -27,6 +30,6 @@ export default function LinkRangeText({ text }: { text: string }) {
           </React.Fragment>
         );
       })}
-    </p>
+    </Text>
   );
 }
