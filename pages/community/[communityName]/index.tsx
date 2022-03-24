@@ -276,7 +276,10 @@ export async function getServerSideProps(context: Params) {
     return { props: { statusCode: 404 } };
   }
   const channels = account.channels;
-  const channel = channels[0];
+  const defaultChannel = account.channels.find(
+    (c) => c.channelName === 'general'
+  );
+  const channel = defaultChannel || channels[0];
 
   const channelId = channel.id;
 
