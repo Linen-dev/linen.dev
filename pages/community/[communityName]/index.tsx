@@ -142,7 +142,11 @@ function Channel({
             </div>
             <div className="flex flex-col w-full">
               <div className="pb-2 sm:px-6">
-                <Message users={users} text={oldestMessage.body} truncate />
+                <Message
+                  author={oldestMessage.author}
+                  text={oldestMessage.body}
+                  truncate
+                />
               </div>
               <div className="text-sm text-gray-400 flex flex-row justify-between">
                 <p>{messages.length} Replies</p>
@@ -178,7 +182,11 @@ function Channel({
         >
           <tr className="border-solid border-gray-200 cursor-pointer">
             <td className="px-6 py-3 md:max-w-[800px]">
-              <Message users={users} text={oldestMessage.body} truncate />
+              <Message
+                author={oldestMessage.author}
+                text={oldestMessage.body}
+                truncate
+              />
             </td>
             <td className="px-6 py-3 align-middle">
               <Avatars
