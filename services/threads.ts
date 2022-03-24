@@ -6,7 +6,6 @@ import {
   channelIndex,
   findAccountById,
   findThreadById,
-  listUsers,
 } from '../lib/models';
 
 interface IndexProps {
@@ -47,9 +46,8 @@ export async function getThreadById(threadId: string) {
     };
   }
 
-  const [channels, users, account] = await Promise.all([
+  const [channels, account] = await Promise.all([
     channelIndex(thread.channel.accountId),
-    listUsers(thread.channel.accountId),
     findAccountById(thread.channel.accountId),
   ]);
 
@@ -81,7 +79,6 @@ export async function getThreadById(threadId: string) {
     props: {
       ...serializeThread(thread),
       threadId,
-      users,
       channels,
       slackUrl: account.slackUrl,
       threadUrl,

@@ -5,11 +5,11 @@ import { users } from '@prisma/client';
 function Message({
   text,
   truncate,
-  users,
+  author,
 }: {
   text: string;
   truncate?: any;
-  users: users[];
+  author: users;
 }) {
   const textToRender = useMemo(() => {
     let str = text;
@@ -19,9 +19,7 @@ function Message({
     }
     // Replace @mentions
     str = str.replace(/<@(.*?)>/g, (replacedStr, userId) => {
-      const userDisplayName =
-        users.find((u: users) => u.slackUserId === userId)?.displayName ||
-        'User';
+      const userDisplayName = author?.displayName || 'User';
       return `<b>@${userDisplayName}</b>`;
     });
     // Replace @channel, @here
@@ -58,7 +56,7 @@ function Message({
     str = str.replace(/&gt;/g, '>');
     str = str.replace(/&lt;/g, '<');
     return str;
-  }, [text, truncate, users]);
+  }, [text, truncate]);
 
   return <MessageRangeText text={textToRender} />;
 }

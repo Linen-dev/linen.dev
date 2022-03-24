@@ -13,7 +13,6 @@ type Props = {
   threadId: string;
   messages: any[];
   channels: any[];
-  users: any[];
   slackUrl: string;
   threadUrl: string;
   settings: any;
@@ -24,7 +23,6 @@ function Thread({
   threadId,
   messages,
   channels,
-  users,
   slackUrl,
   threadUrl,
   settings,
@@ -55,12 +53,12 @@ function Thread({
               </Text>
             </div>
             <div style={{ maxWidth: '700px' }}>
-              <Message text={body} users={users} />
+              <Message text={body} author={author} />
             </div>
           </li>
         );
       });
-  }, [messages, users]);
+  }, [messages]);
 
   useEffect(() => {
     fetch(`/api/threads?incrementId=${threadId}`, { method: 'PUT' });
@@ -68,7 +66,7 @@ function Thread({
 
   return (
     <PageLayout
-      users={users}
+      users={messages.map(({ author }) => author)}
       seo={{ title: messages[0].body.slice(0, 30) }}
       navItems={{ channels: channels }}
       slackUrl={slackUrl}
