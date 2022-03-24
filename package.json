@@ -6,7 +6,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "prepare": "husky install",
+    "prepare": "npx husky install",
     "test": "jest",
     "test:watch": "jest --watch",
     "docker:up": "docker-compose up -d",
