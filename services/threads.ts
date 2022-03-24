@@ -79,6 +79,7 @@ export async function getThreadById(threadId: string) {
     props: {
       ...serializeThread(thread),
       threadId,
+      currentChannel: thread.channel,
       channels,
       slackUrl: account.slackUrl,
       threadUrl,

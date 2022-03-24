@@ -75,6 +75,7 @@ export async function getServerSideProps(context: Params) {
       users,
       threads: threads.map(serializeThread),
       channels,
+      currentChannel: channel,
       communityName,
       slackUrl: account.slackUrl,
       settings,

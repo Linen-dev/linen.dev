@@ -8,11 +8,13 @@ import Message from '../../../../../components/Message';
 
 import styles from './index.module.css';
 import { getThreadById } from '../../../../../services/threads';
+import { channels } from '@prisma/client';
 
 type Props = {
   threadId: string;
   messages: any[];
-  channels: any[];
+  channels: channels[];
+  currentChannel: channels;
   slackUrl: string;
   threadUrl: string;
   settings: any;
@@ -23,6 +25,7 @@ function Thread({
   threadId,
   messages,
   channels,
+  currentChannel,
   slackUrl,
   threadUrl,
   settings,
@@ -68,6 +71,7 @@ function Thread({
     <PageLayout
       users={messages.map(({ author }) => author)}
       seo={{ title: messages[0].body.slice(0, 30) }}
+      currentChannel={currentChannel}
       navItems={{ channels: channels }}
       slackUrl={slackUrl}
       settings={settings}

@@ -19,6 +19,7 @@ interface Props {
   seo?: any;
   users?: users[];
   children: React.ReactNode;
+  currentChannel: channels;
   navItems?: any;
   slackUrl?: string;
   settings: Settings;
@@ -30,6 +31,7 @@ function PageLayout({
   users,
   children,
   navItems,
+  currentChannel,
   slackUrl,
   settings,
   communityName,
@@ -121,7 +123,7 @@ function PageLayout({
       />
       <div className="sm:flex">
         <div className="hidden md:flex">
-          {NavBar(channels, channelName || '')}
+          {NavBar(channels, currentChannel.channelName || '')}
         </div>
         <div className="lg:w-full">
           <ErrorBoundary

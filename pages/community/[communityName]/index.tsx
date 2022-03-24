@@ -35,6 +35,7 @@ type Props = {
   channelId?: string;
   users: users[];
   channels?: channels[];
+  currentChannel: channels;
   threads?: threads[];
   pagination?: PaginationType;
   page?: number;
@@ -46,6 +47,7 @@ function Channel({
   threads,
   channels,
   slackUrl,
+  currentChannel,
   settings,
   communityName,
   pagination,
@@ -78,6 +80,7 @@ function Channel({
         slackUrl={slackUrl}
         settings={settings}
         communityName={communityName}
+        currentChannel={currentChannel}
         navItems={{ channels: channels }}
         seo={{
           title: `${communityName} questions`,
@@ -216,6 +219,7 @@ function Channel({
     <PageLayout
       users={users}
       slackUrl={slackUrl}
+      currentChannel={currentChannel}
       seo={{
         title: `${communityName} questions`,
         description: `${channelName} threads`,
@@ -306,6 +310,7 @@ export async function getServerSideProps(context: Params) {
       users,
       channels,
       communityName,
+      currentChannel: channel,
       slackUrl: account.slackUrl,
       settings,
       threads,
