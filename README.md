@@ -1,11 +1,55 @@
+# Linen.dev
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Quick Start
 
-To set up your dev environment, please run:
+### Environment Variables
+
+Prepare your main environment settings:
 
 ```bash
-bash ./setup.sh
+cp .env.example .env
+```
+
+Adjust `.env` file to your local environment if needed.
+
+For more information how environment variables are used look here:
+
+- [Next.js Environment Variables](https://nextjs.org/docs/basic-features/environment-variables)
+- [Prisma Environment Variables](https://www.prisma.io/docs/guides/development-environment/environment-variables#using-env-files)
+
+### Database setup
+
+You can run PostgreSQL database locally using Docker [PostgreSQL Image](https://hub.docker.com/_/postgres):
+
+```bash
+docker-compose up -d
+```
+
+During database initialization two databases will be created `lineddev` for development purpose and `linentest`
+for integration tests (see `postgres/initdb/00-init-app-db.sh`).
+
+Together with PostgreSQL, [pgAdmin 4 container](https://www.pgadmin.org/download/pgadmin-4-container/) is setup -
+a web based administration tool for the PostgreSQL database.
+
+You can access it at [http://localhost:8080](http://localhost:8080/) (credentials: admin@admin.com/secret).
+
+Click the **Add New Server** button to open the [Server Dialog](https://www.pgadmin.org/docs/pgadmin4/latest/server_dialog.html)
+to add a new server definition (use `db` as host name/address and `postgres` for database, username and password).
+
+### Database seeding
+
+To fill the database with initial data run:
+
+```bash
+docker exec -i -u postgres linendev_postgres psql linendev < db_seed.sql
+```
+
+Run the migration to update the database:
+
+```bash
+npx prisma migrate dev
 ```
 
 ## Getting Started
@@ -56,7 +100,7 @@ Update `accountId` const in constants/example.js
 
 ```bash
 npx prisma migrate dev
-npx prisma generate dev
+npx prisma generate
 ```
 
 or
@@ -65,16 +109,17 @@ or
 npm run migrate
 ```
 
+See [Prisma CLI reference](https://www.prisma.io/docs/reference/api-reference/command-reference) for command description.
+
 ## How to run integration tests
 
-Setup:
+Setup `.env.test`:
 
-Add SLACK_TOKEN to .env.test - the integration tests uses a real Slack account
+- add `SLACK_TOKEN` to `.env.test` - the integration tests uses a real Slack account
+- add `DATABASE_URL=postgresql://linentest:linentest@localhost:5432/linentest` to `.env.test`
 
 ```
-npm install -g dotenv-cli
 npm run setup:integration
-
 ```
 
 Run tests:
