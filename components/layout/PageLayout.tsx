@@ -7,6 +7,7 @@ import SearchBar from '../search/SearchBar';
 import { NavBar } from '../NavBar/NavBar';
 import SEO from './SEO';
 import { channels, users } from '@prisma/client';
+import { addHttpsToUrl } from '../../lib/util';
 
 interface Settings {
   brandColor: string;
@@ -40,6 +41,9 @@ function PageLayout({
     query: { channelName },
   } = useRouter();
   const channels = navItems.channels.filter((c: channels) => !c.hidden);
+  const homeUrl = addHttpsToUrl(settings.homeUrl);
+  const docsUrl = addHttpsToUrl(settings.docsUrl);
+  const logoUrl = addHttpsToUrl(settings.logoUrl);
 
   return (
     <div>
@@ -55,8 +59,8 @@ function PageLayout({
         <Link href={'/'} passHref>
           <img
             className="cursor-pointer h-full"
-            src={settings.logoUrl}
-            alt={`${settings.homeUrl} logo`}
+            src={logoUrl}
+            alt={`${homeUrl} logo`}
           />
         </Link>
         <div
@@ -75,7 +79,7 @@ function PageLayout({
             style={{ color: 'white', fontWeight: 500, marginRight: '24px' }}
             rel="noreferrer"
             target="_blank"
-            href={settings.homeUrl}
+            href={homeUrl}
           >
             Home
           </a>
@@ -84,7 +88,7 @@ function PageLayout({
             style={{ color: 'white', fontWeight: 500, marginRight: '24px' }}
             rel="noreferrer"
             target="_blank"
-            href={settings.docsUrl}
+            href={docsUrl}
           >
             Docs
           </a>

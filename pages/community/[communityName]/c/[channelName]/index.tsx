@@ -41,7 +41,7 @@ export async function getServerSideProps(context: Params) {
     brandColor: account.brandColor || defaultSettings.brandColor,
     homeUrl: account.homeUrl || defaultSettings.homeUrl,
     docsUrl: account.docsUrl || defaultSettings.docsUrl,
-    logoUrl: defaultSettings.logoUrl,
+    logoUrl: account.logoUrl || defaultSettings.logoUrl,
   };
 
   if (!channel) {

@@ -38,15 +38,18 @@ export default function CreateAccountForm() {
       <form onSubmit={onSubmit}>
         <Field>
           <Label htmlFor="homeUrl">Home url</Label>
-          <TextInput placeholder="yourwebsite.com" id="homeUrl" />
+          <TextInput placeholder="https://yourwebsite.com" id="homeUrl" />
         </Field>
         <Field>
           <Label htmlFor="docsUrl">Docs url</Label>
-          <TextInput placeholder="docs.yourwebsite.com" id="docsUrl" />
+          <TextInput placeholder="https://docs.yourwebsite.com" id="docsUrl" />
         </Field>
         <Field>
           <Label htmlFor="redirectDomain">Redirect domain</Label>
-          <TextInput placeholder="linen.yourwebsite.com" id="redirectDomain" />
+          <TextInput
+            placeholder="https://linen.yourwebsite.com"
+            id="redirectDomain"
+          />
         </Field>
         <Field>
           <Label htmlFor="brandColor">Brand color</Label>

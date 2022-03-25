@@ -64,7 +64,7 @@ export async function getThreadById(threadId: string) {
     brandColor: account.brandColor || defaultSettings.brandColor,
     homeUrl: account.homeUrl || defaultSettings.homeUrl,
     docsUrl: account.docsUrl || defaultSettings.docsUrl,
-    logoUrl: defaultSettings.logoUrl,
+    logoUrl: account.logoUrl || defaultSettings.logoUrl,
   };
 
   // "https://papercups-test.slack.com/archives/C01JSB67DTJ/p1627841694000600"

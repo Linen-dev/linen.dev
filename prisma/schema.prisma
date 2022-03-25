@@ -75,6 +75,7 @@ model accounts {
   brandColor     String?
   homeUrl        String?
   docsUrl        String?
+  logoUrl        String?
 
   users               users[]
   slackAuthorizations slackAuthorizations[]
@@ -85,8 +86,8 @@ model auths {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   email     String
-  password    String
-  salt        String
+  password  String
+  salt      String
 
   @@unique([email])
 }
