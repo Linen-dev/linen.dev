@@ -6,7 +6,12 @@ export default function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl; // get pathname of request (e.g. /blog-slug)
   const hostname = req.headers.get('host'); // get hostname of request (e.g. demo.vercel.pub)
 
-  if (hostname === 'localhost:3000' || hostname === 'linen.dev') {
+  if (
+    hostname === 'localhost:3000' ||
+    hostname === 'linen.dev' ||
+    // support staging environment
+    hostname?.includes('*.vercel.app')
+  ) {
     return;
   }
 
