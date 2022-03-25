@@ -19,6 +19,11 @@ export default function middleware(req: NextRequest) {
     !pathname.startsWith('/sitemap.xml') &&
     !pathname.startsWith('/robots.txt')
   ) {
+    if (hostname === 'localhost:3000' || hostname === 'linen.dev') {
+      url.pathname = `/`;
+      return NextResponse.rewrite(url);
+    }
+
     url.pathname = `/community/${currentHost}${pathname}`;
     return NextResponse.rewrite(url);
   }
