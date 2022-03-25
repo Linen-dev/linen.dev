@@ -12,13 +12,6 @@ export default NextAuth({
   pages: {
     signIn: '/signin',
   },
-  callbacks: {
-    redirect({ url, baseUrl }) {
-      console.log('URL', url);
-      console.log('BASE_URL', baseUrl);
-      return baseUrl;
-    },
-  },
   providers: [
     CredentialsProvider({
       name: 'Email and Password',

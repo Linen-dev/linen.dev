@@ -1,5 +1,4 @@
 import Layout from '../../components/layout/CardLayout';
-import Alert from '../../components/Alert';
 import Label from '../../components/Label';
 import TextInput from '../../components/TextInput';
 import PasswordInput from '../../components/PasswordInput';
