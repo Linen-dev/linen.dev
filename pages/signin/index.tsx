@@ -1,48 +1,32 @@
 import Layout from '../../components/layout/CardLayout';
+import Alert from '../../components/Alert';
 import Label from '../../components/Label';
 import TextInput from '../../components/TextInput';
 import PasswordInput from '../../components/PasswordInput';
 import Field from '../../components/Field';
 import Button from '../../components/Button';
+import { getCsrfToken } from 'next-auth/react';
+import type { NextPageContext } from 'next';
+import Error from './Error';
 
-export default function SignIn() {
-  const onSubmit = (event: any) => {
-    event.preventDefault();
-    const form = event.target;
-    const email = form.email.value;
-    const password = form.password.value;
-    if (!email) {
-      return alert('Email is required');
-    }
-    if (!password) {
-      return alert('Password is required');
-    }
-    fetch('/api/sessions', {
-      method: 'POST',
-      body: JSON.stringify({ email, password }),
-    })
-      .then((response) => response.json())
-      .then(({ error }) => {
-        if (error) {
-          return alert(error);
-        }
-        return alert('SUCCESS!');
-      })
-      .catch(() => {
-        alert('Something went wrong. Please try again.');
-      });
-  };
+interface Props {
+  csrfToken: string;
+  error?: string;
+}
 
+export default function SignIn({ csrfToken, error }: Props) {
   return (
     <Layout header="Sign In">
-      <form onSubmit={onSubmit}>
+      <Error error={error} />
+      <form method="post" action="/api/auth/callback/credentials">
+        <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
         <Field>
           <Label htmlFor="email">Email</Label>
-          <TextInput id="email" />
+          <TextInput id="email" required />
         </Field>
         <Field>
           <Label htmlFor="password">Password</Label>
-          <PasswordInput id="password" />
+          <PasswordInput id="password" required />
         </Field>
         <Button type="submit" block>
           Submit
@@ -50,4 +34,13 @@ export default function SignIn() {
       </form>
     </Layout>
   );
+}
+
+export async function getServerSideProps(context: NextPageContext) {
+  return {
+    props: {
+      csrfToken: await getCsrfToken(context),
+      error: context.query.error || null,
+    },
+  };
 }
