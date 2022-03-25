@@ -9,8 +9,9 @@ export default function middleware(req: NextRequest) {
   if (
     hostname === 'localhost:3000' ||
     hostname === 'linen.dev' ||
+    hostname === 'www.linen.dev' ||
     // support staging environment
-    hostname?.includes('*.vercel.app')
+    hostname?.includes('.vercel.app')
   ) {
     return;
   }
