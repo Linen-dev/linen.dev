@@ -1,4 +1,4 @@
-import Layout from '../Layout';
+import Layout from '../../../components/layout/CardLayout';
 import Label from '../../../components/Label';
 import TextInput from '../../../components/TextInput';
 import PasswordInput from '../../../components/PasswordInput';
@@ -38,7 +38,7 @@ export default function CreateAuthForm({ onSuccess }: Props) {
   };
 
   return (
-    <Layout>
+    <Layout header="Sign Up">
       <form onSubmit={onSubmit}>
         <Field>
           <Label htmlFor="email">Email</Label>
@@ -48,7 +48,9 @@ export default function CreateAuthForm({ onSuccess }: Props) {
           <Label htmlFor="password">Password</Label>
           <PasswordInput id="password" />
         </Field>
-        <Button type="submit">Submit</Button>
+        <Button type="submit" block>
+          Submit
+        </Button>
       </form>
     </Layout>
   );
