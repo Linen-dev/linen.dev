@@ -3,7 +3,6 @@ import { getCommunityName } from '../../utilities/middlewareHelper';
 describe('getCommunityName', () => {
   const isProd = true;
   it('gets community name from subdomain', () => {
-    console.log(getCommunityName(isProd, 'osquery.linen.dev'));
     expect(getCommunityName(isProd, 'osquery.linen.dev')).toEqual('osquery');
   });
 

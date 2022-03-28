@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { isSubdomainbasedRouting } from '../lib/util';
 import { getCommunityName } from '../utilities/middlewareHelper';
 
 export default function middleware(req: NextRequest) {
@@ -6,13 +7,7 @@ export default function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl; // get pathname of request (e.g. /blog-slug)
   const hostname = req.headers.get('host'); // get hostname of request (e.g. demo.vercel.pub)
 
-  if (
-    hostname === 'localhost:3000' ||
-    hostname === 'linen.dev' ||
-    hostname === 'www.linen.dev' ||
-    // support staging environment
-    hostname?.includes('.vercel.app')
-  ) {
+  if (!isSubdomainbasedRouting(hostname || '')) {
     return;
   }
 
@@ -26,9 +21,10 @@ export default function middleware(req: NextRequest) {
     !pathname.startsWith('/signup') &&
     !pathname.startsWith('/signin') &&
     !pathname.startsWith('/sitemap.xml') &&
-    !pathname.startsWith('/robots.txt')
+    !pathname.startsWith('/robots.txt') &&
+    communityName !== ''
   ) {
-    url.pathname = `/community/${communityName}${pathname}`;
+    url.pathname = `/s/${communityName}${pathname}`;
     return NextResponse.rewrite(url);
   }
 }

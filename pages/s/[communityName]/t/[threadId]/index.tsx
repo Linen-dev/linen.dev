@@ -9,6 +9,7 @@ import Message from '../../../../../components/Message';
 import styles from './index.module.css';
 import { getThreadById } from '../../../../../services/threads';
 import { channels } from '@prisma/client';
+import { GetServerSidePropsContext } from 'next';
 
 type Props = {
   threadId: string;
@@ -19,6 +20,8 @@ type Props = {
   threadUrl: string;
   settings: any;
   viewCount: number;
+  communityName: string;
+  isSubDomainRouting: boolean;
 };
 
 function Thread({
@@ -30,6 +33,8 @@ function Thread({
   threadUrl,
   settings,
   viewCount,
+  communityName,
+  isSubDomainRouting,
 }: Props) {
   const elements = useMemo(() => {
     return messages
@@ -71,10 +76,12 @@ function Thread({
     <PageLayout
       users={messages.map(({ author }) => author)}
       seo={{ title: messages[0].body.slice(0, 30) }}
+      communityName={communityName}
       currentChannel={currentChannel}
       navItems={{ channels: channels }}
       slackUrl={slackUrl}
       settings={settings}
+      isSubDomainRouting={isSubDomainRouting}
     >
       <div className="px-10 py-8 shadow-md">
         <ul>{elements}</ul>
@@ -100,10 +107,8 @@ function Thread({
 
 export default Thread;
 
-export async function getServerSideProps({
-  params: { threadId },
-}: {
-  params: { threadId: string };
-}) {
-  return await getThreadById(threadId);
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const threadId = context.params?.threadId as string;
+  const host = context.req.headers.host || '';
+  return await getThreadById(threadId, host);
 }

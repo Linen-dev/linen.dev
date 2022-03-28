@@ -1,8 +1,14 @@
 import { Navbar, Group, Title, Text, Paper } from '@mantine/core';
 import { channels } from '@prisma/client';
 import Link from 'next/link';
+import { CustomLink } from '../Link/Link';
 
-export function NavBar(channels: any, channelName: string | string[]) {
+export function NavBar(
+  channels: any,
+  channelName: string | string[],
+  communityName: string,
+  isSubDomainRouting: boolean
+) {
   return (
     <Navbar
       sx={(theme) => ({ backgroundColor: 'white', zIndex: 1 })}
@@ -28,7 +34,14 @@ export function NavBar(channels: any, channelName: string | string[]) {
             }}
           >
             {channels.map((c: channels) => (
-              <Link key={c.channelName} href={`/c/${c.channelName}`} passHref>
+              <CustomLink
+                isSubDomainRouting={isSubDomainRouting}
+                communityName={communityName}
+                key={c.channelName}
+                path={`/c/${c.channelName}`}
+                // href={`/s/${communityName}/c/${c.channelName}`}
+                passHref
+              >
                 <Text
                   className="hover:bg-gray-50 px-4 py-2"
                   size="sm"
@@ -48,7 +61,7 @@ export function NavBar(channels: any, channelName: string | string[]) {
                 >
                   # {c.channelName}
                 </Text>
-              </Link>
+              </CustomLink>
             ))}
           </div>
         </Paper>

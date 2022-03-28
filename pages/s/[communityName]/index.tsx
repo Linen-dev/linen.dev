@@ -1,15 +1,14 @@
-import Avatar, { Size } from '../../../components/Avatar';
+import Avatar from '../../../components/Avatar';
 import Avatars from '../../../components/Avatars';
-import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import Pagination from '../../../components/Pagination';
 import { format } from 'timeago.js';
 import PageLayout from '../../../components/layout/PageLayout';
 import Message from '../../../components/Message';
-import { findAccountByPath, listUsers } from '../../../lib/models';
-import { links } from '../../../constants/examples';
 import { channels, slackThreads, users, messages } from '@prisma/client';
-import { index as fetchThreads } from '../../../services/threads';
+import { CustomLink } from '../../../components/Link/Link';
+import { GetServerSidePropsContext } from 'next';
+import { getThreadsByCommunityName } from '../../../services/communities';
 
 interface PaginationType {
   totalCount: number;
@@ -39,6 +38,7 @@ type Props = {
   threads?: threads[];
   pagination?: PaginationType;
   page?: number;
+  isSubDomainRouting: boolean;
 };
 
 function Channel({
@@ -52,6 +52,7 @@ function Channel({
   communityName,
   pagination,
   page,
+  isSubDomainRouting,
 }: Props) {
   const [currentThreads, setCurrentThreads] = useState(threads);
   const [pageCount, setPageCount] = useState(pagination?.pageCount);
@@ -82,6 +83,7 @@ function Channel({
         communityName={communityName}
         currentChannel={currentChannel}
         navItems={{ channels: channels }}
+        isSubDomainRouting={isSubDomainRouting}
         seo={{
           title: `${communityName} questions`,
           description: `Threads 404`,
@@ -129,7 +131,12 @@ function Channel({
         key={incrementId}
         className="px-4 py-4 hover:bg-gray-50 border-solid border-gray-200 sm:hidden cursor-pointer"
       >
-        <Link href={`/t/${incrementId}/${slug || 'topic'}`} passHref>
+        <CustomLink
+          isSubDomainRouting={isSubDomainRouting}
+          communityName={communityName}
+          path={`/t/${incrementId}/${slug || 'topic'}`}
+          key={`${incrementId}-desktop`}
+        >
           <div className="flex">
             <div className="flex pr-4 items-center sm:hidden">
               {author && (
@@ -157,7 +164,7 @@ function Channel({
               </div>
             </div>
           </div>
-        </Link>
+        </CustomLink>
       </li>
     );
   });
@@ -178,10 +185,11 @@ function Channel({
         return array;
       }, []);
       return (
-        <Link
+        <CustomLink
+          isSubDomainRouting={isSubDomainRouting}
+          communityName={communityName}
+          path={`/t/${incrementId}/${slug || 'topic'}`}
           key={`${incrementId}-desktop`}
-          href={`/t/${incrementId}/${slug || 'topic'}`}
-          passHref
         >
           <tr className="border-solid border-gray-200 cursor-pointer">
             <td className="px-6 py-3 md:max-w-[800px]">
@@ -208,7 +216,7 @@ function Channel({
               {format(new Date(newestMessage.sentAt))}
             </td>
           </tr>
-        </Link>
+        </CustomLink>
       );
     }
   );
@@ -227,6 +235,7 @@ function Channel({
       navItems={{ channels: channels }}
       settings={settings}
       communityName={communityName}
+      isSubDomainRouting={isSubDomainRouting}
     >
       <div className="sm:pt-8 sm:px-8 sm:flex sm:justify-center">
         <table className="hidden sm:block sm:table-fixed ">
@@ -271,51 +280,10 @@ type Params = {
   };
 };
 
-export async function getServerSideProps(context: Params) {
-  const { params, query } = context;
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const communityName = context.params?.communityName as string;
+  const query = context.query;
   const page = Number(query.page) || 1;
-  const { communityName } = params;
-  const account = await findAccountByPath(communityName);
-  if (account === null) {
-    return { props: { statusCode: 404 } };
-  }
-  const channels = account.channels;
-  const defaultChannel = account.channels.find(
-    (c) => c.channelName === 'general'
-  );
-  const channel = defaultChannel || channels[0];
-
-  const channelId = channel.id;
-
-  const { data, pagination } = await fetchThreads({ channelId, page: 1 });
-  let { threads } = data;
-  threads = threads.filter((t) => t.messages.length > 0);
-  const users = threads
-    .map(({ messages }) => messages.map(({ author }) => author))
-    .flat()
-    .filter(Boolean);
-  const defaultSettings =
-    links.find(({ accountId }) => accountId === account.id) || links[0];
-
-  const settings = {
-    brandColor: account.brandColor || defaultSettings.brandColor,
-    homeUrl: account.homeUrl || defaultSettings.homeUrl,
-    docsUrl: account.docsUrl || defaultSettings.docsUrl,
-    logoUrl: account.logoUrl || defaultSettings.logoUrl,
-  };
-
-  return {
-    props: {
-      channelId,
-      users,
-      channels,
-      communityName,
-      currentChannel: channel,
-      slackUrl: account.slackUrl,
-      settings,
-      threads,
-      pagination,
-      page,
-    },
-  };
+  const host = context.req.headers.host || '';
+  return await getThreadsByCommunityName(communityName, page, host);
 }

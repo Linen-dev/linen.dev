@@ -7,6 +7,7 @@ import {
   findAccountById,
   findThreadById,
 } from '../lib/models';
+import { isSubdomainbasedRouting } from '../lib/util';
 
 interface IndexProps {
   channelId: string;
@@ -36,7 +37,8 @@ export async function index({ channelId, page }: IndexProps) {
 
 // Function for getServerSideProps
 // extracted here to be resused in both /[threadId]/index and /[slug]/index
-export async function getThreadById(threadId: string) {
+export async function getThreadById(threadId: string, host: string) {
+  const isSubDomainRouting = isSubdomainbasedRouting(host);
   const id = parseInt(threadId);
   const thread = await findThreadById(id);
 
@@ -82,9 +84,11 @@ export async function getThreadById(threadId: string) {
       currentChannel: thread.channel,
       channels,
       slackUrl: account.slackUrl,
+      communityName: account.slackDomain,
       threadUrl,
       settings,
       viewCount: thread.viewCount,
+      isSubDomainRouting,
     },
   };
 }

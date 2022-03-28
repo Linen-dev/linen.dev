@@ -24,7 +24,8 @@ interface Props {
   navItems?: any;
   slackUrl?: string;
   settings: Settings;
-  communityName?: string;
+  communityName: string;
+  isSubDomainRouting: boolean;
 }
 
 function PageLayout({
@@ -36,6 +37,7 @@ function PageLayout({
   slackUrl,
   settings,
   communityName,
+  isSubDomainRouting,
 }: Props) {
   const {
     query: { channelName },
@@ -127,7 +129,12 @@ function PageLayout({
       />
       <div className="sm:flex">
         <div className="hidden md:flex">
-          {NavBar(channels, currentChannel.channelName || '')}
+          {NavBar(
+            channels,
+            currentChannel.channelName || '',
+            communityName,
+            isSubDomainRouting
+          )}
         </div>
         <div className="lg:w-full">
           <ErrorBoundary
