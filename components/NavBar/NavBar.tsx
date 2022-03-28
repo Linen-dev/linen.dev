@@ -39,7 +39,6 @@ export function NavBar(
                 communityName={communityName}
                 key={c.channelName}
                 path={`/c/${c.channelName}`}
-                // href={`/s/${communityName}/c/${c.channelName}`}
                 passHref
               >
                 <Text

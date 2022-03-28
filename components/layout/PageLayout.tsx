@@ -74,7 +74,12 @@ function PageLayout({
           }}
         >
           <div className="hidden sm:flex w-full">
-            <SearchBar channels={channels} users={users} />
+            <SearchBar
+              channels={channels}
+              users={users}
+              communityName={communityName}
+              isSubDomainRouting={isSubDomainRouting}
+            />
           </div>
           <a
             className="hidden sm:block md:block"
@@ -119,7 +124,12 @@ function PageLayout({
         </div>
       </Header>
       <div className="pt-3 sm:hidden w-full">
-        <SearchBar channels={channels} users={users} />
+        <SearchBar
+          channels={channels}
+          users={users}
+          communityName={communityName}
+          isSubDomainRouting={isSubDomainRouting}
+        />
       </div>
       <SEO
         image={undefined}
