@@ -54,13 +54,35 @@ npx prisma migrate dev
 
 ## Getting Started
 
-First, run the development server:
+You can run development server locally:
 
 ```bash
 npm run dev
 ```
 
+or in the Docker container. But first you have to build the container image:
+
+```bash
+docker-compose --profile app build
+```
+
+and then run it (run `docker-compose down` if you have run previously to start database):
+
+```bash
+docker-compose --profile app up -d
+```
+
+It will run PostgreSQL database together with web application (using [profiles with Compose](https://docs.docker.com/compose/profiles/) feature).
+Changes on the host, like saving a code file, immediately affect the container causing an incremental build
+and a hot reload in the browser.
+
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+To stop the containerized application run:
+
+```bash
+docker-compose down -d
+```
 
 You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
 
