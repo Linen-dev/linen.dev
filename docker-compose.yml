@@ -30,6 +30,37 @@ services:
       - PGADMIN_LISTEN_PORT=80
     volumes:
       - pgadmin:/var/lib/pgadmin
+    depends_on:
+      - db
+
+  app:
+    build:
+      context: .
+      target: deps
+    container_name: linendev_app
+    environment:
+      - DATABASE_URL=postgresql://linendev:linendev@db/linendev
+      - SENTRY_DSN=${SENTRY_DSN}
+      - SENTRY_AUTH_TOKEN=${SENTRY_AUTH_TOKEN}
+      - SLACK_CLIENT_ID=${SLACK_CLIENT_ID}
+      - SLACK_CLIENT_SECRET=${SLACK_CLIENT_SECRET}
+    volumes:
+      # This bind mount allows changes on the host file system to affect the container.
+      # Saving a code file can cause an incremental build, a hot reload in the browser,
+      # and a reconnection of the debugger.
+      # The mount is in delegated mode:
+      # Changes on the host, like saving a code file, immediately affect the container.
+      # Changes within the container, like build output, make their way back to the host,
+      # but are not strictly synchronized.
+      # Exclude node_modules (we want to use node_modules build within container
+      - .:/app:delegated
+      - /app/node_modules
+    ports:
+      - 3000:3000
+    command: npm run dev
+    depends_on:
+      - db
+    profiles: ['app']
 
 volumes:
   pgdata:
