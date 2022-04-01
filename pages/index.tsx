@@ -1,5 +1,6 @@
 import type { NextPage } from 'next';
 import linenExamplePage from '../public/linen-example-page.png';
+import ycLogo from '../public/yc-logo.png';
 import Image from 'next/image';
 
 import { Popover } from '@headlessui/react';
@@ -82,6 +83,13 @@ const Home: NextPage = () => {
                 Live demo
               </a>
             </div>
+          </div>
+          <div className="max-w-5xl mx-auto px-4 flex justify-center mt-5">
+            <p className="px-2">
+              Backed by <b>Y Combinator</b>
+            </p>
+
+            <Image src={ycLogo} width="25" height="25" />
           </div>
         </div>
 
