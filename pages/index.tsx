@@ -1,4 +1,7 @@
 import type { NextPage } from 'next';
+import linenExamplePage from '../public/linen-example-page.png';
+import Image from 'next/image';
+
 import { Popover } from '@headlessui/react';
 import Link from 'next/link';
 import MenuIcon from '@heroicons/react/solid/MenuIcon';
@@ -80,12 +83,19 @@ const Home: NextPage = () => {
             </div>
           </div>
         </div>
-        <div className="flex flex-col items-center mt-10 mb-5">
+
+        <div className="flex justify-center my-20 shadow-lg">
+          <Image className="rounded-md" src={linenExamplePage} />
+        </div>
+
+        {/* Featured Communities */}
+        <div className="flex flex-col items-center mt-10">
           <h1 className="text-2xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-4xl">
             Featured Communities
           </h1>
         </div>
 
+        {/* <div className="mt-10 mx-auto max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28"> */}
         <div className="flex flex-col md:grid md:grid-cols-2 lg:grid-cols-3 gap-3 mt-10">
           <CommunityCard
             url="https://osquery.fleetdm.com"
