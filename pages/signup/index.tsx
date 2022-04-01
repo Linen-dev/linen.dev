@@ -9,11 +9,19 @@ enum Step {
 
 function SignUp() {
   const [step, setStep] = useState(Step.Auth);
+  const [authId, setAuthId] = useState('');
   if (step === Step.Auth) {
-    return <CreateAuthForm onSuccess={() => setStep(Step.Account)} />;
+    return (
+      <CreateAuthForm
+        onSuccess={(id: string) => {
+          setAuthId(id);
+          setStep(Step.Account);
+        }}
+      />
+    );
   }
   if (step === Step.Account) {
-    return <CreateAccountForm />;
+    return <CreateAccountForm authId={authId} />;
   }
 }
 

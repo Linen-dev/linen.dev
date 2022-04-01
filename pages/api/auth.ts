@@ -25,13 +25,20 @@ async function create(request: NextApiRequest, response: NextApiResponse) {
   }
   const salt = generateSalt();
   const hash = generateHash(password, salt);
-  await prisma.auths.create({
+  const record = await prisma.auths.create({
     data: {
       salt,
       password: hash,
       email,
     },
   });
+  return response.status(200).json({ id: record.id });
+}
+
+async function update(request: NextApiRequest, response: NextApiResponse) {
+  // TODO - validate request
+  const { id, accountId } = JSON.parse(request.body);
+  await prisma.auths.update({ where: { id }, data: { accountId } });
   return response.status(200).json({});
 }
 
@@ -41,6 +48,9 @@ export default async function handler(
 ) {
   if (request.method === 'POST') {
     return create(request, response);
+  }
+  if (request.method === 'PUT') {
+    return update(request, response);
   }
   return response.status(404);
 }

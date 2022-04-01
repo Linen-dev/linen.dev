@@ -7,6 +7,7 @@ import { SWRConfig } from 'swr';
 import { AppProps } from 'next/app';
 import Head from 'next/head';
 import { useEffect } from 'react';
+import { SessionProvider } from 'next-auth/react';
 
 export default function App(props: AppProps) {
   const router = useRouter();
@@ -34,7 +35,7 @@ export default function App(props: AppProps) {
   }, [router]);
 
   return (
-    <>
+    <SessionProvider>
       <Head>
         <title>Page title</title>
         <meta
@@ -46,6 +47,6 @@ export default function App(props: AppProps) {
       <SWRConfig>
         <Component {...pageProps} />
       </SWRConfig>
-    </>
+    </SessionProvider>
   );
 }

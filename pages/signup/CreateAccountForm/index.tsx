@@ -7,30 +7,46 @@ import styles from './index.module.css';
 
 const REDIRECT_URI = 'https://linen.dev/api/oauth';
 
-export default function CreateAccountForm() {
-  const onSubmit = (event: any) => {
+interface Props {
+  authId: string;
+}
+
+export default function CreateAccountForm({ authId }: Props) {
+  const onSubmit = async (event: any) => {
     event.preventDefault();
     const form = event.target;
     const homeUrl = form.homeUrl.value;
     const docsUrl = form.docsUrl.value;
     const redirectDomain = form.redirectDomain.value;
     const brandColor = form.brandColor.value;
-    fetch('/api/accounts', {
+    const response = await fetch('/api/accounts', {
       method: 'POST',
-      body: JSON.stringify({ homeUrl, docsUrl, redirectDomain, brandColor }),
-    })
-      .then((response) => response.json())
-      .then((account) => {
-        window.location.href =
-          'https://slack.com/oauth/v2/' +
-          'authorize?client_id=1250901093238.3006399856353&' +
-          '&scope=channels:history,channels:join,channels:read,incoming-webhook,reactions:read,users:read,team:read' +
-          '&user_scope=channels:history,search:read' +
-          '&state=' +
-          account.id +
-          '&redirect_uri=' +
-          REDIRECT_URI;
-      });
+      body: JSON.stringify({
+        authId,
+        homeUrl,
+        docsUrl,
+        redirectDomain,
+        brandColor,
+      }),
+    });
+    const account = await response.json();
+    const response2 = await fetch('/api/auth', {
+      method: 'PUT',
+      body: JSON.stringify({
+        id: authId,
+        accountId: account.id,
+      }),
+    });
+    await response2.json();
+    window.location.href =
+      'https://slack.com/oauth/v2/' +
+      'authorize?client_id=1250901093238.3006399856353&' +
+      '&scope=channels:history,channels:join,channels:read,incoming-webhook,reactions:read,users:read,team:read' +
+      '&user_scope=channels:history,search:read' +
+      '&state=' +
+      account.id +
+      '&redirect_uri=' +
+      REDIRECT_URI;
   };
 
   return (

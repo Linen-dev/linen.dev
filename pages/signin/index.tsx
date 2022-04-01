@@ -17,7 +17,10 @@ export default function SignIn({ csrfToken, error }: Props) {
   return (
     <Layout header="Sign In">
       <Error error={error} />
-      <form method="post" action="/api/auth/callback/credentials">
+      <form
+        method="post"
+        action="/api/auth/callback/credentials?callbackUrl=/settings"
+      >
         <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
         <Field>
           <Label htmlFor="email">Email</Label>

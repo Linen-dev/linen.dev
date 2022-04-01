@@ -3,7 +3,6 @@ import request from 'superagent';
 import { fetchTeamInfo } from '../../fetch_all_conversations';
 import {
   createSlackAuthorization,
-  findOrCreateAccount,
   updateAccount,
   updateAccountRedirectDomain,
 } from '../../lib/models';
