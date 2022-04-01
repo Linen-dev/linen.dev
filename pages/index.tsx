@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { Popover } from '@headlessui/react';
 import Link from 'next/link';
 import MenuIcon from '@heroicons/react/solid/MenuIcon';
+import FadeIn from '../components/FadeIn';
 
 const Home: NextPage = () => {
   return (
@@ -85,7 +86,9 @@ const Home: NextPage = () => {
         </div>
 
         <div className="flex justify-center my-20 shadow-lg">
-          <Image className="rounded-md" src={linenExamplePage} />
+          <FadeIn delay={200}>
+            <Image className="rounded-md" src={linenExamplePage} />
+          </FadeIn>
         </div>
 
         {/* Featured Communities */}
