@@ -7,10 +7,15 @@ import { Popover } from '@headlessui/react';
 import Link from 'next/link';
 import MenuIcon from '@heroicons/react/solid/MenuIcon';
 import FadeIn from '../components/FadeIn';
+import Head from 'next/head';
 
 const Home: NextPage = () => {
   return (
     <div className="mb-10">
+      <Head>
+        <title>Linen | Front page for your Slack and Discord Communities</title>
+      </Head>
+
       <Popover className="relative bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="flex justify-between items-center border-b-2 border-gray-100 py-6 md:justify-start md:space-x-10">
@@ -84,11 +89,10 @@ const Home: NextPage = () => {
               </a>
             </div>
           </div>
-          <div className="max-w-5xl mx-auto px-4 flex justify-center mt-5">
+          <div className="max-w-5xl mx-auto px-4 flex justify-center mt-8">
             <p className="px-2">
               Backed by <b>Y Combinator</b>
             </p>
-
             <Image src={ycLogo} width="25" height="25" />
           </div>
         </div>
@@ -106,7 +110,6 @@ const Home: NextPage = () => {
           </h1>
         </div>
 
-        {/* <div className="mt-10 mx-auto max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28"> */}
         <div className="flex flex-col md:grid md:grid-cols-2 lg:grid-cols-3 gap-3 mt-10">
           <CommunityCard
             url="https://osquery.fleetdm.com"
