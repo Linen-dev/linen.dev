@@ -84,6 +84,7 @@ const Home: NextPage = () => {
                 href="https://osquery.fleetdm.com"
                 className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 md:py-4 md:text-lg md:px-10"
                 target="_blank"
+                rel="noreferrer"
               >
                 Live demo
               </a>
@@ -155,7 +156,7 @@ const Home: NextPage = () => {
           <p>
             Linen is free to set up and install. Once you go through the 10
             minute setup process and wait for the syncing you will be able to
-            make your community's Slack threads free of charge.
+            make your community&apos;s Slack threads free of charge.
           </p>
           <LandingH2>
             Generate organic content for your website and domain
@@ -170,7 +171,7 @@ const Home: NextPage = () => {
           <LandingH2>Scale your community and reduce support burden</LandingH2>
           <p>
             Slack communities are great for chatting and engaging but over time
-            the become overwelming. As a community grows so does the number of
+            they become overwelming. As a community grows so does the number of
             repeat questions. As previously a former open source maintainer I
             wanted to minimize the number of repeat questions and encourage the
             community to search.
@@ -211,7 +212,7 @@ const CommunityCard = ({
 }) => {
   return (
     <div className="min-width-sm px-2 border border-solid rounded border-slate-200 hover:bg-blue-600 hover:text-white">
-      <a href={url} target="_blank">
+      <a href={url} target="_blank" rel="noreferrer">
         <div className="px-2 py-2">
           <p>{communityName}</p>
           <p>{description}</p>

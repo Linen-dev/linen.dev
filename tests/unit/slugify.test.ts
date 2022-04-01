@@ -7,7 +7,6 @@ describe('slugify', () => {
     expect(createSlug(' something space  ')).toEqual('something-space');
   });
   it('removes emojis', () => {
-    console.log(createSlug('something 😉 space '));
     expect(createSlug('something 😉 space ')).toEqual('something-space');
   });
   it('replaces underscores', () => {

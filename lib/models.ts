@@ -199,19 +199,6 @@ export const findOrCreateThread = async (thread: Thread) => {
   });
 };
 
-export const findOrCreateAccount = async (
-  accounts: Prisma.accountsCreateInput
-) => {
-  return await prisma.accounts.upsert({
-    where: {
-      //TODO: Make sure slackTeamID exists
-      slackTeamId: accounts.slackTeamId!,
-    },
-    update: accounts,
-    create: accounts,
-  });
-};
-
 export const updateAccount = async (
   accountId: string,
   account: Prisma.accountsUpdateInput

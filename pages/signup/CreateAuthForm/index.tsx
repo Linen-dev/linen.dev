@@ -6,7 +6,7 @@ import Field from '../../../components/Field';
 import Button from '../../../components/Button';
 
 interface Props {
-  onSuccess: () => void;
+  onSuccess: (authId: string) => void;
 }
 
 export default function CreateAuthForm({ onSuccess }: Props) {
@@ -26,11 +26,11 @@ export default function CreateAuthForm({ onSuccess }: Props) {
       body: JSON.stringify({ email, password }),
     })
       .then((response) => response.json())
-      .then(({ error }) => {
+      .then(({ id, error }) => {
         if (error) {
           return alert(error);
         }
-        return onSuccess();
+        return onSuccess(id);
       })
       .catch(() => {
         alert('Something went wrong. Please try again.');
