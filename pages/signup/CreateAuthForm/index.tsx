@@ -4,7 +4,15 @@ import PasswordField from '../../../components/PasswordField';
 import Button from '../../../components/Button';
 
 interface Props {
-  onSuccess: (authId: string) => void;
+  onSuccess: ({
+    authId,
+    email,
+    password,
+  }: {
+    authId: string;
+    email: string;
+    password: string;
+  }) => void;
 }
 
 export default function CreateAuthForm({ onSuccess }: Props) {
@@ -28,7 +36,7 @@ export default function CreateAuthForm({ onSuccess }: Props) {
         if (error) {
           return alert(error);
         }
-        return onSuccess(id);
+        return onSuccess({ authId: id, email, password });
       })
       .catch(() => {
         alert('Something went wrong. Please try again.');
