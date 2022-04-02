@@ -144,20 +144,22 @@ const Home: NextPage = () => {
         </div>
 
         <div className="grid grid-col-1 gap-3 mx-auto text-gray-700 prose prose-lg max-w-4xl mt-10">
-          <LandingH2>What does Linen do?</LandingH2>
+          <LandingH2>Make your Slack threads Google searchable</LandingH2>
           <p>
             Linen syncs all your threads in your public Slack channels and
             threads to linen.dev/s/your_slack_workspace_name. This makes your
             Slack contents available for your community members without
             requiring a login.
           </p>
-          <LandingH2>What does it cost to use Linen?</LandingH2>
+          <LandingH2>Free to setup and use</LandingH2>
           <p>
             Linen is free to set up and install. Once you go through the 10
             minute setup process and wait for the syncing you will be able to
             make your community's Slack threads free of charge.
           </p>
-          <LandingH2>What does the paid edition include?</LandingH2>
+          <LandingH2>
+            Generate organic content for your website and domain
+          </LandingH2>
           <p>
             The paid edition puts Linen behind your subdomain where you can
             generate organic SEO friendly content that is relevant for your
@@ -165,13 +167,20 @@ const Home: NextPage = () => {
             give all the SEO benefits. You also will be able to customize your
             Linen page with your custom logo and branding.
           </p>
-          <LandingH2>Why did you build Linen?</LandingH2>
+          <LandingH2>Scale your community and reduce support burden</LandingH2>
           <p>
             Slack communities are great for chatting and engaging but over time
             the become overwelming. As a community grows so does the number of
             repeat questions. As previously a former open source maintainer I
             wanted to minimize the number of repeat questions and encourage the
             community to search.
+          </p>
+          <LandingH2>A better experience for your community</LandingH2>
+          <p>
+            Linen is a great way to make your Slack content more discoverable.
+            No longer do you need to login to your Slack workspace to view your
+            community's content. You can link specific conversations in github
+            issues without requiring a sign in to get the context of the issue.
           </p>
         </div>
       </main>
