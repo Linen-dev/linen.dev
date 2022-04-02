@@ -7,9 +7,11 @@ const REDIRECT_URI = 'https://linen.dev/api/oauth';
 
 interface Props {
   authId: string;
+  email: string;
+  password: string;
 }
 
-export default function CreateAccountForm({ authId }: Props) {
+export default function CreateAccountForm({ authId, email, password }: Props) {
   const onSubmit = async (event: any) => {
     event.preventDefault();
     const form = event.target;
@@ -31,7 +33,8 @@ export default function CreateAccountForm({ authId }: Props) {
     const response2 = await fetch('/api/auth', {
       method: 'PUT',
       body: JSON.stringify({
-        id: authId,
+        email,
+        password,
         accountId: account.id,
       }),
     });

@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import prisma from '../../client';
 import { generateHash, generateSalt } from '../../utilities/password';
+import { getSession } from 'next-auth/react';
 
 async function create(request: NextApiRequest, response: NextApiResponse) {
   const { email, password } = JSON.parse(request.body);
@@ -36,9 +37,16 @@ async function create(request: NextApiRequest, response: NextApiResponse) {
 }
 
 async function update(request: NextApiRequest, response: NextApiResponse) {
-  // TODO - validate request
-  const { id, accountId } = JSON.parse(request.body);
-  await prisma.auths.update({ where: { id }, data: { accountId } });
+  const { email, password, accountId } = JSON.parse(request.body);
+  const auth = await prisma.auths.findFirst({ where: { email } });
+  if (!auth) {
+    return response.status(400).json({});
+  }
+  const hash = generateHash(password, auth.salt);
+  if (hash !== auth.password) {
+    return response.status(400).json({});
+  }
+  await prisma.auths.update({ where: { email }, data: { accountId } });
   return response.status(200).json({});
 }
 
