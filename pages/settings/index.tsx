@@ -1,7 +1,7 @@
 import React from 'react';
 import { NextPageContext } from 'next';
 import { getSession, useSession } from 'next-auth/react';
-import CardLayout from '../../components/layout/CardLayout';
+import DashboardLayout from '../../components/layout/DashboardLayout';
 import Label from '../../components/Label';
 import TextInput from '../../components/TextInput';
 import ColorInput from '../../components/ColorInput';
@@ -42,7 +42,7 @@ export default function SettingsPage({ account }: Props) {
     };
 
     return (
-      <CardLayout header="Settings">
+      <DashboardLayout header="Settings">
         <form onSubmit={onSubmit}>
           <Field>
             <Label htmlFor="homeUrl">Home url</Label>
@@ -76,13 +76,13 @@ export default function SettingsPage({ account }: Props) {
             Submit
           </Button>
         </form>
-      </CardLayout>
+      </DashboardLayout>
     );
   }
   return (
-    <CardLayout header="Settings">
+    <DashboardLayout header="Settings">
       <h1>You are not signed in.</h1>
-    </CardLayout>
+    </DashboardLayout>
   );
 }
 
