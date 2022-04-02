@@ -1,8 +1,6 @@
 import Layout from '../../../components/layout/CardLayout';
-import Label from '../../../components/Label';
-import TextInput from '../../../components/TextInput';
-import PasswordInput from '../../../components/PasswordInput';
-import Field from '../../../components/Field';
+import TextField from '../../../components/TextField';
+import PasswordField from '../../../components/PasswordField';
 import Button from '../../../components/Button';
 
 interface Props {
@@ -40,14 +38,8 @@ export default function CreateAuthForm({ onSuccess }: Props) {
   return (
     <Layout header="Sign Up">
       <form onSubmit={onSubmit}>
-        <Field>
-          <Label htmlFor="email">Email</Label>
-          <TextInput id="email" />
-        </Field>
-        <Field>
-          <Label htmlFor="password">Password</Label>
-          <PasswordInput id="password" />
-        </Field>
+        <TextField label="Email" id="email" />
+        <PasswordField label="Password" id="password" />
         <Button type="submit" block>
           Submit
         </Button>
