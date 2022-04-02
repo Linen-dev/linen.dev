@@ -72,9 +72,7 @@ export default function SettingsPage({ account }: Props) {
             <Label htmlFor="brandColor">Brand color</Label>
             <ColorInput id="brandColor" defaultValue={account.brandColor} />
           </Field>
-          <Button type="submit" block>
-            Submit
-          </Button>
+          <Button type="submit">Submit</Button>
         </form>
       </DashboardLayout>
     );
