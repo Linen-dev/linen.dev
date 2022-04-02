@@ -2,10 +2,8 @@ import React from 'react';
 import { NextPageContext } from 'next';
 import { getSession, useSession } from 'next-auth/react';
 import DashboardLayout from '../../components/layout/DashboardLayout';
-import Label from '../../components/Label';
-import TextInput from '../../components/TextInput';
-import ColorInput from '../../components/ColorInput';
-import Field from '../../components/Field';
+import TextField from '../../components/TextField';
+import ColorField from '../../components/ColorField';
 import Button from '../../components/Button';
 import prisma from '../../client';
 import serializeAccount from '../../serializers/account';
@@ -44,34 +42,29 @@ export default function SettingsPage({ account }: Props) {
     return (
       <DashboardLayout header="Settings">
         <form onSubmit={onSubmit}>
-          <Field>
-            <Label htmlFor="homeUrl">Home url</Label>
-            <TextInput
-              placeholder="https://yourwebsite.com"
-              id="homeUrl"
-              defaultValue={account.homeUrl}
-            />
-          </Field>
-          <Field>
-            <Label htmlFor="docsUrl">Docs url</Label>
-            <TextInput
-              placeholder="https://docs.yourwebsite.com"
-              id="docsUrl"
-              defaultValue={account.docsUrl}
-            />
-          </Field>
-          <Field>
-            <Label htmlFor="redirectDomain">Redirect domain</Label>
-            <TextInput
-              placeholder="https://linen.yourwebsite.com"
-              id="redirectDomain"
-              defaultValue={account.redirectDomain}
-            />
-          </Field>
-          <Field>
-            <Label htmlFor="brandColor">Brand color</Label>
-            <ColorInput id="brandColor" defaultValue={account.brandColor} />
-          </Field>
+          <TextField
+            label="Home url"
+            placeholder="https://yourwebsite.com"
+            id="homeUrl"
+            defaultValue={account.homeUrl}
+          />
+          <TextField
+            label="Docs url"
+            placeholder="https://docs.yourwebsite.com"
+            id="docsUrl"
+            defaultValue={account.docsUrl}
+          />
+          <TextField
+            label="Redirect domain"
+            placeholder="https://linen.yourwebsite.com"
+            id="redirectDomain"
+            defaultValue={account.redirectDomain}
+          />
+          <ColorField
+            label="Brand color"
+            id="brandColor"
+            defaultValue={account.brandColor}
+          />
           <Button type="submit">Submit</Button>
         </form>
       </DashboardLayout>
