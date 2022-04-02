@@ -124,7 +124,7 @@ function Channel({
       return array;
     }, []);
 
-    const author = authors[0];
+    const author = oldestMessage.author;
 
     return (
       <li
