@@ -15,6 +15,10 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 # TODO: It’s better if we only bring in what we need. We should use the Next.js src directory which should consists
 #       entirely of files we need to build our app (see: https://nextjs.org/docs/advanced-features/src-directory)
+ARG SENTRY_DSN
+ARG SENTRY_AUTH_TOKEN
+ENV SENTRY_DSN $SENTRY_DSN
+ENV SENTRY_AUTH_TOKEN $SENTRY_AUTH_TOKEN
 RUN npm run build
 
 # Stage 3: run
