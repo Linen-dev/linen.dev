@@ -9,6 +9,7 @@ import { channels, slackThreads, users, messages } from '@prisma/client';
 import { CustomLink } from '../../../components/Link/Link';
 import { GetServerSidePropsContext } from 'next';
 import { getThreadsByCommunityName } from '../../../services/communities';
+import { isSubdomainbasedRouting } from '../../../lib/util';
 
 interface PaginationType {
   totalCount: number;
@@ -285,5 +286,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const query = context.query;
   const page = Number(query.page) || 1;
   const host = context.req.headers.host || '';
-  return await getThreadsByCommunityName(communityName, page, host);
+  const isSubDomainRouting = isSubdomainbasedRouting(host);
+  const result = await getThreadsByCommunityName(communityName, page);
+  return { props: { ...result, isSubDomainRouting } };
 }

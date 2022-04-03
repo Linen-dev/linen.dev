@@ -9,7 +9,8 @@ import Message from '../../../../../components/Message';
 import styles from './index.module.css';
 import { getThreadById } from '../../../../../services/threads';
 import { GetServerSidePropsContext } from 'next';
-import { ThreadById } from '../../../../../types/apiResponses/threads/[threadId]';
+import { ThreadByIdProp } from '../../../../../types/apiResponses/threads/[threadId]';
+import { isSubdomainbasedRouting } from '../../../../../lib/util';
 
 function Thread({
   threadId,
@@ -22,7 +23,7 @@ function Thread({
   viewCount,
   communityName,
   isSubDomainRouting,
-}: ThreadById) {
+}: ThreadByIdProp) {
   console.log({ threadId });
   if (!threadId) {
     return <div>Loading...</div>;
@@ -102,8 +103,9 @@ export default Thread;
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const threadId = context.params?.threadId as string;
   const host = context.req.headers.host || '';
+  const isSubDomainRouting = isSubdomainbasedRouting(host);
   const thread = await getThreadById(threadId, host);
   return {
-    props: thread,
+    props: { ...thread, isSubDomainRouting },
   };
 }

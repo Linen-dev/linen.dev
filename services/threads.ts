@@ -7,11 +7,7 @@ import {
   findAccountById,
   findThreadById,
 } from '../lib/models';
-import { isSubdomainbasedRouting } from '../lib/util';
-import {
-  ThreadById,
-  ThreadByIdResponse,
-} from '../types/apiResponses/threads/[threadId]';
+import { ThreadByIdResponse } from '../types/apiResponses/threads/[threadId]';
 import { users } from '@prisma/client';
 
 interface IndexProps {
@@ -46,7 +42,6 @@ export async function getThreadById(
   threadId: string,
   host: string
 ): Promise<ThreadByIdResponse> {
-  const isSubDomainRouting = isSubdomainbasedRouting(host);
   const id = parseInt(threadId);
   const thread = await findThreadById(id);
 
@@ -106,6 +101,5 @@ export async function getThreadById(
     communityName: account.slackDomain || '',
     threadUrl,
     settings,
-    isSubDomainRouting,
   };
 }

@@ -6,13 +6,11 @@ import { links } from '../constants/examples';
 export const getThreadsByCommunityName = async (
   communityName: string,
   page: number,
-  host: string,
   channelName?: string
 ) => {
   if (!communityName) {
     return { props: { statusCode: 404 } };
   }
-  const isSubDomainRouting = isSubdomainbasedRouting(host);
 
   const account = await findAccountByPath(communityName);
   if (account === null) {
@@ -47,18 +45,15 @@ export const getThreadsByCommunityName = async (
   };
 
   return {
-    props: {
-      channelId,
-      users,
-      channels,
-      communityName,
-      currentChannel: channel,
-      slackUrl: account.slackUrl,
-      settings,
-      threads,
-      pagination,
-      page,
-      isSubDomainRouting,
-    },
+    channelId,
+    users,
+    channels,
+    communityName,
+    currentChannel: channel,
+    slackUrl: account.slackUrl,
+    settings,
+    threads,
+    pagination,
+    page,
   };
 };
