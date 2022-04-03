@@ -1,7 +1,7 @@
 import { GetServerSidePropsContext } from 'next';
 import { isSubdomainbasedRouting } from '../../../../../../lib/util';
 import { getThreadById } from '../../../../../../services/threads';
-import Thread from '../index';
+import Thread from '../../../../../../components/Pages/Thread/Thread';
 
 export default Thread;
 

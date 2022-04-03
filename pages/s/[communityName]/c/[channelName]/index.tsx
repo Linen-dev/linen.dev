@@ -1,7 +1,7 @@
 import { getThreadsByCommunityName } from '../../../../../services/communities';
 import { GetServerSidePropsContext } from 'next';
 
-import Channel from '../../index';
+import Channel from '../../../../../components/Pages/Channels/Channel';
 import { isSubdomainbasedRouting } from '../../../../../lib/util';
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const communityName = context.params?.communityName as string;

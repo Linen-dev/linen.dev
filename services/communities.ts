@@ -2,6 +2,7 @@ import { findAccountByPath } from '../lib/models';
 import { index as fetchThreads } from '../services/threads';
 import { isSubdomainbasedRouting } from '../lib/util';
 import { links } from '../constants/examples';
+import { GetServerSidePropsContext } from 'next/types';
 
 export const getThreadsByCommunityName = async (
   communityName: string,
@@ -57,3 +58,21 @@ export const getThreadsByCommunityName = async (
     page,
   };
 };
+
+export async function communitiesGetServerSideProps(
+  context: GetServerSidePropsContext
+) {
+  const communityName = context.params?.communityName as string;
+  const channelName = context.params?.channelName as string;
+  const query = context.query;
+  const page = Number(query.page) || 1;
+  const host = context.req.headers.host || '';
+  const isSubDomainRouting = isSubdomainbasedRouting(host);
+
+  const result = await getThreadsByCommunityName(
+    communityName,
+    page,
+    channelName
+  );
+  return { props: { ...result, isSubDomainRouting } };
+}
