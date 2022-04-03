@@ -8,21 +8,8 @@ import Message from '../../../../../components/Message';
 
 import styles from './index.module.css';
 import { getThreadById } from '../../../../../services/threads';
-import { channels } from '@prisma/client';
 import { GetServerSidePropsContext } from 'next';
-
-type Props = {
-  threadId: string;
-  messages: any[];
-  channels: channels[];
-  currentChannel: channels;
-  slackUrl: string;
-  threadUrl: string;
-  settings: any;
-  viewCount: number;
-  communityName: string;
-  isSubDomainRouting: boolean;
-};
+import { ThreadById } from '../../../../../types/apiResponses/threads/[threadId]';
 
 function Thread({
   threadId,
@@ -35,7 +22,12 @@ function Thread({
   viewCount,
   communityName,
   isSubDomainRouting,
-}: Props) {
+}: ThreadById) {
+  console.log({ threadId });
+  if (!threadId) {
+    return <div>Loading...</div>;
+  }
+
   const elements = useMemo(() => {
     return messages
       .sort((a, b) => b.sentAt - a.sentAt)
@@ -110,5 +102,8 @@ export default Thread;
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const threadId = context.params?.threadId as string;
   const host = context.req.headers.host || '';
-  return await getThreadById(threadId, host);
+  const thread = await getThreadById(threadId, host);
+  return {
+    props: thread,
+  };
 }

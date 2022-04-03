@@ -8,5 +8,8 @@ export default Thread;
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const threadId = context.params?.threadId as string;
   const host = context.req.headers.host || '';
-  return await getThreadById(threadId, host);
+  const thread = await getThreadById(threadId, host);
+  return {
+    props: thread,
+  };
 }

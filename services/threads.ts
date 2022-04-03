@@ -8,6 +8,11 @@ import {
   findThreadById,
 } from '../lib/models';
 import { isSubdomainbasedRouting } from '../lib/util';
+import {
+  ThreadById,
+  ThreadByIdResponse,
+} from '../types/apiResponses/threads/[threadId]';
+import { users } from '@prisma/client';
 
 interface IndexProps {
   channelId: string;
@@ -37,7 +42,10 @@ export async function index({ channelId, page }: IndexProps) {
 
 // Function for getServerSideProps
 // extracted here to be resused in both /[threadId]/index and /[slug]/index
-export async function getThreadById(threadId: string, host: string) {
+export async function getThreadById(
+  threadId: string,
+  host: string
+): Promise<ThreadByIdResponse> {
   const isSubDomainRouting = isSubdomainbasedRouting(host);
   const id = parseInt(threadId);
   const thread = await findThreadById(id);
@@ -69,7 +77,10 @@ export async function getThreadById(threadId: string, host: string) {
     logoUrl: account.logoUrl || defaultSettings.logoUrl,
   };
 
-  // "https://papercups-test.slack.com/archives/C01JSB67DTJ/p1627841694000600"
+  const authors = thread.messages
+    .map((m) => m.author)
+    .filter((x) => x) as users[];
+
   const threadUrl =
     account.slackUrl +
     '/archives/' +
@@ -78,17 +89,23 @@ export async function getThreadById(threadId: string, host: string) {
     (parseFloat(thread.slackThreadTs) * 1000000).toString();
 
   return {
-    props: {
-      ...serializeThread(thread),
-      threadId,
-      currentChannel: thread.channel,
-      channels,
-      slackUrl: account.slackUrl,
-      communityName: account.slackDomain,
-      threadUrl,
-      settings,
-      viewCount: thread.viewCount,
-      isSubDomainRouting,
-    },
+    id: thread.id,
+    incrementId: thread.incrementId,
+    viewCount: thread.viewCount,
+    slug: thread.slug || '',
+    slackThreadTs: thread.slackThreadTs,
+    messageCount: thread.messageCount,
+    channelId: thread.channel.id,
+    channel: thread.channel,
+    authors: authors,
+    messages: serializeThread(thread).messages,
+    threadId,
+    currentChannel: thread.channel,
+    channels,
+    slackUrl: account.slackUrl || '',
+    communityName: account.slackDomain || '',
+    threadUrl,
+    settings,
+    isSubDomainRouting,
   };
 }
