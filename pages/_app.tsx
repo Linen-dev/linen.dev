@@ -1,4 +1,5 @@
 import '../styles/reset.css';
+import { usePostHog } from 'next-use-posthog';
 import { useRouter } from 'next/router';
 import '../nprogress.css';
 import NProgress from 'nprogress';
@@ -9,7 +10,12 @@ import Head from 'next/head';
 import { useEffect } from 'react';
 import { SessionProvider } from 'next-auth/react';
 
+const POSTHOG_API_KEY = process.env.NEXT_PUBLIC_POSTHOG_API_KEY || '';
+
 export default function App(props: AppProps) {
+  if (POSTHOG_API_KEY) {
+    usePostHog(POSTHOG_API_KEY, { api_host: 'https://app.posthog.com' });
+  }
   const router = useRouter();
 
   const { Component, pageProps } = props;
@@ -37,7 +43,7 @@ export default function App(props: AppProps) {
   return (
     <SessionProvider>
       <Head>
-        <title>Page title</title>
+        <title>Linen Community</title>
         <meta
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width"
