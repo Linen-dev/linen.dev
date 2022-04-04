@@ -9,5 +9,5 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const query = context.query;
   const page = Number(query.page) || 1;
   const result = await getThreadsByCommunityName(communityName, page);
-  return { props: { ...result, isSubDomainRouting: false } };
+  return { props: { ...result, isSubDomainRouting: true } };
 }

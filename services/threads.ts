@@ -39,8 +39,7 @@ export async function index({ channelId, page }: IndexProps) {
 // Function for getServerSideProps
 // extracted here to be resused in both /[threadId]/index and /[slug]/index
 export async function getThreadById(
-  threadId: string,
-  host: string
+  threadId: string
 ): Promise<ThreadByIdResponse> {
   const id = parseInt(threadId);
   const thread = await findThreadById(id);
