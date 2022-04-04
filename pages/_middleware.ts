@@ -3,7 +3,7 @@ import { isSubdomainbasedRouting } from '../lib/util';
 import { getCommunityName } from '../utilities/middlewareHelper';
 
 const IS_PRODUCTION = process.env.NODE_ENV === 'production';
-const PAGES = ['/signup', '/signin', '/settings'];
+const PAGES = ['/signup', '/signin', '/settings', '/forgot-password'];
 
 function isTopLevelPathname(pathname: string) {
   return (
