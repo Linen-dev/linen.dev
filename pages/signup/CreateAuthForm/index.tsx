@@ -1,5 +1,5 @@
 import Layout from '../../../components/layout/CardLayout';
-import TextField from '../../../components/TextField';
+import EmailField from '../../../components/EmailField';
 import PasswordField from '../../../components/PasswordField';
 import Button from '../../../components/Button';
 import Link from '../../../components/Link';
@@ -47,8 +47,8 @@ export default function CreateAuthForm({ onSuccess }: Props) {
   return (
     <Layout header="Sign Up">
       <form onSubmit={onSubmit}>
-        <TextField label="Email" id="email" />
-        <PasswordField label="Password" id="password" />
+        <EmailField label="Email" id="email" required />
+        <PasswordField label="Password" id="password" required />
         <Button type="submit" block>
           Submit
         </Button>

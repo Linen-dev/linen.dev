@@ -58,21 +58,25 @@ export default function CreateAccountForm({ authId, email, password }: Props) {
           label="Home url"
           placeholder="https://yourwebsite.com"
           id="homeUrl"
+          required
         />
         <TextField
           label="Docs url"
           placeholder="https://docs.yourwebsite.com"
           id="docsUrl"
+          required
         />
         <TextField
           label="Redirect domain"
           placeholder="https://linen.yourwebsite.com"
           id="redirectDomain"
+          required
         />
         <ColorField
           label="Brand color"
           id="brandColor"
           defaultValue="#1B194E"
+          required
         />
         <button className={styles.link} type="submit">
           <img
