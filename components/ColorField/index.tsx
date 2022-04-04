@@ -7,13 +7,19 @@ interface Props {
   label: string;
   id: string;
   defaultValue?: string;
+  required?: boolean;
 }
 
-export default function TextField({ label, id, defaultValue }: Props) {
+export default function TextField({
+  label,
+  id,
+  defaultValue,
+  required,
+}: Props) {
   return (
     <Field>
       <Label htmlFor={id}>{label}</Label>
-      <ColorInput id={id} defaultValue={defaultValue} />
+      <ColorInput id={id} defaultValue={defaultValue} required={required} />
     </Field>
   );
 }
