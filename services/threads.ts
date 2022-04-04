@@ -36,7 +36,6 @@ export async function index({ channelId, page }: IndexProps) {
   };
 }
 
-// Function for getServerSideProps
 // extracted here to be resused in both /[threadId]/index and /[slug]/index
 export async function getThreadById(
   threadId: string
