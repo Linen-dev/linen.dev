@@ -1,6 +1,5 @@
 import { getThreadsByCommunityName } from '../../../../../services/communities';
 import { GetServerSidePropsContext } from 'next';
-
 import Channel from '../../../../../components/Pages/Channels/Channel';
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const communityName = context.params?.communityName as string;

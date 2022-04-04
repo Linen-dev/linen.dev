@@ -102,7 +102,11 @@ export default function Channel({
 
   const handlePageClick = ({ selected }: { selected: number }) => {
     const newPage = selected + 1;
-    window.history.pushState({}, '', `?page=${newPage}`);
+    window.history.pushState(
+      {},
+      '',
+      `/c/${currentChannel.channelName}/${newPage}`
+    );
     setCurrentPage(newPage);
   };
 
