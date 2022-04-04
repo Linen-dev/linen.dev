@@ -21,7 +21,7 @@ export default function Thread({
   isSubDomainRouting,
 }: ThreadByIdProp) {
   if (!threadId) {
-    return <div>Loading...</div>;
+    return <div></div>;
   }
 
   const elements = useMemo(() => {

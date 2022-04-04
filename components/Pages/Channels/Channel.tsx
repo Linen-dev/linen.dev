@@ -50,7 +50,7 @@ export default function Channel({
   isSubDomainRouting,
 }: Props) {
   if (!threads) {
-    return <div>Loading...</div>;
+    return <div></div>;
   }
   const [currentThreads, setCurrentThreads] = useState(threads);
   const [pageCount, setPageCount] = useState(pagination?.pageCount);
