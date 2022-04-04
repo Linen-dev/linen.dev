@@ -6,7 +6,6 @@ import Avatar, { Size } from '../../components/Avatar';
 import Message from '../Message';
 import Autocomplete from '../Autocomplete';
 import { messages, channels, users, slackThreads } from '@prisma/client';
-import { CustomLink } from '../Link/Link';
 
 const Suggestion = styled.div({
   cursor: 'pointer',

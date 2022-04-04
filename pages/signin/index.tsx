@@ -2,6 +2,7 @@ import Layout from '../../components/layout/CardLayout';
 import TextField from '../../components/TextField';
 import PasswordField from '../../components/PasswordField';
 import Button from '../../components/Button';
+import Link from '../../components/Link';
 import { getCsrfToken } from 'next-auth/react';
 import type { NextPageContext } from 'next';
 import Error from './Error';
@@ -26,6 +27,9 @@ export default function SignIn({ csrfToken, error }: Props) {
           Submit
         </Button>
       </form>
+      <p className="text-sm pt-3">
+        Don't have an account? <Link href="/signup">Sign up!</Link>
+      </p>
     </Layout>
   );
 }

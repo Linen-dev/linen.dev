@@ -6,7 +6,7 @@ import { format } from 'timeago.js';
 import PageLayout from '../../layout/PageLayout';
 import Message from '../../Message';
 import { channels, slackThreads, users, messages } from '@prisma/client';
-import { CustomLink } from '../../Link/Link';
+import CustomLink from '../../Link/CustomLink';
 
 export interface PaginationType {
   totalCount: number;
