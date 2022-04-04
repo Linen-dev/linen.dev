@@ -1,18 +1,16 @@
-import { getThreadsByCommunityName } from '../../../../../services/communities';
-import { GetServerSidePropsContext } from 'next';
-
+import { GetStaticPropsContext } from 'next/types';
 import Channel from '../../../../../components/Pages/Channels/Channel';
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const communityName = context.params?.communityName as string;
-  const channelName = context.params?.channelName as string;
-  const query = context.query;
-  const page = Number(query.page) || 1;
+import { channelGetStaticProps } from '../../../../../services/communities';
 
-  const result = await getThreadsByCommunityName(
-    communityName,
-    page,
-    channelName
-  );
-  return { props: { ...result, isSubDomainRouting: true } };
+export async function getStaticProps(context: GetStaticPropsContext) {
+  return channelGetStaticProps(context, true);
 }
+
+export function getStaticPaths() {
+  return {
+    paths: [],
+    fallback: true,
+  };
+}
+
 export default Channel;

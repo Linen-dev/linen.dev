@@ -1,8 +1,7 @@
 import { findAccountByPath } from '../lib/models';
 import { index as fetchThreads } from '../services/threads';
-import { isSubdomainbasedRouting } from '../lib/util';
 import { links } from '../constants/examples';
-import { GetServerSidePropsContext, GetStaticPropsContext } from 'next/types';
+import { GetStaticPropsContext } from 'next/types';
 
 export const getThreadsByCommunityName = async (
   communityName: string,
