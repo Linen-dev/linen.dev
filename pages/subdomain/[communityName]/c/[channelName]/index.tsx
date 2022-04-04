@@ -13,6 +13,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     page,
     channelName
   );
-  return { props: { ...result, isSubDomainRouting: false } };
+  return { props: { ...result, isSubDomainRouting: true } };
 }
 export default Channel;

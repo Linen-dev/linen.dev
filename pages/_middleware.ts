@@ -24,7 +24,7 @@ export default function middleware(req: NextRequest) {
     !pathname.startsWith('/robots.txt') &&
     communityName !== ''
   ) {
-    url.pathname = `/s/${communityName}${pathname}`;
+    url.pathname = `/subdomain/${communityName}${pathname}`;
     return NextResponse.rewrite(url);
   }
 }

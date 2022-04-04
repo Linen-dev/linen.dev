@@ -8,6 +8,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const threadId = context.params?.threadId as string;
   const thread = await getThreadById(threadId);
   return {
-    props: { ...thread, isSubDomainRouting: false },
+    props: { ...thread, isSubDomainRouting: true },
   };
 }
