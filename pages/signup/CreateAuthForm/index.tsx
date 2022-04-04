@@ -2,6 +2,7 @@ import Layout from '../../../components/layout/CardLayout';
 import TextField from '../../../components/TextField';
 import PasswordField from '../../../components/PasswordField';
 import Button from '../../../components/Button';
+import Link from '../../../components/Link';
 
 interface Props {
   onSuccess: ({
@@ -52,6 +53,9 @@ export default function CreateAuthForm({ onSuccess }: Props) {
           Submit
         </Button>
       </form>
+      <p className="text-sm pt-3">
+        Already have an account? <Link href="/signin">Sign in!</Link>
+      </p>
     </Layout>
   );
 }

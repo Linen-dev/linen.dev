@@ -1,6 +1,6 @@
 import { Navbar, Group, Title, Text, Paper } from '@mantine/core';
 import { channels } from '@prisma/client';
-import { CustomLink } from '../Link/Link';
+import CustomLink from '../Link/CustomLink';
 
 export function NavBar(
   channels: any,
