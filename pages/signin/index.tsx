@@ -27,9 +27,15 @@ export default function SignIn({ csrfToken, error }: Props) {
           Submit
         </Button>
       </form>
-      <p className="text-sm pt-3">
-        Don't have an account? <Link href="/signup">Sign up!</Link>
-      </p>
+      <div className="text-sm">
+        <p className="py-3">
+          Don't have an account? <Link href="/signup">Sign up!</Link>
+          <br />
+        </p>
+        <p>
+          <Link href="/forgot-password">Forgot your password?</Link>
+        </p>
+      </div>
     </Layout>
   );
 }
