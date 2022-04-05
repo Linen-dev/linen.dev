@@ -75,7 +75,7 @@ function PageLayout({
             />
           </div>
           <a
-            className="hidden sm:block md:block"
+            className="hidden sm:block md:block pt-1"
             style={{ color: 'white', fontWeight: 500, marginRight: '24px' }}
             rel="noreferrer"
             target="_blank"
@@ -84,7 +84,7 @@ function PageLayout({
             Home
           </a>
           <a
-            className="hidden sm:block"
+            className="hidden sm:block pt-1"
             style={{ color: 'white', fontWeight: 500, marginRight: '24px' }}
             rel="noreferrer"
             target="_blank"
