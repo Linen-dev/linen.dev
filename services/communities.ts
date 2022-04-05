@@ -1,4 +1,8 @@
-import { accountsWithChannels, findAccountByPath } from '../lib/models';
+import {
+  accountsWithChannels,
+  channelsGroupByThreadCount,
+  findAccountByPath,
+} from '../lib/models';
 import { index as fetchThreads } from '../services/threads';
 import { links } from '../constants/examples';
 import { GetStaticPropsContext } from 'next/types';
@@ -22,12 +26,31 @@ export const getThreadsByCommunityName = async (
   const defaultChannel = account.channels.find(
     (c) => c.channelName === defaultChannelName
   );
+
   const channel = defaultChannel || channels[0];
 
   const channelId = channel.id;
 
-  const { data, pagination } = await fetchThreads({ channelId, page: 1 });
+  const [threadsReponse, channelsResponse] = await Promise.all([
+    fetchThreads({ channelId, page: 1 }),
+    channelsGroupByThreadCount(),
+  ]);
+
+  const { data, pagination } = threadsReponse;
   let { threads } = data;
+
+  //Filter out channels with less than 10 threads
+  const channelsWithMinThreads = channels.filter((c) => {
+    if (c.id === channel.id) {
+      return true;
+    }
+
+    const channelCount = channelsResponse.find((r) => {
+      return r.channelId === c.id;
+    });
+
+    return channelCount && channelCount._count.id > 10;
+  });
 
   threads = threads.filter((t) => t.messages.length > 0);
   const users = threads
@@ -47,7 +70,7 @@ export const getThreadsByCommunityName = async (
   return {
     channelId,
     users,
-    channels,
+    channels: channelsWithMinThreads,
     communityName,
     currentChannel: channel,
     slackUrl: account.slackUrl,
