@@ -92,6 +92,15 @@ export const findAccountById = async (accountId: string) => {
   });
 };
 
+export const accountsWithSlackDomain = async () => {
+  return prisma.accounts.findMany({
+    select: { slackDomain: true, redirectDomain: true },
+    where: {
+      NOT: [{ slackTeamId: null }],
+    },
+  });
+};
+
 export const updateSlackThread = async (
   id: string,
   thread: Prisma.slackThreadsUpdateInput

@@ -1,4 +1,4 @@
-import { findAccountByPath } from '../lib/models';
+import { accountsWithSlackDomain, findAccountByPath } from '../lib/models';
 import { index as fetchThreads } from '../services/threads';
 import { links } from '../constants/examples';
 import { GetStaticPropsContext } from 'next/types';
@@ -77,5 +77,28 @@ export async function channelGetStaticProps(
       isSubDomainRouting: isSubdomainbasedRouting,
     },
     revalidate: 60, // In seconds
+  };
+}
+
+export async function channelGetStaticPaths() {
+  console.log('running here');
+  const accounts = await accountsWithSlackDomain();
+  let paths = accounts
+    .map((a) => {
+      return a.redirectDomain;
+    })
+    .filter((x) => x);
+
+  paths.concat(
+    accounts
+      .map((a) => {
+        return a.slackDomain;
+      })
+      .filter((x) => x)
+  );
+
+  return {
+    paths,
+    fallback: true,
   };
 }
