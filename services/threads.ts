@@ -6,6 +6,7 @@ import {
   channelIndex,
   findAccountById,
   findThreadById,
+  channelsGroupByThreadCount,
 } from '../lib/models';
 import { ThreadByIdResponse } from '../types/apiResponses/threads/[threadId]';
 import { users } from '@prisma/client';
@@ -49,10 +50,24 @@ export async function getThreadById(
     };
   }
 
-  const [channels, account] = await Promise.all([
+  const [channels, account, channelsResponse] = await Promise.all([
     channelIndex(thread.channel.accountId),
     findAccountById(thread.channel.accountId),
+    channelsGroupByThreadCount(),
   ]);
+
+  //Filter out channels with less than 10 threads
+  const channelsWithMinThreads = channels.filter((c) => {
+    if (c.id === thread.channel.id) {
+      return true;
+    }
+
+    const channelCount = channelsResponse.find((r) => {
+      return r.channelId === c.id;
+    });
+
+    return channelCount && channelCount._count.id > 20;
+  });
 
   if (!account) {
     return {
@@ -94,7 +109,7 @@ export async function getThreadById(
     messages: serializeThread(thread).messages,
     threadId,
     currentChannel: thread.channel,
-    channels,
+    channels: channelsWithMinThreads,
     slackUrl: account.slackUrl || '',
     communityName: account.slackDomain || '',
     threadUrl,
