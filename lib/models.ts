@@ -168,6 +168,16 @@ export const findAccountByPath = async (path: string) => {
   });
 };
 
+//TODO figure out a way to quickly filter out channels based on accountID
+export const channelsGroupByThreadCount = async () => {
+  return await prisma.slackThreads.groupBy({
+    by: ['channelId'],
+    _count: {
+      id: true,
+    },
+  });
+};
+
 export const createManyChannel = async (
   channels: Prisma.channelsCreateManyInput
 ) => {
