@@ -1,4 +1,4 @@
-import { accountsWithSlackDomain, findAccountByPath } from '../lib/models';
+import { accountsWithChannels, findAccountByPath } from '../lib/models';
 import { index as fetchThreads } from '../services/threads';
 import { links } from '../constants/examples';
 import { GetStaticPropsContext } from 'next/types';
@@ -81,15 +81,16 @@ export async function channelGetStaticProps(
 }
 
 export async function channelGetStaticPaths(pathPrefix: string) {
-  const accounts = await accountsWithSlackDomain();
-  let paths = accounts
+  const accounts = await accountsWithChannels();
+  const acc = accounts.filter((a) => a.channels.length > 0);
+  let paths = acc
     .map((a) => {
       return a.redirectDomain;
     })
     .filter((x) => x);
 
   paths.concat(
-    accounts
+    acc
       .map((a) => {
         return a.slackDomain;
       })
