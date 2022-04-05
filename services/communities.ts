@@ -83,13 +83,13 @@ export async function channelGetStaticProps(
 export async function channelGetStaticPaths(pathPrefix: string) {
   const accounts = await accountsWithChannels();
   const acc = accounts.filter((a) => a.channels.length > 0);
-  let paths = acc
+  let redirectDomains = acc
     .map((a) => {
       return a.redirectDomain;
     })
     .filter((x) => x);
 
-  paths.concat(
+  const paths = redirectDomains.concat(
     acc
       .map((a) => {
         return a.slackDomain;
