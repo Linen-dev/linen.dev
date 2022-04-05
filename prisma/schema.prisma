@@ -80,6 +80,7 @@ model accounts {
   auths               auths[]
   users               users[]
   slackAuthorizations slackAuthorizations[]
+  @@unique([redirectDomain])
 }
 
 model auths {
