@@ -1,11 +1,8 @@
 import { Anchor, Code, Text } from '@mantine/core';
 import React from 'react';
-import Link from 'next/link';
-import styled from 'styled-components';
 import Emoji from 'react-emoji-render';
 
 const codeify = (item: string) => {
-  // console.log({item})
   const [_, inner] = item.match(/<code>(.*?)<\/code>/) || [];
   return <Code>{inner}</Code>;
 };
