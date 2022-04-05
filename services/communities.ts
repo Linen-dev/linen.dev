@@ -80,8 +80,7 @@ export async function channelGetStaticProps(
   };
 }
 
-export async function channelGetStaticPaths() {
-  console.log('running here');
+export async function channelGetStaticPaths(pathPrefix: string) {
   const accounts = await accountsWithSlackDomain();
   let paths = accounts
     .map((a) => {
@@ -98,7 +97,7 @@ export async function channelGetStaticPaths() {
   );
 
   return {
-    paths,
+    paths: paths.map((p) => `${pathPrefix}/${p}/`),
     fallback: true,
   };
 }
