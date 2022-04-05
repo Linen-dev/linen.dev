@@ -44,14 +44,18 @@ function Message({
       }
       return `<link href=${url}>${text}</link>`;
     });
+
+    // Code block didn't work because it wasn't accounting for new lines
     // Replace codeblocks
-    str = str.replace(/```(.*?)```/g, (replacedStr, code) => {
-      return `<code>${code}</code>`;
-    });
+    // str = str.replace(/```((.|\n)*)```/g, (replacedStr, code) => {
+    //   console.log({ replacedStr });
+    //   return `<code>${code}</code>`;
+    // });
+
     // Replace inline codeblocks after others are gone
-    str = str.replace(/`(.*?)`/g, (replacedStr, code) => {
-      return `<code>${code}</code>`;
-    });
+    // str = str.replace(/`(.*?)`/g, (replacedStr, code) => {
+    //   return `<code>${code}</code>`;
+    // });
     // Hack to replace at least these entities
     str = str.replace(/&gt;/g, '>');
     str = str.replace(/&lt;/g, '<');
