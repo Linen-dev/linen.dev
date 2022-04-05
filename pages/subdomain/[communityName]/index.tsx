@@ -12,5 +12,5 @@ export async function getStaticProps(context: GetStaticPropsContext) {
 }
 
 export async function getStaticPaths() {
-  return await channelGetStaticPaths();
+  return await channelGetStaticPaths('/subdomain');
 }
