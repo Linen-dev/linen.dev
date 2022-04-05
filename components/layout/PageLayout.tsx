@@ -1,4 +1,3 @@
-import { Button } from '@mantine/core';
 import { ErrorBoundary } from 'react-error-boundary';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -50,7 +49,7 @@ function PageLayout({
   return (
     <div>
       <div
-        className={'flex h-16 px-4 py-4'}
+        className={'flex h-20 px-4 py-4 items-center'}
         // Couldn't get the background color to work with tailwind custom color
         style={{ backgroundColor: settings.brandColor }}
       >
@@ -93,28 +92,22 @@ function PageLayout({
           >
             Docs
           </a>
-          <Button
-            className="hidden sm:block"
-            variant="white"
-            style={{ backgroundColor: 'white' }}
-            component="a"
+          <a
+            className="hidden sm:inline-flex items-center px-3 py-2 border border-transparent shadow-md text-sm font-medium rounded-md text-blue-500"
+            style={{ backgroundColor: 'white', minWidth: '200px' }}
             href={slackUrl}
           >
             <SlackIcon style={{ marginRight: '10px' }} />
-            Join the Conversation
-          </Button>
-          <Button
-            className="sm:hidden"
-            variant="white"
+            Join the conversation
+          </a>
+          <a
+            className="sm:hidden inline-flex items-center px-3 py-2 border border-transparent shadow-md text-sm font-medium rounded-md text-blue-500"
             style={{ backgroundColor: 'white' }}
-            component="a"
             href={slackUrl}
           >
-            <div className="px-1">
-              <SlackIcon />
-            </div>
+            <SlackIcon style={{ marginRight: '10px' }} />
             Join Slack
-          </Button>
+          </a>
         </div>
       </div>
       <div className="pt-3 sm:hidden w-full">
