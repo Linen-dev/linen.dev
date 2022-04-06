@@ -103,7 +103,18 @@ export async function channelGetStaticProps(
   };
 }
 
+const SKIP_CACHING_ON_BUILD_STEP =
+  process.env.SKIP_CACHING_ON_BUILD_STEP || false;
+
 export async function channelGetStaticPaths(pathPrefix: string) {
+  if (SKIP_CACHING_ON_BUILD_STEP) {
+    console.log('hit skip caching on build step');
+    return {
+      paths: [],
+      fallback: true,
+    };
+  }
+
   const accounts = await accountsWithChannels();
   const acc = accounts.filter((a) => a.channels.length > 0);
   let redirectDomains = acc
