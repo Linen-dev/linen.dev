@@ -1,60 +1,80 @@
 import Layout from '../../../components/layout/CardLayout';
-import Label from '../../../components/Label';
-import ColorInput from '../../../components/ColorInput';
-import TextInput from '../../../components/TextInput';
-import Field from '../../../components/Field';
+import TextField from '../../../components/TextField';
+import ColorField from '../../../components/ColorField';
 import styles from './index.module.css';
+import { sendNotification } from '../../../services/slack';
 
 const REDIRECT_URI = 'https://linen.dev/api/oauth';
 
-export default function CreateAccountForm() {
-  const onSubmit = (event: any) => {
+interface Props {
+  authId: string;
+  email: string;
+  password: string;
+}
+
+export default function CreateAccountForm({ authId, email, password }: Props) {
+  const onSubmit = async (event: any) => {
     event.preventDefault();
     const form = event.target;
     const homeUrl = form.homeUrl.value;
     const docsUrl = form.docsUrl.value;
     const redirectDomain = form.redirectDomain.value;
     const brandColor = form.brandColor.value;
-    fetch('/api/accounts', {
+    const response = await fetch('/api/accounts', {
       method: 'POST',
-      body: JSON.stringify({ homeUrl, docsUrl, redirectDomain, brandColor }),
-    })
-      .then((response) => response.json())
-      .then((account) => {
-        window.location.href =
-          'https://slack.com/oauth/v2/' +
-          'authorize?client_id=1250901093238.3006399856353&' +
-          '&scope=channels:history,channels:join,channels:read,incoming-webhook,reactions:read,users:read,team:read' +
-          '&user_scope=channels:history,search:read' +
-          '&state=' +
-          account.id +
-          '&redirect_uri=' +
-          REDIRECT_URI;
-      });
+      body: JSON.stringify({
+        authId,
+        homeUrl,
+        docsUrl,
+        redirectDomain,
+        brandColor,
+      }),
+    });
+
+    const account = await response.json();
+    const response2 = await fetch('/api/auth', {
+      method: 'PUT',
+      body: JSON.stringify({
+        email,
+        password,
+        accountId: account.id,
+      }),
+    });
+    await response2.json();
+    window.location.href =
+      'https://slack.com/oauth/v2/' +
+      'authorize?client_id=1250901093238.3006399856353&' +
+      '&scope=channels:history,channels:join,channels:read,incoming-webhook,reactions:read,users:read,team:read' +
+      '&user_scope=channels:history,search:read' +
+      '&state=' +
+      account.id +
+      '&redirect_uri=' +
+      REDIRECT_URI;
   };
 
   return (
     <Layout header="Sign Up">
       <form onSubmit={onSubmit}>
-        <Field>
-          <Label htmlFor="homeUrl">Home url</Label>
-          <TextInput placeholder="https://yourwebsite.com" id="homeUrl" />
-        </Field>
-        <Field>
-          <Label htmlFor="docsUrl">Docs url</Label>
-          <TextInput placeholder="https://docs.yourwebsite.com" id="docsUrl" />
-        </Field>
-        <Field>
-          <Label htmlFor="redirectDomain">Redirect domain</Label>
-          <TextInput
-            placeholder="https://linen.yourwebsite.com"
-            id="redirectDomain"
-          />
-        </Field>
-        <Field>
-          <Label htmlFor="brandColor">Brand color</Label>
-          <ColorInput id="brandColor" defaultValue="#1B194E" />
-        </Field>
+        <TextField
+          label="Home url"
+          placeholder="https://yourwebsite.com"
+          id="homeUrl"
+        />
+        <TextField
+          label="Docs url"
+          placeholder="https://docs.yourwebsite.com"
+          id="docsUrl"
+        />
+        <TextField
+          label="Redirect domain"
+          placeholder="https://linen.yourwebsite.com"
+          id="redirectDomain"
+        />
+        <ColorField
+          label="Brand color"
+          id="brandColor"
+          defaultValue="#1B194E"
+        />
         <button className={styles.link} type="submit">
           <img
             alt="Add to Slack"

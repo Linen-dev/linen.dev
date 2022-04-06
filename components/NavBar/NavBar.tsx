@@ -1,7 +1,6 @@
 import { Navbar, Group, Title, Text, Paper } from '@mantine/core';
 import { channels } from '@prisma/client';
-import Link from 'next/link';
-import { CustomLink } from '../Link/Link';
+import CustomLink from '../Link/CustomLink';
 
 export function NavBar(
   channels: any,
@@ -38,8 +37,7 @@ export function NavBar(
                 isSubDomainRouting={isSubDomainRouting}
                 communityName={communityName}
                 key={c.channelName}
-                path={`/c/${c.channelName}`}
-                // href={`/s/${communityName}/c/${c.channelName}`}
+                path={`/c/${c.channelName}/1`}
                 passHref
               >
                 <Text

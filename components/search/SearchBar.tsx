@@ -5,7 +5,7 @@ import { Group, Text } from '@mantine/core';
 import Avatar, { Size } from '../../components/Avatar';
 import Message from '../Message';
 import Autocomplete from '../Autocomplete';
-import { messages, channels, users } from '@prisma/client';
+import { messages, channels, users, slackThreads } from '@prisma/client';
 
 const Suggestion = styled.div({
   cursor: 'pointer',
@@ -29,9 +29,13 @@ const parseResults = (data: messages[]) => {
 const SearchBar = ({
   channels = [],
   users = [],
+  communityName,
+  isSubDomainRouting,
 }: {
   channels: channels[];
   users?: users[];
+  communityName: string;
+  isSubDomainRouting: boolean;
 }) => {
   const accountId = channels[0]?.accountId;
   const [value, setValue] = useState('');
@@ -84,9 +88,13 @@ const SearchBar = ({
 
   const handleSelect = useCallback(
     ({ slackThreads }) => {
-      router.push(
-        `/t/${slackThreads.incrementId}/${slackThreads.slug || 'topic'}`
-      );
+      let path = `/t/${slackThreads.incrementId}/${
+        slackThreads.slug || 'topic'
+      }`;
+      if (!isSubDomainRouting) {
+        path = `/s/${communityName}${path}`;
+      }
+      router.push(path);
     },
     [router]
   );
@@ -99,8 +107,6 @@ const SearchBar = ({
       resultParser={parseResults}
       renderSuggestion={renderSuggestion}
       placeholder={'Search messages'}
-      // debounce={null}
-      // limit={null}
     />
   );
 };

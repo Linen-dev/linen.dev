@@ -1,18 +1,20 @@
-import { findAccountByPath } from '../lib/models';
+import {
+  accountsWithChannels,
+  channelsGroupByThreadCount,
+  findAccountByPath,
+} from '../lib/models';
 import { index as fetchThreads } from '../services/threads';
-import { isSubdomainbasedRouting } from '../lib/util';
 import { links } from '../constants/examples';
+import { GetStaticPropsContext } from 'next/types';
 
 export const getThreadsByCommunityName = async (
   communityName: string,
   page: number,
-  host: string,
   channelName?: string
 ) => {
   if (!communityName) {
     return { props: { statusCode: 404 } };
   }
-  const isSubDomainRouting = isSubdomainbasedRouting(host);
 
   const account = await findAccountByPath(communityName);
   if (account === null) {
@@ -24,12 +26,31 @@ export const getThreadsByCommunityName = async (
   const defaultChannel = account.channels.find(
     (c) => c.channelName === defaultChannelName
   );
+
   const channel = defaultChannel || channels[0];
 
   const channelId = channel.id;
 
-  const { data, pagination } = await fetchThreads({ channelId, page: 1 });
+  const [threadsReponse, channelsResponse] = await Promise.all([
+    fetchThreads({ channelId, page: 1 }),
+    channelsGroupByThreadCount(),
+  ]);
+
+  const { data, pagination } = threadsReponse;
   let { threads } = data;
+
+  //Filter out channels with less than 10 threads
+  const channelsWithMinThreads = channels.filter((c) => {
+    if (c.id === channel.id) {
+      return true;
+    }
+
+    const channelCount = channelsResponse.find((r) => {
+      return r.channelId === c.id;
+    });
+
+    return channelCount && channelCount._count.id > 20;
+  });
 
   threads = threads.filter((t) => t.messages.length > 0);
   const users = threads
@@ -47,18 +68,60 @@ export const getThreadsByCommunityName = async (
   };
 
   return {
-    props: {
-      channelId,
-      users,
-      channels,
-      communityName,
-      currentChannel: channel,
-      slackUrl: account.slackUrl,
-      settings,
-      threads,
-      pagination,
-      page,
-      isSubDomainRouting,
-    },
+    channelId,
+    users,
+    channels: channelsWithMinThreads,
+    communityName,
+    currentChannel: channel,
+    slackUrl: account.slackUrl,
+    settings,
+    threads,
+    pagination,
+    page,
   };
 };
+
+export async function channelGetStaticProps(
+  context: GetStaticPropsContext,
+  isSubdomainbasedRouting: boolean
+) {
+  const communityName = context.params?.communityName as string;
+  const channelName = context.params?.channelName as string;
+  const page = context.params?.page as string;
+
+  const result = await getThreadsByCommunityName(
+    communityName,
+    Number(page) || 1,
+    channelName
+  );
+  return {
+    props: {
+      ...result,
+      isSubDomainRouting: isSubdomainbasedRouting,
+    },
+    revalidate: 60, // In seconds
+  };
+}
+
+export async function channelGetStaticPaths(pathPrefix: string) {
+  const accounts = await accountsWithChannels();
+  const acc = accounts.filter((a) => a.channels.length > 0);
+  let redirectDomains = acc
+    .map((a) => {
+      return a.redirectDomain;
+    })
+    .filter((x) => x);
+
+  const paths = redirectDomains.concat(
+    acc
+      .map((a) => {
+        return a.slackDomain;
+      })
+      .filter((x) => x)
+  );
+
+  return {
+    paths: paths.map((p) => `${pathPrefix}/${p}/`),
+    fallback: true,
+  };
+}

@@ -92,6 +92,15 @@ export const findAccountById = async (accountId: string) => {
   });
 };
 
+export const accountsWithChannels = async () => {
+  return prisma.accounts.findMany({
+    select: { slackDomain: true, redirectDomain: true, channels: true },
+    where: {
+      NOT: [{ slackTeamId: null }],
+    },
+  });
+};
+
 export const updateSlackThread = async (
   id: string,
   thread: Prisma.slackThreadsUpdateInput
@@ -159,6 +168,16 @@ export const findAccountByPath = async (path: string) => {
   });
 };
 
+//TODO figure out a way to quickly filter out channels based on accountID
+export const channelsGroupByThreadCount = async () => {
+  return await prisma.slackThreads.groupBy({
+    by: ['channelId'],
+    _count: {
+      id: true,
+    },
+  });
+};
+
 export const createManyChannel = async (
   channels: Prisma.channelsCreateManyInput
 ) => {
@@ -196,19 +215,6 @@ export const findOrCreateThread = async (thread: Thread) => {
     include: {
       messages: true,
     },
-  });
-};
-
-export const findOrCreateAccount = async (
-  accounts: Prisma.accountsCreateInput
-) => {
-  return await prisma.accounts.upsert({
-    where: {
-      //TODO: Make sure slackTeamID exists
-      slackTeamId: accounts.slackTeamId!,
-    },
-    update: accounts,
-    create: accounts,
   });
 };
 

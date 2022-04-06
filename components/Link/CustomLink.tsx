@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-export function CustomLink({
+export default function CustomLink({
   isSubDomainRouting,
   path,
   communityName,

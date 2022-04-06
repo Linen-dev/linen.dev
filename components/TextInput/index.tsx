@@ -7,9 +7,17 @@ interface Props {
   name?: string;
   placeholder?: string;
   required?: boolean;
+  defaultValue?: string;
 }
 
-function TextInput({ type, id, name, placeholder, required }: Props) {
+function TextInput({
+  type,
+  id,
+  name,
+  placeholder,
+  required,
+  defaultValue,
+}: Props) {
   return (
     <input
       className={styles.input}
@@ -18,6 +26,7 @@ function TextInput({ type, id, name, placeholder, required }: Props) {
       name={id || name}
       placeholder={placeholder}
       required={required}
+      defaultValue={defaultValue}
     />
   );
 }

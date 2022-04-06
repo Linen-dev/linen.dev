@@ -1,12 +1,19 @@
 import Layout from '../../../components/layout/CardLayout';
-import Label from '../../../components/Label';
-import TextInput from '../../../components/TextInput';
-import PasswordInput from '../../../components/PasswordInput';
-import Field from '../../../components/Field';
+import TextField from '../../../components/TextField';
+import PasswordField from '../../../components/PasswordField';
 import Button from '../../../components/Button';
+import Link from '../../../components/Link';
 
 interface Props {
-  onSuccess: () => void;
+  onSuccess: ({
+    authId,
+    email,
+    password,
+  }: {
+    authId: string;
+    email: string;
+    password: string;
+  }) => void;
 }
 
 export default function CreateAuthForm({ onSuccess }: Props) {
@@ -26,11 +33,11 @@ export default function CreateAuthForm({ onSuccess }: Props) {
       body: JSON.stringify({ email, password }),
     })
       .then((response) => response.json())
-      .then(({ error }) => {
+      .then(({ id, error }) => {
         if (error) {
           return alert(error);
         }
-        return onSuccess();
+        return onSuccess({ authId: id, email, password });
       })
       .catch(() => {
         alert('Something went wrong. Please try again.');
@@ -40,18 +47,15 @@ export default function CreateAuthForm({ onSuccess }: Props) {
   return (
     <Layout header="Sign Up">
       <form onSubmit={onSubmit}>
-        <Field>
-          <Label htmlFor="email">Email</Label>
-          <TextInput id="email" />
-        </Field>
-        <Field>
-          <Label htmlFor="password">Password</Label>
-          <PasswordInput id="password" />
-        </Field>
+        <TextField label="Email" id="email" />
+        <PasswordField label="Password" id="password" />
         <Button type="submit" block>
           Submit
         </Button>
       </form>
+      <p className="text-sm pt-3">
+        Already have an account? <Link href="/signin">Sign in!</Link>
+      </p>
     </Layout>
   );
 }

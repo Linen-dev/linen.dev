@@ -6,8 +6,10 @@ import {
   channelIndex,
   findAccountById,
   findThreadById,
+  channelsGroupByThreadCount,
 } from '../lib/models';
-import { isSubdomainbasedRouting } from '../lib/util';
+import { ThreadByIdResponse } from '../types/apiResponses/threads/[threadId]';
+import { users } from '@prisma/client';
 
 interface IndexProps {
   channelId: string;
@@ -35,10 +37,10 @@ export async function index({ channelId, page }: IndexProps) {
   };
 }
 
-// Function for getServerSideProps
 // extracted here to be resused in both /[threadId]/index and /[slug]/index
-export async function getThreadById(threadId: string, host: string) {
-  const isSubDomainRouting = isSubdomainbasedRouting(host);
+export async function getThreadById(
+  threadId: string
+): Promise<ThreadByIdResponse> {
   const id = parseInt(threadId);
   const thread = await findThreadById(id);
 
@@ -48,10 +50,24 @@ export async function getThreadById(threadId: string, host: string) {
     };
   }
 
-  const [channels, account] = await Promise.all([
+  const [channels, account, channelsResponse] = await Promise.all([
     channelIndex(thread.channel.accountId),
     findAccountById(thread.channel.accountId),
+    channelsGroupByThreadCount(),
   ]);
+
+  //Filter out channels with less than 10 threads
+  const channelsWithMinThreads = channels.filter((c) => {
+    if (c.id === thread.channel.id) {
+      return true;
+    }
+
+    const channelCount = channelsResponse.find((r) => {
+      return r.channelId === c.id;
+    });
+
+    return channelCount && channelCount._count.id > 20;
+  });
 
   if (!account) {
     return {
@@ -69,7 +85,10 @@ export async function getThreadById(threadId: string, host: string) {
     logoUrl: account.logoUrl || defaultSettings.logoUrl,
   };
 
-  // "https://papercups-test.slack.com/archives/C01JSB67DTJ/p1627841694000600"
+  const authors = thread.messages
+    .map((m) => m.author)
+    .filter((x) => x) as users[];
+
   const threadUrl =
     account.slackUrl +
     '/archives/' +
@@ -78,17 +97,22 @@ export async function getThreadById(threadId: string, host: string) {
     (parseFloat(thread.slackThreadTs) * 1000000).toString();
 
   return {
-    props: {
-      ...serializeThread(thread),
-      threadId,
-      currentChannel: thread.channel,
-      channels,
-      slackUrl: account.slackUrl,
-      communityName: account.slackDomain,
-      threadUrl,
-      settings,
-      viewCount: thread.viewCount,
-      isSubDomainRouting,
-    },
+    id: thread.id,
+    incrementId: thread.incrementId,
+    viewCount: thread.viewCount,
+    slug: thread.slug || '',
+    slackThreadTs: thread.slackThreadTs,
+    messageCount: thread.messageCount,
+    channelId: thread.channel.id,
+    channel: thread.channel,
+    authors: authors,
+    messages: serializeThread(thread).messages,
+    threadId,
+    currentChannel: thread.channel,
+    channels: channelsWithMinThreads,
+    slackUrl: account.slackUrl || '',
+    communityName: account.slackDomain || '',
+    threadUrl,
+    settings,
   };
 }

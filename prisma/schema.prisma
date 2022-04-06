@@ -77,9 +77,10 @@ model accounts {
   docsUrl        String?
   logoUrl        String?
 
+  auths               auths[]
   users               users[]
   slackAuthorizations slackAuthorizations[]
-  @@unique([slackTeamId])
+  @@unique([redirectDomain])
 }
 
 model auths {
@@ -88,6 +89,9 @@ model auths {
   email     String
   password  String
   salt      String
+
+  account   accounts? @relation(fields: [accountId], references: [id])
+  accountId String?
 
   @@unique([email])
 }

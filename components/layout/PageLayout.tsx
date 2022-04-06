@@ -1,4 +1,3 @@
-import { Header, Button } from '@mantine/core';
 import { ErrorBoundary } from 'react-error-boundary';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -49,35 +48,34 @@ function PageLayout({
 
   return (
     <div>
-      <Header
-        sx={() => ({
-          backgroundColor: settings.brandColor,
-          display: 'flex',
-          justifyContent: 'space-between',
-        })}
-        height={76}
-        padding="lg"
+      <div
+        className={'flex h-20 px-4 py-4 items-center'}
+        // Couldn't get the background color to work with tailwind custom color
+        style={{ backgroundColor: settings.brandColor }}
       >
         <Link href={'/'} passHref>
           <img
-            className="cursor-pointer h-full"
+            className="cursor-pointer max-h-8"
             src={logoUrl}
             alt={`${homeUrl} logo`}
           />
         </Link>
         <div
-          className="flex"
+          className="flex w-full"
           style={{
-            minWidth: '250px',
-            flex: '1 0 auto',
             justifyContent: 'flex-end',
           }}
         >
           <div className="hidden sm:flex w-full">
-            <SearchBar channels={channels} users={users} />
+            <SearchBar
+              channels={channels}
+              users={users}
+              communityName={communityName}
+              isSubDomainRouting={isSubDomainRouting}
+            />
           </div>
           <a
-            className="hidden sm:block md:block"
+            className="hidden sm:block md:block pt-1"
             style={{ color: 'white', fontWeight: 500, marginRight: '24px' }}
             rel="noreferrer"
             target="_blank"
@@ -86,7 +84,7 @@ function PageLayout({
             Home
           </a>
           <a
-            className="hidden sm:block"
+            className="hidden sm:block pt-1"
             style={{ color: 'white', fontWeight: 500, marginRight: '24px' }}
             rel="noreferrer"
             target="_blank"
@@ -94,32 +92,31 @@ function PageLayout({
           >
             Docs
           </a>
-          <Button
-            className="hidden sm:block"
-            variant="white"
-            style={{ backgroundColor: 'white' }}
-            component="a"
+          <a
+            className="hidden sm:inline-flex items-center px-3 py-2 border border-transparent shadow-md text-sm font-medium rounded-md text-blue-500"
+            style={{ backgroundColor: 'white', minWidth: '200px' }}
             href={slackUrl}
           >
             <SlackIcon style={{ marginRight: '10px' }} />
-            Join the Conversation
-          </Button>
-          <Button
-            className=" sm:hidden"
-            variant="white"
+            Join the conversation
+          </a>
+          <a
+            className="sm:hidden inline-flex items-center px-3 py-2 border border-transparent shadow-md text-sm font-medium rounded-md text-blue-500"
             style={{ backgroundColor: 'white' }}
-            component="a"
             href={slackUrl}
           >
-            <div className="px-1">
-              <SlackIcon />
-            </div>
-            Join the Conversation
-          </Button>
+            <SlackIcon style={{ marginRight: '10px' }} />
+            Join Slack
+          </a>
         </div>
-      </Header>
+      </div>
       <div className="pt-3 sm:hidden w-full">
-        <SearchBar channels={channels} users={users} />
+        <SearchBar
+          channels={channels}
+          users={users}
+          communityName={communityName}
+          isSubDomainRouting={isSubDomainRouting}
+        />
       </div>
       <SEO
         image={undefined}

@@ -163,7 +163,7 @@ export default async function handler(
   );
   console.log('syncing threads: ', messageWithThreads.length);
 
-  for (let i = 0; i < messageWithThreads.length - 1; i++) {
+  for (let i = 0; i < messageWithThreads.length; i++) {
     if (i % 10 === 0) {
       console.log(i);
     }
@@ -321,7 +321,7 @@ export async function saveMessagesSyncronous(
   channelId: string,
   users: UserMap[]
 ) {
-  for (let j = 0; j < messages.length - 1; j++) {
+  for (let j = 0; j < messages.length; j++) {
     const m = messages[j];
     let threadId: string | null;
 

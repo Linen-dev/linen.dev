@@ -1,12 +1,22 @@
-import { GetServerSidePropsContext } from 'next';
+import { GetStaticPropsContext } from 'next';
 import { getThreadById } from '../../../../../../services/threads';
-import Thread from '../index';
+import Thread from '../../../../../../components/Pages/Thread/Thread';
 
 export default Thread;
 
 //Renders the same page as /threadId
-export async function getServerSideProps(context: GetServerSidePropsContext) {
+export async function getStaticProps(context: GetStaticPropsContext) {
   const threadId = context.params?.threadId as string;
-  const host = context.req.headers.host || '';
-  return await getThreadById(threadId, host);
+  const thread = await getThreadById(threadId);
+  return {
+    props: { ...thread, isSubDomainRouting: false },
+    revalidate: 60, // In seconds
+  };
+}
+
+export function getStaticPaths() {
+  return {
+    paths: [],
+    fallback: true,
+  };
 }
