@@ -23,10 +23,8 @@ const Home: NextPage = () => {
               <Link href={'/'} passHref>
                 <img
                   className="h-8 w-auto sm:h-10 cursor-pointer"
-                  src={
-                    'https://linen-assets.s3.amazonaws.com/linen-black-logo.svg'
-                  }
-                  alt={'Linen logo'}
+                  src="https://linen-assets.s3.amazonaws.com/linen-black-logo.svg"
+                  alt="Linen logo"
                 />
               </Link>
             </div>
