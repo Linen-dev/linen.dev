@@ -2,6 +2,7 @@ import Layout from '../../../components/layout/CardLayout';
 import TextField from '../../../components/TextField';
 import ColorField from '../../../components/ColorField';
 import styles from './index.module.css';
+import { sendNotification } from '../../../services/slack';
 
 const REDIRECT_URI = 'https://linen.dev/api/oauth';
 
@@ -29,6 +30,7 @@ export default function CreateAccountForm({ authId, email, password }: Props) {
         brandColor,
       }),
     });
+
     const account = await response.json();
     const response2 = await fetch('/api/auth', {
       method: 'PUT',

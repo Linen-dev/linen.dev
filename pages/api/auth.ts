@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import prisma from '../../client';
 import { generateHash, generateSalt } from '../../utilities/password';
-import { getSession } from 'next-auth/react';
+import { sendNotification } from '../../services/slack';
 
 async function create(request: NextApiRequest, response: NextApiResponse) {
   const { email, password } = JSON.parse(request.body);
@@ -33,6 +33,7 @@ async function create(request: NextApiRequest, response: NextApiResponse) {
       email,
     },
   });
+  sendNotification('Email created: ' + email);
   return response.status(200).json({ id: record.id });
 }
 
