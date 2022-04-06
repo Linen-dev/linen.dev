@@ -97,6 +97,15 @@ async function findAccountByEmail(session?: any) {
 export async function getServerSideProps(context: NextPageContext) {
   const session = await getSession(context);
   const account = await findAccountByEmail(session);
+
+  if (!account) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: 'signup/CreateAccountForm',
+      },
+    };
+  }
   return {
     props: {
       session,

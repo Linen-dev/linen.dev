@@ -2,7 +2,6 @@ import Layout from '../../../components/layout/CardLayout';
 import TextField from '../../../components/TextField';
 import ColorField from '../../../components/ColorField';
 import styles from './index.module.css';
-import { sendNotification } from '../../../services/slack';
 
 const REDIRECT_URI = 'https://linen.dev/api/oauth';
 
@@ -53,7 +52,7 @@ export default function CreateAccountForm({ authId, email, password }: Props) {
   };
 
   return (
-    <Layout header="Sign Up">
+    <Layout header="Set up your account">
       <form onSubmit={onSubmit}>
         <TextField
           label="Home url"
