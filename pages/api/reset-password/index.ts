@@ -1,21 +1,33 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
+import prisma from '../../../client';
+import { generateHash } from '../../../utilities/password';
 
-function create(request: NextApiRequest, response: NextApiResponse) {
-  const { password, token } = JSON.parse(request.body);
+async function create(request: NextApiRequest, response: NextApiResponse) {
+  const { password, token }: { password?: string; token?: string } = JSON.parse(
+    request.body
+  );
   if (!password) {
     return response.status(400).json({ error: 'Password is required' });
   }
   if (!token) {
     return response.status(400).json({ error: 'Token is required' });
   }
-  // const token = await Token.findOne({ token });
-  // if (!token) {
-  //   return response.status(400).json({ error: 'Invalid token' });
-  // }
-  // const auth = await Auth.findOne({ _id: token.authId });
-  // const { salt } = auth
-  // const hash = await generatePassword(password, salt);
-  // Auth.updateOne({ _id: auth._id }, { password: hash });
+  const auth = await prisma.auths.findFirst({ where: { token } });
+  if (!auth) {
+    return response.status(200).json({});
+  }
+  const hash = generateHash(password, auth.salt);
+  try {
+    await prisma.auths.update({
+      where: { id: auth.id },
+      data: {
+        password: hash,
+        token: null,
+      },
+    });
+  } catch (exception) {
+    response.status(200).json({});
+  }
   return response.status(200).json({});
 }
 

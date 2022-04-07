@@ -1,6 +1,7 @@
 import Layout from '../../components/layout/CardLayout';
 import PasswordField from '../../components/PasswordField';
 import Button from '../../components/Button';
+import { NextPageContext } from 'next';
 
 interface Props {
   token: string;
@@ -41,4 +42,12 @@ export default function ResetPassword({ token }: Props) {
       </form>
     </Layout>
   );
+}
+
+export async function getServerSideProps(context: NextPageContext) {
+  return {
+    props: {
+      token: context.query.token,
+    },
+  };
 }
