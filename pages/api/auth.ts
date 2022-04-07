@@ -33,7 +33,12 @@ async function create(request: NextApiRequest, response: NextApiResponse) {
       email,
     },
   });
-  sendNotification('Email created: ' + email);
+  try {
+    await sendNotification('Email created: ' + email);
+  } catch (e) {
+    console.log('failed to send: ', e);
+  }
+
   return response.status(200).json({ id: record.id });
 }
 
