@@ -71,7 +71,7 @@ export default function Thread({
       settings={settings}
       isSubDomainRouting={isSubDomainRouting}
     >
-      <div className="px-10 py-8 shadow-md">
+      <div className="px-10 py-8">
         <ul>{elements}</ul>
 
         <div className={styles.buttons}>
