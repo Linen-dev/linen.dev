@@ -13,6 +13,7 @@ interface Settings {
   docsUrl: string;
   homeUrl: string;
   logoUrl: string;
+  googleAnalyticsId?: string;
 }
 
 interface Props {
@@ -47,6 +48,7 @@ function PageLayout({
   const homeUrl = addHttpsToUrl(settings.homeUrl);
   const docsUrl = addHttpsToUrl(settings.docsUrl);
   const logoUrl = addHttpsToUrl(settings.logoUrl);
+  const { googleAnalyticsId } = settings;
 
   return (
     <div>
@@ -156,6 +158,12 @@ function PageLayout({
           </ErrorBoundary>
         </div>
       </div>
+      {googleAnalyticsId && (
+        <script
+          async
+          src={`https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}`}
+        />
+      )}
     </div>
   );
 }
