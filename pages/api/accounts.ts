@@ -12,13 +12,30 @@ async function create(request: NextApiRequest, response: NextApiResponse) {
 }
 
 async function update(request: NextApiRequest, response: NextApiResponse) {
-  const { accountId, homeUrl, docsUrl, redirectDomain, brandColor } =
-    JSON.parse(request.body);
-  const account = await prisma.accounts.update({
+  // TODO validate that the user in current session can update this account
+  const {
+    accountId,
+    homeUrl,
+    docsUrl,
+    redirectDomain,
+    brandColor,
+    googleAnalyticsId,
+  } = JSON.parse(request.body);
+  const account = await prisma.accounts.findFirst({
     where: { id: accountId },
-    data: { homeUrl, docsUrl, redirectDomain, brandColor },
+    select: { premium: true },
   });
-  return response.status(200).json(account);
+  if (!account) {
+    return response.status(404).json({});
+  }
+  const data = account.premium
+    ? { homeUrl, docsUrl, redirectDomain, brandColor, googleAnalyticsId }
+    : { homeUrl, docsUrl, redirectDomain, brandColor };
+  const record = await prisma.accounts.update({
+    where: { id: accountId },
+    data,
+  });
+  return response.status(200).json(record);
 }
 
 export default async function handler(
