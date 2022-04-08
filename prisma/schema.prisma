@@ -78,6 +78,7 @@ model accounts {
   docsUrl        String?
   logoUrl        String?
   premium        Boolean    @default(false)
+  googleAnalyticsId String?
 
   auths               auths[]
   users               users[]
