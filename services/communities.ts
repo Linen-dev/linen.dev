@@ -65,6 +65,7 @@ export const getThreadsByCommunityName = async (
     homeUrl: account.homeUrl || defaultSettings.homeUrl,
     docsUrl: account.docsUrl || defaultSettings.docsUrl,
     logoUrl: account.logoUrl || defaultSettings.logoUrl,
+    googleAnalyticsId: account.googleAnalyticsId,
   };
 
   return {
