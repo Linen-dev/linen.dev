@@ -6,22 +6,23 @@ import TextField from '../../components/TextField';
 import ColorField from '../../components/ColorField';
 import Button from '../../components/Button';
 import prisma from '../../client';
-import serializeAccount from '../../serializers/account';
+import serializeAccount, { SerializedAccount } from '../../serializers/account';
 
 interface Props {
-  account?: any;
+  account?: SerializedAccount;
 }
 
 export default function SettingsPage({ account }: Props) {
   const { data: session } = useSession();
 
-  if (session) {
+  if (session && account) {
     const onSubmit = (event: any) => {
       event.preventDefault();
       const form = event.target;
       const homeUrl = form.homeUrl.value;
       const docsUrl = form.docsUrl.value;
       const redirectDomain = form.redirectDomain.value;
+      const googleAnalyticsId = form.googleAnalyticsId?.value;
       const brandColor = form.brandColor.value;
       fetch('/api/accounts', {
         method: 'PUT',
@@ -31,6 +32,7 @@ export default function SettingsPage({ account }: Props) {
           docsUrl,
           redirectDomain,
           brandColor,
+          googleAnalyticsId,
         }),
       })
         .then((response) => response.json())
@@ -60,6 +62,14 @@ export default function SettingsPage({ account }: Props) {
             id="redirectDomain"
             defaultValue={account.redirectDomain}
           />
+          {account.premium && (
+            <TextField
+              label="Google analytics id"
+              placeholder="UA-1-123456789-1"
+              id="googleAnalyticsId"
+              defaultValue={account.googleAnalyticsId}
+            />
+          )}
           <ColorField
             label="Brand color"
             id="brandColor"
