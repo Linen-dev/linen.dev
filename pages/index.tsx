@@ -11,7 +11,7 @@ import Head from 'next/head';
 
 const Home: NextPage = () => {
   return (
-    <div className="mb-10">
+    <div className="mb-10 pb-10">
       <Head>
         <title>Linen | Front page for your Slack and Discord Communities</title>
       </Head>
