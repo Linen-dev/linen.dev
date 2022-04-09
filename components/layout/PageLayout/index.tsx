@@ -1,11 +1,11 @@
 import { ErrorBoundary } from 'react-error-boundary';
 import Link from 'next/link';
-import SlackIcon from '../icons/SlackIcon';
-import SearchBar from '../search/SearchBar';
-import { NavBar } from '../NavBar/NavBar';
-import SEO from './SEO';
+import SlackIcon from '../../icons/SlackIcon';
+import SearchBar from '../../search/SearchBar';
+import { NavBar } from '../../NavBar/NavBar';
+import SEO from '../SEO';
 import { channels, users } from '@prisma/client';
-import { addHttpsToUrl } from '../../lib/util';
+import { addHttpsToUrl } from '../../../lib/util';
 
 interface Settings {
   brandColor: string;
