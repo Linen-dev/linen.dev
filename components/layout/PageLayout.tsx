@@ -1,6 +1,5 @@
 import { ErrorBoundary } from 'react-error-boundary';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import SlackIcon from '../icons/SlackIcon';
 import SearchBar from '../search/SearchBar';
 import { NavBar } from '../NavBar/NavBar';
@@ -41,9 +40,6 @@ function PageLayout({
   communityName,
   isSubDomainRouting,
 }: Props) {
-  const {
-    query: { channelName },
-  } = useRouter();
   const channels = navItems.channels.filter((c: channels) => !c.hidden);
   const homeUrl = addHttpsToUrl(settings.homeUrl);
   const docsUrl = addHttpsToUrl(settings.docsUrl);

@@ -42,4 +42,5 @@ export interface Settings {
   homeUrl: string;
   docsUrl: string;
   logoUrl: string;
+  googleAnalyticsId?: string;
 }
