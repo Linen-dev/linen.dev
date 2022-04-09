@@ -105,7 +105,6 @@ export default function Channel({
 
   // Todo: handle missing channels
   const channelName = channels?.find((c) => c.id === channelId)?.channelName;
-
   const handlePageClick = ({ selected }: { selected: number }) => {
     const newPage = selected + 1;
     window.history.pushState(
