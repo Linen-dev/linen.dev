@@ -3,6 +3,7 @@ import TextField from '../../../components/TextField';
 import ColorField from '../../../components/ColorField';
 import styles from './index.module.css';
 
+//Move this out to an environment variable
 const REDIRECT_URI = 'https://linen.dev/api/oauth';
 
 interface Props {
