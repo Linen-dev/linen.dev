@@ -22,6 +22,7 @@ describe('Channel', () => {
           slackUrl="https://foo.slack.com"
           users={[]}
           settings={{
+            brandColor: '#fff',
             homeUrl: 'https://foo.com',
             docsUrl: 'https://foo.com/docs',
             logoUrl: 'https://foo.com/logo.png',
