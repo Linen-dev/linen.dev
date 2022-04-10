@@ -3,8 +3,11 @@ import TextField from '../../../components/TextField';
 import ColorField from '../../../components/ColorField';
 import styles from './index.module.css';
 
-//Move this out to an environment variable
-const REDIRECT_URI = 'https://linen.dev/api/oauth';
+const REDIRECT_URI =
+  process.env.NEXT_PUBLIC_REDIRECT_URI || 'https://linen.dev/api/oauth';
+
+const SLACK_CLIENT_ID =
+  process.env.NEXT_PUBLIC_SLACK_CLIENT_ID || '1250901093238.3006399856353';
 
 interface Props {
   authId: string;
@@ -43,7 +46,7 @@ export default function CreateAccountForm({ authId, email, password }: Props) {
     await response2.json();
     window.location.href =
       'https://slack.com/oauth/v2/' +
-      'authorize?client_id=1250901093238.3006399856353&' +
+      `authorize?client_id=${SLACK_CLIENT_ID}&` +
       '&scope=channels:history,channels:join,channels:read,incoming-webhook,reactions:read,users:read,team:read' +
       '&user_scope=channels:history,search:read' +
       '&state=' +

@@ -31,8 +31,8 @@ To set up Linen's Slack app you need to follow the steps below:
 4. Create a new Slack app at https://api.slack.com/apps?new_app=1 and click `From an app manifest`
 5. Paste in the copy of manifest with your modifications
 6. Navigate to the newly created app's `Basic Information` in slack
-7. Copy `Client ID` and `Client Secret` and paste them into the `.env` file for `SLACK_CLIENT_ID` and `SLACK_CLIENT_SECRET`
-8. Set REDIRECT_URI in `CreateAccountForm` (will need to move this to env) to `https://linen-YOURNAME.ngrok.io/api/oauth`
+7. Copy `Client ID` and `Client Secret` and paste them into the `.env` file for `NEXT_PUBLIC_SLACK_CLIENT_ID` and `SLACK_CLIENT_SECRET`
+8. Set `NEXT_PUBLIC_REDIRECT_URI` to `https://linen-YOURNAME.ngrok.io/api/oauth` in .env file
 9. Start linen with `npm start` and sign up for a new account localhost:3000/signup and install the app to a workspace i.e Linen's workspace or your own custom one (Linen only shows channels with more than 20 threads so probably best to use Linen's workspace)
 10. Open up Postman or use curl and hit `localhost:3000/api/scripts/sync?account_id=7649c602-5a12-4f29-a8f6-66e288a243eb` - replace account_id with your account id - you can find the accountId in your local postgres database. This will sync all the Slack channels and threads with your Linen account.
 
@@ -172,11 +172,3 @@ Run specific test example:
 ```bash
 npm run test:integration webhook.test.ts
 ```
-
-## Local domain redirect testing
-
-1. Ask for invite for ngrock account
-2. Setup [ngrok](https://ngrok.io/)
-3. pick subdomain i.e kam-test.ngrok.io
-4. Update dev database to have the redirect url `update accounts set "redirectDomain"='kam-test.ngrok.io' where id = '9677cb41-033e-4c1a-9ae5-ef178606cad3';` - replace with your subdomain that you chose
-5. run ngrok tunnel `ngrok http --region=us --hostname=kam-test.ngrok.io 3000`
