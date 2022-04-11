@@ -70,6 +70,7 @@ model accounts {
   slackDomain    String?
   channels       channels[]
   slackTeamId    String?
+  slackInviteUrl String?
   redirectDomain String?
   slackUrl       String?
   brandColor     String?
