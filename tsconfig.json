@@ -21,5 +21,5 @@
     "@/styles/*": ["styles/*"]
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.js", "**/*.css"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "cdk"]
 }

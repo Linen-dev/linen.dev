@@ -3,7 +3,6 @@ import * as cdk from 'aws-cdk-lib';
 import * as ec2 from 'aws-cdk-lib/aws-ec2';
 import * as ecs from 'aws-cdk-lib/aws-ecs';
 import * as ecr from 'aws-cdk-lib/aws-ecr';
-import * as iam from 'aws-cdk-lib/aws-iam';
 import * as ecs_patterns from 'aws-cdk-lib/aws-ecs-patterns';
 
 export class CdkStack extends cdk.Stack {
@@ -69,7 +68,7 @@ export class CdkStack extends cdk.Stack {
     );
 
     const container = taskDefinition.addContainer('nextJSContainer', {
-      image: ecs.EcrImage.fromEcrRepository(repo, 'v1'),
+      image: ecs.EcrImage.fromEcrRepository(repo, 'v2'),
       environment: {
         NODE_ENV: 'production',
       },

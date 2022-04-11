@@ -163,3 +163,15 @@ npm run test:integration webhook.test.ts
 3. pick subdomain i.e kam-test.ngrok.io
 4. Update dev database to have the redirect url `update accounts set "redirectDomain"='kam-test.ngrok.io' where id = '9677cb41-033e-4c1a-9ae5-ef178606cad3';` - replace with your subdomain that you chose
 5. run ngrok tunnel `ngrok http --region=us --hostname=kam-test.ngrok.io 3000`
+
+## Deploy to AWS
+
+Build the production docer image of the application (note: increase the version every time you deploy the one):
+
+```bash
+dotenv -e .env -- docker build \
+  --build-arg SENTRY_DSN=$SENTRY_DSN \
+  --build-arg SENTRY_AUTH_TOKEN=$SENTRY_AUTH_TOKEN \
+  --build-arg NODE_ENV=production \
+  -t linen-dev:v2 . --no-cache
+```
