@@ -21,6 +21,7 @@ export type ThreadById = {
   authors: users[];
   channels: channels[];
   slackUrl?: string;
+  slackInviteUrl?: string;
   threadUrl: string;
   settings: Settings;
   communityName: string;
