@@ -14,6 +14,7 @@ export default function Thread({
   channels,
   currentChannel,
   slackUrl,
+  slackInviteUrl,
   threadUrl,
   settings,
   viewCount,
@@ -68,6 +69,7 @@ export default function Thread({
       currentChannel={currentChannel}
       navItems={{ channels: channels }}
       slackUrl={slackUrl}
+      slackInviteUrl={slackInviteUrl}
       settings={settings}
       isSubDomainRouting={isSubDomainRouting}
     >

@@ -111,6 +111,7 @@ export async function getThreadById(
     currentChannel: thread.channel,
     channels: channelsWithMinThreads,
     slackUrl: account.slackUrl || '',
+    slackInviteUrl: account.slackInviteUrl || '',
     communityName: account.slackDomain || '',
     threadUrl,
     settings,

@@ -22,6 +22,7 @@ interface Props {
   currentChannel: channels;
   navItems?: any;
   slackUrl?: string;
+  slackInviteUrl?: string;
   settings: Settings;
   communityName: string;
   isSubDomainRouting: boolean;
@@ -34,6 +35,7 @@ function PageLayout({
   navItems,
   currentChannel,
   slackUrl,
+  slackInviteUrl,
   settings,
   communityName,
   isSubDomainRouting,
@@ -95,7 +97,7 @@ function PageLayout({
           <a
             className="hidden sm:inline-flex items-center px-3 py-2 border border-transparent shadow-md text-sm font-medium rounded-md text-blue-500"
             style={{ backgroundColor: 'white', minWidth: '200px' }}
-            href={slackUrl}
+            href={slackInviteUrl || slackUrl}
           >
             <SlackIcon style={{ marginRight: '10px' }} />
             Join the conversation
@@ -103,7 +105,7 @@ function PageLayout({
           <a
             className="sm:hidden inline-flex items-center px-3 py-2 border border-transparent shadow-md text-sm font-medium rounded-md text-blue-500"
             style={{ backgroundColor: 'white' }}
-            href={slackUrl}
+            href={slackInviteUrl || slackUrl}
           >
             <SlackIcon style={{ marginRight: '10px' }} />
             Join Slack

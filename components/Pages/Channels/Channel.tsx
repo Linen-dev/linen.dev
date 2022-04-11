@@ -24,7 +24,8 @@ interface threads extends slackThreads {
   messages: message[];
 }
 type Props = {
-  slackUrl: string;
+  slackUrl?: string;
+  slackInviteUrl?: string;
   settings: any;
   communityName: string;
   channelId?: string;
@@ -42,6 +43,7 @@ export default function Channel({
   threads,
   channels,
   slackUrl,
+  slackInviteUrl,
   currentChannel,
   settings,
   communityName,
@@ -77,6 +79,7 @@ export default function Channel({
     return (
       <PageLayout
         slackUrl={slackUrl}
+        slackInviteUrl={slackInviteUrl}
         settings={settings}
         communityName={communityName}
         currentChannel={currentChannel}
@@ -229,6 +232,7 @@ export default function Channel({
     <PageLayout
       users={users}
       slackUrl={slackUrl}
+      slackInviteUrl={slackInviteUrl}
       currentChannel={currentChannel}
       seo={{
         title: `${communityName} questions`,
