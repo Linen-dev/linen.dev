@@ -265,7 +265,11 @@ export default function Channel({
         <ul className="divide-y sm:hidden">{rows}</ul>
       </div>
       {pageCount && (
-        <Pagination onClick={handlePageClick} pageCount={pageCount} />
+        <Pagination
+          channelName={currentChannel.channelName}
+          onClick={handlePageClick}
+          pageCount={pageCount}
+        />
       )}
     </PageLayout>
   );
