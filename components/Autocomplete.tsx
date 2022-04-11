@@ -4,7 +4,8 @@ import styled from 'styled-components';
 import { Group, Text, TextInput } from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
 import { AiOutlineSearch } from 'react-icons/ai';
-import Message from './Message';
+import Image from 'next/image';
+import spinner from '../public/spinner.svg';
 
 const MIN_QUERY_LENGTH = 3;
 
@@ -188,7 +189,14 @@ export default function Autocomplete({
               style={{ padding: '12px', textAlign: 'center', color: '#888' }}
               size="sm"
             >
-              {isSearching ? 'Searching...' : 'No results found.'}
+              {isSearching ? (
+                <div className="flex flex-row space-x-2 justify-center">
+                  <Image src={spinner} width="20" height="20" />{' '}
+                  <p>loading...</p>
+                </div>
+              ) : (
+                'No results found.'
+              )}
             </Text>
           )}
         </Group>

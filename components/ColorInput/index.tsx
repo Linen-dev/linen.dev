@@ -4,15 +4,17 @@ import styles from './index.module.css';
 interface Props {
   id: string;
   defaultValue?: string;
+  required?: boolean;
 }
 
-function ColorInput({ id, defaultValue }: Props) {
+function ColorInput({ id, defaultValue, required }: Props) {
   return (
     <input
       type="color"
       id={id}
       className={styles.input}
       defaultValue={defaultValue}
+      required={required}
     />
   );
 }

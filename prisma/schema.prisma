@@ -89,6 +89,7 @@ model auths {
   email     String
   password  String
   salt      String
+  token     String?
 
   account   accounts? @relation(fields: [accountId], references: [id])
   accountId String?

@@ -2,9 +2,12 @@ import Layout from '../../../components/layout/CardLayout';
 import TextField from '../../../components/TextField';
 import ColorField from '../../../components/ColorField';
 import styles from './index.module.css';
-import { sendNotification } from '../../../services/slack';
 
-const REDIRECT_URI = 'https://linen.dev/api/oauth';
+const REDIRECT_URI =
+  process.env.NEXT_PUBLIC_REDIRECT_URI || 'https://linen.dev/api/oauth';
+
+const SLACK_CLIENT_ID =
+  process.env.NEXT_PUBLIC_SLACK_CLIENT_ID || '1250901093238.3006399856353';
 
 interface Props {
   authId: string;
@@ -43,7 +46,7 @@ export default function CreateAccountForm({ authId, email, password }: Props) {
     await response2.json();
     window.location.href =
       'https://slack.com/oauth/v2/' +
-      'authorize?client_id=1250901093238.3006399856353&' +
+      `authorize?client_id=${SLACK_CLIENT_ID}&` +
       '&scope=channels:history,channels:join,channels:read,incoming-webhook,reactions:read,users:read,team:read' +
       '&user_scope=channels:history,search:read' +
       '&state=' +
@@ -53,27 +56,31 @@ export default function CreateAccountForm({ authId, email, password }: Props) {
   };
 
   return (
-    <Layout header="Sign Up">
+    <Layout header="Set up your account">
       <form onSubmit={onSubmit}>
         <TextField
           label="Home url"
           placeholder="https://yourwebsite.com"
           id="homeUrl"
+          required
         />
         <TextField
           label="Docs url"
           placeholder="https://docs.yourwebsite.com"
           id="docsUrl"
+          required
         />
         <TextField
           label="Redirect domain"
           placeholder="https://linen.yourwebsite.com"
           id="redirectDomain"
+          required
         />
         <ColorField
           label="Brand color"
           id="brandColor"
           defaultValue="#1B194E"
+          required
         />
         <button className={styles.link} type="submit">
           <img

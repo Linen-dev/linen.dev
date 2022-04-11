@@ -13,7 +13,7 @@ export default async function handler(
 ) {
   const code = req.query.code;
   const accountId = req.query.state as string;
-  const clientId = process.env.SLACK_CLIENT_ID;
+  const clientId = process.env.NEXT_PUBLIC_SLACK_CLIENT_ID;
   const clientSecret = process.env.SLACK_CLIENT_SECRET;
 
   const resp = await getSlackAccessToken(

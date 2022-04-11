@@ -1,5 +1,5 @@
 import Layout from '../../components/layout/CardLayout';
-import TextField from '../../components/TextField';
+import EmailField from '../../components/EmailField';
 import PasswordField from '../../components/PasswordField';
 import Button from '../../components/Button';
 import Link from '../../components/Link';
@@ -21,15 +21,21 @@ export default function SignIn({ csrfToken, error }: Props) {
         action="/api/auth/callback/credentials?callbackUrl=/settings"
       >
         <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
-        <TextField label="Email" id="email" required />
+        <EmailField label="Email" id="email" required />
         <PasswordField label="Password" id="password" required />
         <Button type="submit" block>
           Submit
         </Button>
       </form>
-      <p className="text-sm pt-3">
-        Don't have an account? <Link href="/signup">Sign up!</Link>
-      </p>
+      <div className="text-sm">
+        <p className="py-3">
+          Don't have an account? <Link href="/signup">Sign up!</Link>
+          <br />
+        </p>
+        <p>
+          <Link href="/forgot-password">Forgot your password?</Link>
+        </p>
+      </div>
     </Layout>
   );
 }
