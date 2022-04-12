@@ -44,6 +44,7 @@ services:
       - SENTRY_AUTH_TOKEN=${SENTRY_AUTH_TOKEN}
       - SLACK_CLIENT_ID=${SLACK_CLIENT_ID}
       - SLACK_CLIENT_SECRET=${SLACK_CLIENT_SECRET}
+      - SKIP_CACHING_ON_BUILD_STEP=${SKIP_CACHING_ON_BUILD_STEP}
     volumes:
       # This bind mount allows changes on the host file system to affect the container.
       # Saving a code file can cause an incremental build, a hot reload in the browser,

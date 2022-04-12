@@ -183,12 +183,56 @@ npm run test:integration webhook.test.ts
 
 ## Deploy to AWS
 
-Build the production docer image of the application (note: increase the version every time you deploy the one):
+First setup [AWS-CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) and [configure](First setup [AWS-CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) and configure it https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html
+) it for your AWS account.
+
+Increment the version for the app:
+
+```bash
+export APP_VERSION=v3
+```
+
+From the root folder of the project build the production docker image:
 
 ```bash
 dotenv -e .env -- docker build \
-  --build-arg SENTRY_DSN=$SENTRY_DSN \
-  --build-arg SENTRY_AUTH_TOKEN=$SENTRY_AUTH_TOKEN \
+  --build-arg SENTRY_DSN=<SENTRY_DSN> \
+  --build-arg SENTRY_AUTH_TOKEN=<SENTRY_AUTH_TOKEN> \
+  --build-arg SKIP_CACHING_ON_BUILD_STEP=true \
   --build-arg NODE_ENV=production \
-  -t linen-dev:v2 . --no-cache
+  -t linen-dev:${APP_VERSION} . --no-cache
+```
+
+Login your docker to AWS repository:
+
+```bash
+aws ecr get-login-password \
+--region us-east-1 | docker login \
+--username AWS \
+--password-stdin 775327867774.dkr.ecr.us-east-1.amazonaws.com
+```
+
+Tag and push the image to the AWS repository:
+
+```bash
+docker tag linen-dev:v2 775327867774.dkr.ecr.us-east-1.amazonaws.com/linen-dev:${APP_VERSION}
+docker push 775327867774.dkr.ecr.us-east-1.amazonaws.com/linen-dev:${APP_VERSION}
+```
+
+Go to `cdk` folder and run:
+
+```bash
+npm install
+```
+
+Build the deployment:
+
+```bash
+npm run build
+```
+
+Deploy the stack:
+
+```bash
+npm run cdk deploy
 ```

@@ -17,8 +17,10 @@ COPY . .
 #       entirely of files we need to build our app (see: https://nextjs.org/docs/advanced-features/src-directory)
 ARG SENTRY_DSN
 ARG SENTRY_AUTH_TOKEN
+ARG SKIP_CACHING_ON_BUILD_STEP
 ENV SENTRY_DSN $SENTRY_DSN
 ENV SENTRY_AUTH_TOKEN $SENTRY_AUTH_TOKEN
+ENV SKIP_CACHING_ON_BUILD_STEP $SKIP_CACHING_ON_BUILD_STEP
 RUN npm run build
 
 # Stage 3: run

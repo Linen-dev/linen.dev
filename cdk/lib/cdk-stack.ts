@@ -9,29 +9,6 @@ export class CdkStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    // const execRole = new iam.Role(this, 'LinenDevTaskExecutionRole-', {
-    //   assumedBy: new iam.ServicePrincipal('ecs-tasks.amazonaws.com'),
-    // });
-    // execRole.addManagedPolicy(
-    //   iam.ManagedPolicy.fromAwsManagedPolicyName(
-    //     'AmazonECSTaskExecutionRolePolicy'
-    //   )
-    // );
-    //
-    // const containerTaskRole = new iam.Role(this, 'LinenDevTaskRole-', {
-    //   assumedBy: new iam.ServicePrincipal('ecs-tasks.amazonaws.com')
-    // })
-    // containerTaskRole.addToPolicy(
-    //     new iam.PolicyStatement({
-    //       actions: ['ssm:GetParameters'],
-    //       resources: ['arn:aws:ssm:us-east-1:775327867774:parameter/linen-dev/prod/*'],
-    //     })
-    // )
-    //containerTaskRole.addManagedPolicy(iam.ManagedPolicy.fromAwsManagedPolicyName('AmazonDynamoDBFullAccess'))
-    //containerTaskRole.addManagedPolicy(iam.ManagedPolicy.fromAwsManagedPolicyName('AmazonSQSFullAccess'))
-
-    // https://stackoverflow.com/questions/61265108/aws-ecs-fargate-resourceinitializationerror-unable-to-pull-secrets-or-registry
-
     const vpc = new ec2.Vpc(this, 'fargateVpc', {
       maxAzs: 2,
     });
@@ -68,7 +45,7 @@ export class CdkStack extends cdk.Stack {
     );
 
     const container = taskDefinition.addContainer('nextJSContainer', {
-      image: ecs.EcrImage.fromEcrRepository(repo, 'v2'),
+      image: ecs.EcrImage.fromEcrRepository(repo, process.env.APP_VERSION),
       environment: {
         NODE_ENV: 'production',
       },
