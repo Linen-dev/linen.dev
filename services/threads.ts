@@ -96,6 +96,12 @@ export async function getThreadById(
     '/p' +
     (parseFloat(thread.slackThreadTs) * 1000000).toString();
 
+  const threadSlackInviteUrl =
+    account.slackInviteUrl &&
+    `${account.slackInviteUrl}/archives/${thread.channel.slackChannelId}/p${(
+      parseFloat(thread.slackThreadTs) * 1000000
+    ).toString()}`;
+
   return {
     id: thread.id,
     incrementId: thread.incrementId,

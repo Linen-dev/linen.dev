@@ -23,6 +23,7 @@ export type ThreadById = {
   slackUrl?: string;
   slackInviteUrl?: string;
   threadUrl: string;
+  threadSlackInviteUrl?: string;
   settings: Settings;
   communityName: string;
 };
