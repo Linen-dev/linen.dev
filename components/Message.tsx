@@ -6,10 +6,12 @@ function Message({
   text,
   truncate,
   author,
+  mentions,
 }: {
   text: string;
   truncate?: any;
   author: users;
+  mentions: users[];
 }) {
   const textToRender = useMemo(() => {
     let str = text;
@@ -19,7 +21,8 @@ function Message({
     }
     // Replace @mentions
     str = str.replace(/<@(.*?)>/g, (replacedStr, userId) => {
-      const userDisplayName = author?.displayName || 'User';
+      const mention = mentions.find((m) => m.slackUserId === userId);
+      const userDisplayName = mention?.displayName || 'User';
       return `<b>@${userDisplayName}</b>`;
     });
     // Replace @channel, @here

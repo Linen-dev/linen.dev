@@ -2,15 +2,19 @@ import prisma from '../../client';
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 import {
-  createMessage,
+  createMessageWithMentions,
   createUserFromUserInfo,
   findOrCreateThread,
   findUser,
   updateSlackThread,
 } from '../../lib/models';
-import { SlackMessageEvent } from '../../types/slackResponses/slackMessageEventInterface';
+import {
+  Event,
+  SlackMessageEvent,
+} from '../../types/slackResponses/slackMessageEventInterface';
 import { getSlackUser } from './slack';
 import { createSlug } from '../../lib/util';
+import { accounts, channels, slackAuthorizations } from '@prisma/client';
 
 export default async function handler(
   req: NextApiRequest,
@@ -32,7 +36,6 @@ export default async function handler(
 export const handleWebhook = async (body: SlackMessageEvent) => {
   const event = body.event;
   const channelId = body.event.channel;
-
   const channel = await prisma.channels.findUnique({
     where: {
       slackChannelId: channelId,
@@ -69,15 +72,18 @@ export const handleWebhook = async (body: SlackMessageEvent) => {
     slug: thread.slug,
   });
 
-  let user = await findUser(event.user);
-  if (user === null) {
-    const accessToken = channel.account?.slackAuthorizations[0]?.accessToken;
-    if (!!accessToken) {
-      const slackUser = await getSlackUser(event.user, accessToken);
-      //check done above in channel check
-      user = await createUserFromUserInfo(slackUser, channel.accountId!);
-    }
-  }
+  //TODO: replace with blocks in elements
+  let mentionUserIds = event.text.match(/<@(.*?)>/g) || [];
+  mentionUserIds = mentionUserIds.map((m) =>
+    m.replace('<@', '').replace('>', '')
+  );
+  const mentionUsers = await Promise.all(
+    mentionUserIds.map((userId) => findOrCreateUser(userId, channel))
+  );
+
+  const mentionIds = mentionUsers.filter((x) => x).map((x) => x!.id);
+
+  let user = await findOrCreateUser(event.user, channel);
 
   const param = {
     body: event.text,
@@ -88,10 +94,27 @@ export const handleWebhook = async (body: SlackMessageEvent) => {
     usersId: user?.id,
   };
 
-  const message = await createMessage(param);
+  const message = await createMessageWithMentions(param, mentionIds);
 
   return {
     status: 200,
     message,
   };
 };
+async function findOrCreateUser(
+  slackUserId: string,
+  channel: channels & {
+    account: (accounts & { slackAuthorizations: slackAuthorizations[] }) | null;
+  }
+) {
+  let user = await findUser(slackUserId);
+  if (user === null) {
+    const accessToken = channel.account?.slackAuthorizations[0]?.accessToken;
+    if (!!accessToken) {
+      const slackUser = await getSlackUser(slackUserId, accessToken);
+      //check done above in channel check
+      user = await createUserFromUserInfo(slackUser, channel.accountId!);
+    }
+  }
+  return user;
+}

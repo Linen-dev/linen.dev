@@ -26,8 +26,9 @@ model messages {
 
   slackThreadId String?
 
-  author  users?  @relation(fields: [usersId], references: [id])
-  usersId String?
+  mentions slackMentions[]
+  author   users?          @relation(fields: [usersId], references: [id])
+  usersId  String?
   @@unique([body, sentAt])
 }
 
@@ -101,18 +102,28 @@ model auths {
 }
 
 model users {
-  id              String     @id @default(uuid())
+  id              String          @id @default(uuid())
   messages        messages[]
   slackUserId     String
   displayName     String?
   profileImageUrl String?
   isBot           Boolean
   isAdmin         Boolean
+  mentions        slackMentions[]
 
   account    accounts @relation(fields: [accountsId], references: [id])
   accountsId String
 
   @@unique([slackUserId])
+}
+
+model slackMentions {
+  messages   messages? @relation(fields: [messagesId], references: [id])
+  messagesId String
+  users      users?    @relation(fields: [usersId], references: [id])
+  usersId    String
+
+  @@id([messagesId, usersId])
 }
 
 model slackAuthorizations {

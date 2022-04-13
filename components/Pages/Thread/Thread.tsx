@@ -6,7 +6,10 @@ import { format } from 'timeago.js';
 import PageLayout from '../../layout/PageLayout';
 import Message from '../../Message';
 import styles from './index.module.css';
-import { ThreadByIdProp } from '../../../types/apiResponses/threads/[threadId]';
+import {
+  MentionsWithUsers,
+  ThreadByIdProp,
+} from '../../../types/apiResponses/threads/[threadId]';
 
 export default function Thread({
   threadId,
@@ -29,7 +32,7 @@ export default function Thread({
   const elements = useMemo(() => {
     return messages
       .sort((a, b) => b.sentAt - a.sentAt)
-      .map(({ body, author, id: messageId, sentAt, ...rest }) => {
+      .map(({ body, author, id: messageId, sentAt, mentions, ...rest }) => {
         return (
           <li className="pb-8" key={messageId} id={messageId}>
             <div className="flex justify-between">
@@ -51,7 +54,11 @@ export default function Thread({
               </Text>
             </div>
             <div style={{ maxWidth: '700px' }}>
-              <Message text={body} author={author} />
+              <Message
+                mentions={mentions.map((m: MentionsWithUsers) => m.users)}
+                text={body}
+                author={author}
+              />
             </div>
           </li>
         );

@@ -1,3 +1,5 @@
+import { users } from '@prisma/client';
+import { MentionsWithUsers } from '../types/apiResponses/threads/[threadId]';
 import {
   SlackThreadsWithMessages,
   MessageWithAuthor,
@@ -7,6 +9,7 @@ interface SerializedMessage {
   body: string;
   sentAt: string;
   author: string;
+  mentions: MentionsWithUsers[];
 }
 
 interface SerializedThread {
@@ -25,6 +28,7 @@ export default function serialize(
         // see: https://github.com/vercel/next.js/discussions/11498
         sentAt: message.sentAt.toString(),
         author: message.author,
+        mentions: message.mentions || [],
       };
     }),
   };
