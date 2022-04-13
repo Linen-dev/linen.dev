@@ -172,3 +172,67 @@ Run specific test example:
 ```bash
 npm run test:integration webhook.test.ts
 ```
+
+## Local domain redirect testing
+
+1. Ask for invite for ngrock account
+2. Setup [ngrok](https://ngrok.io/)
+3. pick subdomain i.e kam-test.ngrok.io
+4. Update dev database to have the redirect url `update accounts set "redirectDomain"='kam-test.ngrok.io' where id = '9677cb41-033e-4c1a-9ae5-ef178606cad3';` - replace with your subdomain that you chose
+5. run ngrok tunnel `ngrok http --region=us --hostname=kam-test.ngrok.io 3000`
+
+## Deploy to AWS
+
+First setup [AWS-CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) and [configure](First setup [AWS-CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) and configure it https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html
+) it for your AWS account.
+
+Increment the version for the app:
+
+```bash
+export APP_VERSION=v3
+```
+
+From the root folder of the project build the production docker image:
+
+```bash
+dotenv -e .env -- docker build \
+  --build-arg SENTRY_DSN=<SENTRY_DSN> \
+  --build-arg SENTRY_AUTH_TOKEN=<SENTRY_AUTH_TOKEN> \
+  --build-arg SKIP_CACHING_ON_BUILD_STEP=true \
+  --build-arg NODE_ENV=production \
+  -t linen-dev:${APP_VERSION} . --no-cache
+```
+
+Login your docker to AWS repository:
+
+```bash
+aws ecr get-login-password \
+--region us-east-1 | docker login \
+--username AWS \
+--password-stdin 775327867774.dkr.ecr.us-east-1.amazonaws.com
+```
+
+Tag and push the image to the AWS repository:
+
+```bash
+docker tag linen-dev:v2 775327867774.dkr.ecr.us-east-1.amazonaws.com/linen-dev:${APP_VERSION}
+docker push 775327867774.dkr.ecr.us-east-1.amazonaws.com/linen-dev:${APP_VERSION}
+```
+
+Go to `cdk` folder and run:
+
+```bash
+npm install
+```
+
+Build the deployment:
+
+```bash
+npm run build
+```
+
+Deploy the stack:
+
+```bash
+npm run cdk deploy
+```
