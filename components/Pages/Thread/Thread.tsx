@@ -16,6 +16,7 @@ export default function Thread({
   slackUrl,
   slackInviteUrl,
   threadUrl,
+  threadSlackInviteUrl,
   settings,
   viewCount,
   communityName,
@@ -79,7 +80,7 @@ export default function Thread({
         <div className={styles.buttons}>
           <Anchor
             className={styles.join}
-            href={threadUrl}
+            href={threadSlackInviteUrl || threadUrl}
             size="sm"
             target="_blank"
           >
