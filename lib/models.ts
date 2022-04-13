@@ -31,6 +31,25 @@ export const createMessage = async (
   });
 };
 
+export const createMessageWithMentions = async (
+  message: Prisma.messagesUncheckedCreateInput,
+  mentionsId: string[]
+) => {
+  return await prisma.messages.create({
+    data: {
+      body: message.body,
+      slackThreadId: message.slackThreadId,
+      slackMessageId: message.slackMessageId,
+      channelId: message.channelId,
+      sentAt: message.sentAt,
+      usersId: message.usersId,
+      mentions: {
+        create: mentionsId.map((id) => ({ usersId: id })),
+      },
+    },
+  });
+};
+
 export const createOrUpdateMessage = async (
   message: Prisma.messagesUncheckedCreateInput
 ) => {
@@ -256,6 +275,11 @@ export const threadIndex = async (
       messages: {
         include: {
           author: true,
+          mentions: {
+            include: {
+              users: true,
+            },
+          },
         },
         orderBy: {
           sentAt: 'desc',
@@ -282,6 +306,14 @@ export const findThreadById = async (threadId: number) => {
       messages: {
         include: {
           author: true,
+          //Don't like how it includes mentions when I just want users
+          // waiting on this to flatten it out
+          // https://github.com/prisma/prisma/issues/9719
+          mentions: {
+            include: {
+              users: true,
+            },
+          },
         },
         orderBy: {
           sentAt: 'asc',

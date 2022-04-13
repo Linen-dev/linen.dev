@@ -7,6 +7,7 @@ import PageLayout from '../../layout/PageLayout';
 import Message from '../../Message';
 import { channels, slackThreads, users, messages } from '@prisma/client';
 import CustomLink from '../../Link/CustomLink';
+import { MentionsWithUsers } from '../../../types/apiResponses/threads/[threadId]';
 
 export interface PaginationType {
   totalCount: number;
@@ -19,10 +20,13 @@ export interface PaginationType {
 // maybe look into getting prisma handle association generation
 interface message extends messages {
   author: users;
+  mentions: MentionsWithUsers[];
 }
+
 interface threads extends slackThreads {
   messages: message[];
 }
+
 type Props = {
   slackUrl?: string;
   slackInviteUrl?: string;
@@ -159,6 +163,7 @@ export default function Channel({
                 <Message
                   author={oldestMessage.author}
                   text={oldestMessage.body}
+                  mentions={oldestMessage.mentions.map((m) => m.users)}
                   truncate
                 />
               </div>
@@ -198,6 +203,7 @@ export default function Channel({
           <tr className="border-solid border-gray-200 cursor-pointer">
             <td className="px-6 py-3 md:max-w-[800px]">
               <Message
+                mentions={oldestMessage.mentions.map((m) => m.users)}
                 author={oldestMessage.author}
                 text={oldestMessage.body}
                 truncate
