@@ -1,7 +1,7 @@
 import { Text } from '@mantine/core';
 import React from 'react';
 import Emoji from 'react-emoji-render';
-import LinkRangeText from './LinkRangeText';
+import LinkRangeText from '../LinkRangeText';
 
 export default function MessageRangeText({ text }: { text: string }) {
   const textArray = text.split(/<b>(.*?)<\/b>/);
