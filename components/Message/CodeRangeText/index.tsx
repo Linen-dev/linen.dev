@@ -1,4 +1,4 @@
-import { Anchor, Code, Text } from '@mantine/core';
+import { Code } from '@mantine/core';
 import React from 'react';
 import Emoji from 'react-emoji-render';
 
@@ -10,15 +10,11 @@ const codeify = (item: string) => {
 export default function CodeRangeText({ text }: { text: string }) {
   const textArray = text.split(/(<code>.*?\/code>)/);
   if (textArray.length < 3) {
-    return (
-      <Text component="span" size="sm">
-        <Emoji text={text} />
-      </Text>
-    );
+    return <Emoji text={text} />;
   }
 
   return (
-    <Text component="span" size="sm">
+    <>
       {textArray.map((item, index) => {
         return (
           <React.Fragment key={index}>
@@ -27,6 +23,6 @@ export default function CodeRangeText({ text }: { text: string }) {
           </React.Fragment>
         );
       })}
-    </Text>
+    </>
   );
 }

@@ -1,4 +1,3 @@
-import { Text } from '@mantine/core';
 import React from 'react';
 import Emoji from 'react-emoji-render';
 import LinkRangeText from '../LinkRangeText';
@@ -10,7 +9,7 @@ export default function MessageRangeText({ text }: { text: string }) {
   }
 
   return (
-    <Text component="span" size="sm">
+    <>
       {textArray.map((item: string, index: number) => {
         return (
           <React.Fragment key={index}>
@@ -23,6 +22,6 @@ export default function MessageRangeText({ text }: { text: string }) {
           </React.Fragment>
         );
       })}
-    </Text>
+    </>
   );
 }

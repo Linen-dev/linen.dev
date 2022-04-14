@@ -65,7 +65,11 @@ function Message({
     return str;
   }, [text, truncate]);
 
-  return <MessageRangeText text={textToRender} />;
+  return (
+    <div className="text-sm">
+      <MessageRangeText text={textToRender} />
+    </div>
+  );
 }
 
 export default Message;

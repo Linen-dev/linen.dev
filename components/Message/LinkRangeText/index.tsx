@@ -1,4 +1,4 @@
-import { Anchor, Text } from '@mantine/core';
+import { Anchor } from '@mantine/core';
 import React from 'react';
 import CodeRangeText from '../CodeRangeText';
 
@@ -20,7 +20,7 @@ export default function LinkRangeText({ text }: { text: string }) {
   }
 
   return (
-    <Text component="span" size="sm">
+    <>
       {textArray.map((item, index) => {
         return (
           <React.Fragment key={index}>
@@ -29,6 +29,6 @@ export default function LinkRangeText({ text }: { text: string }) {
           </React.Fragment>
         );
       })}
-    </Text>
+    </>
   );
 }
