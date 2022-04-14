@@ -7,7 +7,7 @@ const codeify = (item: string) => {
   return <Code>{inner}</Code>;
 };
 
-export default function LinkRangeText({ text }: { text: string }) {
+export default function CodeRangeText({ text }: { text: string }) {
   const textArray = text.split(/(<code>.*?\/code>)/);
   if (textArray.length < 3) {
     return (

@@ -1,8 +1,6 @@
 import { Anchor, Text } from '@mantine/core';
 import React from 'react';
-import Link from 'next/link';
-import styled from 'styled-components';
-import CodeRangeText from './CodeRangeText';
+import CodeRangeText from '../CodeRangeText';
 
 const linkify = (item: string) => {
   const [_, href]: any = item.match(/href=(.*?)>/);
