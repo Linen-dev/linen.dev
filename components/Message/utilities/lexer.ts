@@ -1,6 +1,17 @@
-interface Token {
-  type: string;
+const START_TAG = '<';
+const END_TAG = '>';
+const MENTION_TAG = '@';
+const CHANNEL_TAG = '!';
+const CHANNEL_NAME_TAG = '#';
+
+export interface Token {
+  type: TokenType;
   value: string;
+}
+
+export enum TokenType {
+  Text = 'text',
+  Mention = 'mention',
 }
 
 export function tokenize(input: string): Token[] {
@@ -10,12 +21,31 @@ export function tokenize(input: string): Token[] {
   function current(): string {
     return input[index];
   }
-  let type = 'text';
+  function next(): string | undefined {
+    return input[index + 1];
+  }
+  let type = TokenType.Text;
   let value = '';
   while (index < length) {
-    value += current();
-    index++;
+    if (current() === START_TAG && next() === MENTION_TAG) {
+      if (value) {
+        tokens.push({ type, value });
+      }
+      type = TokenType.Mention;
+      value = '';
+      index += 2;
+    } else if (current() === END_TAG) {
+      tokens.push({ type, value });
+      type = TokenType.Text;
+      value = '';
+      index++;
+    } else {
+      value += current();
+      index++;
+    }
   }
-  tokens.push({ type, value });
+  if (value) {
+    tokens.push({ type, value });
+  }
   return tokens;
 }
