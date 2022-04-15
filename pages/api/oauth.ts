@@ -45,7 +45,12 @@ export default async function handler(
     authedUserId: user.id,
   });
 
-  res.status(200).json({ ok: 'Slack has been authenticated syncing now' });
+  // Initialize syncing asynchronously
+  request.get(
+    process.env.SYNC_URL + '/api/scripts/sync??account_id=' + accountId
+  );
+
+  res.status(200).json({ ok: 'Slack has been authenticated, syncing now' });
 }
 
 export const getSlackAccessToken = async (
