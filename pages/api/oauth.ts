@@ -47,7 +47,7 @@ export default async function handler(
 
   // Initialize syncing asynchronously
   request.get(
-    process.env.SYNC_URL + '/api/scripts/sync??account_id=' + accountId
+    process.env.SYNC_URL + '/api/scripts/sync?account_id=' + accountId
   );
 
   res.status(200).json({ ok: 'Slack has been authenticated, syncing now' });
