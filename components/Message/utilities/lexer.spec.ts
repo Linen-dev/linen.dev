@@ -24,4 +24,22 @@ describe('#tokenize', () => {
       });
     });
   });
+
+  describe('when channel is present', () => {
+    describe('when the channel is valid', () => {
+      it('returns a channel token', () => {
+        const input = '<!channel>';
+        const expected = [{ type: TokenType.Channel, value: 'channel' }];
+        expect(tokenize(input)).toEqual(expected);
+      });
+    });
+
+    describe('when the channel is invalid', () => {
+      it('returns an empty channel token', () => {
+        const input = '<!>';
+        const expected = [{ type: TokenType.Channel, value: '' }];
+        expect(tokenize(input)).toEqual(expected);
+      });
+    });
+  });
 });
