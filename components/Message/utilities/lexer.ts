@@ -13,6 +13,7 @@ export enum TokenType {
   Text = 'text',
   Mention = 'mention',
   Channel = 'channel',
+  ChannelName = 'channel_name',
 }
 
 export function tokenize(input: string): Token[] {
@@ -40,6 +41,13 @@ export function tokenize(input: string): Token[] {
         tokens.push({ type, value });
       }
       type = TokenType.Channel;
+      value = '';
+      index += 2;
+    } else if (current() === START_TAG && next() === CHANNEL_NAME_TAG) {
+      if (value) {
+        tokens.push({ type, value });
+      }
+      type = TokenType.ChannelName;
       value = '';
       index += 2;
     } else if (current() === END_TAG) {

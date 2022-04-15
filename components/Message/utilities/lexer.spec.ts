@@ -42,4 +42,22 @@ describe('#tokenize', () => {
       });
     });
   });
+
+  describe('when channel name is present', () => {
+    describe('when the channel name is valid', () => {
+      it('returns a channel token', () => {
+        const input = '<#A1|foo>';
+        const expected = [{ type: TokenType.ChannelName, value: 'A1|foo' }];
+        expect(tokenize(input)).toEqual(expected);
+      });
+    });
+
+    describe('when the channel is invalid', () => {
+      it('returns an empty channel token', () => {
+        const input = '<#>';
+        const expected = [{ type: TokenType.ChannelName, value: '' }];
+        expect(tokenize(input)).toEqual(expected);
+      });
+    });
+  });
 });
