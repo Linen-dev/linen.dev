@@ -12,12 +12,22 @@ function truncateText(text: string, truncate: boolean) {
 }
 
 function getDisplayName(userId: string, mentions?: users[]) {
-  if (!mentions) { return 'User' }
+  if (!mentions) {
+    return 'User';
+  }
   const user = mentions.find((u) => u.id === userId);
   return user?.displayName || 'User';
 }
 
-function Message({ text, truncate, mentions }: { text: string; truncate?: any, mentions?: users[] }) {
+function Message({
+  text,
+  truncate,
+  mentions,
+}: {
+  text: string;
+  truncate?: any;
+  mentions?: users[];
+}) {
   const tokens = tokenize(truncateText(text, truncate));
 
   return (
@@ -33,7 +43,9 @@ function Message({ text, truncate, mentions }: { text: string; truncate?: any, m
             return <ReactEmoji key={key} text={value} />;
           }
           if (type === TokenType.Mention) {
-            return <strong key={key}>@{getDisplayName(value, mentions)}</strong>;
+            return (
+              <strong key={key}>@{getDisplayName(value, mentions)}</strong>
+            );
           }
           if (type === TokenType.Link) {
             const [href, name] = value.split('|');
@@ -51,7 +63,11 @@ function Message({ text, truncate, mentions }: { text: string; truncate?: any, m
             return <strong key={key}>#{name || id}</strong>;
           }
           if (type === TokenType.Code) {
-            return <code key={key}>{value}</code>;
+            return (
+              <code key={key} className="rounded p-1">
+                {value}
+              </code>
+            );
           }
           return null;
         })

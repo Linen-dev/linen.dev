@@ -12,6 +12,7 @@ export default function Styleguide() {
         <Message text="Hey, <@John>!" />
         <Message text="Hey, <https://linen.dev>!" />
         <Message text="Hey, <http://linen.dev>!" />
+        <Message text="Hey, `const answer = 42`!" />
       </Example>
     </Layout>
   );
