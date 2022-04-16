@@ -57,11 +57,20 @@ export function tokenize(input: string): Token[] {
   let type = TokenType.Text;
   let value = '';
   while (index < length) {
-    if (current() === START_TAG && isTagSupported(next())) {
+    if (
+      current() === START_TAG &&
+      isTagSupported(next()) &&
+      type !== TokenType.Code
+    ) {
       push(type, value);
       type = getTokenType(next());
       value = '';
       index += 2;
+    } else if (current() === END_TAG && type !== TokenType.Code) {
+      tokens.push({ type, value });
+      type = TokenType.Text;
+      value = '';
+      index++;
     } else if (
       current() === BACKTICK &&
       (type === TokenType.Text || type === TokenType.Code)
@@ -72,11 +81,6 @@ export function tokenize(input: string): Token[] {
       } else {
         type = TokenType.Code;
       }
-      value = '';
-      index++;
-    } else if (current() === END_TAG) {
-      tokens.push({ type, value });
-      type = TokenType.Text;
       value = '';
       index++;
     } else {

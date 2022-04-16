@@ -33,8 +33,8 @@ describe('#tokenize', () => {
     });
   });
 
-  describe('when channel is present', () => {
-    describe('when the channel is valid', () => {
+  describe('when a basic channel is present', () => {
+    describe('when the basic channel is valid', () => {
       it('returns a channel token', () => {
         const input = '<!channel>';
         const expected = [{ type: TokenType.BasicChannel, value: 'channel' }];
@@ -52,7 +52,7 @@ describe('#tokenize', () => {
       });
     });
 
-    describe('when the channel is invalid', () => {
+    describe('when the basic channel is invalid', () => {
       it('returns an empty channel token', () => {
         const input = '<!>';
         const expected = [{ type: TokenType.BasicChannel, value: '' }];
@@ -61,8 +61,8 @@ describe('#tokenize', () => {
     });
   });
 
-  describe('when channel name is present', () => {
-    describe('when the channel name is valid', () => {
+  describe('when a complex channel is present', () => {
+    describe('when the complex channel is valid', () => {
       it('returns a channel token', () => {
         const input = '<#A1|foo>';
         const expected = [{ type: TokenType.ComplexChannel, value: 'A1|foo' }];
@@ -80,7 +80,7 @@ describe('#tokenize', () => {
       });
     });
 
-    describe('when the channel is invalid', () => {
+    describe('when the complex channel is invalid', () => {
       it('returns an empty channel token', () => {
         const input = '<#>';
         const expected = [{ type: TokenType.ComplexChannel, value: '' }];
@@ -95,6 +95,76 @@ describe('#tokenize', () => {
         const input = '`foo`';
         const expected = [{ type: TokenType.Code, value: 'foo' }];
         expect(tokenize(input)).toEqual(expected);
+      });
+
+      describe('when a single backtick does not have a closing backtick', () => {
+        it('returns a code token', () => {
+          const input = '`foo';
+          const expected = [{ type: TokenType.Code, value: 'foo' }];
+          expect(tokenize(input)).toEqual(expected);
+        });
+      });
+
+      describe('when a single backtick contains html code', () => {
+        it('returns a code token', () => {
+          const input = '`<strong>foo</strong>`';
+          const expected = [
+            { type: TokenType.Code, value: '<strong>foo</strong>' },
+          ];
+          expect(tokenize(input)).toEqual(expected);
+        });
+      });
+
+      describe('when a single backtick contains js code', () => {
+        it('returns a code token', () => {
+          const input = '`const foo = "bar";`';
+          const expected = [
+            { type: TokenType.Code, value: 'const foo = "bar";' },
+          ];
+          expect(tokenize(input)).toEqual(expected);
+        });
+      });
+
+      describe('when a single backtick contains css code', () => {
+        it('returns a code token', () => {
+          const input = '`.foo { color: red; }`';
+          const expected = [
+            { type: TokenType.Code, value: '.foo { color: red; }' },
+          ];
+          expect(tokenize(input)).toEqual(expected);
+        });
+      });
+
+      describe('when a single backtick contains a mention tag', () => {
+        it('returns a code token', () => {
+          const input = '`foo <@foo>`';
+          const expected = [{ type: TokenType.Code, value: 'foo <@foo>' }];
+          expect(tokenize(input)).toEqual(expected);
+        });
+      });
+
+      describe('when a single backtick contains a mention tag', () => {
+        it('returns a code token', () => {
+          const input = '`foo <@foo>`';
+          const expected = [{ type: TokenType.Code, value: 'foo <@foo>' }];
+          expect(tokenize(input)).toEqual(expected);
+        });
+      });
+
+      describe('when a single backtick contains a basic channel tag', () => {
+        it('returns a code token', () => {
+          const input = '`foo <#foo>`';
+          const expected = [{ type: TokenType.Code, value: 'foo <#foo>' }];
+          expect(tokenize(input)).toEqual(expected);
+        });
+      });
+
+      describe('when a single backtick contains a complex channel tag', () => {
+        it('returns a code token', () => {
+          const input = '`foo <!foo|bar>`';
+          const expected = [{ type: TokenType.Code, value: 'foo <!foo|bar>' }];
+          expect(tokenize(input)).toEqual(expected);
+        });
       });
     });
 
