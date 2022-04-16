@@ -1,8 +1,9 @@
 const START_TAG = '<';
 const END_TAG = '>';
 const MENTION_TAG = '@';
-const CHANNEL_TAG = '!';
-const CHANNEL_NAME_TAG = '#';
+const BASIC_CHANNEL_TAG = '!';
+const COMPLEX_CHANNEL_TAG = '#';
+const BACKTICK = '`';
 
 export interface Token {
   type: TokenType;
@@ -12,8 +13,30 @@ export interface Token {
 export enum TokenType {
   Text = 'text',
   Mention = 'mention',
-  Channel = 'channel',
-  ChannelName = 'channel_name',
+  BasicChannel = 'channel',
+  ComplexChannel = 'complex_channel',
+  Code = 'code',
+}
+
+function isTagSupported(tag: string): boolean {
+  return (
+    tag === MENTION_TAG ||
+    tag === BASIC_CHANNEL_TAG ||
+    tag === COMPLEX_CHANNEL_TAG
+  );
+}
+
+function getTokenType(tag: string): TokenType {
+  switch (tag) {
+    case MENTION_TAG:
+      return TokenType.Mention;
+    case BASIC_CHANNEL_TAG:
+      return TokenType.BasicChannel;
+    case COMPLEX_CHANNEL_TAG:
+      return TokenType.ComplexChannel;
+    default:
+      return TokenType.Text;
+  }
 }
 
 export function tokenize(input: string): Token[] {
@@ -23,33 +46,34 @@ export function tokenize(input: string): Token[] {
   function current(): string {
     return input[index];
   }
-  function next(): string | undefined {
+  function next(): string {
     return input[index + 1];
+  }
+  function push(type: TokenType, value: string): void {
+    if (value) {
+      tokens.push({ type, value });
+    }
   }
   let type = TokenType.Text;
   let value = '';
   while (index < length) {
-    if (current() === START_TAG && next() === MENTION_TAG) {
-      if (value) {
-        tokens.push({ type, value });
-      }
-      type = TokenType.Mention;
+    if (current() === START_TAG && isTagSupported(next())) {
+      push(type, value);
+      type = getTokenType(next());
       value = '';
       index += 2;
-    } else if (current() === START_TAG && next() === CHANNEL_TAG) {
-      if (value) {
-        tokens.push({ type, value });
+    } else if (
+      current() === BACKTICK &&
+      (type === TokenType.Text || type === TokenType.Code)
+    ) {
+      push(type, value);
+      if (type === TokenType.Code) {
+        type = TokenType.Text;
+      } else {
+        type = TokenType.Code;
       }
-      type = TokenType.Channel;
       value = '';
-      index += 2;
-    } else if (current() === START_TAG && next() === CHANNEL_NAME_TAG) {
-      if (value) {
-        tokens.push({ type, value });
-      }
-      type = TokenType.ChannelName;
-      value = '';
-      index += 2;
+      index++;
     } else if (current() === END_TAG) {
       tokens.push({ type, value });
       type = TokenType.Text;
@@ -60,8 +84,6 @@ export function tokenize(input: string): Token[] {
       index++;
     }
   }
-  if (value) {
-    tokens.push({ type, value });
-  }
+  push(type, value);
   return tokens;
 }
