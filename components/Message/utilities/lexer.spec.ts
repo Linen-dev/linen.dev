@@ -7,7 +7,17 @@ describe('#tokenize', () => {
     expect(tokenize(input)).toEqual(expected);
   });
 
-  describe('when mention is present', () => {
+  describe('when a url is used within the text', () => {
+    it('does not consider it as a link tag', () => {
+      const input = 'Hello, world https://linen.dev!';
+      const expected = [
+        { type: TokenType.Text, value: 'Hello, world https://linen.dev!' },
+      ];
+      expect(tokenize(input)).toEqual(expected);
+    });
+  });
+
+  describe('when a mention is present', () => {
     describe('when the mention is valid', () => {
       it('returns a mention token', () => {
         const input = '<@user>';
@@ -29,6 +39,31 @@ describe('#tokenize', () => {
         const input = '<@>';
         const expected = [{ type: TokenType.Mention, value: '' }];
         expect(tokenize(input)).toEqual(expected);
+      });
+    });
+  });
+
+  describe('when a link is present', () => {
+    describe('when the link uses https://', () => {
+      it('returns a link tag', () => {
+        const input = '<https://linen.dev>';
+        const expected = [{ type: TokenType.Link, value: 'https://linen.dev' }];
+        expect(tokenize(input)).toEqual(expected);
+      });
+    });
+
+    describe('when the link uses http://', () => {
+      it('returns a link tag', () => {
+        const input = '<http://linen.dev>';
+        const expected = [{ type: TokenType.Link, value: 'http://linen.dev' }];
+        expect(tokenize(input)).toEqual(expected);
+      });
+    });
+
+    describe('when the link uses a different protocol', () => {
+      it('does not return a link tag', () => {
+        const input = '<htox://linen.dev>';
+        expect(tokenize(input)).toEqual([]);
       });
     });
   });
@@ -147,6 +182,16 @@ describe('#tokenize', () => {
         it('returns a code token', () => {
           const input = '`foo <@foo>`';
           const expected = [{ type: TokenType.Code, value: 'foo <@foo>' }];
+          expect(tokenize(input)).toEqual(expected);
+        });
+      });
+
+      describe('when a single backtick contains a link tag', () => {
+        it('returns a code token', () => {
+          const input = '`foo <https://linen.dev>`';
+          const expected = [
+            { type: TokenType.Code, value: 'foo <https://linen.dev>' },
+          ];
           expect(tokenize(input)).toEqual(expected);
         });
       });

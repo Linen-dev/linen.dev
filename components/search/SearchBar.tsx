@@ -78,12 +78,7 @@ const SearchBar = ({
             </Group>
           </Group>
           <div style={{ borderLeft: '3px solid #dfdfdf', paddingLeft: '16px' }}>
-            <Message
-              mentions={mentions.users || []}
-              text={body}
-              truncate
-              author={author}
-            />
+            <Message text={body} truncate mentions={mentions.users || []} />
           </div>
         </Suggestion>
       );
