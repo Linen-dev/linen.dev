@@ -1,6 +1,7 @@
 const START_TAG = '<';
 const END_TAG = '>';
 const MENTION_TAG = '@';
+const LINK_TAG = 'h';
 const BASIC_CHANNEL_TAG = '!';
 const COMPLEX_CHANNEL_TAG = '#';
 const BACKTICK = '`';
@@ -13,6 +14,7 @@ export interface Token {
 export enum TokenType {
   Text = 'text',
   Mention = 'mention',
+  Link = 'link',
   BasicChannel = 'channel',
   ComplexChannel = 'complex_channel',
   Code = 'code',
@@ -21,6 +23,7 @@ export enum TokenType {
 function isTagSupported(tag: string): boolean {
   return (
     tag === MENTION_TAG ||
+    tag === LINK_TAG ||
     tag === BASIC_CHANNEL_TAG ||
     tag === COMPLEX_CHANNEL_TAG
   );
@@ -30,6 +33,8 @@ function getTokenType(tag: string): TokenType {
   switch (tag) {
     case MENTION_TAG:
       return TokenType.Mention;
+    case LINK_TAG:
+      return TokenType.Link;
     case BASIC_CHANNEL_TAG:
       return TokenType.BasicChannel;
     case COMPLEX_CHANNEL_TAG:
@@ -37,6 +42,10 @@ function getTokenType(tag: string): TokenType {
     default:
       return TokenType.Text;
   }
+}
+
+function isValidUrl(url: string) {
+  return url.startsWith('http://') || url.startsWith('https://');
 }
 
 export function tokenize(input: string): Token[] {
@@ -89,5 +98,21 @@ export function tokenize(input: string): Token[] {
     }
   }
   push(type, value);
-  return tokens;
+
+  return tokens
+    .map((token) => {
+      if (token.type === TokenType.Link) {
+        const url = `h${token.value}`;
+        if (isValidUrl(url)) {
+          return {
+            type: TokenType.Link,
+            value: url,
+          };
+        } else {
+          return null;
+        }
+      }
+      return token;
+    })
+    .filter(Boolean) as Token[];
 }

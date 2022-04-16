@@ -1,68 +1,61 @@
-import MessageRangeText from './MessageRangeText';
+import React from 'react';
+import { tokenize, TokenType } from './utilities/lexer';
+import ReactEmoji from 'react-emoji-render';
 import { users } from '@prisma/client';
 
-function Message({
-  text,
-  truncate,
-  author,
-  mentions,
-}: {
-  text: string;
-  truncate?: any;
-  author: users;
-  mentions: users[];
-}) {
-  let str = text;
-  if (truncate) {
-    const excerpt = str.substr(0, 220);
-    str = `${excerpt}${excerpt.length === 220 ? '...' : ''}`;
+function truncateText(text: string, truncate: boolean) {
+  if (!truncate) {
+    return text;
   }
-  // Replace @mentions
-  str = str.replace(/<@(.*?)>/g, (replacedStr, userId) => {
-    const userDisplayName = author?.displayName || 'User';
-    return `<b>@${userDisplayName}</b>`;
-  });
-  // Replace @channel, @here
-  str = str.replace(/<!(.*?)>/g, (replacedStr, innerTag) => {
-    return `<b>@${innerTag}</b>`;
-  });
-  // Replace channel names
-  str = str.replace(
-    /<#(.*?)\|(.*?)>/g,
-    (replacedStr, channelId, channelName) => {
-      return `<b>#${channelName}</b>`;
-    }
-  );
-  // Replace links
-  str = str.replace(/<http(.*?)>/g, (replacedStr, urlWithPotentialText) => {
-    const initialUrl = `http${urlWithPotentialText}`;
-    let url = initialUrl;
-    let text = initialUrl;
-    if (initialUrl.includes('|')) {
-      url = initialUrl.split('|')[0];
-      text = initialUrl.split('|')[1];
-    }
-    return `<link href=${url}>${text}</link>`;
-  });
+  const excerpt = text.substr(0, 220);
+  return `${excerpt}${excerpt.length === 220 ? '...' : ''}`;
+}
 
-  // Code block didn't work because it wasn't accounting for new lines
-  // Replace codeblocks
-  // str = str.replace(/```((.|\n)*)```/g, (replacedStr, code) => {
-  //   console.log({ replacedStr });
-  //   return `<code>${code}</code>`;
-  // });
+function getDisplayName(userId: string, mentions?: users[]) {
+  if (!mentions) { return 'User' }
+  const user = mentions.find((u) => u.id === userId);
+  return user?.displayName || 'User';
+}
 
-  // Replace inline codeblocks after others are gone
-  // str = str.replace(/`(.*?)`/g, (replacedStr, code) => {
-  //   return `<code>${code}</code>`;
-  // });
-  // Hack to replace at least these entities
-  str = str.replace(/&gt;/g, '>');
-  str = str.replace(/&lt;/g, '<');
+function Message({ text, truncate, mentions }: { text: string; truncate?: any, mentions?: users[] }) {
+  const tokens = tokenize(truncateText(text, truncate));
 
   return (
     <div className="text-sm">
-      <MessageRangeText text={str} />
+      {tokens
+        .map((token, index) => {
+          const { type, value } = token;
+          if (!value) {
+            return null;
+          }
+          const key = `${index}-${type}-${value}`;
+          if (type === TokenType.Text) {
+            return <ReactEmoji key={key} text={value} />;
+          }
+          if (type === TokenType.Mention) {
+            return <strong key={key}>@{getDisplayName(value, mentions)}</strong>;
+          }
+          if (type === TokenType.Link) {
+            const [href, name] = value.split('|');
+            return (
+              <a className="underline text-indigo-700" key={key} href={href}>
+                {name || href}
+              </a>
+            );
+          }
+          if (type === TokenType.BasicChannel) {
+            return <strong key={key}>@{value}</strong>;
+          }
+          if (type === TokenType.ComplexChannel) {
+            const [id, name] = value.split('|');
+            return <strong key={key}>#{name || id}</strong>;
+          }
+          if (type === TokenType.Code) {
+            return <code key={key}>{value}</code>;
+          }
+          return null;
+        })
+        .filter(Boolean)}
     </div>
   );
 }

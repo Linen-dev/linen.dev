@@ -10,6 +10,8 @@ export default function Styleguide() {
         <Message text="Hello, world! :)" />
         <Message text="Hey, <@John>!" />
         <Message text="Hey, <@John>!" />
+        <Message text="Hey, <https://linen.dev>!" />
+        <Message text="Hey, <http://linen.dev>!" />
       </Example>
     </Layout>
   );

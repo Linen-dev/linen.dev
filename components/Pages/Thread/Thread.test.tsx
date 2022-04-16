@@ -46,6 +46,7 @@ describe('Thread', () => {
             {
               id: '1',
               body: 'Hello',
+              mentions: [],
             },
           ]}
           messageCount={1}
