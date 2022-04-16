@@ -72,6 +72,9 @@ export const handleWebhook = async (body: SlackMessageEvent) => {
     slug: thread.slug,
   });
 
+  //TODO: create render text object and save that on creation of message
+  // This way we don't have to fetch mentions on every message render
+
   //TODO: replace with blocks in elements
   let mentionUserIds = event.text.match(/<@(.*?)>/g) || [];
   mentionUserIds = mentionUserIds.map((m) =>
