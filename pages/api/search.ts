@@ -79,6 +79,11 @@ export default async function handler(
       },
       include: {
         slackThreads: true,
+        mentions: {
+          include: {
+            users: true,
+          },
+        },
       },
     });
 
@@ -101,6 +106,11 @@ export default async function handler(
         },
         include: {
           slackThreads: true,
+          mentions: {
+            include: {
+              users: true,
+            },
+          },
         },
         take: 20,
       });
@@ -118,6 +128,13 @@ export default async function handler(
       },
       channel: {
         accountId: accountId,
+      },
+    },
+    include: {
+      mentions: {
+        include: {
+          users: true,
+        },
       },
     },
     take: 20,

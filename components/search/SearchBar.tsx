@@ -48,7 +48,7 @@ const SearchBar = ({
     )}&account_id=${accountId}`;
 
   const renderSuggestion = useCallback(
-    ({ body, channelId, usersId, author }) => {
+    ({ body, channelId, usersId, author, mentions }) => {
       const user = users.find((u) => u.id === usersId);
       const channel = channels.find((c) => c.id === channelId);
       const channelName = channel?.channelName;
@@ -78,7 +78,12 @@ const SearchBar = ({
             </Group>
           </Group>
           <div style={{ borderLeft: '3px solid #dfdfdf', paddingLeft: '16px' }}>
-            <Message text={body} truncate author={author} />
+            <Message
+              mentions={mentions.users || []}
+              text={body}
+              truncate
+              author={author}
+            />
           </div>
         </Suggestion>
       );
