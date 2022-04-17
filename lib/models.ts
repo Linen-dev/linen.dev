@@ -289,7 +289,7 @@ export const threadIndex = async (
     where: {
       channelId,
       messageCount: {
-        gte: 1,
+        gt: 1,
       },
     },
     orderBy: {
