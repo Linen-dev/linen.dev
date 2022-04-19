@@ -155,7 +155,7 @@ export default async function handler(
     console.log('channel completed syncing: ', c.channelName);
   }
 
-  //Save all threads
+  // Save all threads
   // only fetch threads with single message
   // There will be edge cases where not all the threads are sync'd if you cancel the script
   const messageWithThreads = await findSlackThreadsWithOnlyOneMessage(
@@ -168,7 +168,7 @@ export default async function handler(
       console.log(i);
     }
     const m = messageWithThreads[i];
-    const channel = account.channels.find((c) => c.id === m.channelId);
+    const channel = channels.find((c) => c.id === m.channelId);
     const replies = await fetchReplies(
       m.slackThreadTs,
       channel!.slackChannelId,
