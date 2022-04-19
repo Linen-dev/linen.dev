@@ -13,27 +13,80 @@ describe('Message', () => {
     expect(container).toHaveTextContent('@general');
   });
 
-  it('renders channel names', () => {
-    const { container } = render(<Message text="Hey <#A1|general>" />);
-    expect(container).toHaveTextContent('#general');
+  describe('when channel data is present', () => {
+    it('renders channel names', () => {
+      const { container } = render(<Message text="Hey <#A1>" />);
+      expect(container).toHaveTextContent('#A1');
+    });
+
+    describe('when name is present', () => {
+      it('renders channel names', () => {
+        const { container } = render(<Message text="Hey <#A1|general>" />);
+        expect(container).toHaveTextContent('#general');
+      });
+    });
   });
 
   describe('when a mention is present', () => {
-    describe("and mention data is present", () => {
+    describe('and mention data is present', () => {
       it('renders mention names', () => {
         const { container } = render(
-          <Message text="Hey <@A1>" mentions={[{ id: "A1", displayName: "John Doe", slackUserId: '1234', profileImageUrl: 'https://img.com/1234', isBot: false, isAdmin: false,  accountsId: '1234' }]} />
+          <Message
+            text="Hey <@A1>"
+            mentions={[
+              {
+                id: 'A1',
+                displayName: 'John Doe',
+                slackUserId: '1234',
+                profileImageUrl: 'https://img.com/1234',
+                isBot: false,
+                isAdmin: false,
+                accountsId: '1234',
+              },
+            ]}
+          />
         );
         expect(container).toHaveTextContent('@John Doe');
       });
-    })
+
+      describe('and no mention matches', () => {
+        it('renders "@User"', () => {
+          const { container } = render(
+            <Message
+              text="Hey <@A1>"
+              mentions={[
+                {
+                  id: 'A2',
+                  displayName: 'John Doe',
+                  slackUserId: '1234',
+                  profileImageUrl: 'https://img.com/1234',
+                  isBot: false,
+                  isAdmin: false,
+                  accountsId: '1234',
+                },
+              ]}
+            />
+          );
+          expect(container).toHaveTextContent('@User');
+        });
+      });
+
+      describe('and mention is broken', () => {
+        it('does not render anything', () => {
+          const { container } = render(<Message text="Hey <@>." />);
+          expect(container).toHaveTextContent('Hey .');
+        });
+      });
+    });
 
     describe('and there is no mention data', () => {
       it('renders "@User"', () => {
-        const { container } = render(<Message text="Hey <@A1>, how are you?" />);
+        const { container } = render(
+          <Message text="Hey <@A1>, how are you?" />
+        );
         expect(container).toHaveTextContent('@User');
       });
-    })
+    });
   });
 
   describe('when a link is present', () => {
@@ -51,6 +104,15 @@ describe('Message', () => {
         const link = getByText('bar') as HTMLLinkElement;
         expect(link.href).toEqual('https://foo.com/');
       });
+    });
+  });
+
+  describe('when code is present', () => {
+    it('renders it', () => {
+      const { getByText } = render(<Message text="Hey `foo`" />);
+      const node = getByText('foo');
+      expect(node).toHaveTextContent('foo');
+      expect(node.nodeName).toEqual('CODE');
     });
   });
 });
