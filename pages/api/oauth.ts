@@ -46,9 +46,15 @@ export default async function handler(
   });
 
   // Initialize syncing asynchronously
-  request.get(
-    process.env.SYNC_URL + '/api/scripts/sync?account_id=' + accountId
-  );
+  console.log('Start syncing account: ', accountId);
+  request
+    .get(process.env.SYNC_URL + '/api/scripts/sync?account_id=' + accountId)
+    .then(() => {
+      console.log('Syncing done!');
+    })
+    .catch((err) => {
+      console.error('Syncing error: ', err);
+    });
 
   res.status(200).json({
     ok: 'Slack has been authenticated, syncing now. Kam will reach out soon to finish onboarding',
