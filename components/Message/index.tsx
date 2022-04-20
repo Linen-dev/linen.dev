@@ -1,7 +1,5 @@
 import React from 'react';
-import { tokenize, TokenType } from './utilities/lexer';
 import { users } from '@prisma/client';
-import styles from './index.module.css';
 import Text from './Text';
 import Mention from './Mention';
 import Link from './Link';
@@ -9,7 +7,9 @@ import BasicChannel from './BasicChannel';
 import ComplexChannel from './ComplexChannel';
 import InlineCode from './InlineCode';
 import BlockCode from './BlockCode';
+import { tokenize, TokenType } from './utilities/lexer';
 import { truncate as truncateText } from './utilities/string';
+import styles from './index.module.css';
 
 interface Props {
   text: string;
