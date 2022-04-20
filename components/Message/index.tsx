@@ -1,6 +1,7 @@
 import React from 'react';
 import { tokenize, TokenType } from './utilities/lexer';
 import ReactEmoji from 'react-emoji-render';
+import classNames from 'classnames';
 import { users } from '@prisma/client';
 import styles from './index.module.css';
 
@@ -63,9 +64,16 @@ function Message({
             const [id, name] = value.split('|');
             return <strong key={key}>#{name || id}</strong>;
           }
-          if (type === TokenType.Code) {
+          if (type === TokenType.InlineCode) {
             return (
               <code key={key} className={styles.code}>
+                {value}
+              </code>
+            );
+          }
+          if (type === TokenType.BlockCode) {
+            return (
+              <code key={key} className={classNames(styles.code, 'block')}>
                 {value}
               </code>
             );

@@ -107,9 +107,18 @@ describe('Message', () => {
     });
   });
 
-  describe('when code is present', () => {
+  describe('when inline code is present', () => {
     it('renders it', () => {
       const { getByText } = render(<Message text="Hey `foo`" />);
+      const node = getByText('foo');
+      expect(node).toHaveTextContent('foo');
+      expect(node.nodeName).toEqual('CODE');
+    });
+  });
+
+  describe('when block code is present', () => {
+    it('renders it', () => {
+      const { getByText } = render(<Message text="Hey ```foo```" />);
       const node = getByText('foo');
       expect(node).toHaveTextContent('foo');
       expect(node.nodeName).toEqual('CODE');
