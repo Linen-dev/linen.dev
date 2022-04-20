@@ -160,7 +160,11 @@ export default function Channel({
             </div>
             <div className="flex flex-col w-full">
               <div className="pb-2 sm:px-6">
-                <Message text={oldestMessage.body} truncate mentions={oldestMessage.mentions.map((m) => m.users)} />
+                <Message
+                  text={oldestMessage.body}
+                  truncate
+                  mentions={oldestMessage.mentions.map((m) => m.users)}
+                />
               </div>
               <div className="text-sm text-gray-400 flex flex-row justify-between">
                 <p>{messages.length} Replies</p>
@@ -196,8 +200,12 @@ export default function Channel({
           key={`${incrementId}-desktop`}
         >
           <tr className="border-solid border-gray-200 cursor-pointer">
-            <td className="px-6 py-3 md:max-w-[800px]">
-              <Message text={oldestMessage.body} truncate mentions={oldestMessage.mentions.map((m) => m.users)} />
+            <td className="px-6 py-3 align-middle md:max-w-[800px]">
+              <Message
+                text={oldestMessage.body}
+                truncate
+                mentions={oldestMessage.mentions.map((m) => m.users)}
+              />
             </td>
             <td className="px-6 py-3 align-middle">
               <Avatars
@@ -210,9 +218,11 @@ export default function Channel({
                 }
               />
             </td>
-            <td className="px-6 py-3 text-sm">{viewCount}</td>
-            <td className="px-6 py-3 text-sm">{messages.length}</td>
-            <td className="px-6 py-3 text-sm min-w-[120px]">
+            <td className="px-6 py-3 text-sm align-middle">{viewCount}</td>
+            <td className="px-6 py-3 text-sm align-middle">
+              {messages.length}
+            </td>
+            <td className="px-6 py-3 text-sm align-middle min-w-[120px]">
               {format(new Date(newestMessage.sentAt))}
             </td>
           </tr>
