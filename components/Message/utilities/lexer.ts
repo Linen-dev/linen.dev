@@ -17,7 +17,7 @@ export enum TokenType {
   Link = 'link',
   BasicChannel = 'channel',
   ComplexChannel = 'complex_channel',
-  Code = 'code',
+  InlineCode = 'inline_code',
 }
 
 function isTagSupported(tag: string): boolean {
@@ -69,26 +69,26 @@ export function tokenize(input: string): Token[] {
     if (
       current() === START_TAG &&
       isTagSupported(next()) &&
-      type !== TokenType.Code
+      type !== TokenType.InlineCode
     ) {
       push(type, value);
       type = getTokenType(next());
       value = '';
       index += 2;
-    } else if (current() === END_TAG && type !== TokenType.Code) {
+    } else if (current() === END_TAG && type !== TokenType.InlineCode) {
       tokens.push({ type, value });
       type = TokenType.Text;
       value = '';
       index++;
     } else if (
       current() === BACKTICK &&
-      (type === TokenType.Text || type === TokenType.Code)
+      (type === TokenType.Text || type === TokenType.InlineCode)
     ) {
       push(type, value);
-      if (type === TokenType.Code) {
+      if (type === TokenType.InlineCode) {
         type = TokenType.Text;
       } else {
-        type = TokenType.Code;
+        type = TokenType.InlineCode;
       }
       value = '';
       index++;
