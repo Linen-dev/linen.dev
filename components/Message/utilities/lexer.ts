@@ -18,6 +18,7 @@ export enum TokenType {
   BasicChannel = 'channel',
   ComplexChannel = 'complex_channel',
   InlineCode = 'inline_code',
+  BlockCode = 'block_code',
 }
 
 function isTagSupported(tag: string): boolean {
@@ -55,8 +56,8 @@ export function tokenize(input: string): Token[] {
   function current(): string {
     return input[index];
   }
-  function next(): string {
-    return input[index + 1];
+  function next(count = 1): string {
+    return input[index + count];
   }
   function push(type: TokenType, value: string): void {
     if (value) {
@@ -80,6 +81,19 @@ export function tokenize(input: string): Token[] {
       type = TokenType.Text;
       value = '';
       index++;
+    } else if (
+      current() === BACKTICK &&
+      next() === BACKTICK &&
+      next(2) === BACKTICK
+    ) {
+      push(type, value);
+      if (type === TokenType.BlockCode) {
+        type = TokenType.Text;
+      } else {
+        type = TokenType.BlockCode;
+      }
+      value = '';
+      index += 3;
     } else if (
       current() === BACKTICK &&
       (type === TokenType.Text || type === TokenType.InlineCode)

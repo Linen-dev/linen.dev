@@ -236,7 +236,7 @@ describe('#tokenize', () => {
     describe('when there are three backticks', () => {
       it('returns a code token', () => {
         const input = '```foo```';
-        const expected = [{ type: TokenType.InlineCode, value: 'foo' }];
+        const expected = [{ type: TokenType.BlockCode, value: 'foo' }];
         expect(tokenize(input)).toEqual(expected);
       });
     });
@@ -245,9 +245,9 @@ describe('#tokenize', () => {
       it('returns a code token', () => {
         const input = '```foo``` ```bar```';
         const expected = [
-          { type: TokenType.InlineCode, value: 'foo' },
+          { type: TokenType.BlockCode, value: 'foo' },
           { type: TokenType.Text, value: ' ' },
-          { type: TokenType.InlineCode, value: 'bar' },
+          { type: TokenType.BlockCode, value: 'bar' },
         ];
         expect(tokenize(input)).toEqual(expected);
       });
