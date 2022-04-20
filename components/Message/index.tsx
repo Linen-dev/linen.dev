@@ -73,9 +73,11 @@ function Message({
           }
           if (type === TokenType.BlockCode) {
             return (
-              <code key={key} className={classNames(styles.code, 'block')}>
-                {value}
-              </code>
+              <pre>
+                <code key={key} className={classNames(styles.code, 'block')}>
+                  {value}
+                </code>
+              </pre>
             );
           }
           return null;
