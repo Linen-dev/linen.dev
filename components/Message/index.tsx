@@ -65,7 +65,7 @@ function Message({
           }
           if (type === TokenType.Code) {
             return (
-              <code key={key} className="rounded p-1">
+              <code key={key} className={styles.code}>
                 {value}
               </code>
             );
