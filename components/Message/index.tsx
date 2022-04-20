@@ -2,6 +2,7 @@ import React from 'react';
 import { tokenize, TokenType } from './utilities/lexer';
 import ReactEmoji from 'react-emoji-render';
 import { users } from '@prisma/client';
+import styles from './index.module.css';
 
 function truncateText(text: string, truncate: boolean) {
   if (!truncate) {
@@ -31,7 +32,7 @@ function Message({
   const tokens = tokenize(truncateText(text, truncate));
 
   return (
-    <div className="text-sm">
+    <div className={styles.message}>
       {tokens
         .map((token, index) => {
           const { type, value } = token;
