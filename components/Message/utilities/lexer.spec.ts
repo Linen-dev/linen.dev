@@ -128,14 +128,14 @@ describe('#tokenize', () => {
     describe('when it uses a single backtick', () => {
       it('returns a code token', () => {
         const input = '`foo`';
-        const expected = [{ type: TokenType.Code, value: 'foo' }];
+        const expected = [{ type: TokenType.InlineCode, value: 'foo' }];
         expect(tokenize(input)).toEqual(expected);
       });
 
       describe('when a single backtick does not have a closing backtick', () => {
         it('returns a code token', () => {
           const input = '`foo';
-          const expected = [{ type: TokenType.Code, value: 'foo' }];
+          const expected = [{ type: TokenType.InlineCode, value: 'foo' }];
           expect(tokenize(input)).toEqual(expected);
         });
       });
@@ -144,7 +144,7 @@ describe('#tokenize', () => {
         it('returns a code token', () => {
           const input = '`<strong>foo</strong>`';
           const expected = [
-            { type: TokenType.Code, value: '<strong>foo</strong>' },
+            { type: TokenType.InlineCode, value: '<strong>foo</strong>' },
           ];
           expect(tokenize(input)).toEqual(expected);
         });
@@ -154,7 +154,7 @@ describe('#tokenize', () => {
         it('returns a code token', () => {
           const input = '`const foo = "bar";`';
           const expected = [
-            { type: TokenType.Code, value: 'const foo = "bar";' },
+            { type: TokenType.InlineCode, value: 'const foo = "bar";' },
           ];
           expect(tokenize(input)).toEqual(expected);
         });
@@ -164,7 +164,7 @@ describe('#tokenize', () => {
         it('returns a code token', () => {
           const input = '`.foo { color: red; }`';
           const expected = [
-            { type: TokenType.Code, value: '.foo { color: red; }' },
+            { type: TokenType.InlineCode, value: '.foo { color: red; }' },
           ];
           expect(tokenize(input)).toEqual(expected);
         });
@@ -173,7 +173,9 @@ describe('#tokenize', () => {
       describe('when a single backtick contains a mention tag', () => {
         it('returns a code token', () => {
           const input = '`foo <@foo>`';
-          const expected = [{ type: TokenType.Code, value: 'foo <@foo>' }];
+          const expected = [
+            { type: TokenType.InlineCode, value: 'foo <@foo>' },
+          ];
           expect(tokenize(input)).toEqual(expected);
         });
       });
@@ -181,7 +183,9 @@ describe('#tokenize', () => {
       describe('when a single backtick contains a mention tag', () => {
         it('returns a code token', () => {
           const input = '`foo <@foo>`';
-          const expected = [{ type: TokenType.Code, value: 'foo <@foo>' }];
+          const expected = [
+            { type: TokenType.InlineCode, value: 'foo <@foo>' },
+          ];
           expect(tokenize(input)).toEqual(expected);
         });
       });
@@ -190,7 +194,7 @@ describe('#tokenize', () => {
         it('returns a code token', () => {
           const input = '`foo <https://linen.dev>`';
           const expected = [
-            { type: TokenType.Code, value: 'foo <https://linen.dev>' },
+            { type: TokenType.InlineCode, value: 'foo <https://linen.dev>' },
           ];
           expect(tokenize(input)).toEqual(expected);
         });
@@ -199,7 +203,9 @@ describe('#tokenize', () => {
       describe('when a single backtick contains a basic channel tag', () => {
         it('returns a code token', () => {
           const input = '`foo <#foo>`';
-          const expected = [{ type: TokenType.Code, value: 'foo <#foo>' }];
+          const expected = [
+            { type: TokenType.InlineCode, value: 'foo <#foo>' },
+          ];
           expect(tokenize(input)).toEqual(expected);
         });
       });
@@ -207,7 +213,9 @@ describe('#tokenize', () => {
       describe('when a single backtick contains a complex channel tag', () => {
         it('returns a code token', () => {
           const input = '`foo <!foo|bar>`';
-          const expected = [{ type: TokenType.Code, value: 'foo <!foo|bar>' }];
+          const expected = [
+            { type: TokenType.InlineCode, value: 'foo <!foo|bar>' },
+          ];
           expect(tokenize(input)).toEqual(expected);
         });
       });
@@ -217,9 +225,9 @@ describe('#tokenize', () => {
       it('returns two code tokens', () => {
         const input = '`foo` `bar`';
         const expected = [
-          { type: TokenType.Code, value: 'foo' },
+          { type: TokenType.InlineCode, value: 'foo' },
           { type: TokenType.Text, value: ' ' },
-          { type: TokenType.Code, value: 'bar' },
+          { type: TokenType.InlineCode, value: 'bar' },
         ];
         expect(tokenize(input)).toEqual(expected);
       });
@@ -228,7 +236,7 @@ describe('#tokenize', () => {
     describe('when there are three backticks', () => {
       it('returns a code token', () => {
         const input = '```foo```';
-        const expected = [{ type: TokenType.Code, value: 'foo' }];
+        const expected = [{ type: TokenType.InlineCode, value: 'foo' }];
         expect(tokenize(input)).toEqual(expected);
       });
     });
@@ -237,9 +245,9 @@ describe('#tokenize', () => {
       it('returns a code token', () => {
         const input = '```foo``` ```bar```';
         const expected = [
-          { type: TokenType.Code, value: 'foo' },
+          { type: TokenType.InlineCode, value: 'foo' },
           { type: TokenType.Text, value: ' ' },
-          { type: TokenType.Code, value: 'bar' },
+          { type: TokenType.InlineCode, value: 'bar' },
         ];
         expect(tokenize(input)).toEqual(expected);
       });
