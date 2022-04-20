@@ -190,14 +190,15 @@ Increment the version for the app:
 
 ```bash
 export APP_VERSION=v3
+source .env
 ```
 
 From the root folder of the project build the production docker image:
 
 ```bash
-dotenv -e .env -- docker build \
-  --build-arg SENTRY_DSN=<SENTRY_DSN> \
-  --build-arg SENTRY_AUTH_TOKEN=<SENTRY_AUTH_TOKEN> \
+docker build \
+  --build-arg SENTRY_DSN=${SENTRY_DSN} \
+  --build-arg SENTRY_AUTH_TOKEN=${SENTRY_AUTH_TOKEN} \
   --build-arg SKIP_CACHING_ON_BUILD_STEP=true \
   --build-arg NODE_ENV=production \
   -t linen-dev:${APP_VERSION} . --no-cache
@@ -215,7 +216,7 @@ aws ecr get-login-password \
 Tag and push the image to the AWS repository:
 
 ```bash
-docker tag linen-dev:v2 775327867774.dkr.ecr.us-east-1.amazonaws.com/linen-dev:${APP_VERSION}
+docker tag linen-dev:${APP_VERSION} 775327867774.dkr.ecr.us-east-1.amazonaws.com/linen-dev:${APP_VERSION}
 docker push 775327867774.dkr.ecr.us-east-1.amazonaws.com/linen-dev:${APP_VERSION}
 ```
 
