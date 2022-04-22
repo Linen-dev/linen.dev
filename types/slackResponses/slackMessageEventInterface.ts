@@ -14,16 +14,20 @@ export interface SlackMessageEvent {
 export interface Event {
   client_msg_id: string;
   type: string;
+  subtype?: string;
+  message?: Event;
+  previous_message?: Event;
   text: string;
   user: string;
   ts: string;
   team: string;
   blocks: Block[];
   channel: string;
+  hidden?: boolean;
   event_ts: string;
+  parent_user_id: string;
   channel_type: string;
   thread_ts?: string;
-  parent_user_id?: string;
 }
 
 export interface Block {

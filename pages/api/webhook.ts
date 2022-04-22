@@ -15,6 +15,7 @@ import {
 import { getSlackUser } from './slack';
 import { createSlug } from '../../lib/util';
 import { accounts, channels, slackAuthorizations } from '@prisma/client';
+import { add } from 'husky';
 
 export default async function handler(
   req: NextApiRequest,
@@ -34,7 +35,7 @@ export default async function handler(
 }
 
 export const handleWebhook = async (body: SlackMessageEvent) => {
-  const event = body.event;
+  const event: Event = body.event;
   const channelId = body.event.channel;
   const channel = await prisma.channels.findUnique({
     where: {
@@ -49,11 +50,61 @@ export const handleWebhook = async (body: SlackMessageEvent) => {
     },
   });
 
+  console.log('######## WEBHOOK EVENT #########', event);
+
   if (channel === null || channel.account === null) {
     console.error('Channel does not exist in db ');
     return { status: 403, error: 'Channel not found' };
   }
 
+  let message;
+  if (event.type === 'message' && !event.subtype) {
+    message = await addMessage(channel, event);
+  } else if (
+    event.type === 'message' &&
+    event.subtype &&
+    event.subtype === 'message_deleted'
+  ) {
+    message = await deleteMessage(channel, event);
+  } else if (
+    event.type === 'message' &&
+    event.subtype &&
+    event.subtype === 'message_changed'
+  ) {
+    message = await changeMessage(channel, event);
+  } else {
+    console.error('Event not supported!!');
+  }
+  return {
+    status: 200,
+    message,
+  };
+};
+
+async function findOrCreateUser(
+  slackUserId: string,
+  channel: channels & {
+    account: (accounts & { slackAuthorizations: slackAuthorizations[] }) | null;
+  }
+) {
+  let user = await findUser(slackUserId);
+  if (user === null) {
+    const accessToken = channel.account?.slackAuthorizations[0]?.accessToken;
+    if (!!accessToken) {
+      const slackUser = await getSlackUser(slackUserId, accessToken);
+      //check done above in channel check
+      user = await createUserFromUserInfo(slackUser, channel.accountId!);
+    }
+  }
+  return user;
+}
+
+async function addMessage(
+  channel: channels & {
+    account: (accounts & { slackAuthorizations: slackAuthorizations[] }) | null;
+  },
+  event: Event
+) {
   const thread_ts = event.thread_ts || event.ts;
   const thread = await findOrCreateThread({
     slackThreadTs: thread_ts,
@@ -99,25 +150,27 @@ export const handleWebhook = async (body: SlackMessageEvent) => {
 
   const message = await createMessageWithMentions(param, mentionIds);
 
-  return {
-    status: 200,
-    message,
-  };
-};
-async function findOrCreateUser(
-  slackUserId: string,
+  return message;
+}
+
+async function deleteMessage(
   channel: channels & {
     account: (accounts & { slackAuthorizations: slackAuthorizations[] }) | null;
-  }
+  },
+  event: Event
 ) {
-  let user = await findUser(slackUserId);
-  if (user === null) {
-    const accessToken = channel.account?.slackAuthorizations[0]?.accessToken;
-    if (!!accessToken) {
-      const slackUser = await getSlackUser(slackUserId, accessToken);
-      //check done above in channel check
-      user = await createUserFromUserInfo(slackUser, channel.accountId!);
-    }
-  }
-  return user;
+  console.log('deleteMessage is not implemented yet!');
+
+  return {};
+}
+
+async function changeMessage(
+  channel: channels & {
+    account: (accounts & { slackAuthorizations: slackAuthorizations[] }) | null;
+  },
+  event: Event
+) {
+  console.log('deleteMessage is not implemented yet!');
+
+  return {};
 }
