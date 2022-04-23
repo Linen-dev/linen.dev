@@ -50,6 +50,21 @@ export const createMessageWithMentions = async (
   });
 };
 
+export const deleteMessageWithMentions = async (messageId: string) => {
+  return await prisma.$transaction([
+    prisma.slackMentions.deleteMany({
+      where: {
+        messagesId: messageId,
+      },
+    }),
+    prisma.messages.delete({
+      where: {
+        id: messageId,
+      },
+    }),
+  ]);
+};
+
 export const createOrUpdateMessage = async (
   message: Prisma.messagesUncheckedCreateInput
 ) => {
@@ -391,6 +406,18 @@ export const findMessagesWithThreads = async (accountId: string) => {
     },
     orderBy: {
       sentAt: 'desc',
+    },
+  });
+};
+
+export const findMessageByChannelIdAndTs = async (
+  channelId: string,
+  ts: string
+) => {
+  return prisma.messages.findFirst({
+    where: {
+      channelId: channelId,
+      slackMessageId: ts,
     },
   });
 };

@@ -7,6 +7,8 @@ import {
   findOrCreateThread,
   findUser,
   updateSlackThread,
+  findMessageByChannelIdAndTs,
+  deleteMessageWithMentions,
 } from '../../lib/models';
 import {
   Event,
@@ -159,7 +161,17 @@ async function deleteMessage(
   },
   event: Event
 ) {
-  console.log('deleteMessage is not implemented yet!');
+  if (event.deleted_ts) {
+    const message = await findMessageByChannelIdAndTs(
+      channel.id,
+      event.deleted_ts
+    );
+    if (message) {
+      await deleteMessageWithMentions(message.id);
+    } else {
+      console.warn('Message not found!', channel.id, event.deleted_ts);
+    }
+  }
 
   return {};
 }
@@ -170,7 +182,7 @@ async function changeMessage(
   },
   event: Event
 ) {
-  console.log('deleteMessage is not implemented yet!');
+  console.log('changeMessage is not implemented yet!');
 
   return {};
 }

@@ -24,6 +24,7 @@ export interface Event {
   blocks: Block[];
   channel: string;
   hidden?: boolean;
+  deleted_ts?: string;
   event_ts: string;
   parent_user_id: string;
   channel_type: string;
