@@ -1,6 +1,12 @@
-import { Prisma } from '@prisma/client';
+import {
+  accounts,
+  channels,
+  slackAuthorizations,
+  Prisma,
+} from '@prisma/client';
 import prisma from '../client';
 import { UserInfo } from '../types/slackResponses//slackUserInfoInterface';
+import { getSlackUser } from '../pages/api/slack';
 
 export const createSlackMessage = async (event: any, channelId: string) => {
   const body = event.event.text;
@@ -455,4 +461,22 @@ export const findSlackThreadsWithOnlyOneMessage = async (
   ;`;
 
   return await prisma.$queryRawUnsafe(query);
+};
+
+export const findOrCreateUserFromUserInfo = async (
+  slackUserId: string,
+  channel: channels & {
+    account: (accounts & { slackAuthorizations: slackAuthorizations[] }) | null;
+  }
+) => {
+  let user = await findUser(slackUserId);
+  if (user === null) {
+    const accessToken = channel.account?.slackAuthorizations[0]?.accessToken;
+    if (!!accessToken) {
+      const slackUser = await getSlackUser(slackUserId, accessToken);
+      //check done above in channel check
+      user = await createUserFromUserInfo(slackUser, channel.accountId!);
+    }
+  }
+  return user;
 };

@@ -3,10 +3,9 @@ import prisma from '../../client';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import {
   createMessageWithMentions,
-  createUserFromUserInfo,
   findOrCreateThread,
-  findUser,
   updateSlackThread,
+  findOrCreateUserFromUserInfo,
   findMessageByChannelIdAndTs,
   deleteMessageWithMentions,
 } from '../../lib/models';
@@ -14,10 +13,8 @@ import {
   Event,
   SlackMessageEvent,
 } from '../../types/slackResponses/slackMessageEventInterface';
-import { getSlackUser } from './slack';
 import { createSlug } from '../../lib/util';
 import { accounts, channels, slackAuthorizations } from '@prisma/client';
-import { add } from 'husky';
 
 export default async function handler(
   req: NextApiRequest,
@@ -52,8 +49,6 @@ export const handleWebhook = async (body: SlackMessageEvent) => {
     },
   });
 
-  console.log('######## WEBHOOK EVENT #########', event);
-
   if (channel === null || channel.account === null) {
     console.error('Channel does not exist in db ');
     return { status: 403, error: 'Channel not found' };
@@ -77,29 +72,12 @@ export const handleWebhook = async (body: SlackMessageEvent) => {
   } else {
     console.error('Event not supported!!');
   }
+
   return {
     status: 200,
     message,
   };
 };
-
-async function findOrCreateUser(
-  slackUserId: string,
-  channel: channels & {
-    account: (accounts & { slackAuthorizations: slackAuthorizations[] }) | null;
-  }
-) {
-  let user = await findUser(slackUserId);
-  if (user === null) {
-    const accessToken = channel.account?.slackAuthorizations[0]?.accessToken;
-    if (!!accessToken) {
-      const slackUser = await getSlackUser(slackUserId, accessToken);
-      //check done above in channel check
-      user = await createUserFromUserInfo(slackUser, channel.accountId!);
-    }
-  }
-  return user;
-}
 
 async function addMessage(
   channel: channels & {
@@ -134,12 +112,14 @@ async function addMessage(
     m.replace('<@', '').replace('>', '')
   );
   const mentionUsers = await Promise.all(
-    mentionUserIds.map((userId) => findOrCreateUser(userId, channel))
+    mentionUserIds.map((userId) =>
+      findOrCreateUserFromUserInfo(userId, channel)
+    )
   );
 
   const mentionIds = mentionUsers.filter((x) => x).map((x) => x!.id);
 
-  let user = await findOrCreateUser(event.user, channel);
+  let user = await findOrCreateUserFromUserInfo(event.user, channel);
 
   const param = {
     body: event.text,

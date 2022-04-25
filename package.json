@@ -62,6 +62,7 @@
     "jest": "^27.5.1",
     "jest-mock-extended": "^2.0.4",
     "lint-staged": "^12.3.3",
+    "next-test-api-route-handler": "^3.1.2",
     "postcss": "^8.4.6",
     "prettier": "2.5.1"
   },
