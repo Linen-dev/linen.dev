@@ -251,6 +251,16 @@ describe('#tokenize', () => {
         ];
         expect(tokenize(input)).toEqual(expected);
       });
+
+      describe('and a link is present within the code block', () => {
+        it('returns a code token', () => {
+          const input = '```foo <https://bar.com>```';
+          const expected = [
+            { type: TokenType.BlockCode, value: 'foo <https://bar.com>' },
+          ];
+          expect(tokenize(input)).toEqual(expected);
+        });
+      });
     });
   });
 });

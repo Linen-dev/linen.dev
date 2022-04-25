@@ -31,6 +31,11 @@ Apr 07 04:38:57 ip-10-0-74-131 kernel:  kthread+0x121/0x140
 Apr 07 04:38:57 ip-10-0-74-131 kernel:  ? auditd_reset+0xa0/0xa0
 `.trim();
 
+const CODE_EXAMPLE = `
+[root@visibility99 osquery]# curl -X POST
+<https://xxxxxxxxxxxx:8080/api/v1/enroll> -d '{}' curl: (52) Empty reply from server
+`.trim();
+
 export default function Styleguide() {
   return (
     <Example header="Message">
@@ -44,6 +49,7 @@ export default function Styleguide() {
       <Message text="Has anyone ran into this error before? Just trying to run a spec. Other things like `db:migrate` fail for `PG:InsufficientPrivilege` as well. ```An error occured while loading ./spec/models/user.rb```" />
       <Message text="Lorem ipsum dolor sit amet, lorem ipsum dolor sit amet, lorem ipsum dolor sit amet `lorem ipsum dolor sit amet, lorem ipsum dolor sit amet`" />
       <Message text={`\`\`\`${STACK_TRACE_EXAMPLE}\`\`\``} />
+      <Message text={`\`\`\`${CODE_EXAMPLE}\`\`\``} />
     </Example>
   );
 }
