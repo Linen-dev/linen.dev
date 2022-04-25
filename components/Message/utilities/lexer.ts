@@ -70,13 +70,18 @@ export function tokenize(input: string): Token[] {
     if (
       current() === START_TAG &&
       isTagSupported(next()) &&
-      type !== TokenType.InlineCode
+      type !== TokenType.InlineCode &&
+      type !== TokenType.BlockCode
     ) {
       push(type, value);
       type = getTokenType(next());
       value = '';
       index += 2;
-    } else if (current() === END_TAG && type !== TokenType.InlineCode) {
+    } else if (
+      current() === END_TAG &&
+      type !== TokenType.InlineCode &&
+      type !== TokenType.BlockCode
+    ) {
       tokens.push({ type, value });
       type = TokenType.Text;
       value = '';
