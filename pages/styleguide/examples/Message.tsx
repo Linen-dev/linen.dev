@@ -50,6 +50,7 @@ export default function Styleguide() {
       <Message text="Lorem ipsum dolor sit amet, lorem ipsum dolor sit amet, lorem ipsum dolor sit amet `lorem ipsum dolor sit amet, lorem ipsum dolor sit amet`" />
       <Message text={`\`\`\`${STACK_TRACE_EXAMPLE}\`\`\``} />
       <Message text={`\`\`\`${CODE_EXAMPLE}\`\`\``} />
+      <Message text="<http://localhost:3000/yc-logo.png>" />
     </Example>
   );
 }
