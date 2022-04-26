@@ -1,12 +1,18 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import prisma from '../../client';
+import { stripProtocol } from '../../utilities/url';
 
 async function create(request: NextApiRequest, response: NextApiResponse) {
   const { homeUrl, docsUrl, redirectDomain, brandColor } = JSON.parse(
     request.body
   );
   const account = await prisma.accounts.create({
-    data: { homeUrl, docsUrl, redirectDomain, brandColor },
+    data: {
+      homeUrl,
+      docsUrl,
+      redirectDomain: stripProtocol(redirectDomain),
+      brandColor,
+    },
   });
   return response.status(200).json(account);
 }
@@ -29,8 +35,19 @@ async function update(request: NextApiRequest, response: NextApiResponse) {
     return response.status(404).json({});
   }
   const data = account.premium
-    ? { homeUrl, docsUrl, redirectDomain, brandColor, googleAnalyticsId }
-    : { homeUrl, docsUrl, redirectDomain, brandColor };
+    ? {
+        homeUrl,
+        docsUrl,
+        redirectDomain: stripProtocol(redirectDomain),
+        brandColor,
+        googleAnalyticsId,
+      }
+    : {
+        homeUrl,
+        docsUrl,
+        redirectDomain: stripProtocol(redirectDomain),
+        brandColor,
+      };
   const record = await prisma.accounts.update({
     where: { id: accountId },
     data,

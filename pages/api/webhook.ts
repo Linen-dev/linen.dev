@@ -84,7 +84,7 @@ export const handleWebhook = async (body: SlackMessageEvent) => {
     mentionUserIds.map((userId) => findOrCreateUser(userId, channel))
   );
 
-  const mentionIds = mentionUsers.filter((x) => x).map((x) => x!.id);
+  const mentionIds = mentionUsers.filter(Boolean).map((x) => x!.id);
 
   let user = await findOrCreateUser(event.user, channel);
 
