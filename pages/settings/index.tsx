@@ -7,6 +7,7 @@ import ColorField from '../../components/ColorField';
 import Button from '../../components/Button';
 import prisma from '../../client';
 import serializeAccount, { SerializedAccount } from '../../serializers/account';
+import { stripProtocol } from '../../utilities/url';
 
 interface Props {
   account?: SerializedAccount;
@@ -21,7 +22,7 @@ export default function SettingsPage({ account }: Props) {
       const form = event.target;
       const homeUrl = form.homeUrl.value;
       const docsUrl = form.docsUrl.value;
-      const redirectDomain = form.redirectDomain.value;
+      const redirectDomain = stripProtocol(form.redirectDomain.value);
       const googleAnalyticsId = form.googleAnalyticsId?.value;
       const brandColor = form.brandColor.value;
       fetch('/api/accounts', {
@@ -49,18 +50,21 @@ export default function SettingsPage({ account }: Props) {
             placeholder="https://yourwebsite.com"
             id="homeUrl"
             defaultValue={account.homeUrl}
+            required
           />
           <TextField
             label="Docs url"
             placeholder="https://docs.yourwebsite.com"
             id="docsUrl"
             defaultValue={account.docsUrl}
+            required
           />
           <TextField
             label="Redirect domain"
-            placeholder="https://linen.yourwebsite.com"
+            placeholder="linen.yourwebsite.com"
             id="redirectDomain"
             defaultValue={account.redirectDomain}
+            required
           />
           {account.premium && (
             <TextField
@@ -74,6 +78,7 @@ export default function SettingsPage({ account }: Props) {
             label="Brand color"
             id="brandColor"
             defaultValue={account.brandColor}
+            required
           />
           <Button type="submit">Submit</Button>
         </form>
