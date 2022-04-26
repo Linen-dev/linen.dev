@@ -87,7 +87,7 @@ export async function getThreadById(
 
   const authors = thread.messages
     .map((m) => m.author)
-    .filter((x) => x) as users[];
+    .filter(Boolean) as users[];
 
   const threadUrl =
     account.slackUrl +
