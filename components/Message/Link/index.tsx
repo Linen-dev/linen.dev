@@ -1,4 +1,6 @@
 import React from 'react';
+import classNames from 'classnames';
+import styles from './index.module.css';
 
 interface Props {
   value: string;
@@ -17,7 +19,7 @@ function isImage(href: string): boolean {
 export default function Link({ value }: Props) {
   const [href, name] = value.split('|');
   return (
-    <a className="underline text-indigo-700" href={href}>
+    <a className={classNames('text-indigo-700', styles.link)} href={href}>
       {name || href}
       {isImage(href) && <img src={href} alt={href} />}
     </a>
