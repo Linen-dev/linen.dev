@@ -2,6 +2,7 @@ import Layout from '../../../components/layout/CardLayout';
 import TextField from '../../../components/TextField';
 import ColorField from '../../../components/ColorField';
 import styles from './index.module.css';
+import { stripProtocol } from '../../../utilities/url';
 
 const REDIRECT_URI =
   process.env.NEXT_PUBLIC_REDIRECT_URI || 'https://linen.dev/api/oauth';
@@ -21,7 +22,7 @@ export default function CreateAccountForm({ authId, email, password }: Props) {
     const form = event.target;
     const homeUrl = form.homeUrl.value;
     const docsUrl = form.docsUrl.value;
-    const redirectDomain = form.redirectDomain.value;
+    const redirectDomain = stripProtocol(form.redirectDomain.value);
     const brandColor = form.brandColor.value;
     const response = await fetch('/api/accounts', {
       method: 'POST',
@@ -72,7 +73,7 @@ export default function CreateAccountForm({ authId, email, password }: Props) {
         />
         <TextField
           label="Redirect domain"
-          placeholder="https://linen.yourwebsite.com"
+          placeholder="linen.yourwebsite.com"
           id="redirectDomain"
           required
         />
