@@ -36,6 +36,17 @@ const CODE_EXAMPLE = `
 <https://xxxxxxxxxxxx:8080/api/v1/enroll> -d '{}' curl: (52) Empty reply from server
 `.trim();
 
+const STATIC_TEXT = `
+Hey!
+
+Can you help me?
+
+##ifdef
+  test
+    is this correct
+##endif
+`.trim();
+
 export default function Styleguide() {
   return (
     <Example header="Message">
@@ -45,11 +56,13 @@ export default function Styleguide() {
       <Message text="Hey, <@John>!" />
       <Message text="Hey, <https://linen.dev>!" />
       <Message text="Hey, <http://linen.dev>!" />
+      <Message text="Hey, <http://query.customer.dev/foo/bar/baz/qux/lorem/ipsum/dolor/sit/amet>!" />
       <Message text="Hey, `const answer = 42`!" />
       <Message text="Has anyone ran into this error before? Just trying to run a spec. Other things like `db:migrate` fail for `PG:InsufficientPrivilege` as well. ```An error occured while loading ./spec/models/user.rb```" />
       <Message text="Lorem ipsum dolor sit amet, lorem ipsum dolor sit amet, lorem ipsum dolor sit amet `lorem ipsum dolor sit amet, lorem ipsum dolor sit amet`" />
       <Message text={`\`\`\`${STACK_TRACE_EXAMPLE}\`\`\``} />
       <Message text={`\`\`\`${CODE_EXAMPLE}\`\`\``} />
+      <Message text={STATIC_TEXT} />
       <Message text="<http://localhost:3000/yc-logo.png>" />
     </Example>
   );
