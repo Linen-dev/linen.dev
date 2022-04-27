@@ -6,9 +6,12 @@ import * as mockModels from '../../../lib/models';
 jest.mock('../../../lib/models', () => ({
   ...jest.requireActual('../../../lib/models'),
   findOrCreateUserFromUserInfo: jest.fn(),
+  findMessageByChannelIdAndTs: jest.fn(),
+  deleteMessageWithMentions: jest.fn(),
 }));
 
 import handler from '../../../pages/api/webhook';
+import { deleteMessageWithMentions } from '../../../lib/models';
 
 const addMessageEvent = {
   token: 'RudepRJuMOjy8zENRCLdXW7t',
@@ -36,25 +39,44 @@ const addMessageEvent = {
 };
 
 const deleteMessageEvent = {
-  type: 'message',
-  subtype: 'message_deleted',
-  previous_message: {
-    client_msg_id: 'c09833d7-056b-4ee6-9b43-6d4194f9fa46',
+  token: 'RudepRJuMOjy8zENRCLdXW7t',
+  team_id: 'T036DSF9RJT',
+  api_app_id: 'A03CA2AHMAL',
+  event: {
     type: 'message',
-    text: 'testing more',
-    user: 'U037T5JG1NY',
-    ts: '1650483492.673849',
-    team: 'T036DSF9RJT',
-    blocks: [[Object]],
+    subtype: 'message_deleted',
+    previous_message: {
+      client_msg_id: '3ff2b5dd-787e-4762-b2f6-0b6cc15b97cd',
+      type: 'message',
+      text: 'yet another test',
+      user: 'U037T5JG1NY',
+      ts: '1651046601.602859',
+      team: 'T036DSF9RJT',
+      blocks: [Array],
+    },
+    channel: 'C03ATK7RWNS',
+    hidden: true,
+    deleted_ts: '1651046601.602859',
+    event_ts: '1651046639.000300',
+    ts: '1651046639.000300',
+    channel_type: 'channel',
   },
-  channel: 'C03ATK7RWNS',
-  hidden: true,
-  deleted_ts: '1650483492.673849',
-  event_ts: '1650483598.001300',
-  ts: '1650483598.001300',
-  channel_type: 'channel',
+  type: 'event_callback',
+  event_id: 'Ev03D3UYJSG3',
+  event_time: 1651046639,
+  authorizations: [
+    {
+      enterprise_id: null,
+      team_id: 'T036DSF9RJT',
+      user_id: 'U037T5JG1NY',
+      is_bot: false,
+      is_enterprise_install: false,
+    },
+  ],
+  is_ext_shared_channel: false,
+  event_context:
+    '4-eyJldCI6Im1lc3NhZ2UiLCJ0aWQiOiJUMDM2RFNGOVJKVCIsImFpZCI6IkEwM0NBMkFITUFMIiwiY2lkIjoiQzAzQVRLN1JXTlMifQ',
 };
-
 describe('webhook', () => {
   // let consoleWarnSpy: jest.SpyInstance;
   // let consoleLogSpy: jest.SpyInstance;
@@ -214,6 +236,63 @@ describe('webhook', () => {
             },
           },
         });
+
+        // result OK:200
+        expect(res.status).toBe(200);
+        await expect(res.json()).resolves.toStrictEqual({});
+      },
+    });
+  });
+
+  it('add message - delete message', async () => {
+    const channelMock = {
+      id: 'channel_id',
+      channelName: 'channel_name',
+      slackChannelId: 'C03ATK7RWNS',
+      accountId: 'account_id',
+      hidden: false,
+      slackNextPageCursor: null,
+    };
+    const channelsFindUniqueMock =
+      prismaMock.channels.findUnique.mockResolvedValue(channelMock);
+
+    mockModels.findMessageByChannelIdAndTs.mockResolvedValue({
+      id: 'message_id',
+    });
+
+    await testApiHandler({
+      handler,
+      url: '/api/webhook',
+      test: async ({ fetch }) => {
+        const res = await fetch({
+          method: 'POST',
+          headers: {
+            'content-type': 'application/json',
+          },
+          body: JSON.stringify(deleteMessageEvent),
+        });
+
+        // Proper channel has been searched for based on Slack event
+        expect(channelsFindUniqueMock).toHaveBeenCalledWith({
+          where: {
+            slackChannelId: deleteMessageEvent.event.channel,
+          },
+          include: {
+            account: {
+              include: {
+                slackAuthorizations: true,
+              },
+            },
+          },
+        });
+
+        expect(mockModels.findMessageByChannelIdAndTs).toHaveBeenCalledWith(
+          channelMock.id,
+          deleteMessageEvent.event.deleted_ts
+        );
+        expect(mockModels.deleteMessageWithMentions).toHaveBeenCalledWith(
+          'message_id'
+        );
 
         // result OK:200
         expect(res.status).toBe(200);
