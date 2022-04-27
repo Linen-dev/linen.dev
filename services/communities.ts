@@ -6,6 +6,7 @@ import {
 import { index as fetchThreads } from '../services/threads';
 import { links } from '../constants/examples';
 import { GetStaticPropsContext } from 'next/types';
+import { stripProtocol } from '../utilities/url';
 
 export const getThreadsByCommunityName = async (
   communityName: string,
@@ -121,16 +122,16 @@ export async function channelGetStaticPaths(pathPrefix: string) {
   const acc = accounts.filter((a) => a.channels.length > 0);
   let redirectDomains = acc
     .map((a) => {
-      return a.redirectDomain;
+      return a.redirectDomain && stripProtocol(a.redirectDomain);
     })
-    .filter((x) => x);
+    .filter(Boolean);
 
   const paths = redirectDomains.concat(
     acc
       .map((a) => {
         return a.slackDomain;
       })
-      .filter((x) => x)
+      .filter(Boolean)
   );
 
   return {

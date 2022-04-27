@@ -7,6 +7,7 @@ import {
 import prisma from '../client';
 import { UserInfo } from '../types/slackResponses//slackUserInfoInterface';
 import { getSlackUser } from '../pages/api/slack';
+import { stripProtocol } from '../utilities/url';
 
 export const createSlackMessage = async (event: any, channelId: string) => {
   const body = event.event.text;
@@ -167,7 +168,7 @@ export const updateAccountRedirectDomain = async (
 ) => {
   return await prisma.accounts.update({
     where: { id: accountId },
-    data: { redirectDomain: domain, slackUrl },
+    data: { redirectDomain: stripProtocol(domain), slackUrl },
   });
 };
 

@@ -1,0 +1,8 @@
+.link {
+  hyphens: auto;
+  line-break: auto;
+  overflow-wrap: break-word;
+  text-decoration: underline;
+  word-break: break-word;
+  word-wrap: break-word;
+}

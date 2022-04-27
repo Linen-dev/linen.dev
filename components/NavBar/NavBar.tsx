@@ -62,6 +62,13 @@ export function NavBar(
               </CustomLink>
             ))}
           </div>
+          <a
+            className="pl-4 text-gray-800 opacity-80 text-sm hover:text-blue-900"
+            target="_blank"
+            href="https://www.linen.dev"
+          >
+            Powered by Linen
+          </a>
         </Paper>
       </Group>
     </Navbar>

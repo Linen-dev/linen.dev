@@ -4,8 +4,8 @@ interface Props {
   className?: string;
   src: string;
   alt: string;
-  width: number;
-  height: number;
+  width?: number;
+  height?: number;
 }
 
 export default function Image({ className, src, alt, width, height }: Props) {

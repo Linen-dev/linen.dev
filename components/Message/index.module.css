@@ -1,0 +1,10 @@
+.message {
+  font-size: 14px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  -webkit-font-smoothing: antialiased;
+}
+
+.message + .message {
+  margin-top: 8px;
+}

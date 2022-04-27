@@ -117,7 +117,7 @@ async function addMessage(
     )
   );
 
-  const mentionIds = mentionUsers.filter((x) => x).map((x) => x!.id);
+  const mentionIds = mentionUsers.filter(Boolean).map((x) => x!.id);
 
   let user = await findOrCreateUserFromUserInfo(event.user, channel);
 

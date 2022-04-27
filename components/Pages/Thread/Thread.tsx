@@ -54,11 +54,7 @@ export default function Thread({
               </Text>
             </div>
             <div style={{ maxWidth: '700px' }}>
-              <Message
-                mentions={mentions.map((m: MentionsWithUsers) => m.users)}
-                text={body}
-                author={author}
-              />
+              <Message text={body} mentions={mentions.map((m: MentionsWithUsers) => m.users)} />
             </div>
           </li>
         );
