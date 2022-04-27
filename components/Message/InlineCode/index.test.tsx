@@ -1,10 +1,10 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import BlockCode from '.';
+import InlineCode from '.';
 
-describe('BlockCode', () => {
+describe('InlineCode', () => {
   it('renders it', () => {
-    const { getByText } = render(<BlockCode value="foo" />);
+    const { getByText } = render(<InlineCode value="foo" />);
     const node = getByText('foo');
     expect(node).toHaveTextContent('foo');
     expect(node.nodeName).toEqual('CODE');
@@ -12,7 +12,7 @@ describe('BlockCode', () => {
 
   it('normalizes code', () => {
     const { getByText } = render(
-      <BlockCode value="&lt;div&gt;foo&lt;/div&gt;" />
+      <InlineCode value="&lt;div&gt;foo&lt;/div&gt;" />
     );
     const node = getByText('<div>foo</div>');
     expect(node).toHaveTextContent('<div>foo</div>');
