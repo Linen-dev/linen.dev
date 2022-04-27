@@ -1,14 +1,14 @@
 import { testApiHandler } from 'next-test-api-route-handler';
 
-import { prismaMock } from './singleton';
+import { prismaMock } from '../../singleton';
 
-import * as mockModels from '../../lib/models';
-jest.mock('../../lib/models', () => ({
-  ...jest.requireActual('../../lib/models'),
+import * as mockModels from '../../../lib/models';
+jest.mock('../../../lib/models', () => ({
+  ...jest.requireActual('../../../lib/models'),
   findOrCreateUserFromUserInfo: jest.fn(),
 }));
 
-import handler from '../../pages/api/webhook';
+import handler from '../../../pages/api/webhook';
 
 const addMessageEvent = {
   token: 'RudepRJuMOjy8zENRCLdXW7t',
@@ -33,6 +33,26 @@ const addMessageEvent = {
   is_ext_shared_channel: false,
   event_context:
     '4-eyJldCI6Im1lc3NhZ2UiLCJ0aWQiOiJUMDM2RFNGOVJKVCIsImFpZCI6IkEwM0NBMkFITUFMIiwiY2lkIjoiQzAzQVRLN1JXTlMifQ',
+};
+
+const deleteMessageEvent = {
+  type: 'message',
+  subtype: 'message_deleted',
+  previous_message: {
+    client_msg_id: 'c09833d7-056b-4ee6-9b43-6d4194f9fa46',
+    type: 'message',
+    text: 'testing more',
+    user: 'U037T5JG1NY',
+    ts: '1650483492.673849',
+    team: 'T036DSF9RJT',
+    blocks: [[Object]],
+  },
+  channel: 'C03ATK7RWNS',
+  hidden: true,
+  deleted_ts: '1650483492.673849',
+  event_ts: '1650483598.001300',
+  ts: '1650483598.001300',
+  channel_type: 'channel',
 };
 
 describe('webhook', () => {
