@@ -1,6 +1,12 @@
-import { Prisma } from '@prisma/client';
+import {
+  accounts,
+  channels,
+  slackAuthorizations,
+  Prisma,
+} from '@prisma/client';
 import prisma from '../client';
 import { UserInfo } from '../types/slackResponses//slackUserInfoInterface';
+import { getSlackUser } from '../pages/api/slack';
 import { stripProtocol } from '../utilities/url';
 
 export const createSlackMessage = async (event: any, channelId: string) => {
@@ -49,6 +55,21 @@ export const createMessageWithMentions = async (
       },
     },
   });
+};
+
+export const deleteMessageWithMentions = async (messageId: string) => {
+  return await prisma.$transaction([
+    prisma.slackMentions.deleteMany({
+      where: {
+        messagesId: messageId,
+      },
+    }),
+    prisma.messages.delete({
+      where: {
+        id: messageId,
+      },
+    }),
+  ]);
 };
 
 export const createOrUpdateMessage = async (
@@ -396,6 +417,18 @@ export const findMessagesWithThreads = async (accountId: string) => {
   });
 };
 
+export const findMessageByChannelIdAndTs = async (
+  channelId: string,
+  ts: string
+) => {
+  return prisma.messages.findFirst({
+    where: {
+      channelId: channelId,
+      slackMessageId: ts,
+    },
+  });
+};
+
 export const findMessageByTs = async (ts: string) => {
   return prisma.messages.findFirst({ where: { slackMessageId: ts } });
 };
@@ -429,4 +462,22 @@ export const findSlackThreadsWithOnlyOneMessage = async (
   ;`;
 
   return await prisma.$queryRawUnsafe(query);
+};
+
+export const findOrCreateUserFromUserInfo = async (
+  slackUserId: string,
+  channel: channels & {
+    account: (accounts & { slackAuthorizations: slackAuthorizations[] }) | null;
+  }
+) => {
+  let user = await findUser(slackUserId);
+  if (user === null) {
+    const accessToken = channel.account?.slackAuthorizations[0]?.accessToken;
+    if (!!accessToken) {
+      const slackUser = await getSlackUser(slackUserId, accessToken);
+      //check done above in channel check
+      user = await createUserFromUserInfo(slackUser, channel.accountId!);
+    }
+  }
+  return user;
 };
