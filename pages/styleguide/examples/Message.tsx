@@ -47,6 +47,10 @@ Can you help me?
 ##endif
 `.trim();
 
+const HTML_EXAMPLE = `
+&lt;div&gt;foo&lt;/div&gt;
+`.trim();
+
 export default function Styleguide() {
   return (
     <Example header="Message">
@@ -64,6 +68,8 @@ export default function Styleguide() {
       <Message text={`\`\`\`${CODE_EXAMPLE}\`\`\``} />
       <Message text={STATIC_TEXT} />
       <Message text="<http://localhost:3000/yc-logo.png>" />
+      <Message text={`\`${HTML_EXAMPLE}\``} />
+      <Message text={`\`\`\`${HTML_EXAMPLE}\`\`\`\``} />
     </Example>
   );
 }
