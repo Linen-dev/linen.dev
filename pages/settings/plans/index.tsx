@@ -1,6 +1,6 @@
 import React from 'react';
 import { NextPageContext } from 'next';
-import { getSession, useSession } from 'next-auth/react';
+import { getSession } from 'next-auth/react';
 import DashboardLayout from '../../../components/layout/DashboardLayout';
 import serializeAccount, {
   SerializedAccount,
@@ -12,9 +12,7 @@ interface Props {
 }
 
 export default function SettingsPage({ account }: Props) {
-  const { data: session } = useSession();
-
-  if (session && account) {
+  if (account) {
     return <DashboardLayout header="Plans">{account.premium}</DashboardLayout>;
   }
   return (

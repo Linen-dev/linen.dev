@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { NextPageContext } from 'next';
-import { getSession, useSession } from 'next-auth/react';
+import { getSession } from 'next-auth/react';
 import DashboardLayout from '../../components/layout/DashboardLayout';
 import TextField from '../../components/TextField';
 import ColorField from '../../components/ColorField';
@@ -25,7 +25,6 @@ interface Props {
 }
 
 export default function SettingsPage({ account }: Props) {
-  const { data: session } = useSession();
   const router = useRouter();
 
   useEffect(() => {
@@ -38,7 +37,7 @@ export default function SettingsPage({ account }: Props) {
     if (success) toast.success(decodeURI(success));
   }, [router.query.success]);
 
-  if (session && account) {
+  if (account) {
     const onSubmit = (event: any) => {
       event.preventDefault();
       const form = event.target;
