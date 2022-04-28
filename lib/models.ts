@@ -115,6 +115,19 @@ export const findAccountById = async (accountId: string) => {
   });
 };
 
+export const findAccountByEmail = async (email?: string | null) => {
+  if (!email) {
+    return null;
+  }
+  const auth = await prisma.auths.findFirst({ where: { email } });
+  if (!auth) {
+    return null;
+  }
+  return await prisma.accounts.findFirst({
+    where: { id: auth.accountId as string },
+  });
+};
+
 export const accountsWithChannels = async () => {
   return prisma.accounts.findMany({
     select: { slackDomain: true, redirectDomain: true, channels: true },
