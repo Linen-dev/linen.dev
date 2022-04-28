@@ -24,13 +24,21 @@ export default function DashboardLayout({ children, header }: Props) {
               <a
                 href="/settings"
                 className="bg-purple-50 border-purple-600 text-purple-600 group border-l-4 py-2 px-3 flex items-center text-sm font-medium"
-                x-state-description='undefined: "bg-purple-50 border-purple-600 text-purple-600", undefined: "border-transparent text-gray-600 hover:text-gray-900 hover:bg-gray-50"'
               >
                 <FontAwesomeIcon
                   icon={faGear}
                   className="text-purple-500 mr-3 flex-shrink-0 h-6 w-6"
                 />
                 Settings
+              </a>
+            </div>
+            <div className="space-y-1">
+              <a
+                href="/settings/plans"
+                className="bg-purple-50 border-purple-600 text-purple-600 group border-l-4 py-2 px-3 flex items-center text-sm font-medium"
+              >
+                <FontAwesomeIcon icon={faGear} className="text-purple-500 mr-3 flex-shrink-0 h-6 w-6" />
+                Plans
               </a>
             </div>
           </div>
