@@ -2,10 +2,10 @@ import React from 'react';
 import { NextPageContext } from 'next';
 import { getSession, useSession } from 'next-auth/react';
 import DashboardLayout from '../../../components/layout/DashboardLayout';
-import prisma from '../../../client';
 import serializeAccount, {
   SerializedAccount,
 } from '../../../serializers/account';
+import { findAccountByEmail } from '../../../lib/models';
 
 interface Props {
   account?: SerializedAccount;
@@ -24,26 +24,9 @@ export default function SettingsPage({ account }: Props) {
   );
 }
 
-async function findAccountByEmail(session?: any) {
-  if (!session) {
-    return null;
-  }
-  const email = session.user?.email;
-  if (!email) {
-    return null;
-  }
-  const auth = await prisma.auths.findFirst({ where: { email } });
-  if (!auth) {
-    return null;
-  }
-  return await prisma.accounts.findFirst({
-    where: { id: auth.accountId as string },
-  });
-}
-
 export async function getServerSideProps(context: NextPageContext) {
   const session = await getSession(context);
-  const account = await findAccountByEmail(session);
+  const account = await findAccountByEmail(session?.user?.email);
 
   if (!account) {
     return {
