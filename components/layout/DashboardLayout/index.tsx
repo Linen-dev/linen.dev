@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 interface Props {
   children: React.ReactNode;
-  header: string;
+  header?: string;
 }
 
 export default function DashboardLayout({ children, header }: Props) {
@@ -54,9 +54,11 @@ export default function DashboardLayout({ children, header }: Props) {
         <div className="max-w-4xl mx-auto flex flex-col md:px-8 xl:px-0">
           <div className="py-10">
             <div className="max-w-lg mx-auto px-4">
-              <h1 className="text-3xl font-extrabold text-gray-900">
-                {header}
-              </h1>
+              {header && (
+                <h1 className="text-3xl font-extrabold text-gray-900">
+                  {header}
+                </h1>
+              )}
               <div className="py-6">{children}</div>
             </div>
           </div>
