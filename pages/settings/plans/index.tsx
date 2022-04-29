@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { NextPageContext } from 'next';
+import classNames from 'classnames';
 import { getSession } from 'next-auth/react';
 import DashboardLayout from '../../../components/layout/DashboardLayout';
 import serializeAccount, {
@@ -26,6 +27,7 @@ const tiers = [
     name: 'Premium',
     href: '#',
     priceMonthly: 250,
+    priceYearly: 2500,
     description: 'Additional features',
     includedFeatures: [
       'Potenti felis, in cras at at ligula nunc. ',
@@ -35,7 +37,13 @@ const tiers = [
   },
 ];
 
+enum Period {
+  Monthly,
+  Yearly,
+}
+
 export default function SettingsPage({ account }: Props) {
+  const [period, setPeriod] = useState(Period.Monthly);
   if (account) {
     return (
       <DashboardLayout>
@@ -52,13 +60,21 @@ export default function SettingsPage({ account }: Props) {
             <div className="relative self-center mt-6 bg-gray-100 rounded-lg p-0.5 flex sm:mt-8">
               <button
                 type="button"
-                className="relative w-1/2 bg-white border-gray-200 rounded-md shadow-sm py-2 text-sm font-medium text-gray-900 whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:z-10 sm:w-auto sm:px-8"
+                className={classNames(
+                  'relative w-1/2 border-gray-200 rounded-md py-2 text-sm font-medium text-gray-900 whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:z-10 sm:w-auto sm:px-8',
+                  { 'bg-white shadow-sm': period === Period.Monthly }
+                )}
+                onClick={() => setPeriod(Period.Monthly)}
               >
                 Monthly billing
               </button>
               <button
                 type="button"
-                className="ml-0.5 relative w-1/2 border border-transparent rounded-md py-2 text-sm font-medium text-gray-700 whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:z-10 sm:w-auto sm:px-8"
+                className={classNames(
+                  'ml-0.5 relative w-1/2 border border-transparent rounded-md py-2 text-sm font-medium text-gray-700 whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:z-10 sm:w-auto sm:px-8',
+                  { 'bg-white shadow-sm': period === Period.Yearly }
+                )}
+                onClick={() => setPeriod(Period.Yearly)}
               >
                 Yearly billing
               </button>
@@ -78,13 +94,16 @@ export default function SettingsPage({ account }: Props) {
                     {tier.description}
                   </p>
                   <p className="mt-8">
-                    {tier.priceMonthly ? (
+                    {tier.priceMonthly && tier.priceYearly ? (
                       <>
                         <span className="text-4xl font-extrabold text-gray-900">
-                          ${tier.priceMonthly}
+                          $
+                          {period === Period.Monthly
+                            ? tier.priceMonthly
+                            : tier.priceYearly}
                         </span>{' '}
                         <span className="text-base font-medium text-gray-500">
-                          /mo
+                          /{period === Period.Monthly ? 'mo' : 'yr'}
                         </span>
                       </>
                     ) : (
@@ -93,7 +112,7 @@ export default function SettingsPage({ account }: Props) {
                       </span>
                     )}
                   </p>
-                  {tier.priceMonthly ? (
+                  {tier.priceMonthly && tier.priceYearly ? (
                     <a
                       href={tier.href}
                       className="mt-8 block w-full bg-blue-500 border border-blue-500 rounded-md py-2 text-sm font-semibold text-white text-center hover:bg-blue-600"
