@@ -12,4 +12,10 @@ beforeEach(() => {
   mockReset(prismaMock);
 });
 
+describe('singleton', () => {
+  it('is defined', () => {
+    expect(prisma).toBeDefined();
+  });
+});
+
 export const prismaMock = prisma as unknown as DeepMockProxy<PrismaClient>;
