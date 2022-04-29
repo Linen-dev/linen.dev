@@ -8,6 +8,8 @@ import serializeAccount, {
 } from '../../../serializers/account';
 import { findAccountByEmail } from '../../../lib/models';
 import { CheckIcon } from '@heroicons/react/outline';
+import Billing from './Billing';
+import { Period } from './types';
 
 interface Props {
   account?: SerializedAccount;
@@ -37,11 +39,6 @@ const tiers = [
   },
 ];
 
-enum Period {
-  Monthly,
-  Yearly,
-}
-
 export default function SettingsPage({ account }: Props) {
   const [period, setPeriod] = useState(Period.Monthly);
   if (account) {
@@ -57,28 +54,20 @@ export default function SettingsPage({ account }: Props) {
               <br />
               Paid plans unlock additional features.
             </p>
-            <div className="relative self-center mt-6 bg-gray-100 rounded-lg p-0.5 flex sm:mt-8">
-              <button
-                type="button"
-                className={classNames(
-                  'relative w-1/2 border-gray-200 rounded-md py-2 text-sm font-medium text-gray-900 whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:z-10 sm:w-auto sm:px-8',
-                  { 'bg-white shadow-sm': period === Period.Monthly }
-                )}
-                onClick={() => setPeriod(Period.Monthly)}
-              >
-                Monthly billing
-              </button>
-              <button
-                type="button"
-                className={classNames(
-                  'ml-0.5 relative w-1/2 border border-transparent rounded-md py-2 text-sm font-medium text-gray-700 whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:z-10 sm:w-auto sm:px-8',
-                  { 'bg-white shadow-sm': period === Period.Yearly }
-                )}
-                onClick={() => setPeriod(Period.Yearly)}
-              >
-                Yearly billing
-              </button>
-            </div>
+            <Billing
+              activePeriod={period}
+              plans={[
+                {
+                  name: 'Monthly',
+                  type: Period.Monthly,
+                },
+                {
+                  name: 'Yearly',
+                  type: Period.Yearly,
+                },
+              ]}
+              onPeriodChange={(type) => setPeriod(type)}
+            />
           </div>
           <div className="mt-12 space-y-4 sm:mt-16 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-6 lg:max-w-4xl lg:mx-auto xl:max-w-none xl:mx-0 xl:grid-cols-2">
             {tiers.map((tier) => (
