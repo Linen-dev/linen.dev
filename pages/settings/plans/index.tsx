@@ -21,10 +21,7 @@ const tiers = [
     name: 'Standard',
     href: '#',
     description: 'All the basics for starting',
-    features: [
-      'Potenti felis, in cras at at ligula nunc.',
-      'Orci neque eget pellentesque.',
-    ],
+    features: ['SEO friendly content'],
   },
   {
     name: 'Premium',
@@ -32,11 +29,7 @@ const tiers = [
     priceMonthly: 250,
     priceYearly: 2500,
     description: 'Additional features',
-    features: [
-      'Potenti felis, in cras at at ligula nunc. ',
-      'Orci neque eget pellentesque.',
-      'Donec mauris sit in eu tincidunt etiam.',
-    ],
+    features: ['Use your own domain', 'Use your own Google Analytics'],
   },
 ];
 
