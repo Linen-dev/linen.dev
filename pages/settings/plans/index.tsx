@@ -16,7 +16,6 @@ const tiers = [
   {
     name: 'Standard',
     href: '#',
-    priceMonthly: 12,
     description: 'All the basics for starting',
     includedFeatures: [
       'Potenti felis, in cras at at ligula nunc.',
@@ -26,7 +25,7 @@ const tiers = [
   {
     name: 'Premium',
     href: '#',
-    priceMonthly: 24,
+    priceMonthly: 250,
     description: 'Additional features',
     includedFeatures: [
       'Potenti felis, in cras at at ligula nunc. ',
@@ -79,19 +78,33 @@ export default function SettingsPage({ account }: Props) {
                     {tier.description}
                   </p>
                   <p className="mt-8">
-                    <span className="text-4xl font-extrabold text-gray-900">
-                      ${tier.priceMonthly}
-                    </span>{' '}
-                    <span className="text-base font-medium text-gray-500">
-                      /mo
-                    </span>
+                    {tier.priceMonthly ? (
+                      <>
+                        <span className="text-4xl font-extrabold text-gray-900">
+                          ${tier.priceMonthly}
+                        </span>{' '}
+                        <span className="text-base font-medium text-gray-500">
+                          /mo
+                        </span>
+                      </>
+                    ) : (
+                      <span className="text-4xl font-extrabold text-gray-900">
+                        Free
+                      </span>
+                    )}
                   </p>
-                  <a
-                    href={tier.href}
-                    className="mt-8 block w-full bg-gray-800 border border-gray-800 rounded-md py-2 text-sm font-semibold text-white text-center hover:bg-gray-900"
-                  >
-                    Buy {tier.name}
-                  </a>
+                  {tier.priceMonthly ? (
+                    <a
+                      href={tier.href}
+                      className="mt-8 block w-full bg-blue-500 border border-blue-500 rounded-md py-2 text-sm font-semibold text-white text-center hover:bg-blue-600"
+                    >
+                      Buy {tier.name}
+                    </a>
+                  ) : (
+                    <a className="mt-8 block w-full bg-green-500 border border-green-500 rounded-md py-2 text-sm font-semibold text-white text-center">
+                      <CheckIcon className="inline-block h-6 w-5 ml-1" />
+                    </a>
+                  )}
                 </div>
                 <div className="pt-6 pb-8 px-6">
                   <h3 className="text-xs font-medium text-gray-900 tracking-wide uppercase">
