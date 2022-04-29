@@ -1,12 +1,13 @@
 import React from 'react';
 import Billing from './Billing';
 import { render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Period } from './types';
 
 describe('Billing', () => {
-  it('renders plans', () => {
+  it('renders plans', async () => {
     const onPeriodChange = jest.fn();
-    const { container } = render(
+    const { container, getByText } = render(
       <Billing
         activePeriod={Period.Monthly}
         plans={[
@@ -25,5 +26,7 @@ describe('Billing', () => {
 
     expect(container).toHaveTextContent('Monthly billing');
     expect(container).toHaveTextContent('Yearly billing');
+    await userEvent.click(getByText('Yearly billing'));
+    expect(onPeriodChange).toHaveBeenCalledWith(Period.Yearly);
   });
 });

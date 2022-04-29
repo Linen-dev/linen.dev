@@ -63,6 +63,7 @@
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^12.1.4",
+    "@testing-library/user-event": "^14.1.1",
     "autoprefixer": "^10.4.2",
     "aws-cdk-lib": "^2.20.0",
     "dotenv-cli": "^5.0.0",
