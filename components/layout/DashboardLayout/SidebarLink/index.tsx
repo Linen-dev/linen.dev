@@ -19,6 +19,7 @@ export default function SidebarLink({ icon, href, text, active }: Props) {
           'text-purple-600': active,
         }
       )}
+      aria-selected={active}
     >
       <div
         className={classNames('mr-3 flex-shrink-0 h-6 w-6', {
