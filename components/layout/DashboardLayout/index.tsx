@@ -1,6 +1,11 @@
 import React from 'react';
+<<<<<<< HEAD
 import { faGear } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+=======
+import SidebarLink from './SidebarLink';
+import { CogIcon, CurrencyDollarIcon } from '@heroicons/react/outline';
+>>>>>>> Add a SidebarLink
 
 interface Props {
   children: React.ReactNode;
@@ -21,8 +26,9 @@ export default function DashboardLayout({ children, header }: Props) {
           </div>
           <div className="flex-grow mt-5">
             <div className="space-y-1">
-              <a
+              <SidebarLink
                 href="/settings"
+<<<<<<< HEAD
                 className="bg-purple-50 border-purple-600 text-purple-600 group border-l-4 py-2 px-3 flex items-center text-sm font-medium"
               >
                 <FontAwesomeIcon
@@ -31,15 +37,26 @@ export default function DashboardLayout({ children, header }: Props) {
                 />
                 Settings
               </a>
+=======
+                icon={<CogIcon />}
+                text="Settings"
+              />
+>>>>>>> Add a SidebarLink
             </div>
             <div className="space-y-1">
-              <a
+              <SidebarLink
                 href="/settings/plans"
+<<<<<<< HEAD
                 className="bg-purple-50 border-purple-600 text-purple-600 group border-l-4 py-2 px-3 flex items-center text-sm font-medium"
               >
                 <FontAwesomeIcon icon={faGear} className="text-purple-500 mr-3 flex-shrink-0 h-6 w-6" />
                 Plans
               </a>
+=======
+                icon={<CurrencyDollarIcon />}
+                text="Plans"
+              />
+>>>>>>> Add a SidebarLink
             </div>
           </div>
           {/* <div className="flex-shrink-0 block w-full">
