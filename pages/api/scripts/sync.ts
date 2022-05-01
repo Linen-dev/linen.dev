@@ -22,9 +22,11 @@ import {
   updateAccountRedirectDomain,
   updateNextPageCursor,
   updateSlackThread,
+  udpateAccountSlackSyncStatus,
 } from '../../../lib/models';
 import { createSlug } from '../../../lib/util';
 import { getSlackChannels } from '../slack';
+import ApplicationMailer from '../../../mailers/ApplicationMailer';
 
 export default async function handler(
   req: NextApiRequest,
@@ -41,153 +43,175 @@ export default async function handler(
     return res.status(404).json({ error: 'Account not found' });
   }
 
-  //TODO test multiple slack authorization or reauthorization
-  const token = account.slackAuthorizations[0].accessToken;
+  await udpateAccountSlackSyncStatus(accountId, 'IN_PROGRESS');
 
-  const teamInfoResponse = await fetchTeamInfo(token);
-  const slackUrl = teamInfoResponse.body.team.url;
+  try {
+    //TODO test multiple slack authorization or reauthorization
+    const token = account.slackAuthorizations[0].accessToken;
 
-  if (!!domain && !!slackUrl) {
-    await updateAccountRedirectDomain(accountId, domain, slackUrl);
-  }
+    const teamInfoResponse = await fetchTeamInfo(token);
+    const slackUrl = teamInfoResponse.body.team.url;
 
-  // create and join channels
-  let channels = await createChannels(account.slackTeamId, token, accountId);
-
-  // If channelId is part of parameter only sync the specific channel
-  if (!!channelId) {
-    const channel = channels.find((c) => c.id === channelId);
-    if (!!channel) {
-      channels = [channel];
+    if (!!domain && !!slackUrl) {
+      await updateAccountRedirectDomain(accountId, domain, slackUrl);
     }
-  }
 
-  //paginate and find all the users
-  console.log('Syncing users for account: ', accountId);
-  const usersListResponse = await listUsers(token);
-  const members: any[] = usersListResponse.body.members;
+    // create and join channels
+    let channels = await createChannels(account.slackTeamId, token, accountId);
 
-  let userCursor: string | null =
-    usersListResponse?.body?.response_metadata?.next_cursor;
-
-  while (!!userCursor) {
-    try {
-      console.log({ userCursor });
-      const usersListResponse = await listUsers(token, userCursor);
-      const additionalMembers = usersListResponse?.body?.members;
-      if (!!additionalMembers) {
-        members.push(...additionalMembers);
+    // If channelId is part of parameter only sync the specific channel
+    if (!!channelId) {
+      const channel = channels.find((c) => c.id === channelId);
+      if (!!channel) {
+        channels = [channel];
       }
-      userCursor = usersListResponse?.body?.response_metadata?.next_cursor;
-    } catch (e) {
-      console.log('fetching user failed', (e as Error).message);
-      userCursor = null;
-    }
-  }
-
-  //Only save new users
-  console.log('Saving users');
-  const usersSlackIds = await prisma.users.findMany({
-    where: { accountsId: account.id },
-    select: {
-      slackUserId: true,
-    },
-  });
-
-  const ids = usersSlackIds.map((u) => u.slackUserId);
-
-  const newMembers = members.filter((m) => {
-    return !ids.includes(m.id);
-  });
-
-  await saveUsers(newMembers, accountId);
-
-  const usersInDb = await prisma.users.findMany({
-    where: { accountsId: account.id },
-    select: {
-      slackUserId: true,
-      id: true,
-    },
-  });
-
-  //fetch and save all top level conversations
-  for (let i = 0; i < channels.length; i++) {
-    const c = channels[i];
-    console.log('Syncing channel: ', c.channelName);
-    let nextCursor: any = c.slackNextPageCursor;
-    let firstLoop = true;
-    if (nextCursor === 'completed') {
-      console.log('channel completed syncing: ', c.channelName);
-      continue;
     }
 
-    //fetch all messages by paginating
-    while (!!nextCursor || firstLoop) {
-      console.log('Messages cursor: ', nextCursor);
+    //paginate and find all the users
+    console.log('Syncing users for account: ', accountId);
+    const usersListResponse = await listUsers(token);
+    const members: any[] = usersListResponse.body.members;
+
+    let userCursor: string | null =
+      usersListResponse?.body?.response_metadata?.next_cursor;
+
+    while (!!userCursor) {
       try {
-        const additionalConversations = await fetchConversationsTyped(
-          c.slackChannelId,
-          account.slackAuthorizations[0].accessToken,
-          nextCursor
-        );
-
-        const additionaMessages = additionalConversations.messages;
-
-        //save all messages
-        await saveMessagesTransaction(additionaMessages, c.id, usersInDb);
-        nextCursor = additionalConversations.response_metadata?.next_cursor;
-
-        // save cursor in database so don't have
-        //to refetch same conversation if script fails
-        await updateNextPageCursor(c.id, nextCursor);
+        console.log({ userCursor });
+        const usersListResponse = await listUsers(token, userCursor);
+        const additionalMembers = usersListResponse?.body?.members;
+        if (!!additionalMembers) {
+          members.push(...additionalMembers);
+        }
+        userCursor = usersListResponse?.body?.response_metadata?.next_cursor;
       } catch (e) {
-        console.log('fetching messages failed', (e as Error).message);
-        await new Promise((resolve) => {
-          console.log('waiting 10 seconds');
-          setTimeout(resolve, 10000);
-        });
-
-        nextCursor = null;
+        console.log('fetching user failed', (e as Error).message);
+        userCursor = null;
       }
-      firstLoop = false;
     }
-    await updateNextPageCursor(c.id, 'completed');
-    console.log('channel completed syncing: ', c.channelName);
-  }
 
-  // Save all threads
-  // only fetch threads with single message
-  // There will be edge cases where not all the threads are sync'd if you cancel the script
-  const messageWithThreads = await findSlackThreadsWithOnlyOneMessage(
-    channels.map((c) => c.id)
-  );
-  console.log('syncing threads: ', messageWithThreads.length);
+    //Only save new users
+    console.log('Saving users');
+    const usersSlackIds = await prisma.users.findMany({
+      where: { accountsId: account.id },
+      select: {
+        slackUserId: true,
+      },
+    });
 
-  for (let i = 0; i < messageWithThreads.length; i++) {
-    if (i % 10 === 0) {
-      console.log(i);
+    const ids = usersSlackIds.map((u) => u.slackUserId);
+
+    const newMembers = members.filter((m) => {
+      return !ids.includes(m.id);
+    });
+
+    await saveUsers(newMembers, accountId);
+
+    const usersInDb = await prisma.users.findMany({
+      where: { accountsId: account.id },
+      select: {
+        slackUserId: true,
+        id: true,
+      },
+    });
+
+    //fetch and save all top level conversations
+    for (let i = 0; i < channels.length; i++) {
+      const c = channels[i];
+      console.log('Syncing channel: ', c.channelName);
+      let nextCursor: any = c.slackNextPageCursor;
+      let firstLoop = true;
+      if (nextCursor === 'completed') {
+        console.log('channel completed syncing: ', c.channelName);
+        continue;
+      }
+
+      //fetch all messages by paginating
+      while (!!nextCursor || firstLoop) {
+        console.log('Messages cursor: ', nextCursor);
+        try {
+          const additionalConversations = await fetchConversationsTyped(
+            c.slackChannelId,
+            account.slackAuthorizations[0].accessToken,
+            nextCursor
+          );
+
+          const additionaMessages = additionalConversations.messages;
+
+          //save all messages
+          await saveMessagesTransaction(additionaMessages, c.id, usersInDb);
+          nextCursor = additionalConversations.response_metadata?.next_cursor;
+
+          // save cursor in database so don't have
+          //to refetch same conversation if script fails
+          await updateNextPageCursor(c.id, nextCursor);
+        } catch (e) {
+          console.log('fetching messages failed', (e as Error).message);
+          await new Promise((resolve) => {
+            console.log('waiting 10 seconds');
+            setTimeout(resolve, 10000);
+          });
+
+          nextCursor = null;
+        }
+        firstLoop = false;
+      }
+      await updateNextPageCursor(c.id, 'completed');
+      console.log('channel completed syncing: ', c.channelName);
     }
-    const m = messageWithThreads[i];
-    const channel = channels.find((c) => c.id === m.channelId);
-    const replies = await fetchReplies(
-      m.slackThreadTs,
-      channel!.slackChannelId,
-      token
+
+    // Save all threads
+    // only fetch threads with single message
+    // There will be edge cases where not all the threads are sync'd if you cancel the script
+    const messageWithThreads = await findSlackThreadsWithOnlyOneMessage(
+      channels.map((c) => c.id)
     );
+    console.log('syncing threads: ', messageWithThreads.length);
 
-    const replyMessages = replies?.body;
-    try {
-      await saveMessagesSyncronous(
-        replyMessages.messages,
-        m.channelId,
-        usersInDb
+    for (let i = 0; i < messageWithThreads.length; i++) {
+      if (i % 10 === 0) {
+        console.log(i);
+      }
+      const m = messageWithThreads[i];
+      const channel = channels.find((c) => c.id === m.channelId);
+      const replies = await fetchReplies(
+        m.slackThreadTs,
+        channel!.slackChannelId,
+        token
       );
-    } catch (e) {
-      console.log(e);
-    }
-  }
 
-  res.status(200).json({});
+      const replyMessages = replies?.body;
+      try {
+        await saveMessagesSyncronous(
+          replyMessages.messages,
+          m.channelId,
+          usersInDb
+        );
+      } catch (e) {
+        console.log(e);
+      }
+    }
+
+    await udpateAccountSlackSyncStatus(accountId, 'DONE');
+    ApplicationMailer.send({
+      to: 'kam@linen.dev', // TODO: get proper email
+      subject: 'Linen.dev - Sync progress finished',
+      text: `Syncing process finished for account: ${accountId}`,
+      html: `Syncing process finished for account: ${accountId}`,
+    });
+
+    res.status(200).json({});
+  } catch (err) {
+    await udpateAccountSlackSyncStatus(accountId, 'ERROR');
+    ApplicationMailer.send({
+      to: 'kam@linen.dev', // TODO: get proper email
+      subject: 'Linen.dev - Sync progress failed!',
+      text: `Syncing process failed for account: ${accountId}`,
+      html: `Syncing process failed for account: ${accountId}`,
+    });
+
+    throw err;
+  }
 }
 
 export async function fetchAllMessages(

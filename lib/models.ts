@@ -161,6 +161,16 @@ export const udpateAccountName = async (accountId: string, name: string) => {
   });
 };
 
+export const udpateAccountSlackSyncStatus = async (
+  accountId: string,
+  status: string
+) => {
+  return await prisma.accounts.update({
+    where: { id: accountId },
+    data: { slackSyncStatus: status },
+  });
+};
+
 export const updateAccountRedirectDomain = async (
   accountId: string,
   domain: string,
