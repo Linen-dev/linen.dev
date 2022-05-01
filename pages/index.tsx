@@ -139,9 +139,9 @@ const Home: NextPage = () => {
             description="Open-source data integration for modern data teams "
           ></CommunityCard>
           <CommunityCard
-            url="https://www.linen.dev/s/papercups-io"
-            communityName="Papercups"
-            description="Open source customer support tool"
+            url="https://archive.pulumi.com/"
+            communityName="Pulumi"
+            description="Developer-First Infrastructure as Code"
           ></CommunityCard>
         </div>
 
