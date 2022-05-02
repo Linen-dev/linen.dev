@@ -22,7 +22,7 @@ import {
   updateAccountRedirectDomain,
   updateNextPageCursor,
   updateSlackThread,
-  udpateAccountSlackSyncStatus,
+  updateAccountSlackSyncStatus,
 } from '../../../lib/models';
 import { createSlug } from '../../../lib/util';
 import { getSlackChannels } from '../slack';
@@ -43,7 +43,7 @@ export default async function handler(
     return res.status(404).json({ error: 'Account not found' });
   }
 
-  await udpateAccountSlackSyncStatus(accountId, 'IN_PROGRESS');
+  await updateAccountSlackSyncStatus(accountId, 'IN_PROGRESS');
 
   try {
     //TODO test multiple slack authorization or reauthorization
@@ -192,7 +192,7 @@ export default async function handler(
       }
     }
 
-    await udpateAccountSlackSyncStatus(accountId, 'DONE');
+    await updateAccountSlackSyncStatus(accountId, 'DONE');
     ApplicationMailer.send({
       to: 'kam@linen.dev', // TODO: get proper email
       subject: 'Linen.dev - Sync progress finished',
@@ -202,12 +202,12 @@ export default async function handler(
 
     res.status(200).json({});
   } catch (err) {
-    await udpateAccountSlackSyncStatus(accountId, 'ERROR');
+    await updateAccountSlackSyncStatus(accountId, 'ERROR');
     ApplicationMailer.send({
       to: 'kam@linen.dev', // TODO: get proper email
       subject: 'Linen.dev - Sync progress failed!',
-      text: `Syncing process failed for account: ${accountId}`,
-      html: `Syncing process failed for account: ${accountId}`,
+      text: `Syncing process failed for account: ${accountId}. Error: ${err}`,
+      html: `Syncing process failed for account: ${accountId}. Error: ${err}`,
     });
 
     throw err;
