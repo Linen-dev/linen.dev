@@ -74,6 +74,7 @@ model accounts {
   slackInviteUrl String?
   redirectDomain String?
   slackUrl       String?
+  slackSyncStatus String    @default("NOT_STARTED")
   brandColor     String?
   homeUrl        String?
   docsUrl        String?

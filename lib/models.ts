@@ -154,10 +154,20 @@ export const updateSlackThread = async (
   });
 };
 
-export const udpateAccountName = async (accountId: string, name: string) => {
+export const updateAccountName = async (accountId: string, name: string) => {
   return await prisma.accounts.update({
     where: { id: accountId },
     data: { name },
+  });
+};
+
+export const updateAccountSlackSyncStatus = async (
+  accountId: string,
+  status: string
+) => {
+  return await prisma.accounts.update({
+    where: { id: accountId },
+    data: { slackSyncStatus: status },
   });
 };
 
