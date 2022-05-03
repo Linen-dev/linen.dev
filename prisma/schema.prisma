@@ -59,26 +59,27 @@ model channels {
   account             accounts?      @relation(fields: [accountId], references: [id])
   accountId           String?
   hidden              Boolean        @default(false)
+  default             Boolean        @default(false)
   slackNextPageCursor String?
 
   @@unique([slackChannelId])
 }
 
 model accounts {
-  id             String     @id @default(uuid())
-  createdAt      DateTime   @default(now())
-  name           String?
-  slackDomain    String?
-  channels       channels[]
-  slackTeamId    String?
-  slackInviteUrl String?
-  redirectDomain String?
-  slackUrl       String?
-  brandColor     String?
-  homeUrl        String?
-  docsUrl        String?
-  logoUrl        String?
-  premium        Boolean    @default(false)
+  id                String     @id @default(uuid())
+  createdAt         DateTime   @default(now())
+  name              String?
+  slackDomain       String?
+  channels          channels[]
+  slackTeamId       String?
+  slackInviteUrl    String?
+  redirectDomain    String?
+  slackUrl          String?
+  brandColor        String?
+  homeUrl           String?
+  docsUrl           String?
+  logoUrl           String?
+  premium           Boolean    @default(false)
   googleAnalyticsId String?
 
   auths               auths[]
