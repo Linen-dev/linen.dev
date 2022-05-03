@@ -2,13 +2,18 @@ import React from 'react';
 import { Period } from './types';
 import { CheckIcon } from '@heroicons/react/outline';
 
+interface Price {
+  id: string;
+  amount: number;
+  type: Period;
+}
+
 interface Tier {
   name: string;
   description: string;
   href: string;
-  priceMonthly?: number;
-  priceYearly?: number;
   features: string[];
+  prices?: Price[];
 }
 
 interface Props {
@@ -31,13 +36,13 @@ export default function Tiers({ tiers, activePeriod, premium }: Props) {
             </h2>
             <p className="mt-4 text-sm text-gray-500">{tier.description}</p>
             <p className="mt-8">
-              {tier.priceMonthly && tier.priceYearly ? (
+              {tier.prices ? (
                 <>
                   <span className="text-4xl font-extrabold text-gray-900">
                     $
                     {activePeriod === Period.Monthly
-                      ? tier.priceMonthly
-                      : tier.priceYearly}
+                      ? tier.prices[0].amount
+                      : tier.prices[1].amount}
                   </span>{' '}
                   <span className="text-base font-medium text-gray-500">
                     /{activePeriod === Period.Monthly ? 'mo' : 'yr'}
@@ -49,13 +54,24 @@ export default function Tiers({ tiers, activePeriod, premium }: Props) {
                 </span>
               )}
             </p>
-            {!premium && tier.priceMonthly && tier.priceYearly ? (
-              <a
-                href={tier.href}
-                className="mt-8 block w-full bg-blue-500 border border-blue-500 rounded-md py-2 text-sm font-semibold text-white text-center hover:bg-blue-600"
-              >
-                Buy {tier.name}
-              </a>
+            {!premium && tier.prices ? (
+              <form action="/checkout" method="POST">
+                <input
+                  type="hidden"
+                  name="priceId"
+                  value={
+                    activePeriod === Period.Monthly
+                      ? tier.prices[0].id
+                      : tier.prices[1].id
+                  }
+                />
+                <button
+                  type="submit"
+                  className="mt-8 block w-full bg-blue-500 border border-blue-500 rounded-md py-2 text-sm font-semibold text-white text-center hover:bg-blue-600"
+                >
+                  Buy {tier.name}
+                </button>
+              </form>
             ) : (
               <a className="mt-8 block w-full bg-green-500 border border-green-500 rounded-md py-2 text-sm font-semibold text-white text-center">
                 <CheckIcon className="inline-block h-4 ml-1" />

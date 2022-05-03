@@ -20,13 +20,23 @@ describe('Tiers', () => {
           {
             name: 'Premium',
             href: '#',
-            priceMonthly: 250,
-            priceYearly: 2500,
             description: 'Additional features',
             features: [
               'Potenti felis, in cras at at ligula nunc. ',
               'Orci neque eget pellentesque.',
               'Donec mauris sit in eu tincidunt etiam.',
+            ],
+            prices: [
+              {
+                id: 'price_5678',
+                amount: 250,
+                type: Period.Monthly,
+              },
+              {
+                id: 'price_5678',
+                amount: 2500,
+                type: Period.Yearly,
+              },
             ],
           },
         ]}
