@@ -1,6 +1,7 @@
 import React from 'react';
 import { Period } from './types';
 import { CheckIcon } from '@heroicons/react/outline';
+import { SerializedAccount } from '../../../serializers/account';
 
 interface Price {
   id: string;
@@ -19,10 +20,10 @@ interface Tier {
 interface Props {
   tiers: Tier[];
   activePeriod: Period;
-  premium?: boolean;
+  account: SerializedAccount;
 }
 
-export default function Tiers({ tiers, activePeriod, premium }: Props) {
+export default function Tiers({ tiers, activePeriod, account }: Props) {
   return (
     <div className="mt-12 space-y-4 sm:mt-16 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-6 lg:max-w-4xl lg:mx-auto xl:max-w-none xl:mx-0 xl:grid-cols-2">
       {tiers.map((tier) => (
@@ -54,24 +55,30 @@ export default function Tiers({ tiers, activePeriod, premium }: Props) {
                 </span>
               )}
             </p>
-            {!premium && tier.prices ? (
-              <form action="/checkout" method="POST">
-                <input
-                  type="hidden"
-                  name="priceId"
-                  value={
-                    activePeriod === Period.Monthly
-                      ? tier.prices[0].id
-                      : tier.prices[1].id
+            {!account.premium && tier.prices ? (
+              <button
+                onClick={async () => {
+                  if (!tier.prices) {
+                    return;
                   }
-                />
-                <button
-                  type="submit"
-                  className="mt-8 block w-full bg-blue-500 border border-blue-500 rounded-md py-2 text-sm font-semibold text-white text-center hover:bg-blue-600"
-                >
-                  Buy {tier.name}
-                </button>
-              </form>
+                  const response = await fetch('/api/checkout', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                      accountId: account.id,
+                      priceId:
+                        activePeriod === Period.Monthly
+                          ? tier?.prices[0].id
+                          : tier.prices[1].id,
+                    }),
+                  });
+                  const { redirectUrl } = await response.json();
+                  window.location = redirectUrl;
+                }}
+                type="submit"
+                className="mt-8 block w-full bg-blue-500 border border-blue-500 rounded-md py-2 text-sm font-semibold text-white text-center hover:bg-blue-600"
+              >
+                Buy {tier.name}
+              </button>
             ) : (
               <a className="mt-8 block w-full bg-green-500 border border-green-500 rounded-md py-2 text-sm font-semibold text-white text-center">
                 <CheckIcon className="inline-block h-4 ml-1" />
