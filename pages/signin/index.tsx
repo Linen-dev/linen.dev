@@ -29,7 +29,7 @@ export default function SignIn({ csrfToken, error }: Props) {
       </form>
       <div className="text-sm">
         <p className="py-3">
-          Don't have an account?{' '}
+          Don&apos;t have an account?{' '}
           <Link href="https://airtable.com/shrIpkE0owg8FnoiM">Get Started</Link>
           <br />
         </p>

@@ -172,7 +172,7 @@ const Home: NextPage = () => {
           <LandingH2>Scale your community and reduce support burden</LandingH2>
           <p>
             Slack communities are great for chatting and engaging but over time
-            they become overwelming. As a community grows so does the number of
+            they become overwhelming. As a community grows so does the number of
             repeat questions. As previously a former open source maintainer I
             wanted to minimize the number of repeat questions and encourage the
             community to search.
@@ -181,8 +181,9 @@ const Home: NextPage = () => {
           <p>
             Linen is a great way to make your Slack content more discoverable.
             No longer do you need to login to your Slack workspace to view your
-            community's content. You can link specific conversations in github
-            issues without requiring a sign in to get the context of the issue.
+            community&apos;s content. You can link specific conversations in
+            github issues without requiring a sign in to get the context of the
+            issue.
           </p>
         </div>
       </main>
