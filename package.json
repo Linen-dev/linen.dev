@@ -53,6 +53,7 @@
     "react-intersection-observer": "^8.33.1",
     "react-paginate": "^8.1.2",
     "sitemap": "^7.1.1",
+    "stripe": "^8.219.0",
     "styled-components": "^5.3.3",
     "superagent": "^7.1.1",
     "swr": "^1.2.1",
