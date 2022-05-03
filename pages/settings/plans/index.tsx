@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import { NextPageContext } from 'next';
-import classNames from 'classnames';
 import { getSession } from 'next-auth/react';
 import DashboardLayout from '../../../components/layout/DashboardLayout';
 import serializeAccount, {
   SerializedAccount,
 } from '../../../serializers/account';
 import { findAccountByEmail } from '../../../lib/models';
-import { CheckIcon } from '@heroicons/react/outline';
 import Billing from './Billing';
 import Tiers from './Tiers';
 import { Period } from './types';
@@ -26,10 +24,20 @@ const tiers = [
   {
     name: 'Premium',
     href: '#',
-    priceMonthly: 250,
-    priceYearly: 2500,
     description: 'Additional features',
     features: ['Use your own domain', 'Use your own Google Analytics'],
+    prices: [
+      {
+        id: 'price_1KvHD6H6FaltU5xQSzmnObgI',
+        amount: 250,
+        type: Period.Monthly,
+      },
+      {
+        id: 'price_1KvHD6H6FaltU5xQDPL3SeSq',
+        amount: 2500,
+        type: Period.Yearly,
+      },
+    ],
   },
 ];
 
