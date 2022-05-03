@@ -14,9 +14,10 @@ interface Tier {
 interface Props {
   tiers: Tier[];
   activePeriod: Period;
+  premium?: boolean;
 }
 
-export default function Tiers({ tiers, activePeriod }: Props) {
+export default function Tiers({ tiers, activePeriod, premium }: Props) {
   return (
     <div className="mt-12 space-y-4 sm:mt-16 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-6 lg:max-w-4xl lg:mx-auto xl:max-w-none xl:mx-0 xl:grid-cols-2">
       {tiers.map((tier) => (
@@ -48,7 +49,7 @@ export default function Tiers({ tiers, activePeriod }: Props) {
                 </span>
               )}
             </p>
-            {tier.priceMonthly && tier.priceYearly ? (
+            {!premium && tier.priceMonthly && tier.priceYearly ? (
               <a
                 href={tier.href}
                 className="mt-8 block w-full bg-blue-500 border border-blue-500 rounded-md py-2 text-sm font-semibold text-white text-center hover:bg-blue-600"
@@ -57,7 +58,7 @@ export default function Tiers({ tiers, activePeriod }: Props) {
               </a>
             ) : (
               <a className="mt-8 block w-full bg-green-500 border border-green-500 rounded-md py-2 text-sm font-semibold text-white text-center">
-                <CheckIcon className="inline-block h-6 w-5 ml-1" />
+                <CheckIcon className="inline-block h-4 ml-1" />
               </a>
             )}
           </div>

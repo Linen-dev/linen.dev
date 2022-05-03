@@ -63,7 +63,11 @@ export default function SettingsPage({ account }: Props) {
               onPeriodChange={(type) => setPeriod(type)}
             />
           </div>
-          <Tiers activePeriod={period} tiers={tiers} />
+          <Tiers
+            activePeriod={period}
+            tiers={tiers}
+            premium={account.premium}
+          />
         </div>
       </DashboardLayout>
     );
