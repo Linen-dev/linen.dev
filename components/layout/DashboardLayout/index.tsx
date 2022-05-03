@@ -1,7 +1,8 @@
 import React from 'react';
-import { faGear } from '@fortawesome/free-solid-svg-icons';
+import { faGear, faMoneyBill } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import SidebarLink from './SidebarLink';
+import { useRouter } from 'next/router';
 
 interface Props {
   children: React.ReactNode;
@@ -9,6 +10,7 @@ interface Props {
 }
 
 export default function DashboardLayout({ children, header }: Props) {
+  const { route } = useRouter();
   return (
     <div>
       <div className="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0">
@@ -24,17 +26,17 @@ export default function DashboardLayout({ children, header }: Props) {
             <div className="space-y-1">
               <SidebarLink
                 href="/settings"
-                icon={<FontAwesomeIcon
-                  icon={faGear}
-                />}
+                icon={<FontAwesomeIcon icon={faGear} />}
                 text="Settings"
+                active={route === '/settings'}
               />
             </div>
             <div className="space-y-1">
               <SidebarLink
                 href="/settings/plans"
-                icon={<FontAwesomeIcon icon={faGear} />}
+                icon={<FontAwesomeIcon icon={faMoneyBill} />}
                 text="Plans"
+                active={route === '/settings/plans'}
               />
             </div>
           </div>

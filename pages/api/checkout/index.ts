@@ -14,19 +14,18 @@ async function create(request: NextApiRequest, response: NextApiResponse) {
     return response.status(400).json({ error: 'priceId is required' });
   }
 
-  let customer = null;
-  // await stripe.customers.search({
-  //   query: `name:\'CUSTOMER ${accountId}\'`,
-  // })
+  const { data } = await stripe.customers.search({
+    query: `name:\'CUSTOMER ${accountId}\'`,
+  });
 
-  // if (!customer) {
-  //   customer = await stripe.customers.create({
-  //     name: `CUSTOMER ${accountId}`,
-  //     metadata: {
-  //       accountId
-  //     }
-  //   })
-  // }
+  const customer =
+    data[0] ||
+    (await stripe.customers.create({
+      name: `CUSTOMER ${accountId}`,
+      metadata: {
+        accountId,
+      },
+    }));
 
   const session = await stripe.checkout.sessions.create({
     mode: 'subscription',
@@ -38,7 +37,7 @@ async function create(request: NextApiRequest, response: NextApiResponse) {
     ],
     success_url: `${HOST}/settings/plans?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${HOST}/settings/plans`,
-    customer,
+    customer: customer.id,
   });
 
   return response.status(200).json({
