@@ -82,6 +82,8 @@ export default function SettingsPage({ account }: Props) {
           />
           <Button type="submit">Submit</Button>
         </form>
+        <hr />
+        <div>Slack synchronization status: {account.slackSyncStatus}</div>
       </DashboardLayout>
     );
   }

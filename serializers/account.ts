@@ -6,6 +6,7 @@ export interface SerializedAccount {
   brandColor?: string;
   premium: boolean;
   googleAnalyticsId?: string;
+  slackSyncStatus: string;
 }
 
 export default function serialize(account?: any): SerializedAccount | null {
@@ -19,6 +20,7 @@ export default function serialize(account?: any): SerializedAccount | null {
     brandColor,
     premium,
     googleAnalyticsId,
+    slackSyncStatus,
     id,
   } = account;
   return {
@@ -28,6 +30,7 @@ export default function serialize(account?: any): SerializedAccount | null {
     brandColor,
     premium,
     googleAnalyticsId,
+    slackSyncStatus,
     id,
   };
 }
