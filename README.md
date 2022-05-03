@@ -189,11 +189,16 @@ First setup [AWS-CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-s
 Increment the version for the app:
 
 ```bash
-export APP_VERSION=v3
+export APP_VERSION=v5
 source .env
 ```
 
 From the root folder of the project build the production docker image:
+
+```bash
+# This is required only for MacOs with M1 CPU
+export DOCKER_DEFAULT_PLATFORM=linux/amd64
+```
 
 ```bash
 docker build \
