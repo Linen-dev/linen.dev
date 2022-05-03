@@ -5,8 +5,8 @@ import DashboardLayout from '../../../components/layout/DashboardLayout';
 import prisma from '../../../client';
 import { channelIndex } from '../../../lib/models';
 import { channels } from '@prisma/client';
-import ChannelVisibilityToggle from './ChannelVisibilityToggle';
-import ChannelSetDefault from './ChannelSetDefault';
+import ChannelVisibilityToggle from '../../../components/Pages/Settings/Channels/ChannelVisibilityToggle';
+import ChannelSetDefault from '../../../components/Pages/Settings/Channels/ChannelSetDefault';
 import { sortBy } from '../../../utilities/sort';
 
 interface Props {

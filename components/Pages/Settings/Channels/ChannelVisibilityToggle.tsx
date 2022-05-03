@@ -1,6 +1,6 @@
 import { channels } from '@prisma/client';
 import { Field, Form, Formik } from 'formik';
-import Button from '../../../components/Button';
+import Button from '../../../Button';
 
 interface Props {
   channels: channels[];
