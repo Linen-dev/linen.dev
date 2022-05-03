@@ -11,6 +11,7 @@ interface Props {
   activePeriod: Period;
   onPeriodChange: (type: Period) => void;
   plans: Plan[];
+  premium?: boolean;
 }
 
 export default function Billing({
