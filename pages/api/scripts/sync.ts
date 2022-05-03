@@ -27,6 +27,7 @@ import {
 import { createSlug } from '../../../lib/util';
 import { getSlackChannels } from '../slack';
 import ApplicationMailer from '../../../mailers/ApplicationMailer';
+import { sendNotification } from '../../../services/slack';
 
 export default async function handler(
   req: NextApiRequest,
@@ -209,6 +210,14 @@ export default async function handler(
       text: `Syncing process failed for account: ${accountId}. Error: ${err}`,
       html: `Syncing process failed for account: ${accountId}. Error: ${err}`,
     });
+
+    try {
+      await sendNotification(
+        `Syncing process failed for account: ${accountId}. Error: ${err}`
+      );
+    } catch (e) {
+      console.log('Failed to send Slack notification: ', e);
+    }
 
     throw err;
   }
