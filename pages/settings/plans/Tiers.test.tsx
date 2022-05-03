@@ -41,6 +41,7 @@ describe('Tiers', () => {
           },
         ]}
         activePeriod={Period.Monthly}
+        account={{ id: '1234', premium: false }}
       />
     );
     expect(container).toHaveTextContent('Standard');
