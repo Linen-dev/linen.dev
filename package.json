@@ -21,6 +21,8 @@
     "@mantine/core": "^3.6.7",
     "@mantine/hooks": "^3.6.7",
     "@mantine/next": "^3.6.7",
+    "@mdx-js/loader": "^2.1.1",
+    "@next/mdx": "^12.1.6",
     "@prisma/client": "^3.9.1",
     "@sentry/nextjs": "^6.18.2",
     "@types/node": "17.0.14",

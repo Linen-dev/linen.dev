@@ -7,6 +7,7 @@ const nextConfig = {
   images: {
     domains: ['avatars.slack-edge.com'],
   },
+  pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
 };
 const sentryWebpackPluginOptions = {
   // Additional config options for the Sentry Webpack plugin. Keep in mind that
@@ -20,4 +21,15 @@ const sentryWebpackPluginOptions = {
   // https://github.com/getsentry/sentry-webpack-plugin#options.
 };
 
-module.exports = withSentryConfig(nextConfig, sentryWebpackPluginOptions);
+const withMDX = require('@next/mdx')({
+  extension: /\.mdx?$/,
+  options: {
+    remarkPlugins: [],
+    rehypePlugins: [],
+  },
+});
+
+module.exports = withSentryConfig(
+  withMDX(nextConfig),
+  sentryWebpackPluginOptions
+);
