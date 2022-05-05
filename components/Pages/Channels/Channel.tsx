@@ -8,6 +8,7 @@ import Message from '../../Message';
 import { channels, slackThreads, users, messages } from '@prisma/client';
 import CustomLink from '../../Link/CustomLink';
 import { MentionsWithUsers } from '../../../types/apiResponses/threads/[threadId]';
+import { capitalize } from '../../../lib/util';
 
 export interface PaginationType {
   totalCount: number;
@@ -90,7 +91,9 @@ export default function Channel({
         navItems={{ channels: channels }}
         isSubDomainRouting={isSubDomainRouting}
         seo={{
-          title: `${communityName} questions`,
+          title: `${capitalize(
+            settings.name || communityName
+          )} - Discover and join our community`,
           description: `Threads 404`,
         }}
       >
@@ -240,7 +243,9 @@ export default function Channel({
       slackInviteUrl={slackInviteUrl}
       currentChannel={currentChannel}
       seo={{
-        title: `${communityName} questions`,
+        title: `${capitalize(
+          settings.name || communityName
+        )} - Discover and join our community`,
         description: `${channelName} threads`,
       }}
       navItems={{ channels: channels }}

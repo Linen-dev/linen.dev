@@ -62,6 +62,7 @@ export const getThreadsByCommunityName = async (
     links.find(({ accountId }) => accountId === account.id) || links[0];
 
   const settings = {
+    name: account.name,
     brandColor: account.brandColor || defaultSettings.brandColor,
     homeUrl: account.homeUrl || defaultSettings.homeUrl,
     docsUrl: account.docsUrl || defaultSettings.docsUrl,
