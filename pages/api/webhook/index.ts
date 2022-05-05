@@ -26,12 +26,15 @@ async function create(request: NextApiRequest, response: NextApiResponse) {
 
   switch (eventType) {
     case 'checkout.session.completed':
+      // TODO update account to be premium
       console.log(data);
       break;
     case 'invoice.paid':
+      // TODO update account to be premium
       console.log(data);
       break;
     case 'invoice.payment_failed':
+      // TODO update account to be non premium
       console.log(data);
       break;
     default:
