@@ -1,7 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import prisma from '../../client';
-import { generateHash, generateSalt } from '../../utilities/password';
+import { generateHash } from '../../utilities/password';
 import { sendNotification } from '../../services/slack';
+import { createAuth } from '../../lib/auth';
 
 async function create(request: NextApiRequest, response: NextApiResponse) {
   const { email, password } = JSON.parse(request.body);
@@ -24,14 +25,9 @@ async function create(request: NextApiRequest, response: NextApiResponse) {
   if (auth) {
     return response.status(200).json({});
   }
-  const salt = generateSalt();
-  const hash = generateHash(password, salt);
-  const record = await prisma.auths.create({
-    data: {
-      salt,
-      password: hash,
-      email,
-    },
+  const record = await createAuth({
+    password,
+    email,
   });
   try {
     await sendNotification('Email created: ' + email);

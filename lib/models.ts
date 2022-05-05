@@ -109,10 +109,6 @@ export const updateMessageSlackThreadId = async (
   });
 };
 
-export const createAccount = async (account: Prisma.accountsCreateArgs) => {
-  return prisma.accounts.create(account);
-};
-
 export const findAccount = async (accounts: Prisma.accountsFindUniqueArgs) => {
   return await prisma.accounts.findUnique(accounts);
 };
