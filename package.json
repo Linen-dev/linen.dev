@@ -21,7 +21,6 @@
     "@fortawesome/free-solid-svg-icons": "^6.1.1",
     "@fortawesome/react-fontawesome": "^0.1.18",
     "@headlessui/react": "^1.5.0",
-    "@heroicons/react": "^1.0.6",
     "@mantine/core": "^3.6.7",
     "@mantine/hooks": "^3.6.7",
     "@mantine/next": "^3.6.7",

@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactPaginate from 'react-paginate';
-import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/solid';
+import { faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import styles from './index.module.css';
 
 interface Props {
@@ -30,13 +31,14 @@ export default function Pagination({ onClick, pageCount, channelName }: Props) {
           previousLabel={
             <>
               <span className="sr-only">Previous</span>
-              <ChevronLeftIcon className="h-5 w-5" />
+              <FontAwesomeIcon icon={faAngleLeft} className="h-5 w-5" />
             </>
           }
           nextLinkClassName="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
           nextLabel={
             <>
-              <ChevronRightIcon className="h-5 w-5" />
+              <span className="sr-only">Next</span>
+              <FontAwesomeIcon icon={faAngleRight} className="h-5 w-5" />
             </>
           }
           renderOnZeroPageCount={() => null}
