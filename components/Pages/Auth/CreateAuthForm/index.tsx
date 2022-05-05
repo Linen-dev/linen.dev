@@ -1,32 +1,26 @@
-import Layout from '../../../components/layout/CardLayout';
-import EmailField from '../../../components/EmailField';
-import PasswordField from '../../../components/PasswordField';
-import Button from '../../../components/Button';
-import Link from '../../../components/Link';
+import Layout from '@/components/layout/CardLayout';
+import EmailField from '@/components/EmailField';
+import PasswordField from '@/components/PasswordField';
+import Button from '@/components/Button';
+import Link from '@/components/Link';
+import Router from 'next/router';
+import toast from '@/components/Toast';
 
 interface Props {
-  onSuccess: ({
-    authId,
-    email,
-    password,
-  }: {
-    authId: string;
-    email: string;
-    password: string;
-  }) => void;
+  callbackUrl: string;
 }
 
-export default function CreateAuthForm({ onSuccess }: Props) {
+export default function CreateAuthForm({ callbackUrl }: Props) {
   const onSubmit = (event: any) => {
     event.preventDefault();
     const form = event.target;
     const email = form.email.value;
     const password = form.password.value;
     if (!email) {
-      return alert('Email is required');
+      return toast.error('Email is required');
     }
     if (!password) {
-      return alert('Password is required');
+      return toast.error('Password is required');
     }
     fetch('/api/auth', {
       method: 'POST',
@@ -35,12 +29,13 @@ export default function CreateAuthForm({ onSuccess }: Props) {
       .then((response) => response.json())
       .then(({ id, error }) => {
         if (error) {
-          return alert(error);
+          return toast.error(error);
         }
-        return onSuccess({ authId: id, email, password });
+        Router.push(`/signin?callbackUrl=${callbackUrl}`);
+        return toast.success('Welcome aboard, please sign in!');
       })
       .catch(() => {
-        alert('Something went wrong. Please try again.');
+        toast.error('Something went wrong. Please try again.');
       });
   };
 
@@ -54,7 +49,8 @@ export default function CreateAuthForm({ onSuccess }: Props) {
         </Button>
       </form>
       <p className="text-sm pt-3">
-        Already have an account? <Link href="/signin">Sign in!</Link>
+        Already have an account?{' '}
+        <Link href={`/signin?callbackUrl=${callbackUrl}`}>Sign in!</Link>
       </p>
     </Layout>
   );

@@ -1,40 +1,20 @@
-import { useState } from 'react';
-import CreateAccountForm from './CreateAccountForm';
-import CreateAuthForm from './CreateAuthForm';
+import CreateAuthForm from '@/components/Pages/Auth/CreateAuthForm';
+import { NextPageContext } from 'next';
 
-enum Step {
-  Auth,
-  Account,
+interface Props {
+  callbackUrl: string;
 }
 
-function SignUp() {
-  const [step, setStep] = useState(Step.Auth);
-  const [authId, setAuthId] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  if (step === Step.Auth) {
-    return (
-      <CreateAuthForm
-        onSuccess={({ authId, email, password }) => {
-          setAuthId(authId);
-          setEmail(email);
-          setPassword(password);
-          setStep(Step.Account);
-        }}
-      />
-    );
-  }
-  if (step === Step.Account) {
-    return (
-      <CreateAccountForm authId={authId} email={email} password={password} />
-    );
-  }
+function SignUp(props: Props) {
+  return <CreateAuthForm {...props} />;
 }
 
-export const getServerSideProps = async () => {
+export async function getServerSideProps(context: NextPageContext) {
   return {
-    props: {},
+    props: {
+      callbackUrl: context?.query?.callbackUrl || '/onboarding',
+    },
   };
-};
+}
 
 export default SignUp;
