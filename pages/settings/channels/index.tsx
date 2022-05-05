@@ -2,8 +2,7 @@ import React from 'react';
 import { NextPageContext } from 'next';
 import { getSession, useSession } from 'next-auth/react';
 import DashboardLayout from '../../../components/layout/DashboardLayout';
-import prisma from '../../../client';
-import { channelIndex } from '../../../lib/models';
+import { channelIndex, findAccountByEmail } from '../../../lib/models';
 import { channels } from '@prisma/client';
 import ChannelVisibilityToggle from '../../../components/Pages/Settings/Channels/ChannelVisibilityToggle';
 import ChannelSetDefault from '../../../components/Pages/Settings/Channels/ChannelSetDefault';
@@ -31,23 +30,6 @@ export default function ChannelsPage({ channels, accountId }: Props) {
       <h1>You are not signed in.</h1>
     </DashboardLayout>
   );
-}
-
-async function findAccountByEmail(session?: any) {
-  if (!session) {
-    return null;
-  }
-  const email = session.user?.email;
-  if (!email) {
-    return null;
-  }
-  const auth = await prisma.auths.findFirst({ where: { email } });
-  if (!auth) {
-    return null;
-  }
-  return await prisma.accounts.findFirst({
-    where: { id: auth.accountId as string },
-  });
 }
 
 export async function getServerSideProps(context: NextPageContext) {
