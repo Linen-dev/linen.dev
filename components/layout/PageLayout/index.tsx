@@ -5,7 +5,7 @@ import SearchBar from '../../search/SearchBar';
 import { NavBar } from '../../NavBar/NavBar';
 import SEO from '../SEO';
 import { channels, users } from '@prisma/client';
-import { addHttpsToUrl } from '../../../lib/util';
+import { addHttpsToUrl, pickTextColorBasedOnBgColor } from '../../../lib/util';
 
 interface Settings {
   brandColor: string;
@@ -45,6 +45,11 @@ function PageLayout({
   const docsUrl = addHttpsToUrl(settings.docsUrl);
   const logoUrl = addHttpsToUrl(settings.logoUrl);
   const { googleAnalyticsId } = settings;
+  const fontColor = pickTextColorBasedOnBgColor(
+    settings.brandColor,
+    'white',
+    'black'
+  );
 
   return (
     <div>
@@ -76,7 +81,7 @@ function PageLayout({
           </div>
           <a
             className="hidden sm:block md:block pt-1"
-            style={{ color: 'white', fontWeight: 500, marginRight: '24px' }}
+            style={{ color: fontColor, fontWeight: 500, marginRight: '24px' }}
             rel="noreferrer"
             target="_blank"
             href={homeUrl}
@@ -85,7 +90,7 @@ function PageLayout({
           </a>
           <a
             className="hidden sm:block pt-1"
-            style={{ color: 'white', fontWeight: 500, marginRight: '24px' }}
+            style={{ color: fontColor, fontWeight: 500, marginRight: '24px' }}
             rel="noreferrer"
             target="_blank"
             href={docsUrl}
