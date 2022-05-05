@@ -47,6 +47,14 @@ export default async function handler(
   await updateAccountSlackSyncStatus(accountId, 'IN_PROGRESS');
 
   try {
+    await sendNotification(
+      `Syncing process started for account: ${accountId}.`
+    );
+  } catch (e) {
+    console.log('Failed to send Slack notification: ', e);
+  }
+
+  try {
     //TODO test multiple slack authorization or reauthorization
     const token = account.slackAuthorizations[0].accessToken;
 
