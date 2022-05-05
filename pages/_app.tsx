@@ -9,6 +9,7 @@ import { AppProps } from 'next/app';
 import Head from 'next/head';
 import { useEffect } from 'react';
 import { SessionProvider } from 'next-auth/react';
+import { Toaster } from '@/components/Toast';
 
 const POSTHOG_API_KEY = process.env.NEXT_PUBLIC_POSTHOG_API_KEY || '';
 
@@ -51,6 +52,7 @@ export default function App(props: AppProps) {
       </Head>
 
       <SWRConfig>
+        <Toaster />
         <Component {...pageProps} />
       </SWRConfig>
     </SessionProvider>
