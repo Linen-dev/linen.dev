@@ -1,18 +1,17 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import prisma from '../../client';
+import { createAccount } from '../../lib/account';
 import { stripProtocol } from '../../utilities/url';
 
 async function create(request: NextApiRequest, response: NextApiResponse) {
   const { homeUrl, docsUrl, redirectDomain, brandColor } = JSON.parse(
     request.body
   );
-  const account = await prisma.accounts.create({
-    data: {
-      homeUrl,
-      docsUrl,
-      redirectDomain: stripProtocol(redirectDomain),
-      brandColor,
-    },
+  const account = await createAccount({
+    homeUrl,
+    docsUrl,
+    redirectDomain,
+    brandColor,
   });
   return response.status(200).json(account);
 }

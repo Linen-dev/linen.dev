@@ -13,7 +13,9 @@
     "setup:integration": "dotenv -e .env.test -- npm run db:migrate:test",
     "test:integration": "dotenv -e .env.test -- jest -i",
     "db:migrate": "npx prisma generate && npx prisma migrate dev",
-    "db:migrate:test": "dotenv -e .env.test -- npx prisma migrate deploy"
+    "db:migrate:test": "dotenv -e .env.test -- npx prisma migrate deploy",
+    "db:seed": "ts-node --skip-project bin/seed.ts",
+    "db:reset": "npx prisma reset"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.1.1",
@@ -72,7 +74,8 @@
     "lint-staged": "^12.3.3",
     "next-test-api-route-handler": "^3.1.2",
     "postcss": "^8.4.6",
-    "prettier": "2.5.1"
+    "prettier": "2.5.1",
+    "ts-node": "^10.7.0"
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown"
