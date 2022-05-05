@@ -291,6 +291,9 @@ export const threadCount = async (channelId: string): Promise<number> => {
   return await prisma.slackThreads.count({
     where: {
       channelId,
+      messageCount: {
+        gt: 1,
+      },
     },
   });
 };
