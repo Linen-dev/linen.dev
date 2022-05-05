@@ -1,5 +1,5 @@
 import React from 'react';
-import Alert from '../../components/Alert';
+import Alert from '@/components/Alert';
 
 interface Props {
   error?: string;
