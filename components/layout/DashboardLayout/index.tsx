@@ -1,5 +1,6 @@
 import React from 'react';
-import { CogIcon } from '@heroicons/react/outline';
+import { CogIcon, ViewListIcon } from '@heroicons/react/outline';
+import Link from 'next/link';
 
 interface Props {
   children: React.ReactNode;
@@ -20,14 +21,26 @@ export default function DashboardLayout({ children, header }: Props) {
           </div>
           <div className="flex-grow mt-5">
             <div className="space-y-1">
-              <a
-                href="/settings"
-                className="bg-purple-50 border-purple-600 text-purple-600 group border-l-4 py-2 px-3 flex items-center text-sm font-medium"
-                x-state-description='undefined: "bg-purple-50 border-purple-600 text-purple-600", undefined: "border-transparent text-gray-600 hover:text-gray-900 hover:bg-gray-50"'
-              >
-                <CogIcon className="text-purple-500 mr-3 flex-shrink-0 h-6 w-6" />
-                Settings
-              </a>
+              <Link href="/settings">
+                <a
+                  className="bg-purple-50 border-purple-600 text-purple-600 group border-l-4 py-2 px-3 flex items-center text-sm font-medium"
+                  x-state-description='undefined: "bg-purple-50 border-purple-600 text-purple-600", undefined: "border-transparent text-gray-600 hover:text-gray-900 hover:bg-gray-50"'
+                >
+                  <CogIcon className="text-purple-500 mr-3 flex-shrink-0 h-6 w-6" />
+                  Settings
+                </a>
+              </Link>
+            </div>
+            <div className="space-y-1">
+              <Link href="/settings/channels">
+                <a
+                  className="bg-purple-50 border-purple-600 text-purple-600 group border-l-4 py-2 px-3 flex items-center text-sm font-medium"
+                  x-state-description='undefined: "bg-purple-50 border-purple-600 text-purple-600", undefined: "border-transparent text-gray-600 hover:text-gray-900 hover:bg-gray-50"'
+                >
+                  <ViewListIcon className="text-purple-500 mr-3 flex-shrink-0 h-6 w-6" />
+                  Channels
+                </a>
+              </Link>
             </div>
           </div>
           {/* <div className="flex-shrink-0 block w-full">
