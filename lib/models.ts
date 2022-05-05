@@ -494,3 +494,20 @@ export const findOrCreateUserFromUserInfo = async (
   }
   return user;
 };
+
+export const findAccountByEmail = async (session?: any) => {
+  if (!session) {
+    return null;
+  }
+  const email = session.user?.email;
+  if (!email) {
+    return null;
+  }
+  const auth = await prisma.auths.findFirst({ where: { email } });
+  if (!auth) {
+    return null;
+  }
+  return await prisma.accounts.findFirst({
+    where: { id: auth.accountId as string },
+  });
+};
