@@ -56,9 +56,10 @@ export default async function handler(
       console.error('Syncing error: ', err);
     });
 
-  res.status(200).json({
-    ok: 'Slack has been authenticated, syncing now. Kam will reach out soon to finish onboarding',
-  });
+  res.redirect('/onboarding/customize');
+  // res.status(200).json({
+  //   ok: 'Slack has been authenticated, syncing now. Kam will reach out soon to finish onboarding',
+  // });
 }
 
 export const getSlackAccessToken = async (
