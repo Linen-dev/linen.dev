@@ -13,7 +13,8 @@
     "setup:integration": "dotenv -e .env.test -- npm run db:migrate:test",
     "test:integration": "dotenv -e .env.test -- jest -i",
     "db:migrate": "npx prisma generate && npx prisma migrate dev",
-    "db:migrate:test": "dotenv -e .env.test -- npx prisma migrate deploy"
+    "db:migrate:test": "dotenv -e .env.test -- npx prisma migrate deploy",
+    "format": "prettier -w ."
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.1.1",
@@ -48,6 +49,7 @@
     "react-dom": "17.0.2",
     "react-emoji-render": "^1.2.4",
     "react-error-boundary": "^3.1.4",
+    "react-hot-toast": "^2.2.0",
     "react-icons": "^4.3.1",
     "react-intersection-observer": "^8.33.1",
     "react-paginate": "^8.1.2",
