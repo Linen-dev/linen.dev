@@ -1,6 +1,7 @@
 import React from 'react';
-import { CogIcon, ViewListIcon } from '@heroicons/react/outline';
 import Link from 'next/link';
+import { faGear } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 interface Props {
   children: React.ReactNode;
@@ -26,7 +27,10 @@ export default function DashboardLayout({ children, header }: Props) {
                   className="bg-purple-50 border-purple-600 text-purple-600 group border-l-4 py-2 px-3 flex items-center text-sm font-medium"
                   x-state-description='undefined: "bg-purple-50 border-purple-600 text-purple-600", undefined: "border-transparent text-gray-600 hover:text-gray-900 hover:bg-gray-50"'
                 >
-                  <CogIcon className="text-purple-500 mr-3 flex-shrink-0 h-6 w-6" />
+                  <FontAwesomeIcon
+                    icon={faGear}
+                    className="text-purple-500 mr-3 flex-shrink-0 h-6 w-6"
+                  />
                   Settings
                 </a>
               </Link>
@@ -37,7 +41,10 @@ export default function DashboardLayout({ children, header }: Props) {
                   className="bg-purple-50 border-purple-600 text-purple-600 group border-l-4 py-2 px-3 flex items-center text-sm font-medium"
                   x-state-description='undefined: "bg-purple-50 border-purple-600 text-purple-600", undefined: "border-transparent text-gray-600 hover:text-gray-900 hover:bg-gray-50"'
                 >
-                  <ViewListIcon className="text-purple-500 mr-3 flex-shrink-0 h-6 w-6" />
+                  <FontAwesomeIcon
+                    icon={faGear}
+                    className="text-purple-500 mr-3 flex-shrink-0 h-6 w-6"
+                  />
                   Channels
                 </a>
               </Link>
