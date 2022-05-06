@@ -3,6 +3,8 @@ import prisma from '../../client';
 import { generateHash } from '../../utilities/password';
 import { sendNotification } from '../../services/slack';
 import { createAuth } from '../../lib/auth';
+import { getServerSession } from 'next-auth';
+import { authOptions } from './auth/[...nextauth]';
 
 async function create(request: NextApiRequest, response: NextApiResponse) {
   const { email, password } = JSON.parse(request.body);
@@ -52,6 +54,22 @@ async function update(request: NextApiRequest, response: NextApiResponse) {
   return response.status(200).json({});
 }
 
+async function get(req: NextApiRequest, res: NextApiResponse) {
+  const session = await getServerSession({ req, res }, authOptions);
+  const email = session?.user?.email;
+  if (!email) {
+    return res.status(404).json({});
+  }
+  const auth = await prisma.auths.findFirst({
+    where: { email },
+    select: { accountId: true },
+  });
+  if (!auth) {
+    return res.status(404).json({});
+  }
+  return res.status(200).json(auth);
+}
+
 export default async function handler(
   request: NextApiRequest,
   response: NextApiResponse
@@ -61,6 +79,9 @@ export default async function handler(
   }
   if (request.method === 'PUT') {
     return update(request, response);
+  }
+  if (request.method === 'GET') {
+    return get(request, response);
   }
   return response.status(404);
 }

@@ -44,12 +44,12 @@ export default function DashboardLayout({ children, header }: Props) {
       </div>
       <div className="md:pl-64">
         <div className="max-w-4xl mx-auto flex flex-col md:px-8 xl:px-0">
-          <div className="pt-10 pb-16">
-            <div className="max-w-lg mx-auto pt-10 pb-12 px-4 lg:pb-16">
+          <div className="py-10">
+            <div className="max-w-lg mx-auto px-4">
               <h1 className="text-3xl font-extrabold text-gray-900">
                 {header}
               </h1>
-              <div className="py-6 ">{children}</div>
+              <div className="py-6">{children}</div>
             </div>
           </div>
         </div>

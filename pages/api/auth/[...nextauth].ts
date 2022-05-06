@@ -1,4 +1,4 @@
-import NextAuth from 'next-auth';
+import NextAuth, { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import prisma from '../../../client';
 import { generateHash } from '../../../utilities/password';
@@ -8,7 +8,7 @@ interface Credentials {
   password?: string;
 }
 
-export default NextAuth({
+export const authOptions = {
   pages: {
     signIn: '/signin',
   },
@@ -36,4 +36,7 @@ export default NextAuth({
       },
     }),
   ],
-});
+  secret: process.env.NEXTAUTH_SECRET as string,
+} as NextAuthOptions;
+
+export default NextAuth(authOptions);

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { NextPageContext } from 'next';
 import { getSession, useSession } from 'next-auth/react';
 import DashboardLayout from '../../components/layout/DashboardLayout';
@@ -16,6 +16,9 @@ import {
   faCircleExclamation,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useRouter } from 'next/router';
+import SlackBotButton from '@/components/SlackBotButton';
+import { toast } from '@/components/Toast';
 
 interface Props {
   account?: SerializedAccount;
@@ -23,6 +26,17 @@ interface Props {
 
 export default function SettingsPage({ account }: Props) {
   const { data: session } = useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    const error = router.query.error as string;
+    if (error) toast.error('Something went wrong, please try again');
+  }, [router.query.error]);
+
+  useEffect(() => {
+    const success = router.query.success as string;
+    if (success) toast.success(decodeURI(success));
+  }, [router.query.success]);
 
   if (session && account) {
     const onSubmit = (event: any) => {
@@ -50,76 +64,85 @@ export default function SettingsPage({ account }: Props) {
         });
     };
 
+    const slackSyncComponent = (
+      <DashboardLayout header="Slack Synchronization">
+        {account.slackSyncStatus === 'NOT_STARTED' && (
+          <div>
+            <FontAwesomeIcon icon={faCirclePause} size="lg" /> Not started
+          </div>
+        )}
+        {account.slackSyncStatus === 'IN_PROGRESS' && (
+          <div>
+            <FontAwesomeIcon icon={faSpinner} size="lg" /> In progress
+          </div>
+        )}
+        {account.slackSyncStatus === 'DONE' && (
+          <div>
+            <FontAwesomeIcon icon={faCircleCheck} size="lg" color="green" />{' '}
+            Done
+          </div>
+        )}
+        {account.slackSyncStatus === 'ERROR' && (
+          <div>
+            <FontAwesomeIcon icon={faCircleExclamation} size="lg" color="red" />{' '}
+            Error
+          </div>
+        )}
+        <div className="flex flex-row">
+          <div className="flex-initial">
+            <SlackBotButton />
+          </div>
+        </div>
+      </DashboardLayout>
+    );
+
+    const settingsComponent = (
+      <DashboardLayout header="Settings">
+        <form onSubmit={onSubmit}>
+          <TextField
+            label="Home url"
+            placeholder="https://yourwebsite.com"
+            id="homeUrl"
+            defaultValue={account.homeUrl}
+            required
+          />
+          <TextField
+            label="Docs url"
+            placeholder="https://docs.yourwebsite.com"
+            id="docsUrl"
+            defaultValue={account.docsUrl}
+            required
+          />
+          <TextField
+            label="Redirect domain"
+            placeholder="linen.yourwebsite.com"
+            id="redirectDomain"
+            defaultValue={account.redirectDomain}
+            required
+          />
+          {account.premium && (
+            <TextField
+              label="Google analytics id"
+              placeholder="UA-1-123456789-1"
+              id="googleAnalyticsId"
+              defaultValue={account.googleAnalyticsId}
+            />
+          )}
+          <ColorField
+            label="Brand color"
+            id="brandColor"
+            defaultValue={account.brandColor}
+            required
+          />
+          <Button type="submit">Update</Button>
+        </form>
+      </DashboardLayout>
+    );
+
     return (
       <BlankLayout>
-        <DashboardLayout header="Settings">
-          <form onSubmit={onSubmit}>
-            <TextField
-              label="Home url"
-              placeholder="https://yourwebsite.com"
-              id="homeUrl"
-              defaultValue={account.homeUrl}
-              required
-            />
-            <TextField
-              label="Docs url"
-              placeholder="https://docs.yourwebsite.com"
-              id="docsUrl"
-              defaultValue={account.docsUrl}
-              required
-            />
-            <TextField
-              label="Redirect domain"
-              placeholder="linen.yourwebsite.com"
-              id="redirectDomain"
-              defaultValue={account.redirectDomain}
-              required
-            />
-            {account.premium && (
-              <TextField
-                label="Google analytics id"
-                placeholder="UA-1-123456789-1"
-                id="googleAnalyticsId"
-                defaultValue={account.googleAnalyticsId}
-              />
-            )}
-            <ColorField
-              label="Brand color"
-              id="brandColor"
-              defaultValue={account.brandColor}
-              required
-            />
-            <Button type="submit">Submit</Button>
-          </form>
-        </DashboardLayout>
-        <DashboardLayout header="Slack Synchronization">
-          {account.slackSyncStatus === 'NOT_STARTED' && (
-            <div>
-              <FontAwesomeIcon icon={faCirclePause} size="lg" /> Not started
-            </div>
-          )}
-          {account.slackSyncStatus === 'IN_PROGRESS' && (
-            <div>
-              <FontAwesomeIcon icon={faSpinner} size="lg" /> In progress
-            </div>
-          )}
-          {account.slackSyncStatus === 'DONE' && (
-            <div>
-              <FontAwesomeIcon icon={faCircleCheck} size="lg" color="green" />{' '}
-              Done
-            </div>
-          )}
-          {account.slackSyncStatus === 'ERROR' && (
-            <div>
-              <FontAwesomeIcon
-                icon={faCircleExclamation}
-                size="lg"
-                color="red"
-              />{' '}
-              Error
-            </div>
-          )}
-        </DashboardLayout>
+        {settingsComponent}
+        {slackSyncComponent}
       </BlankLayout>
     );
   }
