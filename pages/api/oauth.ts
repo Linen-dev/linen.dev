@@ -13,7 +13,8 @@ export default async function handler(
 ) {
   const error = req.query.error as string;
   if (error) {
-    return res.redirect('/settings?error=' + encodeURI(error));
+    console.error(error);
+    return res.redirect('/settings?error=1');
   }
 
   const code = req.query.code;

@@ -30,7 +30,7 @@ export default function SettingsPage({ account }: Props) {
 
   useEffect(() => {
     const error = router.query.error as string;
-    if (error) toast.error('Something went error, please try again');
+    if (error) toast.error('Something went wrong, please try again');
   }, [router.query.error]);
 
   useEffect(() => {
