@@ -1,6 +1,7 @@
 import React from 'react';
 import { faGear } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import SlackBotButton from '@/components/SlackBotButton';
 
 interface Props {
   children: React.ReactNode;
@@ -32,6 +33,11 @@ export default function DashboardLayout({ children, header }: Props) {
                 />
                 Settings
               </a>
+            </div>
+          </div>
+          <div className="flex-shrink-0 flex border-t border-gray-200 p-4">
+            <div className="flex-grow items-center">
+              <SlackBotButton />
             </div>
           </div>
           {/* <div className="flex-shrink-0 block w-full">

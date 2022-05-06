@@ -13,12 +13,12 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "incremental": true
-  },
-  "baseUrl": ".", // this must be specified if "paths" is specified.
-  "paths": {
-    "@/components/*": ["components/*"],
-    "@/styles/*": ["styles/*"]
+    "incremental": true,
+    "baseUrl": ".", // this must be specified if "paths" is specified.
+    "paths": {
+      "@/components/*": ["components/*"],
+      "@/styles/*": ["styles/*"]
+    }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.js", "**/*.css"],
   "exclude": ["node_modules", "cdk"]
