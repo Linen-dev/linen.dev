@@ -11,6 +11,11 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  const error = req.query.error as string;
+  if (error) {
+    return res.redirect('/settings?error=' + encodeURI(error));
+  }
+
   const code = req.query.code;
   const accountId = req.query.state as string;
   const clientId = process.env.NEXT_PUBLIC_SLACK_CLIENT_ID;
@@ -56,9 +61,15 @@ export default async function handler(
       console.error('Syncing error: ', err);
     });
 
-  res.status(200).json({
-    ok: 'Slack has been authenticated, syncing now. Kam will reach out soon to finish onboarding',
-  });
+  // res.status(200).json({
+  //   ok: 'Slack has been authenticated, syncing now. Kam will reach out soon to finish onboarding',
+  // });
+  return res.redirect(
+    '/settings?success=' +
+      encodeURI(
+        'Slack has been authenticated, syncing now. Kam will reach out soon to finish onboarding'
+      )
+  );
 }
 
 export const getSlackAccessToken = async (
