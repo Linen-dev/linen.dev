@@ -1,33 +1,9 @@
-import { createAuth } from '../lib/auth';
-import { createAccount, findAccount } from '../lib/account';
+import { findOrCreateAccount, findOrCreateUser } from './factory';
 
 (async () => {
-  const account =
-    (await findAccount({ redirectDomain: 'linen.dev' })) ||
-    (await createAccount({
-      homeUrl: 'https://linen.dev',
-      docsUrl: 'https://linen.dev/docs',
-      redirectDomain: 'linen.dev',
-      brandColor: '#00bcd4',
-    }));
-
-  const users = [
-    'emil@linen.dev',
-    'jarek@linen.dev',
-    'kam@linen.dev',
-    'sandro@linen.dev',
-  ];
-  await Promise.all(
-    users.map(async (email) => {
-      try {
-        await createAuth({
-          email,
-          password: 'password',
-          accountId: account.id,
-        });
-      } catch (exception) {
-        console.log(`User ${email} already exists`);
-      }
-    })
-  );
+  const account = await findOrCreateAccount({ domain: 'linen.dev' });
+  await findOrCreateUser({ email: 'emil@linen.dev', accountId: account.id });
+  await findOrCreateUser({ email: 'jarek@linen.dev', accountId: account.id });
+  await findOrCreateUser({ email: 'kam@linen.dev', accountId: account.id });
+  await findOrCreateUser({ email: 'sandro@linen.dev', accountId: account.id });
 })();
