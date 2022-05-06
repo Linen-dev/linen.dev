@@ -18,6 +18,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useRouter } from 'next/router';
 import SlackBotButton from '@/components/SlackBotButton';
+import { toast } from '@/components/Toast';
 
 interface Props {
   account?: SerializedAccount;
@@ -29,14 +30,12 @@ export default function SettingsPage({ account }: Props) {
 
   useEffect(() => {
     const error = router.query.error as string;
-    // TODO: replace it for new toast, otherwise the page is block by the alert
-    if (error) alert('Something went error, please try again');
+    if (error) toast.error('Something went error, please try again');
   }, [router.query.error]);
 
   useEffect(() => {
     const success = router.query.success as string;
-    // TODO: replace it for new toast, otherwise the page is block by the alert
-    if (success) alert(decodeURI(success));
+    if (success) toast.success(decodeURI(success));
   }, [router.query.success]);
 
   if (session && account) {
