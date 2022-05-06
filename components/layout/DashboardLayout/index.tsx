@@ -1,7 +1,6 @@
 import React from 'react';
 import { faGear } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import SlackBotButton from '@/components/SlackBotButton';
 
 interface Props {
   children: React.ReactNode;
@@ -35,11 +34,6 @@ export default function DashboardLayout({ children, header }: Props) {
               </a>
             </div>
           </div>
-          <div className="flex-shrink-0 flex border-t border-gray-200 p-4">
-            <div className="flex-grow items-center">
-              <SlackBotButton />
-            </div>
-          </div>
           {/* <div className="flex-shrink-0 block w-full">
             <a href="#" className="group border-l-4 border-transparent py-2 px-3 flex items-center text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50">
               <CogIcon className="text-gray-400 group-hover:text-gray-500 mr-3 h-6 w-6" />
@@ -50,12 +44,12 @@ export default function DashboardLayout({ children, header }: Props) {
       </div>
       <div className="md:pl-64">
         <div className="max-w-4xl mx-auto flex flex-col md:px-8 xl:px-0">
-          <div className="pt-10 pb-16">
-            <div className="max-w-lg mx-auto pt-10 pb-12 px-4 lg:pb-16">
+          <div className="py-10">
+            <div className="max-w-lg mx-auto px-4">
               <h1 className="text-3xl font-extrabold text-gray-900">
                 {header}
               </h1>
-              <div className="py-6 ">{children}</div>
+              <div className="py-6">{children}</div>
             </div>
           </div>
         </div>
