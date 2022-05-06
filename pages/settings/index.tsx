@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { NextPageContext } from 'next';
 import { getSession, useSession } from 'next-auth/react';
 import DashboardLayout from '../../components/layout/DashboardLayout';
@@ -16,6 +16,7 @@ import {
   faCircleExclamation,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useRouter } from 'next/router';
 
 interface Props {
   account?: SerializedAccount;
@@ -23,6 +24,19 @@ interface Props {
 
 export default function SettingsPage({ account }: Props) {
   const { data: session } = useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    const error = router.query.error as string;
+    // TODO: replace it for new toast, otherwise the page is block by the alert
+    if (error) alert('Something went error, please try again');
+  }, [router.query.error]);
+
+  useEffect(() => {
+    const success = router.query.success as string;
+    // TODO: replace it for new toast, otherwise the page is block by the alert
+    if (success) alert(decodeURI(success));
+  }, [router.query.success]);
 
   if (session && account) {
     const onSubmit = (event: any) => {
