@@ -1,5 +1,6 @@
 import { createAuth, findAuth } from '../../lib/auth';
 import { createAccount, findAccount } from '../../lib/account';
+import { createChannel, findChannel } from '../../lib/channel';
 
 export async function findOrCreateAccount({ domain }: { domain: string }) {
   return (
@@ -26,6 +27,23 @@ export async function findOrCreateUser({
       email,
       password: 'password',
       accountId,
+    }))
+  );
+}
+
+export async function findOrCreateChannel({
+  name,
+  accountId,
+}: {
+  name: string;
+  accountId: string;
+}) {
+  return (
+    (await findChannel({ name, accountId })) ||
+    (await createChannel({
+      name,
+      accountId,
+      slackChannelId: 'slack-channel-id-1234',
     }))
   );
 }
