@@ -134,6 +134,7 @@ export default async function handler(
         console.log('channel completed syncing: ', c.channelName);
         continue;
       }
+      let retries = 0;
 
       //fetch all messages by paginating
       while (!!nextCursor || firstLoop) {
@@ -160,8 +161,10 @@ export default async function handler(
             console.log('waiting 10 seconds');
             setTimeout(resolve, 10000);
           });
-
-          nextCursor = null;
+          retries += 1;
+          if (retries > 3) {
+            nextCursor = null;
+          }
         }
         firstLoop = false;
       }
