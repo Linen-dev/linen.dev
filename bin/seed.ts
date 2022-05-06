@@ -1,33 +1,38 @@
-import { createAuth } from '../lib/auth';
-import { createAccount, findAccount } from '../lib/account';
+import {
+  findOrCreateAccount,
+  findOrCreateUser,
+  findOrCreateChannel,
+  findOrCreateThread,
+  findOrCreateMessage,
+} from './factory';
 
 (async () => {
-  const account =
-    (await findAccount({ redirectDomain: 'linen.dev' })) ||
-    (await createAccount({
-      homeUrl: 'https://linen.dev',
-      docsUrl: 'https://linen.dev/docs',
-      redirectDomain: 'linen.dev',
-      brandColor: '#00bcd4',
-    }));
+  const account = await findOrCreateAccount({ domain: 'linen.dev' });
 
-  const users = [
-    'emil@linen.dev',
-    'jarek@linen.dev',
-    'kam@linen.dev',
-    'sandro@linen.dev',
-  ];
-  await Promise.all(
-    users.map(async (email) => {
-      try {
-        await createAuth({
-          email,
-          password: 'password',
-          accountId: account.id,
-        });
-      } catch (exception) {
-        console.log(`User ${email} already exists`);
-      }
-    })
-  );
+  await findOrCreateUser({ email: 'emil@linen.dev', accountId: account.id });
+  await findOrCreateUser({ email: 'jarek@linen.dev', accountId: account.id });
+  await findOrCreateUser({ email: 'kam@linen.dev', accountId: account.id });
+  await findOrCreateUser({ email: 'sandro@linen.dev', accountId: account.id });
+
+  const channel = await findOrCreateChannel({
+    name: 'general',
+    accountId: account.id,
+  });
+
+  for (let i = 0; i < 100; i++) {
+    const thread = await findOrCreateThread({
+      channelId: channel.id,
+      slug: `slug-${i}`,
+    });
+    await findOrCreateMessage({
+      body: `foo-${i}`,
+      channelId: channel.id,
+      threadId: thread.id,
+    });
+    await findOrCreateMessage({
+      body: `bar-${i}`,
+      channelId: channel.id,
+      threadId: thread.id,
+    });
+  }
 })();

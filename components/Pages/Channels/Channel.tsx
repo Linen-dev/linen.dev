@@ -253,7 +253,7 @@ export default function Channel({
       communityName={communityName}
       isSubDomainRouting={isSubDomainRouting}
     >
-      <div className="sm:pt-8 sm:px-8 sm:flex sm:justify-center">
+      <div className="sm:pt-8 sm:px-8">
         <table className="hidden sm:block sm:table-fixed ">
           <thead>
             <tr>
@@ -277,14 +277,14 @@ export default function Channel({
           <tbody className="divide-y">{tableRows}</tbody>
         </table>
         <ul className="divide-y sm:hidden">{rows}</ul>
+        {pageCount && (
+          <Pagination
+            channelName={currentChannel.channelName}
+            onClick={handlePageClick}
+            pageCount={pageCount}
+          />
+        )}
       </div>
-      {pageCount && (
-        <Pagination
-          channelName={currentChannel.channelName}
-          onClick={handlePageClick}
-          pageCount={pageCount}
-        />
-      )}
     </PageLayout>
   );
 }
