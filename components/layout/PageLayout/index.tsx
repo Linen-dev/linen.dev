@@ -129,15 +129,14 @@ function PageLayout({
         title={communityName?.split('.')[0]}
         {...seo}
       />
-      <div className="sm:flex">
-        <div className="hidden md:flex">
-          {NavBar(
-            channels,
-            currentChannel.channelName || '',
-            communityName,
-            isSubDomainRouting
-          )}
-        </div>
+      <div className="flex flex-col md:flex-row">
+        {NavBar(
+          channels,
+          currentChannel.channelName || '',
+          communityName,
+          isSubDomainRouting
+        )}
+
         <div className="md:flex justify-center lg:w-full">
           <ErrorBoundary
             FallbackComponent={() => (

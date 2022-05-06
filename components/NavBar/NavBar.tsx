@@ -1,14 +1,32 @@
 import { Navbar, Group, Title, Text, Paper } from '@mantine/core';
 import { channels } from '@prisma/client';
 import CustomLink from '../Link/CustomLink';
+import { NativeSelect } from '@mantine/core';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHashtag } from '@fortawesome/free-solid-svg-icons';
+import CustomRouterPush from '../Link/CustomRouterPush';
+import { useEffect, useState } from 'react';
 
 export function NavBar(
-  channels: any,
+  channels: channels[],
   channelName: string | string[],
   communityName: string,
   isSubDomainRouting: boolean
 ) {
-  return (
+  const [channel, setChannel] = useState(channelName);
+
+  useEffect(() => {
+    console.log('channel', channel);
+    if (channel && channel !== channelName) {
+      CustomRouterPush({
+        isSubDomainRouting: isSubDomainRouting,
+        communityName: communityName,
+        path: `/c/${channel}/1`,
+      });
+    }
+  }, [channel, channelName, communityName, isSubDomainRouting]);
+
+  const navBarLg = (
     <Navbar
       sx={(theme) => ({ backgroundColor: 'white', zIndex: 1 })}
       width={{ base: 250 }}
@@ -72,5 +90,27 @@ export function NavBar(
         </Paper>
       </Group>
     </Navbar>
+  );
+
+  const navBarSm = (
+    <div className="pt-4 px-4">
+      <NativeSelect
+        data={channels.map((c: channels) => c.channelName)}
+        placeholder="Pick one"
+        description="Channels"
+        icon={<FontAwesomeIcon icon={faHashtag} size="xs" />}
+        onChange={(event) => setChannel(event.currentTarget.value)}
+        radius="xs"
+        size="xs"
+        value={channel}
+      />
+    </div>
+  );
+
+  return (
+    <>
+      <div className="hidden md:flex">{navBarLg}</div>
+      <div className="md:hidden">{navBarSm}</div>
+    </>
   );
 }
