@@ -22,19 +22,19 @@ export default function Pagination({ onClick, pageCount, channelName }: Props) {
           onPageChange={onClick}
           pageRangeDisplayed={5}
           pageCount={pageCount}
-          containerClassName="relative z-0 inline-flex rounded-md shadow-lg -space-x-px"
+          containerClassName="border border-solid border-gray-200 inline-flex rounded-md -space-x-px"
           breakLinkClassName="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium"
           hrefBuilder={(page: number) => `/c/${channelName}/${page}`}
           activeLinkClassName="z-10 bg-indigo-50 border-indigo-500 text-indigo-600 relative inline-flex items-center px-4 py-2 border text-sm font-medium"
           pageLinkClassName="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium"
-          previousLinkClassName="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+          previousLinkClassName="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 text-sm font-medium text-gray-500 hover:bg-gray-50"
           previousLabel={
             <>
               <span className="sr-only">Previous</span>
               <FontAwesomeIcon icon={faAngleLeft} className="h-5 w-5" />
             </>
           }
-          nextLinkClassName="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+          nextLinkClassName="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 text-sm font-medium text-gray-500 hover:bg-gray-50"
           nextLabel={
             <>
               <span className="sr-only">Next</span>

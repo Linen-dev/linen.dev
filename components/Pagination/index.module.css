@@ -1,7 +1,3 @@
 .pagination {
-  position: fixed;
-  bottom: 2.5rem;
-  left: 0;
-  width: 100%;
-  z-index: 1;
+  padding: 2.5rem 0;
 }
