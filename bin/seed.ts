@@ -25,11 +25,13 @@ import {
       slug: `slug-${i}`,
     });
     await findOrCreateMessage({
+      slackMessageId: (Math.random() * 100000000000).toString(),
       body: `foo-${i}`,
       channelId: channel.id,
       threadId: thread.id,
     });
     await findOrCreateMessage({
+      slackMessageId: (Math.random() * 100000000000).toString(),
       body: `bar-${i}`,
       channelId: channel.id,
       threadId: thread.id,
