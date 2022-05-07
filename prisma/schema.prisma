@@ -20,7 +20,7 @@ model messages {
 
   channel        channels @relation(fields: [channelId], references: [id])
   channelId      String
-  slackMessageId String?
+  slackMessageId String
 
   slackThreads slackThreads? @relation(fields: [slackThreadId], references: [id])
 
@@ -29,7 +29,7 @@ model messages {
   mentions slackMentions[]
   author   users?          @relation(fields: [usersId], references: [id])
   usersId  String?
-  @@unique([body, sentAt])
+  @@unique([channelId, slackMessageId])
 }
 
 model slackThreads {
