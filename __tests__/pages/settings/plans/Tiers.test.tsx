@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import Tiers from './Tiers';
-import { Period } from './types';
+import Tiers from 'pages/settings/plans/Tiers';
+import { Period } from 'pages/settings/plans/types';
 
 describe('Tiers', () => {
   it('renders tiers', () => {
