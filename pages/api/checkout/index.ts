@@ -1,9 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
+import stripe from 'services/stripe';
 
 const HOST = process.env.NEXTAUTH_URL || 'http://localhost:3000';
-
-const Stripe = require('stripe');
-const stripe = new Stripe(process.env.STRIPE_API_KEY);
 
 async function create(request: NextApiRequest, response: NextApiResponse) {
   const { accountId, priceId } = JSON.parse(request.body);

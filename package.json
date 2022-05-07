@@ -34,6 +34,7 @@
     "@types/nodemailer": "^6.4.4",
     "@types/nprogress": "^0.2.0",
     "@types/react": "17.0.38",
+    "@types/stripe": "^8.0.417",
     "@types/styled-components": "^5.1.23",
     "@types/superagent": "^4.1.15",
     "axios": "^0.26.1",

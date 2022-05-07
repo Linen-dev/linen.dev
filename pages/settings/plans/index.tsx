@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { NextPageContext } from 'next';
+import stripe from 'services/stripe';
+import { StripePricesResponse, StripePrice } from 'services/stripe/types';
 import { getSession } from 'next-auth/react';
 import DashboardLayout from '../../../components/layout/DashboardLayout';
 import serializeAccount, {
@@ -12,38 +14,62 @@ import { Period } from './types';
 
 interface Props {
   account?: SerializedAccount;
+  prices?: StripePrice[];
 }
 
-const tiers = [
-  {
-    name: 'Standard',
-    href: '#',
-    description: 'All the basics for starting',
-    features: ['SEO friendly content'],
-  },
-  {
-    name: 'Premium',
-    href: '#',
-    description: 'Additional features',
-    features: ['Use your own domain', 'Use your own Google Analytics'],
-    prices: [
-      {
-        id: 'price_1KvHD6H6FaltU5xQSzmnObgI',
-        amount: 250,
-        type: Period.Monthly,
-      },
-      {
-        id: 'price_1KvHD6H6FaltU5xQDPL3SeSq',
-        amount: 2500,
-        type: Period.Yearly,
-      },
-    ],
-  },
-];
-
-export default function SettingsPage({ account }: Props) {
+export default function SettingsPage({ account, prices }: Props) {
   const [period, setPeriod] = useState(Period.Monthly);
+
+  if (!prices) {
+    return (
+      <DashboardLayout header="Plans">
+        <p>
+          Stripe is unavailable and we're not able to fetch plans right now.
+          Please try again later.
+        </p>
+      </DashboardLayout>
+    );
+  }
+
+  if (prices.length === 0) {
+    return (
+      <DashboardLayout header="Plans">
+        <p>
+          Sorry, we didn't set up any plans in Stripe yet. Please check again
+          later.
+        </p>
+      </DashboardLayout>
+    );
+  }
+
   if (account) {
+    const tiers = [
+      {
+        name: 'Standard',
+        href: '#',
+        description: 'All the basics for starting',
+        features: ['SEO friendly content'],
+      },
+      {
+        name: 'Premium',
+        href: '#',
+        description: 'Additional features',
+        features: ['Use your own domain', 'Use your own Google Analytics'],
+        prices: [
+          {
+            id: prices[0].id,
+            amount: prices[0].unit_amount / 100,
+            type: Period.Monthly,
+          },
+          {
+            id: prices[1].id,
+            amount: prices[1].unit_amount / 100,
+            type: Period.Yearly,
+          },
+        ],
+      },
+    ];
+
     return (
       <DashboardLayout>
         <div className="mx-auto">
@@ -95,10 +121,20 @@ export async function getServerSideProps(context: NextPageContext) {
       },
     };
   }
+
+  let prices;
+  try {
+    const response = (await stripe.prices.list()) as StripePricesResponse;
+    prices = response.data;
+  } catch (exception) {
+    prices = null;
+  }
+
   return {
     props: {
       session,
       account: serializeAccount(account),
+      prices,
     },
   };
 }
