@@ -115,6 +115,17 @@ export const findAccountById = async (accountId: string) => {
   });
 };
 
+export const findAccountBySlackTeamId = async (slackTeamId: string) => {
+  return await prisma.accounts.findFirst({
+    where: {
+      slackTeamId,
+    },
+    select: {
+      id: true,
+    },
+  });
+};
+
 export const findAccountByEmail = async (email?: string | null) => {
   if (!email) {
     return null;

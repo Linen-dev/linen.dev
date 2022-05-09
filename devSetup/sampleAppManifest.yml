@@ -13,6 +13,7 @@ oauth_config:
     user:
       - channels:history
       - search:read
+      - users:read
     bot:
       - channels:history
       - channels:join
@@ -26,6 +27,7 @@ settings:
     request_url: https://linen-YOURNAME.ngrok.io/api/webhook
     user_events:
       - message.channels
+      - team_join
   org_deploy_enabled: false
   socket_mode_enabled: false
   token_rotation_enabled: false
