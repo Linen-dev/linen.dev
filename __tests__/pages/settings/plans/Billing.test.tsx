@@ -2,7 +2,7 @@ import React from 'react';
 import Billing from 'pages/settings/plans/Billing';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Period } from 'pages/settings/plans/types';
+import { Period } from 'pages/settings/plans';
 
 describe('Billing', () => {
   it('renders plans', async () => {
