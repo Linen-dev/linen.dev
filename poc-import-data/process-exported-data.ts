@@ -23,7 +23,8 @@ let stats = {
   channels: 0,
   channels_in_db: 0,
   users: 0,
-  single: 0,
+  users_in_db: 0,
+  single: 0, // no more singles
   thread: 0,
   message: 0,
   unknown: 0,
@@ -33,11 +34,11 @@ let stats = {
 // const basePath = './poc-import-data/data/san/';
 // const slackTeamId = 'T03ECUWHFGD';
 
-const basePath = './poc-import-data/data/prefect/';
-const slackTeamId = 'TL09B008Y';
+// const basePath = './poc-import-data/data/prefect/';
+// const slackTeamId = 'TL09B008Y';
 
-// const basePath = './poc-import-data/data/netsuite/';
-// const slackTeamId = 'T29A3EDK8';
+const basePath = './poc-import-data/data/netsuite/';
+const slackTeamId = 'T29A3EDK8';
 
 async function findOrCreateAccount() {
   let account = await prisma.accounts.findFirst({ where: { slackTeamId } });
@@ -69,7 +70,7 @@ async function upsertUsers(account: accounts) {
     },
   });
   console.timeEnd('retrieve-users');
-
+  stats.users_in_db = usersInDb.length;
   console.time('toObject-users');
 
   return toObject(usersInDb, 'slackUserId');
@@ -158,6 +159,8 @@ async function processFile({
   }
 }
 
+let threadsBySlackThreadTs: any = {};
+
 async function saveMessagesTransaction(
   messages: ConvesrationHistoryMessage[],
   channelId: string,
@@ -169,58 +172,67 @@ async function saveMessagesTransaction(
   stats.single += messagesByType?.single?.length || 0;
   stats.thread += messagesByType?.thread?.length || 0;
 
+  const singlesTransaction = messagesByType.single?.map((m) => {
+    return {
+      slackThreadTs: m.ts as string,
+      channelId,
+      slug: createSlug(m.text),
+      messageCount: 1,
+    };
+  });
+
+  if (singlesTransaction && singlesTransaction.length) {
+    await prisma.slackThreads.createMany({
+      data: singlesTransaction,
+      skipDuplicates: true,
+    });
+  }
+
   const threadsTransaction = messagesByType.thread?.map((m) => {
-    let slug = createSlug(m.text);
-    return prisma.slackThreads.upsert({
+    return {
+      slackThreadTs: m.ts as string,
+      channelId,
+      slug: createSlug(m.text),
+      messageCount: ((m.reply_count as number) || 0) + 1,
+    };
+  });
+
+  if (threadsTransaction && threadsTransaction.length) {
+    await prisma.slackThreads.createMany({
+      data: threadsTransaction,
+      skipDuplicates: true,
+    });
+    const newThreads = await prisma.slackThreads.findMany({
       where: {
-        slackThreadTs: m.thread_ts,
-      },
-      update: { slug, messageCount: m.reply_count },
-      create: {
-        slackThreadTs: m.thread_ts as string,
-        channelId,
-        slug,
-        messageCount: m.reply_count,
+        slackThreadTs: { in: threadsTransaction.map((e) => e.slackThreadTs) },
       },
     });
-  });
-  threadsTransaction && (await prisma.$transaction(threadsTransaction));
-
-  const threads = await prisma.slackThreads.findMany({ where: { channelId } });
-  const threadsBySlackThreadTs = toObject(threads, 'slackThreadTs');
+    threadsBySlackThreadTs = {
+      ...threadsBySlackThreadTs,
+      ...toObject(newThreads, 'slackThreadTs'),
+    };
+  }
 
   const createMessagesTransaction = messagesByType.message?.map((m) => {
-    let threadId: string | null;
     let thread = threadsBySlackThreadTs[m.thread_ts as string];
     let user = m.user ? userGroupBySlackUserId[m.user] : null;
-    threadId = thread?.id;
-    const text = m.text as string;
-    return prisma.messages.upsert({
-      where: {
-        body_sentAt: {
-          body: text, //.substring(0, 100),
-          sentAt: new Date(parseFloat(m.ts) * 1000),
-        },
-      },
-      update: {
-        slackMessageId: m.ts as string,
-        slackThreadId: threadId,
-        usersId: user?.id,
-      },
-      create: {
-        body: m.text,
-        sentAt: new Date(parseFloat(m.ts) * 1000),
-        channelId,
-        slackMessageId: m.ts as string,
-        slackThreadId: threadId,
-        usersId: user?.id,
-      },
-    });
+    let threadId = thread?.id;
+    return {
+      body: m.text,
+      sentAt: new Date(parseFloat(m.ts) * 1000),
+      channelId,
+      slackMessageId: m.ts as string,
+      slackThreadId: threadId,
+      usersId: user?.id,
+    };
   });
-  //console.log('Starting to save messages: ', new Date());
-  createMessagesTransaction &&
-    (await prisma.$transaction(createMessagesTransaction));
-  // console.log('Finished saving messages', new Date());
+
+  if (createMessagesTransaction && createMessagesTransaction.length) {
+    await prisma.messages.createMany({
+      data: createMessagesTransaction,
+      skipDuplicates: true,
+    });
+  }
 }
 
 const groupMessageByType = (
@@ -232,7 +244,7 @@ const groupMessageByType = (
   unknown?: ConvesrationHistoryMessage[];
 } => {
   const messageTypes: any = {
-    falsefalse: 'single',
+    falsefalse: 'single', // its was single, but we should threat singles as a potential thread
     truetrue: 'thread',
     falsetrue: 'message',
     truefalse: 'unknown',
@@ -274,6 +286,8 @@ const groupMessageByType = (
   const channels = await upsertChannels(account);
   // loop on channels
   for (const channel of channels) {
+    console.log('channel', channel.channelName);
+    threadsBySlackThreadTs = {}; // clean up
     // persist messages
     console.time(channel.channelName);
     await processChannels({ channel, userGroupBySlackUserId });
