@@ -1,4 +1,4 @@
-import { truncate, normalizeCode } from './string';
+import { truncate, decodeHTML } from './string';
 
 describe('#truncate', () => {
   it('truncates text to 223 characters', () => {
@@ -16,29 +16,29 @@ describe('#truncate', () => {
   });
 });
 
-describe('#normalizeCode', () => {
+describe('#decodeHTML', () => {
   it('replaces &lt; with <', () => {
     const code = '&lt;';
-    expect(normalizeCode(code)).toEqual('<');
+    expect(decodeHTML(code)).toEqual('<');
   });
 
   it('replaces &gt; with >', () => {
     const code = '&gt;';
-    expect(normalizeCode(code)).toEqual('>');
+    expect(decodeHTML(code)).toEqual('>');
   });
 
   it('replaces &amp; with &', () => {
     const code = '&amp;';
-    expect(normalizeCode(code)).toEqual('&');
+    expect(decodeHTML(code)).toEqual('&');
   });
 
   it('replaces &quot; with "', () => {
     const code = '&quot;';
-    expect(normalizeCode(code)).toEqual('"');
+    expect(decodeHTML(code)).toEqual('"');
   });
 
   it("replaces &apos; with '", () => {
     const code = '&apos;';
-    expect(normalizeCode(code)).toEqual("'");
+    expect(decodeHTML(code)).toEqual("'");
   });
 });

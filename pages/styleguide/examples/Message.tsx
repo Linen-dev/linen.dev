@@ -51,6 +51,15 @@ const HTML_EXAMPLE = `
 &lt;div&gt;foo &amp; bar&lt;/div&gt;
 `.trim();
 
+const MARKDOWN_EXAMPLE = `
+Hey 👋
+Quick note, I saw that there's a spelling error in the license dashboard UI:
+&gt; 1 devices @ $1.00/device/month
+&gt; Billed *anually* at $12.00/yr
+&gt; Next payment on Apr 13, 2023
+Should be *annually*.
+`.trim();
+
 export default function Styleguide() {
   return (
     <Example header="Message">
@@ -67,6 +76,7 @@ export default function Styleguide() {
       <Message text={`\`\`\`${STACK_TRACE_EXAMPLE}\`\`\``} />
       <Message text={`\`\`\`${CODE_EXAMPLE}\`\`\``} />
       <Message text={STATIC_TEXT} />
+      <Message text={MARKDOWN_EXAMPLE} />
       <Message text="<http://localhost:3000/yc-logo.png>" />
       <Message text={`\`${HTML_EXAMPLE}\``} />
       <Message text={`\`\`\`${HTML_EXAMPLE}\`\`\`\``} />
