@@ -3,6 +3,7 @@ import { createAccount, findAccount } from '../../lib/account';
 import { createChannel, findChannel } from '../../lib/channel';
 import { createThread, findThread } from '../../lib/thread';
 import { createMessage, findMessage } from '../../lib/message';
+import { random } from '../../utilities/string';
 
 export async function findOrCreateAccount({ domain }: { domain: string }) {
   return (
@@ -72,17 +73,15 @@ export async function findOrCreateMessage({
   channelId,
   threadId,
   body,
-  slackMessageId,
 }: {
   channelId: string;
   threadId: string;
   body: string;
-  slackMessageId: string;
 }) {
   return (
     (await findMessage({ channelId, threadId, body })) ||
     (await createMessage({
-      slackMessageId,
+      slackMessageId: random(),
       channelId,
       threadId,
       body,
