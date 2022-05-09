@@ -335,9 +335,9 @@ export async function saveMessagesTransaction(
     const text = m.text as string;
     return prisma.messages.upsert({
       where: {
-        body_sentAt: {
-          body: text,
-          sentAt: new Date(parseFloat(m.ts) * 1000),
+        channelId_slackMessageId: {
+          channelId: channelId,
+          slackMessageId: m.ts,
         },
       },
       update: {
@@ -396,9 +396,9 @@ export async function saveMessagesSyncronous(
     const text = m.text as string;
     await prisma.messages.upsert({
       where: {
-        body_sentAt: {
-          body: text,
-          sentAt: new Date(parseFloat(m.ts) * 1000),
+        channelId_slackMessageId: {
+          channelId: channelId,
+          slackMessageId: m.ts,
         },
       },
       update: {

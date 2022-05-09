@@ -171,7 +171,7 @@ export default function Channel({
               </div>
               <div className="text-sm text-gray-400 flex flex-row justify-between">
                 <p>{messages.length} Replies</p>
-                {format(new Date(newestMessage.sentAt))}
+                {format(new Date(oldestMessage.sentAt))}
               </div>
             </div>
           </div>
@@ -226,7 +226,7 @@ export default function Channel({
               {messages.length}
             </td>
             <td className="px-6 py-3 text-sm align-middle min-w-[120px]">
-              {format(new Date(newestMessage.sentAt))}
+              {format(new Date(oldestMessage.sentAt))}
             </td>
           </tr>
         </CustomLink>

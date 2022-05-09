@@ -72,14 +72,17 @@ export async function findOrCreateMessage({
   channelId,
   threadId,
   body,
+  slackMessageId,
 }: {
   channelId: string;
   threadId: string;
   body: string;
+  slackMessageId: string;
 }) {
   return (
     (await findMessage({ channelId, threadId, body })) ||
     (await createMessage({
+      slackMessageId,
       channelId,
       threadId,
       body,
