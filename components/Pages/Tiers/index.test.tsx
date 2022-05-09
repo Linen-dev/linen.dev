@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import Tiers from 'pages/settings/plans/Tiers';
+import Tiers from '.';
 import { Period } from 'pages/settings/plans';
 
 describe('Tiers', () => {
@@ -41,7 +41,7 @@ describe('Tiers', () => {
           },
         ]}
         activePeriod={Period.Monthly}
-        account={{ id: '1234', premium: false }}
+        account={{ id: '1234', premium: false, slackSyncStatus: 'synced' }}
       />
     );
     expect(container).toHaveTextContent('Standard');
