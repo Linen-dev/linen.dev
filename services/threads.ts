@@ -83,6 +83,10 @@ export async function getThreadById(
     homeUrl: account.homeUrl || defaultSettings.homeUrl,
     docsUrl: account.docsUrl || defaultSettings.docsUrl,
     logoUrl: account.logoUrl || defaultSettings.logoUrl,
+    ...(account.premium &&
+      account.googleAnalyticsId && {
+        googleAnalyticsId: account.googleAnalyticsId,
+      }),
   };
 
   const authors = thread.messages

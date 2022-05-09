@@ -6,6 +6,7 @@ import { NavBar } from '../../NavBar/NavBar';
 import SEO from '../SEO';
 import { channels, users } from '@prisma/client';
 import { addHttpsToUrl, pickTextColorBasedOnBgColor } from '../../../lib/util';
+import GoogleAnalytics from '../GoogleAnalytics';
 
 interface Settings {
   brandColor: string;
@@ -159,12 +160,7 @@ function PageLayout({
           </ErrorBoundary>
         </div>
       </div>
-      {googleAnalyticsId && (
-        <script
-          async
-          src={`https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}`}
-        />
-      )}
+      <GoogleAnalytics googleAnalyticsId={googleAnalyticsId} />
     </div>
   );
 }
