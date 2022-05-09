@@ -31,7 +31,7 @@ export default function Tiers({ tiers, activePeriod, account }: Props) {
       {tiers.map((tier) => (
         <div
           key={tier.name}
-          className="border border-gray-200 rounded-lg shadow-sm divide-y divide-gray-200"
+          className="border-solid border-1 border border-gray-200 rounded-lg shadow-lg divide-y divide-gray-200"
         >
           <div className="p-6">
             <h2 className="text-lg leading-6 font-medium text-gray-900">
@@ -79,20 +79,20 @@ export default function Tiers({ tiers, activePeriod, account }: Props) {
                     window.location = redirectUrl;
                   }}
                   type="submit"
-                  className="mt-8 block w-full bg-blue-500 border border-blue-500 rounded-md py-2 text-sm font-semibold text-white text-center hover:bg-blue-600"
+                  className="shadow-sm mt-8 block w-full bg-blue-500 border border-blue-500 rounded-md py-2 text-sm font-semibold text-white text-center hover:bg-blue-600"
                 >
                   Buy {tier.name}
                 </button>
               ) : (
                 <a
-                  className="mt-8 block w-full bg-blue-500 border border-blue-500 rounded-md py-2 text-sm font-semibold text-white text-center hover:bg-blue-600"
+                  className="shadow-sm mt-8 block w-full bg-blue-500 border border-blue-500 rounded-md py-2 text-sm font-semibold text-white text-center hover:bg-blue-600"
                   href="mailto:kam@linen.dev?subject=Linen%20Premium"
                 >
                   Contact Us
                 </a>
               )
             ) : (
-              <a className="mt-8 block w-full bg-green-500 border border-green-500 rounded-md py-2 text-sm font-semibold text-white text-center">
+              <a className="shadow-sm mt-8 block w-full bg-green-500 border border-green-500 rounded-md py-2 text-sm font-semibold text-white text-center">
                 <FontAwesomeIcon
                   icon={faCheck}
                   className="inline-block h-4 ml-1"
