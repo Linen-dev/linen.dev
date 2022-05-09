@@ -93,19 +93,15 @@ export function NavBar(
 
   const navBarSm = (
     <div className="pt-4 px-10">
-      <div className="flex flex-row space-x-4 justify-center place-items-center">
-        <Text color="dimmed" size="xs">
-          Channels
-        </Text>
-        <NativeSelect
-          data={channels.map((c: channels) => c.channelName)}
-          icon={<FontAwesomeIcon icon={faHashtag} size="xs" />}
-          onChange={(event) => setChannel(event.currentTarget.value)}
-          radius="xs"
-          size="xs"
-          value={channel}
-        />
-      </div>
+      <NativeSelect
+        data={channels.map((c: channels) => c.channelName)}
+        icon={<FontAwesomeIcon icon={faHashtag} size="xs" />}
+        onChange={(event) => setChannel(event.currentTarget.value)}
+        description="Channels"
+        radius="sm"
+        size="xs"
+        value={channel}
+      />
     </div>
   );
 
