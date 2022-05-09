@@ -1,7 +1,6 @@
-import { Navbar, Group, Title, Text, Paper } from '@mantine/core';
+import { Navbar, Group, Title, Text, Paper, NativeSelect } from '@mantine/core';
 import { channels } from '@prisma/client';
 import CustomLink from '../Link/CustomLink';
-import { NativeSelect } from '@mantine/core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHashtag } from '@fortawesome/free-solid-svg-icons';
 import CustomRouterPush from '../Link/CustomRouterPush';
@@ -93,17 +92,20 @@ export function NavBar(
   );
 
   const navBarSm = (
-    <div className="pt-4 px-4">
-      <NativeSelect
-        data={channels.map((c: channels) => c.channelName)}
-        placeholder="Pick one"
-        description="Channels"
-        icon={<FontAwesomeIcon icon={faHashtag} size="xs" />}
-        onChange={(event) => setChannel(event.currentTarget.value)}
-        radius="xs"
-        size="xs"
-        value={channel}
-      />
+    <div className="pt-4 px-10">
+      <div className="flex flex-row space-x-4 justify-center place-items-center">
+        <Text color="dimmed" size="xs">
+          Channels
+        </Text>
+        <NativeSelect
+          data={channels.map((c: channels) => c.channelName)}
+          icon={<FontAwesomeIcon icon={faHashtag} size="xs" />}
+          onChange={(event) => setChannel(event.currentTarget.value)}
+          radius="xs"
+          size="xs"
+          value={channel}
+        />
+      </div>
     </div>
   );
 
