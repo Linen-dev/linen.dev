@@ -8,8 +8,8 @@ import serializeAccount, {
   SerializedAccount,
 } from '../../../serializers/account';
 import { findAccountByEmail } from '../../../lib/models';
-import Billing from './Billing';
-import Tiers from './Tiers';
+import Billing from 'components/Pages/Billing';
+import Tiers from 'components/Pages/Tiers';
 import { isStripeEnabled } from 'utilities/featureFlags';
 
 interface Props {

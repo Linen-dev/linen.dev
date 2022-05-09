@@ -1,5 +1,5 @@
 import React from 'react';
-import { Period } from '.';
+import { Period } from 'pages/settings/plans';
 import { SerializedAccount } from '../../../serializers/account';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';

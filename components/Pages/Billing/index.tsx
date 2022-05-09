@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import { Period } from '.';
+import { Period } from 'pages/settings/plans';
 
 interface Plan {
   name: string;
