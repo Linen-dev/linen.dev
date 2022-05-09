@@ -6,6 +6,8 @@ import {
   findOrCreateMessage,
 } from './factory';
 
+import messages from './factory/messages';
+
 (async () => {
   const account = await findOrCreateAccount({ domain: 'linen.dev' });
 
@@ -25,7 +27,7 @@ import {
       slug: `slug-${i}`,
     });
     await findOrCreateMessage({
-      body: `foo-${i}`,
+      body: messages[i] || `foo-${i}`,
       channelId: channel.id,
       threadId: thread.id,
     });
