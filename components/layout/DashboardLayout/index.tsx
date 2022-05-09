@@ -1,5 +1,9 @@
 import React from 'react';
-import { faGear, faMoneyBill } from '@fortawesome/free-solid-svg-icons';
+import {
+  faGear,
+  faMoneyBill,
+  faListCheck,
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import SidebarLink from './SidebarLink';
 import { useRouter } from 'next/router';
@@ -29,6 +33,14 @@ export default function DashboardLayout({ children, header }: Props) {
                 icon={<FontAwesomeIcon icon={faGear} />}
                 text="Settings"
                 active={route === '/settings'}
+              />
+            </div>
+            <div className="space-y-1">
+              <SidebarLink
+                href="/settings/channels"
+                icon={<FontAwesomeIcon icon={faListCheck} />}
+                text="Channels"
+                active={route === '/settings/channels'}
               />
             </div>
             <div className="space-y-1">
