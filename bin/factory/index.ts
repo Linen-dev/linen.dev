@@ -46,7 +46,7 @@ export async function findOrCreateChannel({
     (await createChannel({
       name,
       accountId,
-      slackChannelId: 'slack-channel-id-1234',
+      slackChannelId: `slack-channel-id-${random()}`,
     }))
   );
 }
