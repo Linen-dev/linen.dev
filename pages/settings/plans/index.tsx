@@ -10,6 +10,7 @@ import serializeAccount, {
 import { findAccountByEmail } from '../../../lib/models';
 import Billing from './Billing';
 import Tiers from './Tiers';
+import { isStripeEnabled } from 'utilities/featureFlags';
 
 interface Props {
   account?: SerializedAccount;
@@ -23,6 +24,57 @@ export enum Period {
 
 export default function SettingsPage({ account, prices }: Props) {
   const [period, setPeriod] = useState(Period.Monthly);
+
+  if (!isStripeEnabled) {
+    if (account) {
+      const tiers = [
+        {
+          name: 'Standard',
+          href: '#',
+          description: 'All the basics for starting',
+          features: ['SEO friendly content'],
+        },
+        {
+          name: 'Premium',
+          href: '#',
+          description: 'Additional features',
+          features: ['Use your own domain', 'Use your own Google Analytics'],
+          prices: [
+            {
+              type: Period.Monthly,
+            },
+            {
+              type: Period.Yearly,
+            },
+          ],
+        },
+      ];
+
+      return (
+        <DashboardLayout>
+          <div className="mx-auto">
+            <div className="sm:flex sm:flex-col sm:align-center">
+              <h1 className="text-5xl font-extrabold text-gray-900 sm:text-center">
+                Pricing Plans
+              </h1>
+              <p className="mt-5 text-xl text-gray-500 sm:text-center">
+                Start using for free.
+                <br />
+                Paid plans unlock additional features.
+              </p>
+            </div>
+            <Tiers activePeriod={period} tiers={tiers} account={account} />
+          </div>
+        </DashboardLayout>
+      );
+    }
+
+    return (
+      <DashboardLayout header="Plans">
+        <h1>You are not signed in.</h1>
+      </DashboardLayout>
+    );
+  }
 
   if (!prices) {
     return (
@@ -106,6 +158,7 @@ export default function SettingsPage({ account, prices }: Props) {
       </DashboardLayout>
     );
   }
+
   return (
     <DashboardLayout header="Plans">
       <h1>You are not signed in.</h1>
@@ -128,8 +181,12 @@ export async function getServerSideProps(context: NextPageContext) {
 
   let prices;
   try {
-    const response = (await stripe.prices.list()) as StripePricesResponse;
-    prices = response.data;
+    if (isStripeEnabled) {
+      const response = (await stripe.prices.list()) as StripePricesResponse;
+      prices = response.data;
+    } else {
+      prices = null;
+    }
   } catch (exception) {
     prices = null;
   }
