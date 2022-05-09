@@ -26,4 +26,19 @@ describe('#normalizeCode', () => {
     const code = '&gt;';
     expect(normalizeCode(code)).toEqual('>');
   });
+
+  it('replaces &amp; with &', () => {
+    const code = '&amp;';
+    expect(normalizeCode(code)).toEqual('&');
+  });
+
+  it('replaces &quot; with "', () => {
+    const code = '&quot;';
+    expect(normalizeCode(code)).toEqual('"');
+  });
+
+  it("replaces &apos; with '", () => {
+    const code = '&apos;';
+    expect(normalizeCode(code)).toEqual("'");
+  });
 });

@@ -4,5 +4,10 @@ export function truncate(text: string): string {
 }
 
 export function normalizeCode(text: string): string {
-  return text.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+  return text
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&amp;/g, '&')
+    .replace(/&quot;/g, '"')
+    .replace(/&apos;/g, "'");
 }
