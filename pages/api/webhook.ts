@@ -8,13 +8,17 @@ import {
   findOrCreateUserFromUserInfo,
   findMessageByChannelIdAndTs,
   deleteMessageWithMentions,
+  createUserFromUserInfo,
+  findAccountBySlackTeamId,
 } from '../../lib/models';
 import {
-  Event,
+  SlackEvent,
   SlackMessageEvent,
+  SlackTeamJoinEvent,
 } from '../../types/slackResponses/slackMessageEventInterface';
 import { createSlug } from '../../lib/util';
 import { accounts, channels, slackAuthorizations } from '@prisma/client';
+import { UserInfo } from 'types/slackResponses/slackUserInfoInterface';
 
 export default async function handler(
   req: NextApiRequest,
@@ -33,9 +37,24 @@ export default async function handler(
   res.status(result.status).json({});
 }
 
-export const handleWebhook = async (body: SlackMessageEvent) => {
-  const event: Event = body.event;
-  const channelId = body.event.channel;
+export const handleWebhook = async (
+  body: SlackEvent
+): Promise<{ status: number; error?: string; message?: any }> => {
+  if (body.event.type === 'team_join') {
+    return processTeamJoin(body.event as SlackTeamJoinEvent);
+  } else if (body.event.type === 'message') {
+    return processMessageEvent(body.event as SlackMessageEvent);
+  } else {
+    console.error('Event not supported!!');
+    return {
+      status: 404,
+      error: 'Event not supported',
+    };
+  }
+};
+
+async function processMessageEvent(event: SlackMessageEvent) {
+  const channelId = event.channel;
   const channel = await prisma.channels.findUnique({
     where: {
       slackChannelId: channelId,
@@ -77,13 +96,13 @@ export const handleWebhook = async (body: SlackMessageEvent) => {
     status: 200,
     message,
   };
-};
+}
 
 async function addMessage(
   channel: channels & {
     account: (accounts & { slackAuthorizations: slackAuthorizations[] }) | null;
   },
-  event: Event
+  event: SlackMessageEvent
 ) {
   const thread_ts = event.thread_ts || event.ts;
   const thread = await findOrCreateThread({
@@ -139,7 +158,7 @@ async function deleteMessage(
   channel: channels & {
     account: (accounts & { slackAuthorizations: slackAuthorizations[] }) | null;
   },
-  event: Event
+  event: SlackMessageEvent
 ) {
   if (event.deleted_ts) {
     const message = await findMessageByChannelIdAndTs(
@@ -160,9 +179,26 @@ async function changeMessage(
   channel: channels & {
     account: (accounts & { slackAuthorizations: slackAuthorizations[] }) | null;
   },
-  event: Event
+  event: SlackMessageEvent
 ) {
   console.log('changeMessage is not implemented yet!');
 
   return {};
+}
+
+async function processTeamJoin(event: SlackTeamJoinEvent) {
+  const team_id = event.user.team_id;
+  // find account by slack team id
+  const account = await findAccountBySlackTeamId(team_id);
+  if (!account?.id) {
+    return {
+      status: 404,
+      message: 'Account not found',
+    };
+  }
+  await createUserFromUserInfo(event.user, account.id);
+  return {
+    status: 201,
+    message: 'User created',
+  };
 }

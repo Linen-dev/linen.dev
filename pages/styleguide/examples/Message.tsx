@@ -48,7 +48,7 @@ Can you help me?
 `.trim();
 
 const HTML_EXAMPLE = `
-&lt;div&gt;foo&lt;/div&gt;
+&lt;div&gt;foo &amp; bar&lt;/div&gt;
 `.trim();
 
 export default function Styleguide() {

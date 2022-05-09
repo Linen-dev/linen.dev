@@ -1,13 +1,16 @@
 import React from 'react';
-import { faGear } from '@fortawesome/free-solid-svg-icons';
+import { faGear, faMoneyBill } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import SidebarLink from './SidebarLink';
+import { useRouter } from 'next/router';
 
 interface Props {
   children: React.ReactNode;
-  header: string;
+  header?: string;
 }
 
 export default function DashboardLayout({ children, header }: Props) {
+  const { route } = useRouter();
   return (
     <div>
       <div className="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0">
@@ -21,17 +24,20 @@ export default function DashboardLayout({ children, header }: Props) {
           </div>
           <div className="flex-grow mt-5">
             <div className="space-y-1">
-              <a
+              <SidebarLink
                 href="/settings"
-                className="bg-purple-50 border-purple-600 text-purple-600 group border-l-4 py-2 px-3 flex items-center text-sm font-medium"
-                x-state-description='undefined: "bg-purple-50 border-purple-600 text-purple-600", undefined: "border-transparent text-gray-600 hover:text-gray-900 hover:bg-gray-50"'
-              >
-                <FontAwesomeIcon
-                  icon={faGear}
-                  className="text-purple-500 mr-3 flex-shrink-0 h-6 w-6"
-                />
-                Settings
-              </a>
+                icon={<FontAwesomeIcon icon={faGear} />}
+                text="Settings"
+                active={route === '/settings'}
+              />
+            </div>
+            <div className="space-y-1">
+              <SidebarLink
+                href="/settings/plans"
+                icon={<FontAwesomeIcon icon={faMoneyBill} />}
+                text="Plans"
+                active={route === '/settings/plans'}
+              />
             </div>
           </div>
           {/* <div className="flex-shrink-0 block w-full">
@@ -46,9 +52,11 @@ export default function DashboardLayout({ children, header }: Props) {
         <div className="max-w-4xl mx-auto flex flex-col md:px-8 xl:px-0">
           <div className="py-10">
             <div className="max-w-lg mx-auto px-4">
-              <h1 className="text-3xl font-extrabold text-gray-900">
-                {header}
-              </h1>
+              {header && (
+                <h1 className="text-3xl font-extrabold text-gray-900">
+                  {header}
+                </h1>
+              )}
               <div className="py-6">{children}</div>
             </div>
           </div>
