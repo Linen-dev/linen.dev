@@ -10,6 +10,7 @@ interface CreateMessageParams {
   channelId: string;
   threadId: string;
   body: string;
+  slackMessageId: string;
 }
 
 export function findMessage({ channelId, threadId, body }: FindMessageParams) {
@@ -22,10 +23,12 @@ export function createMessage({
   channelId,
   threadId,
   body,
+  slackMessageId,
 }: CreateMessageParams) {
   return prisma.messages.create({
     data: {
       channelId,
+      slackMessageId,
       slackThreadId: threadId,
       body,
       sentAt: new Date(),

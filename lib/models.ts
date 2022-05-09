@@ -9,20 +9,6 @@ import { UserInfo } from '../types/slackResponses//slackUserInfoInterface';
 import { getSlackUser } from '../pages/api/slack';
 import { stripProtocol } from '../utilities/url';
 
-export const createSlackMessage = async (event: any, channelId: string) => {
-  const body = event.event.text;
-  const timestamp = event.event.ts;
-  const sentAt = new Date(parseFloat(timestamp) * 1000);
-
-  return await prisma.messages.create({
-    data: {
-      body: body,
-      sentAt: sentAt,
-      channelId: channelId,
-    },
-  });
-};
-
 export const createMessage = async (
   message: Prisma.messagesUncheckedCreateInput
 ) => {
@@ -79,9 +65,9 @@ export const createOrUpdateMessage = async (
   const sentAt = new Date(parseFloat(message.slackMessageId!) * 1000);
   return await prisma.messages.upsert({
     where: {
-      body_sentAt: {
-        body: message.body,
-        sentAt,
+      channelId_slackMessageId: {
+        channelId: message.channelId,
+        slackMessageId: message.slackMessageId,
       },
     },
     update: {
@@ -126,6 +112,19 @@ export const findAccountById = async (accountId: string) => {
       },
       channels: true,
     },
+  });
+};
+
+export const findAccountByEmail = async (email?: string | null) => {
+  if (!email) {
+    return null;
+  }
+  const auth = await prisma.auths.findFirst({ where: { email } });
+  if (!auth) {
+    return null;
+  }
+  return await prisma.accounts.findFirst({
+    where: { id: auth.accountId as string },
   });
 };
 

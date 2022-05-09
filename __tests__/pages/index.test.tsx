@@ -5,7 +5,7 @@ describe('Home', () => {
   it('renders a header', () => {
     const { container } = render(<Home />);
     expect(container).toHaveTextContent(
-      'Turn Slack community into a Q&A website'
+      'Make your Slack community Google-searchable'
     );
   });
 });
