@@ -7,12 +7,12 @@ function GoogleAnalytics({
   googleAnalyticsId?: string;
 }) {
   function gtag(a: any, b: any) {
-    window.dataLayer.push(arguments);
+    (window as any).dataLayer.push(arguments);
   }
 
   useEffect(() => {
     if (googleAnalyticsId) {
-      window.dataLayer = window.dataLayer || [];
+      (window as any).dataLayer = (window as any).dataLayer || [];
       gtag('js', new Date());
       gtag('config', googleAnalyticsId);
     }
