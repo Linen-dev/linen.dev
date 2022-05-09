@@ -1,8 +1,10 @@
-export interface SlackMessageEvent {
+import { UserInfo } from './slackUserInfoInterface';
+
+export interface SlackEvent {
   token: string;
   team_id: string;
   api_app_id: string;
-  event: Event;
+  event: SlackMessageEvent | SlackTeamJoinEvent;
   type: string;
   event_id: string;
   event_time: number;
@@ -11,12 +13,17 @@ export interface SlackMessageEvent {
   event_context: string;
 }
 
-export interface Event {
+export interface SlackTeamJoinEvent {
+  type: string;
+  user: UserInfo;
+}
+
+export interface SlackMessageEvent {
   client_msg_id: string;
   type: string;
   subtype?: string;
-  message?: Event;
-  previous_message?: Event;
+  message?: SlackMessageEvent;
+  previous_message?: SlackMessageEvent;
   text: string;
   user: string;
   ts: string;
