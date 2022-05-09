@@ -10,11 +10,15 @@ import serializeAccount, {
 import { findAccountByEmail } from '../../../lib/models';
 import Billing from './Billing';
 import Tiers from './Tiers';
-import { Period } from './types';
 
 interface Props {
   account?: SerializedAccount;
   prices?: StripePrice[];
+}
+
+export enum Period {
+  Monthly,
+  Yearly,
 }
 
 export default function SettingsPage({ account, prices }: Props) {
