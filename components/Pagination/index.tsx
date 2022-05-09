@@ -23,10 +23,10 @@ export default function Pagination({ onClick, pageCount, channelName }: Props) {
           pageRangeDisplayed={2}
           pageCount={pageCount}
           containerClassName="border border-solid shadow-sm border-gray-200 inline-flex rounded-md -space-x-px"
-          breakLinkClassName="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium"
+          breakLinkClassName="hidden sm:inline-flex bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative items-center px-4 py-2 border text-sm font-medium"
           hrefBuilder={(page: number) => `/c/${channelName}/${page}`}
           activeLinkClassName="z-10 bg-indigo-50 border-indigo-500 text-indigo-600 relative inline-flex items-center px-4 py-2 border text-sm font-medium"
-          pageLinkClassName="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium"
+          pageLinkClassName="hidden sm:inline-flex bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative items-center px-4 py-2 border text-sm font-medium"
           previousLinkClassName="bg-white relative inline-flex items-center px-2 py-2 rounded-md border border-gray-300 text-sm font-medium text-gray-500 hover:bg-gray-50"
           previousLabel={
             <>
