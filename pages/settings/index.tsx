@@ -1,11 +1,10 @@
 import React, { useEffect } from 'react';
 import { NextPageContext } from 'next';
-import { getSession, useSession } from 'next-auth/react';
+import { getSession } from 'next-auth/react';
 import DashboardLayout from '../../components/layout/DashboardLayout';
 import TextField from '../../components/TextField';
 import ColorField from '../../components/ColorField';
 import Button from '../../components/Button';
-import prisma from '../../client';
 import serializeAccount, { SerializedAccount } from '../../serializers/account';
 import { stripProtocol } from '../../utilities/url';
 import BlankLayout from '../../components/layout/BlankLayout';
@@ -19,13 +18,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useRouter } from 'next/router';
 import SlackBotButton from '@/components/SlackBotButton';
 import { toast } from '@/components/Toast';
+import { findAccountByEmail } from '../../lib/models';
 
 interface Props {
   account?: SerializedAccount;
 }
 
 export default function SettingsPage({ account }: Props) {
-  const { data: session } = useSession();
   const router = useRouter();
 
   useEffect(() => {
@@ -38,7 +37,7 @@ export default function SettingsPage({ account }: Props) {
     if (success) toast.success(decodeURI(success));
   }, [router.query.success]);
 
-  if (session && account) {
+  if (account) {
     const onSubmit = (event: any) => {
       event.preventDefault();
       const form = event.target;
@@ -153,26 +152,9 @@ export default function SettingsPage({ account }: Props) {
   );
 }
 
-async function findAccountByEmail(session?: any) {
-  if (!session) {
-    return null;
-  }
-  const email = session.user?.email;
-  if (!email) {
-    return null;
-  }
-  const auth = await prisma.auths.findFirst({ where: { email } });
-  if (!auth) {
-    return null;
-  }
-  return await prisma.accounts.findFirst({
-    where: { id: auth.accountId as string },
-  });
-}
-
 export async function getServerSideProps(context: NextPageContext) {
   const session = await getSession(context);
-  const account = await findAccountByEmail(session);
+  const account = await findAccountByEmail(session?.user?.email);
 
   if (!account) {
     return {
