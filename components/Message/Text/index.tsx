@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactEmoji from 'react-emoji-render';
 import { decodeHTML } from '../utilities/string';
-import { Lexer } from 'marked';
+import { tokenize } from 'utilities/markdown';
 
 interface Props {
   value: string;
@@ -9,7 +9,7 @@ interface Props {
 
 export default function Text({ value }: Props) {
   const text = decodeHTML(value);
-  const tokens = Lexer.lex(text);
+  const tokens = tokenize(text);
   return (
     <>
       {tokens.map((token, index) => {
@@ -18,7 +18,7 @@ export default function Text({ value }: Props) {
           case 'paragraph':
             return (
               <React.Fragment key={key}>
-                <ReactEmoji text={token.text} />
+                <ReactEmoji key={key} text={token.text} />
               </React.Fragment>
             );
           case 'heading':
