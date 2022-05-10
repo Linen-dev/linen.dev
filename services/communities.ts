@@ -53,7 +53,7 @@ export const getThreadsByCommunityName = async (
         return r.channelId === c.id;
       });
 
-      return channelCount && channelCount._count.id > 0;
+      return channelCount && channelCount._count.id > 20;
     });
 
   threads = threads.filter((t) => t.messages.length > 0);
