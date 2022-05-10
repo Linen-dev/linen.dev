@@ -4,7 +4,6 @@ import CustomLink from '../Link/CustomLink';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHashtag } from '@fortawesome/free-solid-svg-icons';
 import CustomRouterPush from '../Link/CustomRouterPush';
-import { useEffect, useState } from 'react';
 
 export function NavBar(
   channels: channels[],
@@ -12,18 +11,15 @@ export function NavBar(
   communityName: string,
   isSubDomainRouting: boolean
 ) {
-  const [channel, setChannel] = useState(channelName);
-
-  useEffect(() => {
-    console.log('channel', channel);
-    if (channel && channel !== channelName) {
+  const onChangeChannel = (channelSelected: string) => {
+    if (channelName && channelName !== channelSelected) {
       CustomRouterPush({
         isSubDomainRouting: isSubDomainRouting,
         communityName: communityName,
-        path: `/c/${channel}/1`,
+        path: `/c/${channelSelected}/1`,
       });
     }
-  }, [channel, channelName, communityName, isSubDomainRouting]);
+  };
 
   const navBarLg = (
     <Navbar
@@ -96,11 +92,11 @@ export function NavBar(
       <NativeSelect
         data={channels.map((c: channels) => c.channelName)}
         icon={<FontAwesomeIcon icon={faHashtag} size="xs" />}
-        onChange={(event) => setChannel(event.currentTarget.value)}
+        onChange={(event) => onChangeChannel(event.currentTarget.value)}
         description="Channels"
         radius="sm"
         size="xs"
-        value={channel}
+        value={channelName}
       />
     </div>
   );
