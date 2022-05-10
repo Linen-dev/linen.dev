@@ -25,7 +25,6 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
     const account = await prisma.accounts.findFirst({
       where: { redirectDomain: domain },
     });
-    console.log('account', account);
     if (account) return domainValid(res, domain);
   }
   // always fallback to ours sitemap.xml
