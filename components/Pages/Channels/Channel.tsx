@@ -9,6 +9,7 @@ import { channels, slackThreads, users, messages } from '@prisma/client';
 import CustomLink from '../../Link/CustomLink';
 import { MentionsWithUsers } from '../../../types/apiResponses/threads/[threadId]';
 import { capitalize } from '../../../lib/util';
+import CustomRouterPush from '@/components/Link/CustomRouterPush';
 
 export interface PaginationType {
   totalCount: number;
@@ -114,11 +115,11 @@ export default function Channel({
   const channelName = channels?.find((c) => c.id === channelId)?.channelName;
   const handlePageClick = ({ selected }: { selected: number }) => {
     const newPage = selected + 1;
-    window.history.pushState(
-      {},
-      '',
-      `/c/${currentChannel.channelName}/${newPage}`
-    );
+    CustomRouterPush({
+      isSubDomainRouting,
+      communityName,
+      path: `/c/${currentChannel.channelName}/${newPage}`,
+    });
     setCurrentPage(newPage);
   };
 
@@ -282,6 +283,8 @@ export default function Channel({
             channelName={currentChannel.channelName}
             onClick={handlePageClick}
             pageCount={pageCount}
+            communityName={communityName}
+            isSubDomainRouting={isSubDomainRouting}
           />
         )}
       </div>
