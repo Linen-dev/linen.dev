@@ -66,7 +66,7 @@ export default function Channel({
   const [initial, setInitial] = useState(true);
 
   useEffect(() => {
-    if (initial && channelId) {
+    if (initial && channelId && page === 1) {
       return setInitial(false);
     }
     fetch(`/api/threads?channelId=${channelId}&page=${currentPage}`)
@@ -79,7 +79,7 @@ export default function Channel({
         setPageCount(pagination.pageCount);
         window.scrollTo(0, 0);
       });
-  }, [currentPage, channelId]);
+  }, [currentPage, channelId, page]);
 
   if (!channelId) {
     return (
@@ -285,6 +285,7 @@ export default function Channel({
             pageCount={pageCount}
             communityName={communityName}
             isSubDomainRouting={isSubDomainRouting}
+            initialPage={page ? page - 1 : 0}
           />
         )}
       </div>

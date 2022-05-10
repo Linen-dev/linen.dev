@@ -11,6 +11,7 @@ interface Props {
   pageCount: number;
   isSubDomainRouting: boolean;
   communityName: string;
+  initialPage: number;
 }
 
 export default function Pagination({
@@ -19,6 +20,7 @@ export default function Pagination({
   channelName,
   isSubDomainRouting,
   communityName,
+  initialPage = 0,
 }: Props) {
   if (pageCount === 1) {
     return null;
@@ -31,6 +33,7 @@ export default function Pagination({
           onPageChange={onClick}
           pageRangeDisplayed={2}
           pageCount={pageCount}
+          initialPage={initialPage}
           containerClassName="border border-solid shadow-sm border-gray-200 inline-flex rounded-md -space-x-px"
           breakLinkClassName="hidden sm:inline-flex bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative items-center px-4 py-2 border text-sm font-medium"
           hrefBuilder={(page: number) =>
