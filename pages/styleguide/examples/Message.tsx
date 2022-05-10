@@ -67,6 +67,11 @@ Should be *annually*.
 • Update the zlib dependency from v1.2.11 to v1.2.12, to address CVE CVE-ABCD-1234.
 • Update the OpenSSL dependency from version 1.1.1l to 1.1.1n to address CVE CVE-ABCD-5678.
 • Update the expat dependency from version 2.2.10 to 2.4.7, to address published CVEs.
+
+| Syntax      | Description |
+| ----------- | ----------- |
+| Header      | Title       |
+| Paragraph   | Text        |
 `.trim();
 
 export default function Styleguide() {
