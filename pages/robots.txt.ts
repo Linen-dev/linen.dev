@@ -1,9 +1,5 @@
-import { getDomain, getSubdomain } from '../../utilities/domain';
-import {
-  createRobotsTxt,
-  createRobotsTxtForSubdomain,
-} from '../../utilities/robots';
-import prisma from '../../client';
+import { createRobotsTxt } from '../utilities/robots';
+import prisma from '../client';
 import { GetServerSideProps } from 'next/types';
 
 function notFound(res: any) {

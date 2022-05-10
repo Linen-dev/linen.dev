@@ -1,4 +1,4 @@
-import { getServerSideProps } from '.';
+import { getServerSideProps } from '../../../pages/robots.txt';
 import { Writable } from 'stream';
 
 const mockAccount = {
