@@ -5,9 +5,10 @@ import {
   saveUsers,
 } from '../fetch_all_conversations';
 import fs from 'fs';
-import { channelIndex, createManyChannel } from '../lib/models';
-import prisma from '../client';
+import { PrismaClient } from '@prisma/client';
 import { createSlug } from '../lib/util';
+
+const prisma = new PrismaClient({}); // initiate a new instance of prisma without info logs
 
 type channel = {
   id: string;
@@ -21,7 +22,6 @@ type channel = {
 
 let stats = {
   channels: 0,
-  channels_in_db: 0,
   users: 0,
   users_in_db: 0,
   single: 0, // no more singles
@@ -110,8 +110,12 @@ async function upsertChannels(account: accounts) {
   } catch (e) {
     console.log('Error creating Channels:', e);
   }
-  const channels = await channelIndex(account.id);
-  stats.channels_in_db = channels.length;
+  const channels = await prisma.channels.findMany({
+    where: {
+      slackChannelId: { in: channelsParam.map((e: any) => e.slackChannelId) },
+      accountId: account.id,
+    },
+  });
   // TODO: need token
   //   for (let channel of channels) {
   //     await joinChannel(channel.slackChannelId, token);
