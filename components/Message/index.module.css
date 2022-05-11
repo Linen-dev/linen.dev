@@ -8,3 +8,9 @@
 .message + .message {
   margin-top: 8px;
 }
+
+@media screen and (min-width: 1024px) {
+  .message {
+    min-width: 256px;
+  }
+}
