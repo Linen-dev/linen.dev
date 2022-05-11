@@ -130,7 +130,7 @@ function PageLayout({
         title={communityName?.split('.')[0]}
         {...seo}
       />
-      <div className="flex flex-col md:flex-row">
+      <div className="flex flex-col lg:flex-row">
         {NavBar(
           channels,
           currentChannel.channelName || '',
