@@ -54,7 +54,10 @@ export default function Thread({
               </Text>
             </div>
             <div style={{ maxWidth: '700px' }}>
-              <Message text={body} mentions={mentions.map((m: MentionsWithUsers) => m.users)} />
+              <Message
+                text={body}
+                mentions={mentions.map((m: MentionsWithUsers) => m.users)}
+              />
             </div>
           </li>
         );
@@ -77,7 +80,7 @@ export default function Thread({
       settings={settings}
       isSubDomainRouting={isSubDomainRouting}
     >
-      <div className="py-8 px-4 md:pl-2 lg:pl-0 md:pr-20 lg:pr-40">
+      <div className="py-8 px-4">
         <ul>{elements}</ul>
 
         <div className={styles.buttons}>
