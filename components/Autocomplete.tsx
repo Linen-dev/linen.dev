@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { useEffect, useRef, useCallback, useState } from 'react';
-import styled from 'styled-components';
 import { Group, Text, TextInput } from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
 import { AiOutlineSearch } from 'react-icons/ai';
@@ -8,12 +7,6 @@ import Image from 'next/image';
 import spinner from '../public/spinner.svg';
 
 const MIN_QUERY_LENGTH = 3;
-
-const IconWrapper = styled.div({
-  position: 'absolute',
-  top: '12px',
-  left: 0,
-});
 
 export default function Autocomplete({
   icon,
@@ -132,7 +125,7 @@ export default function Autocomplete({
       style={{
         position: 'relative',
         flex: '1 1 auto',
-        margin: '0 24px 0 40px',
+        margin: '0 24px',
         zIndex: 100,
       }}
       grow
