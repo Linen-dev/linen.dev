@@ -88,7 +88,7 @@ export function NavBar(
   );
 
   const navBarSm = (
-    <div className="pt-4 px-10">
+    <div className="pt-4 px-6">
       <NativeSelect
         data={channels.map((c: channels) => c.channelName)}
         icon={<FontAwesomeIcon icon={faHashtag} size="xs" />}

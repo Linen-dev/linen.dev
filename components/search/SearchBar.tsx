@@ -106,7 +106,7 @@ const SearchBar = ({
       onSelect={handleSelect}
       resultParser={parseResults}
       renderSuggestion={renderSuggestion}
-      placeholder={'Search messages'}
+      placeholder="Search messages"
     />
   );
 };

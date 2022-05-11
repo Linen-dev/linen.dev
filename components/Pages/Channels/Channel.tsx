@@ -254,7 +254,7 @@ export default function Channel({
       communityName={communityName}
       isSubDomainRouting={isSubDomainRouting}
     >
-      <div className="sm:pt-8 sm:px-8">
+      <div className="sm:pt-6 sm:px-6">
         <table className="hidden sm:block sm:table-fixed ">
           <thead>
             <tr>
