@@ -103,8 +103,8 @@ export function NavBar(
 
   return (
     <>
-      <div className="hidden md:flex">{navBarLg}</div>
-      <div className="md:hidden">{navBarSm}</div>
+      <div className="hidden lg:flex">{navBarLg}</div>
+      <div className="lg:hidden">{navBarSm}</div>
     </>
   );
 }
