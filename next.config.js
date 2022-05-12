@@ -3,6 +3,9 @@
 const { withSentryConfig } = require('@sentry/nextjs');
 
 const nextConfig = {
+  experimental: {
+    swcMinify: false,
+  },
   eslint: {
     // Warning: This allows production builds to successfully complete even if
     // your project has ESLint errors.
