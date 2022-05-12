@@ -1,9 +1,10 @@
-import { Navbar, Group, Title, Text, Paper, NativeSelect } from '@mantine/core';
+import { Group, Title, Text, Paper, NativeSelect } from '@mantine/core';
 import { channels } from '@prisma/client';
 import CustomLink from '../Link/CustomLink';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHashtag } from '@fortawesome/free-solid-svg-icons';
 import CustomRouterPush from '../Link/CustomRouterPush';
+import styles from './index.module.css';
 
 export function NavBar({
   channelName,
@@ -30,11 +31,7 @@ export function NavBar({
   };
 
   const navBarLg = (
-    <Navbar
-      sx={(theme) => ({ backgroundColor: 'white', zIndex: 1 })}
-      width={{ base: 250 }}
-      padding="lg"
-    >
+    <div className={styles.navbar}>
       <Group direction="column">
         <Paper
           shadow="md"
@@ -93,7 +90,7 @@ export function NavBar({
           </a>
         </Paper>
       </Group>
-    </Navbar>
+    </div>
   );
 
   const navBarSm = (
