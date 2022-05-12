@@ -24,6 +24,7 @@ describe('PageLayout', () => {
           homeUrl: 'https://foo.com',
           docsUrl: 'https://foo.com/docs',
           logoUrl: 'https://foo.com/logo.png',
+          communityType: 'slack',
           googleAnalyticsId: 'UA-123456789-1',
         }}
         navItems={{ channels }}

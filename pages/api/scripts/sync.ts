@@ -249,13 +249,14 @@ export async function fetchAllMessages(
       let messages = await saveMessages(
         conversations.body.messages,
         channel.id,
-        channel.slackChannelId
+        channel.slackChannelId,
+        accountId
       );
     } catch (e) {}
   }
 
   const messageWithThreads = await findMessagesWithThreads(accountId);
-  await fetchAndSaveThreadMessages(messageWithThreads, token);
+  await fetchAndSaveThreadMessages(messageWithThreads, token, accountId);
   return messageWithThreads;
 }
 

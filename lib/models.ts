@@ -213,6 +213,9 @@ export const findAccountByPath = async (path: string) => {
         {
           slackDomain: path,
         },
+        {
+          discordServerId: path,
+        },
       ],
     },
     include: {
@@ -291,6 +294,14 @@ export const createSlackAuthorization = async (
   slackAuthorization: Prisma.slackAuthorizationsCreateManyInput
 ) => {
   return await prisma.slackAuthorizations.create({ data: slackAuthorization });
+};
+
+export const createDiscordAuthorization = async (
+  discordAuthorization: Prisma.discordAuthorizationsCreateManyInput
+) => {
+  return await prisma.discordAuthorizations.create({
+    data: discordAuthorization,
+  });
 };
 
 export const threadCount = async (channelId: string): Promise<number> => {
@@ -374,15 +385,25 @@ export const findOrCreateUser = async (
 ) => {
   return await prisma.users.upsert({
     where: {
-      slackUserId: user.slackUserId,
+      slackUserId_accountsId: {
+        accountsId: user.accountsId,
+        slackUserId: user.slackUserId,
+      },
     },
     update: {},
     create: user,
   });
 };
 
-export const findUser = async (userId: string) => {
-  return await prisma.users.findUnique({ where: { slackUserId: userId } });
+export const findUser = async (userId: string, accountId: string) => {
+  return await prisma.users.findUnique({
+    where: {
+      slackUserId_accountsId: {
+        accountsId: accountId,
+        slackUserId: userId,
+      },
+    },
+  });
 };
 
 export const createUser = async (user: Prisma.usersUncheckedCreateInput) => {
@@ -489,7 +510,7 @@ export const findOrCreateUserFromUserInfo = async (
     account: (accounts & { slackAuthorizations: slackAuthorizations[] }) | null;
   }
 ) => {
-  let user = await findUser(slackUserId);
+  let user = await findUser(slackUserId, channel.accountId as string);
   if (user === null) {
     const accessToken = channel.account?.slackAuthorizations[0]?.accessToken;
     if (!!accessToken) {
@@ -499,4 +520,21 @@ export const findOrCreateUserFromUserInfo = async (
     }
   }
   return user;
+};
+
+// using unsafe because prisma query raw does not play well with string interpolation
+export const findSlackThreadsWithNoMessages = async (
+  channelIds: string[]
+): Promise<{ id: string; slackThreadTs: string; channelId: string }[]> => {
+  const ids = channelIds.map((id) => `'${id}'`).join(' , ');
+  const query = `
+  select "slackThreads".id as id , "slackThreads"."slackThreadTs", "slackThreads"."channelId"
+  from "slackThreads" join messages on messages."slackThreadId" = "slackThreads".id 
+  where "slackThreads"."channelId" in (${ids})
+  group by "slackThreads".id
+  having count(*) = 0
+  order by "slackThreads"."slackThreadTs" desc
+  ;`;
+
+  return await prisma.$queryRawUnsafe(query);
 };
