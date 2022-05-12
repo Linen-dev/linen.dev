@@ -153,7 +153,7 @@ async function listMessagesFromThreadAndPersist({
     hasMore = response?.length === 50;
     if (response?.length) {
       messages.push(...response);
-      oldestMessageId = getShorterMessagesTimeStamp(response);
+      hasMore && (oldestMessageId = getShorterMessagesTimeStamp(response));
       await persistMessages({
         messages: response,
         authors,
@@ -221,10 +221,8 @@ async function persistMessages({
   const transaction = messages
     // ?.filter((m) => m.type !== 7)
     .map((message) => {
-      let content = message.content;
-      if (message.content === '' && message.referenced_message?.content) {
-        content = message.referenced_message.content;
-      }
+      let content =
+        message.content || message.referenced_message?.content || '';
       const userId: users = authors[message.author.id];
       return prisma.messages.upsert({
         where: {
@@ -237,6 +235,7 @@ async function persistMessages({
           slackMessageId: message.id,
           slackThreadId: threadInDb.id,
           usersId: userId.id,
+          body: content,
         },
         create: {
           body: content,
