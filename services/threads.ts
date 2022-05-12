@@ -96,12 +96,16 @@ export async function getThreadById(
     .map((m) => m.author)
     .filter(Boolean) as users[];
 
-  const threadUrl =
+  let threadUrl =
     account.slackUrl +
     '/archives/' +
     thread.channel.slackChannelId +
     '/p' +
     (parseFloat(thread.slackThreadTs) * 1000000).toString();
+
+  if (account.discordServerId) {
+    threadUrl = `https://discord.com/channels/${account.discordServerId}/${thread.channel.slackChannelId}/${thread.slackThreadTs}`;
+  }
 
   const threadSlackInviteUrl =
     account.slackInviteUrl &&
