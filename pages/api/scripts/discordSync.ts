@@ -175,6 +175,7 @@ async function findAuthorsAndPersist(
     // has author and isn't in our authors object
     if (message.author.id && !authors[message.author.id]) {
       thereIsNewAuthors.push(message.author);
+      authors[message.author.id] = true; // just to avoid dup
     }
   });
   if (thereIsNewAuthors.length) {
@@ -185,7 +186,6 @@ async function findAuthorsAndPersist(
           slackUserId: newUser.id,
           accountsId,
           displayName: newUser.username,
-
           isAdmin: false, // TODO
           isBot: false, // TODO
           // profileImageUrl: TODO
@@ -219,7 +219,7 @@ async function persistMessages({
   // lets keep simple, just authors
   console.log('messages', messages?.length);
   const transaction = messages
-    ?.filter((m) => m.type !== 7)
+    // ?.filter((m) => m.type !== 7)
     .map((message) => {
       let content = message.content;
       if (message.content === '' && message.referenced_message?.content) {
@@ -322,156 +322,6 @@ async function listPublicArchivedThreadsAndPersist({
     }
   }
   return threads;
-}
-
-/**
- old version
-*/
-async function saveAllThreads(savedChannels: channels[], token: string) {
-  //Save all threads
-  // only fetch threads with single message
-  // There will be edge cases where not all the threads are sync'd if you cancel the script
-  const threads = await prisma.slackThreads.findMany({
-    where: {
-      messageCount: { equals: 0 },
-      channelId: { in: savedChannels.map((c) => c.id) },
-    },
-  });
-
-  console.log({ threads });
-
-  const savedMessages = [];
-
-  for (const thread of threads) {
-    const messages = await getDiscordThreadMessages(
-      thread.slackThreadTs,
-      token
-    );
-
-    for (const message of messages) {
-      let content = message.content;
-      if (message.content === '' && message.referenced_message?.content) {
-        content = message.referenced_message.content;
-      }
-      const savedMessage = await prisma.messages.upsert({
-        where: {
-          channelId_slackMessageId: {
-            channelId: thread.channelId,
-            slackMessageId: message.id,
-          },
-        },
-        update: {
-          slackMessageId: message.id,
-          slackThreadId: thread.id,
-          // usersId: null,
-        },
-        create: {
-          body: content,
-          sentAt: new Date(message.timestamp),
-          channelId: thread.channelId,
-          slackMessageId: message.id,
-          slackThreadId: thread.id,
-          // usersId: user?.id,
-        },
-      });
-      savedMessages.push(savedMessage);
-    }
-    try {
-      const message = messages.sort(
-        (a, b) =>
-          new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
-      )[0];
-      let content = message.content;
-      if (message.content === '' && message.referenced_message?.content) {
-        content = message.referenced_message.content;
-      }
-      await updateSlackThread(thread.id, {
-        messageCount: messages?.length,
-        slug: createSlug(content),
-      });
-    } catch (e) {
-      console.error(2, String(e));
-    }
-  }
-
-  return savedMessages;
-}
-
-/**
- old version
-*/
-async function processChannel({
-  channel,
-  token,
-}: {
-  channel: channels;
-  token: string;
-}) {
-  console.log({ channel });
-  const discordChannelId = channel.slackChannelId;
-  const channelId = channel.id;
-  let nextCursor = channel.slackNextPageCursor as string | undefined;
-  let firstLoop = true;
-
-  if (nextCursor === 'completed') {
-    console.log('channel completed syncing: ', channel.channelName);
-    return;
-  }
-
-  while (!!nextCursor || firstLoop) {
-    firstLoop = false;
-
-    console.log({ nextCursor });
-    const beforeCursor = nextCursor
-      ? new Date(nextCursor).toISOString()
-      : undefined;
-
-    try {
-      let result = await getAllArchivedThreads(
-        discordChannelId,
-        beforeCursor,
-        token
-      );
-
-      let threads: DiscordThreads[] = result.threads;
-      let hasMore = result.hasMore;
-
-      //Save discord threads
-      const threadsTransaction: any = threads
-        ?.map((thread: DiscordThreads) => {
-          if (!thread.id) {
-            return null;
-          }
-
-          return prisma.slackThreads.upsert({
-            where: {
-              slackThreadTs: thread.id,
-            },
-            update: {},
-            create: { slackThreadTs: thread.id, channelId, messageCount: 0 },
-          });
-        })
-        .filter(Boolean);
-
-      const savedThreads = await prisma.$transaction(threadsTransaction);
-
-      if (hasMore && threads?.length > 0) {
-        nextCursor = getShorterTimeStamp(threads);
-        await updateNextPageCursor(channel.id, nextCursor || 'completed');
-      } else {
-        await updateNextPageCursor(channel.id, 'completed');
-        nextCursor = undefined;
-      }
-    } catch (e) {
-      console.error(1, String(e));
-      await new Promise((resolve) => {
-        console.log('waiting 10 seconds');
-        setTimeout(resolve, 10000);
-      });
-
-      nextCursor = undefined;
-    }
-  }
 }
 
 //creates an array and pushes the content of the replies onto it
