@@ -78,6 +78,8 @@ export async function getThreadById(
   const defaultSettings =
     links.find(({ accountId }) => accountId === account.id) || links[0];
 
+  const communityType = account.discordServerId ? 'discord' : 'slack';
+
   const settings = {
     brandColor: account.brandColor || defaultSettings.brandColor,
     homeUrl: account.homeUrl || defaultSettings.homeUrl,
@@ -87,6 +89,7 @@ export async function getThreadById(
       account.googleAnalyticsId && {
         googleAnalyticsId: account.googleAnalyticsId,
       }),
+    communityType: communityType,
   };
 
   const authors = thread.messages
