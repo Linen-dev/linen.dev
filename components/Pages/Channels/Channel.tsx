@@ -289,6 +289,7 @@ export default function Channel({
             communityName={communityName}
             isSubDomainRouting={isSubDomainRouting}
             initialPage={page ? page - 1 : 0}
+            communityType={settings.communityType}
           />
         )}
       </div>
