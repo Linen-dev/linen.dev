@@ -2,13 +2,14 @@ import { ErrorBoundary } from 'react-error-boundary';
 import Link from 'next/link';
 import SlackIcon from '../../icons/SlackIcon';
 import SearchBar from '../../search/SearchBar';
-import { NavBar } from '../../NavBar/NavBar';
+import NavBar from '../../NavBar';
 import SEO from '../SEO';
 import { channels, users } from '@prisma/client';
 import { addHttpsToUrl, pickTextColorBasedOnBgColor } from '../../../lib/util';
 import GoogleAnalytics from '../GoogleAnalytics';
 import JoinDiscord from '@/components/JoinDiscord';
 import JoinSlack from '@/components/JoinSlack';
+import styles from './index.module.css';
 
 interface Settings {
   brandColor: string;
@@ -57,56 +58,58 @@ function PageLayout({
 
   return (
     <div>
-      <div
-        className={'flex h-20 px-4 py-4 items-center'}
-        // Couldn't get the background color to work with tailwind custom color
-        style={{ backgroundColor: settings.brandColor }}
-      >
-        <Link href={'/'} passHref>
-          <img
-            className="cursor-pointer max-h-8"
-            src={logoUrl}
-            alt={`${homeUrl} logo`}
-          />
-        </Link>
+      <div className={styles.push} />
+      <div className={styles.header}>
         <div
-          className="flex w-full"
-          style={{
-            justifyContent: 'flex-end',
-          }}
+          className="flex h-20 px-4 py-4 items-center"
+          // Couldn't get the background color to work with tailwind custom color
+          style={{ backgroundColor: settings.brandColor }}
         >
-          <div className="hidden sm:flex w-full">
-            <SearchBar
-              channels={channels}
-              users={users}
-              communityName={communityName}
-              isSubDomainRouting={isSubDomainRouting}
+          <Link href={'/'} passHref>
+            <img
+              className="cursor-pointer max-h-8"
+              src={logoUrl}
+              alt={`${homeUrl} logo`}
             />
+          </Link>
+          <div
+            className="flex w-full"
+            style={{
+              justifyContent: 'flex-end',
+            }}
+          >
+            <div className="hidden sm:flex w-full">
+              <SearchBar
+                channels={channels}
+                users={users}
+                communityName={communityName}
+                isSubDomainRouting={isSubDomainRouting}
+              />
+            </div>
+            <a
+              className="hidden sm:block md:block pt-1"
+              style={{ color: fontColor, fontWeight: 500, marginRight: '24px' }}
+              rel="noreferrer"
+              target="_blank"
+              href={homeUrl}
+            >
+              Home
+            </a>
+            <a
+              className="hidden sm:block pt-1"
+              style={{ color: fontColor, fontWeight: 500, marginRight: '24px' }}
+              rel="noreferrer"
+              target="_blank"
+              href={docsUrl}
+            >
+              Docs
+            </a>
+            {settings.communityType === 'discord' ? (
+              <JoinDiscord inviteUrl={slackInviteUrl || slackUrl} />
+            ) : (
+              <JoinSlack inviteUrl={slackInviteUrl || slackUrl} />
+            )}
           </div>
-          <a
-            className="hidden sm:block md:block pt-1"
-            style={{ color: fontColor, fontWeight: 500, marginRight: '24px' }}
-            rel="noreferrer"
-            target="_blank"
-            href={homeUrl}
-          >
-            Home
-          </a>
-          <a
-            className="hidden sm:block pt-1"
-            style={{ color: fontColor, fontWeight: 500, marginRight: '24px' }}
-            rel="noreferrer"
-            target="_blank"
-            href={docsUrl}
-          >
-            Docs
-          </a>
-
-          {settings.communityType === 'discord' ? (
-            <JoinDiscord inviteUrl={slackInviteUrl || slackUrl} />
-          ) : (
-            <JoinSlack inviteUrl={slackInviteUrl || slackUrl} />
-          )}
         </div>
       </div>
       <div className="pt-3 sm:hidden w-full">

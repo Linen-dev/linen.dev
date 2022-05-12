@@ -6,7 +6,7 @@ import { faHashtag } from '@fortawesome/free-solid-svg-icons';
 import CustomRouterPush from '../Link/CustomRouterPush';
 import styles from './index.module.css';
 
-export function NavBar({
+export default function NavBar({
   channelName,
   channels,
   communityName,
