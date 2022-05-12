@@ -97,8 +97,6 @@ async function sync(serverId: string, accountId: string, token: string) {
     const threadsOnChannel = await listPublicArchivedThreadsAndPersist({
       channel,
       token,
-      accountId,
-      authors,
     });
     // threads works as channels, we need to get their messages
     // replies are just attributes that references another message, need to do some crazy stuff here
@@ -161,59 +159,32 @@ async function listMessagesFromThreadAndPersist({
         authors,
         accountId,
         threadInDb,
-        token,
       });
     }
   }
 }
 
-async function getUser(userExternalId: string, token: string): Promise<Author> {
-  // https://discord.com/api/users/955891051665707028
-  return await retryPromise(getDiscord(`/users/${userExternalId}`, token)).then(
-    (r) => r.body
-  );
-}
-
 /** be aware that this functions updates the authors object */
-async function findAuthorsAndPersist({
-  messages,
-  authors,
-  accountId,
-  threads,
-  token,
-}: {
-  messages?: DiscordMessage[];
-  threads?: DiscordThreads[];
-  authors: any;
-  accountId: string;
-  token: string;
-}) {
+async function findAuthorsAndPersist(
+  messages: DiscordMessage[],
+  authors: any,
+  accountsId: string
+) {
   let thereIsNewAuthors: Author[] = [];
-  messages?.forEach((message) => {
+  messages.forEach((message) => {
     // has author and isn't in our authors object
     if (message.author.id && !authors[message.author.id]) {
       thereIsNewAuthors.push(message.author);
       authors[message.author.id] = true; // just to avoid dup
     }
   });
-
-  if (threads) {
-    for (const thread of threads) {
-      // has author and isn't in our authors object
-      if (thread.owner_id && !authors[thread.owner_id]) {
-        thereIsNewAuthors.push(await getUser(thread.owner_id, token));
-        authors[thread.owner_id] = true; // just to avoid dup
-      }
-    }
-  }
-
   if (thereIsNewAuthors.length) {
     console.log('thereIsNewAuthors', thereIsNewAuthors.length);
     for (const newUser of thereIsNewAuthors) {
       const user = await prisma.users.create({
         data: {
           slackUserId: newUser.id,
-          accountsId: accountId,
+          accountsId,
           displayName: newUser.username,
           isAdmin: false, // TODO
           isBot: false, // TODO
@@ -234,16 +205,14 @@ async function persistMessages({
   authors,
   accountId,
   threadInDb,
-  token,
 }: {
   messages: DiscordMessage[];
   authors: any;
   accountId: string;
   threadInDb: slackThreads;
-  token: string;
 }) {
   // first we need to insert the users to have the userId available
-  await findAuthorsAndPersist({ messages, authors, accountId, token });
+  await findAuthorsAndPersist(messages, authors, accountId);
 
   // each message has the author
   // has mentions and reactions, but not sure if we should tackle this now
@@ -299,59 +268,29 @@ async function listChannelsAndPersist(
   return await channelPromises;
 }
 
-async function persistThreads({
-  threads,
-  authors,
-  accountId,
-  channelId,
-  token,
-}: {
-  threads: DiscordThreads[];
-  channelId: string;
-  authors: any;
-  accountId: string;
-  token: string;
-}) {
-  await findAuthorsAndPersist({ threads, authors, accountId, token });
-
+async function persistThreads(threads: DiscordThreads[], channelId: string) {
   //Save discord threads
   const threadsTransaction: any = threads
     .map((thread: DiscordThreads) => {
       if (!thread.id) {
         return null;
       }
-      return prisma.$transaction(async (_prisma) => {
-        const newThread = await prisma.slackThreads.upsert({
-          where: {
-            slackThreadTs: thread.id,
-          },
-          update: { messageCount: thread.message_count },
-          create: {
-            slackThreadTs: thread.id,
-            channelId,
-            messageCount: thread.message_count,
-            slug: createSlug(thread.name),
-          },
-        });
-        const userId: users = authors[thread.owner_id];
-        return await prisma.messages.createMany({
-          data: [
-            {
-              body: thread.name,
-              sentAt: new Date(thread.thread_metadata.create_timestamp),
-              channelId,
-              slackMessageId: thread.id,
-              slackThreadId: newThread.id,
-              usersId: userId.id,
-            },
-          ],
-          skipDuplicates: true,
-        });
+      return prisma.slackThreads.upsert({
+        where: {
+          slackThreadTs: thread.id,
+        },
+        update: { messageCount: thread.message_count },
+        create: {
+          slackThreadTs: thread.id,
+          channelId,
+          messageCount: thread.message_count,
+          slug: createSlug(thread.name),
+        },
       });
     })
     .filter(Boolean);
 
-  return await Promise.all(threadsTransaction);
+  return await prisma.$transaction(threadsTransaction);
 }
 
 /**
@@ -361,13 +300,9 @@ async function persistThreads({
 async function listPublicArchivedThreadsAndPersist({
   channel,
   token,
-  accountId,
-  authors,
 }: {
   channel: channels;
   token: string;
-  accountId: string;
-  authors: any;
 }) {
   let hasMore = true;
   const threads: DiscordThreads[] = [];
@@ -381,14 +316,8 @@ async function listPublicArchivedThreadsAndPersist({
     hasMore = response.hasMore;
     if (response.threads && response.threads.length) {
       threads.push(...response.threads);
-      hasMore && (timestamp = getShorterTimeStamp(response.threads));
-      await persistThreads({
-        accountId,
-        authors,
-        channelId: channel.id,
-        threads,
-        token,
-      });
+      timestamp = getShorterTimeStamp(response.threads);
+      await persistThreads(response.threads, channel.id);
     }
   }
   return threads;
