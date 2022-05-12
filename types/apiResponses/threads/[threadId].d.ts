@@ -48,4 +48,5 @@ export interface Settings {
   docsUrl: string;
   logoUrl: string;
   googleAnalyticsId?: string;
+  communityType: string;
 }

@@ -6,7 +6,8 @@ import prisma from '../../../client';
 const HOST = process.env.NEXTAUTH_URL || 'http://localhost:3000';
 
 async function create(request: NextApiRequest, response: NextApiResponse) {
-  const { email } = JSON.parse(request.body);
+  const { email } = request.body;
+
   if (!email) {
     return response.status(400).json({ error: 'Email is required' });
   }
