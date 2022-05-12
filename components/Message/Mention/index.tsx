@@ -5,7 +5,7 @@ function getDisplayName(userId: string, mentions?: users[]) {
   if (!mentions) {
     return 'User';
   }
-  const user = mentions.find((u) => u.id === userId);
+  const user = mentions.find((u) => u.slackUserId === userId);
   return user?.displayName || 'User';
 }
 
