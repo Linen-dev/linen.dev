@@ -116,6 +116,7 @@ export default function Channel({
   const handlePageClick = ({ selected }: { selected: number }) => {
     const newPage = selected + 1;
     CustomRouterPush({
+      communityType: settings.communityType,
       isSubDomainRouting,
       communityName,
       path: `/c/${currentChannel.channelName}/${newPage}`,
@@ -146,6 +147,7 @@ export default function Channel({
         <CustomLink
           isSubDomainRouting={isSubDomainRouting}
           communityName={communityName}
+          communityType={settings.communityType}
           path={`/t/${incrementId}/${slug || 'topic'}`}
           key={`${incrementId}-desktop`}
         >
@@ -200,6 +202,7 @@ export default function Channel({
         <CustomLink
           isSubDomainRouting={isSubDomainRouting}
           communityName={communityName}
+          communityType={settings.communityType}
           path={`/t/${incrementId}/${slug || 'topic'}`}
           key={`${incrementId}-desktop`}
         >

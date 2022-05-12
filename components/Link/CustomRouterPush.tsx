@@ -5,8 +5,9 @@ export default function CustomRouterPush({
   isSubDomainRouting,
   path,
   communityName,
+  communityType,
 }: any) {
   return Router.push(
-    CustomLinkHelper({ communityName, isSubDomainRouting, path })
+    CustomLinkHelper({ communityType, communityName, isSubDomainRouting, path })
   );
 }

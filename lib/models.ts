@@ -213,6 +213,9 @@ export const findAccountByPath = async (path: string) => {
         {
           slackDomain: path,
         },
+        {
+          discordServerId: path,
+        },
       ],
     },
     include: {

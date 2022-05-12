@@ -124,12 +124,13 @@ function PageLayout({
         {...seo}
       />
       <div className="flex flex-col lg:flex-row">
-        {NavBar(
+        {NavBar({
           channels,
-          currentChannel.channelName || '',
+          channelName: currentChannel.channelName || '',
           communityName,
-          isSubDomainRouting
-        )}
+          communityType: settings.communityType,
+          isSubDomainRouting,
+        })}
 
         <div className="md:flex justify-center lg:w-full">
           <ErrorBoundary

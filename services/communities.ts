@@ -108,6 +108,7 @@ export async function channelGetStaticProps(
   return {
     props: {
       ...result,
+      communityName,
       isSubDomainRouting: isSubdomainbasedRouting,
     },
     revalidate: 60, // In seconds

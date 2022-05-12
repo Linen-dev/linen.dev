@@ -5,17 +5,25 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHashtag } from '@fortawesome/free-solid-svg-icons';
 import CustomRouterPush from '../Link/CustomRouterPush';
 
-export function NavBar(
-  channels: channels[],
-  channelName: string | string[],
-  communityName: string,
-  isSubDomainRouting: boolean
-) {
+export function NavBar({
+  channelName,
+  channels,
+  communityName,
+  communityType,
+  isSubDomainRouting,
+}: {
+  channels: channels[];
+  channelName: string | string[];
+  communityName: string;
+  communityType: string;
+  isSubDomainRouting: boolean;
+}) {
   const onChangeChannel = (channelSelected: string) => {
     if (channelName && channelName !== channelSelected) {
       CustomRouterPush({
         isSubDomainRouting: isSubDomainRouting,
-        communityName: communityName,
+        communityName,
+        communityType,
         path: `/c/${channelSelected}/1`,
       });
     }
@@ -49,6 +57,7 @@ export function NavBar(
               <CustomLink
                 isSubDomainRouting={isSubDomainRouting}
                 communityName={communityName}
+                communityType={communityType}
                 key={c.channelName}
                 path={`/c/${c.channelName}/1`}
                 passHref

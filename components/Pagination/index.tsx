@@ -12,6 +12,7 @@ interface Props {
   isSubDomainRouting: boolean;
   communityName: string;
   initialPage: number;
+  communityType: string;
 }
 
 export default function Pagination({
@@ -21,6 +22,7 @@ export default function Pagination({
   isSubDomainRouting,
   communityName,
   initialPage = 0,
+  communityType,
 }: Props) {
   if (pageCount === 1) {
     return null;
@@ -38,6 +40,7 @@ export default function Pagination({
           breakLinkClassName="hidden sm:inline-flex bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative items-center px-4 py-2 border text-sm font-medium"
           hrefBuilder={(page: number) =>
             CustomLinkHelper({
+              communityType,
               isSubDomainRouting,
               communityName,
               path: `/c/${channelName}/${page}`,
