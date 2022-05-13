@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`robots.txt robots.txt should return correct sitemap.xml path for domain linen.dev 1`] = `
+"User-agent: *
+Allow: /
+
+Sitemap: https://linen.dev/sitemap.xml
+  "
+`;
+
+exports[`robots.txt robots.txt should return correct sitemap.xml path for subdomain osquery.fleetdm.com 1`] = `
+"User-agent: *
+Allow: /
+
+Sitemap: https://osquery.fleetdm.com/sitemap.xml
+  "
+`;

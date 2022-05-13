@@ -3,8 +3,7 @@
 
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["fullTextSearch"]
-
+  previewFeatures = ["fullTextSearch", "interactiveTransactions"]
 }
 
 datasource db {
@@ -70,6 +69,7 @@ model accounts {
   createdAt         DateTime   @default(now())
   name              String?
   slackDomain       String?
+  discordServerId   String?
   channels          channels[]
   slackTeamId       String?
   slackInviteUrl    String?
@@ -83,9 +83,10 @@ model accounts {
   premium           Boolean    @default(false)
   googleAnalyticsId String?
 
-  auths               auths[]
-  users               users[]
-  slackAuthorizations slackAuthorizations[]
+  auths                 auths[]
+  users                 users[]
+  slackAuthorizations   slackAuthorizations[]
+  discordAuthorizations discordAuthorizations[]
   @@unique([redirectDomain])
 }
 
@@ -116,7 +117,7 @@ model users {
   account    accounts @relation(fields: [accountsId], references: [id])
   accountsId String
 
-  @@unique([slackUserId])
+  @@unique([slackUserId, accountsId])
 }
 
 model slackMentions {
@@ -139,5 +140,18 @@ model slackAuthorizations {
   userAccessToken String?
 
   account    accounts? @relation(fields: [accountsId], references: [id])
+  accountsId String?
+}
+
+model discordAuthorizations {
+  id           String   @id @default(uuid())
+  createdAt    DateTime @default(now())
+  accessToken  String
+  scope        String
+  refreshToken String
+  expiresAt    DateTime
+
+  account accounts? @relation(fields: [accountsId], references: [id])
+
   accountsId String?
 }

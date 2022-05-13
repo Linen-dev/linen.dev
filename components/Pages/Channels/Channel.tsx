@@ -9,6 +9,7 @@ import { channels, slackThreads, users, messages } from '@prisma/client';
 import CustomLink from '../../Link/CustomLink';
 import { MentionsWithUsers } from '../../../types/apiResponses/threads/[threadId]';
 import { capitalize } from '../../../lib/util';
+import CustomRouterPush from '@/components/Link/CustomRouterPush';
 
 export interface PaginationType {
   totalCount: number;
@@ -65,7 +66,7 @@ export default function Channel({
   const [initial, setInitial] = useState(true);
 
   useEffect(() => {
-    if (initial && channelId) {
+    if (initial && channelId && page === 1) {
       return setInitial(false);
     }
     fetch(`/api/threads?channelId=${channelId}&page=${currentPage}`)
@@ -78,7 +79,7 @@ export default function Channel({
         setPageCount(pagination.pageCount);
         window.scrollTo(0, 0);
       });
-  }, [currentPage, channelId]);
+  }, [currentPage, channelId, page]);
 
   if (!channelId) {
     return (
@@ -114,11 +115,12 @@ export default function Channel({
   const channelName = channels?.find((c) => c.id === channelId)?.channelName;
   const handlePageClick = ({ selected }: { selected: number }) => {
     const newPage = selected + 1;
-    window.history.pushState(
-      {},
-      '',
-      `/c/${currentChannel.channelName}/${newPage}`
-    );
+    CustomRouterPush({
+      communityType: settings.communityType,
+      isSubDomainRouting,
+      communityName,
+      path: `/c/${currentChannel.channelName}/${newPage}`,
+    });
     setCurrentPage(newPage);
   };
 
@@ -145,6 +147,7 @@ export default function Channel({
         <CustomLink
           isSubDomainRouting={isSubDomainRouting}
           communityName={communityName}
+          communityType={settings.communityType}
           path={`/t/${incrementId}/${slug || 'topic'}`}
           key={`${incrementId}-desktop`}
         >
@@ -199,6 +202,7 @@ export default function Channel({
         <CustomLink
           isSubDomainRouting={isSubDomainRouting}
           communityName={communityName}
+          communityType={settings.communityType}
           path={`/t/${incrementId}/${slug || 'topic'}`}
           key={`${incrementId}-desktop`}
         >
@@ -253,7 +257,7 @@ export default function Channel({
       communityName={communityName}
       isSubDomainRouting={isSubDomainRouting}
     >
-      <div className="sm:pt-8 sm:px-8">
+      <div className="sm:pt-6 sm:px-6">
         <table className="hidden sm:block sm:table-fixed ">
           <thead>
             <tr>
@@ -282,6 +286,10 @@ export default function Channel({
             channelName={currentChannel.channelName}
             onClick={handlePageClick}
             pageCount={pageCount}
+            communityName={communityName}
+            isSubDomainRouting={isSubDomainRouting}
+            initialPage={page ? page - 1 : 0}
+            communityType={settings.communityType}
           />
         )}
       </div>

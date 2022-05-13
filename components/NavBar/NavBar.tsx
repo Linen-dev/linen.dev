@@ -1,14 +1,35 @@
-import { Navbar, Group, Title, Text, Paper } from '@mantine/core';
+import { Navbar, Group, Title, Text, Paper, NativeSelect } from '@mantine/core';
 import { channels } from '@prisma/client';
 import CustomLink from '../Link/CustomLink';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHashtag } from '@fortawesome/free-solid-svg-icons';
+import CustomRouterPush from '../Link/CustomRouterPush';
 
-export function NavBar(
-  channels: any,
-  channelName: string | string[],
-  communityName: string,
-  isSubDomainRouting: boolean
-) {
-  return (
+export function NavBar({
+  channelName,
+  channels,
+  communityName,
+  communityType,
+  isSubDomainRouting,
+}: {
+  channels: channels[];
+  channelName: string | string[];
+  communityName: string;
+  communityType: string;
+  isSubDomainRouting: boolean;
+}) {
+  const onChangeChannel = (channelSelected: string) => {
+    if (channelName && channelName !== channelSelected) {
+      CustomRouterPush({
+        isSubDomainRouting: isSubDomainRouting,
+        communityName,
+        communityType,
+        path: `/c/${channelSelected}/1`,
+      });
+    }
+  };
+
+  const navBarLg = (
     <Navbar
       sx={(theme) => ({ backgroundColor: 'white', zIndex: 1 })}
       width={{ base: 250 }}
@@ -36,6 +57,7 @@ export function NavBar(
               <CustomLink
                 isSubDomainRouting={isSubDomainRouting}
                 communityName={communityName}
+                communityType={communityType}
                 key={c.channelName}
                 path={`/c/${c.channelName}/1`}
                 passHref
@@ -72,5 +94,26 @@ export function NavBar(
         </Paper>
       </Group>
     </Navbar>
+  );
+
+  const navBarSm = (
+    <div className="pt-4 px-6">
+      <NativeSelect
+        data={channels.map((c: channels) => c.channelName)}
+        icon={<FontAwesomeIcon icon={faHashtag} size="xs" />}
+        onChange={(event) => onChangeChannel(event.currentTarget.value)}
+        description="Channels"
+        radius="sm"
+        size="xs"
+        value={channelName}
+      />
+    </div>
+  );
+
+  return (
+    <>
+      <div className="hidden lg:flex">{navBarLg}</div>
+      <div className="lg:hidden">{navBarSm}</div>
+    </>
   );
 }

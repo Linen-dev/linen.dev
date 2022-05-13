@@ -6,6 +6,9 @@ import { NavBar } from '../../NavBar/NavBar';
 import SEO from '../SEO';
 import { channels, users } from '@prisma/client';
 import { addHttpsToUrl, pickTextColorBasedOnBgColor } from '../../../lib/util';
+import GoogleAnalytics from '../GoogleAnalytics';
+import JoinDiscord from '@/components/JoinDiscord';
+import JoinSlack from '@/components/JoinSlack';
 
 interface Settings {
   brandColor: string;
@@ -13,6 +16,7 @@ interface Settings {
   homeUrl: string;
   logoUrl: string;
   googleAnalyticsId?: string;
+  communityType: string;
 }
 
 interface Props {
@@ -97,22 +101,12 @@ function PageLayout({
           >
             Docs
           </a>
-          <a
-            className="hidden sm:inline-flex items-center px-3 py-2 border border-transparent shadow-md text-sm font-medium rounded-md text-blue-500"
-            style={{ backgroundColor: 'white', minWidth: '200px' }}
-            href={slackInviteUrl || slackUrl}
-          >
-            <SlackIcon style={{ marginRight: '10px' }} />
-            Join the conversation
-          </a>
-          <a
-            className="sm:hidden inline-flex items-center px-3 py-2 border border-transparent shadow-md text-sm font-medium rounded-md text-blue-500"
-            style={{ backgroundColor: 'white' }}
-            href={slackInviteUrl || slackUrl}
-          >
-            <SlackIcon style={{ marginRight: '10px' }} />
-            Join Slack
-          </a>
+
+          {settings.communityType === 'discord' ? (
+            <JoinDiscord inviteUrl={slackInviteUrl || slackUrl} />
+          ) : (
+            <JoinSlack inviteUrl={slackInviteUrl || slackUrl} />
+          )}
         </div>
       </div>
       <div className="pt-3 sm:hidden w-full">
@@ -129,15 +123,15 @@ function PageLayout({
         title={communityName?.split('.')[0]}
         {...seo}
       />
-      <div className="sm:flex">
-        <div className="hidden md:flex">
-          {NavBar(
-            channels,
-            currentChannel.channelName || '',
-            communityName,
-            isSubDomainRouting
-          )}
-        </div>
+      <div className="flex flex-col lg:flex-row">
+        {NavBar({
+          channels,
+          channelName: currentChannel.channelName || '',
+          communityName,
+          communityType: settings.communityType,
+          isSubDomainRouting,
+        })}
+
         <div className="md:flex justify-center lg:w-full">
           <ErrorBoundary
             FallbackComponent={() => (
@@ -159,12 +153,7 @@ function PageLayout({
           </ErrorBoundary>
         </div>
       </div>
-      {googleAnalyticsId && (
-        <script
-          async
-          src={`https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}`}
-        />
-      )}
+      <GoogleAnalytics googleAnalyticsId={googleAnalyticsId} />
     </div>
   );
 }

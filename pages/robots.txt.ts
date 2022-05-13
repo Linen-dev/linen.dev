@@ -1,45 +1,34 @@
-import { getDomain, getSubdomain } from '../utilities/domain';
-import {
-  createRobotsTxt,
-  createRobotsTxtForSubdomain,
-} from '../utilities/robots';
+import { createRobotsTxt } from '../utilities/robots';
 import prisma from '../client';
 import { GetServerSideProps } from 'next/types';
 
+function notFound(res: any) {
+  res.statusCode = 404;
+  res.end();
+  return { props: {} };
+}
+
+function domainValid(res: any, domain: string) {
+  res.setHeader('Content-Type', 'text/plain');
+  res.write(createRobotsTxt(domain));
+  res.end();
+  return { props: {} };
+}
+
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
-  const { host } = req.headers;
-  if (!host) {
-    res.statusCode = 404;
-    res.end();
-    return { props: {} };
+  const { host: domain } = req.headers;
+  if (!domain) {
+    return notFound(res);
   }
 
-  const domain = getDomain(host);
-  const subdomain = getSubdomain(host);
-
-  if (subdomain) {
+  if (!['linen.dev', 'localhost:3000'].includes(domain)) {
     const account = await prisma.accounts.findFirst({
-      where: { name: subdomain },
+      where: { redirectDomain: domain },
     });
-    if (account) {
-      const robots = createRobotsTxtForSubdomain(domain, subdomain);
-      res.setHeader('Content-Type', 'text/plain');
-      res.write(robots);
-      res.end();
-    } else {
-      res.statusCode = 404;
-      res.end();
-    }
-  } else {
-    const robots = createRobotsTxt(domain);
-    res.setHeader('Content-Type', 'text/plain');
-    res.write(robots);
-    res.end();
+    if (account) return domainValid(res, domain);
   }
-
-  return {
-    props: {},
-  };
+  // always fallback to ours sitemap.xml
+  return domainValid(res, 'linen.dev');
 };
 
 export default () => null;

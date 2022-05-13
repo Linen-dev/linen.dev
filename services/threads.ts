@@ -80,23 +80,34 @@ export async function getThreadById(
   const defaultSettings =
     links.find(({ accountId }) => accountId === account.id) || links[0];
 
+  const communityType = account.discordServerId ? 'discord' : 'slack';
+
   const settings = {
     brandColor: account.brandColor || defaultSettings.brandColor,
     homeUrl: account.homeUrl || defaultSettings.homeUrl,
     docsUrl: account.docsUrl || defaultSettings.docsUrl,
     logoUrl: account.logoUrl || defaultSettings.logoUrl,
+    ...(account.premium &&
+      account.googleAnalyticsId && {
+        googleAnalyticsId: account.googleAnalyticsId,
+      }),
+    communityType: communityType,
   };
 
   const authors = thread.messages
     .map((m) => m.author)
     .filter(Boolean) as users[];
 
-  const threadUrl =
+  let threadUrl =
     account.slackUrl +
     '/archives/' +
     thread.channel.slackChannelId +
     '/p' +
     (parseFloat(thread.slackThreadTs) * 1000000).toString();
+
+  if (account.discordServerId) {
+    threadUrl = `https://discord.com/channels/${account.discordServerId}/${thread.channel.slackChannelId}/${thread.slackThreadTs}`;
+  }
 
   const threadSlackInviteUrl =
     account.slackInviteUrl &&
@@ -120,7 +131,7 @@ export async function getThreadById(
     channels: channelsWithMinThreads,
     slackUrl: account.slackUrl || '',
     slackInviteUrl: account.slackInviteUrl || '',
-    communityName: account.slackDomain || '',
+    communityName: account.slackDomain || account.discordServerId || '',
     threadUrl,
     settings,
   };

@@ -1,14 +1,22 @@
 import Link from 'next/link';
+import CustomLinkHelper from './CustomLinkHelper';
 
 export default function CustomLink({
   isSubDomainRouting,
   path,
   communityName,
+  communityType,
   ...props
 }: any) {
-  if (isSubDomainRouting) {
-    return <Link href={path} {...props}></Link>;
-  } else {
-    return <Link href={`/s/${communityName}${path}`} {...props}></Link>;
-  }
+  return (
+    <Link
+      href={CustomLinkHelper({
+        communityType,
+        communityName,
+        isSubDomainRouting,
+        path,
+      })}
+      {...props}
+    ></Link>
+  );
 }

@@ -89,7 +89,7 @@ async function processMessageEvent(event: SlackMessageEvent) {
   ) {
     message = await changeMessage(channel, event);
   } else {
-    console.error('Event not supported!!');
+    console.error('Event not supported!!', event.type, event.subtype);
   }
 
   return {
@@ -181,9 +181,25 @@ async function changeMessage(
   },
   event: SlackMessageEvent
 ) {
-  console.log('changeMessage is not implemented yet!');
+  // First remove previous message
+  if (event.previous_message) {
+    const message = await findMessageByChannelIdAndTs(
+      channel.id,
+      event.previous_message.ts
+    );
+    if (message) {
+      await deleteMessageWithMentions(message.id);
+    } else {
+      console.warn('Message not found!', channel.id, event.deleted_ts);
+    }
+  }
 
-  return {};
+  let message = {};
+  if (event.message) {
+    message = await addMessage(channel, event.message);
+  }
+
+  return message;
 }
 
 async function processTeamJoin(event: SlackTeamJoinEvent) {

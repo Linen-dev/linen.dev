@@ -125,7 +125,8 @@ export const fetchTeamInfo = async (token: string) => {
 export const saveMessages = async (
   messages: any[],
   channelId: string,
-  slackChannelId: string
+  slackChannelId: string,
+  accountId: string
 ) => {
   const params = messages
     .filter((message) => message.type === 'message')
@@ -151,7 +152,7 @@ export const saveMessages = async (
         });
         threadId = thread.id;
       }
-      const user = await findUser(param.slackUserId);
+      const user = await findUser(param.slackUserId, accountId);
       param.usersId = user?.id;
       param.slackThreadId = threadId;
       messages.push(await createMessage(param));
@@ -169,7 +170,8 @@ export async function fetchAndSaveThreadMessages(
     channel: channels;
     slackThreads: slackThreads | null;
   })[],
-  token: string
+  token: string,
+  accountId: string
 ) {
   const repliesPromises = messages.map((m) => {
     if (!!m.slackThreads?.slackThreadTs) {
@@ -183,7 +185,8 @@ export async function fetchAndSaveThreadMessages(
           return saveThreadedMessages(
             replyMessages,
             m.channel.id,
-            m.slackThreads.slackThreadTs
+            m.slackThreads.slackThreadTs,
+            accountId
           );
         }
       });
@@ -202,7 +205,8 @@ export async function fetchAndSaveUser(slackUserId: string, token: string) {
 export async function saveThreadedMessages(
   replies: any,
   channelId: string,
-  slackThreadTs: string
+  slackThreadTs: string,
+  accountId: string
 ) {
   const repliesParams = replies.messages.map((m: any) => {
     return {
@@ -220,7 +224,7 @@ export async function saveThreadedMessages(
   });
 
   for (let replyParam of repliesParams) {
-    const user = await findUser(replyParam.slackUserId);
+    const user = await findUser(replyParam.slackUserId, accountId);
     replyParam.usersId = user?.id;
     replyParam.slackThreadId = thread.id;
     try {

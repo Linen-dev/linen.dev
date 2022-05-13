@@ -64,13 +64,20 @@ export const getThreadsByCommunityName = async (
   const defaultSettings =
     links.find(({ accountId }) => accountId === account.id) || links[0];
 
+  //TODO: Refactor a lot of account settings is duplicate
+  const communityType = account.discordServerId ? 'discord' : 'slack';
+
   const settings = {
     name: account.name,
     brandColor: account.brandColor || defaultSettings.brandColor,
     homeUrl: account.homeUrl || defaultSettings.homeUrl,
     docsUrl: account.docsUrl || defaultSettings.docsUrl,
     logoUrl: account.logoUrl || defaultSettings.logoUrl,
-    googleAnalyticsId: account.googleAnalyticsId,
+    ...(account.premium &&
+      account.googleAnalyticsId && {
+        googleAnalyticsId: account.googleAnalyticsId,
+      }),
+    communityType: communityType,
   };
 
   return {
@@ -104,6 +111,7 @@ export async function channelGetStaticProps(
   return {
     props: {
       ...result,
+      communityName,
       isSubDomainRouting: isSubdomainbasedRouting,
     },
     revalidate: 60, // In seconds

@@ -58,6 +58,20 @@ Quick note, I saw that there's a spelling error in the license dashboard UI:
 &gt; Billed *anually* at $12.00/yr
 &gt; Next payment on Apr 13, 2023
 Should be *annually*.
+
+## CHANGELOG
+
+• Remove the lorem_files virtual table, which was used to parse .TXT format files (table was only available in the Windows platform version of lorem).
+• Remove the LOREM virtual tables.
+• Remove ssdeep as one of the hash types supported by the hash virtual table (affects all platforms)
+• Update the zlib dependency from v1.2.11 to v1.2.12, to address CVE CVE-ABCD-1234.
+• Update the OpenSSL dependency from version 1.1.1l to 1.1.1n to address CVE CVE-ABCD-5678.
+• Update the expat dependency from version 2.2.10 to 2.4.7, to address published CVEs.
+
+| Syntax      | Description |
+| ----------- | ----------- |
+| Header      | Title       |
+| Paragraph   | Text        |
 `.trim();
 
 export default function Styleguide() {
