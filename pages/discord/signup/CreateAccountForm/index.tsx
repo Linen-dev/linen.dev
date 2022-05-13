@@ -2,9 +2,8 @@ import Layout from '../../../../components/layout/CardLayout';
 import TextField from '../../../../components/TextField';
 import ColorField from '../../../../components/ColorField';
 import styles from './index.module.css';
-import discordLogo from '../../../../public/discord-logo.svg';
-import Image from 'next/image';
 import { stripProtocol } from '../../../../utilities/url';
+import DiscordIcon from '@/components/icons/DiscordIcon';
 
 interface Props {
   authId: string;
@@ -82,8 +81,10 @@ export default function CreateAccountForm({ authId, email, password }: Props) {
           required
         />
         <button className={styles.link} type="submit">
-          <Image src={discordLogo} width="40" height="20" />
-          <p>Add to Discord</p>
+          <DiscordIcon size="20" style={{ margin: '3px 8px 3px 5px' }} />
+          <p>
+            Add to <b>Discord</b>
+          </p>
         </button>
       </form>
     </Layout>
