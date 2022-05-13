@@ -60,4 +60,27 @@ import messages from './factory/messages';
       threadId: thread.id,
     });
   }
+
+  const channel3 = await findOrCreateChannel({
+    name: 'alpha',
+    accountId: account.id,
+  });
+
+  for (let i = 0; i < 50; i++) {
+    const thread = await findOrCreateThread({
+      channelId: channel3.id,
+      slug: `slug-alpha-${i}`,
+    });
+
+    await findOrCreateMessage({
+      body: `bam-${i}`,
+      channelId: channel3.id,
+      threadId: thread.id,
+    });
+    await findOrCreateMessage({
+      body: `quux-${i}`,
+      channelId: channel3.id,
+      threadId: thread.id,
+    });
+  }
 })();
