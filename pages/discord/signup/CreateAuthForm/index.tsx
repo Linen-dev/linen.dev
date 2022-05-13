@@ -3,7 +3,7 @@ import EmailField from '../../../../components/EmailField';
 import PasswordField from '../../../../components/PasswordField';
 import Button from '../../../../components/Button';
 import Link from '../../../../components/Link';
-import toast from '@/components/Toast';
+import toast from 'components/Toast';
 
 interface Props {
   onSuccess: ({

@@ -7,8 +7,8 @@ import SEO from '../SEO';
 import { channels, users } from '@prisma/client';
 import { addHttpsToUrl, pickTextColorBasedOnBgColor } from '../../../lib/util';
 import GoogleAnalytics from '../GoogleAnalytics';
-import JoinDiscord from '@/components/JoinDiscord';
-import JoinSlack from '@/components/JoinSlack';
+import JoinDiscord from 'components/JoinDiscord';
+import JoinSlack from 'components/JoinSlack';
 import styles from './index.module.css';
 
 interface Settings {

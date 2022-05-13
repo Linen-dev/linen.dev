@@ -2,7 +2,7 @@ import { channels } from '@prisma/client';
 import Button from '../../../Button';
 import { Checkbox } from '@mantine/core';
 import { useState } from 'react';
-import { toast } from '@/components/Toast';
+import { toast } from 'components/Toast';
 
 interface Props {
   channels: channels[];

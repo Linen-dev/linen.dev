@@ -1,4 +1,4 @@
-import { CommunityType } from '@/serializers/account';
+import { CommunityType } from 'serializers/account';
 import DiscordBotButton from './DiscordBotButton';
 import SlackBotButton from './SlackBotButton';
 

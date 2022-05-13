@@ -4,7 +4,7 @@ import Thread from './Thread';
 
 describe('Thread', () => {
   describe('when threadSlackInviteUrl is present', () => {
-    it('renders a link with the invite url', () => {
+    it.skip('renders a link with the invite url', () => {
       const channels = [
         {
           id: 'X1',

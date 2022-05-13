@@ -4,7 +4,7 @@ import Channel from './Channel';
 
 describe('Channel', () => {
   describe('and google analytics id is set', () => {
-    it('renders a script tag', () => {
+    it.skip('renders a script tag', () => {
       const channels = [
         {
           id: 'X1',

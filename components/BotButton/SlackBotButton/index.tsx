@@ -1,6 +1,6 @@
 import styles from './index.module.css';
 import Router from 'next/router';
-import { toast } from '@/components/Toast';
+import { toast } from 'components/Toast';
 
 const SLACK_CLIENT_ID =
   process.env.NEXT_PUBLIC_SLACK_CLIENT_ID || '1250901093238.3006399856353';

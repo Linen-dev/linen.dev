@@ -9,7 +9,7 @@ import { channels, slackThreads, users, messages } from '@prisma/client';
 import CustomLink from '../../Link/CustomLink';
 import { MentionsWithUsers } from '../../../types/apiResponses/threads/[threadId]';
 import { capitalize } from '../../../lib/util';
-import CustomRouterPush from '@/components/Link/CustomRouterPush';
+import CustomRouterPush from 'components/Link/CustomRouterPush';
 
 export interface PaginationType {
   totalCount: number;

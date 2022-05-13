@@ -8,7 +8,7 @@ import { AppProps } from 'next/app';
 import Head from 'next/head';
 import { useEffect } from 'react';
 import { SessionProvider } from 'next-auth/react';
-import { Toaster } from '@/components/Toast';
+import { Toaster } from 'components/Toast';
 
 export default function App(props: AppProps) {
   const router = useRouter();

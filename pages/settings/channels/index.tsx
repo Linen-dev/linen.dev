@@ -1,13 +1,13 @@
 import React from 'react';
 import { NextPageContext } from 'next';
 import { getSession, useSession } from 'next-auth/react';
-import DashboardLayout from '@/components/layout/DashboardLayout';
+import DashboardLayout from 'components/layout/DashboardLayout';
 import prisma from '../../../client';
 import { channelIndex } from '../../../lib/models';
 import { channels } from '@prisma/client';
-import ChannelVisibilityToggle from '@/components/Pages/Settings/Channels/ChannelVisibilityToggle';
-import ChannelSetDefault from '@/components/Pages/Settings/Channels/ChannelSetDefault';
-import { sortBy } from '@/utilities/sort';
+import ChannelVisibilityToggle from 'components/Pages/Settings/Channels/ChannelVisibilityToggle';
+import ChannelSetDefault from 'components/Pages/Settings/Channels/ChannelSetDefault';
+import { sortBy } from 'utilities/sort';
 
 interface Props {
   channels?: channels[];
