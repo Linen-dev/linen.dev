@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
 import { NextPageContext } from 'next';
 import { getSession } from 'next-auth/react';
-import DashboardLayout from '../../components/layout/DashboardLayout';
-import TextField from '../../components/TextField';
-import ColorField from '../../components/ColorField';
-import Button from '../../components/Button';
+import DashboardLayout from '@/components/layout/DashboardLayout';
+import TextField from '@/components/TextField';
+import ColorField from '@/components/ColorField';
+import Button from '@/components/Button';
 import serializeAccount, { SerializedAccount } from '../../serializers/account';
 import { stripProtocol } from '../../utilities/url';
-import BlankLayout from '../../components/layout/BlankLayout';
+import BlankLayout from '@/components/layout/BlankLayout';
 import {
   faCirclePause,
   faSpinner,
@@ -16,9 +16,10 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useRouter } from 'next/router';
-import SlackBotButton from '@/components/SlackBotButton';
 import { toast } from '@/components/Toast';
 import { findAccountByEmail } from '../../lib/models';
+import { capitalize } from 'lib/util';
+import BotButton from '@/components/BotButton';
 
 interface Props {
   account?: SerializedAccount;
@@ -29,12 +30,18 @@ export default function SettingsPage({ account }: Props) {
 
   useEffect(() => {
     const error = router.query.error as string;
-    if (error) toast.error('Something went wrong, please try again');
+    if (error) {
+      toast.error('Something went wrong, please try again');
+      router.replace('/settings', undefined, { shallow: true });
+    }
   }, [router.query.error]);
 
   useEffect(() => {
     const success = router.query.success as string;
-    if (success) toast.success(decodeURI(success));
+    if (success) {
+      toast.success(decodeURI(success));
+      router.replace('/settings', undefined, { shallow: true });
+    }
   }, [router.query.success]);
 
   if (account) {
@@ -59,12 +66,14 @@ export default function SettingsPage({ account }: Props) {
       })
         .then((response) => response.json())
         .then(() => {
-          alert('Saved successfully!');
+          toast.success('Saved successfully!');
         });
     };
 
     const slackSyncComponent = (
-      <DashboardLayout header="Slack Synchronization">
+      <DashboardLayout
+        header={`${capitalize(account.communityType)} Synchronization`}
+      >
         {account.slackSyncStatus === 'NOT_STARTED' && (
           <div>
             <FontAwesomeIcon icon={faCirclePause} size="lg" /> Not started
@@ -89,7 +98,7 @@ export default function SettingsPage({ account }: Props) {
         )}
         <div className="flex flex-row">
           <div className="flex-initial">
-            <SlackBotButton />
+            <BotButton communityType={account.communityType} />
           </div>
         </div>
       </DashboardLayout>

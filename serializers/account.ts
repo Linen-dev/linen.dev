@@ -1,3 +1,8 @@
+export enum CommunityType {
+  'discord' = 'discord',
+  'slack' = 'slack',
+}
+
 export interface SerializedAccount {
   id: string;
   homeUrl?: string;
@@ -7,6 +12,7 @@ export interface SerializedAccount {
   premium: boolean;
   googleAnalyticsId?: string;
   slackSyncStatus: string;
+  communityType: CommunityType;
 }
 
 export default function serialize(account?: any): SerializedAccount | null {
@@ -23,6 +29,11 @@ export default function serialize(account?: any): SerializedAccount | null {
     slackSyncStatus,
     id,
   } = account;
+
+  const communityType = account.discordServerId
+    ? CommunityType.discord
+    : CommunityType.slack;
+
   return {
     homeUrl,
     docsUrl,
@@ -32,5 +43,6 @@ export default function serialize(account?: any): SerializedAccount | null {
     googleAnalyticsId,
     slackSyncStatus,
     id,
+    communityType,
   };
 }
