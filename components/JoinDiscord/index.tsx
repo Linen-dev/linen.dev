@@ -8,7 +8,7 @@ export default function JoinDiscord({ inviteUrl }: { inviteUrl?: string }) {
         style={{ backgroundColor: 'white', minWidth: '200px' }}
         href={inviteUrl}
       >
-        <DiscordIcon style={{ margin: '7px 10px 7px 8px' }} />
+        <DiscordIcon style={{ margin: '7px 10px 7px 5px' }} />
         Join the conversation
       </a>
       <a
@@ -16,7 +16,7 @@ export default function JoinDiscord({ inviteUrl }: { inviteUrl?: string }) {
         style={{ backgroundColor: 'white' }}
         href={inviteUrl}
       >
-        <DiscordIcon style={{ margin: '5px 10px 5px 5px' }} />
+        <DiscordIcon style={{ margin: '5px 10px 5px 0px' }} />
         Join Discord
       </a>
     </div>
