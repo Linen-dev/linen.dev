@@ -1,5 +1,4 @@
-import Image from 'next/image';
-import discordLogo from '../../public/discord-logo.svg';
+import DiscordIcon from '../icons/DiscordIcon';
 
 export default function JoinDiscord({ inviteUrl }: { inviteUrl?: string }) {
   return (
@@ -9,7 +8,7 @@ export default function JoinDiscord({ inviteUrl }: { inviteUrl?: string }) {
         style={{ backgroundColor: 'white', minWidth: '200px' }}
         href={inviteUrl}
       >
-        <Image src={discordLogo} height="30px" />
+        <DiscordIcon style={{ margin: '7px 10px 7px 8px' }} />
         Join the conversation
       </a>
       <a
@@ -17,7 +16,8 @@ export default function JoinDiscord({ inviteUrl }: { inviteUrl?: string }) {
         style={{ backgroundColor: 'white' }}
         href={inviteUrl}
       >
-        <Image src={discordLogo} height="30px" /> Join Discord
+        <DiscordIcon style={{ margin: '5px 10px 5px 5px' }} />
+        Join Discord
       </a>
     </div>
   );
