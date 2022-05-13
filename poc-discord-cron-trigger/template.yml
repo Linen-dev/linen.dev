@@ -1,0 +1,115 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  SyncTriggerLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: '/aws/lambda/DiscordSync-Poc-SyncTrigger'
+  IamRoleLambdaExecution:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Policies:
+        - PolicyName:
+            Fn::Join:
+              - '-'
+              - - DiscordSync
+                - Poc
+                - lambda
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogStream
+                  - logs:CreateLogGroup
+                Resource:
+                  - Fn::Sub: arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/DiscordSync-Poc*:*
+              - Effect: Allow
+                Action:
+                  - logs:PutLogEvents
+                Resource:
+                  - Fn::Sub: arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/DiscordSync-Poc*:*:*
+      Path: '/'
+      RoleName:
+        Fn::Join:
+          - '-'
+          - - DiscordSync
+            - Poc
+            - Ref: AWS::Region
+            - lambdaRole
+  SyncTriggerLambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        ZipFile: |
+          const https = require('https');
+          const httpCall = async (hostname, path) => {
+            const options = {
+              hostname,
+              port: 443,
+              path,
+              method: 'GET',
+            };
+            return new Promise((resolve, reject) => {
+              const req = https.request(options);
+              req.on('response', res => {
+                resolve(res);
+              });
+              req.on('error', err => {
+                reject(err);
+              });
+            });
+          }
+          module.exports.handler = async () => {
+            return await httpCall('localhost:3000', '/api/scripts/discordSyncJob')
+          };
+      Handler: index.handler
+      Runtime: nodejs12.x
+      FunctionName: DiscordSync-Poc-SyncTrigger
+      MemorySize: 1024
+      Timeout: 30
+      Role:
+        Fn::GetAtt:
+          - IamRoleLambdaExecution
+          - Arn
+    DependsOn:
+      - SyncTriggerLogGroup
+  DiscordSyncPocSyncTriggerRule1EventBridgeRule:
+    Type: AWS::Events::Rule
+    Properties:
+      Name: DiscordSync-Poc-SyncTrigger-rule-1
+      ScheduleExpression: cron(0 0 * * * *)
+      State: ENABLED
+      Targets:
+        - Arn:
+            Fn::GetAtt:
+              - SyncTriggerLambdaFunction
+              - Arn
+          Id: DiscordSync-Poc-SyncTrigger-rule-1-target
+  SyncTriggerEventBridgeLambdaPermission1:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Ref: SyncTriggerLambdaFunction
+      Principal: events.amazonaws.com
+      SourceArn:
+        Fn::Join:
+          - ':'
+          - - arn
+            - Ref: AWS::Partition
+            - events
+            - Ref: AWS::Region
+            - Ref: AWS::AccountId
+            - Fn::Join:
+                - '/'
+                - - rule
+                  - DiscordSync-Poc-SyncTrigger-rule-1
