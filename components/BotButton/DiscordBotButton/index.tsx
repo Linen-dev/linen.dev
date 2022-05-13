@@ -1,7 +1,7 @@
-import { toast } from '@/components/Toast';
+import { toast } from 'components/Toast';
 import Router from 'next/router';
 import styles from './index.module.css';
-import DiscordIcon from '@/components/icons/DiscordIcon';
+import DiscordIcon from 'components/icons/DiscordIcon';
 
 const DISCORD_CLIENT_ID = process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID as string;
 const REDIRECT_URI = encodeURI(

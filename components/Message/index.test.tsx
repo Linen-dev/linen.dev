@@ -32,7 +32,7 @@ describe('Message', () => {
       it('renders mention names', () => {
         const { container } = render(
           <Message
-            text="Hey <@A1>"
+            text="Hey <@1234>"
             mentions={[
               {
                 id: 'A1',

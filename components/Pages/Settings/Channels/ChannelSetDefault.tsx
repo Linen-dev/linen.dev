@@ -1,7 +1,7 @@
 import { channels } from '@prisma/client';
 import { useState } from 'react';
 import { Select } from '@mantine/core';
-import { toast } from '@/components/Toast';
+import { toast } from 'components/Toast';
 
 interface Props {
   channels?: channels[];

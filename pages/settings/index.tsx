@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
 import { NextPageContext } from 'next';
 import { getSession } from 'next-auth/react';
-import DashboardLayout from '@/components/layout/DashboardLayout';
-import TextField from '@/components/TextField';
-import ColorField from '@/components/ColorField';
-import Button from '@/components/Button';
+import DashboardLayout from 'components/layout/DashboardLayout';
+import TextField from 'components/TextField';
+import ColorField from 'components/ColorField';
+import Button from 'components/Button';
 import serializeAccount, { SerializedAccount } from '../../serializers/account';
 import { stripProtocol } from '../../utilities/url';
-import BlankLayout from '@/components/layout/BlankLayout';
+import BlankLayout from 'components/layout/BlankLayout';
 import {
   faCirclePause,
   faSpinner,
@@ -16,10 +16,10 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useRouter } from 'next/router';
-import { toast } from '@/components/Toast';
+import { toast } from 'components/Toast';
 import { findAccountByEmail } from '../../lib/models';
 import { capitalize } from 'lib/util';
-import BotButton from '@/components/BotButton';
+import BotButton from 'components/BotButton';
 
 interface Props {
   account?: SerializedAccount;

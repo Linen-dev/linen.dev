@@ -3,7 +3,7 @@ import TextField from '../../../../components/TextField';
 import ColorField from '../../../../components/ColorField';
 import styles from './index.module.css';
 import { stripProtocol } from '../../../../utilities/url';
-import DiscordIcon from '@/components/icons/DiscordIcon';
+import DiscordIcon from 'components/icons/DiscordIcon';
 
 interface Props {
   authId: string;
