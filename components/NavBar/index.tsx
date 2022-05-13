@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHashtag } from '@fortawesome/free-solid-svg-icons';
 import CustomRouterPush from '../Link/CustomRouterPush';
 import styles from './index.module.css';
+import { sortByChannelName } from './utilities';
 
 export default function NavBar({
   channelName,
@@ -30,6 +31,8 @@ export default function NavBar({
     }
   };
 
+  const sortedChannels = sortByChannelName(channels);
+
   const navBarLg = (
     <div className={styles.navbar}>
       <Group direction="column">
@@ -50,7 +53,7 @@ export default function NavBar({
               overflowY: 'auto',
             }}
           >
-            {channels.map((c: channels) => (
+            {sortedChannels.map((c: channels) => (
               <CustomLink
                 isSubDomainRouting={isSubDomainRouting}
                 communityName={communityName}
@@ -96,7 +99,7 @@ export default function NavBar({
   const navBarSm = (
     <div className="pt-4 px-6">
       <NativeSelect
-        data={channels.map((c: channels) => c.channelName)}
+        data={sortedChannels.map((c: channels) => c.channelName)}
         icon={<FontAwesomeIcon icon={faHashtag} size="xs" />}
         onChange={(event) => onChangeChannel(event.currentTarget.value)}
         description="Channels"
