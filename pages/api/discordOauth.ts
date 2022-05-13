@@ -32,18 +32,24 @@ export default async function handler(
     },
   });
 
-  try {
-    // Initialize syncing asynchronously
-    request.get(
+  // Initialize syncing asynchronously
+  request
+    .get(
       process.env.SYNC_URL + '/api/scripts/discordSync?account_id=' + accountId
-    );
-  } catch (e) {
-    console.error({ e });
-  }
+    )
+    .then(() => {
+      console.log('Syncing done!');
+    })
+    .catch((err) => {
+      console.error('Syncing error: ', err);
+    });
 
-  res.status(200).json({
-    ok: 'Discord has been authenticated, syncing now. Kam will reach out soon to finish onboarding',
-  });
+  return res.redirect(
+    '/settings?success=' +
+      encodeURI(
+        'Discord has been authenticated, syncing now. Kam will reach out soon to finish onboarding'
+      )
+  );
 }
 
 export const getDiscordAccessToken = async (code: string) => {
