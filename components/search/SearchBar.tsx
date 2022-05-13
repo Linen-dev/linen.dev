@@ -81,7 +81,7 @@ const SearchBar = ({
             <Message
               text={body}
               truncate
-              mentions={mentions.map((m) => m.users) || []}
+              mentions={mentions.map((m: any) => m.users) || []}
             />
           </div>
         </Suggestion>
