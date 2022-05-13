@@ -56,18 +56,20 @@ export async function getThreadById(
     channelsGroupByThreadCount(),
   ]);
 
-  //Filter out channels with less than 10 threads
-  const channelsWithMinThreads = channels.filter((c) => {
-    if (c.id === thread.channel.id) {
-      return true;
-    }
+  //Filter out channels with less than 20 threads
+  const channelsWithMinThreads = channels
+    .filter((c) => !c.hidden)
+    .filter((c) => {
+      if (c.id === thread.channel.id) {
+        return true;
+      }
 
-    const channelCount = channelsResponse.find((r) => {
-      return r.channelId === c.id;
+      const channelCount = channelsResponse.find((r) => {
+        return r.channelId === c.id;
+      });
+
+      return channelCount && channelCount._count.id > 20;
     });
-
-    return channelCount && channelCount._count.id > 20;
-  });
 
   if (!account) {
     return {

@@ -58,6 +58,7 @@ model channels {
   account             accounts?      @relation(fields: [accountId], references: [id])
   accountId           String?
   hidden              Boolean        @default(false)
+  default             Boolean        @default(false)
   slackNextPageCursor String?
 
   @@unique([slackChannelId])

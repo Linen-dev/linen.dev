@@ -22,7 +22,8 @@ export const getThreadsByCommunityName = async (
     return { props: { statusCode: 404 } };
   }
   const channels = account.channels;
-  const defaultChannelName = channelName || 'general';
+  const defaultChannelName =
+    channelName || account.channels.find((c) => c.default)?.channelName;
 
   const defaultChannel = account.channels.find(
     (c) => c.channelName === defaultChannelName
@@ -40,18 +41,20 @@ export const getThreadsByCommunityName = async (
   const { data, pagination } = threadsReponse;
   let { threads } = data;
 
-  //Filter out channels with less than 10 threads
-  const channelsWithMinThreads = channels.filter((c) => {
-    if (c.id === channel.id) {
-      return true;
-    }
+  //Filter out channels with less than 20 threads
+  const channelsWithMinThreads = channels
+    .filter((c) => !c.hidden)
+    .filter((c) => {
+      if (c.id === channel.id) {
+        return true;
+      }
 
-    const channelCount = channelsResponse.find((r) => {
-      return r.channelId === c.id;
+      const channelCount = channelsResponse.find((r) => {
+        return r.channelId === c.id;
+      });
+
+      return channelCount && channelCount._count.id > 20;
     });
-
-    return channelCount && channelCount._count.id > 20;
-  });
 
   threads = threads.filter((t) => t.messages.length > 0);
   const users = threads
