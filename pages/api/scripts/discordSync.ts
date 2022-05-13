@@ -1,26 +1,37 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
-// const { REST } = require('@discordjs/rest');
 import request from 'superagent';
 import {
   Author,
   DiscordMessage,
 } from '../../../types/discordResponses/discordMessagesInterface';
 import { prisma } from '../../../client';
+import { channels, Prisma, slackThreads, users } from '@prisma/client';
 import {
-  accounts,
-  channels,
-  discordAuthorizations,
-  Prisma,
-  slackThreads,
-  users,
-} from '@prisma/client';
-import {
-  findAccountById,
   findOrCreateChannel,
-  updateNextPageCursor,
-  updateSlackThread,
+  updateAccountSlackSyncStatus,
 } from '../../../lib/models';
 import { createSlug } from '../../../lib/util';
+import { sendNotification } from 'services/slack';
+
+enum SyncStatus {
+  IN_PROGRESS = 'IN_PROGRESS',
+  DONE = 'DONE',
+  ERROR = 'ERROR',
+}
+
+async function updateAndNotifySyncStatus(
+  accountId: string,
+  status: SyncStatus
+) {
+  await updateAccountSlackSyncStatus(accountId, status);
+  try {
+    await sendNotification(
+      `Syncing process is ${status} for account: ${accountId}.`
+    );
+  } catch (e) {
+    console.error('Failed to send Slack notification: ', e);
+  }
+}
 
 export default async function handler(
   request: NextApiRequest,
@@ -48,21 +59,27 @@ export default async function handler(
     },
   });
 
-  // const token = account?.discordAuthorizations[0]?.accessToken;
-
   if (!account || !account.discordServerId) {
     return response.status(404).json({ error: 'Account not found' });
   }
 
-  // const token = account.slackAuthorizations[0].accessToken;
   const token = process.env.DISCORD_TOKEN;
   if (!token) {
     return response.status(500).json({ error: 'No discord token set' });
   }
 
-  const result = await sync(account.discordServerId, account.id, token);
+  await updateAndNotifySyncStatus(account.id, SyncStatus.IN_PROGRESS);
 
-  response.status(200).json(result);
+  try {
+    await sync(account.discordServerId, account.id, token);
+  } catch (error) {
+    await updateAndNotifySyncStatus(account.id, SyncStatus.ERROR);
+    throw error;
+  }
+
+  await updateAndNotifySyncStatus(account.id, SyncStatus.DONE);
+
+  response.status(200).json({});
 }
 
 async function getAuthorsFromDatabase(accountId: string) {
