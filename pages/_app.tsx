@@ -1,5 +1,4 @@
 import '../styles/reset.css';
-import { usePostHog } from 'next-use-posthog';
 import { useRouter } from 'next/router';
 import '../nprogress.css';
 import NProgress from 'nprogress';
@@ -11,12 +10,7 @@ import { useEffect } from 'react';
 import { SessionProvider } from 'next-auth/react';
 import { Toaster } from '@/components/Toast';
 
-const POSTHOG_API_KEY = process.env.NEXT_PUBLIC_POSTHOG_API_KEY || '';
-
 export default function App(props: AppProps) {
-  if (POSTHOG_API_KEY) {
-    usePostHog(POSTHOG_API_KEY, { api_host: 'https://app.posthog.com' });
-  }
   const router = useRouter();
 
   const { Component, pageProps } = props;
