@@ -4,7 +4,7 @@ import Label from '../Label';
 import TextInput from '../TextInput';
 
 interface Props {
-  label: string;
+  label?: string;
   id: string;
   type?: string;
   placeholder?: string;
@@ -22,7 +22,7 @@ export default function TextField({
 }: Props) {
   return (
     <Field>
-      <Label htmlFor={id}>{label}</Label>
+      {label && <Label htmlFor={id}>{label}</Label>}
       <TextInput
         id={id}
         type={type}

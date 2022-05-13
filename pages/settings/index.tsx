@@ -20,6 +20,7 @@ import { toast } from 'components/Toast';
 import { findAccountByEmail } from '../../lib/models';
 import { capitalize } from 'lib/util';
 import BotButton from 'components/BotButton';
+import Label from 'components/Label';
 
 interface Props {
   account?: SerializedAccount;
@@ -128,20 +129,30 @@ export default function SettingsPage({ account }: Props) {
             defaultValue={account.redirectDomain}
             required
           />
-          {account.premium && (
-            <TextField
-              label="Google analytics id"
-              placeholder="UA-1-123456789-1"
-              id="googleAnalyticsId"
-              defaultValue={account.googleAnalyticsId}
-            />
-          )}
           <ColorField
             label="Brand color"
             id="brandColor"
             defaultValue={account.brandColor}
             required
           />
+          {account.premium && (
+            <div className="py-8">
+              <h3 className="font-bold font-xl mb-3">Premium</h3>
+              <div className="p-3 rounded border-gray-200 border-solid border">
+                <Label htmlFor="googleAnalyticsId">Google Analytics ID</Label>
+                <p className="text-xs mb-2 text-gray-600">
+                  You can collect data from your website with Google Analytics.
+                  <br />
+                  Enter a valid Analytics Property ID.
+                </p>
+                <TextField
+                  placeholder="G-XXXXXXX or UA-XXXXXX-X"
+                  id="googleAnalyticsId"
+                  defaultValue={account.googleAnalyticsId}
+                />
+              </div>
+            </div>
+          )}
           <Button type="submit">Update</Button>
         </form>
       </DashboardLayout>
