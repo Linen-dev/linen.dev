@@ -32,10 +32,14 @@ export default async function handler(
     },
   });
 
-  // Initialize syncing asynchronously
-  request.get(
-    process.env.SYNC_URL + '/api/scripts/discordSync?account_id=' + accountId
-  );
+  try {
+    // Initialize syncing asynchronously
+    request.get(
+      process.env.SYNC_URL + '/api/scripts/discordSync?account_id=' + accountId
+    );
+  } catch (e) {
+    console.error({ e });
+  }
 
   res.status(200).json({
     ok: 'Discord has been authenticated, syncing now. Kam will reach out soon to finish onboarding',
