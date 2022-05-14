@@ -7,11 +7,14 @@ import PageLayout from '../../layout/PageLayout';
 import Message from '../../Message';
 import { channels, slackThreads, users, messages } from '@prisma/client';
 import CustomLink from '../../Link/CustomLink';
+import CustomLinkHelper from '../../Link/CustomLinkHelper';
 import { MentionsWithUsers } from '../../../types/apiResponses/threads/[threadId]';
 import { capitalize } from '../../../lib/util';
 import CustomRouterPush from 'components/Link/CustomRouterPush';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLink } from '@fortawesome/free-solid-svg-icons';
+import { copyToClipboard } from 'utilities/clipboard';
+import { toast } from 'components/Toast';
 
 export interface PaginationType {
   totalCount: number;
@@ -200,12 +203,13 @@ export default function Channel({
         }
         return array;
       }, []);
+      const path = `/t/${incrementId}/${slug || 'topic'}`;
       return (
         <CustomLink
           isSubDomainRouting={isSubDomainRouting}
           communityName={communityName}
           communityType={settings.communityType}
-          path={`/t/${incrementId}/${slug || 'topic'}`}
+          path={path}
           key={`${incrementId}-desktop`}
         >
           <tr className="border-solid border-gray-200 cursor-pointer">
@@ -236,9 +240,21 @@ export default function Channel({
             </td>
             <td className="pl-6 text-sm text-center align-middle">
               <FontAwesomeIcon
-                className="text-blue-600 p-3"
+                title="Copy to Clipboard"
+                className="text-blue-600 p-3 hover:text-blue-900"
                 icon={faLink}
-                onClick={(event) => event.stopPropagation()}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  const pathname = CustomLinkHelper({
+                    isSubDomainRouting,
+                    communityName,
+                    communityType: settings.communityType,
+                    path,
+                  });
+                  const url = `${window.location.origin}${pathname}`;
+                  copyToClipboard(url);
+                  toast.success('Copied to clipboard', url);
+                }}
               />
             </td>
           </tr>
@@ -266,7 +282,7 @@ export default function Channel({
       communityName={communityName}
       isSubDomainRouting={isSubDomainRouting}
     >
-      <div className="sm:pt-6 sm:px-6">
+      <div className="sm:pt-6">
         <table className="hidden sm:block sm:table-fixed ">
           <thead>
             <tr>
