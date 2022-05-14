@@ -10,6 +10,8 @@ import CustomLink from '../../Link/CustomLink';
 import { MentionsWithUsers } from '../../../types/apiResponses/threads/[threadId]';
 import { capitalize } from '../../../lib/util';
 import CustomRouterPush from 'components/Link/CustomRouterPush';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faLink } from '@fortawesome/free-solid-svg-icons';
 
 export interface PaginationType {
   totalCount: number;
@@ -232,6 +234,13 @@ export default function Channel({
             <td className="px-6 py-3 text-sm align-middle min-w-[120px]">
               {format(new Date(oldestMessage.sentAt))}
             </td>
+            <td className="pl-6 text-sm text-center align-middle">
+              <FontAwesomeIcon
+                className="text-blue-600 p-3"
+                icon={faLink}
+                onClick={(event) => event.stopPropagation()}
+              />
+            </td>
           </tr>
         </CustomLink>
       );
@@ -275,6 +284,9 @@ export default function Channel({
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
                 Activity
+              </th>
+              <th className="pl-6 text-right text-xs font-medium text-gray-500">
+                Actions
               </th>
             </tr>
           </thead>
