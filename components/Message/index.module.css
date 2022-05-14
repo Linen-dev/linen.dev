@@ -11,6 +11,6 @@
 
 @media screen and (min-width: 1024px) {
   .message {
-    min-width: 256px;
+    min-width: 224px;
   }
 }
