@@ -7,14 +7,10 @@ import PageLayout from '../../layout/PageLayout';
 import Message from '../../Message';
 import { channels, slackThreads, users, messages } from '@prisma/client';
 import CustomLink from '../../Link/CustomLink';
-import CustomLinkHelper from '../../Link/CustomLinkHelper';
 import { MentionsWithUsers } from '../../../types/apiResponses/threads/[threadId]';
 import { capitalize } from '../../../lib/util';
 import CustomRouterPush from 'components/Link/CustomRouterPush';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faLink } from '@fortawesome/free-solid-svg-icons';
-import { copyToClipboard } from 'utilities/clipboard';
-import { toast } from 'components/Toast';
+import CopyToClipboardLink from './CopyToClipboardLink';
 
 export interface PaginationType {
   totalCount: number;
@@ -239,22 +235,11 @@ export default function Channel({
               {format(new Date(oldestMessage.sentAt))}
             </td>
             <td className="pl-6 text-sm text-center align-middle">
-              <FontAwesomeIcon
-                title="Copy to Clipboard"
-                className="text-blue-600 p-3 hover:text-blue-900"
-                icon={faLink}
-                onClick={(event) => {
-                  event.stopPropagation();
-                  const pathname = CustomLinkHelper({
-                    isSubDomainRouting,
-                    communityName,
-                    communityType: settings.communityType,
-                    path,
-                  });
-                  const url = `${window.location.origin}${pathname}`;
-                  copyToClipboard(url);
-                  toast.success('Copied to clipboard', url);
-                }}
+              <CopyToClipboardLink
+                isSubDomainRouting={isSubDomainRouting}
+                communityName={communityName}
+                communityType={settings.communityType}
+                path={path}
               />
             </td>
           </tr>
