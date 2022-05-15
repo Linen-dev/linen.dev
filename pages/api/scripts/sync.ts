@@ -296,6 +296,15 @@ type UserMap = {
   id: string;
 };
 
+function getMentionedUsers(text: string, users: UserMap[]) {
+  let mentionSlackUserIds = text.match(/<@(.*?)>/g) || [];
+  mentionSlackUserIds = mentionSlackUserIds.map((m) =>
+    m.replace('<@', '').replace('>', '')
+  );
+
+  return users.filter((u) => mentionSlackUserIds.includes(u.slackUserId));
+}
+
 export async function saveMessagesTransaction(
   messages: ConvesrationHistoryMessage[],
   channelId: string,
@@ -334,6 +343,7 @@ export async function saveMessagesTransaction(
 
     threadId = thread?.id;
     const text = m.text as string;
+    const mentionedUsers = getMentionedUsers(text, users);
     return prisma.messages.upsert({
       where: {
         channelId_slackMessageId: {
@@ -353,6 +363,9 @@ export async function saveMessagesTransaction(
         slackMessageId: m.ts as string,
         slackThreadId: threadId,
         usersId: user?.id,
+        mentions: {
+          create: mentionedUsers.map((u) => ({ usersId: u.id })),
+        },
       },
     });
   });
@@ -395,6 +408,7 @@ export async function saveMessagesSyncronous(
 
     threadId = thread?.id;
     const text = m.text as string;
+    const mentionedUsers = getMentionedUsers(text, users);
     await prisma.messages.upsert({
       where: {
         channelId_slackMessageId: {
@@ -414,6 +428,9 @@ export async function saveMessagesSyncronous(
         slackMessageId: m.ts as string,
         slackThreadId: threadId,
         usersId: user?.id,
+        mentions: {
+          create: mentionedUsers.map((u) => ({ usersId: u.id })),
+        },
       },
     });
   }
