@@ -153,7 +153,6 @@ async function listMessagesFromThreadAndPersist({
   // the messages is return in latest order, so we need to request with the oldest id as "before" parameter
   // at least for the initial sync
   let hasMore = true;
-  const messages: DiscordMessage[] = [];
   let oldestMessageId;
   while (hasMore) {
     hasMore = false;
@@ -164,7 +163,6 @@ async function listMessagesFromThreadAndPersist({
     );
     hasMore = response?.length === 50;
     if (response?.length) {
-      messages.push(...response);
       hasMore && (oldestMessageId = getShorterMessagesTimeStamp(response));
       await persistMessages({
         messages: response,
@@ -220,6 +218,14 @@ async function findAuthorsAndPersist(
         })
       );
     }
+    if (message.mentions) {
+      for (const mention of message.mentions) {
+        if (mention.id && !authors[mention.id]) {
+          thereIsNewAuthors.push(mention);
+          authors[mention.id] = true; // just to avoid dup
+        }
+      }
+    }
   });
 
   await Promise.all(userUpdates);
@@ -269,35 +275,51 @@ async function persistMessages({
   // has mentions and reactions, but not sure if we should tackle this now
   // lets keep simple, just authors
   console.log('messages', messages?.length);
-  const transaction = messages
-    // ?.filter((m) => m.type !== 7)
-    .map((message) => {
-      let content =
-        message.content || message.referenced_message?.content || '';
-      const userId: users = authors[message.author.id];
-      return prisma.messages.upsert({
-        where: {
-          channelId_slackMessageId: {
-            channelId: threadInDb.channelId,
-            slackMessageId: message.id,
-          },
-        },
-        update: {
-          slackMessageId: message.id,
-          slackThreadId: threadInDb.id,
-          usersId: userId.id,
-          body: content,
-        },
-        create: {
-          body: content,
-          sentAt: new Date(message.timestamp),
+  const transaction = messages.map((message) => {
+    let content = message.content || message.referenced_message?.content || '';
+    const userId: users = authors[message.author.id];
+    return prisma.messages.upsert({
+      where: {
+        channelId_slackMessageId: {
           channelId: threadInDb.channelId,
           slackMessageId: message.id,
-          slackThreadId: threadInDb.id,
-          usersId: userId.id,
         },
-      });
+      },
+      update: {
+        slackMessageId: message.id,
+        slackThreadId: threadInDb.id,
+        usersId: userId.id,
+        body: content,
+        ...(message.mentions?.length && {
+          mentions: {
+            createMany: {
+              skipDuplicates: true,
+              data: message.mentions.map((mention) => ({
+                usersId: authors[mention.id].id,
+              })),
+            },
+          },
+        }),
+      },
+      create: {
+        body: content,
+        sentAt: new Date(message.timestamp),
+        channelId: threadInDb.channelId,
+        slackMessageId: message.id,
+        slackThreadId: threadInDb.id,
+        usersId: userId.id,
+        ...(message.mentions?.length && {
+          mentions: {
+            createMany: {
+              data: message.mentions.map((mention) => ({
+                usersId: authors[mention.id].id,
+              })),
+            },
+          },
+        }),
+      },
     });
+  });
   transaction && (await prisma.$transaction(transaction));
 }
 
