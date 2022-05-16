@@ -4,7 +4,7 @@ import Label from '../Label';
 import ColorInput from '../ColorInput';
 
 interface Props {
-  label: string;
+  label?: string;
   id: string;
   defaultValue?: string;
   required?: boolean;
@@ -18,7 +18,7 @@ export default function TextField({
 }: Props) {
   return (
     <Field>
-      <Label htmlFor={id}>{label}</Label>
+      {label && <Label htmlFor={id}>{label}</Label>}
       <ColorInput id={id} defaultValue={defaultValue} required={required} />
     </Field>
   );
