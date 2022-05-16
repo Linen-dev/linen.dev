@@ -6,7 +6,7 @@ export interface DiscordMessage {
   author: Author;
   attachments?: null[] | null;
   embeds?: null[] | null;
-  mentions?: null[] | null;
+  mentions?: Author[] | null;
   mention_roles?: null[] | null;
   pinned: boolean;
   mention_everyone: boolean;
