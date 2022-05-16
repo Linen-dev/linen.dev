@@ -551,13 +551,19 @@ export interface ThreadMetadata {
   archive_timestamp: string;
   auto_archive_duration: number;
   locked: boolean;
-  create_timestamp: string;
+  create_timestamp?: string;
 }
 
-function getShorterTimeStamp(threads: any): string | undefined {
+function getShorterTimeStamp(threads: DiscordThreads[]): string | undefined {
   if (!threads || !threads.length) return;
   const sortedThread = threads
-    ?.map((t: any) => new Date(t.thread_metadata.create_timestamp))
+    ?.map(
+      (t) =>
+        new Date(
+          t.thread_metadata.create_timestamp ||
+            t.thread_metadata.archive_timestamp
+        )
+    )
     .sort((a: Date, b: Date) => a.getTime() - b.getTime())
     .shift();
   return sortedThread && sortedThread.toISOString();
