@@ -1,0 +1,10 @@
+.td {
+  padding: 0.75rem 1.5rem;
+  vertical-align: middle;
+}
+
+@media (min-width: 768px) {
+  .td {
+    max-width: 800px;
+  }
+}
