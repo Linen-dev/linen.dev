@@ -45,9 +45,7 @@ export async function getThreadById(
   const thread = await findThreadById(id);
 
   if (!thread || !thread.channel.accountId) {
-    return {
-      notFound: true,
-    };
+    return Promise.reject(new Error('Thread not found'));
   }
 
   const [channels, account, channelsResponse] = await Promise.all([
@@ -72,9 +70,7 @@ export async function getThreadById(
     });
 
   if (!account) {
-    return {
-      notFound: true,
-    };
+    return Promise.reject(new Error('Account not found'));
   }
 
   const defaultSettings =
