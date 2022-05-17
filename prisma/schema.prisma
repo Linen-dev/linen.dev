@@ -82,7 +82,7 @@ model accounts {
   logoUrl           String?
   premium           Boolean    @default(false)
   googleAnalyticsId String?
-  anonimyzeUsers    Boolean    @default(false)
+  anonymizeUsers    Boolean    @default(false)
 
   auths                 auths[]
   users                 users[]
