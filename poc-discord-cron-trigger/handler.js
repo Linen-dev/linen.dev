@@ -1,21 +1,23 @@
 const https = require('https');
-const httpCall = async (hostname, path) => {
-  const options = {
-    hostname,
-    port: 443,
-    path,
-    method: 'GET',
-  };
-  return new Promise((resolve, reject) => {
-    const req = https.request(options);
-    req.on('response', (res) => {
-      resolve(res);
-    });
-    req.on('error', (err) => {
-      reject(err);
-    });
-  });
-};
 module.exports.handler = async () => {
-  return await httpCall('localhost:3000', '/api/scripts/discordSyncJob');
+  return await new Promise((res, rej) => {
+    https
+      .get(
+        `https://${process.env.SYNC_URL}/api/scripts/discordSyncJob`,
+        (resp) => {
+          let data = '';
+          resp.on('data', (chunk) => {
+            data += chunk;
+          });
+          resp.on('end', () => {
+            console.log(data);
+            res(data);
+          });
+        }
+      )
+      .on('error', (err) => {
+        console.log('Error: ' + err.message);
+        rej(err);
+      });
+  });
 };
