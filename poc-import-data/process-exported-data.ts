@@ -1,4 +1,4 @@
-import { accounts, channels } from '@prisma/client';
+import { accounts, channels, users } from '@prisma/client';
 import {
   ConvesrationHistoryMessage,
   joinChannel,
@@ -20,6 +20,8 @@ type channel = {
   members: string[];
 };
 
+type UserMap = Record<string, users>;
+
 let stats = {
   channels: 0,
   users: 0,
@@ -37,8 +39,8 @@ let stats = {
 // const basePath = './poc-import-data/data/prefect/';
 // const slackTeamId = 'TL09B008Y';
 
-const basePath = './poc-import-data/data/netsuite/';
-const slackTeamId = 'T29A3EDK8';
+const basePath = './poc-import-data/data/future/';
+const slackTeamId = 'T5TCAFTA9';
 
 async function findOrCreateAccount() {
   let account = await prisma.accounts.findFirst({ where: { slackTeamId } });
@@ -53,7 +55,7 @@ async function findOrCreateAccount() {
   });
 }
 
-async function upsertUsers(account: accounts) {
+async function upsertUsers(account: accounts): Promise<UserMap> {
   // read file
   const usersFile = readParseFile('users.json');
   stats.users = usersFile.length;
@@ -153,7 +155,7 @@ async function processFile({
 }: {
   channel: channels;
   fileName: string;
-  userGroupBySlackUserId: any;
+  userGroupBySlackUserId: UserMap;
 }) {
   const messages = readParseFile(channel.channelName + '/' + fileName);
   try {
@@ -168,7 +170,7 @@ let threadsBySlackThreadTs: any = {};
 async function saveMessagesTransaction(
   messages: ConvesrationHistoryMessage[],
   channelId: string,
-  userGroupBySlackUserId: any
+  userGroupBySlackUserId: UserMap
 ) {
   const messagesByType = groupMessageByType(messages);
   stats.message += messagesByType?.message?.length || 0;
@@ -221,22 +223,61 @@ async function saveMessagesTransaction(
     let thread = threadsBySlackThreadTs[m.thread_ts as string];
     let user = m.user ? userGroupBySlackUserId[m.user] : null;
     let threadId = thread?.id;
-    return {
-      body: m.text,
-      sentAt: new Date(parseFloat(m.ts) * 1000),
-      channelId,
-      slackMessageId: m.ts as string,
-      slackThreadId: threadId,
-      usersId: user?.id,
-    };
+    const mentionedUserIds = getMentionedUsers(m.text);
+
+    const mentionedUsers = [];
+    for (const userId of mentionedUserIds) {
+      mentionedUsers.push(userGroupBySlackUserId[userId]);
+    }
+
+    return prisma.messages.upsert({
+      where: {
+        channelId_slackMessageId: {
+          channelId,
+          slackMessageId: m.ts as string,
+        },
+      },
+      create: {
+        body: m.text,
+        sentAt: new Date(parseFloat(m.ts) * 1000),
+        channelId,
+        slackMessageId: m.ts as string,
+        slackThreadId: threadId,
+        usersId: user?.id,
+        mentions: {
+          createMany: {
+            skipDuplicates: true,
+            data: mentionedUsers.map((mention) => ({
+              usersId: mention.id,
+            })),
+          },
+        },
+      },
+      update: {
+        body: m.text,
+        sentAt: new Date(parseFloat(m.ts) * 1000),
+        slackThreadId: threadId,
+        usersId: user?.id,
+        mentions: {
+          createMany: {
+            skipDuplicates: true,
+            data: mentionedUsers.map((mention) => ({
+              usersId: mention.id,
+            })),
+          },
+        },
+      },
+    });
   });
 
   if (createMessagesTransaction && createMessagesTransaction.length) {
-    await prisma.messages.createMany({
-      data: createMessagesTransaction,
-      skipDuplicates: true,
-    });
+    await prisma.$transaction(createMessagesTransaction);
   }
+}
+
+function getMentionedUsers(text: string) {
+  let mentionSlackUserIds = text.match(/<@(.*?)>/g) || [];
+  return mentionSlackUserIds.map((m) => m.replace('<@', '').replace('>', ''));
 }
 
 const groupMessageByType = (
