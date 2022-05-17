@@ -11,27 +11,7 @@ import {
   updateAccountSlackSyncStatus,
 } from '../../../lib/models';
 import { createSlug } from '../../../lib/util';
-import { sendNotification } from 'services/slack';
-
-enum SyncStatus {
-  IN_PROGRESS = 'IN_PROGRESS',
-  DONE = 'DONE',
-  ERROR = 'ERROR',
-}
-
-async function updateAndNotifySyncStatus(
-  accountId: string,
-  status: SyncStatus
-) {
-  await updateAccountSlackSyncStatus(accountId, status);
-  try {
-    await sendNotification(
-      `Syncing process is ${status} for account: ${accountId}.`
-    );
-  } catch (e) {
-    console.error('Failed to send Slack notification: ', e);
-  }
-}
+import { SyncStatus, updateAndNotifySyncStatus } from 'services/sync';
 
 export default async function handler(
   request: NextApiRequest,
