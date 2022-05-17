@@ -7,6 +7,7 @@ import {
 import fs from 'fs';
 import { PrismaClient } from '@prisma/client';
 import { createSlug } from '../lib/util';
+import { SyncStatus, updateAndNotifySyncStatus } from 'services/sync';
 
 const prisma = new PrismaClient({}); // initiate a new instance of prisma without info logs
 
@@ -312,36 +313,36 @@ const groupMessageByType = (
 };
 
 (async () => {
-  console.time('run');
   // find or create account
   const account = await findOrCreateAccount(); // TODO: find or create fn
   if (!account) {
     throw 'fail on create account';
   }
-
-  // TODO: notify start
-
-  // upsert users and retrieve all as object
-  console.time('upsert-users');
-  const userGroupBySlackUserId = await upsertUsers(account);
-  console.timeEnd('upsert-users');
-
-  // upsert channels and retrieve all
-  console.log('Reading channels, it may take a while');
-  const channels = await upsertChannels(account);
-  // loop on channels
-  for (const channel of channels) {
-    console.log('channel', channel.channelName);
-    threadsBySlackThreadTs = {}; // clean up
-    // persist messages
-    console.time(channel.channelName);
-    await processChannels({ channel, userGroupBySlackUserId });
-    console.timeEnd(channel.channelName);
+  // notify start
+  await updateAndNotifySyncStatus(account.id, SyncStatus.IN_PROGRESS);
+  try {
+    console.time('run');
+    // upsert users and retrieve all as object
+    console.time('upsert-users');
+    const userGroupBySlackUserId = await upsertUsers(account);
+    console.timeEnd('upsert-users');
+    // upsert channels and retrieve all
+    console.log('Reading channels, it may take a while');
+    const channels = await upsertChannels(account);
+    // loop on channels
+    for (const channel of channels) {
+      console.log('channel', channel.channelName);
+      threadsBySlackThreadTs = {}; // clean up
+      // persist messages
+      console.time(channel.channelName);
+      await processChannels({ channel, userGroupBySlackUserId });
+      console.timeEnd(channel.channelName);
+    }
+    console.log(stats);
+    console.timeEnd('run');
+  } catch (error) {
+    await updateAndNotifySyncStatus(account.id, SyncStatus.ERROR);
+    throw error;
   }
-
-  // TODO: notify end
-
-  console.log(stats);
-
-  console.timeEnd('run');
+  await updateAndNotifySyncStatus(account.id, SyncStatus.DONE);
 })();
