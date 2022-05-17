@@ -1,4 +1,9 @@
 AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  ApiSyncUri:
+    Type: String
+    Default: linen.ngrok.io
+    Description: Enter our ELB/Fargate Uri without https:// prefix
 Resources:
   SyncTriggerLogGroup:
     Type: AWS::Logs::LogGroup
@@ -74,7 +79,8 @@ Resources:
       MemorySize: 256
       Environment:
         Variables:
-          SYNC_URL: linen-san.ngrok.io
+          SYNC_URL:
+            Ref: ApiSyncUri
       Timeout: 30
       Role:
         Fn::GetAtt:
@@ -87,7 +93,6 @@ Resources:
     Properties:
       Name: DiscordSync-Poc-SyncTrigger-rule-1
       ScheduleExpression: cron(0 0 * * ? *) # every 0:00h of GMT-0
-      #ScheduleExpression: cron(0/5 * * * ? *) # every 5 minutes
       State: ENABLED
       Targets:
         - Arn:
