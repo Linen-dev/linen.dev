@@ -20,9 +20,22 @@ import { toast } from 'components/Toast';
 import { findAccountByEmail } from '../../lib/models';
 import { capitalize } from 'lib/util';
 import BotButton from 'components/BotButton';
+import Label from 'components/Label';
 
 interface Props {
   account?: SerializedAccount;
+}
+
+function Card({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="p-3 mb-3 rounded border-gray-200 border-solid border">
+      {children}
+    </div>
+  );
+}
+
+function Description({ children }: { children: React.ReactNode }) {
+  return <div className="text-sm mb-2 text-gray-600">{children}</div>;
 }
 
 export default function SettingsPage({ account }: Props) {
@@ -107,41 +120,66 @@ export default function SettingsPage({ account }: Props) {
     const settingsComponent = (
       <DashboardLayout header="Settings">
         <form onSubmit={onSubmit}>
-          <TextField
-            label="Home url"
-            placeholder="https://yourwebsite.com"
-            id="homeUrl"
-            defaultValue={account.homeUrl}
-            required
-          />
-          <TextField
-            label="Docs url"
-            placeholder="https://docs.yourwebsite.com"
-            id="docsUrl"
-            defaultValue={account.docsUrl}
-            required
-          />
-          <TextField
-            label="Redirect domain"
-            placeholder="linen.yourwebsite.com"
-            id="redirectDomain"
-            defaultValue={account.redirectDomain}
-            required
-          />
-          {account.premium && (
+          <Card>
+            <Label htmlFor="homeUrl">Home URL</Label>
+            <Description>Link to your home page.</Description>
             <TextField
-              label="Google analytics id"
-              placeholder="UA-1-123456789-1"
-              id="googleAnalyticsId"
-              defaultValue={account.googleAnalyticsId}
+              placeholder="https://yourwebsite.com"
+              id="homeUrl"
+              defaultValue={account.homeUrl}
+              required
             />
+          </Card>
+          <Card>
+            <Label htmlFor="docsUrl">Docs URL</Label>
+            <Description>Link to your documentation.</Description>
+            <TextField
+              placeholder="https://docs.yourwebsite.com"
+              id="docsUrl"
+              defaultValue={account.docsUrl}
+              required
+            />
+          </Card>
+          <Card>
+            <Label htmlFor="redirectDomain">Redirect Domain</Label>
+            <Description>Unique domain to redirect to.</Description>
+            <TextField
+              placeholder="linen.yourwebsite.com"
+              id="redirectDomain"
+              defaultValue={account.redirectDomain}
+              required
+            />
+          </Card>
+          <Card>
+            <Label htmlFor="brandColor">Brand Color</Label>
+            <Description>
+              Color that matches your brand. We'll use it for the header
+              background.
+            </Description>
+            <ColorField
+              id="brandColor"
+              defaultValue={account.brandColor}
+              required
+            />
+          </Card>
+          {account.premium && (
+            <div className="py-8">
+              <h3 className="font-bold font-xl mb-3">Premium</h3>
+              <Card>
+                <Label htmlFor="googleAnalyticsId">Google Analytics ID</Label>
+                <Description>
+                  You can collect data from your website with Google Analytics.
+                  <br />
+                  Enter a valid Analytics Property ID.
+                </Description>
+                <TextField
+                  placeholder="G-XXXXXXX or UA-XXXXXX-X"
+                  id="googleAnalyticsId"
+                  defaultValue={account.googleAnalyticsId}
+                />
+              </Card>
+            </div>
           )}
-          <ColorField
-            label="Brand color"
-            id="brandColor"
-            defaultValue={account.brandColor}
-            required
-          />
           <Button type="submit">Update</Button>
         </form>
       </DashboardLayout>

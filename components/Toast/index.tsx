@@ -19,12 +19,12 @@ const customToast = {
     ),
   },
 
-  success(msg: string) {
-    this.custom({ msg, icon: this.icons.successIcon });
+  success(msg: string, subText?: string) {
+    this.custom({ msg, subText, icon: this.icons.successIcon });
   },
 
-  error(msg: string) {
-    this.custom({ msg, icon: this.icons.errorIcon });
+  error(msg: string, subText?: string) {
+    this.custom({ msg, subText, icon: this.icons.errorIcon });
   },
 
   custom(props: { msg: string; subText?: string; icon?: JSX.Element }) {

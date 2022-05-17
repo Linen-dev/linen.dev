@@ -5,7 +5,7 @@ import {
   DiscordMessage,
 } from '../../../types/discordResponses/discordMessagesInterface';
 import { prisma } from '../../../client';
-import { channels, Prisma, slackThreads, users } from '@prisma/client';
+import { channels, slackThreads, users } from '@prisma/client';
 import {
   findOrCreateChannel,
   updateAccountSlackSyncStatus,
@@ -45,11 +45,6 @@ export default async function handler(
       id: accountId,
     },
     include: {
-      // slackAuthorizations: {
-      //   orderBy: {
-      //     createdAt: 'desc',
-      //   },
-      // },
       discordAuthorizations: {
         orderBy: {
           createdAt: 'desc',
@@ -158,7 +153,6 @@ async function listMessagesFromThreadAndPersist({
   // the messages is return in latest order, so we need to request with the oldest id as "before" parameter
   // at least for the initial sync
   let hasMore = true;
-  const messages: DiscordMessage[] = [];
   let oldestMessageId;
   while (hasMore) {
     hasMore = false;
@@ -169,7 +163,6 @@ async function listMessagesFromThreadAndPersist({
     );
     hasMore = response?.length === 50;
     if (response?.length) {
-      messages.push(...response);
       hasMore && (oldestMessageId = getShorterMessagesTimeStamp(response));
       await persistMessages({
         messages: response,
@@ -181,31 +174,78 @@ async function listMessagesFromThreadAndPersist({
   }
 }
 
-/** be aware that this functions updates the authors object */
+function buildUserAvatar({
+  userId,
+  avatarId,
+}: {
+  userId: string;
+  avatarId: string;
+}): string {
+  return `https://cdn.discordapp.com/avatars/${userId}/${avatarId}.png`;
+}
+
+/** be aware that this function updates the authors object */
 async function findAuthorsAndPersist(
   messages: DiscordMessage[],
   authors: any,
-  accountsId: string
+  accountId: string
 ) {
   let thereIsNewAuthors: Author[] = [];
+  let userUpdates: any = [];
+
   messages.forEach((message) => {
     // has author and isn't in our authors object
-    if (message.author.id && !authors[message.author.id]) {
+    if (!message.author.id) {
+      return;
+    }
+
+    if (!authors[message.author.id]) {
       thereIsNewAuthors.push(message.author);
       authors[message.author.id] = true; // just to avoid dup
+      return;
+    }
+    const user = authors[message.author.id];
+    if (user && message.author.avatar && !user.profileImageUrl) {
+      userUpdates.push(
+        prisma.users.update({
+          data: {
+            profileImageUrl: buildUserAvatar({
+              userId: message.author.id,
+              avatarId: message.author.avatar,
+            }),
+          },
+          where: { id: user.id },
+        })
+      );
+    }
+    if (message.mentions) {
+      for (const mention of message.mentions) {
+        if (mention.id && !authors[mention.id]) {
+          thereIsNewAuthors.push(mention);
+          authors[mention.id] = true; // just to avoid dup
+        }
+      }
     }
   });
+
+  await Promise.all(userUpdates);
+
   if (thereIsNewAuthors.length) {
-    console.log('thereIsNewAuthors', thereIsNewAuthors.length);
+    console.log({ accountId, thereIsNewAuthors: thereIsNewAuthors.length });
     for (const newUser of thereIsNewAuthors) {
       const user = await prisma.users.create({
         data: {
           slackUserId: newUser.id,
-          accountsId,
+          accountsId: accountId,
           displayName: newUser.username,
           isAdmin: false, // TODO
           isBot: false, // TODO
-          // profileImageUrl: TODO
+          ...(newUser.avatar && {
+            profileImageUrl: buildUserAvatar({
+              userId: newUser.id,
+              avatarId: newUser.avatar,
+            }),
+          }),
         },
       });
       authors[newUser.id] = {
@@ -235,35 +275,51 @@ async function persistMessages({
   // has mentions and reactions, but not sure if we should tackle this now
   // lets keep simple, just authors
   console.log('messages', messages?.length);
-  const transaction = messages
-    // ?.filter((m) => m.type !== 7)
-    .map((message) => {
-      let content =
-        message.content || message.referenced_message?.content || '';
-      const userId: users = authors[message.author.id];
-      return prisma.messages.upsert({
-        where: {
-          channelId_slackMessageId: {
-            channelId: threadInDb.channelId,
-            slackMessageId: message.id,
-          },
-        },
-        update: {
-          slackMessageId: message.id,
-          slackThreadId: threadInDb.id,
-          usersId: userId.id,
-          body: content,
-        },
-        create: {
-          body: content,
-          sentAt: new Date(message.timestamp),
+  const transaction = messages.map((message) => {
+    let content = message.content || message.referenced_message?.content || '';
+    const userId: users = authors[message.author.id];
+    return prisma.messages.upsert({
+      where: {
+        channelId_slackMessageId: {
           channelId: threadInDb.channelId,
           slackMessageId: message.id,
-          slackThreadId: threadInDb.id,
-          usersId: userId.id,
         },
-      });
+      },
+      update: {
+        slackMessageId: message.id,
+        slackThreadId: threadInDb.id,
+        usersId: userId.id,
+        body: content,
+        ...(message.mentions?.length && {
+          mentions: {
+            createMany: {
+              skipDuplicates: true,
+              data: message.mentions.map((mention) => ({
+                usersId: authors[mention.id].id,
+              })),
+            },
+          },
+        }),
+      },
+      create: {
+        body: content,
+        sentAt: new Date(message.timestamp),
+        channelId: threadInDb.channelId,
+        slackMessageId: message.id,
+        slackThreadId: threadInDb.id,
+        usersId: userId.id,
+        ...(message.mentions?.length && {
+          mentions: {
+            createMany: {
+              data: message.mentions.map((mention) => ({
+                usersId: authors[mention.id].id,
+              })),
+            },
+          },
+        }),
+      },
     });
+  });
   transaction && (await prisma.$transaction(transaction));
 }
 
@@ -341,74 +397,74 @@ async function listPublicArchivedThreadsAndPersist({
 }
 
 //creates an array and pushes the content of the replies onto it
-async function getReplies(channelId: string, token: string) {
-  const messages = await getDiscord(`/channels/${channelId}/messages`, token);
-  const replies = messages.body
-    .filter(
-      (message: DiscordMessage) =>
-        message.message_reference && message.type === 0
-    )
-    .reverse();
+// async function getReplies(channelId: string, token: string) {
+//   const messages = await getDiscord(`/channels/${channelId}/messages`, token);
+//   const replies = messages.body
+//     .filter(
+//       (message: DiscordMessage) =>
+//         message.message_reference && message.type === 0
+//     )
+//     .reverse();
 
-  const roots = messages.body.filter(
-    (m: DiscordMessage) => !m.message_reference && m.type === 0
-  );
+//   const roots = messages.body.filter(
+//     (m: DiscordMessage) => !m.message_reference && m.type === 0
+//   );
 
-  // Discord returns each message with the parent message it is referencing
-  // Ideally we have messages and all the child messages that is replying to it
-  // what we ended up doing is reversing the relation with a dictionary
-  // Then went through and used breadth first search traversal to create the threads
-  let dict: { [index: string]: DiscordMessage[] } = {};
+//   // Discord returns each message with the parent message it is referencing
+//   // Ideally we have messages and all the child messages that is replying to it
+//   // what we ended up doing is reversing the relation with a dictionary
+//   // Then went through and used breadth first search traversal to create the threads
+//   let dict: { [index: string]: DiscordMessage[] } = {};
 
-  replies.forEach((ele: DiscordMessage) => {
-    if (ele.referenced_message) {
-      if (!dict[ele.referenced_message.id]) {
-        dict[ele.referenced_message.id] = [];
-      }
-      dict[ele.referenced_message.id].push(ele);
-    }
-  });
+//   replies.forEach((ele: DiscordMessage) => {
+//     if (ele.referenced_message) {
+//       if (!dict[ele.referenced_message.id]) {
+//         dict[ele.referenced_message.id] = [];
+//       }
+//       dict[ele.referenced_message.id].push(ele);
+//     }
+//   });
 
-  const threads = roots.map((root: DiscordMessage) => {
-    let queue: DiscordMessage[] = [root];
-    let result: DiscordMessage[] = [];
-    while (queue.length > 0) {
-      const message = queue.shift();
-      if (!message) {
-        return;
-      }
+//   const threads = roots.map((root: DiscordMessage) => {
+//     let queue: DiscordMessage[] = [root];
+//     let result: DiscordMessage[] = [];
+//     while (queue.length > 0) {
+//       const message = queue.shift();
+//       if (!message) {
+//         return;
+//       }
 
-      result.push(message);
+//       result.push(message);
 
-      if (dict[message.id]) {
-        queue.push(...dict[message.id]);
-      }
-    }
-    return result;
-  });
+//       if (dict[message.id]) {
+//         queue.push(...dict[message.id]);
+//       }
+//     }
+//     return result;
+//   });
 
-  return threads;
-}
+//   return threads;
+// }
 
-async function saveDiscordThreads(
-  threads: Prisma.slackThreadsUncheckedCreateInput
-) {
-  return prisma.slackThreads.upsert({
-    where: { slackThreadTs: threads.slackThreadTs },
-    update: {},
-    create: threads,
-  });
-}
+// async function saveDiscordThreads(
+//   threads: Prisma.slackThreadsUncheckedCreateInput
+// ) {
+//   return prisma.slackThreads.upsert({
+//     where: { slackThreadTs: threads.slackThreadTs },
+//     update: {},
+//     create: threads,
+//   });
+// }
 
-async function saveDiscordChannels(channel: Prisma.channelsCreateInput) {
-  return prisma.channels.upsert({
-    where: {
-      slackChannelId: channel.slackChannelId,
-    },
-    update: {},
-    create: channel,
-  });
-}
+// async function saveDiscordChannels(channel: Prisma.channelsCreateInput) {
+//   return prisma.channels.upsert({
+//     where: {
+//       slackChannelId: channel.slackChannelId,
+//     },
+//     update: {},
+//     create: channel,
+//   });
+// }
 
 async function getDiscord(path: string, token: string, query: any = {}) {
   // console.log({ token });
@@ -423,10 +479,10 @@ async function getDiscord(path: string, token: string, query: any = {}) {
   return response;
 }
 
-async function getUsers(serverId: string, token: string) {
-  const response = await getDiscord(`/guilds/${serverId}/members`, token);
-  return response.body;
-}
+// async function getUsers(serverId: string, token: string) {
+//   const response = await getDiscord(`/guilds/${serverId}/members`, token);
+//   return response.body;
+// }
 
 async function getDiscordChannels(
   serverId: string,
@@ -461,31 +517,31 @@ export interface GuildActiveThreads {
   members?: null[] | null;
 }
 
-async function getAllActiveThreads(serverId: string, token: string) {
-  let result = [];
-  // Given a server id - gets all the active threads in that server
-  try {
-    const activeThreads = (
-      await getDiscord(`/guilds/${serverId}/threads/active`, token)
-    ).body as GuildActiveThreads;
+// async function getAllActiveThreads(serverId: string, token: string) {
+//   let result = [];
+//   // Given a server id - gets all the active threads in that server
+//   try {
+//     const activeThreads = (
+//       await getDiscord(`/guilds/${serverId}/threads/active`, token)
+//     ).body as GuildActiveThreads;
 
-    const threadIds =
-      activeThreads.threads?.map((thread: DiscordThreads) => {
-        return thread.id;
-      }) || [];
+//     const threadIds =
+//       activeThreads.threads?.map((thread: DiscordThreads) => {
+//         return thread.id;
+//       }) || [];
 
-    for (const i in threadIds) {
-      const id = threadIds[i];
-      const message = await getDiscordThreadMessages(id, token);
-      result.push(message);
-    }
+//     for (const i in threadIds) {
+//       const id = threadIds[i];
+//       const message = await getDiscordThreadMessages(id, token);
+//       result.push(message);
+//     }
 
-    console.log('Successfully reloaded application (/) commands.');
-  } catch (error) {
-    console.error(4, String(error));
-  }
-  return result;
-}
+//     console.log('Successfully reloaded application (/) commands.');
+//   } catch (error) {
+//     console.error(4, String(error));
+//   }
+//   return result;
+// }
 
 async function getAllArchivedThreads(
   channelId: string,
@@ -551,13 +607,19 @@ export interface ThreadMetadata {
   archive_timestamp: string;
   auto_archive_duration: number;
   locked: boolean;
-  create_timestamp: string;
+  create_timestamp?: string;
 }
 
-function getShorterTimeStamp(threads: any): string | undefined {
+function getShorterTimeStamp(threads: DiscordThreads[]): string | undefined {
   if (!threads || !threads.length) return;
   const sortedThread = threads
-    ?.map((t: any) => new Date(t.thread_metadata.create_timestamp))
+    ?.map(
+      (t) =>
+        new Date(
+          t.thread_metadata.create_timestamp ||
+            t.thread_metadata.archive_timestamp
+        )
+    )
     .sort((a: Date, b: Date) => a.getTime() - b.getTime())
     .shift();
   return sortedThread && sortedThread.toISOString();

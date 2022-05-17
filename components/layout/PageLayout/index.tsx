@@ -10,6 +10,7 @@ import GoogleAnalytics from '../GoogleAnalytics';
 import JoinDiscord from 'components/JoinDiscord';
 import JoinSlack from 'components/JoinSlack';
 import styles from './index.module.css';
+import classNames from 'classnames';
 
 interface Settings {
   brandColor: string;
@@ -135,7 +136,12 @@ function PageLayout({
           isSubDomainRouting,
         })}
 
-        <div className="md:flex justify-center lg:w-full">
+        <div
+          className={classNames(
+            styles.content,
+            'md:flex justify-center lg:w-full'
+          )}
+        >
           <ErrorBoundary
             FallbackComponent={() => (
               <>

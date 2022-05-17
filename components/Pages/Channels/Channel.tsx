@@ -10,6 +10,8 @@ import CustomLink from '../../Link/CustomLink';
 import { MentionsWithUsers } from '../../../types/apiResponses/threads/[threadId]';
 import { capitalize } from '../../../lib/util';
 import CustomRouterPush from 'components/Link/CustomRouterPush';
+import CopyToClipboardLink from './CopyToClipboardLink';
+import styles from './Channel.module.css';
 
 export interface PaginationType {
   totalCount: number;
@@ -142,7 +144,7 @@ export default function Channel({
     return (
       <li
         key={incrementId}
-        className="px-4 py-4 hover:bg-gray-50 border-solid border-gray-200 sm:hidden cursor-pointer"
+        className="px-4 py-4 hover:bg-gray-50 border-solid border-gray-200 md:hidden cursor-pointer"
       >
         <CustomLink
           isSubDomainRouting={isSubDomainRouting}
@@ -152,7 +154,7 @@ export default function Channel({
           key={`${incrementId}-desktop`}
         >
           <div className="flex">
-            <div className="flex pr-4 items-center sm:hidden">
+            <div className="flex pr-4 items-center md:hidden">
               {author && (
                 <Avatar
                   key={`${incrementId}-${
@@ -165,7 +167,7 @@ export default function Channel({
               )}
             </div>
             <div className="flex flex-col w-full">
-              <div className="pb-2 sm:px-6">
+              <div className="pb-2 md:px-6">
                 <Message
                   text={oldestMessage.body}
                   truncate
@@ -198,16 +200,17 @@ export default function Channel({
         }
         return array;
       }, []);
+      const path = `/t/${incrementId}/${slug || 'topic'}`;
       return (
         <CustomLink
           isSubDomainRouting={isSubDomainRouting}
           communityName={communityName}
           communityType={settings.communityType}
-          path={`/t/${incrementId}/${slug || 'topic'}`}
+          path={path}
           key={`${incrementId}-desktop`}
         >
           <tr className="border-solid border-gray-200 cursor-pointer">
-            <td className="px-6 py-3 align-middle md:max-w-[800px]">
+            <td className={styles.td}>
               <Message
                 text={oldestMessage.body}
                 truncate
@@ -231,6 +234,14 @@ export default function Channel({
             </td>
             <td className="px-6 py-3 text-sm align-middle min-w-[120px]">
               {format(new Date(oldestMessage.sentAt))}
+            </td>
+            <td className="px-6 text-sm text-center align-middle">
+              <CopyToClipboardLink
+                isSubDomainRouting={isSubDomainRouting}
+                communityName={communityName}
+                communityType={settings.communityType}
+                path={path}
+              />
             </td>
           </tr>
         </CustomLink>
@@ -257,7 +268,7 @@ export default function Channel({
       communityName={communityName}
       isSubDomainRouting={isSubDomainRouting}
     >
-      <div className="sm:pt-6 sm:px-6">
+      <div className="sm:pt-6">
         <table className="hidden sm:block sm:table-fixed ">
           <thead>
             <tr>
@@ -276,11 +287,14 @@ export default function Channel({
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
                 Activity
               </th>
+              <th className="px-6 text-center text-xs font-medium text-gray-500">
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody className="divide-y">{tableRows}</tbody>
         </table>
-        <ul className="divide-y sm:hidden">{rows}</ul>
+        <ul className="divide-y md:hidden">{rows}</ul>
         {pageCount && (
           <Pagination
             channelName={currentChannel.channelName}
