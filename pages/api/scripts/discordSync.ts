@@ -9,29 +9,10 @@ import { channels, slackThreads, users } from '@prisma/client';
 import {
   findOrCreateChannel,
   updateAccountSlackSyncStatus,
+  updateNextPageCursor,
 } from '../../../lib/models';
 import { createSlug } from '../../../lib/util';
-import { sendNotification } from 'services/slack';
-
-enum SyncStatus {
-  IN_PROGRESS = 'IN_PROGRESS',
-  DONE = 'DONE',
-  ERROR = 'ERROR',
-}
-
-async function updateAndNotifySyncStatus(
-  accountId: string,
-  status: SyncStatus
-) {
-  await updateAccountSlackSyncStatus(accountId, status);
-  try {
-    await sendNotification(
-      `Syncing process is ${status} for account: ${accountId}.`
-    );
-  } catch (e) {
-    console.error('Failed to send Slack notification: ', e);
-  }
-}
+import { SyncStatus, updateAndNotifySyncStatus } from 'services/sync';
 
 export default async function handler(
   request: NextApiRequest,
@@ -98,26 +79,24 @@ async function sync(serverId: string, accountId: string, token: string) {
 
   let authors = await getAuthorsFromDatabase(accountId);
 
-  // pagination it is weird, needs a "before" timestamp, that means they return the latest messages
-  // to get older messages we need to check our oldest and sent the timestamp on the request until has_more attribute is empty
-  // so if a synchronization fails, we should persist the cursor? just for the initial process, we should persist the oldest timestamp
-  // if runs without errors the next sync execution should look for the latest message on database and
-  // query the api until reach the same/older timestamp
-  // what about the edited messages?
   console.log('savedChannels', savedChannels.length);
   for (const channel of savedChannels) {
-    const threadsOnChannel = await listPublicArchivedThreadsAndPersist({
+    // Threads are ordered by archive_timestamp, in descending order.
+    await listPublicArchivedThreadsAndPersist({
       channel,
       token,
     });
+    // we need to query our db to get all threads, not only the synchronized ones
+    const threadsOnChannel = await prisma.slackThreads.findMany({
+      select: { id: true },
+      where: {
+        channelId: channel.id,
+      },
+    });
+    console.log(channel.channelName, 'threads', threadsOnChannel.length);
     // threads works as channels, we need to get their messages
     // replies are just attributes that references another message, need to do some crazy stuff here
     // singles are singles, could potentially be a "thread" of some other message references to it
-    console.log(
-      'threadsOnChannel',
-      channel.channelName,
-      threadsOnChannel.length
-    );
     for (const thread of threadsOnChannel) {
       // when list message, it comes with the author
       // "type": 7 are just joins
@@ -139,13 +118,14 @@ async function listMessagesFromThreadAndPersist({
   authors,
   accountId,
 }: {
-  thread: DiscordThreads;
+  thread: Partial<slackThreads>;
   token: string;
   authors: any;
   accountId: string;
 }) {
   const threadInDb = await prisma.slackThreads.findUnique({
-    where: { slackThreadTs: thread.id },
+    where: { id: thread.id },
+    include: { messages: { take: 1, orderBy: { sentAt: 'desc' } } },
   });
   if (!threadInDb) return;
 
@@ -153,23 +133,25 @@ async function listMessagesFromThreadAndPersist({
   // the messages is return in latest order, so we need to request with the oldest id as "before" parameter
   // at least for the initial sync
   let hasMore = true;
-  let oldestMessageId;
+  let newestMessageId = threadInDb.messages.length
+    ? threadInDb.messages.shift()?.slackMessageId
+    : threadInDb.slackThreadTs;
   while (hasMore) {
     hasMore = false;
     const response = await getDiscordThreadMessages(
       threadInDb.slackThreadTs,
       token,
-      oldestMessageId
+      newestMessageId
     );
     hasMore = response?.length === 50;
     if (response?.length) {
-      hasMore && (oldestMessageId = getShorterMessagesTimeStamp(response));
       await persistMessages({
         messages: response,
         authors,
         accountId,
         threadInDb,
       });
+      hasMore && (newestMessageId = getLatestMessagesId(response));
     }
   }
 }
@@ -187,55 +169,31 @@ function buildUserAvatar({
 /** be aware that this function updates the authors object */
 async function findAuthorsAndPersist(
   messages: DiscordMessage[],
-  authors: any,
+  authors: Record<string, users>,
   accountId: string
 ) {
-  let thereIsNewAuthors: Author[] = [];
-  let userUpdates: any = [];
+  let usersInMessages: Record<string, Author> = {};
+  let usersFounded: string[] = [];
 
   messages.forEach((message) => {
-    // has author and isn't in our authors object
-    if (!message.author.id) {
-      return;
-    }
-
-    if (!authors[message.author.id]) {
-      thereIsNewAuthors.push(message.author);
-      authors[message.author.id] = true; // just to avoid dup
-      return;
-    }
-    const user = authors[message.author.id];
-    if (user && message.author.avatar && !user.profileImageUrl) {
-      userUpdates.push(
-        prisma.users.update({
-          data: {
-            profileImageUrl: buildUserAvatar({
-              userId: message.author.id,
-              avatarId: message.author.avatar,
-            }),
-          },
-          where: { id: user.id },
-        })
-      );
-    }
-    if (message.mentions) {
+    usersInMessages[message.author.id] = message.author;
+    usersFounded.push(message.author.id);
+    if (message?.mentions) {
       for (const mention of message.mentions) {
-        if (mention.id && !authors[mention.id]) {
-          thereIsNewAuthors.push(mention);
-          authors[mention.id] = true; // just to avoid dup
-        }
+        usersInMessages[mention.id] = mention;
+        usersFounded.push(mention.id);
       }
     }
   });
 
-  await Promise.all(userUpdates);
-
-  if (thereIsNewAuthors.length) {
-    console.log({ accountId, thereIsNewAuthors: thereIsNewAuthors.length });
-    for (const newUser of thereIsNewAuthors) {
-      const user = await prisma.users.create({
+  // find uniques usersInMessages
+  for (const userId of usersFounded) {
+    if (!authors[userId]) {
+      // new user, insert
+      const newUser = usersInMessages[userId];
+      authors[userId] = await prisma.users.create({
         data: {
-          slackUserId: newUser.id,
+          slackUserId: userId,
           accountsId: accountId,
           displayName: newUser.username,
           isAdmin: false, // TODO
@@ -248,11 +206,23 @@ async function findAuthorsAndPersist(
           }),
         },
       });
-      authors[newUser.id] = {
-        ...newUser,
-        persisted: true,
-        id: user.id,
-      };
+    }
+    // if exists already, lets look for the avatar
+    if (
+      authors[userId] &&
+      !authors[userId].profileImageUrl &&
+      !!usersInMessages[userId].avatar
+    ) {
+      // update avatar
+      await prisma.users.update({
+        data: {
+          profileImageUrl: buildUserAvatar({
+            userId,
+            avatarId: usersInMessages[userId].avatar as string,
+          }),
+        },
+        where: { id: authors[userId].id },
+      });
     }
   }
 }
@@ -377,6 +347,7 @@ async function listPublicArchivedThreadsAndPersist({
   channel: channels;
   token: string;
 }) {
+  const timestampCursorFlag = new Date().toISOString();
   let hasMore = true;
   const threads: DiscordThreads[] = [];
   let timestamp;
@@ -389,10 +360,23 @@ async function listPublicArchivedThreadsAndPersist({
     hasMore = response.hasMore;
     if (response.threads && response.threads.length) {
       threads.push(...response.threads);
-      timestamp = getShorterTimeStamp(response.threads);
       await persistThreads(response.threads, channel.id);
+      hasMore && (timestamp = getShorterTimeStamp(response.threads));
+    }
+    if (
+      channel.slackNextPageCursor &&
+      timestamp &&
+      new Date(channel.slackNextPageCursor) > new Date(timestamp)
+    ) {
+      // already reach our last cursor
+      console.log('already reach our last cursor');
+      break;
     }
   }
+  // getting here means that the sync for this channels was completed
+  // so our next run should get data from Date.now until cursor timestamp
+  await updateNextPageCursor(channel.id, timestampCursorFlag);
+  console.log('threads', threads.length);
   return threads;
 }
 
@@ -551,6 +535,7 @@ async function getAllArchivedThreads(
   const response = await retryPromise(
     getDiscord(`/channels/${channelId}/threads/archived/public`, token, {
       before: beforeCursor,
+      ...(!beforeCursor && { limit: 2 }),
     })
   )
     .then((e) => e?.body)
@@ -570,11 +555,11 @@ async function getAllArchivedThreads(
 async function getDiscordThreadMessages(
   threadId: string,
   token: string,
-  oldestMessageId?: string
+  newestMessageId?: string
 ): Promise<DiscordMessage[]> {
   const response = await retryPromise(
     getDiscord(`/channels/${threadId}/messages`, token, {
-      before: oldestMessageId,
+      after: newestMessageId,
     })
   ).catch(() => {
     return { body: [] };
@@ -613,28 +598,20 @@ export interface ThreadMetadata {
 function getShorterTimeStamp(threads: DiscordThreads[]): string | undefined {
   if (!threads || !threads.length) return;
   const sortedThread = threads
-    ?.map(
-      (t) =>
-        new Date(
-          t.thread_metadata.create_timestamp ||
-            t.thread_metadata.archive_timestamp
-        )
-    )
+    ?.map((t) => new Date(t.thread_metadata.archive_timestamp))
     .sort((a: Date, b: Date) => a.getTime() - b.getTime())
     .shift();
   return sortedThread && sortedThread.toISOString();
 }
 
-function getShorterMessagesTimeStamp(
-  messages: DiscordMessage[]
-): string | undefined {
+function getLatestMessagesId(messages: DiscordMessage[]): string | undefined {
   if (!messages || !messages.length) return;
   const sortedThread = messages
     .sort(
       (a: DiscordMessage, b: DiscordMessage) =>
         new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
     )
-    .shift();
+    .pop();
   return sortedThread && sortedThread.id;
 }
 
