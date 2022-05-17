@@ -1,3 +1,7 @@
 .field + .field {
   margin-top: 10px;
 }
+
+.field + button[type='submit'] {
+  margin-top: 20px;
+}
