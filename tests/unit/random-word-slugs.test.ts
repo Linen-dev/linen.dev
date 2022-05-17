@@ -1,16 +1,5 @@
-import {
-  generateSlug,
-  totalUniqueSlugs,
-  RandomWordOptions,
-} from 'random-word-slugs';
-
-const numberOfWords = 3;
-const options: RandomWordOptions<3> = {
-  categories: {
-    noun: ['animals'],
-  },
-  partsOfSpeech: ['adjective', 'adjective', 'noun'],
-};
+import { numberOfWords, options } from '@/utilities/randomWordSlugs';
+import { generateSlug, totalUniqueSlugs } from 'random-word-slugs';
 
 describe('random-word-slugs', () => {
   it('simple slug on kebab', () => {
