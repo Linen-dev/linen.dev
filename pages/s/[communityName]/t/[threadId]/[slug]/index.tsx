@@ -7,11 +7,17 @@ export default Thread;
 //Renders the same page as /threadId
 export async function getStaticProps(context: GetStaticPropsContext) {
   const threadId = context.params?.threadId as string;
-  const thread = await getThreadById(threadId);
-  return {
-    props: { ...thread, isSubDomainRouting: false },
-    revalidate: 60, // In seconds
-  };
+  try {
+    const thread = await getThreadById(threadId);
+    return {
+      props: { ...thread, isSubDomainRouting: false },
+      revalidate: 60, // In seconds
+    };
+  } catch (exception) {
+    return {
+      notFound: true,
+    };
+  }
 }
 
 export function getStaticPaths() {

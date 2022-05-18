@@ -7,7 +7,7 @@ import {
 import fs from 'fs';
 import { PrismaClient } from '@prisma/client';
 import { createSlug } from '../lib/util';
-import { SyncStatus, updateAndNotifySyncStatus } from 'services/sync';
+import { SyncStatus, updateAndNotifySyncStatus } from '../services/sync';
 
 const prisma = new PrismaClient({}); // initiate a new instance of prisma without info logs
 
@@ -37,11 +37,11 @@ let stats = {
 // const basePath = './poc-import-data/data/san/';
 // const slackTeamId = 'T03ECUWHFGD';
 
-// const basePath = './poc-import-data/data/prefect/';
-// const slackTeamId = 'TL09B008Y';
+const basePath = './poc-import-data/data/prefect/';
+const slackTeamId = 'TL09B008Y';
 
-const basePath = './poc-import-data/data/future/';
-const slackTeamId = 'T5TCAFTA9';
+// const basePath = './poc-import-data/data/future/';
+// const slackTeamId = 'T5TCAFTA9';
 
 async function findOrCreateAccount() {
   let account = await prisma.accounts.findFirst({ where: { slackTeamId } });

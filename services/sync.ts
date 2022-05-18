@@ -1,4 +1,4 @@
-import { updateAccountSlackSyncStatus } from 'lib/models';
+import { updateAccountSlackSyncStatus } from '../lib/models';
 import { sendNotification } from './slack';
 
 export enum SyncStatus {
