@@ -20,7 +20,8 @@
       "@/utilities/*": ["utilities/*"],
       "@/styles/*": ["styles/*"],
       "@/pages/*": ["pages/*"],
-      "@/serializers/*": ["serializers/*"]
+      "@/serializers/*": ["serializers/*"],
+      "@/lib/*": ["lib/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.js", "**/*.css"],

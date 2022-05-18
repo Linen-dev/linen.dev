@@ -1,13 +1,5 @@
-import { generateSlug, RandomWordOptions } from 'random-word-slugs';
-
-export const numberOfWords = 3;
-export const options: RandomWordOptions<3> = {
-  categories: {
-    noun: ['animals'],
-  },
-  partsOfSpeech: ['adjective', 'adjective', 'noun'],
-};
+import { generateSlug } from '@/lib/random-word-slugs';
 
 export function generateRandomWordSlug() {
-  return generateSlug(numberOfWords, options);
+  return generateSlug();
 }
