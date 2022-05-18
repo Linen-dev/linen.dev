@@ -16,6 +16,7 @@ const customJestConfig = {
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   moduleNameMapper: {
     '@/utilities/(.*)': '<rootDir>/utilities/$1',
+    '@/lib/(.*)': '<rootDir>/lib/$1',
   },
 };
 

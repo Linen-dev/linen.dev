@@ -9,6 +9,7 @@ import { UserInfo } from '../types/slackResponses//slackUserInfoInterface';
 import { getSlackUser } from '../pages/api/slack';
 import { stripProtocol } from '../utilities/url';
 import { anonymizeMessages } from '@/utilities/anonymizeMessages';
+import { generateRandomWordSlug } from '@/utilities/randomWordSlugs';
 
 export const createMessage = async (
   message: Prisma.messagesUncheckedCreateInput
@@ -455,6 +456,7 @@ export const createUserFromUserInfo = async (
     accountsId: accountId,
     isBot: user.is_bot,
     isAdmin: user.is_admin || false,
+    anonymousAlias: generateRandomWordSlug(),
   };
 
   return await createUser(param);

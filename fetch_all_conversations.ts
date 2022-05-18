@@ -7,6 +7,7 @@ import {
   findOrCreateThread,
   findUser,
 } from './lib/models';
+import { generateRandomWordSlug } from './utilities/randomWordSlugs';
 
 export const fetchConversations = async (
   channel: string,
@@ -336,6 +337,7 @@ export const saveUsers = async (users: any[], accountId: string) => {
       accountsId: accountId,
       isBot: user.is_bot,
       isAdmin: user.is_admin || false,
+      anonymousAlias: generateRandomWordSlug(),
     };
   });
 
