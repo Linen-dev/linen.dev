@@ -208,7 +208,7 @@ async function findAuthorsAndPersist(
       });
     }
     // if exists already, lets look for the avatar
-    if (
+    else if (
       authors[userId] &&
       !authors[userId].profileImageUrl &&
       !!usersInMessages[userId].avatar
