@@ -16,6 +16,7 @@ export default async function handler(
   const accountId = request.query.account_id as string;
 
   const users = await getUsers(accountId);
+  console.log('users', users.length);
 
   const usersWithoutAlias = [];
   let listOfAliases: Record<string, boolean> = {};
@@ -27,6 +28,7 @@ export default async function handler(
     }
   }
 
+  console.log('usersWithoutAlias', usersWithoutAlias.length);
   const updateUsersTransaction = [];
   for (const user of usersWithoutAlias) {
     while (true) {
@@ -34,6 +36,7 @@ export default async function handler(
       user.anonymousAlias = generateRandomWordSlug();
       // check if is not dup
       if (!listOfAliases[user.anonymousAlias]) {
+        listOfAliases[user.anonymousAlias] = true;
         break;
       }
     }
@@ -44,9 +47,17 @@ export default async function handler(
         where: { id: user.id },
       })
     );
+    if (updateUsersTransaction.length === 100) {
+      console.time('updateUsersTransaction');
+      await Promise.all(updateUsersTransaction);
+      console.timeEnd('updateUsersTransaction');
+      updateUsersTransaction.splice(0, 100);
+    }
   }
 
-  await prisma.$transaction(updateUsersTransaction);
+  console.time('updateUsersTransaction');
+  updateUsersTransaction.length && (await Promise.all(updateUsersTransaction));
+  console.timeEnd('updateUsersTransaction');
 
   return response.status(200).json({});
 }

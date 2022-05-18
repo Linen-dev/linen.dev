@@ -325,7 +325,7 @@ export const threadIndex = async (
     select: { premium: true, anonymizeUsers: true },
     where: {
       channels: {
-        every: { id: channelId },
+        some: { id: channelId },
       },
       premium: true,
       anonymizeUsers: true,
