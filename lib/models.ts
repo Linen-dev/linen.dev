@@ -8,6 +8,7 @@ import prisma from '../client';
 import { UserInfo } from '../types/slackResponses//slackUserInfoInterface';
 import { getSlackUser } from '../pages/api/slack';
 import { stripProtocol } from '../utilities/url';
+import { anonymizeMessages } from '@/utilities/anonymizeMessages';
 
 export const createMessage = async (
   message: Prisma.messagesUncheckedCreateInput
@@ -320,6 +321,16 @@ export const threadIndex = async (
   take: number = 20,
   skip: number = 0
 ) => {
+  const anonymousCommunity = await prisma.accounts.findFirst({
+    select: { premium: true, anonymizeUsers: true },
+    where: {
+      channels: {
+        every: { id: channelId },
+      },
+      premium: true,
+      anonymizeUsers: true,
+    },
+  });
   const threads = await prisma.slackThreads.findMany({
     take: take,
     skip: skip,
@@ -348,32 +359,48 @@ export const threadIndex = async (
       slackThreadTs: 'desc',
     },
   });
-  return threads.filter((t) => t.messages.length > 0);
+  const threadsWithMessages = threads.filter((t) => t.messages.length > 0);
+  if (anonymousCommunity) {
+    return threadsWithMessages.map(anonymizeMessages);
+  }
+  return threadsWithMessages;
 };
 
 export const findThreadById = async (threadId: number) => {
-  return await prisma.slackThreads.findUnique({
-    where: { incrementId: threadId },
-    include: {
-      messages: {
-        include: {
-          author: true,
-          //Don't like how it includes mentions when I just want users
-          // waiting on this to flatten it out
-          // https://github.com/prisma/prisma/issues/9719
-          mentions: {
-            include: {
-              users: true,
+  return await prisma.slackThreads
+    .findUnique({
+      where: { incrementId: threadId },
+      include: {
+        messages: {
+          include: {
+            author: true,
+            //Don't like how it includes mentions when I just want users
+            // waiting on this to flatten it out
+            // https://github.com/prisma/prisma/issues/9719
+            mentions: {
+              include: {
+                users: true,
+              },
             },
           },
+          orderBy: {
+            sentAt: 'asc',
+          },
         },
-        orderBy: {
-          sentAt: 'asc',
+        channel: {
+          include: {
+            account: { select: { anonymizeUsers: true, premium: true } },
+          },
         },
       },
-      channel: true,
-    },
-  });
+    })
+    .then((thread) => {
+      const account = thread?.channel.account;
+      if (account?.premium && account.anonymizeUsers) {
+        return anonymizeMessages(thread);
+      }
+      return thread;
+    });
 };
 
 export const getThreadWithMultipleMessages = async (channelId: string) => {

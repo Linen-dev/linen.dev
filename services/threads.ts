@@ -44,7 +44,7 @@ export async function getThreadById(
   const id = parseInt(threadId);
   const thread = await findThreadById(id);
 
-  if (!thread || !thread.channel.accountId) {
+  if (!thread || !thread?.channel?.accountId) {
     return {
       notFound: true,
     };
@@ -60,7 +60,7 @@ export async function getThreadById(
   const channelsWithMinThreads = channels
     .filter((c) => !c.hidden)
     .filter((c) => {
-      if (c.id === thread.channel.id) {
+      if (c.id === thread?.channel?.id) {
         return true;
       }
 
