@@ -8,8 +8,8 @@ import prisma from '../client';
 import { UserInfo } from '../types/slackResponses//slackUserInfoInterface';
 import { getSlackUser } from '../pages/api/slack';
 import { stripProtocol } from '../utilities/url';
-import { anonymizeMessages } from '@/utilities/anonymizeMessages';
-import { generateRandomWordSlug } from '@/utilities/randomWordSlugs';
+import { anonymizeMessages } from '../utilities/anonymizeMessages';
+import { generateRandomWordSlug } from '../utilities/randomWordSlugs';
 
 export const createMessage = async (
   message: Prisma.messagesUncheckedCreateInput
