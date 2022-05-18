@@ -10,6 +10,10 @@ function getMentionedSlackUserIds(body: string) {
 }
 
 (async () => {
+  const args = process.argv.slice(2);
+  let fromAccount = args.length > 0 ? args[0] : null;
+  let fromChannel = args.length > 1 ? args[1] : null;
+
   const accounts = await prisma.accounts.findMany({
     select: {
       id: true,
@@ -24,10 +28,28 @@ function getMentionedSlackUserIds(body: string) {
   });
 
   for (const account of accounts) {
-    console.log(`Processing account: ${account.name}`);
+    if (fromAccount) {
+      if (account.name !== fromAccount) {
+        console.log(`[INFO] Skip account: ${account.name}`);
+        continue;
+      } else {
+        fromAccount = null;
+      }
+    }
+
+    console.log(`[INFO] Processing account: ${account.name}`);
 
     for (const channel of account.channels) {
-      console.log(`\tProcessing channel: ${channel.channelName}`);
+      if (fromChannel) {
+        if (channel.channelName !== fromChannel) {
+          console.log(`[INFO] Skip channel: ${channel.channelName}`);
+          continue;
+        } else {
+          fromChannel = null;
+        }
+      }
+
+      console.log(`[INFO] Processing channel: ${channel.channelName}`);
 
       const messages = await prisma.messages.findMany({
         select: { id: true, body: true },
@@ -55,7 +77,7 @@ function getMentionedSlackUserIds(body: string) {
 
             if (slackMention == null) {
               console.log(
-                `\t\t\tAdd mention: ${message.id}/${mentionedUser.displayName}`
+                `[INFO] Add mention: ${account.name}/${channel.channelName}/${message.id}/${mentionedUser.displayName}`
               );
               await prisma.slackMentions.create({
                 data: {
@@ -72,21 +94,29 @@ function getMentionedSlackUserIds(body: string) {
                 accessToken
               );
 
-              console.log(`\t\t\tAdd user: ${slackUser.name}`);
-              const newMentionedUser = await createUserFromUserInfo(
-                slackUser,
-                account.id
-              );
+              if (slackUser) {
+                console.log(
+                  `[INFO] Add user: ${account.name}/${channel.channelName}/${slackUser.name}`
+                );
+                const newMentionedUser = await createUserFromUserInfo(
+                  slackUser,
+                  account.id
+                );
 
-              console.log(
-                `\t\t\tAdd mention: ${message.id}/${newMentionedUser.displayName}`
-              );
-              await prisma.slackMentions.create({
-                data: {
-                  messagesId: message.id,
-                  usersId: newMentionedUser.id,
-                },
-              });
+                console.log(
+                  `[INFO] Add mention: ${account.name}/${channel.channelName}/${message.id}/${newMentionedUser.displayName}`
+                );
+                await prisma.slackMentions.create({
+                  data: {
+                    messagesId: message.id,
+                    usersId: newMentionedUser.id,
+                  },
+                });
+              } else {
+                console.log(
+                  `[ERROR] Slack user not found: ${account.name}/${channel.channelName}/${mentionedSlackUserId}`
+                );
+              }
             }
           }
         }
