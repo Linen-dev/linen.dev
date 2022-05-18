@@ -3,6 +3,7 @@ import {
   faGear,
   faMoneyBill,
   faListCheck,
+  faBucket,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import SidebarLink from './SidebarLink';
@@ -49,6 +50,14 @@ export default function DashboardLayout({ children, header }: Props) {
                 icon={<FontAwesomeIcon icon={faMoneyBill} />}
                 text="Plans"
                 active={route === '/settings/plans'}
+              />
+            </div>
+            <div className="space-y-1">
+              <SidebarLink
+                href="/settings/dns"
+                icon={<FontAwesomeIcon icon={faMoneyBill} />}
+                text="DNS"
+                active={route === '/settings/dns'}
               />
             </div>
           </div>
