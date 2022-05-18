@@ -1,3 +1,4 @@
+import { anonymizeMessagesMentions } from '@/utilities/anonymizeMessages';
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import prisma from '../../client';
 
@@ -8,25 +9,38 @@ export default async function handler(
   const query = req.query.query as string;
   const accountId = req.query.account_id as string;
 
-  const response = await prisma.messages.findMany({
-    where: {
-      body: {
-        search: query.split(' ').join(' & '),
-      },
-      channel: {
-        accountId: accountId,
-      },
-    },
-    include: {
-      slackThreads: true,
-      mentions: {
-        include: {
-          users: true,
+  const account = await prisma.accounts.findUnique({
+    where: { id: accountId },
+    select: { premium: true, anonymizeUsers: true },
+  });
+
+  const response = await prisma.messages
+    .findMany({
+      where: {
+        body: {
+          search: query.split(' ').join(' & '),
+        },
+        channel: {
+          accountId: accountId,
         },
       },
-    },
-    take: 20,
-  });
+      include: {
+        slackThreads: true,
+        mentions: {
+          include: {
+            users: true,
+          },
+        },
+      },
+      take: 20,
+    })
+    .then((messages) => {
+      if (!!account?.anonymizeUsers && !!account.premium) {
+        return anonymizeMessagesMentions(messages);
+      } else {
+        return messages;
+      }
+    });
 
   res.status(200).json(response);
 }

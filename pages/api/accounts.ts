@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next/types';
 import prisma from '../../client';
 import { createAccount } from '../../lib/account';
 import { stripProtocol } from '../../utilities/url';
-import superagent from 'superagent';
+import { dispatchAnonymizeRequest } from '@/utilities/anonymizeMessages';
 
 async function create(request: NextApiRequest, response: NextApiResponse) {
   const { homeUrl, docsUrl, redirectDomain, brandColor } = JSON.parse(
@@ -55,20 +55,8 @@ async function update(request: NextApiRequest, response: NextApiResponse) {
     data,
   });
 
-  if (account.premium && !!anonymizeUsers) {
-    // run anonymize users script asynchronously
-    superagent
-      .get(
-        process.env.SYNC_URL +
-          '/api/scripts/anonymizeUsers?account_id=' +
-          accountId
-      )
-      .then(() => {
-        console.log('Anonymize done!');
-      })
-      .catch((err) => {
-        console.error('Anonymize failed: ', err);
-      });
+  if (!!account.premium && !!anonymizeUsers) {
+    dispatchAnonymizeRequest(accountId);
   }
 
   return response.status(200).json(record);
