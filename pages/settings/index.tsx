@@ -165,6 +165,14 @@ export default function SettingsPage({ account }: Props) {
               required
             />
           </Card>
+          <Card>
+            <Label htmlFor="anonymizeUsers">Anonymize Users</Label>
+            <Description>Replace real usernames by randomly alias.</Description>
+            <CheckboxField
+              id="anonymizeUsers"
+              checked={account.anonymizeUsers}
+            />
+          </Card>
           {account.premium && (
             <div className="py-8">
               <h3 className="font-bold font-xl mb-3">Premium</h3>
@@ -179,16 +187,6 @@ export default function SettingsPage({ account }: Props) {
                   placeholder="G-XXXXXXX or UA-XXXXXX-X"
                   id="googleAnalyticsId"
                   defaultValue={account.googleAnalyticsId}
-                />
-              </Card>
-              <Card>
-                <Label htmlFor="anonymizeUsers">Anonymize Users</Label>
-                <Description>
-                  Replace real usernames by randomly alias.
-                </Description>
-                <CheckboxField
-                  id="anonymizeUsers"
-                  checked={account.anonymizeUsers}
                 />
               </Card>
             </div>

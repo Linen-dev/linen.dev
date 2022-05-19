@@ -49,13 +49,14 @@ async function update(request: NextApiRequest, response: NextApiResponse) {
         docsUrl,
         redirectDomain: stripProtocol(redirectDomain),
         brandColor,
+        anonymizeUsers,
       };
   const record = await prisma.accounts.update({
     where: { id: accountId },
     data,
   });
 
-  if (!!account.premium && !!anonymizeUsers) {
+  if (!!anonymizeUsers) {
     dispatchAnonymizeRequest(accountId);
   }
 

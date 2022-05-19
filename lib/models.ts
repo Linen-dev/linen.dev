@@ -323,12 +323,11 @@ export const threadIndex = async (
   skip: number = 0
 ) => {
   const anonymousCommunity = await prisma.accounts.findFirst({
-    select: { premium: true, anonymizeUsers: true },
+    select: { anonymizeUsers: true },
     where: {
       channels: {
         some: { id: channelId },
       },
-      premium: true,
       anonymizeUsers: true,
     },
   });
@@ -390,14 +389,14 @@ export const findThreadById = async (threadId: number) => {
         },
         channel: {
           include: {
-            account: { select: { anonymizeUsers: true, premium: true } },
+            account: { select: { anonymizeUsers: true } },
           },
         },
       },
     })
     .then((thread) => {
       const account = thread?.channel.account;
-      if (account?.premium && account.anonymizeUsers) {
+      if (account?.anonymizeUsers) {
         return anonymizeMessages(thread);
       }
       return thread;
