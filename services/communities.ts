@@ -25,10 +25,11 @@ export const getThreadsByCommunityName = async (
   const defaultChannelName =
     channelName || account.channels.find((c) => c.default)?.channelName;
 
-  const defaultChannel = account.channels.find(
-    (c) => c.channelName === defaultChannelName
-  );
+  const defaultChannel =
+    account.channels.find((c) => c.channelName === defaultChannelName) ||
+    account.channels.find((c) => c.channelName === 'general');
 
+  //TODO: we should only default to a channel if there are more than 20 threads
   const channel = defaultChannel || channels[0];
 
   const channelId = channel.id;

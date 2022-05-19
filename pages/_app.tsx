@@ -38,6 +38,11 @@ export default function App(props: AppProps) {
   return (
     <SessionProvider>
       <Head>
+        <script
+          defer
+          data-domain="linen.dev"
+          src="https://plausible.io/js/plausible.js"
+        ></script>
         <title>Linen Community</title>
         <meta
           name="viewport"
