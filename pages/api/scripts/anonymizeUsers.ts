@@ -4,7 +4,7 @@ import { prisma } from '../../../client';
 
 async function getUsersWithoutAlias(accountId: string) {
   return await prisma.users.findMany({
-    where: { accountsId: accountId },
+    where: { accountsId: accountId, anonymousAlias: { equals: null } },
     select: { id: true, anonymousAlias: true },
   });
 }
