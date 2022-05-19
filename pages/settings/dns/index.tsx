@@ -2,6 +2,7 @@ import React from 'react';
 import { NextPageContext } from 'next';
 import { getSession, useSession } from 'next-auth/react';
 import DashboardLayout from 'components/layout/DashboardLayout';
+import Table, { Thead, Tbody, Th, Td } from 'components/Table';
 import { findAccountByEmail } from '../../../lib/models';
 import Vercel, { DNSRecord, VercelError } from '../../../services/vercel';
 
@@ -38,51 +39,24 @@ export default function ChannelsPage({ records, error }: Props) {
           your DNS settings.
         </p>
         <h2 className="text-md font-bold">Records</h2>
-        <div className="overflow-x-auto">
-          <div className="inline-block min-w-full py-2 align-middle">
-            <div className="overflow-hidden shadow-sm ring-1 ring-black ring-opacity-5">
-              <table className="min-w-full divide-y divide-gray-300">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th
-                      scope="col"
-                      className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6 lg:pl-8"
-                    >
-                      Type
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                    >
-                      Name
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                    >
-                      Value
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200 bg-white">
-                  {records.map((record: DNSRecord, index) => (
-                    <tr key={record.type + index}>
-                      <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 lg:pl-8">
-                        {record.type}
-                      </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                        {record.name}
-                      </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                        {record.value}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
+        <Table>
+          <Thead>
+            <tr>
+              <Th>Type</Th>
+              <Th>Name</Th>
+              <Th>Value</Th>
+            </tr>
+          </Thead>
+          <Tbody>
+            {records.map((record: DNSRecord, index) => (
+              <tr key={record.type + index}>
+                <Td>{record.type}</Td>
+                <Td>{record.name}</Td>
+                <Td>{record.value}</Td>
+              </tr>
+            ))}
+          </Tbody>
+        </Table>
       </DashboardLayout>
     );
   }
