@@ -21,6 +21,7 @@ import { findAccountByEmail } from '../../lib/models';
 import { capitalize } from 'lib/util';
 import BotButton from 'components/BotButton';
 import Label from 'components/Label';
+import CheckboxField from '@/components/CheckboxField';
 
 interface Props {
   account?: SerializedAccount;
@@ -66,6 +67,7 @@ export default function SettingsPage({ account }: Props) {
       const redirectDomain = stripProtocol(form.redirectDomain.value);
       const googleAnalyticsId = form.googleAnalyticsId?.value;
       const brandColor = form.brandColor.value;
+      const anonymizeUsers = form.anonymizeUsers.checked;
       fetch('/api/accounts', {
         method: 'PUT',
         body: JSON.stringify({
@@ -75,6 +77,7 @@ export default function SettingsPage({ account }: Props) {
           redirectDomain,
           brandColor,
           googleAnalyticsId,
+          anonymizeUsers,
         }),
       })
         .then((response) => response.json())
@@ -153,13 +156,21 @@ export default function SettingsPage({ account }: Props) {
           <Card>
             <Label htmlFor="brandColor">Brand Color</Label>
             <Description>
-              Color that matches your brand. We'll use it for the header
+              Color that matches your brand. We&apos;ll use it for the header
               background.
             </Description>
             <ColorField
               id="brandColor"
               defaultValue={account.brandColor}
               required
+            />
+          </Card>
+          <Card>
+            <Label htmlFor="anonymizeUsers">Anonymize Users</Label>
+            <Description>Replace real usernames by randomly alias.</Description>
+            <CheckboxField
+              id="anonymizeUsers"
+              checked={account.anonymizeUsers}
             />
           </Card>
           {account.premium && (

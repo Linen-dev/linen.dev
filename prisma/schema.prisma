@@ -82,6 +82,7 @@ model accounts {
   logoUrl           String?
   premium           Boolean    @default(false)
   googleAnalyticsId String?
+  anonymizeUsers    Boolean    @default(false)
 
   auths                 auths[]
   users                 users[]
@@ -113,6 +114,7 @@ model users {
   isBot           Boolean
   isAdmin         Boolean
   mentions        slackMentions[]
+  anonymousAlias  String?
 
   account    accounts @relation(fields: [accountsId], references: [id])
   accountsId String

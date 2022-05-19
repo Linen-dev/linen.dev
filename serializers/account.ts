@@ -13,6 +13,7 @@ export interface SerializedAccount {
   googleAnalyticsId?: string;
   slackSyncStatus: string;
   communityType: CommunityType;
+  anonymizeUsers?: boolean;
 }
 
 export default function serialize(account?: any): SerializedAccount | null {
@@ -28,6 +29,7 @@ export default function serialize(account?: any): SerializedAccount | null {
     googleAnalyticsId,
     slackSyncStatus,
     id,
+    anonymizeUsers,
   } = account;
 
   const communityType = account.discordServerId
@@ -44,5 +46,6 @@ export default function serialize(account?: any): SerializedAccount | null {
     slackSyncStatus,
     id,
     communityType,
+    anonymizeUsers,
   };
 }

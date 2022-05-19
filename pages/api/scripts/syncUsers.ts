@@ -1,3 +1,4 @@
+import { generateRandomWordSlug } from '@/utilities/randomWordSlugs';
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import prisma from '../../../client';
 import { listUsers, saveUsers } from '../../../fetch_all_conversations';
@@ -71,6 +72,7 @@ export const saveUsersSyncronous = async (users: any[], accountId: string) => {
       accountsId: accountId,
       isBot: user.is_bot,
       isAdmin: user.is_admin || false,
+      anonymousAlias: generateRandomWordSlug(),
     };
   });
 

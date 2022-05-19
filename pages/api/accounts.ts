@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next/types';
 import prisma from '../../client';
 import { createAccount } from '../../lib/account';
 import { stripProtocol } from '../../utilities/url';
+import { dispatchAnonymizeRequest } from '@/utilities/anonymizeMessages';
 
 async function create(request: NextApiRequest, response: NextApiResponse) {
   const { homeUrl, docsUrl, redirectDomain, brandColor } = JSON.parse(
@@ -25,6 +26,7 @@ async function update(request: NextApiRequest, response: NextApiResponse) {
     redirectDomain,
     brandColor,
     googleAnalyticsId,
+    anonymizeUsers,
   } = JSON.parse(request.body);
   const account = await prisma.accounts.findFirst({
     where: { id: accountId },
@@ -40,17 +42,24 @@ async function update(request: NextApiRequest, response: NextApiResponse) {
         redirectDomain: stripProtocol(redirectDomain),
         brandColor,
         googleAnalyticsId,
+        anonymizeUsers,
       }
     : {
         homeUrl,
         docsUrl,
         redirectDomain: stripProtocol(redirectDomain),
         brandColor,
+        anonymizeUsers,
       };
   const record = await prisma.accounts.update({
     where: { id: accountId },
     data,
   });
+
+  if (!!anonymizeUsers) {
+    dispatchAnonymizeRequest(accountId);
+  }
+
   return response.status(200).json(record);
 }
 

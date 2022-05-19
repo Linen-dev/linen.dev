@@ -7,12 +7,13 @@ import {
 import { prisma } from '../../../client';
 import { channels, slackThreads, users } from '@prisma/client';
 import {
+  createUser,
   findOrCreateChannel,
-  updateAccountSlackSyncStatus,
   updateNextPageCursor,
 } from '../../../lib/models';
 import { createSlug } from '../../../lib/util';
 import { SyncStatus, updateAndNotifySyncStatus } from 'services/sync';
+import { generateRandomWordSlug } from '@/utilities/randomWordSlugs';
 
 export default async function handler(
   request: NextApiRequest,
@@ -191,20 +192,19 @@ async function findAuthorsAndPersist(
     if (!authors[userId]) {
       // new user, insert
       const newUser = usersInMessages[userId];
-      authors[userId] = await prisma.users.create({
-        data: {
-          slackUserId: userId,
-          accountsId: accountId,
-          displayName: newUser.username,
-          isAdmin: false, // TODO
-          isBot: false, // TODO
-          ...(newUser.avatar && {
-            profileImageUrl: buildUserAvatar({
-              userId: newUser.id,
-              avatarId: newUser.avatar,
-            }),
+      authors[userId] = await createUser({
+        slackUserId: userId,
+        accountsId: accountId,
+        displayName: newUser.username,
+        anonymousAlias: generateRandomWordSlug(),
+        isAdmin: false, // TODO
+        isBot: false, // TODO
+        ...(newUser.avatar && {
+          profileImageUrl: buildUserAvatar({
+            userId: newUser.id,
+            avatarId: newUser.avatar,
           }),
-        },
+        }),
       });
     }
     // if exists already, lets look for the avatar
