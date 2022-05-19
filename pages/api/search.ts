@@ -11,7 +11,7 @@ export default async function handler(
 
   const account = await prisma.accounts.findUnique({
     where: { id: accountId },
-    select: { premium: true, anonymizeUsers: true },
+    select: { anonymizeUsers: true },
   });
 
   const response = await prisma.messages
@@ -35,7 +35,7 @@ export default async function handler(
       take: 20,
     })
     .then((messages) => {
-      if (!!account?.anonymizeUsers && !!account.premium) {
+      if (!!account?.anonymizeUsers) {
         return anonymizeMessagesMentions(messages);
       } else {
         return messages;
