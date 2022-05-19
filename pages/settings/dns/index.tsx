@@ -16,7 +16,6 @@ export default function ChannelsPage({ records, error }: Props) {
   if (error) {
     return (
       <DashboardLayout header="DNS">
-        <h1>Error</h1>
         <p>{error.message}</p>
       </DashboardLayout>
     );
@@ -33,9 +32,57 @@ export default function ChannelsPage({ records, error }: Props) {
   if (session) {
     return (
       <DashboardLayout header="DNS">
-        {records.map((record: any) => (
-          <p>{record.type}</p>
-        ))}
+        <p className="mb-6 text-sm">
+          Subdomain routing setup can be achieved by veryfing the ownership of a
+          domain. Copy the TXT and CNAME records from below and paste them into
+          your DNS settings.
+        </p>
+        <h2 className="text-md font-bold">Records</h2>
+        <div className="overflow-x-auto">
+          <div className="inline-block min-w-full py-2 align-middle">
+            <div className="overflow-hidden shadow-sm ring-1 ring-black ring-opacity-5">
+              <table className="min-w-full divide-y divide-gray-300">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th
+                      scope="col"
+                      className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6 lg:pl-8"
+                    >
+                      Type
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                    >
+                      Name
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                    >
+                      Value
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200 bg-white">
+                  {records.map((record: DNSRecord, index) => (
+                    <tr key={record.type + index}>
+                      <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 lg:pl-8">
+                        {record.type}
+                      </td>
+                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                        {record.name}
+                      </td>
+                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                        {record.value}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
       </DashboardLayout>
     );
   }
@@ -77,10 +124,14 @@ export async function getServerSideProps(context: NextPageContext) {
     };
   }
 
+  const records = response.records.filter(
+    (record) => record.type === 'TXT' || record.type === 'CNAME'
+  );
+
   return {
     props: {
       session,
-      records: response?.records || [],
+      records: records,
     },
   };
 }
