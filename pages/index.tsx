@@ -149,6 +149,21 @@ const Home: NextPage = () => {
             communityName="Pulumi"
             description="Developer-First Infrastructure as Code"
           ></CommunityCard>
+          <CommunityCard
+            url="https://community-chat.questdb.io"
+            communityName="QuestDB"
+            description="QuestDB is the fastest open source time series database"
+          ></CommunityCard>
+          <CommunityCard
+            url="https://community-chat.signoz.io"
+            communityName="Signoz"
+            description="Understand issues in your deployed applications & solve them quickly"
+          ></CommunityCard>
+          <CommunityCard
+            url="https://linen.prefect.io"
+            communityName="Prefect"
+            description="The easiest way to build, run, and monitor data pipelines at scale."
+          ></CommunityCard>
         </div>
 
         <div className="grid grid-col-1 gap-3 mx-auto text-gray-700 prose prose-lg max-w-4xl mt-10">
