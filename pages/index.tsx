@@ -65,16 +65,17 @@ const Home: NextPage = () => {
       <main className="mt-10 mx-auto max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28">
         <div className="sm:text-center">
           <h1 className="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
-            <span className="block xl:inline">Make your Slack community</span>{' '}
-            <br></br>
+            <span className="block xl:inline">
+              Make Slack and Discord communities{' '}
+            </span>
             <span className="block text-blue-600 xl:inline">
               Google-searchable
             </span>
           </h1>
           <p className="mt-3 text-base text-gray-500 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl ">
-            Linen syncs your Slack threads to an SEO friendly website that
-            allows your community to discover you through search engines and
-            reduces the number of repeat questions.
+            Linen syncs your Slack and Discord threads to an SEO friendly
+            website that allows your community to discover you through search
+            engines and reduces the number of repeat questions.
           </p>
           <div className="mt-5 sm:mt-8 sm:flex sm:justify-center">
             <div className="rounded-md shadow">
@@ -151,18 +152,20 @@ const Home: NextPage = () => {
         </div>
 
         <div className="grid grid-col-1 gap-3 mx-auto text-gray-700 prose prose-lg max-w-4xl mt-10">
-          <LandingH2>Make your Slack threads Google searchable</LandingH2>
+          <LandingH2>
+            Make your Slack/Discord threads Google searchable
+          </LandingH2>
           <p>
-            Linen syncs all your threads in your public Slack channels and
-            threads to linen.dev/s/your_slack_workspace_name. This makes your
-            Slack contents available for your community members without
-            requiring a login.
+            Linen syncs all your threads in your public channels and threads to
+            linen.dev/s/your_slack_workspace_name. This makes your Slack/Discord
+            contents available for your community members without requiring a
+            login.
           </p>
           <LandingH2>Free to setup and use</LandingH2>
           <p>
             Linen is free to set up and install. Once you go through the 10
             minute setup process and wait for the syncing you will be able to
-            make your community&apos;s Slack threads free of charge.
+            make your community&apos;s threads free of charge.
           </p>
           <LandingH2>
             Generate organic content for your website and domain
@@ -176,18 +179,30 @@ const Home: NextPage = () => {
           </p>
           <LandingH2>Scale your community and reduce support burden</LandingH2>
           <p>
-            Slack communities are great for chatting and engaging but over time
-            they become overwelming. As a community grows so does the number of
-            repeat questions. As previously a former open source maintainer I
-            wanted to minimize the number of repeat questions and encourage the
-            community to search.
+            Slack/Discord communities are great for chatting and engaging but
+            over time they become overwelming. As a community grows so does the
+            number of repeat questions. As previously a former open source
+            maintainer I wanted to minimize the number of repeat questions and
+            encourage the community to search.
           </p>
           <LandingH2>A better experience for your community</LandingH2>
           <p>
-            Linen is a great way to make your Slack content more discoverable.
-            No longer do you need to login to your Slack workspace to view your
-            community's content. You can link specific conversations in github
-            issues without requiring a sign in to get the context of the issue.
+            Linen is a great way to make your community content more
+            discoverable. No longer do you need to login to your Slack/Discord
+            workspace to view your community's content. You can link specific
+            conversations in github issues without requiring a sign in to get
+            the context of the issue.
+          </p>
+          <LandingH2>Community Privacy</LandingH2>
+          <p>
+            Linen only syncs conversations in the public channels. We only pull
+            the display name and profile picture from Slack/Discord and we do
+            not store community member's email or private information. Upon
+            request we will delete any community member's information and
+            messages within 14 days. Finally we have the options of anonymizing
+            your community member's display name with a fake randomly generated
+            string like `many-ancient-parrot`, `adventurous-billowy-kangaroo`,
+            and `benedict-cumberbatch`.
           </p>
         </div>
       </main>
