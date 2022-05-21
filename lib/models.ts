@@ -150,7 +150,7 @@ export const accountsWithChannels = async () => {
           slackTeamId: null,
         },
       ],
-      slackSyncStatus: 'Done',
+      slackSyncStatus: 'DONE',
     },
   });
 };
