@@ -1,4 +1,4 @@
-import type { NextPage } from 'next';
+import { prisma } from '../client';
 import linenExamplePage from '../public/linen-example-page.png';
 import ycLogo from '../public/yc-logo.png';
 import Image from 'next/image';
@@ -10,7 +10,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import FadeIn from '../components/FadeIn';
 import Head from 'next/head';
 
-const Home: NextPage = () => {
+const Home = (props: { accounts: Props[] }) => {
+  const accounts = props.accounts;
   return (
     <div className="mb-10 pb-10">
       <Head>
@@ -119,51 +120,25 @@ const Home: NextPage = () => {
         </div>
 
         <div className="flex flex-col md:grid md:grid-cols-2 lg:grid-cols-3 gap-3 mt-10">
-          <CommunityCard
-            url="https://osquery.fleetdm.com"
-            communityName="Osquery"
-            description="Query your devices like a database"
-          ></CommunityCard>
-          <CommunityCard
-            url="https://flyte-org.linen.dev/"
-            communityName="Flyte"
-            description="The Workflow Automation Platform for Complex, Mission-Critical Data and ML Processes at Scale"
-          ></CommunityCard>
-          <CommunityCard
-            url="https://calendso.linen.dev"
-            communityName="Cal.com"
-            description="Scheduling infrastructure for absolutely everyone"
-          ></CommunityCard>
-          <CommunityCard
-            url="https://community-chat.infracost.io/"
-            communityName="Infracost"
-            description="Cloud cost estimates for Terraform in pull requests"
-          ></CommunityCard>
-          <CommunityCard
-            url="https://www.linen.dev/s/airbytehq/c/contributing-to-airbyte"
-            communityName="Airbyte"
-            description="Open-source data integration for modern data teams "
-          ></CommunityCard>
-          <CommunityCard
-            url="https://archive.pulumi.com/"
-            communityName="Pulumi"
-            description="Developer-First Infrastructure as Code"
-          ></CommunityCard>
-          <CommunityCard
-            url="https://community-chat.questdb.io"
-            communityName="QuestDB"
-            description="QuestDB is the fastest open source time series database"
-          ></CommunityCard>
-          <CommunityCard
-            url="https://community-chat.signoz.io"
-            communityName="Signoz"
-            description="Understand issues in your deployed applications & solve them quickly"
-          ></CommunityCard>
-          <CommunityCard
-            url="https://linen.prefect.io"
-            communityName="Prefect"
-            description="The easiest way to build, run, and monitor data pipelines at scale."
-          ></CommunityCard>
+          {accounts.map((a) => {
+            let url = a.premium
+              ? 'https://' + a.redirectDomain
+              : 'https://linen.dev/s/' + a.slackDomain;
+
+            //TODO:remove this once supabase sets up domain to discord.supabase.com
+            if (url.includes('supabase')) {
+              url = 'https://839993398554656828.linen.dev/';
+            }
+            return (
+              <CommunityCard
+                url={url}
+                communityName="bleh"
+                description="bleh"
+                logoUrl={a.logoUrl}
+                brandColor={a.brandColor}
+              ></CommunityCard>
+            );
+          })}
         </div>
 
         <div className="grid grid-col-1 gap-3 mx-auto text-gray-700 prose prose-lg max-w-4xl mt-10">
@@ -225,11 +200,11 @@ const Home: NextPage = () => {
   );
 };
 
-interface Props {
+interface H2Props {
   children: React.ReactNode;
 }
 
-function LandingH2({ children }: Props) {
+function LandingH2({ children }: H2Props) {
   return (
     <h2 className="text-1xl tracking-tight font-extrabold text-gray-800 sm:text-5xl md:text-2xl pt-2">
       {children}
@@ -239,23 +214,66 @@ function LandingH2({ children }: Props) {
 
 const CommunityCard = ({
   url,
-  communityName,
-  description,
+  brandColor,
+  logoUrl,
 }: {
   url: string;
   communityName: string;
   description: string;
+  brandColor: string;
+  logoUrl: string;
 }) => {
   return (
-    <div className="min-width-sm px-2 border border-solid rounded border-slate-200 hover:bg-blue-600 hover:text-white">
-      <a href={url} target="_blank" rel="noreferrer">
-        <div className="px-2 py-2">
-          <p>{communityName}</p>
-          <p>{description}</p>
-        </div>
+    <div
+      className="min-width-sm border rounded pl-10"
+      style={{
+        backgroundColor: brandColor,
+      }}
+    >
+      <a href={url} target="_blank" rel="noreferrer" className="pl-8">
+        <Image src={logoUrl} width="200px" height="100%"></Image>
       </a>
     </div>
   );
 };
+
+type Props = {
+  logoUrl: string;
+  name: string;
+  brandColor: string;
+  redirectDomain: string;
+  premium: boolean;
+  slackDomain: string;
+};
+
+export async function getStaticProps() {
+  const accounts = await prisma.accounts.findMany({
+    where: {
+      NOT: [
+        {
+          logoUrl: null,
+        },
+      ],
+      slackSyncStatus: 'DONE',
+    },
+    select: {
+      logoUrl: true,
+      name: true,
+      premium: true,
+      brandColor: true,
+      redirectDomain: true,
+      slackDomain: true,
+      discordServerId: true,
+    },
+  });
+
+  const goodLookingLogos = accounts
+    .filter((a) => a.logoUrl?.includes('.svg'))
+    .slice(0, 12);
+
+  return {
+    props: { accounts: goodLookingLogos },
+  };
+}
 
 export default Home;
