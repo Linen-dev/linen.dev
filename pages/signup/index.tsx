@@ -1,10 +1,33 @@
 import { useState } from 'react';
+import { getCsrfToken } from 'next-auth/react';
 import CreateAccountForm from './CreateAccountForm';
 import CreateAuthForm from './CreateAuthForm';
 
 enum Step {
   Auth,
   Account,
+}
+
+async function signIn({
+  email,
+  password,
+}: {
+  email: string;
+  password: string;
+}) {
+  const csrfToken = await getCsrfToken();
+  await fetch('/api/auth/callback/credentials?callbackUrl=/foo', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: new URLSearchParams({
+      email,
+      password,
+      csrfToken: csrfToken as string,
+    }),
+    redirect: 'manual',
+  });
 }
 
 function SignUp() {
@@ -20,6 +43,7 @@ function SignUp() {
           setEmail(email);
           setPassword(password);
           setStep(Step.Account);
+          signIn({ email, password });
         }}
       />
     );
