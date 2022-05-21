@@ -120,7 +120,7 @@ export async function channelGetStaticProps(
 }
 
 const SKIP_CACHING_ON_BUILD_STEP =
-  process.env.SKIP_CACHING_ON_BUILD_STEP || false;
+  process.env.SKIP_CACHING_ON_BUILD_STEP === 'true' || false;
 
 export async function channelGetStaticPaths(pathPrefix: string) {
   if (SKIP_CACHING_ON_BUILD_STEP) {
