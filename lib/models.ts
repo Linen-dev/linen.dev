@@ -145,7 +145,12 @@ export const accountsWithChannels = async () => {
   return prisma.accounts.findMany({
     select: { slackDomain: true, redirectDomain: true, channels: true },
     where: {
-      NOT: [{ slackTeamId: null }],
+      NOT: [
+        {
+          slackTeamId: null,
+        },
+      ],
+      slackSyncStatus: 'DONE',
     },
   });
 };
