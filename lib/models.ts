@@ -148,9 +148,9 @@ export const accountsWithChannels = async () => {
       NOT: [
         {
           slackTeamId: null,
-          slackSyncStatus: 'Error',
         },
       ],
+      slackSyncStatus: 'Done',
     },
   });
 };
