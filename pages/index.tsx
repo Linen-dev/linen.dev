@@ -269,7 +269,8 @@ export async function getStaticProps() {
 
   const goodLookingLogos = accounts
     .filter((a) => a.logoUrl?.includes('.svg'))
-    .slice(0, 12);
+    // since we use 3 columns we want it to only show numbers divisible by 3
+    .slice(0, accounts.length - (accounts.length % 3));
 
   return {
     props: { accounts: goodLookingLogos },
