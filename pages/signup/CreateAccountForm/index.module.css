@@ -1,7 +1,17 @@
 .communityButton {
   display: flex;
+  justify-content: center;
   margin: 1rem auto 0;
   border: 1px solid #c5c6c7;
   border-radius: 5px;
   padding: 7px 10px;
+  min-width: 250px;
+  align-items: center;
+  align-content: center;
+  font-size: large;
+}
+
+.btnContainer {
+  display: flex;
+  flex-direction: column;
 }

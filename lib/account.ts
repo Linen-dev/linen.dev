@@ -28,7 +28,7 @@ export function createAccount({
     data: {
       homeUrl,
       docsUrl,
-      redirectDomain: stripProtocol(redirectDomain),
+      redirectDomain: redirectDomain && stripProtocol(redirectDomain),
       brandColor,
     },
   });

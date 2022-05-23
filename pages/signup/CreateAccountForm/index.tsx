@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { getCsrfToken } from 'next-auth/react';
 import Layout from '../../../components/layout/CardLayout';
-import TextField from '../../../components/TextField';
-import ColorField from '../../../components/ColorField';
 import styles from './index.module.css';
-import { stripProtocol } from '../../../utilities/url';
 import DiscordIcon from '@/components/icons/DiscordIcon';
 import SlackIcon from '@/components/icons/SlackIcon';
+import { toast } from '@/components/Toast';
 
 const REDIRECT_URI_SLACK =
   process.env.NEXT_PUBLIC_REDIRECT_URI || 'https://linen.dev/api/oauth';
@@ -77,82 +75,62 @@ export default function CreateAccountForm({ authId, email, password }: Props) {
 
   const onSubmit = async (event: any) => {
     event.preventDefault();
-    const form = event.target;
-    const homeUrl = form.homeUrl.value;
-    const docsUrl = form.docsUrl.value;
-    const redirectDomain = stripProtocol(form.redirectDomain.value);
-    const brandColor = form.brandColor.value;
-    const response = await fetch('/api/accounts', {
-      method: 'POST',
-      body: JSON.stringify({
-        authId,
-        homeUrl,
-        docsUrl,
-        redirectDomain,
-        brandColor,
-      }),
-    });
-    const account = await response.json();
-    const response2 = await fetch('/api/auth', {
-      method: 'PUT',
-      body: JSON.stringify({
-        email,
-        password,
-        accountId: account.id,
-      }),
-    });
-    await response2.json();
-    await signIn({ email, password });
-    community && integrationAuthorizer(community, account.id);
+    try {
+      const account = await fetch('/api/accounts', {
+        method: 'POST',
+        body: JSON.stringify({
+          authId,
+        }),
+      }).then((res) => {
+        if (!res.ok) throw res;
+        else return res.json();
+      });
+
+      await fetch('/api/auth', {
+        method: 'PUT',
+        body: JSON.stringify({
+          email,
+          password,
+          accountId: account.id,
+        }),
+      }).then((res) => {
+        if (!res.ok) throw res;
+        else return res.json();
+      });
+
+      await signIn({ email, password });
+      community && integrationAuthorizer(community, account.id);
+    } catch (error) {
+      console.error(error);
+      toast.error('Something went wrong, please sign in again');
+    }
   };
 
   return (
     <Layout header="Set up your account">
       <form onSubmit={onSubmit}>
-        <TextField
-          label="Home url"
-          placeholder="https://yourwebsite.com"
-          id="homeUrl"
-          required
-        />
-        <TextField
-          label="Docs url"
-          placeholder="https://docs.yourwebsite.com"
-          id="docsUrl"
-          required
-        />
-        <TextField
-          label="Redirect domain"
-          placeholder="linen.yourwebsite.com"
-          id="redirectDomain"
-          required
-        />
-        <ColorField
-          label="Brand color"
-          id="brandColor"
-          defaultValue="#1B194E"
-          required
-        />
-        <button
-          className={styles.communityButton}
-          type="submit"
-          onClick={() => setCommunity('discord')}
-        >
-          <DiscordIcon size="20" style={{ margin: '3px 8px 3px 1px' }} />
-          <p>
-            Add to <b>Discord</b>
-          </p>
-        </button>
-        <button
-          className={styles.communityButton}
-          type="submit"
-          onClick={() => setCommunity('slack')}
-        >
-          <SlackIcon size="20" style={{ margin: '3px 8px 3px 1px' }} />
-          <p>
-            Add to <b>Slack</b>
-          </p>
-        </button>
+        <div className={styles.btnContainer}>
+          <button
+            className={styles.communityButton}
+            type="submit"
+            onClick={() => setCommunity('discord')}
+          >
+            <DiscordIcon size="25" style={{ margin: '3px 8px 3px 1px' }} />
+            <p>
+              Add to <b>Discord</b>
+            </p>
+          </button>
+          <button
+            className={styles.communityButton}
+            type="submit"
+            onClick={() => setCommunity('slack')}
+          >
+            <SlackIcon size="25" style={{ margin: '3px 8px 3px 1px' }} />
+            <p>
+              Add to <b>Slack</b>
+            </p>
+          </button>
+        </div>
       </form>
     </Layout>
   );
