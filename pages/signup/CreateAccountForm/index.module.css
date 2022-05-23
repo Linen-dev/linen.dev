@@ -1,8 +1,7 @@
-.link {
+.communityButton {
   display: flex;
   margin: 1rem auto 0;
-}
-
-.link img {
-  display: inline-block;
+  border: 1px solid #c5c6c7;
+  border-radius: 5px;
+  padding: 7px 10px;
 }
