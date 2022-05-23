@@ -6,7 +6,13 @@ export function getSubdomain(hostname: string): string | null {
   return hostname.includes('.') ? hostname.split('.')[0] : null;
 }
 
-const linenHostname = ['localhost', 'localhost:3000', 'linen.dev', 'ngrok.io'];
+const linenHostname = [
+  'localhost',
+  'localhost:3000',
+  'linen.dev',
+  'ngrok.io',
+  'vercel.app',
+];
 
 export function isLinenDomain(host?: string) {
   if (!host) return true;

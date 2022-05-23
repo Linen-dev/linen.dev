@@ -17,7 +17,5 @@ export default async function handler(
   res: NextApiResponse
 ) {
   callInternalJob('/api/scripts/discordSyncJob');
-  callInternalJob('/api/scripts/buildSitemap');
-
   return res.status(200).json({});
 }

@@ -1,6 +1,5 @@
-import { isLinenDomain } from '@/utilities/domain';
+import { createXMLSitemapForFreeCommunity } from '@/utilities/sitemap';
 import { GetServerSideProps } from 'next/types';
-import { downloadSitemapChunk } from '../../../../services/sitemap';
 
 export const getServerSideProps: GetServerSideProps = async ({
   req,
@@ -8,11 +7,15 @@ export const getServerSideProps: GetServerSideProps = async ({
   query,
 }) => {
   try {
-    console.log('query', query);
-    const { n } = query;
     const { host } = req.headers;
-    const domain = isLinenDomain(host) ? 'linen.dev' : (host as string);
-    const sitemap = await downloadSitemapChunk(domain, Number(n));
+    if (!host) {
+      throw 'host missing';
+    }
+    const { communityName } = query;
+    const sitemap = await createXMLSitemapForFreeCommunity(
+      host,
+      communityName as string
+    );
     res.setHeader('Content-Type', 'application/xml');
     res.write(sitemap);
     res.end();
