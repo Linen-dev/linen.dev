@@ -98,6 +98,10 @@ Should be *annually*.
 | Paragraph   | Text        |
 `.trim();
 
+const BROKEN_LINK_EXAMPLE = `
+<http://-how-to-register>
+`.trim();
+
 export default function Styleguide() {
   return (
     <Example header="Message">
@@ -134,6 +138,9 @@ export default function Styleguide() {
       <Example description="It escapes HTML entities.">
         <Message text={`\`${HTML_EXAMPLE}\``} />
         <Message text={`\`\`\`${HTML_EXAMPLE}\`\`\`\``} />
+      </Example>
+      <Example description="It supports broken links.">
+        <Message text={BROKEN_LINK_EXAMPLE} />
       </Example>
     </Example>
   );

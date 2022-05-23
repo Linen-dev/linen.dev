@@ -16,10 +16,21 @@ function isImage(href: string): boolean {
   return SUPPORTED_EXTENSIONS.includes(extension.toLowerCase());
 }
 
+function isUrlValid(url: string): boolean {
+  return !url.startsWith('http://-') && !url.startsWith('https://-');
+}
+
 export default function Link({ value }: Props) {
   const [href, name] = value.split('|');
+  const isHrefInvalid = !isUrlValid(href);
   return (
-    <a className={classNames('text-indigo-700', styles.link)} href={href}>
+    <a
+      className={classNames('text-indigo-700', styles.link, {
+        [styles.line]: isHrefInvalid,
+      })}
+      href={href}
+      title={isHrefInvalid ? 'Invalid link' : ''}
+    >
       {name || href}
       {isImage(href) && <img src={href} alt={href} />}
     </a>

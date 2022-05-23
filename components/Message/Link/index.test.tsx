@@ -1,6 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import Link from '.';
+import styles from './index.module.scss';
 
 describe('Link', () => {
   it('renders it', () => {
@@ -26,6 +27,16 @@ describe('Link', () => {
         'https://foo.com/image.png'
       ) as HTMLImageElement;
       expect(image.src).toEqual('https://foo.com/image.png');
+    });
+  });
+
+  describe('when the link is not valid', () => {
+    it('renders a line through', () => {
+      const { getByText } = render(
+        <Link value="https://-how-to-register|foo" />
+      );
+      const link = getByText('foo');
+      expect(link).toHaveClass(styles.line);
     });
   });
 });
