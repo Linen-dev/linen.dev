@@ -1,4 +1,5 @@
 const ACCESS_TOKEN = process.env.VERCEL_ACCESS_TOKEN || '';
+const TEAM_ID = process.env.VERCAL_TEAM_ID || '';
 const BASE_URL = 'https://api.vercel.com';
 
 export interface DNSRecord {
@@ -27,11 +28,14 @@ export default class Vercel {
   static getDnsRecords = async (
     domain: string
   ): Promise<GetDNSRecordsResponse> => {
-    const res = await fetch(`${BASE_URL}/v4/domains/${domain}/records`, {
-      headers: {
-        Authorization: `Bearer ${ACCESS_TOKEN}`,
-      },
-    });
+    const res = await fetch(
+      `${BASE_URL}/v4/domains/${domain}/records?teamId=${TEAM_ID}`,
+      {
+        headers: {
+          Authorization: `Bearer ${ACCESS_TOKEN}`,
+        },
+      }
+    );
     return await res.json();
   };
 }
