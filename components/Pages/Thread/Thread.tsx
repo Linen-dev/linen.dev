@@ -94,11 +94,16 @@ export default function Thread({
             size="sm"
             target="_blank"
           >
-            <AiOutlineLink className={styles.icon} size={18} />
             {settings.communityType === 'discord' ? (
-              <div>Join thread in Discord</div>
+              <div className="flex">
+                <AiOutlineLink className={styles.icon} size={18} />
+                <div>Join thread in Discord</div>
+              </div>
             ) : (
-              <div>Join thread in Slack</div>
+              <div className="flex">
+                <AiOutlineLink className={styles.icon} size={18} />
+                <div>Join thread in Slack</div>
+              </div>
             )}
           </Anchor>
           <div className={styles.count}>
