@@ -1,42 +1,38 @@
 import { createXMLSitemapForSubdomain } from '../utilities/sitemap';
-import { getSubdomain } from '../utilities/domain';
+import { getSubdomain, isLinenDomain } from '../utilities/domain';
 import { GetServerSideProps } from 'next/types';
 import { downloadSitemapMain } from 'services/sitemap';
 
-const linenHostname = ['localhost:3000', 'linen.dev', 'ngrok.io'];
-
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+  const { host } = req.headers;
+
   try {
-    const { host } = req.headers;
-
-    if (!host) {
-      throw 'no host in headers';
-    }
-
-    if (
-      linenHostname.find(
-        (linenHost) => linenHost === host || host.endsWith(linenHost)
-      )
-    ) {
-      const sitemap = await downloadSitemapMain();
-      res.write(sitemap);
-      res.end();
-      return { props: {} };
-    }
-
-    const subdomain = getSubdomain(host);
-    if (!subdomain) {
-      throw 'is not a subdomain';
-    }
-
-    const sitemap = await createXMLSitemapForSubdomain(host, subdomain);
-    res.setHeader('Content-Type', 'application/xml');
+    // new feature :: sitemap from s3
+    const domain = isLinenDomain(host) ? 'linen.dev' : (host as string);
+    const sitemap = await downloadSitemapMain(domain);
     res.write(sitemap);
     res.end();
+    return { props: {} };
   } catch (exception) {
     console.error(exception);
-    res.statusCode = 404;
-    res.end();
+
+    try {
+      // fallback :: old function
+      if (!host) {
+        throw 'host it missing';
+      }
+      const subdomain = getSubdomain(host);
+      if (!subdomain) {
+        throw 'is not a subdomain';
+      }
+      const sitemap = await createXMLSitemapForSubdomain(host, subdomain);
+      res.setHeader('Content-Type', 'application/xml');
+      res.write(sitemap);
+      res.end();
+    } catch (error) {
+      res.statusCode = 404;
+      res.end('Not found');
+    }
   }
 
   return {
