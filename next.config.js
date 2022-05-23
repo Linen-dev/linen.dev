@@ -10,7 +10,11 @@ const nextConfig = {
   },
   reactStrictMode: true,
   images: {
-    domains: ['avatars.slack-edge.com', 'cdn.discordapp.com'],
+    domains: [
+      'avatars.slack-edge.com',
+      'cdn.discordapp.com',
+      'linen-assets.s3.amazonaws.com',
+    ],
   },
   pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
 };
