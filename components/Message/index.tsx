@@ -18,6 +18,9 @@ interface Props {
 }
 
 function Message({ text, truncate, mentions }: Props) {
+  if (text === '') {
+    text = 'message has been deleted';
+  }
   const input = truncate ? truncateText(text) : text;
   const tokens = tokenize(input);
 
