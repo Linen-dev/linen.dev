@@ -117,9 +117,10 @@ async function addMessage(
     thread.slug = createSlug(event.text);
   }
 
+  // maybe here, if threads.slug is null, will persist null
   await updateSlackThread(thread.id, {
     messageCount: thread.messageCount,
-    slug: thread.slug,
+    ...(!!thread.slug && { slug: thread.slug }),
   });
 
   //TODO: create render text object and save that on creation of message

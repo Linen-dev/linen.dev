@@ -9,6 +9,8 @@ export default async function handler(
   let skip = 0;
   let threadsWithNoSlug = await findThreadsWithNoSlugs(skip);
 
+  // weird case here when return 0 rows but there still more rows,
+  // need to re-execute the process a few times to be really completed
   while (threadsWithNoSlug.length > 0) {
     console.log('looping');
     skip += 100;
@@ -44,6 +46,7 @@ const findThreadsWithNoSlugs = (skip: number) => {
         orderBy: {
           sentAt: 'asc',
         },
+        take: 1,
       },
     },
     skip,
