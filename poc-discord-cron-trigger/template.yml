@@ -58,7 +58,7 @@ Resources:
           const https = require('https');
           module.exports.handler = async () => {
             return await new Promise((res, rej) => {
-              https.get(`https://${process.env.SYNC_URL}/api/scripts/discordSyncJob`, (resp) => {
+              https.get(`https://${process.env.SYNC_URL}/api/scripts/cronJobs`, (resp) => {
                 let data = '';
                 resp.on('data', (chunk) => {
                   data += chunk;
