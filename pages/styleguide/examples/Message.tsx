@@ -31,6 +31,14 @@ Apr 07 04:38:57 ip-10-0-74-131 kernel:  kthread+0x121/0x140
 Apr 07 04:38:57 ip-10-0-74-131 kernel:  ? auditd_reset+0xa0/0xa0
 `.trim();
 
+const JAVASCRIPT_EXAMPLE = `
+import React from 'react'
+
+export default function Message({ children }) {
+  return (<div>{children}</div>)
+}
+`.trim();
+
 const CODE_EXAMPLE = `
 [root@visibility99 osquery]# curl -X POST
 <https://xxxxxxxxxxxx:8080/api/v1/enroll> -d '{}' curl: (52) Empty reply from server
@@ -89,6 +97,7 @@ export default function Styleguide() {
       <Message text="Lorem ipsum dolor sit amet, lorem ipsum dolor sit amet, lorem ipsum dolor sit amet `lorem ipsum dolor sit amet, lorem ipsum dolor sit amet`" />
       <Message text={`\`\`\`${STACK_TRACE_EXAMPLE}\`\`\``} />
       <Message text={`\`\`\`${CODE_EXAMPLE}\`\`\``} />
+      <Message text={`\`\`\`${JAVASCRIPT_EXAMPLE}}\`\`\``} />
       <Message text={STATIC_TEXT} />
       <Message text={MARKDOWN_EXAMPLE} />
       <Message text="<http://localhost:3000/yc-logo.png>" />
