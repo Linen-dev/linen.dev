@@ -1,3 +1,5 @@
+import React from 'react';
+import { getCsrfToken } from 'next-auth/react';
 import Layout from '../../../components/layout/CardLayout';
 import TextField from '../../../components/TextField';
 import ColorField from '../../../components/ColorField';
@@ -14,6 +16,28 @@ interface Props {
   authId: string;
   email: string;
   password: string;
+}
+
+async function signIn({
+  email,
+  password,
+}: {
+  email: string;
+  password: string;
+}) {
+  const csrfToken = await getCsrfToken();
+  await fetch('/api/auth/callback/credentials?callbackUrl=/foo', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: new URLSearchParams({
+      email,
+      password,
+      csrfToken: csrfToken as string,
+    }),
+    redirect: 'manual',
+  });
 }
 
 export default function CreateAccountForm({ authId, email, password }: Props) {
@@ -45,6 +69,7 @@ export default function CreateAccountForm({ authId, email, password }: Props) {
       }),
     });
     await response2.json();
+    await signIn({ email, password });
     window.location.href =
       'https://slack.com/oauth/v2/' +
       `authorize?client_id=${SLACK_CLIENT_ID}&` +
