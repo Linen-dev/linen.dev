@@ -23,6 +23,7 @@ import { capitalize } from 'lib/util';
 import BotButton from 'components/BotButton';
 import Label from 'components/Label';
 import CheckboxField from '@/components/CheckboxField';
+import classNames from 'classnames';
 
 interface Props {
   account?: SerializedAccount;
@@ -190,9 +191,23 @@ export default function SettingsPage({ account }: Props) {
             <Description>Logo of your brand.</Description>
             <FileInput onChange={handleLogoChange} />
             {logoUrl ? (
-              <img src={logoUrl} />
+              <img
+                src={logoUrl}
+                style={{
+                  backgroundColor: account.brandColor,
+                }}
+                className={classNames('mb-2 mt-2')}
+              />
             ) : (
-              account.logoUrl && <img src={account.logoUrl} />
+              account.logoUrl && (
+                <img
+                  src={account.logoUrl}
+                  style={{
+                    backgroundColor: account.brandColor,
+                  }}
+                  className={classNames('mb-2 mt-2')}
+                />
+              )
             )}
             <Button onClick={openFileDialog}>
               {files && files.length > 0 && files[0].progress < 100 && (
