@@ -1,73 +1,51 @@
-## sitemap process
+### our sitemap https://linen.dev/sitemap.xml
 
-​
-
-- we should create a cronjob that runs at night or at least once a day, that builds our sitemap from all threads on our database
-- this process should create s3 files as output that we can serve on vercel, with that we will not colapse our database
-- same for each customer, each customer will have their own sitemap files
-- sitemap should not have more than 50k urls, so we should break it down into small sitemaps
-  ​
-
-### file examples
-
-​
-
-## linen.dev
-
-​
-main sitemap.xml
-​
+will return all free communities or premium without redirectDomain sitemaps as this example:
 
 ```xml
-<?xml version="1.0" encoding="UTF-8" ?>
-<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-<sitemap><loc>https://linen.dev/sitemap-threads-0.xml</loc></sitemap>
-<sitemap><loc>https://linen.dev/sitemap-threads-1.xml</loc></sitemap>
+<sitemapindex ....>
+   <sitemap>
+      <loc>https://linen.dev/sitemap/973954867649470474/chunk.xml</loc>
+   </sitemap>
+   <sitemap>
+      <loc>https://linen.dev/sitemap/sandrolinentest/chunk.xml</loc>
+   </sitemap>
 </sitemapindex>
 ```
 
-​
+### accessing https://linen.dev/sitemap/communityName/chunk.xml
 
-### linen.dev/sitemap-threads-0.xml
-
-​
+will return all threads with more than 1 message from that specific community, for instance:
 
 ```xml
-<?xml version="1.0" encoding="UTF-8" ?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-<url><loc>https://linen.dev/s/comunity/c/general/t/difference-between-math-floor-and-math-truncate</loc><lastmod>2022-04-22</lastmod></url>
-<url><loc>https://linen.dev/s/comunity2/c/general/t/the-definitive-guide-to-form-based-website-authentication</loc><lastmod>2022-04-27</lastmod></url>
-<url><loc>https://linen.dev/s/comunity3/c/random/t/unable-to-mock-httprequest-for-json-response-from-http-trigger-azure-function</loc><lastmod>2022-04-28</lastmod></url>
+<urlset ....>
+   <url>
+      <loc>https://linen.dev/s/communityName/t/16/random-slug</loc>
+   </url>
+   <url>
+      <loc>https://linen.dev/s/communityName/t/17/hello-world</loc>
+   </url>
+....
 </urlset>
 ```
 
-​
+### accessing custom domain, as https://custom.domain.io/sitemap.xml
 
-## customer.domain.io
-
-​
-main sitemap.xml for each customer
-​
+will return all threads with more than 1 message from that specific community based on their domain, for instance:
 
 ```xml
-<?xml version="1.0" encoding="UTF-8" ?>
-<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-<sitemap><loc>https://customer.domain.io/sitemap-threads-0.xml</loc></sitemap>
-<sitemap><loc>https://customer.domain.io/sitemap-threads-1.xml</loc></sitemap>
-</sitemapindex>
-```
-
-​
-
-### customer.domain.io/sitemap-threads-0.xml
-
-​
-
-```xml
-<?xml version="1.0" encoding="UTF-8" ?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-<url><loc>https://customer.domain.io/t/difference-between-math-floor-and-math-truncate</loc><lastmod>2022-04-22</lastmod></url>
-<url><loc>https://customer.domain.io/t/the-definitive-guide-to-form-based-website-authentication</loc><lastmod>2022-04-27</lastmod></url>
-<url><loc>https://customer.domain.io/t/unable-to-mock-httprequest-for-json-response-from-http-trigger-azure-function</loc><lastmod>2022-04-28</lastmod></url>
+<urlset ...>
+   <url>
+      <loc>https://custom.domain.io/t/1123/random-slug</loc>
+   </url>
+   <url>
+      <loc>https://custom.domain.io/t/32321/topic-random</loc>
+   </url>
+....
 </urlset>
 ```
+
+### notes
+
+- s3 upload was remove from this implementation due lack of necessity. This implementation was bringing us trouble with the response size that nextjs allow us to return to the client, and the community is far from 50k threads
+- same for the cron job that creates sitemaps, there is no need to persist the sitemap on s3
