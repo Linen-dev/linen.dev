@@ -1,44 +1,32 @@
-import { createXMLSitemapForSubdomain } from '../utilities/sitemap';
-import { getSubdomain } from '../utilities/domain';
+import {
+  createXMLSitemapForLinen,
+  createXMLSitemapForSubdomain,
+} from '../utilities/sitemap';
+import { isLinenDomain } from '../utilities/domain';
 import { GetServerSideProps } from 'next/types';
-import { downloadSitemapMain } from 'services/sitemap';
-
-const linenHostname = ['localhost:3000', 'linen.dev', 'ngrok.io'];
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+  const { host } = req.headers;
   try {
-    const { host } = req.headers;
-
     if (!host) {
-      throw 'no host in headers';
-    }
-
-    if (
-      linenHostname.find(
-        (linenHost) => linenHost === host || host.endsWith(linenHost)
-      )
-    ) {
-      const sitemap = await downloadSitemapMain();
+      throw 'host missing';
+    } else if (isLinenDomain(host)) {
+      const sitemap = await createXMLSitemapForLinen(host);
+      res.setHeader('Content-Type', 'application/xml');
       res.write(sitemap);
       res.end();
-      return { props: {} };
+    } else {
+      const sitemap = await createXMLSitemapForSubdomain(host);
+      res.setHeader('Content-Type', 'application/xml');
+      res.write(sitemap);
+      res.end();
     }
-
-    const subdomain = getSubdomain(host);
-    if (!subdomain) {
-      throw 'is not a subdomain';
-    }
-
-    const sitemap = await createXMLSitemapForSubdomain(host, subdomain);
-    res.setHeader('Content-Type', 'application/xml');
-    res.write(sitemap);
-    res.end();
+    return { props: {} };
   } catch (exception) {
     console.error(exception);
     res.statusCode = 404;
     res.end();
   }
-
   return {
     props: {},
   };

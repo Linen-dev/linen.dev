@@ -1,14 +1,21 @@
+import { createXMLSitemapForFreeCommunity } from '@/utilities/sitemap';
 import { GetServerSideProps } from 'next/types';
-import { downloadSitemapChunk } from '../../../../services/sitemap';
 
 export const getServerSideProps: GetServerSideProps = async ({
+  req,
   res,
   query,
 }) => {
-  console.log('query', query);
   try {
-    const { n } = query;
-    const sitemap = await downloadSitemapChunk(Number(n));
+    const { host } = req.headers;
+    if (!host) {
+      throw 'host missing';
+    }
+    const { communityName } = query;
+    const sitemap = await createXMLSitemapForFreeCommunity(
+      host,
+      communityName as string
+    );
     res.setHeader('Content-Type', 'application/xml');
     res.write(sitemap);
     res.end();

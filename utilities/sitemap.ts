@@ -5,19 +5,11 @@ import prisma from '../client';
 const PROTOCOL = 'https';
 
 export async function createXMLSitemapForSubdomain(
-  host: string,
-  subdomain: string
+  host: string
 ): Promise<string> {
   const account = await prisma.accounts.findFirst({
     where: {
-      OR: [
-        {
-          redirectDomain: host,
-        },
-        {
-          slackDomain: subdomain,
-        },
-      ],
+      redirectDomain: host,
     },
     select: {
       channels: {
@@ -71,4 +63,76 @@ export async function createXMLSitemapForSubdomain(
   return streamToPromise(Readable.from(urls).pipe(stream)).then((data) =>
     data.toString()
   );
+}
+
+export async function createXMLSitemapForLinen(host: string) {
+  const protocol = host.includes('localhost') ? 'http' : PROTOCOL;
+  const freeAccounts = await prisma.accounts.findMany({
+    select: { discordServerId: true, slackDomain: true, id: true },
+    where: {
+      OR: [{ redirectDomain: { equals: null } }, { premium: false }],
+      channels: {
+        some: {
+          slackThreads: {
+            some: {
+              messages: { some: { id: { not: undefined } } },
+            },
+          },
+        },
+      },
+    },
+  });
+  if (!freeAccounts || !freeAccounts.length) return '';
+
+  const stream = new SitemapIndexStream();
+  const urls = freeAccounts.map(({ discordServerId, slackDomain }) => {
+    return `${protocol}://${host}/sitemap/${
+      discordServerId || slackDomain
+    }/chunk.xml`;
+  });
+  return streamToPromise(Readable.from(urls).pipe(stream)).then(String);
+}
+
+export async function createXMLSitemapForFreeCommunity(
+  host: string,
+  community: string
+) {
+  // community could be discordServerId or slackDomain
+  const threads = await prisma.slackThreads.findMany({
+    select: {
+      incrementId: true,
+      slug: true,
+      channel: {
+        select: {
+          account: {
+            select: {
+              discordServerId: true,
+              slackDomain: true,
+            },
+          },
+        },
+      },
+    },
+    where: {
+      messages: { some: { id: { not: undefined } } },
+      channel: {
+        account: {
+          OR: [{ discordServerId: community }, { slackDomain: community }],
+        },
+      },
+    },
+    orderBy: {
+      incrementId: 'asc',
+    },
+  });
+  const protocol = host.includes('localhost') ? 'http' : PROTOCOL;
+  const stream = new SitemapStream({
+    hostname: `${protocol}://${host}`,
+  });
+  if (!threads || !threads.length) return '';
+  const prefix = threads[0].channel.account?.discordServerId ? 'd' : 's';
+  const urls = threads?.map(({ incrementId, slug }) => {
+    return `/${prefix}/${community}/t/${incrementId}/${slug || 'topic'}`;
+  });
+  return streamToPromise(Readable.from(urls).pipe(stream)).then(String);
 }

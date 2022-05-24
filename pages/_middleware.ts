@@ -16,6 +16,7 @@ function isTopLevelPathname(pathname: string) {
     PAGES.includes(pathname) ||
     pathname.startsWith('/api') ||
     pathname === '/sitemap.xml' ||
+    pathname.startsWith('/sitemap/') ||
     pathname === '/robots.txt'
   );
 }
