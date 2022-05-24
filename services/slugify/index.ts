@@ -5,6 +5,7 @@ export async function slugify() {
   try {
     let skip = 0;
     let threadsWithNoSlug = await findThreadsWithNoSlugs(skip);
+    console.log('threadsWithNoSlug', threadsWithNoSlug.length);
 
     // weird case here when return 0 rows but there still more rows,
     // need to re-execute the process a few times to be really completed
@@ -29,10 +30,9 @@ export async function slugify() {
       threadsWithNoSlug = await findThreadsWithNoSlugs(skip);
     }
 
-    console.log(threadsWithNoSlug[0]);
     return {
       status: 200,
-      body: threadsWithNoSlug[0],
+      body: {},
     };
   } catch (error) {
     console.error(error);
