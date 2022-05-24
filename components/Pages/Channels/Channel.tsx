@@ -62,17 +62,7 @@ export default function Channel({
   if (!threads) {
     return <div></div>;
   }
-
-  let sortedThreads: threads[] = [];
-  if (threads) {
-    sortedThreads = threads.sort((a, b) => {
-      return (
-        new Date(a.messages[0].sentAt).getTime() -
-        new Date(b.messages[0].sentAt).getTime()
-      );
-    });
-  }
-  const [currentThreads, setCurrentThreads] = useState(sortedThreads);
+  const [currentThreads, setCurrentThreads] = useState(threads);
   const [pageCount, setPageCount] = useState(pagination?.pageCount);
   const [currentPage, setCurrentPage] = useState(page);
   const [initial, setInitial] = useState(true);
@@ -137,8 +127,8 @@ export default function Channel({
   };
 
   const rows = currentThreads?.map(({ messages, incrementId, slug }) => {
-    const newestMessage = messages[messages.length - 1];
-    const oldestMessage = messages[0];
+    const oldestMessage = messages[messages.length - 1];
+    const newestMessage = messages[0];
     const authors = messages.reduce((array: users[], { author }) => {
       if (
         author &&
@@ -185,7 +175,7 @@ export default function Channel({
                 />
               </div>
               <div className="text-sm text-gray-400 flex flex-row justify-between">
-                <p>{messages.length - 1} Replies</p>
+                <p>{messages.length} Replies</p>
                 {format(new Date(oldestMessage.sentAt))}
               </div>
             </div>
@@ -197,8 +187,8 @@ export default function Channel({
 
   const tableRows = currentThreads?.map(
     ({ messages, incrementId, slug, viewCount }) => {
-      const newestMessage = messages[messages.length - 1];
-      const oldestMessage = messages[0];
+      const oldestMessage = messages[messages.length - 1];
+      const newestMessage = messages[0];
       const authors = messages.reduce((array: users[], { author }) => {
         if (
           author &&
@@ -240,10 +230,10 @@ export default function Channel({
             </td>
             <td className="px-6 py-3 text-sm align-middle">{viewCount}</td>
             <td className="px-6 py-3 text-sm align-middle">
-              {messages.length - 1}
+              {messages.length}
             </td>
             <td className="px-6 py-3 text-sm align-middle min-w-[120px]">
-              {format(new Date(newestMessage.sentAt))}
+              {format(new Date(oldestMessage.sentAt))}
             </td>
             <td className="px-6 text-sm text-center align-middle">
               <CopyToClipboardLink

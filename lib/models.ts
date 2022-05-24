@@ -316,7 +316,7 @@ export const threadCount = async (channelId: string): Promise<number> => {
     where: {
       channelId,
       messageCount: {
-        gt: 0,
+        gt: 1,
       },
     },
   });
@@ -350,14 +350,14 @@ export const threadIndex = async (
           },
         },
         orderBy: {
-          sentAt: 'asc',
+          sentAt: 'desc',
         },
       },
     },
     where: {
       channelId,
       messageCount: {
-        gt: 0,
+        gt: 1,
       },
     },
     orderBy: {
