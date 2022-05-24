@@ -318,6 +318,7 @@ export async function saveMessagesTransaction(
             slackThreadTs: m.thread_ts,
           },
           update: {},
+          // maybe here, if creates, slug will be empty
           create: { slackThreadTs: m.thread_ts, channelId },
         });
       } else {
@@ -398,7 +399,8 @@ export async function saveMessagesSyncronous(
 
     await updateSlackThread(thread.id, {
       messageCount: thread.messageCount,
-      slug: thread.slug,
+      // maybe here, if threads.slug is null, will persist null
+      ...(!!thread.slug && { slug: thread.slug }),
     });
 
     let user: UserMap | undefined;
