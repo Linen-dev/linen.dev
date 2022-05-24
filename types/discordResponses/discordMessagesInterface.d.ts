@@ -25,6 +25,7 @@ export interface Author {
   avatar_decoration?: null;
   discriminator: string;
   public_flags: number;
+  bot?: boolean;
 }
 export interface MessageReference {
   channel_id: string;
@@ -39,7 +40,7 @@ export interface ReferencedMessage {
   author: Author;
   attachments?: null[] | null;
   embeds?: null[] | null;
-  mentions?: null[] | null;
+  mentions?: Author[] | null;
   mention_roles?: null[] | null;
   pinned: boolean;
   mention_everyone: boolean;
