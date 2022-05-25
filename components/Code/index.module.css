@@ -1,0 +1,15 @@
+.code {
+  background: transparent;
+  border: none;
+  padding: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: monospace;
+  font-size: 12px;
+}
+
+.pre {
+  border: 1px solid rgb(225, 225, 225);
+  border-radius: 0.25rem;
+  padding: 0.25rem 0.5rem;
+}
