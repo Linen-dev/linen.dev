@@ -14,3 +14,7 @@
   line-height: 1.3;
   padding: 0.125rem 0.25rem;
 }
+
+.inline {
+  display: inline;
+}
