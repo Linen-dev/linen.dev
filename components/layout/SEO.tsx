@@ -31,7 +31,11 @@ function SEO({
   return (
     <Head>
       <title key="title">{title}</title>
-      <meta name="description" content={description} key="description" />
+      <meta
+        name="description"
+        content={description || title}
+        key="description"
+      />
       <meta name="robots" content={`${noIndex ? 'no' : ''}index,follow`} />
 
       {/* Open Graph */}

@@ -11,7 +11,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
     if (!host) {
       throw 'host missing';
     } else if (isLinenDomain(host)) {
-      const sitemap = await createXMLSitemapForLinen(host);
+      const sitemap = await createXMLSitemapForLinen('linen.dev');
       res.setHeader('Content-Type', 'application/xml');
       res.write(sitemap);
       res.end();
