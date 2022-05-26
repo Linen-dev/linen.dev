@@ -1,36 +1,38 @@
 import request from 'superagent';
-import { SlackSearchResponseBody } from '../../types/slackResponses/slackSearchInterface';
+// import { SlackSearchResponseBody } from '../../types/slackResponses/slackSearchInterface';
 import {
   UserInfo,
   UserInfoResponseBody,
 } from '../../types/slackResponses/slackUserInfoInterface';
 
-export const getSlackChannelInfo = async (channelId: string, token: string) => {
-  const url = 'https://slack.com/api/conversations.info';
+// FIXME: possible dead code
+// const getSlackChannelInfo = async (channelId: string, token: string) => {
+//   const url = 'https://slack.com/api/conversations.info';
 
-  const response = await request
-    .get(url + 'channel=' + channelId)
-    .set('Authorization', 'Bearer ' + token);
+//   const response = await request
+//     .get(url + 'channel=' + channelId)
+//     .set('Authorization', 'Bearer ' + token);
 
-  return response;
-};
+//   return response;
+// };
 
+// FIXME: possible dead code
 //Search only accepts user tokens
-export const slackSearch = async ({
-  query,
-  token,
-}: {
-  query: string;
-  token: string;
-}): Promise<SlackSearchResponseBody> => {
-  const url = 'https://slack.com/api/search.messages?';
+// const slackSearch = async ({
+//   query,
+//   token,
+// }: {
+//   query: string;
+//   token: string;
+// }): Promise<SlackSearchResponseBody> => {
+//   const url = 'https://slack.com/api/search.messages?';
 
-  const response = await request
-    .get(url + 'query=' + query)
-    .set('Authorization', 'Bearer ' + token);
+//   const response = await request
+//     .get(url + 'query=' + query)
+//     .set('Authorization', 'Bearer ' + token);
 
-  return response.body as SlackSearchResponseBody;
-};
+//   return response.body as SlackSearchResponseBody;
+// };
 
 export const getSlackUser = async (
   userId: string,
