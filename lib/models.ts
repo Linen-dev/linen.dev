@@ -365,18 +365,16 @@ export const threadIndex = async (
       slackThreadTs: 'desc',
     },
   });
-  const threadsWithMessages = threads.filter(
-    (thread) => thread.messages.length > 0
-  );
+  const threadsWithMessages = threads
+    .filter((thread) => thread.messages.length > 0)
+    .map((thread) => {
+      thread.messages = mergeMessagesByUserId(thread.messages);
+      return thread;
+    });
   if (anonymousCommunity) {
     return threadsWithMessages.map(anonymizeMessages);
   }
-  return threadsWithMessages.map((thread) => {
-    return {
-      ...thread,
-      messages: mergeMessagesByUserId(thread.messages),
-    };
-  });
+  return threadsWithMessages;
 };
 
 export const findThreadById = async (threadId: number) => {
@@ -409,15 +407,14 @@ export const findThreadById = async (threadId: number) => {
     })
     .then((thread) => {
       const account = thread?.channel.account;
+      if (thread) {
+        thread.messages = mergeMessagesByUserId(thread.messages);
+      }
       if (account?.anonymizeUsers) {
         return anonymizeMessages(thread);
       }
-      return { ...thread, messages: mergeMessagesByUserId(thread?.messages) };
+      return thread;
     });
-};
-
-export const getThreadWithMultipleMessages = async (channelId: string) => {
-  return await prisma.slackThreads;
 };
 
 export const findOrCreateUser = async (

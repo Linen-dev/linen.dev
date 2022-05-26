@@ -1,6 +1,6 @@
 import { messages } from '@prisma/client';
 
-export function mergeMessagesByUserId(messages?: messages[]): messages[] {
+export function mergeMessagesByUserId(messages?: messages[]): any[] {
   if (!messages) {
     return [];
   }
