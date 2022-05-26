@@ -1,6 +1,13 @@
 import { anonymizeMessagesMentions } from '@/utilities/anonymizeMessages';
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import prisma from '../../client';
+import {
+  messages,
+  Prisma,
+  slackMentions,
+  slackThreads,
+  users,
+} from '@prisma/client';
 
 export default async function handler(
   req: NextApiRequest,
@@ -14,33 +21,127 @@ export default async function handler(
     select: { anonymizeUsers: true },
   });
 
-  const response = await prisma.messages
-    .findMany({
-      where: {
-        body: {
-          search: query.split(' ').join(' & '),
-        },
-        channel: {
-          accountId: accountId,
-        },
-      },
-      include: {
-        slackThreads: true,
-        mentions: {
-          include: {
-            users: true,
-          },
-        },
-      },
-      take: 20,
-    })
-    .then((messages) => {
-      if (!!account?.anonymizeUsers) {
-        return anonymizeMessagesMentions(messages);
-      } else {
-        return messages;
-      }
-    });
+  // Search messages
+  const searchQuery = query.split(' ').join(' & ');
+  const messagesResult = await prisma.$queryRaw<
+    messages[]
+  >`SELECT "public"."messages"."id",
+          "public"."messages"."createdAt",
+          "public"."messages"."body",
+          "public"."messages"."sentAt",
+          "public"."messages"."channelId",
+          "public"."messages"."slackMessageId",
+          "public"."messages"."slackThreadId",
+          "public"."messages"."usersId"
+      FROM "public"."messages"
+      WHERE (("public"."messages"."id") IN (
+              SELECT "t0"."id"
+              FROM "public"."messages" AS "t0"
+              INNER JOIN "public"."channels" AS "j0" ON ("j0"."id") = ("t0"."channelId")
+              WHERE ("j0"."accountId" = ${accountId} AND "t0"."id" IS NOT NULL)
+          )
+          AND TO_TSVECTOR('english', "public"."messages"."body") @@ TO_TSQUERY('english', ${searchQuery})
+      )
+      ORDER BY "public"."messages"."id" ASC
+      LIMIT 20`;
+
+  // Get messages threads
+  const threadIds = messagesResult.map((mr) => mr.slackThreadId);
+  const slackThreadsResult =
+    threadIds.length > 0
+      ? await prisma.$queryRaw<
+          slackThreads[]
+        >`SELECT "public"."slackThreads"."id",
+          "public"."slackThreads"."incrementId",
+          "public"."slackThreads"."slackThreadTs",
+          "public"."slackThreads"."viewCount",
+          "public"."slackThreads"."slug",
+          "public"."slackThreads"."messageCount",
+          "public"."slackThreads"."channelId"
+      FROM "public"."slackThreads"
+      WHERE "public"."slackThreads"."id" IN (${Prisma.join(threadIds)})`
+      : [];
+
+  // Get mentions for the messages
+  const messageIds = messagesResult.map((mr) => mr.id);
+  const mentionsResult =
+    messageIds.length > 0
+      ? await prisma.$queryRaw<
+          slackMentions[]
+        >`SELECT "public"."slackMentions"."messagesId",
+          "public"."slackMentions"."usersId"
+      FROM "public"."slackMentions"
+      WHERE "public"."slackMentions"."messagesId" IN (${Prisma.join(
+        messageIds
+      )})`
+      : [];
+
+  // Get mentioned users
+  const userIds = mentionsResult.map((mr) => mr.usersId);
+  const usersResult =
+    userIds.length > 0
+      ? await prisma.$queryRaw<users[]>`SELECT "public"."users"."id",
+          "public"."users"."slackUserId",
+          "public"."users"."displayName",
+          "public"."users"."profileImageUrl",
+          "public"."users"."isBot",
+          "public"."users"."isAdmin",
+          "public"."users"."anonymousAlias",
+          "public"."users"."accountsId"
+      FROM "public"."users"
+      WHERE "public"."users"."id" IN (${Prisma.join(userIds)})`
+      : [];
+
+  // Map the results
+  const searchResults = messagesResult.map((mr) => {
+    return {
+      ...mr,
+      slackThreads: slackThreadsResult.find(
+        (str) => str.id === mr.slackThreadId
+      ),
+      mentions: mentionsResult.map((msr) => {
+        return {
+          ...msr,
+          users: usersResult.find((ur) => ur.id === msr.usersId),
+        };
+      }),
+    };
+  });
+  const response = !!account?.anonymizeUsers
+    ? anonymizeMessagesMentions(searchResults as any)
+    : searchResults;
+
+  // Below is the Prisma substitute of the obove series of queries
+  // but Prisma is not using full-text GIS index, and it is extremely slow.
+  // See also the issue: https://github.com/prisma/prisma/issues/8950
+
+  // const response = await prisma.messages
+  //   .findMany({
+  //     where: {
+  //       body: {
+  //         search: searchQuery,
+  //       },
+  //       channel: {
+  //         accountId: accountId,
+  //       },
+  //     },
+  //     include: {
+  //       slackThreads: true,
+  //       mentions: {
+  //         include: {
+  //           users: true,
+  //         },
+  //       },
+  //     },
+  //     take: 20,
+  //   })
+  //   .then((messages) => {
+  //     if (!!account?.anonymizeUsers) {
+  //       return anonymizeMessagesMentions(messages);
+  //     } else {
+  //       return messages;
+  //     }
+  //   });
 
   res.status(200).json(response);
 }
