@@ -23,6 +23,7 @@ async function update(request: NextApiRequest, response: NextApiResponse) {
     accountId,
     homeUrl,
     docsUrl,
+    logoUrl,
     redirectDomain,
     brandColor,
     googleAnalyticsId,
@@ -39,6 +40,7 @@ async function update(request: NextApiRequest, response: NextApiResponse) {
     ? {
         homeUrl,
         docsUrl,
+        logoUrl,
         redirectDomain: stripProtocol(redirectDomain),
         brandColor,
         googleAnalyticsId,
@@ -47,6 +49,7 @@ async function update(request: NextApiRequest, response: NextApiResponse) {
     : {
         homeUrl,
         docsUrl,
+        logoUrl,
         redirectDomain: stripProtocol(redirectDomain),
         brandColor,
         anonymizeUsers,

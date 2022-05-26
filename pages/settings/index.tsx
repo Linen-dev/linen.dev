@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { NextPageContext } from 'next';
+import { useS3Upload } from 'next-s3-upload';
 import { getSession } from 'next-auth/react';
 import DashboardLayout from 'components/layout/DashboardLayout';
 import TextField from 'components/TextField';
@@ -22,6 +23,7 @@ import { capitalize } from 'lib/util';
 import BotButton from 'components/BotButton';
 import Label from 'components/Label';
 import CheckboxField from '@/components/CheckboxField';
+import classNames from 'classnames';
 
 interface Props {
   account?: SerializedAccount;
@@ -58,7 +60,25 @@ export default function SettingsPage({ account }: Props) {
     }
   }, [router.query.success]);
 
+  let [logoUrl, setLogoUrl] = useState(String);
+  let { FileInput, openFileDialog, uploadToS3, files } = useS3Upload();
+
   if (account) {
+    let handleLogoChange = async (file: File) => {
+      let { url } = await uploadToS3(file, {
+        endpoint: {
+          request: {
+            body: {
+              asset: 'logos',
+              accountId: account.id,
+            },
+            headers: {},
+          },
+        },
+      });
+      setLogoUrl(url);
+    };
+
     const onSubmit = (event: any) => {
       event.preventDefault();
       const form = event.target;
@@ -74,6 +94,7 @@ export default function SettingsPage({ account }: Props) {
           accountId: account.id,
           homeUrl,
           docsUrl,
+          logoUrl,
           redirectDomain,
           brandColor,
           googleAnalyticsId,
@@ -164,6 +185,36 @@ export default function SettingsPage({ account }: Props) {
               defaultValue={account.brandColor}
               required
             />
+          </Card>
+          <Card>
+            <Label htmlFor="logo">Logo</Label>
+            <Description>Logo of your brand.</Description>
+            <FileInput onChange={handleLogoChange} />
+            {logoUrl ? (
+              <img
+                src={logoUrl}
+                style={{
+                  backgroundColor: account.brandColor,
+                }}
+                className={classNames('mb-2 mt-2')}
+              />
+            ) : (
+              account.logoUrl && (
+                <img
+                  src={account.logoUrl}
+                  style={{
+                    backgroundColor: account.brandColor,
+                  }}
+                  className={classNames('mb-2 mt-2')}
+                />
+              )
+            )}
+            <Button onClick={openFileDialog}>
+              {files && files.length > 0 && files[0].progress < 100 && (
+                <FontAwesomeIcon icon={faSpinner} spin={true} size="lg" />
+              )}
+              Upload file
+            </Button>
           </Card>
           <Card>
             <Label htmlFor="anonymizeUsers">Anonymize Users</Label>

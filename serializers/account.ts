@@ -7,6 +7,7 @@ export interface SerializedAccount {
   id: string;
   homeUrl?: string;
   docsUrl?: string;
+  logoUrl?: string;
   redirectDomain?: string;
   brandColor?: string;
   premium: boolean;
@@ -23,6 +24,7 @@ export default function serialize(account?: any): SerializedAccount | null {
   const {
     homeUrl,
     docsUrl,
+    logoUrl,
     redirectDomain,
     brandColor,
     premium,
@@ -39,6 +41,7 @@ export default function serialize(account?: any): SerializedAccount | null {
   return {
     homeUrl,
     docsUrl,
+    logoUrl,
     redirectDomain,
     brandColor,
     premium,
