@@ -31,6 +31,30 @@ Apr 07 04:38:57 ip-10-0-74-131 kernel:  kthread+0x121/0x140
 Apr 07 04:38:57 ip-10-0-74-131 kernel:  ? auditd_reset+0xa0/0xa0
 `.trim();
 
+const JAVASCRIPT_EXAMPLE = `
+import React from 'react'
+
+export default function Message({ children }) {
+  return (<div>{children}</div>)
+}
+`.trim();
+
+const PYTHON_EXAMPLE = `
+for i in range(3):
+	print("===> Outer Loop")
+	print(f"i = {i}")
+	for j in range(2):
+		print("Inner Loop")
+		print(f"j = {j}")
+`.trim();
+
+const RUBY_EXAMPLE = `
+def sum_eq_n?(arr, n)
+  return true if arr.empty? && n == 0
+  arr.product(arr).reject { |a,b| a == b }.any? { |a,b| a + b == n }
+end
+`.trim();
+
 const CODE_EXAMPLE = `
 [root@visibility99 osquery]# curl -X POST
 <https://xxxxxxxxxxxx:8080/api/v1/enroll> -d '{}' curl: (52) Empty reply from server
@@ -77,23 +101,40 @@ Should be *annually*.
 export default function Styleguide() {
   return (
     <Example header="Message">
-      <Message text="Hello, world!" />
-      <Message text="Hello, world! :)" />
-      <Message text="Hey, <@John>!" />
-      <Message text="Hey, <@John>!" />
-      <Message text="Hey, <https://linen.dev>!" />
-      <Message text="Hey, <http://linen.dev>!" />
-      <Message text="Hey, <http://query.customer.dev/foo/bar/baz/qux/lorem/ipsum/dolor/sit/amet>!" />
-      <Message text="Hey, `const answer = 42`!" />
-      <Message text="Has anyone ran into this error before? Just trying to run a spec. Other things like `db:migrate` fail for `PG:InsufficientPrivilege` as well. ```An error occured while loading ./spec/models/user.rb```" />
-      <Message text="Lorem ipsum dolor sit amet, lorem ipsum dolor sit amet, lorem ipsum dolor sit amet `lorem ipsum dolor sit amet, lorem ipsum dolor sit amet`" />
-      <Message text={`\`\`\`${STACK_TRACE_EXAMPLE}\`\`\``} />
-      <Message text={`\`\`\`${CODE_EXAMPLE}\`\`\``} />
-      <Message text={STATIC_TEXT} />
-      <Message text={MARKDOWN_EXAMPLE} />
-      <Message text="<http://localhost:3000/yc-logo.png>" />
-      <Message text={`\`${HTML_EXAMPLE}\``} />
-      <Message text={`\`\`\`${HTML_EXAMPLE}\`\`\`\``} />
+      <Example description="Message component can render emojis.">
+        <Message text="Hello, world! :)" />
+      </Example>
+      <Example description="It supports mentions.">
+        <Message text="Hey, <@John>!" />
+      </Example>
+      <Example description="It supports https and http links.">
+        <Message text="Hey, <https://linen.dev>!" />
+        <Message text="Hey, <http://linen.dev>!" />
+      </Example>
+      <Example description="It supports inline code blocks.">
+        <Message text="Hey, `const answer = 42`!" />
+        <Message text="Has anyone ran into this error before? Just trying to run a spec. Other things like `db:migrate` fail for `PG:InsufficientPrivilege` as well." />
+      </Example>
+      <Example description="It supports block code blocks, with highlighting.">
+        <Message text={`\`\`\`${STACK_TRACE_EXAMPLE}\`\`\``} />
+        <Message text={`\`\`\`${CODE_EXAMPLE}\`\`\``} />
+        <Message text={`\`\`\`${JAVASCRIPT_EXAMPLE}}\`\`\``} />
+        <Message text={`\`\`\`${PYTHON_EXAMPLE}\`\`\``} />
+        <Message text={`\`\`\`${RUBY_EXAMPLE}\`\`\``} />
+      </Example>
+      <Example description="It supports markdown.">
+        <Message text={MARKDOWN_EXAMPLE} />
+      </Example>
+      <Example description="It preserves whitespace.">
+        <Message text={STATIC_TEXT} />
+      </Example>
+      <Example description="It loads images.">
+        <Message text="<http://localhost:3000/yc-logo.png>" />
+      </Example>
+      <Example description="It escapes HTML entities.">
+        <Message text={`\`${HTML_EXAMPLE}\``} />
+        <Message text={`\`\`\`${HTML_EXAMPLE}\`\`\`\``} />
+      </Example>
     </Example>
   );
 }
