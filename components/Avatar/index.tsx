@@ -46,6 +46,8 @@ function Avatar({ src, alt, text = 'u', size }: Props) {
         alt={alt || 'avatar'}
         height={dimensions(size)}
         width={dimensions(size)}
+        placeholder="blur"
+        blurDataURL={text}
       />
     </div>
   );

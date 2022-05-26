@@ -1,12 +1,13 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 
 const getFullPath = (relativePath: string) =>
   `https://linen.dev${relativePath}`;
 const siteName = 'Linen Community';
 
 function SEO({
-  description = 'Community Conversations',
+  description,
   image,
   url,
   noIndex = false,
@@ -19,6 +20,10 @@ function SEO({
   title: string;
 }) {
   const { pathname } = useRouter();
+  const [metaUrl, setMetaUrl] = useState<string | undefined>();
+  useEffect(() => {
+    setMetaUrl(window?.location?.href);
+  }, []);
   // If pathname includes a slug, we won't use that.
   const relativePath =
     url || (pathname.includes('[') ? pathname.split('[')[0] : pathname);
@@ -33,7 +38,7 @@ function SEO({
       <meta
         name="og:url"
         property="og:url"
-        content={getFullPath(relativePath)}
+        content={metaUrl || getFullPath(relativePath)}
         key="ogurl"
       />
       <meta
@@ -46,7 +51,7 @@ function SEO({
       <meta
         name="og:description"
         property="og:description"
-        content={description}
+        content={description || title}
         key="ogdesc"
       />
       <meta name="og:type" property="og:type" content="website" key="ogtype" />
