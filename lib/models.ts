@@ -6,7 +6,7 @@ import {
 } from '@prisma/client';
 import prisma from '../client';
 import { UserInfo } from '../types/slackResponses//slackUserInfoInterface';
-import { getSlackUser } from '../pages/api/slack';
+import { getSlackUser } from '../services/slack';
 import { stripProtocol } from '../utilities/url';
 import { anonymizeMessages } from '../utilities/anonymizeMessages';
 import { generateRandomWordSlug } from '../utilities/randomWordSlugs';
@@ -248,7 +248,10 @@ export const channelsGroupByThreadCount = async () => {
 export const createManyChannel = async (
   channels: Prisma.channelsCreateManyInput
 ) => {
-  return await prisma.channels.createMany({ data: channels });
+  return await prisma.channels.createMany({
+    data: channels,
+    skipDuplicates: true,
+  });
 };
 
 export const findOrCreateChannel = async (
@@ -530,7 +533,7 @@ export const findSlackThreadsWithOnlyOneMessage = async (
   from "slackThreads" join messages on messages."slackThreadId" = "slackThreads".id 
   where "slackThreads"."channelId" in (${ids})
   group by "slackThreads".id
-  having count(*) = 1
+  having count(*) != "slackThreads"."messageCount"
   order by "slackThreads"."slackThreadTs" desc
   ;`;
 
