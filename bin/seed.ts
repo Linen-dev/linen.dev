@@ -1,5 +1,6 @@
 import {
   findOrCreateAccount,
+  findOrCreateAuth,
   findOrCreateUser,
   findOrCreateChannel,
   findOrCreateThread,
@@ -11,10 +12,19 @@ import messages from './factory/messages';
 (async () => {
   const account = await findOrCreateAccount({ domain: 'linen.dev' });
 
-  await findOrCreateUser({ email: 'emil@linen.dev', accountId: account.id });
-  await findOrCreateUser({ email: 'jarek@linen.dev', accountId: account.id });
-  await findOrCreateUser({ email: 'kam@linen.dev', accountId: account.id });
-  await findOrCreateUser({ email: 'sandro@linen.dev', accountId: account.id });
+  await findOrCreateAuth({ email: 'emil@linen.dev', accountId: account.id });
+  await findOrCreateAuth({ email: 'jarek@linen.dev', accountId: account.id });
+  await findOrCreateAuth({ email: 'kam@linen.dev', accountId: account.id });
+  await findOrCreateAuth({ email: 'sandro@linen.dev', accountId: account.id });
+
+  const user1 = await findOrCreateUser({
+    accountsId: account.id,
+    slackUserId: '1',
+  });
+  const user2 = await findOrCreateUser({
+    accountsId: account.id,
+    slackUserId: '2',
+  });
 
   const channel = await findOrCreateChannel({
     name: 'general',
@@ -30,11 +40,19 @@ import messages from './factory/messages';
       body: messages[i] || `foo-${i}`,
       channelId: channel.id,
       threadId: thread.id,
+      usersId: user1.id,
     });
     await findOrCreateMessage({
       body: `bar-${i}`,
       channelId: channel.id,
       threadId: thread.id,
+      usersId: user2.id,
+    });
+    await findOrCreateMessage({
+      body: `baz-${i}`,
+      channelId: channel.id,
+      threadId: thread.id,
+      usersId: user2.id,
     });
   }
 
