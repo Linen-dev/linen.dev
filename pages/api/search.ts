@@ -22,8 +22,6 @@ export default async function handler(
   });
 
   // Search messages
-  const searchQuery = query.split(' ').join(' & ');
-
   const queryPromise = prisma.$queryRaw<messages[]>`SELECT m."id",
           m."createdAt",
           m."body",
