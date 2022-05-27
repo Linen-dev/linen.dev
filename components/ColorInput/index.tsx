@@ -5,9 +5,17 @@ interface Props {
   id: string;
   defaultValue?: string;
   required?: boolean;
+  disabled?: boolean;
+  readOnly?: boolean;
 }
 
-function ColorInput({ id, defaultValue, required }: Props) {
+function ColorInput({
+  id,
+  defaultValue,
+  required,
+  disabled = false,
+  readOnly = false,
+}: Props) {
   return (
     <input
       type="color"
@@ -15,6 +23,8 @@ function ColorInput({ id, defaultValue, required }: Props) {
       className={styles.input}
       defaultValue={defaultValue}
       required={required}
+      disabled={disabled}
+      readOnly={readOnly}
     />
   );
 }

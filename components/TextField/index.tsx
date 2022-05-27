@@ -10,6 +10,8 @@ interface Props {
   placeholder?: string;
   defaultValue?: string;
   required?: boolean;
+  disabled?: boolean;
+  readOnly?: boolean;
 }
 
 export default function TextField({
@@ -19,6 +21,8 @@ export default function TextField({
   placeholder,
   defaultValue,
   required,
+  disabled = false,
+  readOnly = false,
 }: Props) {
   return (
     <Field>
@@ -29,6 +33,8 @@ export default function TextField({
         placeholder={placeholder}
         defaultValue={defaultValue}
         required={required}
+        disabled={disabled}
+        readOnly={readOnly}
       />
     </Field>
   );
