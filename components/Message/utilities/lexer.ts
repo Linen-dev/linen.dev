@@ -1,10 +1,11 @@
-const START_TAG = '<';
-const END_TAG = '>';
-const MENTION_TAG = '@';
-const LINK_TAG = 'h';
-const BASIC_CHANNEL_TAG = '!';
-const COMPLEX_CHANNEL_TAG = '#';
-const BACKTICK = '`';
+export const START_TAG = '<';
+export const END_TAG = '>';
+export const MENTION_TAG = '@';
+export const LINK_TAG = 'h';
+export const BASIC_CHANNEL_TAG = '!';
+export const COMPLEX_CHANNEL_TAG = '#';
+export const HORIZONTAL_RULE_TAG = '-';
+export const BACKTICK = '`';
 
 export interface Token {
   type: TokenType;
@@ -19,6 +20,7 @@ export enum TokenType {
   ComplexChannel = 'complex_channel',
   InlineCode = 'inline_code',
   BlockCode = 'block_code',
+  HorizontalRule = 'horizontal_rule',
 }
 
 function isTagSupported(tag: string): boolean {
@@ -26,7 +28,8 @@ function isTagSupported(tag: string): boolean {
     tag === MENTION_TAG ||
     tag === LINK_TAG ||
     tag === BASIC_CHANNEL_TAG ||
-    tag === COMPLEX_CHANNEL_TAG
+    tag === COMPLEX_CHANNEL_TAG ||
+    tag === HORIZONTAL_RULE_TAG
   );
 }
 
@@ -40,6 +43,8 @@ function getTokenType(tag: string): TokenType {
       return TokenType.BasicChannel;
     case COMPLEX_CHANNEL_TAG:
       return TokenType.ComplexChannel;
+    case HORIZONTAL_RULE_TAG:
+      return TokenType.HorizontalRule;
     default:
       return TokenType.Text;
   }

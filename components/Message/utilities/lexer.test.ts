@@ -263,4 +263,12 @@ describe('#tokenize', () => {
       });
     });
   });
+
+  describe('when horizontal rule is present', () => {
+    it('returns a horizontal rule token', () => {
+      const input = '<-hr>';
+      const expected = [{ type: TokenType.HorizontalRule, value: 'hr' }];
+      expect(tokenize(input)).toEqual(expected);
+    });
+  });
 });

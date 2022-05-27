@@ -46,7 +46,7 @@ describe('#mergeMessagesByUserId', () => {
     ];
     const result = mergeMessagesByUserId(messages);
     expect(result.length).toEqual(3);
-    expect(result[0].body).toEqual('foo\n\nbar');
+    expect(result[0].body).toEqual('foo<-hr>bar');
   });
 
   it('does not merge messages without an author', () => {
