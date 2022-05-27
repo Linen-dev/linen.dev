@@ -133,7 +133,7 @@ export const findAccountByEmail = async (email?: string | null) => {
     return null;
   }
   const auth = await prisma.auths.findFirst({ where: { email } });
-  if (!auth) {
+  if (!auth || !auth.accountId) {
     return null;
   }
   return await prisma.accounts.findFirst({

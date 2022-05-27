@@ -24,6 +24,7 @@ import BotButton from 'components/BotButton';
 import Label from 'components/Label';
 import CheckboxField from '@/components/CheckboxField';
 import classNames from 'classnames';
+import Onboarding from 'components/Pages/Settings/Onboarding';
 
 interface Props {
   account?: SerializedAccount;
@@ -267,29 +268,25 @@ export default function SettingsPage({ account }: Props) {
       </BlankLayout>
     );
   }
-  return (
-    <DashboardLayout header="Settings">
-      <h1>You are not signed in.</h1>
-    </DashboardLayout>
-  );
+  return <Onboarding />;
 }
 
 export async function getServerSideProps(context: NextPageContext) {
   const session = await getSession(context);
   const account = await findAccountByEmail(session?.user?.email);
 
-  if (!account) {
+  if (!session) {
     return {
       redirect: {
         permanent: false,
-        destination: 'signup/CreateAccountForm',
+        destination: 'signin',
       },
     };
   }
   return {
     props: {
       session,
-      account: serializeAccount(account),
+      account: account && serializeAccount(account),
     },
   };
 }
