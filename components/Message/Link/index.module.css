@@ -6,3 +6,7 @@
   word-break: break-word;
   word-wrap: break-word;
 }
+
+.line {
+  text-decoration: line-through;
+}
