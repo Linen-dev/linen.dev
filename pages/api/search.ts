@@ -16,34 +16,33 @@ export default async function handler(
   const query = req.query.query as string;
   const accountId = req.query.account_id as string;
 
-  const account = await prisma.accounts.findUnique({
+  const accountPromise = prisma.accounts.findUnique({
     where: { id: accountId },
     select: { anonymizeUsers: true },
   });
 
   // Search messages
-  const searchQuery = query.split(' ').join(' & ');
-  const messagesResult = await prisma.$queryRaw<
-    messages[]
-  >`SELECT "public"."messages"."id",
-          "public"."messages"."createdAt",
-          "public"."messages"."body",
-          "public"."messages"."sentAt",
-          "public"."messages"."channelId",
-          "public"."messages"."slackMessageId",
-          "public"."messages"."slackThreadId",
-          "public"."messages"."usersId"
-      FROM "public"."messages"
-      WHERE (("public"."messages"."id") IN (
-              SELECT "t0"."id"
-              FROM "public"."messages" AS "t0"
-              INNER JOIN "public"."channels" AS "j0" ON ("j0"."id") = ("t0"."channelId")
-              WHERE ("j0"."accountId" = ${accountId} AND "t0"."id" IS NOT NULL)
-          )
-          AND TO_TSVECTOR('english', "public"."messages"."body") @@ TO_TSQUERY('english', ${searchQuery})
-      )
-      ORDER BY "public"."messages"."id" ASC
+  const queryPromise = prisma.$queryRaw<messages[]>`SELECT m."id",
+          m."createdAt",
+          m."body",
+          m."sentAt",
+          m."channelId",
+          m."slackMessageId",
+          m."slackThreadId",
+          m."usersId"
+      FROM "public"."messages" as m
+      INNER JOIN "public"."channels" AS c ON (c."id") = (m."channelId")
+      WHERE 
+          c."accountId" = ${accountId} 
+          AND m."id" IS NOT NULL
+          AND TO_TSVECTOR('english', m."body") @@ phraseto_tsquery('english', ${query})
+      ORDER BY m."id" ASC
       LIMIT 20`;
+
+  const [account, messagesResult] = await Promise.all([
+    accountPromise,
+    queryPromise,
+  ]);
 
   // Get messages threads
   const threadIds = messagesResult.map((mr) => mr.slackThreadId);
