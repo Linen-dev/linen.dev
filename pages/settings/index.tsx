@@ -30,11 +30,41 @@ interface Props {
   account?: SerializedAccount;
 }
 
-function Card({ children }: { children: React.ReactNode }) {
+function Card({
+  children,
+  readOnly = false,
+  className = '',
+}: {
+  children: React.ReactNode;
+  readOnly?: boolean;
+  className?: string;
+}) {
   return (
-    <div className="p-3 mb-3 rounded border-gray-200 border-solid border">
+    <div
+      className={classNames(
+        'p-3 mb-3 rounded border-gray-200 border-solid border',
+        readOnly ? 'bg-slate-50' : '',
+        className
+      )}
+    >
       {children}
     </div>
+  );
+}
+
+function PremiumCard({
+  children,
+  isPremium = false,
+  className = '',
+}: {
+  children: React.ReactNode;
+  isPremium?: boolean;
+  className?: string;
+}) {
+  return (
+    <Card readOnly={!isPremium} className={className}>
+      {children}
+    </Card>
   );
 }
 
@@ -110,9 +140,10 @@ export default function SettingsPage({ account }: Props) {
     const iconClassName = 'h-5 w-5 mr-2';
 
     const slackSyncComponent = (
-      <DashboardLayout
-        header={`${capitalize(account.communityType)} Synchronization`}
-      >
+      <div className="py-8">
+        <h1 className="text-3xl font-extrabold text-gray-900 pb-4">
+          {capitalize(account.communityType)} Synchronization
+        </h1>
         <div className="flex">
           {account.slackSyncStatus === 'NOT_STARTED' && (
             <>
@@ -152,120 +183,153 @@ export default function SettingsPage({ account }: Props) {
             <BotButton communityType={account.communityType} />
           </div>
         </div>
-      </DashboardLayout>
+      </div>
     );
 
-    const settingsComponent = (
-      <DashboardLayout header="Settings">
-        <form onSubmit={onSubmit}>
-          <Card>
-            <Label htmlFor="homeUrl">Home URL</Label>
-            <Description>Link to your home page.</Description>
-            <TextField
-              placeholder="https://yourwebsite.com"
-              id="homeUrl"
-              defaultValue={account.homeUrl}
-              required
+    const freeAccountSettings = (
+      <>
+        <h3 className="font-bold font-xl mb-3">Free</h3>
+        <Card>
+          <Label htmlFor="homeUrl">Home URL</Label>
+          <Description>Link to your home page.</Description>
+          <TextField
+            placeholder="https://yourwebsite.com"
+            id="homeUrl"
+            defaultValue={account.homeUrl}
+            required
+          />
+        </Card>
+        <Card>
+          <Label htmlFor="docsUrl">Docs URL</Label>
+          <Description>Link to your documentation.</Description>
+          <TextField
+            placeholder="https://docs.yourwebsite.com"
+            id="docsUrl"
+            defaultValue={account.docsUrl}
+            required
+          />
+        </Card>
+        <Card>
+          <Label htmlFor="redirectDomain">Redirect Domain</Label>
+          <Description>Unique domain to redirect to.</Description>
+          <TextField
+            placeholder="linen.yourwebsite.com"
+            id="redirectDomain"
+            defaultValue={account.redirectDomain}
+            required
+          />
+        </Card>
+        <Card>
+          <Label htmlFor="anonymizeUsers">Anonymize Users</Label>
+          <Description>Replace real usernames by randomly alias.</Description>
+          <CheckboxField id="anonymizeUsers" checked={account.anonymizeUsers} />
+        </Card>
+      </>
+    );
+
+    const premiumAccountSettings = (
+      <>
+        <h3 className="font-bold font-xl mb-3">Premium</h3>
+        <PremiumCard isPremium={account.premium} className="h-full">
+          <Label htmlFor="brandColor">Brand Color</Label>
+          <Description>
+            Color that matches your brand. We&apos;ll use it for the header
+            background.
+          </Description>
+          <ColorField
+            id="brandColor"
+            defaultValue={account.premium ? account.brandColor : '#E2E2E2'}
+            required
+            readOnly={!account.premium}
+            disabled={!account.premium}
+          />
+        </PremiumCard>
+        <PremiumCard isPremium={account.premium} className="h-full">
+          <Label htmlFor="logo">Logo</Label>
+          <Description>Logo of your brand.</Description>
+          <FileInput onChange={handleLogoChange} />
+          {logoUrl ? (
+            <img
+              alt=""
+              src={logoUrl}
+              style={{
+                backgroundColor: account.brandColor,
+              }}
+              className={classNames('mb-2 mt-2')}
             />
-          </Card>
-          <Card>
-            <Label htmlFor="docsUrl">Docs URL</Label>
-            <Description>Link to your documentation.</Description>
-            <TextField
-              placeholder="https://docs.yourwebsite.com"
-              id="docsUrl"
-              defaultValue={account.docsUrl}
-              required
-            />
-          </Card>
-          <Card>
-            <Label htmlFor="redirectDomain">Redirect Domain</Label>
-            <Description>Unique domain to redirect to.</Description>
-            <TextField
-              placeholder="linen.yourwebsite.com"
-              id="redirectDomain"
-              defaultValue={account.redirectDomain}
-              required
-            />
-          </Card>
-          <Card>
-            <Label htmlFor="brandColor">Brand Color</Label>
-            <Description>
-              Color that matches your brand. We&apos;ll use it for the header
-              background.
-            </Description>
-            <ColorField
-              id="brandColor"
-              defaultValue={account.brandColor}
-              required
-            />
-          </Card>
-          <Card>
-            <Label htmlFor="logo">Logo</Label>
-            <Description>Logo of your brand.</Description>
-            <FileInput onChange={handleLogoChange} />
-            {logoUrl ? (
+          ) : (
+            account.logoUrl && (
               <img
-                src={logoUrl}
+                alt=""
+                src={account.logoUrl}
                 style={{
                   backgroundColor: account.brandColor,
                 }}
                 className={classNames('mb-2 mt-2')}
               />
-            ) : (
-              account.logoUrl && (
-                <img
-                  src={account.logoUrl}
-                  style={{
-                    backgroundColor: account.brandColor,
-                  }}
-                  className={classNames('mb-2 mt-2')}
-                />
-              )
-            )}
-            <Button onClick={openFileDialog}>
-              {files && files.length > 0 && files[0].progress < 100 && (
-                <FontAwesomeIcon icon={faSpinner} spin={true} size="lg" />
-              )}
-              Upload file
-            </Button>
-          </Card>
-          <Card>
-            <Label htmlFor="anonymizeUsers">Anonymize Users</Label>
-            <Description>Replace real usernames by randomly alias.</Description>
-            <CheckboxField
-              id="anonymizeUsers"
-              checked={account.anonymizeUsers}
-            />
-          </Card>
-          {account.premium && (
-            <div className="py-8">
-              <h3 className="font-bold font-xl mb-3">Premium</h3>
-              <Card>
-                <Label htmlFor="googleAnalyticsId">Google Analytics ID</Label>
-                <Description>
-                  You can collect data from your website with Google Analytics.
-                  <br />
-                  Enter a valid Analytics Property ID.
-                </Description>
-                <TextField
-                  placeholder="G-XXXXXXX or UA-XXXXXX-X"
-                  id="googleAnalyticsId"
-                  defaultValue={account.googleAnalyticsId}
-                />
-              </Card>
-            </div>
+            )
           )}
-          <Button type="submit">Update</Button>
-        </form>
-      </DashboardLayout>
+          <Button onClick={openFileDialog} disabled={!account.premium}>
+            {files && files.length > 0 && files[0].progress < 100 && (
+              <FontAwesomeIcon icon={faSpinner} spin={true} size="lg" />
+            )}
+            Upload file
+          </Button>
+        </PremiumCard>
+        <PremiumCard isPremium={account.premium} className="h-full">
+          <Label htmlFor="googleAnalyticsId">Google Analytics ID</Label>
+          <Description>
+            You can collect data from your website with Google Analytics.
+            <br />
+            Enter a valid Analytics Property ID.
+          </Description>
+          <TextField
+            placeholder="G-XXXXXXX or UA-XXXXXX-X"
+            id="googleAnalyticsId"
+            defaultValue={
+              account.premium ? account.googleAnalyticsId : undefined
+            }
+            disabled={!account.premium}
+            readOnly={!account.premium}
+          />
+        </PremiumCard>
+      </>
+    );
+
+    const settingsComponent = (
+      <form onSubmit={onSubmit}>
+        <div className="grid grid-cols-2 gap-4">
+          <div className="flex flex-col">{freeAccountSettings}</div>
+          <div className="flex flex-col">{premiumAccountSettings}</div>
+        </div>
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <Button block type="submit">
+              Update
+            </Button>
+          </div>
+          <div>
+            {!account.premium ? (
+              <Button
+                block
+                color="yellow"
+                onClick={() => router.push('/settings/plans')}
+              >
+                Upgrade your account
+              </Button>
+            ) : (
+              ''
+            )}
+          </div>
+        </div>
+      </form>
     );
 
     return (
-      <BlankLayout>
+      <DashboardLayout header="Settings">
         {settingsComponent}
         {slackSyncComponent}
-      </BlankLayout>
+      </DashboardLayout>
     );
   }
   return <Onboarding />;
