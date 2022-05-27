@@ -7,7 +7,7 @@ export function mergeMessagesByUserId(messages?: messages[]): any[] {
   return messages.reduce((result: messages[], message: messages) => {
     const last = result[result.length - 1];
     if (last && last.usersId && last.usersId === message.usersId) {
-      last.body += `\n${message.body}`;
+      last.body += `\n\n${message.body}`;
     } else {
       result.push(message);
     }
