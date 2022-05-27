@@ -8,6 +8,8 @@ interface Props {
   id: string;
   defaultValue?: string;
   required?: boolean;
+  disabled?: boolean;
+  readOnly?: boolean;
 }
 
 export default function TextField({
@@ -15,11 +17,19 @@ export default function TextField({
   id,
   defaultValue,
   required,
+  disabled = false,
+  readOnly = false,
 }: Props) {
   return (
     <Field>
       {label && <Label htmlFor={id}>{label}</Label>}
-      <ColorInput id={id} defaultValue={defaultValue} required={required} />
+      <ColorInput
+        id={id}
+        defaultValue={defaultValue}
+        required={required}
+        disabled={disabled}
+        readOnly={readOnly}
+      />
     </Field>
   );
 }
