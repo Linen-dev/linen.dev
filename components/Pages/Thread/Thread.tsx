@@ -11,6 +11,8 @@ import {
   ThreadByIdProp,
 } from '../../../types/apiResponses/threads/[threadId]';
 import CustomLinkHelper from 'components/Link/CustomLinkHelper';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faAngleLeft } from '@fortawesome/free-solid-svg-icons';
 
 export default function Thread({
   threadId,
@@ -99,39 +101,43 @@ export default function Thread({
       settings={settings}
       isSubDomainRouting={isSubDomainRouting}
     >
-      <div className="py-8 px-4">
-        <ul>{elements}</ul>
-
-        <div className="gap-8 columns-2">
-          <div className={styles.buttons}>
-            <Anchor
-              className={styles.join}
-              href={threadSlackInviteUrl || threadUrl}
-              size="sm"
-              target="_blank"
-            >
-              <div className="flex content-center">
-                <AiOutlineLink className={styles.icon} size={18} />
-                {settings.communityType === 'discord' ? (
-                  <div>Join thread in Discord</div>
-                ) : (
-                  <div>Join thread in Slack</div>
-                )}
-              </div>
-            </Anchor>
-          </div>
-          <div className={styles.count}>
-            <span className={styles.subtext}>View count:</span> {viewCount + 1}
-          </div>
-        </div>
-        <div className="flex justify-center">
+      <div>
+        <div className="hidden lg:py-2 lg:pb-0 lg:px-4 lg:flex lg:justify-left">
           <Anchor
             className={styles.join}
             size="sm"
             href={CustomLinkHelper(linkProps)}
           >
-            Back to #{currentChannel?.channelName || 'channel'}
+            <FontAwesomeIcon icon={faAngleLeft} />
+            {/* #{currentChannel?.channelName || 'channel'} */}
           </Anchor>
+        </div>
+        <div className="py-8 px-4">
+          <ul>{elements}</ul>
+
+          <div className="gap-8 columns-2">
+            <div className={styles.buttons}>
+              <Anchor
+                className={styles.join}
+                href={threadSlackInviteUrl || threadUrl}
+                size="sm"
+                target="_blank"
+              >
+                <div className="flex content-center">
+                  <AiOutlineLink className={styles.icon} size={18} />
+                  {settings.communityType === 'discord' ? (
+                    <div>Join thread in Discord</div>
+                  ) : (
+                    <div>Join thread in Slack</div>
+                  )}
+                </div>
+              </Anchor>
+            </div>
+            <div className={styles.count}>
+              <span className={styles.subtext}>View count:</span>{' '}
+              {viewCount + 1}
+            </div>
+          </div>
         </div>
       </div>
     </PageLayout>
