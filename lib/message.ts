@@ -4,6 +4,7 @@ interface FindMessageParams {
   channelId: string;
   threadId: string;
   body: string;
+  usersId?: string;
 }
 
 interface CreateMessageParams {
@@ -11,11 +12,17 @@ interface CreateMessageParams {
   threadId: string;
   body: string;
   slackMessageId: string;
+  usersId?: string;
 }
 
-export function findMessage({ channelId, threadId, body }: FindMessageParams) {
+export function findMessage({
+  channelId,
+  threadId,
+  body,
+  usersId,
+}: FindMessageParams) {
   return prisma.messages.findFirst({
-    where: { channelId, slackThreadId: threadId, body },
+    where: { channelId, slackThreadId: threadId, body, usersId },
   });
 }
 
@@ -24,6 +31,7 @@ export function createMessage({
   threadId,
   body,
   slackMessageId,
+  usersId,
 }: CreateMessageParams) {
   return prisma.messages.create({
     data: {
@@ -32,6 +40,7 @@ export function createMessage({
       slackThreadId: threadId,
       body,
       sentAt: new Date(),
+      usersId,
     },
   });
 }
