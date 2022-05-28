@@ -106,33 +106,46 @@ export default function SettingsPage({ account }: Props) {
           toast.success('Saved successfully!');
         });
     };
+    const iconClassName = 'h-5 w-5 mr-2';
 
     const slackSyncComponent = (
       <DashboardLayout
         header={`${capitalize(account.communityType)} Synchronization`}
       >
-        {account.slackSyncStatus === 'NOT_STARTED' && (
-          <div>
-            <FontAwesomeIcon icon={faCirclePause} size="lg" /> Not started
-          </div>
-        )}
-        {account.slackSyncStatus === 'IN_PROGRESS' && (
-          <div>
-            <FontAwesomeIcon icon={faSpinner} size="lg" /> In progress
-          </div>
-        )}
-        {account.slackSyncStatus === 'DONE' && (
-          <div>
-            <FontAwesomeIcon icon={faCircleCheck} size="lg" color="green" />{' '}
-            Done
-          </div>
-        )}
-        {account.slackSyncStatus === 'ERROR' && (
-          <div>
-            <FontAwesomeIcon icon={faCircleExclamation} size="lg" color="red" />{' '}
-            Error
-          </div>
-        )}
+        <div className="flex">
+          {account.slackSyncStatus === 'NOT_STARTED' && (
+            <>
+              <FontAwesomeIcon icon={faCirclePause} className={iconClassName} />{' '}
+              Not started
+            </>
+          )}
+          {account.slackSyncStatus === 'IN_PROGRESS' && (
+            <>
+              <FontAwesomeIcon icon={faSpinner} className={iconClassName} /> In
+              progress
+            </>
+          )}
+          {account.slackSyncStatus === 'DONE' && (
+            <>
+              <FontAwesomeIcon
+                icon={faCircleCheck}
+                color="green"
+                className={iconClassName}
+              />
+              Done
+            </>
+          )}
+          {account.slackSyncStatus === 'ERROR' && (
+            <>
+              <FontAwesomeIcon
+                icon={faCircleExclamation}
+                className={iconClassName}
+                color="red"
+              />{' '}
+              Error
+            </>
+          )}
+        </div>
         <div className="flex flex-row">
           <div className="flex-initial">
             <BotButton communityType={account.communityType} />

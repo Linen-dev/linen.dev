@@ -14,6 +14,7 @@ interface Props {
   children: React.ReactNode;
   header?: string;
 }
+const iconClassName = 'flex-shrink-0 h-5 w-5';
 
 export default function DashboardLayout({ children, header }: Props) {
   const { route } = useRouter();
@@ -32,7 +33,9 @@ export default function DashboardLayout({ children, header }: Props) {
             <div className="space-y-1">
               <SidebarLink
                 href="/settings"
-                icon={<FontAwesomeIcon icon={faGear} />}
+                icon={
+                  <FontAwesomeIcon icon={faGear} className={iconClassName} />
+                }
                 text="Settings"
                 active={route === '/settings'}
               />
@@ -40,7 +43,12 @@ export default function DashboardLayout({ children, header }: Props) {
             <div className="space-y-1">
               <SidebarLink
                 href="/settings/channels"
-                icon={<FontAwesomeIcon icon={faListCheck} />}
+                icon={
+                  <FontAwesomeIcon
+                    icon={faListCheck}
+                    className={iconClassName}
+                  />
+                }
                 text="Channels"
                 active={route === '/settings/channels'}
               />
@@ -48,7 +56,12 @@ export default function DashboardLayout({ children, header }: Props) {
             <div className="space-y-1">
               <SidebarLink
                 href="/settings/plans"
-                icon={<FontAwesomeIcon icon={faMoneyBill} />}
+                icon={
+                  <FontAwesomeIcon
+                    icon={faMoneyBill}
+                    className={iconClassName}
+                  />
+                }
                 text="Plans"
                 active={route === '/settings/plans'}
               />
@@ -57,7 +70,12 @@ export default function DashboardLayout({ children, header }: Props) {
               <div className="space-y-1">
                 <SidebarLink
                   href="/settings/dns"
-                  icon={<FontAwesomeIcon icon={faMoneyBill} />}
+                  icon={
+                    <FontAwesomeIcon
+                      icon={faMoneyBill}
+                      className={iconClassName}
+                    />
+                  }
                   text="DNS"
                   active={route === '/settings/dns'}
                 />
