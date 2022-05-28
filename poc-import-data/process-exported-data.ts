@@ -1,13 +1,12 @@
-import { accounts, channels, users } from '@prisma/client';
+import { accounts, channels, users, PrismaClient } from '@prisma/client';
 import {
   ConvesrationHistoryMessage,
-  joinChannel,
+  // joinChannel,
   saveUsers,
 } from '../fetch_all_conversations';
 import fs from 'fs';
-import { PrismaClient } from '@prisma/client';
 import { createSlug } from '../lib/util';
-import { SyncStatus, updateAndNotifySyncStatus } from '../services/sync';
+import { SyncStatus, updateAndNotifySyncStatus } from '../services/syncStatus';
 
 const prisma = new PrismaClient({}); // initiate a new instance of prisma without info logs
 

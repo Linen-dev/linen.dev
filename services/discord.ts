@@ -11,8 +11,9 @@ import {
   updateNextPageCursor,
 } from '../lib/models';
 import { createSlug } from '../lib/util';
-import { SyncStatus, updateAndNotifySyncStatus } from '../services/sync';
+import { SyncStatus, updateAndNotifySyncStatus } from './syncStatus';
 import { generateRandomWordSlug } from '../utilities/randomWordSlugs';
+import { retryPromise } from '../utilities/retryPromises';
 
 export async function discordSync({
   accountId,
@@ -624,12 +625,16 @@ async function getAllArchivedThreads(
   beforeCursor: string | undefined,
   token: string
 ): Promise<{ threads: DiscordThreads[]; hasMore: boolean }> {
-  const response = await retryPromise(
-    getDiscord(`/channels/${channelId}/threads/archived/public`, token, {
-      before: beforeCursor,
-      ...(!beforeCursor && { limit: 2 }),
-    })
-  )
+  const response = await retryPromise({
+    promise: getDiscord(
+      `/channels/${channelId}/threads/archived/public`,
+      token,
+      {
+        before: beforeCursor,
+        ...(!beforeCursor && { limit: 2 }),
+      }
+    ),
+  })
     .then((e) => e?.body)
     .catch(() => {
       return { has_more: false, threads: [] };
@@ -649,11 +654,11 @@ async function getDiscordThreadMessages(
   token: string,
   newestMessageId?: string
 ): Promise<DiscordMessage[]> {
-  const response = await retryPromise(
-    getDiscord(`/channels/${threadId}/messages`, token, {
+  const response = await retryPromise({
+    promise: getDiscord(`/channels/${threadId}/messages`, token, {
       after: newestMessageId,
-    })
-  ).catch(() => {
+    }),
+  }).catch(() => {
     return { body: [] };
   });
   const messages = response.body;
@@ -705,30 +710,4 @@ function getLatestMessagesId(messages: DiscordMessage[]): string | undefined {
     )
     .pop();
   return sortedThread && sortedThread.id;
-}
-
-/** default values are: 10 seconds of sleep, 3 retries and stops on 404, 403, 401 */
-async function retryPromise(
-  promise: Promise<any>,
-  retries = 3,
-  skipOn = [404, 403, 401],
-  sleepSeconds = 10
-) {
-  const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
-
-  let attempts = 0;
-  while (attempts < retries) {
-    attempts++;
-    try {
-      return await promise;
-    } catch (error: any) {
-      console.error(error.message, error.status, String(error));
-      if (skipOn.includes(error?.status)) {
-        console.error('Skip retry due error status:', error.status);
-        throw error;
-      }
-      await sleep(sleepSeconds * 1000);
-    }
-  }
-  throw new Error('Retries attempts exceeded');
 }
