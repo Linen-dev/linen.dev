@@ -301,7 +301,7 @@ export default function Channel({
                 Activity
               </th>
               <th className="px-6 text-center text-xs font-medium text-gray-500">
-                Actions
+                Share
               </th>
             </tr>
           </thead>

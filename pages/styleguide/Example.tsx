@@ -2,15 +2,19 @@ import React from 'react';
 import styles from './Example.module.css';
 
 interface Props {
-  header: string;
+  description?: string;
+  header?: string;
   children: React.ReactNode;
 }
 
-export default function Example({ header, children }: Props) {
+export default function Example({ description, header, children }: Props) {
   return (
-    <div className={styles.container}>
-      <h2 className={styles.header}>{header}</h2>
-      {children}
-    </div>
+    <>
+      <p>{description}</p>
+      <div className={styles.container}>
+        {header && <h2 className={styles.header}>{header}</h2>}
+        {children}
+      </div>
+    </>
   );
 }
