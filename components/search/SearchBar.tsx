@@ -42,10 +42,10 @@ const SearchBar = ({
   const [selection, setSelection] = useState(null);
   const router = useRouter();
 
-  const makeURL = (query = '') =>
+  const makeURL = (query = '', offset = 0) =>
     `/api/search?query=${encodeURIComponent(
       query.trim()
-    )}&account_id=${accountId}`;
+    )}&account_id=${accountId}&offset=${offset}`;
 
   const renderSuggestion = useCallback(
     ({ body, channelId, usersId, author, mentions }) => {
