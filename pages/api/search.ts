@@ -37,7 +37,7 @@ export default async function handler(
           AND m."id" IS NOT NULL
           AND TO_TSVECTOR('english', m."body") @@ phraseto_tsquery('english', ${query})
       ORDER BY m."id" ASC
-      LIMIT 20`;
+      LIMIT 5`;
 
   const [account, messagesResult] = await Promise.all([
     accountPromise,
