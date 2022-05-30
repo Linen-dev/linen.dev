@@ -4,7 +4,7 @@ import { Group, Text, TextInput } from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
 import { AiOutlineSearch } from 'react-icons/ai';
 import Image from 'next/image';
-import spinner from '../public/spinner.svg';
+import spinner from '../../public/spinner.svg';
 
 const MIN_QUERY_LENGTH = 3;
 
