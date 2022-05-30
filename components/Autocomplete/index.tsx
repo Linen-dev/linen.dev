@@ -4,13 +4,13 @@ import { Group, Text, TextInput } from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
 import { AiOutlineSearch } from 'react-icons/ai';
 import Image from 'next/image';
-import spinner from '../public/spinner.svg';
+import spinner from '../../public/spinner.svg';
 
 const MIN_QUERY_LENGTH = 3;
 
 export default function Autocomplete({
   icon,
-  makeURL = (debounceValue: string) => '',
+  makeURL = (debounceValue: string, offset: number, limit: number) => '',
   onSelect = (any) => {},
   resultParser = (data) => data,
   renderSuggestion = (any) => null,
@@ -19,7 +19,7 @@ export default function Autocomplete({
   limit = 5,
 }: {
   icon: React.ReactNode;
-  makeURL: (debounceValue: string) => string;
+  makeURL: (debounceValue: string, offset: number, limit: number) => string;
   onSelect: (any: any) => any;
   resultParser: (data: any) => any;
   renderSuggestion: (any: any) => any;
@@ -28,9 +28,11 @@ export default function Autocomplete({
   limit?: number;
 }) {
   const [value, setValue] = useState('');
+  const [offset, setOffset] = useState(0);
   const [results, setResults] = useState([]);
   const [isFocused, setFocused] = useState(false);
   const [isSearching, setSearching] = useState(false);
+  const [isLoadMoreVisible, setLoadMoreVisible] = useState(true);
   const [activeResult, setActiveResult] = useState(-1);
   const lastRequest: any = useRef(null);
   const [debouncedValue] = useDebouncedValue(value, debounce);
@@ -44,7 +46,7 @@ export default function Autocomplete({
       // updating the ref variable with the current debouncedValue
       setSearching(true);
       axios
-        .get(makeURL(debouncedValue))
+        .get(makeURL(debouncedValue, offset, limit))
         .then((r) => {
           // the code in here is asyncronous so debouncedValue
           // that was used when calling the api might be outdated
@@ -53,7 +55,12 @@ export default function Autocomplete({
           if (lastRequest.current === debouncedValue) {
             setSearching(false);
             setActiveResult(-1);
-            setResults(resultParser(r.data));
+            if (offset > 0) {
+              setResults([...results, ...resultParser(r.data)] as any);
+            } else {
+              setResults(resultParser(r.data));
+            }
+            setLoadMoreVisible(r.data.length >= limit);
           } else {
             // Discard API response because it's not most recent.
           }
@@ -65,7 +72,7 @@ export default function Autocomplete({
     } else {
       setResults([]);
     }
-  }, [debouncedValue, makeURL, resultParser]);
+  }, [debouncedValue, makeURL, resultParser, offset, limit]);
 
   const handleFocus = useCallback(() => {
     if (!isFocused) {
@@ -120,6 +127,52 @@ export default function Autocomplete({
     [handleSelect, setActiveResult, activeResult, results]
   );
 
+  function renderSuggestions(results: any[]) {
+    return (
+      <div
+        style={{
+          position: 'relative',
+          width: '100%',
+        }}
+      >
+        {results.map((r: any, idx: number) => (
+          <div
+            key={r.id || idx}
+            onMouseEnter={() => setActiveResult(idx)}
+            style={{
+              backgroundColor: activeResult === idx ? '#f7f9fd' : 'white',
+              width: '100%',
+            }}
+          >
+            {renderSuggestion(r)}
+          </div>
+        ))}
+        {isLoadMoreVisible && (
+          <a
+            onMouseEnter={() => setActiveResult(-1)}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setOffset((offset) => offset + limit);
+            }}
+            style={{
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#8e959f',
+              padding: '10px',
+              width: '100%',
+              fontSize: '14px',
+            }}
+          >
+            Load more
+          </a>
+        )}
+      </div>
+    );
+  }
+
   return (
     <Group
       style={{
@@ -141,7 +194,10 @@ export default function Autocomplete({
         icon={icon && <AiOutlineSearch />}
         placeholder={placeholder}
         value={value}
-        onChange={(e) => setValue(e.currentTarget.value)}
+        onChange={(e) => {
+          setValue(e.currentTarget.value);
+          setOffset(0);
+        }}
       />
       {isFocused && value.length >= MIN_QUERY_LENGTH && (
         <Group
@@ -153,7 +209,7 @@ export default function Autocomplete({
           }}
           style={{
             backgroundColor: 'white',
-            overflow: 'hidden',
+            overflow: 'auto',
             maxWidth: 'unset',
             borderRadius: '4px',
             position: 'absolute',
@@ -161,22 +217,11 @@ export default function Autocomplete({
             left: 0,
             right: 0,
             boxShadow: '2px 3px 7px rgba(0, 0, 0, 0.15)',
-            alignItems: 'stretch',
+            maxHeight: 'calc(100vh - 200px)',
           }}
           direction="column"
         >
-          {results.length > 0 &&
-            results.slice(0, limit).map((r: any, idx) => (
-              <div
-                key={r.id || idx}
-                onMouseEnter={() => setActiveResult(idx)}
-                style={{
-                  backgroundColor: activeResult === idx ? '#f7f9fd' : 'white',
-                }}
-              >
-                {renderSuggestion(r)}
-              </div>
-            ))}
+          {results.length > 0 && renderSuggestions(results)}
           {results.length === 0 && (
             <Text
               style={{ padding: '12px', textAlign: 'center', color: '#888' }}

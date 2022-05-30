@@ -15,6 +15,8 @@ export default async function handler(
 ) {
   const query = req.query.query as string;
   const accountId = req.query.account_id as string;
+  const limit = req.query.limit as string;
+  const offset = req.query.offset as string;
 
   const accountPromise = prisma.accounts.findUnique({
     where: { id: accountId },
@@ -22,6 +24,7 @@ export default async function handler(
   });
 
   // Search messages
+
   const queryPromise = prisma.$queryRaw<messages[]>`SELECT m."id",
           m."createdAt",
           m."body",
@@ -37,7 +40,8 @@ export default async function handler(
           AND m."id" IS NOT NULL
           AND TO_TSVECTOR('english', m."body") @@ phraseto_tsquery('english', ${query})
       ORDER BY m."id" ASC
-      LIMIT 20`;
+      LIMIT ${Number(limit)}
+      OFFSET ${Number(offset)}`;
 
   const [account, messagesResult] = await Promise.all([
     accountPromise,
