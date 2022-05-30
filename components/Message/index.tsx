@@ -7,6 +7,7 @@ import BasicChannel from './BasicChannel';
 import ComplexChannel from './ComplexChannel';
 import InlineCode from './InlineCode';
 import BlockCode from './BlockCode';
+import HorizontalRule from './HorizontalRule';
 import { tokenize, TokenType } from './utilities/lexer';
 import { truncate as truncateText } from './utilities/string';
 import styles from './index.module.css';
@@ -46,6 +47,8 @@ function Message({ text, truncate, mentions }: Props) {
               return <BasicChannel key={key} value={value} />;
             case TokenType.ComplexChannel:
               return <ComplexChannel key={key} value={value} />;
+            case TokenType.HorizontalRule:
+              return <HorizontalRule key={key} />;
             default:
               return null;
           }
