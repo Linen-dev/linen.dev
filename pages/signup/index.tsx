@@ -5,11 +5,34 @@ import Button from 'components/Button';
 import Link from 'components/Link';
 import { useRouter } from 'next/router';
 import { toast } from 'components/Toast';
+import { getCsrfToken } from 'next-auth/react';
+
+async function signIn({
+  email,
+  password,
+}: {
+  email: string;
+  password: string;
+}) {
+  const csrfToken = await getCsrfToken();
+  return await fetch('/api/auth/callback/credentials?callbackUrl=/settings', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: new URLSearchParams({
+      email,
+      password,
+      csrfToken: csrfToken as string,
+    }),
+    redirect: 'follow',
+  });
+}
 
 export default function SignUp() {
   const router = useRouter();
 
-  const onSubmit = (event: any) => {
+  const onSubmit = async (event: any) => {
     event.preventDefault();
     const form = event.target;
     const email = form.email.value;
@@ -20,22 +43,23 @@ export default function SignUp() {
     if (!password) {
       return toast.error('Password is required');
     }
-    fetch('/api/auth', {
-      method: 'POST',
-      body: JSON.stringify({ email, password }),
-    })
-      .then(async (res) => {
-        const { error, message } = await res.json();
-        if (res.ok) {
-          router.push('/signin');
-          return toast.success(message);
-        } else {
-          return toast.error(error);
-        }
-      })
-      .catch(() => {
-        return toast.error('Something went wrong. Please try again.');
+
+    try {
+      const signUpResponse = await fetch('/api/auth', {
+        method: 'POST',
+        body: JSON.stringify({ email, password }),
       });
+      if (signUpResponse.ok) {
+        const signInResponse = await signIn({ email, password });
+        if (signInResponse.redirected) {
+          window.location.href = signInResponse.url;
+        }
+      } else {
+        throw 'error';
+      }
+    } catch (error) {
+      return toast.error('Something went wrong. Please try again.');
+    }
   };
 
   return (

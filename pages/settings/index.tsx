@@ -298,28 +298,30 @@ export default function SettingsPage({ account }: Props) {
 
     const settingsComponent = (
       <form onSubmit={onSubmit}>
-        <div className="grid grid-cols-2 gap-4">
-          <div className="flex flex-col">{freeAccountSettings}</div>
-          <div className="flex flex-col">{premiumAccountSettings}</div>
-        </div>
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <Button block type="submit">
-              Update
-            </Button>
-          </div>
-          <div>
-            {!account.premium ? (
-              <Button
-                block
-                color="yellow"
-                onClick={() => router.push('/settings/plans')}
-              >
-                Upgrade your account
+        <div className="grid md:grid-cols-2 sm:grid-cols-1 gap-4">
+          <div className="flex flex-col">
+            {freeAccountSettings}
+            <div>
+              <Button block type="submit">
+                Update
               </Button>
-            ) : (
-              ''
-            )}
+            </div>
+          </div>
+          <div className="flex flex-col">
+            {premiumAccountSettings}
+            <div>
+              {!account.premium ? (
+                <Button
+                  block
+                  color="yellow"
+                  onClick={() => router.push('/settings/plans')}
+                >
+                  Upgrade your account
+                </Button>
+              ) : (
+                ''
+              )}
+            </div>
           </div>
         </div>
       </form>

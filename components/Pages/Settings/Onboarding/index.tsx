@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Layout from 'components/layout/CardLayout';
 import styles from './index.module.css';
 import DiscordIcon from 'components/icons/DiscordIcon';
@@ -42,36 +42,33 @@ function integrationAuthorizer(community: string, accountId: string) {
 }
 
 export default function Onboarding() {
-  const [community, setCommunity] = useState<string>();
-
-  const onSubmit = async (event: any) => {
-    event.preventDefault();
+  const onSubmit = async (community: string) => {
     try {
-      const auth = await fetch('/api/auth', {
+      const authResponse = await fetch('/api/auth', {
         method: 'PUT',
         body: JSON.stringify({
           createAccount: true,
         }),
-      }).then((res) => {
-        if (!res.ok) throw res;
-        else return res.json();
       });
-      console.log('auth', auth);
+      console.log('authResponse', authResponse);
+      if (!authResponse.ok) {
+        throw 'create account failed';
+      }
+      const auth = await authResponse.json();
       community && integrationAuthorizer(community, auth.account.id);
     } catch (error) {
-      console.error(error);
-      toast.error('Something went wrong, please sign in again');
+      return toast.error('Something went wrong, please sign in again');
     }
   };
 
   return (
     <Layout header="Welcome, let's set up your account">
-      <form onSubmit={onSubmit}>
+      <form>
         <div className={styles.btnContainer}>
           <button
             className={styles.communityButton}
-            type="submit"
-            onClick={() => setCommunity('slack')}
+            type="button"
+            onClick={() => onSubmit('slack')}
           >
             <SlackIcon size="25" style={{ margin: '3px 8px 3px 1px' }} />
             <p>
@@ -80,8 +77,8 @@ export default function Onboarding() {
           </button>
           <button
             className={styles.communityButton}
-            type="submit"
-            onClick={() => setCommunity('discord')}
+            type="button"
+            onClick={() => onSubmit('discord')}
           >
             <DiscordIcon size="25" style={{ margin: '3px 8px 3px 1px' }} />
             <p>
