@@ -16,7 +16,6 @@ export default function Autocomplete({
   renderSuggestion = (any) => null,
   placeholder = 'Search',
   debounce = 150,
-  limit = 5,
 }: {
   icon: React.ReactNode;
   makeURL: (debounceValue: string) => string;
@@ -25,7 +24,6 @@ export default function Autocomplete({
   renderSuggestion: (any: any) => any;
   placeholder: string;
   debounce?: number;
-  limit?: number;
 }) {
   const [value, setValue] = useState('');
   const [results, setResults] = useState([]);
@@ -166,7 +164,7 @@ export default function Autocomplete({
           direction="column"
         >
           {results.length > 0 &&
-            results.slice(0, limit).map((r: any, idx) => (
+            results.map((r: any, idx) => (
               <div
                 key={r.id || idx}
                 onMouseEnter={() => setActiveResult(idx)}
