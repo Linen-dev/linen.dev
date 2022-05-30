@@ -17,5 +17,13 @@ module.exports = {
       cron_restart: '0 0 * * *',
       autorestart: false,
     },
+    {
+      // this function creates alias for all users on our database
+      name: 'anonymize-users',
+      script: 'npx ts-node --skip-project bin/anonymize/index.ts',
+      // it will run every night 0:00 gmt-0
+      cron_restart: '0 0 * * *',
+      autorestart: false,
+    },
   ],
 };
