@@ -10,26 +10,29 @@ const MIN_QUERY_LENGTH = 3;
 
 export default function Autocomplete({
   icon,
-  makeURL = (debounceValue: string, offset: number) => '',
+  makeURL = (debounceValue: string, offset: number, limit: number) => '',
   onSelect = (any) => {},
   resultParser = (data) => data,
   renderSuggestion = (any) => null,
   placeholder = 'Search',
   debounce = 150,
+  limit = 5,
 }: {
   icon: React.ReactNode;
-  makeURL: (debounceValue: string, offset: number) => string;
+  makeURL: (debounceValue: string, offset: number, limit: number) => string;
   onSelect: (any: any) => any;
   resultParser: (data: any) => any;
   renderSuggestion: (any: any) => any;
   placeholder: string;
   debounce?: number;
+  limit?: number;
 }) {
   const [value, setValue] = useState('');
   const [offset, setOffset] = useState(0);
   const [results, setResults] = useState([]);
   const [isFocused, setFocused] = useState(false);
   const [isSearching, setSearching] = useState(false);
+  const [isLoadMoreVisible, setLoadMoreVisible] = useState(true);
   const [activeResult, setActiveResult] = useState(-1);
   const lastRequest: any = useRef(null);
   const [debouncedValue] = useDebouncedValue(value, debounce);
@@ -43,7 +46,7 @@ export default function Autocomplete({
       // updating the ref variable with the current debouncedValue
       setSearching(true);
       axios
-        .get(makeURL(debouncedValue, offset))
+        .get(makeURL(debouncedValue, offset, limit))
         .then((r) => {
           // the code in here is asyncronous so debouncedValue
           // that was used when calling the api might be outdated
@@ -57,6 +60,7 @@ export default function Autocomplete({
             } else {
               setResults(resultParser(r.data));
             }
+            setLoadMoreVisible(r.data.length >= limit);
           } else {
             // Discard API response because it's not most recent.
           }
@@ -68,7 +72,7 @@ export default function Autocomplete({
     } else {
       setResults([]);
     }
-  }, [debouncedValue, makeURL, resultParser, offset]);
+  }, [debouncedValue, makeURL, resultParser, offset, limit]);
 
   const handleFocus = useCallback(() => {
     if (!isFocused) {
@@ -143,26 +147,28 @@ export default function Autocomplete({
             {renderSuggestion(r)}
           </div>
         ))}
-        <a
-          onMouseEnter={() => setActiveResult(-1)}
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            setOffset((offset) => offset + 5);
-          }}
-          style={{
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: '#8e959f',
-            padding: '10px',
-            width: '100%',
-            fontSize: '14px',
-          }}
-        >
-          Load more
-        </a>
+        {isLoadMoreVisible && (
+          <a
+            onMouseEnter={() => setActiveResult(-1)}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setOffset((offset) => offset + limit);
+            }}
+            style={{
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#8e959f',
+              padding: '10px',
+              width: '100%',
+              fontSize: '14px',
+            }}
+          >
+            Load more
+          </a>
+        )}
       </div>
     );
   }
