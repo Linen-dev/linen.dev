@@ -10,9 +10,6 @@ import {
   MentionsWithUsers,
   ThreadByIdProp,
 } from '../../../types/apiResponses/threads/[threadId]';
-import CustomLinkHelper from 'components/Link/CustomLinkHelper';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAngleLeft } from '@fortawesome/free-solid-svg-icons';
 
 export default function Thread({
   threadId,
@@ -102,16 +99,6 @@ export default function Thread({
       isSubDomainRouting={isSubDomainRouting}
     >
       <div>
-        <div className="hidden lg:py-2 lg:pb-0 lg:px-4 lg:flex lg:justify-left">
-          <Anchor
-            className={styles.join}
-            size="sm"
-            href={CustomLinkHelper(linkProps)}
-          >
-            <FontAwesomeIcon icon={faAngleLeft} />
-            {/* #{currentChannel?.channelName || 'channel'} */}
-          </Anchor>
-        </div>
         <div className="py-8 px-4">
           <ul>{elements}</ul>
 
