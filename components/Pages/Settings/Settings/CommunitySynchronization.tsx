@@ -179,9 +179,9 @@ export default function CommunitySynchronization({ account }: SettingsProps) {
           </div>
           <div className="self-center">
             {account?.hasAuth ? (
-              <>
+              <div className="flex items-center">
                 {account?.slackSyncStatus && statusMap[account.slackSyncStatus]}
-              </>
+              </div>
             ) : (
               <WaitForIntegration />
             )}
