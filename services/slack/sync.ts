@@ -56,7 +56,11 @@ export async function slackSync({
     }
 
     // create and join channels
-    let channels = await createChannels(account.slackTeamId, token, accountId);
+    let channels = await createChannels({
+      slackTeamId: account.slackTeamId,
+      token,
+      accountId,
+    });
 
     // If channelId is part of parameter only sync the specific channel
     if (!!channelId) {
@@ -242,11 +246,15 @@ export async function slackSync({
 //   return messageWithThreads;
 // }
 
-async function createChannels(
-  slackTeamId: string,
-  token: string,
-  accountId: string
-) {
+export async function createChannels({
+  slackTeamId,
+  token,
+  accountId,
+}: {
+  slackTeamId: string;
+  token: string;
+  accountId: string;
+}) {
   const channelsResponse = await getSlackChannels(slackTeamId, token);
   const channelsParam = channelsResponse.body.channels.map(
     (channel: { id: any; name: any }) => {

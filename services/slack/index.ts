@@ -1,3 +1,3 @@
 export { sendNotification } from './notification';
-export { slackSync } from './sync';
+export { slackSync, createChannels } from './sync';
 export { getSlackUser, getSlackChannels } from './slackHelper';
