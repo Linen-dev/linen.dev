@@ -23,7 +23,7 @@ export const getThreadsByCommunityName = async (
   }
   const channels = account.channels;
   if (channels.length === 0) {
-    return { props: { status: 404 } };
+    return { props: { statusCode: 404 } };
   }
   const defaultChannelName =
     channelName || account.channels.find((c) => c.default)?.channelName;
