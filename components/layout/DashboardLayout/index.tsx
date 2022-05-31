@@ -2,8 +2,7 @@ import React from 'react';
 import {
   faGear,
   faMoneyBill,
-  faListCheck,
-  faBucket,
+  faPalette,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import SidebarLink from './SidebarLink';
@@ -42,15 +41,12 @@ export default function DashboardLayout({ children, header }: Props) {
             </div>
             <div className="space-y-1">
               <SidebarLink
-                href="/settings/channels"
+                href="/settings/branding"
                 icon={
-                  <FontAwesomeIcon
-                    icon={faListCheck}
-                    className={iconClassName}
-                  />
+                  <FontAwesomeIcon icon={faPalette} className={iconClassName} />
                 }
-                text="Channels"
-                active={route === '/settings/channels'}
+                text="Branding"
+                active={route === '/settings/branding'}
               />
             </div>
             <div className="space-y-1">
