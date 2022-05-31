@@ -68,8 +68,7 @@ function SynchronizerModal({
                     </Dialog.Title>
                     <div className="mt-2">
                       <p className="text-sm text-gray-500">
-                        Lorem ipsum, dolor sit amet consectetur adipisicing
-                        elit.
+                        This will save all historic conversations.
                       </p>
                     </div>
                   </div>
