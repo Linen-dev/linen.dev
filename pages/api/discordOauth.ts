@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { listChannelsAndPersist } from 'services/discord';
 import request from 'superagent';
 import prisma from '../../client';
 import { updateAccount } from '../../lib/models';
@@ -9,6 +10,12 @@ export default async function handler(
 ) {
   const code = req.query.code;
   const accountId = req.query.state as string;
+  const error = req.query.error as string;
+  if (error) {
+    const error_description = req.query.error_description as string;
+    console.error(error, error_description);
+    return res.redirect('/settings?error=1');
+  }
 
   const resp = await getDiscordAccessToken(code as string);
 
@@ -32,17 +39,23 @@ export default async function handler(
     },
   });
 
+  await listChannelsAndPersist({
+    serverId: guild.id,
+    accountId: account.id,
+    token: process.env.DISCORD_TOKEN as string,
+  });
+
   // Initialize syncing asynchronously
-  request
-    .get(
-      process.env.SYNC_URL + '/api/scripts/discordSync?account_id=' + accountId
-    )
-    .then(() => {
-      console.log('Syncing done!');
-    })
-    .catch((err) => {
-      console.error('Syncing error: ', err);
-    });
+  // request
+  //   .get(
+  //     process.env.SYNC_URL + '/api/scripts/discordSync?account_id=' + accountId
+  //   )
+  //   .then(() => {
+  //     console.log('Syncing done!');
+  //   })
+  //   .catch((err) => {
+  //     console.error('Syncing error: ', err);
+  //   });
 
   return res.redirect(
     '/settings?success=' +
