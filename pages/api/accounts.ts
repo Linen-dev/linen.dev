@@ -36,24 +36,21 @@ async function update(request: NextApiRequest, response: NextApiResponse) {
   if (!account) {
     return response.status(404).json({});
   }
+  const freeAccount = {
+    homeUrl,
+    docsUrl,
+    logoUrl,
+    anonymizeUsers,
+    ...(redirectDomain && { redirectDomain: stripProtocol(redirectDomain) }),
+  };
   const data = account.premium
     ? {
-        homeUrl,
-        docsUrl,
-        logoUrl,
-        redirectDomain: stripProtocol(redirectDomain),
+        ...freeAccount,
         brandColor,
         googleAnalyticsId,
-        anonymizeUsers,
       }
-    : {
-        homeUrl,
-        docsUrl,
-        logoUrl,
-        redirectDomain: stripProtocol(redirectDomain),
-        brandColor,
-        anonymizeUsers,
-      };
+    : freeAccount;
+
   const record = await prisma.accounts.update({
     where: { id: accountId },
     data,

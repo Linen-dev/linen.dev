@@ -139,6 +139,10 @@ export const findAccountByEmail = async (email?: string | null) => {
   }
   return await prisma.accounts.findFirst({
     where: { id: auth.accountId as string },
+    include: {
+      slackAuthorizations: true,
+      discordAuthorizations: true,
+    },
   });
 };
 

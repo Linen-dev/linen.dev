@@ -13,8 +13,35 @@ export interface SerializedAccount {
   premium: boolean;
   googleAnalyticsId?: string;
   slackSyncStatus: string;
-  communityType: CommunityType;
+  communityType: CommunityType | null;
   anonymizeUsers?: boolean;
+  hasAuth?: boolean;
+}
+
+function identifyCommunity(account: any) {
+  if (account.slackAuthorizations.length) {
+    return CommunityType.slack;
+  }
+  if (account.discordAuthorizations.length) {
+    return CommunityType.discord;
+  }
+  if (account.discordServerId) {
+    return CommunityType.discord;
+  }
+  if (account.slackTeamId) {
+    return CommunityType.slack;
+  }
+  return null;
+}
+
+function hasAuthFn(account: any) {
+  if (account.slackAuthorizations.length) {
+    return true;
+  }
+  if (account.discordAuthorizations.length) {
+    return true;
+  }
+  return false;
 }
 
 export default function serialize(account?: any): SerializedAccount | null {
@@ -34,9 +61,8 @@ export default function serialize(account?: any): SerializedAccount | null {
     anonymizeUsers,
   } = account;
 
-  const communityType = account.discordServerId
-    ? CommunityType.discord
-    : CommunityType.slack;
+  const communityType = identifyCommunity(account);
+  const hasAuth = hasAuthFn(account);
 
   return {
     homeUrl,
@@ -50,5 +76,6 @@ export default function serialize(account?: any): SerializedAccount | null {
     id,
     communityType,
     anonymizeUsers,
+    hasAuth,
   };
 }
