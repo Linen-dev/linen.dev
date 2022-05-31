@@ -170,11 +170,19 @@ export async function getServerSideProps(context: NextPageContext) {
   const session = await getSession(context);
   const account = await findAccountByEmail(session?.user?.email);
 
+  if (!session) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: 'signin',
+      },
+    };
+  }
   if (!account) {
     return {
       redirect: {
         permanent: false,
-        destination: 'signup/CreateAccountForm',
+        destination: '../settings',
       },
     };
   }
