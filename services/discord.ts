@@ -99,11 +99,11 @@ async function sync({
   token: string;
   fullSync?: boolean;
 }) {
-  const savedChannels = await listChannelsAndPersist(
+  const savedChannels = await listChannelsAndPersist({
     serverId,
     accountId,
-    token
-  );
+    token,
+  });
 
   let authors = await getAuthorsFromDatabase(accountId);
 
@@ -381,11 +381,15 @@ async function persistMessages({
   await Promise.allSettled(cleanUpMessages);
 }
 
-async function listChannelsAndPersist(
-  serverId: string,
-  accountId: string,
-  token: string
-) {
+export async function listChannelsAndPersist({
+  serverId,
+  accountId,
+  token,
+}: {
+  serverId: string;
+  accountId: string;
+  token: string;
+}) {
   const channels = await getDiscordChannels(serverId, token);
   const channelPromises = Promise.all(
     channels.map((channel: discordChannel) => {

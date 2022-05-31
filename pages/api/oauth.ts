@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { createChannels } from 'services/slack';
 import request from 'superagent';
 import { fetchTeamInfo } from '../../fetch_all_conversations';
 import {
@@ -51,16 +52,22 @@ export default async function handler(
     authedUserId: user.id,
   });
 
+  await createChannels({
+    accountId,
+    slackTeamId: body.team.id,
+    token: body.access_token,
+  });
+
   // Initialize syncing asynchronously
-  console.log('Start syncing account: ', accountId);
-  request
-    .get(process.env.SYNC_URL + '/api/scripts/sync?account_id=' + accountId)
-    .then(() => {
-      console.log('Syncing done!');
-    })
-    .catch((err) => {
-      console.error('Syncing error: ', err);
-    });
+  // console.log('Start syncing account: ', accountId);
+  // request
+  //   .get(process.env.SYNC_URL + '/api/scripts/sync?account_id=' + accountId)
+  //   .then(() => {
+  //     console.log('Syncing done!');
+  //   })
+  //   .catch((err) => {
+  //     console.error('Syncing error: ', err);
+  //   });
 
   return res.redirect(
     '/settings?success=' +

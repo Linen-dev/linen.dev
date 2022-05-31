@@ -2,8 +2,7 @@ import React from 'react';
 import {
   faGear,
   faMoneyBill,
-  faListCheck,
-  faBucket,
+  faPalette,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import SidebarLink from './SidebarLink';
@@ -42,15 +41,12 @@ export default function DashboardLayout({ children, header }: Props) {
             </div>
             <div className="space-y-1">
               <SidebarLink
-                href="/settings/channels"
+                href="/settings/branding"
                 icon={
-                  <FontAwesomeIcon
-                    icon={faListCheck}
-                    className={iconClassName}
-                  />
+                  <FontAwesomeIcon icon={faPalette} className={iconClassName} />
                 }
-                text="Channels"
-                active={route === '/settings/channels'}
+                text="Branding"
+                active={route === '/settings/branding'}
               />
             </div>
             <div className="space-y-1">
@@ -93,7 +89,7 @@ export default function DashboardLayout({ children, header }: Props) {
       <div className="md:pl-64">
         <div className="max-w-4xl mx-auto flex flex-col md:px-8 xl:px-0">
           <div className="py-10">
-            <div className="max-w-lg mx-auto px-4">
+            <div className="max-w-4xl mx-auto px-4">
               {header && (
                 <h1 className="text-3xl font-extrabold text-gray-900">
                   {header}

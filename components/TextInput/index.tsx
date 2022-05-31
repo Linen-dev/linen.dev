@@ -8,6 +8,8 @@ interface Props {
   placeholder?: string;
   required?: boolean;
   defaultValue?: string;
+  disabled?: boolean;
+  readOnly?: boolean;
 }
 
 function TextInput({
@@ -17,6 +19,8 @@ function TextInput({
   placeholder,
   required,
   defaultValue,
+  disabled = false,
+  readOnly = false,
 }: Props) {
   return (
     <input
@@ -27,6 +31,8 @@ function TextInput({
       placeholder={placeholder}
       required={required}
       defaultValue={defaultValue}
+      disabled={disabled}
+      readOnly={readOnly}
     />
   );
 }

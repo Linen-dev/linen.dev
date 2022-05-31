@@ -22,14 +22,16 @@ async function setDefaultChannel({
   ];
 
   if (originalChannelId) {
-    prisma.channels.update({
-      where: {
-        id: originalChannelId,
-      },
-      data: {
-        default: false,
-      },
-    });
+    transactions.push(
+      prisma.channels.update({
+        where: {
+          id: originalChannelId,
+        },
+        data: {
+          default: false,
+        },
+      })
+    );
   }
 
   return await prisma.$transaction(transactions);
