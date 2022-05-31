@@ -5,14 +5,14 @@ import SlackIcon from '../icons/SlackIcon';
 
 interface CommunityButtonProps {
   communityType: string;
-  onSubmit: (value: string) => void;
+  onClick: (value: string) => void;
   iconSize?: string;
   label?: string;
   fontSize?: string;
 }
 
 export default function CommunityButton({
-  onSubmit,
+  onClick,
   communityType,
   iconSize = '25',
   label = 'Connect to',
@@ -27,7 +27,7 @@ export default function CommunityButton({
         fontSize
       )}
       type="button"
-      onClick={() => onSubmit(communityType)}
+      onClick={() => onClick(communityType)}
     >
       <div className="flex gap-2 items-center">
         <Icon size={iconSize} />

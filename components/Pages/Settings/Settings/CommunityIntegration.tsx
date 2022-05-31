@@ -13,7 +13,7 @@ export default function CommunityIntegration({
   const communityType =
     account && account.communityType ? account.communityType : 'Slack/Discord';
 
-  const onSubmit = async (community: string) => {
+  const onClick = async (community: string) => {
     try {
       const authResponse = await fetch('/api/auth', {
         method: 'PUT',
@@ -54,13 +54,13 @@ export default function CommunityIntegration({
                 <CommunityButton
                   communityType={'slack'}
                   label="Connect to"
-                  onSubmit={onSubmit}
+                  onClick={onClick}
                   iconSize="20"
                 />
                 <CommunityButton
                   communityType={'discord'}
                   label="Connect to"
-                  onSubmit={onSubmit}
+                  onClick={onClick}
                   iconSize="20"
                 />
               </div>
@@ -68,7 +68,7 @@ export default function CommunityIntegration({
               <CommunityButton
                 communityType={communityType}
                 label="Reconnect to"
-                onSubmit={(community) =>
+                onClick={(community) =>
                   integrationAuthorizer(community, account.id)
                 }
                 iconSize="20"
