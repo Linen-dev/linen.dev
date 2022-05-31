@@ -72,10 +72,24 @@ export default function Thread({
     fetch(`/api/threads?incrementId=${threadId}`, { method: 'PUT' });
   }, []);
 
+  const linkProps = {
+    isSubDomainRouting,
+    communityName,
+    communityType: settings.communityType,
+    path: `/c/${currentChannel?.channelName}`,
+  };
+
+  function buildTitle(channelName: string | undefined, message: any) {
+    const channel = !!channelName ? `#${channelName}` : '';
+    return `${channel} - ${message.body.slice(0, 30)}`;
+  }
+
   return (
     <PageLayout
       users={messages.map(({ author }) => author)}
-      seo={{ title: messages[0].body.slice(0, 30) }}
+      seo={{
+        title: buildTitle(currentChannel?.channelName, messages[0]),
+      }}
       communityName={communityName}
       currentChannel={currentChannel}
       navItems={{ channels: channels }}
@@ -84,25 +98,32 @@ export default function Thread({
       settings={settings}
       isSubDomainRouting={isSubDomainRouting}
     >
-      <div className="py-8 px-4">
-        <ul>{elements}</ul>
+      <div>
+        <div className="py-8 px-4">
+          <ul>{elements}</ul>
 
-        <div className={styles.buttons}>
-          <Anchor
-            className={styles.join}
-            href={threadSlackInviteUrl || threadUrl}
-            size="sm"
-            target="_blank"
-          >
-            <AiOutlineLink className={styles.icon} size={18} />
-            {settings.communityType === 'discord' ? (
-              <div>Join thread in Discord</div>
-            ) : (
-              <div>Join thread in Slack</div>
-            )}
-          </Anchor>
-          <div className={styles.count}>
-            <span className={styles.subtext}>View count:</span> {viewCount + 1}
+          <div className="gap-8 columns-2">
+            <div className={styles.buttons}>
+              <Anchor
+                className={styles.join}
+                href={threadSlackInviteUrl || threadUrl}
+                size="sm"
+                target="_blank"
+              >
+                <div className="flex content-center">
+                  <AiOutlineLink className={styles.icon} size={18} />
+                  {settings.communityType === 'discord' ? (
+                    <div>Join thread in Discord</div>
+                  ) : (
+                    <div>Join thread in Slack</div>
+                  )}
+                </div>
+              </Anchor>
+            </div>
+            <div className={styles.count}>
+              <span className={styles.subtext}>View count:</span>{' '}
+              {viewCount + 1}
+            </div>
           </div>
         </div>
       </div>

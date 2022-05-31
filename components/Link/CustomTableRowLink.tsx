@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import CustomLinkHelper from './CustomLinkHelper';
 
-export default function CustomLink({
+export default function CustomTableRowLink({
   isSubDomainRouting,
   path,
   communityName,
@@ -14,9 +14,5 @@ export default function CustomLink({
     isSubDomainRouting,
     path,
   });
-  return (
-    <Link href={href} {...props}>
-      <a>{props.children}</a>
-    </Link>
-  );
+  return <Link href={href} {...props}></Link>;
 }

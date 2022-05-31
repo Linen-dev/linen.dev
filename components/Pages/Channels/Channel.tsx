@@ -12,6 +12,7 @@ import { capitalize } from '../../../lib/util';
 import CustomRouterPush from 'components/Link/CustomRouterPush';
 import CopyToClipboardLink from './CopyToClipboardLink';
 import styles from './Channel.module.css';
+import CustomTableRowLink from 'components/Link/CustomTableRowLink';
 
 export interface PaginationType {
   totalCount: number;
@@ -200,55 +201,69 @@ export default function Channel({
         }
         return array;
       }, []);
-      const path = `/t/${incrementId}/${slug || 'topic'}`;
+      const linkProps = {
+        isSubDomainRouting,
+        communityName,
+        communityType: settings.communityType,
+        path: `/t/${incrementId}/${slug || 'topic'}`,
+      };
       return (
-        <CustomLink
-          isSubDomainRouting={isSubDomainRouting}
-          communityName={communityName}
-          communityType={settings.communityType}
-          path={path}
-          key={`${incrementId}-desktop`}
-        >
+        <CustomTableRowLink {...linkProps} key={`${incrementId}-desktop`}>
           <tr className="border-solid border-gray-200 cursor-pointer">
             <td className={styles.td}>
-              <Message
-                text={oldestMessage.body}
-                truncate
-                mentions={oldestMessage.mentions.map((m) => m.users)}
-              />
+              <CustomLink {...linkProps}>
+                <Message
+                  text={oldestMessage.body}
+                  truncate
+                  mentions={oldestMessage.mentions.map((m) => m.users)}
+                />
+              </CustomLink>
             </td>
             <td className="px-6 py-3 align-middle">
-              <Avatars
-                users={
-                  authors.map((p) => ({
-                    src: p.profileImageUrl,
-                    alt: p.displayName,
-                    text: (p.displayName || '?').slice(0, 1).toLowerCase(),
-                  })) || []
-                }
-              />
+              <CustomLink {...linkProps}>
+                {' '}
+                <Avatars
+                  users={
+                    authors.map((p) => ({
+                      src: p.profileImageUrl,
+                      alt: p.displayName,
+                      text: (p.displayName || '?').slice(0, 1).toLowerCase(),
+                    })) || []
+                  }
+                />
+              </CustomLink>
             </td>
-            <td className="px-6 py-3 text-sm align-middle">{viewCount}</td>
             <td className="px-6 py-3 text-sm align-middle">
-              {messages.length}
+              <CustomLink {...linkProps}>{viewCount}</CustomLink>
+            </td>
+            <td className="px-6 py-3 text-sm align-middle">
+              <CustomLink {...linkProps}>{messages.length}</CustomLink>
             </td>
             <td className="px-6 py-3 text-sm align-middle min-w-[120px]">
-              {format(new Date(oldestMessage.sentAt))}
+              <CustomLink {...linkProps}>
+                {format(new Date(oldestMessage.sentAt))}
+              </CustomLink>
             </td>
             <td className="px-6 text-sm text-center align-middle">
-              <CopyToClipboardLink
-                isSubDomainRouting={isSubDomainRouting}
-                communityName={communityName}
-                communityType={settings.communityType}
-                path={path}
-              />
+              <CopyToClipboardLink {...linkProps} />
             </td>
           </tr>
-        </CustomLink>
+        </CustomTableRowLink>
       );
     }
   );
 
+  function buildTitle(
+    communityName: string,
+    channelName: string | undefined,
+    page: number = 1
+  ) {
+    const name = capitalize(communityName);
+    const channel = !!channelName
+      ? ` - ${capitalize(channelName)} Threads - Page ${page}`
+      : '';
+    return `${name}${channel}`;
+  }
   return (
     //Super hacky mobile friendly - different component gets
     //rendered when it is smaller than a specific size and gets unhidden
@@ -258,10 +273,8 @@ export default function Channel({
       slackInviteUrl={slackInviteUrl}
       currentChannel={currentChannel}
       seo={{
-        title: `${capitalize(
-          settings.name || communityName
-        )} - Discover and join our community`,
-        description: `${channelName} threads`,
+        title: buildTitle(settings.name || communityName, channelName, page),
+        // description: `${channelName} Threads - Page ${page}`,
       }}
       navItems={{ channels: channels }}
       settings={settings}

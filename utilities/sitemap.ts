@@ -70,7 +70,7 @@ export async function createXMLSitemapForLinen(host: string) {
   const freeAccounts = await prisma.accounts.findMany({
     select: { discordServerId: true, slackDomain: true, id: true },
     where: {
-      OR: [{ redirectDomain: { equals: null } }, { premium: false }],
+      premium: false,
       channels: {
         some: {
           slackThreads: {

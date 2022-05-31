@@ -2,7 +2,7 @@ import {
   createXMLSitemapForLinen,
   createXMLSitemapForSubdomain,
 } from '../utilities/sitemap';
-import { isLinenDomain } from '../utilities/domain';
+import { getSubdomain, isLinenDomain } from '../utilities/domain';
 import { GetServerSideProps } from 'next/types';
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
@@ -11,10 +11,21 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
     if (!host) {
       throw 'host missing';
     } else if (isLinenDomain(host)) {
-      const sitemap = await createXMLSitemapForLinen(host);
-      res.setHeader('Content-Type', 'application/xml');
-      res.write(sitemap);
-      res.end();
+      const subdomain = getSubdomain(host);
+      if (subdomain) {
+        return {
+          redirect: {
+            permanent: false,
+            destination: 'https://linen.dev/sitemap.xml',
+          },
+          props: {},
+        };
+      } else {
+        const sitemap = await createXMLSitemapForLinen('linen.dev');
+        res.setHeader('Content-Type', 'application/xml');
+        res.write(sitemap);
+        res.end();
+      }
     } else {
       const sitemap = await createXMLSitemapForSubdomain(host);
       res.setHeader('Content-Type', 'application/xml');

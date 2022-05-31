@@ -32,7 +32,13 @@
 //   }
 // };
 
-import Document, { DocumentContext } from 'next/document';
+import Document, {
+  DocumentContext,
+  Html,
+  Head,
+  Main,
+  NextScript,
+} from 'next/document';
 import { ServerStyleSheet } from 'styled-components';
 import { ServerStyles, createStylesServer } from '@mantine/next';
 
@@ -63,5 +69,16 @@ export default class _Document extends Document {
     } finally {
       sheet.seal();
     }
+  }
+  render() {
+    return (
+      <Html lang="en">
+        <Head />
+        <body>
+          <Main />
+          <NextScript />
+        </body>
+      </Html>
+    );
   }
 }
