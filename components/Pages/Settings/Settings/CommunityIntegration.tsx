@@ -41,7 +41,10 @@ export default function CommunityIntegration({
             </h3>
             <div className="mt-2 sm:flex sm:items-start sm:justify-between">
               <div className="max-w-xl text-sm text-gray-500">
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+                <p>
+                  Connect to {capitalize(communityType)} to start fetching new
+                  conversations.
+                </p>
               </div>
             </div>
           </div>

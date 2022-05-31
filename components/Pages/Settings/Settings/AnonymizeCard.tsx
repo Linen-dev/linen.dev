@@ -28,7 +28,8 @@ function AnonymizeCardComponent({
             <div className="mt-2 sm:flex sm:items-start sm:justify-between">
               <div className="max-w-xl text-sm text-gray-500">
                 <Switch.Description>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                  Replace your community member&apos;s display name and profile
+                  images with randomly generated words.
                 </Switch.Description>
               </div>
             </div>

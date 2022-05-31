@@ -78,7 +78,7 @@ function ChannelVisibilityCardComponent({
             </h3>
             <div className="mt-2 sm:flex sm:items-start sm:justify-between">
               <div className="max-w-xl text-sm text-gray-500">
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+                <p>Pick which channels to display or hide.</p>
               </div>
             </div>
             <div className="mt-2 sm:flex sm:items-end sm:justify-between">

@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from 'react';
+import React, { useState, Fragment, ReactElement } from 'react';
 import {
   faCheck,
   faChevronDown,
@@ -10,18 +10,22 @@ import classNames from 'classnames';
 import { SettingsProps, WaitForIntegration } from '..';
 import { toast } from 'components/Toast';
 import { channels } from '@prisma/client';
+import DiscordIcon from 'components/icons/DiscordIcon';
+import SlackIcon from 'components/icons/SlackIcon';
 
 type DropDownChannelsProps = {
   channels?: channels[];
   selected?: channels;
   onChange: (channel: channels) => void;
   hasAuth?: boolean;
+  CommunityIcon: any;
 };
 
 function DropDownChannels({
   channels,
   selected,
   onChange,
+  CommunityIcon,
 }: DropDownChannelsProps) {
   return (
     <Listbox value={selected} onChange={onChange}>
@@ -34,7 +38,7 @@ function DropDownChannels({
             <div className="inline-flex shadow-sm rounded-md divide-x divide-blue-700">
               <div className="relative z-0 inline-flex shadow-sm rounded-md divide-x divide-blue-700">
                 <div className="relative inline-flex items-center bg-blue-700 py-2 pl-3 pr-4 border border-transparent rounded-l-md shadow-sm text-white">
-                  <FontAwesomeIcon icon={faHashtag} className="h-4 w-4" />
+                  <CommunityIcon color="#eee" />
                   <p className="ml-2.5 text-sm font-medium">
                     {selected?.channelName || 'choose one'}
                   </p>
@@ -108,6 +112,7 @@ function ChannelsDefaultComponent({
   onChange,
   selected,
   hasAuth,
+  CommunityIcon,
 }: DropDownChannelsProps) {
   return (
     <div className="bg-white shadow sm:rounded-lg">
@@ -119,7 +124,10 @@ function ChannelsDefaultComponent({
             </h3>
             <div className="mt-2 sm:flex sm:items-start sm:justify-between">
               <div className="max-w-xl text-sm text-gray-500">
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+                <p>
+                  Select the first channel that gets displayed when a user lands
+                  on your Linen page.
+                </p>
               </div>
             </div>
           </div>
@@ -129,6 +137,7 @@ function ChannelsDefaultComponent({
                 channels={channels}
                 selected={selected}
                 onChange={onChange}
+                CommunityIcon={CommunityIcon}
               />
             ) : (
               <WaitForIntegration />
@@ -145,6 +154,9 @@ export default function ChannelsDefault({ channels, account }: SettingsProps) {
     channels?.find((channel) => channel.default)
   );
   const [selected, setSelected] = useState(defaultChannel);
+
+  const CommunityIcon =
+    account?.communityType === 'discord' ? DiscordIcon : SlackIcon;
 
   async function onDefaultChannelChange(channelSelected: channels) {
     if (defaultChannel?.id === channelSelected.id) {
@@ -175,6 +187,7 @@ export default function ChannelsDefault({ channels, account }: SettingsProps) {
       selected={selected}
       channels={channels}
       hasAuth={account?.hasAuth}
+      CommunityIcon={CommunityIcon}
     />
   );
 }

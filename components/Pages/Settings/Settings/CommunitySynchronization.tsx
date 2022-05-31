@@ -173,7 +173,10 @@ export default function CommunitySynchronization({ account }: SettingsProps) {
             </h3>
             <div className="mt-2 sm:flex sm:items-start sm:justify-between">
               <div className="max-w-xl text-sm text-gray-500">
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+                <p>
+                  Pull past {capitalize(communityType)} conversations in to
+                  Linen.
+                </p>
               </div>
             </div>
           </div>
