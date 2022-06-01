@@ -92,6 +92,20 @@ export class CdkStack extends cdk.Stack {
             { parameterName: '/linen-dev/prod/slackToken', version: 0 }
           )
         ),
+        NEXTAUTH_SECRET: ecs.Secret.fromSsmParameter(
+          cdk.aws_ssm.StringParameter.fromSecureStringParameterAttributes(
+            this,
+            'nextAuthSecret',
+            { parameterName: '/linen-dev/prod/nextAuthSecret', version: 0 }
+          )
+        ),
+        DISCORD_TOKEN: ecs.Secret.fromSsmParameter(
+          cdk.aws_ssm.StringParameter.fromSecureStringParameterAttributes(
+            this,
+            'discordToken',
+            { parameterName: '/linen-dev/prod/discordToken', version: 0 }
+          )
+        ),
       },
       logging: ecs.LogDriver.awsLogs({
         streamPrefix: 'linen-dev',
@@ -128,7 +142,7 @@ export class CdkStack extends cdk.Stack {
       );
 
     fargateService.targetGroup.configureHealthCheck({
-      path: '/signin',
+      path: '/robots.txt',
       interval: cdk.Duration.seconds(120),
       unhealthyThresholdCount: 5,
     });
