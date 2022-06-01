@@ -14,16 +14,16 @@ export const getThreadsByCommunityName = async (
   channelName?: string
 ) => {
   if (!communityName) {
-    return { props: { statusCode: 404 } };
+    return { notFound: true };
   }
 
   const account = await findAccountByPath(communityName);
   if (account === null) {
-    return { props: { statusCode: 404 } };
+    return { notFound: true };
   }
   const channels = account.channels;
   if (channels.length === 0) {
-    return { props: { status: 404 } };
+    return { notFound: true };
   }
   const defaultChannelName =
     channelName || account.channels.find((c) => c.default)?.channelName;
@@ -112,6 +112,9 @@ export async function channelGetStaticProps(
     Number(page) || 1,
     channelName
   );
+  if (result.notFound) {
+    return { notFound: true };
+  }
   return {
     props: {
       ...result,

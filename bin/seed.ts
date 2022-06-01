@@ -10,6 +10,7 @@ import {
 import messages from './factory/messages';
 
 (async () => {
+  await findOrCreateAccount({ domain: 'empty.dev' });
   const account = await findOrCreateAccount({ domain: 'linen.dev' });
 
   await findOrCreateAuth({ email: 'emil@linen.dev', accountId: account.id });
