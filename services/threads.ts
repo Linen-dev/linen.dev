@@ -66,7 +66,7 @@ export async function getThreadById(
         return r.channelId === c.id;
       });
 
-      return channelCount && channelCount._count.id > 20;
+      return channelCount && channelCount._count.id > 2;
     });
 
   if (!account) {
