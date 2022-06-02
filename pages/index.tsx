@@ -9,6 +9,7 @@ import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import FadeIn from '../components/FadeIn';
 import Head from 'next/head';
+import Footer from '../components/Footer';
 
 const Home = (props: { accounts: Props[] }) => {
   const accounts = props.accounts;
@@ -196,6 +197,7 @@ const Home = (props: { accounts: Props[] }) => {
           </p>
         </div>
       </main>
+      <Footer />
     </div>
   );
 };
