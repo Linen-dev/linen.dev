@@ -6,6 +6,12 @@ export default function Privacy() {
           className="relative h-full text-lg max-w-prose mx-auto space-y-4"
           aria-hidden="true"
         >
+          <a
+            href="/"
+            className="text-blue-600 hover:text-blue-800 visited:text-purple-600"
+          >
+            Back to Home
+          </a>
           <h3 id="privacy-notice">PRIVACY NOTICE</h3>
           <p>Last updated May 15, 2022</p>
           <p>
