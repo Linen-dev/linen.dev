@@ -71,8 +71,27 @@ export default function SignUp() {
           Submit
         </Button>
       </form>
-      <p className="text-sm pt-3">
-        Already have an account? <Link href="/signin">Sign in!</Link>
+      <p className="text-sm pt-3 text-gray-600">
+        Already have an account? <Link href="/signin">Sign in</Link>
+      </p>
+
+      <p className="text-sm pt-3 text-gray-600">
+        By signing up, you agree to our{' '}
+        <a
+          target="_blank"
+          className="text-blue-600 hover:text-blue-800 visited:text-purple-600"
+          href="https://linen.dev/legal/terms"
+        >
+          Terms
+        </a>{' '}
+        and{' '}
+        <a
+          className="text-blue-600 hover:text-blue-800 visited:text-purple-600"
+          target="_blank"
+          href="https://linen.dev/legal/privacy"
+        >
+          Privacy Policy.
+        </a>
       </p>
     </Layout>
   );
