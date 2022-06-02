@@ -2,6 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import styles from './index.module.css';
 import { isImage, isUrlValid } from './utilities';
+import Image from './Image';
 
 interface Props {
   value: string;
@@ -19,7 +20,7 @@ export default function Link({ value }: Props) {
       title={isHrefInvalid ? 'Invalid link' : ''}
     >
       {name || href}
-      {isImage(href) && <img src={href} alt={href} />}
+      {isImage(href) && <Image src={href} />}
     </a>
   );
 }

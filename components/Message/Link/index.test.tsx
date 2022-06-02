@@ -1,7 +1,13 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import Link from '.';
 import styles from './index.module.scss';
+
+jest.mock('./Image/utilities', () => ({
+  preload: jest
+    .fn()
+    .mockResolvedValue({ naturalWidth: 100, naturalHeight: 100 }),
+}));
 
 describe('Link', () => {
   it('renders it', () => {
@@ -19,14 +25,16 @@ describe('Link', () => {
   });
 
   describe('when the link points to an image', () => {
-    it('renders it', () => {
+    it('renders it', async () => {
       const { getByAltText } = render(
         <Link value="https://foo.com/image.png" />
       );
-      const image = getByAltText(
-        'https://foo.com/image.png'
-      ) as HTMLImageElement;
-      expect(image.src).toEqual('https://foo.com/image.png');
+      await waitFor(() => {
+        const image = getByAltText(
+          'https://foo.com/image.png'
+        ) as HTMLImageElement;
+        expect(image.src).toEqual('https://foo.com/image.png');
+      });
     });
   });
 
