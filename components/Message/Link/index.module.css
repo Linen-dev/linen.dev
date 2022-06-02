@@ -13,6 +13,13 @@
 
 .text {
   color: #36454f;
-  font-size: 12px;
+  font-size: 14px;
   margin-bottom: 4px;
+}
+
+.arrow {
+  cursor: pointer;
+  font-size: 16px;
+  padding: 4px;
+  user-select: none;
 }
