@@ -10,3 +10,9 @@
 .line {
   text-decoration: line-through;
 }
+
+.text {
+  color: #36454f;
+  font-size: 12px;
+  margin-bottom: 4px;
+}

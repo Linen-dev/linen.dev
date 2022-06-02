@@ -10,7 +10,20 @@ interface Props {
 
 export default function Link({ value }: Props) {
   const [href, name] = value.split('|');
+
+  if (isImage(href)) {
+    return (
+      <div>
+        <p className={styles.text}>{name || href}</p>
+        <a href={href} target="_blank">
+          <Image src={href} />
+        </a>
+      </div>
+    );
+  }
+
   const isHrefInvalid = !isUrlValid(href);
+
   return (
     <a
       className={classNames('text-indigo-700', styles.link, {
@@ -20,7 +33,6 @@ export default function Link({ value }: Props) {
       title={isHrefInvalid ? 'Invalid link' : ''}
     >
       {name || href}
-      {isImage(href) && <Image src={href} />}
     </a>
   );
 }

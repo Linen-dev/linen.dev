@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { preload } from './utilities';
+import styles from './index.module.css';
 
 interface Props {
   src: string;
@@ -37,7 +38,15 @@ export default function Component({ src, alt }: Props) {
   }, [src]);
 
   if (loaded && width > 0 && height > 0) {
-    return <img src={src} alt={alt || src} width={width} height={height} />;
+    return (
+      <img
+        className={styles.image}
+        src={src}
+        alt={alt || src}
+        width={width}
+        height={height}
+      />
+    );
   }
 
   return null;
