@@ -2,10 +2,11 @@ import prisma from '../../client';
 import { listChannelsAndPersist } from './channels';
 import { processChannel } from './channels';
 import { CrawlType, DISCORD_TOKEN } from './constrains';
+import { crawlUsers } from './users';
 
 // (async () => {
 //   const accountId = '910dd004-8d31-4479-8c03-fee6d524641f';
-//   const crawlType = CrawlType.historic;
+//   const crawlType = CrawlType.new_only;
 //   await syncJob(accountId, crawlType);
 // })();
 
@@ -26,6 +27,8 @@ async function syncJob(accountId: string, crawlType: CrawlType) {
       new Date();
 
   console.log({ onboardingTimestamp });
+
+  await crawlUsers(accountId, account?.discordServerId as string);
 
   const channels = await listChannelsAndPersist({
     serverId: account?.discordServerId as string,

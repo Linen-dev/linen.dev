@@ -1,7 +1,7 @@
 import prisma from '../../client';
 import { channels, slackThreads, users } from '@prisma/client';
 import { DiscordMessage } from '../../types/discordResponses/discordMessagesInterface';
-import { createUsers, getMentions, getUsersInMessages } from './users';
+import { findUsers, getMentions, getUsersInMessages } from './users';
 
 type ProcessMessageType = Record<
   number,
@@ -132,7 +132,11 @@ function filterKnownMessagesTypes(message: DiscordMessage) {
   if (supportedMessageType.includes(message.type)) {
     return true;
   }
-  console.error('message not supported', message);
+  console.error(
+    'message not supported',
+    messageTypes[message.type],
+    JSON.stringify(message)
+  );
   return false;
 }
 
@@ -150,7 +154,7 @@ export async function createMessages({
   messages: DiscordMessage[];
 }) {
   const usersInMessages = getUsersInMessages(messages);
-  const users = await createUsers(accountId, usersInMessages);
+  const users = await findUsers(accountId, usersInMessages);
   await Promise.all(
     messages.filter(filterKnownMessagesTypes).map((message) => {
       // console.log('message', message)
@@ -161,28 +165,28 @@ export async function createMessages({
   );
 }
 
-// enum messageTypes {
-//   'DEFAULT' = 0,
-//   'RECIPIENT_ADD' = 1,
-//   'RECIPIENT_REMOVE' = 2,
-//   'CALL' = 3,
-//   'CHANNEL_NAME_CHANGE' = 4,
-//   'CHANNEL_ICON_CHANGE' = 5,
-//   'CHANNEL_PINNED_MESSAGE' = 6,
-//   'GUILD_MEMBER_JOIN' = 7,
-//   'USER_PREMIUM_GUILD_SUBSCRIPTION' = 8,
-//   'USER_PREMIUM_GUILD_SUBSCRIPTION_TIER_1' = 9,
-//   'USER_PREMIUM_GUILD_SUBSCRIPTION_TIER_2' = 10,
-//   'USER_PREMIUM_GUILD_SUBSCRIPTION_TIER_3' = 11,
-//   'CHANNEL_FOLLOW_ADD' = 12,
-//   'GUILD_DISCOVERY_DISQUALIFIED' = 14,
-//   'GUILD_DISCOVERY_REQUALIFIED' = 15,
-//   'GUILD_DISCOVERY_GRACE_PERIOD_INITIAL_WARNING' = 16,
-//   'GUILD_DISCOVERY_GRACE_PERIOD_FINAL_WARNING' = 17,
-//   'THREAD_CREATED' = 18,
-//   'REPLY' = 19,
-//   'CHAT_INPUT_COMMAND' = 20,
-//   'THREAD_STARTER_MESSAGE' = 21,
-//   'GUILD_INVITE_REMINDER' = 22,
-//   'CONTEXT_MENU_COMMAND' = 23,
-// }
+const messageTypes: any = {
+  0: 'DEFAULT',
+  1: 'RECIPIENT_ADD',
+  2: 'RECIPIENT_REMOVE',
+  3: 'CALL',
+  4: 'CHANNEL_NAME_CHANGE',
+  5: 'CHANNEL_ICON_CHANGE',
+  6: 'CHANNEL_PINNED_MESSAGE',
+  7: 'GUILD_MEMBER_JOIN',
+  8: 'USER_PREMIUM_GUILD_SUBSCRIPTION',
+  9: 'USER_PREMIUM_GUILD_SUBSCRIPTION_TIER_1',
+  10: 'USER_PREMIUM_GUILD_SUBSCRIPTION_TIER_2',
+  11: 'USER_PREMIUM_GUILD_SUBSCRIPTION_TIER_3',
+  12: 'CHANNEL_FOLLOW_ADD',
+  14: 'GUILD_DISCOVERY_DISQUALIFIED',
+  15: 'GUILD_DISCOVERY_REQUALIFIED',
+  16: 'GUILD_DISCOVERY_GRACE_PERIOD_INITIAL_WARNING',
+  17: 'GUILD_DISCOVERY_GRACE_PERIOD_FINAL_WARNING',
+  18: 'THREAD_CREATED',
+  19: 'REPLY',
+  20: 'CHAT_INPUT_COMMAND',
+  21: 'THREAD_STARTER_MESSAGE',
+  22: 'GUILD_INVITE_REMINDER',
+  23: 'CONTEXT_MENU_COMMAND',
+};

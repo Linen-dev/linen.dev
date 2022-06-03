@@ -3,8 +3,11 @@ import { users } from '@prisma/client';
 import {
   DiscordMessage,
   Author,
+  GuildMember,
 } from '../../types/discordResponses/discordMessagesInterface';
 import { generateRandomWordSlug } from '../../utilities/randomWordSlugs';
+import { LIMIT } from './constrains';
+import { getDiscordWithRetry } from './api';
 
 export function buildUserAvatar({
   userId,
@@ -24,10 +27,7 @@ export function getMentions(mentions: Author[] | undefined, users: users[]) {
   return mentions && mentions.reduce(reduceMentions, []);
 }
 
-export async function createUsers(
-  accountId: string,
-  usersInMessages: Author[]
-) {
+async function createUsers(accountId: string, usersInMessages: Author[]) {
   return await prisma.$transaction(
     usersInMessages.map((user) => {
       return prisma.users.upsert({
@@ -66,6 +66,15 @@ export async function createUsers(
   );
 }
 
+export async function findUsers(accountId: string, usersInMessages: Author[]) {
+  return await prisma.users.findMany({
+    where: {
+      slackUserId: { in: usersInMessages.map((u) => u.id) },
+      account: { id: accountId },
+    },
+  });
+}
+
 export function getUsersInMessages(messages: DiscordMessage[]) {
   return messages.reduce((acc: Author[], message) => {
     // type 0 + 21
@@ -79,4 +88,33 @@ export function getUsersInMessages(messages: DiscordMessage[]) {
     }
     return acc;
   }, []);
+}
+
+export async function crawlUsers(accountId: string, discordId: string) {
+  let hasMore = true;
+  let after;
+  do {
+    const users: GuildMember[] = await getDiscordWithRetry({
+      path: `/guilds/${discordId}/members`,
+      query: { limit: LIMIT, after },
+    });
+    await createUsers(
+      accountId,
+      users.map((user) => {
+        return {
+          discriminator: user.user?.discriminator as string,
+          id: user.user?.id as string,
+          username: user.nick || user.user?.username || 'unknown',
+          bot: user.user?.bot,
+          avatar: user.avatar || user.user?.avatar,
+        };
+      })
+    );
+    console.log('users.length', users.length);
+    if (users.length) {
+      after = users.pop()?.user?.id;
+    } else {
+      hasMore = false;
+    }
+  } while (hasMore);
 }

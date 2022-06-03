@@ -19,15 +19,6 @@ async function updateCursor(channel: channels, cursor?: string | null) {
   }
 }
 
-function filterChannels(c: discordChannel) {
-  // type	0	:: a text channel within a server
-  // permission_overwrites missing or array is empty means that is public
-  return (
-    c.type === 0 &&
-    (!c.permission_overwrites || c.permission_overwrites?.length === 0)
-  );
-}
-
 async function getDiscordChannels(
   serverId: string,
   token: string
@@ -35,7 +26,15 @@ async function getDiscordChannels(
   const result = await getDiscordWithRetry({
     path: `/guilds/${serverId}/channels`,
   });
-  return result.body?.filter(filterChannels);
+  return result.filter((c: discordChannel) => {
+    // type	0	:: a text channel within a server
+    // permission_overwrites missing or array is empty means that is public
+    return (
+      c.type === 0 &&
+      !c.nsfw &&
+      (!c.permission_overwrites || c.permission_overwrites?.length === 0)
+    );
+  });
 }
 
 async function crawlChannel(
@@ -105,7 +104,15 @@ async function persistMessagesIntoChannelThread(
   messages: DiscordMessage[]
 ) {
   if (messages.length) {
-    await createMessages({ accountId, channel, messages });
+    let size = 10;
+    for (let i = 0; i < messages.length; i += size) {
+      console.log('batch', i);
+      await createMessages({
+        accountId,
+        channel,
+        messages: messages.slice(i, i + size),
+      });
+    }
   }
 }
 

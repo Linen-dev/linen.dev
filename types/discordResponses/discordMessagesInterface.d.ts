@@ -194,3 +194,28 @@ export interface GuildActiveThreads {
   threads?: DiscordThreads[] | null;
   members?: null[] | null;
 }
+
+interface Member {
+  id: string;
+  username: string;
+  avatar?: string;
+  avatar_decoration?: string;
+  discriminator: string;
+  public_flags: number;
+  bot?: boolean;
+}
+
+export interface GuildMember {
+  user?: Member;
+  nick?: string;
+  avatar?: string;
+  roles: string[];
+  joined_at: string;
+  premium_since?: string;
+  deaf?: boolean;
+  mute?: boolean;
+  pending?: boolean;
+  is_pending?: boolean;
+  communication_disabled_until?: string;
+  flags?: number;
+}
