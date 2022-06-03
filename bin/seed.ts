@@ -47,10 +47,16 @@ import messages from './factory/messages';
       body: `bar-${i}`,
       channelId: channel.id,
       threadId: thread.id,
-      usersId: user2.id,
+      usersId: user1.id,
     });
     await findOrCreateMessage({
       body: `baz-${i}`,
+      channelId: channel.id,
+      threadId: thread.id,
+      usersId: user2.id,
+    });
+    await findOrCreateMessage({
+      body: `qux-${i}`,
       channelId: channel.id,
       threadId: thread.id,
       usersId: user2.id,
