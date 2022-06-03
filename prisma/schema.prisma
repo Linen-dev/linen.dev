@@ -12,10 +12,12 @@ datasource db {
 }
 
 model messages {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-  body      String
-  sentAt    DateTime
+  id         String   @id @default(uuid())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  deletedAt  DateTime?
+  body       String
+  sentAt     DateTime
 
   channel        channels @relation(fields: [channelId], references: [id])
   channelId      String
@@ -106,7 +108,10 @@ model auths {
 }
 
 model users {
-  id              String          @id @default(uuid())
+  id              String   @id @default(uuid())
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  deletedAt       DateTime?
   messages        messages[]
   slackUserId     String
   displayName     String?

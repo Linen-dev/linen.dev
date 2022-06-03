@@ -10,6 +10,7 @@ import {
   deleteMessageWithMentions,
   createUserFromUserInfo,
   findAccountBySlackTeamId,
+  findUser,
 } from '../../lib/models';
 import {
   SlackEvent,
@@ -18,7 +19,6 @@ import {
 } from '../../types/slackResponses/slackMessageEventInterface';
 import { createSlug } from '../../lib/util';
 import { accounts, channels, slackAuthorizations } from '@prisma/client';
-import { UserInfo } from 'types/slackResponses/slackUserInfoInterface';
 
 export default async function handler(
   req: NextApiRequest,
@@ -104,6 +104,13 @@ async function addMessage(
   },
   event: SlackMessageEvent
 ) {
+  // Check if user is marked deleted
+  const checkUser = await findUser(event.user, channel.accountId as string);
+  if (checkUser && checkUser.deletedAt) {
+    console.warn('User deleted!', channel.id, event.user);
+    return {};
+  }
+
   const thread_ts = event.thread_ts || event.ts;
   const thread = await findOrCreateThread({
     slackThreadTs: thread_ts,
@@ -145,6 +152,9 @@ async function addMessage(
     body: event.text,
     channelId: channel.id,
     sentAt: new Date(parseFloat(event.ts) * 1000),
+    updatedAt: event.edited
+      ? new Date(parseFloat(event.edited.ts) * 1000)
+      : undefined,
     slackThreadId: thread?.id,
     slackMessageId: event.ts,
     usersId: user?.id,
@@ -184,6 +194,16 @@ async function changeMessage(
 ) {
   // First remove previous message
   if (event.previous_message) {
+    // Check if user is marked deleted
+    const checkUser = await findUser(
+      event.previous_message.user,
+      channel.accountId as string
+    );
+    if (checkUser && checkUser.deletedAt) {
+      console.warn('User deleted!', channel.id, event.previous_message.user);
+      return {};
+    }
+
     const message = await findMessageByChannelIdAndTs(
       channel.id,
       event.previous_message.ts

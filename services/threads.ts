@@ -9,7 +9,7 @@ import {
   channelsGroupByThreadCount,
 } from '../lib/models';
 import { ThreadByIdResponse } from '../types/apiResponses/threads/[threadId]';
-import { users } from '@prisma/client';
+import serializeUser from '../serializers/user';
 
 interface IndexProps {
   channelId: string;
@@ -91,8 +91,8 @@ export async function getThreadById(
   };
 
   const authors = thread.messages
-    .map((m) => m.author)
-    .filter(Boolean) as users[];
+    .map((m) => serializeUser(m.author))
+    .filter(Boolean);
 
   let threadUrl =
     account.slackUrl +

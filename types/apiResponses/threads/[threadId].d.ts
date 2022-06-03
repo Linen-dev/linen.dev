@@ -22,7 +22,7 @@ export type ThreadById = {
   messages: SerializedMessage[];
   channel: channelsl;
   threadId: string;
-  authors: users[];
+  authors: SerializedUser[];
   channels: channels[];
   slackUrl?: string;
   slackInviteUrl?: string;

@@ -1,0 +1,12 @@
+-- AlterTable messages
+ALTER TABLE "messages"
+  ADD COLUMN "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  ADD COLUMN "deletedAt" TIMESTAMP(3);
+
+UPDATE "messages" SET "updatedAt" = "createdAt";
+
+-- AlterTable users
+ALTER TABLE "users"
+  ADD COLUMN "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  ADD COLUMN "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  ADD COLUMN "deletedAt" TIMESTAMP(3);

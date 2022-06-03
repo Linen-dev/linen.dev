@@ -38,6 +38,7 @@ export const createMessageWithMentions = async (
       slackMessageId: message.slackMessageId,
       channelId: message.channelId,
       sentAt: message.sentAt,
+      updatedAt: message.updatedAt,
       usersId: message.usersId,
       mentions: {
         create: mentionsId.map((id) => ({ usersId: id })),
@@ -491,6 +492,22 @@ export const findMessagesWithThreads = async (accountId: string) => {
     include: {
       slackThreads: true,
       channel: true,
+    },
+    orderBy: {
+      sentAt: 'desc',
+    },
+  });
+};
+
+export const findUserMessages = async (accountId: string, userId: string) => {
+  return await prisma.messages.findMany({
+    where: {
+      channel: { accountId: accountId },
+      author: { id: userId },
+    },
+    include: {
+      channel: true,
+      author: true,
     },
     orderBy: {
       sentAt: 'desc',

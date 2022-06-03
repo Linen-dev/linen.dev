@@ -24,7 +24,6 @@ const addMessageEvent = {
     user: 'U037T5JG1NY',
     ts: '1650644364.126099',
     team: 'T036DSF9RJT',
-    blocks: [{ type: 'rich_text', block_id: '9hC', elements: [Array] }],
     channel: 'C03ATK7RWNS',
     event_ts: '1650644364.126099',
     channel_type: 'channel',
@@ -32,7 +31,6 @@ const addMessageEvent = {
   type: 'event_callback',
   event_id: 'Ev03DDKEJ2DN',
   event_time: 1650805199,
-  authorizations: [[Object]],
   is_ext_shared_channel: false,
   event_context:
     '4-eyJldCI6Im1lc3NhZ2UiLCJ0aWQiOiJUMDM2RFNGOVJKVCIsImFpZCI6IkEwM0NBMkFITUFMIiwiY2lkIjoiQzAzQVRLN1JXTlMifQ',
@@ -52,7 +50,6 @@ const deleteMessageEvent = {
       user: 'U037T5JG1NY',
       ts: '1651046601.602859',
       team: 'T036DSF9RJT',
-      blocks: [Array],
     },
     channel: 'C03ATK7RWNS',
     hidden: true,
@@ -91,8 +88,7 @@ const changeMessageEvent = {
       text: 'Lets test_4',
       user: 'U037T5JG1NY',
       team: 'T036DSF9RJT',
-      edited: [Object],
-      blocks: [Array],
+      edited: { user: 'U037T5JG1NY', ts: '1654282674.000000' },
       ts: '1652127600.388019',
       source_team: 'T036DSF9RJT',
       user_team: 'T036DSF9RJT',
@@ -104,7 +100,6 @@ const changeMessageEvent = {
       user: 'U037T5JG1NY',
       ts: '1652127600.388019',
       team: 'T036DSF9RJT',
-      blocks: [Array],
     },
     channel: 'C03ATK7RWNS',
     hidden: true,
@@ -179,6 +174,7 @@ describe('webhook', () => {
       accountId: 'account_id',
       hidden: false,
       slackNextPageCursor: null,
+      default: true,
     };
     const channelsFindUniqueMock =
       prismaMock.channels.findUnique.mockResolvedValue(channelMock);
@@ -204,12 +200,15 @@ describe('webhook', () => {
       isAdmin: false,
       accountsId: 'account_id',
     };
+    // @ts-ignore
     mockModels.findOrCreateUserFromUserInfo.mockResolvedValue(userMock);
 
     const now = new Date();
     const messageMock = {
       id: 'message_id',
       createdAt: now,
+      updatedAt: now,
+      deletedAt: null,
       body: 'this is test3',
       sentAt: now,
       channelId: 'C03ATK7RWNS',
@@ -304,10 +303,12 @@ describe('webhook', () => {
       accountId: 'account_id',
       hidden: false,
       slackNextPageCursor: null,
+      default: true,
     };
     const channelsFindUniqueMock =
       prismaMock.channels.findUnique.mockResolvedValue(channelMock);
 
+    // @ts-ignore
     mockModels.findMessageByChannelIdAndTs.mockResolvedValue({
       id: 'message_id',
     });
@@ -361,10 +362,12 @@ describe('webhook', () => {
       accountId: 'account_id',
       hidden: false,
       slackNextPageCursor: null,
+      default: true,
     };
     const channelsFindUniqueMock =
       prismaMock.channels.findUnique.mockResolvedValue(channelMock);
 
+    // @ts-ignore
     mockModels.findMessageByChannelIdAndTs.mockResolvedValue({
       id: 'message_id',
     });
@@ -390,12 +393,15 @@ describe('webhook', () => {
       isAdmin: false,
       accountsId: 'account_id',
     };
+    // @ts-ignore
     mockModels.findOrCreateUserFromUserInfo.mockResolvedValue(userMock);
 
     const now = new Date();
     const messageMock = {
       id: 'message_id',
       createdAt: now,
+      updatedAt: now,
+      deletedAt: null,
       body: 'Lets-test-4',
       sentAt: now,
       channelId: 'C03ATK7RWNS',
@@ -492,6 +498,9 @@ describe('webhook', () => {
             channelId: 'channel_id',
             sentAt: new Date(
               parseFloat(changeMessageEvent.event.message.ts) * 1000
+            ),
+            updatedAt: new Date(
+              parseFloat(changeMessageEvent.event.message.edited.ts) * 1000
             ),
             usersId: 'user_id',
             mentions: {

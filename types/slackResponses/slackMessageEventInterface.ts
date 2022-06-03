@@ -18,6 +18,11 @@ export interface SlackTeamJoinEvent {
   user: UserInfo;
 }
 
+export interface Edited {
+  user: string;
+  ts: string;
+}
+
 export interface SlackMessageEvent {
   client_msg_id: string;
   type: string;
@@ -28,6 +33,7 @@ export interface SlackMessageEvent {
   user: string;
   ts: string;
   team: string;
+  edited?: Edited;
   blocks: Block[];
   channel: string;
   hidden?: boolean;

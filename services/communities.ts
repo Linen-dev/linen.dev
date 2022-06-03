@@ -7,6 +7,7 @@ import { index as fetchThreads } from '../services/threads';
 import { links } from '../constants/examples';
 import { GetStaticPropsContext } from 'next/types';
 import { stripProtocol } from '../utilities/url';
+import serializeUser from '../serializers/user';
 
 export const getThreadsByCommunityName = async (
   communityName: string,
@@ -62,7 +63,7 @@ export const getThreadsByCommunityName = async (
 
   threads = threads.filter((t) => t.messages.length > 0);
   const users = threads
-    .map(({ messages }) => messages.map(({ author }) => author))
+    .map(({ messages }) => messages.map(({ author }) => serializeUser(author)))
     .flat()
     .filter(Boolean);
   const defaultSettings =

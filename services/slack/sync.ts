@@ -136,10 +136,10 @@ export async function slackSync({
             nextCursor
           );
 
-          const additionaMessages = additionalConversations.messages;
+          const additionalMessages = additionalConversations.messages;
 
           //save all messages
-          await saveMessagesTransaction(additionaMessages, c.id, usersInDb);
+          await saveMessagesTransaction(additionalMessages, c.id, usersInDb);
           nextCursor = additionalConversations.response_metadata?.next_cursor;
 
           // save cursor in database so don't have
@@ -303,7 +303,6 @@ async function saveMessagesTransaction(
           // maybe here, if creates, slug will be empty
           create: { slackThreadTs: m.thread_ts, channelId },
         });
-      } else {
       }
       return null;
     })
