@@ -75,4 +75,54 @@ describe('#mergeMessagesByUserId', () => {
     const result = mergeMessagesByUserId(messages);
     expect(result.length).toEqual(2);
   });
+
+  describe('when messages are in an desc order', () => {
+    it('merges messages of one author', () => {
+      const messages = [
+        {
+          id: '4',
+          channelId: '1',
+          slackMessageId: '4',
+          slackThreadId: '1',
+          createdAt: new Date(),
+          sentAt: new Date(),
+          usersId: '2',
+          body: 'qux',
+        },
+        {
+          id: '3',
+          channelId: '1',
+          slackMessageId: '3',
+          slackThreadId: '1',
+          createdAt: new Date(),
+          sentAt: new Date(),
+          usersId: '2',
+          body: 'baz',
+        },
+        {
+          id: '2',
+          channelId: '1',
+          slackMessageId: '2',
+          slackThreadId: '1',
+          createdAt: new Date(),
+          sentAt: new Date(),
+          usersId: '1',
+          body: 'bar',
+        },
+        {
+          id: '1',
+          channelId: '1',
+          slackMessageId: '1',
+          slackThreadId: '1',
+          createdAt: new Date(),
+          sentAt: new Date(),
+          usersId: '1',
+          body: 'foo',
+        },
+      ];
+      const result = mergeMessagesByUserId(messages, 'desc');
+      expect(result.length).toEqual(2);
+      expect(result[0].body).toEqual('baz<-hr>qux');
+    });
+  });
 });
