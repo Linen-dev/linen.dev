@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { listChannelsAndPersist } from 'services/discord';
+import { listChannelsAndPersist } from '../../services/discord/channels';
 import request from 'superagent';
 import prisma from '../../client';
 import { updateAccount } from '../../lib/models';
