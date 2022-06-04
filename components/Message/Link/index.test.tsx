@@ -3,7 +3,7 @@ import { render, waitFor } from '@testing-library/react';
 import Link from '.';
 import styles from './index.module.scss';
 
-jest.mock('./Image/utilities', () => ({
+jest.mock('components/Image/utilities', () => ({
   preload: jest
     .fn()
     .mockResolvedValue({ naturalWidth: 100, naturalHeight: 100 }),
