@@ -8,10 +8,13 @@ Quick note, I saw that there's a spelling error in the license dashboard UI:
 Should be *annually*.
 `,
   `
-https://github.com/fleetdm/fleet/pull/5102 - that should take care of that. Thanks for reporting it
+<https://github.com/fleetdm/fleet/pull/5102> - that should take care of that. Thanks for reporting it
 `,
   `
 Thank you both!
+`,
+  `
+Check this out! <https://www.youtube.com/embed/Xsew54QshN8>
 `,
 ].map((message) => message.trim());
 
