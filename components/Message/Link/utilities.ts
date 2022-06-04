@@ -8,14 +8,14 @@ export function isImage(href: string): boolean {
   return SUPPORTED_EXTENSIONS.includes(extension.toLowerCase());
 }
 
-function isYoutubeEmbedUrl(href: string) {
+export function isYoutubeEmbedUrl(href: string) {
   return (
     href.startsWith('https://www.youtube.com/embed/') ||
     href.startsWith('https://youtube.com/embed/')
   );
 }
 
-function isYoutubeWatchUrl(href: string): boolean {
+export function isYoutubeWatchUrl(href: string): boolean {
   return (
     href.startsWith('https://www.youtube.com/watch') ||
     href.startsWith('https://youtube.com/watch')
@@ -32,13 +32,4 @@ export function isVideo(href: string): boolean {
 
 export function isUrlValid(url: string): boolean {
   return !url.startsWith('http://-') && !url.startsWith('https://-');
-}
-
-export function normalizeVideoUrl(url: string): string {
-  if (isYoutubeWatchUrl(url)) {
-    const params = new URLSearchParams(url.split('?')[1]);
-    const version = params.get('v');
-    return `https://www.youtube.com/embed/${version}`;
-  }
-  return url;
 }
