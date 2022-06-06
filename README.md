@@ -175,7 +175,7 @@ npm run test:integration webhook.test.ts
 
 ## Local domain redirect testing
 
-1. Ask for invite for ngrock account
+1. Ask for invite for ngrok account
 2. Setup [ngrok](https://ngrok.io/)
 3. pick subdomain i.e kam-test.ngrok.io
 4. Update dev database to have the redirect url `update accounts set "redirectDomain"='kam-test.ngrok.io' where id = '9677cb41-033e-4c1a-9ae5-ef178606cad3';` - replace with your subdomain that you chose
@@ -190,7 +190,6 @@ Increment the version for the app:
 
 ```bash
 export APP_VERSION=v5
-source .env
 ```
 
 From the root folder of the project build the production docker image:
@@ -201,12 +200,7 @@ export DOCKER_DEFAULT_PLATFORM=linux/amd64
 ```
 
 ```bash
-docker build \
-  --build-arg SENTRY_DSN=${SENTRY_DSN} \
-  --build-arg SENTRY_AUTH_TOKEN=${SENTRY_AUTH_TOKEN} \
-  --build-arg SKIP_CACHING_ON_BUILD_STEP=true \
-  --build-arg NODE_ENV=production \
-  -t linen-dev:${APP_VERSION} . --no-cache
+docker build -t linen-dev:${APP_VERSION} . --no-cache
 ```
 
 Login your docker to AWS repository:
