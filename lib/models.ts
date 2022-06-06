@@ -344,6 +344,7 @@ export const threadIndex = async (
       anonymizeUsers: true,
     },
   });
+  const MESSAGES_ORDER_BY = 'desc';
   const threads = await prisma.slackThreads.findMany({
     take: take,
     skip: skip,
@@ -358,7 +359,7 @@ export const threadIndex = async (
           },
         },
         orderBy: {
-          sentAt: 'desc',
+          sentAt: MESSAGES_ORDER_BY,
         },
       },
     },
@@ -375,7 +376,10 @@ export const threadIndex = async (
   const threadsWithMessages = threads
     .filter((thread) => thread.messages.length > 0)
     .map((thread) => {
-      thread.messages = mergeMessagesByUserId(thread.messages);
+      thread.messages = mergeMessagesByUserId(
+        thread.messages,
+        MESSAGES_ORDER_BY
+      );
       return thread;
     });
   if (anonymousCommunity) {
@@ -385,6 +389,7 @@ export const threadIndex = async (
 };
 
 export const findThreadById = async (threadId: number) => {
+  const MESSAGES_ORDER_BY = 'asc';
   return await prisma.slackThreads
     .findUnique({
       where: { incrementId: threadId },
@@ -402,7 +407,7 @@ export const findThreadById = async (threadId: number) => {
             },
           },
           orderBy: {
-            sentAt: 'asc',
+            sentAt: MESSAGES_ORDER_BY,
           },
         },
         channel: {
@@ -415,7 +420,10 @@ export const findThreadById = async (threadId: number) => {
     .then((thread) => {
       const account = thread?.channel.account;
       if (thread) {
-        thread.messages = mergeMessagesByUserId(thread.messages);
+        thread.messages = mergeMessagesByUserId(
+          thread.messages,
+          MESSAGES_ORDER_BY
+        );
       }
       if (account?.anonymizeUsers) {
         return anonymizeMessages(thread);

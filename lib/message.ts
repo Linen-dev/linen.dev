@@ -39,7 +39,7 @@ export function createMessage({
       slackMessageId,
       slackThreadId: threadId,
       body,
-      sentAt: new Date(),
+      sentAt: new Date().toISOString(),
       usersId,
     },
   });
