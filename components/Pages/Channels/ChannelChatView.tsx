@@ -13,7 +13,7 @@ function Messages({ messages }: { messages?: messageWithAuthor[] }) {
     <div>
       <ul role="list" className="divide-y divide-gray-200">
         {messages?.map((message) => (
-          <li key={message.id} className="py-4">
+          <li key={message.id} className="py-4 max-w-[800px] min-w-[350px]">
             <div className="flex space-x-3">
               {message.author && (
                 <Avatar
@@ -32,17 +32,14 @@ function Messages({ messages }: { messages?: messageWithAuthor[] }) {
                   <h3 className="text-sm font-medium">
                     {message.author?.displayName}
                   </h3>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-gray-500 min-w-[120px]">
                     {format(new Date(message.sentAt))}
                   </p>
                 </div>
-                <div className="text-sm text-gray-500">
-                  <Message
-                    text={message.body}
-                    truncate
-                    mentions={message.mentions?.map((m) => m.users)}
-                  />
-                </div>
+                <Message
+                  text={message.body}
+                  mentions={message.mentions?.map((m) => m.users)}
+                />
               </div>
             </div>
           </li>
@@ -130,7 +127,7 @@ export default function ChannelChatView({
       <div className="sm:pt-6">
         <Messages messages={currentThreads} />
 
-        {pageCount && (
+        {!!pageCount && (
           <Pagination
             channelName={currentChannel.channelName}
             onClick={handlePageClick}

@@ -284,7 +284,7 @@ export default function Channel({
           <tbody className="divide-y">{tableRows}</tbody>
         </table>
         <ul className="divide-y md:hidden">{rows}</ul>
-        {pageCount && (
+        {!!pageCount && (
           <Pagination
             channelName={currentChannel.channelName}
             onClick={handlePageClick}
