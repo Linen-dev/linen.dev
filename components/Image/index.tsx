@@ -1,39 +1,53 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { preload } from './utilities';
 
 interface Props {
   className?: string;
   src: string;
-  alt: string;
-  width?: number;
-  height?: number;
+  alt?: string;
 }
 
-export default function Image({ className, src, alt, width, height }: Props) {
+export default function Component({ className, src, alt }: Props) {
+  const [width, setWidth] = useState(0);
+  const [height, setHeight] = useState(0);
   const [loaded, setLoaded] = useState(false);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const img = document.createElement('img');
-    img.onload = () => setLoaded(true);
-    img.onerror = (err: any) => setError(err);
-    img.src = src;
-  }, []);
+    let mounted = true;
+    setLoaded(false);
+    preload(src)
+      .then((image: HTMLImageElement) => {
+        if (mounted) {
+          const width = image.naturalWidth;
+          const height = image.naturalHeight;
+          setWidth(width);
+          setHeight(height);
+          setLoaded(true);
+        }
+      })
+      .catch(() => {
+        if (mounted) {
+          setWidth(0);
+          setHeight(0);
+          setLoaded(false);
+        }
+      });
+    return () => {
+      mounted = false;
+    };
+  }, [src]);
 
-  if (error) {
-    return <></>;
+  if (loaded && width > 0 && height > 0) {
+    return (
+      <img
+        className={className}
+        src={src}
+        alt={alt || src}
+        width={width}
+        height={height}
+      />
+    );
   }
 
-  if (!loaded) {
-    return <></>;
-  }
-
-  return (
-    <img
-      className={className}
-      src={src}
-      alt={alt}
-      width={width}
-      height={height}
-    />
-  );
+  return null;
 }

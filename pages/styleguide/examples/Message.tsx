@@ -135,6 +135,9 @@ export default function Styleguide() {
       <Example description="It loads images.">
         <Message text="<http://localhost:3000/yc-logo.png>" />
       </Example>
+      <Example description="It embeds videos.">
+        <Message text="<https://www.youtube.com/embed/Xsew54QshN8>" />
+      </Example>
       <Example description="It escapes HTML entities.">
         <Message text={`\`${HTML_EXAMPLE}\``} />
         <Message text={`\`\`\`${HTML_EXAMPLE}\`\`\`\``} />
