@@ -583,3 +583,26 @@ export const findSlackThreadsWithNoMessages = async (
 
   return await prisma.$queryRawUnsafe(query);
 };
+
+export const findMessagesFromChannel = async ({
+  channelId,
+  page,
+}: {
+  channelId: string;
+  page?: number;
+}) => {
+  const where = { channel: { id: channelId }, slackThreadId: null };
+  const total = await prisma.messages.count({ where });
+  const take = 10;
+  const pages = Math.floor(total / take);
+  const currentPage = (page || 1) - 1;
+  const skip = currentPage * take;
+  const messages = await prisma.messages.findMany({
+    include: { author: true, mentions: { include: { users: true } } },
+    orderBy: { sentAt: 'desc' },
+    where,
+    take,
+    skip,
+  });
+  return { total, messages, pages, currentPage };
+};

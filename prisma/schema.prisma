@@ -65,8 +65,8 @@ model channels {
 }
 
 model accounts {
-  id                String     @id @default(uuid())
-  createdAt         DateTime   @default(now())
+  id                String           @id @default(uuid())
+  createdAt         DateTime         @default(now())
   name              String?
   slackDomain       String?
   discordServerId   String?
@@ -75,20 +75,28 @@ model accounts {
   slackInviteUrl    String?
   redirectDomain    String?
   slackUrl          String?
-  slackSyncStatus   String     @default("NOT_STARTED")
+  slackSyncStatus   String           @default("NOT_STARTED")
   brandColor        String?
   homeUrl           String?
   docsUrl           String?
   logoUrl           String?
-  premium           Boolean    @default(false)
+  premium           Boolean          @default(false)
   googleAnalyticsId String?
-  anonymizeUsers    Boolean    @default(false)
+  anonymizeUsers    Boolean          @default(false)
+  messagesViewType  MessagesViewType @default(THREADS)
+
 
   auths                 auths[]
   users                 users[]
   slackAuthorizations   slackAuthorizations[]
   discordAuthorizations discordAuthorizations[]
   @@unique([redirectDomain])
+}
+
+enum MessagesViewType {
+  THREADS
+  THREADS_WITH_MESSAGES
+  MESSAGES
 }
 
 model auths {

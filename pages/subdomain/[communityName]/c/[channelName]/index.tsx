@@ -1,5 +1,5 @@
 import { GetStaticPropsContext } from 'next/types';
-import Channel from '../../../../../components/Pages/Channels/Channel';
+import Channel from '../../../../../components/Pages/Channels';
 import { channelGetStaticProps } from '../../../../../services/communities';
 
 export async function getStaticProps(context: GetStaticPropsContext) {
