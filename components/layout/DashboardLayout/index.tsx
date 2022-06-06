@@ -8,26 +8,23 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import SidebarLink from './SidebarLink';
 import { useRouter } from 'next/router';
 import featureFlags from 'utilities/featureFlags';
+import { SerializedAccount } from 'serializers/account';
+import Logo from './Logo';
 
 interface Props {
   children: React.ReactNode;
   header?: string;
+  account?: SerializedAccount;
 }
 const iconClassName = 'flex-shrink-0 h-5 w-5';
 
-export default function DashboardLayout({ children, header }: Props) {
+export default function DashboardLayout({ children, header, account }: Props) {
   const { route } = useRouter();
   return (
     <div>
       <div className="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0">
         <nav className="bg-gray-50 border-r border-gray-200 pt-5 pb-4 flex flex-col flex-grow overflow-y-auto">
-          <div className="flex-shrink-0 px-4 flex items-center">
-            <img
-              className="h-6 w-auto"
-              src="https://linen-assets.s3.amazonaws.com/linen-black-logo.svg"
-              alt="Linen logo"
-            />
-          </div>
+          <Logo account={account} />
           <div className="flex-grow mt-5">
             <div className="space-y-1">
               <SidebarLink

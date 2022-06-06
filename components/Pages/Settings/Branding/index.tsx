@@ -249,6 +249,8 @@ export default function Branding({ account }: Props) {
   );
 
   return (
-    <DashboardLayout header="Branding">{settingsComponent}</DashboardLayout>
+    <DashboardLayout header="Branding" account={account}>
+      {settingsComponent}
+    </DashboardLayout>
   );
 }

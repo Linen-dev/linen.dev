@@ -19,7 +19,7 @@ export function WaitForIntegration() {
 
 export default function Settings(props: SettingsProps) {
   return (
-    <DashboardLayout header="Settings">
+    <DashboardLayout header="Settings" account={props.account}>
       <div className="grid grid-cols-1 gap-4">
         <div className="flex flex-col gap-4">
           <CommunityIntegration {...props} />
