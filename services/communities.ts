@@ -2,43 +2,61 @@ import {
   accountsWithChannels,
   channelsGroupByThreadCount,
   findAccountByPath,
+  findMessagesFromChannel,
 } from '../lib/models';
 import { index as fetchThreads } from '../services/threads';
 import { links } from '../constants/examples';
 import { GetStaticPropsContext } from 'next/types';
 import { stripProtocol } from '../utilities/url';
+import { accounts, channels, MessagesViewType } from '@prisma/client';
 
-export const getThreadsByCommunityName = async (
-  communityName: string,
-  page: number,
-  channelName?: string
-) => {
-  if (!communityName) {
-    return { notFound: true };
-  }
+type accountWithChannels = accounts & {
+  channels: channels[];
+};
 
-  const account = await findAccountByPath(communityName);
-  if (account === null) {
-    return { notFound: true };
-  }
-  const channels = account.channels;
-  if (channels.length === 0) {
-    return { notFound: true };
-  }
-  const defaultChannelName =
-    channelName || account.channels.find((c) => c.default)?.channelName;
+function buildSettings(account: accountWithChannels): {
+  communityType: string;
+  googleAnalyticsId?: string | undefined;
+  name: string | null;
+  brandColor: string;
+  homeUrl: string;
+  docsUrl: string;
+  logoUrl: string;
+  messagesViewType: MessagesViewType;
+} {
+  const defaultSettings =
+    links.find(({ accountId }) => accountId === account.id) || links[0];
 
-  const defaultChannel =
-    account.channels.find((c) => c.channelName === defaultChannelName) ||
-    account.channels.find((c) => c.channelName === 'general');
+  //TODO: Refactor a lot of account settings is duplicate
+  const communityType = account.discordServerId ? 'discord' : 'slack';
 
-  //TODO: we should only default to a channel if there are more than 20 threads
-  const channel = defaultChannel || channels[0];
+  const settings = {
+    name: account.name,
+    brandColor: account.brandColor || defaultSettings.brandColor,
+    homeUrl: account.homeUrl || defaultSettings.homeUrl,
+    docsUrl: account.docsUrl || defaultSettings.docsUrl,
+    logoUrl: account.logoUrl || defaultSettings.logoUrl,
+    messagesViewType: account.messagesViewType || MessagesViewType.THREADS,
+    ...(account.premium &&
+      account.googleAnalyticsId && {
+        googleAnalyticsId: account.googleAnalyticsId,
+      }),
+    communityType: communityType,
+  };
+  return settings;
+}
 
-  const channelId = channel.id;
-
+async function getThreadsAndUsers({
+  channelId,
+  channels,
+  page,
+}: {
+  channelId: string;
+  page: number;
+  channels: channels[];
+}) {
   const [threadsReponse, channelsResponse] = await Promise.all([
-    fetchThreads({ channelId, page: 1 }),
+    fetchThreads({ channelId, page }),
     channelsGroupByThreadCount(),
   ]);
 
@@ -49,7 +67,7 @@ export const getThreadsByCommunityName = async (
   const channelsWithMinThreads = channels
     .filter((c) => !c.hidden)
     .filter((c) => {
-      if (c.id === channel.id) {
+      if (c.id === channelId) {
         return true;
       }
 
@@ -65,27 +83,113 @@ export const getThreadsByCommunityName = async (
     .map(({ messages }) => messages.map(({ author }) => author))
     .flat()
     .filter(Boolean);
-  const defaultSettings =
-    links.find(({ accountId }) => accountId === account.id) || links[0];
 
-  //TODO: Refactor a lot of account settings is duplicate
-  const communityType = account.discordServerId ? 'discord' : 'slack';
+  return { users, threads, pagination, channelsWithMinThreads, messages: null };
+}
 
-  const settings = {
-    name: account.name,
-    brandColor: account.brandColor || defaultSettings.brandColor,
-    homeUrl: account.homeUrl || defaultSettings.homeUrl,
-    docsUrl: account.docsUrl || defaultSettings.docsUrl,
-    logoUrl: account.logoUrl || defaultSettings.logoUrl,
-    ...(account.premium &&
-      account.googleAnalyticsId && {
-        googleAnalyticsId: account.googleAnalyticsId,
-      }),
-    communityType: communityType,
-  };
+function identifyChannel({
+  channelName,
+  account,
+}: {
+  channelName?: string;
+  account: accountWithChannels;
+}) {
+  const defaultChannelName =
+    channelName || account.channels.find((c) => c.default)?.channelName;
+
+  const defaultChannel =
+    account.channels.find((c) => c.channelName === defaultChannelName) ||
+    account.channels.find((c) => c.channelName === 'general');
+
+  //TODO: we should only default to a channel if there are more than 20 threads
+  const channel = defaultChannel || account.channels[0];
+
+  return { channel };
+}
+
+async function resolveMessageViewType({
+  account,
+  channel,
+  page,
+}: {
+  account: accountWithChannels;
+  channel: channels;
+  page: number;
+}) {
+  if (account.messagesViewType === MessagesViewType.MESSAGES) {
+    return await getMessagesAndUsers({
+      channelId: channel.id,
+      channels: account.channels,
+      page,
+    });
+  } else {
+    return await getThreadsAndUsers({
+      channelId: channel.id,
+      channels: account.channels,
+      page,
+    });
+  }
+}
+
+async function getMessagesAndUsers({
+  channelId,
+  channels,
+  page,
+}: {
+  channelId: string;
+  channels: channels[];
+  page?: number;
+}) {
+  const { messages, total, currentPage, pages } = await findMessagesFromChannel(
+    { channelId, page }
+  );
 
   return {
-    channelId,
+    users: messages.map((message) => message.author),
+    threads: null,
+    pagination: {
+      totalCount: total,
+      pageCount: pages,
+      currentPage,
+      perPage: 10,
+    },
+    channelsWithMinThreads: channels,
+    messages: messages.map((message) => {
+      return {
+        ...message,
+        createdAt: message.createdAt.toISOString(),
+        sentAt: message.sentAt.toISOString(),
+      };
+    }),
+  };
+}
+
+export const getThreadsByCommunityName = async (
+  communityName: string,
+  page: number,
+  channelName?: string
+) => {
+  if (!communityName) {
+    return { notFound: true };
+  }
+
+  const account = await findAccountByPath(communityName);
+  if (account === null) {
+    return { notFound: true };
+  }
+  if (account.channels.length === 0) {
+    return { notFound: true };
+  }
+
+  const { channel } = identifyChannel({ account, channelName });
+
+  const { users, threads, pagination, channelsWithMinThreads, messages } =
+    await resolveMessageViewType({ account, channel, page });
+
+  const settings = buildSettings(account);
+
+  return {
+    channelId: channel.id,
     users,
     channels: channelsWithMinThreads,
     communityName,
@@ -94,6 +198,7 @@ export const getThreadsByCommunityName = async (
     slackInviteUrl: account.slackInviteUrl || '',
     settings,
     threads,
+    messages,
     pagination,
     page,
   };

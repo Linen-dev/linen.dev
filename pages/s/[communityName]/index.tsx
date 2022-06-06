@@ -3,7 +3,7 @@ import {
   channelGetStaticPaths,
   channelGetStaticProps,
 } from '../../../services/communities';
-import Channel from '../../../components/Pages/Channels/Channel';
+import Channel from '../../../components/Pages/Channels';
 
 export default Channel;
 

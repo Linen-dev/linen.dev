@@ -5,47 +5,15 @@ import Pagination from '../../Pagination';
 import { format } from 'timeago.js';
 import PageLayout from '../../layout/PageLayout';
 import Message from '../../Message';
-import { channels, slackThreads, users, messages } from '@prisma/client';
+import { users } from '@prisma/client';
 import CustomLink from '../../Link/CustomLink';
-import { MentionsWithUsers } from '../../../types/apiResponses/threads/[threadId]';
 import { capitalize } from '../../../lib/util';
 import CustomRouterPush from 'components/Link/CustomRouterPush';
 import CopyToClipboardLink from './CopyToClipboardLink';
 import styles from './Channel.module.css';
 import CustomTableRowLink from 'components/Link/CustomTableRowLink';
+import { Props } from '.';
 
-export interface PaginationType {
-  totalCount: number;
-  pageCount: number;
-  currentPage: number;
-  perPage: number;
-}
-
-// The default types doesn't include associatons
-// maybe look into getting prisma handle association generation
-interface message extends messages {
-  author: users;
-  mentions: MentionsWithUsers[];
-}
-
-interface threads extends slackThreads {
-  messages: message[];
-}
-
-type Props = {
-  slackUrl?: string;
-  slackInviteUrl?: string;
-  settings: any;
-  communityName: string;
-  channelId?: string;
-  users: users[];
-  channels?: channels[];
-  currentChannel: channels;
-  threads?: threads[];
-  pagination?: PaginationType;
-  page?: number;
-  isSubDomainRouting: boolean;
-};
 export default function Channel({
   channelId,
   users,
@@ -60,29 +28,36 @@ export default function Channel({
   page,
   isSubDomainRouting,
 }: Props) {
-  if (!threads) {
-    return <div></div>;
-  }
   const [currentThreads, setCurrentThreads] = useState(threads);
   const [pageCount, setPageCount] = useState(pagination?.pageCount);
   const [currentPage, setCurrentPage] = useState(page);
-  const [initial, setInitial] = useState(true);
+  // const [initial, setInitial] = useState(true);
 
   useEffect(() => {
-    if (initial && channelId && page === 1) {
-      return setInitial(false);
-    }
-    fetch(`/api/threads?channelId=${channelId}&page=${currentPage}`)
-      .then((response) => response.json())
-      .then((response) => {
-        const { data, pagination } = response;
-        let { threads } = data;
-        threads = threads.filter((t: threads) => t.messages.length > 0);
-        setCurrentThreads(threads);
-        setPageCount(pagination.pageCount);
-        window.scrollTo(0, 0);
-      });
-  }, [currentPage, channelId, page]);
+    setCurrentThreads(threads);
+    setPageCount(pagination?.pageCount);
+    window.scrollTo(0, 0);
+  }, [threads, pagination]);
+
+  if (!threads) {
+    return <div></div>;
+  }
+
+  // useEffect(() => {
+  //   if (initial && channelId && page === 1) {
+  //     return setInitial(false);
+  //   }
+  //   fetch(`/api/threads?channelId=${channelId}&page=${currentPage}`)
+  //     .then((response) => response.json())
+  //     .then((response) => {
+  //       const { data, pagination } = response;
+  //       let { threads } = data;
+  //       threads = threads.filter((t: threads) => t.messages.length > 0);
+  //       setCurrentThreads(threads);
+  //       setPageCount(pagination.pageCount);
+  //       window.scrollTo(0, 0);
+  //     });
+  // }, [currentPage, channelId, page]);
 
   if (!channelId) {
     return (
@@ -118,6 +93,7 @@ export default function Channel({
   const channelName = channels?.find((c) => c.id === channelId)?.channelName;
   const handlePageClick = ({ selected }: { selected: number }) => {
     const newPage = selected + 1;
+    if (newPage == currentPage) return;
     CustomRouterPush({
       communityType: settings.communityType,
       isSubDomainRouting,
@@ -129,16 +105,16 @@ export default function Channel({
 
   const rows = currentThreads?.map(({ messages, incrementId, slug }) => {
     const oldestMessage = messages[messages.length - 1];
-    const newestMessage = messages[0];
-    const authors = messages.reduce((array: users[], { author }) => {
-      if (
-        author &&
-        !array.find((a: users) => a.profileImageUrl === author.profileImageUrl)
-      ) {
-        array.push(author);
-      }
-      return array;
-    }, []);
+    // const newestMessage = messages[0];
+    // const authors = messages.reduce((array: users[], { author }) => {
+    //   if (
+    //     author &&
+    //     !array.find((a: users) => a.profileImageUrl === author.profileImageUrl)
+    //   ) {
+    //     array.push(author);
+    //   }
+    //   return array;
+    // }, []);
 
     const author = oldestMessage.author;
 
@@ -189,7 +165,7 @@ export default function Channel({
   const tableRows = currentThreads?.map(
     ({ messages, incrementId, slug, viewCount }) => {
       const oldestMessage = messages[messages.length - 1];
-      const newestMessage = messages[0];
+      // const newestMessage = messages[0];
       const authors = messages.reduce((array: users[], { author }) => {
         if (
           author &&
@@ -308,7 +284,7 @@ export default function Channel({
           <tbody className="divide-y">{tableRows}</tbody>
         </table>
         <ul className="divide-y md:hidden">{rows}</ul>
-        {pageCount && (
+        {!!pageCount && (
           <Pagination
             channelName={currentChannel.channelName}
             onClick={handlePageClick}
