@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
-import { discordSync } from '../../../services/discord';
+import { discordSync } from '../../../services/discord/sync';
 
 export default async function handler(
   request: NextApiRequest,

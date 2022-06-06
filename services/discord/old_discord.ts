@@ -2,20 +2,23 @@ import request from 'superagent';
 import {
   Author,
   DiscordMessage,
-} from '../types/discordResponses/discordMessagesInterface';
-import { prisma } from '../client';
+  DiscordThreads,
+} from '../../types/discordResponses/discordMessagesInterface';
+import { prisma } from '../../client';
 import { channels, slackThreads, users } from '@prisma/client';
 import {
   createUser,
-  findOrCreateChannel,
+  // findOrCreateChannel,
   updateNextPageCursor,
-} from '../lib/models';
-import { createSlug } from '../lib/util';
-import { SyncStatus, updateAndNotifySyncStatus } from './syncStatus';
-import { generateRandomWordSlug } from '../utilities/randomWordSlugs';
-import { retryPromise } from '../utilities/retryPromises';
+} from '../../lib/models';
+import { createSlug } from '../../lib/util';
+import { SyncStatus, updateAndNotifySyncStatus } from '../syncStatus';
+import { generateRandomWordSlug } from '../../utilities/randomWordSlugs';
+import { retryPromise } from '../../utilities/retryPromises';
+import { listChannelsAndPersist } from './channels';
+import { buildUserAvatar } from './users';
 
-export async function discordSync({
+async function discordSync({
   accountId,
   fullSync = false,
 }: {
@@ -189,16 +192,6 @@ async function listMessagesFromThreadAndPersist({
       hasMore && (newestMessageId = getLatestMessagesId(response));
     }
   }
-}
-
-function buildUserAvatar({
-  userId,
-  avatarId,
-}: {
-  userId: string;
-  avatarId: string;
-}): string {
-  return `https://cdn.discordapp.com/avatars/${userId}/${avatarId}.png`;
 }
 
 /** be aware that this function updates the authors object */
@@ -381,28 +374,6 @@ async function persistMessages({
   await Promise.allSettled(cleanUpMessages);
 }
 
-export async function listChannelsAndPersist({
-  serverId,
-  accountId,
-  token,
-}: {
-  serverId: string;
-  accountId: string;
-  token: string;
-}) {
-  const channels = await getDiscordChannels(serverId, token);
-  const channelPromises = Promise.all(
-    channels.map((channel: discordChannel) => {
-      return findOrCreateChannel({
-        slackChannelId: channel.id,
-        channelName: channel.name,
-        accountId,
-      });
-    })
-  );
-  return await channelPromises;
-}
-
 async function persistThreads(threads: DiscordThreads[], channelId: string) {
   //Save discord threads
   const threadsTransaction: any = threads
@@ -565,39 +536,6 @@ async function getDiscord(path: string, token: string, query: any = {}) {
 //   return response.body;
 // }
 
-async function getDiscordChannels(
-  serverId: string,
-  token: string
-): Promise<discordChannel[]> {
-  const result = await getDiscord(`/guilds/${serverId}/channels`, token);
-  return result.body?.filter((c: discordChannel) => c?.type === 0);
-}
-
-export interface guildChannelsResponse {}
-
-export interface discordChannel {
-  id: string;
-  type: number;
-  name: string;
-  position: number;
-  parent_id?: string | null;
-  guild_id: string;
-  last_message_id?: string | null;
-  topic?: null;
-  rate_limit_per_user?: number | null;
-  nsfw?: boolean | null;
-  bitrate?: number | null;
-  user_limit?: number | null;
-  rtc_region?: null;
-}
-
-// Todos:
-// Make sure we handle private threads and don't render them
-export interface GuildActiveThreads {
-  threads?: DiscordThreads[] | null;
-  members?: null[] | null;
-}
-
 // async function getAllActiveThreads(serverId: string, token: string) {
 //   let result = [];
 //   // Given a server id - gets all the active threads in that server
@@ -672,29 +610,6 @@ async function getDiscordThreadMessages(
 //TODOS:
 // create a new account
 // Render the client side with new account
-
-export interface DiscordThreads {
-  id: string;
-  guild_id: string;
-  parent_id: string;
-  owner_id: string;
-  type: number;
-  name: string;
-  last_message_id: string;
-  thread_metadata: ThreadMetadata;
-  message_count: number;
-  member_count: number;
-  rate_limit_per_user: number;
-  flags: number;
-}
-
-export interface ThreadMetadata {
-  archived: boolean;
-  archive_timestamp: string;
-  auto_archive_duration: number;
-  locked: boolean;
-  create_timestamp?: string;
-}
 
 function getShorterTimeStamp(threads: DiscordThreads[]): string | undefined {
   if (!threads || !threads.length) return;

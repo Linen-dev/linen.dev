@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import { slackSync } from '../../../services/slack';
-import { discordSync } from '../../../services/discord';
+import { discordSync } from '../../../services/discord/sync';
 import { prisma } from '../../../client';
 import {
   accounts,

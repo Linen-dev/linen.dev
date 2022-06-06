@@ -1,5 +1,5 @@
 import prisma from '../../client';
-import { discordSync } from '../../services/discord';
+import { discordSync } from '../../services/discord/sync';
 
 (async () => {
   const fullSync = !!process.argv.find((arg) => arg === '--full-sync');

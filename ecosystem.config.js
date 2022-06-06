@@ -6,8 +6,8 @@ module.exports = {
       // discord sync process
       name: 'discord-sync',
       script: 'npx ts-node --skip-project bin/discord-sync/index.ts',
-      // it will run in a rate of 15 minutes
-      restart_delay: 15 * MINUTES,
+      // it will run in a rate of 1 minute
+      restart_delay: 1 * MINUTES,
     },
     {
       // this process look for empty slugs on database and try to recreate them
