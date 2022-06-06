@@ -1,0 +1,6 @@
+.image {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  max-width: 300px;
+  padding: 1px;
+}

@@ -1,7 +1,10 @@
 import React from 'react';
 import classNames from 'classnames';
 import styles from './index.module.css';
-import { isImage, isUrlValid } from './utilities';
+import { isImage, isVideo, isUrlValid } from './utilities';
+import Toggle from 'components/Toggle';
+import Image from './Image';
+import Video from './Video';
 
 interface Props {
   value: string;
@@ -9,7 +12,27 @@ interface Props {
 
 export default function Link({ value }: Props) {
   const [href, name] = value.split('|');
+
+  if (isImage(href)) {
+    return (
+      <Toggle header={name || href}>
+        <a href={href} target="_blank">
+          <Image src={href} />
+        </a>
+      </Toggle>
+    );
+  }
+
+  if (isVideo(href)) {
+    return (
+      <Toggle header={name || href}>
+        <Video src={href} />
+      </Toggle>
+    );
+  }
+
   const isHrefInvalid = !isUrlValid(href);
+
   return (
     <a
       className={classNames('text-indigo-700', styles.link, {
@@ -19,7 +42,6 @@ export default function Link({ value }: Props) {
       title={isHrefInvalid ? 'Invalid link' : ''}
     >
       {name || href}
-      {isImage(href) && <img src={href} alt={href} />}
     </a>
   );
 }
