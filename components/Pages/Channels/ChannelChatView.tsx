@@ -1,4 +1,4 @@
-import Avatar from '../../Avatar';
+import Avatar, { Size } from '../../Avatar';
 import { useEffect, useState } from 'react';
 import Pagination from '../../Pagination';
 import { format } from 'timeago.js';
@@ -7,40 +7,41 @@ import Message from '../../Message';
 import { capitalize } from '../../../lib/util';
 import CustomRouterPush from 'components/Link/CustomRouterPush';
 import { Props, messageWithAuthor } from '.';
+import { Anchor, Text } from '@mantine/core';
+import { AiOutlineLink } from 'react-icons/ai';
+import styles from './ChannelChatView.module.css';
 
 function Messages({ messages }: { messages?: messageWithAuthor[] }) {
   return (
     <div>
       <ul role="list" className="divide-y divide-gray-200">
         {messages?.map((message) => (
-          <li key={message.id} className="py-4 max-w-[800px] min-w-[350px]">
-            <div className="flex space-x-3">
-              {message.author && (
+          <li className="pb-8" key={message.id}>
+            <div className="flex justify-between">
+              <div className="flex pb-4">
                 <Avatar
-                  key={`${message.id}-${
-                    message.author.id || message.author.displayName
-                  }-avatar-mobile}`}
-                  src={message.author.profileImageUrl || ''} //  set placeholder with a U sign
-                  alt={message.author.displayName || ''} // Set placeholder of a slack user if missing
-                  text={(message.author.displayName || '?')
+                  size={Size.lg}
+                  alt={message.author?.displayName || 'avatar'}
+                  src={message.author?.profileImageUrl}
+                  text={(message.author?.displayName || '?')
                     .slice(0, 1)
                     .toLowerCase()}
                 />
-              )}
-              <div className="flex-1 space-y-1">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-medium">
-                    {message.author?.displayName}
-                  </h3>
-                  <p className="text-sm text-gray-500 min-w-[120px]">
-                    {format(new Date(message.sentAt))}
+                <div className="pl-3">
+                  <p className="font-semibold text-sm inline-block">
+                    {message.author?.displayName || 'user'}
                   </p>
                 </div>
-                <Message
-                  text={message.body}
-                  mentions={message.mentions?.map((m) => m.users)}
-                />
               </div>
+              <Text size="sm" color="gray">
+                {format(new Date(message.sentAt))}
+              </Text>
+            </div>
+            <div style={{ maxWidth: '700px' }}>
+              <Message
+                text={message.body}
+                mentions={message.mentions?.map((m) => m.users)}
+              />
             </div>
           </li>
         ))}
@@ -124,8 +125,28 @@ export default function ChannelChatView({
       communityName={communityName}
       isSubDomainRouting={isSubDomainRouting}
     >
-      <div className="sm:pt-6">
+      <div className="py-8 px-4">
         <Messages messages={currentThreads} />
+
+        <div className="gap-8 columns-2">
+          <div className={styles.buttons}>
+            <Anchor
+              className={styles.join}
+              href={slackInviteUrl || slackUrl}
+              size="sm"
+              target="_blank"
+            >
+              <div className="flex content-center">
+                <AiOutlineLink className={styles.icon} size={18} />
+                {settings.communityType === 'discord' ? (
+                  <div>Join thread in Discord</div>
+                ) : (
+                  <div>Join thread in Slack</div>
+                )}
+              </div>
+            </Anchor>
+          </div>
+        </div>
 
         {!!pageCount && (
           <Pagination

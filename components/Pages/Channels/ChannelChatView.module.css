@@ -1,0 +1,13 @@
+.buttons {
+  clear: both;
+  min-height: 20px;
+}
+
+.join {
+  float: left;
+  margin-left: 4px;
+}
+
+.icon {
+  display: inline-block;
+}
