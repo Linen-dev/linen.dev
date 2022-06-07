@@ -41,7 +41,6 @@ async function crawlExistingThread(
       path: `/channels/${threadId}/messages`,
       query: { limit: LIMIT, ...query },
     });
-    console.log({ messages: messages.length });
     // if there is less than the limit, means that there is no more messages
     if (messages.length < LIMIT) {
       hasMore = false;
@@ -61,6 +60,10 @@ async function crawlExistingThread(
       messagesInThread.push(message);
     }
   }
+  console.log({
+    thread: thread.incrementId,
+    messages: messagesInThread.length,
+  });
   return messagesInThread;
 }
 
@@ -171,6 +174,7 @@ export async function processThreads(
   let skip = 0;
   do {
     const threads = await getThreadsFromDB(channel, LIMIT, skip);
+    console.log({ channel: channel.channelName, threads: threads.length });
     // for each thread
     for (const thread of threads) {
       // get new messages from thread
@@ -200,7 +204,10 @@ export async function processNewThreads(
   channel: channels
 ) {
   if (newThreads) {
-    console.log('newThreads', newThreads.length);
+    console.log({
+      channel: channel.channelName,
+      newThreads: newThreads.length,
+    });
     for (const newThread of newThreads) {
       await createThread(channel.id, newThread);
     }
