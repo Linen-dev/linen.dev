@@ -28,12 +28,7 @@ async function getDiscordChannels(
   });
   return result.filter((c: discordChannel) => {
     // type	0	:: a text channel within a server
-    // permission_overwrites missing or array is empty means that is public
-    return (
-      c.type === 0 &&
-      !c.nsfw &&
-      (!c.permission_overwrites || c.permission_overwrites?.length === 0)
-    );
+    return c.type === 0;
   });
 }
 
@@ -70,7 +65,6 @@ async function crawlChannel(
       path: `/channels/${channel.slackChannelId}/messages`,
       query: { limit: LIMIT, ...query },
     });
-    console.log({ messages: messages.length });
     // if there is less than the limit, means that there is no more messages
     if (messages.length < LIMIT) {
       hasMore = false;
@@ -106,7 +100,7 @@ async function persistMessagesIntoChannelThread(
   if (messages.length) {
     let size = 10;
     for (let i = 0; i < messages.length; i += size) {
-      console.log('batch', i);
+      // console.log('batch', i);
       await createMessages({
         accountId,
         channel,
@@ -129,6 +123,10 @@ export async function processChannel(
 
   // persist singles
   if (singleMessages) {
+    console.log({
+      channel: channel.channelName,
+      singles: singleMessages.length,
+    });
     await persistMessagesIntoChannelThread(accountId, channel, singleMessages);
   }
 
@@ -158,8 +156,23 @@ export async function listChannelsAndPersist({
         slackChannelId: channel.id,
         channelName: channel.name,
         accountId,
+        hidden: isPrivate(channel),
       });
     })
   );
   return await channelPromises;
+}
+function isPrivate(channel: discordChannel): boolean {
+  if (!channel.nsfw) {
+    return true;
+  }
+  // we assume that if there any permission it is a private channel
+  // customer should toggle it on settings page if want to make it public
+  if (
+    !channel.permission_overwrites ||
+    channel.permission_overwrites?.length === 0
+  ) {
+    return true;
+  }
+  return false;
 }

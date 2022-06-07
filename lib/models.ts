@@ -274,6 +274,7 @@ export const findOrCreateChannel = async (
       accountId: channels.accountId,
       channelName: channels.channelName,
       slackChannelId: channels.slackChannelId,
+      hidden: channels.hidden,
     },
   });
 };
