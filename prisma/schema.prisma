@@ -69,6 +69,7 @@ model accounts {
   createdAt         DateTime         @default(now())
   name              String?
   slackDomain       String?
+  discordDomain     String?
   discordServerId   String?
   channels          channels[]
   slackTeamId       String?
