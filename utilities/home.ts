@@ -1,6 +1,6 @@
 import { SerializedAccount } from 'serializers/account';
 
-export function getLogoLinkUrl(account?: SerializedAccount): string {
+export function getHomeUrl(account?: SerializedAccount): string {
   if (!account) {
     return '/';
   }
@@ -14,7 +14,7 @@ export function getLogoLinkUrl(account?: SerializedAccount): string {
   return '/';
 }
 
-export function getLogoLinkText(url: string): string | null {
+export function getHomeText(url: string): string | null {
   if (url === '/') {
     return null;
   }

@@ -1,4 +1,4 @@
-import { getLogoLinkUrl, getLogoLinkText } from './utilities';
+import { getHomeUrl, getHomeText } from './home';
 import { SerializedAccount, CommunityType } from 'serializers/account';
 
 function createAccount(options: object): SerializedAccount {
@@ -11,34 +11,34 @@ function createAccount(options: object): SerializedAccount {
   };
 }
 
-describe('getLogoLinkUrl', () => {
+describe('getHomeUrl', () => {
   it('returns the correct url for a premium account', () => {
     const account = createAccount({
       premium: true,
       redirectDomain: 'example.com',
     });
-    expect(getLogoLinkUrl(account)).toEqual('https://example.com');
+    expect(getHomeUrl(account)).toEqual('https://example.com');
   });
 
   it('returns the correct url for a slack account', () => {
     const account = createAccount({
       slackDomain: 'example',
     });
-    expect(getLogoLinkUrl(account)).toEqual('/s/example');
+    expect(getHomeUrl(account)).toEqual('/s/example');
   });
 
   it('returns the correct url for a discord account', () => {
     const account = createAccount({
       discordServerId: 'example',
     });
-    expect(getLogoLinkUrl(account)).toEqual('/d/example');
+    expect(getHomeUrl(account)).toEqual('/d/example');
   });
 
   it('returns the correct url for a non-premium account', () => {
     const account = createAccount({
       premium: false,
     });
-    expect(getLogoLinkUrl(account)).toEqual('/');
+    expect(getHomeUrl(account)).toEqual('/');
   });
 
   it('returns the correct url for a non-premium account with a redirect domain', () => {
@@ -46,25 +46,25 @@ describe('getLogoLinkUrl', () => {
       premium: false,
       redirectDomain: 'example.com',
     });
-    expect(getLogoLinkUrl(account)).toEqual('/');
+    expect(getHomeUrl(account)).toEqual('/');
   });
 
   it('returns the correct url when there is no account', () => {
-    expect(getLogoLinkUrl()).toEqual('/');
+    expect(getHomeUrl()).toEqual('/');
   });
 });
 
-describe('getLogoLinkText', () => {
+describe('getHomeText', () => {
   it('returns null for / as the url', () => {
-    expect(getLogoLinkText('/')).toEqual(null);
+    expect(getHomeText('/')).toEqual(null);
   });
 
   it('returns the correct text for a url thats starts with https://', () => {
-    expect(getLogoLinkText('https://example.com')).toEqual('example.com');
+    expect(getHomeText('https://example.com')).toEqual('example.com');
   });
 
   it('returns the linen.dev url for other urls', () => {
-    expect(getLogoLinkText('/s/example')).toEqual('linen.dev/s/example');
-    expect(getLogoLinkText('/d/example')).toEqual('linen.dev/d/example');
+    expect(getHomeText('/s/example')).toEqual('linen.dev/s/example');
+    expect(getHomeText('/d/example')).toEqual('linen.dev/d/example');
   });
 });
