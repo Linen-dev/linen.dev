@@ -124,6 +124,8 @@ const Home = (props: { accounts: Props[] }) => {
           {accounts.map((a) => {
             let url = a.premium
               ? 'https://' + a.redirectDomain
+              : a.discordDomain
+              ? 'https://linen.dev/d/' + a.discordDomain
               : 'https://linen.dev/s/' + a.slackDomain;
 
             //TODO:remove this once supabase sets up domain to discord.supabase.com
@@ -246,6 +248,7 @@ type Props = {
   redirectDomain: string;
   premium: boolean;
   slackDomain: string;
+  discordDomain: string;
 };
 
 export async function getStaticProps() {
@@ -266,6 +269,7 @@ export async function getStaticProps() {
       redirectDomain: true,
       slackDomain: true,
       discordServerId: true,
+      discordDomain: true,
     },
   });
 
