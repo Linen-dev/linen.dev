@@ -10,6 +10,8 @@ import { Props, messageWithAuthor } from '.';
 import { Anchor, Text } from '@mantine/core';
 import { AiOutlineLink } from 'react-icons/ai';
 import styles from './ChannelChatView.module.css';
+import { channels } from '@prisma/client';
+import { Settings } from 'services/communities';
 
 function sortMessagesFromTopDown(a: messageWithAuthor, b: messageWithAuthor) {
   return new Date(a.sentAt).getTime() - new Date(b.sentAt).getTime();
@@ -136,16 +138,19 @@ export default function ChannelChatView({
           <div className={styles.buttons}>
             <Anchor
               className={styles.join}
-              href={slackInviteUrl || slackUrl}
+              href={buildInviteLink(
+                { ...settings, slackInviteUrl },
+                currentChannel
+              )}
               size="sm"
               target="_blank"
             >
               <div className="flex content-center">
                 <AiOutlineLink className={styles.icon} size={18} />
                 {settings.communityType === 'discord' ? (
-                  <div>Join thread in Discord</div>
+                  <div>Join channel in Discord</div>
                 ) : (
-                  <div>Join thread in Slack</div>
+                  <div>Join channel in Slack</div>
                 )}
               </div>
             </Anchor>
@@ -166,4 +171,16 @@ export default function ChannelChatView({
       </div>
     </PageLayout>
   );
+}
+
+function buildInviteLink(
+  settings: Settings & { slackInviteUrl?: string },
+  currentChannel: channels
+) {
+  if (!settings.slackInviteUrl) return '';
+  if (settings.communityType === 'discord') {
+    return `${settings.slackInviteUrl}/${currentChannel.slackChannelId}`;
+  } else {
+    return settings.slackInviteUrl;
+  }
 }

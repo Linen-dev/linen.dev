@@ -16,7 +16,7 @@ type accountWithChannels = accounts & {
   channels: channels[];
 };
 
-function buildSettings(account: accountWithChannels): {
+export type Settings = {
   communityType: string;
   googleAnalyticsId?: string | undefined;
   name: string | null;
@@ -25,7 +25,9 @@ function buildSettings(account: accountWithChannels): {
   docsUrl: string;
   logoUrl: string;
   messagesViewType: MessagesViewType;
-} {
+};
+
+function buildSettings(account: accountWithChannels): Settings {
   const defaultSettings =
     links.find(({ accountId }) => accountId === account.id) || links[0];
 
@@ -169,6 +171,14 @@ async function getMessagesAndUsers({
   };
 }
 
+function buildInviteUrl(account: accounts) {
+  if (account.discordServerId) {
+    return `https://discord.com/channels/${account.discordServerId}`;
+  } else {
+    return account.slackInviteUrl || '';
+  }
+}
+
 export const getThreadsByCommunityName = async (
   communityName: string,
   page: number,
@@ -200,7 +210,7 @@ export const getThreadsByCommunityName = async (
     communityName,
     currentChannel: channel,
     slackUrl: account.slackUrl || '',
-    slackInviteUrl: account.slackInviteUrl || '',
+    slackInviteUrl: buildInviteUrl(account),
     settings,
     threads,
     messages,
