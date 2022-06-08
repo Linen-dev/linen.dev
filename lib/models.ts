@@ -617,3 +617,16 @@ export const findMessagesFromChannel = async ({
   });
   return { total, messages, pages, currentPage };
 };
+
+export const findChannelsWithSingleMessages = async ({
+  channels,
+}: {
+  channels: channels[];
+}) => {
+  return await prisma.channels.findMany({
+    where: {
+      id: { in: channels.map((c) => c.id) },
+      messages: { some: { slackThreadId: null } },
+    },
+  });
+};

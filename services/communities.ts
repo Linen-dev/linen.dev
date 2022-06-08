@@ -2,6 +2,7 @@ import {
   accountsWithChannels,
   channelsGroupByThreadCount,
   findAccountByPath,
+  findChannelsWithSingleMessages,
   findMessagesFromChannel,
 } from '../lib/models';
 import { index as fetchThreads } from '../services/threads';
@@ -143,6 +144,9 @@ async function getMessagesAndUsers({
   const { messages, total, currentPage, pages } = await findMessagesFromChannel(
     { channelId, page }
   );
+  const channelsWithMinThreads = await findChannelsWithSingleMessages({
+    channels,
+  });
 
   return {
     users: messages.map((message) => message.author),
@@ -153,7 +157,7 @@ async function getMessagesAndUsers({
       currentPage,
       perPage: 10,
     },
-    channelsWithMinThreads: channels,
+    channelsWithMinThreads,
     messages: messages.map((message) => {
       return {
         ...message,
