@@ -106,19 +106,16 @@ export default function ChannelVisibilityCard({
   account,
 }: SettingsProps) {
   async function onChange(value: any) {
-    console.log('value', value);
     return fetch('/api/channels', {
       method: 'PUT',
       body: JSON.stringify({ channels: [value] }),
     })
       .then((response) => {
-        if (response.ok) {
-          toast.success('Saved Successfully');
-        } else {
+        if (!response.ok) {
           throw response;
         }
       })
-      .catch(() => toast.error('Something went wrong'));
+      .catch(() => toast.error('Something went wrong. Please try again.'));
   }
 
   return (
