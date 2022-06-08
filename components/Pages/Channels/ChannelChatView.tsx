@@ -1,17 +1,16 @@
 import Avatar, { Size } from '../../Avatar';
 import { useEffect, useState } from 'react';
-import Pagination from '../../Pagination';
 import { format } from 'timeago.js';
 import PageLayout from '../../layout/PageLayout';
 import Message from '../../Message';
 import { capitalize } from '../../../lib/util';
-import CustomRouterPush from 'components/Link/CustomRouterPush';
 import { Props, messageWithAuthor } from '.';
-import { Anchor, Text } from '@mantine/core';
+import { Anchor, Loader, Text } from '@mantine/core';
 import { AiOutlineLink } from 'react-icons/ai';
 import styles from './ChannelChatView.module.css';
 import { channels } from '@prisma/client';
 import { Settings } from 'services/communities';
+import useSWRImmutable from 'swr/immutable';
 
 function sortMessagesFromTopDown(a: messageWithAuthor, b: messageWithAuthor) {
   return new Date(a.sentAt).getTime() - new Date(b.sentAt).getTime();
@@ -78,7 +77,8 @@ export default function ChannelChatView({
     setCurrentThreads(messages);
     setPageCount(pagination?.pageCount);
     window.scrollTo(0, 0);
-  }, [messages, pagination]);
+    setCurrentPage(page);
+  }, [messages, pagination, page]);
 
   if (!messages) {
     return <div></div>;
@@ -86,17 +86,6 @@ export default function ChannelChatView({
 
   // Todo: handle missing channels
   const channelName = channels?.find((c) => c.id === channelId)?.channelName;
-  const handlePageClick = ({ selected }: { selected: number }) => {
-    const newPage = selected + 1;
-    if (newPage == currentPage) return;
-    CustomRouterPush({
-      communityType: settings.communityType,
-      isSubDomainRouting,
-      communityName,
-      path: `/c/${currentChannel.channelName}/${newPage}`,
-    });
-    setCurrentPage(newPage);
-  };
 
   function buildTitle(
     communityName: string,
@@ -108,6 +97,13 @@ export default function ChannelChatView({
       ? ` - ${capitalize(channelName)} Threads - Page ${page}`
       : '';
     return `${name}${channel}`;
+  }
+
+  const pages: any[] = [];
+  for (let i = page; i < currentPage; i++) {
+    pages.unshift(
+      <PageWrapper index={i} key={i} channelId={currentChannel.id} />
+    );
   }
 
   return (
@@ -132,6 +128,10 @@ export default function ChannelChatView({
       isSubDomainRouting={isSubDomainRouting}
     >
       <div className="py-8 px-4">
+        {!!(pageCount && currentPage <= pageCount) && (
+          <LoadMore onClick={() => setCurrentPage(currentPage + 1)} />
+        )}
+        {pages}
         <Messages messages={currentThreads} />
 
         <div className="gap-8 columns-2">
@@ -156,18 +156,6 @@ export default function ChannelChatView({
             </Anchor>
           </div>
         </div>
-
-        {!!pageCount && (
-          <Pagination
-            channelName={currentChannel.channelName}
-            onClick={handlePageClick}
-            pageCount={pageCount}
-            communityName={communityName}
-            isSubDomainRouting={isSubDomainRouting}
-            initialPage={page ? page - 1 : 0}
-            communityType={settings.communityType}
-          />
-        )}
       </div>
     </PageLayout>
   );
@@ -183,4 +171,37 @@ function buildInviteLink(
   } else {
     return settings.slackInviteUrl;
   }
+}
+
+const fetcher = (url: string) => fetch(url).then((r) => r.json());
+
+function PageWrapper({
+  index,
+  channelId,
+}: {
+  index: number;
+  channelId: string;
+}) {
+  const { data, error } = useSWRImmutable(
+    `/api/messages?channelId=${channelId}&page=${index + 1}`,
+    fetcher
+  );
+  if (error) return <></>;
+  return data ? (
+    <Messages messages={data} />
+  ) : (
+    <div className="flex justify-center p-4">
+      <Loader size="sm" />
+    </div>
+  );
+}
+
+function LoadMore({ onClick }: { onClick: () => void }) {
+  return (
+    <div className="flex justify-end pb-4">
+      <Anchor onClick={onClick} size="sm">
+        Load More
+      </Anchor>
+    </div>
+  );
 }
