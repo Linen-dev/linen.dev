@@ -68,7 +68,12 @@ export async function createXMLSitemapForSubdomain(
 export async function createXMLSitemapForLinen(host: string) {
   const protocol = host.includes('localhost') ? 'http' : PROTOCOL;
   const freeAccounts = await prisma.accounts.findMany({
-    select: { discordServerId: true, slackDomain: true, id: true },
+    select: {
+      discordDomain: true,
+      discordServerId: true,
+      slackDomain: true,
+      id: true,
+    },
     where: {
       premium: false,
       channels: {
@@ -85,11 +90,13 @@ export async function createXMLSitemapForLinen(host: string) {
   if (!freeAccounts || !freeAccounts.length) return '';
 
   const stream = new SitemapIndexStream();
-  const urls = freeAccounts.map(({ discordServerId, slackDomain }) => {
-    return `${protocol}://${host}/sitemap/${
-      discordServerId || slackDomain
-    }/chunk.xml`;
-  });
+  const urls = freeAccounts.map(
+    ({ discordDomain, discordServerId, slackDomain }) => {
+      return `${protocol}://${host}/sitemap/${
+        discordDomain || discordServerId || slackDomain
+      }/chunk.xml`;
+    }
+  );
   return streamToPromise(Readable.from(urls).pipe(stream)).then(String);
 }
 
@@ -97,7 +104,7 @@ export async function createXMLSitemapForFreeCommunity(
   host: string,
   community: string
 ) {
-  // community could be discordServerId or slackDomain
+  // community could be discordServerId/discordDomain or slackDomain
   const threads = await prisma.slackThreads.findMany({
     select: {
       incrementId: true,
@@ -106,6 +113,7 @@ export async function createXMLSitemapForFreeCommunity(
         select: {
           account: {
             select: {
+              discordDomain: true,
               discordServerId: true,
               slackDomain: true,
             },
@@ -117,7 +125,11 @@ export async function createXMLSitemapForFreeCommunity(
       messages: { some: { id: { not: undefined } } },
       channel: {
         account: {
-          OR: [{ discordServerId: community }, { slackDomain: community }],
+          OR: [
+            { discordDomain: community },
+            { discordServerId: community },
+            { slackDomain: community },
+          ],
         },
       },
     },

@@ -6,6 +6,7 @@ const pageExtensions = LONG_RUNNING
   ? ['ts', 'js']
   : ['ts', 'js', 'tsx', 'jsx', 'md', 'mdx'];
 const experimental = LONG_RUNNING ? { outputStandalone: true } : {};
+const SKIP_SENTRY = process.env.SKIP_SENTRY === 'true';
 
 /**
  * @type {import('next').NextConfig}
@@ -34,7 +35,7 @@ const sentryWebpackPluginOptions = {
   // recommended:
   //   release, url, org, project, authToken, configFile, stripPrefix,
   //   urlPrefix, include, ignore
-  dryRun: LONG_RUNNING,
+  dryRun: LONG_RUNNING || SKIP_SENTRY,
 
   silent: true, // Suppresses all logs
   // For all available options, see:

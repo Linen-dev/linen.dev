@@ -226,6 +226,9 @@ export const findAccountByPath = async (path: string) => {
           slackDomain: path,
         },
         {
+          discordDomain: path,
+        },
+        {
           discordServerId: path,
         },
       ],
@@ -551,7 +554,7 @@ export const findSlackThreadsWithOnlyOneMessage = async (
   from "slackThreads" join messages on messages."slackThreadId" = "slackThreads".id 
   where "slackThreads"."channelId" in (${ids})
   group by "slackThreads".id
-  having count(*) != "slackThreads"."messageCount"
+  having count(*) = 1
   order by "slackThreads"."slackThreadTs" desc
   ;`;
 
