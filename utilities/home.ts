@@ -8,6 +8,8 @@ export function getHomeUrl(account?: SerializedAccount): string {
     return `https://${account.redirectDomain}`;
   } else if (account.slackDomain) {
     return `/s/${account.slackDomain}`;
+  } else if (account.discordDomain) {
+    return `/d/${account.discordDomain}`;
   } else if (account.discordServerId) {
     return `/d/${account.discordServerId}`;
   }

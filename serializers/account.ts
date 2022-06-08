@@ -17,6 +17,7 @@ export interface SerializedAccount {
   anonymizeUsers?: boolean;
   hasAuth?: boolean;
   slackDomain?: string;
+  discordDomain?: string;
   discordServerId?: string;
 }
 
@@ -62,6 +63,7 @@ export default function serialize(account?: any): SerializedAccount | null {
     id,
     anonymizeUsers,
     slackDomain,
+    discordDomain,
     discordServerId,
   } = account;
 
@@ -82,6 +84,7 @@ export default function serialize(account?: any): SerializedAccount | null {
     anonymizeUsers,
     hasAuth,
     slackDomain,
+    discordDomain,
     discordServerId,
   };
 }
