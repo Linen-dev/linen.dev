@@ -146,8 +146,12 @@ async function updateThread(channel: channels, thread: slackThreads) {
   const message: DiscordMessage = await getDiscordWithRetry({
     path: `/channels/${channel.slackChannelId}/messages/${thread.slackThreadTs}`,
   });
-  // console.log('message', message)
-  return upsertThread[message.type](channel.id, message);
+  try {
+    return upsertThread[message.type](channel.id, message);
+  } catch (err) {
+    console.error(String(err));
+    return;
+  }
 }
 
 export const supportedThreadType = []; // type 0 must have thread attribute to be a thread

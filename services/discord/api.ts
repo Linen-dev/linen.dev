@@ -1,4 +1,4 @@
-import { sleep } from '../../utilities/retryPromises';
+import { retryPromise, sleep } from '../../utilities/retryPromises';
 import request from 'superagent';
 import { DISCORD_TOKEN, SECONDS } from './constrains';
 
@@ -10,7 +10,9 @@ export async function getDiscordWithRetry({
   query?: any;
 }): Promise<any> {
   try {
-    const response = await getDiscord({ path, query });
+    const response = await retryPromise({
+      promise: getDiscord({ path, query }),
+    });
     const rateLimit = {
       limit: Number(response.headers['x-ratelimit-limit']),
       remaining: Number(response.headers['x-ratelimit-remaining']),
