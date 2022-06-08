@@ -51,7 +51,7 @@ export default function SettingsPage({ account, prices }: Props) {
       ];
 
       return (
-        <DashboardLayout>
+        <DashboardLayout account={account}>
           <div className="mx-auto">
             <div className="sm:flex sm:flex-col sm:align-center">
               <h1 className="text-5xl font-extrabold text-gray-900 sm:text-center">
@@ -70,7 +70,7 @@ export default function SettingsPage({ account, prices }: Props) {
     }
 
     return (
-      <DashboardLayout header="Plans">
+      <DashboardLayout header="Plans" account={account}>
         <h1>You are not signed in.</h1>
       </DashboardLayout>
     );
@@ -78,7 +78,7 @@ export default function SettingsPage({ account, prices }: Props) {
 
   if (!prices) {
     return (
-      <DashboardLayout header="Plans">
+      <DashboardLayout header="Plans" account={account}>
         <p>
           Stripe is unavailable and we're not able to fetch plans right now.
           Please try again later.
@@ -89,7 +89,7 @@ export default function SettingsPage({ account, prices }: Props) {
 
   if (prices.length === 0) {
     return (
-      <DashboardLayout header="Plans">
+      <DashboardLayout header="Plans" account={account}>
         <p>
           Sorry, we didn't set up any plans in Stripe yet. Please check again
           later.
@@ -127,7 +127,7 @@ export default function SettingsPage({ account, prices }: Props) {
     ];
 
     return (
-      <DashboardLayout>
+      <DashboardLayout account={account}>
         <div className="mx-auto">
           <div className="sm:flex sm:flex-col sm:align-center">
             <h1 className="text-5xl font-extrabold text-gray-900 sm:text-center">
@@ -160,7 +160,7 @@ export default function SettingsPage({ account, prices }: Props) {
   }
 
   return (
-    <DashboardLayout header="Plans">
+    <DashboardLayout header="Plans" account={account}>
       <h1>You are not signed in.</h1>
     </DashboardLayout>
   );

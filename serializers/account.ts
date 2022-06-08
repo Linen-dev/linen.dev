@@ -16,6 +16,8 @@ export interface SerializedAccount {
   communityType: CommunityType | null;
   anonymizeUsers?: boolean;
   hasAuth?: boolean;
+  slackDomain?: string;
+  discordServerId?: string;
 }
 
 function identifyCommunity(account: any) {
@@ -59,6 +61,8 @@ export default function serialize(account?: any): SerializedAccount | null {
     slackSyncStatus,
     id,
     anonymizeUsers,
+    slackDomain,
+    discordServerId,
   } = account;
 
   const communityType = identifyCommunity(account);
@@ -77,5 +81,7 @@ export default function serialize(account?: any): SerializedAccount | null {
     communityType,
     anonymizeUsers,
     hasAuth,
+    slackDomain,
+    discordServerId,
   };
 }
