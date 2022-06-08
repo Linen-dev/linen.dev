@@ -11,11 +11,15 @@ import { Anchor, Text } from '@mantine/core';
 import { AiOutlineLink } from 'react-icons/ai';
 import styles from './ChannelChatView.module.css';
 
+function sortMessagesFromTopDown(a: messageWithAuthor, b: messageWithAuthor) {
+  return new Date(a.sentAt).getTime() - new Date(b.sentAt).getTime();
+}
+
 function Messages({ messages }: { messages?: messageWithAuthor[] }) {
   return (
     <div>
       <ul role="list" className="divide-y divide-gray-200">
-        {messages?.map((message) => (
+        {messages?.sort(sortMessagesFromTopDown).map((message) => (
           <li className="pb-8" key={message.id}>
             <div className="flex justify-between">
               <div className="flex pb-4">
