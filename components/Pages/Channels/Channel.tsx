@@ -258,7 +258,7 @@ export default function Channel({
       isSubDomainRouting={isSubDomainRouting}
     >
       <div className="sm:pt-6">
-        <table className="hidden sm:block sm:table-fixed ">
+        <table className="hidden md:block md:table-fixed ">
           <thead>
             <tr>
               <th className="px-6 py-3 text-left font-medium text-gray-500">
