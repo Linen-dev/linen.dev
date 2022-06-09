@@ -20,14 +20,21 @@ describe('getHomeUrl', () => {
     expect(getHomeUrl(account)).toEqual('https://example.com');
   });
 
-  it('returns the correct url for a slack account', () => {
+  it('returns the correct url for a slack domain', () => {
     const account = createAccount({
       slackDomain: 'example',
     });
     expect(getHomeUrl(account)).toEqual('/s/example');
   });
 
-  it('returns the correct url for a discord account', () => {
+  it('returns the correct url for a discord domain', () => {
+    const account = createAccount({
+      discordDomain: 'example',
+    });
+    expect(getHomeUrl(account)).toEqual('/d/example');
+  });
+
+  it('returns the correct url for a discord server id', () => {
     const account = createAccount({
       discordServerId: 'example',
     });

@@ -21,25 +21,13 @@ function ChannelToggleList({
   }
 
   return (
-    <Switch.Group as="div" className="flex items-center justify-between m-1">
-      <span className="flex-grow flex flex-col">
-        <Switch.Label
-          as="span"
-          className={classNames(
-            'text-sm font-medium ',
-            enabled ? 'text-gray-900' : 'text-gray-400 line-through	'
-          )}
-          passive
-        >
-          {channel.channelName}
-        </Switch.Label>
-      </span>
+    <Switch.Group as="div" className="flex items-center m-1">
       <Switch
         checked={enabled}
         onChange={(value) => onChannelToggle(value, channel.id)}
         className={classNames(
           enabled ? 'bg-blue-700' : 'bg-gray-200',
-          'relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-300'
+          'relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-300 mr-3'
         )}
       >
         <span
@@ -50,6 +38,17 @@ function ChannelToggleList({
           )}
         />
       </Switch>
+      <Switch.Label
+        as="span"
+        className={classNames(
+          'text-sm font-medium ',
+          enabled ? 'text-gray-900' : 'text-gray-400 line-through	'
+        )}
+        passive
+      >
+        {channel.channelName}
+      </Switch.Label>
+
       <input
         type="hidden"
         name={channel.id}
@@ -107,19 +106,16 @@ export default function ChannelVisibilityCard({
   account,
 }: SettingsProps) {
   async function onChange(value: any) {
-    console.log('value', value);
     return fetch('/api/channels', {
       method: 'PUT',
       body: JSON.stringify({ channels: [value] }),
     })
       .then((response) => {
-        if (response.ok) {
-          toast.success('Saved Successfully');
-        } else {
+        if (!response.ok) {
           throw response;
         }
       })
-      .catch(() => toast.error('Something went wrong'));
+      .catch(() => toast.error('Something went wrong. Please try again.'));
   }
 
   return (
