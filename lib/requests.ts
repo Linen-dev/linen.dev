@@ -1,12 +1,14 @@
 import axios from 'axios';
 import useSWR from 'swr';
 import isBrowser from '../utils/isBrowser';
+import * as Sentry from '@sentry/nextjs';
 
 // const baseUrl = 'https://papercups-io.linen.dev/api'; // set this
 const baseUrl = '/api/'; // set this
 
 const catchError = (e: { response: any }) => {
   const { response } = e;
+  Sentry.captureException(e);
   if (!response || response.status >= 500) {
     throw new Error('An internal error occurred. Please try again');
   } else {

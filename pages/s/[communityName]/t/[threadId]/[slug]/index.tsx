@@ -1,6 +1,7 @@
 import { GetStaticPropsContext } from 'next';
 import { getThreadById } from '../../../../../../services/threads';
 import Thread from '../../../../../../components/Pages/Thread/Thread';
+import * as Sentry from '@sentry/nextjs';
 
 export default Thread;
 
@@ -14,6 +15,8 @@ export async function getStaticProps(context: GetStaticPropsContext) {
       revalidate: 60, // In seconds
     };
   } catch (exception) {
+    Sentry.captureException(exception);
+
     return {
       notFound: true,
     };
