@@ -14,8 +14,9 @@ export default function ForgotPassword({}: Props) {
         method: 'POST',
         body: JSON.stringify({ email }),
       });
-      await response.json();
-      alert('Please check your email for a reset link');
+      if (response.ok) {
+        alert('Please check your email for a reset link');
+      } else throw response;
     } catch (exception) {
       alert('Something went wrong. Please try again.');
     }

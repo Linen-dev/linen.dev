@@ -3,10 +3,8 @@ import ApplicationMailer from '../../../mailers/ApplicationMailer';
 import { generateToken } from '../../../utilities/token';
 import prisma from '../../../client';
 
-const HOST = process.env.NEXTAUTH_URL || 'http://localhost:3000';
-
 async function create(request: NextApiRequest, response: NextApiResponse) {
-  const { email } = request.body;
+  const { email } = JSON.parse(request.body);
 
   if (!email) {
     return response.status(400).json({ error: 'Email is required' });
@@ -19,7 +17,13 @@ async function create(request: NextApiRequest, response: NextApiResponse) {
         token,
       },
     });
-    ApplicationMailer.send({
+
+    const HOST =
+      process.env.NEXTAUTH_URL ||
+      request.headers.origin ||
+      'http://localhost:3000';
+
+    await ApplicationMailer.send({
       to: email,
       subject: 'Linen.dev - Reset your password',
       text: `Reset your password here: ${HOST}/reset-password?token=${token}`,
