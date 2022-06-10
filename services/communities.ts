@@ -9,6 +9,7 @@ import { links } from '../constants/examples';
 import { GetStaticPropsContext } from 'next/types';
 import { stripProtocol } from '../utilities/url';
 import { accounts, channels, MessagesViewType } from '@prisma/client';
+import { NotFound } from 'utilities/response';
 
 type accountWithChannels = accounts & {
   channels: channels[];
@@ -170,15 +171,15 @@ export const getThreadsByCommunityName = async (
   channelName?: string
 ) => {
   if (!communityName) {
-    return { notFound: true };
+    return null;
   }
 
   const account = await findAccountByPath(communityName);
   if (account === null) {
-    return { notFound: true };
+    return null;
   }
   if (account.channels.length === 0) {
-    return { notFound: true };
+    return null;
   }
 
   const { channel } = identifyChannel({ account, channelName });
@@ -217,8 +218,8 @@ export async function channelGetStaticProps(
     Number(page) || 1,
     channelName
   );
-  if (result.notFound) {
-    return { notFound: true };
+  if (!result) {
+    return NotFound();
   }
   return {
     props: {

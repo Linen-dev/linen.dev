@@ -1,6 +1,7 @@
 import { GetStaticPropsContext } from 'next';
 import { getThreadById } from '../../../../../../services/threads';
 import Thread from '../../../../../../components/Pages/Thread/Thread';
+import { NotFound } from 'utilities/response';
 
 export default Thread;
 
@@ -14,9 +15,7 @@ export async function getStaticProps(context: GetStaticPropsContext) {
       revalidate: 60, // In seconds
     };
   } catch (exception) {
-    return {
-      notFound: true,
-    };
+    return NotFound();
   }
 }
 
