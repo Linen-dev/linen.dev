@@ -2,6 +2,7 @@ import { GetStaticPropsContext } from 'next';
 import { getThreadById } from '../../../../../../services/threads';
 import Thread from '../../../../../../components/Pages/Thread/Thread';
 import * as Sentry from '@sentry/nextjs';
+import { NotFound } from 'utilities/response';
 
 export default Thread;
 
@@ -17,9 +18,7 @@ export async function getStaticProps(context: GetStaticPropsContext) {
   } catch (exception) {
     Sentry.captureException(exception);
 
-    return {
-      notFound: true,
-    };
+    return NotFound();
   }
 }
 
