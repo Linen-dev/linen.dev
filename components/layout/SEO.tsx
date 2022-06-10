@@ -19,11 +19,14 @@ function SEO({
   noIndex: boolean;
   title: string;
 }) {
-  const { pathname } = useRouter();
+  const { pathname, asPath } = useRouter();
   const [metaUrl, setMetaUrl] = useState<string | undefined>();
   useEffect(() => {
     setMetaUrl(window?.location?.href);
   }, []);
+  useEffect(() => {
+    setMetaUrl(window?.location?.href);
+  }, [asPath]);
   // If pathname includes a slug, we won't use that.
   const relativePath =
     url || (pathname.includes('[') ? pathname.split('[')[0] : pathname);
@@ -59,6 +62,7 @@ function SEO({
         key="ogdesc"
       />
       <meta name="og:type" property="og:type" content="website" key="ogtype" />
+      <link rel="canonical" href={metaUrl} />
     </Head>
   );
 }
