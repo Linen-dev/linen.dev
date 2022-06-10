@@ -1,15 +1,10 @@
-import { Anchor, Text } from '@mantine/core';
-import Avatar, { Size } from '../../Avatar';
+import { Anchor } from '@mantine/core';
 import { AiOutlineLink } from 'react-icons/ai';
 import { useMemo, useEffect } from 'react';
-import { format } from 'timeago.js';
 import PageLayout from '../../layout/PageLayout';
-import Message from '../../Message';
 import styles from './index.module.css';
-import {
-  MentionsWithUsers,
-  ThreadByIdProp,
-} from '../../../types/apiResponses/threads/[threadId]';
+import { ThreadByIdProp } from '../../../types/apiResponses/threads/[threadId]';
+import { MessageRow } from '../../Message/MessageRow';
 
 export default function Thread({
   threadId,
@@ -32,40 +27,9 @@ export default function Thread({
   const elements = useMemo(() => {
     return messages
       .sort((a, b) => b.sentAt - a.sentAt)
-      .map(
-        ({ body, author, id: messageId, sentAt, mentions, ...rest }, index) => {
-          return (
-            <li className="pb-8" key={`${messageId}-${index}`} id={messageId}>
-              <div className="flex justify-between">
-                <div className="flex pb-4">
-                  <Avatar
-                    size={Size.lg}
-                    alt={author?.displayName || 'avatar'}
-                    src={author?.profileImageUrl}
-                    text={(author?.displayName || '?')
-                      .slice(0, 1)
-                      .toLowerCase()}
-                  />
-                  <div className="pl-3">
-                    <p className="font-semibold text-sm inline-block">
-                      {author?.displayName}
-                    </p>
-                  </div>
-                </div>
-                <Text size="sm" color="gray">
-                  {format(new Date(sentAt))}
-                </Text>
-              </div>
-              <div style={{ maxWidth: '700px' }}>
-                <Message
-                  text={body}
-                  mentions={mentions.map((m: MentionsWithUsers) => m.users)}
-                />
-              </div>
-            </li>
-          );
-        }
-      );
+      .map((message, index) => {
+        return <MessageRow key={`${message.id}-${index}`} message={message} />;
+      });
   }, [messages]);
 
   useEffect(() => {

@@ -113,7 +113,7 @@ export default function NavBar({
   return (
     <>
       <div className="hidden lg:flex">{navBarLg}</div>
-      <div className="lg:hidden">{navBarSm}</div>
+      <div className="lg:hidden h-16">{navBarSm}</div>
     </>
   );
 }
