@@ -7,16 +7,6 @@ describe('#tokenize', () => {
     expect(tokenize(input)).toEqual(expected);
   });
 
-  describe('when a url is used within the text', () => {
-    it('does not consider it as a link tag', () => {
-      const input = 'Hello, world https://linen.dev!';
-      const expected = [
-        { type: TokenType.Text, value: 'Hello, world https://linen.dev!' },
-      ];
-      expect(tokenize(input)).toEqual(expected);
-    });
-  });
-
   describe('when a mention is present', () => {
     describe('when the mention is valid', () => {
       it('returns a mention token', () => {
@@ -56,6 +46,18 @@ describe('#tokenize', () => {
       it('returns a link tag', () => {
         const input = '<http://linen.dev>';
         const expected = [{ type: TokenType.Link, value: 'http://linen.dev' }];
+        expect(tokenize(input)).toEqual(expected);
+      });
+    });
+
+    describe('when a url is used within the text', () => {
+      it('returns a link tag', () => {
+        const input = 'Hello, world https://linen.dev !';
+        const expected = [
+          { type: TokenType.Text, value: 'Hello, world ' },
+          { type: TokenType.Link, value: 'https://linen.dev' },
+          { type: TokenType.Text, value: ' !' },
+        ];
         expect(tokenize(input)).toEqual(expected);
       });
     });

@@ -112,8 +112,10 @@ export default function Styleguide() {
         <Message text="Hey, <@John>!" />
       </Example>
       <Example description="It supports https and http links.">
-        <Message text="Hey, <https://linen.dev>!" />
-        <Message text="Hey, <http://linen.dev>!" />
+        <Message text="Hey, <https://linen.dev> rocks!" />
+        <Message text="Hey, <http://linen.dev> rocks!" />
+        <Message text="Hey, https://linen.dev rocks!" />
+        <Message text="Hey, http://linen.dev rocks!" />
       </Example>
       <Example description="It supports inline code blocks.">
         <Message text="Hey, `const answer = 42`!" />
@@ -137,6 +139,7 @@ export default function Styleguide() {
       </Example>
       <Example description="It embeds videos.">
         <Message text="<https://www.youtube.com/embed/Xsew54QshN8>" />
+        <Message text="https://www.youtube.com/watch?v=q3n8rvREbNM" />
       </Example>
       <Example description="It escapes HTML entities.">
         <Message text={`\`${HTML_EXAMPLE}\``} />

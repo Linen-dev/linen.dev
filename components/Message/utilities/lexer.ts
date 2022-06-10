@@ -124,19 +124,38 @@ export function tokenize(input: string): Token[] {
   push(type, value);
 
   return tokens
-    .map((token) => {
-      if (token.type === TokenType.Link) {
+    .reduce((result: Token[], token: Token) => {
+      if (token.type === TokenType.Text) {
+        tokenizeText(token.value).forEach((item) => result.push(item));
+      } else if (token.type === TokenType.Link) {
         const url = `h${token.value}`;
         if (isValidUrl(url)) {
-          return {
+          result.push({
             type: TokenType.Link,
             value: url,
-          };
-        } else {
-          return null;
+          });
         }
+      } else {
+        result.push(token);
       }
-      return token;
-    })
+      return result;
+    }, [])
     .filter(Boolean) as Token[];
+}
+
+function tokenizeText(value: string): Token[] {
+  const tokens = [];
+  const parts = value.split(/(http?:\/\/[^\s]+|https?:\/\/[^\s]+)/);
+  if (parts.length > 1) {
+    parts.forEach((part) => {
+      if (isValidUrl(part)) {
+        tokens.push({ type: TokenType.Link, value: part });
+      } else {
+        tokens.push({ type: TokenType.Text, value: part });
+      }
+    });
+  } else {
+    tokens.push({ type: TokenType.Text, value });
+  }
+  return tokens;
 }
