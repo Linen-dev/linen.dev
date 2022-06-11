@@ -12,12 +12,12 @@ import messages from './factory/messages';
 (async () => {
   await findOrCreateAccount({ domain: 'empty.dev' });
   await findOrCreateAccount({
-    domain: 'foo.dev',
-    logoUrl: 'https://linen-assets.s3.amazonaws.com/linen-black-logo.svg',
+    domain: 'pulumi.dev',
+    logoUrl: 'https://linen-assets.s3.amazonaws.com/pulumi-logo.svg',
   });
   await findOrCreateAccount({
-    domain: 'bar.dev',
-    logoUrl: 'https://linen-assets.s3.amazonaws.com/linen-black-logo.svg',
+    domain: 'prefect.dev',
+    logoUrl: 'https://linen-assets.s3.amazonaws.com/prefect-logo.svg',
   });
   const account = await findOrCreateAccount({
     domain: 'linen.dev',
