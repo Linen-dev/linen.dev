@@ -6,14 +6,21 @@ import { createMessage, findMessage } from '../../lib/message';
 import { createUser, findUser } from '../../lib/user';
 import { random } from '../../utilities/string';
 
-export async function findOrCreateAccount({ domain }: { domain: string }) {
+export async function findOrCreateAccount({
+  domain,
+  logoUrl,
+}: {
+  domain: string;
+  logoUrl?: string;
+}) {
   return (
-    (await findAccount({ redirectDomain: domain })) ||
+    (await findAccount({ redirectDomain: domain, logoUrl })) ||
     (await createAccount({
       homeUrl: `https://${domain}`,
       docsUrl: `https://${domain}/docs`,
       redirectDomain: domain,
       brandColor: '#00bcd4',
+      logoUrl,
     }))
   );
 }
