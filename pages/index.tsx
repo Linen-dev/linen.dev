@@ -228,21 +228,17 @@ const CommunityCard = ({
   logoUrl: string;
 }) => {
   return (
-    <div
-      className="flex justify-center rounded"
+    <a
+      className="flex items-center justify-center rounded"
       style={{
         backgroundColor: brandColor,
       }}
+      href={url}
+      target="_blank"
+      rel="noreferrer"
     >
-      <a
-        className="flex items-center"
-        href={url}
-        target="_blank"
-        rel="noreferrer"
-      >
-        <Image src={logoUrl} width="200px" height="100%"></Image>
-      </a>
-    </div>
+      <Image src={logoUrl} width="200px" height="100%"></Image>
+    </a>
   );
 };
 
