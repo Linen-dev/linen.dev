@@ -60,6 +60,10 @@ const CODE_EXAMPLE = `
 <https://xxxxxxxxxxxx:8080/api/v1/enroll> -d '{}' curl: (52) Empty reply from server
 `.trim();
 
+const JSON_EXAMPLE = `
+{"foo": "bar", "baz": "qux"}
+`.trim();
+
 const STATIC_TEXT = `
 Hey!
 
@@ -144,6 +148,9 @@ export default function Styleguide() {
       <Example description="It escapes HTML entities.">
         <Message text={`\`${HTML_EXAMPLE}\``} />
         <Message text={`\`\`\`${HTML_EXAMPLE}\`\`\`\``} />
+      </Example>
+      <Example description="It reformats JSON.">
+        <Message text={`\`\`\`${JSON_EXAMPLE}\`\`\``} />
       </Example>
       <Example description="It supports broken links.">
         <Message text={BROKEN_LINK_EXAMPLE} />
