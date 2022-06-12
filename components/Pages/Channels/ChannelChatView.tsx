@@ -64,10 +64,10 @@ export default function ChannelChatView({
   useEffect(() => {
     setCurrentThreads(messages);
     setHasNextPage(page + 1 <= (pagination?.pageCount || 0));
-    window.scrollTo(0, document.body.scrollHeight);
     setCurrentPage(page);
     scrollToBottom('rootRefSetter');
-  }, [router.query]);
+    window.scrollTo(0, document.body.scrollHeight);
+  }, [router.query, messages, page, pagination?.pageCount]);
 
   // We keep the scroll position when new items are added
   useEffect(() => {
@@ -136,16 +136,14 @@ export default function ChannelChatView({
         onScroll={handleRootScroll}
         id="rootRefSetter"
       >
-        <div className="w-full md:w-[700px] self-end">
+        <div className="w-full md:w-[700px] self-start">
           <ul
             role="list"
             className="divide-y divide-gray-200 flex flex-col-reverse"
           >
-            {currentThreads
-              .filter(onlyMessagesFromCurrentChannel)
-              .map((_, index: any) => (
-                <MessageRow key={index} message={_} />
-              ))}
+            {currentThreads.filter(onlyMessagesFromCurrentChannel).map((_) => (
+              <MessageRow key={_.id} message={_} />
+            ))}
             {hasNextPage && (
               <div ref={infiniteRef} className="flex justify-center p-4">
                 <Loader size="sm" />
