@@ -1,17 +1,15 @@
 export function createRobotsTxt(domain: string) {
   return `
 User-agent: *
+
+Disallow: /*.json$
+Disallow: /*_buildManifest.js$
+Disallow: /*_middlewareManifest.js$
+Disallow: /*_ssgManifest.js$
+Disallow: /*.js$
+
 Allow: /
 
 Sitemap: https://${domain}/sitemap.xml
-  `.trimStart();
-}
-
-export function createRobotsTxtForSubdomain(domain: string, subdomain: string) {
-  return `
-User-agent: *
-Allow: /
-
-Sitemap: https://${subdomain}.${domain}/sitemap.xml
-`.trimStart();
+  `.trim();
 }
