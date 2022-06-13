@@ -261,6 +261,7 @@ export async function channelGetStaticPaths(pathPrefix: string) {
 
   return {
     paths: paths.map((p) => `${pathPrefix}/${p}/`),
-    fallback: true,
+    // fallback: true,
+    fallback: 'blocking',
   };
 }
