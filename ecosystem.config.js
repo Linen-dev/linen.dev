@@ -3,6 +3,10 @@ const MINUTES = 60 * 1000;
 module.exports = {
   apps: [
     {
+      name: 'server',
+      script: 'npm run dev',
+    },
+    {
       // discord sync process
       name: 'discord-sync',
       script: 'npx ts-node --skip-project bin/discord-sync/index.ts',

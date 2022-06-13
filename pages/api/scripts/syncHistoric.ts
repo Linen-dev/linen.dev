@@ -43,8 +43,9 @@ export default async function handler(
   const sync = identifySyncType(account);
 
   try {
-    const response = await sync({ accountId });
-    res.status(response.status).json(response.body);
+    sync({ accountId });
+    res.setHeader('Cache-Control', 'max-age=60');
+    res.status(200).json({});
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Something went wrong' });
