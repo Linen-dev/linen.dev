@@ -11,8 +11,9 @@ export default async function handler(
   const domain = req.query.domain as string;
 
   try {
-    const response = await slackSync({ accountId, channelId, domain });
-    res.status(response.status).json(response.body);
+    slackSync({ accountId, channelId, domain });
+    res.setHeader('Cache-Control', 'max-age=60');
+    res.status(200).json({});
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Something went wrong' });
