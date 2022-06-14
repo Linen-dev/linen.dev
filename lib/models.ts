@@ -274,6 +274,7 @@ export const findOrCreateChannel = async (
       accountId: channels.accountId,
       channelName: channels.channelName,
       slackChannelId: channels.slackChannelId,
+      hidden: channels.hidden,
     },
   });
 };
@@ -617,6 +618,19 @@ export const findMessagesFromChannel = async ({
   });
   return { total, messages, pages, currentPage };
 };
+
+export async function findThreadsWithWrongMessageCount() {
+  return await prisma.$queryRaw<
+    { id: string; count: number; messageCount: number }[]
+  >`
+  select "slackThreads".id, count(1), "messageCount"
+  from "slackThreads" 
+  left join messages on messages."slackThreadId" = "slackThreads"."id"
+  group by "slackThreads"."id"
+  having count(1) != "messageCount" 
+  order by "slackThreads"."id" desc
+  limit 100`;
+}
 
 export const findChannelsWithSingleMessages = async ({
   channels,

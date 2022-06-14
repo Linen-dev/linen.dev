@@ -36,6 +36,7 @@ async function syncJob(accountId: string, crawlType: CrawlType) {
     token: DISCORD_TOKEN,
   });
 
+  console.log({ channels: channels.length });
   for (const channel of channels) {
     // look for new threads and new single messages
     if ([CrawlType.historic, CrawlType.from_onboarding].includes(crawlType)) {

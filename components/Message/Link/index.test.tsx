@@ -14,6 +14,7 @@ describe('Link', () => {
     const { getByText } = render(<Link value="https://foo.com" />);
     const link = getByText('https://foo.com') as HTMLLinkElement;
     expect(link.href).toEqual('https://foo.com/');
+    expect(link.rel).toEqual('noopener ugc');
   });
 
   describe('when link has an optional text', () => {

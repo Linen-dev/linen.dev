@@ -21,7 +21,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
     return notFound(res);
   }
 
-  if (!['linen.dev', 'localhost:3000'].includes(domain)) {
+  if (!['www.linen.dev', 'linen.dev', 'localhost:3000'].includes(domain)) {
     const account = await prisma.accounts.findFirst({
       where: { redirectDomain: domain },
     });

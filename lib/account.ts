@@ -3,6 +3,7 @@ import { stripProtocol } from '../utilities/url';
 
 interface FindAccountParams {
   redirectDomain: string;
+  logoUrl?: string;
 }
 
 interface CreateAccountParams {
@@ -10,11 +11,12 @@ interface CreateAccountParams {
   docsUrl: string;
   redirectDomain: string;
   brandColor: string;
+  logoUrl?: string;
 }
 
-export function findAccount({ redirectDomain }: FindAccountParams) {
+export function findAccount({ redirectDomain, logoUrl }: FindAccountParams) {
   return prisma.accounts.findFirst({
-    where: { redirectDomain: stripProtocol(redirectDomain) },
+    where: { redirectDomain: stripProtocol(redirectDomain), logoUrl },
   });
 }
 
@@ -23,6 +25,7 @@ export function createAccount({
   docsUrl,
   redirectDomain,
   brandColor,
+  logoUrl,
 }: CreateAccountParams) {
   return prisma.accounts.create({
     data: {
@@ -30,6 +33,7 @@ export function createAccount({
       docsUrl,
       redirectDomain: stripProtocol(redirectDomain),
       brandColor,
+      logoUrl,
     },
   });
 }

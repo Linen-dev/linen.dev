@@ -113,7 +113,6 @@ const Home = (props: { accounts: Props[] }) => {
           </FadeIn>
         </div>
 
-        {/* Featured Communities */}
         <div className="flex flex-col items-center mt-10">
           <h1 className="text-2xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-4xl">
             Featured Communities
@@ -121,9 +120,11 @@ const Home = (props: { accounts: Props[] }) => {
         </div>
 
         <div className="flex flex-col md:grid md:grid-cols-2 lg:grid-cols-3 gap-3 mt-10">
-          {accounts.map((a) => {
+          {accounts.map((a, index) => {
             let url = a.premium
               ? 'https://' + a.redirectDomain
+              : a.discordDomain
+              ? 'https://linen.dev/d/' + a.discordDomain
               : 'https://linen.dev/s/' + a.slackDomain;
 
             //TODO:remove this once supabase sets up domain to discord.supabase.com
@@ -137,6 +138,7 @@ const Home = (props: { accounts: Props[] }) => {
                 description="bleh"
                 logoUrl={a.logoUrl}
                 brandColor={a.brandColor}
+                key={a.name + index}
               ></CommunityCard>
             );
           })}
@@ -226,16 +228,17 @@ const CommunityCard = ({
   logoUrl: string;
 }) => {
   return (
-    <div
-      className="min-width-sm border rounded pl-10"
+    <a
+      className="flex items-center justify-center rounded"
       style={{
         backgroundColor: brandColor,
       }}
+      href={url}
+      target="_blank"
+      rel="noreferrer"
     >
-      <a href={url} target="_blank" rel="noreferrer" className="pl-8">
-        <Image src={logoUrl} width="200px" height="100%"></Image>
-      </a>
-    </div>
+      <Image src={logoUrl} width="200px" height="100%"></Image>
+    </a>
   );
 };
 
@@ -246,6 +249,7 @@ type Props = {
   redirectDomain: string;
   premium: boolean;
   slackDomain: string;
+  discordDomain: string;
 };
 
 export async function getStaticProps() {
@@ -266,6 +270,7 @@ export async function getStaticProps() {
       redirectDomain: true,
       slackDomain: true,
       discordServerId: true,
+      discordDomain: true,
     },
   });
 

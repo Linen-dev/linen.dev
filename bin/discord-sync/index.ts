@@ -3,11 +3,21 @@ import { discordSync } from '../../services/discord/sync';
 
 (async () => {
   const fullSync = !!process.argv.find((arg) => arg === '--full-sync');
-  console.log('fullSync', fullSync);
+
+  const accountIdFlag = process.argv.find((arg) =>
+    arg.startsWith('--account-id=')
+  );
+
+  let accountId;
+
+  if (accountIdFlag) {
+    console.log({ accountIdFlag });
+    accountId = accountIdFlag.split('=').pop() as string;
+  }
 
   const discordAccounts = await prisma.accounts.findMany({
     select: { id: true },
-    where: { discordServerId: { not: null } },
+    where: { discordServerId: { not: null }, id: accountId },
   });
 
   console.log({ discordAccounts });

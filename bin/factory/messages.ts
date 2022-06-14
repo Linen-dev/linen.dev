@@ -16,6 +16,9 @@ Thank you both!
   `
 Check this out! <https://www.youtube.com/embed/Xsew54QshN8>
 `,
+  `
+Having the *right amount of characters* on each line is key to the readability of your text.
+`,
 ].map((message) => message.trim());
 
 export default messages;

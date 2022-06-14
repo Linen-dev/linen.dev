@@ -5,18 +5,20 @@ import DashboardLayout from 'components/layout/DashboardLayout';
 import Table, { Thead, Tbody, Th, Td } from 'components/Table';
 import { findAccountByEmail } from '../../../lib/models';
 import Vercel, { DNSRecord, VercelError } from '../../../services/vercel';
+import { SerializedAccount } from 'serializers/account';
 
 interface Props {
+  account?: SerializedAccount;
   records?: DNSRecord[];
   error?: VercelError;
 }
 
-export default function ChannelsPage({ records, error }: Props) {
+export default function ChannelsPage({ account, records, error }: Props) {
   const { data: session } = useSession();
 
   if (error) {
     return (
-      <DashboardLayout header="DNS">
+      <DashboardLayout header="DNS" account={account}>
         <p>{error.message}</p>
       </DashboardLayout>
     );
@@ -24,7 +26,7 @@ export default function ChannelsPage({ records, error }: Props) {
 
   if (!records || records.length === 0) {
     return (
-      <DashboardLayout header="DNS">
+      <DashboardLayout header="DNS" account={account}>
         <h1>No DNS records found.</h1>
       </DashboardLayout>
     );
@@ -32,7 +34,7 @@ export default function ChannelsPage({ records, error }: Props) {
 
   if (session) {
     return (
-      <DashboardLayout header="DNS">
+      <DashboardLayout header="DNS" account={account}>
         <p className="mb-6 text-sm">
           Subdomain routing setup can be achieved by veryfing the ownership of a
           domain. Copy the TXT and CNAME records from below and paste them into
@@ -61,7 +63,7 @@ export default function ChannelsPage({ records, error }: Props) {
     );
   }
   return (
-    <DashboardLayout header="DNS">
+    <DashboardLayout header="DNS" account={account}>
       <h1>You are not signed in.</h1>
     </DashboardLayout>
   );

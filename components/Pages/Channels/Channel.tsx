@@ -127,7 +127,7 @@ export default function Channel({
           isSubDomainRouting={isSubDomainRouting}
           communityName={communityName}
           communityType={settings.communityType}
-          path={`/t/${incrementId}/${slug || 'topic'}`}
+          path={`/t/${incrementId}/${slug || 'topic'}`.toLowerCase()}
           key={`${incrementId}-desktop`}
         >
           <div className="flex">
@@ -181,7 +181,7 @@ export default function Channel({
         isSubDomainRouting,
         communityName,
         communityType: settings.communityType,
-        path: `/t/${incrementId}/${slug || 'topic'}`,
+        path: `/t/${incrementId}/${slug || 'topic'}`.toLowerCase(),
       };
       return (
         <CustomTableRowLink {...linkProps} key={`${incrementId}-desktop`}>

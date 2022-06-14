@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import classNames from 'classnames';
 import Image from 'next/image';
 import styles from './index.module.css';
@@ -31,25 +31,29 @@ function dimensions(size?: Size) {
 }
 
 function Avatar({ src, alt, text = 'u', size }: Props) {
-  if (!src) {
-    return (
-      <div className={classNames(styles.placeholder, size && styles[size])}>
-        {text}
-      </div>
-    );
-  }
+  const [hasError, setHasError] = useState(false);
+
   return (
-    <div className={classNames(styles.avatar, size && styles[size])}>
-      <Image
-        className={classNames(styles.image, size && styles[size])}
-        src={normalizeUrl(src)}
-        alt={alt || 'avatar'}
-        height={dimensions(size)}
-        width={dimensions(size)}
-        placeholder="blur"
-        blurDataURL={text}
-      />
-    </div>
+    <>
+      {!src || hasError ? (
+        <div className={classNames(styles.placeholder, size && styles[size])}>
+          {text}
+        </div>
+      ) : (
+        <div className={classNames(styles.avatar, size && styles[size])}>
+          <Image
+            className={classNames(styles.image, size && styles[size])}
+            src={normalizeUrl(src)}
+            onError={() => {
+              setHasError(true);
+            }}
+            alt={alt || 'avatar'}
+            height={dimensions(size)}
+            width={dimensions(size)}
+          />
+        </div>
+      )}
+    </>
   );
 }
 
