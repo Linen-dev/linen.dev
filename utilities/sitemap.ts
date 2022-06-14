@@ -144,7 +144,9 @@ export async function createXMLSitemapForFreeCommunity(
   if (!threads || !threads.length) return '';
   const prefix = threads[0].channel.account?.discordServerId ? 'd' : 's';
   const urls = threads?.map(({ incrementId, slug }) => {
-    return `/${prefix}/${community}/t/${incrementId}/${slug || 'topic'}`;
+    return `/${prefix}/${community}/t/${incrementId}/${
+      slug || 'topic'
+    }`.toLowerCase();
   });
   return streamToPromise(Readable.from(urls).pipe(stream)).then(String);
 }
