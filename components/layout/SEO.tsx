@@ -19,7 +19,7 @@ function SEO({
   noIndex: boolean;
   title: string;
 }) {
-  const { pathname, asPath, query } = useRouter();
+  const { pathname, asPath } = useRouter();
   const [metaUrl, setMetaUrl] = useState<string | undefined>();
 
   useEffect(() => {
@@ -30,13 +30,6 @@ function SEO({
     setMetaUrl(window?.location?.href);
   }, [asPath]);
 
-  useEffect(() => {
-    if (query.threadId && query.slug) {
-      setMetaUrl(
-        window?.location?.href?.split(('/' + query?.slug) as string).shift()
-      );
-    }
-  }, [query]);
   // If pathname includes a slug, we won't use that.
   const relativePath =
     url || (pathname.includes('[') ? pathname.split('[')[0] : pathname);
