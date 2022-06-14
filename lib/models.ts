@@ -619,7 +619,7 @@ export const findMessagesFromChannel = async ({
   return { total, messages, pages, currentPage };
 };
 
-export async function findThreadsWithWrongMessageCount(page: number) {
+export async function findThreadsWithWrongMessageCount() {
   return await prisma.$queryRaw<
     { id: string; count: number; messageCount: number }[]
   >`
@@ -629,5 +629,5 @@ export async function findThreadsWithWrongMessageCount(page: number) {
   group by "slackThreads"."id"
   having count(1) != "messageCount" 
   order by "slackThreads"."id" desc
-  limit 100 offset ${page}`;
+  limit 100`;
 }
