@@ -17,4 +17,10 @@ describe('InlineCode', () => {
     const node = getByText('<div>foo</div>');
     expect(node).toHaveTextContent('<div>foo</div>');
   });
+
+  it('trims code', () => {
+    const { getByText } = render(<InlineCode value=" foo " />);
+    const node = getByText('foo');
+    expect(node.innerHTML).toEqual('foo');
+  });
 });
