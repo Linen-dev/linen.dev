@@ -3,7 +3,6 @@ import { messageWithAuthor } from '../../Pages/Channels';
 import { Text } from '@mantine/core';
 import Message from '../../Message';
 import { format } from 'timeago.js';
-import styles from './index.module.css';
 
 export function MessageRow({ message }: { message: messageWithAuthor }) {
   return (
@@ -28,7 +27,7 @@ export function MessageRow({ message }: { message: messageWithAuthor }) {
           {format(new Date(message.sentAt))}
         </Text>
       </div>
-      <div className={styles.row}>
+      <div className="w-max-[700px]">
         <Message
           text={message.body}
           mentions={message.mentions?.map((m) => m.users)}

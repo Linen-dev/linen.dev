@@ -48,8 +48,8 @@ export default function ChannelChatView({
       const data = await fetcher(
         `/api/messages?channelId=${channelId}&page=${currentPage + 1}`
       );
-      setHasNextPage(currentPage + 1 <= (pagination?.pageCount || 0));
-      setCurrentPage(currentPage + 1);
+      setHasNextPage(data.length === 10);
+      data.length && setCurrentPage(currentPage + 1);
       setCurrentThreads((currentThreads) => [
         ...(currentThreads ? currentThreads : []),
         ...data,
@@ -62,12 +62,22 @@ export default function ChannelChatView({
   }
 
   useEffect(() => {
+    if (String(currentPage) !== router.query.page) {
+      router.replace(
+        router.asPath.substring(0, router.asPath.lastIndexOf('/') + 1) +
+          currentPage,
+        undefined,
+        { shallow: true }
+      );
+    }
+  }, [currentPage, router]);
+
+  useEffect(() => {
     setCurrentThreads(messages);
-    setHasNextPage(page + 1 <= (pagination?.pageCount || 0));
+    setHasNextPage(true);
     setCurrentPage(page);
     scrollToBottom('rootRefSetter');
-    window.scrollTo(0, document.body.scrollHeight);
-  }, [router.query, messages, page, pagination?.pageCount]);
+  }, [messages, page]);
 
   // We keep the scroll position when new items are added
   useEffect(() => {
