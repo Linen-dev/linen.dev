@@ -94,22 +94,30 @@ export async function getThreadById(
     .map((m) => m.author)
     .filter(Boolean) as users[];
 
-  let threadUrl =
-    account.slackUrl +
-    '/archives/' +
-    thread.channel.slackChannelId +
-    '/p' +
-    (parseFloat(thread.slackThreadTs) * 1000000).toString();
+  let threadUrl: string;
+
+  if (account.slackInviteUrl) {
+    if (account.slackInviteUrl.includes('slack.com/join/shared_invite')) {
+      threadUrl =
+        account.slackInviteUrl &&
+        `${account.slackInviteUrl}/archives/${
+          thread.channel.slackChannelId
+        }/p${(parseFloat(thread.slackThreadTs) * 1000000).toString()}`;
+    } else {
+      threadUrl = account.slackInviteUrl;
+    }
+  } else {
+    threadUrl =
+      account.slackUrl +
+      '/archives/' +
+      thread.channel.slackChannelId +
+      '/p' +
+      (parseFloat(thread.slackThreadTs) * 1000000).toString();
+  }
 
   if (account.discordServerId) {
     threadUrl = `https://discord.com/channels/${account.discordServerId}/${thread.channel.slackChannelId}/${thread.slackThreadTs}`;
   }
-
-  const threadSlackInviteUrl =
-    account.slackInviteUrl &&
-    `${account.slackInviteUrl}/archives/${thread.channel.slackChannelId}/p${(
-      parseFloat(thread.slackThreadTs) * 1000000
-    ).toString()}`;
 
   return {
     id: thread.id,

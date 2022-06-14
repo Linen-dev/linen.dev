@@ -27,7 +27,7 @@ export type ThreadById = {
   slackUrl?: string;
   slackInviteUrl?: string;
   threadUrl: string;
-  threadSlackInviteUrl?: string;
+  threadSlackInviteUrl?: string | null;
   settings: Settings;
   communityName: string;
 };
