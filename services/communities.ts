@@ -2,6 +2,7 @@ import {
   accountsWithChannels,
   channelsGroupByThreadCount,
   findAccountByPath,
+  findChannelsWithSingleMessages,
   findMessagesFromChannel,
 } from '../lib/models';
 import { index as fetchThreads } from '../services/threads';
@@ -15,7 +16,7 @@ type accountWithChannels = accounts & {
   channels: channels[];
 };
 
-function buildSettings(account: accountWithChannels): {
+export type Settings = {
   communityType: string;
   googleAnalyticsId?: string | undefined;
   name: string | null;
@@ -24,7 +25,9 @@ function buildSettings(account: accountWithChannels): {
   docsUrl: string;
   logoUrl: string;
   messagesViewType: MessagesViewType;
-} {
+};
+
+function buildSettings(account: accountWithChannels): Settings {
   const defaultSettings =
     links.find(({ accountId }) => accountId === account.id) || links[0];
 
@@ -144,6 +147,9 @@ async function getMessagesAndUsers({
   const { messages, total, currentPage, pages } = await findMessagesFromChannel(
     { channelId, page }
   );
+  const channelsWithMinThreads = await findChannelsWithSingleMessages({
+    channels,
+  });
 
   return {
     users: messages.map((message) => message.author),
@@ -154,7 +160,7 @@ async function getMessagesAndUsers({
       currentPage,
       perPage: 10,
     },
-    channelsWithMinThreads: channels,
+    channelsWithMinThreads,
     messages: messages.map((message) => {
       return {
         ...message,
@@ -163,6 +169,14 @@ async function getMessagesAndUsers({
       };
     }),
   };
+}
+
+function buildInviteUrl(account: accounts) {
+  if (account.discordServerId) {
+    return `https://discord.com/channels/${account.discordServerId}`;
+  } else {
+    return account.slackInviteUrl || '';
+  }
 }
 
 export const getThreadsByCommunityName = async (
@@ -196,7 +210,7 @@ export const getThreadsByCommunityName = async (
     communityName,
     currentChannel: channel,
     slackUrl: account.slackUrl || '',
-    slackInviteUrl: account.slackInviteUrl || '',
+    slackInviteUrl: buildInviteUrl(account),
     settings,
     threads,
     messages,

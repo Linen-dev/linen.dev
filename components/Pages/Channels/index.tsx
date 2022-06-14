@@ -6,6 +6,7 @@ import {
   slackThreads,
   users,
 } from '@prisma/client';
+import { Settings } from 'services/communities';
 import { MentionsWithUsers } from 'types/apiResponses/threads/[threadId]';
 import Channel from './Channel';
 import ChannelChatView from './ChannelChatView';
@@ -38,7 +39,7 @@ export type messageWithAuthor = messages & {
 export type Props = {
   slackUrl?: string;
   slackInviteUrl?: string;
-  settings: any;
+  settings: Settings;
   communityName: string;
   channelId?: string;
   users: users[];
