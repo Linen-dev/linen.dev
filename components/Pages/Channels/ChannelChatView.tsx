@@ -62,6 +62,7 @@ export default function ChannelChatView({
   }
 
   useEffect(() => {
+    if (!router.query.page) return;
     if (String(currentPage) !== router.query.page) {
       router.replace(
         router.asPath.substring(0, router.asPath.lastIndexOf('/') + 1) +
