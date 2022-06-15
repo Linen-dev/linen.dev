@@ -644,3 +644,10 @@ export const findChannelsWithSingleMessages = async ({
     },
   });
 };
+
+export const accountsWithDomain = async () => {
+  return prisma.accounts.findMany({
+    select: { redirectDomain: true },
+    where: { redirectDomain: { not: null } },
+  });
+};
