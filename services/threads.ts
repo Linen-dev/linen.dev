@@ -10,6 +10,7 @@ import {
 } from '../lib/models';
 import { ThreadByIdResponse } from '../types/apiResponses/threads/[threadId]';
 import { users } from '@prisma/client';
+import { fetcher, qsBuilder } from '@/utilities/fetcher';
 
 interface IndexProps {
   channelId: string;
@@ -37,8 +38,21 @@ export async function index({ channelId, page }: IndexProps) {
   };
 }
 
-// extracted here to be resused in both /[threadId]/index and /[slug]/index
 export async function getThreadById(
+  threadId: string
+): Promise<ThreadByIdResponse> {
+  console.time('getThreadById');
+  const qs = qsBuilder({ threadId });
+  console.log({ qs });
+  const result = await fetcher(
+    `${process.env.SYNC_URL}/api/cache/getThreadById?${qs}`
+  );
+  console.timeEnd('getThreadById');
+  return result;
+}
+
+// extracted here to be reused in both /[threadId]/index and /[slug]/index
+export async function internalGetThreadById(
   threadId: string
 ): Promise<ThreadByIdResponse> {
   const id = parseInt(threadId);
