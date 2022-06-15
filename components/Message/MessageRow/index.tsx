@@ -27,7 +27,7 @@ export function MessageRow({ message }: { message: messageWithAuthor }) {
           {format(new Date(message.sentAt))}
         </Text>
       </div>
-      <div className="w-max-[700px]">
+      <div className="max-w-[700px]">
         <Message
           text={message.body}
           mentions={message.mentions?.map((m) => m.users)}
