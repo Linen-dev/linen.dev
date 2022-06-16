@@ -159,6 +159,7 @@ export default function Styleguide() {
       <Example description="It embeds videos.">
         <Message text="<https://www.youtube.com/embed/Xsew54QshN8>" />
         <Message text="https://www.youtube.com/watch?v=q3n8rvREbNM" />
+        <Message text="https://youtu.be/615EqK_9-f0" />
       </Example>
       <Example description="It escapes HTML entities.">
         <Message text={`\`${HTML_EXAMPLE}\``} />
