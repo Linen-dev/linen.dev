@@ -148,11 +148,19 @@ export const findAccountByEmail = async (email?: string | null) => {
 
 export const accountsWithChannels = async () => {
   return prisma.accounts.findMany({
-    select: { slackDomain: true, redirectDomain: true, channels: true },
+    select: {
+      slackDomain: true,
+      discordDomain: true,
+      redirectDomain: true,
+      channels: true,
+    },
     where: {
-      NOT: [
+      OR: [
         {
-          slackTeamId: null,
+          slackTeamId: { not: null },
+        },
+        {
+          discordServerId: { not: null },
         },
       ],
       slackSyncStatus: 'DONE',

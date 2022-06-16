@@ -268,7 +268,7 @@ export async function channelGetStaticPaths(pathPrefix: string) {
   const paths = redirectDomains.concat(
     acc
       .map((a) => {
-        return a.slackDomain;
+        return a.slackDomain || a.discordDomain;
       })
       .filter(Boolean)
   );
