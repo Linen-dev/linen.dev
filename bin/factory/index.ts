@@ -9,9 +9,11 @@ import { random } from '../../utilities/string';
 export async function findOrCreateAccount({
   domain,
   logoUrl,
+  slackDomain,
 }: {
   domain: string;
   logoUrl?: string;
+  slackDomain?: string;
 }) {
   return (
     (await findAccount({ redirectDomain: domain, logoUrl })) ||
@@ -21,6 +23,7 @@ export async function findOrCreateAccount({
       redirectDomain: domain,
       brandColor: '#00bcd4',
       logoUrl,
+      slackDomain,
     }))
   );
 }
@@ -61,9 +64,11 @@ export async function findOrCreateAuth({
 export async function findOrCreateChannel({
   name,
   accountId,
+  hidden,
 }: {
   name: string;
   accountId: string;
+  hidden?: boolean;
 }) {
   return (
     (await findChannel({ name, accountId })) ||
@@ -71,6 +76,7 @@ export async function findOrCreateChannel({
       name,
       accountId,
       slackChannelId: `slack-channel-id-${random()}`,
+      hidden,
     }))
   );
 }

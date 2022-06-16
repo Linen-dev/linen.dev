@@ -12,6 +12,8 @@ interface CreateAccountParams {
   redirectDomain: string;
   brandColor: string;
   logoUrl?: string;
+  discordDomain?: string;
+  slackDomain?: string;
 }
 
 export function findAccount({ redirectDomain, logoUrl }: FindAccountParams) {
@@ -26,6 +28,8 @@ export function createAccount({
   redirectDomain,
   brandColor,
   logoUrl,
+  discordDomain,
+  slackDomain,
 }: CreateAccountParams) {
   return prisma.accounts.create({
     data: {
@@ -34,6 +38,8 @@ export function createAccount({
       redirectDomain: stripProtocol(redirectDomain),
       brandColor,
       logoUrl,
+      discordDomain,
+      slackDomain,
     },
   });
 }
