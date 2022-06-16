@@ -10,6 +10,7 @@ import useInfiniteScroll from 'react-infinite-scroll-hook';
 import { useRouter } from 'next/router';
 import classNames from 'classnames';
 import { MessageRow } from '../../Message/MessageRow';
+import { fetcher } from '@/utilities/fetcher';
 
 export default function ChannelChatView({
   channelId,
@@ -210,8 +211,6 @@ function buildTitle(
   const channel = !!channelName ? ` - ${capitalize(channelName)} Messages` : '';
   return `${name}${channel}`;
 }
-
-const fetcher = (url: string) => fetch(url).then((r) => r.json());
 
 const scrollToBottom = (id: string) => {
   const element = document.getElementById(id);

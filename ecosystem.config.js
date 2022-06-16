@@ -4,7 +4,7 @@ module.exports = {
   apps: [
     {
       name: 'server',
-      script: 'npm run dev',
+      script: 'npm run build && npm run start',
     },
     {
       // discord sync process
