@@ -8,5 +8,7 @@ interface Props {
 }
 
 export default function InlineCode({ value }: Props) {
-  return <Code className={styles.code} content={decodeHTML(value)} inline />;
+  const input = value.trim();
+  const content = decodeHTML(input);
+  return <Code className={styles.code} content={content} inline />;
 }
