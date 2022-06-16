@@ -10,7 +10,8 @@ interface Props {
 }
 
 export default function BlockCode({ value }: Props) {
-  const content = decodeHTML(value);
+  const input = value.trim();
+  const content = decodeHTML(input);
   return (
     <Code
       className={classNames(styles.code, 'block')}

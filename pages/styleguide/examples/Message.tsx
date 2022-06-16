@@ -102,6 +102,18 @@ Should be *annually*.
 | Paragraph   | Text        |
 `.trim();
 
+const WHITESPACE_EXAMPLE = `
+Run cypress-io/github-action@v4
+  with:
+    build: npm run build
+    start: npm start
+    record: false
+    component: false
+undefined:18
+  },
+  ^
+`;
+
 const BROKEN_LINK_EXAMPLE = `
 <http://-how-to-register>
 `.trim();
@@ -140,6 +152,9 @@ export default function Styleguide() {
       </Example>
       <Example description="It loads images.">
         <Message text="<http://localhost:3000/yc-logo.png>" />
+      </Example>
+      <Example description="It converts inline code to block code if newlines are present.">
+        <Message text={`\`${WHITESPACE_EXAMPLE} \``} />
       </Example>
       <Example description="It embeds videos.">
         <Message text="<https://www.youtube.com/embed/Xsew54QshN8>" />

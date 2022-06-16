@@ -127,6 +127,11 @@ export function tokenize(input: string): Token[] {
     .reduce((result: Token[], token: Token) => {
       if (token.type === TokenType.Text) {
         tokenizeText(token.value).forEach((item) => result.push(item));
+      } else if (token.type === TokenType.InlineCode) {
+        if (token.value.includes('\n')) {
+          token.type = TokenType.BlockCode;
+        }
+        result.push(token);
       } else if (token.type === TokenType.Link) {
         const url = `h${token.value}`;
         if (isValidUrl(url)) {

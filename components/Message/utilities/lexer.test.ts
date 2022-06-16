@@ -221,6 +221,14 @@ describe('#tokenize', () => {
           expect(tokenize(input)).toEqual(expected);
         });
       });
+
+      describe('when a single backtick contains newline characters', () => {
+        it('returns a block code token', () => {
+          const input = '`foo\nbar`';
+          const expected = [{ type: TokenType.BlockCode, value: 'foo\nbar' }];
+          expect(tokenize(input)).toEqual(expected);
+        });
+      });
     });
 
     describe('when there are two single backticks', () => {
