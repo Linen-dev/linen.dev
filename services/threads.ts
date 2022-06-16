@@ -41,13 +41,10 @@ export async function index({ channelId, page }: IndexProps) {
 export async function getThreadById(
   threadId: string
 ): Promise<ThreadByIdResponse> {
-  console.time('getThreadById');
   const qs = qsBuilder({ threadId });
-  console.log({ qs });
   const result = await fetcher(
     `${process.env.SYNC_URL}/api/cache/getThreadById?${qs}`
   );
-  console.timeEnd('getThreadById');
   return result;
 }
 
