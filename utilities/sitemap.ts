@@ -1,10 +1,19 @@
 import { SitemapStream, SitemapIndexStream, streamToPromise } from 'sitemap';
 import { Readable } from 'stream';
 import prisma from '../client';
+import { fetcher, qsBuilder } from './fetcher';
 
 const PROTOCOL = 'https';
 
-export async function createXMLSitemapForSubdomain(
+export async function createXMLSitemapForSubdomain(host: string) {
+  const qs = qsBuilder({ host });
+  console.log({ qs });
+  return await fetcher(
+    `${process.env.SYNC_URL}/api/cache/createXMLSitemapForSubdomain?${qs}`
+  );
+}
+
+export async function internalCreateXMLSitemapForSubdomain(
   host: string
 ): Promise<string> {
   const account = await prisma.accounts.findFirst({
@@ -66,6 +75,14 @@ export async function createXMLSitemapForSubdomain(
 }
 
 export async function createXMLSitemapForLinen(host: string) {
+  const qs = qsBuilder({ host });
+  console.log({ qs });
+  return await fetcher(
+    `${process.env.SYNC_URL}/api/cache/createXMLSitemapForLinen?${qs}`
+  );
+}
+
+export async function internalCreateXMLSitemapForLinen(host: string) {
   const protocol = host.includes('localhost') ? 'http' : PROTOCOL;
   const freeAccounts = await prisma.accounts.findMany({
     select: {
@@ -101,6 +118,17 @@ export async function createXMLSitemapForLinen(host: string) {
 }
 
 export async function createXMLSitemapForFreeCommunity(
+  host: string,
+  community: string
+) {
+  const qs = qsBuilder({ host, community });
+  console.log({ qs });
+  return await fetcher(
+    `${process.env.SYNC_URL}/api/cache/createXMLSitemapForFreeCommunity?${qs}`
+  );
+}
+
+export async function internalCreateXMLSitemapForFreeCommunity(
   host: string,
   community: string
 ) {
