@@ -224,16 +224,13 @@ export async function channelGetStaticProps(
   context: GetStaticPropsContext,
   isSubdomainbasedRouting: boolean
 ) {
-  console.time('getThreadsByCommunityName');
   const communityName = context.params?.communityName as string;
   const channelName = context.params?.channelName as string;
   const page = context.params?.page as string;
   const qs = qsBuilder({ communityName, channelName, page });
-  console.log({ qs });
   const result = await fetcher(
     `${process.env.SYNC_URL}/api/cache/getThreadsByCommunityName?${qs}`
   );
-  console.timeEnd('getThreadsByCommunityName');
 
   if (!result) {
     return NotFound();
