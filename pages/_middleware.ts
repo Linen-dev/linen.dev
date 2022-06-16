@@ -37,4 +37,8 @@ export default function middleware(request: NextRequest) {
     url.pathname = `/subdomain/${communityName}${pathname}`;
     return NextResponse.rewrite(url);
   }
+
+  if (PAGES.includes(pathname) && communityName !== '') {
+    return NextResponse.rewrite(`https://linen.dev${pathname}`);
+  }
 }
