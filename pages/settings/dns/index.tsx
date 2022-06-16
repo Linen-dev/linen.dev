@@ -77,7 +77,7 @@ export async function getServerSideProps(context: NextPageContext) {
     return {
       redirect: {
         permanent: false,
-        destination: 'signin',
+        destination: '../signin',
       },
     };
   }
