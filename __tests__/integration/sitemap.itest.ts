@@ -1,7 +1,7 @@
 import {
   createXMLSitemapForSubdomain,
   createXMLSitemapForFreeCommunity,
-} from './sitemap';
+} from '../../utilities/sitemap';
 
 describe('createXMLSitemapForSubdomain', () => {
   let sitemap: string;
