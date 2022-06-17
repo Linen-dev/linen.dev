@@ -1,4 +1,4 @@
-import { isImage, isUrlValid, isVideo } from './utilities';
+import { isImage, isUrlValid, isVideo, isTweet } from './utilities';
 
 describe('isUrlValid', () => {
   describe('when url is valid', () => {
@@ -48,6 +48,21 @@ describe('isVideo', () => {
     it('returns true', () => {
       expect(isVideo('https://google.com/main.css')).toBe(false);
       expect(isVideo('https://google.com/main.js')).toBe(false);
+    });
+  });
+});
+
+describe('isTweet', () => {
+  describe('when href is a tweet', () => {
+    it('returns true', () => {
+      expect(isTweet('https://twitter.com/twitter/status/1234')).toBe(true);
+    });
+  });
+
+  describe('when href is not a tweet', () => {
+    it('returns false', () => {
+      expect(isTweet('https://google.com/main.css')).toBe(false);
+      expect(isTweet('https://google.com/main.js')).toBe(false);
     });
   });
 });
