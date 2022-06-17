@@ -8,6 +8,10 @@ export function isImage(href: string): boolean {
   return SUPPORTED_EXTENSIONS.includes(extension.toLowerCase());
 }
 
+export function isYoutubeShortUrl(href: string): boolean {
+  return href.startsWith('https://youtu.be/');
+}
+
 export function isYoutubeEmbedUrl(href: string) {
   return (
     href.startsWith('https://www.youtube.com/embed/') ||
@@ -23,7 +27,11 @@ export function isYoutubeWatchUrl(href: string): boolean {
 }
 
 function isYoutubeUrl(href: string): boolean {
-  return isYoutubeEmbedUrl(href) || isYoutubeWatchUrl(href);
+  return (
+    isYoutubeEmbedUrl(href) ||
+    isYoutubeWatchUrl(href) ||
+    isYoutubeShortUrl(href)
+  );
 }
 
 export function isVideo(href: string): boolean {

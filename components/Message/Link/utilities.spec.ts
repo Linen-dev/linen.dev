@@ -40,6 +40,7 @@ describe('isVideo', () => {
       expect(isVideo('https://youtube.com/embed/tgbNymZ7vqY')).toBe(true);
       expect(isVideo('https://www.youtube.com/watch')).toBe(true);
       expect(isVideo('https://youtube.com/watch')).toBe(true);
+      expect(isVideo('https://youtu.be/tgbNymZ7vqY')).toBe(true);
     });
   });
 
