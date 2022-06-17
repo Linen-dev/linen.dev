@@ -1,10 +1,11 @@
 import React from 'react';
 import classNames from 'classnames';
 import styles from './index.module.css';
-import { isImage, isVideo, isUrlValid } from './utilities';
+import { isImage, isVideo, isUrlValid, isTweet } from './utilities';
 import Toggle from 'components/Toggle';
 import Image from './Image';
 import Video from './Video';
+import Tweet from './Tweet';
 
 interface Props {
   value: string;
@@ -27,6 +28,14 @@ export default function Link({ value }: Props) {
     return (
       <Toggle header={name || href}>
         <Video src={href} />
+      </Toggle>
+    );
+  }
+
+  if (isTweet(href)) {
+    return (
+      <Toggle header={name || href}>
+        <Tweet src={href} />
       </Toggle>
     );
   }

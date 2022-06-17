@@ -1,11 +1,13 @@
 import React from 'react';
 import { TwitterTweetEmbed } from 'react-twitter-embed';
+import { getTweetId } from './utilities';
 
 interface Props {
-  tweetId: string;
+  src: string;
 }
 
-function Tweet({ tweetId }: Props) {
+function Tweet({ src }: Props) {
+  const tweetId = getTweetId(src);
   return <TwitterTweetEmbed tweetId={tweetId} />;
 }
 
