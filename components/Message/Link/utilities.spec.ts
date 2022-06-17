@@ -56,6 +56,7 @@ describe('isTweet', () => {
   describe('when href is a tweet', () => {
     it('returns true', () => {
       expect(isTweet('https://twitter.com/status/1234')).toBe(true);
+      expect(isTweet('https://twitter.com/johndoe/status/1234')).toBe(true);
     });
   });
 

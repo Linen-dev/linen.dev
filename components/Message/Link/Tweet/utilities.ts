@@ -1,4 +1,5 @@
 export function getTweetId(src: string) {
-  const match = src.match(/https:\/\/twitter\.com\/.*\/status\/(\d+)/);
-  return match ? match[1] : '';
+  const parts = src.split('/');
+  const id = parts[parts.length - 1];
+  return id.split('?')[0];
 }

@@ -39,7 +39,10 @@ export function isVideo(href: string): boolean {
 }
 
 export function isTweet(href: string): boolean {
-  return href.startsWith('https://twitter.com/status/');
+  return (
+    href.startsWith('https://twitter.com/status/') ||
+    href.match(/https:\/\/twitter\.com\/.*\/status\/(\d+)/) !== null
+  );
 }
 
 export function isUrlValid(url: string): boolean {
