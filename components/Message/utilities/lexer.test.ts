@@ -50,6 +50,19 @@ describe('#tokenize', () => {
       });
     });
 
+    describe('when the link uses mailto:', () => {
+      it('returns a link tag', () => {
+        const input = '<mailto:support@linen.dev|Linen Support>';
+        const expected = [
+          {
+            type: TokenType.Mail,
+            value: 'mailto:support@linen.dev|Linen Support',
+          },
+        ];
+        expect(tokenize(input)).toEqual(expected);
+      });
+    });
+
     describe('when a url is used within the text', () => {
       it('returns a link tag', () => {
         const input = 'Hello, world https://linen.dev !';

@@ -2,6 +2,7 @@ export const START_TAG = '<';
 export const END_TAG = '>';
 export const MENTION_TAG = '@';
 export const LINK_TAG = 'h';
+export const MAIL_TAG = 'm';
 export const BASIC_CHANNEL_TAG = '!';
 export const COMPLEX_CHANNEL_TAG = '#';
 export const HORIZONTAL_RULE_TAG = '-';
@@ -16,6 +17,7 @@ export enum TokenType {
   Text = 'text',
   Mention = 'mention',
   Link = 'link',
+  Mail = 'mail',
   BasicChannel = 'channel',
   ComplexChannel = 'complex_channel',
   InlineCode = 'inline_code',
@@ -27,6 +29,7 @@ function isTagSupported(tag: string): boolean {
   return (
     tag === MENTION_TAG ||
     tag === LINK_TAG ||
+    tag === MAIL_TAG ||
     tag === BASIC_CHANNEL_TAG ||
     tag === COMPLEX_CHANNEL_TAG ||
     tag === HORIZONTAL_RULE_TAG
@@ -39,6 +42,8 @@ function getTokenType(tag: string): TokenType {
       return TokenType.Mention;
     case LINK_TAG:
       return TokenType.Link;
+    case MAIL_TAG:
+      return TokenType.Mail;
     case BASIC_CHANNEL_TAG:
       return TokenType.BasicChannel;
     case COMPLEX_CHANNEL_TAG:
@@ -52,6 +57,10 @@ function getTokenType(tag: string): TokenType {
 
 function isValidUrl(url: string) {
   return url.startsWith('http://') || url.startsWith('https://');
+}
+
+function isValidMailto(src: string) {
+  return src.startsWith('mailto:');
 }
 
 export function tokenize(input: string): Token[] {
@@ -138,6 +147,14 @@ export function tokenize(input: string): Token[] {
           result.push({
             type: TokenType.Link,
             value: url,
+          });
+        }
+      } else if (token.type === TokenType.Mail) {
+        const src = `m${token.value}`;
+        if (isValidMailto(src)) {
+          result.push({
+            type: TokenType.Mail,
+            value: src,
           });
         }
       } else {
