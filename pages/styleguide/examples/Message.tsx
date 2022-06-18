@@ -134,7 +134,8 @@ export default function Styleguide() {
         <Message text="Hey, http://linen.dev rocks!" />
       </Example>
       <Example description="It supports mailto links">
-        <Message text="Contact us <mailto:support@linen.dev|support@linen.dev.com>!" />
+        <Message text="Contact us: <mailto:support@linen.dev>!" />
+        <Message text="Contact us: <mailto:support@linen.dev|Linen Support>!" />
       </Example>
       <Example description="It supports inline code blocks.">
         <Message text="Hey, `const answer = 42`!" />

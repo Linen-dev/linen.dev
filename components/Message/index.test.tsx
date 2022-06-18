@@ -107,6 +107,24 @@ describe('Message', () => {
     });
   });
 
+  describe('when a mail is present', () => {
+    it('renders it', () => {
+      const { getByText } = render(<Message text="Hey <mailto:linen.dev>" />);
+      const link = getByText('linen.dev') as HTMLLinkElement;
+      expect(link.href).toEqual('mailto:linen.dev');
+    });
+
+    describe('when mail has an optional text', () => {
+      it('renders a custom link text', () => {
+        const { getByText } = render(
+          <Message text="Hey <mailto:linen.dev|Linen Support>" />
+        );
+        const link = getByText('Linen Support') as HTMLLinkElement;
+        expect(link.href).toEqual('mailto:linen.dev');
+      });
+    });
+  });
+
   describe('when inline code is present', () => {
     it('renders it', () => {
       const { getByText } = render(<Message text="Hey `foo`" />);
