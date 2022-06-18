@@ -133,6 +133,10 @@ export default function Styleguide() {
         <Message text="Hey, https://linen.dev rocks!" />
         <Message text="Hey, http://linen.dev rocks!" />
       </Example>
+      <Example description="It supports mailto links">
+        <Message text="Contact us: <mailto:support@linen.dev>!" />
+        <Message text="Contact us: <mailto:support@linen.dev|Linen Support>!" />
+      </Example>
       <Example description="It supports inline code blocks.">
         <Message text="Hey, `const answer = 42`!" />
         <Message text="Has anyone ran into this error before? Just trying to run a spec. Other things like `db:migrate` fail for `PG:InsufficientPrivilege` as well." />

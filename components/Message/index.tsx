@@ -3,6 +3,7 @@ import { users } from '@prisma/client';
 import Text from './Text';
 import Mention from './Mention';
 import Link from './Link';
+import Mail from './Mail';
 import BasicChannel from './BasicChannel';
 import ComplexChannel from './ComplexChannel';
 import InlineCode from './InlineCode';
@@ -39,6 +40,8 @@ function Message({ text, truncate, mentions }: Props) {
               return <Mention key={key} value={value} mentions={mentions} />;
             case TokenType.Link:
               return <Link key={key} value={value} />;
+            case TokenType.Mail:
+              return <Mail key={key} value={value} />;
             case TokenType.InlineCode:
               return <InlineCode key={key} value={value} />;
             case TokenType.BlockCode:
