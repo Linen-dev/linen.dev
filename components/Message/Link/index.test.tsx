@@ -3,6 +3,8 @@ import { render, waitFor } from '@testing-library/react';
 import Link from '.';
 import styles from './index.module.scss';
 
+jest.mock('./Tweet', () => () => <div>Tweet</div>);
+
 jest.mock('components/Image/utilities', () => ({
   preload: jest
     .fn()
@@ -36,6 +38,15 @@ describe('Link', () => {
         ) as HTMLImageElement;
         expect(image.src).toEqual('https://foo.com/image.png');
       });
+    });
+  });
+
+  describe('when the link points to a tweet', () => {
+    it('renders it', async () => {
+      const { getByText } = render(
+        <Link value="https://twitter.com/status/1234" />
+      );
+      expect(getByText('Tweet')).toBeInTheDocument();
     });
   });
 

@@ -38,6 +38,13 @@ export function isVideo(href: string): boolean {
   return isYoutubeUrl(href);
 }
 
+export function isTweet(href: string): boolean {
+  return (
+    href.startsWith('https://twitter.com/status/') ||
+    href.match(/https:\/\/twitter\.com\/.*\/status\/(\d+)/) !== null
+  );
+}
+
 export function isUrlValid(url: string): boolean {
   return !url.startsWith('http://-') && !url.startsWith('https://-');
 }

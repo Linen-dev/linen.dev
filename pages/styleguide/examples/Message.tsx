@@ -161,6 +161,10 @@ export default function Styleguide() {
         <Message text="https://www.youtube.com/watch?v=q3n8rvREbNM" />
         <Message text="https://youtu.be/615EqK_9-f0" />
       </Example>
+      <Example description="It embeds tweets.">
+        <Message text="https://twitter.com/kotlin/status/1367535067581546501" />
+        <Message text="https://twitter.com/kotlin/status/1367535067581546501?s=21" />
+      </Example>
       <Example description="It escapes HTML entities.">
         <Message text={`\`${HTML_EXAMPLE}\``} />
         <Message text={`\`\`\`${HTML_EXAMPLE}\`\`\`\``} />
