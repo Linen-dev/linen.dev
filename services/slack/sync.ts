@@ -23,7 +23,7 @@ import {
   SyncStatus,
   updateAndNotifySyncStatus,
 } from '../../services/syncStatus';
-import { retryPromise } from '../../utilities/retryPromises';
+import { retryPromise, sleep } from '../../utilities/retryPromises';
 
 export async function slackSync({
   accountId,
@@ -274,9 +274,16 @@ export async function createChannels({
 
   const channels = await channelIndex(accountId);
 
+  console.log('Joining channels started');
   for (let channel of channels) {
     await joinChannel(channel.slackChannelId, token);
+    // Slack's api can handle bursts
+    // so only wait for requests if there are more than 50 messages
+    if (channels.length > 50) {
+      await sleep(1500);
+    }
   }
+  console.log('Joining channels ended');
 
   return channels;
 }
