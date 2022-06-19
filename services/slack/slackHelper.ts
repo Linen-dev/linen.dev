@@ -51,7 +51,8 @@ export const getSlackUser = async (
 // example response:
 
 export const getSlackChannels = async (teamId: string, token: string) => {
-  const url = 'https://slack.com/api/conversations.list?exclude_archived=true&';
+  const url =
+    'https://slack.com/api/conversations.list?exclude_archived=true&limit=999&';
 
   const response = await request
     .get(url + 'team_id=' + teamId)
