@@ -41,17 +41,17 @@ export async function index({ channelId, page }: IndexProps) {
 export async function getThreadById(
   threadId: string
 ): Promise<ThreadByIdResponse> {
-  const qs = qsBuilder({ threadId });
-  const result = await fetcher(
-    `${process.env.SYNC_URL}/api/cache/getThreadById?${qs}`
-  );
-  return result;
-}
+  //   const qs = qsBuilder({ threadId });
+  //   const result = await fetcher(
+  //     `${process.env.SYNC_URL}/api/cache/getThreadById?${qs}`
+  //   );
+  //   return result;
+  // }
 
-// extracted here to be reused in both /[threadId]/index and /[slug]/index
-export async function internalGetThreadById(
-  threadId: string
-): Promise<ThreadByIdResponse> {
+  // // extracted here to be reused in both /[threadId]/index and /[slug]/index
+  // export async function internalGetThreadById(
+  //   threadId: string
+  // ): Promise<ThreadByIdResponse> {
   const id = parseInt(threadId);
   const thread = await findThreadById(id);
 
