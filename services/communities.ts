@@ -11,7 +11,6 @@ import { GetStaticPropsContext } from 'next/types';
 import { stripProtocol } from '../utilities/url';
 import { accounts, channels, MessagesViewType } from '@prisma/client';
 import { NotFound } from 'utilities/response';
-import { fetcher, qsBuilder } from '@/utilities/fetcher';
 
 type accountWithChannels = accounts & {
   channels: channels[];
@@ -224,17 +223,15 @@ export async function channelGetStaticProps(
   context: GetStaticPropsContext,
   isSubdomainbasedRouting: boolean
 ) {
-  console.time('getThreadsByCommunityName');
   const communityName = context.params?.communityName as string;
   const channelName = context.params?.channelName as string;
   const page = context.params?.page as string;
-  const qs = qsBuilder({ communityName, channelName, page });
-  console.log({ qs });
-  const result = await fetcher(
-    `${process.env.SYNC_URL}/api/cache/getThreadsByCommunityName?${qs}`
-  );
-  console.timeEnd('getThreadsByCommunityName');
 
+  const result = await getThreadsByCommunityName(
+    communityName,
+    Number(page) || 1,
+    channelName
+  );
   if (!result) {
     return NotFound();
   }
