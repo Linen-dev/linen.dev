@@ -50,7 +50,7 @@ async function buildSitemap(
     !!channels[channelName]
       ? channels[channelName]++
       : (channels[channelName] = 1);
-    return `${prefix}/t/${incrementId}/${slug.toLowerCase() || 'topic'}`;
+    return `${prefix}/t/${incrementId}/${slug?.toLowerCase() || 'topic'}`;
   });
   const channelsPages: string[] = getChannelPages(channels, prefix);
   if (!channelsPages.length || !urls.length) return '';
