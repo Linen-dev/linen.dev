@@ -3,6 +3,10 @@ import {
   channels,
   slackAuthorizations,
   Prisma,
+  slackThreads,
+  messages,
+  users,
+  slackMentions,
 } from '@prisma/client';
 import prisma from '../client';
 import { UserInfo } from '../types/slackResponses//slackUserInfoInterface';
@@ -200,10 +204,14 @@ export const updateAccountRedirectDomain = async (
   });
 };
 
-export const channelIndex = async (accountId: string) => {
+export const channelIndex = async (
+  accountId: string,
+  { hidden }: { hidden?: boolean } = {}
+) => {
   return await prisma.channels.findMany({
     where: {
       accountId,
+      ...(!!String(hidden) && { hidden }),
     },
   });
 };
@@ -233,24 +241,15 @@ export const findAccountByPath = async (path: string) => {
         },
       ],
     },
-    include: {
-      channels: {
-        where: {
-          hidden: false,
-        },
-      },
-    },
   });
 };
 
 //TODO figure out a way to quickly filter out channels based on accountID
-export const channelsGroupByThreadCount = async () => {
-  return await prisma.slackThreads.groupBy({
-    by: ['channelId'],
-    _count: {
-      id: true,
-    },
-  });
+export const channelsGroupByThreadCount = async (accountId: string) => {
+  return await prisma.$queryRaw<{ channelId: string; count: number }[]>`
+    select * from channels_stats cs 
+    where cs."accountId" = ${accountId}
+    `;
 };
 
 export const createManyChannel = async (
@@ -324,61 +323,138 @@ export const createDiscordAuthorization = async (
 };
 
 export const threadCount = async (channelId: string): Promise<number> => {
-  return await prisma.slackThreads.count({
-    where: {
-      channelId,
-      messageCount: {
-        gt: 1,
-      },
-    },
+  return await prisma.$queryRaw<{ channelId: string; count: number }[]>`
+    select * from channels_stats cs 
+    where cs."channelId" = ${channelId}
+  `.then((rows) => {
+    return rows.reduce((_, curr) => {
+      return curr.count;
+    }, 0);
   });
 };
 
-export const threadIndex = async (
-  channelId: string,
-  take: number = 20,
-  skip: number = 0
-) => {
-  const anonymousCommunity = await prisma.accounts.findFirst({
-    select: { anonymizeUsers: true },
-    where: {
-      channels: {
-        some: { id: channelId },
-      },
-      anonymizeUsers: true,
-    },
-  });
+interface RawResult {
+  // thread
+  id: string;
+  incrementId: number;
+  slackThreadTs: string;
+  createdAt: Date;
+  slug: string;
+  messageCount: number;
+  channelId: string;
+  viewCount: number;
+  slackThreadId: string;
+  // message
+  slackMessageId: string;
+  messageId: string;
+  usersId: string;
+  mentions?: string | null;
+  sentAt: Date;
+  body: string;
+}
+
+type MsgWithMentions = messages &
+  (
+    | { mentions?: string | null }
+    | {
+        mentions?: (slackMentions & {
+          users: users | null;
+        })[];
+      }
+  );
+type ThreadWithMsg = slackThreads & { messages: MsgWithMentions[] };
+
+export const threadIndex = async ({
+  channelId,
+  take = 20,
+  skip = 0,
+  account,
+}: {
+  channelId: string;
+  take?: number;
+  skip?: number;
+  account: accounts;
+}) => {
   const MESSAGES_ORDER_BY = 'desc';
-  const threads = await prisma.slackThreads.findMany({
-    take: take,
-    skip: skip,
-    include: {
-      messages: {
-        include: {
-          author: true,
-          mentions: {
-            include: {
-              users: true,
-            },
-          },
-        },
-        orderBy: {
-          sentAt: MESSAGES_ORDER_BY,
-        },
-      },
-    },
-    where: {
-      channelId,
-      messageCount: {
-        gt: 1,
-      },
-    },
-    orderBy: {
-      slackThreadTs: 'desc',
-    },
-  });
+  const threadsRawQuery = await prisma.$queryRaw<RawResult[]>`
+  SELECT *, x.id as "messageId" FROM
+    ( SELECT 
+        m.*, string_agg(sm."usersId", ',') mentions, 
+        ROW_NUMBER () OVER (PARTITION BY m."slackThreadId" ORDER BY m."sentAt" asc)
+      FROM messages m
+      LEFT JOIN "slackMentions" sm ON sm."messagesId" = m.id
+      WHERE m."slackThreadId" IN ( 
+        SELECT st.id
+        FROM "slackThreads" st
+        WHERE st."channelId" = ${channelId} AND st."messageCount" > 1
+        GROUP BY st."id" 
+        ORDER BY st."slackThreadTs" DESC
+        LIMIT ${take} OFFSET ${skip}
+      )
+      GROUP BY m.id 
+    ) x
+  JOIN "slackThreads" st2 ON st2.id = x."slackThreadId" 
+  WHERE ROW_NUMBER < 5
+  ORDER BY st2."slackThreadTs" DESC, x."sentAt" desc`;
+
+  const usersId: string[] = [];
+
+  const threads: ThreadWithMsg[] = Object.values(
+    threadsRawQuery.reduce((prev: Record<string, ThreadWithMsg>, curr) => {
+      if (!prev[curr.id]) {
+        prev[curr.id] = {
+          id: curr.id,
+          incrementId: curr.incrementId,
+          slackThreadTs: curr.slackThreadTs,
+          slug: curr.slug,
+          messageCount: curr.messageCount,
+          channelId: curr.channelId,
+          viewCount: curr.viewCount,
+          messages: [],
+        } as ThreadWithMsg;
+      }
+      prev[curr.id].messages.push({
+        createdAt: curr.createdAt,
+        slackMessageId: curr.slackMessageId,
+        id: curr.messageId,
+        usersId: curr.usersId,
+        mentions: curr.mentions,
+        slackThreadId: curr.slackThreadId,
+        sentAt: new Date(curr.sentAt),
+        body: curr.body,
+      } as MsgWithMentions);
+
+      usersId.push(curr.usersId);
+      curr.mentions && usersId.push(...curr.mentions?.split(','));
+      return prev;
+    }, {})
+  );
+
+  const users = await prisma.users.findMany({ where: { id: { in: usersId } } });
+  const usersKV: Record<string, users> = users.reduce((prev, curr) => {
+    return { ...prev, [curr.id]: curr };
+  }, {});
+
   const threadsWithMessages = threads
     .filter((thread) => thread.messages.length > 0)
+    .map((thread) => {
+      return {
+        ...thread,
+        messages: thread.messages.map((message) => {
+          const author = message.usersId ? usersKV[message.usersId] : null;
+          const mentions = message.mentions
+            ? (message.mentions as string)?.split(',').map((mention) => {
+                return {
+                  messagesId: message.id,
+                  usersId: mention,
+                  users: usersKV[mention],
+                };
+              })
+            : [];
+          return { ...message, author, mentions };
+        }),
+      };
+    })
     .map((thread) => {
       thread.messages = mergeMessagesByUserId(
         thread.messages,
@@ -386,7 +462,7 @@ export const threadIndex = async (
       );
       return thread;
     });
-  if (anonymousCommunity) {
+  if (account.anonymizeUsers) {
     return threadsWithMessages.map(anonymizeMessages);
   }
   return threadsWithMessages;
