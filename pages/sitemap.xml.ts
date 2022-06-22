@@ -20,7 +20,8 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
     res.end();
   } catch (exception) {
     console.error(exception);
-    res.statusCode = 404;
+    res.statusCode = 500;
+    res.write('Something went wrong');
     res.end();
   }
   return {
