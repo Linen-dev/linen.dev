@@ -244,7 +244,7 @@ export async function channelGetStaticProps(
       communityName,
       isSubDomainRouting: isSubdomainbasedRouting,
     },
-    revalidate: 60, // In seconds
+    revalidate: revalidateInSeconds, // In seconds
   };
 }
 

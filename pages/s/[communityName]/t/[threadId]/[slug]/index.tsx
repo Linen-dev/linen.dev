@@ -3,6 +3,7 @@ import { getThreadById } from '../../../../../../services/threads';
 import Thread from '../../../../../../components/Pages/Thread/Thread';
 import * as Sentry from '@sentry/nextjs';
 import { NotFound } from 'utilities/response';
+import { revalidateInSeconds } from 'constants/revalidate';
 
 export default Thread;
 
@@ -13,11 +14,10 @@ export async function getStaticProps(context: GetStaticPropsContext) {
     const thread = await getThreadById(threadId);
     return {
       props: { ...thread, isSubDomainRouting: false },
-      revalidate: 60, // In seconds
+      revalidate: revalidateInSeconds, // In seconds
     };
   } catch (exception) {
     Sentry.captureException(exception);
-
     return NotFound();
   }
 }

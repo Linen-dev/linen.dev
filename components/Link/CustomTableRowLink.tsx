@@ -14,5 +14,5 @@ export default function CustomTableRowLink({
     isSubDomainRouting,
     path,
   });
-  return <Link href={href} {...props}></Link>;
+  return <Link href={href} {...props} prefetch={false}></Link>;
 }
