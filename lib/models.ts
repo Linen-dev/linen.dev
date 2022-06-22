@@ -430,7 +430,9 @@ export const threadIndex = async ({
     }, {})
   );
 
-  const users = await prisma.users.findMany({ where: { id: { in: usersId } } });
+  const users = await prisma.users.findMany({
+    where: { id: { in: usersId.filter(Boolean) } },
+  });
   const usersKV: Record<string, users> = users.reduce((prev, curr) => {
     return { ...prev, [curr.id]: curr };
   }, {});
