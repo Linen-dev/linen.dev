@@ -15,7 +15,7 @@ export default function CustomLink({
     path,
   });
   return (
-    <Link href={href} {...props}>
+    <Link href={href} {...props} prefetch={false}>
       <a>{props.children}</a>
     </Link>
   );
