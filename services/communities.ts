@@ -1,5 +1,6 @@
 import {
   accountsWithChannels,
+  channelIndex,
   channelsGroupByThreadCount,
   findAccountByPath,
   findChannelsWithSingleMessages,
@@ -10,27 +11,26 @@ import { GetStaticPropsContext } from 'next/types';
 import { stripProtocol } from '../utilities/url';
 import { accounts, channels, MessagesViewType } from '@prisma/client';
 import { NotFound } from 'utilities/response';
+import { revalidateInSeconds } from 'constants/revalidate';
 import { buildSettings } from './accountSettings';
 
-export type accountWithChannels = accounts & {
-  channels: channels[];
-};
-
 async function getThreadsAndUsers({
+  account,
   channelId,
   channels,
   page,
 }: {
+  account: accounts;
   channelId: string;
   page: number;
   channels: channels[];
 }) {
-  const [threadsReponse, channelsResponse] = await Promise.all([
-    fetchThreads({ channelId, page }),
-    channelsGroupByThreadCount(),
+  const [threadsResponse, channelsResponse] = await Promise.all([
+    fetchThreads({ channelId, page, account }),
+    channelsGroupByThreadCount(account.id),
   ]);
 
-  const { data, pagination } = threadsReponse;
+  const { data, pagination } = threadsResponse;
   let { threads } = data;
 
   //Filter out channels with less than 20 threads
@@ -45,7 +45,7 @@ async function getThreadsAndUsers({
         return r.channelId === c.id;
       });
 
-      return channelCount && channelCount._count.id > 2;
+      return channelCount && channelCount.count > 2;
     });
 
   threads = threads.filter((t) => t.messages.length > 0);
@@ -59,20 +59,20 @@ async function getThreadsAndUsers({
 
 function identifyChannel({
   channelName,
-  account,
+  channels,
 }: {
   channelName?: string;
-  account: accountWithChannels;
+  channels: channels[];
 }) {
   const defaultChannelName =
-    channelName || account.channels.find((c) => c.default)?.channelName;
+    channelName || channels.find((c) => c.default)?.channelName;
 
   const defaultChannel =
-    account.channels.find((c) => c.channelName === defaultChannelName) ||
-    account.channels.find((c) => c.channelName === 'general');
+    channels.find((c) => c.channelName === defaultChannelName) ||
+    channels.find((c) => c.channelName === 'general');
 
   //TODO: we should only default to a channel if there are more than 20 threads
-  const channel = defaultChannel || account.channels[0];
+  const channel = defaultChannel || channels[0];
 
   return { channel };
 }
@@ -80,22 +80,25 @@ function identifyChannel({
 async function resolveMessageViewType({
   account,
   channel,
+  channels,
   page,
 }: {
-  account: accountWithChannels;
+  account: accounts;
+  channels: channels[];
   channel: channels;
   page: number;
 }) {
   if (account.messagesViewType === MessagesViewType.MESSAGES) {
     return await getMessagesAndUsers({
       channelId: channel.id,
-      channels: account.channels,
+      channels,
       page,
     });
   } else {
     return await getThreadsAndUsers({
+      account,
       channelId: channel.id,
-      channels: account.channels,
+      channels,
       page,
     });
   }
@@ -158,14 +161,15 @@ export const getThreadsByCommunityName = async (
   if (account === null) {
     return null;
   }
-  if (account.channels.length === 0) {
+  const channels = await channelIndex(account.id, { hidden: false });
+  if (channels.length === 0) {
     return null;
   }
 
-  const { channel } = identifyChannel({ account, channelName });
+  const { channel } = identifyChannel({ channels, channelName });
 
   const { users, threads, pagination, channelsWithMinThreads, messages } =
-    await resolveMessageViewType({ account, channel, page });
+    await resolveMessageViewType({ account, channel, page, channels });
 
   const settings = buildSettings(account);
 
@@ -207,7 +211,7 @@ export async function channelGetStaticProps(
       communityName,
       isSubDomainRouting: isSubdomainbasedRouting,
     },
-    revalidate: 60, // In seconds
+    revalidate: revalidateInSeconds, // In seconds
   };
 }
 

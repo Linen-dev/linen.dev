@@ -9,22 +9,22 @@ import {
   findAccountByThreadIncrementId,
 } from '../lib/models';
 import { ThreadByIdResponse } from '../types/apiResponses/threads/[threadId]';
-import { users } from '@prisma/client';
+import { accounts, users } from '@prisma/client';
 import { anonymizeMessages } from '@/utilities/anonymizeMessages';
 
 interface IndexProps {
   channelId: string;
   page: number;
+  account: accounts;
 }
 
-export async function index({ channelId, page }: IndexProps) {
+export async function index({ channelId, page, account }: IndexProps) {
   const take = 10;
   const skip = (page - 1) * take;
   const [threads, total] = await Promise.all([
-    threadIndex(channelId, take, skip),
+    threadIndex({ channelId, take, skip, account }),
     threadCount(channelId),
   ]);
-
   return {
     data: {
       threads: threads.map(serializeThread),
@@ -38,7 +38,7 @@ export async function index({ channelId, page }: IndexProps) {
   };
 }
 
-// extracted here to be resused in both /[threadId]/index and /[slug]/index
+// extracted here to be reused in both /[threadId]/index and /[slug]/index
 export async function getThreadById(
   threadId: string
 ): Promise<ThreadByIdResponse> {
@@ -52,12 +52,13 @@ export async function getThreadById(
   const [channels, thread, channelsResponse] = await Promise.all([
     channelIndex(account.id),
     findThreadById(id),
-    channelsGroupByThreadCount(),
+    channelsGroupByThreadCount(account.id),
   ]);
 
   if (!thread || !thread?.channel?.accountId) {
     return Promise.reject(new Error('Thread not found'));
   }
+
   //Filter out channels with less than 20 threads
   const channelsWithMinThreads = channels
     .filter((c) => !c.hidden)
@@ -70,7 +71,7 @@ export async function getThreadById(
         return r.channelId === c.id;
       });
 
-      return channelCount && channelCount._count.id > 2;
+      return channelCount && channelCount.count > 2;
     });
 
   if (account?.anonymizeUsers) {
