@@ -1,5 +1,5 @@
 import serializeThread from '../serializers/thread';
-import { links } from '../constants/examples';
+import { buildSettings } from './accountSettings';
 import {
   threadIndex,
   threadCount,
@@ -10,6 +10,7 @@ import {
 } from '../lib/models';
 import { ThreadByIdResponse } from '../types/apiResponses/threads/[threadId]';
 import { users } from '@prisma/client';
+import { anonymizeMessages } from '@/utilities/anonymizeMessages';
 
 interface IndexProps {
   channelId: string;
@@ -36,9 +37,14 @@ export async function index({ channelId, page }: IndexProps) {
     },
   };
 }
-
+export async function getThreadById(threadId: string) {
+  console.time('getThreadById::' + threadId);
+  const response = await _getThreadById(threadId);
+  console.timeEnd('getThreadById::' + threadId);
+  return response;
+}
 // extracted here to be resused in both /[threadId]/index and /[slug]/index
-export async function getThreadById(
+export async function _getThreadById(
   threadId: string
 ): Promise<ThreadByIdResponse> {
   const id = parseInt(threadId);
@@ -73,22 +79,12 @@ export async function getThreadById(
     return Promise.reject(new Error('Account not found'));
   }
 
-  const defaultSettings =
-    links.find(({ accountId }) => accountId === account.id) || links[0];
+  if (account?.anonymizeUsers) {
+    const anonymousThread = anonymizeMessages({ ...thread });
+    anonymousThread?.messages && (thread.messages = anonymousThread?.messages);
+  }
 
-  const communityType = account.discordServerId ? 'discord' : 'slack';
-
-  const settings = {
-    brandColor: account.brandColor || defaultSettings.brandColor,
-    homeUrl: account.homeUrl || defaultSettings.homeUrl,
-    docsUrl: account.docsUrl || defaultSettings.docsUrl,
-    logoUrl: account.logoUrl || defaultSettings.logoUrl,
-    ...(account.premium &&
-      account.googleAnalyticsId && {
-        googleAnalyticsId: account.googleAnalyticsId,
-      }),
-    communityType: communityType,
-  };
+  const settings = buildSettings(account);
 
   const authors = thread.messages
     .map((m) => m.author)
