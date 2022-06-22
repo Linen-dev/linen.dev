@@ -1,5 +1,4 @@
 import { accounts, MessagesViewType } from '@prisma/client';
-import { accountWithChannels } from './communities';
 import { links } from '../constants/examples';
 
 export type Settings = {
@@ -13,9 +12,7 @@ export type Settings = {
   messagesViewType: MessagesViewType;
 };
 
-export function buildSettings(
-  account: accountWithChannels | accounts
-): Settings {
+export function buildSettings(account: accounts): Settings {
   const defaultSettings =
     links.find(({ accountId }) => accountId === account.id) || links[0];
 
