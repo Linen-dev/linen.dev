@@ -3,6 +3,10 @@ import {
   channels,
   slackAuthorizations,
   Prisma,
+  slackThreads,
+  messages,
+  users,
+  slackMentions,
 } from '@prisma/client';
 import prisma from '../client';
 import { UserInfo } from '../types/slackResponses//slackUserInfoInterface';
@@ -100,6 +104,63 @@ export const updateMessageSlackThreadId = async (
 
 export const findAccount = async (accounts: Prisma.accountsFindUniqueArgs) => {
   return await prisma.accounts.findUnique(accounts);
+};
+
+type findAccountByThreadIncrementIdType = {
+  accounts: accounts & {
+    auths: slackAuthorizations[];
+  };
+};
+
+export const findAccountByThreadIncrementId = async (incrementId: number) => {
+  return await prisma.$queryRaw<findAccountByThreadIncrementIdType[]>`
+    select json_build_object(
+      'id', a.id,
+      'name', a."name",
+      'slackTeamId', a."slackTeamId",
+      'redirectDomain', a."redirectDomain",
+      'slackUrl', a."slackUrl",
+      'createdAt', a."createdAt",
+      'slackDomain', a."slackDomain",
+      'brandColor', a."brandColor",
+      'docsUrl', a."docsUrl",
+      'homeUrl', a."homeUrl",
+      'logoUrl', a."logoUrl",
+      'slackInviteUrl', a."slackInviteUrl",
+      'premium', a."premium",
+      'googleAnalyticsId', a."googleAnalyticsId",
+      'slackSyncStatus', a."slackSyncStatus",
+      'discordServerId', a."discordServerId",
+      'anonymizeUsers', a."anonymizeUsers",
+      'messagesViewType', a."messagesViewType",
+      'discordDomain', a."discordDomain",
+      'auths', json_agg(json_build_object(
+          'id', sa.id,
+          'accessToken', sa."accessToken",
+          'botUserId', sa."botUserId",
+          'scope', sa.scope,
+          'accountsId', sa."accountsId",
+          'createdAt', sa."createdAt",
+          'authedUserId', sa."authedUserId",
+          'userAccessToken', sa."userAccessToken",
+          'userScope', sa."userScope"
+      ))
+    ) as "accounts"
+  from accounts a
+  join "slackAuthorizations" sa on sa."accountsId" = a.id
+  join channels c on c."accountId" = a.id
+  join "slackThreads" st on st."channelId" = c.id
+  where st."incrementId" = ${incrementId}
+  group by a.id`
+    .then((rows) => rows?.shift()?.accounts)
+    .then((row) => {
+      if (!row) return null;
+      const { auths, ...rest } = row;
+      return {
+        ...rest,
+        slackAuthorizations: auths,
+      };
+    });
 };
 
 export const findAccountById = async (accountId: string) => {
@@ -392,45 +453,103 @@ export const threadIndex = async (
   return threadsWithMessages;
 };
 
+type findThreadByIdResponse = {
+  thread:
+    | (slackThreads & {
+        messages: (messages & {
+          author: users | null;
+          mentions: (slackMentions & {
+            users: users | null;
+          })[];
+        })[];
+        channel: channels;
+      })
+    | null;
+};
+
+const parseMessage = (
+  message: messages & {
+    mentions: (slackMentions & {
+      users: users | null;
+    })[];
+  }
+) => ({
+  ...message,
+  sentAt: new Date(message.sentAt),
+  ...(!message.mentions ? { mentions: [] } : {}),
+});
+
+const sortBySentAt = (a: messages, b: messages) =>
+  a.sentAt.getTime() - b.sentAt.getTime();
+
 export const findThreadById = async (threadId: number) => {
   const MESSAGES_ORDER_BY = 'asc';
-  return await prisma.slackThreads
-    .findUnique({
-      where: { incrementId: threadId },
-      include: {
-        messages: {
-          include: {
-            author: true,
-            //Don't like how it includes mentions when I just want users
-            // waiting on this to flatten it out
-            // https://github.com/prisma/prisma/issues/9719
-            mentions: {
-              include: {
-                users: true,
-              },
-            },
-          },
-          orderBy: {
-            sentAt: MESSAGES_ORDER_BY,
-          },
-        },
-        channel: {
-          include: {
-            account: { select: { anonymizeUsers: true } },
-          },
-        },
-      },
-    })
-    .then((thread) => {
-      const account = thread?.channel.account;
+  return await prisma.$queryRaw<findThreadByIdResponse[]>`
+    select json_build_object(
+      'id', st.id,
+      'incrementId', st."incrementId",
+      'slackThreadTs', st."slackThreadTs",
+      'viewCount', st."viewCount",
+      'slug', st.slug,
+      'messageCount', st."messageCount",
+      'messages', json_agg(
+        json_build_object(
+          'id', m.id,
+          'body', m.body,
+          'sentAt', m."sentAt",
+          'slackMessageId', m."slackMessageId",
+          'usersId', m."usersId",
+          'author', json_build_object(
+            'id', u.id,
+            'displayName', u."displayName",
+            'slackUserId', u."slackUserId",
+            'profileImageUrl', u."profileImageUrl",
+            'isBot', u."isBot",
+            'isAdmin', u."isAdmin",
+            'anonymousAlias', u."anonymousAlias"
+          ),
+          'mentions', (
+                SELECT json_agg(
+                    json_build_object(
+                        'users', json_build_object(
+                          'id', u2.id,
+                          'displayName', u2."displayName",
+                          'slackUserId', u2."slackUserId",
+                          'profileImageUrl', u2."profileImageUrl",
+                          'isBot', u2."isBot",
+                          'isAdmin', u2."isAdmin",
+                          'anonymousAlias', u2."anonymousAlias" 
+                        )
+                    )
+                )
+                FROM "slackMentions" sm
+                JOIN users u2 on sm."usersId" = u2.id 
+                WHERE sm."messagesId" = m.id
+                GROUP BY m.id
+          )
+        )
+      ),
+      'channel', json_build_object(
+        'id', c.id,
+        'channelName', c."channelName",
+        'slackChannelId', c."slackChannelId",
+        'accountId', c."accountId"
+      )
+    ) as thread
+  from "slackThreads" st
+  join channels c on st."channelId" = c.id
+  join messages m on st.id = m."slackThreadId"
+  join users u on m."usersId" = u.id
+  where st."incrementId" = ${threadId}
+  group by c.id, st.id`
+    .then((rows) => rows?.shift())
+    .then((row) => {
+      const thread = row?.thread;
       if (thread) {
         thread.messages = mergeMessagesByUserId(
-          thread.messages,
+          thread.messages.map(parseMessage).sort(sortBySentAt),
           MESSAGES_ORDER_BY
         );
-      }
-      if (account?.anonymizeUsers) {
-        return anonymizeMessages(thread);
       }
       return thread;
     });

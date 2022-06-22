@@ -1,15 +1,16 @@
 import serializeThread from '../serializers/thread';
-import { links } from '../constants/examples';
+import { buildSettings } from './accountSettings';
 import {
   threadIndex,
   threadCount,
   channelIndex,
-  findAccountById,
   findThreadById,
   channelsGroupByThreadCount,
+  findAccountByThreadIncrementId,
 } from '../lib/models';
 import { ThreadByIdResponse } from '../types/apiResponses/threads/[threadId]';
 import { users } from '@prisma/client';
+import { anonymizeMessages } from '@/utilities/anonymizeMessages';
 
 interface IndexProps {
   channelId: string;
@@ -42,18 +43,21 @@ export async function getThreadById(
   threadId: string
 ): Promise<ThreadByIdResponse> {
   const id = parseInt(threadId);
-  const thread = await findThreadById(id);
+  const account = await findAccountByThreadIncrementId(id);
+
+  if (!account) {
+    return Promise.reject(new Error('Account not found'));
+  }
+
+  const [channels, thread, channelsResponse] = await Promise.all([
+    channelIndex(account.id),
+    findThreadById(id),
+    channelsGroupByThreadCount(),
+  ]);
 
   if (!thread || !thread?.channel?.accountId) {
     return Promise.reject(new Error('Thread not found'));
   }
-
-  const [channels, account, channelsResponse] = await Promise.all([
-    channelIndex(thread.channel.accountId),
-    findAccountById(thread.channel.accountId),
-    channelsGroupByThreadCount(),
-  ]);
-
   //Filter out channels with less than 20 threads
   const channelsWithMinThreads = channels
     .filter((c) => !c.hidden)
@@ -69,26 +73,12 @@ export async function getThreadById(
       return channelCount && channelCount._count.id > 2;
     });
 
-  if (!account) {
-    return Promise.reject(new Error('Account not found'));
+  if (account?.anonymizeUsers) {
+    const anonymousThread = anonymizeMessages({ ...thread });
+    anonymousThread?.messages && (thread.messages = anonymousThread?.messages);
   }
 
-  const defaultSettings =
-    links.find(({ accountId }) => accountId === account.id) || links[0];
-
-  const communityType = account.discordServerId ? 'discord' : 'slack';
-
-  const settings = {
-    brandColor: account.brandColor || defaultSettings.brandColor,
-    homeUrl: account.homeUrl || defaultSettings.homeUrl,
-    docsUrl: account.docsUrl || defaultSettings.docsUrl,
-    logoUrl: account.logoUrl || defaultSettings.logoUrl,
-    ...(account.premium &&
-      account.googleAnalyticsId && {
-        googleAnalyticsId: account.googleAnalyticsId,
-      }),
-    communityType: communityType,
-  };
+  const settings = buildSettings(account);
 
   const authors = thread.messages
     .map((m) => m.author)
