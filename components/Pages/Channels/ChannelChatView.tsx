@@ -5,7 +5,7 @@ import { Props, messageWithAuthor } from '.';
 import { Anchor, Loader } from '@mantine/core';
 import { AiOutlineLink } from 'react-icons/ai';
 import { channels } from '@prisma/client';
-import { Settings } from 'services/communities';
+import { Settings } from 'services/accountSettings';
 import useInfiniteScroll from 'react-infinite-scroll-hook';
 import { useRouter } from 'next/router';
 import classNames from 'classnames';

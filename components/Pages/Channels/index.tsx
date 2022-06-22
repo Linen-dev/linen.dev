@@ -7,7 +7,7 @@ import {
   users,
 } from '@prisma/client';
 import { useRouter } from 'next/router';
-import { Settings } from 'services/communities';
+import { Settings } from 'services/accountSettings';
 import { MentionsWithUsers } from 'types/apiResponses/threads/[threadId]';
 import Channel from './Channel';
 import ChannelChatView from './ChannelChatView';
