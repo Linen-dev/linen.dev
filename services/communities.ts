@@ -11,6 +11,7 @@ import { GetStaticPropsContext } from 'next/types';
 import { stripProtocol } from '../utilities/url';
 import { accounts, channels, MessagesViewType } from '@prisma/client';
 import { NotFound } from 'utilities/response';
+import { revalidateInSeconds } from 'constants/revalidate';
 
 type accountWithChannels = accounts & {
   channels: channels[];
@@ -241,7 +242,7 @@ export async function channelGetStaticProps(
       communityName,
       isSubDomainRouting: isSubdomainbasedRouting,
     },
-    revalidate: 60, // In seconds
+    revalidate: revalidateInSeconds, // In seconds
   };
 }
 
