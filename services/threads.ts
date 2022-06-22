@@ -9,21 +9,21 @@ import {
   channelsGroupByThreadCount,
 } from '../lib/models';
 import { ThreadByIdResponse } from '../types/apiResponses/threads/[threadId]';
-import { users } from '@prisma/client';
+import { accounts, users } from '@prisma/client';
 
 interface IndexProps {
   channelId: string;
   page: number;
+  account: accounts;
 }
 
-export async function index({ channelId, page }: IndexProps) {
+export async function index({ channelId, page, account }: IndexProps) {
   const take = 10;
   const skip = (page - 1) * take;
   const [threads, total] = await Promise.all([
-    threadIndex(channelId, take, skip),
+    threadIndex({ channelId, take, skip, account }),
     threadCount(channelId),
   ]);
-
   return {
     data: {
       threads: threads.map(serializeThread),
@@ -37,7 +37,7 @@ export async function index({ channelId, page }: IndexProps) {
   };
 }
 
-// extracted here to be resused in both /[threadId]/index and /[slug]/index
+// extracted here to be reused in both /[threadId]/index and /[slug]/index
 export async function getThreadById(
   threadId: string
 ): Promise<ThreadByIdResponse> {
@@ -51,7 +51,7 @@ export async function getThreadById(
   const [channels, account, channelsResponse] = await Promise.all([
     channelIndex(thread.channel.accountId),
     findAccountById(thread.channel.accountId),
-    channelsGroupByThreadCount(),
+    channelsGroupByThreadCount(thread?.channel?.accountId),
   ]);
 
   //Filter out channels with less than 20 threads
@@ -66,7 +66,7 @@ export async function getThreadById(
         return r.channelId === c.id;
       });
 
-      return channelCount && channelCount._count.id > 2;
+      return channelCount && channelCount.count > 2;
     });
 
   if (!account) {
