@@ -9,7 +9,14 @@ declare global {
 }
 
 const DocumentClient =
-  global.DocumentClient || new DynamoDB.DocumentClient({ region: 'us-east-1' });
+  global.DocumentClient ||
+  new DynamoDB.DocumentClient({
+    region: process.env.S3_UPLOAD_REGION as string,
+    credentials: {
+      accessKeyId: process.env.S3_UPLOAD_KEY as string,
+      secretAccessKey: process.env.S3_UPLOAD_SECRET as string,
+    },
+  });
 
 if (process.env.NODE_ENV !== 'production')
   global.DocumentClient = DocumentClient;
