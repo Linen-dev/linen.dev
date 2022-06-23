@@ -13,6 +13,8 @@ import { stripProtocol } from '../utilities/url';
 import { accounts, channels, MessagesViewType } from '@prisma/client';
 import { NotFound } from '../utilities/response';
 import { revalidateInSeconds } from 'constants/revalidate';
+import { qsBuilder } from '@/utilities/fetcher';
+import { getCache, setCache } from '@/utilities/dynamoCache';
 
 export type Settings = {
   communityType: string;
@@ -231,13 +233,18 @@ export async function channelGetStaticProps(
   const channelName = context.params?.channelName as string;
   const page = context.params?.page as string;
 
-  const result = await getThreadsByCommunityName(
-    communityName,
-    Number(page) || 1,
-    channelName
-  );
+  const qs = qsBuilder({ communityName, channelName, page }) as string;
+  let result = await getCache(qs);
   if (!result) {
-    return NotFound();
+    result = await getThreadsByCommunityName(
+      communityName,
+      Number(page) || 1,
+      channelName
+    );
+    if (!result) {
+      return NotFound();
+    }
+    await setCache(qs, result);
   }
   return {
     props: {
