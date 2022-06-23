@@ -11,7 +11,12 @@ import {
 import { ThreadByIdResponse } from '../types/apiResponses/threads/[threadId]';
 import { accounts, users } from '@prisma/client';
 import { anonymizeMessages } from '@/utilities/anonymizeMessages';
-
+import { GetStaticPropsContext } from 'next';
+import { NotFound } from 'utilities/response';
+import { revalidateInSeconds } from 'constants/revalidate';
+import * as Sentry from '@sentry/nextjs';
+import { qsBuilder } from '@/utilities/fetcher';
+import { getCache, setCache } from '@/utilities/dynamoCache';
 interface IndexProps {
   channelId: string;
   page: number;
@@ -134,4 +139,32 @@ export async function getThreadById(
     threadUrl,
     settings,
   };
+}
+
+export async function threadGetStaticProps(
+  context: GetStaticPropsContext,
+  isSubdomainbasedRouting: boolean
+) {
+  const threadId = context.params?.threadId as string;
+  try {
+    const qs = qsBuilder({ threadId }) as string;
+    let thread = await getCache(qs);
+    if (!thread) {
+      thread = await getThreadById(threadId);
+      if (!thread) {
+        return NotFound();
+      }
+      await setCache(qs, thread);
+    }
+    return {
+      props: {
+        ...thread,
+        isSubDomainRouting: isSubdomainbasedRouting,
+      },
+      revalidate: revalidateInSeconds, // In seconds
+    };
+  } catch (exception) {
+    Sentry.captureException(exception);
+    return NotFound();
+  }
 }
