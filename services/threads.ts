@@ -1,5 +1,4 @@
 import serializeThread from '../serializers/thread';
-import { links } from '../constants/examples';
 import {
   threadIndex,
   threadCount,
@@ -16,6 +15,8 @@ import { revalidateInSeconds } from 'constants/revalidate';
 import * as Sentry from '@sentry/nextjs';
 import { qsBuilder } from '@/utilities/fetcher';
 import { getCache, setCache } from '@/utilities/dynamoCache';
+import { buildSettings } from './accountSettings';
+
 interface IndexProps {
   channelId: string;
   page: number;
@@ -71,29 +72,14 @@ export async function getThreadById(
         return r.channelId === c.id;
       });
 
-      return channelCount && channelCount.count > 2;
+      return channelCount && channelCount._count.id > 2;
     });
 
   if (!account) {
     return Promise.reject(new Error('Account not found'));
   }
 
-  const defaultSettings =
-    links.find(({ accountId }) => accountId === account.id) || links[0];
-
-  const communityType = account.discordServerId ? 'discord' : 'slack';
-
-  const settings = {
-    brandColor: account.brandColor || defaultSettings.brandColor,
-    homeUrl: account.homeUrl || defaultSettings.homeUrl,
-    docsUrl: account.docsUrl || defaultSettings.docsUrl,
-    logoUrl: account.logoUrl || defaultSettings.logoUrl,
-    ...(account.premium &&
-      account.googleAnalyticsId && {
-        googleAnalyticsId: account.googleAnalyticsId,
-      }),
-    communityType: communityType,
-  };
+  const settings = buildSettings(account);
 
   const authors = thread.messages
     .map((m) => m.author)
@@ -150,6 +136,7 @@ export async function getThreadById(
   };
 }
 
+/** function cached by dynamodb */
 export async function threadGetStaticProps(
   context: GetStaticPropsContext,
   isSubdomainbasedRouting: boolean

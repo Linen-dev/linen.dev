@@ -5,8 +5,8 @@ import {
   Prisma,
   slackThreads,
   messages,
-  users,
   slackMentions,
+  users,
 } from '@prisma/client';
 import prisma from '../client';
 import { UserInfo } from '../types/slackResponses//slackUserInfoInterface';
@@ -15,6 +15,8 @@ import { stripProtocol } from '../utilities/url';
 import { anonymizeMessages } from '../utilities/anonymizeMessages';
 import { generateRandomWordSlug } from '../utilities/randomWordSlugs';
 import { mergeMessagesByUserId } from '../utilities/messages';
+import { qsBuilder } from '@/utilities/fetcher';
+import { getCache, setCache } from '@/utilities/dynamoCache';
 
 export const createMessage = async (
   message: Prisma.messagesUncheckedCreateInput
@@ -106,20 +108,35 @@ export const findAccount = async (accounts: Prisma.accountsFindUniqueArgs) => {
   return await prisma.accounts.findUnique(accounts);
 };
 
-export const findAccountById = async (accountId: string) => {
-  return await prisma.accounts.findUnique({
-    where: {
-      id: accountId,
-    },
-    include: {
-      slackAuthorizations: {
-        orderBy: {
-          createdAt: 'desc',
-        },
+/** function cached by dynamodb */
+export const findAccountById = async (
+  accountId: string
+): Promise<
+  | (accounts & {
+      channels: channels[];
+      slackAuthorizations: slackAuthorizations[];
+    })
+  | null
+> => {
+  const qs = qsBuilder({ findAccountById: accountId }) as string;
+  let response = await getCache(qs);
+  if (!response) {
+    response = await prisma.accounts.findUnique({
+      where: {
+        id: accountId,
       },
-      channels: true,
-    },
-  });
+      include: {
+        slackAuthorizations: {
+          orderBy: {
+            createdAt: 'desc',
+          },
+        },
+        channels: true,
+      },
+    });
+    await setCache(qs, response);
+  }
+  return response;
 };
 
 export const findAccountBySlackTeamId = async (slackTeamId: string) => {
@@ -204,16 +221,23 @@ export const updateAccountRedirectDomain = async (
   });
 };
 
+/** function cached by dynamodb */
 export const channelIndex = async (
   accountId: string,
   { hidden }: { hidden?: boolean } = {}
-) => {
-  return await prisma.channels.findMany({
-    where: {
-      accountId,
-      ...(!!String(hidden) && { hidden }),
-    },
-  });
+): Promise<channels[]> => {
+  const qs = qsBuilder({ channelIndex: accountId, hidden }) as string;
+  let response = await getCache(qs);
+  if (!response) {
+    response = await prisma.channels.findMany({
+      where: {
+        accountId,
+        ...(!!String(hidden) && { hidden }),
+      },
+    });
+    await setCache(qs, response);
+  }
+  return response;
 };
 
 export const findChannel = async (channelId: string) => {
@@ -223,33 +247,62 @@ export const findChannel = async (channelId: string) => {
   });
 };
 
-export const findAccountByPath = async (path: string) => {
-  return await prisma.accounts.findFirst({
-    where: {
-      OR: [
-        {
-          redirectDomain: path,
-        },
-        {
-          slackDomain: path,
-        },
-        {
-          discordDomain: path,
-        },
-        {
-          discordServerId: path,
-        },
-      ],
-    },
-  });
+/** function cached by dynamodb */
+export const findAccountByPath = async (
+  path: string
+): Promise<accounts | null> => {
+  const qs = qsBuilder({ findAccountByPath: path }) as string;
+  let response = await getCache(qs);
+  if (!response) {
+    response = await prisma.accounts.findFirst({
+      where: {
+        OR: [
+          {
+            redirectDomain: path,
+          },
+          {
+            slackDomain: path,
+          },
+          {
+            discordDomain: path,
+          },
+          {
+            discordServerId: path,
+          },
+        ],
+      },
+    });
+    await setCache(qs, response);
+  }
+  return response;
 };
 
-//TODO figure out a way to quickly filter out channels based on accountID
-export const channelsGroupByThreadCount = async (accountId: string) => {
-  return await prisma.$queryRaw<{ channelId: string; count: number }[]>`
-    select * from channels_stats cs 
-    where cs."accountId" = ${accountId}
-    `;
+type channelsGroupByThreadCountType = (Prisma.PickArray<
+  Prisma.SlackThreadsGroupByOutputType,
+  'channelId'[]
+> & {
+  _count: {
+    id: number;
+  };
+})[];
+
+/** function cached by dynamodb */
+export const channelsGroupByThreadCount = async (
+  accountId: string
+): Promise<channelsGroupByThreadCountType> => {
+  const qs = qsBuilder({ channelsGroupByThreadCount: accountId }) as string;
+  let response = await getCache(qs);
+  if (!response) {
+    response = await prisma.slackThreads.groupBy({
+      where: { channel: { account: { id: accountId } } },
+      by: ['channelId'],
+      _count: {
+        id: true,
+      },
+    });
+    await setCache(qs, response);
+  }
+  return response;
 };
 
 export const createManyChannel = async (
@@ -322,48 +375,34 @@ export const createDiscordAuthorization = async (
   });
 };
 
+/** function cached by dynamodb */
 export const threadCount = async (channelId: string): Promise<number> => {
-  return await prisma.$queryRaw<{ channelId: string; count: number }[]>`
-    select * from channels_stats cs 
-    where cs."channelId" = ${channelId}
-  `.then((rows) => {
-    return rows.reduce((_, curr) => {
-      return curr.count;
-    }, 0);
-  });
+  const qs = qsBuilder({ threadCountByChannel: channelId }) as string;
+  let response = await getCache(qs);
+  if (!response) {
+    response = await prisma.slackThreads.count({
+      where: {
+        channelId,
+        messageCount: {
+          gt: 1,
+        },
+      },
+    });
+    await setCache(qs, response);
+  }
+  return response;
 };
 
-interface RawResult {
-  // thread
-  id: string;
-  incrementId: number;
-  slackThreadTs: string;
-  createdAt: Date;
-  slug: string;
-  messageCount: number;
-  channelId: string;
-  viewCount: number;
-  slackThreadId: string;
-  // message
-  slackMessageId: string;
-  messageId: string;
-  usersId: string;
-  mentions?: string | null;
-  sentAt: Date;
-  body: string;
-}
+type threadIndexType = (slackThreads & {
+  messages: (messages & {
+    mentions: (slackMentions & {
+      users: users | null;
+    })[];
+    author: users | null;
+  })[];
+})[];
 
-type MsgWithMentions = messages &
-  (
-    | { mentions?: string | null }
-    | {
-        mentions?: (slackMentions & {
-          users: users | null;
-        })[];
-      }
-  );
-type ThreadWithMsg = slackThreads & { messages: MsgWithMentions[] };
-
+/** function cached by dynamodb */
 export const threadIndex = async ({
   channelId,
   take = 20,
@@ -375,99 +414,61 @@ export const threadIndex = async ({
   skip?: number;
   account: accounts;
 }) => {
-  const MESSAGES_ORDER_BY = 'desc';
-  const threadsRawQuery = await prisma.$queryRaw<RawResult[]>`
-  SELECT *, x.id as "messageId" FROM
-    ( SELECT 
-        m.*, string_agg(sm."usersId", ',') mentions, 
-        ROW_NUMBER () OVER (PARTITION BY m."slackThreadId" ORDER BY m."sentAt" asc)
-      FROM messages m
-      LEFT JOIN "slackMentions" sm ON sm."messagesId" = m.id
-      WHERE m."slackThreadId" IN ( 
-        SELECT st.id
-        FROM "slackThreads" st
-        WHERE st."channelId" = ${channelId} AND st."messageCount" > 1
-        GROUP BY st."id" 
-        ORDER BY st."slackThreadTs" DESC
-        LIMIT ${take} OFFSET ${skip}
-      )
-      GROUP BY m.id 
-    ) x
-  JOIN "slackThreads" st2 ON st2.id = x."slackThreadId" 
-  WHERE ROW_NUMBER < 5
-  ORDER BY st2."slackThreadTs" DESC, x."sentAt" desc`;
-
-  const usersId: string[] = [];
-
-  const threads: ThreadWithMsg[] = Object.values(
-    threadsRawQuery.reduce((prev: Record<string, ThreadWithMsg>, curr) => {
-      if (!prev[curr.id]) {
-        prev[curr.id] = {
-          id: curr.id,
-          incrementId: curr.incrementId,
-          slackThreadTs: curr.slackThreadTs,
-          slug: curr.slug,
-          messageCount: curr.messageCount,
-          channelId: curr.channelId,
-          viewCount: curr.viewCount,
-          messages: [],
-        } as ThreadWithMsg;
-      }
-      prev[curr.id].messages.push({
-        createdAt: curr.createdAt,
-        slackMessageId: curr.slackMessageId,
-        id: curr.messageId,
-        usersId: curr.usersId,
-        mentions: curr.mentions,
-        slackThreadId: curr.slackThreadId,
-        sentAt: new Date(curr.sentAt),
-        body: curr.body,
-      } as MsgWithMentions);
-
-      usersId.push(curr.usersId);
-      curr.mentions && usersId.push(...curr.mentions?.split(','));
-      return prev;
-    }, {})
-  );
-
-  const users = await prisma.users.findMany({
-    where: { id: { in: usersId.filter(Boolean) } },
-  });
-  const usersKV: Record<string, users> = users.reduce((prev, curr) => {
-    return { ...prev, [curr.id]: curr };
-  }, {});
-
-  const threadsWithMessages = threads
-    .filter((thread) => thread.messages.length > 0)
-    .map((thread) => {
-      return {
-        ...thread,
-        messages: thread.messages.map((message) => {
-          const author = message.usersId ? usersKV[message.usersId] : null;
-          const mentions = message.mentions
-            ? (message.mentions as string)?.split(',').map((mention) => {
-                return {
-                  messagesId: message.id,
-                  usersId: mention,
-                  users: usersKV[mention],
-                };
-              })
-            : [];
-          return { ...message, author, mentions };
-        }),
-      };
-    })
-    .map((thread) => {
-      thread.messages = mergeMessagesByUserId(
-        thread.messages,
-        MESSAGES_ORDER_BY
-      );
-      return thread;
+  const qs = qsBuilder({
+    threadIndex: 'threadIndex',
+    channelId,
+    take,
+    skip,
+    account: account.id,
+  }) as string;
+  let response = await getCache(qs);
+  if (!response) {
+    const MESSAGES_ORDER_BY = 'desc';
+    const threads = await prisma.slackThreads.findMany({
+      take: take,
+      skip: skip,
+      include: {
+        messages: {
+          include: {
+            author: true,
+            mentions: {
+              include: {
+                users: true,
+              },
+            },
+          },
+          orderBy: {
+            sentAt: MESSAGES_ORDER_BY,
+          },
+        },
+      },
+      where: {
+        channelId,
+        messageCount: {
+          gt: 1,
+        },
+      },
+      orderBy: {
+        slackThreadTs: 'desc',
+      },
     });
-  if (account.anonymizeUsers) {
-    return threadsWithMessages.map(anonymizeMessages);
+    const threadsWithMessages = threads
+      .filter((thread) => thread.messages.length > 0)
+      .map((thread) => {
+        thread.messages = mergeMessagesByUserId(
+          thread.messages,
+          MESSAGES_ORDER_BY
+        );
+        return thread;
+      });
+
+    response = account.anonymizeUsers
+      ? threadsWithMessages.map(anonymizeMessages)
+      : threadsWithMessages;
+
+    await setCache(qs, response);
   }
-  return threadsWithMessages;
+  return response as threadIndexType;
 };
 
 export const findThreadById = async (threadId: number) => {
