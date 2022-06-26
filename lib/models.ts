@@ -203,7 +203,7 @@ export const updateAccountRedirectDomain = async (
 export const channelIndex = async (
   accountId: string,
   { hidden }: { hidden?: boolean } = {}
-): Promise<channels[]> => {
+) => {
   return await prisma.channels.findMany({
     where: {
       accountId,
@@ -219,9 +219,7 @@ export const findChannel = async (channelId: string) => {
   });
 };
 
-export const findAccountByPath = async (
-  path: string
-): Promise<accounts | null> => {
+export const findAccountByPath = async (path: string) => {
   return await prisma.accounts.findFirst({
     where: {
       OR: [
@@ -383,9 +381,10 @@ export const threadIndex = async ({
       return thread;
     });
 
-  return account.anonymizeUsers
-    ? threadsWithMessages.map(anonymizeMessages)
-    : threadsWithMessages;
+  if (account.anonymizeUsers) {
+    return threadsWithMessages.map(anonymizeMessages);
+  }
+  return threadsWithMessages;
 };
 
 export const findThreadById = async (threadId: number) => {

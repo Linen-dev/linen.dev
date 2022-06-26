@@ -16,7 +16,6 @@ export function buildSettings(account: accounts): Settings {
   const defaultSettings =
     links.find(({ accountId }) => accountId === account.id) || links[0];
 
-  //TODO: Refactor a lot of account settings is duplicate
   const communityType = account.discordServerId ? 'discord' : 'slack';
 
   const settings = {

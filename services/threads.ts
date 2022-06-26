@@ -143,7 +143,6 @@ export async function getThreadById(
   };
 }
 
-/** function cached by dynamodb */
 export async function threadGetStaticProps(
   context: GetStaticPropsContext,
   isSubdomainbasedRouting: boolean
