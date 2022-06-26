@@ -12,9 +12,16 @@ import { stripProtocol } from '../utilities/url';
 import { accounts, channels, MessagesViewType } from '@prisma/client';
 import { NotFound } from '../utilities/response';
 import { revalidateInSeconds } from 'constants/revalidate';
-import { qsBuilder } from '@/utilities/fetcher';
-import { getCache, setCache } from '@/utilities/dynamoCache';
 import { buildSettings } from './accountSettings';
+import { memoize } from '@/utilities/dynamoCache';
+
+const findAccountByPathMemo = memoize(findAccountByPath);
+const channelIndexMemo = memoize(channelIndex);
+const channelsGroupByThreadCountMemo = memoize(channelsGroupByThreadCount);
+const findMessagesFromChannelMemo = memoize(findMessagesFromChannel);
+const findChannelsWithSingleMessagesMemo = memoize(
+  findChannelsWithSingleMessages
+);
 
 async function getThreadsAndUsers({
   account,
@@ -29,7 +36,7 @@ async function getThreadsAndUsers({
 }) {
   const [threadsResponse, channelsResponse] = await Promise.all([
     fetchThreads({ channelId, page, account }),
-    channelsGroupByThreadCount(account.id),
+    channelsGroupByThreadCountMemo(account.id),
   ]);
 
   const { data, pagination } = threadsResponse;
@@ -115,10 +122,9 @@ async function getMessagesAndUsers({
   channels: channels[];
   page?: number;
 }) {
-  const { messages, total, currentPage, pages } = await findMessagesFromChannel(
-    { channelId, page }
-  );
-  const channelsWithMinThreads = await findChannelsWithSingleMessages({
+  const { messages, total, currentPage, pages } =
+    await findMessagesFromChannelMemo({ channelId, page });
+  const channelsWithMinThreads = await findChannelsWithSingleMessagesMemo({
     channels,
   });
 
@@ -159,11 +165,11 @@ export const getThreadsByCommunityName = async (
     return null;
   }
 
-  const account = await findAccountByPath(communityName);
+  const account = await findAccountByPathMemo(communityName);
   if (account === null) {
     return null;
   }
-  const channels = await channelIndex(account.id, { hidden: false });
+  const channels = await channelIndexMemo(account.id, { hidden: false });
   if (channels.length === 0) {
     return null;
   }
@@ -191,7 +197,8 @@ export const getThreadsByCommunityName = async (
   };
 };
 
-/** function cached by dynamodb */
+const getThreadsByCommunityNameMemo = memoize(getThreadsByCommunityName);
+
 export async function channelGetStaticProps(
   context: GetStaticPropsContext,
   isSubdomainbasedRouting: boolean
@@ -200,18 +207,13 @@ export async function channelGetStaticProps(
   const channelName = context.params?.channelName as string;
   const page = context.params?.page as string;
 
-  const qs = qsBuilder({ communityName, channelName, page }) as string;
-  let result = await getCache(qs);
+  const result = await getThreadsByCommunityNameMemo(
+    communityName,
+    Number(page) || 1,
+    channelName
+  );
   if (!result) {
-    result = await getThreadsByCommunityName(
-      communityName,
-      Number(page) || 1,
-      channelName
-    );
-    if (!result) {
-      return NotFound();
-    }
-    await setCache(qs, result);
+    return NotFound();
   }
   return {
     props: {

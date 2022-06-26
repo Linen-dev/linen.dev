@@ -3,10 +3,6 @@ import {
   channels,
   slackAuthorizations,
   Prisma,
-  slackThreads,
-  messages,
-  slackMentions,
-  users,
 } from '@prisma/client';
 import prisma from '../client';
 import { UserInfo } from '../types/slackResponses//slackUserInfoInterface';
@@ -15,8 +11,6 @@ import { stripProtocol } from '../utilities/url';
 import { anonymizeMessages } from '../utilities/anonymizeMessages';
 import { generateRandomWordSlug } from '../utilities/randomWordSlugs';
 import { mergeMessagesByUserId } from '../utilities/messages';
-import { qsBuilder } from '@/utilities/fetcher';
-import { getCache, setCache } from '@/utilities/dynamoCache';
 
 export const createMessage = async (
   message: Prisma.messagesUncheckedCreateInput
@@ -108,35 +102,20 @@ export const findAccount = async (accounts: Prisma.accountsFindUniqueArgs) => {
   return await prisma.accounts.findUnique(accounts);
 };
 
-/** function cached by dynamodb */
-export const findAccountById = async (
-  accountId: string
-): Promise<
-  | (accounts & {
-      channels: channels[];
-      slackAuthorizations: slackAuthorizations[];
-    })
-  | null
-> => {
-  const qs = qsBuilder({ findAccountById: accountId }) as string;
-  let response = await getCache(qs);
-  if (!response) {
-    response = await prisma.accounts.findUnique({
-      where: {
-        id: accountId,
-      },
-      include: {
-        slackAuthorizations: {
-          orderBy: {
-            createdAt: 'desc',
-          },
+export const findAccountById = async (accountId: string) => {
+  return await prisma.accounts.findUnique({
+    where: {
+      id: accountId,
+    },
+    include: {
+      slackAuthorizations: {
+        orderBy: {
+          createdAt: 'desc',
         },
-        channels: true,
       },
-    });
-    await setCache(qs, response);
-  }
-  return response;
+      channels: true,
+    },
+  });
 };
 
 export const findAccountBySlackTeamId = async (slackTeamId: string) => {
@@ -221,23 +200,16 @@ export const updateAccountRedirectDomain = async (
   });
 };
 
-/** function cached by dynamodb */
 export const channelIndex = async (
   accountId: string,
   { hidden }: { hidden?: boolean } = {}
 ): Promise<channels[]> => {
-  const qs = qsBuilder({ channelIndex: accountId, hidden }) as string;
-  let response = await getCache(qs);
-  if (!response) {
-    response = await prisma.channels.findMany({
-      where: {
-        accountId,
-        ...(!!String(hidden) && { hidden }),
-      },
-    });
-    await setCache(qs, response);
-  }
-  return response;
+  return await prisma.channels.findMany({
+    where: {
+      accountId,
+      ...(!!String(hidden) && { hidden }),
+    },
+  });
 };
 
 export const findChannel = async (channelId: string) => {
@@ -247,62 +219,37 @@ export const findChannel = async (channelId: string) => {
   });
 };
 
-/** function cached by dynamodb */
 export const findAccountByPath = async (
   path: string
 ): Promise<accounts | null> => {
-  const qs = qsBuilder({ findAccountByPath: path }) as string;
-  let response = await getCache(qs);
-  if (!response) {
-    response = await prisma.accounts.findFirst({
-      where: {
-        OR: [
-          {
-            redirectDomain: path,
-          },
-          {
-            slackDomain: path,
-          },
-          {
-            discordDomain: path,
-          },
-          {
-            discordServerId: path,
-          },
-        ],
-      },
-    });
-    await setCache(qs, response);
-  }
-  return response;
+  return await prisma.accounts.findFirst({
+    where: {
+      OR: [
+        {
+          redirectDomain: path,
+        },
+        {
+          slackDomain: path,
+        },
+        {
+          discordDomain: path,
+        },
+        {
+          discordServerId: path,
+        },
+      ],
+    },
+  });
 };
 
-type channelsGroupByThreadCountType = (Prisma.PickArray<
-  Prisma.SlackThreadsGroupByOutputType,
-  'channelId'[]
-> & {
-  _count: {
-    id: number;
-  };
-})[];
-
-/** function cached by dynamodb */
-export const channelsGroupByThreadCount = async (
-  accountId: string
-): Promise<channelsGroupByThreadCountType> => {
-  const qs = qsBuilder({ channelsGroupByThreadCount: accountId }) as string;
-  let response = await getCache(qs);
-  if (!response) {
-    response = await prisma.slackThreads.groupBy({
-      where: { channel: { account: { id: accountId } } },
-      by: ['channelId'],
-      _count: {
-        id: true,
-      },
-    });
-    await setCache(qs, response);
-  }
-  return response;
+export const channelsGroupByThreadCount = async (accountId: string) => {
+  return await prisma.slackThreads.groupBy({
+    where: { channel: { account: { id: accountId } } },
+    by: ['channelId'],
+    _count: {
+      id: true,
+    },
+  });
 };
 
 export const createManyChannel = async (
@@ -375,34 +322,17 @@ export const createDiscordAuthorization = async (
   });
 };
 
-/** function cached by dynamodb */
 export const threadCount = async (channelId: string): Promise<number> => {
-  const qs = qsBuilder({ threadCountByChannel: channelId }) as string;
-  let response = await getCache(qs);
-  if (!response) {
-    response = await prisma.slackThreads.count({
-      where: {
-        channelId,
-        messageCount: {
-          gt: 1,
-        },
+  return await prisma.slackThreads.count({
+    where: {
+      channelId,
+      messageCount: {
+        gt: 1,
       },
-    });
-    await setCache(qs, response);
-  }
-  return response;
+    },
+  });
 };
 
-type threadIndexType = (slackThreads & {
-  messages: (messages & {
-    mentions: (slackMentions & {
-      users: users | null;
-    })[];
-    author: users | null;
-  })[];
-})[];
-
-/** function cached by dynamodb */
 export const threadIndex = async ({
   channelId,
   take = 20,
@@ -414,61 +344,48 @@ export const threadIndex = async ({
   skip?: number;
   account: accounts;
 }) => {
-  const qs = qsBuilder({
-    threadIndex: 'threadIndex',
-    channelId,
-    take,
-    skip,
-    account: account.id,
-  }) as string;
-  let response = await getCache(qs);
-  if (!response) {
-    const MESSAGES_ORDER_BY = 'desc';
-    const threads = await prisma.slackThreads.findMany({
-      take: take,
-      skip: skip,
-      include: {
-        messages: {
-          include: {
-            author: true,
-            mentions: {
-              include: {
-                users: true,
-              },
+  const MESSAGES_ORDER_BY = 'desc';
+  const threads = await prisma.slackThreads.findMany({
+    take: take,
+    skip: skip,
+    include: {
+      messages: {
+        include: {
+          author: true,
+          mentions: {
+            include: {
+              users: true,
             },
           },
-          orderBy: {
-            sentAt: MESSAGES_ORDER_BY,
-          },
+        },
+        orderBy: {
+          sentAt: MESSAGES_ORDER_BY,
         },
       },
-      where: {
-        channelId,
-        messageCount: {
-          gt: 1,
-        },
+    },
+    where: {
+      channelId,
+      messageCount: {
+        gt: 1,
       },
-      orderBy: {
-        slackThreadTs: 'desc',
-      },
+    },
+    orderBy: {
+      slackThreadTs: 'desc',
+    },
+  });
+  const threadsWithMessages = threads
+    .filter((thread) => thread.messages.length > 0)
+    .map((thread) => {
+      thread.messages = mergeMessagesByUserId(
+        thread.messages,
+        MESSAGES_ORDER_BY
+      );
+      return thread;
     });
-    const threadsWithMessages = threads
-      .filter((thread) => thread.messages.length > 0)
-      .map((thread) => {
-        thread.messages = mergeMessagesByUserId(
-          thread.messages,
-          MESSAGES_ORDER_BY
-        );
-        return thread;
-      });
 
-    response = account.anonymizeUsers
-      ? threadsWithMessages.map(anonymizeMessages)
-      : threadsWithMessages;
-
-    await setCache(qs, response);
-  }
-  return response as threadIndexType;
+  return account.anonymizeUsers
+    ? threadsWithMessages.map(anonymizeMessages)
+    : threadsWithMessages;
 };
 
 export const findThreadById = async (threadId: number) => {

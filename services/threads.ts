@@ -13,9 +13,16 @@ import { GetStaticPropsContext } from 'next';
 import { NotFound } from 'utilities/response';
 import { revalidateInSeconds } from 'constants/revalidate';
 import * as Sentry from '@sentry/nextjs';
-import { qsBuilder } from '@/utilities/fetcher';
-import { getCache, setCache } from '@/utilities/dynamoCache';
 import { buildSettings } from './accountSettings';
+import { memoize } from '@/utilities/dynamoCache';
+
+const threadIndexMemo = memoize(threadIndex);
+const threadCountMemo = memoize(threadCount);
+const findThreadByIdMemo = memoize(findThreadById);
+const channelIndexMemo = memoize(channelIndex);
+const findAccountByIdMemo = memoize(findAccountById);
+const channelsGroupByThreadCountMemo = memoize(channelsGroupByThreadCount);
+const getThreadByIdMemo = memoize(getThreadById);
 
 interface IndexProps {
   channelId: string;
@@ -27,8 +34,8 @@ export async function index({ channelId, page, account }: IndexProps) {
   const take = 10;
   const skip = (page - 1) * take;
   const [threads, total] = await Promise.all([
-    threadIndex({ channelId, take, skip, account }),
-    threadCount(channelId),
+    threadIndexMemo({ channelId, take, skip, account }),
+    threadCountMemo(channelId),
   ]);
   return {
     data: {
@@ -48,16 +55,16 @@ export async function getThreadById(
   threadId: string
 ): Promise<ThreadByIdResponse> {
   const id = parseInt(threadId);
-  const thread = await findThreadById(id);
+  const thread = await findThreadByIdMemo(id);
 
   if (!thread || !thread?.channel?.accountId) {
     return Promise.reject(new Error('Thread not found'));
   }
 
   const [channels, account, channelsResponse] = await Promise.all([
-    channelIndex(thread.channel.accountId),
-    findAccountById(thread.channel.accountId),
-    channelsGroupByThreadCount(thread?.channel?.accountId),
+    channelIndexMemo(thread.channel.accountId, { hidden: false }),
+    findAccountByIdMemo(thread.channel.accountId),
+    channelsGroupByThreadCountMemo(thread?.channel?.accountId),
   ]);
 
   //Filter out channels with less than 20 threads
@@ -143,15 +150,7 @@ export async function threadGetStaticProps(
 ) {
   const threadId = context.params?.threadId as string;
   try {
-    const qs = qsBuilder({ threadId }) as string;
-    let thread = await getCache(qs);
-    if (!thread) {
-      thread = await getThreadById(threadId);
-      if (!thread) {
-        return NotFound();
-      }
-      await setCache(qs, thread);
-    }
+    const thread = await getThreadByIdMemo(threadId);
     return {
       props: {
         ...thread,
