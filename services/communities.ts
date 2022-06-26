@@ -141,8 +141,8 @@ async function getMessagesAndUsers({
     messages: messages.map((message) => {
       return {
         ...message,
-        createdAt: message.createdAt.toISOString(),
-        sentAt: message.sentAt.toISOString(),
+        createdAt: message?.createdAt?.toISOString(),
+        sentAt: message?.sentAt?.toISOString(),
       };
     }),
   };
