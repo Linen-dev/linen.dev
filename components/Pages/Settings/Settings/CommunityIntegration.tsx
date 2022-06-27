@@ -14,13 +14,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 const statusMap: any = {
   NOT_STARTED: (
     <>
-      <FontAwesomeIcon icon={faSpinner} spin className="h-5 w-5 mr-2" /> In
+      <FontAwesomeIcon icon={faSpinner} spin className="h-5 w-5 mr-1" /> In
       progress
     </>
   ),
   IN_PROGRESS: (
     <>
-      <FontAwesomeIcon icon={faSpinner} spin className="h-5 w-5 mr-2" /> In
+      <FontAwesomeIcon icon={faSpinner} spin className="h-5 w-5 mr-1" /> In
       progress
     </>
   ),
@@ -29,7 +29,7 @@ const statusMap: any = {
       <FontAwesomeIcon
         icon={faCircleCheck}
         color="green"
-        className="h-5 w-5 mr-2"
+        className="h-5 w-5 mr-1"
       />
       Done
     </>
@@ -38,7 +38,7 @@ const statusMap: any = {
     <>
       <FontAwesomeIcon
         icon={faCircleExclamation}
-        className="h-5 w-5 mr-2"
+        className="h-5 w-5 mr-1"
         color="red"
       />{' '}
       Error
@@ -80,12 +80,15 @@ export default function CommunityIntegration({
           <div className="grow">
             <h3 className="text-lg leading-6 font-medium text-gray-900">
               {capitalize(communityType)} integration
+              <span className="text-gray-300"> | </span>
+              {!!account?.hasAuth &&
+                !!account?.slackSyncStatus &&
+                statusMap[account.slackSyncStatus]}
             </h3>
             <div className="mt-2 sm:flex sm:items-start sm:justify-between">
               <div className="max-w-xl text-sm text-gray-500">
                 <p>
-                  Connect to {capitalize(communityType)} to start fetching new
-                  conversations.
+                  Connect to {capitalize(communityType)} to fetch conversations.
                 </p>
               </div>
             </div>
@@ -116,11 +119,6 @@ export default function CommunityIntegration({
                 iconSize="20"
               />
             )}
-            <div className="flex items-center">
-              {!!account?.hasAuth &&
-                !!account?.slackSyncStatus &&
-                statusMap[account.slackSyncStatus]}
-            </div>
           </div>
         </div>
       </div>
