@@ -136,7 +136,14 @@ function PageLayout({
           isSubDomainRouting,
         })}
 
-        <div className="md:flex justify-center lg:w-full">
+        <div
+          className={classNames(
+            'lg:h-[calc(100vh_-_80px)] lg:w-full',
+            'md:flex',
+            'sm:h-[calc(100vh_-_144px)]',
+            'justify-center overflow-auto h-[calc(100vh_-_192px)] w-full'
+          )}
+        >
           <ErrorBoundary
             FallbackComponent={() => (
               <>
