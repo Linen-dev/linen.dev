@@ -1,5 +1,4 @@
 import serializeThread from '../serializers/thread';
-import { links } from '../constants/examples';
 import {
   threadIndex,
   threadCount,
@@ -10,6 +9,12 @@ import {
 } from '../lib/models';
 import { ThreadByIdResponse } from '../types/apiResponses/threads/[threadId]';
 import { accounts, users } from '@prisma/client';
+import { GetStaticPropsContext } from 'next';
+import { NotFound } from 'utilities/response';
+import { revalidateInSeconds } from 'constants/revalidate';
+import * as Sentry from '@sentry/nextjs';
+import { buildSettings } from './accountSettings';
+import { memoize } from '@/utilities/dynamoCache';
 
 interface IndexProps {
   channelId: string;
@@ -21,8 +26,8 @@ export async function index({ channelId, page, account }: IndexProps) {
   const take = 10;
   const skip = (page - 1) * take;
   const [threads, total] = await Promise.all([
-    threadIndex({ channelId, take, skip, account }),
-    threadCount(channelId),
+    threadIndexMemo({ channelId, take, skip, account }),
+    threadCountMemo(channelId),
   ]);
   return {
     data: {
@@ -42,16 +47,16 @@ export async function getThreadById(
   threadId: string
 ): Promise<ThreadByIdResponse> {
   const id = parseInt(threadId);
-  const thread = await findThreadById(id);
+  const thread = await findThreadByIdMemo(id);
 
   if (!thread || !thread?.channel?.accountId) {
     return Promise.reject(new Error('Thread not found'));
   }
 
   const [channels, account, channelsResponse] = await Promise.all([
-    channelIndex(thread.channel.accountId),
-    findAccountById(thread.channel.accountId),
-    channelsGroupByThreadCount(thread?.channel?.accountId),
+    channelIndexMemo(thread.channel.accountId, { hidden: false }),
+    findAccountByIdMemo(thread.channel.accountId),
+    channelsGroupByThreadCountMemo(thread?.channel?.accountId),
   ]);
 
   //Filter out channels with less than 20 threads
@@ -66,29 +71,14 @@ export async function getThreadById(
         return r.channelId === c.id;
       });
 
-      return channelCount && channelCount.count > 2;
+      return channelCount && channelCount._count.id > 2;
     });
 
   if (!account) {
     return Promise.reject(new Error('Account not found'));
   }
 
-  const defaultSettings =
-    links.find(({ accountId }) => accountId === account.id) || links[0];
-
-  const communityType = account.discordServerId ? 'discord' : 'slack';
-
-  const settings = {
-    brandColor: account.brandColor || defaultSettings.brandColor,
-    homeUrl: account.homeUrl || defaultSettings.homeUrl,
-    docsUrl: account.docsUrl || defaultSettings.docsUrl,
-    logoUrl: account.logoUrl || defaultSettings.logoUrl,
-    ...(account.premium &&
-      account.googleAnalyticsId && {
-        googleAnalyticsId: account.googleAnalyticsId,
-      }),
-    communityType: communityType,
-  };
+  const settings = buildSettings(account);
 
   const authors = thread.messages
     .map((m) => m.author)
@@ -144,3 +134,31 @@ export async function getThreadById(
     settings,
   };
 }
+
+export async function threadGetStaticProps(
+  context: GetStaticPropsContext,
+  isSubdomainbasedRouting: boolean
+) {
+  const threadId = context.params?.threadId as string;
+  try {
+    const thread = await getThreadByIdMemo(threadId);
+    return {
+      props: {
+        ...thread,
+        isSubDomainRouting: isSubdomainbasedRouting,
+      },
+      revalidate: revalidateInSeconds, // In seconds
+    };
+  } catch (exception) {
+    Sentry.captureException(exception);
+    return NotFound();
+  }
+}
+
+const threadIndexMemo = memoize(threadIndex);
+const threadCountMemo = memoize(threadCount);
+const findThreadByIdMemo = memoize(findThreadById);
+const channelIndexMemo = memoize(channelIndex);
+const findAccountByIdMemo = memoize(findAccountById);
+const channelsGroupByThreadCountMemo = memoize(channelsGroupByThreadCount);
+const getThreadByIdMemo = memoize(getThreadById);

@@ -27,8 +27,8 @@ async function getMessagesFromChannel(
     messages.map((message) => {
       return {
         ...message,
-        createdAt: message.createdAt.toISOString(),
-        sentAt: message.sentAt.toISOString(),
+        createdAt: message?.createdAt?.toISOString(),
+        sentAt: message?.sentAt?.toISOString(),
       };
     })
   );
