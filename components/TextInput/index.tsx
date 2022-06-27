@@ -21,6 +21,7 @@ function TextInput({
   defaultValue,
   disabled = false,
   readOnly = false,
+  ...rest
 }: Props) {
   return (
     <input
@@ -33,6 +34,7 @@ function TextInput({
       defaultValue={defaultValue}
       disabled={disabled}
       readOnly={readOnly}
+      {...rest}
     />
   );
 }
