@@ -1,5 +1,4 @@
 import serializeThread from '../serializers/thread';
-import { links } from '../constants/examples';
 import {
   threadIndex,
   threadCount,
@@ -10,6 +9,7 @@ import {
 } from '../lib/models';
 import { ThreadByIdResponse } from '../types/apiResponses/threads/[threadId]';
 import { accounts, users } from '@prisma/client';
+import { buildSettings } from './accountSettings';
 
 interface IndexProps {
   channelId: string;
@@ -73,22 +73,7 @@ export async function getThreadById(
     return Promise.reject(new Error('Account not found'));
   }
 
-  const defaultSettings =
-    links.find(({ accountId }) => accountId === account.id) || links[0];
-
-  const communityType = account.discordServerId ? 'discord' : 'slack';
-
-  const settings = {
-    brandColor: account.brandColor || defaultSettings.brandColor,
-    homeUrl: account.homeUrl || defaultSettings.homeUrl,
-    docsUrl: account.docsUrl || defaultSettings.docsUrl,
-    logoUrl: account.logoUrl || defaultSettings.logoUrl,
-    ...(account.premium &&
-      account.googleAnalyticsId && {
-        googleAnalyticsId: account.googleAnalyticsId,
-      }),
-    communityType: communityType,
-  };
+  const settings = buildSettings(account);
 
   const authors = thread.messages
     .map((m) => m.author)

@@ -7,47 +7,12 @@ import {
   findMessagesFromChannel,
 } from '../lib/models';
 import { index as fetchThreads } from '../services/threads';
-import { links } from '../constants/examples';
 import { GetStaticPropsContext } from 'next/types';
 import { stripProtocol } from '../utilities/url';
 import { accounts, channels, MessagesViewType } from '@prisma/client';
 import { NotFound } from '../utilities/response';
 import { revalidateInSeconds } from 'constants/revalidate';
-
-export type Settings = {
-  communityType: string;
-  googleAnalyticsId?: string | undefined;
-  name: string | null;
-  brandColor: string;
-  homeUrl: string;
-  docsUrl: string;
-  logoUrl: string;
-  messagesViewType: MessagesViewType;
-};
-
-function buildSettings(account: accounts): Settings {
-  const defaultSettings =
-    links.find(({ accountId }) => accountId === account.id) || links[0];
-
-  //TODO: Refactor a lot of account settings is duplicate
-  const communityType = account.discordServerId ? 'discord' : 'slack';
-
-  const settings = {
-    name: account.name,
-    brandColor: account.brandColor || defaultSettings.brandColor,
-    homeUrl: account.homeUrl || defaultSettings.homeUrl,
-    docsUrl: account.docsUrl || defaultSettings.docsUrl,
-    logoUrl: account.logoUrl || defaultSettings.logoUrl,
-    messagesViewType: account.messagesViewType || MessagesViewType.THREADS,
-    ...(account.premium &&
-      account.googleAnalyticsId && {
-        googleAnalyticsId: account.googleAnalyticsId,
-      }),
-    communityType: communityType,
-  };
-  return settings;
-}
-
+import { buildSettings } from './accountSettings';
 async function getThreadsAndUsers({
   account,
   channelId,
