@@ -1,8 +1,50 @@
+import '@fortawesome/fontawesome-svg-core/styles.css';
 import CommunityButton from 'components/CommunityButton';
 import { capitalize } from 'lib/util';
 import { integrationAuthorizer } from 'utilities/communityAuthorizers';
 import { SerializedAccount } from 'serializers/account';
 import { toast } from 'components/Toast';
+import {
+  faSpinner,
+  faCircleCheck,
+  faCircleExclamation,
+} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+const statusMap: any = {
+  NOT_STARTED: (
+    <>
+      <FontAwesomeIcon icon={faSpinner} spin className="h-5 w-5 mr-2" /> In
+      progress
+    </>
+  ),
+  IN_PROGRESS: (
+    <>
+      <FontAwesomeIcon icon={faSpinner} spin className="h-5 w-5 mr-2" /> In
+      progress
+    </>
+  ),
+  DONE: (
+    <>
+      <FontAwesomeIcon
+        icon={faCircleCheck}
+        color="green"
+        className="h-5 w-5 mr-2"
+      />
+      Done
+    </>
+  ),
+  ERROR: (
+    <>
+      <FontAwesomeIcon
+        icon={faCircleExclamation}
+        className="h-5 w-5 mr-2"
+        color="red"
+      />{' '}
+      Error
+    </>
+  ),
+};
 
 export default function CommunityIntegration({
   account,
@@ -48,7 +90,7 @@ export default function CommunityIntegration({
               </div>
             </div>
           </div>
-          <div className="self-center">
+          <div className="flex flex-col items-center gap-2">
             {newOnboarding ? (
               <div className="grid grid-cols-1 gap-4">
                 <CommunityButton
@@ -74,6 +116,11 @@ export default function CommunityIntegration({
                 iconSize="20"
               />
             )}
+            <div className="flex items-center">
+              {!!account?.hasAuth &&
+                !!account?.slackSyncStatus &&
+                statusMap[account.slackSyncStatus]}
+            </div>
           </div>
         </div>
       </div>
