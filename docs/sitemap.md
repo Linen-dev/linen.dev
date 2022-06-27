@@ -31,17 +31,38 @@ will return all threads with more than 1 message from that specific community, f
 
 ### accessing custom domain, as https://custom.domain.io/sitemap.xml
 
-will return all threads with more than 1 message from that specific community based on their domain, for instance:
+will return sitemap from channels with threads that has more than 1 message, example:
+
+```xml
+<sitemapindex ....>
+   <sitemap>
+      <loc>https://custom.domain.io/sitemap/c/general/chunk.xml</loc>
+   </sitemap>
+   <sitemap>
+      <loc>https://custom.domain.io/sitemap/c/other/chunk.xml</loc>
+   </sitemap>
+</sitemapindex>
+```
+
+### accessing specific channel chunk of a custom domain, as https://custom.domain.io/sitemap/c/channel/chunk.xml
+
+will return all threads with more than 1 message from that specific community channel based on their domain, plus channel pagination for example:
 
 ```xml
 <urlset ...>
+   <url>
+      <loc>https://custom.domain.io/c/general/1</loc>
+   </url>
+   <url>
+      <loc>https://custom.domain.io/c/general/2</loc>
+   </url>
    <url>
       <loc>https://custom.domain.io/t/1123/random-slug</loc>
    </url>
    <url>
       <loc>https://custom.domain.io/t/32321/topic-random</loc>
    </url>
-....
+   ....
 </urlset>
 ```
 

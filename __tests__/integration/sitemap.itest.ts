@@ -1,12 +1,28 @@
 import {
   createXMLSitemapForSubdomain,
   createXMLSitemapForFreeCommunity,
+  createXMLSitemapForChannel,
 } from '../../utilities/sitemap';
 
 describe('createXMLSitemapForSubdomain', () => {
   let sitemap: string;
   beforeAll(async () => {
     sitemap = await createXMLSitemapForSubdomain('empty.dev');
+  });
+
+  it('it should create a sitemap without any hidden channel neither threads', async () => {
+    expect(sitemap).toMatch(/^((?!hidden).)*$/);
+  });
+  it('it should create a sitemap with all pages of the channel', async () => {
+    expect(sitemap).toMatch(/https:\/\/empty.dev\/sitemap\/c\/general/);
+    expect(sitemap).toMatch(/https:\/\/empty.dev\/sitemap\/c\/sql/);
+  });
+});
+
+describe('createXMLSitemapForChannel', () => {
+  let sitemap: string;
+  beforeAll(async () => {
+    sitemap = await createXMLSitemapForChannel('empty.dev', 'general');
   });
 
   it('it should create a sitemap without any hidden channel neither threads', async () => {
