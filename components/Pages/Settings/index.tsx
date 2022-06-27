@@ -7,6 +7,7 @@ import ChannelsDefault from './Settings/ChannelsDefault';
 import ChannelVisibilityCard from './Settings/ChannelVisibilityCard';
 import CommunityIntegration from './Settings/CommunityIntegration';
 import AnonymizeCard from './Settings/AnonymizeCard';
+import URLs from './Settings/Urls';
 
 export interface SettingsProps {
   account?: SerializedAccount;
@@ -27,6 +28,7 @@ export default function Settings(props: SettingsProps) {
           <AnonymizeCard {...props} />
           <ChannelsDefault {...props} />
           <ChannelVisibilityCard {...props} />
+          <URLs {...props} />
         </div>
       </div>
     </DashboardLayout>
