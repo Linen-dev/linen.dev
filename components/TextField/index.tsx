@@ -23,6 +23,7 @@ export default function TextField({
   required,
   disabled = false,
   readOnly = false,
+  ...rest
 }: Props) {
   return (
     <Field>
@@ -35,6 +36,7 @@ export default function TextField({
         required={required}
         disabled={disabled}
         readOnly={readOnly}
+        {...rest}
       />
     </Field>
   );

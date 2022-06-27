@@ -5,7 +5,6 @@ import ColorField from 'components/ColorField';
 import Button from 'components/Button';
 import { stripProtocol } from 'utilities/url';
 import Label from 'components/Label';
-import CheckboxField from 'components/CheckboxField';
 import classNames from 'classnames';
 import { useS3Upload } from 'next-s3-upload';
 import { useState } from 'react';
@@ -48,7 +47,7 @@ function Card({
     <div
       className={classNames(
         'p-3 mb-3 rounded border-gray-200 border-solid border',
-        readOnly ? 'bg-slate-50' : '',
+        readOnly ? 'bg-slate-50 pointer-events-none' : '',
         className
       )}
     >
@@ -84,76 +83,42 @@ export default function Branding({ account }: Props) {
   const onSubmit = (event: any) => {
     event.preventDefault();
     const form = event.target;
-    const homeUrl = form.homeUrl.value;
-    const docsUrl = form.docsUrl.value;
     const redirectDomain = stripProtocol(form.redirectDomain.value);
     const googleAnalyticsId = form.googleAnalyticsId?.value;
     const brandColor = form.brandColor.value;
-    const anonymizeUsers = form.anonymizeUsers.checked;
     fetch('/api/accounts', {
       method: 'PUT',
       body: JSON.stringify({
         accountId: account.id,
-        homeUrl,
-        docsUrl,
         logoUrl,
         redirectDomain,
         brandColor,
         googleAnalyticsId,
-        anonymizeUsers,
       }),
     })
-      .then((response) => response.json())
-      .then(() => {
-        toast.success('Saved successfully!');
+      .then((response) => {
+        if (response.ok) toast.success('Saved successfully!');
+        else throw response;
+      })
+      .catch(() => {
+        toast.error('Something went wrong!');
       });
   };
 
-  const freeAccountSettings = (
+  const premiumAccountSettings = (
     <>
-      <h3 className="font-bold font-xl mb-3">Free</h3>
-      <Card>
-        <Label htmlFor="homeUrl">Home URL</Label>
-        <Description>Link to your home page.</Description>
-        <TextField
-          placeholder="https://yourwebsite.com"
-          id="homeUrl"
-          defaultValue={account.homeUrl}
-          required
-        />
-      </Card>
-      <Card>
-        <Label htmlFor="docsUrl">Docs URL</Label>
-        <Description>Link to your documentation.</Description>
-        <TextField
-          placeholder="https://docs.yourwebsite.com"
-          id="docsUrl"
-          defaultValue={account.docsUrl}
-          required
-        />
-      </Card>
-      <Card>
+      <PremiumCard isPremium={account.premium}>
         <Label htmlFor="redirectDomain">Redirect Domain</Label>
         <Description>Unique domain to redirect to.</Description>
         <TextField
           placeholder="linen.yourwebsite.com"
           id="redirectDomain"
-          defaultValue={account.redirectDomain}
-          required
+          defaultValue={account.premium ? account.redirectDomain : undefined}
+          disabled={!account.premium}
+          readOnly={!account.premium}
         />
-      </Card>
-      <Card>
-        <Label htmlFor="anonymizeUsers">Anonymize Users</Label>
-        <Description>Replace real usernames by randomly alias.</Description>
-        <CheckboxField id="anonymizeUsers" checked={account.anonymizeUsers} />
-      </Card>
-    </>
-  );
-
-  const premiumAccountSettings = (
-    <>
-      <h3 className="font-bold font-xl mb-3">Premium</h3>
-      <PremiumCard isPremium={account.premium} className="h-full">
+      </PremiumCard>
+      <PremiumCard isPremium={account.premium}>
         <Label htmlFor="brandColor">Brand Color</Label>
         <Description>
           Color that matches your brand. We&apos;ll use it for the header
@@ -167,7 +132,7 @@ export default function Branding({ account }: Props) {
           disabled={!account.premium}
         />
       </PremiumCard>
-      <PremiumCard isPremium={account.premium} className="h-full">
+      <PremiumCard isPremium={account.premium}>
         <Label htmlFor="logo">Logo</Label>
         <Description>Logo of your brand.</Description>
         <FileInput onChange={handleLogoChange} />
@@ -199,7 +164,7 @@ export default function Branding({ account }: Props) {
           Upload file
         </Button>
       </PremiumCard>
-      <PremiumCard isPremium={account.premium} className="h-full">
+      <PremiumCard isPremium={account.premium}>
         <Label htmlFor="googleAnalyticsId">Google Analytics ID</Label>
         <Description>
           You can collect data from your website with Google Analytics.
@@ -219,28 +184,19 @@ export default function Branding({ account }: Props) {
 
   const settingsComponent = (
     <form onSubmit={onSubmit}>
-      <div className="grid md:grid-cols-2 sm:grid-cols-1 gap-4">
-        <div className="flex flex-col">
-          {freeAccountSettings}
-          <div>
-            <Button block type="submit">
-              Update
-            </Button>
-          </div>
-        </div>
+      <div className="grid grid-cols-1">
         <div className="flex flex-col">
           {premiumAccountSettings}
-          <div>
+          <div className="flex justify-end">
             {!account.premium ? (
               <Button
-                block
                 color="yellow"
                 onClick={() => router.push('/settings/plans')}
               >
                 Upgrade your account
               </Button>
             ) : (
-              ''
+              <Button type="submit">Update</Button>
             )}
           </div>
         </div>

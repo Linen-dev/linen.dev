@@ -6,8 +6,8 @@ import LinkCard from './Settings/LinkCard';
 import ChannelsDefault from './Settings/ChannelsDefault';
 import ChannelVisibilityCard from './Settings/ChannelVisibilityCard';
 import CommunityIntegration from './Settings/CommunityIntegration';
-import CommunitySynchronization from './Settings/CommunitySynchronization';
 import AnonymizeCard from './Settings/AnonymizeCard';
+import URLs from './Settings/Urls';
 
 export interface SettingsProps {
   account?: SerializedAccount;
@@ -25,10 +25,10 @@ export default function Settings(props: SettingsProps) {
         <div className="flex flex-col gap-4">
           <LinkCard {...props} />
           <CommunityIntegration {...props} />
-          <CommunitySynchronization {...props} />
           <AnonymizeCard {...props} />
           <ChannelsDefault {...props} />
           <ChannelVisibilityCard {...props} />
+          <URLs {...props} />
         </div>
       </div>
     </DashboardLayout>
