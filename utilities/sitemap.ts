@@ -32,17 +32,14 @@ const buildSitemapQueries = {
   order by 1,2`,
   channelsFromAccountId: (accountId: string) => prisma.$queryRaw<
     { channelName: string }[]
-  >`
-  select c."channelName", * from channels c
+  >`select c."channelName", * from channels c
   where c."accountId" = ${accountId}
   and c.hidden is false
   and exists (
     select 1 from "slackThreads" st 
-    join messages m on m."slackThreadId"=st.id
     where st."channelId" = c.id
     group by c.id, st.id
-    having count(m.id)>1
-    )`,
+   )`,
   freeAccounts: () => prisma.$queryRaw<{ id: string; domain: string }[]>`
   select a.id, coalesce(a."discordDomain",a."discordServerId",a."slackDomain") as "domain"
   from accounts a 
