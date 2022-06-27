@@ -44,7 +44,7 @@ async function getThreadsAndUsers({
         return r.channelId === c.id;
       });
 
-      return channelCount && channelCount.count > 2;
+      return channelCount && channelCount._count.id > 2;
     });
 
   threads = threads.filter((t) => t.messages.length > 0);
@@ -132,8 +132,8 @@ async function getMessagesAndUsers({
     messages: messages.map((message) => {
       return {
         ...message,
-        createdAt: message.createdAt.toISOString(),
-        sentAt: message.sentAt.toISOString(),
+        createdAt: message?.createdAt?.toISOString(),
+        sentAt: message?.sentAt?.toISOString(),
       };
     }),
   };
