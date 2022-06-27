@@ -19,6 +19,7 @@ export interface SerializedAccount {
   slackDomain?: string;
   discordDomain?: string;
   discordServerId?: string;
+  slackInviteUrl?: string;
 }
 
 function identifyCommunity(account: any) {
@@ -65,6 +66,7 @@ export default function serialize(account?: any): SerializedAccount | null {
     slackDomain,
     discordDomain,
     discordServerId,
+    slackInviteUrl,
   } = account;
 
   const communityType = identifyCommunity(account);
@@ -86,5 +88,6 @@ export default function serialize(account?: any): SerializedAccount | null {
     slackDomain,
     discordDomain,
     discordServerId,
+    slackInviteUrl,
   };
 }
