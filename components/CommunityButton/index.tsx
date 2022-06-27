@@ -31,7 +31,7 @@ export default function CommunityButton({
     >
       <div className="flex gap-2 items-center">
         <Icon size={iconSize} />
-        <p>
+        <p className="whitespace-nowrap">
           {label} <b>{capitalize(communityType)}</b>
         </p>
       </div>
