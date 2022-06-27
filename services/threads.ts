@@ -9,6 +9,10 @@ import {
 } from '../lib/models';
 import { ThreadByIdResponse } from '../types/apiResponses/threads/[threadId]';
 import { accounts, users } from '@prisma/client';
+import { GetStaticPropsContext } from 'next';
+import { NotFound } from 'utilities/response';
+import { revalidateInSeconds } from 'constants/revalidate';
+import * as Sentry from '@sentry/nextjs';
 import { buildSettings } from './accountSettings';
 
 interface IndexProps {
@@ -128,4 +132,24 @@ export async function getThreadById(
     threadUrl,
     settings,
   };
+}
+
+export async function threadGetStaticProps(
+  context: GetStaticPropsContext,
+  isSubdomainbasedRouting: boolean
+) {
+  const threadId = context.params?.threadId as string;
+  try {
+    const thread = await getThreadById(threadId);
+    return {
+      props: {
+        ...thread,
+        isSubDomainRouting: isSubdomainbasedRouting,
+      },
+      revalidate: revalidateInSeconds, // In seconds
+    };
+  } catch (exception) {
+    Sentry.captureException(exception);
+    return NotFound();
+  }
 }
