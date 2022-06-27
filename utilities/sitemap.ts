@@ -2,8 +2,59 @@ import { SitemapStream, SitemapIndexStream, streamToPromise } from 'sitemap';
 import { Readable } from 'stream';
 import prisma from '../client';
 
-const PROTOCOL = 'https';
+const resolveProtocol = (host: string) => {
+  return ['localhost'].includes(host) ? 'http' : 'https';
+};
 
+const buildSitemapQueries = {
+  byAccountId: (accountId: string) => prisma.$queryRaw<
+    { channelName: string; incrementId: number; slug: string }[]
+  >`
+  select c."channelName", st."incrementId", st.slug, count(m.id)
+  from "slackThreads" st 
+  join channels c on st."channelId" = c.id
+  join messages m on m."slackThreadId" = st.id
+  where c."accountId" = ${accountId}
+  and c.hidden is false
+  group by 1,2,3
+  having count(m.id) > 1
+  order by 1,2`,
+  byChannelId: (channelId: string) => prisma.$queryRaw<
+    { channelName: string; incrementId: number; slug: string }[]
+  >`
+  select c."channelName", st."incrementId", st.slug, count(m.id)
+  from "slackThreads" st 
+  join channels c on st."channelId" = c.id
+  join messages m on m."slackThreadId" = st.id
+  where c.id = ${channelId}
+  group by 1,2,3
+  having count(m.id) > 1
+  order by 1,2`,
+  channelsFromAccountId: (accountId: string) => prisma.$queryRaw<
+    { channelName: string }[]
+  >`
+  select c."channelName", * from channels c
+  where c."accountId" = ${accountId}
+  and c.hidden is false
+  and exists (
+    select 1 from "slackThreads" st 
+    join messages m on m."slackThreadId"=st.id
+    where st."channelId" = c.id
+    group by c.id, st.id
+    having count(m.id)>1
+    )`,
+  freeAccounts: () => prisma.$queryRaw<{ id: string; domain: string }[]>`
+  select a.id, coalesce(a."discordDomain",a."discordServerId",a."slackDomain") as "domain"
+  from accounts a 
+  join channels c on c."accountId" = a.id 
+  join "slackThreads" st on st."channelId" = c.id
+  join messages m on m."slackThreadId" = st.id
+  where premium is false
+  and coalesce(a."discordDomain",a."discordServerId",a."slackDomain") is not null
+  group by 1`,
+};
+
+// fn very similar to createXMLSitemapForLinen
 export async function createXMLSitemapForSubdomain(
   host: string
 ): Promise<string> {
@@ -19,31 +70,33 @@ export async function createXMLSitemapForSubdomain(
   if (!account) {
     return Promise.reject();
   }
-  return await buildSitemap(account, host);
+  const channels = await buildSitemapQueries.channelsFromAccountId(account.id);
+
+  const stream = new SitemapIndexStream();
+
+  const urls = channels.map(({ channelName }) => {
+    return `${resolveProtocol(
+      host
+    )}://${host}/sitemap/c/${channelName}/chunk.xml`;
+  });
+
+  return streamToPromise(Readable.from(urls).pipe(stream)).then((data) =>
+    data.toString()
+  );
 }
 
 async function buildSitemap(
   account: { id: string },
   host: string,
-  prefix = ''
+  prefix = '',
+  query: 'byAccountId' | 'byChannelId' = 'byAccountId'
 ) {
-  const threads = await prisma.$queryRaw<
-    { channelName: string; incrementId: number; slug: string }[]
-  >`
-    select c."channelName", st."incrementId", st.slug, count(m.id)
-    from "slackThreads" st 
-    join channels c on st."channelId" = c.id
-    join messages m on m."slackThreadId" = st.id
-    where c."accountId" = ${account.id}
-    and c.hidden is false
-    group by 1,2,3
-    having count(m.id) > 1
-    order by 1,2`;
+  const threads = await buildSitemapQueries[query](account.id);
 
   const channels: Record<string, number> = {};
 
   const stream = new SitemapStream({
-    hostname: `${PROTOCOL}://${host}`,
+    hostname: `${resolveProtocol(host)}://${host}`,
   });
 
   const urls = threads.map(({ channelName, incrementId, slug }) => {
@@ -72,18 +125,9 @@ function getChannelPages(channels: Record<string, number>, prefix = '') {
 }
 
 export async function createXMLSitemapForLinen(host: string) {
-  const protocol = host.includes('localhost') ? 'http' : PROTOCOL;
-  const freeAccounts = await prisma.$queryRaw<{ id: string; domain: string }[]>`
-  select a.id, coalesce(a."discordDomain",a."discordServerId",a."slackDomain") as "domain"
-  from accounts a 
-  join channels c on c."accountId" = a.id 
-  join "slackThreads" st on st."channelId" = c.id
-  join messages m on m."slackThreadId" = st.id
-  where premium is false
-  and coalesce(a."discordDomain",a."discordServerId",a."slackDomain") is not null
-  group by 1`;
+  const protocol = resolveProtocol(host);
+  const freeAccounts = await buildSitemapQueries.freeAccounts();
   if (!freeAccounts || !freeAccounts.length) return '';
-
   const stream = new SitemapIndexStream();
   const urls = freeAccounts.map(({ domain }) => {
     return `${protocol}://${host}/sitemap/${domain}/chunk.xml`;
@@ -115,4 +159,24 @@ export async function createXMLSitemapForFreeCommunity(
   }
   const prefix = account.discordServerId ? 'd' : 's';
   return await buildSitemap(account, host, [prefix, community].join('/'));
+}
+
+export async function createXMLSitemapForChannel(
+  host: string,
+  channelName: string
+) {
+  const channel = await prisma.channels.findFirst({
+    where: {
+      channelName,
+      account: { redirectDomain: host },
+      hidden: false,
+    },
+    select: {
+      id: true,
+    },
+  });
+  if (!channel) {
+    return Promise.reject();
+  }
+  return await buildSitemap(channel, host, '', 'byChannelId');
 }
