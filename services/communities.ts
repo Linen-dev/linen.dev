@@ -13,6 +13,8 @@ import { accounts, channels, MessagesViewType } from '@prisma/client';
 import { NotFound } from '../utilities/response';
 import { revalidateInSeconds } from 'constants/revalidate';
 import { buildSettings } from './accountSettings';
+import { memoize } from '@/utilities/dynamoCache';
+
 async function getThreadsAndUsers({
   account,
   channelId,
@@ -25,8 +27,8 @@ async function getThreadsAndUsers({
   channels: channels[];
 }) {
   const [threadsResponse, channelsResponse] = await Promise.all([
-    fetchThreads({ channelId, page, account }),
-    channelsGroupByThreadCount(account.id),
+    fetchThreadsMemo({ channelId, page, account }),
+    channelsGroupByThreadCountMemo(account.id),
   ]);
 
   const { data, pagination } = threadsResponse;
@@ -112,10 +114,9 @@ async function getMessagesAndUsers({
   channels: channels[];
   page?: number;
 }) {
-  const { messages, total, currentPage, pages } = await findMessagesFromChannel(
-    { channelId, page }
-  );
-  const channelsWithMinThreads = await findChannelsWithSingleMessages({
+  const { messages, total, currentPage, pages } =
+    await findMessagesFromChannelMemo({ channelId, page });
+  const channelsWithMinThreads = await findChannelsWithSingleMessagesMemo({
     channels,
   });
 
@@ -156,11 +157,11 @@ export const getThreadsByCommunityName = async (
     return null;
   }
 
-  const account = await findAccountByPath(communityName);
+  const account = await findAccountByPathMemo(communityName);
   if (account === null) {
     return null;
   }
-  const channels = await channelIndex(account.id, { hidden: false });
+  const channels = await channelIndexMemo(account.id, { hidden: false });
   if (channels.length === 0) {
     return null;
   }
@@ -196,7 +197,7 @@ export async function channelGetStaticProps(
   const channelName = context.params?.channelName as string;
   const page = context.params?.page as string;
 
-  const result = await getThreadsByCommunityName(
+  const result = await getThreadsByCommunityNameMemo(
     communityName,
     Number(page) || 1,
     channelName
@@ -247,3 +248,13 @@ export async function channelGetStaticPaths(pathPrefix: string) {
     fallback: true,
   };
 }
+
+const getThreadsByCommunityNameMemo = memoize(getThreadsByCommunityName);
+const findAccountByPathMemo = memoize(findAccountByPath);
+const channelIndexMemo = memoize(channelIndex);
+const channelsGroupByThreadCountMemo = memoize(channelsGroupByThreadCount);
+const findMessagesFromChannelMemo = memoize(findMessagesFromChannel);
+const findChannelsWithSingleMessagesMemo = memoize(
+  findChannelsWithSingleMessages
+);
+const fetchThreadsMemo = memoize(fetchThreads);
