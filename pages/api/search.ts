@@ -32,14 +32,15 @@ export default async function handler(
           m."channelId",
           m."slackMessageId",
           m."slackThreadId",
-          m."usersId"
+          m."usersId",
+          ts_rank(textsearchable_index_col,websearch_to_tsquery('english', ${query}))  AS rank
       FROM "public"."messages" as m
       INNER JOIN "public"."channels" AS c ON (c."id") = (m."channelId")
       WHERE 
           c."accountId" = ${accountId} 
           AND m."id" IS NOT NULL
-          AND TO_TSVECTOR('english', m."body") @@ phraseto_tsquery('english', ${query})
-      ORDER BY m."id" ASC
+          AND textsearchable_index_col @@ websearch_to_tsquery('english', ${query})
+      ORDER BY rank DESC
       LIMIT ${Number(limit)}
       OFFSET ${Number(offset)}`;
 
@@ -72,11 +73,9 @@ export default async function handler(
       ? await prisma.$queryRaw<
           slackMentions[]
         >`SELECT "public"."slackMentions"."messagesId",
-          "public"."slackMentions"."usersId"
-      FROM "public"."slackMentions"
-      WHERE "public"."slackMentions"."messagesId" IN (${Prisma.join(
-        messageIds
-      )})`
+        "public"."slackMentions"."usersId"
+    FROM "public"."slackMentions"
+    WHERE "public"."slackMentions"."messagesId" IN (${Prisma.join(messageIds)})`
       : [];
 
   // Get mentioned users
@@ -84,15 +83,15 @@ export default async function handler(
   const usersResult =
     userIds.length > 0
       ? await prisma.$queryRaw<users[]>`SELECT "public"."users"."id",
-          "public"."users"."slackUserId",
-          "public"."users"."displayName",
-          "public"."users"."profileImageUrl",
-          "public"."users"."isBot",
-          "public"."users"."isAdmin",
-          "public"."users"."anonymousAlias",
-          "public"."users"."accountsId"
-      FROM "public"."users"
-      WHERE "public"."users"."id" IN (${Prisma.join(userIds)})`
+        "public"."users"."slackUserId",
+        "public"."users"."displayName",
+        "public"."users"."profileImageUrl",
+        "public"."users"."isBot",
+        "public"."users"."isAdmin",
+        "public"."users"."anonymousAlias",
+        "public"."users"."accountsId"
+    FROM "public"."users"
+    WHERE "public"."users"."id" IN (${Prisma.join(userIds)})`
       : [];
 
   // Map the results

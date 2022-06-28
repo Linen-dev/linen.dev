@@ -3,7 +3,7 @@
 
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["fullTextSearch", "interactiveTransactions"]
+  previewFeatures = ["fullTextSearch", "interactiveTransactions", "extendedIndexes"]
 }
 
 datasource db {
@@ -25,10 +25,13 @@ model messages {
 
   slackThreadId String?
 
-  mentions slackMentions[]
-  author   users?          @relation(fields: [usersId], references: [id])
-  usersId  String?
+  mentions                 slackMentions[]
+  author                   users?                   @relation(fields: [usersId], references: [id])
+  usersId                  String?
+  textsearchable_index_col Unsupported("tsvector")?
+
   @@unique([channelId, slackMessageId])
+  @@index([textsearchable_index_col], type: Gin)
 }
 
 model slackThreads {
