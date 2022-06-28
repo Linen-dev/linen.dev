@@ -3,7 +3,7 @@ import {
   threadIndex,
   threadCount,
   channelIndex,
-  findAccountById,
+  findAccountByPath,
   findThreadById,
   channelsGroupByThreadCount,
 } from '../lib/models';
@@ -44,18 +44,30 @@ export async function index({ channelId, page, account }: IndexProps) {
 
 // extracted here to be reused in both /[threadId]/index and /[slug]/index
 export async function getThreadById(
-  threadId: string
+  threadId: string,
+  communityName: string
 ): Promise<ThreadByIdResponse> {
   const id = parseInt(threadId);
-  const thread = await findThreadByIdMemo(id);
+  const [thread, account] = await Promise.all([
+    findThreadByIdMemo(id),
+    findAccountByPathMemo(communityName),
+  ]);
 
   if (!thread || !thread?.channel?.accountId) {
     return Promise.reject(new Error('Thread not found'));
   }
 
-  const [channels, account, channelsResponse] = await Promise.all([
+  if (!account) {
+    return Promise.reject(new Error('Account not found'));
+  }
+
+  if (thread?.channel?.accountId !== account.id) {
+    console.log('thread belongs to another community');
+    return Promise.reject(new Error('Thread not found'));
+  }
+
+  const [channels, channelsResponse] = await Promise.all([
     channelIndexMemo(thread.channel.accountId, { hidden: false }),
-    findAccountByIdMemo(thread.channel.accountId),
     channelsGroupByThreadCountMemo(thread?.channel?.accountId),
   ]);
 
@@ -73,10 +85,6 @@ export async function getThreadById(
 
       return channelCount && channelCount._count.id > 2;
     });
-
-  if (!account) {
-    return Promise.reject(new Error('Account not found'));
-  }
 
   const settings = buildSettings(account);
 
@@ -140,8 +148,9 @@ export async function threadGetStaticProps(
   isSubdomainbasedRouting: boolean
 ) {
   const threadId = context.params?.threadId as string;
+  const communityName = context.params?.communityName as string;
   try {
-    const thread = await getThreadByIdMemo(threadId);
+    const thread = await getThreadByIdMemo(threadId, communityName);
     return {
       props: {
         ...thread,
@@ -159,6 +168,6 @@ const threadIndexMemo = memoize(threadIndex);
 const threadCountMemo = memoize(threadCount);
 const findThreadByIdMemo = memoize(findThreadById);
 const channelIndexMemo = memoize(channelIndex);
-const findAccountByIdMemo = memoize(findAccountById);
+const findAccountByPathMemo = memoize(findAccountByPath);
 const channelsGroupByThreadCountMemo = memoize(channelsGroupByThreadCount);
 const getThreadByIdMemo = memoize(getThreadById);
