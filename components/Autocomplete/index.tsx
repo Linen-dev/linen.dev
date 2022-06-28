@@ -15,7 +15,7 @@ export default function Autocomplete({
   resultParser = (data) => data,
   renderSuggestion = (any) => null,
   placeholder = 'Search',
-  debounce = 150,
+  debounce = 400,
   limit = 5,
 }: {
   icon: React.ReactNode;
