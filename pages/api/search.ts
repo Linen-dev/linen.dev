@@ -39,6 +39,7 @@ export default async function handler(
       WHERE 
           c."accountId" = ${accountId} 
           AND m."id" IS NOT NULL
+          and m."slackThreadId" is not null
           AND textsearchable_index_col @@ websearch_to_tsquery('english', ${query})
       ORDER BY rank DESC
       LIMIT ${Number(limit)}
