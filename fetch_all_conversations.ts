@@ -28,7 +28,7 @@ export const fetchConversations = async (
 
 type ConversationHistoryBody = {
   ok: boolean;
-  messages: ConvesrationHistoryMessage[];
+  messages: ConversationHistoryMessage[];
   has_more: boolean;
   pin_count: number;
   channel_actions_ts: any;
@@ -36,7 +36,7 @@ type ConversationHistoryBody = {
   response_metadata?: ResponseMetadata;
 };
 
-export type ConvesrationHistoryMessage = {
+export type ConversationHistoryMessage = {
   type: string;
   subtype?: string;
   ts: string;

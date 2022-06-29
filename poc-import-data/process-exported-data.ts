@@ -1,6 +1,6 @@
 import { accounts, channels, users, PrismaClient } from '@prisma/client';
 import {
-  ConvesrationHistoryMessage,
+  ConversationHistoryMessage,
   // joinChannel,
   saveUsers,
 } from '../fetch_all_conversations';
@@ -168,7 +168,7 @@ async function processFile({
 let threadsBySlackThreadTs: any = {};
 
 async function saveMessagesTransaction(
-  messages: ConvesrationHistoryMessage[],
+  messages: ConversationHistoryMessage[],
   channelId: string,
   userGroupBySlackUserId: UserMap
 ) {
@@ -283,10 +283,10 @@ function getMentionedUsers(text: string) {
 const groupMessageByType = (
   messages: any[]
 ): {
-  single?: ConvesrationHistoryMessage[];
-  thread?: ConvesrationHistoryMessage[];
-  message?: ConvesrationHistoryMessage[];
-  unknown?: ConvesrationHistoryMessage[];
+  single?: ConversationHistoryMessage[];
+  thread?: ConversationHistoryMessage[];
+  message?: ConversationHistoryMessage[];
+  unknown?: ConversationHistoryMessage[];
 } => {
   const messageTypes: any = {
     falsefalse: 'single', // its was single, but we should threat singles as a potential thread

@@ -1,6 +1,6 @@
 import prisma from '../../client';
 import {
-  ConvesrationHistoryMessage,
+  ConversationHistoryMessage,
   fetchConversationsTyped,
   fetchReplies,
   fetchTeamInfo,
@@ -140,10 +140,10 @@ export async function slackSync({
             nextCursor
           );
 
-          const additionaMessages = additionalConversations.messages;
+          const additionalMessages = additionalConversations.messages;
 
           //save all messages
-          await saveMessagesTransaction(additionaMessages, c.id, usersInDb);
+          await saveMessagesTransaction(additionalMessages, c.id, usersInDb);
           nextCursor = additionalConversations.response_metadata?.next_cursor;
 
           // save cursor in database so don't have
@@ -191,10 +191,10 @@ export async function slackSync({
           sleepSeconds: 30,
         });
 
-        const replyMessages: ConvesrationHistoryMessage[] =
+        const replyMessages: ConversationHistoryMessage[] =
           replies?.body?.messages;
         if (replyMessages && replyMessages.length) {
-          await saveMessagesSyncronous(replyMessages, m.channelId, usersInDb);
+          await saveMessagesSynchronous(replyMessages, m.channelId, usersInDb);
         }
       } catch (e) {
         console.error(e);
@@ -303,7 +303,7 @@ function getMentionedUsers(text: string, users: UserMap[]) {
 }
 
 async function saveMessagesTransaction(
-  messages: ConvesrationHistoryMessage[],
+  messages: ConversationHistoryMessage[],
   channelId: string,
   users: UserMap[]
 ) {
@@ -372,8 +372,8 @@ async function saveMessagesTransaction(
   console.log('Finished saving messages', new Date());
 }
 
-async function saveMessagesSyncronous(
-  messages: ConvesrationHistoryMessage[],
+async function saveMessagesSynchronous(
+  messages: ConversationHistoryMessage[],
   channelId: string,
   users: UserMap[]
 ) {
