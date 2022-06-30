@@ -205,6 +205,7 @@ export const saveMessages = async (
     .map((message) => {
       return {
         body: message.text,
+        blocks: message.blocks,
         sentAt: new Date(parseFloat(message.ts) * 1000),
         channelId: channelId,
         slackThreadTs: message.thread_ts,

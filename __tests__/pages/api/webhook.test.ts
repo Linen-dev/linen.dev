@@ -24,7 +24,7 @@ const addMessageEvent = {
     user: 'U037T5JG1NY',
     ts: '1650644364.126099',
     team: 'T036DSF9RJT',
-    blocks: [{ type: 'rich_text', block_id: '9hC', elements: [Array] }],
+    blocks: [{ type: 'rich_text', block_id: '9hC', elements: [] }],
     channel: 'C03ATK7RWNS',
     event_ts: '1650644364.126099',
     channel_type: 'channel',
@@ -92,7 +92,7 @@ const changeMessageEvent = {
       user: 'U037T5JG1NY',
       team: 'T036DSF9RJT',
       edited: [Object],
-      blocks: [Array],
+      blocks: [{ type: 'rich_text', block_id: '9hC', elements: [] }],
       ts: '1652127600.388019',
       source_team: 'T036DSF9RJT',
       user_team: 'T036DSF9RJT',
@@ -104,7 +104,7 @@ const changeMessageEvent = {
       user: 'U037T5JG1NY',
       ts: '1652127600.388019',
       team: 'T036DSF9RJT',
-      blocks: [Array],
+      blocks: [{ type: 'rich_text', block_id: '9hC', elements: [] }],
     },
     channel: 'C03ATK7RWNS',
     hidden: true,
@@ -286,6 +286,7 @@ describe('webhook', () => {
             mentions: {
               create: [],
             },
+            blocks: [{ type: 'rich_text', block_id: '9hC', elements: [] }],
           },
         });
 
@@ -497,6 +498,7 @@ describe('webhook', () => {
             mentions: {
               create: [],
             },
+            blocks: [{ type: 'rich_text', block_id: '9hC', elements: [] }],
           },
         });
 

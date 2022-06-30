@@ -24,6 +24,8 @@ import {
   updateAndNotifySyncStatus,
 } from '../../services/syncStatus';
 import { retryPromise, sleep } from '../../utilities/retryPromises';
+import { processReactions } from './reactions';
+import { processAttachments } from './attachments';
 
 export async function slackSync({
   accountId,
@@ -143,7 +145,12 @@ export async function slackSync({
           const additionalMessages = additionalConversations.messages;
 
           //save all messages
-          await saveMessagesTransaction(additionalMessages, c.id, usersInDb);
+          await saveMessagesTransaction(
+            additionalMessages,
+            c.id,
+            usersInDb,
+            token
+          );
           nextCursor = additionalConversations.response_metadata?.next_cursor;
 
           // save cursor in database so don't have
@@ -194,7 +201,12 @@ export async function slackSync({
         const replyMessages: ConversationHistoryMessage[] =
           replies?.body?.messages;
         if (replyMessages && replyMessages.length) {
-          await saveMessagesSynchronous(replyMessages, m.channelId, usersInDb);
+          await saveMessagesSynchronous(
+            replyMessages,
+            m.channelId,
+            usersInDb,
+            token
+          );
         }
       } catch (e) {
         console.error(e);
@@ -218,33 +230,6 @@ export async function slackSync({
     };
   }
 }
-
-// FIXME: possible dead code
-// async function fetchAllMessages(
-//   token: string,
-//   accountId: string,
-//   channels: any[]
-// ) {
-//   for (let channel of channels) {
-//     try {
-//       const conversations = await fetchConversations(
-//         channel.slackChannelId,
-//         token
-//       );
-
-//       let messages = await saveMessages(
-//         conversations.body.messages,
-//         channel.id,
-//         channel.slackChannelId,
-//         accountId
-//       );
-//     } catch (e) { }
-//   }
-
-//   const messageWithThreads = await findMessagesWithThreads(accountId);
-//   await fetchAndSaveThreadMessages(messageWithThreads, token, accountId);
-//   return messageWithThreads;
-// }
 
 export async function createChannels({
   slackTeamId,
@@ -305,7 +290,8 @@ function getMentionedUsers(text: string, users: UserMap[]) {
 async function saveMessagesTransaction(
   messages: ConversationHistoryMessage[],
   channelId: string,
-  users: UserMap[]
+  users: UserMap[],
+  token: string
 ) {
   const threadsTransaction: any = messages
     .map((m) => {
@@ -318,7 +304,6 @@ async function saveMessagesTransaction(
           // maybe here, if creates, slug will be empty
           create: { slackThreadTs: m.thread_ts, channelId },
         });
-      } else {
       }
       return null;
     })
@@ -326,7 +311,7 @@ async function saveMessagesTransaction(
 
   const threads = await prisma.$transaction(threadsTransaction);
 
-  const createMessagesTransaction = messages.map((m) => {
+  const createMessagesTransaction = messages.map(async (m) => {
     let threadId: string | null;
     let thread: any | null;
 
@@ -342,47 +327,52 @@ async function saveMessagesTransaction(
     threadId = thread?.id;
     const text = m.text as string;
     const mentionedUsers = getMentionedUsers(text, users);
-    return prisma.messages.upsert({
+    const serializedMessage = {
+      body: m.text,
+      blocks: m.blocks,
+      sentAt: new Date(parseFloat(m.ts) * 1000),
+      channelId,
+      slackMessageId: m.ts as string,
+      slackThreadId: threadId,
+      usersId: user?.id,
+    };
+    const message = await prisma.messages.upsert({
       where: {
         channelId_slackMessageId: {
           channelId: channelId,
           slackMessageId: m.ts,
         },
       },
-      update: {
-        slackMessageId: m.ts as string,
-        slackThreadId: threadId,
-        usersId: user?.id,
-      },
+      update: serializedMessage,
       create: {
-        body: m.text,
-        sentAt: new Date(parseFloat(m.ts) * 1000),
-        channelId,
-        slackMessageId: m.ts as string,
-        slackThreadId: threadId,
-        usersId: user?.id,
+        ...serializedMessage,
         mentions: {
           create: mentionedUsers.map((u) => ({ usersId: u.id })),
         },
       },
     });
+    await Promise.all([
+      processReactions(m, message),
+      processAttachments(m, message, token),
+    ]);
   });
   console.log('Starting to save messages: ', new Date());
-  await prisma.$transaction(createMessagesTransaction);
+  await Promise.all(createMessagesTransaction);
   console.log('Finished saving messages', new Date());
 }
 
 async function saveMessagesSynchronous(
   messages: ConversationHistoryMessage[],
   channelId: string,
-  users: UserMap[]
+  users: UserMap[],
+  token: string
 ) {
   const threadHead = messages[0];
-  if (threadHead.reply_count && threadHead.thread_ts) {
+  if (threadHead.ts === threadHead.thread_ts) {
     await prisma.slackThreads.update({
       where: { slackThreadTs: threadHead.thread_ts },
       data: {
-        messageCount: threadHead.reply_count + 1,
+        messageCount: (threadHead.reply_count || 0) + 1,
         slug: createSlug(threadHead.text),
       },
     });
@@ -398,19 +388,6 @@ async function saveMessagesSynchronous(
       channelId: channelId,
     });
 
-    // if (!!m.thread_ts) {
-    //   thread.messageCount = thread.messages.length
-    // } else {
-    //   //create slug based on the first message
-    //   thread.slug = createSlug(m.text);
-    // }
-
-    // await updateSlackThread(thread.id, {
-    //   messageCount: thread.messageCount,
-    //   // maybe here, if threads.slug is null, will persist null
-    //   ...(!!thread.slug && { slug: thread.slug }),
-    // });
-
     let user: UserMap | undefined;
     if (!!m.user) {
       user = users.find((u) => u.slackUserId === m.user);
@@ -419,29 +396,34 @@ async function saveMessagesSynchronous(
     threadId = thread?.id;
     const text = m.text as string;
     const mentionedUsers = getMentionedUsers(text, users);
-    await prisma.messages.upsert({
+    const serializedMessage = {
+      body: m.text,
+      blocks: m.blocks,
+      sentAt: new Date(parseFloat(m.ts) * 1000),
+      channelId,
+      slackMessageId: m.ts as string,
+      slackThreadId: threadId,
+      usersId: user?.id,
+    };
+    const message = await prisma.messages.upsert({
       where: {
         channelId_slackMessageId: {
           channelId: channelId,
           slackMessageId: m.ts,
         },
       },
-      update: {
-        slackMessageId: m.ts as string,
-        slackThreadId: threadId,
-        usersId: user?.id,
-      },
+      update: serializedMessage,
       create: {
-        body: m.text,
-        sentAt: new Date(parseFloat(m.ts) * 1000),
-        channelId,
-        slackMessageId: m.ts as string,
-        slackThreadId: threadId,
-        usersId: user?.id,
+        ...serializedMessage,
         mentions: {
           create: mentionedUsers.map((u) => ({ usersId: u.id })),
         },
       },
     });
+
+    await Promise.all([
+      processReactions(m, message),
+      processAttachments(m, message, token),
+    ]);
   }
 }

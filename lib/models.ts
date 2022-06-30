@@ -18,6 +18,7 @@ export const createMessage = async (
   return await prisma.messages.create({
     data: {
       body: message.body,
+      blocks: message.blocks,
       slackThreadId: message.slackThreadId,
       slackMessageId: message.slackMessageId,
       channelId: message.channelId,
@@ -34,6 +35,7 @@ export const createMessageWithMentions = async (
   return await prisma.messages.create({
     data: {
       body: message.body,
+      blocks: message.blocks,
       slackThreadId: message.slackThreadId,
       slackMessageId: message.slackMessageId,
       channelId: message.channelId,
