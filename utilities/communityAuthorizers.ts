@@ -24,8 +24,8 @@ export function integrationAuthorizer(community: string, accountId: string) {
       window.location.href =
         'https://slack.com/oauth/v2/authorize' +
         `?client_id=${SLACK_CLIENT_ID}` +
-        '&scope=channels:history,channels:join,channels:read,incoming-webhook,reactions:read,users:read,team:read' +
-        '&user_scope=channels:history,search:read' +
+        '&scope=channels:history,channels:join,channels:read,incoming-webhook,reactions:read,users:read,team:read,files:read' +
+        '&user_scope=channels:history,search:read,users:read,reactions:read' +
         `&state=${accountId}` +
         `&redirect_uri=${REDIRECT_URI_SLACK}`;
       break;
