@@ -60,21 +60,18 @@ export default async function handler(
 
   // Initialize syncing asynchronously
   // console.log('Start syncing account: ', accountId);
-  // request
-  //   .get(process.env.SYNC_URL + '/api/scripts/sync?account_id=' + accountId)
-  //   .then(() => {
-  //     console.log('Syncing done!');
-  //   })
-  //   .catch((err) => {
-  //     console.error('Syncing error: ', err);
-  //   });
+  request
+    .get(
+      process.env.SYNC_URL + '/api/scripts/syncHistoric?account_id=' + accountId
+    )
+    // .then(() => {
+    //   console.log('Syncing done!');
+    // })
+    .catch((err) => {
+      console.error('Syncing error: ', err);
+    });
 
-  return res.redirect(
-    '/settings?success=' +
-      encodeURI(
-        'Slack has been authenticated, syncing now. Kam will reach out soon to finish onboarding'
-      )
-  );
+  return res.redirect('/settings');
 }
 
 export const getSlackAccessToken = async (

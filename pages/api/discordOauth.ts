@@ -46,23 +46,18 @@ export default async function handler(
   });
 
   // Initialize syncing asynchronously
-  // request
-  //   .get(
-  //     process.env.SYNC_URL + '/api/scripts/discordSync?account_id=' + accountId
-  //   )
-  //   .then(() => {
-  //     console.log('Syncing done!');
-  //   })
-  //   .catch((err) => {
-  //     console.error('Syncing error: ', err);
-  //   });
+  request
+    .get(
+      process.env.SYNC_URL + '/api/scripts/syncHistoric&account_id=' + accountId
+    )
+    // .then(() => {
+    //   console.log('Syncing done!');
+    // })
+    .catch((err) => {
+      console.error('Syncing error: ', err);
+    });
 
-  return res.redirect(
-    '/settings?success=' +
-      encodeURI(
-        'Discord has been authenticated, syncing now. Kam will reach out soon to finish onboarding'
-      )
-  );
+  return res.redirect('/settings');
 }
 
 export const getDiscordAccessToken = async (code: string) => {
