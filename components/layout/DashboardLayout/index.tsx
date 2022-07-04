@@ -3,6 +3,7 @@ import {
   faGear,
   faMoneyBill,
   faPalette,
+  faGauge,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import SidebarLink from './SidebarLink';
@@ -71,10 +72,7 @@ export default function DashboardLayout({ children, header, account }: Props) {
                 <SidebarLink
                   href="/settings/dns"
                   icon={
-                    <FontAwesomeIcon
-                      icon={faMoneyBill}
-                      className={iconClassName}
-                    />
+                    <FontAwesomeIcon icon={faGauge} className={iconClassName} />
                   }
                   text="DNS"
                   active={route === '/settings/dns'}

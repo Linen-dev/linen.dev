@@ -1,5 +1,5 @@
 export const isStripeEnabled = false;
-export const isVercelDNSEnabled = false;
+export const isVercelDNSEnabled = true;
 
 export default {
   isStripeEnabled,

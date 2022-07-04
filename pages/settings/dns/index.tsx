@@ -5,7 +5,7 @@ import DashboardLayout from 'components/layout/DashboardLayout';
 import Table, { Thead, Tbody, Th, Td } from 'components/Table';
 import { findAccountByEmail } from '../../../lib/models';
 import Vercel, { DNSRecord, VercelError } from '../../../services/vercel';
-import { SerializedAccount } from 'serializers/account';
+import serializeAccount, { SerializedAccount } from 'serializers/account';
 
 interface Props {
   account?: SerializedAccount;
@@ -37,8 +37,8 @@ export default function ChannelsPage({ account, records, error }: Props) {
       <DashboardLayout header="DNS" account={account}>
         <p className="mb-6 text-sm">
           Subdomain routing setup can be achieved by veryfing the ownership of a
-          domain. Copy the TXT and CNAME records from below and paste them into
-          your DNS settings.
+          domain. Copy the TXT and/or CNAME records from below and paste them
+          into your DNS settings.
         </p>
         <h2 className="text-md font-bold">Records</h2>
         <Table>
@@ -81,7 +81,7 @@ export async function getServerSideProps(context: NextPageContext) {
       },
     };
   }
-  if (!account) {
+  if (!account || !account.premium) {
     return {
       redirect: {
         permanent: false,
@@ -94,6 +94,38 @@ export async function getServerSideProps(context: NextPageContext) {
     return {
       props: {
         session,
+        account: serializeAccount(account),
+      },
+    };
+  }
+
+  const { error } = await Vercel.addDomainToProject(account.redirectDomain);
+  if (error && error.code !== 'domain_already_in_use') {
+    return {
+      props: {
+        error: error,
+        account: serializeAccount(account),
+      },
+    };
+  }
+
+  const domain = await Vercel.getProjectDomain(account.redirectDomain);
+
+  if (domain.error) {
+    return {
+      props: {
+        error: domain.error,
+        account: serializeAccount(account),
+      },
+    };
+  }
+
+  if (domain.verification) {
+    return {
+      props: {
+        session,
+        records: domain.verification,
+        account: serializeAccount(account),
       },
     };
   }
@@ -104,6 +136,7 @@ export async function getServerSideProps(context: NextPageContext) {
     return {
       props: {
         error: response.error,
+        account: serializeAccount(account),
       },
     };
   }
@@ -115,7 +148,8 @@ export async function getServerSideProps(context: NextPageContext) {
   return {
     props: {
       session,
-      records: records,
+      records,
+      account: serializeAccount(account),
     },
   };
 }
