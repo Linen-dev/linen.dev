@@ -117,4 +117,42 @@ export default class Vercel {
     );
     return response.json();
   };
+
+  static createOrFindDomain = async (domain: string): Promise<any> => {
+    let response = await Vercel.addDomainToProject(domain);
+
+    if (response.error && response.error.code !== 'domain_already_in_use') {
+      return response;
+    }
+
+    response = await Vercel.getProjectDomain(domain);
+
+    if (response.error) {
+      return response;
+    }
+
+    return response;
+  };
+
+  static findOrCreateDomainWithDnsRecords = async (
+    domain: string
+  ): Promise<any> => {
+    let response = await Vercel.createOrFindDomain(domain);
+
+    if (response.verification) {
+      return { records: response.verification };
+    }
+
+    response = await Vercel.getDnsRecords(domain);
+
+    if (response.error) {
+      return response;
+    }
+
+    const records = response.records.filter(
+      (record: DNSRecord) => record.type === 'TXT' || record.type === 'CNAME'
+    );
+
+    return { records };
+  };
 }

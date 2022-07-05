@@ -93,63 +93,19 @@ export async function getServerSideProps(context: NextPageContext) {
   if (!account.redirectDomain) {
     return {
       props: {
-        session,
         account: serializeAccount(account),
       },
     };
   }
 
-  const { error } = await Vercel.addDomainToProject(account.redirectDomain);
-  if (error && error.code !== 'domain_already_in_use') {
-    return {
-      props: {
-        error: error,
-        account: serializeAccount(account),
-      },
-    };
-  }
-
-  const domain = await Vercel.getProjectDomain(account.redirectDomain);
-
-  if (domain.error) {
-    return {
-      props: {
-        error: domain.error,
-        account: serializeAccount(account),
-      },
-    };
-  }
-
-  if (domain.verification) {
-    return {
-      props: {
-        session,
-        records: domain.verification,
-        account: serializeAccount(account),
-      },
-    };
-  }
-
-  const response = await Vercel.getDnsRecords(account.redirectDomain);
-
-  if (response.error) {
-    return {
-      props: {
-        error: response.error,
-        account: serializeAccount(account),
-      },
-    };
-  }
-
-  const records = response.records.filter(
-    (record) => record.type === 'TXT' || record.type === 'CNAME'
+  const response = await Vercel.findOrCreateDomainWithDnsRecords(
+    account.redirectDomain
   );
 
   return {
     props: {
-      session,
-      records,
       account: serializeAccount(account),
+      ...response,
     },
   };
 }
