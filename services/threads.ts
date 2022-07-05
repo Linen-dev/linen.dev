@@ -156,7 +156,7 @@ export async function threadGetStaticProps(
         ...thread,
         isSubDomainRouting: isSubdomainbasedRouting,
       },
-      revalidate: revalidateInSeconds, // In seconds
+      // revalidate: revalidateInSeconds, // In seconds
     };
   } catch (exception) {
     Sentry.captureException(exception);

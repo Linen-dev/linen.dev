@@ -5,13 +5,17 @@ import Thread from '../../../../../../components/Pages/Thread/Thread';
 export default Thread;
 
 //Renders the same page as /threadId
-export async function getStaticProps(context: GetStaticPropsContext) {
+// export async function getStaticProps(context: GetStaticPropsContext) {
+//   return threadGetStaticProps(context, false);
+// }
+
+export async function getServerSideProps(context: GetStaticPropsContext) {
   return threadGetStaticProps(context, false);
 }
 
-export function getStaticPaths() {
-  return {
-    paths: [],
-    fallback: true,
-  };
-}
+// export function getStaticPaths() {
+//   return {
+//     paths: [],
+//     fallback: true,
+//   };
+// }
