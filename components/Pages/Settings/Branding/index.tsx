@@ -3,6 +3,7 @@ import DashboardLayout from 'components/layout/DashboardLayout';
 import TextField from 'components/TextField';
 import ColorField from 'components/ColorField';
 import Button from 'components/Button';
+import Table, { Thead, Tbody, Th, Td } from 'components/Table';
 import { stripProtocol } from 'utilities/url';
 import Label from 'components/Label';
 import classNames from 'classnames';
@@ -13,6 +14,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { SerializedAccount } from 'serializers/account';
 import { useRouter } from 'next/router';
+import { DNSRecord } from 'services/vercel';
 
 function Description({ children }: { children: React.ReactNode }) {
   return <div className="text-sm mb-2 text-gray-600">{children}</div>;
@@ -58,9 +60,10 @@ function Card({
 
 interface Props {
   account: SerializedAccount;
+  records?: DNSRecord[];
 }
 
-export default function Branding({ account }: Props) {
+export default function Branding({ account, records }: Props) {
   const router = useRouter();
   let [logoUrl, setLogoUrl] = useState<string>();
   let { FileInput, openFileDialog, uploadToS3, files } = useS3Upload();
@@ -97,8 +100,10 @@ export default function Branding({ account }: Props) {
       }),
     })
       .then((response) => {
-        if (response.ok) toast.success('Saved successfully!');
-        else throw response;
+        if (response.ok) {
+          toast.success('Saved successfully!');
+          router.reload();
+        } else throw response;
       })
       .catch(() => {
         toast.error('Something went wrong!');
@@ -118,6 +123,34 @@ export default function Branding({ account }: Props) {
           readOnly={!account.premium}
         />
       </PremiumCard>
+      {account.premium && records && records.length > 0 && (
+        <PremiumCard isPremium={account.premium}>
+          <Label htmlFor="dnsRecords">DNS</Label>
+          <Description>
+            Subdomain routing setup can be achieved by veryfing the ownership of
+            a domain. Copy the TXT and/or CNAME records from below and paste
+            them into your DNS settings.
+          </Description>
+          <Table>
+            <Thead>
+              <tr>
+                <Th>Type</Th>
+                <Th>Name</Th>
+                <Th>Value</Th>
+              </tr>
+            </Thead>
+            <Tbody>
+              {records.map((record: DNSRecord, index) => (
+                <tr key={record.type + index}>
+                  <Td>{record.type}</Td>
+                  <Td>{record.name}</Td>
+                  <Td>{record.value}</Td>
+                </tr>
+              ))}
+            </Tbody>
+          </Table>
+        </PremiumCard>
+      )}
       <PremiumCard isPremium={account.premium}>
         <Label htmlFor="brandColor">Brand Color</Label>
         <Description>

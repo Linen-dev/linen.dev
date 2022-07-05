@@ -140,7 +140,14 @@ export default class Vercel {
     let response = await Vercel.createOrFindDomain(domain);
 
     if (response.verification) {
-      return { records: response.verification };
+      const records = response.verification.map((record: DNSRecord) => {
+        if (record.type === 'TXT' && !record.name) {
+          record.name = '_vercel';
+        }
+        return record;
+      });
+
+      return { records };
     }
 
     response = await Vercel.getDnsRecords(domain);
