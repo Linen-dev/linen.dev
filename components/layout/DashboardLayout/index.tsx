@@ -36,29 +36,36 @@ export default function DashboardLayout({ children, header, account }: Props) {
                 active={route === '/settings'}
               />
             </div>
-            <div className="space-y-1">
-              <SidebarLink
-                href="/settings/branding"
-                icon={
-                  <FontAwesomeIcon icon={faPalette} className={iconClassName} />
-                }
-                text="Branding"
-                active={route === '/settings/branding'}
-              />
-            </div>
-            <div className="space-y-1">
-              <SidebarLink
-                href="/settings/plans"
-                icon={
-                  <FontAwesomeIcon
-                    icon={faMoneyBill}
-                    className={iconClassName}
-                  />
-                }
-                text="Plans"
-                active={route === '/settings/plans'}
-              />
-            </div>
+            {account && (
+              <div className="space-y-1">
+                <SidebarLink
+                  href="/settings/branding"
+                  icon={
+                    <FontAwesomeIcon
+                      icon={faPalette}
+                      className={iconClassName}
+                    />
+                  }
+                  text="Branding"
+                  active={route === '/settings/branding'}
+                />
+              </div>
+            )}
+            {account && (
+              <div className="space-y-1">
+                <SidebarLink
+                  href="/settings/plans"
+                  icon={
+                    <FontAwesomeIcon
+                      icon={faMoneyBill}
+                      className={iconClassName}
+                    />
+                  }
+                  text="Plans"
+                  active={route === '/settings/plans'}
+                />
+              </div>
+            )}
             {featureFlags.isVercelDNSEnabled && (
               <div className="space-y-1">
                 <SidebarLink
