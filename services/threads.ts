@@ -10,11 +10,11 @@ import {
 import { ThreadByIdResponse } from '../types/apiResponses/threads/[threadId]';
 import { accounts, users } from '@prisma/client';
 import { GetStaticPropsContext } from 'next';
-import { NotFound } from 'utilities/response';
-import { revalidateInSeconds } from 'constants/revalidate';
+import { NotFound } from '../utilities/response';
+import { revalidateInSeconds } from '../constants/revalidate';
 import * as Sentry from '@sentry/nextjs';
 import { buildSettings } from './accountSettings';
-import { memoize } from '@/utilities/dynamoCache';
+import { memoize } from '../utilities/dynamoCache';
 
 interface IndexProps {
   channelId: string;

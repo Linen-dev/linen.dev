@@ -6,7 +6,7 @@ const resolveProtocol = (host: string) => {
   return ['localhost'].includes(host) ? 'http' : 'https';
 };
 
-const buildSitemapQueries = {
+export const buildSitemapQueries = {
   byAccountId: (accountId: string) => prisma.$queryRaw<
     { channelName: string; incrementId: number; slug: string }[]
   >`
@@ -31,8 +31,8 @@ const buildSitemapQueries = {
   having count(m.id) > 1
   order by 1,2`,
   channelsFromAccountId: (accountId: string) => prisma.$queryRaw<
-    { channelName: string }[]
-  >`select c."channelName", * from channels c
+    { channelName: string; id: string }[]
+  >`select c."channelName", c.id from channels c
   where c."accountId" = ${accountId}
   and c.hidden is false
   and exists (
