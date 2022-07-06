@@ -30,6 +30,9 @@ export function buildSettings(account: accounts): Settings {
         googleAnalyticsId: account.googleAnalyticsId,
       }),
     communityType: communityType,
+    ...(!!account.googleSiteVerification && {
+      googleSiteVerification: account.googleSiteVerification,
+    }),
   };
   return settings;
 }
