@@ -5,7 +5,6 @@ const LONG_RUNNING = process.env.LONG_RUNNING === 'true';
 const pageExtensions = LONG_RUNNING
   ? ['ts', 'js']
   : ['ts', 'js', 'tsx', 'jsx', 'md', 'mdx'];
-const experimental = LONG_RUNNING ? { outputStandalone: true } : {};
 const SKIP_SENTRY = process.env.SKIP_SENTRY === 'true';
 
 /**
@@ -27,7 +26,6 @@ const nextConfig = {
     ],
   },
   pageExtensions,
-  experimental,
 };
 const sentryWebpackPluginOptions = {
   // Additional config options for the Sentry Webpack plugin. Keep in mind that

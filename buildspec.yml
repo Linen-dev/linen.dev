@@ -1,0 +1,11 @@
+version: 0.2
+
+phases:
+  build:
+    commands:
+      - echo Tests started on `date`
+      - npm install && npm run test
+      - echo Tests completed on `date`
+      - echo Build started on `date`
+      - cd cdk && npm install && npm run build && npm run cdk -- deploy --require-approval never
+      - echo Build completed on `date`
