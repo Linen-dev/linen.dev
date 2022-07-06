@@ -43,7 +43,10 @@ export default async function handler(
   const sync = identifySyncType(account);
 
   try {
-    sync({ accountId });
+    sync({
+      accountId,
+      fullSync: true, // discord only
+    });
     res.setHeader('Cache-Control', 'max-age=60');
     res.status(200).json({});
   } catch (error) {
