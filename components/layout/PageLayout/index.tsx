@@ -18,6 +18,7 @@ interface Settings {
   homeUrl: string;
   logoUrl: string;
   googleAnalyticsId?: string;
+  googleSiteVerification?: string;
   communityType: string;
 }
 
@@ -50,7 +51,7 @@ function PageLayout({
   const homeUrl = addHttpsToUrl(settings.homeUrl);
   const docsUrl = addHttpsToUrl(settings.docsUrl);
   const logoUrl = addHttpsToUrl(settings.logoUrl);
-  const { googleAnalyticsId } = settings;
+  const { googleAnalyticsId, googleSiteVerification } = settings;
   const fontColor = pickTextColorBasedOnBgColor(
     settings.brandColor,
     'white',
@@ -164,7 +165,10 @@ function PageLayout({
           </ErrorBoundary>
         </div>
       </div>
-      <GoogleAnalytics googleAnalyticsId={googleAnalyticsId} />
+      <GoogleAnalytics
+        googleAnalyticsId={googleAnalyticsId}
+        googleSiteVerification={googleSiteVerification}
+      />
     </div>
   );
 }

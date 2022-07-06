@@ -3,8 +3,10 @@ import { useEffect } from 'react';
 
 function GoogleAnalytics({
   googleAnalyticsId,
+  googleSiteVerification,
 }: {
   googleAnalyticsId?: string;
+  googleSiteVerification?: string;
 }) {
   function gtag(a: any, b: any) {
     (window as any).dataLayer.push(arguments);
@@ -20,7 +22,13 @@ function GoogleAnalytics({
 
   return (
     <Head>
-      {googleAnalyticsId && (
+      {!!googleSiteVerification && (
+        <meta
+          name="google-site-verification"
+          content={googleSiteVerification}
+        />
+      )}
+      {!!googleAnalyticsId && (
         <>
           <script
             async
