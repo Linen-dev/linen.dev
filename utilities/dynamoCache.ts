@@ -84,6 +84,7 @@ async function getCache(pk: string, sk: string) {
     log('hit internal ::', pk, sk);
     return getLocalCache(pk + sk);
   }
+  if (process.env.SKIP_DYNAMO_CACHE === 'true') return null;
   try {
     const response = await DocumentClient.get({
       Key: { pk, sk },
@@ -106,6 +107,8 @@ async function getCache(pk: string, sk: string) {
 async function setCache(pk: string, sk: string, obj: any) {
   if (!obj || obj === '') return;
   try {
+    setLocalCache(pk + sk, obj);
+    if (process.env.SKIP_DYNAMO_CACHE === 'true') return null;
     await DocumentClient.put({
       TableName,
       Item: {
@@ -115,7 +118,6 @@ async function setCache(pk: string, sk: string, obj: any) {
         ttl: buildTimeToLive(),
       },
     }).promise();
-    setLocalCache(pk + sk, obj);
   } catch (error) {
     Sentry.captureException(error);
     console.error(error);
