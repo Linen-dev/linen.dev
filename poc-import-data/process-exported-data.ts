@@ -1,12 +1,13 @@
 import { accounts, channels, users, PrismaClient } from '@prisma/client';
 import {
-  ConvesrationHistoryMessage,
-  // joinChannel,
+  ConversationHistoryMessage,
   saveUsers,
 } from '../fetch_all_conversations';
 import fs from 'fs';
 import { createSlug } from '../lib/util';
 import { SyncStatus, updateAndNotifySyncStatus } from '../services/syncStatus';
+import { processReactions } from '../services/slack/reactions';
+import { processAttachments } from '../services/slack/attachments';
 
 const prisma = new PrismaClient({}); // initiate a new instance of prisma without info logs
 
@@ -168,7 +169,7 @@ async function processFile({
 let threadsBySlackThreadTs: any = {};
 
 async function saveMessagesTransaction(
-  messages: ConvesrationHistoryMessage[],
+  messages: ConversationHistoryMessage[],
   channelId: string,
   userGroupBySlackUserId: UserMap
 ) {
@@ -219,7 +220,7 @@ async function saveMessagesTransaction(
     };
   }
 
-  const createMessagesTransaction = messagesByType.message?.map((m) => {
+  const createMessagesTransaction = messagesByType.message?.map(async (m) => {
     let thread = threadsBySlackThreadTs[m.thread_ts as string];
     let user = m.user ? userGroupBySlackUserId[m.user] : null;
     let threadId = thread?.id;
@@ -230,48 +231,42 @@ async function saveMessagesTransaction(
       mentionedUsers.push(userGroupBySlackUserId[userId]);
     }
 
-    return prisma.messages.upsert({
+    const serializedMessage = {
+      body: m.text,
+      blocks: m.blocks,
+      sentAt: new Date(parseFloat(m.ts) * 1000),
+      channelId,
+      slackMessageId: m.ts as string,
+      slackThreadId: threadId,
+      usersId: user?.id,
+      mentions: {
+        createMany: {
+          skipDuplicates: true,
+          data: mentionedUsers.map((mention) => ({
+            usersId: mention.id,
+          })),
+        },
+      },
+    };
+    const message = await prisma.messages.upsert({
       where: {
         channelId_slackMessageId: {
           channelId,
           slackMessageId: m.ts as string,
         },
       },
-      create: {
-        body: m.text,
-        sentAt: new Date(parseFloat(m.ts) * 1000),
-        channelId,
-        slackMessageId: m.ts as string,
-        slackThreadId: threadId,
-        usersId: user?.id,
-        mentions: {
-          createMany: {
-            skipDuplicates: true,
-            data: mentionedUsers.map((mention) => ({
-              usersId: mention.id,
-            })),
-          },
-        },
-      },
-      update: {
-        body: m.text,
-        sentAt: new Date(parseFloat(m.ts) * 1000),
-        slackThreadId: threadId,
-        usersId: user?.id,
-        mentions: {
-          createMany: {
-            skipDuplicates: true,
-            data: mentionedUsers.map((mention) => ({
-              usersId: mention.id,
-            })),
-          },
-        },
-      },
+      create: serializedMessage,
+      update: serializedMessage,
     });
+
+    await Promise.all([
+      processReactions(m, message),
+      processAttachments(m, message, 'token'),
+    ]);
   });
 
   if (createMessagesTransaction && createMessagesTransaction.length) {
-    await prisma.$transaction(createMessagesTransaction);
+    await Promise.all(createMessagesTransaction);
   }
 }
 
@@ -283,10 +278,10 @@ function getMentionedUsers(text: string) {
 const groupMessageByType = (
   messages: any[]
 ): {
-  single?: ConvesrationHistoryMessage[];
-  thread?: ConvesrationHistoryMessage[];
-  message?: ConvesrationHistoryMessage[];
-  unknown?: ConvesrationHistoryMessage[];
+  single?: ConversationHistoryMessage[];
+  thread?: ConversationHistoryMessage[];
+  message?: ConversationHistoryMessage[];
+  unknown?: ConversationHistoryMessage[];
 } => {
   const messageTypes: any = {
     falsefalse: 'single', // its was single, but we should threat singles as a potential thread

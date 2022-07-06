@@ -4,7 +4,11 @@ export interface SlackEvent {
   token: string;
   team_id: string;
   api_app_id: string;
-  event: SlackMessageEvent | SlackTeamJoinEvent;
+  event:
+    | SlackMessageEvent
+    | SlackTeamJoinEvent
+    | SlackMessageReactionRemovedEvent
+    | SlackMessageReactionAddedEvent;
   type: string;
   event_id: string;
   event_time: number;
@@ -36,6 +40,31 @@ export interface SlackMessageEvent {
   parent_user_id: string;
   channel_type: string;
   thread_ts?: string;
+}
+export interface SlackMessageReactionRemovedEvent {
+  type: 'reaction_removed';
+  user: string;
+  reaction: string;
+  item_user: string;
+  item: {
+    type: string;
+    channel: string;
+    ts: string;
+  };
+  event_ts: string;
+}
+
+export interface SlackMessageReactionAddedEvent {
+  type: 'reaction_added';
+  user: string;
+  reaction: string;
+  item_user: string;
+  item: {
+    type: string;
+    channel: string;
+    ts: string;
+  };
+  event_ts: string;
 }
 
 export interface Block {

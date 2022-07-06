@@ -13,6 +13,7 @@ interface CreateMessageParams {
   body: string;
   slackMessageId: string;
   usersId?: string;
+  blocks?: any;
 }
 
 export function findMessage({
@@ -32,6 +33,7 @@ export function createMessage({
   body,
   slackMessageId,
   usersId,
+  blocks,
 }: CreateMessageParams) {
   return prisma.messages.create({
     data: {
@@ -41,6 +43,7 @@ export function createMessage({
       body,
       sentAt: new Date().toISOString(),
       usersId,
+      blocks,
     },
   });
 }

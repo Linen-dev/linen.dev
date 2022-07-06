@@ -26,9 +26,12 @@ model messages {
   slackThreadId String?
 
   mentions                 slackMentions[]
+  attachments              messageAttachments[]
+  reactions                messageReactions[]
   author                   users?                   @relation(fields: [usersId], references: [id])
   usersId                  String?
   textsearchable_index_col Unsupported("tsvector")?
+  blocks                   Json?
 
   @@unique([channelId, slackMessageId])
   @@index([textsearchable_index_col], type: Gin)
@@ -141,6 +144,34 @@ model slackMentions {
   usersId    String
 
   @@id([messagesId, usersId])
+}
+
+model messageAttachments {
+  messages    messages? @relation(fields: [messagesId], references: [id], onDelete: Cascade)
+  messagesId  String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  externalId  String
+  name        String
+  sourceUrl   String
+  title       String?
+  mimetype    String?
+  internalUrl String?
+  permalink   String?
+
+  @@id([messagesId, externalId])
+}
+
+model messageReactions {
+  messages   messages? @relation(fields: [messagesId], references: [id], onDelete: Cascade)
+  messagesId String
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  name       String
+  count      Int?
+  users      Json?
+
+  @@id([messagesId, name])
 }
 
 model slackAuthorizations {

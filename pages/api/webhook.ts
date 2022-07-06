@@ -14,11 +14,17 @@ import {
 import {
   SlackEvent,
   SlackMessageEvent,
+  SlackMessageReactionRemovedEvent,
+  SlackMessageReactionAddedEvent,
   SlackTeamJoinEvent,
 } from '../../types/slackResponses/slackMessageEventInterface';
 import { createSlug } from '../../lib/util';
-import { accounts, channels, slackAuthorizations } from '@prisma/client';
-import { UserInfo } from 'types/slackResponses/slackUserInfoInterface';
+import {
+  accounts,
+  channels,
+  Prisma,
+  slackAuthorizations,
+} from '@prisma/client';
 
 export default async function handler(
   req: NextApiRequest,
@@ -44,6 +50,14 @@ export const handleWebhook = async (
     return processTeamJoin(body.event as SlackTeamJoinEvent);
   } else if (body.event.type === 'message') {
     return processMessageEvent(body.event as SlackMessageEvent);
+  } else if (body.event.type === 'reaction_added') {
+    return processMessageReactionAddedEvent(
+      body.event as SlackMessageReactionAddedEvent
+    );
+  } else if (body.event.type === 'reaction_removed') {
+    return processMessageReactionRemovedEvent(
+      body.event as SlackMessageReactionRemovedEvent
+    );
   } else {
     console.error('Event not supported!!');
     return {
@@ -55,18 +69,7 @@ export const handleWebhook = async (
 
 async function processMessageEvent(event: SlackMessageEvent) {
   const channelId = event.channel;
-  const channel = await prisma.channels.findUnique({
-    where: {
-      slackChannelId: channelId,
-    },
-    include: {
-      account: {
-        include: {
-          slackAuthorizations: true,
-        },
-      },
-    },
-  });
+  const channel = await getChannel(channelId);
 
   if (channel === null || channel.account === null) {
     console.error('Channel does not exist in db ');
@@ -143,6 +146,7 @@ async function addMessage(
 
   const param = {
     body: event.text,
+    blocks: event.blocks as any,
     channelId: channel.id,
     sentAt: new Date(parseFloat(event.ts) * 1000),
     slackThreadId: thread?.id,
@@ -218,4 +222,130 @@ async function processTeamJoin(event: SlackTeamJoinEvent) {
     status: 201,
     message: 'User created',
   };
+}
+
+async function getChannel(channelId: string) {
+  return await prisma.channels.findUnique({
+    where: {
+      slackChannelId: channelId,
+    },
+    include: {
+      account: {
+        include: {
+          slackAuthorizations: true,
+        },
+      },
+    },
+  });
+}
+
+async function processMessageReactionEvent(
+  event: SlackMessageReactionAddedEvent | SlackMessageReactionRemovedEvent
+) {
+  const channelId = event.item.channel;
+  const channel = await getChannel(channelId);
+
+  if (channel === null || channel.account === null) {
+    console.error('Channel does not exist in db ');
+    return { status: 403, error: 'Channel not found' };
+  }
+
+  const message = await prisma.messages.findUnique({
+    where: {
+      channelId_slackMessageId: {
+        channelId: channel.id,
+        slackMessageId: event.item.ts,
+      },
+    },
+  });
+
+  if (!message) {
+    return {
+      status: 404,
+      error: 'Message not found',
+    };
+  }
+
+  const whereClause =
+    Prisma.validator<Prisma.messageReactionsWhereUniqueInput>()({
+      messagesId_name: {
+        messagesId: message.id,
+        name: event.reaction,
+      },
+    });
+
+  const reaction = await prisma.messageReactions.findUnique({
+    where: whereClause,
+  });
+
+  console.log('reaction', reaction);
+
+  return { reaction, whereClause, message };
+}
+
+async function processMessageReactionAddedEvent(
+  event: SlackMessageReactionAddedEvent
+) {
+  const { error, status, reaction, whereClause, message } =
+    await processMessageReactionEvent(event);
+
+  if (error) {
+    return { error, status };
+  }
+
+  const users = [event.user as Prisma.JsonValue];
+  if (reaction) {
+    // update
+    if (reaction.users && Array.isArray(reaction.users)) {
+      users.push(...(reaction.users as Prisma.JsonArray));
+    }
+    await prisma.messageReactions.update({
+      data: {
+        users,
+        count: { increment: 1 },
+      },
+      where: whereClause,
+    });
+  } else {
+    // create
+    await prisma.messageReactions.create({
+      data: {
+        users,
+        count: 1,
+        messagesId: message?.id,
+        name: event.reaction,
+      },
+    });
+  }
+
+  return { status: 200, message: 'Reaction added' };
+}
+
+async function processMessageReactionRemovedEvent(
+  event: SlackMessageReactionRemovedEvent
+) {
+  const { error, status, reaction, whereClause } =
+    await processMessageReactionEvent(event);
+
+  if (error) {
+    return { error, status };
+  }
+
+  if (reaction) {
+    // update
+    if (reaction.users && Array.isArray(reaction.users)) {
+      const users = [...(reaction.users as Prisma.JsonArray)].filter((user) => {
+        return user !== event.user;
+      });
+      await prisma.messageReactions.update({
+        data: {
+          users,
+          count: { decrement: 1 },
+        },
+        where: whereClause,
+      });
+    }
+  }
+
+  return { status: 200, message: 'Reaction removed' };
 }
