@@ -357,6 +357,7 @@ export const threadIndex = async ({
               users: true,
             },
           },
+          reactions: true,
         },
         orderBy: {
           sentAt: MESSAGES_ORDER_BY,
@@ -405,6 +406,7 @@ export const findThreadById = async (threadId: number) => {
                 users: true,
               },
             },
+            reactions: true,
           },
           orderBy: {
             sentAt: MESSAGES_ORDER_BY,
@@ -606,7 +608,11 @@ export const findMessagesFromChannel = async ({
   const currentPage = (page || 1) - 1;
   const skip = currentPage * take;
   const messages = await prisma.messages.findMany({
-    include: { author: true, mentions: { include: { users: true } } },
+    include: {
+      author: true,
+      mentions: { include: { users: true } },
+      reactions: true,
+    },
     orderBy: { sentAt: 'desc' },
     where,
     take,
