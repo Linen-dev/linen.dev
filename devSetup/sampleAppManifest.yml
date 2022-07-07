@@ -32,6 +32,10 @@ settings:
       - team_join
       - reaction_added
       - reaction_removed
+    bot_events:
+      - team_join
+      - channel_created
+      - channel_rename
   org_deploy_enabled: false
   socket_mode_enabled: false
   token_rotation_enabled: false
