@@ -1,10 +1,10 @@
 import React from 'react';
 import Reaction from './Reaction';
 import styles from './index.module.css';
-import { Reaction as ReactionType } from '../types';
+import { SerializedReaction } from 'types/shared';
 
 interface Props {
-  reactions?: ReactionType[];
+  reactions?: SerializedReaction[];
 }
 
 function Reactions({ reactions }: Props) {

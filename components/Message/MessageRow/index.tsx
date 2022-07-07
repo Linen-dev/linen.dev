@@ -31,6 +31,7 @@ export function MessageRow({ message }: { message: messageWithAuthor }) {
         <Message
           text={message.body}
           mentions={message.mentions?.map((m) => m.users)}
+          reactions={message.reactions}
         />
       </div>
     </li>

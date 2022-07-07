@@ -11,6 +11,7 @@ import { Settings } from 'services/accountSettings';
 import { MentionsWithUsers } from 'types/apiResponses/threads/[threadId]';
 import Channel from './Channel';
 import ChannelChatView from './ChannelChatView';
+import { SerializedReaction } from 'types/shared';
 
 export interface PaginationType {
   totalCount: number;
@@ -35,6 +36,7 @@ export type messageWithAuthor = messages & {
   mentions: (slackMentions & {
     users: users;
   })[];
+  reactions: SerializedReaction[];
 };
 
 export type Props = {

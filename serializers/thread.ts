@@ -1,15 +1,17 @@
-import { users } from '@prisma/client';
 import { MentionsWithUsers } from '../types/apiResponses/threads/[threadId]';
 import {
   SlackThreadsWithMessages,
   MessageWithAuthor,
 } from '../types/partialTypes';
+import { SerializedReaction } from 'types/shared';
+import { Prisma } from '@prisma/client';
 
 interface SerializedMessage {
   body: string;
   sentAt: string;
   author: string;
   mentions: MentionsWithUsers[];
+  reactions: SerializedReaction[];
 }
 
 interface SerializedThread {
@@ -29,6 +31,14 @@ export default function serialize(
         sentAt: message.sentAt.toString(),
         author: message.author,
         mentions: message.mentions || [],
+        reactions: message.reactions.map(
+          (reaction: Prisma.messageReactionsGetPayload<{}>) => {
+            return {
+              type: reaction.name,
+              count: reaction.count,
+            } as SerializedReaction;
+          }
+        ),
       };
     }),
   };
