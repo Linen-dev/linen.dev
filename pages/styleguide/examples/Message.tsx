@@ -184,8 +184,9 @@ export default function Styleguide() {
           text="Hello, world! :)"
           reactions={[
             { type: ':+1:', count: 10 },
+            { type: '-1', count: 2 },
             { type: ':heart:', count: 5 },
-            { type: ':thumbsdown:', count: 1 },
+            { type: '100', count: 3 },
           ]}
         />
       </Example>
