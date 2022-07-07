@@ -183,10 +183,13 @@ export default function Styleguide() {
         <Message
           text="Hello, world! :)"
           reactions={[
-            { type: ':+1:', count: 10 },
+            { type: '+1', count: 10 },
             { type: '-1', count: 2 },
-            { type: ':heart:', count: 5 },
+            { type: 'heart', count: 5 },
             { type: '100', count: 3 },
+            { type: 'slightly_smiling_face', count: 1 },
+            { type: 'raised_hands', count: 1 },
+            { type: 'eyes', count: 1 },
           ]}
         />
       </Example>
