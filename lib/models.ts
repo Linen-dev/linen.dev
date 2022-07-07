@@ -628,15 +628,12 @@ export async function findThreadsWithWrongMessageCount() {
   limit 100`;
 }
 
-export const findChannelsWithSingleMessages = async ({
-  channels,
-}: {
-  channels: channels[];
-}) => {
+export const findChannelsWithSingleMessages = async (accountId: string) => {
   return await prisma.channels.findMany({
     where: {
-      id: { in: channels.map((c) => c.id) },
+      accountId,
       messages: { some: { slackThreadId: null } },
+      hidden: false,
     },
   });
 };

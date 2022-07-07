@@ -1,12 +1,13 @@
 import { DynamoDB } from 'aws-sdk';
 import { gzipSync, gunzipSync } from 'zlib';
 import * as Sentry from '@sentry/nextjs';
+import NodeCache from 'node-cache';
 
 declare global {
   // allow global `var` declarations
   // eslint-disable-next-line no-var
   var DocumentClient: DynamoDB.DocumentClient | undefined;
-  var localCache: Record<string, any> | undefined;
+  var localCache: NodeCache | undefined;
 }
 
 const DocumentClient =
@@ -66,15 +67,18 @@ function log(...args: any) {
  * this variable will work as local cache to avoid duplicate requests
  * this cache will live the same time as lambda, between 15 min and a few hours
  */
-let localCache: Record<string, any> = global.localCache || {};
+let localCache: NodeCache =
+  global.localCache ||
+  new NodeCache({ stdTTL: 30, checkperiod: 60, useClones: false });
+
 function setLocalCache(key: string, data: any) {
-  localCache[key] = data;
+  localCache.set(key, data);
 }
 function getLocalCache(key: string) {
-  return localCache[key];
+  return localCache.get(key);
 }
 function hasLocalCache(key: string) {
-  return !!localCache[key];
+  return localCache.has(key);
 }
 
 if (process.env.NODE_ENV !== 'production') global.localCache = localCache;
@@ -84,6 +88,7 @@ async function getCache(pk: string, sk: string) {
     log('hit internal ::', pk, sk);
     return getLocalCache(pk + sk);
   }
+  if (process.env.SKIP_DYNAMO_CACHE === 'true') return null;
   try {
     const response = await DocumentClient.get({
       Key: { pk, sk },
@@ -106,6 +111,8 @@ async function getCache(pk: string, sk: string) {
 async function setCache(pk: string, sk: string, obj: any) {
   if (!obj || obj === '') return;
   try {
+    setLocalCache(pk + sk, obj);
+    if (process.env.SKIP_DYNAMO_CACHE === 'true') return null;
     await DocumentClient.put({
       TableName,
       Item: {
@@ -115,7 +122,6 @@ async function setCache(pk: string, sk: string, obj: any) {
         ttl: buildTimeToLive(),
       },
     }).promise();
-    setLocalCache(pk + sk, obj);
   } catch (error) {
     Sentry.captureException(error);
     console.error(error);

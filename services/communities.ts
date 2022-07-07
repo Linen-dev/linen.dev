@@ -92,7 +92,7 @@ async function resolveMessageViewType({
   if (account.messagesViewType === MessagesViewType.MESSAGES) {
     return await getMessagesAndUsers({
       channelId: channel.id,
-      channels,
+      accountId: account.id,
       page,
     });
   } else {
@@ -107,18 +107,18 @@ async function resolveMessageViewType({
 
 async function getMessagesAndUsers({
   channelId,
-  channels,
+  accountId,
   page,
 }: {
   channelId: string;
-  channels: channels[];
+  accountId: string;
   page?: number;
 }) {
   const { messages, total, currentPage, pages } =
     await findMessagesFromChannelMemo({ channelId, page });
-  const channelsWithMinThreads = await findChannelsWithSingleMessagesMemo({
-    channels,
-  });
+  const channelsWithMinThreads = await findChannelsWithSingleMessagesMemo(
+    accountId
+  );
 
   return {
     users: messages.map((message) => message.author),
