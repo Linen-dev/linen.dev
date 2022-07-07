@@ -179,6 +179,16 @@ export default function Styleguide() {
       <Example description="It supports broken links.">
         <Message text={BROKEN_LINK_EXAMPLE} />
       </Example>
+      <Example description="It supports reactions.">
+        <Message
+          text="Hello, world! :)"
+          reactions={[
+            { type: ':+1:', count: 10 },
+            { type: ':heart:', count: 5 },
+            { type: ':thumbsdown:', count: 1 },
+          ]}
+        />
+      </Example>
     </Example>
   );
 }
