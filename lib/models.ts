@@ -10,7 +10,6 @@ import { getSlackUser } from '../services/slack';
 import { stripProtocol } from '../utilities/url';
 import { anonymizeMessages } from '../utilities/anonymizeMessages';
 import { generateRandomWordSlug } from '../utilities/randomWordSlugs';
-import { mergeMessagesByUserId } from '../utilities/messages';
 
 export const createMessage = async (
   message: Prisma.messagesUncheckedCreateInput
@@ -374,15 +373,9 @@ export const threadIndex = async ({
       slackThreadTs: 'desc',
     },
   });
-  const threadsWithMessages = threads
-    .filter((thread) => thread.messages.length > 0)
-    .map((thread) => {
-      thread.messages = mergeMessagesByUserId(
-        thread.messages,
-        MESSAGES_ORDER_BY
-      );
-      return thread;
-    });
+  const threadsWithMessages = threads.filter(
+    (thread) => thread.messages.length > 0
+  );
   if (account.anonymizeUsers) {
     return threadsWithMessages.map(anonymizeMessages);
   }
@@ -421,12 +414,6 @@ export const findThreadById = async (threadId: number) => {
     })
     .then((thread) => {
       const account = thread?.channel.account;
-      if (thread) {
-        thread.messages = mergeMessagesByUserId(
-          thread.messages,
-          MESSAGES_ORDER_BY
-        );
-      }
       if (account?.anonymizeUsers) {
         return anonymizeMessages(thread);
       }
