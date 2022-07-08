@@ -12,6 +12,8 @@ export async function updateAndNotifySyncStatus(
   accountId: string,
   status: SyncStatus
 ) {
+  if (skipNotification()) return;
+
   await updateAccountSlackSyncStatus(accountId, status);
   try {
     await sendNotification(
@@ -22,7 +24,7 @@ export async function updateAndNotifySyncStatus(
   }
   try {
     await ApplicationMailer.send({
-      to: 'kam@linen.dev', // TODO: get proper email
+      to: (process.env.SUPPORT_EMAIL || 'help@linen.dev') as string,
       subject: `Linen.dev - Sync progress is ${status} for account: ${accountId}`,
       text: `Syncing process is ${status} for account: ${accountId}`,
       html: `Syncing process is ${status} for account: ${accountId}`,
@@ -32,4 +34,7 @@ export async function updateAndNotifySyncStatus(
   } catch (error) {
     console.error(error);
   }
+}
+function skipNotification() {
+  return process.env.SKIP_NOTIFICATION === 'true';
 }
