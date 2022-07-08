@@ -102,6 +102,7 @@ const createMessagesAndThreads = async (account: accounts) => {
       slackUserId: '1',
       isBot: false,
       isAdmin: false,
+      displayName: 'John Doe',
     },
   });
   const user2 = await prisma.users.create({
@@ -110,6 +111,7 @@ const createMessagesAndThreads = async (account: accounts) => {
       slackUserId: '2',
       isBot: false,
       isAdmin: false,
+      displayName: 'Jane Doe',
     },
   });
 
@@ -183,7 +185,7 @@ async function createChannelThreadsMessages({
         slackThreadTs: `slack-thread-ts-${slug}-${random()}`,
       },
     });
-    const message = await prisma.messages.create({
+    const message1 = await prisma.messages.create({
       data: {
         body: messages[i] || `foo-${i}`,
         channelId: channel.id,
@@ -195,12 +197,12 @@ async function createChannelThreadsMessages({
     });
     await prisma.messageReactions.create({
       data: {
-        messagesId: message.id,
+        messagesId: message1.id,
         name: ':thumbsup:',
         count: 5,
       },
     });
-    await prisma.messages.create({
+    const message2 = await prisma.messages.create({
       data: {
         body: `bar-${i}`,
         channelId: channel.id,
@@ -208,6 +210,13 @@ async function createChannelThreadsMessages({
         usersId: user1.id,
         sentAt: new Date().toISOString(),
         slackMessageId: `slack-message-id-${random()}`,
+      },
+    });
+    await prisma.messageReactions.create({
+      data: {
+        messagesId: message2.id,
+        name: ':thumbsup:',
+        count: 5,
       },
     });
     await prisma.messages.create({
