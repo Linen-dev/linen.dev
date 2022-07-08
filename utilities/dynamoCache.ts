@@ -122,6 +122,23 @@ async function setCache(pk: string, sk: string, obj: any) {
   }
 }
 
+export async function healthCheck() {
+  const pk = 'ping',
+    sk = 'pong';
+  await DocumentClient.put({
+    TableName,
+    Item: {
+      pk,
+      sk,
+      ttl: buildTimeToLive(),
+    },
+  }).promise();
+  return await DocumentClient.get({
+    Key: { pk, sk },
+    TableName,
+  }).promise();
+}
+
 /**
  * this function only accepts one parameter, if you need more then one
  * you should convert parameters to destructured object

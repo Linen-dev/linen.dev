@@ -1,7 +1,10 @@
 import { findArgAndParse } from '../../utilities/processArgs';
 import prisma from '../../client';
 import { buildSitemapQueries } from '../../utilities/sitemap';
-import { memoize } from '../../utilities/dynamoCache';
+import {
+  healthCheck as dynamoHealthCheck,
+  memoize,
+} from '../../utilities/dynamoCache';
 import { getThreadsByCommunityName } from '../../services/communities';
 import { getThreadById } from '../../services/threads';
 import axios from 'axios';
@@ -140,4 +143,9 @@ async function crawler() {
 const getThreadsByCommunityNameMemo = memoize(getThreadsByCommunityName);
 const getThreadByIdMemo = memoize(getThreadById);
 
-crawler();
+dynamoHealthCheck().then((health) => {
+  log({ health });
+  if (health) {
+    crawler();
+  }
+});
