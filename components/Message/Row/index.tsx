@@ -4,9 +4,38 @@ import { Text } from '@mantine/core';
 import Message from '../../Message';
 import { format } from 'timeago.js';
 
-export function MessageRow({ message }: { message: messageWithAuthor }) {
+interface Props {
+  message: messageWithAuthor;
+  isPreviousMessageFromSameUser: boolean;
+  isNextMessageFromSameUser: boolean;
+}
+
+export function Row({
+  message,
+  isPreviousMessageFromSameUser,
+  isNextMessageFromSameUser,
+}: Props) {
+  if (isPreviousMessageFromSameUser) {
+    return (
+      <li
+        className={isNextMessageFromSameUser ? 'pb-1' : 'pb-8'}
+        key={message.id}
+      >
+        <div className="max-w-[700px]">
+          <Message
+            text={message.body}
+            mentions={message.mentions?.map((m) => m.users)}
+            reactions={message.reactions}
+          />
+        </div>
+      </li>
+    );
+  }
   return (
-    <li className="pb-8" key={message.id}>
+    <li
+      className={isNextMessageFromSameUser ? 'pb-1' : 'pb-8'}
+      key={message.id}
+    >
       <div className="flex justify-between">
         <div className="flex pb-4">
           <Avatar
@@ -31,10 +60,11 @@ export function MessageRow({ message }: { message: messageWithAuthor }) {
         <Message
           text={message.body}
           mentions={message.mentions?.map((m) => m.users)}
+          reactions={message.reactions}
         />
       </div>
     </li>
   );
 }
 
-export default MessageRow;
+export default Row;

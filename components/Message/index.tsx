@@ -9,17 +9,20 @@ import ComplexChannel from './ComplexChannel';
 import InlineCode from './InlineCode';
 import BlockCode from './BlockCode';
 import HorizontalRule from './HorizontalRule';
+import Reactions from './Reactions';
 import { tokenize, TokenType } from './utilities/lexer';
 import { truncate as truncateText } from './utilities/string';
 import styles from './index.module.css';
+import { Reaction } from './types';
 
 interface Props {
   text: string;
   truncate?: any;
   mentions?: users[];
+  reactions?: Reaction[];
 }
 
-function Message({ text, truncate, mentions }: Props) {
+function Message({ text, truncate, mentions, reactions }: Props) {
   if (text === '') {
     text = 'message has been deleted';
   }
@@ -57,6 +60,7 @@ function Message({ text, truncate, mentions }: Props) {
           }
         })
         .filter(Boolean)}
+      <Reactions reactions={reactions} />
     </div>
   );
 }

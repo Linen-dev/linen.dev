@@ -1,20 +1,10 @@
 import prisma from '../client';
 import { generateHash, generateSalt } from '../utilities/password';
 
-interface FindAuthParams {
-  email: string;
-}
-
 interface CreateAuthParams {
   email: string;
   password: string;
   accountId?: string;
-}
-
-export async function findAuth({ email }: FindAuthParams) {
-  return await prisma.auths.findFirst({
-    where: { email },
-  });
 }
 
 export async function createAuth({

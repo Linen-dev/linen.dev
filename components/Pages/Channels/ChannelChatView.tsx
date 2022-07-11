@@ -9,7 +9,7 @@ import { Settings } from 'services/accountSettings';
 import useInfiniteScroll from 'react-infinite-scroll-hook';
 import { useRouter } from 'next/router';
 import classNames from 'classnames';
-import { MessageRow } from '../../Message/MessageRow';
+import Row from '../../Message/Row';
 import { fetcher } from '@/utilities/fetcher';
 
 export default function ChannelChatView({
@@ -153,9 +153,27 @@ export default function ChannelChatView({
             role="list"
             className="divide-y divide-gray-200 flex flex-col-reverse"
           >
-            {currentThreads.filter(onlyMessagesFromCurrentChannel).map((_) => (
-              <MessageRow key={_.id} message={_} />
-            ))}
+            {currentThreads
+              .filter(onlyMessagesFromCurrentChannel)
+              .map((message, index) => {
+                const previousMessage = messages[index + 1];
+                const nextMessage = messages[index - 1];
+                const isPreviousMessageFromSameUser =
+                  previousMessage &&
+                  previousMessage.usersId === message.usersId;
+                const isNextMessageFromSameUser =
+                  nextMessage && nextMessage.usersId === message.usersId;
+                return (
+                  <Row
+                    key={message.id}
+                    message={message}
+                    isPreviousMessageFromSameUser={
+                      isPreviousMessageFromSameUser
+                    }
+                    isNextMessageFromSameUser={isNextMessageFromSameUser}
+                  />
+                );
+              })}
             {hasNextPage && (
               <div ref={infiniteRef} className="flex justify-center p-4">
                 <Loader size="sm" />

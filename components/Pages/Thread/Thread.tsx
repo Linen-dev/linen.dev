@@ -4,7 +4,7 @@ import { useMemo, useEffect } from 'react';
 import PageLayout from '../../layout/PageLayout';
 import styles from './index.module.css';
 import { ThreadByIdProp } from '../../../types/apiResponses/threads/[threadId]';
-import { MessageRow } from '../../Message/MessageRow';
+import Row from '../../Message/Row';
 
 export default function Thread({
   threadId,
@@ -28,7 +28,20 @@ export default function Thread({
     return messages
       .sort((a, b) => b.sentAt - a.sentAt)
       .map((message, index) => {
-        return <MessageRow key={`${message.id}-${index}`} message={message} />;
+        const previousMessage = messages[index - 1];
+        const nextMessage = messages[index + 1];
+        const isPreviousMessageFromSameUser =
+          previousMessage && previousMessage.usersId === message.usersId;
+        const isNextMessageFromSameUser =
+          nextMessage && nextMessage.usersId === message.usersId;
+        return (
+          <Row
+            key={`${message.id}-${index}`}
+            message={message}
+            isPreviousMessageFromSameUser={isPreviousMessageFromSameUser}
+            isNextMessageFromSameUser={isNextMessageFromSameUser}
+          />
+        );
       });
   }, [messages]);
 
