@@ -7,13 +7,15 @@ import {
   findMessagesFromChannel,
 } from '../lib/models';
 import { index as fetchThreads } from '../services/threads';
-import { GetStaticPropsContext } from 'next/types';
+import {
+  GetServerSidePropsContext,
+} from 'next/types';
 import { stripProtocol } from '../utilities/url';
 import { accounts, channels, MessagesViewType } from '@prisma/client';
 import { NotFound } from '../utilities/response';
-import { revalidateInSeconds } from '../constants/revalidate';
 import { buildSettings } from './accountSettings';
 import { memoize } from '../utilities/dynamoCache';
+import { CacheControl } from '../constants';
 
 async function getThreadsAndUsers({
   account,
@@ -190,7 +192,7 @@ export const getThreadsByCommunityName = async (
 };
 
 export async function channelGetStaticProps(
-  context: GetStaticPropsContext,
+  context: GetServerSidePropsContext,
   isSubdomainbasedRouting: boolean
 ) {
   const communityName = context.params?.communityName as string;
@@ -205,13 +207,13 @@ export async function channelGetStaticProps(
   if (!result) {
     return NotFound();
   }
+  context.res.setHeader('Cache-Control', CacheControl);
   return {
     props: {
       ...result,
       communityName,
       isSubDomainRouting: isSubdomainbasedRouting,
     },
-    revalidate: revalidateInSeconds, // In seconds
   };
 }
 

@@ -9,12 +9,12 @@ import {
 } from '../lib/models';
 import { ThreadByIdResponse } from '../types/apiResponses/threads/[threadId]';
 import { accounts, users } from '@prisma/client';
-import { GetStaticPropsContext } from 'next';
-import { NotFound } from '../utilities/response';
-import { revalidateInSeconds } from '../constants/revalidate';
+import { GetServerSidePropsContext } from 'next';
+import { NotFound } from 'utilities/response';
 import * as Sentry from '@sentry/nextjs';
 import { buildSettings } from './accountSettings';
 import { memoize } from '../utilities/dynamoCache';
+import { CacheControl } from '../constants';
 
 interface IndexProps {
   channelId: string;
@@ -144,19 +144,19 @@ export async function getThreadById(
 }
 
 export async function threadGetStaticProps(
-  context: GetStaticPropsContext,
+  context: GetServerSidePropsContext,
   isSubdomainbasedRouting: boolean
 ) {
   const threadId = context.params?.threadId as string;
   const communityName = context.params?.communityName as string;
   try {
     const thread = await getThreadByIdMemo(threadId, communityName);
+    context.res.setHeader('Cache-Control', CacheControl);
     return {
       props: {
         ...thread,
         isSubDomainRouting: isSubdomainbasedRouting,
       },
-      revalidate: revalidateInSeconds, // In seconds
     };
   } catch (exception) {
     Sentry.captureException(exception);
