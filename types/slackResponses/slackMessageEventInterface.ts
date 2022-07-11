@@ -8,7 +8,9 @@ export interface SlackEvent {
     | SlackMessageEvent
     | SlackTeamJoinEvent
     | SlackMessageReactionRemovedEvent
-    | SlackMessageReactionAddedEvent;
+    | SlackMessageReactionAddedEvent
+    | SlackChannelCreatedEvent
+    | SlackChannelRenameEvent;
   type: string;
   event_id: string;
   event_time: number;
@@ -89,4 +91,23 @@ export interface Authorization {
   user_id: string;
   is_bot: boolean;
   is_enterprise_install: boolean;
+}
+
+export interface SlackChannelCreatedEvent {
+  type: string;
+  channel: {
+    id: string;
+    name: string;
+    created: number;
+    creator: string;
+  };
+}
+
+export interface SlackChannelRenameEvent {
+  type: string;
+  channel: {
+    id: string;
+    name: string;
+    created: number;
+  };
 }
