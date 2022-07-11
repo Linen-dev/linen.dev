@@ -9,12 +9,14 @@ import {
 } from '../lib/models';
 import { ThreadByIdResponse } from '../types/apiResponses/threads/[threadId]';
 import { accounts, users } from '@prisma/client';
-import { GetStaticPropsContext } from 'next';
-import { NotFound } from '../utilities/response';
-import { revalidateInSeconds } from '../constants/revalidate';
+import {
+  GetServerSidePropsContext,
+} from 'next';
+import { NotFound } from 'utilities/response';
 import * as Sentry from '@sentry/nextjs';
 import { buildSettings } from './accountSettings';
 import { memoize } from '../utilities/dynamoCache';
+import { CacheControl } from '../constants';
 
 interface IndexProps {
   channelId: string;
@@ -98,8 +100,7 @@ export async function getThreadById(
     if (account.slackInviteUrl.includes('slack.com/join/shared_invite')) {
       threadUrl =
         account.slackInviteUrl &&
-        `${account.slackInviteUrl}/archives/${
-          thread.channel.slackChannelId
+        `${account.slackInviteUrl}/archives/${thread.channel.slackChannelId
         }/p${(parseFloat(thread.slackThreadTs) * 1000000).toString()}`;
     } else {
       threadUrl = account.slackInviteUrl;
@@ -144,19 +145,19 @@ export async function getThreadById(
 }
 
 export async function threadGetStaticProps(
-  context: GetStaticPropsContext,
+  context: GetServerSidePropsContext,
   isSubdomainbasedRouting: boolean
 ) {
   const threadId = context.params?.threadId as string;
   const communityName = context.params?.communityName as string;
   try {
     const thread = await getThreadByIdMemo(threadId, communityName);
+    context.res.setHeader('Cache-Control', CacheControl);
     return {
       props: {
         ...thread,
         isSubDomainRouting: isSubdomainbasedRouting,
       },
-      revalidate: revalidateInSeconds, // In seconds
     };
   } catch (exception) {
     Sentry.captureException(exception);

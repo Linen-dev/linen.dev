@@ -1,17 +1,11 @@
-import { GetStaticPropsContext } from 'next';
+import {
+  GetServerSidePropsContext,
+} from 'next';
 import { threadGetStaticProps } from '../../../../../../services/threads';
 import Thread from '../../../../../../components/Pages/Thread/Thread';
 
 export default Thread;
 
-//Renders the same page as /threadId
-export async function getStaticProps(context: GetStaticPropsContext) {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
   return threadGetStaticProps(context, true);
-}
-
-export function getStaticPaths() {
-  return {
-    paths: [],
-    fallback: true,
-  };
 }
