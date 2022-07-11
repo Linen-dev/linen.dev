@@ -2,6 +2,7 @@ import { DynamoDB } from 'aws-sdk';
 import { gzipSync, gunzipSync } from 'zlib';
 import * as Sentry from '@sentry/nextjs';
 import NodeCache from 'node-cache';
+import { awsCredentials } from './awsCredentials';
 
 declare global {
   // allow global `var` declarations
@@ -11,14 +12,7 @@ declare global {
 }
 
 const DocumentClient =
-  global.DocumentClient ||
-  new DynamoDB.DocumentClient({
-    region: process.env.S3_UPLOAD_REGION as string,
-    credentials: {
-      accessKeyId: process.env.S3_UPLOAD_KEY as string,
-      secretAccessKey: process.env.S3_UPLOAD_SECRET as string,
-    },
-  });
+  global.DocumentClient || new DynamoDB.DocumentClient(awsCredentials);
 
 if (process.env.NODE_ENV !== 'production')
   global.DocumentClient = DocumentClient;
@@ -126,6 +120,23 @@ async function setCache(pk: string, sk: string, obj: any) {
     Sentry.captureException(error);
     console.error(error);
   }
+}
+
+export async function healthCheck() {
+  const pk = 'ping',
+    sk = 'pong';
+  await DocumentClient.put({
+    TableName,
+    Item: {
+      pk,
+      sk,
+      ttl: buildTimeToLive(),
+    },
+  }).promise();
+  return await DocumentClient.get({
+    Key: { pk, sk },
+    TableName,
+  }).promise();
 }
 
 /**

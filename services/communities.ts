@@ -11,9 +11,9 @@ import { GetStaticPropsContext } from 'next/types';
 import { stripProtocol } from '../utilities/url';
 import { accounts, channels, MessagesViewType } from '@prisma/client';
 import { NotFound } from '../utilities/response';
-import { revalidateInSeconds } from 'constants/revalidate';
+import { revalidateInSeconds } from '../constants/revalidate';
 import { buildSettings } from './accountSettings';
-import { memoize } from '@/utilities/dynamoCache';
+import { memoize } from '../utilities/dynamoCache';
 
 async function getThreadsAndUsers({
   account,
