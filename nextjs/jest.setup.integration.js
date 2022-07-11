@@ -1,4 +1,4 @@
-const { seed } = require('./bin/factory/seed');
+const { seed } = require('./bin/factory');
 
 let hasRun = false;
 
