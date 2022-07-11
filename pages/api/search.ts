@@ -136,6 +136,7 @@ export default async function handler(
   //         },
   //       },
   //       reactions: true,
+  //       attachments: true,
   //     },
   //     take: 20,
   //   })
