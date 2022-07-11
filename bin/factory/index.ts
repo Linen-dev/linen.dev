@@ -2,48 +2,16 @@ import { accounts, users } from '@prisma/client';
 import prisma from '../../client';
 
 import messages from './messages';
-import { generateHash } from '../../utilities/password';
 import { random } from '../../utilities/string';
 
 import { truncateTables } from './truncate';
 import { createAccounts } from './account';
+import { createAuths } from './auth';
 
 export const seed = async () => {
   await truncateTables();
   const [account, account2] = await createAccounts();
-
-  await prisma.auths.create({
-    data: {
-      email: 'emil@linen.dev',
-      password: generateHash('password1!', 'salt'),
-      salt: 'salt',
-      accountId: account.id,
-    },
-  });
-  await prisma.auths.create({
-    data: {
-      email: 'jarek@linen.dev',
-      password: generateHash('password1!', 'salt'),
-      salt: 'salt',
-      accountId: account.id,
-    },
-  });
-  await prisma.auths.create({
-    data: {
-      email: 'kam@linen.dev',
-      password: generateHash('password1!', 'salt'),
-      salt: 'salt',
-      accountId: account.id,
-    },
-  });
-  await prisma.auths.create({
-    data: {
-      email: 'sandro@linen.dev',
-      password: generateHash('password1!', 'salt'),
-      salt: 'salt',
-      accountId: account.id,
-    },
-  });
+  await createAuths(account);
 
   await createMessagesAndThreads(account);
   await createMessagesAndThreads(account2);
