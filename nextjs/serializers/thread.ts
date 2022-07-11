@@ -1,6 +1,6 @@
 import { MentionsWithUsers } from '../types/apiResponses/threads/[threadId]';
 import { ThreadsWithMessages, MessageWithAuthor } from '../types/partialTypes';
-import { SerializedReaction } from 'types/shared';
+import { SerializedAttachment, SerializedReaction } from '../types/shared';
 import { Prisma } from '@prisma/client';
 
 interface SerializedMessage {
@@ -9,6 +9,7 @@ interface SerializedMessage {
   author: string;
   usersId: string;
   mentions: MentionsWithUsers[];
+  attachments: SerializedAttachment[];
   reactions: SerializedReaction[];
 }
 
@@ -31,6 +32,14 @@ export default function serialize(
         author: message.author,
         usersId: message.usersId,
         mentions: message.mentions || [],
+        attachments: message.attachments.map(
+          (attachment: Prisma.messageAttachmentsGetPayload<{}>) => {
+            return {
+              url: attachment.sourceUrl,
+              name: attachment.name,
+            };
+          }
+        ),
         reactions: message.reactions.map(
           (reaction: Prisma.messageReactionsGetPayload<{}>) => {
             return {

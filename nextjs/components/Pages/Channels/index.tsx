@@ -11,7 +11,7 @@ import { Settings } from 'services/accountSettings';
 import { MentionsWithUsers } from 'types/apiResponses/threads/[threadId]';
 import Channel from './Channel';
 import ChannelChatView from './ChannelChatView';
-import { SerializedReaction } from 'types/shared';
+import { SerializedAttachment, SerializedReaction } from 'types/shared';
 
 export interface PaginationType {
   totalCount: number;
@@ -37,6 +37,7 @@ export type messageWithAuthor = messages & {
     users: users;
   })[];
   reactions: SerializedReaction[];
+  attachments: SerializedAttachment[];
 };
 
 export type Props = {
