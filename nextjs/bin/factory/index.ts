@@ -7,6 +7,7 @@ import { random } from '../../utilities/string';
 import { truncateTables } from './truncate';
 import { createAccounts } from './account';
 import { createAuths } from './auth';
+import { createUsers } from './user';
 
 export const seed = async () => {
   await truncateTables();
@@ -18,25 +19,7 @@ export const seed = async () => {
 };
 
 const createMessagesAndThreads = async (account: accounts) => {
-  const user1 = await prisma.users.create({
-    data: {
-      accountsId: account.id,
-      externalUserId: '1',
-      isBot: false,
-      isAdmin: false,
-      displayName: 'John Doe',
-    },
-  });
-  const user2 = await prisma.users.create({
-    data: {
-      accountsId: account.id,
-      externalUserId: '2',
-      isBot: false,
-      isAdmin: false,
-      displayName: 'Jane Doe',
-    },
-  });
-
+  const [user1, user2] = await createUsers(account);
   await createChannelThreadsMessages({
     name: 'general',
     account,

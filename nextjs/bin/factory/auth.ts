@@ -1,7 +1,8 @@
+import { accounts } from '@prisma/client';
 import prisma from '../../client';
 import { generateHash } from '../../utilities/password';
 
-export async function createAuths(account: any) {
+export async function createAuths(account: accounts) {
   await prisma.auths.create({
     data: {
       email: 'emil@linen.dev',
