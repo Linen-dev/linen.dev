@@ -10,19 +10,21 @@ import InlineCode from './InlineCode';
 import BlockCode from './BlockCode';
 import HorizontalRule from './HorizontalRule';
 import Reactions from './Reactions';
+import Attachments from './Attachments';
 import { tokenize, TokenType } from './utilities/lexer';
 import { truncate as truncateText } from './utilities/string';
 import styles from './index.module.css';
-import { Reaction } from './types';
+import { SerializedReaction, SerializedAttachment } from 'types/shared';
 
 interface Props {
   text: string;
   truncate?: any;
   mentions?: users[];
-  reactions?: Reaction[];
+  reactions?: SerializedReaction[];
+  attachments?: SerializedAttachment[];
 }
 
-function Message({ text, truncate, mentions, reactions }: Props) {
+function Message({ text, truncate, mentions, reactions, attachments }: Props) {
   if (text === '') {
     text = 'message has been deleted';
   }
@@ -61,6 +63,7 @@ function Message({ text, truncate, mentions, reactions }: Props) {
         })
         .filter(Boolean)}
       <Reactions reactions={reactions} />
+      <Attachments attachments={attachments} />
     </div>
   );
 }
