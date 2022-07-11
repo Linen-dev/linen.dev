@@ -1,4 +1,4 @@
-import { seed } from './factory/seed';
+import { seed } from './factory';
 
 (async () => {
   await seed();
