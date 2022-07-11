@@ -113,6 +113,7 @@ async function createChannelThreadsMessages({
         externalId: '1234',
         name: 'YC Logo',
         sourceUrl: '/yc-logo.png',
+        internalUrl: '/yc-logo.png',
       },
     });
     const message2 = await prisma.messages.create({

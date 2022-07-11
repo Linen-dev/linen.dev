@@ -33,14 +33,14 @@ export default function serialize(
         usersId: message.usersId,
         mentions: message.mentions || [],
         attachments:
-          message.attachments?.map(
-            (attachment: Prisma.messageAttachmentsGetPayload<{}>) => {
+          message.attachments
+            ?.map((attachment: Prisma.messageAttachmentsGetPayload<{}>) => {
               return {
-                url: attachment.sourceUrl,
+                url: attachment.internalUrl,
                 name: attachment.name,
               };
-            }
-          ) || [],
+            })
+            .filter(({ url }: SerializedAttachment) => Boolean(url)) || [],
         reactions:
           message.reactions?.map(
             (reaction: Prisma.messageReactionsGetPayload<{}>) => {
