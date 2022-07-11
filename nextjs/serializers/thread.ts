@@ -32,22 +32,24 @@ export default function serialize(
         author: message.author,
         usersId: message.usersId,
         mentions: message.mentions || [],
-        attachments: message.attachments.map(
-          (attachment: Prisma.messageAttachmentsGetPayload<{}>) => {
-            return {
-              url: attachment.sourceUrl,
-              name: attachment.name,
-            };
-          }
-        ),
-        reactions: message.reactions.map(
-          (reaction: Prisma.messageReactionsGetPayload<{}>) => {
-            return {
-              type: reaction.name,
-              count: reaction.count,
-            } as SerializedReaction;
-          }
-        ),
+        attachments:
+          message.attachments?.map(
+            (attachment: Prisma.messageAttachmentsGetPayload<{}>) => {
+              return {
+                url: attachment.sourceUrl,
+                name: attachment.name,
+              };
+            }
+          ) || [],
+        reactions:
+          message.reactions?.map(
+            (reaction: Prisma.messageReactionsGetPayload<{}>) => {
+              return {
+                type: reaction.name,
+                count: reaction.count,
+              } as SerializedReaction;
+            }
+          ) || [],
       };
     }),
   };

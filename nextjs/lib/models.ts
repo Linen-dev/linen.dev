@@ -357,6 +357,7 @@ export const threadIndex = async ({
             },
           },
           reactions: true,
+          attachments: true,
         },
         orderBy: {
           sentAt: MESSAGES_ORDER_BY,
@@ -400,6 +401,7 @@ export const findThreadById = async (threadId: number) => {
               },
             },
             reactions: true,
+            attachments: true,
           },
           orderBy: {
             sentAt: MESSAGES_ORDER_BY,
@@ -599,6 +601,7 @@ export const findMessagesFromChannel = async ({
       author: true,
       mentions: { include: { users: true } },
       reactions: true,
+      attachments: true,
     },
     orderBy: { sentAt: 'desc' },
     where,

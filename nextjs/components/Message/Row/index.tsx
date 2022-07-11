@@ -26,6 +26,7 @@ export function Row({
             text={message.body}
             mentions={message.mentions?.map((m) => m.users)}
             reactions={message.reactions}
+            attachments={message.attachments}
           />
         </div>
       </li>
@@ -61,6 +62,7 @@ export function Row({
           text={message.body}
           mentions={message.mentions?.map((m) => m.users)}
           reactions={message.reactions}
+          attachments={message.attachments}
         />
       </div>
     </li>
