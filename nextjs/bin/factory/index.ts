@@ -5,22 +5,10 @@ import messages from './messages';
 import { generateHash } from '../../utilities/password';
 import { random } from '../../utilities/string';
 
-export const seed = async () => {
-  const tablenames = await prisma.$queryRaw<
-    Array<{ tablename: string }>
-  >`SELECT tablename FROM pg_tables WHERE schemaname='public'`;
+import { truncateTables } from './truncate';
 
-  for (const { tablename } of tablenames) {
-    if (tablename !== '_prisma_migrations') {
-      try {
-        await prisma.$executeRawUnsafe(
-          `TRUNCATE TABLE "public"."${tablename}" CASCADE;`
-        );
-      } catch (error) {
-        console.log({ error });
-      }
-    }
-  }
+export const seed = async () => {
+  await truncateTables();
   await prisma.accounts.create({
     data: {
       homeUrl: `https://pulumi.dev`,
