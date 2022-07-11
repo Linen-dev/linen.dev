@@ -107,6 +107,14 @@ async function createChannelThreadsMessages({
         count: 5,
       },
     });
+    await prisma.messageAttachments.create({
+      data: {
+        messagesId: message1.id,
+        externalId: '1234',
+        name: 'YC Logo',
+        sourceUrl: '/yc-logo.png',
+      },
+    });
     const message2 = await prisma.messages.create({
       data: {
         body: `bar-${i}`,
