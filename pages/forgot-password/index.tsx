@@ -2,9 +2,7 @@ import Layout from '../../components/layout/CardLayout';
 import EmailField from '../../components/EmailField';
 import Button from '../../components/Button';
 
-interface Props {}
-
-export default function ForgotPassword({}: Props) {
+export default function ForgotPassword() {
   const onSubmit = async (event: any) => {
     event.preventDefault();
     const form = event.target;

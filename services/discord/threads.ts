@@ -147,7 +147,7 @@ async function updateThread(channel: channels, thread: slackThreads) {
     path: `/channels/${channel.slackChannelId}/messages/${thread.slackThreadTs}`,
   });
   try {
-    return upsertThread[message.type](channel.id, message);
+    return await upsertThread[message.type](channel.id, message);
   } catch (err) {
     console.error(String(err));
     return;

@@ -271,8 +271,7 @@ export async function fetchAndSaveThreadMessages(
 }
 
 export async function fetchAndSaveUser(slackUserId: string, token: string) {
-  const profile = await getUserProfile(slackUserId, token);
-  profile.body;
+  await getUserProfile(slackUserId, token);
 }
 
 export async function saveThreadedMessages(
