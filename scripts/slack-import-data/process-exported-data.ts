@@ -2,12 +2,15 @@ import { accounts, channels, users, PrismaClient } from '@prisma/client';
 import {
   ConversationHistoryMessage,
   saveUsers,
-} from '../fetch_all_conversations';
+} from '../../fetch_all_conversations';
 import fs from 'fs';
-import { createSlug } from '../lib/util';
-import { SyncStatus, updateAndNotifySyncStatus } from '../services/syncStatus';
-import { processReactions } from '../services/slack/reactions';
-import { processAttachments } from '../services/slack/attachments';
+import { createSlug } from '../../lib/util';
+import {
+  SyncStatus,
+  updateAndNotifySyncStatus,
+} from '../../services/syncStatus';
+import { processReactions } from '../../services/slack/reactions';
+import { processAttachments } from '../../services/slack/attachments';
 
 const prisma = new PrismaClient({}); // initiate a new instance of prisma without info logs
 

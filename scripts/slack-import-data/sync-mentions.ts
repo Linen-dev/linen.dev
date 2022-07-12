@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
-import { getSlackUser } from '../services/slack';
-import { createUserFromUserInfo, findUser } from '../lib/models';
+import { getSlackUser } from '../../services/slack';
+import { createUserFromUserInfo, findUser } from '../../lib/models';
 
 const prisma = new PrismaClient({});
 
