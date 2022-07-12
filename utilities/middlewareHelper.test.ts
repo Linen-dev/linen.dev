@@ -1,4 +1,4 @@
-import { getCommunityName } from '../../utilities/middlewareHelper';
+import { getCommunityName } from './middlewareHelper';
 
 describe('getCommunityName', () => {
   const isProd = true;

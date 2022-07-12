@@ -1,4 +1,4 @@
-import { generateSlug, totalUniqueSlugs } from 'lib/random-word-slugs';
+import { generateSlug, totalUniqueSlugs } from '.';
 
 describe('random-word-slugs', () => {
   it('simple slug on kebab', () => {
