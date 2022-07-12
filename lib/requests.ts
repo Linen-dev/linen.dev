@@ -1,6 +1,6 @@
 import axios from 'axios';
 import useSWR from 'swr';
-import isBrowser from '../utils/isBrowser';
+import isBrowser from '../utilities/isBrowser';
 import * as Sentry from '@sentry/nextjs';
 
 // const baseUrl = 'https://papercups-io.linen.dev/api'; // set this
