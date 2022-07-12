@@ -73,6 +73,11 @@ export default function CommunityIntegration({
     }
   };
 
+  const syncStatus =
+    !!account?.hasAuth &&
+    !!account?.slackSyncStatus &&
+    statusMap[account.slackSyncStatus];
+
   return (
     <div className="bg-white shadow sm:rounded-lg">
       <div className="px-4 py-5 sm:p-6">
@@ -80,10 +85,12 @@ export default function CommunityIntegration({
           <div className="grow">
             <h3 className="text-lg leading-6 font-medium text-gray-900">
               {capitalize(communityType)} integration
-              <span className="text-gray-300"> | </span>
-              {!!account?.hasAuth &&
-                !!account?.slackSyncStatus &&
-                statusMap[account.slackSyncStatus]}
+              {syncStatus && (
+                <>
+                  <span className="text-gray-300"> | </span>
+                  {syncStatus}
+                </>
+              )}
             </h3>
             <div className="mt-2 sm:flex sm:items-start sm:justify-between">
               <div className="max-w-xl text-sm text-gray-500">
