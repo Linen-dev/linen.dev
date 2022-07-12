@@ -10,9 +10,7 @@ const environment = process.env.NODE_ENV || 'development';
 
 if (!SKIP_SENTRY) {
   Sentry.init({
-    dsn:
-      SENTRY_DSN ||
-      'https://8b0c61ed891044fb8fbea411aa9d6b8a@o1159351.ingest.sentry.io/6243155',
+    dsn: SENTRY_DSN,
     tracesSampleRate: 1.0,
     environment,
   });
