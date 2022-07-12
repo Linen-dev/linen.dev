@@ -47,7 +47,7 @@
     "highlight.js": "^11.5.1",
     "marked": "^4.0.15",
     "micro": "^9.3.4",
-    "next": "12.0.10",
+    "next": "12.1.6",
     "next-auth": "^4.3.1",
     "next-s3-upload": "^0.2.2",
     "node-cache": "^5.1.2",
