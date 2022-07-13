@@ -83,13 +83,13 @@ export default function Branding({ account, records }: Props) {
     setLogoUrl(url);
   };
 
-  const onSubmit = (event: any) => {
+  const onSubmit = async (event: any) => {
     event.preventDefault();
     const form = event.target;
     const redirectDomain = stripProtocol(form.redirectDomain.value);
     const googleAnalyticsId = form.googleAnalyticsId?.value;
     const brandColor = form.brandColor.value;
-    fetch('/api/accounts', {
+    const response = await fetch('/api/accounts', {
       method: 'PUT',
       body: JSON.stringify({
         accountId: account.id,
@@ -98,16 +98,14 @@ export default function Branding({ account, records }: Props) {
         brandColor,
         googleAnalyticsId,
       }),
-    })
-      .then((response) => {
-        if (response.ok) {
-          toast.success('Saved successfully!');
-          router.reload();
-        } else throw response;
-      })
-      .catch(() => {
-        toast.error('Something went wrong!');
-      });
+    });
+    if (response.ok) {
+      toast.success('Saved successfully!');
+      router.reload();
+    } else {
+      const data = await response.json();
+      toast.error(data.error || 'Something went wrong!');
+    }
   };
 
   const premiumAccountSettings = (
