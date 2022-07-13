@@ -4,7 +4,7 @@ import superagent from 'superagent';
 type Messages =
   | (messages & {
       author: users | null;
-      slackThreads: threads | null;
+      threads: threads | null;
       mentions: (mentions & {
         users: users | null;
       })[];

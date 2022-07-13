@@ -59,7 +59,7 @@ model channels {
   messages          messages[]
   externalChannelId String
 
-  slackThreads       threads[]
+  threads            threads[]
   //We should make channel required for channel
   account            accounts? @relation(fields: [accountId], references: [id])
   accountId          String?

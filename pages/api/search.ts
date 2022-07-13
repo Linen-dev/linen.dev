@@ -119,7 +119,7 @@ export default async function handler(
   //       },
   //     },
   //     include: {
-  //       slackThreads: true,
+  //       threads: true,
   //       mentions: {
   //         include: {
   //           users: true,
