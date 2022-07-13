@@ -13,7 +13,7 @@ export const buildSitemapQueries = {
   select c."channelName", st."incrementId", st.slug, count(m.id)
   from "threads" st 
   join channels c on st."channelId" = c.id
-  join messages m on m."slackThreadId" = st.id
+  join messages m on m."threadId" = st.id
   where c."accountId" = ${accountId}
   and c.hidden is false
   group by 1,2,3
@@ -25,7 +25,7 @@ export const buildSitemapQueries = {
   select c."channelName", st."incrementId", st.slug, count(m.id)
   from "threads" st 
   join channels c on st."channelId" = c.id
-  join messages m on m."slackThreadId" = st.id
+  join messages m on m."threadId" = st.id
   where c.id = ${channelId}
   group by 1,2,3
   having count(m.id) > 1
@@ -45,7 +45,7 @@ export const buildSitemapQueries = {
   from accounts a 
   join channels c on c."accountId" = a.id 
   join "threads" st on st."channelId" = c.id
-  join messages m on m."slackThreadId" = st.id
+  join messages m on m."threadId" = st.id
   where premium is false
   and coalesce(a."discordDomain",a."discordServerId",a."slackDomain") is not null
   group by 1`,

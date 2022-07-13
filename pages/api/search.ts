@@ -25,7 +25,7 @@ export default async function handler(
           m."sentAt",
           m."channelId",
           m."externalMessageId",
-          m."slackThreadId",
+          m."threadId",
           m."usersId",
           ts_rank(textsearchable_index_col,websearch_to_tsquery('english', ${query}))  AS rank
       FROM "public"."messages" as m
@@ -33,7 +33,7 @@ export default async function handler(
       WHERE 
           c."accountId" = ${accountId} 
           AND m."id" IS NOT NULL
-          and m."slackThreadId" is not null
+          and m."threadId" is not null
           AND textsearchable_index_col @@ websearch_to_tsquery('english', ${query})
       ORDER BY rank DESC
       LIMIT ${Number(limit)}
@@ -45,7 +45,7 @@ export default async function handler(
   ]);
 
   // Get messages threads
-  const threadIds = messagesResult.map((mr) => mr.slackThreadId);
+  const threadIds = messagesResult.map((mr) => mr.threadId);
   const threadsResult =
     threadIds.length > 0
       ? await prisma.$queryRaw<threads[]>`SELECT "public"."threads"."id",
@@ -91,7 +91,7 @@ export default async function handler(
   const searchResults = messagesResult.map((mr) => {
     return {
       ...mr,
-      threads: threadsResult.find((str) => str.id === mr.slackThreadId),
+      threads: threadsResult.find((str) => str.id === mr.threadId),
       mentions: mentionsResult.map((msr) => {
         return {
           ...msr,

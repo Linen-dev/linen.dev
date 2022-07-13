@@ -227,7 +227,7 @@ export const saveMessages = async (
       }
       const user = await findUser(param.externalUserId, accountId);
       param.usersId = user?.id;
-      param.slackThreadId = threadId;
+      param.threadId = threadId;
       messages.push(await createMessage(param));
     }
 
@@ -298,7 +298,7 @@ export async function saveThreadedMessages(
   for (let replyParam of repliesParams) {
     const user = await findUser(replyParam.externalUserId, accountId);
     replyParam.usersId = user?.id;
-    replyParam.slackThreadId = thread.id;
+    replyParam.threadId = thread.id;
     try {
       await createOrUpdateMessage(replyParam);
     } catch (e) {

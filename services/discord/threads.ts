@@ -156,14 +156,14 @@ async function updateThread(channel: channels, thread: threads) {
 
 export const supportedThreadType = []; // type 0 must have thread attribute to be a thread
 
-export async function updateThreadMessageCount(slackThreadId: string) {
+export async function updateThreadMessageCount(threadId: string) {
   const messageCount = await prisma.messages.count({
-    where: { slackThreadId },
+    where: { threadId },
   });
   await prisma.threads.update({
     data: { messageCount },
     where: {
-      id: slackThreadId,
+      id: threadId,
     },
   });
 }

@@ -333,7 +333,7 @@ async function saveMessagesTransaction(
       sentAt: new Date(parseFloat(m.ts) * 1000),
       channelId,
       externalMessageId: m.ts as string,
-      slackThreadId: threadId,
+      threadId: threadId,
       usersId: user?.id,
     };
     const message = await prisma.messages.upsert({
@@ -402,7 +402,7 @@ async function saveMessagesSynchronous(
       sentAt: new Date(parseFloat(m.ts) * 1000),
       channelId,
       externalMessageId: m.ts as string,
-      slackThreadId: threadId,
+      threadId: threadId,
       usersId: user?.id,
     };
     const message = await prisma.messages.upsert({

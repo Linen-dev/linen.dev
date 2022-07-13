@@ -14,7 +14,7 @@ type ProcessMessageType = Record<
     body: string;
     sentAt: string;
     externalMessageId: string;
-    slackThreadId?: string;
+    threadId?: string;
     channelId: string;
     authorId: string;
     mentions?: { usersId: string }[];
@@ -43,7 +43,7 @@ function processMessageType0(
     channelId: channel.id,
     sentAt: message.timestamp,
     externalMessageId: message.id,
-    slackThreadId: thread?.id,
+    threadId: thread?.id,
     mentions,
   };
 }
@@ -64,7 +64,7 @@ function processMessageType18(
     channelId: channel.id,
     sentAt: message.timestamp,
     externalMessageId: message.id,
-    slackThreadId: thread?.id,
+    threadId: thread?.id,
     mentions,
   };
 }
@@ -87,7 +87,7 @@ function processMessageType21(
     channelId: channel.id,
     sentAt: message.referenced_message?.timestamp as string,
     externalMessageId: message.referenced_message?.id as string,
-    slackThreadId: thread?.id,
+    threadId: thread?.id,
     mentions,
   };
 }
@@ -96,7 +96,7 @@ function upsertMessage(message: {
   body: string;
   sentAt: string;
   externalMessageId: string;
-  slackThreadId?: string;
+  threadId?: string;
   channelId: string;
   authorId: string;
   mentions?: { usersId: string }[];
@@ -105,7 +105,7 @@ function upsertMessage(message: {
     body: message.body,
     sentAt: message.sentAt,
     externalMessageId: message.externalMessageId,
-    slackThreadId: message.slackThreadId,
+    threadId: message.threadId,
     channelId: message.channelId,
     usersId: message.authorId,
     ...(message.mentions && {

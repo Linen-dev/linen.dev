@@ -21,9 +21,9 @@ model messages {
   channelId         String
   externalMessageId String
 
-  slackThreads threads? @relation(fields: [slackThreadId], references: [id])
+  threads threads? @relation(fields: [threadId], references: [id])
 
-  slackThreadId String?
+  threadId String?
 
   mentions                 mentions[]
   attachments              messageAttachments[]

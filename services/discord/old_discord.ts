@@ -340,7 +340,7 @@ async function persistMessages({
       },
       update: {
         externalMessageId,
-        slackThreadId: threadInDb.id,
+        threadId: threadInDb.id,
         usersId: author.id,
         body,
         ...(mentions?.length && {
@@ -357,7 +357,7 @@ async function persistMessages({
         sentAt: new Date(_message.timestamp),
         channelId: threadInDb.channelId,
         externalMessageId,
-        slackThreadId: threadInDb.id,
+        threadId: threadInDb.id,
         usersId: author.id,
         ...(mentions?.length && {
           mentions: {

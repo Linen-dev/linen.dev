@@ -19,7 +19,7 @@ const parseResults = (data: messages[]) => {
   return data
     .map((r) => ({ ...r, value: r.body }))
     .filter((r) => {
-      if (!r.slackThreadId) return false;
+      if (!r.threadId) return false;
       if (allIds.has(r.id)) return false;
       allIds.add(r.id);
       return true;

@@ -189,7 +189,7 @@ async function createChannelThreadsMessages({
       data: {
         body: messages[i] || `foo-${i}`,
         channelId: channel.id,
-        slackThreadId: thread.id,
+        threadId: thread.id,
         usersId: user1.id,
         sentAt: new Date().toISOString(),
         externalMessageId: `slack-message-id-${random()}`,
@@ -206,7 +206,7 @@ async function createChannelThreadsMessages({
       data: {
         body: `bar-${i}`,
         channelId: channel.id,
-        slackThreadId: thread.id,
+        threadId: thread.id,
         usersId: user1.id,
         sentAt: new Date().toISOString(),
         externalMessageId: `slack-message-id-${random()}`,
@@ -223,7 +223,7 @@ async function createChannelThreadsMessages({
       data: {
         body: `baz-${i}`,
         channelId: channel.id,
-        slackThreadId: thread.id,
+        threadId: thread.id,
         usersId: user2.id,
         sentAt: new Date().toISOString(),
         externalMessageId: `slack-message-id-${random()}`,
@@ -233,7 +233,7 @@ async function createChannelThreadsMessages({
       data: {
         body: `qux-${i}`,
         channelId: channel.id,
-        slackThreadId: thread.id,
+        threadId: thread.id,
         usersId: user2.id,
         sentAt: new Date().toISOString(),
         externalMessageId: `slack-message-id-${random()}`,

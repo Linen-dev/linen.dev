@@ -18,7 +18,7 @@ export const createMessage = async (
     data: {
       body: message.body,
       blocks: message.blocks,
-      slackThreadId: message.slackThreadId,
+      threadId: message.threadId,
       externalMessageId: message.externalMessageId,
       channelId: message.channelId,
       sentAt: message.sentAt,
@@ -35,7 +35,7 @@ export const createMessageWithMentions = async (
     data: {
       body: message.body,
       blocks: message.blocks,
-      slackThreadId: message.slackThreadId,
+      threadId: message.threadId,
       externalMessageId: message.externalMessageId,
       channelId: message.channelId,
       sentAt: message.sentAt,
@@ -87,14 +87,14 @@ export const createOrUpdateMessage = async (
   });
 };
 
-export const updateMessageSlackThreadId = async (
+export const updateMessageThreadId = async (
   messageId: string,
-  slackThreadId: string
+  threadId: string
 ) => {
   return prisma.messages.update({
     where: { id: messageId },
     data: {
-      slackThreadId,
+      threadId,
     },
   });
 };
@@ -486,11 +486,11 @@ export const listUsers = async (accountId: string) => {
 export const findMessagesWithThreads = async (accountId: string) => {
   return await prisma.messages.findMany({
     where: {
-      NOT: [{ slackThreadId: null }],
+      NOT: [{ threadId: null }],
       channel: { accountId: accountId },
     },
     include: {
-      slackThreads: true,
+      threads: true,
       channel: true,
     },
     orderBy: {
@@ -536,7 +536,7 @@ export const findThreadsWithOnlyOneMessage = async (
   const ids = channelIds.map((id) => `'${id}'`).join(' , ');
   const query = `
   select "threads".id as id , "threads"."externalThreadId", "threads"."channelId"
-  from "threads" join messages on messages."slackThreadId" = "threads".id 
+  from "threads" join messages on messages."threadId" = "threads".id 
   where "threads"."channelId" in (${ids})
   group by "threads".id
   having count(*) = 1
@@ -571,7 +571,7 @@ export const findThreadsWithNoMessages = async (
   const ids = channelIds.map((id) => `'${id}'`).join(' , ');
   const query = `
   select "threads".id as id , "threads"."externalThreadId", "threads"."channelId"
-  from "threads" join messages on messages."slackThreadId" = "threads".id 
+  from "threads" join messages on messages."threadId" = "threads".id 
   where "threads"."channelId" in (${ids})
   group by "threads".id
   having count(*) = 0
@@ -588,7 +588,7 @@ export const findMessagesFromChannel = async ({
   channelId: string;
   page?: number;
 }) => {
-  const where = { channel: { id: channelId }, slackThreadId: null };
+  const where = { channel: { id: channelId }, threadId: null };
   const total = await prisma.messages.count({ where });
   const take = 10;
   const pages = Math.floor(total / take);
@@ -614,7 +614,7 @@ export async function findThreadsWithWrongMessageCount() {
   >`
   select "threads".id, count(1), "messageCount"
   from "threads" 
-  left join messages on messages."slackThreadId" = "threads"."id"
+  left join messages on messages."threadId" = "threads"."id"
   group by "threads"."id"
   having count(1) != "messageCount" 
   order by "threads"."id" desc
@@ -625,7 +625,7 @@ export const findChannelsWithSingleMessages = async (accountId: string) => {
   return await prisma.channels.findMany({
     where: {
       accountId,
-      messages: { some: { slackThreadId: null } },
+      messages: { some: { threadId: null } },
       hidden: false,
     },
   });

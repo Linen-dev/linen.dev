@@ -214,7 +214,7 @@ describe('webhook', () => {
       sentAt: now,
       channelId: 'C03ATK7RWNS',
       externalMessageId: '1650644364.126099',
-      slackThreadId: null,
+      threadId: null,
       usersId: 'user_id',
     };
     const messagesCreateMock =
@@ -278,7 +278,7 @@ describe('webhook', () => {
         expect(messagesCreateMock).toHaveBeenCalledWith({
           data: {
             body: 'this is test3',
-            slackThreadId: 'thread_id',
+            threadId: 'thread_id',
             externalMessageId: '1650644364.126099',
             channelId: 'channel_id',
             sentAt: new Date(parseFloat(addMessageEvent.event.ts) * 1000),
@@ -401,7 +401,7 @@ describe('webhook', () => {
       sentAt: now,
       channelId: 'C03ATK7RWNS',
       externalMessageId: '1652127600.388019',
-      slackThreadId: null,
+      threadId: null,
       usersId: 'user_id',
     };
     const messagesCreateMock =
@@ -488,7 +488,7 @@ describe('webhook', () => {
         expect(messagesCreateMock).toHaveBeenCalledWith({
           data: {
             body: 'Lets test_4',
-            slackThreadId: 'thread_id',
+            threadId: 'thread_id',
             externalMessageId: '1652127600.388019',
             channelId: 'channel_id',
             sentAt: new Date(

@@ -161,7 +161,7 @@ async function addMessage(
     blocks: event.blocks as any,
     channelId: channel.id,
     sentAt: new Date(parseFloat(event.ts) * 1000),
-    slackThreadId: thread?.id,
+    threadId: thread?.id,
     externalMessageId: event.ts,
     usersId: user?.id,
   };
