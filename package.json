@@ -16,7 +16,9 @@
     "db:migrate": "npx prisma generate && npx prisma migrate dev",
     "db:migrate:test": "dotenv -e .env.test -- npx prisma migrate deploy",
     "db:seed": "ts-node --skip-project bin/seed.ts",
-    "crawler": "ts-node -P tsconfig.crawler.json bin/crawler/index.ts"
+    "script:crawl": "ts-node -P tsconfig.crawler.json bin/crawler/index.ts",
+    "script:sync:discord": "ts-node -P tsconfig.crawler.json bin/discord-sync/index.ts",
+    "script:maintenance": "ts-node -P tsconfig.crawler.json bin/maintenance/index.ts"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.1.1",
