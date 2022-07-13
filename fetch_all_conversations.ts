@@ -197,7 +197,7 @@ export const fetchTeamInfo = async (token: string) => {
 export const saveMessages = async (
   messages: any[],
   channelId: string,
-  slackChannelId: string,
+  externalChannelId: string,
   accountId: string
 ) => {
   const params = messages
@@ -250,7 +250,7 @@ export async function fetchAndSaveThreadMessages(
     if (!!m.slackThreads?.slackThreadTs) {
       return fetchReplies(
         m.slackThreads.slackThreadTs,
-        m.channel.slackChannelId,
+        m.channel.externalChannelId,
         token
       ).then((response) => {
         if (!!response?.body && m.slackThreads?.slackThreadTs) {

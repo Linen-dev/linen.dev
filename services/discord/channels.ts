@@ -62,7 +62,7 @@ async function crawlChannel(
     }
     // messages are return in desc timestamp order
     const messages: DiscordMessage[] = await getDiscordWithRetry({
-      path: `/channels/${channel.slackChannelId}/messages`,
+      path: `/channels/${channel.externalChannelId}/messages`,
       query: { limit: LIMIT, ...query },
     });
     // if there is less than the limit, means that there is no more messages
@@ -153,7 +153,7 @@ export async function listChannelsAndPersist({
   const channelPromises = Promise.all(
     channels.map((channel: discordChannel) => {
       return findOrCreateChannel({
-        slackChannelId: channel.id,
+        externalChannelId: channel.id,
         channelName: channel.name,
         accountId,
         hidden: isPrivate(channel),

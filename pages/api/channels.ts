@@ -76,12 +76,12 @@ export default async function handler(
     return update(req, res);
   }
   if (req.method === 'POST') {
-    const slackChannelId = req.body.slack_channel_id;
+    const externalChannelId = req.body.slack_channel_id;
     const channelName = req.body.channel_name;
     const accountId = req.body.account_id;
 
     const channel = await findOrCreateChannel({
-      slackChannelId,
+      externalChannelId,
       channelName,
       accountId,
     });

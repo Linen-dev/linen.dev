@@ -103,7 +103,7 @@ async function upsertChannels(account: accounts) {
   // copied from pages/api/scripts/sync.ts line 268
   const channelsParam = channelsFile.map((channel: channel) => {
     return {
-      slackChannelId: channel.id,
+      externalChannelId: channel.id,
       channelName: channel.name,
       accountId: account.id,
     };
@@ -118,13 +118,15 @@ async function upsertChannels(account: accounts) {
   }
   const channels = await prisma.channels.findMany({
     where: {
-      slackChannelId: { in: channelsParam.map((e: any) => e.slackChannelId) },
+      externalChannelId: {
+        in: channelsParam.map((e: any) => e.externalChannelId),
+      },
       accountId: account.id,
     },
   });
   // TODO: need token
   //   for (let channel of channels) {
-  //     await joinChannel(channel.slackChannelId, token);
+  //     await joinChannel(channel.externalChannelId, token);
   //   }
 
   return channels;

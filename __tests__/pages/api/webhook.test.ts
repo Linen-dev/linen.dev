@@ -175,7 +175,7 @@ describe('webhook', () => {
     const channelMock = {
       id: 'channel_id',
       channelName: 'channel_name',
-      slackChannelId: 'C03ATK7RWNS',
+      externalChannelId: 'C03ATK7RWNS',
       accountId: 'account_id',
       hidden: false,
       slackNextPageCursor: null,
@@ -235,7 +235,7 @@ describe('webhook', () => {
         // Proper channel has been searched for based on Slack event
         expect(channelsFindUniqueMock).toHaveBeenCalledWith({
           where: {
-            slackChannelId: addMessageEvent.event.channel,
+            externalChannelId: addMessageEvent.event.channel,
           },
           include: {
             account: {
@@ -301,7 +301,7 @@ describe('webhook', () => {
     const channelMock = {
       id: 'channel_id',
       channelName: 'channel_name',
-      slackChannelId: 'C03ATK7RWNS',
+      externalChannelId: 'C03ATK7RWNS',
       accountId: 'account_id',
       hidden: false,
       slackNextPageCursor: null,
@@ -328,7 +328,7 @@ describe('webhook', () => {
         // Proper channel has been searched for based on Slack event
         expect(channelsFindUniqueMock).toHaveBeenCalledWith({
           where: {
-            slackChannelId: deleteMessageEvent.event.channel,
+            externalChannelId: deleteMessageEvent.event.channel,
           },
           include: {
             account: {
@@ -358,7 +358,7 @@ describe('webhook', () => {
     const channelMock = {
       id: 'channel_id',
       channelName: 'channel_name',
-      slackChannelId: 'C03ATK7RWNS',
+      externalChannelId: 'C03ATK7RWNS',
       accountId: 'account_id',
       hidden: false,
       slackNextPageCursor: null,
@@ -422,7 +422,7 @@ describe('webhook', () => {
         // Proper channel has been searched for based on Slack event
         expect(channelsFindUniqueMock).toHaveBeenCalledWith({
           where: {
-            slackChannelId: changeMessageEvent.event.channel,
+            externalChannelId: changeMessageEvent.event.channel,
           },
           include: {
             account: {
@@ -445,7 +445,7 @@ describe('webhook', () => {
         // Proper channel has been searched for based on Slack event
         expect(channelsFindUniqueMock).toHaveBeenCalledWith({
           where: {
-            slackChannelId: changeMessageEvent.event.channel,
+            externalChannelId: changeMessageEvent.event.channel,
           },
           include: {
             account: {

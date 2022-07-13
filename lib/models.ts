@@ -265,13 +265,13 @@ export const findOrCreateChannel = async (
 ) => {
   return await prisma.channels.upsert({
     where: {
-      slackChannelId: channels.slackChannelId,
+      externalChannelId: channels.externalChannelId,
     },
     update: {},
     create: {
       accountId: channels.accountId,
       channelName: channels.channelName,
-      slackChannelId: channels.slackChannelId,
+      externalChannelId: channels.externalChannelId,
       hidden: channels.hidden,
     },
   });

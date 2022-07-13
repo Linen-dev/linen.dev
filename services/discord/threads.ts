@@ -86,7 +86,7 @@ async function getThreadsFromDB(channel: channels, take: number, skip: number) {
   return await prisma.slackThreads.findMany({
     where: {
       channelId: channel.id,
-      slackThreadTs: { not: channel.slackChannelId },
+      slackThreadTs: { not: channel.externalChannelId },
     },
     include: {
       messages: {
@@ -144,7 +144,7 @@ async function createThread(channelId: string, thread: DiscordMessage) {
 
 async function updateThread(channel: channels, thread: slackThreads) {
   const message: DiscordMessage = await getDiscordWithRetry({
-    path: `/channels/${channel.slackChannelId}/messages/${thread.slackThreadTs}`,
+    path: `/channels/${channel.externalChannelId}/messages/${thread.slackThreadTs}`,
   });
   try {
     return await upsertThread[message.type](channel.id, message);

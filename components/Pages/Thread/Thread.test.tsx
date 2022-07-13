@@ -9,7 +9,7 @@ describe('Thread', () => {
         {
           id: 'X1',
           channelName: 'general',
-          slackChannelId: 'S1',
+          externalChannelId: 'S1',
           accountId: 'A1',
           hidden: false,
           slackNextPageCursor: null,

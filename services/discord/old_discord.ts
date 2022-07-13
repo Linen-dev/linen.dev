@@ -418,7 +418,7 @@ async function listPublicArchivedThreadsAndPersist({
   let timestamp;
   while (hasMore) {
     const response = await getAllArchivedThreads(
-      channel.slackChannelId,
+      channel.externalChannelId,
       timestamp,
       token
     );
@@ -511,7 +511,7 @@ async function listPublicArchivedThreadsAndPersist({
 // async function saveDiscordChannels(channel: Prisma.channelsCreateInput) {
 //   return prisma.channels.upsert({
 //     where: {
-//       slackChannelId: channel.slackChannelId,
+//       externalChannelId: channel.externalChannelId,
 //     },
 //     update: {},
 //     create: channel,

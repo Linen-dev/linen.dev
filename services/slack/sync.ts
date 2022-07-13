@@ -137,7 +137,7 @@ export async function slackSync({
         console.log('Messages cursor: ', nextCursor);
         try {
           const additionalConversations = await fetchConversationsTyped(
-            c.slackChannelId,
+            c.externalChannelId,
             account.slackAuthorizations[0].accessToken,
             nextCursor
           );
@@ -192,7 +192,7 @@ export async function slackSync({
         const replies = await retryPromise({
           promise: fetchReplies(
             m.slackThreadTs,
-            channel!.slackChannelId,
+            channel!.externalChannelId,
             token
           ),
           sleepSeconds: 30,
@@ -244,7 +244,7 @@ export async function createChannels({
   const channelsParam = channelsResponse.body.channels.map(
     (channel: { id: any; name: any }) => {
       return {
-        slackChannelId: channel.id,
+        externalChannelId: channel.id,
         channelName: channel.name,
         accountId,
       };
@@ -261,7 +261,7 @@ export async function createChannels({
 
   console.log('Joining channels started');
   for (let channel of channels) {
-    await joinChannel(channel.slackChannelId, token);
+    await joinChannel(channel.externalChannelId, token);
     // Slack's api can handle bursts
     // so only wait for requests if there are more than 50 messages
     if (channels.length > 50) {

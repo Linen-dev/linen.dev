@@ -121,7 +121,7 @@ const createMessagesAndThreads = async (account: accounts) => {
     user1,
     user2,
     slug: 'slug',
-    slackChannelId: `slack-channel-id-${random()}`,
+    externalChannelId: `slack-channel-id-${random()}`,
   });
   await createChannelThreadsMessages({
     name: 'sql',
@@ -129,7 +129,7 @@ const createMessagesAndThreads = async (account: accounts) => {
     user1,
     user2,
     slug: 'something',
-    slackChannelId: `slack-channel-id-${random()}`,
+    externalChannelId: `slack-channel-id-${random()}`,
   });
   await createChannelThreadsMessages({
     name: 'alpha',
@@ -137,7 +137,7 @@ const createMessagesAndThreads = async (account: accounts) => {
     user1,
     user2,
     slug: 'cool',
-    slackChannelId: `slack-channel-id-${random()}`,
+    externalChannelId: `slack-channel-id-${random()}`,
   });
   await createChannelThreadsMessages({
     name: 'hidden',
@@ -146,7 +146,7 @@ const createMessagesAndThreads = async (account: accounts) => {
     user2,
     slug: 'cool',
     hidden: true,
-    slackChannelId: `slack-channel-id-${random()}`,
+    externalChannelId: `slack-channel-id-${random()}`,
   });
 };
 
@@ -157,7 +157,7 @@ async function createChannelThreadsMessages({
   name,
   slug,
   hidden,
-  slackChannelId,
+  externalChannelId,
 }: {
   account: accounts;
   user1: users;
@@ -165,13 +165,13 @@ async function createChannelThreadsMessages({
   name: string;
   slug: string;
   hidden?: boolean;
-  slackChannelId: string;
+  externalChannelId: string;
 }) {
   const channel = await prisma.channels.create({
     data: {
       channelName: name,
       accountId: account.id,
-      slackChannelId,
+      externalChannelId,
       hidden,
     },
   });

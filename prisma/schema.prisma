@@ -54,10 +54,10 @@ model slackThreads {
 }
 
 model channels {
-  id             String     @id @default(uuid())
-  channelName    String
-  messages       messages[]
-  slackChannelId String
+  id                String     @id @default(uuid())
+  channelName       String
+  messages          messages[]
+  externalChannelId String
 
   slackThreads        slackThreads[]
   //We should make channel required for channel
@@ -67,7 +67,7 @@ model channels {
   default             Boolean        @default(false)
   slackNextPageCursor String?
 
-  @@unique([slackChannelId])
+  @@unique([externalChannelId])
 }
 
 model accounts {

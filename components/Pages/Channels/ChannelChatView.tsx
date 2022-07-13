@@ -214,7 +214,7 @@ function buildInviteLink(
 ) {
   if (!settings.slackInviteUrl) return '';
   if (settings.communityType === 'discord') {
-    return `${settings.slackInviteUrl}/${currentChannel.slackChannelId}`;
+    return `${settings.slackInviteUrl}/${currentChannel.externalChannelId}`;
   } else {
     return settings.slackInviteUrl;
   }

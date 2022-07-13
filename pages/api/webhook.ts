@@ -239,7 +239,7 @@ async function processTeamJoin(event: SlackTeamJoinEvent) {
 async function getChannel(channelId: string) {
   return await prisma.channels.findUnique({
     where: {
-      slackChannelId: channelId,
+      externalChannelId: channelId,
     },
     include: {
       account: {
@@ -370,7 +370,7 @@ async function processChannelCreated(body: SlackEvent) {
   await createChannel({
     accountId: account.id,
     name: event.channel.name,
-    slackChannelId: event.channel.id,
+    externalChannelId: event.channel.id,
     hidden: false,
   });
   return { status: 200, message: 'channel created' };
