@@ -1,0 +1,9 @@
+.code {
+  border-radius: 0.25rem;
+  color: black;
+  font-family: monospace;
+  font-size: 12px;
+  padding: 0.125rem 0.25rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+}

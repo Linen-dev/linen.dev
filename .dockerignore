@@ -1,0 +1,16 @@
+# add git-ignore syntax here of things you don't want copied into docker image
+
+.git
+*Dockerfile*
+node_modules
+npm-debug.log
+.next
+cdk
+
+# local env files
+.env
+.env.local
+.env.development.local
+.env.test
+.env.test.local
+.env.production.local

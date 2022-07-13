@@ -1,0 +1,16 @@
+.message {
+  font-size: 14px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  -webkit-font-smoothing: antialiased;
+}
+
+.message + .message {
+  margin-top: 8px;
+}
+
+@media screen and (min-width: 1024px) {
+  .message {
+    min-width: 224px;
+  }
+}

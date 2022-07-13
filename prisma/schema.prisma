@@ -1,0 +1,203 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch", "interactiveTransactions", "extendedIndexes"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model messages {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  body      String
+  sentAt    DateTime
+
+  channel        channels @relation(fields: [channelId], references: [id])
+  channelId      String
+  slackMessageId String
+
+  slackThreads slackThreads? @relation(fields: [slackThreadId], references: [id])
+
+  slackThreadId String?
+
+  mentions                 slackMentions[]
+  attachments              messageAttachments[]
+  reactions                messageReactions[]
+  author                   users?                   @relation(fields: [usersId], references: [id])
+  usersId                  String?
+  textsearchable_index_col Unsupported("tsvector")?
+  blocks                   Json?
+
+  @@unique([channelId, slackMessageId])
+  @@index([textsearchable_index_col], type: Gin)
+}
+
+model slackThreads {
+  id            String   @id @default(uuid())
+  incrementId   Int      @default(autoincrement())
+  channel       channels @relation(fields: [channelId], references: [id])
+  slackThreadTs String
+  viewCount     Int      @default(0)
+  slug          String?
+  messageCount  Int      @default(1)
+
+  messages  messages[]
+  channelId String
+
+  @@unique([slackThreadTs])
+  @@unique([incrementId])
+}
+
+model channels {
+  id             String     @id @default(uuid())
+  channelName    String
+  messages       messages[]
+  slackChannelId String
+
+  slackThreads        slackThreads[]
+  //We should make channel required for channel
+  account             accounts?      @relation(fields: [accountId], references: [id])
+  accountId           String?
+  hidden              Boolean        @default(false)
+  default             Boolean        @default(false)
+  slackNextPageCursor String?
+
+  @@unique([slackChannelId])
+}
+
+model accounts {
+  id                     String           @id @default(uuid())
+  createdAt              DateTime         @default(now())
+  name                   String?
+  slackDomain            String?
+  discordDomain          String?
+  discordServerId        String?
+  channels               channels[]
+  slackTeamId            String?
+  slackInviteUrl         String?
+  redirectDomain         String?
+  slackUrl               String?
+  slackSyncStatus        String           @default("NOT_STARTED")
+  brandColor             String?
+  homeUrl                String?
+  docsUrl                String?
+  logoUrl                String?
+  premium                Boolean          @default(false)
+  googleAnalyticsId      String?
+  googleSiteVerification String?
+  anonymizeUsers         Boolean          @default(false)
+  messagesViewType       MessagesViewType @default(THREADS)
+
+
+  auths                 auths[]
+  users                 users[]
+  slackAuthorizations   slackAuthorizations[]
+  discordAuthorizations discordAuthorizations[]
+  @@unique([redirectDomain])
+}
+
+enum MessagesViewType {
+  THREADS
+  THREADS_WITH_MESSAGES
+  MESSAGES
+}
+
+model auths {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  email     String
+  password  String
+  salt      String
+  token     String?
+
+  account   accounts? @relation(fields: [accountId], references: [id])
+  accountId String?
+
+  @@unique([email])
+}
+
+model users {
+  id              String          @id @default(uuid())
+  messages        messages[]
+  slackUserId     String
+  displayName     String?
+  profileImageUrl String?
+  isBot           Boolean
+  isAdmin         Boolean
+  mentions        slackMentions[]
+  anonymousAlias  String?
+
+  account    accounts @relation(fields: [accountsId], references: [id])
+  accountsId String
+
+  @@unique([slackUserId, accountsId])
+}
+
+model slackMentions {
+  messages   messages? @relation(fields: [messagesId], references: [id])
+  messagesId String
+  users      users?    @relation(fields: [usersId], references: [id])
+  usersId    String
+
+  @@id([messagesId, usersId])
+}
+
+model messageAttachments {
+  messages    messages? @relation(fields: [messagesId], references: [id], onDelete: Cascade)
+  messagesId  String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  externalId  String
+  name        String
+  sourceUrl   String
+  title       String?
+  mimetype    String?
+  internalUrl String?
+  permalink   String?
+
+  @@id([messagesId, externalId])
+}
+
+model messageReactions {
+  messages   messages? @relation(fields: [messagesId], references: [id], onDelete: Cascade)
+  messagesId String
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  name       String
+  count      Int?
+  users      Json?
+
+  @@id([messagesId, name])
+}
+
+model slackAuthorizations {
+  id              String   @id @default(uuid())
+  createdAt       DateTime @default(now())
+  accessToken     String
+  botUserId       String
+  scope           String
+  userScope       String?
+  authedUserId    String?
+  userAccessToken String?
+
+  account    accounts? @relation(fields: [accountsId], references: [id])
+  accountsId String?
+}
+
+model discordAuthorizations {
+  id           String   @id @default(uuid())
+  createdAt    DateTime @default(now())
+  accessToken  String
+  scope        String
+  refreshToken String
+  expiresAt    DateTime
+
+  account accounts? @relation(fields: [accountsId], references: [id])
+
+  accountsId String?
+}
