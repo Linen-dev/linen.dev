@@ -24,7 +24,7 @@ export type ThreadById = {
   threadId: string;
   authors: users[];
   channels: channels[];
-  slackUrl?: string;
+  communityUrl?: string;
   communityInviteUrl?: string;
   threadUrl: string;
   threadCommunityInviteUrl?: string | null;

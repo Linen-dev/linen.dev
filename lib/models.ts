@@ -193,11 +193,11 @@ export const updateAccountSlackSyncStatus = async (
 export const updateAccountRedirectDomain = async (
   accountId: string,
   domain: string,
-  slackUrl: string
+  communityUrl: string
 ) => {
   return await prisma.accounts.update({
     where: { id: accountId },
-    data: { redirectDomain: stripProtocol(domain), slackUrl },
+    data: { redirectDomain: stripProtocol(domain), communityUrl },
   });
 };
 

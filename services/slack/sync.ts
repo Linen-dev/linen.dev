@@ -51,10 +51,10 @@ export async function slackSync({
     const token = account.slackAuthorizations[0].accessToken;
 
     const teamInfoResponse = await fetchTeamInfo(token);
-    const slackUrl = teamInfoResponse.body.team.url;
+    const communityUrl = teamInfoResponse.body.team.url;
 
-    if (!!domain && !!slackUrl) {
-      await updateAccountRedirectDomain(accountId, domain, slackUrl);
+    if (!!domain && !!communityUrl) {
+      await updateAccountRedirectDomain(accountId, domain, communityUrl);
     }
 
     // create and join channels

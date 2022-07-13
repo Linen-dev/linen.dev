@@ -17,7 +17,7 @@ describe('PageLayout', () => {
     const { baseElement } = render(
       <PageLayout
         communityName="test"
-        slackUrl="https://foo.slack.com"
+        communityUrl="https://foo.slack.com"
         users={[]}
         settings={{
           brandColor: '#fff',

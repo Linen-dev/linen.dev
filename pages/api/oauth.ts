@@ -31,13 +31,13 @@ export default async function handler(
 
   const body: SlackAuthorizationResponse = resp.body;
   const teamInfoResponse = await fetchTeamInfo(body.access_token);
-  const slackUrl = teamInfoResponse?.body?.team?.url;
+  const communityUrl = teamInfoResponse?.body?.team?.url;
 
   const account = await updateAccount(accountId, {
     slackTeamId: body.team.id,
     name: body.team.name,
-    slackDomain: slackUrl.replace('https://', '').split('.')[0] as string,
-    slackUrl,
+    slackDomain: communityUrl.replace('https://', '').split('.')[0] as string,
+    communityUrl,
   });
 
   const user = body.authed_user;

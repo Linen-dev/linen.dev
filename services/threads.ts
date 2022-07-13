@@ -106,7 +106,7 @@ export async function getThreadById(
     }
   } else {
     threadUrl =
-      account.slackUrl +
+      account.communityUrl +
       '/archives/' +
       thread.channel.externalChannelId +
       '/p' +
@@ -131,7 +131,7 @@ export async function getThreadById(
     threadId,
     currentChannel: thread.channel,
     channels: channelsWithMinThreads,
-    slackUrl: account.slackUrl || '',
+    communityUrl: account.communityUrl || '',
     communityInviteUrl: account.communityInviteUrl || '',
     communityName:
       account.slackDomain ||

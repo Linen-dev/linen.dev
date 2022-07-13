@@ -179,7 +179,7 @@ export const getThreadsByCommunityName = async (
     channels: channelsWithMinThreads,
     communityName,
     currentChannel: channel,
-    slackUrl: account.slackUrl || '',
+    communityUrl: account.communityUrl || '',
     communityInviteUrl: buildInviteUrl(account),
     settings,
     threads,

@@ -28,7 +28,7 @@ describe('Thread', () => {
           threadCommunityInviteUrl={threadCommunityInviteUrl}
           threadId="1"
           communityInviteUrl="https://foo.slack.com/invite/1"
-          slackUrl="https://foo.slack.com"
+          communityUrl="https://foo.slack.com"
           slackThreadTs="1588888888"
           settings={{
             brandColor: '#fff',

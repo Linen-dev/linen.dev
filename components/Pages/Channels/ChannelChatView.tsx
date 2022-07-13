@@ -17,7 +17,7 @@ export default function ChannelChatView({
   users,
   messages,
   channels,
-  slackUrl,
+  communityUrl,
   communityInviteUrl,
   currentChannel,
   settings,
@@ -121,7 +121,7 @@ export default function ChannelChatView({
     //rendered when it is smaller than a specific size and gets unhidden
     <PageLayout
       users={users}
-      slackUrl={slackUrl}
+      communityUrl={communityUrl}
       communityInviteUrl={communityInviteUrl}
       currentChannel={currentChannel}
       seo={{

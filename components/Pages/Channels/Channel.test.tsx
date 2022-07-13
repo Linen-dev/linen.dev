@@ -19,7 +19,7 @@ describe('Channel', () => {
         <Channel
           channelId={channels[0].id}
           communityName="test"
-          slackUrl="https://foo.slack.com"
+          communityUrl="https://foo.slack.com"
           users={[]}
           settings={{
             brandColor: '#fff',

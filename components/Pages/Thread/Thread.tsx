@@ -11,7 +11,7 @@ export default function Thread({
   messages,
   channels,
   currentChannel,
-  slackUrl,
+  communityUrl,
   communityInviteUrl,
   threadUrl,
   threadCommunityInviteUrl,
@@ -70,7 +70,7 @@ export default function Thread({
       communityName={communityName}
       currentChannel={currentChannel}
       navItems={{ channels: channels }}
-      slackUrl={slackUrl}
+      communityUrl={communityUrl}
       communityInviteUrl={communityInviteUrl}
       settings={settings}
       isSubDomainRouting={isSubDomainRouting}
