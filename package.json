@@ -40,6 +40,7 @@
     "@types/stripe": "^8.0.417",
     "@types/styled-components": "^5.1.25",
     "@types/superagent": "^4.1.15",
+    "autoprefixer": "^10.4.7",
     "aws-sdk": "^2.1173.0",
     "axios": "^0.27.2",
     "classnames": "^2.3.1",
@@ -47,7 +48,7 @@
     "highlight.js": "^11.5.1",
     "marked": "^4.0.18",
     "micro": "^9.3.4",
-    "next": "12.1.6",
+    "next": "^12.2.2",
     "next-auth": "^4.9.0",
     "next-s3-upload": "^0.2.2",
     "node-cache": "^5.1.2",
@@ -72,7 +73,6 @@
     "tailwindcss": "^3.1.6",
     "timeago.js": "^4.0.2",
     "typescript": "^4.7.4",
-    "autoprefixer": "^10.4.7",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
@@ -82,7 +82,7 @@
     "aws-cdk-lib": "^2.31.1",
     "dotenv-cli": "^5.1.0",
     "eslint": "8.19.0",
-    "eslint-config-next": "12.2.2",
+    "eslint-config-next": "^12.2.2",
     "husky": "^7.0.4",
     "jest": "^27.5.1",
     "jest-mock-extended": "^2.0.6",
