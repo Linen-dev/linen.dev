@@ -1,5 +1,5 @@
 import prisma from '../../client';
-import { channels, slackThreads } from '@prisma/client';
+import { channels, threads } from '@prisma/client';
 import { DiscordMessage } from '../../types/discordResponses/discordMessagesInterface';
 import { createSlug } from '../../lib/util';
 import { getDiscordWithRetry } from './api';
@@ -7,7 +7,7 @@ import { CrawlType, LIMIT } from './constrains';
 import { createMessages } from './messages';
 
 async function crawlExistingThread(
-  thread: slackThreads & {
+  thread: threads & {
     messages: {
       slackMessageId: string;
     }[];
@@ -70,7 +70,7 @@ async function crawlExistingThread(
 async function persistExistingThreadWithMessages(
   accountId: string,
   channel: channels,
-  thread: slackThreads,
+  thread: threads,
   messages: DiscordMessage[]
 ) {
   const persistedThread = await updateThread(channel, thread);
@@ -83,7 +83,7 @@ async function persistExistingThreadWithMessages(
 }
 
 async function getThreadsFromDB(channel: channels, take: number, skip: number) {
-  return await prisma.slackThreads.findMany({
+  return await prisma.threads.findMany({
     where: {
       channelId: channel.id,
       slackThreadTs: { not: channel.externalChannelId },
@@ -115,7 +115,7 @@ function upsertThreadType0(channelId: string, thread: DiscordMessage) {
     ),
     messageCount: 1,
   };
-  return prisma.slackThreads.upsert({
+  return prisma.threads.upsert({
     create: {
       ...slackThread,
       channelId,
@@ -131,7 +131,7 @@ function upsertThreadType0(channelId: string, thread: DiscordMessage) {
 
 const upsertThread: Record<
   number,
-  (channelId: string, thread: DiscordMessage) => Promise<slackThreads>
+  (channelId: string, thread: DiscordMessage) => Promise<threads>
 > = {
   0: upsertThreadType0,
   18: upsertThreadType18,
@@ -142,7 +142,7 @@ async function createThread(channelId: string, thread: DiscordMessage) {
   return upsertThread[thread.type](channelId, thread);
 }
 
-async function updateThread(channel: channels, thread: slackThreads) {
+async function updateThread(channel: channels, thread: threads) {
   const message: DiscordMessage = await getDiscordWithRetry({
     path: `/channels/${channel.externalChannelId}/messages/${thread.slackThreadTs}`,
   });
@@ -160,7 +160,7 @@ export async function updateThreadMessageCount(slackThreadId: string) {
   const messageCount = await prisma.messages.count({
     where: { slackThreadId },
   });
-  await prisma.slackThreads.update({
+  await prisma.threads.update({
     data: { messageCount },
     where: {
       id: slackThreadId,

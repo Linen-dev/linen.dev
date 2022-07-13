@@ -6,7 +6,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   let skip = 0;
-  let threadsToUpdate = await prisma.slackThreads.findMany({
+  let threadsToUpdate = await prisma.threads.findMany({
     include: {
       messages: {
         orderBy: {
@@ -22,7 +22,7 @@ export default async function handler(
     console.log('looping');
     skip += 100;
     const threadsTransaction = threadsToUpdate.map((t) => {
-      return prisma.slackThreads.update({
+      return prisma.threads.update({
         where: {
           id: t.id,
         },
@@ -32,7 +32,7 @@ export default async function handler(
       });
     });
     await prisma.$transaction(threadsTransaction);
-    threadsToUpdate = await prisma.slackThreads.findMany({
+    threadsToUpdate = await prisma.threads.findMany({
       include: {
         messages: {
           orderBy: {

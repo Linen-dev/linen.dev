@@ -192,8 +192,8 @@ describe('webhook', () => {
       messageCount: 0,
       channelId: 'C03ATK7RWNS',
     };
-    const slackThreadsUpsertMock =
-      prismaMock.slackThreads.upsert.mockResolvedValue(threadMock);
+    const threadsUpsertMock =
+      prismaMock.threads.upsert.mockResolvedValue(threadMock);
 
     const userMock = {
       id: 'user_id',
@@ -247,7 +247,7 @@ describe('webhook', () => {
         });
 
         // Proper thread was created/updated
-        expect(slackThreadsUpsertMock).toHaveBeenCalledWith({
+        expect(threadsUpsertMock).toHaveBeenCalledWith({
           where: {
             slackThreadTs: addMessageEvent.event.ts,
           },
@@ -263,7 +263,7 @@ describe('webhook', () => {
 
         // Slug for new thread created
         expect(threadMock.slug).toEqual('this-is-test3');
-        prismaMock.slackThreads.update.calledWith({
+        prismaMock.threads.update.calledWith({
           where: {
             id: threadMock.id,
           },
@@ -379,8 +379,8 @@ describe('webhook', () => {
       messageCount: 0,
       channelId: 'C03ATK7RWNS',
     };
-    const slackThreadsUpsertMock =
-      prismaMock.slackThreads.upsert.mockResolvedValue(threadMock);
+    const threadsUpsertMock =
+      prismaMock.threads.upsert.mockResolvedValue(threadMock);
 
     const userMock = {
       id: 'user_id',
@@ -457,7 +457,7 @@ describe('webhook', () => {
         });
 
         // Proper thread was created/updated
-        expect(slackThreadsUpsertMock).toHaveBeenCalledWith({
+        expect(threadsUpsertMock).toHaveBeenCalledWith({
           where: {
             slackThreadTs: changeMessageEvent.event.message.ts,
           },
@@ -473,7 +473,7 @@ describe('webhook', () => {
 
         // Slug for new thread created
         expect(threadMock.slug).toEqual('Lets-test-4');
-        prismaMock.slackThreads.update.calledWith({
+        prismaMock.threads.update.calledWith({
           where: {
             id: threadMock.id,
           },

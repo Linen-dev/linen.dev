@@ -21,7 +21,7 @@ model messages {
   channelId      String
   slackMessageId String
 
-  slackThreads slackThreads? @relation(fields: [slackThreadId], references: [id])
+  slackThreads threads? @relation(fields: [slackThreadId], references: [id])
 
   slackThreadId String?
 
@@ -37,7 +37,7 @@ model messages {
   @@index([textsearchable_index_col], type: Gin)
 }
 
-model slackThreads {
+model threads {
   id            String   @id @default(uuid())
   incrementId   Int      @default(autoincrement())
   channel       channels @relation(fields: [channelId], references: [id])
@@ -59,12 +59,12 @@ model channels {
   messages          messages[]
   externalChannelId String
 
-  slackThreads       slackThreads[]
+  slackThreads       threads[]
   //We should make channel required for channel
-  account            accounts?      @relation(fields: [accountId], references: [id])
+  account            accounts? @relation(fields: [accountId], references: [id])
   accountId          String?
-  hidden             Boolean        @default(false)
-  default            Boolean        @default(false)
+  hidden             Boolean   @default(false)
+  default            Boolean   @default(false)
   externalPageCursor String?
 
   @@unique([externalChannelId])

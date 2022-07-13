@@ -198,7 +198,7 @@ async function saveMessagesTransaction(
   });
 
   if (singlesTransaction && singlesTransaction.length) {
-    await prisma.slackThreads.createMany({
+    await prisma.threads.createMany({
       data: singlesTransaction,
       skipDuplicates: true,
     });
@@ -214,11 +214,11 @@ async function saveMessagesTransaction(
   });
 
   if (threadsTransaction && threadsTransaction.length) {
-    await prisma.slackThreads.createMany({
+    await prisma.threads.createMany({
       data: threadsTransaction,
       skipDuplicates: true,
     });
-    const newThreads = await prisma.slackThreads.findMany({
+    const newThreads = await prisma.threads.findMany({
       where: {
         slackThreadTs: { in: threadsTransaction.map((e) => e.slackThreadTs) },
       },

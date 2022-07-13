@@ -3,7 +3,7 @@ import {
   messages,
   MessagesViewType,
   mentions,
-  slackThreads,
+  threads,
   users,
 } from '@prisma/client';
 import { useRouter } from 'next/router';
@@ -27,7 +27,7 @@ interface message extends messages {
   mentions: MentionsWithUsers[];
 }
 
-interface threads extends slackThreads {
+interface threadsWithMessages extends threads {
   messages: message[];
 }
 
@@ -48,7 +48,7 @@ export type Props = {
   users: users[];
   channels?: channels[];
   currentChannel: channels;
-  threads?: threads[];
+  threads?: threadsWithMessages[];
   messages?: messageWithAuthor[];
   pagination?: PaginationType;
   page: number;

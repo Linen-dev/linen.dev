@@ -1,4 +1,4 @@
-import { channels, slackThreads, users } from '@prisma/client';
+import { channels, users } from '@prisma/client';
 
 export type ThreadByIdResponse = ThreadById | { notFound: boolean };
 

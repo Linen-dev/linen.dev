@@ -13,7 +13,7 @@ import {
   createManyChannel,
   findAccountById,
   findOrCreateThread,
-  findSlackThreadsWithOnlyOneMessage,
+  findThreadsWithOnlyOneMessage,
   updateAccountRedirectDomain,
   updateNextPageCursor,
 } from '../../lib/models';
@@ -176,7 +176,7 @@ export async function slackSync({
     // Save all threads
     // only fetch threads with single message
     // There will be edge cases where not all the threads are sync'd if you cancel the script
-    const messageWithThreads = await findSlackThreadsWithOnlyOneMessage(
+    const messageWithThreads = await findThreadsWithOnlyOneMessage(
       channels.map((c) => c.id)
     );
     console.log('syncing threads: ', messageWithThreads.length);
@@ -296,7 +296,7 @@ async function saveMessagesTransaction(
   const threadsTransaction: any = messages
     .map((m) => {
       if (!!m.thread_ts) {
-        return prisma.slackThreads.upsert({
+        return prisma.threads.upsert({
           where: {
             slackThreadTs: m.thread_ts,
           },
@@ -369,7 +369,7 @@ async function saveMessagesSynchronous(
 ) {
   const threadHead = messages[0];
   if (threadHead.ts === threadHead.thread_ts) {
-    await prisma.slackThreads.update({
+    await prisma.threads.update({
       where: { slackThreadTs: threadHead.thread_ts },
       data: {
         messageCount: (threadHead.reply_count || 0) + 1,

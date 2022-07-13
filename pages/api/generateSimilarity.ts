@@ -5,7 +5,7 @@ import fs from 'fs';
 
 // async function update(request: NextApiRequest, response: NextApiResponse) {
 //   const id = request.query.id as string;
-//   await prisma.slackThreads.update({
+//   await prisma.threads.update({
 //     where: { id },
 //     data: { viewCount: { increment: 1 } },
 //   });
@@ -18,8 +18,8 @@ export default async function handler(
 ) {
   const token = process.env.GPT3_SECRETS_KEY;
   const result: message[] = await prisma.$queryRaw`select messages.id as 
-    messageid, body from messages join "slackThreads" on messages."slackThreadId" = "slackThreads".id  
-    where "slackThreads"."channelId" = '4c850a46-0114-46dd-af00-7b21eb8720b9' and "slackThreadTs" = "slackMessageId";`;
+    messageid, body from messages join "threads" on messages."slackThreadId" = "threads".id  
+    where "threads"."channelId" = '4c850a46-0114-46dd-af00-7b21eb8720b9' and "slackThreadTs" = "slackMessageId";`;
 
   const trimmedMessages = result.map((m) => {
     return {

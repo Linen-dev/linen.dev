@@ -1,5 +1,5 @@
 import prisma from '../../client';
-import { channels, slackThreads, users } from '@prisma/client';
+import { channels, threads, users } from '@prisma/client';
 import { DiscordMessage } from '../../types/discordResponses/discordMessagesInterface';
 import { findUsers, getMentions, getUsersInMessages } from './users';
 
@@ -9,7 +9,7 @@ type ProcessMessageType = Record<
     channel: channels,
     message: DiscordMessage,
     users: users[],
-    thread?: slackThreads
+    thread?: threads
   ) => {
     body: string;
     sentAt: string;
@@ -31,7 +31,7 @@ function processMessageType0(
   channel: channels,
   message: DiscordMessage,
   users: users[],
-  thread?: slackThreads
+  thread?: threads
 ) {
   const mentions = getMentions(message.mentions, users);
   const authorId = users.find(
@@ -52,7 +52,7 @@ function processMessageType18(
   channel: channels,
   message: DiscordMessage,
   users: users[],
-  thread?: slackThreads
+  thread?: threads
 ) {
   const mentions = getMentions(message.mentions, users);
   const authorId = users.find(
@@ -73,7 +73,7 @@ function processMessageType21(
   channel: channels,
   message: DiscordMessage,
   users: users[],
-  thread?: slackThreads
+  thread?: threads
 ) {
   // console.log('processMessageType21', message);
   const mentions = getMentions(message.referenced_message?.mentions, users);
@@ -152,7 +152,7 @@ export async function createMessages({
 }: {
   accountId: string;
   channel: channels;
-  thread?: slackThreads;
+  thread?: threads;
   messages: DiscordMessage[];
 }) {
   const usersInMessages = getUsersInMessages(messages);

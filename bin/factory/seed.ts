@@ -177,7 +177,7 @@ async function createChannelThreadsMessages({
   });
 
   for (let i = 0; i < 100; i++) {
-    const thread = await prisma.slackThreads.create({
+    const thread = await prisma.threads.create({
       data: {
         channelId: channel.id,
         slug: `${slug}-${channel.channelName}-${channel.id}-${i}`,

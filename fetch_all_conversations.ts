@@ -1,4 +1,4 @@
-import { channels, messages, slackThreads } from '@prisma/client';
+import { channels, messages, threads } from '@prisma/client';
 import request from 'superagent';
 import {
   createManyUsers,
@@ -241,24 +241,24 @@ export const saveMessages = async (
 export async function fetchAndSaveThreadMessages(
   messages: (messages & {
     channel: channels;
-    slackThreads: slackThreads | null;
+    threads: threads | null;
   })[],
   token: string,
   accountId: string
 ) {
   const repliesPromises = messages.map((m) => {
-    if (!!m.slackThreads?.slackThreadTs) {
+    if (!!m.threads?.slackThreadTs) {
       return fetchReplies(
-        m.slackThreads.slackThreadTs,
+        m.threads.slackThreadTs,
         m.channel.externalChannelId,
         token
       ).then((response) => {
-        if (!!response?.body && m.slackThreads?.slackThreadTs) {
+        if (!!response?.body && m.threads?.slackThreadTs) {
           const replyMessages = response?.body;
           return saveThreadedMessages(
             replyMessages,
             m.channel.id,
-            m.slackThreads.slackThreadTs,
+            m.threads.slackThreadTs,
             accountId
           );
         }

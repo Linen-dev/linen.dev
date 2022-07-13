@@ -11,7 +11,7 @@ export const buildSitemapQueries = {
     { channelName: string; incrementId: number; slug: string }[]
   >`
   select c."channelName", st."incrementId", st.slug, count(m.id)
-  from "slackThreads" st 
+  from "threads" st 
   join channels c on st."channelId" = c.id
   join messages m on m."slackThreadId" = st.id
   where c."accountId" = ${accountId}
@@ -23,7 +23,7 @@ export const buildSitemapQueries = {
     { channelName: string; incrementId: number; slug: string }[]
   >`
   select c."channelName", st."incrementId", st.slug, count(m.id)
-  from "slackThreads" st 
+  from "threads" st 
   join channels c on st."channelId" = c.id
   join messages m on m."slackThreadId" = st.id
   where c.id = ${channelId}
@@ -36,7 +36,7 @@ export const buildSitemapQueries = {
   where c."accountId" = ${accountId}
   and c.hidden is false
   and exists (
-    select 1 from "slackThreads" st 
+    select 1 from "threads" st 
     where st."channelId" = c.id
     group by c.id, st.id
    )`,
@@ -44,7 +44,7 @@ export const buildSitemapQueries = {
   select a.id, coalesce(a."discordDomain",a."discordServerId",a."slackDomain") as "domain"
   from accounts a 
   join channels c on c."accountId" = a.id 
-  join "slackThreads" st on st."channelId" = c.id
+  join "threads" st on st."channelId" = c.id
   join messages m on m."slackThreadId" = st.id
   where premium is false
   and coalesce(a."discordDomain",a."discordServerId",a."slackDomain") is not null

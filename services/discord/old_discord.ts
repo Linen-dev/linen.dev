@@ -5,7 +5,7 @@ import {
   DiscordThreads,
 } from '../../types/discordResponses/discordMessagesInterface';
 import { prisma } from '../../client';
-import { channels, slackThreads, users } from '@prisma/client';
+import { channels, threads, users } from '@prisma/client';
 import {
   createUser,
   // findOrCreateChannel,
@@ -119,7 +119,7 @@ async function sync({
       fullSync,
     });
     // we need to query our db to get all threads, not only the synchronized ones
-    const threadsOnChannel = await prisma.slackThreads.findMany({
+    const threadsOnChannel = await prisma.threads.findMany({
       select: { id: true },
       where: {
         channelId: channel.id,
@@ -152,13 +152,13 @@ async function listMessagesFromThreadAndPersist({
   accountId,
   fullSync,
 }: {
-  thread: Partial<slackThreads>;
+  thread: Partial<threads>;
   token: string;
   authors: any;
   accountId: string;
   fullSync?: boolean;
 }) {
-  const threadInDb = await prisma.slackThreads.findUnique({
+  const threadInDb = await prisma.threads.findUnique({
     where: { id: thread.id },
     include: { messages: { take: 1, orderBy: { sentAt: 'desc' } } },
   });
@@ -307,7 +307,7 @@ async function persistMessages({
   messages: DiscordMessage[];
   authors: any;
   accountId: string;
-  threadInDb: slackThreads;
+  threadInDb: threads;
 }) {
   // first we need to insert the users to have the userId available
   await findAuthorsAndPersist(messages, authors, accountId);
@@ -381,7 +381,7 @@ async function persistThreads(threads: DiscordThreads[], channelId: string) {
       if (!thread.id) {
         return null;
       }
-      return prisma.slackThreads.upsert({
+      return prisma.threads.upsert({
         where: {
           slackThreadTs: thread.id,
         },
@@ -499,9 +499,9 @@ async function listPublicArchivedThreadsAndPersist({
 // }
 
 // async function saveDiscordThreads(
-//   threads: Prisma.slackThreadsUncheckedCreateInput
+//   threads: Prisma.threadsUncheckedCreateInput
 // ) {
-//   return prisma.slackThreads.upsert({
+//   return prisma.threads.upsert({
 //     where: { slackThreadTs: threads.slackThreadTs },
 //     update: {},
 //     create: threads,

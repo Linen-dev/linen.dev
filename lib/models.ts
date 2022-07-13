@@ -163,9 +163,9 @@ export const accountsWithChannels = async () => {
 
 export const updateSlackThread = async (
   id: string,
-  thread: Prisma.slackThreadsUpdateInput
+  thread: Prisma.threadsUpdateInput
 ) => {
-  return await prisma.slackThreads.update({
+  return await prisma.threads.update({
     where: {
       id: id,
     },
@@ -242,7 +242,7 @@ export const findAccountByPath = async (path: string) => {
 };
 
 export const channelsGroupByThreadCount = async (accountId: string) => {
-  return await prisma.slackThreads.groupBy({
+  return await prisma.threads.groupBy({
     where: { channel: { account: { id: accountId } } },
     by: ['channelId'],
     _count: {
@@ -283,7 +283,7 @@ export type Thread = {
 };
 
 export const findOrCreateThread = async (thread: Thread) => {
-  return await prisma.slackThreads.upsert({
+  return await prisma.threads.upsert({
     where: {
       slackThreadTs: thread.slackThreadTs,
     },
@@ -322,7 +322,7 @@ export const createDiscordAuthorization = async (
 };
 
 export const threadCount = async (channelId: string): Promise<number> => {
-  return await prisma.slackThreads.count({
+  return await prisma.threads.count({
     where: {
       channelId,
       messageCount: {
@@ -344,7 +344,7 @@ export const threadIndex = async ({
   account: accounts;
 }) => {
   const MESSAGES_ORDER_BY = 'desc';
-  const threads = await prisma.slackThreads.findMany({
+  const threads = await prisma.threads.findMany({
     take: take,
     skip: skip,
     include: {
@@ -384,7 +384,7 @@ export const threadIndex = async ({
 
 export const findThreadById = async (threadId: number) => {
   const MESSAGES_ORDER_BY = 'asc';
-  return await prisma.slackThreads
+  return await prisma.threads
     .findUnique({
       where: { incrementId: threadId },
       include: {
@@ -414,7 +414,7 @@ export const findThreadById = async (threadId: number) => {
     })
     .then((thread) => {
       const account = thread?.channel.account;
-      if (account?.anonymizeUsers) {
+      if (thread && account?.anonymizeUsers) {
         return anonymizeMessages(thread);
       }
       return thread;
@@ -530,17 +530,17 @@ export const updateNextPageCursor = async (
 };
 
 // using unsafe because prisma query raw does not play well with string interpolation
-export const findSlackThreadsWithOnlyOneMessage = async (
+export const findThreadsWithOnlyOneMessage = async (
   channelIds: string[]
 ): Promise<{ id: string; slackThreadTs: string; channelId: string }[]> => {
   const ids = channelIds.map((id) => `'${id}'`).join(' , ');
   const query = `
-  select "slackThreads".id as id , "slackThreads"."slackThreadTs", "slackThreads"."channelId"
-  from "slackThreads" join messages on messages."slackThreadId" = "slackThreads".id 
-  where "slackThreads"."channelId" in (${ids})
-  group by "slackThreads".id
+  select "threads".id as id , "threads"."slackThreadTs", "threads"."channelId"
+  from "threads" join messages on messages."slackThreadId" = "threads".id 
+  where "threads"."channelId" in (${ids})
+  group by "threads".id
   having count(*) = 1
-  order by "slackThreads"."slackThreadTs" desc
+  order by "threads"."slackThreadTs" desc
   ;`;
 
   return await prisma.$queryRawUnsafe(query);
@@ -565,17 +565,17 @@ export const findOrCreateUserFromUserInfo = async (
 };
 
 // using unsafe because prisma query raw does not play well with string interpolation
-export const findSlackThreadsWithNoMessages = async (
+export const findThreadsWithNoMessages = async (
   channelIds: string[]
 ): Promise<{ id: string; slackThreadTs: string; channelId: string }[]> => {
   const ids = channelIds.map((id) => `'${id}'`).join(' , ');
   const query = `
-  select "slackThreads".id as id , "slackThreads"."slackThreadTs", "slackThreads"."channelId"
-  from "slackThreads" join messages on messages."slackThreadId" = "slackThreads".id 
-  where "slackThreads"."channelId" in (${ids})
-  group by "slackThreads".id
+  select "threads".id as id , "threads"."slackThreadTs", "threads"."channelId"
+  from "threads" join messages on messages."slackThreadId" = "threads".id 
+  where "threads"."channelId" in (${ids})
+  group by "threads".id
   having count(*) = 0
-  order by "slackThreads"."slackThreadTs" desc
+  order by "threads"."slackThreadTs" desc
   ;`;
 
   return await prisma.$queryRawUnsafe(query);
@@ -612,12 +612,12 @@ export async function findThreadsWithWrongMessageCount() {
   return await prisma.$queryRaw<
     { id: string; count: number; messageCount: number }[]
   >`
-  select "slackThreads".id, count(1), "messageCount"
-  from "slackThreads" 
-  left join messages on messages."slackThreadId" = "slackThreads"."id"
-  group by "slackThreads"."id"
+  select "threads".id, count(1), "messageCount"
+  from "threads" 
+  left join messages on messages."slackThreadId" = "threads"."id"
+  group by "threads"."id"
   having count(1) != "messageCount" 
-  order by "slackThreads"."id" desc
+  order by "threads"."id" desc
   limit 100`;
 }
 

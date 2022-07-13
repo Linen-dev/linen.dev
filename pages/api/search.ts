@@ -1,13 +1,7 @@
 import { anonymizeMessagesMentions } from '@/utilities/anonymizeMessages';
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import prisma from '../../client';
-import {
-  messages,
-  Prisma,
-  mentions,
-  slackThreads,
-  users,
-} from '@prisma/client';
+import { messages, Prisma, mentions, threads, users } from '@prisma/client';
 
 export default async function handler(
   req: NextApiRequest,
@@ -52,19 +46,17 @@ export default async function handler(
 
   // Get messages threads
   const threadIds = messagesResult.map((mr) => mr.slackThreadId);
-  const slackThreadsResult =
+  const threadsResult =
     threadIds.length > 0
-      ? await prisma.$queryRaw<
-          slackThreads[]
-        >`SELECT "public"."slackThreads"."id",
-          "public"."slackThreads"."incrementId",
-          "public"."slackThreads"."slackThreadTs",
-          "public"."slackThreads"."viewCount",
-          "public"."slackThreads"."slug",
-          "public"."slackThreads"."messageCount",
-          "public"."slackThreads"."channelId"
-      FROM "public"."slackThreads"
-      WHERE "public"."slackThreads"."id" IN (${Prisma.join(threadIds)})`
+      ? await prisma.$queryRaw<threads[]>`SELECT "public"."threads"."id",
+          "public"."threads"."incrementId",
+          "public"."threads"."slackThreadTs",
+          "public"."threads"."viewCount",
+          "public"."threads"."slug",
+          "public"."threads"."messageCount",
+          "public"."threads"."channelId"
+      FROM "public"."threads"
+      WHERE "public"."threads"."id" IN (${Prisma.join(threadIds)})`
       : [];
 
   // Get mentions for the messages
@@ -99,9 +91,7 @@ export default async function handler(
   const searchResults = messagesResult.map((mr) => {
     return {
       ...mr,
-      slackThreads: slackThreadsResult.find(
-        (str) => str.id === mr.slackThreadId
-      ),
+      threads: threadsResult.find((str) => str.id === mr.slackThreadId),
       mentions: mentionsResult.map((msr) => {
         return {
           ...msr,

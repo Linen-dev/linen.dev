@@ -15,7 +15,7 @@ export async function slugify() {
       const slugsTransaction = threadsWithNoSlug.map((t) => {
         const message = t.messages[0];
         const slug = createSlug(message?.body || '');
-        return prisma.slackThreads.update({
+        return prisma.threads.update({
           where: {
             id: t.id,
           },
@@ -44,7 +44,7 @@ export async function slugify() {
 }
 
 const findThreadsWithNoSlugs = (skip: number) => {
-  return prisma.slackThreads.findMany({
+  return prisma.threads.findMany({
     where: {
       slug: null,
     },
