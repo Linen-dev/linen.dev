@@ -49,7 +49,7 @@ export const createMessageWithMentions = async (
 
 export const deleteMessageWithMentions = async (messageId: string) => {
   return await prisma.$transaction([
-    prisma.slackMentions.deleteMany({
+    prisma.mentions.deleteMany({
       where: {
         messagesId: messageId,
       },

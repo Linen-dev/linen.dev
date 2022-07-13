@@ -25,7 +25,7 @@ model messages {
 
   slackThreadId String?
 
-  mentions                 slackMentions[]
+  mentions                 mentions[]
   attachments              messageAttachments[]
   reactions                messageReactions[]
   author                   users?                   @relation(fields: [usersId], references: [id])
@@ -122,14 +122,14 @@ model auths {
 }
 
 model users {
-  id              String          @id @default(uuid())
+  id              String     @id @default(uuid())
   messages        messages[]
   slackUserId     String
   displayName     String?
   profileImageUrl String?
   isBot           Boolean
   isAdmin         Boolean
-  mentions        slackMentions[]
+  mentions        mentions[]
   anonymousAlias  String?
 
   account    accounts @relation(fields: [accountsId], references: [id])
@@ -138,7 +138,7 @@ model users {
   @@unique([slackUserId, accountsId])
 }
 
-model slackMentions {
+model mentions {
   messages   messages? @relation(fields: [messagesId], references: [id])
   messagesId String
   users      users?    @relation(fields: [usersId], references: [id])

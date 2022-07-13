@@ -4,7 +4,7 @@ import prisma from '../../client';
 import {
   messages,
   Prisma,
-  slackMentions,
+  mentions,
   slackThreads,
   users,
 } from '@prisma/client';
@@ -72,11 +72,11 @@ export default async function handler(
   const mentionsResult =
     messageIds.length > 0
       ? await prisma.$queryRaw<
-          slackMentions[]
-        >`SELECT "public"."slackMentions"."messagesId",
-        "public"."slackMentions"."usersId"
-    FROM "public"."slackMentions"
-    WHERE "public"."slackMentions"."messagesId" IN (${Prisma.join(messageIds)})`
+          mentions[]
+        >`SELECT "public"."mentions"."messagesId",
+        "public"."mentions"."usersId"
+    FROM "public"."mentions"
+    WHERE "public"."mentions"."messagesId" IN (${Prisma.join(messageIds)})`
       : [];
 
   // Get mentioned users

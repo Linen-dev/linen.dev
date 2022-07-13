@@ -1,7 +1,7 @@
 import {
   channels,
   messages,
-  slackMentions,
+  mentions,
   slackThreads,
   users,
 } from '@prisma/client';
@@ -11,12 +11,12 @@ type Messages =
   | (messages & {
       author: users | null;
       slackThreads: slackThreads | null;
-      mentions: (slackMentions & {
+      mentions: (mentions & {
         users: users | null;
       })[];
     })
   | (messages & {
-      mentions: (slackMentions & {
+      mentions: (mentions & {
         users: users | null;
       })[];
     });
@@ -25,7 +25,7 @@ type ThreadWithMessages =
   | (slackThreads & {
       messages: (messages & {
         author: users | null;
-        mentions: (slackMentions & {
+        mentions: (mentions & {
           users: users | null;
         })[];
       })[];

@@ -2,7 +2,7 @@ import {
   channels,
   messages,
   MessagesViewType,
-  slackMentions,
+  mentions,
   slackThreads,
   users,
 } from '@prisma/client';
@@ -33,7 +33,7 @@ interface threads extends slackThreads {
 
 export type messageWithAuthor = messages & {
   author: users | null;
-  mentions: (slackMentions & {
+  mentions: (mentions & {
     users: users;
   })[];
   reactions: SerializedReaction[];

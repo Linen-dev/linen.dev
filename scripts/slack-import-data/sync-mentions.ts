@@ -68,7 +68,7 @@ function getMentionedSlackUserIds(body: string) {
           );
 
           if (mentionedUser) {
-            const slackMention = await prisma.slackMentions.findFirst({
+            const slackMention = await prisma.mentions.findFirst({
               where: {
                 messagesId: message.id,
                 usersId: mentionedUser.id,
@@ -79,7 +79,7 @@ function getMentionedSlackUserIds(body: string) {
               console.log(
                 `[INFO] Add mention: ${account.name}/${channel.channelName}/${message.id}/${mentionedUser.displayName}`
               );
-              await prisma.slackMentions.create({
+              await prisma.mentions.create({
                 data: {
                   messagesId: message.id,
                   usersId: mentionedUser.id,
@@ -106,7 +106,7 @@ function getMentionedSlackUserIds(body: string) {
                 console.log(
                   `[INFO] Add mention: ${account.name}/${channel.channelName}/${message.id}/${newMentionedUser.displayName}`
                 );
-                await prisma.slackMentions.create({
+                await prisma.mentions.create({
                   data: {
                     messagesId: message.id,
                     usersId: newMentionedUser.id,

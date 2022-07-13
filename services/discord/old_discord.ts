@@ -281,7 +281,7 @@ async function cleanUpMessage(slackMessageId: string, channelId: string) {
   });
   if (message) {
     for (const mention of message.mentions) {
-      await prisma.slackMentions
+      await prisma.mentions
         .delete({
           where: {
             messagesId_usersId: {
