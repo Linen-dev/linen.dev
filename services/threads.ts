@@ -94,15 +94,15 @@ export async function getThreadById(
 
   let threadUrl: string;
 
-  if (account.slackInviteUrl) {
-    if (account.slackInviteUrl.includes('slack.com/join/shared_invite')) {
+  if (account.communityInviteUrl) {
+    if (account.communityInviteUrl.includes('slack.com/join/shared_invite')) {
       threadUrl =
-        account.slackInviteUrl &&
-        `${account.slackInviteUrl}/archives/${
+        account.communityInviteUrl &&
+        `${account.communityInviteUrl}/archives/${
           thread.channel.externalChannelId
         }/p${(parseFloat(thread.slackThreadTs) * 1000000).toString()}`;
     } else {
-      threadUrl = account.slackInviteUrl;
+      threadUrl = account.communityInviteUrl;
     }
   } else {
     threadUrl =
@@ -132,7 +132,7 @@ export async function getThreadById(
     currentChannel: thread.channel,
     channels: channelsWithMinThreads,
     slackUrl: account.slackUrl || '',
-    slackInviteUrl: account.slackInviteUrl || '',
+    communityInviteUrl: account.communityInviteUrl || '',
     communityName:
       account.slackDomain ||
       account.discordDomain ||

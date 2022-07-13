@@ -41,7 +41,7 @@ export type messageWithAuthor = messages & {
 
 export type Props = {
   slackUrl?: string;
-  slackInviteUrl?: string;
+  communityInviteUrl?: string;
   settings: Settings;
   communityName: string;
   channelId?: string;

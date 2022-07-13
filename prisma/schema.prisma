@@ -79,7 +79,7 @@ model accounts {
   discordServerId        String?
   channels               channels[]
   slackTeamId            String?
-  slackInviteUrl         String?
+  communityInviteUrl     String?
   redirectDomain         String?
   slackUrl               String?
   slackSyncStatus        String           @default("NOT_STARTED")

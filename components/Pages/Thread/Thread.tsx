@@ -12,9 +12,9 @@ export default function Thread({
   channels,
   currentChannel,
   slackUrl,
-  slackInviteUrl,
+  communityInviteUrl,
   threadUrl,
-  threadSlackInviteUrl,
+  threadCommunityInviteUrl,
   settings,
   viewCount,
   communityName,
@@ -71,7 +71,7 @@ export default function Thread({
       currentChannel={currentChannel}
       navItems={{ channels: channels }}
       slackUrl={slackUrl}
-      slackInviteUrl={slackInviteUrl}
+      communityInviteUrl={communityInviteUrl}
       settings={settings}
       isSubDomainRouting={isSubDomainRouting}
     >
@@ -83,7 +83,7 @@ export default function Thread({
             <div className={styles.buttons}>
               <Anchor
                 className={styles.join}
-                href={threadSlackInviteUrl || threadUrl}
+                href={threadCommunityInviteUrl || threadUrl}
                 size="sm"
                 target="_blank"
               >

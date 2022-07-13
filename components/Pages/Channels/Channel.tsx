@@ -20,7 +20,7 @@ export default function Channel({
   threads,
   channels,
   slackUrl,
-  slackInviteUrl,
+  communityInviteUrl,
   currentChannel,
   settings,
   communityName,
@@ -63,7 +63,7 @@ export default function Channel({
     return (
       <PageLayout
         slackUrl={slackUrl}
-        slackInviteUrl={slackInviteUrl}
+        communityInviteUrl={communityInviteUrl}
         settings={settings}
         communityName={communityName}
         currentChannel={currentChannel}
@@ -246,7 +246,7 @@ export default function Channel({
     <PageLayout
       users={users}
       slackUrl={slackUrl}
-      slackInviteUrl={slackInviteUrl}
+      communityInviteUrl={communityInviteUrl}
       currentChannel={currentChannel}
       seo={{
         title: buildTitle(settings.name || communityName, channelName, page),

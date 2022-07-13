@@ -29,7 +29,7 @@ interface Props {
   currentChannel: channels;
   navItems?: any;
   slackUrl?: string;
-  slackInviteUrl?: string;
+  communityInviteUrl?: string;
   settings: Settings;
   communityName: string;
   isSubDomainRouting: boolean;
@@ -42,7 +42,7 @@ function PageLayout({
   navItems,
   currentChannel,
   slackUrl,
-  slackInviteUrl,
+  communityInviteUrl,
   settings,
   communityName,
   isSubDomainRouting,
@@ -107,9 +107,9 @@ function PageLayout({
               Docs
             </a>
             {settings.communityType === 'discord' ? (
-              <JoinDiscord inviteUrl={slackInviteUrl || slackUrl} />
+              <JoinDiscord inviteUrl={communityInviteUrl || slackUrl} />
             ) : (
-              <JoinSlack inviteUrl={slackInviteUrl || slackUrl} />
+              <JoinSlack inviteUrl={communityInviteUrl || slackUrl} />
             )}
           </div>
         </div>
