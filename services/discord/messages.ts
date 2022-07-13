@@ -34,8 +34,9 @@ function processMessageType0(
   thread?: slackThreads
 ) {
   const mentions = getMentions(message.mentions, users);
-  const authorId = users.find((user) => user.slackUserId === message.author.id)
-    ?.id as string;
+  const authorId = users.find(
+    (user) => user.externalUserId === message.author.id
+  )?.id as string;
   return {
     authorId,
     body: message.content,
@@ -54,8 +55,9 @@ function processMessageType18(
   thread?: slackThreads
 ) {
   const mentions = getMentions(message.mentions, users);
-  const authorId = users.find((user) => user.slackUserId === message.author.id)
-    ?.id as string;
+  const authorId = users.find(
+    (user) => user.externalUserId === message.author.id
+  )?.id as string;
   return {
     authorId,
     body: message.content,
@@ -76,7 +78,7 @@ function processMessageType21(
   // console.log('processMessageType21', message);
   const mentions = getMentions(message.referenced_message?.mentions, users);
   const authorId = users.find(
-    (user) => user.slackUserId === message.referenced_message?.author.id
+    (user) => user.externalUserId === message.referenced_message?.author.id
   )?.id as string;
 
   return {

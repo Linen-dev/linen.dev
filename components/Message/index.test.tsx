@@ -37,7 +37,7 @@ describe('Message', () => {
               {
                 id: 'A1',
                 displayName: 'John Doe',
-                slackUserId: '1234',
+                externalUserId: '1234',
                 profileImageUrl: 'https://img.com/1234',
                 isBot: false,
                 isAdmin: false,
@@ -58,7 +58,7 @@ describe('Message', () => {
                 {
                   id: 'A2',
                   displayName: 'John Doe',
-                  slackUserId: '1234',
+                  externalUserId: '1234',
                   profileImageUrl: 'https://img.com/1234',
                   isBot: false,
                   isAdmin: false,

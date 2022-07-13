@@ -84,7 +84,7 @@ export default async function handler(
   const usersResult =
     userIds.length > 0
       ? await prisma.$queryRaw<users[]>`SELECT "public"."users"."id",
-        "public"."users"."slackUserId",
+        "public"."users"."externalUserId",
         "public"."users"."displayName",
         "public"."users"."profileImageUrl",
         "public"."users"."isBot",

@@ -4,9 +4,11 @@ import { createUserFromUserInfo, findUser } from '../../lib/models';
 
 const prisma = new PrismaClient({});
 
-function getMentionedSlackUserIds(body: string) {
-  let mentionSlackUserIds = body.match(/<@(.*?)>/g) || [];
-  return mentionSlackUserIds.map((m) => m.replace('<@', '').replace('>', ''));
+function getMentionedExternalUserIds(body: string) {
+  let mentionExternalUserIds = body.match(/<@(.*?)>/g) || [];
+  return mentionExternalUserIds.map((m) =>
+    m.replace('<@', '').replace('>', '')
+  );
 }
 
 (async () => {
@@ -59,11 +61,13 @@ function getMentionedSlackUserIds(body: string) {
       });
 
       for (const message of messages) {
-        const mentionedSlackUserIds = getMentionedSlackUserIds(message.body);
+        const mentionedExternalUserIds = getMentionedExternalUserIds(
+          message.body
+        );
 
-        for (const mentionedSlackUserId of mentionedSlackUserIds) {
+        for (const mentionedExternalUserId of mentionedExternalUserIds) {
           const mentionedUser = await findUser(
-            mentionedSlackUserId,
+            mentionedExternalUserId,
             account.id
           );
 
@@ -90,7 +94,7 @@ function getMentionedSlackUserIds(body: string) {
             const accessToken = account?.slackAuthorizations[0]?.accessToken;
             if (!!accessToken) {
               const slackUser = await getSlackUser(
-                mentionedSlackUserId,
+                mentionedExternalUserId,
                 accessToken
               );
 
@@ -114,7 +118,7 @@ function getMentionedSlackUserIds(body: string) {
                 });
               } else {
                 console.log(
-                  `[ERROR] Slack user not found: ${account.name}/${channel.channelName}/${mentionedSlackUserId}`
+                  `[ERROR] Slack user not found: ${account.name}/${channel.channelName}/${mentionedExternalUserId}`
                 );
               }
             }

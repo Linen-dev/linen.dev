@@ -34,7 +34,7 @@ export type ThreadById = {
 
 export interface Author {
   id: string;
-  slackUserId: string;
+  externalUserId: string;
   displayName: string;
   profileImageUrl: any;
   isBot: boolean;

@@ -71,7 +71,7 @@ async function upsertUsers(account: accounts): Promise<UserMap> {
   const usersInDb = await prisma.users.findMany({
     where: { accountsId: account.id },
     select: {
-      slackUserId: true,
+      externalUserId: true,
       id: true,
     },
   });
@@ -79,7 +79,7 @@ async function upsertUsers(account: accounts): Promise<UserMap> {
   stats.users_in_db = usersInDb.length;
   console.time('toObject-users');
 
-  return toObject(usersInDb, 'slackUserId');
+  return toObject(usersInDb, 'externalUserId');
 }
 
 export function readParseFile(filename: string) {
@@ -132,10 +132,10 @@ async function upsertChannels(account: accounts) {
 
 async function processChannels({
   channel,
-  userGroupBySlackUserId,
+  userGroupByExternalUserId,
 }: {
   channel: channels;
-  userGroupBySlackUserId: any;
+  userGroupByExternalUserId: any;
 }) {
   const files = listFiles(channel.channelName);
   stats.files += files.length;
@@ -143,7 +143,7 @@ async function processChannels({
   for (const fileName of files) {
     // persist messages
     // console.time(channel.channelName + fileName)
-    await processFile({ channel, fileName, userGroupBySlackUserId });
+    await processFile({ channel, fileName, userGroupByExternalUserId });
     // console.timeEnd(channel.channelName + fileName)
   }
 }
@@ -155,15 +155,19 @@ function listFiles(channelName: string) {
 async function processFile({
   channel,
   fileName,
-  userGroupBySlackUserId,
+  userGroupByExternalUserId,
 }: {
   channel: channels;
   fileName: string;
-  userGroupBySlackUserId: UserMap;
+  userGroupByExternalUserId: UserMap;
 }) {
   const messages = readParseFile(channel.channelName + '/' + fileName);
   try {
-    await saveMessagesTransaction(messages, channel.id, userGroupBySlackUserId);
+    await saveMessagesTransaction(
+      messages,
+      channel.id,
+      userGroupByExternalUserId
+    );
   } catch (error) {
     console.error(String(error), channel.channelName + '/' + fileName);
   }
@@ -174,7 +178,7 @@ let threadsBySlackThreadTs: any = {};
 async function saveMessagesTransaction(
   messages: ConversationHistoryMessage[],
   channelId: string,
-  userGroupBySlackUserId: UserMap
+  userGroupByExternalUserId: UserMap
 ) {
   const messagesByType = groupMessageByType(messages);
   stats.message += messagesByType?.message?.length || 0;
@@ -225,13 +229,13 @@ async function saveMessagesTransaction(
 
   const createMessagesTransaction = messagesByType.message?.map(async (m) => {
     let thread = threadsBySlackThreadTs[m.thread_ts as string];
-    let user = m.user ? userGroupBySlackUserId[m.user] : null;
+    let user = m.user ? userGroupByExternalUserId[m.user] : null;
     let threadId = thread?.id;
     const mentionedUserIds = getMentionedUsers(m.text);
 
     const mentionedUsers = [];
     for (const userId of mentionedUserIds) {
-      mentionedUsers.push(userGroupBySlackUserId[userId]);
+      mentionedUsers.push(userGroupByExternalUserId[userId]);
     }
 
     const serializedMessage = {
@@ -274,8 +278,10 @@ async function saveMessagesTransaction(
 }
 
 function getMentionedUsers(text: string) {
-  let mentionSlackUserIds = text.match(/<@(.*?)>/g) || [];
-  return mentionSlackUserIds.map((m) => m.replace('<@', '').replace('>', ''));
+  let mentionExternalUserIds = text.match(/<@(.*?)>/g) || [];
+  return mentionExternalUserIds.map((m) =>
+    m.replace('<@', '').replace('>', '')
+  );
 }
 
 const groupMessageByType = (
@@ -321,7 +327,7 @@ const groupMessageByType = (
     console.time('run');
     // upsert users and retrieve all as object
     console.time('upsert-users');
-    const userGroupBySlackUserId = await upsertUsers(account);
+    const userGroupByExternalUserId = await upsertUsers(account);
     console.timeEnd('upsert-users');
     // upsert channels and retrieve all
     console.log('Reading channels, it may take a while');
@@ -332,7 +338,7 @@ const groupMessageByType = (
       threadsBySlackThreadTs = {}; // clean up
       // persist messages
       console.time(channel.channelName);
-      await processChannels({ channel, userGroupBySlackUserId });
+      await processChannels({ channel, userGroupByExternalUserId });
       console.timeEnd(channel.channelName);
     }
     console.log(stats);

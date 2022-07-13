@@ -46,10 +46,10 @@ export default async function handler(
   const usersSlackIds = await prisma.users.findMany({
     where: { accountsId: account.id },
     select: {
-      slackUserId: true,
+      externalUserId: true,
     },
   });
-  const ids = usersSlackIds.map((u) => u.slackUserId);
+  const ids = usersSlackIds.map((u) => u.externalUserId);
 
   const newMembers = members.filter((m) => {
     return !ids.includes(m.id);
@@ -70,7 +70,7 @@ export const saveUsersSyncronous = async (users: any[], accountId: string) => {
     const profileImageUrl = profile.image_original;
     return {
       displayName: name,
-      slackUserId: user.id,
+      externalUserId: user.id,
       profileImageUrl,
       accountsId: accountId,
       isBot: user.is_bot,

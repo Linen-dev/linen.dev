@@ -85,7 +85,7 @@ async function getAuthorsFromDatabase(accountId: string) {
   });
   let authors: Record<string, users> = {};
   for (const user of users) {
-    authors[user.slackUserId] = user;
+    authors[user.externalUserId] = user;
   }
   return authors;
 }
@@ -231,7 +231,7 @@ async function findAuthorsAndPersist(
       // new user, insert
       const newUser = usersInMessages[userId];
       authors[userId] = await createUser({
-        slackUserId: userId,
+        externalUserId: userId,
         accountsId: accountId,
         displayName: newUser.username,
         anonymousAlias: generateRandomWordSlug(),

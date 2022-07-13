@@ -209,7 +209,7 @@ export const saveMessages = async (
         sentAt: new Date(parseFloat(message.ts) * 1000),
         channelId: channelId,
         slackThreadTs: message.thread_ts,
-        slackUserId: message.user || message.bot_id,
+        externalUserId: message.user || message.bot_id,
         usersId: null,
       } as any;
     });
@@ -225,7 +225,7 @@ export const saveMessages = async (
         });
         threadId = thread.id;
       }
-      const user = await findUser(param.slackUserId, accountId);
+      const user = await findUser(param.externalUserId, accountId);
       param.usersId = user?.id;
       param.slackThreadId = threadId;
       messages.push(await createMessage(param));
@@ -270,8 +270,8 @@ export async function fetchAndSaveThreadMessages(
   return await Promise.all(repliesPromises);
 }
 
-export async function fetchAndSaveUser(slackUserId: string, token: string) {
-  await getUserProfile(slackUserId, token);
+export async function fetchAndSaveUser(externalUserId: string, token: string) {
+  await getUserProfile(externalUserId, token);
 }
 
 export async function saveThreadedMessages(
@@ -285,7 +285,7 @@ export async function saveThreadedMessages(
       body: m.text,
       sentAt: new Date(parseFloat(m.ts) * 1000),
       slackMessageId: m.ts,
-      slackUserId: m.user || m.bot_id,
+      externalUserId: m.user || m.bot_id,
       channelId: channelId,
     };
   });
@@ -296,7 +296,7 @@ export async function saveThreadedMessages(
   });
 
   for (let replyParam of repliesParams) {
-    const user = await findUser(replyParam.slackUserId, accountId);
+    const user = await findUser(replyParam.externalUserId, accountId);
     replyParam.usersId = user?.id;
     replyParam.slackThreadId = thread.id;
     try {
@@ -422,7 +422,7 @@ export const saveUsers = async (users: any[], accountId: string) => {
     const profileImageUrl = profile.image_original;
     return {
       displayName: name,
-      slackUserId: user.id,
+      externalUserId: user.id,
       profileImageUrl,
       accountsId: accountId,
       isBot: user.is_bot,

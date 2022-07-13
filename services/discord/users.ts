@@ -21,7 +21,9 @@ export function buildUserAvatar({
 
 export function getMentions(mentions: Author[] | undefined, users: users[]) {
   function reduceMentions(previous: { usersId: string }[], current: Author) {
-    const usersId = users.find((user) => user.slackUserId === current.id)?.id;
+    const usersId = users.find(
+      (user) => user.externalUserId === current.id
+    )?.id;
     return [...previous, ...(usersId ? [{ usersId }] : [])];
   }
   return mentions && mentions.reduce(reduceMentions, []);
@@ -32,7 +34,7 @@ async function createUsers(accountId: string, usersInMessages: Author[]) {
     usersInMessages.map((user) => {
       return prisma.users.upsert({
         create: {
-          slackUserId: user.id,
+          externalUserId: user.id,
           accountsId: accountId,
           displayName: user.username,
           anonymousAlias: generateRandomWordSlug(),
@@ -56,9 +58,9 @@ async function createUsers(accountId: string, usersInMessages: Author[]) {
           }),
         },
         where: {
-          slackUserId_accountsId: {
+          externalUserId_accountsId: {
             accountsId: accountId,
-            slackUserId: user.id,
+            externalUserId: user.id,
           },
         },
       });
@@ -69,7 +71,7 @@ async function createUsers(accountId: string, usersInMessages: Author[]) {
 export async function findUsers(accountId: string, usersInMessages: Author[]) {
   return await prisma.users.findMany({
     where: {
-      slackUserId: { in: usersInMessages.map((u) => u.id) },
+      externalUserId: { in: usersInMessages.map((u) => u.id) },
       account: { id: accountId },
     },
   });

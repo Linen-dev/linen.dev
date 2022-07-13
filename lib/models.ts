@@ -426,9 +426,9 @@ export const findOrCreateUser = async (
 ) => {
   return await prisma.users.upsert({
     where: {
-      slackUserId_accountsId: {
+      externalUserId_accountsId: {
         accountsId: user.accountsId,
-        slackUserId: user.slackUserId,
+        externalUserId: user.externalUserId,
       },
     },
     update: {},
@@ -439,9 +439,9 @@ export const findOrCreateUser = async (
 export const findUser = async (userId: string, accountId: string) => {
   return await prisma.users.findUnique({
     where: {
-      slackUserId_accountsId: {
+      externalUserId_accountsId: {
         accountsId: accountId,
-        slackUserId: userId,
+        externalUserId: userId,
       },
     },
   });
@@ -464,7 +464,7 @@ export const createUserFromUserInfo = async (
   const profileImageUrl = profile.image_original;
   const param = {
     displayName: name,
-    slackUserId: user.id,
+    externalUserId: user.id,
     profileImageUrl,
     accountsId: accountId,
     isBot: user.is_bot,
@@ -547,16 +547,16 @@ export const findSlackThreadsWithOnlyOneMessage = async (
 };
 
 export const findOrCreateUserFromUserInfo = async (
-  slackUserId: string,
+  externalUserId: string,
   channel: channels & {
     account: (accounts & { slackAuthorizations: slackAuthorizations[] }) | null;
   }
 ) => {
-  let user = await findUser(slackUserId, channel.accountId as string);
+  let user = await findUser(externalUserId, channel.accountId as string);
   if (user === null) {
     const accessToken = channel.account?.slackAuthorizations[0]?.accessToken;
     if (!!accessToken) {
-      const slackUser = await getSlackUser(slackUserId, accessToken);
+      const slackUser = await getSlackUser(externalUserId, accessToken);
       //check done above in channel check
       user = await createUserFromUserInfo(slackUser, channel.accountId!);
     }

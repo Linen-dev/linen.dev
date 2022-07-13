@@ -124,7 +124,7 @@ model auths {
 model users {
   id              String     @id @default(uuid())
   messages        messages[]
-  slackUserId     String
+  externalUserId  String
   displayName     String?
   profileImageUrl String?
   isBot           Boolean
@@ -135,7 +135,7 @@ model users {
   account    accounts @relation(fields: [accountsId], references: [id])
   accountsId String
 
-  @@unique([slackUserId, accountsId])
+  @@unique([externalUserId, accountsId])
 }
 
 model mentions {

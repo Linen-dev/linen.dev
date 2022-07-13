@@ -99,7 +99,7 @@ const createMessagesAndThreads = async (account: accounts) => {
   const user1 = await prisma.users.create({
     data: {
       accountsId: account.id,
-      slackUserId: '1',
+      externalUserId: '1',
       isBot: false,
       isAdmin: false,
       displayName: 'John Doe',
@@ -108,7 +108,7 @@ const createMessagesAndThreads = async (account: accounts) => {
   const user2 = await prisma.users.create({
     data: {
       accountsId: account.id,
-      slackUserId: '2',
+      externalUserId: '2',
       isBot: false,
       isAdmin: false,
       displayName: 'Jane Doe',

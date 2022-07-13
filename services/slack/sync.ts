@@ -100,11 +100,11 @@ export async function slackSync({
     const usersSlackIds = await prisma.users.findMany({
       where: { accountsId: account.id },
       select: {
-        slackUserId: true,
+        externalUserId: true,
       },
     });
 
-    const ids = usersSlackIds.map((u) => u.slackUserId);
+    const ids = usersSlackIds.map((u) => u.externalUserId);
 
     const newMembers = members.filter((m) => {
       return !ids.includes(m.id);
@@ -115,7 +115,7 @@ export async function slackSync({
     const usersInDb = await prisma.users.findMany({
       where: { accountsId: account.id },
       select: {
-        slackUserId: true,
+        externalUserId: true,
         id: true,
       },
     });
@@ -274,17 +274,17 @@ export async function createChannels({
 }
 
 type UserMap = {
-  slackUserId: string;
+  externalUserId: string;
   id: string;
 };
 
 function getMentionedUsers(text: string, users: UserMap[]) {
-  let mentionSlackUserIds = text.match(/<@(.*?)>/g) || [];
-  mentionSlackUserIds = mentionSlackUserIds.map((m) =>
+  let mentionExternalUserIds = text.match(/<@(.*?)>/g) || [];
+  mentionExternalUserIds = mentionExternalUserIds.map((m) =>
     m.replace('<@', '').replace('>', '')
   );
 
-  return users.filter((u) => mentionSlackUserIds.includes(u.slackUserId));
+  return users.filter((u) => mentionExternalUserIds.includes(u.externalUserId));
 }
 
 async function saveMessagesTransaction(
@@ -321,7 +321,7 @@ async function saveMessagesTransaction(
 
     let user: UserMap | undefined;
     if (!!m.user) {
-      user = users.find((u) => u.slackUserId === m.user);
+      user = users.find((u) => u.externalUserId === m.user);
     }
 
     threadId = thread?.id;
@@ -390,7 +390,7 @@ async function saveMessagesSynchronous(
 
     let user: UserMap | undefined;
     if (!!m.user) {
-      user = users.find((u) => u.slackUserId === m.user);
+      user = users.find((u) => u.externalUserId === m.user);
     }
 
     threadId = thread?.id;

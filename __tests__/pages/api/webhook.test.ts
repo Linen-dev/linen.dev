@@ -197,7 +197,7 @@ describe('webhook', () => {
 
     const userMock = {
       id: 'user_id',
-      slackUserId: 'U037T5JG1NY',
+      externalUserId: 'U037T5JG1NY',
       displayName: 'Jhon Smith',
       profileImageUrl: null,
       isBot: false,
@@ -384,7 +384,7 @@ describe('webhook', () => {
 
     const userMock = {
       id: 'user_id',
-      slackUserId: 'U037T5JG1NY',
+      externalUserId: 'U037T5JG1NY',
       displayName: 'Jhon Smith',
       profileImageUrl: null,
       isBot: false,
