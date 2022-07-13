@@ -517,14 +517,14 @@ export const findMessageByTs = async (ts: string) => {
 
 export const updateNextPageCursor = async (
   channelId: string,
-  slackNextPageCursor: string
+  externalPageCursor: string
 ) => {
   return await prisma.channels.update({
     where: {
       id: channelId,
     },
     data: {
-      slackNextPageCursor,
+      externalPageCursor,
     },
   });
 };

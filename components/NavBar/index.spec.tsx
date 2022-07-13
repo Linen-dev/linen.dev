@@ -12,7 +12,7 @@ describe('NavBar', () => {
         channelType: 'channel',
         hidden: false,
         accountId: '1',
-        slackNextPageCursor: null,
+        externalPageCursor: null,
       },
       {
         id: '2',
@@ -21,7 +21,7 @@ describe('NavBar', () => {
         channelType: 'channel',
         hidden: false,
         accountId: '2',
-        slackNextPageCursor: null,
+        externalPageCursor: null,
       },
     ];
     const { getByText } = render(

@@ -124,7 +124,7 @@ export async function slackSync({
     for (let i = 0; i < channels.length; i++) {
       const c = channels[i];
       console.log('Syncing channel: ', c.channelName);
-      let nextCursor: any = c.slackNextPageCursor;
+      let nextCursor: any = c.externalPageCursor;
       let firstLoop = true;
       if (nextCursor === 'completed') {
         console.log('channel completed syncing: ', c.channelName);

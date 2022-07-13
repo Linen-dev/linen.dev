@@ -59,13 +59,13 @@ model channels {
   messages          messages[]
   externalChannelId String
 
-  slackThreads        slackThreads[]
+  slackThreads       slackThreads[]
   //We should make channel required for channel
-  account             accounts?      @relation(fields: [accountId], references: [id])
-  accountId           String?
-  hidden              Boolean        @default(false)
-  default             Boolean        @default(false)
-  slackNextPageCursor String?
+  account            accounts?      @relation(fields: [accountId], references: [id])
+  accountId          String?
+  hidden             Boolean        @default(false)
+  default            Boolean        @default(false)
+  externalPageCursor String?
 
   @@unique([externalChannelId])
 }

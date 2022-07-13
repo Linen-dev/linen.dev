@@ -41,7 +41,7 @@ async function syncJob(accountId: string, crawlType: CrawlType) {
     // look for new threads and new single messages
     if ([CrawlType.historic, CrawlType.from_onboarding].includes(crawlType)) {
       // this will force sync all messages until reach onboardingTimestamp,
-      channel.slackNextPageCursor = null;
+      channel.externalPageCursor = null;
     }
     await processChannel(channel, onboardingTimestamp, accountId, crawlType);
   }

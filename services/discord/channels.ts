@@ -13,7 +13,7 @@ import { findOrCreateChannel } from '../../lib/models';
 async function updateCursor(channel: channels, cursor?: string | null) {
   if (cursor) {
     await prisma.channels.update({
-      data: { slackNextPageCursor: cursor },
+      data: { externalPageCursor: cursor },
       where: { id: channel.id },
     });
   }
@@ -47,7 +47,7 @@ async function crawlChannel(
   // before will have the last messageId from request to be used on next pagination request
   let before;
   // cursor/after should be the first messageId receive from the last run
-  let after = channel.slackNextPageCursor || undefined;
+  let after = channel.externalPageCursor || undefined;
   while (hasMore) {
     const query = {
       // before should have priority because the API always return messages sort by timestamp desc

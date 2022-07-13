@@ -178,7 +178,7 @@ describe('webhook', () => {
       externalChannelId: 'C03ATK7RWNS',
       accountId: 'account_id',
       hidden: false,
-      slackNextPageCursor: null,
+      externalPageCursor: null,
     };
     const channelsFindUniqueMock =
       prismaMock.channels.findUnique.mockResolvedValue(channelMock);
@@ -304,7 +304,7 @@ describe('webhook', () => {
       externalChannelId: 'C03ATK7RWNS',
       accountId: 'account_id',
       hidden: false,
-      slackNextPageCursor: null,
+      externalPageCursor: null,
     };
     const channelsFindUniqueMock =
       prismaMock.channels.findUnique.mockResolvedValue(channelMock);
@@ -361,7 +361,7 @@ describe('webhook', () => {
       externalChannelId: 'C03ATK7RWNS',
       accountId: 'account_id',
       hidden: false,
-      slackNextPageCursor: null,
+      externalPageCursor: null,
     };
     const channelsFindUniqueMock =
       prismaMock.channels.findUnique.mockResolvedValue(channelMock);

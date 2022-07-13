@@ -431,9 +431,9 @@ async function listPublicArchivedThreadsAndPersist({
     if (!fullSync) {
       // only skip if isn't full sync)
       if (
-        channel.slackNextPageCursor &&
+        channel.externalPageCursor &&
         timestamp &&
-        new Date(channel.slackNextPageCursor) > new Date(timestamp)
+        new Date(channel.externalPageCursor) > new Date(timestamp)
       ) {
         // already reach our last cursor
         console.log('already reach our last cursor');

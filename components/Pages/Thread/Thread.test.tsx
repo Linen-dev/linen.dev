@@ -12,7 +12,7 @@ describe('Thread', () => {
           externalChannelId: 'S1',
           accountId: 'A1',
           hidden: false,
-          slackNextPageCursor: null,
+          externalPageCursor: null,
         },
       ];
       const threadSlackInviteUrl =
