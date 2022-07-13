@@ -25,7 +25,7 @@ function getMentionedExternalUserIds(body: string) {
       slackAuthorizations: true,
     },
     where: {
-      slackSyncStatus: 'DONE',
+      syncStatus: 'DONE',
     },
   });
 

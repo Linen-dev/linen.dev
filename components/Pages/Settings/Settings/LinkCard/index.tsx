@@ -9,7 +9,7 @@ interface Props {
 export default function LinkCard({ account }: Props) {
   const url = getHomeUrl(account);
   const text = getHomeText(url);
-  if (account?.slackSyncStatus !== 'DONE') {
+  if (account?.syncStatus !== 'DONE') {
     return null;
   }
   return (

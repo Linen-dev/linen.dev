@@ -12,7 +12,7 @@ export interface SerializedAccount {
   brandColor?: string;
   premium: boolean;
   googleAnalyticsId?: string;
-  slackSyncStatus: string;
+  syncStatus: string;
   communityType: CommunityType | null;
   anonymizeUsers?: boolean;
   hasAuth?: boolean;
@@ -60,7 +60,7 @@ export default function serialize(account?: any): SerializedAccount | null {
     brandColor,
     premium,
     googleAnalyticsId,
-    slackSyncStatus,
+    syncStatus,
     id,
     anonymizeUsers,
     slackDomain,
@@ -80,7 +80,7 @@ export default function serialize(account?: any): SerializedAccount | null {
     brandColor,
     premium,
     googleAnalyticsId,
-    slackSyncStatus,
+    syncStatus,
     id,
     communityType,
     anonymizeUsers,

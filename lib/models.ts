@@ -156,7 +156,7 @@ export const accountsWithChannels = async () => {
           slackTeamId: null,
         },
       ],
-      slackSyncStatus: 'DONE',
+      syncStatus: 'DONE',
     },
   });
 };
@@ -180,13 +180,13 @@ export const updateAccountName = async (accountId: string, name: string) => {
   });
 };
 
-export const updateAccountSlackSyncStatus = async (
+export const updateAccountSyncStatus = async (
   accountId: string,
   status: string
 ) => {
   return await prisma.accounts.update({
     where: { id: accountId },
-    data: { slackSyncStatus: status },
+    data: { syncStatus: status },
   });
 };
 

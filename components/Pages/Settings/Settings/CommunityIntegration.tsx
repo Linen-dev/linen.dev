@@ -82,8 +82,8 @@ export default function CommunityIntegration({
               {capitalize(communityType)} integration
               <span className="text-gray-300"> | </span>
               {!!account?.hasAuth &&
-                !!account?.slackSyncStatus &&
-                statusMap[account.slackSyncStatus]}
+                !!account?.syncStatus &&
+                statusMap[account.syncStatus]}
             </h3>
             <div className="mt-2 sm:flex sm:items-start sm:justify-between">
               <div className="max-w-xl text-sm text-gray-500">

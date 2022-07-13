@@ -11,19 +11,19 @@ describe('LinkCard', () => {
   });
 
   describe('when account is provided', () => {
-    describe('when account.slackSyncStatus is not DONE', () => {
+    describe('when account.syncStatus is not DONE', () => {
       it('should not render', () => {
         const { container } = render(
-          <LinkCard account={{ slackSyncStatus: 'PENDING' } as any} />
+          <LinkCard account={{ syncStatus: 'PENDING' } as any} />
         );
         expect(container).toBeEmptyDOMElement();
       });
     });
 
-    describe('when account.slackSyncStatus is DONE', () => {
+    describe('when account.syncStatus is DONE', () => {
       it('should render', () => {
         const { container } = render(
-          <LinkCard account={{ slackSyncStatus: 'DONE' } as any} />
+          <LinkCard account={{ syncStatus: 'DONE' } as any} />
         );
         expect(container).not.toBeEmptyDOMElement();
       });

@@ -5,7 +5,7 @@ function createAccount(options: object): SerializedAccount {
   return {
     id: '1',
     premium: false,
-    slackSyncStatus: 'synced',
+    syncStatus: 'synced',
     communityType: CommunityType.slack,
     ...options,
   };
