@@ -38,18 +38,18 @@ model messages {
 }
 
 model threads {
-  id            String   @id @default(uuid())
-  incrementId   Int      @default(autoincrement())
-  channel       channels @relation(fields: [channelId], references: [id])
-  slackThreadTs String
-  viewCount     Int      @default(0)
-  slug          String?
-  messageCount  Int      @default(1)
+  id               String   @id @default(uuid())
+  incrementId      Int      @default(autoincrement())
+  channel          channels @relation(fields: [channelId], references: [id])
+  externalThreadId String
+  viewCount        Int      @default(0)
+  slug             String?
+  messageCount     Int      @default(1)
 
   messages  messages[]
   channelId String
 
-  @@unique([slackThreadTs])
+  @@unique([externalThreadId])
   @@unique([incrementId])
 }
 

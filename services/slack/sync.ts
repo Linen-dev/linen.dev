@@ -191,7 +191,7 @@ export async function slackSync({
       try {
         const replies = await retryPromise({
           promise: fetchReplies(
-            m.slackThreadTs,
+            m.externalThreadId,
             channel!.externalChannelId,
             token
           ),
@@ -298,11 +298,11 @@ async function saveMessagesTransaction(
       if (!!m.thread_ts) {
         return prisma.threads.upsert({
           where: {
-            slackThreadTs: m.thread_ts,
+            externalThreadId: m.thread_ts,
           },
           update: {},
           // maybe here, if creates, slug will be empty
-          create: { slackThreadTs: m.thread_ts, channelId },
+          create: { externalThreadId: m.thread_ts, channelId },
         });
       }
       return null;
@@ -316,7 +316,7 @@ async function saveMessagesTransaction(
     let thread: any | null;
 
     if (!!m.thread_ts) {
-      thread = threads.find((t) => t.slackThreadTs === m.thread_ts);
+      thread = threads.find((t) => t.externalThreadId === m.thread_ts);
     }
 
     let user: UserMap | undefined;
@@ -370,7 +370,7 @@ async function saveMessagesSynchronous(
   const threadHead = messages[0];
   if (threadHead.ts === threadHead.thread_ts) {
     await prisma.threads.update({
-      where: { slackThreadTs: threadHead.thread_ts },
+      where: { externalThreadId: threadHead.thread_ts },
       data: {
         messageCount: (threadHead.reply_count || 0) + 1,
         slug: createSlug(threadHead.text),
@@ -384,7 +384,7 @@ async function saveMessagesSynchronous(
 
     let ts = m.thread_ts || m.ts;
     const thread = await findOrCreateThread({
-      slackThreadTs: ts,
+      externalThreadId: ts,
       channelId: channelId,
     });
 

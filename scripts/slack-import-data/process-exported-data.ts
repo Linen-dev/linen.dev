@@ -175,7 +175,7 @@ async function processFile({
   }
 }
 
-let threadsBySlackThreadTs: any = {};
+let threadsByExternalThreadId: any = {};
 
 async function saveMessagesTransaction(
   messages: ConversationHistoryMessage[],
@@ -190,7 +190,7 @@ async function saveMessagesTransaction(
 
   const singlesTransaction = messagesByType.single?.map((m) => {
     return {
-      slackThreadTs: m.ts as string,
+      externalThreadId: m.ts as string,
       channelId,
       slug: createSlug(m.text),
       messageCount: 1,
@@ -206,7 +206,7 @@ async function saveMessagesTransaction(
 
   const threadsTransaction = messagesByType.thread?.map((m) => {
     return {
-      slackThreadTs: m.ts as string,
+      externalThreadId: m.ts as string,
       channelId,
       slug: createSlug(m.text),
       messageCount: ((m.reply_count as number) || 0) + 1,
@@ -220,17 +220,19 @@ async function saveMessagesTransaction(
     });
     const newThreads = await prisma.threads.findMany({
       where: {
-        slackThreadTs: { in: threadsTransaction.map((e) => e.slackThreadTs) },
+        externalThreadId: {
+          in: threadsTransaction.map((e) => e.externalThreadId),
+        },
       },
     });
-    threadsBySlackThreadTs = {
-      ...threadsBySlackThreadTs,
-      ...toObject(newThreads, 'slackThreadTs'),
+    threadsByExternalThreadId = {
+      ...threadsByExternalThreadId,
+      ...toObject(newThreads, 'externalThreadId'),
     };
   }
 
   const createMessagesTransaction = messagesByType.message?.map(async (m) => {
-    let thread = threadsBySlackThreadTs[m.thread_ts as string];
+    let thread = threadsByExternalThreadId[m.thread_ts as string];
     let user = m.user ? userGroupByExternalUserId[m.user] : null;
     let threadId = thread?.id;
     const mentionedUserIds = getMentionedUsers(m.text);
@@ -337,7 +339,7 @@ const groupMessageByType = (
     // loop on channels
     for (const channel of channels) {
       console.log('channel', channel.channelName);
-      threadsBySlackThreadTs = {}; // clean up
+      threadsByExternalThreadId = {}; // clean up
       // persist messages
       console.time(channel.channelName);
       await processChannels({ channel, userGroupByExternalUserId });

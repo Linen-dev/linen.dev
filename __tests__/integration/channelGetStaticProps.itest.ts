@@ -39,7 +39,7 @@ describe('channelGetStaticProps', () => {
         id: expect.any(String),
         incrementId: expect.any(Number),
         messageCount: 2,
-        slackThreadTs: expect.any(String),
+        externalThreadId: expect.any(String),
         slug: expect.any(String),
         viewCount: expect.any(Number),
       });

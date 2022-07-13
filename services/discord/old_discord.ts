@@ -170,14 +170,14 @@ async function listMessagesFromThreadAndPersist({
   let hasMore = true;
   let newestMessageId = threadInDb.messages.length
     ? threadInDb.messages.shift()?.slackMessageId
-    : threadInDb.slackThreadTs;
+    : threadInDb.externalThreadId;
   if (fullSync) {
     newestMessageId = undefined;
   }
   while (hasMore) {
     hasMore = false;
     const response = await getDiscordThreadMessages(
-      threadInDb.slackThreadTs,
+      threadInDb.externalThreadId,
       token,
       newestMessageId
     );
@@ -383,11 +383,11 @@ async function persistThreads(threads: DiscordThreads[], channelId: string) {
       }
       return prisma.threads.upsert({
         where: {
-          slackThreadTs: thread.id,
+          externalThreadId: thread.id,
         },
         update: { messageCount: thread.message_count + 1 },
         create: {
-          slackThreadTs: thread.id,
+          externalThreadId: thread.id,
           channelId,
           messageCount: thread.message_count + 1,
           slug: createSlug(thread.name),
@@ -502,7 +502,7 @@ async function listPublicArchivedThreadsAndPersist({
 //   threads: Prisma.threadsUncheckedCreateInput
 // ) {
 //   return prisma.threads.upsert({
-//     where: { slackThreadTs: threads.slackThreadTs },
+//     where: { externalThreadId: threads.externalThreadId },
 //     update: {},
 //     create: threads,
 //   });

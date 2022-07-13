@@ -121,7 +121,7 @@ async function addMessage(
 ) {
   const thread_ts = event.thread_ts || event.ts;
   const thread = await findOrCreateThread({
-    slackThreadTs: thread_ts,
+    externalThreadId: thread_ts,
     channelId: channel.id,
   });
 

@@ -50,7 +50,7 @@ export default async function handler(
     threadIds.length > 0
       ? await prisma.$queryRaw<threads[]>`SELECT "public"."threads"."id",
           "public"."threads"."incrementId",
-          "public"."threads"."slackThreadTs",
+          "public"."threads"."externalThreadId",
           "public"."threads"."viewCount",
           "public"."threads"."slug",
           "public"."threads"."messageCount",

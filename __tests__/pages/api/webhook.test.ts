@@ -186,7 +186,7 @@ describe('webhook', () => {
     const threadMock = {
       id: 'thread_id',
       incrementId: 0,
-      slackThreadTs: 'string',
+      externalThreadId: 'string',
       viewCount: 0,
       slug: null,
       messageCount: 0,
@@ -249,11 +249,11 @@ describe('webhook', () => {
         // Proper thread was created/updated
         expect(threadsUpsertMock).toHaveBeenCalledWith({
           where: {
-            slackThreadTs: addMessageEvent.event.ts,
+            externalThreadId: addMessageEvent.event.ts,
           },
           update: {},
           create: {
-            slackThreadTs: addMessageEvent.event.ts,
+            externalThreadId: addMessageEvent.event.ts,
             channelId: channelMock.id,
           },
           include: {
@@ -373,7 +373,7 @@ describe('webhook', () => {
     const threadMock = {
       id: 'thread_id',
       incrementId: 0,
-      slackThreadTs: 'string',
+      externalThreadId: 'string',
       viewCount: 0,
       slug: null,
       messageCount: 0,
@@ -459,11 +459,11 @@ describe('webhook', () => {
         // Proper thread was created/updated
         expect(threadsUpsertMock).toHaveBeenCalledWith({
           where: {
-            slackThreadTs: changeMessageEvent.event.message.ts,
+            externalThreadId: changeMessageEvent.event.message.ts,
           },
           update: {},
           create: {
-            slackThreadTs: changeMessageEvent.event.message.ts,
+            externalThreadId: changeMessageEvent.event.message.ts,
             channelId: channelMock.id,
           },
           include: {

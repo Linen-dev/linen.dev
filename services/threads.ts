@@ -100,7 +100,7 @@ export async function getThreadById(
         account.communityInviteUrl &&
         `${account.communityInviteUrl}/archives/${
           thread.channel.externalChannelId
-        }/p${(parseFloat(thread.slackThreadTs) * 1000000).toString()}`;
+        }/p${(parseFloat(thread.externalThreadId) * 1000000).toString()}`;
     } else {
       threadUrl = account.communityInviteUrl;
     }
@@ -110,11 +110,11 @@ export async function getThreadById(
       '/archives/' +
       thread.channel.externalChannelId +
       '/p' +
-      (parseFloat(thread.slackThreadTs) * 1000000).toString();
+      (parseFloat(thread.externalThreadId) * 1000000).toString();
   }
 
   if (account.discordServerId) {
-    threadUrl = `https://discord.com/channels/${account.discordServerId}/${thread.channel.externalChannelId}/${thread.slackThreadTs}`;
+    threadUrl = `https://discord.com/channels/${account.discordServerId}/${thread.channel.externalChannelId}/${thread.externalThreadId}`;
   }
 
   return {
@@ -122,7 +122,7 @@ export async function getThreadById(
     incrementId: thread.incrementId,
     viewCount: thread.viewCount,
     slug: thread.slug || '',
-    slackThreadTs: thread.slackThreadTs,
+    externalThreadId: thread.externalThreadId,
     messageCount: thread.messageCount,
     channelId: thread.channel.id,
     channel: thread.channel,

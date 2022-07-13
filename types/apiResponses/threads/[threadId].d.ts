@@ -13,7 +13,7 @@ export interface MentionsWithUsers extends mentions {
 export type ThreadById = {
   id: string;
   incrementId: number;
-  slackThreadTs: string;
+  externalThreadId: string;
   viewCount: number;
   slug: string;
   messageCount: number;

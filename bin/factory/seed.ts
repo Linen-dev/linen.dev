@@ -182,7 +182,7 @@ async function createChannelThreadsMessages({
         channelId: channel.id,
         slug: `${slug}-${channel.channelName}-${channel.id}-${i}`,
         messageCount: 2,
-        slackThreadTs: `slack-thread-ts-${slug}-${random()}`,
+        externalThreadId: `slack-thread-ts-${slug}-${random()}`,
       },
     });
     const message1 = await prisma.messages.create({

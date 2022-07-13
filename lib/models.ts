@@ -278,14 +278,14 @@ export const findOrCreateChannel = async (
 };
 
 export type Thread = {
-  slackThreadTs: string;
+  externalThreadId: string;
   channelId: string;
 };
 
 export const findOrCreateThread = async (thread: Thread) => {
   return await prisma.threads.upsert({
     where: {
-      slackThreadTs: thread.slackThreadTs,
+      externalThreadId: thread.externalThreadId,
     },
     update: {},
     create: thread,
@@ -370,7 +370,7 @@ export const threadIndex = async ({
       },
     },
     orderBy: {
-      slackThreadTs: 'desc',
+      externalThreadId: 'desc',
     },
   });
   const threadsWithMessages = threads.filter(
@@ -532,15 +532,15 @@ export const updateNextPageCursor = async (
 // using unsafe because prisma query raw does not play well with string interpolation
 export const findThreadsWithOnlyOneMessage = async (
   channelIds: string[]
-): Promise<{ id: string; slackThreadTs: string; channelId: string }[]> => {
+): Promise<{ id: string; externalThreadId: string; channelId: string }[]> => {
   const ids = channelIds.map((id) => `'${id}'`).join(' , ');
   const query = `
-  select "threads".id as id , "threads"."slackThreadTs", "threads"."channelId"
+  select "threads".id as id , "threads"."externalThreadId", "threads"."channelId"
   from "threads" join messages on messages."slackThreadId" = "threads".id 
   where "threads"."channelId" in (${ids})
   group by "threads".id
   having count(*) = 1
-  order by "threads"."slackThreadTs" desc
+  order by "threads"."externalThreadId" desc
   ;`;
 
   return await prisma.$queryRawUnsafe(query);
@@ -567,15 +567,15 @@ export const findOrCreateUserFromUserInfo = async (
 // using unsafe because prisma query raw does not play well with string interpolation
 export const findThreadsWithNoMessages = async (
   channelIds: string[]
-): Promise<{ id: string; slackThreadTs: string; channelId: string }[]> => {
+): Promise<{ id: string; externalThreadId: string; channelId: string }[]> => {
   const ids = channelIds.map((id) => `'${id}'`).join(' , ');
   const query = `
-  select "threads".id as id , "threads"."slackThreadTs", "threads"."channelId"
+  select "threads".id as id , "threads"."externalThreadId", "threads"."channelId"
   from "threads" join messages on messages."slackThreadId" = "threads".id 
   where "threads"."channelId" in (${ids})
   group by "threads".id
   having count(*) = 0
-  order by "threads"."slackThreadTs" desc
+  order by "threads"."externalThreadId" desc
   ;`;
 
   return await prisma.$queryRawUnsafe(query);

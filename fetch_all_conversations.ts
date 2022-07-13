@@ -208,7 +208,7 @@ export const saveMessages = async (
         blocks: message.blocks,
         sentAt: new Date(parseFloat(message.ts) * 1000),
         channelId: channelId,
-        slackThreadTs: message.thread_ts,
+        externalThreadId: message.thread_ts,
         externalUserId: message.user || message.bot_id,
         usersId: null,
       } as any;
@@ -218,9 +218,9 @@ export const saveMessages = async (
     const messages = [];
     for (let param of params) {
       let threadId: string | null = null;
-      if (!!param.slackThreadTs) {
+      if (!!param.externalThreadId) {
         let thread = await findOrCreateThread({
-          slackThreadTs: param.slackThreadTs,
+          externalThreadId: param.externalThreadId,
           channelId: channelId,
         });
         threadId = thread.id;
@@ -247,18 +247,18 @@ export async function fetchAndSaveThreadMessages(
   accountId: string
 ) {
   const repliesPromises = messages.map((m) => {
-    if (!!m.threads?.slackThreadTs) {
+    if (!!m.threads?.externalThreadId) {
       return fetchReplies(
-        m.threads.slackThreadTs,
+        m.threads.externalThreadId,
         m.channel.externalChannelId,
         token
       ).then((response) => {
-        if (!!response?.body && m.threads?.slackThreadTs) {
+        if (!!response?.body && m.threads?.externalThreadId) {
           const replyMessages = response?.body;
           return saveThreadedMessages(
             replyMessages,
             m.channel.id,
-            m.threads.slackThreadTs,
+            m.threads.externalThreadId,
             accountId
           );
         }
@@ -277,7 +277,7 @@ export async function fetchAndSaveUser(externalUserId: string, token: string) {
 export async function saveThreadedMessages(
   replies: any,
   channelId: string,
-  slackThreadTs: string,
+  externalThreadId: string,
   accountId: string
 ) {
   const repliesParams = replies.messages.map((m: any) => {
@@ -291,7 +291,7 @@ export async function saveThreadedMessages(
   });
 
   let thread = await findOrCreateThread({
-    slackThreadTs: slackThreadTs,
+    externalThreadId: externalThreadId,
     channelId: channelId,
   });
 

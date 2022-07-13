@@ -16,7 +16,7 @@ async function crawlExistingThread(
 ) {
   const messagesInThread: DiscordMessage[] = [];
 
-  const threadId = thread.slackThreadTs;
+  const threadId = thread.externalThreadId;
 
   let hasMore = true;
   // before will have the last messageId from request to be used on next pagination request
@@ -86,7 +86,7 @@ async function getThreadsFromDB(channel: channels, take: number, skip: number) {
   return await prisma.threads.findMany({
     where: {
       channelId: channel.id,
-      slackThreadTs: { not: channel.externalChannelId },
+      externalThreadId: { not: channel.externalChannelId },
     },
     include: {
       messages: {
@@ -106,7 +106,7 @@ function upsertThreadType18(channelId: string, thread: DiscordMessage) {
 
 function upsertThreadType0(channelId: string, thread: DiscordMessage) {
   const slackThread = {
-    slackThreadTs: thread.thread?.id || thread.id,
+    externalThreadId: thread.thread?.id || thread.id,
     slug: createSlug(
       thread.content ||
         thread.thread?.name ||
@@ -124,7 +124,7 @@ function upsertThreadType0(channelId: string, thread: DiscordMessage) {
       ...slackThread,
     },
     where: {
-      slackThreadTs: slackThread.slackThreadTs,
+      externalThreadId: slackThread.externalThreadId,
     },
   });
 }
@@ -144,7 +144,7 @@ async function createThread(channelId: string, thread: DiscordMessage) {
 
 async function updateThread(channel: channels, thread: threads) {
   const message: DiscordMessage = await getDiscordWithRetry({
-    path: `/channels/${channel.externalChannelId}/messages/${thread.slackThreadTs}`,
+    path: `/channels/${channel.externalChannelId}/messages/${thread.externalThreadId}`,
   });
   try {
     return await upsertThread[message.type](channel.id, message);
