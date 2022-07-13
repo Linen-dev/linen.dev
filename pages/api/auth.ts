@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next/types';
 import prisma from '../../client';
 import { sendNotification } from '../../services/slack';
 import { createAuth } from '../../lib/auth';
-import { getServerSession } from 'next-auth';
+import { unstable_getServerSession as getServerSession } from 'next-auth';
 import { authOptions } from './auth/[...nextauth]';
 
 async function create(request: NextApiRequest, response: NextApiResponse) {
@@ -43,7 +43,7 @@ async function create(request: NextApiRequest, response: NextApiResponse) {
 }
 
 async function update(req: NextApiRequest, res: NextApiResponse) {
-  const session = await getServerSession({ req, res }, authOptions);
+  const session = await getServerSession(req, res, authOptions);
   const { createAccount } = JSON.parse(req.body);
 
   const email = session?.user?.email;
@@ -77,7 +77,7 @@ async function update(req: NextApiRequest, res: NextApiResponse) {
 }
 
 async function get(req: NextApiRequest, res: NextApiResponse) {
-  const session = await getServerSession({ req, res }, authOptions);
+  const session = await getServerSession(req, res, authOptions);
   const email = session?.user?.email;
   if (!email) {
     return res.status(404).json({});
