@@ -169,7 +169,7 @@ async function listMessagesFromThreadAndPersist({
   // at least for the initial sync
   let hasMore = true;
   let newestMessageId = threadInDb.messages.length
-    ? threadInDb.messages.shift()?.slackMessageId
+    ? threadInDb.messages.shift()?.externalMessageId
     : threadInDb.externalThreadId;
   if (fullSync) {
     newestMessageId = undefined;
@@ -265,16 +265,16 @@ async function findAuthorsAndPersist(
   }
 }
 
-async function cleanUpMessage(slackMessageId: string, channelId: string) {
+async function cleanUpMessage(externalMessageId: string, channelId: string) {
   // https://discord.com/developers/docs/resources/channel#message-types-thread-starter-message
   // These are the first message in a public thread. They point back to the message in the parent channel from which the thread was started (type 21)
   // These messages will never have content, embeds, or attachments, mainly just the message_reference and referenced_message fields.
   // we should remove the wrong message starter
   const message = await prisma.messages.findUnique({
     where: {
-      channelId_slackMessageId: {
+      channelId_externalMessageId: {
         channelId,
-        slackMessageId,
+        externalMessageId,
       },
     },
     include: { mentions: true },
@@ -330,16 +330,16 @@ async function persistMessages({
     let mentions = _message.mentions?.map((mention) => ({
       usersId: authors[mention.id].id,
     }));
-    let slackMessageId = _message.id;
+    let externalMessageId = _message.id;
     return prisma.messages.upsert({
       where: {
-        channelId_slackMessageId: {
+        channelId_externalMessageId: {
           channelId: threadInDb.channelId,
-          slackMessageId,
+          externalMessageId,
         },
       },
       update: {
-        slackMessageId,
+        externalMessageId,
         slackThreadId: threadInDb.id,
         usersId: author.id,
         body,
@@ -356,7 +356,7 @@ async function persistMessages({
         body,
         sentAt: new Date(_message.timestamp),
         channelId: threadInDb.channelId,
-        slackMessageId,
+        externalMessageId,
         slackThreadId: threadInDb.id,
         usersId: author.id,
         ...(mentions?.length && {

@@ -17,9 +17,9 @@ model messages {
   body      String
   sentAt    DateTime
 
-  channel        channels @relation(fields: [channelId], references: [id])
-  channelId      String
-  slackMessageId String
+  channel           channels @relation(fields: [channelId], references: [id])
+  channelId         String
+  externalMessageId String
 
   slackThreads threads? @relation(fields: [slackThreadId], references: [id])
 
@@ -33,7 +33,7 @@ model messages {
   textsearchable_index_col Unsupported("tsvector")?
   blocks                   Json?
 
-  @@unique([channelId, slackMessageId])
+  @@unique([channelId, externalMessageId])
   @@index([textsearchable_index_col], type: Gin)
 }
 

@@ -24,7 +24,7 @@ export default async function handler(
           m."body",
           m."sentAt",
           m."channelId",
-          m."slackMessageId",
+          m."externalMessageId",
           m."slackThreadId",
           m."usersId",
           ts_rank(textsearchable_index_col,websearch_to_tsquery('english', ${query}))  AS rank

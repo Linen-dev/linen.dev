@@ -19,7 +19,7 @@ export default async function handler(
   const token = process.env.GPT3_SECRETS_KEY;
   const result: message[] = await prisma.$queryRaw`select messages.id as 
     messageid, body from messages join "threads" on messages."slackThreadId" = "threads".id  
-    where "threads"."channelId" = '4c850a46-0114-46dd-af00-7b21eb8720b9' and "externalThreadId" = "slackMessageId";`;
+    where "threads"."channelId" = '4c850a46-0114-46dd-af00-7b21eb8720b9' and "externalThreadId" = "externalMessageId";`;
 
   const trimmedMessages = result.map((m) => {
     return {

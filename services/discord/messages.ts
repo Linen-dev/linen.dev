@@ -13,7 +13,7 @@ type ProcessMessageType = Record<
   ) => {
     body: string;
     sentAt: string;
-    slackMessageId: string;
+    externalMessageId: string;
     slackThreadId?: string;
     channelId: string;
     authorId: string;
@@ -42,7 +42,7 @@ function processMessageType0(
     body: message.content,
     channelId: channel.id,
     sentAt: message.timestamp,
-    slackMessageId: message.id,
+    externalMessageId: message.id,
     slackThreadId: thread?.id,
     mentions,
   };
@@ -63,7 +63,7 @@ function processMessageType18(
     body: message.content,
     channelId: channel.id,
     sentAt: message.timestamp,
-    slackMessageId: message.id,
+    externalMessageId: message.id,
     slackThreadId: thread?.id,
     mentions,
   };
@@ -86,7 +86,7 @@ function processMessageType21(
     body: message.referenced_message?.content as string,
     channelId: channel.id,
     sentAt: message.referenced_message?.timestamp as string,
-    slackMessageId: message.referenced_message?.id as string,
+    externalMessageId: message.referenced_message?.id as string,
     slackThreadId: thread?.id,
     mentions,
   };
@@ -95,7 +95,7 @@ function processMessageType21(
 function upsertMessage(message: {
   body: string;
   sentAt: string;
-  slackMessageId: string;
+  externalMessageId: string;
   slackThreadId?: string;
   channelId: string;
   authorId: string;
@@ -104,7 +104,7 @@ function upsertMessage(message: {
   const toInsert = {
     body: message.body,
     sentAt: message.sentAt,
-    slackMessageId: message.slackMessageId,
+    externalMessageId: message.externalMessageId,
     slackThreadId: message.slackThreadId,
     channelId: message.channelId,
     usersId: message.authorId,
@@ -122,9 +122,9 @@ function upsertMessage(message: {
     create: toInsert,
     update: toInsert,
     where: {
-      channelId_slackMessageId: {
+      channelId_externalMessageId: {
         channelId: message.channelId,
-        slackMessageId: message.slackMessageId,
+        externalMessageId: message.externalMessageId,
       },
     },
   });

@@ -332,15 +332,15 @@ async function saveMessagesTransaction(
       blocks: m.blocks,
       sentAt: new Date(parseFloat(m.ts) * 1000),
       channelId,
-      slackMessageId: m.ts as string,
+      externalMessageId: m.ts as string,
       slackThreadId: threadId,
       usersId: user?.id,
     };
     const message = await prisma.messages.upsert({
       where: {
-        channelId_slackMessageId: {
+        channelId_externalMessageId: {
           channelId: channelId,
-          slackMessageId: m.ts,
+          externalMessageId: m.ts,
         },
       },
       update: serializedMessage,
@@ -401,15 +401,15 @@ async function saveMessagesSynchronous(
       blocks: m.blocks,
       sentAt: new Date(parseFloat(m.ts) * 1000),
       channelId,
-      slackMessageId: m.ts as string,
+      externalMessageId: m.ts as string,
       slackThreadId: threadId,
       usersId: user?.id,
     };
     const message = await prisma.messages.upsert({
       where: {
-        channelId_slackMessageId: {
+        channelId_externalMessageId: {
           channelId: channelId,
-          slackMessageId: m.ts,
+          externalMessageId: m.ts,
         },
       },
       update: serializedMessage,

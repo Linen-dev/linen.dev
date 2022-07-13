@@ -213,7 +213,7 @@ describe('webhook', () => {
       body: 'this is test3',
       sentAt: now,
       channelId: 'C03ATK7RWNS',
-      slackMessageId: '1650644364.126099',
+      externalMessageId: '1650644364.126099',
       slackThreadId: null,
       usersId: 'user_id',
     };
@@ -279,7 +279,7 @@ describe('webhook', () => {
           data: {
             body: 'this is test3',
             slackThreadId: 'thread_id',
-            slackMessageId: '1650644364.126099',
+            externalMessageId: '1650644364.126099',
             channelId: 'channel_id',
             sentAt: new Date(parseFloat(addMessageEvent.event.ts) * 1000),
             usersId: 'user_id',
@@ -400,7 +400,7 @@ describe('webhook', () => {
       body: 'Lets-test-4',
       sentAt: now,
       channelId: 'C03ATK7RWNS',
-      slackMessageId: '1652127600.388019',
+      externalMessageId: '1652127600.388019',
       slackThreadId: null,
       usersId: 'user_id',
     };
@@ -489,7 +489,7 @@ describe('webhook', () => {
           data: {
             body: 'Lets test_4',
             slackThreadId: 'thread_id',
-            slackMessageId: '1652127600.388019',
+            externalMessageId: '1652127600.388019',
             channelId: 'channel_id',
             sentAt: new Date(
               parseFloat(changeMessageEvent.event.message.ts) * 1000

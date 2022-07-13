@@ -284,7 +284,7 @@ export async function saveThreadedMessages(
     return {
       body: m.text,
       sentAt: new Date(parseFloat(m.ts) * 1000),
-      slackMessageId: m.ts,
+      externalMessageId: m.ts,
       externalUserId: m.user || m.bot_id,
       channelId: channelId,
     };

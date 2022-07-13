@@ -19,7 +19,7 @@ export const createMessage = async (
       body: message.body,
       blocks: message.blocks,
       slackThreadId: message.slackThreadId,
-      slackMessageId: message.slackMessageId,
+      externalMessageId: message.externalMessageId,
       channelId: message.channelId,
       sentAt: message.sentAt,
       usersId: message.usersId,
@@ -36,7 +36,7 @@ export const createMessageWithMentions = async (
       body: message.body,
       blocks: message.blocks,
       slackThreadId: message.slackThreadId,
-      slackMessageId: message.slackMessageId,
+      externalMessageId: message.externalMessageId,
       channelId: message.channelId,
       sentAt: message.sentAt,
       usersId: message.usersId,
@@ -65,23 +65,23 @@ export const deleteMessageWithMentions = async (messageId: string) => {
 export const createOrUpdateMessage = async (
   message: Prisma.messagesUncheckedCreateInput
 ) => {
-  //TODO: Make sure slackMessageId exists
-  const sentAt = new Date(parseFloat(message.slackMessageId!) * 1000);
+  //TODO: Make sure externalMessageId exists
+  const sentAt = new Date(parseFloat(message.externalMessageId!) * 1000);
   return await prisma.messages.upsert({
     where: {
-      channelId_slackMessageId: {
+      channelId_externalMessageId: {
         channelId: message.channelId,
-        slackMessageId: message.slackMessageId,
+        externalMessageId: message.externalMessageId,
       },
     },
     update: {
-      slackMessageId: message.slackMessageId,
+      externalMessageId: message.externalMessageId,
     },
     create: {
       body: message.body,
       sentAt,
       channelId: message.channelId,
-      slackMessageId: message.slackMessageId,
+      externalMessageId: message.externalMessageId,
       usersId: null,
     },
   });
@@ -506,13 +506,13 @@ export const findMessageByChannelIdAndTs = async (
   return prisma.messages.findFirst({
     where: {
       channelId: channelId,
-      slackMessageId: ts,
+      externalMessageId: ts,
     },
   });
 };
 
 export const findMessageByTs = async (ts: string) => {
-  return prisma.messages.findFirst({ where: { slackMessageId: ts } });
+  return prisma.messages.findFirst({ where: { externalMessageId: ts } });
 };
 
 export const updateNextPageCursor = async (

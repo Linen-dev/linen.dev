@@ -247,7 +247,7 @@ async function saveMessagesTransaction(
       blocks: m.blocks,
       sentAt: new Date(parseFloat(m.ts) * 1000),
       channelId,
-      slackMessageId: m.ts as string,
+      externalMessageId: m.ts as string,
       slackThreadId: threadId,
       usersId: user?.id,
       mentions: {
@@ -261,9 +261,9 @@ async function saveMessagesTransaction(
     };
     const message = await prisma.messages.upsert({
       where: {
-        channelId_slackMessageId: {
+        channelId_externalMessageId: {
           channelId,
-          slackMessageId: m.ts as string,
+          externalMessageId: m.ts as string,
         },
       },
       create: serializedMessage,

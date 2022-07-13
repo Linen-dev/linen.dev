@@ -162,7 +162,7 @@ async function addMessage(
     channelId: channel.id,
     sentAt: new Date(parseFloat(event.ts) * 1000),
     slackThreadId: thread?.id,
-    slackMessageId: event.ts,
+    externalMessageId: event.ts,
     usersId: user?.id,
   };
 
@@ -264,9 +264,9 @@ async function processMessageReactionEvent(
 
   const message = await prisma.messages.findUnique({
     where: {
-      channelId_slackMessageId: {
+      channelId_externalMessageId: {
         channelId: channel.id,
-        slackMessageId: event.item.ts,
+        externalMessageId: event.item.ts,
       },
     },
   });

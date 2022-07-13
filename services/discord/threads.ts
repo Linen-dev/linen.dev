@@ -9,7 +9,7 @@ import { createMessages } from './messages';
 async function crawlExistingThread(
   thread: threads & {
     messages: {
-      slackMessageId: string;
+      externalMessageId: string;
     }[];
   },
   onboardingTimestamp: Date
@@ -22,7 +22,7 @@ async function crawlExistingThread(
   // before will have the last messageId from request to be used on next pagination request
   let before;
   // cursor/after should be the first messageId receive from the last run
-  let after = thread.messages.shift()?.slackMessageId;
+  let after = thread.messages.shift()?.externalMessageId;
   while (hasMore) {
     const query = {
       // before should have priority because the API always return messages sort by timestamp desc
@@ -90,7 +90,7 @@ async function getThreadsFromDB(channel: channels, take: number, skip: number) {
     },
     include: {
       messages: {
-        select: { slackMessageId: true },
+        select: { externalMessageId: true },
         take: 1,
         orderBy: { createdAt: 'desc' },
       },
