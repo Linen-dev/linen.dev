@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import prisma from '../../client';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import { createAccount } from '../../lib/account';
 import { stripProtocol } from '../../utilities/url';
 import { dispatchAnonymizeRequest } from '@/utilities/anonymizeMessages';
@@ -15,6 +16,16 @@ async function create(request: NextApiRequest, response: NextApiResponse) {
     brandColor,
   });
   return response.status(200).json(account);
+}
+
+function isRedirectDomainNotUniqueError(exception: unknown) {
+  return (
+    exception instanceof PrismaClientKnownRequestError &&
+    exception.code === 'P2002' &&
+    exception.meta &&
+    Array.isArray(exception.meta.target) &&
+    exception.meta.target.includes('redirectDomain')
+  );
 }
 
 async function update(request: NextApiRequest, response: NextApiResponse) {
@@ -55,16 +66,25 @@ async function update(request: NextApiRequest, response: NextApiResponse) {
       }
     : freeAccount;
 
-  const record = await prisma.accounts.update({
-    where: { id: accountId },
-    data,
-  });
+  try {
+    const record = await prisma.accounts.update({
+      where: { id: accountId },
+      data,
+    });
 
-  if (!!anonymizeUsers) {
-    dispatchAnonymizeRequest(accountId);
+    if (!!anonymizeUsers) {
+      dispatchAnonymizeRequest(accountId);
+    }
+
+    return response.status(200).json(record);
+  } catch (exception: unknown) {
+    if (isRedirectDomainNotUniqueError(exception)) {
+      return response.status(400).json({
+        error: 'Redirect domain is already in use',
+      });
+    }
+    return response.status(500).json({});
   }
-
-  return response.status(200).json(record);
 }
 
 export default async function handler(
