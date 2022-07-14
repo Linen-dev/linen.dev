@@ -10,7 +10,9 @@ export class CdkStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    const dockerImage = new ecs.AssetImage(path.join(__dirname, '../..'));
+    const dockerImage = new ecs.AssetImage(
+      path.join(__dirname, '../../nextjs')
+    );
 
     const cacheTableAccessPolicy = new cdk.aws_iam.PolicyStatement({
       actions: ['dynamodb:PutItem', 'dynamodb:GetItem'],

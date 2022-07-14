@@ -1,6 +1,13 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
+pushd nextjs
 npx lint-staged
-
 npm run test
+popd 
+
+pushd cdk
+npx lint-staged
+npm run build
+npm run test
+popd
