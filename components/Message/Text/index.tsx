@@ -65,7 +65,7 @@ export default function Text({ value }: Props) {
                 className="bg-gray-100 border-l-4 border-gray-300 border-solid p-3 my-3"
                 key={key}
               >
-                <ReactEmoji text={token.text} />
+                <Paragraph token={token} />
               </blockquote>
             );
           case 'space':
