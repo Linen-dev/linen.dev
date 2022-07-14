@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { isSubdomainbasedRouting } from '../lib/util';
-import { getCommunityName } from '../utilities/middlewareHelper';
+import { isSubdomainbasedRouting } from './lib/util';
+import { getCommunityName } from './utilities/middlewareHelper';
 
 const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 const PAGES = [
@@ -17,7 +17,8 @@ function isTopLevelPathname(pathname: string) {
     pathname.startsWith('/api') ||
     pathname === '/sitemap.xml' ||
     pathname.startsWith('/sitemap/') ||
-    pathname === '/robots.txt'
+    pathname === '/robots.txt' ||
+    pathname.startsWith('/_next')
   );
 }
 
