@@ -76,7 +76,7 @@ export default function Thread({
       isSubDomainRouting={isSubDomainRouting}
     >
       <div>
-        <div className="py-8 px-4">
+        <div className={styles.thread}>
           <ul>{elements}</ul>
 
           <div className="gap-8 columns-2">

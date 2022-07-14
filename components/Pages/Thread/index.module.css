@@ -1,3 +1,16 @@
+.thread {
+  margin-bottom: 2rem;
+  margin-top: 2rem;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+@media (min-width: 1024px) {
+  .thread {
+    padding-right: 250px;
+  }
+}
+
 .buttons {
   clear: both;
   min-height: 20px;
