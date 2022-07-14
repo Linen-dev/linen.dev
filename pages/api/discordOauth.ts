@@ -48,7 +48,7 @@ export default async function handler(
   // Initialize syncing asynchronously
   request
     .get(
-      process.env.SYNC_URL + '/api/scripts/syncHistoric&account_id=' + accountId
+      process.env.SYNC_URL + '/api/scripts/syncHistoric?account_id=' + accountId
     )
     // .then(() => {
     //   console.log('Syncing done!');
