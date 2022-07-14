@@ -5,7 +5,7 @@ import {
   DiscordThreads,
 } from '../../types/discordResponses/discordMessagesInterface';
 import { prisma } from '../../client';
-import { channels, slackThreads, users } from '@prisma/client';
+import { channels, threads, users } from '@prisma/client';
 import {
   createUser,
   // findOrCreateChannel,
@@ -85,7 +85,7 @@ async function getAuthorsFromDatabase(accountId: string) {
   });
   let authors: Record<string, users> = {};
   for (const user of users) {
-    authors[user.slackUserId] = user;
+    authors[user.externalUserId] = user;
   }
   return authors;
 }
@@ -119,7 +119,7 @@ async function sync({
       fullSync,
     });
     // we need to query our db to get all threads, not only the synchronized ones
-    const threadsOnChannel = await prisma.slackThreads.findMany({
+    const threadsOnChannel = await prisma.threads.findMany({
       select: { id: true },
       where: {
         channelId: channel.id,
@@ -152,13 +152,13 @@ async function listMessagesFromThreadAndPersist({
   accountId,
   fullSync,
 }: {
-  thread: Partial<slackThreads>;
+  thread: Partial<threads>;
   token: string;
   authors: any;
   accountId: string;
   fullSync?: boolean;
 }) {
-  const threadInDb = await prisma.slackThreads.findUnique({
+  const threadInDb = await prisma.threads.findUnique({
     where: { id: thread.id },
     include: { messages: { take: 1, orderBy: { sentAt: 'desc' } } },
   });
@@ -169,15 +169,15 @@ async function listMessagesFromThreadAndPersist({
   // at least for the initial sync
   let hasMore = true;
   let newestMessageId = threadInDb.messages.length
-    ? threadInDb.messages.shift()?.slackMessageId
-    : threadInDb.slackThreadTs;
+    ? threadInDb.messages.shift()?.externalMessageId
+    : threadInDb.externalThreadId;
   if (fullSync) {
     newestMessageId = undefined;
   }
   while (hasMore) {
     hasMore = false;
     const response = await getDiscordThreadMessages(
-      threadInDb.slackThreadTs,
+      threadInDb.externalThreadId,
       token,
       newestMessageId
     );
@@ -231,7 +231,7 @@ async function findAuthorsAndPersist(
       // new user, insert
       const newUser = usersInMessages[userId];
       authors[userId] = await createUser({
-        slackUserId: userId,
+        externalUserId: userId,
         accountsId: accountId,
         displayName: newUser.username,
         anonymousAlias: generateRandomWordSlug(),
@@ -265,23 +265,23 @@ async function findAuthorsAndPersist(
   }
 }
 
-async function cleanUpMessage(slackMessageId: string, channelId: string) {
+async function cleanUpMessage(externalMessageId: string, channelId: string) {
   // https://discord.com/developers/docs/resources/channel#message-types-thread-starter-message
   // These are the first message in a public thread. They point back to the message in the parent channel from which the thread was started (type 21)
   // These messages will never have content, embeds, or attachments, mainly just the message_reference and referenced_message fields.
   // we should remove the wrong message starter
   const message = await prisma.messages.findUnique({
     where: {
-      channelId_slackMessageId: {
+      channelId_externalMessageId: {
         channelId,
-        slackMessageId,
+        externalMessageId,
       },
     },
     include: { mentions: true },
   });
   if (message) {
     for (const mention of message.mentions) {
-      await prisma.slackMentions
+      await prisma.mentions
         .delete({
           where: {
             messagesId_usersId: {
@@ -307,7 +307,7 @@ async function persistMessages({
   messages: DiscordMessage[];
   authors: any;
   accountId: string;
-  threadInDb: slackThreads;
+  threadInDb: threads;
 }) {
   // first we need to insert the users to have the userId available
   await findAuthorsAndPersist(messages, authors, accountId);
@@ -330,17 +330,17 @@ async function persistMessages({
     let mentions = _message.mentions?.map((mention) => ({
       usersId: authors[mention.id].id,
     }));
-    let slackMessageId = _message.id;
+    let externalMessageId = _message.id;
     return prisma.messages.upsert({
       where: {
-        channelId_slackMessageId: {
+        channelId_externalMessageId: {
           channelId: threadInDb.channelId,
-          slackMessageId,
+          externalMessageId,
         },
       },
       update: {
-        slackMessageId,
-        slackThreadId: threadInDb.id,
+        externalMessageId,
+        threadId: threadInDb.id,
         usersId: author.id,
         body,
         ...(mentions?.length && {
@@ -356,8 +356,8 @@ async function persistMessages({
         body,
         sentAt: new Date(_message.timestamp),
         channelId: threadInDb.channelId,
-        slackMessageId,
-        slackThreadId: threadInDb.id,
+        externalMessageId,
+        threadId: threadInDb.id,
         usersId: author.id,
         ...(mentions?.length && {
           mentions: {
@@ -381,13 +381,13 @@ async function persistThreads(threads: DiscordThreads[], channelId: string) {
       if (!thread.id) {
         return null;
       }
-      return prisma.slackThreads.upsert({
+      return prisma.threads.upsert({
         where: {
-          slackThreadTs: thread.id,
+          externalThreadId: thread.id,
         },
         update: { messageCount: thread.message_count + 1 },
         create: {
-          slackThreadTs: thread.id,
+          externalThreadId: thread.id,
           channelId,
           messageCount: thread.message_count + 1,
           slug: createSlug(thread.name),
@@ -418,7 +418,7 @@ async function listPublicArchivedThreadsAndPersist({
   let timestamp;
   while (hasMore) {
     const response = await getAllArchivedThreads(
-      channel.slackChannelId,
+      channel.externalChannelId,
       timestamp,
       token
     );
@@ -431,9 +431,9 @@ async function listPublicArchivedThreadsAndPersist({
     if (!fullSync) {
       // only skip if isn't full sync)
       if (
-        channel.slackNextPageCursor &&
+        channel.externalPageCursor &&
         timestamp &&
-        new Date(channel.slackNextPageCursor) > new Date(timestamp)
+        new Date(channel.externalPageCursor) > new Date(timestamp)
       ) {
         // already reach our last cursor
         console.log('already reach our last cursor');
@@ -499,10 +499,10 @@ async function listPublicArchivedThreadsAndPersist({
 // }
 
 // async function saveDiscordThreads(
-//   threads: Prisma.slackThreadsUncheckedCreateInput
+//   threads: Prisma.threadsUncheckedCreateInput
 // ) {
-//   return prisma.slackThreads.upsert({
-//     where: { slackThreadTs: threads.slackThreadTs },
+//   return prisma.threads.upsert({
+//     where: { externalThreadId: threads.externalThreadId },
 //     update: {},
 //     create: threads,
 //   });
@@ -511,7 +511,7 @@ async function listPublicArchivedThreadsAndPersist({
 // async function saveDiscordChannels(channel: Prisma.channelsCreateInput) {
 //   return prisma.channels.upsert({
 //     where: {
-//       slackChannelId: channel.slackChannelId,
+//       externalChannelId: channel.externalChannelId,
 //     },
 //     update: {},
 //     create: channel,

@@ -94,27 +94,27 @@ export async function getThreadById(
 
   let threadUrl: string;
 
-  if (account.slackInviteUrl) {
-    if (account.slackInviteUrl.includes('slack.com/join/shared_invite')) {
+  if (account.communityInviteUrl) {
+    if (account.communityInviteUrl.includes('slack.com/join/shared_invite')) {
       threadUrl =
-        account.slackInviteUrl &&
-        `${account.slackInviteUrl}/archives/${
-          thread.channel.slackChannelId
-        }/p${(parseFloat(thread.slackThreadTs) * 1000000).toString()}`;
+        account.communityInviteUrl &&
+        `${account.communityInviteUrl}/archives/${
+          thread.channel.externalChannelId
+        }/p${(parseFloat(thread.externalThreadId) * 1000000).toString()}`;
     } else {
-      threadUrl = account.slackInviteUrl;
+      threadUrl = account.communityInviteUrl;
     }
   } else {
     threadUrl =
-      account.slackUrl +
+      account.communityUrl +
       '/archives/' +
-      thread.channel.slackChannelId +
+      thread.channel.externalChannelId +
       '/p' +
-      (parseFloat(thread.slackThreadTs) * 1000000).toString();
+      (parseFloat(thread.externalThreadId) * 1000000).toString();
   }
 
   if (account.discordServerId) {
-    threadUrl = `https://discord.com/channels/${account.discordServerId}/${thread.channel.slackChannelId}/${thread.slackThreadTs}`;
+    threadUrl = `https://discord.com/channels/${account.discordServerId}/${thread.channel.externalChannelId}/${thread.externalThreadId}`;
   }
 
   return {
@@ -122,7 +122,7 @@ export async function getThreadById(
     incrementId: thread.incrementId,
     viewCount: thread.viewCount,
     slug: thread.slug || '',
-    slackThreadTs: thread.slackThreadTs,
+    externalThreadId: thread.externalThreadId,
     messageCount: thread.messageCount,
     channelId: thread.channel.id,
     channel: thread.channel,
@@ -131,8 +131,8 @@ export async function getThreadById(
     threadId,
     currentChannel: thread.channel,
     channels: channelsWithMinThreads,
-    slackUrl: account.slackUrl || '',
-    slackInviteUrl: account.slackInviteUrl || '',
+    communityUrl: account.communityUrl || '',
+    communityInviteUrl: account.communityInviteUrl || '',
     communityName:
       account.slackDomain ||
       account.discordDomain ||

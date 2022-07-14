@@ -13,7 +13,7 @@ import {
   createManyChannel,
   findAccountById,
   findOrCreateThread,
-  findSlackThreadsWithOnlyOneMessage,
+  findThreadsWithOnlyOneMessage,
   updateAccountRedirectDomain,
   updateNextPageCursor,
 } from '../../lib/models';
@@ -51,10 +51,10 @@ export async function slackSync({
     const token = account.slackAuthorizations[0].accessToken;
 
     const teamInfoResponse = await fetchTeamInfo(token);
-    const slackUrl = teamInfoResponse.body.team.url;
+    const communityUrl = teamInfoResponse.body.team.url;
 
-    if (!!domain && !!slackUrl) {
-      await updateAccountRedirectDomain(accountId, domain, slackUrl);
+    if (!!domain && !!communityUrl) {
+      await updateAccountRedirectDomain(accountId, domain, communityUrl);
     }
 
     // create and join channels
@@ -100,11 +100,11 @@ export async function slackSync({
     const usersSlackIds = await prisma.users.findMany({
       where: { accountsId: account.id },
       select: {
-        slackUserId: true,
+        externalUserId: true,
       },
     });
 
-    const ids = usersSlackIds.map((u) => u.slackUserId);
+    const ids = usersSlackIds.map((u) => u.externalUserId);
 
     const newMembers = members.filter((m) => {
       return !ids.includes(m.id);
@@ -115,7 +115,7 @@ export async function slackSync({
     const usersInDb = await prisma.users.findMany({
       where: { accountsId: account.id },
       select: {
-        slackUserId: true,
+        externalUserId: true,
         id: true,
       },
     });
@@ -124,7 +124,7 @@ export async function slackSync({
     for (let i = 0; i < channels.length; i++) {
       const c = channels[i];
       console.log('Syncing channel: ', c.channelName);
-      let nextCursor: any = c.slackNextPageCursor;
+      let nextCursor: any = c.externalPageCursor;
       let firstLoop = true;
       if (nextCursor === 'completed') {
         console.log('channel completed syncing: ', c.channelName);
@@ -137,7 +137,7 @@ export async function slackSync({
         console.log('Messages cursor: ', nextCursor);
         try {
           const additionalConversations = await fetchConversationsTyped(
-            c.slackChannelId,
+            c.externalChannelId,
             account.slackAuthorizations[0].accessToken,
             nextCursor
           );
@@ -176,7 +176,7 @@ export async function slackSync({
     // Save all threads
     // only fetch threads with single message
     // There will be edge cases where not all the threads are sync'd if you cancel the script
-    const messageWithThreads = await findSlackThreadsWithOnlyOneMessage(
+    const messageWithThreads = await findThreadsWithOnlyOneMessage(
       channels.map((c) => c.id)
     );
     console.log('syncing threads: ', messageWithThreads.length);
@@ -191,8 +191,8 @@ export async function slackSync({
       try {
         const replies = await retryPromise({
           promise: fetchReplies(
-            m.slackThreadTs,
-            channel!.slackChannelId,
+            m.externalThreadId,
+            channel!.externalChannelId,
             token
           ),
           sleepSeconds: 30,
@@ -244,7 +244,7 @@ export async function createChannels({
   const channelsParam = channelsResponse.body.channels.map(
     (channel: { id: any; name: any }) => {
       return {
-        slackChannelId: channel.id,
+        externalChannelId: channel.id,
         channelName: channel.name,
         accountId,
       };
@@ -261,7 +261,7 @@ export async function createChannels({
 
   console.log('Joining channels started');
   for (let channel of channels) {
-    await joinChannel(channel.slackChannelId, token);
+    await joinChannel(channel.externalChannelId, token);
     // Slack's api can handle bursts
     // so only wait for requests if there are more than 50 messages
     if (channels.length > 50) {
@@ -274,17 +274,17 @@ export async function createChannels({
 }
 
 type UserMap = {
-  slackUserId: string;
+  externalUserId: string;
   id: string;
 };
 
 function getMentionedUsers(text: string, users: UserMap[]) {
-  let mentionSlackUserIds = text.match(/<@(.*?)>/g) || [];
-  mentionSlackUserIds = mentionSlackUserIds.map((m) =>
+  let mentionExternalUserIds = text.match(/<@(.*?)>/g) || [];
+  mentionExternalUserIds = mentionExternalUserIds.map((m) =>
     m.replace('<@', '').replace('>', '')
   );
 
-  return users.filter((u) => mentionSlackUserIds.includes(u.slackUserId));
+  return users.filter((u) => mentionExternalUserIds.includes(u.externalUserId));
 }
 
 async function saveMessagesTransaction(
@@ -296,13 +296,13 @@ async function saveMessagesTransaction(
   const threadsTransaction: any = messages
     .map((m) => {
       if (!!m.thread_ts) {
-        return prisma.slackThreads.upsert({
+        return prisma.threads.upsert({
           where: {
-            slackThreadTs: m.thread_ts,
+            externalThreadId: m.thread_ts,
           },
           update: {},
           // maybe here, if creates, slug will be empty
-          create: { slackThreadTs: m.thread_ts, channelId },
+          create: { externalThreadId: m.thread_ts, channelId },
         });
       }
       return null;
@@ -316,12 +316,12 @@ async function saveMessagesTransaction(
     let thread: any | null;
 
     if (!!m.thread_ts) {
-      thread = threads.find((t) => t.slackThreadTs === m.thread_ts);
+      thread = threads.find((t) => t.externalThreadId === m.thread_ts);
     }
 
     let user: UserMap | undefined;
     if (!!m.user) {
-      user = users.find((u) => u.slackUserId === m.user);
+      user = users.find((u) => u.externalUserId === m.user);
     }
 
     threadId = thread?.id;
@@ -332,15 +332,15 @@ async function saveMessagesTransaction(
       blocks: m.blocks,
       sentAt: new Date(parseFloat(m.ts) * 1000),
       channelId,
-      slackMessageId: m.ts as string,
-      slackThreadId: threadId,
+      externalMessageId: m.ts as string,
+      threadId: threadId,
       usersId: user?.id,
     };
     const message = await prisma.messages.upsert({
       where: {
-        channelId_slackMessageId: {
+        channelId_externalMessageId: {
           channelId: channelId,
-          slackMessageId: m.ts,
+          externalMessageId: m.ts,
         },
       },
       update: serializedMessage,
@@ -369,8 +369,8 @@ async function saveMessagesSynchronous(
 ) {
   const threadHead = messages[0];
   if (threadHead.ts === threadHead.thread_ts) {
-    await prisma.slackThreads.update({
-      where: { slackThreadTs: threadHead.thread_ts },
+    await prisma.threads.update({
+      where: { externalThreadId: threadHead.thread_ts },
       data: {
         messageCount: (threadHead.reply_count || 0) + 1,
         slug: createSlug(threadHead.text),
@@ -384,13 +384,13 @@ async function saveMessagesSynchronous(
 
     let ts = m.thread_ts || m.ts;
     const thread = await findOrCreateThread({
-      slackThreadTs: ts,
+      externalThreadId: ts,
       channelId: channelId,
     });
 
     let user: UserMap | undefined;
     if (!!m.user) {
-      user = users.find((u) => u.slackUserId === m.user);
+      user = users.find((u) => u.externalUserId === m.user);
     }
 
     threadId = thread?.id;
@@ -401,15 +401,15 @@ async function saveMessagesSynchronous(
       blocks: m.blocks,
       sentAt: new Date(parseFloat(m.ts) * 1000),
       channelId,
-      slackMessageId: m.ts as string,
-      slackThreadId: threadId,
+      externalMessageId: m.ts as string,
+      threadId: threadId,
       usersId: user?.id,
     };
     const message = await prisma.messages.upsert({
       where: {
-        channelId_slackMessageId: {
+        channelId_externalMessageId: {
           channelId: channelId,
-          slackMessageId: m.ts,
+          externalMessageId: m.ts,
         },
       },
       update: serializedMessage,

@@ -1,13 +1,7 @@
 import { anonymizeMessagesMentions } from '@/utilities/anonymizeMessages';
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import prisma from '../../client';
-import {
-  messages,
-  Prisma,
-  slackMentions,
-  slackThreads,
-  users,
-} from '@prisma/client';
+import { messages, Prisma, mentions, threads, users } from '@prisma/client';
 
 export default async function handler(
   req: NextApiRequest,
@@ -30,8 +24,8 @@ export default async function handler(
           m."body",
           m."sentAt",
           m."channelId",
-          m."slackMessageId",
-          m."slackThreadId",
+          m."externalMessageId",
+          m."threadId",
           m."usersId",
           ts_rank(textsearchable_index_col,websearch_to_tsquery('english', ${query}))  AS rank
       FROM "public"."messages" as m
@@ -39,7 +33,7 @@ export default async function handler(
       WHERE 
           c."accountId" = ${accountId} 
           AND m."id" IS NOT NULL
-          and m."slackThreadId" is not null
+          and m."threadId" is not null
           AND textsearchable_index_col @@ websearch_to_tsquery('english', ${query})
       ORDER BY rank DESC
       LIMIT ${Number(limit)}
@@ -51,20 +45,18 @@ export default async function handler(
   ]);
 
   // Get messages threads
-  const threadIds = messagesResult.map((mr) => mr.slackThreadId);
-  const slackThreadsResult =
+  const threadIds = messagesResult.map((mr) => mr.threadId);
+  const threadsResult =
     threadIds.length > 0
-      ? await prisma.$queryRaw<
-          slackThreads[]
-        >`SELECT "public"."slackThreads"."id",
-          "public"."slackThreads"."incrementId",
-          "public"."slackThreads"."slackThreadTs",
-          "public"."slackThreads"."viewCount",
-          "public"."slackThreads"."slug",
-          "public"."slackThreads"."messageCount",
-          "public"."slackThreads"."channelId"
-      FROM "public"."slackThreads"
-      WHERE "public"."slackThreads"."id" IN (${Prisma.join(threadIds)})`
+      ? await prisma.$queryRaw<threads[]>`SELECT "public"."threads"."id",
+          "public"."threads"."incrementId",
+          "public"."threads"."externalThreadId",
+          "public"."threads"."viewCount",
+          "public"."threads"."slug",
+          "public"."threads"."messageCount",
+          "public"."threads"."channelId"
+      FROM "public"."threads"
+      WHERE "public"."threads"."id" IN (${Prisma.join(threadIds)})`
       : [];
 
   // Get mentions for the messages
@@ -72,11 +64,11 @@ export default async function handler(
   const mentionsResult =
     messageIds.length > 0
       ? await prisma.$queryRaw<
-          slackMentions[]
-        >`SELECT "public"."slackMentions"."messagesId",
-        "public"."slackMentions"."usersId"
-    FROM "public"."slackMentions"
-    WHERE "public"."slackMentions"."messagesId" IN (${Prisma.join(messageIds)})`
+          mentions[]
+        >`SELECT "public"."mentions"."messagesId",
+        "public"."mentions"."usersId"
+    FROM "public"."mentions"
+    WHERE "public"."mentions"."messagesId" IN (${Prisma.join(messageIds)})`
       : [];
 
   // Get mentioned users
@@ -84,7 +76,7 @@ export default async function handler(
   const usersResult =
     userIds.length > 0
       ? await prisma.$queryRaw<users[]>`SELECT "public"."users"."id",
-        "public"."users"."slackUserId",
+        "public"."users"."externalUserId",
         "public"."users"."displayName",
         "public"."users"."profileImageUrl",
         "public"."users"."isBot",
@@ -99,9 +91,7 @@ export default async function handler(
   const searchResults = messagesResult.map((mr) => {
     return {
       ...mr,
-      slackThreads: slackThreadsResult.find(
-        (str) => str.id === mr.slackThreadId
-      ),
+      threads: threadsResult.find((str) => str.id === mr.threadId),
       mentions: mentionsResult.map((msr) => {
         return {
           ...msr,
@@ -129,7 +119,7 @@ export default async function handler(
   //       },
   //     },
   //     include: {
-  //       slackThreads: true,
+  //       threads: true,
   //       mentions: {
   //         include: {
   //           users: true,

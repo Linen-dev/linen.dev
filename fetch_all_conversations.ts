@@ -1,4 +1,4 @@
-import { channels, messages, slackThreads } from '@prisma/client';
+import { channels, messages, threads } from '@prisma/client';
 import request from 'superagent';
 import {
   createManyUsers,
@@ -197,7 +197,7 @@ export const fetchTeamInfo = async (token: string) => {
 export const saveMessages = async (
   messages: any[],
   channelId: string,
-  slackChannelId: string,
+  externalChannelId: string,
   accountId: string
 ) => {
   const params = messages
@@ -208,8 +208,8 @@ export const saveMessages = async (
         blocks: message.blocks,
         sentAt: new Date(parseFloat(message.ts) * 1000),
         channelId: channelId,
-        slackThreadTs: message.thread_ts,
-        slackUserId: message.user || message.bot_id,
+        externalThreadId: message.thread_ts,
+        externalUserId: message.user || message.bot_id,
         usersId: null,
       } as any;
     });
@@ -218,16 +218,16 @@ export const saveMessages = async (
     const messages = [];
     for (let param of params) {
       let threadId: string | null = null;
-      if (!!param.slackThreadTs) {
+      if (!!param.externalThreadId) {
         let thread = await findOrCreateThread({
-          slackThreadTs: param.slackThreadTs,
+          externalThreadId: param.externalThreadId,
           channelId: channelId,
         });
         threadId = thread.id;
       }
-      const user = await findUser(param.slackUserId, accountId);
+      const user = await findUser(param.externalUserId, accountId);
       param.usersId = user?.id;
-      param.slackThreadId = threadId;
+      param.threadId = threadId;
       messages.push(await createMessage(param));
     }
 
@@ -241,24 +241,24 @@ export const saveMessages = async (
 export async function fetchAndSaveThreadMessages(
   messages: (messages & {
     channel: channels;
-    slackThreads: slackThreads | null;
+    threads: threads | null;
   })[],
   token: string,
   accountId: string
 ) {
   const repliesPromises = messages.map((m) => {
-    if (!!m.slackThreads?.slackThreadTs) {
+    if (!!m.threads?.externalThreadId) {
       return fetchReplies(
-        m.slackThreads.slackThreadTs,
-        m.channel.slackChannelId,
+        m.threads.externalThreadId,
+        m.channel.externalChannelId,
         token
       ).then((response) => {
-        if (!!response?.body && m.slackThreads?.slackThreadTs) {
+        if (!!response?.body && m.threads?.externalThreadId) {
           const replyMessages = response?.body;
           return saveThreadedMessages(
             replyMessages,
             m.channel.id,
-            m.slackThreads.slackThreadTs,
+            m.threads.externalThreadId,
             accountId
           );
         }
@@ -270,35 +270,35 @@ export async function fetchAndSaveThreadMessages(
   return await Promise.all(repliesPromises);
 }
 
-export async function fetchAndSaveUser(slackUserId: string, token: string) {
-  await getUserProfile(slackUserId, token);
+export async function fetchAndSaveUser(externalUserId: string, token: string) {
+  await getUserProfile(externalUserId, token);
 }
 
 export async function saveThreadedMessages(
   replies: any,
   channelId: string,
-  slackThreadTs: string,
+  externalThreadId: string,
   accountId: string
 ) {
   const repliesParams = replies.messages.map((m: any) => {
     return {
       body: m.text,
       sentAt: new Date(parseFloat(m.ts) * 1000),
-      slackMessageId: m.ts,
-      slackUserId: m.user || m.bot_id,
+      externalMessageId: m.ts,
+      externalUserId: m.user || m.bot_id,
       channelId: channelId,
     };
   });
 
   let thread = await findOrCreateThread({
-    slackThreadTs: slackThreadTs,
+    externalThreadId: externalThreadId,
     channelId: channelId,
   });
 
   for (let replyParam of repliesParams) {
-    const user = await findUser(replyParam.slackUserId, accountId);
+    const user = await findUser(replyParam.externalUserId, accountId);
     replyParam.usersId = user?.id;
-    replyParam.slackThreadId = thread.id;
+    replyParam.threadId = thread.id;
     try {
       await createOrUpdateMessage(replyParam);
     } catch (e) {
@@ -422,7 +422,7 @@ export const saveUsers = async (users: any[], accountId: string) => {
     const profileImageUrl = profile.image_original;
     return {
       displayName: name,
-      slackUserId: user.id,
+      externalUserId: user.id,
       profileImageUrl,
       accountsId: accountId,
       isBot: user.is_bot,

@@ -28,8 +28,8 @@ interface Props {
   children: React.ReactNode;
   currentChannel: channels;
   navItems?: any;
-  slackUrl?: string;
-  slackInviteUrl?: string;
+  communityUrl?: string;
+  communityInviteUrl?: string;
   settings: Settings;
   communityName: string;
   isSubDomainRouting: boolean;
@@ -41,8 +41,8 @@ function PageLayout({
   children,
   navItems,
   currentChannel,
-  slackUrl,
-  slackInviteUrl,
+  communityUrl,
+  communityInviteUrl,
   settings,
   communityName,
   isSubDomainRouting,
@@ -107,9 +107,9 @@ function PageLayout({
               Docs
             </a>
             {settings.communityType === 'discord' ? (
-              <JoinDiscord inviteUrl={slackInviteUrl || slackUrl} />
+              <JoinDiscord inviteUrl={communityInviteUrl || communityUrl} />
             ) : (
-              <JoinSlack inviteUrl={slackInviteUrl || slackUrl} />
+              <JoinSlack inviteUrl={communityInviteUrl || communityUrl} />
             )}
           </div>
         </div>

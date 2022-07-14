@@ -260,7 +260,7 @@ export async function getStaticProps() {
           logoUrl: null,
         },
       ],
-      slackSyncStatus: 'DONE',
+      syncStatus: 'DONE',
     },
     select: {
       logoUrl: true,

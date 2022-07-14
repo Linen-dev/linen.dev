@@ -1,5 +1,5 @@
 import prisma from '../../client';
-import { channels, slackThreads, users } from '@prisma/client';
+import { channels, threads, users } from '@prisma/client';
 import { DiscordMessage } from '../../types/discordResponses/discordMessagesInterface';
 import { findUsers, getMentions, getUsersInMessages } from './users';
 
@@ -9,12 +9,12 @@ type ProcessMessageType = Record<
     channel: channels,
     message: DiscordMessage,
     users: users[],
-    thread?: slackThreads
+    thread?: threads
   ) => {
     body: string;
     sentAt: string;
-    slackMessageId: string;
-    slackThreadId?: string;
+    externalMessageId: string;
+    threadId?: string;
     channelId: string;
     authorId: string;
     mentions?: { usersId: string }[];
@@ -31,18 +31,19 @@ function processMessageType0(
   channel: channels,
   message: DiscordMessage,
   users: users[],
-  thread?: slackThreads
+  thread?: threads
 ) {
   const mentions = getMentions(message.mentions, users);
-  const authorId = users.find((user) => user.slackUserId === message.author.id)
-    ?.id as string;
+  const authorId = users.find(
+    (user) => user.externalUserId === message.author.id
+  )?.id as string;
   return {
     authorId,
     body: message.content,
     channelId: channel.id,
     sentAt: message.timestamp,
-    slackMessageId: message.id,
-    slackThreadId: thread?.id,
+    externalMessageId: message.id,
+    threadId: thread?.id,
     mentions,
   };
 }
@@ -51,18 +52,19 @@ function processMessageType18(
   channel: channels,
   message: DiscordMessage,
   users: users[],
-  thread?: slackThreads
+  thread?: threads
 ) {
   const mentions = getMentions(message.mentions, users);
-  const authorId = users.find((user) => user.slackUserId === message.author.id)
-    ?.id as string;
+  const authorId = users.find(
+    (user) => user.externalUserId === message.author.id
+  )?.id as string;
   return {
     authorId,
     body: message.content,
     channelId: channel.id,
     sentAt: message.timestamp,
-    slackMessageId: message.id,
-    slackThreadId: thread?.id,
+    externalMessageId: message.id,
+    threadId: thread?.id,
     mentions,
   };
 }
@@ -71,12 +73,12 @@ function processMessageType21(
   channel: channels,
   message: DiscordMessage,
   users: users[],
-  thread?: slackThreads
+  thread?: threads
 ) {
   // console.log('processMessageType21', message);
   const mentions = getMentions(message.referenced_message?.mentions, users);
   const authorId = users.find(
-    (user) => user.slackUserId === message.referenced_message?.author.id
+    (user) => user.externalUserId === message.referenced_message?.author.id
   )?.id as string;
 
   return {
@@ -84,8 +86,8 @@ function processMessageType21(
     body: message.referenced_message?.content as string,
     channelId: channel.id,
     sentAt: message.referenced_message?.timestamp as string,
-    slackMessageId: message.referenced_message?.id as string,
-    slackThreadId: thread?.id,
+    externalMessageId: message.referenced_message?.id as string,
+    threadId: thread?.id,
     mentions,
   };
 }
@@ -93,8 +95,8 @@ function processMessageType21(
 function upsertMessage(message: {
   body: string;
   sentAt: string;
-  slackMessageId: string;
-  slackThreadId?: string;
+  externalMessageId: string;
+  threadId?: string;
   channelId: string;
   authorId: string;
   mentions?: { usersId: string }[];
@@ -102,8 +104,8 @@ function upsertMessage(message: {
   const toInsert = {
     body: message.body,
     sentAt: message.sentAt,
-    slackMessageId: message.slackMessageId,
-    slackThreadId: message.slackThreadId,
+    externalMessageId: message.externalMessageId,
+    threadId: message.threadId,
     channelId: message.channelId,
     usersId: message.authorId,
     ...(message.mentions && {
@@ -120,9 +122,9 @@ function upsertMessage(message: {
     create: toInsert,
     update: toInsert,
     where: {
-      channelId_slackMessageId: {
+      channelId_externalMessageId: {
         channelId: message.channelId,
-        slackMessageId: message.slackMessageId,
+        externalMessageId: message.externalMessageId,
       },
     },
   });
@@ -150,7 +152,7 @@ export async function createMessages({
 }: {
   accountId: string;
   channel: channels;
-  thread?: slackThreads;
+  thread?: threads;
   messages: DiscordMessage[];
 }) {
   const usersInMessages = getUsersInMessages(messages);

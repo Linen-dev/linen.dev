@@ -9,17 +9,17 @@ describe('Channel', () => {
         {
           id: 'X1',
           channelName: 'general',
-          slackChannelId: 'S1',
+          externalChannelId: 'S1',
           accountId: 'A1',
           hidden: false,
-          slackNextPageCursor: null,
+          externalPageCursor: null,
         },
       ];
       const { container } = render(
         <Channel
           channelId={channels[0].id}
           communityName="test"
-          slackUrl="https://foo.slack.com"
+          communityUrl="https://foo.slack.com"
           users={[]}
           settings={{
             brandColor: '#fff',

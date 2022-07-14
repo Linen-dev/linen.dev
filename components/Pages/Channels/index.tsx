@@ -2,8 +2,8 @@ import {
   channels,
   messages,
   MessagesViewType,
-  slackMentions,
-  slackThreads,
+  mentions,
+  threads,
   users,
 } from '@prisma/client';
 import { useRouter } from 'next/router';
@@ -27,28 +27,28 @@ interface message extends messages {
   mentions: MentionsWithUsers[];
 }
 
-interface threads extends slackThreads {
+interface threadsWithMessages extends threads {
   messages: message[];
 }
 
 export type messageWithAuthor = messages & {
   author: users | null;
-  mentions: (slackMentions & {
+  mentions: (mentions & {
     users: users;
   })[];
   reactions: SerializedReaction[];
 };
 
 export type Props = {
-  slackUrl?: string;
-  slackInviteUrl?: string;
+  communityUrl?: string;
+  communityInviteUrl?: string;
   settings: Settings;
   communityName: string;
   channelId?: string;
   users: users[];
   channels?: channels[];
   currentChannel: channels;
-  threads?: threads[];
+  threads?: threadsWithMessages[];
   messages?: messageWithAuthor[];
   pagination?: PaginationType;
   page: number;

@@ -7,21 +7,21 @@ describe('NavBar', () => {
     const channels = [
       {
         id: '1',
-        slackChannelId: 'S01',
+        externalChannelId: 'S01',
         channelName: 'channel1',
         channelType: 'channel',
         hidden: false,
         accountId: '1',
-        slackNextPageCursor: null,
+        externalPageCursor: null,
       },
       {
         id: '2',
-        slackChannelId: 'S02',
+        externalChannelId: 'S02',
         channelName: 'channel2',
         channelType: 'channel',
         hidden: false,
         accountId: '2',
-        slackNextPageCursor: null,
+        externalPageCursor: null,
       },
     ];
     const { getByText } = render(

@@ -1,0 +1,1 @@
+ALTER TABLE "slackMentions" RENAME TO "mentions";

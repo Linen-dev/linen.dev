@@ -1,5 +1,5 @@
 import ApplicationMailer from '../mailers/ApplicationMailer';
-import { updateAccountSlackSyncStatus } from '../lib/models';
+import { updateAccountSyncStatus } from '../lib/models';
 import { sendNotification } from './slack';
 
 export enum SyncStatus {
@@ -14,7 +14,7 @@ export async function updateAndNotifySyncStatus(
 ) {
   if (skipNotification()) return;
 
-  await updateAccountSlackSyncStatus(accountId, status);
+  await updateAccountSyncStatus(accountId, status);
   try {
     await sendNotification(
       `Syncing process is ${status} for account: ${accountId}.`

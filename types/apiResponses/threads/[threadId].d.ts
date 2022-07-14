@@ -1,4 +1,4 @@
-import { channels, slackThreads, users } from '@prisma/client';
+import { channels, users } from '@prisma/client';
 
 export type ThreadByIdResponse = ThreadById | { notFound: boolean };
 
@@ -13,7 +13,7 @@ export interface MentionsWithUsers extends mentions {
 export type ThreadById = {
   id: string;
   incrementId: number;
-  slackThreadTs: string;
+  externalThreadId: string;
   viewCount: number;
   slug: string;
   messageCount: number;
@@ -24,17 +24,17 @@ export type ThreadById = {
   threadId: string;
   authors: users[];
   channels: channels[];
-  slackUrl?: string;
-  slackInviteUrl?: string;
+  communityUrl?: string;
+  communityInviteUrl?: string;
   threadUrl: string;
-  threadSlackInviteUrl?: string | null;
+  threadCommunityInviteUrl?: string | null;
   settings: Settings;
   communityName: string;
 };
 
 export interface Author {
   id: string;
-  slackUserId: string;
+  externalUserId: string;
   displayName: string;
   profileImageUrl: any;
   isBot: boolean;

@@ -14,7 +14,7 @@ interface FindChannelByExternalIdParams {
 interface CreateChannelParams {
   name: string;
   accountId: string;
-  slackChannelId: string;
+  externalChannelId: string;
   hidden?: boolean;
 }
 
@@ -34,21 +34,21 @@ export function findChannelByExternalId({
   accountId,
 }: FindChannelByExternalIdParams) {
   return prisma.channels.findFirst({
-    where: { slackChannelId: externalId, accountId },
+    where: { externalChannelId: externalId, accountId },
   });
 }
 
 export function createChannel({
   name,
   accountId,
-  slackChannelId,
+  externalChannelId,
   hidden,
 }: CreateChannelParams) {
   return prisma.channels.create({
     data: {
       channelName: name,
       accountId,
-      slackChannelId,
+      externalChannelId,
       hidden,
     },
   });

@@ -17,8 +17,8 @@ export default function ChannelChatView({
   users,
   messages,
   channels,
-  slackUrl,
-  slackInviteUrl,
+  communityUrl,
+  communityInviteUrl,
   currentChannel,
   settings,
   communityName,
@@ -121,8 +121,8 @@ export default function ChannelChatView({
     //rendered when it is smaller than a specific size and gets unhidden
     <PageLayout
       users={users}
-      slackUrl={slackUrl}
-      slackInviteUrl={slackInviteUrl}
+      communityUrl={communityUrl}
+      communityInviteUrl={communityInviteUrl}
       currentChannel={currentChannel}
       seo={{
         title: buildTitle(
@@ -185,7 +185,7 @@ export default function ChannelChatView({
               <Anchor
                 className="float-left ml-[4px]"
                 href={buildInviteLink(
-                  { ...settings, slackInviteUrl },
+                  { ...settings, communityInviteUrl },
                   currentChannel
                 )}
                 size="sm"
@@ -209,14 +209,14 @@ export default function ChannelChatView({
 }
 
 function buildInviteLink(
-  settings: Settings & { slackInviteUrl?: string },
+  settings: Settings & { communityInviteUrl?: string },
   currentChannel: channels
 ) {
-  if (!settings.slackInviteUrl) return '';
+  if (!settings.communityInviteUrl) return '';
   if (settings.communityType === 'discord') {
-    return `${settings.slackInviteUrl}/${currentChannel.slackChannelId}`;
+    return `${settings.communityInviteUrl}/${currentChannel.externalChannelId}`;
   } else {
-    return settings.slackInviteUrl;
+    return settings.communityInviteUrl;
   }
 }
 

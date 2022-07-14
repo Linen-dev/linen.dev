@@ -4,9 +4,11 @@ import { createUserFromUserInfo, findUser } from '../../lib/models';
 
 const prisma = new PrismaClient({});
 
-function getMentionedSlackUserIds(body: string) {
-  let mentionSlackUserIds = body.match(/<@(.*?)>/g) || [];
-  return mentionSlackUserIds.map((m) => m.replace('<@', '').replace('>', ''));
+function getMentionedExternalUserIds(body: string) {
+  let mentionExternalUserIds = body.match(/<@(.*?)>/g) || [];
+  return mentionExternalUserIds.map((m) =>
+    m.replace('<@', '').replace('>', '')
+  );
 }
 
 (async () => {
@@ -23,7 +25,7 @@ function getMentionedSlackUserIds(body: string) {
       slackAuthorizations: true,
     },
     where: {
-      slackSyncStatus: 'DONE',
+      syncStatus: 'DONE',
     },
   });
 
@@ -59,16 +61,18 @@ function getMentionedSlackUserIds(body: string) {
       });
 
       for (const message of messages) {
-        const mentionedSlackUserIds = getMentionedSlackUserIds(message.body);
+        const mentionedExternalUserIds = getMentionedExternalUserIds(
+          message.body
+        );
 
-        for (const mentionedSlackUserId of mentionedSlackUserIds) {
+        for (const mentionedExternalUserId of mentionedExternalUserIds) {
           const mentionedUser = await findUser(
-            mentionedSlackUserId,
+            mentionedExternalUserId,
             account.id
           );
 
           if (mentionedUser) {
-            const slackMention = await prisma.slackMentions.findFirst({
+            const slackMention = await prisma.mentions.findFirst({
               where: {
                 messagesId: message.id,
                 usersId: mentionedUser.id,
@@ -79,7 +83,7 @@ function getMentionedSlackUserIds(body: string) {
               console.log(
                 `[INFO] Add mention: ${account.name}/${channel.channelName}/${message.id}/${mentionedUser.displayName}`
               );
-              await prisma.slackMentions.create({
+              await prisma.mentions.create({
                 data: {
                   messagesId: message.id,
                   usersId: mentionedUser.id,
@@ -90,7 +94,7 @@ function getMentionedSlackUserIds(body: string) {
             const accessToken = account?.slackAuthorizations[0]?.accessToken;
             if (!!accessToken) {
               const slackUser = await getSlackUser(
-                mentionedSlackUserId,
+                mentionedExternalUserId,
                 accessToken
               );
 
@@ -106,7 +110,7 @@ function getMentionedSlackUserIds(body: string) {
                 console.log(
                   `[INFO] Add mention: ${account.name}/${channel.channelName}/${message.id}/${newMentionedUser.displayName}`
                 );
-                await prisma.slackMentions.create({
+                await prisma.mentions.create({
                   data: {
                     messagesId: message.id,
                     usersId: newMentionedUser.id,
@@ -114,7 +118,7 @@ function getMentionedSlackUserIds(body: string) {
                 });
               } else {
                 console.log(
-                  `[ERROR] Slack user not found: ${account.name}/${channel.channelName}/${mentionedSlackUserId}`
+                  `[ERROR] Slack user not found: ${account.name}/${channel.channelName}/${mentionedExternalUserId}`
                 );
               }
             }

@@ -84,8 +84,8 @@ export default function URLs({ account }: SettingsProps) {
         subtitle="Link to your community invite."
         textFieldOptions={{
           placeholder: 'https://yourwebsite.com/community-invite',
-          id: 'slackInviteUrl',
-          defaultValue: account?.slackInviteUrl,
+          id: 'communityInviteUrl',
+          defaultValue: account?.communityInviteUrl,
           onBlur: (e: any) => onSubmit(e.target),
         }}
       />

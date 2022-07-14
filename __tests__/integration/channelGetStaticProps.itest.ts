@@ -17,7 +17,7 @@ describe('channelGetStaticProps', () => {
       accountId: expect.any(String),
       id: expect.any(String),
       channelName: expect.stringMatching(/general/),
-      slackChannelId: expect.any(String),
+      externalChannelId: expect.any(String),
     });
     expect(props.pagination).toMatchObject({
       currentPage: 1,
@@ -30,7 +30,7 @@ describe('channelGetStaticProps', () => {
         accountId: expect.any(String),
         channelName: expect.stringMatching(/alpha|general|sql/),
         id: expect.any(String),
-        slackChannelId: expect.any(String),
+        externalChannelId: expect.any(String),
       });
     }
     for (const thread of props.threads) {
@@ -39,7 +39,7 @@ describe('channelGetStaticProps', () => {
         id: expect.any(String),
         incrementId: expect.any(Number),
         messageCount: 2,
-        slackThreadTs: expect.any(String),
+        externalThreadId: expect.any(String),
         slug: expect.any(String),
         viewCount: expect.any(Number),
       });

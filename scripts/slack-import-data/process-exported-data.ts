@@ -71,7 +71,7 @@ async function upsertUsers(account: accounts): Promise<UserMap> {
   const usersInDb = await prisma.users.findMany({
     where: { accountsId: account.id },
     select: {
-      slackUserId: true,
+      externalUserId: true,
       id: true,
     },
   });
@@ -79,7 +79,7 @@ async function upsertUsers(account: accounts): Promise<UserMap> {
   stats.users_in_db = usersInDb.length;
   console.time('toObject-users');
 
-  return toObject(usersInDb, 'slackUserId');
+  return toObject(usersInDb, 'externalUserId');
 }
 
 export function readParseFile(filename: string) {
@@ -103,7 +103,7 @@ async function upsertChannels(account: accounts) {
   // copied from pages/api/scripts/sync.ts line 268
   const channelsParam = channelsFile.map((channel: channel) => {
     return {
-      slackChannelId: channel.id,
+      externalChannelId: channel.id,
       channelName: channel.name,
       accountId: account.id,
     };
@@ -118,13 +118,15 @@ async function upsertChannels(account: accounts) {
   }
   const channels = await prisma.channels.findMany({
     where: {
-      slackChannelId: { in: channelsParam.map((e: any) => e.slackChannelId) },
+      externalChannelId: {
+        in: channelsParam.map((e: any) => e.externalChannelId),
+      },
       accountId: account.id,
     },
   });
   // TODO: need token
   //   for (let channel of channels) {
-  //     await joinChannel(channel.slackChannelId, token);
+  //     await joinChannel(channel.externalChannelId, token);
   //   }
 
   return channels;
@@ -132,10 +134,10 @@ async function upsertChannels(account: accounts) {
 
 async function processChannels({
   channel,
-  userGroupBySlackUserId,
+  userGroupByExternalUserId,
 }: {
   channel: channels;
-  userGroupBySlackUserId: any;
+  userGroupByExternalUserId: any;
 }) {
   const files = listFiles(channel.channelName);
   stats.files += files.length;
@@ -143,7 +145,7 @@ async function processChannels({
   for (const fileName of files) {
     // persist messages
     // console.time(channel.channelName + fileName)
-    await processFile({ channel, fileName, userGroupBySlackUserId });
+    await processFile({ channel, fileName, userGroupByExternalUserId });
     // console.timeEnd(channel.channelName + fileName)
   }
 }
@@ -155,26 +157,30 @@ function listFiles(channelName: string) {
 async function processFile({
   channel,
   fileName,
-  userGroupBySlackUserId,
+  userGroupByExternalUserId,
 }: {
   channel: channels;
   fileName: string;
-  userGroupBySlackUserId: UserMap;
+  userGroupByExternalUserId: UserMap;
 }) {
   const messages = readParseFile(channel.channelName + '/' + fileName);
   try {
-    await saveMessagesTransaction(messages, channel.id, userGroupBySlackUserId);
+    await saveMessagesTransaction(
+      messages,
+      channel.id,
+      userGroupByExternalUserId
+    );
   } catch (error) {
     console.error(String(error), channel.channelName + '/' + fileName);
   }
 }
 
-let threadsBySlackThreadTs: any = {};
+let threadsByExternalThreadId: any = {};
 
 async function saveMessagesTransaction(
   messages: ConversationHistoryMessage[],
   channelId: string,
-  userGroupBySlackUserId: UserMap
+  userGroupByExternalUserId: UserMap
 ) {
   const messagesByType = groupMessageByType(messages);
   stats.message += messagesByType?.message?.length || 0;
@@ -184,7 +190,7 @@ async function saveMessagesTransaction(
 
   const singlesTransaction = messagesByType.single?.map((m) => {
     return {
-      slackThreadTs: m.ts as string,
+      externalThreadId: m.ts as string,
       channelId,
       slug: createSlug(m.text),
       messageCount: 1,
@@ -192,7 +198,7 @@ async function saveMessagesTransaction(
   });
 
   if (singlesTransaction && singlesTransaction.length) {
-    await prisma.slackThreads.createMany({
+    await prisma.threads.createMany({
       data: singlesTransaction,
       skipDuplicates: true,
     });
@@ -200,7 +206,7 @@ async function saveMessagesTransaction(
 
   const threadsTransaction = messagesByType.thread?.map((m) => {
     return {
-      slackThreadTs: m.ts as string,
+      externalThreadId: m.ts as string,
       channelId,
       slug: createSlug(m.text),
       messageCount: ((m.reply_count as number) || 0) + 1,
@@ -208,30 +214,32 @@ async function saveMessagesTransaction(
   });
 
   if (threadsTransaction && threadsTransaction.length) {
-    await prisma.slackThreads.createMany({
+    await prisma.threads.createMany({
       data: threadsTransaction,
       skipDuplicates: true,
     });
-    const newThreads = await prisma.slackThreads.findMany({
+    const newThreads = await prisma.threads.findMany({
       where: {
-        slackThreadTs: { in: threadsTransaction.map((e) => e.slackThreadTs) },
+        externalThreadId: {
+          in: threadsTransaction.map((e) => e.externalThreadId),
+        },
       },
     });
-    threadsBySlackThreadTs = {
-      ...threadsBySlackThreadTs,
-      ...toObject(newThreads, 'slackThreadTs'),
+    threadsByExternalThreadId = {
+      ...threadsByExternalThreadId,
+      ...toObject(newThreads, 'externalThreadId'),
     };
   }
 
   const createMessagesTransaction = messagesByType.message?.map(async (m) => {
-    let thread = threadsBySlackThreadTs[m.thread_ts as string];
-    let user = m.user ? userGroupBySlackUserId[m.user] : null;
+    let thread = threadsByExternalThreadId[m.thread_ts as string];
+    let user = m.user ? userGroupByExternalUserId[m.user] : null;
     let threadId = thread?.id;
     const mentionedUserIds = getMentionedUsers(m.text);
 
     const mentionedUsers = [];
     for (const userId of mentionedUserIds) {
-      mentionedUsers.push(userGroupBySlackUserId[userId]);
+      mentionedUsers.push(userGroupByExternalUserId[userId]);
     }
 
     const serializedMessage = {
@@ -239,8 +247,8 @@ async function saveMessagesTransaction(
       blocks: m.blocks,
       sentAt: new Date(parseFloat(m.ts) * 1000),
       channelId,
-      slackMessageId: m.ts as string,
-      slackThreadId: threadId,
+      externalMessageId: m.ts as string,
+      threadId: threadId,
       usersId: user?.id,
       mentions: {
         createMany: {
@@ -253,9 +261,9 @@ async function saveMessagesTransaction(
     };
     const message = await prisma.messages.upsert({
       where: {
-        channelId_slackMessageId: {
+        channelId_externalMessageId: {
           channelId,
-          slackMessageId: m.ts as string,
+          externalMessageId: m.ts as string,
         },
       },
       create: serializedMessage,
@@ -274,8 +282,10 @@ async function saveMessagesTransaction(
 }
 
 function getMentionedUsers(text: string) {
-  let mentionSlackUserIds = text.match(/<@(.*?)>/g) || [];
-  return mentionSlackUserIds.map((m) => m.replace('<@', '').replace('>', ''));
+  let mentionExternalUserIds = text.match(/<@(.*?)>/g) || [];
+  return mentionExternalUserIds.map((m) =>
+    m.replace('<@', '').replace('>', '')
+  );
 }
 
 const groupMessageByType = (
@@ -321,7 +331,7 @@ const groupMessageByType = (
     console.time('run');
     // upsert users and retrieve all as object
     console.time('upsert-users');
-    const userGroupBySlackUserId = await upsertUsers(account);
+    const userGroupByExternalUserId = await upsertUsers(account);
     console.timeEnd('upsert-users');
     // upsert channels and retrieve all
     console.log('Reading channels, it may take a while');
@@ -329,10 +339,10 @@ const groupMessageByType = (
     // loop on channels
     for (const channel of channels) {
       console.log('channel', channel.channelName);
-      threadsBySlackThreadTs = {}; // clean up
+      threadsByExternalThreadId = {}; // clean up
       // persist messages
       console.time(channel.channelName);
-      await processChannels({ channel, userGroupBySlackUserId });
+      await processChannels({ channel, userGroupByExternalUserId });
       console.timeEnd(channel.channelName);
     }
     console.log(stats);

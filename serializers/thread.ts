@@ -1,8 +1,5 @@
 import { MentionsWithUsers } from '../types/apiResponses/threads/[threadId]';
-import {
-  SlackThreadsWithMessages,
-  MessageWithAuthor,
-} from '../types/partialTypes';
+import { ThreadsWithMessages, MessageWithAuthor } from '../types/partialTypes';
 import { SerializedReaction } from 'types/shared';
 import { Prisma } from '@prisma/client';
 
@@ -20,7 +17,7 @@ interface SerializedThread {
 }
 
 export default function serialize(
-  thread: SlackThreadsWithMessages
+  thread: ThreadsWithMessages
 ): SerializedThread {
   return {
     ...thread,

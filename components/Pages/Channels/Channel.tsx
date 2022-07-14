@@ -19,8 +19,8 @@ export default function Channel({
   users,
   threads,
   channels,
-  slackUrl,
-  slackInviteUrl,
+  communityUrl,
+  communityInviteUrl,
   currentChannel,
   settings,
   communityName,
@@ -62,8 +62,8 @@ export default function Channel({
   if (!channelId) {
     return (
       <PageLayout
-        slackUrl={slackUrl}
-        slackInviteUrl={slackInviteUrl}
+        communityUrl={communityUrl}
+        communityInviteUrl={communityInviteUrl}
         settings={settings}
         communityName={communityName}
         currentChannel={currentChannel}
@@ -245,8 +245,8 @@ export default function Channel({
     //rendered when it is smaller than a specific size and gets unhidden
     <PageLayout
       users={users}
-      slackUrl={slackUrl}
-      slackInviteUrl={slackInviteUrl}
+      communityUrl={communityUrl}
+      communityInviteUrl={communityInviteUrl}
       currentChannel={currentChannel}
       seo={{
         title: buildTitle(settings.name || communityName, channelName, page),

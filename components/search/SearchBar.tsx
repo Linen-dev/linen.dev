@@ -5,7 +5,7 @@ import { Group, Text } from '@mantine/core';
 import Avatar, { Size } from '../../components/Avatar';
 import Message from '../Message';
 import Autocomplete from '../Autocomplete';
-import { messages, channels, users, slackThreads } from '@prisma/client';
+import { messages, channels, users } from '@prisma/client';
 
 const Suggestion = styled.div({
   cursor: 'pointer',
@@ -19,7 +19,7 @@ const parseResults = (data: messages[]) => {
   return data
     .map((r) => ({ ...r, value: r.body }))
     .filter((r) => {
-      if (!r.slackThreadId) return false;
+      if (!r.threadId) return false;
       if (allIds.has(r.id)) return false;
       allIds.add(r.id);
       return true;
@@ -91,10 +91,8 @@ const SearchBar = ({
   );
 
   const handleSelect = useCallback(
-    ({ slackThreads }) => {
-      let path = `/t/${slackThreads.incrementId}/${
-        slackThreads.slug || 'topic'
-      }`;
+    ({ threads }) => {
+      let path = `/t/${threads.incrementId}/${threads.slug || 'topic'}`;
       if (!isSubDomainRouting) {
         path = `/s/${communityName}${path}`;
       }

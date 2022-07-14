@@ -12,14 +12,14 @@ export interface SerializedAccount {
   brandColor?: string;
   premium: boolean;
   googleAnalyticsId?: string;
-  slackSyncStatus: string;
+  syncStatus: string;
   communityType: CommunityType | null;
   anonymizeUsers?: boolean;
   hasAuth?: boolean;
   slackDomain?: string;
   discordDomain?: string;
   discordServerId?: string;
-  slackInviteUrl?: string;
+  communityInviteUrl?: string;
 }
 
 function identifyCommunity(account: any) {
@@ -60,13 +60,13 @@ export default function serialize(account?: any): SerializedAccount | null {
     brandColor,
     premium,
     googleAnalyticsId,
-    slackSyncStatus,
+    syncStatus,
     id,
     anonymizeUsers,
     slackDomain,
     discordDomain,
     discordServerId,
-    slackInviteUrl,
+    communityInviteUrl,
   } = account;
 
   const communityType = identifyCommunity(account);
@@ -80,7 +80,7 @@ export default function serialize(account?: any): SerializedAccount | null {
     brandColor,
     premium,
     googleAnalyticsId,
-    slackSyncStatus,
+    syncStatus,
     id,
     communityType,
     anonymizeUsers,
@@ -88,6 +88,6 @@ export default function serialize(account?: any): SerializedAccount | null {
     slackDomain,
     discordDomain,
     discordServerId,
-    slackInviteUrl,
+    communityInviteUrl,
   };
 }

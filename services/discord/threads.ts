@@ -1,5 +1,5 @@
 import prisma from '../../client';
-import { channels, slackThreads } from '@prisma/client';
+import { channels, threads } from '@prisma/client';
 import { DiscordMessage } from '../../types/discordResponses/discordMessagesInterface';
 import { createSlug } from '../../lib/util';
 import { getDiscordWithRetry } from './api';
@@ -7,22 +7,22 @@ import { CrawlType, LIMIT } from './constrains';
 import { createMessages } from './messages';
 
 async function crawlExistingThread(
-  thread: slackThreads & {
+  thread: threads & {
     messages: {
-      slackMessageId: string;
+      externalMessageId: string;
     }[];
   },
   onboardingTimestamp: Date
 ) {
   const messagesInThread: DiscordMessage[] = [];
 
-  const threadId = thread.slackThreadTs;
+  const threadId = thread.externalThreadId;
 
   let hasMore = true;
   // before will have the last messageId from request to be used on next pagination request
   let before;
   // cursor/after should be the first messageId receive from the last run
-  let after = thread.messages.shift()?.slackMessageId;
+  let after = thread.messages.shift()?.externalMessageId;
   while (hasMore) {
     const query = {
       // before should have priority because the API always return messages sort by timestamp desc
@@ -70,7 +70,7 @@ async function crawlExistingThread(
 async function persistExistingThreadWithMessages(
   accountId: string,
   channel: channels,
-  thread: slackThreads,
+  thread: threads,
   messages: DiscordMessage[]
 ) {
   const persistedThread = await updateThread(channel, thread);
@@ -83,14 +83,14 @@ async function persistExistingThreadWithMessages(
 }
 
 async function getThreadsFromDB(channel: channels, take: number, skip: number) {
-  return await prisma.slackThreads.findMany({
+  return await prisma.threads.findMany({
     where: {
       channelId: channel.id,
-      slackThreadTs: { not: channel.slackChannelId },
+      externalThreadId: { not: channel.externalChannelId },
     },
     include: {
       messages: {
-        select: { slackMessageId: true },
+        select: { externalMessageId: true },
         take: 1,
         orderBy: { createdAt: 'desc' },
       },
@@ -106,7 +106,7 @@ function upsertThreadType18(channelId: string, thread: DiscordMessage) {
 
 function upsertThreadType0(channelId: string, thread: DiscordMessage) {
   const slackThread = {
-    slackThreadTs: thread.thread?.id || thread.id,
+    externalThreadId: thread.thread?.id || thread.id,
     slug: createSlug(
       thread.content ||
         thread.thread?.name ||
@@ -115,7 +115,7 @@ function upsertThreadType0(channelId: string, thread: DiscordMessage) {
     ),
     messageCount: 1,
   };
-  return prisma.slackThreads.upsert({
+  return prisma.threads.upsert({
     create: {
       ...slackThread,
       channelId,
@@ -124,14 +124,14 @@ function upsertThreadType0(channelId: string, thread: DiscordMessage) {
       ...slackThread,
     },
     where: {
-      slackThreadTs: slackThread.slackThreadTs,
+      externalThreadId: slackThread.externalThreadId,
     },
   });
 }
 
 const upsertThread: Record<
   number,
-  (channelId: string, thread: DiscordMessage) => Promise<slackThreads>
+  (channelId: string, thread: DiscordMessage) => Promise<threads>
 > = {
   0: upsertThreadType0,
   18: upsertThreadType18,
@@ -142,9 +142,9 @@ async function createThread(channelId: string, thread: DiscordMessage) {
   return upsertThread[thread.type](channelId, thread);
 }
 
-async function updateThread(channel: channels, thread: slackThreads) {
+async function updateThread(channel: channels, thread: threads) {
   const message: DiscordMessage = await getDiscordWithRetry({
-    path: `/channels/${channel.slackChannelId}/messages/${thread.slackThreadTs}`,
+    path: `/channels/${channel.externalChannelId}/messages/${thread.externalThreadId}`,
   });
   try {
     return await upsertThread[message.type](channel.id, message);
@@ -156,14 +156,14 @@ async function updateThread(channel: channels, thread: slackThreads) {
 
 export const supportedThreadType = []; // type 0 must have thread attribute to be a thread
 
-export async function updateThreadMessageCount(slackThreadId: string) {
+export async function updateThreadMessageCount(threadId: string) {
   const messageCount = await prisma.messages.count({
-    where: { slackThreadId },
+    where: { threadId },
   });
-  await prisma.slackThreads.update({
+  await prisma.threads.update({
     data: { messageCount },
     where: {
-      id: slackThreadId,
+      id: threadId,
     },
   });
 }

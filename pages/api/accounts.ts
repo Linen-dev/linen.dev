@@ -39,7 +39,7 @@ async function update(request: NextApiRequest, response: NextApiResponse) {
     brandColor,
     googleAnalyticsId,
     anonymizeUsers,
-    slackInviteUrl,
+    communityInviteUrl,
   } = JSON.parse(request.body);
   const account = await prisma.accounts.findFirst({
     where: { id: accountId },
@@ -52,7 +52,7 @@ async function update(request: NextApiRequest, response: NextApiResponse) {
     homeUrl,
     docsUrl,
     anonymizeUsers,
-    slackInviteUrl,
+    communityInviteUrl,
   };
   const data = account.premium
     ? {

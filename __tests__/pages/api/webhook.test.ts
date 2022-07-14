@@ -175,10 +175,10 @@ describe('webhook', () => {
     const channelMock = {
       id: 'channel_id',
       channelName: 'channel_name',
-      slackChannelId: 'C03ATK7RWNS',
+      externalChannelId: 'C03ATK7RWNS',
       accountId: 'account_id',
       hidden: false,
-      slackNextPageCursor: null,
+      externalPageCursor: null,
     };
     const channelsFindUniqueMock =
       prismaMock.channels.findUnique.mockResolvedValue(channelMock);
@@ -186,18 +186,18 @@ describe('webhook', () => {
     const threadMock = {
       id: 'thread_id',
       incrementId: 0,
-      slackThreadTs: 'string',
+      externalThreadId: 'string',
       viewCount: 0,
       slug: null,
       messageCount: 0,
       channelId: 'C03ATK7RWNS',
     };
-    const slackThreadsUpsertMock =
-      prismaMock.slackThreads.upsert.mockResolvedValue(threadMock);
+    const threadsUpsertMock =
+      prismaMock.threads.upsert.mockResolvedValue(threadMock);
 
     const userMock = {
       id: 'user_id',
-      slackUserId: 'U037T5JG1NY',
+      externalUserId: 'U037T5JG1NY',
       displayName: 'Jhon Smith',
       profileImageUrl: null,
       isBot: false,
@@ -213,8 +213,8 @@ describe('webhook', () => {
       body: 'this is test3',
       sentAt: now,
       channelId: 'C03ATK7RWNS',
-      slackMessageId: '1650644364.126099',
-      slackThreadId: null,
+      externalMessageId: '1650644364.126099',
+      threadId: null,
       usersId: 'user_id',
     };
     const messagesCreateMock =
@@ -235,7 +235,7 @@ describe('webhook', () => {
         // Proper channel has been searched for based on Slack event
         expect(channelsFindUniqueMock).toHaveBeenCalledWith({
           where: {
-            slackChannelId: addMessageEvent.event.channel,
+            externalChannelId: addMessageEvent.event.channel,
           },
           include: {
             account: {
@@ -247,13 +247,13 @@ describe('webhook', () => {
         });
 
         // Proper thread was created/updated
-        expect(slackThreadsUpsertMock).toHaveBeenCalledWith({
+        expect(threadsUpsertMock).toHaveBeenCalledWith({
           where: {
-            slackThreadTs: addMessageEvent.event.ts,
+            externalThreadId: addMessageEvent.event.ts,
           },
           update: {},
           create: {
-            slackThreadTs: addMessageEvent.event.ts,
+            externalThreadId: addMessageEvent.event.ts,
             channelId: channelMock.id,
           },
           include: {
@@ -263,7 +263,7 @@ describe('webhook', () => {
 
         // Slug for new thread created
         expect(threadMock.slug).toEqual('this-is-test3');
-        prismaMock.slackThreads.update.calledWith({
+        prismaMock.threads.update.calledWith({
           where: {
             id: threadMock.id,
           },
@@ -278,8 +278,8 @@ describe('webhook', () => {
         expect(messagesCreateMock).toHaveBeenCalledWith({
           data: {
             body: 'this is test3',
-            slackThreadId: 'thread_id',
-            slackMessageId: '1650644364.126099',
+            threadId: 'thread_id',
+            externalMessageId: '1650644364.126099',
             channelId: 'channel_id',
             sentAt: new Date(parseFloat(addMessageEvent.event.ts) * 1000),
             usersId: 'user_id',
@@ -301,10 +301,10 @@ describe('webhook', () => {
     const channelMock = {
       id: 'channel_id',
       channelName: 'channel_name',
-      slackChannelId: 'C03ATK7RWNS',
+      externalChannelId: 'C03ATK7RWNS',
       accountId: 'account_id',
       hidden: false,
-      slackNextPageCursor: null,
+      externalPageCursor: null,
     };
     const channelsFindUniqueMock =
       prismaMock.channels.findUnique.mockResolvedValue(channelMock);
@@ -328,7 +328,7 @@ describe('webhook', () => {
         // Proper channel has been searched for based on Slack event
         expect(channelsFindUniqueMock).toHaveBeenCalledWith({
           where: {
-            slackChannelId: deleteMessageEvent.event.channel,
+            externalChannelId: deleteMessageEvent.event.channel,
           },
           include: {
             account: {
@@ -358,10 +358,10 @@ describe('webhook', () => {
     const channelMock = {
       id: 'channel_id',
       channelName: 'channel_name',
-      slackChannelId: 'C03ATK7RWNS',
+      externalChannelId: 'C03ATK7RWNS',
       accountId: 'account_id',
       hidden: false,
-      slackNextPageCursor: null,
+      externalPageCursor: null,
     };
     const channelsFindUniqueMock =
       prismaMock.channels.findUnique.mockResolvedValue(channelMock);
@@ -373,18 +373,18 @@ describe('webhook', () => {
     const threadMock = {
       id: 'thread_id',
       incrementId: 0,
-      slackThreadTs: 'string',
+      externalThreadId: 'string',
       viewCount: 0,
       slug: null,
       messageCount: 0,
       channelId: 'C03ATK7RWNS',
     };
-    const slackThreadsUpsertMock =
-      prismaMock.slackThreads.upsert.mockResolvedValue(threadMock);
+    const threadsUpsertMock =
+      prismaMock.threads.upsert.mockResolvedValue(threadMock);
 
     const userMock = {
       id: 'user_id',
-      slackUserId: 'U037T5JG1NY',
+      externalUserId: 'U037T5JG1NY',
       displayName: 'Jhon Smith',
       profileImageUrl: null,
       isBot: false,
@@ -400,8 +400,8 @@ describe('webhook', () => {
       body: 'Lets-test-4',
       sentAt: now,
       channelId: 'C03ATK7RWNS',
-      slackMessageId: '1652127600.388019',
-      slackThreadId: null,
+      externalMessageId: '1652127600.388019',
+      threadId: null,
       usersId: 'user_id',
     };
     const messagesCreateMock =
@@ -422,7 +422,7 @@ describe('webhook', () => {
         // Proper channel has been searched for based on Slack event
         expect(channelsFindUniqueMock).toHaveBeenCalledWith({
           where: {
-            slackChannelId: changeMessageEvent.event.channel,
+            externalChannelId: changeMessageEvent.event.channel,
           },
           include: {
             account: {
@@ -445,7 +445,7 @@ describe('webhook', () => {
         // Proper channel has been searched for based on Slack event
         expect(channelsFindUniqueMock).toHaveBeenCalledWith({
           where: {
-            slackChannelId: changeMessageEvent.event.channel,
+            externalChannelId: changeMessageEvent.event.channel,
           },
           include: {
             account: {
@@ -457,13 +457,13 @@ describe('webhook', () => {
         });
 
         // Proper thread was created/updated
-        expect(slackThreadsUpsertMock).toHaveBeenCalledWith({
+        expect(threadsUpsertMock).toHaveBeenCalledWith({
           where: {
-            slackThreadTs: changeMessageEvent.event.message.ts,
+            externalThreadId: changeMessageEvent.event.message.ts,
           },
           update: {},
           create: {
-            slackThreadTs: changeMessageEvent.event.message.ts,
+            externalThreadId: changeMessageEvent.event.message.ts,
             channelId: channelMock.id,
           },
           include: {
@@ -473,7 +473,7 @@ describe('webhook', () => {
 
         // Slug for new thread created
         expect(threadMock.slug).toEqual('Lets-test-4');
-        prismaMock.slackThreads.update.calledWith({
+        prismaMock.threads.update.calledWith({
           where: {
             id: threadMock.id,
           },
@@ -488,8 +488,8 @@ describe('webhook', () => {
         expect(messagesCreateMock).toHaveBeenCalledWith({
           data: {
             body: 'Lets test_4',
-            slackThreadId: 'thread_id',
-            slackMessageId: '1652127600.388019',
+            threadId: 'thread_id',
+            externalMessageId: '1652127600.388019',
             channelId: 'channel_id',
             sentAt: new Date(
               parseFloat(changeMessageEvent.event.message.ts) * 1000

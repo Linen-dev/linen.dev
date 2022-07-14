@@ -3,19 +3,19 @@ import { render } from '@testing-library/react';
 import Thread from './Thread';
 
 describe('Thread', () => {
-  describe('when threadSlackInviteUrl is present', () => {
+  describe('when threadCommunityInviteUrl is present', () => {
     it.skip('renders a link with the invite url', () => {
       const channels = [
         {
           id: 'X1',
           channelName: 'general',
-          slackChannelId: 'S1',
+          externalChannelId: 'S1',
           accountId: 'A1',
           hidden: false,
-          slackNextPageCursor: null,
+          externalPageCursor: null,
         },
       ];
-      const threadSlackInviteUrl =
+      const threadCommunityInviteUrl =
         'https://foo.slack.com/thread/1#/archives/1234/p5678';
       const { getByText } = render(
         <Thread
@@ -25,11 +25,11 @@ describe('Thread', () => {
           channel={channels[0]}
           currentChannel={channels[0]}
           threadUrl="https://foo.slack.com/thread/1#/"
-          threadSlackInviteUrl={threadSlackInviteUrl}
+          threadCommunityInviteUrl={threadCommunityInviteUrl}
           threadId="1"
-          slackInviteUrl="https://foo.slack.com/invite/1"
-          slackUrl="https://foo.slack.com"
-          slackThreadTs="1588888888"
+          communityInviteUrl="https://foo.slack.com/invite/1"
+          communityUrl="https://foo.slack.com"
+          externalThreadId="1588888888"
           settings={{
             brandColor: '#fff',
             homeUrl: 'https://foo.com',
@@ -55,7 +55,7 @@ describe('Thread', () => {
       );
       const link = getByText('Join thread in Slack') as HTMLLinkElement;
       expect(link).toBeInTheDocument();
-      expect(link.href).toEqual(threadSlackInviteUrl);
+      expect(link.href).toEqual(threadCommunityInviteUrl);
     });
   });
 });

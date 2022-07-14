@@ -144,7 +144,7 @@ function buildInviteUrl(account: accounts) {
   if (account.discordServerId) {
     return `https://discord.com/channels/${account.discordServerId}`;
   } else {
-    return account.slackInviteUrl || '';
+    return account.communityInviteUrl || '';
   }
 }
 
@@ -179,8 +179,8 @@ export const getThreadsByCommunityName = async (
     channels: channelsWithMinThreads,
     communityName,
     currentChannel: channel,
-    slackUrl: account.slackUrl || '',
-    slackInviteUrl: buildInviteUrl(account),
+    communityUrl: account.communityUrl || '',
+    communityInviteUrl: buildInviteUrl(account),
     settings,
     threads,
     messages,

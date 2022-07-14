@@ -17,15 +17,15 @@ model messages {
   body      String
   sentAt    DateTime
 
-  channel        channels @relation(fields: [channelId], references: [id])
-  channelId      String
-  slackMessageId String
+  channel           channels @relation(fields: [channelId], references: [id])
+  channelId         String
+  externalMessageId String
 
-  slackThreads slackThreads? @relation(fields: [slackThreadId], references: [id])
+  threads threads? @relation(fields: [threadId], references: [id])
 
-  slackThreadId String?
+  threadId String?
 
-  mentions                 slackMentions[]
+  mentions                 mentions[]
   attachments              messageAttachments[]
   reactions                messageReactions[]
   author                   users?                   @relation(fields: [usersId], references: [id])
@@ -33,41 +33,41 @@ model messages {
   textsearchable_index_col Unsupported("tsvector")?
   blocks                   Json?
 
-  @@unique([channelId, slackMessageId])
+  @@unique([channelId, externalMessageId])
   @@index([textsearchable_index_col], type: Gin)
 }
 
-model slackThreads {
-  id            String   @id @default(uuid())
-  incrementId   Int      @default(autoincrement())
-  channel       channels @relation(fields: [channelId], references: [id])
-  slackThreadTs String
-  viewCount     Int      @default(0)
-  slug          String?
-  messageCount  Int      @default(1)
+model threads {
+  id               String   @id @default(uuid())
+  incrementId      Int      @default(autoincrement())
+  channel          channels @relation(fields: [channelId], references: [id])
+  externalThreadId String
+  viewCount        Int      @default(0)
+  slug             String?
+  messageCount     Int      @default(1)
 
   messages  messages[]
   channelId String
 
-  @@unique([slackThreadTs])
+  @@unique([externalThreadId])
   @@unique([incrementId])
 }
 
 model channels {
-  id             String     @id @default(uuid())
-  channelName    String
-  messages       messages[]
-  slackChannelId String
+  id                String     @id @default(uuid())
+  channelName       String
+  messages          messages[]
+  externalChannelId String
 
-  slackThreads        slackThreads[]
+  threads            threads[]
   //We should make channel required for channel
-  account             accounts?      @relation(fields: [accountId], references: [id])
-  accountId           String?
-  hidden              Boolean        @default(false)
-  default             Boolean        @default(false)
-  slackNextPageCursor String?
+  account            accounts? @relation(fields: [accountId], references: [id])
+  accountId          String?
+  hidden             Boolean   @default(false)
+  default            Boolean   @default(false)
+  externalPageCursor String?
 
-  @@unique([slackChannelId])
+  @@unique([externalChannelId])
 }
 
 model accounts {
@@ -79,10 +79,10 @@ model accounts {
   discordServerId        String?
   channels               channels[]
   slackTeamId            String?
-  slackInviteUrl         String?
+  communityInviteUrl     String?
   redirectDomain         String?
-  slackUrl               String?
-  slackSyncStatus        String           @default("NOT_STARTED")
+  communityUrl           String?
+  syncStatus             String           @default("NOT_STARTED")
   brandColor             String?
   homeUrl                String?
   docsUrl                String?
@@ -122,23 +122,23 @@ model auths {
 }
 
 model users {
-  id              String          @id @default(uuid())
+  id              String     @id @default(uuid())
   messages        messages[]
-  slackUserId     String
+  externalUserId  String
   displayName     String?
   profileImageUrl String?
   isBot           Boolean
   isAdmin         Boolean
-  mentions        slackMentions[]
+  mentions        mentions[]
   anonymousAlias  String?
 
   account    accounts @relation(fields: [accountsId], references: [id])
   accountsId String
 
-  @@unique([slackUserId, accountsId])
+  @@unique([externalUserId, accountsId])
 }
 
-model slackMentions {
+model mentions {
   messages   messages? @relation(fields: [messagesId], references: [id])
   messagesId String
   users      users?    @relation(fields: [usersId], references: [id])

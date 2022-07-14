@@ -103,7 +103,7 @@ describe('webhook :: channels', () => {
         data: {
           channelName: channelCreatedEvent.event.channel.name,
           accountId,
-          slackChannelId: channelCreatedEvent.event.channel.id,
+          externalChannelId: channelCreatedEvent.event.channel.id,
           hidden: false,
         },
       });
@@ -172,7 +172,7 @@ describe('webhook :: channels', () => {
       });
       expect(channelsFindFirstMock).toHaveBeenCalledWith({
         where: {
-          slackChannelId: channelRenameEvent.event.channel.id,
+          externalChannelId: channelRenameEvent.event.channel.id,
           accountId,
         },
       });
@@ -244,7 +244,7 @@ describe('webhook :: channels', () => {
       });
       expect(channelsFindFirstMock).toHaveBeenCalledWith({
         where: {
-          slackChannelId: channelRenameEvent.event.channel.id,
+          externalChannelId: channelRenameEvent.event.channel.id,
           accountId,
         },
       });
@@ -252,7 +252,7 @@ describe('webhook :: channels', () => {
         data: {
           channelName: channelRenameEvent.event.channel.name,
           accountId,
-          slackChannelId: channelRenameEvent.event.channel.id,
+          externalChannelId: channelRenameEvent.event.channel.id,
           hidden: false,
         },
       });

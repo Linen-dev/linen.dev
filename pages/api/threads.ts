@@ -3,7 +3,7 @@ import prisma from '../../client';
 
 async function update(request: NextApiRequest, response: NextApiResponse) {
   const incrementId = request.query.incrementId as string;
-  await prisma.slackThreads.update({
+  await prisma.threads.update({
     where: { incrementId: parseInt(incrementId) },
     data: { viewCount: { increment: 1 } },
   });

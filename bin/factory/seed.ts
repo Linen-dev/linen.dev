@@ -99,7 +99,7 @@ const createMessagesAndThreads = async (account: accounts) => {
   const user1 = await prisma.users.create({
     data: {
       accountsId: account.id,
-      slackUserId: '1',
+      externalUserId: '1',
       isBot: false,
       isAdmin: false,
       displayName: 'John Doe',
@@ -108,7 +108,7 @@ const createMessagesAndThreads = async (account: accounts) => {
   const user2 = await prisma.users.create({
     data: {
       accountsId: account.id,
-      slackUserId: '2',
+      externalUserId: '2',
       isBot: false,
       isAdmin: false,
       displayName: 'Jane Doe',
@@ -121,7 +121,7 @@ const createMessagesAndThreads = async (account: accounts) => {
     user1,
     user2,
     slug: 'slug',
-    slackChannelId: `slack-channel-id-${random()}`,
+    externalChannelId: `slack-channel-id-${random()}`,
   });
   await createChannelThreadsMessages({
     name: 'sql',
@@ -129,7 +129,7 @@ const createMessagesAndThreads = async (account: accounts) => {
     user1,
     user2,
     slug: 'something',
-    slackChannelId: `slack-channel-id-${random()}`,
+    externalChannelId: `slack-channel-id-${random()}`,
   });
   await createChannelThreadsMessages({
     name: 'alpha',
@@ -137,7 +137,7 @@ const createMessagesAndThreads = async (account: accounts) => {
     user1,
     user2,
     slug: 'cool',
-    slackChannelId: `slack-channel-id-${random()}`,
+    externalChannelId: `slack-channel-id-${random()}`,
   });
   await createChannelThreadsMessages({
     name: 'hidden',
@@ -146,7 +146,7 @@ const createMessagesAndThreads = async (account: accounts) => {
     user2,
     slug: 'cool',
     hidden: true,
-    slackChannelId: `slack-channel-id-${random()}`,
+    externalChannelId: `slack-channel-id-${random()}`,
   });
 };
 
@@ -157,7 +157,7 @@ async function createChannelThreadsMessages({
   name,
   slug,
   hidden,
-  slackChannelId,
+  externalChannelId,
 }: {
   account: accounts;
   user1: users;
@@ -165,34 +165,34 @@ async function createChannelThreadsMessages({
   name: string;
   slug: string;
   hidden?: boolean;
-  slackChannelId: string;
+  externalChannelId: string;
 }) {
   const channel = await prisma.channels.create({
     data: {
       channelName: name,
       accountId: account.id,
-      slackChannelId,
+      externalChannelId,
       hidden,
     },
   });
 
   for (let i = 0; i < 100; i++) {
-    const thread = await prisma.slackThreads.create({
+    const thread = await prisma.threads.create({
       data: {
         channelId: channel.id,
         slug: `${slug}-${channel.channelName}-${channel.id}-${i}`,
         messageCount: 2,
-        slackThreadTs: `slack-thread-ts-${slug}-${random()}`,
+        externalThreadId: `slack-thread-ts-${slug}-${random()}`,
       },
     });
     const message1 = await prisma.messages.create({
       data: {
         body: messages[i] || `foo-${i}`,
         channelId: channel.id,
-        slackThreadId: thread.id,
+        threadId: thread.id,
         usersId: user1.id,
         sentAt: new Date().toISOString(),
-        slackMessageId: `slack-message-id-${random()}`,
+        externalMessageId: `slack-message-id-${random()}`,
       },
     });
     await prisma.messageReactions.create({
@@ -206,10 +206,10 @@ async function createChannelThreadsMessages({
       data: {
         body: `bar-${i}`,
         channelId: channel.id,
-        slackThreadId: thread.id,
+        threadId: thread.id,
         usersId: user1.id,
         sentAt: new Date().toISOString(),
-        slackMessageId: `slack-message-id-${random()}`,
+        externalMessageId: `slack-message-id-${random()}`,
       },
     });
     await prisma.messageReactions.create({
@@ -223,20 +223,20 @@ async function createChannelThreadsMessages({
       data: {
         body: `baz-${i}`,
         channelId: channel.id,
-        slackThreadId: thread.id,
+        threadId: thread.id,
         usersId: user2.id,
         sentAt: new Date().toISOString(),
-        slackMessageId: `slack-message-id-${random()}`,
+        externalMessageId: `slack-message-id-${random()}`,
       },
     });
     await prisma.messages.create({
       data: {
         body: `qux-${i}`,
         channelId: channel.id,
-        slackThreadId: thread.id,
+        threadId: thread.id,
         usersId: user2.id,
         sentAt: new Date().toISOString(),
-        slackMessageId: `slack-message-id-${random()}`,
+        externalMessageId: `slack-message-id-${random()}`,
       },
     });
   }

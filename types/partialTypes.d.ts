@@ -6,12 +6,12 @@ import { Prisma } from '@prisma/client';
 // Cleaner approach as it leverages Prisma Client's generated types
 // Reduced maintenance burden and improved type safety when the schema changes
 
-const slackThreadsWithMessages = Prisma.validator<Prisma.SlackThreadsArgs>()({
+const threadsWithMessages = Prisma.validator<Prisma.threadsArgs>()({
   include: { messages: true },
 });
 
-export type SlackThreadsWithMessages = Prisma.SlackThreadsGetPayload<
-  typeof slackThreadsWithMessages
+export type ThreadsWithMessages = Prisma.threadsGetPayload<
+  typeof threadsWithMessages
 >;
 
 const messageWithAuthor = Prisma.validator<Prisma.MessageArgs>()({

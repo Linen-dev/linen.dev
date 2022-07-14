@@ -1,37 +1,29 @@
-import {
-  channels,
-  messages,
-  slackMentions,
-  slackThreads,
-  users,
-} from '@prisma/client';
+import { channels, messages, mentions, threads, users } from '@prisma/client';
 import superagent from 'superagent';
 
 type Messages =
   | (messages & {
       author: users | null;
-      slackThreads: slackThreads | null;
-      mentions: (slackMentions & {
+      threads: threads | null;
+      mentions: (mentions & {
         users: users | null;
       })[];
     })
   | (messages & {
-      mentions: (slackMentions & {
+      mentions: (mentions & {
         users: users | null;
       })[];
     });
 
-type ThreadWithMessages =
-  | (slackThreads & {
-      messages: (messages & {
-        author: users | null;
-        mentions: (slackMentions & {
-          users: users | null;
-        })[];
-      })[];
-      channel?: channels;
-    })
-  | null;
+type ThreadWithMessages = threads & {
+  messages: (messages & {
+    author: users | null;
+    mentions: (mentions & {
+      users: users | null;
+    })[];
+  })[];
+  channel?: channels;
+};
 
 export function anonymizeMessages(thread: ThreadWithMessages) {
   if (thread) {

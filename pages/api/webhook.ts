@@ -121,7 +121,7 @@ async function addMessage(
 ) {
   const thread_ts = event.thread_ts || event.ts;
   const thread = await findOrCreateThread({
-    slackThreadTs: thread_ts,
+    externalThreadId: thread_ts,
     channelId: channel.id,
   });
 
@@ -161,8 +161,8 @@ async function addMessage(
     blocks: event.blocks as any,
     channelId: channel.id,
     sentAt: new Date(parseFloat(event.ts) * 1000),
-    slackThreadId: thread?.id,
-    slackMessageId: event.ts,
+    threadId: thread?.id,
+    externalMessageId: event.ts,
     usersId: user?.id,
   };
 
@@ -239,7 +239,7 @@ async function processTeamJoin(event: SlackTeamJoinEvent) {
 async function getChannel(channelId: string) {
   return await prisma.channels.findUnique({
     where: {
-      slackChannelId: channelId,
+      externalChannelId: channelId,
     },
     include: {
       account: {
@@ -264,9 +264,9 @@ async function processMessageReactionEvent(
 
   const message = await prisma.messages.findUnique({
     where: {
-      channelId_slackMessageId: {
+      channelId_externalMessageId: {
         channelId: channel.id,
-        slackMessageId: event.item.ts,
+        externalMessageId: event.item.ts,
       },
     },
   });
@@ -370,7 +370,7 @@ async function processChannelCreated(body: SlackEvent) {
   await createChannel({
     accountId: account.id,
     name: event.channel.name,
-    slackChannelId: event.channel.id,
+    externalChannelId: event.channel.id,
     hidden: false,
   });
   return { status: 200, message: 'channel created' };
