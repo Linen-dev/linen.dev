@@ -1,10 +1,11 @@
 import { Lexer } from 'marked';
 
-interface Token {
+export interface Token {
   type: string;
   raw: string;
   text: string;
   depth?: number;
+  tokens?: Token[];
 }
 
 export function tokenize(markdown: string): Token[] {
