@@ -1,20 +1,33 @@
 import prisma from '../../client';
 import { discordSync } from '../../services/discord/sync';
 
-(async () => {
-  const fullSync = !!process.argv.find((arg) => arg === '--full-sync');
+function isInfiniteSync() {
+  return process.env.LONG_RUNNING === 'true';
+}
 
-  const accountIdFlag = process.argv.find((arg) =>
-    arg.startsWith('--account-id=')
-  );
+async function init() {
+  if (isInfiniteSync()) {
+    for (;;) {
+      await runSync();
+    }
+  } else {
+    const fullSync = !!process.argv.find((arg) => arg === '--full-sync');
 
-  let accountId;
+    const accountIdFlag = process.argv.find((arg) =>
+      arg.startsWith('--account-id=')
+    );
 
-  if (accountIdFlag) {
-    console.log({ accountIdFlag });
-    accountId = accountIdFlag.split('=').pop() as string;
+    let accountId;
+
+    if (accountIdFlag) {
+      console.log({ accountIdFlag });
+      accountId = accountIdFlag.split('=').pop() as string;
+    }
+    await runSync(accountId, fullSync);
   }
+}
 
+async function runSync(accountId?: string, fullSync?: boolean) {
   const discordAccounts = await prisma.accounts.findMany({
     select: { id: true },
     where: { discordServerId: { not: null }, id: accountId },
@@ -31,4 +44,6 @@ import { discordSync } from '../../services/discord/sync';
         console.error('Syncing error: ', err, account);
       });
   }
-})();
+}
+
+init();

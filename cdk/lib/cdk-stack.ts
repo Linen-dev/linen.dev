@@ -154,17 +154,13 @@ export class CdkStack extends cdk.Stack {
       targetUtilizationPercent: 70,
     });
 
-    const crawlerLogs = new cdk.aws_logs.LogGroup(this, 'CrawlerLogGroup', {
-      retention: cdk.aws_logs.RetentionDays.ONE_MONTH,
-    });
-
-    const crawler = new ecs_patterns.ScheduledFargateTask(this, 'crawler', {
+    new ecs_patterns.ScheduledFargateTask(this, 'crawler', {
       cluster,
       scheduledFargateTaskImageOptions: {
         image: dockerImage,
         cpu: 1024,
         memoryLimitMiB: 8192,
-        command: ['npm', 'run', 'crawler'],
+        command: ['npm', 'run', 'script:crawl'],
         secrets,
         environment: {
           NODE_ENV: 'production',
@@ -174,15 +170,72 @@ export class CdkStack extends cdk.Stack {
         },
         logDriver: ecs.LogDriver.awsLogs({
           streamPrefix: 'linen-dev-crawler',
-          logGroup: crawlerLogs,
+          logGroup: new cdk.aws_logs.LogGroup(this, 'CrawlerLogGroup', {
+            retention: cdk.aws_logs.RetentionDays.ONE_MONTH,
+          }),
         }),
       },
       schedule:
         cdk.aws_applicationautoscaling.Schedule.expression('rate(24 hours)'),
       platformVersion: ecs.FargatePlatformVersion.LATEST,
-    });
+    }).taskDefinition.addToTaskRolePolicy(cacheTableAccessPolicy);
 
-    crawler.taskDefinition.addToTaskRolePolicy(cacheTableAccessPolicy);
+    new ecs.FargateService(this, 'syncDiscordService', {
+      cluster,
+      taskDefinition: new ecs.FargateTaskDefinition(
+        this,
+        'syncDiscordTaskDef',
+        {
+          memoryLimitMiB: 512,
+          cpu: 256,
+        }
+      ),
+      desiredCount: 1,
+    }).taskDefinition
+      .addContainer('syncDiscordTask', {
+        image: dockerImage,
+        command: ['npm', 'run', 'script:sync:discord'],
+        secrets,
+        environment: {
+          NODE_ENV: 'production',
+          CACHE_TABLE: 'cache_prod',
+          LOG: 'true',
+          LONG_RUNNING: 'true',
+        },
+        logging: ecs.LogDriver.awsLogs({
+          streamPrefix: 'linen-dev-syncDiscord',
+          logGroup: new cdk.aws_logs.LogGroup(this, 'syncDiscordLogGroup', {
+            retention: cdk.aws_logs.RetentionDays.ONE_MONTH,
+          }),
+        }),
+      })
+      .taskDefinition.addToTaskRolePolicy(cacheTableAccessPolicy);
+
+    new ecs_patterns.ScheduledFargateTask(this, 'maintenance', {
+      cluster,
+      scheduledFargateTaskImageOptions: {
+        image: dockerImage,
+        memoryLimitMiB: 512,
+        cpu: 256,
+        command: ['npm', 'run', 'script:maintenance'],
+        secrets,
+        environment: {
+          NODE_ENV: 'production',
+          CACHE_TABLE: 'cache_prod',
+          LOG: 'true',
+          LONG_RUNNING: 'true',
+        },
+        logDriver: ecs.LogDriver.awsLogs({
+          streamPrefix: 'linen-dev-maintenance',
+          logGroup: new cdk.aws_logs.LogGroup(this, 'maintenanceLogGroup', {
+            retention: cdk.aws_logs.RetentionDays.ONE_MONTH,
+          }),
+        }),
+      },
+      schedule:
+        cdk.aws_applicationautoscaling.Schedule.expression('rate(24 hours)'),
+      platformVersion: ecs.FargatePlatformVersion.LATEST,
+    }).taskDefinition.addToTaskRolePolicy(cacheTableAccessPolicy);
 
     // new CodePipeline(this, 'LinenDev', {
     //   pipelineName: 'LinenDev',
