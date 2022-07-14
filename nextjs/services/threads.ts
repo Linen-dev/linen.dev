@@ -15,6 +15,7 @@ import { revalidateInSeconds } from '../constants/revalidate';
 import * as Sentry from '@sentry/nextjs';
 import { buildSettings } from './accountSettings';
 import { memoize } from '../utilities/dynamoCache';
+import { isDomain } from '../utilities/domain';
 
 interface IndexProps {
   channelId: string;
@@ -143,10 +144,7 @@ export async function getThreadById(
   };
 }
 
-export async function threadGetStaticProps(
-  context: GetStaticPropsContext,
-  isSubdomainbasedRouting: boolean
-) {
+export async function threadGetStaticProps(context: GetStaticPropsContext) {
   const threadId = context.params?.threadId as string;
   const communityName = context.params?.communityName as string;
   try {
@@ -154,7 +152,7 @@ export async function threadGetStaticProps(
     return {
       props: {
         ...thread,
-        isSubDomainRouting: isSubdomainbasedRouting,
+        isSubDomainRouting: isDomain(context.params?.communityName as string),
       },
       revalidate: revalidateInSeconds, // In seconds
     };

@@ -28,3 +28,7 @@ export function cleanUpDomain(url: string) {
     return url;
   }
 }
+
+export function isDomain(communityName: string) {
+  return communityName.indexOf('.') > -1;
+}

@@ -7,10 +7,36 @@ const pageExtensions = LONG_RUNNING
   : ['ts', 'js', 'tsx', 'jsx', 'md', 'mdx'];
 const SKIP_SENTRY = process.env.SKIP_SENTRY === 'true';
 
+const rewritesPattern = (letter) => [
+  {
+    source: `/${letter}/:communityName`,
+    destination: `/subdomain/:communityName`,
+  },
+  {
+    source: `/${letter}/:communityName/t/:threadId`,
+    destination: `/subdomain/:communityName/t/:threadId`,
+  },
+  {
+    source: `/${letter}/:communityName/t/:threadId/:slug`,
+    destination: `/subdomain/:communityName/t/:threadId/:slug`,
+  },
+  {
+    source: `/${letter}/:communityName/c/:channelName`,
+    destination: `/subdomain/:communityName/c/:channelName`,
+  },
+  {
+    source: `/${letter}/:communityName/c/:channelName/:page`,
+    destination: `/subdomain/:communityName/c/:channelName/:page`,
+  },
+];
+
 /**
  * @type {import('next').NextConfig}
  */
 const nextConfig = {
+  async rewrites() {
+    return [...rewritesPattern('s'), ...rewritesPattern('d')];
+  },
   eslint: {
     // Warning: This allows production builds to successfully complete even if
     // your project has ESLint errors.

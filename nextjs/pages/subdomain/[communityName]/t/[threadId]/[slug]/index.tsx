@@ -6,7 +6,7 @@ export default Thread;
 
 //Renders the same page as /threadId
 export async function getStaticProps(context: GetStaticPropsContext) {
-  return threadGetStaticProps(context, true);
+  return threadGetStaticProps(context);
 }
 
 export function getStaticPaths() {

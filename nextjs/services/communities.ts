@@ -14,6 +14,7 @@ import { NotFound } from '../utilities/response';
 import { revalidateInSeconds } from '../constants/revalidate';
 import { buildSettings } from './accountSettings';
 import { memoize } from '../utilities/dynamoCache';
+import { isDomain } from '../utilities/domain';
 
 async function getThreadsAndUsers({
   account,
@@ -189,10 +190,7 @@ export const getThreadsByCommunityName = async (
   };
 };
 
-export async function channelGetStaticProps(
-  context: GetStaticPropsContext,
-  isSubdomainbasedRouting: boolean
-) {
+export async function channelGetStaticProps(context: GetStaticPropsContext) {
   const communityName = context.params?.communityName as string;
   const channelName = context.params?.channelName as string;
   const page = context.params?.page as string;
@@ -209,7 +207,7 @@ export async function channelGetStaticProps(
     props: {
       ...result,
       communityName,
-      isSubDomainRouting: isSubdomainbasedRouting,
+      isSubDomainRouting: isDomain(context.params?.communityName as string),
     },
     revalidate: revalidateInSeconds, // In seconds
   };
