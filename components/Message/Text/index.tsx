@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactEmoji from 'react-emoji-render';
+import Paragraph from './Paragraph';
 import { decodeHTML } from '../utilities/string';
-import { tokenize } from 'utilities/markdown';
+import { tokenize, Token } from 'utilities/markdown';
 
 interface Props {
   value: string;
@@ -16,11 +17,7 @@ export default function Text({ value }: Props) {
         const key = `${token.type}-${token.raw}-${index}`;
         switch (token.type) {
           case 'paragraph':
-            return (
-              <React.Fragment key={key}>
-                <ReactEmoji key={key} text={token.text} />
-              </React.Fragment>
-            );
+            return <Paragraph key={key} token={token} />;
           case 'heading':
             switch (token.depth) {
               case 1:

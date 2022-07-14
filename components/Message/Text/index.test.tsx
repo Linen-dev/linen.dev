@@ -49,4 +49,10 @@ describe('Text', () => {
     const { container } = render(<Text value="Hey :)" />);
     expect(container).toHaveTextContent('😃');
   });
+
+  it('renders bold text', () => {
+    const { container } = render(<Text value="*hey*" />);
+    expect(container.querySelector('strong')).toHaveTextContent('hey');
+    expect(container).not.toHaveTextContent('*hey*');
+  });
 });

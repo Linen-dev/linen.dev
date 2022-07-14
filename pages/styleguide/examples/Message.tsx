@@ -81,7 +81,7 @@ const HTML_EXAMPLE = `
 
 const MARKDOWN_EXAMPLE = `
 Hey 👋
-Quick note, I saw that there's a spelling error in the license dashboard UI:
+Quick note, I saw that there's a spelling error in the *license dashboard* UI:
 &gt; 1 devices @ $1.00/device/month
 &gt; Billed *anually* at $12.00/yr
 &gt; Next payment on Apr 13, 2023
