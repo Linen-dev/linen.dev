@@ -35,7 +35,7 @@ services:
 
   app:
     build:
-      context: .
+      context: nextjs
       target: deps
     container_name: linendev_app
     environment:

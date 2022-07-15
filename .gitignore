@@ -3,24 +3,24 @@
 .idea
 
 # dependencies
-/node_modules
+node_modules
 /.pnp
 .pnp.js
 
 # testing
-/coverage
+coverage
 
 # next.js
-/.next/
-/out/
+.next/
+out/
 
 # production
-/build
+build
 
 # misc
 .DS_Store
 *.pem
-!/prisma/*.pem
+!nextjs/prisma/*.pem
 
 # debug
 npm-debug.log*

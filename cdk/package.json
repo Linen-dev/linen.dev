@@ -7,6 +7,7 @@
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
+    "prepare": "cd .. && npx -y husky install",
     "test": "jest",
     "cdk": "cdk"
   },
@@ -21,7 +22,12 @@
   },
   "dependencies": {
     "aws-cdk-lib": "2.18.0",
+    "prettier": "2.7.1",
+    "lint-staged": "^12.5.0",
     "constructs": "^10.0.0",
     "source-map-support": "^0.5.16"
+  },
+  "lint-staged": {
+    "**/*": "prettier --write --ignore-unknown"
   }
 }
