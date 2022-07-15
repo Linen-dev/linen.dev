@@ -1,8 +1,8 @@
 .thread {
   margin-bottom: 2rem;
   margin-top: 2rem;
-  padding-left: 0;
-  padding-right: 0;
+  padding-left: 1.5rem /* 24px */;
+  padding-right: 1.5rem /* 24px */;
 }
 
 @media (min-width: 1024px) {
