@@ -41,4 +41,9 @@ describe('#decodeHTML', () => {
     const code = '&apos;';
     expect(decodeHTML(code)).toEqual("'");
   });
+
+  it('is idempotent', () => {
+    const code = '&lt;';
+    expect(decodeHTML(decodeHTML(code))).toEqual('<');
+  });
 });
