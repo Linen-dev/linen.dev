@@ -1,5 +1,6 @@
 import Example from '../Example';
 import Message from '../../../components/Message';
+import { EMOJIS } from '../../../components/Message/Emoji/utilities/emojis';
 
 const STACK_TRACE_EXAMPLE = `
 Apr 07 04:38:57 ip-10-0-74-131 kernel: watchdog: BUG: soft lockup - CPU#1 stuck for 22s! [kauditd:22]
@@ -129,7 +130,7 @@ export default function Styleguide() {
   return (
     <Example header="Message">
       <Example description="Message component can render emojis.">
-        <Message text="Hello, world! :)" />
+        <Message text="Hello, world! :) :thank-you:" />
       </Example>
       <Example description="It supports mentions.">
         <Message text="Hey, <@John>!" />
@@ -189,15 +190,7 @@ export default function Styleguide() {
       <Example description="It supports reactions.">
         <Message
           text="Hello, world! :)"
-          reactions={[
-            { type: '+1', count: 10 },
-            { type: '-1', count: 2 },
-            { type: 'heart', count: 5 },
-            { type: '100', count: 3 },
-            { type: 'slightly_smiling_face', count: 1 },
-            { type: 'raised_hands', count: 1 },
-            { type: 'eyes', count: 1 },
-          ]}
+          reactions={EMOJIS.map((emoji) => ({ type: emoji, count: 1 }))}
         />
       </Example>
     </Example>
