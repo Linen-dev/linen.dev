@@ -100,13 +100,10 @@ async function getThreadsFromDB(channel: channels, take: number, skip: number) {
   });
 }
 
-function upsertThreadType18(channelId: string, thread: DiscordMessage) {
-  return upsertThreadType0(channelId, thread);
-}
-
-function upsertThreadType0(channelId: string, thread: DiscordMessage) {
+function upsertThread(channelId: string, thread: DiscordMessage) {
   const discordThread = {
     externalThreadId: thread.thread?.id || thread.id,
+    title: thread.thread?.name,
     slug: createSlug(
       thread.content ||
         thread.thread?.name ||
@@ -129,17 +126,8 @@ function upsertThreadType0(channelId: string, thread: DiscordMessage) {
   });
 }
 
-const upsertThread: Record<
-  number,
-  (channelId: string, thread: DiscordMessage) => Promise<threads>
-> = {
-  0: upsertThreadType0,
-  18: upsertThreadType18,
-};
-
 async function createThread(channelId: string, thread: DiscordMessage) {
-  // console.log('thread', thread);
-  return upsertThread[thread.type](channelId, thread);
+  return upsertThread(channelId, thread);
 }
 
 async function updateThread(channel: channels, thread: threads) {
@@ -147,7 +135,7 @@ async function updateThread(channel: channels, thread: threads) {
     path: `/channels/${channel.externalChannelId}/messages/${thread.externalThreadId}`,
   });
   try {
-    return await upsertThread[message.type](channel.id, message);
+    return await upsertThread(channel.id, message);
   } catch (err) {
     console.error(String(err));
     return;
