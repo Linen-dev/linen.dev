@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactEmoji from 'react-emoji-render';
 import { Token } from 'utilities/markdown';
+import { decodeHTML } from '../../utilities/string';
 
 function Paragraph({ token }: { token: Token }) {
   if (token.tokens) {
@@ -22,9 +23,10 @@ function Paragraph({ token }: { token: Token }) {
       </>
     );
   }
+  const text = decodeHTML(token.text);
   return (
     <React.Fragment>
-      <ReactEmoji text={token.text} />
+      <ReactEmoji text={text} />
     </React.Fragment>
   );
 }
