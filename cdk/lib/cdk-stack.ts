@@ -4,28 +4,45 @@ import * as ec2 from 'aws-cdk-lib/aws-ec2';
 import * as ecs from 'aws-cdk-lib/aws-ecs';
 import * as ecs_patterns from 'aws-cdk-lib/aws-ecs-patterns';
 import * as path from 'path';
+import { ScopedAws } from 'aws-cdk-lib';
 
 const BRANCH = process.env.BRANCH || 'staging';
-const DYNAMODB_TABLE = BRANCH === 'main' ? 'cache_prod' : 'cache-staging';
-const SSM_STAGE = BRANCH === 'main' ? 'prod' : 'staging';
+
+function isProd() {
+  return BRANCH === 'main';
+}
+
+const DYNAMODB_TABLE = isProd() ? 'cache_prod' : 'cache-staging';
+const SSM_STAGE = isProd() ? 'prod' : 'staging';
+const S3_ASSETS_BUCKET = isProd() ? 'linen-assets' : 'linen-assets-staging';
 
 export class CdkStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
+    const { accountId, region } = new ScopedAws(this);
+
     const dockerImage = new ecs.AssetImage(
       path.join(__dirname, '../../nextjs'),
       {
         buildArgs: {
-          DATABASE_URL: process.env.DATABASE_URL as string,
+          DATABASE_URL: process.env.DATABASE_URL as string, // this env will be avail inside the codebuild
         },
       }
     );
 
     const cacheTableAccessPolicy = new cdk.aws_iam.PolicyStatement({
-      actions: ['dynamodb:PutItem', 'dynamodb:GetItem'],
+      actions: [
+        'dynamodb:PutItem',
+        'dynamodb:GetItem',
+        's3:PutObject',
+        's3:PutObjectAcl',
+        's3:PutLifecycleConfiguration',
+      ],
       resources: [
-        `arn:aws:dynamodb:us-east-1:775327867774:table/${DYNAMODB_TABLE}`,
+        `arn:aws:dynamodb:${region}:${accountId}:table/${DYNAMODB_TABLE}`,
+        `arn:aws:s3:::${S3_ASSETS_BUCKET}`,
+        `arn:aws:s3:::${S3_ASSETS_BUCKET}/*`,
       ],
     });
 
@@ -64,6 +81,7 @@ export class CdkStack extends cdk.Stack {
       LOG: 'true',
       LONG_RUNNING: 'true',
       SKIP_DYNAMO_CACHE: 'true',
+      S3_UPLOAD_BUCKET: S3_ASSETS_BUCKET,
     };
 
     const secrets = {
@@ -187,7 +205,7 @@ export class CdkStack extends cdk.Stack {
         }),
       },
       schedule:
-        cdk.aws_applicationautoscaling.Schedule.expression('rate(24 hours)'),
+        cdk.aws_applicationautoscaling.Schedule.expression('00 3 ? * * *'),
       platformVersion: ecs.FargatePlatformVersion.LATEST,
     }).taskDefinition.addToTaskRolePolicy(cacheTableAccessPolicy);
 
@@ -234,7 +252,7 @@ export class CdkStack extends cdk.Stack {
         }),
       },
       schedule:
-        cdk.aws_applicationautoscaling.Schedule.expression('rate(24 hours)'),
+        cdk.aws_applicationautoscaling.Schedule.expression('00 3 ? * * *'),
       platformVersion: ecs.FargatePlatformVersion.LATEST,
     }).taskDefinition.addToTaskRolePolicy(cacheTableAccessPolicy);
   }
