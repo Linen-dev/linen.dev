@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactEmoji from 'react-emoji-render';
+import Emoji from '../../Emoji';
 import styles from './index.module.css';
 import { SerializedReaction } from 'types/shared';
 
@@ -13,7 +13,7 @@ function normalizeText(text: string) {
 function Reaction({ type, count }: SerializedReaction) {
   return (
     <div className={styles.reaction}>
-      <ReactEmoji text={normalizeText(type)} /> {count}
+      <Emoji text={normalizeText(type)} /> {count}
     </div>
   );
 }
