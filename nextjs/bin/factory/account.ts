@@ -3,20 +3,20 @@ import prisma from '../../client';
 export async function createAccounts() {
   await prisma.accounts.create({
     data: {
-      homeUrl: `https://pulumi.dev`,
-      docsUrl: `https://pulumi.dev/docs`,
-      redirectDomain: 'pulumi.dev',
+      homeUrl: `https://communityTwo.dev`,
+      docsUrl: `https://communityTwo.dev/docs`,
+      redirectDomain: 'communityTwo.dev',
       brandColor: '#00bcd4',
-      logoUrl: 'https://linen-assets.s3.amazonaws.com/pulumi-logo.svg',
+      logoUrl: 'https://linen-assets.s3.amazonaws.com/communityTwo-logo.svg',
     },
   });
   await prisma.accounts.create({
     data: {
-      homeUrl: `https://prefect.dev`,
-      docsUrl: `https://prefect.dev/docs`,
-      redirectDomain: 'prefect.dev',
+      homeUrl: `https://communityOne.dev`,
+      docsUrl: `https://communityOne.dev/docs`,
+      redirectDomain: 'communityOne.dev',
       brandColor: '#00bcd4',
-      logoUrl: 'https://linen-assets.s3.amazonaws.com/prefect-logo.svg',
+      logoUrl: 'https://linen-assets.s3.amazonaws.com/communityOne-logo.svg',
     },
   });
   const account = await prisma.accounts.create({
