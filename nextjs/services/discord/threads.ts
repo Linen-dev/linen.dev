@@ -105,7 +105,7 @@ function upsertThreadType18(channelId: string, thread: DiscordMessage) {
 }
 
 function upsertThreadType0(channelId: string, thread: DiscordMessage) {
-  const slackThread = {
+  const discordThread = {
     externalThreadId: thread.thread?.id || thread.id,
     slug: createSlug(
       thread.content ||
@@ -117,14 +117,14 @@ function upsertThreadType0(channelId: string, thread: DiscordMessage) {
   };
   return prisma.threads.upsert({
     create: {
-      ...slackThread,
+      ...discordThread,
       channelId,
     },
     update: {
-      ...slackThread,
+      ...discordThread,
     },
     where: {
-      externalThreadId: slackThread.externalThreadId,
+      externalThreadId: discordThread.externalThreadId,
     },
   });
 }
