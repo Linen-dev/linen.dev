@@ -31,7 +31,6 @@ export default function Channel({
   const [currentThreads, setCurrentThreads] = useState(threads);
   const [pageCount, setPageCount] = useState(pagination?.pageCount);
   const [currentPage, setCurrentPage] = useState(page);
-  // const [initial, setInitial] = useState(true);
 
   useEffect(() => {
     setCurrentThreads(threads);
@@ -42,22 +41,6 @@ export default function Channel({
   if (!threads) {
     return <div></div>;
   }
-
-  // useEffect(() => {
-  //   if (initial && channelId && page === 1) {
-  //     return setInitial(false);
-  //   }
-  //   fetch(`/api/threads?channelId=${channelId}&page=${currentPage}`)
-  //     .then((response) => response.json())
-  //     .then((response) => {
-  //       const { data, pagination } = response;
-  //       let { threads } = data;
-  //       threads = threads.filter((t: threads) => t.messages.length > 0);
-  //       setCurrentThreads(threads);
-  //       setPageCount(pagination.pageCount);
-  //       window.scrollTo(0, 0);
-  //     });
-  // }, [currentPage, channelId, page]);
 
   if (!channelId) {
     return (
@@ -105,16 +88,6 @@ export default function Channel({
 
   const rows = currentThreads?.map(({ messages, incrementId, slug }) => {
     const oldestMessage = messages[messages.length - 1];
-    // const newestMessage = messages[0];
-    // const authors = messages.reduce((array: users[], { author }) => {
-    //   if (
-    //     author &&
-    //     !array.find((a: users) => a.profileImageUrl === author.profileImageUrl)
-    //   ) {
-    //     array.push(author);
-    //   }
-    //   return array;
-    // }, []);
 
     const author = oldestMessage.author;
 
