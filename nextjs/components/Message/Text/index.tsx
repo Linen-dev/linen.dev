@@ -22,37 +22,37 @@ export default function Text({ value }: Props) {
             switch (token.depth) {
               case 1:
                 return (
-                  <h1 className="font-xl font-bold mb-3" key={key}>
+                  <h1 className="text-xl font-bold mb-3" key={key}>
                     <ReactEmoji text={token.text} />
                   </h1>
                 );
               case 2:
                 return (
-                  <h2 className="font-lg font-bold mb-3" key={key}>
+                  <h2 className="text-lg font-bold mb-3" key={key}>
                     <ReactEmoji text={token.text} />
                   </h2>
                 );
               case 3:
                 return (
-                  <h3 className="font-md font-bold mb-3" key={key}>
+                  <h3 className="text-md font-bold mb-3" key={key}>
                     <ReactEmoji text={token.text} />
                   </h3>
                 );
               case 4:
                 return (
-                  <h4 className="font-sm font-bold mb-3" key={key}>
+                  <h4 className="text-sm font-bold mb-3" key={key}>
                     <ReactEmoji text={token.text} />
                   </h4>
                 );
               case 5:
                 return (
-                  <h5 className="font-xs font-bold mb-3" key={key}>
+                  <h5 className="text-xs font-bold mb-3" key={key}>
                     <ReactEmoji text={token.text} />
                   </h5>
                 );
               case 6:
                 return (
-                  <h6 className="font-xs font-bold mb-3" key={key}>
+                  <h6 className="text-xs font-bold mb-3" key={key}>
                     <ReactEmoji text={token.text} />
                   </h6>
                 );

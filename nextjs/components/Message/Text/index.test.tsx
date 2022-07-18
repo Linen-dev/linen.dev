@@ -55,4 +55,9 @@ describe('Text', () => {
     expect(container.querySelector('strong')).toHaveTextContent('hey');
     expect(container).not.toHaveTextContent('*hey*');
   });
+
+  it('escapes html entities', () => {
+    const { container } = render(<Text value="# &lt;foo&gt;" />);
+    expect(container).toHaveTextContent('<foo>');
+  });
 });
