@@ -130,7 +130,7 @@ export default function Styleguide() {
   return (
     <Example header="Message">
       <Example description="Message component can render emojis.">
-        <Message text="Hello, world! :) :thank-you:" />
+        <Message text="Hello, world! :)" />
       </Example>
       <Example description="It supports mentions.">
         <Message text="Hey, <@John>!" />
