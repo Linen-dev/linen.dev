@@ -104,7 +104,7 @@ export default function Channel({
       return (
         <li
           key={incrementId}
-          className="px-4 py-4 hover:bg-gray-50 border-solid border-gray-200 md:hidden cursor-pointer"
+          className="px-4 py-4 hover:bg-gray-50 border-solid border-gray-200 cursor-pointer"
         >
           <CustomLink
             isSubDomainRouting={isSubDomainRouting}
@@ -114,7 +114,7 @@ export default function Channel({
             key={`${incrementId}-desktop`}
           >
             <div className="flex">
-              <div className="flex pr-4 md:hidden">
+              <div className="flex pr-4">
                 {author && (
                   <Avatar
                     key={`${incrementId}-${
@@ -127,14 +127,22 @@ export default function Channel({
                 )}
               </div>
               <div className="flex flex-col w-full">
-                <div className="pb-2 md:px-6">
+                <div className="flex flex-row justify-between pb-2">
+                  <p className="font-semibold text-sm inline-block">
+                    {author.displayName || 'user'}
+                  </p>
+                  <div className="text-sm text-gray-400">
+                    {format(new Date(oldestMessage.sentAt))}
+                  </div>
+                </div>
+                <div className="pb-2">
                   <Message
                     text={oldestMessage.body}
                     truncate
                     mentions={oldestMessage.mentions.map((m) => m.users)}
                   />
                 </div>
-                <div className="text-sm text-gray-400 flex flex-row justify-between items-center pr-4">
+                <div className="text-sm text-gray-400 flex flex-row items-center">
                   <div className="flex flex-row">
                     <Avatars
                       users={
@@ -149,83 +157,18 @@ export default function Channel({
                     />
                   </div>
                   {messages.length > 1 && (
-                    <div>{messages.length - 1} replies</div>
+                    //Kam: Not sure about this blue but I wanted to add some color to make the page more interesting
+                    <div className="text-blue-800">
+                      {messages.length - 1} replies
+                    </div>
                   )}
-                  <div>{format(new Date(oldestMessage.sentAt))}</div>
-                  <div className="hidden md:flex">{viewCount} Views</div>
+                  {/* <div className="hidden md:flex">{viewCount} Views</div> */}
                 </div>
               </div>
             </div>
             {/* <CopyToClipboardLink {...linkProps} /> */}
           </CustomLink>
         </li>
-      );
-    }
-  );
-
-  const tableRows = currentThreads?.map(
-    ({ messages, incrementId, slug, viewCount }) => {
-      const oldestMessage = messages[messages.length - 1];
-      // const newestMessage = messages[0];
-      const authors = messages.reduce((array: users[], { author }) => {
-        if (
-          author &&
-          !array.find(
-            ({ profileImageUrl }) => profileImageUrl === author.profileImageUrl
-          )
-        ) {
-          array.push(author);
-        }
-        return array;
-      }, []);
-      const linkProps = {
-        isSubDomainRouting,
-        communityName,
-        communityType: settings.communityType,
-        path: `/t/${incrementId}/${slug || 'topic'}`.toLowerCase(),
-      };
-      return (
-        <CustomTableRowLink {...linkProps} key={`${incrementId}-desktop`}>
-          <tr className="border-solid border-gray-200 cursor-pointer">
-            <td className={styles.td}>
-              <CustomLink {...linkProps}>
-                <Message
-                  text={oldestMessage.body}
-                  truncate
-                  mentions={oldestMessage.mentions.map((m) => m.users)}
-                />
-              </CustomLink>
-            </td>
-            <td className="px-6 py-3 align-middle">
-              <CustomLink {...linkProps}>
-                {' '}
-                <Avatars
-                  users={
-                    authors.map((p) => ({
-                      src: p.profileImageUrl,
-                      alt: p.displayName,
-                      text: (p.displayName || '?').slice(0, 1).toLowerCase(),
-                    })) || []
-                  }
-                />
-              </CustomLink>
-            </td>
-            <td className="px-6 py-3 text-sm align-middle">
-              <CustomLink {...linkProps}>{viewCount}</CustomLink>
-            </td>
-            <td className="px-6 py-3 text-sm align-middle">
-              <CustomLink {...linkProps}>{messages.length}</CustomLink>
-            </td>
-            <td className="px-6 py-3 text-sm align-middle min-w-[120px]">
-              <CustomLink {...linkProps}>
-                {format(new Date(oldestMessage.sentAt))}
-              </CustomLink>
-            </td>
-            <td className="px-6 text-sm text-center align-middle">
-              <CopyToClipboardLink {...linkProps} />
-            </td>
-          </tr>
-        </CustomTableRowLink>
       );
     }
   );
@@ -242,8 +185,6 @@ export default function Channel({
     return `${name}${channel}`;
   }
   return (
-    //Super hacky mobile friendly - different component gets
-    //rendered when it is smaller than a specific size and gets unhidden
     <PageLayout
       users={users}
       communityUrl={communityUrl}
@@ -258,33 +199,8 @@ export default function Channel({
       communityName={communityName}
       isSubDomainRouting={isSubDomainRouting}
     >
-      <div className="sm:pt-6">
-        <table className="hidden md:block md:table-fixed pb-6">
-          <thead>
-            <tr>
-              <th className="px-6 py-3 text-left font-medium text-gray-500">
-                Topic
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
-                Authors
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
-                Views
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
-                Replies
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
-                Activity
-              </th>
-              <th className="px-6 text-center text-xs font-medium text-gray-500">
-                Share
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y">{tableRows}</tbody>
-        </table>
-        <ul className="divide-y md:hidden">{rows}</ul>
+      <div className="sm:pt-6 justify-center">
+        <ul className="divide-y max-w-4xl">{rows}</ul>
         {!!pageCount && (
           <Pagination
             channelName={currentChannel.channelName}

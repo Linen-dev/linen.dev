@@ -140,7 +140,7 @@ function PageLayout({
         <div
           className={classNames(
             'lg:h-[calc(100vh_-_80px)] lg:w-full',
-            'md:flex',
+            'flex',
             'sm:h-[calc(100vh_-_144px)]',
             'justify-center overflow-auto h-[calc(100vh_-_192px)] w-full'
           )}
