@@ -1,6 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import Channel from './Channel';
+import Channel, { uniqueUsers } from './Channel';
+import { users } from '@prisma/client';
 
 describe('Channel', () => {
   describe('and google analytics id is set', () => {
@@ -38,5 +39,35 @@ describe('Channel', () => {
         '<script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-123456789-1"></script>'
       );
     });
+  });
+});
+
+describe('uniqueUsers', () => {
+  const user1 = {
+    accountsId: '2',
+    externalUserId: '1',
+    isBot: false,
+    isAdmin: false,
+    displayName: 'John Doe',
+    profileImageUrl: 'someS3Url2',
+    id: '1',
+    anonymousAlias: 'fakeAlias1',
+  };
+  const user2 = {
+    accountsId: '2',
+    externalUserId: '2',
+    isBot: false,
+    isAdmin: false,
+    displayName: 'Jane Doe',
+    profileImageUrl: 'someS3Url2',
+    id: '2',
+    anonymousAlias: 'fakeAlias2',
+  };
+  const users: users[] = [user1, user2, user1, user2];
+  it('finds unique users from a list', () => {
+    const userResult = uniqueUsers(users);
+    expect(userResult.length).toEqual(2);
+    expect(userResult.includes(user1)).toEqual(true);
+    expect(userResult.includes(user2)).toEqual(true);
   });
 });

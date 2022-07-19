@@ -8,7 +8,6 @@ import {
 } from '@prisma/client';
 import { useRouter } from 'next/router';
 import { Settings } from 'services/accountSettings';
-import { MentionsWithUsers } from 'types/apiResponses/threads/[threadId]';
 import Channel from './Channel';
 import ChannelChatView from './ChannelChatView';
 import { SerializedAttachment, SerializedReaction } from 'types/shared';
@@ -19,17 +18,6 @@ export interface PaginationType {
   pageCount: number;
   currentPage: number;
   perPage: number;
-}
-
-// The default types doesn't include associations
-// maybe look into getting prisma handle association generation
-interface message extends messages {
-  author: users;
-  mentions: MentionsWithUsers[];
-}
-
-interface threadsWithMessages extends threads {
-  messages: message[];
 }
 
 export type messageWithAuthor = messages & {
