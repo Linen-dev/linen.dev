@@ -10,6 +10,7 @@ import { getSlackUser } from '../services/slack';
 import { stripProtocol } from '../utilities/url';
 import { anonymizeMessages } from '../utilities/anonymizeMessages';
 import { generateRandomWordSlug } from '../utilities/randomWordSlugs';
+import { AccountWithSlackAuthAndChannels } from '../types/partialTypes';
 
 export const createMessage = async (
   message: Prisma.messagesUncheckedCreateInput
@@ -103,7 +104,9 @@ export const findAccount = async (accounts: Prisma.accountsFindUniqueArgs) => {
   return await prisma.accounts.findUnique(accounts);
 };
 
-export const findAccountById = async (accountId: string) => {
+export const findAccountById = async (
+  accountId: string
+): Promise<AccountWithSlackAuthAndChannels | null> => {
   return await prisma.accounts.findUnique({
     where: {
       id: accountId,
