@@ -47,9 +47,11 @@ model threads {
   slug             String?
   messageCount     Int      @default(1)
   title            String?
+  description      String?
 
   messages  messages[]
   channelId String
+  repliers  repliers[]
 
   @@unique([externalThreadId])
   @@unique([incrementId])
@@ -136,8 +138,9 @@ model users {
   mentions        mentions[]
   anonymousAlias  String?
 
-  account    accounts @relation(fields: [accountsId], references: [id])
+  account    accounts   @relation(fields: [accountsId], references: [id])
   accountsId String
+  repliers   repliers[]
 
   @@unique([externalUserId, accountsId])
 }
@@ -207,4 +210,14 @@ model discordAuthorizations {
   account accounts? @relation(fields: [accountsId], references: [id])
 
   accountsId String?
+}
+
+model repliers {
+  threadId String
+  thread   threads? @relation(fields: [threadId], references: [id])
+  userId   String
+  user     users?   @relation(fields: [userId], references: [id])
+
+  @@id([threadId, userId])
+  @@index([threadId])
 }
