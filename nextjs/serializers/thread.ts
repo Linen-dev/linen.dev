@@ -1,19 +1,19 @@
 import { MentionsWithUsers } from '../types/apiResponses/threads/[threadId]';
 import { ThreadsWithMessages, MessageWithAuthor } from '../types/partialTypes';
 import { SerializedAttachment, SerializedReaction } from '../types/shared';
-import { Prisma } from '@prisma/client';
+import { Prisma, threads, users } from '@prisma/client';
 
-interface SerializedMessage {
+export interface SerializedMessage {
   body: string;
   sentAt: string;
-  author: string;
+  author: users;
   usersId: string;
   mentions: MentionsWithUsers[];
   attachments: SerializedAttachment[];
   reactions: SerializedReaction[];
 }
 
-interface SerializedThread {
+export interface SerializedThread extends threads {
   messages: SerializedMessage[];
 }
 

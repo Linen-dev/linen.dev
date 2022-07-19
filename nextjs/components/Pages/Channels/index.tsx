@@ -12,6 +12,7 @@ import { MentionsWithUsers } from 'types/apiResponses/threads/[threadId]';
 import Channel from './Channel';
 import ChannelChatView from './ChannelChatView';
 import { SerializedAttachment, SerializedReaction } from 'types/shared';
+import { SerializedThread } from '@/serializers/thread';
 
 export interface PaginationType {
   totalCount: number;
@@ -49,7 +50,7 @@ export type Props = {
   users: users[];
   channels?: channels[];
   currentChannel: channels;
-  threads?: threadsWithMessages[];
+  threads?: SerializedThread[];
   messages?: messageWithAuthor[];
   pagination?: PaginationType;
   page: number;
