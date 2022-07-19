@@ -29,3 +29,28 @@ const messageWithChannel = Prisma.validator<Prisma.MessageArgs>()({
 export type MessageWithAuthor = Prisma.MessagesGetPayload<
   typeof messageWithAuthor
 >;
+
+const accountWithSlackAuthAndChannels = Prisma.validator<Prisma.accountsArgs>()(
+  {
+    include: {
+      slackAuthorizations: {
+        orderBy: {
+          createdAt: 'desc',
+        },
+      },
+      channels: true,
+    },
+  }
+);
+
+export type AccountWithSlackAuthAndChannels = Prisma.accountsGetPayload<
+  typeof accountWithSlackAuthAndChannels
+>;
+
+const userMapType = Prisma.validator<Prisma.usersArgs>()({
+  select: {
+    externalUserId: true,
+    id: true,
+  },
+});
+export type UserMap = Prisma.usersGetPayload<typeof userMapType>;
