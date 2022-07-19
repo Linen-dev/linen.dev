@@ -86,54 +86,82 @@ export default function Channel({
     setCurrentPage(newPage);
   };
 
-  const rows = currentThreads?.map(({ messages, incrementId, slug }) => {
-    const oldestMessage = messages[messages.length - 1];
+  const rows = currentThreads?.map(
+    ({ messages, incrementId, slug, viewCount }) => {
+      const linkProps = {
+        isSubDomainRouting,
+        communityName,
+        communityType: settings.communityType,
+        path: `/t/${incrementId}/${slug || 'topic'}`.toLowerCase(),
+      };
 
-    const author = oldestMessage.author;
+      const oldestMessage = messages[messages.length - 1];
 
-    return (
-      <li
-        key={incrementId}
-        className="px-4 py-4 hover:bg-gray-50 border-solid border-gray-200 md:hidden cursor-pointer"
-      >
-        <CustomLink
-          isSubDomainRouting={isSubDomainRouting}
-          communityName={communityName}
-          communityType={settings.communityType}
-          path={`/t/${incrementId}/${slug || 'topic'}`.toLowerCase()}
-          key={`${incrementId}-desktop`}
+      const author = oldestMessage.author;
+      //don't include the original poster for the thread in replies
+      const authors = uniqueUsers(messages.map((m) => m.author).slice(0, -1));
+
+      return (
+        <li
+          key={incrementId}
+          className="px-4 py-4 hover:bg-gray-50 border-solid border-gray-200 md:hidden cursor-pointer"
         >
-          <div className="flex">
-            <div className="flex pr-4 items-center md:hidden">
-              {author && (
-                <Avatar
-                  key={`${incrementId}-${
-                    author.id || author.displayName
-                  }-avatar-mobile}`}
-                  src={author.profileImageUrl || ''} // set placeholder with a U sign
-                  alt={author.displayName || ''} // Set placeholder of a slack user if missing
-                  text={(author.displayName || '?').slice(0, 1).toLowerCase()}
-                />
-              )}
-            </div>
-            <div className="flex flex-col w-full">
-              <div className="pb-2 md:px-6">
-                <Message
-                  text={oldestMessage.body}
-                  truncate
-                  mentions={oldestMessage.mentions.map((m) => m.users)}
-                />
+          <CustomLink
+            isSubDomainRouting={isSubDomainRouting}
+            communityName={communityName}
+            communityType={settings.communityType}
+            path={`/t/${incrementId}/${slug || 'topic'}`.toLowerCase()}
+            key={`${incrementId}-desktop`}
+          >
+            <div className="flex">
+              <div className="flex pr-4 md:hidden">
+                {author && (
+                  <Avatar
+                    key={`${incrementId}-${
+                      author.id || author.displayName
+                    }-avatar-mobile}`}
+                    src={author.profileImageUrl || ''} // set placeholder with a U sign
+                    alt={author.displayName || ''} // Set placeholder of a slack user if missing
+                    text={(author.displayName || '?').slice(0, 1).toLowerCase()}
+                  />
+                )}
               </div>
-              <div className="text-sm text-gray-400 flex flex-row justify-between">
-                <p>{messages.length} Replies</p>
-                {format(new Date(oldestMessage.sentAt))}
+              <div className="flex flex-col w-full">
+                <div className="pb-2 md:px-6">
+                  <Message
+                    text={oldestMessage.body}
+                    truncate
+                    mentions={oldestMessage.mentions.map((m) => m.users)}
+                  />
+                </div>
+                <div className="text-sm text-gray-400 flex flex-row justify-between items-center pr-4">
+                  <div className="flex flex-row">
+                    <Avatars
+                      users={
+                        authors.map((a) => ({
+                          src: a.profileImageUrl,
+                          alt: a.displayName,
+                          text: (a.displayName || '?')
+                            .slice(0, 1)
+                            .toLowerCase(),
+                        })) || []
+                      }
+                    />
+                  </div>
+                  {messages.length > 1 && (
+                    <div>{messages.length - 1} replies</div>
+                  )}
+                  <div>{format(new Date(oldestMessage.sentAt))}</div>
+                  <div className="hidden md:flex">{viewCount} Views</div>
+                </div>
               </div>
             </div>
-          </div>
-        </CustomLink>
-      </li>
-    );
-  });
+            {/* <CopyToClipboardLink {...linkProps} /> */}
+          </CustomLink>
+        </li>
+      );
+    }
+  );
 
   const tableRows = currentThreads?.map(
     ({ messages, incrementId, slug, viewCount }) => {
@@ -272,3 +300,13 @@ export default function Channel({
     </PageLayout>
   );
 }
+
+export const uniqueUsers = (users: users[]): users[] => {
+  let userMap = new Map<string, users>();
+
+  users.forEach((user) => {
+    userMap.set(user.id, user);
+  });
+
+  return Array.from(userMap.values());
+};
