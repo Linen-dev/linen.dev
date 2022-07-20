@@ -1,4 +1,5 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback } from 'react';
+import axios from 'axios';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
 import { Group, Text } from '@mantine/core';
@@ -101,12 +102,24 @@ const SearchBar = ({
     [router]
   );
 
+  const fetch = ({
+    query,
+    offset,
+    limit,
+  }: {
+    query: string;
+    offset: number;
+    limit: number;
+  }) => {
+    return axios
+      .get(makeURL(query, offset, limit))
+      .then((response) => parseResults(response.data));
+  };
+
   return (
     <Autocomplete
-      icon
-      makeURL={makeURL}
+      fetch={fetch}
       onSelect={handleSelect}
-      resultParser={parseResults}
       renderSuggestion={renderSuggestion}
       placeholder="Search messages"
     />

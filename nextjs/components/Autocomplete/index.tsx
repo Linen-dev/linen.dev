@@ -1,78 +1,83 @@
-import axios from 'axios';
 import { useEffect, useRef, useCallback, useState } from 'react';
+import debounce from 'awesome-debounce-promise';
 import { Group, Text, TextInput } from '@mantine/core';
-import { useDebouncedValue } from '@mantine/hooks';
-import { AiOutlineSearch } from 'react-icons/ai';
-import Image from 'next/image';
-import spinner from '../../public/spinner.svg';
-
-const MIN_QUERY_LENGTH = 3;
+import { AiOutlineSearch, AiOutlineLoading } from 'react-icons/ai';
 
 export default function Autocomplete({
-  icon,
-  makeURL = (debounceValue: string, offset: number, limit: number) => '',
+  fetch,
   onSelect = (any) => {},
-  resultParser = (data) => data,
   renderSuggestion = (any) => null,
   placeholder = 'Search',
-  debounce = 250,
   limit = 5,
+  minlength = 3,
 }: {
-  icon: React.ReactNode;
-  makeURL: (debounceValue: string, offset: number, limit: number) => string;
+  fetch: ({
+    query,
+    offset,
+    limit,
+  }: {
+    query: string;
+    offset: number;
+    limit: number;
+  }) => Promise<object[]>;
   onSelect: (any: any) => any;
-  resultParser: (data: any) => any;
   renderSuggestion: (any: any) => any;
-  placeholder: string;
-  debounce?: number;
+  placeholder?: string;
   limit?: number;
+  minlength?: number;
 }) {
   const [value, setValue] = useState('');
   const [offset, setOffset] = useState(0);
-  const [results, setResults] = useState([]);
+  const [results, setResults] = useState([] as object[]);
   const [isFocused, setFocused] = useState(false);
   const [isSearching, setSearching] = useState(false);
+  const [isMounted, setMounted] = useState(false);
   const [isLoadMoreVisible, setLoadMoreVisible] = useState(true);
-  const [activeResult, setActiveResult] = useState(-1);
-  const lastRequest: any = useRef(null);
-  const [debouncedValue] = useDebouncedValue(value, debounce);
+  const [activeResultIndex, setActiveResultIndex] = useState(-1);
   const inputRef: any = useRef(null);
+
+  const debouncedFetch = useCallback(
+    debounce(fetch, 250, { leading: true }),
+    []
+  );
+
+  useEffect(() => {
+    setMounted(true);
+    return () => {
+      setMounted(false);
+    };
+  }, []);
 
   // this effect will be fired every time debounced changes
   useEffect(() => {
     // setting min length for value
-    lastRequest.current = debouncedValue;
-    if (debouncedValue.length >= MIN_QUERY_LENGTH) {
-      // updating the ref variable with the current debouncedValue
+    if (value.length >= minlength) {
       setSearching(true);
-      axios
-        .get(makeURL(debouncedValue, offset, limit))
-        .then((r) => {
-          // the code in here is asyncronous so debouncedValue
-          // that was used when calling the api might be outdated
-          // that's why we compare it to the value contained in the ref,
-          // because the ref is never outdated (it's mutable)
-          if (lastRequest.current === debouncedValue) {
-            setSearching(false);
-            setActiveResult(-1);
-            if (offset > 0) {
-              setResults([...results, ...resultParser(r.data)] as any);
-            } else {
-              setResults(resultParser(r.data));
-            }
-            setLoadMoreVisible(r.data.length >= limit);
-          } else {
-            // Discard API response because it's not most recent.
+      debouncedFetch({ query: value, offset, limit })
+        .then((data) => {
+          if (!isMounted) {
+            return;
           }
+          setSearching(false);
+          setActiveResultIndex(-1);
+          if (offset > 0) {
+            setResults((results) => [...results, ...data]);
+          } else {
+            setResults([...data]);
+          }
+          setLoadMoreVisible(data.length >= limit);
         })
         .catch((e) => {
+          if (!isMounted) {
+            return;
+          }
           setSearching(false);
           console.error(e);
         });
     } else {
       setResults([]);
     }
-  }, [debouncedValue, makeURL, resultParser, offset, limit]);
+  }, [value, fetch, offset, limit]);
 
   const handleFocus = useCallback(() => {
     if (!isFocused) {
@@ -87,35 +92,35 @@ export default function Autocomplete({
   }, [isFocused, setFocused]);
 
   const handleSelect = useCallback(() => {
-    if (activeResult >= 0 && onSelect) {
+    if (activeResultIndex >= 0 && onSelect) {
       inputRef.current?.blur();
-      onSelect(results[activeResult]);
+      onSelect(results[activeResultIndex]);
     }
-  }, [activeResult, onSelect, results]);
+  }, [activeResultIndex, onSelect, results]);
 
   const handleKeyDown = useCallback(
     (e) => {
       switch (e.key) {
         case 'ArrowDown':
-          if (activeResult !== results.length - 1) {
+          if (activeResultIndex !== results.length - 1) {
             e.preventDefault();
-            setActiveResult(activeResult + 1);
-          } else if (activeResult >= 0) {
+            setActiveResultIndex(activeResultIndex + 1);
+          } else if (activeResultIndex >= 0) {
             e.preventDefault();
-            setActiveResult(0);
+            setActiveResultIndex(0);
           }
           break;
         case 'ArrowUp':
-          if (activeResult !== 0) {
+          if (activeResultIndex !== 0) {
             e.preventDefault();
-            setActiveResult(activeResult - 1);
-          } else if (activeResult >= 0) {
+            setActiveResultIndex(activeResultIndex - 1);
+          } else if (activeResultIndex >= 0) {
             e.preventDefault();
-            setActiveResult(results.length - 1);
+            setActiveResultIndex(results.length - 1);
           }
           break;
         case 'Enter':
-          if (activeResult >= 0) {
+          if (activeResultIndex >= 0) {
             handleSelect();
           }
           break;
@@ -124,7 +129,7 @@ export default function Autocomplete({
           break;
       }
     },
-    [handleSelect, setActiveResult, activeResult, results]
+    [handleSelect, setActiveResultIndex, activeResultIndex, results]
   );
 
   function renderSuggestions(results: any[]) {
@@ -138,9 +143,9 @@ export default function Autocomplete({
         {results.map((r: any, idx: number) => (
           <div
             key={r.id || idx}
-            onMouseEnter={() => setActiveResult(idx)}
+            onMouseEnter={() => setActiveResultIndex(idx)}
             style={{
-              backgroundColor: activeResult === idx ? '#f7f9fd' : 'white',
+              backgroundColor: activeResultIndex === idx ? '#f7f9fd' : 'white',
               width: '100%',
             }}
           >
@@ -149,7 +154,7 @@ export default function Autocomplete({
         ))}
         {isLoadMoreVisible && (
           <a
-            onMouseEnter={() => setActiveResult(-1)}
+            onMouseEnter={() => setActiveResultIndex(-1)}
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
@@ -186,12 +191,18 @@ export default function Autocomplete({
       onFocus={handleFocus}
       onBlur={handleBlur}
       onKeyDown={handleKeyDown}
-      onMouseLeave={() => setActiveResult(-1)}
+      onMouseLeave={() => setActiveResultIndex(-1)}
     >
       <TextInput
         ref={inputRef}
         style={{ maxWidth: 'unset' }}
-        icon={icon && <AiOutlineSearch />}
+        icon={
+          isSearching ? (
+            <AiOutlineLoading className="fa-spin" />
+          ) : (
+            <AiOutlineSearch />
+          )
+        }
         placeholder={placeholder}
         value={value}
         onChange={(e) => {
@@ -199,7 +210,7 @@ export default function Autocomplete({
           setOffset(0);
         }}
       />
-      {isFocused && value.length >= MIN_QUERY_LENGTH && (
+      {isFocused && value.length >= minlength && (
         <Group
           spacing={0}
           onMouseDown={(e) => {
@@ -222,19 +233,12 @@ export default function Autocomplete({
           direction="column"
         >
           {results.length > 0 && renderSuggestions(results)}
-          {results.length === 0 && (
+          {results.length === 0 && !isSearching && (
             <Text
               style={{ padding: '12px', textAlign: 'center', color: '#888' }}
               size="sm"
             >
-              {isSearching ? (
-                <div className="flex flex-row space-x-2 justify-center">
-                  <Image src={spinner} width="20" height="20" />{' '}
-                  <p>loading...</p>
-                </div>
-              ) : (
-                'No results found.'
-              )}
+              No results found.
             </Text>
           )}
         </Group>
