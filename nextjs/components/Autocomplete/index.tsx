@@ -5,8 +5,6 @@ import { AiOutlineSearch } from 'react-icons/ai';
 import Image from 'next/image';
 import spinner from '../../public/spinner.svg';
 
-const MIN_QUERY_LENGTH = 3;
-
 export default function Autocomplete({
   fetch,
   onSelect = (any) => {},
@@ -15,6 +13,7 @@ export default function Autocomplete({
   placeholder = 'Search',
   debounce = 250,
   limit = 5,
+  minlength = 3,
 }: {
   fetch: ({
     query,
@@ -31,6 +30,7 @@ export default function Autocomplete({
   placeholder: string;
   debounce?: number;
   limit?: number;
+  minlength?: number;
 }) {
   const [value, setValue] = useState('');
   const [offset, setOffset] = useState(0);
@@ -47,7 +47,7 @@ export default function Autocomplete({
   useEffect(() => {
     // setting min length for value
     lastRequest.current = debouncedValue;
-    if (debouncedValue.length >= MIN_QUERY_LENGTH) {
+    if (debouncedValue.length >= minlength) {
       // updating the ref variable with the current debouncedValue
       setSearching(true);
       fetch({ query: debouncedValue, offset, limit })
@@ -203,7 +203,7 @@ export default function Autocomplete({
           setOffset(0);
         }}
       />
-      {isFocused && value.length >= MIN_QUERY_LENGTH && (
+      {isFocused && value.length >= minlength && (
         <Group
           spacing={0}
           onMouseDown={(e) => {
