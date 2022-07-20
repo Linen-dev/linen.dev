@@ -43,6 +43,7 @@
     "@types/styled-components": "^5.1.25",
     "@types/superagent": "^4.1.15",
     "autoprefixer": "^10.4.7",
+    "awesome-debounce-promise": "^2.1.0",
     "aws-sdk": "^2.1173.0",
     "axios": "^0.27.2",
     "classnames": "^2.3.1",
