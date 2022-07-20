@@ -111,14 +111,15 @@ const SearchBar = ({
     offset: number;
     limit: number;
   }) => {
-    return axios.get(makeURL(query, offset, limit));
+    return axios
+      .get(makeURL(query, offset, limit))
+      .then((response) => parseResults(response.data));
   };
 
   return (
     <Autocomplete
       fetch={fetch}
       onSelect={handleSelect}
-      resultParser={parseResults}
       renderSuggestion={renderSuggestion}
       placeholder="Search messages"
     />
