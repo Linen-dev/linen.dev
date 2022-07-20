@@ -35,6 +35,7 @@ model messages {
 
   @@unique([channelId, externalMessageId])
   @@index([textsearchable_index_col], type: Gin)
+  @@index([threadId])
 }
 
 model threads {
