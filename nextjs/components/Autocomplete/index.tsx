@@ -8,7 +8,6 @@ import spinner from '../../public/spinner.svg';
 export default function Autocomplete({
   fetch,
   onSelect = (any) => {},
-  resultParser = (data) => data,
   renderSuggestion = (any) => null,
   placeholder = 'Search',
   debounce = 250,
@@ -23,9 +22,8 @@ export default function Autocomplete({
     query: string;
     offset: number;
     limit: number;
-  }) => Promise<{ data: object[] }>;
+  }) => Promise<object[]>;
   onSelect: (any: any) => any;
-  resultParser: (data: any) => any;
   renderSuggestion: (any: any) => any;
   placeholder: string;
   debounce?: number;
@@ -51,7 +49,7 @@ export default function Autocomplete({
       // updating the ref variable with the current debouncedValue
       setSearching(true);
       fetch({ query: debouncedValue, offset, limit })
-        .then((r) => {
+        .then((data) => {
           // the code in here is asyncronous so debouncedValue
           // that was used when calling the api might be outdated
           // that's why we compare it to the value contained in the ref,
@@ -60,11 +58,11 @@ export default function Autocomplete({
             setSearching(false);
             setActiveResult(-1);
             if (offset > 0) {
-              setResults([...results, ...resultParser(r.data)] as any);
+              setResults([...results, ...data] as any);
             } else {
-              setResults(resultParser(r.data));
+              setResults(data);
             }
-            setLoadMoreVisible(r.data.length >= limit);
+            setLoadMoreVisible(data.length >= limit);
           } else {
             // Discard API response because it's not most recent.
           }
@@ -76,7 +74,7 @@ export default function Autocomplete({
     } else {
       setResults([]);
     }
-  }, [debouncedValue, fetch, resultParser, offset, limit]);
+  }, [debouncedValue, fetch, offset, limit]);
 
   const handleFocus = useCallback(() => {
     if (!isFocused) {
