@@ -1,16 +1,13 @@
 import { useEffect, useRef, useCallback, useState } from 'react';
+import debounce from 'awesome-debounce-promise';
 import { Group, Text, TextInput } from '@mantine/core';
-import { useDebouncedValue } from '@mantine/hooks';
-import { AiOutlineSearch } from 'react-icons/ai';
-import Image from 'next/image';
-import spinner from '../../public/spinner.svg';
+import { AiOutlineSearch, AiOutlineLoading } from 'react-icons/ai';
 
 export default function Autocomplete({
   fetch,
   onSelect = (any) => {},
   renderSuggestion = (any) => null,
   placeholder = 'Search',
-  debounce = 250,
   limit = 5,
   minlength = 3,
 }: {
@@ -25,8 +22,7 @@ export default function Autocomplete({
   }) => Promise<object[]>;
   onSelect: (any: any) => any;
   renderSuggestion: (any: any) => any;
-  placeholder: string;
-  debounce?: number;
+  placeholder?: string;
   limit?: number;
   minlength?: number;
 }) {
@@ -37,35 +33,28 @@ export default function Autocomplete({
   const [isSearching, setSearching] = useState(false);
   const [isLoadMoreVisible, setLoadMoreVisible] = useState(true);
   const [activeResultIndex, setActiveResultIndex] = useState(-1);
-  const lastRequest: any = useRef(null);
-  const [debouncedValue] = useDebouncedValue(value, debounce);
   const inputRef: any = useRef(null);
+
+  const debouncedFetch = useCallback(
+    debounce(fetch, 250, { leading: true }),
+    []
+  );
 
   // this effect will be fired every time debounced changes
   useEffect(() => {
     // setting min length for value
-    lastRequest.current = debouncedValue;
-    if (debouncedValue.length >= minlength) {
-      // updating the ref variable with the current debouncedValue
+    if (value.length >= minlength) {
       setSearching(true);
-      fetch({ query: debouncedValue, offset, limit })
+      debouncedFetch({ query: value, offset, limit })
         .then((data) => {
-          // the code in here is asyncronous so debouncedValue
-          // that was used when calling the api might be outdated
-          // that's why we compare it to the value contained in the ref,
-          // because the ref is never outdated (it's mutable)
-          if (lastRequest.current === debouncedValue) {
-            setSearching(false);
-            setActiveResultIndex(-1);
-            if (offset > 0) {
-              setResults((results) => [...results, ...data]);
-            } else {
-              setResults([...data]);
-            }
-            setLoadMoreVisible(data.length >= limit);
+          setSearching(false);
+          setActiveResultIndex(-1);
+          if (offset > 0) {
+            setResults((results) => [...results, ...data]);
           } else {
-            // Discard API response because it's not most recent.
+            setResults([...data]);
           }
+          setLoadMoreVisible(data.length >= limit);
         })
         .catch((e) => {
           setSearching(false);
@@ -74,7 +63,7 @@ export default function Autocomplete({
     } else {
       setResults([]);
     }
-  }, [debouncedValue, fetch, offset, limit]);
+  }, [value, fetch, offset, limit]);
 
   const handleFocus = useCallback(() => {
     if (!isFocused) {
@@ -193,7 +182,13 @@ export default function Autocomplete({
       <TextInput
         ref={inputRef}
         style={{ maxWidth: 'unset' }}
-        icon={<AiOutlineSearch />}
+        icon={
+          isSearching ? (
+            <AiOutlineLoading className="fa-spin" />
+          ) : (
+            <AiOutlineSearch />
+          )
+        }
         placeholder={placeholder}
         value={value}
         onChange={(e) => {
@@ -224,19 +219,12 @@ export default function Autocomplete({
           direction="column"
         >
           {results.length > 0 && renderSuggestions(results)}
-          {results.length === 0 && (
+          {results.length === 0 && !isSearching && (
             <Text
               style={{ padding: '12px', textAlign: 'center', color: '#888' }}
               size="sm"
             >
-              {isSearching ? (
-                <div className="flex flex-row space-x-2 justify-center">
-                  <Image src={spinner} width="20" height="20" />{' '}
-                  <p>loading...</p>
-                </div>
-              ) : (
-                'No results found.'
-              )}
+              No results found.
             </Text>
           )}
         </Group>
