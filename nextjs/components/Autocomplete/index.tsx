@@ -31,6 +31,7 @@ export default function Autocomplete({
   const [results, setResults] = useState([] as object[]);
   const [isFocused, setFocused] = useState(false);
   const [isSearching, setSearching] = useState(false);
+  const [isMounted, setMounted] = useState(false);
   const [isLoadMoreVisible, setLoadMoreVisible] = useState(true);
   const [activeResultIndex, setActiveResultIndex] = useState(-1);
   const inputRef: any = useRef(null);
@@ -40,6 +41,13 @@ export default function Autocomplete({
     []
   );
 
+  useEffect(() => {
+    setMounted(true);
+    return () => {
+      setMounted(false);
+    };
+  }, []);
+
   // this effect will be fired every time debounced changes
   useEffect(() => {
     // setting min length for value
@@ -47,6 +55,9 @@ export default function Autocomplete({
       setSearching(true);
       debouncedFetch({ query: value, offset, limit })
         .then((data) => {
+          if (!isMounted) {
+            return;
+          }
           setSearching(false);
           setActiveResultIndex(-1);
           if (offset > 0) {
@@ -57,6 +68,9 @@ export default function Autocomplete({
           setLoadMoreVisible(data.length >= limit);
         })
         .catch((e) => {
+          if (!isMounted) {
+            return;
+          }
           setSearching(false);
           console.error(e);
         });
