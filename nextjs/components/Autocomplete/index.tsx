@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { useEffect, useRef, useCallback, useState } from 'react';
 import { Group, Text, TextInput } from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
@@ -9,7 +8,7 @@ import spinner from '../../public/spinner.svg';
 const MIN_QUERY_LENGTH = 3;
 
 export default function Autocomplete({
-  makeURL = (debounceValue: string, offset: number, limit: number) => '',
+  fetch,
   onSelect = (any) => {},
   resultParser = (data) => data,
   renderSuggestion = (any) => null,
@@ -17,7 +16,15 @@ export default function Autocomplete({
   debounce = 250,
   limit = 5,
 }: {
-  makeURL: (debounceValue: string, offset: number, limit: number) => string;
+  fetch: ({
+    query,
+    offset,
+    limit,
+  }: {
+    query: string;
+    offset: number;
+    limit: number;
+  }) => Promise<{ data: object[] }>;
   onSelect: (any: any) => any;
   resultParser: (data: any) => any;
   renderSuggestion: (any: any) => any;
@@ -43,8 +50,7 @@ export default function Autocomplete({
     if (debouncedValue.length >= MIN_QUERY_LENGTH) {
       // updating the ref variable with the current debouncedValue
       setSearching(true);
-      axios
-        .get(makeURL(debouncedValue, offset, limit))
+      fetch({ query: debouncedValue, offset, limit })
         .then((r) => {
           // the code in here is asyncronous so debouncedValue
           // that was used when calling the api might be outdated
@@ -70,7 +76,7 @@ export default function Autocomplete({
     } else {
       setResults([]);
     }
-  }, [debouncedValue, makeURL, resultParser, offset, limit]);
+  }, [debouncedValue, fetch, resultParser, offset, limit]);
 
   const handleFocus = useCallback(() => {
     if (!isFocused) {
