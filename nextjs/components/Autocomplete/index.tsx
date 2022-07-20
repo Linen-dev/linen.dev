@@ -9,7 +9,6 @@ import spinner from '../../public/spinner.svg';
 const MIN_QUERY_LENGTH = 3;
 
 export default function Autocomplete({
-  icon,
   makeURL = (debounceValue: string, offset: number, limit: number) => '',
   onSelect = (any) => {},
   resultParser = (data) => data,
@@ -18,7 +17,6 @@ export default function Autocomplete({
   debounce = 250,
   limit = 5,
 }: {
-  icon: React.ReactNode;
   makeURL: (debounceValue: string, offset: number, limit: number) => string;
   onSelect: (any: any) => any;
   resultParser: (data: any) => any;
@@ -191,7 +189,7 @@ export default function Autocomplete({
       <TextInput
         ref={inputRef}
         style={{ maxWidth: 'unset' }}
-        icon={icon && <AiOutlineSearch />}
+        icon={<AiOutlineSearch />}
         placeholder={placeholder}
         value={value}
         onChange={(e) => {

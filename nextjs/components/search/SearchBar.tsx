@@ -103,7 +103,6 @@ const SearchBar = ({
 
   return (
     <Autocomplete
-      icon
       makeURL={makeURL}
       onSelect={handleSelect}
       resultParser={parseResults}
