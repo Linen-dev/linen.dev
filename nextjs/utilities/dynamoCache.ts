@@ -1,8 +1,9 @@
-import { DynamoDB } from 'aws-sdk';
+import DynamoDB from 'aws-sdk/clients/dynamodb';
 import { gzipSync, gunzipSync } from 'zlib';
-import * as Sentry from '@sentry/nextjs';
+// import * as Sentry from '@sentry/nextjs';
 import NodeCache from 'node-cache';
 import { awsCredentials } from './awsCredentials';
+import { log } from './log';
 
 declare global {
   // allow global `var` declarations
@@ -51,12 +52,6 @@ export const serialize = (...paramsArray: any[]) =>
     })
     .join(',');
 
-function log(...args: any) {
-  if (process.env.LOG === 'true') {
-    console.log(...args);
-  }
-}
-
 /**
  * this variable will work as local cache to avoid duplicate requests
  * this cache will live the same time as lambda, between 15 min and a few hours
@@ -97,7 +92,7 @@ async function getCache(pk: string, sk: string) {
     }
   } catch (error) {
     console.error(error);
-    Sentry.captureException(error);
+    // Sentry.captureException(error);
     return null;
   }
 }
@@ -117,7 +112,7 @@ async function setCache(pk: string, sk: string, obj: any) {
       },
     }).promise();
   } catch (error) {
-    Sentry.captureException(error);
+    // Sentry.captureException(error);
     console.error(error);
   }
 }

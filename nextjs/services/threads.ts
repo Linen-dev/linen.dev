@@ -12,9 +12,10 @@ import { accounts, users } from '@prisma/client';
 import { GetStaticPropsContext } from 'next';
 import { NotFound } from '../utilities/response';
 import { revalidateInSeconds } from '../constants/revalidate';
-import * as Sentry from '@sentry/nextjs';
+// import * as Sentry from '@sentry/nextjs';
 import { buildSettings } from './accountSettings';
 import { memoize } from '../utilities/dynamoCache';
+import { log } from '../utilities/log';
 
 interface IndexProps {
   channelId: string;
@@ -149,6 +150,8 @@ export async function threadGetStaticProps(
 ) {
   const threadId = context.params?.threadId as string;
   const communityName = context.params?.communityName as string;
+  log({ communityName, threadId });
+
   try {
     const thread = await getThreadByIdMemo(threadId, communityName);
     return {
@@ -159,7 +162,8 @@ export async function threadGetStaticProps(
       revalidate: revalidateInSeconds, // In seconds
     };
   } catch (exception) {
-    Sentry.captureException(exception);
+    console.error(exception);
+    // Sentry.captureException(exception);
     return NotFound();
   }
 }

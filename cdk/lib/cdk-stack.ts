@@ -4,19 +4,29 @@ import * as ec2 from 'aws-cdk-lib/aws-ec2';
 import * as ecs from 'aws-cdk-lib/aws-ecs';
 import * as ecs_patterns from 'aws-cdk-lib/aws-ecs-patterns';
 import * as path from 'path';
-// import { CodePipeline, CodePipelineSource, ShellStep } from 'aws-cdk-lib/pipelines';
+
+const BRANCH = process.env.BRANCH || 'staging';
+const DYNAMODB_TABLE = BRANCH === 'main' ? 'cache_prod' : 'cache-staging';
+const SSM_STAGE = BRANCH === 'main' ? 'prod' : 'staging';
 
 export class CdkStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
     const dockerImage = new ecs.AssetImage(
-      path.join(__dirname, '../../nextjs')
+      path.join(__dirname, '../../nextjs'),
+      {
+        buildArgs: {
+          DATABASE_URL: process.env.DATABASE_URL as string,
+        },
+      }
     );
 
     const cacheTableAccessPolicy = new cdk.aws_iam.PolicyStatement({
       actions: ['dynamodb:PutItem', 'dynamodb:GetItem'],
-      resources: ['arn:aws:dynamodb:us-east-1:775327867774:table/cache_prod'],
+      resources: [
+        `arn:aws:dynamodb:us-east-1:775327867774:table/${DYNAMODB_TABLE}`,
+      ],
     });
 
     const vpc = new ec2.Vpc(this, 'fargateVpc', {
@@ -32,7 +42,6 @@ export class CdkStack extends cdk.Stack {
     securityGroup.addIngressRule(ec2.Peer.anyIpv4(), ec2.Port.tcp(80));
 
     const cluster = new ecs.Cluster(this, 'nextJSCluster', {
-      clusterName: 'nextJSCluster',
       containerInsights: true,
       vpc,
     });
@@ -48,6 +57,14 @@ export class CdkStack extends cdk.Stack {
       }
     );
     taskDefinition.addToTaskRolePolicy(cacheTableAccessPolicy);
+
+    const environment = {
+      NODE_ENV: 'production',
+      CACHE_TABLE: DYNAMODB_TABLE,
+      LOG: 'true',
+      LONG_RUNNING: 'true',
+      SKIP_DYNAMO_CACHE: 'true',
+    };
 
     const secrets = {
       SENTRY_DSN: ecs.Secret.fromSsmParameter(
@@ -68,7 +85,7 @@ export class CdkStack extends cdk.Stack {
         cdk.aws_ssm.StringParameter.fromSecureStringParameterAttributes(
           this,
           'databaseUrl',
-          { parameterName: '/linen-dev/prod/databaseUrl', version: 0 }
+          { parameterName: `/linen-dev/${SSM_STAGE}/databaseUrl`, version: 0 }
         )
       ),
       SLACK_CLIENT_ID: ecs.Secret.fromSsmParameter(
@@ -110,11 +127,8 @@ export class CdkStack extends cdk.Stack {
 
     const container = taskDefinition.addContainer('nextJSContainer', {
       image: dockerImage,
-      command: ['npm', 'run', 'start'],
-      environment: {
-        NODE_ENV: 'production',
-        CACHE_TABLE: 'cache_prod',
-      },
+      command: ['node', 'server.js'],
+      environment,
       secrets,
       logging: ecs.LogDriver.awsLogs({
         streamPrefix: 'linen-dev',
@@ -162,14 +176,9 @@ export class CdkStack extends cdk.Stack {
         image: dockerImage,
         cpu: 1024,
         memoryLimitMiB: 8192,
-        command: ['npm', 'run', 'script:crawl'],
+        command: ['npm', 'run', 'script:crawl', '--ignore-scripts'],
         secrets,
-        environment: {
-          NODE_ENV: 'production',
-          CACHE_TABLE: 'cache_prod',
-          LOG: 'true',
-          LONG_RUNNING: 'true',
-        },
+        environment,
         logDriver: ecs.LogDriver.awsLogs({
           streamPrefix: 'linen-dev-crawler',
           logGroup: new cdk.aws_logs.LogGroup(this, 'CrawlerLogGroup', {
@@ -196,14 +205,9 @@ export class CdkStack extends cdk.Stack {
     }).taskDefinition
       .addContainer('syncDiscordTask', {
         image: dockerImage,
-        command: ['npm', 'run', 'script:sync:discord'],
+        command: ['npm', 'run', 'script:sync:discord', '--ignore-scripts'],
         secrets,
-        environment: {
-          NODE_ENV: 'production',
-          CACHE_TABLE: 'cache_prod',
-          LOG: 'true',
-          LONG_RUNNING: 'true',
-        },
+        environment,
         logging: ecs.LogDriver.awsLogs({
           streamPrefix: 'linen-dev-syncDiscord',
           logGroup: new cdk.aws_logs.LogGroup(this, 'syncDiscordLogGroup', {
@@ -219,14 +223,9 @@ export class CdkStack extends cdk.Stack {
         image: dockerImage,
         memoryLimitMiB: 512,
         cpu: 256,
-        command: ['npm', 'run', 'script:maintenance'],
+        command: ['npm', 'run', 'script:maintenance', '--ignore-scripts'],
         secrets,
-        environment: {
-          NODE_ENV: 'production',
-          CACHE_TABLE: 'cache_prod',
-          LOG: 'true',
-          LONG_RUNNING: 'true',
-        },
+        environment,
         logDriver: ecs.LogDriver.awsLogs({
           streamPrefix: 'linen-dev-maintenance',
           logGroup: new cdk.aws_logs.LogGroup(this, 'maintenanceLogGroup', {
@@ -238,13 +237,5 @@ export class CdkStack extends cdk.Stack {
         cdk.aws_applicationautoscaling.Schedule.expression('rate(24 hours)'),
       platformVersion: ecs.FargatePlatformVersion.LATEST,
     }).taskDefinition.addToTaskRolePolicy(cacheTableAccessPolicy);
-
-    // new CodePipeline(this, 'LinenDev', {
-    //   pipelineName: 'LinenDev',
-    //   synth: new ShellStep('Build', {
-    //     input: CodePipelineSource.gitHub('Linen-dev/linen.dev', 'crawler'),
-    //     commands: ['cd cdk', 'npm ci', 'npm run build', 'npx cdk synth', 'npx cdk deploy --require-approval never']
-    //   })
-    // });
   }
 }

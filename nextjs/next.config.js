@@ -1,10 +1,6 @@
 //https://vercel.com/support/articles/can-i-redirect-from-a-subdomain-to-a-subpath
 const { withSentryConfig } = require('@sentry/nextjs');
 
-const LONG_RUNNING = process.env.LONG_RUNNING === 'true';
-const pageExtensions = LONG_RUNNING
-  ? ['ts', 'js']
-  : ['ts', 'js', 'tsx', 'jsx', 'md', 'mdx'];
 const SKIP_SENTRY = process.env.SKIP_SENTRY === 'true';
 
 /**
@@ -25,7 +21,7 @@ const nextConfig = {
       `${process.env.S3_UPLOAD_BUCKET}.s3.${process.env.S3_UPLOAD_REGION}.amazonaws.com`,
     ],
   },
-  pageExtensions,
+  output: 'standalone',
 };
 const sentryWebpackPluginOptions = {
   // Additional config options for the Sentry Webpack plugin. Keep in mind that
@@ -33,7 +29,7 @@ const sentryWebpackPluginOptions = {
   // recommended:
   //   release, url, org, project, authToken, configFile, stripPrefix,
   //   urlPrefix, include, ignore
-  dryRun: LONG_RUNNING || SKIP_SENTRY,
+  dryRun: SKIP_SENTRY,
 
   silent: true, // Suppresses all logs
   // For all available options, see:

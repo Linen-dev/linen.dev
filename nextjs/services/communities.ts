@@ -14,6 +14,7 @@ import { NotFound } from '../utilities/response';
 import { revalidateInSeconds } from '../constants/revalidate';
 import { buildSettings } from './accountSettings';
 import { memoize } from '../utilities/dynamoCache';
+import { log } from '../utilities/log';
 
 async function getThreadsAndUsers({
   account,
@@ -196,6 +197,7 @@ export async function channelGetStaticProps(
   const communityName = context.params?.communityName as string;
   const channelName = context.params?.channelName as string;
   const page = context.params?.page as string;
+  log({ communityName, channelName, page });
 
   const result = await getThreadsByCommunityNameMemo(
     communityName,
