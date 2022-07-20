@@ -32,11 +32,11 @@ export default function Autocomplete({
 }) {
   const [value, setValue] = useState('');
   const [offset, setOffset] = useState(0);
-  const [results, setResults] = useState([]);
+  const [results, setResults] = useState([] as object[]);
   const [isFocused, setFocused] = useState(false);
   const [isSearching, setSearching] = useState(false);
   const [isLoadMoreVisible, setLoadMoreVisible] = useState(true);
-  const [activeResult, setActiveResult] = useState(-1);
+  const [activeResultIndex, setActiveResultIndex] = useState(-1);
   const lastRequest: any = useRef(null);
   const [debouncedValue] = useDebouncedValue(value, debounce);
   const inputRef: any = useRef(null);
@@ -56,11 +56,11 @@ export default function Autocomplete({
           // because the ref is never outdated (it's mutable)
           if (lastRequest.current === debouncedValue) {
             setSearching(false);
-            setActiveResult(-1);
+            setActiveResultIndex(-1);
             if (offset > 0) {
-              setResults([...results, ...data] as any);
+              setResults((results) => [...results, ...data]);
             } else {
-              setResults(data);
+              setResults([...data]);
             }
             setLoadMoreVisible(data.length >= limit);
           } else {
@@ -89,35 +89,35 @@ export default function Autocomplete({
   }, [isFocused, setFocused]);
 
   const handleSelect = useCallback(() => {
-    if (activeResult >= 0 && onSelect) {
+    if (activeResultIndex >= 0 && onSelect) {
       inputRef.current?.blur();
-      onSelect(results[activeResult]);
+      onSelect(results[activeResultIndex]);
     }
-  }, [activeResult, onSelect, results]);
+  }, [activeResultIndex, onSelect, results]);
 
   const handleKeyDown = useCallback(
     (e) => {
       switch (e.key) {
         case 'ArrowDown':
-          if (activeResult !== results.length - 1) {
+          if (activeResultIndex !== results.length - 1) {
             e.preventDefault();
-            setActiveResult(activeResult + 1);
-          } else if (activeResult >= 0) {
+            setActiveResultIndex(activeResultIndex + 1);
+          } else if (activeResultIndex >= 0) {
             e.preventDefault();
-            setActiveResult(0);
+            setActiveResultIndex(0);
           }
           break;
         case 'ArrowUp':
-          if (activeResult !== 0) {
+          if (activeResultIndex !== 0) {
             e.preventDefault();
-            setActiveResult(activeResult - 1);
-          } else if (activeResult >= 0) {
+            setActiveResultIndex(activeResultIndex - 1);
+          } else if (activeResultIndex >= 0) {
             e.preventDefault();
-            setActiveResult(results.length - 1);
+            setActiveResultIndex(results.length - 1);
           }
           break;
         case 'Enter':
-          if (activeResult >= 0) {
+          if (activeResultIndex >= 0) {
             handleSelect();
           }
           break;
@@ -126,7 +126,7 @@ export default function Autocomplete({
           break;
       }
     },
-    [handleSelect, setActiveResult, activeResult, results]
+    [handleSelect, setActiveResultIndex, activeResultIndex, results]
   );
 
   function renderSuggestions(results: any[]) {
@@ -140,9 +140,9 @@ export default function Autocomplete({
         {results.map((r: any, idx: number) => (
           <div
             key={r.id || idx}
-            onMouseEnter={() => setActiveResult(idx)}
+            onMouseEnter={() => setActiveResultIndex(idx)}
             style={{
-              backgroundColor: activeResult === idx ? '#f7f9fd' : 'white',
+              backgroundColor: activeResultIndex === idx ? '#f7f9fd' : 'white',
               width: '100%',
             }}
           >
@@ -151,7 +151,7 @@ export default function Autocomplete({
         ))}
         {isLoadMoreVisible && (
           <a
-            onMouseEnter={() => setActiveResult(-1)}
+            onMouseEnter={() => setActiveResultIndex(-1)}
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
@@ -188,7 +188,7 @@ export default function Autocomplete({
       onFocus={handleFocus}
       onBlur={handleBlur}
       onKeyDown={handleKeyDown}
-      onMouseLeave={() => setActiveResult(-1)}
+      onMouseLeave={() => setActiveResultIndex(-1)}
     >
       <TextInput
         ref={inputRef}
