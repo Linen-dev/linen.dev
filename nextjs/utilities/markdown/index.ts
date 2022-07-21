@@ -3,7 +3,7 @@ import { Lexer } from 'marked';
 export interface Token {
   type: string;
   raw: string;
-  text: string;
+  text?: string;
   depth?: number;
   tokens?: Token[];
 }

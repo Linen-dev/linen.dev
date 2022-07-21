@@ -46,4 +46,10 @@ describe('#decodeHTML', () => {
     const code = '&lt;';
     expect(decodeHTML(decodeHTML(code))).toEqual('<');
   });
+
+  describe('when text is undefined', () => {
+    it('returns an empty string', () => {
+      expect(decodeHTML(undefined)).toEqual('');
+    });
+  });
 });

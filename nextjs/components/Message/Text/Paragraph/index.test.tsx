@@ -26,4 +26,13 @@ describe('Paragraph', () => {
     expect(container).toHaveTextContent('<>');
     expect(container).not.toHaveTextContent('&lt;&gt;');
   });
+
+  it('renders whitespace', () => {
+    const token = {
+      type: 'space',
+      raw: 'lorem',
+    };
+    const { container } = render(<Paragraph token={token} />);
+    expect(container).toHaveTextContent('lorem');
+  });
 });
