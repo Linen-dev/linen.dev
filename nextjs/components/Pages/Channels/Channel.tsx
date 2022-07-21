@@ -138,7 +138,6 @@ export default function Channel({
                 <div className="pb-2">
                   <Message
                     text={oldestMessage.body}
-                    truncate
                     mentions={oldestMessage.mentions.map((m) => m.users)}
                     reactions={oldestMessage.reactions}
                     attachments={oldestMessage.attachments}
@@ -206,7 +205,7 @@ export default function Channel({
       isSubDomainRouting={isSubDomainRouting}
     >
       <div className="sm:pt-6 justify-center">
-        <ul className="divide-y max-w-4xl">{rows}</ul>
+        <ul className="divide-y max-w-sm sm:max-w-4xl px-2">{rows}</ul>
         {!!pageCount && (
           <Pagination
             channelName={currentChannel.channelName}
