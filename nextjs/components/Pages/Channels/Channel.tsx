@@ -167,7 +167,9 @@ export default function Channel({
                     {/* <div className="pl-2">{viewCount} Views</div> */}
                   </div>
                   {messages.length > 1 && (
-                    <CopyToClipboardLink {...linkProps} />
+                    <div className="px-6 text-sm">
+                      <CopyToClipboardLink {...linkProps} />
+                    </div>
                   )}
                 </div>
               </div>
