@@ -21,7 +21,7 @@ export default function CopyToClipboardLink({
   return (
     <FontAwesomeIcon
       title="Copy to Clipboard"
-      className="text-blue-600 p-3 hover:text-blue-900"
+      className="text-blue-700 p-1 hover:text-blue-900"
       icon={faLink}
       onClick={(event) => {
         event.stopPropagation();

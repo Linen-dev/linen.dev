@@ -142,31 +142,35 @@ export default function Channel({
                     mentions={oldestMessage.mentions.map((m) => m.users)}
                   />
                 </div>
-                <div className="text-sm text-gray-400 flex flex-row items-center">
-                  <div className="flex flex-row">
-                    <Avatars
-                      users={
-                        authors.map((a) => ({
-                          src: a.profileImageUrl,
-                          alt: a.displayName,
-                          text: (a.displayName || '?')
-                            .slice(0, 1)
-                            .toLowerCase(),
-                        })) || []
-                      }
-                    />
+                <div className="flex flex-row justify-between items-center pr-2">
+                  <div className="text-sm text-gray-400 flex flex-row items-center">
+                    <div className="flex flex-row">
+                      <Avatars
+                        users={
+                          authors.map((a) => ({
+                            src: a.profileImageUrl,
+                            alt: a.displayName,
+                            text: (a.displayName || '?')
+                              .slice(0, 1)
+                              .toLowerCase(),
+                          })) || []
+                        }
+                      />
+                    </div>
+                    {messages.length > 1 && (
+                      //Kam: Not sure about this blue but I wanted to add some color to make the page more interesting
+                      <div className="text-blue-800">
+                        {messages.length - 1} replies
+                      </div>
+                    )}
+                    {/* <div className="pl-2">{viewCount} Views</div> */}
                   </div>
                   {messages.length > 1 && (
-                    //Kam: Not sure about this blue but I wanted to add some color to make the page more interesting
-                    <div className="text-blue-800">
-                      {messages.length - 1} replies
-                    </div>
+                    <CopyToClipboardLink {...linkProps} />
                   )}
-                  {/* <div className="hidden md:flex">{viewCount} Views</div> */}
                 </div>
               </div>
             </div>
-            {/* <CopyToClipboardLink {...linkProps} /> */}
           </CustomLink>
         </li>
       );
