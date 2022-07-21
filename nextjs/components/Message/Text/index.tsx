@@ -13,7 +13,7 @@ export default function Text({ value }: Props) {
   const tokens = tokenize(text);
   return (
     <>
-      {tokens.map((token, index) => {
+      {tokens.map((token: Token, index) => {
         const key = `${token.type}-${token.raw}-${index}`;
         switch (token.type) {
           case 'paragraph':
