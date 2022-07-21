@@ -35,6 +35,7 @@ model messages {
 
   @@unique([channelId, externalMessageId])
   @@index([textsearchable_index_col], type: Gin)
+  @@index([threadId])
 }
 
 model threads {
@@ -51,6 +52,7 @@ model threads {
 
   @@unique([externalThreadId])
   @@unique([incrementId])
+  @@index([channelId])
 }
 
 model channels {
@@ -68,6 +70,7 @@ model channels {
   externalPageCursor String?
 
   @@unique([externalChannelId])
+  @@index([accountId])
 }
 
 model accounts {
@@ -93,11 +96,11 @@ model accounts {
   anonymizeUsers         Boolean          @default(false)
   messagesViewType       MessagesViewType @default(THREADS)
 
-
   auths                 auths[]
   users                 users[]
   slackAuthorizations   slackAuthorizations[]
   discordAuthorizations discordAuthorizations[]
+
   @@unique([redirectDomain])
 }
 
@@ -145,6 +148,7 @@ model mentions {
   usersId    String
 
   @@id([messagesId, usersId])
+  @@index([messagesId])
 }
 
 model messageAttachments {
@@ -161,6 +165,7 @@ model messageAttachments {
   permalink   String?
 
   @@id([messagesId, externalId])
+  @@index([messagesId])
 }
 
 model messageReactions {
@@ -173,6 +178,7 @@ model messageReactions {
   users      Json?
 
   @@id([messagesId, name])
+  @@index([messagesId])
 }
 
 model slackAuthorizations {
