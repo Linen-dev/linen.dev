@@ -17,7 +17,7 @@ export default function Avatars({ users }: { users: AvatarType[] }) {
   return (
     <div
       className={styles.group}
-      style={{ width: 36 + (avatars.length - 1) * 36 }}
+      style={{ width: 36 + (avatars.length - 1) * 24 }}
     >
       {avatars.map((user, index) => (
         <div key={`${user.text}-${index}`} className={styles.item}>
