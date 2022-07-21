@@ -20,6 +20,7 @@ export default function CopyToClipboardLink({
 }: Props) {
   return (
     <FontAwesomeIcon
+      fixedWidth
       title="Copy to Clipboard"
       className="text-blue-700 p-1 hover:text-blue-900"
       icon={faLink}
