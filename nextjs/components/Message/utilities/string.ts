@@ -5,6 +5,13 @@ export function truncate(text: string): string {
   return `${excerpt}${excerpt.length === 220 ? '...' : ''}`;
 }
 
-export function decodeHTML(text: string): string {
-  return decode(text);
+export function decodeHTML(text?: string): string {
+  if (!text) {
+    return '';
+  }
+  try {
+    return decode(text);
+  } catch (exception) {
+    return '';
+  }
 }

@@ -1,4 +1,4 @@
-import { tokenize } from './markdown';
+import { tokenize } from '.';
 
 describe('#tokenize', () => {
   it('returns tokens', async () => {
@@ -28,5 +28,14 @@ describe('#tokenize', () => {
       },
       { type: 'text', text: ' baz', raw: ' baz' },
     ]);
+  });
+
+  it('returns space tokens', async () => {
+    const text = `
+      foo
+    `;
+
+    const tokens = tokenize(text);
+    expect(tokens[0]).toEqual({ type: 'space', raw: '\n' });
   });
 });

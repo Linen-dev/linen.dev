@@ -3,6 +3,10 @@ import Emoji from '../../Emoji';
 import { Token } from 'utilities/markdown';
 import { decodeHTML } from '../../utilities/string';
 
+function Whitespace({ raw }: { raw: string }) {
+  return <>{raw}</>;
+}
+
 function Paragraph({ token }: { token: Token }) {
   if (token.tokens) {
     return (
@@ -22,6 +26,9 @@ function Paragraph({ token }: { token: Token }) {
         })}
       </>
     );
+  }
+  if (!token.text) {
+    return <Whitespace raw={token.raw} />;
   }
   const text = decodeHTML(token.text);
   return (
