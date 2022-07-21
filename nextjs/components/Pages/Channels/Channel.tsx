@@ -140,6 +140,8 @@ export default function Channel({
                     text={oldestMessage.body}
                     truncate
                     mentions={oldestMessage.mentions.map((m) => m.users)}
+                    reactions={oldestMessage.reactions}
+                    attachments={oldestMessage.attachments}
                   />
                 </div>
                 <div className="flex flex-row justify-between items-center pr-2">

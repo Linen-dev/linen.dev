@@ -62,8 +62,9 @@ function Message({ text, truncate, mentions, reactions, attachments }: Props) {
           }
         })
         .filter(Boolean)}
-      <Reactions reactions={reactions} />
       <Attachments attachments={attachments} />
+
+      <Reactions reactions={reactions} />
     </div>
   );
 }
