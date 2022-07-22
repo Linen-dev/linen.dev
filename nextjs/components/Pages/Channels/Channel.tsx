@@ -205,7 +205,7 @@ export default function Channel({
       isSubDomainRouting={isSubDomainRouting}
     >
       <div className="sm:pt-6 justify-center">
-        <ul className="divide-y max-w-sm sm:max-w-4xl px-2">{rows}</ul>
+        <ul className="divide-y sm:max-w-4xl px-1">{rows}</ul>
         {!!pageCount && (
           <Pagination
             channelName={currentChannel.channelName}
