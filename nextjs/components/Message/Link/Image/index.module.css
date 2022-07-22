@@ -4,3 +4,10 @@
   max-width: 300px;
   padding: 1px;
 }
+
+@media only screen and (max-width: 767px) {
+  .image {
+    max-width: 100%;
+    height: auto;
+  }
+}
