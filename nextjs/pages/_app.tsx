@@ -10,6 +10,12 @@ import { useEffect } from 'react';
 import { SessionProvider } from 'next-auth/react';
 import { Toaster } from 'components/Toast';
 
+declare global {
+  interface Window {
+    routeTimeout: any;
+  }
+}
+
 export default function App(props: AppProps) {
   const router = useRouter();
 
@@ -17,10 +23,17 @@ export default function App(props: AppProps) {
 
   useEffect(() => {
     const handleStart = (url: string) => {
+      if (url !== window.location.pathname) {
+        window.routeTimeout = setTimeout(
+          () => (window.location.href = url),
+          100
+        );
+      }
       console.log(`Loading: ${url}`);
       NProgress.start();
     };
     const handleStop = () => {
+      window.routeTimeout && clearTimeout(window.routeTimeout);
       NProgress.done();
     };
 
