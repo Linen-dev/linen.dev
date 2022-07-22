@@ -10,6 +10,7 @@ interface Props {
   defaultValue?: string;
   disabled?: boolean;
   readOnly?: boolean;
+  icon?: React.ReactNode;
 }
 
 function TextInput({
@@ -21,21 +22,25 @@ function TextInput({
   defaultValue,
   disabled = false,
   readOnly = false,
+  icon,
   ...rest
 }: Props) {
   return (
-    <input
-      className={styles.input}
-      type={type}
-      id={id}
-      name={id || name}
-      placeholder={placeholder}
-      required={required}
-      defaultValue={defaultValue}
-      disabled={disabled}
-      readOnly={readOnly}
-      {...rest}
-    />
+    <div className={styles.container}>
+      {icon && <div className={styles.icon}>{icon}</div>}
+      <input
+        className={styles.input}
+        type={type}
+        id={id}
+        name={id || name}
+        placeholder={placeholder}
+        required={required}
+        defaultValue={defaultValue}
+        disabled={disabled}
+        readOnly={readOnly}
+        {...rest}
+      />
+    </div>
   );
 }
 
