@@ -44,6 +44,12 @@ describe('isSubdomainCommunity', () => {
       expect(isSubdomainbasedRouting('')).toEqual(false);
     });
   });
+
+  describe('handle full url', () => {
+    it('it returns true for www.papercups.io', () => {
+      expect(isSubdomainbasedRouting('www.papercups.io')).toEqual(true);
+    });
+  });
 });
 
 const longString = 'THIS Is a really long String'.repeat(100);

@@ -30,9 +30,17 @@ export const isSubdomainbasedRouting = (host: string): boolean => {
   if (host.includes('vercel.app')) {
     return false;
   }
+  if (host.includes('www.localhost:3000')) {
+    return false;
+  }
 
   if (host.includes('.')) {
-    if (host.split('.')[0] === 'www') {
+    const splitHost = host.split('.');
+    if (splitHost[0] === 'www') {
+      // for cases where user want to use fully qualified name and not subdomain like www.papercups.io
+      if (splitHost[1] !== 'linen') {
+        return true;
+      }
       return false;
     }
     if (host.includes('localhost:3000')) {
