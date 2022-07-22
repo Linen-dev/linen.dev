@@ -3,6 +3,7 @@ import { listChannelsAndPersist } from '../../services/discord/channels';
 import request from 'superagent';
 import prisma from '../../client';
 import { updateAccount } from '../../lib/models';
+import { timeoutAfter } from '../../utilities/retryPromises';
 
 export default async function handler(
   req: NextApiRequest,
@@ -28,7 +29,7 @@ export default async function handler(
     name: guild.name,
   });
 
-  const discordAuthorization = await prisma.discordAuthorizations.create({
+  await prisma.discordAuthorizations.create({
     data: {
       accountsId: account.id,
       accessToken: body.access_token,
@@ -39,11 +40,15 @@ export default async function handler(
     },
   });
 
-  await listChannelsAndPersist({
-    serverId: guild.id,
-    accountId: account.id,
-    token: process.env.DISCORD_TOKEN as string,
-  });
+  // this function runs on serverless, implement promise race to avoid timeout for huge communities
+  await Promise.race([
+    timeoutAfter(5),
+    listChannelsAndPersist({
+      serverId: guild.id,
+      accountId: account.id,
+      token: process.env.DISCORD_TOKEN as string,
+    }),
+  ]);
 
   // Initialize syncing asynchronously
   request
