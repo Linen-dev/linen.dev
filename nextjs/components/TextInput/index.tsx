@@ -10,9 +10,12 @@ interface Props {
   placeholder?: string;
   required?: boolean;
   defaultValue?: string;
+  value?: string;
   disabled?: boolean;
   readOnly?: boolean;
   icon?: React.ReactNode;
+  inputRef?: React.RefObject<HTMLInputElement>;
+  onChange?(event: React.ChangeEvent<HTMLInputElement>): void;
 }
 
 function TextInput({
@@ -23,9 +26,12 @@ function TextInput({
   required,
   label,
   defaultValue,
+  value,
   disabled = false,
   readOnly = false,
   icon,
+  inputRef,
+  onChange,
   ...rest
 }: Props) {
   return (
@@ -34,6 +40,7 @@ function TextInput({
       <div className={styles.container}>
         {icon && <div className={styles.icon}>{icon}</div>}
         <input
+          ref={inputRef}
           className={styles.input}
           type={type}
           id={id}
@@ -41,8 +48,10 @@ function TextInput({
           placeholder={placeholder}
           required={required}
           defaultValue={defaultValue}
+          value={value}
           disabled={disabled}
           readOnly={readOnly}
+          onChange={onChange}
           {...rest}
         />
       </div>
