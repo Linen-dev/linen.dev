@@ -1,6 +1,5 @@
 import styled from 'styled-components';
-import { channels, users } from '@prisma/client';
-import { Group, Text } from '@mantine/core';
+import { users } from '@prisma/client';
 import Avatar, { Size } from '../../Avatar';
 import Message from '../../Message';
 
@@ -26,28 +25,31 @@ export default function Suggestion({
 }: Props) {
   return (
     <Container>
-      <Group style={{ width: '100%', marginBottom: '12px' }}>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          width: '100%',
+          marginBottom: '12px',
+        }}
+      >
         <Avatar
           size={Size.sm}
           src={user?.profileImageUrl || ''}
           alt={user?.displayName || ''}
           text={(user?.displayName || '?').slice(0, 1).toLowerCase()}
         />
-        <Group style={{ alignSelf: 'stretch' }} position="apart">
-          <Text size="sm" weight="bold">
-            {user?.displayName}
-          </Text>
+        <div style={{ display: 'flex', marginLeft: '8px' }}>
+          <strong style={{ fontSize: '14px' }}>{user?.displayName}</strong>
           {channelName && (
-            <Text
-              style={{ position: 'absolute', right: '12px' }}
-              size="sm"
-              weight="bold"
+            <strong
+              style={{ fontSize: '14px', position: 'absolute', right: '12px' }}
             >
               #{channelName}
-            </Text>
+            </strong>
           )}
-        </Group>
-      </Group>
+        </div>
+      </div>
       <div style={{ borderLeft: '3px solid #dfdfdf', paddingLeft: '16px' }}>
         <Message
           text={body}
