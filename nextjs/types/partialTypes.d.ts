@@ -54,3 +54,16 @@ const userMapType = Prisma.validator<Prisma.usersArgs>()({
   },
 });
 export type UserMap = Prisma.usersGetPayload<typeof userMapType>;
+
+const channelWithAccountAndSlackAuth = Prisma.validator<Prisma.channelsArgs>()({
+  include: {
+    account: {
+      include: {
+        slackAuthorizations: true,
+      },
+    },
+  },
+});
+export type ChannelWithAccountAndSlackAuth = Prisma.channelsGetPayload<
+  typeof channelWithAccountAndSlackAuth
+>;
