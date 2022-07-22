@@ -8,6 +8,7 @@
     "build": "tsc",
     "watch": "tsc -w",
     "prepare": "cd .. && npx -y husky install",
+    "pretest": "npm run build",
     "test": "jest",
     "cdk": "cdk"
   },

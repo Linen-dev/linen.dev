@@ -1,17 +1,8 @@
 import nodemailer from 'nodemailer';
-
-const HOST = process.env.EMAIL_HOST;
-const USER = process.env.EMAIL_USER;
-const PASS = process.env.EMAIL_PASS;
+import { sesClient } from '../utilities/awsSES';
 
 const transporter = nodemailer.createTransport({
-  host: HOST,
-  port: 465,
-  secure: true,
-  auth: {
-    user: USER,
-    pass: PASS,
-  },
+  SES: sesClient,
 });
 
 interface Options {
