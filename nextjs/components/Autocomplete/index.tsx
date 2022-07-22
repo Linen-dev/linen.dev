@@ -1,6 +1,7 @@
 import { useEffect, useRef, useCallback, useState } from 'react';
 import debounce from 'awesome-debounce-promise';
-import { Group, Text, TextInput } from '@mantine/core';
+import { Group, Text } from '@mantine/core';
+import TextInput from 'components/TextInput';
 import { AiOutlineSearch, AiOutlineLoading } from 'react-icons/ai';
 
 export default function Autocomplete({
@@ -179,23 +180,21 @@ export default function Autocomplete({
   }
 
   return (
-    <Group
+    <div
       style={{
         position: 'relative',
         flex: '1 1 auto',
         margin: '0 24px',
         zIndex: 100,
       }}
-      grow
-      noWrap
       onFocus={handleFocus}
       onBlur={handleBlur}
       onKeyDown={handleKeyDown}
       onMouseLeave={() => setActiveResultIndex(-1)}
     >
       <TextInput
-        ref={inputRef}
-        style={{ maxWidth: 'unset' }}
+        id="search"
+        inputRef={inputRef}
         icon={
           isSearching ? (
             <AiOutlineLoading className="fa-spin" />
@@ -205,8 +204,8 @@ export default function Autocomplete({
         }
         placeholder={placeholder}
         value={value}
-        onChange={(e) => {
-          setValue(e.currentTarget.value);
+        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+          setValue(event.currentTarget.value);
           setOffset(0);
         }}
       />
@@ -243,6 +242,6 @@ export default function Autocomplete({
           )}
         </Group>
       )}
-    </Group>
+    </div>
   );
 }
