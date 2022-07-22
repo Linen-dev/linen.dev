@@ -5,8 +5,10 @@ import { AiOutlineSearch } from 'react-icons/ai';
 export default function MessageExample() {
   return (
     <Example header="TextInput">
-      <Example description="Standard">
-        <TextInput id="text-input-foo" />
+      <Example description="TextInput can have a label.">
+        <TextInput label="Name" id="text-input-foo" />
+      </Example>
+      <Example description="TextInput can have an icon and a placeholder text.">
         <TextInput
           id="text-input-bar"
           icon={<AiOutlineSearch />}
