@@ -1,8 +1,8 @@
-import { generateRandomWordSlug } from '@/utilities/randomWordSlugs';
+import { findOrCreateUser, listUsers as listUsersByAccountId } from 'lib/users';
+import { generateRandomWordSlug } from 'utilities/randomWordSlugs';
 import { NextApiRequest, NextApiResponse } from 'next/types';
-import prisma from '../../../client';
 import { listUsers, saveUsers } from '../../../fetch_all_conversations';
-import { findAccountById, findOrCreateUser } from '../../../lib/models';
+import { findAccountById } from '../../../lib/models';
 
 export default async function handler(
   req: NextApiRequest,
@@ -40,12 +40,7 @@ export default async function handler(
     }
   }
 
-  const usersSlackIds = await prisma.users.findMany({
-    where: { accountsId: account.id },
-    select: {
-      externalUserId: true,
-    },
-  });
+  const usersSlackIds = await listUsersByAccountId(account.id);
   const ids = usersSlackIds.map((u) => u.externalUserId);
 
   const newMembers = members.filter((m) => {

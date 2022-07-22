@@ -5,10 +5,8 @@ import {
   createMessageWithMentions,
   findOrCreateThread,
   updateSlackThread,
-  findOrCreateUserFromUserInfo,
   findMessageByChannelIdAndTs,
   deleteMessageWithMentions,
-  createUserFromUserInfo,
   findAccountBySlackTeamId,
 } from '../../lib/models';
 import {
@@ -33,6 +31,10 @@ import {
   renameChannel,
 } from '../../lib/channel';
 import { findAccountIdByExternalId } from '../../lib/account';
+import {
+  createUserFromUserInfo,
+  findOrCreateUserFromUserInfo,
+} from '../../lib/users';
 
 export default async function handler(
   req: NextApiRequest,
