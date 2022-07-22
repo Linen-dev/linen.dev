@@ -8,11 +8,13 @@ interface Props {
 
 export default function Video({ src }: Props) {
   return (
-    <iframe
-      className={styles.iframe}
-      id="ytplayer"
-      src={normalizeVideoUrl(src)}
-      frameBorder="0"
-    ></iframe>
+    <div className={styles.video}>
+      <iframe
+        className={styles.iframe}
+        id="ytplayer"
+        src={normalizeVideoUrl(src)}
+        frameBorder="0"
+      ></iframe>
+    </div>
   );
 }

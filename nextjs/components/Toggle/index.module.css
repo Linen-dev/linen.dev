@@ -1,11 +1,12 @@
 .text {
   color: #36454f;
+  cursor: pointer;
   font-size: 14px;
   margin-bottom: 4px;
+  line-break: anywhere;
 }
 
 .arrow {
-  cursor: pointer;
   font-size: 16px;
   padding: 4px;
   user-select: none;

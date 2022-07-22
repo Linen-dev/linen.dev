@@ -11,14 +11,12 @@ export default function Toggle({ header, children }: Props) {
 
   return (
     <div>
-      <p className={styles.text}>
+      <p
+        className={styles.text}
+        onClick={() => setVisible((visible) => !visible)}
+      >
         {header}
-        <span
-          className={styles.arrow}
-          onClick={() => setVisible((visible) => !visible)}
-        >
-          {visible ? '▾' : '▸'}
-        </span>
+        <span className={styles.arrow}>{visible ? '▾' : '▸'}</span>
       </p>
       {visible && children}
     </div>
