@@ -1,9 +1,7 @@
 import nodemailer from 'nodemailer';
-import { sesClient } from '../services/aws/ses';
+import transport from './transport';
 
-const transporter = nodemailer.createTransport({
-  SES: sesClient,
-});
+const transporter = nodemailer.createTransport(transport);
 
 interface Options {
   from?: string;
