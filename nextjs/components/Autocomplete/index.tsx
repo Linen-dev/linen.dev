@@ -1,6 +1,5 @@
 import { useEffect, useRef, useCallback, useState } from 'react';
 import debounce from 'awesome-debounce-promise';
-import { Group, Text } from '@mantine/core';
 import TextInput from 'components/TextInput';
 import { AiOutlineSearch, AiOutlineLoading } from 'react-icons/ai';
 
@@ -210,8 +209,7 @@ export default function Autocomplete({
         }}
       />
       {isFocused && value.length >= minlength && (
-        <Group
-          spacing={0}
+        <div
           onMouseDown={(e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -229,18 +227,22 @@ export default function Autocomplete({
             boxShadow: '2px 3px 7px rgba(0, 0, 0, 0.15)',
             maxHeight: 'calc(100vh - 200px)',
           }}
-          direction="column"
         >
           {results.length > 0 && renderSuggestions(results)}
           {results.length === 0 && !isSearching && (
-            <Text
-              style={{ padding: '12px', textAlign: 'center', color: '#888' }}
-              size="sm"
+            <p
+              style={{
+                fontSize: '14px',
+                margin: 0,
+                padding: '12px',
+                textAlign: 'left',
+                color: '#888',
+              }}
             >
               No results found.
-            </Text>
+            </p>
           )}
-        </Group>
+        </div>
       )}
     </div>
   );
