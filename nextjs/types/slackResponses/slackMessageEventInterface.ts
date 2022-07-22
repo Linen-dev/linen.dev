@@ -10,7 +10,8 @@ export interface SlackEvent {
     | SlackMessageReactionRemovedEvent
     | SlackMessageReactionAddedEvent
     | SlackChannelCreatedEvent
-    | SlackChannelRenameEvent;
+    | SlackChannelRenameEvent
+    | UserProfileUpdateEvent;
   type: string;
   event_id: string;
   event_time: number;
@@ -110,4 +111,11 @@ export interface SlackChannelRenameEvent {
     name: string;
     created: number;
   };
+}
+
+export interface UserProfileUpdateEvent {
+  user: UserInfo;
+  cache_ts: number;
+  type: string;
+  event_ts: string;
 }

@@ -32,6 +32,7 @@ settings:
       - team_join
       - reaction_added
       - reaction_removed
+      - user_profile_changed
     bot_events:
       - team_join
       - channel_created
