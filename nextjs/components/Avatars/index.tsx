@@ -10,23 +10,20 @@ interface AvatarType {
 }
 
 export default function Avatars({ users }: { users: AvatarType[] }) {
-  const avatars = users.slice(0, 3);
+  const avatars = users.slice(0, 2);
   if (avatars.length === 0) {
     return <></>;
   }
   return (
-    <div
-      className={styles.group}
-      style={{ width: 36 + (avatars.length - 1) * 24 }}
-    >
+    <div className={styles.group}>
       {avatars.map((user, index) => (
         <div key={`${user.text}-${index}`} className={styles.item}>
           <Avatar key={`${index}-avatar`} {...user} />
         </div>
       ))}
-      {users.length > 3 && (
+      {users.length > 2 && (
         <div className={styles.item}>
-          <div className={styles.placeholder}>{`+${users.length - 3}`}</div>
+          <div className={styles.placeholder}>{`+${users.length - 2}`}</div>
         </div>
       )}
     </div>
