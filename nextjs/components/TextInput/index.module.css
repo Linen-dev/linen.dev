@@ -1,3 +1,13 @@
+.container {
+  display: block;
+  position: relative;
+  width: 100%;
+}
+
+.container + .container {
+  margin-top: 1rem;
+}
+
 .input {
   font-size: 0.875rem;
   line-height: 1.25rem;
@@ -10,4 +20,26 @@
   border-color: light-gray;
   width: 100%;
   display: block;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #0070f3;
+}
+
+.icon {
+  align-items: center;
+  color: #adb5bd;
+  display: flex;
+  height: 38px;
+  left: 0;
+  justify-content: center;
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  width: 36px;
+}
+
+.icon + .input {
+  padding-left: 36px;
 }

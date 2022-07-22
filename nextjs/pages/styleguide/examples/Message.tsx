@@ -126,7 +126,7 @@ const BROKEN_LINK_EXAMPLE = `
 <http://-how-to-register>
 `.trim();
 
-export default function Styleguide() {
+export default function MessageExample() {
   return (
     <Example header="Message">
       <Example description="Message component can render emojis.">

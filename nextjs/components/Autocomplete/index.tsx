@@ -1,6 +1,6 @@
 import { useEffect, useRef, useCallback, useState } from 'react';
 import debounce from 'awesome-debounce-promise';
-import { Group, Text, TextInput } from '@mantine/core';
+import TextInput from 'components/TextInput';
 import { AiOutlineSearch, AiOutlineLoading } from 'react-icons/ai';
 
 export default function Autocomplete({
@@ -179,23 +179,21 @@ export default function Autocomplete({
   }
 
   return (
-    <Group
+    <div
       style={{
         position: 'relative',
         flex: '1 1 auto',
         margin: '0 24px',
         zIndex: 100,
       }}
-      grow
-      noWrap
       onFocus={handleFocus}
       onBlur={handleBlur}
       onKeyDown={handleKeyDown}
       onMouseLeave={() => setActiveResultIndex(-1)}
     >
       <TextInput
-        ref={inputRef}
-        style={{ maxWidth: 'unset' }}
+        id="search"
+        inputRef={inputRef}
         icon={
           isSearching ? (
             <AiOutlineLoading className="fa-spin" />
@@ -205,14 +203,13 @@ export default function Autocomplete({
         }
         placeholder={placeholder}
         value={value}
-        onChange={(e) => {
-          setValue(e.currentTarget.value);
+        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+          setValue(event.currentTarget.value);
           setOffset(0);
         }}
       />
       {isFocused && value.length >= minlength && (
-        <Group
-          spacing={0}
+        <div
           onMouseDown={(e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -230,19 +227,23 @@ export default function Autocomplete({
             boxShadow: '2px 3px 7px rgba(0, 0, 0, 0.15)',
             maxHeight: 'calc(100vh - 200px)',
           }}
-          direction="column"
         >
           {results.length > 0 && renderSuggestions(results)}
           {results.length === 0 && !isSearching && (
-            <Text
-              style={{ padding: '12px', textAlign: 'center', color: '#888' }}
-              size="sm"
+            <p
+              style={{
+                fontSize: '14px',
+                margin: 0,
+                padding: '12px',
+                textAlign: 'left',
+                color: '#888',
+              }}
             >
               No results found.
-            </Text>
+            </p>
           )}
-        </Group>
+        </div>
       )}
-    </Group>
+    </div>
   );
 }
