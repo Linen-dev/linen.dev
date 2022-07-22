@@ -1,5 +1,5 @@
 import SES from 'aws-sdk/clients/ses';
-import { awsCredentials } from './awsCredentials';
+import { awsCredentials } from './credentials';
 
 declare global {
   // eslint-disable-next-line no-var

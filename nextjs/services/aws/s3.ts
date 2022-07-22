@@ -1,5 +1,5 @@
 import S3 from 'aws-sdk/clients/s3';
-import { awsCredentials } from './awsCredentials';
+import { awsCredentials } from './credentials';
 
 declare global {
   // eslint-disable-next-line no-var
