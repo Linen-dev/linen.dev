@@ -17,6 +17,7 @@ import {
   SlackTeamJoinEvent,
   SlackChannelCreatedEvent,
   SlackChannelRenameEvent,
+  UserProfileUpdateEvent,
 } from '../../types/slackResponses/slackMessageEventInterface';
 import { createSlug } from '../../lib/util';
 import {
@@ -34,6 +35,8 @@ import { findAccountIdByExternalId } from '../../lib/account';
 import {
   createUserFromUserInfo,
   findOrCreateUserFromUserInfo,
+  findUser,
+  updateUserFromUserInfo,
 } from '../../lib/users';
 
 export default async function handler(
@@ -72,6 +75,8 @@ export const handleWebhook = async (
     return processChannelCreated(body);
   } else if (body.event.type === 'channel_rename') {
     return processChannelRename(body);
+  } else if (body.event.type === 'user_profile_changed') {
+    return processUserProfileChanged(body);
   } else {
     console.error('Event not supported!!');
     return {
@@ -392,4 +397,18 @@ async function processChannelRename(body: SlackEvent) {
   }
   await renameChannel({ name: event.channel.name, id: channel.id });
   return { status: 200, message: 'channel renamed' };
+}
+
+async function processUserProfileChanged(body: SlackEvent) {
+  const teamId = body.team_id;
+  const event = body.event as UserProfileUpdateEvent;
+  const account = await findAccountIdByExternalId(teamId);
+  if (!account) return { status: 404, error: 'account not found' };
+  const user = await findUser(event.user.id, account.id);
+  if (!user) {
+    await createUserFromUserInfo(event.user, account.id);
+  } else {
+    await updateUserFromUserInfo(user, event.user, account.id);
+  }
+  return { status: 200, message: 'user profile updated' };
 }
