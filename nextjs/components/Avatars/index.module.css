@@ -5,11 +5,6 @@
   min-width: 36px;
 }
 
-.item + .item {
-  margin-left: -0.75rem;
-  z-index: 1;
-}
-
 .placeholder {
   border-radius: 50%;
   background-size: cover;
