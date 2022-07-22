@@ -129,7 +129,7 @@ export default function Channel({
               <div className="flex flex-col w-full">
                 <div className="flex flex-row justify-between pb-2">
                   <p className="font-semibold text-sm inline-block">
-                    {author.displayName || 'user'}
+                    {author?.displayName || 'user'}
                   </p>
                   <div className="text-sm text-gray-400">
                     {format(new Date(oldestMessage.sentAt))}
