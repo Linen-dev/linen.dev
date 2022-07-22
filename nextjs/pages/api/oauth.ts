@@ -1,12 +1,9 @@
+import { timeoutAfter } from '../../utilities/retryPromises';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { createChannels } from 'services/slack';
 import request from 'superagent';
 import { fetchTeamInfo } from '../../fetch_all_conversations';
-import {
-  createSlackAuthorization,
-  updateAccount,
-  updateAccountRedirectDomain,
-} from '../../lib/models';
+import { createSlackAuthorization, updateAccount } from '../../lib/models';
 
 export default async function handler(
   req: NextApiRequest,
@@ -52,11 +49,15 @@ export default async function handler(
     authedUserId: user.id,
   });
 
-  await createChannels({
-    accountId,
-    slackTeamId: body.team.id,
-    token: body.access_token,
-  });
+  // this function runs on serverless, implement promise race to avoid timeout for huge communities
+  await Promise.race([
+    timeoutAfter(5),
+    createChannels({
+      accountId,
+      slackTeamId: body.team.id,
+      token: body.access_token,
+    }),
+  ]);
 
   // Initialize syncing asynchronously
   // console.log('Start syncing account: ', accountId);
