@@ -1,19 +1,9 @@
 import { useCallback } from 'react';
 import axios from 'axios';
-import styled from 'styled-components';
 import { useRouter } from 'next/router';
-import { Group, Text } from '@mantine/core';
-import Avatar, { Size } from '../../components/Avatar';
-import Message from '../Message';
 import Autocomplete from '../Autocomplete';
 import { messages, channels, users } from '@prisma/client';
-
-const Suggestion = styled.div({
-  cursor: 'pointer',
-  position: 'relative',
-  borderBottom: '1px solid #eee',
-  padding: '12px',
-});
+import Suggestion from './Suggestion';
 
 const parseResults = (data: messages[]) => {
   const allIds = new Set();
@@ -53,37 +43,12 @@ const SearchBar = ({
       const channelName = channel?.channelName;
 
       return (
-        <Suggestion>
-          <Group style={{ width: '100%', marginBottom: '12px' }}>
-            <Avatar
-              size={Size.sm}
-              src={user?.profileImageUrl || ''} // set placeholder with a U sign
-              alt={user?.displayName || ''} // Set placeholder of a slack user if missing
-              text={(user?.displayName || '?').slice(0, 1).toLowerCase()}
-            />
-            <Group style={{ alignSelf: 'stretch' }} position="apart">
-              <Text size="sm" weight="bold">
-                {user?.displayName}
-              </Text>
-              {channelName && (
-                <Text
-                  style={{ position: 'absolute', right: '12px' }}
-                  size="sm"
-                  weight="bold"
-                >
-                  #{channelName}
-                </Text>
-              )}
-            </Group>
-          </Group>
-          <div style={{ borderLeft: '3px solid #dfdfdf', paddingLeft: '16px' }}>
-            <Message
-              text={body}
-              truncate
-              mentions={mentions.map((m: any) => m.users) || []}
-            />
-          </div>
-        </Suggestion>
+        <Suggestion
+          body={body}
+          user={user}
+          channelName={channelName}
+          mentions={mentions}
+        />
       );
     },
     [users, channels]
