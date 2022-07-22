@@ -4,19 +4,38 @@ import * as ec2 from 'aws-cdk-lib/aws-ec2';
 import * as ecs from 'aws-cdk-lib/aws-ecs';
 import * as ecs_patterns from 'aws-cdk-lib/aws-ecs-patterns';
 import * as path from 'path';
-// import { CodePipeline, CodePipelineSource, ShellStep } from 'aws-cdk-lib/pipelines';
+import { ScopedAws } from 'aws-cdk-lib';
 
 export class CdkStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
+    const { accountId, region } = new ScopedAws(this);
+
     const dockerImage = new ecs.AssetImage(
       path.join(__dirname, '../../nextjs')
     );
 
+    const bucketName = 'linen-assets';
+    const dynamoTableName = 'cache_prod';
+
     const cacheTableAccessPolicy = new cdk.aws_iam.PolicyStatement({
-      actions: ['dynamodb:PutItem', 'dynamodb:GetItem'],
-      resources: ['arn:aws:dynamodb:us-east-1:775327867774:table/cache_prod'],
+      actions: [
+        'dynamodb:PutItem',
+        'dynamodb:GetItem',
+        's3:PutObject',
+        's3:PutObjectAcl',
+        's3:PutLifecycleConfiguration',
+      ],
+      resources: [
+        `arn:aws:dynamodb:${region}:${accountId}:table/${dynamoTableName}`,
+        `arn:aws:s3:::${bucketName}`,
+        `arn:aws:s3:::${bucketName}/*`,
+      ],
+    });
+    const mailerAccessPolicy = new cdk.aws_iam.PolicyStatement({
+      actions: ['ses:SendRawEmail'],
+      resources: [`*`],
     });
 
     const vpc = new ec2.Vpc(this, 'fargateVpc', {
@@ -37,7 +56,7 @@ export class CdkStack extends cdk.Stack {
       vpc,
     });
 
-    const taskDefinition = new ecs.FargateTaskDefinition(
+    const nextjsTaskDefinition = new ecs.FargateTaskDefinition(
       this,
       'nextJSTaskDefinition',
       {
@@ -47,7 +66,16 @@ export class CdkStack extends cdk.Stack {
         //taskRole: containerTaskRole,
       }
     );
-    taskDefinition.addToTaskRolePolicy(cacheTableAccessPolicy);
+    nextjsTaskDefinition.addToTaskRolePolicy(cacheTableAccessPolicy);
+    nextjsTaskDefinition.addToTaskRolePolicy(mailerAccessPolicy);
+
+    const environment = {
+      NODE_ENV: 'production',
+      CACHE_TABLE: dynamoTableName,
+      LOG: 'true',
+      LONG_RUNNING: 'true',
+      S3_UPLOAD_BUCKET: bucketName,
+    };
 
     const secrets = {
       SENTRY_DSN: ecs.Secret.fromSsmParameter(
@@ -85,6 +113,13 @@ export class CdkStack extends cdk.Stack {
           { parameterName: '/linen-dev/prod/slackClientSecret', version: 0 }
         )
       ),
+      COMPANY_SLACK_BOT_TOKEN: ecs.Secret.fromSsmParameter(
+        cdk.aws_ssm.StringParameter.fromSecureStringParameterAttributes(
+          this,
+          'companySlackToken',
+          { parameterName: '/linen-dev/prod/slackToken', version: 0 }
+        )
+      ),
       SLACK_TOKEN: ecs.Secret.fromSsmParameter(
         cdk.aws_ssm.StringParameter.fromSecureStringParameterAttributes(
           this,
@@ -108,13 +143,10 @@ export class CdkStack extends cdk.Stack {
       ),
     };
 
-    const container = taskDefinition.addContainer('nextJSContainer', {
+    const container = nextjsTaskDefinition.addContainer('nextJSContainer', {
       image: dockerImage,
       command: ['npm', 'run', 'start'],
-      environment: {
-        NODE_ENV: 'production',
-        CACHE_TABLE: 'cache_prod',
-      },
+      environment,
       secrets,
       logging: ecs.LogDriver.awsLogs({
         streamPrefix: 'linen-dev',
@@ -133,10 +165,10 @@ export class CdkStack extends cdk.Stack {
         {
           cluster,
           publicLoadBalancer: true,
-          cpu: 256,
+          cpu: 512,
           desiredCount: 1,
-          memoryLimitMiB: 512,
-          taskDefinition,
+          memoryLimitMiB: 4096,
+          taskDefinition: nextjsTaskDefinition,
           securityGroups: [securityGroup],
         }
       );
@@ -153,36 +185,42 @@ export class CdkStack extends cdk.Stack {
     });
 
     scalableTarget.scaleOnCpuUtilization('cpuScaling', {
-      targetUtilizationPercent: 70,
+      targetUtilizationPercent: 50,
+    });
+    scalableTarget.scaleOnMemoryUtilization('memoryScaling', {
+      targetUtilizationPercent: 50,
     });
 
-    new ecs_patterns.ScheduledFargateTask(this, 'crawler', {
-      cluster,
-      scheduledFargateTaskImageOptions: {
-        image: dockerImage,
-        cpu: 1024,
-        memoryLimitMiB: 8192,
-        command: ['npm', 'run', 'script:crawl'],
-        secrets,
-        environment: {
-          NODE_ENV: 'production',
-          CACHE_TABLE: 'cache_prod',
-          LOG: 'true',
-          LONG_RUNNING: 'true',
-        },
-        logDriver: ecs.LogDriver.awsLogs({
-          streamPrefix: 'linen-dev-crawler',
-          logGroup: new cdk.aws_logs.LogGroup(this, 'CrawlerLogGroup', {
-            retention: cdk.aws_logs.RetentionDays.ONE_MONTH,
+    const crawlerTaskDef = new ecs_patterns.ScheduledFargateTask(
+      this,
+      'crawler',
+      {
+        cluster,
+        scheduledFargateTaskImageOptions: {
+          image: dockerImage,
+          cpu: 1024,
+          memoryLimitMiB: 8192,
+          command: ['npm', 'run', 'script:crawl'],
+          secrets,
+          environment,
+          logDriver: ecs.LogDriver.awsLogs({
+            streamPrefix: 'linen-dev-crawler',
+            logGroup: new cdk.aws_logs.LogGroup(this, 'CrawlerLogGroup', {
+              retention: cdk.aws_logs.RetentionDays.ONE_MONTH,
+            }),
           }),
+        },
+        schedule: cdk.aws_applicationautoscaling.Schedule.cron({
+          minute: '00',
+          hour: '3',
         }),
-      },
-      schedule:
-        cdk.aws_applicationautoscaling.Schedule.expression('rate(24 hours)'),
-      platformVersion: ecs.FargatePlatformVersion.LATEST,
-    }).taskDefinition.addToTaskRolePolicy(cacheTableAccessPolicy);
+        platformVersion: ecs.FargatePlatformVersion.LATEST,
+      }
+    );
+    crawlerTaskDef.taskDefinition.addToTaskRolePolicy(cacheTableAccessPolicy);
+    crawlerTaskDef.taskDefinition.addToTaskRolePolicy(mailerAccessPolicy);
 
-    new ecs.FargateService(this, 'syncDiscordService', {
+    const discordTaskDef = new ecs.FargateService(this, 'syncDiscordService', {
       cluster,
       taskDefinition: new ecs.FargateTaskDefinition(
         this,
@@ -193,58 +231,51 @@ export class CdkStack extends cdk.Stack {
         }
       ),
       desiredCount: 1,
-    }).taskDefinition
-      .addContainer('syncDiscordTask', {
-        image: dockerImage,
-        command: ['npm', 'run', 'script:sync:discord'],
-        secrets,
-        environment: {
-          NODE_ENV: 'production',
-          CACHE_TABLE: 'cache_prod',
-          LOG: 'true',
-          LONG_RUNNING: 'true',
-        },
-        logging: ecs.LogDriver.awsLogs({
-          streamPrefix: 'linen-dev-syncDiscord',
-          logGroup: new cdk.aws_logs.LogGroup(this, 'syncDiscordLogGroup', {
-            retention: cdk.aws_logs.RetentionDays.ONE_MONTH,
-          }),
+    });
+    discordTaskDef.taskDefinition.addContainer('syncDiscordTask', {
+      image: dockerImage,
+      command: ['npm', 'run', 'script:sync:discord'],
+      secrets,
+      environment,
+      logging: ecs.LogDriver.awsLogs({
+        streamPrefix: 'linen-dev-syncDiscord',
+        logGroup: new cdk.aws_logs.LogGroup(this, 'syncDiscordLogGroup', {
+          retention: cdk.aws_logs.RetentionDays.ONE_MONTH,
         }),
-      })
-      .taskDefinition.addToTaskRolePolicy(cacheTableAccessPolicy);
+      }),
+    });
+    discordTaskDef.taskDefinition.addToTaskRolePolicy(cacheTableAccessPolicy);
+    discordTaskDef.taskDefinition.addToTaskRolePolicy(mailerAccessPolicy);
 
-    new ecs_patterns.ScheduledFargateTask(this, 'maintenance', {
-      cluster,
-      scheduledFargateTaskImageOptions: {
-        image: dockerImage,
-        memoryLimitMiB: 512,
-        cpu: 256,
-        command: ['npm', 'run', 'script:maintenance'],
-        secrets,
-        environment: {
-          NODE_ENV: 'production',
-          CACHE_TABLE: 'cache_prod',
-          LOG: 'true',
-          LONG_RUNNING: 'true',
-        },
-        logDriver: ecs.LogDriver.awsLogs({
-          streamPrefix: 'linen-dev-maintenance',
-          logGroup: new cdk.aws_logs.LogGroup(this, 'maintenanceLogGroup', {
-            retention: cdk.aws_logs.RetentionDays.ONE_MONTH,
+    const maintenanceTaskDef = new ecs_patterns.ScheduledFargateTask(
+      this,
+      'maintenance',
+      {
+        cluster,
+        scheduledFargateTaskImageOptions: {
+          image: dockerImage,
+          memoryLimitMiB: 512,
+          cpu: 256,
+          command: ['npm', 'run', 'script:maintenance'],
+          secrets,
+          environment,
+          logDriver: ecs.LogDriver.awsLogs({
+            streamPrefix: 'linen-dev-maintenance',
+            logGroup: new cdk.aws_logs.LogGroup(this, 'maintenanceLogGroup', {
+              retention: cdk.aws_logs.RetentionDays.ONE_MONTH,
+            }),
           }),
+        },
+        schedule: cdk.aws_applicationautoscaling.Schedule.cron({
+          minute: '00',
+          hour: '3',
         }),
-      },
-      schedule:
-        cdk.aws_applicationautoscaling.Schedule.expression('rate(24 hours)'),
-      platformVersion: ecs.FargatePlatformVersion.LATEST,
-    }).taskDefinition.addToTaskRolePolicy(cacheTableAccessPolicy);
-
-    // new CodePipeline(this, 'LinenDev', {
-    //   pipelineName: 'LinenDev',
-    //   synth: new ShellStep('Build', {
-    //     input: CodePipelineSource.gitHub('Linen-dev/linen.dev', 'crawler'),
-    //     commands: ['cd cdk', 'npm ci', 'npm run build', 'npx cdk synth', 'npx cdk deploy --require-approval never']
-    //   })
-    // });
+        platformVersion: ecs.FargatePlatformVersion.LATEST,
+      }
+    );
+    maintenanceTaskDef.taskDefinition.addToTaskRolePolicy(
+      cacheTableAccessPolicy
+    );
+    maintenanceTaskDef.taskDefinition.addToTaskRolePolicy(mailerAccessPolicy);
   }
 }
