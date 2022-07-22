@@ -1,4 +1,4 @@
-import { uploadFile } from '../../utilities/s3Helper';
+import { uploadFile } from '../aws/s3';
 import {
   BUCKET_PREFIX_FOR_ATTACHMENTS,
   LINEN_ASSETS_CDN,

@@ -1,5 +1,5 @@
 import nodemailer from 'nodemailer';
-import { sesClient } from '../utilities/awsSES';
+import { sesClient } from '../services/aws/ses';
 
 const transporter = nodemailer.createTransport({
   SES: sesClient,

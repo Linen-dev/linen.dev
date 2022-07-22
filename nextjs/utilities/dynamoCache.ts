@@ -1,21 +1,12 @@
-import { DynamoDB } from 'aws-sdk';
 import { gzipSync, gunzipSync } from 'zlib';
 import * as Sentry from '@sentry/nextjs';
 import NodeCache from 'node-cache';
-import { awsCredentials } from './awsCredentials';
-
+import { DocumentClient } from '../services/aws/dynamo';
 declare global {
   // allow global `var` declarations
   // eslint-disable-next-line no-var
-  var DocumentClient: DynamoDB.DocumentClient | undefined;
   var localCache: NodeCache | undefined;
 }
-
-const DocumentClient =
-  global.DocumentClient || new DynamoDB.DocumentClient(awsCredentials);
-
-if (process.env.NODE_ENV !== 'production')
-  global.DocumentClient = DocumentClient;
 
 const TableName = process.env.CACHE_TABLE as string;
 
