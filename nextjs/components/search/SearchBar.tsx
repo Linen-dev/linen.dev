@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useCallback } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
@@ -39,8 +39,6 @@ const SearchBar = ({
   isSubDomainRouting: boolean;
 }) => {
   const accountId = channels[0]?.accountId;
-  const [value, setValue] = useState('');
-  const [selection, setSelection] = useState(null);
   const router = useRouter();
 
   const makeURL = (query = '', offset: number, limit: number) =>
@@ -49,7 +47,7 @@ const SearchBar = ({
     )}&account_id=${accountId}&offset=${offset}&limit=${limit}`;
 
   const renderSuggestion = useCallback(
-    ({ body, channelId, usersId, author, mentions }) => {
+    ({ body, channelId, usersId, mentions }) => {
       const user = users.find((u) => u.id === usersId);
       const channel = channels.find((c) => c.id === channelId);
       const channelName = channel?.channelName;
