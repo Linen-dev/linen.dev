@@ -1,14 +1,7 @@
-import styled from 'styled-components';
+import React from 'react';
 import { users } from '@prisma/client';
 import Avatar, { Size } from '../../Avatar';
 import Message from '../../Message';
-
-const Container = styled.div({
-  cursor: 'pointer',
-  position: 'relative',
-  borderBottom: '1px solid #eee',
-  padding: '12px',
-});
 
 interface Props {
   body: string;
@@ -24,7 +17,14 @@ export default function Suggestion({
   channelName,
 }: Props) {
   return (
-    <Container>
+    <div
+      style={{
+        cursor: 'pointer',
+        position: 'relative',
+        borderBottom: '1px solid #eee',
+        padding: '12px',
+      }}
+    >
       <div
         style={{
           display: 'flex',
@@ -57,6 +57,6 @@ export default function Suggestion({
           mentions={mentions.map((m: any) => m.users) || []}
         />
       </div>
-    </Container>
+    </div>
   );
 }
