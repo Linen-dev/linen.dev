@@ -1,4 +1,3 @@
-import { Anchor } from '@mantine/core';
 import { AiOutlineLink } from 'react-icons/ai';
 import { useMemo, useEffect } from 'react';
 import PageLayout from '../../layout/PageLayout';
@@ -79,27 +78,22 @@ export default function Thread({
         <div className={styles.thread}>
           <ul>{elements}</ul>
 
-          <div className="gap-8 columns-2">
-            <div className={styles.buttons}>
-              <Anchor
+          <div>
+            <div className={styles.footer}>
+              <a
                 className={styles.join}
                 href={threadCommunityInviteUrl || threadUrl}
-                size="sm"
                 target="_blank"
               >
-                <div className="flex content-center">
-                  <AiOutlineLink className={styles.icon} size={18} />
-                  {settings.communityType === 'discord' ? (
-                    <div>Join thread in Discord</div>
-                  ) : (
-                    <div>Join thread in Slack</div>
-                  )}
-                </div>
-              </Anchor>
-            </div>
-            <div className={styles.count}>
-              <span className={styles.subtext}>View count:</span>{' '}
-              {viewCount + 1}
+                <AiOutlineLink className={styles.icon} size={18} />
+                {`Join thread in ${
+                  settings.communityType === 'discord' ? 'Discord' : 'Slack'
+                }`}
+              </a>
+              <div className={styles.count}>
+                <span className={styles.subtext}>View count:</span>{' '}
+                {viewCount + 1}
+              </div>
             </div>
           </div>
         </div>
