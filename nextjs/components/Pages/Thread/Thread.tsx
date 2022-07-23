@@ -4,6 +4,7 @@ import PageLayout from '../../layout/PageLayout';
 import styles from './index.module.css';
 import { ThreadByIdProp } from '../../../types/apiResponses/threads/[threadId]';
 import Row from '../../Message/Row';
+import JoinChannelLink from 'components/Link/JoinChannelLink';
 
 export default function Thread({
   threadId,
@@ -80,16 +81,10 @@ export default function Thread({
 
           <div>
             <div className={styles.footer}>
-              <a
-                className={styles.join}
+              <JoinChannelLink
                 href={threadCommunityInviteUrl || threadUrl}
-                target="_blank"
-              >
-                <AiOutlineLink className={styles.icon} size={18} />
-                {`Join thread in ${
-                  settings.communityType === 'discord' ? 'Discord' : 'Slack'
-                }`}
-              </a>
+                communityType={settings.communityType}
+              />
               <div className={styles.count}>
                 <span className={styles.subtext}>View count:</span>{' '}
                 {viewCount + 1}

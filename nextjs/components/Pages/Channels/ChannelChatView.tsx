@@ -2,8 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import PageLayout from '../../layout/PageLayout';
 import { capitalize } from '../../../lib/util';
 import { Props, messageWithAuthor } from '.';
-import { Anchor, Loader } from '@mantine/core';
-import { AiOutlineLink } from 'react-icons/ai';
+import { AiOutlineLoading } from 'react-icons/ai';
 import { channels } from '@prisma/client';
 import { Settings } from 'services/accountSettings';
 import useInfiniteScroll from 'react-infinite-scroll-hook';
@@ -11,6 +10,7 @@ import { useRouter } from 'next/router';
 import classNames from 'classnames';
 import Row from '../../Message/Row';
 import { fetcher } from '@/utilities/fetcher';
+import JoinChannelLink from 'components/Link/JoinChannelLink';
 
 export default function ChannelChatView({
   channelId,
@@ -176,32 +176,17 @@ export default function ChannelChatView({
               })}
             {hasNextPage && (
               <div ref={infiniteRef} className="flex justify-center p-4">
-                <Loader size="sm" />
+                <AiOutlineLoading className="fa-spin" />
               </div>
             )}
           </ul>
-          <div className="gap-8 columns-2">
-            <div className="min-h-[20px] clear-both">
-              <Anchor
-                className="float-left ml-[4px]"
-                href={buildInviteLink(
-                  { ...settings, communityInviteUrl },
-                  currentChannel
-                )}
-                size="sm"
-                target="_blank"
-              >
-                <div className="flex content-center">
-                  <AiOutlineLink className="inline-block" size={18} />
-                  {settings.communityType === 'discord' ? (
-                    <div>Join channel in Discord</div>
-                  ) : (
-                    <div>Join channel in Slack</div>
-                  )}
-                </div>
-              </Anchor>
-            </div>
-          </div>
+          <JoinChannelLink
+            href={buildInviteLink(
+              { ...settings, communityInviteUrl },
+              currentChannel
+            )}
+            communityType={settings.communityType}
+          />
         </div>
       </div>
     </PageLayout>
