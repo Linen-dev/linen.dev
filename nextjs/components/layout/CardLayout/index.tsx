@@ -18,12 +18,12 @@ const Layout = ({ header, children }: Props) => {
           alt="Linen logo"
         />
       </Link>
-      <div className="px-3">
-        <Card>
+      <Card>
+        <div className="px-10 py-8">
           <h1 className={styles.header}>{header}</h1>
           {children}
-        </Card>
-      </div>
+        </div>
+      </Card>
     </div>
   );
 };
