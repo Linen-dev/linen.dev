@@ -31,23 +31,6 @@
   }
 }
 
-.join {
-  align-items: center;
-  color: #1c7ed6;
-  display: flex;
-  float: left;
-  font-size: 14px;
-}
-
-.join:hover {
-  text-decoration: underline;
-}
-
-.icon {
-  display: inline-block;
-  margin-right: 4px;
-}
-
 .count {
   font-size: 14px;
 }
