@@ -1,8 +1,8 @@
 .thread {
   margin-bottom: 2rem;
   margin-top: 2rem;
-  padding-left: 1.5rem /* 24px */;
-  padding-right: 1.5rem /* 24px */;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
 }
 
 @media (min-width: 1024px) {
@@ -11,22 +11,44 @@
   }
 }
 
-.buttons {
+.footer {
   clear: both;
   min-height: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+@media (max-width: 767px) {
+  .footer {
+    min-width: 100%;
+    width: 100%;
+  }
+}
+
+@media (min-width: 768px) {
+  .footer {
+    min-width: 360px;
+  }
 }
 
 .join {
+  align-items: center;
+  color: #1c7ed6;
+  display: flex;
   float: left;
-  margin-left: 4px;
+  font-size: 14px;
+}
+
+.join:hover {
+  text-decoration: underline;
 }
 
 .icon {
   display: inline-block;
+  margin-right: 4px;
 }
 
 .count {
-  float: right;
   font-size: 14px;
 }
 
