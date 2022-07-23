@@ -1,6 +1,5 @@
 import Avatar, { Size } from '../../Avatar';
 import { messageWithAuthor } from '../../Pages/Channels';
-import { Text } from '@mantine/core';
 import Message from '../../Message';
 import { format } from 'timeago.js';
 
@@ -53,9 +52,9 @@ export function Row({
             </p>
           </div>
         </div>
-        <Text size="sm" color="gray">
+        <div className="text-sm text-gray-400">
           {format(new Date(message.sentAt))}
-        </Text>
+        </div>
       </div>
       <div className="max-w-[700px]">
         <Message
