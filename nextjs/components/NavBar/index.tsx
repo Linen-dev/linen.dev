@@ -64,8 +64,8 @@ export default function NavBar({
                 passHref
               >
                 <ChannelName
-                  channelName={c.channelName}
-                  isChannelActive={c.channelName === channelName}
+                  name={c.channelName}
+                  active={c.channelName === channelName}
                 />
               </CustomLink>
             ))}
