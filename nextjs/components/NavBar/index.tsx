@@ -1,5 +1,6 @@
 import { Group, Title, Text, Paper, NativeSelect } from '@mantine/core';
 import { channels } from '@prisma/client';
+import ChannelName from './ChannelName';
 import CustomLink from '../Link/CustomLink';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHashtag } from '@fortawesome/free-solid-svg-icons';
@@ -62,25 +63,10 @@ export default function NavBar({
                 path={`/c/${c.channelName}/1`}
                 passHref
               >
-                <Text
-                  className="hover:bg-gray-50 px-4 py-2"
-                  size="sm"
-                  weight={channelName === c.channelName ? 700 : 500}
-                  sx={(theme) => ({
-                    cursor: 'pointer',
-                    width: '100%',
-                    backgroundColor: 'white',
-                    color: channelName === c.channelName ? '#1B194E' : 'black',
-                    borderLeft: `3px solid ${
-                      channelName === c.channelName ? '#1B194E' : 'transparent'
-                    }`,
-                    '&:hover': {
-                      color: '#1B194E',
-                    },
-                  })}
-                >
-                  # {c.channelName}
-                </Text>
+                <ChannelName
+                  channelName={c.channelName}
+                  isChannelActive={c.channelName === channelName}
+                />
               </CustomLink>
             ))}
           </div>
