@@ -1,0 +1,19 @@
+.name {
+  background: white;
+  border-left: 3px solid transparent;
+  color: black;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  width: 100%;
+}
+.name:hover {
+  background: #f9f9f9;
+  color: #1b194e;
+}
+.active {
+  border-color: #1b194e;
+  color: #1b194e;
+  font-weight: 700;
+}

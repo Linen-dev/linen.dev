@@ -1,29 +1,16 @@
 import React from 'react';
-import { Text } from '@mantine/core';
+import classNames from 'classnames';
+import styles from './index.module.css';
 
 interface Props {
-  channelName: string;
-  isChannelActive: boolean;
+  name: string;
+  active: boolean;
 }
 
-export default function ChannelName({ channelName, isChannelActive }: Props) {
+export default function ChannelName({ name, active }: Props) {
   return (
-    <Text
-      className="hover:bg-gray-50 px-4 py-2"
-      size="sm"
-      weight={isChannelActive ? 700 : 500}
-      sx={() => ({
-        cursor: 'pointer',
-        width: '100%',
-        backgroundColor: 'white',
-        color: isChannelActive ? '#1B194E' : 'black',
-        borderLeft: `3px solid ${isChannelActive ? '#1B194E' : 'transparent'}`,
-        '&:hover': {
-          color: '#1B194E',
-        },
-      })}
-    >
-      # {channelName}
-    </Text>
+    <div className={classNames(styles.name, { [styles.active]: active })}>
+      # {name}
+    </div>
   );
 }
