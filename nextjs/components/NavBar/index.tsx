@@ -1,4 +1,5 @@
-import { Group, Title, Text, Paper, NativeSelect } from '@mantine/core';
+import { NativeSelect } from '@mantine/core';
+import Card from 'components/Card';
 import { channels } from '@prisma/client';
 import ChannelName from './ChannelName';
 import CustomLink from '../Link/CustomLink';
@@ -36,17 +37,16 @@ export default function NavBar({
 
   const navBarLg = (
     <div className={styles.navbar}>
-      <Group direction="column">
-        <Paper
-          shadow="md"
+      <Card>
+        <div
           style={{
             padding: '24px 0',
             width: '100%',
           }}
         >
-          <Title style={{ paddingLeft: 24, marginBottom: 8 }} order={5}>
+          <h5 style={{ fontWeight: 'bold', paddingLeft: 18, marginBottom: 8 }}>
             Channels
-          </Title>
+          </h5>
           <div
             style={{
               display: 'block',
@@ -77,8 +77,8 @@ export default function NavBar({
           >
             Powered by Linen
           </a>
-        </Paper>
-      </Group>
+        </div>
+      </Card>
     </div>
   );
 
