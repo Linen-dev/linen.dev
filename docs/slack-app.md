@@ -24,7 +24,7 @@ We have implemented these ways to sync users data into our app:
 - [x] initial slack sync, triggered by onboarding process. The sync list all users and persist into our database.
 - [x] team_join events from slack webhook, this event contains new users data that we persist into our database.
 - [x] user_profile_changed event from slack webhook, this event contains updated data from users
-- [ ] update existing users when re-run sync process
+- [x] update existing users when re-run sync process
 - [ ] validate if the event has newer data than the existing one
 - [ ] implement a queue service to work with the webhook
 

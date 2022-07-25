@@ -1,9 +1,10 @@
-import { listUsers, saveUsers } from '../../fetch_all_conversations';
+import { listUsers } from '../../fetch_all_conversations';
 import {
   AccountWithSlackAuthAndChannels,
   UserMap,
 } from '../../types/partialTypes';
-import { findUsersByAccountId } from '../../lib/users';
+import { createOrUpdateUser, findUsersByAccountId } from '../../lib/users';
+import { UserInfo } from '../../types/slackResponses/slackUserInfoInterface';
 
 export async function syncUsers({
   accountId,
@@ -16,7 +17,7 @@ export async function syncUsers({
 }) {
   console.log('Syncing users for account: ', accountId);
   const usersListResponse = await listUsers(token);
-  const members: any[] = usersListResponse.body.members;
+  const members: UserInfo[] = usersListResponse.body.members;
 
   let userCursor: string | null =
     usersListResponse?.body?.response_metadata?.next_cursor;
@@ -38,16 +39,9 @@ export async function syncUsers({
 
   //Only save new users
   console.log('Saving users');
-  const usersSlackIds = await findUsersByAccountId(account.id);
-
-  const ids = usersSlackIds.map((u) => u.externalUserId);
-
-  const newMembers = members.filter((m) => {
-    return !ids.includes(m.id);
-  });
-
-  await saveUsers(newMembers, accountId);
-
+  await Promise.all(
+    members.map(async (user) => createOrUpdateUser(user, accountId))
+  );
   const usersInDb = await findUsersByAccountId(account.id);
   return usersInDb as UserMap[];
 }
