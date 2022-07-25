@@ -86,8 +86,8 @@ export default function Channel({
     setCurrentPage(newPage);
   };
 
-  const rows = currentThreads?.map(
-    ({ messages, incrementId, slug, viewCount }) => {
+  const rows = currentThreads
+    ?.map(({ messages, incrementId, slug, viewCount }) => {
       const linkProps = {
         isSubDomainRouting,
         communityName,
@@ -175,8 +175,8 @@ export default function Channel({
           </CustomLink>
         </li>
       );
-    }
-  );
+    })
+    .reverse();
 
   function buildTitle(
     communityName: string,
