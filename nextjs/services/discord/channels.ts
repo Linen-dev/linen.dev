@@ -7,7 +7,6 @@ import {
 } from '../../types/discordResponses/discordMessagesInterface';
 import { getDiscordWithRetry } from './api';
 import { CrawlType, LIMIT } from './constrains';
-import { createMessages } from './messages';
 import { findOrCreateChannel } from '../../lib/models';
 
 async function updateCursor(channel: channels, cursor?: string | null) {
@@ -36,12 +35,10 @@ async function crawlChannel(
   channel: channels,
   onboardingTimestamp: Date
 ): Promise<{
-  newThreads?: DiscordMessage[];
-  singleMessages?: DiscordMessage[];
+  channelMessages?: DiscordMessage[];
   cursor?: string;
 }> {
-  const newThreads: DiscordMessage[] = [];
-  const singleMessages: DiscordMessage[] = [];
+  const channelMessages: DiscordMessage[] = [];
 
   let hasMore = true;
   // before will have the last messageId from request to be used on next pagination request
@@ -82,32 +79,17 @@ async function crawlChannel(
         // we know that messages arrives sort by timestamp desc, latest will always be the lowest
         before = message.id;
       }
-      if (/** supportedThreadType.includes(message.type) || */ message.thread) {
-        newThreads.push(message);
-      } else {
-        singleMessages.push(message);
+      channelMessages.push(message);
+      if (channelMessages.length >= 400) {
+        const newThreads = channelMessages.splice(0, channelMessages.length);
+        await processNewThreads(newThreads, channel);
       }
     }
   }
-  return { newThreads, singleMessages, cursor: after };
-}
-
-async function persistMessagesIntoChannelThread(
-  accountId: string,
-  channel: channels,
-  messages: DiscordMessage[]
-) {
-  if (messages.length) {
-    let size = 10;
-    for (let i = 0; i < messages.length; i += size) {
-      // console.log('batch', i);
-      await createMessages({
-        accountId,
-        channel,
-        messages: messages.slice(i, i + size),
-      });
-    }
+  if (channelMessages.length) {
+    await processNewThreads(channelMessages, channel);
   }
+  return { cursor: after };
 }
 
 export async function processChannel(
@@ -116,21 +98,7 @@ export async function processChannel(
   accountId: string,
   crawlType: CrawlType
 ) {
-  const { newThreads, singleMessages, cursor } = await crawlChannel(
-    channel,
-    onboardingTimestamp
-  );
-
-  // persist singles
-  if (singleMessages) {
-    console.log({
-      channel: channel.channelName,
-      singles: singleMessages.length,
-    });
-    await persistMessagesIntoChannelThread(accountId, channel, singleMessages);
-  }
-
-  await processNewThreads(newThreads, channel);
+  const { cursor } = await crawlChannel(channel, onboardingTimestamp);
 
   await processThreads(channel, onboardingTimestamp, accountId, crawlType);
 
