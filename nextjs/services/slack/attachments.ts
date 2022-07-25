@@ -25,31 +25,37 @@ export async function processAttachments(
 
   if (m.files && m.files.length) {
     promises.push(
-      ...m.files.map((file) => {
-        const serializedFile = {
-          messagesId: message.id,
-          externalId: file.id,
-          name: file.name,
-          sourceUrl: file.url_private,
-          internalUrl: files[file.id],
-          mimetype: file.mimetype,
-          permalink: file.permalink,
-          title: file.title,
-        };
-        return prisma.messageAttachments.upsert({
-          where: {
-            messagesId_externalId: {
-              externalId: file.id,
-              messagesId: message.id,
-            },
-          },
-          create: serializedFile,
-          update: serializedFile,
-        });
-      })
+      ...m.files
+        .filter((file) => !!file.name)
+        .map((file) => {
+          const serializedFile = {
+            messagesId: message.id,
+            externalId: file.id,
+            name: file.name,
+            sourceUrl: file.url_private,
+            internalUrl: files[file.id],
+            mimetype: file.mimetype,
+            permalink: file.permalink,
+            title: file.title,
+          };
+          return prisma.messageAttachments
+            .upsert({
+              where: {
+                messagesId_externalId: {
+                  externalId: file.id,
+                  messagesId: message.id,
+                },
+              },
+              create: serializedFile,
+              update: serializedFile,
+            })
+            .catch((error) => {
+              console.log('attachment failure', error);
+            });
+        })
     );
   }
-  return await Promise.all(promises);
+  return await Promise.all(promises).catch(console.error);
 }
 
 /**
