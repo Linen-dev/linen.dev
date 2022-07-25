@@ -26,7 +26,11 @@ export async function getDiscordWithRetry({
     return response.body;
   } catch (error: any) {
     if ([401, 403, 404].includes(error?.status)) {
-      console.warn('status :: ', error?.status, { path, query });
+      console.warn(
+        'status :: ',
+        error?.status,
+        JSON.stringify({ path, query })
+      );
       return [];
     }
     throw error;
