@@ -1,6 +1,6 @@
 import { prismaMock } from '../../__tests__/singleton';
 import * as retryPromises from '../../utilities/retryPromises';
-import * as s3Helper from '../../utilities/s3Helper';
+import * as s3Helper from '../aws/s3';
 import * as fetch_all_conversations from 'fetch_all_conversations';
 import { fetchAllTopLevelMessages } from './fetchAllTopLevelMessages';
 import { conversationHistory } from '__mocks__/slack-api';

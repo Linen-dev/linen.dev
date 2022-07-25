@@ -1,18 +1,7 @@
 import nodemailer from 'nodemailer';
+import transport from './transport';
 
-const HOST = process.env.EMAIL_HOST;
-const USER = process.env.EMAIL_USER;
-const PASS = process.env.EMAIL_PASS;
-
-const transporter = nodemailer.createTransport({
-  host: HOST,
-  port: 465,
-  secure: true,
-  auth: {
-    user: USER,
-    pass: PASS,
-  },
-});
+const transporter = nodemailer.createTransport(transport);
 
 interface Options {
   from?: string;

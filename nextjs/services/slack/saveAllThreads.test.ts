@@ -1,7 +1,7 @@
 import { conversationHistory, conversationReplies } from '__mocks__/slack-api';
 import { prismaMock } from '../../__tests__/singleton';
 import * as fetch_all_conversations from 'fetch_all_conversations';
-import * as s3Helper from '../../utilities/s3Helper';
+import * as s3Helper from '../aws/s3';
 import { saveAllThreads } from './saveAllThreads';
 import { createSlug } from '../../lib/util';
 

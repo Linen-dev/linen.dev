@@ -15,13 +15,11 @@ export async function updateAndNotifySyncStatus(
   if (skipNotification()) return;
 
   await updateAccountSyncStatus(accountId, status);
-  try {
-    await sendNotification(
-      `Syncing process is ${status} for account: ${accountId}.`
-    );
-  } catch (e) {
-    console.error('Failed to send Slack notification: ', e);
-  }
+  await slackNotification(status, accountId);
+  await emailNotification(status, accountId);
+}
+
+async function emailNotification(status: SyncStatus, accountId: string) {
   try {
     await ApplicationMailer.send({
       to: (process.env.SUPPORT_EMAIL || 'help@linen.dev') as string,
@@ -35,6 +33,17 @@ export async function updateAndNotifySyncStatus(
     console.error(error);
   }
 }
+
+async function slackNotification(status: SyncStatus, accountId: string) {
+  try {
+    await sendNotification(
+      `Syncing process is ${status} for account: ${accountId}.`
+    );
+  } catch (e) {
+    console.error('Failed to send Slack notification: ', e);
+  }
+}
+
 function skipNotification() {
   return process.env.SKIP_NOTIFICATION === 'true';
 }
