@@ -118,3 +118,17 @@ export const findOrCreateUserFromUserInfo = async (
   }
   return user;
 };
+
+export const createOrUpdateUser = async (user: UserInfo, accountId: string) => {
+  const { anonymousAlias, ...userInfo } = buildUserFromInfo(user, accountId);
+  return await prisma.users.upsert({
+    where: {
+      externalUserId_accountsId: {
+        accountsId: accountId,
+        externalUserId: user.id,
+      },
+    },
+    update: userInfo,
+    create: { anonymousAlias, ...userInfo },
+  });
+};

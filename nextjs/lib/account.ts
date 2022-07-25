@@ -50,3 +50,17 @@ export function createAccount({
     },
   });
 }
+
+export async function findSlackAccounts(accountId?: string) {
+  return await prisma.accounts.findMany({
+    select: { id: true },
+    where: {
+      slackTeamId: { not: null },
+      ...(accountId && {
+        AND: {
+          OR: [{ id: accountId }, { redirectDomain: accountId }],
+        },
+      }),
+    },
+  });
+}

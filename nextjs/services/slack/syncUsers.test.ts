@@ -11,6 +11,7 @@ const account = {
 const externalUser = {
   id: 'externalId',
   profile: { display_name: 'fakeName', image_original: 'url' },
+  is_bot: false,
 };
 
 const internalUser = {
@@ -33,11 +34,10 @@ describe('slackSync :: syncUsers', () => {
         },
       } as any);
     const usersFindManyMock = prismaMock.users.findMany
-      .mockResolvedValueOnce([])
+      // .mockResolvedValueOnce([])
       .mockResolvedValueOnce([internalUser]);
 
-    const usersCreateManyMock =
-      prismaMock.users.createMany.mockResolvedValue(null);
+    const usersUpsertMock = prismaMock.users.upsert.mockResolvedValue(null);
 
     const response = await syncUsers({
       account,
@@ -50,7 +50,7 @@ describe('slackSync :: syncUsers', () => {
     expect(listUsersSpy).toHaveBeenCalledWith(
       account.slackAuthorizations[0].accessToken
     );
-    expect(usersFindManyMock).toBeCalledTimes(2);
+    expect(usersFindManyMock).toBeCalledTimes(1);
     expect(usersFindManyMock).toHaveBeenCalledWith({
       where: { accountsId: account.id },
       select: {
@@ -58,10 +58,17 @@ describe('slackSync :: syncUsers', () => {
         id: true,
       },
     });
-    expect(usersCreateManyMock).toBeCalledTimes(1);
-    expect(usersCreateManyMock).toHaveBeenCalledWith({
-      data: [{ ...internalUser, isBot: undefined }],
-      skipDuplicates: true,
+    expect(usersUpsertMock).toBeCalledTimes(1);
+    const { anonymousAlias, ...rest } = internalUser;
+    expect(usersUpsertMock).toHaveBeenCalledWith({
+      where: {
+        externalUserId_accountsId: {
+          accountsId: internalUser.accountsId,
+          externalUserId: internalUser.externalUserId,
+        },
+      },
+      create: internalUser,
+      update: rest,
     });
   });
 });
