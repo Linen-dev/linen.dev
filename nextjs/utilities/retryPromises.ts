@@ -21,6 +21,7 @@ export async function retryPromise({
   sleepSeconds?: number;
 }) {
   let attempts = 0;
+  let lastError;
   while (attempts < retries) {
     attempts++;
     try {
@@ -31,11 +32,12 @@ export async function retryPromise({
         throw error;
       }
       const sleepSeconds = jitter(attempts);
+      lastError = error;
       log(error, sleepSeconds);
       await sleep(sleepSeconds * 1000);
     }
   }
-  throw 'Retries attempts exceeded';
+  throw lastError;
 }
 
 export const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
