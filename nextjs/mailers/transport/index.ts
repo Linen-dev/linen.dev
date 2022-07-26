@@ -18,14 +18,15 @@ const smtpTransport: SMTPTransport.Options = {
   },
 };
 
-const transport = {
-  // smtp
-  test: smtpTransport,
-  development: smtpTransport,
-  dev: smtpTransport,
-  // ses
-  production: sesTransport,
-};
+const transport: Record<string, SESTransport.Options | SMTPTransport.Options> =
+  {
+    // smtp
+    test: smtpTransport,
+    development: smtpTransport,
+    dev: smtpTransport,
+    // ses
+    production: sesTransport,
+  };
 
 export default transport[NODE_ENV] as
   | SESTransport.Options

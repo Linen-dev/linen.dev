@@ -45,6 +45,8 @@ async function syncJob(accountId: string, crawlType: CrawlType) {
     }
     await processChannel(channel, onboardingTimestamp, accountId, crawlType);
   }
+
+  console.log('sync finished');
 }
 
 export async function discordSync({

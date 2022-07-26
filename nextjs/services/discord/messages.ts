@@ -130,7 +130,7 @@ function upsertMessage(message: {
   });
 }
 
-function filterKnownMessagesTypes(message: DiscordMessage) {
+export function filterKnownMessagesTypes(message: DiscordMessage) {
   if (supportedMessageType.includes(message.type)) {
     return true;
   }

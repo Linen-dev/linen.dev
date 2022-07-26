@@ -3,8 +3,8 @@ import { channels, threads } from '@prisma/client';
 import { DiscordMessage } from '../../types/discordResponses/discordMessagesInterface';
 import { createSlug } from '../../lib/util';
 import { getDiscordWithRetry } from './api';
-import { CrawlType, LIMIT } from './constrains';
-import { createMessages } from './messages';
+import { CrawlType, THREAD_LIMIT, LIMIT } from './constrains';
+import { createMessages, filterKnownMessagesTypes } from './messages';
 
 async function crawlExistingThread(
   thread: threads & {
@@ -87,6 +87,7 @@ async function getThreadsFromDB(channel: channels, take: number, skip: number) {
     where: {
       channelId: channel.id,
       externalThreadId: { not: channel.externalChannelId },
+      messageCount: { gt: 1 },
     },
     include: {
       messages: {
@@ -100,20 +101,16 @@ async function getThreadsFromDB(channel: channels, take: number, skip: number) {
   });
 }
 
-function upsertThreadType18(channelId: string, thread: DiscordMessage) {
-  return upsertThreadType0(channelId, thread);
-}
-
-function upsertThreadType0(channelId: string, thread: DiscordMessage) {
+function upsertThread(channelId: string, thread: DiscordMessage) {
   const slackThread = {
-    externalThreadId: thread.thread?.id || thread.id,
+    externalThreadId: thread.id,
     slug: createSlug(
       thread.content ||
         thread.thread?.name ||
         thread.referenced_message?.content ||
         thread.timestamp
     ),
-    messageCount: 1,
+    messageCount: (thread.thread?.message_count || 0) + 1,
   };
   return prisma.threads.upsert({
     create: {
@@ -129,17 +126,9 @@ function upsertThreadType0(channelId: string, thread: DiscordMessage) {
   });
 }
 
-const upsertThread: Record<
-  number,
-  (channelId: string, thread: DiscordMessage) => Promise<threads>
-> = {
-  0: upsertThreadType0,
-  18: upsertThreadType18,
-};
-
 async function createThread(channelId: string, thread: DiscordMessage) {
   // console.log('thread', thread);
-  return upsertThread[thread.type](channelId, thread);
+  return upsertThread(channelId, thread);
 }
 
 async function updateThread(channel: channels, thread: threads) {
@@ -147,7 +136,7 @@ async function updateThread(channel: channels, thread: threads) {
     path: `/channels/${channel.externalChannelId}/messages/${thread.externalThreadId}`,
   });
   try {
-    return await upsertThread[message.type](channel.id, message);
+    return await upsertThread(channel.id, message);
   } catch (err) {
     console.error(String(err));
     return;
@@ -177,7 +166,7 @@ export async function processThreads(
   let hasMore;
   let skip = 0;
   do {
-    const threads = await getThreadsFromDB(channel, LIMIT, skip);
+    const threads = await getThreadsFromDB(channel, THREAD_LIMIT, skip);
     console.log({ channel: channel.channelName, threads: threads.length });
     // for each thread
     for (const thread of threads) {
@@ -198,8 +187,8 @@ export async function processThreads(
       await updateThreadMessageCount(thread.id);
     }
     // pagination over our database
-    hasMore = threads.length === LIMIT;
-    skip += LIMIT;
+    hasMore = threads.length === THREAD_LIMIT;
+    skip += THREAD_LIMIT;
   } while (hasMore);
 }
 
@@ -213,7 +202,15 @@ export async function processNewThreads(
       newThreads: newThreads.length,
     });
     for (const newThread of newThreads) {
-      await createThread(channel.id, newThread);
+      if (filterKnownMessagesTypes(newThread)) {
+        const thread = await createThread(channel.id, newThread);
+        await createMessages({
+          accountId: channel.accountId as string,
+          channel,
+          messages: [newThread],
+          thread,
+        });
+      }
     }
   }
 }
