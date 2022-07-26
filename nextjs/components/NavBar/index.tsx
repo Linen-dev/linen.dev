@@ -1,10 +1,9 @@
-import { NativeSelect } from '@mantine/core';
+import NativeSelect from 'components/NativeSelect';
 import Card from 'components/Card';
 import { channels } from '@prisma/client';
 import ChannelName from './ChannelName';
 import CustomLink from '../Link/CustomLink';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHashtag } from '@fortawesome/free-solid-svg-icons';
+import { AiOutlineNumber } from 'react-icons/ai';
 import CustomRouterPush from '../Link/CustomRouterPush';
 import styles from './index.module.css';
 import { sortByChannelName } from './utilities';
@@ -17,7 +16,7 @@ export default function NavBar({
   isSubDomainRouting,
 }: {
   channels: channels[];
-  channelName: string | string[];
+  channelName: string;
   communityName: string;
   communityType: string;
   isSubDomainRouting: boolean;
@@ -85,12 +84,14 @@ export default function NavBar({
   const navBarSm = (
     <div className="pt-4 px-6">
       <NativeSelect
-        data={sortedChannels.map((c: channels) => c.channelName)}
-        icon={<FontAwesomeIcon icon={faHashtag} size="xs" />}
+        id="channel"
+        options={sortedChannels.map((channel: channels) => ({
+          label: channel.channelName,
+          value: channel.channelName,
+        }))}
+        icon={<AiOutlineNumber />}
         onChange={(event) => onChangeChannel(event.currentTarget.value)}
-        description="Channels"
-        radius="sm"
-        size="xs"
+        label="Channels"
         value={channelName}
       />
     </div>
@@ -99,7 +100,7 @@ export default function NavBar({
   return (
     <>
       <div className="hidden lg:flex">{navBarLg}</div>
-      <div className="lg:hidden h-16">{navBarSm}</div>
+      <div className="lg:hidden">{navBarSm}</div>
     </>
   );
 }
