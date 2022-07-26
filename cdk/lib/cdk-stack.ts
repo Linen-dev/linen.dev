@@ -60,8 +60,8 @@ export class CdkStack extends cdk.Stack {
       this,
       'nextJSTaskDefinition',
       {
-        memoryLimitMiB: 512,
-        cpu: 256,
+        memoryLimitMiB: 4096,
+        cpu: 512,
         //executionRole: execRole,
         //taskRole: containerTaskRole,
       }
