@@ -1,12 +1,11 @@
 import { channels, messages, threads } from '@prisma/client';
 import request from 'superagent';
 import {
-  createManyUsers,
   createMessage,
   createOrUpdateMessage,
   findOrCreateThread,
-  findUser,
 } from './lib/models';
+import { createManyUsers, findUser } from './lib/users';
 import { generateRandomWordSlug } from './utilities/randomWordSlugs';
 
 export const fetchConversations = async (

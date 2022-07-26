@@ -5,9 +5,13 @@ import { prismaMock } from '../../singleton';
 import * as mockModels from '../../../lib/models';
 jest.mock('../../../lib/models', () => ({
   ...jest.requireActual('../../../lib/models'),
-  findOrCreateUserFromUserInfo: jest.fn(),
   findMessageByChannelIdAndTs: jest.fn(),
   deleteMessageWithMentions: jest.fn(),
+}));
+import * as mockUsers from '../../../lib/users';
+jest.mock('../../../lib/users', () => ({
+  ...jest.requireActual('../../../lib/users'),
+  findOrCreateUserFromUserInfo: jest.fn(),
 }));
 
 import handler from '../../../pages/api/webhook';
@@ -204,7 +208,7 @@ describe('webhook', () => {
       isAdmin: false,
       accountsId: 'account_id',
     };
-    mockModels.findOrCreateUserFromUserInfo.mockResolvedValue(userMock);
+    mockUsers.findOrCreateUserFromUserInfo.mockResolvedValue(userMock);
 
     const now = new Date();
     const messageMock = {
@@ -270,7 +274,7 @@ describe('webhook', () => {
           data: threadMock,
         });
 
-        expect(mockModels.findOrCreateUserFromUserInfo).toHaveBeenCalledWith(
+        expect(mockUsers.findOrCreateUserFromUserInfo).toHaveBeenCalledWith(
           addMessageEvent.event.user,
           channelMock
         );
@@ -391,7 +395,7 @@ describe('webhook', () => {
       isAdmin: false,
       accountsId: 'account_id',
     };
-    mockModels.findOrCreateUserFromUserInfo.mockResolvedValue(userMock);
+    mockUsers.findOrCreateUserFromUserInfo.mockResolvedValue(userMock);
 
     const now = new Date();
     const messageMock = {
@@ -480,7 +484,7 @@ describe('webhook', () => {
           data: threadMock,
         });
 
-        expect(mockModels.findOrCreateUserFromUserInfo).toHaveBeenCalledWith(
+        expect(mockUsers.findOrCreateUserFromUserInfo).toHaveBeenCalledWith(
           changeMessageEvent.event.message.user,
           channelMock
         );

@@ -11,6 +11,7 @@ import {
 } from '../../services/syncStatus';
 import { processReactions } from '../../services/slack/reactions';
 import { processAttachments } from '../../services/slack/attachments';
+import { listUsers } from '../../lib/users';
 
 const prisma = new PrismaClient({}); // initiate a new instance of prisma without info logs
 
@@ -68,13 +69,7 @@ async function upsertUsers(account: accounts): Promise<UserMap> {
   console.timeEnd('persist-users');
 
   console.time('retrieve-users');
-  const usersInDb = await prisma.users.findMany({
-    where: { accountsId: account.id },
-    select: {
-      externalUserId: true,
-      id: true,
-    },
-  });
+  const usersInDb = await listUsers(account.id);
   console.timeEnd('retrieve-users');
   stats.users_in_db = usersInDb.length;
   console.time('toObject-users');
