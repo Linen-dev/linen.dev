@@ -14,7 +14,7 @@ export async function fetchToken({
   const token = account.slackAuthorizations[0].accessToken;
 
   const teamInfoResponse = await fetchTeamInfo(token);
-  const communityUrl = teamInfoResponse.body.team.url;
+  const communityUrl = teamInfoResponse?.body?.team?.url;
 
   if (!!domain && !!communityUrl) {
     await updateAccountRedirectDomain(accountId, domain, communityUrl);
