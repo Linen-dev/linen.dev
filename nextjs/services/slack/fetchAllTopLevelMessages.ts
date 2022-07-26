@@ -19,6 +19,8 @@ async function saveMessagesTransaction(
   users: UserMap[],
   token: string
 ) {
+  if (!messages.length) return;
+
   const threadsTransaction: any = messages
     .map((m) => {
       if (!!m.thread_ts) {
