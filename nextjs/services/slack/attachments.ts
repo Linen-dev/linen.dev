@@ -80,7 +80,7 @@ async function processLinks(
         file.id,
         file.name || 'unknown',
       ].join('/');
-      await uploadFile(s3Key, response.text || response.body);
+      await uploadFile(s3Key, Buffer.from(response.text || response.body));
       return {
         fileId: file.id,
         internalUrl: [LINEN_ASSETS_CDN, s3Key].join('/'),
