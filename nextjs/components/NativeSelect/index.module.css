@@ -8,7 +8,8 @@
   margin-top: 1rem;
 }
 
-.input {
+.select {
+  appearance: none;
   font-size: 0.875rem;
   line-height: 1.25rem;
   padding-top: 0.5rem;
@@ -22,7 +23,7 @@
   display: block;
 }
 
-.input:focus {
+.select:focus {
   outline: none;
   border-color: #0070f3;
 }
@@ -31,7 +32,7 @@
   align-items: center;
   color: #adb5bd;
   display: flex;
-  height: 38px;
+  height: 36px;
   left: 0;
   justify-content: center;
   pointer-events: none;
@@ -40,6 +41,6 @@
   width: 36px;
 }
 
-.icon + .input {
-  padding-left: 36px;
+.icon + .select {
+  padding-left: 32px;
 }
