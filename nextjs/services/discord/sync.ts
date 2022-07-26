@@ -4,13 +4,9 @@ import { processChannel } from './channels';
 import { CrawlType, DISCORD_TOKEN } from './constrains';
 import { crawlUsers } from './users';
 
-// (async () => {
-//   const accountId = '910dd004-8d31-4479-8c03-fee6d524641f';
-//   const crawlType = CrawlType.new_only;
-//   await syncJob(accountId, crawlType);
-// })();
-
 async function syncJob(accountId: string, crawlType: CrawlType) {
+  console.log('sync stared', { accountId });
+
   const account = await prisma.accounts.findUnique({
     where: { id: accountId },
     include: {
@@ -43,10 +39,10 @@ async function syncJob(accountId: string, crawlType: CrawlType) {
       // this will force sync all messages until reach onboardingTimestamp,
       channel.externalPageCursor = null;
     }
-    await processChannel(channel, onboardingTimestamp, accountId, crawlType);
+    await processChannel(channel, onboardingTimestamp, crawlType);
   }
 
-  console.log('sync finished');
+  console.log('sync finished', { accountId });
 }
 
 export async function discordSync({
@@ -60,6 +56,10 @@ export async function discordSync({
     const crawlType = fullSync ? CrawlType.historic : CrawlType.new_only;
     console.log('crawlType', crawlType);
     await syncJob(accountId, crawlType);
+    return {
+      status: 200,
+      body: {},
+    };
   } catch (error) {
     console.error(error);
     return {
@@ -67,9 +67,4 @@ export async function discordSync({
       body: {},
     };
   }
-
-  return {
-    status: 200,
-    body: {},
-  };
 }
