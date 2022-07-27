@@ -26,36 +26,27 @@ async function getThreadsAndUsers({
   page: number;
   channels: channels[];
 }) {
-  const [threadsResponse, channelsResponse] = await Promise.all([
+  const [threadsResponse] = await Promise.all([
     fetchThreadsMemo({ channelId, page, account }),
-    channelsGroupByThreadCountMemo(account.id),
   ]);
 
   const { data, pagination } = threadsResponse;
   let { threads } = data;
 
   //Filter out channels with less than 20 threads
-  const channelsWithMinThreads = channels
-    .filter((c) => !c.hidden)
-    .filter((c) => {
-      if (c.id === channelId) {
-        return true;
-      }
-
-      const channelCount = channelsResponse.find((r) => {
-        return r.channelId === c.id;
-      });
-
-      return channelCount && channelCount._count.id > 2;
-    });
-
-  threads = threads.filter((t) => t.messages.length > 0);
+  const visibleChannels = channels.filter((c) => !c.hidden);
   const users = threads
     .map(({ messages }) => messages.map(({ author }) => author))
     .flat()
     .filter(Boolean);
 
-  return { users, threads, pagination, channelsWithMinThreads, messages: null };
+  return {
+    users,
+    threads,
+    pagination,
+    channelsWithMinThreads: visibleChannels,
+    messages: null,
+  };
 }
 
 function identifyChannel({
