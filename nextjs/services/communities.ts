@@ -35,8 +35,6 @@ async function getThreadsAndUsers({
 
   //Filter out channels with less than 20 threads
   const visibleChannels = channels.filter((c) => !c.hidden);
-
-  // threads = threads.filter((t) => t.messages.length > 0);
   const users = threads
     .map(({ messages }) => messages.map(({ author }) => author))
     .flat()
