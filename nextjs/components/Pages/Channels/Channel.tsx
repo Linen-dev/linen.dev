@@ -99,7 +99,9 @@ export default function Channel({
 
       const author = oldestMessage.author;
       //don't include the original poster for the thread in replies
-      const authors = uniqueUsers(messages.map((m) => m.author).slice(0, -1));
+
+      let users = messages.map((m) => m.author).filter(Boolean) as users[];
+      const authors = uniqueUsers(users.slice(0, -1));
 
       return (
         <li
