@@ -369,9 +369,6 @@ export const threadIndex = async ({
     },
     where: {
       channelId,
-      messageCount: {
-        gt: 0,
-      },
     },
     orderBy: {
       externalThreadId: 'desc',
