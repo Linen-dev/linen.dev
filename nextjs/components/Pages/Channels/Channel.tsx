@@ -10,8 +10,6 @@ import CustomLink from '../../Link/CustomLink';
 import { capitalize } from '../../../lib/util';
 import CustomRouterPush from 'components/Link/CustomRouterPush';
 import CopyToClipboardLink from './CopyToClipboardLink';
-import styles from './Channel.module.css';
-import CustomTableRowLink from 'components/Link/CustomTableRowLink';
 import { Props } from '.';
 
 export default function Channel({
