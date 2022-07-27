@@ -6,7 +6,7 @@ import { Prisma, threads, users } from '@prisma/client';
 export interface SerializedMessage {
   body: string;
   sentAt: string;
-  author: users;
+  author?: users;
   usersId: string;
   mentions: MentionsWithUsers[];
   attachments: SerializedAttachment[];
