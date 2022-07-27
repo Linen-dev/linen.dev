@@ -40,15 +40,4 @@ const sentryWebpackPluginOptions = {
   // https://github.com/getsentry/sentry-webpack-plugin#options.
 };
 
-const withMDX = require('@next/mdx')({
-  extension: /\.mdx?$/,
-  options: {
-    remarkPlugins: [],
-    rehypePlugins: [],
-  },
-});
-
-module.exports = withSentryConfig(
-  withMDX(nextConfig),
-  sentryWebpackPluginOptions
-);
+module.exports = withSentryConfig(nextConfig, sentryWebpackPluginOptions);
