@@ -1,6 +1,5 @@
 import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faLink } from '@fortawesome/free-solid-svg-icons';
+import { AiOutlinePaperClip } from 'react-icons/ai';
 import CustomLinkHelper from '../../../Link/CustomLinkHelper';
 import { copyToClipboard } from 'utilities/clipboard';
 import { toast } from 'components/Toast';
@@ -19,13 +18,12 @@ export default function CopyToClipboardLink({
   path,
 }: Props) {
   return (
-    <FontAwesomeIcon
-      fixedWidth
+    <AiOutlinePaperClip
       title="Copy to Clipboard"
-      className="text-blue-700 p-1 hover:text-blue-900"
-      icon={faLink}
+      className="text-blue-700 text-lg hover:text-blue-900"
       onClick={(event) => {
         event.stopPropagation();
+        event.preventDefault();
         const pathname = CustomLinkHelper({
           isSubDomainRouting,
           communityName,
