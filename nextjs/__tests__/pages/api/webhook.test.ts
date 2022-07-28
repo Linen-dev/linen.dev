@@ -15,7 +15,8 @@ jest.mock('../../../lib/users', () => ({
 }));
 
 import handler from '../../../pages/api/webhook';
-import { deleteMessageWithMentions } from '../../../lib/models';
+// import { deleteMessageWithMentions } from '../../../lib/models';
+import { parseSlackSentAt } from '../../../utilities/sentAt';
 
 const addMessageEvent = {
   token: 'RudepRJuMOjy8zENRCLdXW7t',
@@ -259,6 +260,7 @@ describe('webhook', () => {
           create: {
             externalThreadId: addMessageEvent.event.ts,
             channelId: channelMock.id,
+            sentAt: parseSlackSentAt(addMessageEvent.event.ts),
           },
           include: {
             messages: true,
@@ -469,6 +471,7 @@ describe('webhook', () => {
           create: {
             externalThreadId: changeMessageEvent.event.message.ts,
             channelId: channelMock.id,
+            sentAt: parseSlackSentAt(changeMessageEvent.event.message.ts),
           },
           include: {
             messages: true,

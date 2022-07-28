@@ -12,6 +12,7 @@ import {
 import { processReactions } from '../../services/slack/reactions';
 import { processAttachments } from '../../services/slack/attachments';
 import { listUsers } from '../../lib/users';
+import { parseSlackSentAt } from '../../utilities/sentAt';
 
 const prisma = new PrismaClient({}); // initiate a new instance of prisma without info logs
 
@@ -189,6 +190,7 @@ async function saveMessagesTransaction(
       channelId,
       slug: createSlug(m.text),
       messageCount: 1,
+      sentAt: parseSlackSentAt(m.ts),
     };
   });
 
@@ -205,6 +207,7 @@ async function saveMessagesTransaction(
       channelId,
       slug: createSlug(m.text),
       messageCount: ((m.reply_count as number) || 0) + 1,
+      sentAt: parseSlackSentAt(m.ts),
     };
   });
 

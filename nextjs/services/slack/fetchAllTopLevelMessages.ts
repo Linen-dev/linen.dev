@@ -12,6 +12,7 @@ import { processReactions } from './reactions';
 import { processAttachments } from './attachments';
 import { getMentionedUsers } from './getMentionedUsers';
 import { sleep } from '../../utilities/retryPromises';
+import { parseSlackSentAt } from '../../utilities/sentAt';
 
 async function saveMessagesTransaction(
   messages: ConversationHistoryMessage[],
@@ -30,7 +31,11 @@ async function saveMessagesTransaction(
           },
           update: {},
           // maybe here, if creates, slug will be empty
-          create: { externalThreadId: m.thread_ts, channelId },
+          create: {
+            externalThreadId: m.thread_ts,
+            channelId,
+            sentAt: parseSlackSentAt(m.thread_ts),
+          },
         });
       }
       return null;

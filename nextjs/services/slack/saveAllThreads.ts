@@ -12,6 +12,7 @@ import { createSlug } from '../../lib/util';
 import { processReactions } from './reactions';
 import { processAttachments } from './attachments';
 import { getMentionedUsers } from './getMentionedUsers';
+import { parseSlackSentAt } from '../../utilities/sentAt';
 
 async function saveMessagesSynchronous(
   messages: ConversationHistoryMessage[],
@@ -38,6 +39,7 @@ async function saveMessagesSynchronous(
     const thread = await findOrCreateThread({
       externalThreadId: ts,
       channelId: channelId,
+      sentAt: parseSlackSentAt(ts),
     });
 
     let user: UserMap | undefined;
