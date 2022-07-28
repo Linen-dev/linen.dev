@@ -1,8 +1,8 @@
 import React from 'react';
-import CopyToClipboardLink from '.';
+import CopyToClipboardIcon from '.';
 import { render } from '@testing-library/react';
 
-describe('CopyToClipboardLink', () => {
+describe('CopyToClipboardIcon', () => {
   it('renders a clip icon', () => {
     const props = {
       isSubDomainRouting: false,
@@ -10,7 +10,7 @@ describe('CopyToClipboardLink', () => {
       communityType: 'test',
       path: 'test',
     };
-    const { container } = render(<CopyToClipboardLink {...props} />);
+    const { container } = render(<CopyToClipboardIcon {...props} />);
     expect(container.querySelector('svg')).toBeInTheDocument();
   });
 });

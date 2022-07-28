@@ -9,7 +9,7 @@ import { users } from '@prisma/client';
 import CustomLink from '../../Link/CustomLink';
 import { capitalize } from '../../../lib/util';
 import CustomRouterPush from 'components/Link/CustomRouterPush';
-import CopyToClipboardLink from './CopyToClipboardLink';
+import CopyToClipboardIcon from './CopyToClipboardIcon';
 import { Props } from '.';
 
 export default function Channel({
@@ -165,7 +165,7 @@ export default function Channel({
                     {/* <div className="pl-2">{viewCount} Views</div> */}
                   </div>
                   {messages.length > 1 && (
-                    <CopyToClipboardLink {...linkProps} />
+                    <CopyToClipboardIcon {...linkProps} />
                   )}
                 </div>
               </div>

@@ -11,7 +11,7 @@ interface Props {
   path: string;
 }
 
-export default function CopyToClipboardLink({
+export default function CopyToClipboardIcon({
   isSubDomainRouting,
   communityName,
   communityType,
