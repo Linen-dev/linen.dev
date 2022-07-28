@@ -1,22 +1,13 @@
 import React from 'react';
 import { AiOutlinePaperClip } from 'react-icons/ai';
-import CustomLinkHelper from '../../../Link/CustomLinkHelper';
-import { copyToClipboard } from 'utilities/clipboard';
 import { toast } from 'components/Toast';
+import { copyToClipboard } from 'utilities/clipboard';
 
 interface Props {
-  isSubDomainRouting: boolean;
-  communityName: string;
-  communityType: string;
-  path: string;
+  text: string;
 }
 
-export default function CopyToClipboardIcon({
-  isSubDomainRouting,
-  communityName,
-  communityType,
-  path,
-}: Props) {
+export default function CopyToClipboardIcon({ text }: Props) {
   return (
     <AiOutlinePaperClip
       title="Copy to Clipboard"
@@ -24,15 +15,8 @@ export default function CopyToClipboardIcon({
       onClick={(event) => {
         event.stopPropagation();
         event.preventDefault();
-        const pathname = CustomLinkHelper({
-          isSubDomainRouting,
-          communityName,
-          communityType,
-          path,
-        });
-        const url = `${window.location.origin}${pathname}`;
-        copyToClipboard(url);
-        toast.success('Copied to clipboard', url);
+        copyToClipboard(text);
+        toast.success('Copied to clipboard', text);
       }}
     />
   );

@@ -10,6 +10,7 @@ import CustomLink from '../../Link/CustomLink';
 import { capitalize } from '../../../lib/util';
 import CustomRouterPush from 'components/Link/CustomRouterPush';
 import CopyToClipboardIcon from './CopyToClipboardIcon';
+import CustomLinkHelper from '../../Link/CustomLinkHelper';
 import { Props } from '.';
 
 export default function Channel({
@@ -165,7 +166,7 @@ export default function Channel({
                     {/* <div className="pl-2">{viewCount} Views</div> */}
                   </div>
                   {messages.length > 1 && (
-                    <CopyToClipboardIcon {...linkProps} />
+                    <CopyToClipboardIcon text={CustomLinkHelper(linkProps)} />
                   )}
                 </div>
               </div>
