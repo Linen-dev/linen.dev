@@ -4,15 +4,16 @@ import { toast } from 'components/Toast';
 import { copyToClipboard } from 'utilities/clipboard';
 
 interface Props {
-  text: string;
+  getText(): string;
 }
 
-export default function CopyToClipboardIcon({ text }: Props) {
+export default function CopyToClipboardIcon({ getText }: Props) {
   return (
     <AiOutlinePaperClip
       title="Copy to Clipboard"
       className="text-blue-700 text-lg hover:text-blue-900"
       onClick={(event) => {
+        const text = getText();
         event.stopPropagation();
         event.preventDefault();
         copyToClipboard(text);

@@ -10,7 +10,7 @@ import CustomLink from '../../Link/CustomLink';
 import { capitalize } from '../../../lib/util';
 import CustomRouterPush from 'components/Link/CustomRouterPush';
 import CopyToClipboardIcon from './CopyToClipboardIcon';
-import CustomLinkHelper from '../../Link/CustomLinkHelper';
+import { getThreadUrl } from './utilities/url';
 import { Props } from '.';
 
 export default function Channel({
@@ -86,14 +86,7 @@ export default function Channel({
   };
 
   const rows = currentThreads
-    ?.map(({ messages, incrementId, slug, viewCount }) => {
-      const linkProps = {
-        isSubDomainRouting,
-        communityName,
-        communityType: settings.communityType,
-        path: `/t/${incrementId}/${slug || 'topic'}`.toLowerCase(),
-      };
-
+    ?.map(({ messages, incrementId, slug }) => {
       const oldestMessage = messages[messages.length - 1];
 
       const author = oldestMessage.author;
@@ -166,7 +159,17 @@ export default function Channel({
                     {/* <div className="pl-2">{viewCount} Views</div> */}
                   </div>
                   {messages.length > 1 && (
-                    <CopyToClipboardIcon text={CustomLinkHelper(linkProps)} />
+                    <CopyToClipboardIcon
+                      getText={() =>
+                        getThreadUrl({
+                          isSubDomainRouting,
+                          communityName,
+                          communityType: settings.communityType,
+                          incrementId,
+                          slug,
+                        })
+                      }
+                    />
                   )}
                 </div>
               </div>
