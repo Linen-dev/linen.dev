@@ -2,12 +2,14 @@ import {
   ConversationHistoryMessage,
   fetchReplies,
 } from '../../fetch_all_conversations';
-import { findThreadsWithOnlyOneMessage } from '../../lib/models';
 import { retryPromise } from '../../utilities/retryPromises';
 import { UserMap } from '../../types/partialTypes';
 import { channels } from '@prisma/client';
 import prisma from '../../client';
-import { findOrCreateThread } from '../../lib/models';
+import {
+  findOrCreateThread,
+  findThreadsWithOnlyOneMessage,
+} from '../../lib/threads';
 import { createSlug } from '../../lib/util';
 import { processReactions } from './reactions';
 import { processAttachments } from './attachments';

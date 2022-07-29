@@ -1,184 +1,15 @@
-import {
-  accountsWithChannels,
-  channelIndex,
-  channelsGroupByThreadCount,
-  findAccountByPath,
-  findChannelsWithSingleMessages,
-  findMessagesFromChannel,
-} from '../lib/models';
-import { index as fetchThreads } from '../services/threads';
+import { accountsWithChannels, findAccountByPath } from '../lib/models';
 import { GetStaticPropsContext } from 'next/types';
 import { stripProtocol } from '../utilities/url';
-import { accounts, channels, MessagesViewType } from '@prisma/client';
 import { NotFound } from '../utilities/response';
 import { revalidateInSeconds } from '../constants/revalidate';
 import { buildSettings } from './accountSettings';
 import { memoize } from '../utilities/dynamoCache';
-
-async function getThreadsAndUsers({
-  account,
-  channelId,
-  channels,
-  page,
-}: {
-  account: accounts;
-  channelId: string;
-  page: number;
-  channels: channels[];
-}) {
-  const [threadsResponse] = await Promise.all([
-    fetchThreadsMemo({ channelId, page, account }),
-  ]);
-
-  const { data, pagination } = threadsResponse;
-  let { threads } = data;
-
-  //Filter out channels with less than 20 threads
-  const visibleChannels = channels.filter((c) => !c.hidden);
-  const users = threads
-    .map(({ messages }) => messages.map(({ author }) => author))
-    .flat()
-    .filter(Boolean);
-
-  return {
-    users,
-    threads,
-    pagination,
-    channelsWithMinThreads: visibleChannels,
-    messages: null,
-  };
-}
-
-function identifyChannel({
-  channelName,
-  channels,
-}: {
-  channelName?: string;
-  channels: channels[];
-}) {
-  const defaultChannelName =
-    channelName || channels.find((c) => c.default)?.channelName;
-
-  const defaultChannel =
-    channels.find((c) => c.channelName === defaultChannelName) ||
-    channels.find((c) => c.channelName === 'general');
-
-  //TODO: we should only default to a channel if there are more than 20 threads
-  const channel = defaultChannel || channels[0];
-
-  return { channel };
-}
-
-async function resolveMessageViewType({
-  account,
-  channel,
-  channels,
-  page,
-}: {
-  account: accounts;
-  channels: channels[];
-  channel: channels;
-  page: number;
-}) {
-  if (account.messagesViewType === MessagesViewType.MESSAGES) {
-    return await getMessagesAndUsers({
-      channelId: channel.id,
-      accountId: account.id,
-      page,
-    });
-  } else {
-    return await getThreadsAndUsers({
-      account,
-      channelId: channel.id,
-      channels,
-      page,
-    });
-  }
-}
-
-async function getMessagesAndUsers({
-  channelId,
-  accountId,
-  page,
-}: {
-  channelId: string;
-  accountId: string;
-  page?: number;
-}) {
-  const { messages, total, currentPage, pages } =
-    await findMessagesFromChannelMemo({ channelId, page });
-  const channelsWithMinThreads = await findChannelsWithSingleMessagesMemo(
-    accountId
-  );
-
-  return {
-    users: messages.map((message) => message.author),
-    threads: null,
-    pagination: {
-      totalCount: total,
-      pageCount: pages,
-      currentPage,
-      perPage: 10,
-    },
-    channelsWithMinThreads,
-    messages: messages.map((message) => {
-      return {
-        ...message,
-        createdAt: message?.createdAt?.toISOString(),
-        sentAt: message?.sentAt?.toISOString(),
-      };
-    }),
-  };
-}
-
-function buildInviteUrl(account: accounts) {
-  if (account.discordServerId) {
-    return `https://discord.com/channels/${account.discordServerId}`;
-  } else {
-    return account.communityInviteUrl || '';
-  }
-}
-
-export const getThreadsByCommunityName = async (
-  communityName: string,
-  page: number,
-  channelName?: string
-) => {
-  if (!communityName) {
-    return null;
-  }
-
-  const account = await findAccountByPathMemo(communityName);
-  if (account === null) {
-    return null;
-  }
-  const channels = await channelIndexMemo(account.id, { hidden: false });
-  if (channels.length === 0) {
-    return null;
-  }
-
-  const { channel } = identifyChannel({ channels, channelName });
-
-  const { users, threads, pagination, channelsWithMinThreads, messages } =
-    await resolveMessageViewType({ account, channel, page, channels });
-
-  const settings = buildSettings(account);
-
-  return {
-    channelId: channel.id,
-    users,
-    channels: channelsWithMinThreads,
-    communityName,
-    currentChannel: channel,
-    communityUrl: account.communityUrl || '',
-    communityInviteUrl: buildInviteUrl(account),
-    settings,
-    threads,
-    messages,
-    pagination,
-    page,
-  };
-};
+import { findThreadsByCursor } from '../lib/threads';
+import serializeThread from '../serializers/thread';
+import { AccountWithSlackAuthAndChannels } from 'types/partialTypes';
+import type { channels } from '@prisma/client';
+import { decodeCursor, encodeCursor } from '@/utilities/cursor';
 
 export async function channelGetStaticProps(
   context: GetStaticPropsContext,
@@ -186,20 +17,31 @@ export async function channelGetStaticProps(
 ) {
   const communityName = context.params?.communityName as string;
   const channelName = context.params?.channelName as string;
-  const page = context.params?.page as string;
+  const cursor = context.params?.page as string;
 
-  const result = await getThreadsByCommunityNameMemo(
-    communityName,
-    Number(page) || 1,
-    channelName
-  );
-  if (!result) {
-    return NotFound();
-  }
+  const account = (await findAccountByPathMemo(communityName, {
+    include: { channels: { where: { hidden: false } } },
+  })) as AccountWithSlackAuthAndChannels;
+  if (!account) return NotFound();
+
+  const channel = findChannelOrDefault(account.channels, channelName);
+  if (!channel) return NotFound();
+
+  const threads = await findThreadsByCursorMemo({
+    channelId: channel.id,
+    sentAt: cursor && decodeCursor(cursor),
+  });
+  const nextCursor = threads.length === 10 && threads[9].sentAt.toString();
+
   return {
     props: {
-      ...result,
       communityName,
+      ...(nextCursor && { nextCursor: encodeCursor(nextCursor) }),
+      currentChannel: channel,
+      channelName: channel.channelName,
+      channels: account.channels,
+      threads: threads.map(serializeThread),
+      settings: buildSettings(account),
       isSubDomainRouting: isSubdomainbasedRouting,
     },
     revalidate: revalidateInSeconds, // In seconds
@@ -240,12 +82,24 @@ export async function channelGetStaticPaths(pathPrefix: string) {
   };
 }
 
-const getThreadsByCommunityNameMemo = memoize(getThreadsByCommunityName);
+function findChannelOrDefault(channels: channels[], channelName: string) {
+  if (channelName) {
+    return channels.find((c) => c.channelName === channelName);
+  }
+  return channels.find((c) => c.default);
+}
+
+export async function channelNextPage(channelId: string, cursor: string) {
+  const threads = await findThreadsByCursorMemo({
+    channelId,
+    sentAt: cursor,
+  });
+  const nextCursor = threads.length === 10 && threads[9].sentAt.toString();
+  return {
+    threads: threads.map(serializeThread),
+    ...(nextCursor && { nextCursor: encodeCursor(nextCursor) }),
+  };
+}
+
+const findThreadsByCursorMemo = memoize(findThreadsByCursor);
 const findAccountByPathMemo = memoize(findAccountByPath);
-const channelIndexMemo = memoize(channelIndex);
-const channelsGroupByThreadCountMemo = memoize(channelsGroupByThreadCount);
-const findMessagesFromChannelMemo = memoize(findMessagesFromChannel);
-const findChannelsWithSingleMessagesMemo = memoize(
-  findChannelsWithSingleMessages
-);
-const fetchThreadsMemo = memoize(fetchThreads);

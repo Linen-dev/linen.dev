@@ -1,11 +1,8 @@
 import { channels, messages, threads } from '@prisma/client';
 import request from 'superagent';
-import {
-  createMessage,
-  createOrUpdateMessage,
-  findOrCreateThread,
-  findThread,
-} from './lib/models';
+import { createMessage, createOrUpdateMessage } from './lib/models';
+import { findThread } from './lib/threads';
+import { findOrCreateThread } from './lib/threads';
 import { createManyUsers, findUser } from './lib/users';
 import { generateRandomWordSlug } from './utilities/randomWordSlugs';
 

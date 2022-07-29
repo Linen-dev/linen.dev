@@ -1,20 +1,20 @@
 import Avatar from '../../Avatar';
 import Avatars from '../../Avatars';
-import { useEffect, useState } from 'react';
-import Pagination from '../../Pagination';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { format } from 'timeago.js';
 import PageLayout from '../../layout/PageLayout';
 import Message from '../../Message';
-import { users } from '@prisma/client';
+import type { users } from '@prisma/client';
 import CustomLink from '../../Link/CustomLink';
 import { capitalize } from '../../../lib/util';
-import CustomRouterPush from 'components/Link/CustomRouterPush';
-import CopyToClipboardIcon from './CopyToClipboardIcon';
 import { getThreadUrl } from './utilities/url';
 import { Props } from '.';
+import { SerializedThread } from '../../../serializers/thread';
+import { postData } from '../../../utilities/fetcher';
+import useInfiniteScroll from 'react-infinite-scroll-hook';
+import CopyToClipboardIcon from './CopyToClipboardIcon';
 
 export default function Channel({
-  channelId,
   users,
   threads,
   channels,
@@ -23,75 +23,173 @@ export default function Channel({
   currentChannel,
   settings,
   communityName,
-  pagination,
-  page,
+  channelName,
   isSubDomainRouting,
+  nextCursor,
 }: Props) {
-  const [currentThreads, setCurrentThreads] = useState(threads);
-  const [pageCount, setPageCount] = useState(pagination?.pageCount);
-  const [currentPage, setCurrentPage] = useState(page);
+  const [currentThreads, setCurrentThreads] = useState<SerializedThread[]>();
+  const messagesEndRef = useRef<null | HTMLDivElement>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [cursor, setCursor] = useState<string>();
+  const [error, setError] = useState<unknown>();
+  const scrollableRootRef = useRef<HTMLDivElement | null>(null);
+  const lastScrollDistanceToBottomRef = useRef<number>();
+
+  useEffect(() => {
+    setCursor(nextCursor);
+  }, [nextCursor]);
 
   useEffect(() => {
     setCurrentThreads(threads);
-    setPageCount(pagination?.pageCount);
-    window.scrollTo(0, 0);
-  }, [threads, pagination]);
+  }, [threads]);
+
+  const [infiniteRef, { rootRef }] = useInfiniteScroll({
+    loading: isLoading,
+    hasNextPage: !!cursor,
+    onLoadMore: loadMore,
+    disabled: !!error || !cursor,
+    rootMargin: '400px 0px 0px 0px',
+  });
+
+  useEffect(() => {
+    const scrollableRoot = scrollableRootRef.current;
+    const lastScrollDistanceToBottom =
+      lastScrollDistanceToBottomRef.current ?? 0;
+    if (scrollableRoot) {
+      scrollableRoot.scrollTop =
+        scrollableRoot.scrollHeight - lastScrollDistanceToBottom;
+    }
+  }, [currentThreads, rootRef]);
+
+  const rootRefSetter = useCallback(
+    (node: HTMLDivElement) => {
+      rootRef(node);
+      scrollableRootRef.current = node;
+    },
+    [rootRef]
+  );
+
+  const handleRootScroll = useCallback(() => {
+    const rootNode = scrollableRootRef.current;
+    if (rootNode) {
+      const scrollDistanceToBottom = rootNode.scrollHeight - rootNode.scrollTop;
+      lastScrollDistanceToBottomRef.current = scrollDistanceToBottom;
+    }
+  }, []);
 
   if (!threads) {
-    return <div></div>;
+    return <div />;
   }
 
-  if (!channelId) {
-    return (
-      <PageLayout
-        communityUrl={communityUrl}
-        communityInviteUrl={communityInviteUrl}
-        settings={settings}
-        communityName={communityName}
-        currentChannel={currentChannel}
-        navItems={{ channels: channels }}
-        isSubDomainRouting={isSubDomainRouting}
-        seo={{
-          title: `${capitalize(
-            settings.name || communityName
-          )} - Discover and join our community`,
-          description: `Threads 404`,
-        }}
+  async function loadMore() {
+    if (isLoading) return;
+    if (!cursor) return;
+    try {
+      setIsLoading(true);
+      if (cursor) {
+        const data = await postData('/api/threads', {
+          channelId: currentChannel.id,
+          cursor,
+        });
+        setCursor(data.nextCursor || null);
+        setCurrentThreads([
+          ...(currentThreads ? currentThreads : []),
+          ...data.threads,
+        ]);
+      }
+    } catch (error) {
+      setError(error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  const rows = threadBuilder({
+    threads: currentThreads,
+    isSubDomainRouting,
+    communityName,
+    communityType: settings.communityType,
+  })?.reverse();
+
+  function buildTitle(
+    communityName: string,
+    channelName: string | undefined,
+    page: number = 1
+  ) {
+    const name = capitalize(communityName);
+    const channel = !!channelName
+      ? ` - ${capitalize(channelName)} Threads - Page ${page}`
+      : '';
+    return `${name}${channel}`;
+  }
+
+  return (
+    <PageLayout
+      users={users}
+      communityUrl={communityUrl}
+      communityInviteUrl={communityInviteUrl}
+      currentChannel={currentChannel}
+      seo={{
+        title: buildTitle(settings.name || communityName, channelName),
+        // description: `${channelName} Threads - Page ${page}`,
+      }}
+      navItems={{ channels }}
+      settings={settings}
+      communityName={communityName}
+      isSubDomainRouting={isSubDomainRouting}
+    >
+      <div
+        className="overflow-auto
+        lg:h-[calc(100vh_-_80px)]
+        md:h-[calc(100vh_-_144px)] 
+        h-[calc(100vh_-_192px)]
+        lg:w-[calc(100vw_-_250px)]
+        flex justify-center
+        w-[100vw]"
+        ref={rootRefSetter}
+        onScroll={handleRootScroll}
+        id="rootRefSetter"
       >
-        <h1 className="font-bold text-blue-600 text-center text-9xl pt-6">
-          404
-        </h1>
-        <h6 className="mb-2 text-2xl font-bold text-center text-gray-800 md:text-3xl">
-          <span className="text-red-500">Oops!</span> Channel not found
-        </h6>
-        <p className="mb-8 text-center text-gray-500 md:text-lg">
-          The channel you’re looking for doesn’t exist.
-        </p>
-      </PageLayout>
-    );
-  }
+        <div className="sm:pt-6 justify-center">
+          <ul className="divide-y sm:max-w-4xl px-1">
+            <div className="text-gray-600 text-xs text-center m-1">
+              This is the beginning of the #{channelName} channel
+            </div>
+            {cursor && (
+              <div
+                className="text-gray-600 text-xs text-center m-1 cursor-pointer"
+                onClick={() => loadMore()}
+                ref={infiniteRef}
+              >
+                Loading...
+              </div>
+            )}
+            {rows}
+            <div ref={messagesEndRef} />
+          </ul>
+        </div>
+      </div>
+    </PageLayout>
+  );
+}
 
-  // Todo: handle missing channels
-  const channelName = channels?.find((c) => c.id === channelId)?.channelName;
-  const handlePageClick = ({ selected }: { selected: number }) => {
-    const newPage = selected + 1;
-    if (newPage == currentPage) return;
-    CustomRouterPush({
-      communityType: settings.communityType,
-      isSubDomainRouting,
-      communityName,
-      path: `/c/${currentChannel.channelName}/${newPage}`,
-    });
-    setCurrentPage(newPage);
-  };
-
-  const rows = currentThreads
-    ?.map(({ messages, incrementId, slug }) => {
+function threadBuilder({
+  threads,
+  isSubDomainRouting,
+  communityName,
+  communityType,
+}: {
+  threads?: SerializedThread[];
+  isSubDomainRouting: boolean;
+  communityName: string;
+  communityType: string;
+}) {
+  return threads?.map(
+    ({ messages, incrementId, slug, viewCount }: SerializedThread) => {
       const oldestMessage = messages[messages.length - 1];
 
-      const author = oldestMessage.author;
+      const author = oldestMessage?.author;
       //don't include the original poster for the thread in replies
-
       let users = messages.map((m) => m.author).filter(Boolean) as users[];
       const authors = uniqueUsers(users.slice(0, -1));
 
@@ -103,7 +201,7 @@ export default function Channel({
           <CustomLink
             isSubDomainRouting={isSubDomainRouting}
             communityName={communityName}
-            communityType={settings.communityType}
+            communityType={communityType}
             path={`/t/${incrementId}/${slug || 'topic'}`.toLowerCase()}
             key={`${incrementId}-desktop`}
           >
@@ -126,15 +224,15 @@ export default function Channel({
                     {author?.displayName || 'user'}
                   </p>
                   <div className="text-sm text-gray-400">
-                    {format(new Date(oldestMessage.sentAt))}
+                    {format(new Date(oldestMessage?.sentAt))}
                   </div>
                 </div>
                 <div className="pb-2">
                   <Message
-                    text={oldestMessage.body}
-                    mentions={oldestMessage.mentions.map((m) => m.users)}
-                    reactions={oldestMessage.reactions}
-                    attachments={oldestMessage.attachments}
+                    text={oldestMessage?.body || ''}
+                    mentions={oldestMessage?.mentions.map((m) => m.users)}
+                    reactions={oldestMessage?.reactions}
+                    attachments={oldestMessage?.attachments}
                   />
                 </div>
                 <div className="flex flex-row justify-between items-center pr-2">
@@ -164,7 +262,7 @@ export default function Channel({
                         getThreadUrl({
                           isSubDomainRouting,
                           communityName,
-                          communityType: settings.communityType,
+                          communityType,
                           incrementId,
                           slug,
                         })
@@ -177,50 +275,7 @@ export default function Channel({
           </CustomLink>
         </li>
       );
-    })
-    .reverse();
-
-  function buildTitle(
-    communityName: string,
-    channelName: string | undefined,
-    page: number = 1
-  ) {
-    const name = capitalize(communityName);
-    const channel = !!channelName
-      ? ` - ${capitalize(channelName)} Threads - Page ${page}`
-      : '';
-    return `${name}${channel}`;
-  }
-  return (
-    <PageLayout
-      users={users}
-      communityUrl={communityUrl}
-      communityInviteUrl={communityInviteUrl}
-      currentChannel={currentChannel}
-      seo={{
-        title: buildTitle(settings.name || communityName, channelName, page),
-        // description: `${channelName} Threads - Page ${page}`,
-      }}
-      navItems={{ channels: channels }}
-      settings={settings}
-      communityName={communityName}
-      isSubDomainRouting={isSubDomainRouting}
-    >
-      <div className="sm:pt-6 justify-center">
-        <ul className="divide-y sm:max-w-4xl px-1">{rows}</ul>
-        {!!pageCount && (
-          <Pagination
-            channelName={currentChannel.channelName}
-            onClick={handlePageClick}
-            pageCount={pageCount}
-            communityName={communityName}
-            isSubDomainRouting={isSubDomainRouting}
-            initialPage={page ? page - 1 : 0}
-            communityType={settings.communityType}
-          />
-        )}
-      </div>
-    </PageLayout>
+    }
   );
 }
 

@@ -3,12 +3,11 @@ import prisma from '../../client';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import {
   createMessageWithMentions,
-  findOrCreateThread,
-  updateSlackThread,
   findMessageByChannelIdAndTs,
   deleteMessageWithMentions,
   findAccountBySlackTeamId,
 } from '../../lib/models';
+import { findOrCreateThread, updateSlackThread } from '../../lib/threads';
 import {
   SlackEvent,
   SlackMessageEvent,
