@@ -73,6 +73,7 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "@next/bundle-analyzer": "^12.2.3",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^12.1.5",
     "@testing-library/user-event": "^14.2.1",
