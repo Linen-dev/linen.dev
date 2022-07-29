@@ -143,15 +143,12 @@ export async function listChannelsAndPersist({
   return await channelPromises;
 }
 function isPrivate(channel: discordChannel): boolean {
-  if (!channel.nsfw) {
+  if (channel.nsfw) {
     return true;
   }
   // we assume that if there any permission it is a private channel
   // customer should toggle it on settings page if want to make it public
-  if (
-    !channel.permission_overwrites ||
-    channel.permission_overwrites?.length === 0
-  ) {
+  if (channel.permission_overwrites && channel.permission_overwrites.length) {
     return true;
   }
   return false;

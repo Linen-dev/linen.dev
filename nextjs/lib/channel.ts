@@ -64,3 +64,21 @@ export function renameChannel({ name, id }: RenameChannelParams) {
     },
   });
 }
+
+export async function hideEmptyChannels(accountId: string) {
+  const channels = await prisma.channels.findMany({
+    include: { _count: true },
+    where: { accountId },
+  });
+  const promise = channels
+    .map(async (channel) => {
+      if (!channel._count.threads && !channel._count.messages) {
+        await prisma.channels.update({
+          where: { id: channel.id },
+          data: { hidden: true },
+        });
+      }
+    })
+    .filter(Boolean);
+  return Promise.all(promise);
+}
