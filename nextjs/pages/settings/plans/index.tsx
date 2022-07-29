@@ -29,16 +29,30 @@ export default function SettingsPage({ account, prices }: Props) {
     if (account) {
       const tiers = [
         {
-          name: 'Standard',
+          name: 'Free edition',
           href: '#',
           description: 'All the basics for starting',
-          features: ['SEO friendly content'],
+          features: [
+            'Sync Discord or Slack community',
+            'Anonymize community members',
+            'Unlimited message retention history',
+            'Show or hide channels',
+            'Custom community invite URL',
+          ],
         },
         {
           name: 'Premium',
           href: '#',
           description: 'Additional features',
-          features: ['Use your own domain', 'Use your own Google Analytics'],
+          features: [
+            'Custom domain',
+            'Generate SEO from organic content',
+            'Google analytics support',
+            'Custom logo',
+            'Custom brand colors',
+            'Priority Support',
+            'Generated sitemap to improve SEO',
+          ],
           prices: [
             {
               type: Period.Monthly,
