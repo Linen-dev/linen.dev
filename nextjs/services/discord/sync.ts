@@ -7,6 +7,7 @@ import { listChannelsAndPersist } from './channels';
 import { processChannel } from './channels';
 import { CrawlType, DISCORD_TOKEN } from './constrains';
 import { crawlUsers } from './users';
+import { hideEmptyChannels } from '../../lib/channel';
 
 async function syncJob(accountId: string, crawlType: CrawlType) {
   console.log('sync stared', { accountId, crawlType });
@@ -45,7 +46,7 @@ async function syncJob(accountId: string, crawlType: CrawlType) {
     }
     await processChannel(channel, onboardingTimestamp, crawlType);
   }
-
+  await hideEmptyChannels(accountId);
   console.log('sync finished', { accountId });
 }
 
