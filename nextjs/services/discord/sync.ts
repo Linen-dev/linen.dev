@@ -1,3 +1,7 @@
+import {
+  SyncStatus,
+  updateAndNotifySyncStatus,
+} from '../../services/syncStatus';
 import prisma from '../../client';
 import { listChannelsAndPersist } from './channels';
 import { processChannel } from './channels';
@@ -5,7 +9,7 @@ import { CrawlType, DISCORD_TOKEN } from './constrains';
 import { crawlUsers } from './users';
 
 async function syncJob(accountId: string, crawlType: CrawlType) {
-  console.log('sync stared', { accountId });
+  console.log('sync stared', { accountId, crawlType });
 
   const account = await prisma.accounts.findUnique({
     where: { id: accountId },
@@ -54,13 +58,18 @@ export async function discordSync({
 }) {
   try {
     const crawlType = fullSync ? CrawlType.historic : CrawlType.new_only;
-    console.log('crawlType', crawlType);
+    await updateAndNotifySyncStatus(accountId, SyncStatus.IN_PROGRESS);
+
     await syncJob(accountId, crawlType);
+
+    await updateAndNotifySyncStatus(accountId, SyncStatus.DONE);
     return {
       status: 200,
       body: {},
     };
   } catch (error) {
+    await updateAndNotifySyncStatus(accountId, SyncStatus.ERROR);
+
     console.error(error);
     return {
       status: 500,
