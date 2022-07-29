@@ -87,7 +87,10 @@ function findChannelOrDefault(channels: channels[], channelName: string) {
   if (channelName) {
     return channels.find((c) => c.channelName === channelName);
   }
-  return channels.find((c) => c.default);
+  const defaultChannel = channels.find((c) => c.default);
+  if (defaultChannel) return defaultChannel;
+
+  return channels[0];
 }
 
 export async function channelNextPage(channelId: string, cursor: string) {
