@@ -11,6 +11,7 @@ import { AccountWithSlackAuthAndChannels } from 'types/partialTypes';
 import type { channels } from '@prisma/client';
 import { decodeCursor, encodeCursor } from '../utilities/cursor';
 import { serializeChannel } from '../serializers/channel';
+import { shouldThisChannelBeAnonymous } from '../lib/channel';
 
 export async function channelGetStaticProps(
   context: GetStaticPropsContext,
@@ -31,6 +32,7 @@ export async function channelGetStaticProps(
   const threads = await findThreadsByCursorMemo({
     channelId: channel.id,
     sentAt: cursor && decodeCursor(cursor),
+    anonymizeUsers: account.anonymizeUsers,
   });
   const nextCursor = threads.length === 10 && threads[9].sentAt.toString();
 
@@ -94,9 +96,11 @@ function findChannelOrDefault(channels: channels[], channelName: string) {
 }
 
 export async function channelNextPage(channelId: string, cursor: string) {
+  const anonymizeUsers = await shouldThisChannelBeAnonymousMemo(channelId);
   const threads = await findThreadsByCursorMemo({
     channelId,
     sentAt: cursor,
+    anonymizeUsers,
   });
   const nextCursor = threads.length === 10 && threads[9].sentAt.toString();
   return {
@@ -105,5 +109,6 @@ export async function channelNextPage(channelId: string, cursor: string) {
   };
 }
 
+const shouldThisChannelBeAnonymousMemo = memoize(shouldThisChannelBeAnonymous);
 const findThreadsByCursorMemo = memoize(findThreadsByCursor);
 const findAccountByPathMemo = memoize(findAccountByPath);
