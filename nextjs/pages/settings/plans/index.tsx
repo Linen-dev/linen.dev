@@ -31,8 +31,9 @@ export default function SettingsPage({ account, prices }: Props) {
         {
           name: 'Free edition',
           href: '#',
-          description: 'All the basics for starting',
+          description: 'Great for non profits and open source communities',
           features: [
+            'Hosting on Linen.dev domain',
             'Sync Discord or Slack community',
             'Anonymize community members',
             'Unlimited message retention history',
@@ -43,7 +44,7 @@ export default function SettingsPage({ account, prices }: Props) {
         {
           name: 'Premium',
           href: '#',
-          description: 'Additional features',
+          description: 'Built for companies',
           features: [
             'Custom domain',
             'Generate SEO from organic content',
