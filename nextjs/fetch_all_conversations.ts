@@ -4,7 +4,9 @@ import { createMessage, createOrUpdateMessage } from './lib/models';
 import { findThread } from './lib/threads';
 import { findOrCreateThread } from './lib/threads';
 import { createManyUsers, findUser } from './lib/users';
+import { createSlug } from './lib/util';
 import { generateRandomWordSlug } from './utilities/randomWordSlugs';
+import { tsToSentAt } from './utilities/sentAt';
 
 export const fetchConversations = async (
   channel: string,
@@ -278,7 +280,7 @@ export async function saveThreadedMessages(
     .map((m: any) => {
       return {
         body: m.text,
-        sentAt: new Date(parseFloat(m.ts) * 1000),
+        sentAt: tsToSentAt(m.ts),
         externalMessageId: m.ts,
         externalUserId: m.user || m.bot_id,
         channelId: channelId,
@@ -286,14 +288,13 @@ export async function saveThreadedMessages(
     })
     .sort((a: any, b: any) => a.sentAt.getTime() - b.sentAt.getTime());
 
-  const firstMessageSentAt = repliesParams.length
-    ? repliesParams[0].sentAt.getTime()
-    : 0;
+  const firstMessage = repliesParams.length && repliesParams[0];
 
   let thread = await findOrCreateThread({
     externalThreadId: externalThreadId,
     channelId: channelId,
-    sentAt: firstMessageSentAt,
+    sentAt: firstMessage ? firstMessage.sentAt.getTime() : 0,
+    slug: createSlug(firstMessage?.text || ''),
   });
 
   for (let replyParam of repliesParams) {

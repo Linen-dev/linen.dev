@@ -13,10 +13,6 @@ export const createSlug = (message: string) => {
   return slug;
 };
 
-export const tsToSentAt = (ts: string) => {
-  return new Date(parseFloat(ts) * 1000);
-};
-
 // TODO: Should handle this on validation/save when creating an account
 export const addHttpsToUrl = (url: string) => {
   if (!url.startsWith('http://') && !url.startsWith('https://')) {

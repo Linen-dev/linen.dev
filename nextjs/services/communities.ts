@@ -9,7 +9,8 @@ import { findThreadsByCursor } from '../lib/threads';
 import serializeThread from '../serializers/thread';
 import { AccountWithSlackAuthAndChannels } from 'types/partialTypes';
 import type { channels } from '@prisma/client';
-import { decodeCursor, encodeCursor } from '@/utilities/cursor';
+import { decodeCursor, encodeCursor } from '../utilities/cursor';
+import { serializeChannel } from '../serializers/channel';
 
 export async function channelGetStaticProps(
   context: GetStaticPropsContext,
@@ -39,7 +40,7 @@ export async function channelGetStaticProps(
       ...(nextCursor && { nextCursor: encodeCursor(nextCursor) }),
       currentChannel: channel,
       channelName: channel.channelName,
-      channels: account.channels,
+      channels: account.channels.map(serializeChannel),
       threads: threads.map(serializeThread),
       settings: buildSettings(account),
       isSubDomainRouting: isSubdomainbasedRouting,

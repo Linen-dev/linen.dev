@@ -4,7 +4,7 @@ import {
 } from '../../fetch_all_conversations';
 import { retryPromise } from '../../utilities/retryPromises';
 import { UserMap } from '../../types/partialTypes';
-import { channels } from '@prisma/client';
+import type { channels } from '@prisma/client';
 import prisma from '../../client';
 import {
   findOrCreateThread,
@@ -14,7 +14,7 @@ import { createSlug } from '../../lib/util';
 import { processReactions } from './reactions';
 import { processAttachments } from './attachments';
 import { getMentionedUsers } from './getMentionedUsers';
-import { parseSlackSentAt } from '../../utilities/sentAt';
+import { parseSlackSentAt, tsToSentAt } from '../../utilities/sentAt';
 
 async function saveMessagesSynchronous(
   messages: ConversationHistoryMessage[],
@@ -42,6 +42,7 @@ async function saveMessagesSynchronous(
       externalThreadId: ts,
       channelId: channelId,
       sentAt: parseSlackSentAt(ts),
+      slug: createSlug(m.text),
     });
 
     let user: UserMap | undefined;
@@ -55,7 +56,7 @@ async function saveMessagesSynchronous(
     const serializedMessage = {
       body: m.text,
       blocks: m.blocks,
-      sentAt: new Date(parseFloat(m.ts) * 1000),
+      sentAt: tsToSentAt(m.ts),
       channelId,
       externalMessageId: m.ts as string,
       threadId: threadId,

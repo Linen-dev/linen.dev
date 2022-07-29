@@ -5,7 +5,8 @@ import { anonymizeMessages } from '../utilities/anonymizeMessages';
 export type Thread = {
   externalThreadId: string;
   channelId: string;
-  sentAt: number;
+  sentAt: number | bigint;
+  slug: string;
 };
 
 export const updateSlackThread = async (
@@ -25,7 +26,7 @@ export const findOrCreateThread = async (thread: Thread) => {
     where: {
       externalThreadId: thread.externalThreadId,
     },
-    update: {},
+    update: thread,
     create: thread,
     include: {
       messages: true,

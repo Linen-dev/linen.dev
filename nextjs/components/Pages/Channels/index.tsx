@@ -1,8 +1,9 @@
-import { channels, messages, mentions, users } from '@prisma/client';
+import type { channels, messages, mentions, users } from '@prisma/client';
 import { Settings } from 'services/accountSettings';
 import Channel from './Channel';
 import { SerializedAttachment, SerializedReaction } from 'types/shared';
-import { SerializedThread } from '@/serializers/thread';
+import { SerializedThread } from '../../../serializers/thread';
+import { SerializedChannel } from '../../../serializers/channel';
 
 export interface PaginationType {
   totalCount: number;
@@ -27,7 +28,7 @@ export type Props = {
   communityName: string;
   channelName: string;
   users: users[];
-  channels?: channels[];
+  channels?: SerializedChannel[];
   currentChannel: channels;
   threads?: SerializedThread[];
   isSubDomainRouting: boolean;
@@ -35,5 +36,5 @@ export type Props = {
 };
 
 export default function ChannelView(props: Props) {
-  return <Channel {...props} />;
+  return <Channel {...props} key={props.communityName + props.channelName} />;
 }

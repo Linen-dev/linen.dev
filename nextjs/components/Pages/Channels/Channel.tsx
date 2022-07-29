@@ -152,12 +152,12 @@ export default function Channel({
       >
         <div className="sm:pt-6 justify-center">
           <ul className="divide-y sm:max-w-4xl px-1">
-            <div className="text-gray-600 text-xs text-center m-1">
+            <div className="text-gray-600 text-xs text-center m-4">
               This is the beginning of the #{channelName} channel
             </div>
             {cursor && (
               <div
-                className="text-gray-600 text-xs text-center m-1 cursor-pointer"
+                className="text-gray-600 text-xs text-center m-4 cursor-pointer"
                 onClick={() => loadMore()}
                 ref={infiniteRef}
               >
