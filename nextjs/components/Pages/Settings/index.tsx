@@ -22,7 +22,7 @@ export default function Settings(props: SettingsProps) {
   return (
     <DashboardLayout header="Settings" account={props.account}>
       <div className="grid grid-cols-1 gap-4">
-        <div className="flex flex-col gap-4">
+        <div className="grid grid-cols-1 divide-y divide-gray-200 divide-solid">
           <LinkCard {...props} />
           <CommunityIntegration {...props} />
           <AnonymizeCard {...props} />
