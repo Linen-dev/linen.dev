@@ -26,67 +26,59 @@ export default function SettingsPage({ account, prices }: Props) {
   const [period, setPeriod] = useState(Period.Monthly);
 
   if (!isStripeEnabled) {
-    if (account) {
-      const tiers = [
-        {
-          name: 'Free edition',
-          href: '#',
-          description: 'Great for non profits and open source communities',
-          features: [
-            'Hosting on Linen.dev domain',
-            'Sync Discord or Slack community',
-            'Anonymize community members',
-            'Unlimited message retention history',
-            'Show or hide channels',
-            'Custom community invite URL',
-          ],
-        },
-        {
-          name: 'Premium',
-          href: '#',
-          description: 'Built for companies',
-          features: [
-            'Custom domain',
-            'Generate SEO from organic content',
-            'Google analytics support',
-            'Custom logo',
-            'Custom brand colors',
-            'Priority Support',
-            'Generated sitemap to improve SEO',
-          ],
-          prices: [
-            {
-              type: Period.Monthly,
-            },
-            {
-              type: Period.Yearly,
-            },
-          ],
-        },
-      ];
-
-      return (
-        <DashboardLayout account={account}>
-          <div className="mx-auto">
-            <div className="sm:flex sm:flex-col sm:align-center">
-              <h1 className="text-5xl font-extrabold text-gray-900 sm:text-center">
-                Pricing Plans
-              </h1>
-              <p className="mt-5 text-xl text-gray-500 sm:text-center">
-                Start using for free.
-                <br />
-                Paid plans unlock additional features.
-              </p>
-            </div>
-            <Tiers activePeriod={period} tiers={tiers} account={account} />
-          </div>
-        </DashboardLayout>
-      );
-    }
+    const tiers = [
+      {
+        name: 'Free edition',
+        href: '#',
+        description: 'Great for non profits and open source communities',
+        features: [
+          'Hosting on Linen.dev domain',
+          'Sync Discord or Slack community',
+          'Anonymize community members',
+          'Unlimited message retention history',
+          'Show or hide channels',
+          'Custom community invite URL',
+        ],
+      },
+      {
+        name: 'Premium',
+        href: '#',
+        description: 'Built for companies',
+        features: [
+          'Custom domain',
+          'Generate SEO from organic content',
+          'Google analytics support',
+          'Custom logo',
+          'Custom brand colors',
+          'Priority Support',
+          'Generated sitemap to improve SEO',
+        ],
+        prices: [
+          {
+            type: Period.Monthly,
+          },
+          {
+            type: Period.Yearly,
+          },
+        ],
+      },
+    ];
 
     return (
-      <DashboardLayout header="Plans" account={account}>
-        <h1>You are not signed in.</h1>
+      <DashboardLayout account={account}>
+        <div className="mx-auto">
+          <div className="sm:flex sm:flex-col sm:align-center">
+            <h1 className="text-5xl font-extrabold text-gray-900 sm:text-center">
+              Pricing Plans
+            </h1>
+            <p className="mt-5 text-xl text-gray-500 sm:text-center">
+              Start using for free.
+              <br />
+              Paid plans unlock additional features.
+            </p>
+          </div>
+          <Tiers activePeriod={period} tiers={tiers} account={account} />
+        </div>
       </DashboardLayout>
     );
   }
@@ -193,14 +185,6 @@ export async function getServerSideProps(context: NextPageContext) {
       },
     };
   }
-  if (!account) {
-    return {
-      redirect: {
-        permanent: false,
-        destination: '../settings',
-      },
-    };
-  }
 
   let prices;
   try {
@@ -212,6 +196,16 @@ export async function getServerSideProps(context: NextPageContext) {
     }
   } catch (exception) {
     prices = null;
+  }
+
+  if (!account) {
+    return {
+      props: {
+        session,
+        account: null,
+        prices,
+      },
+    };
   }
 
   return {
