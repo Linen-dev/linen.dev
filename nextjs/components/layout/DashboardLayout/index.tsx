@@ -37,36 +37,33 @@ export default function DashboardLayout({ children, header, account }: Props) {
                 active={route === '/settings'}
               />
             </div>
-            {account && (
-              <div className="space-y-1">
-                <SidebarLink
-                  href="/settings/branding"
-                  icon={
-                    <FontAwesomeIcon
-                      icon={faPalette}
-                      className={iconClassName}
-                    />
-                  }
-                  text="Branding"
-                  active={route === '/settings/branding'}
-                />
-              </div>
-            )}
-            {account && (
-              <div className="space-y-1">
-                <SidebarLink
-                  href="/settings/plans"
-                  icon={
-                    <FontAwesomeIcon
-                      icon={faMoneyBill}
-                      className={iconClassName}
-                    />
-                  }
-                  text="Plans"
-                  active={route === '/settings/plans'}
-                />
-              </div>
-            )}
+            {/* {account && ( */}
+            <div className="space-y-1">
+              <SidebarLink
+                href="/settings/branding"
+                icon={
+                  <FontAwesomeIcon icon={faPalette} className={iconClassName} />
+                }
+                text="Branding"
+                active={route === '/settings/branding'}
+              />
+            </div>
+            {/* )} */}
+            {/* {account && ( */}
+            <div className="space-y-1">
+              <SidebarLink
+                href="/settings/plans"
+                icon={
+                  <FontAwesomeIcon
+                    icon={faMoneyBill}
+                    className={iconClassName}
+                  />
+                }
+                text="Plans"
+                active={route === '/settings/plans'}
+              />
+            </div>
+            {/* )} */}
           </div>
           {/* <div className="flex-shrink-0 block w-full">
             <a href="#" className="group border-l-4 border-transparent py-2 px-3 flex items-center text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50">
