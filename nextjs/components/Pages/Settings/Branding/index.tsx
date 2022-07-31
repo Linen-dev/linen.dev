@@ -59,7 +59,7 @@ function Card({
 }
 
 interface Props {
-  account: SerializedAccount;
+  account?: SerializedAccount;
   records?: DNSRecord[];
 }
 
@@ -74,7 +74,7 @@ export default function Branding({ account, records }: Props) {
         request: {
           body: {
             asset: 'logos',
-            accountId: account.id,
+            accountId: account?.id,
           },
           headers: {},
         },
@@ -92,7 +92,7 @@ export default function Branding({ account, records }: Props) {
     const response = await fetch('/api/accounts', {
       method: 'PUT',
       body: JSON.stringify({
-        accountId: account.id,
+        accountId: account?.id,
         logoUrl,
         redirectDomain,
         brandColor,
@@ -110,19 +110,19 @@ export default function Branding({ account, records }: Props) {
 
   const premiumAccountSettings = (
     <>
-      <PremiumCard isPremium={account.premium}>
+      <PremiumCard isPremium={account?.premium}>
         <Label htmlFor="redirectDomain">Redirect Domain</Label>
         <Description>Unique domain to redirect to.</Description>
         <TextField
           placeholder="linen.yourwebsite.com"
           id="redirectDomain"
-          defaultValue={account.premium ? account.redirectDomain : undefined}
-          disabled={!account.premium}
-          readOnly={!account.premium}
+          defaultValue={account?.premium ? account?.redirectDomain : undefined}
+          disabled={!account?.premium}
+          readOnly={!account?.premium}
         />
       </PremiumCard>
-      {account.premium && records && records.length > 0 && (
-        <PremiumCard isPremium={account.premium}>
+      {account?.premium && records && records.length > 0 && (
+        <PremiumCard isPremium={account?.premium}>
           <Label htmlFor="dnsRecords">DNS</Label>
           <Description>
             Subdomain routing setup can be achieved by veryfing the ownership of
@@ -149,7 +149,7 @@ export default function Branding({ account, records }: Props) {
           </Table>
         </PremiumCard>
       )}
-      <PremiumCard isPremium={account.premium}>
+      <PremiumCard isPremium={account?.premium}>
         <Label htmlFor="brandColor">Brand Color</Label>
         <Description>
           Color that matches your brand. We&apos;ll use it for the header
@@ -157,13 +157,13 @@ export default function Branding({ account, records }: Props) {
         </Description>
         <ColorField
           id="brandColor"
-          defaultValue={account.premium ? account.brandColor : '#E2E2E2'}
+          defaultValue={account?.premium ? account?.brandColor : '#E2E2E2'}
           required
-          readOnly={!account.premium}
-          disabled={!account.premium}
+          readOnly={!account?.premium}
+          disabled={!account?.premium}
         />
       </PremiumCard>
-      <PremiumCard isPremium={account.premium}>
+      <PremiumCard isPremium={account?.premium}>
         <Label htmlFor="logo">Logo</Label>
         <Description>Logo of your brand.</Description>
         <FileInput onChange={handleLogoChange} />
@@ -172,30 +172,30 @@ export default function Branding({ account, records }: Props) {
             alt=""
             src={logoUrl}
             style={{
-              backgroundColor: account.brandColor,
+              backgroundColor: account?.brandColor,
             }}
             className={classNames('mb-2 mt-2')}
           />
         ) : (
-          account.logoUrl && (
+          account?.logoUrl && (
             <img
               alt=""
-              src={account.logoUrl}
+              src={account?.logoUrl}
               style={{
-                backgroundColor: account.brandColor,
+                backgroundColor: account?.brandColor,
               }}
               className={classNames('mb-2 mt-2')}
             />
           )
         )}
-        <Button onClick={openFileDialog} disabled={!account.premium}>
+        <Button onClick={openFileDialog} disabled={!account?.premium}>
           {files && files.length > 0 && files[0].progress < 100 && (
             <FontAwesomeIcon icon={faSpinner} spin={true} size="lg" />
           )}
           Upload file
         </Button>
       </PremiumCard>
-      <PremiumCard isPremium={account.premium}>
+      <PremiumCard isPremium={account?.premium}>
         <Label htmlFor="googleAnalyticsId">Google Analytics ID</Label>
         <Description>
           You can collect data from your website with Google Analytics.
@@ -205,9 +205,11 @@ export default function Branding({ account, records }: Props) {
         <TextField
           placeholder="G-XXXXXXX or UA-XXXXXX-X"
           id="googleAnalyticsId"
-          defaultValue={account.premium ? account.googleAnalyticsId : undefined}
-          disabled={!account.premium}
-          readOnly={!account.premium}
+          defaultValue={
+            account?.premium ? account?.googleAnalyticsId : undefined
+          }
+          disabled={!account?.premium}
+          readOnly={!account?.premium}
         />
       </PremiumCard>
     </>
@@ -219,7 +221,7 @@ export default function Branding({ account, records }: Props) {
         <div className="flex flex-col">
           {premiumAccountSettings}
           <div className="flex justify-end">
-            {!account.premium ? (
+            {!account?.premium ? (
               <Button
                 color="yellow"
                 onClick={() => router.push('/settings/plans')}

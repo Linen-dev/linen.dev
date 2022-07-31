@@ -28,9 +28,11 @@ export async function getServerSideProps(context: NextPageContext) {
   }
   if (!account) {
     return {
-      redirect: {
-        permanent: false,
-        destination: '../settings',
+      props: {
+        session,
+        account: null,
+        // account: serializeAccount(account),
+        // ...response,
       },
     };
   }
