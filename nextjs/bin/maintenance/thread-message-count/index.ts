@@ -1,7 +1,7 @@
 import {
   findThreadsWithWrongMessageCount,
   updateSlackThread,
-} from '../../../lib/models';
+} from '../../../lib/threads';
 
 export async function updateMessagesCount() {
   let page = 0;

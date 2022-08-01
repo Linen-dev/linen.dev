@@ -1,16 +1,17 @@
+import {
+  SyncStatus,
+  updateAndNotifySyncStatus,
+} from '../../services/syncStatus';
 import prisma from '../../client';
 import { listChannelsAndPersist } from './channels';
 import { processChannel } from './channels';
 import { CrawlType, DISCORD_TOKEN } from './constrains';
 import { crawlUsers } from './users';
-
-// (async () => {
-//   const accountId = '910dd004-8d31-4479-8c03-fee6d524641f';
-//   const crawlType = CrawlType.new_only;
-//   await syncJob(accountId, crawlType);
-// })();
+import { hideEmptyChannels } from '../../lib/channel';
 
 async function syncJob(accountId: string, crawlType: CrawlType) {
+  console.log('sync stared', { accountId, crawlType });
+
   const account = await prisma.accounts.findUnique({
     where: { id: accountId },
     include: {
@@ -43,10 +44,10 @@ async function syncJob(accountId: string, crawlType: CrawlType) {
       // this will force sync all messages until reach onboardingTimestamp,
       channel.externalPageCursor = null;
     }
-    await processChannel(channel, onboardingTimestamp, accountId, crawlType);
+    await processChannel(channel, onboardingTimestamp, crawlType);
   }
-
-  console.log('sync finished');
+  await hideEmptyChannels(accountId);
+  console.log('sync finished', { accountId });
 }
 
 export async function discordSync({
@@ -58,18 +59,22 @@ export async function discordSync({
 }) {
   try {
     const crawlType = fullSync ? CrawlType.historic : CrawlType.new_only;
-    console.log('crawlType', crawlType);
+    await updateAndNotifySyncStatus(accountId, SyncStatus.IN_PROGRESS);
+
     await syncJob(accountId, crawlType);
+
+    await updateAndNotifySyncStatus(accountId, SyncStatus.DONE);
+    return {
+      status: 200,
+      body: {},
+    };
   } catch (error) {
+    await updateAndNotifySyncStatus(accountId, SyncStatus.ERROR);
+
     console.error(error);
     return {
       status: 500,
       body: {},
     };
   }
-
-  return {
-    status: 200,
-    body: {},
-  };
 }

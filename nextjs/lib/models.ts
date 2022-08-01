@@ -275,6 +275,7 @@ export const findOrCreateChannel = async (
 export type Thread = {
   externalThreadId: string;
   channelId: string;
+  sentAt: number;
 };
 
 export const findOrCreateThread = async (thread: Thread) => {
@@ -284,6 +285,16 @@ export const findOrCreateThread = async (thread: Thread) => {
     },
     update: {},
     create: thread,
+    include: {
+      messages: true,
+    },
+  });
+};
+export const findThread = async (externalThreadId: string) => {
+  return await prisma.threads.findUnique({
+    where: {
+      externalThreadId,
+    },
     include: {
       messages: true,
     },

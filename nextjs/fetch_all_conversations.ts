@@ -1,12 +1,11 @@
-import { channels, messages, threads } from '@prisma/client';
+import type { channels, messages, threads } from '@prisma/client';
 import request from 'superagent';
-import {
-  createMessage,
-  createOrUpdateMessage,
-  findOrCreateThread,
-} from './lib/models';
+import { createMessage, createOrUpdateMessage } from './lib/models';
+import { findOrCreateThread, findThread } from './lib/threads';
 import { createManyUsers, findUser } from './lib/users';
+import { createSlug } from './lib/util';
 import { generateRandomWordSlug } from './utilities/randomWordSlugs';
+import { tsToSentAt } from './utilities/sentAt';
 
 export const fetchConversations = async (
   channel: string,
@@ -218,11 +217,8 @@ export const saveMessages = async (
     for (let param of params) {
       let threadId: string | null = null;
       if (!!param.externalThreadId) {
-        let thread = await findOrCreateThread({
-          externalThreadId: param.externalThreadId,
-          channelId: channelId,
-        });
-        threadId = thread.id;
+        let thread = await findThread(param.externalThreadId);
+        threadId = thread?.id || null;
       }
       const user = await findUser(param.externalUserId, accountId);
       param.usersId = user?.id;
@@ -279,19 +275,25 @@ export async function saveThreadedMessages(
   externalThreadId: string,
   accountId: string
 ) {
-  const repliesParams = replies.messages.map((m: any) => {
-    return {
-      body: m.text,
-      sentAt: new Date(parseFloat(m.ts) * 1000),
-      externalMessageId: m.ts,
-      externalUserId: m.user || m.bot_id,
-      channelId: channelId,
-    };
-  });
+  const repliesParams = replies.messages
+    .map((m: any) => {
+      return {
+        body: m.text,
+        sentAt: tsToSentAt(m.ts),
+        externalMessageId: m.ts,
+        externalUserId: m.user || m.bot_id,
+        channelId: channelId,
+      };
+    })
+    .sort((a: any, b: any) => a.sentAt.getTime() - b.sentAt.getTime());
+
+  const firstMessage = repliesParams.length && repliesParams[0];
 
   let thread = await findOrCreateThread({
     externalThreadId: externalThreadId,
     channelId: channelId,
+    sentAt: firstMessage ? firstMessage.sentAt.getTime() : 0,
+    slug: createSlug(firstMessage?.text || ''),
   });
 
   for (let replyParam of repliesParams) {

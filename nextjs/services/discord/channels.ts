@@ -1,6 +1,6 @@
 import prisma from '../../client';
 import { channels } from '@prisma/client';
-import { processThreads, processNewThreads } from './threads';
+import { processNewThreads } from './threads';
 import {
   discordChannel,
   DiscordMessage,
@@ -33,7 +33,8 @@ async function getDiscordChannels(
 
 async function crawlChannel(
   channel: channels,
-  onboardingTimestamp: Date
+  onboardingTimestamp: Date,
+  crawlType: CrawlType
 ): Promise<{
   channelMessages?: DiscordMessage[];
   cursor?: string;
@@ -82,12 +83,22 @@ async function crawlChannel(
       channelMessages.push(message);
       if (channelMessages.length >= 400) {
         const newThreads = channelMessages.splice(0, channelMessages.length);
-        await processNewThreads(newThreads, channel);
+        await processNewThreads(
+          newThreads,
+          channel,
+          crawlType,
+          onboardingTimestamp
+        );
       }
     }
   }
   if (channelMessages.length) {
-    await processNewThreads(channelMessages, channel);
+    await processNewThreads(
+      channelMessages,
+      channel,
+      crawlType,
+      onboardingTimestamp
+    );
   }
   return { cursor: after };
 }
@@ -95,12 +106,13 @@ async function crawlChannel(
 export async function processChannel(
   channel: channels,
   onboardingTimestamp: Date,
-  accountId: string,
   crawlType: CrawlType
 ) {
-  const { cursor } = await crawlChannel(channel, onboardingTimestamp);
-
-  await processThreads(channel, onboardingTimestamp, accountId, crawlType);
+  const { cursor } = await crawlChannel(
+    channel,
+    onboardingTimestamp,
+    crawlType
+  );
 
   // if everything is fine, persist cursor
   if (cursor) {
@@ -131,15 +143,12 @@ export async function listChannelsAndPersist({
   return await channelPromises;
 }
 function isPrivate(channel: discordChannel): boolean {
-  if (!channel.nsfw) {
+  if (channel.nsfw) {
     return true;
   }
   // we assume that if there any permission it is a private channel
   // customer should toggle it on settings page if want to make it public
-  if (
-    !channel.permission_overwrites ||
-    channel.permission_overwrites?.length === 0
-  ) {
+  if (channel.permission_overwrites && channel.permission_overwrites.length) {
     return true;
   }
   return false;

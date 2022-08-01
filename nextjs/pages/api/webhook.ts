@@ -3,12 +3,11 @@ import prisma from '../../client';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import {
   createMessageWithMentions,
-  findOrCreateThread,
-  updateSlackThread,
   findMessageByChannelIdAndTs,
   deleteMessageWithMentions,
   findAccountBySlackTeamId,
 } from '../../lib/models';
+import { findOrCreateThread, updateSlackThread } from '../../lib/threads';
 import {
   SlackEvent,
   SlackMessageEvent,
@@ -38,6 +37,7 @@ import {
   findUser,
   updateUserFromUserInfo,
 } from '../../lib/users';
+import { parseSlackSentAt, tsToSentAt } from '../../utilities/sentAt';
 
 export default async function handler(
   req: NextApiRequest,
@@ -130,20 +130,16 @@ async function addMessage(
   const thread = await findOrCreateThread({
     externalThreadId: thread_ts,
     channelId: channel.id,
+    sentAt: parseSlackSentAt(event.ts),
+    slug: createSlug(event.text),
   });
 
   if (!!event.thread_ts) {
     thread.messageCount += 1;
-  } else {
-    //create slug based on the first message
-    thread.slug = createSlug(event.text);
+    await updateSlackThread(thread.id, {
+      messageCount: thread.messageCount,
+    });
   }
-
-  // maybe here, if threads.slug is null, will persist null
-  await updateSlackThread(thread.id, {
-    messageCount: thread.messageCount,
-    ...(!!thread.slug && { slug: thread.slug }),
-  });
 
   //TODO: create render text object and save that on creation of message
   // This way we don't have to fetch mentions on every message render
@@ -167,7 +163,7 @@ async function addMessage(
     body: event.text,
     blocks: event.blocks as any,
     channelId: channel.id,
-    sentAt: new Date(parseFloat(event.ts) * 1000),
+    sentAt: tsToSentAt(event.ts),
     threadId: thread?.id,
     externalMessageId: event.ts,
     usersId: user?.id,

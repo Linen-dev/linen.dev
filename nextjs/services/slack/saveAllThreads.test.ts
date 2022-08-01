@@ -4,6 +4,7 @@ import * as fetch_all_conversations from 'fetch_all_conversations';
 import * as s3Helper from '../aws/s3';
 import { saveAllThreads } from './saveAllThreads';
 import { createSlug } from '../../lib/util';
+import { parseSlackSentAt } from '../../utilities/sentAt';
 
 const account = {
   id: 'accountId123',
@@ -119,23 +120,30 @@ describe('slackSync :: saveAllThreads', () => {
     });
 
     expect(threadsUpsertMock).toBeCalledTimes(4);
-    const upsertThread = {
+    const upsertThread = (index: number) => ({
       create: {
         channelId: internalChannel.id,
         externalThreadId: threads[0].id,
+        sentAt: parseSlackSentAt(threads[0].externalThreadId),
+        slug: createSlug(conversationReplies.messages[index].text),
       },
       include: {
         messages: true,
       },
-      update: {},
+      update: {
+        channelId: internalChannel.id,
+        externalThreadId: threads[0].id,
+        sentAt: parseSlackSentAt(threads[0].externalThreadId),
+        slug: createSlug(conversationReplies.messages[index].text),
+      },
       where: {
         externalThreadId: threads[0].id,
       },
-    };
-    expect(threadsUpsertMock).toHaveBeenNthCalledWith(1, upsertThread);
-    expect(threadsUpsertMock).toHaveBeenNthCalledWith(2, upsertThread);
-    expect(threadsUpsertMock).toHaveBeenNthCalledWith(3, upsertThread);
-    expect(threadsUpsertMock).toHaveBeenNthCalledWith(4, upsertThread);
+    });
+    expect(threadsUpsertMock).toHaveBeenNthCalledWith(1, upsertThread(0));
+    expect(threadsUpsertMock).toHaveBeenNthCalledWith(2, upsertThread(1));
+    expect(threadsUpsertMock).toHaveBeenNthCalledWith(3, upsertThread(2));
+    expect(threadsUpsertMock).toHaveBeenNthCalledWith(4, upsertThread(3));
 
     const messageInsertBuilder = (index: number) => ({
       create: {

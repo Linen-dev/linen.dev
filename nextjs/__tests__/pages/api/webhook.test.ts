@@ -15,7 +15,8 @@ jest.mock('../../../lib/users', () => ({
 }));
 
 import handler from '../../../pages/api/webhook';
-import { deleteMessageWithMentions } from '../../../lib/models';
+import { parseSlackSentAt } from '../../../utilities/sentAt';
+import { createSlug } from '../../../lib/util';
 
 const addMessageEvent = {
   token: 'RudepRJuMOjy8zENRCLdXW7t',
@@ -134,25 +135,6 @@ const changeMessageEvent = {
 };
 
 describe('webhook', () => {
-  // let consoleWarnSpy: jest.SpyInstance;
-  // let consoleLogSpy: jest.SpyInstance;
-  // let consoleDebugSpy: jest.SpyInstance;
-  // let consoleErrorSpy: jest.SpyInstance;
-  //
-  // beforeAll(() => {
-  //     consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
-  //     consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
-  //     consoleDebugSpy = jest.spyOn(console, 'debug').mockImplementation(() => {});
-  //     consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
-  // });
-  //
-  // afterAll(() => {
-  //     consoleWarnSpy.mockRestore();
-  //     consoleLogSpy.mockRestore();
-  //     consoleDebugSpy.mockRestore();
-  //     consoleErrorSpy.mockRestore();
-  // });
-
   it('add message - channel not found', async () => {
     prismaMock.channels.findUnique.mockResolvedValue(null);
 
@@ -218,7 +200,7 @@ describe('webhook', () => {
       sentAt: now,
       channelId: 'C03ATK7RWNS',
       externalMessageId: '1650644364.126099',
-      threadId: null,
+      threadId: 'thread_id',
       usersId: 'user_id',
     };
     const messagesCreateMock =
@@ -255,18 +237,23 @@ describe('webhook', () => {
           where: {
             externalThreadId: addMessageEvent.event.ts,
           },
-          update: {},
+          update: {
+            externalThreadId: addMessageEvent.event.ts,
+            channelId: channelMock.id,
+            sentAt: parseSlackSentAt(addMessageEvent.event.ts),
+            slug: createSlug(addMessageEvent.event.text),
+          },
           create: {
             externalThreadId: addMessageEvent.event.ts,
             channelId: channelMock.id,
+            sentAt: parseSlackSentAt(addMessageEvent.event.ts),
+            slug: createSlug(addMessageEvent.event.text),
           },
           include: {
             messages: true,
           },
         });
 
-        // Slug for new thread created
-        expect(threadMock.slug).toEqual('this-is-test3');
         prismaMock.threads.update.calledWith({
           where: {
             id: threadMock.id,
@@ -465,18 +452,23 @@ describe('webhook', () => {
           where: {
             externalThreadId: changeMessageEvent.event.message.ts,
           },
-          update: {},
+          update: {
+            externalThreadId: changeMessageEvent.event.message.ts,
+            channelId: channelMock.id,
+            sentAt: parseSlackSentAt(changeMessageEvent.event.message.ts),
+            slug: createSlug(changeMessageEvent.event.message.text),
+          },
           create: {
             externalThreadId: changeMessageEvent.event.message.ts,
             channelId: channelMock.id,
+            sentAt: parseSlackSentAt(changeMessageEvent.event.message.ts),
+            slug: createSlug(changeMessageEvent.event.message.text),
           },
           include: {
             messages: true,
           },
         });
 
-        // Slug for new thread created
-        expect(threadMock.slug).toEqual('Lets-test-4');
         prismaMock.threads.update.calledWith({
           where: {
             id: threadMock.id,
