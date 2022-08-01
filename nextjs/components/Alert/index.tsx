@@ -5,19 +5,26 @@ interface Props {
   children: React.ReactNode;
 }
 
-const colors = {
-  danger: 'red',
-  info: 'blue',
-};
-
 export default function Alert({ type, children }: Props) {
-  const color = colors[type];
-  return (
-    <div
-      className={`p-4 text-sm text-${color}-700 bg-${color}-100 rounded-lg dark:bg-${color}-200 dark:text-${color}-800`}
-      role="alert"
-    >
-      {children}
-    </div>
-  );
+  if (type === 'danger') {
+    return (
+      <div
+        className="p-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800"
+        role="alert"
+      >
+        {children}
+      </div>
+    );
+  }
+  if (type === 'info') {
+    return (
+      <div
+        className="p-4 text-sm text-blue-700 bg-blue-100 rounded-lg dark:bg-blue-200 dark:text-blue-800"
+        role="alert"
+      >
+        {children}
+      </div>
+    );
+  }
+  return null;
 }
