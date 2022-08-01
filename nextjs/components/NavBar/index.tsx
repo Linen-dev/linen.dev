@@ -27,7 +27,7 @@ export default function NavBar({
         isSubDomainRouting: isSubDomainRouting,
         communityName,
         communityType,
-        path: `/c/${channelSelected}/1`,
+        path: `/c/${channelSelected}`,
       });
     }
   };
@@ -59,7 +59,7 @@ export default function NavBar({
                 communityName={communityName}
                 communityType={communityType}
                 key={c.channelName}
-                path={`/c/${c.channelName}/1`}
+                path={`/c/${c.channelName}`}
                 passHref
               >
                 <ChannelName
@@ -82,7 +82,7 @@ export default function NavBar({
   );
 
   const navBarSm = (
-    <div className="pt-4 px-6">
+    <div className="px-6">
       <NativeSelect
         id="channel"
         options={sortedChannels.map((channel: channels) => ({

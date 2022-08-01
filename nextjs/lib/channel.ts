@@ -82,3 +82,16 @@ export async function hideEmptyChannels(accountId: string) {
     .filter(Boolean);
   return Promise.all(promise);
 }
+
+export async function shouldThisChannelBeAnonymous(channelId: string) {
+  return await prisma.accounts
+    .findFirst({
+      where: {
+        channels: {
+          some: { id: channelId },
+        },
+      },
+      select: { anonymizeUsers: true },
+    })
+    .then((account) => account?.anonymizeUsers);
+}
