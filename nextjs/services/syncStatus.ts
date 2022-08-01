@@ -12,9 +12,10 @@ export async function updateAndNotifySyncStatus(
   accountId: string,
   status: SyncStatus
 ) {
+  await updateAccountSyncStatus(accountId, status);
+
   if (skipNotification()) return;
 
-  await updateAccountSyncStatus(accountId, status);
   await slackNotification(status, accountId);
   await emailNotification(status, accountId);
 }
