@@ -4,6 +4,7 @@ import * as s3Helper from '../aws/s3';
 import * as fetch_all_conversations from 'fetch_all_conversations';
 import { fetchAllTopLevelMessages } from './fetchAllTopLevelMessages';
 import { conversationHistory } from '__mocks__/slack-api';
+import { parseSlackSentAt } from '../../utilities/sentAt';
 
 const account = {
   id: 'accountId123',
@@ -91,6 +92,7 @@ describe('slackSync :: fetchAllTopLevelMessages', () => {
       create: {
         channelId: internalChannel.id,
         externalThreadId: threads[0].externalThreadId,
+        sentAt: parseSlackSentAt(threads[0].externalThreadId),
       },
       update: {},
       where: {
@@ -101,6 +103,7 @@ describe('slackSync :: fetchAllTopLevelMessages', () => {
       create: {
         channelId: internalChannel.id,
         externalThreadId: threads[1].externalThreadId,
+        sentAt: parseSlackSentAt(threads[1].externalThreadId),
       },
       update: {},
       where: {

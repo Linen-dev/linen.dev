@@ -4,6 +4,7 @@ import {
   createMessage,
   createOrUpdateMessage,
   findOrCreateThread,
+  findThread,
 } from './lib/models';
 import { createManyUsers, findUser } from './lib/users';
 import { generateRandomWordSlug } from './utilities/randomWordSlugs';
@@ -218,11 +219,8 @@ export const saveMessages = async (
     for (let param of params) {
       let threadId: string | null = null;
       if (!!param.externalThreadId) {
-        let thread = await findOrCreateThread({
-          externalThreadId: param.externalThreadId,
-          channelId: channelId,
-        });
-        threadId = thread.id;
+        let thread = await findThread(param.externalThreadId);
+        threadId = thread?.id || null;
       }
       const user = await findUser(param.externalUserId, accountId);
       param.usersId = user?.id;
@@ -279,19 +277,26 @@ export async function saveThreadedMessages(
   externalThreadId: string,
   accountId: string
 ) {
-  const repliesParams = replies.messages.map((m: any) => {
-    return {
-      body: m.text,
-      sentAt: new Date(parseFloat(m.ts) * 1000),
-      externalMessageId: m.ts,
-      externalUserId: m.user || m.bot_id,
-      channelId: channelId,
-    };
-  });
+  const repliesParams = replies.messages
+    .map((m: any) => {
+      return {
+        body: m.text,
+        sentAt: new Date(parseFloat(m.ts) * 1000),
+        externalMessageId: m.ts,
+        externalUserId: m.user || m.bot_id,
+        channelId: channelId,
+      };
+    })
+    .sort((a: any, b: any) => a.sentAt.getTime() - b.sentAt.getTime());
+
+  const firstMessageSentAt = repliesParams.length
+    ? repliesParams[0].sentAt.getTime()
+    : 0;
 
   let thread = await findOrCreateThread({
     externalThreadId: externalThreadId,
     channelId: channelId,
+    sentAt: firstMessageSentAt,
   });
 
   for (let replyParam of repliesParams) {
