@@ -2,7 +2,7 @@ import Example from '../Example';
 import TextInput from '../../../components/TextInput';
 import { AiOutlineSearch } from 'react-icons/ai';
 
-export default function MessageExample() {
+export default function TextInputExample() {
   return (
     <Example header="TextInput">
       <Example description="TextInput can have a label.">

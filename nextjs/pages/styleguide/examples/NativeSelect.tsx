@@ -2,7 +2,7 @@ import Example from '../Example';
 import NativeSelect from '../../../components/NativeSelect';
 import { AiOutlineNumber } from 'react-icons/ai';
 
-export default function MessageExample() {
+export default function NativeSelectExample() {
   return (
     <Example header="NativeSelect">
       <Example description="NativeSelect can have a label.">
