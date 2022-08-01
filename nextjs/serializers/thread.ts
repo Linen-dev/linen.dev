@@ -1,7 +1,7 @@
 import { MentionsWithUsers } from '../types/apiResponses/threads/[threadId]';
 import { ThreadsWithMessages, MessageWithAuthor } from '../types/partialTypes';
 import { SerializedAttachment, SerializedReaction } from '../types/shared';
-import { Prisma, threads, users } from '@prisma/client';
+import type { Prisma, threads, users } from '@prisma/client';
 
 export interface SerializedMessage {
   body: string;
@@ -13,7 +13,8 @@ export interface SerializedMessage {
   reactions: SerializedReaction[];
 }
 
-export interface SerializedThread extends threads {
+export interface SerializedThread extends Omit<threads, 'sentAt'> {
+  sentAt: string;
   messages: SerializedMessage[];
 }
 
@@ -22,6 +23,7 @@ export default function serialize(
 ): SerializedThread {
   return {
     ...thread,
+    sentAt: thread.sentAt.toString(),
     messages: thread.messages.map((message: MessageWithAuthor) => {
       return {
         id: message.id,

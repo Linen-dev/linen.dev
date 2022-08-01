@@ -4,6 +4,7 @@ import * as fetch_all_conversations from 'fetch_all_conversations';
 import * as s3Helper from '../aws/s3';
 import { saveAllThreads } from './saveAllThreads';
 import { createSlug } from '../../lib/util';
+import { parseSlackSentAt } from '../../utilities/sentAt';
 
 const account = {
   id: 'accountId123',
@@ -123,6 +124,7 @@ describe('slackSync :: saveAllThreads', () => {
       create: {
         channelId: internalChannel.id,
         externalThreadId: threads[0].id,
+        sentAt: parseSlackSentAt(threads[0].externalThreadId),
       },
       include: {
         messages: true,

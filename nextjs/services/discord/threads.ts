@@ -5,6 +5,7 @@ import { createSlug } from '../../lib/util';
 import { getDiscordWithRetry } from './api';
 import { CrawlType, THREAD_LIMIT, LIMIT } from './constrains';
 import { createMessages, filterKnownMessagesTypes } from './messages';
+import { parseDiscordSentAt } from '../../utilities/sentAt';
 
 async function crawlExistingThread(
   thread: threads & {
@@ -111,6 +112,7 @@ function upsertThread(channelId: string, thread: DiscordMessage) {
         thread.timestamp
     ),
     messageCount: (thread.thread?.message_count || 0) + 1,
+    sentAt: parseDiscordSentAt(thread.timestamp),
   };
   return prisma.threads.upsert({
     create: {

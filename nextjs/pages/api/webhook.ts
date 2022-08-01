@@ -38,6 +38,7 @@ import {
   findUser,
   updateUserFromUserInfo,
 } from '../../lib/users';
+import { parseSlackSentAt } from '../../utilities/sentAt';
 
 export default async function handler(
   req: NextApiRequest,
@@ -130,6 +131,7 @@ async function addMessage(
   const thread = await findOrCreateThread({
     externalThreadId: thread_ts,
     channelId: channel.id,
+    sentAt: parseSlackSentAt(event.ts),
   });
 
   if (!!event.thread_ts) {

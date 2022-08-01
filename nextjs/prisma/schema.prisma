@@ -46,6 +46,7 @@ model threads {
   viewCount        Int      @default(0)
   slug             String?
   messageCount     Int      @default(1)
+  sentAt           BigInt   @default(0)
 
   messages  messages[]
   channelId String
@@ -53,6 +54,7 @@ model threads {
   @@unique([externalThreadId])
   @@unique([incrementId])
   @@index([channelId])
+  @@index([channelId, sentAt])
 }
 
 model channels {
