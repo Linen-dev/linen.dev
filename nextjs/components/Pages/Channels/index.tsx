@@ -25,15 +25,13 @@ export type Props = {
   communityInviteUrl?: string;
   settings: Settings;
   communityName: string;
-  channelId?: string;
+  channelName: string;
   users: users[];
   channels?: channels[];
   currentChannel: channels;
   threads?: SerializedThread[];
-  messages?: messageWithAuthor[];
-  pagination?: PaginationType;
-  page: number;
   isSubDomainRouting: boolean;
+  nextCursor?: string;
 };
 
 export default function ChannelView(props: Props) {

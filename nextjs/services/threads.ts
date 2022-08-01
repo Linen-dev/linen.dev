@@ -1,18 +1,15 @@
 import serializeThread from '../serializers/thread';
 import {
-  threadIndex,
-  threadCount,
   channelIndex,
   findAccountByPath,
-  findThreadById,
   channelsGroupByThreadCount,
 } from '../lib/models';
+import { threadIndex, threadCount, findThreadById } from '../lib/threads';
 import { ThreadByIdResponse } from '../types/apiResponses/threads/[threadId]';
-import { accounts, users } from '@prisma/client';
+import type { accounts, users } from '@prisma/client';
 import { GetStaticPropsContext } from 'next';
 import { NotFound } from '../utilities/response';
 import { revalidateInSeconds } from '../constants/revalidate';
-import * as Sentry from '@sentry/nextjs';
 import { buildSettings } from './accountSettings';
 import { memoize } from '../utilities/dynamoCache';
 
@@ -159,7 +156,7 @@ export async function threadGetStaticProps(
       revalidate: revalidateInSeconds, // In seconds
     };
   } catch (exception) {
-    Sentry.captureException(exception);
+    console.error(exception);
     return NotFound();
   }
 }
