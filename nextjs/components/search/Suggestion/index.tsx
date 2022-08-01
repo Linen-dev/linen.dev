@@ -27,7 +27,7 @@ export default function Suggestion({
           text={(user?.displayName || '?').slice(0, 1).toLowerCase()}
         />
         <div className={styles.text}>
-          <strong>{user?.displayName}</strong>
+          <strong>{user?.displayName || 'user'}</strong>
           {channelName && (
             <strong className={styles.channel}>#{channelName}</strong>
           )}
