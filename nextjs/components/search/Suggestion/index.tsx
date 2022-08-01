@@ -2,6 +2,7 @@ import React from 'react';
 import { users } from '@prisma/client';
 import Avatar, { Size } from '../../Avatar';
 import Message from '../../Message';
+import styles from './index.module.css';
 
 interface Props {
   body: string;
@@ -17,46 +18,26 @@ export default function Suggestion({
   channelName,
 }: Props) {
   return (
-    <div
-      style={{
-        cursor: 'pointer',
-        position: 'relative',
-        borderBottom: '1px solid #eee',
-        padding: '12px',
-      }}
-    >
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          width: '100%',
-          marginBottom: '12px',
-        }}
-      >
+    <div className={styles.container}>
+      <div className={styles.header}>
         <Avatar
           size={Size.sm}
           src={user?.profileImageUrl || ''}
           alt={user?.displayName || ''}
           text={(user?.displayName || '?').slice(0, 1).toLowerCase()}
         />
-        <div style={{ display: 'flex', marginLeft: '8px' }}>
-          <strong style={{ fontSize: '14px' }}>{user?.displayName}</strong>
+        <div className={styles.text}>
+          <strong>{user?.displayName || 'user'}</strong>
           {channelName && (
-            <strong
-              style={{ fontSize: '14px', position: 'absolute', right: '12px' }}
-            >
-              #{channelName}
-            </strong>
+            <strong className={styles.channel}>#{channelName}</strong>
           )}
         </div>
       </div>
-      <div style={{ borderLeft: '3px solid #dfdfdf', paddingLeft: '16px' }}>
-        <Message
-          text={body}
-          truncate
-          mentions={mentions.map((m: any) => m.users) || []}
-        />
-      </div>
+      <Message
+        text={body}
+        truncate
+        mentions={mentions.map((m: any) => m.users) || []}
+      />
     </div>
   );
 }
