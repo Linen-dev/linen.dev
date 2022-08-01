@@ -4,7 +4,8 @@ import * as s3Helper from '../aws/s3';
 import * as fetch_all_conversations from 'fetch_all_conversations';
 import { fetchAllTopLevelMessages } from './fetchAllTopLevelMessages';
 import { conversationHistory } from '__mocks__/slack-api';
-import { parseSlackSentAt } from '../../utilities/sentAt';
+import { parseSlackSentAt, tsToSentAt } from '../../utilities/sentAt';
+import { createSlug } from '../../lib/util';
 
 const account = {
   id: 'accountId123',
@@ -38,31 +39,25 @@ describe('slackSync :: fetchAllTopLevelMessages', () => {
       .spyOn(retryPromises, 'sleep')
       .mockResolvedValue(Promise.resolve());
 
-    const threads = conversationHistory.messages
-      .filter((t) => t.ts === t.thread_ts)
-      .map(({ ts }) => {
-        return { externalThreadId: ts, id: ts };
-      });
-    expect(threads.length).toBe(2);
-
-    const messages = conversationHistory.messages
-      .filter((t) => t.ts !== t.thread_ts)
-      .map(({ ts }) => {
-        return { externalThreadId: ts };
-      });
-
-    expect(messages.length).toBe(2);
+    const allMessages = conversationHistory.messages.map(({ ts }) => {
+      return { externalThreadId: ts, id: ts };
+    });
 
     const fetchConversationsTypedMock = jest
       .spyOn(fetch_all_conversations, 'fetchConversationsTyped')
       .mockResolvedValue(conversationHistory);
 
-    const threadsUpsertMock = prismaMock.threads.upsert.mockResolvedValue();
-    prismaMock.$transaction.mockResolvedValue(threads);
+    const threadsUpsertMock = prismaMock.threads.upsert
+      .mockResolvedValueOnce(allMessages[0])
+      .mockResolvedValueOnce(allMessages[1])
+      .mockResolvedValueOnce(allMessages[2])
+      .mockResolvedValueOnce(allMessages[3]);
 
     const messagesUpsertMock = prismaMock.messages.upsert
-      .mockResolvedValueOnce(messages[0])
-      .mockResolvedValueOnce(messages[1]);
+      .mockResolvedValueOnce(allMessages[0])
+      .mockResolvedValueOnce(allMessages[1])
+      .mockResolvedValueOnce(allMessages[2])
+      .mockResolvedValueOnce(allMessages[3]);
 
     const messageReactionsUpsertMock =
       prismaMock.messageReactions.upsert.mockResolvedValue();
@@ -87,159 +82,77 @@ describe('slackSync :: fetchAllTopLevelMessages', () => {
       undefined
     );
 
-    expect(threadsUpsertMock).toHaveBeenCalledTimes(2);
-    expect(threadsUpsertMock).toHaveBeenNthCalledWith(1, {
+    const upsertBuilder = (index: number) => ({
       create: {
         channelId: internalChannel.id,
-        externalThreadId: threads[0].externalThreadId,
-        sentAt: parseSlackSentAt(threads[0].externalThreadId),
+        externalThreadId: conversationHistory.messages[index].ts,
+        sentAt: parseSlackSentAt(conversationHistory.messages[index].ts),
+        slug: createSlug(conversationHistory.messages[index].text),
       },
-      update: {},
-      where: {
-        externalThreadId: threads[0].externalThreadId,
-      },
-    });
-    expect(threadsUpsertMock).toHaveBeenNthCalledWith(2, {
-      create: {
+      update: {
         channelId: internalChannel.id,
-        externalThreadId: threads[1].externalThreadId,
-        sentAt: parseSlackSentAt(threads[1].externalThreadId),
+        externalThreadId: conversationHistory.messages[index].ts,
+        sentAt: parseSlackSentAt(conversationHistory.messages[index].ts),
+        slug: createSlug(conversationHistory.messages[index].text),
       },
-      update: {},
       where: {
-        externalThreadId: threads[1].externalThreadId,
+        externalThreadId: conversationHistory.messages[index].ts,
       },
+      include: { messages: true },
     });
+    expect(threadsUpsertMock).toHaveBeenCalledTimes(4);
+    expect(threadsUpsertMock).toHaveBeenNthCalledWith(1, upsertBuilder(0));
+    expect(threadsUpsertMock).toHaveBeenNthCalledWith(2, upsertBuilder(1));
+    expect(threadsUpsertMock).toHaveBeenNthCalledWith(3, upsertBuilder(2));
+    expect(threadsUpsertMock).toHaveBeenNthCalledWith(4, upsertBuilder(3));
 
     expect(messagesUpsertMock).toHaveBeenCalledTimes(4);
-    const sentAt1 = new Date(
-      parseFloat(conversationHistory.messages[0].ts) * 1000
-    );
-    expect(messagesUpsertMock).toHaveBeenNthCalledWith(1, {
+
+    const messageUpsertBuilder = (index: number) => ({
       create: {
         blocks: [],
-        body: conversationHistory.messages[0].text,
+        body: conversationHistory.messages[index].text,
         channelId: internalChannel.id,
-        externalMessageId: conversationHistory.messages[0].ts,
+        externalMessageId: conversationHistory.messages[index].ts,
         mentions: {
           create: [],
         },
-        sentAt: sentAt1,
-        threadId: threads[0].id,
+        sentAt: tsToSentAt(conversationHistory.messages[index].ts),
+        threadId: allMessages[index].id,
         usersId: undefined,
       },
       update: {
         blocks: [],
-        body: conversationHistory.messages[0].text,
+        body: conversationHistory.messages[index].text,
         channelId: internalChannel.id,
-        externalMessageId: conversationHistory.messages[0].ts,
-        sentAt: sentAt1,
-        threadId: threads[0].id,
+        externalMessageId: conversationHistory.messages[index].ts,
+        sentAt: tsToSentAt(conversationHistory.messages[index].ts),
+        threadId: allMessages[index].id,
         usersId: undefined,
       },
       where: {
         channelId_externalMessageId: {
           channelId: internalChannel.id,
-          externalMessageId: conversationHistory.messages[0].ts,
+          externalMessageId: conversationHistory.messages[index].ts,
         },
       },
     });
-    const sentAt2 = new Date(
-      parseFloat(conversationHistory.messages[1].ts) * 1000
+    expect(messagesUpsertMock).toHaveBeenNthCalledWith(
+      1,
+      messageUpsertBuilder(0)
     );
-    expect(messagesUpsertMock).toHaveBeenNthCalledWith(2, {
-      create: {
-        blocks: [],
-        body: conversationHistory.messages[1].text,
-        channelId: internalChannel.id,
-        externalMessageId: conversationHistory.messages[1].ts,
-        mentions: {
-          create: [],
-        },
-        sentAt: sentAt2,
-        threadId: threads[1].id,
-        usersId: undefined,
-      },
-      update: {
-        blocks: [],
-        body: conversationHistory.messages[1].text,
-        channelId: internalChannel.id,
-        externalMessageId: conversationHistory.messages[1].ts,
-        sentAt: sentAt2,
-        threadId: threads[1].id,
-        usersId: undefined,
-      },
-      where: {
-        channelId_externalMessageId: {
-          channelId: internalChannel.id,
-          externalMessageId: conversationHistory.messages[1].ts,
-        },
-      },
-    });
-    const sentAt3 = new Date(
-      parseFloat(conversationHistory.messages[2].ts) * 1000
+    expect(messagesUpsertMock).toHaveBeenNthCalledWith(
+      2,
+      messageUpsertBuilder(1)
     );
-    expect(messagesUpsertMock).toHaveBeenNthCalledWith(3, {
-      create: {
-        blocks: [],
-        body: conversationHistory.messages[2].text,
-        channelId: internalChannel.id,
-        externalMessageId: conversationHistory.messages[2].ts,
-        mentions: {
-          create: [],
-        },
-        sentAt: sentAt3,
-        threadId: undefined,
-        usersId: undefined,
-      },
-      update: {
-        blocks: [],
-        body: conversationHistory.messages[2].text,
-        channelId: internalChannel.id,
-        externalMessageId: conversationHistory.messages[2].ts,
-        sentAt: sentAt3,
-        threadId: undefined,
-        usersId: undefined,
-      },
-      where: {
-        channelId_externalMessageId: {
-          channelId: internalChannel.id,
-          externalMessageId: conversationHistory.messages[2].ts,
-        },
-      },
-    });
-    const sentAt4 = new Date(
-      parseFloat(conversationHistory.messages[3].ts) * 1000
+    expect(messagesUpsertMock).toHaveBeenNthCalledWith(
+      3,
+      messageUpsertBuilder(2)
     );
-    expect(messagesUpsertMock).toHaveBeenNthCalledWith(4, {
-      create: {
-        blocks: [],
-        body: conversationHistory.messages[3].text,
-        channelId: internalChannel.id,
-        externalMessageId: conversationHistory.messages[3].ts,
-        mentions: {
-          create: [],
-        },
-        sentAt: sentAt4,
-        threadId: undefined,
-        usersId: undefined,
-      },
-      update: {
-        blocks: [],
-        body: conversationHistory.messages[3].text,
-        channelId: internalChannel.id,
-        externalMessageId: conversationHistory.messages[3].ts,
-        sentAt: sentAt4,
-        threadId: undefined,
-        usersId: undefined,
-      },
-      where: {
-        channelId_externalMessageId: {
-          channelId: internalChannel.id,
-          externalMessageId: conversationHistory.messages[3].ts,
-        },
-      },
-    });
+    expect(messagesUpsertMock).toHaveBeenNthCalledWith(
+      4,
+      messageUpsertBuilder(3)
+    );
 
     expect(sleepMock).toHaveBeenCalledTimes(0);
     expect(messageReactionsUpsertMock).toHaveBeenCalledTimes(0);
