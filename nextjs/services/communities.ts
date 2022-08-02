@@ -12,6 +12,8 @@ import type { channels } from '@prisma/client';
 import { decodeCursor, encodeCursor } from '../utilities/cursor';
 import { shouldThisChannelBeAnonymous } from '../lib/channel';
 
+const CURSOR_LIMIT = 10;
+
 export async function channelGetStaticProps(
   context: GetStaticPropsContext,
   isSubdomainbasedRouting: boolean
@@ -34,7 +36,9 @@ export async function channelGetStaticProps(
     sentAt: cursor && decodeCursor(cursor),
     anonymizeUsers: account.anonymizeUsers,
   });
-  const nextCursor = threads.length === 10 && threads[9].sentAt.toString();
+  const nextCursor =
+    threads.length === CURSOR_LIMIT &&
+    threads[CURSOR_LIMIT - 1].sentAt.toString();
 
   return {
     props: {
@@ -102,7 +106,9 @@ export async function channelNextPage(channelId: string, cursor: string) {
     sentAt: cursor,
     anonymizeUsers,
   });
-  const nextCursor = threads.length === 10 && threads[9].sentAt.toString();
+  const nextCursor =
+    threads.length === CURSOR_LIMIT &&
+    threads[CURSOR_LIMIT - 1].sentAt.toString();
   return {
     threads: threads.map(serializeThread),
     ...(nextCursor && { nextCursor: encodeCursor(nextCursor) }),
