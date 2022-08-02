@@ -1,6 +1,6 @@
 import Example from '../Example';
 import Message from '../../../components/Message';
-import { EMOJIS } from '../../../components/Message/Emoji/utilities/emojis';
+import ALIASES from '../../../components/Message/Emoji/utilities/aliases';
 
 const STACK_TRACE_EXAMPLE = `
 Apr 07 04:38:57 ip-10-0-74-131 kernel: watchdog: BUG: soft lockup - CPU#1 stuck for 22s! [kauditd:22]
@@ -190,7 +190,10 @@ export default function MessageExample() {
       <Example description="It supports reactions.">
         <Message
           text="Hello, world! :)"
-          reactions={EMOJIS.map((emoji) => ({ type: emoji, count: 1 }))}
+          reactions={Object.keys(ALIASES).map((alias) => ({
+            type: alias,
+            count: 1,
+          }))}
         />
       </Example>
     </Example>

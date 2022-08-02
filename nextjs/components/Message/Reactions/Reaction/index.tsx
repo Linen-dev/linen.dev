@@ -1,27 +1,17 @@
 import React from 'react';
-import Emoji from '../../Emoji';
 import ALIASES from '../../Emoji/utilities/aliases';
-import { UNSUPPORTED_EMOJIS } from '../../Emoji/utilities/emojis';
 import styles from './index.module.css';
 import { SerializedReaction } from 'types/shared';
 
-function normalizeText(text: string) {
-  if (text.startsWith(':') && text.endsWith(':')) {
-    return text;
+function normalizeType(type: string) {
+  if (type.startsWith(':') && type.endsWith(':')) {
+    return type.slice(1, -1);
   }
-  return `:${text}:`;
+  return type;
 }
 
 function Reaction({ type, count }: SerializedReaction) {
-  const alias = (ALIASES as { [key: string]: string })[type];
-
-  if (UNSUPPORTED_EMOJIS.includes(type)) {
-    return (
-      <a className={styles.reaction} title={type}>
-        {normalizeText(type)} {count}
-      </a>
-    );
-  }
+  const alias = (ALIASES as { [key: string]: string })[normalizeType(type)];
   if (alias) {
     return (
       <a className={styles.reaction} title={type}>
@@ -31,7 +21,7 @@ function Reaction({ type, count }: SerializedReaction) {
   }
   return (
     <a className={styles.reaction} title={type}>
-      <Emoji text={normalizeText(type)} /> {count}
+      {type} {count}
     </a>
   );
 }
