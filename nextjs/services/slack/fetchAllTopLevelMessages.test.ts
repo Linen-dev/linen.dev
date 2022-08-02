@@ -89,12 +89,7 @@ describe('slackSync :: fetchAllTopLevelMessages', () => {
         sentAt: parseSlackSentAt(conversationHistory.messages[index].ts),
         slug: createSlug(conversationHistory.messages[index].text),
       },
-      update: {
-        channelId: internalChannel.id,
-        externalThreadId: conversationHistory.messages[index].ts,
-        sentAt: parseSlackSentAt(conversationHistory.messages[index].ts),
-        slug: createSlug(conversationHistory.messages[index].text),
-      },
+      update: {},
       where: {
         externalThreadId: conversationHistory.messages[index].ts,
       },
