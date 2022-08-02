@@ -258,4 +258,5 @@ export const UNSUPPORTED_EMOJIS = [
   'hattip',
   'mps-transient',
   'tnx',
+  'sunglasses_lakefs',
 ];
