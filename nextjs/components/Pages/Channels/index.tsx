@@ -35,5 +35,5 @@ export type Props = {
 };
 
 export default function ChannelView(props: Props) {
-  return <Channel {...props} />;
+  return <Channel {...props} key={props.communityName + props.channelName} />;
 }

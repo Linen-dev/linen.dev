@@ -13,6 +13,7 @@ import { SerializedThread } from '../../../serializers/thread';
 import { postData } from '../../../utilities/fetcher';
 import useInfiniteScroll from 'react-infinite-scroll-hook';
 import CopyToClipboardIcon from './CopyToClipboardIcon';
+import Spinner from 'components/Spinner';
 
 export default function Channel({
   users,
@@ -152,16 +153,13 @@ export default function Channel({
       >
         <div className="sm:pt-6 justify-center">
           <ul className="divide-y sm:max-w-4xl px-1">
-            <div className="text-gray-600 text-xs text-center m-1">
-              This is the beginning of the #{channelName} channel
-            </div>
-            {cursor && (
-              <div
-                className="text-gray-600 text-xs text-center m-1 cursor-pointer"
-                onClick={() => loadMore()}
-                ref={infiniteRef}
-              >
-                Loading...
+            {cursor ? (
+              <div className="m-3" ref={infiniteRef}>
+                <Spinner />
+              </div>
+            ) : (
+              <div className="text-gray-600 text-xs text-center m-3">
+                This is the beginning of the #{channelName} channel
               </div>
             )}
             {rows}
