@@ -26,7 +26,7 @@ export const findOrCreateThread = async (thread: Thread) => {
     where: {
       externalThreadId: thread.externalThreadId,
     },
-    update: thread,
+    update: {},
     create: thread,
     include: {
       messages: true,

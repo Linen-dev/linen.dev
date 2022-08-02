@@ -237,12 +237,7 @@ describe('webhook', () => {
           where: {
             externalThreadId: addMessageEvent.event.ts,
           },
-          update: {
-            externalThreadId: addMessageEvent.event.ts,
-            channelId: channelMock.id,
-            sentAt: parseSlackSentAt(addMessageEvent.event.ts),
-            slug: createSlug(addMessageEvent.event.text),
-          },
+          update: {},
           create: {
             externalThreadId: addMessageEvent.event.ts,
             channelId: channelMock.id,
@@ -452,12 +447,7 @@ describe('webhook', () => {
           where: {
             externalThreadId: changeMessageEvent.event.message.ts,
           },
-          update: {
-            externalThreadId: changeMessageEvent.event.message.ts,
-            channelId: channelMock.id,
-            sentAt: parseSlackSentAt(changeMessageEvent.event.message.ts),
-            slug: createSlug(changeMessageEvent.event.message.text),
-          },
+          update: {},
           create: {
             externalThreadId: changeMessageEvent.event.message.ts,
             channelId: channelMock.id,
