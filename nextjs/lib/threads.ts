@@ -196,15 +196,17 @@ export async function findThreadsByCursor({
   sentAt = '0',
   sort = 'desc',
   limit = 10,
+  anonymizeUsers = false,
 }: {
   channelId: string;
   sentAt?: string;
   sort?: 'desc' | 'asc';
   limit?: number;
+  anonymizeUsers?: boolean;
 }) {
   const whereSentAt = whereBuilder(sort, sentAt);
 
-  return await prisma.threads.findMany({
+  const threads = await prisma.threads.findMany({
     take: limit,
     where: {
       sentAt: whereSentAt,
@@ -227,6 +229,7 @@ export async function findThreadsByCursor({
     },
     orderBy: { sentAt: sort },
   });
+  return anonymizeUsers ? threads.map(anonymizeMessages) : threads;
 }
 
 function whereBuilder(sort: 'desc' | 'asc', sentAt: string) {
