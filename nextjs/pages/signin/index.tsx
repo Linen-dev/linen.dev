@@ -1,20 +1,26 @@
 import Layout from '../../components/layout/CardLayout';
 import EmailField from '../../components/EmailField';
 import PasswordField from '../../components/PasswordField';
+import Alert from '../../components/Alert';
 import Button from '../../components/Button';
 import Link from '../../components/Link';
 import { getCsrfToken } from 'next-auth/react';
 import type { NextPageContext } from 'next';
 import Error from './Error';
+import { verifyAuthByToken } from '../../lib/auth';
 
 interface Props {
   csrfToken: string;
   error?: string;
+  verified: boolean;
 }
 
-export default function SignIn({ csrfToken, error }: Props) {
+export default function SignIn({ csrfToken, error, verified }: Props) {
   return (
     <Layout header="Sign In">
+      {verified && (
+        <Alert type="info">Your account has been verified correctly.</Alert>
+      )}
       <Error error={error} />
       <form
         method="post"
@@ -42,10 +48,13 @@ export default function SignIn({ csrfToken, error }: Props) {
 }
 
 export async function getServerSideProps(context: NextPageContext) {
+  const verified = await verifyAuthByToken(context.query.verificationToken);
+
   return {
     props: {
       csrfToken: await getCsrfToken(context),
       error: context.query.error || null,
+      verified,
     },
   };
 }

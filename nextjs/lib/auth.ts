@@ -26,3 +26,22 @@ export async function createAuth({
     },
   });
 }
+
+export async function verifyAuthByToken(
+  token?: string | string[]
+): Promise<boolean> {
+  if (!token || Array.isArray(token)) {
+    return false;
+  }
+  const auth = await prisma.auths.findFirst({
+    where: { verificationToken: token as string },
+  });
+  if (auth) {
+    await prisma.auths.update({
+      where: { id: auth.id },
+      data: { verified: true, verificationToken: null },
+    });
+    return true;
+  }
+  return false;
+}

@@ -29,7 +29,7 @@ async function create(request: NextApiRequest, response: NextApiResponse) {
       .status(200)
       .json({ message: 'Account exists, please sign in!' });
   }
-  const record = await createAuth({
+  await createAuth({
     password,
     email,
     verificationToken: generateToken(),
