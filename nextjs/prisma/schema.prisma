@@ -119,6 +119,8 @@ model auths {
   password  String
   salt      String
   token     String?
+  verified  Boolean  @default(false)
+  verificationToken String?
 
   account   accounts? @relation(fields: [accountId], references: [id])
   accountId String?
