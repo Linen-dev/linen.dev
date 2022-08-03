@@ -4,12 +4,14 @@ import { generateHash, generateSalt } from '../utilities/password';
 interface CreateAuthParams {
   email: string;
   password: string;
+  verificationToken: string;
   accountId?: string;
 }
 
 export async function createAuth({
   email,
   password,
+  verificationToken,
   accountId,
 }: CreateAuthParams) {
   const salt = generateSalt();
@@ -20,6 +22,7 @@ export async function createAuth({
       password: hash,
       email,
       accountId,
+      verificationToken,
     },
   });
 }

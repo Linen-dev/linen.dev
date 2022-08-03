@@ -8,6 +8,11 @@ import ApplicationMailer from '../../../mailers/ApplicationMailer';
 jest.mock('../../../client');
 jest.mock('../../../services/slack');
 jest.mock('../../../mailers/ApplicationMailer');
+jest.mock('../../../utilities/token', () => ({
+  generateToken() {
+    return '1234';
+  },
+}));
 
 describe('auth', () => {
   describe('#create', () => {
@@ -42,6 +47,22 @@ describe('auth', () => {
       expect(sendNotification).toHaveBeenCalledWith(
         'Email created: john@doe.com'
       );
+    });
+
+    it('creates a verification token', async () => {
+      const request = create('request', {
+        method: 'POST',
+        body: {
+          email: 'john@doe.com',
+          password: '123456',
+        },
+      }) as NextApiRequest;
+      const response = create('response') as NextApiResponse;
+      (prisma.auths.findFirst as jest.Mock).mockResolvedValue(null);
+      await handler(request, response);
+      expect(prisma.auths.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({ verificationToken: '1234' }),
+      });
     });
 
     it.skip('sends a verification email', async () => {

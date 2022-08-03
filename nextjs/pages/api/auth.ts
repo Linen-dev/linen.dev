@@ -4,6 +4,7 @@ import { sendNotification } from '../../services/slack';
 import { createAuth } from '../../lib/auth';
 import { unstable_getServerSession as getServerSession } from 'next-auth';
 import { authOptions } from './auth/[...nextauth]';
+import { generateToken } from '../../utilities/token';
 
 async function create(request: NextApiRequest, response: NextApiResponse) {
   const { email, password } = JSON.parse(request.body);
@@ -31,6 +32,7 @@ async function create(request: NextApiRequest, response: NextApiResponse) {
   const record = await createAuth({
     password,
     email,
+    verificationToken: generateToken(),
   });
   try {
     await sendNotification('Email created: ' + email);
