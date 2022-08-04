@@ -191,35 +191,6 @@ export class CdkStack extends cdk.Stack {
       targetUtilizationPercent: 50,
     });
 
-    const crawlerTaskDef = new ecs_patterns.ScheduledFargateTask(
-      this,
-      'crawler',
-      {
-        cluster,
-        scheduledFargateTaskImageOptions: {
-          image: dockerImage,
-          cpu: 1024,
-          memoryLimitMiB: 8192,
-          command: ['npm', 'run', 'script:crawl'],
-          secrets,
-          environment,
-          logDriver: ecs.LogDriver.awsLogs({
-            streamPrefix: 'linen-dev-crawler',
-            logGroup: new cdk.aws_logs.LogGroup(this, 'CrawlerLogGroup', {
-              retention: cdk.aws_logs.RetentionDays.ONE_MONTH,
-            }),
-          }),
-        },
-        schedule: cdk.aws_applicationautoscaling.Schedule.cron({
-          minute: '00',
-          hour: '3',
-        }),
-        platformVersion: ecs.FargatePlatformVersion.LATEST,
-      }
-    );
-    crawlerTaskDef.taskDefinition.addToTaskRolePolicy(cacheTableAccessPolicy);
-    crawlerTaskDef.taskDefinition.addToTaskRolePolicy(mailerAccessPolicy);
-
     const discordTaskDef = new ecs.FargateService(this, 'syncDiscordService', {
       cluster,
       taskDefinition: new ecs.FargateTaskDefinition(
@@ -236,7 +207,10 @@ export class CdkStack extends cdk.Stack {
       image: dockerImage,
       command: ['npm', 'run', 'script:sync:discord'],
       secrets,
-      environment,
+      environment: {
+        ...environment,
+        SKIP_NOTIFICATION: 'true',
+      },
       logging: ecs.LogDriver.awsLogs({
         streamPrefix: 'linen-dev-syncDiscord',
         logGroup: new cdk.aws_logs.LogGroup(this, 'syncDiscordLogGroup', {
