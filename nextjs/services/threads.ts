@@ -4,40 +4,14 @@ import {
   findAccountByPath,
   channelsGroupByThreadCount,
 } from '../lib/models';
-import { threadIndex, threadCount, findThreadById } from '../lib/threads';
+import { findThreadById } from '../lib/threads';
 import { ThreadByIdResponse } from '../types/apiResponses/threads/[threadId]';
-import type { accounts, users } from '@prisma/client';
+import type { users } from '@prisma/client';
 import { GetStaticPropsContext } from 'next';
 import { NotFound } from '../utilities/response';
 import { revalidateInSeconds } from '../constants/revalidate';
 import { buildSettings } from './accountSettings';
 import { memoize } from '../utilities/dynamoCache';
-
-interface IndexProps {
-  channelId: string;
-  page: number;
-  account: accounts;
-}
-
-export async function index({ channelId, page, account }: IndexProps) {
-  const take = 10;
-  const skip = (page - 1) * take;
-  const [threads, total] = await Promise.all([
-    threadIndexMemo({ channelId, take, skip, account }),
-    threadCountMemo(channelId),
-  ]);
-  return {
-    data: {
-      threads: threads.map(serializeThread),
-    },
-    pagination: {
-      totalCount: total,
-      pageCount: Math.ceil(total / take),
-      currentPage: page,
-      perPage: take,
-    },
-  };
-}
 
 // extracted here to be reused in both /[threadId]/index and /[slug]/index
 export async function getThreadById(
@@ -161,8 +135,6 @@ export async function threadGetStaticProps(
   }
 }
 
-const threadIndexMemo = memoize(threadIndex);
-const threadCountMemo = memoize(threadCount);
 const findThreadByIdMemo = memoize(findThreadById);
 const channelIndexMemo = memoize(channelIndex);
 const findAccountByPathMemo = memoize(findAccountByPath);
