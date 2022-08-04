@@ -40,7 +40,7 @@ interface TransportOptions {
   send?: (data: any, callback: any) => void;
 }
 
-const transport = {
+const transport: any = {
   test: testTransport,
   development: smtpTransport,
   production: sesTransport,
