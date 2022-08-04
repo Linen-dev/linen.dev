@@ -46,5 +46,5 @@ if (process.env.ANALYZE === 'true') {
   });
   module.exports = withBundleAnalyzer(nextConfig);
 } else {
-  module.exports = withSentryConfig(nextConfig, sentryWebpackPluginOptions);
+  module.exports = nextConfig;
 }
