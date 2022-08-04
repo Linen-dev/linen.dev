@@ -56,54 +56,6 @@ export const threadCount = async (channelId: string): Promise<number> => {
   });
 };
 
-export const threadIndex = async ({
-  channelId,
-  take = 20,
-  skip = 0,
-  account,
-}: {
-  channelId: string;
-  take?: number;
-  skip?: number;
-  account: accounts;
-}) => {
-  const MESSAGES_ORDER_BY = 'desc';
-  const threads = await prisma.threads.findMany({
-    take: take,
-    skip: skip,
-    include: {
-      messages: {
-        include: {
-          author: true,
-          mentions: {
-            include: {
-              users: true,
-            },
-          },
-          reactions: true,
-          attachments: true,
-        },
-        orderBy: {
-          sentAt: MESSAGES_ORDER_BY,
-        },
-      },
-    },
-    where: {
-      channelId,
-    },
-    orderBy: {
-      externalThreadId: 'desc',
-    },
-  });
-  const threadsWithMessages = threads.filter(
-    (thread) => thread.messages.length > 0
-  );
-  if (account.anonymizeUsers) {
-    return threadsWithMessages.map(anonymizeMessages);
-  }
-  return threadsWithMessages;
-};
-
 export const findThreadById = async (threadId: number) => {
   const MESSAGES_ORDER_BY = 'asc';
   return await prisma.threads
