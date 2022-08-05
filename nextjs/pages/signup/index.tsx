@@ -1,37 +1,13 @@
+import React, { useState } from 'react';
 import Layout from 'components/layout/CardLayout';
 import EmailField from 'components/EmailField';
 import PasswordField from 'components/PasswordField';
 import Button from 'components/Button';
 import Link from 'components/Link';
-import { useRouter } from 'next/router';
 import { toast } from 'components/Toast';
-import { getCsrfToken } from 'next-auth/react';
-
-async function signIn({
-  email,
-  password,
-}: {
-  email: string;
-  password: string;
-}) {
-  const csrfToken = await getCsrfToken();
-  return await fetch('/api/auth/callback/credentials?callbackUrl=/settings', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    body: new URLSearchParams({
-      email,
-      password,
-      csrfToken: csrfToken as string,
-    }),
-    redirect: 'follow',
-  });
-}
 
 export default function SignUp() {
-  const router = useRouter();
-
+  const [loading, setLoading] = useState(false);
   const onSubmit = async (event: any) => {
     event.preventDefault();
     const form = event.target;
@@ -45,19 +21,16 @@ export default function SignUp() {
     }
 
     try {
-      const signUpResponse = await fetch('/api/auth', {
+      setLoading(true);
+      const response = await fetch('/api/auth', {
         method: 'POST',
         body: JSON.stringify({ email, password }),
       });
-      if (signUpResponse.ok) {
-        const signInResponse = await signIn({ email, password });
-        if (signInResponse.redirected) {
-          window.location.href = signInResponse.url;
-        }
-      } else {
-        throw 'error';
-      }
+      const json = await response.json();
+      setLoading(false);
+      return toast.success(json.message);
     } catch (error) {
+      setLoading(false);
       return toast.error('Something went wrong. Please try again.');
     }
   };
@@ -67,7 +40,7 @@ export default function SignUp() {
       <form onSubmit={onSubmit}>
         <EmailField label="Email" id="email" required />
         <PasswordField label="Password" id="password" required />
-        <Button type="submit" block>
+        <Button type="submit" block disabled={loading}>
           Submit
         </Button>
       </form>

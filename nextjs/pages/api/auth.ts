@@ -26,9 +26,11 @@ async function create(request: NextApiRequest, response: NextApiResponse) {
   }
   const auth = await prisma.auths.findFirst({ where: { email } });
   if (auth) {
-    return response
-      .status(200)
-      .json({ message: 'Account exists, please sign in!' });
+    return response.status(200).json({
+      message: auth.verified
+        ? 'Account exists, please sign in!'
+        : 'Account exists, please verify your email!',
+    });
   }
   const verificationToken = generateToken();
   await createAuth({
@@ -41,20 +43,22 @@ async function create(request: NextApiRequest, response: NextApiResponse) {
     request.headers.origin ||
     'http://localhost:3000';
 
+  try {
+    await sendNotification('Email created: ' + email);
+  } catch (e) {
+    console.log('failed to send: ', e);
+  }
+
   await ApplicationMailer.send({
     to: email,
     subject: 'Linen - Verify your email',
     html: `Verify your account <a href="${HOST}/signin?verification-token=${verificationToken}">here</a>.`,
     text: `Verify your account here: ${HOST}/signin?verification-token=${verificationToken}`,
   });
-  try {
-    await sendNotification('Email created: ' + email);
-  } catch (e) {
-    console.log('failed to send: ', e);
-  }
-  return response
-    .status(200)
-    .json({ message: 'Account created, please sign in!' });
+
+  return response.status(200).json({
+    message: "We've sent you a verification email. Please check your inbox.",
+  });
 }
 
 async function update(req: NextApiRequest, res: NextApiResponse) {

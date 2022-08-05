@@ -29,7 +29,8 @@ describe('auth', () => {
       await handler(request, response);
       expect(response.status).toHaveBeenCalledWith(200);
       expect(response.json).toHaveBeenCalledWith({
-        message: 'Account created, please sign in!',
+        message:
+          "We've sent you a verification email. Please check your inbox.",
       });
     });
 
@@ -85,22 +86,49 @@ describe('auth', () => {
     });
 
     describe('when auth already exists', () => {
-      it('returns a 200', async () => {
-        const request = create('request', {
-          method: 'POST',
-          body: {
-            email: 'john@doe.com',
-            password: '123456',
-          },
-        }) as NextApiRequest;
-        const response = create('response') as NextApiResponse;
-        (prisma.auths.findFirst as jest.Mock).mockResolvedValue(null);
-        await handler(request, response);
-        (prisma.auths.findFirst as jest.Mock).mockResolvedValue({});
-        await handler(request, response);
-        expect(response.status).toHaveBeenCalledWith(200);
-        expect(response.json).toHaveBeenCalledWith({
-          message: 'Account exists, please sign in!',
+      describe('when the account is already verified', () => {
+        it('returns a sign in message', async () => {
+          const request = create('request', {
+            method: 'POST',
+            body: {
+              email: 'john@doe.com',
+              password: '123456',
+            },
+          }) as NextApiRequest;
+          const response = create('response') as NextApiResponse;
+          (prisma.auths.findFirst as jest.Mock).mockResolvedValue(null);
+          await handler(request, response);
+          (prisma.auths.findFirst as jest.Mock).mockResolvedValue({
+            verified: true,
+          });
+          await handler(request, response);
+          expect(response.status).toHaveBeenCalledWith(200);
+          expect(response.json).toHaveBeenCalledWith({
+            message: 'Account exists, please sign in!',
+          });
+        });
+      });
+
+      describe('when the account is not verified yet', () => {
+        it('returns a sign in message', async () => {
+          const request = create('request', {
+            method: 'POST',
+            body: {
+              email: 'john@doe.com',
+              password: '123456',
+            },
+          }) as NextApiRequest;
+          const response = create('response') as NextApiResponse;
+          (prisma.auths.findFirst as jest.Mock).mockResolvedValue(null);
+          await handler(request, response);
+          (prisma.auths.findFirst as jest.Mock).mockResolvedValue({
+            verified: false,
+          });
+          await handler(request, response);
+          expect(response.status).toHaveBeenCalledWith(200);
+          expect(response.json).toHaveBeenCalledWith({
+            message: 'Account exists, please verify your email!',
+          });
         });
       });
     });

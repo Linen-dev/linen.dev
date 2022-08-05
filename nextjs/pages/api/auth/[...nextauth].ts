@@ -28,8 +28,11 @@ export const authOptions = {
         if (!auth) {
           return null;
         }
+        if (!auth.verified) {
+          return null; // it would be great to show a better error for this flow
+        }
         if (auth.password === generateHash(password, auth.salt)) {
-          return auth;
+          return { id: auth.id, email: auth.email };
         }
 
         return null;
