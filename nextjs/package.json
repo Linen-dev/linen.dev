@@ -16,10 +16,12 @@
     "db:migrate": "npx prisma generate && npx prisma migrate dev",
     "db:migrate:test": "dotenv -e .env.test -- npx prisma migrate deploy",
     "db:seed": "ts-node --skip-project bin/seed.ts",
-    "script:crawl": "ts-node -P tsconfig.commonjs.json bin/crawler/index.ts",
-    "script:sync:discord": "ts-node -P tsconfig.commonjs.json bin/discord-sync/index.ts",
-    "script:sync:slack": "ts-node --skip-project bin/slack-sync/index.ts",
-    "script:maintenance": "ts-node -P tsconfig.commonjs.json bin/maintenance/index.ts"
+    "prescript:crawl": "esbuild bin/crawler/index.ts --bundle --minify --platform=node --target=node16 --outfile=bin/crawler/index.min.js",
+    "script:crawl": "node bin/crawler/index.min.js",
+    "prescript:sync:discord": "esbuild bin/discord-sync/index.ts --bundle --minify --platform=node --target=node16 --outfile=bin/discord-sync/index.min.js",
+    "script:sync:discord": "node bin/discord-sync/index.min.js",
+    "prescript:maintenance": "esbuild bin/maintenance/index.ts --bundle --minify --platform=node --target=node16 --outfile=bin/maintenance/index.min.js",
+    "script:maintenance": "node bin/maintenance/index.min.js"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.1.1",
@@ -79,6 +81,7 @@
     "@testing-library/user-event": "^14.2.1",
     "aws-cdk-lib": "^2.31.1",
     "dotenv-cli": "^5.1.0",
+    "esbuild": "^0.14.49",
     "eslint": "8.19.0",
     "eslint-config-next": "^12.2.2",
     "husky": "^7.0.4",
