@@ -64,6 +64,7 @@ export const seed = async () => {
       password: generateHash('password1!', 'salt'),
       salt: 'salt',
       accountId: account.id,
+      verified: true,
     },
   });
   await prisma.auths.create({
@@ -72,6 +73,7 @@ export const seed = async () => {
       password: generateHash('password1!', 'salt'),
       salt: 'salt',
       accountId: account.id,
+      verified: true,
     },
   });
   await prisma.auths.create({
@@ -80,6 +82,7 @@ export const seed = async () => {
       password: generateHash('password1!', 'salt'),
       salt: 'salt',
       accountId: account.id,
+      verified: true,
     },
   });
   await prisma.auths.create({
@@ -88,6 +91,7 @@ export const seed = async () => {
       password: generateHash('password1!', 'salt'),
       salt: 'salt',
       accountId: account.id,
+      verified: true,
     },
   });
 
