@@ -125,8 +125,8 @@ export default function Branding({ account, records }: Props) {
         <PremiumCard isPremium={account?.premium}>
           <Label htmlFor="dnsRecords">DNS</Label>
           <Description>
-            Subdomain routing setup can be achieved by veryfing the ownership of
-            a domain. Copy the TXT and/or CNAME records from below and paste
+            Subdomain routing setup can be achieved by verifying the ownership
+            of a domain. Copy the TXT and/or CNAME records from below and paste
             them into your DNS settings.
           </Description>
           <Table>

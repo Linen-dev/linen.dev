@@ -4,6 +4,7 @@ import serializeAccount, { SerializedAccount } from 'serializers/account';
 import { NextPageContext } from 'next';
 import { getSession } from 'next-auth/react';
 import Vercel, { DNSRecord } from 'services/vercel';
+import featureFlags from '@/utilities/featureFlags';
 
 interface Props {
   account: SerializedAccount;
@@ -38,7 +39,13 @@ export async function getServerSideProps(context: NextPageContext) {
   }
 
   let response;
-  if (account && account.premium && account.redirectDomain) {
+
+  if (
+    featureFlags.isVercelDomainEnabled &&
+    account &&
+    account.premium &&
+    account.redirectDomain
+  ) {
     response = await Vercel.findOrCreateDomainWithDnsRecords(
       account.redirectDomain
     );
