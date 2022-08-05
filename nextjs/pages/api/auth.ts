@@ -5,6 +5,7 @@ import { createAuth } from '../../lib/auth';
 import { unstable_getServerSession as getServerSession } from 'next-auth';
 import { authOptions } from './auth/[...nextauth]';
 import { generateToken } from '../../utilities/token';
+import ApplicationMailer from 'mailers/ApplicationMailer';
 
 async function create(request: NextApiRequest, response: NextApiResponse) {
   const { email, password } = JSON.parse(request.body);
@@ -29,10 +30,22 @@ async function create(request: NextApiRequest, response: NextApiResponse) {
       .status(200)
       .json({ message: 'Account exists, please sign in!' });
   }
+  const verificationToken = generateToken();
   await createAuth({
     password,
     email,
-    verificationToken: generateToken(),
+    verificationToken,
+  });
+  const HOST =
+    process.env.NEXTAUTH_URL ||
+    request.headers.origin ||
+    'http://localhost:3000';
+
+  await ApplicationMailer.send({
+    to: email,
+    subject: 'Linen - Verify your email',
+    html: `<a href="${HOST}/verify?token=${verificationToken}">Verify your account</a>`,
+    text: `Verify your account here: ${HOST}/verify?token=${verificationToken}`,
   });
   try {
     await sendNotification('Email created: ' + email);

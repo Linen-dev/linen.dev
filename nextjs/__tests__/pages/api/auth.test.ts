@@ -65,7 +65,7 @@ describe('auth', () => {
       });
     });
 
-    it.skip('sends a verification email', async () => {
+    it('sends a verification email', async () => {
       const request = create('request', {
         method: 'POST',
         body: {
@@ -79,7 +79,7 @@ describe('auth', () => {
       expect(ApplicationMailer.send).toHaveBeenCalledWith(
         expect.objectContaining({
           to: 'john@doe.com',
-          subject: 'Linen.dev - Verification email',
+          subject: 'Linen - Verify your email',
         })
       );
     });
