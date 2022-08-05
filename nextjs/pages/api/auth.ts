@@ -44,8 +44,8 @@ async function create(request: NextApiRequest, response: NextApiResponse) {
   await ApplicationMailer.send({
     to: email,
     subject: 'Linen - Verify your email',
-    html: `<a href="${HOST}/verify?token=${verificationToken}">Verify your account</a>`,
-    text: `Verify your account here: ${HOST}/verify?token=${verificationToken}`,
+    html: `Verify your account <a href="${HOST}/signin?verification-token=${verificationToken}">here</a>.`,
+    text: `Verify your account here: ${HOST}/signin?verification-token=${verificationToken}`,
   });
   try {
     await sendNotification('Email created: ' + email);

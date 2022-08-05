@@ -19,7 +19,7 @@ export default function SignIn({ csrfToken, error, verified }: Props) {
   return (
     <Layout header="Sign In">
       {verified && (
-        <Alert type="info">Your account has been verified correctly.</Alert>
+        <Alert type="info">Verification complete! Please sign in.</Alert>
       )}
       <Error error={error} />
       <form
@@ -48,7 +48,7 @@ export default function SignIn({ csrfToken, error, verified }: Props) {
 }
 
 export async function getServerSideProps(context: NextPageContext) {
-  const verified = await verifyAuthByToken(context.query.verificationToken);
+  const verified = await verifyAuthByToken(context.query['verification-token']);
 
   return {
     props: {

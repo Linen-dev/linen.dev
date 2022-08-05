@@ -10,7 +10,7 @@ describe('Signin', () => {
   it('renders an alert for a verified account', () => {
     const { container } = render(<Signin csrfToken="1234" verified />);
     expect(container).toHaveTextContent(
-      'Your account has been verified correctly.'
+      'Verification complete! Please sign in.'
     );
   });
 
