@@ -7,5 +7,6 @@ phases:
   build:
     commands:      
       - echo Build started on `date`
+      - echo $BRANCH
       - cd cdk && npm install && npm run build && npm run cdk -- deploy --require-approval never
       - echo Build completed on `date`
