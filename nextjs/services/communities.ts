@@ -8,11 +8,19 @@ import { memoize } from '../utilities/dynamoCache';
 import { findThreadsByCursor } from '../lib/threads';
 import serializeThread from '../serializers/thread';
 import { AccountWithSlackAuthAndChannels } from 'types/partialTypes';
-import type { channels } from '@prisma/client';
+import type { channels, accounts } from '@prisma/client';
 import { decodeCursor, encodeCursor } from '../utilities/cursor';
 import { shouldThisChannelBeAnonymous } from '../lib/channel';
 
 const CURSOR_LIMIT = 10;
+
+function buildInviteUrl(account: accounts) {
+  if (account.discordServerId) {
+    return `https://discord.com/channels/${account.discordServerId}`;
+  } else {
+    return account.communityInviteUrl || '';
+  }
+}
 
 export async function channelGetStaticProps(
   context: GetStaticPropsContext,
@@ -50,6 +58,7 @@ export async function channelGetStaticProps(
       threads: threads.map(serializeThread),
       settings: buildSettings(account),
       isSubDomainRouting: isSubdomainbasedRouting,
+      communityInviteUrl: buildInviteUrl(account),
     },
     revalidate: revalidateInSeconds, // In seconds
   };
