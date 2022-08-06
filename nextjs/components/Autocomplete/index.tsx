@@ -2,6 +2,7 @@ import { useEffect, useRef, useCallback, useState } from 'react';
 import debounce from 'awesome-debounce-promise';
 import TextInput from 'components/TextInput';
 import { AiOutlineSearch, AiOutlineLoading } from 'react-icons/ai';
+import styles from './index.module.css';
 
 export default function Autocomplete({
   fetch,
@@ -196,7 +197,7 @@ export default function Autocomplete({
         inputRef={inputRef}
         icon={
           isSearching ? (
-            <AiOutlineLoading className="fa-spin" />
+            <AiOutlineLoading className={styles.spin} />
           ) : (
             <AiOutlineSearch />
           )
