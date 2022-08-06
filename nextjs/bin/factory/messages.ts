@@ -8,7 +8,7 @@ Quick note, I saw that there's a spelling error in the license dashboard UI:
 Should be *annually*.
 `,
   `
-<https://github.com/fleetdm/fleet/pull/5102> - that should take care of that. Thanks for reporting it
+<https://github.com/> - that should take care of that. Thanks for reporting it
 `,
   `
 Thank you both!
@@ -18,6 +18,10 @@ Check this out! <https://www.youtube.com/embed/Xsew54QshN8>
 `,
   `
 Having the *right amount of characters* on each line is key to the readability of your text.
+`,
+  `
+Please check your logs.
+LoremIpsumDolorSitAmetLoremIpsumDolorSitAmetLoremIpsumDolorSitAmetLoremIpsumDolorSitAmetLoremIpsumDolorSitAmetLoremIpsumDolorSitAmetLoremIpsumDolorSitAmetLoremIpsumDolorSitAmetLoremIpsumDolorSitAmetLoremIpsumDolorSitAmet
 `,
 ].map((message) => message.trim());
 

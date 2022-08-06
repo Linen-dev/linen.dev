@@ -259,4 +259,5 @@ export const UNSUPPORTED_EMOJIS = [
   'mps-transient',
   'tnx',
   'sunglasses_lakefs',
+  'plus-one',
 ];
