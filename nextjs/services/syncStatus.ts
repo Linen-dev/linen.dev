@@ -10,23 +10,30 @@ export enum SyncStatus {
 
 export async function updateAndNotifySyncStatus(
   accountId: string,
-  status: SyncStatus
+  status: SyncStatus,
+  accountName?: string | null,
+  homeUrl?: string | null
 ) {
   await updateAccountSyncStatus(accountId, status);
 
   if (skipNotification()) return;
 
-  await slackNotification(status, accountId);
-  await emailNotification(status, accountId);
+  await slackNotification(status, accountId, accountName || '', homeUrl || '');
+  await emailNotification(status, accountId, accountName || '', homeUrl || '');
 }
 
-async function emailNotification(status: SyncStatus, accountId: string) {
+async function emailNotification(
+  status: SyncStatus,
+  accountId: string,
+  accountName: string,
+  homeUrl: string
+) {
   try {
     await ApplicationMailer.send({
       to: (process.env.SUPPORT_EMAIL || 'help@linen.dev') as string,
       subject: `Linen.dev - Sync progress is ${status} for account: ${accountId}`,
-      text: `Syncing process is ${status} for account: ${accountId}`,
-      html: `Syncing process is ${status} for account: ${accountId}`,
+      text: `Syncing process is ${status} for account:  ${accountId}, ${accountName}, ${homeUrl}`,
+      html: `Syncing process is ${status} for account:  ${accountId}, ${accountName}, ${homeUrl}`,
     }).catch((err) => {
       console.log('Failed to send Email notification', err);
     });
@@ -35,10 +42,15 @@ async function emailNotification(status: SyncStatus, accountId: string) {
   }
 }
 
-async function slackNotification(status: SyncStatus, accountId: string) {
+async function slackNotification(
+  status: SyncStatus,
+  accountId: string,
+  accountName: string,
+  homeUrl: string
+) {
   try {
     await sendNotification(
-      `Syncing process is ${status} for account: ${accountId}.`
+      `Syncing process is ${status} for account: ${accountId}, ${accountName}, ${homeUrl}.`
     );
   } catch (e) {
     console.error('Failed to send Slack notification: ', e);

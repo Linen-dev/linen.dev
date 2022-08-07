@@ -324,7 +324,12 @@ const groupMessageByType = (
     throw 'fail on create account';
   }
   // notify start
-  await updateAndNotifySyncStatus(account.id, SyncStatus.IN_PROGRESS);
+  await updateAndNotifySyncStatus(
+    account.id,
+    SyncStatus.IN_PROGRESS,
+    account.name,
+    account.homeUrl
+  );
   try {
     console.time('run');
     // upsert users and retrieve all as object
@@ -346,8 +351,18 @@ const groupMessageByType = (
     console.log(stats);
     console.timeEnd('run');
   } catch (error) {
-    await updateAndNotifySyncStatus(account.id, SyncStatus.ERROR);
+    await updateAndNotifySyncStatus(
+      account.id,
+      SyncStatus.ERROR,
+      account.name,
+      account.homeUrl
+    );
     throw error;
   }
-  await updateAndNotifySyncStatus(account.id, SyncStatus.DONE);
+  await updateAndNotifySyncStatus(
+    account.id,
+    SyncStatus.DONE,
+    account.name,
+    account.homeUrl
+  );
 })();
