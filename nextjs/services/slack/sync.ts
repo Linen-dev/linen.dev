@@ -30,7 +30,12 @@ export async function slackSync({
     throw { status: 404, error: 'Account not found' };
   }
 
-  await updateAndNotifySyncStatus(accountId, SyncStatus.IN_PROGRESS);
+  await updateAndNotifySyncStatus(
+    accountId,
+    SyncStatus.IN_PROGRESS,
+    account.name,
+    account.homeUrl
+  );
 
   try {
     //TODO test multiple slack authorization or reauthorization
@@ -62,7 +67,12 @@ export async function slackSync({
     await saveAllThreads({ channels, token, usersInDb });
     await hideEmptyChannels(accountId);
 
-    await updateAndNotifySyncStatus(accountId, SyncStatus.DONE);
+    await updateAndNotifySyncStatus(
+      accountId,
+      SyncStatus.DONE,
+      account.name,
+      account.homeUrl
+    );
 
     return {
       status: 200,
@@ -71,7 +81,12 @@ export async function slackSync({
   } catch (err) {
     console.error(err);
 
-    await updateAndNotifySyncStatus(accountId, SyncStatus.ERROR);
+    await updateAndNotifySyncStatus(
+      accountId,
+      SyncStatus.ERROR,
+      account.name,
+      account.homeUrl
+    );
 
     throw {
       status: 500,
