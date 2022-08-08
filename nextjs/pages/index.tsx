@@ -156,15 +156,15 @@ const Home = (props: { accounts: Props[] }) => {
               ? 'https://linen.dev/d/' + a.discordDomain
               : 'https://linen.dev/s/' + a.slackDomain;
 
-            //TODO:remove this once supabase sets up domain to discord.supabase.com
+            // TODO:remove this once supabase sets up domain to discord.supabase.com
             if (url.includes('supabase')) {
               url = 'https://839993398554656828.linen.dev/';
             }
             return (
               <CommunityCard
                 url={url}
-                communityName="bleh"
-                description="bleh"
+                communityName={a.name}
+                description="Community"
                 logoUrl={a.logoUrl}
                 brandColor={a.brandColor}
                 key={a.name + index}
@@ -303,13 +303,15 @@ export async function getStaticProps() {
     },
   });
 
-  const goodLookingLogos = accounts
-    .filter((a) => a.logoUrl?.includes('.svg'))
-    // since we use 3 columns we want it to only show numbers divisible by 3
-    .slice(0, accounts.length - (accounts.length % 3));
+  const goodLookingLogos = accounts.filter((a) => a.logoUrl?.includes('.svg'));
+  // since we use 3 columns we want it to only show numbers divisible by 3
+  const remainders = goodLookingLogos.slice(
+    0,
+    goodLookingLogos.length - (goodLookingLogos.length % 3)
+  );
 
   return {
-    props: { accounts: goodLookingLogos },
+    props: { accounts: remainders },
   };
 }
 
