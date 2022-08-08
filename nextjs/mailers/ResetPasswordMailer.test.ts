@@ -11,11 +11,13 @@ describe('ResetPasswordMailer', () => {
       token: '12345',
     };
     await ResetPasswordMailer.send(options);
-    expect(ApplicationMailer.send).toHaveBeenCalledWith({
-      to: options.to,
-      subject: 'Linen.dev - Reset your password',
-      text: `Reset your password here: ${options.host}/reset-password?token=${options.token}`,
-      html: `Reset your password here: <a href='${options.host}/reset-password?token=${options.token}'>${options.host}/reset-password?token=${options.token}</a>`,
-    });
+    const { mock } = ApplicationMailer.send as jest.Mock;
+    expect(mock.calls).toHaveLength(1);
+    const args = mock.calls[0][0];
+    expect(args.to).toBe('john@doe.com');
+    expect(args.subject).toEqual('Linen.dev - Reset your password');
+    expect(args.html).toContain(
+      "<a href='http://localhost:3000/reset-password?token=12345'>"
+    );
   });
 });
