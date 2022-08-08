@@ -6,6 +6,7 @@ import { unstable_getServerSession as getServerSession } from 'next-auth';
 import { authOptions } from './auth/[...nextauth]';
 import { generateToken } from '../../utilities/token';
 import ApplicationMailer from 'mailers/ApplicationMailer';
+import { getCurrentUrl } from '../../utilities/domain';
 
 async function create(request: NextApiRequest, response: NextApiResponse) {
   const { email, password } = JSON.parse(request.body);
@@ -38,10 +39,7 @@ async function create(request: NextApiRequest, response: NextApiResponse) {
     email,
     verificationToken,
   });
-  const HOST =
-    process.env.NEXTAUTH_URL ||
-    request.headers.origin ||
-    'http://localhost:3000';
+  const HOST = getCurrentUrl(request);
 
   try {
     await sendNotification('Email created: ' + email);
