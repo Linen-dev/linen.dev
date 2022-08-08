@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
-import ApplicationMailer from '../../../mailers/ApplicationMailer';
+import ResetPasswordMailer from '../../../mailers/ResetPasswordMailer';
 import { generateToken } from '../../../utilities/token';
 import prisma from '../../../client';
 import { getCurrentUrl } from '../../../utilities/domain';
@@ -19,13 +19,10 @@ async function create(request: NextApiRequest, response: NextApiResponse) {
       },
     });
 
-    const HOST = getCurrentUrl(request);
-
-    await ApplicationMailer.send({
+    await ResetPasswordMailer.send({
       to: email,
-      subject: 'Linen.dev - Reset your password',
-      text: `Reset your password here: ${HOST}/reset-password?token=${token}`,
-      html: `Reset your password here: <a href='${HOST}/reset-password?token=${token}'>${HOST}/reset-password?token=${token}</a>`,
+      host: getCurrentUrl(request),
+      token,
     });
   } catch (exception) {
     return response.status(200).json({});
