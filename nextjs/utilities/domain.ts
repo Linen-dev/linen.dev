@@ -1,12 +1,6 @@
-export function getDomain(hostname: string): string {
-  return hostname.split('.').slice(-1)[0];
-}
+import { NextApiRequest } from 'next';
 
-export function getSubdomain(hostname: string): string | null {
-  return hostname.includes('.') ? hostname.split('.')[0] : null;
-}
-
-const linenHostname = [
+const LINEN_HOSTNAMES = [
   'localhost',
   'localhost:3000',
   'linen.dev',
@@ -16,15 +10,15 @@ const linenHostname = [
 
 export function isLinenDomain(host?: string) {
   if (!host) return true;
-  return !!linenHostname.find(
+  return !!LINEN_HOSTNAMES.find(
     (linenHost) => linenHost === host || host.endsWith(linenHost)
   );
 }
 
-export function cleanUpDomain(url: string) {
-  try {
-    return new URL(url).host;
-  } catch (error) {
-    return url;
-  }
+export function getCurrentUrl(request?: NextApiRequest) {
+  return (
+    process.env.NEXTAUTH_URL ||
+    request?.headers?.origin ||
+    'http://localhost:3000'
+  );
 }
