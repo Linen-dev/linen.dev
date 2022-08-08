@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next/types';
 import ApplicationMailer from '../../../mailers/ApplicationMailer';
 import { generateToken } from '../../../utilities/token';
 import prisma from '../../../client';
+import { getCurrentUrl } from '../../../utilities/domain';
 
 async function create(request: NextApiRequest, response: NextApiResponse) {
   const { email } = JSON.parse(request.body);
@@ -18,10 +19,7 @@ async function create(request: NextApiRequest, response: NextApiResponse) {
       },
     });
 
-    const HOST =
-      process.env.NEXTAUTH_URL ||
-      request.headers.origin ||
-      'http://localhost:3000';
+    const HOST = getCurrentUrl(request);
 
     await ApplicationMailer.send({
       to: email,
