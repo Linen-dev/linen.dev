@@ -123,11 +123,9 @@ model auths {
 
   account   accounts? @relation(fields: [accountId], references: [id])
   accountId String?
-  user      users?    @relation(fields: [usersId], references: [id])
-  usersId   String
+  users     users[]
 
   @@unique([email])
-  @@unique([usersId])
 }
 
 model memberships {
@@ -156,11 +154,12 @@ model users {
   account    accounts @relation(fields: [accountsId], references: [id])
   accountsId String
 
-  auth        auths?
-  authsId     String
+  auth        auths?        @relation(fields: [authsId], references: [id])
+  authsId     String?
   memberships memberships[]
 
   @@unique([externalUserId, accountsId])
+  @@index([authsId])
 }
 
 model mentions {
