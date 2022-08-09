@@ -1,4 +1,6 @@
-import type { accounts, Prisma } from '@prisma/client';
+import type { Prisma } from '@prisma/client';
+import { FindThreadsByCursorType } from 'types/cursor';
+import { ThreadsWithMessagesFull } from 'types/partialTypes';
 import prisma from '../client';
 import { anonymizeMessages } from '../utilities/anonymizeMessages';
 
@@ -148,20 +150,17 @@ export async function findThreadsByCursor({
   sentAt = '0',
   sort = 'desc',
   limit = 10,
+  direction = 'lt',
   anonymizeUsers = false,
 }: {
   channelId: string;
-  sentAt?: string;
-  sort?: 'desc' | 'asc';
   limit?: number;
   anonymizeUsers?: boolean;
-}) {
-  const whereSentAt = whereBuilder(sort, sentAt);
-
+} & FindThreadsByCursorType): Promise<ThreadsWithMessagesFull[]> {
   const threads = await prisma.threads.findMany({
     take: limit,
     where: {
-      sentAt: whereSentAt,
+      sentAt: { [direction]: BigInt(sentAt) },
       channelId,
     },
     include: {
@@ -176,27 +175,12 @@ export async function findThreadsByCursor({
           reactions: true,
           attachments: true,
         },
-        orderBy: { sentAt: sort },
+        orderBy: { sentAt: 'desc' },
       },
     },
     orderBy: { sentAt: sort },
   });
-  return anonymizeUsers ? threads.map(anonymizeMessages) : threads;
-}
-
-function whereBuilder(sort: 'desc' | 'asc', sentAt: string) {
-  // users
-  if (sort === 'desc' && sentAt === '0') {
-    return { gt: BigInt(sentAt) };
-  }
-  if (sort === 'desc' && sentAt !== '0') {
-    return { lt: BigInt(sentAt) };
-  }
-  // crawlers
-  if (sort === 'asc' && sentAt === '0') {
-    return { gt: BigInt(sentAt) };
-  }
-  if (sort === 'asc' && sentAt !== '0') {
-    return { gt: BigInt(sentAt) };
-  }
+  return (
+    anonymizeUsers ? threads.map(anonymizeMessages) : threads
+  ) as ThreadsWithMessagesFull[];
 }
