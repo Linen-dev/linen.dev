@@ -99,7 +99,6 @@ model accounts {
   anonymizeUsers         Boolean          @default(false)
   messagesViewType       MessagesViewType @default(THREADS)
 
-  auths                 auths[]
   users                 users[]
   slackAuthorizations   slackAuthorizations[]
   discordAuthorizations discordAuthorizations[]
@@ -121,8 +120,6 @@ model auths {
   salt      String
   token     String?
 
-  account   accounts? @relation(fields: [accountId], references: [id])
-  accountId String?
   users     users[]
 
   @@unique([email])
