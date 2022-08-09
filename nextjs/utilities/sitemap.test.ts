@@ -47,7 +47,22 @@ describe('sitemaps', () => {
     expect(channelsFindFirstMock).toHaveBeenNthCalledWith(1, {
       where: {
         channelName,
-        account: { redirectDomain: host },
+        account: {
+          OR: [
+            {
+              discordDomain: host,
+            },
+            {
+              discordServerId: host,
+            },
+            {
+              slackDomain: host,
+            },
+            {
+              redirectDomain: host,
+            },
+          ],
+        },
         hidden: false,
       },
     });
@@ -88,24 +103,12 @@ describe('sitemaps', () => {
     });
 
     expect(result).toBeDefined();
-    console.log('result', result);
+    expect(result).toHaveLength(5);
 
-    expect(
-      /https:\/\/customer.custom.domain\/c\/general\/YXNjOmd0OjA=/.exec(result)
-    ).toHaveLength(1);
-    expect(
-      /https:\/\/customer.custom.domain\/c\/general\/YXNjOmd0OjEyNA==/.exec(
-        result
-      )
-    ).toHaveLength(1);
-    expect(
-      /https:\/\/customer.custom.domain\/t\/1\/slug1/.exec(result)
-    ).toHaveLength(1);
-    expect(
-      /https:\/\/customer.custom.domain\/t\/2\/slug2/.exec(result)
-    ).toHaveLength(1);
-    expect(
-      /https:\/\/customer.custom.domain\/t\/3\/slug3/.exec(result)
-    ).toHaveLength(1);
+    expect(result[0]).toBe(`c/${channelMock.channelName}/YXNjOmd0OjA=`);
+    expect(result[1]).toBe(`t/${threadMock.incrementId}/${threadMock.slug}`);
+    expect(result[2]).toBe(`t/${thread2Mock.incrementId}/${thread2Mock.slug}`);
+    expect(result[3]).toBe(`c/${channelMock.channelName}/YXNjOmd0OjEyNA==`);
+    expect(result[4]).toBe(`t/${thread3Mock.incrementId}/${thread3Mock.slug}`);
   });
 });
