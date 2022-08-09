@@ -3,7 +3,7 @@ export const fetcher = (url: string) => fetch(url).then((r) => r.json());
 export const qsBuilder = (params?: any) =>
   !!params &&
   Object.keys(params)
-    .map((key: any) => `${key}=${params[key]}`)
+    .map((key: any) => `${key}=${encodeURIComponent(params[key])}`)
     .join('&');
 
 export async function postData(url = '', data = {}) {
@@ -22,4 +22,9 @@ export async function postData(url = '', data = {}) {
     body: JSON.stringify(data), // body data type must match "Content-Type" header
   });
   return response.json(); // parses JSON response into native JavaScript objects
+}
+
+export async function getData(url = '', data = {}) {
+  const response = await fetch(url + '?' + qsBuilder(data));
+  return response.json();
 }

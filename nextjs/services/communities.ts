@@ -7,7 +7,10 @@ import { buildSettings } from './accountSettings';
 import { memoize } from '../utilities/dynamoCache';
 import { findThreadsByCursor } from '../lib/threads';
 import serializeThread from '../serializers/thread';
-import { AccountWithSlackAuthAndChannels } from 'types/partialTypes';
+import {
+  AccountWithSlackAuthAndChannels,
+  ThreadsWithMessagesFull,
+} from 'types/partialTypes';
 import type { channels, accounts } from '@prisma/client';
 import { decodeCursor, encodeCursor } from '../utilities/cursor';
 import { shouldThisChannelBeAnonymous } from '../lib/channel';
@@ -39,19 +42,29 @@ export async function channelGetStaticProps(
   const channel = findChannelOrDefault(account.channels, channelName);
   if (!channel) return NotFound();
 
-  const threads = await findThreadsByCursorMemo({
-    channelId: channel.id,
-    sentAt: cursor && decodeCursor(cursor),
-    anonymizeUsers: account.anonymizeUsers,
-  });
+  const { sort, direction, sentAt } = decodeCursor(cursor);
+
+  const threads = (
+    await findThreadsByCursorMemo({
+      channelId: channel.id,
+      sentAt,
+      sort,
+      direction,
+      anonymizeUsers: account.anonymizeUsers,
+    })
+  ).sort(sortBySentAtAsc);
+
+  // if cursor exists, it probably means that is a crawler
+  // so we won't create a new cursor, it already exists in the sitemap
   const nextCursor =
-    threads.length === CURSOR_LIMIT &&
-    threads[CURSOR_LIMIT - 1].sentAt.toString();
+    !cursor && threads.length === CURSOR_LIMIT
+      ? encodeCursor(`${sort}:lt:${threads[0].sentAt.toString()}`)
+      : null;
 
   return {
     props: {
       communityName,
-      ...(nextCursor && { nextCursor: encodeCursor(nextCursor) }),
+      nextCursor,
       currentChannel: channel,
       channelName: channel.channelName,
       channels: account.channels,
@@ -109,18 +122,28 @@ function findChannelOrDefault(channels: channels[], channelName: string) {
 }
 
 export async function channelNextPage(channelId: string, cursor: string) {
+  // since we only support infinity scroll up,
+  // we will hard code sort (desc) and direction (lt)
+  const { sort, direction, sentAt } = decodeCursor(cursor);
   const anonymizeUsers = await shouldThisChannelBeAnonymousMemo(channelId);
-  const threads = await findThreadsByCursorMemo({
-    channelId,
-    sentAt: cursor,
-    anonymizeUsers,
-  });
+  const threads = (
+    await findThreadsByCursorMemo({
+      channelId,
+      sentAt,
+      sort: 'desc',
+      direction: 'lt',
+      anonymizeUsers,
+    })
+  ).sort(sortBySentAtAsc);
+
   const nextCursor =
-    threads.length === CURSOR_LIMIT &&
-    threads[CURSOR_LIMIT - 1].sentAt.toString();
+    threads.length === CURSOR_LIMIT
+      ? encodeCursor(`desc:lt:${threads[0].sentAt.toString()}`)
+      : null;
+
   return {
     threads: threads.map(serializeThread),
-    ...(nextCursor && { nextCursor: encodeCursor(nextCursor) }),
+    nextCursor,
   };
 }
 
@@ -135,4 +158,11 @@ function parsePageParam(page: string) {
   } else {
     return page;
   }
+}
+
+function sortBySentAtAsc(
+  a: ThreadsWithMessagesFull,
+  b: ThreadsWithMessagesFull
+) {
+  return Number(a.sentAt) - Number(b.sentAt);
 }

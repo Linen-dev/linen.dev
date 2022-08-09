@@ -10,7 +10,7 @@ import { capitalize } from '../../../lib/util';
 import { getThreadUrl } from './utilities/url';
 import { Props } from '.';
 import { SerializedThread } from '../../../serializers/thread';
-import { postData } from '../../../utilities/fetcher';
+import { getData } from '../../../utilities/fetcher';
 import useInfiniteScroll from 'react-infinite-scroll-hook';
 import CopyToClipboardIcon from './CopyToClipboardIcon';
 import Spinner from 'components/Spinner';
@@ -88,14 +88,14 @@ export default function Channel({
     try {
       setIsLoading(true);
       if (cursor) {
-        const data = await postData('/api/threads', {
+        const data = await getData('/api/threads', {
           channelId: currentChannel.id,
           cursor,
         });
         setCursor(data.nextCursor || null);
         setCurrentThreads([
-          ...(currentThreads ? currentThreads : []),
           ...data.threads,
+          ...(currentThreads ? currentThreads : []),
         ]);
       }
     } catch (error) {
@@ -110,7 +110,7 @@ export default function Channel({
     isSubDomainRouting,
     communityName,
     communityType: settings.communityType,
-  })?.reverse();
+  });
 
   function buildTitle(
     communityName: string,

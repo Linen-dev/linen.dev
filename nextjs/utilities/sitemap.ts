@@ -1,6 +1,8 @@
+import type { channels } from '@prisma/client';
 import { SitemapStream, SitemapIndexStream, streamToPromise } from 'sitemap';
 import { Readable } from 'stream';
 import prisma from '../client';
+import { encodeCursor } from './cursor';
 
 const resolveProtocol = (host: string) => {
   return ['localhost'].includes(host) ? 'http' : 'https';
@@ -168,12 +170,76 @@ export async function createXMLSitemapForChannel(
       account: { redirectDomain: host },
       hidden: false,
     },
-    select: {
-      id: true,
-    },
   });
   if (!channel) {
     return Promise.reject();
   }
-  return await buildSitemap(channel, host, '', 'byChannelId');
+
+  let chunks: string[] = [];
+  let next: bigint | undefined;
+  for (;;) {
+    const { err, nextCursor, chunk } = await queryThreads(
+      channel,
+      channelName,
+      next
+    );
+
+    if (err) break;
+
+    chunk?.length && chunks.push(...chunk);
+
+    next = nextCursor;
+    if (!next) break;
+  }
+
+  const stream = new SitemapStream({
+    hostname: `${resolveProtocol(host)}://${host}`,
+  });
+  if (chunks.length) {
+    return streamToPromise(Readable.from(chunks).pipe(stream)).then((data) =>
+      data.toString()
+    );
+  }
+  return;
+}
+
+async function queryThreads(
+  channel: channels,
+  channelName: string,
+  next: bigint = BigInt(0)
+) {
+  let err: any,
+    nextCursor: bigint | undefined,
+    chunk: string[] = [];
+  try {
+    const threads = await prisma.threads.findMany({
+      where: { channelId: channel.id, sentAt: { gt: next } },
+      orderBy: { sentAt: 'asc' },
+      select: {
+        incrementId: true,
+        slug: true,
+        messageCount: true,
+        sentAt: true,
+      },
+      take: 10,
+    });
+
+    if (!threads?.length) return {};
+
+    chunk.push(`c/${channelName}/${encodeCursor(`asc:gt:${next}`)}`);
+    for (const thread of threads) {
+      if (thread.messageCount > 1) {
+        chunk.push(
+          `t/${thread.incrementId}/${thread.slug?.toLowerCase() || 'topic'}`
+        );
+      }
+    }
+
+    nextCursor = threads.pop()?.sentAt;
+    // console.log('nextCursor', nextCursor);
+  } catch (error) {
+    console.error(error);
+    err = error;
+  }
+  return { err, nextCursor, chunk };
 }
