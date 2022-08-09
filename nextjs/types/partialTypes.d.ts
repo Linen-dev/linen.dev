@@ -14,6 +14,27 @@ export type ThreadsWithMessages = Prisma.threadsGetPayload<
   typeof threadsWithMessages
 >;
 
+const threadsWithMessagesFull = Prisma.validator<Prisma.threadsArgs>()({
+  include: {
+    messages: {
+      include: {
+        author: true,
+        mentions: {
+          include: {
+            users: true,
+          },
+        },
+        reactions: true,
+        attachments: true,
+      },
+    },
+  },
+});
+
+export type ThreadsWithMessagesFull = Prisma.threadsGetPayload<
+  typeof threadsWithMessagesFull
+>;
+
 const messageWithAuthor = Prisma.validator<Prisma.MessageArgs>()({
   include: { author: true },
 });

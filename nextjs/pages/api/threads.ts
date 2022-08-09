@@ -1,7 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import { channelNextPage } from '../../services/communities';
 import prisma from '../../client';
-import { decodeCursor } from '@/utilities/cursor';
 
 async function update(request: NextApiRequest, response: NextApiResponse) {
   const incrementId = request.query.incrementId as string;
@@ -12,14 +11,14 @@ async function update(request: NextApiRequest, response: NextApiResponse) {
   return response.status(200).json({});
 }
 
-async function post(request: NextApiRequest, response: NextApiResponse) {
-  const channelId = request.body?.channelId as string;
+async function get(request: NextApiRequest, response: NextApiResponse) {
+  const channelId = request.query?.channelId as string;
   if (!channelId) return response.status(404).json({});
 
-  const cursor = request.body?.cursor as string;
+  const cursor = request.query?.cursor as string;
   if (!cursor) return response.status(404).json({});
 
-  const result = await channelNextPage(channelId, decodeCursor(cursor));
+  const result = await channelNextPage(channelId, cursor);
   return response.status(200).json(result);
 }
 
@@ -30,8 +29,8 @@ export default async function handler(
   if (request.method === 'PUT') {
     return update(request, response);
   }
-  if (request.method === 'POST') {
-    return post(request, response);
+  if (request.method === 'GET') {
+    return get(request, response);
   }
   return response.status(404);
 }
