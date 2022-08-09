@@ -1,5 +1,4 @@
-import { findOrCreateUser, listUsers as getUsersByAccountId } from 'lib/users';
-import { generateRandomWordSlug } from 'utilities/randomWordSlugs';
+import { listUsers as getUsersByAccountId } from 'lib/users';
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import { listUsers, saveUsers } from '../../../fetch_all_conversations';
 import { findAccountById } from '../../../lib/models';
@@ -53,37 +52,3 @@ export default async function handler(
   const users = await saveUsers(newMembers, accountId);
   res.status(200).json({ users });
 }
-
-export const saveUsersSyncronous = async (users: any[], accountId: string) => {
-  const params = users.map((user) => {
-    const profile = user.profile;
-    const name =
-      profile.display_name ||
-      profile.display_name_normalized ||
-      profile.real_name ||
-      profile.real_name_normalized;
-    const profileImageUrl = profile.image_original;
-    return {
-      displayName: name,
-      externalUserId: user.id,
-      profileImageUrl,
-      accountsId: accountId,
-      isBot: user.is_bot,
-      isAdmin: user.is_admin || false,
-      anonymousAlias: generateRandomWordSlug(),
-    };
-  });
-
-  const createdUsers = [];
-  for (let i = 0; i < params.length; i++) {
-    const param = params[i];
-    try {
-      const user = await findOrCreateUser(param);
-      createdUsers.push(user);
-    } catch (e) {
-      console.error('failed to create user:', (e as Error).message);
-    }
-  }
-
-  return createdUsers;
-};
