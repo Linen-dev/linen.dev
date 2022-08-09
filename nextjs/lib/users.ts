@@ -17,21 +17,6 @@ export async function findUsersByAccountId(
   });
 }
 
-export const findOrCreateUser = async (
-  user: Prisma.usersUncheckedCreateInput
-) => {
-  return await prisma.users.upsert({
-    where: {
-      externalUserId_accountsId: {
-        accountsId: user.accountsId,
-        externalUserId: user.externalUserId,
-      },
-    },
-    update: {},
-    create: user,
-  });
-};
-
 export const findUser = async (
   externalUserId: string,
   internalAccountId: string
