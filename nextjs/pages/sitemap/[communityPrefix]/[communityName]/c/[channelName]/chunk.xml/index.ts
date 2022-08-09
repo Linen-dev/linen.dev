@@ -13,14 +13,14 @@ export const getServerSideProps: GetServerSideProps = async ({
     if (!host) {
       throw 'host missing';
     }
-    const { channelName } = query;
+    const { channelName, communityName, communityPrefix } = query;
+
     const sitemap = await createXMLSitemapForChannel(
-      host,
+      communityName as string,
       channelName as string
     );
-
     const stream = new SitemapStream({
-      hostname: `https://${host}/`,
+      hostname: `https://${host}/${communityPrefix}/${communityName}/`,
     });
     const response = await streamToPromise(
       Readable.from(sitemap).pipe(stream)
