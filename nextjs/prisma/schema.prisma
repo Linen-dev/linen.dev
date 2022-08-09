@@ -65,11 +65,12 @@ model channels {
 
   threads            threads[]
   //We should make channel required for channel
-  account            accounts? @relation(fields: [accountId], references: [id])
+  account            accounts?     @relation(fields: [accountId], references: [id])
   accountId          String?
-  hidden             Boolean   @default(false)
-  default            Boolean   @default(false)
+  hidden             Boolean       @default(false)
+  default            Boolean       @default(false)
   externalPageCursor String?
+  memberships        memberships[]
 
   @@unique([externalChannelId])
   @@index([accountId])
@@ -122,14 +123,29 @@ model auths {
 
   account   accounts? @relation(fields: [accountId], references: [id])
   accountId String?
+  user      users?    @relation(fields: [usersId], references: [id])
+  usersId   String
 
   @@unique([email])
+  @@unique([usersId])
+}
+
+model memberships {
+  user    users    @relation(fields: [usersId], references: [id])
+  channel channels @relation(fields: [channelsId], references: [id])
+
+  usersId    String
+  channelsId String
+
+  @@unique([usersId, channelsId])
+  @@index([usersId])
+  @@index([channelsId])
 }
 
 model users {
   id              String     @id @default(uuid())
   messages        messages[]
-  externalUserId  String
+  externalUserId  String?
   displayName     String?
   profileImageUrl String?
   isBot           Boolean
@@ -139,6 +155,10 @@ model users {
 
   account    accounts @relation(fields: [accountsId], references: [id])
   accountsId String
+
+  auth        auths?
+  authsId     String
+  memberships memberships[]
 
   @@unique([externalUserId, accountsId])
 }
