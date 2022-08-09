@@ -11,10 +11,11 @@ export const getServerSideProps: GetServerSideProps = async ({
     if (!host) {
       throw 'host missing';
     }
-    const { communityName } = query;
+    const { communityName, communityPrefix } = query;
     const sitemap = await createXMLSitemapForFreeCommunity(
       host,
-      communityName as string
+      communityName as string,
+      communityPrefix as string
     );
     res.setHeader('Content-Type', 'application/xml');
     res.write(sitemap);
