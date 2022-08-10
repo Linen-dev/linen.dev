@@ -36,8 +36,8 @@ export async function channelGetStaticProps(
 ) {
   const communityName = context.params?.communityName as string;
   const channelName = context.params?.channelName as string;
-  const page = context.params?.page as string;
-  const cursor = parsePageParam(page);
+  const page = context.params?.page as string | undefined;
+  const cursor = page && parsePageParam(page);
 
   const account = (await findAccountByPathMemo(communityName, {
     include: { channels: { where: { hidden: false } } },
@@ -77,6 +77,7 @@ export async function channelGetStaticProps(
       settings: buildSettings(account),
       isSubDomainRouting: isSubdomainbasedRouting,
       communityInviteUrl: buildInviteUrl(account),
+      pathCursor: page || null,
     },
     revalidate: revalidateInSeconds, // In seconds
   };
