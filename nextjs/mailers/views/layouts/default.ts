@@ -1,4 +1,6 @@
 import div from '../components/div';
+import img from '../components/img';
+import timestamp from '../components/timestamp';
 
 export default function layout(children: string) {
   return `
@@ -15,15 +17,31 @@ export default function layout(children: string) {
             height: '100%',
             spacing: '48px',
           },
-          div(
-            {
-              background: '#ffffff',
-              padding: '32px',
-              width: '480px',
-              textAlign: 'center',
-            },
-            children.trim()
-          )
+          [
+            img({
+              src: 'https://linen.dev/images/logo/linen.png',
+              height: '36',
+              style: 'margin: 0 auto; display: block;',
+            }),
+            div(
+              {
+                background: '#ffffff',
+                padding: '32px',
+                width: '480px',
+                textAlign: 'center',
+              },
+              [children.trim()]
+            ),
+            div(
+              {
+                background: '#f9fafb',
+                textAlign: 'center',
+                style: 'font-size: 12px; color: #5d7079;',
+              },
+              ['© Rebase Corporation 312 W 20th St New York, NY 10011']
+            ),
+            timestamp(),
+          ]
         )}
       </body>
     </html>

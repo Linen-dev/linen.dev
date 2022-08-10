@@ -8,6 +8,7 @@ export default function email({
   token: string;
 }): string {
   return layout(`
-    Reset your password here: <a href='${host}/reset-password?token=${token}'>${host}/reset-password?token=${token}</a>
+    <h1>Forgot your password?</h1>
+    No problem! Reset your password here: <a href='${host}/reset-password?token=${token}'>${host}/reset-password?token=${token}</a>
   `);
 }
