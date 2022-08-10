@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next/types';
 import prisma from '../../client';
 import { sendNotification } from '../../services/slack';
 import { createAuth } from '../../lib/auth';
+// The unstable_getServerSession only has the prefix unstable_ at the moment, because the API may change in the future. There are no known bugs at the moment and it is safe to use.
 import { unstable_getServerSession as getServerSession } from 'next-auth';
 import { authOptions } from './auth/[...nextauth]';
 

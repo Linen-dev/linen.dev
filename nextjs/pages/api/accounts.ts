@@ -1,21 +1,25 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import prisma from '../../client';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
-import { createAccount } from '../../lib/account';
 import { stripProtocol } from '../../utilities/url';
 import { dispatchAnonymizeRequest } from '@/utilities/anonymizeMessages';
+// The unstable_getServerSession only has the prefix unstable_ at the moment, because the API may change in the future. There are no known bugs at the moment and it is safe to use.
+import { unstable_getServerSession } from 'next-auth';
+import { authOptions } from './auth/[...nextauth]';
+import { createAccountAndUser } from 'lib/account';
 
-async function create(request: NextApiRequest, response: NextApiResponse) {
-  const { homeUrl, docsUrl, redirectDomain, brandColor } = JSON.parse(
-    request.body
-  );
-  const account = await createAccount({
-    homeUrl,
-    docsUrl,
-    redirectDomain,
-    brandColor,
-  });
-  return response.status(200).json(account);
+async function create(req: NextApiRequest, res: NextApiResponse) {
+  const session = await unstable_getServerSession(req, res, authOptions);
+  const email = session?.user?.email;
+  if (!email) {
+    return res.status(401);
+  }
+
+  const displayName = email.split('@').shift() || email;
+
+  const account = await createAccountAndUser(email, displayName);
+
+  return res.status(200).json({ id: account.id });
 }
 
 function isRedirectDomainNotUniqueError(exception: unknown) {

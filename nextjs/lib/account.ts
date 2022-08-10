@@ -1,5 +1,6 @@
 import prisma from '../client';
 import { stripProtocol } from '../utilities/url';
+import { generateRandomWordSlug } from 'utilities/randomWordSlugs';
 
 interface FindAccountParams {
   redirectDomain: string;
@@ -61,6 +62,33 @@ export async function findSlackAccounts(accountId?: string) {
           OR: [{ id: accountId }, { redirectDomain: accountId }],
         },
       }),
+    },
+  });
+}
+
+export async function createAccountAndUser(email: string, displayName: string) {
+  return await prisma.accounts.create({
+    data: {
+      auths: {
+        connect: {
+          email,
+        },
+      },
+      users: {
+        create: {
+          isAdmin: true,
+          isBot: false,
+          anonymousAlias: generateRandomWordSlug(),
+          auth: {
+            connect: {
+              email,
+            },
+          },
+          displayName,
+          externalUserId: null,
+          profileImageUrl: null,
+        },
+      },
     },
   });
 }
