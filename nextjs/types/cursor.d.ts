@@ -1,5 +1,5 @@
 export type FindThreadsByCursorType = {
   sentAt?: string;
-  direction?: 'gt' | 'lt';
-  sort?: 'desc' | 'asc';
+  direction: 'gt' | 'lt';
+  sort: 'desc' | 'asc';
 };
