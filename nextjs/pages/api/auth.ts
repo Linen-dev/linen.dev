@@ -2,8 +2,12 @@ import { NextApiRequest, NextApiResponse } from 'next/types';
 import prisma from '../../client';
 import { sendNotification } from '../../services/slack';
 import { createAuth } from '../../lib/auth';
-import { unstable_getServerSession as getServerSession } from 'next-auth';
+import {
+  Session,
+  unstable_getServerSession as getServerSession,
+} from 'next-auth';
 import { authOptions } from './auth/[...nextauth]';
+import { accounts } from '@prisma/client';
 
 async function create(request: NextApiRequest, response: NextApiResponse) {
   const { email, password } = JSON.parse(request.body);
@@ -42,19 +46,21 @@ async function create(request: NextApiRequest, response: NextApiResponse) {
     .json({ message: 'Account created, please sign in!' });
 }
 
-async function update(req: NextApiRequest, res: NextApiResponse) {
-  const session = await getServerSession(req, res, authOptions);
-  const { createAccount } = JSON.parse(req.body);
-
+//pulled out the code so it is easier to test
+export async function updateAuth(
+  createAccount: boolean,
+  session: Session | null
+): Promise<{ status: number; result: any }> {
   const email = session?.user?.email;
   if (!email) {
-    return res.status(401).json({});
+    return { status: 401, result: {} };
   }
   const auth = await prisma.auths.findFirst({
     where: { email },
   });
+
   if (!auth) {
-    return res.status(401).json({});
+    return { status: 401, result: {} };
   }
 
   if (createAccount) {
@@ -70,10 +76,17 @@ async function update(req: NextApiRequest, res: NextApiResponse) {
         },
       },
     });
-    return res.status(200).json(account);
-  } else {
-    return res.status(200).json({});
+    return { status: 200, result: account };
   }
+  return { status: 200, result: {} };
+}
+
+async function update(req: NextApiRequest, res: NextApiResponse) {
+  const session = await getServerSession(req, res, authOptions);
+  const { createAccount } = JSON.parse(req.body);
+
+  const { status, result } = await updateAuth(createAccount, session);
+  return res.status(status).json(result);
 }
 
 async function get(req: NextApiRequest, res: NextApiResponse) {
