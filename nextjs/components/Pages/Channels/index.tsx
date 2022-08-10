@@ -32,6 +32,7 @@ export type Props = {
   threads?: SerializedThread[];
   isSubDomainRouting: boolean;
   nextCursor?: string;
+  pathCursor?: string;
 };
 
 export default function ChannelView(props: Props) {

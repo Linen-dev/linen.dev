@@ -27,6 +27,7 @@ export default function Channel({
   channelName,
   isSubDomainRouting,
   nextCursor,
+  pathCursor,
 }: Props) {
   const [currentThreads, setCurrentThreads] = useState<SerializedThread[]>();
   const messagesEndRef = useRef<null | HTMLDivElement>(null);
@@ -56,7 +57,7 @@ export default function Channel({
     const scrollableRoot = scrollableRootRef.current;
     const lastScrollDistanceToBottom =
       lastScrollDistanceToBottomRef.current ?? 0;
-    if (scrollableRoot) {
+    if (hasNotPathCursor(pathCursor) && scrollableRoot) {
       scrollableRoot.scrollTop =
         scrollableRoot.scrollHeight - lastScrollDistanceToBottom;
     }
@@ -153,14 +154,18 @@ export default function Channel({
       >
         <div className="sm:pt-6 justify-center">
           <ul className="divide-y sm:max-w-4xl px-1">
-            {cursor ? (
-              <div className="m-3" ref={infiniteRef}>
-                <Spinner />
-              </div>
-            ) : (
-              <div className="text-gray-600 text-xs text-center m-3">
-                This is the beginning of the #{channelName} channel
-              </div>
+            {hasNotPathCursor(pathCursor) && (
+              <>
+                {cursor ? (
+                  <div className="m-3" ref={infiniteRef}>
+                    <Spinner />
+                  </div>
+                ) : (
+                  <div className="text-gray-600 text-xs text-center m-3">
+                    This is the beginning of the #{channelName} channel
+                  </div>
+                )}
+              </>
             )}
             {rows}
             <div ref={messagesEndRef} />
@@ -286,3 +291,10 @@ export const uniqueUsers = (users: users[]): users[] => {
 
   return Array.from(userMap.values());
 };
+function hasNotPathCursor(pathCursor: string | undefined) {
+  return !hasPathCursor(pathCursor);
+}
+
+function hasPathCursor(pathCursor: string | undefined) {
+  return !!pathCursor;
+}
