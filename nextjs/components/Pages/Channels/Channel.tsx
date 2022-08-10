@@ -14,6 +14,7 @@ import { getData } from '../../../utilities/fetcher';
 import useInfiniteScroll from 'react-infinite-scroll-hook';
 import CopyToClipboardIcon from './CopyToClipboardIcon';
 import Spinner from 'components/Spinner';
+import CustomLinkHelper from 'components/Link/CustomLinkHelper';
 
 export default function Channel({
   users,
@@ -61,7 +62,7 @@ export default function Channel({
       scrollableRoot.scrollTop =
         scrollableRoot.scrollHeight - lastScrollDistanceToBottom;
     }
-  }, [currentThreads, rootRef]);
+  }, [currentThreads, pathCursor, rootRef]);
 
   const rootRefSetter = useCallback(
     (node: HTMLDivElement) => {
@@ -168,6 +169,20 @@ export default function Channel({
               </>
             )}
             {rows}
+            {hasPathCursor(pathCursor) && nextCursor && (
+              <div className="text-gray-600 text-xs text-center m-3 p-4">
+                <a
+                  href={CustomLinkHelper({
+                    isSubDomainRouting,
+                    communityName,
+                    communityType: settings.communityType,
+                    path: `/c/${channelName}/${nextCursor}`,
+                  })}
+                >
+                  Next
+                </a>
+              </div>
+            )}
             <div ref={messagesEndRef} />
           </ul>
         </div>

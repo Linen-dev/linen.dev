@@ -61,10 +61,7 @@ export async function channelGetStaticProps(
 
   // if cursor exists, it probably means that is a crawler
   // so we won't create a new cursor, it already exists in the sitemap
-  const nextCursor =
-    !cursor && threads.length === CURSOR_LIMIT
-      ? encodeCursor(`${sort}:lt:${threads[0].sentAt.toString()}`)
-      : null;
+  const nextCursor = buildCursor({ pathCursor: page, threads, sort });
 
   return {
     props: {
@@ -177,4 +174,23 @@ async function getPathsFromPrefix(pathPrefix: string) {
       .filter(Boolean);
   }
   return [];
+}
+
+function buildCursor({
+  pathCursor,
+  threads,
+  sort,
+}: {
+  pathCursor?: string;
+  threads: ThreadsWithMessagesFull[];
+  sort: string;
+}) {
+  const cursorBy = {
+    user: `${sort}:lt:${threads[0].sentAt.toString()}`,
+    crawler: `${sort}:gt:${threads[threads.length - 1].sentAt.toString()}`,
+  };
+
+  return threads.length === CURSOR_LIMIT
+    ? encodeCursor(pathCursor ? cursorBy.crawler : cursorBy.user)
+    : null;
 }
