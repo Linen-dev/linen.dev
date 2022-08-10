@@ -6,11 +6,21 @@ interface Props {
   width?: string;
   height?: string;
   textAlign?: string;
+  style?: string;
 }
 
 export default function div(
-  { align, background, spacing, padding, width, height, textAlign }: Props,
-  children: string
+  {
+    align,
+    background,
+    spacing,
+    padding,
+    width,
+    height,
+    textAlign,
+    style,
+  }: Props,
+  children: string[]
 ): string {
   return `
     <table width="${width || '100%'}" height="${height || 'auto'}" align="${
@@ -20,9 +30,10 @@ export default function div(
   }" border="0" bgcolor="${background || '#ffffff'}">
       <tbody>
         <tr>
-          <td align="${textAlign}">${children}</td>
+          <td style="${style || ''}" align="${textAlign || ''}">${children.map(
+    (child) => child
+  )}</td>
         </tr>
       </tbody>
-    </table>
-  `.trim();
+    </table>`.trim();
 }
