@@ -6,5 +6,7 @@ export function getMentionedUsers(text: string, users: UserMap[]) {
     m.replace('<@', '').replace('>', '')
   );
 
-  return users.filter((u) => mentionExternalUserIds.includes(u.externalUserId));
+  return users.filter((u) =>
+    mentionExternalUserIds.includes(u.externalUserId || u.id)
+  );
 }
