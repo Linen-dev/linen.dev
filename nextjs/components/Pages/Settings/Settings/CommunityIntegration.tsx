@@ -57,17 +57,14 @@ export default function CommunityIntegration({
 
   const onClick = async (community: string) => {
     try {
-      const authResponse = await fetch('/api/auth', {
-        method: 'PUT',
-        body: JSON.stringify({
-          createAccount: true,
-        }),
+      const accountCreateRequest = await fetch('/api/accounts', {
+        method: 'POST',
       });
-      if (!authResponse.ok) {
+      if (!accountCreateRequest.ok) {
         throw 'create account failed';
       }
-      const auth = await authResponse.json();
-      community && integrationAuthorizer(community, auth.account.id);
+      const account: { id: string } = await accountCreateRequest.json();
+      community && integrationAuthorizer(community, account.id);
     } catch (error) {
       return toast.error('Something went wrong, please sign in again');
     }
