@@ -92,3 +92,53 @@ export async function createAccountAndUser(email: string, displayName: string) {
     },
   });
 }
+
+export async function findAccountsPremiumWithMessages() {
+  return await prisma.accounts.findMany({
+    select: {
+      redirectDomain: true,
+    },
+    where: {
+      premium: true,
+      redirectDomain: { not: null },
+      channels: { some: { messages: { some: { id: {} } } } },
+    },
+  });
+}
+
+export async function findAccountsFreeDiscordWithMessages() {
+  return await prisma.accounts.findMany({
+    select: {
+      discordDomain: true,
+      discordServerId: true,
+    },
+    where: {
+      premium: false,
+      discordAuthorizations: { some: {} },
+      channels: { some: { messages: { some: { id: {} } } } },
+      AND: {
+        OR: [
+          { discordDomain: { not: null } },
+          { discordServerId: { not: null } },
+        ],
+      },
+    },
+  });
+}
+
+export async function findAccountsFreeSlackWithMessages() {
+  return await prisma.accounts.findMany({
+    select: {
+      slackDomain: true,
+      slackTeamId: true,
+    },
+    where: {
+      premium: false,
+      slackAuthorizations: { some: {} },
+      channels: { some: { messages: { some: { id: {} } } } },
+      AND: {
+        OR: [{ slackDomain: { not: null } }, { slackTeamId: { not: null } }],
+      },
+    },
+  });
+}

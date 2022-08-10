@@ -14,6 +14,11 @@ import {
 import type { channels, accounts } from '@prisma/client';
 import { decodeCursor, encodeCursor } from '../utilities/cursor';
 import { shouldThisChannelBeAnonymous } from '../lib/channel';
+import {
+  findAccountsFreeDiscordWithMessages,
+  findAccountsFreeSlackWithMessages,
+  findAccountsPremiumWithMessages,
+} from 'lib/account';
 
 const CURSOR_LIMIT = 10;
 
@@ -89,21 +94,7 @@ export async function channelGetStaticPaths(pathPrefix: string) {
     };
   }
 
-  const accounts = await accountsWithChannels();
-  const acc = accounts.filter((a) => a.channels.length > 0);
-  let redirectDomains = acc
-    .map((a) => {
-      return a.redirectDomain && stripProtocol(a.redirectDomain);
-    })
-    .filter(Boolean);
-
-  const paths = redirectDomains.concat(
-    acc
-      .map((a) => {
-        return a.slackDomain;
-      })
-      .filter(Boolean)
-  );
+  const paths = await getPathsFromPrefix(pathPrefix);
 
   return {
     paths: paths.map((p) => `${pathPrefix}/${p}/`),
@@ -165,4 +156,24 @@ function sortBySentAtAsc(
   b: ThreadsWithMessagesFull
 ) {
   return Number(a.sentAt) - Number(b.sentAt);
+}
+
+async function getPathsFromPrefix(pathPrefix: string) {
+  if (pathPrefix === '/subdomain') {
+    const accounts = await findAccountsPremiumWithMessages();
+    return accounts.map((account) => account.redirectDomain).filter(Boolean);
+  }
+  if (pathPrefix === '/d') {
+    const accounts = await findAccountsFreeDiscordWithMessages();
+    return accounts
+      .map((account) => account.discordDomain || account.discordServerId)
+      .filter(Boolean);
+  }
+  if (pathPrefix === '/s') {
+    const accounts = await findAccountsFreeSlackWithMessages();
+    return accounts
+      .map((account) => account.slackDomain || account.slackTeamId)
+      .filter(Boolean);
+  }
+  return [];
 }
