@@ -1,0 +1,1 @@
+npx ts-node --skip-project bin/create-user-for-auths/index.ts
