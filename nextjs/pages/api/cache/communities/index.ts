@@ -1,4 +1,4 @@
-import { accountsWithDomain } from '@/lib/models';
+import { accountsWithDomain } from 'lib/models';
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import { cacheSeconds } from '../_settings';
 

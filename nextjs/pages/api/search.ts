@@ -1,4 +1,4 @@
-import { anonymizeMessagesMentions } from '@/utilities/anonymizeMessages';
+import { anonymizeMessagesMentions } from 'utilities/anonymizeMessages';
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import prisma from '../../client';
 import { messages, Prisma, mentions, threads, users } from '@prisma/client';
