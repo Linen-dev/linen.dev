@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Switch } from '@headlessui/react';
 import classNames from 'classnames';
 import { SettingsProps, WaitForIntegration } from '..';
-import { toast } from '@/components/Toast';
+import { toast } from 'components/Toast';
 
 function AnonymizeCardComponent({
   enabled,

@@ -1,4 +1,4 @@
-import { findMessagesFromChannel } from '@/lib/models';
+import { findMessagesFromChannel } from 'lib/models';
 import { NextApiRequest, NextApiResponse } from 'next/types';
 
 export default async function handler(

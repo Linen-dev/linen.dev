@@ -1,4 +1,4 @@
-import { capitalize } from '@/lib/util';
+import { capitalize } from 'lib/util';
 import classNames from 'classnames';
 import DiscordIcon from '../icons/DiscordIcon';
 import SlackIcon from '../icons/SlackIcon';

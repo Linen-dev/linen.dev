@@ -1,4 +1,4 @@
-import { createXMLSitemapForChannel } from '@/utilities/sitemap';
+import { createXMLSitemapForChannel } from 'utilities/sitemap';
 import { GetServerSideProps } from 'next/types';
 import { SitemapStream, streamToPromise } from 'sitemap';
 import { Readable } from 'stream';

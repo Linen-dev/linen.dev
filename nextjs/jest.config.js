@@ -15,10 +15,6 @@ const customJestConfig = {
   moduleDirectories: ['node_modules', '<rootDir>/'],
   testEnvironment: 'jest-environment-jsdom',
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
-  moduleNameMapper: {
-    '@/utilities/(.*)': '<rootDir>/utilities/$1',
-    '@/lib/(.*)': '<rootDir>/lib/$1',
-  },
   testMatch: ['**/?(*.)+(spec|test).[tj]s?(x)'],
 };
 module.exports.customJestConfig = customJestConfig;

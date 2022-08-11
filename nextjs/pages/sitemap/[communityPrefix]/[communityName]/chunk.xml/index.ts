@@ -1,4 +1,4 @@
-import { createXMLSitemapForFreeCommunity } from '@/utilities/sitemap';
+import { createXMLSitemapForFreeCommunity } from 'utilities/sitemap';
 import { GetServerSideProps } from 'next/types';
 
 export const getServerSideProps: GetServerSideProps = async ({

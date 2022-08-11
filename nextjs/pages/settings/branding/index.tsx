@@ -4,7 +4,7 @@ import serializeAccount, { SerializedAccount } from 'serializers/account';
 import { NextPageContext } from 'next';
 import { getSession } from 'next-auth/react';
 import Vercel, { DNSRecord } from 'services/vercel';
-import featureFlags from '@/utilities/featureFlags';
+import featureFlags from 'utilities/featureFlags';
 
 interface Props {
   account: SerializedAccount;
