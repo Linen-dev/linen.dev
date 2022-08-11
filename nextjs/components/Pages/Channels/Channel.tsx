@@ -15,6 +15,7 @@ import useInfiniteScroll from 'react-infinite-scroll-hook';
 import CopyToClipboardIcon from './CopyToClipboardIcon';
 import Spinner from 'components/Spinner';
 import CustomLinkHelper from 'components/Link/CustomLinkHelper';
+import ButtonPagination from 'components/ButtonPagination';
 
 export default function Channel({
   users,
@@ -171,33 +172,32 @@ export default function Channel({
                 )}
               </>
             )}
-            {hasPathCursor(pathCursor) && nextCursor?.prev && (
-              <div className="text-gray-600 text-xs text-center m-3">
-                <a
-                  href={CustomLinkHelper({
-                    isSubDomainRouting,
-                    communityName,
-                    communityType: settings.communityType,
-                    path: `/c/${channelName}/${nextCursor.prev}`,
-                  })}
-                >
-                  Previous
-                </a>
-              </div>
-            )}
             {rows}
-            {hasPathCursor(pathCursor) && nextCursor?.next && (
-              <div className="text-gray-600 text-xs text-center m-3 p-4">
-                <a
-                  href={CustomLinkHelper({
-                    isSubDomainRouting,
-                    communityName,
-                    communityType: settings.communityType,
-                    path: `/c/${channelName}/${nextCursor.next}`,
-                  })}
-                >
-                  Next
-                </a>
+            {hasPathCursor(pathCursor) && (
+              <div className="text-center p-4">
+                {nextCursor?.prev && (
+                  <ButtonPagination
+                    href={CustomLinkHelper({
+                      isSubDomainRouting,
+                      communityName,
+                      communityType: settings.communityType,
+                      path: `/c/${channelName}/${nextCursor.prev}`,
+                    })}
+                    label="Previous"
+                  />
+                )}
+                {nextCursor?.next && (
+                  <ButtonPagination
+                    href={CustomLinkHelper({
+                      isSubDomainRouting,
+                      communityName,
+                      communityType: settings.communityType,
+                      path: `/c/${channelName}/${nextCursor.next}`,
+                    })}
+                    label="Next"
+                    className="ml-3"
+                  />
+                )}
               </div>
             )}
             <div ref={messagesEndRef} />
