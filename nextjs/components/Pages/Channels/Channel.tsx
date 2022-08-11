@@ -162,9 +162,12 @@ export default function Channel({
                     <Spinner />
                   </div>
                 ) : (
-                  <div className="text-gray-600 text-xs text-center m-3">
-                    This is the beginning of the #{channelName} channel
-                  </div>
+                  <div></div>
+                  // Commenting this out because most of the time it isn't true and it
+                  // looks buggy and unpolished
+                  // <div className="text-gray-600 text-xs text-center m-3">
+                  //   This is the beginning of the #{channelName} channel
+                  // </div>
                 )}
               </>
             )}
