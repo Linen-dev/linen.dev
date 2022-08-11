@@ -1,38 +1,44 @@
-import NextAuth, { NextAuthOptions } from 'next-auth';
-import CredentialsProvider from 'next-auth/providers/credentials';
+import NextAuth, { type NextAuthOptions } from 'next-auth';
+import EmailProvider from 'next-auth/providers/email';
 import prisma from '../../../client';
-import { generateHash } from '../../../utilities/password';
-
-interface Credentials {
-  email?: string;
-  password?: string;
-}
+import { CustomPrismaAdapter } from 'lib/auth';
+import ApplicationMailer from 'mailers/ApplicationMailer';
 
 export const authOptions = {
   pages: {
     signIn: '/signin',
+    error: '/signin',
+    verifyRequest: '/verify-request',
   },
+  adapter: CustomPrismaAdapter(prisma),
   providers: [
-    CredentialsProvider({
-      name: 'Email and Password',
-      credentials: {
-        email: { label: 'Email', type: 'text' },
-        password: { label: 'Password', type: 'password' },
+    EmailProvider({
+      server: {
+        host: process.env.EMAIL_HOST,
+        port: 465,
+        auth: {
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASS,
+        },
       },
-      async authorize(credentials, request) {
-        const { email, password } = credentials as Credentials;
-        if (!email || !password) {
-          return null;
-        }
-        const auth = await prisma.auths.findFirst({ where: { email } });
-        if (!auth) {
-          return null;
-        }
-        if (auth.password === generateHash(password, auth.salt)) {
-          return auth;
-        }
+      from: 'Linen.dev <no-reply@linendev.com>',
 
-        return null;
+      async sendVerificationRequest(params) {
+        const { identifier, url, provider, theme } = params;
+        const { host } = new URL(url);
+
+        const result = await ApplicationMailer.send({
+          to: identifier,
+          from: provider.from,
+          subject: `Sign in to Linen.dev`,
+          text: `Sign in to Linen.dev\n${url}`,
+          html: `Sign in to Linen.dev\n${url}`,
+        });
+
+        const failed = result.rejected.concat(result.pending).filter(Boolean);
+        if (failed.length) {
+          throw new Error(`Email(s) (${failed.join(', ')}) could not be sent`);
+        }
       },
     }),
   ],
