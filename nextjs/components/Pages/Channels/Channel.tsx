@@ -8,7 +8,7 @@ import type { users } from '@prisma/client';
 import CustomLink from '../../Link/CustomLink';
 import { capitalize } from '../../../lib/util';
 import { getThreadUrl } from './utilities/url';
-import { Props } from '.';
+import { ChannelViewCursorProps, ChannelViewProps } from '.';
 import { SerializedThread } from '../../../serializers/thread';
 import { getData } from '../../../utilities/fetcher';
 import useInfiniteScroll from 'react-infinite-scroll-hook';
@@ -29,11 +29,11 @@ export default function Channel({
   isSubDomainRouting,
   nextCursor,
   pathCursor,
-}: Props) {
+}: ChannelViewProps) {
   const [currentThreads, setCurrentThreads] = useState<SerializedThread[]>();
   const messagesEndRef = useRef<null | HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [cursor, setCursor] = useState<string>();
+  const [cursor, setCursor] = useState<ChannelViewCursorProps>();
   const [error, setError] = useState<unknown>();
   const scrollableRootRef = useRef<HTMLDivElement | null>(null);
   const lastScrollDistanceToBottomRef = useRef<number>();
@@ -48,9 +48,9 @@ export default function Channel({
 
   const [infiniteRef, { rootRef }] = useInfiniteScroll({
     loading: isLoading,
-    hasNextPage: !!cursor,
+    hasNextPage: !!cursor?.prev,
     onLoadMore: loadMore,
-    disabled: !!error || !cursor,
+    disabled: !!error || !cursor?.prev,
     rootMargin: '400px 0px 0px 0px',
   });
 
@@ -58,7 +58,7 @@ export default function Channel({
     const scrollableRoot = scrollableRootRef.current;
     const lastScrollDistanceToBottom =
       lastScrollDistanceToBottomRef.current ?? 0;
-    if (hasNotPathCursor(pathCursor) && scrollableRoot) {
+    if (!hasPathCursor(pathCursor) && scrollableRoot) {
       scrollableRoot.scrollTop =
         scrollableRoot.scrollHeight - lastScrollDistanceToBottom;
     }
@@ -86,13 +86,13 @@ export default function Channel({
 
   async function loadMore() {
     if (isLoading) return;
-    if (!cursor) return;
+    if (!cursor?.prev) return;
     try {
       setIsLoading(true);
-      if (cursor) {
+      if (cursor.prev) {
         const data = await getData('/api/threads', {
           channelId: currentChannel.id,
-          cursor,
+          cursor: cursor.prev,
         });
         setCursor(data.nextCursor || null);
         setCurrentThreads([
@@ -155,9 +155,9 @@ export default function Channel({
       >
         <div className="sm:pt-6 justify-center">
           <ul className="divide-y sm:max-w-4xl px-1">
-            {hasNotPathCursor(pathCursor) && (
+            {!hasPathCursor(pathCursor) && (
               <>
-                {cursor ? (
+                {cursor?.prev ? (
                   <div className="m-3" ref={infiniteRef}>
                     <Spinner />
                   </div>
@@ -168,15 +168,29 @@ export default function Channel({
                 )}
               </>
             )}
+            {hasPathCursor(pathCursor) && nextCursor?.prev && (
+              <div className="text-gray-600 text-xs text-center m-3">
+                <a
+                  href={CustomLinkHelper({
+                    isSubDomainRouting,
+                    communityName,
+                    communityType: settings.communityType,
+                    path: `/c/${channelName}/${nextCursor.prev}`,
+                  })}
+                >
+                  Previous
+                </a>
+              </div>
+            )}
             {rows}
-            {hasPathCursor(pathCursor) && nextCursor && (
+            {hasPathCursor(pathCursor) && nextCursor?.next && (
               <div className="text-gray-600 text-xs text-center m-3 p-4">
                 <a
                   href={CustomLinkHelper({
                     isSubDomainRouting,
                     communityName,
                     communityType: settings.communityType,
-                    path: `/c/${channelName}/${nextCursor}`,
+                    path: `/c/${channelName}/${nextCursor.next}`,
                   })}
                 >
                   Next
@@ -306,10 +320,7 @@ export const uniqueUsers = (users: users[]): users[] => {
 
   return Array.from(userMap.values());
 };
-function hasNotPathCursor(pathCursor: string | undefined) {
-  return !hasPathCursor(pathCursor);
-}
 
-function hasPathCursor(pathCursor: string | undefined) {
+function hasPathCursor(pathCursor?: string | null) {
   return !!pathCursor;
 }
