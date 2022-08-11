@@ -1,11 +1,10 @@
-import { accountsWithChannels, findAccountByPath } from '../lib/models';
+import { findAccountByPath } from '../lib/models';
 import { GetStaticPropsContext } from 'next/types';
-import { stripProtocol } from '../utilities/url';
 import { NotFound } from '../utilities/response';
 import { revalidateInSeconds } from '../constants/revalidate';
 import { buildSettings } from './accountSettings';
 import { memoize } from '../utilities/dynamoCache';
-import { findThreadsByCursor } from '../lib/threads';
+import { findPreviousCursor, findThreadsByCursor } from '../lib/threads';
 import serializeThread from '../serializers/thread';
 import {
   AccountWithSlackAuthAndChannels,
@@ -19,6 +18,10 @@ import {
   findAccountsFreeSlackWithMessages,
   findAccountsPremiumWithMessages,
 } from 'lib/account';
+import {
+  ChannelViewCursorProps,
+  ChannelViewProps,
+} from 'components/Pages/Channels';
 
 const CURSOR_LIMIT = 10;
 
@@ -33,7 +36,11 @@ function buildInviteUrl(account: accounts) {
 export async function channelGetStaticProps(
   context: GetStaticPropsContext,
   isSubdomainbasedRouting: boolean
-) {
+): Promise<{
+  props?: ChannelViewProps;
+  revalidate: number;
+  notfound?: boolean;
+}> {
   const communityName = context.params?.communityName as string;
   const channelName = context.params?.channelName as string;
   const page = context.params?.page as string | undefined;
@@ -59,9 +66,13 @@ export async function channelGetStaticProps(
     })
   ).sort(sortBySentAtAsc);
 
-  // if cursor exists, it probably means that is a crawler
-  // so we won't create a new cursor, it already exists in the sitemap
-  const nextCursor = buildCursor({ pathCursor: page, threads, sort });
+  const nextCursor = await buildCursor({
+    pathCursor: page,
+    threads,
+    sort,
+    sentAt,
+    channelId: channel.id,
+  });
 
   return {
     props: {
@@ -75,6 +86,7 @@ export async function channelGetStaticProps(
       isSubDomainRouting: isSubdomainbasedRouting,
       communityInviteUrl: buildInviteUrl(account),
       pathCursor: page || null,
+      users: [], // not sure why?
     },
     revalidate: revalidateInSeconds, // In seconds
   };
@@ -113,22 +125,17 @@ function findChannelOrDefault(channels: channels[], channelName: string) {
 export async function channelNextPage(channelId: string, cursor: string) {
   // since we only support infinity scroll up,
   // we will hard code sort (desc) and direction (lt)
-  const { sort, direction, sentAt } = decodeCursor(cursor);
+  const { sentAt } = decodeCursor(cursor);
   const anonymizeUsers = await shouldThisChannelBeAnonymousMemo(channelId);
-  const threads = (
-    await findThreadsByCursorMemo({
-      channelId,
-      sentAt,
-      sort: 'desc',
-      direction: 'lt',
-      anonymizeUsers,
-    })
-  ).sort(sortBySentAtAsc);
+  const threads = await findThreadsByCursorMemo({
+    channelId,
+    sentAt,
+    sort: 'desc',
+    direction: 'lt',
+    anonymizeUsers,
+  }).then((t) => t.sort(sortBySentAtAsc));
 
-  const nextCursor =
-    threads.length === CURSOR_LIMIT
-      ? encodeCursor(`desc:lt:${threads[0].sentAt.toString()}`)
-      : null;
+  const nextCursor = await buildCursor({ sort: 'desc', threads, channelId });
 
   return {
     threads: threads.map(serializeThread),
@@ -176,21 +183,62 @@ async function getPathsFromPrefix(pathPrefix: string) {
   return [];
 }
 
-function buildCursor({
+async function buildCursor({
   pathCursor,
   threads,
   sort,
+  channelId,
+  sentAt,
 }: {
   pathCursor?: string;
   threads: ThreadsWithMessagesFull[];
   sort: string;
-}) {
-  const cursorBy = {
-    user: `${sort}:lt:${threads[0].sentAt.toString()}`,
-    crawler: `${sort}:gt:${threads[threads.length - 1].sentAt.toString()}`,
-  };
+  channelId: string;
+  sentAt?: string;
+}): Promise<ChannelViewCursorProps> {
+  try {
+    const isCrawler = !!pathCursor;
 
-  return threads.length === CURSOR_LIMIT
-    ? encodeCursor(pathCursor ? cursorBy.crawler : cursorBy.user)
-    : null;
+    if (isCrawler) {
+      // crawler
+      const previousPage = await findPreviousCursor({
+        channelId,
+        direction: 'lt',
+        sort: 'desc',
+        sentAt,
+      }).then((e) => e.sort((a, b) => Number(a.sentAt) - Number(b.sentAt)));
+      return {
+        // prev: we need to query our db
+        prev: !previousPage.length
+          ? null
+          : previousPage.length > CURSOR_LIMIT
+          ? encodeCursor(`asc:gt:${previousPage[0].sentAt.toString()}`)
+          : encodeCursor(`asc:gt:0`),
+        // next: last thread sent at
+        next:
+          threads.length === CURSOR_LIMIT
+            ? encodeCursor(
+                `asc:gt:${threads[threads.length - 1].sentAt.toString()}`
+              )
+            : null,
+      };
+    } else {
+      // users
+      return {
+        // prev: first thread from result
+        prev:
+          threads.length === CURSOR_LIMIT
+            ? encodeCursor(`${sort}:lt:${threads[0].sentAt.toString()}`)
+            : null,
+        // next: always null
+        next: null,
+      };
+    }
+  } catch (error) {
+    console.error(error);
+    return {
+      prev: null,
+      next: null,
+    };
+  }
 }

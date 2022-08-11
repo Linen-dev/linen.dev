@@ -184,3 +184,25 @@ export async function findThreadsByCursor({
     anonymizeUsers ? threads.map(anonymizeMessages) : threads
   ) as ThreadsWithMessagesFull[];
 }
+
+export async function findPreviousCursor({
+  channelId,
+  sentAt = '0',
+  sort = 'desc',
+  limit = 10,
+  direction = 'lt',
+}: {
+  channelId: string;
+  limit?: number;
+  anonymizeUsers?: boolean;
+} & FindThreadsByCursorType) {
+  return await prisma.threads.findMany({
+    select: { sentAt: true },
+    take: limit + 1,
+    where: {
+      sentAt: { [direction]: BigInt(sentAt) },
+      channelId,
+    },
+    orderBy: { sentAt: sort },
+  });
+}

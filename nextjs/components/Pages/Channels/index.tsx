@@ -20,7 +20,7 @@ export type messageWithAuthor = messages & {
   attachments: SerializedAttachment[];
 };
 
-export type Props = {
+export type ChannelViewProps = {
   communityUrl?: string;
   communityInviteUrl?: string;
   settings: Settings;
@@ -31,10 +31,15 @@ export type Props = {
   currentChannel: channels;
   threads?: SerializedThread[];
   isSubDomainRouting: boolean;
-  nextCursor?: string;
-  pathCursor?: string;
+  nextCursor: ChannelViewCursorProps;
+  pathCursor: string | null;
 };
 
-export default function ChannelView(props: Props) {
+export type ChannelViewCursorProps = {
+  next: string | null;
+  prev: string | null;
+};
+
+export default function ChannelView(props: ChannelViewProps) {
   return <Channel {...props} key={props.communityName + props.channelName} />;
 }
