@@ -16,27 +16,13 @@ export default function SignIn({ csrfToken, error }: Props) {
   return (
     <Layout header="Sign In">
       <Error error={error} />
-      <form
-        method="post"
-        action="/api/auth/callback/credentials?callbackUrl=/settings"
-      >
+      <form method="post" action="/api/auth/signin/email?callbackUrl=/settings">
         <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
-        <EmailField label="Email" id="email" required />
-        <PasswordField label="Password" id="password" required />
+        <EmailField label="Email address" id="email" required />
         <Button type="submit" block>
-          Submit
+          Sign in with Email
         </Button>
       </form>
-      <div className="text-sm">
-        <p className="py-3">
-          Don't have an account?{' '}
-          <Link href="https://linen.dev/signup">Get Started</Link>
-          <br />
-        </p>
-        <p>
-          <Link href="/forgot-password">Forgot your password?</Link>
-        </p>
-      </div>
     </Layout>
   );
 }
