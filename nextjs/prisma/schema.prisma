@@ -114,16 +114,18 @@ enum MessagesViewType {
 }
 
 model auths {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-  email     String
-  password  String
-  salt      String
-  token     String?
+  id            String    @id @default(uuid())
+  createdAt     DateTime  @default(now())
+  email         String
+  emailVerified DateTime?
+  password      String
+  salt          String
+  token         String?
 
   account   accounts? @relation(fields: [accountId], references: [id])
   accountId String?
   users     users[]
+  session   session[]
 
   @@unique([email])
 }
@@ -227,4 +229,20 @@ model discordAuthorizations {
   account accounts? @relation(fields: [accountsId], references: [id])
 
   accountsId String?
+}
+
+model verificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         auths    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
