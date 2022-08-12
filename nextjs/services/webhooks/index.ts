@@ -1,11 +1,5 @@
 import prisma from '../../client';
-import {
-  SlackEvent,
-  SlackMessageEvent,
-  SlackMessageReactionRemovedEvent,
-  SlackMessageReactionAddedEvent,
-  SlackTeamJoinEvent,
-} from '../../types/slackResponses/slackMessageEventInterface';
+import { SlackEvent } from '../../types/slackResponses/slackMessageEventInterface';
 import { processMessageEvent } from './processMessageEvents';
 import {
   processMessageReactionAddedEvent,
@@ -22,17 +16,13 @@ export const handleWebhook = async (
   body: SlackEvent
 ): Promise<{ status: number; error?: string; message?: any }> => {
   if (body.event.type === 'team_join') {
-    return processTeamJoin(body.event as SlackTeamJoinEvent);
+    return processTeamJoin(body);
   } else if (body.event.type === 'message') {
-    return processMessageEvent(body.event as SlackMessageEvent);
+    return processMessageEvent(body);
   } else if (body.event.type === 'reaction_added') {
-    return processMessageReactionAddedEvent(
-      body.event as SlackMessageReactionAddedEvent
-    );
+    return processMessageReactionAddedEvent(body);
   } else if (body.event.type === 'reaction_removed') {
-    return processMessageReactionRemovedEvent(
-      body.event as SlackMessageReactionRemovedEvent
-    );
+    return processMessageReactionRemovedEvent(body);
   } else if (body.event.type === 'channel_created') {
     return processChannelCreated(body);
   } else if (body.event.type === 'channel_rename') {

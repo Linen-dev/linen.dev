@@ -1,8 +1,12 @@
 import { findAccountBySlackTeamId } from '../../lib/models';
-import { SlackTeamJoinEvent } from '../../types/slackResponses/slackMessageEventInterface';
+import {
+  SlackEvent,
+  SlackTeamJoinEvent,
+} from '../../types/slackResponses/slackMessageEventInterface';
 import { createUserFromUserInfo } from '../../lib/users';
 
-export async function processTeamJoin(event: SlackTeamJoinEvent) {
+export async function processTeamJoin(body: SlackEvent) {
+  const event = body.event as SlackTeamJoinEvent;
   const team_id = event.user.team_id;
   // find account by slack team id
   const account = await findAccountBySlackTeamId(team_id);
