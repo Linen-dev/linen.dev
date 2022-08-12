@@ -1,4 +1,4 @@
-import { toast } from '@/components/Toast';
+import { toast } from 'components/Toast';
 import TextField from 'components/TextField';
 import { SettingsProps } from '..';
 

@@ -2,7 +2,7 @@ import { channels, messages, mentions, users } from '@prisma/client';
 import { Settings } from 'services/accountSettings';
 import Channel from './Channel';
 import { SerializedAttachment, SerializedReaction } from 'types/shared';
-import { SerializedThread } from '@/serializers/thread';
+import { SerializedThread } from 'serializers/thread';
 
 export interface PaginationType {
   totalCount: number;
