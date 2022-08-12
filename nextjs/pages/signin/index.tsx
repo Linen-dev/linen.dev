@@ -6,6 +6,7 @@ import { getCsrfToken } from 'next-auth/react';
 import type { NextPageContext } from 'next';
 import Error from './Error';
 import { useRouter } from 'next/router';
+import { useState } from 'react';
 
 interface SignInProps {
   csrfToken: string;
@@ -14,6 +15,8 @@ interface SignInProps {
 
 export default function SignIn({ csrfToken, error }: SignInProps) {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
+
   return (
     <Layout header="Log In">
       <Error error={error} />
@@ -22,11 +25,12 @@ export default function SignIn({ csrfToken, error }: SignInProps) {
         action={`/api/auth/signin/email?callbackUrl=${
           router?.query?.callbackUrl || '/settings'
         }`}
+        onSubmit={() => setLoading(true)}
       >
         <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
         <EmailField label="Email address" id="email" required />
-        <Button type="submit" block>
-          Sign in with Email
+        <Button type="submit" block disabled={loading}>
+          {loading ? 'Loading...' : 'Sign in with Email'}
         </Button>
       </form>
       <div className="text-sm">
