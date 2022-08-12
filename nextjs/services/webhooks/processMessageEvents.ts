@@ -4,14 +4,18 @@ import {
   deleteMessageWithMentions,
 } from '../../lib/models';
 import { findOrCreateThread, updateSlackThread } from '../../lib/threads';
-import { SlackMessageEvent } from '../../types/slackResponses/slackMessageEventInterface';
+import {
+  SlackEvent,
+  SlackMessageEvent,
+} from '../../types/slackResponses/slackMessageEventInterface';
 import { createSlug } from '../../lib/util';
-import { accounts, channels, slackAuthorizations } from '@prisma/client';
+import type { accounts, channels, slackAuthorizations } from '@prisma/client';
 import { findOrCreateUserFromUserInfo } from '../../lib/users';
 import { parseSlackSentAt, tsToSentAt } from '../../utilities/sentAt';
 import { getChannel } from '.';
 
-export async function processMessageEvent(event: SlackMessageEvent) {
+export async function processMessageEvent(body: SlackEvent) {
+  const event = body.event as SlackMessageEvent;
   const channelId = event.channel;
   const channel = await getChannel(channelId);
 

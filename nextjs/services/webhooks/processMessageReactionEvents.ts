@@ -2,6 +2,7 @@ import prisma from '../../client';
 import {
   SlackMessageReactionRemovedEvent,
   SlackMessageReactionAddedEvent,
+  SlackEvent,
 } from '../../types/slackResponses/slackMessageEventInterface';
 import { Prisma } from '@prisma/client';
 import { getChannel } from '.';
@@ -50,9 +51,8 @@ async function processMessageReactionEvent(
   return { reaction, whereClause, message };
 }
 
-export async function processMessageReactionAddedEvent(
-  event: SlackMessageReactionAddedEvent
-) {
+export async function processMessageReactionAddedEvent(body: SlackEvent) {
+  const event = body.event as SlackMessageReactionAddedEvent;
   const { error, status, reaction, whereClause, message } =
     await processMessageReactionEvent(event);
 
@@ -87,9 +87,8 @@ export async function processMessageReactionAddedEvent(
 
   return { status: 200, message: 'Reaction added' };
 }
-export async function processMessageReactionRemovedEvent(
-  event: SlackMessageReactionRemovedEvent
-) {
+export async function processMessageReactionRemovedEvent(body: SlackEvent) {
+  const event = body.event as SlackMessageReactionRemovedEvent;
   const { error, status, reaction, whereClause } =
     await processMessageReactionEvent(event);
 
