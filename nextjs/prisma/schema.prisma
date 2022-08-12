@@ -103,6 +103,7 @@ model accounts {
   users                 users[]
   slackAuthorizations   slackAuthorizations[]
   discordAuthorizations discordAuthorizations[]
+  invites               invites[]
 
   @@unique([redirectDomain])
 }
@@ -159,6 +160,7 @@ model users {
   auth        auths?        @relation(fields: [authsId], references: [id])
   authsId     String?
   memberships memberships[]
+  invites     invites[]
 
   @@unique([externalUserId, accountsId])
   @@index([authsId])
@@ -245,4 +247,20 @@ model session {
   userId       String
   expires      DateTime
   user         auths    @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model invites {
+  id         String    @id @default(uuid())
+  email      String
+  accountsId String
+  status     String    @default("PENDING")
+  accounts   accounts? @relation(fields: [accountsId], references: [id])
+
+  createdById String
+  createdBy   users? @relation(fields: [createdById], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([email, accountsId])
 }
