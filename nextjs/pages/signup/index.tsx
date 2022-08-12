@@ -22,7 +22,12 @@ export default function SignUp({ csrfToken }: SignUpProps) {
         }`}
       >
         <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
-        <EmailField label="Email address" id="email" required />
+        <EmailField
+          label="Email address"
+          id="email"
+          required
+          defaultValue={router?.query?.email as string}
+        />
         <Button type="submit" block>
           Sign up with Email
         </Button>
