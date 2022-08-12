@@ -14,7 +14,7 @@ export default function SignUp({ csrfToken }: SignUpProps) {
   const router = useRouter();
 
   return (
-    <Layout header="Sign Up">
+    <Layout header="Sign Up for free">
       <form
         method="post"
         action={`/api/auth/signin/email?callbackUrl=${
@@ -28,7 +28,7 @@ export default function SignUp({ csrfToken }: SignUpProps) {
         </Button>
       </form>
       <p className="text-sm pt-3 text-gray-600">
-        Already have an account? <Link href="/signin">Sign in</Link>
+        Already have an account? <Link href="/signin">Log in</Link>
       </p>
 
       <p className="text-sm pt-3 text-gray-600">

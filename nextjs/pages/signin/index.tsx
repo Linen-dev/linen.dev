@@ -15,7 +15,7 @@ interface SignInProps {
 export default function SignIn({ csrfToken, error }: SignInProps) {
   const router = useRouter();
   return (
-    <Layout header="Sign In">
+    <Layout header="Log In">
       <Error error={error} />
       <form
         method="post"
