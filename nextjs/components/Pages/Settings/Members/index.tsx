@@ -3,6 +3,7 @@ import { MembersPageProps } from 'pages/settings/members';
 import DashboardLayout from 'components/layout/DashboardLayout';
 import Button from 'components/Button';
 import { useRouter } from 'next/router';
+import { useState } from 'react';
 
 export interface MembersType {
   email: string;
@@ -10,7 +11,13 @@ export interface MembersType {
   status: 'PENDING' | 'ACCEPTED' | 'UNKNOWN' | string;
 }
 
-function InviteMember({ onSubmit }: { onSubmit: any }) {
+function InviteMember({
+  onSubmit,
+  loading,
+}: {
+  onSubmit: any;
+  loading: boolean;
+}) {
   return (
     <div>
       <form onSubmit={onSubmit} className="flex flex-row gap-2">
@@ -23,8 +30,8 @@ function InviteMember({ onSubmit }: { onSubmit: any }) {
           />
         </div>
         <div className="shrink">
-          <Button block type="submit">
-            Invite member
+          <Button block type="submit" disabled={loading}>
+            {loading ? 'Loading...' : 'Invite member'}
           </Button>
         </div>
       </form>
@@ -90,25 +97,33 @@ function TableMembers({ users }: { users: MembersType[] }) {
 
 export default function Members({ account, users }: MembersPageProps) {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
   async function createInvite(event: any) {
     event.preventDefault();
-    const form = event.target;
-    const email = form.email.value;
-    const response = await fetch('/api/invites', {
-      method: 'POST',
-      body: JSON.stringify({ email, accountId: account?.id }),
-    });
-    if (!response.ok) {
+    setLoading(true);
+    try {
+      const form = event.target;
+      const email = form.email.value;
+      const response = await fetch('/api/invites', {
+        method: 'POST',
+        body: JSON.stringify({ email, accountId: account?.id }),
+      });
+      if (!response.ok) {
+        throw response;
+      } else {
+        router.reload();
+      }
+    } catch (error) {
       alert('Something went wrong');
-    } else {
-      router.reload();
+    } finally {
+      setLoading(false);
     }
   }
 
   return (
     <DashboardLayout header="Members" account={account!}>
-      <InviteMember onSubmit={createInvite} />
+      <InviteMember onSubmit={createInvite} loading={loading} />
       <TableMembers users={users} />
     </DashboardLayout>
   );

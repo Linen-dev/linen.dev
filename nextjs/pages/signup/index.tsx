@@ -5,6 +5,7 @@ import Link from 'components/Link';
 import { useRouter } from 'next/router';
 import { getCsrfToken } from 'next-auth/react';
 import type { NextPageContext } from 'next';
+import { useState } from 'react';
 
 interface SignUpProps {
   csrfToken: string;
@@ -12,6 +13,7 @@ interface SignUpProps {
 
 export default function SignUp({ csrfToken }: SignUpProps) {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
   return (
     <Layout header="Sign Up">
@@ -20,6 +22,7 @@ export default function SignUp({ csrfToken }: SignUpProps) {
         action={`/api/auth/signin/email?callbackUrl=${
           router?.query?.callbackUrl || '/settings'
         }`}
+        onSubmit={() => setLoading(true)}
       >
         <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
         <EmailField
@@ -28,8 +31,8 @@ export default function SignUp({ csrfToken }: SignUpProps) {
           required
           defaultValue={router?.query?.email as string}
         />
-        <Button type="submit" block>
-          Sign up with Email
+        <Button type="submit" block disabled={loading}>
+          {loading ? 'Loading...' : 'Sign up with Email'}
         </Button>
       </form>
       <p className="text-sm pt-3 text-gray-600">
