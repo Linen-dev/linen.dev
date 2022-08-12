@@ -43,6 +43,8 @@ if (process.env.ANALYZE === 'true') {
     enabled: true,
   });
   module.exports = withBundleAnalyzer(nextConfig);
+} else if (process.env.NODE_ENV === 'development') {
+  module.exports = nextConfig;
 } else {
   module.exports = withSentryConfig(nextConfig, sentryWebpackPluginOptions);
 }
