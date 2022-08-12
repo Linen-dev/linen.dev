@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import prisma from '../../../client';
+import { withSentry } from 'utilities/sentry';
 
 type DefaultChannelRequest = {
   channelId: string;
@@ -44,10 +45,7 @@ async function put(req: NextApiRequest, res: NextApiResponse) {
   return res.status(200).json({});
 }
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   switch (req.method) {
     case 'PUT':
       return put(req, res);
@@ -55,3 +53,5 @@ export default async function handler(
       return res.status(404).json({});
   }
 }
+
+export default withSentry(handler);

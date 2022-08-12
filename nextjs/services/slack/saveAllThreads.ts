@@ -15,6 +15,7 @@ import { processReactions } from './reactions';
 import { processAttachments } from './attachments';
 import { getMentionedUsers } from './getMentionedUsers';
 import { parseSlackSentAt, tsToSentAt } from '../../utilities/sentAt';
+import { captureExceptionAndFlush } from 'utilities/sentry';
 
 async function saveMessagesSynchronous(
   messages: ConversationHistoryMessage[],
@@ -127,6 +128,7 @@ export async function saveAllThreads({
         );
       }
     } catch (e) {
+      await captureExceptionAndFlush(e);
       console.error(e);
     }
   }

@@ -1,10 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import prisma from '../../../client';
+import { withSentry } from 'utilities/sentry';
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   let skip = 0;
   let threadsToUpdate = await prisma.threads.findMany({
     include: {
@@ -47,3 +45,5 @@ export default async function handler(
 
   res.status(200).json(threadsToUpdate[0]);
 }
+
+export default withSentry(handler);

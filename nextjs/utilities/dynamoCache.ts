@@ -1,5 +1,5 @@
 import { gzipSync, gunzipSync } from 'zlib';
-import * as Sentry from '@sentry/nextjs';
+import { captureExceptionAndFlush } from 'utilities/sentry';
 import NodeCache from 'node-cache';
 import { DocumentClient } from '../services/aws/dynamo';
 declare global {
@@ -88,7 +88,7 @@ async function getCache(pk: string, sk: string) {
     }
   } catch (error) {
     console.error(error);
-    Sentry.captureException(error);
+    await captureExceptionAndFlush(error);
     return null;
   }
 }
@@ -108,7 +108,7 @@ async function setCache(pk: string, sk: string, obj: any) {
       },
     }).promise();
   } catch (error) {
-    Sentry.captureException(error);
+    await captureExceptionAndFlush(error);
     console.error(error);
   }
 }

@@ -5,6 +5,7 @@ import { createAuth } from '../../lib/auth';
 // The unstable_getServerSession only has the prefix unstable_ at the moment, because the API may change in the future. There are no known bugs at the moment and it is safe to use.
 import { unstable_getServerSession as getServerSession } from 'next-auth';
 import { authOptions } from './auth/[...nextauth]';
+import { captureExceptionAndFlush, withSentry } from 'utilities/sentry';
 
 async function create(request: NextApiRequest, response: NextApiResponse) {
   const { email, password } = JSON.parse(request.body);
@@ -37,6 +38,7 @@ async function create(request: NextApiRequest, response: NextApiResponse) {
     await sendNotification('Email created: ' + email);
   } catch (e) {
     console.log('failed to send: ', e);
+    await captureExceptionAndFlush(e);
   }
   return response
     .status(200)
@@ -93,10 +95,7 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
   return res.status(200).json(auth);
 }
 
-export default async function handler(
-  request: NextApiRequest,
-  response: NextApiResponse
-) {
+async function handler(request: NextApiRequest, response: NextApiResponse) {
   if (request.method === 'POST') {
     return create(request, response);
   }
@@ -108,3 +107,5 @@ export default async function handler(
   }
   return response.status(404);
 }
+
+export default withSentry(handler);

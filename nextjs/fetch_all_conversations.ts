@@ -1,5 +1,6 @@
 import type { channels, messages, threads } from '@prisma/client';
 import request from 'superagent';
+import { captureExceptionAndFlush } from 'utilities/sentry';
 import { createMessage, createOrUpdateMessage } from './lib/models';
 import { findOrCreateThread, findThread } from './lib/threads';
 import { createManyUsers, findUser } from './lib/users';
@@ -228,6 +229,7 @@ export const saveMessages = async (
 
     return messages;
   } catch (e) {
+    await captureExceptionAndFlush(e);
     console.log(e);
     return null;
   }
@@ -304,6 +306,7 @@ export async function saveThreadedMessages(
       await createOrUpdateMessage(replyParam);
     } catch (e) {
       console.log(e);
+      await captureExceptionAndFlush(e);
       continue;
     }
   }

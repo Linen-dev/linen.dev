@@ -4,11 +4,9 @@ import { createChannels } from 'services/slack';
 import request from 'superagent';
 import { fetchTeamInfo } from '../../fetch_all_conversations';
 import { createSlackAuthorization, updateAccount } from '../../lib/models';
+import { captureExceptionAndFlush, withSentry } from 'utilities/sentry';
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   const error = req.query.error as string;
   if (error) {
     console.error(error);
@@ -70,6 +68,7 @@ export default async function handler(
     // })
     .catch((err) => {
       console.error('Syncing error: ', err);
+      return captureExceptionAndFlush(err);
     });
 
   return res.redirect('/settings');
@@ -124,3 +123,5 @@ export interface IncomingWebhook {
   configuration_url: string;
   url: string;
 }
+
+export default withSentry(handler);

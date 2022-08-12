@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next/types';
 import { channelIndex, findOrCreateChannel } from '../../lib/models';
 import prisma from '../../client';
 import { channels } from '@prisma/client';
+import { withSentry } from 'utilities/sentry';
 
 //example post body:
 // {
@@ -68,10 +69,7 @@ async function update(request: NextApiRequest, response: NextApiResponse) {
   return response.status(200).json({});
 }
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'PUT') {
     return update(req, res);
   }
@@ -95,3 +93,5 @@ export default async function handler(
 }
 
 const get = () => {};
+
+export default withSentry(handler);

@@ -2,11 +2,9 @@ import { anonymizeMessagesMentions } from 'utilities/anonymizeMessages';
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import prisma from '../../client';
 import { messages, Prisma, mentions, threads, users } from '@prisma/client';
+import { withSentry } from 'utilities/sentry';
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   const query = req.query.query as string;
   const accountId = req.query.account_id as string;
   const limit = req.query.limit as string;
@@ -248,3 +246,5 @@ export interface Field {
   value: string;
   short: boolean;
 }
+
+export default withSentry(handler);

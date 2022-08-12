@@ -1,3 +1,4 @@
+import { captureExceptionAndFlush } from 'utilities/sentry';
 import prisma from '../../client';
 import { createSlug } from '../../lib/util';
 
@@ -35,6 +36,7 @@ export async function slugify() {
       body: {},
     };
   } catch (error) {
+    await captureExceptionAndFlush(error);
     console.error(error);
     return {
       status: 500,

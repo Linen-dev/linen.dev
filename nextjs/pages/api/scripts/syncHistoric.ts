@@ -7,6 +7,7 @@ import {
   slackAuthorizations,
   discordAuthorizations,
 } from '@prisma/client';
+import { captureExceptionAndFlush, withSentry } from 'utilities/sentry';
 
 function identifySyncType(
   account:
@@ -25,10 +26,7 @@ function identifySyncType(
   throw 'authorization missing';
 }
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   const accountId = req.query.account_id as string;
   const account = await prisma.accounts.findUnique({
     where: {
@@ -50,7 +48,10 @@ export default async function handler(
     res.setHeader('Cache-Control', 'max-age=60');
     res.status(200).json({});
   } catch (error) {
+    await captureExceptionAndFlush(error);
     console.error(error);
     res.status(500).json({ error: 'Something went wrong' });
   }
 }
+
+export default withSentry(handler);
