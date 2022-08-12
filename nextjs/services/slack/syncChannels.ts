@@ -3,6 +3,7 @@ import { joinChannel } from '../../fetch_all_conversations';
 import { channelIndex, createManyChannel } from '../../lib/models';
 import { getSlackChannels } from '.';
 import { sleep } from '../../utilities/retryPromises';
+import { captureExceptionAndFlush } from 'utilities/sentry';
 
 export async function createChannels({
   slackTeamId,
@@ -27,6 +28,7 @@ export async function createChannels({
   try {
     await createManyChannel(channelsParam);
   } catch (e) {
+    await captureExceptionAndFlush(e);
     console.log('Error creating Channels:', e);
   }
 

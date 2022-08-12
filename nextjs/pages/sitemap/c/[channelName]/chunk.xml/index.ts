@@ -2,6 +2,7 @@ import { createXMLSitemapForChannel } from 'utilities/sitemap';
 import { GetServerSideProps } from 'next/types';
 import { SitemapStream, streamToPromise } from 'sitemap';
 import { Readable } from 'stream';
+import { captureExceptionAndFlush } from 'utilities/sentry';
 
 export const getServerSideProps: GetServerSideProps = async ({
   req,
@@ -30,6 +31,7 @@ export const getServerSideProps: GetServerSideProps = async ({
     res.write(response);
     res.end();
   } catch (error) {
+    await captureExceptionAndFlush(error);
     console.error(error);
     res.statusCode = 500;
     res.write('Something went wrong');

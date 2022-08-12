@@ -38,11 +38,9 @@ import {
   updateUserFromUserInfo,
 } from '../../lib/users';
 import { parseSlackSentAt, tsToSentAt } from '../../utilities/sentAt';
+import { captureExceptionAndFlush, withSentry } from 'utilities/sentry';
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (!!req.body.challenge) {
     res.status(200).json(req.body.challenge);
     return;
@@ -50,6 +48,7 @@ export default async function handler(
 
   const result = await handleWebhook(req.body);
   if (result.error) {
+    await captureExceptionAndFlush(result.error);
     res.status(result.status).json({ error: result.error });
     return;
   }
@@ -408,3 +407,5 @@ async function processUserProfileChanged(body: SlackEvent) {
   }
   return { status: 200, message: 'user profile updated' };
 }
+
+export default withSentry(handler);

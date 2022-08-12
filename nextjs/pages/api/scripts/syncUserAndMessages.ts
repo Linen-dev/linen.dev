@@ -1,12 +1,10 @@
 import { listUsers as getUsersByAccountId } from 'lib/users';
 import { NextApiRequest, NextApiResponse } from 'next/types';
+import { captureExceptionAndFlush, withSentry } from 'utilities/sentry';
 import { listUsers, saveUsers } from '../../../fetch_all_conversations';
 import { findAccountById } from '../../../lib/models';
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   const accountId = req.query.account_id as string;
   const account = await findAccountById(accountId);
   if (!account) {
@@ -35,6 +33,7 @@ export default async function handler(
       }
       userCursor = usersListResponse?.body?.response_metadata?.next_cursor;
     } catch (e) {
+      await captureExceptionAndFlush(e);
       console.log('fetching user failed', (e as Error).message);
       userCursor = null;
     }
@@ -52,3 +51,5 @@ export default async function handler(
   const users = await saveUsers(newMembers, accountId);
   res.status(200).json({ users });
 }
+
+export default withSentry(handler);

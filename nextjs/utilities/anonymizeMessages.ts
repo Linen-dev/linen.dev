@@ -1,5 +1,6 @@
 import { channels, messages, mentions, threads, users } from '@prisma/client';
 import superagent from 'superagent';
+import { captureExceptionAndFlush } from 'utilities/sentry';
 
 type Messages =
   | (messages & {
@@ -77,5 +78,6 @@ export function dispatchAnonymizeRequest(accountId: string) {
     })
     .catch((err) => {
       console.error('Anonymize failed: ', err);
+      return captureExceptionAndFlush(err);
     });
 }

@@ -7,6 +7,7 @@ import { dispatchAnonymizeRequest } from 'utilities/anonymizeMessages';
 import { unstable_getServerSession } from 'next-auth';
 import { authOptions } from './auth/[...nextauth]';
 import { createAccountAndUser } from 'lib/account';
+import { captureExceptionAndFlush, withSentry } from 'utilities/sentry';
 
 async function create(req: NextApiRequest, res: NextApiResponse) {
   const session = await unstable_getServerSession(req, res, authOptions);
@@ -87,14 +88,12 @@ async function update(request: NextApiRequest, response: NextApiResponse) {
         error: 'Redirect domain is already in use',
       });
     }
+    await captureExceptionAndFlush(exception);
     return response.status(500).json({});
   }
 }
 
-export default async function handler(
-  request: NextApiRequest,
-  response: NextApiResponse
-) {
+async function handler(request: NextApiRequest, response: NextApiResponse) {
   if (request.method === 'POST') {
     return create(request, response);
   }
@@ -103,3 +102,5 @@ export default async function handler(
   }
   return response.status(404);
 }
+
+export default withSentry(handler);

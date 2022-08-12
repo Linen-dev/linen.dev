@@ -10,6 +10,7 @@ import {
   MessageFile,
 } from '../../fetch_all_conversations';
 import prisma from '../../client';
+import { captureExceptionAndFlush } from 'utilities/sentry';
 
 export async function processAttachments(
   m: ConversationHistoryMessage,
@@ -51,11 +52,12 @@ export async function processAttachments(
             })
             .catch((error) => {
               console.log('attachment failure', error);
+              return captureExceptionAndFlush(error);
             });
         })
     );
   }
-  return await Promise.all(promises).catch(console.error);
+  return await Promise.all(promises).catch(captureExceptionAndFlush);
 }
 
 /**
@@ -87,7 +89,7 @@ async function processLinks(
       };
     } catch (error) {
       console.error(error);
-      // TODO: report errors?
+      await captureExceptionAndFlush(error);
       return {};
     }
   }

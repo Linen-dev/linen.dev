@@ -3,6 +3,7 @@ import { SitemapIndexStream, streamToPromise } from 'sitemap';
 import { Readable } from 'stream';
 import prisma from '../client';
 import { encodeCursor } from './cursor';
+import { captureExceptionAndFlush } from 'utilities/sentry';
 
 const resolveProtocol = (host: string) => {
   return ['localhost'].includes(host) ? 'http' : 'https';
@@ -194,6 +195,7 @@ async function queryThreads(
 
     nextCursor = threads.pop()?.sentAt;
   } catch (error) {
+    await captureExceptionAndFlush(error);
     console.error(error);
     err = error;
   }

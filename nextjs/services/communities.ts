@@ -22,6 +22,7 @@ import {
   ChannelViewCursorProps,
   ChannelViewProps,
 } from 'components/Pages/Channels';
+import { captureExceptionAndFlush } from 'utilities/sentry';
 
 const CURSOR_LIMIT = 10;
 
@@ -235,6 +236,7 @@ async function buildCursor({
       };
     }
   } catch (error) {
+    await captureExceptionAndFlush(error);
     console.error(error);
     return {
       prev: null,

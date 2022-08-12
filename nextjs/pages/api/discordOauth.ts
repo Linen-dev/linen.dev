@@ -4,11 +4,9 @@ import request from 'superagent';
 import prisma from '../../client';
 import { updateAccount } from '../../lib/models';
 import { timeoutAfter } from '../../utilities/retryPromises';
+import { captureExceptionAndFlush, withSentry } from 'utilities/sentry';
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   const code = req.query.code;
   const accountId = req.query.state as string;
   const error = req.query.error as string;
@@ -60,6 +58,7 @@ export default async function handler(
     // })
     .catch((err) => {
       console.error('Syncing error: ', err);
+      return captureExceptionAndFlush(err);
     });
 
   return res.redirect('/settings');
@@ -172,3 +171,5 @@ export interface Role {
 export interface Tags {
   bot_id: string;
 }
+
+export default withSentry(handler);

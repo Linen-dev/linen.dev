@@ -9,6 +9,7 @@ import { syncUsers } from './syncUsers';
 import { fetchAllTopLevelMessages } from './fetchAllTopLevelMessages';
 import { saveAllThreads } from './saveAllThreads';
 import { hideEmptyChannels } from '../../lib/channel';
+import { captureExceptionAndFlush } from 'utilities/sentry';
 
 export async function slackSync({
   accountId,
@@ -79,6 +80,7 @@ export async function slackSync({
       body: {},
     };
   } catch (err) {
+    await captureExceptionAndFlush(err);
     console.error(err);
 
     await updateAndNotifySyncStatus(

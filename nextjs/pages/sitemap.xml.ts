@@ -4,6 +4,7 @@ import {
 } from '../utilities/sitemap';
 import { isLinenDomain } from '../utilities/domain';
 import { GetServerSideProps } from 'next/types';
+import { captureExceptionAndFlush } from 'utilities/sentry';
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   const { host } = req.headers;
@@ -19,6 +20,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
     res.write(sitemap);
     res.end();
   } catch (exception) {
+    await captureExceptionAndFlush(exception);
     console.error(exception);
     res.statusCode = 500;
     res.write('Something went wrong');
