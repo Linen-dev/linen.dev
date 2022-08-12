@@ -5,6 +5,7 @@ import styles from './index.module.css';
 import { ThreadByIdProp } from '../../../types/apiResponses/threads/[threadId]';
 import Row from '../../Message/Row';
 import JoinChannelLink from 'components/Link/JoinChannelLink';
+import { SerializedMessage } from 'serializers/thread';
 
 export default function Thread({
   threadId,
@@ -56,9 +57,12 @@ export default function Thread({
     path: `/c/${currentChannel?.channelName}`,
   };
 
-  function buildTitle(channelName: string | undefined, message: any) {
+  function buildTitle(
+    channelName: string | undefined,
+    message?: SerializedMessage
+  ) {
     const channel = !!channelName ? `#${channelName}` : '';
-    return `${channel} - ${message.body.slice(0, 30)}`;
+    return `${channel} - ${message?.body.slice(0, 30)}`;
   }
 
   return (
