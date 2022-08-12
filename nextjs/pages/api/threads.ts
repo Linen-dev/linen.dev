@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import { channelNextPage } from '../../services/communities';
 import prisma from '../../client';
+import { withSentry } from 'utilities/sentry';
 
 async function update(request: NextApiRequest, response: NextApiResponse) {
   const incrementId = request.query.incrementId as string;
@@ -22,10 +23,7 @@ async function get(request: NextApiRequest, response: NextApiResponse) {
   return response.status(200).json(result);
 }
 
-export default async function handler(
-  request: NextApiRequest,
-  response: NextApiResponse
-) {
+async function handler(request: NextApiRequest, response: NextApiResponse) {
   if (request.method === 'PUT') {
     return update(request, response);
   }
@@ -34,3 +32,5 @@ export default async function handler(
   }
   return response.status(404);
 }
+
+export default withSentry(handler);

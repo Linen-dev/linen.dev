@@ -1,5 +1,6 @@
 import { createXMLSitemapForFreeCommunity } from 'utilities/sitemap';
 import { GetServerSideProps } from 'next/types';
+import { captureExceptionAndFlush } from 'utilities/sentry';
 
 export const getServerSideProps: GetServerSideProps = async ({
   req,
@@ -21,6 +22,7 @@ export const getServerSideProps: GetServerSideProps = async ({
     res.write(sitemap);
     res.end();
   } catch (error) {
+    await captureExceptionAndFlush(error);
     console.error(error);
     res.statusCode = 500;
     res.write('Something went wrong');

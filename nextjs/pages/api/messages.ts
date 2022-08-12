@@ -1,10 +1,8 @@
 import { findMessagesFromChannel } from 'lib/models';
 import { NextApiRequest, NextApiResponse } from 'next/types';
+import { withSentry } from 'utilities/sentry';
 
-export default async function handler(
-  request: NextApiRequest,
-  response: NextApiResponse
-) {
+async function handler(request: NextApiRequest, response: NextApiResponse) {
   if (request.method === 'GET') {
     return getMessagesFromChannel(request, response);
   }
@@ -33,3 +31,5 @@ async function getMessagesFromChannel(
     })
   );
 }
+
+export default withSentry(handler);

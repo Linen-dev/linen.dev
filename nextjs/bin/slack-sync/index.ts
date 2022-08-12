@@ -1,6 +1,7 @@
 import { findArgAndParse } from '../../utilities/processArgs';
 import { slackSync } from '../../services/slack';
 import { findSlackAccounts } from '../../lib/account';
+import { captureExceptionAndFlush } from 'utilities/sentry';
 
 async function runScript(
   account: { id: string },
@@ -17,6 +18,7 @@ async function runScript(
     })
     .catch((err) => {
       console.error('Syncing error: ', err, account);
+      return captureExceptionAndFlush(err);
     });
 }
 

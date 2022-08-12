@@ -2,6 +2,7 @@ import { buffer } from 'micro';
 import prisma from 'client';
 import stripe from 'services/stripe';
 import { NextApiRequest, NextApiResponse } from 'next/types';
+import { captureExceptionAndFlush, withSentry } from 'utilities/sentry';
 
 const secret = process.env.STRIPE_WEBHOOK_SECRET;
 
@@ -35,10 +36,7 @@ async function fetchAccountId(event: any) {
   return customer.metadata.accountId;
 }
 
-export default async function handler(
-  request: NextApiRequest,
-  response: NextApiResponse
-) {
+async function handler(request: NextApiRequest, response: NextApiResponse) {
   if (request.method === 'POST') {
     const body = await buffer(request);
     const signature = request.headers['stripe-signature'];
@@ -51,6 +49,7 @@ export default async function handler(
     try {
       event = stripe.webhooks.constructEvent(body, signature, secret);
     } catch (err) {
+      await captureExceptionAndFlush(err);
       return response.status(400).json({ status: 'error' });
     }
 
@@ -73,3 +72,5 @@ export default async function handler(
 
   return response.status(405).json({ status: 'error' });
 }
+
+export default withSentry(handler);

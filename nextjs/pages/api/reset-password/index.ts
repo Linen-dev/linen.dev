@@ -1,4 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
+import { captureExceptionAndFlush, withSentry } from 'utilities/sentry';
 import prisma from '../../../client';
 import { generateHash } from '../../../utilities/password';
 
@@ -26,17 +27,17 @@ async function create(request: NextApiRequest, response: NextApiResponse) {
       },
     });
   } catch (exception) {
+    await captureExceptionAndFlush(exception);
     response.status(200).json({});
   }
   return response.status(200).json({});
 }
 
-export default async function handler(
-  request: NextApiRequest,
-  response: NextApiResponse
-) {
+async function handler(request: NextApiRequest, response: NextApiResponse) {
   if (request.method === 'POST') {
     return create(request, response);
   }
   return response.status(404);
 }
+
+export default withSentry(handler);

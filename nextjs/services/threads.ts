@@ -12,6 +12,7 @@ import { NotFound } from '../utilities/response';
 import { revalidateInSeconds } from '../constants/revalidate';
 import { buildSettings } from './accountSettings';
 import { memoize } from '../utilities/dynamoCache';
+import { captureExceptionAndFlush } from 'utilities/sentry';
 
 // extracted here to be reused in both /[threadId]/index and /[slug]/index
 export async function getThreadById(
@@ -130,6 +131,7 @@ export async function threadGetStaticProps(
       revalidate: revalidateInSeconds, // In seconds
     };
   } catch (exception) {
+    await captureExceptionAndFlush(exception);
     console.error(exception);
     return NotFound();
   }

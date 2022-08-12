@@ -1,4 +1,5 @@
 import S3 from 'aws-sdk/clients/s3';
+import { captureExceptionAndFlush } from 'utilities/sentry';
 import { awsCredentials } from './credentials';
 
 declare global {
@@ -22,7 +23,7 @@ export async function uploadFile(Key: string, Body: Buffer) {
       })
       .promise();
   } catch (error) {
-    // TODO: report error?
+    await captureExceptionAndFlush(error);
     console.error(error);
   }
 }

@@ -1,3 +1,4 @@
+import { captureExceptionAndFlush } from 'utilities/sentry';
 import prisma from '../../client';
 import { discordSync } from '../../services/discord/sync';
 
@@ -42,6 +43,7 @@ async function runSync(accountId?: string, fullSync?: boolean) {
       })
       .catch((err) => {
         console.error('Syncing error: ', err, account);
+        return captureExceptionAndFlush(err);
       });
   }
 }

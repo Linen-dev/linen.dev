@@ -1,10 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import request from 'superagent';
+import { captureExceptionAndFlush, withSentry } from 'utilities/sentry';
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   const accountId = req.query.account_id as string;
   // Initialize syncing asynchronously
   console.log('Start syncing account: ', accountId);
@@ -17,7 +15,10 @@ export default async function handler(
     })
     .catch((err) => {
       console.error('Syncing error: ', err.status, err.message);
+      return captureExceptionAndFlush(err);
     });
 
   return res.status(200).json({});
 }
+
+export default withSentry(handler);

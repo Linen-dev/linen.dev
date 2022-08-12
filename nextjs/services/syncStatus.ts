@@ -1,6 +1,7 @@
 import ApplicationMailer from '../mailers/ApplicationMailer';
 import { updateAccountSyncStatus } from '../lib/models';
 import { sendNotification } from './slack';
+import { captureExceptionAndFlush } from 'utilities/sentry';
 
 export enum SyncStatus {
   IN_PROGRESS = 'IN_PROGRESS',
@@ -36,8 +37,10 @@ async function emailNotification(
       html: `Syncing process is ${status} for account:  ${accountId}, ${accountName}, ${homeUrl}`,
     }).catch((err) => {
       console.log('Failed to send Email notification', err);
+      return captureExceptionAndFlush(err);
     });
   } catch (error) {
+    await captureExceptionAndFlush(error);
     console.error(error);
   }
 }
@@ -53,6 +56,7 @@ async function slackNotification(
       `Syncing process is ${status} for account: ${accountId}, ${accountName}, ${homeUrl}.`
     );
   } catch (e) {
+    await captureExceptionAndFlush(e);
     console.error('Failed to send Slack notification: ', e);
   }
 }

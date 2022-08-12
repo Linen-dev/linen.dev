@@ -5,6 +5,7 @@ import {
 } from '../../types/partialTypes';
 import { createOrUpdateUser, findUsersByAccountId } from '../../lib/users';
 import { UserInfo } from '../../types/slackResponses/slackUserInfoInterface';
+import { captureExceptionAndFlush } from 'utilities/sentry';
 
 export async function syncUsers({
   accountId,
@@ -32,6 +33,7 @@ export async function syncUsers({
       }
       userCursor = usersListResponse?.body?.response_metadata?.next_cursor;
     } catch (e) {
+      await captureExceptionAndFlush(e);
       console.log('fetching user failed', (e as Error).message);
       userCursor = null;
     }
