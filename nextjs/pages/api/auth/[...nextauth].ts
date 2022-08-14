@@ -33,7 +33,9 @@ export const authOptions = {
             url,
           });
 
-          const failed = result.rejected.concat(result.pending).filter(Boolean);
+          const failed = result?.rejected
+            ?.concat(result.pending)
+            .filter(Boolean);
           if (failed.length) {
             throw new Error(
               `Email(s) (${failed.join(', ')}) could not be sent`
