@@ -8,23 +8,19 @@ describe('Message', () => {
     expect(container).toHaveTextContent('😃');
   });
 
-  it('highlights channel names', () => {
-    const { container } = render(<Message text="Hey <!general>" />);
-    expect(container).toHaveTextContent('@general');
+  it('renders channel ids', () => {
+    const { container } = render(<Message text="Hey <#A1>" />);
+    expect(container).toHaveTextContent('#A1');
   });
 
-  describe('when channel data is present', () => {
-    it('renders channel names', () => {
-      const { container } = render(<Message text="Hey <#A1>" />);
-      expect(container).toHaveTextContent('#A1');
-    });
+  it('renders channel names', () => {
+    const { container } = render(<Message text="Hey <#A1|general>" />);
+    expect(container).toHaveTextContent('#general');
+  });
 
-    describe('when name is present', () => {
-      it('renders channel names', () => {
-        const { container } = render(<Message text="Hey <#A1|general>" />);
-        expect(container).toHaveTextContent('#general');
-      });
-    });
+  it('renders commands', () => {
+    const { container } = render(<Message text="Hey <!fx^fy>" />);
+    expect(container).toHaveTextContent('<!fx^fy>');
   });
 
   describe('when a mention is present', () => {
@@ -74,7 +70,7 @@ describe('Message', () => {
       describe('and mention is broken', () => {
         it('does not render anything', () => {
           const { container } = render(<Message text="Hey <@>." />);
-          expect(container).toHaveTextContent('Hey .');
+          expect(container).toHaveTextContent('Hey @User.');
         });
       });
     });

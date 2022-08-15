@@ -1,11 +1,12 @@
 import React from 'react';
 import classNames from 'classnames';
 import styles from './index.module.css';
-import { isImage, isVideo, isUrlValid, isTweet } from './utilities';
+import { isImage, isVideo, isUrlValid, isTweet, isMail } from './utilities';
 import Toggle from 'components/Toggle';
 import Image from './Image';
 import Video from './Video';
 import Tweet from './Tweet';
+import Mail from './Mail';
 
 interface Props {
   value: string;
@@ -38,6 +39,10 @@ export default function Link({ value }: Props) {
         <Tweet src={href} />
       </Toggle>
     );
+  }
+
+  if (isMail(href)) {
+    return <Mail value={value} />;
   }
 
   const isHrefInvalid = !isUrlValid(href);

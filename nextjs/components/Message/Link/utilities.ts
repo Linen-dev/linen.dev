@@ -45,6 +45,10 @@ export function isTweet(href: string): boolean {
   );
 }
 
+export function isMail(href: string): boolean {
+  return href.startsWith('mailto:');
+}
+
 export function isUrlValid(url: string): boolean {
   return !url.startsWith('http://-') && !url.startsWith('https://-');
 }
