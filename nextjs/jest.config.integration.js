@@ -8,7 +8,8 @@ const createJestConfig = nextJest(nextConfig);
 const config = {
   // collectCoverage: true,
   // coverageDirectory: 'coverage',
-  testMatch: ['**/?(*.)+(iispec|itest).[tj]s?(x)'],
+  moduleDirectories: ['node_modules', '<rootDir>/'],
+  testMatch: ['**/?(*.)+(ispec|itest).[tj]s?(x)'],
   setupFilesAfterEnv: [
     '<rootDir>/__tests__/mocks.ts',
     '<rootDir>/__mocks__/client.ts',

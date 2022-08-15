@@ -1,11 +1,9 @@
 import handler from '../../../pages/api/auth';
 import { create } from '../../factory';
 import type { NextApiRequest, NextApiResponse } from 'next';
-import prisma from '../../../client';
 import { sendNotification } from '../../../services/slack';
 import ApplicationMailer from '../../../mailers/ApplicationMailer';
 
-jest.mock('../../../client');
 jest.mock('../../../services/slack');
 jest.mock('../../../mailers/ApplicationMailer');
 
@@ -20,7 +18,6 @@ describe('auth', () => {
         },
       }) as NextApiRequest;
       const response = create('response') as NextApiResponse;
-      (prisma.auths.findFirst as jest.Mock).mockResolvedValue(null);
       await handler(request, response);
       expect(response.status).toHaveBeenCalledWith(200);
       expect(response.json).toHaveBeenCalledWith({
@@ -37,7 +34,6 @@ describe('auth', () => {
         },
       }) as NextApiRequest;
       const response = create('response') as NextApiResponse;
-      (prisma.auths.findFirst as jest.Mock).mockResolvedValue(null);
       await handler(request, response);
       expect(sendNotification).toHaveBeenCalledWith(
         'Email created: john@doe.com'
@@ -53,7 +49,6 @@ describe('auth', () => {
         },
       }) as NextApiRequest;
       const response = create('response') as NextApiResponse;
-      (prisma.auths.findFirst as jest.Mock).mockResolvedValue(null);
       await handler(request, response);
       expect(ApplicationMailer.send).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -73,9 +68,7 @@ describe('auth', () => {
           },
         }) as NextApiRequest;
         const response = create('response') as NextApiResponse;
-        (prisma.auths.findFirst as jest.Mock).mockResolvedValue(null);
         await handler(request, response);
-        (prisma.auths.findFirst as jest.Mock).mockResolvedValue({});
         await handler(request, response);
         expect(response.status).toHaveBeenCalledWith(200);
         expect(response.json).toHaveBeenCalledWith({
