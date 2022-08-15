@@ -15,7 +15,7 @@ async function processMessageReactionEvent(
 
   if (channel === null || channel.account === null) {
     console.error('Channel does not exist in db ');
-    return { status: 403, error: 'Channel not found' };
+    return { status: 403, error: 'Channel not found', metadata: { channelId } };
   }
 
   const message = await prisma.messages.findUnique({
@@ -31,6 +31,7 @@ async function processMessageReactionEvent(
     return {
       status: 404,
       error: 'Message not found',
+      metadata: { channelId: channel.id, externalMessageId: event.item.ts },
     };
   }
 
@@ -46,7 +47,7 @@ async function processMessageReactionEvent(
     where: whereClause,
   });
 
-  console.log('reaction', reaction);
+  // console.log('reaction', reaction);
 
   return { reaction, whereClause, message };
 }

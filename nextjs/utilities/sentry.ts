@@ -5,4 +5,22 @@ async function captureExceptionAndFlush(error: unknown) {
   await flush(2000);
 }
 
-export { withSentry, captureException, captureExceptionAndFlush };
+function tryCatch<R, T extends (...args: any[]) => Promise<R>>(fn: T): T {
+  const g = async (...args: any[]) => {
+    try {
+      return await fn(...args);
+    } catch (error) {
+      await captureExceptionAndFlush(error);
+      throw error;
+    }
+  };
+  return g as T;
+}
+
+// const devWithSentry = (origHandler: any) => {
+//   return async (req: any, res: any) => {
+//     return origHandler(req, res);
+//   };
+// };
+
+export { withSentry, captureException, captureExceptionAndFlush, tryCatch };
