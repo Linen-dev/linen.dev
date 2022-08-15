@@ -2,10 +2,7 @@ import {
   ConversationHistoryMessage,
   fetchReplies,
 } from '../../fetch_all_conversations';
-import {
-  findThreadsWithOnlyOneMessage,
-  findOrCreateThread,
-} from '../../lib/threads';
+import { findOrCreateThread, findThreadsByChannel } from '../../lib/threads';
 import { retryPromise } from '../../utilities/retryPromises';
 import { UserMap } from '../../types/partialTypes';
 import type { channels } from '@prisma/client';
@@ -87,49 +84,65 @@ async function saveMessagesSynchronous(
 }
 
 export async function saveAllThreads({
-  channels,
+  channel,
   token,
   usersInDb,
 }: {
-  channels: channels[];
+  channel: channels;
   token: string;
   usersInDb: UserMap[];
 }) {
-  const messageWithThreads = await findThreadsWithOnlyOneMessage(
-    channels.map((c) => c.id)
-  );
-  console.log('syncing threads: ', messageWithThreads.length);
+  console.log('syncing threads', channel?.channelName);
 
-  for (let i = 0; i < messageWithThreads.length; i++) {
-    if (i % 10 === 0) {
-      console.log(i);
-    }
-    const m = messageWithThreads[i];
-    const channel = channels.find((c) => c.id === m.channelId);
+  let cursor = 0;
+  do {
+    console.log('cursor', cursor);
+    const threads = await findThreadsByChannel({
+      channelId: channel.id,
+      cursor,
+      limit: 25,
+    });
 
-    try {
-      const replies = await retryPromise({
-        promise: fetchReplies(
-          m.externalThreadId,
-          channel!.externalChannelId,
-          token
-        ),
-        sleepSeconds: 30,
-      });
+    if (!threads?.length) break;
+    console.log('threads.length', threads.length);
 
-      const replyMessages: ConversationHistoryMessage[] =
-        replies?.body?.messages;
-      if (replyMessages && replyMessages.length) {
-        await saveMessagesSynchronous(
-          replyMessages,
-          m.channelId,
-          usersInDb,
-          token
-        );
-      }
-    } catch (e) {
-      await captureExceptionAndFlush(e);
-      console.error(e);
-    }
-  }
+    await Promise.all(
+      threads.map(async (thread) => {
+        try {
+          const replies = await retryPromise({
+            promise: fetchReplies(
+              thread.externalThreadId,
+              channel!.externalChannelId,
+              token
+            ),
+            sleepSeconds: 30,
+          });
+          const replyMessages: ConversationHistoryMessage[] =
+            replies?.body?.messages;
+
+          console.log(
+            thread.externalThreadId,
+            thread.messageCount,
+            'replyMessages.length',
+            replyMessages?.length
+          );
+          if (replyMessages && replyMessages.length) {
+            await saveMessagesSynchronous(
+              replyMessages,
+              thread.channelId,
+              usersInDb,
+              token
+            );
+          }
+        } catch (e) {
+          console.error(e);
+          await captureExceptionAndFlush(e);
+        }
+      })
+    );
+
+    cursor = Number(threads?.[threads?.length - 1]?.sentAt);
+  } while (true);
+
+  console.log('finish sync threads', channel?.channelName);
 }

@@ -2,5 +2,8 @@
   "extends": "./tsconfig",
   "compilerOptions": {
     "module": "commonjs"
+  },
+  "ts-node": {
+    "require": ["tsconfig-paths/register"]
   }
 }

@@ -68,7 +68,7 @@ describe('slackSync :: fetchAllTopLevelMessages', () => {
     const channelsUpdateMock = prismaMock.channels.update.mockResolvedValue();
 
     await fetchAllTopLevelMessages({
-      channels: [internalChannel],
+      channel: internalChannel,
       account,
       usersInDb: [],
       token: account.slackAuthorizations[0].accessToken,
@@ -88,8 +88,17 @@ describe('slackSync :: fetchAllTopLevelMessages', () => {
         externalThreadId: conversationHistory.messages[index].ts,
         sentAt: parseSlackSentAt(conversationHistory.messages[index].ts),
         slug: createSlug(conversationHistory.messages[index].text),
+        messageCount:
+          (conversationHistory.messages[index]?.reply_count || 0) + 1,
       },
-      update: {},
+      update: {
+        channelId: internalChannel.id,
+        externalThreadId: conversationHistory.messages[index].ts,
+        sentAt: parseSlackSentAt(conversationHistory.messages[index].ts),
+        slug: createSlug(conversationHistory.messages[index].text),
+        messageCount:
+          (conversationHistory.messages[index]?.reply_count || 0) + 1,
+      },
       where: {
         externalThreadId: conversationHistory.messages[index].ts,
       },
