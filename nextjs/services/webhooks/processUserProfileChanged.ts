@@ -13,7 +13,8 @@ export async function processUserProfileChanged(body: SlackEvent) {
   const teamId = body.team_id;
   const event = body.event as UserProfileUpdateEvent;
   const account = await findAccountIdByExternalId(teamId);
-  if (!account) return { status: 404, error: 'account not found' };
+  if (!account)
+    return { status: 404, error: 'account not found', metadata: { teamId } };
   const user = await findUser(event.user.id, account.id);
   if (!user) {
     await createUserFromUserInfo(event.user, account.id);
