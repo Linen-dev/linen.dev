@@ -1,6 +1,4 @@
-import type SESTransport from 'nodemailer/lib/ses-transport';
 import type SMTPTransport from 'nodemailer/lib/smtp-transport';
-import { sesClient } from '../../services/aws/ses';
 
 const NODE_ENV = process.env.NODE_ENV || 'development';
 
@@ -24,26 +22,13 @@ const smtpTransport = {
   },
 } as SMTPTransport.Options;
 
-const sesTransport = {
-  SES: sesClient,
-} as SESTransport.Options;
-
-interface TransportOptions {
-  SES?: object;
-  host?: string;
-  port?: number;
-  secure?: boolean;
-  auth?: {
-    user: string;
-    pass: string;
-  };
-  send?: (data: any, callback: any) => void;
-}
-
-const transport: any = {
+const transport: Record<
+  'development' | 'production' | 'test',
+  SMTPTransport.Options
+> = {
   test: testTransport,
   development: smtpTransport,
-  production: sesTransport,
+  production: smtpTransport,
 };
 
-export default transport[NODE_ENV] as TransportOptions;
+export default transport[NODE_ENV] as SMTPTransport.Options;
