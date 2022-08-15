@@ -16,11 +16,13 @@ export async function slackSync({
   channelId,
   domain,
   fullSync,
+  skipUsers = false,
 }: {
   accountId: string;
   channelId?: string;
   domain?: string;
   fullSync?: boolean | undefined;
+  skipUsers?: boolean;
 }) {
   console.log(new Date());
   console.log('fullSync', fullSync);
@@ -51,21 +53,24 @@ export async function slackSync({
     });
 
     //paginate and find all the users
-    const usersInDb = await syncUsers({ accountId, token, account });
+    const usersInDb = await syncUsers({ accountId, token, account, skipUsers });
 
-    //fetch and save all top level conversations
-    await fetchAllTopLevelMessages({
-      channels,
-      account,
-      usersInDb,
-      token,
-      fullSync,
-    });
+    for (const channel of channels) {
+      //fetch and save all top level conversations
+      await fetchAllTopLevelMessages({
+        channel,
+        account,
+        usersInDb,
+        token,
+        fullSync,
+      });
 
-    // Save all threads
-    // only fetch threads with single message
-    // There will be edge cases where not all the threads are sync'd if you cancel the script
-    await saveAllThreads({ channels, token, usersInDb });
+      // Save all threads
+      // only fetch threads with single message
+      // There will be edge cases where not all the threads are sync'd if you cancel the script
+      await saveAllThreads({ channel, token, usersInDb });
+    }
+
     await hideEmptyChannels(accountId);
 
     await updateAndNotifySyncStatus(

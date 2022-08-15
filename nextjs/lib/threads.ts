@@ -23,12 +23,14 @@ export const updateSlackThread = async (
   });
 };
 
-export const findOrCreateThread = async (thread: Thread) => {
+export const findOrCreateThread = async (
+  thread: Prisma.threadsCreateManyInput
+) => {
   return await prisma.threads.upsert({
     where: {
       externalThreadId: thread.externalThreadId,
     },
-    update: {},
+    update: thread,
     create: thread,
     include: {
       messages: true,
@@ -98,22 +100,38 @@ export const findThreadById = async (threadId: number) => {
     });
 };
 
-// using unsafe because prisma query raw does not play well with string interpolation
-export const findThreadsWithOnlyOneMessage = async (
-  channelIds: string[]
-): Promise<{ id: string; externalThreadId: string; channelId: string }[]> => {
-  const ids = channelIds.map((id) => `'${id}'`).join(' , ');
-  const query = `
-  select "threads".id as id , "threads"."externalThreadId", "threads"."channelId"
-  from "threads" join messages on messages."threadId" = "threads".id 
-  where "threads"."channelId" in (${ids})
-  group by "threads".id
-  having count(*) = 1
-  order by "threads"."externalThreadId" desc
-  ;`;
-
-  return await prisma.$queryRawUnsafe(query);
+export const findThreadsByChannel = ({
+  channelId,
+  cursor,
+  limit = 10,
+}: {
+  channelId: string;
+  cursor?: number;
+  limit?: number;
+}) => {
+  return prisma.threads.findMany({
+    where: { channelId, sentAt: { gt: cursor || 0 } },
+    take: limit,
+    orderBy: { sentAt: 'asc' },
+  });
 };
+
+// using unsafe because prisma query raw does not play well with string interpolation
+// export const findThreadsWithOnlyOneMessage = async (
+//   channelIds: string[]
+// ): Promise<{ id: string; externalThreadId: string; channelId: string }[]> => {
+//   const ids = channelIds.map((id) => `'${id}'`).join(' , ');
+//   const query = `
+//   select "threads".id as id , "threads"."externalThreadId", "threads"."channelId"
+//   from "threads" join messages on messages."threadId" = "threads".id
+//   where "threads"."channelId" in (${ids})
+//   group by "threads".id
+//   having count(*) = 1
+//   order by "threads"."externalThreadId" desc
+//   ;`;
+
+//   return await prisma.$queryRawUnsafe(query);
+// };
 
 // using unsafe because prisma query raw does not play well with string interpolation
 export const findThreadsWithNoMessages = async (

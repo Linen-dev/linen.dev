@@ -1,5 +1,5 @@
-import { conversationHistory, conversationReplies } from '__mocks__/slack-api';
 import { prismaMock } from '../../__tests__/singleton';
+import { conversationHistory, conversationReplies } from '__mocks__/slack-api';
 import * as fetch_all_conversations from 'fetch_all_conversations';
 import * as s3Helper from '../aws/s3';
 import { saveAllThreads } from './saveAllThreads';
@@ -56,8 +56,9 @@ describe('slackSync :: saveAllThreads', () => {
       });
     expect(threads.length).toBe(2);
 
-    const findThreadsWithOnlyOneMessageMock =
-      prismaMock.$queryRawUnsafe.mockResolvedValueOnce(threads);
+    const findThreadsWithOnlyOneMessageMock = prismaMock.threads.findMany
+      .mockResolvedValueOnce(threads)
+      .mockResolvedValueOnce();
 
     const fetchConversationsTypedMock = jest
       .spyOn(fetch_all_conversations, 'fetchReplies')
@@ -86,13 +87,12 @@ describe('slackSync :: saveAllThreads', () => {
     const uploadFileSpy = jest.spyOn(s3Helper, 'uploadFile');
 
     await saveAllThreads({
-      channels: [internalChannel, internalChannel2],
+      channel: internalChannel,
       usersInDb: [],
       token: account.slackAuthorizations[0].accessToken,
     });
 
-    expect(findThreadsWithOnlyOneMessageMock).toBeCalledTimes(1);
-    expect(findThreadsWithOnlyOneMessageMock).toHaveBeenCalledWith(rawQuery);
+    expect(findThreadsWithOnlyOneMessageMock).toBeCalledTimes(2);
 
     expect(fetchConversationsTypedMock).toBeCalledTimes(2);
     expect(fetchConversationsTypedMock).toHaveBeenNthCalledWith(
@@ -130,7 +130,12 @@ describe('slackSync :: saveAllThreads', () => {
       include: {
         messages: true,
       },
-      update: {},
+      update: {
+        channelId: internalChannel.id,
+        externalThreadId: threads[0].id,
+        sentAt: parseSlackSentAt(threads[0].externalThreadId),
+        slug: createSlug(conversationReplies.messages[index].text),
+      },
       where: {
         externalThreadId: threads[0].id,
       },
