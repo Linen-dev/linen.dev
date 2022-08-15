@@ -50,18 +50,3 @@ export const handleWebhook = async (
     };
   }
 };
-
-export async function getChannel(channelId: string) {
-  return await prisma.channels.findUnique({
-    where: {
-      externalChannelId: channelId,
-    },
-    include: {
-      account: {
-        include: {
-          slackAuthorizations: true,
-        },
-      },
-    },
-  });
-}
