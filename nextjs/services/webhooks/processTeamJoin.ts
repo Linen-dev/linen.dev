@@ -13,7 +13,8 @@ export async function processTeamJoin(body: SlackEvent) {
   if (!account?.id) {
     return {
       status: 404,
-      message: 'Account not found',
+      error: 'Account not found',
+      metadata: { team_id },
     };
   }
   await createUserFromUserInfo(event.user, account.id);

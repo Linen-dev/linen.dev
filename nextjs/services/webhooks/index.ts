@@ -11,24 +11,37 @@ import {
 } from './processChannelEvents';
 import { processUserProfileChanged } from './processUserProfileChanged';
 import { processTeamJoin } from './processTeamJoin';
+import { tryCatch } from 'utilities/sentry';
+
+const processTeamJoinTryCatch = tryCatch(processTeamJoin);
+const processMessageEventTryCatch = tryCatch(processMessageEvent);
+const processMessageReactionAddedEventTryCatch = tryCatch(
+  processMessageReactionAddedEvent
+);
+const processMessageReactionRemovedEventTryCatch = tryCatch(
+  processMessageReactionRemovedEvent
+);
+const processChannelCreatedTryCatch = tryCatch(processChannelCreated);
+const processChannelRenameTryCatch = tryCatch(processChannelRename);
+const processUserProfileChangedTryCatch = tryCatch(processUserProfileChanged);
 
 export const handleWebhook = async (
   body: SlackEvent
 ): Promise<{ status: number; error?: string; message?: any }> => {
   if (body.event.type === 'team_join') {
-    return processTeamJoin(body);
+    return processTeamJoinTryCatch(body);
   } else if (body.event.type === 'message') {
-    return processMessageEvent(body);
+    return processMessageEventTryCatch(body);
   } else if (body.event.type === 'reaction_added') {
-    return processMessageReactionAddedEvent(body);
+    return processMessageReactionAddedEventTryCatch(body);
   } else if (body.event.type === 'reaction_removed') {
-    return processMessageReactionRemovedEvent(body);
+    return processMessageReactionRemovedEventTryCatch(body);
   } else if (body.event.type === 'channel_created') {
-    return processChannelCreated(body);
+    return processChannelCreatedTryCatch(body);
   } else if (body.event.type === 'channel_rename') {
-    return processChannelRename(body);
+    return processChannelRenameTryCatch(body);
   } else if (body.event.type === 'user_profile_changed') {
-    return processUserProfileChanged(body);
+    return processUserProfileChangedTryCatch(body);
   } else {
     console.error('Event not supported!!');
     return {

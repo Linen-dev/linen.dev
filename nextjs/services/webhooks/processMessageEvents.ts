@@ -21,7 +21,7 @@ export async function processMessageEvent(body: SlackEvent) {
 
   if (channel === null || channel.account === null) {
     console.error('Channel does not exist in db ');
-    return { status: 403, error: 'Channel not found' };
+    return { status: 403, error: 'Channel not found', metadata: { channelId } };
   }
 
   let message;
@@ -113,9 +113,9 @@ async function deleteMessage(
       channel.id,
       event.deleted_ts
     );
-    if (message) {
-      await deleteMessageWithMentions(message.id);
-    } else {
+    try {
+      message && (await deleteMessageWithMentions(message.id));
+    } catch (error) {
       console.warn('Message not found!', channel.id, event.deleted_ts);
     }
   }
@@ -135,9 +135,9 @@ async function changeMessage(
       channel.id,
       event.previous_message.ts
     );
-    if (message) {
-      await deleteMessageWithMentions(message.id);
-    } else {
+    try {
+      message && (await deleteMessageWithMentions(message.id));
+    } catch (error) {
       console.warn('Message not found!', channel.id, event.deleted_ts);
     }
   }
