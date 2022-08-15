@@ -20,6 +20,7 @@
     "script:crawl": "node bin/crawler/index.min.js",
     "prescript:sync:discord": "esbuild bin/discord-sync/index.ts --bundle --minify --platform=node --target=node16 --outfile=bin/discord-sync/index.min.js",
     "script:sync:discord": "node bin/discord-sync/index.min.js",
+    "script:sync:slack": "ts-node -P tsconfig.commonjs.json bin/slack-sync/index.ts",
     "prescript:maintenance": "esbuild bin/maintenance/index.ts --bundle --minify --platform=node --target=node16 --outfile=bin/maintenance/index.min.js",
     "script:maintenance": "node bin/maintenance/index.min.js"
   },
@@ -91,7 +92,8 @@
     "next-test-api-route-handler": "^3.1.6",
     "postcss": "^8.4.14",
     "prettier": "2.7.1",
-    "ts-node": "^10.8.2"
+    "ts-node": "^10.8.2",
+    "tsconfig-paths": "^4.1.0"
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown"

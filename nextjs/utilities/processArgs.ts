@@ -32,3 +32,9 @@ export function findArgAndParse(flag: string) {
   }
   return value;
 }
+
+export function findBoolArg(flag: string) {
+  const arg = process.argv.find((arg) => arg.startsWith(`--${flag}`));
+  console.log(flag, arg);
+  return !!arg;
+}
