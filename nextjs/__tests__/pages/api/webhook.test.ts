@@ -135,28 +135,6 @@ const changeMessageEvent = {
 };
 
 describe('webhook', () => {
-  it('add message - channel not found', async () => {
-    prismaMock.channels.findUnique.mockResolvedValue(null);
-
-    await testApiHandler({
-      handler,
-      url: '/api/webhook',
-      test: async ({ fetch }) => {
-        const res = await fetch({
-          method: 'POST',
-          headers: {
-            'content-type': 'application/json',
-          },
-          body: JSON.stringify(addMessageEvent),
-        });
-        expect(res.status).toBe(403);
-        await expect(res.json()).resolves.toStrictEqual({
-          error: 'Channel not found',
-        });
-      },
-    });
-  });
-
   it('add message - new thread', async () => {
     const channelMock = {
       id: 'channel_id',

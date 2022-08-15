@@ -5,17 +5,22 @@ import {
   SlackEvent,
 } from '../../types/slackResponses/slackMessageEventInterface';
 import { Prisma } from '@prisma/client';
-import { getChannel } from '.';
+import { findOrCreateChannelByExternalId } from 'lib/channel';
 
 async function processMessageReactionEvent(
-  event: SlackMessageReactionAddedEvent | SlackMessageReactionRemovedEvent
+  event: SlackMessageReactionAddedEvent | SlackMessageReactionRemovedEvent,
+  teamId: string
 ) {
   const channelId = event.item.channel;
-  const channel = await getChannel(channelId);
+  const channel = await findOrCreateChannelByExternalId(channelId, teamId);
 
-  if (channel === null || channel.account === null) {
+  if (channel === null) {
     console.error('Channel does not exist in db ');
     return { status: 403, error: 'Channel not found', metadata: { channelId } };
+  }
+  if (channel.account === null) {
+    console.error('Account does not exist in db ');
+    return { status: 403, error: 'Account not found', metadata: { teamId } };
   }
 
   const message = await prisma.messages.findUnique({
@@ -54,8 +59,10 @@ async function processMessageReactionEvent(
 
 export async function processMessageReactionAddedEvent(body: SlackEvent) {
   const event = body.event as SlackMessageReactionAddedEvent;
+  const teamId = body.team_id;
+
   const { error, status, reaction, whereClause, message } =
-    await processMessageReactionEvent(event);
+    await processMessageReactionEvent(event, teamId);
 
   if (error) {
     return { error, status };
@@ -90,8 +97,10 @@ export async function processMessageReactionAddedEvent(body: SlackEvent) {
 }
 export async function processMessageReactionRemovedEvent(body: SlackEvent) {
   const event = body.event as SlackMessageReactionRemovedEvent;
+  const teamId = body.team_id;
+
   const { error, status, reaction, whereClause } =
-    await processMessageReactionEvent(event);
+    await processMessageReactionEvent(event, teamId);
 
   if (error) {
     return { error, status };
