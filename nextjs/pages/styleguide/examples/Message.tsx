@@ -129,65 +129,78 @@ const BROKEN_LINK_EXAMPLE = `
 export default function MessageExample() {
   return (
     <Example header="Message">
-      <Example description="Message component can render emojis.">
+      <Example description="Renders text.">
+        <Message text="Lorem ipsum, dolor sit amet." />
+      </Example>
+      <Example description="Renders bold text.">
+        <Message text="Lorem *ipsum*, dolor sit amet." />
+      </Example>
+      <Example description="Renders italic text.">
+        <Message text="Lorem _ipsum_, dolor sit amet." />
+      </Example>
+      <Example description="Renders strikethrough text.">
+        <Message text="Lorem ~ipsum~, dolor sit amet." />
+      </Example>
+      <Example description="Renders emojis.">
         <Message text="Hello, world! :)" />
       </Example>
-      <Example description="It supports mentions.">
-        <Message text="Hey, <@John>!" />
+      <Example description="Renders mentions.">
+        <Message text="Hey, <@uid1234>!" />
       </Example>
-      <Example description="It supports https and http links.">
+      <Example description="Renders channels.">
+        <Message text="Hey, <#general>!" />
+      </Example>
+      <Example description="Renders https and http links.">
         <Message text="Hey, <https://linen.dev> rocks!" />
         <Message text="Hey, <http://linen.dev> rocks!" />
-        <Message text="Hey, https://linen.dev rocks!" />
-        <Message text="Hey, http://linen.dev rocks!" />
       </Example>
-      <Example description="It supports mailto links">
+      <Example description="Renders mailto links">
         <Message text="Contact us: <mailto:support@linen.dev>!" />
         <Message text="Contact us: <mailto:support@linen.dev|Linen Support>!" />
       </Example>
-      <Example description="It supports inline code blocks.">
+      <Example description="Renders inline code blocks.">
         <Message text="Hey, `const answer = 42`!" />
         <Message text="Has anyone ran into this error before? Just trying to run a spec. Other things like `db:migrate` fail for `PG:InsufficientPrivilege` as well." />
       </Example>
-      <Example description="It supports block code blocks, with highlighting.">
+      <Example description="Renders block code blocks, with highlighting.">
         <Message text={`\`\`\`${STACK_TRACE_EXAMPLE}\`\`\``} />
         <Message text={`\`\`\`${CODE_EXAMPLE}\`\`\``} />
         <Message text={`\`\`\`${JAVASCRIPT_EXAMPLE}}\`\`\``} />
         <Message text={`\`\`\`${PYTHON_EXAMPLE}\`\`\``} />
         <Message text={`\`\`\`${RUBY_EXAMPLE}\`\`\``} />
       </Example>
-      <Example description="It supports markdown.">
+      <Example description="Renders markdown.">
         <Message text={MARKDOWN_EXAMPLE} />
       </Example>
-      <Example description="It preserves whitespace.">
+      <Example description="Renders whitespace.">
         <Message text={STATIC_TEXT} />
       </Example>
-      <Example description="It loads images.">
+      <Example description="Renders images.">
         <Message text="<http://localhost:3000/yc-logo.png>" />
       </Example>
       <Example description="It converts inline code to block code if newlines are present.">
         <Message text={`\`${WHITESPACE_EXAMPLE} \``} />
       </Example>
-      <Example description="It embeds videos.">
+      <Example description="Renders videos.">
         <Message text="<https://www.youtube.com/embed/Xsew54QshN8>" />
-        <Message text="https://www.youtube.com/watch?v=q3n8rvREbNM" />
-        <Message text="https://youtu.be/615EqK_9-f0" />
+        <Message text="<https://www.youtube.com/watch?v=q3n8rvREbNM>" />
+        <Message text="<https://youtu.be/615EqK_9-f0>" />
       </Example>
-      <Example description="It embeds tweets.">
-        <Message text="https://twitter.com/kotlin/status/1367535067581546501" />
-        <Message text="https://twitter.com/kotlin/status/1367535067581546501?s=21" />
+      <Example description="Renders tweets.">
+        <Message text="<https://twitter.com/kotlin/status/1367535067581546501>" />
+        <Message text="<https://twitter.com/kotlin/status/1367535067581546501?s=21>" />
       </Example>
-      <Example description="It escapes HTML entities.">
+      <Example description="Renders HTML entities.">
         <Message text={`\`${HTML_EXAMPLE}\``} />
         <Message text={`\`\`\`${HTML_EXAMPLE}\`\`\`\``} />
       </Example>
-      <Example description="It reformats JSON.">
+      <Example description="Renders JSON.">
         <Message text={`\`\`\`${JSON_EXAMPLE}\`\`\``} />
       </Example>
-      <Example description="It supports broken links.">
+      <Example description="Renders broken links.">
         <Message text={BROKEN_LINK_EXAMPLE} />
       </Example>
-      <Example description="It supports reactions.">
+      <Example description="Renders reactions.">
         <Message
           text="Hello, world! :)"
           reactions={EMOJIS.map((emoji) => ({ type: emoji, count: 1 }))}
