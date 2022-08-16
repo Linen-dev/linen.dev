@@ -36,7 +36,7 @@ export function NextApp(
 
   const container = nextjsTaskDefinition.addContainer('nextJSContainer', {
     image: dockerImage,
-    command: ['node', 'server.js'],
+    command: ['npm', 'run', 'start:prod'],
     environment,
     secrets,
     logging: cdk.aws_ecs.LogDriver.awsLogs({
