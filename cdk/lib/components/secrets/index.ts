@@ -17,63 +17,63 @@ export function Secrets(scope: Construct) {
       cdk.aws_ssm.StringParameter.fromSecureStringParameterAttributes(
         scope,
         'sentryDns',
-        { parameterName: '/linen-dev/prod/sentryDns', version: 0 }
+        { parameterName: '/linen-dev/prod/sentryDns' }
       )
     ),
     SENTRY_AUTH_TOKEN: cdk.aws_ecs.Secret.fromSsmParameter(
       cdk.aws_ssm.StringParameter.fromSecureStringParameterAttributes(
         scope,
         'sentryAuthToken',
-        { parameterName: '/linen-dev/prod/sentryAuthToken', version: 0 }
+        { parameterName: '/linen-dev/prod/sentryAuthToken' }
       )
     ),
     DATABASE_URL: cdk.aws_ecs.Secret.fromSsmParameter(
       cdk.aws_ssm.StringParameter.fromSecureStringParameterAttributes(
         scope,
         'databaseUrl',
-        { parameterName: `/linen-dev/${SSM_STAGE}/databaseUrl`, version: 0 }
+        { parameterName: `/linen-dev/${SSM_STAGE}/databaseUrl` }
       )
     ),
     SLACK_CLIENT_ID: cdk.aws_ecs.Secret.fromSsmParameter(
       cdk.aws_ssm.StringParameter.fromSecureStringParameterAttributes(
         scope,
         'slackClientId',
-        { parameterName: '/linen-dev/prod/slackClientId', version: 0 }
+        { parameterName: '/linen-dev/prod/slackClientId' }
       )
     ),
     SLACK_CLIENT_SECRET: cdk.aws_ecs.Secret.fromSsmParameter(
       cdk.aws_ssm.StringParameter.fromSecureStringParameterAttributes(
         scope,
         'slackClientSecret',
-        { parameterName: '/linen-dev/prod/slackClientSecret', version: 0 }
+        { parameterName: '/linen-dev/prod/slackClientSecret' }
       )
     ),
     COMPANY_SLACK_BOT_TOKEN: cdk.aws_ecs.Secret.fromSsmParameter(
       cdk.aws_ssm.StringParameter.fromSecureStringParameterAttributes(
         scope,
         'companySlackToken',
-        { parameterName: '/linen-dev/prod/slackToken', version: 0 }
+        { parameterName: '/linen-dev/prod/slackToken' }
       )
     ),
     SLACK_TOKEN: cdk.aws_ecs.Secret.fromSsmParameter(
       cdk.aws_ssm.StringParameter.fromSecureStringParameterAttributes(
         scope,
         'slackToken',
-        { parameterName: '/linen-dev/prod/slackToken', version: 0 }
+        { parameterName: '/linen-dev/prod/slackToken' }
       )
     ),
     NEXTAUTH_SECRET: cdk.aws_ecs.Secret.fromSsmParameter(
       cdk.aws_ssm.StringParameter.fromSecureStringParameterAttributes(
         scope,
         'nextAuthSecret',
-        { parameterName: '/linen-dev/prod/nextAuthSecret', version: 0 }
+        { parameterName: '/linen-dev/prod/nextAuthSecret' }
       )
     ),
     DISCORD_TOKEN: cdk.aws_ecs.Secret.fromSsmParameter(
       cdk.aws_ssm.StringParameter.fromSecureStringParameterAttributes(
         scope,
         'discordToken',
-        { parameterName: '/linen-dev/prod/discordToken', version: 0 }
+        { parameterName: '/linen-dev/prod/discordToken' }
       )
     ),
   };
