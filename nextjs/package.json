@@ -16,13 +16,10 @@
     "db:migrate": "npx prisma generate && npx prisma migrate dev",
     "db:migrate:test": "dotenv -e .env.test -- npx prisma migrate deploy",
     "db:seed": "ts-node --skip-project bin/seed.ts",
-    "prescript:crawl": "esbuild bin/crawler/index.ts --bundle --minify --platform=node --target=node16 --outfile=bin/crawler/index.min.js",
-    "script:crawl": "node bin/crawler/index.min.js",
-    "prescript:sync:discord": "esbuild bin/discord-sync/index.ts --bundle --minify --platform=node --target=node16 --outfile=bin/discord-sync/index.min.js",
-    "script:sync:discord": "node bin/discord-sync/index.min.js",
+    "start:prod": "pm2 start \"npm run start\"",
+    "script:sync:discord": "pm2 start \"ts-node -P tsconfig.commonjs.json bin/discord-sync/index.ts\"",
     "script:sync:slack": "ts-node -P tsconfig.commonjs.json bin/slack-sync/index.ts",
-    "prescript:maintenance": "esbuild bin/maintenance/index.ts --bundle --minify --platform=node --target=node16 --outfile=bin/maintenance/index.min.js",
-    "script:maintenance": "node bin/maintenance/index.min.js"
+    "script:maintenance": "ts-node -P tsconfig.commonjs.json bin/maintenance/index.ts"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.1.1",
@@ -55,6 +52,7 @@
     "node-cache": "^5.1.2",
     "nodemailer": "^6.7.7",
     "nprogress": "^0.2.0",
+    "pm2": "^5.2.0",
     "prisma": "^3.15.2",
     "react": "17.0.2",
     "react-dom": "17.0.2",
