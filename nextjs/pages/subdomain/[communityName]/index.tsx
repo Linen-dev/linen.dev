@@ -2,7 +2,7 @@ import { GetStaticPropsContext } from 'next';
 import {
   channelGetStaticPaths,
   channelGetStaticProps,
-} from '../../../services/communities';
+} from '../../../services/channel';
 import Channel from '../../../components/Pages/Channels';
 
 export default Channel;

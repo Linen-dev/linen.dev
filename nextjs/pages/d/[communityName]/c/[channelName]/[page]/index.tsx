@@ -1,4 +1,4 @@
-import { channelGetStaticProps } from '../../../../../../services/communities';
+import { channelGetStaticProps } from '../../../../../../services/channel';
 import { GetStaticPropsContext } from 'next';
 import Channel from '../../../../../../components/Pages/Channels';
 

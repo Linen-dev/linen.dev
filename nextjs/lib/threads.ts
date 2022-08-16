@@ -164,22 +164,28 @@ export async function findThreadsWithWrongMessageCount() {
 }
 
 export async function findThreadsByCursor({
-  channelId,
+  channelIds,
   sentAt = '0',
   sort = 'desc',
   limit = 10,
   direction = 'lt',
   anonymizeUsers = false,
 }: {
-  channelId: string;
+  channelIds: string[];
   limit?: number;
   anonymizeUsers?: boolean;
 } & FindThreadsByCursorType): Promise<ThreadsWithMessagesFull[]> {
+  if (channelIds === []) {
+    return [];
+  }
+
   const threads = await prisma.threads.findMany({
     take: limit,
     where: {
       sentAt: { [direction]: BigInt(sentAt) },
-      channelId,
+      channelId: {
+        in: channelIds,
+      },
     },
     include: {
       messages: {
