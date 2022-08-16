@@ -59,7 +59,7 @@ export async function channelGetStaticProps(
 
   const threads = (
     await findThreadsByCursorMemo({
-      channelId: channel.id,
+      channelIds: [channel.id],
       sentAt,
       sort,
       direction,
@@ -129,7 +129,7 @@ export async function channelNextPage(channelId: string, cursor: string) {
   const { sentAt } = decodeCursor(cursor);
   const anonymizeUsers = await shouldThisChannelBeAnonymousMemo(channelId);
   const threads = await findThreadsByCursorMemo({
-    channelId,
+    channelIds: [channelId],
     sentAt,
     sort: 'desc',
     direction: 'lt',
@@ -184,6 +184,7 @@ async function getPathsFromPrefix(pathPrefix: string) {
   return [];
 }
 
+// TODO: Add unit test to this function
 async function buildCursor({
   pathCursor,
   threads,
