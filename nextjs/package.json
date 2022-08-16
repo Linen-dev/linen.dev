@@ -21,6 +21,7 @@
     "prescript:sync:discord": "esbuild bin/discord-sync/index.ts --bundle --minify --platform=node --target=node16 --outfile=bin/discord-sync/index.min.js",
     "script:sync:discord": "node bin/discord-sync/index.min.js",
     "script:sync:slack": "ts-node -P tsconfig.commonjs.json bin/slack-sync/index.ts",
+    "script:remove-community": "ts-node -P tsconfig.commonjs.json bin/remove-community/index.ts",
     "prescript:maintenance": "esbuild bin/maintenance/index.ts --bundle --minify --platform=node --target=node16 --outfile=bin/maintenance/index.min.js",
     "script:maintenance": "node bin/maintenance/index.min.js"
   },
