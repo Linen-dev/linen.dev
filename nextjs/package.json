@@ -16,8 +16,8 @@
     "db:migrate": "npx prisma generate && npx prisma migrate dev",
     "db:migrate:test": "dotenv -e .env.test -- npx prisma migrate deploy",
     "db:seed": "ts-node --skip-project bin/seed.ts",
-    "start:prod": "pm2 start \"npm run start\"",
-    "script:sync:discord": "pm2 start \"ts-node -P tsconfig.commonjs.json bin/discord-sync/index.ts\"",
+    "start:prod": "pm2-runtime --raw \"npm run start\"",
+    "script:sync:discord": "ts-node -P tsconfig.commonjs.json bin/discord-sync/index.ts",
     "script:sync:slack": "ts-node -P tsconfig.commonjs.json bin/slack-sync/index.ts",
     "script:maintenance": "ts-node -P tsconfig.commonjs.json bin/maintenance/index.ts"
   },

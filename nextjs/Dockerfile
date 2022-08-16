@@ -7,6 +7,7 @@ WORKDIR /app
 COPY package.json ./
 COPY package-lock.json ./
 RUN npm ci
+RUN npm install pm2 -g
 
 # Rebuild the source code only when needed
 FROM public.ecr.aws/docker/library/node:16-alpine AS builder
