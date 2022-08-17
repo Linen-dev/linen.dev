@@ -1,5 +1,5 @@
 import type { channels } from '@prisma/client';
-import { SitemapIndexStream, streamToPromise } from 'sitemap';
+import { SitemapIndexStream, SitemapStream, streamToPromise } from 'sitemap';
 import { Readable } from 'stream';
 import prisma from '../client';
 import { encodeCursor } from './cursor';
@@ -153,6 +153,7 @@ export async function createXMLSitemapForFreeCommunity(
   );
 }
 
+// exported just for testing
 export async function createXMLSitemapForChannel(
   host: string,
   channelName: string
@@ -232,4 +233,36 @@ async function queryThreads(
     err = error;
   }
   return { err, nextCursor, chunk };
+}
+
+export async function createSitemapForSubdomainChannel(
+  host: string,
+  channelName: string
+) {
+  const sitemap = await createXMLSitemapForChannel(host, channelName);
+
+  const stream = new SitemapStream({
+    hostname: `${appendProtocol(host)}/`,
+  });
+  return await streamToPromise(Readable.from(sitemap).pipe(stream)).then(
+    (data) => data.toString()
+  );
+}
+
+export async function createSitemapForFreeChannel(
+  host: string,
+  channelName: string,
+  communityName: string,
+  communityPrefix: string
+) {
+  const sitemap = await createXMLSitemapForChannel(
+    communityName as string,
+    channelName as string
+  );
+  const stream = new SitemapStream({
+    hostname: `${appendProtocol(host)}/${communityPrefix}/${communityName}/`,
+  });
+  return await streamToPromise(Readable.from(sitemap).pipe(stream)).then(
+    (data) => data.toString()
+  );
 }
