@@ -210,13 +210,13 @@ export async function findThreadsByCursor({
 }
 
 export async function findPreviousCursor({
-  channelId,
+  channelIds,
   sentAt = '0',
   sort = 'desc',
   limit = 10,
   direction = 'lt',
 }: {
-  channelId: string;
+  channelIds: string[];
   limit?: number;
   anonymizeUsers?: boolean;
 } & FindThreadsByCursorType) {
@@ -225,7 +225,9 @@ export async function findPreviousCursor({
     take: limit + 1,
     where: {
       sentAt: { [direction]: BigInt(sentAt) },
-      channelId,
+      channelId: {
+        in: channelIds,
+      },
     },
     orderBy: { sentAt: sort },
   });

@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
-import { channelNextPage } from '../../services/channel';
 import prisma from '../../client';
 import { withSentry } from 'utilities/sentry';
+import { channelNextPage } from 'services/channel';
 
 async function update(request: NextApiRequest, response: NextApiResponse) {
   const incrementId = request.query.incrementId as string;
