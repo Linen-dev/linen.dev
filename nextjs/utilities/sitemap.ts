@@ -5,12 +5,9 @@ import prisma from '../client';
 import { encodeCursor } from './cursor';
 import { captureExceptionAndFlush } from 'utilities/sentry';
 import createDebug from 'debug';
+import { appendProtocol } from './url';
 
 const debug = createDebug('linen:sitemap');
-
-const resolveProtocol = (host: string) => {
-  return ['localhost'].includes(host) ? 'http' : 'https';
-};
 
 const channelsFromAccountId = (accountId: string) => prisma.$queryRaw<
   { channelName: string; id: string }[]
@@ -44,9 +41,7 @@ export async function createXMLSitemapForSubdomain(
   const stream = new SitemapIndexStream();
 
   const urls = channels.map(({ channelName }) => {
-    return `${resolveProtocol(
-      host
-    )}://${host}/sitemap/c/${channelName}/chunk.xml`;
+    return `${appendProtocol(host)}/sitemap/c/${channelName}/chunk.xml`;
   });
 
   return streamToPromise(Readable.from(urls).pipe(stream)).then((data) =>
@@ -106,7 +101,7 @@ export async function createXMLSitemapForLinen(host: string) {
           debug('account without name', id);
           return;
         }
-        return `https://${host}/sitemap/${letter}/${domain}/chunk.xml`;
+        return `${appendProtocol(host)}/sitemap/${letter}/${domain}/chunk.xml`;
       }
     )
     .filter(Boolean);
@@ -144,7 +139,9 @@ export async function createXMLSitemapForFreeCommunity(
   const stream = new SitemapIndexStream();
 
   const urls = channels.map(({ channelName }) => {
-    return `https://${host}/sitemap/${communityPrefix}/${community}/c/${channelName}/chunk.xml`;
+    return `${appendProtocol(
+      host
+    )}/sitemap/${communityPrefix}/${community}/c/${channelName}/chunk.xml`;
   });
 
   debug('channels %o', urls.length);
