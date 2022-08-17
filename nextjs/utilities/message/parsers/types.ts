@@ -53,6 +53,18 @@ export interface StrikeNode {
   source: string;
 }
 
+export interface UnderlineNode {
+  type: string;
+  children: Node[];
+  source: string;
+}
+
+export interface SpoilerNode {
+  type: string;
+  children: Node[];
+  source: string;
+}
+
 export interface QuoteNode {
   type: string;
   children: Node[];
@@ -85,6 +97,7 @@ export type Node =
   | ChannelNode
   | BoldNode
   | ItalicNode
+  | UnderlineNode
   | QuoteNode
   | CodeNode
   | PreNode

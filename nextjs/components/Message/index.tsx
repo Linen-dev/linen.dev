@@ -29,7 +29,7 @@ import {
   CodeNode,
   PreNode,
   EmojiNode,
-} from 'utilities/message/parsers/slack/types';
+} from 'utilities/message/parsers/types';
 
 interface Props {
   text: string;

@@ -1,163 +1,44 @@
-// The parser is a state machine that walks the input string, matching
-// against the matchers in order.
+// Slack uses the `mrkdwn` format.
+// https://api.slack.com/reference/surfaces/formatting
 
-// The parser has two modes:
-//
-// - `explicit` mode: when the parser encounters a character that
-//   is not a space, punctuation, or a newline, it switches to
-//   `explicit` mode.
-// - `topline` mode: when the parser encounters a newline, it
-//   switches to `topline` mode.
-//
-// The parser switches between modes as it encounters characters.
-
-// The parser is a simplified version of the one in
-// https://github.com/pocka/slack-message-parser/blob/master/LICENSE
+import parse from '../parse';
+import { explicit, regexp, topline, deep, shallow, root } from '../combinators';
 import {
-  Node,
   RootNode,
-  BoldNode,
-  TextNode,
   UserNode,
   ChannelNode,
   CommandNode,
   LinkNode,
-  ItalicNode,
-  StrikeNode,
   QuoteNode,
-  CodeNode,
-  PreNode,
   EmojiNode,
-} from 'utilities/message/parsers/slack/types';
-
-export const regexp =
-  (pattern: RegExp, callback: any) => (text: string, position: number) => {
-    const match = text.substring(position).match(pattern);
-
-    if (!match) {
-      return null;
-    }
-
-    return callback(match, text, position);
-  };
-
-const explicit = (matcher: any) => (text: string, position: number) => {
-  const previous = text[position - 1];
-
-  if (previous && !previous.match(/[\s.,([{!?\-=]/)) {
-    return null;
-  }
-
-  return matcher(text, position);
-};
-
-const topline = (matcher: any) => (text: string, position: number) => {
-  if (position > 0 && text.charAt(position - 1) !== '\n') {
-    return null;
-  }
-
-  return matcher(text, position);
-};
+} from 'utilities/message/parsers/types';
 
 const bold = explicit(
   regexp(
     /^\*(\S([^*\n]*?|[^*\n]*? `.*?` )\S|\S)\*(?=[\s.,\])}!?\-=]|$)/,
-    (
-      match: [string, string],
-      _: string,
-      position: number
-    ): [BoldNode, number] => {
-      const [result, content] = match;
-
-      return [
-        {
-          type: 'bold',
-          children: parse(content),
-          source: result,
-        },
-        position + result.length,
-      ];
-    }
+    deep('bold', (content: string) => parse(content, matchers))
   )
 );
 
 const code = explicit(
-  regexp(
-    /^`([^`]+?)`(?=[\s.,\])}!?\-=]|$)/,
-    (match: [string, string], _: string, position: number) => {
-      const [result, content] = match;
-
-      return [
-        {
-          type: 'code',
-          value: content,
-          source: result,
-        },
-        position + result.length,
-      ];
-    }
-  )
+  regexp(/^`([^`]+?)`(?=[\s.,\])}!?\-=]|$)/, shallow('code'))
 );
 
 const pre = explicit(
-  regexp(
-    /^```(\s*\S[\s\S]*?\s*)```(?=[\s.,\])}!?\-=]|$)/,
-    (match: [string, string], _: string, position: number) => {
-      const [result, content] = match;
-
-      return [
-        {
-          type: 'pre',
-          value: content,
-          source: result,
-        },
-        position + result.length,
-      ];
-    }
-  )
+  regexp(/^```(\s*\S[\s\S]*?\s*)```(?=[\s.,\])}!?\-=]|$)/, shallow('pre'))
 );
 
 const italic = explicit(
   regexp(
     /^_(\S([^_\n]*?|[^_\n]*? `.*?` )\S|\S)\_(?=[\s.,\])}!?\-=]|$)/,
-    (
-      match: [string, string],
-      _: string,
-      position: number
-    ): [ItalicNode, number] => {
-      const [result, content] = match;
-
-      return [
-        {
-          type: 'italic',
-          children: parse(content),
-          source: result,
-        },
-        position + result.length,
-      ];
-    }
+    deep('italic', (content: string) => parse(content, matchers))
   )
 );
 
 const strike = explicit(
   regexp(
     /^~(\S([^~\n]*?|[^~\n]*? `.*?` )\S|\S)\~(?=[\s.,\])}!?\-=]|$)/,
-    (
-      match: [string, string],
-      _: string,
-      position: number
-    ): [StrikeNode, number] => {
-      const [result, content] = match;
-
-      return [
-        {
-          type: 'strike',
-          children: parse(content),
-          source: result,
-        },
-        position + result.length,
-      ];
-    }
+    deep('strike', (content: string) => parse(content, matchers))
   )
 );
 
@@ -183,9 +64,9 @@ const quote = topline(
                   value: entity[1],
                   source: entity[1],
                 },
-                ...parse(entity[3]),
+                ...parse(entity[3], matchers),
               ]
-            : parse(content),
+            : parse(content, matchers),
           source: result,
         },
         position + result.length,
@@ -224,7 +105,7 @@ const link = regexp(
   ): [UserNode | ChannelNode | CommandNode | LinkNode, number] => {
     const [result, link, _, label] = match;
     const next = position + result.length;
-    const labels = label ? parse(label) : undefined;
+    const labels = label ? parse(label, matchers) : undefined;
 
     switch (link[0]) {
       case '@':
@@ -278,62 +159,6 @@ const link = regexp(
 
 const matchers = [bold, pre, code, emoji, italic, quote, link, strike];
 
-function match(input: string, position: number) {
-  const { length } = matchers;
-  for (let index = 0; index < length; index++) {
-    const match = matchers[index](input, position);
-
-    if (match) {
-      return match;
-    }
-  }
-
-  return null;
-}
-
-function parse(input: string): Node[] {
-  const children = [];
-  const length = input.length;
-
-  let index = 0;
-  let buffer = '';
-
-  function flush() {
-    if (buffer) {
-      children.push({
-        type: 'text',
-        value: buffer,
-        source: buffer,
-      });
-      buffer = '';
-    }
-  }
-
-  while (index < length) {
-    const result = match(input, index);
-
-    if (result) {
-      flush();
-
-      const [node, position] = result;
-      children.push(node);
-      index = position;
-      continue;
-    }
-
-    buffer += input[index];
-    index++;
-  }
-
-  flush();
-
-  return children;
-}
-
 export default function (input: string): RootNode {
-  return {
-    type: 'root',
-    children: parse(input),
-    source: input,
-  };
+  return root(input, parse(input, matchers));
 }
