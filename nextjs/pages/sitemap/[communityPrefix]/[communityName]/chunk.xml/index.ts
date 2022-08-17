@@ -1,4 +1,4 @@
-import { createXMLSitemapForFreeCommunity } from 'utilities/sitemap';
+import { createSitemapForFree } from 'utilities/sitemap';
 import { GetServerSideProps } from 'next/types';
 import { captureExceptionAndFlush } from 'utilities/sentry';
 
@@ -13,7 +13,7 @@ export const getServerSideProps: GetServerSideProps = async ({
       throw 'host missing';
     }
     const { communityName, communityPrefix } = query;
-    const sitemap = await createXMLSitemapForFreeCommunity(
+    const sitemap = await createSitemapForFree(
       host,
       communityName as string,
       communityPrefix as string

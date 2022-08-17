@@ -1,5 +1,5 @@
 import { prismaMock } from '__tests__/singleton';
-import { createXMLSitemapForChannel } from './sitemap';
+import { internalCreateSitemapByChannel } from './sitemap';
 
 describe('sitemaps', () => {
   it('should list all threads from the channel plus all cursor pages', async () => {
@@ -41,7 +41,7 @@ describe('sitemaps', () => {
       .mockResolvedValueOnce([thread3Mock])
       .mockResolvedValue([]);
 
-    const result = await createXMLSitemapForChannel(host, channelName);
+    const result = await internalCreateSitemapByChannel(host, channelName);
 
     expect(channelsFindFirstMock).toHaveBeenCalledTimes(1);
     expect(channelsFindFirstMock).toHaveBeenNthCalledWith(1, {

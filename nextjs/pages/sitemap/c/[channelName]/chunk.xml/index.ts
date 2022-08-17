@@ -1,4 +1,4 @@
-import { createSitemapForSubdomainChannel } from 'utilities/sitemap';
+import { createSitemapForPremiumByChannel } from 'utilities/sitemap';
 import { GetServerSideProps } from 'next/types';
 import { captureExceptionAndFlush } from 'utilities/sentry';
 
@@ -13,7 +13,7 @@ export const getServerSideProps: GetServerSideProps = async ({
       throw 'host missing';
     }
     const { channelName } = query;
-    const response = await createSitemapForSubdomainChannel(
+    const response = await createSitemapForPremiumByChannel(
       host,
       channelName as string
     );

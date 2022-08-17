@@ -20,10 +20,7 @@ where st."channelId" = c.id
 group by c.id, st.id
 )`;
 
-// fn very similar to createXMLSitemapForLinen
-export async function createXMLSitemapForSubdomain(
-  host: string
-): Promise<string> {
+export async function createSitemapForPremium(host: string): Promise<string> {
   const account = await prisma.accounts.findFirst({
     where: {
       redirectDomain: host,
@@ -49,7 +46,7 @@ export async function createXMLSitemapForSubdomain(
   );
 }
 
-export async function createXMLSitemapForLinen(host: string) {
+export async function createSitemapForLinen(host: string) {
   const freeAccounts = await prisma.accounts.findMany({
     select: {
       id: true,
@@ -110,7 +107,7 @@ export async function createXMLSitemapForLinen(host: string) {
   return streamToPromise(Readable.from(urls).pipe(stream)).then(String);
 }
 
-export async function createXMLSitemapForFreeCommunity(
+export async function createSitemapForFree(
   host: string,
   community: string,
   communityPrefix: string
@@ -154,7 +151,7 @@ export async function createXMLSitemapForFreeCommunity(
 }
 
 // exported just for testing
-export async function createXMLSitemapForChannel(
+export async function internalCreateSitemapByChannel(
   host: string,
   channelName: string
 ) {
@@ -235,11 +232,11 @@ async function queryThreads(
   return { err, nextCursor, chunk };
 }
 
-export async function createSitemapForSubdomainChannel(
+export async function createSitemapForPremiumByChannel(
   host: string,
   channelName: string
 ) {
-  const sitemap = await createXMLSitemapForChannel(host, channelName);
+  const sitemap = await internalCreateSitemapByChannel(host, channelName);
 
   const stream = new SitemapStream({
     hostname: `${appendProtocol(host)}/`,
@@ -249,13 +246,13 @@ export async function createSitemapForSubdomainChannel(
   );
 }
 
-export async function createSitemapForFreeChannel(
+export async function createSitemapForFreeByChannel(
   host: string,
   channelName: string,
   communityName: string,
   communityPrefix: string
 ) {
-  const sitemap = await createXMLSitemapForChannel(
+  const sitemap = await internalCreateSitemapByChannel(
     communityName as string,
     channelName as string
   );
