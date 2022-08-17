@@ -24,7 +24,7 @@ describe('parse', () => {
     expect(parse('*foo*')).toEqual(root([bold([text('foo')])]));
   });
 
-  it('returns a `italic` node', () => {
+  it('returns an `italic` node', () => {
     expect(parse('_foo_')).toEqual(root([italic([text('foo')])]));
   });
 
