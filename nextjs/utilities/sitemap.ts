@@ -37,9 +37,9 @@ export async function createSitemapForPremium(host: string): Promise<string> {
 
   const stream = new SitemapIndexStream();
 
-  const urls = channels.map(({ channelName }) => {
-    return `${appendProtocol(host)}/sitemap/c/${channelName}/chunk.xml`;
-  });
+  const urls = channels.map(({ channelName }) =>
+    encodeURI(`${appendProtocol(host)}/sitemap/c/${channelName}/chunk.xml`)
+  );
 
   return streamToPromise(Readable.from(urls).pipe(stream)).then((data) =>
     data.toString()
@@ -76,6 +76,8 @@ export async function createSitemapForLinen(host: string) {
   if (!freeAccounts || !freeAccounts.length) return '';
   debug('accounts', freeAccounts);
 
+  const httpHost = appendProtocol(host);
+
   const stream = new SitemapIndexStream();
   const urls = freeAccounts
     .map(
@@ -98,7 +100,7 @@ export async function createSitemapForLinen(host: string) {
           debug('account without name', id);
           return;
         }
-        return `${appendProtocol(host)}/sitemap/${letter}/${domain}/chunk.xml`;
+        return encodeURI(`${httpHost}/sitemap/${letter}/${domain}/chunk.xml`);
       }
     )
     .filter(Boolean);
@@ -116,6 +118,7 @@ export async function createSitemapForFree(
   // community could be discordServerId/discordDomain or slackDomain
   const account = await prisma.accounts.findFirst({
     where: {
+      // TODO: premium must be false
       OR: [
         { discordDomain: community },
         { discordServerId: community },
@@ -135,11 +138,13 @@ export async function createSitemapForFree(
 
   const stream = new SitemapIndexStream();
 
-  const urls = channels.map(({ channelName }) => {
-    return `${appendProtocol(
-      host
-    )}/sitemap/${communityPrefix}/${community}/c/${channelName}/chunk.xml`;
-  });
+  const httpHost = appendProtocol(host);
+
+  const urls = channels.map(({ channelName }) =>
+    encodeURI(
+      `${httpHost}/sitemap/${communityPrefix}/${community}/c/${channelName}/chunk.xml`
+    )
+  );
 
   debug('channels %o', urls.length);
 
@@ -183,7 +188,7 @@ export async function internalCreateSitemapByChannel(
       next
     );
     if (err) break;
-    chunk?.length && chunks.push(...chunk);
+    chunk?.length && chunks.push(...chunk.map((c) => encodeURI(c)));
     next = nextCursor;
     if (!next) break;
   }
@@ -257,7 +262,9 @@ export async function createSitemapForFreeByChannel(
     channelName as string
   );
   const stream = new SitemapStream({
-    hostname: `${appendProtocol(host)}/${communityPrefix}/${communityName}/`,
+    hostname: encodeURI(
+      `${appendProtocol(host)}/${communityPrefix}/${communityName}/`
+    ),
   });
   return await streamToPromise(Readable.from(sitemap).pipe(stream)).then(
     (data) => data.toString()
