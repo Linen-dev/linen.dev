@@ -1,4 +1,4 @@
-import { createSitemapForFreeChannel } from 'utilities/sitemap';
+import { createSitemapForFreeByChannel } from 'utilities/sitemap';
 import { GetServerSideProps } from 'next/types';
 import { captureExceptionAndFlush } from 'utilities/sentry';
 
@@ -13,7 +13,7 @@ export const getServerSideProps: GetServerSideProps = async ({
       throw 'host missing';
     }
     const { channelName, communityName, communityPrefix } = query;
-    const response = await createSitemapForFreeChannel(
+    const response = await createSitemapForFreeByChannel(
       host,
       channelName as string,
       communityName as string,

@@ -1,6 +1,6 @@
 import {
-  createXMLSitemapForLinen,
-  createXMLSitemapForSubdomain,
+  createSitemapForLinen,
+  createSitemapForPremium,
 } from '../utilities/sitemap';
 import { isLinenDomain } from '../utilities/domain';
 import { GetServerSideProps } from 'next/types';
@@ -14,8 +14,8 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
     }
 
     const sitemap = isLinenDomain(host)
-      ? await createXMLSitemapForLinen(host)
-      : await createXMLSitemapForSubdomain(host);
+      ? await createSitemapForLinen(host)
+      : await createSitemapForPremium(host);
     res.setHeader('Content-Type', 'application/xml');
     res.write(sitemap);
     res.end();
