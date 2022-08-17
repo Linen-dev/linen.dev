@@ -1,9 +1,6 @@
-import { createXMLSitemapForChannel } from 'utilities/sitemap';
+import { createSitemapForSubdomainChannel } from 'utilities/sitemap';
 import { GetServerSideProps } from 'next/types';
-import { SitemapStream, streamToPromise } from 'sitemap';
-import { Readable } from 'stream';
 import { captureExceptionAndFlush } from 'utilities/sentry';
-import { appendProtocol } from 'utilities/url';
 
 export const getServerSideProps: GetServerSideProps = async ({
   req,
@@ -16,18 +13,10 @@ export const getServerSideProps: GetServerSideProps = async ({
       throw 'host missing';
     }
     const { channelName } = query;
-    const sitemap = await createXMLSitemapForChannel(
+    const response = await createSitemapForSubdomainChannel(
       host,
       channelName as string
     );
-
-    const stream = new SitemapStream({
-      hostname: `${appendProtocol(host)}/`,
-    });
-    const response = await streamToPromise(
-      Readable.from(sitemap).pipe(stream)
-    ).then((data) => data.toString());
-
     res.setHeader('Content-Type', 'application/xml');
     res.write(response);
     res.end();
