@@ -3,6 +3,7 @@ import { GetServerSideProps } from 'next/types';
 import { SitemapStream, streamToPromise } from 'sitemap';
 import { Readable } from 'stream';
 import { captureExceptionAndFlush } from 'utilities/sentry';
+import { appendProtocol } from 'utilities/url';
 
 export const getServerSideProps: GetServerSideProps = async ({
   req,
@@ -21,7 +22,7 @@ export const getServerSideProps: GetServerSideProps = async ({
     );
 
     const stream = new SitemapStream({
-      hostname: `https://${host}/`,
+      hostname: `${appendProtocol(host)}/`,
     });
     const response = await streamToPromise(
       Readable.from(sitemap).pipe(stream)
