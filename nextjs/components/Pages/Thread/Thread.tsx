@@ -41,6 +41,7 @@ export default function Thread({
             message={message}
             isPreviousMessageFromSameUser={isPreviousMessageFromSameUser}
             isNextMessageFromSameUser={isNextMessageFromSameUser}
+            communityType={settings.communityType}
           />
         );
       });

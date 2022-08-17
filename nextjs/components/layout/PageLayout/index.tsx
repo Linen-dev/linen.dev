@@ -86,6 +86,7 @@ function PageLayout({
                 users={users}
                 communityName={communityName}
                 isSubDomainRouting={isSubDomainRouting}
+                communityType={settings.communityType}
               />
             </div>
             <a
@@ -120,6 +121,7 @@ function PageLayout({
           users={users}
           communityName={communityName}
           isSubDomainRouting={isSubDomainRouting}
+          communityType={settings.communityType}
         />
       </div>
       <SEO
