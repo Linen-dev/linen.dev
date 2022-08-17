@@ -14,7 +14,8 @@ import transform from './utilities/transform';
 import { truncate as truncateText } from './utilities/string';
 import styles from './index.module.css';
 import { SerializedReaction, SerializedAttachment } from 'types/shared';
-import parse from 'utilities/message/parsers/slack';
+import parseSlackMessage from 'utilities/message/parsers/slack';
+import parseDiscordMessage from 'utilities/message/parsers/discord';
 import {
   Node,
   RootNode,
@@ -33,16 +34,30 @@ import {
 
 interface Props {
   text: string;
+  communityType?: string;
   truncate?: any;
   mentions?: users[];
   reactions?: SerializedReaction[];
   attachments?: SerializedAttachment[];
 }
 
-function Message({ text, truncate, mentions, reactions, attachments }: Props) {
+const parsers = {
+  slack: parseSlackMessage,
+  discord: parseDiscordMessage,
+};
+
+function Message({
+  text,
+  communityType,
+  truncate,
+  mentions,
+  reactions,
+  attachments,
+}: Props) {
   if (text === '') {
     text = 'message has been deleted';
   }
+  const parse = communityType === 'discord' ? parsers.discord : parsers.slack;
   const input = truncate ? truncateText(text) : text;
   const tree = transform(parse(input));
 
@@ -111,5 +126,9 @@ function Message({ text, truncate, mentions, reactions, attachments }: Props) {
     </div>
   );
 }
+
+Message.defaultProps = {
+  communityType: 'slack',
+};
 
 export default Message;
