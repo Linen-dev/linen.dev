@@ -4,6 +4,9 @@ import { Readable } from 'stream';
 import prisma from '../client';
 import { encodeCursor } from './cursor';
 import { captureExceptionAndFlush } from 'utilities/sentry';
+import createDebug from 'debug';
+
+const debug = createDebug('linen:sitemap');
 
 const resolveProtocol = (host: string) => {
   return ['localhost'].includes(host) ? 'http' : 'https';
@@ -54,10 +57,16 @@ export async function createXMLSitemapForSubdomain(
 export async function createXMLSitemapForLinen(host: string) {
   const freeAccounts = await prisma.accounts.findMany({
     select: {
+      id: true,
       discordDomain: true,
       discordServerId: true,
       slackDomain: true,
       slackTeamId: true,
+      _count: {
+        select: {
+          channels: true,
+        },
+      },
     },
     where: {
       premium: false,
@@ -71,16 +80,38 @@ export async function createXMLSitemapForLinen(host: string) {
       },
     },
   });
+
   if (!freeAccounts || !freeAccounts.length) return '';
+  debug('accounts', freeAccounts);
+
   const stream = new SitemapIndexStream();
-  const urls = freeAccounts.map(
-    ({ discordDomain, discordServerId, slackDomain, slackTeamId }) => {
-      const letter = !!discordDomain || !!discordServerId ? 'd' : 's';
-      const domain =
-        discordDomain || slackDomain || discordServerId || slackTeamId;
-      return `https://${host}/sitemap/${letter}/${domain}/chunk.xml`;
-    }
-  );
+  const urls = freeAccounts
+    .map(
+      ({
+        discordDomain,
+        discordServerId,
+        slackDomain,
+        slackTeamId,
+        _count,
+        id,
+      }) => {
+        if (!_count.channels) {
+          debug('account without channels', id);
+          return;
+        }
+        const letter = !!discordDomain || !!discordServerId ? 'd' : 's';
+        const domain =
+          discordDomain || slackDomain || discordServerId || slackTeamId;
+        if (!domain) {
+          debug('account without name', id);
+          return;
+        }
+        return `https://${host}/sitemap/${letter}/${domain}/chunk.xml`;
+      }
+    )
+    .filter(Boolean);
+
+  debug('urls', urls);
   return streamToPromise(Readable.from(urls).pipe(stream)).then(String);
 }
 
@@ -89,6 +120,7 @@ export async function createXMLSitemapForFreeCommunity(
   community: string,
   communityPrefix: string
 ) {
+  debug('request', { host, community, communityPrefix });
   // community could be discordServerId/discordDomain or slackDomain
   const account = await prisma.accounts.findFirst({
     where: {
@@ -104,9 +136,8 @@ export async function createXMLSitemapForFreeCommunity(
       slackTeamId: true,
     },
   });
-  if (!account) {
-    return Promise.reject();
-  }
+  debug('account %o', account);
+  if (!account) throw "account doesn't exist";
 
   const channels = await channelsFromAccountId(account.id);
 
@@ -115,6 +146,10 @@ export async function createXMLSitemapForFreeCommunity(
   const urls = channels.map(({ channelName }) => {
     return `https://${host}/sitemap/${communityPrefix}/${community}/c/${channelName}/chunk.xml`;
   });
+
+  debug('channels %o', urls.length);
+
+  if (!urls.length) throw "account doesn't have channels";
 
   return streamToPromise(Readable.from(urls).pipe(stream)).then((data) =>
     data.toString()
