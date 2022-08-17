@@ -72,7 +72,7 @@ export async function channelGetStaticProps(
     threads,
     sort,
     sentAt,
-    channelId: channel.id,
+    channelIds: [channel.id],
   });
 
   return {
@@ -136,7 +136,11 @@ export async function channelNextPage(channelId: string, cursor: string) {
     anonymizeUsers,
   }).then((t) => t.sort(sortBySentAtAsc));
 
-  const nextCursor = await buildCursor({ sort: 'desc', threads, channelId });
+  const nextCursor = await buildCursor({
+    sort: 'desc',
+    threads,
+    channelIds: [channelId],
+  });
 
   return {
     threads: threads.map(serializeThread),
@@ -189,13 +193,13 @@ async function buildCursor({
   pathCursor,
   threads,
   sort,
-  channelId,
+  channelIds,
   sentAt,
 }: {
   pathCursor?: string;
   threads: ThreadsWithMessagesFull[];
   sort: string;
-  channelId: string;
+  channelIds: string[];
   sentAt?: string;
 }): Promise<ChannelViewCursorProps> {
   try {
@@ -204,7 +208,7 @@ async function buildCursor({
     if (isCrawler) {
       // crawler
       const previousPage = await findPreviousCursor({
-        channelId,
+        channelIds,
         direction: 'lt',
         sort: 'desc',
         sentAt,

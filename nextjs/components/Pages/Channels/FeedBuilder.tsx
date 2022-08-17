@@ -23,9 +23,11 @@ export function feedBuilder({
   communityName: string;
   communityType: string;
 }) {
-  return threads?.map(
-    ({ messages, incrementId, slug, viewCount }: SerializedThread) => {
+  return threads
+    ?.filter((t) => t.messages.length > 0)
+    .map(({ messages, incrementId, slug, viewCount }: SerializedThread) => {
       const oldestMessage = messages[messages.length - 1];
+      const newestMessage = messages[0];
 
       const author = oldestMessage?.author;
       //don't include the original poster for the thread in replies
@@ -63,7 +65,7 @@ export function feedBuilder({
                     {author?.displayName || 'user'}
                   </p>
                   <div className="text-sm text-gray-400">
-                    {format(new Date(oldestMessage?.sentAt))}
+                    {format(new Date(newestMessage?.sentAt))}
                   </div>
                 </div>
                 <div className="pb-2">
@@ -114,6 +116,5 @@ export function feedBuilder({
           </CustomLink>
         </li>
       );
-    }
-  );
+    });
 }
