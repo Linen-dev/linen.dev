@@ -50,3 +50,22 @@ export function url(link) {
     source: link,
   };
 }
+
+export function user(id, label) {
+  return {
+    type: 'user',
+    id,
+    label,
+    source: `<@${id}${label ? '|' + source(label) : ''}>`,
+  };
+}
+
+export function channel(id, label) {
+  return {
+    type: 'channel',
+    id,
+    label,
+    value: id + (label ? '|' + source(label) : ''),
+    source: `<#${id}${label ? '|' + source(label) : ''}>`,
+  };
+}

@@ -92,6 +92,50 @@ const link2 = explicit(
   )
 );
 
+const link3 = regexp(
+  /^<([^\s<>][^\n<>]*?)(\|([^<>]+?))?>/,
+  (match: [string, string, string, string], text: string, position: number) => {
+    const [result, link, _, label] = match;
+    const next = position + result.length;
+    const labels = label ? parse(label, matchers) : undefined;
+
+    switch (link[0]) {
+      case '@':
+        return [
+          {
+            type: 'user',
+            id: link.slice(1),
+            label: labels,
+            source: result,
+          },
+          next,
+        ];
+      case '#':
+        return [
+          {
+            type: 'channel',
+            id: link.slice(1),
+            label: labels,
+            value: link.slice(1) + (label ? `|${label}` : ''),
+            source: result,
+          },
+          next,
+        ];
+      default:
+        return [
+          {
+            type: 'url',
+            url: link,
+            label: labels,
+            value: link + (label ? `|${label}` : ''),
+            source: result,
+          },
+          next,
+        ];
+    }
+  }
+);
+
 const matchers = [
   underline,
   bold,
@@ -103,6 +147,7 @@ const matchers = [
   spoiler,
   link1,
   link2,
+  link3,
 ];
 
 export default function (input: string) {
