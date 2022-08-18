@@ -1,3 +1,4 @@
+jest.mock('../../fetch_all_conversations');
 import { fetchToken } from './fetchToken';
 import * as fetch_all_conversations from 'fetch_all_conversations';
 
