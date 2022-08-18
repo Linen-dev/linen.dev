@@ -1,3 +1,6 @@
+jest.mock('../../fetch_all_conversations');
+jest.mock('./slackHelper');
+
 import { prismaMock } from '../../__tests__/singleton';
 import { syncChannels } from './syncChannels';
 import * as fetch_all_conversations from 'fetch_all_conversations';

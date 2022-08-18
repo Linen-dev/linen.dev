@@ -1,7 +1,9 @@
+jest.mock('../../fetch_all_conversations');
+jest.mock('../aws/s3');
+
 import { prismaMock } from '../../__tests__/singleton';
-import * as retryPromises from '../../utilities/retryPromises';
 import * as s3Helper from '../aws/s3';
-import * as fetch_all_conversations from 'fetch_all_conversations';
+import * as fetch_all_conversations from '../../fetch_all_conversations';
 import { fetchAllTopLevelMessages } from './fetchAllTopLevelMessages';
 import { conversationHistory } from '__mocks__/slack-api';
 import { parseSlackSentAt, tsToSentAt } from '../../utilities/sentAt';
@@ -35,10 +37,6 @@ describe('slackSync :: fetchAllTopLevelMessages', () => {
 
   // pending: mentions, reactions and attachments
   test('fetchAllTopLevelMessages', async () => {
-    const sleepMock = jest
-      .spyOn(retryPromises, 'sleep')
-      .mockResolvedValue(Promise.resolve());
-
     const allMessages = conversationHistory.messages.map(({ ts }) => {
       return { externalThreadId: ts, id: ts };
     });
@@ -158,7 +156,6 @@ describe('slackSync :: fetchAllTopLevelMessages', () => {
       messageUpsertBuilder(3)
     );
 
-    expect(sleepMock).toHaveBeenCalledTimes(0);
     expect(messageReactionsUpsertMock).toHaveBeenCalledTimes(0);
     expect(messageAttachmentsUpsertMock).toHaveBeenCalledTimes(0);
     expect(fetchFileSpy).toHaveBeenCalledTimes(0);

@@ -1,3 +1,6 @@
+jest.mock('../../fetch_all_conversations');
+jest.mock('../aws/s3');
+
 import { prismaMock } from '../../__tests__/singleton';
 import { conversationHistory, conversationReplies } from '__mocks__/slack-api';
 import * as fetch_all_conversations from 'fetch_all_conversations';
