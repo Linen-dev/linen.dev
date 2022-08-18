@@ -20,6 +20,7 @@
     "start:prod": "pm2-runtime --raw \"npm run start\"",
     "script:sync:discord": "ts-node -P tsconfig.commonjs.json bin/discord-sync/index.ts",
     "script:sync:slack": "ts-node -P tsconfig.commonjs.json bin/slack-sync/index.ts",
+    "script:remove-community": "ts-node -P tsconfig.commonjs.json bin/remove-community/index.ts",
     "script:maintenance": "ts-node -P tsconfig.commonjs.json bin/maintenance/index.ts"
   },
   "dependencies": {
