@@ -10,6 +10,8 @@ import {
   pre,
   spoiler,
   url,
+  user,
+  channel,
 } from './spec-helpers';
 
 describe('parse', () => {
@@ -48,6 +50,14 @@ describe('parse', () => {
 
   it('returns a `url` node', () => {
     expect(parse('https://foo.com')).toEqual(root([url('https://foo.com')]));
+  });
+
+  it('returns a `user` node', () => {
+    expect(parse('<@uid>')).toEqual(root([user('uid')]));
+  });
+
+  it('returns a `channel` node', () => {
+    expect(parse('<#cid>')).toEqual(root([channel('cid')]));
   });
 
   it('returns a `bold` and `italic` nodes', () => {
