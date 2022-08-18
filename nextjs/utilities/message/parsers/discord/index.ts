@@ -54,6 +54,44 @@ const pre = explicit(
   regexp(/^```(\s*\S[\s\S]*?\s*)```(?=[\s.,\])}!?\-=]|$)/, shallow('pre'))
 );
 
+const link1 = explicit(
+  regexp(
+    /^((https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])(?=[\s.,\])}!?\-=]|$)/gi,
+    (match: [string, string], _: string, position: number) => {
+      const [result, content] = match;
+
+      return [
+        {
+          type: 'url',
+          url: result,
+          value: result,
+          source: result,
+        },
+        position + result.length,
+      ];
+    }
+  )
+);
+
+const link2 = explicit(
+  regexp(
+    /^(mailto:[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])(?=[\s.,\])}!?\-=]|$)/gi,
+    (match: [string, string], _: string, position: number) => {
+      const [result, content] = match;
+
+      return [
+        {
+          type: 'url',
+          url: result,
+          value: result,
+          source: result,
+        },
+        position + result.length,
+      ];
+    }
+  )
+);
+
 const matchers = [
   underline,
   bold,
@@ -63,6 +101,8 @@ const matchers = [
   pre,
   code,
   spoiler,
+  link1,
+  link2,
 ];
 
 export default function (input: string) {

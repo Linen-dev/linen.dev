@@ -41,3 +41,12 @@ export function pre(value) {
 export function spoiler(children) {
   return { type: 'spoiler', children, source: `||${source(children)}||` };
 }
+
+export function url(link) {
+  return {
+    type: 'url',
+    url: link,
+    value: link,
+    source: link,
+  };
+}

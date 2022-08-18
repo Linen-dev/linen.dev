@@ -172,7 +172,7 @@ describe('parse', () => {
     });
   });
 
-  describe('link', () => {
+  describe('url', () => {
     it('parses command arguments', () => {
       expect(parse('<!foo^bar>')).toEqual(root([command('foo', ['bar'])]));
     });

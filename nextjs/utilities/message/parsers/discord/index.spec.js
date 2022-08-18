@@ -9,6 +9,7 @@ import {
   code,
   pre,
   spoiler,
+  url,
 } from './spec-helpers';
 
 describe('parse', () => {
@@ -45,6 +46,10 @@ describe('parse', () => {
     expect(parse('||foo||')).toEqual(root([spoiler([text('foo')])]));
   });
 
+  it('returns a `url` node', () => {
+    expect(parse('https://foo.com')).toEqual(root([url('https://foo.com')]));
+  });
+
   it('returns a `bold` and `italic` nodes', () => {
     expect(parse('***foo***')).toEqual(
       root([bold([italic([text('foo')], '*')])])
@@ -67,5 +72,19 @@ describe('parse', () => {
     expect(parse('__***foo***__')).toEqual(
       root([underline([bold([italic([text('foo')], '*')])])])
     );
+  });
+
+  describe('url', () => {
+    it('parses http and mailto as urls', () => {
+      expect(parse('Visit http://foo.bar or email to mailto:foo@bar!')).toEqual(
+        root([
+          text('Visit '),
+          url('http://foo.bar'),
+          text(' or email to '),
+          url('mailto:foo@bar'),
+          text('!'),
+        ])
+      );
+    });
   });
 });
