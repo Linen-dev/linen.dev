@@ -8,11 +8,8 @@ jest.mock('../../../lib/models', () => ({
   findMessageByChannelIdAndTs: jest.fn(),
   deleteMessageWithMentions: jest.fn(),
 }));
+jest.mock('../../../lib/users');
 import * as mockUsers from '../../../lib/users';
-jest.mock('../../../lib/users', () => ({
-  ...jest.requireActual('../../../lib/users'),
-  findOrCreateUserFromUserInfo: jest.fn(),
-}));
 
 import handler from '../../../pages/api/webhook';
 import { parseSlackSentAt } from '../../../utilities/sentAt';

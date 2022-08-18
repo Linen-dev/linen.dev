@@ -1,3 +1,5 @@
+jest.mock('../../fetch_all_conversations');
+
 import { prismaMock } from '../../__tests__/singleton';
 import { syncUsers } from './syncUsers';
 import * as fetch_all_conversations from 'fetch_all_conversations';
