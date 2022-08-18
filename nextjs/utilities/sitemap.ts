@@ -9,44 +9,50 @@ import { appendProtocol } from './url';
 
 const debug = createDebug('linen:sitemap');
 
-const channelsFromAccountId = (accountId: string) => prisma.$queryRaw<
-  { channelName: string; id: string }[]
->`select c."channelName", c.id from channels c
-where c."accountId" = ${accountId}
-and c.hidden is false
-and exists (
-select 1 from "threads" st 
-where st."channelId" = c.id
-group by c.id, st.id
-)`;
-
-export async function createSitemapForPremium(host: string): Promise<string> {
+export async function createSitemapForPremium(
+  host: string,
+  sitemapBuilder: (urls: string[]) => Promise<string> = buildSitemapIndexStream
+) {
   const account = await prisma.accounts.findFirst({
-    where: {
-      redirectDomain: host,
-    },
     select: {
       id: true,
+      channels: {
+        select: {
+          channelName: true,
+          _count: {
+            select: {
+              messages: true,
+              threads: true,
+            },
+          },
+        },
+        where: {
+          hidden: false,
+        },
+      },
+    },
+    where: {
+      redirectDomain: host,
     },
   });
 
   if (!account) {
-    return Promise.reject();
+    throw 'account not found';
   }
-  const channels = await channelsFromAccountId(account.id);
 
-  const stream = new SitemapIndexStream();
+  const urls = account.channels
+    .filter((c) => c._count.messages > 0 && c._count.threads > 0)
+    .map(({ channelName }) =>
+      encodeURI(`${appendProtocol(host)}/sitemap/c/${channelName}/chunk.xml`)
+    );
 
-  const urls = channels.map(({ channelName }) =>
-    encodeURI(`${appendProtocol(host)}/sitemap/c/${channelName}/chunk.xml`)
-  );
-
-  return streamToPromise(Readable.from(urls).pipe(stream)).then((data) =>
-    data.toString()
-  );
+  return sitemapBuilder(urls);
 }
 
-export async function createSitemapForLinen(host: string) {
+export async function createSitemapForLinen(
+  host: string,
+  sitemapBuilder: (urls: string[]) => Promise<string> = buildSitemapIndexStream
+) {
   const freeAccounts = await prisma.accounts.findMany({
     select: {
       id: true,
@@ -54,9 +60,17 @@ export async function createSitemapForLinen(host: string) {
       discordServerId: true,
       slackDomain: true,
       slackTeamId: true,
-      _count: {
+      channels: {
         select: {
-          channels: true,
+          _count: {
+            select: {
+              messages: true,
+              threads: true,
+            },
+          },
+        },
+        where: {
+          hidden: false,
         },
       },
     },
@@ -78,85 +92,105 @@ export async function createSitemapForLinen(host: string) {
 
   const httpHost = appendProtocol(host);
 
-  const stream = new SitemapIndexStream();
   const urls = freeAccounts
-    .map(
-      ({
-        discordDomain,
-        discordServerId,
-        slackDomain,
-        slackTeamId,
-        _count,
-        id,
-      }) => {
-        if (!_count.channels) {
-          debug('account without channels', id);
-          return;
-        }
-        const letter = !!discordDomain || !!discordServerId ? 'd' : 's';
-        const domain =
-          discordDomain || slackDomain || discordServerId || slackTeamId;
-        if (!domain) {
-          debug('account without name', id);
-          return;
-        }
-        return encodeURI(`${httpHost}/sitemap/${letter}/${domain}/chunk.xml`);
+    .filter((account) => {
+      if (
+        !account.channels ||
+        !account.channels.length ||
+        !account.channels.find((e) => e._count.messages) ||
+        !account.channels.find((e) => e._count.threads)
+      ) {
+        debug('account without channels', account.id);
+        return false;
       }
-    )
+      const domain =
+        account.discordDomain ||
+        account.slackDomain ||
+        account.discordServerId ||
+        account.slackTeamId;
+      if (!domain) {
+        debug('account without name', account.id);
+        return false;
+      }
+      return true;
+    })
+    .map((account) => {
+      const letter =
+        !!account.discordDomain || !!account.discordServerId ? 'd' : 's';
+      const domain =
+        account.discordDomain ||
+        account.slackDomain ||
+        account.discordServerId ||
+        account.slackTeamId;
+      return encodeURI(`${httpHost}/sitemap/${letter}/${domain}/chunk.xml`);
+    })
     .filter(Boolean);
 
   debug('urls', urls);
-  return streamToPromise(Readable.from(urls).pipe(stream)).then(String);
+  return sitemapBuilder(urls);
 }
 
 export async function createSitemapForFree(
   host: string,
   community: string,
-  communityPrefix: string
+  communityPrefix: string,
+  sitemapBuilder: (urls: string[]) => Promise<string> = buildSitemapIndexStream
 ) {
   debug('request', { host, community, communityPrefix });
   // community could be discordServerId/discordDomain or slackDomain
   const account = await prisma.accounts.findFirst({
+    select: {
+      id: true,
+      discordServerId: true,
+      slackTeamId: true,
+      channels: {
+        select: {
+          channelName: true,
+          _count: {
+            select: {
+              messages: true,
+              threads: true,
+            },
+          },
+        },
+        where: {
+          hidden: false,
+        },
+      },
+    },
     where: {
-      // TODO: premium must be false
       OR: [
         { discordDomain: community },
         { discordServerId: community },
         { slackDomain: community },
       ],
     },
-    select: {
-      id: true,
-      discordServerId: true,
-      slackTeamId: true,
-    },
   });
   debug('account %o', account);
-  if (!account) throw "account doesn't exist";
-
-  const channels = await channelsFromAccountId(account.id);
-
-  const stream = new SitemapIndexStream();
+  if (!account) {
+    throw "account doesn't exist";
+  }
 
   const httpHost = appendProtocol(host);
 
-  const urls = channels.map(({ channelName }) =>
-    encodeURI(
-      `${httpHost}/sitemap/${communityPrefix}/${community}/c/${channelName}/chunk.xml`
-    )
-  );
+  const urls = account.channels
+    .filter((c) => c._count.messages > 0 && c._count.threads > 0)
+    .map(({ channelName, ...rest }) =>
+      encodeURI(
+        `${httpHost}/sitemap/${communityPrefix}/${community}/c/${channelName}/chunk.xml`
+      )
+    );
 
   debug('channels %o', urls.length);
 
-  if (!urls.length) throw "account doesn't have channels";
+  if (!urls.length) {
+    throw "account doesn't have channels";
+  }
 
-  return streamToPromise(Readable.from(urls).pipe(stream)).then((data) =>
-    data.toString()
-  );
+  return sitemapBuilder(urls);
 }
 
-// exported just for testing
-export async function internalCreateSitemapByChannel(
+async function internalCreateSitemapByChannel(
   host: string,
   channelName: string
 ) {
@@ -191,6 +225,15 @@ export async function internalCreateSitemapByChannel(
     chunk?.length && chunks.push(...chunk.map((c) => encodeURI(c)));
     next = nextCursor;
     if (!next) break;
+
+    if (chunks?.length && chunks.length >= 10000) {
+      await captureExceptionAndFlush({
+        error: "isn't issue, just a flag on sitemap builder process",
+        problem: 'this channel has more than 10k threads',
+        channel,
+      });
+      break;
+    }
   }
 
   return chunks;
@@ -239,34 +282,49 @@ async function queryThreads(
 
 export async function createSitemapForPremiumByChannel(
   host: string,
-  channelName: string
+  channelName: string,
+  sitemapBuilder: (
+    hostname: string,
+    sitemap: string[]
+  ) => Promise<string> = buildSitemapStream
 ) {
   const sitemap = await internalCreateSitemapByChannel(host, channelName);
-
-  const stream = new SitemapStream({
-    hostname: `${appendProtocol(host)}/`,
-  });
-  return await streamToPromise(Readable.from(sitemap).pipe(stream)).then(
-    (data) => data.toString()
-  );
+  const hostname = `${appendProtocol(host)}/`;
+  return sitemapBuilder(hostname, sitemap);
 }
 
 export async function createSitemapForFreeByChannel(
   host: string,
   channelName: string,
   communityName: string,
-  communityPrefix: string
+  communityPrefix: string,
+  sitemapBuilder: (
+    hostname: string,
+    sitemap: string[]
+  ) => Promise<string> = buildSitemapStream
 ) {
   const sitemap = await internalCreateSitemapByChannel(
     communityName as string,
     channelName as string
   );
-  const stream = new SitemapStream({
-    hostname: encodeURI(
-      `${appendProtocol(host)}/${communityPrefix}/${communityName}/`
-    ),
-  });
-  return await streamToPromise(Readable.from(sitemap).pipe(stream)).then(
-    (data) => data.toString()
+  if (!sitemap.length) throw 'empty channel';
+
+  const hostname = encodeURI(
+    `${appendProtocol(host)}/${communityPrefix}/${communityName}/`
   );
+  return sitemapBuilder(hostname, sitemap);
+}
+
+function buildSitemapStream(hostname: string, sitemap: string[]) {
+  const stream = new SitemapStream({
+    hostname,
+  });
+  return streamToPromise(Readable.from(sitemap).pipe(stream)).then((data) =>
+    data.toString()
+  );
+}
+
+function buildSitemapIndexStream(urls: string[]) {
+  const stream = new SitemapIndexStream();
+  return streamToPromise(Readable.from(urls).pipe(stream)).then(String);
 }
