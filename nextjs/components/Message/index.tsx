@@ -34,7 +34,7 @@ import {
 
 interface Props {
   text: string;
-  communityType?: string;
+  format?: string;
   truncate?: any;
   mentions?: users[];
   reactions?: SerializedReaction[];
@@ -48,7 +48,7 @@ const parsers = {
 
 function Message({
   text,
-  communityType,
+  format,
   truncate,
   mentions,
   reactions,
@@ -57,7 +57,7 @@ function Message({
   if (text === '') {
     text = 'message has been deleted';
   }
-  const parse = communityType === 'discord' ? parsers.discord : parsers.slack;
+  const parse = format === 'discord' ? parsers.discord : parsers.slack;
   const input = truncate ? truncateText(text) : text;
   const tree = transform(parse(input));
 
@@ -128,7 +128,7 @@ function Message({
 }
 
 Message.defaultProps = {
-  communityType: 'slack',
+  format: 'slack',
 };
 
 export default Message;

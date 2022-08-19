@@ -25,7 +25,7 @@ export function Row({
         <div className="max-w-[700px]">
           <Message
             text={message.body}
-            communityType={communityType}
+            format={communityType}
             mentions={message.mentions?.map((m) => m.users)}
             reactions={message.reactions}
             attachments={message.attachments}
@@ -62,7 +62,7 @@ export function Row({
       <div className="max-w-[700px]">
         <Message
           text={message.body}
-          communityType={communityType}
+          format={communityType}
           mentions={message.mentions?.map((m) => m.users)}
           reactions={message.reactions}
           attachments={message.attachments}
