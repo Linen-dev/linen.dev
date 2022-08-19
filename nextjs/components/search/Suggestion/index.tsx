@@ -37,7 +37,7 @@ export default function Suggestion({
       </div>
       <Message
         text={body}
-        communityType={communityType}
+        format={communityType}
         truncate
         mentions={mentions.map((m: any) => m.users) || []}
       />
