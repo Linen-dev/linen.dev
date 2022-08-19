@@ -112,7 +112,6 @@ function Message({ text, format, mentions, reactions, attachments }: Props) {
     <div className={styles.message}>
       {render(tree)}
       <Attachments attachments={attachments} />
-
       <Reactions reactions={reactions} />
     </div>
   );
