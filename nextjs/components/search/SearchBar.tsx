@@ -22,11 +22,13 @@ const SearchBar = ({
   users = [],
   communityName,
   isSubDomainRouting,
+  communityType,
 }: {
   channels: channels[];
   users?: users[];
   communityName: string;
   isSubDomainRouting: boolean;
+  communityType: string;
 }) => {
   const accountId = channels[0]?.accountId;
   const router = useRouter();
@@ -48,6 +50,7 @@ const SearchBar = ({
           user={user}
           channelName={channelName}
           mentions={mentions}
+          communityType={communityType}
         />
       );
     },

@@ -71,6 +71,7 @@ export function feedBuilder({
                 <div className="pb-2">
                   <Message
                     text={oldestMessage?.body || ''}
+                    format={communityType}
                     mentions={oldestMessage?.mentions.map((m) => m.users)}
                     reactions={oldestMessage?.reactions}
                     attachments={oldestMessage?.attachments}

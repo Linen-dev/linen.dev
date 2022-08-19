@@ -9,6 +9,7 @@ interface Props {
   mentions: any[];
   user?: users;
   channelName?: string;
+  communityType: string;
 }
 
 export default function Suggestion({
@@ -16,6 +17,7 @@ export default function Suggestion({
   mentions,
   user,
   channelName,
+  communityType,
 }: Props) {
   return (
     <div className={styles.container}>
@@ -35,6 +37,7 @@ export default function Suggestion({
       </div>
       <Message
         text={body}
+        format={communityType}
         truncate
         mentions={mentions.map((m: any) => m.users) || []}
       />

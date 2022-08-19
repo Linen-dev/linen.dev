@@ -5,7 +5,7 @@ import Suggestion from '.';
 describe('Suggestion', () => {
   it('renders a suggestion', () => {
     const { container } = render(
-      <Suggestion body="Lorem ipsum" mentions={[]} />
+      <Suggestion body="Lorem ipsum" mentions={[]} communityType="slack" />
     );
     expect(container).toHaveTextContent('Lorem ipsum');
   });
@@ -13,7 +13,7 @@ describe('Suggestion', () => {
   describe('when user is unknown', () => {
     it('renders "user" as the display name', () => {
       const { container } = render(
-        <Suggestion body="Lorem ipsum" mentions={[]} />
+        <Suggestion body="Lorem ipsum" mentions={[]} communityType="slack" />
       );
       expect(container).toHaveTextContent('user');
     });
