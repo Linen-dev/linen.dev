@@ -7,7 +7,7 @@ interface Props {
   label?: string;
 }
 
-function MessageInput({ name, label }: Props) {
+function Textarea({ name, label }: Props) {
   return (
     <>
       <Label htmlFor={name}>{label}</Label>
@@ -16,4 +16,4 @@ function MessageInput({ name, label }: Props) {
   );
 }
 
-export default MessageInput;
+export default Textarea;
