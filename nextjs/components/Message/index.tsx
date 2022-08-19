@@ -11,7 +11,7 @@ import Quote from './Quote';
 import Reactions from './Reactions';
 import Attachments from './Attachments';
 import transform from './utilities/transform';
-import { truncate as truncateText } from './utilities/string';
+import { truncate as truncateText } from 'utilities/string';
 import styles from './index.module.css';
 import { SerializedReaction, SerializedAttachment } from 'types/shared';
 import parseSlackMessage from 'utilities/message/parsers/slack';
@@ -58,7 +58,7 @@ function Message({
     text = 'message has been deleted';
   }
   const parse = format === 'discord' ? parsers.discord : parsers.slack;
-  const input = truncate ? truncateText(text) : text;
+  const input = truncate ? truncateText(text, 220) : text;
   const tree = transform(parse(input));
 
   function render(node: RootNode | Node): React.ReactNode {
