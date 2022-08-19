@@ -80,21 +80,16 @@ export default function Thread({
       settings={settings}
       isSubDomainRouting={isSubDomainRouting}
     >
-      <div>
-        <div className={styles.thread}>
-          <ul>{elements}</ul>
+      <div className={styles.thread}>
+        <ul>{elements}</ul>
 
-          <div>
-            <div className={styles.footer}>
-              <JoinChannelLink
-                href={threadCommunityInviteUrl || threadUrl}
-                communityType={settings.communityType}
-              />
-              <div className={styles.count}>
-                <span className={styles.subtext}>View count:</span>{' '}
-                {viewCount + 1}
-              </div>
-            </div>
+        <div className={styles.footer}>
+          <JoinChannelLink
+            href={threadCommunityInviteUrl || threadUrl}
+            communityType={settings.communityType}
+          />
+          <div className={styles.count}>
+            <span className={styles.subtext}>View count:</span> {viewCount + 1}
           </div>
         </div>
       </div>

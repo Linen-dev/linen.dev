@@ -15,6 +15,7 @@
   clear: both;
   min-height: 20px;
   display: flex;
+  padding-bottom: 2rem;
   justify-content: space-between;
 }
 
