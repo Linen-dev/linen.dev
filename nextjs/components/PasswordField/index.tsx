@@ -10,7 +10,12 @@ interface Props {
   required?: boolean;
 }
 
-export default function TextField({ label, id, placeholder, required }: Props) {
+export default function PasswordField({
+  label,
+  id,
+  placeholder,
+  required,
+}: Props) {
   return (
     <Field>
       <Label htmlFor={id}>{label}</Label>
