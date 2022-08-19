@@ -260,4 +260,5 @@ export const UNSUPPORTED_EMOJIS = [
   'tnx',
   'sunglasses_lakefs',
   'plus-one',
+  'party_blob',
 ];
