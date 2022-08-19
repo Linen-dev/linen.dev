@@ -1,15 +1,15 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import Textarea from '.';
+import MessageField from '.';
 
-describe('Textarea', () => {
+describe('MessageField', () => {
   it('renders a textarea', () => {
-    const { container } = render(<Textarea name="foo" />);
+    const { container } = render(<MessageField name="foo" />);
     expect(container.querySelector('textarea')).toBeTruthy();
   });
 
   it('renders a label', () => {
-    const { container } = render(<Textarea label="foo" name="bar" />);
+    const { container } = render(<MessageField label="foo" name="bar" />);
     expect(container).toHaveTextContent('foo');
   });
 });
