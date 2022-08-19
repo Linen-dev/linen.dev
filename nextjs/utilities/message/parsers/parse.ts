@@ -10,6 +10,13 @@
 //   switches to `topline` mode.
 //
 // The parser switches between modes as it encounters characters.
+//
+// The parser flushes the buffer when it matches a new node.
+// Nodes can have children. The parser recurses into the children
+// when it encounters a node that has children.
+//
+// The parser returns an abstract syntax tree. The syntax tree
+// has a root node and a list of child nodes.
 
 // The parser is based on the one in
 // https://github.com/pocka/slack-message-parser/blob/master/LICENSE
