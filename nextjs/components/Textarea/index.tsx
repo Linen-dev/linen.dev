@@ -4,14 +4,26 @@ import styles from './index.module.css';
 
 interface Props {
   name: string;
+  id?: string;
+  defaultValue?: string;
   label?: string;
+  hidden?: boolean;
+  onChange?: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
 }
 
-function Textarea({ name, label }: Props) {
+function Textarea({ name, id, defaultValue, label, hidden, onChange }: Props) {
   return (
     <>
-      <Label htmlFor={name}>{label}</Label>
-      <textarea className={styles.textarea} name={name} rows={6}></textarea>
+      {label && <Label htmlFor={name}>{label}</Label>}
+      <textarea
+        className={styles.textarea}
+        id={id || name}
+        defaultValue={defaultValue}
+        name={name}
+        hidden={hidden}
+        rows={6}
+        onChange={onChange}
+      ></textarea>
     </>
   );
 }

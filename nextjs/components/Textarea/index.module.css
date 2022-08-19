@@ -16,3 +16,7 @@
   outline: none;
   border-color: #0070f3;
 }
+
+.textarea[hidden] {
+  display: none;
+}
