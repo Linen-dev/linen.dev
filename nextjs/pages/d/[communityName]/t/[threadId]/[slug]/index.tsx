@@ -1,6 +1,6 @@
 import { GetStaticPropsContext } from 'next';
 import { threadGetStaticProps } from '../../../../../../services/threads';
-import ThreadPage from '../../../../../../components/Pages/ThreadPage/ThreadPage';
+import { ThreadPage } from 'components/Pages/ThreadPage';
 
 export default ThreadPage;
 

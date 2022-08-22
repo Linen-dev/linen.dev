@@ -10,6 +10,7 @@ import Spinner from 'components/Spinner';
 import CustomLinkHelper from 'components/Link/CustomLinkHelper';
 import ButtonPagination from 'components/ButtonPagination';
 import { Feed } from '../../Feed/Feed';
+import { Thread } from 'components/Thread';
 
 export default function Channel({
   threads,
@@ -99,13 +100,6 @@ export default function Channel({
     }
   }
 
-  const rows = Feed({
-    threads: currentThreads,
-    isSubDomainRouting,
-    communityName: settings.communityName,
-    communityType: settings.communityType,
-  });
-
   function buildTitle(
     communityName: string,
     channelName: string | undefined,
@@ -162,7 +156,12 @@ export default function Channel({
                 )}
               </>
             )}
-            {rows}
+            <Feed
+              threads={currentThreads}
+              isSubDomainRouting={isSubDomainRouting}
+              communityName={settings.communityName}
+              communityType={settings.communityType}
+            />
             {hasPathCursor(pathCursor) && (
               <div className="text-center p-4">
                 {nextCursor?.prev && (
