@@ -1,13 +1,10 @@
-import { useMemo, useEffect } from 'react';
-import PageLayout from '../../layout/PageLayout';
-import styles from './index.module.css';
+import PageLayout from 'components/layout/PageLayout';
 import { ThreadByIdProp } from '../../../types/apiResponses/threads/[threadId]';
-import Row from '../../Message/Row';
-import JoinChannelLink from 'components/Link/JoinChannelLink';
 import { SerializedMessage } from 'serializers/thread';
-import { Settings } from 'services/accountSettings';
+import { useEffect } from 'react';
+import { Thread } from 'components/Thread';
 
-export default function ThreadPage({
+export function ThreadPage({
   threadId,
   messages,
   channels,
@@ -53,57 +50,5 @@ export default function ThreadPage({
         viewCount={viewCount}
       />
     </PageLayout>
-  );
-}
-
-function Thread({
-  messages,
-  threadUrl,
-  settings,
-  viewCount,
-}: {
-  messages: SerializedMessage[];
-  threadUrl: string;
-  settings: Settings;
-  viewCount: number;
-}) {
-  const elements = useMemo(() => {
-    return messages
-      .sort(
-        (a, b) => new Date(b.sentAt).getTime() - new Date(a.sentAt).getTime()
-      )
-      .map((message, index) => {
-        const previousMessage = messages[index - 1];
-        const nextMessage = messages[index + 1];
-        const isPreviousMessageFromSameUser =
-          previousMessage && previousMessage.usersId === message.usersId;
-        const isNextMessageFromSameUser =
-          nextMessage && nextMessage.usersId === message.usersId;
-        return (
-          <Row
-            key={`${message.id}-${index}`}
-            message={message}
-            isPreviousMessageFromSameUser={isPreviousMessageFromSameUser}
-            isNextMessageFromSameUser={isNextMessageFromSameUser}
-            communityType={settings.communityType}
-          />
-        );
-      });
-  }, [messages]);
-
-  return (
-    <div className={styles.thread}>
-      <ul>{elements}</ul>
-
-      <div className={styles.footer}>
-        <JoinChannelLink
-          href={threadUrl}
-          communityType={settings.communityType}
-        />
-        <div className={styles.count}>
-          <span className={styles.subtext}>View count:</span> {viewCount + 1}
-        </div>
-      </div>
-    </div>
   );
 }
