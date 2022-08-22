@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import Autocomplete from '../Autocomplete';
-import { messages, channels, users } from '@prisma/client';
+import { messages, channels } from '@prisma/client';
 import Suggestion from './Suggestion';
 
 const parseResults = (data: messages[]) => {
@@ -19,13 +19,11 @@ const parseResults = (data: messages[]) => {
 
 const SearchBar = ({
   channels = [],
-  users = [],
   communityName,
   isSubDomainRouting,
   communityType,
 }: {
   channels: channels[];
-  users?: users[];
   communityName: string;
   isSubDomainRouting: boolean;
   communityType: string;
@@ -38,23 +36,25 @@ const SearchBar = ({
       query.trim()
     )}&account_id=${accountId}&offset=${offset}&limit=${limit}`;
 
+  // TODO: Fetch user info from search query.
+  // The first hacked together version literally loaded all the users
+  // in the database from channels view
   const renderSuggestion = useCallback(
     ({ body, channelId, usersId, mentions }) => {
-      const user = users.find((u) => u.id === usersId);
       const channel = channels.find((c) => c.id === channelId);
       const channelName = channel?.channelName;
 
       return (
         <Suggestion
           body={body}
-          user={user}
+          // user={}
           channelName={channelName}
           mentions={mentions}
           communityType={communityType}
         />
       );
     },
-    [users, channels]
+    [channels]
   );
 
   const handleSelect = useCallback(
