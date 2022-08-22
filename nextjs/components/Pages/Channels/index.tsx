@@ -25,10 +25,7 @@ export type messageWithAuthor = messages & {
 };
 
 export type ChannelViewProps = {
-  communityUrl?: string;
-  communityInviteUrl?: string;
   settings: Settings;
-  communityName: string;
   channelName: string;
   users: users[];
   channels?: channels[];
@@ -46,5 +43,10 @@ export type ChannelViewCursorProps = {
 };
 
 export default function ChannelView(props: ChannelViewProps) {
-  return <Channel {...props} key={props.communityName + props.channelName} />;
+  return (
+    <Channel
+      {...props}
+      key={props.settings.communityName + props.channelName}
+    />
+  );
 }
