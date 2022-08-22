@@ -24,6 +24,7 @@ export default function Channel({
   isSubDomainRouting,
   nextCursor,
   pathCursor,
+  isBot,
 }: ChannelViewProps) {
   const [currentThreads, setCurrentThreads] = useState<SerializedThread[]>();
   const messagesEndRef = useRef<null | HTMLDivElement>(null);
