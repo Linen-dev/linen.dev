@@ -1,6 +1,5 @@
 import { ErrorBoundary } from 'react-error-boundary';
 import Link from 'next/link';
-import SlackIcon from '../../icons/SlackIcon';
 import SearchBar from '../../search/SearchBar';
 import NavBar from '../../NavBar';
 import SEO from '../SEO';
@@ -24,7 +23,6 @@ interface Settings {
 
 interface Props {
   seo?: any;
-  users?: users[];
   children: React.ReactNode;
   currentChannel: channels;
   navItems?: any;
@@ -37,7 +35,6 @@ interface Props {
 
 function PageLayout({
   seo = {},
-  users,
   children,
   navItems,
   currentChannel,
@@ -83,7 +80,6 @@ function PageLayout({
             <div className="hidden sm:flex w-full">
               <SearchBar
                 channels={channels}
-                users={users}
                 communityName={communityName}
                 isSubDomainRouting={isSubDomainRouting}
                 communityType={settings.communityType}
@@ -118,7 +114,6 @@ function PageLayout({
       <div className="pt-3 sm:hidden w-full">
         <SearchBar
           channels={channels}
-          users={users}
           communityName={communityName}
           isSubDomainRouting={isSubDomainRouting}
           communityType={settings.communityType}

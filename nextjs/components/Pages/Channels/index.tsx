@@ -27,7 +27,6 @@ export type messageWithAuthor = messages & {
 export type ChannelViewProps = {
   settings: Settings;
   channelName: string;
-  users: users[];
   channels?: channels[];
   currentChannel: channels;
   threads?: SerializedThread[];
