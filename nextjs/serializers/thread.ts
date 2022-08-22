@@ -10,6 +10,7 @@ import type {
 } from '@prisma/client';
 
 export interface SerializedMessage {
+  id: string;
   body: string;
   sentAt: string;
   author?: users;
