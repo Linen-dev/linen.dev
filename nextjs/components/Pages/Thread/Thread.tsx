@@ -64,7 +64,6 @@ export default function Thread({
 
   return (
     <PageLayout
-      users={messages.map(({ author }) => author)}
       seo={{
         title: buildTitle(currentChannel?.channelName, messages[0]),
       }}

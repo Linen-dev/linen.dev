@@ -73,7 +73,6 @@ export async function channelGetServerSideProps(
       settings: buildSettings(account),
       isSubDomainRouting: isSubdomainbasedRouting,
       pathCursor: page || null,
-      users: [], // not sure why?
       isBot: isBot(context.req.headers['user-agent'] || ''),
     },
   };

@@ -12,7 +12,6 @@ import ButtonPagination from 'components/ButtonPagination';
 import { Feed } from '../../Feed/Feed';
 
 export default function Channel({
-  users,
   threads,
   channels,
   currentChannel,
@@ -121,7 +120,6 @@ export default function Channel({
 
   return (
     <PageLayout
-      users={users}
       communityUrl={settings.communityUrl}
       communityInviteUrl={settings.communityInviteUrl}
       currentChannel={currentChannel}
