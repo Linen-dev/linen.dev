@@ -1,7 +1,6 @@
 import { findAccountByPath } from '../lib/models';
 import { GetServerSidePropsContext } from 'next/types';
 import { NotFound } from '../utilities/response';
-import { revalidateInSeconds } from '../constants/revalidate';
 import { buildSettings } from './accountSettings';
 import { memoize } from '../utilities/dynamoCache';
 import { findPreviousCursor, findThreadsByCursor } from '../lib/threads';
@@ -20,9 +19,10 @@ import {
 } from 'lib/account';
 import {
   ChannelViewCursorProps,
-  ChannelViewProps,
+  ChannelResponse,
 } from 'components/Pages/Channels';
 import { captureExceptionAndFlush } from 'utilities/sentry';
+import { isBot } from 'next/dist/server/web/spec-extension/user-agent';
 
 const CURSOR_LIMIT = 10;
 
@@ -37,10 +37,7 @@ function buildInviteUrl(account: accounts) {
 export async function channelGetServerSideProps(
   context: GetServerSidePropsContext,
   isSubdomainbasedRouting: boolean
-): Promise<{
-  props?: ChannelViewProps;
-  notfound?: boolean;
-}> {
+): Promise<ChannelResponse> {
   const communityName = context.params?.communityName as string;
   const channelName = context.params?.channelName as string;
   const page = context.params?.page as string | undefined;
@@ -87,6 +84,7 @@ export async function channelGetServerSideProps(
       communityInviteUrl: buildInviteUrl(account),
       pathCursor: page || null,
       users: [], // not sure why?
+      isBot: isBot(context.req.headers['user-agent'] || ''),
     },
   };
 }
