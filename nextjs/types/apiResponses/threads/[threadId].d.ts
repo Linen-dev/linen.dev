@@ -24,12 +24,8 @@ export type ThreadById = {
   threadId: string;
   authors: users[];
   channels: channels[];
-  communityUrl?: string;
-  communityInviteUrl?: string;
   threadUrl: string;
-  threadCommunityInviteUrl?: string | null;
   settings: Settings;
-  communityName: string;
 };
 
 export interface Author {
@@ -40,13 +36,4 @@ export interface Author {
   isBot: boolean;
   isAdmin: boolean;
   accountsId: string;
-}
-
-export interface Settings {
-  brandColor: string;
-  homeUrl: string;
-  docsUrl: string;
-  logoUrl: string;
-  googleAnalyticsId?: string;
-  communityType: string;
 }

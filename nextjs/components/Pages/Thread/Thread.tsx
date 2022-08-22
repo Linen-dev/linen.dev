@@ -12,14 +12,10 @@ export default function Thread({
   messages,
   channels,
   currentChannel,
-  communityUrl,
-  communityInviteUrl,
   threadUrl,
-  threadCommunityInviteUrl,
-  settings,
   viewCount,
-  communityName,
   isSubDomainRouting,
+  settings,
 }: ThreadByIdProp) {
   if (!threadId) {
     return <div></div>;
@@ -53,7 +49,7 @@ export default function Thread({
 
   const linkProps = {
     isSubDomainRouting,
-    communityName,
+    communityName: settings.communityName,
     communityType: settings.communityType,
     path: `/c/${currentChannel?.channelName}`,
   };
@@ -72,11 +68,11 @@ export default function Thread({
       seo={{
         title: buildTitle(currentChannel?.channelName, messages[0]),
       }}
-      communityName={communityName}
+      communityName={settings.communityName}
       currentChannel={currentChannel}
       navItems={{ channels: channels }}
-      communityUrl={communityUrl}
-      communityInviteUrl={communityInviteUrl}
+      communityUrl={settings.communityUrl}
+      communityInviteUrl={settings.communityInviteUrl}
       settings={settings}
       isSubDomainRouting={isSubDomainRouting}
     >
@@ -85,7 +81,7 @@ export default function Thread({
 
         <div className={styles.footer}>
           <JoinChannelLink
-            href={threadCommunityInviteUrl || threadUrl}
+            href={threadUrl}
             communityType={settings.communityType}
           />
           <div className={styles.count}>

@@ -10,7 +10,20 @@ export type Settings = {
   docsUrl: string;
   logoUrl: string;
   messagesViewType: MessagesViewType;
+  communityUrl: string;
+  communityInviteUrl: string;
+  communityName: string;
 };
+
+function buildInviteUrl(account: accounts) {
+  if (account.communityInviteUrl) {
+    return account.communityInviteUrl;
+  } else if (account.discordServerId) {
+    return `https://discord.com/channels/${account.discordServerId}`;
+  } else {
+    return '';
+  }
+}
 
 export function buildSettings(account: accounts): Settings {
   const defaultSettings =
@@ -19,6 +32,13 @@ export function buildSettings(account: accounts): Settings {
   const communityType = account.discordServerId ? 'discord' : 'slack';
 
   const settings = {
+    communityUrl: account.communityUrl || '',
+    communityInviteUrl: buildInviteUrl(account),
+    communityName:
+      account.slackDomain ||
+      account.discordDomain ||
+      account.discordServerId ||
+      '',
     name: account.name,
     brandColor: account.brandColor || defaultSettings.brandColor,
     homeUrl: account.homeUrl || defaultSettings.homeUrl,

@@ -26,14 +26,6 @@ import { isBot } from 'next/dist/server/web/spec-extension/user-agent';
 
 const CURSOR_LIMIT = 10;
 
-function buildInviteUrl(account: accounts) {
-  if (account.discordServerId) {
-    return `https://discord.com/channels/${account.discordServerId}`;
-  } else {
-    return account.communityInviteUrl || '';
-  }
-}
-
 export async function channelGetServerSideProps(
   context: GetServerSidePropsContext,
   isSubdomainbasedRouting: boolean
@@ -73,7 +65,6 @@ export async function channelGetServerSideProps(
 
   return {
     props: {
-      communityName,
       nextCursor,
       currentChannel: channel,
       channelName: channel.channelName,
@@ -81,7 +72,6 @@ export async function channelGetServerSideProps(
       threads: threads.map(serializeThread),
       settings: buildSettings(account),
       isSubDomainRouting: isSubdomainbasedRouting,
-      communityInviteUrl: buildInviteUrl(account),
       pathCursor: page || null,
       users: [], // not sure why?
       isBot: isBot(context.req.headers['user-agent'] || ''),
