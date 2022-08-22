@@ -1,8 +1,8 @@
 import { GetStaticPropsContext } from 'next';
 import { threadGetStaticProps } from '../../../../../services/threads';
-import Thread from '../../../../../components/Pages/Thread/Thread';
+import ThreadPage from '../../../../../components/Pages/ThreadPage/ThreadPage';
 
-export default Thread;
+export default ThreadPage;
 
 //Renders the same page as /threadId
 export async function getStaticProps(context: GetStaticPropsContext) {
