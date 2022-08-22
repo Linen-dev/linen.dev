@@ -23,45 +23,49 @@ export function Feed({
   communityName: string;
   communityType: string;
 }) {
-  return threads
-    ?.filter((t) => t.messages.length > 0)
-    .map(({ messages, incrementId, slug, viewCount }: SerializedThread) => {
-      const oldestMessage = messages[messages.length - 1];
-      const newestMessage = messages[0];
+  return (
+    <div>
+      {threads
+        ?.filter((t) => t.messages.length > 0)
+        .map(({ messages, incrementId, slug, viewCount }: SerializedThread) => {
+          const oldestMessage = messages[messages.length - 1];
+          const newestMessage = messages[0];
 
-      const author = oldestMessage?.author;
-      //don't include the original poster for the thread in replies
-      let users = messages.map((m) => m.author).filter(Boolean) as users[];
-      const authors = uniqueUsers(users.slice(0, -1));
+          const author = oldestMessage?.author;
+          //don't include the original poster for the thread in replies
+          let users = messages.map((m) => m.author).filter(Boolean) as users[];
+          const authors = uniqueUsers(users.slice(0, -1));
 
-      return (
-        <li
-          key={incrementId}
-          className="px-4 py-4 hover:bg-gray-50 border-solid border-gray-200 cursor-pointer"
-        >
-          <CustomLink
-            isSubDomainRouting={isSubDomainRouting}
-            communityName={communityName}
-            communityType={communityType}
-            path={`/t/${incrementId}/${slug || 'topic'}`.toLowerCase()}
-            key={`${incrementId}-desktop`}
-          >
-            <MessageCard
-              author={author}
-              incrementId={incrementId}
-              newestMessage={newestMessage}
-              oldestMessage={oldestMessage}
-              authors={authors}
-              messages={messages}
-              isSubDomainRouting={isSubDomainRouting}
-              communityName={communityName}
-              communityType={communityType}
-              slug={slug}
-            />
-          </CustomLink>
-        </li>
-      );
-    });
+          return (
+            <li
+              key={incrementId}
+              className="px-4 py-4 hover:bg-gray-50 border-solid border-gray-200 cursor-pointer"
+            >
+              <CustomLink
+                isSubDomainRouting={isSubDomainRouting}
+                communityName={communityName}
+                communityType={communityType}
+                path={`/t/${incrementId}/${slug || 'topic'}`.toLowerCase()}
+                key={`${incrementId}-desktop`}
+              >
+                <MessageCard
+                  author={author}
+                  incrementId={incrementId}
+                  newestMessage={newestMessage}
+                  oldestMessage={oldestMessage}
+                  authors={authors}
+                  messages={messages}
+                  isSubDomainRouting={isSubDomainRouting}
+                  communityName={communityName}
+                  communityType={communityType}
+                  slug={slug}
+                />
+              </CustomLink>
+            </li>
+          );
+        })}
+    </div>
+  );
 }
 
 function MessageCard({
