@@ -4,6 +4,7 @@ import { SerializedAttachment, SerializedReaction } from '../types/shared';
 import type { Prisma, threads, users } from '@prisma/client';
 
 export interface SerializedMessage {
+  id: string;
   body: string;
   sentAt: string;
   author?: users;

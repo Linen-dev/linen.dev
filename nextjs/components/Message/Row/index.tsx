@@ -1,10 +1,10 @@
 import Avatar, { Size } from '../../Avatar';
-import { messageWithAuthor } from '../../Pages/Channels';
 import Message from '../../Message';
 import { format } from 'timeago.js';
+import { SerializedMessage } from 'serializers/thread';
 
 interface Props {
-  message: messageWithAuthor;
+  message: SerializedMessage;
   isPreviousMessageFromSameUser: boolean;
   isNextMessageFromSameUser: boolean;
   communityType: string;
