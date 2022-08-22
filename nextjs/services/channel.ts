@@ -1,5 +1,5 @@
 import { findAccountByPath } from '../lib/models';
-import { GetStaticPropsContext } from 'next/types';
+import { GetServerSidePropsContext } from 'next/types';
 import { NotFound } from '../utilities/response';
 import { revalidateInSeconds } from '../constants/revalidate';
 import { buildSettings } from './accountSettings';
@@ -34,12 +34,11 @@ function buildInviteUrl(account: accounts) {
   }
 }
 
-export async function channelGetStaticProps(
-  context: GetStaticPropsContext,
+export async function channelGetServerSideProps(
+  context: GetServerSidePropsContext,
   isSubdomainbasedRouting: boolean
 ): Promise<{
   props?: ChannelViewProps;
-  revalidate: number;
   notfound?: boolean;
 }> {
   const communityName = context.params?.communityName as string;
@@ -89,27 +88,6 @@ export async function channelGetStaticProps(
       pathCursor: page || null,
       users: [], // not sure why?
     },
-    revalidate: revalidateInSeconds, // In seconds
-  };
-}
-
-const SKIP_CACHING_ON_BUILD_STEP =
-  process.env.SKIP_CACHING_ON_BUILD_STEP === 'true' || false;
-
-export async function channelGetStaticPaths(pathPrefix: string) {
-  if (SKIP_CACHING_ON_BUILD_STEP) {
-    console.log('hit skip caching on build step');
-    return {
-      paths: [],
-      fallback: true,
-    };
-  }
-
-  const paths = await getPathsFromPrefix(pathPrefix);
-
-  return {
-    paths: paths.map((p) => `${pathPrefix}/${p}/`),
-    fallback: true,
   };
 }
 

@@ -1,15 +1,9 @@
-import { channelGetStaticProps } from '../../../../../services/channel';
-import { GetStaticPropsContext } from 'next';
-import Channel from '../../../../../components/Pages/Channels';
+import { channelGetServerSideProps } from 'services/channel';
+import Channel from 'components/Pages/Channels';
+import { GetServerSidePropsContext } from 'next/types';
 
-export async function getStaticProps(context: GetStaticPropsContext) {
-  return channelGetStaticProps(context, false);
-}
-
-export function getStaticPaths() {
-  return {
-    paths: [],
-    fallback: true,
-  };
-}
 export default Channel;
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  return channelGetServerSideProps(context, false);
+}
