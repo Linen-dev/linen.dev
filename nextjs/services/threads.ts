@@ -103,13 +103,6 @@ export async function getThreadById(
     threadId,
     currentChannel: thread.channel,
     channels: channelsWithMinThreads,
-    communityUrl: account.communityUrl || '',
-    communityInviteUrl: account.communityInviteUrl || '',
-    communityName:
-      account.slackDomain ||
-      account.discordDomain ||
-      account.discordServerId ||
-      '',
     threadUrl,
     settings,
   };

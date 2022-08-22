@@ -9,17 +9,14 @@ import useInfiniteScroll from 'react-infinite-scroll-hook';
 import Spinner from 'components/Spinner';
 import CustomLinkHelper from 'components/Link/CustomLinkHelper';
 import ButtonPagination from 'components/ButtonPagination';
-import { feedBuilder } from './FeedBuilder';
+import { Feed } from '../../Feed/Feed';
 
 export default function Channel({
   users,
   threads,
   channels,
-  communityUrl,
-  communityInviteUrl,
   currentChannel,
   settings,
-  communityName,
   channelName,
   isSubDomainRouting,
   nextCursor,
@@ -103,10 +100,10 @@ export default function Channel({
     }
   }
 
-  const rows = feedBuilder({
+  const rows = Feed({
     threads: currentThreads,
     isSubDomainRouting,
-    communityName,
+    communityName: settings.communityName,
     communityType: settings.communityType,
   });
 
@@ -125,16 +122,16 @@ export default function Channel({
   return (
     <PageLayout
       users={users}
-      communityUrl={communityUrl}
-      communityInviteUrl={communityInviteUrl}
+      communityUrl={settings.communityUrl}
+      communityInviteUrl={settings.communityInviteUrl}
       currentChannel={currentChannel}
       seo={{
-        title: buildTitle(settings.name || communityName, channelName),
+        title: buildTitle(settings.name || settings.communityName, channelName),
         // description: `${channelName} Threads - Page ${page}`,
       }}
       navItems={{ channels }}
       settings={settings}
-      communityName={communityName}
+      communityName={settings.communityName}
       isSubDomainRouting={isSubDomainRouting}
     >
       <div
@@ -174,7 +171,7 @@ export default function Channel({
                   <ButtonPagination
                     href={CustomLinkHelper({
                       isSubDomainRouting,
-                      communityName,
+                      communityName: settings.communityName,
                       communityType: settings.communityType,
                       path: `/c/${channelName}/${nextCursor.prev}`,
                     })}
@@ -185,7 +182,7 @@ export default function Channel({
                   <ButtonPagination
                     href={CustomLinkHelper({
                       isSubDomainRouting,
-                      communityName,
+                      communityName: settings.communityName,
                       communityType: settings.communityType,
                       path: `/c/${channelName}/${nextCursor.next}`,
                     })}
