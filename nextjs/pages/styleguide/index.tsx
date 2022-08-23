@@ -1,7 +1,7 @@
 import Layout from './Layout';
 import AlertExample from './examples/Alert';
 import TextareaExample from './examples/Textarea';
-import MessageFieldExample from './examples/MessageField';
+import MessageFormExample from './examples/MessageForm';
 import MessageExample from './examples/Message';
 import TextInputExample from './examples/TextInput';
 import NativeSelectExample from './examples/NativeSelect';
@@ -9,7 +9,7 @@ import NativeSelectExample from './examples/NativeSelect';
 export default function Styleguide() {
   return (
     <Layout>
-      <MessageFieldExample />
+      <MessageFormExample />
       <MessageExample />
       <TextInputExample />
       <TextareaExample />
