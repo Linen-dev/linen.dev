@@ -1,15 +1,14 @@
 .name {
-  background: white;
   border-left: 3px solid transparent;
-  color: black;
   cursor: pointer;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 450;
+
   padding: 0.5rem 1rem;
   width: 100%;
 }
 .name:hover {
-  background: #f9f9f9;
+  background: white;
   color: #1b194e;
 }
 .active {

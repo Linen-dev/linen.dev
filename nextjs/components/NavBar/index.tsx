@@ -35,49 +35,36 @@ export default function NavBar({
   const sortedChannels = sortByChannelName(channels);
 
   const navBarLg = (
-    <div className={styles.navbar}>
-      <Card>
-        <div
-          style={{
-            padding: '24px 0',
-            width: '100%',
-          }}
-        >
-          <h5 style={{ fontWeight: 'bold', paddingLeft: 18, marginBottom: 8 }}>
-            Channels
-          </h5>
-          <div
-            style={{
-              display: 'block',
-              height: 'calc(100vh - 200px)',
-              overflowY: 'auto',
-            }}
+    <div className="pl-2 w-[250px] pt-4 bg-slate-50">
+      <h5 style={{ fontWeight: 'bold', paddingLeft: 18, marginBottom: 8 }}>
+        Channels
+      </h5>
+      <div className="block overflow-hidden hover:overflow-auto h-[calc(100vh-160px)]">
+        {sortedChannels.map((c: channels) => (
+          <CustomLink
+            isSubDomainRouting={isSubDomainRouting}
+            communityName={communityName}
+            communityType={communityType}
+            key={c.channelName}
+            path={`/c/${c.channelName}`}
+            passHref
           >
-            {sortedChannels.map((c: channels) => (
-              <CustomLink
-                isSubDomainRouting={isSubDomainRouting}
-                communityName={communityName}
-                communityType={communityType}
-                key={c.channelName}
-                path={`/c/${c.channelName}`}
-                passHref
-              >
-                <ChannelName
-                  name={c.channelName}
-                  active={c.channelName === channelName}
-                />
-              </CustomLink>
-            ))}
-          </div>
-          <a
-            className="pl-4 text-gray-800 opacity-80 text-sm hover:text-blue-900"
-            target="_blank"
-            href="https://www.linen.dev"
-          >
-            Powered by Linen
-          </a>
-        </div>
-      </Card>
+            <div className="text-gray-800">
+              <ChannelName
+                name={c.channelName}
+                active={c.channelName === channelName}
+              />
+            </div>
+          </CustomLink>
+        ))}
+      </div>
+      <a
+        className="pl-4 text-gray-800 opacity-80 text-sm hover:text-blue-900 py-2"
+        target="_blank"
+        href="https://www.linen.dev"
+      >
+        Powered by Linen
+      </a>
     </div>
   );
 
@@ -99,7 +86,7 @@ export default function NavBar({
 
   return (
     <>
-      <div className="hidden lg:flex">{navBarLg}</div>
+      <div className="hidden lg:flex bg-color-slate">{navBarLg}</div>
       <div className="lg:hidden">{navBarSm}</div>
     </>
   );
