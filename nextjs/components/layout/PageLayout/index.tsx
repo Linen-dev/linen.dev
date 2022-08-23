@@ -60,7 +60,7 @@ function PageLayout({
       <div className={styles.push} />
       <div className={styles.header}>
         <div
-          className="flex h-20 px-4 py-4 items-center"
+          className="flex h-15 px-4 py-4 items-center"
           // Couldn't get the background color to work with tailwind custom color
           style={{ backgroundColor: settings.brandColor }}
         >
