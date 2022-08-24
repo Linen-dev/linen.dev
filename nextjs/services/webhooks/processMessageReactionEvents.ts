@@ -5,14 +5,14 @@ import {
   SlackEvent,
 } from '../../types/slackResponses/slackMessageEventInterface';
 import { Prisma } from '@prisma/client';
-import { findOrCreateChannelByExternalId } from 'lib/channel';
+import { findChannelWithAccountByExternalId } from 'lib/channel';
 
 async function processMessageReactionEvent(
   event: SlackMessageReactionAddedEvent | SlackMessageReactionRemovedEvent,
   teamId: string
 ) {
   const channelId = event.item.channel;
-  const channel = await findOrCreateChannelByExternalId(channelId, teamId);
+  const channel = await findChannelWithAccountByExternalId(channelId, teamId);
 
   if (channel === null) {
     console.error('Channel does not exist in db ');
