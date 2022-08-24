@@ -12,13 +12,13 @@ import { createSlug } from '../../lib/util';
 import type { accounts, channels, slackAuthorizations } from '@prisma/client';
 import { findOrCreateUserFromUserInfo } from '../../lib/users';
 import { parseSlackSentAt, tsToSentAt } from '../../utilities/sentAt';
-import { findOrCreateChannelByExternalId } from 'lib/channel';
+import { findChannelWithAccountByExternalId } from 'lib/channel';
 
 export async function processMessageEvent(body: SlackEvent) {
   const event = body.event as SlackMessageEvent;
   const channelId = event.channel;
   const teamId = body.team_id;
-  const channel = await findOrCreateChannelByExternalId(channelId, teamId);
+  const channel = await findChannelWithAccountByExternalId(channelId, teamId);
 
   if (channel === null) {
     console.error('Channel does not exist in db ');
