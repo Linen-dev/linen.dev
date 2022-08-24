@@ -85,9 +85,9 @@ describe('sitemap', () => {
     premium = await prisma.accounts.create({
       data: {
         premium: true,
-        redirectDomain: 'linen.community.com',
-        slackDomain: 'premium',
-        discordDomain: 'premium',
+        redirectDomain: `linen.${random()}.com`,
+        slackDomain: `linen-${random()}`,
+        discordDomain: `linen-${random()}`,
       },
     });
     premiumChannels = {
@@ -173,7 +173,6 @@ describe('sitemap', () => {
         premium.redirectDomain as string,
         sitemapBuilder
       );
-      // console.log('result', result);
     });
 
     it("it shouldn't show the hidden channel", async () => {
@@ -210,7 +209,6 @@ describe('sitemap', () => {
         's',
         sitemapBuilder
       );
-      // console.log('result', result);
     });
 
     it("it shouldn't show the hidden channel", async () => {
@@ -240,7 +238,6 @@ describe('sitemap', () => {
 
     beforeAll(async () => {
       result = await sitemap.createSitemapForLinen('localhost', sitemapBuilder);
-      // console.log('result', result);
     });
 
     it('it should call the sitemap builder once', async () => {
