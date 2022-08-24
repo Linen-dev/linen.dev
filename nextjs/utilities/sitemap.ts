@@ -1,40 +1,48 @@
 import type { channels } from '@prisma/client';
 import { SitemapIndexStream, SitemapStream, streamToPromise } from 'sitemap';
 import { Readable } from 'stream';
-import prisma from '../client';
 import { encodeCursor } from './cursor';
 import { captureExceptionAndFlush } from 'utilities/sentry';
 import createDebug from 'debug';
 import { appendProtocol } from './url';
+import {
+  getAccountByHostWithChannelsStats,
+  findAccountByNameWithChannelsStats,
+  findChannelByNameAndHost,
+  findFreeAccountsWithChannelsStats,
+  findThreadsByChannelAndCursor,
+  type AccountsWithChannelsStats,
+} from 'lib/sitemap';
 
 const debug = createDebug('linen:sitemap');
+
+function resolveDomain(account: AccountsWithChannelsStats) {
+  return (
+    account.discordDomain ||
+    account.slackDomain ||
+    account.discordServerId ||
+    account.slackTeamId
+  );
+}
+
+function resolveCommunityPrefix(account: AccountsWithChannelsStats) {
+  return !!account.discordDomain || !!account.discordServerId ? 'd' : 's';
+}
+
+function hasChannelsWithThreads(account: AccountsWithChannelsStats) {
+  return (
+    account.channels &&
+    account.channels.length &&
+    account.channels.find((e) => e._count.messages) &&
+    account.channels.find((e) => e._count.threads)
+  );
+}
 
 export async function createSitemapForPremium(
   host: string,
   sitemapBuilder: (urls: string[]) => Promise<string> = buildSitemapIndexStream
 ) {
-  const account = await prisma.accounts.findFirst({
-    select: {
-      id: true,
-      channels: {
-        select: {
-          channelName: true,
-          _count: {
-            select: {
-              messages: true,
-              threads: true,
-            },
-          },
-        },
-        where: {
-          hidden: false,
-        },
-      },
-    },
-    where: {
-      redirectDomain: host,
-    },
-  });
+  const account = await getAccountByHostWithChannelsStats(host);
 
   if (!account) {
     throw 'account not found';
@@ -53,39 +61,7 @@ export async function createSitemapForLinen(
   host: string,
   sitemapBuilder: (urls: string[]) => Promise<string> = buildSitemapIndexStream
 ) {
-  const freeAccounts = await prisma.accounts.findMany({
-    select: {
-      id: true,
-      discordDomain: true,
-      discordServerId: true,
-      slackDomain: true,
-      slackTeamId: true,
-      channels: {
-        select: {
-          _count: {
-            select: {
-              messages: true,
-              threads: true,
-            },
-          },
-        },
-        where: {
-          hidden: false,
-        },
-      },
-    },
-    where: {
-      premium: false,
-      AND: {
-        OR: [
-          { discordDomain: { not: null } },
-          { slackDomain: { not: null } },
-          { discordServerId: { not: null } },
-          { slackTeamId: { not: null } },
-        ],
-      },
-    },
-  });
+  const freeAccounts = await findFreeAccountsWithChannelsStats();
 
   if (!freeAccounts || !freeAccounts.length) return '';
   debug('accounts', freeAccounts);
@@ -94,20 +70,11 @@ export async function createSitemapForLinen(
 
   const urls = freeAccounts
     .filter((account) => {
-      if (
-        !account.channels ||
-        !account.channels.length ||
-        !account.channels.find((e) => e._count.messages) ||
-        !account.channels.find((e) => e._count.threads)
-      ) {
+      if (!hasChannelsWithThreads(account)) {
         debug('account without channels', account.id);
         return false;
       }
-      const domain =
-        account.discordDomain ||
-        account.slackDomain ||
-        account.discordServerId ||
-        account.slackTeamId;
+      const domain = resolveDomain(account);
       if (!domain) {
         debug('account without name', account.id);
         return false;
@@ -115,13 +82,8 @@ export async function createSitemapForLinen(
       return true;
     })
     .map((account) => {
-      const letter =
-        !!account.discordDomain || !!account.discordServerId ? 'd' : 's';
-      const domain =
-        account.discordDomain ||
-        account.slackDomain ||
-        account.discordServerId ||
-        account.slackTeamId;
+      const letter = resolveCommunityPrefix(account);
+      const domain = resolveDomain(account);
       return encodeURI(`${httpHost}/sitemap/${letter}/${domain}/chunk.xml`);
     })
     .filter(Boolean);
@@ -138,34 +100,7 @@ export async function createSitemapForFree(
 ) {
   debug('request', { host, community, communityPrefix });
   // community could be discordServerId/discordDomain or slackDomain
-  const account = await prisma.accounts.findFirst({
-    select: {
-      id: true,
-      discordServerId: true,
-      slackTeamId: true,
-      channels: {
-        select: {
-          channelName: true,
-          _count: {
-            select: {
-              messages: true,
-              threads: true,
-            },
-          },
-        },
-        where: {
-          hidden: false,
-        },
-      },
-    },
-    where: {
-      OR: [
-        { discordDomain: community },
-        { discordServerId: community },
-        { slackDomain: community },
-      ],
-    },
-  });
+  const account = await findAccountByNameWithChannelsStats(community);
   debug('account %o', account);
   if (!account) {
     throw "account doesn't exist";
@@ -194,20 +129,7 @@ async function internalCreateSitemapByChannel(
   host: string,
   channelName: string
 ) {
-  const channel = await prisma.channels.findFirst({
-    where: {
-      channelName,
-      account: {
-        OR: [
-          { discordDomain: host },
-          { discordServerId: host },
-          { slackDomain: host },
-          { redirectDomain: host },
-        ],
-      },
-      hidden: false,
-    },
-  });
+  const channel = await findChannelByNameAndHost(channelName, host);
   if (!channel) {
     throw 'channel not found';
   }
@@ -248,17 +170,7 @@ async function queryThreads(
     nextCursor: bigint | undefined,
     chunk: string[] = [];
   try {
-    const threads = await prisma.threads.findMany({
-      where: { channelId: channel.id, sentAt: { gt: next } },
-      orderBy: { sentAt: 'asc' },
-      select: {
-        incrementId: true,
-        slug: true,
-        messageCount: true,
-        sentAt: true,
-      },
-      take: 10,
-    });
+    const threads = await findThreadsByChannelAndCursor(channel.id, next);
 
     if (!threads?.length) return {};
 
