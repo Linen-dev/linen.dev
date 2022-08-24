@@ -61,6 +61,7 @@ export default function NavBar({
       <a
         className="pl-4 text-gray-800 opacity-80 text-sm hover:text-blue-900 py-2"
         target="_blank"
+        rel="noreferrer"
         href="https://www.linen.dev"
       >
         Powered by Linen

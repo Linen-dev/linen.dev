@@ -18,7 +18,7 @@ export default function Link({ value }: Props) {
   if (isImage(href)) {
     return (
       <Toggle header={name || href}>
-        <a href={href} target="_blank" rel="noopener ugc">
+        <a href={href} target="_blank" rel="noreferrer ugc">
           <Image src={href} />
         </a>
       </Toggle>
@@ -54,7 +54,7 @@ export default function Link({ value }: Props) {
       })}
       href={href}
       title={isHrefInvalid ? 'Invalid link' : ''}
-      rel="noopener ugc"
+      rel="noreferrer ugc"
       target="_blank"
     >
       {name || href}

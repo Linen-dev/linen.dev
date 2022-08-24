@@ -1,4 +1,3 @@
-import { AiOutlineLink } from 'react-icons/ai';
 import { useMemo, useEffect } from 'react';
 import PageLayout from '../../layout/PageLayout';
 import styles from './index.module.css';
@@ -17,14 +16,10 @@ export default function Thread({
   isSubDomainRouting,
   settings,
 }: ThreadByIdProp) {
-  if (!threadId) {
-    return <div></div>;
-  }
-
   const elements = useMemo(() => {
     return messages
-      .sort((a, b) => b.sentAt - a.sentAt)
-      .map((message, index) => {
+      ?.sort((a, b) => b.sentAt - a.sentAt)
+      ?.map((message, index) => {
         const previousMessage = messages[index - 1];
         const nextMessage = messages[index + 1];
         const isPreviousMessageFromSameUser =
@@ -44,15 +39,13 @@ export default function Thread({
   }, [messages]);
 
   useEffect(() => {
-    fetch(`/api/threads?incrementId=${threadId}`, { method: 'PUT' });
+    threadId &&
+      fetch(`/api/threads?incrementId=${threadId}`, { method: 'PUT' });
   }, []);
 
-  const linkProps = {
-    isSubDomainRouting,
-    communityName: settings.communityName,
-    communityType: settings.communityType,
-    path: `/c/${currentChannel?.channelName}`,
-  };
+  if (!threadId) {
+    return <div></div>;
+  }
 
   function buildTitle(
     channelName: string | undefined,
