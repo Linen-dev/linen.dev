@@ -38,11 +38,11 @@ export function findChannelByExternalId({
   });
 }
 
-export async function findOrCreateChannelByExternalId(
+export async function findChannelWithAccountByExternalId(
   externalId: string,
   externalAccountId: string
 ) {
-  const channel = await prisma.channels.findUnique({
+  return await prisma.channels.findUnique({
     where: {
       externalChannelId: externalId,
     },
@@ -52,29 +52,6 @@ export async function findOrCreateChannelByExternalId(
           slackAuthorizations: true,
         },
       },
-    },
-  });
-  if (channel) return channel;
-
-  const account = await prisma.accounts.findFirst({
-    select: { id: true },
-    where: { slackTeamId: externalAccountId },
-  });
-
-  if (!account) return { account: null };
-
-  return await prisma.channels.create({
-    include: {
-      account: {
-        include: {
-          slackAuthorizations: true,
-        },
-      },
-    },
-    data: {
-      channelName: 'new-channel', // TODO: we need to get the real name
-      externalChannelId: externalId,
-      account: { connect: { id: account?.id } },
     },
   });
 }
