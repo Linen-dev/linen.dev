@@ -20,7 +20,7 @@ export default function Footer() {
                 href={item.href}
                 className="text-base text-gray-500 hover:text-gray-900"
                 target="_blank"
-                rel="noopener"
+                rel="noreferrer"
               >
                 {item.name}
               </a>

@@ -10,7 +10,12 @@ interface Props {
 
 function Attachment({ attachment }: Props) {
   return (
-    <a className={styles.attachment} href={attachment.url} target="_blank">
+    <a
+      className={styles.attachment}
+      href={attachment.url}
+      target="_blank"
+      rel="noreferrer"
+    >
       <FontAwesomeIcon className={styles.icon} icon={faFileArrowDown} />
       {attachment.name}
     </a>

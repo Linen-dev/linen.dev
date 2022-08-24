@@ -128,8 +128,8 @@ export default function SettingsPage({ account, prices }: Props) {
     return (
       <DashboardLayout header="Plans" account={account}>
         <p>
-          Stripe is unavailable and we're not able to fetch plans right now.
-          Please try again later.
+          Stripe is unavailable and we&apos;re not able to fetch plans right
+          now. Please try again later.
         </p>
       </DashboardLayout>
     );
@@ -139,8 +139,8 @@ export default function SettingsPage({ account, prices }: Props) {
     return (
       <DashboardLayout header="Plans" account={account}>
         <p>
-          Sorry, we didn't set up any plans in Stripe yet. Please check again
-          later.
+          Sorry, we didn&apos;t set up any plans in Stripe yet. Please check
+          again later.
         </p>
       </DashboardLayout>
     );

@@ -9,7 +9,7 @@ interface Props {
 
 export default function JoinChannelLink({ href, communityType }: Props) {
   return (
-    <a className={styles.join} href={href} target="_blank">
+    <a className={styles.join} href={href} target="_blank" rel="noreferrer">
       <AiOutlineLink className={styles.icon} size={18} />
       {`Join thread in ${communityType === 'discord' ? 'Discord' : 'Slack'}`}
     </a>

@@ -23,12 +23,14 @@ const Home = (props: { accounts: Props[] }) => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="flex justify-between items-center border-b-2 border-gray-100 py-6 md:justify-start md:space-x-10">
             <div className="flex justify-start lg:w-0 lg:flex-1">
-              <Link href={'/'} passHref>
-                <img
-                  className="h-8 w-auto sm:h-10 cursor-pointer"
-                  src="https://linen-assets.s3.amazonaws.com/linen-black-logo.svg"
-                  alt="Linen logo"
-                />
+              <Link href="/" passHref>
+                <a>
+                  <img
+                    className="h-8 w-auto sm:h-10 cursor-pointer"
+                    src="https://linen-assets.s3.amazonaws.com/linen-black-logo.svg"
+                    alt="Linen logo"
+                  />
+                </a>
               </Link>
             </div>
             <div className="-mr-2 -my-2 md:hidden">
@@ -43,19 +45,13 @@ const Home = (props: { accounts: Props[] }) => {
             </div>
 
             <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0">
-              <Link href={'/signin'} passHref>
-                <a
-                  href="#"
-                  className="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900"
-                >
+              <Link href="/signin" passHref>
+                <a className="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900">
                   Sign in
                 </a>
               </Link>
               <Link href="/signup" passHref>
-                <a
-                  href="#"
-                  className="ml-8 whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-blue-600 hover:bg-blue-700"
-                >
+                <a className="ml-8 whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-blue-600 hover:bg-blue-700">
                   Get Started
                 </a>
               </Link>
@@ -81,12 +77,11 @@ const Home = (props: { accounts: Props[] }) => {
           </p>
           <div className="mt-5 sm:mt-8 sm:flex sm:justify-center">
             <div className="rounded-md shadow">
-              <a
-                href="/signup"
-                className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 md:py-4 md:text-lg md:px-10"
-              >
-                Get Started
-              </a>
+              <Link href="/signup" passHref>
+                <a className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 md:py-4 md:text-lg md:px-10">
+                  Get Started
+                </a>
+              </Link>
             </div>
             <div className="mt-3 sm:mt-0 sm:ml-3">
               <a
@@ -211,20 +206,20 @@ const Home = (props: { accounts: Props[] }) => {
           <p>
             Linen is a great way to make your community content more
             discoverable. No longer do you need to login to your Slack/Discord
-            workspace to view your community's content. You can link specific
-            conversations in github issues without requiring a sign in to get
-            the context of the issue.
+            workspace to view your community&apos;s content. You can link
+            specific conversations in github issues without requiring a sign in
+            to get the context of the issue.
           </p>
           <LandingH2>Community Privacy</LandingH2>
           <p>
             Linen only syncs conversations in the public channels. We only pull
             the display name and profile picture from Slack/Discord and we do
-            not store community member's email or private information. Upon
-            request we will delete any community member's information and
+            not store community member&apos;s email or private information. Upon
+            request we will delete any community member&apos;s information and
             messages within 14 days. Finally we have the options of anonymizing
-            your community member's display name with a fake randomly generated
-            string like `many-ancient-parrot`, `adventurous-billowy-kangaroo`,
-            and `benedict-cumberbatch`.
+            your community member&apos;s display name with a fake randomly
+            generated string like `many-ancient-parrot`,
+            `adventurous-billowy-kangaroo`, and `benedict-cumberbatch`.
           </p>
         </div>
       </main>

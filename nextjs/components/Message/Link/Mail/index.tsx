@@ -13,6 +13,7 @@ function Mail({ value }: Props) {
       className={classNames('text-indigo-700', styles.link)}
       href={href}
       target="_blank"
+      rel="noreferrer"
     >
       {name || href.split(':')[1]}
     </a>

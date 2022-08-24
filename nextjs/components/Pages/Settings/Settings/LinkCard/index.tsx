@@ -16,7 +16,7 @@ export default function LinkCard({ account }: Props) {
     <div className="bg-blue-100">
       <div className="px-4 py-5 sm:p-6">
         <h3 className="text-lg leading-6 font-medium text-blue-900">
-          <a href={url} target="_blank" rel="noopener">
+          <a href={url} target="_blank" rel="noreferrer">
             {text}
           </a>
         </h3>
