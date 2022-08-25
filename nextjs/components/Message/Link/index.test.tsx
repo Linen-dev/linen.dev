@@ -3,7 +3,13 @@ import { render, waitFor } from '@testing-library/react';
 import Link from '.';
 import styles from './index.module.scss';
 
-jest.mock('./Tweet', () => () => <div>Tweet</div>);
+jest.mock(
+  './Tweet',
+  () =>
+    function foo() {
+      return <div>Tweet</div>;
+    }
+);
 
 jest.mock('components/Image/utilities', () => ({
   preload: jest
@@ -16,7 +22,7 @@ describe('Link', () => {
     const { getByText } = render(<Link value="https://foo.com" />);
     const link = getByText('https://foo.com') as HTMLLinkElement;
     expect(link.href).toEqual('https://foo.com/');
-    expect(link.rel).toEqual('noopener ugc');
+    expect(link.rel).toEqual('noreferrer ugc');
   });
 
   describe('when link has an optional text', () => {

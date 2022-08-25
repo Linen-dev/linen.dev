@@ -64,7 +64,7 @@ function PageLayout({
           // Couldn't get the background color to work with tailwind custom color
           style={{ backgroundColor: settings.brandColor }}
         >
-          <Link href={'/'} passHref>
+          <Link href="/">
             <img
               className="cursor-pointer max-h-8"
               src={logoUrl}
