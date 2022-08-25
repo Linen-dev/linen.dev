@@ -1,8 +1,7 @@
 import PageLayout from '../../layout/PageLayout';
-import type { users } from '@prisma/client';
-import { capitalize } from '../../../lib/util';
 import { ChannelViewProps } from '.';
 import { Channel } from 'components/Channel';
+import { buildChannelSeo } from 'utilities/seo';
 
 export default function ChannelPage({
   threads,
@@ -19,26 +18,19 @@ export default function ChannelPage({
     return <div />;
   }
 
-  function buildTitle(
-    communityName: string,
-    channelName: string | undefined,
-    page: number = 1
-  ) {
-    const name = capitalize(communityName);
-    const channel = !!channelName
-      ? ` - ${capitalize(channelName)} Threads - Page ${page}`
-      : '';
-    return `${name}${channel}`;
-  }
-
   return (
     <PageLayout
       communityUrl={settings.communityUrl}
       communityInviteUrl={settings.communityInviteUrl}
       currentChannel={currentChannel}
       seo={{
-        title: buildTitle(settings.name || settings.communityName, channelName),
-        // description: `${channelName} Threads - Page ${page}`,
+        ...buildChannelSeo({
+          settings,
+          channelName,
+          isSubDomainRouting,
+          pathCursor,
+          threads,
+        }),
       }}
       navItems={{ channels }}
       settings={settings}
