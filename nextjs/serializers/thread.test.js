@@ -10,6 +10,7 @@ describe('#serialize', () => {
             reactions: [
               { name: 'yes', count: 1 },
               { name: 'no', count: 0 },
+              { name: 'fake', count: null },
             ],
           }),
         ],
