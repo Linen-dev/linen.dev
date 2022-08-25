@@ -20,12 +20,13 @@ export type ThreadById = {
   channelId: string;
   currentChannel: channels;
   messages: SerializedMessage[];
-  channel: channelsl;
+  channel: channels;
   threadId: string;
   authors: users[];
   channels: channels[];
   threadUrl: string;
   settings: Settings;
+  pathCursor: string;
 };
 
 export interface Author {
