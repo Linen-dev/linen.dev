@@ -1,6 +1,6 @@
 import type { accounts, channels, threads } from '@prisma/client';
 import { v4 as random } from 'uuid';
-import { prisma } from 'client';
+import { prisma } from '../../client';
 import { channelGetServerSideProps, channelNextPage } from 'services/channel';
 import {
   ChannelResponse,
