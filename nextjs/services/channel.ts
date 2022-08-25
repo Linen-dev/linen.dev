@@ -21,7 +21,6 @@ import {
   ChannelViewCursorProps,
   ChannelResponse,
 } from 'components/Pages/Channels';
-import { captureExceptionAndFlush } from 'utilities/sentry';
 import { isBot } from 'next/dist/server/web/spec-extension/user-agent';
 
 const CURSOR_LIMIT = 10;
@@ -55,12 +54,16 @@ export async function channelGetServerSideProps(
     })
   ).sort(sortBySentAtAsc);
 
+  const isCrawler = isBot(context?.req?.headers?.['user-agent'] || '');
+
   const nextCursor = await buildCursor({
-    pathCursor: page,
-    threads,
     sort,
+    direction,
     sentAt,
+    threads,
+    pathCursor: page,
     channelIds: [channel.id],
+    isCrawler,
   });
 
   return {
@@ -73,7 +76,7 @@ export async function channelGetServerSideProps(
       settings: buildSettings(account),
       isSubDomainRouting: isSubdomainbasedRouting,
       pathCursor: page || null,
-      isBot: isBot(context.req.headers['user-agent'] || ''),
+      isBot: isCrawler,
     },
   };
 }
@@ -88,23 +91,26 @@ function findChannelOrDefault(channels: channels[], channelName: string) {
   return channels[0];
 }
 
+// aka loadMore, it could be asc (gt) or desc (lt)
+// it should return just one cursor, the one to keep loading into same direction
 export async function channelNextPage(channelId: string, cursor: string) {
-  // since we only support infinity scroll up,
-  // we will hard code sort (desc) and direction (lt)
-  const { sentAt } = decodeCursor(cursor);
+  const { sort, direction, sentAt } = decodeCursor(cursor);
   const anonymizeUsers = await shouldThisChannelBeAnonymousMemo(channelId);
   const threads = await findThreadsByCursorMemo({
     channelIds: [channelId],
     sentAt,
-    sort: 'desc',
-    direction: 'lt',
+    sort,
+    direction,
     anonymizeUsers,
   }).then((t) => t.sort(sortBySentAtAsc));
 
   const nextCursor = await buildCursor({
-    sort: 'desc',
     threads,
-    channelIds: [channelId],
+    sort,
+    sentAt,
+    direction,
+    channelIds: [],
+    loadMore: true,
   });
 
   return {
@@ -133,6 +139,7 @@ function sortBySentAtAsc(
   return Number(a.sentAt) - Number(b.sentAt);
 }
 
+// TODO: clean up
 async function getPathsFromPrefix(pathPrefix: string) {
   if (pathPrefix === '/subdomain') {
     const accounts = await findAccountsPremiumWithMessages();
@@ -158,59 +165,91 @@ async function buildCursor({
   pathCursor,
   threads,
   sort,
-  channelIds,
   sentAt,
+  direction,
+  channelIds,
+  loadMore = false,
+  isCrawler = false,
 }: {
   pathCursor?: string;
   threads: ThreadsWithMessagesFull[];
   sort: string;
-  channelIds: string[];
   sentAt?: string;
+  direction: string;
+  channelIds: string[];
+  loadMore?: boolean;
+  isCrawler?: boolean;
 }): Promise<ChannelViewCursorProps> {
-  try {
-    const isCrawler = !!pathCursor;
+  const hasMore = threads?.length === CURSOR_LIMIT;
 
-    if (isCrawler) {
-      // crawler
-      const previousPage = await findPreviousCursor({
-        channelIds,
-        direction: 'lt',
-        sort: 'desc',
-        sentAt,
-      }).then((e) => e.sort((a, b) => Number(a.sentAt) - Number(b.sentAt)));
-      return {
-        // prev: we need to query our db
-        prev: !previousPage.length
-          ? null
-          : previousPage.length > CURSOR_LIMIT
-          ? encodeCursor(`asc:gt:${previousPage[0].sentAt.toString()}`)
-          : encodeCursor(`asc:gt:0`),
-        // next: last thread sent at
-        next:
-          threads.length === CURSOR_LIMIT
-            ? encodeCursor(
-                `asc:gt:${threads[threads.length - 1].sentAt.toString()}`
-              )
-            : null,
-      };
+  // if empty, there is no cursor to return
+  if (!threads?.length) return { prev: null, next: null };
+
+  // load more
+  if (loadMore) {
+    if (sort === 'desc') {
+      return { prev: encodeCursor(`desc:lt:${threads[0].sentAt}`), next: null };
     } else {
-      // users
       return {
-        // prev: first thread from result
-        prev:
-          threads.length === CURSOR_LIMIT
-            ? encodeCursor(`${sort}:lt:${threads[0].sentAt.toString()}`)
-            : null,
-        // next: always null
-        next: null,
+        prev: null,
+        next: encodeCursor(`asc:gt:${threads[threads.length - 1].sentAt}`),
       };
     }
-  } catch (error) {
-    await captureExceptionAndFlush(error);
-    console.error(error);
+  }
+
+  // first page
+  if (sort === 'asc' && sentAt === '0') {
     return {
       prev: null,
-      next: null,
+      next: hasMore
+        ? encodeCursor(`asc:gt:${threads[threads.length - 1].sentAt}`)
+        : null,
     };
   }
+
+  // if isCrawler we should have the prev cursor as same as the sitemap does
+  if (isCrawler) {
+    // prev: we need to query our db to get the previous page
+    const previousPage = await findPreviousCursor({
+      channelIds,
+      direction: 'lt',
+      sort: 'desc',
+      sentAt,
+    }).then((e) => e.sort((a, b) => Number(a.sentAt) - Number(b.sentAt)));
+    return {
+      prev: !previousPage.length
+        ? null
+        : previousPage.length > CURSOR_LIMIT
+        ? encodeCursor(`asc:gt:${previousPage[0].sentAt}`)
+        : encodeCursor(`asc:gt:0`),
+      // next: last thread sent at
+      next: hasMore
+        ? encodeCursor(`asc:gt:${threads[threads.length - 1].sentAt}`)
+        : null,
+    };
+  }
+
+  // back to channel
+  if (sort === 'asc' && direction === 'gte') {
+    return {
+      prev: encodeCursor(`desc:lt:${threads[0].sentAt}`),
+      next: hasMore
+        ? encodeCursor(`asc:gt:${threads[threads.length - 1].sentAt}`)
+        : null,
+    };
+  }
+  // N page
+  if (!!pathCursor) {
+    return {
+      prev: encodeCursor(`desc:lt:${threads[0].sentAt}`),
+      next: hasMore
+        ? encodeCursor(`asc:gt:${threads[threads.length - 1].sentAt}`)
+        : null,
+    };
+  }
+  // empty, last page
+  return {
+    prev: encodeCursor(`desc:lt:${threads[0].sentAt}`),
+    next: null,
+  };
 }
