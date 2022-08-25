@@ -2,8 +2,8 @@ import { ErrorBoundary } from 'react-error-boundary';
 import Link from 'next/link';
 import SearchBar from '../../search/SearchBar';
 import NavBar from '../../NavBar';
-import SEO from '../SEO';
-import { channels, users } from '@prisma/client';
+import SEO, { type SeoProps } from '../SEO';
+import type { channels } from '@prisma/client';
 import { addHttpsToUrl, pickTextColorBasedOnBgColor } from '../../../lib/util';
 import GoogleAnalytics from '../GoogleAnalytics';
 import JoinDiscord from 'components/JoinDiscord';
@@ -22,7 +22,7 @@ interface Settings {
 }
 
 interface Props {
-  seo?: any;
+  seo: SeoProps;
   children: React.ReactNode;
   currentChannel: channels;
   navItems?: any;
@@ -34,7 +34,7 @@ interface Props {
 }
 
 function PageLayout({
-  seo = {},
+  seo,
   children,
   navItems,
   currentChannel,
@@ -119,12 +119,7 @@ function PageLayout({
           communityType={settings.communityType}
         />
       </div>
-      <SEO
-        image={undefined}
-        url={undefined}
-        title={seo.title || communityName?.split('.')[0]}
-        {...seo}
-      />
+      <SEO {...seo} />
       <div className="flex flex-col lg:flex-row">
         {NavBar({
           channels,

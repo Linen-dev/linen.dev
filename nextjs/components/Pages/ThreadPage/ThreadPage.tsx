@@ -1,8 +1,8 @@
 import PageLayout from 'components/layout/PageLayout';
 import { ThreadByIdProp } from '../../../types/apiResponses/threads/[threadId]';
-import { SerializedMessage } from 'serializers/thread';
 import { useEffect } from 'react';
 import { Thread } from 'components/Thread';
+import { buildThreadSeo } from 'utilities/seo';
 
 export function ThreadPage({
   threadId,
@@ -13,8 +13,8 @@ export function ThreadPage({
   viewCount,
   isSubDomainRouting,
   settings,
+  slug,
 }: ThreadByIdProp) {
-
   useEffect(() => {
     threadId &&
       fetch(`/api/threads?incrementId=${threadId}`, { method: 'PUT' });
@@ -24,18 +24,17 @@ export function ThreadPage({
     return <div></div>;
   }
 
-  function buildTitle(
-    channelName: string | undefined,
-    message?: SerializedMessage
-  ) {
-    const channel = !!channelName ? `#${channelName}` : '';
-    return `${channel} - ${message?.body.slice(0, 30)}`;
-  }
-
   return (
     <PageLayout
       seo={{
-        title: buildTitle(currentChannel?.channelName, messages[0]),
+        ...buildThreadSeo({
+          isSubDomainRouting,
+          channelName: currentChannel.channelName,
+          messages,
+          settings,
+          threadId,
+          slug,
+        }),
       }}
       communityName={settings.communityName}
       currentChannel={currentChannel}
