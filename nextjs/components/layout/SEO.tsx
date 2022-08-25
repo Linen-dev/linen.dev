@@ -1,39 +1,20 @@
 import Head from 'next/head';
-import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
 
-const getFullPath = (relativePath: string) =>
-  `https://linen.dev${relativePath}`;
-const siteName = 'Linen Community';
+export interface SeoProps {
+  description: string;
+  image?: string;
+  url: string;
+  noIndex?: boolean;
+  title: string;
+}
 
-function SEO({
+export default function SEO({
   description,
-  image,
+  image = 'https://linen-assets.s3.amazonaws.com/linen-black-logo.svg',
   url,
   noIndex = false,
   title = 'Linen Community',
-}: {
-  description: string;
-  image: string;
-  url: string;
-  noIndex: boolean;
-  title: string;
-}) {
-  const { pathname, asPath } = useRouter();
-  const [metaUrl, setMetaUrl] = useState<string | undefined>();
-
-  useEffect(() => {
-    setMetaUrl(window?.location?.href);
-  }, []);
-
-  useEffect(() => {
-    setMetaUrl(window?.location?.href);
-  }, [asPath]);
-
-  // If pathname includes a slug, we won't use that.
-  const relativePath =
-    url || (pathname.includes('[') ? pathname.split('[')[0] : pathname);
-
+}: SeoProps) {
   return (
     <Head>
       <title key="title">{title}</title>
@@ -45,12 +26,8 @@ function SEO({
       <meta name="robots" content={`${noIndex ? 'no' : ''}index,follow`} />
 
       {/* Open Graph */}
-      <meta
-        name="og:url"
-        property="og:url"
-        content={metaUrl || getFullPath(relativePath)}
-        key="ogurl"
-      />
+      <meta name="og:url" property="og:url" content={url} key="ogurl" />
+      <meta name="og:image" property="og:image" content={image} key="ogimage" />
       <meta
         name="og:site_name"
         property="og:site_name"
@@ -65,9 +42,7 @@ function SEO({
         key="ogdesc"
       />
       <meta name="og:type" property="og:type" content="website" key="ogtype" />
-      <link rel="canonical" href={metaUrl} />
+      <link rel="canonical" href={url} />
     </Head>
   );
 }
-
-export default SEO;

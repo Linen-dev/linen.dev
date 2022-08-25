@@ -13,6 +13,8 @@ export type Settings = {
   communityUrl: string;
   communityInviteUrl: string;
   communityName: string;
+  redirectDomain?: string;
+  prefix?: 'd' | 's';
 };
 
 function buildInviteUrl(account: accounts) {
@@ -25,13 +27,20 @@ function buildInviteUrl(account: accounts) {
   }
 }
 
+const communityMapping: Record<string, 'd' | 's'> = {
+  discord: 'd',
+  slack: 's',
+};
+
 export function buildSettings(account: accounts): Settings {
   const defaultSettings =
     links.find(({ accountId }) => accountId === account.id) || links[0];
 
   const communityType = account.discordServerId ? 'discord' : 'slack';
 
-  const settings = {
+  return {
+    prefix: communityMapping[communityType],
+    ...(account.redirectDomain && { redirectDomain: account.redirectDomain }),
     communityUrl: account.communityUrl || '',
     communityInviteUrl: buildInviteUrl(account),
     communityName:
@@ -54,5 +63,4 @@ export function buildSettings(account: accounts): Settings {
       googleSiteVerification: account.googleSiteVerification,
     }),
   };
-  return settings;
 }
