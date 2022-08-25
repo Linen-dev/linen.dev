@@ -1,27 +1,19 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
+import createMessage from './message';
+import createThread from './thread';
+import createResponse from './response';
+import createRequest from './request';
 
-export function create(
-  name: string,
-  options?: object
-): NextApiRequest | NextApiResponse {
-  if (name === 'request') {
-    const request = {
-      method: 'GET',
-      body: '{}',
-      ...options,
-    } as NextApiRequest;
-    if (typeof request.body === 'object') {
-      request.body = JSON.stringify(request.body);
-    }
-    return request;
+export function create(name: string, options?: object): any {
+  switch (name) {
+    case 'request':
+      return createRequest(options);
+    case 'response':
+      return createResponse(options);
+    case 'thread':
+      return createThread(options);
+    case 'message':
+      return createMessage(options);
+    default:
+      throw new Error(`Unknown factory name: ${name}`);
   }
-  if (name === 'response') {
-    const response = {
-      status: jest.fn().mockReturnThis() as unknown,
-      json: jest.fn() as unknown,
-      ...options,
-    } as NextApiResponse;
-    return response;
-  }
-  throw new Error(`Unknown factory name: ${name}`);
 }
