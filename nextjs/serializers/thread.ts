@@ -1,7 +1,13 @@
 import { MentionsWithUsers } from '../types/apiResponses/threads/[threadId]';
 import { ThreadsWithMessages, MessageWithAuthor } from '../types/partialTypes';
 import { SerializedAttachment, SerializedReaction } from '../types/shared';
-import type { Prisma, threads, users } from '@prisma/client';
+import type {
+  Prisma,
+  threads,
+  users,
+  messageAttachments,
+  messageReactions,
+} from '@prisma/client';
 
 export interface SerializedMessage {
   body: string;
@@ -36,7 +42,7 @@ export default function serialize(
         mentions: message.mentions || [],
         attachments:
           message.attachments
-            ?.map((attachment: Prisma.messageAttachmentsGetPayload<{}>) => {
+            ?.map((attachment: messageAttachments) => {
               return {
                 url: attachment.internalUrl,
                 name: attachment.name,
@@ -44,14 +50,17 @@ export default function serialize(
             })
             .filter(({ url }: SerializedAttachment) => Boolean(url)) || [],
         reactions:
-          message.reactions?.map(
-            (reaction: Prisma.messageReactionsGetPayload<{}>) => {
+          message.reactions
+            ?.filter(
+              (reaction: messageReactions) =>
+                typeof reaction.count === 'number' && reaction.count > 0
+            )
+            ?.map((reaction: messageReactions) => {
               return {
                 type: reaction.name,
                 count: reaction.count,
               } as SerializedReaction;
-            }
-          ) || [],
+            }) || [],
       };
     }),
   };
