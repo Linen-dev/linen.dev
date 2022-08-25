@@ -44,14 +44,14 @@ export default function serialize(
             })
             .filter(({ url }: SerializedAttachment) => Boolean(url)) || [],
         reactions:
-          message.reactions?.map(
-            (reaction: Prisma.messageReactionsGetPayload<{}>) => {
+          message.reactions
+            ?.map((reaction: Prisma.messageReactionsGetPayload<{}>) => {
               return {
                 type: reaction.name,
                 count: reaction.count,
               } as SerializedReaction;
-            }
-          ) || [],
+            })
+            .filter((reaction: SerializedReaction) => reaction.count > 0) || [],
       };
     }),
   };
