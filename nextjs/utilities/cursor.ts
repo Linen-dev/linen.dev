@@ -1,7 +1,10 @@
 import { FindThreadsByCursorType } from 'types/cursor';
 
+// flag to help debug locally, it will use the cursor without encode it
+const SKIP_ENCODE_CURSOR = process.env.SKIP_ENCODE_CURSOR === 'true';
+
 export function encodeCursor(data: string) {
-  return Buffer.from(data).toString('base64');
+  return SKIP_ENCODE_CURSOR ? data : Buffer.from(data).toString('base64');
 }
 
 const defaultCursor: FindThreadsByCursorType = {
@@ -13,12 +16,14 @@ const defaultCursor: FindThreadsByCursorType = {
 export function decodeCursor(data?: string): FindThreadsByCursorType {
   if (!data) return defaultCursor;
   try {
-    const decoded = Buffer.from(data, 'base64').toString();
+    const decoded = SKIP_ENCODE_CURSOR
+      ? data
+      : Buffer.from(data, 'base64').toString();
     const split = decoded?.split(':');
     if (split.length === 3) {
       return {
         sort: split[0] === 'asc' ? 'asc' : 'desc',
-        direction: split[1] === 'lt' ? 'lt' : 'gt',
+        direction: split[1] as 'gt' | 'lt' | 'gte',
         sentAt: split[2],
       };
     }
