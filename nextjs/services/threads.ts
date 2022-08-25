@@ -5,7 +5,10 @@ import {
   channelsGroupByThreadCount,
 } from '../lib/models';
 import { findThreadById } from '../lib/threads';
-import { ThreadByIdResponse } from '../types/apiResponses/threads/[threadId]';
+import {
+  ThreadById,
+  ThreadByIdProp,
+} from '../types/apiResponses/threads/[threadId]';
 import type { users } from '@prisma/client';
 import { GetStaticPropsContext } from 'next';
 import { NotFound } from '../utilities/response';
@@ -13,12 +16,12 @@ import { revalidateInSeconds } from '../constants/revalidate';
 import { buildSettings } from './accountSettings';
 import { memoize } from '../utilities/dynamoCache';
 import { captureExceptionAndFlush } from 'utilities/sentry';
+import { encodeCursor } from 'utilities/cursor';
 
-// extracted here to be reused in both /[threadId]/index and /[slug]/index
-export async function getThreadById(
+async function getThreadById(
   threadId: string,
   communityName: string
-): Promise<ThreadByIdResponse> {
+): Promise<ThreadById> {
   const id = parseInt(threadId);
   const [thread, account] = await Promise.all([
     findThreadByIdMemo(id),
@@ -105,13 +108,18 @@ export async function getThreadById(
     channels: channelsWithMinThreads,
     threadUrl,
     settings,
+    pathCursor: encodeCursor(`asc:gte:${thread.sentAt.toString()}`),
   };
 }
 
 export async function threadGetStaticProps(
   context: GetStaticPropsContext,
   isSubdomainbasedRouting: boolean
-) {
+): Promise<{
+  props?: ThreadByIdProp;
+  revalidate: number;
+  notfound?: boolean;
+}> {
   const threadId = context.params?.threadId as string;
   const communityName = context.params?.communityName as string;
   try {
@@ -126,7 +134,7 @@ export async function threadGetStaticProps(
   } catch (exception) {
     await captureExceptionAndFlush(exception);
     console.error(exception);
-    return NotFound();
+    return { ...NotFound(), revalidate: revalidateInSeconds };
   }
 }
 
