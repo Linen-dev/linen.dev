@@ -4,9 +4,7 @@ import Channel from './Channel';
 import { SerializedAttachment, SerializedReaction } from 'types/shared';
 import { SerializedThread } from 'serializers/thread';
 
-export type ChannelResponse =
-  | { props: ChannelViewProps }
-  | { notFound: boolean };
+export type ChannelResponse = { props?: ChannelViewProps; notFound?: boolean };
 
 export interface PaginationType {
   totalCount: number;
