@@ -8,6 +8,7 @@ import {
 } from 'components/Pages/Channels';
 import { encodeCursor } from 'utilities/cursor';
 import { SerializedThread } from 'serializers/thread';
+import { createThreadsOneByDay } from 'bin/factory/threads';
 jest.mock('utilities/dynamoCache');
 
 const reqWithBotHeaders = {
@@ -30,61 +31,22 @@ const reqWithUserHeaders = {
 
 if (process.env.DATABASE_URL) throw 'be careful';
 
-async function createThreads(
-  channel: channels,
-  account: accounts,
-  threadsCount: number
-) {
-  const user = await prisma.users.create({
-    data: {
-      isAdmin: true,
-      isBot: false,
-      accountsId: account.id,
-    },
-  });
-
-  const oneDay = 24 * 60 * 60 * 1000;
-  const nDays = threadsCount * oneDay;
-  const date = new Date().getTime() - nDays;
-
-  const threads = [];
-  for (let i = 0; i < threadsCount; i++) {
-    const thread = await prisma.threads.create({
-      data: {
-        channelId: channel.id,
-        slug: `slug-${channel.channelName}-${channel.id}-${i}`,
-        messageCount: 2,
-        externalThreadId: `thread-ts-${random()}`,
-        sentAt: date + i * oneDay,
-      },
-    });
-    await prisma.messages.create({
-      data: {
-        body: `foo-${i}-${random()}`,
-        channelId: channel.id,
-        threadId: thread.id,
-        usersId: user.id,
-        sentAt: new Date(date + i * oneDay).toISOString(),
-        externalMessageId: `message-id-${random()}`,
-      },
-    });
-    threads.push(thread);
-  }
-  return threads;
-}
-
 describe('channels services', () => {
-  let account: accounts;
-  let channel: channels;
-  let threads: threads[];
-  const threadsCount = 25;
-  if (threadsCount < 25) throw 'we need at least 25 threads';
-  const isSubdomain = true;
-  let nextCursor: string;
-  const threadIndex = Math.ceil(threadsCount / 2);
+  const scope = {
+    account: {} as accounts,
+    channel: {} as channels,
+    threads: [] as threads[],
+    threadsCount: 25,
+    isSubdomain: true,
+    nextCursor: '',
+    threadIndex: 0,
+  };
+
+  if (scope.threadsCount < 25) throw 'we need at least 25 threads';
+  scope.threadIndex = Math.ceil(scope.threadsCount / 2);
 
   beforeAll(async () => {
-    account = await prisma.accounts.create({
+    scope.account = await prisma.accounts.create({
       include: { channels: true },
       data: {
         premium: true,
@@ -93,15 +55,19 @@ describe('channels services', () => {
         discordDomain: `linen-${random()}`,
       },
     });
-    channel = await prisma.channels.create({
+    scope.channel = await prisma.channels.create({
       data: {
         channelName: `linen-${random()}`,
         externalChannelId: `linen-${random()}`,
         hidden: false,
-        accountId: account.id,
+        accountId: scope.account.id,
       },
     });
-    threads = await createThreads(channel, account, threadsCount);
+    scope.threads = await createThreadsOneByDay(
+      scope.channel,
+      scope.account,
+      scope.threadsCount
+    );
   });
 
   describe('from channel view (users)', () => {
@@ -112,12 +78,12 @@ describe('channels services', () => {
         channelProps = await channelGetServerSideProps(
           {
             params: {
-              communityName: account.redirectDomain as string,
-              channelName: channel.channelName,
+              communityName: scope.account.redirectDomain as string,
+              channelName: scope.channel.channelName,
             },
             ...reqWithUserHeaders,
           } as any,
-          isSubdomain
+          scope.isSubdomain
         );
       });
 
@@ -126,7 +92,7 @@ describe('channels services', () => {
         const threadsProps = channelProps.props?.threads!.reverse()!;
         for (let idx = 0; idx < threadsProps.length; idx++) {
           expect(threadsProps[idx].incrementId).toBe(
-            threads[threads.length - 1 - idx].incrementId
+            scope.threads[scope.threads.length - 1 - idx].incrementId
           );
         }
       });
@@ -155,7 +121,7 @@ describe('channels services', () => {
         const threadsProps = fetchMore.threads.reverse();
         for (let idx = 0; idx < threadsProps.length; idx++) {
           expect(threadsProps[idx].incrementId).toBe(
-            threads[threads.length - 1 - 10 - idx].incrementId
+            scope.threads[scope.threads.length - 1 - 10 - idx].incrementId
           );
         }
       });
@@ -175,25 +141,27 @@ describe('channels services', () => {
         channelProps = await channelGetServerSideProps(
           {
             params: {
-              communityName: account.redirectDomain as string,
-              channelName: channel.channelName,
+              communityName: scope.account.redirectDomain as string,
+              channelName: scope.channel.channelName,
               page: encodeCursor('asc:gt:0'),
             },
             ...reqWithBotHeaders,
           } as any,
-          isSubdomain
+          scope.isSubdomain
         );
       });
       it('it should return the first 10 threads', async () => {
         expect(channelProps.props?.threads).toBeInstanceOf(Array);
         const threadsProps = channelProps.props?.threads!;
         for (let idx = 0; idx < threadsProps.length; idx++) {
-          expect(threadsProps[idx].incrementId).toBe(threads[idx].incrementId);
+          expect(threadsProps[idx].incrementId).toBe(
+            scope.threads[idx].incrementId
+          );
         }
       });
       it('it should have the next cursor set', async () => {
         expect(channelProps.props?.nextCursor.next).not.toBeNull();
-        nextCursor = channelProps.props?.nextCursor.next as string;
+        scope.nextCursor = channelProps.props?.nextCursor.next as string;
       });
       it('it should have the prev cursor as null', async () => {
         expect(channelProps.props?.nextCursor.prev).toBeNull();
@@ -206,13 +174,13 @@ describe('channels services', () => {
         channelProps = await channelGetServerSideProps(
           {
             params: {
-              communityName: account.redirectDomain as string,
-              channelName: channel.channelName,
-              page: nextCursor,
+              communityName: scope.account.redirectDomain as string,
+              channelName: scope.channel.channelName,
+              page: scope.nextCursor,
             },
             ...reqWithBotHeaders,
           } as any,
-          isSubdomain
+          scope.isSubdomain
         );
       });
       it('it should return the next 10 threads', async () => {
@@ -220,7 +188,7 @@ describe('channels services', () => {
         const threadsProps = channelProps.props?.threads!;
         for (let idx = 0; idx < threadsProps.length; idx++) {
           expect(threadsProps[idx].incrementId).toBe(
-            threads[idx + 10].incrementId
+            scope.threads[idx + 10].incrementId
           );
         }
       });
@@ -238,13 +206,15 @@ describe('channels services', () => {
         channelProps = await channelGetServerSideProps(
           {
             params: {
-              communityName: account.redirectDomain as string,
-              channelName: channel.channelName,
-              page: encodeCursor(`asc:gte:${threads[threadIndex].sentAt}`),
+              communityName: scope.account.redirectDomain as string,
+              channelName: scope.channel.channelName,
+              page: encodeCursor(
+                `asc:gte:${scope.threads[scope.threadIndex].sentAt}`
+              ),
             },
             ...reqWithBotHeaders,
           } as any,
-          isSubdomain
+          scope.isSubdomain
         );
       });
       it('it should return the thread + next 9 threads', async () => {
@@ -252,7 +222,7 @@ describe('channels services', () => {
         const threadsProps = channelProps.props?.threads!;
         for (let idx = 0; idx < threadsProps.length; idx++) {
           expect(threadsProps[idx].incrementId).toBe(
-            threads[idx + threadIndex].incrementId
+            scope.threads[idx + scope.threadIndex].incrementId
           );
         }
       });
@@ -266,7 +236,7 @@ describe('channels services', () => {
         );
         for (let idx = 0; idx < fetchMore.threads.length; idx++) {
           expect(fetchMore.threads[idx].incrementId).toBe(
-            threads[idx + threadIndex + 10].incrementId
+            scope.threads[idx + scope.threadIndex + 10].incrementId
           );
         }
       });
@@ -280,7 +250,7 @@ describe('channels services', () => {
         );
         for (let idx = 0; idx < fetchMore.threads.length; idx++) {
           expect(fetchMore.threads[idx].incrementId).toBe(
-            threads[threadIndex - 10 + idx].incrementId
+            scope.threads[scope.threadIndex - 10 + idx].incrementId
           );
         }
       });
@@ -292,13 +262,15 @@ describe('channels services', () => {
         channelProps = await channelGetServerSideProps(
           {
             params: {
-              communityName: account.redirectDomain as string,
-              channelName: channel.channelName,
-              page: encodeCursor(`asc:gte:${threads[threadsCount - 3].sentAt}`),
+              communityName: scope.account.redirectDomain as string,
+              channelName: scope.channel.channelName,
+              page: encodeCursor(
+                `asc:gte:${scope.threads[scope.threadsCount - 3].sentAt}`
+              ),
             },
             ...reqWithBotHeaders,
           } as any,
-          isSubdomain
+          scope.isSubdomain
         );
       });
       it('it should return the thread + next 2 threads', async () => {
@@ -306,7 +278,7 @@ describe('channels services', () => {
         const threadsProps = channelProps.props?.threads!;
         for (let idx = 0; idx < threadsProps.length; idx++) {
           expect(threadsProps[idx].incrementId).toBe(
-            threads[idx + threadsCount - 3].incrementId
+            scope.threads[idx + scope.threadsCount - 3].incrementId
           );
         }
       });
