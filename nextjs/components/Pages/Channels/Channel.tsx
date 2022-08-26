@@ -9,8 +9,11 @@ import useInfiniteScroll from 'react-infinite-scroll-hook';
 import Spinner from 'components/Spinner';
 import CustomLinkHelper from 'components/Link/CustomLinkHelper';
 import ButtonPagination from 'components/ButtonPagination';
-import { Feed } from '../../Feed/Feed';
 import { Thread } from 'components/Thread';
+import { Transition } from '@headlessui/react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faX } from '@fortawesome/free-solid-svg-icons';
+import { Feed } from 'components/Feed';
 
 export default function Channel({
   threads,
@@ -30,6 +33,19 @@ export default function Channel({
   const [error, setError] = useState<unknown>();
   const scrollableRootRef = useRef<HTMLDivElement | null>(null);
   const lastScrollDistanceToBottomRef = useRef<number>();
+
+  const [isShowingThread, setIsShowingThread] = useState(false);
+  const [currentThread, setCurrentThread] = useState<SerializedThread>();
+
+  async function loadThread(incrementId: number) {
+    const currentThread = currentThreads?.find(
+      (t) => t.incrementId === incrementId
+    );
+    if (currentThread) {
+      setCurrentThread(currentThread);
+    }
+    setIsShowingThread(true);
+  }
 
   useEffect(() => {
     setCursor(nextCursor);
@@ -161,6 +177,8 @@ export default function Channel({
               isSubDomainRouting={isSubDomainRouting}
               communityName={settings.communityName}
               communityType={settings.communityType}
+              isBot={isBot}
+              onClick={loadThread}
             />
             {hasPathCursor(pathCursor) && (
               <div className="text-center p-4">
@@ -193,6 +211,35 @@ export default function Channel({
           </ul>
         </div>
       </div>
+
+      <Transition
+        show={isShowingThread}
+        className="flex flex-col border-l border-solid border-gray-200"
+      >
+        <div className="overflow-auto flex flex-col">
+          <div className="border-b border-solid border-gray-200 py-4 px-4">
+            <div className="flex flex-row justify-between">
+              <p className="font-bold">{channelName}</p>
+              <a
+                onClick={() => setIsShowingThread(false)}
+                className="flex justify-center"
+              >
+                <div className="min-w-[10px] flex justify-center">
+                  <FontAwesomeIcon icon={faX} color="gray" />
+                </div>
+              </a>
+            </div>
+          </div>
+          <div className="flex justify-center">
+            <Thread
+              messages={currentThread?.messages || []}
+              threadUrl={''}
+              communityType={settings.communityType}
+              viewCount={currentThread?.viewCount || 0}
+            />
+          </div>
+        </div>
+      </Transition>
     </PageLayout>
   );
 }
