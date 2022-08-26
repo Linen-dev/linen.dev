@@ -21,6 +21,7 @@ export interface SerializedMessage {
 }
 
 export interface SerializedThread extends Omit<threads, 'sentAt'> {
+  id: string;
   sentAt: string;
   messages: SerializedMessage[];
 }

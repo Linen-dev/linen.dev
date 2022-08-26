@@ -3,17 +3,16 @@ import { SerializedMessage } from 'serializers/thread';
 import JoinChannelLink from 'components/Link/JoinChannelLink';
 import Row from 'components/Message/Row';
 import { useMemo } from 'react';
-import { Settings } from 'services/accountSettings';
 
 export function Thread({
   messages,
   threadUrl,
-  settings,
+  communityType,
   viewCount,
 }: {
   messages: SerializedMessage[];
   threadUrl: string;
-  settings: Settings;
+  communityType: string;
   viewCount: number;
 }) {
   const elements = useMemo(() => {
@@ -34,7 +33,7 @@ export function Thread({
             message={message}
             isPreviousMessageFromSameUser={isPreviousMessageFromSameUser}
             isNextMessageFromSameUser={isNextMessageFromSameUser}
-            communityType={settings.communityType}
+            communityType={communityType}
           />
         );
       });
@@ -45,10 +44,7 @@ export function Thread({
       <ul>{elements}</ul>
 
       <div className={styles.footer}>
-        <JoinChannelLink
-          href={threadUrl}
-          communityType={settings.communityType}
-        />
+        <JoinChannelLink href={threadUrl} communityType={communityType} />
         <div className={styles.count}>
           <span className={styles.subtext}>View count:</span> {viewCount + 1}
         </div>

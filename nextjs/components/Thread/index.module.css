@@ -3,12 +3,7 @@
   margin-top: 2rem;
   padding-left: 1.5rem;
   padding-right: 1.5rem;
-}
-
-@media (min-width: 1024px) {
-  .thread {
-    padding-right: 250px;
-  }
+  max-width: 100%;
 }
 
 .footer {
