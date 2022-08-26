@@ -1,6 +1,6 @@
 import { captureExceptionAndFlush } from 'utilities/sentry';
 import prisma from '../../client';
-import { createSlug } from '../../lib/util';
+import { createSlug } from '../../utilities/util';
 
 export async function slugify() {
   try {

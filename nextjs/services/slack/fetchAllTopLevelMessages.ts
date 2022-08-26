@@ -14,7 +14,7 @@ import { getMentionedUsers } from './getMentionedUsers';
 import { sleep } from '../../utilities/retryPromises';
 import { parseSlackSentAt, tsToSentAt } from '../../utilities/sentAt';
 import { findOrCreateThread } from '../../lib/threads';
-import { createSlug } from '../../lib/util';
+import { createSlug } from '../../utilities/util';
 import { captureExceptionAndFlush } from 'utilities/sentry';
 
 async function saveMessagesTransaction(

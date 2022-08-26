@@ -4,7 +4,7 @@ import {
   saveUsers,
 } from '../../fetch_all_conversations';
 import fs from 'fs';
-import { createSlug } from '../../lib/util';
+import { createSlug } from '../../utilities/util';
 import {
   SyncStatus,
   updateAndNotifySyncStatus,

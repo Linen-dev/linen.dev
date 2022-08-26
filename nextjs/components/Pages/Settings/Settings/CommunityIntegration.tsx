@@ -1,6 +1,6 @@
 import '@fortawesome/fontawesome-svg-core/styles.css';
 import CommunityButton from 'components/CommunityButton';
-import { capitalize } from 'lib/util';
+import { capitalize } from 'utilities/string';
 import { integrationAuthorizer } from 'utilities/communityAuthorizers';
 import { SerializedAccount } from 'serializers/account';
 import { toast } from 'components/Toast';

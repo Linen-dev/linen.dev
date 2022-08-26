@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { isSubdomainbasedRouting } from './lib/util';
+import { isSubdomainbasedRouting } from './utilities/domain';
 import { getCommunityName } from './utilities/middlewareHelper';
 
 const IS_PRODUCTION = process.env.NODE_ENV === 'production';
