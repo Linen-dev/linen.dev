@@ -3,9 +3,9 @@ import Avatars from '../Avatars';
 import { format } from 'timeago.js';
 import Message from '../Message';
 import { users } from '@prisma/client';
-import { getThreadUrl } from '../Pages/Channels/utilities/url';
+import { getThreadUrl } from '../Pages/ChannelsPage/utilities/url';
 import { SerializedMessage } from '../../serializers/thread';
-import CopyToClipboardIcon from '../Pages/Channels/CopyToClipboardIcon';
+import CopyToClipboardIcon from '../Pages/ChannelsPage/CopyToClipboardIcon';
 
 export function MessageCard({
   author,
