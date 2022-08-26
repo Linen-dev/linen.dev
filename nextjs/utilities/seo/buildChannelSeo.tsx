@@ -1,6 +1,7 @@
 import { capitalize, cleanUpStringForSeo } from 'utilities/string';
 import { Settings } from 'services/accountSettings';
 import { SerializedThread } from 'serializers/thread';
+import { LINEN_URL } from '../../constants';
 
 export function buildChannelSeo({
   settings,
@@ -25,7 +26,7 @@ export function buildChannelSeo({
 
   let url = isSubDomainRouting
     ? `https://${settings.redirectDomain}/c/${channelName}`
-    : `https://linen.dev/${settings.prefix}/${settings.communityName}/c/${channelName}`;
+    : `${LINEN_URL}/${settings.prefix}/${settings.communityName}/c/${channelName}`;
 
   if (pathCursor) {
     url += '/' + pathCursor;
