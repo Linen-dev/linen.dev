@@ -1,10 +1,4 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import PageLayout from '../../layout/PageLayout';
-import type { users } from '@prisma/client';
-import { capitalize } from '../../../lib/util';
-import { ChannelViewCursorProps, ChannelViewProps } from '.';
-import { SerializedThread } from '../../../serializers/thread';
-import { getData } from '../../../utilities/fetcher';
 import useInfiniteScroll from 'react-infinite-scroll-hook';
 import Spinner from 'components/Spinner';
 import CustomLinkHelper from 'components/Link/CustomLinkHelper';
@@ -14,10 +8,16 @@ import { Transition } from '@headlessui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faX } from '@fortawesome/free-solid-svg-icons';
 import { Feed } from 'components/Feed';
+import { AiOutlineLeft } from 'react-icons/ai';
+import { SerializedThread } from 'serializers/thread';
+import {
+  ChannelViewCursorProps,
+  ChannelViewProps,
+} from 'components/Pages/ChannelsPage';
+import { getData } from 'utilities/fetcher';
 
-export default function Channel({
+export function Channel({
   threads,
-  channels,
   currentChannel,
   settings,
   channelName,
@@ -116,40 +116,28 @@ export default function Channel({
     }
   }
 
-  function buildTitle(
-    communityName: string,
-    channelName: string | undefined,
-    page: number = 1
-  ) {
-    const name = capitalize(communityName);
-    const channel = !!channelName
-      ? ` - ${capitalize(channelName)} Threads - Page ${page}`
-      : '';
-    return `${name}${channel}`;
-  }
-
   return (
-    <PageLayout
-      communityUrl={settings.communityUrl}
-      communityInviteUrl={settings.communityInviteUrl}
-      currentChannel={currentChannel}
-      seo={{
-        title: buildTitle(settings.name || settings.communityName, channelName),
-        // description: `${channelName} Threads - Page ${page}`,
-      }}
-      navItems={{ channels }}
-      settings={settings}
-      communityName={settings.communityName}
-      isSubDomainRouting={isSubDomainRouting}
-    >
-      <div
-        className="overflow-auto
+    <>
+      {/* Added padding right when scroll bar is hidden 
+      and remove padding when scroll bar 
+      is showing so it doesn't move the screen as much */}
+      <Transition
+        show={true}
+        className="
+
+        overflow-hidden
+        hover:overflow-auto
+
+        pr-4
+        hover:pr-0
+
         lg:h-[calc(100vh_-_80px)]
         md:h-[calc(100vh_-_144px)] 
         h-[calc(100vh_-_192px)]
         lg:w-[calc(100vw_-_250px)]
         flex justify-center
-        w-[100vw]"
+        w-[100vw]
+        "
         ref={rootRefSetter}
         onScroll={handleRootScroll}
         id="rootRefSetter"
@@ -210,7 +198,7 @@ export default function Channel({
             <div ref={messagesEndRef} />
           </ul>
         </div>
-      </div>
+      </Transition>
 
       <Transition
         show={isShowingThread}
@@ -219,7 +207,13 @@ export default function Channel({
         <div className="overflow-auto flex flex-col px-4">
           <div className="border-b border-solid border-gray-200 py-4 px-4">
             <div className="flex flex-row justify-between">
-              <p className="font-bold">{channelName}</p>
+              <div className="flex flex-row justify-center">
+                <div className="flex items-center sm:hidden">
+                  {/* Using react icon here because the thin version of FontAwesome is paid */}
+                  <AiOutlineLeft color="gray" />
+                </div>
+                <p className="font-bold pl-2">{channelName}</p>
+              </div>
               <a
                 onClick={() => setIsShowingThread(false)}
                 className="flex justify-center"
@@ -240,20 +234,15 @@ export default function Channel({
           </div>
         </div>
       </Transition>
-    </PageLayout>
+    </>
   );
 }
-
-export const uniqueUsers = (users: users[]): users[] => {
-  let userMap = new Map<string, users>();
-
-  users.forEach((user) => {
-    userMap.set(user.id, user);
-  });
-
-  return Array.from(userMap.values());
-};
 
 function hasPathCursor(pathCursor?: string | null) {
   return !!pathCursor;
 }
+
+// Scenarios
+// When it is mobile screen and no thread we show the main messages
+// When it is mobile screen and there is thread we show the thread
+// When it is mobile screen and there is a thread showing if we click on the back button it goes back to the main thread

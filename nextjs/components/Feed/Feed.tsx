@@ -1,7 +1,6 @@
 import { users } from '@prisma/client';
 import CustomLink from '../Link/CustomLink';
 import { SerializedThread } from '../../serializers/thread';
-import { uniqueUsers } from '../Pages/Channels/Channel';
 import { MessageCard } from '../MessageCard';
 
 // A feed is a collection of threads
@@ -95,3 +94,13 @@ export function Feed({
     </div>
   );
 }
+
+export const uniqueUsers = (users: users[]): users[] => {
+  let userMap = new Map<string, users>();
+
+  users.forEach((user) => {
+    userMap.set(user.id, user);
+  });
+
+  return Array.from(userMap.values());
+};

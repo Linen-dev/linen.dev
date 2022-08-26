@@ -5,7 +5,7 @@ import { channelGetServerSideProps, channelNextPage } from 'services/channel';
 import {
   ChannelResponse,
   ChannelViewCursorProps,
-} from 'components/Pages/Channels';
+} from 'components/Pages/ChannelsPage';
 import { encodeCursor } from 'utilities/cursor';
 import { SerializedThread } from 'serializers/thread';
 jest.mock('utilities/dynamoCache');
