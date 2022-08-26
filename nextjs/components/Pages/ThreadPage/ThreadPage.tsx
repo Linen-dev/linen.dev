@@ -48,7 +48,7 @@ export function ThreadPage({
       <Thread
         messages={messages}
         threadUrl={threadUrl}
-        settings={settings}
+        communityType={settings.communityType}
         viewCount={viewCount}
       />
     </PageLayout>
