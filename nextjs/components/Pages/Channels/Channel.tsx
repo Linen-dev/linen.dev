@@ -216,7 +216,7 @@ export default function Channel({
         show={isShowingThread}
         className="flex flex-col border-l border-solid border-gray-200"
       >
-        <div className="overflow-auto flex flex-col">
+        <div className="overflow-auto flex flex-col px-4">
           <div className="border-b border-solid border-gray-200 py-4 px-4">
             <div className="flex flex-row justify-between">
               <p className="font-bold">{channelName}</p>
