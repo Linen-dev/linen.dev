@@ -20,7 +20,7 @@ import {
 import {
   ChannelViewCursorProps,
   ChannelResponse,
-} from 'components/Pages/Channels';
+} from 'components/Pages/ChannelsPage';
 import { isBot } from 'next/dist/server/web/spec-extension/user-agent';
 
 const CURSOR_LIMIT = 10;

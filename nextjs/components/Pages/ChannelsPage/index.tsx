@@ -1,6 +1,6 @@
 import { channels, messages, mentions, users } from '@prisma/client';
 import { Settings } from 'services/accountSettings';
-import Channel from './Channel';
+import ChannelPage from './ChannelPage';
 import { SerializedAttachment, SerializedReaction } from 'types/shared';
 import { SerializedThread } from 'serializers/thread';
 
@@ -41,7 +41,7 @@ export type ChannelViewCursorProps = {
 
 export default function ChannelView(props: ChannelViewProps) {
   return (
-    <Channel
+    <ChannelPage
       {...props}
       key={props.settings.communityName + props.channelName}
     />
