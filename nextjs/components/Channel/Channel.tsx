@@ -115,6 +115,22 @@ export function Channel({
       setIsLoading(false);
     }
   }
+  const [isMobile, setIsMobile] = useState(false);
+
+  //choose the screen size
+  const handleResize = () => {
+    if (window.innerWidth < 768) {
+      setIsMobile(true);
+    } else {
+      setIsMobile(false);
+    }
+  };
+
+  // create an event listener
+  useEffect(() => {
+    handleResize();
+    window.addEventListener('resize', handleResize);
+  });
 
   return (
     <>
@@ -122,7 +138,7 @@ export function Channel({
       and remove padding when scroll bar 
       is showing so it doesn't move the screen as much */}
       <Transition
-        show={true}
+        show={showChannel({ isMobile, isShowingThread })}
         className="
 
         overflow-hidden
@@ -208,15 +224,17 @@ export function Channel({
           <div className="border-b border-solid border-gray-200 py-4 px-4">
             <div className="flex flex-row justify-between">
               <div className="flex flex-row justify-center">
-                <div className="flex items-center sm:hidden">
-                  {/* Using react icon here because the thin version of FontAwesome is paid */}
-                  <AiOutlineLeft color="gray" />
+                <div className="flex items-center md:hidden">
+                  <a onClick={() => setIsShowingThread(false)}>
+                    {/* Using react icon here because the thin version of FontAwesome is paid */}
+                    <AiOutlineLeft color="gray" />
+                  </a>
                 </div>
                 <p className="font-bold pl-2">{channelName}</p>
               </div>
               <a
                 onClick={() => setIsShowingThread(false)}
-                className="flex justify-center"
+                className="hidden md:flex md:justify-center"
               >
                 <div className="min-w-[10px] flex justify-center">
                   <FontAwesomeIcon icon={faX} color="gray" />
@@ -242,7 +260,15 @@ function hasPathCursor(pathCursor?: string | null) {
   return !!pathCursor;
 }
 
-// Scenarios
-// When it is mobile screen and no thread we show the main messages
-// When it is mobile screen and there is thread we show the thread
-// When it is mobile screen and there is a thread showing if we click on the back button it goes back to the main thread
+export const showChannel = ({
+  isMobile,
+  isShowingThread,
+}: {
+  isMobile: boolean;
+  isShowingThread: boolean;
+}): boolean => {
+  if (isMobile && isShowingThread) {
+    return false;
+  }
+  return true;
+};
