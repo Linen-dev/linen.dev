@@ -7,7 +7,7 @@ import * as fetch_all_conversations from '../../fetch_all_conversations';
 import { fetchAllTopLevelMessages } from './fetchAllTopLevelMessages';
 import { conversationHistory } from '__mocks__/slack-api';
 import { parseSlackSentAt, tsToSentAt } from '../../utilities/sentAt';
-import { createSlug } from '../../lib/util';
+import { createSlug } from '../../utilities/util';
 
 const account = {
   id: 'accountId123',

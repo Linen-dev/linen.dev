@@ -1,7 +1,7 @@
 import prisma from '../../client';
 import type { channels, threads } from '@prisma/client';
 import { DiscordMessage } from '../../types/discordResponses/discordMessagesInterface';
-import { createSlug } from '../../lib/util';
+import { createSlug } from '../../utilities/util';
 import { getDiscordWithRetry } from './api';
 import { CrawlType, LIMIT } from './constrains';
 import { createMessages, filterKnownMessagesTypes } from './messages';

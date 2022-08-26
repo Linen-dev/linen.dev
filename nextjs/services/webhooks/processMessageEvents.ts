@@ -8,7 +8,7 @@ import {
   SlackEvent,
   SlackMessageEvent,
 } from '../../types/slackResponses/slackMessageEventInterface';
-import { createSlug } from '../../lib/util';
+import { createSlug } from '../../utilities/util';
 import type { accounts, channels, slackAuthorizations } from '@prisma/client';
 import { findOrCreateUserFromUserInfo } from '../../lib/users';
 import { parseSlackSentAt, tsToSentAt } from '../../utilities/sentAt';

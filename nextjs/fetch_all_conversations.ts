@@ -4,7 +4,7 @@ import { captureExceptionAndFlush } from 'utilities/sentry';
 import { createMessage, createOrUpdateMessage } from './lib/models';
 import { findOrCreateThread, findThread } from './lib/threads';
 import { createManyUsers, findUser } from './lib/users';
-import { createSlug } from './lib/util';
+import { createSlug } from './utilities/util';
 import { generateRandomWordSlug } from './utilities/randomWordSlugs';
 import { tsToSentAt } from './utilities/sentAt';
 

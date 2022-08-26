@@ -7,7 +7,7 @@ import { retryPromise } from '../../utilities/retryPromises';
 import { UserMap } from '../../types/partialTypes';
 import type { channels } from '@prisma/client';
 import prisma from '../../client';
-import { createSlug } from '../../lib/util';
+import { createSlug } from '../../utilities/util';
 import { processReactions } from './reactions';
 import { processAttachments } from './attachments';
 import { getMentionedUsers } from './getMentionedUsers';

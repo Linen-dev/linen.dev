@@ -1,14 +1,7 @@
-import { capitalize } from 'lib/util';
+import { capitalize, cleanUpStringForSeo } from 'utilities/string';
 import type { Settings } from 'services/accountSettings';
 import type { SerializedMessage, SerializedThread } from 'serializers/thread';
 import QAPageJsonLd, { Question } from 'utilities/seo/QAPageJsonLd';
-
-const cleanUpRegex = /[^a-zA-Z0-9 ]/g;
-
-function cleanUpStringForSeo(str?: string | null) {
-  if (!str) return '';
-  return str.replace(cleanUpRegex, ' ').replace(/\s+/g, ' ');
-}
 
 function buildNameText(messages: SerializedMessage[]): Question {
   const first = messages[0];

@@ -1,4 +1,4 @@
-import { NextApiRequest } from 'next';
+import type { NextApiRequest } from 'next';
 
 const LINEN_HOSTNAMES = [
   'localhost',
@@ -22,3 +22,34 @@ export function getCurrentUrl(request?: NextApiRequest) {
     'http://localhost:3000'
   );
 }
+
+// Checks if the routing is subdomain or based on paths
+export const isSubdomainbasedRouting = (host: string): boolean => {
+  if (host.includes('vercel.app')) {
+    return false;
+  }
+  if (host.includes('www.localhost:3000')) {
+    return false;
+  }
+
+  if (host.includes('.')) {
+    const splitHost = host.split('.');
+    if (splitHost[0] === 'www') {
+      // for cases where user want to use fully qualified name and not subdomain like www.papercups.io
+      if (splitHost[1] !== 'linen') {
+        return true;
+      }
+      return false;
+    }
+    if (host.includes('localhost:3000')) {
+      return true;
+    }
+
+    // handle osquery.fleetdm.com and something.linen.dev
+    if (host.split('.').length > 2) {
+      return true;
+    }
+  }
+
+  return false;
+};

@@ -13,7 +13,7 @@ import * as mockUsers from '../../../lib/users';
 
 import handler from '../../../pages/api/webhook';
 import { parseSlackSentAt } from '../../../utilities/sentAt';
-import { createSlug } from '../../../lib/util';
+import { createSlug } from 'utilities/util';
 
 const addMessageEvent = {
   token: 'RudepRJuMOjy8zENRCLdXW7t',
