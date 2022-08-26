@@ -47,8 +47,9 @@ describe('Link', () => {
     });
   });
 
+  //Disabling twitter card for now since it doesn't play well with mobile view
   describe('when the link points to a tweet', () => {
-    it('renders it', async () => {
+    it.skip('renders it', async () => {
       const { getByText } = render(
         <Link value="https://twitter.com/status/1234" />
       );
