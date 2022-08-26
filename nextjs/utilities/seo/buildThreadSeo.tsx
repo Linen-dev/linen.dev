@@ -1,6 +1,7 @@
 import { capitalize, cleanUpStringForSeo } from 'utilities/string';
 import { Settings } from 'services/accountSettings';
 import { SerializedMessage } from 'serializers/thread';
+import { LINEN_URL } from '../../constants';
 
 export function buildThreadSeo({
   isSubDomainRouting,
@@ -28,7 +29,7 @@ export function buildThreadSeo({
 
   let url = isSubDomainRouting
     ? `https://${settings.redirectDomain}/t/${threadId}`
-    : `https://linen.dev/${settings.prefix}/${settings.communityName}/t/${threadId}`;
+    : `${LINEN_URL}/${settings.prefix}/${settings.communityName}/t/${threadId}`;
 
   if (slug) {
     url += '/' + slug.toLowerCase();
