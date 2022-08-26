@@ -33,13 +33,14 @@ export default function Link({ value }: Props) {
     );
   }
 
-  if (isTweet(href)) {
-    return (
-      <Toggle header={name || href}>
-        <Tweet src={href} />
-      </Toggle>
-    );
-  }
+  // Disabling twitter since it is not playing well with mobile view
+  // if (isTweet(href)) {
+  //   return (
+  //     <Toggle header={name || href}>
+  //       <Tweet src={href} />
+  //     </Toggle>
+  //   );
+  // }
 
   if (isMail(href)) {
     return <Mail value={value} />;
