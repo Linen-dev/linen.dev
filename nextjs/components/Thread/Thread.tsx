@@ -18,7 +18,7 @@ export function Thread({
   const elements = useMemo(() => {
     return messages
       .sort(
-        (a, b) => new Date(b.sentAt).getTime() - new Date(a.sentAt).getTime()
+        (a, b) => new Date(a.sentAt).getTime() - new Date(b.sentAt).getTime()
       )
       .map((message, index) => {
         const previousMessage = messages[index - 1];
