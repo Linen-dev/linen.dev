@@ -11,7 +11,6 @@ import Quote from './Quote';
 import Reactions from './Reactions';
 import Attachments from './Attachments';
 import transform from './utilities/transform';
-import { truncate as truncateText } from './utilities/string';
 import styles from './index.module.css';
 import { SerializedReaction, SerializedAttachment } from 'types/shared';
 import parseSlackMessage from 'utilities/message/parsers/slack';
@@ -46,20 +45,12 @@ const parsers = {
   discord: parseDiscordMessage,
 };
 
-function Message({
-  text,
-  format,
-  truncate,
-  mentions,
-  reactions,
-  attachments,
-}: Props) {
+function Message({ text, format, mentions, reactions, attachments }: Props) {
   if (text === '') {
     text = 'message has been deleted';
   }
   const parse = format === 'discord' ? parsers.discord : parsers.slack;
-  const input = truncate ? truncateText(text) : text;
-  const tree = transform(parse(input));
+  const tree = transform(parse(text));
 
   function render(node: RootNode | Node): React.ReactNode {
     switch (node.type) {
@@ -121,7 +112,6 @@ function Message({
     <div className={styles.message}>
       {render(tree)}
       <Attachments attachments={attachments} />
-
       <Reactions reactions={reactions} />
     </div>
   );
