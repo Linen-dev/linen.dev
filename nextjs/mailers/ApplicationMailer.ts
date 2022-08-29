@@ -14,7 +14,7 @@ class ApplicationMailer {
   static async send(options: Options) {
     return transporter.sendMail({
       ...options,
-      from: 'no-reply@linendev.com',
+      from: process.env.EMAIL_FROM || 'no-reply@linendev.com',
     });
   }
 }

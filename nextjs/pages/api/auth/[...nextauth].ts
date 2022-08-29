@@ -17,12 +17,13 @@ export const authOptions = {
       server: {
         host: process.env.EMAIL_HOST,
         port: 465,
+        secure: true,
         auth: {
           user: process.env.EMAIL_USER,
           pass: process.env.EMAIL_PASS,
         },
       },
-      from: 'Linen.dev <no-reply@linendev.com>',
+      from: `Linen.dev <${process.env.EMAIL_FROM || 'no-reply@linendev.com'}>`,
 
       async sendVerificationRequest(params) {
         try {
@@ -43,7 +44,9 @@ export const authOptions = {
           }
         } catch (error) {
           await captureExceptionAndFlush(error);
-          // throw error;
+          if (process.env.NODE_ENV === 'development') {
+            throw error;
+          }
         }
       },
     }),
