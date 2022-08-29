@@ -1,8 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import useInfiniteScroll from 'react-infinite-scroll-hook';
 import Spinner from 'components/Spinner';
-import CustomLinkHelper from 'components/Link/CustomLinkHelper';
-import ButtonPagination from 'components/ButtonPagination';
 import { Thread } from 'components/Thread';
 import { Transition } from '@headlessui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -67,7 +65,7 @@ export function Channel({
     const scrollableRoot = scrollableRootRef.current;
     const lastScrollDistanceToBottom =
       lastScrollDistanceToBottomRef.current ?? 0;
-    if (!hasPathCursor(pathCursor) && scrollableRoot) {
+    if (scrollableRoot) {
       scrollableRoot.scrollTop =
         scrollableRoot.scrollHeight - lastScrollDistanceToBottom;
     }
@@ -160,22 +158,20 @@ export function Channel({
       >
         <div className="sm:pt-6 justify-center">
           <ul className="divide-y sm:max-w-4xl px-1">
-            {!hasPathCursor(pathCursor) && (
-              <>
-                {cursor?.prev ? (
-                  <div className="m-3" ref={infiniteRef}>
-                    <Spinner />
-                  </div>
-                ) : (
-                  <div></div>
-                  // Commenting this out because most of the time it isn't true and it
-                  // looks buggy and unpolished
-                  // <div className="text-gray-600 text-xs text-center m-3">
-                  //   This is the beginning of the #{channelName} channel
-                  // </div>
-                )}
-              </>
-            )}
+            <>
+              {cursor?.prev ? (
+                <div className="m-3" ref={infiniteRef}>
+                  <Spinner />
+                </div>
+              ) : (
+                <div></div>
+                // Commenting this out because most of the time it isn't true and it
+                // looks buggy and unpolished
+                // <div className="text-gray-600 text-xs text-center m-3">
+                //   This is the beginning of the #{channelName} channel
+                // </div>
+              )}
+            </>
             <Feed
               threads={currentThreads}
               isSubDomainRouting={isSubDomainRouting}
@@ -184,33 +180,6 @@ export function Channel({
               isBot={isBot}
               onClick={loadThread}
             />
-            {hasPathCursor(pathCursor) && (
-              <div className="text-center p-4">
-                {nextCursor?.prev && (
-                  <ButtonPagination
-                    href={CustomLinkHelper({
-                      isSubDomainRouting,
-                      communityName: settings.communityName,
-                      communityType: settings.communityType,
-                      path: `/c/${channelName}/${nextCursor.prev}`,
-                    })}
-                    label="Previous"
-                  />
-                )}
-                {nextCursor?.next && (
-                  <ButtonPagination
-                    href={CustomLinkHelper({
-                      isSubDomainRouting,
-                      communityName: settings.communityName,
-                      communityType: settings.communityType,
-                      path: `/c/${channelName}/${nextCursor.next}`,
-                    })}
-                    label="Next"
-                    className="ml-3"
-                  />
-                )}
-              </div>
-            )}
             <div ref={messagesEndRef} />
           </ul>
         </div>
@@ -254,10 +223,6 @@ export function Channel({
       </Transition>
     </>
   );
-}
-
-function hasPathCursor(pathCursor?: string | null) {
-  return !!pathCursor;
 }
 
 export const showChannel = ({

@@ -1,6 +1,6 @@
 import PageLayout from '../../layout/PageLayout';
 import { ChannelViewProps } from '.';
-import { Channel } from 'components/Channel';
+import { Channel, ChannelForBots } from 'components/Channel';
 import { buildChannelSeo } from 'utilities/seo';
 
 export default function ChannelPage({
@@ -17,6 +17,8 @@ export default function ChannelPage({
   if (!threads) {
     return <div />;
   }
+
+  const ComponentToRender = isBot ? ChannelForBots : Channel;
 
   return (
     <PageLayout
@@ -37,7 +39,7 @@ export default function ChannelPage({
       communityName={settings.communityName}
       isSubDomainRouting={isSubDomainRouting}
     >
-      <Channel
+      <ComponentToRender
         threads={threads}
         currentChannel={currentChannel}
         settings={settings}
@@ -49,10 +51,6 @@ export default function ChannelPage({
       />
     </PageLayout>
   );
-}
-
-function hasPathCursor(pathCursor?: string | null) {
-  return !!pathCursor;
 }
 
 // Scenarios
