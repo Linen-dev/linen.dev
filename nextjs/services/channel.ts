@@ -1,7 +1,7 @@
 import { findAccountByPath } from '../lib/models';
 import { GetServerSidePropsContext } from 'next/types';
 import { NotFound } from '../utilities/response';
-import { buildSettings } from './accountSettings';
+import { buildSettings, Settings } from './accountSettings';
 import { memoize } from '../utilities/dynamoCache';
 import { findPreviousCursor, findThreadsByCursor } from '../lib/threads';
 import serializeThread from '../serializers/thread';
@@ -9,7 +9,7 @@ import {
   AccountWithSlackAuthAndChannels,
   ThreadsWithMessagesFull,
 } from 'types/partialTypes';
-import type { channels, accounts } from '@prisma/client';
+import type { channels } from '@prisma/client';
 import { decodeCursor, encodeCursor } from '../utilities/cursor';
 import { shouldThisChannelBeAnonymous } from '../lib/channel';
 import {
@@ -42,6 +42,31 @@ export async function channelGetServerSideProps(
   const channel = findChannelOrDefault(account.channels, channelName);
   if (!channel) return NotFound();
 
+  const settings = buildSettings(account);
+
+  const isCrawler = isBot(context?.req?.headers?.['user-agent'] || '');
+
+  if (isCrawler) {
+    if (!channelName) {
+      // should be redirect to <default_channel>/<first_page>
+      return resolveRedirect({
+        isSubdomainbasedRouting,
+        communityName,
+        settings,
+        channel,
+      });
+    }
+    if (!page) {
+      // should be redirect to first page
+      return resolveRedirect({
+        isSubdomainbasedRouting,
+        communityName,
+        settings,
+        channel,
+      });
+    }
+  }
+
   const { sort, direction, sentAt } = decodeCursor(cursor);
 
   const threads = (
@@ -53,8 +78,6 @@ export async function channelGetServerSideProps(
       anonymizeUsers: account.anonymizeUsers,
     })
   ).sort(sortBySentAtAsc);
-
-  const isCrawler = isBot(context?.req?.headers?.['user-agent'] || '');
 
   const nextCursor = await buildCursor({
     sort,
@@ -73,7 +96,7 @@ export async function channelGetServerSideProps(
       channelName: channel.channelName,
       channels: account.channels,
       threads: threads.map(serializeThread),
-      settings: buildSettings(account),
+      settings,
       isSubDomainRouting: isSubdomainbasedRouting,
       pathCursor: page || null,
       isBot: isCrawler,
@@ -251,5 +274,34 @@ async function buildCursor({
   return {
     prev: encodeCursor(`desc:lt:${threads[0].sentAt}`),
     next: null,
+  };
+}
+
+function resolveRedirect({
+  isSubdomainbasedRouting,
+  communityName,
+  channelName,
+  settings,
+  channel,
+}: {
+  isSubdomainbasedRouting: boolean;
+  communityName: string;
+  channelName?: string;
+  settings: Settings;
+  channel: channels;
+}) {
+  let url = isSubdomainbasedRouting
+    ? '/'
+    : `/${settings.prefix}/${communityName}/`;
+
+  url += channelName ? `/c/${channelName}` : `/c/${channel.channelName}`;
+
+  url += `/${encodeCursor('asc:gt:0')}`;
+
+  return {
+    redirect: {
+      destination: url,
+      permanent: false,
+    },
   };
 }
