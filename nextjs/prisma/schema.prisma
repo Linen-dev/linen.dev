@@ -96,6 +96,7 @@ model accounts {
   docsUrl                String?
   logoUrl                String?
   premium                Boolean          @default(false)
+  private                Boolean          @default(false)
   googleAnalyticsId      String?
   googleSiteVerification String?
   anonymizeUsers         Boolean          @default(false)
