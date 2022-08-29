@@ -37,5 +37,15 @@ export async function createAccounts() {
       slackDomain: 'empty',
     },
   });
-  return [account, account2];
+  const account3 = await prisma.accounts.create({
+    data: {
+      homeUrl: `https://private.dev`,
+      docsUrl: `https://private.dev/docs`,
+      redirectDomain: 'private.dev',
+      brandColor: '#00bcd4',
+      logoUrl: 'https://linen-assets.s3.amazonaws.com/linen-black-logo.svg',
+      slackDomain: 'private',
+    },
+  });
+  return [account, account2, account3];
 }

@@ -11,11 +11,12 @@ import { createUsers } from './user';
 
 export const seed = async () => {
   await truncateTables();
-  const [account, account2] = await createAccounts();
+  const [account, account2, account3] = await createAccounts();
   await createAuths(account);
 
   await createMessagesAndThreads(account);
   await createMessagesAndThreads(account2);
+  await createMessagesAndThreads(account3);
 };
 
 const createMessagesAndThreads = async (account: accounts) => {
