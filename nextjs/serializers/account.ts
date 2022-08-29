@@ -20,6 +20,7 @@ export interface SerializedAccount {
   discordDomain?: string;
   discordServerId?: string;
   communityInviteUrl?: string;
+  private: boolean;
 }
 
 function identifyCommunity(account: any) {
@@ -67,6 +68,7 @@ export default function serialize(account?: any): SerializedAccount | null {
     discordDomain,
     discordServerId,
     communityInviteUrl,
+    private: isPrivate,
   } = account;
 
   const communityType = identifyCommunity(account);
@@ -89,5 +91,6 @@ export default function serialize(account?: any): SerializedAccount | null {
     discordDomain,
     discordServerId,
     communityInviteUrl,
+    private: isPrivate,
   };
 }

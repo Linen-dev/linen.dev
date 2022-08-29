@@ -5,6 +5,7 @@ import type { channels } from '@prisma/client';
 import LinkCard from './Settings/LinkCard';
 import ChannelsDefault from './Settings/ChannelsDefault';
 import ChannelVisibilityCard from './Settings/ChannelVisibilityCard';
+import CommunityVisibilityCard from './Settings/CommunityVisibilityCard';
 import CommunityIntegration from './Settings/CommunityIntegration';
 import AnonymizeCard from './Settings/AnonymizeCard';
 import URLs from './Settings/Urls';
@@ -30,6 +31,7 @@ export default function Settings(props: SettingsProps) {
             <CommunityIntegration {...props} />
             <AnonymizeCard {...props} />
             <ChannelsDefault {...props} />
+            <CommunityVisibilityCard {...props} />
             <ChannelVisibilityCard {...props} />
             <URLs {...props} />
           </div>

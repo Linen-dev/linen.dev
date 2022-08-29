@@ -45,6 +45,7 @@ async function update(request: NextApiRequest, response: NextApiResponse) {
     googleAnalyticsId,
     anonymizeUsers,
     communityInviteUrl,
+    private: isPrivate,
   } = JSON.parse(request.body);
   const account = await prisma.accounts.findFirst({
     where: { id: accountId },
@@ -58,6 +59,7 @@ async function update(request: NextApiRequest, response: NextApiResponse) {
     docsUrl,
     anonymizeUsers,
     communityInviteUrl,
+    private: isPrivate,
   };
   const data = account.premium
     ? {
