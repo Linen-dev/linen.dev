@@ -1,6 +1,7 @@
 import NextAuth, { type NextAuthOptions } from 'next-auth';
 import EmailProvider from 'next-auth/providers/email';
 import prisma from '../../../client';
+import { NOREPLY_EMAIL } from '../../../secrets';
 import { CustomPrismaAdapter } from 'lib/auth';
 import SignInMailer from 'mailers/SignInMailer';
 import { captureExceptionAndFlush } from 'utilities/sentry';
@@ -23,9 +24,7 @@ export const authOptions = {
           pass: process.env.EMAIL_PASS,
         },
       },
-      from: `Linen.dev <${
-        process.env.NOREPLY_EMAIL || 'no-reply@linendev.com'
-      }>`,
+      from: `Linen.dev <${NOREPLY_EMAIL}>`,
 
       async sendVerificationRequest(params) {
         try {

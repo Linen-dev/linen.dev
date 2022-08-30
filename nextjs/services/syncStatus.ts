@@ -2,6 +2,7 @@ import ApplicationMailer from '../mailers/ApplicationMailer';
 import { updateAccountSyncStatus } from '../lib/models';
 import { sendNotification } from './slack';
 import { captureExceptionAndFlush } from 'utilities/sentry';
+import { SUPPORT_EMAIL } from '../secrets';
 
 export enum SyncStatus {
   IN_PROGRESS = 'IN_PROGRESS',
@@ -31,7 +32,7 @@ async function emailNotification(
 ) {
   try {
     await ApplicationMailer.send({
-      to: (process.env.SUPPORT_EMAIL || 'help@linen.dev') as string,
+      to: SUPPORT_EMAIL,
       subject: `Linen.dev - Sync progress is ${status} for account: ${accountId}`,
       text: `Syncing process is ${status} for account:  ${accountId}, ${accountName}, ${homeUrl}`,
       html: `Syncing process is ${status} for account:  ${accountId}, ${accountName}, ${homeUrl}`,
