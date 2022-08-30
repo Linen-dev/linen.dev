@@ -110,7 +110,7 @@ export const findThreadsByChannel = ({
   limit?: number;
 }) => {
   return prisma.threads.findMany({
-    where: { channelId, sentAt: { gt: cursor || 0 } },
+    where: { channelId, sentAt: { gt: cursor || 0 }, hidden: false },
     take: limit,
     orderBy: { sentAt: 'asc' },
   });
@@ -186,6 +186,7 @@ export async function findThreadsByCursor({
       channelId: {
         in: channelIds,
       },
+      hidden: false,
     },
     include: {
       messages: {
@@ -228,6 +229,7 @@ export async function findPreviousCursor({
       channelId: {
         in: channelIds,
       },
+      hidden: false,
     },
     orderBy: { sentAt: sort },
   });
