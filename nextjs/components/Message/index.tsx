@@ -45,8 +45,12 @@ const parsers = {
   discord: parseDiscordMessage,
 };
 
+function noAttachment(attachments?: SerializedAttachment[]) {
+  return !attachments || attachments?.length === 0;
+}
+
 function Message({ text, format, mentions, reactions, attachments }: Props) {
-  if (text === '') {
+  if (text === '' && noAttachment(attachments)) {
     text = 'message has been deleted';
   }
   const parse = format === 'discord' ? parsers.discord : parsers.slack;
