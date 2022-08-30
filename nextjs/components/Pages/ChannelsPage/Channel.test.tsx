@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import ChannelPage from './ChannelPage';
-import { users } from '@prisma/client';
+import type { MessagesViewType, users } from '@prisma/client';
 
 describe('Channel', () => {
   describe('and google analytics id is set', () => {
@@ -39,6 +39,95 @@ describe('Channel', () => {
         '<script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-123456789-1"></script>'
       );
     });
+  });
+
+  const channelProps = {
+    channelName: 'channelName',
+    currentChannel: {
+      accountId: 'accountId',
+      channelName: 'channelName',
+      default: true,
+      externalChannelId: 'externalChannelId',
+      externalPageCursor: 'externalPageCursor',
+      hidden: false,
+      id: 'id',
+    },
+    isBot: false,
+    isSubDomainRouting: true,
+    nextCursor: {
+      next: 'next',
+      prev: 'prev',
+    },
+    pathCursor: 'pathCursor',
+    settings: {
+      brandColor: 'brandColor',
+      communityInviteUrl: 'communityInviteUrl',
+      communityName: 'communityName',
+      communityType: 'communityType',
+      communityUrl: 'communityUrl',
+      docsUrl: 'docsUrl',
+      homeUrl: 'homeUrl',
+      logoUrl: 'logoUrl',
+      messagesViewType: 'THREADS' as MessagesViewType,
+      name: 'name',
+    },
+    threads: [
+      {
+        channelId: 'channelId',
+        externalThreadId: 'externalThreadId',
+        id: 'id',
+        incrementId: 1,
+        messageCount: 2,
+        messages: [
+          {
+            attachments: [],
+            body: 'body',
+            id: 'id',
+            mentions: [],
+            reactions: [],
+            sentAt: 'sentAt',
+            usersId: 'usersId',
+          },
+        ],
+        sentAt: 'sentAt',
+        slug: 'slug',
+        viewCount: 1,
+      },
+    ],
+    channels: [],
+  };
+  test('it should render the view for bots with pagination buttons', () => {
+    const { container } = render(
+      <ChannelPage {...channelProps} isBot={true} />
+    );
+    expect(container.innerHTML).not.toMatch(
+      new RegExp(
+        '<div class="m-3"><div class="spinner-wrapper"><div class="spinner" role="spinner"><div class="spinner-icon"></div></div></div></div>'
+      )
+    );
+    expect(container.innerHTML).toMatch(
+      new RegExp('<a href="/c/channelName/prev" class="btn">Previous</a>')
+    );
+    expect(container.innerHTML).toMatch(
+      new RegExp('<a href="/c/channelName/next" class="btn ml-3">Next</a>')
+    );
+  });
+
+  test('it should render the view for users without pagination buttons', () => {
+    const { container } = render(
+      <ChannelPage {...channelProps} isBot={false} />
+    );
+    expect(container.innerHTML).not.toMatch(
+      new RegExp('<a href="/c/channelName/prev" class="btn">Previous</a>')
+    );
+    expect(container.innerHTML).not.toMatch(
+      new RegExp('<a href="/c/channelName/next" class="btn ml-3">Next</a>')
+    );
+    expect(container.innerHTML).toMatch(
+      new RegExp(
+        '<div class="m-3"><div class="spinner-wrapper"><div class="spinner" role="spinner"><div class="spinner-icon"></div></div></div></div>'
+      )
+    );
   });
 });
 
