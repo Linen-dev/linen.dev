@@ -23,7 +23,9 @@ export const authOptions = {
           pass: process.env.EMAIL_PASS,
         },
       },
-      from: `Linen.dev <${process.env.EMAIL_FROM || 'no-reply@linendev.com'}>`,
+      from: `Linen.dev <${
+        process.env.NOREPLY_EMAIL || 'no-reply@linendev.com'
+      }>`,
 
       async sendVerificationRequest(params) {
         try {
