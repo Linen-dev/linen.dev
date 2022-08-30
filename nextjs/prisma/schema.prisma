@@ -55,6 +55,7 @@ model threads {
   @@unique([externalThreadId])
   @@unique([incrementId])
   @@index([channelId])
+  @@index([channelId, sentAt])
   @@index([channelId, sentAt, hidden])
 }
 
