@@ -28,7 +28,7 @@ export const authOptions = {
 
       async sendVerificationRequest(params) {
         try {
-          const { identifier, url, provider, theme } = params;
+          const { identifier, url } = params;
 
           const result = await SignInMailer.send({
             to: identifier,
