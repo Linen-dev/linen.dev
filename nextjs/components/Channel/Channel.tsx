@@ -8,10 +8,7 @@ import { faX } from '@fortawesome/free-solid-svg-icons';
 import { Feed } from 'components/Feed';
 import { AiOutlineLeft } from 'react-icons/ai';
 import { SerializedThread } from 'serializers/thread';
-import {
-  ChannelViewCursorProps,
-  ChannelViewProps,
-} from 'components/Pages/ChannelsPage';
+import { ChannelViewProps } from 'components/Pages/ChannelsPage';
 import { getData } from 'utilities/fetcher';
 
 export function Channel({
@@ -24,13 +21,16 @@ export function Channel({
   pathCursor,
   isBot,
 }: ChannelViewProps) {
+  const [init, setInit] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [currentThreads, setCurrentThreads] = useState<SerializedThread[]>();
   const messagesEndRef = useRef<null | HTMLDivElement>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [cursor, setCursor] = useState<ChannelViewCursorProps>();
-  const [error, setError] = useState<unknown>();
   const scrollableRootRef = useRef<HTMLDivElement | null>(null);
-  const lastScrollDistanceToBottomRef = useRef<number>();
+  const lastDistanceToBottomRef = useRef<number>(0);
+  const lastDistanceToTopRef = useRef<number>(60);
+  const [lastDirection, setLastDirection] = useState<'top' | 'bottom'>();
+  const [cursor, setCursor] = useState(nextCursor);
+  const [error, setError] = useState<{ prev?: unknown; next?: unknown }>();
 
   const [isShowingThread, setIsShowingThread] = useState(false);
   const [currentThread, setCurrentThread] = useState<SerializedThread>();
@@ -46,73 +46,97 @@ export function Channel({
   }
 
   useEffect(() => {
-    setCursor(nextCursor);
-  }, [nextCursor]);
-
-  useEffect(() => {
     setCurrentThreads(threads);
   }, [threads]);
 
   const [infiniteRef, { rootRef }] = useInfiniteScroll({
     loading: isLoading,
-    hasNextPage: !!cursor?.prev,
+    hasNextPage: !!cursor.prev,
     onLoadMore: loadMore,
-    disabled: !!error || !cursor?.prev,
+    disabled: !!error?.prev || !cursor.prev,
     rootMargin: '400px 0px 0px 0px',
+  });
+
+  const [infiniteBottomRef, { rootRef: bottomRootRef }] = useInfiniteScroll({
+    loading: isLoading,
+    hasNextPage: !!cursor.next,
+    onLoadMore: loadMoreNext,
+    disabled: !!error?.next || !cursor.next,
+    rootMargin: '0px 0px 400px 0px',
   });
 
   useEffect(() => {
     const scrollableRoot = scrollableRootRef.current;
-    const lastScrollDistanceToBottom =
-      lastScrollDistanceToBottomRef.current ?? 0;
+    const lastScrollDistanceToBottom = lastDistanceToBottomRef.current;
+    const lastScrollDistanceToTop = lastDistanceToTopRef.current;
     if (scrollableRoot) {
-      scrollableRoot.scrollTop =
-        scrollableRoot.scrollHeight - lastScrollDistanceToBottom;
+      if (init && pathCursor) {
+        scrollableRoot.scrollTop = lastDistanceToBottomRef.current;
+        setInit(false);
+      } else if (lastDirection === 'top') {
+        scrollableRoot.scrollTop =
+          scrollableRoot.scrollHeight - lastScrollDistanceToBottom;
+      } else {
+        scrollableRoot.scrollTop = lastScrollDistanceToTop;
+      }
     }
-  }, [currentThreads, pathCursor, rootRef]);
+  }, [currentThreads]);
 
   const rootRefSetter = useCallback(
     (node: HTMLDivElement) => {
+      bottomRootRef(node);
       rootRef(node);
       scrollableRootRef.current = node;
     },
-    [rootRef]
+    [rootRef, bottomRootRef]
   );
 
   const handleRootScroll = useCallback(() => {
     const rootNode = scrollableRootRef.current;
     if (rootNode) {
       const scrollDistanceToBottom = rootNode.scrollHeight - rootNode.scrollTop;
-      lastScrollDistanceToBottomRef.current = scrollDistanceToBottom;
+      lastDistanceToBottomRef.current = scrollDistanceToBottom;
+      lastDistanceToTopRef.current = rootNode.scrollTop;
     }
   }, []);
 
-  if (!threads) {
-    return <div />;
-  }
-
-  async function loadMore() {
+  async function loadMore(next: boolean = false) {
+    const key = next ? 'next' : 'prev';
+    const dir = next ? 'bottom' : 'top';
     if (isLoading) return;
-    if (!cursor?.prev) return;
+    if (!cursor[key]) return;
     try {
+      setLastDirection(dir);
       setIsLoading(true);
-      if (cursor.prev) {
+      if (cursor[key]) {
         const data = await getData('/api/threads', {
           channelId: currentChannel.id,
-          cursor: cursor.prev,
+          cursor: cursor[key],
         });
-        setCursor(data.nextCursor || null);
-        setCurrentThreads([
-          ...data.threads,
-          ...(currentThreads ? currentThreads : []),
-        ]);
+        setCursor({ ...cursor, [key]: data?.nextCursor?.[key] });
+        if (next) {
+          setCurrentThreads([
+            ...(currentThreads ? currentThreads : []),
+            ...data.threads,
+          ]);
+        } else {
+          setCurrentThreads([
+            ...data.threads,
+            ...(currentThreads ? currentThreads : []),
+          ]);
+        }
       }
-    } catch (error) {
-      setError(error);
+    } catch (err) {
+      setError({ ...error, [key]: err });
     } finally {
       setIsLoading(false);
     }
   }
+
+  async function loadMoreNext() {
+    loadMore(true);
+  }
+
   const [isMobile, setIsMobile] = useState(false);
 
   //choose the screen size
@@ -129,6 +153,10 @@ export function Channel({
     handleResize();
     window.addEventListener('resize', handleResize);
   });
+
+  if (!threads) {
+    return <div />;
+  }
 
   return (
     <>
@@ -158,20 +186,14 @@ export function Channel({
       >
         <div className="sm:pt-6 justify-center">
           <ul className="divide-y sm:max-w-4xl px-1">
-            <>
-              {cursor?.prev ? (
-                <div className="m-3" ref={infiniteRef}>
-                  <Spinner />
-                </div>
-              ) : (
-                <div></div>
-                // Commenting this out because most of the time it isn't true and it
-                // looks buggy and unpolished
-                // <div className="text-gray-600 text-xs text-center m-3">
-                //   This is the beginning of the #{channelName} channel
-                // </div>
-              )}
-            </>
+            {cursor?.prev && !error?.prev ? (
+              <div className="m-3" ref={infiniteRef}>
+                <Spinner />
+              </div>
+            ) : (
+              <div />
+            )}
+
             <Feed
               threads={currentThreads}
               isSubDomainRouting={isSubDomainRouting}
@@ -180,6 +202,14 @@ export function Channel({
               isBot={isBot}
               onClick={loadThread}
             />
+
+            {cursor.next && !error?.next ? (
+              <div className="m-3" ref={infiniteBottomRef}>
+                <Spinner />
+              </div>
+            ) : (
+              <div />
+            )}
             <div ref={messagesEndRef} />
           </ul>
         </div>
