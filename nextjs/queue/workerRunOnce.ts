@@ -1,7 +1,9 @@
 import { runOnce } from 'graphile-worker';
+import { downloadCert } from 'utilities/database';
 import settings from './settings';
 
 async function main() {
+  await downloadCert();
   // The function will run until there are no runnable jobs left, and then resolve.
   const runner = await runOnce(settings);
   await runner;
