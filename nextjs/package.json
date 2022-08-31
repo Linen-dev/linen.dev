@@ -20,7 +20,9 @@
     "start:prod": "pm2-runtime --raw \"npm run start\"",
     "script:sync:discord": "ts-node -P tsconfig.commonjs.json bin/discord-sync/index.ts",
     "script:sync:slack": "ts-node -P tsconfig.commonjs.json bin/slack-sync/index.ts",
-    "script:maintenance": "ts-node -P tsconfig.commonjs.json bin/maintenance/index.ts"
+    "script:maintenance": "ts-node -P tsconfig.commonjs.json bin/maintenance/index.ts",
+    "queue:worker": "ts-node -P tsconfig.commonjs.json queue/worker.ts",
+    "queue:workerRunOnce": "ts-node -P tsconfig.commonjs.json queue/workerRunOnce.ts"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.1.2",
@@ -48,6 +50,7 @@
     "classnames": "^2.3.1",
     "debug": "^4.3.4",
     "entities": "^4.3.1",
+    "graphile-worker": "^0.13.0",
     "highlight.js": "^11.6.0",
     "marked": "^4.0.18",
     "micro": "^9.4.1",
