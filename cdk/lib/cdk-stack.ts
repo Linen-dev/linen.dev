@@ -8,6 +8,8 @@ import { Docker } from './components/docker';
 import { Roles } from './components/roles';
 import { Secrets } from './components/secrets';
 import { Distro } from './components/distro';
+import { QueueWorker } from './components/queue-worker';
+import { QueueWorkerOnce } from './components/queue-worker-once';
 
 export class CdkStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -37,6 +39,24 @@ export class CdkStack extends cdk.Stack {
     });
 
     Distro(this, { loadBalancer });
+
+    QueueWorker(this, {
+      cluster,
+      dockerImage,
+      secrets,
+      environment,
+      cacheTableAccessPolicy,
+      mailerAccessPolicy,
+    });
+
+    QueueWorkerOnce(this, {
+      cluster,
+      dockerImage,
+      secrets,
+      environment,
+      cacheTableAccessPolicy,
+      mailerAccessPolicy,
+    });
 
     SyncDiscord(this, {
       cluster,
