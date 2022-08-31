@@ -1,7 +1,7 @@
+jest.mock('../../client');
 jest.mock('../../fetch_all_conversations');
 import { fetchToken } from './fetchToken';
 import * as fetch_all_conversations from 'fetch_all_conversations';
-
 const account = {
   id: 'accountId123',
   slackTeamId: 'slackTeamId123',

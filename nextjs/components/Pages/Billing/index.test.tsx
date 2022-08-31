@@ -1,3 +1,4 @@
+jest.mock('../../../client');
 import React from 'react';
 import Billing from '.';
 import { render } from '@testing-library/react';

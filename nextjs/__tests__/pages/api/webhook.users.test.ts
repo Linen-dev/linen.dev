@@ -1,7 +1,6 @@
 import { prismaMock } from '../../singleton';
-import type { accounts, channels } from '@prisma/client';
-import { testApiHandler } from 'next-test-api-route-handler';
-import handler from '../../../pages/api/webhook';
+import type { accounts } from '@prisma/client';
+import { handleWebhook } from 'services/webhooks';
 
 const userUpdateEvent = {
   token: 'xacv5epJ26YAuNHJeO4UoaNf',
@@ -84,21 +83,11 @@ describe('webhook :: users', () => {
         }
       );
 
-      await testApiHandler({
-        handler,
-        url: '/api/webhook',
-        test: async ({ fetch }) => {
-          const res = await fetch({
-            method: 'POST',
-            headers: {
-              'content-type': 'application/json',
-            },
-            body: JSON.stringify(userUpdateEvent),
-          });
-          expect(res.status).toBe(200);
-          await expect(res.json()).resolves.toStrictEqual({});
-        },
-      });
+      const res = await handleWebhook(userUpdateEvent);
+
+      expect(res.status).toBe(200);
+      expect(res.message).toStrictEqual('user profile updated');
+
       expect(accountsFindFirstMock).toHaveBeenCalledTimes(1);
       expect(accountsFindFirstMock).toHaveBeenCalledWith({
         select: { id: true },
@@ -140,21 +129,11 @@ describe('webhook :: users', () => {
       const usersFindUniqueMock =
         prismaMock.users.findUnique.mockResolvedValue(null);
 
-      await testApiHandler({
-        handler,
-        url: '/api/webhook',
-        test: async ({ fetch }) => {
-          const res = await fetch({
-            method: 'POST',
-            headers: {
-              'content-type': 'application/json',
-            },
-            body: JSON.stringify(userUpdateEvent),
-          });
-          expect(res.status).toBe(200);
-          await expect(res.json()).resolves.toStrictEqual({});
-        },
-      });
+      const res = await handleWebhook(userUpdateEvent);
+
+      expect(res.status).toBe(200);
+      expect(res.message).toStrictEqual('user profile updated');
+
       expect(accountsFindFirstMock).toHaveBeenCalledTimes(1);
       expect(accountsFindFirstMock).toHaveBeenCalledWith({
         select: { id: true },
