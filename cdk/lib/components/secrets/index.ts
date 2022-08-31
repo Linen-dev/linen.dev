@@ -76,6 +76,13 @@ export function Secrets(scope: Construct) {
         { parameterName: '/linen-dev/prod/discordToken' }
       )
     ),
+    RDS_CERTIFICATE: cdk.aws_ecs.Secret.fromSsmParameter(
+      cdk.aws_ssm.StringParameter.fromSecureStringParameterAttributes(
+        scope,
+        'rdsCertificate',
+        { parameterName: '/linen-dev/prod/rdsCertificate' }
+      )
+    ),
   };
 
   return { environment, secrets };
