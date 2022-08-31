@@ -9,8 +9,14 @@ import Head from 'next/head';
 import { useEffect } from 'react';
 import { SessionProvider } from 'next-auth/react';
 import { Toaster } from 'components/Toast';
+import { usePostHog } from 'next-use-posthog';
 
+const POSTHOG_API_KEY = process.env.NEXT_PUBLIC_POSTHOG_API_KEY;
 export default function App(props: AppProps) {
+  if (POSTHOG_API_KEY) {
+    usePostHog(POSTHOG_API_KEY, { api_host: 'https://app.posthog.com' });
+  }
+
   const router = useRouter();
 
   const { Component, pageProps } = props;
