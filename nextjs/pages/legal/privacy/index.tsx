@@ -1,786 +1,586 @@
 import Link from 'next/link';
-
+import React from 'react';
 export default function Privacy() {
   return (
     <div className="relative py-16 bg-white">
       <div className="lg:block lg:absolute lg:inset-y-0 lg:h-full lg:w-full">
-        <div
-          className="relative h-full text-lg max-w-prose mx-auto space-y-4"
-          aria-hidden="true"
-        >
+        <div className="relative h-full text-lg max-w-prose mx-auto space-y-4">
           <Link href="/" passHref>
             <a className="text-blue-600 hover:text-blue-800 visited:text-purple-600">
               Back to Home
             </a>
           </Link>
           <h3 id="privacy-notice">PRIVACY NOTICE</h3>
-          <p>Last updated May 15, 2022</p>
-          <p>
-            This privacy notice for Rebase Corporation (doing business as Linen)
-            (&quot;Linen,&quot; &quot;we,&quot; &quot;us,&quot; or
-            &quot;our&quot;), describes how and why we might collect, store,
-            use, and/or share (&quot;process&quot;) your information when you
-            use our services (&quot;Services&quot;), such as when you: Visit our
-            website at linen.dev, or any website of ours that links to this
-            privacy notice Engage with us in other related ways, including any
-            sales, marketing, or events Questions or concerns? Reading this
-            privacy notice will help you understand your privacy rights and
-            choices. If you do not agree with our policies and practices, please
-            do not use our Services. If you still have any questions or
-            concerns, please contact us at help@linen.dev.
-          </p>
-          <h3 id="summary-of-key-points">SUMMARY OF KEY POINTS</h3>
-          <p>
-            This summary provides key points from our privacy notice, but you
-            can find out more details about any of these topics by clicking the
-            link following each key point or by using our table of contents
-            below to find the section you are looking for. You can also click
-            here to go directly to our table of contents.
-          </p>
-          <p>What personal information do we process? </p>
-          <p>
-            When you visit, use, or navigate our Services, we may process
-            personal information depending on how you interact with Linen and
-            the Services, the choices you make, and the products and features
-            you use. Click here to learn more.
-          </p>
-          <p>Do we process any sensitive personal information? </p>
-          <p>We do not process sensitive personal information.</p>
-          <p>Do we receive any information from third parties? </p>
-          <p>We do not receive any information from third parties.</p>
-          <p>How do we process your information? </p>
-          <p>
-            We process your information to provide, improve, and administer our
-            Services, communicate with you, for security and fraud prevention,
-            and to comply with law. We may also process your information for
-            other purposes with your consent. We process your information only
-            when we have a valid legal reason to do so. Click here to learn
-            more.
-          </p>
-          <p>
-            In what situations and with which parties do we share personal
-            information?{' '}
-          </p>
-          <p>
-            We may share information in specific situations and with specific
-            third parties. Click here to learn more.
-          </p>
-          <p>How do we keep your information safe? </p>
-          <p>
-            We have organizational and technical processes and procedures in
-            place to protect your personal information. However, no electronic
-            transmission over the internet or information storage technology can
-            be guaranteed to be 100% secure, so we cannot promise or guarantee
-            that hackers, cybercriminals, or other unauthorized third parties
-            will not be able to defeat our security and improperly collect,
-            access, steal, or modify your information. Click here to learn more.
-          </p>
-          <p>What are your rights? </p>
-          <p>
-            Depending on where you are located geographically, the applicable
-            privacy law may mean you have certain rights regarding your personal
-            information. Click here to learn more.
-          </p>
-          <p>How do I exercise my rights? </p>
-          <p>
-            The easiest way to exercise your rights is by contacting us at
-            help@linen.dev. We will consider and act upon any request in
-            accordance with applicable data protection laws.
-          </p>
-          <p>
-            Want to learn more about what Linen does with any information we
-            collect? Click here to review the notice in full.
-          </p>
-          <h3 id="table-of-contents">TABLE OF CONTENTS</h3>
-          <ol>
-            <li>WHAT INFORMATION DO WE COLLECT?</li>
-            <li>HOW DO WE PROCESS YOUR INFORMATION?</li>
-            <li>
-              WHAT LEGAL BASES DO WE RELY ON TO PROCESS YOUR PERSONAL
-              INFORMATION?
-            </li>
-            <li>WHEN AND WITH WHOM DO WE SHARE YOUR PERSONAL INFORMATION?</li>
-            <li>DO WE USE COOKIES AND OTHER TRACKING TECHNOLOGIES?</li>
-            <li>HOW LONG DO WE KEEP YOUR INFORMATION?</li>
-            <li>HOW DO WE KEEP YOUR INFORMATION SAFE?</li>
-            <li>DO WE COLLECT INFORMATION FROM MINORS?</li>
-            <li>WHAT ARE YOUR PRIVACY RIGHTS?</li>
-            <li>CONTROLS FOR DO-NOT-TRACK FEATURES</li>
-            <li>DO CALIFORNIA RESIDENTS HAVE SPECIFIC PRIVACY RIGHTS?</li>
-            <li>DO WE MAKE UPDATES TO THIS NOTICE?</li>
-            <li>HOW CAN YOU CONTACT US ABOUT THIS NOTICE?</li>
-            <li>
-              HOW CAN YOU REVIEW, UPDATE, OR DELETE THE DATA WE COLLECT FROM
-              YOU?
-            </li>
-          </ol>
-          <p>Personal information you disclose to us</p>
-          <p>
-            In Short: We collect personal information that you provide to us.
-          </p>
-          <p>
-            We collect personal information that you voluntarily provide to us
-            when you register on the Services, express an interest in obtaining
-            information about us or our products and Services, when you
-            participate in activities on the Services, or otherwise when you
-            contact us.
-          </p>
-          <p>
-            Personal Information Provided by You. The personal information that
-            we collect depends on the context of your interactions with us and
-            the Services, the choices you make, and the products and features
-            you use. The personal information we collect for admins with account
-            may include the following: names email addresses
-          </p>
-          <p>Sensitive Information. We do not process sensitive information.</p>
-          <p>
-            Payment Data. We may collect data necessary to process your payment
-            if you make purchases, such as your payment instrument number (such
-            as a credit card number), and the security code associated with your
-            payment instrument. All payment data is stored by Stripe. You may
-            find their privacy notice link(s) here:{' '}
-            <a href="https://stripe.com/privacy">https://stripe.com/privacy</a>.
-          </p>
-          <p>
-            All personal information that you provide to us must be true,
-            complete, and accurate, and you must notify us of any changes to
-            such personal information.
-          </p>
-          <p>Information automatically collected</p>
-          <p>
-            In Short: Some information — such as your Internet Protocol (IP)
-            address and/or browser and device characteristics — is collected
-            automatically when you visit our Services.
-          </p>
-          <p>
-            We automatically collect certain information when you visit, use, or
-            navigate the Services. This information does not reveal your
-            specific identity (like your name or contact information) but may
-            include device and usage information, such as your IP address,
-            browser and device characteristics, operating system, language
-            preferences, referring URLs, device name, country, location,
-            information about how and when you use our Services, and other
-            technical information. This information is primarily needed to
-            maintain the security and operation of our Services, and for our
-            internal analytics and reporting purposes.
-          </p>
-          <p>
-            Like many businesses, we also collect information through cookies
-            and similar technologies.
-          </p>
-          <p>
-            The information we collect includes: Log and Usage Data. Log and
-            usage data is service-related, diagnostic, usage, and performance
-            information our servers automatically collect when you access or use
-            our Services and which we record in log files. Depending on how you
-            interact with us, this log data may include your IP address, device
-            information, browser type, and settings and information about your
-            activity in the Services (such as the date/time stamps associated
-            with your usage, pages and files viewed, searches, and other actions
-            you take such as which features you use), device event information
-            (such as system activity, error reports (sometimes called
-            &quot;crash dumps&quot;), and hardware settings). Device Data. We
-            collect device data such as information about your computer, phone,
-            tablet, or other device you use to access the Services. Depending on
-            the device used, this device data may include information such as
-            your IP address (or proxy server), device and application
-            identification numbers, location, browser type, hardware model,
-            Internet service provider and/or mobile carrier, operating system,
-            and system configuration information.
-          </p>
-          <h2>HOW DO WE PROCESS YOUR INFORMATION?</h2>
-          <p>
-            In Short: We process your information to provide, improve, and
-            administer our Services, communicate with you, for security and
-            fraud prevention, and to comply with law. We may also process your
-            information for other purposes with your consent.
-          </p>
-          <p>
-            We process your personal information for a variety of reasons,
-            depending on how you interact with our Services, including: To
-            facilitate account creation and authentication and otherwise manage
-            user accounts. We may process your information so you can create and
-            log in to your account, as well as keep your account in working
-            order. To respond to user inquiries/offer support to users. We may
-            process your information to respond to your inquiries and solve any
-            potential issues you might have with the requested service. To send
-            administrative information to you. We may process your information
-            to send you details about our products and services, changes to our
-            terms and policies, and other similar information.
-          </p>
-          <p>
-            To request feedback. We may process your information when necessary
-            to request feedback and to contact you about your use of our
-            Services. To send you marketing and promotional communications. We
-            may process the personal information you send to us for our
-            marketing purposes, if this is in accordance with your marketing
-            preferences. You can opt out of our marketing emails at any time.
-            For more information, see &quot;WHAT ARE YOUR PRIVACY RIGHTS?&quot;
-            below). To save or protect an individual&#39;s vital interest. We
-            may process your information when necessary to save or protect an
-            individual’s vital interest, such as to prevent harm.
-          </p>
-          <ol>
-            <li>WHAT LEGAL BASES DO WE RELY ON TO PROCESS YOUR INFORMATION?</li>
-          </ol>
-          <p>
-            In Short: We only process your personal information when we believe
-            it is necessary and we have a valid legal reason (i.e., legal basis)
-            to do so under applicable law, like with your consent, to comply
-            with laws, to provide you with services to enter into or fulfill our
-            contractual obligations, to protect your rights, or to fulfill our
-            legitimate business interests.
-          </p>
-          <p>
-            If you are located in the EU or UK, this section applies to you.
-          </p>
-          <p>
-            The General Data Protection Regulation (GDPR) and UK GDPR require us
-            to explain the valid legal bases we rely on in order to process your
-            personal information. As such, we may rely on the following legal
-            bases to process your personal information: Consent. We may process
-            your information if you have given us permission (i.e., consent) to
-            use your personal information for a specific purpose. You can
-            withdraw your consent at any time. Click here to learn more.
-            Performance of a Contract. We may process your personal information
-            when we believe it is necessary to fulfill our contractual
-            obligations to you, including providing our Services or at your
-            request prior to entering into a contract with you. Legitimate
-            Interests. We may process your information when we believe it is
-            reasonably necessary to achieve our legitimate business interests
-            and those interests do not outweigh your interests and fundamental
-            rights and freedoms. For example, we may process your personal
-            information for some of the purposes described in order to: Send
-            users information about special offers and discounts on our products
-            and services Understand how our users use our products and services
-            so we can improve user experience Legal Obligations. We may process
-            your information where we believe it is necessary for compliance
-            with our legal obligations, such as to cooperate with a law
-            enforcement body or regulatory agency, exercise or defend our legal
-            rights, or disclose your information as evidence in litigation in
-            which we are involved. Vital Interests. We may process your
-            information where we believe it is necessary to protect your vital
-            interests or the vital interests of a third party, such as
-            situations involving potential threats to the safety of any person.
-          </p>
-          <p>If you are located in Canada, this section applies to you.</p>
-          <p>
-            We may process your information if you have given us specific
-            permission (i.e., express consent) to use your personal information
-            for a specific purpose, or in situations where your permission can
-            be inferred (i.e., implied consent). You can withdraw your consent
-            at any time. Click here to learn more.
-          </p>
-          <p>
-            In some exceptional cases, we may be legally permitted under
-            applicable law to process your information without your consent,
-            including, for example: If collection is clearly in the interests of
-            an individual and consent cannot be obtained in a timely way For
-            investigations and fraud detection and prevention For business
-            transactions provided certain conditions are met If it is contained
-            in a witness statement and the collection is necessary to assess,
-            process, or settle an insurance claim For identifying injured, ill,
-            or deceased persons and communicating with next of kin If we have
-            reasonable grounds to believe an individual has been, is, or may be
-            victim of financial abuse If it is reasonable to expect collection
-            and use with consent would compromise the availability or the
-            accuracy of the information and the collection is reasonable for
-            purposes related to investigating a breach of an agreement or a
-            contravention of the laws of Canada or a province If disclosure is
-            required to comply with a subpoena, warrant, court order, or rules
-            of the court relating to the production of records If it was
-            produced by an individual in the course of their employment,
-            business, or profession and the collection is consistent with the
-            purposes for which the information was produced If the collection is
-            solely for journalistic, artistic, or literary purposes If the
-            information is publicly available and is specified by the
-            regulations
-          </p>
-          <ol>
-            <li>WHEN AND WITH WHOM DO WE SHARE YOUR PERSONAL INFORMATION?</li>
-          </ol>
-          <p>
-            In Short: We may share information in specific situations described
-            in this section and/or with the following third parties.
-          </p>
-          <p>
-            We may need to share your personal information in the following
-            situations: Business Transfers. We may share or transfer your
-            information in connection with, or during negotiations of, any
-            merger, sale of company assets, financing, or acquisition of all or
-            a portion of our business to another company.
-          </p>
-          <ol>
-            <li>DO WE USE COOKIES AND OTHER TRACKING TECHNOLOGIES?</li>
-          </ol>
-          <p>
-            In Short: We may use cookies and other tracking technologies to
-            collect and store your information.
-          </p>
-          <p>
-            We may use cookies and similar tracking technologies (like web
-            beacons and pixels) to access or store information. Specific
-            information about how we use such technologies and how you can
-            refuse certain cookies is set out in our Cookie Notice.
-          </p>
-          <ol>
-            <li>HOW LONG DO WE KEEP YOUR INFORMATION?</li>
-          </ol>
-          <p>
-            In Short: We keep your information for as long as necessary to
-            fulfill the purposes outlined in this privacy notice unless
-            otherwise required by law.
-          </p>
-          <p>
-            We will only keep your personal information for as long as it is
-            necessary for the purposes set out in this privacy notice, unless a
-            longer retention period is required or permitted by law (such as
-            tax, accounting, or other legal requirements). No purpose in this
-            notice will require us keeping your personal information for longer
-            than three (3) months past the termination of the user&#39;s
-            account.
-          </p>
-          <p>
-            When we have no ongoing legitimate business need to process your
-            personal information, we will either delete or anonymize such
-            information, or, if this is not possible (for example, because your
-            personal information has been stored in backup archives), then we
-            will securely store your personal information and isolate it from
-            any further processing until deletion is possible.
-          </p>
-          <ol>
-            <li>HOW DO WE KEEP YOUR INFORMATION SAFE?</li>
-          </ol>
-          <p>
-            In Short: We aim to protect your personal information through a
-            system of organizational and technical security measures.
-          </p>
-          <p>
-            We have implemented appropriate and reasonable technical and
-            organizational security measures designed to protect the security of
-            any personal information we process. However, despite our safeguards
-            and efforts to secure your information, no electronic transmission
-            over the Internet or information storage technology can be
-            guaranteed to be 100% secure, so we cannot promise or guarantee that
-            hackers, cybercriminals, or other unauthorized third parties will
-            not be able to defeat our security and improperly collect, access,
-            steal, or modify your information. Although we will do our best to
-            protect your personal information, transmission of personal
-            information to and from our Services is at your own risk. You should
-            only access the Services within a secure environment.
-          </p>
-          <ol>
-            <li>DO WE COLLECT INFORMATION FROM MINORS?</li>
-          </ol>
-          <p>
-            In Short: We do not knowingly collect data from or market to
-            children under 18 years of age.
-          </p>
-          <p>
-            We do not knowingly solicit data from or market to children under 18
-            years of age. By using the Services, you represent that you are at
-            least 18 or that you are the parent or guardian of such a minor and
-            consent to such minor dependent’s use of the Services. If we learn
-            that personal information from users less than 18 years of age has
-            been collected, we will deactivate the account and take reasonable
-            measures to promptly delete such data from our records. If you
-            become aware of any data we may have collected from children under
-            age 18, please contact us at help@linen.dev.
-          </p>
-          <ol>
-            <li>WHAT ARE YOUR PRIVACY RIGHTS?</li>
-          </ol>
-          <p>
-            In Short: In some regions, such as the European Economic Area (EEA),
-            United Kingdom (UK), and Canada, you have rights that allow you
-            greater access to and control over your personal information. You
-            may review, change, or terminate your account at any time.
-          </p>
-          <p>
-            In some regions (like the EEA, UK, and Canada), you have certain
-            rights under applicable data protection laws. These may include the
-            right (i) to request access and obtain a copy of your personal
-            information, (ii) to request rectification or erasure; (iii) to
-            restrict the processing of your personal information; and (iv) if
-            applicable, to data portability. In certain circumstances, you may
-            also have the right to object to the processing of your personal
-            information. You can make such a request by contacting us by using
-            the contact details provided in the section &quot;HOW CAN YOU
-            CONTACT US ABOUT THIS NOTICE?&quot; below.
-          </p>
-          <p>
-            We will consider and act upon any request in accordance with
-            applicable data protection laws.
-          </p>
-          <p>
-            If you are located in the EEA or UK and you believe we are
-            unlawfully processing your personal information, you also have the
-            right to complain to your local data protection supervisory
-            authority. You can find their contact details here:{' '}
-            <a href="https://ec.europa.eu/justice/data-protection/bodies/authorities/index_en.htm">
-              https://ec.europa.eu/justice/data-protection/bodies/authorities/index_en.htm
-            </a>
-            .
-          </p>
-          <p>
-            If you are located in Switzerland, the contact details for the data
-            protection authorities are available here:{' '}
-            <a href="https://www.edoeb.admin.ch/edoeb/en/home.html">
-              https://www.edoeb.admin.ch/edoeb/en/home.html
-            </a>
-            .
-          </p>
-          <p>
-            Withdrawing your consent: If we are relying on your consent to
-            process your personal information, which may be express and/or
-            implied consent depending on the applicable law, you have the right
-            to withdraw your consent at any time. You can withdraw your consent
-            at any time by contacting us by using the contact details provided
-            in the section &quot;HOW CAN YOU CONTACT US ABOUT THIS NOTICE?&quot;
-            below.
-          </p>
-          <p>
-            However, please note that this will not affect the lawfulness of the
-            processing before its withdrawal, nor when applicable law allows,
-            will it affect the processing of your personal information conducted
-            in reliance on lawful processing grounds other than consent.
-          </p>
-          <p>
-            Opting out of marketing and promotional communications: You can
-            unsubscribe from our marketing and promotional communications at any
-            time by clicking on the unsubscribe link in the emails that we send,
-            or by contacting us using the details provided in the section
-            &quot;HOW CAN YOU CONTACT US ABOUT THIS NOTICE?&quot; below. You
-            will then be removed from the marketing lists. However, we may still
-            communicate with you — for example, to send you service-related
-            messages that are necessary for the administration and use of your
-            account, to respond to service requests, or for other non-marketing
-            purposes.
-          </p>
-          <p>Account Information</p>
-          <p>
-            If you would at any time like to review or change the information in
-            your account or terminate your account, you can: Contact us using
-            the contact information provided. Upon your request to terminate
-            your account, we will deactivate or delete your account and
-            information from our active databases. However, we may retain some
-            information in our files to prevent fraud, troubleshoot problems,
-            assist with any investigations, enforce our legal terms and/or
-            comply with applicable legal requirements.
-          </p>
-          <p>
-            Cookies and similar technologies: Most Web browsers are set to
-            accept cookies by default. If you prefer, you can usually choose to
-            set your browser to remove cookies and to reject cookies. If you
-            choose to remove cookies or reject cookies, this could affect
-            certain features or services of our Services. To opt out of
-            interest-based advertising by advertisers on our Services visit{' '}
-            <a href="http://www.aboutads.info/choices/">
-              http://www.aboutads.info/choices/
-            </a>
-            .
-          </p>
-          <p>
-            If you have questions or comments about your privacy rights, you may
-            email us at help@linen.dev.
-          </p>
-          <ol>
-            <li>CONTROLS FOR DO-NOT-TRACK FEATURES</li>
-          </ol>
-          <p>
-            Most web browsers and some mobile operating systems and mobile
-            applications include a Do-Not-Track (&quot;DNT&quot;) feature or
-            setting you can activate to signal your privacy preference not to
-            have data about your online browsing activities monitored and
-            collected. At this stage no uniform technology standard for
-            recognizing and implementing DNT signals has been finalized. As
-            such, we do not currently respond to DNT browser signals or any
-            other mechanism that automatically communicates your choice not to
-            be tracked online. If a standard for online tracking is adopted that
-            we must follow in the future, we will inform you about that practice
-            in a revised version of this privacy notice.
-          </p>
-          <ol>
-            <li>DO CALIFORNIA RESIDENTS HAVE SPECIFIC PRIVACY RIGHTS?</li>
-          </ol>
-          <p>
-            In Short: Yes, if you are a resident of California, you are granted
-            specific rights regarding access to your personal information.
-          </p>
-          <p>
-            California Civil Code Section 1798.83, also known as the &quot;Shine
-            The Light&quot; law, permits our users who are California residents
-            to request and obtain from us, once a year and free of charge,
-            information about categories of personal information (if any) we
-            disclosed to third parties for direct marketing purposes and the
-            names and addresses of all third parties with which we shared
-            personal information in the immediately preceding calendar year. If
-            you are a California resident and would like to make such a request,
-            please submit your request in writing to us using the contact
-            information provided below.
-          </p>
-          <p>
-            If you are under 18 years of age, reside in California, and have a
-            registered account with Services, you have the right to request
-            removal of unwanted data that you publicly post on the Services. To
-            request removal of such data, please contact us using the contact
-            information provided below and include the email address associated
-            with your account and a statement that you reside in California. We
-            will make sure the data is not publicly displayed on the Services,
-            but please be aware that the data may not be completely or
-            comprehensively removed from all our systems (e.g., backups, etc.).
-          </p>
-          <p>CCPA Privacy Notice</p>
-          <p>
-            The California Code of Regulations defines a &quot;resident&quot;
-            as:
-          </p>
-          <p>
-            (1) every individual who is in the State of California for other
-            than a temporary or transitory purpose and (2) every individual who
-            is domiciled in the State of California who is outside the State of
-            California for a temporary or transitory purpose
-          </p>
-          <p>All other individuals are defined as &quot;non-residents.&quot;</p>
-          <p>
-            If this definition of &quot;resident&quot; applies to you, we must
-            adhere to certain rights and obligations regarding your personal
-            information.
-          </p>
-          <p>What categories of personal information do we collect?</p>
-          <p>
-            We have collected the following categories of personal information
-            in the past twelve (12) months:
-          </p>
-          <p>
-            Category Examples Collected A. Identifiers Contact details, such as
-            real name, alias, postal address, telephone or mobile contact
-            number, unique personal identifier, online identifier, Internet
-            Protocol address, email address, and account name
-          </p>
-          <p>YES</p>
-          <p>
-            B. Personal information categories listed in the California Customer
-            Records statute Name, contact information, education, employment,
-            employment history, and financial information
-          </p>
-          <p>YES</p>
-          <p>
-            C. Protected classification characteristics under California or
-            federal law Gender and date of birth
-          </p>
-          <p>NO</p>
-          <p>
-            D. Commercial information Transaction information, purchase history,
-            financial details, and payment information
-          </p>
-          <p>NO</p>
-          <p>E. Biometric information Fingerprints and voiceprints</p>
-          <p>NO</p>
-          <p>
-            F. Internet or other similar network activity Browsing history,
-            search history, online behavior, interest data, and interactions
-            with our and other websites, applications, systems, and
-            advertisements
-          </p>
-          <p>NO</p>
-          <p>G. Geolocation data Device location</p>
-          <p>NO</p>
-          <p>
-            H. Audio, electronic, visual, thermal, olfactory, or similar
-            information Images and audio, video or call recordings created in
-            connection with our business activities
-          </p>
-          <p>NO</p>
-          <p>
-            I. Professional or employment-related information Business contact
-            details in order to provide you our services at a business level or
-            job title, work history, and professional qualifications if you
-            apply for a job with us
-          </p>
-          <p>NO</p>
-          <p>
-            J. Education Information Student records and directory information
-          </p>
-          <p>NO</p>
-          <p>
-            K. Inferences drawn from other personal information Inferences drawn
-            from any of the collected personal information listed above to
-            create a profile or summary about, for example, an individual’s
-            preferences and characteristics
-          </p>
-          <p>NO</p>
-          <p>
-            We may also collect other personal information outside of these
-            categories instances where you interact with us in person, online,
-            or by phone or mail in the context of: Receiving help through our
-            customer support channels; Participation in customer surveys or
-            contests; and Facilitation in the delivery of our Services and to
-            respond to your inquiries. How do we use and share your personal
-            information?
-          </p>
-          <p>
-            More information about our data collection and sharing practices can
-            be found in this privacy notice.
-          </p>
-          <p>
-            You may contact us by email at help@linen.dev, or by referring to
-            the contact details at the bottom of this document.
-          </p>
-          <p>
-            If you are using an authorized agent to exercise your right to opt
-            out we may deny a request if the authorized agent does not submit
-            proof that they have been validly authorized to act on your behalf.
-          </p>
-          <p>Will your information be shared with anyone else?</p>
-          <p>
-            We may disclose your personal information with our service providers
-            pursuant to a written contract between us and each service provider.
-            Each service provider is a for-profit entity that processes the
-            information on our behalf.
-          </p>
-          <p>
-            We may use your personal information for our own business purposes,
-            such as for undertaking internal research for technological
-            development and demonstration. This is not considered to be
-            &quot;selling&quot; of your personal information.
-          </p>
-          <p>
-            Rebase Corporation has not disclosed or sold any personal
-            information to third parties for a business or commercial purpose in
-            the preceding twelve (12) months. Rebase Corporation will not sell
-            personal information in the future belonging to website visitors,
-            users, and other consumers.
-          </p>
-          <p>Your rights with respect to your personal data</p>
-          <p>Right to request deletion of the data — Request to delete</p>
-          <p>
-            You can ask for the deletion of your personal information. If you
-            ask us to delete your personal information, we will respect your
-            request and delete your personal information, subject to certain
-            exceptions provided by law, such as (but not limited to) the
-            exercise by another consumer of his or her right to free speech, our
-            compliance requirements resulting from a legal obligation, or any
-            processing that may be required to protect against illegal
-            activities.
-          </p>
-          <p>Right to be informed — Request to know</p>
-          <p>Depending on the circumstances, you have a right to know:</p>
-          <p>whether we collect and use your personal information;</p>
-          <p>the categories of personal information that we collect;</p>
-          <p>
-            the purposes for which the collected personal information is used;
-          </p>
-          <p>whether we sell your personal information to third parties;</p>
-          <p>
-            the categories of personal information that we sold or disclosed for
-            a business purpose;
-          </p>
-          <p>
-            the categories of third parties to whom the personal information was
-            sold or disclosed for a business purpose; and
-          </p>
-          <p>
-            the business or commercial purpose for collecting or selling
+          <div>Effective date: 08/31/2022</div>
+
+          <div>Introduction</div>
+
+          <div>Welcome to Rebase Corporation</div>
+
+          <div>
+            Rebase Corporation (“us”, “we”, or “our”) operates Linen.dev
+            (hereinafter referred to as “Service”).
+          </div>
+
+          <div>
+            Our Privacy Policy governs your visit to Linen.dev, and explains how
+            we collect, safeguard and disclose information that results from
+            your use of our Service.
+          </div>
+
+          <div>
+            We use your data to provide and improve Service. By using Service,
+            you agree to the collection and use of information in accordance
+            with this policy. Unless otherwise defined in this Privacy Policy,
+            the terms used in this Privacy Policy have the same meanings as in
+            our Terms and Conditions.
+          </div>
+
+          <div>
+            Our Terms and Conditions (“Terms”) govern all use of our Service and
+            together with the Privacy Policy constitutes your agreement with us
+            (“agreement”).
+          </div>
+
+          <div>Definitions</div>
+
+          <div>
+            SERVICE means the Linen.dev website operated by Rebase Corporation
+          </div>
+
+          <div>
+            PERSONAL DATA means data about a living individual who can be
+            identified from those data (or from those and other information
+            either in our possession or likely to come into our possession).
+          </div>
+          <div>
+            USAGE DATA is data collected automatically either generated by the
+            use of Service or from Service infrastructure itself (for example,
+            the duration of a page visit).
+          </div>
+          <div>
+            COOKIES are small files stored on your device (computer or mobile
+            device).
+          </div>
+          <div>
+            DATA CONTROLLER means a natural or legal person who (either alone or
+            jointly or in common with other persons) determines the purposes for
+            which and the manner in which any personal data are, or are to be,
+            processed. For the purpose of this Privacy Policy, we are a Data
+            Controller of your data.
+          </div>
+          <div>
+            DATA PROCESSORS (OR SERVICE PROVIDERS) means any natural or legal
+            person who processes the data on behalf of the Data Controller. We
+            may use the services of various Service Providers in order to
+            process your data more effectively.
+          </div>
+          <div>
+            DATA SUBJECT is any living individual who is the subject of Personal
+            Data.
+          </div>
+          <div>
+            THE USER is the individual using our Service. The User corresponds
+            to the Data Subject, who is the subject of Personal Data.
+          </div>
+          <div>Information Collection and Use</div>
+          <div>
+            We collect several different types of information for various
+            purposes to provide and improve our Service to you.
+          </div>
+          <div>Types of Data Collected</div>
+          <div>Personal Data</div>
+          <div>
+            While using our Service, we may ask you to provide us with certain
+            personally identifiable information that can be used to contact or
+            identify you (“Personal Data”). Personally identifiable information
+            may include, but is not limited to:
+          </div>
+          <div>Email address</div>
+          <div>First name and last name</div>
+          <div>Cookies and Usage Data</div>
+          <div>
+            We may use your Personal Data to contact you with newsletters,
+            marketing or promotional materials and other information that may be
+            of interest to you. You may opt out of receiving any, or all, of
+            these communications from us by following the unsubscribe link or by
+            emailing at help@linen.dev.
+          </div>
+          <div>Usage Data</div>
+          <div>
+            We may also collect information that your browser sends whenever you
+            visit our Service or when you access Service by or through a mobile
+            device (“Usage Data”).
+          </div>
+          <div>
+            This Usage Data may include information such as your computer's
+            Internet Protocol address (e.g. IP address), browser type, browser
+            version, the pages of our Service that you visit, the time and date
+            of your visit, the time spent on those pages, unique device
+            identifiers and other diagnostic data.
+          </div>
+          <div>
+            When you access Service with a mobile device, this Usage Data may
+            include information such as the type of mobile device you use, your
+            mobile device unique ID, the IP address of your mobile device, your
+            mobile operating system, the type of mobile Internet browser you
+            use, unique device identifiers and other diagnostic data.
+          </div>
+          <div>Tracking Cookies Data</div>
+          <div>
+            We use cookies and similar tracking technologies to track the
+            activity on our Service and we hold certain information.
+          </div>
+          <div>
+            Cookies are files with a small amount of data which may include an
+            anonymous unique identifier. Cookies are sent to your browser from a
+            website and stored on your device. Other tracking technologies are
+            also used such as beacons, tags and scripts to collect and track
+            information and to improve and analyze our Service.
+          </div>
+          <div>
+            You can instruct your browser to refuse all cookies or to indicate
+            when a cookie is being sent. However, if you do not accept cookies,
+            you may not be able to use some portions of our Service.
+          </div>
+          <div>Examples of Cookies we use:</div>
+          <div>
+            Session Cookies: We use Session Cookies to operate our Service.
+          </div>
+          <div>
+            Preference Cookies: We use Preference Cookies to remember your
+            preferences and various settings.
+          </div>
+          <div>
+            Security Cookies: We use Security Cookies for security purposes.
+          </div>
+          <div>
+            Advertising Cookies: Advertising Cookies are used to serve you with
+            advertisements that may be relevant to you and your interests.
+          </div>
+          <div>Use of Data</div>
+          <div>
+            Rebase Corporation uses the collected data for various purposes:
+          </div>
+          <div>to provide and maintain our Service;</div>
+          <div>to notify you about changes to our Service;</div>
+          <div>
+            to allow you to participate in interactive features of our Service
+            when you choose to do so;
+          </div>
+          <div>to provide customer support;</div>
+          <div>
+            to gather analysis or valuable information so that we can improve
+            our Service;
+          </div>
+          <div>to monitor the usage of our Service;</div>
+          <div>to detect, prevent and address technical issues;</div>
+          <div>to fulfill any other purpose for which you provide it;</div>
+          <div>
+            to carry out our obligations and enforce our rights arising from any
+            contracts entered into between you and us, including for billing and
+            collection;
+          </div>
+          <div>
+            to provide you with notices about your account and/or subscription,
+            including expiration and renewal notices, email-instructions, etc.;
+          </div>
+          <div>
+            to provide you with news, special offers and general information
+            about other goods, services and events which we offer that are
+            similar to those that you have already purchased or enquired about
+            unless you have opted not to receive such information;
+          </div>
+          <div>
+            in any other way we may describe when you provide the information;
+          </div>
+          <div>for any other purpose with your consent.</div>
+          <div>Retention of Data</div>
+          <div>
+            We will retain your Personal Data only for as long as is necessary
+            for the purposes set out in this Privacy Policy. We will retain and
+            use your Personal Data to the extent necessary to comply with our
+            legal obligations (for example, if we are required to retain your
+            data to comply with applicable laws), resolve disputes, and enforce
+            our legal agreements and policies.
+          </div>
+          <div>
+            We will also retain Usage Data for internal analysis purposes. Usage
+            Data is generally retained for a shorter period, except when this
+            data is used to strengthen the security or to improve the
+            functionality of our Service, or we are legally obligated to retain
+            this data for longer time periods.
+          </div>
+          <div>Transfer of Data</div>
+          <div>
+            Your information, including Personal Data, may be transferred to –
+            and maintained on – computers located outside of your state,
+            province, country or other governmental jurisdiction where the data
+            protection laws may differ from those of your jurisdiction.
+          </div>
+          <div>
+            If you are located outside United States and choose to provide
+            information to us, please note that we transfer the data, including
+            Personal Data, to United States and process it there.
+          </div>
+          <div>
+            Your consent to this Privacy Policy followed by your submission of
+            such information represents your agreement to that transfer.
+          </div>
+          <div>
+            Rebase Corporation will take all the steps reasonably necessary to
+            ensure that your data is treated securely and in accordance with
+            this Privacy Policy and no transfer of your Personal Data will take
+            place to an organisation or a country unless there are adequate
+            controls in place including the security of your data and other
             personal information.
-          </p>
-          <p>
-            In accordance with applicable law, we are not obligated to provide
-            or delete consumer information that is de-identified in response to
-            a consumer request or to re-identify individual data to verify a
-            consumer request.
-          </p>
-          <p>
-            Right to Non-Discrimination for the Exercise of a Consumer’s Privacy
-            Rights
-          </p>
-          <p>
-            We will not discriminate against you if you exercise your privacy
-            rights.
-          </p>
-          <p>Verification process</p>
-          <p>
-            Upon receiving your request, we will need to verify your identity to
-            determine you are the same person about whom we have the information
-            in our system. These verification efforts require us to ask you to
-            provide information so that we can match it with information you
-            have previously provided us. For instance, depending on the type of
-            request you submit, we may ask you to provide certain information so
-            that we can match the information you provide with the information
-            we already have on file, or we may contact you through a
-            communication method (e.g., phone or email) that you have previously
-            provided to us. We may also use other verification methods as the
-            circumstances dictate.
-          </p>
-          <p>
-            We will only use personal information provided in your request to
-            verify your identity or authority to make the request. To the extent
-            possible, we will avoid requesting additional information from you
-            for the purposes of verification. However, if we cannot verify your
-            identity from the information already maintained by us, we may
-            request that you provide additional information for the purposes of
-            verifying your identity and for security or fraud-prevention
-            purposes. We will delete such additionally provided information as
-            soon as we finish verifying you.
-          </p>
-          <p>
-            Other privacy rights You may object to the processing of your
-            personal information. You may request correction of your personal
-            data if it is incorrect or no longer relevant, or ask to restrict
-            the processing of the information. You can designate an authorized
-            agent to make a request under the CCPA on your behalf. We may deny a
-            request from an authorized agent that does not submit proof that
-            they have been validly authorized to act on your behalf in
-            accordance with the CCPA. You may request to opt out from future
-            selling of your personal information to third parties. Upon
-            receiving an opt-out request, we will act upon the request as soon
-            as feasibly possible, but no later than fifteen (15) days from the
-            date of the request submission. To exercise these rights, you can
-            contact us by email at help@linen.dev, or by referring to the
-            contact details at the bottom of this document. If you have a
-            complaint about how we handle your data, we would like to hear from
+          </div>
+          <div>Disclosure of Data</div>
+          <div>
+            We may disclose personal information that we collect, or you
+            provide:
+          </div>
+          <div>
+            Disclosure for Law Enforcement. Under certain circumstances, we may
+            be required to disclose your Personal Data if required to do so by
+            law or in response to valid requests by public authorities.
+          </div>
+          <div>
+            Business Transaction. If we or our subsidiaries are involved in a
+            merger, acquisition or asset sale, your Personal Data may be
+            transferred.
+          </div>
+          <div>Other cases. We may disclose your information also:</div>
+          <div>to our subsidiaries and affiliates;</div>
+          <div>
+            to contractors, service providers, and other third parties we use to
+            support our business;
+          </div>
+          <div>Security of Data</div>
+          <div>
+            The security of your data is important to us but remember that no
+            method of transmission over the Internet or method of electronic
+            storage is 100% secure. While we strive to use commercially
+            acceptable means to protect your Personal Data, we cannot guarantee
+            its absolute security.
+          </div>
+          <div>
+            Your Data Protection Rights Under General Data Protection Regulation
+            (GDPR)
+          </div>
+          <div>
+            If you are a resident of the European Union (EU) and European
+            Economic Area (EEA), you have certain data protection rights,
+            covered by GDPR. – See more at
+            https://eur-lex.europa.eu/eli/reg/2016/679/oj
+          </div>
+          <div>
+            We aim to take reasonable steps to allow you to correct, amend,
+            delete, or limit the use of your Personal Data.
+          </div>
+          <div>
+            If you wish to be informed what Personal Data we hold about you and
+            if you want it to be removed from our systems, please email us at
+            help@linen.dev.
+          </div>
+          <div>
+            In certain circumstances, you have the following data protection
+            rights:
+          </div>
+          <div>
+            the right to access, update or to delete the information we have on
+            you;
+          </div>
+          <div>
+            the right of rectification. You have the right to have your
+            information rectified if that information is inaccurate or
+            incomplete;
+          </div>
+          <div>
+            the right to object. You have the right to object to our processing
+            of your Personal Data;
+          </div>
+          <div>
+            the right of restriction. You have the right to request that we
+            restrict the processing of your personal information;
+          </div>
+          <div>
+            the right to data portability. You have the right to be provided
+            with a copy of your Personal Data in a structured, machine-readable
+            and commonly used format;
+          </div>
+          <div>
+            the right to withdraw consent. You also have the right to withdraw
+            your consent at any time where we rely on your consent to process
+            your personal information;
+          </div>
+          <div>
+            Please note that we may ask you to verify your identity before
+            responding to such requests. Please note, we may not able to provide
+            Service without some necessary data.
+          </div>
+          <div>
+            You have the right to complain to a Data Protection Authority about
+            our collection and use of your Personal Data. For more information,
+            please contact your local data protection authority in the European
+            Economic Area (EEA).
+          </div>
+          <div>
+            Your Data Protection Rights under the California Privacy Protection
+            Act (CalOPPA)
+          </div>
+          <div>
+            CalOPPA is the first state law in the nation to require commercial
+            websites and online services to post a privacy policy. The law’s
+            reach stretches well beyond California to require a person or
+            company in the United States (and conceivable the world) that
+            operates websites collecting personally identifiable information
+            from California consumers to post a conspicuous privacy policy on
+            its website stating exactly the information being collected and
+            those individuals with whom it is being shared, and to comply with
+            this policy. – See more at:
+            https://consumercal.org/about-cfc/cfc-education-foundation/california-online-privacy-protection-act-caloppa-3/
+          </div>
+          <div>According to CalOPPA we agree to the following:</div>
+          <div>users can visit our site anonymously;</div>
+          <div>
+            our Privacy Policy link includes the word “Privacy”, and can easily
+            be found on the page specified above on the home page of our
+            website;
+          </div>
+          <div>
+            users will be notified of any privacy policy changes on our Privacy
+            Policy Page;
+          </div>
+          <div>
+            users are able to change their personal information by emailing us
+            at help@linen.dev.
+          </div>
+          <div>Our Policy on “Do Not Track” Signals:</div>
+          <div>
+            We honor Do Not Track signals and do not track, plant cookies, or
+            use advertising when a Do Not Track browser mechanism is in place.
+            Do Not Track is a preference you can set in your web browser to
+            inform websites that you do not want to be tracked.
+          </div>
+          <div>
+            You can enable or disable Do Not Track by visiting the Preferences
+            or Settings page of your web browser.
+          </div>
+          <div>
+            Your Data Protection Rights under the California Consumer Privacy
+            Act (CCPA)
+          </div>
+          <div>
+            If you are a California resident, you are entitled to learn what
+            data we collect about you, ask to delete your data and not to sell
+            (share) it. To exercise your data protection rights, you can make
+            certain requests and ask us:
+          </div>
+          <div>
+            What personal information we have about you. If you make this
+            request, we will return to you:
+          </div>
+          <div>
+            The categories of personal information we have collected about you.
+          </div>
+          <div>
+            The categories of sources from which we collect your personal
+            information.
+          </div>
+          <div>
+            The business or commercial purpose for collecting or selling your
+            personal information.
+          </div>
+          <div>
+            The categories of third parties with whom we share personal
+            information.
+          </div>
+          <div>
+            The specific pieces of personal information we have collected about
             you.
-          </p>
-          <ol>
-            <li>DO WE MAKE UPDATES TO THIS NOTICE?</li>
-          </ol>
-          <p>
-            In Short: Yes, we will update this notice as necessary to stay
-            compliant with relevant laws.
-          </p>
-          <p>
-            We may update this privacy notice from time to time. The updated
-            version will be indicated by an updated &quot;Revised&quot; date and
-            the updated version will be effective as soon as it is accessible.
-            If we make material changes to this privacy notice, we may notify
-            you either by prominently posting a notice of such changes or by
-            directly sending you a notification. We encourage you to review this
-            privacy notice frequently to be informed of how we are protecting
-            your information.
-          </p>
-          <ol>
-            <li>HOW CAN YOU CONTACT US ABOUT THIS NOTICE?</li>
-          </ol>
-          <p>
-            If you have questions or comments about this notice, you may email
-            us at help@linen.dev or by post to:
-          </p>
-          <p>
-            Rebase Corporation 312 W 20th St New York, NY 10011 United States
-          </p>
-          <ol>
-            <li>
-              HOW CAN YOU REVIEW, UPDATE, OR DELETE THE DATA WE COLLECT FROM
-              YOU?
-            </li>
-          </ol>
-          <p>
-            Based on the applicable laws of your country, you may have the right
-            to request access to the personal information we collect from you,
-            change that information, or delete it in some circumstances. To
-            request to review, update, or delete your personal information,
-            please email us at: help@linen.dev.
-          </p>
+          </div>
+          <div>
+            A list of categories of personal information that we have sold,
+            along with the category of any other company we sold it to. If we
+            have not sold your personal information, we will inform you of that
+            fact.
+          </div>
+          <div>
+            A list of categories of personal information that we have disclosed
+            for a business purpose, along with the category of any other company
+            we shared it with.
+          </div>
+          <div>
+            Please note, you are entitled to ask us to provide you with this
+            information up to two times in a rolling twelve-month period. When
+            you make this request, the information provided may be limited to
+            the personal information we collected about you in the previous 12
+            months.
+          </div>
+          <div>
+            To delete your personal information. If you make this request, we
+            will delete the personal information we hold about you as of the
+            date of your request from our records and direct any service
+            providers to do the same. In some cases, deletion may be
+            accomplished through de-identification of the information. If you
+            choose to delete your personal information, you may not be able to
+            use certain functions that require your personal information to
+            operate.
+          </div>
+          <div>
+            To stop selling your personal information. We don't sell or rent
+            your personal information to any third parties for any purpose. You
+            are the only owner of your Personal Data and can request disclosure
+            or deletion at any time.
+          </div>
+          <div>
+            Please note, if you ask us to delete or stop selling your data, it
+            may impact your experience with us, and you may not be able to
+            participate in certain programs or membership services which require
+            the usage of your personal information to function. But in no
+            circumstances, we will discriminate against you for exercising your
+            rights.
+          </div>
+          <div>
+            To exercise your California data protection rights described above,
+            please send your request(s) by one of the following means:
+          </div>
+          <div>By email: help@linen.dev</div>
+          <div>
+            Your data protection rights, described above, are covered by the
+            CCPA, short for the California Consumer Privacy Act. To find out
+            more, visit the official California Legislative Information website.
+            The CCPA took effect on 01/01/2020.
+          </div>
+          <div>Service Providers</div>
+          <div>
+            We may employ third party companies and individuals to facilitate
+            our Service (“Service Providers”), provide Service on our behalf,
+            perform Service-related services or assist us in analysing how our
+            Service is used.
+          </div>
+          <div>
+            These third parties have access to your Personal Data only to
+            perform these tasks on our behalf and are obligated not to disclose
+            or use it for any other purpose.
+          </div>
+          <div>Analytics</div>
+          <div>
+            We may use third-party Service Providers to monitor and analyze the
+            use of our Service.
+          </div>
+          <div>
+            Google Analytics Google Analytics is a web analytics service offered
+            by Google that tracks and reports website traffic. Google uses the
+            data collected to track and monitor the use of our Service. This
+            data is shared with other Google services. Google may use the
+            collected data to contextualise and personalise the ads of its own
+            advertising network.
+          </div>
+          <div>
+            For more information on the privacy practices of Google, please
+            visit the Google Privacy Terms web page:
+            https://policies.google.com/privacy?hl=en
+          </div>
+          <div>
+            We also encourage you to review the Google's policy for safeguarding
+            your data: https://support.google.com/analytics/answer/6004245.
+          </div>
+          <div>
+            PostHog PostHog is a product analytics platform built for the modern
+            enterprise, with the differentiators of being open source and having
+            a broader view of the tools needed to make a product successful.
+          </div>
+          <div>
+            For more information about PostHog, please visit their Privacy
+            Policy: https://posthog.com/privacy
+          </div>
+          <div>CI/CD tools</div>
+          <div>
+            We may use third-party Service Providers to automate the development
+            process of our Service.
+          </div>
+          <div>GitHub</div>
+          <div>GitHub is provided by GitHub, Inc.</div>
+          <div>
+            GitHub is a development platform to host and review code, manage
+            projects, and build software.
+          </div>
+          <div>
+            For more information on what data GitHub collects for what purpose
+            and how the protection of the data is ensured, please visit GitHub
+            Privacy Policy page:
+            https://help.github.com/en/articles/github-privacy-statement.
+          </div>
+          <div>Payments</div>
+          <div>
+            We may provide paid products and/or services within Service. In that
+            case, we use third-party services for payment processing (e.g.
+            payment processors).
+          </div>
+          <div>
+            We will not store or collect your payment card details. That
+            information is provided directly to our third-party payment
+            processors whose use of your personal information is governed by
+            their Privacy Policy. These payment processors adhere to the
+            standards set by PCI-DSS as managed by the PCI Security Standards
+            Council, which is a joint effort of brands like Visa, Mastercard,
+            American Express and Discover. PCI-DSS requirements help ensure the
+            secure handling of payment information.
+          </div>
+          <div>The payment processors we work with are:</div>
+          <div>
+            Stripe: Their Privacy Policy can be viewed at:
+            https://stripe.com/us/privacy
+          </div>
+          <div>Links to Other Sites</div>
+          <div>
+            Our Service may contain links to other sites that are not operated
+            by us. If you click a third party link, you will be directed to that
+            third party's site. We strongly advise you to review the Privacy
+            Policy of every site you visit.
+          </div>
+          <div>
+            We have no control over and assume no responsibility for the
+            content, privacy policies or practices of any third party sites or
+            services.
+          </div>
+          <div>Children's Privacy</div>
+          <div>
+            Our Services are not intended for use by children under the age of
+            18 (“Child” or “Children”).
+          </div>
+          <div>
+            We do not knowingly collect personally identifiable information from
+            Children under 18. If you become aware that a Child has provided us
+            with Personal Data, please contact us. If we become aware that we
+            have collected Personal Data from Children without verification of
+            parental consent, we take steps to remove that information from our
+            servers.
+          </div>
+          <div>Changes to This Privacy Policy</div>
+          <div>
+            We may update our Privacy Policy from time to time. We will notify
+            you of any changes by posting the new Privacy Policy on this page.
+          </div>
+          <div>
+            We will let you know via email and/or a prominent notice on our
+            Service, prior to the change becoming effective and update
+            “effective date” at the top of this Privacy Policy.
+          </div>
+          <div>
+            You are advised to review this Privacy Policy periodically for any
+            changes. Changes to this Privacy Policy are effective when they are
+            posted on this page.
+          </div>
+          <div>Contact Us</div>
+          <div>
+            If you have any questions about this Privacy Policy, please contact
+            us:
+          </div>
+          <div>By email: help@linen.dev.</div>
+          <div>By visiting this page on our website: linen.dev.</div>
         </div>
       </div>
     </div>
