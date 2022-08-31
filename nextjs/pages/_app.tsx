@@ -11,11 +11,18 @@ import { SessionProvider } from 'next-auth/react';
 import { Toaster } from 'components/Toast';
 import { usePostHog } from 'next-use-posthog';
 
-const POSTHOG_API_KEY = process.env.NEXT_PUBLIC_POSTHOG_API_KEY;
+const POSTHOG_API_KEY = process.env.NEXT_PUBLIC_POSTHOG_API_KEY!;
 export default function App(props: AppProps) {
-  if (POSTHOG_API_KEY) {
-    usePostHog(POSTHOG_API_KEY, { api_host: 'https://app.posthog.com' });
-  }
+  usePostHog(POSTHOG_API_KEY, {
+    api_host: 'https://app.posthog.com',
+    loaded: (posthog) => {
+      if (
+        !process.env.NEXT_PUBLIC_POSTHOG_API_KEY ||
+        process.env.NODE_ENV === 'development'
+      )
+        posthog.opt_out_capturing();
+    },
+  });
 
   const router = useRouter();
 

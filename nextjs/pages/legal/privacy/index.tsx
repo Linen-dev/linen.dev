@@ -113,7 +113,7 @@ export default function Privacy() {
             device (“Usage Data”).
           </div>
           <div>
-            This Usage Data may include information such as your computer's
+            This Usage Data may include information such as your computer&apos;s
             Internet Protocol address (e.g. IP address), browser type, browser
             version, the pages of our Service that you visit, the time and date
             of your visit, the time spent on those pages, unique device
@@ -429,10 +429,10 @@ export default function Privacy() {
             operate.
           </div>
           <div>
-            To stop selling your personal information. We don't sell or rent
-            your personal information to any third parties for any purpose. You
-            are the only owner of your Personal Data and can request disclosure
-            or deletion at any time.
+            To stop selling your personal information. We don&apos;t sell or
+            rent your personal information to any third parties for any purpose.
+            You are the only owner of your Personal Data and can request
+            disclosure or deletion at any time.
           </div>
           <div>
             Please note, if you ask us to delete or stop selling your data, it
@@ -484,8 +484,9 @@ export default function Privacy() {
             https://policies.google.com/privacy?hl=en
           </div>
           <div>
-            We also encourage you to review the Google's policy for safeguarding
-            your data: https://support.google.com/analytics/answer/6004245.
+            We also encourage you to review the Google&apos;s policy for
+            safeguarding your data:
+            https://support.google.com/analytics/answer/6004245.
           </div>
           <div>
             PostHog PostHog is a product analytics platform built for the modern
@@ -538,15 +539,15 @@ export default function Privacy() {
           <div>
             Our Service may contain links to other sites that are not operated
             by us. If you click a third party link, you will be directed to that
-            third party's site. We strongly advise you to review the Privacy
-            Policy of every site you visit.
+            third party&apos;s site. We strongly advise you to review the
+            Privacy Policy of every site you visit.
           </div>
           <div>
             We have no control over and assume no responsibility for the
             content, privacy policies or practices of any third party sites or
             services.
           </div>
-          <div>Children's Privacy</div>
+          <div>Children&apos;s Privacy</div>
           <div>
             Our Services are not intended for use by children under the age of
             18 (“Child” or “Children”).
