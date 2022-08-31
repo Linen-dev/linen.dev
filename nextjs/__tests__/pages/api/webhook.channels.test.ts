@@ -1,7 +1,6 @@
 import { accounts, channels } from '@prisma/client';
-import { testApiHandler } from 'next-test-api-route-handler';
 import { prismaMock } from '../../singleton';
-import handler from '../../../pages/api/webhook';
+import { handleWebhook } from 'services/webhooks';
 
 const channelRenameEvent = {
   token: 'xacv5epJ26YAuNHJeO4UoaNf',
@@ -79,21 +78,10 @@ describe('webhook :: channels', () => {
         {} as channels
       );
 
-      await testApiHandler({
-        handler,
-        url: '/api/webhook',
-        test: async ({ fetch }) => {
-          const res = await fetch({
-            method: 'POST',
-            headers: {
-              'content-type': 'application/json',
-            },
-            body: JSON.stringify(channelCreatedEvent),
-          });
-          expect(res.status).toBe(200);
-          await expect(res.json()).resolves.toStrictEqual({});
-        },
-      });
+      const res = await handleWebhook(channelCreatedEvent);
+
+      expect(res.status).toBe(200);
+      expect(res.message).toStrictEqual('channel created');
 
       expect(accountsFindFirstMock).toHaveBeenCalledWith({
         select: { id: true },
@@ -112,23 +100,12 @@ describe('webhook :: channels', () => {
     test('account does not exists :: it should return 404', async () => {
       const accountsFindFirstMock =
         prismaMock.accounts.findFirst.mockResolvedValue(null);
-      await testApiHandler({
-        handler,
-        url: '/api/webhook',
-        test: async ({ fetch }) => {
-          const res = await fetch({
-            method: 'POST',
-            headers: {
-              'content-type': 'application/json',
-            },
-            body: JSON.stringify(channelCreatedEvent),
-          });
-          expect(res.status).toBe(404);
-          await expect(res.json()).resolves.toStrictEqual({
-            error: 'account not found',
-          });
-        },
-      });
+
+      const res = await handleWebhook(channelCreatedEvent);
+
+      expect(res.status).toBe(404);
+      expect(res.error).toStrictEqual('account not found');
+
       expect(accountsFindFirstMock).toHaveBeenCalledWith({
         select: { id: true },
         where: { slackTeamId: channelCreatedEvent.team_id },
@@ -151,21 +128,12 @@ describe('webhook :: channels', () => {
       const channelsUpdateMock = prismaMock.channels.update.mockResolvedValue(
         {} as channels
       );
-      await testApiHandler({
-        handler,
-        url: '/api/webhook',
-        test: async ({ fetch }) => {
-          const res = await fetch({
-            method: 'POST',
-            headers: {
-              'content-type': 'application/json',
-            },
-            body: JSON.stringify(channelRenameEvent),
-          });
-          expect(res.status).toBe(200);
-          await expect(res.json()).resolves.toStrictEqual({});
-        },
-      });
+
+      const res = await handleWebhook(channelRenameEvent);
+
+      expect(res.status).toBe(200);
+      expect(res.message).toStrictEqual('channel renamed');
+
       expect(accountsFindFirstMock).toHaveBeenCalledWith({
         select: { id: true },
         where: { slackTeamId: channelRenameEvent.team_id },
@@ -189,23 +157,12 @@ describe('webhook :: channels', () => {
     test('account does not exists :: it should return 404', async () => {
       const accountsFindFirstMock =
         prismaMock.accounts.findFirst.mockResolvedValue(null);
-      await testApiHandler({
-        handler,
-        url: '/api/webhook',
-        test: async ({ fetch }) => {
-          const res = await fetch({
-            method: 'POST',
-            headers: {
-              'content-type': 'application/json',
-            },
-            body: JSON.stringify(channelRenameEvent),
-          });
-          expect(res.status).toBe(404);
-          await expect(res.json()).resolves.toStrictEqual({
-            error: 'account not found',
-          });
-        },
-      });
+
+      const res = await handleWebhook(channelRenameEvent);
+
+      expect(res.status).toBe(404);
+      expect(res.error).toStrictEqual('account not found');
+
       expect(accountsFindFirstMock).toHaveBeenCalledWith({
         select: { id: true },
         where: { slackTeamId: channelRenameEvent.team_id },
@@ -223,21 +180,12 @@ describe('webhook :: channels', () => {
       const channelsCreateMock = prismaMock.channels.create.mockResolvedValue(
         {} as channels
       );
-      await testApiHandler({
-        handler,
-        url: '/api/webhook',
-        test: async ({ fetch }) => {
-          const res = await fetch({
-            method: 'POST',
-            headers: {
-              'content-type': 'application/json',
-            },
-            body: JSON.stringify(channelRenameEvent),
-          });
-          expect(res.status).toBe(200);
-          await expect(res.json()).resolves.toStrictEqual({});
-        },
-      });
+
+      const res = await handleWebhook(channelRenameEvent);
+
+      expect(res.status).toBe(200);
+      expect(res.message).toStrictEqual('channel created');
+
       expect(accountsFindFirstMock).toHaveBeenCalledWith({
         select: { id: true },
         where: { slackTeamId: channelRenameEvent.team_id },

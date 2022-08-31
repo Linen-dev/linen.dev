@@ -1,7 +1,4 @@
-import { testApiHandler } from 'next-test-api-route-handler';
-
 import { prismaMock } from '../../singleton';
-
 import * as mockModels from '../../../lib/models';
 jest.mock('../../../lib/models', () => ({
   ...jest.requireActual('../../../lib/models'),
@@ -10,10 +7,9 @@ jest.mock('../../../lib/models', () => ({
 }));
 jest.mock('../../../lib/users');
 import * as mockUsers from '../../../lib/users';
-
-import handler from '../../../pages/api/webhook';
 import { parseSlackSentAt } from '../../../utilities/sentAt';
 import { createSlug } from 'utilities/util';
+import { handleWebhook } from 'services/webhooks';
 
 const addMessageEvent = {
   token: 'RudepRJuMOjy8zENRCLdXW7t',
@@ -181,86 +177,74 @@ describe('webhook', () => {
     const messagesCreateMock =
       prismaMock.messages.create.mockResolvedValue(messageMock);
 
-    await testApiHandler({
-      handler,
-      url: '/api/webhook',
-      test: async ({ fetch }) => {
-        const res = await fetch({
-          method: 'POST',
-          headers: {
-            'content-type': 'application/json',
-          },
-          body: JSON.stringify(addMessageEvent),
-        });
+    const res = await handleWebhook(addMessageEvent);
 
-        // Proper channel has been searched for based on Slack event
-        expect(channelsFindUniqueMock).toHaveBeenCalledWith({
-          where: {
-            externalChannelId: addMessageEvent.event.channel,
-          },
+    // Proper channel has been searched for based on Slack event
+    expect(channelsFindUniqueMock).toHaveBeenCalledWith({
+      where: {
+        externalChannelId: addMessageEvent.event.channel,
+      },
+      include: {
+        account: {
           include: {
-            account: {
-              include: {
-                slackAuthorizations: true,
-              },
-            },
+            slackAuthorizations: true,
           },
-        });
-
-        // Proper thread was created/updated
-        expect(threadsUpsertMock).toHaveBeenCalledWith({
-          where: {
-            externalThreadId: addMessageEvent.event.ts,
-          },
-          update: {
-            externalThreadId: addMessageEvent.event.ts,
-            channelId: channelMock.id,
-            sentAt: parseSlackSentAt(addMessageEvent.event.ts),
-            slug: createSlug(addMessageEvent.event.text),
-          },
-          create: {
-            externalThreadId: addMessageEvent.event.ts,
-            channelId: channelMock.id,
-            sentAt: parseSlackSentAt(addMessageEvent.event.ts),
-            slug: createSlug(addMessageEvent.event.text),
-          },
-          include: {
-            messages: true,
-          },
-        });
-
-        prismaMock.threads.update.calledWith({
-          where: {
-            id: threadMock.id,
-          },
-          data: threadMock,
-        });
-
-        expect(mockUsers.findOrCreateUserFromUserInfo).toHaveBeenCalledWith(
-          addMessageEvent.event.user,
-          channelMock
-        );
-
-        expect(messagesCreateMock).toHaveBeenCalledWith({
-          data: {
-            body: 'this is test3',
-            threadId: 'thread_id',
-            externalMessageId: '1650644364.126099',
-            channelId: 'channel_id',
-            sentAt: new Date(parseFloat(addMessageEvent.event.ts) * 1000),
-            usersId: 'user_id',
-            mentions: {
-              create: [],
-            },
-            blocks: [{ type: 'rich_text', block_id: '9hC', elements: [] }],
-          },
-        });
-
-        // result OK:200
-        expect(res.status).toBe(200);
-        await expect(res.json()).resolves.toStrictEqual({});
+        },
       },
     });
+
+    // Proper thread was created/updated
+    expect(threadsUpsertMock).toHaveBeenCalledWith({
+      where: {
+        externalThreadId: addMessageEvent.event.ts,
+      },
+      update: {
+        externalThreadId: addMessageEvent.event.ts,
+        channelId: channelMock.id,
+        sentAt: parseSlackSentAt(addMessageEvent.event.ts),
+        slug: createSlug(addMessageEvent.event.text),
+      },
+      create: {
+        externalThreadId: addMessageEvent.event.ts,
+        channelId: channelMock.id,
+        sentAt: parseSlackSentAt(addMessageEvent.event.ts),
+        slug: createSlug(addMessageEvent.event.text),
+      },
+      include: {
+        messages: true,
+      },
+    });
+
+    prismaMock.threads.update.calledWith({
+      where: {
+        id: threadMock.id,
+      },
+      data: threadMock,
+    });
+
+    expect(mockUsers.findOrCreateUserFromUserInfo).toHaveBeenCalledWith(
+      addMessageEvent.event.user,
+      channelMock
+    );
+
+    expect(messagesCreateMock).toHaveBeenCalledWith({
+      data: {
+        body: 'this is test3',
+        threadId: 'thread_id',
+        externalMessageId: '1650644364.126099',
+        channelId: 'channel_id',
+        sentAt: new Date(parseFloat(addMessageEvent.event.ts) * 1000),
+        usersId: 'user_id',
+        mentions: {
+          create: [],
+        },
+        blocks: [{ type: 'rich_text', block_id: '9hC', elements: [] }],
+      },
+    });
+
+    // result OK:200
+    expect(res.status).toBe(200);
+    expect(res.message.body).toStrictEqual('this is test3');
   });
 
   it('delete message', async () => {
@@ -279,45 +263,32 @@ describe('webhook', () => {
       id: 'message_id',
     });
 
-    await testApiHandler({
-      handler,
-      url: '/api/webhook',
-      test: async ({ fetch }) => {
-        const res = await fetch({
-          method: 'POST',
-          headers: {
-            'content-type': 'application/json',
-          },
-          body: JSON.stringify(deleteMessageEvent),
-        });
-
-        // Proper channel has been searched for based on Slack event
-        expect(channelsFindUniqueMock).toHaveBeenCalledWith({
-          where: {
-            externalChannelId: deleteMessageEvent.event.channel,
-          },
+    const res = await handleWebhook(deleteMessageEvent);
+    // Proper channel has been searched for based on Slack event
+    expect(channelsFindUniqueMock).toHaveBeenCalledWith({
+      where: {
+        externalChannelId: deleteMessageEvent.event.channel,
+      },
+      include: {
+        account: {
           include: {
-            account: {
-              include: {
-                slackAuthorizations: true,
-              },
-            },
+            slackAuthorizations: true,
           },
-        });
-
-        expect(mockModels.findMessageByChannelIdAndTs).toHaveBeenCalledWith(
-          channelMock.id,
-          deleteMessageEvent.event.deleted_ts
-        );
-        expect(mockModels.deleteMessageWithMentions).toHaveBeenCalledWith(
-          'message_id'
-        );
-
-        // result OK:200
-        expect(res.status).toBe(200);
-        await expect(res.json()).resolves.toStrictEqual({});
+        },
       },
     });
+
+    expect(mockModels.findMessageByChannelIdAndTs).toHaveBeenCalledWith(
+      channelMock.id,
+      deleteMessageEvent.event.deleted_ts
+    );
+    expect(mockModels.deleteMessageWithMentions).toHaveBeenCalledWith(
+      'message_id'
+    );
+
+    // result OK:200
+    expect(res.status).toBe(200);
+    expect(res.message).toStrictEqual({});
   });
 
   it('change message', async () => {
@@ -373,110 +344,98 @@ describe('webhook', () => {
     const messagesCreateMock =
       prismaMock.messages.create.mockResolvedValue(messageMock);
 
-    await testApiHandler({
-      handler,
-      url: '/api/webhook',
-      test: async ({ fetch }) => {
-        const res = await fetch({
-          method: 'POST',
-          headers: {
-            'content-type': 'application/json',
-          },
-          body: JSON.stringify(changeMessageEvent),
-        });
+    const res = await handleWebhook(changeMessageEvent);
 
-        // Proper channel has been searched for based on Slack event
-        expect(channelsFindUniqueMock).toHaveBeenCalledWith({
-          where: {
-            externalChannelId: changeMessageEvent.event.channel,
-          },
+    // Proper channel has been searched for based on Slack event
+    expect(channelsFindUniqueMock).toHaveBeenCalledWith({
+      where: {
+        externalChannelId: changeMessageEvent.event.channel,
+      },
+      include: {
+        account: {
           include: {
-            account: {
-              include: {
-                slackAuthorizations: true,
-              },
-            },
+            slackAuthorizations: true,
           },
-        });
-
-        expect(mockModels.findMessageByChannelIdAndTs).toHaveBeenCalledWith(
-          channelMock.id,
-          changeMessageEvent.event.previous_message.ts
-        );
-
-        expect(mockModels.deleteMessageWithMentions).toHaveBeenCalledWith(
-          'message_id'
-        );
-
-        // Proper channel has been searched for based on Slack event
-        expect(channelsFindUniqueMock).toHaveBeenCalledWith({
-          where: {
-            externalChannelId: changeMessageEvent.event.channel,
-          },
-          include: {
-            account: {
-              include: {
-                slackAuthorizations: true,
-              },
-            },
-          },
-        });
-
-        // Proper thread was created/updated
-        expect(threadsUpsertMock).toHaveBeenCalledWith({
-          where: {
-            externalThreadId: changeMessageEvent.event.message.ts,
-          },
-          update: {
-            externalThreadId: changeMessageEvent.event.message.ts,
-            channelId: channelMock.id,
-            sentAt: parseSlackSentAt(changeMessageEvent.event.message.ts),
-            slug: createSlug(changeMessageEvent.event.message.text),
-          },
-          create: {
-            externalThreadId: changeMessageEvent.event.message.ts,
-            channelId: channelMock.id,
-            sentAt: parseSlackSentAt(changeMessageEvent.event.message.ts),
-            slug: createSlug(changeMessageEvent.event.message.text),
-          },
-          include: {
-            messages: true,
-          },
-        });
-
-        prismaMock.threads.update.calledWith({
-          where: {
-            id: threadMock.id,
-          },
-          data: threadMock,
-        });
-
-        expect(mockUsers.findOrCreateUserFromUserInfo).toHaveBeenCalledWith(
-          changeMessageEvent.event.message.user,
-          channelMock
-        );
-
-        expect(messagesCreateMock).toHaveBeenCalledWith({
-          data: {
-            body: 'Lets test_4',
-            threadId: 'thread_id',
-            externalMessageId: '1652127600.388019',
-            channelId: 'channel_id',
-            sentAt: new Date(
-              parseFloat(changeMessageEvent.event.message.ts) * 1000
-            ),
-            usersId: 'user_id',
-            mentions: {
-              create: [],
-            },
-            blocks: [{ type: 'rich_text', block_id: '9hC', elements: [] }],
-          },
-        });
-
-        // result OK:200
-        expect(res.status).toBe(200);
-        await expect(res.json()).resolves.toStrictEqual({});
+        },
       },
     });
+
+    expect(mockModels.findMessageByChannelIdAndTs).toHaveBeenCalledWith(
+      channelMock.id,
+      changeMessageEvent.event.previous_message.ts
+    );
+
+    expect(mockModels.deleteMessageWithMentions).toHaveBeenCalledWith(
+      'message_id'
+    );
+
+    // Proper channel has been searched for based on Slack event
+    expect(channelsFindUniqueMock).toHaveBeenCalledWith({
+      where: {
+        externalChannelId: changeMessageEvent.event.channel,
+      },
+      include: {
+        account: {
+          include: {
+            slackAuthorizations: true,
+          },
+        },
+      },
+    });
+
+    // Proper thread was created/updated
+    expect(threadsUpsertMock).toHaveBeenCalledWith({
+      where: {
+        externalThreadId: changeMessageEvent.event.message.ts,
+      },
+      update: {
+        externalThreadId: changeMessageEvent.event.message.ts,
+        channelId: channelMock.id,
+        sentAt: parseSlackSentAt(changeMessageEvent.event.message.ts),
+        slug: createSlug(changeMessageEvent.event.message.text),
+      },
+      create: {
+        externalThreadId: changeMessageEvent.event.message.ts,
+        channelId: channelMock.id,
+        sentAt: parseSlackSentAt(changeMessageEvent.event.message.ts),
+        slug: createSlug(changeMessageEvent.event.message.text),
+      },
+      include: {
+        messages: true,
+      },
+    });
+
+    prismaMock.threads.update.calledWith({
+      where: {
+        id: threadMock.id,
+      },
+      data: threadMock,
+    });
+
+    expect(mockUsers.findOrCreateUserFromUserInfo).toHaveBeenCalledWith(
+      changeMessageEvent.event.message.user,
+      channelMock
+    );
+
+    expect(messagesCreateMock).toHaveBeenCalledWith({
+      data: {
+        body: 'Lets test_4',
+        threadId: 'thread_id',
+        externalMessageId: '1652127600.388019',
+        channelId: 'channel_id',
+        sentAt: new Date(
+          parseFloat(changeMessageEvent.event.message.ts) * 1000
+        ),
+        usersId: 'user_id',
+        mentions: {
+          create: [],
+        },
+        blocks: [{ type: 'rich_text', block_id: '9hC', elements: [] }],
+      },
+    });
+
+    // result OK:200
+    expect(res.status).toBe(200);
+    expect(res.message.body).toStrictEqual('Lets-test-4');
   });
 });
