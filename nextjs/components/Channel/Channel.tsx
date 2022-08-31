@@ -185,7 +185,7 @@ export function Channel({
         id="rootRefSetter"
       >
         <div className="sm:pt-6 justify-center">
-          <ul className="divide-y sm:max-w-4xl px-1">
+          <ul className="divide-y px-1">
             {cursor?.prev && !error?.prev ? (
               <div className="m-3" ref={infiniteRef}>
                 <Spinner />
@@ -217,7 +217,7 @@ export function Channel({
 
       <Transition
         show={isShowingThread}
-        className="flex flex-col border-l border-solid border-gray-200"
+        className="flex flex-col border-l border-solid border-gray-200 md:max-w-lg"
       >
         <div className="overflow-auto flex flex-col px-4">
           <div className="border-b border-solid border-gray-200 py-4 px-4">

@@ -22,15 +22,13 @@ export function Row({
         className={isNextMessageFromSameUser ? 'pb-1' : 'pb-8'}
         key={message.id}
       >
-        <div className="max-w-[700px]">
-          <Message
-            text={message.body}
-            format={communityType}
-            mentions={message.mentions?.map((m) => m.users)}
-            reactions={message.reactions}
-            attachments={message.attachments}
-          />
-        </div>
+        <Message
+          text={message.body}
+          format={communityType}
+          mentions={message.mentions?.map((m) => m.users)}
+          reactions={message.reactions}
+          attachments={message.attachments}
+        />
       </li>
     );
   }
@@ -59,15 +57,13 @@ export function Row({
           {format(new Date(message.sentAt))}
         </div>
       </div>
-      <div className="max-w-[700px]">
-        <Message
-          text={message.body}
-          format={communityType}
-          mentions={message.mentions?.map((m) => m.users)}
-          reactions={message.reactions}
-          attachments={message.attachments}
-        />
-      </div>
+      <Message
+        text={message.body}
+        format={communityType}
+        mentions={message.mentions?.map((m) => m.users)}
+        reactions={message.reactions}
+        attachments={message.attachments}
+      />
     </li>
   );
 }
