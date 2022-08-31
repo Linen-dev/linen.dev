@@ -44,12 +44,14 @@ export function ThreadPage({
       settings={settings}
       isSubDomainRouting={isSubDomainRouting}
     >
-      <Thread
-        messages={messages}
-        threadUrl={threadUrl}
-        communityType={settings.communityType}
-        viewCount={viewCount}
-      />
+      <div className="max-w-[700px]">
+        <Thread
+          messages={messages}
+          threadUrl={threadUrl}
+          communityType={settings.communityType}
+          viewCount={viewCount}
+        />
+      </div>
     </PageLayout>
   );
 }
