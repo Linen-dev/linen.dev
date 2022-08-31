@@ -1,6 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { tmpdir } from 'os';
-import fs from 'fs';
+import { getDatabaseUrl } from 'utilities/database';
 
 declare global {
   // allow global `var` declarations
@@ -8,21 +7,17 @@ declare global {
   var prisma: PrismaClient | undefined;
 }
 
-if (!global.prisma && process.env.RDS_CERTIFICATE) {
-  const certOut = `${tmpdir()}/rds-ca-2019-root.pem`;
-  const cert = process.env.RDS_CERTIFICATE;
-  const certExists = fs.existsSync(certOut);
-  if (!certExists) {
-    console.log(`Writing certificate to ${certOut}`);
-    fs.writeFile(certOut, cert, (err) => {
-      if (err) return console.log(err);
-    });
-  }
-}
-
 export const prisma =
   global.prisma ||
   new PrismaClient({
+    datasources: {
+      db: {
+        url: getDatabaseUrl({
+          dbUrl: process.env.DATABASE_URL,
+          cert: process.env.RDS_CERTIFICATE,
+        }),
+      },
+    },
     log: ['warn', 'error'],
   });
 
