@@ -31,7 +31,7 @@ export function MessageCard({
   slug: string | null;
 }) {
   return (
-    <div className="flex">
+    <div className="flex w-full">
       <div className="flex pr-4">
         {author && (
           <Avatar
@@ -45,15 +45,15 @@ export function MessageCard({
         )}
       </div>
       <div className="flex flex-col w-full">
-        <div className="flex flex-row justify-between pb-2">
+        <div className="flex flex-row pb-2">
           <p className="font-semibold text-sm inline-block">
             {author?.displayName || 'user'}
           </p>
-          <div className="text-sm text-gray-400">
+          <div className="text-sm text-gray-400 pl-2">
             {format(new Date(newestMessage?.sentAt))}
           </div>
         </div>
-        <div className="pb-2">
+        <div className="pb-2 max-w-3xl">
           <Message
             text={oldestMessage?.body || ''}
             mentions={oldestMessage?.mentions.map((m) => m.users)}
@@ -61,7 +61,7 @@ export function MessageCard({
             attachments={oldestMessage?.attachments}
           />
         </div>
-        <div className="flex flex-row justify-between items-center pr-2">
+        <div className="flex flex-row items-center pr-2">
           <div className="text-sm text-gray-400 flex flex-row items-center">
             <Avatars
               users={
@@ -74,7 +74,7 @@ export function MessageCard({
             />
             {messages.length > 1 && (
               //Kam: Not sure about this blue but I wanted to add some color to make the page more interesting
-              <div className="pl-2 text-blue-800">
+              <div className="px-2 text-blue-800">
                 {messages.length - 1} replies
               </div>
             )}
