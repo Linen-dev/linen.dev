@@ -23,7 +23,7 @@ export function Feed({
   onClick: (threadId: number) => void;
 }) {
   return (
-    <div>
+    <div className="divide-y border-gray-200">
       {threads
         ?.filter((t) => t.messages.length > 0)
         .map(
