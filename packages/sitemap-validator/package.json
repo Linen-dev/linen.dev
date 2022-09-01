@@ -1,0 +1,28 @@
+{
+  "name": "sitemap",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "script:sitemap": "ts-node src/index.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "args": "^5.0.3",
+    "await-to-js": "^3.0.0",
+    "axios": "^0.27.2",
+    "debug": "^4.3.4",
+    "jxon": "^2.0.0-beta.5"
+  },
+  "devDependencies": {
+    "@types/args": "^5.0.0",
+    "@types/debug": "^4.1.7",
+    "@types/jxon": "^2.0.1",
+    "@types/node": "^18.7.14",
+    "ts-node": "^10.9.1",
+    "tslib": "^2.4.0",
+    "typescript": "^4.8.2"
+  }
+}
