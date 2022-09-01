@@ -4,6 +4,7 @@ import { SerializedAccount } from 'serializers/account';
 import type { channels } from '@prisma/client';
 import LinkCard from './Settings/LinkCard';
 import ChannelsDefault from './Settings/ChannelsDefault';
+import CommunityVisibilityCard from './Settings/CommunityVisibilityCard';
 import ChannelVisibilityCard from './Settings/ChannelVisibilityCard';
 import CommunityIntegration from './Settings/CommunityIntegration';
 import AnonymizeCard from './Settings/AnonymizeCard';
@@ -31,6 +32,9 @@ export default function Settings(props: SettingsProps) {
             <AnonymizeCard {...props} />
             <ChannelsDefault {...props} />
             <ChannelVisibilityCard {...props} />
+            {props.account && (
+              <CommunityVisibilityCard account={props.account} />
+            )}
             <URLs {...props} />
           </div>
         </div>
