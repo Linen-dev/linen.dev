@@ -180,7 +180,7 @@ export function Channel({
         id="rootRefSetter"
       >
         <div className="sm:pt-6 justify-left w-full">
-          <ul className="divide-y px-1">
+          <ul className="divide-y">
             {cursor?.prev && !error?.prev ? (
               <div className="m-3" ref={infiniteRef}>
                 <Spinner />

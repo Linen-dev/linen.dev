@@ -23,7 +23,7 @@ export function Feed({
   onClick: (threadId: number) => void;
 }) {
   return (
-    <div className="divide-y border-gray-200">
+    <div className="divide-y">
       {threads
         ?.filter((t) => t.messages.length > 0)
         .map(
@@ -47,7 +47,7 @@ export function Feed({
             return (
               <li
                 key={incrementId}
-                className="px-4 py-4 hover:bg-gray-50 border-solid border-gray-200 cursor-pointer"
+                className="px-4 py-4 hover:bg-gray-50 border-solid border-gray-200 cursor-pointer w-full border-l"
               >
                 {isBot ? (
                   //I could custom link conditionally render something?
