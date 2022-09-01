@@ -14,6 +14,7 @@ export function ThreadPage({
   isSubDomainRouting,
   settings,
   slug,
+  incrementId,
 }: ThreadByIdProp) {
   useEffect(() => {
     threadId &&
@@ -48,8 +49,11 @@ export function ThreadPage({
         <Thread
           messages={messages}
           threadUrl={threadUrl}
-          communityType={settings.communityType}
           viewCount={viewCount}
+          settings={settings}
+          incrementId={incrementId}
+          isSubDomainRouting={isSubDomainRouting}
+          slug={slug}
         />
       </div>
     </PageLayout>

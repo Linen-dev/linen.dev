@@ -2,6 +2,7 @@ import { users } from '@prisma/client';
 import CustomLink from '../Link/CustomLink';
 import { SerializedThread } from '../../serializers/thread';
 import { MessageCard } from '../MessageCard';
+import type { Settings } from 'services/accountSettings';
 
 // A feed is a collection of threads
 // A channel feed is a collection of threads of a single channel
@@ -10,15 +11,13 @@ import { MessageCard } from '../MessageCard';
 export function Feed({
   threads,
   isSubDomainRouting,
-  communityName,
-  communityType,
+  settings,
   isBot,
   onClick,
 }: {
   threads?: SerializedThread[];
   isSubDomainRouting: boolean;
-  communityName: string;
-  communityType: string;
+  settings: Settings;
   isBot: boolean;
   onClick: (threadId: number) => void;
 }) {
@@ -53,8 +52,8 @@ export function Feed({
                   //I could custom link conditionally render something?
                   <CustomLink
                     isSubDomainRouting={isSubDomainRouting}
-                    communityName={communityName}
-                    communityType={communityType}
+                    communityName={settings.communityName}
+                    communityType={settings.communityType}
                     path={`/t/${incrementId}/${slug || 'topic'}`.toLowerCase()}
                     key={`${incrementId}-desktop`}
                   >
@@ -66,8 +65,7 @@ export function Feed({
                       authors={authors}
                       messages={messages}
                       isSubDomainRouting={isSubDomainRouting}
-                      communityName={communityName}
-                      communityType={communityType}
+                      settings={settings}
                       slug={slug}
                     />
                   </CustomLink>
@@ -81,8 +79,7 @@ export function Feed({
                       authors={authors}
                       messages={messages}
                       isSubDomainRouting={isSubDomainRouting}
-                      communityName={communityName}
-                      communityType={communityType}
+                      settings={settings}
                       slug={slug}
                     />
                   </div>
