@@ -1,3 +1,5 @@
+import { AccountType } from '@prisma/client';
+
 export enum CommunityType {
   'discord' = 'discord',
   'slack' = 'slack',
@@ -5,6 +7,7 @@ export enum CommunityType {
 
 export interface SerializedAccount {
   id: string;
+  type: AccountType;
   homeUrl?: string;
   docsUrl?: string;
   logoUrl?: string;
@@ -23,10 +26,10 @@ export interface SerializedAccount {
 }
 
 function identifyCommunity(account: any) {
-  if (account.slackAuthorizations.length) {
+  if (account.slackAuthorizations?.length) {
     return CommunityType.slack;
   }
-  if (account.discordAuthorizations.length) {
+  if (account.discordAuthorizations?.length) {
     return CommunityType.discord;
   }
   if (account.discordServerId) {
@@ -39,10 +42,10 @@ function identifyCommunity(account: any) {
 }
 
 function hasAuthFn(account: any) {
-  if (account.slackAuthorizations.length) {
+  if (account.slackAuthorizations?.length) {
     return true;
   }
-  if (account.discordAuthorizations.length) {
+  if (account.discordAuthorizations?.length) {
     return true;
   }
   return false;
@@ -62,6 +65,7 @@ export default function serialize(account?: any): SerializedAccount | null {
     googleAnalyticsId,
     syncStatus,
     id,
+    type,
     anonymizeUsers,
     slackDomain,
     discordDomain,
@@ -82,6 +86,7 @@ export default function serialize(account?: any): SerializedAccount | null {
     googleAnalyticsId,
     syncStatus,
     id,
+    type,
     communityType,
     anonymizeUsers,
     hasAuth,
