@@ -1,24 +1,24 @@
-import handler from 'pages/api/accounts';
-import { create } from '__tests__/factory';
+import { create, update } from 'pages/api/accounts';
+import { create as factory } from '__tests__/factory';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 describe('accounts', () => {
   describe('#create', () => {
     it('returns 401 for a not logged in user', async () => {
-      const request = create('request', {
+      const request = factory('request', {
         method: 'POST',
       }) as NextApiRequest;
-      const response = create('response') as NextApiResponse;
-      await handler(request, response);
+      const response = factory('response') as NextApiResponse;
+      await create(request, response);
       expect(response.status).toHaveBeenCalledWith(401);
     });
   });
 
   describe('#update', () => {
     it('returns a 404 for if the account does not exist', async () => {
-      const request = create('request', { method: 'PUT' }) as NextApiRequest;
-      const response = create('response') as NextApiResponse;
-      await handler(request, response);
+      const request = factory('request', { method: 'PUT' }) as NextApiRequest;
+      const response = factory('response') as NextApiResponse;
+      await update(request, response);
       expect(response.status).toHaveBeenCalledWith(404);
     });
   });
