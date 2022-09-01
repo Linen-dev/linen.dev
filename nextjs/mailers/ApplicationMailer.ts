@@ -1,5 +1,6 @@
 import nodemailer from 'nodemailer';
 import transport from './transport';
+import { NOREPLY_EMAIL } from 'secrets';
 
 const transporter = nodemailer.createTransport(transport);
 
@@ -14,7 +15,7 @@ class ApplicationMailer {
   static async send(options: Options) {
     return transporter.sendMail({
       ...options,
-      from: 'no-reply@linendev.com',
+      from: NOREPLY_EMAIL,
     });
   }
 }
