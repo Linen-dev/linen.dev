@@ -166,25 +166,20 @@ export function Channel({
       <Transition
         show={showChannel({ isMobile, isShowingThread })}
         className="
-
-        overflow-hidden
-        hover:overflow-auto
-
-        pr-4
-        hover:pr-0
+        overflow-auto
 
         lg:h-[calc(100vh_-_80px)]
         md:h-[calc(100vh_-_144px)] 
         h-[calc(100vh_-_192px)]
         lg:w-[calc(100vw_-_250px)]
-        flex justify-center
+        flex justify-left
         w-[100vw]
         "
         ref={rootRefSetter}
         onScroll={handleRootScroll}
         id="rootRefSetter"
       >
-        <div className="sm:pt-6 justify-center">
+        <div className="sm:pt-6 justify-left w-full">
           <ul className="divide-y px-1">
             {cursor?.prev && !error?.prev ? (
               <div className="m-3" ref={infiniteRef}>
@@ -217,9 +212,9 @@ export function Channel({
 
       <Transition
         show={isShowingThread}
-        className="flex flex-col border-l border-solid border-gray-200 md:max-w-lg"
+        className="flex flex-col border-l border-solid border-gray-200 md:w-[700px]"
       >
-        <div className="overflow-auto flex flex-col px-4">
+        <div className="overflow-auto flex flex-col px-2">
           <div className="border-b border-solid border-gray-200 py-4 px-4">
             <div className="flex flex-row justify-between">
               <div className="flex flex-row justify-center">
