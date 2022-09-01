@@ -1,0 +1,8 @@
+.threadLink {
+  display: none;
+  float: right;
+  cursor: pointer;
+}
+.showOnHover:hover .threadLink {
+  display: flex;
+}

@@ -3,18 +3,33 @@ import { SerializedMessage } from 'serializers/thread';
 import JoinChannelLink from 'components/Link/JoinChannelLink';
 import Row from 'components/Message/Row';
 import { useMemo } from 'react';
+import type { Settings } from 'services/accountSettings';
+import { getThreadUrl } from 'components/Pages/ChannelsPage/utilities/url';
 
 export function Thread({
   messages,
   threadUrl,
-  communityType,
   viewCount,
+  isSubDomainRouting,
+  settings,
+  incrementId,
+  slug,
 }: {
   messages: SerializedMessage[];
   threadUrl: string;
-  communityType: string;
   viewCount: number;
+  isSubDomainRouting: boolean;
+  settings: Settings;
+  incrementId?: number;
+  slug?: string;
 }) {
+  const threadLink = getThreadUrl({
+    incrementId: incrementId!,
+    isSubDomainRouting,
+    settings,
+    slug,
+  });
+
   const elements = useMemo(() => {
     return messages
       .sort(
@@ -33,7 +48,8 @@ export function Thread({
             message={message}
             isPreviousMessageFromSameUser={isPreviousMessageFromSameUser}
             isNextMessageFromSameUser={isNextMessageFromSameUser}
-            communityType={communityType}
+            communityType={settings.communityType}
+            threadLink={threadLink}
           />
         );
       });
@@ -44,7 +60,10 @@ export function Thread({
       <ul>{elements}</ul>
 
       <div className={styles.footer}>
-        <JoinChannelLink href={threadUrl} communityType={communityType} />
+        <JoinChannelLink
+          href={threadUrl}
+          communityType={settings.communityType}
+        />
         <div className={styles.count}>
           <span className={styles.subtext}>View count:</span> {viewCount + 1}
         </div>

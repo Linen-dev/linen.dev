@@ -192,8 +192,7 @@ export function Channel({
             <Feed
               threads={currentThreads}
               isSubDomainRouting={isSubDomainRouting}
-              communityName={settings.communityName}
-              communityType={settings.communityType}
+              settings={settings}
               isBot={isBot}
               onClick={loadThread}
             />
@@ -240,8 +239,11 @@ export function Channel({
             <Thread
               messages={currentThread?.messages || []}
               threadUrl={''}
-              communityType={settings.communityType}
               viewCount={currentThread?.viewCount || 0}
+              settings={settings}
+              isSubDomainRouting={isSubDomainRouting}
+              incrementId={currentThread?.incrementId}
+              slug={currentThread?.slug || undefined}
             />
           </div>
         </div>

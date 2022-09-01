@@ -46,8 +46,7 @@ export function ChannelForBots({
             <Feed
               threads={currentThreads}
               isSubDomainRouting={isSubDomainRouting}
-              communityName={settings.communityName}
-              communityType={settings.communityType}
+              settings={settings}
               isBot={isBot}
               onClick={() => {}}
             />

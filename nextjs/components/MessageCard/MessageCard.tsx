@@ -6,6 +6,7 @@ import { users } from '@prisma/client';
 import { getThreadUrl } from '../Pages/ChannelsPage/utilities/url';
 import { SerializedMessage } from '../../serializers/thread';
 import CopyToClipboardIcon from '../Pages/ChannelsPage/CopyToClipboardIcon';
+import type { Settings } from 'services/accountSettings';
 
 export function MessageCard({
   author,
@@ -15,8 +16,7 @@ export function MessageCard({
   authors,
   messages,
   isSubDomainRouting,
-  communityName,
-  communityType,
+  settings,
   slug,
 }: {
   author: users | undefined;
@@ -26,8 +26,7 @@ export function MessageCard({
   authors: users[];
   messages: SerializedMessage[];
   isSubDomainRouting: boolean;
-  communityName: string;
-  communityType: string;
+  settings: Settings;
   slug: string | null;
 }) {
   return (
@@ -85,8 +84,7 @@ export function MessageCard({
               getText={() =>
                 getThreadUrl({
                   isSubDomainRouting,
-                  communityName,
-                  communityType,
+                  settings,
                   incrementId,
                   slug,
                 })
