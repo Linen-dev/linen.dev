@@ -4,6 +4,7 @@ import { AccountType } from '@prisma/client';
 import Card from '../Card';
 import NativeSelect from 'components/NativeSelect';
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
+import { isLoginProtectionEnabled } from 'utilities/featureFlags';
 
 interface Props {
   account: SerializedAccount;
@@ -34,16 +35,18 @@ export default function CommunityVisibilityCard({ account }: Props) {
       header="Community visibility"
       description={description(type)}
       action={
-        <NativeSelect
-          id="type"
-          icon={icon(type)}
-          theme="blue"
-          options={[
-            { label: 'Public', value: AccountType.PUBLIC },
-            { label: 'Private', value: AccountType.PRIVATE },
-          ]}
-          onChange={(event) => setType(event.target.value as AccountType)}
-        />
+        isLoginProtectionEnabled && (
+          <NativeSelect
+            id="type"
+            icon={icon(type)}
+            theme="blue"
+            options={[
+              { label: 'Public', value: AccountType.PUBLIC },
+              { label: 'Private', value: AccountType.PRIVATE },
+            ]}
+            onChange={(event) => setType(event.target.value as AccountType)}
+          />
+        )
       }
     />
   );

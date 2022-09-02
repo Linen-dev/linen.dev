@@ -4,6 +4,8 @@ import { create } from '__tests__/factory';
 import { AccountType } from '@prisma/client';
 import userEvent from '@testing-library/user-event';
 
+jest.mock('utilities/featureFlags', () => ({ isLoginProtectionEnabled: true }));
+
 describe('CommunityVisibilityCard', () => {
   it('renders a description for a public account', () => {
     const account = create('account', { type: AccountType.PUBLIC });
