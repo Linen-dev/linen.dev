@@ -1,5 +1,5 @@
 import { type RunnerOptions } from 'graphile-worker';
-import { getDatabaseUrl } from 'utilities/database';
+import { getDatabaseUrl } from '../utilities/database';
 
 const settings: RunnerOptions = {
   connectionString: getDatabaseUrl({
