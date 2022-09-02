@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { SerializedAccount } from 'serializers/account';
 import { AccountType } from '@prisma/client';
 import Card from '../Card';
+import NativeSelect from 'components/NativeSelect';
+import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 
 interface Props {
   account: SerializedAccount;
@@ -16,11 +18,32 @@ function description(type: AccountType) {
   }
 }
 
+function icon(type: AccountType) {
+  switch (type) {
+    case AccountType.PUBLIC:
+      return <AiFillEye />;
+    case AccountType.PRIVATE:
+      return <AiFillEyeInvisible />;
+  }
+}
+
 export default function CommunityVisibilityCard({ account }: Props) {
+  const [type, setType] = useState(account.type);
   return (
     <Card
       header="Community visibility"
-      description={description(account.type)}
+      description={description(type)}
+      action={
+        <NativeSelect
+          id="type"
+          icon={icon(type)}
+          options={[
+            { label: 'Public', value: AccountType.PUBLIC },
+            { label: 'Private', value: AccountType.PRIVATE },
+          ]}
+          onChange={(event) => setType(event.target.value as AccountType)}
+        />
+      }
     />
   );
 }
