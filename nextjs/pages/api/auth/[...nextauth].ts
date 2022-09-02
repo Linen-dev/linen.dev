@@ -1,9 +1,10 @@
 import NextAuth, { type NextAuthOptions } from 'next-auth';
 import EmailProvider from 'next-auth/providers/email';
-import prisma from '../../../client';
+import prisma from 'client';
 import { CustomPrismaAdapter } from 'lib/auth';
 import SignInMailer from 'mailers/SignInMailer';
 import { captureExceptionAndFlush } from 'utilities/sentry';
+import { NOREPLY_EMAIL } from 'secrets';
 
 export const authOptions = {
   pages: {
@@ -22,11 +23,11 @@ export const authOptions = {
           pass: process.env.EMAIL_PASS,
         },
       },
-      from: 'Linen.dev <no-reply@linendev.com>',
+      from: `Linen.dev <${NOREPLY_EMAIL}>`,
 
       async sendVerificationRequest(params) {
         try {
-          const { identifier, url, provider, theme } = params;
+          const { identifier, url } = params;
 
           const result = await SignInMailer.send({
             to: identifier,
