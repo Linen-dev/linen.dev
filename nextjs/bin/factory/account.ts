@@ -1,5 +1,4 @@
 import prisma from '../../client';
-import { AccountType } from '@prisma/client';
 
 export async function createAccounts() {
   await prisma.accounts.createMany({
@@ -26,7 +25,7 @@ export async function createAccounts() {
         brandColor: '#00bcd4',
         slackDomain: 'private',
         logoUrl: 'https://linen-assets.s3.amazonaws.com/linen-black-logo.svg',
-        type: AccountType.PRIVATE,
+        type: 'PRIVATE',
       },
     ],
   });
