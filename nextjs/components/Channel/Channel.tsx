@@ -3,10 +3,8 @@ import useInfiniteScroll from 'react-infinite-scroll-hook';
 import Spinner from 'components/Spinner';
 import { Thread } from 'components/Thread';
 import { Transition } from '@headlessui/react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faX } from '@fortawesome/free-solid-svg-icons';
 import { Feed } from 'components/Feed';
-import { AiOutlineLeft } from 'react-icons/ai';
+import { AiOutlineLeft, AiOutlineClose } from 'react-icons/ai';
 import { SerializedThread } from 'serializers/thread';
 import { ChannelViewProps } from 'components/Pages/ChannelsPage';
 import { getData } from 'utilities/fetcher';
@@ -229,8 +227,8 @@ export function Channel({
                 onClick={() => setIsShowingThread(false)}
                 className="hidden md:flex md:justify-center"
               >
-                <div className="min-w-[10px] flex justify-center">
-                  <FontAwesomeIcon icon={faX} color="gray" />
+                <div className="min-w-[10px] flex justify-center cursor-pointer items-center text-slate-400">
+                  <AiOutlineClose />
                 </div>
               </a>
             </div>

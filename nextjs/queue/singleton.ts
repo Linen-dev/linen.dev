@@ -1,5 +1,5 @@
 import { makeWorkerUtils, type WorkerUtils } from 'graphile-worker';
-import { getDatabaseUrl } from 'utilities/database';
+import { getDatabaseUrl } from '../utilities/database';
 
 const WorkerSingleton = (function () {
   let instance: WorkerUtils;
