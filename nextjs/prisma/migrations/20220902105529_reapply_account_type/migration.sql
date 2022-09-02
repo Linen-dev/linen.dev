@@ -1,0 +1,5 @@
+ALTER TABLE "accounts" DROP COLUMN IF EXISTS "type";
+DROP TYPE IF EXISTS "AccountType";
+
+CREATE TYPE "AccountType" AS ENUM ('PUBLIC', 'PRIVATE');
+ALTER TABLE "accounts" ADD COLUMN     "type" "AccountType" NOT NULL DEFAULT E'PUBLIC';
