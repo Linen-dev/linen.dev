@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { getDatabaseUrl } from 'utilities/database';
+import { getDatabaseUrl } from './utilities/database';
 
 declare global {
   // allow global `var` declarations
