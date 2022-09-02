@@ -1,4 +1,7 @@
-import { AccountType } from '@prisma/client';
+export enum AccountType {
+  'PUBLIC' = 'PUBLIC',
+  'PRIVATE' = 'PRIVATE',
+}
 
 export enum CommunityType {
   'discord' = 'discord',
@@ -86,7 +89,7 @@ export default function serialize(account?: any): SerializedAccount | null {
     googleAnalyticsId,
     syncStatus,
     id,
-    type,
+    type: type || AccountType.PUBLIC,
     communityType,
     anonymizeUsers,
     hasAuth,

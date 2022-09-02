@@ -1,6 +1,6 @@
 import React from 'react';
 import { SerializedAccount } from 'serializers/account';
-import { AccountType } from '@prisma/client';
+import { AccountType } from 'serializers/account';
 import Card from '../Card';
 
 interface Props {

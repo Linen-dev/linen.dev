@@ -1,7 +1,7 @@
 import CommunityVisibilityCard from '.';
 import { render } from '@testing-library/react';
 import { create } from '__tests__/factory';
-import { AccountType } from '@prisma/client';
+import { AccountType } from 'serializers/account';
 
 describe('CommunityVisibilityCard', () => {
   it('renders a description for a public account', () => {

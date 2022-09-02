@@ -1,5 +1,6 @@
 import type { accounts } from '@prisma/client';
-import { AccountType, MessagesViewType } from '@prisma/client';
+import { MessagesViewType } from '@prisma/client';
+import { AccountType } from 'serializers/account';
 
 export default function createMessage(options?: Partial<accounts>): accounts {
   return {

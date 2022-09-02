@@ -82,7 +82,6 @@ model channels {
 model accounts {
   id                     String           @id @default(uuid())
   createdAt              DateTime         @default(now())
-  type                   AccountType      @default(PUBLIC)
   name                   String?
   slackDomain            String?
   discordDomain          String?
@@ -110,11 +109,6 @@ model accounts {
   invites               invites[]
 
   @@unique([redirectDomain])
-}
-
-enum AccountType {
-  PUBLIC
-  PRIVATE
 }
 
 enum MessagesViewType {
