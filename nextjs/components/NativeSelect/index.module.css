@@ -19,6 +19,7 @@
   border-width: 1px;
   border-radius: 0.375rem;
   border-color: #e5e7eb;
+  min-width: 96px;
   width: 100%;
   display: block;
 }
