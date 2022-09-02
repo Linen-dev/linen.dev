@@ -236,7 +236,6 @@ export function Channel({
           <div className="flex justify-center">
             <Thread
               messages={currentThread?.messages || []}
-              threadUrl={''}
               viewCount={currentThread?.viewCount || 0}
               settings={settings}
               isSubDomainRouting={isSubDomainRouting}

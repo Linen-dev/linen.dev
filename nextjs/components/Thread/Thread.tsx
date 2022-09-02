@@ -16,7 +16,7 @@ export function Thread({
   slug,
 }: {
   messages: SerializedMessage[];
-  threadUrl: string;
+  threadUrl?: string;
   viewCount: number;
   isSubDomainRouting: boolean;
   settings: Settings;
@@ -60,10 +60,12 @@ export function Thread({
       <ul>{elements}</ul>
 
       <div className={styles.footer}>
-        <JoinChannelLink
-          href={threadUrl}
-          communityType={settings.communityType}
-        />
+        {threadUrl && (
+          <JoinChannelLink
+            href={threadUrl}
+            communityType={settings.communityType}
+          />
+        )}
         <div className={styles.count}>
           <span className={styles.subtext}>View count:</span> {viewCount + 1}
         </div>
