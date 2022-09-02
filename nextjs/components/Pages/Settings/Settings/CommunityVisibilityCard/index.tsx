@@ -37,6 +37,7 @@ export default function CommunityVisibilityCard({ account }: Props) {
         <NativeSelect
           id="type"
           icon={icon(type)}
+          theme="blue"
           options={[
             { label: 'Public', value: AccountType.PUBLIC },
             { label: 'Private', value: AccountType.PRIVATE },

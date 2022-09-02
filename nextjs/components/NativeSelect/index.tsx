@@ -1,4 +1,5 @@
 import React from 'react';
+import classNames from 'classnames';
 import Label from '../Label';
 import styles from './index.module.css';
 
@@ -18,6 +19,7 @@ interface Props {
   icon?: React.ReactNode;
   onChange?(event: React.ChangeEvent<HTMLSelectElement>): void;
   options: Option[];
+  theme?: 'white' | 'blue';
 }
 
 function NativeSelect({
@@ -31,11 +33,16 @@ function NativeSelect({
   icon,
   onChange,
   options,
+  theme,
 }: Props) {
   return (
     <>
       {label && <Label htmlFor={id}>{label}</Label>}
-      <div className={styles.container}>
+      <div
+        className={classNames(styles.container, {
+          [styles.blue]: theme === 'blue',
+        })}
+      >
         {icon && <div className={styles.icon}>{icon}</div>}
         <select
           className={styles.select}
