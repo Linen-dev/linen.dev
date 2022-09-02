@@ -9,7 +9,7 @@ import { authOptions } from './auth/[...nextauth]';
 import { createAccountAndUser } from 'lib/account';
 import { captureExceptionAndFlush, withSentry } from 'utilities/sentry';
 
-async function create(req: NextApiRequest, res: NextApiResponse) {
+export async function create(req: NextApiRequest, res: NextApiResponse) {
   const session = await unstable_getServerSession(req, res, authOptions);
   const email = session?.user?.email;
   if (!email) {
@@ -33,7 +33,10 @@ function isRedirectDomainNotUniqueError(exception: unknown) {
   );
 }
 
-async function update(request: NextApiRequest, response: NextApiResponse) {
+export async function update(
+  request: NextApiRequest,
+  response: NextApiResponse
+) {
   // TODO validate that the user in current session can update this account
   const {
     accountId,
