@@ -10,6 +10,7 @@
 
 .select {
   appearance: none;
+  cursor: pointer;
   font-size: 0.875rem;
   line-height: 1.25rem;
   padding-top: 0.5rem;
@@ -19,6 +20,7 @@
   border-width: 1px;
   border-radius: 0.375rem;
   border-color: #e5e7eb;
+  min-width: 96px;
   width: 100%;
   display: block;
 }
@@ -43,4 +45,20 @@
 
 .icon + .select {
   padding-left: 32px;
+}
+
+.blue .select {
+  background: #1149e0;
+  border-color: #1149e0;
+  color: white;
+  font-weight: bold;
+}
+
+.blue .select:focus {
+  background: #193cb7;
+  border-color: #193cb7;
+}
+
+.blue .icon {
+  color: white;
 }
