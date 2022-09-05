@@ -65,8 +65,6 @@ export async function findSlackAccounts(accountId?: string) {
   });
 }
 
-export async function createAccountAndUser(email: string) {}
-
 export async function findAccountsPremiumWithMessages() {
   return await prisma.accounts.findMany({
     select: {

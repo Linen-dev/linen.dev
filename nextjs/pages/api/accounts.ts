@@ -8,6 +8,7 @@ import { unstable_getServerSession, Session } from 'next-auth';
 import { authOptions } from './auth/[...nextauth]';
 import { captureExceptionAndFlush, withSentry } from 'utilities/sentry';
 import { generateRandomWordSlug } from 'utilities/randomWordSlugs';
+import { findAccountByEmail } from 'lib/models';
 
 export async function create({
   session,
@@ -66,9 +67,12 @@ export async function update({ params, session }: any) {
   if (!email) {
     return { status: 401 };
   }
-  // TODO validate that the user in current session can update this account
+  const account = await findAccountByEmail(email);
+  if (!account) {
+    return { status: 404 };
+  }
+
   const {
-    accountId,
     homeUrl,
     docsUrl,
     logoUrl,
@@ -78,13 +82,6 @@ export async function update({ params, session }: any) {
     anonymizeUsers,
     communityInviteUrl,
   } = params;
-  const account = await prisma.accounts.findFirst({
-    where: { id: accountId },
-    select: { premium: true },
-  });
-  if (!account) {
-    return { status: 404 };
-  }
   const freeAccount = {
     homeUrl,
     docsUrl,
@@ -105,12 +102,12 @@ export async function update({ params, session }: any) {
 
   try {
     const record = await prisma.accounts.update({
-      where: { id: accountId },
+      where: { id: account.id },
       data,
     });
 
     if (!!anonymizeUsers) {
-      dispatchAnonymizeRequest(accountId);
+      dispatchAnonymizeRequest(account.id);
     }
 
     return { status: 200, data: record };
