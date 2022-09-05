@@ -74,7 +74,6 @@ export default function AnonymizeCard({ account }: SettingsProps) {
     fetch('/api/accounts', {
       method: 'PUT',
       body: JSON.stringify({
-        accountId: account.id,
         anonymizeUsers: toggle,
       }),
     })

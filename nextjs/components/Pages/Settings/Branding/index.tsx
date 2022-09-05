@@ -92,7 +92,6 @@ export default function Branding({ account, records }: Props) {
     const response = await fetch('/api/accounts', {
       method: 'PUT',
       body: JSON.stringify({
-        accountId: account?.id,
         logoUrl,
         redirectDomain,
         brandColor,

@@ -9,6 +9,7 @@ export async function createAccounts() {
         docsUrl: `https://linen.dev/docs`,
         redirectDomain: 'linen.dev',
         brandColor: '#00bcd4',
+        slackDomain: 'linen',
         logoUrl: 'https://linen-assets.s3.amazonaws.com/linen-black-logo.svg',
       },
       {

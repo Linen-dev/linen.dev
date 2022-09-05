@@ -1,31 +1,34 @@
-import CommunityVisibilityCard from '.';
+import CommunityTypeCard from '.';
 import { render, waitFor } from '@testing-library/react';
-import { create } from '__tests__/factory';
 import { AccountType } from '@prisma/client';
 import userEvent from '@testing-library/user-event';
 
 jest.mock('utilities/featureFlags', () => ({ isLoginProtectionEnabled: true }));
 
-describe('CommunityVisibilityCard', () => {
+describe('CommunityTypeCard', () => {
   it('renders a description for a public account', () => {
-    const account = create('account', { type: AccountType.PUBLIC });
-    const { container } = render(<CommunityVisibilityCard account={account} />);
+    const { container } = render(
+      <CommunityTypeCard type={AccountType.PUBLIC} onChange={jest.fn()} />
+    );
     expect(container).toHaveTextContent(
       'Your community is currently public. It can be viewed by anyone.'
     );
   });
 
   it('renders a description for a private account', () => {
-    const account = create('account', { type: AccountType.PRIVATE });
-    const { container } = render(<CommunityVisibilityCard account={account} />);
+    const { container } = render(
+      <CommunityTypeCard type={AccountType.PRIVATE} onChange={jest.fn()} />
+    );
     expect(container).toHaveTextContent(
       'Your community is currently private. It can be viewed by admins.'
     );
   });
 
   it('changes community type on selection', async () => {
-    const account = create('account', { type: AccountType.PUBLIC });
-    const { container } = render(<CommunityVisibilityCard account={account} />);
+    const onChange = jest.fn();
+    const { container } = render(
+      <CommunityTypeCard type={AccountType.PUBLIC} onChange={onChange} />
+    );
     expect(container).toHaveTextContent(
       'Your community is currently public. It can be viewed by anyone.'
     );
@@ -36,5 +39,6 @@ describe('CommunityVisibilityCard', () => {
         'Your community is currently private. It can be viewed by admins.'
       )
     );
+    expect(onChange).toHaveBeenCalledWith(AccountType.PRIVATE);
   });
 });

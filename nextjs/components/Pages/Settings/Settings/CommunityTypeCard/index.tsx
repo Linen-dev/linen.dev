@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { SerializedAccount } from 'serializers/account';
 import { AccountType } from '@prisma/client';
 import Card from '../Card';
 import NativeSelect from 'components/NativeSelect';
@@ -7,7 +6,8 @@ import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 import { isLoginProtectionEnabled } from 'utilities/featureFlags';
 
 interface Props {
-  account: SerializedAccount;
+  type: AccountType;
+  onChange(type: AccountType): void;
 }
 
 function description(type: AccountType) {
@@ -28,8 +28,11 @@ function icon(type: AccountType) {
   }
 }
 
-export default function CommunityVisibilityCard({ account }: Props) {
-  const [type, setType] = useState(account.type);
+export default function CommunityTypeCard({
+  type: initialType,
+  onChange,
+}: Props) {
+  const [type, setType] = useState(initialType);
   return (
     <Card
       header="Community visibility"
@@ -44,7 +47,13 @@ export default function CommunityVisibilityCard({ account }: Props) {
               { label: 'Public', value: AccountType.PUBLIC },
               { label: 'Private', value: AccountType.PRIVATE },
             ]}
-            onChange={(event) => setType(event.target.value as AccountType)}
+            defaultValue={type}
+            onChange={(event: React.SyntheticEvent) => {
+              const node = event.target as HTMLSelectElement;
+              const type = node.value as AccountType;
+              setType(type);
+              onChange(type);
+            }}
           />
         )
       }
