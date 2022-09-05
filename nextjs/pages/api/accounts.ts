@@ -6,8 +6,8 @@ import { dispatchAnonymizeRequest } from 'utilities/anonymizeMessages';
 // The unstable_getServerSession only has the prefix unstable_ at the moment, because the API may change in the future. There are no known bugs at the moment and it is safe to use.
 import { unstable_getServerSession, Session } from 'next-auth';
 import { authOptions } from './auth/[...nextauth]';
-import { createAccountAndUser } from 'lib/account';
 import { captureExceptionAndFlush, withSentry } from 'utilities/sentry';
+import { generateRandomWordSlug } from 'utilities/randomWordSlugs';
 
 export async function create({
   session,
@@ -19,28 +19,37 @@ export async function create({
     return { status: 401 };
   }
 
-  const account = await createAccountAndUser(email);
-  return { status: 200, data: { id: account.id } };
+  try {
+    const displayName = email.split('@').shift() || email;
+    const { id } = await prisma.accounts.create({
+      data: {
+        auths: {
+          connect: {
+            email,
+          },
+        },
+        users: {
+          create: {
+            isAdmin: true,
+            isBot: false,
+            anonymousAlias: generateRandomWordSlug(),
+            auth: {
+              connect: {
+                email,
+              },
+            },
+            displayName,
+            externalUserId: null,
+            profileImageUrl: null,
+          },
+        },
+      },
+    });
+    return { status: 200, data: { id } };
+  } catch (exception) {
+    return { status: 500 };
+  }
 }
-
-const handlers = {
-  async create(request: NextApiRequest, response: NextApiResponse) {
-    const session = await unstable_getServerSession(
-      request,
-      response,
-      authOptions
-    );
-    const { status, data } = await create({ session });
-    if (data) {
-      return response.status(status).json(data);
-    }
-    return response.status(status);
-  },
-  async update(request: NextApiRequest, response: NextApiResponse) {
-    const params = JSON.parse(request.body);
-    return update({ params });
-  },
-};
 
 function isRedirectDomainNotUniqueError(exception: unknown) {
   return (
@@ -52,7 +61,11 @@ function isRedirectDomainNotUniqueError(exception: unknown) {
   );
 }
 
-export async function update({ params }: any) {
+export async function update({ params, session }: any) {
+  const email = session?.user?.email;
+  if (!email) {
+    return { status: 401 };
+  }
   // TODO validate that the user in current session can update this account
   const {
     accountId,
@@ -114,6 +127,30 @@ export async function update({ params }: any) {
     return { status: 500 };
   }
 }
+
+const handlers = {
+  async create(request: NextApiRequest, response: NextApiResponse) {
+    const session = await unstable_getServerSession(
+      request,
+      response,
+      authOptions
+    );
+    const { status, data } = await create({ session });
+    if (data) {
+      return response.status(status).json(data);
+    }
+    return response.status(status);
+  },
+  async update(request: NextApiRequest, response: NextApiResponse) {
+    const session = await unstable_getServerSession(
+      request,
+      response,
+      authOptions
+    );
+    const params = JSON.parse(request.body);
+    return update({ params, session });
+  },
+};
 
 async function handler(request: NextApiRequest, response: NextApiResponse) {
   if (request.method === 'POST') {
