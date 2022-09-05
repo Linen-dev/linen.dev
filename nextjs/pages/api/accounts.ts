@@ -4,24 +4,46 @@ import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import { stripProtocol } from '../../utilities/url';
 import { dispatchAnonymizeRequest } from 'utilities/anonymizeMessages';
 // The unstable_getServerSession only has the prefix unstable_ at the moment, because the API may change in the future. There are no known bugs at the moment and it is safe to use.
-import { unstable_getServerSession } from 'next-auth';
+import { unstable_getServerSession, Session } from 'next-auth';
 import { authOptions } from './auth/[...nextauth]';
 import { createAccountAndUser } from 'lib/account';
 import { captureExceptionAndFlush, withSentry } from 'utilities/sentry';
 
-export async function create(req: NextApiRequest, res: NextApiResponse) {
-  const session = await unstable_getServerSession(req, res, authOptions);
+export async function create({
+  session,
+}: {
+  session: Session | null;
+}): Promise<{ status: number; data?: { id: string } }> {
   const email = session?.user?.email;
   if (!email) {
-    return res.status(401);
+    return { status: 401 };
   }
 
   const displayName = email.split('@').shift() || email;
 
   const account = await createAccountAndUser(email, displayName);
 
-  return res.status(200).json({ id: account.id });
+  return { status: 200, data: { id: account.id } };
 }
+
+const handlers = {
+  async create(request: NextApiRequest, response: NextApiResponse) {
+    const session = await unstable_getServerSession(
+      request,
+      response,
+      authOptions
+    );
+    const { status, data } = await create({ session });
+    if (data) {
+      return response.status(status).json(data);
+    }
+    return response.status(status);
+  },
+  async update(request: NextApiRequest, response: NextApiResponse) {
+    const params = JSON.parse(request.body);
+    return update({ params });
+  },
+};
 
 function isRedirectDomainNotUniqueError(exception: unknown) {
   return (
@@ -33,10 +55,7 @@ function isRedirectDomainNotUniqueError(exception: unknown) {
   );
 }
 
-export async function update(
-  request: NextApiRequest,
-  response: NextApiResponse
-) {
+export async function update({ params }: any) {
   // TODO validate that the user in current session can update this account
   const {
     accountId,
@@ -48,13 +67,13 @@ export async function update(
     googleAnalyticsId,
     anonymizeUsers,
     communityInviteUrl,
-  } = JSON.parse(request.body);
+  } = params;
   const account = await prisma.accounts.findFirst({
     where: { id: accountId },
     select: { premium: true },
   });
   if (!account) {
-    return response.status(404).json({});
+    return { status: 404 };
   }
   const freeAccount = {
     homeUrl,
@@ -84,24 +103,27 @@ export async function update(
       dispatchAnonymizeRequest(accountId);
     }
 
-    return response.status(200).json(record);
+    return { status: 200, data: record };
   } catch (exception: unknown) {
     if (isRedirectDomainNotUniqueError(exception)) {
-      return response.status(400).json({
-        error: 'Redirect domain is already in use',
-      });
+      return {
+        status: 400,
+        data: {
+          error: 'Redirect domain is already in use',
+        },
+      };
     }
     await captureExceptionAndFlush(exception);
-    return response.status(500).json({});
+    return { status: 500 };
   }
 }
 
 async function handler(request: NextApiRequest, response: NextApiResponse) {
   if (request.method === 'POST') {
-    return create(request, response);
+    return handlers.create(request, response);
   }
   if (request.method === 'PUT') {
-    return update(request, response);
+    return handlers.update(request, response);
   }
   return response.status(404);
 }
