@@ -1,17 +1,66 @@
+import { prismaMock } from '__tests__/singleton';
 import { create, update } from 'pages/api/accounts';
+import { Session } from 'next-auth';
+import { create as factory } from '__tests__/factory';
 
 describe('accounts', () => {
   describe('#create', () => {
-    it('returns 401 for a not logged in user', async () => {
-      const { status } = await create({ session: null });
-      expect(status).toEqual(401);
+    describe('when the user is logged in', () => {
+      describe('and the account was created successfully', () => {
+        it('returns a 200 and the account id', async () => {
+          const session = { user: { email: 'john@doe.com' } } as Session;
+          await prismaMock.accounts.create.mockResolvedValue(
+            factory('account', { id: 'account-id' })
+          );
+          const { status, data } = await create({
+            session,
+          });
+          expect(status).toEqual(200);
+          expect(data).toEqual({ id: 'account-id' });
+        });
+      });
+
+      describe('and the account creation failed', () => {
+        it('returns a 500', async () => {
+          const session = { user: { email: 'john@doe.com' } } as Session;
+          await prismaMock.accounts.create.mockRejectedValue({});
+          const { status } = await create({
+            session,
+          });
+          expect(status).toEqual(500);
+        });
+      });
+    });
+
+    describe('when the user is not logged in', () => {
+      it('returns 401', async () => {
+        const { status } = await create({
+          session: null,
+        });
+        expect(status).toEqual(401);
+      });
     });
   });
 
   describe('#update', () => {
-    it('returns a 404 for if the account does not exist', async () => {
-      const { status } = await update({ params: { accountId: '1234' } });
-      expect(status).toEqual(404);
+    describe('when the user is logged in', () => {
+      it('returns a 404 for if the account does not exist', async () => {
+        const session = { user: { email: 'john@doe.com' } } as Session;
+        const { status } = await update({
+          params: { accountId: '1234' },
+          session,
+        });
+        expect(status).toEqual(404);
+      });
+    });
+
+    describe('when the user is not logged in', () => {
+      it('returns 401', async () => {
+        const { status } = await create({
+          session: null,
+        });
+        expect(status).toEqual(401);
+      });
     });
   });
 });
