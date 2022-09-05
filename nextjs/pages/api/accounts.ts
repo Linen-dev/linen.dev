@@ -144,36 +144,30 @@ export async function update({
   }
 }
 
-const handlers = {
-  async create(request: NextApiRequest, response: NextApiResponse) {
-    const session = await unstable_getServerSession(
-      request,
-      response,
-      authOptions
-    );
-    const { status, data } = await create({ session });
-    if (data) {
-      return response.status(status).json(data);
-    }
-    return response.status(status);
-  },
-  async update(request: NextApiRequest, response: NextApiResponse) {
-    const session = await unstable_getServerSession(
-      request,
-      response,
-      authOptions
-    );
-    const params = JSON.parse(request.body);
-    return update({ params, session });
-  },
+const handle = async (
+  request: NextApiRequest,
+  response: NextApiResponse,
+  callback: any
+) => {
+  const session = await unstable_getServerSession(
+    request,
+    response,
+    authOptions
+  );
+  const params = request.body ? JSON.parse(request.body) : {};
+  const { status, data } = await callback({ params, session });
+  if (data) {
+    return response.status(status).json(data);
+  }
+  return response.status(status);
 };
 
 async function handler(request: NextApiRequest, response: NextApiResponse) {
   if (request.method === 'POST') {
-    return handlers.create(request, response);
+    return handle(request, response, create);
   }
   if (request.method === 'PUT') {
-    return handlers.update(request, response);
+    return handle(request, response, update);
   }
   return response.status(404);
 }
