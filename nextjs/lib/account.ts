@@ -66,7 +66,8 @@ export async function findSlackAccounts(accountId?: string) {
   });
 }
 
-export async function createAccountAndUser(email: string, displayName: string) {
+export async function createAccountAndUser(email: string) {
+  const displayName = email.split('@').shift() || email;
   return await prisma.accounts.create({
     data: {
       auths: {

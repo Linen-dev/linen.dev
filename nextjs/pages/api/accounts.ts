@@ -19,10 +19,7 @@ export async function create({
     return { status: 401 };
   }
 
-  const displayName = email.split('@').shift() || email;
-
-  const account = await createAccountAndUser(email, displayName);
-
+  const account = await createAccountAndUser(email);
   return { status: 200, data: { id: account.id } };
 }
 
