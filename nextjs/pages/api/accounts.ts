@@ -9,6 +9,7 @@ import { authOptions } from './auth/[...nextauth]';
 import { captureExceptionAndFlush, withSentry } from 'utilities/sentry';
 import { generateRandomWordSlug } from 'utilities/randomWordSlugs';
 import { findAccountByEmail } from 'lib/models';
+import { AccountType } from '@prisma/client';
 
 export async function create({
   session,
@@ -62,7 +63,23 @@ function isRedirectDomainNotUniqueError(exception: unknown) {
   );
 }
 
-export async function update({ params, session }: any) {
+export async function update({
+  params,
+  session,
+}: {
+  params: {
+    homeUrl?: string;
+    docsUrl?: string;
+    logoUrl?: string;
+    redirectDomain?: string;
+    brandColor?: string;
+    googleAnalyticsId?: string;
+    anonymizeUsers?: boolean;
+    communityInviteUrl?: string;
+    type?: AccountType;
+  };
+  session: Session | null;
+}): Promise<{ status: number; data?: object }> {
   const email = session?.user?.email;
   if (!email) {
     return { status: 401 };
@@ -81,12 +98,14 @@ export async function update({ params, session }: any) {
     googleAnalyticsId,
     anonymizeUsers,
     communityInviteUrl,
+    type,
   } = params;
   const freeAccount = {
     homeUrl,
     docsUrl,
     anonymizeUsers,
     communityInviteUrl,
+    type,
   };
   const data = account.premium
     ? {

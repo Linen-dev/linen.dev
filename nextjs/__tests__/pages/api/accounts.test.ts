@@ -44,19 +44,42 @@ describe('accounts', () => {
 
   describe('#update', () => {
     describe('when the user is logged in', () => {
-      it('returns a 404 for if the account does not exist', async () => {
-        const session = { user: { email: 'john@doe.com' } } as Session;
-        const { status } = await update({
-          params: { accountId: '1234' },
-          session,
+      describe('and the account exists', () => {
+        it('returns a 200', async () => {
+          const session = { user: { email: 'john@doe.com' } } as Session;
+          const account = factory('account', { id: 'account-id' });
+          const auth = factory('auth', { accountId: account.id });
+          await prismaMock.auths.findFirst.mockResolvedValue(auth);
+          await prismaMock.accounts.findFirst.mockResolvedValue(account);
+          await prismaMock.accounts.update.mockResolvedValue(account);
+          const { status } = await update({
+            params: { homeUrl: 'https://foo.com', type: 'PRIVATE' },
+            session,
+          });
+          expect(status).toEqual(200);
+          expect(prismaMock.accounts.update).toHaveBeenCalledWith(
+            expect.objectContaining({
+              data: { homeUrl: 'https://foo.com', type: 'PRIVATE' },
+            })
+          );
         });
-        expect(status).toEqual(404);
+      });
+      describe('and the account does not exist', () => {
+        it('returns a 404', async () => {
+          const session = { user: { email: 'john@doe.com' } } as Session;
+          const { status } = await update({
+            params: {},
+            session,
+          });
+          expect(status).toEqual(404);
+        });
       });
     });
 
     describe('when the user is not logged in', () => {
       it('returns 401', async () => {
-        const { status } = await create({
+        const { status } = await update({
+          params: {},
           session: null,
         });
         expect(status).toEqual(401);
