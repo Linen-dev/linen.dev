@@ -1,6 +1,5 @@
 import { findAccountByPath } from '../lib/models';
 import { GetServerSidePropsContext } from 'next/types';
-import { getSession } from 'next-auth/react';
 import { NotFound } from '../utilities/response';
 import { buildSettings, Settings } from './accountSettings';
 import { memoize } from '../utilities/dynamoCache';
@@ -10,7 +9,7 @@ import {
   AccountWithSlackAuthAndChannels,
   ThreadsWithMessagesFull,
 } from 'types/partialTypes';
-import { AccountType, channels } from '@prisma/client';
+import { channels } from '@prisma/client';
 import { decodeCursor, encodeCursor } from '../utilities/cursor';
 import { shouldThisChannelBeAnonymous } from '../lib/channel';
 import {
@@ -23,7 +22,6 @@ import {
   ChannelResponse,
 } from 'components/Pages/ChannelsPage';
 import { isBot } from 'next/dist/server/web/spec-extension/user-agent';
-import { findAccountByEmail } from 'lib/models';
 
 const CURSOR_LIMIT = 10;
 
@@ -40,19 +38,6 @@ export async function channelGetServerSideProps(
     include: { channels: { where: { hidden: false } } },
   })) as AccountWithSlackAuthAndChannels;
   if (!account) return NotFound();
-  if (account.type === AccountType.PRIVATE) {
-    const session = await getSession(context);
-    const userAccount = await findAccountByEmail(session?.user?.email);
-    if (!userAccount || userAccount.id !== account.id) {
-      return {
-        redirect: {
-          destination: '/signin',
-          permanent: false,
-        },
-      };
-    }
-  }
-
   const channel = findChannelOrDefault(account.channels, channelName);
   if (!channel) return NotFound();
 
