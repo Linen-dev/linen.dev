@@ -1,7 +1,7 @@
 import type { accounts, channels, threads } from '@prisma/client';
 import { v4 as random } from 'uuid';
 import { prisma } from '../../client';
-import { threadGetStaticProps } from 'services/threads';
+import { threadGetServerSideProps } from 'services/threads';
 import { encodeCursor } from 'utilities/cursor';
 import { createThreadsOneByDay } from 'bin/factory/threads';
 jest.mock('utilities/dynamoCache');
@@ -46,7 +46,7 @@ describe('threads services', () => {
     });
 
     it('it should have a link to go back to the channel', async () => {
-      const threadProps = await threadGetStaticProps(
+      const threadProps = await threadGetServerSideProps(
         {
           params: {
             threadId: String(scope.threads[scope.threadIndex].incrementId),

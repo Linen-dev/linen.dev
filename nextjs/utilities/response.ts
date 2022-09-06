@@ -7,3 +7,12 @@ export function NotFound(): NotFoundResponse {
     notFound: true,
   };
 }
+
+export function RedirectTo(url: string) {
+  return {
+    redirect: {
+      destination: url,
+      permanent: false,
+    },
+  };
+}
