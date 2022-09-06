@@ -12,7 +12,6 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "test:integration": "dotenv -e .env.test -- jest -i -c jest.config.integration.js",
-    "setup:integration": "dotenv -e .env.test -- npm run db:migrate:test",
     "db:migrate": "npx prisma generate && npx prisma migrate dev",
     "db:migrate:test": "dotenv -e .env.test -- npx prisma migrate deploy",
     "db:seed": "ts-node --skip-project bin/seed.ts",
