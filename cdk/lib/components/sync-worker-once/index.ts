@@ -1,7 +1,7 @@
 import { Construct } from 'constructs';
 import * as cdk from 'aws-cdk-lib';
 
-type QueueWorkerOnceType = {
+type SyncWorkerOnceType = {
   cluster: cdk.aws_ecs.Cluster;
   dockerImage: cdk.aws_ecs.AssetImage;
   secrets: Record<string, cdk.aws_ecs.Secret>;
@@ -10,7 +10,7 @@ type QueueWorkerOnceType = {
   mailerAccessPolicy: cdk.aws_iam.PolicyStatement;
 };
 
-export function QueueWorkerOnce(
+export function SyncWorkerOnce(
   scope: Construct,
   {
     cluster,
@@ -19,16 +19,16 @@ export function QueueWorkerOnce(
     environment,
     cacheTableAccessPolicy,
     mailerAccessPolicy,
-  }: QueueWorkerOnceType
+  }: SyncWorkerOnceType
 ) {
-  const queueWorkerOnceDef = new cdk.aws_ecs.FargateService(
+  const SyncWorkerOnceDef = new cdk.aws_ecs.FargateService(
     scope,
-    'QueueWorkerOnceService',
+    'SyncWorkerOnceService',
     {
       cluster,
       taskDefinition: new cdk.aws_ecs.FargateTaskDefinition(
         scope,
-        'QueueWorkerOnceTaskDef',
+        'SyncWorkerOnceTaskDef',
         {
           memoryLimitMiB: 4096,
           cpu: 512,
@@ -38,18 +38,18 @@ export function QueueWorkerOnce(
       assignPublicIp: true,
     }
   );
-  queueWorkerOnceDef.taskDefinition.addContainer('QueueWorkerOnceTask', {
+  SyncWorkerOnceDef.taskDefinition.addContainer('SyncWorkerOnceTask', {
     image: dockerImage,
-    command: ['npm', 'run', 'queue:worker:webhookRunOnce'],
+    command: ['npm', 'run', 'queue:worker:syncRunOnce'],
     secrets,
     environment,
     logging: cdk.aws_ecs.LogDriver.awsLogs({
-      streamPrefix: 'linen-dev-QueueWorkerOnce',
-      logGroup: new cdk.aws_logs.LogGroup(scope, 'QueueWorkerOnceLogGroup', {
+      streamPrefix: 'linen-dev-SyncWorkerOnce',
+      logGroup: new cdk.aws_logs.LogGroup(scope, 'SyncWorkerOnceLogGroup', {
         retention: cdk.aws_logs.RetentionDays.ONE_MONTH,
       }),
     }),
   });
-  queueWorkerOnceDef.taskDefinition.addToTaskRolePolicy(cacheTableAccessPolicy);
-  queueWorkerOnceDef.taskDefinition.addToTaskRolePolicy(mailerAccessPolicy);
+  SyncWorkerOnceDef.taskDefinition.addToTaskRolePolicy(cacheTableAccessPolicy);
+  SyncWorkerOnceDef.taskDefinition.addToTaskRolePolicy(mailerAccessPolicy);
 }

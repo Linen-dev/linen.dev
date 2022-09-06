@@ -1,10 +1,6 @@
-import { listUsers } from '../../fetch_all_conversations';
-import {
-  AccountWithSlackAuthAndChannels,
-  UserMap,
-} from '../../types/partialTypes';
-import { createOrUpdateUser, findUsersByAccountId } from '../../lib/users';
-import { UserInfo } from '../../types/slackResponses/slackUserInfoInterface';
+import { AccountWithSlackAuthAndChannels, UserMap } from 'types/partialTypes';
+import { createOrUpdateUser, findUsersByAccountId } from 'lib/users';
+import { UserInfo } from 'types/slackResponses/slackUserInfoInterface';
 import { captureExceptionAndFlush } from 'utilities/sentry';
 
 export async function syncUsers({
@@ -12,11 +8,13 @@ export async function syncUsers({
   token,
   account,
   skipUsers,
+  listUsers,
 }: {
   accountId: string;
   token: string;
   account: AccountWithSlackAuthAndChannels;
   skipUsers?: boolean;
+  listUsers: Function;
 }) {
   if (!skipUsers) {
     console.log('Syncing users for account: ', accountId);

@@ -1,8 +1,8 @@
-jest.mock('../../fetch_all_conversations');
+jest.mock('services/slack/api');
 
-import { prismaMock } from '../../__tests__/singleton';
+import { prismaMock } from '__tests__/singleton';
 import { syncUsers } from './syncUsers';
-import * as fetch_all_conversations from 'fetch_all_conversations';
+import * as fetch_all_conversations from 'services/slack/api';
 
 const account = {
   id: 'accountId123',
@@ -45,6 +45,7 @@ describe('slackSync :: syncUsers', () => {
       account,
       accountId: account.id,
       token: account.slackAuthorizations[0].accessToken,
+      listUsers: fetch_all_conversations.listUsers,
     });
     expect(response).toMatchObject([internalUser]);
 

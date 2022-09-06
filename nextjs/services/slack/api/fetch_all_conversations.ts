@@ -1,12 +1,16 @@
 import type { channels, messages, threads } from '@prisma/client';
 import request from 'superagent';
 import { captureExceptionAndFlush } from 'utilities/sentry';
-import { createMessage, createOrUpdateMessage } from './lib/models';
-import { findOrCreateThread, findThread } from './lib/threads';
-import { createManyUsers, findUser } from './lib/users';
-import { createSlug } from './utilities/util';
-import { generateRandomWordSlug } from './utilities/randomWordSlugs';
-import { tsToSentAt } from './utilities/sentAt';
+import { createMessage, createOrUpdateMessage } from 'lib/models';
+import { findOrCreateThread, findThread } from 'lib/threads';
+import { createManyUsers, findUser } from 'lib/users';
+import { createSlug } from 'utilities/util';
+import { generateRandomWordSlug } from 'utilities/randomWordSlugs';
+import { tsToSentAt } from 'utilities/sentAt';
+import {
+  UserInfo,
+  UserInfoResponseBody,
+} from 'types/slackResponses/slackUserInfoInterface';
 
 export const fetchConversations = async (
   channel: string,
@@ -25,13 +29,13 @@ export const fetchConversations = async (
   return response;
 };
 
-type ConversationHistoryBody = {
+export type ConversationHistoryBody = {
   ok: boolean;
   messages: ConversationHistoryMessage[];
   has_more: boolean;
-  pin_count: number;
-  channel_actions_ts: any;
-  channel_actions_count: number;
+  pin_count?: number;
+  channel_actions_ts?: any;
+  channel_actions_count?: number;
   response_metadata?: ResponseMetadata;
 };
 
@@ -327,6 +331,8 @@ export const fetchReplies = async (
 };
 
 export const fetchFile = async (fileUrl: string, token: string) => {
+  if (!token) return await request.get(fileUrl);
+
   const response = await request
     .get(fileUrl)
     .set('Authorization', 'Bearer ' + token);
@@ -465,4 +471,29 @@ export const joinChannel = async (channel: string, token: string) => {
     .set('Authorization', 'Bearer ' + token);
 
   return response;
+};
+
+export const getSlackChannels = async (teamId: string, token: string) => {
+  const url =
+    'https://slack.com/api/conversations.list?exclude_archived=true&limit=999&';
+
+  const response = await request
+    .get(url + 'team_id=' + teamId)
+    .set('Authorization', 'Bearer ' + token);
+
+  return response;
+};
+
+export const getSlackUser = async (
+  userId: string,
+  token: string
+): Promise<UserInfo> => {
+  const url = 'https://slack.com/api/users.info?';
+
+  const response = await request
+    .get(url + 'user=' + userId)
+    .set('Authorization', 'Bearer ' + token);
+
+  const responseBody = response.body as UserInfoResponseBody;
+  return responseBody.user;
 };

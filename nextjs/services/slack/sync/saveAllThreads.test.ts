@@ -1,13 +1,13 @@
-jest.mock('../../fetch_all_conversations');
-jest.mock('../aws/s3');
+jest.mock('services/slack/api');
+jest.mock('services/aws/s3');
 
-import { prismaMock } from '../../__tests__/singleton';
+import { prismaMock } from '__tests__/singleton';
 import { conversationHistory, conversationReplies } from '__mocks__/slack-api';
-import * as fetch_all_conversations from 'fetch_all_conversations';
-import * as s3Helper from '../aws/s3';
+import * as fetch_all_conversations from 'services/slack/api';
+import * as s3Helper from 'services/aws/s3';
 import { saveAllThreads } from './saveAllThreads';
-import { createSlug } from '../../utilities/util';
-import { parseSlackSentAt } from '../../utilities/sentAt';
+import { createSlug } from 'utilities/util';
+import { parseSlackSentAt } from 'utilities/sentAt';
 
 const account = {
   id: 'accountId123',
@@ -33,22 +33,6 @@ const externalChannel2 = {
   name: 'randomName2',
   slackTeamId: account.slackTeamId,
 };
-
-const internalChannel2 = {
-  id: 'uuid234',
-  channelName: externalChannel.name,
-  externalPageCursor: 'completed',
-  externalChannelId: externalChannel2.id,
-};
-
-const rawQuery = `
-  select \"threads\".id as id , \"threads\".\"externalThreadId\", \"threads\".\"channelId\"
-  from \"threads\" join messages on messages.\"threadId\" = \"threads\".id 
-  where \"threads\".\"channelId\" in ('${internalChannel.id}' , '${internalChannel2.id}')
-  group by \"threads\".id
-  having count(*) = 1
-  order by \"threads\".\"externalThreadId\" desc
-  ;`;
 
 describe('slackSync :: saveAllThreads', () => {
   test('saveAllThreads', async () => {
@@ -93,6 +77,7 @@ describe('slackSync :: saveAllThreads', () => {
       channel: internalChannel,
       usersInDb: [],
       token: account.slackAuthorizations[0].accessToken,
+      fetchReplies: fetch_all_conversations.fetchReplies,
     });
 
     expect(findThreadsWithOnlyOneMessageMock).toBeCalledTimes(2);

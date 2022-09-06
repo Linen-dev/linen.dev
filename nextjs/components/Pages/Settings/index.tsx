@@ -10,6 +10,7 @@ import CommunityIntegration from './Settings/CommunityIntegration';
 import AnonymizeCard from './Settings/AnonymizeCard';
 import URLs from './Settings/Urls';
 import { Invite } from './Members/Invite';
+import ImportFromSlack from './Settings/ImportFromSlack';
 
 export interface SettingsProps {
   account?: SerializedAccount;
@@ -29,6 +30,7 @@ export default function Settings(props: SettingsProps) {
           <div className="grid grid-cols-1 divide-y divide-gray-200 divide-solid">
             <LinkCard {...props} />
             <CommunityIntegration {...props} />
+            <ImportFromSlack {...props} />
             <AnonymizeCard {...props} />
             <ChannelsDefault {...props} />
             <ChannelVisibilityCard {...props} />

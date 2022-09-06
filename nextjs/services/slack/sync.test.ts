@@ -1,6 +1,6 @@
 process.env.SKIP_NOTIFICATION = 'true';
 
-import { prismaMock } from '../../__tests__/singleton';
+import { prismaMock } from '__tests__/singleton';
 import { slackSync } from './sync';
 
 describe('slackSync', () => {

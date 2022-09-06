@@ -3,7 +3,7 @@ import prisma from '../client';
 import type { Prisma, users } from '@prisma/client';
 import { UserInfo } from '../types/slackResponses//slackUserInfoInterface';
 import { generateRandomWordSlug } from '../utilities/randomWordSlugs';
-import { getSlackUser } from '../services/slack';
+import { getSlackUser } from 'services/slack/api';
 
 export async function findUsersByAccountId(
   accountId: string

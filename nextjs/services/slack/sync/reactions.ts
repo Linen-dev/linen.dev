@@ -1,6 +1,6 @@
 import { messages } from '@prisma/client';
-import { ConversationHistoryMessage } from '../../fetch_all_conversations';
-import prisma from '../../client';
+import type { ConversationHistoryMessage } from '../api';
+import prisma from '../../../client';
 
 export async function processReactions(
   m: ConversationHistoryMessage,

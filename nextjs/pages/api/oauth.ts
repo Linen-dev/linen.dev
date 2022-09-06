@@ -2,76 +2,80 @@ import { timeoutAfter } from '../../utilities/retryPromises';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { createChannels } from 'services/slack';
 import request from 'superagent';
-import { fetchTeamInfo } from '../../fetch_all_conversations';
+import {
+  fetchTeamInfo,
+  getSlackChannels,
+  joinChannel,
+} from 'services/slack/api';
 import { createSlackAuthorization, updateAccount } from '../../lib/models';
-import { captureExceptionAndFlush, withSentry } from 'utilities/sentry';
+import { captureException, withSentry } from '@sentry/nextjs';
+import { createSyncJob } from 'queue/jobs';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const error = req.query.error as string;
-  if (error) {
-    console.error(error);
-    return res.redirect('/settings?error=1');
-  }
+  try {
+    if (req.query.error) {
+      throw req.query.error;
+    }
 
-  const code = req.query.code;
-  const accountId = req.query.state as string;
-  const clientId = process.env.NEXT_PUBLIC_SLACK_CLIENT_ID;
-  const clientSecret = process.env.SLACK_CLIENT_SECRET;
+    const code = req.query.code;
+    const accountId = req.query.state as string;
+    const clientId = process.env.NEXT_PUBLIC_SLACK_CLIENT_ID;
+    const clientSecret = process.env.SLACK_CLIENT_SECRET;
 
-  const resp = await getSlackAccessToken(
-    code as string,
-    clientId as string,
-    clientSecret as string
-  );
+    const resp = await getSlackAccessToken(
+      code as string,
+      clientId as string,
+      clientSecret as string
+    );
 
-  const body: SlackAuthorizationResponse = resp.body;
-  const teamInfoResponse = await fetchTeamInfo(body.access_token);
-  const communityUrl = teamInfoResponse?.body?.team?.url;
+    const body: SlackAuthorizationResponse = resp.body;
+    if (!body.ok) {
+      throw body;
+    }
 
-  const account = await updateAccount(accountId, {
-    slackTeamId: body.team.id,
-    name: body.team.name,
-    slackDomain: communityUrl.replace('https://', '').split('.')[0] as string,
-    communityUrl,
-  });
+    const teamInfoResponse = await fetchTeamInfo(body.access_token);
+    const communityUrl = teamInfoResponse?.body?.team?.url;
 
-  const user = body.authed_user;
-
-  const slackAuthorization = await createSlackAuthorization({
-    accessToken: body.access_token,
-    botUserId: body.bot_user_id,
-    scope: body.scope,
-    accountsId: account.id,
-    userAccessToken: user.access_token,
-    userScope: user.scope,
-    authedUserId: user.id,
-  });
-
-  // this function runs on serverless, implement promise race to avoid timeout for huge communities
-  await Promise.race([
-    timeoutAfter(5),
-    createChannels({
-      accountId,
+    const account = await updateAccount(accountId, {
       slackTeamId: body.team.id,
-      token: body.access_token,
-    }),
-  ]);
-
-  // Initialize syncing asynchronously
-  // console.log('Start syncing account: ', accountId);
-  request
-    .get(
-      process.env.SYNC_URL + '/api/scripts/syncHistoric?account_id=' + accountId
-    )
-    // .then(() => {
-    //   console.log('Syncing done!');
-    // })
-    .catch((err) => {
-      console.error('Syncing error: ', err);
-      return captureExceptionAndFlush(err);
+      name: body.team.name,
+      slackDomain: communityUrl.replace('https://', '').split('.')[0] as string,
+      communityUrl,
     });
 
-  return res.redirect('/settings');
+    const user = body.authed_user;
+
+    await createSlackAuthorization({
+      accessToken: body.access_token,
+      botUserId: body.bot_user_id,
+      scope: body.scope,
+      accountsId: account.id,
+      userAccessToken: user.access_token,
+      userScope: user.scope,
+      authedUserId: user.id,
+    });
+
+    // this function runs on serverless, implement promise race to avoid timeout for huge communities
+    await Promise.race([
+      timeoutAfter(5),
+      createChannels({
+        accountId,
+        slackTeamId: body.team.id,
+        token: body.access_token,
+        getSlackChannels,
+        joinChannel,
+      }),
+    ]);
+
+    await createSyncJob({
+      account_id: accountId,
+    });
+
+    return res.redirect('/settings');
+  } catch (error) {
+    captureException(error);
+    return res.redirect('/settings?error=1');
+  }
 }
 
 export const getSlackAccessToken = async (

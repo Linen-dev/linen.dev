@@ -6,7 +6,8 @@ export default APIRoute.configure({
   key(req, filename) {
     let asset = req.body.asset;
     let ext = path.extname(filename);
-    let uuidFilename = uuidv4() + ext;
+    let name = filename.substring(0, filename.indexOf(ext));
+    let uuidFilename = name + uuidv4() + ext;
 
     return `${asset}/${uuidFilename}`;
   },
