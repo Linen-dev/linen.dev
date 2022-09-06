@@ -10,13 +10,15 @@ import {
   ThreadByIdProp,
 } from '../types/apiResponses/threads/[threadId]';
 import type { users } from '@prisma/client';
-import { GetStaticPropsContext } from 'next';
+import { GetServerSidePropsContext } from 'next';
 import { NotFound } from '../utilities/response';
 import { revalidateInSeconds } from '../constants/revalidate';
 import { buildSettings } from './accountSettings';
 import { memoize } from '../utilities/dynamoCache';
 import { captureExceptionAndFlush } from 'utilities/sentry';
 import { encodeCursor } from 'utilities/cursor';
+import PermissionsService from 'services/permissions';
+import { RedirectTo } from 'utilities/response';
 
 async function getThreadById(
   threadId: string,
@@ -113,14 +115,18 @@ async function getThreadById(
   };
 }
 
-export async function threadGetStaticProps(
-  context: GetStaticPropsContext,
+export async function threadGetServerSideProps(
+  context: GetServerSidePropsContext,
   isSubdomainbasedRouting: boolean
 ): Promise<{
   props?: ThreadByIdProp;
-  revalidate: number;
+  revalidate?: number;
   notfound?: boolean;
+  redirect?: object;
 }> {
+  if (!PermissionsService.access(context)) {
+    return RedirectTo('/signin');
+  }
   const threadId = context.params?.threadId as string;
   const communityName = context.params?.communityName as string;
   try {
