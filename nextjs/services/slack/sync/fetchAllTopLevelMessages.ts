@@ -1,20 +1,16 @@
-import { fetchConversationsTyped } from '../../fetch_all_conversations';
-import { updateNextPageCursor } from '../../lib/models';
-import {
-  AccountWithSlackAuthAndChannels,
-  UserMap,
-} from '../../types/partialTypes';
+import { updateNextPageCursor } from 'lib/models';
+import { AccountWithSlackAuthAndChannels, UserMap } from 'types/partialTypes';
 import type { channels } from '@prisma/client';
 
-import prisma from '../../client';
-import { ConversationHistoryMessage } from '../../fetch_all_conversations';
+import prisma from '../../../client';
+import type { ConversationHistoryMessage } from '../api';
 import { processReactions } from './reactions';
 import { processAttachments } from './attachments';
 import { getMentionedUsers } from './getMentionedUsers';
-import { sleep } from '../../utilities/retryPromises';
-import { parseSlackSentAt, tsToSentAt } from '../../utilities/sentAt';
-import { findOrCreateThread } from '../../lib/threads';
-import { createSlug } from '../../utilities/util';
+import { sleep } from 'utilities/retryPromises';
+import { parseSlackSentAt, tsToSentAt } from 'utilities/sentAt';
+import { findOrCreateThread } from 'lib/threads';
+import { createSlug } from 'utilities/util';
 import { captureExceptionAndFlush } from 'utilities/sentry';
 
 async function saveMessagesTransaction(
@@ -83,16 +79,17 @@ async function saveMessagesTransaction(
 
 export async function fetchAllTopLevelMessages({
   channel,
-  account,
   usersInDb,
   token,
   fullSync,
+  fetchConversationsTyped,
 }: {
   channel: channels;
   account: AccountWithSlackAuthAndChannels;
   usersInDb: UserMap[];
   token: string;
   fullSync?: boolean | undefined;
+  fetchConversationsTyped: Function;
 }) {
   const c = channel;
   if (fullSync) {
@@ -113,7 +110,7 @@ export async function fetchAllTopLevelMessages({
     try {
       const additionalConversations = await fetchConversationsTyped(
         c.externalChannelId,
-        account.slackAuthorizations[0].accessToken,
+        token,
         nextCursor
       );
 

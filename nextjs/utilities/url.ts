@@ -16,3 +16,10 @@ export const addHttpsToUrl = (url: string) => {
   }
   return url;
 };
+
+/** this function will parse an object into query string params */
+export const qs = (params: any) => {
+  return Object.entries(params)
+    .map(([key, value]) => `${key}=${encodeURIComponent(value as string)}`)
+    .join('&');
+};

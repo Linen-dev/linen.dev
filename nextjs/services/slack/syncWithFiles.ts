@@ -1,36 +1,50 @@
+import axios from 'axios';
 import { findAccountById } from 'lib/models';
 import { SyncStatus, updateAndNotifySyncStatus } from 'services/sync';
 import { captureExceptionAndFlush } from 'utilities/sentry';
-import {
-  fetchTeamInfo,
-  fetchReplies,
-  joinChannel,
-  listUsers,
-  fetchConversationsTyped,
-  getSlackChannels,
-} from './api';
+import { SlackFileAdapter } from './file';
 import { syncWrapper } from './syncWrapper';
+import extract from 'extract-zip';
+import { tmpdir } from 'os';
+import fs from 'fs';
+import { v4 } from 'uuid';
 
-export async function slackSync({
+export async function slackSyncWithFiles({
   accountId,
   channelId,
   domain,
   fullSync,
   skipUsers = false,
+  fileLocation,
 }: {
   accountId: string;
   channelId?: string;
   domain?: string;
   fullSync?: boolean | undefined;
   skipUsers?: boolean;
+  fileLocation?: string;
 }) {
   console.log(new Date(), { fullSync });
 
+  if (!fileLocation) throw 'missing files location';
+
   const account = await findAccountById(accountId);
 
-  if (!account || !account.slackTeamId) {
+  if (!account) {
     throw { status: 404, error: 'Account not found' };
   }
+
+  const file = await getFileFromS3(fileLocation);
+  const tempFolder = await extractIntoTemp(file);
+
+  const {
+    fetchConversationsTyped,
+    fetchReplies,
+    fetchTeamInfo,
+    getSlackChannels,
+    joinChannel,
+    listUsers,
+  } = new SlackFileAdapter(tempFolder);
 
   await updateAndNotifySyncStatus(
     accountId,
@@ -84,4 +98,31 @@ export async function slackSync({
   } finally {
     console.log('sync finished at', new Date());
   }
+}
+
+async function getFileFromS3(fileLocation: string) {
+  return new Promise(async (res, rej) => {
+    try {
+      const target = tmpdir() + '/' + v4();
+      fs.mkdirSync(target, { recursive: true });
+      const response = await axios({
+        baseURL: fileLocation,
+        method: 'get',
+        responseType: 'stream',
+      });
+      response.data.pipe(fs.createWriteStream(target + '/file.zip'));
+      response.data.on('end', () => {
+        res(target + '/file.zip');
+      });
+    } catch (error) {
+      rej(error);
+    }
+  });
+}
+
+async function extractIntoTemp(file: any) {
+  const target = tmpdir() + '/' + v4();
+  fs.mkdirSync(target, { recursive: true });
+  await extract(file, { dir: target });
+  return target;
 }

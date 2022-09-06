@@ -1,7 +1,7 @@
-jest.mock('../../client');
-jest.mock('../../fetch_all_conversations');
+jest.mock('../../../client');
+jest.mock('services/slack/api');
 import { fetchToken } from './fetchToken';
-import * as fetch_all_conversations from 'fetch_all_conversations';
+import * as fetch_all_conversations from 'services/slack/api';
 const account = {
   id: 'accountId123',
   slackTeamId: 'slackTeamId123',
@@ -17,6 +17,7 @@ describe('slackSync :: fetchToken', () => {
       await fetchToken({
         account,
         accountId: account.id,
+        fetchTeamInfo: fetch_all_conversations.fetchTeamInfo,
       })
     ).toBe('token123');
     expect(fetchTeamInfoSpy).toBeCalledTimes(1);

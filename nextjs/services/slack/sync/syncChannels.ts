@@ -1,18 +1,20 @@
-import { AccountWithSlackAuthAndChannels } from '../../types/partialTypes';
-import { joinChannel } from '../../fetch_all_conversations';
-import { channelIndex, createManyChannel } from '../../lib/models';
-import { getSlackChannels } from '.';
-import { sleep } from '../../utilities/retryPromises';
+import { AccountWithSlackAuthAndChannels } from 'types/partialTypes';
+import { channelIndex, createManyChannel } from 'lib/models';
+import { sleep } from 'utilities/retryPromises';
 import { captureExceptionAndFlush } from 'utilities/sentry';
 
 export async function createChannels({
   slackTeamId,
   token,
   accountId,
+  getSlackChannels,
+  joinChannel,
 }: {
   slackTeamId: string;
   token: string;
   accountId: string;
+  getSlackChannels: Function;
+  joinChannel: Function;
 }) {
   const channelsResponse = await getSlackChannels(slackTeamId, token);
   const channelsParam = channelsResponse.body.channels.map(
@@ -62,16 +64,22 @@ export async function syncChannels({
   token,
   accountId,
   channelId,
+  getSlackChannels,
+  joinChannel,
 }: {
   account: AccountWithSlackAuthAndChannels;
   token: string;
   accountId: string;
   channelId?: string;
+  getSlackChannels: Function;
+  joinChannel: Function;
 }) {
   let channels = await createChannels({
     slackTeamId: account.slackTeamId as string,
     token,
     accountId,
+    getSlackChannels,
+    joinChannel,
   });
 
   // If channelId is part of parameter only sync the specific channel

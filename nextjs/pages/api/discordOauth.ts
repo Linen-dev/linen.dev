@@ -4,64 +4,59 @@ import request from 'superagent';
 import prisma from '../../client';
 import { updateAccount } from '../../lib/models';
 import { timeoutAfter } from '../../utilities/retryPromises';
-import { captureExceptionAndFlush, withSentry } from 'utilities/sentry';
+import { captureException, withSentry } from 'utilities/sentry';
+import { createSyncJob } from 'queue/jobs';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const code = req.query.code;
-  const accountId = req.query.state as string;
-  const error = req.query.error as string;
-  if (error) {
-    const error_description = req.query.error_description as string;
-    console.error(error, error_description);
-    return res.redirect('/settings?error=1');
-  }
+  try {
+    const code = req.query.code;
+    const accountId = req.query.state as string;
 
-  const resp = await getDiscordAccessToken(code as string);
+    if (req.query.error || req.query.error_description) {
+      throw req.query;
+    }
 
-  const body: DiscordAuthorizationResponse = resp.body;
+    const resp = await getDiscordAccessToken(code as string);
 
-  const guild = body.guild;
+    const body: DiscordAuthorizationResponse = resp.body;
 
-  const account = await updateAccount(accountId, {
-    discordServerId: guild.id,
-    name: guild.name,
-  });
+    const guild = body.guild;
 
-  await prisma.discordAuthorizations.create({
-    data: {
-      accountsId: account.id,
-      accessToken: body.access_token,
-      scope: body.scope,
-      refreshToken: body.refresh_token,
-      //Expires in returns the seconds until the token expires
-      expiresAt: new Date(new Date().getTime() + body.expires_in * 1000),
-    },
-  });
-
-  // this function runs on serverless, implement promise race to avoid timeout for huge communities
-  await Promise.race([
-    timeoutAfter(5),
-    listChannelsAndPersist({
-      serverId: guild.id,
-      accountId: account.id,
-      token: process.env.DISCORD_TOKEN as string,
-    }),
-  ]);
-
-  // Initialize syncing asynchronously
-  request
-    .get(
-      process.env.SYNC_URL + '/api/scripts/syncHistoric?account_id=' + accountId
-    )
-    // .then(() => {
-    //   console.log('Syncing done!');
-    // })
-    .catch((err) => {
-      console.error('Syncing error: ', err);
-      return captureExceptionAndFlush(err);
+    const account = await updateAccount(accountId, {
+      discordServerId: guild.id,
+      name: guild.name,
     });
 
-  return res.redirect('/settings');
+    await prisma.discordAuthorizations.create({
+      data: {
+        accountsId: account.id,
+        accessToken: body.access_token,
+        scope: body.scope,
+        refreshToken: body.refresh_token,
+        //Expires in returns the seconds until the token expires
+        expiresAt: new Date(new Date().getTime() + body.expires_in * 1000),
+      },
+    });
+
+    // this function runs on serverless, implement promise race to avoid timeout for huge communities
+    await Promise.race([
+      timeoutAfter(5),
+      listChannelsAndPersist({
+        serverId: guild.id,
+        accountId: account.id,
+        token: process.env.DISCORD_TOKEN as string,
+      }),
+    ]);
+
+    await createSyncJob({
+      account_id: accountId,
+    });
+
+    return res.redirect('/settings');
+  } catch (error) {
+    captureException(error);
+    return res.redirect('/settings?error=1');
+  }
 }
 
 export const getDiscordAccessToken = async (code: string) => {

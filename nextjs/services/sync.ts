@@ -1,8 +1,16 @@
 import ApplicationMailer from '../mailers/ApplicationMailer';
 import { updateAccountSyncStatus } from '../lib/models';
-import { sendNotification } from './slack';
+import { sendNotification, slackSync } from './slack';
 import { captureExceptionAndFlush } from 'utilities/sentry';
 import { SUPPORT_EMAIL } from 'secrets';
+import type {
+  accounts,
+  discordAuthorizations,
+  slackAuthorizations,
+} from '@prisma/client';
+import { discordSync } from './discord/sync';
+import { slackSyncWithFiles } from './slack/syncWithFiles';
+import prisma from '../client';
 
 export enum SyncStatus {
   IN_PROGRESS = 'IN_PROGRESS',
@@ -64,4 +72,51 @@ async function slackNotification(
 
 function skipNotification() {
   return process.env.SKIP_NOTIFICATION === 'true';
+}
+
+function identifySyncType(
+  account:
+    | (accounts & {
+        slackAuthorizations: slackAuthorizations[];
+        discordAuthorizations: discordAuthorizations[];
+      })
+    | null
+) {
+  if (account?.discordAuthorizations.length) {
+    return discordSync;
+  }
+  if (account?.slackAuthorizations.length) {
+    return slackSync;
+  }
+  throw 'authorization missing';
+}
+
+export type SyncJobType = {
+  account_id: string;
+  file_location?: string;
+};
+
+export async function syncJob({ account_id, file_location }: SyncJobType) {
+  const accountId = account_id;
+  const fileLocation = file_location;
+
+  const account = await prisma.accounts.findUnique({
+    where: {
+      id: accountId,
+    },
+    include: {
+      discordAuthorizations: true,
+      slackAuthorizations: true,
+    },
+  });
+
+  const syncFunction = fileLocation
+    ? slackSyncWithFiles
+    : identifySyncType(account);
+
+  await syncFunction({
+    accountId,
+    fullSync: true, // discord only
+    fileLocation,
+  });
 }

@@ -1,7 +1,4 @@
-import {
-  SyncStatus,
-  updateAndNotifySyncStatus,
-} from '../../services/syncStatus';
+import { SyncStatus, updateAndNotifySyncStatus } from '../sync';
 import prisma from '../../client';
 import { listChannelsAndPersist } from './channels';
 import { processChannel } from './channels';

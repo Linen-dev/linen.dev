@@ -1,15 +1,15 @@
-import { uploadFile } from '../aws/s3';
+import { uploadFile } from 'services/aws/s3';
 import {
   BUCKET_PREFIX_FOR_ATTACHMENTS,
   LINEN_ASSETS_CDN,
-} from '../../constants';
+} from '../../../constants';
 import { messages } from '@prisma/client';
 import {
-  ConversationHistoryMessage,
+  type ConversationHistoryMessage,
   fetchFile,
-  MessageFile,
-} from '../../fetch_all_conversations';
-import prisma from '../../client';
+  type MessageFile,
+} from '../api';
+import prisma from '../../../client';
 import { captureExceptionAndFlush } from 'utilities/sentry';
 
 export async function processAttachments(
