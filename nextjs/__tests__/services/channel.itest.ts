@@ -29,8 +29,6 @@ const reqWithUserHeaders = {
   },
 };
 
-if (process.env.DATABASE_URL) throw 'be careful';
-
 describe('channels services', () => {
   const scope = {
     account: {} as accounts,
