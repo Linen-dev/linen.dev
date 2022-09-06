@@ -10,10 +10,7 @@ const config = {
   // coverageDirectory: 'coverage',
   moduleDirectories: ['node_modules', '<rootDir>/'],
   testMatch: ['**/?(*.)+(ispec|itest).[tj]s?(x)'],
-  setupFilesAfterEnv: [
-    '<rootDir>/__tests__/mocks.ts',
-    '<rootDir>/__mocks__/client.ts',
-  ],
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.integration.js'],
 };
 
 module.exports = createJestConfig({ ...customJestConfig, ...config });

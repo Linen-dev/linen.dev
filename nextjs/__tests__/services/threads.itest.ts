@@ -6,8 +6,6 @@ import { encodeCursor } from 'utilities/cursor';
 import { createThreadsOneByDay } from 'bin/factory/threads';
 jest.mock('utilities/dynamoCache');
 
-if (process.env.DATABASE_URL) throw 'be careful';
-
 describe('threads services', () => {
   describe('from thread view', () => {
     const scope = {
