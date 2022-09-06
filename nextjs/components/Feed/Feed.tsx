@@ -33,8 +33,8 @@ export function Feed({
             slug,
             viewCount,
           }: SerializedThread) => {
-            const oldestMessage = messages[messages.length - 1];
-            const newestMessage = messages[0];
+            const oldestMessage = messages[0];
+            const newestMessage = messages[messages.length - 1];
 
             const author = oldestMessage?.author;
             //don't include the original poster for the thread in replies

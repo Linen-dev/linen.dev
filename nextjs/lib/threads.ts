@@ -200,7 +200,7 @@ export async function findThreadsByCursor({
           reactions: true,
           attachments: true,
         },
-        orderBy: { sentAt: 'desc' },
+        orderBy: { sentAt: 'asc' },
       },
     },
     orderBy: { sentAt: sort },
