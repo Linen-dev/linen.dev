@@ -5,8 +5,6 @@ import * as sitemap from '../../utilities/sitemap';
 
 const random = () => v4();
 
-if (process.env.DATABASE_URL) throw 'be careful';
-
 async function createChannel({
   account,
   hidden,
