@@ -1,6 +1,6 @@
 export const isStripeEnabled = false;
 export const isVercelDomainEnabled = true;
-export const isLoginProtectionEnabled = false;
+export const isLoginProtectionEnabled = true;
 
 export default {
   isStripeEnabled,
