@@ -1,13 +1,13 @@
-jest.mock('../../fetch_all_conversations');
-jest.mock('../aws/s3');
+jest.mock('services/slack/api');
+jest.mock('services/aws/s3');
 
-import { prismaMock } from '../../__tests__/singleton';
-import * as s3Helper from '../aws/s3';
-import * as fetch_all_conversations from '../../fetch_all_conversations';
+import { prismaMock } from '__tests__/singleton';
+import * as s3Helper from 'services/aws/s3';
+import * as fetch_all_conversations from 'services/slack/api';
 import { fetchAllTopLevelMessages } from './fetchAllTopLevelMessages';
 import { conversationHistory } from '__mocks__/slack-api';
-import { parseSlackSentAt, tsToSentAt } from '../../utilities/sentAt';
-import { createSlug } from '../../utilities/util';
+import { parseSlackSentAt, tsToSentAt } from 'utilities/sentAt';
+import { createSlug } from 'utilities/util';
 
 const account = {
   id: 'accountId123',
@@ -70,6 +70,7 @@ describe('slackSync :: fetchAllTopLevelMessages', () => {
       account,
       usersInDb: [],
       token: account.slackAuthorizations[0].accessToken,
+      fetchConversationsTyped: fetch_all_conversations.fetchConversationsTyped,
     });
 
     expect(fetchConversationsTypedMock).toHaveBeenCalledTimes(1);

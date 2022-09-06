@@ -1,17 +1,18 @@
-import { fetchTeamInfo } from '../../fetch_all_conversations';
-import { updateAccountRedirectDomain } from '../../lib/models';
-import { AccountWithSlackAuthAndChannels } from '../../types/partialTypes';
+import { updateAccountRedirectDomain } from 'lib/models';
+import { AccountWithSlackAuthAndChannels } from 'types/partialTypes';
 
 export async function fetchToken({
   account,
   domain,
   accountId,
+  fetchTeamInfo,
 }: {
   account: AccountWithSlackAuthAndChannels;
   domain?: string;
   accountId: string;
+  fetchTeamInfo: Function;
 }) {
-  const token = account.slackAuthorizations[0].accessToken;
+  const token = account.slackAuthorizations?.shift()?.accessToken || '';
 
   const teamInfoResponse = await fetchTeamInfo(token);
   const communityUrl = teamInfoResponse?.body?.team?.url;

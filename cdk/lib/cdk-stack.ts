@@ -2,14 +2,16 @@ import type { Construct } from 'constructs';
 import * as cdk from 'aws-cdk-lib';
 import { SyncDiscord } from './components/sync-discord';
 import { Maintenance } from './components/maintenance';
-import { NextApp } from './components/next';
+// import { NextApp } from './components/next';
 import { Vpc } from './components/vpc';
 import { Docker } from './components/docker';
 import { Roles } from './components/roles';
 import { Secrets } from './components/secrets';
-import { Distro } from './components/distro';
+// import { Distro } from './components/distro';
 import { QueueWorker } from './components/queue-worker';
 import { QueueWorkerOnce } from './components/queue-worker-once';
+import { SyncWorker } from './components/sync-worker';
+import { SyncWorkerOnce } from './components/sync-worker-once';
 
 export class CdkStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -28,17 +30,17 @@ export class CdkStack extends cdk.Stack {
       vpc,
     });
 
-    const { loadBalancer } = NextApp(this, {
-      cluster,
-      dockerImage,
-      secrets,
-      environment,
-      cacheTableAccessPolicy,
-      mailerAccessPolicy,
-      securityGroup,
-    });
+    // const { loadBalancer } = NextApp(this, {
+    //   cluster,
+    //   dockerImage,
+    //   secrets,
+    //   environment,
+    //   cacheTableAccessPolicy,
+    //   mailerAccessPolicy,
+    //   securityGroup,
+    // });
 
-    Distro(this, { loadBalancer });
+    // Distro(this, { loadBalancer });
 
     QueueWorker(this, {
       cluster,
@@ -50,6 +52,24 @@ export class CdkStack extends cdk.Stack {
     });
 
     QueueWorkerOnce(this, {
+      cluster,
+      dockerImage,
+      secrets,
+      environment,
+      cacheTableAccessPolicy,
+      mailerAccessPolicy,
+    });
+
+    SyncWorker(this, {
+      cluster,
+      dockerImage,
+      secrets,
+      environment,
+      cacheTableAccessPolicy,
+      mailerAccessPolicy,
+    });
+
+    SyncWorkerOnce(this, {
       cluster,
       dockerImage,
       secrets,

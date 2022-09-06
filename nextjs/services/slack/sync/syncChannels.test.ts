@@ -1,10 +1,8 @@
-jest.mock('../../fetch_all_conversations');
-jest.mock('./slackHelper');
+jest.mock('services/slack/api');
 
-import { prismaMock } from '../../__tests__/singleton';
+import { prismaMock } from '__tests__/singleton';
 import { syncChannels } from './syncChannels';
-import * as fetch_all_conversations from 'fetch_all_conversations';
-import * as slackHelper from './slackHelper';
+import * as fetch_all_conversations from 'services/slack/api';
 import { conversationList } from '__mocks__/slack-api';
 
 const account = {
@@ -41,7 +39,7 @@ const internalChannel3 = {
 describe('slackSync :: syncChannels', () => {
   test('syncChannels', async () => {
     const getSlackChannelsSpy = jest
-      .spyOn(slackHelper, 'getSlackChannels')
+      .spyOn(fetch_all_conversations, 'getSlackChannels')
       .mockReturnValueOnce({
         body: conversationList,
       } as any);
@@ -59,6 +57,8 @@ describe('slackSync :: syncChannels', () => {
       token: account.slackAuthorizations[0].accessToken,
       account,
       accountId: account.id,
+      getSlackChannels: fetch_all_conversations.getSlackChannels,
+      joinChannel: fetch_all_conversations.joinChannel,
     });
     expect(response).toMatchObject([
       internalChannel,
