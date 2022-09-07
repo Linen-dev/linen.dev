@@ -14,9 +14,9 @@ interface Props {
 function description(type: AccountType) {
   switch (type) {
     case AccountType.PUBLIC:
-      return 'Your community is currently public. It can be viewed by anyone. Premium feature.';
+      return 'Your community is currently public. It can be viewed by anyone.';
     case AccountType.PRIVATE:
-      return 'Your community is currently private. It can be viewed by admins. Premium feature.';
+      return 'Your community is currently private. It can be viewed by admins.';
   }
 }
 
@@ -42,23 +42,26 @@ export default function CommunityTypeCard({
       action={
         isLoginProtectionEnabled && (
           <>
-            <NativeSelect
-              id="type"
-              icon={icon(type)}
-              theme="blue"
-              options={[
-                { label: 'Public', value: AccountType.PUBLIC },
-                { label: 'Private', value: AccountType.PRIVATE },
-              ]}
-              defaultValue={type}
-              disabled={disabled}
-              onChange={(event: React.SyntheticEvent) => {
-                const node = event.target as HTMLSelectElement;
-                const type = node.value as AccountType;
-                setType(type);
-                onChange(type);
-              }}
-            />
+            {disabled ? (
+              <small>Premium feature</small>
+            ) : (
+              <NativeSelect
+                id="type"
+                icon={icon(type)}
+                theme="blue"
+                options={[
+                  { label: 'Public', value: AccountType.PUBLIC },
+                  { label: 'Private', value: AccountType.PRIVATE },
+                ]}
+                defaultValue={type}
+                onChange={(event: React.SyntheticEvent) => {
+                  const node = event.target as HTMLSelectElement;
+                  const type = node.value as AccountType;
+                  setType(type);
+                  onChange(type);
+                }}
+              />
+            )}
           </>
         )
       }
