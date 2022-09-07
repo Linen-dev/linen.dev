@@ -17,6 +17,7 @@ describe('#access', () => {
       await prisma.accounts.create({
         data: {
           name: 'foo',
+          slackDomain: 'foo',
           type: AccountType.PUBLIC,
         },
       });
@@ -33,6 +34,7 @@ describe('#access', () => {
         await prisma.accounts.create({
           data: {
             name: 'foo',
+            slackDomain: 'foo',
             type: AccountType.PRIVATE,
           },
         });
@@ -50,6 +52,7 @@ describe('#access', () => {
           await prisma.accounts.create({
             data: {
               name: 'foo',
+              slackDomain: 'foo',
               type: AccountType.PRIVATE,
             },
           });
@@ -66,6 +69,7 @@ describe('#access', () => {
           const account = await prisma.accounts.create({
             data: {
               name: 'foo',
+              slackDomain: 'foo',
               type: AccountType.PRIVATE,
             },
           });
@@ -90,6 +94,7 @@ describe('#access', () => {
           await prisma.accounts.create({
             data: {
               name: 'foo',
+              slackDomain: 'foo',
               type: AccountType.PRIVATE,
             },
           });
