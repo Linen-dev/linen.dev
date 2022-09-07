@@ -39,16 +39,17 @@ model messages {
 }
 
 model threads {
-  id               String   @id @default(uuid())
-  incrementId      Int      @default(autoincrement())
-  channel          channels @relation(fields: [channelId], references: [id])
+  id               String      @id @default(uuid())
+  incrementId      Int         @default(autoincrement())
+  channel          channels    @relation(fields: [channelId], references: [id])
   externalThreadId String
-  viewCount        Int      @default(0)
+  viewCount        Int         @default(0)
   slug             String?
-  messageCount     Int      @default(1)
+  messageCount     Int         @default(1)
   sentAt           BigInt
-  hidden           Boolean  @default(false)
+  hidden           Boolean     @default(false)
   title            String?
+  state            ThreadState @default(OPEN)
 
   messages  messages[]
   channelId String
@@ -58,6 +59,11 @@ model threads {
   @@index([channelId])
   @@index([channelId, sentAt])
   @@index([channelId, sentAt, hidden])
+}
+
+enum ThreadState {
+  OPEN
+  CLOSE
 }
 
 model channels {
