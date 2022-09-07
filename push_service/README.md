@@ -16,3 +16,24 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
 - Docs: https://hexdocs.pm/phoenix
 - Forum: https://elixirforum.com/c/phoenix-forum
 - Source: https://github.com/phoenixframework/phoenix
+
+## Services are connected to push
+
+How service works:
+
+1. Client side is loaded with channel ids
+2. Client joins the channels that it has access to
+3. When someone sends a new message it hits the node api
+4. Node api saves to the database and then sends a post request to Elixir push service with the following data:
+
+```
+  {
+    channelId: '',
+    messageObject: {
+      someMessageObject
+    }
+  }
+```
+
+5. Based on who has subscribed to the channel id it broadcasts to all the clients that are connected to it
+6. Client recieves the new message and rerenders the new element in channel or feed.
