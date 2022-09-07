@@ -16,6 +16,7 @@ export function ThreadPage({
   slug,
   incrementId,
   title,
+  permissions,
 }: ThreadByIdProp) {
   useEffect(() => {
     threadId &&

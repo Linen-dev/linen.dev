@@ -13,6 +13,7 @@ export default function ChannelPage({
   nextCursor,
   pathCursor,
   isBot,
+  permissions,
 }: ChannelViewProps) {
   if (!threads) {
     return <div />;
@@ -48,6 +49,7 @@ export default function ChannelPage({
         nextCursor={nextCursor}
         pathCursor={pathCursor}
         isBot={isBot}
+        permissions={permissions}
       />
     </PageLayout>
   );

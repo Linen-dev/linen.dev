@@ -135,3 +135,40 @@ describe('#access', () => {
     });
   });
 });
+
+describe('#inbox', () => {
+  describe('when the user is logged in', () => {
+    describe('and the user belongs to the community', () => {
+      it('returns true', async () => {
+        const context = {
+          params: { communityName: 'foo' },
+        };
+        const account = await prisma.accounts.create({
+          data: {
+            name: 'foo',
+            slackDomain: 'foo',
+          },
+        });
+        await prisma.auths.create({
+          data: {
+            email: 'john@doe.com',
+            accountId: account.id,
+            password: 'foo',
+            salt: 'bar',
+          },
+        });
+        Session.find.mockResolvedValue({ user: { email: 'john@doe.com' } });
+        expect(await PermissionsService.inbox(context)).toEqual(true);
+      });
+    });
+  });
+  describe('when the user is not logged in', () => {
+    it('returns false', async () => {
+      const context = {
+        params: { communityName: 'foo' },
+      };
+      Session.find.mockResolvedValue(null);
+      expect(await PermissionsService.inbox(context)).toEqual(false);
+    });
+  });
+});

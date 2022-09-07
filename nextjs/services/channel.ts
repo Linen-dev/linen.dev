@@ -105,6 +105,9 @@ export async function channelGetServerSideProps(
       isSubDomainRouting: isSubdomainbasedRouting,
       pathCursor: page || null,
       isBot: isCrawler,
+      permissions: {
+        inbox: await PermissionsService.inbox(context),
+      },
     },
   };
 }

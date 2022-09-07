@@ -133,6 +133,9 @@ export async function threadGetServerSideProps(
     return {
       props: {
         ...thread,
+        permissions: {
+          inbox: await PermissionsService.inbox(context),
+        },
         isSubDomainRouting: isSubdomainbasedRouting,
       },
     };
