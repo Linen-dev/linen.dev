@@ -41,6 +41,7 @@
   position: absolute;
   top: 0;
   width: 36px;
+  z-index: 1;
 }
 
 .icon + .select {
@@ -61,4 +62,8 @@
 
 .blue .icon {
   color: white;
+}
+
+.disabled .select {
+  cursor: not-allowed;
 }

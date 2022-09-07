@@ -105,7 +105,6 @@ export async function update({
     docsUrl,
     anonymizeUsers,
     communityInviteUrl,
-    type,
   };
   const data = account.premium
     ? {
@@ -113,6 +112,7 @@ export async function update({
         brandColor,
         googleAnalyticsId,
         logoUrl,
+        type,
         ...(redirectDomain && {
           redirectDomain: stripProtocol(redirectDomain),
         }),

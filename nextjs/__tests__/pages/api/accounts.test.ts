@@ -45,23 +45,52 @@ describe('accounts', () => {
   describe('#update', () => {
     describe('when the user is logged in', () => {
       describe('and the account exists', () => {
-        it('returns a 200', async () => {
-          const session = { user: { email: 'john@doe.com' } } as Session;
-          const account = factory('account', { id: 'account-id' });
-          const auth = factory('auth', { accountId: account.id });
-          await prismaMock.auths.findFirst.mockResolvedValue(auth);
-          await prismaMock.accounts.findFirst.mockResolvedValue(account);
-          await prismaMock.accounts.update.mockResolvedValue(account);
-          const { status } = await update({
-            params: { homeUrl: 'https://foo.com', type: 'PRIVATE' },
-            session,
+        describe('and the account is free', () => {
+          it('returns a 200', async () => {
+            const session = { user: { email: 'john@doe.com' } } as Session;
+            const account = factory('account', {
+              id: 'account-id',
+              premium: false,
+            });
+            const auth = factory('auth', { accountId: account.id });
+            await prismaMock.auths.findFirst.mockResolvedValue(auth);
+            await prismaMock.accounts.findFirst.mockResolvedValue(account);
+            await prismaMock.accounts.update.mockResolvedValue(account);
+            const { status } = await update({
+              params: { homeUrl: 'https://foo.com', type: 'PRIVATE' },
+              session,
+            });
+            expect(status).toEqual(200);
+            expect(prismaMock.accounts.update).toHaveBeenCalledWith(
+              expect.objectContaining({
+                data: { homeUrl: 'https://foo.com' },
+              })
+            );
           });
-          expect(status).toEqual(200);
-          expect(prismaMock.accounts.update).toHaveBeenCalledWith(
-            expect.objectContaining({
-              data: { homeUrl: 'https://foo.com', type: 'PRIVATE' },
-            })
-          );
+        });
+
+        describe('and the account is premium', () => {
+          it('returns a 200', async () => {
+            const session = { user: { email: 'john@doe.com' } } as Session;
+            const account = factory('account', {
+              id: 'account-id',
+              premium: true,
+            });
+            const auth = factory('auth', { accountId: account.id });
+            await prismaMock.auths.findFirst.mockResolvedValue(auth);
+            await prismaMock.accounts.findFirst.mockResolvedValue(account);
+            await prismaMock.accounts.update.mockResolvedValue(account);
+            const { status } = await update({
+              params: { homeUrl: 'https://foo.com', type: 'PRIVATE' },
+              session,
+            });
+            expect(status).toEqual(200);
+            expect(prismaMock.accounts.update).toHaveBeenCalledWith(
+              expect.objectContaining({
+                data: { homeUrl: 'https://foo.com', type: 'PRIVATE' },
+              })
+            );
+          });
         });
       });
       describe('and the account does not exist', () => {

@@ -124,7 +124,7 @@ export async function threadGetServerSideProps(
   notfound?: boolean;
   redirect?: object;
 }> {
-  const access = PermissionsService.access(context);
+  const access = await PermissionsService.access(context);
   if (!access) {
     return RedirectTo('/signin');
   }

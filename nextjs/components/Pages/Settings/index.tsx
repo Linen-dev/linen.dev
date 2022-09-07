@@ -56,15 +56,16 @@ export default function Settings(props: SettingsProps) {
             <AnonymizeCard {...props} />
             <ChannelsDefault {...props} />
             <ChannelVisibilityCard {...props} />
+            <URLs {...props} />
             {props.account && (
               <CommunityTypeCard
                 type={props.account.type}
+                disabled={!props.account.premium}
                 onChange={(type: AccountType) => {
                   updateAccount({ type });
                 }}
               />
             )}
-            <URLs {...props} />
           </div>
         </div>
       </DashboardLayout>
