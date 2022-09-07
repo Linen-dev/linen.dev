@@ -15,6 +15,7 @@ export function ThreadPage({
   settings,
   slug,
   incrementId,
+  title,
 }: ThreadByIdProp) {
   useEffect(() => {
     threadId &&
@@ -47,6 +48,7 @@ export function ThreadPage({
     >
       <div className="max-w-[700px]">
         <Thread
+          title={title}
           messages={messages}
           threadUrl={threadUrl}
           viewCount={viewCount}

@@ -27,6 +27,7 @@ export type ThreadById = {
   threadUrl: string;
   settings: Settings;
   pathCursor: string;
+  title: string | null;
 };
 
 export interface Author {

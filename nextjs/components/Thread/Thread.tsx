@@ -14,6 +14,7 @@ export function Thread({
   settings,
   incrementId,
   slug,
+  title,
 }: {
   messages: SerializedMessage[];
   threadUrl?: string;
@@ -22,6 +23,7 @@ export function Thread({
   settings: Settings;
   incrementId?: number;
   slug?: string;
+  title: string | null;
 }) {
   const threadLink = getThreadUrl({
     incrementId: incrementId!,
@@ -53,6 +55,7 @@ export function Thread({
 
   return (
     <div className={styles.thread}>
+      {title ? <h2 className={styles.title}>{title}</h2> : <></>}
       <ul>{elements}</ul>
 
       <div className={styles.footer}>
