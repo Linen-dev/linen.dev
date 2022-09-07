@@ -8,7 +8,11 @@ jest.mock('utilities/featureFlags', () => ({ isLoginProtectionEnabled: true }));
 describe('CommunityTypeCard', () => {
   it('renders a description for a public account', () => {
     const { container } = render(
-      <CommunityTypeCard type={AccountType.PUBLIC} onChange={jest.fn()} />
+      <CommunityTypeCard
+        type={AccountType.PUBLIC}
+        onChange={jest.fn()}
+        disabled={false}
+      />
     );
     expect(container).toHaveTextContent(
       'Your community is currently public. It can be viewed by anyone.'
@@ -17,7 +21,11 @@ describe('CommunityTypeCard', () => {
 
   it('renders a description for a private account', () => {
     const { container } = render(
-      <CommunityTypeCard type={AccountType.PRIVATE} onChange={jest.fn()} />
+      <CommunityTypeCard
+        type={AccountType.PRIVATE}
+        onChange={jest.fn()}
+        disabled={false}
+      />
     );
     expect(container).toHaveTextContent(
       'Your community is currently private. It can be viewed by admins.'
@@ -27,7 +35,11 @@ describe('CommunityTypeCard', () => {
   it('changes community type on selection', async () => {
     const onChange = jest.fn();
     const { container } = render(
-      <CommunityTypeCard type={AccountType.PUBLIC} onChange={onChange} />
+      <CommunityTypeCard
+        type={AccountType.PUBLIC}
+        onChange={onChange}
+        disabled={false}
+      />
     );
     expect(container).toHaveTextContent(
       'Your community is currently public. It can be viewed by anyone.'

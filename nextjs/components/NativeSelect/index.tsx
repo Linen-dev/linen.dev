@@ -41,6 +41,7 @@ function NativeSelect({
       <div
         className={classNames(styles.container, {
           [styles.blue]: theme === 'blue',
+          [styles.disabled]: disabled,
         })}
       >
         {icon && <div className={styles.icon}>{icon}</div>}
