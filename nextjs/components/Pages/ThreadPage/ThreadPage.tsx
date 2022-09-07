@@ -40,7 +40,7 @@ export function ThreadPage({
       }}
       communityName={settings.communityName}
       currentChannel={currentChannel}
-      navItems={{ channels: channels }}
+      channels={channels}
       communityUrl={settings.communityUrl}
       communityInviteUrl={settings.communityInviteUrl}
       settings={settings}

@@ -23,10 +23,10 @@ interface Settings {
 }
 
 interface Props {
-  seo: SeoProps;
+  seo?: SeoProps;
   children: React.ReactNode;
-  currentChannel: channels;
-  navItems?: any;
+  currentChannel?: channels;
+  channels?: channels[];
   communityUrl?: string;
   communityInviteUrl?: string;
   settings: Settings;
@@ -37,7 +37,7 @@ interface Props {
 function PageLayout({
   seo,
   children,
-  navItems,
+  channels: initialChannels,
   currentChannel,
   communityUrl,
   communityInviteUrl,
@@ -45,7 +45,9 @@ function PageLayout({
   communityName,
   isSubDomainRouting,
 }: Props) {
-  const channels = navItems.channels.filter((c: channels) => !c.hidden);
+  const channels = initialChannels
+    ? initialChannels.filter((c: channels) => !c.hidden)
+    : [];
   const homeUrl = addHttpsToUrl(settings.homeUrl);
   const docsUrl = addHttpsToUrl(settings.docsUrl);
   const logoUrl = addHttpsToUrl(settings.logoUrl);
@@ -120,16 +122,15 @@ function PageLayout({
           communityType={settings.communityType}
         />
       </div>
-      <SEO {...seo} />
+      {seo && <SEO {...seo} />}
       <div className="flex flex-col lg:flex-row">
         {NavBar({
           channels,
-          channelName: currentChannel.channelName || '',
+          channelName: currentChannel?.channelName || '',
           communityName,
           communityType: settings.communityType,
           isSubDomainRouting,
         })}
-
         <div
           className={classNames(
             'lg:h-[calc(100vh_-_80px)] lg:w-full',

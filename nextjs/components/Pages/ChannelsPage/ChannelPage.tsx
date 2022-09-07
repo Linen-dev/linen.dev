@@ -34,7 +34,7 @@ export default function ChannelPage({
           threads,
         }),
       }}
-      navItems={{ channels }}
+      channels={channels}
       settings={settings}
       communityName={settings.communityName}
       isSubDomainRouting={isSubDomainRouting}

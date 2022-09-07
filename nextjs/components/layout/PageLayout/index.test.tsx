@@ -27,7 +27,7 @@ describe('PageLayout', () => {
           communityType: 'slack',
           googleAnalyticsId: 'UA-123456789-1',
         }}
-        navItems={{ channels }}
+        channels={channels}
         currentChannel={channels[0]}
         isSubDomainRouting
       >

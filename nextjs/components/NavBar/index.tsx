@@ -1,12 +1,11 @@
 import NativeSelect from 'components/NativeSelect';
-import Card from 'components/Card';
 import { channels } from '@prisma/client';
 import ChannelName from './ChannelName';
 import CustomLink from '../Link/CustomLink';
 import { AiOutlineNumber } from 'react-icons/ai';
 import CustomRouterPush from '../Link/CustomRouterPush';
-import styles from './index.module.css';
 import { sortByChannelName } from './utilities';
+import { isInboxEnabled } from 'utilities/featureFlags';
 
 export default function NavBar({
   channelName,
@@ -36,6 +35,19 @@ export default function NavBar({
 
   const navBarLg = (
     <div className="pl-2 w-[250px] pt-4 bg-slate-50">
+      {isInboxEnabled && (
+        <h5 style={{ fontWeight: 'bold', paddingLeft: 18, marginBottom: 8 }}>
+          <CustomLink
+            isSubDomainRouting={isSubDomainRouting}
+            communityName={communityName}
+            communityType={communityType}
+            path="/inbox"
+            passHref
+          >
+            Inbox
+          </CustomLink>
+        </h5>
+      )}
       <h5 style={{ fontWeight: 'bold', paddingLeft: 18, marginBottom: 8 }}>
         Channels
       </h5>
