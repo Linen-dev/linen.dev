@@ -51,6 +51,7 @@ export default function SettingsPage({ account, prices }: Props) {
           'Custom logo',
           'Custom brand colors',
           'Generated sitemap to improve SEO',
+          'Private communities',
         ],
         prices: [
           {
