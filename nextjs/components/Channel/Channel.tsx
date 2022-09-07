@@ -235,6 +235,7 @@ export function Channel({
           </div>
           <div className="flex justify-center">
             <Thread
+              title={currentThread ? currentThread.title : null}
               messages={currentThread?.messages || []}
               viewCount={currentThread?.viewCount || 0}
               settings={settings}

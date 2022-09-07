@@ -109,6 +109,7 @@ async function getThreadById(
     threadUrl,
     settings,
     pathCursor: encodeCursor(`asc:gte:${thread.sentAt.toString()}`),
+    title: thread.title,
   };
 }
 

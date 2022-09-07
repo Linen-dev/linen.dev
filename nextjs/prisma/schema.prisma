@@ -48,6 +48,7 @@ model threads {
   messageCount     Int      @default(1)
   sentAt           BigInt
   hidden           Boolean  @default(false)
+  title            String?
 
   messages  messages[]
   channelId String
@@ -77,7 +78,6 @@ model channels {
   @@unique([externalChannelId])
   @@index([accountId])
 }
-
 
 model accounts {
   id                     String           @id @default(uuid())
