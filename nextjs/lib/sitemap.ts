@@ -34,6 +34,7 @@ export const getAccountByHostWithChannelsStats = (host: string) =>
     ...accountsWithChannelsStats,
     where: {
       redirectDomain: host,
+      type: 'PUBLIC',
     },
   });
 
@@ -41,6 +42,7 @@ export const findFreeAccountsWithChannelsStats = () =>
   prisma.accounts.findMany({
     ...accountsWithChannelsStats,
     where: {
+      type: 'PUBLIC',
       premium: false,
       AND: {
         OR: [
@@ -62,6 +64,9 @@ export const findAccountByNameWithChannelsStats = (community: string) =>
         { discordServerId: community },
         { slackDomain: community },
       ],
+      AND: {
+        type: 'PUBLIC',
+      },
     },
   });
 
@@ -76,6 +81,7 @@ export const findChannelByNameAndHost = (channelName: string, host: string) =>
           { slackDomain: host },
           { redirectDomain: host },
         ],
+        AND: { type: 'PUBLIC' },
       },
       hidden: false,
     },
