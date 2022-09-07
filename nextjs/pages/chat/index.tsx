@@ -77,7 +77,7 @@ export default class Chat extends React.Component {
   }
 
   render() {
-    const listItems = this.state.messages.map((m) => <ul>{m}</ul>);
+    const listItems = this.state.messages.map((m: any) => <ul key={m}>{m}</ul>);
 
     return (
       <div>
@@ -97,8 +97,3 @@ export default class Chat extends React.Component {
     );
   }
 }
-
-// export default function Chat() {
-
-//   return <div> Hello world </div>;
-// }
