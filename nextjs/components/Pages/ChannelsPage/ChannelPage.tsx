@@ -39,6 +39,7 @@ export default function ChannelPage({
       settings={settings}
       communityName={settings.communityName}
       isSubDomainRouting={isSubDomainRouting}
+      permissions={permissions}
     >
       <ComponentToRender
         threads={threads}

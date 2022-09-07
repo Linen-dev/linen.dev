@@ -46,6 +46,7 @@ export function ThreadPage({
       communityInviteUrl={settings.communityInviteUrl}
       settings={settings}
       isSubDomainRouting={isSubDomainRouting}
+      permissions={permissions}
     >
       <div className="max-w-[700px]">
         <Thread

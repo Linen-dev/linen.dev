@@ -11,6 +11,7 @@ import JoinDiscord from 'components/JoinDiscord';
 import JoinSlack from 'components/JoinSlack';
 import styles from './index.module.css';
 import classNames from 'classnames';
+import { Permissions } from 'types/shared';
 
 interface Settings {
   brandColor: string;
@@ -32,6 +33,7 @@ interface Props {
   settings: Settings;
   communityName: string;
   isSubDomainRouting: boolean;
+  permissions: Permissions;
 }
 
 function PageLayout({
@@ -44,6 +46,7 @@ function PageLayout({
   settings,
   communityName,
   isSubDomainRouting,
+  permissions,
 }: Props) {
   const channels = initialChannels
     ? initialChannels.filter((c: channels) => !c.hidden)
@@ -130,6 +133,7 @@ function PageLayout({
           communityName,
           communityType: settings.communityType,
           isSubDomainRouting,
+          permissions,
         })}
         <div
           className={classNames(

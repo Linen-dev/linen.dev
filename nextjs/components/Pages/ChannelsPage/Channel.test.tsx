@@ -2,6 +2,7 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import ChannelPage from './ChannelPage';
 import type { MessagesViewType, users } from '@prisma/client';
+import { create as factory } from '__tests__/factory';
 
 describe('Channel', () => {
   describe('and google analytics id is set', () => {
@@ -32,6 +33,7 @@ describe('Channel', () => {
           threads={[]}
           channels={channels}
           currentChannel={channels[0]}
+          permissions={factory('permissions')}
           isSubDomainRouting
         />
       );
@@ -59,6 +61,7 @@ describe('Channel', () => {
       prev: 'prev',
     },
     pathCursor: 'pathCursor',
+    permissions: factory('permissions'),
     settings: {
       brandColor: 'brandColor',
       communityInviteUrl: 'communityInviteUrl',
