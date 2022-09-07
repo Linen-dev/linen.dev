@@ -10,6 +10,7 @@ export default function createThread(options?: Partial<threads>): threads {
     messageCount: 2,
     sentAt: BigInt(100),
     channelId: '1',
+    title: 'this is a title',
     ...options,
   };
 }
