@@ -6,5 +6,5 @@ export default ThreadPage;
 
 //Renders the same page as /threadId
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  return threadGetServerSideProps(context, true);
+  return threadGetServerSideProps(context, false);
 }
