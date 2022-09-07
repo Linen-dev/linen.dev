@@ -2,7 +2,7 @@ import { AccountType } from '@prisma/client';
 import { GetServerSidePropsContext } from 'next/types';
 import Session from '../session';
 import prisma from 'client';
-import { findAccountByEmail } from 'lib/models';
+import { findAccountByPath, findAccountByEmail } from 'lib/models';
 
 export default class PermissionsService {
   static async access(context: GetServerSidePropsContext): Promise<boolean> {
@@ -13,9 +13,7 @@ export default class PermissionsService {
     ) {
       return false;
     }
-    const community = await prisma.accounts.findFirst({
-      where: { name: context.params.communityName },
-    });
+    const community = await findAccountByPath(context.params.communityName);
     if (!community) {
       return false;
     }
