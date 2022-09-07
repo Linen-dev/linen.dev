@@ -31,7 +31,8 @@ export async function channelGetServerSideProps(
   context: GetServerSidePropsContext,
   isSubdomainbasedRouting: boolean
 ): Promise<ChannelResponse> {
-  if (!PermissionsService.access(context)) {
+  const access = await PermissionsService.access(context);
+  if (!access) {
     return RedirectTo('/signin');
   }
   const communityName = context.params?.communityName as string;
