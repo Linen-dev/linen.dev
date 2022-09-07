@@ -12,7 +12,6 @@ import {
 import type { users } from '@prisma/client';
 import { GetServerSidePropsContext } from 'next';
 import { NotFound } from '../utilities/response';
-import { revalidateInSeconds } from '../constants/revalidate';
 import { buildSettings } from './accountSettings';
 import { memoize } from '../utilities/dynamoCache';
 import { captureExceptionAndFlush } from 'utilities/sentry';
@@ -120,8 +119,7 @@ export async function threadGetServerSideProps(
   isSubdomainbasedRouting: boolean
 ): Promise<{
   props?: ThreadByIdProp;
-  revalidate?: number;
-  notfound?: boolean;
+  notFound?: boolean;
   redirect?: object;
 }> {
   const access = await PermissionsService.access(context);
@@ -137,12 +135,11 @@ export async function threadGetServerSideProps(
         ...thread,
         isSubDomainRouting: isSubdomainbasedRouting,
       },
-      revalidate: revalidateInSeconds, // In seconds
     };
   } catch (exception) {
     await captureExceptionAndFlush(exception);
     console.error(exception);
-    return { ...NotFound(), revalidate: revalidateInSeconds };
+    return NotFound();
   }
 }
 
