@@ -4,23 +4,53 @@ import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import { stripProtocol } from '../../utilities/url';
 import { dispatchAnonymizeRequest } from 'utilities/anonymizeMessages';
 // The unstable_getServerSession only has the prefix unstable_ at the moment, because the API may change in the future. There are no known bugs at the moment and it is safe to use.
-import { unstable_getServerSession } from 'next-auth';
+import { unstable_getServerSession, Session } from 'next-auth';
 import { authOptions } from './auth/[...nextauth]';
-import { createAccountAndUser } from 'lib/account';
 import { captureExceptionAndFlush, withSentry } from 'utilities/sentry';
+import { generateRandomWordSlug } from 'utilities/randomWordSlugs';
+import { findAccountByEmail } from 'lib/models';
+import { AccountType } from '@prisma/client';
 
-export async function create(req: NextApiRequest, res: NextApiResponse) {
-  const session = await unstable_getServerSession(req, res, authOptions);
+export async function create({
+  session,
+}: {
+  session: Session | null;
+}): Promise<{ status: number; data?: { id: string } }> {
   const email = session?.user?.email;
   if (!email) {
-    return res.status(401);
+    return { status: 401 };
   }
 
-  const displayName = email.split('@').shift() || email;
-
-  const account = await createAccountAndUser(email, displayName);
-
-  return res.status(200).json({ id: account.id });
+  try {
+    const displayName = email.split('@').shift() || email;
+    const { id } = await prisma.accounts.create({
+      data: {
+        auths: {
+          connect: {
+            email,
+          },
+        },
+        users: {
+          create: {
+            isAdmin: true,
+            isBot: false,
+            anonymousAlias: generateRandomWordSlug(),
+            auth: {
+              connect: {
+                email,
+              },
+            },
+            displayName,
+            externalUserId: null,
+            profileImageUrl: null,
+          },
+        },
+      },
+    });
+    return { status: 200, data: { id } };
+  } catch (exception) {
+    return { status: 500 };
+  }
 }
 
 function isRedirectDomainNotUniqueError(exception: unknown) {
@@ -33,13 +63,33 @@ function isRedirectDomainNotUniqueError(exception: unknown) {
   );
 }
 
-export async function update(
-  request: NextApiRequest,
-  response: NextApiResponse
-) {
-  // TODO validate that the user in current session can update this account
+export async function update({
+  params,
+  session,
+}: {
+  params: {
+    homeUrl?: string;
+    docsUrl?: string;
+    logoUrl?: string;
+    redirectDomain?: string;
+    brandColor?: string;
+    googleAnalyticsId?: string;
+    anonymizeUsers?: boolean;
+    communityInviteUrl?: string;
+    type?: AccountType;
+  };
+  session: Session | null;
+}): Promise<{ status: number; data?: object }> {
+  const email = session?.user?.email;
+  if (!email) {
+    return { status: 401 };
+  }
+  const account = await findAccountByEmail(email);
+  if (!account) {
+    return { status: 404 };
+  }
+
   const {
-    accountId,
     homeUrl,
     docsUrl,
     logoUrl,
@@ -48,14 +98,8 @@ export async function update(
     googleAnalyticsId,
     anonymizeUsers,
     communityInviteUrl,
-  } = JSON.parse(request.body);
-  const account = await prisma.accounts.findFirst({
-    where: { id: accountId },
-    select: { premium: true },
-  });
-  if (!account) {
-    return response.status(404).json({});
-  }
+    type,
+  } = params;
   const freeAccount = {
     homeUrl,
     docsUrl,
@@ -68,6 +112,7 @@ export async function update(
         brandColor,
         googleAnalyticsId,
         logoUrl,
+        type,
         ...(redirectDomain && {
           redirectDomain: stripProtocol(redirectDomain),
         }),
@@ -76,32 +121,53 @@ export async function update(
 
   try {
     const record = await prisma.accounts.update({
-      where: { id: accountId },
+      where: { id: account.id },
       data,
     });
 
     if (!!anonymizeUsers) {
-      dispatchAnonymizeRequest(accountId);
+      dispatchAnonymizeRequest(account.id);
     }
 
-    return response.status(200).json(record);
+    return { status: 200, data: record };
   } catch (exception: unknown) {
     if (isRedirectDomainNotUniqueError(exception)) {
-      return response.status(400).json({
-        error: 'Redirect domain is already in use',
-      });
+      return {
+        status: 400,
+        data: {
+          error: 'Redirect domain is already in use',
+        },
+      };
     }
     await captureExceptionAndFlush(exception);
-    return response.status(500).json({});
+    return { status: 500 };
   }
 }
 
+const handle = async (
+  request: NextApiRequest,
+  response: NextApiResponse,
+  callback: any
+) => {
+  const session = await unstable_getServerSession(
+    request,
+    response,
+    authOptions
+  );
+  const params = request.body ? JSON.parse(request.body) : {};
+  const { status, data } = await callback({ params, session });
+  if (data) {
+    return response.status(status).json(data);
+  }
+  return response.status(status);
+};
+
 async function handler(request: NextApiRequest, response: NextApiResponse) {
   if (request.method === 'POST') {
-    return create(request, response);
+    return handle(request, response, create);
   }
   if (request.method === 'PUT') {
-    return update(request, response);
+    return handle(request, response, update);
   }
   return response.status(404);
 }

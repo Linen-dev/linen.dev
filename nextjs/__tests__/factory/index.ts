@@ -3,6 +3,7 @@ import createThread from './thread';
 import createResponse from './response';
 import createRequest from './request';
 import createAccount from './account';
+import createAuth from './auth';
 
 export function create(name: string, options?: object): any {
   switch (name) {
@@ -16,6 +17,8 @@ export function create(name: string, options?: object): any {
       return createMessage(options);
     case 'account':
       return createAccount(options);
+    case 'auth':
+      return createAuth(options);
     default:
       throw new Error(`Unknown factory name: ${name}`);
   }

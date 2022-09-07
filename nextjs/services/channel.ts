@@ -9,7 +9,7 @@ import {
   AccountWithSlackAuthAndChannels,
   ThreadsWithMessagesFull,
 } from 'types/partialTypes';
-import type { channels } from '@prisma/client';
+import { channels } from '@prisma/client';
 import { decodeCursor, encodeCursor } from '../utilities/cursor';
 import { shouldThisChannelBeAnonymous } from '../lib/channel';
 import {
@@ -22,6 +22,8 @@ import {
   ChannelResponse,
 } from 'components/Pages/ChannelsPage';
 import { isBot } from 'next/dist/server/web/spec-extension/user-agent';
+import PermissionsService from 'services/permissions';
+import { RedirectTo } from 'utilities/response';
 
 const CURSOR_LIMIT = 10;
 
@@ -29,6 +31,10 @@ export async function channelGetServerSideProps(
   context: GetServerSidePropsContext,
   isSubdomainbasedRouting: boolean
 ): Promise<ChannelResponse> {
+  const access = await PermissionsService.access(context);
+  if (!access) {
+    return RedirectTo('/signin');
+  }
   const communityName = context.params?.communityName as string;
   const channelName = context.params?.channelName as string;
   const page = context.params?.page as string | undefined;
@@ -38,7 +44,6 @@ export async function channelGetServerSideProps(
     include: { channels: { where: { hidden: false } } },
   })) as AccountWithSlackAuthAndChannels;
   if (!account) return NotFound();
-
   const channel = findChannelOrDefault(account.channels, channelName);
   if (!channel) return NotFound();
 

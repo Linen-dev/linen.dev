@@ -43,7 +43,6 @@ export default function URLs({ account }: SettingsProps) {
     fetch('/api/accounts', {
       method: 'PUT',
       body: JSON.stringify({
-        accountId: account.id,
         [target.id]: target.value,
       }),
     })
