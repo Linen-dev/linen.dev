@@ -2,6 +2,9 @@ import type { accounts, channels } from '@prisma/client';
 import prisma from '../../client';
 import { v4 } from 'uuid';
 import * as sitemap from '../../utilities/sitemap';
+import setup from '__tests__/spec-helpers/integration';
+
+setup({ truncationStrategy: 'none' });
 
 const random = () => v4();
 
@@ -163,10 +166,11 @@ describe('sitemap', () => {
   });
 
   describe('premium community with 1 hidden channel and 1 channel without threads', () => {
-    const sitemapBuilder = jest.fn((e) => e.join());
+    let sitemapBuilder: any;
     let result: string;
 
     beforeAll(async () => {
+      sitemapBuilder = jest.fn((e) => e.join());
       result = await sitemap.createSitemapForPremium(
         premium.redirectDomain as string,
         sitemapBuilder
@@ -197,10 +201,11 @@ describe('sitemap', () => {
   });
 
   describe('free community with 1 hidden channel and 1 channel without threads', () => {
-    const sitemapBuilder = jest.fn((e) => e.join());
+    let sitemapBuilder: any;
     let result: string;
 
     beforeAll(async () => {
+      sitemapBuilder = jest.fn((e) => e.join());
       result = await sitemap.createSitemapForFree(
         'localhost',
         free1.slackDomain as string,

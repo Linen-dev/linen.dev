@@ -3,6 +3,9 @@ import { create } from '../../factory';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { sendNotification } from '../../../services/slack';
 import ApplicationMailer from '../../../mailers/ApplicationMailer';
+import setup from '__tests__/spec-helpers/integration';
+
+setup({ truncationStrategy: 'delete' });
 
 jest.mock('../../../services/slack');
 jest.mock('../../../mailers/ApplicationMailer');
