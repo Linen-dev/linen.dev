@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 
 import { Channel, Socket } from 'phoenix';
 import { useEffect } from 'react';
@@ -7,6 +7,7 @@ export default function Chat() {
   const [messages, setMessages] = useState<string[]>([]);
   const [message, setMessage] = useState('');
   const [channel, setChannel] = useState(null);
+  const messagesRef = useRef(messages);
 
   useEffect(() => {
     const socket = new Socket('ws://localhost:4000/socket', {
@@ -30,7 +31,8 @@ export default function Chat() {
       });
     channel.on('new_msg', (payload) => {
       try {
-        setMessages([...messages, payload.body]);
+        setMessages([...messagesRef.current, payload.body]);
+        messagesRef.current = [...messagesRef.current, payload.body];
       } catch (e) {
         console.log(e);
       }
@@ -57,7 +59,9 @@ export default function Chat() {
 
   return (
     <div>
-      {messages}
+      {messages.map((m: any) => (
+        <ul key={m}>{m}</ul>
+      ))}
       <form onSubmit={handleSubmit}>
         <label>
           <input
@@ -71,10 +75,4 @@ export default function Chat() {
       </form>
     </div>
   );
-  // }
 }
-
-// export default function Chat() {
-
-//   return <div> Hello world </div>;
-// }

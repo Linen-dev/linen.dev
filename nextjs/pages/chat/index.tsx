@@ -5,14 +5,7 @@ import { Channel, Socket } from 'phoenix';
 export default class Chat extends React.Component {
   socket: Socket | null = null;
   channel: Channel | null = null;
-  // messages: string[] = [];
-  // const [messages, setMessages] = useState([]);
 
-  // state = {
-  //   body: '',
-  //   value: '',
-  // };
-  // const [value, setValue] = useState('');
   constructor(props: any) {
     super(props);
     this.state = { body: '', value: '', messages: [] };
@@ -50,9 +43,6 @@ export default class Chat extends React.Component {
       } catch (e) {
         console.log(e);
       }
-      // let messageItem = document.createElement('p');
-      // messageItem.innerText = `[${Date()}] ${payload.body}`;
-      // this.messages.push(messageItem.innerText);
     });
 
     console.log(this.socket);
