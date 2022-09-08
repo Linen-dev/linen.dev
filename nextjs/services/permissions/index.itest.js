@@ -2,6 +2,9 @@ import PermissionsService from '.';
 import prisma from 'client';
 import Session from '../session';
 import { AccountType } from '@prisma/client';
+import setup from '__tests__/spec-helpers/integration';
+
+setup({ truncationStrategy: 'delete' });
 
 jest.mock('../session');
 

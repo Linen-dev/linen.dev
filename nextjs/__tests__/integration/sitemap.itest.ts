@@ -2,6 +2,9 @@ import type { accounts, channels } from '@prisma/client';
 import prisma from '../../client';
 import { v4 } from 'uuid';
 import * as sitemap from '../../utilities/sitemap';
+import setup from '__tests__/spec-helpers/integration';
+
+setup({ truncationStrategy: 'none' });
 
 const random = () => v4();
 
@@ -79,7 +82,7 @@ describe('sitemap', () => {
 
   let freeEmpty: accounts;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     premium = await prisma.accounts.create({
       data: {
         premium: true,
@@ -166,7 +169,7 @@ describe('sitemap', () => {
     let sitemapBuilder: any;
     let result: string;
 
-    beforeEach(async () => {
+    beforeAll(async () => {
       sitemapBuilder = jest.fn((e) => e.join());
       result = await sitemap.createSitemapForPremium(
         premium.redirectDomain as string,
@@ -201,7 +204,7 @@ describe('sitemap', () => {
     let sitemapBuilder: any;
     let result: string;
 
-    beforeEach(async () => {
+    beforeAll(async () => {
       sitemapBuilder = jest.fn((e) => e.join());
       result = await sitemap.createSitemapForFree(
         'localhost',
@@ -236,7 +239,7 @@ describe('sitemap', () => {
     const sitemapBuilder = jest.fn((e) => e.join());
     let result: string;
 
-    beforeEach(async () => {
+    beforeAll(async () => {
       result = await sitemap.createSitemapForLinen('localhost', sitemapBuilder);
     });
 

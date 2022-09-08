@@ -17,3 +17,12 @@ export async function truncateTables() {
     console.log({ error });
   }
 }
+
+export async function deleteData() {
+  const models = (prisma as any)._dmmf.datamodel.models.map(
+    ({ name }: { name: string }) => name
+  );
+  await prisma.$transaction(
+    models.map((name: string) => (prisma as any)[name].deleteMany({}))
+  );
+}

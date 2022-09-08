@@ -9,6 +9,10 @@ import {
 import { encodeCursor } from 'utilities/cursor';
 import { SerializedThread } from 'serializers/thread';
 import { createThreadsOneByDay } from 'bin/factory/threads';
+import setup from '__tests__/spec-helpers/integration';
+
+setup({ truncationStrategy: 'cascade' });
+
 jest.mock('utilities/dynamoCache');
 
 const reqWithBotHeaders = {
@@ -32,7 +36,7 @@ const reqWithUserHeaders = {
 describe('channels services', () => {
   let scope: any;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     scope = {
       account: {} as accounts,
       channel: {} as channels,
@@ -71,7 +75,7 @@ describe('channels services', () => {
     let channelProps: ChannelResponse;
 
     describe('access the channel page', () => {
-      beforeEach(async () => {
+      beforeAll(async () => {
         channelProps = await channelGetServerSideProps(
           {
             params: {
@@ -106,7 +110,7 @@ describe('channels services', () => {
         threads: SerializedThread[];
         nextCursor: ChannelViewCursorProps;
       };
-      beforeEach(async () => {
+      beforeAll(async () => {
         fetchMore = await channelNextPage(
           channelProps.props?.currentChannel.id!,
           channelProps.props?.nextCursor.prev!
@@ -134,7 +138,7 @@ describe('channels services', () => {
   describe.skip('from channel view (bots)', () => {
     describe('access the channel page with pathCursor as asc:0', () => {
       let channelProps: ChannelResponse;
-      beforeEach(async () => {
+      beforeAll(async () => {
         channelProps = await channelGetServerSideProps(
           {
             params: {
@@ -167,7 +171,7 @@ describe('channels services', () => {
 
     describe('access the channel page with pathCursor from next page', () => {
       let channelProps: ChannelResponse;
-      beforeEach(async () => {
+      beforeAll(async () => {
         channelProps = await channelGetServerSideProps(
           {
             params: {
@@ -199,7 +203,7 @@ describe('channels services', () => {
 
     describe('access the channel page with pathCursor from thread view', () => {
       let channelProps: ChannelResponse;
-      beforeEach(async () => {
+      beforeAll(async () => {
         channelProps = await channelGetServerSideProps(
           {
             params: {
@@ -255,7 +259,7 @@ describe('channels services', () => {
 
     describe('access the channel page with pathCursor from last 3 threads', () => {
       let channelProps: ChannelResponse;
-      beforeEach(async () => {
+      beforeAll(async () => {
         channelProps = await channelGetServerSideProps(
           {
             params: {
