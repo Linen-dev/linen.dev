@@ -1,5 +1,5 @@
 import { accounts, MessagesViewType } from '@prisma/client';
-import { links } from '../constants/examples';
+import { links } from '../../constants/examples';
 
 export type Settings = {
   communityType: string;
@@ -32,7 +32,7 @@ const communityMapping: Record<string, 'd' | 's'> = {
   slack: 's',
 };
 
-export function buildSettings(account: accounts): Settings {
+export function serialize(account: accounts): Settings {
   const defaultSettings =
     links.find(({ accountId }) => accountId === account.id) || links[0];
 

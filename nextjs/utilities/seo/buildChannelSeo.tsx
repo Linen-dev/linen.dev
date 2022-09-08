@@ -1,5 +1,5 @@
 import { capitalize, cleanUpStringForSeo } from 'utilities/string';
-import { Settings } from 'services/accountSettings';
+import { Settings } from 'serializers/account/settings';
 import { SerializedThread } from 'serializers/thread';
 import { LINEN_URL } from '../../constants';
 

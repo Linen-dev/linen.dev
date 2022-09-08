@@ -1,5 +1,5 @@
 import { channels, messages, mentions, users } from '@prisma/client';
-import { Settings } from 'services/accountSettings';
+import { Settings } from 'serializers/account/settings';
 import ChannelPage from './ChannelPage';
 import {
   SerializedAttachment,

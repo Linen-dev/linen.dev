@@ -1,35 +1,38 @@
 import PageLayout from 'components/layout/PageLayout';
 import { GetServerSidePropsContext } from 'next';
-import { findAccountByPath } from 'lib/models';
-import { buildSettings, Settings } from 'services/accountSettings';
-import { AccountWithSlackAuthAndChannels } from 'types/partialTypes';
 import { channels } from '@prisma/client';
 import PermissionsService from 'services/permissions';
+import CommunityService from 'services/community';
+import ChannelsService from 'services/channels';
+import {
+  serialize as serializeSettings,
+  Settings,
+} from 'serializers/account/settings';
 import { Permissions } from 'types/shared';
-import { RedirectTo } from 'utilities/response';
+import { NotFound, RedirectTo } from 'utilities/response';
 
 interface Props {
+  channels: channels[];
   communityName: string;
   isSubDomainRouting: boolean;
-  settings: Settings;
-  channels: channels[];
   permissions: Permissions;
+  settings: Settings;
 }
 
 export default function Inbox({
+  channels,
   communityName,
   isSubDomainRouting,
-  settings,
-  channels,
   permissions,
+  settings,
 }: Props) {
   return (
     <PageLayout
+      channels={channels}
       communityName={communityName}
       isSubDomainRouting={isSubDomainRouting}
-      settings={settings}
-      channels={channels}
       permissions={permissions}
+      settings={settings}
     >
       Inbox
     </PageLayout>
@@ -38,23 +41,20 @@ export default function Inbox({
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const permissions = await PermissionsService.get(context);
-  if (!permissions.access) {
+  if (!permissions.inbox) {
     return RedirectTo('/signin');
   }
-  const communityName = context?.params?.communityName as string;
-  const account = (await findAccountByPath(communityName, {
-    include: { channels: { where: { hidden: false } } },
-  })) as AccountWithSlackAuthAndChannels;
-  if (!account) {
-    return Promise.reject(new Error('Account not found'));
+  const community = await CommunityService.find(context);
+  if (!community) {
+    return NotFound();
   }
-  const settings = buildSettings(account);
+  const channels = await ChannelsService.find(community.id);
   return {
     props: {
-      communityName,
+      communityName: context?.params?.communityName,
       isSubDomainRouting: false,
-      settings,
-      channels: account.channels,
+      settings: serializeSettings(community),
+      channels,
       permissions,
     },
   };

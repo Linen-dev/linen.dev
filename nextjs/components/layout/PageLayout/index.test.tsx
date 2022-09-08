@@ -5,16 +5,7 @@ import { create as factory } from '__tests__/factory';
 
 describe('PageLayout', () => {
   it('renders the home url', () => {
-    const channels = [
-      factory('channel', {
-        id: 'X1',
-        channelName: 'general',
-        externalChannelId: 'S1',
-        accountId: 'A1',
-        hidden: false,
-        externalPageCursor: null,
-      }),
-    ];
+    const channels = [factory('channel')];
     const { baseElement } = render(
       <PageLayout
         communityName="test"

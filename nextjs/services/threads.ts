@@ -12,7 +12,7 @@ import {
 import type { users } from '@prisma/client';
 import { GetServerSidePropsContext } from 'next';
 import { NotFound } from '../utilities/response';
-import { buildSettings } from './accountSettings';
+import { serialize as serializeSettings } from 'serializers/account/settings';
 import { memoize } from '../utilities/dynamoCache';
 import { captureExceptionAndFlush } from 'utilities/sentry';
 import { encodeCursor } from 'utilities/cursor';
@@ -62,7 +62,7 @@ async function getThreadById(
       return channelCount && channelCount._count.id > 2;
     });
 
-  const settings = buildSettings(account);
+  const settings = serializeSettings(account);
 
   const authors = thread.messages
     .map((m) => m.author)

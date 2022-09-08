@@ -1,7 +1,10 @@
 import { findAccountByPath } from '../lib/models';
 import { GetServerSidePropsContext } from 'next/types';
 import { NotFound } from '../utilities/response';
-import { buildSettings, Settings } from './accountSettings';
+import {
+  serialize as serializeSettings,
+  Settings,
+} from 'serializers/account/settings';
 import { memoize } from '../utilities/dynamoCache';
 import { findPreviousCursor, findThreadsByCursor } from '../lib/threads';
 import serializeThread from '../serializers/thread';
@@ -47,7 +50,7 @@ export async function channelGetServerSideProps(
   const channel = findChannelOrDefault(account.channels, channelName);
   if (!channel) return NotFound();
 
-  const settings = buildSettings(account);
+  const settings = serializeSettings(account);
 
   const isCrawler = isBot(context?.req?.headers?.['user-agent'] || '');
 
