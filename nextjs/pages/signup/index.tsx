@@ -20,7 +20,7 @@ export default function SignUp({ csrfToken }: SignUpProps) {
       <form
         method="post"
         action={`/api/auth/signin/email?callbackUrl=${
-          router?.query?.callbackUrl || '/settings'
+          router?.query?.callbackUrl || '/api/settings'
         }`}
         onSubmit={() => setLoading(true)}
       >

@@ -10,7 +10,6 @@ import ChannelVisibilityCard from './Settings/ChannelVisibilityCard';
 import CommunityIntegration from './Settings/CommunityIntegration';
 import AnonymizeCard from './Settings/AnonymizeCard';
 import URLs from './Settings/Urls';
-import { Invite } from './Members/Invite';
 import ImportFromSlack from './Settings/ImportFromSlack';
 import debounce from 'awesome-debounce-promise';
 
@@ -45,30 +44,27 @@ export function WaitForIntegration() {
 
 export default function Settings(props: SettingsProps) {
   return (
-    <>
-      <Invite />
-      <DashboardLayout header="Settings" account={props.account}>
-        <div className="grid grid-cols-1 gap-4">
-          <div className="grid grid-cols-1 divide-y divide-gray-200 divide-solid">
-            <LinkCard {...props} />
-            <CommunityIntegration {...props} />
-            <ImportFromSlack {...props} />
-            <AnonymizeCard {...props} />
-            <ChannelsDefault {...props} />
-            <ChannelVisibilityCard {...props} />
-            <URLs {...props} />
-            {props.account && (
-              <CommunityTypeCard
-                type={props.account.type}
-                disabled={!props.account.premium}
-                onChange={(type: AccountType) => {
-                  updateAccount({ type });
-                }}
-              />
-            )}
-          </div>
+    <DashboardLayout header="Settings" account={props.account}>
+      <div className="grid grid-cols-1 gap-4">
+        <div className="grid grid-cols-1 divide-y divide-gray-200 divide-solid">
+          <LinkCard {...props} />
+          <CommunityIntegration {...props} />
+          <ImportFromSlack {...props} />
+          <AnonymizeCard {...props} />
+          <ChannelsDefault {...props} />
+          <ChannelVisibilityCard {...props} />
+          <URLs {...props} />
+          {props.account && (
+            <CommunityTypeCard
+              type={props.account.type}
+              disabled={!props.account.premium}
+              onChange={(type: AccountType) => {
+                updateAccount({ type });
+              }}
+            />
+          )}
         </div>
-      </DashboardLayout>
-    </>
+      </div>
+    </DashboardLayout>
   );
 }
