@@ -7,10 +7,11 @@ import DashboardLayout from '../../../components/layout/DashboardLayout';
 import serializeAccount, {
   SerializedAccount,
 } from '../../../serializers/account';
-import { findAccountByEmail } from '../../../lib/models';
+import { findAccountAndUserByEmail } from '../../../lib/models';
 import Billing from 'components/Pages/Billing';
 import Tiers from 'components/Pages/Tiers';
 import { isStripeEnabled } from 'utilities/featureFlags';
+import { Roles } from '@prisma/client';
 
 interface Props {
   account?: SerializedAccount;
@@ -217,13 +218,23 @@ export default function SettingsPage({ account, prices }: Props) {
 
 export async function getServerSideProps(context: NextPageContext) {
   const session = await getSession(context);
-  const account = await findAccountByEmail(session?.user?.email);
+  const accountAndUser = await findAccountAndUserByEmail(session?.user?.email);
+  const { account, user } = accountAndUser || {};
 
   if (!session) {
     return {
       redirect: {
         permanent: false,
         destination: '../signin',
+      },
+    };
+  }
+
+  if (user && user.role === Roles.MEMBER) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: '../403',
       },
     };
   }

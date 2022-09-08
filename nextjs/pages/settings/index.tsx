@@ -4,10 +4,10 @@ import { getSession } from 'next-auth/react';
 import serializeAccount, { SerializedAccount } from 'serializers/account';
 import { useRouter } from 'next/router';
 import { toast } from 'components/Toast';
-import { channelIndex, findAccountByEmail } from 'lib/models';
+import { channelIndex, findAccountAndUserByEmail } from 'lib/models';
 import Settings from 'components/Pages/Settings';
 import { sortBy } from 'utilities/sort';
-import { channels } from '@prisma/client';
+import { channels, Roles } from '@prisma/client';
 
 interface Props {
   account?: SerializedAccount;
@@ -35,7 +35,8 @@ export default function SettingsPage({ account, channels }: Props) {
 
 export async function getServerSideProps(context: NextPageContext) {
   const session = await getSession(context);
-  const account = await findAccountByEmail(session?.user?.email);
+  const accountAndUser = await findAccountAndUserByEmail(session?.user?.email);
+  const { account, user } = accountAndUser || {};
 
   if (!session) {
     return {
@@ -50,6 +51,15 @@ export async function getServerSideProps(context: NextPageContext) {
     return {
       props: {
         session,
+      },
+    };
+  }
+
+  if (user && user.role === Roles.MEMBER) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: '403',
       },
     };
   }

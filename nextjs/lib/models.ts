@@ -141,6 +141,28 @@ export const findAccountByEmail = async (email?: string | null) => {
   });
 };
 
+export const findAccountAndUserByEmail = async (email?: string | null) => {
+  if (!email) {
+    return null;
+  }
+  const auth = await prisma.auths.findFirst({
+    where: { email },
+    include: { users: true },
+  });
+  if (!auth || !auth.accountId) {
+    return null;
+  }
+  const account = await prisma.accounts.findFirst({
+    where: { id: auth.accountId as string },
+    include: {
+      slackAuthorizations: true,
+      discordAuthorizations: true,
+    },
+  });
+  const user = auth.users.find((u) => u.accountsId === auth.accountId);
+  return { account, user };
+};
+
 export const accountsWithChannels = async () => {
   return prisma.accounts.findMany({
     select: { slackDomain: true, redirectDomain: true, channels: true },
