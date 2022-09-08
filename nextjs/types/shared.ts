@@ -9,5 +9,6 @@ export interface SerializedAttachment {
 }
 
 export interface Permissions {
+  access: boolean;
   inbox: boolean;
 }

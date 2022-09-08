@@ -37,8 +37,8 @@ export default function Inbox({
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const access = await PermissionsService.inbox(context);
-  if (!access) {
+  const permissions = await PermissionsService.get(context);
+  if (!permissions.access) {
     return RedirectTo('/signin');
   }
   const communityName = context?.params?.communityName as string;
@@ -55,9 +55,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       isSubDomainRouting: false,
       settings,
       channels: account.channels,
-      permissions: {
-        inbox: access,
-      },
+      permissions,
     },
   };
 }

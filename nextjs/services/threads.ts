@@ -122,8 +122,8 @@ export async function threadGetServerSideProps(
   notFound?: boolean;
   redirect?: object;
 }> {
-  const access = await PermissionsService.access(context);
-  if (!access) {
+  const permissions = await PermissionsService.get(context);
+  if (!permissions.access) {
     return RedirectTo('/signin');
   }
   const threadId = context.params?.threadId as string;
@@ -133,9 +133,7 @@ export async function threadGetServerSideProps(
     return {
       props: {
         ...thread,
-        permissions: {
-          inbox: await PermissionsService.inbox(context),
-        },
+        permissions,
         isSubDomainRouting: isSubdomainbasedRouting,
       },
     };

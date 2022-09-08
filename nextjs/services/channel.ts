@@ -31,8 +31,8 @@ export async function channelGetServerSideProps(
   context: GetServerSidePropsContext,
   isSubdomainbasedRouting: boolean
 ): Promise<ChannelResponse> {
-  const access = await PermissionsService.access(context);
-  if (!access) {
+  const permissions = await PermissionsService.get(context);
+  if (!permissions.access) {
     return RedirectTo('/signin');
   }
   const communityName = context.params?.communityName as string;
@@ -105,9 +105,7 @@ export async function channelGetServerSideProps(
       isSubDomainRouting: isSubdomainbasedRouting,
       pathCursor: page || null,
       isBot: isCrawler,
-      permissions: {
-        inbox: await PermissionsService.inbox(context),
-      },
+      permissions,
     },
   };
 }
