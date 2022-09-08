@@ -5,7 +5,7 @@ import { getSession } from 'next-auth/react';
 import Members, { MembersType } from 'components/Pages/Settings/Members';
 import type { Session } from 'next-auth';
 import { findUsersAndInvitesByAccount } from 'services/invites';
-import type { auths, invites } from '@prisma/client';
+import { auths, invites, users } from '@prisma/client';
 
 export interface MembersPageProps {
   session: Session;
@@ -55,22 +55,32 @@ export async function getServerSideProps(
   };
 }
 
-function serializeUsers(users: auths[], invites: invites[]): MembersType[] {
+function serializeUsers(
+  users: (auths & {
+    users: users[];
+  })[],
+  invites: invites[]
+): MembersType[] {
   return users.map(userToMember).concat(invites.map(inviteToMember));
 }
 
-function userToMember({ email }: auths): MembersType {
+function userToMember({
+  email,
+  users,
+}: auths & {
+  users: users[];
+}): MembersType {
   return {
     email,
-    role: 'Admin',
+    role: users?.shift()?.role || 'ADMIN',
     status: 'ACCEPTED',
   };
 }
 
-function inviteToMember({ email, status }: invites): MembersType {
+function inviteToMember({ email, status, role }: invites): MembersType {
   return {
     email,
-    role: 'Admin',
+    role,
     status,
   };
 }
