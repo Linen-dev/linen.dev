@@ -79,7 +79,7 @@ describe('sitemap', () => {
 
   let freeEmpty: accounts;
 
-  beforeAll(async () => {
+  beforeEach(async () => {
     premium = await prisma.accounts.create({
       data: {
         premium: true,
@@ -163,10 +163,11 @@ describe('sitemap', () => {
   });
 
   describe('premium community with 1 hidden channel and 1 channel without threads', () => {
-    const sitemapBuilder = jest.fn((e) => e.join());
+    let sitemapBuilder: any;
     let result: string;
 
-    beforeAll(async () => {
+    beforeEach(async () => {
+      sitemapBuilder = jest.fn((e) => e.join());
       result = await sitemap.createSitemapForPremium(
         premium.redirectDomain as string,
         sitemapBuilder
@@ -197,10 +198,11 @@ describe('sitemap', () => {
   });
 
   describe('free community with 1 hidden channel and 1 channel without threads', () => {
-    const sitemapBuilder = jest.fn((e) => e.join());
+    let sitemapBuilder: any;
     let result: string;
 
-    beforeAll(async () => {
+    beforeEach(async () => {
+      sitemapBuilder = jest.fn((e) => e.join());
       result = await sitemap.createSitemapForFree(
         'localhost',
         free1.slackDomain as string,
@@ -234,7 +236,7 @@ describe('sitemap', () => {
     const sitemapBuilder = jest.fn((e) => e.join());
     let result: string;
 
-    beforeAll(async () => {
+    beforeEach(async () => {
       result = await sitemap.createSitemapForLinen('localhost', sitemapBuilder);
     });
 

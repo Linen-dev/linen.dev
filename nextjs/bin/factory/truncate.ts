@@ -8,12 +8,11 @@ export async function truncateTables() {
   const tables = tablenames
     .map(({ tablename }) => tablename)
     .filter((name) => name !== '_prisma_migrations')
-    .map((name) => `"public"."${name}"`);
+    .map((name) => `"public"."${name}"`)
+    .join(', ');
 
   try {
-    await prisma.$executeRawUnsafe(
-      `TRUNCATE TABLE ${tables.join(', ')} RESTART IDENTITY CASCADE;`
-    );
+    await prisma.$executeRawUnsafe(`TRUNCATE TABLE ${tables} CASCADE;`);
   } catch (error) {
     console.log({ error });
   }

@@ -2,9 +2,6 @@ import PermissionsService from '.';
 import prisma from 'client';
 import Session from '../session';
 import { AccountType } from '@prisma/client';
-import { truncateTables } from 'bin/factory/truncate';
-
-afterEach(truncateTables);
 
 jest.mock('../session');
 
