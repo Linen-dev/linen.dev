@@ -134,21 +134,23 @@ export async function getOneInviteByUser(
 export async function acceptInvite(id: string, email: string) {
   const invite = await prisma.invites.findUnique({ where: { id } });
   if (invite?.email !== email) {
-    return { status: 400, message: 'bad request, email mismatch' };
+    throw { error: 'bad request, email mismatch' };
   }
   const auth = await prisma.auths.findUnique({ where: { email } });
   if (!auth) {
-    return { status: 400, message: 'bad request, missing signup' };
+    throw { error: 'bad request, missing signup' };
   }
   const user = await prisma.users.findFirst({
+    include: { account: true },
     where: { accountsId: invite.accountsId, authsId: auth.id },
   });
   if (user) {
-    return { status: 400, message: 'bad request, user already join' };
+    return user;
   }
   const displayName = email.split('@').shift() || email;
 
-  await prisma.users.create({
+  const newUser = await prisma.users.create({
+    include: { account: true },
     data: {
       isAdmin: invite.role === 'ADMIN',
       isBot: false,
@@ -167,5 +169,5 @@ export async function acceptInvite(id: string, email: string) {
 
   await prisma.invites.update({ where: { id }, data: { status: 'ACCEPTED' } });
 
-  return { status: 200, message: 'invite accepted' };
+  return newUser;
 }

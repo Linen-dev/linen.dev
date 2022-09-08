@@ -117,3 +117,12 @@ export const createOrUpdateUser = async (user: UserInfo, accountId: string) => {
     create: { anonymousAlias, ...userInfo },
   });
 };
+
+export const findUserByEmail = async (email: string) => {
+  return await prisma.users.findFirst({
+    include: { account: true },
+    where: {
+      auth: { email },
+    },
+  });
+};
