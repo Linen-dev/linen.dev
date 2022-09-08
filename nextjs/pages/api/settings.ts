@@ -6,7 +6,6 @@ import { acceptInvite, getOneInviteByUser } from 'services/invites';
 import { Roles } from '@prisma/client';
 import { findUserByEmail } from 'lib/users';
 import { getHomeUrl } from 'utilities/home';
-import { findAccountByEmail } from 'lib/models';
 import serializeAccount from 'serializers/account';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {

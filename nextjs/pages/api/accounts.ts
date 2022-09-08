@@ -9,7 +9,7 @@ import { authOptions } from './auth/[...nextauth]';
 import { captureExceptionAndFlush, withSentry } from 'utilities/sentry';
 import { generateRandomWordSlug } from 'utilities/randomWordSlugs';
 import { findAccountByEmail } from 'lib/models';
-import { AccountType } from '@prisma/client';
+import { AccountType, Roles } from '@prisma/client';
 
 export async function create({
   session,
@@ -43,6 +43,7 @@ export async function create({
             displayName,
             externalUserId: null,
             profileImageUrl: null,
+            role: Roles.OWNER,
           },
         },
       },
