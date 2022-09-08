@@ -176,9 +176,16 @@ model users {
   authsId     String?
   memberships memberships[]
   invites     invites[]
+  role        Roles         @default(MEMBER)
 
   @@unique([externalUserId, accountsId])
   @@index([authsId])
+}
+
+enum Roles {
+  OWNER
+  ADMIN
+  MEMBER
 }
 
 model mentions {
@@ -276,6 +283,7 @@ model invites {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  role      Roles    @default(MEMBER)
 
   @@unique([email, accountsId])
 }

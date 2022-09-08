@@ -1,5 +1,5 @@
 import { generateRandomWordSlug } from 'utilities/randomWordSlugs';
-import { auths, invites, Prisma } from '@prisma/client';
+import { auths, invites, Prisma, Roles, users } from '@prisma/client';
 import InviteToJoinMailer from 'mailers/InviteToJoinMailer';
 import prisma from '../client';
 
@@ -8,11 +8,13 @@ export async function createInvitation({
   email,
   accountId,
   host,
+  role,
 }: {
   requesterEmail: string;
   email: string;
   accountId: string;
   host: string;
+  role: Roles;
 }) {
   const requester = await prisma.auths.findUnique({
     where: { email: requesterEmail },
@@ -37,6 +39,7 @@ export async function createInvitation({
       email,
       accountsId: accountId,
       createdById: user.id,
+      role,
     },
   });
 
@@ -73,10 +76,13 @@ async function sendInvitationByEmail({
 }
 
 export async function findUsersAndInvitesByAccount(id: string): Promise<{
-  users: auths[];
+  users: (auths & {
+    users: users[];
+  })[];
   invites: invites[];
 }> {
   const users = await prisma.auths.findMany({
+    include: { users: true },
     where: { users: { some: { accountsId: id } } },
   });
 
@@ -144,12 +150,13 @@ export async function acceptInvite(id: string, email: string) {
 
   await prisma.users.create({
     data: {
-      isAdmin: true,
+      isAdmin: invite.role === 'ADMIN',
       isBot: false,
       account: { connect: { id: invite.accountsId } },
       auth: { connect: { id: auth.id } },
       anonymousAlias: generateRandomWordSlug(),
       displayName,
+      role: invite.role,
     },
   });
   // this step will be deprecated soon

@@ -7,6 +7,7 @@ import {
   getOneInviteByUser,
 } from 'services/invites';
 import { authOptions } from './auth/[...nextauth]';
+import type { Roles } from '@prisma/client';
 
 export default async function handler(
   request: NextApiRequest,
@@ -39,13 +40,21 @@ export default async function handler(
 
 async function post(
   session: Session | null,
-  body: any,
+  body: string,
   host: string
 ): Promise<{
   status: number;
   message: string;
 }> {
-  const { email, accountId } = JSON.parse(body);
+  const {
+    email,
+    accountId,
+    role,
+  }: {
+    email: string;
+    accountId: string;
+    role: Roles;
+  } = JSON.parse(body);
 
   if (!session?.user?.email) {
     return { status: 401, message: 'unauthorized' };
@@ -56,6 +65,7 @@ async function post(
     email,
     accountId,
     host,
+    role,
   });
 }
 

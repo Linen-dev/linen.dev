@@ -4,10 +4,13 @@ import DashboardLayout from 'components/layout/DashboardLayout';
 import Button from 'components/Button';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
+import { captureExceptionAndFlush } from 'utilities/sentry';
+import NativeSelect from 'components/NativeSelect';
+import type { Roles } from '@prisma/client';
 
 export interface MembersType {
   email: string;
-  role: 'Admin';
+  role: Roles;
   status: 'PENDING' | 'ACCEPTED' | 'UNKNOWN' | string;
 }
 
@@ -30,14 +33,20 @@ function InviteMember({
           />
         </div>
         <div className="shrink">
+          <NativeSelect
+            id="role"
+            options={[
+              { label: 'ADMIN', value: 'ADMIN' },
+              { label: 'MEMBER', value: 'MEMBER' },
+            ]}
+          />
+        </div>
+        <div className="shrink">
           <Button block type="submit" disabled={loading}>
             {loading ? 'Loading...' : 'Invite member'}
           </Button>
         </div>
       </form>
-      <p className="mt-2 text-xs text-gray-500" id="email-description">
-        New member will be added to the team as Admin.
-      </p>
     </div>
   );
 }
@@ -76,13 +85,6 @@ function TableMembers({ users }: { users: MembersType[] }) {
                     {user.role}
                   </span>
                 </p>
-                {/* <div className="text-sm mr-4">
-                  {user.status === 'PENDING' && (
-                    <a href="#" className="text-blue-700 hover:text-blue-800">
-                      Resend invitation
-                    </a>
-                  )}
-                </div> */}
                 <div className="flex items-center">
                   <MemberStatus status={user.status} />
                 </div>
@@ -105,9 +107,10 @@ export default function Members({ account, users }: MembersPageProps) {
     try {
       const form = event.target;
       const email = form.email.value;
+      const role = form.role.value;
       const response = await fetch('/api/invites', {
         method: 'POST',
-        body: JSON.stringify({ email, accountId: account?.id }),
+        body: JSON.stringify({ email, accountId: account?.id, role }),
       });
       if (!response.ok) {
         throw response;
@@ -115,6 +118,7 @@ export default function Members({ account, users }: MembersPageProps) {
         router.reload();
       }
     } catch (error) {
+      await captureExceptionAndFlush(error);
       alert('Something went wrong');
     } finally {
       setLoading(false);
