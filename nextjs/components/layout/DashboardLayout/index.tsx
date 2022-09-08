@@ -46,16 +46,18 @@ export default function DashboardLayout({ children, header, account }: Props) {
                 active={route === '/settings/branding'}
               />
             </div>
-            <div className="space-y-1">
-              <SidebarLink
-                href="/settings/members"
-                icon={
-                  <FontAwesomeIcon icon={faUsers} className={iconClassName} />
-                }
-                text="Members"
-                active={route === '/settings/members'}
-              />
-            </div>
+            {account?.communityType && (
+              <div className="space-y-1">
+                <SidebarLink
+                  href="/settings/members"
+                  icon={
+                    <FontAwesomeIcon icon={faUsers} className={iconClassName} />
+                  }
+                  text="Members"
+                  active={route === '/settings/members'}
+                />
+              </div>
+            )}
             <div className="space-y-1">
               <SidebarLink
                 href="/settings/plans"
