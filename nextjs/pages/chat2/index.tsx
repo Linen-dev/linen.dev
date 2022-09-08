@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 export default function Chat() {
   const [messages, setMessages] = useState<string[]>([]);
   const [message, setMessage] = useState('');
-  const [channel, setChannel] = useState(null);
+  const [channel, setChannel] = useState<Channel>();
   const messagesRef = useRef(messages);
 
   useEffect(() => {
@@ -37,6 +37,10 @@ export default function Chat() {
         console.log(e);
       }
     });
+
+    return () => {
+      socket.disconnect();
+    };
   }, []);
 
   const handleSubmit = (event: any) => {
