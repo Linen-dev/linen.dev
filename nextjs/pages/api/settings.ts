@@ -21,9 +21,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       ? await acceptInvite(invite.id, session.user.email)
       : await findUserByEmail(session.user.email);
 
-    if (!user) throw 'user not found';
-
-    if (user.role === Roles.MEMBER) {
+    if (user?.role === Roles.MEMBER) {
       const account = serializeAccount(user.account);
       if (!account) throw 'account not found';
 
