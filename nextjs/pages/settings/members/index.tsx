@@ -1,11 +1,11 @@
-import { findAccountByEmail } from 'lib/models';
+import { findAccountAndUserByEmail } from 'lib/models';
 import serializeAccount, { SerializedAccount } from 'serializers/account';
 import { NextPageContext } from 'next';
 import { getSession } from 'next-auth/react';
 import Members, { MembersType } from 'components/Pages/Settings/Members';
 import type { Session } from 'next-auth';
 import { findUsersAndInvitesByAccount } from 'services/invites';
-import { auths, invites, users } from '@prisma/client';
+import { auths, invites, Roles, users } from '@prisma/client';
 
 export interface MembersPageProps {
   session: Session;
@@ -31,9 +31,8 @@ export async function getServerSideProps(
     };
   }
 
-  const account = await findAccountByEmail(session?.user?.email).then(
-    serializeAccount
-  );
+  const accountAndUser = await findAccountAndUserByEmail(session?.user?.email);
+  const { account, user } = accountAndUser || {};
 
   if (!account) {
     return {
@@ -44,13 +43,22 @@ export async function getServerSideProps(
     };
   }
 
+  if (user && user.role === Roles.MEMBER) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: '../403',
+      },
+    };
+  }
+
   const { users, invites } = await findUsersAndInvitesByAccount(account.id);
 
   return {
     props: {
       users: serializeUsers(users, invites),
       session,
-      account,
+      account: serializeAccount(account)!,
     },
   };
 }

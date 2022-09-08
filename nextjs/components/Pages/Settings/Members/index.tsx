@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { captureExceptionAndFlush } from 'utilities/sentry';
 import NativeSelect from 'components/NativeSelect';
-import type { Roles } from '@prisma/client';
+import { Roles } from '@prisma/client';
 
 export interface MembersType {
   email: string;
@@ -36,8 +36,8 @@ function InviteMember({
           <NativeSelect
             id="role"
             options={[
-              { label: 'ADMIN', value: 'ADMIN' },
-              { label: 'MEMBER', value: 'MEMBER' },
+              { label: Roles.MEMBER, value: Roles.MEMBER },
+              { label: Roles.ADMIN, value: Roles.ADMIN },
             ]}
           />
         </div>

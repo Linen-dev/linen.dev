@@ -1,10 +1,11 @@
 import Branding from 'components/Pages/Settings/Branding';
-import { findAccountByEmail } from 'lib/models';
+import { findAccountAndUserByEmail } from 'lib/models';
 import serializeAccount, { SerializedAccount } from 'serializers/account';
 import { NextPageContext } from 'next';
 import { getSession } from 'next-auth/react';
 import Vercel, { DNSRecord } from 'services/vercel';
 import featureFlags from 'utilities/featureFlags';
+import { Roles } from '@prisma/client';
 
 interface Props {
   account: SerializedAccount;
@@ -17,7 +18,8 @@ export default function BrandingPage({ account, records }: Props) {
 
 export async function getServerSideProps(context: NextPageContext) {
   const session = await getSession(context);
-  const account = await findAccountByEmail(session?.user?.email);
+  const accountAndUser = await findAccountAndUserByEmail(session?.user?.email);
+  const { account, user } = accountAndUser || {};
 
   if (!session) {
     return {
@@ -34,6 +36,15 @@ export async function getServerSideProps(context: NextPageContext) {
         account: null,
         // account: serializeAccount(account),
         // ...response,
+      },
+    };
+  }
+
+  if (user && user.role === Roles.MEMBER) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: '../403',
       },
     };
   }
