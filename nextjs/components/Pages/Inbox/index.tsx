@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PageLayout from 'components/layout/PageLayout';
 import { channels, ThreadState } from '@prisma/client';
 import { Settings } from 'serializers/account/settings';
 import { Permissions } from 'types/shared';
-import { create as factory } from '__tests__/factory';
 import Header from './Header';
 import Filters from './Filters';
 import Grid from './Grid';
+import { SerializedThread } from 'serializers/thread';
+import debounce from 'awesome-debounce-promise';
 
 interface Props {
   channels: channels[];
@@ -16,33 +17,24 @@ interface Props {
   settings: Settings;
 }
 
-const threads = [
-  factory('thread', {
-    title: 'Super new thread',
-    messages: [factory('message', { body: 'This thread looks great' })],
-    state: ThreadState.OPEN,
-  }),
-  factory('thread', {
-    title: 'Linen is great',
-    messages: [factory('message')],
-    state: ThreadState.OPEN,
-  }),
-  factory('thread', {
-    title: null,
-    messages: [factory('message')],
-    state: ThreadState.OPEN,
-  }),
-  factory('thread', {
-    title: 'How can I add a new migration?',
-    messages: [factory('message')],
-    state: ThreadState.CLOSE,
-  }),
-  factory('thread', {
-    title: null,
-    messages: [factory('message')],
-    state: ThreadState.CLOSE,
-  }),
-];
+interface InboxResponse {
+  threads: SerializedThread[];
+}
+
+const fetchInbox = debounce(
+  ({ communityName, state }) => {
+    return fetch(`/api/inbox?communityName=${communityName}&state=${state}`, {
+      method: 'GET',
+    }).then((response) => {
+      if (response.ok) {
+        return response.json();
+      }
+      throw new Error('Failed to fetch the inbox.');
+    });
+  },
+  250,
+  { leading: true }
+);
 
 export default function Inbox({
   channels,
@@ -51,7 +43,34 @@ export default function Inbox({
   permissions,
   settings,
 }: Props) {
+  const [inbox, setInbox] = useState<InboxResponse>({ threads: [] });
   const [state, setState] = useState<ThreadState>(ThreadState.OPEN);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    let mounted = true;
+    setLoading(true);
+    fetchInbox({ communityName, state })
+      .then((data: InboxResponse) => {
+        if (mounted) {
+          setInbox(data);
+        }
+      })
+      .catch(() => {
+        if (mounted) {
+          alert('Something went wrong. Please reload the page.');
+        }
+      })
+      .finally(() => {
+        if (mounted) {
+          setLoading(false);
+        }
+      });
+    return () => {
+      mounted = false;
+    };
+  }, [communityName, state]);
+
   return (
     <PageLayout
       channels={channels}
@@ -64,6 +83,7 @@ export default function Inbox({
       <Header />
       <Filters
         state={state}
+        loading={loading}
         onChange={(type: string, value: ThreadState) => {
           switch (type) {
             case 'state':
@@ -71,7 +91,7 @@ export default function Inbox({
           }
         }}
       />
-      <Grid state={state} threads={threads} />
+      <Grid threads={inbox.threads} loading={loading} />
     </PageLayout>
   );
 }

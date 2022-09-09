@@ -4,6 +4,7 @@ import CommunityService from 'services/community';
 import ChannelsService from 'services/channels';
 import prisma from 'client';
 import { ThreadState } from '@prisma/client';
+import serializeThread from 'serializers/thread';
 
 export async function index({
   params,
@@ -21,11 +22,29 @@ export async function index({
       state: params.state || ThreadState.OPEN,
       channelId: { in: channels.map((channel) => channel.id) },
     },
+    include: {
+      messages: {
+        include: {
+          author: true,
+          mentions: {
+            include: {
+              users: true,
+            },
+          },
+          reactions: true,
+          attachments: true,
+        },
+        orderBy: { sentAt: 'asc' },
+        take: 1,
+      },
+    },
+    orderBy: { sentAt: 'desc' },
+    take: 10,
   });
   return {
     status: 200,
     data: {
-      threads,
+      threads: threads.map(serializeThread),
     },
   };
 }
