@@ -6,10 +6,11 @@ import { AiOutlineMessage } from 'react-icons/ai';
 
 interface Props {
   state: string;
+  loading: boolean;
   onChange(type: string, value: string): void;
 }
 
-export default function Filters({ state, onChange }: Props) {
+export default function Filters({ state, loading, onChange }: Props) {
   return (
     <div className={styles.filters}>
       <div className={styles.state}>

@@ -6,7 +6,7 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
   if (request.method === 'GET') {
     return getMessagesFromChannel(request, response);
   }
-  return response.status(404);
+  return response.status(404).json({});
 }
 
 async function getMessagesFromChannel(

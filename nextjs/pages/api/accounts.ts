@@ -157,10 +157,7 @@ const handle = async (
   );
   const params = request.body ? JSON.parse(request.body) : {};
   const { status, data } = await callback({ params, session });
-  if (data) {
-    return response.status(status).json(data);
-  }
-  return response.status(status);
+  return response.status(status).json(data || {});
 };
 
 async function handler(request: NextApiRequest, response: NextApiResponse) {
@@ -170,7 +167,7 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
   if (request.method === 'PUT') {
     return handle(request, response, update);
   }
-  return response.status(404);
+  return response.status(404).json({});
 }
 
 export default withSentry(handler);

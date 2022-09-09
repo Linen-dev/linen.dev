@@ -34,7 +34,7 @@ export async function channelGetServerSideProps(
   context: GetServerSidePropsContext,
   isSubdomainbasedRouting: boolean
 ): Promise<ChannelResponse> {
-  const permissions = await PermissionsService.get(context);
+  const permissions = await PermissionsService.for(context);
   if (!permissions.access) {
     return RedirectTo('/signin');
   }

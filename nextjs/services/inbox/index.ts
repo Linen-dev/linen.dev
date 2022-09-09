@@ -9,11 +9,11 @@ export async function inboxGetServerSideProps(
   context: GetServerSidePropsContext,
   isSubDomainRouting: boolean
 ) {
-  const permissions = await PermissionsService.get(context);
+  const permissions = await PermissionsService.for(context);
   if (!permissions.inbox) {
     return RedirectTo('/signin');
   }
-  const community = await CommunityService.find(context);
+  const community = await CommunityService.find(context.params);
   if (!community) {
     return NotFound();
   }

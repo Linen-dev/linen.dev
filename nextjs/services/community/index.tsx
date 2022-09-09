@@ -1,19 +1,16 @@
 import { accounts } from '@prisma/client';
-import { GetServerSidePropsContext } from 'next';
 import { findAccountByPath } from 'lib/models';
 
 class CommunityService {
-  static async find(
-    context: GetServerSidePropsContext
-  ): Promise<accounts | null> {
+  static async find(params: any): Promise<accounts | null> {
     if (
-      !context.params ||
-      !context.params.communityName ||
-      typeof context.params.communityName !== 'string'
+      !params ||
+      !params.communityName ||
+      typeof params.communityName !== 'string'
     ) {
       return null;
     }
-    return findAccountByPath(context.params.communityName);
+    return findAccountByPath(params.communityName);
   }
 }
 
