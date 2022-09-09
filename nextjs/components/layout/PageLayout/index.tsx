@@ -24,6 +24,7 @@ interface Settings {
 }
 
 interface Props {
+  className?: string;
   seo?: SeoProps;
   children: React.ReactNode;
   currentChannel?: channels;
@@ -37,6 +38,7 @@ interface Props {
 }
 
 function PageLayout({
+  className,
   seo,
   children,
   channels: initialChannels,
@@ -136,12 +138,15 @@ function PageLayout({
           permissions,
         })}
         <div
-          className={classNames(
-            'lg:h-[calc(100vh_-_80px)] lg:w-full',
-            'md:flex',
-            'sm:h-[calc(100vh_-_144px)]',
-            'justify-center overflow-auto h-[calc(100vh_-_192px)] w-full'
-          )}
+          className={
+            className ||
+            classNames(
+              'lg:h-[calc(100vh_-_80px)] lg:w-full',
+              'md:flex',
+              'sm:h-[calc(100vh_-_144px)]',
+              'justify-center overflow-auto h-[calc(100vh_-_192px)] w-full'
+            )
+          }
         >
           <ErrorBoundary
             FallbackComponent={() => (

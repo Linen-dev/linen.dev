@@ -1,4 +1,4 @@
-import type { threads } from '@prisma/client';
+import { threads, ThreadState } from '@prisma/client';
 
 export default function createThread(options?: Partial<threads>): threads {
   return {
@@ -11,6 +11,8 @@ export default function createThread(options?: Partial<threads>): threads {
     sentAt: BigInt(100),
     channelId: '1',
     title: 'this is a title',
+    hidden: false,
+    state: ThreadState.OPEN,
     ...options,
   };
 }
