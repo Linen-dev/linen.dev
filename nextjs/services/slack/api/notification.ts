@@ -11,7 +11,11 @@ export const sendNotification = async (message: string) => {
   const url = 'https://slack.com/api/chat.postMessage?';
 
   const response = await request
-    .post(url + 'channel=events-and-metrics' + `&text=${message}`)
+    .post(
+      url +
+        'channel=events-and-metrics' +
+        `&text=${encodeURIComponent(message)}`
+    )
     .set('Authorization', 'Bearer ' + token);
 
   return response;
