@@ -37,7 +37,7 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
   if (request.method === 'POST') {
     return create(request, response);
   }
-  return response.status(404);
+  return response.status(404).json({});
 }
 
 export default withSentry(handler);

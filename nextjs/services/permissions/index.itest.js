@@ -22,7 +22,7 @@ describe('#get', () => {
             type: AccountType.PUBLIC,
           },
         });
-        const permissions = await PermissionsService.get(context);
+        const permissions = await PermissionsService.for(context);
         expect(permissions.access).toEqual(true);
       });
     });
@@ -41,7 +41,7 @@ describe('#get', () => {
             },
           });
           Session.find.mockResolvedValue(null);
-          const permissions = await PermissionsService.get(context);
+          const permissions = await PermissionsService.for(context);
           expect(permissions.access).toEqual(false);
         });
       });
@@ -59,7 +59,7 @@ describe('#get', () => {
                 type: AccountType.PRIVATE,
               },
             });
-            const permissions = await PermissionsService.get(context);
+            const permissions = await PermissionsService.for(context);
             Session.find.mockResolvedValue({ user: { email: 'john@doe.com' } });
             expect(permissions.access).toEqual(false);
           });
@@ -85,7 +85,7 @@ describe('#get', () => {
                 salt: 'bar',
               },
             });
-            const permissions = await PermissionsService.get(context);
+            const permissions = await PermissionsService.for(context);
             Session.find.mockResolvedValue({ user: { email: 'john@doe.com' } });
             expect(permissions.access).toEqual(true);
           });
@@ -118,7 +118,7 @@ describe('#get', () => {
               },
             });
             Session.find.mockResolvedValue({ user: { email: 'john@doe.com' } });
-            const permissions = await PermissionsService.get(context);
+            const permissions = await PermissionsService.for(context);
             expect(permissions.access).toEqual(false);
           });
         });
@@ -130,7 +130,7 @@ describe('#get', () => {
         const context = {
           params: { communityName: 'foo' },
         };
-        const permissions = await PermissionsService.get(context);
+        const permissions = await PermissionsService.for(context);
         expect(permissions.access).toEqual(false);
       });
     });
@@ -138,7 +138,7 @@ describe('#get', () => {
     describe('when the community name is missing', () => {
       it('returns false', async () => {
         const context = {};
-        const permissions = await PermissionsService.get(context);
+        const permissions = await PermissionsService.for(context);
         expect(permissions.access).toEqual(false);
       });
     });
@@ -166,7 +166,7 @@ describe('#get', () => {
             },
           });
           Session.find.mockResolvedValue({ user: { email: 'john@doe.com' } });
-          const permissions = await PermissionsService.get(context);
+          const permissions = await PermissionsService.for(context);
           expect(permissions.inbox).toEqual(true);
         });
       });
@@ -177,7 +177,7 @@ describe('#get', () => {
           params: { communityName: 'foo' },
         };
         Session.find.mockResolvedValue(null);
-        const permissions = await PermissionsService.get(context);
+        const permissions = await PermissionsService.for(context);
         expect(permissions.inbox).toEqual(false);
       });
     });

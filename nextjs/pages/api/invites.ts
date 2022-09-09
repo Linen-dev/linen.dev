@@ -21,7 +21,7 @@ export default async function handler(
     return response.status(status).json({ message });
   }
 
-  return response.status(404);
+  return response.status(404).json({});
 }
 
 async function post(

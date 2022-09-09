@@ -30,7 +30,7 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
   if (request.method === 'GET') {
     return get(request, response);
   }
-  return response.status(404);
+  return response.status(404).json({});
 }
 
 export default withSentry(handler);
