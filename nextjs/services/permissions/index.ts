@@ -1,35 +1,62 @@
-import { AccountType } from '@prisma/client';
+import { AccountType, accounts } from '@prisma/client';
 import { GetServerSidePropsContext } from 'next/types';
 import Session from '../session';
-import prisma from 'client';
 import { findAccountByPath, findAccountByEmail } from 'lib/models';
+import { Permissions } from 'types/shared';
 
 export default class PermissionsService {
-  static async access(context: GetServerSidePropsContext): Promise<boolean> {
-    if (
-      !context.params ||
-      !context.params.communityName ||
-      typeof context.params.communityName !== 'string'
-    ) {
-      return false;
-    }
-    const community = await findAccountByPath(context.params.communityName);
+  static async get(context: GetServerSidePropsContext): Promise<Permissions> {
+    const community = await findCommunity(context);
+    const account = await findAccount(context);
+    const access = PermissionsService._access(community, account);
+    const inbox = PermissionsService._inbox(community, account);
+    return {
+      access,
+      inbox,
+    };
+  }
+  static _access(
+    community: accounts | null,
+    account: accounts | null
+  ): boolean {
     if (!community) {
       return false;
     }
     if (community.type === AccountType.PRIVATE) {
-      const session = await Session.find(context);
-      if (!session || !session.user || !session.user.email) {
-        return false;
-      }
-      const account = await findAccountByEmail(session.user.email);
-      if (!account) {
-        return false;
-      }
-      if (account.id !== community.id) {
+      if (!account || account.id !== community.id) {
         return false;
       }
     }
     return true;
   }
+
+  static _inbox(community: accounts | null, account: accounts | null): boolean {
+    if (!community) {
+      return false;
+    }
+    if (!account || account.id !== community.id) {
+      return false;
+    }
+
+    return true;
+  }
+}
+
+async function findCommunity(context: GetServerSidePropsContext) {
+  if (
+    !context.params ||
+    !context.params.communityName ||
+    typeof context.params.communityName !== 'string'
+  ) {
+    return null;
+  }
+  return findAccountByPath(context.params.communityName);
+}
+
+async function findAccount(context: GetServerSidePropsContext) {
+  const session = await Session.find(context);
+  if (!session || !session.user || !session.user.email) {
+    return null;
+  }
+  return findAccountByEmail(session.user.email);
 }

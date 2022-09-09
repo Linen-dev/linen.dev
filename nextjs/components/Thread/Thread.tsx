@@ -3,7 +3,7 @@ import { SerializedMessage } from 'serializers/thread';
 import JoinChannelLink from 'components/Link/JoinChannelLink';
 import Row from 'components/Message/Row';
 import { useMemo } from 'react';
-import type { Settings } from 'services/accountSettings';
+import type { Settings } from 'serializers/account/settings';
 import { getThreadUrl } from 'components/Pages/ChannelsPage/utilities/url';
 
 export function Thread({

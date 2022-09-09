@@ -1,0 +1,12 @@
+.filters {
+  padding: 0 1.5rem 1.5rem;
+  text-align: right;
+}
+
+.state {
+  width: 96px;
+}
+
+.state select {
+  text-align: center;
+}

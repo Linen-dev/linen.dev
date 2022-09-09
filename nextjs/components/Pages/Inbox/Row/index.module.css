@@ -1,0 +1,38 @@
+.row {
+  align-items: center;
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+}
+
+.content {
+  align-items: center;
+  display: flex;
+  gap: 0.5rem;
+  font-size: 12px;
+}
+
+.channel {
+  font-size: 12px;
+  border: 1px solid #4c6ef5;
+  color: #4c6ef5;
+  border-radius: 16px;
+  padding: 2px 8px;
+}
+
+.date,
+.message {
+  color: lightslategray;
+}
+
+.row {
+  padding-bottom: 0.5rem;
+}
+.row + .row {
+  border-top: 1px solid whitesmoke;
+  padding-top: 0.5rem;
+}
+.row:last-child {
+  padding-bottom: 0;
+}

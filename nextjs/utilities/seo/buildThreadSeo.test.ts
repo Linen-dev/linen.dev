@@ -1,5 +1,5 @@
 import { SerializedMessage } from 'serializers/thread';
-import { Settings } from 'services/accountSettings';
+import { Settings } from 'serializers/account/settings';
 import { buildThreadSeo } from './buildThreadSeo';
 
 describe('buildThreadSeo', () => {

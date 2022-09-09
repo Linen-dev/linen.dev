@@ -1,9 +1,11 @@
 import { channels, users } from '@prisma/client';
+import { Permissions } from 'types/shared';
 
 export type ThreadByIdResponse = ThreadById | { notFound: boolean };
 
 export interface ThreadByIdProp extends ThreadById {
   isSubDomainRouting: boolean;
+  permissions: Permissions;
 }
 
 export interface MentionsWithUsers extends mentions {

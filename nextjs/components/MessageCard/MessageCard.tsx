@@ -6,7 +6,7 @@ import { users } from '@prisma/client';
 import { getThreadUrl } from '../Pages/ChannelsPage/utilities/url';
 import { SerializedMessage } from '../../serializers/thread';
 import CopyToClipboardIcon from '../Pages/ChannelsPage/CopyToClipboardIcon';
-import type { Settings } from 'services/accountSettings';
+import type { Settings } from 'serializers/account/settings';
 
 export function MessageCard({
   author,

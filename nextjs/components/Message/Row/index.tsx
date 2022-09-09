@@ -1,4 +1,4 @@
-import Avatar, { Size } from '../../Avatar';
+import Avatar, { Size } from 'components/Avatar';
 import Message from '../../Message';
 import { format } from 'timeago.js';
 import { SerializedMessage } from 'serializers/thread';

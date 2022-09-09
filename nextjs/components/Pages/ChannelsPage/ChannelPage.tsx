@@ -13,6 +13,7 @@ export default function ChannelPage({
   nextCursor,
   pathCursor,
   isBot,
+  permissions,
 }: ChannelViewProps) {
   if (!threads) {
     return <div />;
@@ -34,10 +35,11 @@ export default function ChannelPage({
           threads,
         }),
       }}
-      navItems={{ channels }}
+      channels={channels}
       settings={settings}
       communityName={settings.communityName}
       isSubDomainRouting={isSubDomainRouting}
+      permissions={permissions}
     >
       <ComponentToRender
         threads={threads}
@@ -48,6 +50,7 @@ export default function ChannelPage({
         nextCursor={nextCursor}
         pathCursor={pathCursor}
         isBot={isBot}
+        permissions={permissions}
       />
     </PageLayout>
   );

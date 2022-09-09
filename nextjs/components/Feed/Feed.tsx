@@ -2,7 +2,7 @@ import { users } from '@prisma/client';
 import CustomLink from '../Link/CustomLink';
 import { SerializedThread } from '../../serializers/thread';
 import { MessageCard } from '../MessageCard';
-import type { Settings } from 'services/accountSettings';
+import type { Settings } from 'serializers/account/settings';
 
 // A feed is a collection of threads
 // A channel feed is a collection of threads of a single channel

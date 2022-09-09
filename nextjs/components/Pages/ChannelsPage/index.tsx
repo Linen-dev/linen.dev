@@ -1,7 +1,11 @@
 import { channels, messages, mentions, users } from '@prisma/client';
-import { Settings } from 'services/accountSettings';
+import { Settings } from 'serializers/account/settings';
 import ChannelPage from './ChannelPage';
-import { SerializedAttachment, SerializedReaction } from 'types/shared';
+import {
+  SerializedAttachment,
+  SerializedReaction,
+  Permissions,
+} from 'types/shared';
 import { SerializedThread } from 'serializers/thread';
 
 export type ChannelResponse = {
@@ -39,6 +43,7 @@ export type ChannelViewProps = {
   nextCursor: ChannelViewCursorProps;
   pathCursor: string | null;
   isBot: boolean;
+  permissions: Permissions;
 };
 
 export type ChannelViewCursorProps = {

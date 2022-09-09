@@ -4,6 +4,8 @@ import createResponse from './response';
 import createRequest from './request';
 import createAccount from './account';
 import createAuth from './auth';
+import createPermissions from './permissions';
+import createChannel from './channel';
 
 export function create(name: string, options?: object): any {
   switch (name) {
@@ -19,6 +21,10 @@ export function create(name: string, options?: object): any {
       return createAccount(options);
     case 'auth':
       return createAuth(options);
+    case 'permissions':
+      return createPermissions(options);
+    case 'channel':
+      return createChannel(options);
     default:
       throw new Error(`Unknown factory name: ${name}`);
   }

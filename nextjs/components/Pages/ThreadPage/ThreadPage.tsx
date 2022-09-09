@@ -16,6 +16,7 @@ export function ThreadPage({
   slug,
   incrementId,
   title,
+  permissions,
 }: ThreadByIdProp) {
   useEffect(() => {
     threadId &&
@@ -40,11 +41,12 @@ export function ThreadPage({
       }}
       communityName={settings.communityName}
       currentChannel={currentChannel}
-      navItems={{ channels: channels }}
+      channels={channels}
       communityUrl={settings.communityUrl}
       communityInviteUrl={settings.communityInviteUrl}
       settings={settings}
       isSubDomainRouting={isSubDomainRouting}
+      permissions={permissions}
     >
       <div className="max-w-[700px]">
         <Thread

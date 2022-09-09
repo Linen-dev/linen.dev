@@ -11,6 +11,7 @@ import JoinDiscord from 'components/JoinDiscord';
 import JoinSlack from 'components/JoinSlack';
 import styles from './index.module.css';
 import classNames from 'classnames';
+import { Permissions } from 'types/shared';
 
 interface Settings {
   brandColor: string;
@@ -23,29 +24,35 @@ interface Settings {
 }
 
 interface Props {
-  seo: SeoProps;
+  className?: string;
+  seo?: SeoProps;
   children: React.ReactNode;
-  currentChannel: channels;
-  navItems?: any;
+  currentChannel?: channels;
+  channels?: channels[];
   communityUrl?: string;
   communityInviteUrl?: string;
   settings: Settings;
   communityName: string;
   isSubDomainRouting: boolean;
+  permissions: Permissions;
 }
 
 function PageLayout({
+  className,
   seo,
   children,
-  navItems,
+  channels: initialChannels,
   currentChannel,
   communityUrl,
   communityInviteUrl,
   settings,
   communityName,
   isSubDomainRouting,
+  permissions,
 }: Props) {
-  const channels = navItems.channels.filter((c: channels) => !c.hidden);
+  const channels = initialChannels
+    ? initialChannels.filter((c: channels) => !c.hidden)
+    : [];
   const homeUrl = addHttpsToUrl(settings.homeUrl);
   const docsUrl = addHttpsToUrl(settings.docsUrl);
   const logoUrl = addHttpsToUrl(settings.logoUrl);
@@ -120,23 +127,26 @@ function PageLayout({
           communityType={settings.communityType}
         />
       </div>
-      <SEO {...seo} />
+      {seo && <SEO {...seo} />}
       <div className="flex flex-col lg:flex-row">
         {NavBar({
           channels,
-          channelName: currentChannel.channelName || '',
+          channelName: currentChannel?.channelName || '',
           communityName,
           communityType: settings.communityType,
           isSubDomainRouting,
+          permissions,
         })}
-
         <div
-          className={classNames(
-            'lg:h-[calc(100vh_-_80px)] lg:w-full',
-            'md:flex',
-            'sm:h-[calc(100vh_-_144px)]',
-            'justify-center overflow-auto h-[calc(100vh_-_192px)] w-full'
-          )}
+          className={
+            className ||
+            classNames(
+              'lg:h-[calc(100vh_-_80px)] lg:w-full',
+              'md:flex',
+              'sm:h-[calc(100vh_-_144px)]',
+              'justify-center overflow-auto h-[calc(100vh_-_192px)] w-full'
+            )
+          }
         >
           <ErrorBoundary
             FallbackComponent={() => (
