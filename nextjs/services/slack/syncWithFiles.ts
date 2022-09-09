@@ -4,7 +4,7 @@ import { SyncStatus, updateAndNotifySyncStatus } from 'services/sync';
 import { captureExceptionAndFlush } from 'utilities/sentry';
 import { SlackFileAdapter } from './file';
 import { syncWrapper } from './syncWrapper';
-import extract from 'extract-zip';
+import StreamZip from 'node-stream-zip';
 import { tmpdir } from 'os';
 import fs from 'fs';
 import { v4 } from 'uuid';
@@ -122,7 +122,9 @@ async function getFileFromS3(fileLocation: string) {
 
 async function extractIntoTemp(file: any) {
   const target = tmpdir() + '/' + v4();
+  const zip = new StreamZip.async({ file });
   fs.mkdirSync(target, { recursive: true });
-  await extract(file, { dir: target });
+  await zip.extract(null, target);
+  await zip.close();
   return target;
 }
