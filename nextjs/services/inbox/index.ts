@@ -13,7 +13,7 @@ export async function inboxGetServerSideProps(
   if (!permissions.inbox) {
     return RedirectTo('/signin');
   }
-  const community = await CommunityService.find(context);
+  const community = await CommunityService.find(context.params);
   if (!community) {
     return NotFound();
   }
