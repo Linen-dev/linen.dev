@@ -19,9 +19,11 @@ export default function Grid({ threads, loading }: Props) {
         return (
           <Row
             key={message.body + index}
-            title={thread.title}
             date={format(thread.sentAt)}
             message={message}
+            href={`/t/${thread.incrementId}/${
+              thread.slug || 'topic'
+            }`.toLowerCase()}
           />
         );
       })}
