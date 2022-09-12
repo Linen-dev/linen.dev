@@ -4,7 +4,6 @@ import { prisma } from '../../client';
 import { threadGetServerSideProps } from 'services/threads';
 import { encodeCursor } from 'utilities/cursor';
 import { createThreadsOneByDay } from 'bin/factory/threads';
-jest.mock('utilities/dynamoCache');
 jest.mock('services/session');
 
 describe('threads services', () => {
