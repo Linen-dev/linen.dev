@@ -13,7 +13,6 @@ import type { users } from '@prisma/client';
 import { GetServerSidePropsContext } from 'next';
 import { NotFound } from '../utilities/response';
 import { serialize as serializeSettings } from 'serializers/account/settings';
-import { memoize } from '../utilities/dynamoCache';
 import { captureExceptionAndFlush } from 'utilities/sentry';
 import { encodeCursor } from 'utilities/cursor';
 import PermissionsService from 'services/permissions';
@@ -25,8 +24,8 @@ async function getThreadById(
 ): Promise<ThreadById> {
   const id = parseInt(threadId);
   const [thread, account] = await Promise.all([
-    findThreadByIdMemo(id),
-    findAccountByPathMemo(communityName),
+    findThreadById(id),
+    findAccountByPath(communityName),
   ]);
 
   if (!thread || !thread?.channel?.accountId) {
@@ -43,8 +42,8 @@ async function getThreadById(
   }
 
   const [channels, channelsResponse] = await Promise.all([
-    channelIndexMemo(thread.channel.accountId, { hidden: false }),
-    channelsGroupByThreadCountMemo(thread?.channel?.accountId),
+    channelIndex(thread.channel.accountId, { hidden: false }),
+    channelsGroupByThreadCount(thread?.channel?.accountId),
   ]);
 
   //Filter out channels with less than 20 threads
@@ -129,7 +128,7 @@ export async function threadGetServerSideProps(
   const threadId = context.params?.threadId as string;
   const communityName = context.params?.communityName as string;
   try {
-    const thread = await getThreadByIdMemo(threadId, communityName);
+    const thread = await getThreadById(threadId, communityName);
     return {
       props: {
         ...thread,
@@ -143,9 +142,3 @@ export async function threadGetServerSideProps(
     return NotFound();
   }
 }
-
-const findThreadByIdMemo = memoize(findThreadById);
-const channelIndexMemo = memoize(channelIndex);
-const findAccountByPathMemo = memoize(findAccountByPath);
-const channelsGroupByThreadCountMemo = memoize(channelsGroupByThreadCount);
-const getThreadByIdMemo = memoize(getThreadById);

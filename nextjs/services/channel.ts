@@ -5,7 +5,6 @@ import {
   serialize as serializeSettings,
   Settings,
 } from 'serializers/account/settings';
-import { memoize } from '../utilities/dynamoCache';
 import { findPreviousCursor, findThreadsByCursor } from '../lib/threads';
 import serializeThread from '../serializers/thread';
 import {
@@ -43,7 +42,7 @@ export async function channelGetServerSideProps(
   const page = context.params?.page as string | undefined;
   const cursor = page && parsePageParam(page);
 
-  const account = (await findAccountByPathMemo(communityName, {
+  const account = (await findAccountByPath(communityName, {
     include: { channels: { where: { hidden: false } } },
   })) as AccountWithSlackAuthAndChannels;
   if (!account) return NotFound();
@@ -78,7 +77,7 @@ export async function channelGetServerSideProps(
   const { sort, direction, sentAt } = decodeCursor(cursor);
 
   const threads = (
-    await findThreadsByCursorMemo({
+    await findThreadsByCursor({
       channelIds: [channel.id],
       sentAt,
       sort,
@@ -127,8 +126,8 @@ function findChannelOrDefault(channels: channels[], channelName: string) {
 // it should return just one cursor, the one to keep loading into same direction
 export async function channelNextPage(channelId: string, cursor: string) {
   const { sort, direction, sentAt } = decodeCursor(cursor);
-  const anonymizeUsers = await shouldThisChannelBeAnonymousMemo(channelId);
-  const threads = await findThreadsByCursorMemo({
+  const anonymizeUsers = await shouldThisChannelBeAnonymous(channelId);
+  const threads = await findThreadsByCursor({
     channelIds: [channelId],
     sentAt,
     sort,
@@ -150,10 +149,6 @@ export async function channelNextPage(channelId: string, cursor: string) {
     nextCursor,
   };
 }
-
-const shouldThisChannelBeAnonymousMemo = memoize(shouldThisChannelBeAnonymous);
-const findThreadsByCursorMemo = memoize(findThreadsByCursor);
-const findAccountByPathMemo = memoize(findAccountByPath);
 
 function parsePageParam(page: string) {
   // if is a number we should return undefined

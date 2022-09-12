@@ -13,7 +13,6 @@ import setup from '__tests__/spec-helpers/integration';
 
 setup({ truncationStrategy: 'cascade' });
 
-jest.mock('utilities/dynamoCache');
 jest.mock('services/session');
 
 const reqWithBotHeaders = {
