@@ -6,7 +6,7 @@ interface Props {
   children: React.ReactNode;
 }
 
-export default function Toggle({ header, children }: Props) {
+export default function Accordion({ header, children }: Props) {
   const [visible, setVisible] = useState(true);
 
   return (
