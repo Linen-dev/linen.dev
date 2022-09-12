@@ -8,6 +8,7 @@ import Filters from './Filters';
 import Grid from './Grid';
 import { SerializedThread } from 'serializers/thread';
 import debounce from 'awesome-debounce-promise';
+import { LinkContext } from 'contexts/Link';
 
 interface Props {
   channels: channels[];
@@ -83,26 +84,34 @@ export default function Feed({
   }, [communityName, state]);
 
   return (
-    <PageLayout
-      channels={channels}
-      communityName={communityName}
-      isSubDomainRouting={isSubDomainRouting}
-      permissions={permissions}
-      settings={settings}
-      className="block w-full"
+    <LinkContext
+      context={{
+        isSubDomainRouting,
+        communityName: settings.communityName,
+        communityType: settings.communityType,
+      }}
     >
-      <Header />
-      <Filters
-        state={state}
-        loading={loading}
-        onChange={(type: string, value: ThreadState) => {
-          switch (type) {
-            case 'state':
-              setState(value);
-          }
-        }}
-      />
-      <Grid threads={feed.threads} loading={loading} />
-    </PageLayout>
+      <PageLayout
+        channels={channels}
+        communityName={communityName}
+        isSubDomainRouting={isSubDomainRouting}
+        permissions={permissions}
+        settings={settings}
+        className="block w-full"
+      >
+        <Header />
+        <Filters
+          state={state}
+          loading={loading}
+          onChange={(type: string, value: ThreadState) => {
+            switch (type) {
+              case 'state':
+                setState(value);
+            }
+          }}
+        />
+        <Grid threads={feed.threads} loading={loading} />
+      </PageLayout>
+    </LinkContext>
   );
 }

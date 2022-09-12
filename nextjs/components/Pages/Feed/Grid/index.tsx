@@ -1,6 +1,7 @@
 import React from 'react';
 import Row from '../Row';
 import { SerializedThread } from 'serializers/thread';
+import { format } from 'utilities/date';
 
 interface Props {
   threads: SerializedThread[];
@@ -18,9 +19,11 @@ export default function Grid({ threads, loading }: Props) {
         return (
           <Row
             key={message.body + index}
-            title={thread.title}
-            date="09/09/2022"
+            date={format(thread.sentAt)}
             message={message}
+            href={`/t/${thread.incrementId}/${
+              thread.slug || 'topic'
+            }`.toLowerCase()}
           />
         );
       })}

@@ -1,9 +1,8 @@
 .row {
   align-items: center;
-  display: flex;
+  display: block;
   width: 100%;
-  justify-content: space-between;
-  padding: 0 1.5rem;
+  padding: 0.5rem 1.5rem;
 }
 
 .content {
@@ -11,14 +10,6 @@
   display: flex;
   gap: 0.5rem;
   font-size: 12px;
-}
-
-.channel {
-  font-size: 12px;
-  border: 1px solid #4c6ef5;
-  color: #4c6ef5;
-  border-radius: 16px;
-  padding: 2px 8px;
 }
 
 .date,
@@ -29,9 +20,11 @@
 .row {
   padding-bottom: 0.5rem;
 }
+.row:hover {
+  background-color: whitesmoke;
+}
 .row + .row {
   border-top: 1px solid whitesmoke;
-  padding-top: 0.5rem;
 }
 .row:last-child {
   padding-bottom: 0;
