@@ -21,14 +21,14 @@ function ChannelToggleList({
   }
 
   return (
-    <div className="flex items-center m-1">
+    <div className="flex m-1">
       <Toggle
         checked={enabled}
         onChange={(checked) => onChannelToggle(checked, channel.id)}
       />
       <span
         className={classNames(
-          'text-sm font-medium ',
+          'text-sm font-medium ml-2',
           enabled ? 'text-gray-900' : 'text-gray-400 line-through	'
         )}
       >
