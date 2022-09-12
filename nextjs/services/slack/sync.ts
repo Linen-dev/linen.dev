@@ -8,6 +8,7 @@ import {
   listUsers,
   fetchConversationsTyped,
   getSlackChannels,
+  getMemberships,
 } from './api';
 import { syncWrapper } from './syncWrapper';
 
@@ -53,6 +54,7 @@ export async function slackSync({
       getSlackChannels,
       joinChannel,
       listUsers,
+      getMemberships,
     });
 
     await updateAndNotifySyncStatus(

@@ -5,6 +5,7 @@ import type {
   FetchRepliesResponseType,
   FetchTeamInfoFnType,
   FetchTeamInfoResponseType,
+  GetMembershipsFnType,
   GetSlackChannelsFnType,
   GetSlackChannelsResponseType,
   JoinChannelFnType,
@@ -53,6 +54,14 @@ export class SlackFileAdapter {
     return {
       body: { channels: channelsFile },
     };
+  };
+
+  getMemberships: GetMembershipsFnType = async (
+    channelId: string,
+    token: string
+  ): Promise<string[]> => {
+    const channelsFile = this._readParseFile('channels.json') as any[];
+    return channelsFile.find((f) => f.id === channelId)?.members;
   };
 
   joinChannel: JoinChannelFnType = async (channel: string, token: string) => {};

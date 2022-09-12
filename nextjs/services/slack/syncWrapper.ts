@@ -6,6 +6,7 @@ import { fetchAllTopLevelMessages } from './sync/fetchAllTopLevelMessages';
 import { saveAllThreads } from './sync/saveAllThreads';
 import { AccountWithSlackAuthAndChannels } from 'types/partialTypes';
 import type { ConversationHistoryBody } from './api';
+import { syncMemberships } from './sync/membership';
 
 export type FetchTeamInfoResponseType = { body?: { team?: { url?: string } } };
 export type FetchTeamInfoFnType = (
@@ -40,6 +41,11 @@ export type FetchConversationsTypedFnType = (
   userCursor?: string | null
 ) => Promise<ConversationHistoryBody>;
 
+export type GetMembershipsFnType = (
+  channel: string,
+  token: string
+) => Promise<string[]>;
+
 export type FetchRepliesResponseType = { body?: { messages?: any[] } };
 export type FetchRepliesFnType = (
   threadTs: string,
@@ -54,6 +60,7 @@ export type SyncWrapperFunctionsTypes = {
   listUsers: ListUsersFnType;
   fetchConversationsTyped: FetchConversationsTypedFnType;
   fetchReplies: FetchRepliesFnType;
+  getMemberships: GetMembershipsFnType;
 };
 
 export interface SyncWrapperTypes extends SyncWrapperFunctionsTypes {
@@ -78,6 +85,7 @@ export async function syncWrapper({
   listUsers,
   fetchConversationsTyped,
   fetchReplies,
+  getMemberships,
 }: SyncWrapperTypes) {
   const token = await fetchToken({
     account,
@@ -106,6 +114,12 @@ export async function syncWrapper({
   });
 
   for (const channel of channels) {
+    await syncMemberships({
+      accountId,
+      channel,
+      token,
+      getMemberships,
+    });
     //fetch and save all top level conversations
     await fetchAllTopLevelMessages({
       channel,

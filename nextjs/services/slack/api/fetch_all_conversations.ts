@@ -11,6 +11,7 @@ import {
   UserInfo,
   UserInfoResponseBody,
 } from 'types/slackResponses/slackUserInfoInterface';
+import { GetMembershipsFnType } from '../syncWrapper';
 
 export const fetchConversations = async (
   channel: string,
@@ -482,6 +483,25 @@ export const getSlackChannels = async (teamId: string, token: string) => {
     .set('Authorization', 'Bearer ' + token);
 
   return response;
+};
+
+export const getMemberships: GetMembershipsFnType = async (
+  channelId: string,
+  token: string
+) => {
+  const members: string[] = [];
+  const url = `https://slack.com/api/conversations.members?channel=${channelId}`;
+
+  let cursor;
+  do {
+    const response: any = await request
+      .get(`${url}${!!cursor && `&cursor=${cursor}`}`)
+      .set('Authorization', 'Bearer ' + token);
+    response?.body?.members && members.push(...response.body.members);
+    cursor = response?.body?.response_metadata?.next_cursor;
+  } while (!!cursor);
+
+  return members;
 };
 
 export const getSlackUser = async (

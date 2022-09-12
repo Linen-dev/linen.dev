@@ -44,6 +44,7 @@ export async function slackSyncWithFiles({
     getSlackChannels,
     joinChannel,
     listUsers,
+    getMemberships,
   } = new SlackFileAdapter(tempFolder);
 
   await updateAndNotifySyncStatus(
@@ -67,6 +68,7 @@ export async function slackSyncWithFiles({
       getSlackChannels,
       joinChannel,
       listUsers,
+      getMemberships,
     });
 
     await updateAndNotifySyncStatus(
