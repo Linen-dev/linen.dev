@@ -1,10 +1,10 @@
 import React from 'react';
 import { useState } from 'react';
-import { Switch } from '@headlessui/react';
 import classNames from 'classnames';
 import { SettingsProps, WaitForIntegration } from '..';
 import { channels } from '@prisma/client';
 import { toast } from 'components/Toast';
+import Toggle from 'components/Toggle';
 
 function ChannelToggleList({
   channel,
@@ -15,46 +15,32 @@ function ChannelToggleList({
 }) {
   const [enabled, setEnabled] = useState(!channel.hidden);
 
-  async function onChannelToggle(value: boolean, id: string) {
-    await onChange({ id, hidden: String(value) === 'false' });
-    setEnabled(value);
+  async function onChannelToggle(checked: boolean, id: string) {
+    await onChange({ id, hidden: !checked });
+    setEnabled(checked);
   }
 
   return (
-    <Switch.Group as="div" className="flex items-center m-1">
-      <Switch
+    <div className="flex items-center m-1">
+      <Toggle
         checked={enabled}
-        onChange={(value) => onChannelToggle(value, channel.id)}
-        className={classNames(
-          enabled ? 'bg-blue-700' : 'bg-gray-200',
-          'relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-300 mr-3'
-        )}
-      >
-        <span
-          aria-hidden="true"
-          className={classNames(
-            enabled ? 'translate-x-5' : 'translate-x-0',
-            'pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200'
-          )}
-        />
-      </Switch>
-      <Switch.Label
-        as="span"
+        onChange={(checked) => onChannelToggle(checked, channel.id)}
+      />
+      <span
         className={classNames(
           'text-sm font-medium ',
           enabled ? 'text-gray-900' : 'text-gray-400 line-through	'
         )}
-        passive
       >
         {channel.channelName}
-      </Switch.Label>
+      </span>
 
       <input
         type="hidden"
         name={channel.id}
         value={enabled ? 'true' : 'false'}
       />
-    </Switch.Group>
+    </div>
   );
 }
 
