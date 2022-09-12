@@ -4,13 +4,14 @@ import CommunityService from 'services/community';
 import ChannelsService from 'services/channels';
 import { serialize as serializeSettings } from 'serializers/account/settings';
 import { NotFound, RedirectTo } from 'utilities/response';
+import { isFeedEnabled } from 'utilities/featureFlags';
 
 export async function feedGetServerSideProps(
   context: GetServerSidePropsContext,
   isSubDomainRouting: boolean
 ) {
   const permissions = await PermissionsService.for(context);
-  if (!permissions.feed) {
+  if (!permissions.feed || !isFeedEnabled) {
     return RedirectTo('/signin');
   }
   const community = await CommunityService.find(context.params);
