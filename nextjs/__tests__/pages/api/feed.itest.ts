@@ -1,11 +1,11 @@
-import { index } from 'pages/api/inbox';
+import { index } from 'pages/api/feed';
 import prisma from 'client';
 import setup from '__tests__/spec-helpers/integration';
 import { ThreadState } from '@prisma/client';
 
 setup({ truncationStrategy: 'none' });
 
-describe('inbox', () => {
+describe('feed', () => {
   describe('#index', () => {
     it('returns threads of given community', async () => {
       const account = await prisma.accounts.create({

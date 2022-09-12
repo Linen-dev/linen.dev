@@ -17,43 +17,43 @@ interface Props {
   settings: Settings;
 }
 
-interface InboxResponse {
+interface FeedResponse {
   threads: SerializedThread[];
 }
 
-const fetchInbox = debounce(
+const fetchFeed = debounce(
   ({ communityName, state }) => {
-    return fetch(`/api/inbox?communityName=${communityName}&state=${state}`, {
+    return fetch(`/api/feed?communityName=${communityName}&state=${state}`, {
       method: 'GET',
     }).then((response) => {
       if (response.ok) {
         return response.json();
       }
-      throw new Error('Failed to fetch the inbox.');
+      throw new Error('Failed to fetch the feed.');
     });
   },
   250,
   { leading: true }
 );
 
-export default function Inbox({
+export default function Feed({
   channels,
   communityName,
   isSubDomainRouting,
   permissions,
   settings,
 }: Props) {
-  const [inbox, setInbox] = useState<InboxResponse>({ threads: [] });
+  const [feed, setFeed] = useState<FeedResponse>({ threads: [] });
   const [state, setState] = useState<ThreadState>(ThreadState.OPEN);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     let mounted = true;
     setLoading(true);
-    fetchInbox({ communityName, state })
-      .then((data: InboxResponse) => {
+    fetchFeed({ communityName, state })
+      .then((data: FeedResponse) => {
         if (mounted) {
-          setInbox(data);
+          setFeed(data);
         }
       })
       .catch(() => {
@@ -91,7 +91,7 @@ export default function Inbox({
           }
         }}
       />
-      <Grid threads={inbox.threads} loading={loading} />
+      <Grid threads={feed.threads} loading={loading} />
     </PageLayout>
   );
 }

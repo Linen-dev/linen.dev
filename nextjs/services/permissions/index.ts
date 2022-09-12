@@ -22,10 +22,10 @@ export default class PermissionsService {
     const community = await findCommunity(params);
     const account = await findAccount(request, response);
     const access = PermissionsService._access(community, account);
-    const inbox = PermissionsService._inbox(community, account);
+    const feed = PermissionsService._feed(community, account);
     return {
       access,
-      inbox,
+      feed,
     };
   }
 
@@ -51,7 +51,7 @@ export default class PermissionsService {
     return true;
   }
 
-  static _inbox(community: accounts | null, account: accounts | null): boolean {
+  static _feed(community: accounts | null, account: accounts | null): boolean {
     if (!community) {
       return false;
     }
