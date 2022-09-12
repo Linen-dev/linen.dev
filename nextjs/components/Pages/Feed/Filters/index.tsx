@@ -1,8 +1,7 @@
 import { ThreadState } from '@prisma/client';
 import React from 'react';
-import NativeSelect from 'components/NativeSelect';
+import ButtonToggle from 'components/ButtonToggle';
 import styles from './index.module.css';
-import { AiOutlineMessage } from 'react-icons/ai';
 
 interface Props {
   state: string;
@@ -13,20 +12,14 @@ interface Props {
 export default function Filters({ state, loading, onChange }: Props) {
   return (
     <div className={styles.filters}>
-      <div className={styles.state}>
-        <NativeSelect
-          id="state"
-          icon={<AiOutlineMessage />}
-          value={state}
-          onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
-            onChange('state', event.target.value)
-          }
-          options={[
-            { label: 'Active', value: ThreadState.OPEN },
-            { label: 'Closed', value: ThreadState.CLOSE },
-          ]}
-        />
-      </div>
+      <ButtonToggle
+        value={state}
+        options={[
+          { label: 'Active', value: ThreadState.OPEN },
+          { label: 'Closed', value: ThreadState.CLOSE },
+        ]}
+        onChange={(value: ThreadState) => onChange('state', value)}
+      />
     </div>
   );
 }
