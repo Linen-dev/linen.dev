@@ -20,20 +20,24 @@ async function query(site: string) {
   );
   const $ = load(result.data);
   const resultStats = $('#result-stats').text();
-  return getResult(resultStats);
+  return Number(getResult(resultStats) || 0);
 }
 
 export async function crawlGoogleResults() {
   const accounts = await findAccountsPremium();
 
   const result = await Promise.all(
-    [...accounts, { redirectDomain: 'linen.dev' }].map(async (account) => {
-      if (account.redirectDomain) {
-        const stats = await query(account.redirectDomain);
-        return account.redirectDomain.padEnd(50, '.') + (stats || '-');
+    [...accounts, { redirectDomain: 'linen.dev' }].map(
+      async ({ redirectDomain }) => {
+        const stats = await query(redirectDomain!);
+        return { redirectDomain, stats };
       }
-    })
+    )
   );
-  console.log('result', result);
-  await sendNotification(result.filter(Boolean).join('\n'));
+  const message = result
+    .sort((a, b) => b?.stats - a?.stats)
+    .map((acc) => acc.redirectDomain!.padEnd(50, '.') + acc.stats);
+
+  console.log('message', message);
+  await sendNotification(message.join('\n'));
 }
