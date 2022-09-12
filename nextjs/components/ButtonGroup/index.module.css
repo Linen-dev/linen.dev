@@ -1,0 +1,15 @@
+.group {
+  background-color: #e5e7eb;
+  border-radius: 128px;
+  display: inline-block;
+  padding: 0.125rem;
+}
+
+.group button {
+  margin-left: 8px;
+  margin-bottom: 0;
+}
+
+.group button:first-child {
+  margin-left: 0;
+}
