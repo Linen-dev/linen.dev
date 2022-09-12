@@ -78,6 +78,20 @@ export async function findAccountsPremiumWithMessages() {
   });
 }
 
+export async function findAccountsPremium() {
+  return await prisma.accounts.findMany({
+    select: {
+      type: true,
+      redirectDomain: true,
+      name: true,
+    },
+    where: {
+      redirectDomain: { not: null },
+    },
+    orderBy: { redirectDomain: 'asc' },
+  });
+}
+
 export async function findAccountsFreeDiscordWithMessages() {
   return await prisma.accounts.findMany({
     select: {
