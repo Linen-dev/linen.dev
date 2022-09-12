@@ -1,4 +1,5 @@
 import ApplicationMailer from './ApplicationMailer';
+import view from './views/emails/signin';
 
 interface Options {
   to: string;
@@ -11,7 +12,7 @@ export default class SignInMailer {
       to,
       subject: 'Sign in to Linen.dev',
       text: `Sign in to Linen.dev\n${url}`,
-      html: `Sign in to Linen.dev\n${url}`, // TODO: html
+      html: view({ url }),
     });
   }
 }
