@@ -2,7 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import styles from './index.module.css';
 import { isImage, isVideo, isUrlValid, isTweet, isMail } from './utilities';
-import Toggle from 'components/Toggle';
+import Accordion from 'components/Accordion';
 import Image from './Image';
 import Video from './Video';
 import Tweet from './Tweet';
@@ -17,28 +17,28 @@ export default function Link({ value }: Props) {
 
   if (isImage(href)) {
     return (
-      <Toggle header={name || href}>
+      <Accordion header={name || href}>
         <a href={href} target="_blank" rel="noreferrer ugc">
           <Image src={href} />
         </a>
-      </Toggle>
+      </Accordion>
     );
   }
 
   if (isVideo(href)) {
     return (
-      <Toggle header={name || href}>
+      <Accordion header={name || href}>
         <Video src={href} />
-      </Toggle>
+      </Accordion>
     );
   }
 
   // Disabling twitter since it is not playing well with mobile view
   // if (isTweet(href)) {
   //   return (
-  //     <Toggle header={name || href}>
+  //     <Accordion header={name || href}>
   //       <Tweet src={href} />
-  //     </Toggle>
+  //     </Accordion>
   //   );
   // }
 

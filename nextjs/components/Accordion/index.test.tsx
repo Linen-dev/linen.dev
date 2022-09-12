@@ -1,13 +1,13 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import Toggle from 'components/Toggle';
+import Accordion from '.';
 
-describe('Toggle', () => {
-  it('display content', () => {
+describe('Accordion', () => {
+  it('displays content', () => {
     const { getByText } = render(
-      <Toggle header="header">
+      <Accordion header="header">
         <p>content</p>
-      </Toggle>
+      </Accordion>
     );
     expect(getByText('header')).toBeInTheDocument();
     expect(getByText('content')).toBeInTheDocument();
@@ -16,9 +16,9 @@ describe('Toggle', () => {
   describe('when arrow is clicked', () => {
     it('toggles the content', () => {
       const { getByText, queryByText } = render(
-        <Toggle header="header">
+        <Accordion header="header">
           <p>content</p>
-        </Toggle>
+        </Accordion>
       );
       getByText('▾').click();
       expect(getByText('header')).toBeInTheDocument();

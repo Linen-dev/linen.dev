@@ -1,24 +1,26 @@
-import React, { useState } from 'react';
-import styles from './index.module.css';
+import React from 'react';
+import ReactSwitch from 'react-switch';
 
 interface Props {
-  header: string;
-  children: React.ReactNode;
+  checked: boolean;
+  onChange(checked: boolean): void;
 }
 
-export default function Toggle({ header, children }: Props) {
-  const [visible, setVisible] = useState(true);
-
+export default function Toggle({ checked, onChange }: Props) {
   return (
-    <div>
-      <p
-        className={styles.text}
-        onClick={() => setVisible((visible) => !visible)}
-      >
-        {header}
-        <span className={styles.arrow}>{visible ? '▾' : '▸'}</span>
-      </p>
-      {visible && children}
-    </div>
+    <ReactSwitch
+      checked={checked}
+      onChange={onChange}
+      onColor="#1149e0"
+      offColor="#e5e7eb"
+      onHandleColor="#ffffff"
+      offHandleColor="#ffffff"
+      activeBoxShadow="0 0 1px 0 #1149e0"
+      checkedIcon={false}
+      uncheckedIcon={false}
+      height={24}
+      width={44}
+      handleDiameter={20}
+    />
   );
 }

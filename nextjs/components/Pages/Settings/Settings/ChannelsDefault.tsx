@@ -1,9 +1,5 @@
-import React, { useState, Fragment, ReactElement } from 'react';
-import {
-  faCheck,
-  faChevronDown,
-  faHashtag,
-} from '@fortawesome/free-solid-svg-icons';
+import React, { useState, Fragment } from 'react';
+import { faCheck, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Listbox, Transition } from '@headlessui/react';
 import classNames from 'classnames';

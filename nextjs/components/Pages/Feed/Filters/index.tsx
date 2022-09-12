@@ -17,7 +17,7 @@ export default function Filters({ state, loading, onChange }: Props) {
         <NativeSelect
           id="state"
           icon={<AiOutlineMessage />}
-          defaultValue={state}
+          value={state}
           onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
             onChange('state', event.target.value)
           }
