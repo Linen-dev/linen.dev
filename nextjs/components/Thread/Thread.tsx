@@ -5,8 +5,11 @@ import Row from 'components/Message/Row';
 import { useMemo } from 'react';
 import type { Settings } from 'serializers/account/settings';
 import { getThreadUrl } from 'components/Pages/ChannelsPage/utilities/url';
+import MessageForm from 'components/MessageForm';
 
 export function Thread({
+  id,
+  channelId,
   messages,
   threadUrl,
   viewCount,
@@ -16,6 +19,8 @@ export function Thread({
   slug,
   title,
 }: {
+  id: string;
+  channelId: string;
   messages: SerializedMessage[];
   threadUrl?: string;
   viewCount: number;
@@ -68,6 +73,9 @@ export function Thread({
         <div className={styles.count}>
           <span className={styles.subtext}>View count:</span> {viewCount + 1}
         </div>
+      </div>
+      <div className="py-2 px-2 max-w-[500px]">
+        <MessageForm channelId={channelId} threadId={id} />
       </div>
     </div>
   );

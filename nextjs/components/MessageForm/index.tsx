@@ -3,13 +3,35 @@ import autosize from 'autosize';
 import Button from 'components/Button';
 import Message from 'components/Message';
 import styles from './index.module.css';
+import { messageParams } from 'services/messages/messages';
 
-function MessageForm() {
+function MessageForm({
+  channelId,
+  threadId,
+}: {
+  channelId: string;
+  threadId: string | null;
+}) {
   const [value, setValue] = useState('');
   const [preview, setPreview] = useState(false);
-  const onSubmit = (event: React.SyntheticEvent) => {
+  const onSubmit = async (event: React.SyntheticEvent) => {
     event.preventDefault();
     event.stopPropagation();
+    const message: messageParams = {
+      body: value,
+      channelId,
+      threadId,
+    };
+
+    const response = await fetch('/api/messages', {
+      method: 'POST',
+      body: JSON.stringify(message),
+    });
+    if (response.ok) {
+      console.log('saved successfully');
+    } else {
+      console.log('failed to save');
+    }
   };
   const ref = useRef(null);
 

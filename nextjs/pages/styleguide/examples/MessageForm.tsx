@@ -5,7 +5,7 @@ export default function MessageFormExample() {
   return (
     <Example header="MessageForm">
       <Example description="Renders a label.">
-        <MessageForm />
+        <MessageForm channelId={''} threadId={null} />
       </Example>
     </Example>
   );

@@ -19,7 +19,7 @@ model messages {
 
   channel           channels @relation(fields: [channelId], references: [id])
   channelId         String
-  externalMessageId String
+  externalMessageId String?
 
   threads threads? @relation(fields: [threadId], references: [id])
 
@@ -42,7 +42,7 @@ model threads {
   id               String      @id @default(uuid())
   incrementId      Int         @default(autoincrement())
   channel          channels    @relation(fields: [channelId], references: [id])
-  externalThreadId String
+  externalThreadId String?
   viewCount        Int         @default(0)
   slug             String?
   messageCount     Int         @default(1)
@@ -70,7 +70,7 @@ model channels {
   id                String     @id @default(uuid())
   channelName       String
   messages          messages[]
-  externalChannelId String
+  externalChannelId String?
 
   threads            threads[]
   //We should make channel required for channel
@@ -203,6 +203,7 @@ model messageAttachments {
   messagesId  String
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+  //We need to change this to generate it's own id
   externalId  String
   name        String
   sourceUrl   String
@@ -217,6 +218,7 @@ model messageAttachments {
 
 model messageReactions {
   messages   messages? @relation(fields: [messagesId], references: [id], onDelete: Cascade)
+  //We need to generate our own id here
   messagesId String
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
