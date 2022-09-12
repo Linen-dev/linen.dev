@@ -249,7 +249,7 @@ export async function fetchAndSaveThreadMessages(
   accountId: string
 ) {
   const repliesPromises = messages.map((m) => {
-    if (!!m.threads?.externalThreadId) {
+    if (!!m.threads?.externalThreadId && m.channel.externalChannelId) {
       return fetchReplies(
         m.threads.externalThreadId,
         m.channel.externalChannelId,

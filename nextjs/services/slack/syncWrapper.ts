@@ -114,9 +114,14 @@ export async function syncWrapper({
   });
 
   for (const channel of channels) {
+    if (!channel.externalChannelId) {
+      continue;
+    }
+
     await syncMemberships({
       accountId,
-      channel,
+      channelId: channel.id,
+      externalChannelId: channel.externalChannelId,
       token,
       getMemberships,
     });

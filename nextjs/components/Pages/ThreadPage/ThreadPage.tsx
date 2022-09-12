@@ -5,6 +5,7 @@ import { Thread } from 'components/Thread';
 import { buildThreadSeo } from 'utilities/seo';
 
 export function ThreadPage({
+  id,
   threadId,
   messages,
   channels,
@@ -50,6 +51,8 @@ export function ThreadPage({
     >
       <div className="max-w-[700px]">
         <Thread
+          id={id}
+          channelId={currentChannel.id}
           title={title}
           messages={messages}
           threadUrl={threadUrl}
@@ -58,6 +61,7 @@ export function ThreadPage({
           incrementId={incrementId}
           isSubDomainRouting={isSubDomainRouting}
           slug={slug}
+          permissions={permissions}
         />
       </div>
     </PageLayout>

@@ -6,6 +6,8 @@ import { useMemo } from 'react';
 import type { Settings } from 'serializers/account/settings';
 import { getThreadUrl } from 'components/Pages/ChannelsPage/utilities/url';
 import MessageForm from 'components/MessageForm';
+import { isSendMessageEnabled } from 'utilities/featureFlags';
+import { Permissions } from 'types/shared';
 
 export function Thread({
   id,
@@ -18,17 +20,19 @@ export function Thread({
   incrementId,
   slug,
   title,
+  permissions,
 }: {
   id: string;
   channelId: string;
   messages: SerializedMessage[];
-  threadUrl?: string;
+  threadUrl: string | null;
   viewCount: number;
   isSubDomainRouting: boolean;
   settings: Settings;
   incrementId?: number;
   slug?: string;
   title: string | null;
+  permissions: Permissions;
 }) {
   const threadLink = getThreadUrl({
     incrementId: incrementId!,
@@ -74,9 +78,11 @@ export function Thread({
           <span className={styles.subtext}>View count:</span> {viewCount + 1}
         </div>
       </div>
-      <div className="py-2 px-2 max-w-[500px]">
-        <MessageForm channelId={channelId} threadId={id} />
-      </div>
+      {isSendMessageEnabled && permissions.sendMessage && (
+        <div className="py-2 px-2 max-w-[500px]">
+          <MessageForm channelId={channelId} threadId={id} />
+        </div>
+      )}
     </div>
   );
 }

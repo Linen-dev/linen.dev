@@ -11,4 +11,5 @@ export interface SerializedAttachment {
 export interface Permissions {
   access: boolean;
   feed: boolean;
+  sendMessage: boolean;
 }

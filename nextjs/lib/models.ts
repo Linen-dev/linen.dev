@@ -54,9 +54,11 @@ export const deleteMessageWithMentions = async (messageId: string) => {
   ]);
 };
 
-export const createOrUpdateMessage = async (
-  message: Prisma.messagesUncheckedCreateInput
-) => {
+export const createOrUpdateMessage = async (message: {
+  externalMessageId: string;
+  channelId: string;
+  body: string;
+}) => {
   //TODO: Make sure externalMessageId exists
   const sentAt = new Date(parseFloat(message.externalMessageId!) * 1000);
   return await prisma.messages.upsert({
@@ -268,9 +270,12 @@ export const createManyChannel = async (
   });
 };
 
-export const findOrCreateChannel = async (
-  channels: Prisma.channelsUncheckedCreateInput
-) => {
+export const findOrCreateChannel = async (channels: {
+  externalChannelId: string;
+  channelName: string;
+  accountId: string;
+  hidden?: boolean;
+}) => {
   return await prisma.channels.upsert({
     where: {
       externalChannelId: channels.externalChannelId,

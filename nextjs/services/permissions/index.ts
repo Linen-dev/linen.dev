@@ -22,10 +22,12 @@ export default class PermissionsService {
     const community = await findCommunity(params);
     const account = await findAccount(request, response);
     const access = PermissionsService._access(community, account);
+    const sendMessage = PermissionsService._sendMessage(community, account);
     const feed = PermissionsService._feed(community, account);
     return {
       access,
       feed,
+      sendMessage,
     };
   }
 
@@ -36,6 +38,7 @@ export default class PermissionsService {
       params: context.params,
     });
   }
+
   static _access(
     community: accounts | null,
     account: accounts | null
@@ -52,6 +55,21 @@ export default class PermissionsService {
   }
 
   static _feed(community: accounts | null, account: accounts | null): boolean {
+    if (!community) {
+      return false;
+    }
+    if (!account || account.id !== community.id) {
+      return false;
+    }
+
+    return true;
+  }
+
+  //Todo: Check roles and check if they have permissions to post to channel
+  static _sendMessage(
+    community: accounts | null,
+    account: accounts | null
+  ): boolean {
     if (!community) {
       return false;
     }

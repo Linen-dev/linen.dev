@@ -91,6 +91,7 @@ describe('#get', () => {
           });
         });
 
+        //We should be using checking if there is a user with the auths id here
         describe('and the user belongs to a different community', () => {
           it('returns false', async () => {
             const context = {
@@ -145,6 +146,45 @@ describe('#get', () => {
   });
 
   describe('#feed', () => {
+    describe('when the user is logged in', () => {
+      describe('and the user belongs to the community', () => {
+        it('returns true', async () => {
+          const context = {
+            params: { communityName: 'foo' },
+          };
+          const account = await prisma.accounts.create({
+            data: {
+              name: 'foo',
+              slackDomain: 'foo',
+            },
+          });
+          await prisma.auths.create({
+            data: {
+              email: 'john@doe.com',
+              accountId: account.id,
+              password: 'foo',
+              salt: 'bar',
+            },
+          });
+          Session.find.mockResolvedValue({ user: { email: 'john@doe.com' } });
+          const permissions = await PermissionsService.for(context);
+          expect(permissions.feed).toEqual(true);
+        });
+      });
+    });
+    describe('when the user is not logged in', () => {
+      it('returns false', async () => {
+        const context = {
+          params: { communityName: 'foo' },
+        };
+        Session.find.mockResolvedValue(null);
+        const permissions = await PermissionsService.for(context);
+        expect(permissions.feed).toEqual(false);
+      });
+    });
+  });
+
+  describe('#sendMessage', () => {
     describe('when the user is logged in', () => {
       describe('and the user belongs to the community', () => {
         it('returns true', async () => {

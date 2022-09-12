@@ -9,7 +9,7 @@ import { SerializedThread } from 'serializers/thread';
 import { ChannelViewProps } from 'components/Pages/ChannelsPage';
 import { getData } from 'utilities/fetcher';
 import MessageForm from 'components/MessageForm';
-import styles from './index.module.css';
+import { isSendMessageEnabled } from 'utilities/featureFlags';
 
 export function Channel({
   threads,
@@ -20,6 +20,7 @@ export function Channel({
   nextCursor,
   pathCursor,
   isBot,
+  permissions,
 }: ChannelViewProps) {
   const [init, setInit] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
@@ -196,9 +197,11 @@ export function Channel({
               isBot={isBot}
               onClick={loadThread}
             />
-            <div className="py-2 px-2 max-w-[500px]">
-              <MessageForm channelId={currentChannel.id} threadId={null} />
-            </div>
+            {isSendMessageEnabled && permissions.sendMessage && (
+              <div className="py-2 px-2 max-w-[500px]">
+                <MessageForm channelId={currentChannel.id} threadId={null} />
+              </div>
+            )}
             {cursor.next && !error?.next ? (
               <div className="m-3" ref={infiniteBottomRef}>
                 <Spinner />
@@ -238,20 +241,20 @@ export function Channel({
             </div>
           </div>
           <div className="flex justify-center">
-            {currentThread ? (
+            {currentThread && (
               <Thread
                 id={currentThread.id}
                 channelId={currentThread.channelId}
-                title={currentThread ? currentThread.title : null}
+                title={currentThread.title}
                 messages={currentThread.messages || []}
                 viewCount={currentThread.viewCount || 0}
                 settings={settings}
                 isSubDomainRouting={isSubDomainRouting}
                 incrementId={currentThread.incrementId}
                 slug={currentThread.slug || undefined}
+                threadUrl={null}
+                permissions={permissions}
               />
-            ) : (
-              <></>
             )}
           </div>
         </div>

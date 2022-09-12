@@ -15,7 +15,7 @@ export interface MentionsWithUsers extends mentions {
 export type ThreadById = {
   id: string;
   incrementId: number;
-  externalThreadId: string;
+  externalThreadId: string | null;
   viewCount: number;
   slug: string;
   messageCount: number;
@@ -26,7 +26,7 @@ export type ThreadById = {
   threadId: string;
   authors: users[];
   channels: channels[];
-  threadUrl: string;
+  threadUrl: string | null;
   settings: Settings;
   pathCursor: string;
   title: string | null;

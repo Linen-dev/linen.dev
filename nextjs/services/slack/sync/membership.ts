@@ -4,20 +4,22 @@ import { GetMembershipsFnType } from '../syncWrapper';
 
 export async function syncMemberships({
   accountId,
-  channel,
+  channelId,
+  externalChannelId,
   token,
   getMemberships,
 }: {
   accountId: string;
-  channel: channels;
+  channelId: string;
+  externalChannelId: string;
   token: string;
   getMemberships: GetMembershipsFnType;
 }) {
-  const members = await getMemberships(channel.externalChannelId, token);
+  const members = await getMemberships(externalChannelId, token);
   if (members && members.length) {
     for (const member of members) {
       await createMembership({
-        channel: { connect: { id: channel.id } },
+        channel: { connect: { id: channelId } },
         user: {
           connect: {
             externalUserId_accountsId: {

@@ -23,9 +23,13 @@ export const updateSlackThread = async (
   });
 };
 
-export const findOrCreateThread = async (
-  thread: Prisma.threadsCreateManyInput
-) => {
+export const findOrCreateThread = async (thread: {
+  channelId: string;
+  externalThreadId: string;
+  sentAt: number;
+  slug?: string;
+  messageCount?: number;
+}) => {
   return await prisma.threads.upsert({
     where: {
       externalThreadId: thread.externalThreadId,

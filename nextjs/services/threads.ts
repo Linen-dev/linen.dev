@@ -67,25 +67,27 @@ async function getThreadById(
     .map((m) => m.author)
     .filter(Boolean) as users[];
 
-  let threadUrl: string;
+  let threadUrl: string | null = null;
 
-  if (account.communityInviteUrl) {
-    if (account.communityInviteUrl.includes('slack.com/join/shared_invite')) {
-      threadUrl =
-        account.communityInviteUrl &&
-        `${account.communityInviteUrl}/archives/${
-          thread.channel.externalChannelId
-        }/p${(parseFloat(thread.externalThreadId) * 1000000).toString()}`;
+  if (thread.externalThreadId) {
+    if (account.communityInviteUrl) {
+      if (account.communityInviteUrl.includes('slack.com/join/shared_invite')) {
+        threadUrl =
+          account.communityInviteUrl &&
+          `${account.communityInviteUrl}/archives/${
+            thread.channel.externalChannelId
+          }/p${(parseFloat(thread.externalThreadId) * 1000000).toString()}`;
+      } else {
+        threadUrl = account.communityInviteUrl;
+      }
     } else {
-      threadUrl = account.communityInviteUrl;
+      threadUrl =
+        account.communityUrl +
+        '/archives/' +
+        thread.channel.externalChannelId +
+        '/p' +
+        (parseFloat(thread.externalThreadId) * 1000000).toString();
     }
-  } else {
-    threadUrl =
-      account.communityUrl +
-      '/archives/' +
-      thread.channel.externalChannelId +
-      '/p' +
-      (parseFloat(thread.externalThreadId) * 1000000).toString();
   }
 
   if (account.discordServerId) {

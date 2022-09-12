@@ -2,6 +2,7 @@ import { findMessagesFromChannel } from 'lib/models';
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import serialize from 'serializers/thread';
 import { messageParams, saveMessage } from 'services/messages/messages';
+import PermissionsService from 'services/permissions';
 import { withSentry } from 'utilities/sentry';
 
 async function handler(request: NextApiRequest, response: NextApiResponse) {
@@ -40,6 +41,7 @@ export async function create(
   request: NextApiRequest,
   response: NextApiResponse<any>
 ) {
+  //Need to check if they have permission to post in the channel
   const { body, channelId, threadId } = JSON.parse(request.body);
   if (!channelId) {
     return response.status(400).json({ error: 'channel id is required' });

@@ -23,10 +23,11 @@ function MessageForm({
       threadId,
     };
 
-    const response = await fetch('/api/messages', {
+    const response = await fetch(`/api/messages`, {
       method: 'POST',
       body: JSON.stringify(message),
     });
+
     if (response.ok) {
       console.log('saved successfully');
     } else {
