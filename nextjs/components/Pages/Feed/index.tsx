@@ -21,7 +21,7 @@ interface FeedResponse {
   threads: SerializedThread[];
 }
 
-const fetchFeed = debounce(
+const debouncedFetch = debounce(
   ({ communityName, state }) => {
     return fetch(`/api/feed?communityName=${communityName}&state=${state}`, {
       method: 'GET',
@@ -35,6 +35,9 @@ const fetchFeed = debounce(
   250,
   { leading: true }
 );
+
+const POLL_INTERVAL_IN_SECONDS = 30;
+const POLL_INTERVAL = POLL_INTERVAL_IN_SECONDS * 1000;
 
 export default function Feed({
   channels,
@@ -50,23 +53,31 @@ export default function Feed({
   useEffect(() => {
     let mounted = true;
     setLoading(true);
-    fetchFeed({ communityName, state })
-      .then((data: FeedResponse) => {
-        if (mounted) {
-          setFeed(data);
-        }
-      })
-      .catch(() => {
-        if (mounted) {
-          alert('Something went wrong. Please reload the page.');
-        }
-      })
-      .finally(() => {
-        if (mounted) {
-          setLoading(false);
-        }
-      });
+    const fetchFeed = () =>
+      debouncedFetch({ communityName, state })
+        .then((data: FeedResponse) => {
+          if (mounted) {
+            setFeed(data);
+          }
+        })
+        .catch(() => {
+          if (mounted) {
+            alert('Something went wrong. Please reload the page.');
+          }
+        })
+        .finally(() => {
+          if (mounted) {
+            setLoading(false);
+          }
+        });
+    fetchFeed();
+
+    const intervalId = setInterval(() => {
+      fetchFeed();
+    }, POLL_INTERVAL);
+
     return () => {
+      clearInterval(intervalId);
       mounted = false;
     };
   }, [communityName, state]);
