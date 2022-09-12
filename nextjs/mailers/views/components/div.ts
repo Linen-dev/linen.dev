@@ -30,9 +30,9 @@ export default function div(
   }" border="0" bgcolor="${background || '#ffffff'}">
       <tbody>
         <tr>
-          <td style="${style || ''}" align="${textAlign || ''}">${children.map(
-    (child) => child
-  )}</td>
+          <td style="${style || ''}" align="${textAlign || ''}">${children
+    .map((child) => child)
+    .join('')}</td>
         </tr>
       </tbody>
     </table>`.trim();
