@@ -32,7 +32,7 @@ export default function div(
         <tr>
           <td style="${style || ''}" align="${textAlign || ''}">${children
     .map((child) => child)
-    .join('')}</td>
+    .join('<br/>')}</td>
         </tr>
       </tbody>
     </table>`.trim();
