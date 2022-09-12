@@ -144,7 +144,7 @@ describe('#get', () => {
     });
   });
 
-  describe('#inbox', () => {
+  describe('#feed', () => {
     describe('when the user is logged in', () => {
       describe('and the user belongs to the community', () => {
         it('returns true', async () => {
@@ -167,7 +167,7 @@ describe('#get', () => {
           });
           Session.find.mockResolvedValue({ user: { email: 'john@doe.com' } });
           const permissions = await PermissionsService.for(context);
-          expect(permissions.inbox).toEqual(true);
+          expect(permissions.feed).toEqual(true);
         });
       });
     });
@@ -178,7 +178,7 @@ describe('#get', () => {
         };
         Session.find.mockResolvedValue(null);
         const permissions = await PermissionsService.for(context);
-        expect(permissions.inbox).toEqual(false);
+        expect(permissions.feed).toEqual(false);
       });
     });
   });

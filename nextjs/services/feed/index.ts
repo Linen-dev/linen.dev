@@ -5,12 +5,12 @@ import ChannelsService from 'services/channels';
 import { serialize as serializeSettings } from 'serializers/account/settings';
 import { NotFound, RedirectTo } from 'utilities/response';
 
-export async function inboxGetServerSideProps(
+export async function feedGetServerSideProps(
   context: GetServerSidePropsContext,
   isSubDomainRouting: boolean
 ) {
   const permissions = await PermissionsService.for(context);
-  if (!permissions.inbox) {
+  if (!permissions.feed) {
     return RedirectTo('/signin');
   }
   const community = await CommunityService.find(context.params);

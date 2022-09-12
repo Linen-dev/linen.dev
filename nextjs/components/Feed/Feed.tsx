@@ -4,10 +4,6 @@ import { SerializedThread } from '../../serializers/thread';
 import { MessageCard } from '../MessageCard';
 import type { Settings } from 'serializers/account/settings';
 
-// A feed is a collection of threads
-// A channel feed is a collection of threads of a single channel
-// A shared inbox is a collection of threads from multiple channels
-
 export function Feed({
   threads,
   isSubDomainRouting,
@@ -37,7 +33,6 @@ export function Feed({
             const newestMessage = messages[messages.length - 1];
 
             const author = oldestMessage?.author;
-            //don't include the original poster for the thread in replies
             let users = messages
               .map((m) => m.author)
               .filter(Boolean) as users[];
@@ -49,7 +44,6 @@ export function Feed({
                 className="px-4 py-4 hover:bg-blue-50 border-solid border-gray-200 cursor-pointer w-full"
               >
                 {isBot ? (
-                  //I could custom link conditionally render something?
                   <CustomLink
                     isSubDomainRouting={isSubDomainRouting}
                     communityName={settings.communityName}

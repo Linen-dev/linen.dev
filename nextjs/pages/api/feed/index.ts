@@ -57,7 +57,7 @@ const handlers = {
         response,
         params: request.query,
       });
-      if (!permissions.inbox) {
+      if (!permissions.feed) {
         return response.status(401).json({});
       }
       const { status, data } = await index({ params: request.query });

@@ -5,7 +5,7 @@ import CustomLink from '../Link/CustomLink';
 import { AiOutlineNumber } from 'react-icons/ai';
 import CustomRouterPush from '../Link/CustomRouterPush';
 import { sortByChannelName } from './utilities';
-import { isInboxEnabled } from 'utilities/featureFlags';
+import { isFeedEnabled } from 'utilities/featureFlags';
 import { Permissions } from 'types/shared';
 
 export default function NavBar({
@@ -38,16 +38,16 @@ export default function NavBar({
 
   const navBarLg = (
     <div className="pl-2 w-[250px] pt-4 bg-slate-50">
-      {isInboxEnabled && permissions.inbox && (
+      {isFeedEnabled && permissions.feed && (
         <h5 style={{ fontWeight: 'bold', paddingLeft: 18, marginBottom: 8 }}>
           <CustomLink
             isSubDomainRouting={isSubDomainRouting}
             communityName={communityName}
             communityType={communityType}
-            path="/inbox"
+            path="/feed"
             passHref
           >
-            Inbox
+            Feed
           </CustomLink>
         </h5>
       )}

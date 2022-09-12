@@ -5,7 +5,7 @@ export default function createPermissions(
 ): Permissions {
   return {
     access: false,
-    inbox: false,
+    feed: false,
     ...options,
   };
 }
