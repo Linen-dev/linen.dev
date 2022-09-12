@@ -96,7 +96,6 @@ export class CdkStack extends cdk.Stack {
       secrets,
       environment: {
         ...environment,
-        SKIP_NOTIFICATION: 'true',
       },
       cacheTableAccessPolicy,
       mailerAccessPolicy,

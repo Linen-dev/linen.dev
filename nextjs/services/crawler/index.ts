@@ -34,6 +34,6 @@ export async function crawlGoogleResults() {
       }
     })
   );
-
+  console.log('result', result);
   await sendNotification(result.filter(Boolean).join('\n'));
 }

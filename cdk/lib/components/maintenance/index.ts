@@ -32,8 +32,8 @@ export function Maintenance(
       },
       scheduledFargateTaskImageOptions: {
         image: dockerImage,
-        memoryLimitMiB: 512,
-        cpu: 256,
+        memoryLimitMiB: 2048,
+        cpu: 1024,
         command: ['npm', 'run', 'script:maintenance', '--ignore-scripts'],
         secrets,
         environment,
