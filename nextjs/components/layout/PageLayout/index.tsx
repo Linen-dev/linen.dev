@@ -12,16 +12,8 @@ import JoinSlack from 'components/JoinSlack';
 import styles from './index.module.css';
 import classNames from 'classnames';
 import { Permissions } from 'types/shared';
-
-interface Settings {
-  brandColor: string;
-  docsUrl: string;
-  homeUrl: string;
-  logoUrl: string;
-  googleAnalyticsId?: string;
-  googleSiteVerification?: string;
-  communityType: string;
-}
+import { LinkContext } from 'contexts/Link';
+import { Settings } from 'serializers/account/settings';
 
 interface Props {
   className?: string;
@@ -64,7 +56,13 @@ function PageLayout({
   );
 
   return (
-    <div>
+    <LinkContext
+      context={{
+        isSubDomainRouting,
+        communityName: settings.communityName,
+        communityType: settings.communityType,
+      }}
+    >
       <div className={styles.push} />
       <div className={styles.header}>
         <div
@@ -172,7 +170,7 @@ function PageLayout({
         googleAnalyticsId={googleAnalyticsId}
         googleSiteVerification={googleSiteVerification}
       />
-    </div>
+    </LinkContext>
   );
 }
 
