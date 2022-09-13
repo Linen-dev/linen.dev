@@ -2,6 +2,7 @@ import { ReactNode } from 'react';
 import classNames from 'classnames';
 
 interface Props {
+  className?: string;
   type?: 'button' | 'submit' | 'reset';
   block?: boolean;
   children?: ReactNode;
@@ -21,6 +22,7 @@ const presetColors: Record<string, string> = {
 };
 
 const Button = ({
+  className,
   type,
   block,
   children,
@@ -36,6 +38,7 @@ const Button = ({
       type={type}
       onClick={onClick}
       className={classNames(
+        className,
         'font-medium mb-2',
         {
           'w-full': block,

@@ -6,8 +6,8 @@ import { Permissions } from 'types/shared';
 import Header from './Header';
 import Filters from './Filters';
 import Grid from './Grid';
-import { SerializedThread } from 'serializers/thread';
 import debounce from 'awesome-debounce-promise';
+import { FeedResponse, Selections } from './types';
 
 interface Props {
   channels: channels[];
@@ -15,10 +15,6 @@ interface Props {
   isSubDomainRouting: boolean;
   permissions: Permissions;
   settings: Settings;
-}
-
-interface FeedResponse {
-  threads: SerializedThread[];
 }
 
 const debouncedFetch = debounce(
@@ -49,6 +45,7 @@ export default function Feed({
   const [feed, setFeed] = useState<FeedResponse>({ threads: [] });
   const [state, setState] = useState<ThreadState>(ThreadState.OPEN);
   const [loading, setLoading] = useState(false);
+  const [selections, setSelections] = useState<Selections>({});
 
   useEffect(() => {
     let mounted = true;
@@ -94,15 +91,28 @@ export default function Feed({
       <Header />
       <Filters
         state={state}
-        loading={loading}
+        selections={selections}
         onChange={(type: string, value: ThreadState) => {
+          setSelections({});
           switch (type) {
             case 'state':
               setState(value);
           }
         }}
       />
-      <Grid threads={feed.threads} loading={loading} />
+      <Grid
+        threads={feed.threads}
+        loading={loading}
+        selections={selections}
+        onChange={(id, checked) => {
+          setSelections((selections) => {
+            return {
+              ...selections,
+              [id]: checked,
+            };
+          });
+        }}
+      />
     </PageLayout>
   );
 }

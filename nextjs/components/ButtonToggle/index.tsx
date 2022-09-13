@@ -8,14 +8,20 @@ interface Option {
 }
 
 interface Props {
+  className?: string;
   options: Option[];
   value: any;
   onChange(value: any): void;
 }
 
-export default function ButtonToggle({ value, options, onChange }: Props) {
+export default function ButtonToggle({
+  className,
+  value,
+  options,
+  onChange,
+}: Props) {
   return (
-    <ButtonGroup>
+    <ButtonGroup className={className}>
       {options.map((option, index) => {
         return (
           <Button
