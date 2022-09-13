@@ -60,9 +60,10 @@ const SearchBar = ({
   const handleSelect = useCallback(
     ({ threads }) => {
       let path = `/t/${threads.incrementId}/${threads.slug || 'topic'}`;
-      // TODO this is buggy, should redirect to /s/ or /d/ based on community type
       if (!isSubDomainRouting) {
-        path = `/s/${communityName}${path}`;
+        path = `/${
+          communityType === 'discord' ? 'd' : 's'
+        }/${communityName}${path}`;
       }
       router.push(path);
     },
