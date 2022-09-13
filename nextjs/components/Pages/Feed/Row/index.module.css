@@ -1,8 +1,12 @@
 .row {
   align-items: center;
   display: block;
-  width: 100%;
   padding: 0.5rem 1.5rem;
+  width: 100%;
+}
+
+.row.selected {
+  background-color: aliceblue;
 }
 
 .content {
@@ -10,6 +14,10 @@
   display: flex;
   gap: 0.5rem;
   font-size: 12px;
+}
+
+.body {
+  display: flex;
 }
 
 .date,

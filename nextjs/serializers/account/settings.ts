@@ -4,6 +4,7 @@ import { links } from '../../constants/examples';
 export type Settings = {
   communityType: string;
   googleAnalyticsId?: string | undefined;
+  googleSiteVerification?: string | undefined;
   name: string | null;
   brandColor: string;
   homeUrl: string;

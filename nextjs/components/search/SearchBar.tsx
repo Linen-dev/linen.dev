@@ -61,7 +61,9 @@ const SearchBar = ({
     ({ threads }) => {
       let path = `/t/${threads.incrementId}/${threads.slug || 'topic'}`;
       if (!isSubDomainRouting) {
-        path = `/s/${communityName}${path}`;
+        path = `/${
+          communityType === 'discord' ? 'd' : 's'
+        }/${communityName}${path}`;
       }
       router.push(path);
     },
