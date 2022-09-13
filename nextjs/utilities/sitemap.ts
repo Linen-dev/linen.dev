@@ -33,8 +33,7 @@ function hasChannelsWithThreads(account: AccountsWithChannelsStats) {
   return (
     account.channels &&
     account.channels.length &&
-    account.channels.find((e) => e._count.messages) &&
-    account.channels.find((e) => e._count.threads)
+    account.channels.find((e) => e.threads.find((t) => t.messages.length > 1))
   );
 }
 
@@ -49,7 +48,7 @@ export async function createSitemapForPremium(
   }
 
   const urls = account.channels
-    .filter((c) => c._count.messages > 0 && c._count.threads > 0)
+    .filter((c) => c.threads.find((t) => t.messages.length > 1))
     .map(({ channelName }) =>
       encodeURI(`${appendProtocol(host)}/sitemap/c/${channelName}/chunk.xml`)
     );
@@ -109,7 +108,7 @@ export async function createSitemapForFree(
   const httpHost = appendProtocol(host);
 
   const urls = account.channels
-    .filter((c) => c._count.messages > 0 && c._count.threads > 0)
+    .filter((c) => c.threads.find((t) => t.messages.length > 1))
     .map(({ channelName, ...rest }) =>
       encodeURI(
         `${httpHost}/sitemap/${communityPrefix}/${community}/c/${channelName}/chunk.xml`
@@ -176,7 +175,7 @@ async function queryThreads(
 
     chunk.push(`c/${channelName}/${encodeCursor(`asc:gt:${next}`)}`);
     for (const thread of threads) {
-      if (thread.messageCount > 1) {
+      if (thread.messages.length > 1) {
         chunk.push(
           `t/${thread.incrementId}/${thread.slug?.toLowerCase() || 'topic'}`
         );

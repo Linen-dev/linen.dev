@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client';
+import { AccountType, Prisma } from '@prisma/client';
 import prisma from '../client';
 
 const accountsWithChannelsStats = Prisma.validator<Prisma.accountsArgs>()({
@@ -11,11 +11,10 @@ const accountsWithChannelsStats = Prisma.validator<Prisma.accountsArgs>()({
     channels: {
       select: {
         channelName: true,
-        _count: {
-          select: {
-            messages: true,
-            threads: true,
-          },
+        threads: {
+          take: 1,
+          where: { hidden: false, messages: { some: {} } },
+          include: { messages: { take: 2 } },
         },
       },
       where: {
@@ -34,7 +33,7 @@ export const getAccountByHostWithChannelsStats = (host: string) =>
     ...accountsWithChannelsStats,
     where: {
       redirectDomain: host,
-      type: 'PUBLIC',
+      type: AccountType.PUBLIC,
     },
   });
 
@@ -42,7 +41,7 @@ export const findFreeAccountsWithChannelsStats = () =>
   prisma.accounts.findMany({
     ...accountsWithChannelsStats,
     where: {
-      type: 'PUBLIC',
+      type: AccountType.PUBLIC,
       premium: false,
       AND: {
         OR: [
@@ -65,7 +64,7 @@ export const findAccountByNameWithChannelsStats = (community: string) =>
         { slackDomain: community },
       ],
       AND: {
-        type: 'PUBLIC',
+        type: AccountType.PUBLIC,
       },
     },
   });
@@ -81,7 +80,7 @@ export const findChannelByNameAndHost = (channelName: string, host: string) =>
           { slackDomain: host },
           { redirectDomain: host },
         ],
-        AND: { type: 'PUBLIC' },
+        AND: { type: AccountType.PUBLIC },
       },
       hidden: false,
     },
@@ -100,6 +99,7 @@ export const findThreadsByChannelAndCursor = (
       slug: true,
       messageCount: true,
       sentAt: true,
+      messages: { take: 2 },
     },
     take: limit,
   });
