@@ -1,7 +1,7 @@
 import { prisma } from '../client';
 import linenExamplePage from '../public/linen-example-page.png';
-import ycLogo from '../public/yc-logo.png';
 import Image from 'next/image';
+import YCombinatorLogo from 'components/Logo/YCombinator';
 
 import { Popover } from '@headlessui/react';
 import Link from 'next/link';
@@ -98,7 +98,7 @@ const Home = (props: { accounts: Props[] }) => {
             <p className="px-2">
               Backed by <b>Y Combinator</b>
             </p>
-            <Image src={ycLogo} width="25" height="25" />
+            <YCombinatorLogo />
           </div>
           <div className="flex justify-center my-20 shadow-lg">
             <FadeIn delay={200}>
