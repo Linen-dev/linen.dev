@@ -130,9 +130,6 @@ function PageLayout({
         {NavBar({
           channels,
           channelName: currentChannel?.channelName || '',
-          communityName,
-          communityType: settings.communityType,
-          isSubDomainRouting,
           permissions,
         })}
         <div
