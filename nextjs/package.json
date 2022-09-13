@@ -24,7 +24,8 @@
     "queue:worker:webhookRunOnce": "npm run queue:worker:webhook -- --once",
     "start:queue:sync": "pm2-runtime --raw \"npm run queue:worker:sync\"",
     "queue:worker:sync": "dotenv -e .env -- npx ts-node -P tsconfig.commonjs.json queue/workers/sync.ts",
-    "queue:worker:syncRunOnce": "npm run queue:worker:sync -- --once"
+    "queue:worker:syncRunOnce": "npm run queue:worker:sync -- --once",
+    "script:sitemap": "ts-node -P tsconfig.commonjs.json bin/sitemap/index.ts"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.1.2",
