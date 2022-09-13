@@ -1,6 +1,6 @@
 import prisma from 'client';
 
-export interface messageParams {
+export interface messageInput {
   body: string;
   threadId: string | null;
   channelId: string;
@@ -12,7 +12,7 @@ export async function saveMessage({
   threadId,
   channelId,
   userId,
-}: messageParams) {
+}: messageInput) {
   const sentAt = new Date();
   if (threadId) {
     return prisma.threads.update({
@@ -28,7 +28,7 @@ export async function saveMessage({
             body,
             channelId,
             sentAt,
-            usersId: userId
+            usersId: userId,
           },
         },
       },
@@ -43,6 +43,7 @@ export async function saveMessage({
             body,
             channelId,
             sentAt,
+            usersId: userId,
           },
         },
       },

@@ -3,7 +3,7 @@ import autosize from 'autosize';
 import Button from 'components/Button';
 import Message from 'components/Message';
 import styles from './index.module.css';
-import { messageParams } from 'services/messages/messages';
+import { messageInput } from 'services/messages/messages';
 
 function MessageForm({
   channelId,
@@ -17,7 +17,7 @@ function MessageForm({
   const onSubmit = async (event: React.SyntheticEvent) => {
     event.preventDefault();
     event.stopPropagation();
-    const message: messageParams = {
+    const message = {
       body: value,
       channelId,
       threadId,
