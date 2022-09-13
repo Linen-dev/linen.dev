@@ -1,6 +1,11 @@
 .container {
   position: relative;
 }
+
+.messageForm {
+  min-height: 75px;
+}
+
 .textarea {
   font-size: 0.875rem;
   line-height: 1.25rem;

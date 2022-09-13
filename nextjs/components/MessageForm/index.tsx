@@ -43,7 +43,7 @@ function MessageForm({
     };
   }, []);
   return (
-    <form onSubmit={onSubmit}>
+    <form className={styles.messageForm} onSubmit={onSubmit}>
       <textarea
         ref={ref}
         className={styles.textarea}
@@ -54,6 +54,7 @@ function MessageForm({
         onChange={(event) => setValue(event.target.value)}
       />
       {preview && <Message text={value} />}
+
       <div className={styles.toolbar}>
         {value && (
           <a

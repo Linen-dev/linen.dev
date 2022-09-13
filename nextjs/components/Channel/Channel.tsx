@@ -198,7 +198,7 @@ export function Channel({
               onClick={loadThread}
             />
             {isSendMessageEnabled && permissions.sendMessage && (
-              <div className="py-2 px-2 max-w-[500px]">
+              <div className="py-2 px-2">
                 <MessageForm channelId={currentChannel.id} threadId={null} />
               </div>
             )}
