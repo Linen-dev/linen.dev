@@ -4,12 +4,14 @@ export interface messageParams {
   body: string;
   threadId: string | null;
   channelId: string;
+  userId: string;
 }
 
 export async function saveMessage({
   body,
   threadId,
   channelId,
+  userId,
 }: messageParams) {
   const sentAt = new Date();
   if (threadId) {
@@ -26,6 +28,7 @@ export async function saveMessage({
             body,
             channelId,
             sentAt,
+            usersId: userId
           },
         },
       },

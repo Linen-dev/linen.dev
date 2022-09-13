@@ -118,7 +118,7 @@ export const createOrUpdateUser = async (user: UserInfo, accountId: string) => {
   });
 };
 
-export const findUserByEmail = async (email: string) => {
+export const findAuthByEmail = async (email: string) => {
   return await prisma.users.findFirst({
     include: { account: true },
     where: {

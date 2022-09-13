@@ -4,7 +4,7 @@ import { unstable_getServerSession } from 'next-auth';
 import { authOptions } from './auth/[...nextauth]';
 import { acceptInvite, getOneInviteByUser } from 'services/invites';
 import { Roles } from '@prisma/client';
-import { findUserByEmail } from 'lib/users';
+import { findAuthByEmail } from 'lib/users';
 import { getHomeUrl } from 'utilities/home';
 import serializeAccount from 'serializers/account';
 
@@ -18,7 +18,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     const invite = await getOneInviteByUser(session.user.email);
     const user = invite
       ? await acceptInvite(invite.id, session.user.email)
-      : await findUserByEmail(session.user.email);
+      : await findAuthByEmail(session.user.email);
 
     if (user?.role === Roles.MEMBER) {
       const account = serializeAccount(user.account);

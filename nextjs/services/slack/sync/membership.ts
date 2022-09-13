@@ -1,4 +1,3 @@
-import type { channels } from '@prisma/client';
 import { createMembership } from 'lib/membership';
 import { GetMembershipsFnType } from '../syncWrapper';
 

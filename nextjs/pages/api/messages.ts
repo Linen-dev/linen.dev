@@ -1,9 +1,12 @@
 import { findMessagesFromChannel } from 'lib/models';
+import { unstable_getServerSession } from 'next-auth';
 import { NextApiRequest, NextApiResponse } from 'next/types';
-import serialize from 'serializers/thread';
-import { messageParams, saveMessage } from 'services/messages/messages';
-import PermissionsService from 'services/permissions';
+import { authOptions } from './auth/[...nextauth]';
+import { saveMessage } from 'services/messages/messages';
 import { withSentry } from 'utilities/sentry';
+import { findAuthByEmail } from 'lib/users';
+import { prisma } from 'client';
+import { userAgentFromString } from 'next/server';
 
 async function handler(request: NextApiRequest, response: NextApiResponse) {
   if (request.method === 'GET') {
@@ -37,15 +40,51 @@ async function getMessagesFromChannel(
   );
 }
 
+//TODO: refactor to use permissions service
 export async function create(
   request: NextApiRequest,
   response: NextApiResponse<any>
 ) {
-  //Need to check if they have permission to post in the channel
+  const session = await unstable_getServerSession(
+    request,
+    response,
+    authOptions
+  );
+  if (!session?.user?.email) {
+    throw 'missing session';
+  }
+
   const { body, channelId, threadId } = JSON.parse(request.body);
   if (!channelId) {
     return response.status(400).json({ error: 'channel id is required' });
   }
+
+  const channel = await prisma.channels.findUnique({
+    where: { id: channelId },
+  });
+
+  if (!channel || !channel.accountId) {
+    return response.status(400).json({ error: "can't find the channel" });
+  }
+
+  const auth = await prisma.auths.findUnique({
+    where: {
+      email: session.user.email,
+    },
+    include: {
+      users: {
+        where: {
+          accountsId: channel.accountId,
+        },
+      },
+    },
+  });
+
+  if (!auth || !auth.users || auth.users.length === 0) {
+    return response.status(401).json({ error: 'invalid user' });
+  }
+
+  const user = auth.users[0];
 
   //TODO: check empty attachment
   if (!body) {
@@ -56,6 +95,7 @@ export async function create(
     body,
     channelId,
     threadId,
+    userId: user.id,
   });
 
   return response.status(200).json('success');
