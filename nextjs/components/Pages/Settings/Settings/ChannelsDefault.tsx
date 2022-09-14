@@ -182,7 +182,7 @@ export default function ChannelsDefault({ channels, account }: SettingsProps) {
       onChange={onDefaultChannelChange}
       selected={selected}
       channels={channels}
-      hasAuth={account?.hasAuth}
+      hasAuth={!!account}
       CommunityIcon={CommunityIcon}
     />
   );

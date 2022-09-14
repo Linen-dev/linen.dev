@@ -107,7 +107,7 @@ export default function ChannelVisibilityCard({
   return (
     <ChannelVisibilityCardComponent
       channels={channels}
-      hasAuth={account?.hasAuth}
+      hasAuth={!!account}
       onChange={onChange}
     />
   );
