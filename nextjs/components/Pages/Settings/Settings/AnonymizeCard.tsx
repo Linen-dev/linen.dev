@@ -70,7 +70,7 @@ export default function AnonymizeCard({ account }: SettingsProps) {
     <AnonymizeCardComponent
       enabled={enabled}
       onChange={onChange}
-      hasAuth={account?.hasAuth}
+      hasAuth={!!account}
     />
   );
 }
