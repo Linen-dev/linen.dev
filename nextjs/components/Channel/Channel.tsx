@@ -11,6 +11,8 @@ import MessageForm from 'components/MessageForm';
 import { isChatEnabled } from 'utilities/featureFlags';
 import Header from './Header';
 import { ThreadState } from '@prisma/client';
+import { Channel as PhoneixChannel, Socket } from 'phoenix';
+import { toast } from 'components/Toast';
 
 export function Channel({
   threads,
@@ -33,6 +35,8 @@ export function Channel({
   const [lastDirection, setLastDirection] = useState<'top' | 'bottom'>();
   const [cursor, setCursor] = useState(nextCursor);
   const [error, setError] = useState<{ prev?: unknown; next?: unknown }>();
+
+  const [channel, setChannel] = useState<PhoneixChannel>();
 
   const [isShowingThread, setIsShowingThread] = useState(false);
   const [currentThread, setCurrentThread] = useState<SerializedThread>();
@@ -83,6 +87,42 @@ export function Channel({
       }
     }
   }, [currentThreads]);
+
+  useEffect(() => {
+    const socket = new Socket('ws://localhost:4000/socket', {
+      params: {
+        token:
+          'SFMyNTY.g2gDbQAAAAZzb21laWRuBgDzoIz6gQFiAAFRgA.51L54Q50ov8bZWhHDjbgVZ2n1wrUeapeMN87_cCPet8',
+      },
+    });
+
+    socket.connect();
+    const channel = socket.channel(`room:lobby:${currentChannel.id}`, {});
+
+    setChannel(channel);
+    channel
+      .join()
+      .receive('ok', (resp: any) => {
+        console.log('Joined successfully', resp);
+      })
+      .receive('error', (resp: any) => {
+        console.log('Unable to join', resp);
+      });
+    channel.on('new_msg', (payload) => {
+      console.log({ payload });
+      toast.success(payload.body);
+      // try {
+      //   setMessages([...messagesRef.current, payload.body]);
+      //   messagesRef.current = [...messagesRef.current, payload.body];
+      // } catch (e) {
+      //   console.log(e);
+      // }
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
 
   const rootRefSetter = useCallback(
     (node: HTMLDivElement) => {
