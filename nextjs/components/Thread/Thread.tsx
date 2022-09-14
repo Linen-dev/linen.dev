@@ -88,6 +88,31 @@ export function Thread({
     });
   }, [messages]);
 
+  const sendMessage = async ({
+    message,
+    channelId,
+    threadId,
+  }: {
+    message: string;
+    channelId: string;
+    threadId: string;
+  }) => {
+    const response = await fetch(`/api/messages`, {
+      method: 'POST',
+      body: JSON.stringify({
+        body: message,
+        channelId,
+        threadId,
+      }),
+    });
+
+    if (response.ok) {
+      console.log('saved successfully');
+    } else {
+      console.log('failed to save');
+    }
+  };
+
   return (
     <div className={styles.thread}>
       {title ? <h2 className={styles.title}>{title}</h2> : <></>}
@@ -114,7 +139,11 @@ export function Thread({
       )}
       {isSendMessageEnabled && permissions.sendMessage && (
         <div className="py-2 px-2 max-w-[500px]">
-          <MessageForm channelId={channelId} threadId={id} />
+          <MessageForm
+            onSubmit={(message: string) =>
+              sendMessage({ message, channelId, threadId: id })
+            }
+          />
         </div>
       )}
     </div>

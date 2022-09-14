@@ -159,6 +159,28 @@ export function Channel({
     return <div />;
   }
 
+  const sendMessage = async ({
+    message,
+    channelId,
+  }: {
+    message: string;
+    channelId: string;
+  }) => {
+    const response = await fetch(`/api/messages`, {
+      method: 'POST',
+      body: JSON.stringify({
+        body: message,
+        channelId,
+      }),
+    });
+
+    if (response.ok) {
+      console.log('saved successfully');
+    } else {
+      console.log('failed to save');
+    }
+  };
+
   return (
     <>
       {/* Added padding right when scroll bar is hidden 
@@ -199,7 +221,11 @@ export function Channel({
             />
             {isSendMessageEnabled && permissions.sendMessage && (
               <div className="py-2 px-2">
-                <MessageForm channelId={currentChannel.id} threadId={null} />
+                <MessageForm
+                  onSubmit={(message: string) =>
+                    sendMessage({ message, channelId: currentChannel.id })
+                  }
+                />
               </div>
             )}
             {cursor.next && !error?.next ? (
