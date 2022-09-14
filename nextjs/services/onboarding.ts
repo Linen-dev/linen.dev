@@ -49,13 +49,13 @@ export async function OnboardingCreateCommunity(
       auths: {
         connect: { email: sessionEmail },
       },
-      channels: {
-        create: {
-          channelName: 'general',
-          externalChannelId: v4(),
-          default: true,
-        },
-      },
+      // channels: {
+      //   create: {
+      //     channelName: 'general',
+      //     externalChannelId: v4(),
+      //     default: true,
+      //   },
+      // },
       users: {
         create: {
           auth: { connect: { email: sessionEmail } },
