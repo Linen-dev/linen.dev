@@ -37,6 +37,7 @@ export async function index({
         orderBy: { sentAt: 'asc' },
         take: 1,
       },
+      channel: true,
     },
     orderBy: { sentAt: 'desc' },
     take: 10,

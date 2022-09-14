@@ -22,7 +22,7 @@ export async function saveMessage({
       sentAt,
       usersId: userId,
     },
-  };
+  } as any;
 
   if (threadId) {
     return prisma.threads.update({
@@ -43,7 +43,7 @@ export async function saveMessage({
         sentAt: sentAt.getTime(),
         messageCount: 1,
         messages,
-      },
+      } as any,
     });
   }
 }

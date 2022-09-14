@@ -18,4 +18,13 @@ describe('#serialize', () => {
     );
     expect(thread.messages[0].reactions).toEqual([{ type: 'yes', count: 1 }]);
   });
+
+  it('serializers the channel', () => {
+    const thread = serialize(
+      create('thread', {
+        channel: create('channel', { channelName: 'general' }),
+      })
+    );
+    expect(thread.channel.channelName).toEqual('general');
+  });
 });
