@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
-import prisma from '../../client';
+import prisma from '../../../client';
 import { withSentry } from 'utilities/sentry';
 import { channelNextPage } from 'services/channel';
 
