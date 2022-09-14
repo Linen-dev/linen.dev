@@ -1,7 +1,7 @@
 import Avatar, { Size } from 'components/Avatar';
 import Message from '../../Message';
 import { format } from 'timeago.js';
-import { SerializedMessage } from 'serializers/thread';
+import { SerializedMessage } from 'serializers/message';
 import CopyToClipboardIcon from 'components/Pages/ChannelsPage/CopyToClipboardIcon';
 import styles from './index.module.css';
 

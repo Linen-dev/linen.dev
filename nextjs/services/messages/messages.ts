@@ -25,7 +25,7 @@ export async function saveMessage({
   } as any;
 
   if (threadId) {
-    return prisma.threads.update({
+    await prisma.threads.update({
       where: {
         id: threadId,
       },
@@ -37,7 +37,7 @@ export async function saveMessage({
       },
     });
   } else {
-    return prisma.threads.create({
+    await prisma.threads.create({
       data: {
         channelId: channelId,
         sentAt: sentAt.getTime(),
@@ -46,4 +46,16 @@ export async function saveMessage({
       } as any,
     });
   }
+
+  return prisma.messages.findFirst({
+    where: {
+      body,
+      channelId,
+      sentAt,
+      usersId: userId,
+    },
+    include: {
+      author: true,
+    },
+  });
 }

@@ -6,14 +6,14 @@ import { random } from '../../utilities/string';
 
 import { truncateTables } from './truncate';
 import { createAccounts } from './account';
-import { createAuths } from './auth';
+import { createAuthsAndUsers } from './auth';
 import { createAuthorizations } from './authorizations';
 import { createUsers } from './user';
 
 export const seed = async () => {
   await truncateTables();
   const accounts = await createAccounts();
-  await createAuths(accounts[0]);
+  await createAuthsAndUsers(accounts[0]);
   await createAuthorizations(accounts[0]);
 
   await createMessagesAndThreads(accounts[0]);
