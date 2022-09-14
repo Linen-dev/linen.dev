@@ -1,3 +1,4 @@
+import '@fortawesome/fontawesome-svg-core/styles.css';
 import '../styles/reset.css';
 import { useRouter } from 'next/router';
 import '../nprogress.css';
