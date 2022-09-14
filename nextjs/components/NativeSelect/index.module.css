@@ -67,3 +67,7 @@
 .disabled .select {
   cursor: not-allowed;
 }
+
+.grey {
+  background: #989898;
+}

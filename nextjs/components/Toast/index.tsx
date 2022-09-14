@@ -3,6 +3,7 @@ export { Toaster } from 'react-hot-toast';
 import {
   faCircleCheck,
   faCircleXmark,
+  faInfoCircle,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -17,6 +18,9 @@ const customToast = {
     errorIcon: (
       <FontAwesomeIcon icon={faCircleXmark} className="h-6 w-6 text-red-400" />
     ),
+    infoIcon: (
+      <FontAwesomeIcon icon={faInfoCircle} className="h-6 w-6 text-blue-400" />
+    ),
   },
 
   success(msg: string, subText?: string) {
@@ -25,6 +29,10 @@ const customToast = {
 
   error(msg: string, subText?: string) {
     this.custom({ msg, subText, icon: this.icons.errorIcon });
+  },
+
+  info(msg: string, subText?: string) {
+    this.custom({ msg, subText, icon: this.icons.infoIcon });
   },
 
   custom(props: { msg: string; subText?: string; icon?: JSX.Element }) {
