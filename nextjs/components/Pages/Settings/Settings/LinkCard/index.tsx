@@ -9,7 +9,7 @@ interface Props {
 export default function LinkCard({ account }: Props) {
   const url = getHomeUrl(account);
   const text = getHomeText(url);
-  if (account?.syncStatus !== 'DONE') {
+  if (!account) {
     return null;
   }
   return (

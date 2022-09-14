@@ -11,14 +11,14 @@ describe('LinkCard', () => {
   });
 
   describe('when account is provided', () => {
-    describe('when account.syncStatus is not DONE', () => {
-      it('should not render', () => {
-        const { container } = render(
-          <LinkCard account={{ syncStatus: 'PENDING' } as any} />
-        );
-        expect(container).toBeEmptyDOMElement();
-      });
-    });
+    // describe('when account.syncStatus is not DONE', () => {
+    //   it('should not render', () => {
+    //     const { container } = render(
+    //       <LinkCard account={{ syncStatus: 'PENDING' } as any} />
+    //     );
+    //     expect(container).toBeEmptyDOMElement();
+    //   });
+    // });
 
     describe('when account.syncStatus is DONE', () => {
       it('should render', () => {
