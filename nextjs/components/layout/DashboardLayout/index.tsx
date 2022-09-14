@@ -3,6 +3,7 @@ import {
   faGear,
   faMoneyBill,
   faPalette,
+  faPlus,
   faUsers,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -26,6 +27,15 @@ export default function DashboardLayout({ children, header, account }: Props) {
         <nav className="bg-gray-50 border-r border-gray-200 pt-5 pb-4 flex flex-col flex-grow overflow-y-auto">
           <Logo account={account} />
           <div className="flex-grow mt-5">
+            <div className="space-y-1">
+              <SidebarLink
+                href="/o/create-community"
+                icon={
+                  <FontAwesomeIcon icon={faPlus} className={iconClassName} />
+                }
+                text="Create new community"
+              />
+            </div>
             <div className="space-y-1">
               <SidebarLink
                 href="/settings"
