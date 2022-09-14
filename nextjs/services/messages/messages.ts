@@ -14,6 +14,16 @@ export async function saveMessage({
   userId,
 }: messageInput) {
   const sentAt = new Date();
+
+  const messages = {
+    create: {
+      body,
+      channelId,
+      sentAt,
+      usersId: userId,
+    },
+  };
+
   if (threadId) {
     return prisma.threads.update({
       where: {
@@ -23,14 +33,7 @@ export async function saveMessage({
         messageCount: {
           increment: 1,
         },
-        messages: {
-          create: {
-            body,
-            channelId,
-            sentAt,
-            usersId: userId,
-          },
-        },
+        messages,
       },
     });
   } else {
@@ -38,14 +41,8 @@ export async function saveMessage({
       data: {
         channelId: channelId,
         sentAt: sentAt.getTime(),
-        messages: {
-          create: {
-            body,
-            channelId,
-            sentAt,
-            usersId: userId,
-          },
-        },
+        messageCount: 1,
+        messages,
       },
     });
   }
