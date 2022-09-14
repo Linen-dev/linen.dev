@@ -5,16 +5,25 @@ import Message from 'components/Message';
 import styles from './index.module.css';
 
 interface Props {
-  onSubmit(message: string): void;
+  onSubmit(message: string): Promise<any>;
 }
 
 function MessageForm({ onSubmit }: Props) {
   const [message, setMessage] = useState('');
   const [preview, setPreview] = useState(false);
+  const [loading, setLoading] = useState(false);
   const handleSubmit = async (event: React.SyntheticEvent) => {
     event.preventDefault();
     event.stopPropagation();
-    onSubmit(message);
+    setLoading(true);
+    onSubmit(message)
+      .then(() => {
+        setMessage('');
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
+      });
   };
   const ref = useRef(null);
 
@@ -33,6 +42,7 @@ function MessageForm({ onSubmit }: Props) {
         placeholder="Type something..."
         hidden={preview}
         rows={1}
+        value={message}
         onChange={(event) => setMessage(event.target.value)}
       />
       {preview && <Message text={message} />}
@@ -46,7 +56,7 @@ function MessageForm({ onSubmit }: Props) {
             {preview ? 'Write' : 'Preview'}
           </a>
         )}
-        <Button disabled={!message} type="submit">
+        <Button disabled={!message || loading} type="submit">
           Send
         </Button>
       </div>

@@ -166,19 +166,13 @@ export function Channel({
     message: string;
     channelId: string;
   }) => {
-    const response = await fetch(`/api/messages`, {
+    return fetch(`/api/messages`, {
       method: 'POST',
       body: JSON.stringify({
         body: message,
         channelId,
       }),
     });
-
-    if (response.ok) {
-      console.log('saved successfully');
-    } else {
-      console.log('failed to save');
-    }
   };
 
   return (

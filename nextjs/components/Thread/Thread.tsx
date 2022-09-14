@@ -97,7 +97,7 @@ export function Thread({
     channelId: string;
     threadId: string;
   }) => {
-    const response = await fetch(`/api/messages`, {
+    return fetch(`/api/messages`, {
       method: 'POST',
       body: JSON.stringify({
         body: message,
@@ -105,12 +105,6 @@ export function Thread({
         threadId,
       }),
     });
-
-    if (response.ok) {
-      console.log('saved successfully');
-    } else {
-      console.log('failed to save');
-    }
   };
 
   return (
