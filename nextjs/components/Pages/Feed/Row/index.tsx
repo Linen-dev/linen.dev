@@ -1,58 +1,66 @@
 import React, { useState } from 'react';
-import classNames from 'classnames';
 import Avatar, { Size } from 'components/Avatar';
 import styles from './index.module.css';
 import Link from 'components/Link/InternalLink';
-import Checkbox from 'components/Checkbox';
+import { ThreadState } from '@prisma/client';
 
 interface Props {
   id: string;
-  selected: boolean;
   href: string;
+  state: ThreadState;
   date: string;
   message: any;
-  onChange(id: string, checked: boolean): void;
+  onClose(id: string, state: ThreadState): void;
 }
 
 export default function Row({
   id,
-  selected,
   href,
+  state,
   date,
   message,
-  onChange,
+  onClose,
 }: Props) {
+  const [expanded, setExpanded] = useState<boolean>(false);
   return (
-    <div className={classNames(styles.row, { [styles.selected]: selected })}>
+    <div className={styles.row}>
       <div className={styles.content}>
-        <Checkbox
-          checked={selected}
-          onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-            event.stopPropagation();
-            const { checked } = event.target;
-            onChange(id, checked);
-          }}
-        />
-        <Link href={href}>
-          <div className={styles.body}>
-            <Avatar
-              size={Size.md}
-              alt={message.author?.displayName || 'avatar'}
-              src={message.author?.profileImageUrl}
-              text={(message.author?.displayName || '?')
-                .slice(0, 1)
-                .toLowerCase()}
-            />
+        <div
+          className={styles.body}
+          onClick={() => setExpanded((expanded) => !expanded)}
+        >
+          <Avatar
+            size={Size.md}
+            alt={message.author?.displayName || 'avatar'}
+            src={message.author?.profileImageUrl}
+            text={(message.author?.displayName || '?')
+              .slice(0, 1)
+              .toLowerCase()}
+          />
+          <div>
             <div>
-              <div>
-                #channel <span className={styles.date}>{date}</span>
-              </div>
-              <div className={styles.message}>
-                {message.author?.displayName || 'User'}: {message.body}
-              </div>
+              #channel <span className={styles.date}>{date}</span>
+            </div>
+            <div className={styles.message}>
+              {message.author?.displayName || 'User'}: {message.body}
             </div>
           </div>
-        </Link>
+        </div>
+        {expanded && (
+          <ul className={styles.links}>
+            <li>
+              <Link href={href}>View</Link>
+            </li>
+            <li>
+              {state === ThreadState.OPEN && (
+                <a onClick={() => onClose(id, ThreadState.CLOSE)}>Close</a>
+              )}
+              {state === ThreadState.CLOSE && (
+                <a onClick={() => onClose(id, ThreadState.OPEN)}>Reopen</a>
+              )}
+            </li>
+          </ul>
+        )}
       </div>
     </div>
   );

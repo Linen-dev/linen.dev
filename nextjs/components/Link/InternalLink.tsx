@@ -3,11 +3,12 @@ import CustomLinkHelper from './CustomLinkHelper';
 import { useLinkContext } from 'contexts/Link';
 
 interface Props {
+  className?: string;
   href: string;
   children: React.ReactNode;
 }
 
-export default function InternalLink({ href, children }: Props) {
+export default function InternalLink({ className, href, children }: Props) {
   const { isSubDomainRouting, communityName, communityType } = useLinkContext();
   const path = CustomLinkHelper({
     communityType,
@@ -17,7 +18,7 @@ export default function InternalLink({ href, children }: Props) {
   });
   return (
     <Link href={path} prefetch={false}>
-      <a>{children}</a>
+      <a className={className}>{children}</a>
     </Link>
   );
 }
