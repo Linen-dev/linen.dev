@@ -1,4 +1,5 @@
 import { findMessagesFromChannel } from 'lib/models';
+import request, * as agent from 'superagent';
 import { unstable_getServerSession } from 'next-auth';
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import { authOptions } from '../auth/[...nextauth]';
@@ -137,6 +138,10 @@ export async function create(
       attachments: true,
     },
   });
+
+  await agent
+    .post('localhost:4000/api/messages')
+    .send({ channel_id: channelId, body });
 
   return response.status(200).json(serializeMessage(message));
 }

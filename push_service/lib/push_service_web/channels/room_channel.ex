@@ -5,6 +5,10 @@ defmodule PushServiceWeb.RoomChannel do
     {:ok, socket}
   end
 
+  def join("room:lobby:" <> channel_id, _params, socket) do
+    {:ok, assign(socket, :channel_id, channel_id)}
+  end
+
   def handle_in("new_msg", %{"body" => body}, socket) do
     broadcast!(socket, "new_msg", %{body: body})
     {:noreply, socket}

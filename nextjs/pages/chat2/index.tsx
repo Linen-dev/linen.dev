@@ -18,7 +18,7 @@ export default function Chat() {
     });
 
     socket.connect();
-    const channel = socket.channel('room:lobby', {});
+    const channel = socket.channel('room:lobby:channel1', {});
 
     setChannel(channel);
     channel
