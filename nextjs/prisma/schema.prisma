@@ -116,6 +116,7 @@ model accounts {
   invites               invites[]
 
   @@unique([redirectDomain])
+  @@unique([slackDomain])
 }
 
 enum AccountType {
