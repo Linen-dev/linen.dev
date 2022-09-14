@@ -7,6 +7,7 @@ import { Roles } from '@prisma/client';
 import { findAuthByEmail } from 'lib/users';
 import { getHomeUrl } from 'utilities/home';
 import serializeAccount from 'serializers/account';
+import { isRedirectToNewOnboardingEnabled } from 'utilities/featureFlags';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
@@ -16,15 +17,26 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     }
 
     const invite = await getOneInviteByUser(session.user.email);
-    const user = invite
-      ? await acceptInvite(invite.id, session.user.email)
-      : await findAuthByEmail(session.user.email);
+    if (invite) {
+      await acceptInvite(invite.id, session.user.email);
+    }
 
-    if (user?.role === Roles.MEMBER) {
-      const account = serializeAccount(user.account);
-      if (!account) throw 'account not found';
+    const auth = await findAuthByEmail(session.user.email);
+    if (!auth) {
+      throw 'missing auth';
+    }
 
-      const url = getHomeUrl(account);
+    const account = serializeAccount(auth.account);
+    if (!account) {
+      return res.redirect(
+        isRedirectToNewOnboardingEnabled ? '/o/create-community' : '/settings'
+      );
+    }
+
+    const url = getHomeUrl(account);
+    const user = auth.users.find((u) => u.accountsId === auth.accountId);
+
+    if (user && user.role === Roles.MEMBER) {
       return res.redirect(url);
     }
     return res.redirect('/settings');
