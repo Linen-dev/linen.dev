@@ -2,7 +2,7 @@ import styles from './index.module.css';
 import { SerializedMessage } from 'serializers/thread';
 import JoinChannelLink from 'components/Link/JoinChannelLink';
 import Row from 'components/Message/Row';
-import { useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { ThreadState } from '@prisma/client';
 import type { Settings } from 'serializers/account/settings';
 import { getThreadUrl } from 'components/Pages/ChannelsPage/utilities/url';
@@ -10,6 +10,7 @@ import MessageForm from 'components/MessageForm';
 import { isFeedEnabled, isSendMessageEnabled } from 'utilities/featureFlags';
 import { Permissions } from 'types/shared';
 import Button from 'components/Button';
+import { toast } from 'components/Toast';
 
 export function Thread({
   id,
@@ -21,6 +22,7 @@ export function Thread({
   settings,
   incrementId,
   slug,
+  state: initialState,
   title,
   permissions,
 }: {
@@ -34,8 +36,10 @@ export function Thread({
   incrementId?: number;
   slug?: string;
   title: string | null;
+  state: ThreadState;
   permissions: Permissions;
 }) {
+  const [state, setState] = useState<ThreadState>(initialState);
   const closeThread = () => {
     return fetch(`/api/threads/${id}`, {
       method: 'PUT',
@@ -45,7 +49,8 @@ export function Thread({
     })
       .then((response) => {
         if (response.ok) {
-          return response.json();
+          toast.success('Successfully marked the thread as closed.');
+          return setState(ThreadState.CLOSE);
         }
         throw new Error('Failed to close the thread.');
       })
@@ -99,10 +104,11 @@ export function Thread({
           <span className={styles.subtext}>View count:</span> {viewCount + 1}
         </div>
       </div>
-      {isFeedEnabled && (
+      {/* TODO check if the user has permissions */}
+      {state === ThreadState.OPEN && isFeedEnabled && (
         <div className="text-right">
           <Button onClick={closeThread} size="xs" rounded="full">
-            Close thread
+            Mark thread as Closed
           </Button>
         </div>
       )}
