@@ -4,7 +4,7 @@ import { format } from 'timeago.js';
 import Message from '../Message';
 import { users } from '@prisma/client';
 import { getThreadUrl } from '../Pages/ChannelsPage/utilities/url';
-import { SerializedMessage } from '../../serializers/message';
+import { SerializedMessage } from '../../serializers/thread';
 import CopyToClipboardIcon from '../Pages/ChannelsPage/CopyToClipboardIcon';
 import type { Settings } from 'serializers/account/settings';
 

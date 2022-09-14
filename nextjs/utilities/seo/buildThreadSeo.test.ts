@@ -1,4 +1,4 @@
-import { SerializedMessage } from 'serializers/message';
+import { SerializedMessage } from 'serializers/thread';
 import { Settings } from 'serializers/account/settings';
 import { buildThreadSeo } from './buildThreadSeo';
 

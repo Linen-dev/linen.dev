@@ -4,8 +4,9 @@ import { NextApiRequest, NextApiResponse } from 'next/types';
 import { authOptions } from './auth/[...nextauth]';
 import { saveMessage } from 'services/messages/messages';
 import { withSentry } from 'utilities/sentry';
+import { findAuthByEmail } from 'lib/users';
 import { prisma } from 'client';
-import serializeMessage from 'serializers/message';
+import { userAgentFromString } from 'next/server';
 
 async function handler(request: NextApiRequest, response: NextApiResponse) {
   if (request.method === 'GET') {
@@ -90,14 +91,14 @@ export async function create(
     return response.status(400).json({ error: 'message is required' });
   }
 
-  const message = await saveMessage({
+  const threadWithMessage = await saveMessage({
     body,
     channelId,
     threadId,
     userId: user.id,
   });
 
-  return response.status(200).json(serializeMessage(message));
+  return response.status(200).json('success');
 }
 
 export default withSentry(handler);
