@@ -32,6 +32,20 @@ const debouncedFetch = debounce(
   { leading: true }
 );
 
+const updateThread = (id: string, state: ThreadState) => {
+  return fetch(`/api/threads/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify({
+      state,
+    }),
+  }).then((response) => {
+    if (response.ok) {
+      return response.json();
+    }
+    throw new Error('Failed to update the thread state.');
+  });
+};
+
 const POLL_INTERVAL_IN_SECONDS = 30;
 const POLL_INTERVAL = POLL_INTERVAL_IN_SECONDS * 1000;
 
@@ -78,6 +92,18 @@ export default function Feed({
     };
   }, [communityName, state]);
 
+  const onThreadUpdate = (id: string, threadState: ThreadState) => {
+    return updateThread(id, threadState).then(() => {
+      setFeed((data) => ({
+        ...data,
+        threads: data.threads.filter((thread) => thread.id !== id),
+      }));
+      debouncedFetch({ communityName, state }).then((data: FeedResponse) =>
+        setFeed(data)
+      );
+    });
+  };
+
   return (
     <PageLayout
       channels={channels}
@@ -97,7 +123,7 @@ export default function Feed({
           }
         }}
       />
-      <Grid threads={feed.threads} loading={loading} />
+      <Grid threads={feed.threads} loading={loading} onClose={onThreadUpdate} />
     </PageLayout>
   );
 }

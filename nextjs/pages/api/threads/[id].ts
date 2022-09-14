@@ -1,11 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import prisma from '../../../client';
 import { withSentry } from 'utilities/sentry';
-import { ThreadState } from '@prisma/client';
 
 async function update(request: NextApiRequest, response: NextApiResponse) {
   const id = request.query.id as string;
-  const state = request.query.state as ThreadState;
+  const { state } = JSON.parse(request.body);
   await prisma.threads.update({
     where: { id },
     data: { state },

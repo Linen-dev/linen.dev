@@ -10,6 +10,7 @@
 }
 
 .body {
+  cursor: pointer;
   display: flex;
   gap: 0.5rem;
 }
@@ -22,12 +23,32 @@
 .row {
   padding-bottom: 0.5rem;
 }
-.row:hover {
-  background-color: whitesmoke;
-}
 .row + .row {
   border-top: 1px solid whitesmoke;
 }
 .row:last-child {
   padding-bottom: 0;
+}
+
+.links {
+  display: block;
+  padding-top: 0.5rem;
+}
+
+.links li {
+  display: inline-block;
+  margin-left: 0.25rem;
+}
+
+.links li:first-child {
+  margin-left: 0;
+}
+
+.links li a {
+  color: rgb(67, 56, 202);
+  cursor: pointer;
+}
+
+.links li a:hover {
+  text-decoration: underline;
 }
