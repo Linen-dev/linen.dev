@@ -6,14 +6,12 @@
 }
 
 .content {
-  align-items: center;
-  display: flex;
-  gap: 0.5rem;
   font-size: 12px;
 }
 
 .body {
   display: flex;
+  gap: 0.5rem;
 }
 
 .date,
