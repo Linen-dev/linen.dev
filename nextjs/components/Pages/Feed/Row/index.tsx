@@ -8,11 +8,9 @@ import { format } from 'utilities/date';
 
 interface Props {
   thread: SerializedThread;
-  onClose(id: string, state: ThreadState): void;
 }
 
-export default function Row({ thread, onClose }: Props) {
-  const [expanded, setExpanded] = useState<boolean>(false);
+export default function Row({ thread }: Props) {
   const message = thread.messages[0];
   const href = `/t/${thread.incrementId}/${
     thread.slug || 'topic'
@@ -22,43 +20,29 @@ export default function Row({ thread, onClose }: Props) {
   return (
     <div className={styles.row}>
       <div className={styles.content}>
-        <div
-          className={styles.body}
-          onClick={() => setExpanded((expanded) => !expanded)}
-        >
-          <Avatar
-            size={Size.md}
-            alt={message.author?.displayName || 'avatar'}
-            src={message.author?.profileImageUrl}
-            text={(message.author?.displayName || '?')
-              .slice(0, 1)
-              .toLowerCase()}
-          />
-          <div>
+        <Link href={href}>
+          <div className={styles.body}>
+            <Avatar
+              size={Size.md}
+              alt={message.author?.displayName || 'avatar'}
+              src={message.author?.profileImageUrl}
+              text={(message.author?.displayName || '?')
+                .slice(0, 1)
+                .toLowerCase()}
+            />
             <div>
-              {channel && <span className="mr-1">#{channel.channelName}</span>}
-              <span className={styles.date}>{date}</span>
-            </div>
-            <div className={styles.message}>
-              {message.author?.displayName || 'User'}: {message.body}
+              <div>
+                {channel && (
+                  <span className="mr-1">#{channel.channelName}</span>
+                )}
+                <span className={styles.date}>{date}</span>
+              </div>
+              <div className={styles.message}>
+                {message.author?.displayName || 'User'}: {message.body}
+              </div>
             </div>
           </div>
-        </div>
-        {expanded && (
-          <ul className={styles.links}>
-            <li>
-              <Link href={href}>View</Link>
-            </li>
-            <li>
-              {state === ThreadState.OPEN && (
-                <a onClick={() => onClose(id, ThreadState.CLOSE)}>Close</a>
-              )}
-              {state === ThreadState.CLOSE && (
-                <a onClick={() => onClose(id, ThreadState.OPEN)}>Reopen</a>
-              )}
-            </li>
-          </ul>
-        )}
+        </Link>
       </div>
     </div>
   );
