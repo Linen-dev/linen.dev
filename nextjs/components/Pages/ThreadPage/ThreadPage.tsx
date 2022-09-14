@@ -20,8 +20,7 @@ export function ThreadPage({
   permissions,
 }: ThreadByIdProp) {
   useEffect(() => {
-    threadId &&
-      fetch(`/api/threads?incrementId=${threadId}`, { method: 'PUT' });
+    threadId && fetch(`/api/count?incrementId=${threadId}`, { method: 'PUT' });
   }, []);
 
   if (!threadId) {
