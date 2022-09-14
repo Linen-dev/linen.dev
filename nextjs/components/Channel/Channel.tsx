@@ -263,6 +263,7 @@ export function Channel({
           <div className="flex justify-center">
             {currentThread && (
               <Thread
+                key={currentThread.id}
                 id={currentThread.id}
                 channelId={currentThread.channelId}
                 title={currentThread.title}
