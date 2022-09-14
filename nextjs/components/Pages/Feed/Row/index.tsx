@@ -3,25 +3,22 @@ import Avatar, { Size } from 'components/Avatar';
 import styles from './index.module.css';
 import Link from 'components/Link/InternalLink';
 import { ThreadState } from '@prisma/client';
+import { SerializedThread } from 'serializers/thread';
+import { format } from 'utilities/date';
 
 interface Props {
-  id: string;
-  href: string;
-  state: ThreadState;
-  date: string;
-  message: any;
+  thread: SerializedThread;
   onClose(id: string, state: ThreadState): void;
 }
 
-export default function Row({
-  id,
-  href,
-  state,
-  date,
-  message,
-  onClose,
-}: Props) {
+export default function Row({ thread, onClose }: Props) {
   const [expanded, setExpanded] = useState<boolean>(false);
+  const message = thread.messages[0];
+  const href = `/t/${thread.incrementId}/${
+    thread.slug || 'topic'
+  }`.toLowerCase();
+  const date = format(thread.sentAt);
+  const { state, channel, id } = thread;
   return (
     <div className={styles.row}>
       <div className={styles.content}>
@@ -39,7 +36,8 @@ export default function Row({
           />
           <div>
             <div>
-              #channel <span className={styles.date}>{date}</span>
+              {channel && <span className="mr-1">#{channel.channelName}</span>}
+              <span className={styles.date}>{date}</span>
             </div>
             <div className={styles.message}>
               {message.author?.displayName || 'User'}: {message.body}
