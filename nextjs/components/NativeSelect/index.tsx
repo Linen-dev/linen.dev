@@ -19,7 +19,7 @@ interface Props {
   icon?: React.ReactNode;
   onChange?(event: React.ChangeEvent<HTMLSelectElement>): void;
   options: Option[];
-  theme?: 'white' | 'blue';
+  theme?: 'white' | 'blue' | 'gray';
 }
 
 function NativeSelect({
@@ -46,7 +46,9 @@ function NativeSelect({
       >
         {icon && <div className={styles.icon}>{icon}</div>}
         <select
-          className={styles.select}
+          className={classNames(styles.select, {
+            'bg-gray-50 text-gray-500': theme === 'gray',
+          })}
           id={id}
           name={id || name}
           required={required}

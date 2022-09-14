@@ -6,6 +6,7 @@ interface Props {
   label: string;
   required?: boolean;
   defaultValue?: string;
+  placeholder?: string;
 }
 
 export default function EmailField({
@@ -13,6 +14,7 @@ export default function EmailField({
   label,
   required,
   defaultValue,
+  placeholder,
 }: Props) {
   return (
     <TextField
@@ -21,6 +23,7 @@ export default function EmailField({
       required={required}
       type="email"
       defaultValue={defaultValue}
+      placeholder={placeholder}
     />
   );
 }
