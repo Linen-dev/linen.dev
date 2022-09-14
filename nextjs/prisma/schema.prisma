@@ -199,6 +199,7 @@ model mentions {
 }
 
 model messageAttachments {
+  id          String?   @default(uuid())
   messages    messages? @relation(fields: [messagesId], references: [id], onDelete: Cascade)
   messagesId  String
   createdAt   DateTime  @default(now())
