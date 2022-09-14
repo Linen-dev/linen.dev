@@ -7,7 +7,7 @@ import Header from './Header';
 import Filters from './Filters';
 import Grid from './Grid';
 import debounce from 'awesome-debounce-promise';
-import { FeedResponse, Selections } from './types';
+import { FeedResponse } from './types';
 
 interface Props {
   channels: channels[];
@@ -45,7 +45,6 @@ export default function Feed({
   const [feed, setFeed] = useState<FeedResponse>({ threads: [] });
   const [state, setState] = useState<ThreadState>(ThreadState.OPEN);
   const [loading, setLoading] = useState(false);
-  const [selections, setSelections] = useState<Selections>({});
 
   useEffect(() => {
     let mounted = true;
@@ -91,28 +90,14 @@ export default function Feed({
       <Header />
       <Filters
         state={state}
-        selections={selections}
         onChange={(type: string, value: ThreadState) => {
-          setSelections({});
           switch (type) {
             case 'state':
               setState(value);
           }
         }}
       />
-      <Grid
-        threads={feed.threads}
-        loading={loading}
-        selections={selections}
-        onChange={(id, checked) => {
-          setSelections((selections) => {
-            return {
-              ...selections,
-              [id]: checked,
-            };
-          });
-        }}
-      />
+      <Grid threads={feed.threads} loading={loading} />
     </PageLayout>
   );
 }
