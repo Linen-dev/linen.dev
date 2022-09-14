@@ -2,12 +2,15 @@ import styles from './index.module.css';
 import { SerializedMessage } from 'serializers/thread';
 import JoinChannelLink from 'components/Link/JoinChannelLink';
 import Row from 'components/Message/Row';
-import { useMemo } from 'react';
+import { useState, useMemo } from 'react';
+import { ThreadState } from '@prisma/client';
 import type { Settings } from 'serializers/account/settings';
 import { getThreadUrl } from 'components/Pages/ChannelsPage/utilities/url';
 import MessageForm from 'components/MessageForm';
-import { isSendMessageEnabled } from 'utilities/featureFlags';
+import { isFeedEnabled, isSendMessageEnabled } from 'utilities/featureFlags';
 import { Permissions } from 'types/shared';
+import Button from 'components/Button';
+import { toast } from 'components/Toast';
 
 export function Thread({
   id,
@@ -19,6 +22,7 @@ export function Thread({
   settings,
   incrementId,
   slug,
+  state: initialState,
   title,
   permissions,
 }: {
@@ -32,8 +36,30 @@ export function Thread({
   incrementId?: number;
   slug?: string;
   title: string | null;
+  state: ThreadState;
   permissions: Permissions;
 }) {
+  const [state, setState] = useState<ThreadState>(initialState);
+  const closeThread = () => {
+    return fetch(`/api/threads/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify({
+        state: ThreadState.CLOSE,
+      }),
+    })
+      .then((response) => {
+        if (response.ok) {
+          toast.success('Successfully marked the thread as closed.');
+          return setState(ThreadState.CLOSE);
+        }
+        throw new Error('Failed to close the thread.');
+      })
+      .catch((exception) => {
+        // TODO better error handling and reporting
+        alert(exception.message);
+      });
+  };
+
   const threadLink = getThreadUrl({
     incrementId: incrementId!,
     isSubDomainRouting,
@@ -78,6 +104,14 @@ export function Thread({
           <span className={styles.subtext}>View count:</span> {viewCount + 1}
         </div>
       </div>
+      {/* TODO check if the user has permissions */}
+      {state === ThreadState.OPEN && isFeedEnabled && (
+        <div className="text-right">
+          <Button onClick={closeThread} size="xs" rounded="full">
+            Mark thread as Closed
+          </Button>
+        </div>
+      )}
       {isSendMessageEnabled && permissions.sendMessage && (
         <div className="py-2 px-2 max-w-[500px]">
           <MessageForm channelId={channelId} threadId={id} />

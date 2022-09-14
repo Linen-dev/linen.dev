@@ -3,6 +3,7 @@ import prisma from '../../../client';
 import { withSentry } from 'utilities/sentry';
 
 async function update(request: NextApiRequest, response: NextApiResponse) {
+  // TODO check user permissions
   const id = request.query.id as string;
   const { state } = JSON.parse(request.body);
   await prisma.threads.update({

@@ -6,19 +6,16 @@ import { ThreadState } from '@prisma/client';
 interface Props {
   threads: SerializedThread[];
   loading: boolean;
-  onClose(id: string, state: ThreadState): void;
 }
 
-export default function Grid({ threads, loading, onClose }: Props) {
+export default function Grid({ threads, loading }: Props) {
   if (threads.length === 0 || loading) {
     return null;
   }
   return (
     <>
       {threads.map((thread, index) => {
-        return (
-          <Row key={thread.id + index} thread={thread} onClose={onClose} />
-        );
+        return <Row key={thread.id + index} thread={thread} />;
       })}
     </>
   );

@@ -246,6 +246,7 @@ export function Channel({
                 id={currentThread.id}
                 channelId={currentThread.channelId}
                 title={currentThread.title}
+                state={currentThread.state}
                 messages={currentThread.messages || []}
                 viewCount={currentThread.viewCount || 0}
                 settings={settings}

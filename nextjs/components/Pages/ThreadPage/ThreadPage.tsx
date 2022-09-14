@@ -17,6 +17,7 @@ export function ThreadPage({
   slug,
   incrementId,
   title,
+  state,
   permissions,
 }: ThreadByIdProp) {
   useEffect(() => {
@@ -53,6 +54,7 @@ export function ThreadPage({
           id={id}
           channelId={currentChannel.id}
           title={title}
+          state={state}
           messages={messages}
           threadUrl={threadUrl}
           viewCount={viewCount}
