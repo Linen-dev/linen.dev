@@ -1,5 +1,5 @@
 import styles from './index.module.css';
-import { SerializedMessage } from 'serializers/thread';
+import { SerializedMessage } from 'serializers/message';
 import JoinChannelLink from 'components/Link/JoinChannelLink';
 import Row from 'components/Message/Row';
 import { useState, useMemo } from 'react';
@@ -15,7 +15,7 @@ import { toast } from 'components/Toast';
 export function Thread({
   id,
   channelId,
-  messages,
+  messages: initialMessages,
   threadUrl,
   viewCount,
   isSubDomainRouting,
@@ -40,6 +40,8 @@ export function Thread({
   permissions: Permissions;
 }) {
   const [state, setState] = useState<ThreadState>(initialState);
+  const [messages, setMessages] =
+    useState<SerializedMessage[]>(initialMessages);
   const closeThread = () => {
     return fetch(`/api/threads/${id}`, {
       method: 'PUT',
@@ -59,7 +61,6 @@ export function Thread({
         alert(exception.message);
       });
   };
-
   const threadLink = getThreadUrl({
     incrementId: incrementId!,
     isSubDomainRouting,
@@ -104,7 +105,18 @@ export function Thread({
         channelId,
         threadId,
       }),
-    });
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+        throw 'Could not send a message';
+      })
+      .then((message: SerializedMessage) => {
+        setMessages((messages) => {
+          return [...messages, message];
+        });
+      });
   };
 
   return (
