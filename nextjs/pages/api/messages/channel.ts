@@ -2,10 +2,9 @@ import { findMessagesFromChannel } from 'lib/models';
 import { unstable_getServerSession } from 'next-auth';
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import { authOptions } from '../auth/[...nextauth]';
-import { saveMessage } from 'services/messages/messages';
 import { withSentry } from 'utilities/sentry';
 import { prisma } from 'client';
-import serializeMessage from 'serializers/message';
+import serializeThread from 'serializers/thread';
 
 async function handler(request: NextApiRequest, response: NextApiResponse) {
   if (request.method === 'GET') {
@@ -53,7 +52,7 @@ export async function create(
     throw 'missing session';
   }
 
-  const { body, channelId, threadId } = JSON.parse(request.body);
+  const { body, channelId } = JSON.parse(request.body);
   if (!channelId) {
     return response.status(400).json({ error: 'channel id is required' });
   }
@@ -90,14 +89,44 @@ export async function create(
     return response.status(400).json({ error: 'message is required' });
   }
 
-  const message = await saveMessage({
-    body,
-    channelId,
-    threadId,
-    userId: user.id,
+  const sentAt = new Date();
+  const userId = user.id;
+
+  const messages = {
+    create: {
+      body,
+      channelId,
+      sentAt,
+      usersId: userId,
+    },
+  } as any;
+
+  const thread = await prisma.threads.create({
+    data: {
+      channelId: channelId,
+      sentAt: sentAt.getTime(),
+      messageCount: 1,
+      messages,
+    } as any,
+    include: {
+      messages: {
+        include: {
+          author: true,
+          mentions: {
+            include: {
+              users: true,
+            },
+          },
+          reactions: true,
+          attachments: true,
+        },
+        take: 1,
+      },
+      channel: true,
+    },
   });
 
-  return response.status(200).json(serializeMessage(message));
+  return response.status(200).json(serializeThread(thread));
 }
 
 export default withSentry(handler);
