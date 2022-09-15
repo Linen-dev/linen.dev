@@ -24,7 +24,8 @@
     "queue:worker:webhookRunOnce": "npm run queue:worker:webhook -- --once",
     "start:queue:sync": "pm2-runtime --raw \"npm run queue:worker:sync\"",
     "queue:worker:sync": "dotenv -e .env -- npx ts-node -P tsconfig.commonjs.json queue/workers/sync.ts",
-    "queue:worker:syncRunOnce": "npm run queue:worker:sync -- --once"
+    "queue:worker:syncRunOnce": "npm run queue:worker:sync -- --once",
+    "script:import-users": "ts-node -P tsconfig.commonjs.json bin/import-users/index.ts"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.1.2",
@@ -41,6 +42,7 @@
     "@types/nodemailer": "^6.4.5",
     "@types/nprogress": "^0.2.0",
     "@types/phoenix": "^1.5.4",
+    "@types/papaparse": "^5.3.5",
     "@types/react": "17.0.48",
     "@types/stripe": "^8.0.417",
     "@types/superagent": "^4.1.15",
@@ -68,6 +70,7 @@
     "nodemailer": "^6.7.8",
     "nprogress": "^0.2.0",
     "phoenix": "^1.6.11",
+    "papaparse": "^5.3.2",
     "pm2": "^5.2.0",
     "prisma": "^3.15.2",
     "react": "17.0.2",
