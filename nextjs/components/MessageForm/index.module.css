@@ -18,7 +18,9 @@
   border-color: #e5e7eb;
   width: 100%;
   display: block;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
 }
 
 .textarea:focus {

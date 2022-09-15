@@ -144,7 +144,7 @@ export function Thread({
         </div>
       )}
       {isChatEnabled && permissions.chat && (
-        <div className="py-2 px-2 max-w-[500px]">
+        <div className="w-full">
           <MessageForm
             onSubmit={(message: string) =>
               sendMessage({ message, channelId, threadId: id })

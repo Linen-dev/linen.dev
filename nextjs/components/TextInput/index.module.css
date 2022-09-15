@@ -20,6 +20,7 @@
   border-color: #e5e7eb;
   width: 100%;
   display: block;
+  -webkit-font-smoothing: antialiased;
 }
 
 .input:focus {
