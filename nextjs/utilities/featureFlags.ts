@@ -3,6 +3,7 @@ export const isLoginProtectionEnabled = true;
 export const isStripeEnabled = false;
 export const isFeedEnabled = false;
 export const isChatEnabled = false;
+export const isCreateChannelEnabled = false;
 
 export default {
   isStripeEnabled,
@@ -10,4 +11,5 @@ export default {
   isLoginProtectionEnabled,
   isFeedEnabled,
   isChatEnabled,
+  isCreateChannelEnabled,
 };

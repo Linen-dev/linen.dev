@@ -3,6 +3,8 @@ import { channelIndex, findOrCreateChannel } from '../../lib/models';
 import prisma from '../../client';
 import { channels } from '@prisma/client';
 import { withSentry } from 'utilities/sentry';
+import { v4 } from 'uuid';
+import { getAuthFromSession } from 'utilities/session';
 
 //example post body:
 // {
@@ -70,13 +72,16 @@ async function update(request: NextApiRequest, response: NextApiResponse) {
 }
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
+  const session = await getAuthFromSession(req, res);
+  const body = JSON.parse(req.body);
+
   if (req.method === 'PUT') {
     return update(req, res);
   }
   if (req.method === 'POST') {
-    const externalChannelId = req.body.slack_channel_id;
-    const channelName = req.body.channel_name;
-    const accountId = req.body.account_id;
+    const externalChannelId = body.slack_channel_id || v4();
+    const channelName = body.channel_name;
+    const accountId = session.accountId;
 
     const channel = await findOrCreateChannel({
       externalChannelId,
@@ -85,13 +90,12 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     });
     res.status(200).json(channel);
     return;
-  } else {
-    const accountId = req.query.account_id;
-    const channels = await channelIndex(accountId as string);
+  }
+  if (req.method === 'GET') {
+    const channels = await channelIndex(session.accountId);
     res.status(200).json(channels);
+    return;
   }
 }
-
-const get = () => {};
 
 export default withSentry(handler);

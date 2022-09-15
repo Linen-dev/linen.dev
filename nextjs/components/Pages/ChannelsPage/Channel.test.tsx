@@ -3,6 +3,7 @@ import { render } from '@testing-library/react';
 import ChannelPage from './ChannelPage';
 import type { MessagesViewType, users } from '@prisma/client';
 import { create as factory } from '__tests__/factory';
+import { SessionProvider } from 'next-auth/react';
 
 jest.mock('utilities/featureFlags', () => {
   return {
@@ -107,7 +108,9 @@ describe('Channel', () => {
   };
   test('it should render the view for bots with pagination buttons', () => {
     const { container } = render(
-      <ChannelPage {...channelProps} isBot={true} />
+      <SessionProvider>
+        <ChannelPage {...channelProps} isBot={true} />
+      </SessionProvider>
     );
     expect(container.innerHTML).not.toMatch(
       new RegExp(
@@ -124,7 +127,9 @@ describe('Channel', () => {
 
   test('it should render the view for users without pagination buttons', () => {
     const { container } = render(
-      <ChannelPage {...channelProps} isBot={false} />
+      <SessionProvider>
+        <ChannelPage {...channelProps} isBot={false} />
+      </SessionProvider>
     );
     expect(container.innerHTML).not.toMatch(
       new RegExp('<a href="/c/channelName/prev" class="btn">Previous</a>')
