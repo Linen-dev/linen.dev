@@ -71,9 +71,12 @@ function MessageForm({ onSubmit }: Props) {
         />
         {preview &&
           (message ? (
-            <div className="mx-px mt-px px-3 pt-2 pb-12">
-              <Message text={message} />
-            </div>
+            <>
+              <div className="mx-px mt-px px-3 pt-2 pb-12">
+                <Message text={message} />
+              </div>
+              <hr className="pb-2 w-full" />
+            </>
           ) : (
             <>
               <div className="mx-px mt-px px-3 pt-2 pb-12 text-sm leading-5 text-gray-800">
