@@ -9,7 +9,7 @@ import { SerializedThread } from 'serializers/thread';
 import { ChannelViewProps } from 'components/Pages/ChannelsPage';
 import { getData } from 'utilities/fetcher';
 import MessageForm from 'components/MessageForm';
-import { isSendMessageEnabled } from 'utilities/featureFlags';
+import { isChatEnabled } from 'utilities/featureFlags';
 
 export function Channel({
   threads,
@@ -166,13 +166,24 @@ export function Channel({
     message: string;
     channelId: string;
   }) => {
-    return fetch(`/api/messages`, {
+    return fetch(`/api/messages/channel`, {
       method: 'POST',
       body: JSON.stringify({
         body: message,
         channelId,
       }),
-    });
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+        throw 'Could not send a message';
+      })
+      .then((thread: SerializedThread) => {
+        setCurrentThreads((currentThreads) => {
+          return [...(currentThreads ? currentThreads : []), thread];
+        });
+      });
   };
 
   return (
@@ -213,7 +224,7 @@ export function Channel({
               isBot={isBot}
               onClick={loadThread}
             />
-            {isSendMessageEnabled && permissions.sendMessage && (
+            {isChatEnabled && permissions.chat && (
               <div className="py-2 px-2">
                 <MessageForm
                   onSubmit={(message: string) =>
