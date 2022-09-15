@@ -5,7 +5,7 @@ import {
   NextApiResponse,
 } from 'next/types';
 import Session from '../session';
-import { findAccountByPath, findAccountByEmail } from 'lib/models';
+import { findAccountByPath, findAccountByIdAndEmail } from 'lib/models';
 import { Permissions } from 'types/shared';
 
 type Request = GetServerSidePropsContext['req'] | NextApiRequest;
@@ -20,7 +20,7 @@ interface Props {
 export default class PermissionsService {
   static async get({ request, response, params }: Props): Promise<Permissions> {
     const community = await findCommunity(params);
-    const account = await findAccount(request, response);
+    const account = await findAccount(request, response, community);
     const access = PermissionsService._access(community, account);
     const chat = PermissionsService._chat(community, account);
     const feed = PermissionsService._feed(community, account);
@@ -89,10 +89,17 @@ async function findCommunity(params: any) {
   return findAccountByPath(params.communityName);
 }
 
-async function findAccount(request: Request, response: Response) {
+async function findAccount(
+  request: Request,
+  response: Response,
+  community: accounts | null
+) {
+  if (!community) {
+    return null;
+  }
   const session = await Session.find(request, response);
   if (!session || !session.user || !session.user.email) {
     return null;
   }
-  return findAccountByEmail(session.user.email);
+  return findAccountByIdAndEmail(community.id, session.user.email);
 }
