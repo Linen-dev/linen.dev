@@ -225,7 +225,7 @@ export function Channel({
               onClick={loadThread}
             />
             {isChatEnabled && permissions.chat && (
-              <div className="py-2 px-2">
+              <div className="w-full pt-4 px-4">
                 <MessageForm
                   onSubmit={(message: string) =>
                     sendMessage({ message, channelId: currentChannel.id })

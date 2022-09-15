@@ -1,5 +1,6 @@
 import { ReactNode } from 'react';
 import classNames from 'classnames';
+import styles from './index.module.css';
 
 interface Props {
   className?: string;
@@ -11,6 +12,7 @@ interface Props {
   color?: 'blue' | 'white' | 'transparent' | 'yellow' | 'disabled';
   rounded?: 'lg' | 'full';
   size?: 'sm' | 'xs';
+  weight?: 'medium' | 'normal';
 }
 
 const presetColors: Record<string, string> = {
@@ -31,6 +33,7 @@ const Button = ({
   color = 'blue',
   rounded = 'lg',
   size = 'sm',
+  weight = 'medium',
 }: Props) => {
   return (
     <button
@@ -38,13 +41,15 @@ const Button = ({
       type={type}
       onClick={onClick}
       className={classNames(
+        styles.button,
         className,
-        'font-medium mb-2',
+        'mb-2',
         {
           'w-full': block,
+          'font-medium': weight === 'medium',
           'rounded-lg': rounded === 'lg',
           'rounded-full': rounded === 'full',
-          'text-sm px-5 py-2.5': size === 'sm',
+          'text-sm px-4 py-2': size === 'sm',
           'text-xs px-4 py-2': size === 'xs',
         },
         disabled ? presetColors['disabled'] : presetColors[color]
