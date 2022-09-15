@@ -172,7 +172,18 @@ export function Channel({
         body: message,
         channelId,
       }),
-    });
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+        throw 'Could not send a message';
+      })
+      .then((thread: SerializedThread) => {
+        setCurrentThreads((currentThreads) => {
+          return [...(currentThreads ? currentThreads : []), thread];
+        });
+      });
   };
 
   return (
