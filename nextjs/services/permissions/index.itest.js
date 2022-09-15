@@ -184,7 +184,7 @@ describe('#get', () => {
     });
   });
 
-  describe('#sendMessage', () => {
+  describe('#chat', () => {
     describe('when the user is logged in', () => {
       describe('and the user belongs to the community', () => {
         it('returns true', async () => {

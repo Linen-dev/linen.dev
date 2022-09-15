@@ -9,7 +9,7 @@ import { SerializedThread } from 'serializers/thread';
 import { ChannelViewProps } from 'components/Pages/ChannelsPage';
 import { getData } from 'utilities/fetcher';
 import MessageForm from 'components/MessageForm';
-import { isSendMessageEnabled } from 'utilities/featureFlags';
+import { isChatEnabled } from 'utilities/featureFlags';
 
 export function Channel({
   threads,
@@ -213,7 +213,7 @@ export function Channel({
               isBot={isBot}
               onClick={loadThread}
             />
-            {isSendMessageEnabled && permissions.sendMessage && (
+            {isChatEnabled && permissions.chat && (
               <div className="py-2 px-2">
                 <MessageForm
                   onSubmit={(message: string) =>

@@ -7,7 +7,7 @@ import { ThreadState } from '@prisma/client';
 import type { Settings } from 'serializers/account/settings';
 import { getThreadUrl } from 'components/Pages/ChannelsPage/utilities/url';
 import MessageForm from 'components/MessageForm';
-import { isFeedEnabled, isSendMessageEnabled } from 'utilities/featureFlags';
+import { isFeedEnabled, isChatEnabled } from 'utilities/featureFlags';
 import { Permissions } from 'types/shared';
 import Button from 'components/Button';
 import { toast } from 'components/Toast';
@@ -143,7 +143,7 @@ export function Thread({
           </Button>
         </div>
       )}
-      {isSendMessageEnabled && permissions.sendMessage && (
+      {isChatEnabled && permissions.chat && (
         <div className="py-2 px-2 max-w-[500px]">
           <MessageForm
             onSubmit={(message: string) =>
