@@ -94,6 +94,7 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^12.1.5",
     "@testing-library/user-event": "^14.4.3",
+    "@types/phoenix": "^1.5.4",
     "aws-cdk-lib": "^2.38.0",
     "dotenv-cli": "^5.1.0",
     "esbuild": "^0.15.5",
