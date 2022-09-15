@@ -12,7 +12,7 @@ import { isChatEnabled } from 'utilities/featureFlags';
 import Header from './Header';
 import { ThreadState } from '@prisma/client';
 import { Channel as PhoneixChannel, Socket } from 'phoenix';
-import { toast } from 'components/Toast';
+import { SerializedMessage } from 'serializers/message';
 
 export function Channel({
   threads,
@@ -89,12 +89,8 @@ export function Channel({
   }, [currentThreads]);
 
   useEffect(() => {
-    const socket = new Socket('ws://localhost:4000/socket', {
-      params: {
-        token:
-          'SFMyNTY.g2gDbQAAAAZzb21laWRuBgDzoIz6gQFiAAFRgA.51L54Q50ov8bZWhHDjbgVZ2n1wrUeapeMN87_cCPet8',
-      },
-    });
+    //Set url instead of hard coding
+    const socket = new Socket('ws://localhost:4000/socket');
 
     socket.connect();
     const channel = socket.channel(`room:lobby:${currentChannel.id}`, {});
@@ -109,14 +105,37 @@ export function Channel({
         console.log('Unable to join', resp);
       });
     channel.on('new_msg', (payload) => {
-      console.log({ payload });
-      toast.success(payload.body);
-      // try {
-      //   setMessages([...messagesRef.current, payload.body]);
-      //   messagesRef.current = [...messagesRef.current, payload.body];
-      // } catch (e) {
-      //   console.log(e);
-      // }
+      try {
+        if (payload.body.message) {
+          const message: SerializedMessage = payload.body.message;
+          const threadId = payload.body.threadId;
+
+          setCurrentThreads((currentThreads) => {
+            const index = currentThreads?.findIndex((t) => t.id === threadId);
+            if (!index) {
+              return currentThreads;
+            }
+
+            const newThreads = [...(currentThreads ? currentThreads : [])];
+            newThreads[index].messages = [
+              ...newThreads[index].messages,
+              message,
+            ];
+            return newThreads;
+          });
+        }
+
+        if (payload.body.thread) {
+          setCurrentThreads((currentThreads) => {
+            return [
+              ...(currentThreads ? currentThreads : []),
+              payload.body.thread,
+            ];
+          });
+        }
+      } catch (e) {
+        console.log(e);
+      }
     });
 
     return () => {
@@ -213,18 +232,12 @@ export function Channel({
         body: message,
         channelId,
       }),
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-        throw 'Could not send a message';
-      })
-      .then((thread: SerializedThread) => {
-        setCurrentThreads((currentThreads) => {
-          return [...(currentThreads ? currentThreads : []), thread];
-        });
-      });
+    }).then((response) => {
+      if (response.ok) {
+        return response.json();
+      }
+      throw 'Could not send a message';
+    });
   };
 
   return (

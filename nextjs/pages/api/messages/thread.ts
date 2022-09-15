@@ -1,11 +1,11 @@
 import { findMessagesFromChannel } from 'lib/models';
-import request, * as agent from 'superagent';
 import { unstable_getServerSession } from 'next-auth';
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import { authOptions } from '../auth/[...nextauth]';
 import { withSentry } from 'utilities/sentry';
 import { prisma } from 'client';
 import serializeMessage from 'serializers/message';
+import { push } from 'services/push';
 
 async function handler(request: NextApiRequest, response: NextApiResponse) {
   if (request.method === 'GET') {
@@ -139,10 +139,17 @@ export async function create(
     },
   });
 
-  const token = process.env.PUSH_SERVICE_KEY;
-  await agent
-    .post('localhost:4000/api/messages')
-    .send({ channel_id: channelId, body, token });
+  if (!message) {
+    return response.status(400).json({ error: 'failed to create message' });
+  }
+
+  await push({
+    channelId,
+    body: {
+      message: serializeMessage(message),
+      threadId: threadId,
+    },
+  });
 
   return response.status(200).json(serializeMessage(message));
 }

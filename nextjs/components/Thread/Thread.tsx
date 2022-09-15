@@ -2,13 +2,14 @@ import styles from './index.module.css';
 import { SerializedMessage } from 'serializers/message';
 import JoinChannelLink from 'components/Link/JoinChannelLink';
 import Row from 'components/Message/Row';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { ThreadState } from '@prisma/client';
 import type { Settings } from 'serializers/account/settings';
 import { getThreadUrl } from 'components/Pages/ChannelsPage/utilities/url';
 import MessageForm from 'components/MessageForm';
 import { isChatEnabled } from 'utilities/featureFlags';
 import { Permissions } from 'types/shared';
+import { Channel as PhoneixChannel, Socket } from 'phoenix';
 
 export function Thread({
   id,
@@ -39,6 +40,7 @@ export function Thread({
   permissions: Permissions;
   onThreadUpdate(state: ThreadState): void;
 }) {
+  const [channel, setChannel] = useState<PhoneixChannel>();
   const [messages, setMessages] =
     useState<SerializedMessage[]>(initialMessages);
   const updateThread = (state: ThreadState) => {
@@ -87,6 +89,38 @@ export function Thread({
     });
   }, [messages]);
 
+  useEffect(() => {
+    //Set url instead of hard coding
+    const socket = new Socket('ws://localhost:4000/socket');
+
+    socket.connect();
+    const channel = socket.channel(`room:lobby:${channelId}`, {});
+
+    setChannel(channel);
+    channel
+      .join()
+      .receive('ok', (resp: any) => {
+        console.log('Joined successfully', resp);
+      })
+      .receive('error', (resp: any) => {
+        console.log('Unable to join', resp);
+      });
+    channel.on('new_msg', (payload) => {
+      try {
+        if (payload.body.message) {
+          setMessages((messages) => {
+            return [...messages, payload.body.message];
+          });
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
   const sendMessage = async ({
     message,
     channelId,
@@ -110,11 +144,7 @@ export function Thread({
         }
         throw 'Could not send a message';
       })
-      .then((message: SerializedMessage) => {
-        setMessages((messages) => {
-          return [...messages, message];
-        });
-      });
+      .then((message: SerializedMessage) => {});
   };
 
   return (
