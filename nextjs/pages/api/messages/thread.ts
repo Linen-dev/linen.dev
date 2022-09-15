@@ -139,9 +139,10 @@ export async function create(
     },
   });
 
+  const token = process.env.PUSH_SERVICE_KEY;
   await agent
     .post('localhost:4000/api/messages')
-    .send({ channel_id: channelId, body });
+    .send({ channel_id: channelId, body, token });
 
   return response.status(200).json(serializeMessage(message));
 }
