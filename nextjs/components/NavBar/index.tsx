@@ -2,9 +2,10 @@ import { channels } from '@prisma/client';
 import ChannelName from './ChannelName';
 import ChannelSelect from './ChannelSelect';
 import { sortByChannelName } from './utilities';
-import { isFeedEnabled } from 'utilities/featureFlags';
+import { isCreateChannelEnabled, isFeedEnabled } from 'utilities/featureFlags';
 import { Permissions } from 'types/shared';
 import Link from 'components/Link/InternalLink';
+import { NewChannelModal } from 'components/Channel';
 
 export default function NavBar({
   channelName,
@@ -24,9 +25,10 @@ export default function NavBar({
           <Link href="/feed">Feed</Link>
         </h5>
       )}
-      <h5 style={{ fontWeight: 'bold', paddingLeft: 18, marginBottom: 8 }}>
-        Channels
-      </h5>
+      <div className="flex px-[18px] mb-2">
+        <span className="grow font-bold">Channels</span>
+        {!!isCreateChannelEnabled && <NewChannelModal />}
+      </div>
       <div className="block overflow-hidden hover:overflow-auto h-[calc(100vh-240px)]">
         {sortedChannels.map((c: channels) => (
           <Link key={c.channelName} href={`/c/${c.channelName}`}>
