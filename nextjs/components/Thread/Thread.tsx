@@ -98,7 +98,7 @@ export function Thread({
     channelId: string;
     threadId: string;
   }) => {
-    return fetch(`/api/messages`, {
+    return fetch(`/api/messages/thread`, {
       method: 'POST',
       body: JSON.stringify({
         body: message,

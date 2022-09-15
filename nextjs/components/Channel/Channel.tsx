@@ -166,7 +166,7 @@ export function Channel({
     message: string;
     channelId: string;
   }) => {
-    return fetch(`/api/messages`, {
+    return fetch(`/api/messages/channel`, {
       method: 'POST',
       body: JSON.stringify({
         body: message,

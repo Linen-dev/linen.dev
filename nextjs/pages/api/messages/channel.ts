@@ -1,7 +1,7 @@
 import { findMessagesFromChannel } from 'lib/models';
 import { unstable_getServerSession } from 'next-auth';
 import { NextApiRequest, NextApiResponse } from 'next/types';
-import { authOptions } from './auth/[...nextauth]';
+import { authOptions } from '../auth/[...nextauth]';
 import { saveMessage } from 'services/messages/messages';
 import { withSentry } from 'utilities/sentry';
 import { prisma } from 'client';
