@@ -17,7 +17,6 @@ export interface SerializedMessage {
   mentions: MentionsWithUsers[];
   attachments: SerializedAttachment[];
   reactions: SerializedReaction[];
-  threadId: string;
 }
 
 export default function serialize(
