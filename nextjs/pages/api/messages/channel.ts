@@ -5,6 +5,8 @@ import { authOptions } from '../auth/[...nextauth]';
 import { withSentry } from 'utilities/sentry';
 import { prisma } from 'client';
 import serializeThread from 'serializers/thread';
+import request, * as agent from 'superagent';
+import { push } from 'services/push';
 
 async function handler(request: NextApiRequest, response: NextApiResponse) {
   if (request.method === 'GET') {
@@ -123,6 +125,13 @@ export async function create(
         take: 1,
       },
       channel: true,
+    },
+  });
+
+  await push({
+    channelId: channel.id,
+    body: {
+      thread: serializeThread(thread),
     },
   });
 
