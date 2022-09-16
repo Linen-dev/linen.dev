@@ -89,58 +89,60 @@ export function Channel({
   }, [currentThreads]);
 
   useEffect(() => {
-    //Set url instead of hard coding
-    const socket = new Socket('ws://localhost:4000/socket');
+    if (isChatEnabled) {
+      //Set url instead of hard coding
+      const socket = new Socket('ws://localhost:4000/socket');
 
-    socket.connect();
-    const channel = socket.channel(`room:lobby:${currentChannel.id}`, {});
+      socket.connect();
+      const channel = socket.channel(`room:lobby:${currentChannel.id}`, {});
 
-    setChannel(channel);
-    channel
-      .join()
-      .receive('ok', (resp: any) => {
-        console.log('Joined successfully', resp);
-      })
-      .receive('error', (resp: any) => {
-        console.log('Unable to join', resp);
+      setChannel(channel);
+      channel
+        .join()
+        .receive('ok', (resp: any) => {
+          console.log('Joined successfully', resp);
+        })
+        .receive('error', (resp: any) => {
+          console.log('Unable to join', resp);
+        });
+      channel.on('new_msg', (payload) => {
+        try {
+          if (payload.body.message) {
+            const message: SerializedMessage = payload.body.message;
+            const threadId = payload.body.threadId;
+
+            setCurrentThreads((currentThreads) => {
+              const index = currentThreads?.findIndex((t) => t.id === threadId);
+              if (!index) {
+                return currentThreads;
+              }
+
+              const newThreads = [...(currentThreads ? currentThreads : [])];
+              newThreads[index].messages = [
+                ...newThreads[index].messages,
+                message,
+              ];
+              return newThreads;
+            });
+          }
+
+          if (payload.body.thread) {
+            setCurrentThreads((currentThreads) => {
+              return [
+                ...(currentThreads ? currentThreads : []),
+                payload.body.thread,
+              ];
+            });
+          }
+        } catch (e) {
+          console.log(e);
+        }
       });
-    channel.on('new_msg', (payload) => {
-      try {
-        if (payload.body.message) {
-          const message: SerializedMessage = payload.body.message;
-          const threadId = payload.body.threadId;
 
-          setCurrentThreads((currentThreads) => {
-            const index = currentThreads?.findIndex((t) => t.id === threadId);
-            if (!index) {
-              return currentThreads;
-            }
-
-            const newThreads = [...(currentThreads ? currentThreads : [])];
-            newThreads[index].messages = [
-              ...newThreads[index].messages,
-              message,
-            ];
-            return newThreads;
-          });
-        }
-
-        if (payload.body.thread) {
-          setCurrentThreads((currentThreads) => {
-            return [
-              ...(currentThreads ? currentThreads : []),
-              payload.body.thread,
-            ];
-          });
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    });
-
-    return () => {
-      socket.disconnect();
-    };
+      return () => {
+        socket.disconnect();
+      };
+    }
   }, []);
 
   const rootRefSetter = useCallback(
