@@ -1,0 +1,140 @@
+.container {
+  display: flex;
+}
+
+.logo {
+  position: relative;
+  width: 120px;
+  height: 120px;
+}
+
+.text {
+  font-weight: 900;
+  font-size: 8rem;
+  line-height: 0.97;
+  margin-left: 16px;
+}
+
+.line-vertical {
+  position: absolute;
+  top: 0;
+  height: 120px;
+  width: 10px;
+}
+
+.square {
+  position: absolute;
+  top: 0;
+  left: 50px;
+  width: 10px;
+  height: 10px;
+}
+
+.line-vertical-one {
+  left: 10px;
+  background-color: #0855f4;
+}
+
+.line-vertical-two {
+  left: 30px;
+  background-color: #4495fa;
+}
+
+.line-vertical-three {
+  left: 50px;
+  background-color: #25cde8;
+}
+
+.line-horizontal {
+  position: absolute;
+  left: 0px;
+  height: 10px;
+  width: 120px;
+}
+
+.line-horizontal-one {
+  top: 100px;
+  background-color: #0855f4;
+}
+
+.line-horizontal-two {
+  top: 80px;
+  background-color: #4495fa;
+}
+
+.line-horizontal-three {
+  top: 60px;
+  background-color: #25cde8;
+}
+
+.line-horizontal-one::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 30px;
+  width: 10px;
+  height: 10px;
+  background-color: #003cd2;
+}
+
+.line-horizontal-one::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 10px;
+  width: 10px;
+  height: 10px;
+  background-color: #0000d1;
+}
+
+.line-horizontal-three::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 10px;
+  width: 10px;
+  height: 10px;
+  background-color: #003cd2;
+}
+
+.line-horizontal-two::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 10px;
+  width: 10px;
+  height: 10px;
+  background-color: #003cd2;
+}
+
+.line-horizontal-two::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 30px;
+  width: 10px;
+  height: 10px;
+  background-color: #0855f4;
+}
+
+.line-horizontal-three::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 30px;
+  width: 10px;
+  height: 10px;
+  background-color: #0078e3;
+}
+
+.line-horizontal-one .square {
+  background-color: #003cd2;
+}
+
+.line-horizontal-two .square {
+  background-color: #0078e3;
+}
+
+.line-horizontal-three .square {
+  background-color: #00a4d2;
+}
