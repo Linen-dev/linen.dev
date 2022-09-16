@@ -20,9 +20,10 @@ export function Thread({
   settings,
   incrementId,
   slug,
-  state: initialState,
+  state,
   title,
   permissions,
+  onThreadUpdate,
 }: {
   id: string;
   channelId: string;
@@ -36,8 +37,8 @@ export function Thread({
   title: string | null;
   state: ThreadState;
   permissions: Permissions;
+  onThreadUpdate(state: ThreadState): void;
 }) {
-  const [state, setState] = useState<ThreadState>(initialState);
   const [messages, setMessages] =
     useState<SerializedMessage[]>(initialMessages);
   const updateThread = (state: ThreadState) => {
@@ -49,7 +50,7 @@ export function Thread({
     })
       .then((response) => {
         if (response.ok) {
-          return setState(state);
+          return onThreadUpdate(state);
         }
         throw new Error('Failed to close the thread.');
       })
