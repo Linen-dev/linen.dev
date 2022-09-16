@@ -27,7 +27,7 @@ export default function NavBar({
       <h5 style={{ fontWeight: 'bold', paddingLeft: 18, marginBottom: 8 }}>
         Channels
       </h5>
-      <div className="block overflow-hidden hover:overflow-auto h-[calc(100vh-160px)]">
+      <div className="block overflow-hidden hover:overflow-auto h-[calc(100vh-240px)]">
         {sortedChannels.map((c: channels) => (
           <Link key={c.channelName} href={`/c/${c.channelName}`}>
             <div className="text-gray-800">
