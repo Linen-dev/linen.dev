@@ -1,8 +1,9 @@
 import PageLayout from 'components/layout/PageLayout';
 import { ThreadByIdProp } from '../../../types/apiResponses/threads/[threadId]';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Thread } from 'components/Thread';
 import { buildThreadSeo } from 'utilities/seo';
+import { ThreadState } from '@prisma/client';
 
 export function ThreadPage({
   id,
@@ -17,9 +18,10 @@ export function ThreadPage({
   slug,
   incrementId,
   title,
-  state,
+  state: initialState,
   permissions,
 }: ThreadByIdProp) {
+  const [state, setState] = useState(initialState);
   useEffect(() => {
     threadId && fetch(`/api/count?incrementId=${threadId}`, { method: 'PUT' });
   }, []);
@@ -63,6 +65,7 @@ export function ThreadPage({
           isSubDomainRouting={isSubDomainRouting}
           slug={slug}
           permissions={permissions}
+          onThreadUpdate={(state: ThreadState) => setState(state)}
         />
       </div>
     </PageLayout>

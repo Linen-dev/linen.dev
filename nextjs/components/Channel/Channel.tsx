@@ -253,7 +253,8 @@ export function Channel({
       >
         <div className="overflow-auto flex flex-col">
           <Header
-            title={currentThread?.title || `#${channelName}`}
+            title={currentThread?.title}
+            channelName={channelName}
             onClose={() => setIsShowingThread(false)}
             closed={currentThread?.state === ThreadState.CLOSE}
           />
@@ -273,6 +274,12 @@ export function Channel({
                 slug={currentThread.slug || undefined}
                 threadUrl={null}
                 permissions={permissions}
+                onThreadUpdate={(state: ThreadState) =>
+                  setCurrentThread(() => ({
+                    ...currentThread,
+                    state,
+                  }))
+                }
               />
             )}
           </div>
