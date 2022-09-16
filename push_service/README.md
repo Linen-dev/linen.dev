@@ -1,9 +1,10 @@
 # PushService
 
-To start your Phoenix server:
+To start the push service:
 
+- Create a secret i.e a string see .env.example
 - Install dependencies with `mix deps.get`
-- Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
+- Start Phoenix endpoint with `PUSH_SERVICE_KEY='YOUR KEY' mix phx.server` or inside IEx with `iex -S mix phx.server`
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
