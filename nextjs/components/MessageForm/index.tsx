@@ -8,7 +8,6 @@ import classNames from 'classnames';
 interface Props {
   onSend?(message: string): Promise<any>;
   onSendAndClose?(message: string): Promise<any>;
-  buttons?: React.ReactNode;
 }
 
 function MessageForm({ onSend, onSendAndClose }: Props) {
