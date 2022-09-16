@@ -5,7 +5,7 @@ export default function MessageFormExample() {
   return (
     <Example header="MessageForm">
       <Example description="Renders a label.">
-        <MessageForm onSubmit={() => Promise.resolve()} />
+        <MessageForm />
       </Example>
     </Example>
   );

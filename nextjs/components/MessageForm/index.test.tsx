@@ -4,9 +4,7 @@ import MessageForm from '.';
 
 describe('MessageForm', () => {
   it('renders a textarea', () => {
-    const { getByPlaceholderText } = render(
-      <MessageForm onSubmit={jest.fn()} />
-    );
+    const { getByPlaceholderText } = render(<MessageForm />);
     const textarea = getByPlaceholderText('Add your comment...');
     expect(textarea).toBeInTheDocument();
   });

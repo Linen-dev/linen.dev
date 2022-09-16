@@ -6,21 +6,23 @@ import styles from './index.module.css';
 import classNames from 'classnames';
 
 interface Props {
-  onSubmit(message: string): Promise<any>;
+  onSend?(message: string): Promise<any>;
+  onSendAndClose?(message: string): Promise<any>;
+  buttons?: React.ReactNode;
 }
 
-function MessageForm({ onSubmit }: Props) {
+function MessageForm({ onSend, onSendAndClose }: Props) {
   const [message, setMessage] = useState('');
   const [preview, setPreview] = useState(false);
   const [loading, setLoading] = useState(false);
-  const handleSubmit = async (event: React.SyntheticEvent) => {
+  const handleSubmit = async (event: React.SyntheticEvent, callback?: any) => {
     event.preventDefault();
     event.stopPropagation();
     if (!message || loading) {
       return;
     }
     setLoading(true);
-    onSubmit(message)
+    callback?.(message)
       .then(() => {
         setMessage('');
         setLoading(false);
@@ -29,6 +31,11 @@ function MessageForm({ onSubmit }: Props) {
         setLoading(false);
       });
   };
+  const handleSend = async (event: React.SyntheticEvent) =>
+    handleSubmit(event, onSend);
+  const handleSendAndClose = (event: React.SyntheticEvent) =>
+    handleSubmit(event, onSendAndClose);
+
   const ref = useRef(null);
 
   useEffect(() => {
@@ -39,9 +46,9 @@ function MessageForm({ onSubmit }: Props) {
   }, []);
 
   const activeTab =
-    'cursor-pointer rounded-md border border-transparent px-3 py-1.5 text-sm font-medium text-gray-900 bg-gray-100 hover:bg-gray-200';
+    'cursor-pointer rounded-md border border-transparent px-3 py-1.5 text-sm text-xs text-gray-900 bg-gray-100 hover:bg-gray-200';
   const inactiveTab =
-    'cursor-pointer rounded-md border border-transparent px-3 py-1.5 text-sm font-medium text-gray-500 hover:text-gray-900 bg-white hover:bg-gray-100';
+    'cursor-pointer rounded-md border border-transparent px-3 py-1.5 text-sm text-xs text-gray-500 hover:text-gray-900 bg-white hover:bg-gray-100';
   return (
     <>
       <div className="flex items-center mb-2">
@@ -58,7 +65,7 @@ function MessageForm({ onSubmit }: Props) {
           Preview
         </div>
       </div>
-      <form className={styles.messageForm} onSubmit={handleSubmit}>
+      <form className={styles.messageForm} onSubmit={handleSend}>
         <textarea
           ref={ref}
           className={styles.textarea}
@@ -67,7 +74,10 @@ function MessageForm({ onSubmit }: Props) {
           hidden={preview}
           rows={4}
           value={message}
-          onChange={(event) => setMessage(event.target.value)}
+          onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) => {
+            const message = event.target.value;
+            setMessage(message);
+          }}
         />
         {preview &&
           (message ? (
@@ -87,9 +97,23 @@ function MessageForm({ onSubmit }: Props) {
           ))}
 
         <div className={styles.toolbar}>
-          <Button type="submit" weight="normal">
-            Post
-          </Button>
+          {onSendAndClose && (
+            <Button
+              onClick={(event: React.SyntheticEvent) =>
+                handleSendAndClose(event)
+              }
+              size="xs"
+              weight="normal"
+              color="gray"
+            >
+              Post &amp; Close
+            </Button>
+          )}
+          {onSend && (
+            <Button type="submit" weight="normal" size="xs">
+              Post
+            </Button>
+          )}
         </div>
       </form>
     </>
