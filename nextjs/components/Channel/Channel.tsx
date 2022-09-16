@@ -4,12 +4,13 @@ import Spinner from 'components/Spinner';
 import { Thread } from 'components/Thread';
 import { Transition } from '@headlessui/react';
 import { Feed } from 'components/Feed';
-import { AiOutlineLeft, AiOutlineClose } from 'react-icons/ai';
 import { SerializedThread } from 'serializers/thread';
 import { ChannelViewProps } from 'components/Pages/ChannelsPage';
 import { getData } from 'utilities/fetcher';
 import MessageForm from 'components/MessageForm';
 import { isChatEnabled } from 'utilities/featureFlags';
+import Header from './Header';
+import { ThreadState } from '@prisma/client';
 
 export function Channel({
   threads,
@@ -191,6 +192,7 @@ export function Channel({
       {/* Added padding right when scroll bar is hidden 
       and remove padding when scroll bar 
       is showing so it doesn't move the screen as much */}
+
       <Transition
         show={showChannel({ isMobile, isShowingThread })}
         className="
@@ -202,6 +204,7 @@ export function Channel({
         lg:w-[calc(100vw_-_250px)]
         flex justify-left
         w-[100vw]
+        relative
         "
         ref={rootRefSetter}
         onScroll={handleRootScroll}
@@ -216,7 +219,6 @@ export function Channel({
             ) : (
               <div />
             )}
-
             <Feed
               threads={currentThreads}
               isSubDomainRouting={isSubDomainRouting}
@@ -249,28 +251,12 @@ export function Channel({
         show={isShowingThread}
         className="flex flex-col border-l border-solid border-gray-200 md:w-[700px]"
       >
-        <div className="overflow-auto flex flex-col px-2">
-          <div className="border-b border-solid border-gray-200 py-4 px-4">
-            <div className="flex flex-row justify-between">
-              <div className="flex flex-row justify-center">
-                <div className="flex items-center md:hidden">
-                  <a onClick={() => setIsShowingThread(false)}>
-                    {/* Using react icon here because the thin version of FontAwesome is paid */}
-                    <AiOutlineLeft color="gray" />
-                  </a>
-                </div>
-                <p className="font-bold pl-2">{channelName}</p>
-              </div>
-              <a
-                onClick={() => setIsShowingThread(false)}
-                className="hidden md:flex md:justify-center"
-              >
-                <div className="min-w-[10px] flex justify-center cursor-pointer items-center text-slate-400">
-                  <AiOutlineClose />
-                </div>
-              </a>
-            </div>
-          </div>
+        <div className="overflow-auto flex flex-col">
+          <Header
+            title={currentThread?.title || `#${channelName}`}
+            onClose={() => setIsShowingThread(false)}
+            closed={currentThread?.state === ThreadState.CLOSE}
+          />
           <div className="flex justify-center">
             {currentThread && (
               <Thread

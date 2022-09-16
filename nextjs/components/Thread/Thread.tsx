@@ -7,14 +7,8 @@ import { ThreadState } from '@prisma/client';
 import type { Settings } from 'serializers/account/settings';
 import { getThreadUrl } from 'components/Pages/ChannelsPage/utilities/url';
 import MessageForm from 'components/MessageForm';
-import featureFlags, {
-  isFeedEnabled,
-  isChatEnabled,
-} from 'utilities/featureFlags';
+import { isChatEnabled } from 'utilities/featureFlags';
 import { Permissions } from 'types/shared';
-import Button from 'components/Button';
-import { toast } from 'components/Toast';
-import Checkbox from 'components/Checkbox';
 
 export function Thread({
   id,
