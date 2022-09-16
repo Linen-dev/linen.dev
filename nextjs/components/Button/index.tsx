@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 import classNames from 'classnames';
 import styles from './index.module.css';
 
@@ -7,9 +7,9 @@ interface Props {
   type?: 'button' | 'submit' | 'reset';
   block?: boolean;
   children?: ReactNode;
-  onClick?(): void;
+  onClick?(event: React.SyntheticEvent): void;
   disabled?: boolean;
-  color?: 'blue' | 'white' | 'transparent' | 'yellow' | 'disabled';
+  color?: 'blue' | 'white' | 'gray' | 'transparent' | 'yellow' | 'disabled';
   rounded?: 'lg' | 'full';
   size?: 'sm' | 'xs';
   weight?: 'medium' | 'normal';
@@ -18,6 +18,7 @@ interface Props {
 const presetColors: Record<string, string> = {
   blue: 'text-white bg-blue-700 hover:bg-blue-800 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800',
   white: 'text-black bg-white',
+  gray: 'text-black bg-gray-100 hover:bg-gray-200',
   transparent: 'text-black bg-transparent',
   yellow: 'text-white bg-yellow-600 hover:bg-yellow-500 focus:ring-yellow-600',
   disabled: 'text-black bg-gray-200',

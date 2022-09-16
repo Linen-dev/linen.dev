@@ -35,3 +35,11 @@
 .toolbar {
   text-align: right;
 }
+
+.toolbar button {
+  margin-right: 8px;
+}
+
+.toolbar button:last-child {
+  margin-right: 0;
+}

@@ -7,10 +7,14 @@ import { ThreadState } from '@prisma/client';
 import type { Settings } from 'serializers/account/settings';
 import { getThreadUrl } from 'components/Pages/ChannelsPage/utilities/url';
 import MessageForm from 'components/MessageForm';
-import { isFeedEnabled, isChatEnabled } from 'utilities/featureFlags';
+import featureFlags, {
+  isFeedEnabled,
+  isChatEnabled,
+} from 'utilities/featureFlags';
 import { Permissions } from 'types/shared';
 import Button from 'components/Button';
 import { toast } from 'components/Toast';
+import Checkbox from 'components/Checkbox';
 
 export function Thread({
   id,
@@ -42,17 +46,16 @@ export function Thread({
   const [state, setState] = useState<ThreadState>(initialState);
   const [messages, setMessages] =
     useState<SerializedMessage[]>(initialMessages);
-  const closeThread = () => {
+  const updateThread = (state: ThreadState) => {
     return fetch(`/api/threads/${id}`, {
       method: 'PUT',
       body: JSON.stringify({
-        state: ThreadState.CLOSE,
+        state,
       }),
     })
       .then((response) => {
         if (response.ok) {
-          toast.success('Successfully marked the thread as closed.');
-          return setState(ThreadState.CLOSE);
+          return setState(state);
         }
         throw new Error('Failed to close the thread.');
       })
@@ -135,21 +138,30 @@ export function Thread({
           <span className={styles.subtext}>View count:</span> {viewCount + 1}
         </div>
       </div>
-      {/* TODO check if the user has permissions */}
-      {state === ThreadState.OPEN && isFeedEnabled && (
-        <div className="text-right">
-          <Button onClick={closeThread} size="xs" rounded="full">
-            Mark thread as Closed
-          </Button>
-        </div>
-      )}
       {isChatEnabled && permissions.chat && (
         <div className="w-full">
-          <MessageForm
-            onSubmit={(message: string) =>
-              sendMessage({ message, channelId, threadId: id })
-            }
-          />
+          {state === ThreadState.OPEN ? (
+            <MessageForm
+              onSend={(message: string) =>
+                sendMessage({ message, channelId, threadId: id })
+              }
+              onSendAndClose={(message: string) => {
+                return Promise.all([
+                  sendMessage({ message, channelId, threadId: id }),
+                  updateThread(ThreadState.CLOSE),
+                ]);
+              }}
+            />
+          ) : (
+            <MessageForm
+              onSend={(message: string) => {
+                return Promise.all([
+                  sendMessage({ message, channelId, threadId: id }),
+                  updateThread(ThreadState.OPEN),
+                ]);
+              }}
+            />
+          )}
         </div>
       )}
     </div>
