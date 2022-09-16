@@ -249,17 +249,18 @@ export function Channel({
         show={isShowingThread}
         className="flex flex-col border-l border-solid border-gray-200 md:w-[700px]"
       >
-        <div className="overflow-auto flex flex-col px-2">
+        <div className="overflow-auto flex flex-col">
           <div className="border-b border-solid border-gray-200 py-4 px-4">
             <div className="flex flex-row justify-between">
               <div className="flex flex-row justify-center">
                 <div className="flex items-center md:hidden">
                   <a onClick={() => setIsShowingThread(false)}>
-                    {/* Using react icon here because the thin version of FontAwesome is paid */}
                     <AiOutlineLeft color="gray" />
                   </a>
                 </div>
-                <p className="font-bold pl-2">{channelName}</p>
+                <p className="font-bold pl-2">
+                  {currentThread?.title || `#${channelName}`}
+                </p>
               </div>
               <a
                 onClick={() => setIsShowingThread(false)}
