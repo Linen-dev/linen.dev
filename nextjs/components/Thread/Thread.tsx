@@ -46,16 +46,16 @@ export function Thread({
   const [state, setState] = useState<ThreadState>(initialState);
   const [messages, setMessages] =
     useState<SerializedMessage[]>(initialMessages);
-  const closeThread = () => {
+  const updateThread = (state: ThreadState) => {
     return fetch(`/api/threads/${id}`, {
       method: 'PUT',
       body: JSON.stringify({
-        state: ThreadState.CLOSE,
+        state,
       }),
     })
       .then((response) => {
         if (response.ok) {
-          return setState(ThreadState.CLOSE);
+          return setState(state);
         }
         throw new Error('Failed to close the thread.');
       })
@@ -148,15 +148,18 @@ export function Thread({
               onSendAndClose={(message: string) => {
                 return Promise.all([
                   sendMessage({ message, channelId, threadId: id }),
-                  closeThread(),
+                  updateThread(ThreadState.CLOSE),
                 ]);
               }}
             />
           ) : (
             <MessageForm
-              onSend={(message: string) =>
-                sendMessage({ message, channelId, threadId: id })
-              }
+              onSend={(message: string) => {
+                return Promise.all([
+                  sendMessage({ message, channelId, threadId: id }),
+                  updateThread(ThreadState.OPEN),
+                ]);
+              }}
             />
           )}
         </div>
