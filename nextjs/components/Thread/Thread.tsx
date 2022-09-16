@@ -90,36 +90,38 @@ export function Thread({
   }, [messages]);
 
   useEffect(() => {
-    //Set url instead of hard coding
-    const socket = new Socket('ws://localhost:4000/socket');
+    if (isChatEnabled) {
+      //Set url instead of hard coding
+      const socket = new Socket('ws://localhost:4000/socket');
 
-    socket.connect();
-    const channel = socket.channel(`room:lobby:${channelId}`, {});
+      socket.connect();
+      const channel = socket.channel(`room:lobby:${channelId}`, {});
 
-    setChannel(channel);
-    channel
-      .join()
-      .receive('ok', (resp: any) => {
-        console.log('Joined successfully', resp);
-      })
-      .receive('error', (resp: any) => {
-        console.log('Unable to join', resp);
-      });
-    channel.on('new_msg', (payload) => {
-      try {
-        if (payload.body.message) {
-          setMessages((messages) => {
-            return [...messages, payload.body.message];
-          });
+      setChannel(channel);
+      channel
+        .join()
+        .receive('ok', (resp: any) => {
+          console.log('Joined successfully', resp);
+        })
+        .receive('error', (resp: any) => {
+          console.log('Unable to join', resp);
+        });
+      channel.on('new_msg', (payload) => {
+        try {
+          if (payload.body.message) {
+            setMessages((messages) => {
+              return [...messages, payload.body.message];
+            });
+          }
+        } catch (e) {
+          console.log(e);
         }
-      } catch (e) {
-        console.log(e);
-      }
-    });
+      });
 
-    return () => {
-      socket.disconnect();
-    };
+      return () => {
+        socket.disconnect();
+      };
+    }
   }, []);
   const sendMessage = async ({
     message,
