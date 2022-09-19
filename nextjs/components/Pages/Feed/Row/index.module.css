@@ -5,14 +5,26 @@
   width: 100%;
 }
 
+.row.selected {
+  background-color: aliceblue;
+}
+
+.row:hover {
+  background-color: ghostwhite;
+}
+
 .content {
+  display: flex;
   font-size: 12px;
+  gap: 0.5rem;
+  width: 100%;
 }
 
 .body {
   cursor: pointer;
   display: flex;
   gap: 0.5rem;
+  width: 100%;
 }
 
 .date,
