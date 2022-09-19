@@ -1,31 +1,34 @@
 import { getCurrentUrl } from 'utilities/domain';
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { type Session, unstable_getServerSession } from 'next-auth';
-import { createInvitation } from 'services/invites';
-import { authOptions } from './auth/[...nextauth]';
+import { createInvitation, updateInvitation } from 'services/invites';
 import type { Roles } from '@prisma/client';
+import { getAuthFromSession, UserSession } from 'utilities/session';
 
 export default async function handler(
   request: NextApiRequest,
   response: NextApiResponse
 ) {
-  const session = await unstable_getServerSession(
-    request,
-    response,
-    authOptions
-  );
+  const user = await getAuthFromSession(request, response);
   const host = getCurrentUrl(request);
 
   if (request.method === 'POST') {
-    const { status, message } = await post(session, request.body, host);
+    const { status, message } = await createInvite(user, request.body, host);
+    return response.status(status).json({ message });
+  }
+  if (request.method === 'PUT') {
+    const { status, message } = await updateInviteRole(
+      user,
+      request.body,
+      host
+    );
     return response.status(status).json({ message });
   }
 
-  return response.status(404).json({});
+  return response.status(405).end();
 }
 
-async function post(
-  session: Session | null,
+async function createInvite(
+  user: UserSession,
   body: string,
   host: string
 ): Promise<{
@@ -42,15 +45,34 @@ async function post(
     role: Roles;
   } = JSON.parse(body);
 
-  if (!session?.user?.email) {
-    return { status: 401, message: 'unauthorized' };
-  }
-
   return await createInvitation({
-    requesterEmail: session.user.email,
+    requesterEmail: user.email,
     email,
     accountId,
     host,
+    role,
+  });
+}
+
+async function updateInviteRole(
+  user: UserSession,
+  body: string,
+  host: string
+): Promise<{
+  status: number;
+  message: string;
+}> {
+  const {
+    userId,
+    role,
+  }: {
+    userId: string;
+    role: Roles;
+  } = JSON.parse(body);
+
+  return await updateInvitation({
+    requesterEmail: user.email,
+    userId,
     role,
   });
 }

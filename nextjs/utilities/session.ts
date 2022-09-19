@@ -1,3 +1,4 @@
+import type { Roles } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { unstable_getServerSession } from 'next-auth';
 import { authOptions } from 'pages/api/auth/[...nextauth]';
@@ -10,10 +11,18 @@ export async function getSession(
   return await unstable_getServerSession(request, response, authOptions);
 }
 
+export type UserSession = {
+  accountId: string;
+  userId: string;
+  role: Roles;
+  authId: string;
+  email: string;
+};
+
 export async function getAuthFromSession(
   request: NextApiRequest,
   response: NextApiResponse
-) {
+): Promise<UserSession> {
   const session = await getSession(request, response);
   if (!session || !session?.user?.email) {
     throw 'missing session';
