@@ -105,6 +105,7 @@
     "next-test-api-route-handler": "^3.1.7",
     "postcss": "^8.4.16",
     "prettier": "2.7.1",
+    "sass": "^1.54.9",
     "ts-node": "^10.9.1",
     "tsconfig-paths": "^4.1.0"
   },

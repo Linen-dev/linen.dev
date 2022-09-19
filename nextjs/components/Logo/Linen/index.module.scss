@@ -1,79 +1,86 @@
+$color-primary: #0855f4;
+$color-secondary: #4495fa;
+$color-tertiary: #25cde8;
+
+$size: 3px;
+
 .container {
   display: flex;
+  align-items: center;
 }
 
 .logo {
   position: relative;
-  width: 120px;
-  height: 120px;
+  width: $size * 12;
+  height: $size * 12;
 }
 
 .text {
   font-weight: 900;
-  font-size: 8rem;
-  line-height: 0.97;
-  margin-left: 16px;
+  font-size: $size * 14;
+  line-height: 1;
+  margin-left: $size * 3;
 }
 
 .line-vertical {
   position: absolute;
   top: 0;
-  height: 120px;
-  width: 10px;
+  height: $size * 12;
+  width: $size;
 }
 
 .square {
   position: absolute;
   top: 0;
-  left: 50px;
-  width: 10px;
-  height: 10px;
+  left: $size * 5;
+  width: $size;
+  height: $size;
 }
 
 .line-vertical-one {
-  left: 10px;
-  background-color: #0855f4;
+  left: $size;
+  background-color: $color-primary;
 }
 
 .line-vertical-two {
-  left: 30px;
-  background-color: #4495fa;
+  left: $size * 3;
+  background-color: $color-secondary;
 }
 
 .line-vertical-three {
-  left: 50px;
-  background-color: #25cde8;
+  left: $size * 5;
+  background-color: $color-tertiary;
 }
 
 .line-horizontal {
   position: absolute;
   left: 0px;
-  height: 10px;
-  width: 120px;
+  height: $size;
+  width: $size * 12;
 }
 
 .line-horizontal-one {
-  top: 100px;
-  background-color: #0855f4;
+  top: $size * 10;
+  background-color: $color-primary;
 }
 
 .line-horizontal-two {
-  top: 80px;
-  background-color: #4495fa;
+  top: $size * 8;
+  background-color: $color-secondary;
 }
 
 .line-horizontal-three {
-  top: 60px;
-  background-color: #25cde8;
+  top: $size * 6;
+  background-color: $color-tertiary;
 }
 
 .line-horizontal-one::after {
   content: '';
   position: absolute;
   top: 0;
-  left: 30px;
-  width: 10px;
-  height: 10px;
+  left: $size * 3;
+  width: $size;
+  height: $size;
   background-color: #003cd2;
 }
 
@@ -81,9 +88,9 @@
   content: '';
   position: absolute;
   top: 0;
-  left: 10px;
-  width: 10px;
-  height: 10px;
+  left: $size;
+  width: $size;
+  height: $size;
   background-color: #0000d1;
 }
 
@@ -91,9 +98,9 @@
   content: '';
   position: absolute;
   top: 0;
-  left: 10px;
-  width: 10px;
-  height: 10px;
+  left: $size;
+  width: $size;
+  height: $size;
   background-color: #003cd2;
 }
 
@@ -101,9 +108,9 @@
   content: '';
   position: absolute;
   top: 0;
-  left: 10px;
-  width: 10px;
-  height: 10px;
+  left: $size;
+  width: $size;
+  height: $size;
   background-color: #003cd2;
 }
 
@@ -111,9 +118,9 @@
   content: '';
   position: absolute;
   top: 0;
-  left: 30px;
-  width: 10px;
-  height: 10px;
+  left: $size * 3;
+  width: $size;
+  height: $size;
   background-color: #0855f4;
 }
 
@@ -121,9 +128,9 @@
   content: '';
   position: absolute;
   top: 0;
-  left: 30px;
-  width: 10px;
-  height: 10px;
+  left: $size * 3;
+  width: $size;
+  height: $size;
   background-color: #0078e3;
 }
 
