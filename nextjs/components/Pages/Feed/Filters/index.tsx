@@ -9,6 +9,7 @@ interface Props {
   state: string;
   selections: Selections;
   onChange(type: string, value: string): void;
+  onUpdate(): void;
 }
 
 function showActions(selections: Selections): boolean {
@@ -21,7 +22,12 @@ function showActions(selections: Selections): boolean {
   return false;
 }
 
-export default function Filters({ state, selections, onChange }: Props) {
+export default function Filters({
+  state,
+  selections,
+  onChange,
+  onUpdate,
+}: Props) {
   return (
     <div className={styles.filters}>
       <ButtonToggle
@@ -34,8 +40,13 @@ export default function Filters({ state, selections, onChange }: Props) {
         onChange={(value: ThreadState) => onChange('state', value)}
       />
       {showActions(selections) && (
-        <Button className={styles.filter} size="xs" rounded="full">
-          Close
+        <Button
+          className={styles.filter}
+          size="xs"
+          rounded="full"
+          onClick={onUpdate}
+        >
+          {state === ThreadState.OPEN ? 'Close' : 'Reopen'}
         </Button>
       )}
     </div>

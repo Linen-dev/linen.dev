@@ -44,8 +44,32 @@ export default function Feed({
 }: Props) {
   const [feed, setFeed] = useState<FeedResponse>({ threads: [] });
   const [state, setState] = useState<ThreadState>(ThreadState.OPEN);
+  const [key, setKey] = useState(0);
   const [loading, setLoading] = useState(false);
   const [selections, setSelections] = useState<Selections>({});
+
+  const updateThreads = async () => {
+    const ids = [];
+    for (const key in selections) {
+      const selection = selections[key];
+      if (selection) {
+        ids.push(key);
+      }
+    }
+    await Promise.all(
+      ids.map((id) =>
+        fetch(`/api/threads/${id}`, {
+          method: 'PUT',
+          body: JSON.stringify({
+            state:
+              state === ThreadState.OPEN ? ThreadState.CLOSE : ThreadState.OPEN,
+          }),
+        })
+      )
+    );
+    setSelections({});
+    setKey((key) => key + 1);
+  };
 
   useEffect(() => {
     let mounted = true;
@@ -77,7 +101,7 @@ export default function Feed({
       clearInterval(intervalId);
       mounted = false;
     };
-  }, [communityName, state]);
+  }, [communityName, state, key]);
 
   return (
     <PageLayout
@@ -99,6 +123,7 @@ export default function Feed({
               setState(value);
           }
         }}
+        onUpdate={updateThreads}
       />
       <Grid
         threads={feed.threads}

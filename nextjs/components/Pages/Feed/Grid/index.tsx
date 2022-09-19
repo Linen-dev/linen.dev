@@ -26,7 +26,7 @@ export default function Grid({
           <Row
             key={thread.id + index}
             thread={thread}
-            selected={selections[thread.id]}
+            selected={!!selections[thread.id]}
             onChange={onChange}
           />
         );
