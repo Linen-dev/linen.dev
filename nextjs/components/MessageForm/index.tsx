@@ -4,6 +4,7 @@ import Button from 'components/Button';
 import Message from 'components/Message';
 import styles from './index.module.css';
 import classNames from 'classnames';
+import toast from 'components/Toast';
 
 interface Props {
   onSend?(message: string): Promise<any>;
@@ -27,6 +28,7 @@ function MessageForm({ onSend, onSendAndClose }: Props) {
         setLoading(false);
       })
       .catch(() => {
+        toast.error('Something went wrong. Please try again.');
         setLoading(false);
       });
   };
@@ -76,6 +78,15 @@ function MessageForm({ onSend, onSendAndClose }: Props) {
           onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) => {
             const message = event.target.value;
             setMessage(message);
+          }}
+          onKeyDown={(event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+            if (event.key === 'Enter') {
+              if (event.ctrlKey) {
+                setMessage((message) => `${message}\n`);
+              } else {
+                handleSend(event);
+              }
+            }
           }}
         />
         {preview &&
