@@ -71,9 +71,9 @@ export function PushService(
   const { loadBalancer } = pushService;
 
   pushService.targetGroup.configureHealthCheck({
-    path: '/',
-    interval: cdk.Duration.seconds(120),
-    unhealthyThresholdCount: 5,
+    path: '/api/health',
+    interval: cdk.Duration.seconds(60),
+    unhealthyThresholdCount: 3,
   });
 
   const scalableTarget = pushService.service.autoScaleTaskCount({
