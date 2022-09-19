@@ -1,8 +1,10 @@
 import React from 'react';
+import classNames from 'classnames';
 import Label from '../Label';
 import styles from './index.module.css';
 
 interface Props {
+  className?: string;
   type?: string;
   id: string;
   name?: string;
@@ -19,6 +21,7 @@ interface Props {
 }
 
 function TextInput({
+  className,
   type,
   id,
   name,
@@ -41,7 +44,7 @@ function TextInput({
         {icon && <div className={styles.icon}>{icon}</div>}
         <input
           ref={inputRef}
-          className={styles.input}
+          className={classNames(styles.input, className)}
           type={type}
           id={id}
           name={id || name}

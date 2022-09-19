@@ -193,6 +193,7 @@ export default function Autocomplete({
       onMouseLeave={() => setActiveResultIndex(-1)}
     >
       <TextInput
+        className={styles.input}
         id="search"
         inputRef={inputRef}
         icon={
