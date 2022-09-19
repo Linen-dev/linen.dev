@@ -1,17 +1,8 @@
 import { Construct } from 'constructs';
 import * as cdk from 'aws-cdk-lib';
-import { DYNAMODB_TABLE, S3_ASSETS_BUCKET, SSM_STAGE } from '../../utils/env';
+import { SSM_STAGE } from '../../utils/env';
 
 export function Secrets(scope: Construct) {
-  const environment = {
-    NODE_ENV: 'production',
-    CACHE_TABLE: DYNAMODB_TABLE,
-    LOG: 'true',
-    LONG_RUNNING: 'true',
-    SKIP_DYNAMO_CACHE: 'true',
-    S3_UPLOAD_BUCKET: S3_ASSETS_BUCKET,
-  };
-
   const secrets = {
     SENTRY_DSN: cdk.aws_ecs.Secret.fromSsmParameter(
       cdk.aws_ssm.StringParameter.fromSecureStringParameterAttributes(
@@ -83,7 +74,21 @@ export function Secrets(scope: Construct) {
         { parameterName: '/linen-dev/prod/rdsCertificate' }
       )
     ),
+    PUSH_SERVICE_KEY: cdk.aws_ecs.Secret.fromSsmParameter(
+      cdk.aws_ssm.StringParameter.fromSecureStringParameterAttributes(
+        scope,
+        'pushServiceKey',
+        { parameterName: '/linen-dev/prod/pushServiceKey' }
+      )
+    ),
+    SECRET_KEY_BASE: cdk.aws_ecs.Secret.fromSsmParameter(
+      cdk.aws_ssm.StringParameter.fromSecureStringParameterAttributes(
+        scope,
+        'pushSecretKeyBase',
+        { parameterName: '/linen-dev/prod/pushSecretKeyBase' }
+      )
+    ),
   };
 
-  return { environment, secrets };
+  return { secrets };
 }

@@ -4,6 +4,12 @@ import ChannelPage from './ChannelPage';
 import type { MessagesViewType, users } from '@prisma/client';
 import { create as factory } from '__tests__/factory';
 
+jest.mock('utilities/featureFlags', () => {
+  return {
+    isChatEnabled: false,
+  };
+});
+
 describe('Channel', () => {
   describe('and google analytics id is set', () => {
     it.skip('renders a script tag', () => {

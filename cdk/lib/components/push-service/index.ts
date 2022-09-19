@@ -3,7 +3,7 @@ import * as cdk from 'aws-cdk-lib';
 import { Certificate } from 'aws-cdk-lib/aws-certificatemanager';
 import { certs } from '../../utils/env';
 
-type NextAppType = {
+type PushServiceType = {
   cluster: cdk.aws_ecs.Cluster;
   dockerImage: cdk.aws_ecs.AssetImage;
   secrets: Record<string, cdk.aws_ecs.Secret>;
@@ -13,7 +13,7 @@ type NextAppType = {
   securityGroup: cdk.aws_ec2.ISecurityGroup;
 };
 
-export function NextApp(
+export function PushService(
   scope: Construct,
   {
     cluster,
@@ -23,65 +23,61 @@ export function NextApp(
     cacheTableAccessPolicy,
     mailerAccessPolicy,
     securityGroup,
-  }: NextAppType
+  }: PushServiceType
 ) {
-  const nextjsTaskDefinition = new cdk.aws_ecs.FargateTaskDefinition(
+  const pushServiceTaskDef = new cdk.aws_ecs.FargateTaskDefinition(
     scope,
-    'nextJSTaskDefinition',
-    {
-      memoryLimitMiB: 512,
-      cpu: 256,
-    }
+    'pushServiceTaskDef'
   );
-  nextjsTaskDefinition.addToTaskRolePolicy(cacheTableAccessPolicy);
-  nextjsTaskDefinition.addToTaskRolePolicy(mailerAccessPolicy);
+  pushServiceTaskDef.addToTaskRolePolicy(cacheTableAccessPolicy);
+  pushServiceTaskDef.addToTaskRolePolicy(mailerAccessPolicy);
 
-  const container = nextjsTaskDefinition.addContainer('NextContainer', {
+  const container = pushServiceTaskDef.addContainer('PushServiceContainer', {
     image: dockerImage,
-    command: ['npm', 'run', 'start:prod'],
+    command: ['mix', 'phx.server'],
     environment,
     secrets,
     logging: cdk.aws_ecs.LogDriver.awsLogs({
-      streamPrefix: 'linen-dev',
+      streamPrefix: 'PushService',
       logRetention: cdk.aws_logs.RetentionDays.FIVE_DAYS,
     }),
   });
 
   container.addPortMappings({
-    containerPort: 3000,
+    containerPort: 4000,
   });
 
-  const fargateService =
+  const pushService =
     new cdk.aws_ecs_patterns.ApplicationLoadBalancedFargateService(
       scope,
-      'NextService',
+      'PushService',
       {
         cluster,
         assignPublicIp: true,
         publicLoadBalancer: true,
-        cpu: 256,
-        desiredCount: 2,
-        memoryLimitMiB: 512,
-        taskDefinition: nextjsTaskDefinition,
+        cpu: 1024,
+        memoryLimitMiB: 2048,
+        desiredCount: 1,
+        taskDefinition: pushServiceTaskDef,
         securityGroups: [securityGroup],
         redirectHTTP: true,
         certificate: Certificate.fromCertificateArn(
           scope,
-          'NextServiceCert',
-          certs.cname
+          'PushServiceCert',
+          certs.push
         ),
       }
     );
-  const { loadBalancer } = fargateService;
+  const { loadBalancer } = pushService;
 
-  fargateService.targetGroup.configureHealthCheck({
-    path: '/robots.txt',
+  pushService.targetGroup.configureHealthCheck({
+    path: '/',
     interval: cdk.Duration.seconds(120),
     unhealthyThresholdCount: 5,
   });
 
-  const scalableTarget = fargateService.service.autoScaleTaskCount({
-    minCapacity: 2,
+  const scalableTarget = pushService.service.autoScaleTaskCount({
+    minCapacity: 1,
     maxCapacity: 10,
   });
 

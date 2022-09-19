@@ -10,6 +10,7 @@ import Config
 # Configures the endpoint
 config :push_service, PushServiceWeb.Endpoint,
   url: [host: "localhost"],
+  check_origin: false,
   render_errors: [view: PushServiceWeb.ErrorView, accepts: ~w(json), layout: false],
   pubsub_server: PushService.PubSub,
   live_view: [signing_salt: "cRPEKVLq"]
