@@ -2,12 +2,13 @@ defmodule PushServiceWeb.Router do
   use PushServiceWeb, :router
 
   pipeline :api do
-    plug :accepts, ["json"]
+    plug(:accepts, ["json"])
   end
 
   scope "/api", PushServiceWeb do
-    pipe_through :api
-    resources "/messages", MessageController, only: [:index, :create]
+    pipe_through(:api)
+    resources("/messages", MessageController, only: [:index, :create])
+    get("/health", HealthController, :index)
   end
 
   # Enables the Swoosh mailbox preview in development.
@@ -16,7 +17,7 @@ defmodule PushServiceWeb.Router do
   # node running the Phoenix server.
   if Mix.env() == :dev do
     scope "/dev" do
-      pipe_through [:fetch_session, :protect_from_forgery]
+      pipe_through([:fetch_session, :protect_from_forgery])
 
       # forward "/mailbox", Plug.Swoosh.MailboxPreview
     end
