@@ -92,7 +92,9 @@ export function Thread({
   useEffect(() => {
     if (isChatEnabled) {
       //Set url instead of hard coding
-      const socket = new Socket('ws://localhost:4000/socket');
+      const socket = new Socket(
+        `${process.env.NEXT_PUBLIC_PUSH_SERVICE_URL}/socket`
+      );
 
       socket.connect();
       const channel = socket.channel(`room:lobby:${channelId}`, {});

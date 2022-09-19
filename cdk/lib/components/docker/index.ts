@@ -1,12 +1,14 @@
 import * as cdk from 'aws-cdk-lib';
 import * as path from 'path';
+import { NEXT_PUBLIC_PUSH_SERVICE_URL, DATABASE_URL } from '../../utils/env';
 
 export function Docker() {
   const dockerImage = new cdk.aws_ecs.AssetImage(
     path.join(__dirname, '../../../../nextjs'),
     {
       buildArgs: {
-        DATABASE_URL: process.env.DATABASE_URL as string, // this env will be avail inside the codebuild
+        NEXT_PUBLIC_PUSH_SERVICE_URL,
+        DATABASE_URL,
       },
     }
   );
