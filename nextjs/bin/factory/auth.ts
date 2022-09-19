@@ -1,6 +1,7 @@
 import { accounts } from '@prisma/client';
 import prisma from '../../client';
 import { generateHash } from '../../utilities/password';
+import { Roles } from '@prisma/client';
 
 export async function createAuthsAndUsers(account: accounts) {
   const auth1 = await prisma.auths.create({
@@ -18,6 +19,7 @@ export async function createAuthsAndUsers(account: accounts) {
       authsId: auth1.id,
       isAdmin: true,
       isBot: false,
+      role: Roles.ADMIN,
     },
   });
   const auth2 = await prisma.auths.create({
@@ -35,6 +37,7 @@ export async function createAuthsAndUsers(account: accounts) {
       authsId: auth2.id,
       isAdmin: true,
       isBot: false,
+      role: Roles.ADMIN,
     },
   });
   const auth3 = await prisma.auths.create({
@@ -52,6 +55,7 @@ export async function createAuthsAndUsers(account: accounts) {
       authsId: auth3.id,
       isAdmin: true,
       isBot: false,
+      role: Roles.OWNER,
     },
   });
   const auth4 = await prisma.auths.create({
@@ -69,6 +73,7 @@ export async function createAuthsAndUsers(account: accounts) {
       authsId: auth4.id,
       isAdmin: true,
       isBot: false,
+      role: Roles.ADMIN,
     },
   });
 }
