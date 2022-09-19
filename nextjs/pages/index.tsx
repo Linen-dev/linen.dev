@@ -1,6 +1,7 @@
 import { prisma } from '../client';
 import linenExamplePage from '../public/linen-example-page.png';
 import Image from 'next/image';
+import LinenLogo from 'components/Logo/Linen';
 import YCombinatorLogo from 'components/Logo/YCombinator';
 
 import { Popover } from '@headlessui/react';
@@ -25,11 +26,7 @@ const Home = (props: { accounts: Props[] }) => {
             <div className="flex justify-start lg:w-0 lg:flex-1">
               <Link href="/" passHref>
                 <a>
-                  <img
-                    className="h-8 w-auto sm:h-10 cursor-pointer"
-                    src="https://linen-assets.s3.amazonaws.com/linen-black-logo.svg"
-                    alt="Linen logo"
-                  />
+                  <LinenLogo />
                 </a>
               </Link>
             </div>
