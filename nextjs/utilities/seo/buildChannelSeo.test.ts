@@ -53,7 +53,7 @@ describe('buildChannelSeo', () => {
       ] as SerializedThread[],
     });
     expect(title).toEqual('CommunityName | ChannelName');
-    expect(description).toEqual('body ... body ... body');
+    expect(description).toEqual('body… body… body');
     expect(url).toEqual('https://redirectDomain/c/channelName');
     expect(image).toEqual(defaultProps.settings.logoUrl);
     expect(rest).toEqual({});
@@ -89,7 +89,7 @@ describe('buildChannelSeo', () => {
       ] as SerializedThread[],
     });
     expect(title).toEqual('CommunityName | ChannelName');
-    expect(description).toEqual('topic ... conversation ... slug slug');
+    expect(description).toEqual('topic… conversation… slug slug');
     expect(url).toEqual('https://redirectDomain/c/channelName');
     expect(image).toEqual(defaultProps.settings.logoUrl);
     expect(rest).toEqual({});
@@ -120,14 +120,15 @@ describe('buildChannelSeo', () => {
     expect(image).toEqual(defaultProps.settings.logoUrl);
     expect(rest).toEqual({});
   });
+
   test('channel with cursor', async () => {
     const { description, title, url, image, ...rest } = await buildChannelSeo({
       ...defaultProps,
-      pathCursor: 'cursor',
+      pathCursor: 'fx1Fgn4',
     });
-    expect(title).toEqual('CommunityName | ChannelName | cursor');
+    expect(title).toEqual('CommunityName | ChannelName');
     expect(description).toEqual(title);
-    expect(url).toEqual('https://redirectDomain/c/channelName/cursor');
+    expect(url).toEqual('https://redirectDomain/c/channelName/fx1Fgn4');
     expect(image).toEqual(defaultProps.settings.logoUrl);
     expect(rest).toEqual({});
   });
