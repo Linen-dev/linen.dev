@@ -13,7 +13,7 @@
 }
 
 .logo {
-  display: block;
-  margin: 0 auto 2rem;
-  width: 6rem;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
 }
