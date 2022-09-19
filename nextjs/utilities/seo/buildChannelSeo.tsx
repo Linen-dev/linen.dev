@@ -16,11 +16,7 @@ export function buildChannelSeo({
   pathCursor: string | null;
   threads?: SerializedThread[];
 }) {
-  const title = [
-    capitalize(settings.communityName),
-    capitalize(channelName),
-    pathCursor,
-  ]
+  const title = [capitalize(settings.communityName), capitalize(channelName)]
     .filter(Boolean)
     .join(' | ');
 
@@ -36,9 +32,9 @@ export function buildChannelSeo({
   const description =
     threads
       ?.map((t) =>
-        cleanUpStringForSeo(t.messages?.[0]?.body || t.slug).substring(0, 40)
+        cleanUpStringForSeo(t.messages?.[0]?.body || t.slug).substring(0, 43)
       )
-      .join(' ... ') || title;
+      .join('… ') || title;
 
   return { description, title, url, image: settings.logoUrl };
 }

@@ -1,3 +1,11 @@
+.input {
+  border-color: white;
+}
+
+.input:focus {
+  border-color: white;
+}
+
 .spin {
   animation: spin-animation 2s infinite;
 }
