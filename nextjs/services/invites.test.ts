@@ -1,0 +1,122 @@
+import { updateInvitation } from './invites';
+import { Roles } from '@prisma/client';
+import prisma from 'client';
+import { v4 } from 'uuid';
+
+describe('invite service', () => {
+  describe('update invite', () => {
+    test('as admin, update invite from same tenant should succeed', async () => {
+      const account = await prisma.accounts.create({ data: {} });
+      const requester = await prisma.auths.create({
+        data: {
+          email: v4(),
+          password: '',
+          salt: '',
+          account: { connect: { id: account.id } },
+        },
+      });
+      const requesterUser = await prisma.users.create({
+        data: {
+          isAdmin: true,
+          isBot: false,
+          role: Roles.OWNER,
+          account: { connect: { id: account.id } },
+          auth: { connect: { id: requester.id } },
+        },
+      });
+      const inviteToUpdate = await prisma.invites.create({
+        data: {
+          email: v4(),
+          role: Roles.MEMBER,
+          accounts: { connect: { id: account.id } },
+          createdBy: { connect: { id: requesterUser.id } },
+        },
+      });
+      await expect(
+        updateInvitation({
+          requesterEmail: requester.email,
+          role: Roles.ADMIN,
+          userId: inviteToUpdate.id,
+        })
+      ).resolves.toMatchObject({ status: 200, message: 'invitation updated' });
+    });
+
+    test('as admin, update invite from distinct tenant should fail', async () => {
+      const account = await prisma.accounts.create({ data: {} });
+      const account2 = await prisma.accounts.create({ data: {} });
+
+      const requester = await prisma.auths.create({
+        data: {
+          email: v4(),
+          password: '',
+          salt: '',
+          account: { connect: { id: account.id } },
+        },
+      });
+      const requesterUser = await prisma.users.create({
+        data: {
+          isAdmin: true,
+          isBot: false,
+          role: Roles.OWNER,
+          account: { connect: { id: account.id } },
+          auth: { connect: { id: requester.id } },
+        },
+      });
+      const inviteToUpdate = await prisma.invites.create({
+        data: {
+          email: v4(),
+          role: Roles.MEMBER,
+          accounts: { connect: { id: account2.id } },
+          createdBy: { connect: { id: requesterUser.id } },
+        },
+      });
+      await expect(
+        updateInvitation({
+          requesterEmail: requester.email,
+          role: Roles.ADMIN,
+          userId: inviteToUpdate.id,
+        })
+      ).resolves.toMatchObject({ status: 404, message: 'user not found' });
+    });
+
+    test('as member, update an invite role should fail', async () => {
+      const account = await prisma.accounts.create({ data: {} });
+
+      const requester = await prisma.auths.create({
+        data: {
+          email: v4(),
+          password: '',
+          salt: '',
+          account: { connect: { id: account.id } },
+        },
+      });
+      const requesterUser = await prisma.users.create({
+        data: {
+          isAdmin: true,
+          isBot: false,
+          role: Roles.MEMBER,
+          account: { connect: { id: account.id } },
+          auth: { connect: { id: requester.id } },
+        },
+      });
+      const inviteToUpdate = await prisma.invites.create({
+        data: {
+          email: v4(),
+          role: Roles.MEMBER,
+          accounts: { connect: { id: account.id } },
+          createdBy: { connect: { id: requesterUser.id } },
+        },
+      });
+      await expect(
+        updateInvitation({
+          requesterEmail: requester.email,
+          role: Roles.ADMIN,
+          userId: inviteToUpdate.id,
+        })
+      ).resolves.toMatchObject({
+        status: 404,
+        message: 'requester is not authorized to make this change',
+      });
+    });
+  });
+});

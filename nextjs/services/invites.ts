@@ -171,3 +171,54 @@ export async function acceptInvite(id: string, email: string) {
 
   return newUser;
 }
+
+export async function updateInvitation({
+  requesterEmail,
+  userId,
+  role,
+}: {
+  requesterEmail: string;
+  userId: string;
+  role: Roles;
+}) {
+  const requester = await prisma.auths.findUnique({
+    where: { email: requesterEmail },
+    include: { account: true, users: true },
+  });
+
+  const invite = await prisma.invites.findUnique({ where: { id: userId } });
+
+  const user = requester?.users.find(
+    (user) => user.accountsId === invite?.accountsId
+  );
+  if (!user) {
+    return { status: 404, message: 'user not found' };
+  }
+  const userFromSession = requester?.users.find(
+    (u) => u.accountsId === user.accountsId
+  );
+  if (!userFromSession) {
+    return { status: 404, message: "user doesn't belong to same tenant" };
+  }
+  // user requester should be an owner or admin
+  if (
+    userFromSession.role !== Roles.ADMIN &&
+    userFromSession.role !== Roles.OWNER
+  ) {
+    return {
+      status: 404,
+      message: 'requester is not authorized to make this change',
+    };
+  }
+
+  await prisma.invites.update({
+    where: {
+      id: userId,
+    },
+    data: {
+      role,
+    },
+  });
+
+  return { status: 200, message: 'invitation updated' };
+}

@@ -4,11 +4,15 @@ import DashboardLayout from 'components/layout/DashboardLayout';
 import Button from 'components/Button';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { captureExceptionAndFlush } from 'utilities/sentry';
 import NativeSelect from 'components/NativeSelect';
 import { Roles } from '@prisma/client';
+import { captureException } from '@sentry/nextjs';
+import { toast } from 'components/Toast';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 export interface MembersType {
+  id: string;
   email: string;
   role: Roles;
   status: 'PENDING' | 'ACCEPTED' | 'UNKNOWN' | string;
@@ -75,25 +79,75 @@ function TableMembers({ users }: { users: MembersType[] }) {
   return (
     <div>
       <ul role="list" className="flex flex-col pt-4 gap-0">
-        {users?.map((user) => (
-          <li key={user.email}>
-            <div className="border-gray-200 border-solid border">
-              <div className="flex justify-start items-center p-4">
-                <p className="grow text-sm font-medium truncate">
-                  {user.email}
-                  <span className="flex text-xs text-gray-500">
-                    {user.role}
-                  </span>
-                </p>
-                <div className="flex items-center">
-                  <MemberStatus status={user.status} />
-                </div>
-              </div>
-            </div>
-          </li>
-        ))}
+        {users?.map((user) => RowMember(user))}
       </ul>
     </div>
+  );
+}
+
+function RowMember(user: MembersType): JSX.Element {
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState(user);
+
+  const onChange = async (e: any, status: string) => {
+    e?.preventDefault();
+    setLoading(true);
+    try {
+      const role = e.target.value;
+      const userId = e.target.id;
+      let url = '/api/invites';
+      if (status === 'ACCEPTED') {
+        url = '/api/users';
+      }
+      const response = await fetch(url, {
+        method: 'PUT',
+        body: JSON.stringify({ userId, role }),
+      });
+      if (!response.ok) {
+        throw response;
+      }
+      setData({ ...data, role });
+    } catch (error) {
+      captureException(error);
+      toast.error('Something went wrong');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <li key={user.id}>
+      <div className="border-gray-200 border-solid border">
+        <div className="flex justify-start items-center p-4">
+          <p className="grow text-sm font-medium truncate">{user.email}</p>
+          <div className="flex pr-4">
+            {loading && (
+              <div className="relative z-10 left-1/2 right-1/2 pt-2">
+                <FontAwesomeIcon
+                  icon={faSpinner}
+                  spin
+                  className="h-5 w-5 text-blue-400 "
+                />
+              </div>
+            )}
+            <NativeSelect
+              id={user.id}
+              defaultValue={data.role}
+              onChange={(e) => onChange(e, user.status)}
+              disabled={loading}
+              options={[
+                { label: Roles.MEMBER, value: Roles.MEMBER },
+                { label: Roles.ADMIN, value: Roles.ADMIN },
+                { label: Roles.OWNER, value: Roles.OWNER },
+              ]}
+            />
+          </div>
+          <div className="flex items-center">
+            <MemberStatus status={user.status} />
+          </div>
+        </div>
+      </div>
+    </li>
   );
 }
 
@@ -118,8 +172,8 @@ export default function Members({ account, users }: MembersPageProps) {
         router.reload();
       }
     } catch (error) {
-      await captureExceptionAndFlush(error);
-      alert('Something went wrong');
+      captureException(error);
+      toast.error('Something went wrong');
     } finally {
       setLoading(false);
     }
