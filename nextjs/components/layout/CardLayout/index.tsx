@@ -1,7 +1,8 @@
 import { ReactNode } from 'react';
 import styles from './index.module.css';
 import Card from '../../Card';
-import Link from '../../Link';
+import Link from 'next/link';
+import LinenLogo from 'components/Logo/Linen';
 
 interface Props {
   header: string;
@@ -11,15 +12,15 @@ interface Props {
 const Layout = ({ header, children }: Props) => {
   return (
     <div className={styles.page}>
-      <Link href="/">
-        <img
-          className={styles.logo}
-          src="https://linen-assets.s3.amazonaws.com/linen-black-logo.svg"
-          alt="Linen logo"
-        />
-      </Link>
+      <div className={styles.logo}>
+        <Link className="text-center" href="/">
+          <a>
+            <LinenLogo />
+          </a>
+        </Link>
+      </div>
       <Card>
-        <div className="px-10 py-8">
+        <div className={styles.content}>
           <h1 className={styles.header}>{header}</h1>
           {children}
         </div>

@@ -18,7 +18,7 @@ export default function SignIn({ csrfToken, error }: SignInProps) {
   const [loading, setLoading] = useState(false);
 
   return (
-    <Layout header="Log In">
+    <Layout header="Sign In">
       <Error error={error} />
       <form
         method="post"

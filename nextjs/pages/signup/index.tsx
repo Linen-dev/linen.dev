@@ -36,7 +36,7 @@ export default function SignUp({ csrfToken }: SignUpProps) {
         </Button>
       </form>
       <p className="text-sm pt-3 text-gray-600">
-        Already have an account? <Link href="/signin">Log in</Link>
+        Already have an account? <Link href="/signin">Sign in</Link>
       </p>
 
       <p className="text-sm pt-3 text-gray-600">
