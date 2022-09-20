@@ -1,0 +1,49 @@
+.suggestions {
+  list-style: none;
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.suggestion {
+  position: relative;
+  margin: 0;
+  user-select: none;
+  padding: 0.5rem 0.75rem;
+  display: flex;
+  border-bottom: 1px solid #eee;
+}
+
+.suggestion:last-child {
+  border-bottom: none;
+}
+
+.username {
+  color: rgb(17, 24, 39);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.name {
+  color: rgb(55, 65, 81);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-left: 0.25rem;
+}
+
+.suggestion:hover {
+  cursor: pointer;
+  color: white;
+  font-weight: 500;
+  background: rgb(79, 70, 229);
+}
+
+.suggestion:hover .name {
+  color: rgb(199, 210, 254);
+}
+
+.suggestion:hover .username {
+  color: white;
+}
