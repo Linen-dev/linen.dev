@@ -6,11 +6,17 @@ export default function SuggestionsExample() {
     <Example header="Suggestions">
       <Example description="Suggestions have a username and an optional name.">
         <Suggestions
-          users={[
-            { username: '@john', name: 'John Doe' },
-            { username: '@jim', name: 'Jim Jam' },
-            { username: '@meghan' },
-          ]}
+          fetch={() =>
+            new Promise((resolve) =>
+              setTimeout(() => {
+                resolve([
+                  { username: '@john', name: 'John Doe' },
+                  { username: '@jim', name: 'Jim Jam' },
+                  { username: '@meghan' },
+                ]);
+              }, 250)
+            )
+          }
         />
       </Example>
     </Example>

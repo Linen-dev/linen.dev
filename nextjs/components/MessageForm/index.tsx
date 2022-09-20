@@ -5,16 +5,55 @@ import Message from 'components/Message';
 import styles from './index.module.css';
 import classNames from 'classnames';
 import toast from 'components/Toast';
+import Suggestions from 'components/Suggestions';
 
 interface Props {
   onSend?(message: string): Promise<any>;
   onSendAndClose?(message: string): Promise<any>;
 }
 
+const getCaretPosition = (ref: any) => {
+  if (!ref || !ref.current) {
+    return 0;
+  }
+  const node = ref.current;
+  return node.selectionStart;
+};
+
+function isWhitespace(character: string) {
+  return /\s/.test(character);
+}
+
+function isUndefined(character: string | undefined) {
+  return typeof character === 'undefined';
+}
+
+function isMentionMode(message: string, position: number) {
+  const current = message[position - 1];
+  const previous = message[position - 2];
+  return current === '@' && (isWhitespace(previous) || isUndefined(previous));
+}
+
+function getMode(message: string, position: number) {
+  return isMentionMode(message, position) ? Mode.Mention : Mode.Standard;
+}
+
+function isMentionKey(key: string) {
+  return ['ArrowUp', 'ArrowDown', 'Enter'].includes(key);
+}
+
+enum Mode {
+  Standard,
+  Mention,
+}
+
 function MessageForm({ onSend, onSendAndClose }: Props) {
   const [message, setMessage] = useState('');
   const [preview, setPreview] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [position, setPosition] = useState(0);
+  const ref = useRef(null);
+  const mode = getMode(message, position);
   const handleSubmit = async (event: React.SyntheticEvent, callback?: any) => {
     event.preventDefault();
     event.stopPropagation();
@@ -37,8 +76,6 @@ function MessageForm({ onSend, onSendAndClose }: Props) {
   const handleSendAndClose = (event: React.SyntheticEvent) =>
     handleSubmit(event, onSendAndClose);
 
-  const ref = useRef(null);
-
   useEffect(() => {
     autosize(ref.current);
     return () => {
@@ -51,8 +88,8 @@ function MessageForm({ onSend, onSendAndClose }: Props) {
   const inactiveTab =
     'cursor-pointer rounded-md border border-transparent px-3 py-1.5 text-sm text-xs text-gray-500 hover:text-gray-900 bg-white hover:bg-gray-100';
   return (
-    <>
-      <div className="flex items-center mb-2">
+    <div className={styles.container}>
+      <div className={styles.actions}>
         <div
           onClick={() => setPreview(false)}
           className={classNames(preview ? inactiveTab : activeTab)}
@@ -66,6 +103,32 @@ function MessageForm({ onSend, onSendAndClose }: Props) {
           Preview
         </div>
       </div>
+      {mode === Mode.Mention && !preview && (
+        <Suggestions
+          className={styles.suggestions}
+          fetch={() =>
+            new Promise((resolve) => {
+              setTimeout(() => {
+                resolve([
+                  { username: 'john', name: 'John Doe' },
+                  { username: 'jim', name: 'Jim Jam' },
+                ]);
+              }, 250);
+            })
+          }
+          onSelect={(user) => {
+            setMessage((message) => {
+              return [
+                message.slice(0, position),
+                user.username,
+                message.slice(position),
+              ].join('');
+            });
+            (ref.current as any).focus();
+            setTimeout(() => setPosition(getCaretPosition(ref)), 0);
+          }}
+        />
+      )}
       <form className={styles.messageForm} onSubmit={handleSend}>
         <textarea
           ref={ref}
@@ -78,8 +141,12 @@ function MessageForm({ onSend, onSendAndClose }: Props) {
           onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) => {
             const message = event.target.value;
             setMessage(message);
+            setPosition(getCaretPosition(ref));
           }}
           onKeyDown={(event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+            if (mode === Mode.Mention && isMentionKey(event.key)) {
+              return event.preventDefault();
+            }
             if (event.key === 'Enter') {
               if (event.ctrlKey) {
                 setMessage((message) => `${message}\n`);
@@ -126,7 +193,7 @@ function MessageForm({ onSend, onSendAndClose }: Props) {
           )}
         </div>
       </form>
-    </>
+    </div>
   );
 }
 
