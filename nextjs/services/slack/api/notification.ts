@@ -20,3 +20,7 @@ export const sendNotification = async (message: string) => {
 
   return response;
 };
+
+export function skipNotification() {
+  return process.env.SKIP_NOTIFICATION === 'true';
+}

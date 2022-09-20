@@ -34,15 +34,17 @@ export class CdkStack extends cdk.Stack {
       vpc,
     });
 
-    NextApp(this, {
-      cluster,
-      dockerImage,
-      secrets,
-      environment,
-      cacheTableAccessPolicy,
-      mailerAccessPolicy,
-      securityGroup,
-    });
+    // NextApp(this, {
+    //   cluster,
+    //   dockerImage,
+    //   secrets,
+    //   environment,
+    //   cacheTableAccessPolicy,
+    //   mailerAccessPolicy,
+    //   securityGroup,
+    // });
+
+    // Distro(this, { loadBalancer });
 
     PushService(this, {
       cluster,
@@ -53,8 +55,6 @@ export class CdkStack extends cdk.Stack {
       mailerAccessPolicy,
       securityGroup,
     });
-
-    // Distro(this, { loadBalancer });
 
     QueueWorker(this, {
       cluster,
@@ -108,9 +108,7 @@ export class CdkStack extends cdk.Stack {
       cluster,
       dockerImage,
       secrets,
-      environment: {
-        ...environment,
-      },
+      environment,
       cacheTableAccessPolicy,
       mailerAccessPolicy,
     });
