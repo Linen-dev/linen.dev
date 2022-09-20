@@ -6,6 +6,7 @@ export const isChatEnabled = false;
 export const isCreateChannelEnabled = false;
 export const isRedirectToNewOnboardingEnabled = false;
 export const isNewOnboardingButtonEnabled = false;
+export const isTenantPickerEnabled = true;
 
 export default {
   isStripeEnabled,

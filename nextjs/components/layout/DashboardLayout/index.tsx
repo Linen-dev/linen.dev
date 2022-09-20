@@ -12,6 +12,7 @@ import { useRouter } from 'next/router';
 import { SerializedAccount } from 'serializers/account';
 import Logo from './Logo';
 import { isNewOnboardingButtonEnabled } from 'utilities/featureFlags';
+import { Tenant } from 'components/Tenant';
 
 interface Props {
   children: React.ReactNode;
@@ -39,6 +40,9 @@ export default function DashboardLayout({ children, header, account }: Props) {
                 />
               </div>
             )}
+            <div className="space-y-1">
+              <Tenant />
+            </div>
             <div className="space-y-1">
               <SidebarLink
                 href="/settings"

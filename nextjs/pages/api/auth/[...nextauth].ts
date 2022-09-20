@@ -49,6 +49,33 @@ export const authOptions = {
       },
     }),
   ],
+  callbacks: {
+    async session({ session, token, user }: any) {
+      // we may need to cache this call
+      const tenants = await prisma.auths.findUnique({
+        where: { id: user.id },
+        include: {
+          users: { include: { account: { select: { id: true, name: true } } } },
+        },
+      });
+      const u = tenants?.users?.find(
+        (u) => u.accountsId === tenants?.accountId
+      );
+      session.user = {
+        ...user,
+        userId: u?.id,
+        role: u?.role,
+        accountId: tenants?.accountId,
+        tenants: tenants?.users?.map(({ account, id, role }) => ({
+          userId: id,
+          role,
+          accountId: account.id,
+          accountName: account.name,
+        })),
+      };
+      return session;
+    },
+  },
   secret: process.env.NEXTAUTH_SECRET as string,
 } as NextAuthOptions;
 
