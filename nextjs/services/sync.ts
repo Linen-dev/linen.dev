@@ -11,6 +11,7 @@ import type {
 import { discordSync } from './discord/sync';
 import { slackSyncWithFiles } from './slack/syncWithFiles';
 import prisma from '../client';
+import { skipNotification } from './slack/api/notification';
 
 export enum SyncStatus {
   IN_PROGRESS = 'IN_PROGRESS',
@@ -68,10 +69,6 @@ async function slackNotification(
     await captureExceptionAndFlush(e);
     console.error('Failed to send Slack notification: ', e);
   }
-}
-
-function skipNotification() {
-  return process.env.SKIP_NOTIFICATION === 'true';
 }
 
 function identifySyncType(
