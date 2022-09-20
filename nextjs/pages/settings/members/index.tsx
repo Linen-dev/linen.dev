@@ -64,24 +64,22 @@ export async function getServerSideProps(
 }
 
 function serializeUsers(
-  auths: (auths & {
-    users: users[];
+  users: (users & {
+    auth: auths | null;
   })[],
   invites: invites[]
 ): MembersType[] {
-  return auths.map(userToMember).concat(invites.map(inviteToMember));
+  return users.map(userToMember).concat(invites.map(inviteToMember));
 }
 
-function userToMember({
-  email,
-  users,
-}: auths & {
-  users: users[];
-}): MembersType {
-  const user = users.find(Boolean)!;
+function userToMember(
+  user: users & {
+    auth: auths | null;
+  }
+): MembersType {
   return {
     id: user.id,
-    email,
+    email: user.auth?.email || user.displayName,
     role: user.role,
     status: 'ACCEPTED',
   };

@@ -76,14 +76,14 @@ async function sendInvitationByEmail({
 }
 
 export async function findUsersAndInvitesByAccount(id: string): Promise<{
-  users: (auths & {
-    users: users[];
+  users: (users & {
+    auth: auths | null;
   })[];
   invites: invites[];
 }> {
-  const users = await prisma.auths.findMany({
-    include: { users: true },
-    where: { users: { some: { accountsId: id } } },
+  const users = await prisma.users.findMany({
+    where: { accountsId: id },
+    include: { auth: true },
   });
 
   const invites = await prisma.invites.findMany({

@@ -13,7 +13,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 export interface MembersType {
   id: string;
-  email: string;
+  email: string | null;
   role: Roles;
   status: 'PENDING' | 'ACCEPTED' | 'UNKNOWN' | string;
 }
@@ -76,12 +76,42 @@ function MemberStatus({ status }: { status: string }) {
 }
 
 function TableMembers({ users }: { users: MembersType[] }) {
+  function filterByEmail(e: any) {
+    const filter = e.target.value.toLowerCase();
+    const ul = document.getElementById('memberList');
+    if (!ul) return;
+    const li = ul.getElementsByTagName('li');
+    if (!li) return;
+    for (let i = 0; i < li.length; i++) {
+      let p = li[i].getElementsByTagName('p')[0];
+      if (p) {
+        let txtValue = p.textContent || p.innerText;
+        if (txtValue.toLowerCase().indexOf(filter) > -1) {
+          li[i].style.display = '';
+        } else {
+          li[i].style.display = 'none';
+        }
+      }
+    }
+  }
+
   return (
-    <div>
-      <ul role="list" className="flex flex-col pt-4 gap-0">
+    <>
+      <div className="flex pt-4">
+        <div className="grow">
+          <TextInput
+            id="filterByEmail"
+            placeholder="Filter by Email"
+            {...{
+              onKeyUp: filterByEmail,
+            }}
+          />
+        </div>
+      </div>
+      <ul role="list" id="memberList" className="flex flex-col gap-0">
         {users?.map((user) => RowMember(user))}
       </ul>
-    </div>
+    </>
   );
 }
 
@@ -132,7 +162,7 @@ function RowMember(user: MembersType): JSX.Element {
             )}
             <NativeSelect
               id={user.id}
-              defaultValue={data.role}
+              value={data.role}
               onChange={(e) => onChange(e, user.status)}
               disabled={loading}
               options={[
