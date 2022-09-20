@@ -74,6 +74,7 @@ async function update(request: NextApiRequest, response: NextApiResponse) {
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   const session = await getAuthFromSession(req, res);
   const body = JSON.parse(req.body);
+  const accountId = session.accountId!;
 
   if (req.method === 'PUT') {
     return update(req, res);
@@ -81,8 +82,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
     const externalChannelId = body.slack_channel_id || v4();
     const channelName = body.channel_name;
-    const accountId = session.accountId;
-
     const channel = await findOrCreateChannel({
       externalChannelId,
       channelName,
@@ -92,7 +91,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     return;
   }
   if (req.method === 'GET') {
-    const channels = await channelIndex(session.accountId);
+    const channels = await channelIndex(accountId);
     res.status(200).json(channels);
     return;
   }
