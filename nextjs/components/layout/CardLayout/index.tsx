@@ -20,7 +20,7 @@ const Layout = ({ header, children }: Props) => {
         </Link>
       </div>
       <Card>
-        <div className="px-10 py-8">
+        <div className={styles.content}>
           <h1 className={styles.header}>{header}</h1>
           {children}
         </div>

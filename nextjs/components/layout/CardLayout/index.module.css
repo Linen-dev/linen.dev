@@ -12,8 +12,22 @@
   text-align: center;
 }
 
+.content {
+  padding: 2rem 2.5rem;
+}
+
 .logo {
   display: flex;
   justify-content: center;
   margin-bottom: 2rem;
+}
+
+@media screen and (max-width: 767px) {
+  .page {
+    padding-top: 2rem;
+  }
+
+  .content {
+    padding: 1rem 1.5rem;
+  }
 }
