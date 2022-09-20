@@ -2,6 +2,12 @@
   position: relative;
 }
 
+.actions {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
 .messageForm {
   min-height: 75px;
 }
