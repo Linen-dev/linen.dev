@@ -4,10 +4,7 @@ import Image from 'next/image';
 import LinenLogo from 'components/Logo/Linen';
 import YCombinatorLogo from 'components/Logo/YCombinator';
 
-import { Popover } from '@headlessui/react';
 import Link from 'next/link';
-import { faBars } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import FadeIn from '../components/FadeIn';
 import Head from 'next/head';
 import Footer from '../components/Footer';
@@ -20,42 +17,32 @@ const Home = (props: { accounts: Props[] }) => {
         <title>Linen | Front page for your Slack and Discord Communities</title>
       </Head>
 
-      <Popover className="relative bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="flex justify-between items-center border-b-2 border-gray-100 py-6 md:justify-start md:space-x-10">
-            <div className="flex justify-start lg:w-0 lg:flex-1">
-              <Link href="/" passHref>
-                <a>
-                  <LinenLogo />
-                </a>
-              </Link>
-            </div>
-            <div className="-mr-2 -my-2 md:hidden">
-              <Popover.Button className="bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500">
-                <span className="sr-only">Open menu</span>
-                <FontAwesomeIcon
-                  icon={faBars}
-                  className="h-6 w-6"
-                  aria-hidden="true"
-                />
-              </Popover.Button>
-            </div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="flex justify-between items-center border-b-2 border-gray-100 py-6 md:justify-start md:space-x-10">
+          <div className="flex justify-start lg:w-0 lg:flex-1">
+            <Link href="/" passHref>
+              <a>
+                <LinenLogo />
+              </a>
+            </Link>
+          </div>
 
-            <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0">
-              <Link href="/signin" passHref>
-                <a className="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900">
-                  Sign in
-                </a>
-              </Link>
+          <div className="flex items-center justify-end md:flex-1 lg:w-0">
+            <Link href="/signin" passHref>
+              <a className="mr-4 whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900">
+                Sign in
+              </a>
+            </Link>
+            <div className="hidden md:block">
               <Link href="/signup" passHref>
-                <a className="ml-8 whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-blue-600 hover:bg-blue-700">
+                <a className="ml-4 whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-blue-600 hover:bg-blue-700">
                   Get Started
                 </a>
               </Link>
             </div>
           </div>
         </div>
-      </Popover>
+      </div>
 
       <main className="mt-10 mx-auto max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28">
         <div className="sm:text-center">
