@@ -234,7 +234,7 @@ export async function getServerSideProps(context: NextPageContext) {
     return {
       redirect: {
         permanent: false,
-        destination: '../403',
+        destination: '../settings?forbidden=1',
       },
     };
   }

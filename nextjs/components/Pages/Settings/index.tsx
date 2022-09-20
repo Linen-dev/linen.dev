@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import DashboardLayout from 'components/layout/DashboardLayout';
 import { toast } from 'components/Toast';
 import { SerializedAccount } from 'serializers/account';
@@ -12,10 +12,13 @@ import AnonymizeCard from './Settings/AnonymizeCard';
 import URLs from './Settings/Urls';
 import ImportFromSlack from './Settings/ImportFromSlack';
 import debounce from 'awesome-debounce-promise';
+import { ForbiddenCard } from './Settings/ForbiddenCard';
+import { useRouter } from 'next/router';
 
 export interface SettingsProps {
   account?: SerializedAccount;
   channels?: channels[];
+  forbidden?: boolean;
 }
 
 const updateAccount = debounce(
@@ -43,6 +46,35 @@ export function WaitForIntegration() {
 }
 
 export default function Settings(props: SettingsProps) {
+  const router = useRouter();
+
+  useEffect(() => {
+    const error = router.query.error as string;
+    if (error) {
+      toast.error('Something went wrong, please try again');
+      router.replace(window.location.pathname, undefined, { shallow: true });
+    }
+    const forbidden = router.query.forbidden as string;
+    if (forbidden) {
+      toast.info(
+        'Your current role does not have enough permissions to access this page'
+      );
+      router.replace(window.location.pathname, undefined, { shallow: true });
+    }
+    const success = router.query.success as string;
+    if (success) {
+      toast.success(decodeURI(success));
+      router.replace(window.location.pathname, undefined, { shallow: true });
+    }
+  }, [router.query, router]);
+
+  if (props.forbidden)
+    return (
+      <DashboardLayout header="Settings">
+        <ForbiddenCard />
+        <LinkCard {...props} />
+      </DashboardLayout>
+    );
   return (
     <DashboardLayout header="Settings" account={props.account}>
       <div className="grid grid-cols-1 gap-4">
