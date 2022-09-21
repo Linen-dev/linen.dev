@@ -9,6 +9,7 @@ interface Option {
 }
 
 interface Props {
+  className?: string;
   id: string;
   name?: string;
   label?: string;
@@ -23,6 +24,7 @@ interface Props {
 }
 
 function NativeSelect({
+  className,
   id,
   name,
   required,
@@ -39,7 +41,7 @@ function NativeSelect({
     <>
       {label && <Label htmlFor={id}>{label}</Label>}
       <div
-        className={classNames(styles.container, {
+        className={classNames(className, styles.container, {
           [styles.blue]: theme === 'blue',
           [styles.disabled]: disabled,
         })}

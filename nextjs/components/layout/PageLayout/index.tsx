@@ -70,7 +70,7 @@ function PageLayout({
           style={{ backgroundColor: settings.brandColor, gap: '24px' }}
         >
           <Link href={homeUrl || '/'} passHref>
-            <a className="cursor-pointer block">
+            <a className="cursor-pointer block" target="_blank">
               <img
                 className="block"
                 style={{ height: '32px' }}
@@ -113,7 +113,7 @@ function PageLayout({
           </div>
         </div>
       </div>
-      <div className="pt-3 sm:hidden w-full">
+      <div className="py-1 sm:hidden w-full">
         <SearchBar
           channels={channels}
           communityName={communityName}

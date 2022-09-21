@@ -1,10 +1,7 @@
 .thread {
-  margin-bottom: 2rem;
-  margin-top: 2rem;
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
+  padding: 1rem;
   max-width: 100%;
-  min-width: 320px;
+  min-width: 480px;
 }
 
 .footer {
@@ -16,6 +13,10 @@
 }
 
 @media (max-width: 767px) {
+  .thread {
+    min-width: 320px;
+  }
+
   .footer {
     min-width: 100%;
     width: 100%;

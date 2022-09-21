@@ -112,6 +112,11 @@ export function Thread({
         try {
           if (payload.body.message) {
             setMessages((messages) => {
+              const messageId = payload.body.message.id;
+              const index = messages.findIndex((t) => t.id === messageId);
+              if (index >= 0) {
+                return messages;
+              }
               return [...messages, payload.body.message];
             });
           }
@@ -148,7 +153,16 @@ export function Thread({
         }
         throw 'Could not send a message';
       })
-      .then((message: SerializedMessage) => {});
+      .then((message: SerializedMessage) => {
+        setMessages((messages) => {
+          const messageId = message.id;
+          const index = messages.findIndex((t) => t.id === messageId);
+          if (index >= 0) {
+            return messages;
+          }
+          return [...messages, message];
+        });
+      });
   };
 
   return (
@@ -157,15 +171,15 @@ export function Thread({
       <ul>{elements}</ul>
 
       <div className={styles.footer}>
+        <div className={styles.count}>
+          <span className={styles.subtext}>View count:</span> {viewCount + 1}
+        </div>
         {threadUrl && (
           <JoinChannelLink
             href={threadUrl}
             communityType={settings.communityType}
           />
         )}
-        <div className={styles.count}>
-          <span className={styles.subtext}>View count:</span> {viewCount + 1}
-        </div>
       </div>
       {isChatEnabled && permissions.chat && (
         <div className="w-full">

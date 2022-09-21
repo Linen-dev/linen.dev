@@ -13,7 +13,7 @@ export default function Header({ title, channelName, onClose, closed }: Props) {
     <div className="border-b border-solid border-gray-200 py-4 px-4">
       <div className="flex flex-row justify-between items-center">
         <div className="flex flex-row justify-center">
-          <div className="flex items-center md:hidden">
+          <div className="flex items-center md:hidden mr-2">
             <a onClick={onClose}>
               <AiOutlineLeft color="gray" />
             </a>
