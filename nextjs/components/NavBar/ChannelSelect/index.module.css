@@ -1,0 +1,13 @@
+.label {
+  display: block;
+}
+
+.select select {
+  border: none;
+}
+
+@media screen and (max-width: 1023px) {
+  .label {
+    display: none;
+  }
+}

@@ -113,7 +113,7 @@ function PageLayout({
           </div>
         </div>
       </div>
-      <div className="pt-3 sm:hidden w-full">
+      <div className="py-1 sm:hidden w-full">
         <SearchBar
           channels={channels}
           communityName={communityName}

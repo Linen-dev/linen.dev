@@ -53,7 +53,14 @@ export default function NavBar({
   );
 
   const navBarSm = (
-    <div className="px-6">
+    <div
+      className="py-1"
+      style={{
+        borderTop: '1px solid #e5e7eb;',
+        borderBottom: '1px solid #e5e7eb;',
+        boxShadow: '0 1px 5px #e5e7eb',
+      }}
+    >
       <ChannelSelect channels={sortedChannels} value={channelName} />
     </div>
   );
