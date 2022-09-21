@@ -1,13 +1,17 @@
 export function createRobotsTxt(domain: string) {
   return `
 User-agent: *
-Allow: /
+Disallow: /
+
+User-agent: *
+Allow: /$
+Allow: /s/
+Allow: /d/
+Allow: /t/
+Allow: /c/
+Allow: /feed
+Allow: /sitemap
+
 Sitemap: https://${domain}/sitemap.xml
 `.trim();
 }
-
-// Disallow: /*.json$
-// Disallow: /*_buildManifest.js$
-// Disallow: /*_middlewareManifest.js$
-// Disallow: /*_ssgManifest.js$
-// Disallow: /*.js$
