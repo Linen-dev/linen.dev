@@ -67,20 +67,23 @@ function PageLayout({
       <div className={styles.header}>
         <div
           className="flex h-20 px-4 py-4 items-center"
-          // Couldn't get the background color to work with tailwind custom color
-          style={{ backgroundColor: settings.brandColor }}
+          style={{ backgroundColor: settings.brandColor, gap: '24px' }}
         >
-          <Link href="/">
-            <img
-              className="cursor-pointer max-h-8"
-              src={logoUrl}
-              alt={`${homeUrl} logo`}
-            />
+          <Link href={homeUrl || '/'} passHref>
+            <a className="cursor-pointer">
+              <img
+                className="max-h-8"
+                style={{ minHeight: '32px' }}
+                src={logoUrl}
+                alt={`${homeUrl} logo`}
+              />
+            </a>
           </Link>
           <div
-            className="flex w-full"
+            className="flex w-full items-center"
             style={{
               justifyContent: 'flex-end',
+              gap: '24px',
             }}
           >
             <div className="hidden sm:flex w-full">
@@ -92,18 +95,10 @@ function PageLayout({
               />
             </div>
             <a
-              className="hidden sm:block md:block pt-1"
-              style={{ color: fontColor, fontWeight: 500, marginRight: '24px' }}
+              className="hidden sm:flex items-center text-sm"
+              style={{ color: fontColor, fontWeight: 500 }}
               rel="noreferrer"
-              target="_blank"
-              href={homeUrl}
-            >
-              Home
-            </a>
-            <a
-              className="hidden sm:block pt-1"
-              style={{ color: fontColor, fontWeight: 500, marginRight: '24px' }}
-              rel="noreferrer"
+              title="Documentation"
               target="_blank"
               href={docsUrl}
             >
