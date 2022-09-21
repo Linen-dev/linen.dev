@@ -2,25 +2,26 @@ import React, { useEffect, useState } from 'react';
 import classNames from 'classnames';
 import styles from './index.module.css';
 
-interface User {
+export interface SuggestionUser {
+  id: string;
   username: string;
   name?: string;
 }
 
 interface Props {
   className?: string;
-  fetch(): Promise<User[]>;
-  onSelect?(user: User): void;
+  fetch(): Promise<SuggestionUser[]>;
+  onSelect?(user: SuggestionUser): void;
 }
 
 export default function Suggestions({ className, fetch, onSelect }: Props) {
   const [selection, setSelection] = useState(0);
-  const [users, setUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState<SuggestionUser[]>([]);
 
   useEffect(() => {
     let mounted = true;
     fetch()
-      .then((users: User[]) => {
+      .then((users: SuggestionUser[]) => {
         if (mounted) {
           setUsers(users);
         }
@@ -76,7 +77,7 @@ export default function Suggestions({ className, fetch, onSelect }: Props) {
 
   return (
     <ul className={classNames(styles.suggestions, className)}>
-      {users.map((user: User, index: Number) => {
+      {users.map((user: SuggestionUser, index: Number) => {
         const { username, name } = user;
         return (
           <li

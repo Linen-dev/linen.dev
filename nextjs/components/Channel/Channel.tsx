@@ -16,6 +16,7 @@ import { scrollToBottom } from 'utilities/scroll';
 import styles from './index.module.css';
 import { v4 as uuid } from 'uuid';
 import debounce from 'awesome-debounce-promise';
+import { fetchMentions } from 'utilities/message/fetch/mentions';
 
 const debouncedSendMessage = debounce(
   ({ message, channelId, imitationId }) => {
@@ -379,6 +380,7 @@ export function Channel({
                 onSend={(message: string) => {
                   return sendMessage({ message, channelId: currentChannel.id });
                 }}
+                fetchMentions={fetchMentions}
               />
             </div>
           )}

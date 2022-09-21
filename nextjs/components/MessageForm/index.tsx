@@ -4,7 +4,7 @@ import Button from 'components/Button';
 import styles from './index.module.css';
 import classNames from 'classnames';
 import toast from 'components/Toast';
-import Suggestions from 'components/Suggestions';
+import Suggestions, { SuggestionUser } from 'components/Suggestions';
 import Preview from './Preview';
 import { isWhitespace } from 'utilities/string';
 import { getCaretPosition, setCaretPosition } from './utilities';
@@ -12,6 +12,7 @@ import { getCaretPosition, setCaretPosition } from './utilities';
 interface Props {
   onSend?(message: string): Promise<any>;
   onSendAndClose?(message: string): Promise<any>;
+  fetchMentions(): Promise<SuggestionUser[]>;
 }
 
 function isUndefined(character: string | undefined) {
@@ -37,7 +38,7 @@ enum Mode {
   Mention,
 }
 
-function MessageForm({ onSend, onSendAndClose }: Props) {
+function MessageForm({ onSend, onSendAndClose, fetchMentions }: Props) {
   const [message, setMessage] = useState('');
   const [preview, setPreview] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -96,16 +97,7 @@ function MessageForm({ onSend, onSendAndClose }: Props) {
       {mode === Mode.Mention && !preview && (
         <Suggestions
           className={styles.suggestions}
-          fetch={() =>
-            new Promise((resolve) => {
-              setTimeout(() => {
-                resolve([
-                  { username: 'john', name: 'John Doe' },
-                  { username: 'jim', name: 'Jim Jam' },
-                ]);
-              }, 250);
-            })
-          }
+          fetch={fetchMentions}
           onSelect={(user) => {
             setMessage((message) => {
               return [
