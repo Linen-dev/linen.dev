@@ -53,6 +53,7 @@ export function ThreadPage({
     >
       <div className="max-w-[700px]">
         <Thread
+          key={id}
           id={id}
           channelId={currentChannel.id}
           title={title}

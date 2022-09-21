@@ -2,7 +2,7 @@ import styles from './index.module.css';
 import { SerializedMessage } from 'serializers/message';
 import JoinChannelLink from 'components/Link/JoinChannelLink';
 import Row from 'components/Message/Row';
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { ThreadState } from '@prisma/client';
 import type { Settings } from 'serializers/account/settings';
 import { getThreadUrl } from 'components/Pages/ChannelsPage/utilities/url';
@@ -68,26 +68,24 @@ export function Thread({
     slug,
   });
 
-  const elements = useMemo(() => {
-    return messages.map((message, index) => {
-      const previousMessage = messages[index - 1];
-      const nextMessage = messages[index + 1];
-      const isPreviousMessageFromSameUser =
-        previousMessage && previousMessage.usersId === message.usersId;
-      const isNextMessageFromSameUser =
-        nextMessage && nextMessage.usersId === message.usersId;
-      return (
-        <Row
-          key={`${message.id}-${index}`}
-          message={message}
-          isPreviousMessageFromSameUser={isPreviousMessageFromSameUser}
-          isNextMessageFromSameUser={isNextMessageFromSameUser}
-          communityType={settings.communityType}
-          threadLink={threadLink}
-        />
-      );
-    });
-  }, [messages]);
+  const elements = messages.map((message, index) => {
+    const previousMessage = messages[index - 1];
+    const nextMessage = messages[index + 1];
+    const isPreviousMessageFromSameUser =
+      previousMessage && previousMessage.usersId === message.usersId;
+    const isNextMessageFromSameUser =
+      nextMessage && nextMessage.usersId === message.usersId;
+    return (
+      <Row
+        key={`${message.id}-${index}`}
+        message={message}
+        isPreviousMessageFromSameUser={isPreviousMessageFromSameUser}
+        isNextMessageFromSameUser={isNextMessageFromSameUser}
+        communityType={settings.communityType}
+        threadLink={threadLink}
+      />
+    );
+  });
 
   useEffect(() => {
     if (isChatEnabled) {
