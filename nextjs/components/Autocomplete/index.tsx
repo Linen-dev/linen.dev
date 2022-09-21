@@ -184,7 +184,6 @@ export default function Autocomplete({
       style={{
         position: 'relative',
         flex: '1 1 auto',
-        margin: '0 24px',
         zIndex: 100,
       }}
       onFocus={handleFocus}
