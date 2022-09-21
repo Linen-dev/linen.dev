@@ -70,11 +70,12 @@ function PageLayout({
           style={{ backgroundColor: settings.brandColor, gap: '24px' }}
         >
           <Link href={homeUrl || '/'} passHref>
-            <a className="cursor-pointer">
+            <a className="cursor-pointer block">
               <img
-                className="max-h-8"
-                style={{ minHeight: '32px' }}
+                className="block"
+                style={{ height: '32px' }}
                 src={logoUrl}
+                height="32"
                 alt={`${homeUrl} logo`}
               />
             </a>
