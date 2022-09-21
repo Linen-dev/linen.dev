@@ -15,7 +15,7 @@ import { Channel as PhoneixChannel, Socket } from 'phoenix';
 import { SerializedMessage } from 'serializers/message';
 
 export function Channel({
-  threads,
+  threads: initialThreads,
   currentChannel,
   settings,
   channelName,
@@ -27,7 +27,7 @@ export function Channel({
 }: ChannelViewProps) {
   const [init, setInit] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
-  const [currentThreads, setCurrentThreads] = useState<SerializedThread[]>();
+  const [threads, setThreads] = useState<SerializedThread[]>(initialThreads);
   const messagesEndRef = useRef<null | HTMLDivElement>(null);
   const scrollableRootRef = useRef<HTMLDivElement | null>(null);
   const lastDistanceToBottomRef = useRef<number>(0);
@@ -42,18 +42,12 @@ export function Channel({
   const [currentThread, setCurrentThread] = useState<SerializedThread>();
 
   async function loadThread(incrementId: number) {
-    const currentThread = currentThreads?.find(
-      (t) => t.incrementId === incrementId
-    );
+    const currentThread = threads.find((t) => t.incrementId === incrementId);
     if (currentThread) {
       setCurrentThread(currentThread);
     }
     setIsShowingThread(true);
   }
-
-  useEffect(() => {
-    setCurrentThreads(threads);
-  }, [threads]);
 
   const [infiniteRef, { rootRef }] = useInfiniteScroll({
     loading: isLoading,
@@ -86,7 +80,7 @@ export function Channel({
         scrollableRoot.scrollTop = lastScrollDistanceToTop;
       }
     }
-  }, [currentThreads]);
+  }, [threads]);
 
   useEffect(() => {
     if (isChatEnabled) {
@@ -111,15 +105,15 @@ export function Channel({
         try {
           if (payload.body.message) {
             const message: SerializedMessage = payload.body.message;
-            const threadId = payload.body.threadId;
 
-            setCurrentThreads((currentThreads) => {
-              const index = currentThreads?.findIndex((t) => t.id === threadId);
-              if (!index) {
-                return currentThreads;
+            setThreads((threads) => {
+              const threadId = payload.body.message.threadId;
+              const index = threads.findIndex(({ id }) => id === threadId);
+              if (index >= 0) {
+                return threads;
               }
 
-              const newThreads = [...(currentThreads ? currentThreads : [])];
+              const newThreads = [...threads];
               newThreads[index].messages = [
                 ...newThreads[index].messages,
                 message,
@@ -129,11 +123,13 @@ export function Channel({
           }
 
           if (payload.body.thread) {
-            setCurrentThreads((currentThreads) => {
-              return [
-                ...(currentThreads ? currentThreads : []),
-                payload.body.thread,
-              ];
+            setThreads((threads) => {
+              const threadId = payload.body.thread.id;
+              const index = threads.findIndex((t) => t.id === threadId);
+              if (index >= 0) {
+                return threads;
+              }
+              return [...threads, payload.body.thread];
             });
           }
         } catch (e) {
@@ -180,15 +176,9 @@ export function Channel({
         });
         setCursor({ ...cursor, [key]: data?.nextCursor?.[key] });
         if (next) {
-          setCurrentThreads([
-            ...(currentThreads ? currentThreads : []),
-            ...data.threads,
-          ]);
+          setThreads([...threads, ...data.threads]);
         } else {
-          setCurrentThreads([
-            ...data.threads,
-            ...(currentThreads ? currentThreads : []),
-          ]);
+          setThreads([...data.threads, ...threads]);
         }
       }
     } catch (err) {
@@ -219,7 +209,7 @@ export function Channel({
     window.addEventListener('resize', handleResize);
   });
 
-  if (!threads) {
+  if (threads.length === 0) {
     return <div />;
   }
 
@@ -236,12 +226,23 @@ export function Channel({
         body: message,
         channelId,
       }),
-    }).then((response) => {
-      if (response.ok) {
-        return response.json();
-      }
-      throw 'Could not send a message';
-    });
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+        throw 'Could not send a message';
+      })
+      .then((thread: SerializedThread) => {
+        setThreads((threads: SerializedThread[]) => {
+          const threadId = thread.id;
+          const index = threads.findIndex((t) => t.id === threadId);
+          if (index >= 0) {
+            return threads;
+          }
+          return [...threads, thread];
+        });
+      });
   };
 
   return (
@@ -277,7 +278,7 @@ export function Channel({
               <div />
             )}
             <Feed
-              threads={currentThreads}
+              threads={threads}
               isSubDomainRouting={isSubDomainRouting}
               settings={settings}
               isBot={isBot}

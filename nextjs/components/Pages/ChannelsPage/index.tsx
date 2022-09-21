@@ -38,7 +38,7 @@ export type ChannelViewProps = {
   channelName: string;
   channels?: channels[];
   currentChannel: channels;
-  threads?: SerializedThread[];
+  threads: SerializedThread[];
   isSubDomainRouting: boolean;
   nextCursor: ChannelViewCursorProps;
   pathCursor: string | null;

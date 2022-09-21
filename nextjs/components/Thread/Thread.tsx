@@ -112,6 +112,11 @@ export function Thread({
         try {
           if (payload.body.message) {
             setMessages((messages) => {
+              const messageId = payload.body.message.id;
+              const index = messages.findIndex((t) => t.id === messageId);
+              if (index >= 0) {
+                return messages;
+              }
               return [...messages, payload.body.message];
             });
           }
@@ -148,7 +153,16 @@ export function Thread({
         }
         throw 'Could not send a message';
       })
-      .then((message: SerializedMessage) => {});
+      .then((message: SerializedMessage) => {
+        setMessages((messages) => {
+          const messageId = message.id;
+          const index = messages.findIndex((t) => t.id === messageId);
+          if (index >= 0) {
+            return messages;
+          }
+          return [...messages, message];
+        });
+      });
   };
 
   return (
