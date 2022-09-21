@@ -13,6 +13,10 @@
 }
 
 @media (max-width: 767px) {
+  .thread {
+    min-width: 320px;
+  }
+
   .footer {
     min-width: 100%;
     width: 100%;
