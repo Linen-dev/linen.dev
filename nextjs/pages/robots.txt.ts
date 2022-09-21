@@ -31,4 +31,5 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   return domainValid(res, 'linen.dev');
 };
 
+// eslint-disable-next-line import/no-anonymous-default-export
 export default () => null;
