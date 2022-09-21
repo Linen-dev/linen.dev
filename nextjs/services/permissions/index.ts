@@ -44,7 +44,7 @@ export default class PermissionsService {
     account: accounts | null
   ): boolean {
     if (!community) {
-      return false;
+      return true;
     }
     if (community.type === AccountType.PRIVATE) {
       if (!account || account.id !== community.id) {
