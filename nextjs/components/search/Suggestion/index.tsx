@@ -2,7 +2,6 @@ import React from 'react';
 import { users } from '@prisma/client';
 import Avatar, { Size } from '../../Avatar';
 import Message from '../../Message';
-import { truncate } from 'utilities/string';
 import styles from './index.module.css';
 
 interface Props {
@@ -37,7 +36,7 @@ export default function Suggestion({
         </div>
       </div>
       <Message
-        text={truncate(body, 220)}
+        text={body}
         format={communityType}
         mentions={mentions.map((m: any) => m.users) || []}
       />

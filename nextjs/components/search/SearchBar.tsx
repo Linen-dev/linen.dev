@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import Autocomplete from '../Autocomplete';
 import { messages, channels } from '@prisma/client';
 import Suggestion from './Suggestion';
+import styles from './index.module.css';
 
 const parseResults = (data: messages[]) => {
   const allIds = new Set();
@@ -45,13 +46,15 @@ const SearchBar = ({
       const channelName = channel?.channelName;
 
       return (
-        <Suggestion
-          body={body}
-          // user={}
-          channelName={channelName}
-          mentions={mentions}
-          communityType={communityType}
-        />
+        <div className={styles.suggestion}>
+          <Suggestion
+            body={body}
+            // user={}
+            channelName={channelName}
+            mentions={mentions}
+            communityType={communityType}
+          />
+        </div>
       );
     },
     [channels]
