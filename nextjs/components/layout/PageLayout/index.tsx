@@ -70,7 +70,7 @@ function PageLayout({
           style={{ backgroundColor: settings.brandColor, gap: '24px' }}
         >
           <Link href={homeUrl || '/'} passHref>
-            <a className="cursor-pointer block">
+            <a className="cursor-pointer block" target="_blank">
               <img
                 className="block"
                 style={{ height: '32px' }}
