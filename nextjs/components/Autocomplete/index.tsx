@@ -235,7 +235,7 @@ export default function Autocomplete({
               style={{
                 fontSize: '14px',
                 margin: 0,
-                padding: '12px',
+                padding: '8px 12px',
                 textAlign: 'left',
                 color: '#888',
               }}
