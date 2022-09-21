@@ -66,7 +66,7 @@ function PageLayout({
       <div className={styles.push} />
       <div className={styles.header}>
         <div
-          className="flex h-20 px-4 py-4 items-center"
+          className="flex h-16 px-4 py-2 items-center"
           style={{ backgroundColor: settings.brandColor, gap: '24px' }}
         >
           <Link href={homeUrl || '/'} passHref>

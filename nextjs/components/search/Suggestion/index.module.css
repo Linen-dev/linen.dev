@@ -1,7 +1,5 @@
 .container {
-  border-bottom: 1px solid #eee;
   cursor: pointer;
-  padding: 0.75rem;
   position: relative;
 }
 
