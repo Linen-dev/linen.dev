@@ -58,7 +58,7 @@ export default function NavBar({
       style={{
         borderTop: '1px solid #e5e7eb;',
         borderBottom: '1px solid #e5e7eb;',
-        boxShadow: '0 1px 5px #e5e7eb',
+        boxShadow: '0 1px 2px #e5e7eb',
       }}
     >
       <ChannelSelect channels={sortedChannels} value={channelName} />
