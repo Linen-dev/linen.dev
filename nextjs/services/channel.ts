@@ -1,24 +1,16 @@
 import { findAccountByPath } from '../lib/models';
 import { GetServerSidePropsContext } from 'next/types';
 import { NotFound } from '../utilities/response';
-import {
-  serialize as serializeSettings,
-  Settings,
-} from 'serializers/account/settings';
+import { serialize as serializeSettings } from 'serializers/account/settings';
 import { findPreviousCursor, findThreadsByCursor } from '../lib/threads';
 import serializeThread from '../serializers/thread';
 import {
   AccountWithSlackAuthAndChannels,
   ThreadsWithMessagesFull,
 } from 'types/partialTypes';
-import { channels } from '@prisma/client';
+import type { channels } from '@prisma/client';
 import { decodeCursor, encodeCursor } from '../utilities/cursor';
 import { shouldThisChannelBeAnonymous } from '../lib/channel';
-import {
-  findAccountsFreeDiscordWithMessages,
-  findAccountsFreeSlackWithMessages,
-  findAccountsPremiumWithMessages,
-} from 'lib/account';
 import {
   ChannelViewCursorProps,
   ChannelResponse,
@@ -26,6 +18,11 @@ import {
 import { isBot } from 'next/dist/server/web/spec-extension/user-agent';
 import PermissionsService from 'services/permissions';
 import { RedirectTo } from 'utilities/response';
+import {
+  redirectChannelToDomain,
+  resolveCrawlerRedirect,
+  shouldRedirectToDomain,
+} from 'utilities/redirects';
 
 const CURSOR_LIMIT = 10;
 
@@ -51,12 +48,24 @@ export async function channelGetServerSideProps(
 
   const settings = serializeSettings(account);
 
+  if (
+    shouldRedirectToDomain({ account, communityName, isSubdomainbasedRouting })
+  ) {
+    return redirectChannelToDomain({
+      account,
+      communityName,
+      settings,
+      channelName,
+      channel,
+    });
+  }
+
   const isCrawler = isBot(context?.req?.headers?.['user-agent'] || '');
 
   if (isCrawler) {
     if (!channelName) {
       // should be redirect to <default_channel>/<first_page>
-      return resolveRedirect({
+      return resolveCrawlerRedirect({
         isSubdomainbasedRouting,
         communityName,
         settings,
@@ -65,7 +74,7 @@ export async function channelGetServerSideProps(
     }
     if (!page) {
       // should be redirect to first page
-      return resolveRedirect({
+      return resolveCrawlerRedirect({
         isSubdomainbasedRouting,
         communityName,
         settings,
@@ -166,27 +175,6 @@ function sortBySentAtAsc(
   return Number(a.sentAt) - Number(b.sentAt);
 }
 
-// TODO: clean up
-async function getPathsFromPrefix(pathPrefix: string) {
-  if (pathPrefix === '/subdomain') {
-    const accounts = await findAccountsPremiumWithMessages();
-    return accounts.map((account) => account.redirectDomain).filter(Boolean);
-  }
-  if (pathPrefix === '/d') {
-    const accounts = await findAccountsFreeDiscordWithMessages();
-    return accounts
-      .map((account) => account.discordDomain || account.discordServerId)
-      .filter(Boolean);
-  }
-  if (pathPrefix === '/s') {
-    const accounts = await findAccountsFreeSlackWithMessages();
-    return accounts
-      .map((account) => account.slackDomain || account.slackTeamId)
-      .filter(Boolean);
-  }
-  return [];
-}
-
 // TODO: Add unit test to this function
 async function buildCursor({
   pathCursor,
@@ -278,34 +266,5 @@ async function buildCursor({
   return {
     prev: encodeCursor(`desc:lt:${threads[0].sentAt}`),
     next: null,
-  };
-}
-
-function resolveRedirect({
-  isSubdomainbasedRouting,
-  communityName,
-  channelName,
-  settings,
-  channel,
-}: {
-  isSubdomainbasedRouting: boolean;
-  communityName: string;
-  channelName?: string;
-  settings: Settings;
-  channel: channels;
-}) {
-  let url = isSubdomainbasedRouting
-    ? '/'
-    : `/${settings.prefix}/${communityName}/`;
-
-  url += channelName ? `/c/${channelName}` : `/c/${channel.channelName}`;
-
-  url += `/${encodeCursor('asc:gt:0')}`;
-
-  return {
-    redirect: {
-      destination: url,
-      permanent: false,
-    },
   };
 }
