@@ -96,7 +96,7 @@ async function createChannelThreadsMessages({
     });
     const message1 = await prisma.messages.create({
       data: {
-        body: messages[i] || `foo-${i}`,
+        body: messages[i] || `foo-${i}-${random()}`,
         channelId: channel.id,
         threadId: thread.id,
         usersId: user1.id,
