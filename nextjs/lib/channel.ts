@@ -1,5 +1,5 @@
+import { accounts, Prisma } from '@prisma/client';
 import prisma from '../client';
-import { stripProtocol } from '../utilities/url';
 
 interface FindChannelParams {
   name: string;
@@ -112,4 +112,45 @@ export async function shouldThisChannelBeAnonymous(channelId: string) {
       select: { anonymizeUsers: true },
     })
     .then((account) => account?.anonymizeUsers);
+}
+
+const channelSerialized = Prisma.validator<Prisma.channelsFindManyArgs>()({
+  select: {
+    id: true,
+    channelName: true,
+    default: true,
+    hidden: true,
+    accountId: true,
+  },
+});
+
+export type ChannelSerialized = Prisma.channelsGetPayload<
+  typeof channelSerialized
+>;
+
+export async function findChannelsByAccount({
+  isCrawler,
+  account,
+}: {
+  isCrawler: boolean;
+  account: Partial<accounts>;
+}): Promise<ChannelSerialized[]> {
+  // if crawler, get only channels with threads
+  // for normal users, we may see channels empty (e.g. new channels)
+  return await prisma.channels.findMany({
+    ...channelSerialized,
+    where: {
+      hidden: false,
+      account: { id: account.id },
+      ...(isCrawler && {
+        threads: {
+          some: {
+            hidden: false,
+            messages: { some: {} },
+            messageCount: { gt: 1 },
+          },
+        },
+      }),
+    },
+  });
 }

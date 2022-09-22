@@ -263,16 +263,6 @@ export const findAccountByPath = async (
   });
 };
 
-export const channelsGroupByThreadCount = async (accountId: string) => {
-  return await prisma.threads.groupBy({
-    where: { channel: { account: { id: accountId } } },
-    by: ['channelId'],
-    _count: {
-      id: true,
-    },
-  });
-};
-
 export const createManyChannel = async (
   channels: Prisma.channelsCreateManyInput
 ) => {

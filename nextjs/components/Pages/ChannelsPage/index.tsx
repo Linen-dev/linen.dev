@@ -1,12 +1,13 @@
-import { channels, messages, mentions, users } from '@prisma/client';
-import { Settings } from 'serializers/account/settings';
+import type { messages, mentions, users } from '@prisma/client';
+import type { Settings } from 'serializers/account/settings';
 import ChannelPage from './ChannelPage';
-import {
+import type {
   SerializedAttachment,
   SerializedReaction,
   Permissions,
 } from 'types/shared';
-import { SerializedThread } from 'serializers/thread';
+import type { SerializedThread } from 'serializers/thread';
+import type { ChannelSerialized } from 'lib/channel';
 
 export type ChannelResponse = {
   props?: ChannelViewProps;
@@ -36,8 +37,8 @@ export type messageWithAuthor = messages & {
 export type ChannelViewProps = {
   settings: Settings;
   channelName: string;
-  channels?: channels[];
-  currentChannel: channels;
+  channels?: ChannelSerialized[];
+  currentChannel: ChannelSerialized;
   threads: SerializedThread[];
   isSubDomainRouting: boolean;
   nextCursor: ChannelViewCursorProps;

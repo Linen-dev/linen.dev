@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLinkContext } from 'contexts/Link';
-import { channels } from '@prisma/client';
+import type { ChannelSerialized } from 'lib/channel';
 import NativeSelect from 'components/NativeSelect';
 import CustomRouterPush from 'components/Link/CustomRouterPush';
 import { AiOutlineNumber } from 'react-icons/ai';
@@ -9,7 +9,7 @@ import styles from './index.module.css';
 
 interface Props {
   value: string;
-  channels: channels[];
+  channels: ChannelSerialized[];
 }
 
 export default function ChannelSelect({ value, channels }: Props) {
@@ -33,7 +33,7 @@ export default function ChannelSelect({ value, channels }: Props) {
       <NativeSelect
         className={styles.select}
         id="channel"
-        options={channels.map((channel: channels) => ({
+        options={channels.map((channel: ChannelSerialized) => ({
           label: channel.channelName,
           value: channel.channelName,
         }))}

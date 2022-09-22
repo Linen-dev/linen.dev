@@ -1,4 +1,4 @@
-import { channels } from '@prisma/client';
+import type { ChannelSerialized } from 'lib/channel';
 import ChannelName from './ChannelName';
 import ChannelSelect from './ChannelSelect';
 import { sortByChannelName } from './utilities';
@@ -12,7 +12,7 @@ export default function NavBar({
   channels,
   permissions,
 }: {
-  channels: channels[];
+  channels: ChannelSerialized[];
   channelName: string;
   permissions: Permissions;
 }) {
@@ -30,7 +30,7 @@ export default function NavBar({
         {!!isCreateChannelEnabled && <NewChannelModal />}
       </div>
       <div className="block overflow-hidden hover:overflow-auto h-[calc(100vh-240px)]">
-        {sortedChannels.map((c: channels) => (
+        {sortedChannels.map((c: ChannelSerialized) => (
           <Link key={c.channelName} href={`/c/${c.channelName}`}>
             <div className="text-gray-800">
               <ChannelName

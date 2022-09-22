@@ -3,7 +3,7 @@ import Link from 'next/link';
 import SearchBar from '../../search/SearchBar';
 import NavBar from '../../NavBar';
 import SEO, { type SeoProps } from '../SEO';
-import type { channels } from '@prisma/client';
+import type { ChannelSerialized } from 'lib/channel';
 import { addHttpsToUrl } from 'utilities/url';
 import { pickTextColorBasedOnBgColor } from 'utilities/util';
 import GoogleAnalytics from '../GoogleAnalytics';
@@ -19,8 +19,8 @@ interface Props {
   className?: string;
   seo?: SeoProps;
   children: React.ReactNode;
-  currentChannel?: channels;
-  channels?: channels[];
+  currentChannel?: ChannelSerialized;
+  channels?: ChannelSerialized[];
   communityUrl?: string;
   communityInviteUrl?: string;
   settings: Settings;
@@ -43,7 +43,7 @@ function PageLayout({
   permissions,
 }: Props) {
   const channels = initialChannels
-    ? initialChannels.filter((c: channels) => !c.hidden)
+    ? initialChannels.filter((c: ChannelSerialized) => !c.hidden)
     : [];
   const homeUrl = addHttpsToUrl(settings.homeUrl);
   const docsUrl = addHttpsToUrl(settings.docsUrl);

@@ -2,9 +2,10 @@ import { useCallback } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import Autocomplete from '../Autocomplete';
-import { messages, channels } from '@prisma/client';
+import type { messages } from '@prisma/client';
 import Suggestion from './Suggestion';
 import styles from './index.module.css';
+import { ChannelSerialized } from 'lib/channel';
 
 const parseResults = (data: messages[]) => {
   const allIds = new Set();
@@ -24,7 +25,7 @@ const SearchBar = ({
   isSubDomainRouting,
   communityType,
 }: {
-  channels: channels[];
+  channels: ChannelSerialized[];
   communityName: string;
   isSubDomainRouting: boolean;
   communityType: string;

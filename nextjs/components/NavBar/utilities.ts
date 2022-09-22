@@ -1,6 +1,8 @@
-import { channels } from '@prisma/client';
+import type { ChannelSerialized } from 'lib/channel';
 
-export function sortByChannelName(channels: channels[]): channels[] {
+export function sortByChannelName(
+  channels: ChannelSerialized[]
+): ChannelSerialized[] {
   return channels.sort((a, b) => {
     if (a.channelName < b.channelName) {
       return -1;
