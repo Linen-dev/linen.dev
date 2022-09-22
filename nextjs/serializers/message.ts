@@ -17,6 +17,7 @@ export interface SerializedMessage {
   mentions: MentionsWithUsers[];
   attachments: SerializedAttachment[];
   reactions: SerializedReaction[];
+  threadId: string;
 }
 
 export default function serialize(
@@ -24,6 +25,7 @@ export default function serialize(
 ): SerializedMessage {
   return {
     id: message.id,
+    threadId: message.threadId,
     body: message.body,
     // Have to convert to string b/c Nextjs doesn't support date hydration -
     // see: https://github.com/vercel/next.js/discussions/11498
