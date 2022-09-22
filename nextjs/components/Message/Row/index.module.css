@@ -1,3 +1,39 @@
+.row {
+  position: relative;
+}
+
+.avatar {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 46px;
+}
+
+.content {
+  position: relative;
+  padding-left: 46px;
+}
+
+.username {
+  font-weight: 600;
+  font-size: 0.875rem;
+  line-height: 1;
+  color: black;
+}
+
+.header {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  padding-bottom: 0.25rem;
+}
+
+.date {
+  color: rgb(156, 163, 175);
+  margin-left: 0.5rem;
+  font-size: 0.75rem;
+}
+
 .threadLink {
   display: none;
   float: right;

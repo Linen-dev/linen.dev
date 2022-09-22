@@ -1,48 +1,17 @@
 import React, { useState, useRef, useEffect } from 'react';
 import autosize from 'autosize';
 import Button from 'components/Button';
-import Message from 'components/Message';
 import styles from './index.module.css';
 import classNames from 'classnames';
 import toast from 'components/Toast';
 import Suggestions from 'components/Suggestions';
+import Preview from './Preview';
+import { isWhitespace } from 'utilities/string';
+import { getCaretPosition, setCaretPosition } from './utilities';
 
 interface Props {
   onSend?(message: string): Promise<any>;
   onSendAndClose?(message: string): Promise<any>;
-}
-
-const getCaretPosition = (ref: any) => {
-  if (!ref || !ref.current) {
-    return 0;
-  }
-  const node = ref.current;
-  return node.selectionStart;
-};
-
-const setCaretPosition = (ref: any, position: number) => {
-  if (!ref || !ref.current) {
-    return false;
-  }
-  const node = ref.current;
-
-  if (node.createTextRange) {
-    const range = node.createTextRange();
-    range.move('character', position);
-    range.select();
-  } else {
-    if (node.selectionStart) {
-      node.focus();
-      node.setSelectionRange(position, position);
-    } else {
-      node.focus();
-    }
-  }
-  return true;
-};
-
-function isWhitespace(character: string) {
-  return /\s/.test(character);
 }
 
 function isUndefined(character: string | undefined) {
@@ -189,23 +158,7 @@ function MessageForm({ onSend, onSendAndClose }: Props) {
             }
           }}
         />
-        {preview &&
-          (message ? (
-            <>
-              <div className="mx-px mt-px px-3 pt-2 pb-12">
-                <Message text={message} />
-              </div>
-              <hr className="pb-2 w-full" />
-            </>
-          ) : (
-            <>
-              <div className="mx-px mt-px px-3 pt-2 pb-12 text-sm leading-5 text-gray-800">
-                Preview content will render here.
-              </div>
-              <hr className="pb-2 w-full" />
-            </>
-          ))}
-
+        {preview && <Preview message={message} />}
         <div className={styles.toolbar}>
           {onSendAndClose && (
             <Button

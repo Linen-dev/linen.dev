@@ -24,6 +24,7 @@
   min-width: 96px;
   width: 100%;
   display: block;
+  line-height: 18px;
 }
 
 .select:focus {
@@ -56,6 +57,7 @@
   font-weight: bold;
 }
 
+.blue .select:hover,
 .blue .select:focus {
   background: #193cb7;
   border-color: #193cb7;
