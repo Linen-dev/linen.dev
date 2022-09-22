@@ -1,3 +1,18 @@
+.row {
+  position: relative;
+}
+
+.avatar {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 50px;
+}
+
+.content {
+  position: relative;
+  padding-left: 50px;
+}
 .threadLink {
   display: none;
   float: right;

@@ -31,7 +31,7 @@ export function MessageCard({
 }) {
   return (
     <div className="flex w-full">
-      <div className="flex pr-4">
+      <div className="flex pr-3">
         {author && (
           <Avatar
             key={`${incrementId}-${

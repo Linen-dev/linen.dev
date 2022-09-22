@@ -21,3 +21,7 @@
   font-weight: bold;
   font-size: 14px;
 }
+
+.item + .item {
+  margin-left: 2px;
+}

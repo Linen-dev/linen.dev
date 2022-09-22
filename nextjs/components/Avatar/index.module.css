@@ -21,16 +21,17 @@
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  border: 2px solid #fff;
+  border: 2px solid #6f00ff;
   width: 36px;
   height: 36px;
   text-align: center;
   text-transform: lowercase;
   line-height: 32px;
-  background-color: #edf2ff;
-  color: #4c6ef5;
-  font-weight: bold;
-  font-size: 14px;
+  color: white;
+  background-color: #6f00ff;
+  font-weight: 500;
+  font-size: 16px;
+  text-transform: uppercase;
 }
 
 .sm {
