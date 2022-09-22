@@ -10,6 +10,7 @@ import { captureException } from '@sentry/nextjs';
 import { toast } from 'components/Toast';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { AiOutlineUser } from 'react-icons/ai';
 
 export interface MembersType {
   id: string;
@@ -39,9 +40,11 @@ function InviteMember({
         <div className="shrink">
           <NativeSelect
             id="role"
+            icon={<AiOutlineUser />}
+            theme="blue"
             options={[
-              { label: Roles.MEMBER, value: Roles.MEMBER },
-              { label: Roles.ADMIN, value: Roles.ADMIN },
+              { label: 'Member', value: Roles.MEMBER },
+              { label: 'Admin', value: Roles.ADMIN },
             ]}
           />
         </div>
@@ -98,9 +101,10 @@ function TableMembers({ users }: { users: MembersType[] }) {
   return (
     <>
       <div className="flex pt-4">
-        <div className="grow">
+        <div className="grow mb-2">
           <TextInput
             id="filterByEmail"
+            label="Filters"
             placeholder="Filter by Email"
             {...{
               onKeyUp: filterByEmail,
@@ -146,8 +150,8 @@ function RowMember(user: MembersType): JSX.Element {
   };
 
   return (
-    <li key={user.id}>
-      <div className="border-gray-200 border-solid border">
+    <li key={user.id} className="mb-1">
+      <div className="border-gray-200 border-solid border rounded-md">
         <div className="flex justify-start items-center p-4">
           <p className="grow text-sm font-medium truncate">{user.email}</p>
           <div className="flex pr-4">
@@ -165,10 +169,12 @@ function RowMember(user: MembersType): JSX.Element {
               value={data.role}
               onChange={(e) => onChange(e, user.status)}
               disabled={loading}
+              icon={<AiOutlineUser />}
+              theme="blue"
               options={[
-                { label: Roles.MEMBER, value: Roles.MEMBER },
-                { label: Roles.ADMIN, value: Roles.ADMIN },
-                { label: Roles.OWNER, value: Roles.OWNER },
+                { label: 'Member', value: Roles.MEMBER },
+                { label: 'Admin', value: Roles.ADMIN },
+                { label: 'Owner', value: Roles.OWNER },
               ]}
             />
           </div>
