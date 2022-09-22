@@ -132,10 +132,10 @@ function PageLayout({
           className={
             className ||
             classNames(
-              'lg:h-[calc(100vh_-_80px)] lg:w-full',
+              'lg:h-[calc(100vh_-_64px)] lg:w-full',
               'md:flex',
               'sm:h-[calc(100vh_-_144px)]',
-              'justify-center overflow-auto h-[calc(100vh_-_192px)] w-full'
+              'justify-center overflow-auto h-[calc(100vh_-_152px)] w-full'
             )
           }
         >

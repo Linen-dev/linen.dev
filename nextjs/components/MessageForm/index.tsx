@@ -129,14 +129,14 @@ function MessageForm({ onSend, onSendAndClose }: Props) {
           }}
         />
       )}
-      <form className={styles.messageForm} onSubmit={handleSend}>
+      <form onSubmit={handleSend}>
         <textarea
           ref={ref}
           className={styles.textarea}
           name="message"
           placeholder="Add your comment..."
           hidden={preview}
-          rows={4}
+          rows={3}
           value={message}
           onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) => {
             const message = event.target.value;
@@ -150,6 +150,7 @@ function MessageForm({ onSend, onSendAndClose }: Props) {
             if (event.key === 'Enter') {
               if (event.ctrlKey) {
                 setMessage((message) => `${message}\n`);
+                setTimeout(() => autosize.update(ref.current), 0);
               } else {
                 handleSend(event);
               }

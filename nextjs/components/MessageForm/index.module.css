@@ -8,10 +8,6 @@
   margin-bottom: 0.5rem;
 }
 
-.messageForm {
-  min-height: 75px;
-}
-
 .textarea {
   font-size: 0.875rem;
   line-height: 1.25rem;
@@ -44,6 +40,7 @@
 
 .toolbar button {
   margin-right: 8px;
+  margin-bottom: 0;
 }
 
 .toolbar button:last-child {

@@ -18,7 +18,7 @@ export function Feed({
   onClick: (threadId: number) => void;
 }) {
   return (
-    <div>
+    <>
       {threads
         ?.filter((t) => t.messages.length > 0)
         .map(
@@ -82,7 +82,7 @@ export function Feed({
             );
           }
         )}
-    </div>
+    </>
   );
 }
 
