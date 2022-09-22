@@ -13,6 +13,7 @@ import Header from './Header';
 import { ThreadState } from '@prisma/client';
 import { Channel as PhoneixChannel, Socket } from 'phoenix';
 import { SerializedMessage } from 'serializers/message';
+import styles from './index.module.css';
 
 export function Channel({
   threads: initialThreads,
@@ -256,9 +257,9 @@ export function Channel({
         className="
         overflow-auto
 
-        lg:h-[calc(100vh_-_80px)]
+        lg:h-[calc(100vh_-_64px)]
         md:h-[calc(100vh_-_144px)] 
-        h-[calc(100vh_-_192px)]
+        h-[calc(100vh_-_152px)]
         lg:w-[calc(100vw_-_250px)]
         flex justify-left
         w-[100vw]
@@ -269,14 +270,14 @@ export function Channel({
         id="rootRefSetter"
       >
         <div className="sm:pt-6 justify-left w-full">
+          {cursor?.prev && !error?.prev ? (
+            <div className="m-3" ref={infiniteRef}>
+              <Spinner />
+            </div>
+          ) : (
+            <div />
+          )}
           <ul className="divide-y">
-            {cursor?.prev && !error?.prev ? (
-              <div className="m-3" ref={infiniteRef}>
-                <Spinner />
-              </div>
-            ) : (
-              <div />
-            )}
             <Feed
               threads={threads}
               isSubDomainRouting={isSubDomainRouting}
@@ -284,24 +285,24 @@ export function Channel({
               isBot={isBot}
               onClick={loadThread}
             />
-            {isChatEnabled && permissions.chat && (
-              <div className="w-full pt-4 px-4">
-                <MessageForm
-                  onSend={(message: string) =>
-                    sendMessage({ message, channelId: currentChannel.id })
-                  }
-                />
-              </div>
-            )}
-            {cursor.next && !error?.next ? (
-              <div className="m-3" ref={infiniteBottomRef}>
-                <Spinner />
-              </div>
-            ) : (
-              <div />
-            )}
-            <div ref={messagesEndRef} />
           </ul>
+          <div ref={messagesEndRef} />
+          {isChatEnabled && permissions.chat && (
+            <div className={styles.chat}>
+              <MessageForm
+                onSend={(message: string) =>
+                  sendMessage({ message, channelId: currentChannel.id })
+                }
+              />
+            </div>
+          )}
+          {cursor.next && !error?.next ? (
+            <div className="m-3" ref={infiniteBottomRef}>
+              <Spinner />
+            </div>
+          ) : (
+            <div />
+          )}
         </div>
       </Transition>
 

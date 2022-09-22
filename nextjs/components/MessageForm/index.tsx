@@ -20,6 +20,27 @@ const getCaretPosition = (ref: any) => {
   return node.selectionStart;
 };
 
+const setCaretPosition = (ref: any, position: number) => {
+  if (!ref || !ref.current) {
+    return false;
+  }
+  const node = ref.current;
+
+  if (node.createTextRange) {
+    const range = node.createTextRange();
+    range.move('character', position);
+    range.select();
+  } else {
+    if (node.selectionStart) {
+      node.focus();
+      node.setSelectionRange(position, position);
+    } else {
+      node.focus();
+    }
+  }
+  return true;
+};
+
 function isWhitespace(character: string) {
   return /\s/.test(character);
 }
@@ -129,19 +150,19 @@ function MessageForm({ onSend, onSendAndClose }: Props) {
           }}
         />
       )}
-      <form className={styles.messageForm} onSubmit={handleSend}>
+      <form onSubmit={handleSend}>
         <textarea
           ref={ref}
           className={styles.textarea}
           name="message"
           placeholder="Add your comment..."
           hidden={preview}
-          rows={4}
+          rows={3}
           value={message}
           onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) => {
             const message = event.target.value;
             setMessage(message);
-            setPosition(getCaretPosition(ref));
+            setTimeout(() => setPosition(getCaretPosition(ref)), 0);
           }}
           onKeyDown={(event: React.KeyboardEvent<HTMLTextAreaElement>) => {
             if (mode === Mode.Mention && isMentionKey(event.key)) {
@@ -149,7 +170,19 @@ function MessageForm({ onSend, onSendAndClose }: Props) {
             }
             if (event.key === 'Enter') {
               if (event.ctrlKey) {
-                setMessage((message) => `${message}\n`);
+                const position = getCaretPosition(ref);
+                setMessage((message) => {
+                  return [
+                    message.slice(0, position),
+                    '\n',
+                    message.slice(position),
+                  ].join('');
+                });
+                setTimeout(() => {
+                  setCaretPosition(ref, position + 1);
+                  setPosition(position + 1);
+                  autosize.update(ref.current);
+                }, 0);
               } else {
                 handleSend(event);
               }

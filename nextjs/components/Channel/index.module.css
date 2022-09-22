@@ -1,0 +1,8 @@
+.chat {
+  background: white;
+  border-top: 1px solid #e5e7eb;
+  bottom: 0;
+  padding: 1rem;
+  position: sticky;
+  width: 100%;
+}
