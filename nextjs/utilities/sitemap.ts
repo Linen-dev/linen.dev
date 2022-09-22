@@ -2,7 +2,7 @@ import type { accounts, channels } from '@prisma/client';
 import { SitemapIndexStream, SitemapStream, streamToPromise } from 'sitemap';
 import { Readable } from 'stream';
 import { encodeCursor } from './cursor';
-import { captureExceptionAndFlush } from 'utilities/sentry';
+import { captureException, flush } from '@sentry/nextjs';
 import { appendProtocol } from './url';
 import {
   findChannelByNameAndHost,
@@ -128,11 +128,12 @@ async function internalCreateSitemapByChannel(
     if (!next) break;
 
     if (chunks?.length && chunks.length >= 10000) {
-      await captureExceptionAndFlush({
+      captureException({
         error: "isn't issue, just a flag on sitemap builder process",
         problem: 'this channel has more than 10k threads',
         channel,
       });
+      await flush(2000);
       break;
     }
   }
@@ -164,8 +165,9 @@ async function queryThreads(
 
     nextCursor = threads.pop()?.sentAt;
   } catch (error) {
-    await captureExceptionAndFlush(error);
     console.error(error);
+    captureException(error);
+    await flush(2000);
     err = error;
   }
   return { err, nextCursor, chunk };

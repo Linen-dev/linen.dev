@@ -6,7 +6,7 @@ import { dispatchAnonymizeRequest } from 'utilities/anonymizeMessages';
 // The unstable_getServerSession only has the prefix unstable_ at the moment, because the API may change in the future. There are no known bugs at the moment and it is safe to use.
 import { unstable_getServerSession, Session } from 'next-auth';
 import { authOptions } from './auth/[...nextauth]';
-import { captureExceptionAndFlush, withSentry } from 'utilities/sentry';
+import { captureException, withSentry } from '@sentry/nextjs';
 import { generateRandomWordSlug } from 'utilities/randomWordSlugs';
 import { findAccountByEmail } from 'lib/models';
 import { AccountType, Roles } from '@prisma/client';
@@ -140,7 +140,7 @@ export async function update({
         },
       };
     }
-    await captureExceptionAndFlush(exception);
+    captureException(exception);
     return { status: 500 };
   }
 }

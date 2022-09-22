@@ -1,4 +1,4 @@
-import { captureExceptionAndFlush } from 'utilities/sentry';
+import { captureException, flush } from '@sentry/nextjs';
 import prisma from '../../client';
 import { discordSync } from '../../services/discord/sync';
 
@@ -43,7 +43,8 @@ async function runSync(accountId?: string, fullSync?: boolean) {
       })
       .catch((err) => {
         console.error('Syncing error: ', err, account);
-        return captureExceptionAndFlush(err);
+        captureException(err);
+        return flush(2000);
       });
   }
 }

@@ -1,7 +1,7 @@
 import { AccountWithSlackAuthAndChannels } from 'types/partialTypes';
 import { channelIndex, createManyChannel } from 'lib/models';
 import { sleep } from 'utilities/retryPromises';
-import { captureExceptionAndFlush } from 'utilities/sentry';
+import { captureException, flush } from '@sentry/nextjs';
 
 export async function createChannels({
   slackTeamId,
@@ -30,7 +30,8 @@ export async function createChannels({
   try {
     await createManyChannel(channelsParam);
   } catch (e) {
-    await captureExceptionAndFlush(e);
+    captureException(e);
+    await flush(2000);
     console.log('Error creating Channels:', e);
   }
 

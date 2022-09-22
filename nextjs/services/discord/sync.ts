@@ -5,7 +5,7 @@ import { processChannel } from './channels';
 import { CrawlType, DISCORD_TOKEN } from './constrains';
 import { crawlUsers } from './users';
 import { hideEmptyChannels } from '../../lib/channel';
-import { captureExceptionAndFlush } from 'utilities/sentry';
+import { captureException, flush } from '@sentry/nextjs';
 
 async function syncJob(accountId: string, crawlType: CrawlType) {
   console.log('sync stared', { accountId, crawlType });
@@ -68,7 +68,8 @@ export async function discordSync({
     };
   } catch (error) {
     await updateAndNotifySyncStatus(accountId, SyncStatus.ERROR);
-    await captureExceptionAndFlush(error);
+    captureException(error);
+    await flush(2000);
     console.error(error);
     return {
       status: 500,

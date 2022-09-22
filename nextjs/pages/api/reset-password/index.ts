@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
-import { captureExceptionAndFlush, withSentry } from 'utilities/sentry';
+import { captureException, withSentry } from '@sentry/nextjs';
 import prisma from '../../../client';
 import { generateHash } from '../../../utilities/password';
 
@@ -27,7 +27,7 @@ async function create(request: NextApiRequest, response: NextApiResponse) {
       },
     });
   } catch (exception) {
-    await captureExceptionAndFlush(exception);
+    captureException(exception);
     response.status(200).json({});
   }
   return response.status(200).json({});

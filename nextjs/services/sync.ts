@@ -1,7 +1,7 @@
 import ApplicationMailer from '../mailers/ApplicationMailer';
 import { updateAccountSyncStatus } from '../lib/models';
 import { sendNotification, slackSync } from './slack';
-import { captureExceptionAndFlush } from 'utilities/sentry';
+import { captureException, flush } from '@sentry/nextjs';
 import { SUPPORT_EMAIL } from 'secrets';
 import type {
   accounts,
@@ -47,10 +47,12 @@ async function emailNotification(
       html: `Syncing process is ${status} for account:  ${accountId}, ${accountName}, ${homeUrl}`,
     }).catch((err) => {
       console.log('Failed to send Email notification', err);
-      return captureExceptionAndFlush(err);
+      captureException(err);
+      return flush(2000);
     });
   } catch (error) {
-    await captureExceptionAndFlush(error);
+    captureException(error);
+    await flush(2000);
     console.error(error);
   }
 }
@@ -66,7 +68,8 @@ async function slackNotification(
       `Syncing process is ${status} for account: ${accountId}, ${accountName}, ${homeUrl}.`
     );
   } catch (e) {
-    await captureExceptionAndFlush(e);
+    captureException(e);
+    await flush(2000);
     console.error('Failed to send Slack notification: ', e);
   }
 }

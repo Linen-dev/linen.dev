@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import prisma from '../../../client';
-import { withSentry } from 'utilities/sentry';
+import { withSentry } from '@sentry/nextjs';
 
 async function update(request: NextApiRequest, response: NextApiResponse) {
   // TODO check user permissions

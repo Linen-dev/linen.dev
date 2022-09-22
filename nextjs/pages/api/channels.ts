@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next/types';
 import { channelIndex, findOrCreateChannel } from '../../lib/models';
 import prisma from '../../client';
 import { channels } from '@prisma/client';
-import { withSentry } from 'utilities/sentry';
+import { withSentry } from '@sentry/nextjs';
 import { v4 } from 'uuid';
 import { getAuthFromSession } from 'utilities/session';
 

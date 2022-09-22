@@ -4,7 +4,7 @@ import request from 'superagent';
 import prisma from '../../client';
 import { updateAccount } from '../../lib/models';
 import { timeoutAfter } from '../../utilities/retryPromises';
-import { captureException, withSentry } from 'utilities/sentry';
+import { captureException, withSentry } from '@sentry/nextjs';
 import { createSyncJob } from 'queue/jobs';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {

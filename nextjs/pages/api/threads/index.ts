@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
-import { withSentry } from 'utilities/sentry';
+import { withSentry } from '@sentry/nextjs';
 import { channelNextPage } from 'services/channel';
 
 async function get(request: NextApiRequest, response: NextApiResponse) {

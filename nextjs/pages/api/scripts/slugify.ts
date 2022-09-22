@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import { slugify } from '../../../services/slugify';
-import { withSentry } from 'utilities/sentry';
+import { withSentry } from '@sentry/nextjs';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   const response = await slugify();

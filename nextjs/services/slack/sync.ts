@@ -1,6 +1,6 @@
 import { findAccountById } from 'lib/models';
 import { SyncStatus, updateAndNotifySyncStatus } from 'services/sync';
-import { captureExceptionAndFlush } from 'utilities/sentry';
+import { captureException, flush } from '@sentry/nextjs';
 import {
   fetchTeamInfo,
   fetchReplies,
@@ -69,8 +69,8 @@ export async function slackSync({
       body: {},
     };
   } catch (err) {
-    await captureExceptionAndFlush(err);
     console.error(err);
+    captureException(err);
 
     await updateAndNotifySyncStatus(
       accountId,
@@ -79,6 +79,7 @@ export async function slackSync({
       account.homeUrl
     );
 
+    await flush(2000);
     throw {
       status: 500,
       error: String(err),
