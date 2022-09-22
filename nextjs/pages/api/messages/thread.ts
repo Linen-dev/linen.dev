@@ -2,7 +2,7 @@ import { findMessagesFromChannel } from 'lib/models';
 import { unstable_getServerSession } from 'next-auth';
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import { authOptions } from '../auth/[...nextauth]';
-import { withSentry } from 'utilities/sentry';
+import { withSentry } from '@sentry/nextjs';
 import { prisma } from 'client';
 import serializeMessage from 'serializers/message';
 import { push } from 'services/push';

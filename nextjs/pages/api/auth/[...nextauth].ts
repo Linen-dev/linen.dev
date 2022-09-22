@@ -3,7 +3,7 @@ import EmailProvider from 'next-auth/providers/email';
 import prisma from 'client';
 import { CustomPrismaAdapter } from 'lib/auth';
 import SignInMailer from 'mailers/SignInMailer';
-import { captureExceptionAndFlush } from 'utilities/sentry';
+import { captureException, flush } from '@sentry/nextjs';
 import { NOREPLY_EMAIL } from 'secrets';
 
 export const authOptions = {
@@ -43,8 +43,8 @@ export const authOptions = {
             );
           }
         } catch (error) {
-          await captureExceptionAndFlush(error);
-          // throw error;
+          captureException(error);
+          await flush(1000);
         }
       },
     }),

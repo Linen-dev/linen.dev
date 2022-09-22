@@ -9,7 +9,7 @@ import { processReactions } from './reactions';
 import { processAttachments } from './attachments';
 import { getMentionedUsers } from './getMentionedUsers';
 import { parseSlackSentAt, tsToSentAt } from 'utilities/sentAt';
-import { captureExceptionAndFlush } from 'utilities/sentry';
+import { captureException, flush } from '@sentry/nextjs';
 
 async function saveMessagesSynchronous(
   messages: ConversationHistoryMessage[],
@@ -135,7 +135,8 @@ export async function saveAllThreads({
           }
         } catch (e) {
           console.error(e);
-          await captureExceptionAndFlush(e);
+          captureException(e);
+          await flush(2000);
         }
       })
     );

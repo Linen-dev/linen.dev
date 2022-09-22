@@ -2,7 +2,7 @@ import { anonymizeMessagesMentions } from 'utilities/anonymizeMessages';
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import prisma from '../../client';
 import { messages, Prisma, mentions, threads, users } from '@prisma/client';
-import { withSentry } from 'utilities/sentry';
+import { withSentry } from '@sentry/nextjs';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   const query = req.query.query as string;

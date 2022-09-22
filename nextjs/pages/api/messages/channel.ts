@@ -2,10 +2,9 @@ import { findMessagesFromChannel } from 'lib/models';
 import { unstable_getServerSession } from 'next-auth';
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import { authOptions } from '../auth/[...nextauth]';
-import { withSentry } from 'utilities/sentry';
+import { withSentry } from '@sentry/nextjs';
 import { prisma } from 'client';
 import serializeThread from 'serializers/thread';
-import request, * as agent from 'superagent';
 import { push } from 'services/push';
 
 async function handler(request: NextApiRequest, response: NextApiResponse) {

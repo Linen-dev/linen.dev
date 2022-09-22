@@ -1,4 +1,4 @@
-import { captureExceptionAndFlush } from 'utilities/sentry';
+import { captureException, flush } from '@sentry/nextjs';
 import prisma from '../../client';
 import { createSlug } from '../../utilities/util';
 
@@ -36,8 +36,9 @@ export async function slugify() {
       body: {},
     };
   } catch (error) {
-    await captureExceptionAndFlush(error);
     console.error(error);
+    captureException(error);
+    await flush(2000);
     return {
       status: 500,
       body: { error: 'Internal server error' },

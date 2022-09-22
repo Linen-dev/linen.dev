@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { anonymizeUsersFromAccount } from '../../../services/anonymize';
-import { withSentry } from 'utilities/sentry';
+import { withSentry } from '@sentry/nextjs';
 
 async function handler(request: NextApiRequest, response: NextApiResponse) {
   const accountId = request.query.account_id as string;

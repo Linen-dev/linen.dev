@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import stripe from 'services/stripe';
-import { withSentry } from 'utilities/sentry';
+import { withSentry } from '@sentry/nextjs';
 
 const HOST = process.env.NEXTAUTH_URL || 'http://localhost:3000';
 
