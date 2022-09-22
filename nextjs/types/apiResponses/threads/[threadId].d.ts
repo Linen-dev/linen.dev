@@ -20,12 +20,12 @@ export type ThreadById = {
   slug: string;
   messageCount: number;
   channelId: string;
-  currentChannel: channels;
+  currentChannel: ChannelSerialized;
   messages: SerializedMessage[];
-  channel: channels;
+  channel: ChannelSerialized;
   threadId: string;
   authors: users[];
-  channels: channels[];
+  channels: ChannelSerialized[];
   threadUrl: string | null;
   settings: Settings;
   pathCursor: string;

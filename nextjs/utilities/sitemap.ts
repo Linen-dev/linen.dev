@@ -1,58 +1,49 @@
-import type { channels } from '@prisma/client';
+import type { accounts, channels } from '@prisma/client';
 import { SitemapIndexStream, SitemapStream, streamToPromise } from 'sitemap';
 import { Readable } from 'stream';
 import { encodeCursor } from './cursor';
 import { captureExceptionAndFlush } from 'utilities/sentry';
-import createDebug from 'debug';
 import { appendProtocol } from './url';
 import {
-  getAccountByHostWithChannelsStats,
-  findAccountByNameWithChannelsStats,
   findChannelByNameAndHost,
-  findFreeAccountsWithChannelsStats,
   findThreadsByChannelAndCursor,
-  type AccountsWithChannelsStats,
 } from 'lib/sitemap';
+import { findAccountByPath } from 'lib/models';
+import { findChannelsByAccount } from 'lib/channel';
+import { findFreeAccountsWithThreads } from 'lib/account';
 
-const debug = createDebug('linen:sitemap');
-
-function resolveDomain(account: AccountsWithChannelsStats) {
+function resolveDomain(account: Partial<accounts>) {
   return (
-    account.discordDomain ||
-    account.slackDomain ||
-    account.discordServerId ||
-    account.slackTeamId
+    account.discordDomain || account.slackDomain || account.discordServerId
   );
 }
 
-function resolveCommunityPrefix(account: AccountsWithChannelsStats) {
+function resolveCommunityPrefix(account: Partial<accounts>) {
   return !!account.discordDomain || !!account.discordServerId ? 'd' : 's';
-}
-
-function hasChannelsWithThreads(account: AccountsWithChannelsStats) {
-  return (
-    account.channels &&
-    account.channels.length &&
-    account.channels.find((e) => e._count.messages) &&
-    account.channels.find((e) => e._count.threads)
-  );
 }
 
 export async function createSitemapForPremium(
   host: string,
   sitemapBuilder: (urls: string[]) => Promise<string> = buildSitemapIndexStream
 ) {
-  const account = await getAccountByHostWithChannelsStats(host);
+  const account = await findAccountByPath(host);
 
   if (!account) {
     throw 'account not found';
   }
+  if (account.type === 'PRIVATE') {
+    throw 'account is private';
+  }
 
-  const urls = account.channels
-    .filter((c) => c._count.messages > 0 && c._count.threads > 0)
-    .map(({ channelName }) =>
-      encodeURI(`${appendProtocol(host)}/sitemap/c/${channelName}/chunk.xml`)
-    );
+  const channels = await findChannelsByAccount({ account, isCrawler: true });
+
+  if (!channels.length) {
+    throw 'account without public channels';
+  }
+
+  const urls = channels.map(({ channelName }) =>
+    encodeURI(`${appendProtocol(host)}/sitemap/c/${channelName}/chunk.xml`)
+  );
 
   return sitemapBuilder(urls);
 }
@@ -61,25 +52,17 @@ export async function createSitemapForLinen(
   host: string,
   sitemapBuilder: (urls: string[]) => Promise<string> = buildSitemapIndexStream
 ) {
-  const freeAccounts = await findFreeAccountsWithChannelsStats();
-
-  if (!freeAccounts || !freeAccounts.length) return '';
-  debug('accounts', freeAccounts);
+  const freeAccounts = await findFreeAccountsWithThreads();
+  if (!freeAccounts || !freeAccounts.length) {
+    throw 'no free accounts';
+  }
 
   const httpHost = appendProtocol(host);
 
   const urls = freeAccounts
     .filter((account) => {
-      if (!hasChannelsWithThreads(account)) {
-        debug('account without channels', account.id);
-        return false;
-      }
       const domain = resolveDomain(account);
-      if (!domain) {
-        debug('account without name', account.id);
-        return false;
-      }
-      return true;
+      return !!domain;
     })
     .map((account) => {
       const letter = resolveCommunityPrefix(account);
@@ -88,7 +71,6 @@ export async function createSitemapForLinen(
     })
     .filter(Boolean);
 
-  debug('urls', urls);
   return sitemapBuilder(urls);
 }
 
@@ -98,25 +80,22 @@ export async function createSitemapForFree(
   communityPrefix: string,
   sitemapBuilder: (urls: string[]) => Promise<string> = buildSitemapIndexStream
 ) {
-  debug('request', { host, community, communityPrefix });
-  // community could be discordServerId/discordDomain or slackDomain
-  const account = await findAccountByNameWithChannelsStats(community);
-  debug('account %o', account);
+  const account = await findAccountByPath(community);
   if (!account) {
     throw "account doesn't exist";
+  }
+  if (account.type === 'PRIVATE') {
+    throw 'account is private';
   }
 
   const httpHost = appendProtocol(host);
 
-  const urls = account.channels
-    .filter((c) => c._count.messages > 0 && c._count.threads > 0)
-    .map(({ channelName, ...rest }) =>
-      encodeURI(
-        `${httpHost}/sitemap/${communityPrefix}/${community}/c/${channelName}/chunk.xml`
-      )
-    );
-
-  debug('channels %o', urls.length);
+  const channels = await findChannelsByAccount({ account, isCrawler: true });
+  const urls = channels.map(({ channelName }) =>
+    encodeURI(
+      `${httpHost}/sitemap/${communityPrefix}/${community}/c/${channelName}/chunk.xml`
+    )
+  );
 
   if (!urls.length) {
     throw "account doesn't have channels";

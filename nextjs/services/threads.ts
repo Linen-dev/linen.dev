@@ -1,9 +1,5 @@
 import serializeThread from '../serializers/thread';
-import {
-  channelIndex,
-  findAccountByPath,
-  channelsGroupByThreadCount,
-} from '../lib/models';
+import { findAccountByPath } from '../lib/models';
 import { findThreadById } from '../lib/threads';
 import { ThreadByIdProp } from '../types/apiResponses/threads/[threadId]';
 import type { users } from '@prisma/client';
@@ -14,6 +10,8 @@ import { captureException } from '@sentry/nextjs';
 import { encodeCursor } from 'utilities/cursor';
 import PermissionsService from 'services/permissions';
 import { RedirectTo } from 'utilities/response';
+import { findChannelsByAccount } from 'lib/channel';
+import { isBot } from 'next/dist/server/web/spec-extension/user-agent';
 import {
   redirectThreadToDomain,
   shouldRedirectToDomain,
@@ -71,26 +69,12 @@ export async function threadGetServerSideProps(
         slug,
       });
     }
+    const isCrawler = isBot(context?.req?.headers?.['user-agent'] || '');
 
-    const [channels, channelsResponse] = await Promise.all([
-      channelIndex(thread.channel.accountId, { hidden: false }),
-      channelsGroupByThreadCount(thread?.channel?.accountId),
-    ]);
-
-    //Filter out channels with less than 20 threads
-    const channelsWithMinThreads = channels
-      .filter((c) => !c.hidden)
-      .filter((c) => {
-        if (c.id === thread?.channel?.id) {
-          return true;
-        }
-
-        const channelCount = channelsResponse.find((r) => {
-          return r.channelId === c.id;
-        });
-
-        return channelCount && channelCount._count.id > 2;
-      });
+    const channels = await findChannelsByAccount({
+      isCrawler,
+      account,
+    });
 
     const authors = thread.messages
       .map((m) => m.author)
@@ -125,6 +109,8 @@ export async function threadGetServerSideProps(
       threadUrl = `https://discord.com/channels/${account.discordServerId}/${thread.channel.externalChannelId}/${thread.externalThreadId}`;
     }
 
+    const currentChannel = channels.find((c) => c.id === thread.channel?.id)!;
+
     return {
       props: {
         id: thread.id,
@@ -133,13 +119,13 @@ export async function threadGetServerSideProps(
         slug: thread.slug || '',
         externalThreadId: thread.externalThreadId,
         messageCount: thread.messageCount,
-        channelId: thread.channel.id,
-        channel: thread.channel,
+        channelId: currentChannel.id,
+        channel: currentChannel,
         authors: authors,
         messages: serializeThread(thread).messages,
         threadId,
-        currentChannel: thread.channel,
-        channels: channelsWithMinThreads,
+        currentChannel,
+        channels,
         threadUrl,
         settings,
         pathCursor: encodeCursor(`asc:gte:${thread.sentAt.toString()}`),

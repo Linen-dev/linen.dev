@@ -1,3 +1,4 @@
+import { AccountType } from '@prisma/client';
 import prisma from '../client';
 import { stripProtocol } from '../utilities/url';
 
@@ -74,7 +75,30 @@ export async function findAccountsPremium() {
     },
     where: {
       redirectDomain: { not: null },
+      type: AccountType.PUBLIC,
     },
     orderBy: { redirectDomain: 'asc' },
+  });
+}
+
+export async function findFreeAccountsWithThreads() {
+  return await prisma.accounts.findMany({
+    select: { discordDomain: true, slackDomain: true, discordServerId: true },
+    where: {
+      type: AccountType.PUBLIC,
+      premium: false,
+      channels: {
+        some: {
+          hidden: false,
+          threads: {
+            some: {
+              hidden: false,
+              messages: { some: {} },
+              messageCount: { gt: 1 },
+            },
+          },
+        },
+      },
+    },
   });
 }

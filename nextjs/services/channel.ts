@@ -4,13 +4,13 @@ import { NotFound } from '../utilities/response';
 import { serialize as serializeSettings } from 'serializers/account/settings';
 import { findPreviousCursor, findThreadsByCursor } from '../lib/threads';
 import serializeThread from '../serializers/thread';
-import {
-  AccountWithSlackAuthAndChannels,
-  ThreadsWithMessagesFull,
-} from 'types/partialTypes';
-import type { channels } from '@prisma/client';
+import { ThreadsWithMessagesFull } from 'types/partialTypes';
 import { decodeCursor, encodeCursor } from '../utilities/cursor';
-import { shouldThisChannelBeAnonymous } from '../lib/channel';
+import {
+  ChannelSerialized,
+  findChannelsByAccount,
+  shouldThisChannelBeAnonymous,
+} from '../lib/channel';
 import {
   ChannelViewCursorProps,
   ChannelResponse,
@@ -34,16 +34,20 @@ export async function channelGetServerSideProps(
   if (!permissions.access) {
     return RedirectTo('/signin');
   }
+  const isCrawler = isBot(context?.req?.headers?.['user-agent'] || '');
   const communityName = context.params?.communityName as string;
   const channelName = context.params?.channelName as string;
   const page = context.params?.page as string | undefined;
   const cursor = page && parsePageParam(page);
 
-  const account = (await findAccountByPath(communityName, {
-    include: { channels: { where: { hidden: false } } },
-  })) as AccountWithSlackAuthAndChannels;
+  const account = await findAccountByPath(communityName);
   if (!account) return NotFound();
-  const channel = findChannelOrDefault(account.channels, channelName);
+
+  const channels = await findChannelsByAccount({
+    isCrawler,
+    account,
+  });
+  const channel = findChannelOrDefault(channels, channelName);
   if (!channel) return NotFound();
 
   const settings = serializeSettings(account);
@@ -59,8 +63,6 @@ export async function channelGetServerSideProps(
       channel,
     });
   }
-
-  const isCrawler = isBot(context?.req?.headers?.['user-agent'] || '');
 
   if (isCrawler) {
     if (!channelName) {
@@ -110,7 +112,7 @@ export async function channelGetServerSideProps(
       nextCursor,
       currentChannel: channel,
       channelName: channel.channelName,
-      channels: account.channels,
+      channels,
       threads: threads.map(serializeThread),
       settings,
       isSubDomainRouting: isSubdomainbasedRouting,
@@ -121,7 +123,10 @@ export async function channelGetServerSideProps(
   };
 }
 
-function findChannelOrDefault(channels: channels[], channelName: string) {
+function findChannelOrDefault(
+  channels: ChannelSerialized[],
+  channelName: string
+) {
   if (channelName) {
     return channels.find((c) => c.channelName === channelName);
   }

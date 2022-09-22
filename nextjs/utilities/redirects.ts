@@ -1,8 +1,9 @@
-import type { accounts, channels } from '@prisma/client';
+import type { accounts } from '@prisma/client';
 import { Settings } from 'serializers/account/settings';
 import { RedirectTo } from './response';
 import { encodeCursor } from 'utilities/cursor';
 import { appendProtocol } from './url';
+import { ChannelSerialized } from 'lib/channel';
 
 export function resolveCrawlerRedirect({
   isSubdomainbasedRouting,
@@ -15,7 +16,7 @@ export function resolveCrawlerRedirect({
   communityName: string;
   channelName?: string;
   settings: Settings;
-  channel: channels;
+  channel: ChannelSerialized;
 }) {
   let url = buildChannelUrl({
     isSubdomainbasedRouting,
@@ -64,7 +65,7 @@ export function redirectChannelToDomain({
   communityName: string;
   settings: Settings;
   channelName: string;
-  channel: channels;
+  channel: ChannelSerialized;
 }) {
   return RedirectTo(
     appendProtocol(
@@ -118,7 +119,7 @@ function buildChannelUrl({
   settings: Settings;
   communityName: string;
   channelName: string | undefined;
-  channel: channels;
+  channel: ChannelSerialized;
 }) {
   let url = isSubdomainbasedRouting
     ? ''
