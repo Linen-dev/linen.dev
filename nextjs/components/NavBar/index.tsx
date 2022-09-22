@@ -56,8 +56,8 @@ export default function NavBar({
     <div
       className="py-1"
       style={{
-        borderTop: '1px solid #e5e7eb;',
-        borderBottom: '1px solid #e5e7eb;',
+        borderTop: '1px solid #e5e7eb',
+        borderBottom: '1px solid #e5e7eb',
         boxShadow: '0 1px 2px #e5e7eb',
       }}
     >

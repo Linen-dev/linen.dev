@@ -1,5 +1,9 @@
 # PushService
 
+The service is using elixir, so you need to set it up first.
+
+- Install Elixir: https://elixir-lang.org/install.html
+
 To start the push service:
 
 - Create a secret i.e a string see .env.example

@@ -104,16 +104,16 @@ export function Channel({
       channel.on('new_msg', (payload) => {
         try {
           if (payload.body.message) {
-            const message: SerializedMessage = payload.body.message;
-
             setThreads((threads) => {
-              const threadId = payload.body.message.threadId;
+              const message: SerializedMessage = payload.body.message;
+              const { threadId } = message;
               const index = threads.findIndex(({ id }) => id === threadId);
-              if (index >= 0) {
+              if (index === -1) {
                 return threads;
               }
 
               const newThreads = [...threads];
+
               newThreads[index].messages = [
                 ...newThreads[index].messages,
                 message,
