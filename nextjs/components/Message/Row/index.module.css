@@ -6,12 +6,12 @@
   position: absolute;
   left: 0;
   top: 0;
-  width: 50px;
+  width: 46px;
 }
 
 .content {
   position: relative;
-  padding-left: 50px;
+  padding-left: 46px;
 }
 
 .username {

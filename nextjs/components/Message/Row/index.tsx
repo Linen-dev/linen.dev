@@ -23,19 +23,17 @@ export function Row({
   children,
 }: Props) {
   return (
-    <li id={message.id} className={classNames(styles.row)} key={message.id}>
+    <div id={message.id} className={classNames(styles.row)} key={message.id}>
       <div className={styles.avatar}>
         {!isPreviousMessageFromSameUser && (
-          <div className="flex pr-3">
-            <Avatar
-              size={Size.lg}
-              alt={message.author?.displayName || 'avatar'}
-              src={message.author?.profileImageUrl}
-              text={(message.author?.displayName || '?')
-                .slice(0, 1)
-                .toLowerCase()}
-            />
-          </div>
+          <Avatar
+            size={Size.lg}
+            alt={message.author?.displayName || 'avatar'}
+            src={message.author?.profileImageUrl}
+            text={(message.author?.displayName || '?')
+              .slice(0, 1)
+              .toLowerCase()}
+          />
         )}
       </div>
       <div className={styles.content}>
@@ -67,7 +65,7 @@ export function Row({
           {children}
         </div>
       </div>
-    </li>
+    </div>
   );
 }
 

@@ -6,45 +6,50 @@ import CopyToClipboardIcon from '../Pages/ChannelsPage/CopyToClipboardIcon';
 import type { Settings } from 'serializers/account/settings';
 import Row from 'components/Message/Row';
 
+export const uniqueUsers = (users: users[]): users[] => {
+  let userMap = new Map<string, users>();
+
+  users.forEach((user) => {
+    userMap.set(user.id, user);
+  });
+
+  return Array.from(userMap.values());
+};
+
 export function MessageCard({
   incrementId,
-  oldestMessage,
-  authors,
   messages,
   isSubDomainRouting,
   settings,
   slug,
 }: {
   incrementId: number;
-  oldestMessage: SerializedMessage;
-  authors: users[];
   messages: SerializedMessage[];
   isSubDomainRouting: boolean;
   settings: Settings;
   slug: string | null;
 }) {
+  let users = messages.map((m) => m.author).filter(Boolean) as users[];
+  const authors = uniqueUsers(users.slice(0, -1));
+  const oldestMessage = messages[0];
   return (
     <Row message={oldestMessage} communityType={settings.communityType}>
-      <div className="flex flex-row items-center pt-2 pr-2">
-        <div className="text-sm text-gray-400 flex flex-row items-center">
-          <Avatars
-            users={
-              authors.map((a) => ({
-                src: a.profileImageUrl,
-                alt: a.displayName,
-                text: (a.displayName || '?').slice(0, 1).toLowerCase(),
-              })) || []
-            }
-          />
-          {messages.length > 1 && (
-            //Kam: Not sure about this blue but I wanted to add some color to make the page more interesting
+      {authors.length > 0 && (
+        <div className="flex flex-row items-center pt-2 pr-2">
+          <div className="text-sm text-gray-400 flex flex-row items-center">
+            <Avatars
+              users={
+                authors.map((a) => ({
+                  src: a.profileImageUrl,
+                  alt: a.displayName,
+                  text: (a.displayName || '?').slice(0, 1).toLowerCase(),
+                })) || []
+              }
+            />
             <div className="px-2 text-blue-800">
               {messages.length - 1} replies
             </div>
-          )}
-          {/* <div className="pl-2">{viewCount} Views</div> */}
-        </div>
-        {messages.length > 1 && (
+          </div>
           <CopyToClipboardIcon
             getText={() =>
               getThreadUrl({
@@ -55,8 +60,8 @@ export function MessageCard({
               })
             }
           />
-        )}
-      </div>
+        </div>
+      )}
     </Row>
   );
 }
