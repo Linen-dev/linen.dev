@@ -52,9 +52,7 @@ export function Feed({
                     key={`${incrementId}-desktop`}
                   >
                     <MessageCard
-                      author={author}
                       incrementId={incrementId}
-                      newestMessage={newestMessage}
                       oldestMessage={oldestMessage}
                       authors={authors}
                       messages={messages}
@@ -66,9 +64,7 @@ export function Feed({
                 ) : (
                   <div onClick={() => onClick(incrementId)}>
                     <MessageCard
-                      author={author}
                       incrementId={incrementId}
-                      newestMessage={newestMessage}
                       oldestMessage={oldestMessage}
                       authors={authors}
                       messages={messages}

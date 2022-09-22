@@ -13,6 +13,27 @@
   position: relative;
   padding-left: 50px;
 }
+
+.username {
+  font-weight: 600;
+  font-size: 0.875rem;
+  line-height: 1;
+  color: black;
+}
+
+.header {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  padding-bottom: 0.25rem;
+}
+
+.date {
+  color: rgb(156, 163, 175);
+  margin-left: 0.5rem;
+  font-size: 0.75rem;
+}
+
 .threadLink {
   display: none;
   float: right;

@@ -76,14 +76,17 @@ export function Thread({
     const isNextMessageFromSameUser =
       nextMessage && nextMessage.usersId === message.usersId;
     return (
-      <Row
+      <div
         key={`${message.id}-${index}`}
-        message={message}
-        isPreviousMessageFromSameUser={isPreviousMessageFromSameUser}
-        isNextMessageFromSameUser={isNextMessageFromSameUser}
-        communityType={settings.communityType}
-        threadLink={threadLink}
-      />
+        className={isNextMessageFromSameUser ? '' : 'pb-4'}
+      >
+        <Row
+          message={message}
+          isPreviousMessageFromSameUser={isPreviousMessageFromSameUser}
+          communityType={settings.communityType}
+          threadLink={threadLink}
+        />
+      </div>
     );
   });
 

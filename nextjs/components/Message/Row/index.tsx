@@ -1,3 +1,4 @@
+import React from 'react';
 import Avatar, { Size } from 'components/Avatar';
 import classNames from 'classnames';
 import Message from '../../Message';
@@ -8,25 +9,21 @@ import styles from './index.module.css';
 
 interface Props {
   message: SerializedMessage;
-  isPreviousMessageFromSameUser: boolean;
-  isNextMessageFromSameUser: boolean;
   communityType: string;
+  isPreviousMessageFromSameUser?: boolean;
   threadLink?: string;
+  children?: React.ReactNode;
 }
 
 export function Row({
   message,
   isPreviousMessageFromSameUser,
-  isNextMessageFromSameUser,
   communityType,
   threadLink,
+  children,
 }: Props) {
   return (
-    <li
-      id={message.id}
-      className={classNames(styles.row, { 'pb-4': !isNextMessageFromSameUser })}
-      key={message.id}
-    >
+    <li id={message.id} className={classNames(styles.row)} key={message.id}>
       <div className={styles.avatar}>
         {!isPreviousMessageFromSameUser && (
           <div className="flex pr-3">
@@ -42,33 +39,32 @@ export function Row({
         )}
       </div>
       <div className={styles.content}>
-        <div className="flex flex-col w-full">
-          {!isPreviousMessageFromSameUser && (
-            <div className="flex flex-row pb-1">
-              <p className="font-semibold text-sm inline-block">
-                {message.author?.displayName || 'user'}
-              </p>
-              <div className="text-sm text-gray-400 pl-2">
-                {format(new Date(message.sentAt))}
-              </div>
+        {!isPreviousMessageFromSameUser && (
+          <div className={styles.header}>
+            <p className={styles.username}>
+              {message.author?.displayName || 'user'}
+            </p>
+            <div className={styles.date}>
+              {format(new Date(message.sentAt))}
+            </div>
+          </div>
+        )}
+        <div className={styles.showOnHover}>
+          {!!threadLink && (
+            <div className={styles.threadLink}>
+              <CopyToClipboardIcon
+                getText={() => threadLink + '#' + message.id}
+              />
             </div>
           )}
-          <div className={styles.showOnHover}>
-            {!!threadLink && (
-              <div className={styles.threadLink}>
-                <CopyToClipboardIcon
-                  getText={() => threadLink + '#' + message.id}
-                />
-              </div>
-            )}
-            <Message
-              text={message.body}
-              format={communityType}
-              mentions={message.mentions?.map((m) => m.users)}
-              reactions={message.reactions}
-              attachments={message.attachments}
-            />
-          </div>
+          <Message
+            text={message.body}
+            format={communityType}
+            mentions={message.mentions?.map((m) => m.users)}
+            reactions={message.reactions}
+            attachments={message.attachments}
+          />
+          {children}
         </div>
       </div>
     </li>
