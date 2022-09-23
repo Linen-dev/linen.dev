@@ -143,7 +143,10 @@ export const findAccountByEmail = async (email?: string | null) => {
   });
 };
 
-export const findAccountByIdAndEmail = async (id: string, email: string) => {
+export const findUserAndAccountByIdAndEmail = async (
+  id: string,
+  email: string
+) => {
   const auth = await prisma.auths.findFirst({
     where: { email, users: { some: { account: { id } } } },
     include: { users: { include: { account: true } } },
@@ -152,7 +155,7 @@ export const findAccountByIdAndEmail = async (id: string, email: string) => {
     return null;
   }
   const user = auth.users.find((u) => u.accountsId === id);
-  return user ? user.account : null;
+  return user ? user : null;
 };
 
 export const findAccountAndUserByEmail = async (email?: string | null) => {
