@@ -21,6 +21,7 @@ export async function index({
       hidden: false,
       state: params.state || ThreadState.OPEN,
       channelId: { in: channels.map((channel) => channel.id) },
+      messageCount: { gte: 1 },
     },
     include: {
       messages: {
