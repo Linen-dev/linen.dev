@@ -23,6 +23,9 @@ import {
   resolveCrawlerRedirect,
   shouldRedirectToDomain,
 } from 'utilities/redirects';
+import Session from 'services/session';
+import { findAuthByEmail } from 'lib/users';
+import serializeUser from 'serializers/user';
 
 const CURSOR_LIMIT = 10;
 
@@ -107,10 +110,20 @@ export async function channelGetServerSideProps(
     isCrawler,
   });
 
+  let currentUser;
+  const session = await Session.find(context.req, context.res);
+  if (session && session.user && session.user.email) {
+    const auth = await findAuthByEmail(session.user.email);
+    if (auth) {
+      currentUser = auth.users.find((u) => u.accountsId === auth.accountId);
+    }
+  }
+
   return {
     props: {
       nextCursor,
       currentChannel: channel,
+      currentUser: currentUser && serializeUser(currentUser),
       channelName: channel.channelName,
       channels,
       threads: threads.map(serializeThread),

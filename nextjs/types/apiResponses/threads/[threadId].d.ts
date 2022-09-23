@@ -1,5 +1,6 @@
 import { channels, users, ThreadState } from '@prisma/client';
 import { Permissions } from 'types/shared';
+import { SerializedUser } from 'serializers/user';
 
 export type ThreadByIdResponse = ThreadById | { notFound: boolean };
 
@@ -21,6 +22,7 @@ export type ThreadById = {
   messageCount: number;
   channelId: string;
   currentChannel: ChannelSerialized;
+  currentUser?: SerializerUser;
   messages: SerializedMessage[];
   channel: ChannelSerialized;
   threadId: string;
