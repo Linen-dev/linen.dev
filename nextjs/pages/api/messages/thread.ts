@@ -8,6 +8,7 @@ import serializeMessage from 'serializers/message';
 import { push } from 'services/push';
 import parse from 'utilities/message/parsers/linen';
 import { findUserIds } from 'utilities/message/find';
+import { eventNewMessage } from 'services/events';
 
 async function handler(request: NextApiRequest, response: NextApiResponse) {
   if (request.method === 'GET') {
@@ -153,6 +154,11 @@ export async function create(
     return response.status(400).json({ error: 'failed to create message' });
   }
 
+  await eventNewMessage({
+    channelId,
+    messageId: message.id,
+    threadId,
+  });
   await push({
     channelId,
     body: {

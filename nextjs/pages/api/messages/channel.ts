@@ -8,6 +8,7 @@ import serializeThread from 'serializers/thread';
 import { push } from 'services/push';
 import parse from 'utilities/message/parsers/linen';
 import { findUserIds } from 'utilities/message/find';
+import { eventNewThread } from 'services/events';
 
 async function handler(request: NextApiRequest, response: NextApiResponse) {
   if (request.method === 'GET') {
@@ -137,6 +138,11 @@ export async function create(
     },
   });
 
+  await eventNewThread({
+    channelId,
+    messageId: thread.messages[0].id,
+    threadId: thread.id,
+  });
   await push({
     channelId: channel.id,
     body: {
