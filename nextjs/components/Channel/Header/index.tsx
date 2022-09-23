@@ -1,5 +1,7 @@
 import React from 'react';
+import classNames from 'classnames';
 import { AiOutlineLeft, AiOutlineClose } from 'react-icons/ai';
+import styles from './index.module.css';
 
 interface Props {
   title?: string | null;
@@ -10,7 +12,12 @@ interface Props {
 
 export default function Header({ title, channelName, onClose, closed }: Props) {
   return (
-    <div className="border-b border-solid border-gray-200 py-4 px-4">
+    <div
+      className={classNames(
+        styles.header,
+        'border-b border-solid border-gray-200 py-4 px-4'
+      )}
+    >
       <div className="flex flex-row justify-between items-center">
         <div className="flex flex-row justify-center">
           <div className="flex items-center md:hidden mr-2">

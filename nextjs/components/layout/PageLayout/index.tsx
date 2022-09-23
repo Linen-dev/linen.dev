@@ -27,6 +27,7 @@ interface Props {
   communityName: string;
   isSubDomainRouting: boolean;
   permissions: Permissions;
+  innerRef?: any;
 }
 
 function PageLayout({
@@ -41,6 +42,7 @@ function PageLayout({
   communityName,
   isSubDomainRouting,
   permissions,
+  innerRef,
 }: Props) {
   const channels = initialChannels
     ? initialChannels.filter((c: ChannelSerialized) => !c.hidden)
@@ -138,6 +140,7 @@ function PageLayout({
               'justify-center overflow-auto h-[calc(100vh_-_152px)] w-full'
             )
           }
+          ref={innerRef}
         >
           <ErrorBoundary
             FallbackComponent={() => (

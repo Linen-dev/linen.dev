@@ -49,6 +49,7 @@ export function Channel({
   const [isLoading, setIsLoading] = useState(false);
   const [threads, setThreads] = useState<SerializedThread[]>(initialThreads);
   const scrollableRootRef = useRef<HTMLDivElement | null>(null);
+  const threadRef = useRef<HTMLDivElement>(null);
   const lastDistanceToBottomRef = useRef<number>(0);
   const lastDistanceToTopRef = useRef<number>(60);
   const [lastDirection, setLastDirection] = useState<'top' | 'bottom'>();
@@ -145,7 +146,6 @@ export function Channel({
             setThreads((threads) => {
               const threadId = payload.body.thread.id;
               const imitationId = payload.body.imitationId;
-              console.log(payload.body);
               const index = threads.findIndex((t) => t.id === threadId);
               if (index >= 0) {
                 return threads;
@@ -397,39 +397,43 @@ export function Channel({
         show={isShowingThread}
         className="flex flex-col border-l border-solid border-gray-200 md:w-[700px]"
       >
-        <div className="overflow-auto flex flex-col">
+        <div className="overflow-auto flex flex-col relative" ref={threadRef}>
           <Header
             title={currentThread?.title}
             channelName={channelName}
             onClose={() => setIsShowingThread(false)}
             closed={currentThread?.state === ThreadState.CLOSE}
           />
-          <div className="flex justify-center">
-            {currentThread && (
-              <Thread
-                key={currentThread.id}
-                id={currentThread.id}
-                channelId={currentThread.channelId}
-                currentUser={currentUser}
-                title={currentThread.title}
-                state={currentThread.state}
-                messages={currentThread.messages || []}
-                viewCount={currentThread.viewCount || 0}
-                settings={settings}
-                isSubDomainRouting={isSubDomainRouting}
-                incrementId={currentThread.incrementId}
-                slug={currentThread.slug || undefined}
-                threadUrl={null}
-                permissions={permissions}
-                onThreadUpdate={(state: ThreadState) =>
-                  setCurrentThread(() => ({
-                    ...currentThread,
-                    state,
-                  }))
-                }
-              />
-            )}
-          </div>
+          {currentThread && (
+            <Thread
+              key={currentThread.id}
+              id={currentThread.id}
+              channelId={currentThread.channelId}
+              currentUser={currentUser}
+              title={currentThread.title}
+              state={currentThread.state}
+              messages={currentThread.messages || []}
+              viewCount={currentThread.viewCount || 0}
+              settings={settings}
+              isSubDomainRouting={isSubDomainRouting}
+              incrementId={currentThread.incrementId}
+              slug={currentThread.slug || undefined}
+              threadUrl={null}
+              permissions={permissions}
+              onThreadUpdate={(state: ThreadState) =>
+                setCurrentThread(() => ({
+                  ...currentThread,
+                  state,
+                }))
+              }
+              onSend={() => {
+                scrollToBottom(threadRef.current as HTMLElement);
+              }}
+              onMount={() => {
+                scrollToBottom(threadRef.current as HTMLElement);
+              }}
+            />
+          )}
         </div>
       </Transition>
     </>

@@ -45,6 +45,8 @@ export function Thread({
   permissions,
   currentUser,
   onThreadUpdate,
+  onSend,
+  onMount,
 }: {
   id: string;
   channelId: string;
@@ -60,6 +62,8 @@ export function Thread({
   permissions: Permissions;
   currentUser?: SerializedUser;
   onThreadUpdate(state: ThreadState): void;
+  onSend?(): void;
+  onMount?(): void;
 }) {
   const [channel, setChannel] = useState<PhoneixChannel>();
   const [messages, setMessages] =
@@ -112,6 +116,7 @@ export function Thread({
   });
 
   useEffect(() => {
+    onMount?.();
     if (isChatEnabled) {
       //Set url instead of hard coding
       const socket = new Socket(
@@ -155,6 +160,8 @@ export function Thread({
         socket.disconnect();
       };
     }
+
+    return () => {};
   }, []);
   const sendMessage = async ({
     message,
@@ -195,6 +202,10 @@ export function Thread({
       return [...messages, imitation];
     });
 
+    setTimeout(() => {
+      onSend?.();
+    }, 0);
+
     return debouncedSendMessage({
       message,
       channelId,
@@ -231,23 +242,25 @@ export function Thread({
   };
 
   return (
-    <div className={styles.thread}>
-      {title ? <h2 className={styles.title}>{title}</h2> : <></>}
-      <ul>{elements}</ul>
+    <>
+      <div className={styles.thread}>
+        {title ? <h2 className={styles.title}>{title}</h2> : <></>}
+        <ul>{elements}</ul>
 
-      <div className={styles.footer}>
-        <div className={styles.count}>
-          <span className={styles.subtext}>View count:</span> {viewCount + 1}
+        <div className={styles.footer}>
+          <div className={styles.count}>
+            <span className={styles.subtext}>View count:</span> {viewCount + 1}
+          </div>
+          {threadUrl && (
+            <JoinChannelLink
+              href={threadUrl}
+              communityType={settings.communityType}
+            />
+          )}
         </div>
-        {threadUrl && (
-          <JoinChannelLink
-            href={threadUrl}
-            communityType={settings.communityType}
-          />
-        )}
       </div>
-      {isChatEnabled && permissions.chat && (
-        <div className="w-full">
+      {isChatEnabled && currentUser && permissions.chat && (
+        <div className={styles.chat}>
           {state === ThreadState.OPEN ? (
             <MessageForm
               onSend={(message: string) =>
@@ -272,6 +285,6 @@ export function Thread({
           )}
         </div>
       )}
-    </div>
+    </>
   );
 }
