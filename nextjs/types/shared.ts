@@ -12,4 +12,5 @@ export interface Permissions {
   access: boolean;
   feed: boolean;
   chat: boolean;
+  channel_create: boolean;
 }

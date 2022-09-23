@@ -1,11 +1,11 @@
-import { AccountType, accounts } from '@prisma/client';
+import { AccountType, Roles, type accounts, type users } from '@prisma/client';
 import {
   GetServerSidePropsContext,
   NextApiRequest,
   NextApiResponse,
 } from 'next/types';
 import Session from '../session';
-import { findAccountByPath, findAccountByIdAndEmail } from 'lib/models';
+import { findAccountByPath, findUserAndAccountByIdAndEmail } from 'lib/models';
 import { Permissions } from 'types/shared';
 
 type Request = GetServerSidePropsContext['req'] | NextApiRequest;
@@ -20,14 +20,21 @@ interface Props {
 export default class PermissionsService {
   static async get({ request, response, params }: Props): Promise<Permissions> {
     const community = await findCommunity(params);
-    const account = await findAccount(request, response, community);
+    const user = await findAccount(request, response, community);
+    const account = user?.account || null;
     const access = PermissionsService._access(community, account);
     const chat = PermissionsService._chat(community, account);
     const feed = PermissionsService._feed(community, account);
+    const channel_create = PermissionsService._channel_create(
+      community,
+      account,
+      user
+    );
     return {
       access,
       feed,
       chat,
+      channel_create,
     };
   }
 
@@ -63,6 +70,29 @@ export default class PermissionsService {
     }
 
     return true;
+  }
+
+  static _channel_create(
+    community: accounts | null,
+    account: accounts | null,
+    user:
+      | (users & {
+          account: accounts;
+        })
+      | null
+  ): boolean {
+    if (!community) {
+      return false;
+    }
+    if (!account || account.id !== community.id) {
+      return false;
+    }
+    if (user && user.role) {
+      if (user.role === Roles.ADMIN) return true;
+      if (user.role === Roles.OWNER) return true;
+    }
+
+    return false;
   }
 
   //Todo: Check roles and check if they have permissions to post to channel
@@ -101,5 +131,5 @@ async function findAccount(
   if (!session || !session.user || !session.user.email) {
     return null;
   }
-  return findAccountByIdAndEmail(community.id, session.user.email);
+  return findUserAndAccountByIdAndEmail(community.id, session.user.email);
 }

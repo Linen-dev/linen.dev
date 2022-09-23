@@ -27,7 +27,9 @@ export default function NavBar({
       )}
       <div className="flex px-[18px] mb-2">
         <span className="grow font-bold">Channels</span>
-        {!!isCreateChannelEnabled && <NewChannelModal />}
+        {!!isCreateChannelEnabled && permissions.channel_create && (
+          <NewChannelModal />
+        )}
       </div>
       <div className="block overflow-hidden hover:overflow-auto h-[calc(100vh-240px)]">
         {sortedChannels.map((c: ChannelSerialized) => (
