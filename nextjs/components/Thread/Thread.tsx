@@ -3,13 +3,32 @@ import { SerializedMessage } from 'serializers/message';
 import JoinChannelLink from 'components/Link/JoinChannelLink';
 import Row from 'components/Message/Row';
 import { useState, useEffect } from 'react';
-import { ThreadState } from '@prisma/client';
+import { ThreadState, Roles } from '@prisma/client';
 import type { Settings } from 'serializers/account/settings';
 import { getThreadUrl } from 'components/Pages/ChannelsPage/utilities/url';
 import MessageForm from 'components/MessageForm';
 import { isChatEnabled } from 'utilities/featureFlags';
 import { Permissions } from 'types/shared';
+import { SerializedUser } from 'serializers/user';
 import { Channel as PhoneixChannel, Socket } from 'phoenix';
+import { v4 as uuid } from 'uuid';
+import debounce from 'awesome-debounce-promise';
+
+const debouncedSendMessage = debounce(
+  ({ message, channelId, threadId, imitationId }) => {
+    return fetch(`/api/messages/thread`, {
+      method: 'POST',
+      body: JSON.stringify({
+        body: message,
+        channelId,
+        threadId,
+        imitationId,
+      }),
+    });
+  },
+  100,
+  { leading: true }
+);
 
 export function Thread({
   id,
@@ -24,6 +43,7 @@ export function Thread({
   state,
   title,
   permissions,
+  currentUser,
   onThreadUpdate,
 }: {
   id: string;
@@ -38,6 +58,7 @@ export function Thread({
   title: string | null;
   state: ThreadState;
   permissions: Permissions;
+  currentUser?: SerializedUser;
   onThreadUpdate(state: ThreadState): void;
 }) {
   const [channel, setChannel] = useState<PhoneixChannel>();
@@ -114,11 +135,15 @@ export function Thread({
           if (payload.body.message) {
             setMessages((messages) => {
               const messageId = payload.body.message.id;
+              const imitationId = payload.body.imitationId;
               const index = messages.findIndex((t) => t.id === messageId);
               if (index >= 0) {
                 return messages;
               }
-              return [...messages, payload.body.message];
+              return [
+                ...messages.filter((message) => message.id !== imitationId),
+                payload.body.message,
+              ];
             });
           }
         } catch (e) {
@@ -140,13 +165,41 @@ export function Thread({
     channelId: string;
     threadId: string;
   }) => {
-    return fetch(`/api/messages/thread`, {
-      method: 'POST',
-      body: JSON.stringify({
-        body: message,
-        channelId,
-        threadId,
-      }),
+    if (!currentUser) {
+      throw 'current user is required';
+    }
+    const imitation: SerializedMessage = {
+      id: uuid(),
+      body: message,
+      sentAt: new Date().toString(),
+      usersId: currentUser.id,
+      mentions: [],
+      attachments: [],
+      reactions: [],
+      threadId,
+      author: {
+        id: currentUser.id,
+        externalUserId: currentUser.externalUserId,
+        displayName: currentUser.displayName,
+        profileImageUrl: currentUser.profileImageUrl,
+        isBot: false,
+        isAdmin: false,
+        anonymousAlias: null,
+        accountsId: 'fake-account-id',
+        authsId: null,
+        role: Roles.MEMBER, // serialize or not?
+      },
+    };
+
+    setMessages((messages) => {
+      return [...messages, imitation];
+    });
+
+    return debouncedSendMessage({
+      message,
+      channelId,
+      threadId,
+      imitationId: imitation.id,
     })
       .then((response) => {
         if (response.ok) {
@@ -154,16 +207,27 @@ export function Thread({
         }
         throw 'Could not send a message';
       })
-      .then((message: SerializedMessage) => {
-        setMessages((messages) => {
-          const messageId = message.id;
-          const index = messages.findIndex((t) => t.id === messageId);
-          if (index >= 0) {
-            return messages;
-          }
-          return [...messages, message];
-        });
-      });
+      .then(
+        ({
+          message,
+          imitationId,
+        }: {
+          message: SerializedMessage;
+          imitationId: string;
+        }) => {
+          setMessages((messages) => {
+            const messageId = message.id;
+            const index = messages.findIndex((t) => t.id === messageId);
+            if (index >= 0) {
+              return messages;
+            }
+            return [
+              ...messages.filter((message) => message.id !== imitationId),
+              message,
+            ];
+          });
+        }
+      );
   };
 
   return (

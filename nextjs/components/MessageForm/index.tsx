@@ -51,9 +51,9 @@ function MessageForm({ onSend, onSendAndClose }: Props) {
       return;
     }
     setLoading(true);
+    setMessage('');
     callback?.(message)
       .then(() => {
-        setMessage('');
         setLoading(false);
       })
       .catch(() => {

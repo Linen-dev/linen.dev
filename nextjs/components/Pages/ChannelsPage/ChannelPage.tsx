@@ -7,6 +7,7 @@ export default function ChannelPage({
   threads,
   channels,
   currentChannel,
+  currentUser,
   settings,
   channelName,
   isSubDomainRouting,
@@ -44,6 +45,7 @@ export default function ChannelPage({
       <ComponentToRender
         threads={threads}
         currentChannel={currentChannel}
+        currentUser={currentUser}
         settings={settings}
         channelName={channelName}
         isSubDomainRouting={isSubDomainRouting}

@@ -7,6 +7,7 @@ import type {
   Permissions,
 } from 'types/shared';
 import type { SerializedThread } from 'serializers/thread';
+import type { SerializedUser } from 'serializers/user';
 import type { ChannelSerialized } from 'lib/channel';
 
 export type ChannelResponse = {
@@ -39,6 +40,7 @@ export type ChannelViewProps = {
   channelName: string;
   channels?: ChannelSerialized[];
   currentChannel: ChannelSerialized;
+  currentUser?: SerializedUser;
   threads: SerializedThread[];
   isSubDomainRouting: boolean;
   nextCursor: ChannelViewCursorProps;

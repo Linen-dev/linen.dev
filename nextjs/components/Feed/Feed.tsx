@@ -21,10 +21,10 @@ export function Feed({
     <>
       {threads
         ?.filter((thread) => thread.messages.length > 0)
-        .map(({ messages, incrementId, slug }: SerializedThread) => {
+        .map(({ messages, incrementId, slug }, index) => {
           return (
             <li
-              key={incrementId}
+              key={`feed-${incrementId}-${index}`}
               className="px-4 py-4 hover:bg-blue-50 border-solid border-gray-200 cursor-pointer w-full"
             >
               {isBot ? (

@@ -10,14 +10,33 @@ import { getData } from 'utilities/fetcher';
 import MessageForm from 'components/MessageForm';
 import { isChatEnabled } from 'utilities/featureFlags';
 import Header from './Header';
-import { ThreadState } from '@prisma/client';
+import { ThreadState, Roles } from '@prisma/client';
 import { Channel as PhoneixChannel, Socket } from 'phoenix';
 import { SerializedMessage } from 'serializers/message';
+import { scrollToBottom } from 'utilities/scroll';
 import styles from './index.module.css';
+import { v4 as uuid } from 'uuid';
+import debounce from 'awesome-debounce-promise';
+
+const debouncedSendMessage = debounce(
+  ({ message, channelId, imitationId }) => {
+    return fetch(`/api/messages/channel`, {
+      method: 'POST',
+      body: JSON.stringify({
+        body: message,
+        channelId,
+        imitationId,
+      }),
+    });
+  },
+  100,
+  { leading: true }
+);
 
 export function Channel({
   threads: initialThreads,
   currentChannel,
+  currentUser,
   settings,
   channelName,
   isSubDomainRouting,
@@ -29,7 +48,6 @@ export function Channel({
   const [init, setInit] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [threads, setThreads] = useState<SerializedThread[]>(initialThreads);
-  const messagesEndRef = useRef<null | HTMLDivElement>(null);
   const scrollableRootRef = useRef<HTMLDivElement | null>(null);
   const lastDistanceToBottomRef = useRef<number>(0);
   const lastDistanceToTopRef = useRef<number>(60);
@@ -126,17 +144,24 @@ export function Channel({
           if (payload.body.thread) {
             setThreads((threads) => {
               const threadId = payload.body.thread.id;
+              const imitationId = payload.body.imitationId;
+              console.log(payload.body);
               const index = threads.findIndex((t) => t.id === threadId);
               if (index >= 0) {
                 return threads;
               }
-              return [...threads, payload.body.thread];
+              return [
+                ...threads.filter((thread) => thread.id !== imitationId),
+                payload.body.thread,
+              ];
             });
           }
         } catch (e) {
           console.log(e);
         }
       });
+
+      scrollToBottom(scrollableRootRef.current as HTMLElement);
 
       return () => {
         socket.disconnect();
@@ -221,12 +246,63 @@ export function Channel({
     message: string;
     channelId: string;
   }) => {
-    return fetch(`/api/messages/channel`, {
-      method: 'POST',
-      body: JSON.stringify({
-        body: message,
-        channelId,
-      }),
+    if (!currentUser) {
+      throw 'current user must be present';
+    }
+    const imitation: SerializedThread = {
+      id: uuid(),
+      sentAt: new Date().toString(),
+      messages: [
+        {
+          id: 'imitation-message-id',
+          body: message,
+          sentAt: new Date().toString(),
+          usersId: 'imitation-user-id',
+          mentions: [],
+          attachments: [],
+          reactions: [],
+          threadId: 'imitation-thread-id',
+          author: {
+            // we should have a better type for author
+            id: currentUser.id,
+            displayName: currentUser.displayName,
+            profileImageUrl: currentUser.profileImageUrl,
+            externalUserId: currentUser.externalUserId,
+            isBot: false, // serialize?
+            isAdmin: false,
+            anonymousAlias: null,
+            accountsId: 'imitation-account-id',
+            authsId: null,
+            role: Roles.MEMBER, // serialize?
+          },
+        },
+      ],
+      messageCount: 1,
+      channel: {
+        channelName: currentChannel.channelName,
+        hidden: currentChannel.hidden,
+        default: currentChannel.default,
+      },
+      channelId: currentChannel.id,
+      hidden: false,
+      viewCount: 0,
+      incrementId: -1,
+      externalThreadId: null,
+      slug: null,
+      title: null,
+      state: ThreadState.OPEN,
+    };
+    setThreads((threads: SerializedThread[]) => {
+      return [...threads, imitation];
+    });
+    setTimeout(
+      () => scrollToBottom(scrollableRootRef.current as HTMLElement),
+      0
+    );
+    return debouncedSendMessage({
+      message,
+      channelId,
+      imitationId: imitation.id,
     })
       .then((response) => {
         if (response.ok) {
@@ -234,16 +310,28 @@ export function Channel({
         }
         throw 'Could not send a message';
       })
-      .then((thread: SerializedThread) => {
-        setThreads((threads: SerializedThread[]) => {
-          const threadId = thread.id;
-          const index = threads.findIndex((t) => t.id === threadId);
-          if (index >= 0) {
-            return threads;
-          }
-          return [...threads, thread];
-        });
-      });
+      .then(
+        ({
+          thread,
+          imitationId,
+        }: {
+          thread: SerializedThread;
+          imitationId: string;
+        }) => {
+          setThreads((threads: SerializedThread[]) => {
+            const threadId = thread.id;
+            let index;
+            index = threads.findIndex((thread) => thread.id === threadId);
+            if (index >= 0) {
+              return threads;
+            }
+            return [
+              ...threads.filter((thread) => thread.id !== imitationId),
+              thread,
+            ];
+          });
+        }
+      );
   };
 
   return (
@@ -286,13 +374,12 @@ export function Channel({
               onClick={loadThread}
             />
           </ul>
-          <div ref={messagesEndRef} />
-          {isChatEnabled && permissions.chat && (
+          {isChatEnabled && currentUser && permissions.chat && (
             <div className={styles.chat}>
               <MessageForm
-                onSend={(message: string) =>
-                  sendMessage({ message, channelId: currentChannel.id })
-                }
+                onSend={(message: string) => {
+                  return sendMessage({ message, channelId: currentChannel.id });
+                }}
               />
             </div>
           )}
@@ -323,6 +410,7 @@ export function Channel({
                 key={currentThread.id}
                 id={currentThread.id}
                 channelId={currentThread.channelId}
+                currentUser={currentUser}
                 title={currentThread.title}
                 state={currentThread.state}
                 messages={currentThread.messages || []}

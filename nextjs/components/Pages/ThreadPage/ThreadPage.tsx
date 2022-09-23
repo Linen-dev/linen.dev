@@ -11,6 +11,7 @@ export function ThreadPage({
   messages,
   channels,
   currentChannel,
+  currentUser,
   threadUrl,
   viewCount,
   isSubDomainRouting,
@@ -66,6 +67,7 @@ export function ThreadPage({
           isSubDomainRouting={isSubDomainRouting}
           slug={slug}
           permissions={permissions}
+          currentUser={currentUser}
           onThreadUpdate={(state: ThreadState) => setState(state)}
         />
       </div>

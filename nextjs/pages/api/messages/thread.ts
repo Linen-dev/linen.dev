@@ -53,7 +53,7 @@ export async function create(
     throw 'missing session';
   }
 
-  const { body, channelId, threadId } = JSON.parse(request.body);
+  const { body, channelId, threadId, imitationId } = JSON.parse(request.body);
 
   if (!threadId) {
     return response.status(400).json({ error: 'thread id is required' });
@@ -61,6 +61,10 @@ export async function create(
 
   if (!channelId) {
     return response.status(400).json({ error: 'channel id is required' });
+  }
+
+  if (!imitationId) {
+    return response.status(400).json({ error: 'imitation id is required' });
   }
 
   const channel = await prisma.channels.findUnique({
@@ -148,10 +152,14 @@ export async function create(
     body: {
       message: serializeMessage(message),
       threadId: threadId,
+      imitationId,
     },
   });
 
-  return response.status(200).json(serializeMessage(message));
+  return response.status(200).json({
+    message: serializeMessage(message),
+    imitationId,
+  });
 }
 
 export default withSentry(handler);
