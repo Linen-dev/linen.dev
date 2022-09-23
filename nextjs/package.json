@@ -25,6 +25,8 @@
     "start:queue:sync": "pm2-runtime --raw \"npm run queue:worker:sync\"",
     "queue:worker:sync": "dotenv -e .env -- npx ts-node -P tsconfig.commonjs.json queue/workers/sync.ts",
     "queue:worker:syncRunOnce": "npm run queue:worker:sync -- --once",
+    "start:queue:chat-sync": "pm2-runtime --raw \"npm run queue:worker:chat-sync\"",
+    "queue:worker:chat-sync": "dotenv -e .env -- npx ts-node -P tsconfig.commonjs.json queue/workers/chat-sync.ts",
     "script:import-users": "ts-node -P tsconfig.commonjs.json bin/import-users/index.ts"
   },
   "dependencies": {

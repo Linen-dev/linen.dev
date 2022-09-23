@@ -15,6 +15,7 @@ import { SyncWorkerOnce } from './components/sync-worker-once';
 import { PushService } from './components/push-service';
 import { DockerElixir } from './components/docker-elixir';
 import { environment } from './utils/env';
+import { ChatSyncWorker } from './components/chat-sync-worker';
 
 export class CdkStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -84,6 +85,15 @@ export class CdkStack extends cdk.Stack {
     });
 
     SyncWorkerOnce(this, {
+      cluster,
+      dockerImage,
+      secrets,
+      environment,
+      cacheTableAccessPolicy,
+      mailerAccessPolicy,
+    });
+
+    ChatSyncWorker(this, {
       cluster,
       dockerImage,
       secrets,
