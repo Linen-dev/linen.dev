@@ -110,34 +110,35 @@ export default function Feed({
       isSubDomainRouting={isSubDomainRouting}
       permissions={permissions}
       settings={settings}
-      className="block w-full"
     >
-      <Header />
-      <Filters
-        state={state}
-        selections={selections}
-        onChange={(type: string, value: ThreadState) => {
-          setSelections({});
-          switch (type) {
-            case 'state':
-              setState(value);
-          }
-        }}
-        onUpdate={updateThreads}
-      />
-      <Grid
-        threads={feed.threads}
-        loading={loading}
-        selections={selections}
-        onChange={(id: string, checked: boolean) => {
-          setSelections((selections: Selections) => {
-            return {
-              ...selections,
-              [id]: checked,
-            };
-          });
-        }}
-      />
+      <div className="block w-full">
+        <Header />
+        <Filters
+          state={state}
+          selections={selections}
+          onChange={(type: string, value: ThreadState) => {
+            setSelections({});
+            switch (type) {
+              case 'state':
+                setState(value);
+            }
+          }}
+          onUpdate={updateThreads}
+        />
+        <Grid
+          threads={feed.threads}
+          loading={loading}
+          selections={selections}
+          onChange={(id: string, checked: boolean) => {
+            setSelections((selections: Selections) => {
+              return {
+                ...selections,
+                [id]: checked,
+              };
+            });
+          }}
+        />
+      </div>
     </PageLayout>
   );
 }
