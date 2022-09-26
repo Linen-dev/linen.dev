@@ -73,6 +73,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
     return res.redirect('/settings');
   } catch (error) {
+    console.error({ error });
     captureException(error);
     return res.redirect('/settings?error=1');
   }

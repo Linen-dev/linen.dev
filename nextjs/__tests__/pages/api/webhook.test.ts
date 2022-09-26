@@ -148,6 +148,7 @@ describe('webhook', () => {
       slug: null,
       messageCount: 0,
       channelId: 'C03ATK7RWNS',
+      sentAt: new Date().getTime(),
     };
     const threadsUpsertMock =
       prismaMock.threads.upsert.mockResolvedValue(threadMock);
@@ -315,6 +316,7 @@ describe('webhook', () => {
       slug: null,
       messageCount: 0,
       channelId: 'C03ATK7RWNS',
+      sentAt: new Date().getTime(),
     };
     const threadsUpsertMock =
       prismaMock.threads.upsert.mockResolvedValue(threadMock);

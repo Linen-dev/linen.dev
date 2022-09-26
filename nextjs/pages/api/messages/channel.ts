@@ -5,7 +5,6 @@ import { authOptions } from '../auth/[...nextauth]';
 import { withSentry } from '@sentry/nextjs';
 import { prisma } from 'client';
 import serializeThread from 'serializers/thread';
-import { push } from 'services/push';
 import parse from 'utilities/message/parsers/linen';
 import { findUserIds } from 'utilities/message/find';
 import { eventNewThread } from 'services/events';
@@ -138,21 +137,18 @@ export async function create(
     },
   });
 
+  const serializedThread = serializeThread(thread);
+
   await eventNewThread({
     channelId,
     messageId: thread.messages[0].id,
     threadId: thread.id,
-  });
-  await push({
-    channelId: channel.id,
-    body: {
-      thread: serializeThread(thread),
-      imitationId: imitationId,
-    },
+    thread: serializedThread,
+    imitationId,
   });
 
   return response.status(200).json({
-    thread: serializeThread(thread),
+    thread: serializedThread,
     imitationId,
   });
 }

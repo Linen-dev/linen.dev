@@ -13,6 +13,9 @@ import type { accounts, channels, slackAuthorizations } from '@prisma/client';
 import { findOrCreateUserFromUserInfo } from '../../lib/users';
 import { parseSlackSentAt, tsToSentAt } from '../../utilities/sentAt';
 import { findChannelWithAccountByExternalId } from 'lib/channel';
+import { eventNewMessage, eventNewThread } from 'services/events';
+import serializeMessage from 'serializers/message';
+import serializeThread from 'serializers/thread';
 
 export async function processMessageEvent(body: SlackEvent) {
   const event = body.event as SlackMessageEvent;
@@ -104,6 +107,30 @@ async function addMessage(
   };
 
   const message = await createMessageWithMentions(param, mentionIds);
+
+  const channelId = channel.id;
+  const messageId = message.id;
+  const threadId = thread.id;
+
+  if (event.ts === event.thread_ts || !event.thread_ts) {
+    // is a thread
+    await eventNewThread({
+      channelId,
+      messageId,
+      threadId,
+      thread: serializeThread({ ...thread, messages: [message] }),
+      imitationId: '', // could this be optional?
+    });
+  } else if (!!event.thread_ts && event.ts !== event.thread_ts) {
+    // is a reply
+    await eventNewMessage({
+      channelId,
+      messageId,
+      threadId,
+      message: serializeMessage(message),
+      imitationId: '', // could this be optional?
+    });
+  }
 
   return message;
 }

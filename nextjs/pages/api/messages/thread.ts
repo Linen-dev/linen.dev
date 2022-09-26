@@ -5,7 +5,6 @@ import { authOptions } from '../auth/[...nextauth]';
 import { withSentry } from '@sentry/nextjs';
 import { prisma } from 'client';
 import serializeMessage from 'serializers/message';
-import { push } from 'services/push';
 import parse from 'utilities/message/parsers/linen';
 import { findUserIds } from 'utilities/message/find';
 import { eventNewMessage } from 'services/events';
@@ -154,22 +153,18 @@ export async function create(
     return response.status(400).json({ error: 'failed to create message' });
   }
 
+  const serializedMessage = serializeMessage(message);
+
   await eventNewMessage({
     channelId,
     messageId: message.id,
     threadId,
-  });
-  await push({
-    channelId,
-    body: {
-      message: serializeMessage(message),
-      threadId: threadId,
-      imitationId,
-    },
+    message: serializedMessage,
+    imitationId,
   });
 
   return response.status(200).json({
-    message: serializeMessage(message),
+    message: serializedMessage,
     imitationId,
   });
 }
