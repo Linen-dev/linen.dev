@@ -1,0 +1,9 @@
+.feed {
+  width: 100%;
+  border-right: 1px solid #e5e7eb;
+}
+
+.thread {
+  display: flex;
+  flex-direction: column;
+}

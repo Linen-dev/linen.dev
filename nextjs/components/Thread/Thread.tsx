@@ -60,7 +60,7 @@ export function Thread({
   isSubDomainRouting: boolean;
   settings: Settings;
   incrementId?: number;
-  slug?: string;
+  slug?: string | null;
   title: string | null;
   state: ThreadState;
   permissions: Permissions;

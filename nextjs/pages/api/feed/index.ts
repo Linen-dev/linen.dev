@@ -49,7 +49,6 @@ export async function index({
           attachments: true,
         },
         orderBy: { sentAt: 'asc' },
-        take: 1,
       },
       channel: true,
     },
