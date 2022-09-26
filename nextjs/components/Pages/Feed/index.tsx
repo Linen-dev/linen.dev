@@ -18,10 +18,13 @@ interface Props {
 }
 
 const debouncedFetch = debounce(
-  ({ communityName, state }) => {
-    return fetch(`/api/feed?communityName=${communityName}&state=${state}`, {
-      method: 'GET',
-    }).then((response) => {
+  ({ communityName, state, page }) => {
+    return fetch(
+      `/api/feed?communityName=${communityName}&state=${state}&page=${page}`,
+      {
+        method: 'GET',
+      }
+    ).then((response) => {
       if (response.ok) {
         return response.json();
       }
@@ -42,8 +45,9 @@ export default function Feed({
   permissions,
   settings,
 }: Props) {
-  const [feed, setFeed] = useState<FeedResponse>({ threads: [] });
+  const [feed, setFeed] = useState<FeedResponse>({ threads: [], total: 0 });
   const [state, setState] = useState<ThreadState>(ThreadState.OPEN);
+  const [page, setPage] = useState<number>(1);
   const [key, setKey] = useState(0);
   const [loading, setLoading] = useState(false);
   const [selections, setSelections] = useState<Selections>({});
@@ -75,7 +79,7 @@ export default function Feed({
     let mounted = true;
     setLoading(true);
     const fetchFeed = () =>
-      debouncedFetch({ communityName, state })
+      debouncedFetch({ communityName, state, page })
         .then((data: FeedResponse) => {
           if (mounted) {
             setFeed(data);
@@ -101,7 +105,7 @@ export default function Feed({
       clearInterval(intervalId);
       mounted = false;
     };
-  }, [communityName, state, key]);
+  }, [communityName, state, page, key]);
 
   return (
     <PageLayout
@@ -110,34 +114,46 @@ export default function Feed({
       isSubDomainRouting={isSubDomainRouting}
       permissions={permissions}
       settings={settings}
-      className="block w-full"
     >
-      <Header />
-      <Filters
-        state={state}
-        selections={selections}
-        onChange={(type: string, value: ThreadState) => {
-          setSelections({});
-          switch (type) {
-            case 'state':
-              setState(value);
-          }
-        }}
-        onUpdate={updateThreads}
-      />
-      <Grid
-        threads={feed.threads}
-        loading={loading}
-        selections={selections}
-        onChange={(id: string, checked: boolean) => {
-          setSelections((selections: Selections) => {
-            return {
-              ...selections,
-              [id]: checked,
-            };
-          });
-        }}
-      />
+      <div className="block w-full">
+        <Header />
+        <Filters
+          state={state}
+          selections={selections}
+          onChange={(type: string, value) => {
+            setSelections({});
+            setPage(1);
+            switch (type) {
+              case 'state':
+                setState(value as ThreadState);
+            }
+          }}
+          total={feed.total}
+          onUpdate={updateThreads}
+          page={page}
+          onPageChange={(type: string) => {
+            switch (type) {
+              case 'back':
+                return setPage((page) => page - 1);
+              case 'next':
+                return setPage((page) => page + 1);
+            }
+          }}
+        />
+        <Grid
+          threads={feed.threads}
+          loading={loading}
+          selections={selections}
+          onChange={(id: string, checked: boolean) => {
+            setSelections((selections: Selections) => {
+              return {
+                ...selections,
+                [id]: checked,
+              };
+            });
+          }}
+        />
+      </div>
     </PageLayout>
   );
 }

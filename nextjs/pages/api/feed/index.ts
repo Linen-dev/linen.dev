@@ -6,23 +6,36 @@ import prisma from 'client';
 import { ThreadState } from '@prisma/client';
 import serializeThread from 'serializers/thread';
 
+function getPage(page?: number) {
+  if (!page || page < 1) {
+    return 1;
+  }
+  return page;
+}
+
 export async function index({
   params,
 }: {
-  params: { communityName?: string; state?: ThreadState };
+  params: { communityName?: string; state?: ThreadState; page?: number };
 }) {
   const community = await CommunityService.find(params);
   if (!community) {
     return { status: 404 };
   }
+  const page = getPage(params.page);
+  const limit = 10;
   const channels = await ChannelsService.find(community.id);
+  const condition = {
+    hidden: false,
+    state: params.state || ThreadState.OPEN,
+    channelId: { in: channels.map((channel) => channel.id) },
+    messageCount: { gte: 1 },
+  };
+  const total = await prisma.threads.count({
+    where: condition,
+  });
   const threads = await prisma.threads.findMany({
-    where: {
-      hidden: false,
-      state: params.state || ThreadState.OPEN,
-      channelId: { in: channels.map((channel) => channel.id) },
-      messageCount: { gte: 1 },
-    },
+    where: condition,
     include: {
       messages: {
         include: {
@@ -41,12 +54,14 @@ export async function index({
       channel: true,
     },
     orderBy: { sentAt: 'desc' },
-    take: 10,
+    take: limit,
+    skip: (page - 1) * limit,
   });
   return {
     status: 200,
     data: {
       threads: threads.map(serializeThread),
+      total,
     },
   };
 }
