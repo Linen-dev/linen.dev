@@ -9,6 +9,7 @@ import Pagination from './Pagination';
 interface Props {
   state: string;
   selections: Selections;
+  total: number;
   onChange(type: string, value: string): void;
   onUpdate(): void;
 }
@@ -26,6 +27,7 @@ function showActions(selections: Selections): boolean {
 export default function Filters({
   state,
   selections,
+  total,
   onChange,
   onUpdate,
 }: Props) {
@@ -50,7 +52,7 @@ export default function Filters({
           {state === ThreadState.OPEN ? 'Close' : 'Reopen'}
         </Button>
       )}
-      <Pagination />
+      <Pagination total={total} />
     </div>
   );
 }

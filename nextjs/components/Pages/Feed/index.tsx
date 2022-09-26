@@ -42,7 +42,7 @@ export default function Feed({
   permissions,
   settings,
 }: Props) {
-  const [feed, setFeed] = useState<FeedResponse>({ threads: [] });
+  const [feed, setFeed] = useState<FeedResponse>({ threads: [], total: 0 });
   const [state, setState] = useState<ThreadState>(ThreadState.OPEN);
   const [key, setKey] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -123,6 +123,7 @@ export default function Feed({
                 setState(value);
             }
           }}
+          total={feed.total}
           onUpdate={updateThreads}
         />
         <Grid
