@@ -32,3 +32,9 @@
 .icon.disabled:hover {
   background: inherit;
 }
+
+@media screen and (max-width: 767px) {
+  .count {
+    display: none;
+  }
+}

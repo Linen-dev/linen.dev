@@ -5,6 +5,9 @@ import ChannelsService from 'services/channels';
 import { serialize as serializeSettings } from 'serializers/account/settings';
 import { NotFound, RedirectTo } from 'utilities/response';
 import { isFeedEnabled } from 'utilities/featureFlags';
+import Session from 'services/session';
+import { findAuthByEmail } from 'lib/users';
+import serializeUser from 'serializers/user';
 
 export async function feedGetServerSideProps(
   context: GetServerSidePropsContext,
@@ -19,11 +22,24 @@ export async function feedGetServerSideProps(
     return NotFound();
   }
   const channels = await ChannelsService.find(community.id);
+
+  let currentUser;
+  const session = await Session.find(context.req, context.res);
+  if (session && session.user && session.user.email) {
+    const auth = await findAuthByEmail(session.user.email);
+    if (auth) {
+      currentUser = auth.users.find(
+        (user) => user.accountsId === auth.accountId
+      );
+    }
+  }
+
   return {
     props: {
       communityName: context?.params?.communityName,
       isSubDomainRouting,
       settings: serializeSettings(community),
+      currentUser: currentUser && serializeUser(currentUser),
       channels,
       permissions,
     },

@@ -5,6 +5,10 @@
   justify-content: space-between;
 }
 
+.group {
+  display: flex;
+}
+
 .filter {
   margin-bottom: 0;
   margin-left: 0.25rem;

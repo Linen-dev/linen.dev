@@ -3,7 +3,6 @@ import classNames from 'classnames';
 import Avatar, { Size } from 'components/Avatar';
 import Checkbox from 'components/Checkbox';
 import styles from './index.module.css';
-import Link from 'components/Link/InternalLink';
 import { SerializedThread } from 'serializers/thread';
 import { format } from 'utilities/date';
 
@@ -11,19 +10,11 @@ interface Props {
   thread: SerializedThread;
   selected: boolean;
   onChange(id: string, checked: boolean): void;
+  onClick(): void;
 }
 
-function threadUrl(thread: SerializedThread): string {
-  const { incrementId, slug } = thread;
-  if (slug) {
-    return `/t/${incrementId}/${slug}`.toLowerCase();
-  }
-  return `/t/${incrementId}`;
-}
-
-export default function Row({ thread, selected, onChange }: Props) {
+export default function Row({ thread, selected, onChange, onClick }: Props) {
   const message = thread.messages[0];
-  const href = threadUrl(thread);
   const date = format(message.sentAt);
   const { channel, id } = thread;
   return (
@@ -37,7 +28,7 @@ export default function Row({ thread, selected, onChange }: Props) {
             onChange(id, checked);
           }}
         />
-        <Link className={styles.body} href={href}>
+        <div className={styles.body} onClick={onClick}>
           <Avatar
             size={Size.md}
             alt={message.author?.displayName || 'avatar'}
@@ -55,7 +46,7 @@ export default function Row({ thread, selected, onChange }: Props) {
               {message.author?.displayName || 'User'}: {message.body}
             </div>
           </div>
-        </Link>
+        </div>
       </div>
     </div>
   );

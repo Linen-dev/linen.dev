@@ -57,7 +57,7 @@ export function Channel({
 
   const [channel, setChannel] = useState<PhoneixChannel>();
 
-  const [isShowingThread, setIsShowingThread] = useState(false);
+  const [showThread, setShowThread] = useState(false);
   const [currentThread, setCurrentThread] = useState<SerializedThread>();
 
   async function loadThread(incrementId: number) {
@@ -65,7 +65,7 @@ export function Channel({
     if (currentThread) {
       setCurrentThread(currentThread);
     }
-    setIsShowingThread(true);
+    setShowThread(true);
   }
 
   const [infiniteRef, { rootRef }] = useInfiniteScroll({
@@ -219,7 +219,6 @@ export function Channel({
 
   const [isMobile, setIsMobile] = useState(false);
 
-  //choose the screen size
   const handleResize = () => {
     if (window.innerWidth < 768) {
       setIsMobile(true);
@@ -228,11 +227,13 @@ export function Channel({
     }
   };
 
-  // create an event listener
   useEffect(() => {
     handleResize();
     window.addEventListener('resize', handleResize);
-  });
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   if (threads.length === 0) {
     return <div />;
@@ -340,10 +341,9 @@ export function Channel({
       is showing so it doesn't move the screen as much */}
 
       <Transition
-        show={showChannel({ isMobile, isShowingThread })}
+        show={showChannel({ isMobile, showThread })}
         className="
         overflow-auto
-
         lg:h-[calc(100vh_-_64px)]
         md:h-[calc(100vh_-_144px)] 
         h-[calc(100vh_-_152px)]
@@ -393,7 +393,7 @@ export function Channel({
       </Transition>
 
       <Transition
-        show={isShowingThread}
+        show={showThread}
         className="flex flex-col border-l border-solid border-gray-200 md:w-[700px]"
       >
         <div className="overflow-auto flex flex-col relative" ref={threadRef}>
@@ -420,7 +420,7 @@ export function Channel({
                   state,
                 }))
               }
-              onClose={() => setIsShowingThread(false)}
+              onClose={() => setShowThread(false)}
               onSend={() => {
                 scrollToBottom(threadRef.current as HTMLElement);
               }}
@@ -435,14 +435,14 @@ export function Channel({
   );
 }
 
-export const showChannel = ({
+const showChannel = ({
   isMobile,
-  isShowingThread,
+  showThread,
 }: {
   isMobile: boolean;
-  isShowingThread: boolean;
+  showThread: boolean;
 }): boolean => {
-  if (isMobile && isShowingThread) {
+  if (isMobile && showThread) {
     return false;
   }
   return true;
