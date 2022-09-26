@@ -1,18 +1,34 @@
 .pagination {
+  align-items: center;
   display: flex;
 }
 
-.back,
-.next {
+.count {
+  color: rgb(51, 65, 85);
+  font-size: 12px;
+  font-weight: 400;
+  padding: 0.5rem;
+}
+
+.icon {
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   border-radius: 100%;
   padding: 0.5rem;
+  transition: 0.1s ease-in background;
 }
 
-.back:hover,
-.next:hover {
+.icon:hover {
   background: #e5e7eb;
+}
+
+.icon.disabled {
+  color: #b8b8b8;
+  cursor: auto;
+}
+
+.icon.disabled:hover {
+  background: inherit;
 }
