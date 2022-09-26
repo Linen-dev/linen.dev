@@ -104,6 +104,9 @@ export async function slackChatSync({
   if (!message.threads) {
     throw 'thread is missing from message';
   }
+  if (!!message.externalMessageId) {
+    return 'message has externalId already';
+  }
 
   const token = slackToken.accessToken;
   const externalChannelId = channel.externalChannelId!;
