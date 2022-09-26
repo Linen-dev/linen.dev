@@ -61,6 +61,7 @@ export function ThreadPage({
           key={id}
           id={id}
           channelId={currentChannel.id}
+          channelName={currentChannel.channelName}
           title={title}
           state={state}
           messages={messages}

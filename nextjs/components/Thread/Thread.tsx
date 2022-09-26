@@ -1,18 +1,19 @@
-import styles from './index.module.css';
+import { useState, useEffect } from 'react';
+import { Channel as PhoneixChannel, Socket } from 'phoenix';
+import { v4 as uuid } from 'uuid';
+import { ThreadState, Roles } from '@prisma/client';
+import debounce from 'awesome-debounce-promise';
+import Header from './Header';
 import { SerializedMessage } from 'serializers/message';
 import JoinChannelLink from 'components/Link/JoinChannelLink';
 import Row from 'components/Message/Row';
-import { useState, useEffect } from 'react';
-import { ThreadState, Roles } from '@prisma/client';
 import type { Settings } from 'serializers/account/settings';
 import { getThreadUrl } from 'components/Pages/ChannelsPage/utilities/url';
 import MessageForm from 'components/MessageForm';
 import { isChatEnabled } from 'utilities/featureFlags';
 import { Permissions } from 'types/shared';
 import { SerializedUser } from 'serializers/user';
-import { Channel as PhoneixChannel, Socket } from 'phoenix';
-import { v4 as uuid } from 'uuid';
-import debounce from 'awesome-debounce-promise';
+import styles from './index.module.css';
 
 const debouncedSendMessage = debounce(
   ({ message, channelId, threadId, imitationId }) => {
@@ -33,6 +34,7 @@ const debouncedSendMessage = debounce(
 export function Thread({
   id,
   channelId,
+  channelName,
   messages: initialMessages,
   threadUrl,
   viewCount,
@@ -45,11 +47,13 @@ export function Thread({
   permissions,
   currentUser,
   onThreadUpdate,
+  onClose,
   onSend,
   onMount,
 }: {
   id: string;
   channelId: string;
+  channelName: string;
   messages: SerializedMessage[];
   threadUrl: string | null;
   viewCount: number;
@@ -62,6 +66,7 @@ export function Thread({
   permissions: Permissions;
   currentUser?: SerializedUser;
   onThreadUpdate(state: ThreadState): void;
+  onClose?(): void;
   onSend?(): void;
   onMount?(): void;
 }) {
@@ -243,8 +248,13 @@ export function Thread({
 
   return (
     <>
+      <Header
+        title={title}
+        channelName={channelName}
+        onClose={onClose}
+        closed={state === ThreadState.CLOSE}
+      />
       <div className={styles.thread}>
-        {title ? <h2 className={styles.title}>{title}</h2> : <></>}
         <ul>{elements}</ul>
 
         <div className={styles.footer}>

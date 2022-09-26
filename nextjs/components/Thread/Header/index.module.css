@@ -1,0 +1,29 @@
+.header {
+  background: white;
+  position: sticky;
+  top: 0;
+  width: 100%;
+  z-index: 2;
+}
+
+.close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgb(51, 65, 85);
+  cursor: pointer;
+  border-radius: 50%;
+  padding: 0.5rem;
+  transition: 0.1s ease-in background, 0.1s ease-in color;
+}
+
+.close:hover {
+  background: #e5e7eb;
+  color: black;
+}
+
+@media screen and (max-width: 767px) {
+  .close {
+    display: none;
+  }
+}

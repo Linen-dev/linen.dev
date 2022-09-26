@@ -1,12 +1,12 @@
 import React from 'react';
 import classNames from 'classnames';
-import { AiOutlineLeft, AiOutlineClose } from 'react-icons/ai';
+import { GoChevronLeft, GoX } from 'react-icons/go';
 import styles from './index.module.css';
 
 interface Props {
   title?: string | null;
   channelName: string;
-  onClose(): void;
+  onClose?(): void;
   closed?: boolean;
 }
 
@@ -20,11 +20,13 @@ export default function Header({ title, channelName, onClose, closed }: Props) {
     >
       <div className="flex flex-row justify-between items-center">
         <div className="flex flex-row justify-center">
-          <div className="flex items-center md:hidden mr-2">
-            <a onClick={onClose}>
-              <AiOutlineLeft color="gray" />
-            </a>
-          </div>
+          {onClose && (
+            <div className="flex items-center md:hidden mr-2">
+              <a onClick={onClose}>
+                <GoChevronLeft />
+              </a>
+            </div>
+          )}
 
           <div>
             <div className="text-lg font-bold block">{title || 'Thread'}</div>
@@ -37,13 +39,11 @@ export default function Header({ title, channelName, onClose, closed }: Props) {
               Thread Closed
             </div>
           )}
-          <a onClick={onClose} className="hidden md:flex">
-            <div className="min-w-[10px] flex justify-center cursor-pointer items-center">
-              <span className="text-slate-400">
-                <AiOutlineClose />
-              </span>
-            </div>
-          </a>
+          {onClose && (
+            <a onClick={onClose} className={classNames(styles.close)}>
+              <GoX />
+            </a>
+          )}
         </div>
       </div>
     </div>

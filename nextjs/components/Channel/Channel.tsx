@@ -9,7 +9,6 @@ import { ChannelViewProps } from 'components/Pages/ChannelsPage';
 import { getData } from 'utilities/fetcher';
 import MessageForm from 'components/MessageForm';
 import { isChatEnabled } from 'utilities/featureFlags';
-import Header from './Header';
 import { ThreadState, Roles } from '@prisma/client';
 import { Channel as PhoneixChannel, Socket } from 'phoenix';
 import { SerializedMessage } from 'serializers/message';
@@ -398,17 +397,12 @@ export function Channel({
         className="flex flex-col border-l border-solid border-gray-200 md:w-[700px]"
       >
         <div className="overflow-auto flex flex-col relative" ref={threadRef}>
-          <Header
-            title={currentThread?.title}
-            channelName={channelName}
-            onClose={() => setIsShowingThread(false)}
-            closed={currentThread?.state === ThreadState.CLOSE}
-          />
           {currentThread && (
             <Thread
               key={currentThread.id}
               id={currentThread.id}
               channelId={currentThread.channelId}
+              channelName={channelName}
               currentUser={currentUser}
               title={currentThread.title}
               state={currentThread.state}
@@ -426,6 +420,7 @@ export function Channel({
                   state,
                 }))
               }
+              onClose={() => setIsShowingThread(false)}
               onSend={() => {
                 scrollToBottom(threadRef.current as HTMLElement);
               }}
