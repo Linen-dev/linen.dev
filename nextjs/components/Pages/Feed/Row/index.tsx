@@ -13,13 +13,19 @@ interface Props {
   onChange(id: string, checked: boolean): void;
 }
 
+function threadUrl(thread: SerializedThread): string {
+  const { incrementId, slug } = thread;
+  if (slug) {
+    return `/t/${incrementId}/${slug}`.toLowerCase();
+  }
+  return `/t/${incrementId}`;
+}
+
 export default function Row({ thread, selected, onChange }: Props) {
   const message = thread.messages[0];
-  const href = `/t/${thread.incrementId}/${
-    thread.slug || 'topic'
-  }`.toLowerCase();
-  const date = format(thread.sentAt);
-  const { state, channel, id } = thread;
+  const href = threadUrl(thread);
+  const date = format(message.sentAt);
+  const { channel, id } = thread;
   return (
     <div className={classNames(styles.row, { [styles.selected]: selected })}>
       <div className={styles.content}>
