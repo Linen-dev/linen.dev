@@ -23,6 +23,7 @@
   background-repeat: no-repeat;
   border: 2px solid #6f00ff;
   width: 36px;
+  min-width: 36px;
   height: 36px;
   text-align: center;
   text-transform: lowercase;
@@ -36,6 +37,7 @@
 
 .sm {
   width: 26px;
+  min-width: 26px;
   height: 26px;
   line-height: 26px;
   border: none;
@@ -43,6 +45,7 @@
 
 .lg {
   width: 38px;
+  min-width: 38px;
   height: 38px;
   line-height: 38px;
   border: none;
