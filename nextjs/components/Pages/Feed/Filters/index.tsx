@@ -4,6 +4,7 @@ import ButtonToggle from 'components/ButtonToggle';
 import Button from 'components/Button';
 import styles from './index.module.css';
 import { Selections } from '../types';
+import Pagination from './Pagination';
 
 interface Props {
   state: string;
@@ -49,6 +50,7 @@ export default function Filters({
           {state === ThreadState.OPEN ? 'Close' : 'Reopen'}
         </Button>
       )}
+      <Pagination />
     </div>
   );
 }

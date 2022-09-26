@@ -1,0 +1,18 @@
+.pagination {
+  display: flex;
+}
+
+.back,
+.next {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 100%;
+  padding: 0.5rem;
+}
+
+.back:hover,
+.next:hover {
+  background: #e5e7eb;
+}
