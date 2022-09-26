@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import classNames from 'classnames';
 import { ThreadState } from '@prisma/client';
+import { Permissions } from 'types/shared';
 import { GoKebabVertical, GoChevronLeft, GoX, GoSync } from 'react-icons/go';
 import styles from './index.module.css';
 
@@ -8,6 +9,7 @@ interface Props {
   title?: string | null;
   channelName: string;
   state: ThreadState;
+  permissions: Permissions;
   onClose?(): void;
   onCloseThread(): void;
   onReopenThread(): void;
@@ -31,6 +33,7 @@ export default function Header({
   title,
   channelName,
   state,
+  permissions,
   onClose,
   onCloseThread,
   onReopenThread,
@@ -85,12 +88,14 @@ export default function Header({
               )}
             </ul>
           )}
-          <a
-            className={styles.icon}
-            onClick={() => setActions((actions) => !actions)}
-          >
-            <GoKebabVertical />
-          </a>
+          {permissions.feed && (
+            <a
+              className={styles.icon}
+              onClick={() => setActions((actions) => !actions)}
+            >
+              <GoKebabVertical />
+            </a>
+          )}
           {onClose && (
             <a
               onClick={onClose}

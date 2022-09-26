@@ -254,6 +254,7 @@ export function Thread({
         onClose={onClose}
         onCloseThread={() => updateThread(ThreadState.CLOSE)}
         onReopenThread={() => updateThread(ThreadState.OPEN)}
+        permissions={permissions}
         state={state}
       />
       <div className={styles.thread}>
