@@ -6,7 +6,13 @@
   z-index: 2;
 }
 
-.close {
+.icons {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+}
+
+.icon {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -15,11 +21,45 @@
   border-radius: 50%;
   padding: 0.5rem;
   transition: 0.1s ease-in background, 0.1s ease-in color;
+  position: relative;
 }
 
-.close:hover {
+.icon:hover {
   background: #e5e7eb;
   color: black;
+}
+
+.actions {
+  position: absolute;
+  top: 36px;
+  right: 0;
+  background: white;
+  box-shadow: 0 1 2px #e5e7eb;
+  border: 1px solid #e5e7eb;
+  z-index: 2;
+  margin: 0;
+  user-select: none;
+  padding: 0;
+  font-size: 12px;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.actions li {
+  cursor: pointer;
+  color: rgb(51, 65, 85);
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  justify-content: center;
+  padding: 0.25rem 0.5rem;
+  white-space: nowrap;
+}
+
+.actions li:hover {
+  background: #6f00ff;
+  color: white;
 }
 
 @media screen and (max-width: 767px) {

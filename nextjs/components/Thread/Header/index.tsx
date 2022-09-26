@@ -1,16 +1,41 @@
-import React from 'react';
+import React, { useState } from 'react';
 import classNames from 'classnames';
-import { GoChevronLeft, GoX } from 'react-icons/go';
+import { ThreadState } from '@prisma/client';
+import { GoKebabVertical, GoChevronLeft, GoX, GoSync } from 'react-icons/go';
 import styles from './index.module.css';
 
 interface Props {
   title?: string | null;
   channelName: string;
+  state: ThreadState;
   onClose?(): void;
-  closed?: boolean;
+  onCloseThread(): void;
+  onReopenThread(): void;
 }
 
-export default function Header({ title, channelName, onClose, closed }: Props) {
+function getTitle({
+  title,
+  closed,
+}: {
+  title?: string | null;
+  closed?: boolean;
+}): string {
+  title = title || 'Thread';
+  if (closed) {
+    return `[CLOSED] ${title}`;
+  }
+  return title;
+}
+
+export default function Header({
+  title,
+  channelName,
+  state,
+  onClose,
+  onCloseThread,
+  onReopenThread,
+}: Props) {
+  const [actions, setActions] = useState(false);
   return (
     <div
       className={classNames(
@@ -29,18 +54,48 @@ export default function Header({ title, channelName, onClose, closed }: Props) {
           )}
 
           <div>
-            <div className="text-lg font-bold block">{title || 'Thread'}</div>
+            <div className="text-lg font-bold block">
+              {getTitle({ title, closed: state === ThreadState.CLOSE })}
+            </div>
             <div className="text-gray-600 text-xs ">#{channelName}</div>
           </div>
         </div>
-        <div className="flex flex-row">
-          {closed && (
-            <div className="inline-block px-3 py-1.5 mr-2 text-xs text-blue-900 bg-blue-100 rounded-md">
-              Thread Closed
-            </div>
+        <div className={styles.icons}>
+          {actions && (
+            <ul className={styles.actions}>
+              {state === ThreadState.OPEN && (
+                <li
+                  onClick={() => {
+                    setActions(false);
+                    onCloseThread();
+                  }}
+                >
+                  <GoX /> Close thread
+                </li>
+              )}
+              {state === ThreadState.CLOSE && (
+                <li
+                  onClick={() => {
+                    setActions(false);
+                    onReopenThread();
+                  }}
+                >
+                  <GoSync /> Reopen thread
+                </li>
+              )}
+            </ul>
           )}
+          <a
+            className={styles.icon}
+            onClick={() => setActions((actions) => !actions)}
+          >
+            <GoKebabVertical />
+          </a>
           {onClose && (
-            <a onClick={onClose} className={classNames(styles.close)}>
+            <a
+              onClick={onClose}
+              className={classNames(styles.icon, styles.close)}
+            >
               <GoX />
             </a>
           )}

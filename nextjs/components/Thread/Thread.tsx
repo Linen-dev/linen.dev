@@ -252,7 +252,9 @@ export function Thread({
         title={title}
         channelName={channelName}
         onClose={onClose}
-        closed={state === ThreadState.CLOSE}
+        onCloseThread={() => updateThread(ThreadState.CLOSE)}
+        onReopenThread={() => updateThread(ThreadState.OPEN)}
+        state={state}
       />
       <div className={styles.thread}>
         <ul>{elements}</ul>
