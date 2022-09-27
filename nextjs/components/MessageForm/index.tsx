@@ -8,10 +8,12 @@ import Suggestions from 'components/Suggestions';
 import Preview from './Preview';
 import { isWhitespace } from 'utilities/string';
 import { getCaretPosition, setCaretPosition } from './utilities';
+import { SerializedUser } from 'serializers/user';
 
 interface Props {
   onSend?(message: string): Promise<any>;
   onSendAndClose?(message: string): Promise<any>;
+  fetchMentions?(): Promise<SerializedUser[]>;
 }
 
 function isUndefined(character: string | undefined) {
@@ -37,7 +39,7 @@ enum Mode {
   Mention,
 }
 
-function MessageForm({ onSend, onSendAndClose }: Props) {
+function MessageForm({ onSend, onSendAndClose, fetchMentions }: Props) {
   const [message, setMessage] = useState('');
   const [preview, setPreview] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -96,21 +98,12 @@ function MessageForm({ onSend, onSendAndClose }: Props) {
       {mode === Mode.Mention && !preview && (
         <Suggestions
           className={styles.suggestions}
-          fetch={() =>
-            new Promise((resolve) => {
-              setTimeout(() => {
-                resolve([
-                  { username: 'john', name: 'John Doe' },
-                  { username: 'jim', name: 'Jim Jam' },
-                ]);
-              }, 250);
-            })
-          }
+          fetch={fetchMentions}
           onSelect={(user) => {
             setMessage((message) => {
               return [
                 message.slice(0, position),
-                user.username,
+                user.id,
                 message.slice(position),
               ].join('');
             });

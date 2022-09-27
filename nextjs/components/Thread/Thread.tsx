@@ -14,6 +14,7 @@ import { isChatEnabled } from 'utilities/featureFlags';
 import { Permissions } from 'types/shared';
 import { SerializedUser } from 'serializers/user';
 import styles from './index.module.css';
+import { get } from 'utilities/http';
 
 const debouncedSendMessage = debounce(
   ({ message, channelId, threadId, imitationId }) => {
@@ -285,6 +286,7 @@ export function Thread({
                   updateThread(ThreadState.CLOSE),
                 ]);
               }}
+              fetchMentions={() => get('/api/mentions')}
             />
           ) : (
             <MessageForm
@@ -294,6 +296,7 @@ export function Thread({
                   updateThread(ThreadState.OPEN),
                 ]);
               }}
+              fetchMentions={() => get('/api/mentions')}
             />
           )}
         </div>

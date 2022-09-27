@@ -1,4 +1,5 @@
 import { Roles } from '@prisma/client';
+import { UserSession } from 'utilities/session';
 import prisma from '../../client';
 
 export async function updateUserRole({

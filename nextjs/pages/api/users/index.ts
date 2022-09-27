@@ -1,4 +1,3 @@
-import { getCurrentUrl } from 'utilities/domain';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import type { Roles } from '@prisma/client';
 import { getAuthFromSession, UserSession } from 'utilities/session';
@@ -8,18 +7,17 @@ export default async function handler(
   request: NextApiRequest,
   response: NextApiResponse
 ) {
-  const user = await getAuthFromSession(request, response);
-  const host = getCurrentUrl(request);
+  const requester = await getAuthFromSession(request, response);
 
   if (request.method === 'PUT') {
-    await updateUserRole(user, request.body, host);
+    await updateUserRole(requester, request.body);
     return response.status(200).json({ message: 'user role updated' });
   }
 
   return response.status(405).end();
 }
 
-async function updateUserRole(user: UserSession, body: string, host: string) {
+async function updateUserRole(requester: UserSession, body: string) {
   const {
     userId,
     role,
@@ -29,7 +27,7 @@ async function updateUserRole(user: UserSession, body: string, host: string) {
   } = JSON.parse(body);
 
   return await userService.updateUserRole({
-    requesterEmail: user.email,
+    requesterEmail: requester.email,
     userId,
     role,
   });

@@ -22,13 +22,6 @@
   border-bottom: none;
 }
 
-.username {
-  color: rgb(17, 24, 39);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
 .name {
   color: rgb(55, 65, 81);
   overflow: hidden;
@@ -59,10 +52,5 @@
 
 .suggestion.selected .name,
 .suggestion:hover .name {
-  color: rgb(199, 210, 254);
-}
-
-.suggestion.selected .username,
-.suggestion:hover .username {
   color: white;
 }
