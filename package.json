@@ -1,9 +1,33 @@
 {
-  "dependencies": {
-    "@types/phoenix": "^1.5.4",
-    "phoenix": "^1.6.11"
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "nextjs"
+  ],
+  "prisma": {
+    "schema": "packages/database/prisma/schema.prisma"
+  },
+  "scripts": {
+    "build": "turbo run build",
+    "pretest": "npm run database",
+    "test": "turbo run test",
+    "db:migrate:deploy": "turbo run db:migrate:deploy",
+    "db:push": "turbo run db:push",
+    "db:seed": "turbo run db:seed",
+    "dev": "turbo run dev --parallel",
+    "start": "turbo run start --parallel",
+    "clean": "turbo run clean --parallel",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "database": "turbo run build --filter=./packages/database",
+    "generate": "turbo run generate",
+    "lint": "turbo run lint",
+    "prepare": "husky install"
   },
   "devDependencies": {
-    "dotenv": "^16.0.2"
+    "husky": "^8.0.1",
+    "next": "^12.2.5",
+    "prettier": "^2.5.1",
+    "tsx": "^3.7.1",
+    "turbo": "latest"
   }
 }
