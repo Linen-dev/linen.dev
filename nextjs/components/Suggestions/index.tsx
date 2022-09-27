@@ -71,21 +71,25 @@ export default function Suggestions({ className, fetch, onSelect }: Props) {
   }
 
   return (
-    <ul className={classNames(styles.suggestions, className)}>
-      {users.map((user: SerializedUser, index: Number) => {
-        const { id, displayName } = user;
-        return (
-          <li
-            key={id}
-            className={classNames(styles.suggestion, {
-              [styles.selected]: selection === index,
-            })}
-            onClick={() => onSelect?.(user)}
-          >
-            {displayName && <span className={styles.name}>{displayName}</span>}
-          </li>
-        );
-      })}
-    </ul>
+    <div className={styles.container}>
+      <ul className={classNames(styles.suggestions, className)}>
+        {users.map((user: SerializedUser, index: Number) => {
+          const { id, displayName } = user;
+          return (
+            <li
+              key={id}
+              className={classNames(styles.suggestion, {
+                [styles.selected]: selection === index,
+              })}
+              onClick={() => onSelect?.(user)}
+            >
+              {displayName && (
+                <span className={styles.name}>{displayName}</span>
+              )}
+            </li>
+          );
+        })}
+      </ul>
+    </div>
   );
 }
