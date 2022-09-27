@@ -1,27 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import classNames from 'classnames';
 import styles from './index.module.css';
-
-export interface SuggestionUser {
-  id: string;
-  username: string;
-  name?: string;
-}
+import { SerializedUser } from 'serializers/user';
 
 interface Props {
   className?: string;
-  fetch(): Promise<SuggestionUser[]>;
-  onSelect?(user: SuggestionUser): void;
+  fetch?(): Promise<SerializedUser[]>;
+  onSelect?(user: SerializedUser): void;
 }
 
 export default function Suggestions({ className, fetch, onSelect }: Props) {
   const [selection, setSelection] = useState(0);
-  const [users, setUsers] = useState<SuggestionUser[]>([]);
+  const [users, setUsers] = useState<SerializedUser[]>([]);
 
   useEffect(() => {
     let mounted = true;
-    fetch()
-      .then((users: SuggestionUser[]) => {
+    fetch?.()
+      .then((users: SerializedUser[]) => {
         if (mounted) {
           setUsers(users);
         }
@@ -77,18 +72,17 @@ export default function Suggestions({ className, fetch, onSelect }: Props) {
 
   return (
     <ul className={classNames(styles.suggestions, className)}>
-      {users.map((user: SuggestionUser, index: Number) => {
-        const { username, name } = user;
+      {users.map((user: SerializedUser, index: Number) => {
+        const { id, displayName } = user;
         return (
           <li
-            key={username}
+            key={id}
             className={classNames(styles.suggestion, {
               [styles.selected]: selection === index,
             })}
             onClick={() => onSelect?.(user)}
           >
-            <span className={styles.username}>@{username}</span>
-            {name && <span className={styles.name}>{name}</span>}
+            {displayName && <span className={styles.name}>{displayName}</span>}
           </li>
         );
       })}

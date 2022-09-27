@@ -4,15 +4,16 @@ import Button from 'components/Button';
 import styles from './index.module.css';
 import classNames from 'classnames';
 import toast from 'components/Toast';
-import Suggestions, { SuggestionUser } from 'components/Suggestions';
+import Suggestions from 'components/Suggestions';
 import Preview from './Preview';
 import { isWhitespace } from 'utilities/string';
 import { getCaretPosition, setCaretPosition } from './utilities';
+import { SerializedUser } from 'serializers/user';
 
 interface Props {
   onSend?(message: string): Promise<any>;
   onSendAndClose?(message: string): Promise<any>;
-  fetchMentions(): Promise<SuggestionUser[]>;
+  fetchMentions?(): Promise<SerializedUser[]>;
 }
 
 function isUndefined(character: string | undefined) {
@@ -102,7 +103,7 @@ function MessageForm({ onSend, onSendAndClose, fetchMentions }: Props) {
             setMessage((message) => {
               return [
                 message.slice(0, position),
-                user.username,
+                user.id,
                 message.slice(position),
               ].join('');
             });

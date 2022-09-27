@@ -61,22 +61,3 @@ export async function updateUserRole({
     },
   });
 }
-
-// should we support mentions on anonymous communities?
-export async function findUsersByName(requester: UserSession, query?: string) {
-  const users = await prisma.users.findMany({
-    where: {
-      account: { id: requester.accountId },
-      ...(!!query && { AND: [{ displayName: { search: query } }] }),
-    },
-    take: 5,
-    select: { displayName: true, id: true },
-  });
-  return users.map((u) => {
-    return {
-      id: u.id,
-      username: u.displayName,
-      name: u.displayName,
-    };
-  });
-}

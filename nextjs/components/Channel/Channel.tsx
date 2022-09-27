@@ -6,7 +6,7 @@ import { Transition } from '@headlessui/react';
 import { Feed } from 'components/Feed';
 import { SerializedThread } from 'serializers/thread';
 import { ChannelViewProps } from 'components/Pages/ChannelsPage';
-import { getData } from 'utilities/fetcher';
+import { get } from 'utilities/http';
 import MessageForm from 'components/MessageForm';
 import { isChatEnabled } from 'utilities/featureFlags';
 import { ThreadState, Roles } from '@prisma/client';
@@ -16,7 +16,6 @@ import { scrollToBottom } from 'utilities/scroll';
 import styles from './index.module.css';
 import { v4 as uuid } from 'uuid';
 import debounce from 'awesome-debounce-promise';
-import { fetchMentions } from 'utilities/message/fetch/mentions';
 
 const debouncedSendMessage = debounce(
   ({ message, channelId, imitationId }) => {
@@ -196,7 +195,7 @@ export function Channel({
       setLastDirection(dir);
       setIsLoading(true);
       if (cursor[key]) {
-        const data = await getData('/api/threads', {
+        const data = await get('/api/threads', {
           channelId: currentChannel.id,
           cursor: cursor[key],
         });
@@ -380,7 +379,7 @@ export function Channel({
                 onSend={(message: string) => {
                   return sendMessage({ message, channelId: currentChannel.id });
                 }}
-                fetchMentions={fetchMentions}
+                fetchMentions={() => get('/api/mentions')}
               />
             </div>
           )}
