@@ -5,7 +5,6 @@ import { Thread } from 'components/Thread';
 import { buildThreadSeo } from 'utilities/seo';
 import { ThreadState } from '@prisma/client';
 import { scrollToBottom } from 'utilities/scroll';
-import { isChatEnabled } from 'utilities/featureFlags';
 
 export function ThreadPage({
   id,
@@ -78,9 +77,7 @@ export function ThreadPage({
             scrollToBottom(ref.current as HTMLElement);
           }}
           onMount={() => {
-            isChatEnabled &&
-              currentUser &&
-              scrollToBottom(ref.current as HTMLElement);
+            permissions.chat && scrollToBottom(ref.current as HTMLElement);
           }}
         />
       </div>

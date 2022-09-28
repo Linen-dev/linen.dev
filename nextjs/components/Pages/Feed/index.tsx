@@ -13,7 +13,6 @@ import { FeedResponse, Selections } from './types';
 import styles from './index.module.css';
 import { Thread } from 'components/Thread';
 import { scrollToBottom } from 'utilities/scroll';
-import { isChatEnabled } from 'utilities/featureFlags';
 import { Transition } from '@headlessui/react';
 
 interface Props {
@@ -252,8 +251,7 @@ export default function Feed({
                   scrollToBottom(ref.current as HTMLElement);
                 }}
                 onMount={() => {
-                  isChatEnabled &&
-                    currentUser &&
+                  permissions.chat &&
                     scrollToBottom(ref.current as HTMLElement);
                 }}
               />

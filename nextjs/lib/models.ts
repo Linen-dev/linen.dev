@@ -1,4 +1,4 @@
-import type { Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import prisma from '../client';
 import { stripProtocol } from '../utilities/url';
 import { AccountWithSlackAuthAndChannels } from '../types/partialTypes';
@@ -149,7 +149,9 @@ export const findUserAndAccountByIdAndEmail = async (
 ) => {
   const auth = await prisma.auths.findFirst({
     where: { email, users: { some: { account: { id } } } },
-    include: { users: { include: { account: true } } },
+    include: {
+      users: { include: { account: { include: { featureFlags: true } } } },
+    },
   });
   if (!auth) {
     return null;
@@ -241,12 +243,21 @@ export const findChannel = async (channelId: string) => {
   });
 };
 
+const accountWithFeatureFlag = Prisma.validator<Prisma.accountsArgs>()({
+  include: { featureFlags: true },
+});
+
+export type AccountWithFeatureFlag = Prisma.accountsGetPayload<
+  typeof accountWithFeatureFlag
+>;
+
 export const findAccountByPath = async (
   path: string,
   args?: Prisma.accountsArgs
 ) => {
   return await prisma.accounts.findFirst({
     ...args,
+    ...accountWithFeatureFlag,
     where: {
       OR: [
         {

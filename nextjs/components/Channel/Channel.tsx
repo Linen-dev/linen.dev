@@ -8,7 +8,6 @@ import { SerializedThread } from 'serializers/thread';
 import { ChannelViewProps } from 'components/Pages/ChannelsPage';
 import { get } from 'utilities/http';
 import MessageForm from 'components/MessageForm';
-import { isChatEnabled } from 'utilities/featureFlags';
 import { ThreadState, Roles } from '@prisma/client';
 import { Channel as PhoneixChannel, Socket } from 'phoenix';
 import type { PushMessageType } from 'services/push';
@@ -104,7 +103,7 @@ export function Channel({
   }, [threads]);
 
   useEffect(() => {
-    if (isChatEnabled) {
+    if (permissions.chat) {
       //Set url instead of hard coding
       const socket = new Socket(
         `${process.env.NEXT_PUBLIC_PUSH_SERVICE_URL}/socket`
@@ -380,7 +379,7 @@ export function Channel({
               onClick={loadThread}
             />
           </ul>
-          {isChatEnabled && currentUser && permissions.chat && (
+          {permissions.chat && (
             <div className={styles.chat}>
               <MessageForm
                 onSend={(message: string) => {

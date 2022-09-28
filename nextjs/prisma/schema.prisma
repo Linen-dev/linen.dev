@@ -115,6 +115,8 @@ model accounts {
   discordAuthorizations discordAuthorizations[]
   invites               invites[]
 
+  featureFlags featureFlags?
+
   @@unique([redirectDomain])
   @@unique([slackDomain])
 }
@@ -290,4 +292,13 @@ model invites {
   role      Roles    @default(MEMBER)
 
   @@unique([email, accountsId])
+}
+
+model featureFlags {
+  accountId String   @id
+  account   accounts @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  isFeedEnabled          Boolean @default(false)
+  isChatEnabled          Boolean @default(false)
+  isCreateChannelEnabled Boolean @default(false)
 }
