@@ -2,7 +2,6 @@ import type { ChannelSerialized } from 'lib/channel';
 import ChannelName from './ChannelName';
 import ChannelSelect from './ChannelSelect';
 import { sortByChannelName } from './utilities';
-import { isCreateChannelEnabled, isFeedEnabled } from 'utilities/featureFlags';
 import { Permissions } from 'types/shared';
 import Link from 'components/Link/InternalLink';
 import { NewChannelModal } from 'components/Channel';
@@ -20,16 +19,14 @@ export default function NavBar({
 
   const navBarLg = (
     <div className="pl-2 w-[250px] pt-4 bg-slate-50">
-      {isFeedEnabled && permissions.feed && (
+      {permissions.feed && (
         <h5 style={{ fontWeight: 'bold', paddingLeft: 18, marginBottom: 8 }}>
           <Link href="/feed">Feed</Link>
         </h5>
       )}
       <div className="flex px-[18px] mb-2">
         <span className="grow font-bold">Channels</span>
-        {!!isCreateChannelEnabled && permissions.channel_create && (
-          <NewChannelModal />
-        )}
+        {permissions.channel_create && <NewChannelModal />}
       </div>
       <div className="block overflow-hidden hover:overflow-auto h-[calc(100vh-240px)]">
         {sortedChannels.map((c: ChannelSerialized) => (

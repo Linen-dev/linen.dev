@@ -5,7 +5,11 @@ import {
   NextApiResponse,
 } from 'next/types';
 import Session from '../session';
-import { findAccountByPath, findUserAndAccountByIdAndEmail } from 'lib/models';
+import {
+  type AccountWithFeatureFlag,
+  findAccountByPath,
+  findUserAndAccountByIdAndEmail,
+} from 'lib/models';
 import { Permissions } from 'types/shared';
 
 type Request = GetServerSidePropsContext['req'] | NextApiRequest;
@@ -47,7 +51,7 @@ export default class PermissionsService {
   }
 
   static _access(
-    community: accounts | null,
+    community: AccountWithFeatureFlag | null,
     account: accounts | null
   ): boolean {
     if (!community) {
@@ -61,19 +65,24 @@ export default class PermissionsService {
     return true;
   }
 
-  static _feed(community: accounts | null, account: accounts | null): boolean {
+  static _feed(
+    community: AccountWithFeatureFlag | null,
+    account: accounts | null
+  ): boolean {
     if (!community) {
       return false;
     }
     if (!account || account.id !== community.id) {
       return false;
     }
-
-    return true;
+    if (community.featureFlags) {
+      return community.featureFlags.isFeedEnabled;
+    }
+    return false;
   }
 
   static _channel_create(
-    community: accounts | null,
+    community: AccountWithFeatureFlag | null,
     account: accounts | null,
     user:
       | (users & {
@@ -87,24 +96,34 @@ export default class PermissionsService {
     if (!account || account.id !== community.id) {
       return false;
     }
-    if (user && user.role) {
-      if (user.role === Roles.ADMIN) return true;
-      if (user.role === Roles.OWNER) return true;
+    if (
+      community.featureFlags &&
+      community.featureFlags.isCreateChannelEnabled
+    ) {
+      if (user && user.role) {
+        if (user.role === Roles.ADMIN) return true;
+        if (user.role === Roles.OWNER) return true;
+      }
     }
 
     return false;
   }
 
   //Todo: Check roles and check if they have permissions to post to channel
-  static _chat(community: accounts | null, account: accounts | null): boolean {
+  static _chat(
+    community: AccountWithFeatureFlag | null,
+    account: accounts | null
+  ): boolean {
     if (!community) {
       return false;
     }
     if (!account || account.id !== community.id) {
       return false;
     }
-
-    return true;
+    if (community.featureFlags) {
+      return community.featureFlags.isChatEnabled;
+    }
+    return false;
   }
 }
 
@@ -122,7 +141,7 @@ async function findCommunity(params: any) {
 async function findAccount(
   request: Request,
   response: Response,
-  community: accounts | null
+  community: AccountWithFeatureFlag | null
 ) {
   if (!community) {
     return null;

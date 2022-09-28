@@ -10,7 +10,6 @@ import Row from 'components/Message/Row';
 import type { Settings } from 'serializers/account/settings';
 import { getThreadUrl } from 'components/Pages/ChannelsPage/utilities/url';
 import MessageForm from 'components/MessageForm';
-import { isChatEnabled } from 'utilities/featureFlags';
 import { Permissions } from 'types/shared';
 import { SerializedUser } from 'serializers/user';
 import styles from './index.module.css';
@@ -126,7 +125,7 @@ export function Thread({
 
   useEffect(() => {
     onMount?.();
-    if (isChatEnabled) {
+    if (permissions.chat) {
       //Set url instead of hard coding
       const socket = new Socket(
         `${process.env.NEXT_PUBLIC_PUSH_SERVICE_URL}/socket`
@@ -277,7 +276,7 @@ export function Thread({
           )}
         </div>
       </div>
-      {isChatEnabled && currentUser && permissions.chat && (
+      {permissions.chat && (
         <div className={styles.chat}>
           {state === ThreadState.OPEN ? (
             <MessageForm
