@@ -93,9 +93,9 @@ describe('parse', () => {
   });
 
   it('returns a `quote` node', () => {
-    expect(parse('< foo')).toEqual(root([quote([text('foo')])]));
-    expect(parse('< *foo*')).toEqual(root([quote([bold([text('foo')])])]));
-    expect(parse('< _foo_')).toEqual(root([quote([italic([text('foo')])])]));
-    expect(parse('< ~foo~')).toEqual(root([quote([strike([text('foo')])])]));
+    expect(parse('> foo')).toEqual(root([quote([text('foo')])]));
+    expect(parse('> *foo*')).toEqual(root([quote([bold([text('foo')])])]));
+    expect(parse('> _foo_')).toEqual(root([quote([italic([text('foo')])])]));
+    expect(parse('> ~foo~')).toEqual(root([quote([strike([text('foo')])])]));
   });
 });
