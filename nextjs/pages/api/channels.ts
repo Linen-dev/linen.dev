@@ -18,14 +18,17 @@ import { getAuthFromSession } from 'utilities/session';
 async function toggleChannelVisibility({
   channelsIdToHide,
   channelsIdToShow,
+  accountId,
 }: {
   channelsIdToShow: string[];
   channelsIdToHide: string[];
+  accountId: string;
 }) {
   return await prisma.$transaction([
     prisma.channels.updateMany({
       where: {
         id: { in: channelsIdToHide },
+        accountId,
       },
       data: {
         hidden: true,
@@ -34,6 +37,7 @@ async function toggleChannelVisibility({
     prisma.channels.updateMany({
       where: {
         id: { in: channelsIdToShow },
+        accountId,
       },
       data: {
         hidden: false,
@@ -61,41 +65,46 @@ function getVisibleChannelIds(channels: channels[]) {
   return filterChannelsByHiddenField(channels, false);
 }
 
-async function update(request: NextApiRequest, response: NextApiResponse) {
+async function update(body: UpdateChannelVisibilityRequest, accountId: string) {
   // TODO validate that the user in current session can update this account
-  const body: UpdateChannelVisibilityRequest = JSON.parse(request.body);
   const { channels } = body;
   const channelsIdToHide = getHiddenChannelIds(channels);
   const channelsIdToShow = getVisibleChannelIds(channels);
-  await toggleChannelVisibility({ channelsIdToHide, channelsIdToShow });
-  return response.status(200).json({});
+  await toggleChannelVisibility({
+    channelsIdToHide,
+    channelsIdToShow,
+    accountId,
+  });
 }
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   const session = await getAuthFromSession(req, res);
-  const body = JSON.parse(req.body);
+  if (!session) {
+    return res.status(401).end();
+  }
+  const accountId = session.accountId;
+  if (!accountId) {
+    return res.status(403).end();
+  }
 
+  const body = JSON.parse(req.body);
   if (req.method === 'PUT') {
-    return update(req, res);
+    await update(body, accountId);
+    return res.status(200).json({});
   }
   if (req.method === 'POST') {
-    const externalChannelId = body.slack_channel_id || v4();
-    const channelName = body.channel_name;
-    const accountId = session.accountId;
-
     const channel = await findOrCreateChannel({
-      externalChannelId,
-      channelName,
+      externalChannelId: body.slack_channel_id || v4(),
+      channelName: body.channel_name,
       accountId,
     });
-    res.status(200).json(channel);
-    return;
+    return res.status(200).json(channel);
   }
   if (req.method === 'GET') {
-    const channels = await channelIndex(session.accountId);
-    res.status(200).json(channels);
-    return;
+    const channels = await channelIndex(accountId);
+    return res.status(200).json(channels);
   }
+  return res.status(405).end();
 }
 
 export default withSentry(handler);
