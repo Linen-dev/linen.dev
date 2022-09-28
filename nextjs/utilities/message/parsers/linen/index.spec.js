@@ -1,9 +1,50 @@
 import parse from '.';
-import { root, code, user, pre, url, text } from './spec-helpers';
+import {
+  root,
+  code,
+  user,
+  pre,
+  url,
+  text,
+  bold,
+  italic,
+  strike,
+  quote,
+} from './spec-helpers';
 
 describe('parse', () => {
   it('returns a `text` node', () => {
     expect(parse('foo')).toEqual(root([text('foo')]));
+  });
+
+  it('returns a `bold` node', () => {
+    expect(parse('*foo*')).toEqual(root([bold([text('foo')])]));
+    expect(parse('foo *foo*')).toEqual(
+      root([text('foo '), bold([text('foo')])])
+    );
+    expect(parse('*foo* foo')).toEqual(
+      root([bold([text('foo')]), text(' foo')])
+    );
+  });
+
+  it('returns an `italic` node', () => {
+    expect(parse('_foo_')).toEqual(root([italic([text('foo')])]));
+    expect(parse('foo _foo_')).toEqual(
+      root([text('foo '), italic([text('foo')])])
+    );
+    expect(parse('_foo_ foo')).toEqual(
+      root([italic([text('foo')]), text(' foo')])
+    );
+  });
+
+  it('returns a `strike` node', () => {
+    expect(parse('~foo~')).toEqual(root([strike([text('foo')])]));
+    expect(parse('foo ~foo~')).toEqual(
+      root([text('foo '), strike([text('foo')])])
+    );
+    expect(parse('~foo~ foo')).toEqual(
+      root([strike([text('foo')]), text(' foo')])
+    );
   });
 
   it('returns a `code` node', () => {
@@ -18,6 +59,10 @@ describe('parse', () => {
 
   it('returns a `user` node', () => {
     expect(parse('@uid')).toEqual(root([user('uid')]));
+    expect(parse('@uid1 @uid2')).toEqual(
+      root([user('uid1'), text(' '), user('uid2')])
+    );
+    expect(parse('hey @uid1')).toEqual(root([text('hey '), user('uid1')]));
   });
 
   it('returns a `pre` node', () => {
@@ -26,8 +71,8 @@ describe('parse', () => {
   });
 
   it('returns a `url` node', () => {
-    // expect(parse('https://foo.bar')).toEqual(root([url('https://foo.bar')]));
-    // expect(parse('http://foo.bar')).toEqual(root([url('http://foo.bar')]));
+    expect(parse('https://foo.bar')).toEqual(root([url('https://foo.bar')]));
+    expect(parse('http://foo.bar')).toEqual(root([url('http://foo.bar')]));
     expect(parse('foo https://bar.baz')).toEqual(
       root([text('foo '), url('https://bar.baz')])
     );
