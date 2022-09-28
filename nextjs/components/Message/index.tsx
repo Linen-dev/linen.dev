@@ -89,7 +89,13 @@ function Message({ text, format, mentions, reactions, attachments }: Props) {
           </Quote>
         );
       case 'text':
-        return <Text key={node.source} value={(node as TextNode).value} />;
+        return (
+          <Text
+            key={node.source}
+            format={format}
+            value={(node as TextNode).value}
+          />
+        );
       case 'user':
         return (
           <Mention
