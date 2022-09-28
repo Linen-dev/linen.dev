@@ -88,4 +88,8 @@ describe('parse', () => {
       ])
     );
   });
+
+  it('returns a `quote` node', () => {
+    expect(parse('< foo')).toEqual(root([quote([text('foo')])]));
+  });
 });

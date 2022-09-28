@@ -35,7 +35,33 @@ const strike = explicit(
   )
 );
 
-const matchers = [bold, italic, strike];
+const quote = topline(
+  regexp(/^\< (.*)(\n|$)/, (match, _, position) => {
+    const [result, content] = match;
+
+    const entity = content.match(/^((\< )+)(.*)$/);
+
+    return [
+      {
+        type: 'quote',
+        children: entity
+          ? [
+              {
+                type: 'text',
+                value: entity[1],
+                source: entity[1],
+              },
+              ...parse(entity[3], matchers),
+            ]
+          : parse(content, matchers),
+        source: result,
+      },
+      position + result.length,
+    ];
+  })
+);
+
+const matchers = [bold, italic, strike, quote];
 
 function expand(tokens) {
   return tokens.reduce((result, token) => {

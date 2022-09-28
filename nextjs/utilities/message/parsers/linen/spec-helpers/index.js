@@ -42,6 +42,6 @@ export function quote(children) {
   return {
     type: 'quote',
     children,
-    source: `${'&gt;'}${source(children)}`,
+    source: `< ${source(children)}`,
   };
 }
