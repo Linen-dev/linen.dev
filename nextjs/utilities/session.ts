@@ -4,11 +4,17 @@ import prisma from '../client';
 import Session from 'services/session';
 
 export type UserSession = {
-  accountId: string;
-  userId: string;
-  role: Roles;
+  accountId: string | null;
+  userId?: string;
+  role?: Roles;
   authId: string;
   email: string;
+  tenants: {
+    userId: string;
+    role: Roles;
+    accountId: string;
+    accountName: string | null;
+  }[];
 };
 
 export async function getAuthFromSession(
@@ -20,31 +26,29 @@ export async function getAuthFromSession(
     throw 'missing session';
   }
 
-  const auth = await prisma.auths.findFirst({
-    where: {
-      email: session.user.email,
+  const auth = await prisma.auths.findUnique({
+    where: { email: session.user.email },
+    include: {
+      users: { include: { account: { select: { id: true, name: true } } } },
     },
-    include: { account: true, users: true },
   });
   if (!auth) {
     throw 'auth not found';
   }
 
-  const { account } = auth;
-  if (!account) {
-    throw 'missing account from auth';
-  }
-
-  const user = auth.users.find((user) => user.accountsId === auth.accountId);
-  if (!user) {
-    throw 'missing user from auth';
-  }
+  const user = auth?.users?.find((u) => u.accountsId === auth.accountId);
 
   return {
-    accountId: account.id,
-    userId: user.id,
-    role: user.role,
+    accountId: auth.accountId,
     authId: auth.id,
     email: auth.email,
+    userId: user?.id,
+    role: user?.role,
+    tenants: auth?.users?.map(({ account, id, role }) => ({
+      userId: id,
+      role,
+      accountId: account.id,
+      accountName: account.name,
+    })),
   };
 }
