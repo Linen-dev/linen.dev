@@ -16,6 +16,7 @@ import { SerializedUser } from 'serializers/user';
 import styles from './index.module.css';
 import { get } from 'utilities/http';
 import { useUsersContext } from 'contexts/Users';
+import type { PushMessageType } from 'services/push';
 
 const debouncedSendMessage = debounce(
   ({ message, channelId, threadId, imitationId }) => {
@@ -143,21 +144,22 @@ export function Thread({
         .receive('error', (resp: any) => {
           console.log('Unable to join', resp);
         });
-      channel.on('new_msg', (payload) => {
+      channel.on('new_msg', (payload: PushMessageType) => {
+        const currentThreadId = id;
         try {
-          if (payload.body.message) {
-            setMessages((messages) => {
-              const messageId = payload.body.message.id;
-              const imitationId = payload.body.imitationId;
-              const index = messages.findIndex((t) => t.id === messageId);
-              if (index >= 0) {
-                return messages;
-              }
-              return [
-                ...messages.filter((message) => message.id !== imitationId),
-                payload.body.message,
-              ];
-            });
+          if (payload.is_reply && payload.thread_id === currentThreadId) {
+            const messageId = payload.message_id;
+            const imitationId = payload.imitation_id;
+            fetch('/api/messages/' + messageId)
+              .then((e) => e.json())
+              .then((message) =>
+                setMessages((messages) => [
+                  ...messages.filter(
+                    ({ id }) => id !== imitationId && id !== messageId
+                  ),
+                  message,
+                ])
+              );
           }
         } catch (e) {
           console.log(e);

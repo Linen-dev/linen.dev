@@ -14,8 +14,6 @@ import { findOrCreateUserFromUserInfo } from '../../lib/users';
 import { parseSlackSentAt, tsToSentAt } from '../../utilities/sentAt';
 import { findChannelWithAccountByExternalId } from 'lib/channel';
 import { eventNewMessage, eventNewThread } from 'services/events';
-import serializeMessage from 'serializers/message';
-import serializeThread from 'serializers/thread';
 
 export async function processMessageEvent(body: SlackEvent) {
   const event = body.event as SlackMessageEvent;
@@ -118,8 +116,7 @@ async function addMessage(
       channelId,
       messageId,
       threadId,
-      thread: serializeThread({ ...thread, messages: [message] }),
-      imitationId: '', // could this be optional?
+      imitationId: threadId,
     });
   } else if (!!event.thread_ts && event.ts !== event.thread_ts) {
     // is a reply
@@ -127,8 +124,7 @@ async function addMessage(
       channelId,
       messageId,
       threadId,
-      message: serializeMessage(message),
-      imitationId: '', // could this be optional?
+      imitationId: messageId,
     });
   }
 

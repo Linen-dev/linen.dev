@@ -137,18 +137,15 @@ export async function create(
     },
   });
 
-  const serializedThread = serializeThread(thread);
-
   await eventNewThread({
     channelId,
     messageId: thread.messages[0].id,
     threadId: thread.id,
-    thread: serializedThread,
     imitationId,
   });
 
   return response.status(200).json({
-    thread: serializedThread,
+    thread: serializeThread(thread),
     imitationId,
   });
 }
