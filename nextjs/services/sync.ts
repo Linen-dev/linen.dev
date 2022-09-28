@@ -124,11 +124,11 @@ export async function syncJob({ account_id, file_location }: SyncJobType) {
 }
 
 export type ChatSyncJobType = {
-  channelId: any;
-  threadId: any;
-  messageId: any;
-  thread?: boolean;
-  reply?: boolean;
+  channelId: string;
+  threadId: string;
+  messageId: string;
+  isThread?: boolean;
+  isReply?: boolean;
 };
 
 const include = Prisma.validator<Prisma.channelsArgs>()({
@@ -147,10 +147,10 @@ export async function chatSyncJob({
   channelId,
   messageId,
   threadId,
-  thread,
-  reply,
+  isThread,
+  isReply,
 }: ChatSyncJobType) {
-  console.log({ thread, reply });
+  console.log({ isThread, isReply });
 
   const channel = await prisma.channels.findFirst({
     where: {
@@ -170,7 +170,7 @@ export async function chatSyncJob({
   }
   // check if is slack
   if (channel.account.slackAuthorizations.length) {
-    return slackChatSync({ channel, threadId, messageId, thread, reply });
+    return slackChatSync({ channel, threadId, messageId, isThread, isReply });
   }
   // check if is discord
   if (channel.account.discordAuthorizations.length) {

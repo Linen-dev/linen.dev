@@ -76,14 +76,14 @@ export async function slackChatSync({
   channel,
   threadId,
   messageId,
-  thread,
-  reply,
+  isThread,
+  isReply,
 }: {
   channel: ChannelWithAccountAndAuthorizations;
   threadId?: string;
   messageId: string;
-  thread?: boolean;
-  reply?: boolean;
+  isThread?: boolean;
+  isReply?: boolean;
 }) {
   console.log({ threadId, messageId });
   // check if has enough permissions
@@ -120,7 +120,7 @@ export async function slackChatSync({
         } as AuthorUser)
       : undefined;
 
-  if (thread) {
+  if (isThread) {
     return await newThread(
       threadId,
       token,
@@ -131,7 +131,7 @@ export async function slackChatSync({
     );
   }
 
-  if (reply) {
+  if (isReply) {
     return await newReply(message, token, body, externalChannelId, user);
   }
 }
@@ -162,8 +162,10 @@ async function newReply(
       where: { id: message.id },
       data: { externalMessageId: response.message.ts },
     });
+    return 'reply sent';
   }
-  return 'reply sent';
+  console.error({ response });
+  throw 'something went wrong';
 }
 
 async function newThread(
@@ -197,8 +199,10 @@ async function newThread(
       where: { id: message.id },
       data: { externalMessageId: response.message.ts },
     });
+    return 'thread created';
   }
-  return 'thread created';
+  console.error({ response });
+  throw 'something went wrong';
 }
 
 function isAllowToSendMessages(s: slackAuthorizations): boolean {

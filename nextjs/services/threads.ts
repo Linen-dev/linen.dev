@@ -1,6 +1,6 @@
 import serializeThread from '../serializers/thread';
 import { findAccountByPath } from '../lib/models';
-import { findThreadById } from '../lib/threads';
+import { findThreadByIncrementId } from '../lib/threads';
 import { ThreadByIdProp } from '../types/apiResponses/threads/[threadId]';
 import type { users } from '@prisma/client';
 import { GetServerSidePropsContext } from 'next';
@@ -38,7 +38,7 @@ export async function threadGetServerSideProps(
   try {
     const id = parseInt(threadId);
     const [thread, account] = await Promise.all([
-      findThreadById(id),
+      findThreadByIncrementId(id),
       findAccountByPath(communityName),
     ]);
 

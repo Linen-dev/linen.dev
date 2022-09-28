@@ -153,18 +153,15 @@ export async function create(
     return response.status(400).json({ error: 'failed to create message' });
   }
 
-  const serializedMessage = serializeMessage(message);
-
   await eventNewMessage({
     channelId,
     messageId: message.id,
     threadId,
-    message: serializedMessage,
     imitationId,
   });
 
   return response.status(200).json({
-    message: serializedMessage,
+    message: serializeMessage(message),
     imitationId,
   });
 }

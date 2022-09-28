@@ -9,13 +9,14 @@ defmodule PushServiceWeb.RoomChannel do
     {:ok, assign(socket, :channel_id, channel_id)}
   end
 
-  def handle_in("new_msg", %{"body" => body, "token" => token}, socket) do
-    if(token != System.get_env("PUSH_SERVICE_KEY")) do
-      {:noreply, socket}
-    else
-      broadcast!(socket, "new_msg", %{body: body})
-      {:noreply, socket}
+  def handle_in("new_msg", params, socket) do
+    %{"token" => token} = params
+
+    if(token == System.get_env("PUSH_SERVICE_KEY")) do
+      broadcast!(socket, "new_msg", %{})
     end
+
+    {:noreply, socket}
   end
 
   def join("room:" <> _private_room_id, _params, _socket) do

@@ -63,12 +63,25 @@ export const threadCount = async (channelId: string): Promise<number> => {
     },
   });
 };
+export const findThreadByIncrementId = async (incrementId: number) => {
+  return findThreadWithMessages({ incrementId });
+};
 
-export const findThreadById = async (threadId: number) => {
+export const findThreadById = async (id: string) => {
+  return findThreadWithMessages({ id });
+};
+
+const findThreadWithMessages = async ({
+  incrementId,
+  id,
+}: {
+  incrementId?: number;
+  id?: string;
+}) => {
   const MESSAGES_ORDER_BY = 'asc';
   return await prisma.threads
     .findUnique({
-      where: { incrementId: threadId },
+      where: { incrementId, id },
       include: {
         messages: {
           include: {
@@ -179,7 +192,7 @@ export async function findThreadsByCursor({
   limit?: number;
   anonymizeUsers?: boolean;
 } & FindThreadsByCursorType): Promise<ThreadsWithMessagesFull[]> {
-  if (channelIds === []) {
+  if (!channelIds.length) {
     return [];
   }
 

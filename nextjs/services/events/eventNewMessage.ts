@@ -1,11 +1,11 @@
 import { createChatSyncJob } from 'queue/jobs';
 import { push } from 'services/push';
-import type { ChatSyncJobType } from 'services/sync';
-import type { SerializedMessage } from 'serializers/message';
 
-type NewMessageEvent = ChatSyncJobType & {
+type NewMessageEvent = {
+  channelId: any;
+  threadId: any;
+  messageId: any;
   imitationId: string;
-  message: SerializedMessage;
 };
 
 export async function eventNewMessage({
@@ -13,19 +13,17 @@ export async function eventNewMessage({
   messageId,
   threadId,
   imitationId,
-  message,
 }: NewMessageEvent) {
-  const promises: Promise<any>[] = [
-    createChatSyncJob({ channelId, messageId, threadId, reply: true }),
-    push({
-      channelId,
-      body: {
-        message,
-        threadId,
-        imitationId,
-      },
-    }),
-  ];
+  const event = {
+    channelId,
+    messageId,
+    threadId,
+    imitationId,
+    isThread: false,
+    isReply: true,
+  };
+
+  const promises: Promise<any>[] = [createChatSyncJob(event), push(event)];
 
   await Promise.allSettled(promises);
 }

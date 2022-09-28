@@ -8,6 +8,10 @@ export default async function handler(
   response: NextApiResponse
 ) {
   const { accountId } = await getAuthFromSession(request, response);
+  if (!accountId) {
+    throw 'session without account';
+  }
+
   if (request.method === 'GET') {
     const term = request.query.term as string;
     const condition = term

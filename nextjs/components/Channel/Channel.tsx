@@ -11,7 +11,7 @@ import MessageForm from 'components/MessageForm';
 import { isChatEnabled } from 'utilities/featureFlags';
 import { ThreadState, Roles } from '@prisma/client';
 import { Channel as PhoneixChannel, Socket } from 'phoenix';
-import { SerializedMessage } from 'serializers/message';
+import type { PushMessageType } from 'services/push';
 import { scrollToBottom } from 'utilities/scroll';
 import styles from './index.module.css';
 import { v4 as uuid } from 'uuid';
@@ -122,40 +122,45 @@ export function Channel({
         .receive('error', (resp: any) => {
           console.log('Unable to join', resp);
         });
-      channel.on('new_msg', (payload) => {
+      channel.on('new_msg', (payload: PushMessageType) => {
         try {
-          if (payload.body.message) {
-            setThreads((threads) => {
-              const message: SerializedMessage = payload.body.message;
-              const { threadId } = message;
-              const index = threads.findIndex(({ id }) => id === threadId);
-              if (index === -1) {
-                return threads;
-              }
-
-              const newThreads = [...threads];
-
-              newThreads[index].messages = [
-                ...newThreads[index].messages,
-                message,
-              ];
-              return newThreads;
-            });
+          if (payload.is_reply) {
+            const threadId = payload.thread_id;
+            const messageId = payload.message_id;
+            const imitationId = payload.imitation_id;
+            fetch('/api/messages/' + messageId)
+              .then((e) => e.json())
+              .then((message) =>
+                setThreads((threads) => {
+                  const index = threads.findIndex(({ id }) => id === threadId);
+                  const newThreads = [...threads];
+                  if (index > -1) {
+                    newThreads[index].messages = [
+                      ...newThreads[index].messages.filter(
+                        ({ id }) => id !== imitationId && id !== messageId
+                      ),
+                      message,
+                    ];
+                  }
+                  return newThreads;
+                })
+              );
           }
 
-          if (payload.body.thread) {
-            setThreads((threads) => {
-              const threadId = payload.body.thread.id;
-              const imitationId = payload.body.imitationId;
-              const index = threads.findIndex((t) => t.id === threadId);
-              if (index >= 0) {
-                return threads;
-              }
-              return [
-                ...threads.filter((thread) => thread.id !== imitationId),
-                payload.body.thread,
-              ];
-            });
+          if (payload.is_thread) {
+            const threadId = payload.thread_id;
+            const imitationId = payload.imitation_id;
+            fetch('/api/threads/' + threadId)
+              .then((e) => e.json())
+              .then((thread) => {
+                console.log('thread', thread);
+                setThreads((threads) => [
+                  ...threads.filter(
+                    ({ id }) => id !== imitationId && id !== threadId
+                  ),
+                  thread,
+                ]);
+              });
           }
         } catch (e) {
           console.log(e);
