@@ -13,6 +13,7 @@ import Attachments from './Attachments';
 import transform from './utilities/transform';
 import styles from './index.module.css';
 import { SerializedReaction, SerializedAttachment } from 'types/shared';
+import parseLinenMessage from 'utilities/message/parsers/linen';
 import parseSlackMessage from 'utilities/message/parsers/slack';
 import parseDiscordMessage from 'utilities/message/parsers/discord';
 import {
@@ -33,7 +34,7 @@ import {
 
 interface Props {
   text: string;
-  format?: string;
+  format?: 'linen' | 'discord' | 'slack';
   truncate?: any;
   mentions?: users[];
   reactions?: SerializedReaction[];
@@ -41,9 +42,12 @@ interface Props {
 }
 
 const parsers = {
+  linen: parseLinenMessage,
   slack: parseSlackMessage,
   discord: parseDiscordMessage,
 };
+
+const DEFAULT_FORMAT = 'slack';
 
 function noAttachment(attachments?: SerializedAttachment[]) {
   return !attachments || attachments?.length === 0;
@@ -53,7 +57,7 @@ function Message({ text, format, mentions, reactions, attachments }: Props) {
   if (text === '' && noAttachment(attachments)) {
     text = 'message has been deleted';
   }
-  const parse = format === 'discord' ? parsers.discord : parsers.slack;
+  const parse = parsers[format || DEFAULT_FORMAT];
   const tree = transform(parse(text));
 
   function render(node: RootNode | Node): React.ReactNode {
@@ -85,7 +89,13 @@ function Message({ text, format, mentions, reactions, attachments }: Props) {
           </Quote>
         );
       case 'text':
-        return <Text key={node.source} value={(node as TextNode).value} />;
+        return (
+          <Text
+            key={node.source}
+            format={format}
+            value={(node as TextNode).value}
+          />
+        );
       case 'user':
         return (
           <Mention
@@ -122,7 +132,7 @@ function Message({ text, format, mentions, reactions, attachments }: Props) {
 }
 
 Message.defaultProps = {
-  format: 'slack',
+  format: DEFAULT_FORMAT,
 };
 
 export default Message;

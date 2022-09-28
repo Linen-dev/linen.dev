@@ -57,7 +57,7 @@ export function Row({
           )}
           <Message
             text={message.body}
-            format={communityType}
+            format={communityType as any}
             mentions={message.mentions?.map((m) => m.users)}
             reactions={message.reactions}
             attachments={message.attachments}

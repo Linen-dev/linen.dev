@@ -10,7 +10,7 @@ export default function Preview({ message }: Props) {
     return (
       <>
         <div className="mx-px mt-px px-3 pt-2 pb-12">
-          <Message text={message} />
+          <Message text={message} format="linen" />
         </div>
         <hr className="pb-2 w-full" />
       </>

@@ -36,10 +36,10 @@ const strike = explicit(
 );
 
 const quote = topline(
-  regexp(/^\< (.*)(\n|$)/, (match, _, position) => {
+  regexp(/^\> (.*)(\n|$)/, (match, _, position) => {
     const [result, content] = match;
 
-    const entity = content.match(/^((\< )+)(.*)$/);
+    const entity = content.match(/^((\> )+)(.*)$/);
 
     return [
       {

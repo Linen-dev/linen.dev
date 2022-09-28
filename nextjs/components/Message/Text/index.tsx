@@ -6,9 +6,13 @@ import { tokenize, Token } from 'utilities/markdown';
 
 interface Props {
   value: string;
+  format?: 'linen' | 'discord' | 'slack';
 }
 
-export default function Text({ value }: Props) {
+export default function Text({ format, value }: Props) {
+  if (format === 'linen') {
+    return <>{value}</>;
+  }
   const text = decodeHTML(value);
   const tokens = tokenize(text);
   return (

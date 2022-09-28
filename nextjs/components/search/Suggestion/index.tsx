@@ -37,7 +37,7 @@ export default function Suggestion({
       </div>
       <Message
         text={body}
-        format={communityType}
+        format={communityType as any}
         mentions={mentions.map((m: any) => m.users) || []}
       />
     </div>
