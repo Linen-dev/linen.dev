@@ -13,19 +13,19 @@ import {
   EmojiNode,
 } from 'utilities/message/parsers/types';
 
-const bold = explicit(
-  regexp(
-    /^\*(\S([^*\n]*?|[^*\n]*? `.*?` )\S|\S)\*(?=[\s.,\])}!?\-=]|$)/,
-    deep('bold', (content: string) => parse(content, matchers))
-  )
-);
-
 const code = explicit(
   regexp(/^`([^`]+?)`(?=[\s.,\])}!?\-=]|$)/, shallow('code'))
 );
 
 const pre = explicit(
   regexp(/^```(\s*\S[\s\S]*?\s*)```(?=[\s.,\])}!?\-=]|$)/, shallow('pre'))
+);
+
+const bold = explicit(
+  regexp(
+    /^\*(\S([^*\n]*?|[^*\n]*? `.*?` )\S|\S)\*(?=[\s.,\])}!?\-=]|$)/,
+    deep('bold', (content: string) => parse(content, matchers))
+  )
 );
 
 const italic = explicit(
