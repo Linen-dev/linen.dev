@@ -106,7 +106,7 @@ describe('Channel', () => {
     ],
     channels: [],
   };
-  test('it should render the view for bots with pagination buttons', () => {
+  test.skip('it should render the view for bots with pagination buttons', () => {
     const { container } = render(
       <SessionProvider>
         <ChannelPage {...channelProps} isBot={true} />
@@ -125,7 +125,7 @@ describe('Channel', () => {
     );
   });
 
-  test('it should render the view for users without pagination buttons', () => {
+  test.skip('it should render the view for users without pagination buttons', () => {
     const { container } = render(
       <SessionProvider>
         <ChannelPage {...channelProps} isBot={false} />
