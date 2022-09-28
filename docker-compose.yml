@@ -16,7 +16,7 @@ services:
       - APP_DB=linendev,linentest
     volumes:
       - pgdata:/var/lib/postgresql/data/pgdata
-      - ./postgres/initdb:/docker-entrypoint-initdb.d
+      - ./nextjs/postgres/initdb:/docker-entrypoint-initdb.d
 
   pgadmin:
     container_name: linendev_pgadmin
