@@ -15,6 +15,9 @@ import {
 describe('parse', () => {
   it('returns a `text` node', () => {
     expect(parse('foo')).toEqual(root([text('foo')]));
+    expect(parse('john@doe.com')).toEqual(root([text('john@doe.com')]));
+    expect(parse('@ @')).toEqual(root([text('@ @')]));
+    expect(parse('@@')).toEqual(root([text('@@')]));
   });
 
   it('returns a `bold` node', () => {
@@ -91,5 +94,8 @@ describe('parse', () => {
 
   it('returns a `quote` node', () => {
     expect(parse('< foo')).toEqual(root([quote([text('foo')])]));
+    expect(parse('< *foo*')).toEqual(root([quote([bold([text('foo')])])]));
+    expect(parse('< _foo_')).toEqual(root([quote([italic([text('foo')])])]));
+    expect(parse('< ~foo~')).toEqual(root([quote([strike([text('foo')])])]));
   });
 });

@@ -22,9 +22,15 @@ function tokenize(input) {
       if (type === 'code' || type === 'pre') {
         value += current;
       } else {
-        flush();
         const previous = input[index - 1];
-        if (!previous || isWhitespace(previous)) {
+        const next = input[index + 1];
+        if (
+          next &&
+          next !== '@' &&
+          !isWhitespace(next) &&
+          (!previous || isWhitespace(previous))
+        ) {
+          flush();
           value += current;
           type = 'user';
         } else {
