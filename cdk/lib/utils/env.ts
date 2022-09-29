@@ -19,7 +19,7 @@ const aliases = {
 
 export const environment: Record<string, string> = {
   STACK_NAME: isProd ? 'LinenDev-main' : 'LinenDev-staging',
-  SSM_STAGE: isProd ? 'main' : 'staging',
+  SSM_STAGE: isProd ? 'prod' : 'staging',
   NODE_ENV: 'production',
   // DATABASE_URL: secrets or process.env.DATABASE_URL!,
   // RDS_CERTIFICATE: secrets
