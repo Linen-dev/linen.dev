@@ -6,7 +6,7 @@ export default function createMessage(options?: Partial<messages>): messages {
     createdAt: new Date(),
     body: 'foo *bar* _baz_',
     sentAt: new Date(),
-    externalMessageId: 'X-1',
+    externalMessageId: null,
     threadId: '1',
     channelId: '1',
     usersId: null,

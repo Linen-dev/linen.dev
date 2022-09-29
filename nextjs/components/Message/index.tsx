@@ -31,15 +31,18 @@ import {
   PreNode,
   EmojiNode,
 } from 'utilities/message/parsers/types';
+import { SerializedMessage } from 'serializers/message';
 
 interface Props {
   text: string;
-  format?: 'linen' | 'discord' | 'slack';
+  format: MessageFormat;
   truncate?: any;
   mentions?: users[];
   reactions?: SerializedReaction[];
   attachments?: SerializedAttachment[];
 }
+
+type MessageFormat = 'linen' | 'discord' | 'slack';
 
 const parsers = {
   linen: parseLinenMessage,
@@ -47,17 +50,28 @@ const parsers = {
   discord: parseDiscordMessage,
 };
 
-const DEFAULT_FORMAT = 'slack';
-
 function noAttachment(attachments?: SerializedAttachment[]) {
   return !attachments || attachments?.length === 0;
+}
+
+export function getMessageFormat({
+  externalId,
+  communityType,
+}: {
+  externalId?: string;
+  communityType: string;
+}): MessageFormat {
+  if (externalId) {
+    return communityType as MessageFormat;
+  }
+  return 'linen';
 }
 
 function Message({ text, format, mentions, reactions, attachments }: Props) {
   if (text === '' && noAttachment(attachments)) {
     text = 'message has been deleted';
   }
-  const parse = parsers[format || DEFAULT_FORMAT];
+  const parse = parsers[format];
   const tree = transform(parse(text));
 
   function render(node: RootNode | Node): React.ReactNode {
@@ -130,9 +144,5 @@ function Message({ text, format, mentions, reactions, attachments }: Props) {
     </div>
   );
 }
-
-Message.defaultProps = {
-  format: DEFAULT_FORMAT,
-};
 
 export default Message;

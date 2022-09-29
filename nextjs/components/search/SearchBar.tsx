@@ -42,7 +42,9 @@ const SearchBar = ({
   // The first hacked together version literally loaded all the users
   // in the database from channels view
   const renderSuggestion = useCallback(
-    ({ body, channelId, usersId, mentions }) => {
+    (searchResult) => {
+      const { body, channelId, usersId, mentions, externalMessageId } =
+        searchResult;
       const channel = channels.find((c) => c.id === channelId);
       const channelName = channel?.channelName;
 
@@ -50,6 +52,7 @@ const SearchBar = ({
         <div className={styles.suggestion}>
           <Suggestion
             body={body}
+            externalId={externalMessageId}
             // user={}
             channelName={channelName}
             mentions={mentions}
