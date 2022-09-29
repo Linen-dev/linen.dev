@@ -1,9 +1,9 @@
-import { MentionsWithUsers } from '../types/apiResponses/threads/[threadId]';
-import { MessageWithAuthor } from '../types/partialTypes';
+import { MessageForSerialization } from '../types/partialTypes';
 import { SerializedAttachment, SerializedReaction } from '../types/shared';
-
+import serializeUser, { SerializedUser } from 'serializers/user';
 import type {
   users,
+  mentions,
   messageAttachments,
   messageReactions,
 } from '@prisma/client';
@@ -13,7 +13,7 @@ export interface SerializedMessage {
   body: string;
   sentAt: string;
   usersId: string;
-  mentions: MentionsWithUsers[];
+  mentions: SerializedUser[];
   attachments: SerializedAttachment[];
   reactions: SerializedReaction[];
   threadId: string;
@@ -37,8 +37,23 @@ function serializeReaction(reaction: messageReactions): SerializedReaction {
   };
 }
 
+type MentionsForSerialization = mentions & { users?: users };
+
+function serializeMentions(
+  mentions?: MentionsForSerialization[]
+): SerializedUser[] {
+  if (!mentions) {
+    return [];
+  }
+  return mentions
+    .filter((mention: MentionsForSerialization) => mention.users)
+    .map((mention: MentionsForSerialization) =>
+      serializeUser(mention.users as users)
+    );
+}
+
 export default function serialize(
-  message: MessageWithAuthor
+  message: MessageForSerialization
 ): SerializedMessage {
   return {
     id: message.id,
@@ -48,7 +63,7 @@ export default function serialize(
     sentAt: message.sentAt.toString(),
     author: message.author,
     usersId: message.usersId,
-    mentions: message.mentions || [],
+    mentions: serializeMentions(message.mentions),
     attachments:
       message.attachments
         ?.filter(({ internalUrl }: messageAttachments) => Boolean(internalUrl))

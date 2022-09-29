@@ -27,21 +27,26 @@ export type ThreadsWithMessagesFull = Prisma.threadsGetPayload<
   typeof threadsWithMessagesFull
 >;
 
-const messageWithAuthor = Prisma.validator<Prisma.MessageArgs>()({
-  include: { author: true },
+const messageForSerialization = Prisma.validator<Prisma.MessageArgs>()({
+  include: {
+    users: true,
+  },
+  mentions: {
+    include: {
+      users: true,
+    },
+  },
+  reactions: true,
+  attachments: true,
 });
 
-export type MessageWithAuthor = Prisma.MessagesGetPayload<
-  typeof messageWithAuthor
+export type MessageForSerialization = Prisma.MessagesGetPayload<
+  typeof messageForSerialization
 >;
 
 const messageWithChannel = Prisma.validator<Prisma.MessageArgs>()({
   include: { author: true },
 });
-
-export type MessageWithAuthor = Prisma.MessagesGetPayload<
-  typeof messageWithAuthor
->;
 
 const accountWithSlackAuthAndChannels = Prisma.validator<Prisma.accountsArgs>()(
   {

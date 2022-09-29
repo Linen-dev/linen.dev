@@ -258,6 +258,7 @@ export function Channel({
           body: message,
           sentAt: new Date().toString(),
           usersId: 'imitation-user-id',
+          // TODO get mentions realtime, e.g. from user list
           mentions: [],
           attachments: [],
           reactions: [],

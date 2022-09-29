@@ -186,6 +186,7 @@ export function Thread({
       body: message,
       sentAt: new Date().toString(),
       usersId: currentUser.id,
+      // TODO fill out mentions with users
       mentions: [],
       attachments: [],
       reactions: [],

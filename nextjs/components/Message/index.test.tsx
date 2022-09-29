@@ -54,12 +54,6 @@ describe('Message', () => {
               displayName: 'John Doe',
               externalUserId: '1234',
               profileImageUrl: 'https://img.com/1234',
-              isBot: false,
-              isAdmin: false,
-              accountsId: '1234',
-              anonymousAlias: '',
-              authsId: null,
-              role: 'ADMIN',
             },
           ]}
           format="slack"
@@ -78,12 +72,6 @@ describe('Message', () => {
               displayName: 'John Doe',
               externalUserId: '1234',
               profileImageUrl: 'https://img.com/1234',
-              isBot: false,
-              isAdmin: false,
-              accountsId: '1234',
-              anonymousAlias: '',
-              authsId: null,
-              role: 'ADMIN',
             },
           ]}
           format="slack"

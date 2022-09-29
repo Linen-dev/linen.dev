@@ -6,6 +6,8 @@ import { withSentry } from '@sentry/nextjs';
 import { prisma } from 'client';
 import serializeMessage from 'serializers/message';
 import { push } from 'services/push';
+import parse from 'utilities/message/parsers/linen';
+import { findUserIds } from 'utilities/message/find';
 
 async function handler(request: NextApiRequest, response: NextApiResponse) {
   if (request.method === 'GET') {
@@ -94,7 +96,6 @@ export async function create(
 
   const user = auth.users[0];
 
-  //TODO: check empty attachment
   if (!body) {
     return response.status(400).json({ error: 'message is required' });
   }
@@ -102,12 +103,17 @@ export async function create(
   const sentAt = new Date();
   const userId = user.id;
 
+  const tree = parse(body);
+  const userIds = findUserIds(tree);
   const messages = {
     create: {
       body,
       channelId,
       sentAt,
       usersId: userId,
+      mentions: {
+        create: userIds.map((id: string) => ({ usersId: id })),
+      },
     },
   } as any;
 

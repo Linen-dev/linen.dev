@@ -3,11 +3,12 @@ import { users } from '@prisma/client';
 import Avatar, { Size } from '../../Avatar';
 import Message, { getMessageFormat } from '../../Message';
 import styles from './index.module.css';
+import { SerializedUser } from 'serializers/user';
 
 interface Props {
   body: string;
   externalId?: string;
-  mentions: any[];
+  mentions: SerializedUser[];
   user?: users;
   channelName?: string;
   communityType: string;
@@ -40,7 +41,7 @@ export default function Suggestion({
       <Message
         text={body}
         format={getMessageFormat({ communityType, externalId })}
-        mentions={mentions.map((m: any) => m.users) || []}
+        mentions={mentions}
       />
     </div>
   );

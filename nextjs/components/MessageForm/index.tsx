@@ -43,6 +43,7 @@ function MessageForm({ onSend, onSendAndClose, fetchMentions }: Props) {
   const [message, setMessage] = useState('');
   const [preview, setPreview] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [users, setUsers] = useState<SerializedUser[]>([]);
   const [position, setPosition] = useState(0);
   const ref = useRef(null);
   const mode = getMode(message, position);
@@ -75,6 +76,25 @@ function MessageForm({ onSend, onSendAndClose, fetchMentions }: Props) {
     };
   }, []);
 
+  useEffect(() => {
+    let mounted = true;
+    fetchMentions?.()
+      .then((users: SerializedUser[]) => {
+        if (mounted) {
+          setUsers(users);
+        }
+      })
+      .catch(() => {
+        if (mounted) {
+          // notify the backend
+        }
+      });
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
   const activeTab =
     'cursor-pointer rounded-md border border-transparent px-3 py-1.5 text-sm text-xs text-gray-900 bg-gray-100 hover:bg-gray-200';
   const inactiveTab =
@@ -98,7 +118,7 @@ function MessageForm({ onSend, onSendAndClose, fetchMentions }: Props) {
       {mode === Mode.Mention && !preview && (
         <Suggestions
           className={styles.suggestions}
-          fetch={fetchMentions}
+          users={users}
           onSelect={(user) => {
             setMessage((message) => {
               return [
@@ -151,7 +171,7 @@ function MessageForm({ onSend, onSendAndClose, fetchMentions }: Props) {
             }
           }}
         />
-        {preview && <Preview message={message} />}
+        {preview && <Preview message={message} users={users} />}
         <div className={styles.toolbar}>
           {onSendAndClose && (
             <Button

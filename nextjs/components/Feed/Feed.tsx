@@ -25,26 +25,28 @@ export function Feed({
           return (
             <li
               key={`feed-${incrementId}-${index}`}
-              className="px-4 py-4 hover:bg-blue-50 border-solid border-gray-200 cursor-pointer w-full"
+              className="hover:bg-blue-50 border-solid border-gray-200 cursor-pointer w-full"
             >
               {isBot ? (
-                <CustomLink
-                  isSubDomainRouting={isSubDomainRouting}
-                  communityName={settings.communityName}
-                  communityType={settings.communityType}
-                  path={`/t/${incrementId}/${slug || 'topic'}`.toLowerCase()}
-                  key={`${incrementId}-desktop`}
-                >
-                  <MessageCard
-                    incrementId={incrementId}
-                    messages={messages}
+                <div className="px-4 py-4">
+                  <CustomLink
                     isSubDomainRouting={isSubDomainRouting}
-                    settings={settings}
-                    slug={slug}
-                  />
-                </CustomLink>
+                    communityName={settings.communityName}
+                    communityType={settings.communityType}
+                    path={`/t/${incrementId}/${slug || 'topic'}`.toLowerCase()}
+                    key={`${incrementId}-desktop`}
+                  >
+                    <MessageCard
+                      incrementId={incrementId}
+                      messages={messages}
+                      isSubDomainRouting={isSubDomainRouting}
+                      settings={settings}
+                      slug={slug}
+                    />
+                  </CustomLink>
+                </div>
               ) : (
-                <div onClick={() => onClick(incrementId)}>
+                <div className="px-4 py-4" onClick={() => onClick(incrementId)}>
                   <MessageCard
                     incrementId={incrementId}
                     messages={messages}

@@ -61,7 +61,7 @@ export function Row({
               externalId: message.externalId,
               communityType,
             })}
-            mentions={message.mentions?.map((m) => m.users)}
+            mentions={message.mentions}
             reactions={message.reactions}
             attachments={message.attachments}
           />

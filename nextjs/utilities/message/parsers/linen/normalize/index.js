@@ -12,7 +12,8 @@ function normalize(token) {
   if (token.type === 'user') {
     const { value } = token;
     token.source = value;
-    token.value = value.replace(/^@/, '');
+    token.id = value.replace(/^@/, '');
+    delete token.value;
   }
   return token;
 }

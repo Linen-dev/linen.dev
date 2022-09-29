@@ -1,5 +1,4 @@
 import React from 'react';
-import { users } from '@prisma/client';
 import Text from './Text';
 import Mention from './Mention';
 import Link from './Link';
@@ -31,13 +30,13 @@ import {
   PreNode,
   EmojiNode,
 } from 'utilities/message/parsers/types';
-import { SerializedMessage } from 'serializers/message';
+import { SerializedUser } from 'serializers/user';
 
 interface Props {
   text: string;
   format: MessageFormat;
   truncate?: any;
-  mentions?: users[];
+  mentions?: SerializedUser[];
   reactions?: SerializedReaction[];
   attachments?: SerializedAttachment[];
 }

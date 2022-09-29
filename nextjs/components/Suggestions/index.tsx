@@ -6,31 +6,12 @@ import { SerializedUser } from 'serializers/user';
 interface Props {
   className?: string;
   fetch?(): Promise<SerializedUser[]>;
+  users: SerializedUser[];
   onSelect?(user: SerializedUser): void;
 }
 
-export default function Suggestions({ className, fetch, onSelect }: Props) {
+export default function Suggestions({ className, users, onSelect }: Props) {
   const [selection, setSelection] = useState(0);
-  const [users, setUsers] = useState<SerializedUser[]>([]);
-
-  useEffect(() => {
-    let mounted = true;
-    fetch?.()
-      .then((users: SerializedUser[]) => {
-        if (mounted) {
-          setUsers(users);
-        }
-      })
-      .catch(() => {
-        if (mounted) {
-          // notify the backend
-        }
-      });
-
-    return () => {
-      mounted = false;
-    };
-  }, []);
 
   useEffect(() => {
     const handler = (event: KeyboardEvent) => {

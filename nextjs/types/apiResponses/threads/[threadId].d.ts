@@ -9,10 +9,6 @@ export interface ThreadByIdProp extends ThreadById {
   permissions: Permissions;
 }
 
-export interface MentionsWithUsers extends mentions {
-  users: users;
-}
-
 export type ThreadById = {
   id: string;
   incrementId: number;
