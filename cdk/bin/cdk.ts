@@ -3,10 +3,10 @@
 import 'source-map-support/register';
 import * as cdk from 'aws-cdk-lib';
 import { CdkStack } from '../lib/cdk-stack';
-import { stackName, account, region } from '../lib/utils/env';
+import { environment, account, region } from '../lib/utils/env';
 
 const app = new cdk.App();
-new CdkStack(app, stackName, {
+new CdkStack(app, environment.STACK_NAME, {
   env: {
     account,
     region,
