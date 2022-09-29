@@ -101,7 +101,6 @@ async function createChannelThreadsMessages({
         threadId: thread.id,
         usersId: user1.id,
         sentAt: new Date().toISOString(),
-        externalMessageId: `slack-message-id-${random()}`,
       },
     });
     await prisma.messageReactions.create({
@@ -118,7 +117,6 @@ async function createChannelThreadsMessages({
         threadId: thread.id,
         usersId: user1.id,
         sentAt: new Date().toISOString(),
-        externalMessageId: `slack-message-id-${random()}`,
       },
     });
     await prisma.messageReactions.create({
@@ -135,7 +133,6 @@ async function createChannelThreadsMessages({
         threadId: thread.id,
         usersId: user2.id,
         sentAt: new Date().toISOString(),
-        externalMessageId: `slack-message-id-${random()}`,
       },
     });
     await prisma.messages.create({
@@ -145,7 +142,6 @@ async function createChannelThreadsMessages({
         threadId: thread.id,
         usersId: user2.id,
         sentAt: new Date().toISOString(),
-        externalMessageId: `slack-message-id-${random()}`,
       },
     });
   }

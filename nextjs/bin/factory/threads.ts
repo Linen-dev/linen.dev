@@ -49,7 +49,6 @@ export async function createThreadsOneByDay(
         threadId: thread.id,
         usersId: user.id,
         sentAt: new Date(date + i * oneDay).toISOString(),
-        externalMessageId: `message-id-${random()}`,
       },
     });
     await prisma.messages.create({
@@ -59,7 +58,6 @@ export async function createThreadsOneByDay(
         threadId: thread.id,
         usersId: user.id,
         sentAt: new Date(date + i * oneDay + oneMinute).toISOString(),
-        externalMessageId: `message-id-${random()}`,
       },
     });
     threads.push(thread);

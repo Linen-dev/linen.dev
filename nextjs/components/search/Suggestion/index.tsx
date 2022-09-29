@@ -1,12 +1,14 @@
 import React from 'react';
 import { users } from '@prisma/client';
 import Avatar, { Size } from '../../Avatar';
-import Message from '../../Message';
+import Message, { getMessageFormat } from '../../Message';
 import styles from './index.module.css';
+import { SerializedUser } from 'serializers/user';
 
 interface Props {
   body: string;
-  mentions: any[];
+  externalId?: string;
+  mentions: SerializedUser[];
   user?: users;
   channelName?: string;
   communityType: string;
@@ -14,6 +16,7 @@ interface Props {
 
 export default function Suggestion({
   body,
+  externalId,
   mentions,
   user,
   channelName,
@@ -37,8 +40,8 @@ export default function Suggestion({
       </div>
       <Message
         text={body}
-        format={communityType as any}
-        mentions={mentions.map((m: any) => m.users) || []}
+        format={getMessageFormat({ communityType, externalId })}
+        mentions={mentions}
       />
     </div>
   );

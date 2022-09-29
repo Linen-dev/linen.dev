@@ -30,8 +30,8 @@ export function pre(value) {
   return { type: 'pre', value, source: `\`\`\`${value}\`\`\`` };
 }
 
-export function user(value) {
-  return { type: 'user', value, source: `@${value}` };
+export function user(id) {
+  return { type: 'user', id, source: `@${id}` };
 }
 
 export function url(value) {

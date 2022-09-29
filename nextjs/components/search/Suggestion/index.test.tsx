@@ -1,6 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import Suggestion from '.';
+import { create } from '__tests__/factory';
 
 describe('Suggestion', () => {
   it('renders a suggestion', () => {

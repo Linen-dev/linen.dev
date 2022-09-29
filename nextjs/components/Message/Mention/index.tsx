@@ -1,17 +1,19 @@
 import React from 'react';
-import { users } from '@prisma/client';
+import { SerializedUser } from 'serializers/user';
 
-function getDisplayName(userId: string, mentions?: users[]) {
+function getDisplayName(userId: string, mentions?: SerializedUser[]) {
   if (!mentions) {
     return 'User';
   }
-  const user = mentions.find((u) => u.externalUserId === userId);
+  const user = mentions.find(
+    (user) => user.id === userId || user.externalUserId === userId
+  );
   return user?.displayName || 'User';
 }
 
 interface Props {
   value: string;
-  mentions?: users[];
+  mentions?: SerializedUser[];
 }
 
 export default function Mention({ value, mentions }: Props) {

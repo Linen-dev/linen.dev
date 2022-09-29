@@ -1,4 +1,4 @@
-import { MessageWithAuthor } from '../types/partialTypes';
+import { MessageForSerialization } from '../types/partialTypes';
 import serializeMessage, { SerializedMessage } from './message';
 
 import type { channels, threads } from '@prisma/client';
@@ -17,7 +17,7 @@ export interface SerializedThread extends Omit<threads, 'sentAt'> {
 }
 
 type ThreadForSerialization = threads & {
-  messages?: MessageWithAuthor[];
+  messages?: MessageForSerialization[];
   channel?: channels;
 };
 
@@ -33,7 +33,7 @@ function serializeChannel(channel?: channels): SerializedChannel | null {
 }
 
 function serializeMessages(
-  messages?: MessageWithAuthor[]
+  messages?: MessageForSerialization[]
 ): SerializedMessage[] {
   if (!messages) {
     return [];
