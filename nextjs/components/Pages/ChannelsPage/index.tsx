@@ -40,7 +40,7 @@ export type ChannelViewProps = {
   channelName: string;
   channels?: ChannelSerialized[];
   currentChannel: ChannelSerialized;
-  currentUser?: SerializedUser;
+  currentUser: SerializedUser | null;
   threads: SerializedThread[];
   isSubDomainRouting: boolean;
   nextCursor: ChannelViewCursorProps;

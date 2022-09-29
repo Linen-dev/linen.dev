@@ -132,7 +132,7 @@ export async function threadGetServerSideProps(
         externalThreadId: thread.externalThreadId,
         messageCount: thread.messageCount,
         channelId: currentChannel.id,
-        currentUser: currentUser && serializeUser(currentUser),
+        currentUser: !!currentUser ? serializeUser(currentUser) : null,
         channel: currentChannel,
         authors: authors,
         messages: serializeThread(thread).messages,
