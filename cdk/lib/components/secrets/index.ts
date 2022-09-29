@@ -1,6 +1,7 @@
 import { Construct } from 'constructs';
 import * as cdk from 'aws-cdk-lib';
-import { SSM_STAGE } from '../../utils/env';
+import { environment } from '../../utils/env';
+const { SSM_STAGE } = environment;
 
 export function Secrets(scope: Construct) {
   const secrets = {
@@ -8,14 +9,14 @@ export function Secrets(scope: Construct) {
       cdk.aws_ssm.StringParameter.fromSecureStringParameterAttributes(
         scope,
         'sentryDns',
-        { parameterName: '/linen-dev/prod/sentryDns' }
+        { parameterName: `/linen-dev/${SSM_STAGE}/sentryDns` }
       )
     ),
     SENTRY_AUTH_TOKEN: cdk.aws_ecs.Secret.fromSsmParameter(
       cdk.aws_ssm.StringParameter.fromSecureStringParameterAttributes(
         scope,
         'sentryAuthToken',
-        { parameterName: '/linen-dev/prod/sentryAuthToken' }
+        { parameterName: `/linen-dev/${SSM_STAGE}/sentryAuthToken` }
       )
     ),
     DATABASE_URL: cdk.aws_ecs.Secret.fromSsmParameter(
@@ -29,27 +30,20 @@ export function Secrets(scope: Construct) {
       cdk.aws_ssm.StringParameter.fromSecureStringParameterAttributes(
         scope,
         'slackClientId',
-        { parameterName: '/linen-dev/prod/slackClientId' }
+        { parameterName: `/linen-dev/${SSM_STAGE}/slackClientId` }
       )
     ),
     SLACK_CLIENT_SECRET: cdk.aws_ecs.Secret.fromSsmParameter(
       cdk.aws_ssm.StringParameter.fromSecureStringParameterAttributes(
         scope,
         'slackClientSecret',
-        { parameterName: '/linen-dev/prod/slackClientSecret' }
+        { parameterName: `/linen-dev/${SSM_STAGE}/slackClientSecret` }
       )
     ),
     COMPANY_SLACK_BOT_TOKEN: cdk.aws_ecs.Secret.fromSsmParameter(
       cdk.aws_ssm.StringParameter.fromSecureStringParameterAttributes(
         scope,
         'companySlackToken',
-        { parameterName: '/linen-dev/prod/slackToken' }
-      )
-    ),
-    SLACK_TOKEN: cdk.aws_ecs.Secret.fromSsmParameter(
-      cdk.aws_ssm.StringParameter.fromSecureStringParameterAttributes(
-        scope,
-        'slackToken',
         { parameterName: '/linen-dev/prod/slackToken' }
       )
     ),
@@ -86,6 +80,48 @@ export function Secrets(scope: Construct) {
         scope,
         'pushSecretKeyBase',
         { parameterName: '/linen-dev/prod/pushSecretKeyBase' }
+      )
+    ),
+    // VERCEL_ACCESS_TOKEN: TODO
+    // VERCEL_TEAM_ID: TODO
+    // STRIPE_API_KEY: TODO
+    // STRIPE_WEBHOOK_SECRET: TODO
+    // DISCORD_CLIENT_SECRET: TODO
+    // NEXT_PUBLIC_DISCORD_CLIENT_ID: TODO
+    // NEXT_PUBLIC_POSTHOG_API_KEY: TODO
+    NEXT_PUBLIC_SENTRY_DSN: cdk.aws_ecs.Secret.fromSsmParameter(
+      cdk.aws_ssm.StringParameter.fromSecureStringParameterAttributes(
+        scope,
+        'sentryDnsPublic',
+        { parameterName: `/linen-dev/${SSM_STAGE}/sentryDns` }
+      )
+    ),
+    NEXT_PUBLIC_SLACK_CLIENT_ID: cdk.aws_ecs.Secret.fromSsmParameter(
+      cdk.aws_ssm.StringParameter.fromSecureStringParameterAttributes(
+        scope,
+        'slackClientIdPublic',
+        { parameterName: `/linen-dev/${SSM_STAGE}/slackClientId` }
+      )
+    ),
+    EMAIL_HOST: cdk.aws_ecs.Secret.fromSsmParameter(
+      cdk.aws_ssm.StringParameter.fromSecureStringParameterAttributes(
+        scope,
+        'emailHost',
+        { parameterName: `/linen-dev/prod/emailHost` }
+      )
+    ),
+    EMAIL_USER: cdk.aws_ecs.Secret.fromSsmParameter(
+      cdk.aws_ssm.StringParameter.fromSecureStringParameterAttributes(
+        scope,
+        'emailUser',
+        { parameterName: `/linen-dev/prod/emailUser` }
+      )
+    ),
+    EMAIL_PASS: cdk.aws_ecs.Secret.fromSsmParameter(
+      cdk.aws_ssm.StringParameter.fromSecureStringParameterAttributes(
+        scope,
+        'emailPass',
+        { parameterName: `/linen-dev/prod/emailPass` }
       )
     ),
   };
