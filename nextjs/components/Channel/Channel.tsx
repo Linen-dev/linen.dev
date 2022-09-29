@@ -16,6 +16,7 @@ import { scrollToBottom } from 'utilities/scroll';
 import styles from './index.module.css';
 import { v4 as uuid } from 'uuid';
 import debounce from 'awesome-debounce-promise';
+import { useUsersContext } from 'contexts/Users';
 
 const debouncedSendMessage = debounce(
   ({ message, channelId, imitationId }) => {
@@ -54,6 +55,7 @@ export function Channel({
   const [lastDirection, setLastDirection] = useState<'top' | 'bottom'>();
   const [cursor, setCursor] = useState(nextCursor);
   const [error, setError] = useState<{ prev?: unknown; next?: unknown }>();
+  const [allUsers] = useUsersContext();
 
   const [channel, setChannel] = useState<PhoneixChannel>();
 
@@ -258,8 +260,7 @@ export function Channel({
           body: message,
           sentAt: new Date().toString(),
           usersId: 'imitation-user-id',
-          // TODO get mentions realtime, e.g. from user list
-          mentions: [],
+          mentions: allUsers,
           attachments: [],
           reactions: [],
           threadId: 'imitation-thread-id',

@@ -60,6 +60,7 @@
     "eslint-config-next": "^12.2.5",
     "graphile-worker": "^0.13.0",
     "highlight.js": "^11.6.0",
+    "lodash.unionby": "^4.8.0",
     "marked": "^4.0.18",
     "micro": "^9.4.1",
     "next": "^12.2.5",

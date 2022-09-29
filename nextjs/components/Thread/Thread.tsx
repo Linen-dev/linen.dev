@@ -15,6 +15,7 @@ import { Permissions } from 'types/shared';
 import { SerializedUser } from 'serializers/user';
 import styles from './index.module.css';
 import { get } from 'utilities/http';
+import { useUsersContext } from 'contexts/Users';
 
 const debouncedSendMessage = debounce(
   ({ message, channelId, threadId, imitationId }) => {
@@ -72,6 +73,7 @@ export function Thread({
   onMount?(): void;
 }) {
   const [channel, setChannel] = useState<PhoneixChannel>();
+  const [allUsers] = useUsersContext();
   const [messages, setMessages] =
     useState<SerializedMessage[]>(initialMessages);
   const updateThread = (state: ThreadState) => {
@@ -186,8 +188,7 @@ export function Thread({
       body: message,
       sentAt: new Date().toString(),
       usersId: currentUser.id,
-      // TODO fill out mentions with users
-      mentions: [],
+      mentions: allUsers,
       attachments: [],
       reactions: [],
       threadId,

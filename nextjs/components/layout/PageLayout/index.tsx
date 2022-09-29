@@ -13,6 +13,7 @@ import styles from './index.module.css';
 import classNames from 'classnames';
 import { Permissions } from 'types/shared';
 import { LinkContext } from 'contexts/Link';
+import { UsersContext } from 'contexts/Users';
 import { Settings } from 'serializers/account/settings';
 
 interface Props {
@@ -65,107 +66,109 @@ function PageLayout({
         communityType: settings.communityType,
       }}
     >
-      <div className={styles.push} />
-      <div className={styles.header}>
-        <div
-          className="flex h-16 px-4 py-2 items-center"
-          style={{ backgroundColor: settings.brandColor, gap: '24px' }}
-        >
-          <Link href={homeUrl || '/'} passHref>
-            <a className="cursor-pointer block" target="_blank">
-              <img
-                className="block"
-                style={{ height: '32px' }}
-                src={logoUrl}
-                height="32"
-                alt={`${homeUrl} logo`}
-              />
-            </a>
-          </Link>
+      <UsersContext>
+        <div className={styles.push} />
+        <div className={styles.header}>
           <div
-            className="flex w-full items-center"
-            style={{
-              justifyContent: 'flex-end',
-              gap: '24px',
-            }}
+            className="flex h-16 px-4 py-2 items-center"
+            style={{ backgroundColor: settings.brandColor, gap: '24px' }}
           >
-            <div className="hidden sm:flex w-full">
-              <SearchBar
-                channels={channels}
-                communityName={communityName}
-                isSubDomainRouting={isSubDomainRouting}
-                communityType={settings.communityType}
-              />
-            </div>
-            <a
-              className="hidden sm:flex items-center text-sm"
-              style={{ color: fontColor, fontWeight: 500 }}
-              rel="noreferrer"
-              title="Documentation"
-              target="_blank"
-              href={docsUrl}
+            <Link href={homeUrl || '/'} passHref>
+              <a className="cursor-pointer block" target="_blank">
+                <img
+                  className="block"
+                  style={{ height: '32px' }}
+                  src={logoUrl}
+                  height="32"
+                  alt={`${homeUrl} logo`}
+                />
+              </a>
+            </Link>
+            <div
+              className="flex w-full items-center"
+              style={{
+                justifyContent: 'flex-end',
+                gap: '24px',
+              }}
             >
-              Docs
-            </a>
-            {settings.communityType === 'discord' ? (
-              <JoinDiscord inviteUrl={communityInviteUrl || communityUrl} />
-            ) : (
-              <JoinSlack inviteUrl={communityInviteUrl || communityUrl} />
-            )}
+              <div className="hidden sm:flex w-full">
+                <SearchBar
+                  channels={channels}
+                  communityName={communityName}
+                  isSubDomainRouting={isSubDomainRouting}
+                  communityType={settings.communityType}
+                />
+              </div>
+              <a
+                className="hidden sm:flex items-center text-sm"
+                style={{ color: fontColor, fontWeight: 500 }}
+                rel="noreferrer"
+                title="Documentation"
+                target="_blank"
+                href={docsUrl}
+              >
+                Docs
+              </a>
+              {settings.communityType === 'discord' ? (
+                <JoinDiscord inviteUrl={communityInviteUrl || communityUrl} />
+              ) : (
+                <JoinSlack inviteUrl={communityInviteUrl || communityUrl} />
+              )}
+            </div>
           </div>
         </div>
-      </div>
-      <div className="py-1 sm:hidden w-full">
-        <SearchBar
-          channels={channels}
-          communityName={communityName}
-          isSubDomainRouting={isSubDomainRouting}
-          communityType={settings.communityType}
-        />
-      </div>
-      {seo && <SEO {...seo} />}
-      <div className="flex flex-col lg:flex-row">
-        {NavBar({
-          channels,
-          channelName: currentChannel?.channelName || '',
-          permissions,
-        })}
-        <div
-          className={
-            className ||
-            classNames(
-              'lg:h-[calc(100vh_-_64px)] lg:w-full',
-              'md:flex',
-              'sm:h-[calc(100vh_-_144px)]',
-              'justify-center overflow-auto h-[calc(100vh_-_152px)] w-full'
-            )
-          }
-          ref={innerRef}
-        >
-          <ErrorBoundary
-            FallbackComponent={() => (
-              <>
-                <h1 className="font-bold text-blue-600 text-center text-9xl pt-6">
-                  500
-                </h1>
-                <h6 className="mb-2 text-2xl font-bold text-center text-gray-800 md:text-3xl">
-                  <span className="text-red-500">Oops!</span> Something went
-                  wrong
-                </h6>
-                <p className="mb-8 text-center text-gray-500 md:text-lg">
-                  Please try again or contact us
-                </p>
-              </>
-            )}
-          >
-            {children}
-          </ErrorBoundary>
+        <div className="py-1 sm:hidden w-full">
+          <SearchBar
+            channels={channels}
+            communityName={communityName}
+            isSubDomainRouting={isSubDomainRouting}
+            communityType={settings.communityType}
+          />
         </div>
-      </div>
-      <GoogleAnalytics
-        googleAnalyticsId={googleAnalyticsId}
-        googleSiteVerification={googleSiteVerification}
-      />
+        {seo && <SEO {...seo} />}
+        <div className="flex flex-col lg:flex-row">
+          {NavBar({
+            channels,
+            channelName: currentChannel?.channelName || '',
+            permissions,
+          })}
+          <div
+            className={
+              className ||
+              classNames(
+                'lg:h-[calc(100vh_-_64px)] lg:w-full',
+                'md:flex',
+                'sm:h-[calc(100vh_-_144px)]',
+                'justify-center overflow-auto h-[calc(100vh_-_152px)] w-full'
+              )
+            }
+            ref={innerRef}
+          >
+            <ErrorBoundary
+              FallbackComponent={() => (
+                <>
+                  <h1 className="font-bold text-blue-600 text-center text-9xl pt-6">
+                    500
+                  </h1>
+                  <h6 className="mb-2 text-2xl font-bold text-center text-gray-800 md:text-3xl">
+                    <span className="text-red-500">Oops!</span> Something went
+                    wrong
+                  </h6>
+                  <p className="mb-8 text-center text-gray-500 md:text-lg">
+                    Please try again or contact us
+                  </p>
+                </>
+              )}
+            >
+              {children}
+            </ErrorBoundary>
+          </div>
+        </div>
+        <GoogleAnalytics
+          googleAnalyticsId={googleAnalyticsId}
+          googleSiteVerification={googleSiteVerification}
+        />
+      </UsersContext>
     </LinkContext>
   );
 }
