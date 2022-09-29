@@ -9,6 +9,7 @@ import Preview from './Preview';
 import { isWhitespace } from 'utilities/string';
 import { getCaretPosition, setCaretPosition } from './utilities';
 import { SerializedUser } from 'serializers/user';
+import { useUsersContext } from 'contexts/Users';
 
 interface Props {
   onSend?(message: string): Promise<any>;
@@ -44,6 +45,7 @@ function MessageForm({ onSend, onSendAndClose, fetchMentions }: Props) {
   const [preview, setPreview] = useState(false);
   const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState<SerializedUser[]>([]);
+  const [, addUsers] = useUsersContext();
   const [position, setPosition] = useState(0);
   const ref = useRef(null);
   const mode = getMode(message, position);
@@ -82,6 +84,7 @@ function MessageForm({ onSend, onSendAndClose, fetchMentions }: Props) {
       .then((users: SerializedUser[]) => {
         if (mounted) {
           setUsers(users);
+          addUsers(users);
         }
       })
       .catch(() => {
