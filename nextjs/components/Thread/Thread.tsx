@@ -66,7 +66,7 @@ export function Thread({
   title: string | null;
   state: ThreadState;
   permissions: Permissions;
-  currentUser?: SerializedUser;
+  currentUser: SerializedUser | null;
   onThreadUpdate(state: ThreadState): void;
   onClose?(): void;
   onSend?(): void;

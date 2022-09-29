@@ -18,7 +18,7 @@ export type ThreadById = {
   messageCount: number;
   channelId: string;
   currentChannel: ChannelSerialized;
-  currentUser?: SerializerUser;
+  currentUser: SerializerUser | null;
   messages: SerializedMessage[];
   channel: ChannelSerialized;
   threadId: string;

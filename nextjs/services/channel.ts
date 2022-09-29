@@ -123,7 +123,7 @@ export async function channelGetServerSideProps(
     props: {
       nextCursor,
       currentChannel: channel,
-      currentUser: currentUser && serializeUser(currentUser),
+      currentUser: !!currentUser ? serializeUser(currentUser) : null,
       channelName: channel.channelName,
       channels,
       threads: threads.map(serializeThread),
