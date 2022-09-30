@@ -3,8 +3,6 @@ import { render, waitFor } from '@testing-library/react';
 import { AccountType } from '@prisma/client';
 import userEvent from '@testing-library/user-event';
 
-jest.mock('utilities/featureFlags', () => ({ isLoginProtectionEnabled: true }));
-
 describe('CommunityTypeCard', () => {
   it('renders a description for a public account', () => {
     const { container } = render(

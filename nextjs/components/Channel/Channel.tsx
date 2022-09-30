@@ -128,7 +128,7 @@ export function Channel({
             const messageId = payload.message_id;
             const imitationId = payload.imitation_id;
             fetch('/api/messages/' + messageId)
-              .then((e) => e.json())
+              .then((response) => response.json())
               .then((message) =>
                 setThreads((threads) => {
                   const index = threads.findIndex(({ id }) => id === threadId);
@@ -150,9 +150,8 @@ export function Channel({
             const threadId = payload.thread_id;
             const imitationId = payload.imitation_id;
             fetch('/api/threads/' + threadId)
-              .then((e) => e.json())
+              .then((response) => response.json())
               .then((thread) => {
-                console.log('thread', thread);
                 setThreads((threads) => [
                   ...threads.filter(
                     ({ id }) => id !== imitationId && id !== threadId

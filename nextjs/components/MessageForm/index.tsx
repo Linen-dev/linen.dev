@@ -2,14 +2,15 @@ import React, { useState, useRef, useEffect } from 'react';
 import autosize from 'autosize';
 import Button from 'components/Button';
 import styles from './index.module.css';
-import classNames from 'classnames';
 import toast from 'components/Toast';
 import Suggestions from 'components/Suggestions';
+import Tab from './Tab';
 import Preview from './Preview';
 import { isWhitespace } from 'utilities/string';
 import { getCaretPosition, setCaretPosition } from './utilities';
 import { SerializedUser } from 'serializers/user';
 import { useUsersContext } from 'contexts/Users';
+import { postprocess } from './utilities/message';
 
 interface Props {
   onSend?(message: string): Promise<any>;
@@ -45,10 +46,11 @@ function MessageForm({ onSend, onSendAndClose, fetchMentions }: Props) {
   const [preview, setPreview] = useState(false);
   const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState<SerializedUser[]>([]);
-  const [, addUsers] = useUsersContext();
+  const [allUsers, addUsers] = useUsersContext();
   const [position, setPosition] = useState(0);
   const ref = useRef(null);
   const mode = getMode(message, position);
+
   const handleSubmit = async (event: React.SyntheticEvent, callback?: any) => {
     event.preventDefault();
     event.stopPropagation();
@@ -57,7 +59,8 @@ function MessageForm({ onSend, onSendAndClose, fetchMentions }: Props) {
     }
     setLoading(true);
     setMessage('');
-    callback?.(message)
+
+    callback?.(postprocess(message, allUsers))
       .then(() => {
         setLoading(false);
       })
@@ -98,35 +101,32 @@ function MessageForm({ onSend, onSendAndClose, fetchMentions }: Props) {
     };
   }, []);
 
-  const activeTab =
-    'cursor-pointer rounded-md border border-transparent px-3 py-1.5 text-sm text-xs text-gray-900 bg-gray-100 hover:bg-gray-200';
-  const inactiveTab =
-    'cursor-pointer rounded-md border border-transparent px-3 py-1.5 text-sm text-xs text-gray-500 hover:text-gray-900 bg-white hover:bg-gray-100';
   return (
     <div className={styles.container}>
       <div className={styles.actions}>
-        <div
-          onClick={() => setPreview(false)}
-          className={classNames(preview ? inactiveTab : activeTab)}
-        >
+        <Tab onClick={() => setPreview(false)} active={!preview}>
           Write
-        </div>
-        <div
-          onClick={() => setPreview(true)}
-          className={classNames('ml-2', preview ? activeTab : inactiveTab)}
-        >
+        </Tab>
+        <Tab onClick={() => setPreview(true)} active={preview}>
           Preview
-        </div>
+        </Tab>
       </div>
       {mode === Mode.Mention && !preview && (
         <Suggestions
           className={styles.suggestions}
           users={users}
           onSelect={(user) => {
+            // we currently assume that users are unique
+            // we should track which users were selected
+            // to map to the correct user
+
+            // other, ideal solution would be that users just have a unique
+            // username in the db
+            // in that case we don't need to do any postprocessing
             setMessage((message) => {
               return [
                 message.slice(0, position),
-                user.id,
+                user.username,
                 message.slice(position),
               ].join('');
             });
@@ -174,7 +174,9 @@ function MessageForm({ onSend, onSendAndClose, fetchMentions }: Props) {
             }
           }}
         />
-        {preview && <Preview message={message} users={users} />}
+        {preview && (
+          <Preview message={postprocess(message, allUsers)} users={users} />
+        )}
         <div className={styles.toolbar}>
           {onSendAndClose && (
             <Button
