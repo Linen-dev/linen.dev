@@ -10,10 +10,10 @@ import Row from 'components/Message/Row';
 import type { Settings } from 'serializers/account/settings';
 import { getThreadUrl } from 'components/Pages/ChannelsPage/utilities/url';
 import MessageForm from 'components/MessageForm';
+import { fetchMentions } from 'components/MessageForm/api';
 import { Permissions } from 'types/shared';
 import { SerializedUser } from 'serializers/user';
 import styles from './index.module.css';
-import { get } from 'utilities/http';
 import { useUsersContext } from 'contexts/Users';
 import type { PushMessageType } from 'services/push';
 
@@ -289,7 +289,7 @@ export function Thread({
                   updateThread(ThreadState.CLOSE),
                 ]);
               }}
-              fetchMentions={() => get('/api/mentions')}
+              fetchMentions={fetchMentions}
             />
           ) : (
             <MessageForm
@@ -299,7 +299,7 @@ export function Thread({
                   updateThread(ThreadState.OPEN),
                 ]);
               }}
-              fetchMentions={() => get('/api/mentions')}
+              fetchMentions={fetchMentions}
             />
           )}
         </div>

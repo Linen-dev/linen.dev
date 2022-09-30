@@ -15,21 +15,71 @@ import { postprocess } from './utilities/message';
 interface Props {
   onSend?(message: string): Promise<any>;
   onSendAndClose?(message: string): Promise<any>;
-  fetchMentions?(): Promise<SerializedUser[]>;
+  fetchMentions?(term?: string): Promise<SerializedUser[]>;
 }
 
 function isUndefined(character: string | undefined) {
   return typeof character === 'undefined';
 }
 
+function isUsernameCharacter(character: string) {
+  return !!character && /[a-zA-Z0-9\.]/.test(character);
+}
+
 function isMentionMode(message: string, position: number) {
   const current = message[position - 1];
   const previous = message[position - 2];
-  return current === '@' && (isWhitespace(previous) || isUndefined(previous));
+  if (current === '@' && (isWhitespace(previous) || isUndefined(previous))) {
+    return true;
+  }
+
+  if (isUsernameCharacter(current)) {
+    let index = 2;
+    let character = message[position - index];
+    while (isUsernameCharacter(character)) {
+      index++;
+      character = message[position - index];
+    }
+    const current = character;
+    index++;
+    const previous = message[position - index];
+    if (current === '@' && (isWhitespace(previous) || isUndefined(previous))) {
+      return true;
+    }
+  }
+  return false;
 }
 
 function getMode(message: string, position: number) {
   return isMentionMode(message, position) ? Mode.Mention : Mode.Standard;
+}
+
+function getMention(message: string, position: number) {
+  if (isMentionMode(message, position)) {
+    const current = message[position - 1];
+    let mention = current;
+    if (isUsernameCharacter(current)) {
+      let index = 2;
+      let character = message[position - index];
+      while (isUsernameCharacter(character)) {
+        index++;
+        mention += character;
+        character = message[position - index];
+      }
+      const current = character;
+      index++;
+      const previous = message[position - index];
+      if (
+        current === '@' &&
+        (isWhitespace(previous) || isUndefined(previous))
+      ) {
+        return mention.split('').reverse().join('');
+      }
+    } else {
+      return '';
+    }
+  }
+  return '';
 }
 
 function isMentionKey(key: string) {
@@ -50,6 +100,7 @@ function MessageForm({ onSend, onSendAndClose, fetchMentions }: Props) {
   const [position, setPosition] = useState(0);
   const ref = useRef(null);
   const mode = getMode(message, position);
+  const mention = getMention(message, position);
 
   const handleSubmit = async (event: React.SyntheticEvent, callback?: any) => {
     event.preventDefault();
@@ -83,7 +134,7 @@ function MessageForm({ onSend, onSendAndClose, fetchMentions }: Props) {
 
   useEffect(() => {
     let mounted = true;
-    fetchMentions?.()
+    fetchMentions?.(mention)
       .then((users: SerializedUser[]) => {
         if (mounted) {
           setUsers(users);
@@ -99,7 +150,7 @@ function MessageForm({ onSend, onSendAndClose, fetchMentions }: Props) {
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [mention]);
 
   return (
     <div className={styles.container}>
@@ -124,10 +175,14 @@ function MessageForm({ onSend, onSendAndClose, fetchMentions }: Props) {
             // username in the db
             // in that case we don't need to do any postprocessing
             setMessage((message) => {
+              const start = message.slice(0, position);
+              const index = start.lastIndexOf('@') + 1;
+              const difference = position - index;
               return [
-                message.slice(0, position),
+                message.slice(0, index),
                 user.username,
-                message.slice(position),
+                ' ',
+                message.slice(difference + index),
               ].join('');
             });
             (ref.current as any).focus();

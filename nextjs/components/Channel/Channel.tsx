@@ -8,6 +8,7 @@ import { SerializedThread } from 'serializers/thread';
 import { ChannelViewProps } from 'components/Pages/ChannelsPage';
 import { get } from 'utilities/http';
 import MessageForm from 'components/MessageForm';
+import { fetchMentions } from 'components/MessageForm/api';
 import { ThreadState, Roles } from '@prisma/client';
 import { Channel as PhoneixChannel, Socket } from 'phoenix';
 import type { PushMessageType } from 'services/push';
@@ -384,7 +385,7 @@ export function Channel({
                 onSend={(message: string) => {
                   return sendMessage({ message, channelId: currentChannel.id });
                 }}
-                fetchMentions={() => get('/api/mentions')}
+                fetchMentions={fetchMentions}
               />
             </div>
           )}
