@@ -15,13 +15,13 @@ export default async function handler(
   if (request.method === 'GET') {
     const term = request.query.term as string;
     const condition = term
-      ? { AND: [{ displayName: { search: term } }] }
+      ? { displayName: { contains: term, mode: 'insensitive' } }
       : null;
     const users = await prisma.users.findMany({
       where: {
         account: { id: accountId },
         ...condition,
-      },
+      } as any,
       take: 10,
     });
     return response.status(200).json(users.map(serializeUser));
