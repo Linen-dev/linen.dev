@@ -8,19 +8,22 @@ export default function SuggestionsExample() {
         <Suggestions
           users={[
             {
-              id: '@john',
+              id: '1',
+              username: 'john.doe',
               displayName: 'John Doe',
               externalUserId: null,
               profileImageUrl: null,
             },
             {
-              id: '@jim',
+              id: '2',
+              username: 'jim.jam',
               displayName: 'Jim Jam',
               externalUserId: null,
               profileImageUrl: null,
             },
             {
-              id: '@meghan',
+              id: '3',
+              username: 'meghan.yu',
               displayName: 'Meghan Yu',
               externalUserId: null,
               profileImageUrl: null,

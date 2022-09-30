@@ -55,7 +55,7 @@ export default function Suggestions({ className, users, onSelect }: Props) {
     <div className={styles.container}>
       <ul className={classNames(styles.suggestions, className)}>
         {users.map((user: SerializedUser, index: Number) => {
-          const { id, displayName } = user;
+          const { id, username, displayName } = user;
           return (
             <li
               key={id}
@@ -65,7 +65,10 @@ export default function Suggestions({ className, users, onSelect }: Props) {
               onClick={() => onSelect?.(user)}
             >
               {displayName && (
-                <span className={styles.name}>{displayName}</span>
+                <>
+                  <span className={styles.username}>@{username}</span>
+                  <span className={styles.name}>{displayName}</span>
+                </>
               )}
             </li>
           );
