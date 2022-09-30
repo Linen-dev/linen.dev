@@ -7,6 +7,7 @@
   background-repeat: no-repeat;
   width: 36px;
   height: 36px;
+  box-shadow: 0 1px 2px #ccc;
 }
 
 .image {
@@ -33,6 +34,7 @@
   font-weight: 500;
   font-size: 16px;
   text-transform: uppercase;
+  box-shadow: 0 1px 2px #ccc;
 }
 
 .sm {
@@ -41,6 +43,8 @@
   height: 26px;
   line-height: 26px;
   border: none;
+  font-size: 12px;
+  font-weight: 500;
 }
 
 .lg {
