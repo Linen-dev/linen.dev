@@ -2,7 +2,6 @@
   display: flex;
   justify-content: left;
   align-items: center;
-  min-width: 36px;
 }
 
 .placeholder {
@@ -20,6 +19,24 @@
   color: #000;
   font-weight: bold;
   font-size: 14px;
+}
+
+.sm {
+  width: 26px;
+  min-width: 26px;
+  height: 26px;
+  line-height: 26px;
+  border: none;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.lg {
+  width: 38px;
+  min-width: 38px;
+  height: 38px;
+  line-height: 38px;
+  border: none;
 }
 
 .item + .item {

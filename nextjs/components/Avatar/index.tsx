@@ -11,11 +11,7 @@ interface Props {
   size?: Size;
 }
 
-export enum Size {
-  sm = 'sm',
-  md = 'md',
-  lg = 'lg',
-}
+export type Size = 'sm' | 'md' | 'lg';
 
 function dimensions(size?: Size) {
   switch (size) {

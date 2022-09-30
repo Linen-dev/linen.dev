@@ -1,6 +1,6 @@
 import React from 'react';
 import { users } from '@prisma/client';
-import Avatar, { Size } from '../../Avatar';
+import Avatar from '../../Avatar';
 import Message, { getMessageFormat } from '../../Message';
 import styles from './index.module.css';
 import { SerializedUser } from 'serializers/user';
@@ -26,7 +26,7 @@ export default function Suggestion({
     <div className={styles.container}>
       <div className={styles.header}>
         <Avatar
-          size={Size.sm}
+          size="sm"
           src={user?.profileImageUrl || ''}
           alt={user?.displayName || ''}
           text={(user?.displayName || '?').slice(0, 1).toLowerCase()}

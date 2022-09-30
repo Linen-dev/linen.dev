@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import classNames from 'classnames';
-import Avatar, { Size } from 'components/Avatar';
+import Avatar from 'components/Avatar';
 import Checkbox from 'components/Checkbox';
 import styles from './index.module.css';
 import { SerializedThread } from 'serializers/thread';
@@ -30,7 +30,7 @@ export default function Row({ thread, selected, onChange, onClick }: Props) {
         />
         <div className={styles.body} onClick={onClick}>
           <Avatar
-            size={Size.md}
+            size="md"
             alt={message.author?.displayName || 'avatar'}
             src={message.author?.profileImageUrl}
             text={(message.author?.displayName || '?')

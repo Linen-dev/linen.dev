@@ -1,5 +1,5 @@
 import React from 'react';
-import Avatar, { Size } from 'components/Avatar';
+import Avatar from 'components/Avatar';
 import classNames from 'classnames';
 import Message, { getMessageFormat } from '../../Message';
 import { format } from 'timeago.js';
@@ -27,7 +27,7 @@ export function Row({
       <div className={styles.avatar}>
         {!isPreviousMessageFromSameUser && (
           <Avatar
-            size={Size.lg}
+            size="lg"
             alt={message.author?.displayName || 'avatar'}
             src={message.author?.profileImageUrl}
             text={(message.author?.displayName || '?')

@@ -38,6 +38,7 @@ export function MessageCard({
         <div className="flex flex-row items-center pt-2 pr-2">
           <div className="text-sm text-gray-400 flex flex-row items-center">
             <Avatars
+              size="sm"
               users={
                 authors.map((a) => ({
                   src: a.profileImageUrl,
