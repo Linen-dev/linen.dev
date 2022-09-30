@@ -3,7 +3,6 @@ import { AccountType } from '@prisma/client';
 import Card from '../Card';
 import NativeSelect from 'components/NativeSelect';
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
-import { isLoginProtectionEnabled } from 'utilities/featureFlags';
 
 interface Props {
   type: AccountType;
@@ -40,30 +39,28 @@ export default function CommunityTypeCard({
       header="Community visibility"
       description={description(type)}
       action={
-        isLoginProtectionEnabled && (
-          <>
-            {disabled ? (
-              <small>Premium feature</small>
-            ) : (
-              <NativeSelect
-                id="type"
-                icon={icon(type)}
-                theme="blue"
-                options={[
-                  { label: 'Public', value: AccountType.PUBLIC },
-                  { label: 'Private', value: AccountType.PRIVATE },
-                ]}
-                defaultValue={type}
-                onChange={(event: React.SyntheticEvent) => {
-                  const node = event.target as HTMLSelectElement;
-                  const type = node.value as AccountType;
-                  setType(type);
-                  onChange(type);
-                }}
-              />
-            )}
-          </>
-        )
+        <>
+          {disabled ? (
+            <small>Premium feature</small>
+          ) : (
+            <NativeSelect
+              id="type"
+              icon={icon(type)}
+              theme="blue"
+              options={[
+                { label: 'Public', value: AccountType.PUBLIC },
+                { label: 'Private', value: AccountType.PRIVATE },
+              ]}
+              defaultValue={type}
+              onChange={(event: React.SyntheticEvent) => {
+                const node = event.target as HTMLSelectElement;
+                const type = node.value as AccountType;
+                setType(type);
+                onChange(type);
+              }}
+            />
+          )}
+        </>
       }
     />
   );

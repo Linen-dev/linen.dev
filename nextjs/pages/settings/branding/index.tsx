@@ -51,12 +51,7 @@ export async function getServerSideProps(context: NextPageContext) {
 
   let response;
 
-  if (
-    featureFlags.isVercelDomainEnabled &&
-    account &&
-    account.premium &&
-    account.redirectDomain
-  ) {
+  if (account && account.premium && account.redirectDomain) {
     response = await Vercel.findOrCreateDomainWithDnsRecords(
       account.redirectDomain
     );
