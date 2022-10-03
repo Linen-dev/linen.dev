@@ -1,4 +1,4 @@
-defmodule PushServiceWeb.MessageController do
+defmodule PushServiceWeb.ChannelController do
   use PushServiceWeb, :controller
   action_fallback(PushServiceWeb.FallbackController)
 
@@ -13,7 +13,7 @@ defmodule PushServiceWeb.MessageController do
         "token" => token
       }) do
     if(token == System.get_env("PUSH_SERVICE_KEY")) do
-      PushServiceWeb.Endpoint.broadcast!("room:topic:" <> thread_id, "new_msg", %{
+      PushServiceWeb.Endpoint.broadcast!("room:lobby:" <> channel_id, "new_msg", %{
         "channel_id" => channel_id,
         "imitation_id" => imitation_id,
         "message_id" => message_id,

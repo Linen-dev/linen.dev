@@ -7,7 +7,10 @@ defmodule PushServiceWeb.Router do
 
   scope "/api", PushServiceWeb do
     pipe_through(:api)
-    resources("/messages", MessageController, only: [:index, :create])
+    resources("/channel", ChannelController, only: [:create])
+    resources("/community", CommunityController, only: [:create])
+    resources("/message", MessageController, only: [:create])
+    resources("/user", UserController, only: [:create])
     get("/health", HealthController, :index)
   end
 

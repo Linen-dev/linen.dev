@@ -5,6 +5,7 @@ import { SerializedUser } from 'serializers/user';
 export type ThreadByIdResponse = ThreadById | { notFound: boolean };
 
 export interface ThreadByIdProp extends ThreadById {
+  token: string | null;
   isSubDomainRouting: boolean;
   permissions: Permissions;
 }
