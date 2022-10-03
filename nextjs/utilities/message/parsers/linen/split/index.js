@@ -34,7 +34,12 @@ function split(tokens) {
           if (typeof current === 'number' && typeof next === 'number') {
             const text = value.substring(current, next);
             if (needles.includes(current)) {
-              result.push({ type: 'url', value: text, source: text });
+              result.push({
+                type: 'url',
+                url: text,
+                value: text,
+                source: text,
+              });
             } else {
               result.push({ type: 'text', value: text, source: text });
             }

@@ -216,8 +216,8 @@ export default function Feed({
           />
         </Transition>
         <Transition show={!!thread} className={styles.thread}>
-          <div className="overflow-auto flex flex-col relative" ref={ref}>
-            {thread && (
+          {thread && (
+            <div className="overflow-auto flex flex-col relative" ref={ref}>
               <Thread
                 key={thread.id}
                 id={thread.id}
@@ -255,8 +255,8 @@ export default function Feed({
                     scrollToBottom(ref.current as HTMLElement);
                 }}
               />
-            )}
-          </div>
+            </div>
+          )}
         </Transition>
       </div>
     </PageLayout>

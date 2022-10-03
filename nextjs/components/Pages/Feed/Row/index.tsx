@@ -2,6 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import Avatar from 'components/Avatar';
 import Checkbox from 'components/Checkbox';
+import Title from './Title';
 import styles from './index.module.css';
 import { SerializedThread } from 'serializers/thread';
 import { format } from 'utilities/date';
@@ -42,7 +43,7 @@ export default function Row({ thread, selected, onChange, onClick }: Props) {
             {channel && (
               <div className={styles.channel}>#{channel.channelName}</div>
             )}
-            <div className={styles.title}>{thread.title || message.body}</div>
+            <Title thread={thread} />
             <div className={styles.description}>
               {message.author?.displayName || 'User'} started this thread {date}
               .

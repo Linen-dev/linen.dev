@@ -46,13 +46,6 @@
   font-size: 12px;
 }
 
-.title {
-  color: #2d2f34;
-  font-size: 16px;
-  font-weight: 500;
-  margin-bottom: 0.25rem;
-}
-
 .row:last-child {
   padding-bottom: 0;
 }
