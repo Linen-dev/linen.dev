@@ -5,7 +5,7 @@ import Button from 'components/Button';
 import styles from './index.module.css';
 import { Selections } from '../types';
 import Pagination from './Pagination';
-import { GoComment, GoCheck } from 'react-icons/go';
+import { GoComment, GoCheck, GoSync } from 'react-icons/go';
 
 interface Props {
   state: string;
@@ -54,12 +54,20 @@ export default function Filters({
         />
         {showActions(selections) && (
           <Button
+            color="gray"
             className={styles.filter}
             size="xs"
-            rounded="full"
             onClick={onUpdate}
           >
-            {state === ThreadState.OPEN ? 'Close' : 'Reopen'}
+            {state === ThreadState.OPEN ? (
+              <>
+                <GoCheck /> Close
+              </>
+            ) : (
+              <>
+                <GoSync /> Reopen
+              </>
+            )}
           </Button>
         )}
       </div>
