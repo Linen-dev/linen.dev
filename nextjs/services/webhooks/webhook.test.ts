@@ -1,15 +1,16 @@
-import { prismaMock } from '../../singleton';
-import * as mockModels from '../../../lib/models';
-jest.mock('../../../lib/models', () => ({
-  ...jest.requireActual('../../../lib/models'),
+import { prismaMock } from '__tests__/singleton';
+import * as mockModels from 'lib/models';
+jest.mock('lib/models', () => ({
+  ...jest.requireActual('lib/models'),
   findMessageByChannelIdAndTs: jest.fn(),
   deleteMessageWithMentions: jest.fn(),
 }));
-jest.mock('../../../lib/users');
-import * as mockUsers from '../../../lib/users';
-import { parseSlackSentAt } from '../../../utilities/sentAt';
+jest.mock('lib/users');
+import * as mockUsers from 'lib/users';
+import { parseSlackSentAt } from 'utilities/sentAt';
 import { createSlug } from 'utilities/util';
 import { handleWebhook } from 'services/webhooks';
+import { MessageFormat } from '@prisma/client';
 
 const addMessageEvent = {
   token: 'RudepRJuMOjy8zENRCLdXW7t',
@@ -240,6 +241,7 @@ describe('webhook', () => {
           create: [],
         },
         blocks: [{ type: 'rich_text', block_id: '9hC', elements: [] }],
+        messageFormat: MessageFormat.SLACK,
       },
     });
 
@@ -429,6 +431,7 @@ describe('webhook', () => {
           parseFloat(changeMessageEvent.event.message.ts) * 1000
         ),
         usersId: 'user_id',
+        messageFormat: MessageFormat.SLACK,
         mentions: {
           create: [],
         },

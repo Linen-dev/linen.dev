@@ -8,6 +8,7 @@ import serializeMessage from 'serializers/message';
 import parse from 'utilities/message/parsers/linen';
 import { findUserIds } from 'utilities/message/find';
 import { eventNewMessage } from 'services/events';
+import { MessageFormat, Prisma } from '@prisma/client';
 
 async function handler(request: NextApiRequest, response: NextApiResponse) {
   if (request.method === 'GET') {
@@ -108,14 +109,15 @@ export async function create(
   const messages = {
     create: {
       body,
-      channelId,
+      channel: { connect: { id: channelId } },
       sentAt,
-      usersId: userId,
+      author: { connect: { id: userId } },
       mentions: {
         create: userIds.map((id: string) => ({ usersId: id })),
       },
-    },
-  } as any;
+      messageFormat: MessageFormat.LINEN,
+    } as Prisma.messagesCreateInput,
+  };
 
   await prisma.threads.update({
     where: {

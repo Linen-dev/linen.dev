@@ -1,5 +1,5 @@
 import { accounts, channels } from '@prisma/client';
-import { prismaMock } from '../../singleton';
+import { prismaMock } from '__tests__/singleton';
 import { handleWebhook } from 'services/webhooks';
 
 const channelRenameEvent = {

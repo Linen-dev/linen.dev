@@ -2,7 +2,7 @@ import type { ConversationHistoryMessage } from '../api';
 import { findOrCreateThread, findThreadsByChannel } from 'lib/threads';
 import { retryPromise } from 'utilities/retryPromises';
 import { UserMap } from 'types/partialTypes';
-import type { channels } from '@prisma/client';
+import { channels, MessageFormat } from '@prisma/client';
 import prisma from '../../../client';
 import { createSlug } from 'utilities/util';
 import { processReactions } from './reactions';
@@ -56,6 +56,7 @@ async function saveMessagesSynchronous(
       externalMessageId: m.ts as string,
       threadId: threadId,
       usersId: user?.id,
+      messageFormat: MessageFormat.SLACK,
     };
     const message = await prisma.messages.upsert({
       where: {

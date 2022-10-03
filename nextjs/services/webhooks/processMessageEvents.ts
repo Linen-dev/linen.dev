@@ -9,7 +9,13 @@ import {
   SlackMessageEvent,
 } from '../../types/slackResponses/slackMessageEventInterface';
 import { createSlug } from '../../utilities/util';
-import type { accounts, channels, slackAuthorizations } from '@prisma/client';
+import {
+  accounts,
+  channels,
+  MessageFormat,
+  Prisma,
+  slackAuthorizations,
+} from '@prisma/client';
 import { findOrCreateUserFromUserInfo } from '../../lib/users';
 import { parseSlackSentAt, tsToSentAt } from '../../utilities/sentAt';
 import { findChannelWithAccountByExternalId } from 'lib/channel';
@@ -94,7 +100,7 @@ async function addMessage(
 
   let user = await findOrCreateUserFromUserInfo(event.user, channel);
 
-  const param = {
+  const param: Prisma.messagesUncheckedCreateInput = {
     body: event.text,
     blocks: event.blocks as any,
     channelId: channel.id,
@@ -102,6 +108,7 @@ async function addMessage(
     threadId: thread?.id,
     externalMessageId: event.ts,
     usersId: user?.id,
+    messageFormat: MessageFormat.SLACK,
   };
 
   const message = await createMessageWithMentions(param, mentionIds);

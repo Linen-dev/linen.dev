@@ -1,4 +1,4 @@
-import type { accounts, channels } from '@prisma/client';
+import { accounts, channels, MessageFormat } from '@prisma/client';
 import { v4 as random } from 'uuid';
 import { prisma } from '../../client';
 
@@ -49,6 +49,7 @@ export async function createThreadsOneByDay(
         threadId: thread.id,
         usersId: user.id,
         sentAt: new Date(date + i * oneDay).toISOString(),
+        messageFormat: MessageFormat.LINEN,
       },
     });
     await prisma.messages.create({
@@ -58,6 +59,7 @@ export async function createThreadsOneByDay(
         threadId: thread.id,
         usersId: user.id,
         sentAt: new Date(date + i * oneDay + oneMinute).toISOString(),
+        messageFormat: MessageFormat.LINEN,
       },
     });
     threads.push(thread);

@@ -1,4 +1,4 @@
-import type { accounts, channels } from '@prisma/client';
+import { accounts, channels, MessageFormat } from '@prisma/client';
 import prisma from '../../client';
 import { v4 } from 'uuid';
 import * as sitemap from '../../utilities/sitemap';
@@ -51,6 +51,7 @@ async function createChannel({
           usersId: user.id,
           sentAt: new Date().toISOString(),
           externalMessageId: `message-id-${random()}`,
+          messageFormat: MessageFormat.LINEN,
         },
       });
     }

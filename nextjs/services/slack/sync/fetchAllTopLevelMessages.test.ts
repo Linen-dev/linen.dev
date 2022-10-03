@@ -8,6 +8,7 @@ import { fetchAllTopLevelMessages } from './fetchAllTopLevelMessages';
 import { conversationHistory } from '__mocks__/slack-api';
 import { parseSlackSentAt, tsToSentAt } from 'utilities/sentAt';
 import { createSlug } from 'utilities/util';
+import { MessageFormat } from '@prisma/client';
 
 const account = {
   id: 'accountId123',
@@ -123,6 +124,7 @@ describe('slackSync :: fetchAllTopLevelMessages', () => {
         sentAt: tsToSentAt(conversationHistory.messages[index].ts),
         threadId: allMessages[index].id,
         usersId: undefined,
+        messageFormat: MessageFormat.SLACK,
       },
       update: {
         blocks: [],
@@ -132,6 +134,7 @@ describe('slackSync :: fetchAllTopLevelMessages', () => {
         sentAt: tsToSentAt(conversationHistory.messages[index].ts),
         threadId: allMessages[index].id,
         usersId: undefined,
+        messageFormat: MessageFormat.SLACK,
       },
       where: {
         channelId_externalMessageId: {
