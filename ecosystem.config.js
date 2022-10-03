@@ -2,8 +2,9 @@ require('dotenv').config();
 
 const PORT = process.env.PORT || 3000;
 const PUSH_SERVICE_KEY = process.env.PUSH_SERVICE_KEY;
+const AUTH_SERVICE_URL = process.env.AUTH_SERVICE_URL;
 
-if (!PUSH_SERVICE_KEY) throw 'missing vars';
+if (!PUSH_SERVICE_KEY || !AUTH_SERVICE_URL) throw 'missing vars';
 
 module.exports = {
   apps: [
@@ -36,6 +37,7 @@ module.exports = {
       cwd: 'push_service',
       env: {
         PUSH_SERVICE_KEY,
+        AUTH_SERVICE_URL,
       },
     },
     {

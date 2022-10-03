@@ -22,8 +22,11 @@ export async function feedGetServerSideProps(
   const channels = await ChannelsService.find(community.id);
   const currentUser = await Session.user(context.req, context.res);
 
+  const token = await Session.tokenRaw(context.req);
+
   return {
     props: {
+      token: token || null,
       communityName: context?.params?.communityName,
       isSubDomainRouting,
       settings: serializeSettings(community),

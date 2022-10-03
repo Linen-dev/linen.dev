@@ -52,6 +52,7 @@ export function Thread({
   onClose,
   onSend,
   onMount,
+  token,
 }: {
   id: string;
   channelId: string;
@@ -77,6 +78,7 @@ export function Thread({
   onClose?(): void;
   onSend?(): void;
   onMount?(): void;
+  token: string | null;
 }) {
   const [channel, setChannel] = useState<PhoneixChannel>();
   const [allUsers] = useUsersContext();
@@ -139,14 +141,15 @@ export function Thread({
 
   useEffect(() => {
     onMount?.();
-    if (permissions.chat) {
+    if (permissions.chat && token) {
       //Set url instead of hard coding
       const socket = new Socket(
-        `${process.env.NEXT_PUBLIC_PUSH_SERVICE_URL}/socket`
+        `${process.env.NEXT_PUBLIC_PUSH_SERVICE_URL}/socket`,
+        { params: { token } }
       );
 
       socket.connect();
-      const channel = socket.channel(`room:lobby:${channelId}`, {});
+      const channel = socket.channel(`room:topic:${id}`);
 
       setChannel(channel);
       channel

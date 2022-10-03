@@ -29,7 +29,26 @@ export const push = ({
   isThread,
   isReply,
 }: PushType) => {
-  return request.post(`${pushURL}/api/messages`).send({
+  return request.post(`${pushURL}/api/message`).send({
+    channel_id: channelId,
+    thread_id: threadId,
+    message_id: messageId,
+    imitation_id: imitationId,
+    is_thread: isThread,
+    is_reply: isReply,
+    token,
+  });
+};
+
+export const pushChannel = ({
+  channelId,
+  threadId,
+  messageId,
+  imitationId,
+  isThread,
+  isReply,
+}: PushType) => {
+  return request.post(`${pushURL}/api/channel`).send({
     channel_id: channelId,
     thread_id: threadId,
     message_id: messageId,

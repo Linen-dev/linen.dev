@@ -44,6 +44,7 @@ export function Channel({
   pathCursor,
   isBot,
   permissions,
+  token,
 }: ChannelViewProps) {
   const [init, setInit] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
@@ -104,10 +105,13 @@ export function Channel({
   }, [threads]);
 
   useEffect(() => {
-    if (permissions.chat) {
+    if (permissions.chat && token) {
       //Set url instead of hard coding
       const socket = new Socket(
-        `${process.env.NEXT_PUBLIC_PUSH_SERVICE_URL}/socket`
+        `${process.env.NEXT_PUBLIC_PUSH_SERVICE_URL}/socket`,
+        {
+          params: { token },
+        }
       );
 
       socket.connect();
@@ -435,6 +439,7 @@ export function Channel({
               onMount={() => {
                 scrollToBottom(threadRef.current as HTMLElement);
               }}
+              token={token}
             />
           )}
         </div>

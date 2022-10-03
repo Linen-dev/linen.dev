@@ -22,6 +22,7 @@ interface Props {
   isSubDomainRouting: boolean;
   permissions: Permissions;
   settings: Settings;
+  token: string | null;
 }
 
 const debouncedFetch = debounce(
@@ -52,6 +53,7 @@ export default function Feed({
   isSubDomainRouting,
   permissions,
   settings,
+  token,
 }: Props) {
   const [feed, setFeed] = useState<FeedResponse>({ threads: [], total: 0 });
   const [state, setState] = useState<ThreadState>(ThreadState.OPEN);
@@ -251,6 +253,7 @@ export default function Feed({
               onMount={() => {
                 permissions.chat && scrollToBottom(ref.current as HTMLElement);
               }}
+              token={token}
             />
           </div>
         )}

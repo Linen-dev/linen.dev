@@ -3,7 +3,6 @@ import { ThreadByIdProp } from '../../../types/apiResponses/threads/[threadId]';
 import { useEffect, useState, useRef } from 'react';
 import { Thread } from 'components/Thread';
 import { buildThreadSeo } from 'utilities/seo';
-import { ThreadState } from '@prisma/client';
 import { scrollToBottom } from 'utilities/scroll';
 
 export function ThreadPage({
@@ -22,6 +21,7 @@ export function ThreadPage({
   title: initialTitle,
   state: initialState,
   permissions,
+  token,
 }: ThreadByIdProp) {
   const [state, setState] = useState(initialState);
   const [title, setTitle] = useState(initialTitle);
@@ -83,6 +83,7 @@ export function ThreadPage({
           onMount={() => {
             permissions.chat && scrollToBottom(ref.current as HTMLElement);
           }}
+          token={token}
         />
       </div>
     </PageLayout>

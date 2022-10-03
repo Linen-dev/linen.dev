@@ -36,6 +36,7 @@ export type messageWithAuthor = messages & {
 };
 
 export type ChannelViewProps = {
+  token: string | null;
   settings: Settings;
   channelName: string;
   channels?: ChannelSerialized[];

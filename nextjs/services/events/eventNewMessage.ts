@@ -1,5 +1,5 @@
 import { createChatSyncJob } from 'queue/jobs';
-import { push } from 'services/push';
+import { push, pushChannel } from 'services/push';
 
 type NewMessageEvent = {
   channelId: any;
@@ -23,7 +23,11 @@ export async function eventNewMessage({
     isReply: true,
   };
 
-  const promises: Promise<any>[] = [createChatSyncJob(event), push(event)];
+  const promises: Promise<any>[] = [
+    createChatSyncJob(event),
+    push(event),
+    pushChannel(event),
+  ];
 
   await Promise.allSettled(promises);
 }

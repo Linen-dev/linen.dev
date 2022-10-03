@@ -1,5 +1,6 @@
 defmodule PushServiceWeb.UserSocket do
   use Phoenix.Socket
+  use HTTPoison.Base
 
   # A Socket handler
   #
@@ -10,7 +11,9 @@ defmodule PushServiceWeb.UserSocket do
   # Uncomment the following line to define a "room:*" topic
   # pointing to the `PushServiceWeb.RoomChannel`:
   #
-  channel "room:*", PushServiceWeb.RoomChannel
+  channel("room:*", PushServiceWeb.RoomChannel)
+  channel("user*", PushServiceWeb.RoomChannel)
+
   #
   # To create a channel file, use the mix task:
   #
@@ -18,7 +21,6 @@ defmodule PushServiceWeb.UserSocket do
   #
   # See the [`Channels guide`](https://hexdocs.pm/phoenix/channels.html)
   # for further details.
-
 
   # Socket params are passed from the client and can
   # be used to verify and authenticate a user. After
@@ -32,9 +34,20 @@ defmodule PushServiceWeb.UserSocket do
   # See `Phoenix.Token` documentation for examples in
   # performing token verification on connect.
   @impl true
-  def connect(_params, socket, _connect_info) do
-    {:ok, socket}
+  def connect(%{"token" => token}, socket, _connect_info) do
+    case PushServiceWeb.AuthHelper.can_connect(%{
+           "token" => token
+         }) do
+      {:ok, body} ->
+        {:ok, assign(socket, :current_user, body)}
+
+      {_} ->
+        {:error, %{reason: "unauthorized"}}
+    end
   end
+
+  @impl true
+  def connect(_params, _socket, _connect_info), do: :error
 
   # Socket id's are topics that allow you to identify all sockets for a given user:
   #

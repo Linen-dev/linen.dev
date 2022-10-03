@@ -111,8 +111,11 @@ export async function channelGetServerSideProps(
 
   const currentUser = await Session.user(context.req, context.res);
 
+  const token = await Session.tokenRaw(context.req);
+
   return {
     props: {
+      token: token || null,
       nextCursor,
       currentChannel: channel,
       currentUser: !!currentUser ? serializeUser(currentUser) : null,

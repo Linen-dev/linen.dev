@@ -9,6 +9,8 @@ import { authOptions } from 'pages/api/auth/[...nextauth]';
 import type { users } from '@prisma/client';
 import { findAuthByEmail } from 'lib/users';
 export { type SessionType };
+import { getToken, type JWT } from 'next-auth/jwt';
+import prisma from 'client';
 
 export default class Session {
   static async find(
@@ -34,5 +36,46 @@ export default class Session {
       }
     }
     return null;
+  }
+
+  static async token(
+    req: GetServerSidePropsContext['req'] | NextApiRequest
+  ): Promise<JWT | null> {
+    return getToken({ req });
+  }
+
+  static async tokenRaw(
+    req: GetServerSidePropsContext['req'] | NextApiRequest
+  ): Promise<string | null> {
+    return getToken({ req, raw: true });
+  }
+
+  static async canAuthAccessChannel(authId: string, channelId: string) {
+    return await prisma.auths.findFirst({
+      where: {
+        id: authId,
+        account: { channels: { some: { id: channelId } } },
+      },
+    });
+  }
+
+  static async canAuthAccessCommunity(authId: string, communityId: string) {
+    return await prisma.auths.findFirst({
+      where: {
+        id: authId,
+        account: { id: communityId },
+      },
+    });
+  }
+
+  static async canAuthAccessThread(authId: string, threadId: string) {
+    return await prisma.auths.findFirst({
+      where: {
+        id: authId,
+        account: {
+          channels: { some: { threads: { some: { id: threadId } } } },
+        },
+      },
+    });
   }
 }
