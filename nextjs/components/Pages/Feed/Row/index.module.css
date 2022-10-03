@@ -1,43 +1,58 @@
 .row {
   align-items: center;
   display: block;
-  padding: 0.5rem 1.5rem;
+  padding: 0 1.5rem;
   width: 100%;
 }
 
 .row.selected {
-  background-color: aliceblue;
+  background-color: #f1f2f4;
 }
 
 .row:hover {
-  background-color: ghostwhite;
+  background-color: #f6f7f9;
+}
+
+.checkbox {
+  margin: 0.75rem;
 }
 
 .content {
+  align-items: center;
   display: flex;
   font-size: 12px;
-  gap: 0.5rem;
   width: 100%;
 }
 
 .body {
+  align-items: center;
   cursor: pointer;
   display: flex;
-  gap: 0.5rem;
+  gap: 1rem;
+  padding: 0.75rem 0;
   width: 100%;
 }
 
-.date,
-.message {
-  color: lightslategray;
+.channel {
+  font-size: 14px;
 }
 
-.row {
-  padding-bottom: 0.5rem;
+.channel,
+.description {
+  color: #6a707c;
 }
-.row + .row {
-  border-top: 1px solid whitesmoke;
+
+.description {
+  font-size: 12px;
 }
+
+.title {
+  color: #2d2f34;
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
 .row:last-child {
   padding-bottom: 0;
 }

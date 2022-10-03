@@ -21,6 +21,7 @@ export default function Row({ thread, selected, onChange, onClick }: Props) {
     <div className={classNames(styles.row, { [styles.selected]: selected })}>
       <div className={styles.content}>
         <Checkbox
+          className={styles.checkbox}
           checked={selected}
           onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
             event.stopPropagation();
@@ -38,12 +39,13 @@ export default function Row({ thread, selected, onChange, onClick }: Props) {
               .toLowerCase()}
           />
           <div>
-            <div>
-              {channel && <span className="mr-1">#{channel.channelName}</span>}
-              <span className={styles.date}>{date}</span>
-            </div>
-            <div className={styles.message}>
-              {message.author?.displayName || 'User'}: {message.body}
+            {channel && (
+              <div className={styles.channel}>#{channel.channelName}</div>
+            )}
+            <div className={styles.title}>{thread.title || message.body}</div>
+            <div className={styles.description}>
+              {message.author?.displayName || 'User'} started this thread {date}
+              .
             </div>
           </div>
         </div>

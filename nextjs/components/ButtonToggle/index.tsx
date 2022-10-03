@@ -1,9 +1,11 @@
 import React from 'react';
 import Button from 'components/Button';
 import ButtonGroup from 'components/ButtonGroup';
+import styles from './index.module.css';
 
 interface Option {
   label: string;
+  icon?: React.ReactNode;
   value: any;
 }
 
@@ -26,11 +28,12 @@ export default function ButtonToggle({
         return (
           <Button
             key={`${option.label}-${index}`}
+            className={styles.button}
             color={option.value === value ? 'white' : 'transparent'}
             size="xs"
-            rounded="full"
             onClick={() => onChange(option.value)}
           >
+            {option.icon}
             {option.label}
           </Button>
         );

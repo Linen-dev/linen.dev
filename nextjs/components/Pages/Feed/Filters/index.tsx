@@ -5,6 +5,7 @@ import Button from 'components/Button';
 import styles from './index.module.css';
 import { Selections } from '../types';
 import Pagination from './Pagination';
+import { GoComment, GoCheck } from 'react-icons/go';
 
 interface Props {
   state: string;
@@ -42,8 +43,12 @@ export default function Filters({
           className={styles.filter}
           value={state}
           options={[
-            { label: 'Active', value: ThreadState.OPEN },
-            { label: 'Closed', value: ThreadState.CLOSE },
+            {
+              label: 'Active',
+              icon: <GoComment />,
+              value: ThreadState.OPEN,
+            },
+            { label: 'Closed', icon: <GoCheck />, value: ThreadState.CLOSE },
           ]}
           onChange={(value: ThreadState) => onChange('state', value)}
         />
