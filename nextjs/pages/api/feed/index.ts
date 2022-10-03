@@ -30,6 +30,9 @@ export async function index({
     state: params.state || ThreadState.OPEN,
     channelId: { in: channels.map((channel) => channel.id) },
     messageCount: { gte: 1 },
+    messages: {
+      some: {},
+    },
   };
   const total = await prisma.threads.count({
     where: condition,
