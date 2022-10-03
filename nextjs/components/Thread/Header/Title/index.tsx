@@ -4,6 +4,7 @@ import { GoPencil } from 'react-icons/go';
 import classNames from 'classnames';
 import styles from './index.module.css';
 import { ThreadState } from '@prisma/client';
+import { Permissions } from 'types/shared';
 
 enum Mode {
   Edit,
@@ -13,6 +14,7 @@ enum Mode {
 interface Props {
   title?: string | null;
   state: ThreadState;
+  permissions: Permissions;
   onSetTitle(title: string): void;
 }
 
@@ -30,14 +32,20 @@ function getTitle({
   return title;
 }
 
-export default function Title({ title, state, onSetTitle }: Props) {
+export default function Title({
+  title,
+  state,
+  permissions,
+  onSetTitle,
+}: Props) {
   const [mode, setMode] = useState(Mode.Read);
+  const text = getTitle({ title, closed: state === ThreadState.CLOSE });
+  if (!permissions.feed) {
+    return <div className={styles.title}>{text}</div>;
+  }
   return (
     <div
-      className={classNames(
-        styles.title,
-        'text-lg font-bold block cursor-pointer'
-      )}
+      className={classNames(styles.title, 'cursor-pointer')}
       onClick={() => setMode(Mode.Edit)}
     >
       {mode === Mode.Edit && (
@@ -60,7 +68,7 @@ export default function Title({ title, state, onSetTitle }: Props) {
       )}
       {mode === Mode.Read && (
         <>
-          {getTitle({ title, closed: state === ThreadState.CLOSE })}
+          {text}
           <GoPencil className={styles.icon} />
         </>
       )}

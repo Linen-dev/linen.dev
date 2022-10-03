@@ -45,7 +45,12 @@ export default function Header({
           )}
 
           <div>
-            <Title title={title} state={state} onSetTitle={onSetTitle} />
+            <Title
+              title={title}
+              state={state}
+              permissions={permissions}
+              onSetTitle={onSetTitle}
+            />
             <div className="text-gray-600 text-xs ">#{channelName}</div>
           </div>
         </div>
