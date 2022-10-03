@@ -35,7 +35,7 @@ export function user(id) {
 }
 
 export function url(value) {
-  return { type: 'url', value, source: value };
+  return { type: 'url', url: value, value, source: value };
 }
 
 export function quote(children) {

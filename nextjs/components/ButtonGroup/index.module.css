@@ -1,6 +1,7 @@
 .group {
-  background-color: #e5e7eb;
-  border-radius: 128px;
+  background-color: #f6f7f9;
+  border: 1px solid #ecedef;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   padding: 0.125rem;
