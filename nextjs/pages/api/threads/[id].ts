@@ -7,20 +7,23 @@ import { getAuthFromSession } from 'utilities/session';
 import to from 'utilities/await-to-js';
 
 async function update(request: NextApiRequest, response: NextApiResponse) {
-  // TODO check user permissions
   const id = request.query.id as string;
-  const { state } = JSON.parse(request.body);
+  const [error, session] = await to(getAuthFromSession(request, response));
+  if (error || !session) {
+    return response.status(401).end();
+  }
+  const { state, title } = JSON.parse(request.body);
   await prisma.threads.update({
     where: { id },
-    data: { state },
+    data: { state, title },
   });
   return response.status(200).json({});
 }
 
 async function get(request: NextApiRequest, response: NextApiResponse) {
   const id = request.query.id as string;
-  const [sessionErr, session] = await to(getAuthFromSession(request, response));
-  if (!!sessionErr || !session) {
+  const [error, session] = await to(getAuthFromSession(request, response));
+  if (error || !session) {
     return response.status(401).end();
   }
   const thread = await findThreadById(id);

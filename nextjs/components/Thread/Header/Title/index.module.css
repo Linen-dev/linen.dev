@@ -1,0 +1,10 @@
+.title {
+  align-items: center;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.icon {
+  color: rgb(51, 65, 85);
+  font-size: 12px;
+}

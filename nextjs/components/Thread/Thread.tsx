@@ -67,7 +67,13 @@ export function Thread({
   state: ThreadState;
   permissions: Permissions;
   currentUser: SerializedUser | null;
-  onThreadUpdate(state: ThreadState): void;
+  onThreadUpdate({
+    state,
+    title,
+  }: {
+    state: ThreadState;
+    title: string | null;
+  }): void;
   onClose?(): void;
   onSend?(): void;
   onMount?(): void;
@@ -76,16 +82,24 @@ export function Thread({
   const [allUsers] = useUsersContext();
   const [messages, setMessages] =
     useState<SerializedMessage[]>(initialMessages);
-  const updateThread = (state: ThreadState) => {
+  const updateThread = ({
+    state: newState,
+    title: newTitle,
+  }: {
+    state?: ThreadState;
+    title?: string;
+  }) => {
+    const options = {
+      state: newState || state,
+      title: newTitle || title,
+    };
     return fetch(`/api/threads/${id}`, {
       method: 'PUT',
-      body: JSON.stringify({
-        state,
-      }),
+      body: JSON.stringify(options),
     })
       .then((response) => {
         if (response.ok) {
-          return onThreadUpdate(state);
+          return onThreadUpdate(options);
         }
         throw new Error('Failed to close the thread.');
       })
@@ -256,8 +270,9 @@ export function Thread({
         title={title}
         channelName={channelName}
         onClose={onClose}
-        onCloseThread={() => updateThread(ThreadState.CLOSE)}
-        onReopenThread={() => updateThread(ThreadState.OPEN)}
+        onCloseThread={() => updateThread({ state: ThreadState.CLOSE })}
+        onReopenThread={() => updateThread({ state: ThreadState.OPEN })}
+        onSetTitle={(title) => updateThread({ title })}
         permissions={permissions}
         state={state}
       />
@@ -286,7 +301,7 @@ export function Thread({
               onSendAndClose={(message: string) => {
                 return Promise.all([
                   sendMessage({ message, channelId, threadId: id }),
-                  updateThread(ThreadState.CLOSE),
+                  updateThread({ state: ThreadState.CLOSE }),
                 ]);
               }}
               fetchMentions={fetchMentions}
@@ -296,7 +311,7 @@ export function Thread({
               onSend={(message: string) => {
                 return Promise.all([
                   sendMessage({ message, channelId, threadId: id }),
-                  updateThread(ThreadState.OPEN),
+                  updateThread({ state: ThreadState.OPEN }),
                 ]);
               }}
               fetchMentions={fetchMentions}

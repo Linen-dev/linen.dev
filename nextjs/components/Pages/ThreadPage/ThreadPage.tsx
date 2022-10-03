@@ -19,11 +19,12 @@ export function ThreadPage({
   settings,
   slug,
   incrementId,
-  title,
+  title: initialTitle,
   state: initialState,
   permissions,
 }: ThreadByIdProp) {
   const [state, setState] = useState(initialState);
+  const [title, setTitle] = useState(initialTitle);
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
     threadId && fetch(`/api/count?incrementId=${threadId}`, { method: 'PUT' });
@@ -72,7 +73,10 @@ export function ThreadPage({
           slug={slug}
           permissions={permissions}
           currentUser={currentUser}
-          onThreadUpdate={(state: ThreadState) => setState(state)}
+          onThreadUpdate={({ state, title }) => {
+            setState(state);
+            setTitle(title);
+          }}
           onSend={() => {
             scrollToBottom(ref.current as HTMLElement);
           }}
