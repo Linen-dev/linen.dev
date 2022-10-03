@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import classNames from 'classnames';
 import { ThreadState } from '@prisma/client';
 import { Permissions } from 'types/shared';
-import { GoKebabVertical, GoChevronLeft, GoX, GoSync } from 'react-icons/go';
+import { GoCheck, GoChevronLeft, GoX, GoSync } from 'react-icons/go';
 import styles from './index.module.css';
 
 interface Props {
@@ -64,37 +64,33 @@ export default function Header({
           </div>
         </div>
         <div className={styles.icons}>
-          {actions && (
-            <ul className={styles.actions}>
+          {permissions.feed && (
+            <>
               {state === ThreadState.OPEN && (
-                <li
+                <a
+                  className={styles.icon}
+                  title="Close thread"
                   onClick={() => {
                     setActions(false);
                     onCloseThread();
                   }}
                 >
-                  <GoX /> Close thread
-                </li>
+                  <GoCheck />
+                </a>
               )}
               {state === ThreadState.CLOSE && (
-                <li
+                <a
+                  className={styles.icon}
+                  title="Reopen thread"
                   onClick={() => {
                     setActions(false);
                     onReopenThread();
                   }}
                 >
-                  <GoSync /> Reopen thread
-                </li>
+                  <GoSync />
+                </a>
               )}
-            </ul>
-          )}
-          {permissions.feed && (
-            <a
-              className={styles.icon}
-              onClick={() => setActions((actions) => !actions)}
-            >
-              <GoKebabVertical />
-            </a>
+            </>
           )}
           {onClose && (
             <a
