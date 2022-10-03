@@ -421,10 +421,11 @@ export function Channel({
               slug={currentThread.slug || undefined}
               threadUrl={null}
               permissions={permissions}
-              onThreadUpdate={(state: ThreadState) =>
+              onThreadUpdate={({ state, title }) =>
                 setCurrentThread(() => ({
                   ...currentThread,
                   state,
+                  title,
                 }))
               }
               onClose={() => setShowThread(false)}

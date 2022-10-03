@@ -234,7 +234,7 @@ export default function Feed({
                 slug={thread.slug}
                 permissions={permissions}
                 currentUser={currentUser}
-                onThreadUpdate={(state: ThreadState) => {
+                onThreadUpdate={({ state, title }) => {
                   setThread((thread) => {
                     if (!thread) {
                       return null;
@@ -242,6 +242,7 @@ export default function Feed({
                     return {
                       ...thread,
                       state,
+                      title,
                     };
                   });
                   setKey((key) => key + 1);

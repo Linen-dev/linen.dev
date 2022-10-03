@@ -16,8 +16,11 @@ interface Props {
   disabled?: boolean;
   readOnly?: boolean;
   icon?: React.ReactNode;
+  autoFocus?: boolean;
   inputRef?: React.RefObject<HTMLInputElement>;
   onChange?(event: React.ChangeEvent<HTMLInputElement>): void;
+  onBlur?(event: React.ChangeEvent<HTMLInputElement>): void;
+  onKeyDown?(event: React.KeyboardEvent<HTMLInputElement>): void;
 }
 
 function TextInput({
@@ -35,6 +38,9 @@ function TextInput({
   icon,
   inputRef,
   onChange,
+  onBlur,
+  onKeyDown,
+  autoFocus,
   ...rest
 }: Props) {
   return (
@@ -55,6 +61,9 @@ function TextInput({
           disabled={disabled}
           readOnly={readOnly}
           onChange={onChange}
+          onBlur={onBlur}
+          onKeyDown={onKeyDown}
+          autoFocus={autoFocus}
           {...rest}
         />
       </div>

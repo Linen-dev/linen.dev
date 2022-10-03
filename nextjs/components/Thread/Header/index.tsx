@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Title from './Title';
 import classNames from 'classnames';
 import { ThreadState } from '@prisma/client';
 import { Permissions } from 'types/shared';
@@ -13,20 +14,7 @@ interface Props {
   onClose?(): void;
   onCloseThread(): void;
   onReopenThread(): void;
-}
-
-function getTitle({
-  title,
-  closed,
-}: {
-  title?: string | null;
-  closed?: boolean;
-}): string {
-  title = title || 'Thread';
-  if (closed) {
-    return `[CLOSED] ${title}`;
-  }
-  return title;
+  onSetTitle(title: string): void;
 }
 
 export default function Header({
@@ -37,8 +25,8 @@ export default function Header({
   onClose,
   onCloseThread,
   onReopenThread,
+  onSetTitle,
 }: Props) {
-  const [actions, setActions] = useState(false);
   return (
     <div
       className={classNames(
@@ -57,9 +45,12 @@ export default function Header({
           )}
 
           <div>
-            <div className="text-lg font-bold block">
-              {getTitle({ title, closed: state === ThreadState.CLOSE })}
-            </div>
+            <Title
+              title={title}
+              state={state}
+              permissions={permissions}
+              onSetTitle={onSetTitle}
+            />
             <div className="text-gray-600 text-xs ">#{channelName}</div>
           </div>
         </div>
@@ -71,7 +62,6 @@ export default function Header({
                   className={styles.icon}
                   title="Close thread"
                   onClick={() => {
-                    setActions(false);
                     onCloseThread();
                   }}
                 >
@@ -83,7 +73,6 @@ export default function Header({
                   className={styles.icon}
                   title="Reopen thread"
                   onClick={() => {
-                    setActions(false);
                     onReopenThread();
                   }}
                 >
