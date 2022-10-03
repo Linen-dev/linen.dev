@@ -38,15 +38,15 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       },
     });
 
-    // this function runs on serverless, implement promise race to avoid timeout for huge communities
-    await Promise.race([
-      timeoutAfter(5),
-      listChannelsAndPersist({
-        serverId: guild.id,
-        accountId: account.id,
-        token: process.env.DISCORD_TOKEN as string,
-      }),
-    ]);
+    // // this function runs on serverless, implement promise race to avoid timeout for huge communities
+    // await Promise.race([
+    //   timeoutAfter(5),
+    //   listChannelsAndPersist({
+    //     serverId: guild.id,
+    //     accountId: account.id,
+    //     token: process.env.DISCORD_TOKEN as string,
+    //   }),
+    // ]);
 
     await createSyncJob({
       account_id: accountId,

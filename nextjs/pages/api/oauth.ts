@@ -55,17 +55,17 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       authedUserId: user.id,
     });
 
-    // this function runs on serverless, implement promise race to avoid timeout for huge communities
-    await Promise.race([
-      timeoutAfter(5),
-      createChannels({
-        accountId,
-        slackTeamId: body.team.id,
-        token: body.access_token,
-        getSlackChannels,
-        joinChannel,
-      }),
-    ]);
+    // // this function runs on serverless, implement promise race to avoid timeout for huge communities
+    // await Promise.race([
+    //   timeoutAfter(5),
+    //   createChannels({
+    //     accountId,
+    //     slackTeamId: body.team.id,
+    //     token: body.access_token,
+    //     getSlackChannels,
+    //     joinChannel,
+    //   }),
+    // ]);
 
     await createSyncJob({
       account_id: accountId,

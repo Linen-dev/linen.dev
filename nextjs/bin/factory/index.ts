@@ -1,4 +1,4 @@
-import { accounts, users } from '@prisma/client';
+import { accounts, MessageFormat, users } from '@prisma/client';
 import prisma from '../../client';
 
 import messages from './messages';
@@ -101,6 +101,7 @@ async function createChannelThreadsMessages({
         threadId: thread.id,
         usersId: user1.id,
         sentAt: new Date().toISOString(),
+        messageFormat: MessageFormat.LINEN,
       },
     });
     await prisma.messageReactions.create({
@@ -117,6 +118,7 @@ async function createChannelThreadsMessages({
         threadId: thread.id,
         usersId: user1.id,
         sentAt: new Date().toISOString(),
+        messageFormat: MessageFormat.LINEN,
       },
     });
     await prisma.messageReactions.create({
@@ -133,6 +135,7 @@ async function createChannelThreadsMessages({
         threadId: thread.id,
         usersId: user2.id,
         sentAt: new Date().toISOString(),
+        messageFormat: MessageFormat.LINEN,
       },
     });
     await prisma.messages.create({
@@ -142,6 +145,7 @@ async function createChannelThreadsMessages({
         threadId: thread.id,
         usersId: user2.id,
         sentAt: new Date().toISOString(),
+        messageFormat: MessageFormat.LINEN,
       },
     });
   }

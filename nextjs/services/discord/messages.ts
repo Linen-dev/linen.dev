@@ -1,5 +1,5 @@
 import prisma from '../../client';
-import { channels, threads, users } from '@prisma/client';
+import { channels, MessageFormat, threads, users } from '@prisma/client';
 import { DiscordMessage } from '../../types/discordResponses/discordMessagesInterface';
 import { findUsers, getMentions, getUsersInMessages } from './users';
 
@@ -108,6 +108,7 @@ function upsertMessage(message: {
     threadId: message.threadId,
     channelId: message.channelId,
     usersId: message.authorId,
+    messageFormat: MessageFormat.DISCORD,
     ...(message.mentions && {
       mentions: {
         createMany: {

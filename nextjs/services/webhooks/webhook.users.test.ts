@@ -1,4 +1,4 @@
-import { prismaMock } from '../../singleton';
+import { prismaMock } from '__tests__/singleton';
 import type { accounts } from '@prisma/client';
 import { handleWebhook } from 'services/webhooks';
 

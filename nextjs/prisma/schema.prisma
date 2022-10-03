@@ -32,10 +32,17 @@ model messages {
   usersId                  String?
   textsearchable_index_col Unsupported("tsvector")?
   blocks                   Json?
+  messageFormat            MessageFormat?
 
   @@unique([channelId, externalMessageId])
   @@index([textsearchable_index_col], type: Gin)
   @@index([threadId])
+}
+
+enum MessageFormat {
+  DISCORD
+  SLACK
+  LINEN
 }
 
 model threads {

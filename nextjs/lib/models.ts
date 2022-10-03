@@ -15,6 +15,7 @@ export const createMessage = async (
       channelId: message.channelId,
       sentAt: message.sentAt,
       usersId: message.usersId,
+      messageFormat: message.messageFormat,
     },
   });
 };
@@ -32,6 +33,7 @@ export const createMessageWithMentions = async (
       channelId: message.channelId,
       sentAt: message.sentAt,
       usersId: message.usersId,
+      messageFormat: message.messageFormat,
       mentions: {
         create: mentionsId.map((id) => ({ usersId: id })),
       },
@@ -54,30 +56,29 @@ export const deleteMessageWithMentions = async (messageId: string) => {
   ]);
 };
 
-export const createOrUpdateMessage = async (message: {
-  externalMessageId: string;
-  channelId: string;
-  body: string;
-}) => {
+export const createOrUpdateMessage = async (
+  message: Prisma.messagesUncheckedCreateInput
+) => {
   //TODO: Make sure externalMessageId exists
   const sentAt = new Date(parseFloat(message.externalMessageId!) * 1000);
+  const toUpsert: Prisma.messagesUncheckedCreateInput = {
+    body: message.body,
+    sentAt,
+    channelId: message.channelId,
+    externalMessageId: message.externalMessageId,
+    usersId: message.usersId,
+    messageFormat: message.messageFormat,
+    threadId: message.threadId,
+  };
   return await prisma.messages.upsert({
     where: {
       channelId_externalMessageId: {
         channelId: message.channelId,
-        externalMessageId: message.externalMessageId,
+        externalMessageId: message.externalMessageId!,
       },
     },
-    update: {
-      externalMessageId: message.externalMessageId,
-    },
-    create: {
-      body: message.body,
-      sentAt,
-      channelId: message.channelId,
-      externalMessageId: message.externalMessageId,
-      usersId: null,
-    },
+    update: toUpsert,
+    create: toUpsert,
   });
 };
 

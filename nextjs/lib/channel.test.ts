@@ -1,7 +1,7 @@
 import { findChannelsByAccount } from './channel';
 import prisma from 'client';
 import { v4 } from 'uuid';
-import { AccountType } from '@prisma/client';
+import { AccountType, MessageFormat } from '@prisma/client';
 
 describe('channel lib', () => {
   describe('as crawler, finding channels by account', () => {
@@ -131,11 +131,13 @@ async function createThreadWithMessage(
                 channelId: channelId,
                 body: v4(),
                 sentAt,
+                messageFormat: MessageFormat.LINEN,
               },
               {
                 channelId: channelId,
                 body: v4(),
                 sentAt,
+                messageFormat: MessageFormat.LINEN,
               },
             ],
           },

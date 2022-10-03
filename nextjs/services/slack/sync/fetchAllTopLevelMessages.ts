@@ -1,6 +1,6 @@
 import { updateNextPageCursor } from 'lib/models';
 import { AccountWithSlackAuthAndChannels, UserMap } from 'types/partialTypes';
-import type { channels } from '@prisma/client';
+import { channels, MessageFormat } from '@prisma/client';
 
 import prisma from '../../../client';
 import type { ConversationHistoryMessage } from '../api';
@@ -52,6 +52,7 @@ async function saveMessagesTransaction(
       externalMessageId: m.ts as string,
       threadId: thread?.id,
       usersId: user?.id,
+      messageFormat: MessageFormat.SLACK,
     };
     const message = await prisma.messages.upsert({
       where: {

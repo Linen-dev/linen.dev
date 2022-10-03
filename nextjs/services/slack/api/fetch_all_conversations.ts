@@ -1,4 +1,4 @@
-import type { channels, messages, threads } from '@prisma/client';
+import { channels, MessageFormat, messages, threads } from '@prisma/client';
 import request from 'superagent';
 import { captureException, flush } from '@sentry/nextjs';
 import { createMessage, createOrUpdateMessage } from 'lib/models';
@@ -215,6 +215,7 @@ export const saveMessages = async (
         externalThreadId: message.thread_ts,
         externalUserId: message.user || message.bot_id,
         usersId: null,
+        messageFormat: MessageFormat.SLACK,
       } as any;
     });
 
@@ -291,6 +292,7 @@ export async function saveThreadedMessages(
         externalMessageId: m.ts,
         externalUserId: m.user || m.bot_id,
         channelId: channelId,
+        messageFormat: MessageFormat.SLACK,
       };
     })
     .sort((a: any, b: any) => a.sentAt.getTime() - b.sentAt.getTime());

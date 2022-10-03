@@ -39,6 +39,7 @@ async function buildSentAtForThreads() {
           data: {
             sentAt: 1,
             messageCount: 0,
+            hidden: true,
           },
         });
       }
