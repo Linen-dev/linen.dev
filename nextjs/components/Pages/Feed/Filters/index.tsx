@@ -5,6 +5,7 @@ import Button from 'components/Button';
 import styles from './index.module.css';
 import { Selections } from '../types';
 import Pagination from './Pagination';
+import ScopeSelect from './ScopeSelect';
 import { GoComment, GoCheck, GoSync } from 'react-icons/go';
 
 interface Props {
@@ -52,6 +53,7 @@ export default function Filters({
           ]}
           onChange={(value: ThreadState) => onChange('state', value)}
         />
+        <ScopeSelect onChange={onChange} />
         {showActions(selections) && (
           <Button
             color="gray"
@@ -71,7 +73,9 @@ export default function Filters({
           </Button>
         )}
       </div>
-      <Pagination page={page} total={total} onPageChange={onPageChange} />
+      <div className={styles.group}>
+        <Pagination page={page} total={total} onPageChange={onPageChange} />
+      </div>
     </div>
   );
 }

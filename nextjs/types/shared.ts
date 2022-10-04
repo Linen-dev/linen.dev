@@ -14,3 +14,8 @@ export interface Permissions {
   chat: boolean;
   channel_create: boolean;
 }
+
+export enum Scope {
+  All = 'all',
+  Participant = 'participant',
+}
