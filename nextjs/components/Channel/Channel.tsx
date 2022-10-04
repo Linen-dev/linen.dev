@@ -17,6 +17,7 @@ import styles from './index.module.css';
 import { v4 as uuid } from 'uuid';
 import debounce from 'awesome-debounce-promise';
 import { useUsersContext } from 'contexts/Users';
+import { NotifyMentions } from 'components/Notification';
 
 const debouncedSendMessage = debounce(
   ({ message, channelId, imitationId }) => {
@@ -346,6 +347,8 @@ export function Channel({
 
   return (
     <>
+      <NotifyMentions token={token} key="notifyMentions" />
+
       {/* Added padding right when scroll bar is hidden 
       and remove padding when scroll bar 
       is showing so it doesn't move the screen as much */}

@@ -243,6 +243,7 @@ describe('webhook', () => {
         blocks: [{ type: 'rich_text', block_id: '9hC', elements: [] }],
         messageFormat: MessageFormat.SLACK,
       },
+      include: { mentions: true },
     });
 
     // result OK:200
@@ -437,6 +438,7 @@ describe('webhook', () => {
         },
         blocks: [{ type: 'rich_text', block_id: '9hC', elements: [] }],
       },
+      include: { mentions: true },
     });
 
     // result OK:200

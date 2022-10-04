@@ -155,6 +155,7 @@ export async function create(
     messageId: message.id,
     threadId,
     imitationId,
+    mentions: message.mentions,
   });
 
   return response.status(200).json({

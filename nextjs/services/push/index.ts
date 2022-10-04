@@ -58,3 +58,29 @@ export const pushChannel = ({
     token,
   });
 };
+
+export const pushUserMention = ({
+  userId,
+  threadId,
+  channelId,
+}: {
+  userId: string;
+  threadId: string;
+  channelId: string;
+}) => {
+  return request.post(`${pushURL}/api/user`).send({
+    user_id: userId,
+    thread_id: threadId,
+    channel_id: channelId,
+    is_mention: true,
+    token,
+  });
+};
+
+// TODO: in progress
+export const pushCommunity = ({ communityId }: { communityId: string }) => {
+  return request.post(`${pushURL}/api/community`).send({
+    community_id: communityId,
+    token,
+  });
+};

@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from 'react';
 import { Thread } from 'components/Thread';
 import { buildThreadSeo } from 'utilities/seo';
 import { scrollToBottom } from 'utilities/scroll';
+import { NotifyMentions } from 'components/Notification';
 
 export function ThreadPage({
   id,
@@ -56,6 +57,7 @@ export function ThreadPage({
       permissions={permissions}
       innerRef={ref}
     >
+      <NotifyMentions token={token} key="notifyMentions" />
       <div className="w-full">
         <Thread
           key={id}
