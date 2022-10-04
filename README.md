@@ -4,10 +4,6 @@
   </a>
 </p>
 
-<p align="center">
-Make Slack and Discord communities Google-searchable
-</p>
-
 ## Linen.dev
 
 Linen is a Google-searchable community chat tool. Linen was built as an alternative to closed tools like Slack and Discord.
