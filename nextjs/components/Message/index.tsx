@@ -31,6 +31,7 @@ import {
   EmojiNode,
 } from 'utilities/message/parsers/types';
 import { SerializedUser } from 'serializers/user';
+import { MessageFormat } from '@prisma/client';
 
 interface Props {
   text: string;
@@ -41,29 +42,14 @@ interface Props {
   attachments?: SerializedAttachment[];
 }
 
-type MessageFormat = 'linen' | 'discord' | 'slack';
-
 const parsers = {
-  linen: parseLinenMessage,
-  slack: parseSlackMessage,
-  discord: parseDiscordMessage,
+  [MessageFormat.LINEN]: parseLinenMessage,
+  [MessageFormat.SLACK]: parseSlackMessage,
+  [MessageFormat.DISCORD]: parseDiscordMessage,
 };
 
 function noAttachment(attachments?: SerializedAttachment[]) {
   return !attachments || attachments?.length === 0;
-}
-
-export function getMessageFormat({
-  externalId,
-  communityType,
-}: {
-  externalId?: string;
-  communityType: string;
-}): MessageFormat {
-  if (externalId) {
-    return communityType as MessageFormat;
-  }
-  return 'linen';
 }
 
 function Message({ text, format, mentions, reactions, attachments }: Props) {

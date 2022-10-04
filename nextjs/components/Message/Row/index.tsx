@@ -1,7 +1,7 @@
 import React from 'react';
 import Avatar from 'components/Avatar';
 import classNames from 'classnames';
-import Message, { getMessageFormat } from '../../Message';
+import Message from '../../Message';
 import { format } from 'timeago.js';
 import { SerializedMessage } from 'serializers/message';
 import CopyToClipboardIcon from 'components/Pages/ChannelsPage/CopyToClipboardIcon';
@@ -57,10 +57,7 @@ export function Row({
           )}
           <Message
             text={message.body}
-            format={getMessageFormat({
-              externalId: message.externalId,
-              communityType,
-            })}
+            format={message.messageFormat}
             mentions={message.mentions}
             reactions={message.reactions}
             attachments={message.attachments}

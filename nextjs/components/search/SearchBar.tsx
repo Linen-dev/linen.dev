@@ -43,7 +43,7 @@ const SearchBar = ({
   // in the database from channels view
   const renderSuggestion = useCallback(
     (searchResult) => {
-      const { body, channelId, usersId, mentions, externalMessageId } =
+      const { body, channelId, usersId, mentions, messageFormat } =
         searchResult;
       const channel = channels.find((c) => c.id === channelId);
       const channelName = channel?.channelName;
@@ -52,11 +52,10 @@ const SearchBar = ({
         <div className={styles.suggestion}>
           <Suggestion
             body={body}
-            externalId={externalMessageId}
+            format={messageFormat}
             // user={}
             channelName={channelName}
             mentions={mentions}
-            communityType={communityType}
           />
         </div>
       );

@@ -6,6 +6,7 @@ import type {
   mentions,
   messageAttachments,
   messageReactions,
+  MessageFormat,
 } from '@prisma/client';
 
 export interface SerializedMessage {
@@ -19,6 +20,7 @@ export interface SerializedMessage {
   threadId: string;
   externalId?: string;
   author?: users;
+  messageFormat: MessageFormat;
 }
 
 function serializeAttachment(
@@ -61,6 +63,7 @@ export function serialize(message: MessageForSerialization): SerializedMessage {
     sentAt: message.sentAt.toString(),
     author: message.author,
     usersId: message.usersId,
+    messageFormat: message.messageFormat,
     mentions: serializeMentions(message.mentions),
     attachments:
       message.attachments

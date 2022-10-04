@@ -1,26 +1,24 @@
 import React from 'react';
-import { users } from '@prisma/client';
+import { users, MessageFormat } from '@prisma/client';
 import Avatar from '../../Avatar';
-import Message, { getMessageFormat } from '../../Message';
+import Message from '../../Message';
 import styles from './index.module.css';
 import { SerializedUser } from 'serializers/user';
 
 interface Props {
   body: string;
-  externalId?: string;
+  format: MessageFormat;
   mentions: SerializedUser[];
   user?: users;
   channelName?: string;
-  communityType: string;
 }
 
 export default function Suggestion({
   body,
-  externalId,
+  format,
   mentions,
   user,
   channelName,
-  communityType,
 }: Props) {
   return (
     <div className={styles.container}>
@@ -38,11 +36,7 @@ export default function Suggestion({
           )}
         </div>
       </div>
-      <Message
-        text={body}
-        format={getMessageFormat({ communityType, externalId })}
-        mentions={mentions}
-      />
+      <Message text={body} format={format} mentions={mentions} />
     </div>
   );
 }

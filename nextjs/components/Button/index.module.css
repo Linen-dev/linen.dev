@@ -1,6 +1,7 @@
 .button {
   align-items: center;
   display: inline-flex;
+  justify-content: center;
   gap: 0.25rem;
   -webkit-font-smoothing: antialiased;
 }
