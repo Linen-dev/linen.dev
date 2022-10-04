@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import classNames from 'classnames';
 import PageLayout from 'components/layout/PageLayout';
 import { channels, ThreadState } from '@prisma/client';
 import { SerializedThread } from 'serializers/thread';
@@ -10,7 +11,6 @@ import Filters from './Filters';
 import Grid from './Grid';
 import debounce from 'awesome-debounce-promise';
 import { FeedResponse, Selections } from './types';
-import styles from './index.module.css';
 import { Thread } from 'components/Thread';
 import { scrollToBottom } from 'utilities/scroll';
 import { Transition } from '@headlessui/react';
@@ -157,112 +157,104 @@ export default function Feed({
       isSubDomainRouting={isSubDomainRouting}
       permissions={permissions}
       settings={settings}
-      className="w-full block"
     >
-      <div
-        className="
-          overflow-auto
-          lg:h-[calc(100vh_-_64px)]
-          md:h-[calc(100vh_-_144px)] 
-          h-[calc(100vh_-_152px)]
-          lg:w-[calc(100vw_-_250px)]
-          flex justify-left
-          w-[100vw]
-          relative      
-        "
+      <Transition
+        show={isMobile && !!thread ? false : true}
+        className={classNames(
+          'flex-col overflow-auto lg:h-[calc(100vh_-_64px)] md:h-[calc(100vh_-_144px)] h-[calc(100vh_-_152px)] lg:w-[calc(100vw_-_250px)] flex justify-left w-[100vw] relative'
+        )}
       >
-        <Transition
-          show={isMobile && !!thread ? false : true}
-          className={styles.feed}
-        >
-          <Header />
-          <Filters
-            state={state}
-            selections={selections}
-            onChange={(type: string, value) => {
-              setSelections({});
-              setPage(1);
-              switch (type) {
-                case 'state':
-                  return setState(value as ThreadState);
-                case 'scope':
-                  return setScope(value as Scope);
-              }
-            }}
-            total={feed.total}
-            onUpdate={updateThreads}
-            page={page}
-            onPageChange={(type: string) => {
-              switch (type) {
-                case 'back':
-                  return setPage((page) => page - 1);
-                case 'next':
-                  return setPage((page) => page + 1);
-              }
-            }}
-          />
-          <Grid
-            threads={feed.threads}
-            loading={loading}
-            selections={selections}
-            onChange={(id: string, checked: boolean) => {
-              setSelections((selections: Selections) => {
-                return {
-                  ...selections,
-                  [id]: checked,
-                };
-              });
-            }}
-            onSelect={(thread: SerializedThread) => {
-              setThread(thread);
-            }}
-          />
-        </Transition>
-        <Transition show={!!thread} className={styles.thread}>
-          {thread && (
-            <div className="overflow-auto flex flex-col relative" ref={ref}>
-              <Thread
-                key={thread.id}
-                id={thread.id}
-                channelId={thread.channelId}
-                channelName={thread.channel?.channelName || 'xx'}
-                title={thread.title}
-                state={thread.state}
-                messages={thread.messages}
-                threadUrl={'foobarbaz'}
-                viewCount={thread.viewCount}
-                settings={settings}
-                incrementId={thread.incrementId}
-                isSubDomainRouting={isSubDomainRouting}
-                slug={thread.slug}
-                permissions={permissions}
-                currentUser={currentUser}
-                onThreadUpdate={({ state, title }) => {
-                  setThread((thread) => {
-                    if (!thread) {
-                      return null;
-                    }
-                    return {
-                      ...thread,
-                      state,
-                      title,
-                    };
-                  });
-                  setKey((key) => key + 1);
-                }}
-                onClose={() => setThread(null)}
-                onSend={() => {
-                  scrollToBottom(ref.current as HTMLElement);
-                }}
-                onMount={() => {
-                  permissions.chat &&
-                    scrollToBottom(ref.current as HTMLElement);
-                }}
-              />
-            </div>
-          )}
-        </Transition>
-      </div>
+        <Header />
+        <Filters
+          state={state}
+          selections={selections}
+          onChange={(type: string, value) => {
+            setSelections({});
+            setPage(1);
+            switch (type) {
+              case 'state':
+                return setState(value as ThreadState);
+              case 'scope':
+                return setScope(value as Scope);
+            }
+          }}
+          total={feed.total}
+          onUpdate={updateThreads}
+          page={page}
+          onPageChange={(type: string) => {
+            switch (type) {
+              case 'back':
+                return setPage((page) => page - 1);
+              case 'next':
+                return setPage((page) => page + 1);
+            }
+          }}
+        />
+        <Grid
+          threads={feed.threads}
+          loading={loading}
+          selections={selections}
+          onChange={(id: string, checked: boolean) => {
+            setSelections((selections: Selections) => {
+              return {
+                ...selections,
+                [id]: checked,
+              };
+            });
+          }}
+          onSelect={(thread: SerializedThread) => {
+            setThread(thread);
+          }}
+        />
+      </Transition>
+      <Transition
+        show={!!thread}
+        className={classNames(
+          'flex flex-col border-l border-solid border-gray-200 md:w-[700px]'
+        )}
+      >
+        {thread && (
+          <div className="overflow-auto flex flex-col relative" ref={ref}>
+            <Thread
+              key={thread.id}
+              id={thread.id}
+              channelId={thread.channelId}
+              channelName={thread.channel?.channelName || 'xx'}
+              title={thread.title}
+              state={thread.state}
+              messages={thread.messages}
+              threadUrl={'foobarbaz'}
+              viewCount={thread.viewCount}
+              settings={settings}
+              incrementId={thread.incrementId}
+              isSubDomainRouting={isSubDomainRouting}
+              slug={thread.slug}
+              permissions={permissions}
+              currentUser={currentUser}
+              onThreadUpdate={({ state, title }) => {
+                setThread((thread) => {
+                  if (!thread) {
+                    return null;
+                  }
+                  return {
+                    ...thread,
+                    state,
+                    title,
+                  };
+                });
+                setKey((key) => key + 1);
+              }}
+              onClose={() => setThread(null)}
+              onSend={() => {
+                scrollToBottom(ref.current as HTMLElement);
+              }}
+              onMount={() => {
+                permissions.chat && scrollToBottom(ref.current as HTMLElement);
+              }}
+            />
+          </div>
+        )}
+      </Transition>
     </PageLayout>
   );
 }
