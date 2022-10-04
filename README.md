@@ -27,7 +27,7 @@ There are a few problems with chat communities today:
 
 ### Features:
 
-1. Slack/Discord Import: We can import all of your public Slack/Discord conversations, attachments, emojis, and membersOpen close state on all threads
+1. Slack/Discord Import: We can import all of your public Slack/Discord conversations, attachments, emojis, and members
 2. Sitemap generation to help search engines crawl your community
 3. Markdown message support
 4. Join multiple communities with a single account (only works on cloud edition)
@@ -36,7 +36,8 @@ There are a few problems with chat communities today:
 7. Custom community branding
 8. Attachments support
 9. Drag and drop messages in to threads
-10. Drag and drop messages in to different channels
+10. Open close state on all threads
+11. Drag and drop messages in to different channels
 
 ### Near term Roadmap:
 
