@@ -25,6 +25,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
           m."externalMessageId",
           m."threadId",
           m."usersId",
+          m."messageFormat",
           ts_rank(textsearchable_index_col,websearch_to_tsquery('english', ${query}))  AS rank
       FROM "public"."messages" as m
       INNER JOIN "public"."channels" AS c ON (c."id") = (m."channelId")
