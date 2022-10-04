@@ -248,7 +248,7 @@ function MessageForm({ onSend, onSendAndClose, fetchMentions }: Props) {
           }}
         />
         {preview && (
-          <Preview message={postprocess(message, allUsers)} users={users} />
+          <Preview message={postprocess(message, allUsers)} users={allUsers} />
         )}
         <div className={styles.toolbar}>
           {onSendAndClose && (
