@@ -9,18 +9,28 @@ export default async function handler(
 ) {
   try {
     const { push_token } = JSON.parse(req.body);
-    if (!push_token || !PUSH_SERVICE_KEY || push_token !== PUSH_SERVICE_KEY) {
-      throw 'missing token';
+    if (!push_token) {
+      throw 'missing push token';
+    }
+    if (!PUSH_SERVICE_KEY) {
+      throw 'missing push service key';
+    }
+    if (push_token !== PUSH_SERVICE_KEY) {
+      throw 'invalid push token';
     }
 
     const token = await Session.token(req);
     if (!token) {
-      throw { status: 401 };
+      throw 'invalid authorization token';
     }
 
-    const { id } = token;
-    res.send(id);
+    if (!token.id) {
+      throw 'missing user id on authorization token';
+    }
+
+    res.send(token.id);
   } catch (error: any) {
+    console.error({ error });
     res.status(error.status || 500);
   } finally {
     res.end();

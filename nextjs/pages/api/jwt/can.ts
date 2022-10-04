@@ -10,13 +10,17 @@ export default async function handler(
   try {
     const { push_token, current_user, channel_id, thread_id, community_id } =
       JSON.parse(req.body);
-    if (
-      !current_user ||
-      !push_token ||
-      !PUSH_SERVICE_KEY ||
-      push_token !== PUSH_SERVICE_KEY
-    ) {
-      throw 'bad token';
+    if (!current_user) {
+      throw 'missing current user';
+    }
+    if (!push_token) {
+      throw 'missing push token';
+    }
+    if (!PUSH_SERVICE_KEY) {
+      throw 'missing push service key';
+    }
+    if (push_token !== PUSH_SERVICE_KEY) {
+      throw 'invalid push token';
     }
 
     if (channel_id) {
@@ -38,6 +42,7 @@ export default async function handler(
       throw 'missing parameters';
     }
   } catch (error: any) {
+    console.error({ error });
     res.status(error.status || 500);
   } finally {
     res.end();

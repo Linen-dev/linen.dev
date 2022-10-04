@@ -71,6 +71,7 @@ export const authOptions = {
         if (auth.password === generateHash(password, auth.salt)) {
           return {
             email: auth.email,
+            id: auth.id,
           };
         }
         return null;

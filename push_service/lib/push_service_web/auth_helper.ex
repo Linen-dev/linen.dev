@@ -12,11 +12,11 @@ defmodule PushServiceWeb.AuthHelper do
         community_id: community_id
       })
 
-    case HTTPoison.post(@api_url <> "/api/jwt/can", requestBody) do
+    case HTTPoison.post("#{@api_url}/api/jwt/can", requestBody) do
       {:ok, %HTTPoison.Response{status_code: 200, body: _}} ->
         {:ok}
 
-      {_} ->
+      {_, _} ->
         {:error}
     end
   end
@@ -29,11 +29,11 @@ defmodule PushServiceWeb.AuthHelper do
         channel_id: channel_id
       })
 
-    case HTTPoison.post(@api_url <> "/api/jwt/can", requestBody) do
+    case HTTPoison.post("#{@api_url}/api/jwt/can", requestBody) do
       {:ok, %HTTPoison.Response{status_code: 200, body: _}} ->
         {:ok}
 
-      {_} ->
+      {_, _} ->
         {:error}
     end
   end
@@ -46,11 +46,11 @@ defmodule PushServiceWeb.AuthHelper do
         thread_id: thread_id
       })
 
-    case HTTPoison.post(@api_url <> "/api/jwt/can", requestBody) do
+    case HTTPoison.post("#{@api_url}/api/jwt/can", requestBody) do
       {:ok, %HTTPoison.Response{status_code: 200, body: _}} ->
         {:ok}
 
-      {_} ->
+      {_, _} ->
         {:error}
     end
   end
@@ -71,11 +71,11 @@ defmodule PushServiceWeb.AuthHelper do
         push_token: @push_token
       })
 
-    case HTTPoison.post(@api_url <> "/api/jwt/who", requestBody, headers) do
+    case HTTPoison.post("#{@api_url}/api/jwt/who", requestBody, headers) do
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
         {:ok, body}
 
-      {_} ->
+      {_, _} ->
         {:error}
     end
   end
