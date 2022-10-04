@@ -10,6 +10,7 @@ import {
   italic,
   strike,
   quote,
+  signal,
 } from './spec-helpers';
 
 describe('parse', () => {
@@ -66,6 +67,14 @@ describe('parse', () => {
       root([user('uid1'), text(' '), user('uid2')])
     );
     expect(parse('hey @uid1')).toEqual(root([text('hey '), user('uid1')]));
+  });
+
+  it('returns a `signal` node', () => {
+    expect(parse('!uid')).toEqual(root([signal('uid')]));
+    expect(parse('!uid1 !uid2')).toEqual(
+      root([signal('uid1'), text(' '), signal('uid2')])
+    );
+    expect(parse('hey !uid1')).toEqual(root([text('hey '), signal('uid1')]));
   });
 
   it('returns a `pre` node', () => {

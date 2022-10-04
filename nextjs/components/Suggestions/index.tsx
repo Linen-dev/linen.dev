@@ -66,7 +66,7 @@ export default function Suggestions({ className, users, onSelect }: Props) {
             >
               {displayName && (
                 <>
-                  <span className={styles.username}>@{username}</span>
+                  <span className={styles.username}>{username}</span>
                   <span className={styles.name}>{displayName}</span>
                 </>
               )}

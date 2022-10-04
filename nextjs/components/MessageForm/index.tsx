@@ -26,10 +26,24 @@ function isUsernameCharacter(character: string) {
   return !!character && /[a-zA-Z0-9\.]/.test(character);
 }
 
+function isMentionCharacter(character: string) {
+  return character === '@' || character === '!';
+}
+
+function getMentionIndex(text: string) {
+  const index1 = text.lastIndexOf('!');
+  const index2 = text.lastIndexOf('@');
+  const indexes = [index1, index2];
+  return Math.max.apply(Math, indexes) + 1;
+}
+
 function isMentionMode(message: string, position: number) {
   const current = message[position - 1];
   const previous = message[position - 2];
-  if (current === '@' && (isWhitespace(previous) || isUndefined(previous))) {
+  if (
+    isMentionCharacter(current) &&
+    (isWhitespace(previous) || isUndefined(previous))
+  ) {
     return true;
   }
 
@@ -43,7 +57,10 @@ function isMentionMode(message: string, position: number) {
     const current = character;
     index++;
     const previous = message[position - index];
-    if (current === '@' && (isWhitespace(previous) || isUndefined(previous))) {
+    if (
+      isMentionCharacter(current) &&
+      (isWhitespace(previous) || isUndefined(previous))
+    ) {
       return true;
     }
   }
@@ -70,7 +87,7 @@ function getMention(message: string, position: number) {
       index++;
       const previous = message[position - index];
       if (
-        current === '@' &&
+        isMentionCharacter(current) &&
         (isWhitespace(previous) || isUndefined(previous))
       ) {
         return mention.split('').reverse().join('');
@@ -174,9 +191,10 @@ function MessageForm({ onSend, onSendAndClose, fetchMentions }: Props) {
             // other, ideal solution would be that users just have a unique
             // username in the db
             // in that case we don't need to do any postprocessing
+
             setMessage((message) => {
               const start = message.slice(0, position);
-              const index = start.lastIndexOf('@') + 1;
+              const index = getMentionIndex(start);
               const difference = position - index;
               return [
                 message.slice(0, index),

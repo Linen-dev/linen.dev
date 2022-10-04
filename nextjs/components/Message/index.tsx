@@ -98,6 +98,16 @@ function Message({ text, format, mentions, reactions, attachments }: Props) {
       case 'user':
         return (
           <Mention
+            tag="@"
+            key={node.source}
+            value={(node as UserNode).id}
+            mentions={mentions}
+          />
+        );
+      case 'signal':
+        return (
+          <Mention
+            tag="!"
             key={node.source}
             value={(node as UserNode).id}
             mentions={mentions}

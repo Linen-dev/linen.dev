@@ -22,7 +22,7 @@ export default async function handler(
         account: { id: accountId },
         ...condition,
       } as any,
-      take: 10,
+      take: 5,
     });
     return response.status(200).json(users.map(serializeUser));
   }

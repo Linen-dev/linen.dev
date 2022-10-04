@@ -1,5 +1,5 @@
 function isWhitespace(character) {
-  return /\s/.test(character);
+  return /\s/gi.test(character);
 }
 
 function tokenize(input) {
@@ -18,7 +18,8 @@ function tokenize(input) {
 
   while (index < length) {
     const current = input[index];
-    if (current === '@') {
+
+    function serialize(tag, node) {
       if (type === 'code' || type === 'pre') {
         value += current;
       } else {
@@ -26,19 +27,25 @@ function tokenize(input) {
         const next = input[index + 1];
         if (
           next &&
-          next !== '@' &&
+          next !== tag &&
           !isWhitespace(next) &&
           (!previous || isWhitespace(previous))
         ) {
           flush();
           value += current;
-          type = 'user';
+          type = node;
         } else {
           value += current;
         }
       }
+    }
+
+    if (current === '@') {
+      serialize('@', 'user');
+    } else if (current === '!') {
+      serialize('!', 'signal');
     } else if (isWhitespace(current)) {
-      if (type === 'user') {
+      if (type === 'user' || type === 'signal') {
         flush();
         type = 'text';
       }
