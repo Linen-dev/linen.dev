@@ -3,7 +3,6 @@
   position: sticky;
   top: 0;
   width: 100%;
-  z-index: 2;
 }
 
 .icons {
@@ -36,7 +35,6 @@
   background: white;
   box-shadow: 0 1 2px #e5e7eb;
   border: 1px solid #e5e7eb;
-  z-index: 2;
   margin: 0;
   user-select: none;
   padding: 0;

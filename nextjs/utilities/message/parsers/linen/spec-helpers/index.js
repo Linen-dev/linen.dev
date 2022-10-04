@@ -34,6 +34,10 @@ export function user(id) {
   return { type: 'user', id, source: `@${id}` };
 }
 
+export function signal(id) {
+  return { type: 'signal', id, source: `!${id}` };
+}
+
 export function url(value) {
   return { type: 'url', url: value, value, source: value };
 }

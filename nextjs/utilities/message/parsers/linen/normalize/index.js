@@ -15,6 +15,12 @@ function normalize(token) {
     token.id = value.replace(/^@/, '');
     delete token.value;
   }
+  if (token.type === 'signal') {
+    const { value } = token;
+    token.source = value;
+    token.id = value.replace(/^\!/, '');
+    delete token.value;
+  }
   return token;
 }
 

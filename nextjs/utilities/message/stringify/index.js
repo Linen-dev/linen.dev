@@ -54,6 +54,10 @@ function stringify(tree) {
       output += node.source;
     }
 
+    if (node.type === 'signal') {
+      output += node.source;
+    }
+
     if (node.type === 'url') {
       output += node.source;
     }

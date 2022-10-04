@@ -12,10 +12,16 @@ function getDisplayName(userId: string, mentions?: SerializedUser[]) {
 }
 
 interface Props {
+  tag: '@' | '!';
   value: string;
   mentions?: SerializedUser[];
 }
 
-export default function Mention({ value, mentions }: Props) {
-  return <strong>@{getDisplayName(value, mentions)}</strong>;
+export default function Mention({ tag, value, mentions }: Props) {
+  return (
+    <strong>
+      {tag}
+      {getDisplayName(value, mentions)}
+    </strong>
+  );
 }
