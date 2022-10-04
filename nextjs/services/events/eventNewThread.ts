@@ -1,11 +1,14 @@
+import { mentions } from '@prisma/client';
 import { createChatSyncJob } from 'queue/jobs';
 import { push, pushChannel } from 'services/push';
+import { eventNewMentions } from './eventNewMentions';
 
 type NewThreadEvent = {
   channelId: any;
   threadId: any;
   messageId: any;
   imitationId: string;
+  mentions: mentions[];
 };
 
 export async function eventNewThread({
@@ -13,6 +16,7 @@ export async function eventNewThread({
   messageId,
   threadId,
   imitationId,
+  mentions = [],
 }: NewThreadEvent) {
   const event = {
     channelId,
@@ -27,6 +31,7 @@ export async function eventNewThread({
     createChatSyncJob(event),
     push(event),
     pushChannel(event),
+    eventNewMentions({ mentions, channelId, threadId }),
   ];
 
   await Promise.allSettled(promises);

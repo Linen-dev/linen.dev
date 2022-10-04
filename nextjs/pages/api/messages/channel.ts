@@ -139,6 +139,7 @@ export async function create(
     messageId: thread.messages[0].id,
     threadId: thread.id,
     imitationId,
+    mentions: thread.messages[0].mentions,
   });
 
   return response.status(200).json({

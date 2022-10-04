@@ -25,6 +25,7 @@ export const createMessageWithMentions = async (
   mentionsId: string[]
 ) => {
   return await prisma.messages.create({
+    include: { mentions: true },
     data: {
       body: message.body,
       blocks: message.blocks,

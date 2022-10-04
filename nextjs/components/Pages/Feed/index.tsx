@@ -14,6 +14,7 @@ import { FeedResponse, Selections } from './types';
 import { Thread } from 'components/Thread';
 import { scrollToBottom } from 'utilities/scroll';
 import { Transition } from '@headlessui/react';
+import { NotifyMentions } from 'components/Notification';
 
 interface Props {
   channels: channels[];
@@ -160,6 +161,7 @@ export default function Feed({
       permissions={permissions}
       settings={settings}
     >
+      <NotifyMentions token={token} key="notifyMentions" />
       <Transition
         show={isMobile && !!thread ? false : true}
         className={classNames(
