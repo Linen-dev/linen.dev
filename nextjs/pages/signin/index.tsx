@@ -5,7 +5,7 @@ import Link from '../../components/Link';
 import { getCsrfToken } from 'next-auth/react';
 import type { NextPageContext } from 'next';
 import Error from './Error';
-import { useRouter } from 'next/router';
+import PasswordField from 'components/PasswordField';
 import { useState } from 'react';
 
 interface SignInProps {
@@ -13,32 +13,67 @@ interface SignInProps {
   error?: string;
 }
 
+const Anchor = ({ children, onClick }: any) => (
+  <a
+    className="text-blue-600 hover:text-blue-800 cursor-pointer"
+    onClick={onClick}
+  >
+    {children}
+  </a>
+);
+
 export default function SignIn({ csrfToken, error }: SignInProps) {
-  const router = useRouter();
+  const [sign, setSign] = useState<'creds' | 'magic'>('creds');
   const [loading, setLoading] = useState(false);
 
   return (
     <Layout header="Sign In">
       <Error error={error} />
-      <form
-        method="post"
-        action={`/api/auth/signin/email?callbackUrl=${
-          router?.query?.callbackUrl || '/api/settings'
-        }`}
-        onSubmit={() => setLoading(true)}
-      >
-        <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
-        <EmailField label="Email address" id="email" required />
-        <Button type="submit" block disabled={loading}>
-          {loading ? 'Loading...' : 'Sign in with Email'}
-        </Button>
-      </form>
-      <div className="text-sm">
-        <p className="py-3">
-          Don&rsquo;t have an account? <Link href="/signup">Get Started</Link>
-          <br />
-        </p>
-      </div>
+      {sign === 'creds' && (
+        <form
+          method="post"
+          action="/api/auth/callback/credentials?callbackUrl=/api/settings"
+          onSubmit={() => setLoading(true)}
+        >
+          <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
+          <EmailField label="Email address" id="email" required />
+          <PasswordField label="Password" id="password" required />
+
+          <p className="py-3 text-sm">
+            <Link href="/forgot-password">Forgot your password?</Link>
+          </p>
+          <Button type="submit" block disabled={loading}>
+            {loading ? 'Loading...' : 'Sign in'}
+          </Button>
+          <div className="flex text-sm justify-between py-3">
+            <Link href="/signup">Don&apos;t have an account?</Link>
+            <Anchor onClick={() => setSign('magic')}>Sign in by email</Anchor>
+          </div>
+        </form>
+      )}
+
+      {sign === 'magic' && (
+        <form
+          method="post"
+          action="/api/auth/signin/email?callbackUrl=/api/settings"
+          onSubmit={() => setLoading(true)}
+        >
+          <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
+          <EmailField label="Email address" id="email" required />
+          <Button type="submit" block disabled={loading}>
+            {loading ? 'Loading...' : 'Email me a link'}
+          </Button>
+          <p className="py-3 text-sm">
+            We will send you an email containing a link to sign you in.
+          </p>
+          <div className="flex text-sm justify-between py-3">
+            <Link href="/signup">Don&apos;t have an account?</Link>
+            <Anchor onClick={() => setSign('creds')}>
+              Sign in with credentials
+            </Anchor>
+          </div>
+        </form>
+      )}
     </Layout>
   );
 }

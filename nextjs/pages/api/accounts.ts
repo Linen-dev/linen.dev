@@ -3,9 +3,7 @@ import prisma from '../../client';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import { stripProtocol } from '../../utilities/url';
 import { dispatchAnonymizeRequest } from 'utilities/anonymizeMessages';
-// The unstable_getServerSession only has the prefix unstable_ at the moment, because the API may change in the future. There are no known bugs at the moment and it is safe to use.
-import { unstable_getServerSession, Session } from 'next-auth';
-import { authOptions } from './auth/[...nextauth]';
+import Session, { SessionType } from 'services/session';
 import { captureException, withSentry } from '@sentry/nextjs';
 import { generateRandomWordSlug } from 'utilities/randomWordSlugs';
 import { findAccountByEmail } from 'lib/models';
@@ -14,7 +12,7 @@ import { AccountType, Roles } from '@prisma/client';
 export async function create({
   session,
 }: {
-  session: Session | null;
+  session: SessionType | null;
 }): Promise<{ status: number; data?: { id: string } }> {
   const email = session?.user?.email;
   if (!email) {
@@ -79,7 +77,7 @@ export async function update({
     communityInviteUrl?: string;
     type?: AccountType;
   };
-  session: Session | null;
+  session: SessionType | null;
 }): Promise<{ status: number; data?: object }> {
   const email = session?.user?.email;
   if (!email) {
@@ -150,11 +148,7 @@ const handle = async (
   response: NextApiResponse,
   callback: any
 ) => {
-  const session = await unstable_getServerSession(
-    request,
-    response,
-    authOptions
-  );
+  const session = await Session.find(request, response);
   const params = request.body ? JSON.parse(request.body) : {};
   const { status, data } = await callback({ params, session });
   return response.status(status).json(data || {});

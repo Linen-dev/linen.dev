@@ -5,6 +5,8 @@ import { CustomPrismaAdapter } from 'lib/auth';
 import SignInMailer from 'mailers/SignInMailer';
 import { captureException, flush } from '@sentry/nextjs';
 import { NOREPLY_EMAIL } from 'secrets';
+import CredentialsProvider from 'next-auth/providers/credentials';
+import { generateHash } from 'utilities/password';
 
 export const authOptions = {
   pages: {
@@ -48,7 +50,34 @@ export const authOptions = {
         }
       },
     }),
+    CredentialsProvider({
+      name: 'Email and Password',
+      credentials: {
+        email: { label: 'Email', type: 'text' },
+        password: { label: 'Password', type: 'password' },
+      },
+      async authorize(credentials, request) {
+        if (!credentials) {
+          return null;
+        }
+        const { email, password } = credentials;
+        if (!email || !password) {
+          return null;
+        }
+        const auth = await prisma.auths.findUnique({ where: { email } });
+        if (!auth) {
+          return null;
+        }
+        if (auth.password === generateHash(password, auth.salt)) {
+          return {
+            email: auth.email,
+          };
+        }
+        return null;
+      },
+    }),
   ],
+  session: { strategy: 'jwt' },
   secret: process.env.NEXTAUTH_SECRET as string,
 } as NextAuthOptions;
 

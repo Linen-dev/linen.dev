@@ -3,11 +3,12 @@ import {
   NextApiRequest,
   NextApiResponse,
 } from 'next/types';
-import { Session as SessionType } from 'next-auth';
+import type { Session as SessionType } from 'next-auth';
 import { unstable_getServerSession } from 'next-auth/next';
 import { authOptions } from 'pages/api/auth/[...nextauth]';
 import type { users } from '@prisma/client';
 import { findAuthByEmail } from 'lib/users';
+export { type SessionType };
 
 export default class Session {
   static async find(

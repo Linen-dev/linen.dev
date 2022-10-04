@@ -2,9 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next/types';
 import prisma from '../../client';
 import { sendNotification } from '../../services/slack';
 import { createAuth } from '../../lib/auth';
-// The unstable_getServerSession only has the prefix unstable_ at the moment, because the API may change in the future. There are no known bugs at the moment and it is safe to use.
-import { unstable_getServerSession as getServerSession } from 'next-auth';
-import { authOptions } from './auth/[...nextauth]';
+import Session from 'services/session';
 import { captureException, withSentry } from '@sentry/nextjs';
 
 async function create(request: NextApiRequest, response: NextApiResponse) {
@@ -46,7 +44,7 @@ async function create(request: NextApiRequest, response: NextApiResponse) {
 }
 
 async function update(req: NextApiRequest, res: NextApiResponse) {
-  const session = await getServerSession(req, res, authOptions);
+  const session = await Session.find(req, res);
   const { createAccount } = JSON.parse(req.body);
 
   const email = session?.user?.email;
@@ -80,7 +78,7 @@ async function update(req: NextApiRequest, res: NextApiResponse) {
 }
 
 async function get(req: NextApiRequest, res: NextApiResponse) {
-  const session = await getServerSession(req, res, authOptions);
+  const session = await Session.find(req, res);
   const email = session?.user?.email;
   if (!email) {
     return res.status(404).json({});
