@@ -1,4 +1,5 @@
 import walk from '../walk';
+import unique from 'lodash.uniq';
 
 function compare(type, selector) {
   if (Array.isArray(selector)) {
@@ -20,5 +21,5 @@ function findByType(tree, selector) {
 
 export function findUserIds(tree) {
   const nodes = findByType(tree, ['user', 'signal']);
-  return nodes.map((node) => node.id);
+  return unique(nodes.map((node) => node.id));
 }
