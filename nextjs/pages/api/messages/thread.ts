@@ -1,7 +1,6 @@
 import { findMessagesFromChannel } from 'lib/models';
-import { unstable_getServerSession } from 'next-auth';
+import Session from 'services/session';
 import { NextApiRequest, NextApiResponse } from 'next/types';
-import { authOptions } from '../auth/[...nextauth]';
 import { withSentry } from '@sentry/nextjs';
 import { prisma } from 'client';
 import serializeMessage from 'serializers/message';
@@ -47,11 +46,7 @@ export async function create(
   request: NextApiRequest,
   response: NextApiResponse<any>
 ) {
-  const session = await unstable_getServerSession(
-    request,
-    response,
-    authOptions
-  );
+  const session = await Session.find(request, response);
   if (!session?.user?.email) {
     throw 'missing session';
   }

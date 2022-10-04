@@ -1,15 +1,10 @@
 import { withSentry } from '@sentry/nextjs';
-import { unstable_getServerSession } from 'next-auth';
+import Session from 'services/session';
 import { NextApiRequest, NextApiResponse } from 'next/types';
-import { authOptions } from '../auth/[...nextauth]';
 import { OnboardingCreateChannel } from 'services/onboarding';
 
 async function handler(request: NextApiRequest, response: NextApiResponse) {
-  const session = await unstable_getServerSession(
-    request,
-    response,
-    authOptions
-  );
+  const session = await Session.find(request, response);
 
   if (!session?.user?.email) {
     return response.status(401).end();

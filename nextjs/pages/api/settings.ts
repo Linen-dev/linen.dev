@@ -1,7 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { captureException, withSentry } from '@sentry/nextjs';
-import { unstable_getServerSession } from 'next-auth';
-import { authOptions } from './auth/[...nextauth]';
+import Session from 'services/session';
 import { acceptInvite, getOneInviteByUser } from 'services/invites';
 import { Roles } from '@prisma/client';
 import { findAuthByEmail } from 'lib/users';
@@ -11,7 +10,7 @@ import { isRedirectToNewOnboardingEnabled } from 'utilities/featureFlags';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
-    const session = await unstable_getServerSession(req, res, authOptions);
+    const session = await Session.find(req, res);
     if (!session?.user?.email) {
       throw 'missing session';
     }
@@ -41,8 +40,9 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     }
     return res.redirect('/settings');
   } catch (error) {
+    console.error({ error });
     captureException(error);
-    return res.redirect('https://linen.dev');
+    return res.redirect('/');
   }
 }
 
