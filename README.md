@@ -4,8 +4,6 @@
   </a>
 </p>
 
-## Linen.dev
-
 Linen is a Google-searchable community chat tool. Linen was built as an alternative to closed tools like Slack and Discord.
 
 Linen is free and offers unlimited message retention you can sign up at Linen.community.
