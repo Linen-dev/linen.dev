@@ -4,7 +4,7 @@ import { channels, ThreadState } from '@prisma/client';
 import { SerializedThread } from 'serializers/thread';
 import { SerializedUser } from 'serializers/user';
 import { Settings } from 'serializers/account/settings';
-import { Permissions } from 'types/shared';
+import { Permissions, Scope } from 'types/shared';
 import Header from './Header';
 import Filters from './Filters';
 import Grid from './Grid';
@@ -25,9 +25,9 @@ interface Props {
 }
 
 const debouncedFetch = debounce(
-  ({ communityName, state, page }) => {
+  ({ communityName, state, scope, page }) => {
     return fetch(
-      `/api/feed?communityName=${communityName}&state=${state}&page=${page}`,
+      `/api/feed?communityName=${communityName}&state=${state}&scope=${scope}&page=${page}`,
       {
         method: 'GET',
       }
@@ -55,6 +55,7 @@ export default function Feed({
 }: Props) {
   const [feed, setFeed] = useState<FeedResponse>({ threads: [], total: 0 });
   const [state, setState] = useState<ThreadState>(ThreadState.OPEN);
+  const [scope, setScope] = useState<Scope>(Scope.All);
   const [page, setPage] = useState<number>(1);
   const [key, setKey] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -121,7 +122,7 @@ export default function Feed({
     let mounted = true;
     setLoading(true);
     const fetchFeed = () =>
-      debouncedFetch({ communityName, state, page })
+      debouncedFetch({ communityName, state, scope, page })
         .then((data: FeedResponse) => {
           if (mounted) {
             setFeed(data);
@@ -147,7 +148,7 @@ export default function Feed({
       clearInterval(intervalId);
       mounted = false;
     };
-  }, [communityName, state, page, key]);
+  }, [communityName, state, page, scope, key]);
 
   return (
     <PageLayout
@@ -183,7 +184,9 @@ export default function Feed({
               setPage(1);
               switch (type) {
                 case 'state':
-                  setState(value as ThreadState);
+                  return setState(value as ThreadState);
+                case 'scope':
+                  return setScope(value as Scope);
               }
             }}
             total={feed.total}

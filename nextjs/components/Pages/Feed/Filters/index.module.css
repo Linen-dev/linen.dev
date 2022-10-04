@@ -6,12 +6,13 @@
 }
 
 .group {
+  align-items: center;
   display: flex;
+  gap: 0.5rem;
 }
 
 .filter {
   margin-bottom: 0;
-  margin-left: 0.25rem;
 }
 
 .filter:first-child {

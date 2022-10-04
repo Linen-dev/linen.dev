@@ -17,7 +17,6 @@ import {
   shouldRedirectToDomain,
 } from 'utilities/redirects';
 import Session from 'services/session';
-import { findAuthByEmail } from 'lib/users';
 import serializeUser from 'serializers/user';
 
 export async function threadGetServerSideProps(
@@ -113,15 +112,7 @@ export async function threadGetServerSideProps(
     }
 
     const currentChannel = channels.find((c) => c.id === thread.channel?.id)!;
-
-    let currentUser;
-    const session = await Session.find(context.req, context.res);
-    if (session && session.user && session.user.email) {
-      const auth = await findAuthByEmail(session.user.email);
-      if (auth) {
-        currentUser = auth.users.find((u) => u.accountsId === auth.accountId);
-      }
-    }
+    const currentUser = await Session.user(context.req, context.res);
 
     return {
       props: {
