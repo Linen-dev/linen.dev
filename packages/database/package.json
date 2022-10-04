@@ -9,26 +9,24 @@
     "dist/**"
   ],
   "scripts": {
-    "build": "tsup",
+    "build": "npx tsup",
     "clean": "rimraf .turbo node_modules dist",
-    "db:migrate:deploy": "prisma migrate deploy",
-    "db:migrate:dev": "prisma migrate dev",
-    "db:push": "prisma db push",
-    "dev": "tsup --watch",
-    "format": "prisma format",
-    "generate": "prisma generate",
-    "lint": "eslint ./src --fix",
+    "db:migrate:deploy": "npx prisma migrate deploy",
+    "db:migrate:dev": "npx prisma migrate dev",
+    "db:push": "npx prisma db push",
+    "dev": "npx tsup --watch",
+    "format": "npx prisma format",
+    "generate": "npx prisma generate",
+    "lint": "npx eslint ./src --fix",
     "prebuild": "npm run generate",
     "predev": "npm run generate",
-    "studio": "prisma studio",
+    "studio": "npx prisma studio",
     "db:migrate": "npx prisma generate && npx prisma migrate dev",
     "db:migrate:test": "dotenv -e .env.test -- npx prisma migrate deploy"
   },
   "dependencies": {
     "@prisma/client": "^3.10.0",
-    "axios": "^0.27.2"
-  },
-  "devDependencies": {
+    "axios": "^0.27.2",
     "@types/node": "^18.7.23",
     "eslint": "^8.12.0",
     "prisma": "^3.10.0",
@@ -37,5 +35,6 @@
     "tsup": "^5.11.13",
     "tsx": "^3.7.1",
     "typescript": "^4.5.5"
-  }
+  },
+  "devDependencies": {}
 }

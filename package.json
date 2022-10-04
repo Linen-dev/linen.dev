@@ -21,10 +21,10 @@
     "database": "turbo run build --filter=./packages/database",
     "generate": "turbo run generate",
     "lint": "turbo run lint",
-    "prepare": "husky install"
+    "prepare": "npx -y husky install"
   },
-  "devDependencies": {
-    "husky": "^8.0.1",
+  "dependencies": {
+    "husky": "^7.0.4",
     "next": "^12.2.5",
     "prettier": "^2.5.1",
     "tsx": "^3.7.1",
