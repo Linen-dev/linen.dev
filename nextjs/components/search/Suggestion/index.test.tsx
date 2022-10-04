@@ -1,12 +1,16 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import Suggestion from '.';
-import { create } from '__tests__/factory';
+import { MessageFormat } from '@prisma/client';
 
 describe('Suggestion', () => {
   it('renders a suggestion', () => {
     const { container } = render(
-      <Suggestion body="Lorem ipsum" mentions={[]} communityType="slack" />
+      <Suggestion
+        body="Lorem ipsum"
+        mentions={[]}
+        format={MessageFormat.LINEN}
+      />
     );
     expect(container).toHaveTextContent('Lorem ipsum');
   });
@@ -14,7 +18,11 @@ describe('Suggestion', () => {
   describe('when user is unknown', () => {
     it('renders "user" as the display name', () => {
       const { container } = render(
-        <Suggestion body="Lorem ipsum" mentions={[]} communityType="slack" />
+        <Suggestion
+          body="Lorem ipsum"
+          mentions={[]}
+          format={MessageFormat.LINEN}
+        />
       );
       expect(container).toHaveTextContent('user');
     });

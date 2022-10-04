@@ -1,12 +1,13 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import Message from '.';
+import { MessageFormat } from '@prisma/client';
 
 describe('Message', () => {
   describe('linen format', () => {
     it('renders text', () => {
       const { container } = render(
-        <Message text="Hello World" format="linen" />
+        <Message text="Hello World" format={MessageFormat.LINEN} />
       );
       expect(container).toHaveTextContent('Hello World');
     });
@@ -15,31 +16,35 @@ describe('Message', () => {
   describe('slack format', () => {
     it('renders text', () => {
       const { container } = render(
-        <Message text="Hello World" format="slack" />
+        <Message text="Hello World" format={MessageFormat.SLACK} />
       );
       expect(container).toHaveTextContent('Hello World');
     });
 
     it('renders emojis', () => {
-      const { container } = render(<Message text="Hey :)" format="slack" />);
+      const { container } = render(
+        <Message text="Hey :)" format={MessageFormat.SLACK} />
+      );
       expect(container).toHaveTextContent('😃');
     });
 
     it('renders channel ids', () => {
-      const { container } = render(<Message text="Hey <#A1>" format="slack" />);
+      const { container } = render(
+        <Message text="Hey <#A1>" format={MessageFormat.SLACK} />
+      );
       expect(container).toHaveTextContent('#A1');
     });
 
     it('renders channel names', () => {
       const { container } = render(
-        <Message text="Hey <#A1|general>" format="slack" />
+        <Message text="Hey <#A1|general>" format={MessageFormat.SLACK} />
       );
       expect(container).toHaveTextContent('#general');
     });
 
     it('renders commands', () => {
       const { container } = render(
-        <Message text="Hey <!fx^fy>" format="slack" />
+        <Message text="Hey <!fx^fy>" format={MessageFormat.SLACK} />
       );
       expect(container).toHaveTextContent('<!fx^fy>');
     });
@@ -54,9 +59,10 @@ describe('Message', () => {
               displayName: 'John Doe',
               externalUserId: '1234',
               profileImageUrl: 'https://img.com/1234',
+              username: 'john.doe',
             },
           ]}
-          format="slack"
+          format={MessageFormat.SLACK}
         />
       );
       expect(container).toHaveTextContent('@John Doe');
@@ -72,29 +78,32 @@ describe('Message', () => {
               displayName: 'John Doe',
               externalUserId: '1234',
               profileImageUrl: 'https://img.com/1234',
+              username: 'john.doe',
             },
           ]}
-          format="slack"
+          format={MessageFormat.SLACK}
         />
       );
       expect(container).toHaveTextContent('@User');
     });
 
     it('renders `@User` for a broken mention', () => {
-      const { container } = render(<Message text="Hey <@>." format="slack" />);
+      const { container } = render(
+        <Message text="Hey <@>." format={MessageFormat.SLACK} />
+      );
       expect(container).toHaveTextContent('Hey @User.');
     });
 
     it('renders "@User" when there is no mention data', () => {
       const { container } = render(
-        <Message text="Hey <@A1>, how are you?" format="slack" />
+        <Message text="Hey <@A1>, how are you?" format={MessageFormat.SLACK} />
       );
       expect(container).toHaveTextContent('@User');
     });
 
     it('renders links', () => {
       const { getByText } = render(
-        <Message text="Hey <https://foo.com>" format="slack" />
+        <Message text="Hey <https://foo.com>" format={MessageFormat.SLACK} />
       );
       const link = getByText('https://foo.com') as HTMLLinkElement;
       expect(link.href).toEqual('https://foo.com/');
@@ -102,7 +111,10 @@ describe('Message', () => {
 
     it('renders links with labels', () => {
       const { getByText } = render(
-        <Message text="Hey <https://foo.com|bar>" format="slack" />
+        <Message
+          text="Hey <https://foo.com|bar>"
+          format={MessageFormat.SLACK}
+        />
       );
       const link = getByText('bar') as HTMLLinkElement;
       expect(link.href).toEqual('https://foo.com/');
@@ -110,7 +122,10 @@ describe('Message', () => {
 
     it('renders emails', () => {
       const { getByText } = render(
-        <Message text="Hey <mailto:help@linen.dev>" format="slack" />
+        <Message
+          text="Hey <mailto:help@linen.dev>"
+          format={MessageFormat.SLACK}
+        />
       );
       const link = getByText('help@linen.dev') as HTMLLinkElement;
       expect(link.href).toEqual('mailto:help@linen.dev');
@@ -120,7 +135,7 @@ describe('Message', () => {
       const { getByText } = render(
         <Message
           text="Hey <mailto:help@linen.dev|Linen Support>"
-          format="slack"
+          format={MessageFormat.SLACK}
         />
       );
       const link = getByText('Linen Support') as HTMLLinkElement;
@@ -128,7 +143,9 @@ describe('Message', () => {
     });
 
     it('renders inline code', () => {
-      const { getByText } = render(<Message text="Hey `foo`" format="slack" />);
+      const { getByText } = render(
+        <Message text="Hey `foo`" format={MessageFormat.SLACK} />
+      );
       const node = getByText('foo');
       expect(node).toHaveTextContent('foo');
       expect(node.nodeName).toEqual('CODE');
@@ -136,7 +153,7 @@ describe('Message', () => {
 
     it('renders block code', () => {
       const { getByText } = render(
-        <Message text="Hey ```foo```" format="slack" />
+        <Message text="Hey ```foo```" format={MessageFormat.SLACK} />
       );
       const node = getByText('foo');
       expect(node).toHaveTextContent('foo');
@@ -147,14 +164,14 @@ describe('Message', () => {
   describe('discord format', () => {
     it('renders text', () => {
       const { container } = render(
-        <Message text="Hello World" format="discord" />
+        <Message text="Hello World" format={MessageFormat.DISCORD} />
       );
       expect(container).toHaveTextContent('Hello World');
     });
 
     it('renders links', () => {
       const { getByText } = render(
-        <Message text="Hey https://foo.com" format="discord" />
+        <Message text="Hey https://foo.com" format={MessageFormat.DISCORD} />
       );
       const link = getByText('https://foo.com') as HTMLLinkElement;
       expect(link.href).toEqual('https://foo.com/');
@@ -162,27 +179,32 @@ describe('Message', () => {
 
     it('renders emails', () => {
       const { getByText } = render(
-        <Message text="Hey mailto:help@linen.dev" format="discord" />
+        <Message
+          text="Hey mailto:help@linen.dev"
+          format={MessageFormat.DISCORD}
+        />
       );
       const link = getByText('help@linen.dev') as HTMLLinkElement;
       expect(link.href).toEqual('mailto:help@linen.dev');
     });
 
     it('renders emojis', () => {
-      const { container } = render(<Message text="Hey :)" format="discord" />);
+      const { container } = render(
+        <Message text="Hey :)" format={MessageFormat.DISCORD} />
+      );
       expect(container).toHaveTextContent('😃');
     });
 
     it('renders channel ids', () => {
       const { container } = render(
-        <Message text="Hey <#A1>" format="discord" />
+        <Message text="Hey <#A1>" format={MessageFormat.DISCORD} />
       );
       expect(container).toHaveTextContent('#A1');
     });
 
     it('renders inline code', () => {
       const { getByText } = render(
-        <Message text="Hey `foo`" format="discord" />
+        <Message text="Hey `foo`" format={MessageFormat.DISCORD} />
       );
       const node = getByText('foo');
       expect(node).toHaveTextContent('foo');
@@ -191,7 +213,7 @@ describe('Message', () => {
 
     it('renders block code', () => {
       const { getByText } = render(
-        <Message text="Hey ```foo```" format="discord" />
+        <Message text="Hey ```foo```" format={MessageFormat.DISCORD} />
       );
       const node = getByText('foo');
       expect(node).toHaveTextContent('foo');
@@ -200,7 +222,10 @@ describe('Message', () => {
 
     it('renders block code without changing links', () => {
       const { getByText } = render(
-        <Message text="Hey ```https://foo.com```" format="discord" />
+        <Message
+          text="Hey ```https://foo.com```"
+          format={MessageFormat.DISCORD}
+        />
       );
       const node = getByText('https://foo.com');
       expect(node).toHaveTextContent('https://foo.com');

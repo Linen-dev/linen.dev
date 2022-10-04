@@ -7,15 +7,16 @@ import parseSlackMessage from 'utilities/message/parsers/slack';
 import parseDiscordMessage from 'utilities/message/parsers/discord';
 import walk from 'utilities/message/walk';
 import { truncate } from 'utilities/string';
+import { MessageFormat } from '@prisma/client';
 
 interface Props {
   thread: SerializedThread;
 }
 
 const parsers = {
-  linen: parseLinenMessage,
-  slack: parseSlackMessage,
-  discord: parseDiscordMessage,
+  [MessageFormat.LINEN]: parseLinenMessage,
+  [MessageFormat.SLACK]: parseSlackMessage,
+  [MessageFormat.DISCORD]: parseDiscordMessage,
 };
 
 function getDisplayName(userId: string, mentions?: SerializedUser[]) {
@@ -29,7 +30,7 @@ function getDisplayName(userId: string, mentions?: SerializedUser[]) {
 }
 
 function getTitle(message: SerializedMessage): string {
-  const parse = parsers.linen; // TODO parsers[message.format]
+  const parse = parsers[message.messageFormat];
   const tree = parse(message.body);
   let title = '';
 

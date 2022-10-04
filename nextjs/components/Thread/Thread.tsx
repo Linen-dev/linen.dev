@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Channel as PhoneixChannel, Socket } from 'phoenix';
 import { v4 as uuid } from 'uuid';
-import { ThreadState, Roles } from '@prisma/client';
+import { ThreadState, Roles, MessageFormat } from '@prisma/client';
 import debounce from 'awesome-debounce-promise';
 import Header from './Header';
 import { SerializedMessage } from 'serializers/message';
@@ -207,6 +207,7 @@ export function Thread({
       attachments: [],
       reactions: [],
       threadId,
+      messageFormat: MessageFormat.LINEN,
       author: {
         id: currentUser.id,
         externalUserId: currentUser.externalUserId,
@@ -217,7 +218,7 @@ export function Thread({
         anonymousAlias: null,
         accountsId: 'fake-account-id',
         authsId: null,
-        role: Roles.MEMBER, // serialize or not?
+        role: Roles.MEMBER,
       },
     };
 

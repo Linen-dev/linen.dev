@@ -9,7 +9,7 @@ import { ChannelViewProps } from 'components/Pages/ChannelsPage';
 import { get } from 'utilities/http';
 import MessageForm from 'components/MessageForm';
 import { fetchMentions } from 'components/MessageForm/api';
-import { ThreadState, Roles } from '@prisma/client';
+import { ThreadState, Roles, MessageFormat } from '@prisma/client';
 import { Channel as PhoneixChannel, Socket } from 'phoenix';
 import type { PushMessageType } from 'services/push';
 import { scrollToBottom } from 'utilities/scroll';
@@ -268,18 +268,18 @@ export function Channel({
           attachments: [],
           reactions: [],
           threadId: 'imitation-thread-id',
+          messageFormat: MessageFormat.LINEN,
           author: {
-            // we should have a better type for author
             id: currentUser.id,
             displayName: currentUser.displayName,
             profileImageUrl: currentUser.profileImageUrl,
             externalUserId: currentUser.externalUserId,
-            isBot: false, // serialize?
+            isBot: false,
             isAdmin: false,
             anonymousAlias: null,
             accountsId: 'imitation-account-id',
             authsId: null,
-            role: Roles.MEMBER, // serialize?
+            role: Roles.MEMBER,
           },
         },
       ],

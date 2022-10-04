@@ -3,14 +3,15 @@ import Emoji from '../Emoji';
 import Paragraph from './Paragraph';
 import { decodeHTML } from '../utilities/string';
 import { tokenize, Token } from 'utilities/markdown';
+import { MessageFormat } from '@prisma/client';
 
 interface Props {
   value: string;
-  format?: 'linen' | 'discord' | 'slack';
+  format?: MessageFormat;
 }
 
 export default function Text({ format, value }: Props) {
-  if (format === 'linen') {
+  if (format === MessageFormat.LINEN) {
     return <>{value}</>;
   }
   const text = decodeHTML(value);

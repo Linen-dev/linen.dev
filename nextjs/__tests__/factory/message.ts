@@ -1,4 +1,4 @@
-import type { messages } from '@prisma/client';
+import { messages, MessageFormat } from '@prisma/client';
 
 export default function createMessage(options?: Partial<messages>): messages {
   return {
@@ -11,6 +11,7 @@ export default function createMessage(options?: Partial<messages>): messages {
     channelId: '1',
     usersId: null,
     blocks: null,
+    messageFormat: MessageFormat.LINEN,
     ...options,
   };
 }

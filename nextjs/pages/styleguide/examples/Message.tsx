@@ -1,6 +1,8 @@
+import Message from 'components/Message';
+import { EMOJIS } from 'components/Message/Emoji/utilities/emojis';
 import Example from '../Example';
-import Message from '../../../components/Message';
-import { EMOJIS } from '../../../components/Message/Emoji/utilities/emojis';
+
+import { MessageFormat } from '@prisma/client';
 
 const STACK_TRACE_EXAMPLE = `
 Apr 07 04:38:57 ip-10-0-74-131 kernel: watchdog: BUG: soft lockup - CPU#1 stuck for 22s! [kauditd:22]
@@ -126,95 +128,146 @@ export default function MessageExample() {
   return (
     <Example header="Message">
       <Example description="Renders text.">
-        <Message text="Lorem ipsum, dolor sit amet." format="linen" />
+        <Message
+          text="Lorem ipsum, dolor sit amet."
+          format={MessageFormat.LINEN}
+        />
       </Example>
       <Example description="Renders bold text.">
-        <Message text="Lorem *ipsum*, dolor sit amet." format="linen" />
+        <Message
+          text="Lorem *ipsum*, dolor sit amet."
+          format={MessageFormat.LINEN}
+        />
       </Example>
       <Example description="Renders italic text.">
-        <Message text="Lorem _ipsum_, dolor sit amet." format="linen" />
+        <Message
+          text="Lorem _ipsum_, dolor sit amet."
+          format={MessageFormat.LINEN}
+        />
       </Example>
       <Example description="Renders strikethrough text.">
-        <Message text="Lorem ~ipsum~, dolor sit amet." format="linen" />
+        <Message
+          text="Lorem ~ipsum~, dolor sit amet."
+          format={MessageFormat.LINEN}
+        />
       </Example>
       <Example description="Renders emojis.">
-        <Message text="Hello, world! 😃" format="linen" />
+        <Message text="Hello, world! 😃" format={MessageFormat.LINEN} />
       </Example>
       <Example description="Renders mentions.">
-        <Message text="Hey, @uid1234 !" format="linen" />
+        <Message text="Hey, @uid1234 !" format={MessageFormat.LINEN} />
       </Example>
       {/* <Example description="Renders channels.">
-        <Message text="Hey, #general !" format="linen" />
+        <Message text="Hey, #general !" format={MessageFormat.LINEN} />
       </Example> */}
       <Example description="Renders https and http links.">
-        <Message text="Hey, https://linen.dev rocks!" format="linen" />
-        <Message text="Hey, http://linen.dev rocks!" format="linen" />
+        <Message
+          text="Hey, https://linen.dev rocks!"
+          format={MessageFormat.LINEN}
+        />
+        <Message
+          text="Hey, http://linen.dev rocks!"
+          format={MessageFormat.LINEN}
+        />
       </Example>
       {/* <Example description="Renders mailto links">
-        <Message text="Contact us: mailto:support@linen.dev!" format="linen" />
+        <Message text="Contact us: mailto:support@linen.dev!" format={MessageFormat.LINEN} />
       </Example> */}
       <Example description="Renders inline code blocks.">
-        <Message text="Hey, `const answer = 42`!" format="linen" />
+        <Message
+          text="Hey, `const answer = 42`!"
+          format={MessageFormat.LINEN}
+        />
         <Message
           text="Has anyone ran into this error before? Just trying to run a spec. Other things like `db:migrate` fail for `PG:InsufficientPrivilege` as well."
-          format="linen"
+          format={MessageFormat.LINEN}
         />
       </Example>
       <Example description="Renders block code blocks, with highlighting.">
-        <Message text={`\`\`\`${STACK_TRACE_EXAMPLE}\`\`\``} format="linen" />
-        <Message text={`\`\`\`${CODE_EXAMPLE}\`\`\``} format="linen" />
-        <Message text={`\`\`\`${JAVASCRIPT_EXAMPLE}}\`\`\``} format="linen" />
-        <Message text={`\`\`\`${PYTHON_EXAMPLE}\`\`\``} format="linen" />
-        <Message text={`\`\`\`${RUBY_EXAMPLE}\`\`\``} format="linen" />
+        <Message
+          text={`\`\`\`${STACK_TRACE_EXAMPLE}\`\`\``}
+          format={MessageFormat.LINEN}
+        />
+        <Message
+          text={`\`\`\`${CODE_EXAMPLE}\`\`\``}
+          format={MessageFormat.LINEN}
+        />
+        <Message
+          text={`\`\`\`${JAVASCRIPT_EXAMPLE}}\`\`\``}
+          format={MessageFormat.LINEN}
+        />
+        <Message
+          text={`\`\`\`${PYTHON_EXAMPLE}\`\`\``}
+          format={MessageFormat.LINEN}
+        />
+        <Message
+          text={`\`\`\`${RUBY_EXAMPLE}\`\`\``}
+          format={MessageFormat.LINEN}
+        />
       </Example>
       {/* <Example description="Renders markdown.">
-        <Message text={MARKDOWN_EXAMPLE} format="linen" />
+        <Message text={MARKDOWN_EXAMPLE} format={MessageFormat.LINEN} />
       </Example> */}
       <Example description="Renders whitespace.">
-        <Message text={STATIC_TEXT} format="linen" />
+        <Message text={STATIC_TEXT} format={MessageFormat.LINEN} />
       </Example>
       <Example description="Renders images.">
-        <Message text="http://localhost:3000/yc-logo.png" format="linen" />
+        <Message
+          text="http://localhost:3000/yc-logo.png"
+          format={MessageFormat.LINEN}
+        />
       </Example>
       <Example description="It converts inline code to block code if newlines are present.">
-        <Message text={`\`${WHITESPACE_EXAMPLE} \``} format="linen" />
+        <Message
+          text={`\`${WHITESPACE_EXAMPLE} \``}
+          format={MessageFormat.LINEN}
+        />
       </Example>
       <Example description="Renders videos.">
         <Message
           text="https://www.youtube.com/embed/Xsew54QshN8"
-          format="linen"
+          format={MessageFormat.LINEN}
         />
         <Message
           text="https://www.youtube.com/watch?v=q3n8rvREbNM"
-          format="linen"
+          format={MessageFormat.LINEN}
         />
-        <Message text="https://youtu.be/615EqK_9-f0" format="linen" />
+        <Message
+          text="https://youtu.be/615EqK_9-f0"
+          format={MessageFormat.LINEN}
+        />
       </Example>
       {/* <Example description="Renders tweets.">
         <Message
           text="https://twitter.com/kotlin/status/1367535067581546501"
-          format="linen"
+          format={MessageFormat.LINEN}
         />
         <Message
           text="https://twitter.com/kotlin/status/1367535067581546501?s=21"
-          format="linen"
+          format={MessageFormat.LINEN}
         />
       </Example> */}
       <Example description="Renders HTML entities.">
-        <Message text={`\`${HTML_EXAMPLE}\``} format="linen" />
-        <Message text={`\`\`\`${HTML_EXAMPLE}\`\`\``} format="linen" />
+        <Message text={`\`${HTML_EXAMPLE}\``} format={MessageFormat.LINEN} />
+        <Message
+          text={`\`\`\`${HTML_EXAMPLE}\`\`\``}
+          format={MessageFormat.LINEN}
+        />
       </Example>
       <Example description="Renders JSON.">
-        <Message text={`\`\`\`${JSON_EXAMPLE}\`\`\``} format="linen" />
+        <Message
+          text={`\`\`\`${JSON_EXAMPLE}\`\`\``}
+          format={MessageFormat.LINEN}
+        />
       </Example>
       <Example description="Renders broken links.">
-        <Message text="http://-how-to-register" format="linen" />
+        <Message text="http://-how-to-register" format={MessageFormat.LINEN} />
       </Example>
       <Example description="Renders reactions.">
         <Message
           text="Hello, world! :)"
           reactions={EMOJIS.map((emoji) => ({ type: emoji, count: 1 }))}
-          format="linen"
+          format={MessageFormat.LINEN}
         />
       </Example>
     </Example>
