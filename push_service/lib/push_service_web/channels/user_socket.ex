@@ -41,13 +41,13 @@ defmodule PushServiceWeb.UserSocket do
       {:ok, body} ->
         {:ok, assign(socket, :current_user, body)}
 
+      {_, _} ->
+        {:error, %{reason: "unauthorized"}}
+
       {_} ->
         {:error, %{reason: "unauthorized"}}
     end
   end
-
-  @impl true
-  def connect(_params, _socket, _connect_info), do: :error
 
   # Socket id's are topics that allow you to identify all sockets for a given user:
   #

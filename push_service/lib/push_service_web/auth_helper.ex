@@ -1,5 +1,6 @@
 defmodule PushServiceWeb.AuthHelper do
   use HTTPoison.Base
+  require Logger
 
   @push_token System.get_env("PUSH_SERVICE_KEY")
   @api_url System.get_env("AUTH_SERVICE_URL")
@@ -70,6 +71,8 @@ defmodule PushServiceWeb.AuthHelper do
       Poison.encode!(%{
         push_token: @push_token
       })
+
+    Logger.info(@api_url)
 
     case HTTPoison.post("#{@api_url}/api/jwt/who", requestBody, headers) do
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->

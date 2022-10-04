@@ -38,7 +38,7 @@ export const environment: Record<string, string> = {
   // NEXTAUTH_SECRET: secrets
   // PUSH_SERVICE_KEY: secrets,
   PUSH_SERVICE_URL: 'https://' + aliases.push,
-  AUTH_SERVICE_URL: 'https://linen.dev',
+  // AUTH_SERVICE_URL: secrets
   // VERCEL_ACCESS_TOKEN: secrets,
   // VERCEL_TEAM_ID: secrets,
   // STRIPE_API_KEY: secrets,

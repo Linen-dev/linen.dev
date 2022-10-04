@@ -82,6 +82,13 @@ export function Secrets(scope: Construct) {
         { parameterName: '/linen-dev/prod/pushSecretKeyBase' }
       )
     ),
+    AUTH_SERVICE_URL: cdk.aws_ecs.Secret.fromSsmParameter(
+      cdk.aws_ssm.StringParameter.fromSecureStringParameterAttributes(
+        scope,
+        'authServiceUrl',
+        { parameterName: `/linen-dev/${SSM_STAGE}/authServiceUrl` }
+      )
+    ),
     // VERCEL_ACCESS_TOKEN: TODO
     // VERCEL_TEAM_ID: TODO
     // STRIPE_API_KEY: TODO
