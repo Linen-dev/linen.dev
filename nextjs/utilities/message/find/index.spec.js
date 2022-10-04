@@ -23,6 +23,11 @@ describe('findUserIds', () => {
               id: '3',
               source: '!3',
             },
+            {
+              type: 'signal',
+              id: '1',
+              source: '!1',
+            },
           ],
         },
       ],
