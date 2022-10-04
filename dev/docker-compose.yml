@@ -1,0 +1,22 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres:13
+    container_name: linendev_postgres
+    restart: always
+    ports:
+      - '${DB_PORT}:${DB_PORT}'
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_PORT=${DB_PORT}
+      - PGDATA=/var/lib/postgresql/data/pgdata
+      - APP_DB=linendev,linentest
+    volumes:
+      - pgdata:/var/lib/postgresql/data/pgdata
+      - ./postgres/initdb:/docker-entrypoint-initdb.d
+
+volumes:
+  pgdata:
