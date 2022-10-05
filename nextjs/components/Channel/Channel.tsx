@@ -16,15 +16,32 @@ import debounce from 'utilities/debounce';
 import { useUsersContext } from 'contexts/Users';
 import { NotifyMentions } from 'components/Notification';
 import useWebsockets from 'hooks/websockets';
+import { SerializedMessage } from 'serializers/message';
 import SidebarLayout from 'components/layout/shared/SidebarLayout';
+import useThreadWebsockets from 'hooks/websockets/thread';
 
-const debouncedSendMessage = debounce(
+const debouncedSendChannelMessage = debounce(
   ({ message, channelId, imitationId }: any) => {
     return fetch(`/api/messages/channel`, {
       method: 'POST',
       body: JSON.stringify({
         body: message,
         channelId,
+        imitationId,
+      }),
+    });
+  },
+  100
+);
+
+const debouncedSendMessage = debounce(
+  ({ message, channelId, threadId, imitationId }: any) => {
+    return fetch(`/api/messages/thread`, {
+      method: 'POST',
+      body: JSON.stringify({
+        body: message,
+        channelId,
+        threadId,
         imitationId,
       }),
     });
@@ -207,6 +224,28 @@ export function Channel({
     loadMore(true);
   }
 
+  useThreadWebsockets({
+    id: currentThread?.id,
+    token,
+    permissions,
+    onMessage(message, messageId, imitationId) {
+      setCurrentThread((currentThread) => {
+        if (!currentThread) {
+          return;
+        }
+        return {
+          ...currentThread,
+          messages: [
+            ...currentThread.messages.filter(
+              ({ id }: any) => id !== imitationId && id !== messageId
+            ),
+            message,
+          ],
+        };
+      });
+    },
+  });
+
   if (threads.length === 0) {
     return <div />;
   }
@@ -271,7 +310,7 @@ export function Channel({
       () => scrollToBottom(scrollableRootRef.current as HTMLElement),
       0
     );
-    return debouncedSendMessage({
+    return debouncedSendChannelMessage({
       message,
       channelId,
       imitationId: imitation.id,
@@ -340,6 +379,97 @@ export function Channel({
       });
   };
 
+  const sendThreadMessage = async ({
+    message,
+    channelId,
+    threadId,
+  }: {
+    message: string;
+    channelId: string;
+    threadId: string;
+  }) => {
+    if (!currentUser) {
+      throw 'current user is required';
+    }
+    const imitation: SerializedMessage = {
+      id: uuid(),
+      body: message,
+      sentAt: new Date().toString(),
+      usersId: currentUser.id,
+      mentions: allUsers,
+      attachments: [],
+      reactions: [],
+      threadId,
+      messageFormat: MessageFormat.LINEN,
+      author: {
+        id: currentUser.id,
+        externalUserId: currentUser.externalUserId,
+        displayName: currentUser.displayName,
+        profileImageUrl: currentUser.profileImageUrl,
+        isBot: false,
+        isAdmin: false,
+        anonymousAlias: null,
+        accountsId: 'fake-account-id',
+        authsId: null,
+        role: Roles.MEMBER,
+      },
+    };
+
+    setCurrentThread((thread) => {
+      if (!thread) {
+        return;
+      }
+      return {
+        ...thread,
+        messages: [...thread.messages, imitation],
+      };
+    });
+
+    return debouncedSendMessage({
+      message,
+      channelId,
+      threadId,
+      imitationId: imitation.id,
+    })
+      .then((response: any) => {
+        if (response.ok) {
+          return response.json();
+        }
+        throw 'Could not send a message';
+      })
+      .then(
+        ({
+          message,
+          imitationId,
+        }: {
+          message: SerializedMessage;
+          imitationId: string;
+        }) => {
+          setCurrentThread((thread: any) => {
+            if (!thread) {
+              return;
+            }
+            const messageId = message.id;
+            const index = thread.messages.findIndex(
+              (message: SerializedMessage) => message.id === messageId
+            );
+            if (index >= 0) {
+              return thread;
+            }
+            return {
+              ...thread,
+              messages: [
+                ...thread.messages.filter(
+                  (message: SerializedMessage) => message.id !== imitationId
+                ),
+                message,
+              ],
+            };
+          });
+        }
+      );
+  };
+
   return (
     <>
       <NotifyMentions token={token} key="notifyMentions" />
@@ -394,7 +524,6 @@ export function Channel({
               id={currentThread.id}
               channelId={currentThread.channelId}
               channelName={channelName}
-              currentUser={currentUser}
               title={currentThread.title}
               state={currentThread.state}
               messages={currentThread.messages || []}
@@ -407,13 +536,13 @@ export function Channel({
               permissions={permissions}
               updateThread={updateThread}
               onClose={() => setShowThread(false)}
+              sendMessage={sendThreadMessage}
               onSend={() => {
                 scrollToBottom(threadRef.current as HTMLElement);
               }}
               onMount={() => {
                 scrollToBottom(threadRef.current as HTMLElement);
               }}
-              token={token}
             />
           )
         }
