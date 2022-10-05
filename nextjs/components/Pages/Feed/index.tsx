@@ -9,12 +9,12 @@ import { Permissions, Scope } from 'types/shared';
 import Header from './Header';
 import Filters from './Filters';
 import Grid from './Grid';
-import debounce from 'awesome-debounce-promise';
 import { FeedResponse, Selections } from './types';
 import { Thread } from 'components/Thread';
-import { scrollToBottom } from 'utilities/scroll';
 import { NotifyMentions } from 'components/Notification';
-import useDevice from 'hooks/device';
+import { scrollToBottom } from 'utilities/scroll';
+import debounce from 'utilities/debounce';
+import usePolling from 'hooks/polling';
 
 interface Props {
   channels: channels[];
@@ -27,7 +27,7 @@ interface Props {
 }
 
 const debouncedFetch = debounce(
-  ({ communityName, state, scope, page }) => {
+  ({ communityName, state, scope, page }: any) => {
     return fetch(
       `/api/feed?communityName=${communityName}&state=${state}&scope=${scope}&page=${page}`,
       {
@@ -39,13 +39,8 @@ const debouncedFetch = debounce(
       }
       throw new Error('Failed to fetch the feed.');
     });
-  },
-  250,
-  { leading: true }
+  }
 );
-
-const POLL_INTERVAL_IN_SECONDS = 30;
-const POLL_INTERVAL = POLL_INTERVAL_IN_SECONDS * 1000;
 
 export default function Feed({
   channels,
@@ -61,12 +56,9 @@ export default function Feed({
   const [scope, setScope] = useState<Scope>(Scope.All);
   const [page, setPage] = useState<number>(1);
   const [key, setKey] = useState(0);
-  const [loading, setLoading] = useState(false);
   const [selections, setSelections] = useState<Selections>({});
   const [thread, setThread] = useState<SerializedThread | null>(null);
   const ref = useRef<HTMLDivElement>(null);
-
-  const { isMobile } = useDevice();
 
   const updateThreads = async () => {
     const ids: string[] = [];
@@ -105,37 +97,20 @@ export default function Feed({
     setKey((key) => key + 1);
   };
 
-  useEffect(() => {
-    let mounted = true;
-    setLoading(true);
-    const fetchFeed = () =>
-      debouncedFetch({ communityName, state, scope, page })
-        .then((data: FeedResponse) => {
-          if (mounted) {
-            setFeed(data);
-          }
-        })
-        .catch(() => {
-          if (mounted) {
-            alert('Something went wrong. Please reload the page.');
-          }
-        })
-        .finally(() => {
-          if (mounted) {
-            setLoading(false);
-          }
-        });
-    fetchFeed();
-
-    const intervalId = setInterval(() => {
-      fetchFeed();
-    }, POLL_INTERVAL);
-
-    return () => {
-      clearInterval(intervalId);
-      mounted = false;
-    };
-  }, [communityName, state, page, scope, key]);
+  const [polling] = usePolling(
+    {
+      fetch() {
+        return debouncedFetch({ communityName, state, scope, page });
+      },
+      success(data: FeedResponse) {
+        setFeed(data);
+      },
+      error() {
+        alert('Something went wrong. Please reload the page.');
+      },
+    },
+    [communityName, state, page, scope, key]
+  );
 
   return (
     <PageLayout
@@ -177,7 +152,7 @@ export default function Feed({
             />
             <Grid
               threads={feed.threads}
-              loading={loading}
+              loading={polling}
               selections={selections}
               onChange={(id: string, checked: boolean) => {
                 setSelections((selections: Selections) => {
