@@ -15,16 +15,18 @@ describe('transport', () => {
     };
     const output = transform(tree);
 
-    expect(output).toEqual({
-      type: 'root',
-      children: [
-        {
-          type: 'pre',
-          value: 'foo\nbar',
-          source: 'foo\nbar',
-        },
-      ],
-      source: 'foo\nbar',
-    });
+    expect(output).toEqual(
+      expect.objectContaining({
+        type: 'root',
+        children: [
+          expect.objectContaining({
+            type: 'pre',
+            value: 'foo\nbar',
+            source: 'foo\nbar',
+          }),
+        ],
+        source: 'foo\nbar',
+      })
+    );
   });
 });

@@ -59,38 +59,36 @@ function Message({ text, format, mentions, reactions, attachments }: Props) {
   const parse = parsers[format];
   const tree = transform(parse(text));
 
-  function render(node: RootNode | Node): React.ReactNode {
+  function render(node: any): React.ReactNode {
     switch (node.type) {
       case 'root':
         return (node as RootNode).children.map(render);
       case 'bold':
         return (
-          <strong key={node.source}>
+          <strong key={node.uuid}>
             {(node as BoldNode).children.map(render)}
           </strong>
         );
       case 'italic':
         return (
-          <em className="italic" key={node.source}>
+          <em className="italic" key={node.uuid}>
             {(node as ItalicNode).children.map(render)}
           </em>
         );
       case 'strike':
         return (
-          <del key={node.source}>
-            {(node as StrikeNode).children.map(render)}
-          </del>
+          <del key={node.uuid}>{(node as StrikeNode).children.map(render)}</del>
         );
       case 'quote':
         return (
-          <Quote key={node.source}>
+          <Quote key={node.uuid}>
             {(node as QuoteNode).children.map(render)}
           </Quote>
         );
       case 'text':
         return (
           <Text
-            key={node.source}
+            key={node.uuid}
             format={format}
             value={(node as TextNode).value}
           />
@@ -99,7 +97,7 @@ function Message({ text, format, mentions, reactions, attachments }: Props) {
         return (
           <Mention
             tag="@"
-            key={node.source}
+            key={node.uuid}
             value={(node as UserNode).id}
             mentions={mentions}
           />
@@ -108,27 +106,23 @@ function Message({ text, format, mentions, reactions, attachments }: Props) {
         return (
           <Mention
             tag="!"
-            key={node.source}
+            key={node.uuid}
             value={(node as UserNode).id}
             mentions={mentions}
           />
         );
       case 'channel':
-        return (
-          <Channel key={node.source} value={(node as ChannelNode).value} />
-        );
+        return <Channel key={node.uuid} value={(node as ChannelNode).value} />;
       case 'code':
-        return (
-          <InlineCode key={node.source} value={(node as CodeNode).value} />
-        );
+        return <InlineCode key={node.uuid} value={(node as CodeNode).value} />;
       case 'pre':
-        return <BlockCode key={node.source} value={(node as PreNode).value} />;
+        return <BlockCode key={node.uuid} value={(node as PreNode).value} />;
       case 'url':
-        return <Link key={node.source} value={(node as LinkNode).value} />;
+        return <Link key={node.uuid} value={(node as LinkNode).value} />;
       case 'emoji':
-        return <Emoji key={node.source} text={(node as EmojiNode).source} />;
+        return <Emoji key={node.uuid} text={(node as EmojiNode).source} />;
     }
-    return <React.Fragment key={node.source}>{node.source}</React.Fragment>;
+    return <React.Fragment key={node.uuid}>{node.source}</React.Fragment>;
   }
 
   return (

@@ -1,11 +1,14 @@
-export default function transform(tree: any) {
-  if (tree.type === 'code') {
-    if (tree.value.includes('\n')) {
-      tree.type = 'pre';
+import { v4 as uuid } from 'uuid';
+
+export default function transform(node: any) {
+  node.uuid = uuid();
+  if (node.type === 'code') {
+    if (node.value.includes('\n')) {
+      node.type = 'pre';
     }
   }
-  if (tree.children) {
-    tree.children = tree.children.map(transform);
+  if (node.children) {
+    node.children = node.children.map(transform);
   }
-  return tree;
+  return node;
 }
