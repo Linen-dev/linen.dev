@@ -208,11 +208,10 @@ export default function Feed({
               key={thread.id}
               id={thread.id}
               channelId={thread.channelId}
-              channelName={thread.channel?.channelName || 'xx'}
+              channelName={thread.channel?.channelName as string}
               title={thread.title}
               state={thread.state}
               messages={thread.messages}
-              threadUrl={'foobarbaz'}
               viewCount={thread.viewCount}
               settings={settings}
               incrementId={thread.incrementId}
