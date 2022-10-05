@@ -8,30 +8,24 @@ Linen is a Google-searchable community chat tool. Linen was built as an alternat
 
 Linen is free and offers unlimited message retention you can sign up at Linen.community.
 
-### Philosphy:
+### Core Features:
 
-There are a few problems with chat communities today:
-
-1. Slack and Discord are not accessible by the internet and archivable. Slack and Discord becomes blackhole for information.
-   1. We designed linen to be Google Searchable by rendering a static version of our page based on whether if it is a bot. Search engines do not crawl javascript well which is why most other chat tools aren’t getting indexed.
-2. These communities often becomes a customer support channel and it is often overwhelming for the community maintainers.
-   1. We treat threads very similarly to Github issues and support tickets so that the team can manage their conversations better.
-3. Chat is very noisy and too many notifications are stressful.
-   1. We redesigned the notification system around the concept of a feed. @mentions show up in your feed instead of sending you a push notification. We add a !mention for when you want a real time notification system
+1. Linen is search engine friendly. We have over 50,000 pages indexed on Google. Most chat apps are not search engine friendly because they are very JS heavy. We made Linen search engine friendly by offering a sitemap, conditionally rendering a static version of our page to search engines, and using cursor based pagination so pages will be consistant.
+2. Linen is designed with customer support in mind. Most communities often become a customer support channel. All of our threads have a open close state. We have a feed where you can browse all open/closed conversations in one place instead of having to worry about which channels and conversations your team have missed.
+3. Linen is designed to be async first. Chat can be very noisy especially with large communities. By having a feed of conversations that you are participating in you don't have to worry about missing messages. We also repurposed @mentions from a notification to a async notification where it shows up in your feed. We replaced it with !mention which will send a push notification to you. 
+4. Linen support imports from all of your public Slack/Discord conversations, attachments, emojis, and members.
 
 ### Features:
-
-1. Slack/Discord Import: We can import all of your public Slack/Discord conversations, attachments, emojis, and members
+1. Drag and drop messages in to different channels
 2. Sitemap generation to help search engines crawl your community
 3. Markdown message support
-4. Join multiple communities with a single account (only works on cloud edition)
+4. Join multiple communities with a single account
 5. Custom domain hosting for Cloud edition
 6. Anonymize member’s display names
 7. Custom community branding
 8. Attachments support
 9. Drag and drop messages in to threads
 10. Open close state on all threads
-11. Drag and drop messages in to different channels
 
 ### Near term Roadmap:
 
