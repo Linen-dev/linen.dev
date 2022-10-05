@@ -1,5 +1,4 @@
 import PageLayout from 'components/layout/PageLayout';
-import { ThreadByIdProp } from '../../../../types/apiResponses/threads/[threadId]';
 import { useEffect, useState, useRef } from 'react';
 import { Thread } from 'components/Thread';
 import { buildThreadSeo } from 'utilities/seo';
@@ -31,7 +30,6 @@ const debouncedSendMessage = debounce(
 export default function Content({
   id,
   threadId,
-  channels,
   currentChannel,
   currentUser,
   threadUrl,
@@ -177,27 +175,7 @@ export default function Content({
   };
 
   return (
-    <PageLayout
-      seo={{
-        ...buildThreadSeo({
-          isSubDomainRouting,
-          channelName: currentChannel.channelName,
-          messages,
-          settings,
-          threadId,
-          slug,
-        }),
-      }}
-      communityName={settings.communityName}
-      currentChannel={currentChannel}
-      channels={channels}
-      communityUrl={settings.communityUrl}
-      communityInviteUrl={settings.communityInviteUrl}
-      settings={settings}
-      isSubDomainRouting={isSubDomainRouting}
-      permissions={permissions}
-      innerRef={ref}
-    >
+    <>
       <NotifyMentions token={token} key="notifyMentions" />
       <div className="w-full">
         <Thread
@@ -225,6 +203,6 @@ export default function Content({
           }}
         />
       </div>
-    </PageLayout>
+    </>
   );
 }

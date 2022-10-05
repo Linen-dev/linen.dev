@@ -56,7 +56,6 @@ export function ThreadPage({
       <Content
         id={id}
         threadId={threadId}
-        channels={channels}
         currentChannel={currentChannel}
         currentUser={currentUser}
         threadUrl={threadUrl}
