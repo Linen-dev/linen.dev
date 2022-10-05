@@ -39,6 +39,7 @@ There are a few problems with chat communities today:
 - Desktop client
 - Mobile app
 - Github issues integration
+- Improve self deployment flows
 
 Our documentation is divided into several sections:
 
@@ -50,10 +51,6 @@ Our documentation is divided into several sections:
 
 - [Database](./docs/database.md)
 - [Cache](./docs/cache.md)
-
-#### Infrastructure
-
-- [CDK](./docs/cdk.md)
 
 #### Others
 
