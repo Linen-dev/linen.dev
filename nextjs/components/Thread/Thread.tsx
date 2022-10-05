@@ -3,9 +3,9 @@ import { v4 as uuid } from 'uuid';
 import { ThreadState, Roles, MessageFormat } from '@prisma/client';
 import debounce from 'awesome-debounce-promise';
 import Header from './Header';
+import Messages from './Messages';
 import { SerializedMessage } from 'serializers/message';
 import JoinChannelLink from 'components/Link/JoinChannelLink';
-import Row from 'components/Message/Row';
 import type { Settings } from 'serializers/account/settings';
 import { getThreadUrl } from 'components/Pages/ChannelsPage/utilities/url';
 import MessageForm from 'components/MessageForm';
@@ -113,28 +113,6 @@ export function Thread({
     isSubDomainRouting,
     settings,
     slug,
-  });
-
-  const elements = messages.map((message, index) => {
-    const previousMessage = messages[index - 1];
-    const nextMessage = messages[index + 1];
-    const isPreviousMessageFromSameUser =
-      previousMessage && previousMessage.usersId === message.usersId;
-    const isNextMessageFromSameUser =
-      nextMessage && nextMessage.usersId === message.usersId;
-    return (
-      <div
-        key={`${message.id}-${index}`}
-        className={isNextMessageFromSameUser ? '' : 'pb-4'}
-      >
-        <Row
-          message={message}
-          isPreviousMessageFromSameUser={isPreviousMessageFromSameUser}
-          communityType={settings.communityType}
-          threadLink={threadLink}
-        />
-      </div>
-    );
   });
 
   useEffect(() => {
@@ -262,7 +240,11 @@ export function Thread({
         state={state}
       />
       <div className={styles.thread}>
-        <ul>{elements}</ul>
+        <Messages
+          messages={messages}
+          communityType={settings.communityType}
+          threadLink={threadLink}
+        />
 
         <div className={styles.footer}>
           <div className={styles.count}>
