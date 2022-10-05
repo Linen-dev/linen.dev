@@ -1,7 +1,5 @@
-import { useState, useEffect } from 'react';
-import { v4 as uuid } from 'uuid';
-import { ThreadState, Roles, MessageFormat } from '@prisma/client';
-import debounce from 'utilities/debounce';
+import { useEffect } from 'react';
+import { ThreadState } from '@prisma/client';
 import Header from './Header';
 import Messages from './Messages';
 import { SerializedMessage } from 'serializers/message';
@@ -11,31 +9,13 @@ import { getThreadUrl } from 'components/Pages/ChannelsPage/utilities/url';
 import MessageForm from 'components/MessageForm';
 import { fetchMentions } from 'components/MessageForm/api';
 import { Permissions } from 'types/shared';
-import { SerializedUser } from 'serializers/user';
 import styles from './index.module.css';
-import { useUsersContext } from 'contexts/Users';
-import useWebsockets from 'hooks/websockets';
-
-const debouncedSendMessage = debounce(
-  ({ message, channelId, threadId, imitationId }: any) => {
-    return fetch(`/api/messages/thread`, {
-      method: 'POST',
-      body: JSON.stringify({
-        body: message,
-        channelId,
-        threadId,
-        imitationId,
-      }),
-    });
-  },
-  100
-);
 
 export function Thread({
   id,
   channelId,
   channelName,
-  messages: initialMessages,
+  messages,
   threadUrl,
   viewCount,
   isSubDomainRouting,
@@ -45,12 +25,11 @@ export function Thread({
   state,
   title,
   permissions,
-  currentUser,
+  sendMessage,
   updateThread,
   onClose,
   onSend,
   onMount,
-  token,
 }: {
   id: string;
   channelId: string;
@@ -65,16 +44,20 @@ export function Thread({
   title: string | null;
   state: ThreadState;
   permissions: Permissions;
-  currentUser: SerializedUser | null;
+  sendMessage({
+    message,
+    channelId,
+    threadId,
+  }: {
+    message: string;
+    channelId: string;
+    threadId: string;
+  }): Promise<void>;
   updateThread({ state, title }: { state?: ThreadState; title?: string }): void;
   onClose?(): void;
   onSend?(): void;
   onMount?(): void;
-  token: string | null;
 }) {
-  const [allUsers] = useUsersContext();
-  const [messages, setMessages] =
-    useState<SerializedMessage[]>(initialMessages);
   const threadLink = getThreadUrl({
     incrementId: incrementId!,
     isSubDomainRouting,
@@ -85,114 +68,6 @@ export function Thread({
   useEffect(() => {
     onMount?.();
   }, []);
-
-  useWebsockets({
-    room: `room:topic:${id}`,
-    token,
-    permissions,
-    onNewMessage(payload) {
-      const currentThreadId = id;
-      try {
-        if (payload.is_reply && payload.thread_id === currentThreadId) {
-          const messageId = payload.message_id;
-          const imitationId = payload.imitation_id;
-          fetch('/api/messages/' + messageId)
-            .then((e) => e.json())
-            .then((message) =>
-              setMessages((messages) => [
-                ...messages.filter(
-                  ({ id }) => id !== imitationId && id !== messageId
-                ),
-                message,
-              ])
-            );
-        }
-      } catch (exception) {
-        if (process.env.NODE_ENV === 'development') {
-          console.log(exception);
-        }
-      }
-    },
-  });
-
-  const sendMessage = async ({
-    message,
-    channelId,
-    threadId,
-  }: {
-    message: string;
-    channelId: string;
-    threadId: string;
-  }) => {
-    if (!currentUser) {
-      throw 'current user is required';
-    }
-    const imitation: SerializedMessage = {
-      id: uuid(),
-      body: message,
-      sentAt: new Date().toString(),
-      usersId: currentUser.id,
-      mentions: allUsers,
-      attachments: [],
-      reactions: [],
-      threadId,
-      messageFormat: MessageFormat.LINEN,
-      author: {
-        id: currentUser.id,
-        externalUserId: currentUser.externalUserId,
-        displayName: currentUser.displayName,
-        profileImageUrl: currentUser.profileImageUrl,
-        isBot: false,
-        isAdmin: false,
-        anonymousAlias: null,
-        accountsId: 'fake-account-id',
-        authsId: null,
-        role: Roles.MEMBER,
-      },
-    };
-
-    setMessages((messages) => {
-      return [...messages, imitation];
-    });
-
-    setTimeout(() => {
-      onSend?.();
-    }, 0);
-
-    return debouncedSendMessage({
-      message,
-      channelId,
-      threadId,
-      imitationId: imitation.id,
-    })
-      .then((response: any) => {
-        if (response.ok) {
-          return response.json();
-        }
-        throw 'Could not send a message';
-      })
-      .then(
-        ({
-          message,
-          imitationId,
-        }: {
-          message: SerializedMessage;
-          imitationId: string;
-        }) => {
-          setMessages((messages) => {
-            const messageId = message.id;
-            const index = messages.findIndex((t) => t.id === messageId);
-            if (index >= 0) {
-              return messages;
-            }
-            return [
-              ...messages.filter((message) => message.id !== imitationId),
-              message,
-            ];
-          });
-        }
-      );
-  };
 
   return (
     <>
@@ -229,10 +104,12 @@ export function Thread({
         <div className={styles.chat}>
           {state === ThreadState.OPEN ? (
             <MessageForm
-              onSend={(message: string) =>
-                sendMessage({ message, channelId, threadId: id })
-              }
+              onSend={(message: string) => {
+                onSend?.();
+                return sendMessage({ message, channelId, threadId: id });
+              }}
               onSendAndClose={(message: string) => {
+                onSend?.();
                 return Promise.all([
                   sendMessage({ message, channelId, threadId: id }),
                   updateThread({ state: ThreadState.CLOSE }),
@@ -243,6 +120,7 @@ export function Thread({
           ) : (
             <MessageForm
               onSend={(message: string) => {
+                onSend?.();
                 return Promise.all([
                   sendMessage({ message, channelId, threadId: id }),
                   updateThread({ state: ThreadState.OPEN }),

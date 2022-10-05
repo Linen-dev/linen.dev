@@ -4,7 +4,7 @@ import { Permissions } from 'types/shared';
 import type { PushMessageType } from 'services/push';
 
 interface Props {
-  room: string;
+  room?: string;
   token: string | null;
   permissions: Permissions;
   onNewMessage(payload: PushMessageType): void;
@@ -13,7 +13,7 @@ interface Props {
 function useWebsockets({ room, token, permissions, onNewMessage }: Props) {
   const [channel, setChannel] = useState<Channel>();
   useEffect(() => {
-    if (permissions.chat && token) {
+    if (permissions.chat && token && room) {
       //Set url instead of hard coding
       const socket = new Socket(
         `${process.env.NEXT_PUBLIC_PUSH_SERVICE_URL}/socket`,
