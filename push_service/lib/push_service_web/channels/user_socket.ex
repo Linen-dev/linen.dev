@@ -41,6 +41,9 @@ defmodule PushServiceWeb.UserSocket do
       {:ok, body} ->
         {:ok, assign(socket, :current_user, body)}
 
+      {_, _} ->
+        {:error, %{reason: "unauthorized"}}
+
       {_} ->
         {:error, %{reason: "unauthorized"}}
     end
