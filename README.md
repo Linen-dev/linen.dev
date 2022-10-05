@@ -25,7 +25,7 @@ Linen is free and offers unlimited message retention you can sign up at Linen.co
 - **Desktop/Mobile client**: We want to support a desktop and mobile client for Linen so you can get push notifications for when there are urgent things.
 - **Botting**: We want to support botting and automation where you can build and add your custom bots
 
-## Feed:
+## Feedback:
 Linen is in it's early stages of development so we are looking for a ton of feedback.
 
 ### Misc Features:
