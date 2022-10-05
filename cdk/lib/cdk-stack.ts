@@ -22,7 +22,7 @@ export class CdkStack extends cdk.Stack {
     const { dockerImage } = Docker();
     const { dockerImage: dockerElixir } = DockerElixir();
 
-    const { cacheTableAccessPolicy, mailerAccessPolicy } = Roles(this);
+    const { s3AccessPolicy, mailerAccessPolicy } = Roles(this);
 
     const { securityGroup, vpc } = Vpc(this);
 
@@ -38,7 +38,7 @@ export class CdkStack extends cdk.Stack {
     //   dockerImage,
     //   secrets,
     //   environment,
-    //   cacheTableAccessPolicy,
+    //   s3AccessPolicy,
     //   mailerAccessPolicy,
     //   securityGroup,
     // });
@@ -50,7 +50,7 @@ export class CdkStack extends cdk.Stack {
       dockerImage: dockerElixir,
       secrets,
       environment,
-      cacheTableAccessPolicy,
+      s3AccessPolicy,
       mailerAccessPolicy,
       securityGroup,
     });
@@ -60,7 +60,7 @@ export class CdkStack extends cdk.Stack {
       dockerImage,
       secrets,
       environment,
-      cacheTableAccessPolicy,
+      s3AccessPolicy,
       mailerAccessPolicy,
     });
 
@@ -69,7 +69,7 @@ export class CdkStack extends cdk.Stack {
       dockerImage,
       secrets,
       environment,
-      cacheTableAccessPolicy,
+      s3AccessPolicy,
       mailerAccessPolicy,
     });
 
@@ -78,7 +78,7 @@ export class CdkStack extends cdk.Stack {
       dockerImage,
       secrets,
       environment,
-      cacheTableAccessPolicy,
+      s3AccessPolicy,
       mailerAccessPolicy,
     });
 
@@ -90,7 +90,7 @@ export class CdkStack extends cdk.Stack {
         ...environment,
         SKIP_NOTIFICATION: 'true',
       },
-      cacheTableAccessPolicy,
+      s3AccessPolicy,
       mailerAccessPolicy,
     });
 
@@ -99,7 +99,7 @@ export class CdkStack extends cdk.Stack {
       dockerImage,
       secrets,
       environment,
-      cacheTableAccessPolicy,
+      s3AccessPolicy,
       mailerAccessPolicy,
     });
   }

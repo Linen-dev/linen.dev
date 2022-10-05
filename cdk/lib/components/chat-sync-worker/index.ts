@@ -6,7 +6,7 @@ type ChatSyncWorkerType = {
   dockerImage: cdk.aws_ecs.AssetImage;
   secrets: Record<string, cdk.aws_ecs.Secret>;
   environment: Record<string, string>;
-  cacheTableAccessPolicy: cdk.aws_iam.PolicyStatement;
+  s3AccessPolicy: cdk.aws_iam.PolicyStatement;
   mailerAccessPolicy: cdk.aws_iam.PolicyStatement;
 };
 
@@ -17,7 +17,7 @@ export function ChatSyncWorker(
     dockerImage,
     secrets,
     environment,
-    cacheTableAccessPolicy,
+    s3AccessPolicy,
     mailerAccessPolicy,
   }: ChatSyncWorkerType
 ) {
@@ -50,6 +50,6 @@ export function ChatSyncWorker(
       }),
     }),
   });
-  chatSyncWorkerDef.taskDefinition.addToTaskRolePolicy(cacheTableAccessPolicy);
+  chatSyncWorkerDef.taskDefinition.addToTaskRolePolicy(s3AccessPolicy);
   chatSyncWorkerDef.taskDefinition.addToTaskRolePolicy(mailerAccessPolicy);
 }

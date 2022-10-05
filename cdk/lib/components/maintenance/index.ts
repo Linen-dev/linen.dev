@@ -6,7 +6,7 @@ type MaintenanceType = {
   dockerImage: cdk.aws_ecs.AssetImage;
   secrets: Record<string, cdk.aws_ecs.Secret>;
   environment: Record<string, string>;
-  cacheTableAccessPolicy: cdk.aws_iam.PolicyStatement;
+  s3AccessPolicy: cdk.aws_iam.PolicyStatement;
   mailerAccessPolicy: cdk.aws_iam.PolicyStatement;
 };
 
@@ -17,7 +17,7 @@ export function Maintenance(
     dockerImage,
     secrets,
     environment,
-    cacheTableAccessPolicy,
+    s3AccessPolicy,
     mailerAccessPolicy,
   }: MaintenanceType
 ) {
@@ -51,6 +51,6 @@ export function Maintenance(
       platformVersion: cdk.aws_ecs.FargatePlatformVersion.LATEST,
     }
   );
-  maintenanceTaskDef.taskDefinition.addToTaskRolePolicy(cacheTableAccessPolicy);
+  maintenanceTaskDef.taskDefinition.addToTaskRolePolicy(s3AccessPolicy);
   maintenanceTaskDef.taskDefinition.addToTaskRolePolicy(mailerAccessPolicy);
 }

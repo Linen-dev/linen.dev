@@ -4,7 +4,7 @@ import { environment } from '../../utils/env';
 const { S3_ASSETS_BUCKET } = environment;
 
 export function Roles(scope: Construct) {
-  const cacheTableAccessPolicy = new cdk.aws_iam.PolicyStatement({
+  const s3AccessPolicy = new cdk.aws_iam.PolicyStatement({
     actions: [
       's3:PutObject',
       's3:PutObjectAcl',
@@ -21,5 +21,5 @@ export function Roles(scope: Construct) {
     resources: [`*`],
   });
 
-  return { cacheTableAccessPolicy, mailerAccessPolicy };
+  return { s3AccessPolicy, mailerAccessPolicy };
 }

@@ -6,7 +6,7 @@ type SyncDiscordType = {
   dockerImage: cdk.aws_ecs.AssetImage;
   secrets: Record<string, cdk.aws_ecs.Secret>;
   environment: Record<string, string>;
-  cacheTableAccessPolicy: cdk.aws_iam.PolicyStatement;
+  s3AccessPolicy: cdk.aws_iam.PolicyStatement;
   mailerAccessPolicy: cdk.aws_iam.PolicyStatement;
 };
 
@@ -17,7 +17,7 @@ export function SyncDiscord(
     dockerImage,
     secrets,
     environment,
-    cacheTableAccessPolicy,
+    s3AccessPolicy,
     mailerAccessPolicy,
   }: SyncDiscordType
 ) {
@@ -50,6 +50,6 @@ export function SyncDiscord(
       }),
     }),
   });
-  discordTaskDef.taskDefinition.addToTaskRolePolicy(cacheTableAccessPolicy);
+  discordTaskDef.taskDefinition.addToTaskRolePolicy(s3AccessPolicy);
   discordTaskDef.taskDefinition.addToTaskRolePolicy(mailerAccessPolicy);
 }
