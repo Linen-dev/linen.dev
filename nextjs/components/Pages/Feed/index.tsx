@@ -15,6 +15,7 @@ import { Thread } from 'components/Thread';
 import { scrollToBottom } from 'utilities/scroll';
 import { Transition } from '@headlessui/react';
 import { NotifyMentions } from 'components/Notification';
+import useDevice from 'hooks/device';
 
 interface Props {
   channels: channels[];
@@ -66,6 +67,8 @@ export default function Feed({
   const [thread, setThread] = useState<SerializedThread | null>(null);
   const ref = useRef<HTMLDivElement>(null);
 
+  const { isMobile } = useDevice();
+
   const updateThreads = async () => {
     const ids: string[] = [];
     for (const key in selections) {
@@ -102,24 +105,6 @@ export default function Feed({
     setSelections({});
     setKey((key) => key + 1);
   };
-
-  const [isMobile, setIsMobile] = useState(false);
-
-  const handleResize = () => {
-    if (window.innerWidth < 768) {
-      setIsMobile(true);
-    } else {
-      setIsMobile(false);
-    }
-  };
-
-  useEffect(() => {
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
 
   useEffect(() => {
     let mounted = true;

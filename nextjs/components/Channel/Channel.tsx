@@ -10,14 +10,14 @@ import { get } from 'utilities/http';
 import MessageForm from 'components/MessageForm';
 import { fetchMentions } from 'components/MessageForm/api';
 import { ThreadState, Roles, MessageFormat } from '@prisma/client';
-import { Channel as PhoneixChannel, Socket } from 'phoenix';
-import type { PushMessageType } from 'services/push';
 import { scrollToBottom } from 'utilities/scroll';
 import styles from './index.module.css';
 import { v4 as uuid } from 'uuid';
 import debounce from 'awesome-debounce-promise';
 import { useUsersContext } from 'contexts/Users';
 import { NotifyMentions } from 'components/Notification';
+import useWebsockets from 'hooks/websockets';
+import useDevice from 'hooks/device';
 
 const debouncedSendMessage = debounce(
   ({ message, channelId, imitationId }) => {
@@ -58,8 +58,6 @@ export function Channel({
   const [cursor, setCursor] = useState(nextCursor);
   const [error, setError] = useState<{ prev?: unknown; next?: unknown }>();
   const [allUsers] = useUsersContext();
-
-  const [channel, setChannel] = useState<PhoneixChannel>();
 
   const [showThread, setShowThread] = useState(false);
   const [currentThread, setCurrentThread] = useState<SerializedThread>();
@@ -105,77 +103,60 @@ export function Channel({
     }
   }, [threads]);
 
-  useEffect(() => {
-    if (permissions.chat && token) {
-      //Set url instead of hard coding
-      const socket = new Socket(
-        `${process.env.NEXT_PUBLIC_PUSH_SERVICE_URL}/socket`,
-        {
-          params: { token },
+  useWebsockets({
+    room: `room:lobby:${currentChannel.id}`,
+    token,
+    permissions,
+    onNewMessage(payload) {
+      try {
+        if (payload.is_reply) {
+          const threadId = payload.thread_id;
+          const messageId = payload.message_id;
+          const imitationId = payload.imitation_id;
+          fetch('/api/messages/' + messageId)
+            .then((response) => response.json())
+            .then((message) =>
+              setThreads((threads) => {
+                const index = threads.findIndex(({ id }) => id === threadId);
+                const newThreads = [...threads];
+                if (index > -1) {
+                  newThreads[index].messages = [
+                    ...newThreads[index].messages.filter(
+                      ({ id }) => id !== imitationId && id !== messageId
+                    ),
+                    message,
+                  ];
+                }
+                return newThreads;
+              })
+            );
         }
-      );
 
-      socket.connect();
-      const channel = socket.channel(`room:lobby:${currentChannel.id}`, {});
-
-      setChannel(channel);
-      channel
-        .join()
-        .receive('ok', (resp: any) => {
-          console.log('Joined successfully', resp);
-        })
-        .receive('error', (resp: any) => {
-          console.log('Unable to join', resp);
-        });
-      channel.on('new_msg', (payload: PushMessageType) => {
-        try {
-          if (payload.is_reply) {
-            const threadId = payload.thread_id;
-            const messageId = payload.message_id;
-            const imitationId = payload.imitation_id;
-            fetch('/api/messages/' + messageId)
-              .then((response) => response.json())
-              .then((message) =>
-                setThreads((threads) => {
-                  const index = threads.findIndex(({ id }) => id === threadId);
-                  const newThreads = [...threads];
-                  if (index > -1) {
-                    newThreads[index].messages = [
-                      ...newThreads[index].messages.filter(
-                        ({ id }) => id !== imitationId && id !== messageId
-                      ),
-                      message,
-                    ];
-                  }
-                  return newThreads;
-                })
-              );
-          }
-
-          if (payload.is_thread) {
-            const threadId = payload.thread_id;
-            const imitationId = payload.imitation_id;
-            fetch('/api/threads/' + threadId)
-              .then((response) => response.json())
-              .then((thread) => {
-                setThreads((threads) => [
-                  ...threads.filter(
-                    ({ id }) => id !== imitationId && id !== threadId
-                  ),
-                  thread,
-                ]);
-              });
-          }
-        } catch (e) {
+        if (payload.is_thread) {
+          const threadId = payload.thread_id;
+          const imitationId = payload.imitation_id;
+          fetch('/api/threads/' + threadId)
+            .then((response) => response.json())
+            .then((thread) => {
+              setThreads((threads) => [
+                ...threads.filter(
+                  ({ id }) => id !== imitationId && id !== threadId
+                ),
+                thread,
+              ]);
+            });
+        }
+      } catch (e) {
+        if (process.env.NODE_ENV === 'development') {
           console.log(e);
         }
-      });
+      }
+    },
+  });
 
+  useEffect(() => {
+    if (permissions.chat && token) {
       scrollToBottom(scrollableRootRef.current as HTMLElement);
-
-      return () => {
-        socket.disconnect();
-      };
     }
   }, []);
 
@@ -228,23 +209,7 @@ export function Channel({
     loadMore(true);
   }
 
-  const [isMobile, setIsMobile] = useState(false);
-
-  const handleResize = () => {
-    if (window.innerWidth < 768) {
-      setIsMobile(true);
-    } else {
-      setIsMobile(false);
-    }
-  };
-
-  useEffect(() => {
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
+  const { isMobile } = useDevice();
 
   if (threads.length === 0) {
     return <div />;
@@ -348,10 +313,6 @@ export function Channel({
   return (
     <>
       <NotifyMentions token={token} key="notifyMentions" />
-
-      {/* Added padding right when scroll bar is hidden 
-      and remove padding when scroll bar 
-      is showing so it doesn't move the screen as much */}
 
       <Transition
         show={showChannel({ isMobile, showThread })}

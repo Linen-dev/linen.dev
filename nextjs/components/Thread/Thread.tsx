@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { Channel as PhoneixChannel, Socket } from 'phoenix';
 import { v4 as uuid } from 'uuid';
 import { ThreadState, Roles, MessageFormat } from '@prisma/client';
 import debounce from 'awesome-debounce-promise';
@@ -15,7 +14,7 @@ import { Permissions } from 'types/shared';
 import { SerializedUser } from 'serializers/user';
 import styles from './index.module.css';
 import { useUsersContext } from 'contexts/Users';
-import type { PushMessageType } from 'services/push';
+import useWebsockets from 'hooks/websockets';
 
 const debouncedSendMessage = debounce(
   ({ message, channelId, threadId, imitationId }) => {
@@ -80,7 +79,6 @@ export function Thread({
   onMount?(): void;
   token: string | null;
 }) {
-  const [channel, setChannel] = useState<PhoneixChannel>();
   const [allUsers] = useUsersContext();
   const [messages, setMessages] =
     useState<SerializedMessage[]>(initialMessages);
@@ -141,54 +139,37 @@ export function Thread({
 
   useEffect(() => {
     onMount?.();
-    if (permissions.chat && token) {
-      //Set url instead of hard coding
-      const socket = new Socket(
-        `${process.env.NEXT_PUBLIC_PUSH_SERVICE_URL}/socket`,
-        { params: { token } }
-      );
-
-      socket.connect();
-      const channel = socket.channel(`room:topic:${id}`);
-
-      setChannel(channel);
-      channel
-        .join()
-        .receive('ok', (resp: any) => {
-          console.log('Joined successfully', resp);
-        })
-        .receive('error', (resp: any) => {
-          console.log('Unable to join', resp);
-        });
-      channel.on('new_msg', (payload: PushMessageType) => {
-        const currentThreadId = id;
-        try {
-          if (payload.is_reply && payload.thread_id === currentThreadId) {
-            const messageId = payload.message_id;
-            const imitationId = payload.imitation_id;
-            fetch('/api/messages/' + messageId)
-              .then((e) => e.json())
-              .then((message) =>
-                setMessages((messages) => [
-                  ...messages.filter(
-                    ({ id }) => id !== imitationId && id !== messageId
-                  ),
-                  message,
-                ])
-              );
-          }
-        } catch (e) {
-          console.log(e);
-        }
-      });
-
-      return () => {
-        socket.disconnect();
-      };
-    }
-
-    return () => {};
   }, []);
+
+  useWebsockets({
+    room: `room:topic:${id}`,
+    token,
+    permissions,
+    onNewMessage(payload) {
+      const currentThreadId = id;
+      try {
+        if (payload.is_reply && payload.thread_id === currentThreadId) {
+          const messageId = payload.message_id;
+          const imitationId = payload.imitation_id;
+          fetch('/api/messages/' + messageId)
+            .then((e) => e.json())
+            .then((message) =>
+              setMessages((messages) => [
+                ...messages.filter(
+                  ({ id }) => id !== imitationId && id !== messageId
+                ),
+                message,
+              ])
+            );
+        }
+      } catch (exception) {
+        if (process.env.NODE_ENV === 'development') {
+          console.log(exception);
+        }
+      }
+    },
+  });
+
   const sendMessage = async ({
     message,
     channelId,
