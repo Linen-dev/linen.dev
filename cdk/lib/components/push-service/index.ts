@@ -1,7 +1,7 @@
-import { Construct } from "constructs";
-import * as cdk from "aws-cdk-lib";
-import { Certificate } from "aws-cdk-lib/aws-certificatemanager";
-import { certs } from "../../utils/env";
+import { Construct } from 'constructs';
+import * as cdk from 'aws-cdk-lib';
+import { Certificate } from 'aws-cdk-lib/aws-certificatemanager';
+import { certs } from '../../utils/env';
 
 type PushServiceType = {
   cluster: cdk.aws_ecs.Cluster;
@@ -27,18 +27,18 @@ export function PushService(
 ) {
   const pushServiceTaskDef = new cdk.aws_ecs.FargateTaskDefinition(
     scope,
-    "pushServiceTaskDef"
+    'pushServiceTaskDef'
   );
   pushServiceTaskDef.addToTaskRolePolicy(cacheTableAccessPolicy);
   pushServiceTaskDef.addToTaskRolePolicy(mailerAccessPolicy);
 
-  const container = pushServiceTaskDef.addContainer("PushServiceContainer", {
+  const container = pushServiceTaskDef.addContainer('PushServiceContainer', {
     image: dockerImage,
-    command: ["mix", "phx.server"],
+    command: ['mix', 'phx.server'],
     environment,
     secrets,
     logging: cdk.aws_ecs.LogDriver.awsLogs({
-      streamPrefix: "PushService",
+      streamPrefix: 'PushService',
       logRetention: cdk.aws_logs.RetentionDays.FIVE_DAYS,
     }),
   });
@@ -50,7 +50,7 @@ export function PushService(
   const pushService =
     new cdk.aws_ecs_patterns.ApplicationLoadBalancedFargateService(
       scope,
-      "PushService",
+      'PushService',
       {
         cluster,
         assignPublicIp: true,
@@ -63,7 +63,7 @@ export function PushService(
         redirectHTTP: true,
         certificate: Certificate.fromCertificateArn(
           scope,
-          "PushServiceCert",
+          'PushServiceCert',
           certs.push
         ),
       }
@@ -71,8 +71,8 @@ export function PushService(
   const { loadBalancer } = pushService;
 
   pushService.targetGroup.configureHealthCheck({
-    path: "/api/health",
-    interval: cdk.Duration.seconds(60),
+    path: '/api/health',
+    interval: cdk.Duration.seconds(120),
     unhealthyThresholdCount: 3,
   });
 
