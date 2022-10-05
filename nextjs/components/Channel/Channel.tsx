@@ -75,12 +75,12 @@ export function Channel({
   const [allUsers] = useUsersContext();
 
   const [showThread, setShowThread] = useState(false);
-  const [currentThread, setCurrentThread] = useState<SerializedThread>();
+  const [currentThreadId, setCurrentThreadId] = useState<string>();
 
-  async function loadThread(incrementId: number) {
+  async function selectThread(incrementId: number) {
     const currentThread = threads.find((t) => t.incrementId === incrementId);
     if (currentThread) {
-      setCurrentThread(currentThread);
+      setCurrentThreadId(currentThread.id);
     }
     setShowThread(true);
   }
@@ -225,23 +225,25 @@ export function Channel({
   }
 
   useThreadWebsockets({
-    id: currentThread?.id,
+    id: currentThreadId,
     token,
     permissions,
     onMessage(message, messageId, imitationId) {
-      setCurrentThread((currentThread) => {
-        if (!currentThread) {
-          return;
-        }
-        return {
-          ...currentThread,
-          messages: [
-            ...currentThread.messages.filter(
-              ({ id }: any) => id !== imitationId && id !== messageId
-            ),
-            message,
-          ],
-        };
+      setThreads((threads) => {
+        return threads.map((thread) => {
+          if (thread.id === currentThreadId) {
+            return {
+              ...thread,
+              messages: [
+                ...thread.messages.filter(
+                  ({ id }: any) => id !== imitationId && id !== messageId
+                ),
+                message,
+              ],
+            };
+          }
+          return thread;
+        });
       });
     },
   });
@@ -352,19 +354,28 @@ export function Channel({
     state?: ThreadState;
     title?: string;
   }) => {
-    if (!currentThread) {
+    if (!currentThreadId) {
       return;
     }
-    const options = {
-      state: newState || currentThread.state,
-      title: newTitle || currentThread.title,
-    };
-    setCurrentThread(() => ({
-      ...currentThread,
-      state: options.state,
-      title: options.title,
-    }));
-    return fetch(`/api/threads/${currentThread.id}`, {
+    const options: { state?: ThreadState; title?: string } = {};
+    if (newState) {
+      options.state = newState;
+    }
+    if (newTitle) {
+      options.title = newTitle;
+    }
+    setThreads((threads) => {
+      return threads.map((thread) => {
+        if (thread.id === currentThreadId) {
+          return {
+            ...thread,
+            ...options,
+          };
+        }
+        return thread;
+      });
+    });
+    return fetch(`/api/threads/${currentThreadId}`, {
       method: 'PUT',
       body: JSON.stringify(options),
     })
@@ -415,14 +426,16 @@ export function Channel({
       },
     };
 
-    setCurrentThread((thread) => {
-      if (!thread) {
-        return;
-      }
-      return {
-        ...thread,
-        messages: [...thread.messages, imitation],
-      };
+    setThreads((threads) => {
+      return threads.map((thread) => {
+        if (thread.id === currentThreadId) {
+          return {
+            ...thread,
+            messages: [...thread.messages, imitation],
+          };
+        }
+        return thread;
+      });
     });
 
     return debouncedSendMessage({
@@ -445,30 +458,36 @@ export function Channel({
           message: SerializedMessage;
           imitationId: string;
         }) => {
-          setCurrentThread((thread: any) => {
-            if (!thread) {
-              return;
-            }
-            const messageId = message.id;
-            const index = thread.messages.findIndex(
-              (message: SerializedMessage) => message.id === messageId
-            );
-            if (index >= 0) {
+          setThreads((threads) => {
+            return threads.map((thread) => {
+              if (thread.id === currentThreadId) {
+                const messageId = message.id;
+                const index = thread.messages.findIndex(
+                  (message: SerializedMessage) => message.id === messageId
+                );
+                if (index >= 0) {
+                  return thread;
+                }
+                return {
+                  ...thread,
+                  messages: [
+                    ...thread.messages.filter(
+                      (message: SerializedMessage) => message.id !== imitationId
+                    ),
+                    message,
+                  ],
+                };
+              }
               return thread;
-            }
-            return {
-              ...thread,
-              messages: [
-                ...thread.messages.filter(
-                  (message: SerializedMessage) => message.id !== imitationId
-                ),
-                message,
-              ],
-            };
+            });
           });
         }
       );
   };
+
+  const threadToRender = threads.find(
+    (thread) => thread.id === currentThreadId
+  );
 
   return (
     <>
@@ -489,7 +508,7 @@ export function Channel({
                 isSubDomainRouting={isSubDomainRouting}
                 settings={settings}
                 isBot={isBot}
-                onClick={loadThread}
+                onClick={selectThread}
               />
             </ul>
             {permissions.chat && (
@@ -518,20 +537,20 @@ export function Channel({
         onLeftScroll={handleRootScroll}
         right={
           showThread &&
-          currentThread && (
+          threadToRender && (
             <Thread
-              key={currentThread.id}
-              id={currentThread.id}
-              channelId={currentThread.channelId}
+              key={threadToRender.id}
+              id={threadToRender.id}
+              channelId={threadToRender.channelId}
               channelName={channelName}
-              title={currentThread.title}
-              state={currentThread.state}
-              messages={currentThread.messages || []}
-              viewCount={currentThread.viewCount || 0}
+              title={threadToRender.title}
+              state={threadToRender.state}
+              messages={threadToRender.messages || []}
+              viewCount={threadToRender.viewCount || 0}
               settings={settings}
               isSubDomainRouting={isSubDomainRouting}
-              incrementId={currentThread.incrementId}
-              slug={currentThread.slug || undefined}
+              incrementId={threadToRender.incrementId}
+              slug={threadToRender.slug || undefined}
               threadUrl={null}
               permissions={permissions}
               updateThread={updateThread}
