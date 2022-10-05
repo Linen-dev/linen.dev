@@ -57,7 +57,7 @@ export function Thread({
   channelId: string;
   channelName: string;
   messages: SerializedMessage[];
-  threadUrl: string | null;
+  threadUrl?: string | null;
   viewCount: number;
   isSubDomainRouting: boolean;
   settings: Settings;
