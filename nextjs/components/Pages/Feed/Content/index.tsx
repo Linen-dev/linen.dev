@@ -176,7 +176,23 @@ export default function Feed({
         title: options.title,
       };
     });
-    setKey((key) => key + 1);
+
+    setFeed((feed) => {
+      return {
+        ...feed,
+        threads: feed.threads.map((feedThread) => {
+          if (feedThread.id === thread.id) {
+            return {
+              ...feedThread,
+              state: options.state,
+              title: options.title,
+            };
+          }
+          return feedThread;
+        }),
+      };
+    });
+
     return fetch(`/api/threads/${thread.id}`, {
       method: 'PUT',
       body: JSON.stringify(options),
