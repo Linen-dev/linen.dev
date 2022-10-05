@@ -2,7 +2,6 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import useInfiniteScroll from 'react-infinite-scroll-hook';
 import Spinner from 'components/Spinner';
 import { Thread } from 'components/Thread';
-import { Transition } from '@headlessui/react';
 import { Feed } from 'components/Feed';
 import { SerializedThread } from 'serializers/thread';
 import { ChannelViewProps } from 'components/Pages/ChannelsPage';
@@ -13,14 +12,14 @@ import { ThreadState, Roles, MessageFormat } from '@prisma/client';
 import { scrollToBottom } from 'utilities/scroll';
 import styles from './index.module.css';
 import { v4 as uuid } from 'uuid';
-import debounce from 'awesome-debounce-promise';
+import debounce from 'utilities/debounce';
 import { useUsersContext } from 'contexts/Users';
 import { NotifyMentions } from 'components/Notification';
 import useWebsockets from 'hooks/websockets';
-import useDevice from 'hooks/device';
+import SidebarLayout from 'components/layout/shared/SidebarLayout';
 
 const debouncedSendMessage = debounce(
-  ({ message, channelId, imitationId }) => {
+  ({ message, channelId, imitationId }: any) => {
     return fetch(`/api/messages/channel`, {
       method: 'POST',
       body: JSON.stringify({
@@ -30,8 +29,7 @@ const debouncedSendMessage = debounce(
       }),
     });
   },
-  100,
-  { leading: true }
+  100
 );
 
 export function Channel({
@@ -209,8 +207,6 @@ export function Channel({
     loadMore(true);
   }
 
-  const { isMobile } = useDevice();
-
   if (threads.length === 0) {
     return <div />;
   }
@@ -313,66 +309,52 @@ export function Channel({
   return (
     <>
       <NotifyMentions token={token} key="notifyMentions" />
-
-      <Transition
-        show={showChannel({ isMobile, showThread })}
-        className="
-        overflow-auto
-        lg:h-[calc(100vh_-_64px)]
-        md:h-[calc(100vh_-_144px)] 
-        h-[calc(100vh_-_152px)]
-        lg:w-[calc(100vw_-_250px)]
-        flex justify-left
-        w-[100vw]
-        relative
-        "
-        ref={rootRefSetter}
-        onScroll={handleRootScroll}
-        id="rootRefSetter"
-      >
-        <div className="sm:pt-6 justify-left w-full">
-          {cursor?.prev && !error?.prev ? (
-            <div className="m-3" ref={infiniteRef}>
-              <Spinner />
-            </div>
-          ) : (
-            <div />
-          )}
-          <ul className="divide-y">
-            <Feed
-              threads={threads}
-              isSubDomainRouting={isSubDomainRouting}
-              settings={settings}
-              isBot={isBot}
-              onClick={loadThread}
-            />
-          </ul>
-          {permissions.chat && (
-            <div className={styles.chat}>
-              <MessageForm
-                onSend={(message: string) => {
-                  return sendMessage({ message, channelId: currentChannel.id });
-                }}
-                fetchMentions={fetchMentions}
+      <SidebarLayout
+        left={
+          <div className="sm:pt-6 justify-left w-full">
+            {cursor?.prev && !error?.prev ? (
+              <div className="m-3" ref={infiniteRef}>
+                <Spinner />
+              </div>
+            ) : (
+              <div />
+            )}
+            <ul className="divide-y">
+              <Feed
+                threads={threads}
+                isSubDomainRouting={isSubDomainRouting}
+                settings={settings}
+                isBot={isBot}
+                onClick={loadThread}
               />
-            </div>
-          )}
-          {cursor.next && !error?.next ? (
-            <div className="m-3" ref={infiniteBottomRef}>
-              <Spinner />
-            </div>
-          ) : (
-            <div />
-          )}
-        </div>
-      </Transition>
-
-      <Transition
-        show={showThread}
-        className="flex flex-col border-l border-solid border-gray-200 md:w-[700px]"
-      >
-        <div className="overflow-auto flex flex-col relative" ref={threadRef}>
-          {currentThread && (
+            </ul>
+            {permissions.chat && (
+              <div className={styles.chat}>
+                <MessageForm
+                  onSend={(message: string) => {
+                    return sendMessage({
+                      message,
+                      channelId: currentChannel.id,
+                    });
+                  }}
+                  fetchMentions={fetchMentions}
+                />
+              </div>
+            )}
+            {cursor.next && !error?.next ? (
+              <div className="m-3" ref={infiniteBottomRef}>
+                <Spinner />
+              </div>
+            ) : (
+              <div />
+            )}
+          </div>
+        }
+        leftRef={rootRefSetter}
+        onLeftScroll={handleRootScroll}
+        right={
+          showThread &&
+          currentThread && (
             <Thread
               key={currentThread.id}
               id={currentThread.id}
@@ -405,22 +387,10 @@ export function Channel({
               }}
               token={token}
             />
-          )}
-        </div>
-      </Transition>
+          )
+        }
+        rightRef={threadRef}
+      />
     </>
   );
 }
-
-const showChannel = ({
-  isMobile,
-  showThread,
-}: {
-  isMobile: boolean;
-  showThread: boolean;
-}): boolean => {
-  if (isMobile && showThread) {
-    return false;
-  }
-  return true;
-};

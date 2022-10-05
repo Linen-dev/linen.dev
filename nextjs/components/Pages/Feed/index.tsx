@@ -170,48 +170,46 @@ export default function Feed({
         }
         right={
           thread && (
-            <div className="overflow-auto flex flex-col relative" ref={ref}>
-              <Thread
-                key={thread.id}
-                id={thread.id}
-                channelId={thread.channelId}
-                channelName={thread.channel?.channelName as string}
-                title={thread.title}
-                state={thread.state}
-                messages={thread.messages}
-                viewCount={thread.viewCount}
-                settings={settings}
-                incrementId={thread.incrementId}
-                isSubDomainRouting={isSubDomainRouting}
-                slug={thread.slug}
-                permissions={permissions}
-                currentUser={currentUser}
-                onThreadUpdate={({ state, title }) => {
-                  setThread((thread) => {
-                    if (!thread) {
-                      return null;
-                    }
-                    return {
-                      ...thread,
-                      state,
-                      title,
-                    };
-                  });
-                  setKey((key) => key + 1);
-                }}
-                onClose={() => setThread(null)}
-                onSend={() => {
-                  scrollToBottom(ref.current as HTMLElement);
-                }}
-                onMount={() => {
-                  permissions.chat &&
-                    scrollToBottom(ref.current as HTMLElement);
-                }}
-                token={token}
-              />
-            </div>
+            <Thread
+              key={thread.id}
+              id={thread.id}
+              channelId={thread.channelId}
+              channelName={thread.channel?.channelName as string}
+              title={thread.title}
+              state={thread.state}
+              messages={thread.messages}
+              viewCount={thread.viewCount}
+              settings={settings}
+              incrementId={thread.incrementId}
+              isSubDomainRouting={isSubDomainRouting}
+              slug={thread.slug}
+              permissions={permissions}
+              currentUser={currentUser}
+              onThreadUpdate={({ state, title }) => {
+                setThread((thread) => {
+                  if (!thread) {
+                    return null;
+                  }
+                  return {
+                    ...thread,
+                    state,
+                    title,
+                  };
+                });
+                setKey((key) => key + 1);
+              }}
+              onClose={() => setThread(null)}
+              onSend={() => {
+                scrollToBottom(ref.current as HTMLElement);
+              }}
+              onMount={() => {
+                permissions.chat && scrollToBottom(ref.current as HTMLElement);
+              }}
+              token={token}
+            />
           )
         }
+        rightRef={ref}
       />
     </PageLayout>
   );
