@@ -20,6 +20,24 @@ if System.get_env("PHX_SERVER") do
   config :push_service, PushServiceWeb.Endpoint, server: true
 end
 
+auth_service_url =
+  System.get_env("AUTH_SERVICE_URL") ||
+    raise """
+    environment variable AUTH_SERVICE_URL is missing.
+    """
+
+push_service_key =
+  System.get_env("PUSH_SERVICE_KEY") ||
+    raise """
+    environment variable PUSH_SERVICE_KEY is missing.
+    """
+
+config :push_service,
+  auth_service_url: auth_service_url
+
+config :push_service,
+  push_service_key: push_service_key
+
 if config_env() == :prod do
   # The secret key base is used to sign/encrypt cookies and other secrets.
   # A default value is used in config/dev.exs and config/test.exs but you

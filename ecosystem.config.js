@@ -1,10 +1,6 @@
 require('dotenv').config();
 
 const PORT = process.env.PORT || 3000;
-const PUSH_SERVICE_KEY = process.env.PUSH_SERVICE_KEY;
-const AUTH_SERVICE_URL = process.env.AUTH_SERVICE_URL;
-
-if (!PUSH_SERVICE_KEY || !AUTH_SERVICE_URL) throw 'missing vars';
 
 module.exports = {
   apps: [
@@ -36,8 +32,11 @@ module.exports = {
       script: 'mix phx.server',
       cwd: 'push_service',
       env: {
-        PUSH_SERVICE_KEY,
-        AUTH_SERVICE_URL,
+        MIX_ENV: 'prod',
+        PORT: 4000,
+        PUSH_SERVICE_KEY: process.env.PUSH_SERVICE_KEY,
+        AUTH_SERVICE_URL: process.env.AUTH_SERVICE_URL,
+        SECRET_KEY_BASE: process.env.SECRET_KEY_BASE,
       },
     },
     {
