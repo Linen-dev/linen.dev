@@ -1,7 +1,7 @@
-import { Construct } from 'constructs';
-import * as cdk from 'aws-cdk-lib';
-import { Certificate } from 'aws-cdk-lib/aws-certificatemanager';
-import { certs } from '../../utils/env';
+import { Construct } from "constructs";
+import * as cdk from "aws-cdk-lib";
+import { Certificate } from "aws-cdk-lib/aws-certificatemanager";
+import { certs } from "../../utils/env";
 
 type PushServiceType = {
   cluster: cdk.aws_ecs.Cluster;
@@ -27,18 +27,18 @@ export function PushService(
 ) {
   const pushServiceTaskDef = new cdk.aws_ecs.FargateTaskDefinition(
     scope,
-    'pushServiceTaskDef'
+    "pushServiceTaskDef"
   );
   pushServiceTaskDef.addToTaskRolePolicy(cacheTableAccessPolicy);
   pushServiceTaskDef.addToTaskRolePolicy(mailerAccessPolicy);
 
-  const container = pushServiceTaskDef.addContainer('PushServiceContainer', {
+  const container = pushServiceTaskDef.addContainer("PushServiceContainer", {
     image: dockerImage,
-    command: ['mix', 'phx.server'],
+    command: ["mix", "phx.server"],
     environment,
     secrets,
     logging: cdk.aws_ecs.LogDriver.awsLogs({
-      streamPrefix: 'PushService',
+      streamPrefix: "PushService",
       logRetention: cdk.aws_logs.RetentionDays.FIVE_DAYS,
     }),
   });
@@ -50,20 +50,20 @@ export function PushService(
   const pushService =
     new cdk.aws_ecs_patterns.ApplicationLoadBalancedFargateService(
       scope,
-      'PushService',
+      "PushService",
       {
         cluster,
         assignPublicIp: true,
         publicLoadBalancer: true,
-        cpu: 1024,
-        memoryLimitMiB: 2048,
+        cpu: 2048,
+        memoryLimitMiB: 4096,
         desiredCount: 1,
         taskDefinition: pushServiceTaskDef,
         securityGroups: [securityGroup],
         redirectHTTP: true,
         certificate: Certificate.fromCertificateArn(
           scope,
-          'PushServiceCert',
+          "PushServiceCert",
           certs.push
         ),
       }
@@ -71,21 +71,9 @@ export function PushService(
   const { loadBalancer } = pushService;
 
   pushService.targetGroup.configureHealthCheck({
-    path: '/api/health',
+    path: "/api/health",
     interval: cdk.Duration.seconds(60),
     unhealthyThresholdCount: 3,
-  });
-
-  const scalableTarget = pushService.service.autoScaleTaskCount({
-    minCapacity: 1,
-    maxCapacity: 10,
-  });
-
-  scalableTarget.scaleOnCpuUtilization('cpuScaling', {
-    targetUtilizationPercent: 50,
-  });
-  scalableTarget.scaleOnMemoryUtilization('memoryScaling', {
-    targetUtilizationPercent: 50,
   });
 
   return { loadBalancer };
