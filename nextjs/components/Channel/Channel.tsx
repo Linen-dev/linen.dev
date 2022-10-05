@@ -276,7 +276,7 @@ export function Channel({
       channelId,
       imitationId: imitation.id,
     })
-      .then((response) => {
+      .then((response: any) => {
         if (response.ok) {
           return response.json();
         }
@@ -304,6 +304,40 @@ export function Channel({
           });
         }
       );
+  };
+
+  const updateThread = ({
+    state: newState,
+    title: newTitle,
+  }: {
+    state?: ThreadState;
+    title?: string;
+  }) => {
+    if (!currentThread) {
+      return;
+    }
+    const options = {
+      state: newState || currentThread.state,
+      title: newTitle || currentThread.title,
+    };
+    setCurrentThread(() => ({
+      ...currentThread,
+      state: options.state,
+      title: options.title,
+    }));
+    return fetch(`/api/threads/${currentThread.id}`, {
+      method: 'PUT',
+      body: JSON.stringify(options),
+    })
+      .then((response) => {
+        if (response.ok) {
+          return;
+        }
+        throw new Error('Failed to close the thread.');
+      })
+      .catch((exception) => {
+        alert(exception.message);
+      });
   };
 
   return (
@@ -371,13 +405,7 @@ export function Channel({
               slug={currentThread.slug || undefined}
               threadUrl={null}
               permissions={permissions}
-              onThreadUpdate={({ state, title }) =>
-                setCurrentThread(() => ({
-                  ...currentThread,
-                  state,
-                  title,
-                }))
-              }
+              updateThread={updateThread}
               onClose={() => setShowThread(false)}
               onSend={() => {
                 scrollToBottom(threadRef.current as HTMLElement);

@@ -5,6 +5,7 @@ import { Thread } from 'components/Thread';
 import { buildThreadSeo } from 'utilities/seo';
 import { scrollToBottom } from 'utilities/scroll';
 import { NotifyMentions } from 'components/Notification';
+import { ThreadState } from '@prisma/client';
 
 export function ThreadPage({
   id,
@@ -34,6 +35,34 @@ export function ThreadPage({
   if (!threadId) {
     return <div></div>;
   }
+
+  const updateThread = ({
+    state: newState,
+    title: newTitle,
+  }: {
+    state?: ThreadState;
+    title?: string;
+  }) => {
+    const options = {
+      state: newState || state,
+      title: newTitle || title,
+    };
+    setState(options.state);
+    setTitle(options.title);
+    return fetch(`/api/threads/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(options),
+    })
+      .then((response) => {
+        if (response.ok) {
+          return;
+        }
+        throw new Error('Failed to close the thread.');
+      })
+      .catch((exception) => {
+        alert(exception.message);
+      });
+  };
 
   return (
     <PageLayout
@@ -75,10 +104,7 @@ export function ThreadPage({
           slug={slug}
           permissions={permissions}
           currentUser={currentUser}
-          onThreadUpdate={({ state, title }) => {
-            setState(state);
-            setTitle(title);
-          }}
+          updateThread={updateThread}
           onSend={() => {
             scrollToBottom(ref.current as HTMLElement);
           }}

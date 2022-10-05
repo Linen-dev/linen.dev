@@ -112,6 +112,46 @@ export default function Feed({
     [communityName, state, page, scope, key]
   );
 
+  const updateThread = ({
+    state: newState,
+    title: newTitle,
+  }: {
+    state?: ThreadState;
+    title?: string;
+  }) => {
+    if (!thread) {
+      return;
+    }
+    const options = {
+      state: newState || thread.state,
+      title: newTitle || thread.title,
+    };
+    setThread((thread) => {
+      if (!thread) {
+        return null;
+      }
+      return {
+        ...thread,
+        state: options.state,
+        title: options.title,
+      };
+    });
+    setKey((key) => key + 1);
+    return fetch(`/api/threads/${thread.id}`, {
+      method: 'PUT',
+      body: JSON.stringify(options),
+    })
+      .then((response) => {
+        if (response.ok) {
+          return;
+        }
+        throw new Error('Failed to close the thread.');
+      })
+      .catch((exception) => {
+        alert(exception.message);
+      });
+  };
+
   return (
     <PageLayout
       channels={channels}
@@ -185,19 +225,7 @@ export default function Feed({
               slug={thread.slug}
               permissions={permissions}
               currentUser={currentUser}
-              onThreadUpdate={({ state, title }) => {
-                setThread((thread) => {
-                  if (!thread) {
-                    return null;
-                  }
-                  return {
-                    ...thread,
-                    state,
-                    title,
-                  };
-                });
-                setKey((key) => key + 1);
-              }}
+              updateThread={updateThread}
               onClose={() => setThread(null)}
               onSend={() => {
                 scrollToBottom(ref.current as HTMLElement);

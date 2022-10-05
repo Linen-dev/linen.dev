@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { v4 as uuid } from 'uuid';
 import { ThreadState, Roles, MessageFormat } from '@prisma/client';
-import debounce from 'awesome-debounce-promise';
+import debounce from 'utilities/debounce';
 import Header from './Header';
 import Messages from './Messages';
 import { SerializedMessage } from 'serializers/message';
@@ -17,7 +17,7 @@ import { useUsersContext } from 'contexts/Users';
 import useWebsockets from 'hooks/websockets';
 
 const debouncedSendMessage = debounce(
-  ({ message, channelId, threadId, imitationId }) => {
+  ({ message, channelId, threadId, imitationId }: any) => {
     return fetch(`/api/messages/thread`, {
       method: 'POST',
       body: JSON.stringify({
@@ -28,8 +28,7 @@ const debouncedSendMessage = debounce(
       }),
     });
   },
-  100,
-  { leading: true }
+  100
 );
 
 export function Thread({
@@ -47,7 +46,7 @@ export function Thread({
   title,
   permissions,
   currentUser,
-  onThreadUpdate,
+  updateThread,
   onClose,
   onSend,
   onMount,
@@ -67,13 +66,7 @@ export function Thread({
   state: ThreadState;
   permissions: Permissions;
   currentUser: SerializedUser | null;
-  onThreadUpdate({
-    state,
-    title,
-  }: {
-    state: ThreadState;
-    title: string | null;
-  }): void;
+  updateThread({ state, title }: { state?: ThreadState; title?: string }): void;
   onClose?(): void;
   onSend?(): void;
   onMount?(): void;
@@ -82,32 +75,6 @@ export function Thread({
   const [allUsers] = useUsersContext();
   const [messages, setMessages] =
     useState<SerializedMessage[]>(initialMessages);
-  const updateThread = ({
-    state: newState,
-    title: newTitle,
-  }: {
-    state?: ThreadState;
-    title?: string;
-  }) => {
-    const options = {
-      state: newState || state,
-      title: newTitle || title,
-    };
-    return fetch(`/api/threads/${id}`, {
-      method: 'PUT',
-      body: JSON.stringify(options),
-    })
-      .then((response) => {
-        if (response.ok) {
-          return onThreadUpdate(options);
-        }
-        throw new Error('Failed to close the thread.');
-      })
-      .catch((exception) => {
-        // TODO better error handling and reporting
-        alert(exception.message);
-      });
-  };
   const threadLink = getThreadUrl({
     incrementId: incrementId!,
     isSubDomainRouting,
@@ -198,7 +165,7 @@ export function Thread({
       threadId,
       imitationId: imitation.id,
     })
-      .then((response) => {
+      .then((response: any) => {
         if (response.ok) {
           return response.json();
         }
