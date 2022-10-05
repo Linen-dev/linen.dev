@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import classNames from 'classnames';
 import PageLayout from 'components/layout/PageLayout';
+import SidebarLayout from 'components/layout/shared/SidebarLayout';
 import { channels, ThreadState } from '@prisma/client';
 import { SerializedThread } from 'serializers/thread';
 import { SerializedUser } from 'serializers/user';
@@ -13,7 +13,6 @@ import debounce from 'awesome-debounce-promise';
 import { FeedResponse, Selections } from './types';
 import { Thread } from 'components/Thread';
 import { scrollToBottom } from 'utilities/scroll';
-import { Transition } from '@headlessui/react';
 import { NotifyMentions } from 'components/Notification';
 import useDevice from 'hooks/device';
 
@@ -147,103 +146,98 @@ export default function Feed({
       settings={settings}
     >
       <NotifyMentions token={token} key="notifyMentions" />
-      <Transition
-        show={isMobile && !!thread ? false : true}
-        className={classNames(
-          'flex-col overflow-auto lg:h-[calc(100vh_-_64px)] md:h-[calc(100vh_-_144px)] h-[calc(100vh_-_152px)] lg:w-[calc(100vw_-_250px)] flex justify-left w-[100vw] relative'
-        )}
-      >
-        <Header />
-        <Filters
-          state={state}
-          selections={selections}
-          onChange={(type: string, value) => {
-            setSelections({});
-            setPage(1);
-            switch (type) {
-              case 'state':
-                return setState(value as ThreadState);
-              case 'scope':
-                return setScope(value as Scope);
-            }
-          }}
-          total={feed.total}
-          onUpdate={updateThreads}
-          page={page}
-          onPageChange={(type: string) => {
-            switch (type) {
-              case 'back':
-                return setPage((page) => page - 1);
-              case 'next':
-                return setPage((page) => page + 1);
-            }
-          }}
-        />
-        <Grid
-          threads={feed.threads}
-          loading={loading}
-          selections={selections}
-          onChange={(id: string, checked: boolean) => {
-            setSelections((selections: Selections) => {
-              return {
-                ...selections,
-                [id]: checked,
-              };
-            });
-          }}
-          onSelect={(thread: SerializedThread) => {
-            setThread(thread);
-          }}
-        />
-      </Transition>
-      <Transition
-        show={!!thread}
-        className={classNames(
-          'flex flex-col border-l border-solid border-gray-200 md:w-[700px]'
-        )}
-      >
-        {thread && (
-          <div className="overflow-auto flex flex-col relative" ref={ref}>
-            <Thread
-              key={thread.id}
-              id={thread.id}
-              channelId={thread.channelId}
-              channelName={thread.channel?.channelName as string}
-              title={thread.title}
-              state={thread.state}
-              messages={thread.messages}
-              viewCount={thread.viewCount}
-              settings={settings}
-              incrementId={thread.incrementId}
-              isSubDomainRouting={isSubDomainRouting}
-              slug={thread.slug}
-              permissions={permissions}
-              currentUser={currentUser}
-              onThreadUpdate={({ state, title }) => {
-                setThread((thread) => {
-                  if (!thread) {
-                    return null;
-                  }
+      <SidebarLayout
+        left={
+          <>
+            <Header />
+            <Filters
+              state={state}
+              selections={selections}
+              onChange={(type: string, value) => {
+                setSelections({});
+                setPage(1);
+                switch (type) {
+                  case 'state':
+                    return setState(value as ThreadState);
+                  case 'scope':
+                    return setScope(value as Scope);
+                }
+              }}
+              total={feed.total}
+              onUpdate={updateThreads}
+              page={page}
+              onPageChange={(type: string) => {
+                switch (type) {
+                  case 'back':
+                    return setPage((page) => page - 1);
+                  case 'next':
+                    return setPage((page) => page + 1);
+                }
+              }}
+            />
+            <Grid
+              threads={feed.threads}
+              loading={loading}
+              selections={selections}
+              onChange={(id: string, checked: boolean) => {
+                setSelections((selections: Selections) => {
                   return {
-                    ...thread,
-                    state,
-                    title,
+                    ...selections,
+                    [id]: checked,
                   };
                 });
-                setKey((key) => key + 1);
               }}
-              onClose={() => setThread(null)}
-              onSend={() => {
-                scrollToBottom(ref.current as HTMLElement);
+              onSelect={(thread: SerializedThread) => {
+                setThread(thread);
               }}
-              onMount={() => {
-                permissions.chat && scrollToBottom(ref.current as HTMLElement);
-              }}
-              token={token}
             />
-          </div>
-        )}
-      </Transition>
+          </>
+        }
+        right={
+          thread && (
+            <div className="overflow-auto flex flex-col relative" ref={ref}>
+              <Thread
+                key={thread.id}
+                id={thread.id}
+                channelId={thread.channelId}
+                channelName={thread.channel?.channelName as string}
+                title={thread.title}
+                state={thread.state}
+                messages={thread.messages}
+                viewCount={thread.viewCount}
+                settings={settings}
+                incrementId={thread.incrementId}
+                isSubDomainRouting={isSubDomainRouting}
+                slug={thread.slug}
+                permissions={permissions}
+                currentUser={currentUser}
+                onThreadUpdate={({ state, title }) => {
+                  setThread((thread) => {
+                    if (!thread) {
+                      return null;
+                    }
+                    return {
+                      ...thread,
+                      state,
+                      title,
+                    };
+                  });
+                  setKey((key) => key + 1);
+                }}
+                onClose={() => setThread(null)}
+                onSend={() => {
+                  scrollToBottom(ref.current as HTMLElement);
+                }}
+                onMount={() => {
+                  permissions.chat &&
+                    scrollToBottom(ref.current as HTMLElement);
+                }}
+                token={token}
+              />
+            </div>
+          )
+        }
+      />
     </PageLayout>
   );
 }
