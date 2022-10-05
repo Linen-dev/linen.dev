@@ -35,7 +35,7 @@ There are a few problems with chat communities today:
 
 ### Near term Roadmap:
 
-- Improved search: Right now search is based on postgres full text search. We plan on introducing a separate search service to manage this
+- Improved search
 - Desktop client
 - Mobile app
 - Github issues integration
