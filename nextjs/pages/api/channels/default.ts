@@ -1,16 +1,25 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import prisma from '../../../client';
 import { withSentry } from '@sentry/nextjs';
+import PermissionsService from 'services/permissions';
 
 type DefaultChannelRequest = {
+  communityId: string;
   channelId: string;
   originalChannelId: string;
 };
 
-async function setDefaultChannel({
-  channelId,
-  originalChannelId,
-}: DefaultChannelRequest) {
+async function put(request: NextApiRequest, response: NextApiResponse) {
+  const { communityId, channelId, originalChannelId }: DefaultChannelRequest =
+    JSON.parse(request.body);
+  const permissions = await PermissionsService.get({
+    request,
+    response,
+    params: { communityId },
+  });
+  if (!permissions.manage) {
+    return response.status(401).json({});
+  }
   const transactions = [
     prisma.channels.update({
       where: {
@@ -35,14 +44,8 @@ async function setDefaultChannel({
     );
   }
 
-  return await prisma.$transaction(transactions);
-}
-
-async function put(req: NextApiRequest, res: NextApiResponse) {
-  // TODO: validate that the user in current session can update this account
-  const body: DefaultChannelRequest = JSON.parse(req.body);
-  await setDefaultChannel(body);
-  return res.status(200).json({});
+  await prisma.$transaction(transactions);
+  return response.status(200).json({});
 }
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {

@@ -161,6 +161,7 @@ export default function ChannelsDefault({ channels, account }: SettingsProps) {
     fetch('/api/channels/default', {
       method: 'PUT',
       body: JSON.stringify({
+        communityId: account?.id,
         channelId: channelSelected?.id,
         originalChannelId: defaultChannel?.id,
       }),
