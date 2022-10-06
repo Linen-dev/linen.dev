@@ -10,6 +10,7 @@ import {
   findAccountByPath,
   findUserAndAccountByIdAndEmail,
 } from 'lib/models';
+import prisma from 'client';
 import { Permissions } from 'types/shared';
 
 type Request = GetServerSidePropsContext['req'] | NextApiRequest;
@@ -152,14 +153,20 @@ export default class PermissionsService {
 }
 
 async function findCommunity(params: any) {
-  if (
-    !params ||
-    !params.communityName ||
-    typeof params.communityName !== 'string'
-  ) {
-    return null;
+  if (params && params.communityId && typeof params.communityId === 'string') {
+    return prisma.accounts.findFirst({
+      include: { featureFlags: true },
+      where: { id: params.communityId },
+    });
   }
-  return findAccountByPath(params.communityName);
+  if (
+    params &&
+    params.communityName &&
+    typeof params.communityName === 'string'
+  ) {
+    return findAccountByPath(params.communityName);
+  }
+  return null;
 }
 
 async function findAccount(
