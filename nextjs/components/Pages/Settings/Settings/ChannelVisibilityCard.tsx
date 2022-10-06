@@ -94,7 +94,7 @@ export default function ChannelVisibilityCard({
   async function onChange(value: any) {
     return fetch('/api/channels', {
       method: 'PUT',
-      body: JSON.stringify({ channels: [value] }),
+      body: JSON.stringify({ communityId: account?.id, channels: [value] }),
     })
       .then((response) => {
         if (!response.ok) {
