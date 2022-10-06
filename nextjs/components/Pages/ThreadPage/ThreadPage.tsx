@@ -9,6 +9,7 @@ export function ThreadPage({
   threadId,
   channels,
   currentChannel,
+  currentCommunity,
   currentUser,
   threadUrl,
   viewCount,
@@ -57,6 +58,7 @@ export function ThreadPage({
         id={id}
         threadId={threadId}
         currentChannel={currentChannel}
+        currentCommunity={currentCommunity}
         currentUser={currentUser}
         threadUrl={threadUrl}
         viewCount={viewCount}
