@@ -29,6 +29,7 @@ export default class PermissionsService {
     const access = PermissionsService._access(community, account);
     const chat = PermissionsService._chat(community, account);
     const feed = PermissionsService._feed(community, account);
+    const manage = PermissionsService._manage(community, account, user);
     const channel_create = PermissionsService._channel_create(
       community,
       account,
@@ -38,6 +39,7 @@ export default class PermissionsService {
       access,
       feed,
       chat,
+      manage,
       channel_create,
     };
   }
@@ -48,6 +50,28 @@ export default class PermissionsService {
       response: context.res,
       params: context.params,
     });
+  }
+
+  static _manage(
+    community: AccountWithFeatureFlag | null,
+    account: accounts | null,
+    user:
+      | (users & {
+          account: accounts;
+        })
+      | null
+  ): boolean {
+    if (!community) {
+      return false;
+    }
+    if (!account || account.id !== community.id) {
+      return false;
+    }
+
+    if (!user) {
+      return false;
+    }
+    return user.role === Roles.ADMIN || user.role === Roles.OWNER;
   }
 
   static _access(

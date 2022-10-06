@@ -6,6 +6,9 @@ export default function createPermissions(
   return {
     access: false,
     feed: false,
+    chat: false,
+    manage: false,
+    channel_create: false,
     ...options,
   };
 }
