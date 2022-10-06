@@ -64,7 +64,7 @@ export default function URLs({ account }: SettingsProps) {
         textFieldOptions={{
           placeholder: 'https://yourwebsite.com',
           id: 'homeUrl',
-          defaultValue: account?.homeUrl,
+          defaultValue: account?.homeUrl || '',
           onBlur: (e: any) => onSubmit(e.target),
         }}
       />
@@ -74,7 +74,7 @@ export default function URLs({ account }: SettingsProps) {
         textFieldOptions={{
           placeholder: 'https://docs.yourwebsite.com',
           id: 'docsUrl',
-          defaultValue: account?.docsUrl,
+          defaultValue: account?.docsUrl || '',
           onBlur: (e: any) => onSubmit(e.target),
         }}
       />
@@ -84,7 +84,7 @@ export default function URLs({ account }: SettingsProps) {
         textFieldOptions={{
           placeholder: 'https://yourwebsite.com/community-invite',
           id: 'communityInviteUrl',
-          defaultValue: account?.communityInviteUrl,
+          defaultValue: account?.communityInviteUrl || '',
           onBlur: (e: any) => onSubmit(e.target),
         }}
       />
