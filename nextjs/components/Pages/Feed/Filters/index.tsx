@@ -13,6 +13,7 @@ interface Props {
   selections: Selections;
   page: number;
   total: number;
+  defaultScope: string;
   onChange(type: string, value: string): void;
   onUpdate(): void;
   onPageChange(type: string): void;
@@ -33,6 +34,7 @@ export default function Filters({
   selections,
   page,
   total,
+  defaultScope,
   onChange,
   onUpdate,
   onPageChange,
@@ -53,7 +55,7 @@ export default function Filters({
           ]}
           onChange={(value: ThreadState) => onChange('state', value)}
         />
-        <ScopeSelect onChange={onChange} />
+        <ScopeSelect onChange={onChange} defaultValue={defaultScope} />
         {showActions(selections) && (
           <Button
             color="gray"
