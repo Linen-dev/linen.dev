@@ -1,6 +1,6 @@
 import { mentions } from '@prisma/client';
 import { createChatSyncJob } from 'queue/jobs';
-import { push, pushChannel } from 'services/push';
+import { push, pushChannel, pushCommunity } from 'services/push';
 import { eventNewMentions } from './eventNewMentions';
 
 type NewMessageEvent = {
@@ -9,6 +9,7 @@ type NewMessageEvent = {
   messageId: any;
   imitationId: string;
   mentions: mentions[];
+  communityId: string;
 };
 
 export async function eventNewMessage({
@@ -17,6 +18,7 @@ export async function eventNewMessage({
   threadId,
   imitationId,
   mentions = [],
+  communityId,
 }: NewMessageEvent) {
   const event = {
     channelId,
@@ -31,6 +33,7 @@ export async function eventNewMessage({
     createChatSyncJob(event),
     push(event),
     pushChannel(event),
+    pushCommunity({ ...event, communityId }),
     eventNewMentions({ mentions, channelId, threadId }),
   ];
 

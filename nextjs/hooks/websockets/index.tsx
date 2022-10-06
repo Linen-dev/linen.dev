@@ -44,6 +44,11 @@ function useWebsockets({ room, token, permissions, onNewMessage }: Props) {
     return () => {};
   }, []);
 
+  useEffect(() => {
+    channel?.off('new_msg');
+    channel?.on('new_msg', onNewMessage);
+  }, [onNewMessage]);
+
   return { connected, channel };
 }
 

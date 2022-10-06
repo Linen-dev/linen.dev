@@ -120,6 +120,7 @@ async function addMessage(
   if (event.ts === event.thread_ts || !event.thread_ts) {
     // is a thread
     await eventNewThread({
+      communityId: channel.accountId!,
       channelId,
       messageId,
       threadId,
@@ -129,6 +130,7 @@ async function addMessage(
   } else if (!!event.thread_ts && event.ts !== event.thread_ts) {
     // is a reply
     await eventNewMessage({
+      communityId: channel.accountId!,
       channelId,
       messageId,
       threadId,

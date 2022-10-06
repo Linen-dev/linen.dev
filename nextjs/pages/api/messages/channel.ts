@@ -1,4 +1,3 @@
-import { findMessagesFromChannel } from 'lib/models';
 import Session from 'services/session';
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import { withSentry } from '@sentry/nextjs';
@@ -122,6 +121,7 @@ export async function create(
   });
 
   await eventNewThread({
+    communityId,
     channelId,
     messageId: thread.messages[0].id,
     threadId: thread.id,
