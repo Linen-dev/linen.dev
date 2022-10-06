@@ -25,6 +25,7 @@ export function NewChannelModal() {
       const response = await fetch('/api/channels', {
         method: 'POST',
         body: JSON.stringify({
+          communityName,
           channel_name,
         }),
       });

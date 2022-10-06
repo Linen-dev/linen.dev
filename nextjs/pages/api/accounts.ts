@@ -8,6 +8,7 @@ import { captureException, withSentry } from '@sentry/nextjs';
 import { generateRandomWordSlug } from 'utilities/randomWordSlugs';
 import { findAccountByEmail } from 'lib/models';
 import { AccountType, Roles } from '@prisma/client';
+import PermissionsService from 'services/permissions';
 
 export async function create({
   session,
@@ -159,6 +160,15 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
     return handle(request, response, create);
   }
   if (request.method === 'PUT') {
+    const { communityId } = JSON.parse(request.body);
+    const permissions = await PermissionsService.get({
+      request,
+      response,
+      params: { communityId },
+    });
+    if (!permissions.manage) {
+      return response.status(401).end();
+    }
     return handle(request, response, update);
   }
   return response.status(404).json({});

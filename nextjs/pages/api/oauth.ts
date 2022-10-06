@@ -1,12 +1,6 @@
-import { timeoutAfter } from '../../utilities/retryPromises';
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { createChannels } from 'services/slack';
 import request from 'superagent';
-import {
-  fetchTeamInfo,
-  getSlackChannels,
-  joinChannel,
-} from 'services/slack/api';
+import { fetchTeamInfo } from 'services/slack/api';
 import { createSlackAuthorization, updateAccount } from '../../lib/models';
 import { captureException, withSentry } from '@sentry/nextjs';
 import { createSyncJob } from 'queue/jobs';

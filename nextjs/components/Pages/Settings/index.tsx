@@ -22,10 +22,11 @@ export interface SettingsProps {
 }
 
 const updateAccount = debounce(
-  ({ type }) => {
+  ({ communityId, type }) => {
     fetch('/api/accounts', {
       method: 'PUT',
       body: JSON.stringify({
+        communityId,
         type,
       }),
     })
@@ -91,7 +92,7 @@ export default function Settings(props: SettingsProps) {
               type={props.account.type}
               disabled={!props.account.premium}
               onChange={(type: AccountType) => {
-                updateAccount({ type });
+                updateAccount({ communityId: props.account?.id, type });
               }}
             />
           )}

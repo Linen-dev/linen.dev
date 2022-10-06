@@ -90,7 +90,7 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
   if (!auth) {
     return res.status(404).json({});
   }
-  return res.status(200).json(auth);
+  return res.status(200).json({ accountId: auth.accountId });
 }
 
 async function handler(request: NextApiRequest, response: NextApiResponse) {

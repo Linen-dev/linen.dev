@@ -5,6 +5,7 @@ import { channels } from '@prisma/client';
 import { withSentry } from '@sentry/nextjs';
 import { v4 } from 'uuid';
 import { getAuthFromSession } from 'utilities/session';
+import PermissionsService from 'services/permissions';
 
 //example post body:
 // {
@@ -87,7 +88,24 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     return res.status(403).end();
   }
 
+  if (req.method === 'GET') {
+    const channels = await channelIndex(accountId);
+    return res.status(200).json(channels);
+  }
+
   const body = JSON.parse(req.body);
+  const permissions = await PermissionsService.get({
+    request: req,
+    response: res,
+    params: {
+      communityId: body.communityId,
+      communityName: body.communityName,
+    },
+  });
+
+  if (!permissions.manage) {
+    return res.status(401).end();
+  }
   if (req.method === 'PUT') {
     await update(body, accountId);
     return res.status(200).json({});
@@ -99,10 +117,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       accountId,
     });
     return res.status(200).json(channel);
-  }
-  if (req.method === 'GET') {
-    const channels = await channelIndex(accountId);
-    return res.status(200).json(channels);
   }
   return res.status(405).end();
 }

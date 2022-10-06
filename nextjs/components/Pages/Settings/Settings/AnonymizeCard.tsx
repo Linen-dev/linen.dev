@@ -52,6 +52,7 @@ export default function AnonymizeCard({ account }: SettingsProps) {
     fetch('/api/accounts', {
       method: 'PUT',
       body: JSON.stringify({
+        communityId: account?.id,
         anonymizeUsers: toggle,
       }),
     })
