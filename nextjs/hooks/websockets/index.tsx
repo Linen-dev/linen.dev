@@ -12,6 +12,7 @@ interface Props {
 
 function useWebsockets({ room, token, permissions, onNewMessage }: Props) {
   const [channel, setChannel] = useState<Channel>();
+  const [connected, setConnected] = useState<boolean>(false);
   useEffect(() => {
     if (permissions.chat && token && room) {
       //Set url instead of hard coding
@@ -27,18 +28,15 @@ function useWebsockets({ room, token, permissions, onNewMessage }: Props) {
       channel
         .join()
         .receive('ok', (resp: any) => {
-          if (process.env.NODE_ENV === 'development') {
-            console.log('Joined successfully', resp);
-          }
+          setConnected(true);
         })
         .receive('error', (resp: any) => {
-          if (process.env.NODE_ENV === 'development') {
-            console.log('Unable to join', resp);
-          }
+          setConnected(false);
         });
       channel.on('new_msg', onNewMessage);
 
       return () => {
+        setConnected(false);
         socket.disconnect();
       };
     }
@@ -46,7 +44,7 @@ function useWebsockets({ room, token, permissions, onNewMessage }: Props) {
     return () => {};
   }, []);
 
-  return channel;
+  return { connected, channel };
 }
 
 export default useWebsockets;

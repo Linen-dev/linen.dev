@@ -35,12 +35,13 @@ const debouncedSendChannelMessage = debounce(
   100
 );
 
-const debouncedSendMessage = debounce(
-  ({ message, channelId, threadId, imitationId }: any) => {
+const debouncedSendThreadMessage = debounce(
+  ({ message, communityId, channelId, threadId, imitationId }: any) => {
     return fetch(`/api/messages/thread`, {
       method: 'POST',
       body: JSON.stringify({
         body: message,
+        communityId,
         channelId,
         threadId,
         imitationId,
@@ -441,8 +442,9 @@ export function Channel({
       });
     });
 
-    return debouncedSendMessage({
+    return debouncedSendThreadMessage({
       message,
+      communityId: currentCommunity?.id,
       channelId,
       threadId,
       imitationId: imitation.id,

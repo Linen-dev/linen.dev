@@ -8,50 +8,22 @@ import parse from 'utilities/message/parsers/linen';
 import { findUserIds } from 'utilities/message/find';
 import { eventNewMessage } from 'services/events';
 import { MessageFormat, Prisma } from '@prisma/client';
+import PermissionsService from 'services/permissions';
 
 async function handler(request: NextApiRequest, response: NextApiResponse) {
-  if (request.method === 'GET') {
-    return getMessagesFromChannel(request, response);
-  } else if (request.method === 'POST') {
+  if (request.method === 'POST') {
     return create(request, response);
   }
   return response.status(404).json({});
 }
 
-async function getMessagesFromChannel(
-  request: NextApiRequest,
-  response: NextApiResponse<any>
-) {
-  const channelId = request.query.channelId as string;
-  const page = request.query.page as string;
-
-  const { messages } = await findMessagesFromChannel({
-    channelId,
-    page: Number(page),
-  });
-
-  return response.status(200).json(
-    messages.map((message) => {
-      return {
-        ...message,
-        createdAt: message?.createdAt?.toISOString(),
-        sentAt: message?.sentAt?.toISOString(),
-      };
-    })
-  );
-}
-
-//TODO: refactor to use permissions service
 export async function create(
   request: NextApiRequest,
   response: NextApiResponse<any>
 ) {
-  const session = await Session.find(request, response);
-  if (!session?.user?.email) {
-    throw 'missing session';
-  }
-
-  const { body, channelId, threadId, imitationId } = JSON.parse(request.body);
+  const { body, communityId, channelId, threadId, imitationId } = JSON.parse(
+    request.body
+  );
 
   if (!threadId) {
     return response.status(400).json({ error: 'thread id is required' });
@@ -63,6 +35,21 @@ export async function create(
 
   if (!imitationId) {
     return response.status(400).json({ error: 'imitation id is required' });
+  }
+
+  const session = await Session.find(request, response);
+  if (!session?.user?.email) {
+    return response.status(401).end();
+  }
+
+  const permissions = await PermissionsService.get({
+    request,
+    response,
+    params: { communityId },
+  });
+
+  if (!permissions.chat) {
+    return response.status(401).end();
   }
 
   const channel = await prisma.channels.findUnique({

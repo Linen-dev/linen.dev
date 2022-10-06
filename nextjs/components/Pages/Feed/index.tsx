@@ -10,6 +10,7 @@ import Content from './Content';
 interface Props {
   channels: channels[];
   communityName: string;
+  communityId: string;
   currentUser: SerializedUser;
   isSubDomainRouting: boolean;
   permissions: Permissions;
@@ -20,6 +21,7 @@ interface Props {
 export default function Feed({
   channels,
   communityName,
+  communityId,
   currentUser,
   isSubDomainRouting,
   permissions,
@@ -35,6 +37,7 @@ export default function Feed({
       settings={settings}
     >
       <Content
+        communityId={communityId}
         communityName={communityName}
         isSubDomainRouting={isSubDomainRouting}
         permissions={permissions}

@@ -11,35 +11,10 @@ import { MessageFormat, Prisma } from '@prisma/client';
 import PermissionsService from 'services/permissions';
 
 async function handler(request: NextApiRequest, response: NextApiResponse) {
-  if (request.method === 'GET') {
-    return getMessagesFromChannel(request, response);
-  } else if (request.method === 'POST') {
+  if (request.method === 'POST') {
     return create(request, response);
   }
   return response.status(404).json({});
-}
-
-async function getMessagesFromChannel(
-  request: NextApiRequest,
-  response: NextApiResponse<any>
-) {
-  const channelId = request.query.channelId as string;
-  const page = request.query.page as string;
-
-  const { messages } = await findMessagesFromChannel({
-    channelId,
-    page: Number(page),
-  });
-
-  return response.status(200).json(
-    messages.map((message) => {
-      return {
-        ...message,
-        createdAt: message?.createdAt?.toISOString(),
-        sentAt: message?.sentAt?.toISOString(),
-      };
-    })
-  );
 }
 
 export async function create(

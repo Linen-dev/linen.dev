@@ -21,6 +21,7 @@ import { useUsersContext } from 'contexts/Users';
 import { MessageFormat, Roles } from '@prisma/client';
 
 interface Props {
+  communityId: string;
   communityName: string;
   currentUser: SerializedUser;
   isSubDomainRouting: boolean;
@@ -46,11 +47,12 @@ const debouncedFetch = debounce(
 );
 
 const debouncedSendMessage = debounce(
-  ({ message, channelId, threadId, imitationId }: any) => {
+  ({ message, communityId, channelId, threadId, imitationId }: any) => {
     return fetch(`/api/messages/thread`, {
       method: 'POST',
       body: JSON.stringify({
         body: message,
+        communityId,
         channelId,
         threadId,
         imitationId,
@@ -61,6 +63,7 @@ const debouncedSendMessage = debounce(
 );
 
 export default function Feed({
+  communityId,
   communityName,
   currentUser,
   isSubDomainRouting,
@@ -271,6 +274,7 @@ export default function Feed({
 
     return debouncedSendMessage({
       message,
+      communityId,
       channelId,
       threadId,
       imitationId: imitation.id,

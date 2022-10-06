@@ -5,6 +5,7 @@ import { ThreadByIdProp } from '../types/apiResponses/threads/[threadId]';
 import type { users } from '@prisma/client';
 import { GetServerSidePropsContext } from 'next';
 import { NotFound } from '../utilities/response';
+import serializeAccount from 'serializers/account';
 import { serialize as serializeSettings } from 'serializers/account/settings';
 import { captureException } from '@sentry/nextjs';
 import { encodeCursor } from 'utilities/cursor';
@@ -126,6 +127,7 @@ export async function threadGetServerSideProps(
         externalThreadId: thread.externalThreadId,
         messageCount: thread.messageCount,
         channelId: currentChannel.id,
+        currentCommunity: serializeAccount(account),
         currentUser: !!currentUser ? serializeUser(currentUser) : null,
         channel: currentChannel,
         authors: authors,

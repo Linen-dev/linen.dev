@@ -1,7 +1,5 @@
-import PageLayout from 'components/layout/PageLayout';
 import { useEffect, useState, useRef } from 'react';
 import { Thread } from 'components/Thread';
-import { buildThreadSeo } from 'utilities/seo';
 import { scrollToBottom } from 'utilities/scroll';
 import { NotifyMentions } from 'components/Notification';
 import { ThreadState } from '@prisma/client';
@@ -13,11 +11,12 @@ import { MessageFormat, Roles } from '@prisma/client';
 import { v4 as uuid } from 'uuid';
 
 const debouncedSendMessage = debounce(
-  ({ message, channelId, threadId, imitationId }: any) => {
+  ({ message, communityId, channelId, threadId, imitationId }: any) => {
     return fetch(`/api/messages/thread`, {
       method: 'POST',
       body: JSON.stringify({
         body: message,
+        communityId,
         channelId,
         threadId,
         imitationId,
@@ -31,6 +30,7 @@ export default function Content({
   id,
   threadId,
   currentChannel,
+  currentCommunity,
   currentUser,
   threadUrl,
   viewCount,
@@ -141,6 +141,7 @@ export default function Content({
 
     return debouncedSendMessage({
       message,
+      communityId: currentCommunity?.id,
       channelId,
       threadId,
       imitationId: imitation.id,

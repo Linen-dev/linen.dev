@@ -28,6 +28,7 @@ export async function feedGetServerSideProps(
     props: {
       token: token || null,
       communityName: context?.params?.communityName,
+      communityId: community.id,
       isSubDomainRouting,
       settings: serializeSettings(community),
       currentUser: currentUser && serializeUser(currentUser),
