@@ -1,7 +1,14 @@
 import { anonymizeMessagesMentions } from 'utilities/anonymizeMessages';
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import prisma from '../../client';
-import { messages, Prisma, mentions, threads, users } from '@prisma/client';
+import {
+  messages,
+  Prisma,
+  mentions,
+  threads,
+  users,
+  AccountType,
+} from '@prisma/client';
 import { withSentry } from '@sentry/nextjs';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -10,10 +17,14 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   const limit = req.query.limit as string;
   const offset = req.query.offset as string;
 
-  const accountPromise = prisma.accounts.findUnique({
+  const account = await prisma.accounts.findUnique({
     where: { id: accountId },
-    select: { anonymizeUsers: true },
+    select: { anonymizeUsers: true, type: true },
   });
+
+  if (!account || account.type === AccountType.PRIVATE) {
+    return res.status(401).end();
+  }
 
   // Search messages
 
@@ -38,11 +49,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       LIMIT ${Number(limit)}
       OFFSET ${Number(offset)}`;
 
-  const [account, messagesResult] = await Promise.all([
-    accountPromise,
-    queryPromise,
-  ]);
-
+  const messagesResult = await queryPromise;
   // Get messages threads
   const threadIds = messagesResult.map((mr) => mr.threadId);
   const threadsResult =
