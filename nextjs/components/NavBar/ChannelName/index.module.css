@@ -1,5 +1,4 @@
 .name {
-  border-left: 3px solid transparent;
   cursor: pointer;
   font-size: 14px;
   font-weight: 450;
@@ -9,10 +8,13 @@
 }
 .name:hover {
   background: white;
-  color: #1b194e;
 }
 .active {
-  border-color: #1b194e;
-  color: #1b194e;
+  background-color: white;
   font-weight: 700;
+}
+
+.highlighted::before {
+  content: '! ';
+  font-weight: 900;
 }

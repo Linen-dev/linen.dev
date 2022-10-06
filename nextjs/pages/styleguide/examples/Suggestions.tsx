@@ -9,6 +9,7 @@ export default function SuggestionsExample() {
           users={[
             {
               id: '1',
+              authsId: '1x',
               username: 'john.doe',
               displayName: 'John Doe',
               externalUserId: null,
@@ -16,6 +17,7 @@ export default function SuggestionsExample() {
             },
             {
               id: '2',
+              authsId: '2x',
               username: 'jim.jam',
               displayName: 'Jim Jam',
               externalUserId: null,
@@ -23,6 +25,7 @@ export default function SuggestionsExample() {
             },
             {
               id: '3',
+              authsId: '3x',
               username: 'meghan.yu',
               displayName: 'Meghan Yu',
               externalUserId: null,
