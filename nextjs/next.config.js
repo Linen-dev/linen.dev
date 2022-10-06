@@ -18,6 +18,9 @@ const nextConfig = {
       `${process.env.S3_UPLOAD_BUCKET}.s3.${process.env.S3_UPLOAD_REGION}.amazonaws.com`,
     ],
   },
+  sentry: {
+    hideSourceMaps: true,
+  },
 };
 const sentryWebpackPluginOptions = {
   // Additional config options for the Sentry Webpack plugin. Keep in mind that
@@ -26,7 +29,7 @@ const sentryWebpackPluginOptions = {
   //   release, url, org, project, authToken, configFile, stripPrefix,
   //   urlPrefix, include, ignore
   dryRun: SKIP_SENTRY,
-
+  hideSourceMaps: true,
   silent: true, // Suppresses all logs
   // For all available options, see:
   // https://github.com/getsentry/sentry-webpack-plugin#options.
