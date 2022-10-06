@@ -1,7 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { Thread } from 'components/Thread';
 import { scrollToBottom } from 'utilities/scroll';
-import { NotifyMentions } from 'components/Notification';
 import { ThreadState } from '@prisma/client';
 import useThreadWebsockets from 'hooks/websockets/thread';
 import { SerializedMessage } from 'serializers/message';
@@ -176,34 +175,31 @@ export default function Content({
   };
 
   return (
-    <>
-      <NotifyMentions token={token} key="notifyMentions" />
-      <div className="w-full">
-        <Thread
-          key={id}
-          id={id}
-          channelId={currentChannel.id}
-          channelName={currentChannel.channelName}
-          title={title}
-          state={state}
-          messages={messages}
-          threadUrl={threadUrl}
-          viewCount={viewCount}
-          settings={settings}
-          incrementId={incrementId}
-          isSubDomainRouting={isSubDomainRouting}
-          slug={slug}
-          permissions={permissions}
-          updateThread={updateThread}
-          sendMessage={sendMessage}
-          onSend={() => {
-            scrollToBottom(ref.current as HTMLElement);
-          }}
-          onMount={() => {
-            permissions.chat && scrollToBottom(ref.current as HTMLElement);
-          }}
-        />
-      </div>
-    </>
+    <div className="w-full">
+      <Thread
+        key={id}
+        id={id}
+        channelId={currentChannel.id}
+        channelName={currentChannel.channelName}
+        title={title}
+        state={state}
+        messages={messages}
+        threadUrl={threadUrl}
+        viewCount={viewCount}
+        settings={settings}
+        incrementId={incrementId}
+        isSubDomainRouting={isSubDomainRouting}
+        slug={slug}
+        permissions={permissions}
+        updateThread={updateThread}
+        sendMessage={sendMessage}
+        onSend={() => {
+          scrollToBottom(ref.current as HTMLElement);
+        }}
+        onMount={() => {
+          permissions.chat && scrollToBottom(ref.current as HTMLElement);
+        }}
+      />
+    </div>
   );
 }

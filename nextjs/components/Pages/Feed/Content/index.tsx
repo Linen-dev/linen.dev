@@ -10,7 +10,6 @@ import Filters from '../Filters';
 import Grid from '../Grid';
 import { FeedResponse, Selections } from '../types';
 import { Thread } from 'components/Thread';
-import { NotifyMentions } from 'components/Notification';
 import { scrollToBottom } from 'utilities/scroll';
 import debounce from 'utilities/debounce';
 import { SerializedMessage } from 'serializers/message';
@@ -220,9 +219,6 @@ export default function Feed({
     channelId: string;
     threadId: string;
   }) => {
-    if (!currentUser) {
-      throw 'current user is required';
-    }
     const imitation: SerializedMessage = {
       id: uuid(),
       body: message,
@@ -348,7 +344,6 @@ export default function Feed({
 
   return (
     <>
-      <NotifyMentions token={token} key="notifyMentions" />
       <SidebarLayout
         left={
           <>

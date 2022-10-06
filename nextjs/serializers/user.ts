@@ -2,6 +2,7 @@ import type { users } from '@prisma/client';
 
 export interface SerializedUser {
   id: string;
+  authsId: string | null;
   username: string | null;
   displayName: string | null;
   externalUserId: string | null;
@@ -18,6 +19,7 @@ function username(displayName: string | null) {
 export default function serialize(user: users) {
   return {
     id: user.id,
+    authsId: user.authsId,
     username: username(user.displayName),
     externalUserId: user.externalUserId,
     displayName: user.displayName,

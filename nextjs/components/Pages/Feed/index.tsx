@@ -28,6 +28,7 @@ export default function Feed({
   settings,
   token,
 }: Props) {
+  console.log(currentUser);
   return (
     <PageLayout
       channels={channels}
@@ -35,6 +36,8 @@ export default function Feed({
       isSubDomainRouting={isSubDomainRouting}
       permissions={permissions}
       settings={settings}
+      token={token}
+      currentUser={currentUser}
     >
       <Content
         communityId={communityId}

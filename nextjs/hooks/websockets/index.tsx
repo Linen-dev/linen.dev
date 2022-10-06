@@ -4,7 +4,7 @@ import { Permissions } from 'types/shared';
 import type { PushMessageType } from 'services/push';
 
 interface Props {
-  room?: string;
+  room?: string | null;
   token: string | null;
   permissions: Permissions;
   onNewMessage(payload: PushMessageType): void;
@@ -27,10 +27,10 @@ function useWebsockets({ room, token, permissions, onNewMessage }: Props) {
       setChannel(channel);
       channel
         .join()
-        .receive('ok', (resp: any) => {
+        .receive('ok', () => {
           setConnected(true);
         })
-        .receive('error', (resp: any) => {
+        .receive('error', () => {
           setConnected(false);
         });
       channel.on('new_msg', onNewMessage);
