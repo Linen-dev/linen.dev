@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import type { ChannelSerialized } from 'lib/channel';
 import ChannelName from './ChannelName';
 import ChannelSelect from './ChannelSelect';
@@ -25,19 +26,23 @@ export default function NavBar({
 }: Props) {
   const userId = currentUser?.authsId;
 
+  const [highlighs, setHighlights] = useState<string[]>([]);
+
   useWebsockets({
     room: userId && `user:${userId}`,
     permissions,
     token,
     onNewMessage(payload) {
-      alert(JSON.stringify(payload, null, 2));
+      setHighlights((highlighs) => {
+        return [...highlighs, payload.channel_id];
+      });
     },
   });
 
   const sortedChannels = sortByChannelName(channels);
 
   const navBarLg = (
-    <div className="pl-2 w-[250px] pt-4 bg-slate-50">
+    <div className="w-[250px] pt-4 bg-slate-50">
       {permissions.feed && (
         <h5 style={{ fontWeight: 'bold', paddingLeft: 18, marginBottom: 8 }}>
           <Link href="/feed">Feed</Link>
@@ -53,6 +58,9 @@ export default function NavBar({
             <div className="text-gray-800">
               <ChannelName
                 name={c.channelName}
+                highlighted={
+                  highlighs.includes(c.id) && c.channelName !== channelName
+                }
                 active={c.channelName === channelName}
               />
             </div>

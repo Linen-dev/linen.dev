@@ -28,7 +28,6 @@ export default function Feed({
   settings,
   token,
 }: Props) {
-  console.log(currentUser);
   return (
     <PageLayout
       channels={channels}
