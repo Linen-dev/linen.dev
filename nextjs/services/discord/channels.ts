@@ -68,7 +68,6 @@ async function crawlChannel(
       hasMore = false;
     }
     for (const message of messages) {
-      // console.log(message);
       if (!after) {
         after = message.id;
       }

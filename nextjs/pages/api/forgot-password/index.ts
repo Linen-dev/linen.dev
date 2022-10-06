@@ -13,6 +13,13 @@ async function create(request: NextApiRequest, response: NextApiResponse) {
   }
   try {
     const token = generateToken();
+
+    const auth = await prisma.auths.findFirst({ where: { email } });
+
+    if (!auth) {
+      return response.status(200).json({});
+    }
+
     await prisma.auths.update({
       where: { email },
       data: {

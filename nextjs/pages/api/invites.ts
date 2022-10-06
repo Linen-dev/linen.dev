@@ -9,6 +9,11 @@ export default async function handler(
   response: NextApiResponse
 ) {
   const user = await getAuthFromSession(request, response);
+
+  if (!user) {
+    return response.status(401).end();
+  }
+
   const host = getCurrentUrl(request);
 
   if (request.method === 'POST') {

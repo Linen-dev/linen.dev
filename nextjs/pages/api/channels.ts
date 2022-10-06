@@ -78,11 +78,11 @@ async function update(body: UpdateChannelVisibilityRequest, accountId: string) {
 }
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const session = await getAuthFromSession(req, res);
-  if (!session) {
+  const user = await getAuthFromSession(req, res);
+  if (!user) {
     return res.status(401).end();
   }
-  const accountId = session.accountId;
+  const accountId = user.accountId;
   if (!accountId) {
     return res.status(403).end();
   }

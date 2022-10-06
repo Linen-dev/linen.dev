@@ -7,9 +7,9 @@ export default async function handler(
   request: NextApiRequest,
   response: NextApiResponse
 ) {
-  const { accountId } = await getAuthFromSession(request, response);
-  if (!accountId) {
-    throw 'session without account';
+  const user = await getAuthFromSession(request, response);
+  if (!user) {
+    return response.status(401).end();
   }
 
   if (request.method === 'GET') {
@@ -19,7 +19,7 @@ export default async function handler(
       : null;
     const users = await prisma.users.findMany({
       where: {
-        account: { id: accountId },
+        account: { id: user.accountId },
         ...condition,
       } as any,
       take: 5,

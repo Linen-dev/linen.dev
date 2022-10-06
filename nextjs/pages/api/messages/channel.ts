@@ -8,6 +8,7 @@ import parse from 'utilities/message/parsers/linen';
 import { findUserIds } from 'utilities/message/find';
 import { eventNewThread } from 'services/events';
 import { MessageFormat, Prisma } from '@prisma/client';
+import PermissionsService from 'services/permissions';
 
 async function handler(request: NextApiRequest, response: NextApiResponse) {
   if (request.method === 'GET') {
@@ -41,23 +42,34 @@ async function getMessagesFromChannel(
   );
 }
 
-//TODO: refactor to use permissions service
 export async function create(
   request: NextApiRequest,
   response: NextApiResponse<any>
 ) {
-  const session = await Session.find(request, response);
-  if (!session?.user?.email) {
-    throw 'missing session';
-  }
-
-  const { body, channelId, imitationId } = JSON.parse(request.body);
+  const { body, channelId, imitationId, communityId } = JSON.parse(
+    request.body
+  );
   if (!channelId) {
     return response.status(400).json({ error: 'channel id is required' });
   }
 
   if (!imitationId) {
     return response.status(400).json({ error: 'imitation id is required' });
+  }
+
+  const session = await Session.find(request, response);
+  if (!session?.user?.email) {
+    return response.status(401).end();
+  }
+
+  const permissions = await PermissionsService.get({
+    request,
+    response,
+    params: { communityId },
+  });
+
+  if (!permissions.chat) {
+    return response.status(401).end();
   }
 
   const channel = await prisma.channels.findUnique({

@@ -4,12 +4,11 @@ import { withSentry } from '@sentry/nextjs';
 import { findThreadById } from 'lib/threads';
 import serializeThread from 'serializers/thread';
 import { getAuthFromSession } from 'utilities/session';
-import to from 'utilities/await-to-js';
 
 async function update(request: NextApiRequest, response: NextApiResponse) {
   const id = request.query.id as string;
-  const [error, session] = await to(getAuthFromSession(request, response));
-  if (error || !session) {
+  const user = await getAuthFromSession(request, response);
+  if (!user) {
     return response.status(401).end();
   }
   const { state, title } = JSON.parse(request.body);
@@ -22,15 +21,15 @@ async function update(request: NextApiRequest, response: NextApiResponse) {
 
 async function get(request: NextApiRequest, response: NextApiResponse) {
   const id = request.query.id as string;
-  const [error, session] = await to(getAuthFromSession(request, response));
-  if (error || !session) {
+  const user = await getAuthFromSession(request, response);
+  if (!user) {
     return response.status(401).end();
   }
   const thread = await findThreadById(id);
   if (!thread) {
     return response.status(404).end();
   }
-  const permission = session.tenants.find(
+  const permission = user.tenants.find(
     (u) => u.accountId === thread.channel?.accountId
   );
   if (!permission) {

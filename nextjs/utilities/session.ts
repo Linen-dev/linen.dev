@@ -20,10 +20,10 @@ export type UserSession = {
 export async function getAuthFromSession(
   request: NextApiRequest,
   response: NextApiResponse
-): Promise<UserSession> {
+): Promise<UserSession | null> {
   const session = await Session.find(request, response);
   if (!session || !session?.user?.email) {
-    throw 'missing session';
+    return null;
   }
 
   const auth = await prisma.auths.findUnique({
@@ -33,7 +33,7 @@ export async function getAuthFromSession(
     },
   });
   if (!auth) {
-    throw 'auth not found';
+    return null;
   }
 
   const user = auth?.users?.find((u) => u.accountsId === auth.accountId);

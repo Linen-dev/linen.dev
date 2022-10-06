@@ -9,6 +9,10 @@ export default async function handler(
 ) {
   const requester = await getAuthFromSession(request, response);
 
+  if (!requester) {
+    return response.status(401).end();
+  }
+
   if (request.method === 'PUT') {
     await updateUserRole(requester, request.body);
     return response.status(200).json({ message: 'user role updated' });

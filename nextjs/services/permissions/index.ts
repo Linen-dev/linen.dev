@@ -134,7 +134,6 @@ export default class PermissionsService {
     return false;
   }
 
-  //Todo: Check roles and check if they have permissions to post to channel
   static _chat(
     community: AccountWithFeatureFlag | null,
     account: accounts | null

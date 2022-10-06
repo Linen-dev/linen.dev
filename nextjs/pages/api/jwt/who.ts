@@ -4,11 +4,11 @@ import Session from 'services/session';
 const PUSH_SERVICE_KEY = process.env.PUSH_SERVICE_KEY;
 
 export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
+  request: NextApiRequest,
+  response: NextApiResponse
 ) {
   try {
-    const { push_token } = JSON.parse(req.body);
+    const { push_token } = JSON.parse(request.body);
     if (!push_token) {
       throw 'missing push token';
     }
@@ -19,7 +19,7 @@ export default async function handler(
       throw 'invalid push token';
     }
 
-    const token = await Session.token(req);
+    const token = await Session.token(request);
     if (!token) {
       throw 'invalid authorization token';
     }
@@ -28,11 +28,11 @@ export default async function handler(
       throw 'missing user id on authorization token';
     }
 
-    res.send(token.id);
+    response.send(token.id);
   } catch (error: any) {
     console.error({ error });
-    res.status(error.status || 500);
+    response.status(error.status || 500).end();
   } finally {
-    res.end();
+    response.end();
   }
 }
