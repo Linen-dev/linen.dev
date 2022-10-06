@@ -29,6 +29,7 @@ export default function ChannelPage({
       communityUrl={settings.communityUrl}
       communityInviteUrl={settings.communityInviteUrl}
       currentChannel={currentChannel}
+      currentUser={currentUser}
       seo={{
         ...buildChannelSeo({
           settings,
@@ -43,6 +44,7 @@ export default function ChannelPage({
       communityName={settings.communityName}
       isSubDomainRouting={isSubDomainRouting}
       permissions={permissions}
+      token={token}
     >
       <ComponentToRender
         threads={threads}

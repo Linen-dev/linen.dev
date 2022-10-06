@@ -46,6 +46,7 @@ export function ThreadPage({
       }}
       communityName={settings.communityName}
       currentChannel={currentChannel}
+      currentUser={currentUser}
       channels={channels}
       communityUrl={settings.communityUrl}
       communityInviteUrl={settings.communityInviteUrl}
@@ -53,6 +54,7 @@ export function ThreadPage({
       isSubDomainRouting={isSubDomainRouting}
       permissions={permissions}
       innerRef={ref}
+      token={token}
     >
       <Content
         id={id}

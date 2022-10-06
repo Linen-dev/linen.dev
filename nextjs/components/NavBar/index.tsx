@@ -5,16 +5,35 @@ import { sortByChannelName } from './utilities';
 import { Permissions } from 'types/shared';
 import Link from 'components/Link/InternalLink';
 import { NewChannelModal } from 'components/Channel';
+import useWebsockets from 'hooks/websockets';
+import { SerializedUser } from 'serializers/user';
+
+interface Props {
+  channels: ChannelSerialized[];
+  currentUser?: SerializedUser | null;
+  channelName: string;
+  permissions: Permissions;
+  token: string | null;
+}
 
 export default function NavBar({
   channelName,
+  currentUser,
   channels,
   permissions,
-}: {
-  channels: ChannelSerialized[];
-  channelName: string;
-  permissions: Permissions;
-}) {
+  token,
+}: Props) {
+  const userId = currentUser?.authsId;
+
+  useWebsockets({
+    room: userId && `user:${userId}`,
+    permissions,
+    token,
+    onNewMessage(payload) {
+      alert(JSON.stringify(payload, null, 2));
+    },
+  });
+
   const sortedChannels = sortByChannelName(channels);
 
   const navBarLg = (

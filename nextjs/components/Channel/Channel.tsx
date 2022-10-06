@@ -14,7 +14,6 @@ import styles from './index.module.css';
 import { v4 as uuid } from 'uuid';
 import debounce from 'utilities/debounce';
 import { useUsersContext } from 'contexts/Users';
-import { NotifyMentions } from 'components/Notification';
 import useWebsockets from 'hooks/websockets';
 import { SerializedMessage } from 'serializers/message';
 import SidebarLayout from 'components/layout/shared/SidebarLayout';
@@ -496,7 +495,6 @@ export function Channel({
 
   return (
     <>
-      <NotifyMentions token={token} key="notifyMentions" />
       <SidebarLayout
         left={
           <div className="sm:pt-6 justify-left w-full">

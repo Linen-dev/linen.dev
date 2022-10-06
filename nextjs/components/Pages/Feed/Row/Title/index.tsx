@@ -51,6 +51,9 @@ function getTitle(message: SerializedMessage): string {
     if (node.type === 'user') {
       title += `@${getDisplayName(node.id, message.mentions)}`;
     }
+    if (node.type === 'signal') {
+      title += `!${getDisplayName(node.id, message.mentions)}`;
+    }
   });
 
   if (!title) {

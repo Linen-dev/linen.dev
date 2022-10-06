@@ -15,12 +15,14 @@ import { Permissions } from 'types/shared';
 import { LinkContext } from 'contexts/Link';
 import { UsersContext } from 'contexts/Users';
 import { Settings } from 'serializers/account/settings';
+import { SerializedUser } from 'serializers/user';
 
 interface Props {
   className?: string;
   seo?: SeoProps;
   children: React.ReactNode;
   currentChannel?: ChannelSerialized;
+  currentUser?: SerializedUser | null;
   channels?: ChannelSerialized[];
   communityUrl?: string;
   communityInviteUrl?: string;
@@ -29,6 +31,7 @@ interface Props {
   isSubDomainRouting: boolean;
   permissions: Permissions;
   innerRef?: any;
+  token: string | null;
 }
 
 function PageLayout({
@@ -37,6 +40,7 @@ function PageLayout({
   children,
   channels: initialChannels,
   currentChannel,
+  currentUser,
   communityUrl,
   communityInviteUrl,
   settings,
@@ -44,6 +48,7 @@ function PageLayout({
   isSubDomainRouting,
   permissions,
   innerRef,
+  token,
 }: Props) {
   const channels = initialChannels
     ? initialChannels.filter((c: ChannelSerialized) => !c.hidden)
@@ -130,7 +135,9 @@ function PageLayout({
           {NavBar({
             channels,
             channelName: currentChannel?.channelName || '',
+            currentUser,
             permissions,
+            token,
           })}
           <div
             className={
