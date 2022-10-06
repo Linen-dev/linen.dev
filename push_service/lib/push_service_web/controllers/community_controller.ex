@@ -6,6 +6,12 @@ defmodule PushServiceWeb.CommunityController do
   def create(conn, params) do
     %{
       "community_id" => community_id,
+      "channel_id" => channel_id,
+      "thread_id" => thread_id,
+      "message_id" => message_id,
+      "imitation_id" => imitation_id,
+      "is_thread" => is_thread,
+      "is_reply" => is_reply,
       "token" => token
     } = params
 

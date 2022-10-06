@@ -6,7 +6,7 @@ interface Props {
   error(): void;
 }
 
-const POLL_INTERVAL_IN_SECONDS = 15;
+const POLL_INTERVAL_IN_SECONDS = 999999;
 const POLL_INTERVAL = POLL_INTERVAL_IN_SECONDS * 1000;
 
 function usePolling({ fetch, success, error }: Props, dependencies?: any[]) {

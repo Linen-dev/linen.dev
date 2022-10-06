@@ -20,6 +20,9 @@ export type PushMessageType = {
   is_thread: boolean;
   is_reply: boolean;
 };
+export type CommunityPushType = PushMessageType & {
+  community_id: string;
+};
 
 export const push = ({
   channelId,
@@ -77,10 +80,26 @@ export const pushUserMention = ({
   });
 };
 
-// TODO: in progress
-export const pushCommunity = ({ communityId }: { communityId: string }) => {
+export const pushCommunity = ({
+  communityId,
+  channelId,
+  threadId,
+  messageId,
+  imitationId,
+  isThread,
+  isReply,
+}: {
+  communityId: string;
+} & PushType) => {
+  if (!communityId) return Promise.resolve();
   return request.post(`${pushURL}/api/community`).send({
     community_id: communityId,
+    channel_id: channelId,
+    thread_id: threadId,
+    message_id: messageId,
+    imitation_id: imitationId,
+    is_thread: isThread,
+    is_reply: isReply,
     token,
   });
 };

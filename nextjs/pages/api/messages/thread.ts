@@ -138,6 +138,7 @@ export async function create(
   }
 
   await eventNewMessage({
+    communityId,
     channelId,
     messageId: message.id,
     threadId,

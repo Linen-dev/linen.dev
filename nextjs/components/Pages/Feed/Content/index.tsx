@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import SidebarLayout from 'components/layout/shared/SidebarLayout';
 import { ThreadState } from '@prisma/client';
 import { SerializedThread } from 'serializers/thread';
@@ -18,6 +18,8 @@ import usePolling from 'hooks/polling';
 import useThreadWebsockets from 'hooks/websockets/thread';
 import { useUsersContext } from 'contexts/Users';
 import { MessageFormat, Roles } from '@prisma/client';
+import useFeedWebsockets from 'hooks/websockets/feed';
+import type { CommunityPushType } from 'services/push';
 
 interface Props {
   communityId: string;
@@ -100,6 +102,38 @@ export default function Feed({
         };
       });
     },
+  });
+
+  const onNewMessage = useCallback(
+    (payload: CommunityPushType) => {
+      const threadId = payload.thread_id;
+      fetch('/api/threads/' + threadId)
+        .then((response) => response.json())
+        .then((thread: SerializedThread) => {
+          if (
+            scope === Scope.Participant &&
+            !thread.messages.find(
+              (m) =>
+                m.author?.id === currentUser.id ||
+                m.mentions.find((me) => me.id === currentUser.id)
+            )
+          ) {
+            return;
+          }
+          setFeed(({ threads, ...rest }) => ({
+            ...rest,
+            threads: [thread, ...threads.filter((t) => t.id !== thread.id)],
+          }));
+        });
+    },
+    [currentUser.id, scope]
+  );
+
+  useFeedWebsockets({
+    communityId,
+    onNewMessage,
+    permissions,
+    token,
   });
 
   const updateThreads = async () => {
