@@ -9,6 +9,7 @@ import type {
 import type { SerializedThread } from 'serializers/thread';
 import type { SerializedUser } from 'serializers/user';
 import type { ChannelSerialized } from 'lib/channel';
+import { SerializedAccount } from 'serializers/account';
 
 export type ChannelResponse = {
   props?: ChannelViewProps;
@@ -41,6 +42,7 @@ export type ChannelViewProps = {
   channelName: string;
   channels?: ChannelSerialized[];
   currentChannel: ChannelSerialized;
+  currentCommunity: SerializedAccount | null;
   currentUser: SerializedUser | null;
   threads: SerializedThread[];
   isSubDomainRouting: boolean;

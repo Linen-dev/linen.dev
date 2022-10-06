@@ -43,7 +43,6 @@ describe('robots.txt', () => {
       res,
     };
     await getServerSideProps(context);
-    console.log(res.body);
     expect(res.headers['Content-Type']).toEqual('text/plain');
     expect(res.statusCode).toBeFalsy();
     expect(res.body).toMatchSnapshot();
@@ -59,7 +58,6 @@ describe('robots.txt', () => {
       res,
     };
     await getServerSideProps(context);
-    console.log(res.body);
     expect(res.headers['Content-Type']).toEqual('text/plain');
     expect(res.statusCode).toBeFalsy();
     expect(res.body).toMatchSnapshot();

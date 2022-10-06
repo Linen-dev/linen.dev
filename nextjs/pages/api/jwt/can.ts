@@ -4,12 +4,12 @@ import Session from 'services/session';
 const PUSH_SERVICE_KEY = process.env.PUSH_SERVICE_KEY;
 
 export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
+  request: NextApiRequest,
+  response: NextApiResponse
 ) {
   try {
     const { push_token, current_user, channel_id, thread_id, community_id } =
-      JSON.parse(req.body);
+      JSON.parse(request.body);
     if (!current_user) {
       throw 'missing current user';
     }
@@ -28,23 +28,23 @@ export default async function handler(
         current_user,
         channel_id
       );
-      res.status(result ? 200 : 403);
+      response.status(result ? 200 : 403).end();
     } else if (thread_id) {
       const result = await Session.canAuthAccessThread(current_user, thread_id);
-      res.status(result ? 200 : 403);
+      response.status(result ? 200 : 403).end();
     } else if (community_id) {
       const result = await Session.canAuthAccessCommunity(
         current_user,
         community_id
       );
-      res.status(result ? 200 : 403);
+      response.status(result ? 200 : 403).end();
     } else {
       throw 'missing parameters';
     }
   } catch (error: any) {
     console.error({ error });
-    res.status(error.status || 500);
+    response.status(error.status || 500).end();
   } finally {
-    res.end();
+    response.end();
   }
 }

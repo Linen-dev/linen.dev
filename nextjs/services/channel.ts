@@ -3,6 +3,7 @@ import { GetServerSidePropsContext } from 'next/types';
 import { NotFound } from '../utilities/response';
 import { serialize as serializeSettings } from 'serializers/account/settings';
 import { findPreviousCursor, findThreadsByCursor } from '../lib/threads';
+import serializeAccount from '../serializers/account';
 import serializeThread from '../serializers/thread';
 import { ThreadsWithMessagesFull } from 'types/partialTypes';
 import { decodeCursor, encodeCursor } from '../utilities/cursor';
@@ -118,6 +119,7 @@ export async function channelGetServerSideProps(
       token: token || null,
       nextCursor,
       currentChannel: channel,
+      currentCommunity: serializeAccount(account),
       currentUser: !!currentUser ? serializeUser(currentUser) : null,
       channelName: channel.channelName,
       channels,

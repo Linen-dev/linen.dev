@@ -75,7 +75,6 @@ function processMessageType21(
   users: users[],
   thread?: threads
 ) {
-  // console.log('processMessageType21', message);
   const mentions = getMentions(message.referenced_message?.mentions, users);
   const authorId = users.find(
     (user) => user.externalUserId === message.referenced_message?.author.id
@@ -160,7 +159,6 @@ export async function createMessages({
   const users = await findUsers(accountId, usersInMessages);
   await Promise.all(
     messages.filter(filterKnownMessagesTypes).map((message) => {
-      // console.log('message', message)
       return upsertMessage(
         processMessageTypeMap[message.type](channel, message, users, thread)
       );

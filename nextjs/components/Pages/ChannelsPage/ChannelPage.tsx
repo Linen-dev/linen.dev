@@ -7,6 +7,7 @@ export default function ChannelPage({
   threads,
   channels,
   currentChannel,
+  currentCommunity,
   currentUser,
   settings,
   channelName,
@@ -46,6 +47,7 @@ export default function ChannelPage({
       <ComponentToRender
         threads={threads}
         currentChannel={currentChannel}
+        currentCommunity={currentCommunity}
         currentUser={currentUser}
         settings={settings}
         channelName={channelName}

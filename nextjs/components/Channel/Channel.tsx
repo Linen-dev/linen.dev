@@ -21,10 +21,11 @@ import SidebarLayout from 'components/layout/shared/SidebarLayout';
 import useThreadWebsockets from 'hooks/websockets/thread';
 
 const debouncedSendChannelMessage = debounce(
-  ({ message, channelId, imitationId }: any) => {
+  ({ message, communityId, channelId, imitationId }: any) => {
     return fetch(`/api/messages/channel`, {
       method: 'POST',
       body: JSON.stringify({
+        communityId,
         body: message,
         channelId,
         imitationId,
@@ -52,6 +53,7 @@ const debouncedSendMessage = debounce(
 export function Channel({
   threads: initialThreads,
   currentChannel,
+  currentCommunity,
   currentUser,
   settings,
   channelName,
@@ -314,6 +316,7 @@ export function Channel({
     );
     return debouncedSendChannelMessage({
       message,
+      communityId: currentCommunity?.id,
       channelId,
       imitationId: imitation.id,
     })
