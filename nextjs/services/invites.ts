@@ -4,41 +4,27 @@ import InviteToJoinMailer from 'mailers/InviteToJoinMailer';
 import prisma from '../client';
 
 export async function createInvitation({
-  requesterEmail,
+  createdByUserId,
   email,
   accountId,
   host,
   role,
 }: {
-  requesterEmail: string;
+  createdByUserId: string;
   email: string;
   accountId: string;
   host: string;
   role: Roles;
 }) {
-  const requester = await prisma.auths.findUnique({
-    where: { email: requesterEmail },
-    include: { account: true, users: true },
-  });
-
-  if (requester?.accountId !== accountId) {
-    return { status: 403, message: 'forbidden' };
-  }
-
-  if (!requester.account?.id) {
-    return { status: 404, message: 'account not found' };
-  }
-
-  const user = requester.users.find((user) => user.accountsId === accountId);
-  if (!user) {
-    return { status: 404, message: 'user not found' };
-  }
-
-  await prisma.invites.create({
+  const invite = await prisma.invites.create({
+    select: {
+      accounts: true,
+      createdBy: { include: { auth: { select: { email: true } } } },
+    },
     data: {
       email,
       accountsId: accountId,
-      createdById: user.id,
+      createdById: createdByUserId,
       role,
     },
   });
@@ -46,11 +32,11 @@ export async function createInvitation({
   await sendInvitationByEmail({
     email,
     host,
-    communityName:
-      requester.account?.name ||
-      requester.account?.discordDomain ||
-      requester.account?.slackDomain,
-    inviterName: user.displayName || requester.email,
+    communityName: (invite.accounts?.name ||
+      invite.accounts?.discordDomain ||
+      invite.accounts?.slackDomain)!,
+    inviterName: (invite.createdBy?.displayName ||
+      invite.createdBy?.auth?.email)!,
   });
 
   return { status: 200, message: 'invitation sent' };
@@ -152,7 +138,7 @@ export async function acceptInvite(id: string, email: string) {
   const newUser = await prisma.users.create({
     include: { account: true },
     data: {
-      isAdmin: invite.role === 'ADMIN',
+      isAdmin: invite.role === Roles.ADMIN,
       isBot: false,
       account: { connect: { id: invite.accountsId } },
       auth: { connect: { id: auth.id } },
@@ -173,47 +159,28 @@ export async function acceptInvite(id: string, email: string) {
 }
 
 export async function updateInvitation({
-  requesterEmail,
-  userId,
+  inviteId,
   role,
+  accountId,
 }: {
-  requesterEmail: string;
-  userId: string;
+  inviteId: string;
   role: Roles;
+  accountId: string;
 }) {
-  const requester = await prisma.auths.findUnique({
-    where: { email: requesterEmail },
-    include: { account: true, users: true },
-  });
-
-  const invite = await prisma.invites.findUnique({ where: { id: userId } });
-
-  const user = requester?.users.find(
-    (user) => user.accountsId === invite?.accountsId
-  );
-  if (!user) {
-    return { status: 404, message: 'user not found' };
+  const invite = await prisma.invites.findUnique({ where: { id: inviteId } });
+  if (!invite) {
+    return { status: 404 };
   }
-  const userFromSession = requester?.users.find(
-    (u) => u.accountsId === user.accountsId
-  );
-  if (!userFromSession) {
-    return { status: 404, message: "user doesn't belong to same tenant" };
+  if (!invite?.accountsId) {
+    return { status: 403 };
   }
-  // user requester should be an owner or admin
-  if (
-    userFromSession.role !== Roles.ADMIN &&
-    userFromSession.role !== Roles.OWNER
-  ) {
-    return {
-      status: 404,
-      message: 'requester is not authorized to make this change',
-    };
+  if (invite?.accountsId !== accountId) {
+    return { status: 403 };
   }
 
   await prisma.invites.update({
     where: {
-      id: userId,
+      id: inviteId,
     },
     data: {
       role,
