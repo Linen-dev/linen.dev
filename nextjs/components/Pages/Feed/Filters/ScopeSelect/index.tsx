@@ -13,7 +13,7 @@ export default function ScopeSelect({ onChange, defaultValue }: Props) {
       defaultValue={defaultValue}
       options={[
         { label: 'All', value: Scope.All },
-        { label: 'I participate in', value: Scope.Participant },
+        { label: 'My conversations', value: Scope.Participant },
       ]}
       onChange={(event) => onChange('scope', event.target.value)}
     />
