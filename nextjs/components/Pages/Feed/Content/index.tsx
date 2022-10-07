@@ -74,7 +74,7 @@ export default function Feed({
 }: Props) {
   const [feed, setFeed] = useState<FeedResponse>({ threads: [], total: 0 });
   const [state, setState] = useState<ThreadState>(ThreadState.OPEN);
-  const [scope, setScope] = useState<Scope>(Scope.Participant);
+  const [scope, setScope] = useState<Scope>(Scope.All);
   const [page, setPage] = useState<number>(1);
   const [key, setKey] = useState(0);
   const [selections, setSelections] = useState<Selections>({});
