@@ -1,12 +1,12 @@
 .container {
-  min-height: calc(100vh - 64px);
+  height: auto;
 }
 
 .container.has-chat {
   min-height: calc(100vh - 64px - 192px);
 }
 
-.content {
+.has-chat .content {
   display: flex;
   flex: 1 1 auto;
   height: 100%;
