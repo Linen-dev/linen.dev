@@ -7,7 +7,7 @@ export default function Header() {
         Feed
       </h1>
       <p className="mt-2 text-md text-slate-700 dark:text-slate-400">
-        Manage your community with ease.
+        All of your channel conversations in one place
       </p>
     </div>
   );
