@@ -58,9 +58,12 @@ export default function NavBar({
             <div className="text-gray-800">
               <ChannelName
                 name={c.channelName}
-                highlighted={
-                  highlighs.includes(c.id) && c.channelName !== channelName
-                }
+                count={highlighs.reduce((count: number, id: string) => {
+                  if (id === c.id) {
+                    return count + 1;
+                  }
+                  return count;
+                }, 0)}
                 active={c.channelName === channelName}
               />
             </div>
