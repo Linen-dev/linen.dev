@@ -104,6 +104,7 @@ export function Thread({
         <div className={styles.chat}>
           {state === ThreadState.OPEN ? (
             <MessageForm
+              autoFocus
               onSend={(message: string) => {
                 onSend?.();
                 return sendMessage({ message, channelId, threadId: id });
@@ -119,6 +120,7 @@ export function Thread({
             />
           ) : (
             <MessageForm
+              autoFocus
               onSend={(message: string) => {
                 onSend?.();
                 return Promise.all([

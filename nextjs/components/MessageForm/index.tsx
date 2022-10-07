@@ -13,6 +13,7 @@ import { useUsersContext } from 'contexts/Users';
 import { postprocess } from './utilities/message';
 
 interface Props {
+  autoFocus?: boolean;
   onSend?(message: string): Promise<any>;
   onSendAndClose?(message: string): Promise<any>;
   fetchMentions?(term?: string): Promise<SerializedUser[]>;
@@ -108,7 +109,12 @@ enum Mode {
   Mention,
 }
 
-function MessageForm({ onSend, onSendAndClose, fetchMentions }: Props) {
+function MessageForm({
+  autoFocus,
+  onSend,
+  onSendAndClose,
+  fetchMentions,
+}: Props) {
   const [message, setMessage] = useState('');
   const [preview, setPreview] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -211,6 +217,7 @@ function MessageForm({ onSend, onSendAndClose, fetchMentions }: Props) {
       <form onSubmit={handleSend}>
         <textarea
           ref={ref}
+          autoFocus={autoFocus}
           className={styles.textarea}
           name="message"
           placeholder="Add your comment..."
