@@ -1,14 +1,14 @@
-import { v4 as uuid } from 'uuid';
-
-export default function transform(node: any) {
-  node.uuid = uuid();
+export default function transform(node: any, count = 1) {
+  node.uuid = `${node.source}-${count}`;
   if (node.type === 'code') {
     if (node.value.includes('\n')) {
       node.type = 'pre';
     }
   }
   if (node.children) {
-    node.children = node.children.map(transform);
+    node.children = node.children.map((node: any) =>
+      transform(node, count + 1)
+    );
   }
   return node;
 }
