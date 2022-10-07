@@ -4,19 +4,18 @@ import styles from './index.module.css';
 
 interface Props {
   name: string;
-  highlighted: boolean;
+  count: number;
   active: boolean;
 }
 
-export default function ChannelName({ name, highlighted, active }: Props) {
+export default function ChannelName({ name, count, active }: Props) {
   return (
     <div
       className={classNames(styles.name, {
         [styles.active]: active,
-        [styles.highlighted]: highlighted,
       })}
     >
-      # {name}
+      {!active && count > 0 ? `[${count}] #` : '#'} {name}
     </div>
   );
 }

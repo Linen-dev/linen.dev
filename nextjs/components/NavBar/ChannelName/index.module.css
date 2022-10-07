@@ -1,5 +1,7 @@
 .name {
+  align-items: center;
   cursor: pointer;
+  display: flex;
   font-size: 14px;
   font-weight: 450;
 
@@ -12,9 +14,4 @@
 .active {
   background-color: white;
   font-weight: 700;
-}
-
-.highlighted::before {
-  content: '! ';
-  font-weight: 900;
 }
