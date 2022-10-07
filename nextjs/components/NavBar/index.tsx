@@ -26,15 +26,15 @@ export default function NavBar({
 }: Props) {
   const userId = currentUser?.authsId;
 
-  const [highlighs, setHighlights] = useState<string[]>([]);
+  const [highlights, setHighlights] = useState<string[]>([]);
 
   useWebsockets({
     room: userId && `user:${userId}`,
     permissions,
     token,
     onNewMessage(payload) {
-      setHighlights((highlighs) => {
-        return [...highlighs, payload.channel_id];
+      setHighlights((highlights) => {
+        return [...highlights, payload.channel_id];
       });
     },
   });
@@ -45,7 +45,9 @@ export default function NavBar({
     <div className="w-[250px] pt-4 bg-slate-50">
       {permissions.feed && (
         <h5 style={{ fontWeight: 'bold', paddingLeft: 18, marginBottom: 8 }}>
-          <Link href="/feed">Feed</Link>
+          <Link onClick={() => setHighlights([])} href="/feed">
+            {highlights.length > 0 ? `[${highlights.length}] Feed` : 'Feed'}
+          </Link>
         </h5>
       )}
       <div className="flex px-[18px] mb-2">
@@ -53,18 +55,26 @@ export default function NavBar({
         {permissions.channel_create && <NewChannelModal />}
       </div>
       <div className="block overflow-hidden hover:overflow-auto h-[calc(100vh-240px)]">
-        {sortedChannels.map((c: ChannelSerialized) => (
-          <Link key={c.channelName} href={`/c/${c.channelName}`}>
+        {sortedChannels.map((channel: ChannelSerialized) => (
+          <Link
+            onClick={() => {
+              setHighlights((highlights) => {
+                return highlights.filter((id) => id !== channel.id);
+              });
+            }}
+            key={channel.channelName}
+            href={`/c/${channel.channelName}`}
+          >
             <div className="text-gray-800">
               <ChannelName
-                name={c.channelName}
-                count={highlighs.reduce((count: number, id: string) => {
-                  if (id === c.id) {
+                name={channel.channelName}
+                count={highlights.reduce((count: number, id: string) => {
+                  if (id === channel.id) {
                     return count + 1;
                   }
                   return count;
                 }, 0)}
-                active={c.channelName === channelName}
+                active={channel.channelName === channelName}
               />
             </div>
           </Link>

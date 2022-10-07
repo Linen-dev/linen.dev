@@ -4,11 +4,17 @@ import { useLinkContext } from 'contexts/Link';
 
 interface Props {
   className?: string;
+  onClick?(): void;
   href: string;
   children: React.ReactNode;
 }
 
-export default function InternalLink({ className, href, children }: Props) {
+export default function InternalLink({
+  className,
+  onClick,
+  href,
+  children,
+}: Props) {
   const { isSubDomainRouting, communityName, communityType } = useLinkContext();
   const path = CustomLinkHelper({
     communityType,
@@ -18,7 +24,9 @@ export default function InternalLink({ className, href, children }: Props) {
   });
   return (
     <Link href={path} prefetch={false}>
-      <a className={className}>{children}</a>
+      <a onClick={onClick} className={className}>
+        {children}
+      </a>
     </Link>
   );
 }
