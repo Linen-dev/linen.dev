@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import useInfiniteScroll from 'react-infinite-scroll-hook';
 import Spinner from 'components/Spinner';
 import { Thread } from 'components/Thread';
@@ -18,6 +18,8 @@ import useWebsockets from 'hooks/websockets';
 import { SerializedMessage } from 'serializers/message';
 import SidebarLayout from 'components/layout/shared/SidebarLayout';
 import useThreadWebsockets from 'hooks/websockets/thread';
+import Empty from './Empty';
+import classNames from 'classnames';
 
 const debouncedSendChannelMessage = debounce(
   ({ message, communityId, channelId, imitationId }: any) => {
@@ -249,10 +251,6 @@ export function Channel({
       });
     },
   });
-
-  if (threads.length === 0) {
-    return <div />;
-  }
 
   const sendMessage = async ({
     message,
@@ -497,23 +495,33 @@ export function Channel({
     <>
       <SidebarLayout
         left={
-          <div className="sm:pt-6 justify-left w-full">
+          <div className={styles.container}>
             {cursor?.prev && !error?.prev ? (
-              <div className="m-3" ref={infiniteRef}>
+              <div className="sm:pt-6 m-3" ref={infiniteRef}>
                 <Spinner />
               </div>
             ) : (
-              <div />
+              <React.Fragment />
             )}
-            <ul className="divide-y">
-              <Feed
-                threads={threads}
-                isSubDomainRouting={isSubDomainRouting}
-                settings={settings}
-                isBot={isBot}
-                onClick={selectThread}
-              />
-            </ul>
+            <div
+              className={classNames(styles.content, {
+                [styles.empty]: threads.length === 0,
+              })}
+            >
+              {threads.length === 0 ? (
+                <Empty />
+              ) : (
+                <ul className="divide-y w-full">
+                  <Feed
+                    threads={threads}
+                    isSubDomainRouting={isSubDomainRouting}
+                    settings={settings}
+                    isBot={isBot}
+                    onClick={selectThread}
+                  />
+                </ul>
+              )}
+            </div>
             {permissions.chat && (
               <div className={styles.chat}>
                 <MessageForm
@@ -532,7 +540,7 @@ export function Channel({
                 <Spinner />
               </div>
             ) : (
-              <div />
+              <React.Fragment />
             )}
           </div>
         }
