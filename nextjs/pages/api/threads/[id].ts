@@ -3,47 +3,54 @@ import prisma from '../../../client';
 import { withSentry } from '@sentry/nextjs';
 import { findThreadById } from 'lib/threads';
 import serializeThread from 'serializers/thread';
-import { getAuthFromSession } from 'utilities/session';
+import PermissionsService from 'services/permissions';
+import type { ThreadState } from '@prisma/client';
 
-async function update(request: NextApiRequest, response: NextApiResponse) {
-  const id = request.query.id as string;
-  const user = await getAuthFromSession(request, response);
-  if (!user) {
-    return response.status(401).end();
-  }
-  const { state, title } = JSON.parse(request.body);
+async function update(threadId: string, state: ThreadState, title: string) {
   await prisma.threads.update({
-    where: { id },
+    where: { id: threadId },
     data: { state, title },
   });
-  return response.status(200).json({});
 }
 
-async function get(request: NextApiRequest, response: NextApiResponse) {
-  const id = request.query.id as string;
-  const user = await getAuthFromSession(request, response);
-  if (!user) {
-    return response.status(401).end();
-  }
-  const thread = await findThreadById(id);
+async function get(threadId: string) {
+  const thread = await findThreadById(threadId);
   if (!thread) {
-    return response.status(404).end();
+    return;
   }
-  const permission = user.tenants.find(
-    (u) => u.accountId === thread.channel?.accountId
-  );
-  if (!permission) {
-    return response.status(403).end();
-  }
-  return response.status(200).json(serializeThread(thread));
+  return serializeThread(thread);
 }
 
 async function handler(request: NextApiRequest, response: NextApiResponse) {
+  const threadId = request.query.id as string;
+  const permissions = await PermissionsService.getAccessThread({
+    request,
+    response,
+    threadId,
+  });
+  if (!permissions.access) {
+    return response.status(403).end();
+  }
+  if (!permissions.can_access_thread) {
+    return response.status(403).end();
+  }
+
   if (request.method === 'GET') {
-    return get(request, response);
+    const thread = await get(threadId);
+    if (thread) {
+      response.status(200).json(thread);
+    } else {
+      response.status(404);
+    }
+    return response.end();
   }
   if (request.method === 'PUT') {
-    return update(request, response);
+    if (!permissions.manage) {
+      return response.status(403).end();
+    }
+    const { state, title } = JSON.parse(request.body);
+    await update(threadId, state, title);
+    return response.status(200).end();
   }
   return response.status(405).end();
 }
