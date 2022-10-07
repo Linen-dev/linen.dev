@@ -64,21 +64,3 @@ export function anonymizeMessagesMentions(messages: Messages[]) {
     return anonymizeMentions(message);
   });
 }
-
-export function dispatchAnonymizeRequest(accountId: string) {
-  // run anonymize users script asynchronously
-  superagent
-    .get(
-      process.env.SYNC_URL +
-        '/api/scripts/anonymizeUsers?account_id=' +
-        accountId
-    )
-    .then(() => {
-      console.log('Anonymize done!');
-    })
-    .catch((err) => {
-      console.error('Anonymize failed: ', err);
-      captureException(err);
-      return flush(2000);
-    });
-}

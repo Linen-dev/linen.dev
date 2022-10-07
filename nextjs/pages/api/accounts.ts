@@ -2,7 +2,6 @@ import { NextApiRequest, NextApiResponse } from 'next/types';
 import prisma from '../../client';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import { stripProtocol } from '../../utilities/url';
-import { dispatchAnonymizeRequest } from 'utilities/anonymizeMessages';
 import Session, { SessionType } from 'services/session';
 import { captureException, withSentry } from '@sentry/nextjs';
 import { generateRandomWordSlug } from 'utilities/randomWordSlugs';
@@ -124,10 +123,6 @@ export async function update({
       where: { id: account.id },
       data,
     });
-
-    if (!!anonymizeUsers) {
-      dispatchAnonymizeRequest(account.id);
-    }
 
     return { status: 200, data: record };
   } catch (exception: unknown) {
