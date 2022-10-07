@@ -1,7 +1,25 @@
+.container {
+  height: calc(100vh - 64px - 192px);
+}
+
+.content {
+  display: flex;
+  flex: 1 1 auto;
+  height: 100%;
+  width: 100%;
+  align-items: flex-end;
+}
+
+.content.empty {
+  align-items: center;
+  justify-content: center;
+}
+
 .chat {
   background: white;
   border-top: 1px solid #e5e7eb;
   bottom: 0;
+  flex: 0 1 auto;
   padding: 1rem;
   position: sticky;
   width: 100%;
