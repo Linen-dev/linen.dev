@@ -1,59 +1,40 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
-import prisma from '../../../client';
 import { withSentry } from '@sentry/nextjs';
 import PermissionsService from 'services/permissions';
+import ChannelsService from 'services/channels';
 
-type DefaultChannelRequest = {
+type Props = {
   communityId: string;
+};
+
+type PutProps = Props & {
   channelId: string;
   originalChannelId: string;
 };
 
-async function put(request: NextApiRequest, response: NextApiResponse) {
-  const { communityId, channelId, originalChannelId }: DefaultChannelRequest =
-    JSON.parse(request.body);
+async function handler(request: NextApiRequest, response: NextApiResponse) {
+  const body = JSON.parse(request.body);
+  const { communityId }: Props = body;
   const permissions = await PermissionsService.get({
     request,
     response,
     params: { communityId },
   });
+
   if (!permissions.manage) {
-    return response.status(401).json({});
-  }
-  const transactions = [
-    prisma.channels.update({
-      where: {
-        id: channelId,
-      },
-      data: {
-        default: true,
-      },
-    }),
-  ];
-
-  if (originalChannelId) {
-    transactions.push(
-      prisma.channels.update({
-        where: {
-          id: originalChannelId,
-        },
-        data: {
-          default: false,
-        },
-      })
-    );
+    return response.status(401).end();
   }
 
-  await prisma.$transaction(transactions);
-  return response.status(200).json({});
-}
-
-async function handler(req: NextApiRequest, res: NextApiResponse) {
-  switch (req.method) {
+  switch (request.method) {
     case 'PUT':
-      return put(req, res);
+      const { channelId, originalChannelId }: PutProps = body;
+      const { status } = await ChannelsService.setDefaultChannel(
+        channelId,
+        originalChannelId
+      );
+      return response.status(status).end();
     default:
-      return res.status(404).json({});
+      return response.status(405).end();
   }
 }
 
