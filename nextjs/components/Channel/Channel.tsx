@@ -498,6 +498,7 @@ export function Channel({
           <div
             className={classNames(styles.container, {
               [styles['has-chat']]: permissions.chat,
+              [styles['is-empty']]: threads.length === 0,
             })}
           >
             {cursor?.prev && !error?.prev ? (
@@ -505,11 +506,11 @@ export function Channel({
                 <Spinner />
               </div>
             ) : (
-              <React.Fragment />
+              <div />
             )}
             <div
               className={classNames(styles.content, {
-                [styles.empty]: threads.length === 0,
+                [styles['is-empty']]: threads.length === 0,
               })}
             >
               {threads.length === 0 ? (

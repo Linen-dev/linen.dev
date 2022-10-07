@@ -1,22 +1,18 @@
-.container {
-  height: auto;
-}
-
-.container.has-chat {
+.container.is-empty.has-chat {
   min-height: calc(100vh - 64px - 192px);
 }
 
 .has-chat .content {
   display: flex;
   flex: 1 1 auto;
-  height: 100%;
   width: 100%;
   align-items: flex-end;
 }
 
-.content.empty {
+.content.is-empty {
   align-items: center;
   justify-content: center;
+  height: 100%;
 }
 
 .chat {
