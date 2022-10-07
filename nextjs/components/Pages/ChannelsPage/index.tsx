@@ -58,10 +58,5 @@ export type ChannelViewCursorProps = {
 };
 
 export default function ChannelView(props: ChannelViewProps) {
-  return (
-    <ChannelPage
-      {...props}
-      key={props.settings.communityName + props.channelName}
-    />
-  );
+  return <ChannelPage {...props} />;
 }

@@ -15,7 +15,7 @@ export default function ChannelName({ name, count, active }: Props) {
         [styles.active]: active,
       })}
     >
-      {!active && count > 0 ? `[${count}] #` : '#'} {name}
+      {count > 0 ? `[${count}] #` : '#'} {name}
     </div>
   );
 }

@@ -59,6 +59,7 @@ export default function ChannelPage({
         isBot={isBot}
         permissions={permissions}
         token={token}
+        key={settings.communityName + channelName}
       />
     </PageLayout>
   );
