@@ -10,6 +10,7 @@ import {
   AccountType,
 } from '@prisma/client';
 import { withSentry } from '@sentry/nextjs';
+import PermissionsService from 'services/permissions';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   const query = req.query.query as string;
@@ -22,8 +23,21 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     select: { anonymizeUsers: true, type: true },
   });
 
-  if (!account || account.type === AccountType.PRIVATE) {
-    return res.status(401).end();
+  if (!account) {
+    return res.status(404).end();
+  }
+  if (account.type === AccountType.PRIVATE) {
+    const permissions = await PermissionsService.get({
+      request: req,
+      response: res,
+      params: {
+        communityId: accountId,
+      },
+    });
+
+    if (!permissions.access) {
+      return res.status(403).end();
+    }
   }
 
   // Search messages
