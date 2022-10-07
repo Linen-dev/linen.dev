@@ -1,5 +1,5 @@
 export default function transform(node: any, count = 1) {
-  node.uuid = `${node.source}-${count}`;
+  node.cid = `${node.source}-${count}`;
   if (node.type === 'code') {
     if (node.value.includes('\n')) {
       node.type = 'pre';

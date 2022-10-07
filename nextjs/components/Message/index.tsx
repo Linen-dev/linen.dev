@@ -65,30 +65,30 @@ function Message({ text, format, mentions, reactions, attachments }: Props) {
         return (node as RootNode).children.map(render);
       case 'bold':
         return (
-          <strong key={node.uuid}>
+          <strong key={node.cid}>
             {(node as BoldNode).children.map(render)}
           </strong>
         );
       case 'italic':
         return (
-          <em className="italic" key={node.uuid}>
+          <em className="italic" key={node.cid}>
             {(node as ItalicNode).children.map(render)}
           </em>
         );
       case 'strike':
         return (
-          <del key={node.uuid}>{(node as StrikeNode).children.map(render)}</del>
+          <del key={node.cid}>{(node as StrikeNode).children.map(render)}</del>
         );
       case 'quote':
         return (
-          <Quote key={node.uuid}>
+          <Quote key={node.cid}>
             {(node as QuoteNode).children.map(render)}
           </Quote>
         );
       case 'text':
         return (
           <Text
-            key={node.uuid}
+            key={node.cid}
             format={format}
             value={(node as TextNode).value}
           />
@@ -97,7 +97,7 @@ function Message({ text, format, mentions, reactions, attachments }: Props) {
         return (
           <Mention
             tag="@"
-            key={node.uuid}
+            key={node.cid}
             value={(node as UserNode).id}
             mentions={mentions}
           />
@@ -106,23 +106,23 @@ function Message({ text, format, mentions, reactions, attachments }: Props) {
         return (
           <Mention
             tag="!"
-            key={node.uuid}
+            key={node.cid}
             value={(node as UserNode).id}
             mentions={mentions}
           />
         );
       case 'channel':
-        return <Channel key={node.uuid} value={(node as ChannelNode).value} />;
+        return <Channel key={node.cid} value={(node as ChannelNode).value} />;
       case 'code':
-        return <InlineCode key={node.uuid} value={(node as CodeNode).value} />;
+        return <InlineCode key={node.cid} value={(node as CodeNode).value} />;
       case 'pre':
-        return <BlockCode key={node.uuid} value={(node as PreNode).value} />;
+        return <BlockCode key={node.cid} value={(node as PreNode).value} />;
       case 'url':
-        return <Link key={node.uuid} value={(node as LinkNode).value} />;
+        return <Link key={node.cid} value={(node as LinkNode).value} />;
       case 'emoji':
-        return <Emoji key={node.uuid} text={(node as EmojiNode).source} />;
+        return <Emoji key={node.cid} text={(node as EmojiNode).source} />;
     }
-    return <React.Fragment key={node.uuid}>{node.source}</React.Fragment>;
+    return <React.Fragment key={node.cid}>{node.source}</React.Fragment>;
   }
 
   return (
