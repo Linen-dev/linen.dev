@@ -120,10 +120,16 @@ export default function Feed({
           ) {
             return;
           }
-          setFeed(({ threads, ...rest }) => ({
-            ...rest,
-            threads: [thread, ...threads.filter((t) => t.id !== thread.id)],
-          }));
+          setFeed((feed) => {
+            if (page > 1) {
+              return feed;
+            }
+            const { threads, ...rest } = feed;
+            return {
+              ...rest,
+              threads: [thread, ...threads.filter((t) => t.id !== thread.id)],
+            };
+          });
         });
     },
     [currentUser.id, scope]
