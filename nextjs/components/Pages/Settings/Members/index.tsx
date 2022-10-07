@@ -78,7 +78,13 @@ function MemberStatus({ status }: { status: string }) {
   );
 }
 
-function TableMembers({ users }: { users: MembersType[] }) {
+function TableMembers({
+  users,
+  communityId,
+}: {
+  users: MembersType[];
+  communityId: string;
+}) {
   function filterByEmail(e: any) {
     const filter = e.target.value.toLowerCase();
     const ul = document.getElementById('memberList');
@@ -113,13 +119,13 @@ function TableMembers({ users }: { users: MembersType[] }) {
         </div>
       </div>
       <ul role="list" id="memberList" className="flex flex-col gap-0">
-        {users?.map((user) => RowMember(user))}
+        {users?.map((user) => RowMember(user, communityId))}
       </ul>
     </>
   );
 }
 
-function RowMember(user: MembersType): JSX.Element {
+function RowMember(user: MembersType, communityId: string): JSX.Element {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState(user);
 
@@ -128,14 +134,14 @@ function RowMember(user: MembersType): JSX.Element {
     setLoading(true);
     try {
       const role = e.target.value;
-      const userId = e.target.id;
-      let url = '/api/invites';
+      const id = e.target.id;
+      let url = '/api/users/invites';
       if (status === 'ACCEPTED') {
         url = '/api/users';
       }
       const response = await fetch(url, {
         method: 'PUT',
-        body: JSON.stringify({ userId, role }),
+        body: JSON.stringify({ userId: id, inviteId: id, role, communityId }),
       });
       if (!response.ok) {
         throw response;
@@ -198,9 +204,9 @@ export default function Members({ account, users }: MembersPageProps) {
       const form = event.target;
       const email = form.email.value;
       const role = form.role.value;
-      const response = await fetch('/api/invites', {
+      const response = await fetch('/api/users/invites', {
         method: 'POST',
-        body: JSON.stringify({ email, accountId: account?.id, role }),
+        body: JSON.stringify({ email, communityId: account?.id, role }),
       });
       if (!response.ok) {
         throw response;
@@ -218,7 +224,7 @@ export default function Members({ account, users }: MembersPageProps) {
   return (
     <DashboardLayout header="Members" account={account!}>
       <InviteMember onSubmit={createInvite} loading={loading} />
-      <TableMembers users={users} />
+      <TableMembers users={users} communityId={account.id} />
     </DashboardLayout>
   );
 }
