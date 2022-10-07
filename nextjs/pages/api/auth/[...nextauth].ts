@@ -90,7 +90,12 @@ export const authOptions = {
       return session;
     },
   },
-  session: { strategy: 'jwt' },
+  session: {
+    strategy: 'jwt',
+  },
+  jwt: {
+    maxAge: 5 * 60,
+  },
   secret: process.env.NEXTAUTH_SECRET as string,
 } as NextAuthOptions;
 
