@@ -16,6 +16,7 @@ import debounce from 'utilities/debounce';
 import { useUsersContext } from 'contexts/Users';
 import useWebsockets from 'hooks/websockets';
 import { SerializedMessage } from 'serializers/message';
+import ChatLayout from 'components/layout/shared/ChatLayout';
 import SidebarLayout from 'components/layout/shared/SidebarLayout';
 import useThreadWebsockets from 'hooks/websockets/thread';
 import Empty from './Empty';
@@ -508,38 +509,39 @@ export function Channel({
             ) : (
               <div />
             )}
-            <div
-              className={classNames(styles.content, {
-                [styles['is-empty']]: threads.length === 0,
-              })}
-            >
-              {threads.length === 0 ? (
-                <Empty />
-              ) : (
-                <ul className="divide-y w-full">
-                  <Feed
-                    threads={threads}
-                    isSubDomainRouting={isSubDomainRouting}
-                    settings={settings}
-                    isBot={isBot}
-                    onClick={selectThread}
-                  />
-                </ul>
-              )}
-            </div>
-            {permissions.chat && (
-              <div className={styles.chat}>
-                <MessageForm
-                  onSend={(message: string) => {
-                    return sendMessage({
-                      message,
-                      channelId: currentChannel.id,
-                    });
-                  }}
-                  fetchMentions={fetchMentions}
-                />
-              </div>
-            )}
+            <ChatLayout
+              content={
+                threads.length === 0 ? (
+                  <Empty />
+                ) : (
+                  <ul className="divide-y w-full">
+                    <Feed
+                      threads={threads}
+                      isSubDomainRouting={isSubDomainRouting}
+                      settings={settings}
+                      isBot={isBot}
+                      onClick={selectThread}
+                    />
+                  </ul>
+                )
+              }
+              footer={
+                permissions.chat && (
+                  <div className={styles.chat}>
+                    <MessageForm
+                      onSend={(message: string) => {
+                        return sendMessage({
+                          message,
+                          channelId: currentChannel.id,
+                        });
+                      }}
+                      fetchMentions={fetchMentions}
+                    />
+                  </div>
+                )
+              }
+              direction={permissions.chat ? 'end' : 'start'}
+            />
             {cursor.next && !error?.next ? (
               <div className="m-3" ref={infiniteBottomRef}>
                 <Spinner />

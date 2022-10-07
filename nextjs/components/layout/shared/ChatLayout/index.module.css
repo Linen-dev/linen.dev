@@ -1,0 +1,32 @@
+.table {
+  display: table;
+  height: 100%;
+  width: 100%;
+}
+
+.main {
+  display: table-row;
+  height: 100%;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.footer {
+  background-color: white;
+  bottom: 0;
+  display: table-row;
+  position: sticky;
+  width: 100%;
+}
+
+.start .content {
+  justify-content: flex-start;
+}
+
+.end .content {
+  justify-content: flex-end;
+}

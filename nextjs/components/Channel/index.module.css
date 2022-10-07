@@ -1,26 +1,8 @@
-.container.is-empty.has-chat {
-  min-height: calc(100vh - 64px - 192px);
-}
-
-.has-chat .content {
-  display: flex;
-  flex: 1 1 auto;
-  width: 100%;
-  align-items: flex-end;
-}
-
-.content.is-empty {
-  align-items: center;
-  justify-content: center;
+.container {
   height: 100%;
 }
 
 .chat {
-  background: white;
   border-top: 1px solid #e5e7eb;
-  bottom: 0;
-  flex: 0 1 auto;
   padding: 1rem;
-  position: sticky;
-  width: 100%;
 }
