@@ -162,6 +162,13 @@ export const findUserAndAccountByIdAndEmail = async (
   return user ? user : null;
 };
 
+export const findAuthByEmail = async (email: string) => {
+  return await prisma.auths.findUnique({
+    where: { email },
+    include: { users: true, account: true },
+  });
+};
+
 export const findAccountAndUserByEmail = async (email?: string | null) => {
   if (!email) {
     return null;

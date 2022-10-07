@@ -1,4 +1,10 @@
-import { AccountType, Roles, type accounts, type users } from '@prisma/client';
+import {
+  AccountType,
+  auths,
+  Roles,
+  type accounts,
+  type users,
+} from '@prisma/client';
 import {
   GetServerSidePropsContext,
   NextApiRequest,
@@ -8,7 +14,7 @@ import Session from '../session';
 import {
   type AccountWithFeatureFlag,
   findAccountByPath,
-  findUserAndAccountByIdAndEmail,
+  findAuthByEmail,
 } from 'lib/models';
 import prisma from 'client';
 import { Permissions } from 'types/shared';
@@ -24,9 +30,12 @@ interface Props {
 
 export default class PermissionsService {
   static async get({ request, response, params }: Props): Promise<Permissions> {
-    const community = await findCommunity(params);
-    const user = await findAccount(request, response, community);
-    const account = user?.account || null;
+    const [community, auth] = await Promise.all([
+      findCommunity(params),
+      findAuth(request, response),
+    ]);
+    const user = findUser(auth, community) || null;
+    const account = auth?.account || null;
     const access = PermissionsService._access(community, account);
     const chat = PermissionsService._chat(community, account);
     const feed = PermissionsService._feed(community, account);
@@ -42,6 +51,11 @@ export default class PermissionsService {
       chat,
       manage,
       channel_create,
+      user: {
+        id: user?.id || null,
+        accountId: account?.id || null,
+        authId: auth?.id || null,
+      },
     };
   }
 
@@ -56,11 +70,7 @@ export default class PermissionsService {
   static _manage(
     community: AccountWithFeatureFlag | null,
     account: accounts | null,
-    user:
-      | (users & {
-          account: accounts;
-        })
-      | null
+    user: users | null
   ): boolean {
     if (!community) {
       return false;
@@ -109,11 +119,7 @@ export default class PermissionsService {
   static _channel_create(
     community: AccountWithFeatureFlag | null,
     account: accounts | null,
-    user:
-      | (users & {
-          account: accounts;
-        })
-      | null
+    user: users | null
   ): boolean {
     if (!community) {
       return false;
@@ -149,6 +155,50 @@ export default class PermissionsService {
     }
     return false;
   }
+
+  static async getAccessChannel({
+    request,
+    response,
+    channelId,
+  }: Omit<Props, 'params'> & { channelId: string }) {
+    const channel = await prisma.channels.findUnique({
+      include: { account: true },
+      where: { id: channelId },
+    });
+    const permissions = await PermissionsService.get({
+      request,
+      response,
+      params: {
+        communityId: channel?.account?.id,
+      },
+    });
+    return {
+      ...permissions,
+      can_access_channel: !!channel,
+    };
+  }
+
+  static async getAccessThread({
+    request,
+    response,
+    threadId,
+  }: Omit<Props, 'params'> & { threadId: string }) {
+    const thread = await prisma.threads.findUnique({
+      include: { channel: { include: { account: true } } },
+      where: { id: threadId },
+    });
+    const permissions = await PermissionsService.get({
+      request,
+      response,
+      params: {
+        communityId: thread?.channel?.account?.id!,
+      },
+    });
+    return {
+      ...permissions,
+      can_access_thread: !!thread,
+    };
+  }
 }
 
 async function findCommunity(params: any) {
@@ -168,17 +218,26 @@ async function findCommunity(params: any) {
   return null;
 }
 
-async function findAccount(
-  request: Request,
-  response: Response,
+function findUser(
+  auth:
+    | (auths & {
+        users: users[];
+        account: accounts | null;
+      })
+    | null,
+
   community: AccountWithFeatureFlag | null
 ) {
   if (!community) {
     return null;
   }
+  return auth?.users.find((u) => u.accountsId === community.id);
+}
+
+async function findAuth(request: Request, response: Response) {
   const session = await Session.find(request, response);
   if (!session || !session.user || !session.user.email) {
     return null;
   }
-  return findUserAndAccountByIdAndEmail(community.id, session.user.email);
+  return findAuthByEmail(session.user.email);
 }
