@@ -495,7 +495,11 @@ export function Channel({
     <>
       <SidebarLayout
         left={
-          <div className={styles.container}>
+          <div
+            className={classNames(styles.container, {
+              [styles['has-chat']]: permissions.chat,
+            })}
+          >
             {cursor?.prev && !error?.prev ? (
               <div className="sm:pt-6 m-3" ref={infiniteRef}>
                 <Spinner />

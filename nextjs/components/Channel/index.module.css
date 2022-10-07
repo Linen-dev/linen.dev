@@ -1,5 +1,9 @@
 .container {
-  height: calc(100vh - 64px - 192px);
+  min-height: calc(100vh - 64px);
+}
+
+.container.has-chat {
+  min-height: calc(100vh - 64px - 192px);
 }
 
 .content {
