@@ -1,4 +1,4 @@
-import DiscordIcon from '../icons/DiscordIcon';
+import DiscordIcon from '../../icons/DiscordIcon';
 
 export default function JoinDiscord({ inviteUrl }: { inviteUrl?: string }) {
   return (

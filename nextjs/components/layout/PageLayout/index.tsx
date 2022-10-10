@@ -7,8 +7,7 @@ import type { ChannelSerialized } from 'lib/channel';
 import { addHttpsToUrl } from 'utilities/url';
 import { pickTextColorBasedOnBgColor } from 'utilities/util';
 import GoogleAnalytics from '../GoogleAnalytics';
-import JoinDiscord from 'components/JoinDiscord';
-import JoinSlack from 'components/JoinSlack';
+import JoinButton from 'components/JoinButton';
 import styles from './index.module.css';
 import classNames from 'classnames';
 import { Permissions } from 'types/shared';
@@ -114,11 +113,10 @@ function PageLayout({
               >
                 Docs
               </a>
-              {settings.communityType === 'discord' ? (
-                <JoinDiscord inviteUrl={communityInviteUrl || communityUrl} />
-              ) : (
-                <JoinSlack inviteUrl={communityInviteUrl || communityUrl} />
-              )}
+              <JoinButton
+                inviteUrl={communityInviteUrl || communityUrl}
+                communityType={settings.communityType}
+              />
             </div>
           </div>
         </div>

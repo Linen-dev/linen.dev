@@ -1,0 +1,17 @@
+.button {
+  align-items: center;
+  background: white;
+  border: none;
+  display: flex;
+  white-space: nowrap;
+  padding-left: 0.5rem;
+  padding-right: 1rem;
+}
+
+.button:hover {
+  text-decoration: underline;
+}
+
+.icon {
+  transform: scale(0.5);
+}
