@@ -3,12 +3,19 @@ import { createChatSyncJob } from 'queue/jobs';
 import { push, pushChannel, pushCommunity } from 'services/push';
 import { eventNewMentions } from './eventNewMentions';
 
+interface MentionNode {
+  type: string;
+  id: string;
+  source: string;
+}
+
 type NewThreadEvent = {
   channelId: any;
   threadId: any;
   messageId: any;
   imitationId: string;
   mentions: mentions[];
+  mentionNodes: MentionNode[];
   communityId: string;
 };
 
@@ -18,6 +25,7 @@ export async function eventNewThread({
   threadId,
   imitationId,
   mentions = [],
+  mentionNodes = [],
   communityId,
 }: NewThreadEvent) {
   const event = {
@@ -34,7 +42,7 @@ export async function eventNewThread({
     push(event),
     pushChannel(event),
     pushCommunity({ ...event, communityId }),
-    eventNewMentions({ mentions, channelId, threadId }),
+    eventNewMentions({ mentions, mentionNodes, channelId, threadId }),
   ];
 
   await Promise.allSettled(promises);

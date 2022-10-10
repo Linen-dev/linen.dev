@@ -199,6 +199,9 @@ function MessageForm({
             // in that case we don't need to do any postprocessing
 
             setMessage((message) => {
+              if (!user) {
+                return message;
+              }
               const start = message.slice(0, position);
               const index = getMentionIndex(start);
               const difference = position - index;
