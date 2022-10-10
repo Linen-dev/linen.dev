@@ -8,6 +8,7 @@ import Link from 'components/Link/InternalLink';
 import { NewChannelModal } from 'components/Channel';
 import useWebsockets from 'hooks/websockets';
 import { SerializedUser } from 'serializers/user';
+import { toast } from 'components/Toast';
 
 interface Props {
   channels: ChannelSerialized[];
@@ -33,6 +34,14 @@ export default function NavBar({
     permissions,
     token,
     onNewMessage(payload) {
+      if (payload.mention_type === 'signal') {
+        const channel = channels.find(
+          (channel) => channel.id === payload.channel_id
+        );
+        if (channel) {
+          toast.info(`You were mentioned in #${channel.channelName}`);
+        }
+      }
       setHighlights((highlights) => {
         return [...highlights, payload.channel_id];
       });

@@ -82,8 +82,8 @@ export async function create(
   const userId = user.id;
 
   const tree = parse(body);
-  const mentions = findMentions(tree);
-  const userIds = unique(mentions.map(({ id }) => id));
+  const mentionNodes = findMentions(tree);
+  const userIds = unique(mentionNodes.map(({ id }) => id));
   const messages = {
     create: {
       body,
@@ -91,7 +91,7 @@ export async function create(
       sentAt,
       author: { connect: { id: userId } },
       mentions: {
-        create: userIds,
+        create: userIds.map((id: string) => ({ usersId: id })),
       },
       messageFormat: MessageFormat.LINEN,
     } as Prisma.messagesCreateInput,
@@ -129,6 +129,7 @@ export async function create(
     threadId: thread.id,
     imitationId,
     mentions: thread.messages[0].mentions,
+    mentionNodes,
   });
 
   return response.status(200).json({

@@ -23,7 +23,7 @@ export function Row({
   children,
 }: Props) {
   return (
-    <div id={message.id} className={classNames(styles.row)} key={message.id}>
+    <div id={message.id} className={classNames(styles.row)}>
       <div className={styles.avatar}>
         {!isPreviousMessageFromSameUser && (
           <Avatar

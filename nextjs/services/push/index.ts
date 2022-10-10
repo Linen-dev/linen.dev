@@ -19,6 +19,7 @@ export type PushMessageType = {
   imitation_id: string;
   is_thread: boolean;
   is_reply: boolean;
+  mention_type?: string;
 };
 export type CommunityPushType = PushMessageType & {
   community_id: string;
@@ -66,16 +67,19 @@ export const pushUserMention = ({
   userId,
   threadId,
   channelId,
+  mentionType,
 }: {
   userId: string;
   threadId: string;
   channelId: string;
+  mentionType: string;
 }) => {
   return request.post(`${pushURL}/api/user`).send({
     user_id: userId,
     thread_id: threadId,
     channel_id: channelId,
     is_mention: true,
+    mention_type: mentionType,
     token,
   });
 };

@@ -126,6 +126,7 @@ async function addMessage(
       threadId,
       imitationId: threadId,
       mentions: message.mentions,
+      mentionNodes: [],
     });
   } else if (!!event.thread_ts && event.ts !== event.thread_ts) {
     // is a reply
@@ -136,6 +137,7 @@ async function addMessage(
       threadId,
       imitationId: messageId,
       mentions: message.mentions,
+      mentionNodes: [],
     });
   }
 
