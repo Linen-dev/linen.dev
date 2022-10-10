@@ -234,7 +234,7 @@ function MessageForm({
               return event.preventDefault();
             }
             if (event.key === 'Enter') {
-              if (event.ctrlKey) {
+              if (event.ctrlKey || event.shiftKey) {
                 const position = getCaretPosition(ref);
                 setMessage((message) => {
                   return [

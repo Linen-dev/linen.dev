@@ -34,7 +34,7 @@ export default function Suggestions({ className, users, onSelect }: Props) {
         });
       }
       if (event.key === 'Enter') {
-        if (event.ctrlKey) {
+        if (event.ctrlKey || event.shiftKey) {
           return;
         }
         event.stopPropagation();
