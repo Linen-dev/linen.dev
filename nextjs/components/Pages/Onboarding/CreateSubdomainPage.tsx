@@ -37,7 +37,7 @@ export function CreateSubdomainPage() {
         throw response;
       } else {
         window.sessionStorage.setItem('pathDomain', slackDomain);
-        window.location.href = '/o/create-channels';
+        window.location.href = '/onboarding/create-channels';
       }
     } catch (error: any) {
       console.log(error);

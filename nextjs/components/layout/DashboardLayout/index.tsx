@@ -31,7 +31,7 @@ export default function DashboardLayout({ children, header, account }: Props) {
             {!!isNewOnboardingButtonEnabled && (
               <div className="space-y-1">
                 <SidebarLink
-                  href="/o/create-community"
+                  href="/onboarding/create-community"
                   icon={
                     <FontAwesomeIcon icon={faPlus} className={iconClassName} />
                   }
