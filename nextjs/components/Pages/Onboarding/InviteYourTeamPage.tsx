@@ -26,7 +26,7 @@ export function InviteYourTeamPage() {
       const email1 = form.email1.value;
       const email2 = form.email2.value;
       const email3 = form.email3.value;
-      const channelId = window.sessionStorage.getItem('channelId');
+      const accountId = window.sessionStorage.getItem('accountId');
 
       const response = await fetch('/api/onboarding/invite-team', {
         method: 'POST',
@@ -34,7 +34,7 @@ export function InviteYourTeamPage() {
           email1,
           email2,
           email3,
-          channelId,
+          accountId,
         }),
       });
       if (!response.ok) {
