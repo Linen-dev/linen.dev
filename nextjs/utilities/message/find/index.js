@@ -20,6 +20,10 @@ function findByType(tree, selector) {
 }
 
 export function findUserIds(tree) {
+  return unique(findMentions(tree).map((node) => node.id));
+}
+
+export function findMentions(tree) {
   const nodes = findByType(tree, ['user', 'signal']);
-  return unique(nodes.map((node) => node.id));
+  return nodes.map((node) => node);
 }
