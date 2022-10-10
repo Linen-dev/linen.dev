@@ -1,14 +1,14 @@
-import { findMessagesFromChannel } from 'lib/models';
 import Session from 'services/session';
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import { withSentry } from '@sentry/nextjs';
 import { prisma } from 'client';
 import serializeMessage from 'serializers/message';
 import parse from 'utilities/message/parsers/linen';
-import { findUserIds } from 'utilities/message/find';
+import { findMentions } from 'utilities/message/find';
 import { eventNewMessage } from 'services/events';
 import { MessageFormat, Prisma } from '@prisma/client';
 import PermissionsService from 'services/permissions';
+import unique from 'lodash.uniq';
 
 async function handler(request: NextApiRequest, response: NextApiResponse) {
   if (request.method === 'POST') {
@@ -87,7 +87,8 @@ export async function create(
   const userId = user.id;
 
   const tree = parse(body);
-  const userIds = findUserIds(tree);
+  const mentions = findMentions(tree);
+  const userIds = unique(mentions.map(({ id }) => id));
   const messages = {
     create: {
       body,
@@ -95,7 +96,7 @@ export async function create(
       sentAt,
       author: { connect: { id: userId } },
       mentions: {
-        create: userIds.map((id: string) => ({ usersId: id })),
+        create: userIds,
       },
       messageFormat: MessageFormat.LINEN,
     } as Prisma.messagesCreateInput,
