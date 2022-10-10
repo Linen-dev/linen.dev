@@ -1,4 +1,4 @@
-import SlackIcon from '../icons/SlackIcon';
+import SlackIcon from '../../icons/SlackIcon';
 
 export default function JoinSlack({ inviteUrl }: { inviteUrl?: string }) {
   return (
