@@ -27,6 +27,8 @@ export default function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl; // get pathname of request (e.g. /blog-slug)
   const hostname = request.headers.get('host'); // get hostname of request (e.g. demo.vercel.pub)
 
+  process.env.NODE_ENV === 'development' && console.log(hostname, pathname);
+
   if (!isSubdomainbasedRouting(hostname || '')) {
     return;
   }

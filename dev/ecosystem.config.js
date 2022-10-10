@@ -14,17 +14,17 @@ module.exports = {
     },
     {
       name: 'queue-chat',
-      script: 'npm run queue:worker:chat-sync',
+      script: 'npx tsx watch queue/workers/chat-sync.ts',
       cwd: '../nextjs',
     },
     {
       name: 'queue-sync',
-      script: 'npm run queue:worker:sync',
+      script: 'npx tsx watch queue/workers/sync.ts',
       cwd: '../nextjs',
     },
     {
       name: 'queue-webhook',
-      script: 'npm run queue:worker:webhook',
+      script: 'npx tsx watch queue/workers/webhook.ts',
       cwd: '../nextjs',
     },
     {
