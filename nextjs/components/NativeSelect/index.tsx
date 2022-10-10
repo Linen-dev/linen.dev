@@ -59,8 +59,8 @@ function NativeSelect({
           disabled={disabled}
           onChange={onChange}
         >
-          {options.map((option: Option) => (
-            <option key={option.value} value={option.value}>
+          {options.map((option: Option, index: number) => (
+            <option key={`${option.value}-${index}`} value={option.value}>
               {option.label}
             </option>
           ))}

@@ -195,8 +195,8 @@ export default function Feed({
   );
 
   const updateThread = ({
-    state: newState,
-    title: newTitle,
+    state,
+    title,
   }: {
     state?: ThreadState;
     title?: string;
@@ -204,18 +204,23 @@ export default function Feed({
     if (!thread) {
       return;
     }
-    const options = {
-      state: newState || thread.state,
-      title: newTitle || thread.title,
-    };
+    const options: { state?: ThreadState; title?: string } = {};
+
+    if (state) {
+      options.state = state;
+    }
+
+    if (title) {
+      options.title = title;
+    }
+
     setThread((thread) => {
       if (!thread) {
         return;
       }
       return {
         ...thread,
-        state: options.state,
-        title: options.title,
+        ...options,
       };
     });
 
@@ -226,8 +231,7 @@ export default function Feed({
           if (feedThread.id === thread.id) {
             return {
               ...feedThread,
-              state: options.state,
-              title: options.title,
+              ...options,
             };
           }
           return feedThread;
@@ -241,6 +245,9 @@ export default function Feed({
     })
       .then((response) => {
         if (response.ok) {
+          if (options.state) {
+            setKey((key) => key + 1);
+          }
           return;
         }
         throw new Error('Failed to close the thread.');

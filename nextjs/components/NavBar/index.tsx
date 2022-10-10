@@ -55,14 +55,14 @@ export default function NavBar({
         {permissions.channel_create && <NewChannelModal />}
       </div>
       <div className="block overflow-hidden hover:overflow-auto h-[calc(100vh-240px)]">
-        {sortedChannels.map((channel: ChannelSerialized) => (
+        {sortedChannels.map((channel: ChannelSerialized, index: number) => (
           <Link
             onClick={() => {
               setHighlights((highlights) => {
                 return highlights.filter((id) => id !== channel.id);
               });
             }}
-            key={channel.channelName}
+            key={`${channel.channelName}-${index}`}
             href={`/c/${channel.channelName}`}
           >
             <div className="text-gray-800">
