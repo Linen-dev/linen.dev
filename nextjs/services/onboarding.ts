@@ -1,29 +1,17 @@
 import prisma from '../client';
 import { v4 } from 'uuid';
-import { Roles } from '@prisma/client';
+import { AccountType, Roles } from '@prisma/client';
 import { createInvitation } from './invites';
 
-export async function OnboardingCreateChannel(sessionEmail: string, body: any) {
-  const { channelName, accountId } = JSON.parse(body);
-
-  if (!accountId) {
-    throw 'missing account id';
-  }
-
-  const auth = await prisma.auths.findFirst({
-    where: {
-      email: sessionEmail,
-      users: { some: { accountsId: accountId } },
-    },
-    include: { account: true, users: true },
-  });
-
-  if (auth?.account?.id !== accountId) {
-    throw 'unauthorized';
-  }
-
-  const user = auth?.users.find((u) => u.accountsId === accountId);
-
+export async function OnboardingCreateChannel({
+  channelName,
+  accountId,
+  userId,
+}: {
+  channelName: string;
+  accountId: string;
+  userId: string;
+}) {
   return await prisma.channels.create({
     data: {
       channelName,
@@ -32,33 +20,35 @@ export async function OnboardingCreateChannel(sessionEmail: string, body: any) {
         connect: { id: accountId },
       },
       memberships: {
-        create: { user: { connect: { id: user?.id } } },
+        create: { user: { connect: { id: userId } } },
       },
     },
   });
 }
 
-export async function OnboardingCreateCommunity(
-  sessionEmail: string,
-  body: any
-) {
-  const { name } = JSON.parse(body);
+export async function OnboardingCreateCommunity({
+  authId,
+  name,
+}: {
+  authId: string;
+  name: string;
+}) {
   return await prisma.accounts.create({
     data: {
       name,
       auths: {
-        connect: { email: sessionEmail },
+        connect: { id: authId },
       },
-      // channels: {
-      //   create: {
-      //     channelName: 'general',
-      //     externalChannelId: v4(),
-      //     default: true,
-      //   },
-      // },
+      channels: {
+        create: {
+          channelName: 'default',
+          externalChannelId: v4(),
+          default: true,
+        },
+      },
       users: {
         create: {
-          auth: { connect: { email: sessionEmail } },
+          auth: { connect: { id: authId } },
           isAdmin: true,
           isBot: false,
           role: Roles.OWNER,
@@ -75,35 +65,32 @@ export class PathDomainError extends Error {
   }
 }
 
-export async function OnboardingUpdateAccount(sessionEmail: string, body: any) {
-  const { slackDomain, communityType, redirectDomain, premium, accountId } =
-    JSON.parse(body);
-
-  if (!accountId) throw 'missing account id';
-
-  const auth = await prisma.auths.findFirst({
-    where: { email: sessionEmail },
-    include: { account: true },
-  });
-
-  if (auth?.account?.id !== accountId) {
-    throw 'unauthorized';
-  }
-
+export async function OnboardingUpdateAccount({
+  slackDomain,
+  communityType,
+  redirectDomain,
+  premium,
+  accountId,
+}: {
+  slackDomain: string;
+  communityType: AccountType;
+  redirectDomain: string;
+  premium: boolean;
+  accountId: string;
+}) {
   try {
     return await prisma.accounts.update({
       data: {
         premium,
         type: communityType,
         slackDomain,
-        ...(!!redirectDomain && { redirectDomain }),
+        ...(!!premium && !!redirectDomain && { redirectDomain }),
       },
       where: {
         id: accountId,
       },
     });
   } catch (error: any) {
-    // console.dir(Object.entries(error), { depth: Infinity });
     if (
       error.code === 'P2002' &&
       error.meta.target.length &&
@@ -117,44 +104,26 @@ export async function OnboardingUpdateAccount(sessionEmail: string, body: any) {
   }
 }
 
-export async function OnboardingInviteTeam(
-  sessionEmail: string,
-  body: any,
-  host: string
-) {
-  const { channelId, email1, email2, email3 } = JSON.parse(body);
-
-  if (!email1 && !email2 && !email3) return;
-
-  if (!channelId) {
-    throw 'missing channel id';
-  }
-
-  const channel = await prisma.channels.findFirst({
-    where: { id: channelId },
-    include: { account: true },
-  });
-
-  if (!channel || !channel.account) throw 'channel not found';
-
-  const auth = await prisma.auths.findFirst({
-    where: {
-      email: sessionEmail,
-    },
-    include: { account: true },
-  });
-
-  if (!auth || !auth.account) throw 'auth not found';
-
-  if (auth.account.id !== channel.account.id) {
-    throw 'unauthorized';
-  }
-
+export async function OnboardingInviteTeam({
+  accountId,
+  createdByUserId,
+  host,
+  email1,
+  email2,
+  email3,
+}: {
+  accountId: string;
+  createdByUserId: string;
+  host: string;
+  email1?: string;
+  email2?: string;
+  email3?: string;
+}) {
   for (const email of [email1, email2, email3].filter(Boolean)) {
     await createInvitation({
-      requesterEmail: sessionEmail,
-      email,
-      accountId: channel.account.id,
+      createdByUserId,
+      email: email!,
+      accountId,
       host,
       role: Roles.ADMIN,
     });

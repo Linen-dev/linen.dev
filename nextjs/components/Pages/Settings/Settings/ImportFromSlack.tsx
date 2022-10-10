@@ -64,7 +64,7 @@ export default function ImportFromSlack({
 
   return (
     <>
-      {communityType === 'slack' && (
+      {communityType !== 'discord' && (
         <div className="bg-white">
           <div className="px-4 py-5 sm:p-6">
             <div className="flex">
