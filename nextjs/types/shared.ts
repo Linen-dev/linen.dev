@@ -18,6 +18,7 @@ export interface Permissions {
     id: string | null;
     accountId: string | null;
     authId: string | null;
+    email: string | null;
   } | null;
 }
 

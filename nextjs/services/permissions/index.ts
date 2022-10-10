@@ -35,7 +35,7 @@ export default class PermissionsService {
       findAuth(request, response),
     ]);
     const user = findUser(auth, community) || null;
-    const account = auth?.account || null;
+    const account = user?.account || null;
     const access = PermissionsService._access(community, account);
     const chat = PermissionsService._chat(community, account);
     const feed = PermissionsService._feed(community, account);
@@ -55,6 +55,7 @@ export default class PermissionsService {
         id: user?.id || null,
         accountId: account?.id || null,
         authId: auth?.id || null,
+        email: auth?.email || null,
       },
     };
   }
@@ -221,11 +222,11 @@ async function findCommunity(params: any) {
 function findUser(
   auth:
     | (auths & {
-        users: users[];
-        account: accounts | null;
+        users: (users & {
+          account: accounts;
+        })[];
       })
     | null,
-
   community: AccountWithFeatureFlag | null
 ) {
   if (!community) {

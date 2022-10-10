@@ -60,7 +60,8 @@ export default function SignUp({ csrfToken }: SignUpProps) {
     password: string;
   }) {
     const csrfToken = await getCsrfToken();
-    return await fetch('/api/auth/callback/credentials?callbackUrl=/settings', {
+    const url = '/api/auth/callback/credentials?callbackUrl=/api/settings';
+    return await fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',

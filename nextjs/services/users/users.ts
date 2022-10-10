@@ -38,4 +38,18 @@ export default class UsersService {
       },
     });
   }
+  static async updateTenant({
+    authId,
+    accountId,
+  }: {
+    authId: string;
+    accountId: string;
+  }) {
+    await prisma.auths.update({
+      where: {
+        id: authId,
+      },
+      data: { accountId },
+    });
+  }
 }

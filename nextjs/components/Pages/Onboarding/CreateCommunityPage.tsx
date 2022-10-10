@@ -25,7 +25,7 @@ export function CreateCommunityPage() {
       } else {
         const account = await response.json();
         window.sessionStorage.setItem('accountId', account.id);
-        window.location.href = '/o/create-subdomain';
+        window.location.href = '/onboarding/create-subdomain';
       }
     } catch (error) {
       Sentry.captureException(error);

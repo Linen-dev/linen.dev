@@ -34,7 +34,7 @@ export function CreateChannelPage() {
         const channel = await response.json();
         window.sessionStorage.setItem('channelId', channel.id);
         window.sessionStorage.setItem('channelName', channelName);
-        window.location.href = '/o/invite-your-team';
+        window.location.href = '/onboarding/invite-your-team';
       }
     } catch (error) {
       Sentry.captureException(error);
