@@ -5,11 +5,14 @@ import Message from '../../Message';
 import { format } from 'timeago.js';
 import { SerializedMessage } from 'serializers/message';
 import CopyToClipboardIcon from 'components/Pages/ChannelsPage/CopyToClipboardIcon';
-import styles from './index.module.css';
+import { ThreadState } from '@prisma/client';
+import styles from './index.module.scss';
+import { GoCheck } from 'react-icons/go';
 
 interface Props {
   message: SerializedMessage;
   communityType: string;
+  state?: ThreadState;
   isPreviousMessageFromSameUser?: boolean;
   threadLink?: string;
   children?: React.ReactNode;
@@ -18,6 +21,7 @@ interface Props {
 export function Row({
   message,
   isPreviousMessageFromSameUser,
+  state,
   communityType,
   threadLink,
   children,
@@ -45,6 +49,11 @@ export function Row({
             <div className={styles.date}>
               {format(new Date(message.sentAt))}
             </div>
+            {state === ThreadState.CLOSE && (
+              <div className={styles.check}>
+                <GoCheck />
+              </div>
+            )}
           </div>
         )}
         <div className={styles.showOnHover}>

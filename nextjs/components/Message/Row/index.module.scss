@@ -1,3 +1,5 @@
+@import 'styles/colors.scss';
+
 .row {
   position: relative;
 }
@@ -26,12 +28,20 @@
   display: flex;
   flex-direction: row;
   padding-bottom: 0.25rem;
+  gap: 0.5rem;
 }
 
 .date {
   color: rgb(156, 163, 175);
-  margin-left: 0.5rem;
   font-size: 0.75rem;
+}
+
+.check {
+  background: white;
+  border-radius: 50%;
+  border: 2px solid $color-primary;
+  color: $color-primary;
+  font-size: 14px;
 }
 
 .threadLink {

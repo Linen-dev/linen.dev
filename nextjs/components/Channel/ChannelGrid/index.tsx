@@ -20,7 +20,7 @@ export default function ChannelGrid({
     <>
       {threads
         ?.filter((thread) => thread.messages.length > 0)
-        .map(({ messages, incrementId, slug }, index) => {
+        .map(({ messages, state, incrementId, slug }, index) => {
           return (
             <li
               key={`feed-${incrementId}-${index}`}
@@ -38,6 +38,7 @@ export default function ChannelGrid({
                     <ChannelRow
                       incrementId={incrementId}
                       messages={messages}
+                      state={state}
                       isSubDomainRouting={isSubDomainRouting}
                       settings={settings}
                       slug={slug}
@@ -49,6 +50,7 @@ export default function ChannelGrid({
                   <ChannelRow
                     incrementId={incrementId}
                     messages={messages}
+                    state={state}
                     isSubDomainRouting={isSubDomainRouting}
                     settings={settings}
                     slug={slug}
