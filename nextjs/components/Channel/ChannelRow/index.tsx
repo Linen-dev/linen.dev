@@ -1,8 +1,8 @@
-import Avatars from '../Avatars';
+import Avatars from '../../Avatars';
 import { users } from '@prisma/client';
-import { getThreadUrl } from '../Pages/ChannelsPage/utilities/url';
-import { SerializedMessage } from '../../serializers/message';
-import CopyToClipboardIcon from '../Pages/ChannelsPage/CopyToClipboardIcon';
+import { getThreadUrl } from '../../Pages/ChannelsPage/utilities/url';
+import { SerializedMessage } from '../../../serializers/message';
+import CopyToClipboardIcon from '../../Pages/ChannelsPage/CopyToClipboardIcon';
 import type { Settings } from 'serializers/account/settings';
 import Row from 'components/Message/Row';
 
@@ -16,7 +16,7 @@ export const uniqueUsers = (users: users[]): users[] => {
   return Array.from(userMap.values());
 };
 
-export function MessageCard({
+export default function ThreadRow({
   incrementId,
   messages,
   isSubDomainRouting,

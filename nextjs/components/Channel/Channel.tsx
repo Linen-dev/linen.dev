@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import useInfiniteScroll from 'react-infinite-scroll-hook';
 import Spinner from 'components/Spinner';
 import { Thread } from 'components/Thread';
-import { Feed } from 'components/Feed';
+import ChannelGrid from 'components/Channel/ChannelGrid';
 import { SerializedThread } from 'serializers/thread';
 import { ChannelViewProps } from 'components/Pages/ChannelsPage';
 import { get } from 'utilities/http';
@@ -515,7 +515,7 @@ export function Channel({
                   <Empty />
                 ) : (
                   <ul className="divide-y w-full">
-                    <Feed
+                    <ChannelGrid
                       threads={threads}
                       isSubDomainRouting={isSubDomainRouting}
                       settings={settings}
