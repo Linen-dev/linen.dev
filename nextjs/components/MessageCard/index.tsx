@@ -1,1 +1,0 @@
-export { MessageCard } from './MessageCard';

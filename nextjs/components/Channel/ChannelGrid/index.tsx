@@ -1,10 +1,9 @@
-import { users } from '@prisma/client';
-import CustomLink from '../Link/CustomLink';
-import { SerializedThread } from '../../serializers/thread';
-import { MessageCard } from '../MessageCard';
+import CustomLink from '../../Link/CustomLink';
+import { SerializedThread } from '../../../serializers/thread';
+import ChannelRow from '../ChannelRow';
 import type { Settings } from 'serializers/account/settings';
 
-export function Feed({
+export default function ChannelGrid({
   threads,
   isSubDomainRouting,
   settings,
@@ -36,7 +35,7 @@ export function Feed({
                     path={`/t/${incrementId}/${slug || 'topic'}`.toLowerCase()}
                     key={`${incrementId}-desktop`}
                   >
-                    <MessageCard
+                    <ChannelRow
                       incrementId={incrementId}
                       messages={messages}
                       isSubDomainRouting={isSubDomainRouting}
@@ -47,7 +46,7 @@ export function Feed({
                 </div>
               ) : (
                 <div className="px-4 py-4" onClick={() => onClick(incrementId)}>
-                  <MessageCard
+                  <ChannelRow
                     incrementId={incrementId}
                     messages={messages}
                     isSubDomainRouting={isSubDomainRouting}

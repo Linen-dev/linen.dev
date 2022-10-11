@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import CustomLinkHelper from 'components/Link/CustomLinkHelper';
 import ButtonPagination from 'components/ButtonPagination';
 
-import { Feed } from 'components/Feed';
+import ChannelGrid from 'components/Channel/ChannelGrid';
 import { SerializedThread } from 'serializers/thread';
 import { ChannelViewProps } from 'components/Pages/ChannelsPage';
 
@@ -43,7 +43,7 @@ export function ChannelForBots({
       >
         <div className="sm:pt-6 justify-center">
           <ul className="divide-y sm:max-w-4xl px-1">
-            <Feed
+            <ChannelGrid
               threads={currentThreads}
               isSubDomainRouting={isSubDomainRouting}
               settings={settings}
