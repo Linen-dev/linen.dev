@@ -1,11 +1,8 @@
 import { prisma } from 'client';
 import linenExamplePage from 'public/linen-example-page.png';
-import feedExample from 'public/feed-example.png';
 import Image from 'next/image';
 import LinenLogo from 'components/Logo/Linen';
 import YCombinatorLogo from 'components/Logo/YCombinator';
-import { BoltIcon, GlobeAltIcon, ScaleIcon } from '@heroicons/react/24/outline';
-import { CheckIcon } from '@heroicons/react/24/outline';
 
 import Link from 'next/link';
 import FadeIn from 'components/FadeIn';
@@ -31,8 +28,7 @@ const Home = (props: { accounts: Props[] }) => {
       name: 'Business Edition',
       href: '#',
       priceMonthly: 'Contact us',
-      description:
-        'Generate long tail keywords and organic traffic for your product',
+      description: 'Improve your SEO and generate organic traffic',
       features: [
         'Host Linen under your custom url/subdomain',
         'Custom community branding',
@@ -46,18 +42,18 @@ const Home = (props: { accounts: Props[] }) => {
       name: 'Custom branding',
       description:
         'Get branded colors and logos of your community or company. Your community should feel like yours and not',
-      icon: GlobeAltIcon,
+      // icon: GlobeAltIcon,
     },
     {
       name: 'Host Linen on your own domain',
       description:
         'Get organic SEO traffic from Google. Linen generates a set of long tail keywords. Our largest community has seen over 180,0000 Google impressions',
-      icon: ScaleIcon,
+      // icon: ScaleIcon,
     },
     {
       name: 'Analytics tracking',
       description: 'Add your own analytics tracking to your community ',
-      icon: BoltIcon,
+      // icon: BoltIcon,
     },
   ];
   return (
@@ -140,6 +136,37 @@ const Home = (props: { accounts: Props[] }) => {
           </div>
         </div>
 
+        <div className="bg-blue-700 mt-20 rounded-md">
+          <div className="max-w-7xl mx-auto py-12 px-4 sm:py-16 sm:px-6 lg:px-8 lg:py-20">
+            <div className="max-w-3xl mx-auto text-center">
+              <h2 className="text-2xl font-extrabold text-white sm:text-4xl">
+                Trusted by the largest communities
+              </h2>
+              <p className="mt-3 text-xl text-blue-200 sm:mt-4">
+                Retain your community knowledge and improve your SEO
+              </p>
+            </div>
+            <dl className="mt-10 text-center sm:max-w-3xl sm:mx-auto sm:grid sm:grid-cols-2 sm:gap-8">
+              <div className="flex flex-col mt-10 sm:mt-0">
+                <dt className="order-2 mt-2 text-lg leading-6 font-medium text-blue-200">
+                  Pages indexed by Google
+                </dt>
+                <dd className="order-1 text-4xl md:text-5xl font-extrabold text-white">
+                  50,000+
+                </dd>
+              </div>
+              <div className="flex flex-col mt-10 sm:mt-0">
+                <dt className="order-2 mt-2 text-lg leading-6 font-medium text-blue-200">
+                  Number of search impresssions
+                </dt>
+                <dd className="order-1 text-4xl md:text-5xl font-extrabold text-white">
+                  200,000+
+                </dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+
         <div className="relative overflow-hidden pt-16 pb-32">
           <div
             aria-hidden="true"
@@ -176,10 +203,6 @@ const Home = (props: { accounts: Props[] }) => {
               </div>
               <div className="mt-12 sm:mt-16 lg:mt-0">
                 <div className="-mr-48 pl-4 sm:pl-6 md:-mr-16 lg:relative lg:m-0 lg:h-full lg:px-0">
-                  {/* <Image
-                    className="w-full rounded-xl shadow-xl ring-1 ring-black ring-opacity-5 lg:absolute lg:left-0 lg:h-full lg:w-auto lg:max-w-none"
-                    src={feedExample}
-                  /> */}
                   <img
                     className="w-full rounded-xl shadow-xl ring-1 ring-black ring-opacity-5 lg:absolute lg:left-0 lg:h-full lg:w-auto lg:max-w-none"
                     src="https://linen-assets.s3.us-east-1.amazonaws.com/feedExample.png"
@@ -223,7 +246,7 @@ const Home = (props: { accounts: Props[] }) => {
                 <div className="-ml-48 pr-4 sm:pr-6 md:-ml-16 lg:relative lg:m-0 lg:h-full lg:px-0">
                   <img
                     className="w-full rounded-xl shadow-xl ring-1 ring-black ring-opacity-5 lg:absolute lg:right-0 lg:h-full lg:w-auto lg:max-w-none"
-                    src="https://tailwindui.com/img/component-images/inbox-app-screenshot-2.jpg"
+                    src="https://linen-assets.s3.us-east-1.amazonaws.com/search.svg"
                     alt="Customer profile user interface"
                   />
                 </div>
@@ -270,7 +293,7 @@ const Home = (props: { accounts: Props[] }) => {
                 <div key={feature.name}>
                   <dt>
                     <div className="flex h-12 w-12 items-center justify-center rounded-md bg-indigo-500 text-white">
-                      <feature.icon className="h-6 w-6" aria-hidden="true" />
+                      {/* <feature.icon className="h-6 w-6" aria-hidden="true" /> */}
                     </div>
                     <p className="mt-5 text-lg font-medium leading-6 text-gray-900">
                       {feature.name}
@@ -296,7 +319,7 @@ const Home = (props: { accounts: Props[] }) => {
                   Free and unlimited messages for communities
                 </p>
                 <p className="text-xl text-gray-300">
-                  Don't lose your data after 90 days.
+                  Don&apos;t lose your data after 90 days.
                 </p>
               </div>
             </div>
@@ -332,10 +355,10 @@ const Home = (props: { accounts: Props[] }) => {
                           {tier.features.map((feature) => (
                             <li key={feature} className="flex items-start">
                               <div className="flex-shrink-0">
-                                <CheckIcon
+                                {/* <CheckIcon
                                   className="h-6 w-6 text-green-500"
                                   aria-hidden="true"
-                                />
+                                /> */}
                               </div>
                               <p className="ml-3 text-base text-gray-700">
                                 {feature}
@@ -368,7 +391,7 @@ const Home = (props: { accounts: Props[] }) => {
           <p>
             Linen is a real time chat app that is designed to have all the
             benefits of a forum while having the user experience of a chat app.
-            Your community doesn't have to learn a new user experience
+            Your community doesn&apos;t have to learn a new user experience
           </p>
           <LandingH2>Linen communities are Google searchable</LandingH2>
           <p>
@@ -378,11 +401,12 @@ const Home = (props: { accounts: Props[] }) => {
             contents available for your community members without requiring a
             login.
           </p>
-          <LandingH2>Free to setup and use</LandingH2>
+          <LandingH2>Import your community conversations</LandingH2>
           <p>
-            Linen is free to set up and install. Once you go through the 10
-            minute setup process and wait for the syncing you will be able to
-            make your community&apos;s threads free of charge.
+            You can import your community Linen is free to set up and install.
+            Once you go through the 10 minute setup process and wait for the
+            syncing you will be able to make your community&apos;s threads free
+            of charge.
           </p>
           <LandingH2>
             Generate organic content for your website and domain

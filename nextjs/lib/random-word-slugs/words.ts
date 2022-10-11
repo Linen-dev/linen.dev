@@ -417,7 +417,6 @@ export const wordList = {
     'square',
     'stale',
     'steep',
-    'sticky',
     'stocky',
     'straight',
     'strong',

@@ -218,7 +218,7 @@ interface H2Props {
 
 function LandingH2({ children }: H2Props) {
   return (
-    <h2 className="text-1xl tracking-tight font-extrabold text-gray-800 sm:text-5xl md:text-2xl pt-2">
+    <h2 className="text-1xl tracking-tight font-extrabold text-gray-800 sm:text-2xl pt-2">
       {children}
     </h2>
   );
