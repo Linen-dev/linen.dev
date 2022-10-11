@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import classNames from 'classnames';
 import Image from 'next/image';
-import styles from './index.module.css';
+import styles from './index.module.scss';
 import { normalizeUrl } from 'utilities/url';
 
 interface Props {

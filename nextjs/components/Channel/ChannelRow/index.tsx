@@ -1,5 +1,5 @@
 import Avatars from '../../Avatars';
-import { users } from '@prisma/client';
+import { users, ThreadState } from '@prisma/client';
 import { getThreadUrl } from '../../Pages/ChannelsPage/utilities/url';
 import { SerializedMessage } from '../../../serializers/message';
 import CopyToClipboardIcon from '../../Pages/ChannelsPage/CopyToClipboardIcon';
@@ -19,12 +19,14 @@ export const uniqueUsers = (users: users[]): users[] => {
 export default function ThreadRow({
   incrementId,
   messages,
+  state,
   isSubDomainRouting,
   settings,
   slug,
 }: {
   incrementId: number;
   messages: SerializedMessage[];
+  state: ThreadState;
   isSubDomainRouting: boolean;
   settings: Settings;
   slug: string | null;
@@ -33,7 +35,11 @@ export default function ThreadRow({
   const authors = uniqueUsers(users.slice(0, -1));
   const oldestMessage = messages[0];
   return (
-    <Row message={oldestMessage} communityType={settings.communityType}>
+    <Row
+      message={oldestMessage}
+      state={state}
+      communityType={settings.communityType}
+    >
       {authors.length > 0 && (
         <div className="flex flex-row items-center pt-2 pr-2">
           <div className="text-sm text-gray-400 flex flex-row items-center">
