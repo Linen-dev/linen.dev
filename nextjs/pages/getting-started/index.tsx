@@ -2,6 +2,7 @@ import { GettingStartedPage } from 'components/Pages/GettingStartedPage';
 import type { NextPageContext } from 'next';
 import { getSession } from 'next-auth/react';
 import { prisma } from 'client';
+import { findInvitesByEmail } from 'services/invites';
 
 export default function CreateCommunity(props: any) {
   return <GettingStartedPage {...props} />;
@@ -21,7 +22,7 @@ export async function getServerSideProps(context: NextPageContext) {
 
   const auth = await findAccountsFromAuth(session?.user?.email!);
 
-  const invites = await findInvitesForAuth(session?.user?.email!);
+  const invites = await findInvitesByEmail(session?.user?.email!);
 
   return {
     props: {
@@ -41,23 +42,6 @@ const filterAccounts = (e: any) =>
   e.account?.slackDomain ||
   e.accounts?.discordDomain ||
   e.accounts?.slackDomain;
-
-async function findInvitesForAuth(email: string) {
-  return await prisma.invites.findMany({
-    where: { email, status: 'PENDING' },
-    select: {
-      id: true,
-      accounts: {
-        select: {
-          id: true,
-          name: true,
-          discordDomain: true,
-          slackDomain: true,
-        },
-      },
-    },
-  });
-}
 
 async function findAccountsFromAuth(email: string) {
   return await prisma.auths.findUnique({
