@@ -1,4 +1,3 @@
-import { prisma } from 'client';
 import linenExamplePage from 'public/linen-example-page.png';
 import Image from 'next/image';
 import LinenLogo from 'components/Logo/Linen';
@@ -9,8 +8,7 @@ import FadeIn from 'components/FadeIn';
 import Head from 'next/head';
 import Footer from 'components/Footer';
 
-const Home = (props: { accounts: Props[] }) => {
-  const accounts = props.accounts;
+const Home = () => {
   const tiers = [
     {
       name: 'Community Edition',
@@ -262,7 +260,6 @@ const Home = (props: { accounts: Props[] }) => {
 
         <div className="bg-white py-12">
           <div className="mx-auto max-w-xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
-            <h2 className="sr-only">A better way to send money.</h2>
             <dl className="space-y-10 lg:grid lg:grid-cols-3 lg:gap-8 lg:space-y-0">
               {features.map((feature) => (
                 <div key={feature.name}>
@@ -465,36 +462,8 @@ type Props = {
 };
 
 export async function getStaticProps() {
-  const accounts = await prisma.accounts.findMany({
-    where: {
-      NOT: [
-        {
-          logoUrl: null,
-        },
-      ],
-      syncStatus: 'DONE',
-    },
-    select: {
-      logoUrl: true,
-      name: true,
-      premium: true,
-      brandColor: true,
-      redirectDomain: true,
-      slackDomain: true,
-      discordServerId: true,
-      discordDomain: true,
-    },
-  });
-
-  const goodLookingLogos = accounts.filter((a) => a.logoUrl?.includes('.svg'));
-  // since we use 3 columns we want it to only show numbers divisible by 3
-  const remainders = goodLookingLogos.slice(
-    0,
-    goodLookingLogos.length - (goodLookingLogos.length % 3)
-  );
-
   return {
-    props: { accounts: remainders },
+    props: {},
   };
 }
 
