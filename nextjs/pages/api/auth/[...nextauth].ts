@@ -1,5 +1,6 @@
 import NextAuth, { type NextAuthOptions } from 'next-auth';
 import EmailProvider from 'next-auth/providers/email';
+import GoogleProvider from 'next-auth/providers/google';
 import prisma from 'client';
 import { CustomPrismaAdapter } from 'lib/auth';
 import SignInMailer from 'mailers/SignInMailer';
@@ -76,6 +77,11 @@ export const authOptions = {
         }
         return null;
       },
+    }),
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID as string,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+      idToken: false,
     }),
   ],
   callbacks: {
