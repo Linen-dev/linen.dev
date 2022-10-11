@@ -5,3 +5,11 @@
   justify-content: center;
   height: 100%;
 }
+
+.icon {
+  border: 3px solid black;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  padding: 8px;
+  transform: rotate(15deg);
+}
