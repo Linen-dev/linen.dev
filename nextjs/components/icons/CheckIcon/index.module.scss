@@ -1,11 +1,7 @@
 @import 'styles/colors.scss';
 
 .check {
-  background: $color-primary;
   border-radius: 50%;
-  border: 2px solid $color-primary;
-  box-shadow: 0 1px 2px #ccc;
-  color: white;
+  color: $color-secondary;
   font-size: 12px;
-  padding: 1px;
 }
