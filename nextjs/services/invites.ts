@@ -2,6 +2,7 @@ import { generateRandomWordSlug } from 'utilities/randomWordSlugs';
 import { auths, invites, Prisma, Roles, users } from '@prisma/client';
 import InviteToJoinMailer from 'mailers/InviteToJoinMailer';
 import prisma from '../client';
+import { cleanUpString } from 'utilities/string';
 
 export async function createInvitation({
   createdByUserId,
@@ -188,4 +189,75 @@ export async function updateInvitation({
   });
 
   return { status: 200, message: 'invitation updated' };
+}
+
+export async function findInvitesByEmail(
+  email: string,
+  params?: { accountsId?: string }
+) {
+  const where = {
+    ...(params?.accountsId && { accountsId: params.accountsId }),
+    email,
+    status: 'PENDING',
+  } as Prisma.invitesWhereInput;
+  return await prisma.invites.findMany({
+    where,
+    select: {
+      id: true,
+      accounts: {
+        select: {
+          id: true,
+          name: true,
+          discordDomain: true,
+          slackDomain: true,
+        },
+      },
+    },
+  });
+}
+
+export async function joinCommunity(
+  email: string,
+  accountId: string,
+  authId: string
+) {
+  const user = await findUser(accountId, authId);
+  if (!!user) {
+    await checkoutTenant(authId, accountId);
+    return { data: 'user already belongs to tenant' };
+  }
+  const displayName = cleanUpString(email.split('@').shift() || email);
+  await createUser(accountId, authId, displayName);
+  await checkoutTenant(authId, accountId);
+}
+
+async function createUser(
+  accountId: string,
+  authId: string,
+  displayName: string
+) {
+  await prisma.users.create({
+    data: {
+      isAdmin: false,
+      isBot: false,
+      accountsId: accountId,
+      authsId: authId,
+      displayName,
+      anonymousAlias: generateRandomWordSlug(),
+      role: Roles.MEMBER,
+    },
+  });
+}
+
+async function findUser(accountId: string, authId: string) {
+  return await prisma.users.findFirst({
+    where: {
+      accountsId: accountId,
+      authsId: authId,
+    },
+  });
+}
+
+async function checkoutTenant(authId: string, accountId: string) {
+  await prisma.auths.update({ where: { id: authId }, data: { accountId } });
 }
