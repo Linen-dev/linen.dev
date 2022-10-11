@@ -9,6 +9,7 @@ import { NewChannelModal } from 'components/Channel';
 import useWebsockets from 'hooks/websockets';
 import { SerializedUser } from 'serializers/user';
 import { toast } from 'components/Toast';
+import Badge from 'components/Badge';
 
 interface Props {
   channels: ChannelSerialized[];
@@ -55,7 +56,10 @@ export default function NavBar({
       {permissions.feed && (
         <h5 style={{ fontWeight: 'bold', paddingLeft: 18, marginBottom: 8 }}>
           <Link onClick={() => setHighlights([])} href="/feed">
-            {highlights.length > 0 ? `[${highlights.length}] Feed` : 'Feed'}
+            Feed
+            {highlights.length > 0 && (
+              <Badge className="ml-2">{highlights.length}</Badge>
+            )}
           </Link>
         </h5>
       )}
