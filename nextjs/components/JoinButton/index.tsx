@@ -6,11 +6,12 @@ import JoinSlack from './JoinSlack';
 interface Props {
   inviteUrl?: string;
   communityType: String;
+  communityId?: string;
 }
 
-function JoinButton({ inviteUrl, communityType }: Props) {
+function JoinButton({ inviteUrl, communityType, communityId }: Props) {
   if (!inviteUrl) {
-    return <JoinLinen />;
+    return <JoinLinen accountId={communityId} />;
   }
   return communityType === 'discord' ? (
     <JoinDiscord inviteUrl={inviteUrl} />

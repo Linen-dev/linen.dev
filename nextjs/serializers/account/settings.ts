@@ -2,6 +2,7 @@ import { accounts, MessagesViewType } from '@prisma/client';
 import { links } from '../../constants/examples';
 
 export type Settings = {
+  communityId: string;
   communityType: string;
   googleAnalyticsId?: string | undefined;
   googleSiteVerification?: string | undefined;
@@ -40,6 +41,7 @@ export function serialize(account: accounts): Settings {
   const communityType = account.discordServerId ? 'discord' : 'slack';
 
   return {
+    communityId: account.id,
     prefix: communityMapping[communityType],
     ...(account.redirectDomain && { redirectDomain: account.redirectDomain }),
     communityUrl: account.communityUrl || '',

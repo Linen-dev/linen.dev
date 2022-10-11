@@ -4,9 +4,14 @@ import { sendNotification } from '../../services/slack';
 import { createAuth } from '../../lib/auth';
 import Session from 'services/session';
 import { captureException, withSentry } from '@sentry/nextjs';
+import { cleanUpString } from 'utilities/string';
+import { AccountType, Roles } from '@prisma/client';
+import { generateRandomWordSlug } from 'utilities/randomWordSlugs';
 
 async function create(request: NextApiRequest, response: NextApiResponse) {
-  const { email, password } = JSON.parse(request.body);
+  const body = JSON.parse(request.body);
+  const { email, password, accountId, displayName } = body;
+
   if (!email) {
     return response.status(400).json({
       error: 'Please provide email',
@@ -28,10 +33,15 @@ async function create(request: NextApiRequest, response: NextApiResponse) {
       .status(200)
       .json({ message: 'Account exists, please sign in!' });
   }
-  const record = await createAuth({
+  const newAuth = await createAuth({
     password,
     email,
   });
+
+  if (accountId) {
+    await joinCommunity(accountId, newAuth.id, displayName, email);
+  }
+
   try {
     await sendNotification('Email created: ' + email);
   } catch (e) {
@@ -41,6 +51,37 @@ async function create(request: NextApiRequest, response: NextApiResponse) {
   return response
     .status(200)
     .json({ message: 'Account created, please sign in!' });
+}
+
+async function joinCommunity(
+  accountId: string,
+  newAuthId: string,
+  displayName: string,
+  email: string
+) {
+  const account = await prisma.accounts.findUnique({
+    where: { id: accountId },
+  });
+  if (account && account.type === AccountType.PUBLIC) {
+    await prisma.auths.update({
+      where: { id: newAuthId },
+      data: {
+        accountId,
+        users: {
+          create: {
+            isAdmin: false,
+            isBot: false,
+            accountsId: accountId,
+            displayName: cleanUpString(
+              displayName || email.split('@').shift() || email
+            ),
+            anonymousAlias: generateRandomWordSlug(),
+            role: Roles.MEMBER,
+          },
+        },
+      },
+    });
+  }
 }
 
 async function update(req: NextApiRequest, res: NextApiResponse) {

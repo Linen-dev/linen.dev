@@ -16,6 +16,9 @@ type Invite = Account & {
 
 const shouldLog = process.env.NODE_ENV === 'development';
 
+const Or = <div className="p-4 text-sm text-gray-400 text-center"> or </div>;
+const Space = <div className="p-4"></div>;
+
 export function GettingStartedPage({ session, ...rest }: any) {
   const [invites, setInvites] = useState<Invite[]>(
     rest.invites.map((i: Invite) => ({
@@ -23,7 +26,15 @@ export function GettingStartedPage({ session, ...rest }: any) {
       loading: false,
     }))
   );
-  const [accounts, setAccounts] = useState<Account[]>(rest.accounts);
+  const [accounts] = useState<Account[]>(rest.accounts);
+
+  const [freeCommunities] = useState<Account[]>([
+    {
+      domain: 'linen',
+      id: 'id',
+      name: 'Linen',
+    },
+  ]);
 
   async function acceptInvite(invite: Invite) {
     try {
@@ -35,7 +46,7 @@ export function GettingStartedPage({ session, ...rest }: any) {
         return state;
       });
 
-      const join = await fetch('/api/users/invites/join', {
+      const join = await fetch('/api/invites/join', {
         method: 'POST',
         body: JSON.stringify({
           inviteId: invite.inviteId,
@@ -46,10 +57,7 @@ export function GettingStartedPage({ session, ...rest }: any) {
         throw join;
       }
 
-      setInvites((state) =>
-        state.filter((s) => s.inviteId !== invite.inviteId)
-      );
-      setAccounts((accounts) => [...accounts, invite]);
+      openTenant(invite.id, `/s/${invite.domain}`);
     } catch (error) {
       if (shouldLog) {
         console.error({ error });
@@ -91,26 +99,55 @@ export function GettingStartedPage({ session, ...rest }: any) {
   return (
     <>
       <Layout header={`Welcome ${session?.user?.email}`}>
-        <div className="flex flex-col gap-2">
-          <h1 className="font-bold">Create a new community workspace</h1>
-          <span className="text-sm text-justify">
-            Linen gives your community a home — a place where they can work
-            together. To create a new workspace, click the button below.
-          </span>
-          <Button
-            onClick={() =>
-              (window.location.href = '/onboarding/create-community')
-            }
-          >
-            Create a workspace
-          </Button>
-        </div>
+        <>
+          <div className="flex flex-col gap-2">
+            <h1 className="font-bold">Create a new community</h1>
+            <span className="text-sm text-justify">
+              Linen gives your community a home — a place where they can work
+              together. To create a new community, click the button below.
+            </span>
+            <Button
+              onClick={() =>
+                (window.location.href = '/onboarding/create-community')
+              }
+            >
+              Create a community
+            </Button>
+          </div>
+        </>
+
+        {!!freeCommunities.length && (
+          <>
+            {Or}
+            <div className="flex flex-col gap-2">
+              <h1 className="font-bold">Visit our free community</h1>
+              <div className="flex flex-col gap-2 divide-y divide-solid divide-gray-200">
+                {freeCommunities.map((account: Account) => (
+                  <div className="flex items-center" key={account.id}>
+                    <div className="flex flex-col grow">
+                      {account.name || account.id}
+                      <span className="text-sm text-gray-500">{`linen.dev/s/${account.domain}`}</span>
+                    </div>
+                    <Button
+                      className="-mb-2"
+                      onClick={() =>
+                        (window.location.href = `/s/${account.domain}`)
+                      }
+                    >
+                      Open
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </>
+        )}
 
         {!!accounts.length && (
           <>
-            <div className="p-4"></div>
+            {Space}
             <div className="flex flex-col gap-2">
-              <h1 className="font-bold">Open a community workspace</h1>
+              <h1 className="font-bold">Open a community</h1>
               <div className="flex flex-col gap-2 divide-y divide-solid divide-gray-200">
                 {accounts.map((account: Account) => (
                   <div className="flex items-center" key={account.id}>
@@ -135,7 +172,7 @@ export function GettingStartedPage({ session, ...rest }: any) {
 
         {!!invites.length && (
           <>
-            <div className="p-4"></div>
+            {Space}
             <div className="flex flex-col gap-2">
               <h1 className="font-bold">Accept an invitation</h1>
               <div className="flex flex-col gap-2 divide-y divide-solid divide-gray-200">
