@@ -1,0 +1,9 @@
+@import 'styles/colors.scss';
+
+.check {
+  background: white;
+  border-radius: 50%;
+  border: 2px solid $color-primary;
+  color: $color-primary;
+  font-size: 14px;
+}
