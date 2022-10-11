@@ -260,31 +260,6 @@ const Home = (props: { accounts: Props[] }) => {
           </h1>
         </div>
 
-        <div className="flex flex-col md:grid md:grid-cols-2 lg:grid-cols-3 gap-3 ">
-          {accounts.map((a, index) => {
-            let url = a.premium
-              ? 'https://' + a.redirectDomain
-              : a.discordDomain
-              ? 'https://linen.dev/d/' + a.discordDomain
-              : 'https://linen.dev/s/' + a.slackDomain;
-
-            // TODO:remove this once supabase sets up domain to discord.supabase.com
-            if (url.includes('supabase')) {
-              url = 'https://839993398554656828.linen.dev/';
-            }
-            return (
-              <CommunityCard
-                url={url}
-                communityName={a.name}
-                description="Community"
-                logoUrl={a.logoUrl}
-                brandColor={a.brandColor}
-                key={a.name + index}
-              ></CommunityCard>
-            );
-          })}
-        </div>
-
         <div className="bg-white py-12">
           <div className="mx-auto max-w-xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
             <h2 className="sr-only">A better way to send money.</h2>
