@@ -5,6 +5,7 @@ import classNames from 'classnames';
 import styles from './index.module.css';
 import { ThreadState } from '@prisma/client';
 import { Permissions } from 'types/shared';
+import CheckIcon from 'components/icons/CheckIcon';
 
 enum Mode {
   Edit,
@@ -24,10 +25,15 @@ function getTitle({
 }: {
   title?: string | null;
   closed?: boolean;
-}): string {
+}): React.ReactNode {
   title = title || 'Thread';
   if (closed) {
-    return `[CLOSED] ${title}`;
+    return (
+      <>
+        <CheckIcon />
+        {title}
+      </>
+    );
   }
   return title;
 }

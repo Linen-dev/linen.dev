@@ -7,7 +7,7 @@ import { SerializedMessage } from 'serializers/message';
 import CopyToClipboardIcon from 'components/Pages/ChannelsPage/CopyToClipboardIcon';
 import { ThreadState } from '@prisma/client';
 import styles from './index.module.scss';
-import { GoCheck } from 'react-icons/go';
+import CheckIcon from 'components/icons/CheckIcon';
 
 interface Props {
   message: SerializedMessage;
@@ -49,11 +49,7 @@ export function Row({
             <div className={styles.date}>
               {format(new Date(message.sentAt))}
             </div>
-            {state === ThreadState.CLOSE && (
-              <div className={styles.check}>
-                <GoCheck />
-              </div>
-            )}
+            {state === ThreadState.CLOSE && <CheckIcon />}
           </div>
         )}
         <div className={styles.showOnHover}>
