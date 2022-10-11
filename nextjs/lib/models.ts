@@ -165,7 +165,7 @@ export const findUserAndAccountByIdAndEmail = async (
 export const findAuthByEmail = async (email: string) => {
   return await prisma.auths.findUnique({
     where: { email },
-    include: { users: { include: { account: true } } },
+    include: { users: { include: { account: true } }, account: true },
   });
 };
 
