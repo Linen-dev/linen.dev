@@ -1,6 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import styles from './index.module.css';
+import Badge from 'components/Badge';
 
 interface Props {
   name: string;
@@ -15,7 +16,8 @@ export default function ChannelName({ name, count, active }: Props) {
         [styles.active]: active,
       })}
     >
-      {count > 0 ? `[${count}] #` : '#'} {name}
+      # {name}
+      {count > 0 && <Badge className="ml-2">{count}</Badge>}
     </div>
   );
 }
