@@ -23,3 +23,7 @@ export function cleanUpStringForSeo(str?: string | null) {
   if (!str) return '';
   return str.replace(cleanUpRegex, ' ').replace(/\s+/g, ' ');
 }
+
+export function cleanUpString(str: string) {
+  return cleanUpStringForSeo(str);
+}

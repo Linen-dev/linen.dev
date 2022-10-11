@@ -135,7 +135,7 @@ function RowMember(user: MembersType, communityId: string): JSX.Element {
     try {
       const role = e.target.value;
       const id = e.target.id;
-      let url = '/api/users/invites';
+      let url = '/api/invites';
       if (status === 'ACCEPTED') {
         url = '/api/users';
       }
@@ -204,7 +204,7 @@ export default function Members({ account, users }: MembersPageProps) {
       const form = event.target;
       const email = form.email.value;
       const role = form.role.value;
-      const response = await fetch('/api/users/invites', {
+      const response = await fetch('/api/invites', {
         method: 'POST',
         body: JSON.stringify({ email, communityId: account?.id, role }),
       });

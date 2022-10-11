@@ -1,16 +1,20 @@
-import Layout from '../../components/layout/CardLayout';
-import EmailField from '../../components/EmailField';
-import Button from '../../components/Button';
-import Link from '../../components/Link';
+import Layout from 'components/layout/CardLayout';
+import EmailField from 'components/EmailField';
+import Button from 'components/Button';
+import Link from 'components/Link';
 import { getCsrfToken } from 'next-auth/react';
 import type { NextPageContext } from 'next';
 import Error from './Error';
 import PasswordField from 'components/PasswordField';
 import { useState } from 'react';
+import { qs } from 'utilities/url';
 
 interface SignInProps {
   csrfToken: string;
   error?: string;
+  email: string;
+  callbackUrl: string;
+  state?: string;
 }
 
 const Anchor = ({ children, onClick }: any) => (
@@ -22,7 +26,13 @@ const Anchor = ({ children, onClick }: any) => (
   </a>
 );
 
-export default function SignIn({ csrfToken, error }: SignInProps) {
+export default function SignIn({
+  csrfToken,
+  error,
+  email,
+  callbackUrl,
+  state,
+}: SignInProps) {
   const [sign, setSign] = useState<'creds' | 'magic'>('creds');
   const [loading, setLoading] = useState(false);
 
@@ -32,11 +42,18 @@ export default function SignIn({ csrfToken, error }: SignInProps) {
       {sign === 'creds' && (
         <form
           method="post"
-          action="/api/auth/callback/credentials?callbackUrl=/api/settings"
+          action={
+            '/api/auth/callback/credentials?' + qs({ callbackUrl, state })
+          }
           onSubmit={() => setLoading(true)}
         >
           <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
-          <EmailField label="Email address" id="email" required />
+          <EmailField
+            label="Email address"
+            id="email"
+            required
+            defaultValue={email}
+          />
           <PasswordField label="Password" id="password" required />
 
           <p className="py-3 text-sm">
@@ -46,7 +63,9 @@ export default function SignIn({ csrfToken, error }: SignInProps) {
             {loading ? 'Loading...' : 'Sign in'}
           </Button>
           <div className="flex text-sm justify-between py-3">
-            <Link href="/signup">Don&apos;t have an account?</Link>
+            <Link href={'/signup?' + qs({ callbackUrl, state })}>
+              Don&apos;t have an account?
+            </Link>
             <Anchor onClick={() => setSign('magic')}>Sign in by email</Anchor>
           </div>
         </form>
@@ -55,11 +74,16 @@ export default function SignIn({ csrfToken, error }: SignInProps) {
       {sign === 'magic' && (
         <form
           method="post"
-          action="/api/auth/signin/email?callbackUrl=/api/settings"
+          action={'/api/auth/signin/email?' + qs({ callbackUrl, state })}
           onSubmit={() => setLoading(true)}
         >
           <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
-          <EmailField label="Email address" id="email" required />
+          <EmailField
+            label="Email address"
+            id="email"
+            required
+            defaultValue={email}
+          />
           <Button type="submit" block disabled={loading}>
             {loading ? 'Loading...' : 'Email me a link'}
           </Button>
@@ -67,7 +91,9 @@ export default function SignIn({ csrfToken, error }: SignInProps) {
             We will send you an email containing a link to sign you in.
           </p>
           <div className="flex text-sm justify-between py-3">
-            <Link href="/signup">Don&apos;t have an account?</Link>
+            <Link href={'/signup?' + qs({ callbackUrl, state })}>
+              Don&apos;t have an account?
+            </Link>
             <Anchor onClick={() => setSign('creds')}>
               Sign in with credentials
             </Anchor>
@@ -83,6 +109,9 @@ export async function getServerSideProps(context: NextPageContext) {
     props: {
       csrfToken: await getCsrfToken(context),
       error: context.query.error || null,
+      callbackUrl: context.query.callbackUrl || '/api/settings',
+      email: context.query.email || null,
+      state: context.query.state || null,
     },
   };
 }

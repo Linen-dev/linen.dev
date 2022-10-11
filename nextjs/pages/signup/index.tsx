@@ -2,19 +2,28 @@ import Layout from 'components/layout/CardLayout';
 import EmailField from 'components/EmailField';
 import Button from 'components/Button';
 import Link from 'components/Link';
-import { useRouter } from 'next/router';
+import TextField from 'components/TextField';
 import { getCsrfToken } from 'next-auth/react';
 import type { NextPageContext } from 'next';
 import { useState } from 'react';
 import PasswordField from 'components/PasswordField';
 import Error from 'pages/signin/Error';
+import { qs } from 'utilities/url';
 
 interface SignUpProps {
   csrfToken: string;
+  email: string;
+  callbackUrl: string;
+  error: string;
+  state: string;
 }
 
-export default function SignUp({ csrfToken }: SignUpProps) {
-  const router = useRouter();
+export default function SignUp({
+  csrfToken,
+  email,
+  callbackUrl,
+  state,
+}: SignUpProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -23,6 +32,7 @@ export default function SignUp({ csrfToken }: SignUpProps) {
     const form = event.target;
     const email = form.email.value;
     const password = form.password.value;
+
     if (!email) {
       setError('Email is required');
       return;
@@ -35,7 +45,14 @@ export default function SignUp({ csrfToken }: SignUpProps) {
       setLoading(true);
       const signUpResponse = await fetch('/api/auth', {
         method: 'POST',
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({
+          email,
+          password,
+          ...(!!state && {
+            displayName: form.displayName.value,
+            accountId: state,
+          }),
+        }),
       });
       if (signUpResponse.ok) {
         const signInResponse = await signIn({ email, password });
@@ -60,7 +77,8 @@ export default function SignUp({ csrfToken }: SignUpProps) {
     password: string;
   }) {
     const csrfToken = await getCsrfToken();
-    const url = '/api/auth/callback/credentials?callbackUrl=/api/settings';
+    const url = '/api/auth/callback/credentials?' + qs({ callbackUrl, state });
+
     return await fetch(url, {
       method: 'POST',
       headers: {
@@ -80,11 +98,22 @@ export default function SignUp({ csrfToken }: SignUpProps) {
       <Error error={error} />
       <form onSubmit={onSubmit}>
         <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
+        {!!state && (
+          <TextField
+            label="Display name"
+            id="displayName"
+            {...{
+              minlength: 1,
+              maxlength: 30,
+            }}
+          />
+        )}
+
         <EmailField
           label="Email address"
           id="email"
           required
-          defaultValue={router?.query?.email as string}
+          defaultValue={email}
         />
         <PasswordField label="Password" id="password" required />
 
@@ -94,7 +123,8 @@ export default function SignUp({ csrfToken }: SignUpProps) {
       </form>
 
       <p className="text-sm pt-3 text-gray-600">
-        Already have an account? <Link href="/signin">Sign in</Link>
+        Already have an account?{' '}
+        <Link href={`/signin?` + qs({ callbackUrl, state })}>Sign in</Link>
       </p>
 
       <p className="text-sm pt-3 text-gray-600">
@@ -124,6 +154,9 @@ export async function getServerSideProps(context: NextPageContext) {
     props: {
       csrfToken: await getCsrfToken(context),
       error: context.query.error || null,
+      callbackUrl: context.query.callbackUrl || '/api/settings',
+      email: context.query.email || null,
+      state: context.query.state || null,
     },
   };
 }

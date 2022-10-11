@@ -116,6 +116,7 @@ function PageLayout({
               <JoinButton
                 inviteUrl={communityInviteUrl || communityUrl}
                 communityType={settings.communityType}
+                communityId={settings.communityId}
               />
             </div>
           </div>
