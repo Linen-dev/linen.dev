@@ -35,7 +35,7 @@ export default class PermissionsService {
       findAuth(request, response),
     ]);
     const user = findUser(auth, community) || null;
-    const account = user?.account || null;
+    const account = user?.account || auth?.account || null;
     const access = PermissionsService._access(community, account);
     const chat = PermissionsService._chat(community, account);
     const feed = PermissionsService._feed(community, account);
