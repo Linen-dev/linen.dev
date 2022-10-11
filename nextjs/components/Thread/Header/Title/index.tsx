@@ -26,7 +26,7 @@ function getTitle({
   title?: string | null;
   closed?: boolean;
 }): React.ReactNode {
-  title = title || 'Thread';
+  title = title || 'Title';
   if (closed) {
     return (
       <>
