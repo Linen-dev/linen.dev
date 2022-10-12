@@ -28,9 +28,7 @@ export type ThreadsWithMessagesFull = Prisma.threadsGetPayload<
 >;
 
 const messageForSerialization = Prisma.validator<Prisma.MessageArgs>()({
-  include: {
-    users: true,
-  },
+  author: true,
   mentions: {
     include: {
       users: true,
