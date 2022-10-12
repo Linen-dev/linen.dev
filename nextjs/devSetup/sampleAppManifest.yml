@@ -24,6 +24,8 @@ oauth_config:
       - users:read
       - team:read
       - files:read
+      - chat:write
+      - chat:write.customize
 settings:
   event_subscriptions:
     request_url: https://linen-YOURNAME.ngrok.io/api/webhook
