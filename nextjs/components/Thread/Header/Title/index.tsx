@@ -46,7 +46,7 @@ export default function Title({
 }: Props) {
   const [mode, setMode] = useState(Mode.Read);
   const text = getTitle({ title, closed: state === ThreadState.CLOSE });
-  if (!permissions.feed) {
+  if (!permissions.manage) {
     return <div className={styles.title}>{text}</div>;
   }
   return (

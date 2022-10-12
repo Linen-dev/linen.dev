@@ -25,14 +25,17 @@ type PostProps = Props & {
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   const body = JSON.parse(req.body);
 
-  const { communityId, communityName }: Props = body;
+  const { communityId }: Props = body;
+
+  if (!communityId) {
+    return res.status(400).end();
+  }
 
   const permissions = await PermissionsService.get({
     request: req,
     response: res,
     params: {
       communityId,
-      communityName,
     },
   });
 

@@ -11,6 +11,9 @@ async function get(request: NextApiRequest, response: NextApiResponse) {
   if (!message) {
     return response.status(404).end();
   }
+  if (!message.channel.accountId) {
+    return response.status(401).end();
+  }
 
   const permissions = await PermissionsService.get({
     request,

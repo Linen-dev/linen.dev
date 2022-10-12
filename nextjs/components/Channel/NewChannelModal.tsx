@@ -1,4 +1,4 @@
-import { Fragment, useState, createRef } from 'react';
+import { Fragment, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { FiPlus, FiX } from 'react-icons/fi';
 import Button from 'components/Button';
@@ -9,7 +9,7 @@ import { useSession } from 'next-auth/react';
 import { useLinkContext } from 'contexts/Link';
 import CustomRouterPush from 'components/Link/CustomRouterPush';
 
-export function NewChannelModal() {
+export function NewChannelModal({ communityId }: { communityId: string }) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const { status } = useSession();
@@ -24,7 +24,7 @@ export function NewChannelModal() {
       const response = await fetch('/api/channels', {
         method: 'POST',
         body: JSON.stringify({
-          communityName,
+          communityId,
           channel_name,
         }),
       });

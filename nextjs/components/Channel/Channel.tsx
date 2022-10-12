@@ -593,7 +593,10 @@ export function Channel({
                           channelId: currentChannel.id,
                         });
                       }}
-                      fetchMentions={fetchMentions}
+                      fetchMentions={(term?: string) => {
+                        if (!term) return Promise.resolve([]);
+                        return fetchMentions(term, settings.communityId);
+                      }}
                     />
                   </div>
                 )

@@ -69,7 +69,9 @@ export default function DesktopNavBar({
       )}
       <NavLabel>
         <div className="grow">Channels</div>
-        {permissions.channel_create && <NewChannelModal />}
+        {permissions.channel_create && !!permissions.user?.accountId && (
+          <NewChannelModal communityId={permissions.user.accountId} />
+        )}
       </NavLabel>
       <div className="block overflow-hidden hover:overflow-auto h-[calc(100vh-240px)]">
         {channels.map((channel: ChannelSerialized, index: number) => {
