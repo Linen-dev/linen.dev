@@ -11,6 +11,8 @@ import { toast } from 'components/Toast';
 import Badge from 'components/Badge';
 import styles from './index.module.scss';
 import { FiBox, FiHash } from 'react-icons/fi';
+import { useRouter } from 'next/router';
+import usePath from 'hooks/path';
 
 interface Props {
   channels: ChannelSerialized[];
@@ -27,9 +29,10 @@ export default function DesktopNavBar({
   permissions,
   token,
 }: Props) {
-  const userId = currentUser?.authsId;
-
   const [highlights, setHighlights] = useState<string[]>([]);
+  const router = useRouter();
+
+  const userId = currentUser?.authsId;
 
   useWebsockets({
     room: userId && `user:${userId}`,
@@ -50,11 +53,13 @@ export default function DesktopNavBar({
     },
   });
 
+  const feedUrl = usePath({ href: '/feed' });
+
   return (
     <div className={styles.navbar}>
       {permissions.feed && (
         <Link onClick={() => setHighlights([])} href="/feed">
-          <NavItem>
+          <NavItem active={feedUrl === router.asPath}>
             <FiBox className="mr-1" /> Feed
             {highlights.length > 0 && (
               <Badge className="ml-2">{highlights.length}</Badge>

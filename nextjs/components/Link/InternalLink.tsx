@@ -1,6 +1,5 @@
 import Link from 'next/link';
-import CustomLinkHelper from './CustomLinkHelper';
-import { useLinkContext } from 'contexts/Link';
+import usePath from 'hooks/path';
 
 interface Props {
   className?: string;
@@ -15,13 +14,7 @@ export default function InternalLink({
   href,
   children,
 }: Props) {
-  const { isSubDomainRouting, communityName, communityType } = useLinkContext();
-  const path = CustomLinkHelper({
-    communityType,
-    communityName,
-    isSubDomainRouting,
-    path: href,
-  });
+  const path = usePath({ href });
   return (
     <Link href={path} prefetch={false}>
       <a onClick={onClick} className={className}>
