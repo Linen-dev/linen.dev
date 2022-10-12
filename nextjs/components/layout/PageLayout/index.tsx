@@ -1,7 +1,7 @@
 import { ErrorBoundary } from 'react-error-boundary';
 import Link from 'next/link';
 import SearchBar from '../../search/SearchBar';
-import NavBar from '../../NavBar';
+import NavBar from 'components/NavBar';
 import SEO, { type SeoProps } from '../SEO';
 import type { ChannelSerialized } from 'lib/channel';
 import { addHttpsToUrl } from 'utilities/url';
@@ -131,13 +131,13 @@ function PageLayout({
         </div>
         {seo && <SEO {...seo} />}
         <div className="flex flex-col lg:flex-row">
-          {NavBar({
-            channels,
-            channelName: currentChannel?.channelName || '',
-            currentUser,
-            permissions,
-            token,
-          })}
+          <NavBar
+            channels={channels}
+            channelName={currentChannel?.channelName || ''}
+            currentUser={currentUser}
+            permissions={permissions}
+            token={token}
+          />
           <div
             className={
               className ||
