@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { ChannelSerialized } from 'lib/channel';
-import ChannelName from './ChannelName';
+import NavItem from './NavItem';
+import NavLabel from './NavLabel';
 import { Permissions } from 'types/shared';
 import Link from 'components/Link/InternalLink';
 import { NewChannelModal } from 'components/Channel';
@@ -8,6 +9,8 @@ import useWebsockets from 'hooks/websockets';
 import { SerializedUser } from 'serializers/user';
 import { toast } from 'components/Toast';
 import Badge from 'components/Badge';
+import styles from './index.module.scss';
+import { FiBox, FiHash } from 'react-icons/fi';
 
 interface Props {
   channels: ChannelSerialized[];
@@ -17,7 +20,7 @@ interface Props {
   token: string | null;
 }
 
-export default function NavBar({
+export default function DesktopNavBar({
   channelName,
   currentUser,
   channels,
@@ -48,50 +51,49 @@ export default function NavBar({
   });
 
   return (
-    <div className="w-[250px] bg-slate-50">
+    <div className={styles.navbar}>
       {permissions.feed && (
         <Link onClick={() => setHighlights([])} href="/feed">
-          Feed
-          {highlights.length > 0 && (
-            <Badge className="ml-2">{highlights.length}</Badge>
-          )}
+          <NavItem>
+            <FiBox className="mr-1" /> Feed
+            {highlights.length > 0 && (
+              <Badge className="ml-2">{highlights.length}</Badge>
+            )}
+          </NavItem>
         </Link>
       )}
-      <div className="flex">
-        Channels
+      <NavLabel>
+        <div className="grow">Channels</div>
         {permissions.channel_create && <NewChannelModal />}
-      </div>
+      </NavLabel>
       <div className="block overflow-hidden hover:overflow-auto h-[calc(100vh-240px)]">
-        {channels.map((channel: ChannelSerialized, index: number) => (
-          <Link
-            onClick={() => {
-              setHighlights((highlights) => {
-                return highlights.filter((id) => id !== channel.id);
-              });
-            }}
-            key={`${channel.channelName}-${index}`}
-            href={`/c/${channel.channelName}`}
-          >
-            <ChannelName
-              name={channel.channelName}
-              count={highlights.reduce((count: number, id: string) => {
-                if (id === channel.id) {
-                  return count + 1;
-                }
-                return count;
-              }, 0)}
-              active={channel.channelName === channelName}
-            />
-          </Link>
-        ))}
+        {channels.map((channel: ChannelSerialized, index: number) => {
+          const count = highlights.reduce((count: number, id: string) => {
+            if (id === channel.id) {
+              return count + 1;
+            }
+            return count;
+          }, 0);
+          return (
+            <Link
+              onClick={() => {
+                setHighlights((highlights) => {
+                  return highlights.filter((id) => id !== channel.id);
+                });
+              }}
+              key={`${channel.channelName}-${index}`}
+              href={`/c/${channel.channelName}`}
+            >
+              <NavItem active={channel.channelName === channelName}>
+                <FiHash className="mr-1" /> {channel.channelName}
+                {count > 0 && <Badge className="ml-2">{count}</Badge>}
+              </NavItem>
+            </Link>
+          );
+        })}
       </div>
-      <a
-        className="text-gray-800 opacity-80 text-sm hover:text-blue-900 py-2"
-        target="_blank"
-        rel="noreferrer"
-        href="https://www.linen.dev"
-      >
-        Powered by Linen
+      <a target="_blank" rel="noreferrer" href="https://www.linen.dev">
+        <NavItem>Powered by Linen</NavItem>
       </a>
     </div>
   );
