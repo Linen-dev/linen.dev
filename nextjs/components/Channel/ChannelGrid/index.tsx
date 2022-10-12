@@ -1,7 +1,9 @@
+import classNames from 'classnames';
 import CustomLink from '../../Link/CustomLink';
 import { SerializedThread } from '../../../serializers/thread';
 import ChannelRow from '../ChannelRow';
 import type { Settings } from 'serializers/account/settings';
+import styles from './index.module.scss';
 
 export default function ChannelGrid({
   threads,
@@ -24,7 +26,7 @@ export default function ChannelGrid({
           return (
             <li
               key={`feed-${incrementId}-${index}`}
-              className="hover:bg-blue-50 border-solid border-gray-200 cursor-pointer w-full"
+              className={classNames(styles.li)}
             >
               {isBot ? (
                 <div className="px-4 py-4">

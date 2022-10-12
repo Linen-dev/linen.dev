@@ -1,0 +1,15 @@
+@import 'styles/colors.scss';
+
+.li {
+  border-top: 1px solid $color-border;
+}
+
+.li:first-child {
+  border-top: 0;
+}
+
+.li:hover {
+  background: rgb(249 250 251);
+  cursor: pointer;
+  width: 100%;
+}
