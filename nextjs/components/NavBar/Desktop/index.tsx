@@ -10,7 +10,7 @@ import { SerializedUser } from 'serializers/user';
 import { toast } from 'components/Toast';
 import Badge from 'components/Badge';
 import styles from './index.module.scss';
-import { FiBox, FiHash } from 'react-icons/fi';
+import { FiRss, FiHash } from 'react-icons/fi';
 import { useRouter } from 'next/router';
 import usePath from 'hooks/path';
 
@@ -60,7 +60,7 @@ export default function DesktopNavBar({
       {permissions.feed && (
         <Link onClick={() => setHighlights([])} href="/feed">
           <NavItem active={feedUrl === router.asPath}>
-            <FiBox className="mr-1" /> Feed
+            <FiRss className="mr-1" /> Feed
             {highlights.length > 0 && (
               <Badge className="ml-2">{highlights.length}</Badge>
             )}
