@@ -133,7 +133,7 @@ export default function Feed({
           });
         });
     },
-    [currentUser.id, scope]
+    [currentUser?.id, scope]
   );
 
   useFeedWebsockets({
@@ -400,6 +400,7 @@ export default function Feed({
               state={state}
               selections={selections}
               defaultScope={scope}
+              permissions={permissions}
               onChange={(type: string, value) => {
                 setSelections({});
                 setPage(1);

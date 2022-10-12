@@ -102,7 +102,7 @@ export function Thread({
       </div>
       {permissions.chat && (
         <div className={styles.chat}>
-          {state === ThreadState.OPEN ? (
+          {permissions.manage && state === ThreadState.OPEN ? (
             <MessageForm
               autoFocus
               onSend={(message: string) => {
@@ -116,7 +116,10 @@ export function Thread({
                   updateThread({ state: ThreadState.CLOSE }),
                 ]);
               }}
-              fetchMentions={fetchMentions}
+              fetchMentions={(term?: string) => {
+                if (!term) return Promise.resolve([]);
+                return fetchMentions(term, settings.communityId);
+              }}
             />
           ) : (
             <MessageForm
@@ -125,10 +128,14 @@ export function Thread({
                 onSend?.();
                 return Promise.all([
                   sendMessage({ message, channelId, threadId: id }),
-                  updateThread({ state: ThreadState.OPEN }),
+                  permissions.manage &&
+                    updateThread({ state: ThreadState.OPEN }),
                 ]);
               }}
-              fetchMentions={fetchMentions}
+              fetchMentions={(term?: string) => {
+                if (!term) return Promise.resolve([]);
+                return fetchMentions(term, settings.communityId);
+              }}
             />
           )}
         </div>

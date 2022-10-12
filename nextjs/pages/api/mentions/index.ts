@@ -7,18 +7,24 @@ export default async function handler(
   request: NextApiRequest,
   response: NextApiResponse
 ) {
+  if (!request.query.communityId) {
+    return response.status(400).end();
+  }
   const permissions = await PermissionsService.get({
     request,
     response,
-    params: {},
+    params: {
+      communityId: request.query.communityId as string,
+    },
   });
 
-  // we may check for chat permissions here
-  // right now the users can only list users from same tenant
+  if (!permissions.is_member) {
+    return response.status(403).end();
+  }
 
   if (request.method === 'GET') {
     const term = request.query.term as string;
-    const users = await getMentions(term, permissions.user?.accountId!);
+    const users = await getMentions(term, request.query.communityId as string);
     response.status(200).json(users.map(serializeUser));
     return response.end();
   }

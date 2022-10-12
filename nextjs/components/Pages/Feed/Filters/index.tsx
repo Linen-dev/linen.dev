@@ -7,6 +7,7 @@ import { Selections } from '../types';
 import Pagination from './Pagination';
 import ScopeSelect from './ScopeSelect';
 import { GoComment, GoCheck, GoSync } from 'react-icons/go';
+import type { Permissions } from 'types/shared';
 
 interface Props {
   state: string;
@@ -14,6 +15,7 @@ interface Props {
   page: number;
   total: number;
   defaultScope: string;
+  permissions: Permissions;
   onChange(type: string, value: string): void;
   onUpdate(): void;
   onPageChange(type: string): void;
@@ -35,6 +37,7 @@ export default function Filters({
   page,
   total,
   defaultScope,
+  permissions,
   onChange,
   onUpdate,
   onPageChange,
@@ -55,7 +58,9 @@ export default function Filters({
           ]}
           onChange={(value: ThreadState) => onChange('state', value)}
         />
-        <ScopeSelect onChange={onChange} defaultValue={defaultScope} />
+        {permissions.is_member && (
+          <ScopeSelect onChange={onChange} defaultValue={defaultScope} />
+        )}
         {showActions(selections) && (
           <Button
             color="gray"

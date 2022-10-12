@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Title from './Title';
 import StickyHeader from 'components/StickyHeader';
 import classNames from 'classnames';
@@ -51,7 +51,7 @@ export default function Header({
           </div>
         </div>
         <div className={styles.icons}>
-          {permissions.feed && (
+          {permissions.manage && (
             <>
               {state === ThreadState.OPEN && (
                 <a

@@ -4,11 +4,15 @@ import { createSyncJob } from 'queue/jobs';
 import PermissionsService from 'services/permissions';
 
 async function handler(request: NextApiRequest, response: NextApiResponse) {
+  if (!request.query.account_id) {
+    return response.status(400).end();
+  }
+
   const permissions = await PermissionsService.get({
     request,
     response,
     params: {
-      communityId: request.query.account_id,
+      communityId: request.query.account_id as string,
     },
   });
   if (!permissions.manage) {

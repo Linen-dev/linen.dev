@@ -1,12 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import PermissionsService from 'services/permissions';
 import CommunityService from 'services/community';
-import Session from 'services/session';
 import prisma from 'client';
 import { Prisma, ThreadState } from '@prisma/client';
 import serializeThread from 'serializers/thread';
 import { Scope } from 'types/shared';
-import { users } from '@prisma/client';
 
 function getPage(page?: number) {
   if (!page || page < 1) {
@@ -17,7 +15,7 @@ function getPage(page?: number) {
 
 export async function index({
   params,
-  currentUser,
+  currentUserId,
 }: {
   params: {
     communityName?: string;
@@ -25,7 +23,7 @@ export async function index({
     scope?: Scope;
     page?: number;
   };
-  currentUser: users;
+  currentUserId?: string;
 }) {
   const community = await CommunityService.find(params);
   if (!community) {
@@ -40,18 +38,22 @@ export async function index({
       channel: { account: { id: community.id } },
       state: params.state || ThreadState.OPEN,
     },
-    ...(scope === Scope.Participant && {
-      OR: [
-        { usersId: currentUser.id },
-        { mentions: { some: { usersId: currentUser.id } } },
-      ],
-    }),
+    ...(!!currentUserId &&
+      scope === Scope.Participant && {
+        OR: [
+          { usersId: currentUserId },
+          { mentions: { some: { usersId: currentUserId } } },
+        ],
+      }),
   } as Prisma.messagesWhereInput;
 
   const total = await countThreads({
     state: params.state || ThreadState.OPEN,
     communityId: community.id,
-    currentUserId: scope === Scope.Participant ? currentUser.id : undefined,
+    currentUserId:
+      !!currentUserId && scope === Scope.Participant
+        ? currentUserId
+        : undefined,
   });
 
   const messages = await prisma.messages.findMany({
@@ -94,21 +96,19 @@ export async function index({
 const handlers = {
   async index(request: NextApiRequest, response: NextApiResponse) {
     try {
-      const currentUser = await Session.user(request, response);
-      if (!currentUser) {
-        return response.status(401).json({});
-      }
       const permissions = await PermissionsService.get({
         request,
         response,
-        params: request.query,
+        params: {
+          communityName: request.query.communityName as string,
+        },
       });
       if (!permissions.feed) {
         return response.status(401).json({});
       }
       const { status, data } = await index({
         params: request.query,
-        currentUser,
+        currentUserId: permissions.user?.id || undefined,
       });
       response.status(status).json(data);
     } catch (exception) {
