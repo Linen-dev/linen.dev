@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Title from './Title';
+import StickyHeader from 'components/StickyHeader';
 import classNames from 'classnames';
 import { ThreadState } from '@prisma/client';
 import { Permissions } from 'types/shared';
@@ -28,12 +29,7 @@ export default function Header({
   onSetTitle,
 }: Props) {
   return (
-    <div
-      className={classNames(
-        styles.header,
-        'border-b border-solid border-gray-200 py-4 px-4'
-      )}
-    >
+    <StickyHeader>
       <div className="flex flex-row justify-between items-center">
         <div className="flex flex-row justify-center">
           {onClose && (
@@ -91,6 +87,6 @@ export default function Header({
           )}
         </div>
       </div>
-    </div>
+    </StickyHeader>
   );
 }
