@@ -1,14 +1,17 @@
 import React from 'react';
+import StickyHeader from 'components/StickyHeader';
+import { FiBox } from 'react-icons/fi';
+import styles from './index.module.css';
 
 export default function Header() {
   return (
-    <div className="p-6">
-      <h1 className="inline-block text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight dark:text-slate-200">
-        Feed
-      </h1>
-      <p className="mt-2 text-md text-slate-700 dark:text-slate-400">
+    <StickyHeader>
+      <div className={styles.title}>
+        <FiBox /> Feed
+      </div>
+      <div className="text-gray-600 text-xs ">
         All of your channel conversations in one place
-      </p>
-    </div>
+      </div>
+    </StickyHeader>
   );
 }
