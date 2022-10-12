@@ -5,6 +5,7 @@ import { buildChannelSeo } from 'utilities/seo';
 
 export default function ChannelPage({
   threads,
+  pinnedThreads,
   channels,
   currentChannel,
   currentCommunity,
@@ -48,6 +49,7 @@ export default function ChannelPage({
     >
       <ComponentToRender
         threads={threads}
+        pinnedThreads={pinnedThreads}
         currentChannel={currentChannel}
         currentCommunity={currentCommunity}
         currentUser={currentUser}

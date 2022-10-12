@@ -45,6 +45,7 @@ export type ChannelViewProps = {
   currentCommunity: SerializedAccount | null;
   currentUser: SerializedUser | null;
   threads: SerializedThread[];
+  pinnedThreads: SerializedThread[];
   isSubDomainRouting: boolean;
   nextCursor: ChannelViewCursorProps;
   pathCursor: string | null;

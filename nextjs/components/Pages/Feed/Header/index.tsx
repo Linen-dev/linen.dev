@@ -9,7 +9,7 @@ export default function Header() {
       <div className={styles.title}>
         <FiBox /> Feed
       </div>
-      <div className="text-gray-600 text-xs ">
+      <div className="text-gray-600 text-xs">
         All of your channel conversations in one place
       </div>
     </StickyHeader>

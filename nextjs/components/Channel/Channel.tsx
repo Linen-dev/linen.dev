@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import useInfiniteScroll from 'react-infinite-scroll-hook';
-import Spinner from 'components/Spinner';
 import { Thread } from 'components/Thread';
 import ChannelGrid from 'components/Channel/ChannelGrid';
 import { SerializedThread } from 'serializers/thread';
@@ -22,6 +21,8 @@ import useThreadWebsockets from 'hooks/websockets/thread';
 import Header from './Header';
 import Empty from './Empty';
 import classNames from 'classnames';
+import PinnedThread from './PinnedThread';
+import ChannelRow from './ChannelRow';
 
 const debouncedSendChannelMessage = debounce(
   ({ message, communityId, channelId, imitationId }: any) => {
@@ -56,6 +57,7 @@ const debouncedSendThreadMessage = debounce(
 
 export function Channel({
   threads: initialThreads,
+  pinnedThreads,
   currentChannel,
   currentCommunity,
   currentUser,
@@ -493,6 +495,8 @@ export function Channel({
     (thread) => thread.id === currentThreadId
   );
 
+  const pinnedThread = pinnedThreads[pinnedThreads.length - 1];
+
   return (
     <>
       <SidebarLayout
@@ -507,7 +511,22 @@ export function Channel({
             <ChatLayout
               content={
                 <>
-                  <Header channelName={currentChannel.channelName} />
+                  <Header channelName={currentChannel.channelName}>
+                    {pinnedThread && (
+                      <PinnedThread
+                        onClick={() => selectThread(pinnedThread.incrementId)}
+                      >
+                        <ChannelRow
+                          incrementId={pinnedThread.incrementId}
+                          messages={pinnedThread.messages}
+                          state={pinnedThread.state}
+                          isSubDomainRouting={isSubDomainRouting}
+                          settings={settings}
+                          slug={pinnedThread.slug}
+                        />
+                      </PinnedThread>
+                    )}
+                  </Header>
                   {threads.length === 0 ? (
                     <Empty />
                   ) : (

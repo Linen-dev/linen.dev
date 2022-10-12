@@ -5,14 +5,16 @@ import styles from './index.module.css';
 
 interface Props {
   channelName: string;
+  children: React.ReactNode;
 }
 
-export default function Header({ channelName }: Props) {
+export default function Header({ channelName, children }: Props) {
   return (
     <StickyHeader>
       <div className={styles.title}>
         <FiHash /> {channelName}
       </div>
+      {children}
     </StickyHeader>
   );
 }
