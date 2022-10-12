@@ -12,9 +12,10 @@ import {
 } from 'next/types';
 import Session from '../session';
 import {
-  type AccountWithFeatureFlag,
+  type AccountWithPermissions,
   findAccountByPath,
   findAuthByEmail,
+  accountWithPermissionsInclude,
 } from 'lib/models';
 import prisma from 'client';
 import { Permissions } from 'types/shared';
@@ -25,7 +26,10 @@ type Response = GetServerSidePropsContext['res'] | NextApiResponse;
 interface Props {
   request: Request;
   response: Response;
-  params: any;
+  params: {
+    communityId?: string;
+    communityName?: string;
+  };
 }
 
 export default class PermissionsService {
@@ -35,21 +39,19 @@ export default class PermissionsService {
       findAuth(request, response),
     ]);
     const user = findUser(auth, community) || null;
-    const account = user?.account || auth?.account || null;
+    const account = user?.account || null;
     const access = PermissionsService._access(community, account);
-    const chat = PermissionsService._chat(community, account);
-    const feed = PermissionsService._feed(community, account);
+    const chat = PermissionsService._chat(community);
+    const feed = PermissionsService._feed(community);
+    const is_member = PermissionsService._is_member(community, account, user);
     const manage = PermissionsService._manage(community, account, user);
-    const channel_create = PermissionsService._channel_create(
-      community,
-      account,
-      user
-    );
-    return {
+    const channel_create = PermissionsService._channel_create(community, user);
+    const permissions = {
       access,
       feed,
       chat,
       manage,
+      is_member,
       channel_create,
       user: {
         id: user?.id || null,
@@ -58,18 +60,21 @@ export default class PermissionsService {
         email: auth?.email || null,
       },
     };
+    console.log(permissions);
+    return permissions;
   }
 
   static async for(context: GetServerSidePropsContext) {
+    // TODO:
     return PermissionsService.get({
       request: context.req,
       response: context.res,
-      params: context.params,
+      params: context.params as any,
     });
   }
 
   static _manage(
-    community: AccountWithFeatureFlag | null,
+    community: AccountWithPermissions | null,
     account: accounts | null,
     user: users | null
   ): boolean {
@@ -87,7 +92,7 @@ export default class PermissionsService {
   }
 
   static _access(
-    community: AccountWithFeatureFlag | null,
+    community: AccountWithPermissions | null,
     account: accounts | null
   ): boolean {
     if (!community) {
@@ -101,60 +106,68 @@ export default class PermissionsService {
     return true;
   }
 
-  static _feed(
-    community: AccountWithFeatureFlag | null,
-    account: accounts | null
-  ): boolean {
+  static _feed(community: AccountWithPermissions | null): boolean {
     if (!community) {
       return false;
     }
-    if (!account || account.id !== community.id) {
-      return false;
-    }
-    if (community.featureFlags) {
-      return community.featureFlags.isFeedEnabled;
-    }
-    return false;
+    return true;
   }
 
-  static _channel_create(
-    community: AccountWithFeatureFlag | null,
+  static _is_member(
+    community: AccountWithPermissions | null,
     account: accounts | null,
     user: users | null
   ): boolean {
     if (!community) {
       return false;
     }
-    if (!account || account.id !== community.id) {
-      return false;
-    }
-    if (
-      community.featureFlags &&
-      community.featureFlags.isCreateChannelEnabled
-    ) {
-      if (user && user.role) {
-        if (user.role === Roles.ADMIN) return true;
-        if (user.role === Roles.OWNER) return true;
-      }
-    }
-
-    return false;
+    return !!user && !!account;
   }
 
-  static _chat(
-    community: AccountWithFeatureFlag | null,
-    account: accounts | null
+  static _channel_create(
+    community: AccountWithPermissions | null,
+    user: users | null
   ): boolean {
     if (!community) {
       return false;
     }
-    if (!account || account.id !== community.id) {
+    if (!user) {
       return false;
     }
-    if (community.featureFlags) {
-      return community.featureFlags.isChatEnabled;
+    if (user.accountsId !== community.id) {
+      return false;
     }
+
+    if (community?.discordAuthorizations?.length) {
+      return false;
+    }
+    if (community?.slackAuthorizations?.length) {
+      return false;
+    }
+
+    if (user.role === Roles.ADMIN) return true;
+    if (user.role === Roles.OWNER) return true;
+
     return false;
+  }
+
+  static _chat(community: AccountWithPermissions | null): boolean {
+    if (!community) {
+      return false;
+    }
+    if (community?.discordAuthorizations?.length) {
+      return false;
+    }
+    if (community?.slackAuthorizations?.length) {
+      const scope = community?.slackAuthorizations?.find(
+        (integration) => integration?.scope?.indexOf('chat:write') > -1
+      );
+      if (!scope) {
+        return false;
+      }
+    }
+
+    return true;
   }
 
   static async getAccessChannel({
@@ -170,7 +183,7 @@ export default class PermissionsService {
       request,
       response,
       params: {
-        communityId: channel?.account?.id,
+        communityId: channel?.account?.id!,
       },
     });
     return {
@@ -205,7 +218,7 @@ export default class PermissionsService {
 async function findCommunity(params: any) {
   if (params && params.communityId && typeof params.communityId === 'string') {
     return prisma.accounts.findFirst({
-      include: { featureFlags: true },
+      ...accountWithPermissionsInclude,
       where: { id: params.communityId },
     });
   }
@@ -227,7 +240,7 @@ function findUser(
         })[];
       })
     | null,
-  community: AccountWithFeatureFlag | null
+  community: AccountWithPermissions | null
 ) {
   if (!community) {
     return null;
