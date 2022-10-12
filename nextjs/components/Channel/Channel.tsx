@@ -23,6 +23,7 @@ import Empty from './Empty';
 import classNames from 'classnames';
 import PinnedThread from './PinnedThread';
 import ChannelRow from './ChannelRow';
+import { toast } from 'components/Toast';
 
 const debouncedSendChannelMessage = debounce(
   ({ message, communityId, channelId, imitationId }: any) => {
@@ -430,7 +431,7 @@ export function Channel({
         throw new Error('Failed to close the thread.');
       })
       .catch((exception) => {
-        alert(exception.message);
+        toast.error(exception.message);
       });
   };
 

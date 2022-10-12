@@ -8,6 +8,7 @@ import debounce from 'utilities/debounce';
 import { useUsersContext } from 'contexts/Users';
 import { MessageFormat, Roles } from '@prisma/client';
 import { v4 as uuid } from 'uuid';
+import { toast } from 'components/Toast';
 
 const debouncedSendMessage = debounce(
   ({ message, communityId, channelId, threadId, imitationId }: any) => {
@@ -94,7 +95,7 @@ export default function Content({
         throw new Error('Failed to close the thread.');
       })
       .catch((exception) => {
-        alert(exception.message);
+        toast.error(exception.message);
       });
   };
 

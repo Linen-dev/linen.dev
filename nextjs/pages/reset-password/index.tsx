@@ -2,6 +2,7 @@ import Layout from '../../components/layout/CardLayout';
 import PasswordField from '../../components/PasswordField';
 import Button from '../../components/Button';
 import { NextPageContext } from 'next';
+import { toast } from 'components/Toast';
 
 interface Props {
   token: string;
@@ -14,7 +15,8 @@ export default function ResetPassword({ token }: Props) {
     const password = form.password.value;
     const passwordConfirmation = form.passwordConfirmation.value;
     if (password !== passwordConfirmation) {
-      return alert('Passwords do not match');
+      toast.error('Passwords do not match');
+      return;
     }
     try {
       const response = await fetch('/api/reset-password', {
@@ -24,7 +26,7 @@ export default function ResetPassword({ token }: Props) {
       await response.json();
       window.location.href = '/signin';
     } catch (exception) {
-      alert('Something went wrong. Please try again.');
+      toast.error('Something went wrong. Please try again.');
     }
   };
   return (

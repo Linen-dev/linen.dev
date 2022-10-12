@@ -1,6 +1,7 @@
 import Layout from '../../components/layout/CardLayout';
 import EmailField from '../../components/EmailField';
 import Button from '../../components/Button';
+import { toast } from 'components/Toast';
 
 export default function ForgotPassword() {
   const onSubmit = async (event: any) => {
@@ -13,10 +14,10 @@ export default function ForgotPassword() {
         body: JSON.stringify({ email }),
       });
       if (response.ok) {
-        alert('Please check your email for a reset link');
+        toast.success('Please check your email for a reset link');
       } else throw response;
     } catch (exception) {
-      alert('Something went wrong. Please try again.');
+      toast.error('Something went wrong. Please try again.');
     }
   };
   return (
