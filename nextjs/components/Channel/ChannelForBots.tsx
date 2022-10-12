@@ -36,7 +36,7 @@ export function ChannelForBots({
         lg:h-[calc(100vh_-_64px)]
         md:h-[calc(100vh_-_144px)] 
         h-[calc(100vh_-_152px)]
-        lg:w-[calc(100vw_-_250px)]
+        lg:w-[calc(100vw_-_200px)]
         flex justify-center
         w-[100vw]
         "

@@ -25,7 +25,7 @@ function SidebarLayout({
       <Transition
         show={isMobile && !!right ? false : true}
         className={
-          'flex-col overflow-auto lg:h-[calc(100vh_-_64px)] md:h-[calc(100vh_-_144px)] h-[calc(100vh_-_152px)] lg:w-[calc(100vw_-_250px)] flex justify-left w-[100vw] relative'
+          'flex-col overflow-auto lg:h-[calc(100vh_-_64px)] md:h-[calc(100vh_-_144px)] h-[calc(100vh_-_152px)] lg:w-[calc(100vw_-_200px)] flex justify-left w-[100vw] relative'
         }
         onScroll={onLeftScroll}
         ref={leftRef}
