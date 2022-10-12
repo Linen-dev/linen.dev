@@ -20,6 +20,7 @@ import { useUsersContext } from 'contexts/Users';
 import { MessageFormat, Roles } from '@prisma/client';
 import useFeedWebsockets from 'hooks/websockets/feed';
 import type { CommunityPushType } from 'services/push';
+import { toast } from 'components/Toast';
 
 interface Props {
   communityId: string;
@@ -188,7 +189,7 @@ export default function Feed({
         setFeed(data);
       },
       error() {
-        alert('Something went wrong. Please reload the page.');
+        toast.error('Something went wrong. Please reload the page.');
       },
     },
     [communityName, state, page, scope, key]
@@ -253,7 +254,7 @@ export default function Feed({
         throw new Error('Failed to close the thread.');
       })
       .catch((exception) => {
-        alert(exception.message);
+        toast.error(exception.message);
       });
   };
 

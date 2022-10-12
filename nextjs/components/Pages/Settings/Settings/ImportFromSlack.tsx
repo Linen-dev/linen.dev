@@ -53,7 +53,7 @@ export default function ImportFromSlack({
       if (!startSync.ok) {
         throw startSync;
       }
-      alert('Import process initiated');
+      toast.success('Import process initiated');
     } catch (error) {
       captureException(error);
       fail();
