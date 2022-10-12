@@ -1,10 +1,7 @@
-import { useEffect, useState } from 'react';
-
 import CustomLinkHelper from 'components/Link/CustomLinkHelper';
 import ButtonPagination from 'components/ButtonPagination';
 
 import ChannelGrid from 'components/Channel/ChannelGrid';
-import { SerializedThread } from 'serializers/thread';
 import { ChannelViewProps } from 'components/Pages/ChannelsPage';
 
 export function ChannelForBots({
@@ -15,16 +12,6 @@ export function ChannelForBots({
   nextCursor,
   isBot,
 }: ChannelViewProps) {
-  const [currentThreads, setCurrentThreads] = useState<SerializedThread[]>();
-
-  useEffect(() => {
-    setCurrentThreads(threads);
-  }, [threads]);
-
-  if (!threads) {
-    return <div />;
-  }
-
   return (
     <>
       <div
@@ -44,7 +31,7 @@ export function ChannelForBots({
         <div className="sm:pt-6 justify-center">
           <ul className="divide-y sm:max-w-4xl px-1">
             <ChannelGrid
-              threads={currentThreads}
+              threads={threads}
               isSubDomainRouting={isSubDomainRouting}
               settings={settings}
               isBot={isBot}
