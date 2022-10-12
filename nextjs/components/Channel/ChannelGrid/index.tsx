@@ -12,7 +12,7 @@ export default function ChannelGrid({
   isBot,
   onClick,
 }: {
-  threads?: SerializedThread[];
+  threads: SerializedThread[];
   isSubDomainRouting: boolean;
   settings: Settings;
   isBot: boolean;
@@ -21,7 +21,7 @@ export default function ChannelGrid({
   return (
     <>
       {threads
-        ?.filter((thread) => thread.messages.length > 0)
+        .filter((thread) => thread.messages.length > 0)
         .map(({ messages, state, incrementId, slug }, index) => {
           return (
             <li

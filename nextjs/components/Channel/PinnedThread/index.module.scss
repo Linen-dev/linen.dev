@@ -1,0 +1,22 @@
+@import 'styles/colors.scss';
+
+.section {
+  background: rgba($color-primary, 0.1);
+  border: 1px solid $color-border;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  padding: 0.75rem;
+  position: relative;
+}
+
+.section:hover {
+  background: rgb(249 250 251);
+}
+
+.icon {
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  font-size: 12px;
+}

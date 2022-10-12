@@ -114,6 +114,8 @@ export async function channelGetServerSideProps(
 
   const token = await Session.tokenRaw(context.req);
 
+  const serializedThreads = threads.map(serializeThread);
+
   return {
     props: {
       token: token || null,
@@ -123,7 +125,8 @@ export async function channelGetServerSideProps(
       currentUser: !!currentUser ? serializeUser(currentUser) : null,
       channelName: channel.channelName,
       channels,
-      threads: threads.map(serializeThread),
+      threads: serializedThreads,
+      pinnedThreads: [],
       settings,
       isSubDomainRouting: isSubdomainbasedRouting,
       pathCursor: page || null,
