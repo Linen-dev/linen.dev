@@ -64,6 +64,7 @@
     "highlight.js": "^11.6.0",
     "lodash.unionby": "^4.8.0",
     "lodash.uniq": "^4.5.0",
+    "lru-cache": "^7.14.0",
     "marked": "^4.1.1",
     "micro": "^9.4.1",
     "next": "^12.3.1",
