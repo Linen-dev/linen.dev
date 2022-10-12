@@ -24,7 +24,7 @@ export default function NavBar({
 
   return (
     <>
-      <div className="hidden lg:flex bg-color-slate">
+      <div className="hidden lg:flex">
         <DesktopNavBar
           channels={sortedChannels}
           channelName={channelName}

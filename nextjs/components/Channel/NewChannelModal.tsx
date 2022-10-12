@@ -1,7 +1,6 @@
-import { Fragment, useState } from 'react';
+import { Fragment, useState, createRef } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faX } from '@fortawesome/free-solid-svg-icons';
+import { FiPlus, FiX } from 'react-icons/fi';
 import Button from 'components/Button';
 import TextInput from 'components/TextInput';
 import { captureException } from '@sentry/nextjs';
@@ -53,17 +52,19 @@ export function NewChannelModal() {
       <>
         <button
           type="button"
-          onClick={() => setOpen(!open)}
-          className="inline-flex items-center rounded-md border border-slate-200 bg-slate-100 px-1 text-sm font-medium text-slate-400 shadow-sm hover:bg-slate-200 "
+          onClick={() => {
+            setOpen(true);
+          }}
+          className="inline-flex items-center text-gray-400 hover:text-gray-500 text-sm font-medium"
         >
-          <FontAwesomeIcon
-            icon={faPlus}
-            className="h-4 w-4"
-            aria-hidden="true"
-          />
+          <FiPlus />
         </button>
         <Transition.Root show={open} as={Fragment}>
-          <Dialog as="div" className="relative z-10" onClose={setOpen}>
+          <Dialog
+            as="div"
+            className="relative z-10"
+            onClose={() => setOpen(false)}
+          >
             <Transition.Child
               as={Fragment}
               enter="ease-out duration-300"
@@ -90,55 +91,49 @@ export function NewChannelModal() {
                   <form onSubmit={onSubmit}>
                     <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6">
                       <div>
-                        <div className="absolute top-0 right-0 hidden pt-4 pr-4 sm:block">
-                          <button
-                            type="button"
-                            className="rounded-md bg-white text-gray-400 hover:text-gray-500"
-                            onClick={() => setOpen(false)}
-                          >
-                            <span className="sr-only">Close</span>
-                            <FontAwesomeIcon
-                              icon={faX}
-                              className="h-4 w-4"
-                              aria-hidden="true"
-                            />
-                          </button>
-                        </div>
-                        <div className="text-left">
+                        <div className="flex items-center justify-between">
                           <Dialog.Title
                             as="h1"
                             className="text-lg font-bold leading-6 text-gray-900"
                           >
                             Create a channel
                           </Dialog.Title>
-                          <div className="mt-2">
-                            <p className="text-sm text-gray-500">
-                              Channels are where your community communicates.
-                              They&apos;re best when organized around a topic.
-                              e.g. javascript.
-                            </p>
-                          </div>
 
-                          <div className="p-4"></div>
-
-                          <TextInput
-                            id="channelName"
-                            label="Channel name"
-                            required
-                            placeholder="e.g. javascript"
-                            {...{
-                              pattern: '[a-z-]+',
-                              title:
-                                'Channels name should only contain lower case letters and hyphens. e.g. javascript',
-                            }}
-                          />
-
-                          <span className="text-xs">
-                            Be sure to choose an url friendly name.
-                          </span>
-
-                          <div className="p-4"></div>
+                          <button
+                            type="button"
+                            className="rounded-md bg-white text-gray-400 hover:text-gray-500"
+                            onClick={() => setOpen(false)}
+                          >
+                            <span className="sr-only">Close</span>
+                            <FiX />
+                          </button>
                         </div>
+                        <div className="mt-2">
+                          <p className="text-sm text-gray-500">
+                            Channels are where your community communicates.
+                            They&apos;re best when organized around a topic.
+                            e.g. javascript.
+                          </p>
+                        </div>
+
+                        <div className="p-4"></div>
+
+                        <TextInput
+                          autoFocus
+                          id="channelName"
+                          label="Channel name"
+                          required
+                          placeholder="e.g. javascript"
+                          {...{
+                            pattern: '[a-z-]+',
+                            title:
+                              'Channels name should only contain lower case letters and hyphens. e.g. javascript',
+                          }}
+                        />
+
+                        <span className="text-xs text-gray-500">
+                          Be sure to choose an url friendly name.
+                        </span>
                       </div>
                       <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
                         <Button color="blue" type="submit" disabled={loading}>

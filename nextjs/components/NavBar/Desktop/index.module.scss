@@ -1,0 +1,8 @@
+@import 'styles/colors.scss';
+
+.navbar {
+  background: $color-background;
+  border-right: 1px solid $color-border;
+  width: 200px;
+  padding: 0.5rem 0.5rem;
+}
