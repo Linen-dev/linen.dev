@@ -14,6 +14,7 @@ export interface Permissions {
   chat: boolean;
   manage: boolean;
   channel_create: boolean;
+  is_member: boolean;
   user: {
     id: string | null;
     accountId: string | null;

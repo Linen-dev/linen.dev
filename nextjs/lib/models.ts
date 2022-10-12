@@ -165,7 +165,7 @@ export const findUserAndAccountByIdAndEmail = async (
 export const findAuthByEmail = async (email: string) => {
   return await prisma.auths.findUnique({
     where: { email },
-    include: { users: { include: { account: true } }, account: true },
+    include: { users: { include: { account: true } } },
   });
 };
 
@@ -252,21 +252,22 @@ export const findChannel = async (channelId: string) => {
   });
 };
 
-const accountWithFeatureFlag = Prisma.validator<Prisma.accountsArgs>()({
-  include: { featureFlags: true },
-});
+export const accountWithPermissionsInclude =
+  Prisma.validator<Prisma.accountsArgs>()({
+    include: {
+      featureFlags: true,
+      slackAuthorizations: true,
+      discordAuthorizations: true,
+    },
+  });
 
-export type AccountWithFeatureFlag = Prisma.accountsGetPayload<
-  typeof accountWithFeatureFlag
+export type AccountWithPermissions = Prisma.accountsGetPayload<
+  typeof accountWithPermissionsInclude
 >;
 
-export const findAccountByPath = async (
-  path: string,
-  args?: Prisma.accountsArgs
-) => {
+export const findAccountByPath = async (path: string) => {
   return await prisma.accounts.findFirst({
-    ...args,
-    ...accountWithFeatureFlag,
+    ...accountWithPermissionsInclude,
     where: {
       OR: [
         {
