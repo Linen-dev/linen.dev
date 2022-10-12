@@ -19,6 +19,7 @@ import { SerializedMessage } from 'serializers/message';
 import ChatLayout from 'components/layout/shared/ChatLayout';
 import SidebarLayout from 'components/layout/shared/SidebarLayout';
 import useThreadWebsockets from 'hooks/websockets/thread';
+import Header from './Header';
 import Empty from './Empty';
 import classNames from 'classnames';
 
@@ -502,28 +503,25 @@ export function Channel({
               [styles['is-empty']]: threads.length === 0,
             })}
           >
-            {cursor?.prev && !error?.prev ? (
-              <div className="sm:pt-6 m-3" ref={infiniteRef}>
-                <Spinner />
-              </div>
-            ) : (
-              <div />
-            )}
+            {cursor?.prev && !error?.prev && <div ref={infiniteRef}></div>}
             <ChatLayout
               content={
-                threads.length === 0 ? (
-                  <Empty />
-                ) : (
-                  <ul className="divide-y w-full">
-                    <ChannelGrid
-                      threads={threads}
-                      isSubDomainRouting={isSubDomainRouting}
-                      settings={settings}
-                      isBot={isBot}
-                      onClick={selectThread}
-                    />
-                  </ul>
-                )
+                <>
+                  <Header channelName={currentChannel.channelName} />
+                  {threads.length === 0 ? (
+                    <Empty />
+                  ) : (
+                    <ul className="divide-y w-full">
+                      <ChannelGrid
+                        threads={threads}
+                        isSubDomainRouting={isSubDomainRouting}
+                        settings={settings}
+                        isBot={isBot}
+                        onClick={selectThread}
+                      />
+                    </ul>
+                  )}
+                </>
               }
               footer={
                 permissions.chat && (
@@ -542,13 +540,7 @@ export function Channel({
               }
               direction={permissions.chat ? 'end' : 'start'}
             />
-            {cursor.next && !error?.next ? (
-              <div className="m-3" ref={infiniteBottomRef}>
-                <Spinner />
-              </div>
-            ) : (
-              <React.Fragment />
-            )}
+            {cursor.next && !error?.next && <div ref={infiniteBottomRef}></div>}
           </div>
         }
         leftRef={rootRefSetter}
