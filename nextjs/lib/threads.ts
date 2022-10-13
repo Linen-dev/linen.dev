@@ -180,6 +180,49 @@ export async function findThreadsWithWrongMessageCount() {
   limit 100`;
 }
 
+export async function findPinnedThreads({
+  channelIds,
+  limit = 3,
+  anonymizeUsers = false,
+}: {
+  channelIds: string[];
+  limit?: number;
+  anonymizeUsers?: boolean;
+}): Promise<ThreadsWithMessagesFull[]> {
+  if (!channelIds.length) {
+    return [];
+  }
+
+  const threads = await prisma.threads.findMany({
+    take: limit,
+    where: {
+      channelId: {
+        in: channelIds,
+      },
+      hidden: false,
+      pinned: true,
+    },
+    include: {
+      messages: {
+        include: {
+          author: true,
+          mentions: {
+            include: {
+              users: true,
+            },
+          },
+          reactions: true,
+          attachments: true,
+        },
+        orderBy: { sentAt: 'asc' },
+      },
+    },
+  });
+  return (
+    anonymizeUsers ? threads.map(anonymizeMessages) : threads
+  ) as ThreadsWithMessagesFull[];
+}
+
 export async function findThreadsByCursor({
   channelIds,
   sentAt = '0',

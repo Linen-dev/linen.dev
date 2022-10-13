@@ -6,10 +6,20 @@ import serializeThread from 'serializers/thread';
 import PermissionsService from 'services/permissions';
 import type { ThreadState } from '@prisma/client';
 
-async function update(threadId: string, state: ThreadState, title: string) {
+async function update({
+  threadId,
+  state,
+  title,
+  pinned,
+}: {
+  threadId: string;
+  state: ThreadState;
+  title: string;
+  pinned: boolean;
+}) {
   await prisma.threads.update({
     where: { id: threadId },
-    data: { state, title },
+    data: { state, title, pinned },
   });
 }
 
@@ -48,8 +58,8 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
     if (!permissions.manage) {
       return response.status(403).end();
     }
-    const { state, title } = JSON.parse(request.body);
-    await update(threadId, state, title);
+    const { state, title, pinned } = JSON.parse(request.body);
+    await update({ threadId, state, title, pinned });
     return response.status(200).end();
   }
   return response.status(405).end();

@@ -3,26 +3,32 @@ import CustomLink from '../../Link/CustomLink';
 import { SerializedThread } from '../../../serializers/thread';
 import ChannelRow from '../ChannelRow';
 import type { Settings } from 'serializers/account/settings';
+import { Permissions } from 'types/shared';
 import styles from './index.module.scss';
 
 export default function ChannelGrid({
   threads,
+  permissions,
   isSubDomainRouting,
   settings,
   isBot,
   onClick,
+  onPin,
 }: {
   threads: SerializedThread[];
+  permissions: Permissions;
   isSubDomainRouting: boolean;
   settings: Settings;
   isBot: boolean;
   onClick: (threadId: number) => void;
+  onPin: (threadId: string) => void;
 }) {
   return (
     <>
       {threads
         .filter((thread) => thread.messages.length > 0)
-        .map(({ messages, state, incrementId, slug }, index) => {
+        .map((thread, index) => {
+          const { incrementId, slug } = thread;
           return (
             <li
               key={`feed-${incrementId}-${index}`}
@@ -38,24 +44,22 @@ export default function ChannelGrid({
                     key={`${incrementId}-desktop`}
                   >
                     <ChannelRow
-                      incrementId={incrementId}
-                      messages={messages}
-                      state={state}
+                      thread={thread}
+                      permissions={permissions}
                       isSubDomainRouting={isSubDomainRouting}
                       settings={settings}
-                      slug={slug}
+                      onPin={onPin}
                     />
                   </CustomLink>
                 </div>
               ) : (
                 <div className="px-4 py-4" onClick={() => onClick(incrementId)}>
                   <ChannelRow
-                    incrementId={incrementId}
-                    messages={messages}
-                    state={state}
+                    thread={thread}
+                    permissions={permissions}
                     isSubDomainRouting={isSubDomainRouting}
                     settings={settings}
-                    slug={slug}
+                    onPin={onPin}
                   />
                 </div>
               )}

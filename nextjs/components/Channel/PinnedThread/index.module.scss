@@ -1,9 +1,9 @@
 @import 'styles/colors.scss';
 
 .section {
-  background: rgba($color-primary, 0.1);
   border: 1px solid $color-border;
   border-radius: 4px;
+  box-shadow: -1px 1px 0 $color-border;
   cursor: pointer;
   margin-top: 0.5rem;
   padding: 0.75rem;

@@ -2,7 +2,11 @@ import { findAccountByPath } from '../lib/models';
 import { GetServerSidePropsContext } from 'next/types';
 import { NotFound } from '../utilities/response';
 import { serialize as serializeSettings } from 'serializers/account/settings';
-import { findPreviousCursor, findThreadsByCursor } from '../lib/threads';
+import {
+  findPreviousCursor,
+  findThreadsByCursor,
+  findPinnedThreads,
+} from '../lib/threads';
 import serializeAccount from '../serializers/account';
 import serializeThread from '../serializers/thread';
 import { ThreadsWithMessagesFull } from 'types/partialTypes';
@@ -100,6 +104,12 @@ export async function channelGetServerSideProps(
     })
   ).sort(sortBySentAtAsc);
 
+  const pinnedThreads = await findPinnedThreads({
+    channelIds: [channel.id],
+    anonymizeUsers: account.anonymizeUsers,
+    limit: 10,
+  });
+
   const nextCursor = await buildCursor({
     sort,
     direction,
@@ -114,8 +124,6 @@ export async function channelGetServerSideProps(
 
   const token = await Session.tokenRaw(context.req);
 
-  const serializedThreads = threads.map(serializeThread);
-
   return {
     props: {
       token: token || null,
@@ -125,8 +133,8 @@ export async function channelGetServerSideProps(
       currentUser: !!currentUser ? serializeUser(currentUser) : null,
       channelName: channel.channelName,
       channels,
-      threads: serializedThreads,
-      pinnedThreads: [],
+      threads: threads.map(serializeThread),
+      pinnedThreads: pinnedThreads.map(serializeThread),
       settings,
       isSubDomainRouting: isSubdomainbasedRouting,
       pathCursor: page || null,
