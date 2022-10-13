@@ -31,6 +31,9 @@ Join our public community: https://linen.dev/s/linen
 - **Private Channels**: Channels that are invite only within the community
 - **Direct messages**: Direct messages within the community
 
+### Feed view:
+![Feed](https://linen-assets.s3.us-east-1.amazonaws.com/feedExample.png)
+
 ## Feedback:
 Linen is in it's early stages of development so we are looking for a ton of feedback.
 
