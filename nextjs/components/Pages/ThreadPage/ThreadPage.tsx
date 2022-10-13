@@ -24,9 +24,6 @@ export function ThreadPage({
   token,
 }: ThreadByIdProp) {
   const ref = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    threadId && fetch(`/api/count?incrementId=${threadId}`, { method: 'PUT' });
-  }, []);
 
   if (!threadId) {
     return <div></div>;

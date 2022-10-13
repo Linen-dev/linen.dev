@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import useInfiniteScroll from 'react-infinite-scroll-hook';
 import { Thread } from 'components/Thread';
 import ChannelGrid from 'components/Channel/ChannelGrid';
@@ -7,14 +7,11 @@ import { ChannelViewProps } from 'components/Pages/ChannelsPage';
 import { get } from 'utilities/http';
 import MessageForm from 'components/MessageForm';
 import { fetchMentions } from 'components/MessageForm/api';
-import { ThreadState, Roles, MessageFormat } from '@prisma/client';
+import { ThreadState } from '@prisma/client';
 import { scrollToBottom } from 'utilities/scroll';
 import styles from './index.module.css';
-import { v4 as uuid } from 'uuid';
-import debounce from 'utilities/debounce';
 import { useUsersContext } from 'contexts/Users';
 import useWebsockets from 'hooks/websockets';
-import { SerializedMessage } from 'serializers/message';
 import ChatLayout from 'components/layout/shared/ChatLayout';
 import SidebarLayout from 'components/layout/shared/SidebarLayout';
 import useThreadWebsockets from 'hooks/websockets/thread';
@@ -24,37 +21,9 @@ import classNames from 'classnames';
 import PinnedThread from './PinnedThread';
 import ChannelRow from './ChannelRow';
 import { toast } from 'components/Toast';
-
-const debouncedSendChannelMessage = debounce(
-  ({ message, communityId, channelId, imitationId }: any) => {
-    return fetch(`/api/messages/channel`, {
-      method: 'POST',
-      body: JSON.stringify({
-        communityId,
-        body: message,
-        channelId,
-        imitationId,
-      }),
-    });
-  },
-  100
-);
-
-const debouncedSendThreadMessage = debounce(
-  ({ message, communityId, channelId, threadId, imitationId }: any) => {
-    return fetch(`/api/messages/thread`, {
-      method: 'POST',
-      body: JSON.stringify({
-        body: message,
-        communityId,
-        channelId,
-        threadId,
-        imitationId,
-      }),
-    });
-  },
-  100
-);
+import { useJoinContext } from 'contexts/Join';
+import { sendThreadMessageWrapper } from './sendThreadMessageWrapper';
+import { sendMessageWrapper } from './sendMessageWrapper';
 
 export function Channel({
   threads: initialThreads,
@@ -84,6 +53,7 @@ export function Channel({
   const [cursor, setCursor] = useState(nextCursor);
   const [error, setError] = useState<{ prev?: unknown; next?: unknown }>();
   const [allUsers] = useUsersContext();
+  const { startSignUp } = useJoinContext();
 
   const [showThread, setShowThread] = useState(false);
   const [currentThreadId, setCurrentThreadId] = useState<string>();
@@ -295,102 +265,15 @@ export function Channel({
     },
   });
 
-  const sendMessage = async ({
-    message,
-    channelId,
-  }: {
-    message: string;
-    channelId: string;
-  }) => {
-    if (!currentUser) {
-      throw 'current user must be present';
-    }
-    const imitation: SerializedThread = {
-      id: uuid(),
-      sentAt: new Date().toString(),
-      messages: [
-        {
-          id: 'imitation-message-id',
-          body: message,
-          sentAt: new Date().toString(),
-          usersId: 'imitation-user-id',
-          mentions: allUsers,
-          attachments: [],
-          reactions: [],
-          threadId: 'imitation-thread-id',
-          messageFormat: MessageFormat.LINEN,
-          author: {
-            id: currentUser.id,
-            displayName: currentUser.displayName,
-            profileImageUrl: currentUser.profileImageUrl,
-            externalUserId: currentUser.externalUserId,
-            isBot: false,
-            isAdmin: false,
-            anonymousAlias: null,
-            accountsId: 'imitation-account-id',
-            authsId: null,
-            role: Roles.MEMBER,
-          },
-        },
-      ],
-      messageCount: 1,
-      channel: {
-        channelName: currentChannel.channelName,
-        hidden: currentChannel.hidden,
-        default: currentChannel.default,
-      },
-      channelId: currentChannel.id,
-      hidden: false,
-      viewCount: 0,
-      incrementId: -1,
-      externalThreadId: null,
-      slug: null,
-      title: null,
-      state: ThreadState.OPEN,
-      pinned: false,
-    };
-    setThreads((threads: SerializedThread[]) => {
-      return [...threads, imitation];
-    });
-    setTimeout(
-      () => scrollToBottom(scrollableRootRef.current as HTMLElement),
-      0
-    );
-    return debouncedSendChannelMessage({
-      message,
-      communityId: currentCommunity?.id,
-      channelId,
-      imitationId: imitation.id,
-    })
-      .then((response: any) => {
-        if (response.ok) {
-          return response.json();
-        }
-        throw 'Could not send a message';
-      })
-      .then(
-        ({
-          thread,
-          imitationId,
-        }: {
-          thread: SerializedThread;
-          imitationId: string;
-        }) => {
-          setThreads((threads: SerializedThread[]) => {
-            const threadId = thread.id;
-            let index;
-            index = threads.findIndex((thread) => thread.id === threadId);
-            if (index >= 0) {
-              return threads;
-            }
-            return [
-              ...threads.filter((thread) => thread.id !== imitationId),
-              thread,
-            ];
-          });
-        }
-      );
-  };
+  const sendMessage = sendMessageWrapper({
+    currentUser,
+    allUsers,
+    currentChannel,
+    setThreads,
+    scrollableRootRef,
+    currentCommunity,
+    startSignUp,
+  });
 
   const updateThread = ({
     state: newState,
@@ -435,101 +318,14 @@ export function Channel({
       });
   };
 
-  const sendThreadMessage = async ({
-    message,
-    channelId,
-    threadId,
-  }: {
-    message: string;
-    channelId: string;
-    threadId: string;
-  }) => {
-    if (!currentUser) {
-      throw 'current user is required';
-    }
-    const imitation: SerializedMessage = {
-      id: uuid(),
-      body: message,
-      sentAt: new Date().toString(),
-      usersId: currentUser.id,
-      mentions: allUsers,
-      attachments: [],
-      reactions: [],
-      threadId,
-      messageFormat: MessageFormat.LINEN,
-      author: {
-        id: currentUser.id,
-        externalUserId: currentUser.externalUserId,
-        displayName: currentUser.displayName,
-        profileImageUrl: currentUser.profileImageUrl,
-        isBot: false,
-        isAdmin: false,
-        anonymousAlias: null,
-        accountsId: 'fake-account-id',
-        authsId: null,
-        role: Roles.MEMBER,
-      },
-    };
-
-    setThreads((threads) => {
-      return threads.map((thread) => {
-        if (thread.id === currentThreadId) {
-          return {
-            ...thread,
-            messages: [...thread.messages, imitation],
-          };
-        }
-        return thread;
-      });
-    });
-
-    return debouncedSendThreadMessage({
-      message,
-      communityId: currentCommunity?.id,
-      channelId,
-      threadId,
-      imitationId: imitation.id,
-    })
-      .then((response: any) => {
-        if (response.ok) {
-          return response.json();
-        }
-        throw 'Could not send a message';
-      })
-      .then(
-        ({
-          message,
-          imitationId,
-        }: {
-          message: SerializedMessage;
-          imitationId: string;
-        }) => {
-          setThreads((threads) => {
-            return threads.map((thread) => {
-              if (thread.id === currentThreadId) {
-                const messageId = message.id;
-                const index = thread.messages.findIndex(
-                  (message: SerializedMessage) => message.id === messageId
-                );
-                if (index >= 0) {
-                  return thread;
-                }
-                return {
-                  ...thread,
-                  messages: [
-                    ...thread.messages.filter(
-                      (message: SerializedMessage) => message.id !== imitationId
-                    ),
-                    message,
-                  ],
-                };
-              }
-              return thread;
-            });
-          });
-        }
-      );
-  };
+  const sendThreadMessage = sendThreadMessageWrapper({
+    currentUser,
+    allUsers,
+    setThreads,
+    currentThreadId,
+    currentCommunity,
+    startSignUp,
+  });
 
   const threadToRender = threads.find(
     (thread) => thread.id === currentThreadId

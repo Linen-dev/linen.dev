@@ -3,10 +3,20 @@ import classNames from 'classnames';
 import styles from './index.module.css';
 import { useSession } from 'next-auth/react';
 import { toast } from 'components/Toast';
-import { qs } from 'utilities/url';
+import { useJoinContext } from 'contexts/Join';
+import { Permissions } from 'types/shared';
 
-export default function JoinLinen({ accountId }: { accountId?: string }) {
+import { signOut } from 'next-auth/react';
+
+export default function JoinLinen({
+  accountId,
+  permissions,
+}: {
+  accountId?: string;
+  permissions?: Permissions;
+}) {
   const { data, status } = useSession();
+  const { startSignUp } = useJoinContext();
 
   const onClick = async () => {
     if (status === 'authenticated') {
@@ -23,14 +33,31 @@ export default function JoinLinen({ accountId }: { accountId?: string }) {
         window.location.href = window.location.href;
       }
     } else if (status === 'unauthenticated') {
-      window.location.href =
-        `/signup?` +
-        qs({ callbackUrl: window.location.href, state: accountId });
+      accountId &&
+        startSignUp?.({
+          communityId: accountId,
+        });
     }
   };
 
   if (status === 'loading') {
     return <div />;
+  }
+
+  if (permissions?.is_member) {
+    return (
+      <a
+        className={classNames(
+          styles.button,
+          'shadow-md text-sm font-medium rounded-md text-blue-500',
+          'cursor-pointer'
+        )}
+        onClick={() => signOut()}
+      >
+        <LinenIcon className={styles.icon} />
+        {data?.user?.email}, <span>Sign out</span>
+      </a>
+    );
   }
 
   return (
