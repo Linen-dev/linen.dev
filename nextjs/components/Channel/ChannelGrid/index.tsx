@@ -14,6 +14,7 @@ export default function ChannelGrid({
   isBot,
   onClick,
   onPin,
+  onReaction,
 }: {
   threads: SerializedThread[];
   permissions: Permissions;
@@ -22,6 +23,7 @@ export default function ChannelGrid({
   isBot: boolean;
   onClick: (threadId: number) => void;
   onPin: (threadId: string) => void;
+  onReaction: (threadId: string, reaction: string) => void;
 }) {
   return (
     <>
@@ -49,6 +51,7 @@ export default function ChannelGrid({
                       isSubDomainRouting={isSubDomainRouting}
                       settings={settings}
                       onPin={onPin}
+                      onReaction={onReaction}
                     />
                   </CustomLink>
                 </div>
@@ -60,6 +63,7 @@ export default function ChannelGrid({
                     isSubDomainRouting={isSubDomainRouting}
                     settings={settings}
                     onPin={onPin}
+                    onReaction={onReaction}
                   />
                 </div>
               )}

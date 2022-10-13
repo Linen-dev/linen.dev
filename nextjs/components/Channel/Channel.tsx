@@ -102,6 +102,48 @@ export function Channel({
       });
   }
 
+  async function sendReaction(threadId: string, type: string) {
+    function addReaction(threads: SerializedThread[]) {
+      return threads.map((thread) => {
+        if (thread.id === threadId) {
+          return {
+            ...thread,
+            messages: thread.messages.map((message, index) => {
+              if (index === 0) {
+                const reaction = message.reactions.find(
+                  (reaction) => reaction.type === type
+                );
+                if (!reaction) {
+                  return {
+                    ...message,
+                    reactions: [...message.reactions, { type, count: 1 }],
+                  };
+                }
+                return {
+                  ...message,
+                  reactions: message.reactions.map((reaction) => {
+                    if (reaction.type === type) {
+                      return {
+                        type,
+                        count: reaction.count + 1,
+                      };
+                    }
+                    return reaction;
+                  }),
+                };
+              }
+              return message;
+            }),
+          };
+        }
+        return thread;
+      });
+    }
+    setThreads(addReaction);
+    setPinnedThreads(addReaction);
+    // TODO send reaction
+  }
+
   const [infiniteRef, { rootRef }] = useInfiniteScroll({
     loading: isLoading,
     hasNextPage: !!cursor.prev,
@@ -358,6 +400,7 @@ export function Channel({
                           isSubDomainRouting={isSubDomainRouting}
                           settings={settings}
                           onPin={pinThread}
+                          onReaction={sendReaction}
                         />
                       </PinnedThread>
                     )}
@@ -374,6 +417,7 @@ export function Channel({
                         isBot={isBot}
                         onClick={selectThread}
                         onPin={pinThread}
+                        onReaction={sendReaction}
                       />
                     </ul>
                   )}
