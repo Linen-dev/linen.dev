@@ -11,7 +11,6 @@ export default function CopyToClipboardIcon({ getText }: Props) {
   return (
     <AiOutlinePaperClip
       title="Copy to Clipboard"
-      className="text-blue-700 text-lg hover:text-blue-900"
       onClick={(event) => {
         const text = getText();
         event.stopPropagation();

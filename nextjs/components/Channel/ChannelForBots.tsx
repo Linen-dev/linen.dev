@@ -7,6 +7,7 @@ import { ChannelViewProps } from 'components/Pages/ChannelsPage';
 export function ChannelForBots({
   threads,
   settings,
+  permissions,
   channelName,
   isSubDomainRouting,
   nextCursor,
@@ -32,10 +33,12 @@ export function ChannelForBots({
           <ul className="divide-y sm:max-w-4xl px-1">
             <ChannelGrid
               threads={threads}
+              permissions={permissions}
               isSubDomainRouting={isSubDomainRouting}
               settings={settings}
               isBot={isBot}
               onClick={() => {}}
+              onPin={() => {}}
             />
             <div className="text-center p-4">
               {nextCursor?.prev && (

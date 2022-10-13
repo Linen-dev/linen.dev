@@ -57,7 +57,7 @@ const debouncedSendThreadMessage = debounce(
 
 export function Channel({
   threads: initialThreads,
-  pinnedThreads,
+  pinnedThreads: initialPinnedThreads,
   currentChannel,
   currentCommunity,
   currentUser,
@@ -73,6 +73,8 @@ export function Channel({
   const [init, setInit] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [threads, setThreads] = useState<SerializedThread[]>(initialThreads);
+  const [pinnedThreads, setPinnedThreads] =
+    useState<SerializedThread[]>(initialPinnedThreads);
   const scrollableRootRef = useRef<HTMLDivElement | null>(null);
   const threadRef = useRef<HTMLDivElement>(null);
   const lastDistanceToBottomRef = useRef<number>(0);
@@ -91,6 +93,42 @@ export function Channel({
       setCurrentThreadId(currentThread.id);
     }
     setShowThread(true);
+  }
+
+  async function pinThread(threadId: string) {
+    const thread = threads.find(({ id }) => id === threadId);
+    if (!thread) {
+      return;
+    }
+    const newPinned = !thread.pinned;
+    setThreads((threads) => {
+      return threads.map((thread) => {
+        if (thread.id === threadId) {
+          return { ...thread, pinned: newPinned };
+        }
+        return thread;
+      });
+    });
+    setPinnedThreads((pinnedThreads) => {
+      if (newPinned) {
+        return [...pinnedThreads, { ...thread, pinned: true }];
+      } else {
+        return pinnedThreads.filter(({ id }) => id !== threadId);
+      }
+    });
+    return fetch(`/api/threads/${thread.id}`, {
+      method: 'PUT',
+      body: JSON.stringify({ pinned: newPinned }),
+    })
+      .then((response) => {
+        if (response.ok) {
+          return;
+        }
+        throw new Error('Failed to pin the thread.');
+      })
+      .catch((exception) => {
+        alert(exception.message);
+      });
   }
 
   const [infiniteRef, { rootRef }] = useInfiniteScroll({
@@ -308,6 +346,7 @@ export function Channel({
       slug: null,
       title: null,
       state: ThreadState.OPEN,
+      pinned: false,
     };
     setThreads((threads: SerializedThread[]) => {
       return [...threads, imitation];
@@ -517,12 +556,11 @@ export function Channel({
                         onClick={() => selectThread(pinnedThread.incrementId)}
                       >
                         <ChannelRow
-                          incrementId={pinnedThread.incrementId}
-                          messages={pinnedThread.messages}
-                          state={pinnedThread.state}
+                          thread={pinnedThread}
+                          permissions={permissions}
                           isSubDomainRouting={isSubDomainRouting}
                           settings={settings}
-                          slug={pinnedThread.slug}
+                          onPin={pinThread}
                         />
                       </PinnedThread>
                     )}
@@ -533,10 +571,12 @@ export function Channel({
                     <ul className="divide-y w-full">
                       <ChannelGrid
                         threads={threads}
+                        permissions={permissions}
                         isSubDomainRouting={isSubDomainRouting}
                         settings={settings}
                         isBot={isBot}
                         onClick={selectThread}
+                        onPin={pinThread}
                       />
                     </ul>
                   )}

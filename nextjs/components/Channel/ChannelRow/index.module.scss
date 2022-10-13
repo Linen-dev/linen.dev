@@ -1,0 +1,36 @@
+@import 'styles/colors.scss';
+
+.container {
+  position: relative;
+}
+
+.options {
+  background: white;
+  border-radius: 4px;
+  border: 1px solid $color-border;
+  box-shadow: 0 3px 5px $color-border;
+  position: absolute;
+  display: none;
+  top: 50%;
+  right: 0.5rem;
+  transform: translate(0, -50%);
+  padding: 0;
+}
+
+.options li {
+  padding: 0.375rem;
+  font-size: 16px;
+}
+
+.options li:hover {
+  background: rgb(249 250 251);
+}
+
+.container:hover .options {
+  align-items: center;
+  display: flex;
+}
+
+.pinned {
+  color: $color-secondary;
+}
