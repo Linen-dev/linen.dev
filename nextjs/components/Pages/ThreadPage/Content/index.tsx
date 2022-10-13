@@ -85,7 +85,7 @@ export default function Content({
   };
 
   const sendMessage = sendMessageWrapper({
-    currentUser,
+    currentUser: permissions.is_member ? currentUser : null,
     startSignUp,
     currentCommunity,
     allUsers,
