@@ -34,7 +34,7 @@ export function sendMessageWrapper({
   allUsers: SerializedUser[];
   setMessages: Function;
 }) {
-  return ({
+  return async ({
     message,
     channelId,
     threadId,

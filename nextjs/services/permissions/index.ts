@@ -60,12 +60,10 @@ export default class PermissionsService {
         email: auth?.email || null,
       },
     };
-    console.log(permissions);
     return permissions;
   }
 
   static async for(context: GetServerSidePropsContext) {
-    // TODO:
     return PermissionsService.get({
       request: context.req,
       response: context.res,
@@ -108,6 +106,14 @@ export default class PermissionsService {
 
   static _feed(community: AccountWithPermissions | null): boolean {
     if (!community) {
+      return false;
+    }
+    // TODO: this should be removed when feed is ready for all communities
+    if (community?.discordAuthorizations?.length) {
+      return false;
+    }
+    // TODO: this should be removed when feed is ready for all communities
+    if (community?.slackAuthorizations?.length) {
       return false;
     }
     return true;
