@@ -12,7 +12,7 @@ const Home = () => {
   const tiers = [
     {
       name: 'Community Edition',
-      href: '#',
+      href: '/signup',
       priceMonthly: 'Free',
       description: 'Free for open source and non profit communities',
       features: [
@@ -24,7 +24,7 @@ const Home = () => {
     },
     {
       name: 'Business Edition',
-      href: '#',
+      href: 'mailto:help@linen.dev',
       priceMonthly: 'Contact us',
       description: 'Improve your SEO and generate organic traffic',
       features: [
@@ -117,7 +117,7 @@ const Home = () => {
                 target="_blank"
                 rel="noreferrer"
               >
-                Live demo
+                Linen community
               </a>
             </div>
           </div>
@@ -189,19 +189,19 @@ const Home = () => {
                       attention in a single page
                     </p>
                     <div className="mt-6">
-                      <a
-                        href="#"
+                      <Link
+                        href="/signup"
                         className="inline-flex rounded-md border border-transparent bg-gradient-to-r from-blue-600 to-indigo-600 bg-origin-border px-4 py-2 text-base font-medium text-white shadow-sm hover:from-blue-700 hover:to-indigo-700"
                       >
                         Get started
-                      </a>
+                      </Link>
                     </div>
                   </div>
                 </div>
               </div>
               <div className="mt-12 sm:mt-16 lg:mt-0">
                 <div className="-mr-48 pl-4 sm:pl-6 md:-mr-16 lg:relative lg:m-0 lg:h-full lg:px-0">
-                  <img
+                  <Image
                     className="w-full rounded-xl shadow-xl ring-1 ring-black ring-opacity-5 lg:absolute lg:left-0 lg:h-full lg:w-auto lg:max-w-none"
                     src="https://linen-assets.s3.us-east-1.amazonaws.com/feedExample.png"
                     alt="Inbox user interface"
@@ -230,12 +230,12 @@ const Home = () => {
                       Google{' '}
                     </p>
                     <div className="mt-6">
-                      <a
-                        href="#"
+                      <Link
+                        href="/signup"
                         className="inline-flex rounded-md border border-transparent bg-gradient-to-r from-blue-600 to-indigo-600 bg-origin-border px-4 py-2 text-base font-medium text-white shadow-sm hover:from-blue-700 hover:to-indigo-700"
                       >
                         Get started
-                      </a>
+                      </Link>
                     </div>
                   </div>
                 </div>
