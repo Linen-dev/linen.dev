@@ -24,20 +24,32 @@ export const createMessageWithMentions = async (
   message: Prisma.messagesUncheckedCreateInput,
   mentionsId: string[]
 ) => {
-  return await prisma.messages.create({
+  const msg = {
+    body: message.body,
+    blocks: message.blocks,
+    threadId: message.threadId,
+    externalMessageId: message.externalMessageId,
+    channelId: message.channelId,
+    sentAt: message.sentAt,
+    usersId: message.usersId,
+    messageFormat: message.messageFormat,
+  };
+  return await prisma.messages.upsert({
     include: { mentions: true },
-    data: {
-      body: message.body,
-      blocks: message.blocks,
-      threadId: message.threadId,
-      externalMessageId: message.externalMessageId,
-      channelId: message.channelId,
-      sentAt: message.sentAt,
-      usersId: message.usersId,
-      messageFormat: message.messageFormat,
+    create: {
+      ...msg,
       mentions: {
         create: mentionsId.map((id) => ({ usersId: id })),
       },
+    },
+    where: {
+      channelId_externalMessageId: {
+        externalMessageId: message.externalMessageId!,
+        channelId: message.channelId,
+      },
+    },
+    update: {
+      ...msg,
     },
   });
 };

@@ -90,15 +90,15 @@ export const listUsers = async (accountId: string) => {
 
 export const findOrCreateUserFromUserInfo = async (
   externalUserId: string,
-  channel: ChannelWithAccountAndSlackAuth
+  accountId: string,
+  accessToken?: string
 ) => {
-  let user = await findUser(externalUserId, channel.accountId as string);
+  let user = await findUser(externalUserId, accountId);
   if (user === null) {
-    const accessToken = channel.account?.slackAuthorizations[0]?.accessToken;
     if (!!accessToken) {
       const slackUser = await getSlackUser(externalUserId, accessToken);
       //check done above in channel check
-      user = await createUserFromUserInfo(slackUser, channel.accountId!);
+      user = await createUserFromUserInfo(slackUser, accountId!);
     }
   }
   return user;

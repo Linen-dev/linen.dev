@@ -77,7 +77,20 @@ async function processLinks(
 ): Promise<Record<string, string>> {
   if (!files || !files.length) return {};
 
-  async function processLink(file: MessageFile) {
+  return (await Promise.all(files.map(processLink(token)))).reduce(
+    arrayToMap,
+    {}
+  );
+}
+
+function processLink(
+  token: string
+): (
+  value: MessageFile,
+  index: number,
+  array: MessageFile[]
+) => Promise<{ fileId?: string; internalUrl?: string }> {
+  return async function (file: MessageFile) {
     if (!file.url_private) return {};
     try {
       const response = await fetchFile(file.url_private, token);
@@ -97,9 +110,7 @@ async function processLinks(
       await flush(2000);
       return {};
     }
-  }
-
-  return (await Promise.all(files.map(processLink))).reduce(arrayToMap, {});
+  };
 }
 
 function arrayToMapGeneric(key: string, val: string) {
