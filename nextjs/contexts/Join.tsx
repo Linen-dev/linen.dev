@@ -1,6 +1,7 @@
 import Modal from 'components/Modal';
 import SignUpComponent from 'components/Pages/SignUp';
-import { getSession } from 'next-auth/react';
+import { Session } from 'next-auth';
+import { getSession, useSession } from 'next-auth/react';
 import React, { createContext, useContext, useState } from 'react';
 
 const Context = createContext<{
@@ -24,19 +25,39 @@ type onSignInType = {
 export type StartSignUpFn = (props: StartSignUpProps) => any;
 
 export const JoinContext = ({ children }: Props) => {
+  const { data, status } = useSession();
   const [open, setOpen] = useState(false);
   const [communityId, setCommunityId] = useState<string>();
   const [onSignInAction, setOnSignInAction] = useState<onSignInType>();
 
-  const startSignUp = (props: StartSignUpProps) => {
-    props.onSignIn && setOnSignInAction(props.onSignIn);
+  const startSignUp = async (props: StartSignUpProps) => {
+    setOnSignInAction(props.onSignIn);
     setCommunityId(props.communityId);
+    if (status === 'authenticated') {
+      const res = await fetch('/api/invites/join-button', {
+        method: 'post',
+        body: JSON.stringify({
+          communityId: props.communityId,
+        }),
+      });
+      if (res.ok) {
+        await callAfterSignInFunction(props.onSignIn, data);
+        return;
+      }
+    }
     setOpen(!open);
   };
 
   const onSuccessfulSignIn = async () => {
     setOpen(false);
     const session = await getSession();
+    await callAfterSignInFunction(onSignInAction, session);
+  };
+
+  async function callAfterSignInFunction(
+    onSignInAction: onSignInType | undefined,
+    session: Session | null
+  ) {
     await onSignInAction?.run({
       currentUser: session?.user,
       startSignUp: () => {},
@@ -45,7 +66,7 @@ export const JoinContext = ({ children }: Props) => {
       ...onSignInAction.params,
     });
     window.location.href = window.location.href;
-  };
+  }
 
   const onCloseModal = (e: boolean) => {
     setOpen(e);

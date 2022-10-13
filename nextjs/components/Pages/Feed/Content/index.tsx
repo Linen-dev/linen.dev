@@ -243,7 +243,7 @@ export default function Feed({
   };
 
   const sendMessage = sendMessageWrapper({
-    currentUser,
+    currentUser: permissions.is_member ? currentUser : null,
     allUsers,
     setThread,
     setFeed,

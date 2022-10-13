@@ -266,7 +266,7 @@ export function Channel({
   });
 
   const sendMessage = sendMessageWrapper({
-    currentUser,
+    currentUser: permissions.is_member ? currentUser : null,
     allUsers,
     currentChannel,
     setThreads,
@@ -319,7 +319,7 @@ export function Channel({
   };
 
   const sendThreadMessage = sendThreadMessageWrapper({
-    currentUser,
+    currentUser: permissions.is_member ? currentUser : null,
     allUsers,
     setThreads,
     currentThreadId,

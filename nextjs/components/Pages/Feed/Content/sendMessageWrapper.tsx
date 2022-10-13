@@ -32,7 +32,7 @@ export function sendMessageWrapper({
   communityId,
   startSignUp,
 }: {
-  currentUser: SerializedUser;
+  currentUser: SerializedUser | null;
   allUsers: SerializedUser[];
   setThread: React.Dispatch<React.SetStateAction<SerializedThread | undefined>>;
   setFeed: React.Dispatch<React.SetStateAction<FeedResponse>>;
