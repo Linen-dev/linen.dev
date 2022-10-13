@@ -112,7 +112,7 @@ const Home = () => {
             </div>
             <div className="mt-3 sm:mt-0 sm:ml-3">
               <a
-                href="https://slack-chats.kotlinlang.org"
+                href="https://linen.dev/s/linen"
                 className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 md:py-4 md:text-lg md:px-10"
                 target="_blank"
                 rel="noreferrer"
@@ -189,11 +189,10 @@ const Home = () => {
                       attention in a single page
                     </p>
                     <div className="mt-6">
-                      <Link
-                        href="/signup"
-                        className="inline-flex rounded-md border border-transparent bg-gradient-to-r from-blue-600 to-indigo-600 bg-origin-border px-4 py-2 text-base font-medium text-white shadow-sm hover:from-blue-700 hover:to-indigo-700"
-                      >
-                        Get started
+                      <Link href="/signup">
+                        <a className="inline-flex rounded-md border border-transparent bg-gradient-to-r from-blue-600 to-indigo-600 bg-origin-border px-4 py-2 text-base font-medium text-white shadow-sm hover:from-blue-700 hover:to-indigo-700">
+                          Get started
+                        </a>
                       </Link>
                     </div>
                   </div>
@@ -201,7 +200,7 @@ const Home = () => {
               </div>
               <div className="mt-12 sm:mt-16 lg:mt-0">
                 <div className="-mr-48 pl-4 sm:pl-6 md:-mr-16 lg:relative lg:m-0 lg:h-full lg:px-0">
-                  <Image
+                  <img
                     className="w-full rounded-xl shadow-xl ring-1 ring-black ring-opacity-5 lg:absolute lg:left-0 lg:h-full lg:w-auto lg:max-w-none"
                     src="https://linen-assets.s3.us-east-1.amazonaws.com/feedExample.png"
                     alt="Inbox user interface"
@@ -230,11 +229,10 @@ const Home = () => {
                       Google{' '}
                     </p>
                     <div className="mt-6">
-                      <Link
-                        href="/signup"
-                        className="inline-flex rounded-md border border-transparent bg-gradient-to-r from-blue-600 to-indigo-600 bg-origin-border px-4 py-2 text-base font-medium text-white shadow-sm hover:from-blue-700 hover:to-indigo-700"
-                      >
-                        Get started
+                      <Link href="/signup">
+                        <a className="inline-flex rounded-md border border-transparent bg-gradient-to-r from-blue-600 to-indigo-600 bg-origin-border px-4 py-2 text-base font-medium text-white shadow-sm hover:from-blue-700 hover:to-indigo-700">
+                          Get started
+                        </a>
                       </Link>
                     </div>
                   </div>
