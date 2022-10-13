@@ -58,6 +58,7 @@ model threads {
   hidden           Boolean     @default(false)
   title            String?
   state            ThreadState @default(OPEN)
+  pinned           Boolean     @default(false)
 
   messages  messages[]
   channelId String
