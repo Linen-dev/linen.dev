@@ -39,6 +39,7 @@ export function ChannelForBots({
               isBot={isBot}
               onClick={() => {}}
               onPin={() => {}}
+              onReaction={() => {}}
             />
             <div className="text-center p-4">
               {nextCursor?.prev && (

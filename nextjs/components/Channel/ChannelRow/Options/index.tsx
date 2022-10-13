@@ -6,6 +6,7 @@ import { toast } from 'components/Toast';
 import { Permissions } from 'types/shared';
 import { GoPin } from 'react-icons/go';
 import { AiOutlinePaperClip } from 'react-icons/ai';
+import { FiThumbsUp } from 'react-icons/fi';
 import type { Settings } from 'serializers/account/settings';
 import { SerializedThread } from 'serializers/thread';
 import styles from './index.module.scss';
@@ -17,6 +18,7 @@ interface Props {
   settings: Settings;
   isSubDomainRouting: boolean;
   onPin(threadId: string): void;
+  onReaction(threadId: string, reaction: string): void;
 }
 
 export default function Options({
@@ -25,10 +27,20 @@ export default function Options({
   permissions,
   settings,
   isSubDomainRouting,
+  onReaction,
   onPin,
 }: Props) {
   return (
     <ul className={classNames(styles.options, className)}>
+      <li
+        onClick={(event) => {
+          event.stopPropagation();
+          event.preventDefault();
+          onReaction(thread.id, ':thumbsup:');
+        }}
+      >
+        <FiThumbsUp />
+      </li>
       <li
         onClick={(event) => {
           const text = getThreadUrl({

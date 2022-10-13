@@ -23,12 +23,14 @@ export default function ChannelRow({
   isSubDomainRouting,
   settings,
   onPin,
+  onReaction,
 }: {
   thread: SerializedThread;
   permissions: Permissions;
   isSubDomainRouting: boolean;
   settings: Settings;
   onPin(threadId: string): void;
+  onReaction(threadId: string, reaction: string): void;
 }) {
   const { incrementId, messages, state, slug } = thread;
   let users = messages.map((m) => m.author).filter(Boolean) as users[];
@@ -68,6 +70,7 @@ export default function ChannelRow({
         permissions={permissions}
         className={styles.options}
         onPin={onPin}
+        onReaction={onReaction}
       />
     </div>
   );
