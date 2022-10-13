@@ -12,6 +12,9 @@ export async function feedGetServerSideProps(
   isSubDomainRouting: boolean
 ) {
   const permissions = await PermissionsService.for(context);
+  if (!permissions.access) {
+    return RedirectTo('/signin');
+  }
   if (!permissions.feed) {
     return RedirectTo('/signin');
   }
