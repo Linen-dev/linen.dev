@@ -1,3 +1,4 @@
+import { MessageFile } from 'services/slack';
 import { UserInfo } from './slackUserInfoInterface';
 
 export interface SlackEvent {
@@ -43,6 +44,7 @@ export interface SlackMessageEvent {
   parent_user_id: string;
   channel_type: string;
   thread_ts?: string;
+  files?: MessageFile[];
 }
 export interface SlackMessageReactionRemovedEvent {
   type: 'reaction_removed';

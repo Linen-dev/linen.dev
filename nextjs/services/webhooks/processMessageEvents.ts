@@ -20,6 +20,7 @@ import { findOrCreateUserFromUserInfo } from '../../lib/users';
 import { parseSlackSentAt, tsToSentAt } from '../../utilities/sentAt';
 import { findChannelWithAccountByExternalId } from 'lib/channel';
 import { eventNewMessage, eventNewThread } from 'services/events';
+import { processAttachments } from 'services/slack';
 
 export async function processMessageEvent(body: SlackEvent) {
   const event = body.event as SlackMessageEvent;
@@ -38,7 +39,10 @@ export async function processMessageEvent(body: SlackEvent) {
   }
 
   let message;
-  if (event.type === 'message' && !event.subtype) {
+  if (
+    event.type === 'message' &&
+    (!event.subtype || ['file_share'].includes(event.subtype))
+  ) {
     message = await addMessage(channel, event);
   } else if (
     event.type === 'message' &&
@@ -90,15 +94,20 @@ async function addMessage(
   mentionUserIds = mentionUserIds.map((m) =>
     m.replace('<@', '').replace('>', '')
   );
+  const accessToken = channel.account?.slackAuthorizations[0]?.accessToken!;
   const mentionUsers = await Promise.all(
     mentionUserIds.map((userId) =>
-      findOrCreateUserFromUserInfo(userId, channel)
+      findOrCreateUserFromUserInfo(userId, channel.accountId!, accessToken)
     )
   );
 
   const mentionIds = mentionUsers.filter(Boolean).map((x) => x!.id);
 
-  let user = await findOrCreateUserFromUserInfo(event.user, channel);
+  let user = await findOrCreateUserFromUserInfo(
+    event.user,
+    channel.accountId!,
+    accessToken
+  );
 
   const param: Prisma.messagesUncheckedCreateInput = {
     body: event.text,
@@ -112,6 +121,16 @@ async function addMessage(
   };
 
   const message = await createMessageWithMentions(param, mentionIds);
+
+  if (accessToken) {
+    await processAttachments(
+      {
+        files: event.files,
+      } as any,
+      message,
+      accessToken
+    );
+  }
 
   const channelId = channel.id;
   const messageId = message.id;

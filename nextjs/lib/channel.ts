@@ -49,7 +49,10 @@ export async function findChannelWithAccountByExternalId(
     include: {
       account: {
         include: {
-          slackAuthorizations: true,
+          slackAuthorizations: {
+            orderBy: { createdAt: 'desc' },
+            take: 1,
+          },
         },
       },
     },

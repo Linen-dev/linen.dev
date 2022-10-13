@@ -1,16 +1,8 @@
-import { prismaMock } from '__tests__/singleton';
-import * as mockModels from 'lib/models';
-jest.mock('lib/models', () => ({
-  ...jest.requireActual('lib/models'),
-  findMessageByChannelIdAndTs: jest.fn(),
-  deleteMessageWithMentions: jest.fn(),
-}));
 jest.mock('lib/users');
-import * as mockUsers from 'lib/users';
-import { parseSlackSentAt } from 'utilities/sentAt';
-import { createSlug } from 'utilities/util';
+jest.mock('services/events');
 import { handleWebhook } from 'services/webhooks';
-import { MessageFormat } from '@prisma/client';
+import { v4 } from 'uuid';
+import { prisma } from 'client';
 
 const addMessageEvent = {
   token: 'RudepRJuMOjy8zENRCLdXW7t',
@@ -130,165 +122,78 @@ const changeMessageEvent = {
 
 describe('webhook', () => {
   it('add message - new thread', async () => {
-    const channelMock = {
-      id: 'channel_id',
-      channelName: 'channel_name',
-      externalChannelId: 'C03ATK7RWNS',
-      accountId: 'account_id',
-      hidden: false,
-      externalPageCursor: null,
-    };
-    const channelsFindUniqueMock =
-      prismaMock.channels.findUnique.mockResolvedValue(channelMock);
-
-    const threadMock = {
-      id: 'thread_id',
-      incrementId: 0,
-      externalThreadId: 'string',
-      viewCount: 0,
-      slug: null,
-      messageCount: 0,
-      channelId: 'C03ATK7RWNS',
-      sentAt: new Date().getTime(),
-    };
-    const threadsUpsertMock =
-      prismaMock.threads.upsert.mockResolvedValue(threadMock);
-
-    const userMock = {
-      id: 'user_id',
-      externalUserId: 'U037T5JG1NY',
-      displayName: 'Jhon Smith',
-      profileImageUrl: null,
-      isBot: false,
-      isAdmin: false,
-      accountsId: 'account_id',
-    };
-    mockUsers.findOrCreateUserFromUserInfo.mockResolvedValue(userMock);
-
-    const now = new Date();
-    const messageMock = {
-      id: 'message_id',
-      createdAt: now,
-      body: 'this is test3',
-      sentAt: now,
-      channelId: 'C03ATK7RWNS',
-      externalMessageId: '1650644364.126099',
-      threadId: 'thread_id',
-      usersId: 'user_id',
-    };
-    const messagesCreateMock =
-      prismaMock.messages.create.mockResolvedValue(messageMock);
-
-    const res = await handleWebhook(addMessageEvent);
-
-    // Proper channel has been searched for based on Slack event
-    expect(channelsFindUniqueMock).toHaveBeenCalledWith({
-      where: {
-        externalChannelId: addMessageEvent.event.channel,
-      },
-      include: {
-        account: {
-          include: {
-            slackAuthorizations: true,
-          },
-        },
-      },
+    const account = await prisma.accounts.create({
+      data: {},
     });
-
-    // Proper thread was created/updated
-    expect(threadsUpsertMock).toHaveBeenCalledWith({
-      where: {
-        externalThreadId: addMessageEvent.event.ts,
-      },
-      update: {
-        externalThreadId: addMessageEvent.event.ts,
-        channelId: channelMock.id,
-        sentAt: parseSlackSentAt(addMessageEvent.event.ts),
-        slug: createSlug(addMessageEvent.event.text),
-      },
-      create: {
-        externalThreadId: addMessageEvent.event.ts,
-        channelId: channelMock.id,
-        sentAt: parseSlackSentAt(addMessageEvent.event.ts),
-        slug: createSlug(addMessageEvent.event.text),
-      },
-      include: {
-        messages: true,
-      },
-    });
-
-    prismaMock.threads.update.calledWith({
-      where: {
-        id: threadMock.id,
-      },
-      data: threadMock,
-    });
-
-    expect(mockUsers.findOrCreateUserFromUserInfo).toHaveBeenCalledWith(
-      addMessageEvent.event.user,
-      channelMock
-    );
-
-    expect(messagesCreateMock).toHaveBeenCalledWith({
+    const channelMock = await prisma.channels.create({
       data: {
-        body: 'this is test3',
-        threadId: 'thread_id',
-        externalMessageId: '1650644364.126099',
-        channelId: 'channel_id',
-        sentAt: new Date(parseFloat(addMessageEvent.event.ts) * 1000),
-        usersId: 'user_id',
-        mentions: {
-          create: [],
-        },
-        blocks: [{ type: 'rich_text', block_id: '9hC', elements: [] }],
-        messageFormat: MessageFormat.SLACK,
+        channelName: v4(),
+        externalChannelId: v4(),
+        accountId: account.id,
+        hidden: false,
       },
-      include: { mentions: true },
     });
 
+    const res = await handleWebhook({
+      ...addMessageEvent,
+      event: {
+        ...addMessageEvent.event,
+        channel: channelMock.externalChannelId!,
+      },
+    });
     // result OK:200
     expect(res.status).toBe(200);
     expect(res.message.body).toStrictEqual('this is test3');
+
+    const message = await prisma.messages.findFirst({
+      where: { externalMessageId: addMessageEvent.event.ts },
+    });
+    expect(message).toBeDefined();
+    expect(message?.id).toBe(res.message.id);
+    expect(message?.channelId).toBe(channelMock.id);
+
+    const thread = await prisma.threads.findFirst({
+      where: { id: message?.threadId! },
+    });
+    expect(thread).toBeDefined();
+    expect(message?.externalMessageId).toBe(thread?.externalThreadId);
   });
 
   it('delete message', async () => {
-    const channelMock = {
-      id: 'channel_id',
-      channelName: 'channel_name',
-      externalChannelId: 'C03ATK7RWNS',
-      accountId: 'account_id',
-      hidden: false,
-      externalPageCursor: null,
-    };
-    const channelsFindUniqueMock =
-      prismaMock.channels.findUnique.mockResolvedValue(channelMock);
-
-    mockModels.findMessageByChannelIdAndTs.mockResolvedValue({
-      id: 'message_id',
-    });
-
-    const res = await handleWebhook(deleteMessageEvent);
-    // Proper channel has been searched for based on Slack event
-    expect(channelsFindUniqueMock).toHaveBeenCalledWith({
-      where: {
-        externalChannelId: deleteMessageEvent.event.channel,
-      },
-      include: {
-        account: {
-          include: {
-            slackAuthorizations: true,
+    const message = await prisma.messages.create({
+      include: { channel: true },
+      data: {
+        body: v4(),
+        sentAt: new Date(),
+        externalMessageId: v4(),
+        channel: {
+          create: {
+            channelName: v4(),
+            externalChannelId: v4(),
+            account: { create: {} },
           },
         },
       },
     });
 
-    expect(mockModels.findMessageByChannelIdAndTs).toHaveBeenCalledWith(
-      channelMock.id,
-      deleteMessageEvent.event.deleted_ts
-    );
-    expect(mockModels.deleteMessageWithMentions).toHaveBeenCalledWith(
-      'message_id'
-    );
+    const messageShouldExist = await prisma.messages.findUnique({
+      where: { id: message.id },
+    });
+    expect(messageShouldExist).toBeDefined();
+
+    const res = await handleWebhook({
+      ...deleteMessageEvent,
+      event: {
+        ...deleteMessageEvent.event,
+        deleted_ts: message.externalMessageId!,
+        channel: message.channel.externalChannelId!,
+      },
+    });
+
+    const messageShouldNotExist = await prisma.messages.findUnique({
+      where: { id: message.id },
+    });
+    expect(messageShouldNotExist).toBeNull();
 
     // result OK:200
     expect(res.status).toBe(200);
@@ -296,153 +201,56 @@ describe('webhook', () => {
   });
 
   it('change message', async () => {
-    const channelMock = {
-      id: 'channel_id',
-      channelName: 'channel_name',
-      externalChannelId: 'C03ATK7RWNS',
-      accountId: 'account_id',
-      hidden: false,
-      externalPageCursor: null,
-    };
-    const channelsFindUniqueMock =
-      prismaMock.channels.findUnique.mockResolvedValue(channelMock);
-
-    mockModels.findMessageByChannelIdAndTs.mockResolvedValue({
-      id: 'message_id',
-    });
-
-    const threadMock = {
-      id: 'thread_id',
-      incrementId: 0,
-      externalThreadId: 'string',
-      viewCount: 0,
-      slug: null,
-      messageCount: 0,
-      channelId: 'C03ATK7RWNS',
-      sentAt: new Date().getTime(),
-    };
-    const threadsUpsertMock =
-      prismaMock.threads.upsert.mockResolvedValue(threadMock);
-
-    const userMock = {
-      id: 'user_id',
-      externalUserId: 'U037T5JG1NY',
-      displayName: 'Jhon Smith',
-      profileImageUrl: null,
-      isBot: false,
-      isAdmin: false,
-      accountsId: 'account_id',
-    };
-    mockUsers.findOrCreateUserFromUserInfo.mockResolvedValue(userMock);
-
-    const now = new Date();
-    const messageMock = {
-      id: 'message_id',
-      createdAt: now,
-      body: 'Lets-test-4',
-      sentAt: now,
-      channelId: 'C03ATK7RWNS',
-      externalMessageId: '1652127600.388019',
-      threadId: null,
-      usersId: 'user_id',
-    };
-    const messagesCreateMock =
-      prismaMock.messages.create.mockResolvedValue(messageMock);
-
-    const res = await handleWebhook(changeMessageEvent);
-
-    // Proper channel has been searched for based on Slack event
-    expect(channelsFindUniqueMock).toHaveBeenCalledWith({
-      where: {
-        externalChannelId: changeMessageEvent.event.channel,
-      },
-      include: {
-        account: {
-          include: {
-            slackAuthorizations: true,
-          },
-        },
-      },
-    });
-
-    expect(mockModels.findMessageByChannelIdAndTs).toHaveBeenCalledWith(
-      channelMock.id,
-      changeMessageEvent.event.previous_message.ts
-    );
-
-    expect(mockModels.deleteMessageWithMentions).toHaveBeenCalledWith(
-      'message_id'
-    );
-
-    // Proper channel has been searched for based on Slack event
-    expect(channelsFindUniqueMock).toHaveBeenCalledWith({
-      where: {
-        externalChannelId: changeMessageEvent.event.channel,
-      },
-      include: {
-        account: {
-          include: {
-            slackAuthorizations: true,
-          },
-        },
-      },
-    });
-
-    // Proper thread was created/updated
-    expect(threadsUpsertMock).toHaveBeenCalledWith({
-      where: {
-        externalThreadId: changeMessageEvent.event.message.ts,
-      },
-      update: {
-        externalThreadId: changeMessageEvent.event.message.ts,
-        channelId: channelMock.id,
-        sentAt: parseSlackSentAt(changeMessageEvent.event.message.ts),
-        slug: createSlug(changeMessageEvent.event.message.text),
-      },
-      create: {
-        externalThreadId: changeMessageEvent.event.message.ts,
-        channelId: channelMock.id,
-        sentAt: parseSlackSentAt(changeMessageEvent.event.message.ts),
-        slug: createSlug(changeMessageEvent.event.message.text),
-      },
-      include: {
-        messages: true,
-      },
-    });
-
-    prismaMock.threads.update.calledWith({
-      where: {
-        id: threadMock.id,
-      },
-      data: threadMock,
-    });
-
-    expect(mockUsers.findOrCreateUserFromUserInfo).toHaveBeenCalledWith(
-      changeMessageEvent.event.message.user,
-      channelMock
-    );
-
-    expect(messagesCreateMock).toHaveBeenCalledWith({
+    const message = await prisma.messages.create({
+      include: { channel: true },
       data: {
-        body: 'Lets test_4',
-        threadId: 'thread_id',
-        externalMessageId: '1652127600.388019',
-        channelId: 'channel_id',
-        sentAt: new Date(
-          parseFloat(changeMessageEvent.event.message.ts) * 1000
-        ),
-        usersId: 'user_id',
-        messageFormat: MessageFormat.SLACK,
-        mentions: {
-          create: [],
+        body: v4(),
+        sentAt: new Date(),
+        externalMessageId: v4(),
+        channel: {
+          create: {
+            channelName: v4(),
+            externalChannelId: v4(),
+            account: { create: {} },
+          },
         },
-        blocks: [{ type: 'rich_text', block_id: '9hC', elements: [] }],
       },
-      include: { mentions: true },
     });
 
+    const messageShouldExist = await prisma.messages.findUnique({
+      where: { id: message.id },
+    });
+    expect(messageShouldExist).toBeDefined();
+
+    const res = await handleWebhook({
+      ...changeMessageEvent,
+      event: {
+        ...changeMessageEvent.event,
+        previous_message: {
+          ...changeMessageEvent.event.previous_message,
+          ts: message.externalMessageId!,
+        },
+        message: {
+          ...changeMessageEvent.event.message,
+          ts: message.externalMessageId!,
+        },
+        channel: message.channel.externalChannelId!,
+      },
+    });
+
+    const messageShouldHaveBeenUpdated = await prisma.messages.findFirst({
+      where: {
+        externalMessageId: message.externalMessageId!,
+      },
+    });
+
+    expect(messageShouldHaveBeenUpdated?.body).not.toStrictEqual(
+      messageShouldExist?.body
+    );
+
+    expect(messageShouldHaveBeenUpdated?.body).toStrictEqual('Lets test_4');
     // result OK:200
     expect(res.status).toBe(200);
-    expect(res.message.body).toStrictEqual('Lets-test-4');
+    expect(res.message.body).toStrictEqual('Lets test_4');
   });
 });
