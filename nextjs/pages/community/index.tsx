@@ -2,6 +2,7 @@ import linenExamplePage from 'public/linen-example-page.png';
 import Image from 'next/image';
 import LinenLogo from 'components/Logo/Linen';
 import YCombinatorLogo from 'components/Logo/YCombinator';
+import { GoCheck } from 'react-icons/go';
 
 import Link from 'next/link';
 import FadeIn from 'components/FadeIn';
@@ -174,9 +175,9 @@ const Home = () => {
             <div className="lg:mx-auto lg:grid lg:max-w-7xl lg:grid-flow-col-dense lg:grid-cols-2 lg:gap-24 lg:px-8">
               <div className="mx-auto max-w-xl px-4 sm:px-6 lg:mx-0 lg:max-w-none lg:py-16 lg:px-0">
                 <div>
-                  <div>
+                  {/* <div>
                     <span className="flex h-12 w-12 items-center justify-center rounded-md bg-gradient-to-r from-blue-600 to-indigo-600"></span>
-                  </div>
+                  </div> */}
                   <div className="mt-6">
                     <h2 className="text-3xl font-bold tracking-tight text-gray-900">
                       Built for community support
@@ -214,9 +215,9 @@ const Home = () => {
             <div className="lg:mx-auto lg:grid lg:max-w-7xl lg:grid-flow-col-dense lg:grid-cols-2 lg:gap-24 lg:px-8">
               <div className="mx-auto max-w-xl px-4 sm:px-6 lg:col-start-2 lg:mx-0 lg:max-w-none lg:py-32 lg:px-0">
                 <div>
-                  <div>
+                  {/* <div>
                     <span className="flex h-12 w-12 items-center justify-center rounded-md bg-gradient-to-r from-blue-600 to-indigo-600"></span>
-                  </div>
+                  </div> */}
                   <div className="mt-6">
                     <h2 className="text-3xl font-bold tracking-tight text-gray-900">
                       Let Google answers questions and not your team
@@ -263,6 +264,7 @@ const Home = () => {
                 <div key={feature.name}>
                   <dt>
                     <div className="flex h-12 w-12 items-center justify-center rounded-md bg-indigo-500 text-white">
+                      <GoCheck className="h-6 w-6" aria-hidden="true" />
                       {/* <feature.icon className="h-6 w-6" aria-hidden="true" /> */}
                     </div>
                     <p className="mt-5 text-lg font-medium leading-6 text-gray-900">
@@ -325,10 +327,7 @@ const Home = () => {
                           {tier.features.map((feature) => (
                             <li key={feature} className="flex items-start">
                               <div className="flex-shrink-0">
-                                {/* <CheckIcon
-                                  className="h-6 w-6 text-green-500"
-                                  aria-hidden="true"
-                                /> */}
+                                <GoCheck className="text-green-500" />
                               </div>
                               <p className="ml-3 text-base text-gray-700">
                                 {feature}
@@ -367,9 +366,8 @@ const Home = () => {
           <p>
             Linen is a realtime chat app that also is Google searchable. syncs
             all your threads in your public channels and threads to
-            linen.dev/s/your_slack_workspace_name. This makes your Slack/Discord
-            contents available for your community members without requiring a
-            login.
+            linen.dev/s/community_name. This makes your content available for
+            your community members without requiring a login.
           </p>
           <LandingH2>Import your community conversations</LandingH2>
           <p>
