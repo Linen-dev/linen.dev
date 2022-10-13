@@ -44,21 +44,21 @@ export default function JoinLinen({
     return <div />;
   }
 
-  if (permissions?.is_member) {
-    return (
-      <a
-        className={classNames(
-          styles.button,
-          'shadow-md text-sm font-medium rounded-md text-blue-500',
-          'cursor-pointer'
-        )}
-        onClick={() => signOut()}
-      >
-        <LinenIcon className={styles.icon} />
-        {data?.user?.email}, <span>Sign out</span>
-      </a>
-    );
-  }
+  // if (permissions?.is_member) {
+  //   return (
+  //     <a
+  //       className={classNames(
+  //         styles.button,
+  //         'shadow-md text-sm font-medium rounded-md text-blue-500',
+  //         'cursor-pointer'
+  //       )}
+  //       onClick={() => signOut()}
+  //     >
+  //       <LinenIcon className={styles.icon} />
+  //       <span>Sign out</span>
+  //     </a>
+  //   );
+  // }
 
   return (
     <a
