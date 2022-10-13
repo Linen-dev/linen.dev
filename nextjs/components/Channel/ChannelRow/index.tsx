@@ -1,14 +1,10 @@
 import Avatars from '../../Avatars';
 import { users } from '@prisma/client';
-import { getThreadUrl } from '../../Pages/ChannelsPage/utilities/url';
+import Options from './Options';
 import type { Settings } from 'serializers/account/settings';
 import Row from 'components/Message/Row';
 import styles from './index.module.scss';
-import { GoPin } from 'react-icons/go';
-import { AiOutlinePaperClip } from 'react-icons/ai';
 import { SerializedThread } from 'serializers/thread';
-import { copyToClipboard } from 'utilities/clipboard';
-import { toast } from 'components/Toast';
 import { Permissions } from 'types/shared';
 
 export const uniqueUsers = (users: users[]): users[] => {
@@ -65,35 +61,14 @@ export default function ChannelRow({
           </div>
         )}
       </Row>
-      <ul className={styles.options}>
-        <li
-          onClick={(event) => {
-            const text = getThreadUrl({
-              isSubDomainRouting,
-              settings,
-              incrementId,
-              slug,
-            });
-            event.stopPropagation();
-            event.preventDefault();
-            copyToClipboard(text);
-            toast.success('Copied to clipboard', text);
-          }}
-        >
-          <AiOutlinePaperClip />
-        </li>
-        {permissions.manage && (
-          <li
-            onClick={(event) => {
-              event.stopPropagation();
-              event.preventDefault();
-              onPin(thread.id);
-            }}
-          >
-            <GoPin className={thread.pinned ? styles.pinned : ''} />
-          </li>
-        )}
-      </ul>
+      <Options
+        thread={thread}
+        isSubDomainRouting={isSubDomainRouting}
+        settings={settings}
+        permissions={permissions}
+        className={styles.options}
+        onPin={onPin}
+      />
     </div>
   );
 }
