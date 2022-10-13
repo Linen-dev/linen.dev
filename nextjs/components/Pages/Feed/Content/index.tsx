@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import SidebarLayout from 'components/layout/shared/SidebarLayout';
 import { ThreadState } from '@prisma/client';
 import { SerializedThread } from 'serializers/thread';
@@ -12,12 +12,11 @@ import { FeedResponse, Selections } from '../types';
 import { Thread } from 'components/Thread';
 import { scrollToBottom } from 'utilities/scroll';
 import debounce from 'utilities/debounce';
-import { SerializedMessage } from 'serializers/message';
-import { v4 as uuid } from 'uuid';
+import { sendMessageWrapper } from './sendMessageWrapper';
 import usePolling from 'hooks/polling';
 import useThreadWebsockets from 'hooks/websockets/thread';
 import { useUsersContext } from 'contexts/Users';
-import { MessageFormat, Roles } from '@prisma/client';
+import { useJoinContext } from 'contexts/Join';
 import useFeedWebsockets from 'hooks/websockets/feed';
 import type { CommunityPushType } from 'services/push';
 import { toast } from 'components/Toast';
@@ -48,22 +47,6 @@ const debouncedFetch = debounce(
   }
 );
 
-const debouncedSendMessage = debounce(
-  ({ message, communityId, channelId, threadId, imitationId }: any) => {
-    return fetch(`/api/messages/thread`, {
-      method: 'POST',
-      body: JSON.stringify({
-        body: message,
-        communityId,
-        channelId,
-        threadId,
-        imitationId,
-      }),
-    });
-  },
-  100
-);
-
 export default function Feed({
   communityId,
   communityName,
@@ -82,6 +65,7 @@ export default function Feed({
   const [thread, setThread] = useState<SerializedThread>();
   const ref = useRef<HTMLDivElement>(null);
   const [allUsers] = useUsersContext();
+  const { startSignUp } = useJoinContext();
 
   useThreadWebsockets({
     id: thread?.id,
@@ -258,137 +242,14 @@ export default function Feed({
       });
   };
 
-  const sendMessage = async ({
-    message,
-    channelId,
-    threadId,
-  }: {
-    message: string;
-    channelId: string;
-    threadId: string;
-  }) => {
-    const imitation: SerializedMessage = {
-      id: uuid(),
-      body: message,
-      sentAt: new Date().toString(),
-      usersId: currentUser.id,
-      mentions: allUsers,
-      attachments: [],
-      reactions: [],
-      threadId,
-      messageFormat: MessageFormat.LINEN,
-      author: {
-        id: currentUser.id,
-        externalUserId: currentUser.externalUserId,
-        displayName: currentUser.displayName,
-        profileImageUrl: currentUser.profileImageUrl,
-        isBot: false,
-        isAdmin: false,
-        anonymousAlias: null,
-        accountsId: 'fake-account-id',
-        authsId: null,
-        role: Roles.MEMBER,
-      },
-    };
-
-    setThread((thread) => {
-      if (!thread) {
-        return;
-      }
-      return {
-        ...thread,
-        messages: [...thread.messages, imitation],
-      };
-    });
-
-    setFeed((feed) => {
-      return {
-        ...feed,
-        threads: feed.threads.map((thread) => {
-          if (thread.id === threadId) {
-            return {
-              ...thread,
-              messages: [...thread.messages, imitation],
-            };
-          }
-          return thread;
-        }),
-      };
-    });
-
-    return debouncedSendMessage({
-      message,
-      communityId,
-      channelId,
-      threadId,
-      imitationId: imitation.id,
-    })
-      .then((response: any) => {
-        if (response.ok) {
-          return response.json();
-        }
-        throw 'Could not send a message';
-      })
-      .then(
-        ({
-          message,
-          imitationId,
-        }: {
-          message: SerializedMessage;
-          imitationId: string;
-        }) => {
-          setThread((thread: any) => {
-            if (!thread) {
-              return;
-            }
-            const messageId = message.id;
-            const index = thread.messages.findIndex(
-              (message: SerializedMessage) => message.id === messageId
-            );
-            if (index >= 0) {
-              return thread;
-            }
-            return {
-              ...thread,
-              messages: [
-                ...thread.messages.filter(
-                  (message: SerializedMessage) => message.id !== imitationId
-                ),
-                message,
-              ],
-            };
-          });
-
-          setFeed((feed) => {
-            return {
-              ...feed,
-              threads: feed.threads.map((thread) => {
-                if (thread.id === threadId) {
-                  const messageId = message.id;
-                  const index = thread.messages.findIndex(
-                    (message: SerializedMessage) => message.id === messageId
-                  );
-                  if (index >= 0) {
-                    return thread;
-                  }
-                  return {
-                    ...thread,
-                    messages: [
-                      ...thread.messages.filter(
-                        (message: SerializedMessage) =>
-                          message.id !== imitationId
-                      ),
-                      message,
-                    ],
-                  };
-                }
-                return thread;
-              }),
-            };
-          });
-        }
-      );
-  };
+  const sendMessage = sendMessageWrapper({
+    currentUser,
+    allUsers,
+    setThread,
+    setFeed,
+    communityId,
+    startSignUp,
+  });
 
   return (
     <>

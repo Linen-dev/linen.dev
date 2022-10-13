@@ -117,6 +117,7 @@ function PageLayout({
                 inviteUrl={communityInviteUrl || communityUrl}
                 communityType={settings.communityType}
                 communityId={settings.communityId}
+                permissions={permissions}
               />
             </div>
           </div>
