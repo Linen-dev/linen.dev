@@ -48,7 +48,6 @@ export const JoinContext = ({ children }: Props) => {
   };
 
   const onCloseModal = (e: boolean) => {
-    console.log('onCloseModal');
     setOpen(e);
   };
 
