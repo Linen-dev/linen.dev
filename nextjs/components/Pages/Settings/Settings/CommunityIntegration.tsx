@@ -8,23 +8,23 @@ import { GoCheck, GoAlert, GoInfo } from 'react-icons/go';
 const statusMap: any = {
   NOT_STARTED: (
     <>
-      <GoInfo className="h-5 w-5 mr-1" /> In progress
+      <GoInfo className="h-5 w-5 mr-1 inline" /> In progress
     </>
   ),
   IN_PROGRESS: (
     <>
-      <GoInfo className="h-5 w-5 mr-1" /> In progress
+      <GoInfo className="h-5 w-5 mr-1 inline" /> In progress
     </>
   ),
   DONE: (
     <>
-      <GoCheck color="green" className="h-5 w-5 mr-1" />
+      <GoCheck color="green" className="h-5 w-5 mr-1 inline" />
       Done
     </>
   ),
   ERROR: (
     <>
-      <GoAlert className="h-5 w-5 mr-1" color="red" /> Error
+      <GoAlert className="h-5 w-5 mr-1 inline" color="red" /> Error
     </>
   ),
 };
