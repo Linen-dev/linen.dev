@@ -1,5 +1,5 @@
 import Modal from 'components/Modal';
-import SignUpComponent from 'components/Pages/SignUp';
+import SignUpWithCredentials from 'components/Pages/SignUp/Credentials';
 import { Session } from 'next-auth';
 import { getSession, useSession } from 'next-auth/react';
 import React, { createContext, useContext, useState } from 'react';
@@ -82,7 +82,7 @@ export const JoinContext = ({ children }: Props) => {
           subtitle: 'Sign up to join the community and start to chat',
         }}
       >
-        <SignUpComponent
+        <SignUpWithCredentials
           {...{
             state: communityId,
             noFollow: true,

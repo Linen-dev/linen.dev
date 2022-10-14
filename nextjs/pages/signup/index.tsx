@@ -1,6 +1,6 @@
 import { getCsrfToken } from 'next-auth/react';
 import type { NextPageContext } from 'next';
-import SignUpComponent from 'components/Pages/SignUp';
+import SignUpWithCredentials from 'components/Pages/SignUp/Credentials';
 import Layout from 'components/layout/CardLayout';
 
 interface SignUpProps {
@@ -19,7 +19,7 @@ export default function SignUp({
 }: SignUpProps) {
   return (
     <Layout header="Sign Up for free">
-      <SignUpComponent {...{ state, callbackUrl, csrfToken, email }} />
+      <SignUpWithCredentials {...{ state, callbackUrl, csrfToken, email }} />
     </Layout>
   );
 }
