@@ -97,11 +97,12 @@ export default function SignUp({
   return (
     <>
       <Error error={error} />
-      <form onSubmit={onSubmit}>
+      <form className="px-20" onSubmit={onSubmit}>
         <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
         {!!state && (
           <TextField
-            label="Display name"
+            className="text-center"
+            placeholder="Display name"
             id="displayName"
             {...{
               minLength: 1,
@@ -111,41 +112,47 @@ export default function SignUp({
         )}
 
         <EmailField
-          label="Email address"
+          className="text-center"
+          placeholder="Email address"
           id="email"
           required
           defaultValue={email}
         />
-        <PasswordField label="Password" id="password" required />
+        <PasswordField
+          className="text-center"
+          placeholder="Password"
+          id="password"
+          required
+        />
 
         <Button type="submit" block disabled={loading}>
-          {loading ? 'Loading...' : 'Sign up'}
+          Continue
         </Button>
+        <p className="text-xs text-center text-gray-600">
+          By using the platform, you agree to our{' '}
+          <a
+            target="_blank"
+            className="text-blue-600 hover:text-blue-800 visited:text-purple-600"
+            href="/legal/terms"
+          >
+            Terms
+          </a>{' '}
+          and{' '}
+          <a
+            className="text-blue-600 hover:text-blue-800 visited:text-purple-600"
+            target="_blank"
+            href="/legal/privacy"
+          >
+            Privacy Policy.
+          </a>
+        </p>
+        <hr className="my-10" />
+        <p className="text-xs text-center text-gray-600">
+          Already have an account?
+          <br />
+          <Link href={`/signin?` + qs({ callbackUrl, state })}>Sign in</Link>
+        </p>
       </form>
-
-      <p className="text-sm pt-3 text-gray-600">
-        Already have an account?{' '}
-        <Link href={`/signin?` + qs({ callbackUrl, state })}>Sign in</Link>
-      </p>
-
-      <p className="text-sm pt-3 text-gray-600">
-        By signing up, you agree to our{' '}
-        <a
-          target="_blank"
-          className="text-blue-600 hover:text-blue-800 visited:text-purple-600"
-          href="/legal/terms"
-        >
-          Terms
-        </a>{' '}
-        and{' '}
-        <a
-          className="text-blue-600 hover:text-blue-800 visited:text-purple-600"
-          target="_blank"
-          href="/legal/privacy"
-        >
-          Privacy Policy.
-        </a>
-      </p>
     </>
   );
 }

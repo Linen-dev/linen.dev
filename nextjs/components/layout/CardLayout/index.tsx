@@ -5,7 +5,7 @@ import Link from 'next/link';
 import LinenLogo from 'components/Logo/Linen';
 
 interface Props {
-  header: string;
+  header?: string;
   children?: ReactNode;
 }
 
@@ -21,7 +21,7 @@ const Layout = ({ header, children }: Props) => {
       </div>
       <Card>
         <div className={styles.content}>
-          <h1 className={styles.header}>{header}</h1>
+          {header && <h1 className={styles.header}>{header}</h1>}
           {children}
         </div>
       </Card>

@@ -3,6 +3,7 @@ import PasswordField from '../../components/PasswordField';
 import Button from '../../components/Button';
 import { NextPageContext } from 'next';
 import { toast } from 'components/Toast';
+import { useState } from 'react';
 
 interface Props {
   token: string;
@@ -24,23 +25,33 @@ export default function ResetPassword({ token }: Props) {
         body: JSON.stringify({ password, token }),
       });
       await response.json();
-      window.location.href = '/signin';
+      window.location.href = '/signin&mode=creds';
     } catch (exception) {
       toast.error('Something went wrong. Please try again.');
     }
   };
   return (
     <Layout header="Reset Password">
-      <form onSubmit={onSubmit}>
-        <PasswordField label="Password" id="password" required />
+      <form onSubmit={onSubmit} className="px-20">
         <PasswordField
-          label="Password confirmation"
+          className="text-center"
+          placeholder="Password"
+          id="password"
+          required
+        />
+        <PasswordField
+          className="text-center"
+          placeholder="Password confirmation"
           id="passwordConfirmation"
           required
         />
         <Button type="submit" block>
-          Submit
+          Continue
         </Button>
+        <p className="text-xs text-center text-gray-700">
+          Clicking continue will reset your password and redirect you to the
+          sign in page.
+        </p>
       </form>
     </Layout>
   );

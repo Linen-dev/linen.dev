@@ -4,14 +4,16 @@ import Label from '../Label';
 import PasswordInput from '../PasswordInput';
 
 interface Props {
-  label: string;
   id: string;
+  className?: string;
+  label?: string;
   placeholder?: string;
   required?: boolean;
 }
 
 export default function PasswordField({
   label,
+  className,
   id,
   placeholder,
   required,
@@ -19,7 +21,12 @@ export default function PasswordField({
   return (
     <Field>
       <Label htmlFor={id}>{label}</Label>
-      <PasswordInput id={id} placeholder={placeholder} required={required} />
+      <PasswordInput
+        className={className}
+        id={id}
+        placeholder={placeholder}
+        required={required}
+      />
     </Field>
   );
 }
