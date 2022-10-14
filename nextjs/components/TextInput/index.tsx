@@ -17,6 +17,7 @@ interface Props {
   readOnly?: boolean;
   icon?: React.ReactNode;
   autoFocus?: boolean;
+  style?: object;
   inputRef?: React.RefObject<HTMLInputElement>;
   onChange?(event: React.ChangeEvent<HTMLInputElement>): void;
   onBlur?(event: React.ChangeEvent<HTMLInputElement>): void;
@@ -33,6 +34,7 @@ function TextInput({
   label,
   defaultValue,
   value,
+  style,
   disabled = false,
   readOnly = false,
   icon,
@@ -64,6 +66,7 @@ function TextInput({
           onBlur={onBlur}
           onKeyDown={onKeyDown}
           autoFocus={autoFocus}
+          style={style}
           {...rest}
         />
       </div>

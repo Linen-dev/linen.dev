@@ -1,13 +1,10 @@
 import { ErrorBoundary } from 'react-error-boundary';
-import Link from 'next/link';
+import Header from './Header';
 import SearchBar from '../../search/SearchBar';
 import NavBar from 'components/NavBar';
 import SEO, { type SeoProps } from '../SEO';
 import type { ChannelSerialized } from 'lib/channel';
-import { addHttpsToUrl } from 'utilities/url';
-import { pickTextColorBasedOnBgColor } from 'utilities/util';
 import GoogleAnalytics from '../GoogleAnalytics';
-import JoinButton from 'components/JoinButton';
 import styles from './index.module.css';
 import classNames from 'classnames';
 import { Permissions } from 'types/shared';
@@ -22,7 +19,7 @@ interface Props {
   children: React.ReactNode;
   currentChannel?: ChannelSerialized;
   currentUser?: SerializedUser | null;
-  channels?: ChannelSerialized[];
+  channels: ChannelSerialized[];
   communityUrl?: string;
   communityInviteUrl?: string;
   settings: Settings;
@@ -49,18 +46,8 @@ function PageLayout({
   innerRef,
   token,
 }: Props) {
-  const channels = initialChannels
-    ? initialChannels.filter((c: ChannelSerialized) => !c.hidden)
-    : [];
-  const homeUrl = addHttpsToUrl(settings.homeUrl);
-  const docsUrl = addHttpsToUrl(settings.docsUrl);
-  const logoUrl = addHttpsToUrl(settings.logoUrl);
+  const channels = initialChannels.filter((c: ChannelSerialized) => !c.hidden);
   const { googleAnalyticsId, googleSiteVerification } = settings;
-  const fontColor = pickTextColorBasedOnBgColor(
-    settings.brandColor,
-    'white',
-    'black'
-  );
 
   return (
     <LinkContext
@@ -73,57 +60,18 @@ function PageLayout({
       <UsersContext>
         <div className={styles.push} />
         <div className={styles.header}>
-          <div
-            className="flex h-16 px-4 py-2 items-center"
-            style={{ backgroundColor: settings.brandColor, gap: '24px' }}
-          >
-            <Link href={homeUrl || '/'} passHref>
-              <a className="cursor-pointer block" target="_blank">
-                <img
-                  className="block"
-                  style={{ height: '32px' }}
-                  src={logoUrl}
-                  height="32"
-                  alt={`${homeUrl} logo`}
-                />
-              </a>
-            </Link>
-            <div
-              className="flex w-full items-center"
-              style={{
-                justifyContent: 'flex-end',
-                gap: '24px',
-              }}
-            >
-              <div className="hidden sm:flex w-full">
-                <SearchBar
-                  channels={channels}
-                  communityName={communityName}
-                  isSubDomainRouting={isSubDomainRouting}
-                  communityType={settings.communityType}
-                />
-              </div>
-              <a
-                className="hidden sm:flex items-center text-sm"
-                style={{ color: fontColor, fontWeight: 500 }}
-                rel="noreferrer"
-                title="Documentation"
-                target="_blank"
-                href={docsUrl}
-              >
-                Docs
-              </a>
-              <JoinButton
-                inviteUrl={communityInviteUrl || communityUrl}
-                communityType={settings.communityType}
-                communityId={settings.communityId}
-                permissions={permissions}
-              />
-            </div>
-          </div>
+          <Header
+            channels={channels}
+            settings={settings}
+            permissions={permissions}
+            communityInviteUrl={communityInviteUrl}
+            communityUrl={communityUrl}
+            isSubDomainRouting={isSubDomainRouting}
+          />
         </div>
         <div className="py-1 sm:hidden w-full">
           <SearchBar
+            borderColor="#fff"
             channels={channels}
             communityName={communityName}
             isSubDomainRouting={isSubDomainRouting}
