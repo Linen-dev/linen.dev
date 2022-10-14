@@ -32,15 +32,9 @@ export default function ResetPassword({ token }: Props) {
   };
   return (
     <Layout header="Reset Password">
-      <form onSubmit={onSubmit} className="px-20">
+      <form onSubmit={onSubmit} className="px-2">
+        <PasswordField placeholder="Password" id="password" required />
         <PasswordField
-          className="text-center"
-          placeholder="Password"
-          id="password"
-          required
-        />
-        <PasswordField
-          className="text-center"
           placeholder="Password confirmation"
           id="passwordConfirmation"
           required
@@ -48,7 +42,7 @@ export default function ResetPassword({ token }: Props) {
         <Button type="submit" block>
           Continue
         </Button>
-        <p className="text-xs text-center text-gray-700">
+        <p className="text-xs  text-gray-700">
           Clicking continue will reset your password and redirect you to the
           sign in page.
         </p>
