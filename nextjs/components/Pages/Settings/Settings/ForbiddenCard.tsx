@@ -1,5 +1,4 @@
-import { faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { GoAlert } from 'react-icons/go';
 import React from 'react';
 
 export function ForbiddenCard() {
@@ -7,11 +6,7 @@ export function ForbiddenCard() {
     <div className="rounded-md bg-yellow-50 p-4 mb-4">
       <div className="flex">
         <div className="flex-shrink-0">
-          <FontAwesomeIcon
-            icon={faTriangleExclamation}
-            className="h-5 w-5 text-yellow-400"
-            aria-hidden="true"
-          />
+          <GoAlert className="h-5 w-5 text-yellow-400" aria-hidden="true" />
         </div>
         <div className="ml-3">
           <h3 className="text-sm font-medium text-yellow-800">

@@ -1,9 +1,8 @@
 import React from 'react';
 import { Period } from 'pages/settings/plans';
 import { SerializedAccount } from '../../../serializers/account';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { isStripeEnabled } from 'utilities/featureFlags';
+import { GoCheck } from 'react-icons/go';
 
 interface Price {
   id?: string;
@@ -101,10 +100,7 @@ export default function Tiers({ tiers, activePeriod, account }: Props) {
               )
             ) : (
               <a className="shadow-sm mt-8 block w-full bg-green-500 border border-green-500 rounded-md py-2 text-sm font-semibold text-white text-center">
-                <FontAwesomeIcon
-                  icon={faCheck}
-                  className="inline-block h-4 ml-1"
-                />
+                <GoCheck className="inline-block h-4 ml-1" />
               </a>
             )}
           </div>
@@ -115,8 +111,7 @@ export default function Tiers({ tiers, activePeriod, account }: Props) {
             <ul role="list" className="mt-6 space-y-4">
               {tier.features.map((feature) => (
                 <li key={feature} className="flex space-x-3">
-                  <FontAwesomeIcon
-                    icon={faCheck}
+                  <GoCheck
                     className="flex-shrink-0 h-5 w-5 text-green-500"
                     aria-hidden="true"
                   />

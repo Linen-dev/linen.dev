@@ -3,44 +3,28 @@ import { capitalize } from 'utilities/string';
 import { integrationAuthorizer } from 'utilities/communityAuthorizers';
 import { SerializedAccount } from 'serializers/account';
 import { toast } from 'components/Toast';
-import {
-  faSpinner,
-  faCircleCheck,
-  faCircleExclamation,
-} from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { GoCheck, GoAlert, GoInfo } from 'react-icons/go';
 
 const statusMap: any = {
   NOT_STARTED: (
     <>
-      <FontAwesomeIcon icon={faSpinner} spin className="h-5 w-5 mr-1" /> In
-      progress
+      <GoInfo className="h-5 w-5 mr-1" /> In progress
     </>
   ),
   IN_PROGRESS: (
     <>
-      <FontAwesomeIcon icon={faSpinner} spin className="h-5 w-5 mr-1" /> In
-      progress
+      <GoInfo className="h-5 w-5 mr-1" /> In progress
     </>
   ),
   DONE: (
     <>
-      <FontAwesomeIcon
-        icon={faCircleCheck}
-        color="green"
-        className="h-5 w-5 mr-1"
-      />
+      <GoCheck color="green" className="h-5 w-5 mr-1" />
       Done
     </>
   ),
   ERROR: (
     <>
-      <FontAwesomeIcon
-        icon={faCircleExclamation}
-        className="h-5 w-5 mr-1"
-        color="red"
-      />{' '}
-      Error
+      <GoAlert className="h-5 w-5 mr-1" color="red" /> Error
     </>
   ),
 };

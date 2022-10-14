@@ -7,6 +7,7 @@ import MessageFormExample from './examples/MessageForm';
 import MessageExample from './examples/Message';
 import TextInputExample from './examples/TextInput';
 import NativeSelectExample from './examples/NativeSelect';
+import ToastExample from './examples/Toast';
 
 export default function Styleguide() {
   return (
@@ -19,6 +20,7 @@ export default function Styleguide() {
       <TextareaExample />
       <NativeSelectExample />
       <AlertExample />
+      <ToastExample />
     </Layout>
   );
 }

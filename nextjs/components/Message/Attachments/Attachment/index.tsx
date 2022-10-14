@@ -1,8 +1,7 @@
 import React from 'react';
 import { SerializedAttachment } from 'types/shared';
 import styles from './index.module.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFileArrowDown } from '@fortawesome/free-solid-svg-icons';
+import { GoCloudDownload } from 'react-icons/go';
 
 interface Props {
   attachment: SerializedAttachment;
@@ -16,7 +15,7 @@ function Attachment({ attachment }: Props) {
       target="_blank"
       rel="noreferrer"
     >
-      <FontAwesomeIcon className={styles.icon} icon={faFileArrowDown} />
+      <GoCloudDownload className={styles.icon} />
       {attachment.name}
     </a>
   );

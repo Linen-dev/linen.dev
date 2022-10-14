@@ -98,7 +98,7 @@ export default function ImportFromSlack({
                   className="hidden"
                   accept=".zip"
                 />
-                <Button onClick={openFileDialog}>
+                <Button onClick={openFileDialog} disabled={loading}>
                   {!loading ? 'Upload file' : 'Uploading...'}
                 </Button>
               </div>
