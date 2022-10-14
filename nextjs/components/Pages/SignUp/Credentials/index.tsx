@@ -8,7 +8,7 @@ import PasswordField from 'components/PasswordField';
 import Error from 'pages/signin/Error';
 import { qs } from 'utilities/url';
 
-export default function SignUpComponent({
+export default function SignUp({
   state,
   callbackUrl,
   csrfToken,
