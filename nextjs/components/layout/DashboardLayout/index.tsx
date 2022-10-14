@@ -1,17 +1,16 @@
 import React from 'react';
-import {
-  faGear,
-  faMoneyBill,
-  faPalette,
-  faPlus,
-  faUsers,
-} from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import SidebarLink from './SidebarLink';
 import { useRouter } from 'next/router';
 import { SerializedAccount } from 'serializers/account';
 import Logo from './Logo';
 import { isNewOnboardingButtonEnabled } from 'utilities/featureFlags';
+import {
+  GoPlus,
+  GoGear,
+  GoSettings,
+  GoOrganization,
+  GoCreditCard,
+} from 'react-icons/go';
 
 interface Props {
   children: React.ReactNode;
@@ -32,9 +31,7 @@ export default function DashboardLayout({ children, header, account }: Props) {
               <div className="space-y-1">
                 <SidebarLink
                   href="/onboarding/create-community"
-                  icon={
-                    <FontAwesomeIcon icon={faPlus} className={iconClassName} />
-                  }
+                  icon={<GoPlus className={iconClassName} />}
                   text="Create new community"
                 />
               </div>
@@ -42,9 +39,7 @@ export default function DashboardLayout({ children, header, account }: Props) {
             <div className="space-y-1">
               <SidebarLink
                 href="/settings"
-                icon={
-                  <FontAwesomeIcon icon={faGear} className={iconClassName} />
-                }
+                icon={<GoGear className={iconClassName} />}
                 text="Settings"
                 active={route === '/settings'}
               />
@@ -52,9 +47,7 @@ export default function DashboardLayout({ children, header, account }: Props) {
             <div className="space-y-1">
               <SidebarLink
                 href="/settings/branding"
-                icon={
-                  <FontAwesomeIcon icon={faPalette} className={iconClassName} />
-                }
+                icon={<GoSettings className={iconClassName} />}
                 text="Branding"
                 active={route === '/settings/branding'}
               />
@@ -62,9 +55,7 @@ export default function DashboardLayout({ children, header, account }: Props) {
             <div className="space-y-1">
               <SidebarLink
                 href="/settings/members"
-                icon={
-                  <FontAwesomeIcon icon={faUsers} className={iconClassName} />
-                }
+                icon={<GoOrganization className={iconClassName} />}
                 text="Members"
                 active={route === '/settings/members'}
               />
@@ -72,12 +63,7 @@ export default function DashboardLayout({ children, header, account }: Props) {
             <div className="space-y-1">
               <SidebarLink
                 href="/settings/plans"
-                icon={
-                  <FontAwesomeIcon
-                    icon={faMoneyBill}
-                    className={iconClassName}
-                  />
-                }
+                icon={<GoCreditCard className={iconClassName} />}
                 text="Plans"
                 active={route === '/settings/plans'}
               />
