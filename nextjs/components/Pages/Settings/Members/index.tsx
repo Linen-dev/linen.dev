@@ -8,8 +8,6 @@ import NativeSelect from 'components/NativeSelect';
 import { Roles } from '@prisma/client';
 import { captureException } from '@sentry/nextjs';
 import { toast } from 'components/Toast';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { AiOutlineUser } from 'react-icons/ai';
 
 export interface MembersType {
@@ -161,15 +159,6 @@ function RowMember(user: MembersType, communityId: string): JSX.Element {
         <div className="flex justify-start items-center p-4">
           <p className="grow text-sm font-medium truncate">{user.email}</p>
           <div className="flex pr-4">
-            {loading && (
-              <div className="relative z-10 left-1/2 right-1/2 pt-2">
-                <FontAwesomeIcon
-                  icon={faSpinner}
-                  spin
-                  className="h-5 w-5 text-blue-400 "
-                />
-              </div>
-            )}
             <NativeSelect
               id={user.id}
               value={data.role}

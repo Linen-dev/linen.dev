@@ -1,26 +1,12 @@
 import toast from 'react-hot-toast';
 export { Toaster } from 'react-hot-toast';
-import {
-  faCircleCheck,
-  faCircleXmark,
-  faInfoCircle,
-} from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { GoCheck, GoInfo, GoAlert } from 'react-icons/go';
 
 const customToast = {
   icons: {
-    successIcon: (
-      <FontAwesomeIcon
-        icon={faCircleCheck}
-        className="h-6 w-6 text-green-400"
-      />
-    ),
-    errorIcon: (
-      <FontAwesomeIcon icon={faCircleXmark} className="h-6 w-6 text-red-400" />
-    ),
-    infoIcon: (
-      <FontAwesomeIcon icon={faInfoCircle} className="h-6 w-6 text-blue-400" />
-    ),
+    successIcon: <GoCheck className="h-6 w-6 text-green-400" />,
+    errorIcon: <GoAlert className="h-6 w-6 text-red-400" />,
+    infoIcon: <GoInfo className="h-6 w-6 text-blue-400" />,
   },
 
   success(msg: string, subText?: string) {

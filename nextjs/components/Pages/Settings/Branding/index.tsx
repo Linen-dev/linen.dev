@@ -10,8 +10,6 @@ import classNames from 'classnames';
 import { useS3Upload } from 'next-s3-upload';
 import { useState } from 'react';
 import { toast } from 'components/Toast';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { SerializedAccount } from 'serializers/account';
 import { useRouter } from 'next/router';
 import { DNSRecord } from 'services/vercel';
@@ -67,6 +65,7 @@ export default function Branding({ account, records }: Props) {
   const router = useRouter();
   let [logoUrl, setLogoUrl] = useState<string>();
   let { FileInput, openFileDialog, uploadToS3, files } = useS3Upload();
+  const isUploading = files && files.length > 0 && files[0].progress < 100;
 
   let handleLogoChange = async (file: File) => {
     let { url } = await uploadToS3(file, {
@@ -188,11 +187,11 @@ export default function Branding({ account, records }: Props) {
             />
           )
         )}
-        <Button onClick={openFileDialog} disabled={!account?.premium}>
-          {files && files.length > 0 && files[0].progress < 100 && (
-            <FontAwesomeIcon icon={faSpinner} spin={true} size="lg" />
-          )}
-          Upload file
+        <Button
+          onClick={() => !isUploading && openFileDialog()}
+          disabled={!account?.premium || isUploading}
+        >
+          {isUploading ? 'Uploading...' : 'Upload file'}
         </Button>
       </PremiumCard>
       <PremiumCard isPremium={account?.premium}>

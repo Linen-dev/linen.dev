@@ -1,6 +1,5 @@
 import React, { useState, Fragment } from 'react';
-import { faCheck, faChevronDown } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { GoCheck, GoChevronDown } from 'react-icons/go';
 import { Listbox, Transition } from '@headlessui/react';
 import classNames from 'classnames';
 import { SettingsProps, WaitForIntegration } from '..';
@@ -41,10 +40,7 @@ function DropDownChannels({
                 </div>
                 <Listbox.Button className="relative inline-flex items-center bg-blue-700 p-2 rounded-l-none rounded-r-md text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:z-10 focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-blue-300">
                   <span className="sr-only">Change default channel</span>
-                  <FontAwesomeIcon
-                    icon={faChevronDown}
-                    className="h-5 w-5 text-white"
-                  />
+                  <GoChevronDown className="h-5 w-5 text-white" />
                 </Listbox.Button>
               </div>
             </div>
@@ -83,10 +79,7 @@ function DropDownChannels({
                                 active ? 'text-white' : 'text-blue-600'
                               }
                             >
-                              <FontAwesomeIcon
-                                icon={faCheck}
-                                className="h-5 w-5"
-                              />
+                              <GoCheck className="h-5 w-5" />
                             </span>
                           ) : null}
                         </div>
