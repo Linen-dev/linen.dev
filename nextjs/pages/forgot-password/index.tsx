@@ -31,9 +31,8 @@ export default function ForgotPassword({ email }: Props) {
   };
   return (
     <Layout header="Forgot Password">
-      <form onSubmit={onSubmit} className="px-20">
+      <form onSubmit={onSubmit} className="px-2">
         <EmailField
-          className="text-center"
           placeholder="Email address"
           id="email"
           required
@@ -42,7 +41,7 @@ export default function ForgotPassword({ email }: Props) {
         <Button type="submit" block disabled={loading}>
           Continue
         </Button>
-        <p className="text-xs text-center text-gray-700">
+        <p className="text-xs  text-gray-700">
           Clicking continue will send you a reset password link.
         </p>
       </form>

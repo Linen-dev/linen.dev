@@ -47,14 +47,13 @@ export default function SignIn({
 
       {mode === 'magic' && (
         <form
-          className="px-20"
+          className="px-2"
           method="post"
           action={'/api/auth/signin/email?' + qs({ callbackUrl })}
           onSubmit={() => setLoading(true)}
         >
           <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
           <EmailField
-            className="text-center"
             placeholder="Email address"
             id="email"
             required
@@ -66,7 +65,7 @@ export default function SignIn({
           <Button type="submit" block disabled={loading}>
             Continue
           </Button>
-          <p className="text-xs text-center text-gray-600">
+          <p className="text-xs  text-gray-600">
             By using the platform, you agree to our{' '}
             <a
               target="_blank"
@@ -86,29 +85,30 @@ export default function SignIn({
           </p>
           <hr className="my-10" />
 
-          <p className="text-xs text-center text-gray-700 pb-3">
-            Prefer passwords?
-            <br />
-            <a
-              className="text-blue-600 hover:text-blue-800 visited:text-purple-600 cursor-pointer"
-              onClick={() => setMode('creds')}
-            >
-              Sign in with credentials
-            </a>
-            .
-          </p>
-
-          <p className="text-xs text-center text-gray-700">
-            No account?
-            <br />
-            <Link href="/signup">Sign up for free</Link>.
-          </p>
+          <div className="flex justify-between">
+            <p className="text-xs  text-gray-700">
+              No account?
+              <br />
+              <Link href="/signup">Sign up for free</Link>.
+            </p>
+            <p className="text-xs  text-gray-700 pb-3">
+              Prefer passwords?
+              <br />
+              <a
+                className="text-blue-600 hover:text-blue-800 visited:text-purple-600 cursor-pointer"
+                onClick={() => setMode('creds')}
+              >
+                Sign in with credentials
+              </a>
+              .
+            </p>
+          </div>
         </form>
       )}
 
       {mode === 'creds' && (
         <form
-          className="px-20"
+          className="px-2"
           method="post"
           action={
             '/api/auth/callback/credentials?' + qs({ callbackUrl, state })
@@ -117,7 +117,6 @@ export default function SignIn({
         >
           <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
           <EmailField
-            className="text-center"
             placeholder="Email address"
             id="email"
             required
@@ -126,16 +125,12 @@ export default function SignIn({
               setEmail(event.target.value)
             }
           />
-          <PasswordField
-            className="text-center"
-            placeholder="Password"
-            id="password"
-            required
-          />
+          <PasswordField placeholder="Password" id="password" required />
+
           <Button type="submit" block disabled={loading}>
             Continue
           </Button>
-          <p className="text-xs text-center text-gray-600">
+          <p className="text-xs  text-gray-600">
             By using the platform, you agree to our{' '}
             <a
               target="_blank"
@@ -153,21 +148,33 @@ export default function SignIn({
               Privacy Policy.
             </a>
           </p>
-          <hr className="my-10" />
 
-          <p className="text-xs text-center text-gray-700 pb-3">
-            Forgot your password?
-            <br />
+          <p className="text-xs pt-5 text-gray-700 pb-3">
             <Link href={`/forgot-password?email=${email || ''}`}>
-              Click here
+              Forgot your password?
             </Link>
-            .
           </p>
-          <p className="text-xs text-center text-gray-700">
-            No account?
-            <br />
-            <Link href="/signup">Sign up for free</Link>.
-          </p>
+
+          <hr className="my-5" />
+
+          <div className="flex justify-between">
+            <p className="text-xs  text-gray-700">
+              No account?
+              <br />
+              <Link href="/signup">Sign up for free</Link>.
+            </p>
+            <p className="text-xs text-gray-700 pb-3">
+              Prefer email?
+              <br />
+              <a
+                className="text-blue-600 hover:text-blue-800 visited:text-purple-600 cursor-pointer"
+                onClick={() => setMode('magic')}
+              >
+                Sign in with email
+              </a>
+              .
+            </p>
+          </div>
         </form>
       )}
     </Layout>

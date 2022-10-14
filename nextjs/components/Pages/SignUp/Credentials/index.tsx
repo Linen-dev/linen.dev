@@ -97,11 +97,10 @@ export default function SignUp({
   return (
     <>
       <Error error={error} />
-      <form className="px-20" onSubmit={onSubmit}>
+      <form className="px-2" onSubmit={onSubmit}>
         <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
         {!!state && (
           <TextField
-            className="text-center"
             placeholder="Display name"
             id="displayName"
             {...{
@@ -112,23 +111,17 @@ export default function SignUp({
         )}
 
         <EmailField
-          className="text-center"
           placeholder="Email address"
           id="email"
           required
           defaultValue={email}
         />
-        <PasswordField
-          className="text-center"
-          placeholder="Password"
-          id="password"
-          required
-        />
+        <PasswordField placeholder="Password" id="password" required />
 
         <Button type="submit" block disabled={loading}>
           Continue
         </Button>
-        <p className="text-xs text-center text-gray-600">
+        <p className="text-xs text-gray-600">
           By using the platform, you agree to our{' '}
           <a
             target="_blank"
@@ -146,12 +139,32 @@ export default function SignUp({
             Privacy Policy.
           </a>
         </p>
-        <hr className="my-10" />
-        <p className="text-xs text-center text-gray-600">
-          Already have an account?
-          <br />
-          <Link href={`/signin?` + qs({ callbackUrl, state })}>Sign in</Link>
-        </p>
+        <hr className="my-5" />
+
+        <div className="flex justify-between">
+          <p className="text-xs text-gray-600">
+            Already have an account?
+            <br />
+            <a
+              href={`/signin?` + qs({ callbackUrl, state })}
+              className="text-blue-600 hover:text-blue-800 visited:text-purple-600"
+            >
+              Sign in
+            </a>
+            .
+          </p>
+          <p className="text-xs  text-gray-700 mb-3">
+            Prefer email?
+            <br />
+            <a
+              href={`/signup?mode=magic&email=${email || ''}`}
+              className="text-blue-600 hover:text-blue-800 visited:text-purple-600"
+            >
+              Sign up with email
+            </a>
+            .
+          </p>
+        </div>
       </form>
     </>
   );

@@ -19,14 +19,13 @@ export default function MagicLink({
   const [loading, setLoading] = useState(false);
   return (
     <form
-      className="px-20"
+      className="px-2"
       method="post"
       action={'/api/auth/signin/email?' + qs({ callbackUrl })}
       onSubmit={() => setLoading(true)}
     >
       <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
       <EmailField
-        className="text-center"
         placeholder="Email address"
         id="email"
         required
@@ -38,7 +37,7 @@ export default function MagicLink({
       <Button type="submit" block disabled={loading}>
         Continue
       </Button>
-      <p className="text-xs text-center text-gray-700">
+      <p className="text-xs text-gray-700">
         By using the platform, you agree to our{' '}
         <a
           target="_blank"
@@ -57,20 +56,23 @@ export default function MagicLink({
         </a>
         .
       </p>
-      <hr className="my-10" />
-      <p className="text-xs text-center text-gray-700 mb-3">
-        Prefer passwords?
-        <br />
-        <Link href={`/signup?mode=creds&email=${email || ''}`}>
-          Sign up with credentials
-        </Link>
-        .
-      </p>
-      <p className="text-xs text-center text-gray-600">
-        Already have an account?
-        <br />
-        <Link href={`/signin`}>Sign in</Link>.
-      </p>
+      <hr className="my-5" />
+
+      <div className="flex justify-between">
+        <p className="text-xs  text-gray-600">
+          Already have an account?
+          <br />
+          <Link href={`/signin`}>Sign in</Link>.
+        </p>
+        <p className="text-xs  text-gray-700 mb-3">
+          Prefer passwords?
+          <br />
+          <Link href={`/signup?mode=creds&email=${email || ''}`}>
+            Sign up with credentials
+          </Link>
+          .
+        </p>
+      </div>
     </form>
   );
 }
