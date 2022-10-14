@@ -15,6 +15,7 @@ interface SignInProps {
   email: string;
   callbackUrl: string;
   state?: string;
+  mode?: string;
 }
 
 const Anchor = ({ children, onClick }: any) => (
@@ -29,18 +30,85 @@ const Anchor = ({ children, onClick }: any) => (
 export default function SignIn({
   csrfToken,
   error,
-  email,
+  email: initialEmail,
   callbackUrl,
   state,
+  mode: initialMode,
 }: SignInProps) {
-  const [sign, setSign] = useState<'creds' | 'magic'>('creds');
+  const [email, setEmail] = useState(initialEmail);
+  const [mode, setMode] = useState<'creds' | 'magic'>(
+    initialMode === 'creds' ? 'creds' : 'magic'
+  );
   const [loading, setLoading] = useState(false);
 
   return (
     <Layout header="Sign In">
       <Error error={error} />
-      {sign === 'creds' && (
+
+      {mode === 'magic' && (
         <form
+          className="px-20"
+          method="post"
+          action={'/api/auth/signin/email?' + qs({ callbackUrl })}
+          onSubmit={() => setLoading(true)}
+        >
+          <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
+          <EmailField
+            className="text-center"
+            placeholder="Email address"
+            id="email"
+            required
+            value={email}
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+              setEmail(event.target.value)
+            }
+          />
+          <Button type="submit" block disabled={loading}>
+            Continue
+          </Button>
+          <p className="text-xs text-center text-gray-600">
+            By using the platform, you agree to our{' '}
+            <a
+              target="_blank"
+              className="text-blue-600 hover:text-blue-800 visited:text-purple-600"
+              href="/legal/terms"
+            >
+              Terms
+            </a>{' '}
+            and{' '}
+            <a
+              className="text-blue-600 hover:text-blue-800 visited:text-purple-600"
+              target="_blank"
+              href="/legal/privacy"
+            >
+              Privacy Policy.
+            </a>
+          </p>
+          <hr className="my-10" />
+
+          <p className="text-xs text-center text-gray-700 pb-3">
+            Prefer passwords?
+            <br />
+            <a
+              className="text-blue-600 hover:text-blue-800 visited:text-purple-600 cursor-pointer"
+              onClick={() => setMode('creds')}
+            >
+              Sign in with credentials
+            </a>
+            .
+          </p>
+
+          <p className="text-xs text-center text-gray-700">
+            No account?
+            <br />
+            <Link href="/signup">Sign up for free</Link>.
+          </p>
+        </form>
+      )}
+
+      {mode === 'creds' && (
+        <form
+          className="px-20"
           method="post"
           action={
             '/api/auth/callback/credentials?' + qs({ callbackUrl, state })
@@ -49,55 +117,57 @@ export default function SignIn({
         >
           <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
           <EmailField
-            label="Email address"
+            className="text-center"
+            placeholder="Email address"
             id="email"
             required
-            defaultValue={email}
+            value={email}
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+              setEmail(event.target.value)
+            }
           />
-          <PasswordField label="Password" id="password" required />
-
-          <p className="py-3 text-sm">
-            <Link href="/forgot-password">Forgot your password?</Link>
-          </p>
-          <Button type="submit" block disabled={loading}>
-            {loading ? 'Loading...' : 'Sign in'}
-          </Button>
-          <div className="flex text-sm justify-between py-3">
-            <Link href={'/signup?' + qs({ callbackUrl, state })}>
-              Don&apos;t have an account?
-            </Link>
-            <Anchor onClick={() => setSign('magic')}>Sign in by email</Anchor>
-          </div>
-        </form>
-      )}
-
-      {sign === 'magic' && (
-        <form
-          method="post"
-          action={'/api/auth/signin/email?' + qs({ callbackUrl, state })}
-          onSubmit={() => setLoading(true)}
-        >
-          <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
-          <EmailField
-            label="Email address"
-            id="email"
+          <PasswordField
+            className="text-center"
+            placeholder="Password"
+            id="password"
             required
-            defaultValue={email}
           />
           <Button type="submit" block disabled={loading}>
-            {loading ? 'Loading...' : 'Email me a link'}
+            Continue
           </Button>
-          <p className="py-3 text-sm">
-            We will send you an email containing a link to sign you in.
+          <p className="text-xs text-center text-gray-600">
+            By using the platform, you agree to our{' '}
+            <a
+              target="_blank"
+              className="text-blue-600 hover:text-blue-800 visited:text-purple-600"
+              href="/legal/terms"
+            >
+              Terms
+            </a>{' '}
+            and{' '}
+            <a
+              className="text-blue-600 hover:text-blue-800 visited:text-purple-600"
+              target="_blank"
+              href="/legal/privacy"
+            >
+              Privacy Policy.
+            </a>
           </p>
-          <div className="flex text-sm justify-between py-3">
-            <Link href={'/signup?' + qs({ callbackUrl, state })}>
-              Don&apos;t have an account?
+          <hr className="my-10" />
+
+          <p className="text-xs text-center text-gray-700 pb-3">
+            Forgot your password?
+            <br />
+            <Link href={`/forgot-password?email=${email || ''}`}>
+              Click here
             </Link>
-            <Anchor onClick={() => setSign('creds')}>
-              Sign in with credentials
-            </Anchor>
-          </div>
+            .
+          </p>
+          <p className="text-xs text-center text-gray-700">
+            No account?
+            <br />
+            <Link href="/signup">Sign up for free</Link>.
+          </p>
         </form>
       )}
     </Layout>
@@ -110,8 +180,9 @@ export async function getServerSideProps(context: NextPageContext) {
       csrfToken: await getCsrfToken(context),
       error: context.query.error || null,
       callbackUrl: context.query.callbackUrl || '/api/settings',
-      email: context.query.email || null,
+      email: context.query.email || '',
       state: context.query.state || null,
+      mode: context.query.mode || null,
     },
   };
 }
