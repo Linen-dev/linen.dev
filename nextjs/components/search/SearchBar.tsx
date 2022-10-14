@@ -20,11 +20,13 @@ const parseResults = (data: messages[]) => {
 };
 
 const SearchBar = ({
+  borderColor,
   channels = [],
   communityName,
   isSubDomainRouting,
   communityType,
 }: {
+  borderColor: string;
   channels: ChannelSerialized[];
   communityName: string;
   isSubDomainRouting: boolean;
@@ -96,6 +98,7 @@ const SearchBar = ({
       onSelect={handleSelect}
       renderSuggestion={renderSuggestion}
       placeholder="Search messages"
+      style={{ borderColor }}
     />
   );
 };

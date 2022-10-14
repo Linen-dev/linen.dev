@@ -2,6 +2,7 @@ import PageLayout from '../../layout/PageLayout';
 import { ChannelViewProps } from '.';
 import { Channel, ChannelForBots } from 'components/Channel';
 import { buildChannelSeo } from 'utilities/seo';
+import { ChannelSerialized } from 'lib/channel';
 
 export default function ChannelPage({
   threads,
@@ -19,6 +20,8 @@ export default function ChannelPage({
   permissions,
   token,
 }: ChannelViewProps) {
+  // reusing the type between few layers causes problems
+  // we should explicitly define the type per component
   if (!threads) {
     return <div />;
   }
@@ -40,7 +43,7 @@ export default function ChannelPage({
           threads,
         }),
       }}
-      channels={channels}
+      channels={channels as ChannelSerialized[]}
       settings={settings}
       communityName={settings.communityName}
       isSubDomainRouting={isSubDomainRouting}

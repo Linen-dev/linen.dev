@@ -11,6 +11,7 @@ export default function Autocomplete({
   placeholder = 'Search',
   limit = 5,
   minlength = 3,
+  style,
 }: {
   fetch: ({
     query,
@@ -26,6 +27,7 @@ export default function Autocomplete({
   placeholder?: string;
   limit?: number;
   minlength?: number;
+  style?: object;
 }) {
   const [value, setValue] = useState('');
   const [offset, setOffset] = useState(0);
@@ -208,6 +210,7 @@ export default function Autocomplete({
           setValue(event.currentTarget.value);
           setOffset(0);
         }}
+        style={style}
       />
       {isFocused && value.length >= minlength && (
         <div
