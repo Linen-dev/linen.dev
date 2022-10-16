@@ -9,9 +9,11 @@ interface SerializedChannel {
   default: boolean;
 }
 
-export interface SerializedThread extends Omit<threads, 'sentAt'> {
+export interface SerializedThread
+  extends Omit<threads, 'sentAt' | 'lastReplyAt'> {
   id: string;
   sentAt: string;
+  lastReplyAt: string;
   messages: SerializedMessage[];
   channel: SerializedChannel | null;
 }
@@ -47,6 +49,7 @@ export default function serialize(
   return {
     ...thread,
     sentAt: thread.sentAt.toString(),
+    lastReplyAt: thread.lastReplyAt?.toString() || thread.sentAt.toString(),
     channel: serializeChannel(thread.channel),
     messages: serializeMessages(thread.messages),
   };

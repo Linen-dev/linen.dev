@@ -101,6 +101,7 @@ export async function create(
     data: {
       channel: { connect: { id: channelId } },
       sentAt: sentAt.getTime(),
+      lastReplyAt: sentAt.getTime(),
       messageCount: 1,
       messages,
     } as Prisma.threadsCreateInput,

@@ -18,7 +18,9 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       throw 'missing auth';
     }
 
-    const account = serializeAccount(auth.account);
+    const account = serializeAccount(
+      auth.users.find((u) => u.accountsId === auth.accountId)?.account
+    );
     if (!account) {
       return res.redirect('/getting-started').end();
     }

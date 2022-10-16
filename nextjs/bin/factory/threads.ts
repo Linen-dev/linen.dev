@@ -40,6 +40,7 @@ export async function createThreadsOneByDay(
         messageCount: 2,
         externalThreadId: `thread-ts-${random()}`,
         sentAt: date + i * oneDay,
+        lastReplyAt: date + i * oneDay,
       },
     });
     await prisma.messages.create({
