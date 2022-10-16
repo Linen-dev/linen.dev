@@ -37,6 +37,7 @@ async function saveMessagesSynchronous(
       externalThreadId: ts,
       channelId: channelId,
       sentAt: parseSlackSentAt(ts),
+      lastReplyAt: parseSlackSentAt(ts),
       slug: createSlug(m.text),
     });
 
@@ -73,7 +74,15 @@ async function saveMessagesSynchronous(
         },
       },
     });
-
+    if (!!message.threadId) {
+      await prisma.threads.updateMany({
+        where: {
+          id: message.threadId,
+          lastReplyAt: { lt: message.sentAt.getTime() },
+        },
+        data: { lastReplyAt: message.sentAt.getTime() },
+      });
+    }
     await Promise.all([
       processReactions(m, message),
       processAttachments(m, message, token),

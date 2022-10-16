@@ -59,9 +59,9 @@ model threads {
   title            String?
   state            ThreadState @default(OPEN)
   pinned           Boolean     @default(false)
-
-  messages  messages[]
-  channelId String
+  messages         messages[]
+  channelId        String
+  lastReplyAt      BigInt?
 
   @@unique([externalThreadId])
   @@unique([incrementId])

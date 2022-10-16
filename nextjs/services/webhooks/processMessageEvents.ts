@@ -77,6 +77,7 @@ async function addMessage(
     externalThreadId: thread_ts,
     channelId: channel.id,
     sentAt: parseSlackSentAt(event.ts),
+    lastReplyAt: parseSlackSentAt(event.ts),
     slug: createSlug(event.text),
   });
 

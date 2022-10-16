@@ -103,6 +103,7 @@ function upsertMessage(message: {
   const toInsert = {
     body: message.body,
     sentAt: message.sentAt,
+    lastReplyAt: message.sentAt,
     externalMessageId: message.externalMessageId,
     threadId: message.threadId,
     channelId: message.channelId,

@@ -95,6 +95,7 @@ function upsertThread(channelId: string, thread: DiscordMessage) {
     ),
     messageCount: (thread.thread?.message_count || 0) + 1,
     sentAt: parseDiscordSentAt(thread.timestamp),
+    lastReplyAt: parseDiscordSentAt(thread.timestamp),
   };
   return prisma.threads.upsert({
     create: {
