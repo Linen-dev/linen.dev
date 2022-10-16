@@ -111,6 +111,7 @@ export async function create(
         increment: 1,
       },
       messages,
+      lastReplyAt: new Date().getTime(),
     },
   });
 

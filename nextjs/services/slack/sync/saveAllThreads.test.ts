@@ -114,6 +114,7 @@ describe('slackSync :: saveAllThreads', () => {
         channelId: internalChannel.id,
         externalThreadId: threads[0].id,
         sentAt: parseSlackSentAt(threads[0].externalThreadId),
+        lastReplyAt: parseSlackSentAt(threads[0].externalThreadId),
         slug: createSlug(conversationReplies.messages[index].text),
       },
       include: {
@@ -123,6 +124,7 @@ describe('slackSync :: saveAllThreads', () => {
         channelId: internalChannel.id,
         externalThreadId: threads[0].id,
         sentAt: parseSlackSentAt(threads[0].externalThreadId),
+        lastReplyAt: parseSlackSentAt(threads[0].externalThreadId),
         slug: createSlug(conversationReplies.messages[index].text),
       },
       where: {

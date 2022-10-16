@@ -27,6 +27,7 @@ export const findOrCreateThread = async (thread: {
   channelId: string;
   externalThreadId: string;
   sentAt: number;
+  lastReplyAt: number;
   slug?: string;
   messageCount?: number;
 }) => {

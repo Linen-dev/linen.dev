@@ -121,6 +121,7 @@ async function createThreadWithMessage(
     data: {
       ...(!!opts?.hidden && { hidden: opts.hidden }),
       sentAt: sentAt.getTime(),
+      lastReplyAt: sentAt.getTime(),
       channel: { connect: { id: channelId } },
       ...(!opts?.skipMessages && {
         messageCount: 2,

@@ -92,6 +92,7 @@ async function createChannelThreadsMessages({
         messageCount: 2,
         externalThreadId: `slack-thread-ts-${slug}-${random()}`,
         sentAt: new Date().getTime(),
+        lastReplyAt: new Date().getTime(),
       },
     });
     const message1 = await prisma.messages.create({
