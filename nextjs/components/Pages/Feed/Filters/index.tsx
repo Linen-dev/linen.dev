@@ -19,6 +19,7 @@ interface Props {
   onChange(type: string, value: string): void;
   onUpdate(): void;
   onPageChange(type: string): void;
+  isFetchingTotal: boolean;
 }
 
 function showActions(selections: Selections): boolean {
@@ -41,6 +42,7 @@ export default function Filters({
   onChange,
   onUpdate,
   onPageChange,
+  isFetchingTotal,
 }: Props) {
   return (
     <div className={styles.filters}>
@@ -81,7 +83,12 @@ export default function Filters({
         )}
       </div>
       <div className={styles.group}>
-        <Pagination page={page} total={total} onPageChange={onPageChange} />
+        <Pagination
+          page={page}
+          total={total}
+          onPageChange={onPageChange}
+          isFetchingTotal={isFetchingTotal}
+        />
       </div>
     </div>
   );

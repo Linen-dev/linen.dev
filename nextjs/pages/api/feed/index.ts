@@ -2,9 +2,10 @@ import { NextApiRequest, NextApiResponse } from 'next/types';
 import PermissionsService from 'services/permissions';
 import CommunityService from 'services/community';
 import prisma from 'client';
-import { Prisma, ThreadState } from '@prisma/client';
+import { ThreadState } from '@prisma/client';
 import serializeThread from 'serializers/thread';
 import { Scope } from 'types/shared';
+import ChannelsService from 'services/channels';
 
 function getPage(page?: number) {
   if (!page || page < 1) {
@@ -22,73 +23,74 @@ export async function index({
     state?: ThreadState;
     scope?: Scope;
     page?: number;
+    total?: boolean;
   };
   currentUserId?: string;
 }) {
   const community = await CommunityService.find(params);
   if (!community) {
-    return { status: 404, data: 'NotFound' };
+    return { status: 404 };
   }
   const page = getPage(params.page);
   const scope = params.scope || Scope.All;
   const limit = 10;
+  const channels = await ChannelsService.find(community.id);
   const condition = {
-    threads: {
-      hidden: false,
-      channel: { account: { id: community.id } },
-      state: params.state || ThreadState.OPEN,
-    },
-    ...(!!currentUserId &&
-      scope === Scope.Participant && {
-        OR: [
-          { usersId: currentUserId },
-          { mentions: { some: { usersId: currentUserId } } },
-        ],
-      }),
-  } as Prisma.messagesWhereInput;
-
-  const total = await countThreads({
+    hidden: false,
     state: params.state || ThreadState.OPEN,
-    communityId: community.id,
-    currentUserId:
-      !!currentUserId && scope === Scope.Participant
-        ? currentUserId
-        : undefined,
-  });
+    channelId: { in: channels.map((channel) => channel.id) },
+    messageCount: { gte: 1 },
+    messages: {
+      some: {},
+    },
+    lastReplyAt: { lt: new Date().getTime() },
+  } as any;
 
-  const messages = await prisma.messages.findMany({
+  if (!!currentUserId && scope === Scope.Participant) {
+    condition.messages.some.OR = [
+      { usersId: currentUserId },
+      { mentions: { some: { usersId: currentUserId } } },
+    ];
+  }
+
+  if (!!params.total) {
+    const total = await prisma.threads.count({
+      where: condition,
+    });
+    return {
+      status: 200,
+      data: {
+        total,
+      },
+    };
+  }
+
+  const threads = await prisma.threads.findMany({
     where: condition,
-    orderBy: { sentAt: 'desc' },
-    distinct: ['threadId'],
+    include: {
+      messages: {
+        include: {
+          author: true,
+          mentions: {
+            include: {
+              users: true,
+            },
+          },
+          reactions: true,
+          attachments: true,
+        },
+        orderBy: { sentAt: 'asc' },
+      },
+      channel: true,
+    },
+    orderBy: { lastReplyAt: 'desc' },
     take: limit,
     skip: (page - 1) * limit,
-    select: {
-      threads: {
-        include: {
-          messages: {
-            include: {
-              author: true,
-              mentions: {
-                include: {
-                  users: true,
-                },
-              },
-              reactions: true,
-              attachments: true,
-            },
-            orderBy: { sentAt: 'asc' },
-          },
-          channel: true,
-        },
-      },
-    },
   });
-  const threads = messages.map(({ threads }) => threads!);
   return {
     status: 200,
     data: {
       threads: threads.map(serializeThread),
-      total,
     },
   };
 }
@@ -128,33 +130,4 @@ export default async function handler(
     return handlers.index(request, response);
   }
   return response.status(404).json({});
-}
-
-async function countThreads({
-  state,
-  communityId,
-  currentUserId,
-}: {
-  state: ThreadState;
-  communityId: string;
-  currentUserId?: string;
-}) {
-  return await prisma.threads.count({
-    where: {
-      hidden: false,
-      state: state || ThreadState.OPEN,
-      channel: { account: { id: communityId } },
-      messageCount: { gte: 1 },
-      messages: {
-        some: {
-          ...(!!currentUserId && {
-            OR: [
-              { usersId: currentUserId },
-              { mentions: { some: { usersId: currentUserId } } },
-            ],
-          }),
-        },
-      },
-    },
-  });
 }
