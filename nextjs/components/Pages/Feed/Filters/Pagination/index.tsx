@@ -2,11 +2,13 @@ import React from 'react';
 import classNames from 'classnames';
 import { GoChevronLeft, GoChevronRight } from 'react-icons/go';
 import styles from './index.module.css';
+import { CgSpinner } from 'react-icons/cg';
 
 interface Props {
   total: number;
   page: number;
   onPageChange(type: string): void;
+  isFetchingTotal: boolean;
 }
 
 interface Range {
@@ -32,14 +34,24 @@ function getRange(page: number, total: number): Range {
   };
 }
 
-export default function Pagination({ total, page, onPageChange }: Props) {
+export default function Pagination({
+  total,
+  page,
+  onPageChange,
+  isFetchingTotal,
+}: Props) {
   const { start, end } = getRange(page, total);
   const isBackDisabled = page === 1;
   const isNextDisabled = total <= 10 || end === total;
   return (
     <div className={styles.pagination}>
       <div className={styles.count}>
-        {start}-{end} of {total}
+        {start}-{end} of{' '}
+        {isFetchingTotal ? (
+          <CgSpinner className="inline mb-1 animate-spin" />
+        ) : (
+          total
+        )}
       </div>
       <div
         className={classNames(styles.icon, {

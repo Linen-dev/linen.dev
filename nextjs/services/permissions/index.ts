@@ -14,11 +14,11 @@ import Session from '../session';
 import {
   type AccountWithPermissions,
   findAccountByPath,
-  findAuthByEmail,
   accountWithPermissionsInclude,
 } from 'lib/models';
 import prisma from 'client';
 import { Permissions } from 'types/shared';
+import { findAuthByEmail } from 'lib/users';
 
 type Request = GetServerSidePropsContext['req'] | NextApiRequest;
 type Response = GetServerSidePropsContext['res'] | NextApiResponse;
@@ -108,14 +108,14 @@ export default class PermissionsService {
     if (!community) {
       return false;
     }
-    // TODO: this should be removed when feed is ready for all communities
-    if (community?.discordAuthorizations?.length) {
-      return false;
-    }
-    // TODO: this should be removed when feed is ready for all communities
-    if (community?.slackAuthorizations?.length) {
-      return false;
-    }
+    // // TODO: this should be removed when feed is ready for all communities
+    // if (community?.discordAuthorizations?.length) {
+    //   return false;
+    // }
+    // // TODO: this should be removed when feed is ready for all communities
+    // if (community?.slackAuthorizations?.length) {
+    //   return false;
+    // }
     return true;
   }
 

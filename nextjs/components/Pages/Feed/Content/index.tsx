@@ -170,13 +170,36 @@ export default function Feed({
         return debouncedFetch({ communityName, state, scope, page });
       },
       success(data: FeedResponse) {
-        setFeed(data);
+        setFeed((f) => ({ ...f, threads: data.threads }));
       },
       error() {
         toast.error('Something went wrong. Please reload the page.');
       },
     },
     [communityName, state, page, scope, key]
+  );
+
+  const [totalPolling] = usePolling(
+    {
+      fetch() {
+        return fetch(
+          `/api/feed?communityName=${communityName}&state=${state}&scope=${scope}&total=true`,
+          {
+            method: 'GET',
+          }
+        ).then((response) => {
+          if (response.ok) {
+            return response.json();
+          }
+          throw new Error('Failed to fetch the feed.');
+        });
+      },
+      success(data: FeedResponse) {
+        setFeed((f) => ({ ...f, total: data.total }));
+      },
+      error() {},
+    },
+    [communityName, state, scope]
   );
 
   const updateThread = ({
@@ -273,6 +296,7 @@ export default function Feed({
                 }
               }}
               total={feed.total}
+              isFetchingTotal={totalPolling}
               onUpdate={updateThreads}
               page={page}
               onPageChange={(type: string) => {

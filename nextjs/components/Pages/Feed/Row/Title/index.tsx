@@ -65,6 +65,6 @@ function getTitle(message: SerializedMessage): string {
 
 export default function Title({ thread }: Props) {
   const { title } = thread;
-  const message = thread.messages[0];
+  const message = thread.messages[thread.messages.length - 1];
   return <div className={styles.title}>{title || getTitle(message)}</div>;
 }
