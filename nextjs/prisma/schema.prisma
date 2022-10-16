@@ -68,6 +68,7 @@ model threads {
   @@index([channelId])
   @@index([channelId, sentAt])
   @@index([channelId, sentAt, hidden])
+  @@index([channelId, hidden, state, lastReplyAt])
 }
 
 enum ThreadState {
