@@ -104,6 +104,9 @@ export function Channel({
 
   async function sendReaction(threadId: string, type: string) {
     function addReaction(threads: SerializedThread[]) {
+      if (!currentUser) {
+        return threads;
+      }
       return threads.map((thread) => {
         if (thread.id === threadId) {
           return {
@@ -118,7 +121,7 @@ export function Channel({
                     ...message,
                     reactions: [
                       ...message.reactions,
-                      { type, count: 1, users: [] },
+                      { type, count: 1, users: [currentUser] },
                     ],
                   };
                 }
@@ -126,10 +129,20 @@ export function Channel({
                   ...message,
                   reactions: message.reactions.map((reaction) => {
                     if (reaction.type === type) {
+                      const ids = reaction.users.map(({ id }) => id);
+                      if (ids.includes(currentUser.id)) {
+                        return {
+                          type,
+                          count: reaction.count - 1,
+                          users: reaction.users.filter(
+                            ({ id }) => id !== currentUser.id
+                          ),
+                        };
+                      }
                       return {
                         type,
                         count: reaction.count + 1,
-                        users: [],
+                        users: [...reaction.users, currentUser],
                       };
                     }
                     return reaction;
@@ -403,6 +416,7 @@ export function Channel({
                           permissions={permissions}
                           isSubDomainRouting={isSubDomainRouting}
                           settings={settings}
+                          currentUser={currentUser}
                           onPin={pinThread}
                           onReaction={sendReaction}
                         />
@@ -419,6 +433,7 @@ export function Channel({
                         isSubDomainRouting={isSubDomainRouting}
                         settings={settings}
                         isBot={isBot}
+                        currentUser={currentUser}
                         onClick={selectThread}
                         onPin={pinThread}
                         onReaction={sendReaction}
