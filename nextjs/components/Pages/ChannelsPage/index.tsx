@@ -1,15 +1,12 @@
 import type { messages, mentions, users } from '@prisma/client';
 import type { Settings } from 'serializers/account/settings';
 import ChannelPage from './ChannelPage';
-import type {
-  SerializedAttachment,
-  SerializedReaction,
-  Permissions,
-} from 'types/shared';
+import type { SerializedAttachment, Permissions } from 'types/shared';
 import type { SerializedThread } from 'serializers/thread';
 import type { SerializedUser } from 'serializers/user';
 import type { ChannelSerialized } from 'lib/channel';
 import { SerializedAccount } from 'serializers/account';
+import { SerializedReaction } from 'serializers/reaction';
 
 export type ChannelResponse = {
   props?: ChannelViewProps;

@@ -3,7 +3,7 @@ import Emoji from '../../Emoji';
 import ALIASES from '../../Emoji/utilities/aliases';
 import { UNSUPPORTED_EMOJIS } from '../../Emoji/utilities/emojis';
 import styles from './index.module.css';
-import { SerializedReaction } from 'types/shared';
+import { SerializedReaction } from 'serializers/reaction';
 
 function normalizeText(text: string) {
   if (text.startsWith(':') && text.endsWith(':')) {
