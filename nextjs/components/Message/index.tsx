@@ -41,6 +41,7 @@ interface Props {
   mentions?: SerializedUser[];
   reactions?: SerializedReaction[];
   attachments?: SerializedAttachment[];
+  currentUser?: SerializedUser | null;
 }
 
 const parsers = {
@@ -53,7 +54,14 @@ function noAttachment(attachments?: SerializedAttachment[]) {
   return !attachments || attachments?.length === 0;
 }
 
-function Message({ text, format, mentions, reactions, attachments }: Props) {
+function Message({
+  text,
+  format,
+  mentions,
+  reactions,
+  attachments,
+  currentUser,
+}: Props) {
   if (text === '' && noAttachment(attachments)) {
     text = 'message has been deleted';
   }
@@ -130,7 +138,7 @@ function Message({ text, format, mentions, reactions, attachments }: Props) {
     <div className={styles.message}>
       {render(tree)}
       <Attachments attachments={attachments} />
-      <Reactions reactions={reactions} />
+      <Reactions reactions={reactions} currentUser={currentUser} />
     </div>
   );
 }

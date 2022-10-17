@@ -81,6 +81,7 @@ export function Row({
             mentions={message.mentions}
             reactions={message.reactions}
             attachments={message.attachments}
+            currentUser={currentUser}
           />
           {children}
           <div className={styles.actions}>
