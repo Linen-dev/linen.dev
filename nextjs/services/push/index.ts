@@ -10,6 +10,8 @@ type PushType = {
   imitationId?: string;
   isThread: boolean;
   isReply: boolean;
+  message?: string;
+  thread?: string;
 };
 
 export type PushMessageType = {
@@ -20,6 +22,8 @@ export type PushMessageType = {
   is_thread: boolean;
   is_reply: boolean;
   mention_type?: string;
+  message?: string;
+  thread?: string;
 };
 export type CommunityPushType = PushMessageType & {
   community_id: string;
@@ -32,6 +36,8 @@ export const push = ({
   imitationId,
   isThread,
   isReply,
+  message,
+  thread,
 }: PushType) => {
   return request.post(`${pushURL}/api/message`).send({
     channel_id: channelId,
@@ -40,6 +46,8 @@ export const push = ({
     imitation_id: imitationId,
     is_thread: isThread,
     is_reply: isReply,
+    message,
+    thread,
     token,
   });
 };
@@ -51,6 +59,8 @@ export const pushChannel = ({
   imitationId,
   isThread,
   isReply,
+  message,
+  thread,
 }: PushType) => {
   return request.post(`${pushURL}/api/channel`).send({
     channel_id: channelId,
@@ -59,6 +69,8 @@ export const pushChannel = ({
     imitation_id: imitationId,
     is_thread: isThread,
     is_reply: isReply,
+    message,
+    thread,
     token,
   });
 };
@@ -92,6 +104,8 @@ export const pushCommunity = ({
   imitationId,
   isThread,
   isReply,
+  message,
+  thread,
 }: {
   communityId: string;
 } & PushType) => {
@@ -104,6 +118,8 @@ export const pushCommunity = ({
     imitation_id: imitationId,
     is_thread: isThread,
     is_reply: isReply,
+    message,
+    thread,
     token,
   });
 };

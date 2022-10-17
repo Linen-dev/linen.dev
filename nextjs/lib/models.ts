@@ -35,7 +35,7 @@ export const createMessageWithMentions = async (
     messageFormat: message.messageFormat,
   };
   return await prisma.messages.upsert({
-    include: { mentions: true },
+    include: { mentions: true, author: true },
     create: {
       ...msg,
       mentions: {

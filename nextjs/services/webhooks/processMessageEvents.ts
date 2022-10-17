@@ -2,13 +2,13 @@ import {
   createMessageWithMentions,
   findMessageByChannelIdAndTs,
   deleteMessageWithMentions,
-} from '../../lib/models';
-import { findOrCreateThread, updateSlackThread } from '../../lib/threads';
+} from 'lib/models';
+import { findOrCreateThread, updateSlackThread } from 'lib/threads';
 import {
   SlackEvent,
   SlackMessageEvent,
-} from '../../types/slackResponses/slackMessageEventInterface';
-import { createSlug } from '../../utilities/util';
+} from 'types/slackResponses/slackMessageEventInterface';
+import { createSlug } from 'utilities/util';
 import {
   accounts,
   channels,
@@ -16,11 +16,13 @@ import {
   Prisma,
   slackAuthorizations,
 } from '@prisma/client';
-import { findOrCreateUserFromUserInfo } from '../../lib/users';
-import { parseSlackSentAt, tsToSentAt } from '../../utilities/sentAt';
+import { findOrCreateUserFromUserInfo } from 'lib/users';
+import { parseSlackSentAt, tsToSentAt } from 'utilities/sentAt';
 import { findChannelWithAccountByExternalId } from 'lib/channel';
 import { eventNewMessage, eventNewThread } from 'services/events';
 import { processAttachments } from 'services/slack';
+import { serializeMessage } from 'serializers/message';
+import { serializeThread } from 'serializers/thread';
 
 export async function processMessageEvent(body: SlackEvent) {
   const event = body.event as SlackMessageEvent;
@@ -138,6 +140,10 @@ async function addMessage(
 
   if (event.ts === event.thread_ts || !event.thread_ts) {
     // is a thread
+    const serializedThread = serializeThread({
+      ...thread,
+      messages: [message],
+    });
     await eventNewThread({
       communityId: channel.accountId!,
       channelId,
@@ -146,9 +152,11 @@ async function addMessage(
       imitationId: threadId,
       mentions: message.mentions,
       mentionNodes: [],
+      thread: JSON.stringify(serializedThread),
     });
   } else if (!!event.thread_ts && event.ts !== event.thread_ts) {
     // is a reply
+    const serializedMessage = serializeMessage(message);
     await eventNewMessage({
       communityId: channel.accountId!,
       channelId,
@@ -157,6 +165,7 @@ async function addMessage(
       imitationId: messageId,
       mentions: message.mentions,
       mentionNodes: [],
+      message: JSON.stringify(serializedMessage),
     });
   }
 

@@ -17,6 +17,7 @@ type NewThreadEvent = {
   mentions: mentions[];
   mentionNodes: MentionNode[];
   communityId: string;
+  thread: string;
 };
 
 export async function eventNewThread({
@@ -27,6 +28,7 @@ export async function eventNewThread({
   mentions = [],
   mentionNodes = [],
   communityId,
+  thread,
 }: NewThreadEvent) {
   const event = {
     channelId,
@@ -35,6 +37,7 @@ export async function eventNewThread({
     imitationId,
     isThread: true,
     isReply: false,
+    thread,
   };
 
   const promises: Promise<any>[] = [

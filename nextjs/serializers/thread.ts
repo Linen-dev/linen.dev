@@ -41,7 +41,7 @@ function serializeMessages(
   return messages.map(serializeMessage);
 }
 
-export default function serialize(
+export function serializeThread(
   thread: ThreadForSerialization
 ): SerializedThread {
   return {
@@ -51,3 +51,5 @@ export default function serialize(
     messages: serializeMessages(thread.messages),
   };
 }
+
+export default serializeThread;

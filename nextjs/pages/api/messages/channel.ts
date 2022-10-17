@@ -122,6 +122,7 @@ export async function create(
     },
   });
 
+  const serializedThread = serializeThread(thread);
   await eventNewThread({
     communityId,
     channelId,
@@ -130,10 +131,11 @@ export async function create(
     imitationId,
     mentions: thread.messages[0].mentions,
     mentionNodes,
+    thread: JSON.stringify(serializedThread),
   });
 
   return response.status(200).json({
-    thread: serializeThread(thread),
+    thread: serializedThread,
     imitationId,
   });
 }

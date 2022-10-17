@@ -25,6 +25,7 @@ import { useJoinContext } from 'contexts/Join';
 import { sendThreadMessageWrapper } from './sendThreadMessageWrapper';
 import { sendMessageWrapper } from './sendMessageWrapper';
 import debounce from 'utilities/debounce';
+import { SerializedMessage } from 'serializers/message';
 
 const debouncedSendReaction = debounce(
   (params: {
@@ -251,38 +252,40 @@ export function Channel({
           const threadId = payload.thread_id;
           const messageId = payload.message_id;
           const imitationId = payload.imitation_id;
-          fetch('/api/messages/' + messageId)
-            .then((response) => response.json())
-            .then((message) =>
-              setThreads((threads) => {
-                const index = threads.findIndex(({ id }) => id === threadId);
-                const newThreads = [...threads];
-                if (index > -1) {
-                  newThreads[index].messages = [
-                    ...newThreads[index].messages.filter(
-                      ({ id }) => id !== imitationId && id !== messageId
-                    ),
-                    message,
-                  ];
-                }
-                return newThreads;
-              })
-            );
+          const message: SerializedMessage =
+            payload.message && JSON.parse(payload.message);
+          if (!message) {
+            return;
+          }
+          setThreads((threads) => {
+            const index = threads.findIndex(({ id }) => id === threadId);
+            const newThreads = [...threads];
+            if (index > -1) {
+              newThreads[index].messages = [
+                ...newThreads[index].messages.filter(
+                  ({ id }) => id !== imitationId && id !== messageId
+                ),
+                message,
+              ];
+            }
+            return newThreads;
+          });
         }
 
         if (payload.is_thread) {
           const threadId = payload.thread_id;
           const imitationId = payload.imitation_id;
-          fetch('/api/threads/' + threadId)
-            .then((response) => response.json())
-            .then((thread) => {
-              setThreads((threads) => [
-                ...threads.filter(
-                  ({ id }) => id !== imitationId && id !== threadId
-                ),
-                thread,
-              ]);
-            });
+          const thread: SerializedThread =
+            payload.thread && JSON.parse(payload.thread);
+          if (!thread) {
+            return;
+          }
+          setThreads((threads) => [
+            ...threads.filter(
+              ({ id }) => id !== imitationId && id !== threadId
+            ),
+            thread,
+          ]);
         }
       } catch (e) {
         if (process.env.NODE_ENV === 'development') {

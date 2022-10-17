@@ -3,24 +3,14 @@ defmodule PushServiceWeb.MessageController do
   action_fallback(PushServiceWeb.FallbackController)
 
   # use pattern matching
-  def create(conn, %{
-        "channel_id" => channel_id,
-        "imitation_id" => imitation_id,
-        "message_id" => message_id,
-        "thread_id" => thread_id,
-        "is_thread" => is_thread,
-        "is_reply" => is_reply,
-        "token" => token
-      }) do
+  def create(conn, params) do
+    %{
+      "thread_id" => thread_id,
+      "token" => token
+    } = params
+
     if(token == System.get_env("PUSH_SERVICE_KEY")) do
-      PushServiceWeb.Endpoint.broadcast!("room:topic:" <> thread_id, "new_msg", %{
-        "channel_id" => channel_id,
-        "imitation_id" => imitation_id,
-        "message_id" => message_id,
-        "thread_id" => thread_id,
-        "is_thread" => is_thread,
-        "is_reply" => is_reply
-      })
+      PushServiceWeb.Endpoint.broadcast!("room:topic:" <> thread_id, "new_msg", params)
 
       json(conn, %{status: 200})
     else

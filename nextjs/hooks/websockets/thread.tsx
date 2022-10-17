@@ -24,9 +24,12 @@ function useThreadWebsockets({ id, token, permissions, onMessage }: Props) {
         if (payload.is_reply && payload.thread_id === currentThreadId) {
           const messageId = payload.message_id;
           const imitationId = payload.imitation_id;
-          fetch('/api/messages/' + messageId)
-            .then((e) => e.json())
-            .then((message) => onMessage(message, messageId, imitationId));
+          const message: SerializedMessage =
+            payload.message && JSON.parse(payload.message);
+          if (!message) {
+            return;
+          }
+          onMessage(message, messageId, imitationId);
         }
       } catch (exception) {
         if (process.env.NODE_ENV === 'development') {

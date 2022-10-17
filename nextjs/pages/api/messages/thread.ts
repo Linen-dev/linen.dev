@@ -138,6 +138,7 @@ export async function create(
     return response.status(400).json({ error: 'failed to create message' });
   }
 
+  const serializedMessage = serializeMessage(message);
   await eventNewMessage({
     communityId,
     channelId,
@@ -146,10 +147,11 @@ export async function create(
     imitationId,
     mentions: message.mentions,
     mentionNodes,
+    message: JSON.stringify(serializedMessage),
   });
 
   return response.status(200).json({
-    message: serializeMessage(message),
+    message: serializedMessage,
     imitationId,
   });
 }
