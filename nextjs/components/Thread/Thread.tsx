@@ -48,7 +48,17 @@ export function Thread({
   onClose?(): void;
   onSend?(): void;
   onMount?(): void;
-  onReaction?(threadId: string, messageId: string, type: string): void;
+  onReaction?({
+    threadId,
+    messageId,
+    type,
+    active,
+  }: {
+    threadId: string;
+    messageId: string;
+    type: string;
+    active: boolean;
+  }): void;
 }) {
   const { id, title, state, viewCount } = thread;
   useEffect(() => {

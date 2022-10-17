@@ -32,7 +32,17 @@ export default function ChannelRow({
   settings: Settings;
   currentUser: SerializedUser | null;
   onPin(threadId: string): void;
-  onReaction(threadId: string, messageId: string, reaction: string): void;
+  onReaction({
+    threadId,
+    messageId,
+    type,
+    active,
+  }: {
+    threadId: string;
+    messageId: string;
+    type: string;
+    active: boolean;
+  }): void;
 }) {
   const { messages } = thread;
   let users = messages.map((m) => m.author).filter(Boolean) as users[];

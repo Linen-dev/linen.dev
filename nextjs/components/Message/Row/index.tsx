@@ -23,7 +23,17 @@ interface Props {
   children?: React.ReactNode;
   currentUser: SerializedUser | null;
   onPin?(threadId: string): void;
-  onReaction?(threadId: string, messageId: string, type: string): void;
+  onReaction?({
+    threadId,
+    messageId,
+    type,
+    active,
+  }: {
+    threadId: string;
+    messageId: string;
+    type: string;
+    active: boolean;
+  }): void;
 }
 
 export function Row({

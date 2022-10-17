@@ -26,7 +26,17 @@ export default function ChannelGrid({
   currentUser: SerializedUser | null;
   onClick: (threadId: number) => void;
   onPin: (threadId: string) => void;
-  onReaction: (threadId: string, messageId: string, reaction: string) => void;
+  onReaction({
+    threadId,
+    messageId,
+    type,
+    active,
+  }: {
+    threadId: string;
+    messageId: string;
+    type: string;
+    active: boolean;
+  }): void;
 }) {
   return (
     <>
