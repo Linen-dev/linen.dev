@@ -305,18 +305,12 @@ export default function Feed({
         right={
           thread && (
             <Thread
+              thread={thread}
               key={thread.id}
-              id={thread.id}
               channelId={thread.channelId}
               channelName={thread.channel?.channelName as string}
-              title={thread.title}
-              state={thread.state}
-              messages={thread.messages}
-              viewCount={thread.viewCount}
               settings={settings}
-              incrementId={thread.incrementId}
               isSubDomainRouting={isSubDomainRouting}
-              slug={thread.slug}
               permissions={permissions}
               updateThread={updateThread}
               onClose={() => setThread(undefined)}

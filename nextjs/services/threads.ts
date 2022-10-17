@@ -1,4 +1,4 @@
-import serializeThread from '../serializers/thread';
+import serializeThread from 'serializers/thread';
 import { findAccountByPath } from '../lib/models';
 import { findThreadByIncrementId } from '../lib/threads';
 import { ThreadByIdProp } from '../types/apiResponses/threads/[threadId]';
@@ -51,7 +51,6 @@ export async function threadGetServerSideProps(
     }
 
     if (thread?.channel?.accountId !== account.id) {
-      console.log('thread belongs to another community');
       return Promise.reject(new Error('Thread not found'));
     }
 
@@ -120,26 +119,18 @@ export async function threadGetServerSideProps(
     return {
       props: {
         token: token || null,
-        id: thread.id,
-        incrementId: thread.incrementId,
-        viewCount: thread.viewCount,
-        slug: thread.slug || '',
+        thread: serializeThread(thread),
         externalThreadId: thread.externalThreadId,
-        messageCount: thread.messageCount,
         channelId: currentChannel.id,
         currentCommunity: serializeAccount(account),
         currentUser: !!currentUser ? serializeUser(currentUser) : null,
         channel: currentChannel,
         authors: authors,
-        messages: serializeThread(thread).messages,
-        threadId,
         currentChannel,
         channels,
         threadUrl,
         settings,
         pathCursor: encodeCursor(`asc:gte:${thread.sentAt.toString()}`),
-        title: thread.title,
-        state: thread.state,
         permissions,
         isSubDomainRouting: isSubdomainbasedRouting,
       },

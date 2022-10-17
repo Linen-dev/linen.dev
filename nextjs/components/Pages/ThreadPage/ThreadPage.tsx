@@ -1,33 +1,22 @@
 import PageLayout from 'components/layout/PageLayout';
 import { ThreadByIdProp } from '../../../types/apiResponses/threads/[threadId]';
-import { useEffect, useState, useRef } from 'react';
+import { useRef } from 'react';
 import { buildThreadSeo } from 'utilities/seo';
 import Content from './Content';
 
 export function ThreadPage({
-  id,
-  threadId,
+  thread,
   channels,
   currentChannel,
   currentCommunity,
   currentUser,
   threadUrl,
-  viewCount,
   isSubDomainRouting,
   settings,
-  slug,
-  incrementId,
-  messages,
-  title,
-  state,
   permissions,
   token,
 }: ThreadByIdProp) {
   const ref = useRef<HTMLDivElement>(null);
-
-  if (!threadId) {
-    return <div></div>;
-  }
 
   return (
     <PageLayout
@@ -35,10 +24,10 @@ export function ThreadPage({
         ...buildThreadSeo({
           isSubDomainRouting,
           channelName: currentChannel.channelName,
-          messages,
+          messages: thread.messages,
           settings,
-          threadId,
-          slug,
+          threadId: thread.id,
+          slug: thread.slug || '',
         }),
       }}
       communityName={settings.communityName}
@@ -54,20 +43,13 @@ export function ThreadPage({
       token={token}
     >
       <Content
-        id={id}
-        threadId={threadId}
+        thread={thread}
         currentChannel={currentChannel}
         currentCommunity={currentCommunity}
         currentUser={currentUser}
         threadUrl={threadUrl}
-        viewCount={viewCount}
         isSubDomainRouting={isSubDomainRouting}
         settings={settings}
-        slug={slug}
-        incrementId={incrementId}
-        messages={messages}
-        title={title}
-        state={state}
         permissions={permissions}
         token={token}
       />
