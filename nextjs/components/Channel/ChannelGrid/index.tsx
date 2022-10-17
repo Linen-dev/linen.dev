@@ -3,6 +3,7 @@ import CustomLink from '../../Link/CustomLink';
 import { SerializedThread } from '../../../serializers/thread';
 import ChannelRow from '../ChannelRow';
 import type { Settings } from 'serializers/account/settings';
+import { SerializedUser } from 'serializers/user';
 import { Permissions } from 'types/shared';
 import styles from './index.module.scss';
 
@@ -12,6 +13,7 @@ export default function ChannelGrid({
   isSubDomainRouting,
   settings,
   isBot,
+  currentUser,
   onClick,
   onPin,
   onReaction,
@@ -21,6 +23,7 @@ export default function ChannelGrid({
   isSubDomainRouting: boolean;
   settings: Settings;
   isBot: boolean;
+  currentUser: SerializedUser | null;
   onClick: (threadId: number) => void;
   onPin: (threadId: string) => void;
   onReaction: (threadId: string, reaction: string) => void;
@@ -50,6 +53,7 @@ export default function ChannelGrid({
                       permissions={permissions}
                       isSubDomainRouting={isSubDomainRouting}
                       settings={settings}
+                      currentUser={currentUser}
                       onPin={onPin}
                       onReaction={onReaction}
                     />
@@ -62,6 +66,7 @@ export default function ChannelGrid({
                     permissions={permissions}
                     isSubDomainRouting={isSubDomainRouting}
                     settings={settings}
+                    currentUser={currentUser}
                     onPin={onPin}
                     onReaction={onReaction}
                   />

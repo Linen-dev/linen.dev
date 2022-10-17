@@ -5,6 +5,7 @@ import type { Settings } from 'serializers/account/settings';
 import Row from 'components/Message/Row';
 import styles from './index.module.scss';
 import { SerializedThread } from 'serializers/thread';
+import { SerializedUser } from 'serializers/user';
 import { Permissions } from 'types/shared';
 
 export const uniqueUsers = (users: users[]): users[] => {
@@ -22,6 +23,7 @@ export default function ChannelRow({
   permissions,
   isSubDomainRouting,
   settings,
+  currentUser,
   onPin,
   onReaction,
 }: {
@@ -29,6 +31,7 @@ export default function ChannelRow({
   permissions: Permissions;
   isSubDomainRouting: boolean;
   settings: Settings;
+  currentUser: SerializedUser | null;
   onPin(threadId: string): void;
   onReaction(threadId: string, reaction: string): void;
 }) {
@@ -68,6 +71,7 @@ export default function ChannelRow({
         isSubDomainRouting={isSubDomainRouting}
         settings={settings}
         permissions={permissions}
+        currentUser={currentUser}
         className={styles.options}
         onPin={onPin}
         onReaction={onReaction}
