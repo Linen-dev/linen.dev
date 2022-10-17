@@ -16,7 +16,9 @@ describe('#serialize', () => {
         ],
       })
     );
-    expect(thread.messages[0].reactions).toEqual([{ type: 'yes', count: 1 }]);
+    expect(thread.messages[0].reactions).toEqual([
+      { type: 'yes', count: 1, users: [] },
+    ]);
   });
 
   it('serializers the channel', () => {

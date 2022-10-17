@@ -18,6 +18,7 @@ function Reactions({ reactions }: Props) {
           key={reaction.type + index}
           type={reaction.type}
           count={reaction.count}
+          users={reaction.users}
         />
       ))}
     </div>
