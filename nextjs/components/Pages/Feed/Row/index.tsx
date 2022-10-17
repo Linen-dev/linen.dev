@@ -15,7 +15,7 @@ interface Props {
 }
 
 export default function Row({ thread, selected, onChange, onClick }: Props) {
-  const message = thread.messages[0];
+  const message = thread.messages[thread.messages.length - 1];
   const { channel, id } = thread;
   return (
     <div className={classNames(styles.row, { [styles.selected]: selected })}>
