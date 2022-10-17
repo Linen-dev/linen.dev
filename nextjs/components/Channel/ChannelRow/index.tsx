@@ -1,6 +1,6 @@
 import Avatars from '../../Avatars';
 import { users } from '@prisma/client';
-import Options from './Options';
+import Actions from 'components/Actions';
 import type { Settings } from 'serializers/account/settings';
 import Row from 'components/Message/Row';
 import styles from './index.module.scss';
@@ -66,7 +66,7 @@ export default function ChannelRow({
           </div>
         )}
       </Row>
-      <Options
+      <Actions
         thread={thread}
         isSubDomainRouting={isSubDomainRouting}
         settings={settings}
