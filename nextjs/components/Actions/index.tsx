@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import { getThreadUrl } from '../../../Pages/ChannelsPage/utilities/url';
+import { getThreadUrl } from '../Pages/ChannelsPage/utilities/url';
 import { copyToClipboard } from 'utilities/clipboard';
 import { toast } from 'components/Toast';
 import { Permissions } from 'types/shared';
