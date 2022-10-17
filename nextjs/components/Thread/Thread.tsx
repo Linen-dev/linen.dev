@@ -4,8 +4,8 @@ import Header from './Header';
 import Messages from './Messages';
 import JoinChannelLink from 'components/Link/JoinChannelLink';
 import { SerializedThread } from 'serializers/thread';
+import { SerializedUser } from 'serializers/user';
 import type { Settings } from 'serializers/account/settings';
-import { getThreadUrl } from 'components/Pages/ChannelsPage/utilities/url';
 import MessageForm from 'components/MessageForm';
 import { fetchMentions } from 'components/MessageForm/api';
 import { Permissions } from 'types/shared';
@@ -19,11 +19,13 @@ export function Thread({
   isSubDomainRouting,
   settings,
   permissions,
+  currentUser,
   sendMessage,
   updateThread,
   onClose,
   onSend,
   onMount,
+  onReaction,
 }: {
   thread: SerializedThread;
   channelId: string;
@@ -32,6 +34,7 @@ export function Thread({
   isSubDomainRouting: boolean;
   settings: Settings;
   permissions: Permissions;
+  currentUser: SerializedUser | null;
   sendMessage({
     message,
     channelId,
@@ -45,15 +48,9 @@ export function Thread({
   onClose?(): void;
   onSend?(): void;
   onMount?(): void;
+  onReaction?(threadId: string, messageId: string, type: string): void;
 }) {
-  const { id, messages, incrementId, slug, title, state, viewCount } = thread;
-  const threadLink = getThreadUrl({
-    incrementId: incrementId!,
-    isSubDomainRouting,
-    settings,
-    slug,
-  });
-
+  const { id, title, state, viewCount } = thread;
   useEffect(() => {
     onMount?.();
   }, []);
@@ -72,9 +69,12 @@ export function Thread({
       />
       <div className={styles.thread}>
         <Messages
-          messages={messages}
-          communityType={settings.communityType}
-          threadLink={threadLink}
+          thread={thread}
+          permissions={permissions}
+          isSubDomainRouting={isSubDomainRouting}
+          currentUser={currentUser}
+          settings={settings}
+          onReaction={onReaction}
         />
 
         <div className={styles.footer}>

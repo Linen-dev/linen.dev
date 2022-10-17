@@ -1,14 +1,28 @@
 import React from 'react';
 import Row from 'components/Message/Row';
-import { SerializedMessage } from 'serializers/message';
+import { SerializedThread } from 'serializers/thread';
+import { SerializedUser } from 'serializers/user';
+import { Settings } from 'serializers/account/settings';
+import { Permissions } from 'types/shared';
 
 interface Props {
-  communityType: string;
-  threadLink: string;
-  messages: SerializedMessage[];
+  thread: SerializedThread;
+  permissions: Permissions;
+  settings: Settings;
+  isSubDomainRouting: boolean;
+  currentUser: SerializedUser | null;
+  onReaction?(threadId: string, messageId: string, type: string): void;
 }
 
-function Messages({ communityType, threadLink, messages }: Props) {
+function Messages({
+  thread,
+  permissions,
+  settings,
+  isSubDomainRouting,
+  currentUser,
+  onReaction,
+}: Props) {
+  const { messages } = thread;
   const elements = messages.map((message, index) => {
     const previousMessage = messages[index - 1];
     const nextMessage = messages[index + 1];
@@ -22,10 +36,14 @@ function Messages({ communityType, threadLink, messages }: Props) {
         className={isNextMessageFromSameUser ? '' : 'pb-4'}
       >
         <Row
+          thread={thread}
           message={message}
           isPreviousMessageFromSameUser={isPreviousMessageFromSameUser}
-          communityType={communityType}
-          threadLink={threadLink}
+          permissions={permissions}
+          currentUser={currentUser}
+          settings={settings}
+          isSubDomainRouting={isSubDomainRouting}
+          onReaction={onReaction}
         />
       </div>
     );

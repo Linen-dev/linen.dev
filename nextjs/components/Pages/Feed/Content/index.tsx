@@ -312,6 +312,7 @@ export default function Feed({
               settings={settings}
               isSubDomainRouting={isSubDomainRouting}
               permissions={permissions}
+              currentUser={currentUser}
               updateThread={updateThread}
               onClose={() => setThread(undefined)}
               sendMessage={sendMessage}

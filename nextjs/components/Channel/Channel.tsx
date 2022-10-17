@@ -102,7 +102,11 @@ export function Channel({
       });
   }
 
-  async function sendReaction(threadId: string, type: string) {
+  async function sendReaction(
+    threadId: string,
+    messageId: string,
+    type: string
+  ) {
     function addReaction(threads: SerializedThread[]) {
       if (!currentUser) {
         return threads;
@@ -112,7 +116,7 @@ export function Channel({
           return {
             ...thread,
             messages: thread.messages.map((message, index) => {
-              if (index === 0) {
+              if (message.id === messageId) {
                 const reaction = message.reactions.find(
                   (reaction) => reaction.type === type
                 );
@@ -127,26 +131,40 @@ export function Channel({
                 }
                 return {
                   ...message,
-                  reactions: message.reactions.map((reaction) => {
-                    if (reaction.type === type) {
-                      const ids = reaction.users.map(({ id }) => id);
-                      if (ids.includes(currentUser.id)) {
+                  reactions: message.reactions
+                    .filter((reaction) => {
+                      if (
+                        reaction.type === type &&
+                        reaction.users
+                          .map(({ id }) => id)
+                          .includes(currentUser.id) &&
+                        reaction.count - 1 === 0
+                      ) {
+                        return false;
+                      }
+                      return true;
+                    })
+                    .map((reaction) => {
+                      if (reaction.type === type) {
+                        const ids = reaction.users.map(({ id }) => id);
+                        if (ids.includes(currentUser.id)) {
+                          const count = reaction.count - 1;
+                          return {
+                            type,
+                            count,
+                            users: reaction.users.filter(
+                              ({ id }) => id !== currentUser.id
+                            ),
+                          };
+                        }
                         return {
                           type,
-                          count: reaction.count - 1,
-                          users: reaction.users.filter(
-                            ({ id }) => id !== currentUser.id
-                          ),
+                          count: reaction.count + 1,
+                          users: [...reaction.users, currentUser],
                         };
                       }
-                      return {
-                        type,
-                        count: reaction.count + 1,
-                        users: [...reaction.users, currentUser],
-                      };
-                    }
-                    return reaction;
-                  }),
+                      return reaction;
+                    }),
                 };
               }
               return message;
@@ -479,9 +497,11 @@ export function Channel({
               isSubDomainRouting={isSubDomainRouting}
               threadUrl={null}
               permissions={permissions}
+              currentUser={currentUser}
               updateThread={updateThread}
               onClose={() => setShowThread(false)}
               sendMessage={sendThreadMessage}
+              onReaction={sendReaction}
               onSend={() => {
                 scrollToBottom(threadRef.current as HTMLElement);
               }}
