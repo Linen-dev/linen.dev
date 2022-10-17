@@ -4,7 +4,7 @@ import { withSentry } from '@sentry/nextjs';
 import { findThreadById } from 'lib/threads';
 import serializeThread from 'serializers/thread';
 import PermissionsService from 'services/permissions';
-import type { ThreadState } from '@prisma/client';
+import { ThreadState } from '@prisma/client';
 
 async function update({
   threadId,
@@ -17,9 +17,20 @@ async function update({
   title: string;
   pinned: boolean;
 }) {
+  const thread = await prisma.threads.findUnique({
+    where: { id: threadId },
+    select: { state: true },
+  });
+  if (!thread) return;
+  let closeAt;
+  if (thread.state === ThreadState.OPEN && state === ThreadState.CLOSE) {
+    closeAt = new Date().getTime();
+  } else if (thread.state === ThreadState.CLOSE && state === ThreadState.OPEN) {
+    closeAt = null;
+  }
   await prisma.threads.update({
     where: { id: threadId },
-    data: { state, title, pinned },
+    data: { state, title, pinned, closeAt },
   });
 }
 

@@ -62,6 +62,7 @@ model threads {
 
   messages  messages[]
   channelId String
+  closeAt   BigInt?
 
   @@unique([externalThreadId])
   @@unique([incrementId])

@@ -75,6 +75,7 @@ export function sendMessageWrapper({
     const imitation: SerializedThread = {
       id: uuid(),
       sentAt: new Date().toString(),
+      closeAt: null,
       messages: [
         {
           id: 'imitation-message-id',
