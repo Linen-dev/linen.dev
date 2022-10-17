@@ -1,7 +1,7 @@
 import React from 'react';
 import Reaction from './Reaction';
 import styles from './index.module.css';
-import { SerializedReaction } from 'types/shared';
+import { SerializedReaction } from 'serializers/reaction';
 
 interface Props {
   reactions?: SerializedReaction[];

@@ -1,6 +1,7 @@
 import { MessageForSerialization } from '../types/partialTypes';
-import { SerializedAttachment, SerializedReaction } from '../types/shared';
+import { SerializedAttachment } from '../types/shared';
 import serializeUser, { SerializedUser } from 'serializers/user';
+import serializeReaction, { SerializedReaction } from 'serializers/reaction';
 import type {
   users,
   mentions,
@@ -29,13 +30,6 @@ function serializeAttachment(
   return {
     url: attachment.internalUrl as string,
     name: attachment.name,
-  };
-}
-
-function serializeReaction(reaction: messageReactions): SerializedReaction {
-  return {
-    type: reaction.name,
-    count: reaction.count as number,
   };
 }
 
