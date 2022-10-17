@@ -2,8 +2,8 @@ import { useEffect } from 'react';
 import { ThreadState } from '@prisma/client';
 import Header from './Header';
 import Messages from './Messages';
-import { SerializedMessage } from 'serializers/message';
 import JoinChannelLink from 'components/Link/JoinChannelLink';
+import { SerializedThread } from 'serializers/thread';
 import type { Settings } from 'serializers/account/settings';
 import { getThreadUrl } from 'components/Pages/ChannelsPage/utilities/url';
 import MessageForm from 'components/MessageForm';
@@ -12,18 +12,12 @@ import { Permissions } from 'types/shared';
 import styles from './index.module.css';
 
 export function Thread({
-  id,
+  thread,
   channelId,
   channelName,
-  messages,
   threadUrl,
-  viewCount,
   isSubDomainRouting,
   settings,
-  incrementId,
-  slug,
-  state,
-  title,
   permissions,
   sendMessage,
   updateThread,
@@ -31,18 +25,12 @@ export function Thread({
   onSend,
   onMount,
 }: {
-  id: string;
+  thread: SerializedThread;
   channelId: string;
   channelName: string;
-  messages: SerializedMessage[];
   threadUrl?: string | null;
-  viewCount: number;
   isSubDomainRouting: boolean;
   settings: Settings;
-  incrementId?: number;
-  slug?: string | null;
-  title: string | null;
-  state: ThreadState;
   permissions: Permissions;
   sendMessage({
     message,
@@ -58,6 +46,7 @@ export function Thread({
   onSend?(): void;
   onMount?(): void;
 }) {
+  const { id, messages, incrementId, slug, title, state, viewCount } = thread;
   const threadLink = getThreadUrl({
     incrementId: incrementId!,
     isSubDomainRouting,

@@ -2,6 +2,7 @@ import { channels, users, ThreadState } from '@prisma/client';
 import { Permissions } from 'types/shared';
 import { SerializedUser } from 'serializers/user';
 import { SerializedAccount } from 'serializers/account';
+import { SerializedThread } from 'serializers/thread';
 
 export type ThreadByIdResponse = ThreadById | { notFound: boolean };
 
@@ -12,26 +13,18 @@ export interface ThreadByIdProp extends ThreadById {
 }
 
 export type ThreadById = {
-  id: string;
-  incrementId: number;
+  thread: SerializedThread;
   externalThreadId: string | null;
-  viewCount: number;
-  slug: string;
-  messageCount: number;
   channelId: string;
   currentChannel: ChannelSerialized;
   currentCommunity: SerializedAccount | null;
   currentUser: SerializerUser | null;
-  messages: SerializedMessage[];
   channel: ChannelSerialized;
-  threadId: string;
   authors: users[];
   channels: ChannelSerialized[];
   threadUrl: string | null;
   settings: Settings;
   pathCursor: string;
-  title: string | null;
-  state: ThreadState;
 };
 
 export interface Author {

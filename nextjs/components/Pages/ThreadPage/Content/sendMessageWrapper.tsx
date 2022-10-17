@@ -3,6 +3,7 @@ import { MessageFormat, Roles } from '@prisma/client';
 import { v4 as uuid } from 'uuid';
 import { StartSignUpFn } from 'contexts/Join';
 import { SerializedUser } from 'serializers/user';
+import { SerializedThread } from 'serializers/thread';
 import debounce from 'utilities/debounce';
 
 const debouncedSendMessage = debounce(
@@ -26,13 +27,13 @@ export function sendMessageWrapper({
   startSignUp,
   currentCommunity,
   allUsers,
-  setMessages,
+  setThread,
 }: {
   currentUser: any;
   startSignUp?: StartSignUpFn;
   currentCommunity: any;
   allUsers: SerializedUser[];
-  setMessages: Function;
+  setThread: Function;
 }) {
   return async ({
     message,
@@ -51,7 +52,7 @@ export function sendMessageWrapper({
           init: {
             currentCommunity,
             allUsers,
-            setMessages,
+            setThread,
           },
           params: {
             message,
@@ -86,8 +87,11 @@ export function sendMessageWrapper({
       },
     };
 
-    setMessages((messages: SerializedMessage[]) => {
-      return [...messages, imitation];
+    setThread((thread: SerializedThread) => {
+      return {
+        ...thread,
+        messages: [...thread.messages, imitation],
+      };
     });
 
     return debouncedSendMessage({
@@ -111,16 +115,21 @@ export function sendMessageWrapper({
           message: SerializedMessage;
           imitationId: string;
         }) => {
-          setMessages((messages: SerializedMessage[]) => {
+          setThread((thread: SerializedThread) => {
             const messageId = message.id;
-            const index = messages.findIndex((t) => t.id === messageId);
+            const index = thread.messages.findIndex((t) => t.id === messageId);
             if (index >= 0) {
-              return messages;
+              return thread;
             }
-            return [
-              ...messages.filter((message) => message.id !== imitationId),
-              message,
-            ];
+            return {
+              ...thread,
+              messages: [
+                ...thread.messages.filter(
+                  (message) => message.id !== imitationId
+                ),
+                message,
+              ],
+            };
           });
         }
       );

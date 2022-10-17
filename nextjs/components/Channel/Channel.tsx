@@ -471,18 +471,12 @@ export function Channel({
           showThread &&
           threadToRender && (
             <Thread
+              thread={threadToRender}
               key={threadToRender.id}
-              id={threadToRender.id}
               channelId={threadToRender.channelId}
               channelName={channelName}
-              title={threadToRender.title}
-              state={threadToRender.state}
-              messages={threadToRender.messages || []}
-              viewCount={threadToRender.viewCount || 0}
               settings={settings}
               isSubDomainRouting={isSubDomainRouting}
-              incrementId={threadToRender.incrementId}
-              slug={threadToRender.slug || undefined}
               threadUrl={null}
               permissions={permissions}
               updateThread={updateThread}

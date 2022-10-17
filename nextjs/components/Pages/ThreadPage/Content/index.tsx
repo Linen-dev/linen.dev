@@ -3,58 +3,69 @@ import { Thread } from 'components/Thread';
 import { scrollToBottom } from 'utilities/scroll';
 import { ThreadState } from '@prisma/client';
 import useThreadWebsockets from 'hooks/websockets/thread';
-import { SerializedMessage } from 'serializers/message';
 import { useUsersContext } from 'contexts/Users';
 import { useJoinContext } from 'contexts/Join';
 import { sendMessageWrapper } from './sendMessageWrapper';
 import { toast } from 'components/Toast';
+import { SerializedThread } from 'serializers/thread';
+import { SerializedAccount } from 'serializers/account';
+import { SerializedUser } from 'serializers/user';
+import type { Settings } from 'serializers/account/settings';
+import type { ChannelSerialized } from 'lib/channel';
+import { Permissions } from 'types/shared';
+
+interface Props {
+  thread: SerializedThread;
+  currentChannel: ChannelSerialized;
+  currentCommunity: SerializedAccount | null;
+  currentUser: SerializedUser | null;
+  threadUrl: string | null;
+  isSubDomainRouting: boolean;
+  settings: Settings;
+  permissions: Permissions;
+  token: string | null;
+}
 
 export default function Content({
-  id,
-  threadId,
+  thread: initialThread,
   currentChannel,
   currentCommunity,
   currentUser,
   threadUrl,
-  viewCount,
   isSubDomainRouting,
   settings,
-  slug,
-  incrementId,
-  messages: initialMessages,
-  title: initialTitle,
-  state: initialState,
   permissions,
   token,
-}: any) {
-  const [state, setState] = useState(initialState);
-  const [title, setTitle] = useState(initialTitle);
-  const [messages, setMessages] = useState(initialMessages);
+}: Props) {
+  const [thread, setThread] = useState(initialThread);
   const [allUsers] = useUsersContext();
   const { startSignUp } = useJoinContext();
 
+  const threadId = thread.id;
+
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    threadId && fetch(`/api/count?incrementId=${threadId}`, { method: 'PUT' });
+    fetch(`/api/count?incrementId=${threadId}`, { method: 'PUT' });
   }, [threadId]);
 
   useThreadWebsockets({
-    id,
+    id: thread.id,
     token,
     permissions,
     onMessage(message, messageId, imitationId) {
-      setMessages((messages: SerializedMessage[]) => [
-        ...messages.filter(
-          ({ id }: any) => id !== imitationId && id !== messageId
-        ),
-        message,
-      ]);
+      setThread((thread) => {
+        return {
+          ...thread,
+          messages: [
+            ...thread.messages.filter(
+              ({ id }: any) => id !== imitationId && id !== messageId
+            ),
+            message,
+          ],
+        };
+      });
     },
   });
-
-  if (!threadId) {
-    return <div></div>;
-  }
 
   const updateThread = ({
     state: newState,
@@ -64,12 +75,16 @@ export default function Content({
     title?: string;
   }) => {
     const options = {
-      state: newState || state,
-      title: newTitle || title,
+      state: newState || thread.state,
+      title: newTitle || thread.title,
     };
-    setState(options.state);
-    setTitle(options.title);
-    return fetch(`/api/threads/${id}`, {
+    setThread((thread) => {
+      return {
+        ...thread,
+        ...options,
+      };
+    });
+    return fetch(`/api/threads/${thread.id}`, {
       method: 'PUT',
       body: JSON.stringify(options),
     })
@@ -89,25 +104,19 @@ export default function Content({
     startSignUp,
     currentCommunity,
     allUsers,
-    setMessages,
+    setThread, // setThread
   });
 
   return (
     <div className="w-full">
       <Thread
-        key={id}
-        id={id}
+        thread={thread}
+        key={thread.id}
         channelId={currentChannel.id}
         channelName={currentChannel.channelName}
-        title={title}
-        state={state}
-        messages={messages}
         threadUrl={threadUrl}
-        viewCount={viewCount}
         settings={settings}
-        incrementId={incrementId}
         isSubDomainRouting={isSubDomainRouting}
-        slug={slug}
         permissions={permissions}
         updateThread={updateThread}
         sendMessage={sendMessage}

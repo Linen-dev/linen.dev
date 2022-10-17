@@ -37,6 +37,7 @@ export function ChannelForBots({
               isSubDomainRouting={isSubDomainRouting}
               settings={settings}
               isBot={isBot}
+              currentUser={null}
               onClick={() => {}}
               onPin={() => {}}
               onReaction={() => {}}
