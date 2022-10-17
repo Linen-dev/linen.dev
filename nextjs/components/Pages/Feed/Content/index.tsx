@@ -20,6 +20,7 @@ import { useJoinContext } from 'contexts/Join';
 import useFeedWebsockets from 'hooks/websockets/feed';
 import type { CommunityPushType } from 'services/push';
 import { toast } from 'components/Toast';
+import { SerializedMessage } from 'serializers/message';
 
 interface Props {
   communityId: string;
@@ -89,33 +90,64 @@ export default function Feed({
     },
   });
 
+  function prependThread(
+    thread: SerializedThread,
+    message?: SerializedMessage
+  ) {
+    return (feed: FeedResponse) => {
+      const { threads, ...rest } = feed;
+      if (message) {
+        thread.messages = [
+          ...thread.messages.filter((m) => m.id !== message.id),
+          message,
+        ];
+      }
+      return {
+        ...rest,
+        threads: [thread, ...threads.filter((t) => t.id !== thread.id)],
+      };
+    };
+  }
+
+  function filterByScope(scope: Scope, messages: SerializedMessage[]) {
+    return (
+      scope === Scope.Participant &&
+      !messages.find(
+        (m) =>
+          m.author?.id === currentUser.id ||
+          m.mentions.find((me) => me.id === currentUser.id)
+      )
+    );
+  }
+
   const onNewMessage = useCallback(
     (payload: CommunityPushType) => {
-      const threadId = payload.thread_id;
-      fetch('/api/threads/' + threadId)
-        .then((response) => response.json())
-        .then((thread: SerializedThread) => {
-          if (
-            scope === Scope.Participant &&
-            !thread.messages.find(
-              (m) =>
-                m.author?.id === currentUser.id ||
-                m.mentions.find((me) => me.id === currentUser.id)
-            )
-          ) {
-            return;
-          }
-          setFeed((feed) => {
-            if (page > 1) {
-              return feed;
-            }
-            const { threads, ...rest } = feed;
-            return {
-              ...rest,
-              threads: [thread, ...threads.filter((t) => t.id !== thread.id)],
-            };
-          });
-        });
+      const thread: SerializedThread =
+        payload.thread && JSON.parse(payload.thread);
+      const message: SerializedMessage =
+        payload.message && JSON.parse(payload.message);
+      if (page > 1) {
+        return;
+      }
+      if (thread) {
+        if (filterByScope(scope, thread.messages)) {
+          return;
+        }
+        setFeed(prependThread(thread));
+      }
+      if (message) {
+        if (filterByScope(scope, [message])) {
+          return;
+        }
+        const thread = feed.threads.find((t) => t.id === message.threadId);
+        if (thread) {
+          setFeed(prependThread(thread, message));
+        } else {
+          fetch('/api/threads/' + payload.thread_id)
+            .then((response) => response.json())
+            .then((thread) => setFeed(prependThread(thread, message)));
+        }
+      }
     },
     [currentUser?.id, scope]
   );

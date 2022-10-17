@@ -17,6 +17,7 @@ type NewMessageEvent = {
   mentions: mentions[];
   mentionNodes: MentionNode[];
   communityId: string;
+  message: string;
 };
 
 export async function eventNewMessage({
@@ -27,6 +28,7 @@ export async function eventNewMessage({
   mentions = [],
   mentionNodes = [],
   communityId,
+  message,
 }: NewMessageEvent) {
   const event = {
     channelId,
@@ -35,6 +37,7 @@ export async function eventNewMessage({
     imitationId,
     isThread: false,
     isReply: true,
+    message,
   };
 
   const promises: Promise<any>[] = [

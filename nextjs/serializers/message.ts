@@ -48,7 +48,9 @@ function serializeMentions(
     );
 }
 
-export function serialize(message: MessageForSerialization): SerializedMessage {
+export function serializeMessage(
+  message: MessageForSerialization
+): SerializedMessage {
   return {
     id: message.id,
     externalId: message.externalMessageId,
@@ -73,4 +75,4 @@ export function serialize(message: MessageForSerialization): SerializedMessage {
   };
 }
 
-export default serialize;
+export default serializeMessage;
