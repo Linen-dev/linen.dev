@@ -11,7 +11,17 @@ interface Props {
   settings: Settings;
   isSubDomainRouting: boolean;
   currentUser: SerializedUser | null;
-  onReaction?(threadId: string, messageId: string, type: string): void;
+  onReaction?({
+    threadId,
+    messageId,
+    type,
+    active,
+  }: {
+    threadId: string;
+    messageId: string;
+    type: string;
+    active: boolean;
+  }): void;
 }
 
 function Messages({

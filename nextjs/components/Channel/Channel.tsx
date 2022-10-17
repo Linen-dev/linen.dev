@@ -4,7 +4,7 @@ import { Thread } from 'components/Thread';
 import ChannelGrid from 'components/Channel/ChannelGrid';
 import { SerializedThread } from 'serializers/thread';
 import { ChannelViewProps } from 'components/Pages/ChannelsPage';
-import { get } from 'utilities/http';
+import { get, post } from 'utilities/http';
 import MessageForm from 'components/MessageForm';
 import { fetchMentions } from 'components/MessageForm/api';
 import { ThreadState } from '@prisma/client';
@@ -24,6 +24,18 @@ import { toast } from 'components/Toast';
 import { useJoinContext } from 'contexts/Join';
 import { sendThreadMessageWrapper } from './sendThreadMessageWrapper';
 import { sendMessageWrapper } from './sendMessageWrapper';
+import debounce from 'utilities/debounce';
+
+const debouncedSendReaction = debounce(
+  (params: {
+    communityId: string;
+    messageId: string;
+    type: string;
+    action: string;
+  }) => {
+    return post('/api/reactions', params);
+  }
+);
 
 export function Channel({
   threads: initialThreads,
@@ -102,11 +114,17 @@ export function Channel({
       });
   }
 
-  async function sendReaction(
-    threadId: string,
-    messageId: string,
-    type: string
-  ) {
+  async function sendReaction({
+    threadId,
+    messageId,
+    type,
+    active,
+  }: {
+    threadId: string;
+    messageId: string;
+    type: string;
+    active: boolean;
+  }) {
     function addReaction(threads: SerializedThread[]) {
       if (!currentUser) {
         return threads;
@@ -115,7 +133,7 @@ export function Channel({
         if (thread.id === threadId) {
           return {
             ...thread,
-            messages: thread.messages.map((message, index) => {
+            messages: thread.messages.map((message) => {
               if (message.id === messageId) {
                 const reaction = message.reactions.find(
                   (reaction) => reaction.type === type
@@ -129,25 +147,22 @@ export function Channel({
                     ],
                   };
                 }
-                return {
-                  ...message,
-                  reactions: message.reactions
-                    .filter((reaction) => {
-                      if (
-                        reaction.type === type &&
-                        reaction.users
-                          .map(({ id }) => id)
-                          .includes(currentUser.id) &&
-                        reaction.count - 1 === 0
-                      ) {
-                        return false;
-                      }
-                      return true;
-                    })
-                    .map((reaction) => {
-                      if (reaction.type === type) {
-                        const ids = reaction.users.map(({ id }) => id);
-                        if (ids.includes(currentUser.id)) {
+
+                if (active) {
+                  return {
+                    ...message,
+                    reactions: message.reactions
+                      .filter((reaction) => {
+                        if (
+                          reaction.type === type &&
+                          reaction.count - 1 === 0
+                        ) {
+                          return false;
+                        }
+                        return true;
+                      })
+                      .map((reaction) => {
+                        if (reaction.type === type) {
                           const count = reaction.count - 1;
                           return {
                             type,
@@ -157,14 +172,23 @@ export function Channel({
                             ),
                           };
                         }
-                        return {
-                          type,
-                          count: reaction.count + 1,
-                          users: [...reaction.users, currentUser],
-                        };
-                      }
-                      return reaction;
-                    }),
+                        return reaction;
+                      }),
+                  };
+                }
+
+                return {
+                  ...message,
+                  reactions: message.reactions.map((reaction) => {
+                    if (reaction.type === type) {
+                      return {
+                        type,
+                        count: reaction.count + 1,
+                        users: [...reaction.users, currentUser],
+                      };
+                    }
+                    return reaction;
+                  }),
                 };
               }
               return message;
@@ -176,7 +200,12 @@ export function Channel({
     }
     setThreads(addReaction);
     setPinnedThreads(addReaction);
-    // TODO send reaction
+    debouncedSendReaction({
+      communityId: currentCommunity?.id,
+      messageId,
+      type,
+      action: active ? 'decrement' : 'increment',
+    });
   }
 
   const [infiniteRef, { rootRef }] = useInfiniteScroll({

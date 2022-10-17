@@ -22,10 +22,20 @@ interface Props {
   isSubDomainRouting: boolean;
   currentUser: SerializedUser | null;
   onPin?(threadId: string): void;
-  onReaction?(threadId: string, messageId: string, reaction: string): void;
+  onReaction?({
+    threadId,
+    messageId,
+    type,
+    active,
+  }: {
+    threadId: string;
+    messageId: string;
+    type: string;
+    active: boolean;
+  }): void;
 }
 
-function hasUserReaction(
+function hasReaction(
   message: SerializedMessage,
   type: string,
   userId?: string
@@ -51,11 +61,7 @@ export default function Options({
   onReaction,
   onPin,
 }: Props) {
-  const hasThumbsupReaction = hasUserReaction(
-    message,
-    ':thumbsup:',
-    currentUser?.id
-  );
+  const isReactionActive = hasReaction(message, ':thumbsup:', currentUser?.id);
   return (
     <ul className={classNames(styles.options, className)}>
       {onReaction && currentUser && (
@@ -63,12 +69,17 @@ export default function Options({
           onClick={(event) => {
             event.stopPropagation();
             event.preventDefault();
-            onReaction(thread.id, message.id, ':thumbsup:');
+            onReaction({
+              threadId: thread.id,
+              messageId: message.id,
+              type: ':thumbsup:',
+              active: isReactionActive,
+            });
           }}
         >
           <FiThumbsUp
             className={classNames({
-              [styles.active]: hasThumbsupReaction,
+              [styles.active]: isReactionActive,
             })}
           />
         </li>
