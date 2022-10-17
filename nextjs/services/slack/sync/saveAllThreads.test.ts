@@ -120,13 +120,7 @@ describe('slackSync :: saveAllThreads', () => {
       include: {
         messages: true,
       },
-      update: {
-        channelId: internalChannel.id,
-        externalThreadId: threads[0].id,
-        sentAt: parseSlackSentAt(threads[0].externalThreadId),
-        lastReplyAt: parseSlackSentAt(threads[0].externalThreadId),
-        slug: createSlug(conversationReplies.messages[index].text),
-      },
+      update: {},
       where: {
         externalThreadId: threads[0].id,
       },

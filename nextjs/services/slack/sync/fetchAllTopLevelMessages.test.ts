@@ -92,15 +92,7 @@ describe('slackSync :: fetchAllTopLevelMessages', () => {
         messageCount:
           (conversationHistory.messages[index]?.reply_count || 0) + 1,
       },
-      update: {
-        channelId: internalChannel.id,
-        externalThreadId: conversationHistory.messages[index].ts,
-        sentAt: parseSlackSentAt(conversationHistory.messages[index].ts),
-        lastReplyAt: parseSlackSentAt(conversationHistory.messages[index].ts),
-        slug: createSlug(conversationHistory.messages[index].text),
-        messageCount:
-          (conversationHistory.messages[index]?.reply_count || 0) + 1,
-      },
+      update: {},
       where: {
         externalThreadId: conversationHistory.messages[index].ts,
       },
