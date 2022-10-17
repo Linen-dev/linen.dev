@@ -266,7 +266,11 @@ export default function MessageExample() {
       <Example description="Renders reactions.">
         <Message
           text="Hello, world! :)"
-          reactions={EMOJIS.map((emoji) => ({ type: emoji, count: 1 }))}
+          reactions={EMOJIS.map((emoji) => ({
+            type: emoji,
+            count: 1,
+            users: [],
+          }))}
           format={MessageFormat.LINEN}
         />
       </Example>

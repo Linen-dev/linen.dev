@@ -116,7 +116,10 @@ export function Channel({
                 if (!reaction) {
                   return {
                     ...message,
-                    reactions: [...message.reactions, { type, count: 1 }],
+                    reactions: [
+                      ...message.reactions,
+                      { type, count: 1, users: [] },
+                    ],
                   };
                 }
                 return {
@@ -126,6 +129,7 @@ export function Channel({
                       return {
                         type,
                         count: reaction.count + 1,
+                        users: [],
                       };
                     }
                     return reaction;
