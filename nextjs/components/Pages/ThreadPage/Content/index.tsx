@@ -116,6 +116,7 @@ export default function Content({
         channelName={currentChannel.channelName}
         threadUrl={threadUrl}
         settings={settings}
+        currentUser={currentUser}
         isSubDomainRouting={isSubDomainRouting}
         permissions={permissions}
         updateThread={updateThread}

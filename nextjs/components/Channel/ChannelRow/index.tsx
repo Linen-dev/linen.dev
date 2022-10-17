@@ -1,6 +1,5 @@
 import Avatars from '../../Avatars';
 import { users } from '@prisma/client';
-import Actions from 'components/Actions';
 import type { Settings } from 'serializers/account/settings';
 import Row from 'components/Message/Row';
 import styles from './index.module.scss';
@@ -33,18 +32,23 @@ export default function ChannelRow({
   settings: Settings;
   currentUser: SerializedUser | null;
   onPin(threadId: string): void;
-  onReaction(threadId: string, reaction: string): void;
+  onReaction(threadId: string, messageId: string, reaction: string): void;
 }) {
-  const { incrementId, messages, state, slug } = thread;
+  const { messages } = thread;
   let users = messages.map((m) => m.author).filter(Boolean) as users[];
   const authors = uniqueUsers(users);
   const oldestMessage = messages[0];
   return (
     <div className={styles.container}>
       <Row
+        thread={thread}
         message={oldestMessage}
-        state={state}
-        communityType={settings.communityType}
+        isSubDomainRouting={isSubDomainRouting}
+        settings={settings}
+        permissions={permissions}
+        currentUser={currentUser}
+        onPin={onPin}
+        onReaction={onReaction}
       >
         {messages.length > 1 && (
           <div className="flex flex-row items-center pt-2 pr-2">
@@ -66,16 +70,6 @@ export default function ChannelRow({
           </div>
         )}
       </Row>
-      <Actions
-        thread={thread}
-        isSubDomainRouting={isSubDomainRouting}
-        settings={settings}
-        permissions={permissions}
-        currentUser={currentUser}
-        className={styles.options}
-        onPin={onPin}
-        onReaction={onReaction}
-      />
     </div>
   );
 }

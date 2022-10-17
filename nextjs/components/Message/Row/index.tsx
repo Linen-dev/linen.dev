@@ -3,28 +3,40 @@ import Avatar from 'components/Avatar';
 import classNames from 'classnames';
 import Message from '../../Message';
 import { format } from 'timeago.js';
+import { SerializedThread } from 'serializers/thread';
 import { SerializedMessage } from 'serializers/message';
-import CopyToClipboardIcon from 'components/Pages/ChannelsPage/CopyToClipboardIcon';
+import { Settings } from 'serializers/account/settings';
+import { SerializedUser } from 'serializers/user';
 import { ThreadState } from '@prisma/client';
 import styles from './index.module.scss';
 import CheckIcon from 'components/icons/CheckIcon';
+import Actions from 'components/Actions';
+import { Permissions } from 'types/shared';
 
 interface Props {
+  thread: SerializedThread;
   message: SerializedMessage;
-  communityType: string;
-  state?: ThreadState;
   isPreviousMessageFromSameUser?: boolean;
-  threadLink?: string;
+  isSubDomainRouting: boolean;
+  settings: Settings;
+  permissions: Permissions;
   children?: React.ReactNode;
+  currentUser: SerializedUser | null;
+  onPin?(threadId: string): void;
+  onReaction?(threadId: string, messageId: string, type: string): void;
 }
 
 export function Row({
+  thread,
   message,
   isPreviousMessageFromSameUser,
-  state,
-  communityType,
-  threadLink,
   children,
+  isSubDomainRouting,
+  currentUser,
+  settings,
+  permissions,
+  onReaction,
+  onPin,
 }: Props) {
   return (
     <div id={message.id} className={classNames(styles.row)}>
@@ -49,17 +61,10 @@ export function Row({
             <div className={styles.date}>
               {format(new Date(message.sentAt))}
             </div>
-            {state === ThreadState.CLOSE && <CheckIcon />}
+            {thread.state === ThreadState.CLOSE && <CheckIcon />}
           </div>
         )}
-        <div className={styles.showOnHover}>
-          {!!threadLink && (
-            <div className={styles.threadLink}>
-              <CopyToClipboardIcon
-                getText={() => threadLink + '#' + message.id}
-              />
-            </div>
-          )}
+        <div className={styles.message}>
           <Message
             text={message.body}
             format={message.messageFormat}
@@ -68,6 +73,18 @@ export function Row({
             attachments={message.attachments}
           />
           {children}
+          <div className={styles.actions}>
+            <Actions
+              thread={thread}
+              message={message}
+              settings={settings}
+              permissions={permissions}
+              currentUser={currentUser}
+              isSubDomainRouting={isSubDomainRouting}
+              onPin={onPin}
+              onReaction={onReaction}
+            />
+          </div>
         </div>
       </div>
     </div>
