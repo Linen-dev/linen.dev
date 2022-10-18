@@ -48,7 +48,7 @@ export function Channel({
   const [pinnedThreads, setPinnedThreads] =
     useState<SerializedThread[]>(initialPinnedThreads);
   const scrollableRootRef = useRef<HTMLDivElement | null>(null);
-  const threadRef = useRef<HTMLDivElement>(null);
+  const rightRef = useRef<HTMLDivElement>(null);
   const lastDistanceToBottomRef = useRef<number>(0);
   const lastDistanceToTopRef = useRef<number>(60);
   const [lastDirection, setLastDirection] = useState<'top' | 'bottom'>();
@@ -288,7 +288,7 @@ export function Channel({
     scrollToBottom(scrollableRootRef.current as HTMLElement);
   }, []);
 
-  const rootRefSetter = useCallback(
+  const leftRef = useCallback(
     (node: HTMLDivElement) => {
       bottomRootRef(node);
       rootRef(node);
@@ -501,7 +501,7 @@ export function Channel({
             {cursor.next && !error?.next && <div ref={infiniteBottomRef}></div>}
           </div>
         }
-        leftRef={rootRefSetter}
+        leftRef={leftRef}
         onLeftScroll={handleRootScroll}
         right={
           showThread &&
@@ -521,15 +521,15 @@ export function Channel({
               sendMessage={sendThreadMessage}
               onReaction={sendReaction}
               onSend={() => {
-                scrollToBottom(threadRef.current as HTMLElement);
+                scrollToBottom(rightRef.current as HTMLElement);
               }}
               onMount={() => {
-                scrollToBottom(threadRef.current as HTMLElement);
+                scrollToBottom(rightRef.current as HTMLElement);
               }}
             />
           )
         }
-        rightRef={threadRef}
+        rightRef={rightRef}
       />
     </>
   );
