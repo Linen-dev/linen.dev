@@ -1,7 +1,24 @@
-export function scrollToBottom(node: HTMLElement) {
+export function scrollToBottom(node: HTMLElement, smooth?: boolean) {
   if (node) {
-    node.scrollTop = node.scrollHeight;
+    if (node.scroll && smooth) {
+      node.scroll({
+        top: node.scrollHeight,
+        behavior: 'smooth',
+      });
+    } else {
+      node.scrollTop = node.scrollHeight;
+    }
   }
+}
+
+export function isScrollAtBottom(node: HTMLElement) {
+  if (!node) {
+    return false;
+  }
+  return (
+    Math.ceil(node.scrollTop) + Math.ceil(node.clientHeight) ===
+    Math.ceil(node.scrollHeight)
+  );
 }
 
 export function isInViewport(node: HTMLElement) {

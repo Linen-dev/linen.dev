@@ -23,7 +23,11 @@ import { useJoinContext } from 'contexts/Join';
 import { sendThreadMessageWrapper } from './sendThreadMessageWrapper';
 import { sendMessageWrapper } from './sendMessageWrapper';
 import { SerializedMessage } from 'serializers/message';
-import { scrollToBottom, isInViewport } from 'utilities/scroll';
+import {
+  scrollToBottom,
+  isScrollAtBottom,
+  isInViewport,
+} from 'utilities/scroll';
 import { postReaction } from './utilities/http';
 import styles from './index.module.css';
 
@@ -42,7 +46,6 @@ export function Channel({
   permissions,
   token,
 }: ChannelViewProps) {
-  const [init, setInit] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [threads, setThreads] = useState<SerializedThread[]>(initialThreads);
   const [pinnedThreads, setPinnedThreads] =
@@ -61,15 +64,24 @@ export function Channel({
   const [showThread, setShowThread] = useState(false);
   const [currentThreadId, setCurrentThreadId] = useState<string>();
 
+  function handleLeftScroll() {
+    if (
+      isScrollAtBottom(scrollableRootRef.current as HTMLElement) ||
+      isInViewport(leftBottomRef.current as HTMLElement)
+    ) {
+      setTimeout(() => {
+        scrollToBottom(scrollableRootRef.current as HTMLElement);
+      }, 0);
+    }
+  }
+
   async function selectThread(incrementId: number) {
     const currentThread = threads.find((t) => t.incrementId === incrementId);
     if (currentThread) {
       setCurrentThreadId(currentThread.id);
     }
     setShowThread(true);
-    if (isInViewport(leftBottomRef.current as HTMLElement)) {
-      setTimeout(() => leftBottomRef.current?.scrollIntoView(), 0);
-    }
+    handleLeftScroll();
   }
 
   async function pinThread(threadId: string) {
@@ -218,23 +230,6 @@ export function Channel({
     rootMargin: '0px 0px 800px 0px',
   });
 
-  useEffect(() => {
-    const scrollableRoot = scrollableRootRef.current;
-    const lastScrollDistanceToBottom = lastDistanceToBottomRef.current;
-    const lastScrollDistanceToTop = lastDistanceToTopRef.current;
-    if (scrollableRoot) {
-      if (init && pathCursor) {
-        scrollableRoot.scrollTop = lastDistanceToBottomRef.current;
-        setInit(false);
-      } else if (lastDirection === 'top') {
-        scrollableRoot.scrollTop =
-          scrollableRoot.scrollHeight - lastScrollDistanceToBottom;
-      } else {
-        scrollableRoot.scrollTop = lastScrollDistanceToTop;
-      }
-    }
-  }, [threads]);
-
   useWebsockets({
     room: `room:lobby:${currentChannel.id}`,
     token,
@@ -328,6 +323,19 @@ export function Channel({
           setThreads([...threads, ...data.threads]);
         } else {
           setThreads([...data.threads, ...threads]);
+        }
+      }
+      const scrollableRoot = scrollableRootRef.current;
+      const lastScrollDistanceToBottom = lastDistanceToBottomRef.current;
+      const lastScrollDistanceToTop = lastDistanceToTopRef.current;
+      if (scrollableRoot) {
+        if (pathCursor) {
+          scrollableRoot.scrollTop = lastDistanceToBottomRef.current;
+        } else if (lastDirection === 'top') {
+          scrollableRoot.scrollTop =
+            scrollableRoot.scrollHeight - lastScrollDistanceToBottom;
+        } else {
+          scrollableRoot.scrollTop = lastScrollDistanceToTop;
         }
       }
     } catch (err) {
@@ -526,6 +534,7 @@ export function Channel({
               sendMessage={sendThreadMessage}
               onReaction={sendReaction}
               onSend={() => {
+                handleLeftScroll();
                 scrollToBottom(rightRef.current as HTMLElement);
               }}
               onMount={() => {
