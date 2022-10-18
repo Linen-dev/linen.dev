@@ -73,6 +73,9 @@ export default function Feed({
     token,
     permissions,
     onMessage(message, messageId, imitationId) {
+      // race condition bug here if you don't have a console.log
+      // it will not update the thread
+      console.log('new message');
       setThread((thread) => {
         if (!thread) {
           return;
