@@ -26,17 +26,7 @@ import { sendThreadMessageWrapper } from './sendThreadMessageWrapper';
 import { sendMessageWrapper } from './sendMessageWrapper';
 import debounce from 'utilities/debounce';
 import { SerializedMessage } from 'serializers/message';
-
-const debouncedSendReaction = debounce(
-  (params: {
-    communityId: string;
-    messageId: string;
-    type: string;
-    action: string;
-  }) => {
-    return post('/api/reactions', params);
-  }
-);
+import { postReaction } from './utilities/http';
 
 export function Channel({
   threads: initialThreads,
@@ -201,7 +191,7 @@ export function Channel({
     }
     setThreads(addReaction);
     setPinnedThreads(addReaction);
-    debouncedSendReaction({
+    postReaction({
       communityId: currentCommunity?.id,
       messageId,
       type,
