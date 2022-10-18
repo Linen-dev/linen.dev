@@ -2,6 +2,8 @@ import prisma from '../client';
 import { generateHash, generateSalt } from '../utilities/password';
 import { PrismaClient, Prisma, auths } from '@prisma/client';
 import type { Adapter, AdapterUser } from 'next-auth/adapters';
+import { sendNotification } from 'services/slack';
+import { skipNotification } from 'services/slack/api/notification';
 
 interface CreateAuthParams {
   email: string;
@@ -20,6 +22,14 @@ export async function createAuth({ email, password }: CreateAuthParams) {
     },
   });
 }
+
+const notifyNewUser = (a: auths) => {
+  return Promise.allSettled([
+    !skipNotification() && sendNotification('Email created: ' + a.email),
+  ]).then(() => {
+    return a;
+  });
+};
 
 const parseAuthToAdapterUser = ({
   email,
@@ -43,6 +53,7 @@ export function CustomPrismaAdapter(p: PrismaClient): Adapter {
     createUser: (data) =>
       p.auths
         .create({ data: parseAdapterUserToAuth(data) })
+        .then(notifyNewUser)
         .then(parseAuthToAdapterUser),
 
     getUser: (id) =>
