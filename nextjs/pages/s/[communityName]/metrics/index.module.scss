@@ -1,0 +1,12 @@
+.title {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  font-weight: bold;
+  gap: 0.25rem;
+}
+
+.subtitle {
+  color: gray; // TODO reuse colors.scss
+  font-size: 12px;
+}

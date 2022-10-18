@@ -67,3 +67,5 @@ export function serialize(account: accounts): Settings {
     }),
   };
 }
+
+export default serialize;

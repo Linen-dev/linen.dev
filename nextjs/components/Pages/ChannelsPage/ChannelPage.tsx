@@ -45,7 +45,6 @@ export default function ChannelPage({
       }}
       channels={channels as ChannelSerialized[]}
       settings={settings}
-      communityName={settings.communityName}
       isSubDomainRouting={isSubDomainRouting}
       permissions={permissions}
       token={token}
