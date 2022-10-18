@@ -203,7 +203,7 @@ export function Channel({
     hasNextPage: !!cursor.prev,
     onLoadMore: loadMore,
     disabled: !!error?.prev || !cursor.prev,
-    rootMargin: '0px 0px 0px 0px',
+    rootMargin: '800px 0px 0px 0px',
   });
 
   const [infiniteBottomRef, { rootRef: bottomRootRef }] = useInfiniteScroll({
@@ -211,7 +211,7 @@ export function Channel({
     hasNextPage: !!cursor.next,
     onLoadMore: loadMoreNext,
     disabled: !!error?.next || !cursor.next,
-    rootMargin: '0px 0px 0px 0px',
+    rootMargin: '0px 0px 800px 0px',
   });
 
   useEffect(() => {
