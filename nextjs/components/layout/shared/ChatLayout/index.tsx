@@ -5,17 +5,11 @@ import styles from './index.module.css';
 interface Props {
   content: React.ReactNode;
   footer: React.ReactNode;
-  direction?: 'start' | 'end';
 }
 
-function ChatLayout({ content, footer, direction }: Props) {
+function ChatLayout({ content, footer }: Props) {
   return (
-    <div
-      className={classNames(styles.table, {
-        [styles.start]: direction === 'start',
-        [styles.end]: direction === 'end',
-      })}
-    >
+    <div className={classNames(styles.table)}>
       <div className={styles.main}>
         <div className={styles.content}>{content}</div>
       </div>
@@ -23,9 +17,5 @@ function ChatLayout({ content, footer, direction }: Props) {
     </div>
   );
 }
-
-ChatLayout.defaultProps = {
-  direction: 'start',
-};
 
 export default ChatLayout;
