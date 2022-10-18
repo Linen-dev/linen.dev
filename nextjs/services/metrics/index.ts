@@ -5,6 +5,7 @@ import CommunityService from 'services/community';
 import Session from 'services/session';
 import PermissionsService from 'services/permissions';
 import { NotFound, RedirectTo } from 'utilities/response';
+import serializeAccount from 'serializers/account';
 
 export async function getMetricsServerSideProps(
   context: GetServerSidePropsContext,
@@ -28,6 +29,7 @@ export async function getMetricsServerSideProps(
   return {
     props: {
       token: token || null,
+      currentCommunity: serializeAccount(community),
       channels,
       permissions,
       settings,

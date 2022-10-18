@@ -13,7 +13,6 @@ import styles from './index.module.scss';
 import { FiRss, FiBarChart, FiHash } from 'react-icons/fi';
 import { useRouter } from 'next/router';
 import usePath from 'hooks/path';
-import { isMetricEnabled } from 'utilities/featureFlags';
 
 interface Props {
   channels: ChannelSerialized[];
@@ -71,7 +70,7 @@ export default function DesktopNavBar({
           </NavItem>
         </Link>
       )}
-      {isMetricEnabled && permissions.manage && (
+      {permissions.manage && (
         <Link onClick={() => setHighlights([])} href="/metrics">
           <NavItem active={paths.metrics === router.asPath}>
             <FiBarChart className="mr-1" /> Metrics
