@@ -1,5 +1,9 @@
-import React from 'react';
+import { GetServerSidePropsContext } from 'next';
+import Metrics from 'components/Pages/Metrics';
+import { getMetricsServerSideProps } from 'services/metrics';
 
-export default function Metrics() {
-  return <>Metrics</>;
+export default Metrics;
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  return getMetricsServerSideProps(context, true);
 }
