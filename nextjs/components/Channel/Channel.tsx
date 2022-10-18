@@ -23,7 +23,7 @@ import { useJoinContext } from 'contexts/Join';
 import { sendThreadMessageWrapper } from './sendThreadMessageWrapper';
 import { sendMessageWrapper } from './sendMessageWrapper';
 import { SerializedMessage } from 'serializers/message';
-import { scrollToBottom } from 'utilities/scroll';
+import { scrollToBottom, isInViewport } from 'utilities/scroll';
 import { postReaction } from './utilities/http';
 import styles from './index.module.css';
 
@@ -49,6 +49,7 @@ export function Channel({
     useState<SerializedThread[]>(initialPinnedThreads);
   const scrollableRootRef = useRef<HTMLDivElement | null>(null);
   const rightRef = useRef<HTMLDivElement>(null);
+  const leftBottomRef = useRef<HTMLDivElement>(null);
   const lastDistanceToBottomRef = useRef<number>(0);
   const lastDistanceToTopRef = useRef<number>(60);
   const [lastDirection, setLastDirection] = useState<'top' | 'bottom'>();
@@ -66,6 +67,9 @@ export function Channel({
       setCurrentThreadId(currentThread.id);
     }
     setShowThread(true);
+    if (isInViewport(leftBottomRef.current as HTMLElement)) {
+      setTimeout(() => leftBottomRef.current?.scrollIntoView(), 0);
+    }
   }
 
   async function pinThread(threadId: string) {
@@ -499,6 +503,7 @@ export function Channel({
               }
             />
             {cursor.next && !error?.next && <div ref={infiniteBottomRef}></div>}
+            <div ref={leftBottomRef}></div>
           </div>
         }
         leftRef={leftRef}
