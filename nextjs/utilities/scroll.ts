@@ -5,6 +5,9 @@ export function scrollToBottom(node: HTMLElement) {
 }
 
 export function isInViewport(node: HTMLElement) {
+  if (!node) {
+    return false;
+  }
   const { top, left, bottom, right } = node.getBoundingClientRect();
   return (
     top >= 0 &&
