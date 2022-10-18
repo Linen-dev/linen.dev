@@ -309,7 +309,8 @@ model featureFlags {
   accountId String   @id
   account   accounts @relation(fields: [accountId], references: [id], onDelete: Cascade)
 
-  isFeedEnabled          Boolean @default(false) @ignore
-  isChatEnabled          Boolean @default(false) @ignore
-  isCreateChannelEnabled Boolean @default(false) @ignore
+  isFeedEnabled            Boolean @default(false) @ignore
+  isChatEnabled            Boolean @default(false)
+  isManagerOnlyChatEnabled Boolean @default(false)
+  isCreateChannelEnabled   Boolean @default(false) @ignore
 }
