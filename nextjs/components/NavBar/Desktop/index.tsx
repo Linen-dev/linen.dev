@@ -83,7 +83,7 @@ export default function DesktopNavBar({
           <NewChannelModal communityId={permissions.user.accountId} />
         )}
       </NavLabel>
-      <div className="block overflow-hidden hover:overflow-auto h-[calc(100vh-240px)]">
+      <div>
         {channels.map((channel: ChannelSerialized, index: number) => {
           const count = highlights.reduce((count: number, id: string) => {
             if (id === channel.id) {
