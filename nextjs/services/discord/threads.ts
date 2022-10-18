@@ -82,6 +82,7 @@ async function upsertThreadWithNewMessages(
     thread: persistedThread,
     messages,
   });
+  await updateLastReplyAt({ thread, messages });
 }
 
 function upsertThread(channelId: string, thread: DiscordMessage) {
@@ -109,6 +110,27 @@ function upsertThread(channelId: string, thread: DiscordMessage) {
       externalThreadId: slackThread.externalThreadId,
     },
   });
+}
+
+export async function updateLastReplyAt({
+  messages,
+  thread,
+}: {
+  messages: DiscordMessage[];
+  thread: threads | undefined;
+}) {
+  if (thread && messages.length) {
+    await prisma.threads.update({
+      data: {
+        lastReplyAt: parseDiscordSentAt(
+          messages[messages.length - 1].timestamp
+        ),
+      },
+      where: {
+        id: thread.id,
+      },
+    });
+  }
 }
 
 async function updateThread(channel: channels, thread: threads) {

@@ -68,12 +68,6 @@ export async function discordSync({
     };
   } catch (error) {
     await updateAndNotifySyncStatus(accountId, SyncStatus.ERROR);
-    captureException(error);
-    await flush(2000);
-    console.error(error);
-    return {
-      status: 500,
-      body: {},
-    };
+    throw error;
   }
 }

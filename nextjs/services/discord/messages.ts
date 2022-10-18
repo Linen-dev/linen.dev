@@ -2,6 +2,8 @@ import prisma from '../../client';
 import { channels, MessageFormat, threads, users } from '@prisma/client';
 import { DiscordMessage } from '../../types/discordResponses/discordMessagesInterface';
 import { findUsers, getMentions, getUsersInMessages } from './users';
+import { parseDiscordSentAt } from 'utilities/sentAt';
+import { updateLastReplyAt } from './threads';
 
 type ProcessMessageType = Record<
   number,
@@ -103,7 +105,6 @@ function upsertMessage(message: {
   const toInsert = {
     body: message.body,
     sentAt: message.sentAt,
-    lastReplyAt: message.sentAt,
     externalMessageId: message.externalMessageId,
     threadId: message.threadId,
     channelId: message.channelId,
@@ -165,6 +166,7 @@ export async function createMessages({
       );
     })
   );
+  await updateLastReplyAt({ messages, thread });
 }
 
 const messageTypes: any = {
