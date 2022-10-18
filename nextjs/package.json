@@ -80,7 +80,7 @@
     "react-error-boundary": "^3.1.4",
     "react-hot-toast": "^2.3.0",
     "react-icons": "^4.4.0",
-    "react-infinite-scroll-hook": "^4.0.3",
+    "react-infinite-scroll-hook": "^4.0.4",
     "react-intersection-observer": "^8.34.0",
     "react-switch": "^7.0.0",
     "react-twitter-embed": "^4.0.4",

@@ -31,7 +31,7 @@ import {
 import Session from 'services/session';
 import serializeUser from 'serializers/user';
 
-const CURSOR_LIMIT = 10;
+const CURSOR_LIMIT = 30;
 
 export async function channelGetServerSideProps(
   context: GetServerSidePropsContext,

@@ -228,7 +228,7 @@ export async function findThreadsByCursor({
   channelIds,
   sentAt = '0',
   sort = 'desc',
-  limit = 10,
+  limit = 30,
   direction = 'lt',
   anonymizeUsers = false,
 }: {
