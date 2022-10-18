@@ -8,8 +8,6 @@ import { get, post } from 'utilities/http';
 import MessageForm from 'components/MessageForm';
 import { fetchMentions } from 'components/MessageForm/api';
 import { ThreadState } from '@prisma/client';
-import { scrollToBottom } from 'utilities/scroll';
-import styles from './index.module.css';
 import { useUsersContext } from 'contexts/Users';
 import useWebsockets from 'hooks/websockets';
 import ChatLayout from 'components/layout/shared/ChatLayout';
@@ -24,9 +22,10 @@ import { toast } from 'components/Toast';
 import { useJoinContext } from 'contexts/Join';
 import { sendThreadMessageWrapper } from './sendThreadMessageWrapper';
 import { sendMessageWrapper } from './sendMessageWrapper';
-import debounce from 'utilities/debounce';
 import { SerializedMessage } from 'serializers/message';
+import { scrollToBottom } from 'utilities/scroll';
 import { postReaction } from './utilities/http';
+import styles from './index.module.css';
 
 export function Channel({
   threads: initialThreads,
@@ -204,7 +203,7 @@ export function Channel({
     hasNextPage: !!cursor.prev,
     onLoadMore: loadMore,
     disabled: !!error?.prev || !cursor.prev,
-    rootMargin: '400px 0px 0px 0px',
+    rootMargin: '0px 0px 0px 0px',
   });
 
   const [infiniteBottomRef, { rootRef: bottomRootRef }] = useInfiniteScroll({
@@ -212,7 +211,7 @@ export function Channel({
     hasNextPage: !!cursor.next,
     onLoadMore: loadMoreNext,
     disabled: !!error?.next || !cursor.next,
-    rootMargin: '0px 0px 400px 0px',
+    rootMargin: '0px 0px 0px 0px',
   });
 
   useEffect(() => {
