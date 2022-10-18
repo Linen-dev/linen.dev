@@ -1,0 +1,7 @@
+@import 'styles/colors.scss';
+
+.container {
+  background: rgb(243, 244, 246);
+  border-bottom: 1px solid $color-border;
+  padding: 2rem 1rem;
+}
