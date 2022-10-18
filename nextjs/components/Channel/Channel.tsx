@@ -510,7 +510,6 @@ export function Channel({
                   </div>
                 )
               }
-              direction={permissions.chat ? 'end' : 'start'}
             />
             {cursor.next && !error?.next && <div ref={infiniteBottomRef}></div>}
           </div>
