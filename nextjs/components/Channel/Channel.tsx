@@ -296,9 +296,7 @@ export function Channel({
   });
 
   useEffect(() => {
-    if (permissions.chat && token) {
-      scrollToBottom(scrollableRootRef.current as HTMLElement);
-    }
+    scrollToBottom(scrollableRootRef.current as HTMLElement);
   }, []);
 
   const rootRefSetter = useCallback(
