@@ -61,9 +61,9 @@ export const JoinContext = ({ children }: Props) => {
     await onSignInAction?.run({
       currentUser: session?.user,
       startSignUp: () => {},
-      ...onSignInAction.init,
-    })({
-      ...onSignInAction.params,
+      ...onSignInAction?.init,
+    })?.({
+      ...onSignInAction?.params,
     });
     window.location.href = window.location.href;
   }

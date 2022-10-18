@@ -41,7 +41,7 @@ export default class PermissionsService {
     const user = findUser(auth, community) || null;
     const account = user?.account || null;
     const access = PermissionsService._access(community, account);
-    const chat = PermissionsService._chat(community);
+    const chat = PermissionsService._chat(community, user);
     const feed = PermissionsService._feed(community);
     const is_member = PermissionsService._is_member(community, account, user);
     const manage = PermissionsService._manage(community, account, user);
@@ -108,14 +108,6 @@ export default class PermissionsService {
     if (!community) {
       return false;
     }
-    // // TODO: this should be removed when feed is ready for all communities
-    // if (community?.discordAuthorizations?.length) {
-    //   return false;
-    // }
-    // // TODO: this should be removed when feed is ready for all communities
-    // if (community?.slackAuthorizations?.length) {
-    //   return false;
-    // }
     return true;
   }
 
@@ -157,23 +149,21 @@ export default class PermissionsService {
     return false;
   }
 
-  static _chat(community: AccountWithPermissions | null): boolean {
+  static _chat(
+    community: AccountWithPermissions | null,
+    user: users | null
+  ): boolean {
     if (!community) {
       return false;
     }
-    if (community?.discordAuthorizations?.length) {
-      return false;
+    if (community.featureFlags?.isChatEnabled) {
+      return true;
     }
-    if (community?.slackAuthorizations?.length) {
-      const scope = community?.slackAuthorizations?.find(
-        (integration) => integration?.scope?.indexOf('chat:write') > -1
-      );
-      if (!scope) {
-        return false;
-      }
+    if (community.featureFlags?.isManagerOnlyChatEnabled) {
+      if (user?.role === Roles.ADMIN) return true;
+      if (user?.role === Roles.OWNER) return true;
     }
-
-    return true;
+    return false;
   }
 
   static async getAccessChannel({
