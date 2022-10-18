@@ -10,9 +10,10 @@ import { SerializedUser } from 'serializers/user';
 import { toast } from 'components/Toast';
 import Badge from 'components/Badge';
 import styles from './index.module.scss';
-import { FiRss, FiHash } from 'react-icons/fi';
+import { FiRss, FiBarChart, FiHash } from 'react-icons/fi';
 import { useRouter } from 'next/router';
 import usePath from 'hooks/path';
+import { isMetricEnabled } from 'utilities/featureFlags';
 
 interface Props {
   channels: ChannelSerialized[];
@@ -53,17 +54,27 @@ export default function DesktopNavBar({
     },
   });
 
-  const feedUrl = usePath({ href: '/feed' });
+  const paths = {
+    feed: usePath({ href: '/feed' }),
+    metrics: usePath({ href: '/metrics' }),
+  };
 
   return (
     <div className={styles.navbar}>
       {permissions.feed && (
         <Link onClick={() => setHighlights([])} href="/feed">
-          <NavItem active={feedUrl === router.asPath}>
+          <NavItem active={paths.feed === router.asPath}>
             <FiRss className="mr-1" /> Feed
             {highlights.length > 0 && (
               <Badge className="ml-2">{highlights.length}</Badge>
             )}
+          </NavItem>
+        </Link>
+      )}
+      {isMetricEnabled && permissions.manage && (
+        <Link onClick={() => setHighlights([])} href="/metrics">
+          <NavItem active={paths.metrics === router.asPath}>
+            <FiBarChart className="mr-1" /> Metrics
           </NavItem>
         </Link>
       )}

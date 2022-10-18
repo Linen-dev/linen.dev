@@ -23,7 +23,6 @@ interface Props {
   communityUrl?: string;
   communityInviteUrl?: string;
   settings: Settings;
-  communityName: string;
   isSubDomainRouting: boolean;
   permissions: Permissions;
   innerRef?: any;
@@ -40,7 +39,6 @@ function PageLayout({
   communityUrl,
   communityInviteUrl,
   settings,
-  communityName,
   isSubDomainRouting,
   permissions,
   innerRef,
@@ -73,7 +71,7 @@ function PageLayout({
           <SearchBar
             borderColor="#fff"
             channels={channels}
-            communityName={communityName}
+            communityName={settings.communityName}
             isSubDomainRouting={isSubDomainRouting}
             communityType={settings.communityType}
           />

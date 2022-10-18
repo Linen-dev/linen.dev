@@ -8,6 +8,7 @@ export enum CommunityType {
 export interface SerializedAccount {
   id: string;
   type: AccountType;
+  name?: string;
   homeUrl?: string;
   docsUrl?: string;
   logoUrl?: string;
@@ -66,6 +67,7 @@ export default function serialize(account?: any): SerializedAccount | null {
     syncStatus,
     id,
     type,
+    name,
     anonymizeUsers,
     slackDomain,
     discordDomain,
@@ -87,6 +89,7 @@ export default function serialize(account?: any): SerializedAccount | null {
     syncStatus,
     id,
     type,
+    name,
     communityType,
     anonymizeUsers,
     hasAuth,

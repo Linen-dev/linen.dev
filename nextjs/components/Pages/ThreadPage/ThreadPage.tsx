@@ -30,7 +30,6 @@ export function ThreadPage({
           slug: thread.slug || '',
         }),
       }}
-      communityName={settings.communityName}
       currentChannel={currentChannel}
       currentUser={currentUser}
       channels={channels}

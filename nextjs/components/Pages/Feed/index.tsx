@@ -31,7 +31,6 @@ export default function Feed({
   return (
     <PageLayout
       channels={channels}
-      communityName={communityName}
       isSubDomainRouting={isSubDomainRouting}
       permissions={permissions}
       settings={settings}
