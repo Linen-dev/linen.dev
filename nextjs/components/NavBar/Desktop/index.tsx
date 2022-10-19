@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { ChannelSerialized } from 'lib/channel';
-import NavItem from './NavItem';
+import NavItem from '../NavItem';
 import NavLabel from './NavLabel';
 import { Permissions } from 'types/shared';
 import Link from 'components/Link/InternalLink';

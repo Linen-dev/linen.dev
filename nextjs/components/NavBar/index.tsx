@@ -34,7 +34,11 @@ export default function NavBar({
         />
       </div>
       <div className="lg:hidden">
-        <MobileNavBar channels={sortedChannels} channelName={channelName} />
+        <MobileNavBar
+          channels={sortedChannels}
+          channelName={channelName}
+          permissions={permissions}
+        />
       </div>
     </>
   );
