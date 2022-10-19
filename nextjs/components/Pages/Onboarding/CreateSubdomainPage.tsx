@@ -64,6 +64,7 @@ export function CreateSubdomainPage() {
           label="What should be your community path?"
           {...{
             pattern: '[a-z-]+',
+            required: true,
             title:
               'Community path should only contain lower case letters and hyphens. e.g. linen-community',
           }}
