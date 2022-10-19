@@ -4,6 +4,7 @@ import { fetchTeamInfo } from 'services/slack/api';
 import { createSlackAuthorization, updateAccount } from '../../lib/models';
 import { captureException, withSentry } from '@sentry/nextjs';
 import { createSyncJob } from 'queue/jobs';
+import { AccountIntegration } from '@prisma/client';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
@@ -35,6 +36,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       name: body.team.name,
       slackDomain: communityUrl.replace('https://', '').split('.')[0] as string,
       communityUrl,
+      integration: AccountIntegration.SLACK,
     });
 
     const user = body.authed_user;
@@ -48,18 +50,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       userScope: user.scope,
       authedUserId: user.id,
     });
-
-    // // this function runs on serverless, implement promise race to avoid timeout for huge communities
-    // await Promise.race([
-    //   timeoutAfter(5),
-    //   createChannels({
-    //     accountId,
-    //     slackTeamId: body.team.id,
-    //     token: body.access_token,
-    //     getSlackChannels,
-    //     joinChannel,
-    //   }),
-    // ]);
 
     await createSyncJob({
       account_id: accountId,

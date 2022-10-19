@@ -1,6 +1,8 @@
 import {
+  AccountIntegration,
   AccountType,
   auths,
+  ChatType,
   Roles,
   type accounts,
   type users,
@@ -11,11 +13,7 @@ import {
   NextApiResponse,
 } from 'next/types';
 import Session from '../session';
-import {
-  type AccountWithPermissions,
-  findAccountByPath,
-  accountWithPermissionsInclude,
-} from 'lib/models';
+import { findAccountByPath } from 'lib/models';
 import prisma from 'client';
 import { Permissions } from 'types/shared';
 import { findAuthByEmail } from 'lib/users';
@@ -58,6 +56,8 @@ export default class PermissionsService {
         accountId: account?.id || null,
         authId: auth?.id || null,
         email: auth?.email || null,
+        displayName: user?.displayName || null,
+        profileImageUrl: user?.profileImageUrl || null,
       },
     };
     return permissions;
@@ -72,7 +72,7 @@ export default class PermissionsService {
   }
 
   static _manage(
-    community: AccountWithPermissions | null,
+    community: accounts | null,
     account: accounts | null,
     user: users | null
   ): boolean {
@@ -90,7 +90,7 @@ export default class PermissionsService {
   }
 
   static _access(
-    community: AccountWithPermissions | null,
+    community: accounts | null,
     account: accounts | null
   ): boolean {
     if (!community) {
@@ -104,7 +104,7 @@ export default class PermissionsService {
     return true;
   }
 
-  static _feed(community: AccountWithPermissions | null): boolean {
+  static _feed(community: accounts | null): boolean {
     if (!community) {
       return false;
     }
@@ -112,7 +112,7 @@ export default class PermissionsService {
   }
 
   static _is_member(
-    community: AccountWithPermissions | null,
+    community: accounts | null,
     account: accounts | null,
     user: users | null
   ): boolean {
@@ -123,7 +123,7 @@ export default class PermissionsService {
   }
 
   static _channel_create(
-    community: AccountWithPermissions | null,
+    community: accounts | null,
     user: users | null
   ): boolean {
     if (!community) {
@@ -136,10 +136,10 @@ export default class PermissionsService {
       return false;
     }
 
-    if (community?.discordAuthorizations?.length) {
+    if (community?.integration === AccountIntegration.DISCORD) {
       return false;
     }
-    if (community?.slackAuthorizations?.length) {
+    if (community?.integration === AccountIntegration.SLACK) {
       return false;
     }
 
@@ -149,26 +149,21 @@ export default class PermissionsService {
     return false;
   }
 
-  static _chat(
-    community: AccountWithPermissions | null,
-    user: users | null
-  ): boolean {
-    if (
-      community?.discordAuthorizations.length === 0 &&
-      community?.slackAuthorizations.length === 0
-    ) {
-      return true;
-    }
-
+  static _chat(community: accounts | null, user: users | null): boolean {
     if (!community) {
       return false;
     }
-    if (community.featureFlags?.isChatEnabled) {
-      return true;
+    if (community.chat === ChatType.NONE) {
+      return false;
     }
-    if (community.featureFlags?.isManagerOnlyChatEnabled) {
+    if (community.chat === ChatType.MANAGERS) {
       if (user?.role === Roles.ADMIN) return true;
       if (user?.role === Roles.OWNER) return true;
+      return false;
+    }
+    if (community.chat === ChatType.MEMBERS) {
+      if (!!user?.role) return true;
+      return false;
     }
     return false;
   }
@@ -221,7 +216,6 @@ export default class PermissionsService {
 async function findCommunity(params: any) {
   if (params && params.communityId && typeof params.communityId === 'string') {
     return prisma.accounts.findFirst({
-      ...accountWithPermissionsInclude,
       where: { id: params.communityId },
     });
   }
@@ -243,7 +237,7 @@ function findUser(
         })[];
       })
     | null,
-  community: AccountWithPermissions | null
+  community: accounts | null
 ) {
   if (!community) {
     return null;
