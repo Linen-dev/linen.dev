@@ -1,11 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { listChannelsAndPersist } from '../../services/discord/channels';
 import request from 'superagent';
 import prisma from '../../client';
 import { updateAccount } from '../../lib/models';
-import { timeoutAfter } from '../../utilities/retryPromises';
 import { captureException, withSentry } from '@sentry/nextjs';
 import { createSyncJob } from 'queue/jobs';
+import { AccountIntegration } from '@prisma/client';
+import { createSlug } from 'utilities/util';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
@@ -25,6 +25,8 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     const account = await updateAccount(accountId, {
       discordServerId: guild.id,
       name: guild.name,
+      discordDomain: createSlug(guild.name),
+      integration: AccountIntegration.DISCORD,
     });
 
     await prisma.discordAuthorizations.create({
@@ -37,16 +39,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         expiresAt: new Date(new Date().getTime() + body.expires_in * 1000),
       },
     });
-
-    // // this function runs on serverless, implement promise race to avoid timeout for huge communities
-    // await Promise.race([
-    //   timeoutAfter(5),
-    //   listChannelsAndPersist({
-    //     serverId: guild.id,
-    //     accountId: account.id,
-    //     token: process.env.DISCORD_TOKEN as string,
-    //   }),
-    // ]);
 
     await createSyncJob({
       account_id: accountId,

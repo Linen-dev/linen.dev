@@ -96,9 +96,9 @@ model channels {
 }
 
 model accounts {
-  id                     String           @id @default(uuid())
-  createdAt              DateTime         @default(now())
-  type                   AccountType      @default(PUBLIC)
+  id                     String      @id @default(uuid())
+  createdAt              DateTime    @default(now())
+  type                   AccountType @default(PUBLIC)
   name                   String?
   slackDomain            String?
   discordDomain          String?
@@ -108,24 +108,23 @@ model accounts {
   communityInviteUrl     String?
   redirectDomain         String?
   communityUrl           String?
-  syncStatus             String           @default("NOT_STARTED")
+  syncStatus             String      @default("NOT_STARTED")
   brandColor             String?
   homeUrl                String?
   docsUrl                String?
   logoUrl                String?
-  premium                Boolean          @default(false)
+  premium                Boolean     @default(false)
   googleAnalyticsId      String?
   googleSiteVerification String?
-  anonymizeUsers         Boolean          @default(false)
-  messagesViewType       MessagesViewType @default(THREADS)
+  anonymizeUsers         Boolean     @default(false)
 
   auths                 auths[]
   users                 users[]
   slackAuthorizations   slackAuthorizations[]
   discordAuthorizations discordAuthorizations[]
   invites               invites[]
-
-  featureFlags featureFlags?
+  chat                  ChatType                @default(MANAGERS)
+  integration           AccountIntegration      @default(NONE)
 
   @@unique([redirectDomain])
   @@unique([slackDomain])
@@ -136,10 +135,16 @@ enum AccountType {
   PRIVATE
 }
 
-enum MessagesViewType {
-  THREADS
-  THREADS_WITH_MESSAGES
-  MESSAGES
+enum AccountIntegration {
+  NONE
+  SLACK
+  DISCORD
+}
+
+enum ChatType {
+  NONE
+  MANAGERS
+  MEMBERS
 }
 
 model auths {
@@ -303,14 +308,4 @@ model invites {
   role      Roles    @default(MEMBER)
 
   @@unique([email, accountsId])
-}
-
-model featureFlags {
-  accountId String   @id
-  account   accounts @relation(fields: [accountId], references: [id], onDelete: Cascade)
-
-  isFeedEnabled            Boolean @default(false) @ignore
-  isChatEnabled            Boolean @default(false)
-  isManagerOnlyChatEnabled Boolean @default(false)
-  isCreateChannelEnabled   Boolean @default(false) @ignore
 }

@@ -163,22 +163,8 @@ export const channelIndex = async (
   });
 };
 
-export const accountWithPermissionsInclude =
-  Prisma.validator<Prisma.accountsArgs>()({
-    include: {
-      featureFlags: true,
-      slackAuthorizations: true,
-      discordAuthorizations: true,
-    },
-  });
-
-export type AccountWithPermissions = Prisma.accountsGetPayload<
-  typeof accountWithPermissionsInclude
->;
-
 export const findAccountByPath = async (path: string) => {
   return await prisma.accounts.findFirst({
-    ...accountWithPermissionsInclude,
     where: {
       OR: [
         {
