@@ -153,6 +153,13 @@ export default class PermissionsService {
     community: AccountWithPermissions | null,
     user: users | null
   ): boolean {
+    if (
+      community?.discordAuthorizations.length === 0 &&
+      community?.slackAuthorizations.length === 0
+    ) {
+      return true;
+    }
+
     if (!community) {
       return false;
     }
