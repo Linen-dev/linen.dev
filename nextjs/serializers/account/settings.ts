@@ -1,4 +1,4 @@
-import { accounts, MessagesViewType } from '@prisma/client';
+import { accounts } from '@prisma/client';
 import { links } from '../../constants/examples';
 
 export type Settings = {
@@ -11,7 +11,6 @@ export type Settings = {
   homeUrl: string;
   docsUrl: string;
   logoUrl: string;
-  messagesViewType: MessagesViewType;
   communityUrl: string;
   communityInviteUrl: string;
   communityName: string;
@@ -56,7 +55,6 @@ export function serialize(account: accounts): Settings {
     homeUrl: account.homeUrl || defaultSettings.homeUrl,
     docsUrl: account.docsUrl || defaultSettings.docsUrl,
     logoUrl: account.logoUrl || defaultSettings.logoUrl,
-    messagesViewType: account.messagesViewType || MessagesViewType.THREADS,
     ...(account.premium &&
       account.googleAnalyticsId && {
         googleAnalyticsId: account.googleAnalyticsId,
