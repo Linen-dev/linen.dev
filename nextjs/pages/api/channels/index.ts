@@ -5,6 +5,7 @@ import { v4 } from 'uuid';
 import PermissionsService from 'services/permissions';
 import { createSlug } from 'utilities/util';
 import ChannelsService from 'services/channels';
+import prisma from 'client';
 
 type Props = {
   communityId?: string;
@@ -17,9 +18,9 @@ type PutProps = Props & {
 };
 
 type PostProps = Props & {
-  communityId?: string;
-  slack_channel_id?: string;
-  channel_name: string;
+  communityId: string;
+  slackChannelId?: string;
+  channelName: string;
 };
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -50,15 +51,29 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 
   if (req.method === 'POST') {
-    const { channel_name, communityId, slack_channel_id }: PostProps = body;
+    const { channelName, communityId, slackChannelId }: PostProps = body;
+
+    const slug = createSlug(channelName);
+
+    const result = await prisma.channels.findFirst({
+      where: {
+        channelName: slug,
+        accountId: communityId,
+      },
+    });
+
+    if (result) {
+      return res
+        .status(400)
+        .json({ error: 'Channel with this name already exists' });
+    }
 
     const channel = await findOrCreateChannel({
-      externalChannelId: slack_channel_id || v4(),
-      channelName: createSlug(channel_name),
-      accountId: communityId || permissions.user?.accountId!,
+      externalChannelId: slackChannelId || v4(),
+      channelName: slug,
+      accountId: communityId,
     });
-    res.status(200).json(channel);
-    return res.end();
+    return res.status(200).json(channel);
   }
   return res.status(405).end();
 }
