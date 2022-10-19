@@ -8,6 +8,7 @@ import { pickTextColorBasedOnBgColor } from 'utilities/colors';
 import { Permissions } from 'types/shared';
 import { Settings } from 'serializers/account/settings';
 import type { ChannelSerialized } from 'lib/channel';
+import UserAvatar from './UserAvatar';
 
 interface Props {
   settings: Settings;
@@ -60,7 +61,7 @@ export default function Header({
           gap: '24px',
         }}
       >
-        <div className="hidden sm:flex w-full">
+        <div className="hidden sm:flex grow">
           <SearchBar
             borderColor={borderColor}
             channels={channels}
@@ -79,7 +80,15 @@ export default function Header({
         >
           Docs
         </a>
-        <JoinButton settings={settings} permissions={permissions} />
+        {permissions.is_member ? (
+          <UserAvatar
+            user={{
+              displayName: permissions.user?.email!,
+            }}
+          />
+        ) : (
+          <JoinButton settings={settings} permissions={permissions} />
+        )}
       </div>
     </div>
   );
