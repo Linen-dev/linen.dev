@@ -6,6 +6,7 @@ import { ThreadState } from '@prisma/client';
 import serializeThread from 'serializers/thread';
 import { Scope } from 'types/shared';
 import ChannelsService from 'services/channels';
+import { anonymizeMessages } from 'utilities/anonymizeMessages';
 
 function getPage(page?: number) {
   if (!page || page < 1) {
@@ -87,10 +88,18 @@ export async function index({
     take: limit,
     skip: (page - 1) * limit,
   });
+
   return {
     status: 200,
     data: {
-      threads: threads.map(serializeThread),
+      threads: threads
+        .map((thread) => {
+          if (community.anonymizeUsers) {
+            return anonymizeMessages(thread);
+          }
+          return thread;
+        })
+        .map(serializeThread),
     },
   };
 }
