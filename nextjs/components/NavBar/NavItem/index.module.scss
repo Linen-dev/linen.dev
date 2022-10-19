@@ -25,3 +25,10 @@
   color: rgb(17 24 39);
   font-weight: 700;
 }
+
+@media screen and (max-width: 1024px) {
+  .name {
+    border-radius: 0;
+    margin: 0;
+  }
+}
