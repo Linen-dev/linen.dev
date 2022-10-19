@@ -15,6 +15,7 @@ import debounce from 'utilities/debounce';
 import { sendMessageWrapper } from './sendMessageWrapper';
 import usePolling from 'hooks/polling';
 import useThreadWebsockets from 'hooks/websockets/thread';
+import useKeyboard from 'hooks/keyboard';
 import { useUsersContext } from 'contexts/Users';
 import { useJoinContext } from 'contexts/Join';
 import useFeedWebsockets from 'hooks/websockets/feed';
@@ -67,6 +68,7 @@ export default function Feed({
   const ref = useRef<HTMLDivElement>(null);
   const [allUsers] = useUsersContext();
   const { startSignUp } = useJoinContext();
+  const { isShiftPressed } = useKeyboard();
 
   useThreadWebsockets({
     id: thread?.id,
@@ -347,7 +349,7 @@ export default function Feed({
               threads={feed.threads}
               loading={polling}
               selections={selections}
-              onChange={(id: string, checked: boolean) => {
+              onChange={(id: string, checked: boolean, index: number) => {
                 setSelections((selections: Selections) => {
                   return {
                     ...selections,
