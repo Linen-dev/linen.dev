@@ -2,7 +2,7 @@ import type { Prisma } from '@prisma/client';
 import { FindThreadsByCursorType } from 'types/cursor';
 import { ThreadsWithMessagesFull } from 'types/partialTypes';
 import prisma from '../client';
-import { anonymizeMessages } from '../utilities/anonymizeMessages';
+import { anonymizeMessages } from 'utilities/anonymizeMessages';
 
 export type Thread = {
   externalThreadId: string;
