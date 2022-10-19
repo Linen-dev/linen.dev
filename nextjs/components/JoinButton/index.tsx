@@ -3,27 +3,23 @@ import JoinLinen from './JoinLinen';
 import JoinDiscord from './JoinDiscord';
 import JoinSlack from './JoinSlack';
 import { Permissions } from 'types/shared';
+import type { Settings } from 'serializers/account/settings';
 
 interface Props {
-  inviteUrl?: string;
-  communityType: String;
-  communityId?: string;
+  settings: Settings;
   permissions?: Permissions;
 }
 
-function JoinButton({
-  inviteUrl,
-  communityType,
-  communityId,
-  permissions,
-}: Props) {
-  if (!inviteUrl) {
-    return <JoinLinen accountId={communityId} permissions={permissions} />;
+function JoinButton({ settings, permissions }: Props) {
+  if (!settings.communityInviteUrl) {
+    return (
+      <JoinLinen accountId={settings.communityId} permissions={permissions} />
+    );
   }
-  return communityType === 'discord' ? (
-    <JoinDiscord inviteUrl={inviteUrl} />
+  return settings.communityType === 'discord' ? (
+    <JoinDiscord inviteUrl={settings.communityInviteUrl} />
   ) : (
-    <JoinSlack inviteUrl={inviteUrl} />
+    <JoinSlack inviteUrl={settings.communityInviteUrl} />
   );
 }
 

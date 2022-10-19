@@ -20,8 +20,6 @@ interface Props {
   currentChannel?: ChannelSerialized;
   currentUser?: SerializedUser | null;
   channels: ChannelSerialized[];
-  communityUrl?: string;
-  communityInviteUrl?: string;
   settings: Settings;
   isSubDomainRouting: boolean;
   permissions: Permissions;
@@ -36,8 +34,6 @@ function PageLayout({
   channels: initialChannels,
   currentChannel,
   currentUser,
-  communityUrl,
-  communityInviteUrl,
   settings,
   isSubDomainRouting,
   permissions,
@@ -62,8 +58,6 @@ function PageLayout({
             channels={channels}
             settings={settings}
             permissions={permissions}
-            communityInviteUrl={communityInviteUrl}
-            communityUrl={communityUrl}
             isSubDomainRouting={isSubDomainRouting}
           />
         </div>
