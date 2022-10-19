@@ -1,7 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import ChannelPage from './ChannelPage';
-import type { MessagesViewType, users } from '@prisma/client';
 import { create as factory } from '__tests__/factory';
 import { SessionProvider } from 'next-auth/react';
 
@@ -78,7 +77,6 @@ describe('Channel', () => {
       docsUrl: 'docsUrl',
       homeUrl: 'homeUrl',
       logoUrl: 'logoUrl',
-      messagesViewType: 'THREADS' as MessagesViewType,
       name: 'name',
     },
     threads: [

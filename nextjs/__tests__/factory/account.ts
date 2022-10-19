@@ -1,5 +1,5 @@
 import type { accounts } from '@prisma/client';
-import { AccountType, MessagesViewType } from '@prisma/client';
+import { AccountType } from '@prisma/client';
 
 export default function createMessage(options?: Partial<accounts>): accounts {
   return {
@@ -23,7 +23,8 @@ export default function createMessage(options?: Partial<accounts>): accounts {
     googleSiteVerification: null,
     anonymizeUsers: false,
     premium: false,
-    messagesViewType: MessagesViewType.THREADS,
+    chat: 'NONE',
+    integration: 'NONE',
     ...options,
   };
 }
