@@ -7,7 +7,7 @@ interface Props {
   threads: SerializedThread[];
   selections: Selections;
   loading: boolean;
-  onChange(id: string, checked: boolean): void;
+  onChange(id: string, checked: boolean, index: number): void;
   onSelect(thread: SerializedThread): void;
 }
 
@@ -29,7 +29,7 @@ export default function Grid({
             key={thread.id + index}
             thread={thread}
             selected={!!selections[thread.id]}
-            onChange={onChange}
+            onChange={(id, checked) => onChange(id, checked, index)}
             onClick={() => onSelect(thread)}
           />
         );
