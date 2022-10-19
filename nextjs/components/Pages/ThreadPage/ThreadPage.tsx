@@ -33,8 +33,6 @@ export function ThreadPage({
       currentChannel={currentChannel}
       currentUser={currentUser}
       channels={channels}
-      communityUrl={settings.communityUrl}
-      communityInviteUrl={settings.communityInviteUrl}
       settings={settings}
       isSubDomainRouting={isSubDomainRouting}
       permissions={permissions}

@@ -30,8 +30,6 @@ export default function ChannelPage({
 
   return (
     <PageLayout
-      communityUrl={settings.communityUrl}
-      communityInviteUrl={settings.communityInviteUrl}
       currentChannel={currentChannel}
       currentUser={currentUser}
       seo={{

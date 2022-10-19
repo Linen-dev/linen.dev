@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import React from 'react';
 import Link from 'next/link';
 import SearchBar from 'components/search/SearchBar';
@@ -13,8 +14,6 @@ interface Props {
   channels: ChannelSerialized[];
   isSubDomainRouting: boolean;
   permissions: Permissions;
-  communityInviteUrl?: string;
-  communityUrl?: string;
 }
 
 function isWhiteColor(color: string) {
@@ -25,8 +24,6 @@ export default function Header({
   settings,
   channels,
   isSubDomainRouting,
-  communityInviteUrl,
-  communityUrl,
   permissions,
 }: Props) {
   const { brandColor, communityName } = settings;
@@ -82,12 +79,7 @@ export default function Header({
         >
           Docs
         </a>
-        <JoinButton
-          inviteUrl={communityInviteUrl || communityUrl}
-          communityType={settings.communityType}
-          communityId={settings.communityId}
-          permissions={permissions}
-        />
+        <JoinButton settings={settings} permissions={permissions} />
       </div>
     </div>
   );
