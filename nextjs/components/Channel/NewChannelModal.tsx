@@ -20,14 +20,18 @@ export function NewChannelModal({ communityId }: { communityId: string }) {
     try {
       e.preventDefault();
       const form = e.target;
-      const channel_name = form.channelName.value;
+      const channelName = form.channelName.value;
       const response = await fetch('/api/channels', {
         method: 'POST',
         body: JSON.stringify({
           communityId,
-          channel_name,
+          channelName,
         }),
       });
+      const data = await response.json();
+      if (response.status === 400 && data.error) {
+        return toast.error(data.error);
+      }
       if (!response.ok) {
         throw response;
       } else {
@@ -36,7 +40,7 @@ export function NewChannelModal({ communityId }: { communityId: string }) {
           isSubDomainRouting,
           communityName,
           communityType,
-          path: `/c/${channel_name}`,
+          path: `/c/${channelName}`,
         });
       }
     } catch (error) {
