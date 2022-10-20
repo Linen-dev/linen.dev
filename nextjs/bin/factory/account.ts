@@ -1,5 +1,5 @@
 import prisma from '../../client';
-import { AccountType } from '@prisma/client';
+import { AccountType, ChatType } from '@prisma/client';
 
 export async function createAccounts() {
   await prisma.accounts.createMany({
@@ -11,6 +11,7 @@ export async function createAccounts() {
         brandColor: '#000000',
         slackDomain: 'linen',
         logoUrl: 'https://linen-assets.s3.amazonaws.com/linen-white-logo.svg',
+        chat: ChatType.MEMBERS,
       },
       {
         homeUrl: `https://empty.dev`,
@@ -19,6 +20,7 @@ export async function createAccounts() {
         brandColor: '#000000',
         slackDomain: 'empty',
         logoUrl: 'https://linen-assets.s3.amazonaws.com/linen-white-logo.svg',
+        chat: ChatType.MEMBERS,
       },
       {
         homeUrl: `https://private.dev`,
@@ -28,6 +30,7 @@ export async function createAccounts() {
         slackDomain: 'private',
         logoUrl: 'https://linen-assets.s3.amazonaws.com/linen-white-logo.svg',
         type: AccountType.PRIVATE,
+        chat: ChatType.MEMBERS,
       },
     ],
   });

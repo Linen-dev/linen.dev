@@ -14,9 +14,16 @@ import { SerializedUser } from 'serializers/user';
 interface Props {
   settings: Settings;
   channels: ChannelSerialized[];
-  currentUser: SerializedUser | null;
+  currentUser?: SerializedUser | null;
   isSubDomainRouting: boolean;
   permissions: Permissions;
+  onProfileChange({
+    displayName,
+    userId,
+  }: {
+    displayName: string;
+    userId: string;
+  }): Promise<void>;
 }
 
 function isWhiteColor(color: string) {
@@ -29,6 +36,7 @@ export default function Header({
   currentUser,
   isSubDomainRouting,
   permissions,
+  onProfileChange,
 }: Props) {
   const { brandColor, communityName } = settings;
   const homeUrl = addHttpsToUrl(settings.homeUrl);
@@ -84,7 +92,10 @@ export default function Header({
           Docs
         </a>
         {currentUser ? (
-          <UserAvatar currentUser={currentUser} />
+          <UserAvatar
+            currentUser={currentUser}
+            onProfileChange={onProfileChange}
+          />
         ) : (
           <JoinButton settings={settings} permissions={permissions} />
         )}

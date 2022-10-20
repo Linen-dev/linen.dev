@@ -12,6 +12,7 @@ import { LinkContext } from 'contexts/Link';
 import { UsersContext } from 'contexts/Users';
 import { Settings } from 'serializers/account/settings';
 import { SerializedUser } from 'serializers/user';
+import { put } from 'utilities/http';
 
 interface Props {
   className?: string;
@@ -43,6 +44,29 @@ function PageLayout({
   const channels = initialChannels.filter((c: ChannelSerialized) => !c.hidden);
   const { googleAnalyticsId, googleSiteVerification } = settings;
 
+  const updateProfile = ({
+    displayName,
+    userId,
+  }: {
+    displayName: string;
+    userId: string;
+  }) => {
+    return put('/api/profile', {
+      userId,
+      displayName,
+    }).then(() => {
+      // Potential improvement:
+      // We could improve the behavior here
+      // by updating the user information live.
+      // It is a bit time consuming because
+      // we would need to make currentUser dynamic
+      // and update user information in all threads we have.
+      // We would need to have a centralized store for users
+      // which we could manipulate.
+      window.location.reload();
+    });
+  };
+
   return (
     <LinkContext
       context={{
@@ -60,6 +84,7 @@ function PageLayout({
             currentUser={currentUser}
             permissions={permissions}
             isSubDomainRouting={isSubDomainRouting}
+            onProfileChange={updateProfile}
           />
         </div>
         <div className="py-1 sm:hidden w-full">

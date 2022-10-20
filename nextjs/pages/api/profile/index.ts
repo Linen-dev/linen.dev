@@ -40,7 +40,7 @@ export default async function handler(
   request: NextApiRequest,
   response: NextApiResponse
 ) {
-  if (request.method === 'POST') {
+  if (request.method === 'PUT') {
     const user = await Session.user(request, response);
     if (!user) {
       return response.status(401).end({});
