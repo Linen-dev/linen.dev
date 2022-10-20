@@ -350,6 +350,7 @@ export default function Feed({
               threads={feed.threads}
               loading={polling}
               selections={selections}
+              permissions={permissions}
               onChange={(id: string, checked: boolean, index: number) => {
                 setSelections((selections: Selections) => {
                   return manageSelections({
