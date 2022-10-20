@@ -1,31 +1,38 @@
-import { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
+import classNames from 'classnames';
 import { Menu, Transition } from '@headlessui/react';
 import { signOut } from 'next-auth/react';
+import { SerializedUser } from 'serializers/user';
 import Avatar from 'components/Avatar';
+import Modal from 'components/Modal';
+import ProfileForm from './ProfileForm';
 
-const userNavigation = [
-  {
-    name: 'Sign out',
-    href: '#',
-    onClick: (e: any) => {
-      e.preventDefault();
-      signOut();
-    },
-  },
-];
-
-function classNames(...classes: any) {
-  return classes.filter(Boolean).join(' ');
+interface Props {
+  currentUser: SerializedUser;
 }
 
-type UserAvatarProps = {
-  user: {
-    displayName: string;
-    profileImageUrl?: string;
-  };
-};
+enum Mode {
+  Menu,
+  Profile,
+}
 
-export default function UserAvatar({ user }: UserAvatarProps) {
+export default function UserAvatar({ currentUser }: Props) {
+  const userNavigation = [
+    {
+      name: 'Profile',
+      onClick() {
+        setMode(Mode.Profile);
+      },
+    },
+    {
+      name: 'Sign out',
+      onClick() {
+        signOut();
+      },
+    },
+  ];
+  const [open, setOpen] = useState(false);
+  const [mode, setMode] = useState(Mode.Menu);
   return (
     <>
       <div className="flex h-16 justify-between">
@@ -37,9 +44,11 @@ export default function UserAvatar({ user }: UserAvatarProps) {
                 <Avatar
                   size="md"
                   shadow="none"
-                  alt={user?.displayName || 'avatar'}
-                  src={user?.profileImageUrl}
-                  text={(user?.displayName || 'u').slice(0, 1).toLowerCase()}
+                  alt={currentUser.displayName || 'avatar'}
+                  src={currentUser.profileImageUrl}
+                  text={(currentUser.displayName || 'u')
+                    .slice(0, 1)
+                    .toLowerCase()}
                 />
               </Menu.Button>
             </div>
@@ -57,11 +66,10 @@ export default function UserAvatar({ user }: UserAvatarProps) {
                   <Menu.Item key={item.name}>
                     {({ active }) => (
                       <a
-                        href={item.href}
                         onClick={item.onClick}
                         className={classNames(
                           active ? 'bg-gray-100' : '',
-                          'block px-4 py-2 text-sm text-gray-700'
+                          'block px-4 py-2 text-sm text-gray-700 cursor-pointer'
                         )}
                       >
                         {item.name}
@@ -74,6 +82,12 @@ export default function UserAvatar({ user }: UserAvatarProps) {
           </Menu>
         </div>
       </div>
+      <Modal open={mode === Mode.Profile} close={() => setMode(Mode.Menu)}>
+        <ProfileForm
+          currentUser={currentUser}
+          afterSubmit={() => setMode(Mode.Menu)}
+        />
+      </Modal>
     </>
   );
 }
