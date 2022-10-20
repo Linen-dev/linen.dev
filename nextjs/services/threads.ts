@@ -37,6 +37,9 @@ export async function threadGetServerSideProps(
   const slug = context.params?.slug as string | undefined;
   try {
     const id = parseInt(threadId);
+    if (!id) {
+      return Promise.reject(new Error('Thread not found'));
+    }
     const [thread, account] = await Promise.all([
       findThreadByIncrementId(id),
       findAccountByPath(communityName),
