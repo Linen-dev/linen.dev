@@ -9,9 +9,11 @@ interface Props {
   alt?: string | null;
   text?: string;
   size?: Size;
+  shadow?: Shadow;
 }
 
 export type Size = 'sm' | 'md' | 'lg';
+export type Shadow = 'none' | 'sm';
 
 function dimensions(size?: Size) {
   switch (size) {
@@ -26,19 +28,29 @@ function dimensions(size?: Size) {
   }
 }
 
-function Avatar({ src, alt, text = 'u', size }: Props) {
+function Avatar({ src, alt, text = 'u', size, shadow }: Props) {
   const [hasError, setHasError] = useState(false);
 
   return (
     <>
       {!src || hasError ? (
-        <div className={classNames(styles.placeholder, size && styles[size])}>
+        <div
+          className={classNames(styles.placeholder, {
+            [styles.size]: size,
+            [styles.shadow]: shadow === 'sm',
+          })}
+        >
           {text}
         </div>
       ) : (
-        <div className={classNames(styles.avatar, size && styles[size])}>
+        <div
+          className={classNames(styles.avatar, {
+            [styles.size]: size,
+            [styles.shadow]: shadow === 'sm',
+          })}
+        >
           <Image
-            className={classNames(styles.image, size && styles[size])}
+            className={classNames(styles.image, { [styles.size]: size })}
             src={normalizeUrl(src)}
             onError={() => {
               setHasError(true);
@@ -55,6 +67,7 @@ function Avatar({ src, alt, text = 'u', size }: Props) {
 
 Avatar.defaultProps = {
   size: 'md',
+  shadow: 'sm',
 };
 
 export default Avatar;
