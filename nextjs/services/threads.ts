@@ -38,7 +38,7 @@ export async function threadGetServerSideProps(
   try {
     const id = parseInt(threadId);
     if (!id) {
-      return Promise.reject(new Error('Thread not found'));
+      throw new Error('Thread not found');
     }
     const [thread, account] = await Promise.all([
       findThreadByIncrementId(id),
@@ -46,15 +46,15 @@ export async function threadGetServerSideProps(
     ]);
 
     if (!thread || !thread?.channel?.accountId) {
-      return Promise.reject(new Error('Thread not found'));
+      throw new Error('Thread not found');
     }
 
     if (!account) {
-      return Promise.reject(new Error('Account not found'));
+      throw new Error('Account not found');
     }
 
     if (thread?.channel?.accountId !== account.id) {
-      return Promise.reject(new Error('Thread not found'));
+      throw new Error('Thread not found');
     }
 
     const settings = serializeSettings(account);
