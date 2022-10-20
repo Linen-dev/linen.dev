@@ -22,6 +22,17 @@ export async function post(url = '', params = {}) {
   return response.json();
 }
 
+export async function put(url = '', params = {}) {
+  const response = await fetch(url, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(params),
+  });
+  return response.json();
+}
+
 export async function get(url = '', params = {}) {
   const response = await fetch(buildURL(url, params));
   return response.json();

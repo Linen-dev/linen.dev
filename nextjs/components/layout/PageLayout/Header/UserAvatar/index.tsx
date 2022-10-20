@@ -9,6 +9,13 @@ import ProfileForm from './ProfileForm';
 
 interface Props {
   currentUser: SerializedUser;
+  onProfileChange({
+    displayName,
+    userId,
+  }: {
+    displayName: string;
+    userId: string;
+  }): Promise<void>;
 }
 
 enum Mode {
@@ -16,7 +23,7 @@ enum Mode {
   Profile,
 }
 
-export default function UserAvatar({ currentUser }: Props) {
+export default function UserAvatar({ currentUser, onProfileChange }: Props) {
   const userNavigation = [
     {
       name: 'Profile',
@@ -31,7 +38,6 @@ export default function UserAvatar({ currentUser }: Props) {
       },
     },
   ];
-  const [open, setOpen] = useState(false);
   const [mode, setMode] = useState(Mode.Menu);
   return (
     <>
@@ -85,7 +91,10 @@ export default function UserAvatar({ currentUser }: Props) {
       <Modal open={mode === Mode.Profile} close={() => setMode(Mode.Menu)}>
         <ProfileForm
           currentUser={currentUser}
-          afterSubmit={() => setMode(Mode.Menu)}
+          onSubmit={async ({ displayName, userId }) => {
+            await onProfileChange({ displayName, userId });
+            setMode(Mode.Menu);
+          }}
         />
       </Modal>
     </>

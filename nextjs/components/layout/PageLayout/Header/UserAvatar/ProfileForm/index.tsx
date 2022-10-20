@@ -7,10 +7,16 @@ import { SerializedUser } from 'serializers/user';
 
 interface Props {
   currentUser: SerializedUser;
-  afterSubmit(): void;
+  onSubmit({
+    displayName,
+    userId,
+  }: {
+    displayName: string;
+    userId: string;
+  }): void;
 }
 
-export default function ProfileForm({ currentUser, afterSubmit }: Props) {
+export default function ProfileForm({ currentUser, onSubmit }: Props) {
   const [submitting, setSubmitting] = useState(false);
   return (
     <>
@@ -23,11 +29,7 @@ export default function ProfileForm({ currentUser, afterSubmit }: Props) {
           const displayName = form.displayName.value;
           try {
             setSubmitting(true);
-            await post('/api/profile', {
-              userId: currentUser.id,
-              displayName,
-            });
-            afterSubmit();
+            await onSubmit({ displayName, userId: currentUser.id });
           } catch (exception) {
             toast.error('Something went wrong. Please try again.');
           } finally {
