@@ -35,8 +35,7 @@ function Avatar({ src, alt, text = 'u', size, shadow }: Props) {
     <>
       {!src || hasError ? (
         <div
-          className={classNames(styles.placeholder, {
-            [styles.size]: size,
+          className={classNames(styles.placeholder, size && styles[size], {
             [styles.shadow]: shadow === 'sm',
           })}
         >
@@ -44,13 +43,12 @@ function Avatar({ src, alt, text = 'u', size, shadow }: Props) {
         </div>
       ) : (
         <div
-          className={classNames(styles.avatar, {
-            [styles.size]: size,
+          className={classNames(styles.avatar, size && styles[size], {
             [styles.shadow]: shadow === 'sm',
           })}
         >
           <Image
-            className={classNames(styles.image, { [styles.size]: size })}
+            className={classNames(styles.image, size && styles[size])}
             src={normalizeUrl(src)}
             onError={() => {
               setHasError(true);
