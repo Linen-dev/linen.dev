@@ -41,12 +41,12 @@ export default function Content({
   const [allUsers] = useUsersContext();
   const { startSignUp } = useJoinContext();
 
-  const threadId = thread.id;
+  const incrementId = thread.incrementId;
 
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    fetch(`/api/count?incrementId=${threadId}`, { method: 'PUT' });
-  }, [threadId]);
+    fetch(`/api/count?incrementId=${incrementId}`, { method: 'PUT' });
+  }, [incrementId]);
 
   useThreadWebsockets({
     id: thread.id,
