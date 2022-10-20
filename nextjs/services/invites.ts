@@ -69,7 +69,7 @@ export async function findUsersAndInvitesByAccount(id: string): Promise<{
   invites: invites[];
 }> {
   const users = await prisma.users.findMany({
-    where: { accountsId: id },
+    where: { accountsId: id, authsId: { not: null } },
     include: { auth: true },
   });
 
