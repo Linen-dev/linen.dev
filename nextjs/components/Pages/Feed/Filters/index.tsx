@@ -63,7 +63,7 @@ export default function Filters({
         {permissions.is_member && (
           <ScopeSelect onChange={onChange} defaultValue={defaultScope} />
         )}
-        {showActions(selections) && (
+        {permissions.manage && showActions(selections) && (
           <Button
             color="gray"
             className={styles.filter}
