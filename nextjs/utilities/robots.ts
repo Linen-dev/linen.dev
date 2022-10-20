@@ -9,7 +9,7 @@ Allow: /s/
 Allow: /d/
 Allow: /t/
 Allow: /c/
-Allow: /feed
+Disallow: /feed
 Allow: /sitemap
 
 Sitemap: https://${domain}/sitemap.xml
