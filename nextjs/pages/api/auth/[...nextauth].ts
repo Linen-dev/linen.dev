@@ -6,6 +6,7 @@ import SignInMailer from 'mailers/SignInMailer';
 import { captureException, flush } from '@sentry/nextjs';
 import { NOREPLY_EMAIL } from 'secrets';
 import CredentialsProvider from 'next-auth/providers/credentials';
+import GitHubProvider from 'next-auth/providers/github';
 import { generateHash } from 'utilities/password';
 
 export const authOptions = {
@@ -16,6 +17,10 @@ export const authOptions = {
   },
   adapter: CustomPrismaAdapter(prisma),
   providers: [
+    GitHubProvider({
+      clientId: process.env.GITHUB_ID!,
+      clientSecret: process.env.GITHUB_SECRET!,
+    }),
     EmailProvider({
       server: {
         host: process.env.EMAIL_HOST,

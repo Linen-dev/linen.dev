@@ -148,18 +148,21 @@ enum ChatType {
 }
 
 model auths {
-  id            String    @id @default(uuid())
-  createdAt     DateTime  @default(now())
-  email         String
-  emailVerified DateTime?
-  password      String
-  salt          String
-  token         String?
+  id              String    @id @default(uuid())
+  createdAt       DateTime  @default(now())
+  email           String
+  emailVerified   DateTime?
+  password        String
+  salt            String
+  token           String?
+  displayName     String?
+  profileImageUrl String?
 
-  account   accounts? @relation(fields: [accountId], references: [id])
+  account   accounts?       @relation(fields: [accountId], references: [id])
   accountId String?
   users     users[]
   session   session[]
+  oauths    oauthAccounts[]
 
   @@unique([email])
 }
@@ -308,4 +311,24 @@ model invites {
   role      Roles    @default(MEMBER)
 
   @@unique([email, accountsId])
+}
+
+model oauthAccounts {
+  id                       String  @id @default(cuid())
+  userId                   String
+  type                     String
+  provider                 String
+  providerAccountId        String
+  refresh_token            String? @db.Text
+  access_token             String? @db.Text
+  expires_at               Int?
+  refresh_token_expires_in Int?
+  token_type               String?
+  scope                    String?
+  id_token                 String? @db.Text
+  session_state            String?
+
+  user auths @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
 }
