@@ -9,10 +9,12 @@ import { Permissions } from 'types/shared';
 import { Settings } from 'serializers/account/settings';
 import type { ChannelSerialized } from 'lib/channel';
 import UserAvatar from './UserAvatar';
+import { SerializedUser } from 'serializers/user';
 
 interface Props {
   settings: Settings;
   channels: ChannelSerialized[];
+  currentUser: SerializedUser | null;
   isSubDomainRouting: boolean;
   permissions: Permissions;
 }
@@ -24,6 +26,7 @@ function isWhiteColor(color: string) {
 export default function Header({
   settings,
   channels,
+  currentUser,
   isSubDomainRouting,
   permissions,
 }: Props) {
@@ -80,12 +83,8 @@ export default function Header({
         >
           Docs
         </a>
-        {permissions.is_member ? (
-          <UserAvatar
-            user={{
-              displayName: permissions.user?.email!,
-            }}
-          />
+        {currentUser ? (
+          <UserAvatar currentUser={currentUser} />
         ) : (
           <JoinButton settings={settings} permissions={permissions} />
         )}

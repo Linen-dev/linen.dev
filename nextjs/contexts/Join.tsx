@@ -77,7 +77,7 @@ export const JoinContext = ({ children }: Props) => {
       <Modal
         {...{
           open,
-          setOpen: onCloseModal,
+          close: onCloseModal,
           title: 'Join the community',
           subtitle: 'Sign up to join the community and start to chat',
         }}

@@ -57,6 +57,7 @@ function PageLayout({
           <Header
             channels={channels}
             settings={settings}
+            currentUser={currentUser}
             permissions={permissions}
             isSubDomainRouting={isSubDomainRouting}
           />
