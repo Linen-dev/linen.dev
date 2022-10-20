@@ -36,6 +36,7 @@ export default function UserAvatar({ user }: UserAvatarProps) {
                 <span className="sr-only">Open user menu</span>
                 <Avatar
                   size="md"
+                  shadow="none"
                   alt={user?.displayName || 'avatar'}
                   src={user?.profileImageUrl}
                   text={(user?.displayName || 'u').slice(0, 1).toLowerCase()}
