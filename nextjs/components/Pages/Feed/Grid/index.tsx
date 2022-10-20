@@ -28,7 +28,7 @@ export default function Grid({
           <Row
             key={thread.id + index}
             thread={thread}
-            selected={!!selections[thread.id]}
+            selected={!!selections[thread.id]?.checked}
             onChange={(id, checked) => onChange(id, checked, index)}
             onClick={() => onSelect(thread)}
           />

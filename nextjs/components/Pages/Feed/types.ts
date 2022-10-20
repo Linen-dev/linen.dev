@@ -6,5 +6,8 @@ export interface FeedResponse {
 }
 
 export interface Selections {
-  [key: string]: boolean;
+  [key: string]: {
+    checked: boolean;
+    index: number;
+  };
 }

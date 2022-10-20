@@ -25,7 +25,7 @@ interface Props {
 function showActions(selections: Selections): boolean {
   for (const key in selections) {
     const selection = selections[key];
-    if (selection) {
+    if (selection?.checked) {
       return true;
     }
   }

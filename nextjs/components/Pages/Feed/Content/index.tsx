@@ -22,6 +22,7 @@ import useFeedWebsockets from 'hooks/websockets/feed';
 import type { CommunityPushType } from 'services/push';
 import { toast } from 'components/Toast';
 import { SerializedMessage } from 'serializers/message';
+import { manageSelections } from '../utilities/selection';
 
 interface Props {
   communityId: string;
@@ -168,7 +169,7 @@ export default function Feed({
     const ids: string[] = [];
     for (const key in selections) {
       const selection = selections[key];
-      if (selection) {
+      if (selection?.checked) {
         ids.push(key);
       }
     }
@@ -351,10 +352,14 @@ export default function Feed({
               selections={selections}
               onChange={(id: string, checked: boolean, index: number) => {
                 setSelections((selections: Selections) => {
-                  return {
-                    ...selections,
-                    [id]: checked,
-                  };
+                  return manageSelections({
+                    id,
+                    checked,
+                    index,
+                    selections,
+                    ids: feed.threads.map((thread) => thread.id),
+                    isShiftPressed,
+                  });
                 });
               }}
               onSelect={(thread: SerializedThread) => {
