@@ -4,13 +4,14 @@ import { getThreadUrl } from '../Pages/ChannelsPage/utilities/url';
 import { copyToClipboard } from 'utilities/clipboard';
 import { toast } from 'components/Toast';
 import { Permissions } from 'types/shared';
-import { GoPin } from 'react-icons/go';
+import { GoPin, GoFoldUp } from 'react-icons/go';
 import { AiOutlinePaperClip } from 'react-icons/ai';
 import { FiThumbsUp } from 'react-icons/fi';
 import type { Settings } from 'serializers/account/settings';
 import { SerializedThread } from 'serializers/thread';
 import { SerializedUser } from 'serializers/user';
 import { SerializedMessage } from 'serializers/message';
+import Tooltip from 'components/Tooltip';
 import styles from './index.module.scss';
 
 interface Props {
@@ -33,6 +34,7 @@ interface Props {
     type: string;
     active: boolean;
   }): void;
+  onMerge?(threadId: string): void;
 }
 
 function hasReaction(
@@ -50,7 +52,7 @@ function hasReaction(
   return !!reaction.users.find(({ id }) => id === userId);
 }
 
-export default function Options({
+export default function Actions({
   className,
   thread,
   message,
@@ -60,10 +62,11 @@ export default function Options({
   currentUser,
   onReaction,
   onPin,
+  onMerge,
 }: Props) {
   const isReactionActive = hasReaction(message, ':thumbsup:', currentUser?.id);
   return (
-    <ul className={classNames(styles.options, className)}>
+    <ul className={classNames(styles.actions, className)}>
       {onReaction && currentUser && (
         <li
           onClick={(event) => {
@@ -77,11 +80,13 @@ export default function Options({
             });
           }}
         >
-          <FiThumbsUp
-            className={classNames({
-              [styles.active]: isReactionActive,
-            })}
-          />
+          <Tooltip text="Like">
+            <FiThumbsUp
+              className={classNames({
+                [styles.active]: isReactionActive,
+              })}
+            />
+          </Tooltip>
         </li>
       )}
       <li
@@ -98,7 +103,9 @@ export default function Options({
           toast.success('Copied to clipboard', text);
         }}
       >
-        <AiOutlinePaperClip />
+        <Tooltip text="URL">
+          <AiOutlinePaperClip />
+        </Tooltip>
       </li>
       {onPin && permissions.manage && (
         <li
@@ -108,7 +115,22 @@ export default function Options({
             onPin(thread.id);
           }}
         >
-          <GoPin className={classNames({ [styles.active]: thread.pinned })} />
+          <Tooltip text="Pin">
+            <GoPin className={classNames({ [styles.active]: thread.pinned })} />
+          </Tooltip>
+        </li>
+      )}
+      {onMerge && permissions.manage && (
+        <li
+          onClick={(event) => {
+            event.stopPropagation();
+            event.preventDefault();
+            onMerge(thread.id);
+          }}
+        >
+          <Tooltip text="Merge">
+            <GoFoldUp />
+          </Tooltip>
         </li>
       )}
     </ul>

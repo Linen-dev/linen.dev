@@ -17,6 +17,7 @@ export default function ChannelGrid({
   onClick,
   onPin,
   onReaction,
+  onMerge,
 }: {
   threads: SerializedThread[];
   permissions: Permissions;
@@ -37,6 +38,7 @@ export default function ChannelGrid({
     type: string;
     active: boolean;
   }): void;
+  onMerge?(threadId: string): void;
 }) {
   return (
     <>
@@ -64,8 +66,6 @@ export default function ChannelGrid({
                       isSubDomainRouting={isSubDomainRouting}
                       settings={settings}
                       currentUser={currentUser}
-                      onPin={onPin}
-                      onReaction={onReaction}
                     />
                   </CustomLink>
                 </div>
@@ -79,6 +79,7 @@ export default function ChannelGrid({
                     currentUser={currentUser}
                     onPin={onPin}
                     onReaction={onReaction}
+                    onMerge={index > 0 ? onMerge : undefined}
                   />
                 </div>
               )}

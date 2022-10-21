@@ -1,0 +1,30 @@
+@import 'styles/colors.scss';
+
+.tooltip {
+  position: relative;
+}
+
+.tooltip::after {
+  background-color: black;
+  bottom: calc(100% + 12px);
+  border-radius: 2px;
+  box-shadow: 0 0 1px 2px $color-border;
+  color: white;
+  content: attr(data-tooltip);
+  font-size: 12px;
+  font-weight: 500;
+  left: 50%;
+  opacity: 0;
+  padding: 6px 8px;
+  pointer-events: none;
+  position: absolute;
+  transform: translateX(-50%);
+  transition: opacity 0.1s ease-in;
+  white-space: nowrap;
+  width: auto;
+  z-index: 2;
+}
+
+.tooltip:hover::after {
+  opacity: 1;
+}

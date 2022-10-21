@@ -34,6 +34,7 @@ interface Props {
     type: string;
     active: boolean;
   }): void;
+  onMerge?(threadId: string): void;
 }
 
 export function Row({
@@ -47,6 +48,7 @@ export function Row({
   permissions,
   onReaction,
   onPin,
+  onMerge,
 }: Props) {
   return (
     <div id={message.id} className={classNames(styles.row)}>
@@ -94,6 +96,7 @@ export function Row({
               isSubDomainRouting={isSubDomainRouting}
               onPin={onPin}
               onReaction={onReaction}
+              onMerge={onMerge}
             />
           </div>
         </div>

@@ -435,6 +435,26 @@ export function Channel({
     startSignUp,
   });
 
+  const mergeThreads = (threadId: string) => {
+    setThreads((threads) => {
+      return threads
+        .map((current, index) => {
+          const next = threads[index + 1];
+          if (next && next.id === threadId) {
+            return {
+              ...current,
+              messages: [...current.messages, ...next.messages],
+            };
+          }
+          if (current.id === threadId) {
+            return null;
+          }
+          return current;
+        })
+        .filter(Boolean) as SerializedThread[];
+    });
+  };
+
   const threadToRender = threads.find(
     (thread) => thread.id === currentThreadId
   );
@@ -486,6 +506,7 @@ export function Channel({
                         onClick={selectThread}
                         onPin={pinThread}
                         onReaction={sendReaction}
+                        onMerge={mergeThreads}
                       />
                     </ul>
                   )}
