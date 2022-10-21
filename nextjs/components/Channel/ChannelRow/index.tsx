@@ -25,14 +25,15 @@ export default function ChannelRow({
   currentUser,
   onPin,
   onReaction,
+  onMerge,
 }: {
   thread: SerializedThread;
   permissions: Permissions;
   isSubDomainRouting: boolean;
   settings: Settings;
   currentUser: SerializedUser | null;
-  onPin(threadId: string): void;
-  onReaction({
+  onPin?(threadId: string): void;
+  onReaction?({
     threadId,
     messageId,
     type,
@@ -43,6 +44,7 @@ export default function ChannelRow({
     type: string;
     active: boolean;
   }): void;
+  onMerge?(threadId: string): void;
 }) {
   const { messages } = thread;
   let users = messages.map((m) => m.author).filter(Boolean) as users[];
@@ -59,6 +61,7 @@ export default function ChannelRow({
         currentUser={currentUser}
         onPin={onPin}
         onReaction={onReaction}
+        onMerge={onMerge}
       >
         {messages.length > 1 && (
           <div className="flex flex-row items-center pt-2 pr-2">
