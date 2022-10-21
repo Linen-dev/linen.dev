@@ -200,6 +200,11 @@ async function changeMessage(
   },
   event: SlackMessageEvent
 ) {
+  if (event.previous_message?.subtype === 'bot_message') {
+    // nothing to do
+    return;
+  }
+
   // First remove previous message
   if (event.previous_message) {
     const message = await findMessageByChannelIdAndTs(
