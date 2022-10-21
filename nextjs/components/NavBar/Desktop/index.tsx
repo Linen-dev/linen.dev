@@ -6,7 +6,6 @@ import { Permissions } from 'types/shared';
 import Link from 'components/Link/InternalLink';
 import { NewChannelModal } from 'components/Channel';
 import useWebsockets from 'hooks/websockets';
-import { SerializedUser } from 'serializers/user';
 import { toast } from 'components/Toast';
 import Badge from 'components/Badge';
 import styles from './index.module.scss';
@@ -16,23 +15,20 @@ import usePath from 'hooks/path';
 
 interface Props {
   channels: ChannelSerialized[];
-  currentUser?: SerializedUser | null;
   channelName: string;
   permissions: Permissions;
-  token: string | null;
 }
 
 export default function DesktopNavBar({
   channelName,
-  currentUser,
   channels,
   permissions,
-  token,
 }: Props) {
   const [highlights, setHighlights] = useState<string[]>([]);
   const router = useRouter();
 
-  const userId = currentUser?.authsId;
+  const userId = permissions.auth?.id || null;
+  const token = permissions.token || null;
 
   useWebsockets({
     room: userId && `user:${userId}`,
@@ -79,8 +75,8 @@ export default function DesktopNavBar({
       )}
       <NavLabel>
         <div className="grow">Channels</div>
-        {permissions.channel_create && !!permissions.user?.accountId && (
-          <NewChannelModal communityId={permissions.user.accountId} />
+        {permissions.channel_create && !!permissions.accountId && (
+          <NewChannelModal communityId={permissions.accountId} />
         )}
       </NavLabel>
       <div>

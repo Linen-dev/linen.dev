@@ -11,7 +11,6 @@ import { Permissions } from 'types/shared';
 import { LinkContext } from 'contexts/Link';
 import { UsersContext } from 'contexts/Users';
 import { Settings } from 'serializers/account/settings';
-import { SerializedUser } from 'serializers/user';
 import { put } from 'utilities/http';
 
 interface Props {
@@ -19,13 +18,11 @@ interface Props {
   seo?: SeoProps;
   children: React.ReactNode;
   currentChannel?: ChannelSerialized;
-  currentUser?: SerializedUser | null;
   channels: ChannelSerialized[];
   settings: Settings;
   isSubDomainRouting: boolean;
   permissions: Permissions;
   innerRef?: any;
-  token: string | null;
 }
 
 function PageLayout({
@@ -34,12 +31,10 @@ function PageLayout({
   children,
   channels: initialChannels,
   currentChannel,
-  currentUser,
   settings,
   isSubDomainRouting,
   permissions,
   innerRef,
-  token,
 }: Props) {
   const channels = initialChannels.filter((c: ChannelSerialized) => !c.hidden);
   const { googleAnalyticsId, googleSiteVerification } = settings;
@@ -81,7 +76,6 @@ function PageLayout({
           <Header
             channels={channels}
             settings={settings}
-            currentUser={currentUser}
             permissions={permissions}
             isSubDomainRouting={isSubDomainRouting}
             onProfileChange={updateProfile}
@@ -101,9 +95,7 @@ function PageLayout({
           <NavBar
             channels={channels}
             channelName={currentChannel?.channelName || ''}
-            currentUser={currentUser}
             permissions={permissions}
-            token={token}
           />
           <div
             className={

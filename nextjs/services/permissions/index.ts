@@ -32,9 +32,10 @@ interface Props {
 
 export default class PermissionsService {
   static async get({ request, response, params }: Props): Promise<Permissions> {
-    const [community, auth] = await Promise.all([
+    const [community, auth, token] = await Promise.all([
       findCommunity(params),
       findAuth(request, response),
+      Session.tokenRaw(request),
     ]);
     const user = findUser(auth, community) || null;
     const account = user?.account || null;
@@ -51,14 +52,24 @@ export default class PermissionsService {
       manage,
       is_member,
       channel_create,
-      user: {
-        id: user?.id || null,
-        accountId: account?.id || null,
-        authId: auth?.id || null,
-        email: auth?.email || null,
-        displayName: user?.displayName || null,
-        profileImageUrl: user?.profileImageUrl || null,
-      },
+      accountId: community?.id || null,
+      auth: auth
+        ? {
+            email: auth.email,
+            id: auth.id,
+          }
+        : null,
+      token: token || null,
+      user: user
+        ? {
+            id: user.id,
+            username: user.displayName,
+            authsId: user.authsId,
+            displayName: user.displayName,
+            externalUserId: user.externalUserId,
+            profileImageUrl: user.profileImageUrl,
+          }
+        : null,
     };
     return permissions;
   }

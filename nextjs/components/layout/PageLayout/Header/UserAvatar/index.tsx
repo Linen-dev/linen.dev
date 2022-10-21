@@ -32,6 +32,12 @@ export default function UserAvatar({ currentUser, onProfileChange }: Props) {
       },
     },
     {
+      name: 'Settings',
+      onClick() {
+        window.location.href = '/settings';
+      },
+    },
+    {
       name: 'Sign out',
       onClick() {
         signOut();

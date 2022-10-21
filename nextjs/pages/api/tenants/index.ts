@@ -21,14 +21,14 @@ export default async function handler(
     return response.status(401).end();
   }
 
-  if (!permissions.user?.authId) {
+  if (!permissions.auth?.id) {
     return response.status(401).end();
   }
 
   if (request.method === 'POST') {
     await UsersService.updateTenant({
       accountId: body.communityId,
-      authId: permissions.user.authId,
+      authId: permissions.auth?.id,
     });
     return response.status(200).end();
   }

@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { Thread } from 'components/Thread';
 import { scrollToBottom } from 'utilities/scroll';
 import { ThreadState } from '@prisma/client';
@@ -9,7 +9,6 @@ import { sendMessageWrapper } from './sendMessageWrapper';
 import { toast } from 'components/Toast';
 import { SerializedThread } from 'serializers/thread';
 import { SerializedAccount } from 'serializers/account';
-import { SerializedUser } from 'serializers/user';
 import type { Settings } from 'serializers/account/settings';
 import type { ChannelSerialized } from 'lib/channel';
 import { Permissions } from 'types/shared';
@@ -18,35 +17,29 @@ interface Props {
   thread: SerializedThread;
   currentChannel: ChannelSerialized;
   currentCommunity: SerializedAccount | null;
-  currentUser: SerializedUser | null;
   threadUrl: string | null;
   isSubDomainRouting: boolean;
   settings: Settings;
   permissions: Permissions;
-  token: string | null;
 }
 
 export default function Content({
   thread: initialThread,
   currentChannel,
   currentCommunity,
-  currentUser,
   threadUrl,
   isSubDomainRouting,
   settings,
   permissions,
-  token,
 }: Props) {
   const [thread, setThread] = useState(initialThread);
   const [allUsers] = useUsersContext();
   const { startSignUp } = useJoinContext();
 
-  const incrementId = thread.incrementId;
+  const token = permissions.token || null;
+  const currentUser = permissions.user;
 
   const ref = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    fetch(`/api/count?incrementId=${incrementId}`, { method: 'PUT' });
-  }, [incrementId]);
 
   useThreadWebsockets({
     id: thread.id,

@@ -60,10 +60,14 @@ export function Thread({
     active: boolean;
   }): void;
 }) {
-  const { id, title, state, viewCount } = thread;
+  const { id, title, state, viewCount, incrementId } = thread;
   useEffect(() => {
     onMount?.();
   }, []);
+
+  useEffect(() => {
+    fetch(`/api/count?incrementId=${incrementId}`, { method: 'PUT' });
+  }, [incrementId]);
 
   return (
     <>

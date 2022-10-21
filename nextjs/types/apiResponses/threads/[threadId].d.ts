@@ -7,7 +7,6 @@ import { SerializedThread } from 'serializers/thread';
 export type ThreadByIdResponse = ThreadById | { notFound: boolean };
 
 export interface ThreadByIdProp extends ThreadById {
-  token: string | null;
   isSubDomainRouting: boolean;
   permissions: Permissions;
 }
@@ -18,7 +17,6 @@ export type ThreadById = {
   channelId: string;
   currentChannel: ChannelSerialized;
   currentCommunity: SerializedAccount | null;
-  currentUser: SerializerUser | null;
   channel: ChannelSerialized;
   authors: users[];
   channels: ChannelSerialized[];

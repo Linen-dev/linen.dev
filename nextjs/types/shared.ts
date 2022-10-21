@@ -1,3 +1,5 @@
+import type { SerializedUser } from 'serializers/user';
+
 export interface SerializedAttachment {
   url: string;
   name: string;
@@ -10,11 +12,12 @@ export interface Permissions {
   manage: boolean;
   channel_create: boolean;
   is_member: boolean;
-  user: {
-    id: string | null;
-    accountId: string | null;
-    authId: string | null;
-    email: string | null;
+  accountId: string | null;
+  token: string | null;
+  user: SerializedUser | null;
+  auth: {
+    id: string;
+    email: string;
   } | null;
 }
 

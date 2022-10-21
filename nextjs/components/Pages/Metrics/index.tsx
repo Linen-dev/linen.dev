@@ -12,7 +12,6 @@ interface Props {
   currentCommunity: SerializedAccount;
   permissions: Permissions;
   settings: Settings;
-  token: string | null;
 }
 
 const stats = [
@@ -26,7 +25,6 @@ export default function Metrics({
   currentCommunity,
   settings,
   permissions,
-  token,
 }: Props) {
   return (
     <PageLayout
@@ -34,7 +32,6 @@ export default function Metrics({
       permissions={permissions}
       settings={settings}
       isSubDomainRouting={false}
-      token={token}
       className="w-full"
     >
       <Header />

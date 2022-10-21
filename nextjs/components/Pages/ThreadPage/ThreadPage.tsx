@@ -9,12 +9,10 @@ export function ThreadPage({
   channels,
   currentChannel,
   currentCommunity,
-  currentUser,
   threadUrl,
   isSubDomainRouting,
   settings,
   permissions,
-  token,
 }: ThreadByIdProp) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -31,24 +29,20 @@ export function ThreadPage({
         }),
       }}
       currentChannel={currentChannel}
-      currentUser={currentUser}
       channels={channels}
       settings={settings}
       isSubDomainRouting={isSubDomainRouting}
       permissions={permissions}
       innerRef={ref}
-      token={token}
     >
       <Content
         thread={thread}
         currentChannel={currentChannel}
         currentCommunity={currentCommunity}
-        currentUser={currentUser}
         threadUrl={threadUrl}
         isSubDomainRouting={isSubDomainRouting}
         settings={settings}
         permissions={permissions}
-        token={token}
       />
     </PageLayout>
   );

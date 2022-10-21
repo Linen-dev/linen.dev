@@ -1,25 +1,16 @@
 import type { ChannelSerialized } from 'lib/channel';
 import { sortByChannelName } from './utilities';
 import { Permissions } from 'types/shared';
-import { SerializedUser } from 'serializers/user';
 import DesktopNavBar from './Desktop';
 import MobileNavBar from './Mobile';
 
 interface Props {
   channels: ChannelSerialized[];
-  currentUser?: SerializedUser | null;
   channelName: string;
   permissions: Permissions;
-  token: string | null;
 }
 
-export default function NavBar({
-  channelName,
-  currentUser,
-  channels,
-  permissions,
-  token,
-}: Props) {
+export default function NavBar({ channelName, channels, permissions }: Props) {
   const sortedChannels = sortByChannelName(channels);
 
   return (
@@ -28,9 +19,7 @@ export default function NavBar({
         <DesktopNavBar
           channels={sortedChannels}
           channelName={channelName}
-          currentUser={currentUser}
           permissions={permissions}
-          token={token}
         />
       </div>
       <div className="lg:hidden">

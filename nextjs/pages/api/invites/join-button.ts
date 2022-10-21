@@ -26,16 +26,16 @@ export default async function handler(
   }
 
   if (request.method === 'POST') {
-    const invites = await findInvitesByEmail(permissions.user?.email!, {
+    const invites = await findInvitesByEmail(permissions.auth?.email!, {
       accountsId: communityId,
     });
     if (invites.length) {
-      await acceptInvite(invites[0].id, permissions.user?.email!);
+      await acceptInvite(invites[0].id, permissions.auth?.email!);
     } else {
       await joinCommunity(
-        permissions.user?.email!,
+        permissions.auth?.email!,
         communityId,
-        permissions.user?.authId!
+        permissions.auth?.id!
       );
     }
     return response.status(200).end();
