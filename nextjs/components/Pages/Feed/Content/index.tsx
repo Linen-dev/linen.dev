@@ -2,7 +2,6 @@ import { useState, useRef, useCallback } from 'react';
 import SidebarLayout from 'components/layout/shared/SidebarLayout';
 import { ThreadState } from '@prisma/client';
 import { SerializedThread } from 'serializers/thread';
-import { SerializedUser } from 'serializers/user';
 import { Settings } from 'serializers/account/settings';
 import { Permissions, Scope } from 'types/shared';
 import Header from '../Header';
@@ -25,13 +24,9 @@ import { SerializedMessage } from 'serializers/message';
 import { manageSelections } from '../utilities/selection';
 
 interface Props {
-  communityId: string;
-  communityName: string;
-  currentUser: SerializedUser;
   isSubDomainRouting: boolean;
   permissions: Permissions;
   settings: Settings;
-  token: string | null;
 }
 
 const debouncedFetch = debounce(
@@ -51,13 +46,9 @@ const debouncedFetch = debounce(
 );
 
 export default function Feed({
-  communityId,
-  communityName,
-  currentUser,
   isSubDomainRouting,
   permissions,
   settings,
-  token,
 }: Props) {
   const [feed, setFeed] = useState<FeedResponse>({ threads: [], total: 0 });
   const [state, setState] = useState<ThreadState>(ThreadState.OPEN);
@@ -70,6 +61,10 @@ export default function Feed({
   const [allUsers] = useUsersContext();
   const { startSignUp } = useJoinContext();
   const { isShiftPressed } = useKeyboard();
+
+  const token = permissions.token || null;
+  const currentUser = permissions.user || null;
+  const { communityId, communityName } = settings;
 
   useThreadWebsockets({
     id: thread?.id,
@@ -120,8 +115,8 @@ export default function Feed({
       scope === Scope.Participant &&
       !messages.find(
         (m) =>
-          m.author?.id === currentUser.id ||
-          m.mentions.find((me) => me.id === currentUser.id)
+          m.author?.id === currentUser?.id ||
+          m.mentions.find((me) => me.id === currentUser?.id)
       )
     );
   }

@@ -54,7 +54,11 @@ export default class Session {
     return await prisma.auths.findFirst({
       where: {
         id: authId,
-        account: { channels: { some: { id: channelId } } },
+        users: {
+          some: {
+            account: { channels: { some: { id: channelId } } },
+          },
+        },
       },
     });
   }
@@ -63,7 +67,11 @@ export default class Session {
     return await prisma.auths.findFirst({
       where: {
         id: authId,
-        account: { id: communityId },
+        users: {
+          some: {
+            account: { id: communityId },
+          },
+        },
       },
     });
   }
@@ -72,8 +80,12 @@ export default class Session {
     return await prisma.auths.findFirst({
       where: {
         id: authId,
-        account: {
-          channels: { some: { threads: { some: { id: threadId } } } },
+        users: {
+          some: {
+            account: {
+              channels: { some: { threads: { some: { id: threadId } } } },
+            },
+          },
         },
       },
     });

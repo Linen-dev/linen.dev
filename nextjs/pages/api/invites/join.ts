@@ -17,13 +17,13 @@ export default async function handler(
     response,
     params: {},
   });
-  if (!permissions.user?.email) {
+  if (!permissions.auth?.email) {
     return response.status(401).end();
   }
 
   if (request.method === 'POST') {
     const { inviteId }: PostProps = JSON.parse(request.body);
-    await acceptInvite(inviteId, permissions.user.email);
+    await acceptInvite(inviteId, permissions.auth?.email);
     return response.status(200).end();
   }
 

@@ -10,14 +10,14 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
     params: {},
   });
 
-  if (!permissions.user?.authId) {
+  if (!permissions.auth?.id) {
     return response.status(401).end();
   }
 
   if (request.method === 'POST') {
     const { name } = JSON.parse(request.body);
     const { id } = await OnboardingCreateCommunity({
-      authId: permissions.user?.authId!,
+      authId: permissions.auth.id!,
       name,
     });
     response.status(200).json({ id });

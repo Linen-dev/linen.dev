@@ -10,7 +10,6 @@ export default function ChannelPage({
   channels,
   currentChannel,
   currentCommunity,
-  currentUser,
   settings,
   channelName,
   isSubDomainRouting,
@@ -18,7 +17,6 @@ export default function ChannelPage({
   pathCursor,
   isBot,
   permissions,
-  token,
 }: ChannelViewProps) {
   // reusing the type between few layers causes problems
   // we should explicitly define the type per component
@@ -31,7 +29,6 @@ export default function ChannelPage({
   return (
     <PageLayout
       currentChannel={currentChannel}
-      currentUser={currentUser}
       seo={{
         ...buildChannelSeo({
           settings,
@@ -45,14 +42,12 @@ export default function ChannelPage({
       settings={settings}
       isSubDomainRouting={isSubDomainRouting}
       permissions={permissions}
-      token={token}
     >
       <ComponentToRender
         threads={threads}
         pinnedThreads={pinnedThreads}
         currentChannel={currentChannel}
         currentCommunity={currentCommunity}
-        currentUser={currentUser}
         settings={settings}
         channelName={channelName}
         isSubDomainRouting={isSubDomainRouting}
@@ -60,7 +55,6 @@ export default function ChannelPage({
         pathCursor={pathCursor}
         isBot={isBot}
         permissions={permissions}
-        token={token}
         key={settings.communityName + channelName}
       />
     </PageLayout>

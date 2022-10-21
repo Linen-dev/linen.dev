@@ -115,18 +115,13 @@ export async function threadGetServerSideProps(
     }
 
     const currentChannel = channels.find((c) => c.id === thread.channel?.id)!;
-    const currentUser = await Session.user(context.req, context.res);
-
-    const token = await Session.tokenRaw(context.req);
 
     return {
       props: {
-        token: token || null,
         thread: serializeThread(thread),
         externalThreadId: thread.externalThreadId,
         channelId: currentChannel.id,
         currentCommunity: serializeAccount(account),
-        currentUser: !!currentUser ? serializeUser(currentUser) : null,
         channel: currentChannel,
         authors: authors,
         currentChannel,

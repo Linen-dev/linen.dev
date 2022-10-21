@@ -36,7 +36,6 @@ export function Channel({
   pinnedThreads: initialPinnedThreads,
   currentChannel,
   currentCommunity,
-  currentUser,
   settings,
   channelName,
   isSubDomainRouting,
@@ -44,7 +43,6 @@ export function Channel({
   pathCursor,
   isBot,
   permissions,
-  token,
 }: ChannelViewProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [threads, setThreads] = useState<SerializedThread[]>(initialThreads);
@@ -63,6 +61,9 @@ export function Channel({
 
   const [showThread, setShowThread] = useState(false);
   const [currentThreadId, setCurrentThreadId] = useState<string>();
+
+  const currentUser = permissions.user || null;
+  const token = permissions.token || null;
 
   function handleLeftScroll() {
     if (

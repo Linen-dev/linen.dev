@@ -120,17 +120,11 @@ export async function channelGetServerSideProps(
     isCrawler,
   });
 
-  const currentUser = await Session.user(context.req, context.res);
-
-  const token = await Session.tokenRaw(context.req);
-
   return {
     props: {
-      token: token || null,
       nextCursor,
       currentChannel: channel,
       currentCommunity: serializeAccount(account),
-      currentUser: !!currentUser ? serializeUser(currentUser) : null,
       channelName: channel.channelName,
       channels,
       threads: threads.map(serializeThread),

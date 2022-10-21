@@ -12,11 +12,10 @@ describe('Header', () => {
     it('renders the user avatar', () => {
       const settings = create('settings');
       const user = create('user');
-      const permissions = create('permissions', { is_member: true });
+      const permissions = create('permissions', { is_member: true, user });
       const { container } = render(
         <Header
           settings={settings}
-          currentUser={user}
           channels={[]}
           isSubDomainRouting={false}
           permissions={permissions}
@@ -31,11 +30,10 @@ describe('Header', () => {
     it('renders the join button', () => {
       const settings = create('settings');
       const user = create('user');
-      const permissions = create('permissions', { is_member: false });
+      const permissions = create('permissions', { is_member: false, user });
       const { container } = render(
         <Header
           settings={settings}
-          currentUser={user}
           channels={[]}
           isSubDomainRouting={false}
           permissions={permissions}
