@@ -91,7 +91,7 @@ export default function Header({
         >
           Docs
         </a>
-        {currentUser ? (
+        {currentUser && permissions.is_member ? (
           <UserAvatar
             currentUser={currentUser}
             onProfileChange={onProfileChange}
