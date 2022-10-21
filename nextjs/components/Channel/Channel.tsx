@@ -28,7 +28,7 @@ import {
   isScrollAtBottom,
   isInViewport,
 } from 'utilities/scroll';
-import { postReaction } from './utilities/http';
+import { postReaction, postMerge } from './utilities/http';
 import styles from './index.module.css';
 
 export function Channel({
@@ -436,6 +436,9 @@ export function Channel({
   });
 
   const mergeThreads = (threadId: string) => {
+    const index = threads.findIndex((thread) => thread.id === threadId);
+    const current = threads[index];
+    const previous = threads[index - 1];
     setThreads((threads) => {
       return threads
         .map((current, index) => {
@@ -452,6 +455,11 @@ export function Channel({
           return current;
         })
         .filter(Boolean) as SerializedThread[];
+    });
+    return postMerge({
+      from: current.id,
+      to: previous.id,
+      communityId: currentCommunity?.id,
     });
   };
 
