@@ -4,6 +4,7 @@ import { PrismaClient, Prisma, auths } from '@prisma/client';
 import type { Adapter, AdapterUser } from 'next-auth/adapters';
 import { sendNotification } from 'services/slack';
 import { skipNotification } from 'services/slack/api/notification';
+import { eventSignUp } from 'services/events/eventNewSignUp';
 
 interface CreateAuthParams {
   email: string;
@@ -25,7 +26,7 @@ export async function createAuth({ email, password }: CreateAuthParams) {
 
 const notifyNewUser = (a: auths) => {
   return Promise.allSettled([
-    !skipNotification() && sendNotification('Email created: ' + a.email),
+    !skipNotification() && eventSignUp(a.id, a.email, a.createdAt),
   ]).then(() => {
     return a;
   });

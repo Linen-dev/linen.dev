@@ -465,6 +465,12 @@ export default function Privacy() {
             perform these tasks on our behalf and are obligated not to disclose
             or use it for any other purpose.
           </div>
+          <div>Customer.io - email campaign service provider</div>
+          <div>
+            For more information on the privacy practices of Customer.io, please
+            visit the Customer.io Privacy Terms web page:
+            https://customer.io/legal/privacy-policy/
+          </div>
           <div>Analytics</div>
           <div>
             We may use third-party Service Providers to monitor and analyze the

@@ -7,6 +7,7 @@ import { captureException, withSentry } from '@sentry/nextjs';
 import { cleanUpString } from 'utilities/string';
 import { AccountType, Roles } from '@prisma/client';
 import { generateRandomWordSlug } from 'utilities/randomWordSlugs';
+import { eventSignUp } from 'services/events/eventNewSignUp';
 
 async function create(request: NextApiRequest, response: NextApiResponse) {
   const body = JSON.parse(request.body);
@@ -43,7 +44,7 @@ async function create(request: NextApiRequest, response: NextApiResponse) {
   }
 
   try {
-    await sendNotification('Email created: ' + email);
+    await eventSignUp(newAuth.id, email, newAuth.createdAt);
   } catch (e) {
     console.log('failed to send: ', e);
     captureException(e);
