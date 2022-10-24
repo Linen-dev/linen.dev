@@ -7,6 +7,9 @@ export const trackSignUp = async (
   email: string,
   createdAt: Date
 ) => {
+  if (!siteId || !apiKey) {
+    return;
+  }
   let cio = new TrackClient(siteId, apiKey, { region: RegionEU });
 
   cio.identify(id, {
