@@ -1,5 +1,21 @@
 @import 'styles/colors.scss';
 
 .container {
+  align-items: center;
+  display: flex;
   position: relative;
+  padding: 1rem;
+}
+
+.over {
+  background: $color-gray-100;
+  cursor: move;
+}
+
+.over * {
+  pointer-events: none;
+}
+
+.content {
+  width: 100%;
 }

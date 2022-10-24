@@ -436,30 +436,41 @@ export function Channel({
     startSignUp,
   });
 
-  const mergeThreads = (threadId: string) => {
-    const index = threads.findIndex((thread) => thread.id === threadId);
-    const current = threads[index];
-    const previous = threads[index - 1];
+  const mergeThreads = ({ from, to }: { from: string; to: string }) => {
+    const source = threads.find((thread) => thread.id === from);
+    const target = threads.find((thread) => thread.id === to);
+
     setThreads((threads) => {
+      if (!source || !target) {
+        return threads;
+      }
       return threads
-        .map((current, index) => {
-          const next = threads[index + 1];
-          if (next && next.id === threadId) {
-            return {
-              ...current,
-              messages: [...current.messages, ...next.messages],
-            };
-          }
-          if (current.id === threadId) {
+        .map((thread) => {
+          if (thread.id === from) {
             return null;
           }
-          return current;
+          if (thread.id === to) {
+            return {
+              ...thread,
+              messages: [...thread.messages, ...source.messages].sort(
+                (a, b) => {
+                  return (
+                    new Date(a.sentAt).getTime() - new Date(b.sentAt).getTime()
+                  );
+                }
+              ),
+            };
+          }
+          return thread;
         })
         .filter(Boolean) as SerializedThread[];
     });
+    if (!source || !target) {
+      return Promise.resolve();
+    }
     return postMerge({
-      from: current.id,
-      to: previous.id,
+      from: source.id,
+      to: target.id,
       communityId: currentCommunity?.id,
     });
   };
@@ -515,7 +526,26 @@ export function Channel({
                         onClick={selectThread}
                         onPin={pinThread}
                         onReaction={sendReaction}
-                        onMerge={mergeThreads}
+                        onMerge={(threadId: string) => {
+                          const index = threads.findIndex(
+                            (thread) => thread.id === threadId
+                          );
+                          const current = threads[index];
+                          const previous = threads[index - 1];
+                          return mergeThreads({
+                            from: current.id,
+                            to: previous.id,
+                          });
+                        }}
+                        onDrop={({
+                          from,
+                          to,
+                        }: {
+                          from: string;
+                          to: string;
+                        }) => {
+                          return mergeThreads({ from, to });
+                        }}
                       />
                     </ul>
                   )}

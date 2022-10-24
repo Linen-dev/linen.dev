@@ -70,7 +70,7 @@ export function sendThreadMessageWrapper({
     const imitation: SerializedMessage = {
       id: uuid(),
       body: message,
-      sentAt: new Date().toString(),
+      sentAt: new Date().getTime().toString(),
       usersId: currentUser.id,
       mentions: allUsers,
       attachments: [],
