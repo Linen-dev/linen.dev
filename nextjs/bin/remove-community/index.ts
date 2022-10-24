@@ -21,6 +21,15 @@ async function cleanUp() {
       where: { channelId: channel.id },
     });
     console.log(channel.channelName, 'threadCount', threadCount);
+
+    const channelMembershipCount = await prisma.memberships.deleteMany({
+      where: { channelsId: channel.id },
+    });
+    console.log(
+      channel.channelName,
+      'channelMembershipCount',
+      channelMembershipCount
+    );
   }
 
   const channelsCount = await prisma.channels.deleteMany({
