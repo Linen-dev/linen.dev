@@ -74,13 +74,13 @@ export function sendMessageWrapper({
     }
     const imitation: SerializedThread = {
       id: uuid(),
-      sentAt: new Date().toString(),
-      lastReplyAt: new Date().toString(),
+      sentAt: new Date().getTime().toString(),
+      lastReplyAt: new Date().getTime().toString(),
       messages: [
         {
           id: 'imitation-message-id',
           body: message,
-          sentAt: new Date().toString(),
+          sentAt: new Date().getTime().toString(),
           usersId: 'imitation-user-id',
           mentions: allUsers,
           attachments: [],

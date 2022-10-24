@@ -1,4 +1,3 @@
-import classNames from 'classnames';
 import CustomLink from '../../Link/CustomLink';
 import { SerializedThread } from '../../../serializers/thread';
 import ChannelRow from '../ChannelRow';
@@ -18,6 +17,7 @@ export default function ChannelGrid({
   onPin,
   onReaction,
   onMerge,
+  onDrop,
 }: {
   threads: SerializedThread[];
   permissions: Permissions;
@@ -39,6 +39,7 @@ export default function ChannelGrid({
     active: boolean;
   }): void;
   onMerge?(threadId: string): void;
+  onDrop?({ from, to }: { from: string; to: string }): void;
 }) {
   return (
     <>
@@ -47,12 +48,9 @@ export default function ChannelGrid({
         .map((thread, index) => {
           const { incrementId, slug } = thread;
           return (
-            <li
-              key={`feed-${incrementId}-${index}`}
-              className={classNames(styles.li)}
-            >
+            <li key={`feed-${incrementId}-${index}`} className={styles.li}>
               {isBot ? (
-                <div className="px-4 py-4">
+                <>
                   <CustomLink
                     isSubDomainRouting={isSubDomainRouting}
                     communityName={settings.communityName}
@@ -68,9 +66,9 @@ export default function ChannelGrid({
                       currentUser={currentUser}
                     />
                   </CustomLink>
-                </div>
+                </>
               ) : (
-                <div className="px-4 py-4" onClick={() => onClick(incrementId)}>
+                <div onClick={() => onClick(incrementId)}>
                   <ChannelRow
                     thread={thread}
                     permissions={permissions}
@@ -80,6 +78,7 @@ export default function ChannelGrid({
                     onPin={onPin}
                     onReaction={onReaction}
                     onMerge={index > 0 ? onMerge : undefined}
+                    onDrop={onDrop}
                   />
                 </div>
               )}
