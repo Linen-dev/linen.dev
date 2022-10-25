@@ -30,7 +30,7 @@
     "script:import-users": "ts-node -P tsconfig.commonjs.json bin/import-users/index.ts"
   },
   "dependencies": {
-    "@headlessui/react": "^1.6.6",
+    "@headlessui/react": "^1.7.3",
     "@prisma/client": "^3.15.2",
     "@sentry/nextjs": "^7.14.1",
     "@types/debug": "^4.1.7",
