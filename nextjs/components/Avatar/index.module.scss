@@ -20,8 +20,7 @@
 .image {
   display: block;
   border-radius: 50%;
-  height: 36px;
-  border: 2px solid #fff !important;
+  height: 38px;
 }
 
 .placeholder {
@@ -29,10 +28,9 @@
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  border: 2px solid $color-primary;
-  width: 36px;
-  min-width: 36px;
-  height: 36px;
+  width: 38px;
+  min-width: 38px;
+  height: 38px;
   text-align: center;
   text-transform: lowercase;
   line-height: 32px;
@@ -53,7 +51,6 @@
   min-width: 26px;
   height: 26px;
   line-height: 26px;
-  border: none;
   font-size: 12px;
   font-weight: 500;
 }
@@ -63,5 +60,64 @@
   min-width: 38px;
   height: 38px;
   line-height: 38px;
-  border: none;
+}
+
+.color-red {
+  background: #ffebee;
+  color: #b71c1c;
+}
+
+.color-magenta {
+  background: #ffe8f0;
+  color: #a20d41;
+}
+
+.color-purple {
+  background: #f3e5f5;
+  color: #4a148c;
+}
+
+.color-indigo {
+  background-color: #e8eaf6;
+  color: #1a237e;
+}
+
+.color-blue {
+  background-color: #e3f2fd;
+  color: #0d47a1;
+}
+
+.color-cyan {
+  background-color: #e0f7fa;
+  color: #006064;
+}
+
+.color-teal {
+  background-color: #e0f2f1;
+  color: #004d40;
+}
+
+.color-green {
+  background-color: #e9f5e9;
+  color: #305332;
+}
+
+.color-lime {
+  background-color: #f5facb;
+  color: #645b0c;
+}
+
+.color-mustard {
+  background-color: #fff9de;
+  color: #845c07;
+}
+
+.color-orange {
+  background-color: #fdeee5;
+  color: #a22d09;
+}
+
+.color-brown {
+  background-color: #f5e1d4;
+  color: #5a1500;
 }
