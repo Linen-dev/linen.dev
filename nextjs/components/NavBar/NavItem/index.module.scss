@@ -2,7 +2,7 @@
 
 .name {
   align-items: center;
-  color: rgb(75 85 99);
+  color: $color-gray-700;
   border-radius: 4px;
   cursor: pointer;
   display: flex;
@@ -16,13 +16,13 @@
   transition: 0.1s ease-in color, 0.1s ease-in background;
 }
 .name:hover {
-  background: rgb(249 250 251);
-  color: rgb(17 24 39);
+  background: $color-gray-100;
+  color: $color-gray-900;
 }
 .active,
 .active:hover {
   background-color: rgb(243 244 246);
-  color: rgb(17 24 39);
+  color: $color-gray-900;
   font-weight: 700;
 }
 
