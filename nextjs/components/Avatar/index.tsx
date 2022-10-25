@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import Image from 'next/image';
 import styles from './index.module.scss';
 import { normalizeUrl } from 'utilities/url';
+import { getColor } from './utilities/color';
 import { getLetter } from './utilities/string';
 
 interface Props {
@@ -29,16 +30,18 @@ function dimensions(size?: Size) {
 }
 
 function Avatar({ src, text = 'u', size, shadow }: Props) {
-  const [hasError, setHasError] = useState(false);
+  const [error, setError] = useState(false);
 
   const letter = getLetter(text || '');
+  const color = getColor(letter);
 
   return (
     <>
-      {!src || hasError ? (
+      {!src || error ? (
         <div
           className={classNames(styles.placeholder, size && styles[size], {
             [styles.shadow]: shadow === 'sm',
+            [styles[`color-${color}`]]: color,
           })}
         >
           {letter}
@@ -53,7 +56,7 @@ function Avatar({ src, text = 'u', size, shadow }: Props) {
             className={classNames(styles.image, size && styles[size])}
             src={normalizeUrl(src)}
             onError={() => {
-              setHasError(true);
+              setError(true);
             }}
             alt={text || 'avatar'}
             height={dimensions(size)}
