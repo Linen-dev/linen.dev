@@ -25,9 +25,8 @@ export default function Suggestion({
       <div className={styles.header}>
         <Avatar
           size="sm"
-          src={user?.profileImageUrl || ''}
-          alt={user?.displayName || ''}
-          text={(user?.displayName || '?').slice(0, 1).toLowerCase()}
+          src={user?.profileImageUrl}
+          text={user?.displayName}
         />
         <div className={styles.text}>
           <strong>{user?.displayName || 'user'}</strong>

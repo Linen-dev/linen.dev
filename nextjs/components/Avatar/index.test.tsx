@@ -12,6 +12,11 @@ describe('Avatar', () => {
     expect(container.querySelector('.md')).toBeInTheDocument();
   });
 
+  it('changes the text into a letter', () => {
+    const { container } = render(<Avatar text="John" />);
+    expect(container).toHaveTextContent('j');
+  });
+
   describe('when size is set to sm', () => {
     it('renders size classes', () => {
       const { container } = render(<Avatar text="a" size="sm" />);

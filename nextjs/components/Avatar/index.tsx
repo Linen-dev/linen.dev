@@ -3,11 +3,11 @@ import classNames from 'classnames';
 import Image from 'next/image';
 import styles from './index.module.scss';
 import { normalizeUrl } from 'utilities/url';
+import { getLetter } from './utilities/string';
 
 interface Props {
   src?: string | null;
-  alt?: string | null;
-  text?: string;
+  text?: string | null;
   size?: Size;
   shadow?: Shadow;
 }
@@ -28,8 +28,10 @@ function dimensions(size?: Size) {
   }
 }
 
-function Avatar({ src, alt, text = 'u', size, shadow }: Props) {
+function Avatar({ src, text = 'u', size, shadow }: Props) {
   const [hasError, setHasError] = useState(false);
+
+  const letter = getLetter(text || '');
 
   return (
     <>
@@ -39,7 +41,7 @@ function Avatar({ src, alt, text = 'u', size, shadow }: Props) {
             [styles.shadow]: shadow === 'sm',
           })}
         >
-          {text}
+          {letter}
         </div>
       ) : (
         <div
@@ -53,7 +55,7 @@ function Avatar({ src, alt, text = 'u', size, shadow }: Props) {
             onError={() => {
               setHasError(true);
             }}
-            alt={alt || 'avatar'}
+            alt={text || 'avatar'}
             height={dimensions(size)}
             width={dimensions(size)}
           />
