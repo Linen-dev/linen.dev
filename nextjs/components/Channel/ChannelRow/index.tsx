@@ -26,7 +26,6 @@ export default function ChannelRow({
   currentUser,
   onPin,
   onReaction,
-  onMerge,
   onDrop,
 }: {
   thread: SerializedThread;
@@ -46,7 +45,6 @@ export default function ChannelRow({
     type: string;
     active: boolean;
   }): void;
-  onMerge?(threadId: string): void;
   onDrop?({ from, to }: { from: string; to: string }): void;
 }) {
   const { messages } = thread;
@@ -72,7 +70,6 @@ export default function ChannelRow({
           currentUser={currentUser}
           onPin={onPin}
           onReaction={onReaction}
-          onMerge={onMerge}
         >
           {messages.length > 1 && (
             <div className="flex flex-row items-center pt-2 pr-2">

@@ -526,17 +526,6 @@ export function Channel({
                         onClick={selectThread}
                         onPin={pinThread}
                         onReaction={sendReaction}
-                        onMerge={(threadId: string) => {
-                          const index = threads.findIndex(
-                            (thread) => thread.id === threadId
-                          );
-                          const current = threads[index];
-                          const previous = threads[index - 1];
-                          return mergeThreads({
-                            from: current.id,
-                            to: previous.id,
-                          });
-                        }}
                         onDrop={({
                           from,
                           to,

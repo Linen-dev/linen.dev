@@ -4,7 +4,7 @@ import { getThreadUrl } from '../Pages/ChannelsPage/utilities/url';
 import { copyToClipboard } from 'utilities/clipboard';
 import { toast } from 'components/Toast';
 import { Permissions } from 'types/shared';
-import { GoPin, GoFoldUp } from 'react-icons/go';
+import { GoPin } from 'react-icons/go';
 import { AiOutlinePaperClip } from 'react-icons/ai';
 import { FiThumbsUp } from 'react-icons/fi';
 import type { Settings } from 'serializers/account/settings';
@@ -34,7 +34,6 @@ interface Props {
     type: string;
     active: boolean;
   }): void;
-  onMerge?(threadId: string): void;
 }
 
 function hasReaction(
@@ -62,7 +61,6 @@ export default function Actions({
   currentUser,
   onReaction,
   onPin,
-  onMerge,
 }: Props) {
   const isReactionActive = hasReaction(message, ':thumbsup:', currentUser?.id);
   return (
@@ -117,19 +115,6 @@ export default function Actions({
         >
           <Tooltip text="Pin">
             <GoPin className={classNames({ [styles.active]: thread.pinned })} />
-          </Tooltip>
-        </li>
-      )}
-      {onMerge && permissions.manage && (
-        <li
-          onClick={(event) => {
-            event.stopPropagation();
-            event.preventDefault();
-            onMerge(thread.id);
-          }}
-        >
-          <Tooltip text="Merge">
-            <GoFoldUp />
           </Tooltip>
         </li>
       )}
