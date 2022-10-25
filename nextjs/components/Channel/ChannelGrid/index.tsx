@@ -16,7 +16,6 @@ export default function ChannelGrid({
   onClick,
   onPin,
   onReaction,
-  onMerge,
   onDrop,
 }: {
   threads: SerializedThread[];
@@ -38,7 +37,6 @@ export default function ChannelGrid({
     type: string;
     active: boolean;
   }): void;
-  onMerge?(threadId: string): void;
   onDrop?({ from, to }: { from: string; to: string }): void;
 }) {
   return (
@@ -77,7 +75,6 @@ export default function ChannelGrid({
                     currentUser={currentUser}
                     onPin={onPin}
                     onReaction={onReaction}
-                    onMerge={index > 0 ? onMerge : undefined}
                     onDrop={onDrop}
                   />
                 </div>
