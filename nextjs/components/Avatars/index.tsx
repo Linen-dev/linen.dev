@@ -5,8 +5,7 @@ import classNames from 'classnames';
 
 interface AvatarType {
   src?: string | null;
-  alt?: string | null;
-  text: string;
+  text?: string | null;
 }
 
 interface Props {
@@ -23,7 +22,12 @@ export default function Avatars({ users, size }: Props) {
     <div className={styles.group}>
       {avatars.map((user, index) => (
         <div key={`${user.text}-${index}`} className={styles.item}>
-          <Avatar key={`${index}-avatar`} {...user} size={size} />
+          <Avatar
+            key={`${index}-avatar`}
+            text={user.text}
+            src={user.src}
+            size={size}
+          />
         </div>
       ))}
       {users.length > 2 && (

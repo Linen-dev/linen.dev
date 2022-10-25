@@ -43,11 +43,8 @@ export default function Row({
         <div className={styles.body} onClick={onClick}>
           <Avatar
             size="md"
-            alt={message.author?.displayName || 'avatar'}
             src={message.author?.profileImageUrl}
-            text={(message.author?.displayName || '?')
-              .slice(0, 1)
-              .toLowerCase()}
+            text={message.author?.displayName}
           />
           <div>
             {channel && (

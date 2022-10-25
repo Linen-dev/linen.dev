@@ -82,8 +82,7 @@ export default function ChannelRow({
                   users={
                     authors.map((a) => ({
                       src: a.profileImageUrl,
-                      alt: a.displayName,
-                      text: (a.displayName || '?').slice(0, 1).toLowerCase(),
+                      text: a.displayName,
                     })) || []
                   }
                 />

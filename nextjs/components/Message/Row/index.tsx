@@ -56,11 +56,8 @@ export function Row({
         {!isPreviousMessageFromSameUser && (
           <Avatar
             size="lg"
-            alt={message.author?.displayName || 'avatar'}
             src={message.author?.profileImageUrl}
-            text={(message.author?.displayName || '?')
-              .slice(0, 1)
-              .toLowerCase()}
+            text={message.author?.displayName}
           />
         )}
       </div>

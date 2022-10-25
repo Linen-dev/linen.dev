@@ -56,11 +56,8 @@ export default function UserAvatar({ currentUser, onProfileChange }: Props) {
                 <Avatar
                   size="md"
                   shadow="none"
-                  alt={currentUser.displayName || 'avatar'}
                   src={currentUser.profileImageUrl}
-                  text={(currentUser.displayName || 'u')
-                    .slice(0, 1)
-                    .toLowerCase()}
+                  text={currentUser.displayName}
                 />
               </Menu.Button>
             </div>
