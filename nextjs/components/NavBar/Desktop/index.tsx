@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import { useState } from 'react';
 import type { ChannelSerialized } from 'lib/channel';
 import NavItem from '../NavItem';
@@ -12,14 +13,17 @@ import styles from './index.module.scss';
 import { FiRss, FiBarChart, FiHash } from 'react-icons/fi';
 import { useRouter } from 'next/router';
 import usePath from 'hooks/path';
+import { Mode } from 'hooks/mode';
 
 interface Props {
+  mode: Mode;
   channels: ChannelSerialized[];
   channelName: string;
   permissions: Permissions;
 }
 
 export default function DesktopNavBar({
+  mode,
   channelName,
   channels,
   permissions,
@@ -55,7 +59,11 @@ export default function DesktopNavBar({
   };
 
   return (
-    <div className={styles.navbar}>
+    <div
+      className={classNames(styles.navbar, {
+        [styles.dimmed]: mode === Mode.Drag,
+      })}
+    >
       {permissions.feed && (
         <Link onClick={() => setHighlights([])} href="/feed">
           <NavItem active={paths.feed === router.asPath}>

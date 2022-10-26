@@ -4,6 +4,7 @@ import ChannelRow from '../ChannelRow';
 import type { Settings } from 'serializers/account/settings';
 import { SerializedUser } from 'serializers/user';
 import { Permissions } from 'types/shared';
+import { Mode } from 'hooks/mode';
 import styles from './index.module.scss';
 
 export default function ChannelGrid({
@@ -13,6 +14,7 @@ export default function ChannelGrid({
   settings,
   isBot,
   currentUser,
+  mode,
   onClick,
   onPin,
   onReaction,
@@ -24,6 +26,7 @@ export default function ChannelGrid({
   settings: Settings;
   isBot: boolean;
   currentUser: SerializedUser | null;
+  mode?: Mode;
   onClick: (threadId: number) => void;
   onPin: (threadId: string) => void;
   onReaction({
@@ -73,6 +76,7 @@ export default function ChannelGrid({
                     isSubDomainRouting={isSubDomainRouting}
                     settings={settings}
                     currentUser={currentUser}
+                    mode={mode}
                     onPin={onPin}
                     onReaction={onReaction}
                     onDrop={onDrop}

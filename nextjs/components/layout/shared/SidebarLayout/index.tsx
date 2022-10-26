@@ -1,6 +1,9 @@
 import React from 'react';
+import classNames from 'classnames';
 import { Transition } from '@headlessui/react';
 import useDevice from 'hooks/device';
+import { Mode } from 'hooks/mode';
+import styles from './index.module.scss';
 
 interface Props {
   left: React.ReactNode;
@@ -9,6 +12,7 @@ interface Props {
   rightRef?: any;
   onLeftScroll?(): void;
   onRightScroll?(): void;
+  mode?: Mode;
 }
 
 function SidebarLayout({
@@ -18,6 +22,7 @@ function SidebarLayout({
   rightRef,
   onLeftScroll,
   onRightScroll,
+  mode,
 }: Props) {
   const { isMobile } = useDevice();
   return (
@@ -34,13 +39,16 @@ function SidebarLayout({
       </Transition>
       <Transition
         show={!!right}
-        className={
-          'flex flex-col border-l border-solid border-gray-200 md:w-[700px]'
-        }
+        className={classNames(styles.right, 'md:w-[700px]', {
+          [styles.dimmed]: mode === Mode.Drag,
+        })}
       >
         {right && (
           <div
-            className="overflow-auto flex flex-col relative"
+            className={classNames(
+              styles.content,
+              'overflow-auto flex flex-col relative'
+            )}
             onScroll={onRightScroll}
             ref={rightRef}
           >

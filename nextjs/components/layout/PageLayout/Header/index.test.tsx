@@ -2,6 +2,7 @@ import React from 'react';
 import Header from '.';
 import { render } from '@testing-library/react';
 import { create } from '__tests__/factory';
+import { Mode } from 'hooks/mode';
 
 jest.mock('next-auth/react', () => ({
   useSession: () => ({}),
@@ -20,6 +21,7 @@ describe('Header', () => {
           isSubDomainRouting={false}
           permissions={permissions}
           onProfileChange={jest.fn()}
+          mode={Mode.Default}
         />
       );
       expect(container).toHaveTextContent('Open user menu');
@@ -38,6 +40,7 @@ describe('Header', () => {
           isSubDomainRouting={false}
           permissions={permissions}
           onProfileChange={jest.fn()}
+          mode={Mode.Default}
         />
       );
       expect(container).toHaveTextContent('Join the conversation');

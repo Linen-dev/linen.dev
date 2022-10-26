@@ -1,9 +1,11 @@
 import React from 'react';
+import classNames from 'classnames';
 import Row from 'components/Message/Row';
 import { SerializedThread } from 'serializers/thread';
 import { SerializedUser } from 'serializers/user';
 import { Settings } from 'serializers/account/settings';
 import { Permissions } from 'types/shared';
+import styles from './index.module.scss';
 
 interface Props {
   thread: SerializedThread;
@@ -43,7 +45,9 @@ function Messages({
     return (
       <div
         key={`${message.id}-${index}`}
-        className={isNextMessageFromSameUser ? '' : 'pb-4'}
+        className={classNames(styles.container, {
+          'pb-4': !isNextMessageFromSameUser,
+        })}
       >
         <Row
           thread={thread}
@@ -59,7 +63,7 @@ function Messages({
     );
   });
 
-  return <ul>{elements}</ul>;
+  return <div>{elements}</div>;
 }
 
 export default Messages;

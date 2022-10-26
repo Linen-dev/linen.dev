@@ -12,6 +12,7 @@ import { LinkContext } from 'contexts/Link';
 import { UsersContext } from 'contexts/Users';
 import { Settings } from 'serializers/account/settings';
 import { put } from 'utilities/http';
+import useMode, { Mode } from 'hooks/mode';
 
 interface Props {
   className?: string;
@@ -38,6 +39,7 @@ function PageLayout({
 }: Props) {
   const channels = initialChannels.filter((c: ChannelSerialized) => !c.hidden);
   const { googleAnalyticsId, googleSiteVerification } = settings;
+  const { mode } = useMode();
 
   const updateProfile = ({
     displayName,
@@ -74,6 +76,7 @@ function PageLayout({
         <div className={styles.push} />
         <div className={styles.header}>
           <Header
+            mode={mode}
             channels={channels}
             settings={settings}
             permissions={permissions}
@@ -93,6 +96,7 @@ function PageLayout({
         {seo && <SEO {...seo} />}
         <div className="flex flex-col lg:flex-row">
           <NavBar
+            mode={mode}
             channels={channels}
             channelName={currentChannel?.channelName || ''}
             permissions={permissions}

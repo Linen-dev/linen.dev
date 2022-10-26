@@ -1,11 +1,6 @@
 .container {
-  height: 100%;
-}
-
-.chat {
-  background: white;
-  border-top: 1px solid #e5e7eb;
-  padding: 1rem;
+  align-items: center;
+  display: flex;
   transition: filter 0.1s ease-in;
 }
 

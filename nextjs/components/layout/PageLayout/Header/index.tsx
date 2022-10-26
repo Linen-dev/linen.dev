@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import React from 'react';
 import Link from 'next/link';
+import classNames from 'classnames';
 import SearchBar from 'components/search/SearchBar';
 import JoinButton from 'components/JoinButton';
 import { addHttpsToUrl } from 'utilities/url';
@@ -9,12 +10,15 @@ import { Permissions } from 'types/shared';
 import { Settings } from 'serializers/account/settings';
 import type { ChannelSerialized } from 'lib/channel';
 import UserAvatar from './UserAvatar';
+import { Mode } from 'hooks/mode';
+import styles from './index.module.scss';
 
 interface Props {
   settings: Settings;
   channels: ChannelSerialized[];
   isSubDomainRouting: boolean;
   permissions: Permissions;
+  mode: Mode;
   onProfileChange({
     displayName,
     userId,
@@ -34,6 +38,7 @@ export default function Header({
   isSubDomainRouting,
   permissions,
   onProfileChange,
+  mode,
 }: Props) {
   const { brandColor, communityName } = settings;
   const homeUrl = addHttpsToUrl(settings.homeUrl);
@@ -43,7 +48,9 @@ export default function Header({
   const borderColor = isWhiteColor(brandColor) ? '#e5e7eb' : brandColor;
   return (
     <div
-      className="flex h-16 px-4 py-2 items-center"
+      className={classNames(styles.container, 'h-16 px-4 py-2', {
+        [styles.dimmed]: mode === Mode.Drag,
+      })}
       style={{
         backgroundColor: brandColor,
         borderBottom: `1px solid ${borderColor}`,

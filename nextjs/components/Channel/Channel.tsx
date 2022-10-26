@@ -29,6 +29,7 @@ import {
   isInViewport,
 } from 'utilities/scroll';
 import { postReaction, postMerge } from './utilities/http';
+import useMode, { Mode } from 'hooks/mode';
 import styles from './index.module.css';
 
 export function Channel({
@@ -58,6 +59,7 @@ export function Channel({
   const [error, setError] = useState<{ prev?: unknown; next?: unknown }>();
   const [allUsers] = useUsersContext();
   const { startSignUp } = useJoinContext();
+  const { mode } = useMode();
 
   const [showThread, setShowThread] = useState(false);
   const [currentThreadId, setCurrentThreadId] = useState<string>();
@@ -484,6 +486,7 @@ export function Channel({
   return (
     <>
       <SidebarLayout
+        mode={mode}
         left={
           <div
             className={classNames(styles.container, {
@@ -495,7 +498,7 @@ export function Channel({
             <ChatLayout
               content={
                 <>
-                  <Header channelName={currentChannel.channelName}>
+                  <Header channelName={currentChannel.channelName} mode={mode}>
                     {pinnedThread && (
                       <PinnedThread
                         onClick={() => selectThread(pinnedThread.incrementId)}
@@ -522,6 +525,7 @@ export function Channel({
                         isSubDomainRouting={isSubDomainRouting}
                         settings={settings}
                         isBot={isBot}
+                        mode={mode}
                         currentUser={currentUser}
                         onClick={selectThread}
                         onPin={pinThread}
@@ -542,7 +546,11 @@ export function Channel({
               }
               footer={
                 permissions.chat && (
-                  <div className={styles.chat}>
+                  <div
+                    className={classNames(styles.chat, {
+                      [styles.dimmed]: mode === Mode.Drag,
+                    })}
+                  >
                     <MessageForm
                       onSend={(message: string) => {
                         return sendMessage({
@@ -578,6 +586,7 @@ export function Channel({
               threadUrl={null}
               permissions={permissions}
               currentUser={currentUser}
+              mode={mode}
               updateThread={updateThread}
               onClose={() => setShowThread(false)}
               sendMessage={sendThreadMessage}

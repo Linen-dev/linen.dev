@@ -7,6 +7,7 @@ import styles from './index.module.scss';
 import { SerializedThread } from 'serializers/thread';
 import { SerializedUser } from 'serializers/user';
 import { Permissions } from 'types/shared';
+import { Mode } from 'hooks/mode';
 
 export const uniqueUsers = (users: users[]): users[] => {
   let userMap = new Map<string, users>();
@@ -24,6 +25,7 @@ export default function ChannelRow({
   isSubDomainRouting,
   settings,
   currentUser,
+  mode,
   onPin,
   onReaction,
   onDrop,
@@ -33,6 +35,7 @@ export default function ChannelRow({
   isSubDomainRouting: boolean;
   settings: Settings;
   currentUser: SerializedUser | null;
+  mode?: Mode;
   onPin?(threadId: string): void;
   onReaction?({
     threadId,
@@ -59,6 +62,7 @@ export default function ChannelRow({
       draggable={permissions.manage}
       overClassName={styles.over}
       onDrop={onDrop}
+      mode={mode}
     >
       <div className={styles.content}>
         <Row

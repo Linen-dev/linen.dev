@@ -9,24 +9,11 @@ import type { Settings } from 'serializers/account/settings';
 import MessageForm from 'components/MessageForm';
 import { fetchMentions } from 'components/MessageForm/api';
 import { Permissions } from 'types/shared';
-import styles from './index.module.css';
+import { Mode } from 'hooks/mode';
+import styles from './index.module.scss';
+import classNames from 'classnames';
 
-export function Thread({
-  thread,
-  channelId,
-  channelName,
-  threadUrl,
-  isSubDomainRouting,
-  settings,
-  permissions,
-  currentUser,
-  sendMessage,
-  updateThread,
-  onClose,
-  onSend,
-  onMount,
-  onReaction,
-}: {
+interface Props {
   thread: SerializedThread;
   channelId: string;
   channelName: string;
@@ -35,6 +22,7 @@ export function Thread({
   settings: Settings;
   permissions: Permissions;
   currentUser: SerializedUser | null;
+  mode?: Mode;
   sendMessage({
     message,
     channelId,
@@ -59,7 +47,25 @@ export function Thread({
     type: string;
     active: boolean;
   }): void;
-}) {
+}
+
+export function Thread({
+  thread,
+  channelId,
+  channelName,
+  threadUrl,
+  isSubDomainRouting,
+  settings,
+  permissions,
+  currentUser,
+  mode,
+  sendMessage,
+  updateThread,
+  onClose,
+  onSend,
+  onMount,
+  onReaction,
+}: Props) {
   const { id, title, state, viewCount, incrementId } = thread;
   useEffect(() => {
     onMount?.();
@@ -70,7 +76,11 @@ export function Thread({
   }, [incrementId]);
 
   return (
-    <>
+    <div
+      className={classNames(styles.container, {
+        [styles.dimmed]: mode === Mode.Drag,
+      })}
+    >
       <Header
         title={title}
         channelName={channelName}
@@ -143,6 +153,6 @@ export function Thread({
           )}
         </div>
       )}
-    </>
+    </div>
   );
 }
