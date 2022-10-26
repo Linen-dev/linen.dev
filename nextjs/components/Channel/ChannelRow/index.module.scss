@@ -25,3 +25,12 @@
 .content {
   width: 100%;
 }
+
+.footer {
+  align-items: center;
+  color: $color-gray-600;
+  display: flex;
+  font-size: 12px;
+  gap: 0.5rem;
+  padding-top: 0.5rem;
+}

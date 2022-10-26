@@ -51,9 +51,15 @@ export default function ChannelRow({
   onDrop?({ from, to }: { from: string; to: string }): void;
 }) {
   const { messages } = thread;
+  const oldestMessage = messages[0];
   let users = messages.map((m) => m.author).filter(Boolean) as users[];
   const authors = uniqueUsers(users);
-  const oldestMessage = messages[0];
+  const avatars = authors
+    .filter((user) => user.id !== oldestMessage.author?.id)
+    .map((a) => ({
+      src: a.profileImageUrl,
+      text: a.displayName,
+    }));
 
   return (
     <DraggableRow
@@ -76,21 +82,15 @@ export default function ChannelRow({
           onReaction={onReaction}
         >
           {messages.length > 1 && (
-            <div className="flex flex-row items-center pt-2 pr-2">
-              <div className="text-sm text-gray-400 flex flex-row items-center">
-                <Avatars
-                  size="sm"
-                  users={
-                    authors.map((a) => ({
-                      src: a.profileImageUrl,
-                      text: a.displayName,
-                    })) || []
-                  }
-                />
-                <div className="px-2 text-blue-800">
-                  {messages.length - 1} replies
-                </div>
-              </div>
+            <div className={styles.footer}>
+              <Avatars size="sm" users={avatars} />
+              <>
+                {messages.length - 1}{' '}
+                {messages.length > 2 ? 'replies' : 'reply'} &middot;{' '}
+                {`${authors.length} participant${
+                  authors.length > 1 ? 's' : ''
+                }`}
+              </>
             </div>
           )}
         </Row>
