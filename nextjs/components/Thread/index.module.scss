@@ -1,4 +1,17 @@
+@import 'styles/colors.scss';
+
+.container {
+  background: white;
+  transition: filter 0.1s ease-in;
+}
+
+.dimmed {
+  filter: brightness(75%);
+  pointer-events: none;
+}
+
 .thread {
+  background: white;
   padding: 1rem 1rem 0;
   max-width: 100%;
   min-width: 480px;

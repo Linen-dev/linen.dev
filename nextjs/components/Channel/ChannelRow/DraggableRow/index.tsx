@@ -1,4 +1,7 @@
 import React, { createRef } from 'react';
+import classNames from 'classnames';
+import styles from './index.module.scss';
+import { Mode } from 'hooks/mode';
 
 interface Props {
   className?: string;
@@ -6,6 +9,7 @@ interface Props {
   draggable: boolean;
   children: React.ReactNode;
   id: string;
+  mode?: Mode;
   onDrop?({ from, to }: { from: string; to: string }): void;
 }
 
@@ -15,6 +19,7 @@ export default function DraggableRow({
   overClassName,
   draggable,
   children,
+  mode,
   onDrop,
 }: Props) {
   const ref = createRef<HTMLDivElement>();
@@ -62,7 +67,9 @@ export default function DraggableRow({
 
   return (
     <div
-      className={className}
+      className={classNames(className, {
+        [styles.dragging]: mode === Mode.Drag,
+      })}
       onDragStart={handleDragStart}
       onDragOver={handleDragOver}
       onDragEnter={handleDragEnter}
