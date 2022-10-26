@@ -9,10 +9,10 @@
 }
 
 .right.dimmed {
-  filter: brightness(90%);
+  filter: brightness(95%);
   pointer-events: none;
 }
 
 .right.dimmed .content * {
-  filter: brightness(100%);
+  filter: brightness(95%);
 }
