@@ -501,18 +501,9 @@ export function Channel({
                   <Header channelName={currentChannel.channelName} mode={mode}>
                     {pinnedThread && (
                       <PinnedThread
+                        thread={pinnedThread}
                         onClick={() => selectThread(pinnedThread.incrementId)}
-                      >
-                        <ChannelRow
-                          thread={pinnedThread}
-                          permissions={permissions}
-                          isSubDomainRouting={isSubDomainRouting}
-                          settings={settings}
-                          currentUser={currentUser}
-                          onPin={pinThread}
-                          onReaction={sendReaction}
-                        />
-                      </PinnedThread>
+                      />
                     )}
                   </Header>
                   {threads.length === 0 ? (
