@@ -4,31 +4,49 @@ import { withSentry } from '@sentry/nextjs';
 import { findThreadById } from 'lib/threads';
 import serializeThread from 'serializers/thread';
 import PermissionsService from 'services/permissions';
-import type { ThreadState } from '@prisma/client';
+import { Permissions } from 'types/shared';
+import { ThreadState } from '@prisma/client';
 
-async function update({
-  threadId,
-  state,
-  title,
-  pinned,
-}: {
-  threadId: string;
-  state: ThreadState;
-  title: string;
-  pinned: boolean;
-}) {
-  await prisma.threads.update({
-    where: { id: threadId },
-    data: { state, title, pinned },
-  });
+interface UpdateProps {
+  permissions: Permissions;
+  params: {
+    threadId: string;
+    state: ThreadState;
+    title: string;
+    pinned: boolean;
+  };
 }
 
-async function get(threadId: string) {
+export async function update({ permissions, params }: UpdateProps) {
+  const { threadId, state, title, pinned } = params;
+  if (permissions.manage) {
+    const thread = await prisma.threads.update({
+      where: { id: threadId },
+      data: { state, title, pinned },
+    });
+    return { status: 200, data: serializeThread(thread) };
+  }
   const thread = await findThreadById(threadId);
   if (!thread) {
-    return;
+    return { status: 404 };
   }
-  return serializeThread(thread);
+  // ideally we could keep the creator info on the thread
+  const creator = thread.messages[0].author;
+
+  if (!creator || !permissions.user) {
+    return { status: 403 };
+  }
+
+  if (creator.id === permissions.user.id) {
+    const { state, title } = params;
+    const thread = await prisma.threads.update({
+      where: { id: threadId },
+      data: { state, title },
+    });
+    return { status: 200, data: serializeThread(thread) };
+  }
+
+  return { status: 403 };
 }
 
 async function handler(request: NextApiRequest, response: NextApiResponse) {
@@ -39,30 +57,30 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
     threadId,
   });
   if (!permissions.access) {
-    return response.status(403).end();
+    return response.status(403).json({});
   }
   if (!permissions.can_access_thread) {
-    return response.status(403).end();
+    return response.status(403).json({});
   }
 
   if (request.method === 'GET') {
-    const thread = await get(threadId);
-    if (thread) {
-      response.status(200).json(thread);
-    } else {
-      response.status(404);
+    const thread = await findThreadById(threadId);
+    if (!thread) {
+      return response.status(404).json({});
     }
-    return response.end();
+    return response.status(200).json(serializeThread(thread));
   }
   if (request.method === 'PUT') {
-    if (!permissions.manage) {
-      return response.status(403).end();
-    }
-    const { state, title, pinned } = JSON.parse(request.body);
-    await update({ threadId, state, title, pinned });
-    return response.status(200).end();
+    const { status, data } = await update({
+      permissions,
+      params: {
+        threadId,
+        ...JSON.parse(request.body),
+      },
+    });
+    return response.status(status).json(data || {});
   }
-  return response.status(405).end();
+  return response.status(405).json({});
 }
 
 export default withSentry(handler);
