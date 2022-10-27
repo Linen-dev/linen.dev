@@ -4,7 +4,6 @@ import { GoPencil } from 'react-icons/go';
 import classNames from 'classnames';
 import styles from './index.module.css';
 import { ThreadState } from '@prisma/client';
-import { Permissions } from 'types/shared';
 import CheckIcon from 'components/icons/CheckIcon';
 
 enum Mode {
@@ -15,7 +14,7 @@ enum Mode {
 interface Props {
   title?: string | null;
   state: ThreadState;
-  permissions: Permissions;
+  manage: boolean;
   onSetTitle(title: string): void;
 }
 
@@ -38,15 +37,10 @@ function getTitle({
   return title;
 }
 
-export default function Title({
-  title,
-  state,
-  permissions,
-  onSetTitle,
-}: Props) {
+export default function Title({ title, state, manage, onSetTitle }: Props) {
   const [mode, setMode] = useState(Mode.Read);
   const text = getTitle({ title, closed: state === ThreadState.CLOSE });
-  if (!permissions.manage) {
+  if (!manage) {
     return <div className={styles.title}>{text}</div>;
   }
   return (
