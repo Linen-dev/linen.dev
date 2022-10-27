@@ -37,19 +37,14 @@ function Messages({
   const { messages } = thread;
   const elements = messages.map((message, index) => {
     const previousMessage = messages[index - 1];
-    const nextMessage = messages[index + 1];
     const isPreviousMessageFromSameUser =
       previousMessage && previousMessage.usersId === message.usersId;
-    const isNextMessageFromSameUser =
-      nextMessage && nextMessage.usersId === message.usersId;
     return (
-      <div
-        key={`${message.id}-${index}`}
-        className={classNames(styles.container, {
-          'pb-4': !isNextMessageFromSameUser,
-        })}
-      >
+      <div key={`${message.id}-${index}`} className={styles.container}>
         <Row
+          className={classNames({
+            [styles.top]: !isPreviousMessageFromSameUser,
+          })}
           thread={thread}
           message={message}
           isPreviousMessageFromSameUser={isPreviousMessageFromSameUser}

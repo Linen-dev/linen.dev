@@ -1,19 +1,38 @@
 @import 'styles/colors.scss';
 
 .row {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0 1rem;
   position: relative;
+  width: 100%;
 }
 
-.avatar {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 46px;
+.row:hover {
+  background: $color-gray-100;
+}
+
+.left {
+  display: flex;
+  min-width: 36px;
+  width: 36px;
+  justify-content: center;
+}
+
+.left .date {
+  display: none;
+}
+
+.row:hover .left .date {
+  align-self: center;
+  display: flex;
+  font-size: 10px;
+  white-space: nowrap;
 }
 
 .content {
   position: relative;
-  padding-left: 46px;
+  width: 100%;
 }
 
 .username {
@@ -38,6 +57,22 @@
 
 .message {
   position: relative;
+  margin-top: -0.25rem;
+  margin-left: -0.375rem;
+  padding: 0.125rem 0.375rem;
+}
+
+.message .date {
+  display: none;
+}
+
+.message:hover .date {
+  position: absolute;
+  top: 4px;
+  left: -3rem;
+  display: block;
+  font-size: 1px;
+  z-index: 1;
 }
 
 .actions {
@@ -47,7 +82,7 @@
   border: 1px solid $color-border;
   box-shadow: 0 3px 5px $color-border;
   position: absolute;
-  top: 0;
+  top: -1.5rem;
   right: 0;
   padding: 0;
 }

@@ -71,7 +71,7 @@ export function sendMessageWrapper({
     const imitation: SerializedMessage = {
       id: uuid(),
       body: message,
-      sentAt: new Date().getTime().toString(),
+      sentAt: new Date().toISOString(),
       usersId: currentUser.id,
       mentions: allUsers,
       attachments: [],

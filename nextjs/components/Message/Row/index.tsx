@@ -2,7 +2,7 @@ import React from 'react';
 import Avatar from 'components/Avatar';
 import classNames from 'classnames';
 import Message from '../../Message';
-import { format } from 'timeago.js';
+import { format } from 'utilities/date';
 import { SerializedThread } from 'serializers/thread';
 import { SerializedMessage } from 'serializers/message';
 import { Settings } from 'serializers/account/settings';
@@ -14,6 +14,7 @@ import Actions from 'components/Actions';
 import { Permissions } from 'types/shared';
 
 interface Props {
+  className?: string;
   thread: SerializedThread;
   message: SerializedMessage;
   isPreviousMessageFromSameUser?: boolean;
@@ -37,6 +38,7 @@ interface Props {
 }
 
 export function Row({
+  className,
   thread,
   message,
   isPreviousMessageFromSameUser,
@@ -48,26 +50,27 @@ export function Row({
   onReaction,
   onPin,
 }: Props) {
+  const top = !isPreviousMessageFromSameUser;
   return (
-    <div id={message.id} className={classNames(styles.row)}>
-      <div className={styles.avatar}>
-        {!isPreviousMessageFromSameUser && (
+    <div id={message.id} className={classNames(styles.row, className)}>
+      <div className={styles.left}>
+        {top ? (
           <Avatar
             size="lg"
             src={message.author?.profileImageUrl}
             text={message.author?.displayName}
           />
+        ) : (
+          <span className={styles.date}>{format(message.sentAt, 'p')}</span>
         )}
       </div>
       <div className={styles.content}>
-        {!isPreviousMessageFromSameUser && (
+        {top && (
           <div className={styles.header}>
             <p className={styles.username}>
               {message.author?.displayName || 'user'}
             </p>
-            <div className={styles.date}>
-              {format(new Date(message.sentAt))}
-            </div>
+            <div className={styles.date}>{format(message.sentAt, 'p')}</div>
             {thread.state === ThreadState.CLOSE && <CheckIcon />}
           </div>
         )}
