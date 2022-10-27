@@ -4,6 +4,13 @@
     "phoenix": "^1.6.11"
   },
   "devDependencies": {
+    "@tauri-apps/cli": "^1.1.1",
+    "@tauri-apps/tauricon": "^1.0.3",
     "dotenv": "^16.0.2"
+  },
+  "scripts": {
+    "tauri": "tauri",
+    "dev": "cd nextjs && npm run dev",
+    "build": "cd nextjs &&  npm run build"
   }
 }

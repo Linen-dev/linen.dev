@@ -1,3 +1,8 @@
 {
-  "prettier.configPath": ".prettierrc"
+  "prettier.configPath": ".prettierrc",
+  "workbench.colorCustomizations": {
+    "activityBar.background": "#55005A",
+    "titleBar.activeBackground": "#77017E",
+    "titleBar.activeForeground": "#FFF8FF"
+  }
 }
