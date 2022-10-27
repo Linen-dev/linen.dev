@@ -10,7 +10,7 @@ import Quote from './Quote';
 import Reactions from './Reactions';
 import Attachments from './Attachments';
 import transform from './utilities/transform';
-import styles from './index.module.css';
+import styles from './index.module.scss';
 import { SerializedAttachment } from 'types/shared';
 import { SerializedReaction } from 'serializers/reaction';
 import parseLinenMessage from 'utilities/message/parsers/linen';

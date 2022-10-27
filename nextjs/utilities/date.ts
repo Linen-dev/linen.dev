@@ -1,5 +1,5 @@
-import { format as timeago } from 'timeago.js';
+import formatDate from 'date-fns/format';
 
-export function format(date: string): string {
-  return timeago(new Date(date));
+export function format(date: string, pattern: string = 'p'): string {
+  return formatDate(new Date(date), pattern);
 }
