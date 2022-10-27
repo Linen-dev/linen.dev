@@ -3,15 +3,14 @@ import Title from './Title';
 import StickyHeader from 'components/StickyHeader';
 import classNames from 'classnames';
 import { ThreadState } from '@prisma/client';
-import { Permissions } from 'types/shared';
 import { GoCheck, GoChevronLeft, GoX, GoSync } from 'react-icons/go';
+import { SerializedThread } from 'serializers/thread';
 import styles from './index.module.css';
 
 interface Props {
-  title?: string | null;
+  thread: SerializedThread;
   channelName: string;
-  state: ThreadState;
-  permissions: Permissions;
+  manage: boolean;
   onClose?(): void;
   onCloseThread(): void;
   onReopenThread(): void;
@@ -19,15 +18,15 @@ interface Props {
 }
 
 export default function Header({
-  title,
+  thread,
   channelName,
-  state,
-  permissions,
+  manage,
   onClose,
   onCloseThread,
   onReopenThread,
   onSetTitle,
 }: Props) {
+  const { title, state } = thread;
   return (
     <StickyHeader>
       <div className="flex flex-row justify-between items-center">
@@ -44,14 +43,14 @@ export default function Header({
             <Title
               title={title}
               state={state}
-              permissions={permissions}
+              manage={manage}
               onSetTitle={onSetTitle}
             />
             <div className="text-gray-600 text-xs ">#{channelName}</div>
           </div>
         </div>
         <div className={styles.icons}>
-          {permissions.manage && (
+          {manage && (
             <>
               {state === ThreadState.OPEN && (
                 <a

@@ -66,7 +66,7 @@ export function Thread({
   onMount,
   onReaction,
 }: Props) {
-  const { id, title, state, viewCount, incrementId } = thread;
+  const { id, state, viewCount, incrementId } = thread;
   useEffect(() => {
     onMount?.();
   }, []);
@@ -75,6 +75,19 @@ export function Thread({
     fetch(`/api/count?incrementId=${incrementId}`, { method: 'PUT' });
   }, [incrementId]);
 
+  function isThreadCreator(
+    currentUser: SerializedUser | null,
+    thread: SerializedThread
+  ): boolean {
+    const creator = thread.messages[0].author;
+    if (!currentUser || !creator) {
+      return false;
+    }
+    return currentUser.id === creator.id;
+  }
+
+  const manage = permissions.manage || isThreadCreator(currentUser, thread);
+
   return (
     <div
       className={classNames(styles.container, {
@@ -82,14 +95,13 @@ export function Thread({
       })}
     >
       <Header
-        title={title}
+        thread={thread}
         channelName={channelName}
         onClose={onClose}
         onCloseThread={() => updateThread({ state: ThreadState.CLOSE })}
         onReopenThread={() => updateThread({ state: ThreadState.OPEN })}
         onSetTitle={(title) => updateThread({ title })}
-        permissions={permissions}
-        state={state}
+        manage={manage}
       />
       <div className={styles.thread}>
         <Messages
@@ -115,7 +127,7 @@ export function Thread({
       </div>
       {permissions.chat && (
         <div className={styles.chat}>
-          {permissions.manage && state === ThreadState.OPEN ? (
+          {manage && state === ThreadState.OPEN ? (
             <MessageForm
               autoFocus
               onSend={(message: string) => {
@@ -141,8 +153,7 @@ export function Thread({
                 onSend?.();
                 return Promise.all([
                   sendMessage({ message, channelId, threadId: id }),
-                  permissions.manage &&
-                    updateThread({ state: ThreadState.OPEN }),
+                  manage && updateThread({ state: ThreadState.OPEN }),
                 ]);
               }}
               fetchMentions={(term?: string) => {
