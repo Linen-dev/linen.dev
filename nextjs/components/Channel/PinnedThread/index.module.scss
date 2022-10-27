@@ -1,21 +1,12 @@
 @import 'styles/colors.scss';
 
-.section {
-  border: 1px solid $color-border;
-  border-radius: 4px;
+.title {
+  color: $color-gray-700;
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+
+.title:hover {
   cursor: pointer;
-  margin-top: 0.5rem;
-  padding: 0.75rem;
-  position: relative;
-}
-
-.section:hover {
-  background: $color-gray-100;
-}
-
-.icon {
-  position: absolute;
-  right: 8px;
-  top: 8px;
-  font-size: 12px;
+  text-decoration: underline;
 }
