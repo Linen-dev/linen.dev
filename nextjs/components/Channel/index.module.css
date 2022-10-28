@@ -13,3 +13,7 @@
   filter: brightness(95%);
   pointer-events: none;
 }
+
+.pinned {
+  padding-bottom: 0;
+}
