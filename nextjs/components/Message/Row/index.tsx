@@ -70,7 +70,7 @@ export function Row({
             <p className={styles.username}>
               {message.author?.displayName || 'user'}
             </p>
-            <div className={styles.date}>{format(message.sentAt, 'p')}</div>
+            <div className={styles.date}>{format(message.sentAt, 'Pp')}</div>
             {thread.state === ThreadState.CLOSE && <CheckIcon />}
           </div>
         )}
