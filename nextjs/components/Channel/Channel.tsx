@@ -499,7 +499,9 @@ export function Channel({
               content={
                 <>
                   <Header
-                    className={classNames({ [styles.pinned]: pinnedThread })}
+                    className={classNames(styles.header, {
+                      [styles.pinned]: !!pinnedThread,
+                    })}
                     channelName={currentChannel.channelName}
                     mode={mode}
                   >
