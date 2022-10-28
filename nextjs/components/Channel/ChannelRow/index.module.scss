@@ -16,6 +16,14 @@
     $color-gray-100 16px
   );
   cursor: move;
+  background-size: 200% 200%;
+  animation: move 20s linear infinite;
+}
+
+@keyframes move {
+  100% {
+    background-position: 100% 100%;
+  }
 }
 
 .over * {
