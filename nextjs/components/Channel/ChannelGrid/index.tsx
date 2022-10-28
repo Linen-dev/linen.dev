@@ -71,6 +71,7 @@ export default function ChannelGrid({
               ) : (
                 <div onClick={() => onClick(incrementId)}>
                   <ChannelRow
+                    className={styles.row}
                     thread={thread}
                     permissions={permissions}
                     isSubDomainRouting={isSubDomainRouting}
