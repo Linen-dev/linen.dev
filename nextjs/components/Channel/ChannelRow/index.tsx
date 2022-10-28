@@ -20,6 +20,7 @@ export const uniqueUsers = (users: users[]): users[] => {
 };
 
 export default function ChannelRow({
+  className,
   thread,
   permissions,
   isSubDomainRouting,
@@ -30,6 +31,7 @@ export default function ChannelRow({
   onReaction,
   onDrop,
 }: {
+  className?: string;
   thread: SerializedThread;
   permissions: Permissions;
   isSubDomainRouting: boolean;
@@ -72,6 +74,7 @@ export default function ChannelRow({
     >
       <div className={styles.content}>
         <Row
+          className={className}
           thread={thread}
           message={oldestMessage}
           isSubDomainRouting={isSubDomainRouting}

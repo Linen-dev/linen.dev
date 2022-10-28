@@ -52,7 +52,10 @@ export function Row({
 }: Props) {
   const top = !isPreviousMessageFromSameUser;
   return (
-    <div id={message.id} className={classNames(styles.row, className)}>
+    <div
+      id={message.id}
+      className={classNames(className, styles.row, { [styles.top]: top })}
+    >
       <div className={styles.left}>
         {top ? (
           <Avatar
@@ -74,7 +77,12 @@ export function Row({
             {thread.state === ThreadState.CLOSE && <CheckIcon />}
           </div>
         )}
-        <div className={styles.message}>
+        <div
+          className={classNames(styles.message, {
+            [styles.top]: top,
+            [styles.basic]: !top,
+          })}
+        >
           <Message
             text={message.body}
             format={message.messageFormat}

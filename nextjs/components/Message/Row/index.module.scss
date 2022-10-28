@@ -12,6 +12,10 @@
   background: $color-gray-100;
 }
 
+.row.top {
+  padding: 1rem 1rem 0.25rem;
+}
+
 .left {
   display: flex;
   min-width: 36px;
@@ -57,9 +61,14 @@
 
 .message {
   position: relative;
-  margin-top: -0.25rem;
-  margin-left: -0.375rem;
-  padding: 0.125rem 0.375rem;
+}
+
+.message.top {
+  padding: 0;
+}
+
+.message.basic {
+  padding: 0.25rem 0;
 }
 
 .message .date {
