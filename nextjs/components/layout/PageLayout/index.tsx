@@ -84,7 +84,7 @@ function PageLayout({
             onProfileChange={updateProfile}
           />
         </div>
-        <div className="py-1 sm:hidden w-full">
+        <div className="sm:hidden w-full">
           <SearchBar
             borderColor="#fff"
             channels={channels}

@@ -156,6 +156,10 @@ function MessageForm({
   }, []);
 
   useEffect(() => {
+    autosize.update(ref.current);
+  }, [message]);
+
+  useEffect(() => {
     let mounted = true;
     fetchMentions?.(mention)
       .then((users: SerializedUser[]) => {
@@ -217,7 +221,7 @@ function MessageForm({
           }}
         />
       )}
-      <form onSubmit={handleSend}>
+      <form className={styles.form} onSubmit={handleSend}>
         <textarea
           ref={ref}
           autoFocus={autoFocus}
@@ -225,7 +229,7 @@ function MessageForm({
           name="message"
           placeholder="Add your comment..."
           hidden={preview}
-          rows={3}
+          rows={2}
           value={message}
           onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) => {
             const message = event.target.value;
@@ -249,7 +253,6 @@ function MessageForm({
                 setTimeout(() => {
                   setCaretPosition(ref, position + 1);
                   setPosition(position + 1);
-                  autosize.update(ref.current);
                 }, 0);
               } else {
                 handleSend(event);

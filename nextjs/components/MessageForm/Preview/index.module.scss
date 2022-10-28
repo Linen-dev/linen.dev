@@ -1,0 +1,12 @@
+@import 'styles/colors.scss';
+
+.preview {
+  border: 1px solid $color-border;
+  border-radius: 6px;
+  min-height: 77px;
+  padding: 0.5rem 0.75rem;
+}
+
+.empty {
+  font-size: 14px;
+}

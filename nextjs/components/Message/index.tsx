@@ -66,7 +66,8 @@ function Message({
     text = 'message has been deleted';
   }
   const parse = parsers[format];
-  const tree = transform(parse(text));
+  const input = text.trim();
+  const tree = transform(parse(input));
 
   function render(node: any): React.ReactNode {
     switch (node.type) {

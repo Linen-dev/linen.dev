@@ -17,3 +17,13 @@
 .pinned {
   padding-bottom: 0;
 }
+
+@media screen and (max-width: 767px) {
+  .chat {
+    padding: 0.5rem 1rem;
+  }
+
+  .header {
+    display: none;
+  }
+}

@@ -10,3 +10,9 @@
   min-width: 280px;
   width: 100%;
 }
+
+@media screen and (max-width: 767px) {
+  .iframe {
+    min-width: 240px;
+  }
+}
