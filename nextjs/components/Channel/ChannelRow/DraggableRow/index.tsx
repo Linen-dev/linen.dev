@@ -27,6 +27,14 @@ export default function DraggableRow({
     return <div className={className}>{children}</div>;
   }
   function handleDragStart(event: React.DragEvent) {
+    const image = document.getElementById(
+      'drag-and-drop-placeholder-image'
+    ) as HTMLImageElement;
+
+    if (image) {
+      image.width = 64;
+      event.dataTransfer.setDragImage(image, 64, 32);
+    }
     event.dataTransfer.setData('text', id);
   }
 
