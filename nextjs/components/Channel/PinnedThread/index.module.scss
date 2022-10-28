@@ -1,12 +1,13 @@
 @import 'styles/colors.scss';
 
-.title {
-  color: $color-gray-700;
-  font-size: 0.75rem;
-  line-height: 1rem;
+.section {
+  cursor: pointer;
+  border-top: 1px solid $color-border;
+  margin-top: 0.5rem;
+  margin-left: -1rem;
+  margin-right: -1rem;
 }
 
-.title:hover {
-  cursor: pointer;
-  text-decoration: underline;
+.section:hover {
+  background: $color-gray-100;
 }

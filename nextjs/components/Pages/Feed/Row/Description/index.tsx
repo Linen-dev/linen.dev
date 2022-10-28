@@ -21,7 +21,7 @@ export default function Description({ messages }: Props) {
   const date = format(message.sentAt);
   return (
     <div className={styles.description}>
-      {message.author?.displayName || 'User'} replied to this thread at {date}.
+      {message.author?.displayName || 'User'} replied to this thread {date}.
     </div>
   );
 }
