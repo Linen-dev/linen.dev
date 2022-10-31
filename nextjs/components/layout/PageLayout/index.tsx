@@ -4,7 +4,6 @@ import SearchBar from '../../search/SearchBar';
 import NavBar from 'components/NavBar';
 import SEO, { type SeoProps } from '../SEO';
 import type { ChannelSerialized } from 'lib/channel';
-import DragImage from './DragImage';
 import GoogleAnalytics from '../GoogleAnalytics';
 import styles from './index.module.css';
 import classNames from 'classnames';
@@ -84,7 +83,6 @@ function PageLayout({
             isSubDomainRouting={isSubDomainRouting}
             onProfileChange={updateProfile}
           />
-          <DragImage />
         </div>
         <div className="sm:hidden w-full">
           <SearchBar
