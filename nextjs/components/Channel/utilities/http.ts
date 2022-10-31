@@ -21,3 +21,9 @@ export const moveMessage = debounce(
     return post('/api/move/message', params);
   }
 );
+
+export const moveThread = debounce(
+  (params: { threadId: string; channelId: string }) => {
+    return post('/api/move/thread', params);
+  }
+);
