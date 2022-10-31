@@ -28,7 +28,7 @@ import {
   isScrollAtBottom,
   isInViewport,
 } from 'utilities/scroll';
-import { postReaction, postMerge, postMove } from './utilities/http';
+import { postReaction, postMerge, moveMessage } from './utilities/http';
 import useMode, { Mode } from 'hooks/mode';
 import styles from './index.module.css';
 
@@ -519,7 +519,7 @@ export function Channel({
         .filter(Boolean) as SerializedThread[];
     });
 
-    return postMove({
+    return moveMessage({
       messageId,
       threadId,
       communityId: currentCommunity?.id,
