@@ -5,6 +5,7 @@ import { SerializedThread } from 'serializers/thread';
 import { SerializedUser } from 'serializers/user';
 import { Settings } from 'serializers/account/settings';
 import { Permissions } from 'types/shared';
+import { Mode } from 'hooks/mode';
 import styles from './index.module.scss';
 
 interface Props {
@@ -13,6 +14,7 @@ interface Props {
   settings: Settings;
   isSubDomainRouting: boolean;
   currentUser: SerializedUser | null;
+  mode?: Mode;
   onReaction?({
     threadId,
     messageId,
@@ -32,6 +34,7 @@ function Messages({
   settings,
   isSubDomainRouting,
   currentUser,
+  mode,
   onReaction,
 }: Props) {
   const { messages } = thread;
@@ -52,6 +55,7 @@ function Messages({
           currentUser={currentUser}
           settings={settings}
           isSubDomainRouting={isSubDomainRouting}
+          mode={mode}
           onReaction={onReaction}
         />
       </div>

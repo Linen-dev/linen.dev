@@ -28,7 +28,7 @@ import {
   isScrollAtBottom,
   isInViewport,
 } from 'utilities/scroll';
-import { postReaction, postMerge } from './utilities/http';
+import { postReaction, postMerge, postMove } from './utilities/http';
 import useMode, { Mode } from 'hooks/mode';
 import styles from './index.module.css';
 
@@ -477,6 +477,55 @@ export function Channel({
     });
   };
 
+  const moveMessageToThread = ({
+    messageId,
+    threadId,
+  }: {
+    messageId: string;
+    threadId: string;
+  }) => {
+    const messages = [...threads.map((thread) => thread.messages)].flat();
+    const message = messages.find(({ id }) => id === messageId);
+
+    setThreads((threads) => {
+      if (!message) {
+        return threads;
+      }
+      return threads
+        .map((thread) => {
+          if (thread.id === threadId) {
+            const ids = thread.messages.map(({ id }) => id);
+            if (ids.includes(messageId)) {
+              return thread;
+            }
+            return {
+              ...thread,
+              messages: [...thread.messages, message].sort((a, b) => {
+                return (
+                  new Date(a.sentAt).getTime() - new Date(b.sentAt).getTime()
+                );
+              }),
+            };
+          }
+          const ids = thread.messages.map(({ id }) => id);
+          if (ids.includes(messageId)) {
+            return {
+              ...thread,
+              messages: thread.messages.filter(({ id }) => id !== messageId),
+            };
+          }
+          return thread;
+        })
+        .filter(Boolean) as SerializedThread[];
+    });
+
+    return postMove({
+      messageId,
+      threadId,
+      communityId: currentCommunity?.id,
+    });
+  };
+
   const threadToRender = threads.find(
     (thread) => thread.id === currentThreadId
   );
@@ -537,13 +586,23 @@ export function Channel({
                         onPin={pinThread}
                         onReaction={sendReaction}
                         onDrop={({
+                          type,
                           from,
                           to,
                         }: {
+                          type: string;
                           from: string;
                           to: string;
                         }) => {
-                          return mergeThreads({ from, to });
+                          if (type === 'thread') {
+                            return mergeThreads({ from, to });
+                          } else if (type === 'message') {
+                            return moveMessageToThread({
+                              messageId: from,
+                              threadId: to,
+                            });
+                          }
+                          // unsupported action
                         }}
                       />
                     </ul>

@@ -95,6 +95,11 @@
   right: 0;
   padding: 0;
 }
+
 .message:hover .actions {
   display: flex;
+}
+
+.draggable {
+  cursor: grab;
 }

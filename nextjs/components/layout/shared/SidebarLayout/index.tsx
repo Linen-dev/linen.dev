@@ -39,9 +39,7 @@ function SidebarLayout({
       </Transition>
       <Transition
         show={!!right}
-        className={classNames(styles.right, 'md:w-[700px]', {
-          [styles.dimmed]: mode === Mode.Drag,
-        })}
+        className={classNames(styles.right, 'md:w-[700px]')}
       >
         {right && (
           <div

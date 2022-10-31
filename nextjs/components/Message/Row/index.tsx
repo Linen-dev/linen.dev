@@ -1,6 +1,7 @@
 import React from 'react';
 import Avatar from 'components/Avatar';
 import classNames from 'classnames';
+import DraggableRow from './DraggableRow';
 import Message from '../../Message';
 import { format } from 'utilities/date';
 import { SerializedThread } from 'serializers/thread';
@@ -12,6 +13,7 @@ import styles from './index.module.scss';
 import CheckIcon from 'components/icons/CheckIcon';
 import Actions from 'components/Actions';
 import { Permissions } from 'types/shared';
+import { Mode } from 'hooks/mode';
 
 interface Props {
   className?: string;
@@ -23,6 +25,7 @@ interface Props {
   permissions: Permissions;
   children?: React.ReactNode;
   currentUser: SerializedUser | null;
+  mode?: Mode;
   onPin?(threadId: string): void;
   onReaction?({
     threadId,
@@ -47,14 +50,21 @@ export function Row({
   currentUser,
   settings,
   permissions,
+  mode,
   onReaction,
   onPin,
 }: Props) {
   const top = !isPreviousMessageFromSameUser;
+  const draggable = permissions.manage;
   return (
-    <div
+    <DraggableRow
       id={message.id}
-      className={classNames(className, styles.row, { [styles.top]: top })}
+      className={classNames(className, styles.row, {
+        [styles.draggable]: draggable,
+        [styles.top]: top,
+      })}
+      draggable={draggable}
+      mode={mode}
     >
       <div className={styles.left}>
         {top ? (
@@ -106,7 +116,7 @@ export function Row({
           </div>
         </div>
       </div>
-    </div>
+    </DraggableRow>
   );
 }
 

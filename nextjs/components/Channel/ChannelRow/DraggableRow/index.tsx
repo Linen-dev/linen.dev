@@ -10,7 +10,7 @@ interface Props {
   children: React.ReactNode;
   id: string;
   mode?: Mode;
-  onDrop?({ from, to }: { from: string; to: string }): void;
+  onDrop?({ type, from, to }: { type: string; from: string; to: string }): void;
 }
 
 export default function DraggableRow({
@@ -27,7 +27,13 @@ export default function DraggableRow({
     return <div className={className}>{children}</div>;
   }
   function handleDragStart(event: React.DragEvent) {
-    event.dataTransfer.setData('text', id);
+    event.dataTransfer.setData(
+      'text',
+      JSON.stringify({
+        type: 'thread',
+        id,
+      })
+    );
   }
 
   function handleDragOver(event: React.DragEvent) {
@@ -55,12 +61,14 @@ export default function DraggableRow({
   function handleDrop(event: React.DragEvent) {
     const node = ref.current as HTMLDivElement;
     node.classList.remove(overClassName);
-    const data = event.dataTransfer.getData('text');
-    if (data === id) {
+    const text = event.dataTransfer.getData('text');
+    const data = JSON.parse(text);
+    if (data.id === id) {
       return event.stopPropagation();
     }
     return onDrop?.({
-      from: data,
+      type: data.type,
+      from: data.id,
       to: id,
     });
   }

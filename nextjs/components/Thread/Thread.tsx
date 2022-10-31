@@ -89,11 +89,7 @@ export function Thread({
   const manage = permissions.manage || isThreadCreator(currentUser, thread);
 
   return (
-    <div
-      className={classNames(styles.container, {
-        [styles.dimmed]: mode === Mode.Drag,
-      })}
-    >
+    <div className={classNames(styles.container)}>
       <Header
         thread={thread}
         channelName={channelName}

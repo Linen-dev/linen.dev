@@ -50,7 +50,7 @@ export default function ChannelRow({
     type: string;
     active: boolean;
   }): void;
-  onDrop?({ from, to }: { from: string; to: string }): void;
+  onDrop?({ type, from, to }: { type: string; from: string; to: string }): void;
 }) {
   const { messages } = thread;
   const oldestMessage = messages[0];
@@ -81,6 +81,7 @@ export default function ChannelRow({
           settings={settings}
           permissions={permissions}
           currentUser={currentUser}
+          mode={mode}
           onPin={onPin}
           onReaction={onReaction}
         >
