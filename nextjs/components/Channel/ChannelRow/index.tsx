@@ -78,7 +78,6 @@ export default function ChannelRow({
       id={thread.id}
       className={styles.container}
       draggable={permissions.manage}
-      overClassName={styles.over}
       onDrop={onDrop}
       mode={mode}
     >

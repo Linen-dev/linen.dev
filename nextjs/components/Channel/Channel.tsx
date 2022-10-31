@@ -651,11 +651,7 @@ export function Channel({
               }
               footer={
                 permissions.chat && (
-                  <div
-                    className={classNames(styles.chat, {
-                      [styles.dimmed]: mode === Mode.Drag,
-                    })}
-                  >
+                  <div className={styles.chat}>
                     <MessageForm
                       onSend={(message: string) => {
                         return sendMessage({

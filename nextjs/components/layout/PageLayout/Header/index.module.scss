@@ -1,10 +1,4 @@
 .container {
   align-items: center;
   display: flex;
-  transition: filter 0.1s ease-in;
-}
-
-.dimmed {
-  filter: brightness(95%);
-  pointer-events: none;
 }

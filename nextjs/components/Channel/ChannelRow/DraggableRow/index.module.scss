@@ -1,3 +1,9 @@
+@import 'styles/animations.scss';
+
 .dragging {
   cursor: grabbing;
+}
+
+.dropzone {
+  @extend .animated-stripped-background;
 }
