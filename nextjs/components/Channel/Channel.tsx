@@ -28,7 +28,12 @@ import {
   isScrollAtBottom,
   isInViewport,
 } from 'utilities/scroll';
-import { postReaction, postMerge, moveMessage } from './utilities/http';
+import {
+  postReaction,
+  postMerge,
+  moveMessage,
+  moveThread,
+} from './utilities/http';
 import useMode, { Mode } from 'hooks/mode';
 import styles from './index.module.css';
 
@@ -526,6 +531,28 @@ export function Channel({
     });
   };
 
+  const moveThreadToChannel = ({
+    threadId,
+    channelId,
+  }: {
+    threadId: string;
+    channelId: string;
+  }) => {
+    setThreads((threads) => {
+      return threads.filter((thread) => {
+        if (thread.id === threadId && thread.channelId !== channelId) {
+          return false;
+        }
+        return true;
+      });
+    });
+
+    return moveThread({
+      threadId,
+      channelId,
+    });
+  };
+
   const threadToRender = threads.find(
     (thread) => thread.id === currentThreadId
   );
@@ -586,23 +613,36 @@ export function Channel({
                         onPin={pinThread}
                         onReaction={sendReaction}
                         onDrop={({
-                          type,
+                          source,
+                          target,
                           from,
                           to,
                         }: {
-                          type: string;
+                          source: string;
+                          target: string;
                           from: string;
                           to: string;
                         }) => {
-                          if (type === 'thread') {
+                          console.log(source, target);
+                          if (source === 'thread' && target === 'thread') {
                             return mergeThreads({ from, to });
-                          } else if (type === 'message') {
+                          } else if (
+                            source === 'message' &&
+                            target === 'thread'
+                          ) {
                             return moveMessageToThread({
                               messageId: from,
                               threadId: to,
                             });
+                          } else if (
+                            source === 'thread' &&
+                            target === 'channel'
+                          ) {
+                            return moveThreadToChannel({
+                              threadId: from,
+                              channelId: to,
+                            });
                           }
-                          // unsupported action
                         }}
                       />
                     </ul>
