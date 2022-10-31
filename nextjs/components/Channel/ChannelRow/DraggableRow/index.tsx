@@ -10,7 +10,17 @@ interface Props {
   children: React.ReactNode;
   id: string;
   mode?: Mode;
-  onDrop?({ type, from, to }: { type: string; from: string; to: string }): void;
+  onDrop?({
+    source,
+    target,
+    from,
+    to,
+  }: {
+    source: string;
+    target: string;
+    from: string;
+    to: string;
+  }): void;
 }
 
 export default function DraggableRow({
@@ -30,7 +40,7 @@ export default function DraggableRow({
     event.dataTransfer.setData(
       'text',
       JSON.stringify({
-        type: 'thread',
+        source: 'thread',
         id,
       })
     );
@@ -67,7 +77,8 @@ export default function DraggableRow({
       return event.stopPropagation();
     }
     return onDrop?.({
-      type: data.type,
+      source: data.source,
+      target: 'thread',
       from: data.id,
       to: id,
     });

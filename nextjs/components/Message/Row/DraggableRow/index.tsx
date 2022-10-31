@@ -30,7 +30,7 @@ export default function DraggableRow({
     event.dataTransfer.setData(
       'text',
       JSON.stringify({
-        type: 'message',
+        source: 'message',
         id,
       })
     );
