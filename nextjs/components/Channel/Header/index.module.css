@@ -1,12 +1,3 @@
-.header {
-  transition: filter 0.1s ease-in;
-}
-
-.dimmed {
-  filter: brightness(95%);
-  pointer-events: none;
-}
-
 .title {
   align-items: center;
   display: flex;

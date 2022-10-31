@@ -7,31 +7,6 @@
   padding: 1rem 0;
 }
 
-.over {
-  background: repeating-linear-gradient(
-    -45deg,
-    #fff,
-    #fff 8px,
-    $color-gray-100 8px,
-    $color-gray-100 16px,
-    $color-gray-100 24px,
-    $color-gray-100 32px
-  );
-  cursor: move;
-  background-size: 200% 200%;
-  animation: move 20s linear infinite;
-}
-
-@keyframes move {
-  100% {
-    background-position: 100% 100%;
-  }
-}
-
-.over * {
-  pointer-events: none;
-}
-
 .content {
   width: 100%;
 }

@@ -1,4 +1,5 @@
 @import 'styles/colors.scss';
+@import 'styles/animations.scss';
 
 .navbar {
   background: $color-background;
@@ -7,10 +8,13 @@
   overflow: scroll;
   width: 200px;
   padding: 0.5rem 0.5rem;
-  transition: filter 0.1s ease-in;
 }
 
-.dimmed {
-  filter: brightness(95%);
-  pointer-events: none;
+.item {
+  display: block;
+}
+
+.dropzone {
+  @extend .animated-stripped-background;
+  animation-duration: 5s;
 }

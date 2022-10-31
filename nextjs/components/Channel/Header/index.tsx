@@ -19,11 +19,7 @@ export default function Header({
   mode,
 }: Props) {
   return (
-    <StickyHeader
-      className={classNames(styles.header, className, {
-        [styles.dimmed]: mode === Mode.Drag,
-      })}
-    >
+    <StickyHeader className={classNames(styles.header, className)}>
       <div className={styles.title}>
         <FiHash /> {channelName}
       </div>

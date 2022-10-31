@@ -5,7 +5,6 @@ import { Mode } from 'hooks/mode';
 
 interface Props {
   className?: string;
-  overClassName: string;
   draggable: boolean;
   children: React.ReactNode;
   id: string;
@@ -26,7 +25,6 @@ interface Props {
 export default function DraggableRow({
   id,
   className,
-  overClassName,
   draggable,
   children,
   mode,
@@ -54,23 +52,9 @@ export default function DraggableRow({
   function handleDragEnter(event: React.DragEvent) {
     event.preventDefault();
     event.stopPropagation();
-    const node = ref.current as HTMLDivElement;
-    node.classList.add(overClassName);
-  }
-
-  function handleDragLeave() {
-    const node = ref.current as HTMLDivElement;
-    node.classList.remove(overClassName);
-  }
-
-  function handleDragEnd() {
-    const node = ref.current as HTMLDivElement;
-    node.classList.remove(overClassName);
   }
 
   function handleDrop(event: React.DragEvent) {
-    const node = ref.current as HTMLDivElement;
-    node.classList.remove(overClassName);
     const text = event.dataTransfer.getData('text');
     const data = JSON.parse(text);
     if (data.id === id) {
@@ -84,16 +68,17 @@ export default function DraggableRow({
     });
   }
 
+  const dragging = mode === Mode.Drag;
+
   return (
     <div
       className={classNames(className, {
-        [styles.dragging]: mode === Mode.Drag,
+        [styles.dragging]: dragging,
+        [styles.dropzone]: dragging,
       })}
       onDragStart={handleDragStart}
       onDragOver={handleDragOver}
       onDragEnter={handleDragEnter}
-      onDragLeave={handleDragLeave}
-      onDragEnd={handleDragEnd}
       onDrop={handleDrop}
       draggable
       ref={ref}

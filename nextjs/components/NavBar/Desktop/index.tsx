@@ -1,5 +1,5 @@
-import classNames from 'classnames';
 import { useState } from 'react';
+import classNames from 'classnames';
 import type { ChannelSerialized } from 'lib/channel';
 import NavItem from '../NavItem';
 import NavLabel from './NavLabel';
@@ -59,11 +59,7 @@ export default function DesktopNavBar({
   };
 
   return (
-    <div
-      className={classNames(styles.navbar, {
-        [styles.dimmed]: mode === Mode.Drag,
-      })}
-    >
+    <div className={styles.navbar}>
       {permissions.feed && (
         <Link onClick={() => setHighlights([])} href="/feed">
           <NavItem active={paths.feed === router.asPath}>
@@ -95,8 +91,28 @@ export default function DesktopNavBar({
             }
             return count;
           }, 0);
+
+          function handleDrop(event: React.DragEvent) {
+            const id = channel.id;
+            const text = event.dataTransfer.getData('text');
+            const data = JSON.parse(text);
+            if (data.id === id) {
+              return event.stopPropagation();
+            }
+            // return onDrop?.({
+            //   source: data.source,
+            //   target: 'channel',
+            //   from: data.id,
+            //   to: id,
+            // });
+          }
+
           return (
             <Link
+              className={classNames(styles.item, {
+                [styles.dropzone]: mode === Mode.Drag,
+              })}
+              onDrop={handleDrop}
               onClick={() => {
                 setHighlights((highlights) => {
                   return highlights.filter((id) => id !== channel.id);
