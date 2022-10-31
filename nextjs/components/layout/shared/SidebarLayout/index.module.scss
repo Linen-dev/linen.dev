@@ -5,14 +5,4 @@
   border-left: 1px solid $color-border;
   display: flex;
   flex-direction: column;
-  transition: filter 0.1s ease-in;
-}
-
-.right.dimmed {
-  filter: brightness(95%);
-  pointer-events: none;
-}
-
-.right.dimmed .content * {
-  filter: brightness(100%);
 }

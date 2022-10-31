@@ -40,7 +40,7 @@ export default function ChannelGrid({
     type: string;
     active: boolean;
   }): void;
-  onDrop?({ from, to }: { from: string; to: string }): void;
+  onDrop?({ type, from, to }: { type: string; from: string; to: string }): void;
 }) {
   return (
     <>

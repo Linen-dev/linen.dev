@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import debounce from 'utilities/debounce';
 
 export enum Mode {
   Default,
@@ -10,10 +9,10 @@ export default function useMode() {
   const [mode, setMode] = useState<Mode>(Mode.Default);
 
   useEffect(() => {
-    const onDragStart = debounce(() => setMode(Mode.Drag));
-    const onDragEnd = debounce(() => setMode(Mode.Default));
-    const onDrop = debounce(() => setMode(Mode.Default));
-    const onDragOver = debounce((event: Event) => event.preventDefault());
+    const onDragStart = () => setMode(Mode.Drag);
+    const onDragEnd = () => setMode(Mode.Default);
+    const onDrop = () => setMode(Mode.Default);
+    const onDragOver = (event: Event) => event.preventDefault();
 
     document.addEventListener('dragstart', onDragStart);
     document.addEventListener('dragend', onDragEnd);

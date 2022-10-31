@@ -15,3 +15,9 @@ export const postReaction = debounce(
 export const postMerge = debounce((params: { from: string; to: string }) => {
   return post('/api/merge', params);
 });
+
+export const postMove = debounce(
+  (params: { messageId: string; threadId: string }) => {
+    return post('/api/move', params);
+  }
+);
