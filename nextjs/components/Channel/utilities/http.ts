@@ -16,8 +16,8 @@ export const postMerge = debounce((params: { from: string; to: string }) => {
   return post('/api/merge', params);
 });
 
-export const postMove = debounce(
+export const moveMessage = debounce(
   (params: { messageId: string; threadId: string }) => {
-    return post('/api/move', params);
+    return post('/api/move/message', params);
   }
 );
