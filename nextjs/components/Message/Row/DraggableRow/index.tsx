@@ -1,6 +1,4 @@
 import React, { createRef } from 'react';
-import classNames from 'classnames';
-import styles from './index.module.scss';
 import { Mode } from 'hooks/mode';
 
 interface Props {
@@ -48,9 +46,7 @@ export default function DraggableRow({
 
   return (
     <div
-      className={classNames(className, styles.draggable, {
-        [styles.dragging]: mode === Mode.Drag,
-      })}
+      className={className}
       onDragStart={handleDragStart}
       onDragOver={handleDragOver}
       onDragEnter={handleDragEnter}

@@ -60,7 +60,6 @@ export function Row({
     <DraggableRow
       id={message.id}
       className={classNames(className, styles.row, {
-        [styles.draggable]: draggable,
         [styles.top]: top,
       })}
       draggable={draggable}

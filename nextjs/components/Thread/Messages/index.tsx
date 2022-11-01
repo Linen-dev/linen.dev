@@ -45,7 +45,7 @@ function Messages({
     return (
       <div key={`${message.id}-${index}`} className={styles.container}>
         <Row
-          className={classNames({
+          className={classNames(styles.row, {
             [styles.top]: !isPreviousMessageFromSameUser,
           })}
           thread={thread}

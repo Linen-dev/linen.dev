@@ -1,9 +1,6 @@
-@import 'styles/animations.scss';
+@import 'styles/colors.scss';
 
-.dragging {
-  cursor: grabbing;
-}
-
-.dropzone {
-  @extend .animated-stripped-background;
+.row[dragged='true'],
+.row[dragged='true']:hover {
+  background-color: rgba($color-tertiary, 0.2);
 }
