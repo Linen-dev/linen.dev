@@ -2,7 +2,6 @@ import type { accounts, channels, threads } from '@prisma/client';
 import { v4 as random } from 'uuid';
 import { prisma } from '../../client';
 import { channelGetServerSideProps, channelNextPage } from 'services/channel';
-import { ChannelResponse } from 'components/Pages/ChannelsPage';
 import { encodeCursor } from 'utilities/cursor';
 import { SerializedThread } from 'serializers/thread';
 import { createThreadsOneByDay } from 'bin/factory/threads';
@@ -69,7 +68,7 @@ describe('channels services', () => {
   });
 
   describe('from channel view (users)', () => {
-    let channelProps: ChannelResponse;
+    let channelProps: any;
 
     describe('access the channel page', () => {
       beforeAll(async () => {
@@ -137,7 +136,7 @@ describe('channels services', () => {
 
   describe.skip('from channel view (bots)', () => {
     describe('access the channel page with pathCursor as asc:0', () => {
-      let channelProps: ChannelResponse;
+      let channelProps: any;
       beforeAll(async () => {
         channelProps = await channelGetServerSideProps(
           {
@@ -170,7 +169,7 @@ describe('channels services', () => {
     });
 
     describe('access the channel page with pathCursor from next page', () => {
-      let channelProps: ChannelResponse;
+      let channelProps: any;
       beforeAll(async () => {
         channelProps = await channelGetServerSideProps(
           {
@@ -202,7 +201,7 @@ describe('channels services', () => {
     });
 
     describe('access the channel page with pathCursor from thread view', () => {
-      let channelProps: ChannelResponse;
+      let channelProps: any;
       beforeAll(async () => {
         channelProps = await channelGetServerSideProps(
           {
@@ -258,7 +257,7 @@ describe('channels services', () => {
     });
 
     describe('access the channel page with pathCursor from last 3 threads', () => {
-      let channelProps: ChannelResponse;
+      let channelProps: any;
       beforeAll(async () => {
         channelProps = await channelGetServerSideProps(
           {

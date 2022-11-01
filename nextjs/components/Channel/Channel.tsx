@@ -25,6 +25,7 @@ import { SerializedAccount } from 'serializers/account';
 import { SerializedMessage } from 'serializers/message';
 import { Settings } from 'serializers/account/settings';
 import { SerializedThread } from 'serializers/thread';
+import { Permissions } from 'types/shared';
 import {
   scrollToBottom,
   isScrollAtBottom,

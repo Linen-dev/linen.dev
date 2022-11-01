@@ -4,6 +4,7 @@ import ButtonPagination from 'components/ButtonPagination';
 import ChannelGrid from 'components/Channel/ChannelGrid';
 import { Settings } from 'serializers/account/settings';
 import { SerializedThread } from 'serializers/thread';
+import { Permissions } from 'types/shared';
 
 interface Props {
   settings: Settings;
