@@ -4,7 +4,7 @@ import ButtonPagination from 'components/ButtonPagination';
 import ChannelGrid from 'components/Channel/ChannelGrid';
 import { ChannelViewProps } from 'components/Pages/ChannelsPage';
 
-export function ChannelForBots({
+export default function ChannelForBots({
   threads,
   settings,
   permissions,
