@@ -1,9 +1,30 @@
 import PageLayout from '../../layout/PageLayout';
-import { ChannelViewProps } from '.';
 import { buildChannelSeo } from 'utilities/seo';
 import { ChannelSerialized } from 'lib/channel';
 import Channel from 'components/Channel/Channel';
 import ChannelForBots from 'components/Channel/ChannelForBots';
+import { SerializedAccount } from 'serializers/account';
+import { Settings } from 'serializers/account/settings';
+import { SerializedThread } from 'serializers/thread';
+import { Permissions } from 'types/shared';
+
+interface Props {
+  settings: Settings;
+  channelName: string;
+  channels?: ChannelSerialized[];
+  currentChannel: ChannelSerialized;
+  currentCommunity: SerializedAccount | null;
+  threads: SerializedThread[];
+  pinnedThreads: SerializedThread[];
+  isSubDomainRouting: boolean;
+  nextCursor: {
+    next: string | null;
+    prev: string | null;
+  };
+  pathCursor: string | null;
+  isBot: boolean;
+  permissions: Permissions;
+}
 
 export default function ChannelPage({
   threads,
@@ -18,7 +39,7 @@ export default function ChannelPage({
   pathCursor,
   isBot,
   permissions,
-}: ChannelViewProps) {
+}: Props) {
   // reusing the type between few layers causes problems
   // we should explicitly define the type per component
   if (!threads) {

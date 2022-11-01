@@ -2,7 +2,21 @@ import CustomLinkHelper from 'components/Link/CustomLinkHelper';
 import ButtonPagination from 'components/ButtonPagination';
 
 import ChannelGrid from 'components/Channel/ChannelGrid';
-import { ChannelViewProps } from 'components/Pages/ChannelsPage';
+import { Settings } from 'serializers/account/settings';
+import { SerializedThread } from 'serializers/thread';
+
+interface Props {
+  settings: Settings;
+  channelName: string;
+  threads: SerializedThread[];
+  isSubDomainRouting: boolean;
+  nextCursor: {
+    next: string | null;
+    prev: string | null;
+  };
+  isBot: boolean;
+  permissions: Permissions;
+}
 
 export default function ChannelForBots({
   threads,
@@ -12,7 +26,7 @@ export default function ChannelForBots({
   isSubDomainRouting,
   nextCursor,
   isBot,
-}: ChannelViewProps) {
+}: Props) {
   return (
     <>
       <div
