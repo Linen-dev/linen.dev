@@ -62,10 +62,12 @@ export default function Channel({
 
   useEffect(() => {
     setThreads(initialThreads);
+    setCurrentThreadId(undefined);
   }, [initialThreads]);
 
   useEffect(() => {
     setPinnedThreads(initialPinnedThreads);
+    setCurrentThreadId(undefined);
   }, [initialPinnedThreads]);
 
   useWebsockets({
@@ -496,7 +498,6 @@ export default function Channel({
           sendReaction={sendReaction}
           mergeThreads={mergeThreads}
           moveMessageToThread={moveMessageToThread}
-          moveThreadToChannel={moveThreadToChannel}
           onSelectThread={onSelectThread}
           updateThread={updateThread}
         />
