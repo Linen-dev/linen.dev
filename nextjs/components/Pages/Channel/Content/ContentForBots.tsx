@@ -1,7 +1,7 @@
 import CustomLinkHelper from 'components/Link/CustomLinkHelper';
 import ButtonPagination from 'components/ButtonPagination';
 
-import ChannelGrid from 'components/Channel/ChannelGrid';
+import ChannelGrid from 'components/Pages/Channel/Content/ChannelGrid';
 import { Settings } from 'serializers/account/settings';
 import { SerializedThread } from 'serializers/thread';
 import { Permissions } from 'types/shared';

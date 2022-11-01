@@ -1,5 +1,5 @@
-import DraggableRow from 'components/Channel/ChannelRow/DraggableRow';
-import Avatars from '../../Avatars';
+import DraggableRow from 'components/Pages/Channel/Content/ChannelRow/DraggableRow';
+import Avatars from '../../../../Avatars';
 import { users } from '@prisma/client';
 import type { Settings } from 'serializers/account/settings';
 import Row from 'components/Message/Row';

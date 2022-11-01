@@ -5,7 +5,7 @@ import NavItem from '../NavItem';
 import NavLabel from './NavLabel';
 import { Permissions } from 'types/shared';
 import Link from 'components/Link/InternalLink';
-import NewChannelModal from 'components/Channel/NewChannelModal';
+import NewChannelModal from 'components/Pages/Channel/Content/NewChannelModal';
 import useWebsockets from 'hooks/websockets';
 import { toast } from 'components/Toast';
 import Badge from 'components/Badge';
