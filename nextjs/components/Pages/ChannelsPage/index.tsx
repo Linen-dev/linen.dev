@@ -8,7 +8,7 @@ import { SerializedAccount } from 'serializers/account';
 import { SerializedReaction } from 'serializers/reaction';
 
 export type ChannelResponse = {
-  props?: ChannelViewProps;
+  props?: Props;
   notFound?: boolean;
   redirect?: {
     destination: string;
@@ -32,7 +32,7 @@ export type messageWithAuthor = messages & {
   attachments: SerializedAttachment[];
 };
 
-export type ChannelViewProps = {
+interface Props {
   settings: Settings;
   channelName: string;
   channels?: ChannelSerialized[];
@@ -48,8 +48,8 @@ export type ChannelViewProps = {
   pathCursor: string | null;
   isBot: boolean;
   permissions: Permissions;
-};
+}
 
-export default function ChannelView(props: ChannelViewProps) {
+export default function ChannelView(props: Props) {
   return <ChannelPage {...props} />;
 }
