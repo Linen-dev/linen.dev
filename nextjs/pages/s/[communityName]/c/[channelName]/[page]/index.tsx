@@ -1,4 +1,4 @@
-import Channel from 'components/Pages/ChannelsPage';
+import Channel from 'components/Pages/Channel';
 import { GetServerSidePropsContext } from 'next/types';
 import { channelGetServerSideProps } from 'services/channel';
 

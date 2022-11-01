@@ -4,7 +4,7 @@ import { render } from '@testing-library/react';
 
 describe('CopyToClipboardIcon', () => {
   it('renders a clip icon', () => {
-    const { container } = render(<CopyToClipboardIcon text="foo" />);
+    const { container } = render(<CopyToClipboardIcon getText={() => 'foo'} />);
     expect(container.querySelector('svg')).toBeInTheDocument();
   });
 });

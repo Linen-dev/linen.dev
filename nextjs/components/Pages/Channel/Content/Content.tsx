@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import useInfiniteScroll from 'react-infinite-scroll-hook';
 import { Thread } from 'components/Thread';
-import ChannelGrid from 'components/Channel/ChannelGrid';
+import ChannelGrid from 'components/Pages/Channel/Content/ChannelGrid';
 import { get } from 'utilities/http';
 import MessageForm from 'components/MessageForm';
 import { fetchMentions } from 'components/MessageForm/api';

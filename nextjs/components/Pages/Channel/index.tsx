@@ -1,8 +1,8 @@
 import PageLayout from '../../layout/PageLayout';
 import { buildChannelSeo } from 'utilities/seo';
 import { ChannelSerialized } from 'lib/channel';
-import Channel from 'components/Channel/Channel';
-import ChannelForBots from 'components/Channel/ChannelForBots';
+import Content from 'components/Pages/Channel/Content/Content';
+import ContentForBots from 'components/Pages/Channel/Content/ContentForBots';
 import { SerializedAccount } from 'serializers/account';
 import { Settings } from 'serializers/account/settings';
 import { SerializedThread } from 'serializers/thread';
@@ -26,7 +26,7 @@ interface Props {
   permissions: Permissions;
 }
 
-export default function ChannelPage({
+export default function Channel({
   threads,
   pinnedThreads,
   channels,
@@ -40,14 +40,6 @@ export default function ChannelPage({
   isBot,
   permissions,
 }: Props) {
-  // reusing the type between few layers causes problems
-  // we should explicitly define the type per component
-  if (!threads) {
-    return <div />;
-  }
-
-  const ComponentToRender = isBot ? ChannelForBots : Channel;
-
   return (
     <PageLayout
       currentChannel={currentChannel}
@@ -65,20 +57,32 @@ export default function ChannelPage({
       isSubDomainRouting={isSubDomainRouting}
       permissions={permissions}
     >
-      <ComponentToRender
-        threads={threads}
-        pinnedThreads={pinnedThreads}
-        currentChannel={currentChannel}
-        currentCommunity={currentCommunity}
-        settings={settings}
-        channelName={channelName}
-        isSubDomainRouting={isSubDomainRouting}
-        nextCursor={nextCursor}
-        pathCursor={pathCursor}
-        isBot={isBot}
-        permissions={permissions}
-        key={settings.communityName + channelName}
-      />
+      {isBot ? (
+        <ContentForBots
+          threads={threads}
+          settings={settings}
+          channelName={channelName}
+          isSubDomainRouting={isSubDomainRouting}
+          nextCursor={nextCursor}
+          isBot={isBot}
+          permissions={permissions}
+        />
+      ) : (
+        <Content
+          threads={threads}
+          pinnedThreads={pinnedThreads}
+          currentChannel={currentChannel}
+          currentCommunity={currentCommunity}
+          settings={settings}
+          channelName={channelName}
+          isSubDomainRouting={isSubDomainRouting}
+          nextCursor={nextCursor}
+          pathCursor={pathCursor}
+          isBot={isBot}
+          permissions={permissions}
+          key={settings.communityName + channelName}
+        />
+      )}
     </PageLayout>
   );
 }
