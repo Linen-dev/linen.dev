@@ -41,15 +41,13 @@ export type ChannelViewProps = {
   threads: SerializedThread[];
   pinnedThreads: SerializedThread[];
   isSubDomainRouting: boolean;
-  nextCursor: ChannelViewCursorProps;
+  nextCursor: {
+    next: string | null;
+    prev: string | null;
+  };
   pathCursor: string | null;
   isBot: boolean;
   permissions: Permissions;
-};
-
-export type ChannelViewCursorProps = {
-  next: string | null;
-  prev: string | null;
 };
 
 export default function ChannelView(props: ChannelViewProps) {
