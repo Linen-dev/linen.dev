@@ -16,10 +16,7 @@ import {
   findChannelsByAccount,
   shouldThisChannelBeAnonymous,
 } from '../lib/channel';
-import {
-  ChannelViewCursorProps,
-  ChannelResponse,
-} from 'components/Pages/ChannelsPage';
+import { ChannelResponse } from 'components/Pages/ChannelsPage';
 import { isBot } from 'next/dist/server/web/spec-extension/user-agent';
 import PermissionsService from 'services/permissions';
 import { RedirectTo } from 'utilities/response';
@@ -28,8 +25,6 @@ import {
   resolveCrawlerRedirect,
   shouldRedirectToDomain,
 } from 'utilities/redirects';
-import Session from 'services/session';
-import serializeUser from 'serializers/user';
 
 const CURSOR_LIMIT = 30;
 
@@ -214,7 +209,10 @@ async function buildCursor({
   channelIds: string[];
   loadMore?: boolean;
   isCrawler?: boolean;
-}): Promise<ChannelViewCursorProps> {
+}): Promise<{
+  next: string | null;
+  prev: string | null;
+}> {
   const hasMore = threads?.length === CURSOR_LIMIT;
 
   // if empty, there is no cursor to return
