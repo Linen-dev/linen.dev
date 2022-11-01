@@ -69,13 +69,6 @@ interface Props {
     messageId: string;
     threadId: string;
   }): void;
-  moveThreadToChannel({
-    threadId,
-    channelId,
-  }: {
-    threadId: string;
-    channelId: string;
-  }): void;
   updateThread({ state, title }: { state?: ThreadState; title?: string }): void;
 }
 
@@ -98,7 +91,6 @@ export default function Channel({
   onSelectThread,
   mergeThreads,
   moveMessageToThread,
-  moveThreadToChannel,
   updateThread,
 }: Props) {
   const [isLoading, setIsLoading] = useState(false);
@@ -318,14 +310,6 @@ export default function Channel({
                             return moveMessageToThread({
                               messageId: from,
                               threadId: to,
-                            });
-                          } else if (
-                            source === 'thread' &&
-                            target === 'channel'
-                          ) {
-                            return moveThreadToChannel({
-                              threadId: from,
-                              channelId: to,
                             });
                           }
                         }}
