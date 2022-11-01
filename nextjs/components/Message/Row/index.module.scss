@@ -8,10 +8,6 @@
   width: 100%;
 }
 
-.row:hover {
-  background: $color-gray-100;
-}
-
 .row.top {
   padding: 1rem 1rem 0.25rem;
 }
@@ -98,8 +94,4 @@
 
 .message:hover .actions {
   display: flex;
-}
-
-.draggable {
-  cursor: grab;
 }

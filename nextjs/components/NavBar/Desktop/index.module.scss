@@ -1,5 +1,4 @@
 @import 'styles/colors.scss';
-@import 'styles/animations.scss';
 
 .navbar {
   background: $color-background;
@@ -12,9 +11,4 @@
 
 .item {
   display: block;
-}
-
-.dropzone {
-  @extend .animated-stripped-background;
-  animation-duration: 5s;
 }

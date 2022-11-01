@@ -7,6 +7,10 @@
   padding: 1rem 0;
 }
 
+.container[draggable='true']:active {
+  cursor: grabbing;
+}
+
 .content {
   width: 100%;
 }

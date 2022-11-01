@@ -1,7 +1,7 @@
 import React, { createRef } from 'react';
 import classNames from 'classnames';
-import styles from './index.module.scss';
 import { Mode } from 'hooks/mode';
+import styles from './index.module.scss';
 
 interface Props {
   className?: string;
@@ -42,16 +42,57 @@ export default function DraggableRow({
         id,
       })
     );
+
+    const node =
+      document.getElementById('drag-image') || document.createElement('div');
+    node.id = 'drag-image';
+    node.style.position = 'absolute';
+    node.style.background = '#0855f4';
+    node.style.borderRadius = '4px';
+    node.style.boxShadow = '0 3px 5px #ccc';
+    node.style.color = 'white';
+    node.style.display = 'flex';
+    node.style.alignItems = 'center';
+    node.style.fontWeight = 'bold';
+    node.style.fontSize = '14px';
+    node.style.padding = '1rem';
+    node.style.left = '-999px';
+    node.style.top = '-999px';
+    node.style.cursor = 'move';
+    node.innerText = 'Move thread';
+
+    document.body.appendChild(node);
+
+    // background: $color-primary;
+    // box-shadow: 0 1px 3px #ccc;
+    // color: white;
+    // font-weight: bold;
+    // left: -999px;
+    // padding: 1rem;
+    // position: absolute;
+    // top: -999px;
+    // width: 160px;
+    // height: 80px;
+    // z-index: -1;
+    event.dataTransfer.setDragImage(node, 0, 0);
+
+    event.dataTransfer.effectAllowed = 'move';
+    event.currentTarget.setAttribute('dragged', 'true');
+  }
+
+  function handleDragEnd(event: React.DragEvent) {
+    event.currentTarget.setAttribute('dragged', 'false');
   }
 
   function handleDragOver(event: React.DragEvent) {
-    event?.preventDefault();
+    event.preventDefault();
     return false;
   }
 
   function handleDragEnter(event: React.DragEvent) {
     event.preventDefault();
     event.stopPropagation();
+    event.dataTransfer.dropEffect = 'move';
   }
 
   function handleDrop(event: React.DragEvent) {
@@ -68,15 +109,11 @@ export default function DraggableRow({
     });
   }
 
-  const dragging = mode === Mode.Drag;
-
   return (
     <div
-      className={classNames(className, {
-        [styles.dragging]: dragging,
-        [styles.dropzone]: dragging,
-      })}
+      className={classNames(className, styles.row)}
       onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}
       onDragOver={handleDragOver}
       onDragEnter={handleDragEnter}
       onDrop={handleDrop}

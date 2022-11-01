@@ -9,9 +9,15 @@ export default function useMode() {
   const [mode, setMode] = useState<Mode>(Mode.Default);
 
   useEffect(() => {
-    const onDragStart = () => setMode(Mode.Drag);
-    const onDragEnd = () => setMode(Mode.Default);
-    const onDrop = () => setMode(Mode.Default);
+    const onDragStart = () => {
+      setMode(Mode.Drag);
+    };
+    const onDragEnd = () => {
+      setMode(Mode.Default);
+    };
+    const onDrop = () => {
+      setMode(Mode.Default);
+    };
     const onDragOver = (event: Event) => event.preventDefault();
 
     document.addEventListener('dragstart', onDragStart);
