@@ -20,6 +20,17 @@ interface Props {
   channels: ChannelSerialized[];
   channelName: string;
   permissions: Permissions;
+  onDrop?({
+    source,
+    target,
+    from,
+    to,
+  }: {
+    source: string;
+    target: string;
+    to: string;
+    from: string;
+  }): void;
 }
 
 export default function DesktopNavBar({
@@ -27,6 +38,7 @@ export default function DesktopNavBar({
   channelName,
   channels,
   permissions,
+  onDrop,
 }: Props) {
   const [highlights, setHighlights] = useState<string[]>([]);
   const router = useRouter();
@@ -99,12 +111,12 @@ export default function DesktopNavBar({
             if (data.id === id) {
               return event.stopPropagation();
             }
-            // return onDrop?.({
-            //   source: data.source,
-            //   target: 'channel',
-            //   from: data.id,
-            //   to: id,
-            // });
+            return onDrop?.({
+              source: data.source,
+              target: 'channel',
+              from: data.id,
+              to: id,
+            });
           }
 
           return (

@@ -10,6 +10,17 @@ interface Props {
   channels: ChannelSerialized[];
   channelName: string;
   permissions: Permissions;
+  onDrop?({
+    source,
+    target,
+    from,
+    to,
+  }: {
+    source: string;
+    target: string;
+    to: string;
+    from: string;
+  }): void;
 }
 
 export default function NavBar({
@@ -17,6 +28,7 @@ export default function NavBar({
   channelName,
   channels,
   permissions,
+  onDrop,
 }: Props) {
   const sortedChannels = sortByChannelName(channels);
 
@@ -28,6 +40,7 @@ export default function NavBar({
           channels={sortedChannels}
           channelName={channelName}
           permissions={permissions}
+          onDrop={onDrop}
         />
       </div>
       <div className="lg:hidden">

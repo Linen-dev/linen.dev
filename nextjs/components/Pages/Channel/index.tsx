@@ -378,6 +378,7 @@ export default function Channel({
     return moveThread({
       threadId,
       channelId,
+      communityId: currentCommunity?.id,
     });
   };
 
@@ -424,6 +425,22 @@ export default function Channel({
       });
   };
 
+  function onDrop({
+    source,
+    target,
+    from,
+    to,
+  }: {
+    source: string;
+    target: string;
+    from: string;
+    to: string;
+  }) {
+    if (source === 'thread' && target === 'channel') {
+      return moveThreadToChannel({ threadId: from, channelId: to });
+    }
+  }
+
   return (
     <PageLayout
       currentChannel={currentChannel}
@@ -440,6 +457,7 @@ export default function Channel({
       settings={settings}
       isSubDomainRouting={isSubDomainRouting}
       permissions={permissions}
+      onDrop={onDrop}
     >
       {isBot ? (
         <ContentForBots

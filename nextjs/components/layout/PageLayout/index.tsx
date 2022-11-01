@@ -24,6 +24,17 @@ interface Props {
   isSubDomainRouting: boolean;
   permissions: Permissions;
   innerRef?: any;
+  onDrop?({
+    source,
+    target,
+    from,
+    to,
+  }: {
+    source: string;
+    target: string;
+    to: string;
+    from: string;
+  }): void;
 }
 
 function PageLayout({
@@ -36,6 +47,7 @@ function PageLayout({
   isSubDomainRouting,
   permissions,
   innerRef,
+  onDrop,
 }: Props) {
   const channels = initialChannels.filter((c: ChannelSerialized) => !c.hidden);
   const { googleAnalyticsId, googleSiteVerification } = settings;
@@ -100,6 +112,7 @@ function PageLayout({
             channels={channels}
             channelName={currentChannel?.channelName || ''}
             permissions={permissions}
+            onDrop={onDrop}
           />
           <div
             className={
