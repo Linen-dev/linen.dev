@@ -16,7 +16,6 @@ import {
   findChannelsByAccount,
   shouldThisChannelBeAnonymous,
 } from '../lib/channel';
-import { ChannelResponse } from 'components/Pages/ChannelsPage';
 import { isBot } from 'next/dist/server/web/spec-extension/user-agent';
 import PermissionsService from 'services/permissions';
 import { RedirectTo } from 'utilities/response';
@@ -31,7 +30,7 @@ const CURSOR_LIMIT = 30;
 export async function channelGetServerSideProps(
   context: GetServerSidePropsContext,
   isSubdomainbasedRouting: boolean
-): Promise<ChannelResponse> {
+) {
   const permissions = await PermissionsService.for(context);
   if (!permissions.access) {
     return RedirectTo('/signin');
