@@ -7,22 +7,18 @@ import MessageForm from 'components/MessageForm';
 import { fetchMentions } from 'components/MessageForm/api';
 import { ThreadState } from '@prisma/client';
 import { useUsersContext } from 'contexts/Users';
-import useWebsockets from 'hooks/websockets';
 import ChatLayout from 'components/layout/shared/ChatLayout';
 import SidebarLayout from 'components/layout/shared/SidebarLayout';
-import useThreadWebsockets from 'hooks/websockets/thread';
 import Header from './Header';
 import Empty from './Empty';
 import classNames from 'classnames';
 import PinnedThread from './PinnedThread';
 import ChannelRow from './ChannelRow';
-import { toast } from 'components/Toast';
 import { useJoinContext } from 'contexts/Join';
 import { sendThreadMessageWrapper } from './sendThreadMessageWrapper';
 import { sendMessageWrapper } from './sendMessageWrapper';
 import type { ChannelSerialized } from 'lib/channel';
 import { SerializedAccount } from 'serializers/account';
-import { SerializedMessage } from 'serializers/message';
 import { Settings } from 'serializers/account/settings';
 import { SerializedThread } from 'serializers/thread';
 import { Permissions } from 'types/shared';
@@ -31,12 +27,6 @@ import {
   isScrollAtBottom,
   isInViewport,
 } from 'utilities/scroll';
-import {
-  postReaction,
-  postMerge,
-  moveMessage,
-  moveThread,
-} from './utilities/http';
 import useMode from 'hooks/mode';
 import styles from './index.module.css';
 
@@ -56,11 +46,42 @@ interface Props {
   pathCursor: string | null;
   isBot: boolean;
   permissions: Permissions;
+  currentThreadId: string | undefined;
+  setThreads: React.Dispatch<React.SetStateAction<SerializedThread[]>>;
+  pinThread(threadId: string): void;
+  sendReaction({
+    threadId,
+    messageId,
+    type,
+    active,
+  }: {
+    threadId: string;
+    messageId: string;
+    type: string;
+    active: boolean;
+  }): void;
+  onSelectThread(thread: SerializedThread): void;
+  mergeThreads({ from, to }: { from: string; to: string }): void;
+  moveMessageToThread({
+    messageId,
+    threadId,
+  }: {
+    messageId: string;
+    threadId: string;
+  }): void;
+  moveThreadToChannel({
+    threadId,
+    channelId,
+  }: {
+    threadId: string;
+    channelId: string;
+  }): void;
+  updateThread({ state, title }: { state?: ThreadState; title?: string }): void;
 }
 
 export default function Channel({
-  threads: initialThreads,
-  pinnedThreads: initialPinnedThreads,
+  threads,
+  pinnedThreads,
   currentChannel,
   currentCommunity,
   settings,
@@ -70,11 +91,17 @@ export default function Channel({
   pathCursor,
   isBot,
   permissions,
+  currentThreadId,
+  setThreads,
+  pinThread,
+  sendReaction,
+  onSelectThread,
+  mergeThreads,
+  moveMessageToThread,
+  moveThreadToChannel,
+  updateThread,
 }: Props) {
   const [isLoading, setIsLoading] = useState(false);
-  const [threads, setThreads] = useState<SerializedThread[]>(initialThreads);
-  const [pinnedThreads, setPinnedThreads] =
-    useState<SerializedThread[]>(initialPinnedThreads);
   const scrollableRootRef = useRef<HTMLDivElement | null>(null);
   const rightRef = useRef<HTMLDivElement>(null);
   const leftBottomRef = useRef<HTMLDivElement>(null);
@@ -88,10 +115,8 @@ export default function Channel({
   const { mode } = useMode();
 
   const [showThread, setShowThread] = useState(false);
-  const [currentThreadId, setCurrentThreadId] = useState<string>();
 
   const currentUser = permissions.user || null;
-  const token = permissions.token || null;
 
   function handleLeftScroll() {
     if (
@@ -107,140 +132,10 @@ export default function Channel({
   async function selectThread(incrementId: number) {
     const currentThread = threads.find((t) => t.incrementId === incrementId);
     if (currentThread) {
-      setCurrentThreadId(currentThread.id);
+      onSelectThread(currentThread);
     }
     setShowThread(true);
     handleLeftScroll();
-  }
-
-  async function pinThread(threadId: string) {
-    const thread = threads.find(({ id }) => id === threadId);
-    if (!thread) {
-      return;
-    }
-    const newPinned = !thread.pinned;
-    setThreads((threads) => {
-      return threads.map((thread) => {
-        if (thread.id === threadId) {
-          return { ...thread, pinned: newPinned };
-        }
-        return thread;
-      });
-    });
-    setPinnedThreads((pinnedThreads) => {
-      if (newPinned) {
-        return [...pinnedThreads, { ...thread, pinned: true }];
-      } else {
-        return pinnedThreads.filter(({ id }) => id !== threadId);
-      }
-    });
-    return fetch(`/api/threads/${thread.id}`, {
-      method: 'PUT',
-      body: JSON.stringify({ pinned: newPinned }),
-    })
-      .then((response) => {
-        if (response.ok) {
-          return;
-        }
-        throw new Error('Failed to pin the thread.');
-      })
-      .catch((exception) => {
-        alert(exception.message);
-      });
-  }
-
-  async function sendReaction({
-    threadId,
-    messageId,
-    type,
-    active,
-  }: {
-    threadId: string;
-    messageId: string;
-    type: string;
-    active: boolean;
-  }) {
-    function addReaction(threads: SerializedThread[]) {
-      if (!currentUser) {
-        return threads;
-      }
-      return threads.map((thread) => {
-        if (thread.id === threadId) {
-          return {
-            ...thread,
-            messages: thread.messages.map((message) => {
-              if (message.id === messageId) {
-                const reaction = message.reactions.find(
-                  (reaction) => reaction.type === type
-                );
-                if (!reaction) {
-                  return {
-                    ...message,
-                    reactions: [
-                      ...message.reactions,
-                      { type, count: 1, users: [currentUser] },
-                    ],
-                  };
-                }
-
-                if (active) {
-                  return {
-                    ...message,
-                    reactions: message.reactions
-                      .filter((reaction) => {
-                        if (
-                          reaction.type === type &&
-                          reaction.count - 1 === 0
-                        ) {
-                          return false;
-                        }
-                        return true;
-                      })
-                      .map((reaction) => {
-                        if (reaction.type === type) {
-                          const count = reaction.count - 1;
-                          return {
-                            type,
-                            count,
-                            users: reaction.users.filter(
-                              ({ id }) => id !== currentUser.id
-                            ),
-                          };
-                        }
-                        return reaction;
-                      }),
-                  };
-                }
-
-                return {
-                  ...message,
-                  reactions: message.reactions.map((reaction) => {
-                    if (reaction.type === type) {
-                      return {
-                        type,
-                        count: reaction.count + 1,
-                        users: [...reaction.users, currentUser],
-                      };
-                    }
-                    return reaction;
-                  }),
-                };
-              }
-              return message;
-            }),
-          };
-        }
-        return thread;
-      });
-    }
-    setThreads(addReaction);
-    setPinnedThreads(addReaction);
-    postReaction({
-      communityId: currentCommunity?.id,
-      messageId,
-      type,
-      action: active ? 'decrement' : 'increment',
-    });
   }
 
   const [infiniteRef, { rootRef }] = useInfiniteScroll({
@@ -257,59 +152,6 @@ export default function Channel({
     onLoadMore: loadMoreNext,
     disabled: !!error?.next || !cursor.next,
     rootMargin: '0px 0px 800px 0px',
-  });
-
-  useWebsockets({
-    room: `room:lobby:${currentChannel.id}`,
-    token,
-    permissions,
-    onNewMessage(payload) {
-      try {
-        if (payload.is_reply) {
-          const threadId = payload.thread_id;
-          const messageId = payload.message_id;
-          const imitationId = payload.imitation_id;
-          const message: SerializedMessage =
-            payload.message && JSON.parse(payload.message);
-          if (!message) {
-            return;
-          }
-          setThreads((threads) => {
-            const index = threads.findIndex(({ id }) => id === threadId);
-            const newThreads = [...threads];
-            if (index > -1) {
-              newThreads[index].messages = [
-                ...newThreads[index].messages.filter(
-                  ({ id }) => id !== imitationId && id !== messageId
-                ),
-                message,
-              ];
-            }
-            return newThreads;
-          });
-        }
-
-        if (payload.is_thread) {
-          const threadId = payload.thread_id;
-          const imitationId = payload.imitation_id;
-          const thread: SerializedThread =
-            payload.thread && JSON.parse(payload.thread);
-          if (!thread) {
-            return;
-          }
-          setThreads((threads) => [
-            ...threads.filter(
-              ({ id }) => id !== imitationId && id !== threadId
-            ),
-            thread,
-          ]);
-        }
-      } catch (e) {
-        if (process.env.NODE_ENV === 'development') {
-          console.log(e);
-        }
-      }
-    },
   });
 
   useEffect(() => {
@@ -378,30 +220,6 @@ export default function Channel({
     loadMore(true);
   }
 
-  useThreadWebsockets({
-    id: currentThreadId,
-    token,
-    permissions,
-    onMessage(message, messageId, imitationId) {
-      setThreads((threads) => {
-        return threads.map((thread) => {
-          if (thread.id === currentThreadId) {
-            return {
-              ...thread,
-              messages: [
-                ...thread.messages.filter(
-                  ({ id }: any) => id !== imitationId && id !== messageId
-                ),
-                message,
-              ],
-            };
-          }
-          return thread;
-        });
-      });
-    },
-  });
-
   const sendMessage = sendMessageWrapper({
     currentUser: permissions.is_member ? currentUser : null,
     allUsers,
@@ -412,49 +230,6 @@ export default function Channel({
     startSignUp,
   });
 
-  const updateThread = ({
-    state: newState,
-    title: newTitle,
-  }: {
-    state?: ThreadState;
-    title?: string;
-  }) => {
-    if (!currentThreadId) {
-      return;
-    }
-    const options: { state?: ThreadState; title?: string } = {};
-    if (newState) {
-      options.state = newState;
-    }
-    if (newTitle) {
-      options.title = newTitle;
-    }
-    setThreads((threads) => {
-      return threads.map((thread) => {
-        if (thread.id === currentThreadId) {
-          return {
-            ...thread,
-            ...options,
-          };
-        }
-        return thread;
-      });
-    });
-    return fetch(`/api/threads/${currentThreadId}`, {
-      method: 'PUT',
-      body: JSON.stringify(options),
-    })
-      .then((response) => {
-        if (response.ok) {
-          return;
-        }
-        throw new Error('Failed to close the thread.');
-      })
-      .catch((exception) => {
-        toast.error(exception.message);
-      });
-  };
-
   const sendThreadMessage = sendThreadMessageWrapper({
     currentUser: permissions.is_member ? currentUser : null,
     allUsers,
@@ -463,116 +238,6 @@ export default function Channel({
     currentCommunity,
     startSignUp,
   });
-
-  const mergeThreads = ({ from, to }: { from: string; to: string }) => {
-    const source = threads.find((thread) => thread.id === from);
-    const target = threads.find((thread) => thread.id === to);
-
-    setThreads((threads) => {
-      if (!source || !target) {
-        return threads;
-      }
-      return threads
-        .map((thread) => {
-          if (thread.id === from) {
-            return null;
-          }
-          if (thread.id === to) {
-            return {
-              ...thread,
-              messages: [...thread.messages, ...source.messages].sort(
-                (a, b) => {
-                  return (
-                    new Date(a.sentAt).getTime() - new Date(b.sentAt).getTime()
-                  );
-                }
-              ),
-            };
-          }
-          return thread;
-        })
-        .filter(Boolean) as SerializedThread[];
-    });
-    if (!source || !target) {
-      return Promise.resolve();
-    }
-    return postMerge({
-      from: source.id,
-      to: target.id,
-      communityId: currentCommunity?.id,
-    });
-  };
-
-  const moveMessageToThread = ({
-    messageId,
-    threadId,
-  }: {
-    messageId: string;
-    threadId: string;
-  }) => {
-    const messages = [...threads.map((thread) => thread.messages)].flat();
-    const message = messages.find(({ id }) => id === messageId);
-
-    setThreads((threads) => {
-      if (!message) {
-        return threads;
-      }
-      return threads
-        .map((thread) => {
-          if (thread.id === threadId) {
-            const ids = thread.messages.map(({ id }) => id);
-            if (ids.includes(messageId)) {
-              return thread;
-            }
-            return {
-              ...thread,
-              messages: [...thread.messages, message].sort((a, b) => {
-                return (
-                  new Date(a.sentAt).getTime() - new Date(b.sentAt).getTime()
-                );
-              }),
-            };
-          }
-          const ids = thread.messages.map(({ id }) => id);
-          if (ids.includes(messageId)) {
-            return {
-              ...thread,
-              messages: thread.messages.filter(({ id }) => id !== messageId),
-            };
-          }
-          return thread;
-        })
-        .filter(Boolean) as SerializedThread[];
-    });
-
-    return moveMessage({
-      messageId,
-      threadId,
-      communityId: currentCommunity?.id,
-    });
-  };
-
-  const moveThreadToChannel = ({
-    threadId,
-    channelId,
-  }: {
-    threadId: string;
-    channelId: string;
-  }) => {
-    setThreads((threads) => {
-      return threads.filter((thread) => {
-        if (thread.id === threadId && thread.channelId !== channelId) {
-          return false;
-        }
-        return true;
-      });
-    });
-
-    return moveThread({
-      threadId,
-      channelId,
-    });
-  };
 
   const threadToRender = threads.find(
     (thread) => thread.id === currentThreadId
@@ -644,7 +309,6 @@ export default function Channel({
                           from: string;
                           to: string;
                         }) => {
-                          console.log(source, target);
                           if (source === 'thread' && target === 'thread') {
                             return mergeThreads({ from, to });
                           } else if (
