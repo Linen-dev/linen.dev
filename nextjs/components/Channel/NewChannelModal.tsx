@@ -9,7 +9,11 @@ import { useSession } from 'next-auth/react';
 import { useLinkContext } from 'contexts/Link';
 import CustomRouterPush from 'components/Link/CustomRouterPush';
 
-export function NewChannelModal({ communityId }: { communityId: string }) {
+export default function NewChannelModal({
+  communityId,
+}: {
+  communityId: string;
+}) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const { status } = useSession();

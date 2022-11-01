@@ -1,8 +1,9 @@
 import PageLayout from '../../layout/PageLayout';
 import { ChannelViewProps } from '.';
-import { Channel, ChannelForBots } from 'components/Channel';
 import { buildChannelSeo } from 'utilities/seo';
 import { ChannelSerialized } from 'lib/channel';
+import Channel from 'components/Channel/Channel';
+import ChannelForBots from 'components/Channel/ChannelForBots';
 
 export default function ChannelPage({
   threads,
@@ -60,8 +61,3 @@ export default function ChannelPage({
     </PageLayout>
   );
 }
-
-// Scenarios
-// When it is mobile screen and no thread we show the main messages
-// When it is mobile screen and there is thread we show the thread
-// When it is mobile screen and there is a thread showing if we click on the back button it goes back to the main thread

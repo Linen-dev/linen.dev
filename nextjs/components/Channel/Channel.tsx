@@ -2,9 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import useInfiniteScroll from 'react-infinite-scroll-hook';
 import { Thread } from 'components/Thread';
 import ChannelGrid from 'components/Channel/ChannelGrid';
-import { SerializedThread } from 'serializers/thread';
-import { ChannelViewProps } from 'components/Pages/ChannelsPage';
-import { get, post } from 'utilities/http';
+import { get } from 'utilities/http';
 import MessageForm from 'components/MessageForm';
 import { fetchMentions } from 'components/MessageForm/api';
 import { ThreadState } from '@prisma/client';
@@ -22,7 +20,11 @@ import { toast } from 'components/Toast';
 import { useJoinContext } from 'contexts/Join';
 import { sendThreadMessageWrapper } from './sendThreadMessageWrapper';
 import { sendMessageWrapper } from './sendMessageWrapper';
+import type { ChannelSerialized } from 'lib/channel';
+import { SerializedAccount } from 'serializers/account';
 import { SerializedMessage } from 'serializers/message';
+import { Settings } from 'serializers/account/settings';
+import { SerializedThread } from 'serializers/thread';
 import {
   scrollToBottom,
   isScrollAtBottom,
@@ -34,10 +36,28 @@ import {
   moveMessage,
   moveThread,
 } from './utilities/http';
-import useMode, { Mode } from 'hooks/mode';
+import useMode from 'hooks/mode';
 import styles from './index.module.css';
 
-export function Channel({
+interface Props {
+  settings: Settings;
+  channelName: string;
+  channels?: ChannelSerialized[];
+  currentChannel: ChannelSerialized;
+  currentCommunity: SerializedAccount | null;
+  threads: SerializedThread[];
+  pinnedThreads: SerializedThread[];
+  isSubDomainRouting: boolean;
+  nextCursor: {
+    next: string | null;
+    prev: string | null;
+  };
+  pathCursor: string | null;
+  isBot: boolean;
+  permissions: Permissions;
+}
+
+export default function Channel({
   threads: initialThreads,
   pinnedThreads: initialPinnedThreads,
   currentChannel,
@@ -49,7 +69,7 @@ export function Channel({
   pathCursor,
   isBot,
   permissions,
-}: ChannelViewProps) {
+}: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const [threads, setThreads] = useState<SerializedThread[]>(initialThreads);
   const [pinnedThreads, setPinnedThreads] =
