@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PageLayout from 'components/layout/PageLayout';
 import { toast } from 'components/Toast';
 import { buildChannelSeo } from 'utilities/seo';
@@ -59,6 +59,14 @@ export default function Channel({
 
   const currentUser = permissions.user || null;
   const token = permissions.token || null;
+
+  useEffect(() => {
+    setThreads(initialThreads);
+  }, [initialThreads]);
+
+  useEffect(() => {
+    setPinnedThreads(initialPinnedThreads);
+  }, [initialPinnedThreads]);
 
   useWebsockets({
     room: `room:lobby:${currentChannel.id}`,
@@ -471,7 +479,6 @@ export default function Channel({
         />
       ) : (
         <Content
-          key={settings.communityName + channelName}
           threads={threads}
           pinnedThreads={pinnedThreads}
           currentChannel={currentChannel}
