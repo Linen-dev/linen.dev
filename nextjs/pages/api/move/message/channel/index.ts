@@ -2,6 +2,8 @@ import { NextApiRequest, NextApiResponse } from 'next/types';
 import prisma from 'client';
 import Permissions from 'services/permissions';
 import CommunityService from 'services/community';
+import serializeThread from 'serializers/thread';
+import { anonymizeMessages } from 'utilities/anonymizeMessages';
 
 export async function create({
   messageId,
@@ -35,7 +37,7 @@ export async function create({
     };
   }
 
-  const thread = await prisma.threads.create({
+  const { id: threadId } = await prisma.threads.create({
     data: {
       channelId: channel.id,
       sentAt: new Date().getTime(),
@@ -46,14 +48,40 @@ export async function create({
   await prisma.messages.update({
     where: { id: message.id },
     data: {
-      threadId: thread.id,
+      threadId: threadId,
       channelId: channel.id,
     },
   });
 
+  const thread = await prisma.threads.findUnique({
+    where: { id: threadId },
+    include: {
+      messages: {
+        include: {
+          author: true,
+          mentions: {
+            include: {
+              users: true,
+            },
+          },
+          reactions: true,
+          attachments: true,
+        },
+        orderBy: { sentAt: 'asc' },
+      },
+      channel: true,
+    },
+  });
+
+  if (!thread) {
+    return { status: 404 };
+  }
+
   return {
     status: 200,
-    data: {},
+    data: serializeThread(
+      community.anonymizeUsers ? anonymizeMessages(thread) : thread
+    ),
   };
 }
 

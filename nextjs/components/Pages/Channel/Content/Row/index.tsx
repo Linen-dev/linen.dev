@@ -1,6 +1,5 @@
 import DraggableRow from 'components/Pages/Channel/Content/Row/DraggableRow';
 import Avatars from '../../../../Avatars';
-import { users } from '@prisma/client';
 import type { Settings } from 'serializers/account/settings';
 import Row from 'components/Message/Row';
 import styles from './index.module.scss';
@@ -9,8 +8,8 @@ import { SerializedUser } from 'serializers/user';
 import { Permissions } from 'types/shared';
 import { Mode } from 'hooks/mode';
 
-export const uniqueUsers = (users: users[]): users[] => {
-  let userMap = new Map<string, users>();
+export const uniqueUsers = (users: SerializedUser[]): SerializedUser[] => {
+  let userMap = new Map<string, SerializedUser>();
 
   users.forEach((user) => {
     userMap.set(user.id, user);
@@ -64,7 +63,7 @@ export default function ChannelRow({
 }) {
   const { messages } = thread;
   const oldestMessage = messages[0];
-  let users = messages.map((m) => m.author).filter(Boolean) as users[];
+  let users = messages.map((m) => m.author).filter(Boolean) as SerializedUser[];
   const authors = uniqueUsers(users);
   const avatars = authors
     .filter((user) => user.id !== oldestMessage.author?.id)

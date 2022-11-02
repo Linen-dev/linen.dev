@@ -9,7 +9,7 @@ export interface SerializedUser {
   profileImageUrl: string | null;
 }
 
-function username(displayName: string | null) {
+export function username(displayName: string | null) {
   if (!displayName) {
     return null;
   }

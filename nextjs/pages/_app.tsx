@@ -11,6 +11,7 @@ import { SessionProvider } from 'next-auth/react';
 import { Toaster } from 'components/Toast';
 import { usePostHog } from 'next-use-posthog';
 import { JoinContext } from 'contexts/Join';
+import { UsersContext } from 'contexts/Users';
 
 const POSTHOG_API_KEY = process.env.NEXT_PUBLIC_POSTHOG_API_KEY!;
 export default function App(props: AppProps) {
@@ -71,7 +72,9 @@ export default function App(props: AppProps) {
       <SWRConfig>
         <Toaster />
         <JoinContext>
-          <Component {...pageProps} />
+          <UsersContext>
+            <Component {...pageProps} />
+          </UsersContext>
         </JoinContext>
       </SWRConfig>
     </SessionProvider>

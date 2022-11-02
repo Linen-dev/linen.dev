@@ -20,7 +20,7 @@ export interface SerializedMessage {
   reactions: SerializedReaction[];
   threadId: string;
   externalId?: string;
-  author?: users;
+  author?: SerializedUser;
   messageFormat: MessageFormat;
 }
 
@@ -57,7 +57,7 @@ export function serializeMessage(
     threadId: message.threadId,
     body: message.body,
     sentAt: message.sentAt.toString(),
-    author: message.author,
+    author: message.author ? serializeUser(message.author) : undefined,
     usersId: message.usersId,
     messageFormat: message.messageFormat,
     mentions: serializeMentions(message.mentions),
