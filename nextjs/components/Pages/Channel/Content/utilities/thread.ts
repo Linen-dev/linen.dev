@@ -1,7 +1,7 @@
 import { v4 as uuid } from 'uuid';
 import { SerializedThread } from 'serializers/thread';
-import { SerializedUser } from 'serializers/user';
-import { MessageFormat, Roles, ThreadState } from '@prisma/client';
+import { SerializedUser, username } from 'serializers/user';
+import { MessageFormat, ThreadState } from '@prisma/client';
 import { ChannelSerialized } from 'lib/channel';
 
 export function createThreadImitation({
@@ -32,15 +32,11 @@ export function createThreadImitation({
         messageFormat: MessageFormat.LINEN,
         author: {
           id: author.id,
+          username: username(author.displayName),
           displayName: author.displayName,
           profileImageUrl: author.profileImageUrl,
           externalUserId: author.externalUserId,
-          isBot: false,
-          isAdmin: false,
-          anonymousAlias: null,
-          accountsId: 'imitation-account-id',
           authsId: null,
-          role: Roles.MEMBER,
         },
       },
     ],

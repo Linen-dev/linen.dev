@@ -1,7 +1,7 @@
 import { v4 as uuid } from 'uuid';
 import { SerializedMessage } from 'serializers/message';
-import { SerializedUser } from 'serializers/user';
-import { MessageFormat, Roles } from '@prisma/client';
+import { username, SerializedUser } from 'serializers/user';
+import { MessageFormat } from '@prisma/client';
 
 export function createMessageImitation({
   message,
@@ -27,14 +27,10 @@ export function createMessageImitation({
     author: {
       id: author.id,
       externalUserId: author.externalUserId,
+      username: username(author.displayName),
       displayName: author.displayName,
       profileImageUrl: author.profileImageUrl,
-      isBot: false,
-      isAdmin: false,
-      anonymousAlias: null,
-      accountsId: 'fake-account-id',
       authsId: null,
-      role: Roles.MEMBER,
     },
   };
 }

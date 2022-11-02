@@ -1,6 +1,6 @@
 import React from 'react';
 import { SerializedThread } from 'serializers/thread';
-import { SerializedUser } from 'serializers/user';
+import { SerializedUser, username } from 'serializers/user';
 import { FeedResponse } from '../types';
 import { SerializedMessage } from 'serializers/message';
 import { v4 as uuid } from 'uuid';
@@ -81,14 +81,10 @@ export function sendMessageWrapper({
       author: {
         id: currentUser.id,
         externalUserId: currentUser.externalUserId,
+        username: username(currentUser.displayName),
         displayName: currentUser.displayName,
         profileImageUrl: currentUser.profileImageUrl,
-        isBot: false,
-        isAdmin: false,
-        anonymousAlias: null,
-        accountsId: 'fake-account-id',
         authsId: null,
-        role: Roles.MEMBER,
       },
     };
 

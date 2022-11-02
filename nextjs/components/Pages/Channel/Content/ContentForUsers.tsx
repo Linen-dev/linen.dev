@@ -238,6 +238,21 @@ export default function Channel({
 
   const pinnedThread = pinnedThreads[pinnedThreads.length - 1];
 
+  const handleDrop = ({
+    source,
+    target,
+    from,
+    to,
+  }: {
+    source: string;
+    target: string;
+    from: string;
+    to: string;
+  }) => {
+    onDrop({ source, target, from, to });
+    handleLeftScroll();
+  };
+
   return (
     <>
       <SidebarLayout
@@ -291,7 +306,7 @@ export default function Channel({
                         onClick={selectThread}
                         onPin={pinThread}
                         onReaction={sendReaction}
-                        onDrop={onDrop}
+                        onDrop={handleDrop}
                       />
                     </ul>
                   )}
@@ -302,7 +317,7 @@ export default function Channel({
                   <Chat
                     communityId={settings.communityId}
                     channelId={currentChannel.id}
-                    onDrop={onDrop}
+                    onDrop={handleDrop}
                     sendMessage={sendMessage}
                   />
                 )

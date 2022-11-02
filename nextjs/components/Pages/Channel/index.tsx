@@ -3,12 +3,13 @@ import PageLayout from 'components/layout/PageLayout';
 import { toast } from 'components/Toast';
 import { buildChannelSeo } from 'utilities/seo';
 import { ChannelSerialized } from 'lib/channel';
-import Content from 'components/Pages/Channel/Content/Content';
+import ContentForUsers from 'components/Pages/Channel/Content/ContentForUsers';
 import ContentForBots from 'components/Pages/Channel/Content/ContentForBots';
 import { SerializedAccount } from 'serializers/account';
 import { Settings } from 'serializers/account/settings';
 import { SerializedThread } from 'serializers/thread';
 import { SerializedMessage } from 'serializers/message';
+import { SerializedUser } from 'serializers/user';
 import { Permissions } from 'types/shared';
 import {
   postReaction,
@@ -17,8 +18,10 @@ import {
   moveMessageToChannelRequest,
   moveThreadToChannelRequest,
 } from './Content/utilities/http';
+import { createThreadImitation } from './Content/utilities/thread';
 import useWebsockets from 'hooks/websockets';
 import useThreadWebsockets from 'hooks/websockets/thread';
+import { useUsersContext } from 'contexts/Users';
 import { ThreadState } from '@prisma/client';
 
 interface Props {
@@ -57,6 +60,7 @@ export default function Channel({
   const [pinnedThreads, setPinnedThreads] =
     useState<SerializedThread[]>(initialPinnedThreads);
   const [currentThreadId, setCurrentThreadId] = useState<string>();
+  const [allUsers] = useUsersContext();
 
   const currentUser = permissions.user || null;
   const token = permissions.token || null;
@@ -400,9 +404,22 @@ export default function Channel({
     messageId: string;
     channelId: string;
   }) => {
+    const messages = [...threads.map((thread) => thread.messages)].flat();
+    const message = messages.find(({ id }) => id === messageId);
+    if (!message) {
+      return;
+    }
+    const imitation =
+      currentChannel.id === channelId &&
+      createThreadImitation({
+        message: message.body,
+        author: message.author as SerializedUser,
+        mentions: allUsers,
+        channel: currentChannel,
+      });
+
     setThreads((threads) => {
-      // we could create a thread imitation
-      return threads.map((thread) => {
+      const result = threads.map((thread) => {
         const ids = thread.messages.map(({ id }) => id);
         if (ids.includes(messageId)) {
           return {
@@ -410,18 +427,33 @@ export default function Channel({
             messages: thread.messages.filter(({ id }) => id !== messageId),
           };
         }
+
         return thread;
       });
+
+      if (imitation) {
+        return [...result, imitation];
+      }
+
+      return result;
     });
 
     return moveMessageToChannelRequest({
       messageId,
       channelId,
       communityId: currentCommunity?.id,
-    }).then(() => {
-      if (currentChannel.id === channelId) {
-        window.location.reload();
-      }
+    }).then((thread: SerializedThread) => {
+      setThreads((threads) => {
+        if (imitation) {
+          return threads.map((current) => {
+            if (current.id === imitation.id) {
+              return thread;
+            }
+            return current;
+          });
+        }
+        return threads;
+      });
     });
   };
 
@@ -538,7 +570,7 @@ export default function Channel({
           permissions={permissions}
         />
       ) : (
-        <Content
+        <ContentForUsers
           threads={threads}
           pinnedThreads={pinnedThreads}
           currentChannel={currentChannel}
