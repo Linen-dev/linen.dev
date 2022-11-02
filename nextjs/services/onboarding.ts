@@ -2,6 +2,7 @@ import prisma from '../client';
 import { v4 } from 'uuid';
 import { AccountType, Roles } from '@prisma/client';
 import { createInvitation } from './invites';
+import { createAccountEvent } from './customerIo/trackEvents';
 
 export async function OnboardingCreateChannel({
   channelName,
@@ -33,7 +34,7 @@ export async function OnboardingCreateCommunity({
   authId: string;
   name: string;
 }) {
-  return await prisma.accounts.create({
+  const account = await prisma.accounts.create({
     data: {
       name,
       auths: {
@@ -56,6 +57,8 @@ export async function OnboardingCreateCommunity({
       },
     },
   });
+  createAccountEvent(authId, account.id);
+  return account;
 }
 
 export class PathDomainError extends Error {

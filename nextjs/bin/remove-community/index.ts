@@ -3,6 +3,7 @@ import prisma from '../../client';
 
 console.log(process.env.DATABASE_URL);
 
+//TODO: We should probably add a test here...
 async function cleanUp() {
   const accountId = findArgAndParseOrThrow('accountId');
 

@@ -1,4 +1,4 @@
-import { trackSignUp } from 'services/customerIo';
+import { createUserEvent } from 'services/customerIo/trackEvents';
 import { sendNotification } from 'services/slack';
 
 export const eventSignUp = async (
@@ -8,7 +8,7 @@ export const eventSignUp = async (
 ) => {
   const promises: Promise<any>[] = [
     sendNotification('Email created: ' + email),
-    trackSignUp(id, email, createdAt),
+    createUserEvent(id, email, createdAt),
   ];
 
   await Promise.allSettled(promises);
