@@ -1,6 +1,6 @@
 import CustomLink from 'components/Link/CustomLink';
 import { SerializedThread } from 'serializers/thread';
-import ChannelRow from '../ChannelRow';
+import Row from '../Row';
 import type { Settings } from 'serializers/account/settings';
 import { SerializedUser } from 'serializers/user';
 import { Permissions } from 'types/shared';
@@ -69,7 +69,7 @@ export default function ChannelGrid({
                     path={`/t/${incrementId}/${slug || 'topic'}`.toLowerCase()}
                     key={`${incrementId}-desktop`}
                   >
-                    <ChannelRow
+                    <Row
                       thread={thread}
                       permissions={permissions}
                       isSubDomainRouting={isSubDomainRouting}
@@ -80,7 +80,7 @@ export default function ChannelGrid({
                 </>
               ) : (
                 <div onClick={() => onClick(incrementId)}>
-                  <ChannelRow
+                  <Row
                     className={styles.row}
                     thread={thread}
                     permissions={permissions}
