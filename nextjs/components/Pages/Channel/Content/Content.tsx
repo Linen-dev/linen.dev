@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import useInfiniteScroll from 'react-infinite-scroll-hook';
 import { Thread } from 'components/Thread';
-import ChannelGrid from 'components/Pages/Channel/Content/ChannelGrid';
 import { get } from 'utilities/http';
 import { ThreadState } from '@prisma/client';
 import { useUsersContext } from 'contexts/Users';
@@ -10,6 +9,7 @@ import SidebarLayout from 'components/layout/shared/SidebarLayout';
 import Header from './Header';
 import Empty from './Empty';
 import Chat from './Chat';
+import Grid from './Grid';
 import classNames from 'classnames';
 import PinnedThread from './PinnedThread';
 import ChannelRow from './ChannelRow';
@@ -280,7 +280,7 @@ export default function Channel({
                     <Empty />
                   ) : (
                     <ul className="divide-y w-full">
-                      <ChannelGrid
+                      <Grid
                         threads={threads}
                         permissions={permissions}
                         isSubDomainRouting={isSubDomainRouting}

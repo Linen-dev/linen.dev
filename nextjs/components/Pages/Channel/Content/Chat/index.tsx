@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { createRef } from 'react';
 import MessageForm from 'components/MessageForm';
 import { fetchMentions } from 'components/MessageForm/api';
 import styles from './index.module.scss';
@@ -32,10 +32,26 @@ export default function Chat({
   onDrop,
   sendMessage,
 }: Props) {
+  const ref = createRef<HTMLDivElement>();
+
+  function handleDragEnter() {
+    const node = ref.current as HTMLElement;
+    node.classList.add(styles.hover);
+  }
+
+  function handleDragLeave() {
+    const node = ref.current as HTMLElement;
+    node.classList.remove(styles.hover);
+  }
+
   return (
     <div
       className={styles.chat}
+      onDragEnter={handleDragEnter}
+      onDragLeave={handleDragLeave}
       onDrop={(event: React.DragEvent) => {
+        const node = ref.current as HTMLElement;
+        node.classList.remove(styles.hover);
         const text = event.dataTransfer.getData('text');
         const data = JSON.parse(text);
         onDrop({
@@ -45,6 +61,7 @@ export default function Chat({
           to: channelId,
         });
       }}
+      ref={ref}
     >
       <MessageForm
         onSend={(message: string) => {
