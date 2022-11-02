@@ -12,7 +12,7 @@ import Chat from './Chat';
 import Grid from './Grid';
 import classNames from 'classnames';
 import PinnedThread from './PinnedThread';
-import ChannelRow from './ChannelRow';
+import Row from './Row';
 import { useJoinContext } from 'contexts/Join';
 import { sendThreadMessageWrapper } from './sendThreadMessageWrapper';
 import { sendMessageWrapper } from './sendMessageWrapper';
@@ -264,7 +264,7 @@ export default function Channel({
                       <PinnedThread
                         onClick={() => selectThread(pinnedThread.incrementId)}
                       >
-                        <ChannelRow
+                        <Row
                           thread={pinnedThread}
                           permissions={permissions}
                           isSubDomainRouting={isSubDomainRouting}
