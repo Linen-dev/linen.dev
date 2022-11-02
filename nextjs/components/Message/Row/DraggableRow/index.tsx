@@ -1,5 +1,6 @@
 import React, { createRef } from 'react';
 import { Mode } from 'hooks/mode';
+import styles from './index.module.scss';
 
 interface Props {
   className?: string;
@@ -14,7 +15,6 @@ export default function DraggableRow({
   className,
   draggable,
   children,
-  mode,
 }: Props) {
   const ref = createRef<HTMLDivElement>();
   if (!draggable) {
@@ -25,6 +25,26 @@ export default function DraggableRow({
     );
   }
   function handleDragStart(event: React.DragEvent) {
+    const node =
+      document.getElementById('drag-image') || document.createElement('div');
+    node.id = 'drag-image';
+    node.style.position = 'absolute';
+    node.style.background = '#0855f4';
+    node.style.borderRadius = '4px';
+    node.style.boxShadow = '0 3px 5px #ccc';
+    node.style.color = 'white';
+    node.style.display = 'flex';
+    node.style.alignItems = 'center';
+    node.style.fontWeight = 'bold';
+    node.style.fontSize = '14px';
+    node.style.padding = '0.5rem 1rem';
+    node.style.left = '-999px';
+    node.style.top = '-999px';
+    node.style.cursor = 'move';
+    node.innerText = 'Move message';
+
+    document.body.appendChild(node);
+    event.dataTransfer.effectAllowed = 'copyMove';
     event.dataTransfer.setData(
       'text',
       JSON.stringify({
@@ -32,22 +52,33 @@ export default function DraggableRow({
         id,
       })
     );
+    event.dataTransfer.setDragImage(node, 0, 0);
+    (event.currentTarget as HTMLElement).style.cursor = 'move';
+
+    const element = ref.current as HTMLElement;
+    element.classList.add(styles.dragged);
+  }
+
+  function handleDragEnd(event: React.DragEvent) {
+    const element = ref.current as HTMLElement;
+    element.classList.remove(styles.dragged);
   }
 
   function handleDragOver(event: React.DragEvent) {
-    event?.preventDefault();
+    event.preventDefault();
     return false;
   }
 
   function handleDragEnter(event: React.DragEvent) {
     event.preventDefault();
-    event.stopPropagation();
+    event.dataTransfer.dropEffect = 'copy';
   }
 
   return (
     <div
       className={className}
       onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}
       onDragOver={handleDragOver}
       onDragEnter={handleDragEnter}
       draggable

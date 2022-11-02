@@ -31,10 +31,10 @@ code {
   border: 1px solid rgb(225, 225, 225);
 }
 
-div[draggable='true'] {
+*[draggable='true'] {
   cursor: grab;
 }
 
-div[draggable='true']:active {
+*[draggable='true']:active {
   cursor: grabbing;
 }

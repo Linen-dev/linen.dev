@@ -12,9 +12,9 @@ import { SerializedMessage } from 'serializers/message';
 import { Permissions } from 'types/shared';
 import {
   postReaction,
-  postMerge,
-  moveMessage,
-  moveThread,
+  mergeThreadsRequest,
+  moveMessageToThreadRequest,
+  moveThreadToChannelRequest,
 } from './Content/utilities/http';
 import useWebsockets from 'hooks/websockets';
 import useThreadWebsockets from 'hooks/websockets/thread';
@@ -313,7 +313,7 @@ export default function Channel({
     if (!source || !target) {
       return Promise.resolve();
     }
-    return postMerge({
+    return mergeThreadsRequest({
       from: source.id,
       to: target.id,
       communityId: currentCommunity?.id,
@@ -362,7 +362,7 @@ export default function Channel({
         .filter(Boolean) as SerializedThread[];
     });
 
-    return moveMessage({
+    return moveMessageToThreadRequest({
       messageId,
       threadId,
       communityId: currentCommunity?.id,
@@ -385,7 +385,7 @@ export default function Channel({
       });
     });
 
-    return moveThread({
+    return moveThreadToChannelRequest({
       threadId,
       channelId,
       communityId: currentCommunity?.id,
@@ -435,7 +435,7 @@ export default function Channel({
       });
   };
 
-  function onDrop({
+  function onChannelDrop({
     source,
     target,
     from,
@@ -448,6 +448,27 @@ export default function Channel({
   }) {
     if (source === 'thread' && target === 'channel') {
       return moveThreadToChannel({ threadId: from, channelId: to });
+    }
+  }
+
+  function onThreadDrop({
+    source,
+    target,
+    from,
+    to,
+  }: {
+    source: string;
+    target: string;
+    from: string;
+    to: string;
+  }) {
+    if (source === 'thread' && target === 'thread') {
+      return mergeThreads({ from, to });
+    } else if (source === 'message' && target === 'thread') {
+      return moveMessageToThread({
+        messageId: from,
+        threadId: to,
+      });
     }
   }
 
@@ -467,7 +488,7 @@ export default function Channel({
       settings={settings}
       isSubDomainRouting={isSubDomainRouting}
       permissions={permissions}
-      onDrop={onDrop}
+      onDrop={onChannelDrop}
     >
       {isBot ? (
         <ContentForBots
@@ -495,9 +516,8 @@ export default function Channel({
           currentThreadId={currentThreadId}
           setThreads={setThreads}
           pinThread={pinThread}
+          onDrop={onThreadDrop}
           sendReaction={sendReaction}
-          mergeThreads={mergeThreads}
-          moveMessageToThread={moveMessageToThread}
           onSelectThread={onSelectThread}
           updateThread={updateThread}
         />
