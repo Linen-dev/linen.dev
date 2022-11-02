@@ -14,6 +14,7 @@ import {
   postReaction,
   mergeThreadsRequest,
   moveMessageToThreadRequest,
+  moveMessageToChannelRequest,
   moveThreadToChannelRequest,
 } from './Content/utilities/http';
 import useWebsockets from 'hooks/websockets';
@@ -392,6 +393,33 @@ export default function Channel({
     });
   };
 
+  const moveMessageToChannel = ({
+    messageId,
+    channelId,
+  }: {
+    messageId: string;
+    channelId: string;
+  }) => {
+    setThreads((threads) => {
+      return threads.map((thread) => {
+        const ids = thread.messages.map(({ id }) => id);
+        if (ids.includes(messageId)) {
+          return {
+            ...thread,
+            messages: thread.messages.filter(({ id }) => id !== messageId),
+          };
+        }
+        return thread;
+      });
+    });
+
+    return moveMessageToChannelRequest({
+      messageId,
+      channelId,
+      communityId: currentCommunity?.id,
+    });
+  };
+
   const updateThread = ({
     state: newState,
     title: newTitle,
@@ -448,6 +476,8 @@ export default function Channel({
   }) {
     if (source === 'thread' && target === 'channel') {
       return moveThreadToChannel({ threadId: from, channelId: to });
+    } else if (source === 'message' && target === 'channel') {
+      return moveMessageToChannel({ messageId: from, channelId: to });
     }
   }
 
