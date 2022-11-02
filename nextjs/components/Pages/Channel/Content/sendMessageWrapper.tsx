@@ -1,7 +1,5 @@
 import { SerializedThread } from 'serializers/thread';
-import { ThreadState, Roles, MessageFormat } from '@prisma/client';
 import { scrollToBottom } from 'utilities/scroll';
-import { v4 as uuid } from 'uuid';
 import { SerializedUser } from 'serializers/user';
 import { SerializedAccount } from 'serializers/account';
 import debounce from 'utilities/debounce';

@@ -1,12 +1,11 @@
 import React from 'react';
 import { SerializedThread } from 'serializers/thread';
-import { Roles, MessageFormat } from '@prisma/client';
-import { v4 as uuid } from 'uuid';
 import { SerializedMessage } from 'serializers/message';
 import { SerializedUser } from 'serializers/user';
 import { SerializedAccount } from 'serializers/account';
 import debounce from 'utilities/debounce';
 import { StartSignUpFn } from 'contexts/Join';
+import { createMessageImitation } from './utilities/message';
 
 const debouncedSendThreadMessage = debounce(
   ({ message, communityId, channelId, threadId, imitationId }: any) => {
@@ -67,29 +66,12 @@ export function sendThreadMessageWrapper({
       });
       return;
     }
-    const imitation: SerializedMessage = {
-      id: uuid(),
-      body: message,
-      sentAt: new Date().toISOString(),
-      usersId: currentUser.id,
-      mentions: allUsers,
-      attachments: [],
-      reactions: [],
+    const imitation: SerializedMessage = createMessageImitation({
+      message,
       threadId,
-      messageFormat: MessageFormat.LINEN,
-      author: {
-        id: currentUser.id,
-        externalUserId: currentUser.externalUserId,
-        displayName: currentUser.displayName,
-        profileImageUrl: currentUser.profileImageUrl,
-        isBot: false,
-        isAdmin: false,
-        anonymousAlias: null,
-        accountsId: 'fake-account-id',
-        authsId: null,
-        role: Roles.MEMBER,
-      },
-    };
+      author: currentUser,
+      mentions: allUsers,
+    });
 
     setThreads((threads) => {
       return threads.map((thread) => {
