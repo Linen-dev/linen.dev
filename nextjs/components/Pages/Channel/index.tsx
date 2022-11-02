@@ -401,6 +401,7 @@ export default function Channel({
     channelId: string;
   }) => {
     setThreads((threads) => {
+      // we could create a thread imitation
       return threads.map((thread) => {
         const ids = thread.messages.map(({ id }) => id);
         if (ids.includes(messageId)) {
@@ -417,6 +418,10 @@ export default function Channel({
       messageId,
       channelId,
       communityId: currentCommunity?.id,
+    }).then(() => {
+      if (currentChannel.id === channelId) {
+        window.location.reload();
+      }
     });
   };
 
@@ -499,6 +504,8 @@ export default function Channel({
         messageId: from,
         threadId: to,
       });
+    } else if (source === 'message' && target === 'channel') {
+      return moveMessageToChannel({ messageId: from, channelId: to });
     }
   }
 
