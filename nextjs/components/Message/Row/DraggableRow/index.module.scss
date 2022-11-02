@@ -1,0 +1,6 @@
+@import 'styles/colors.scss';
+
+.dragged,
+.dragged:hover {
+  background-color: lighten($color-tertiary, 40%) !important;
+}

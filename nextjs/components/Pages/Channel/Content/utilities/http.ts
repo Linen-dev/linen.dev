@@ -12,18 +12,20 @@ export const postReaction = debounce(
   }
 );
 
-export const postMerge = debounce((params: { from: string; to: string }) => {
-  return post('/api/merge', params);
-});
-
-export const moveMessage = debounce(
-  (params: { messageId: string; threadId: string }) => {
-    return post('/api/move/message', params);
+export const mergeThreadsRequest = debounce(
+  (params: { from: string; to: string }) => {
+    return post('/api/merge', params);
   }
 );
 
-export const moveThread = debounce(
+export const moveMessageToThreadRequest = debounce(
+  (params: { messageId: string; threadId: string }) => {
+    return post('/api/move/message/thread', params);
+  }
+);
+
+export const moveThreadToChannelRequest = debounce(
   (params: { threadId: string; channelId: string }) => {
-    return post('/api/move/thread', params);
+    return post('/api/move/thread/channel', params);
   }
 );

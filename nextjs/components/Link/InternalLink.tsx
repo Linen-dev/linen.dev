@@ -4,6 +4,8 @@ import usePath from 'hooks/path';
 interface Props {
   className?: string;
   onClick?(): void;
+  onDragEnter?(event: React.DragEvent): void;
+  onDragLeave?(event: React.DragEvent): void;
   onDrop?(event: React.DragEvent): void;
   href: string;
   children: React.ReactNode;
@@ -12,6 +14,8 @@ interface Props {
 export default function InternalLink({
   className,
   onClick,
+  onDragEnter,
+  onDragLeave,
   onDrop,
   href,
   children,
@@ -19,7 +23,13 @@ export default function InternalLink({
   const path = usePath({ href });
   return (
     <Link href={path} prefetch={false}>
-      <a onClick={onClick} onDrop={onDrop} className={className}>
+      <a
+        onClick={onClick}
+        onDragEnter={onDragEnter}
+        onDragLeave={onDragLeave}
+        onDrop={onDrop}
+        className={className}
+      >
         {children}
       </a>
     </Link>

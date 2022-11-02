@@ -61,13 +61,16 @@ interface Props {
     active: boolean;
   }): void;
   onSelectThread(thread: SerializedThread): void;
-  mergeThreads({ from, to }: { from: string; to: string }): void;
-  moveMessageToThread({
-    messageId,
-    threadId,
+  onDrop({
+    source,
+    target,
+    from,
+    to,
   }: {
-    messageId: string;
-    threadId: string;
+    source: string;
+    target: string;
+    from: string;
+    to: string;
   }): void;
   updateThread({ state, title }: { state?: ThreadState; title?: string }): void;
 }
@@ -87,10 +90,9 @@ export default function Channel({
   currentThreadId,
   setThreads,
   pinThread,
+  onDrop,
   sendReaction,
   onSelectThread,
-  mergeThreads,
-  moveMessageToThread,
   updateThread,
 }: Props) {
   const [isLoading, setIsLoading] = useState(false);
@@ -290,29 +292,7 @@ export default function Channel({
                         onClick={selectThread}
                         onPin={pinThread}
                         onReaction={sendReaction}
-                        onDrop={({
-                          source,
-                          target,
-                          from,
-                          to,
-                        }: {
-                          source: string;
-                          target: string;
-                          from: string;
-                          to: string;
-                        }) => {
-                          if (source === 'thread' && target === 'thread') {
-                            return mergeThreads({ from, to });
-                          } else if (
-                            source === 'message' &&
-                            target === 'thread'
-                          ) {
-                            return moveMessageToThread({
-                              messageId: from,
-                              threadId: to,
-                            });
-                          }
-                        }}
+                        onDrop={onDrop}
                       />
                     </ul>
                   )}

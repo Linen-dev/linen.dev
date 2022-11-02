@@ -1,6 +1,12 @@
 @import 'styles/colors.scss';
 
-.row[dragged='true'],
-.row[dragged='true']:hover {
-  background-color: rgba($color-tertiary, 0.2);
+.dragged {
+  background-color: lighten($color-tertiary, 40%);
+}
+
+.hover {
+  background-color: $color-gray-100;
+  * {
+    pointer-events: none;
+  }
 }

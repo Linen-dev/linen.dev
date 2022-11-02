@@ -35,14 +35,6 @@ export default function DraggableRow({
     return <div className={className}>{children}</div>;
   }
   function handleDragStart(event: React.DragEvent) {
-    event.dataTransfer.setData(
-      'text',
-      JSON.stringify({
-        source: 'thread',
-        id,
-      })
-    );
-
     const node =
       document.getElementById('drag-image') || document.createElement('div');
     node.id = 'drag-image';
@@ -55,33 +47,30 @@ export default function DraggableRow({
     node.style.alignItems = 'center';
     node.style.fontWeight = 'bold';
     node.style.fontSize = '14px';
-    node.style.padding = '1rem';
+    node.style.padding = '0.5rem 1rem';
     node.style.left = '-999px';
     node.style.top = '-999px';
     node.style.cursor = 'move';
     node.innerText = 'Move thread';
 
     document.body.appendChild(node);
-
-    // background: $color-primary;
-    // box-shadow: 0 1px 3px #ccc;
-    // color: white;
-    // font-weight: bold;
-    // left: -999px;
-    // padding: 1rem;
-    // position: absolute;
-    // top: -999px;
-    // width: 160px;
-    // height: 80px;
-    // z-index: -1;
+    event.dataTransfer.effectAllowed = 'copyMove';
+    event.dataTransfer.setData(
+      'text',
+      JSON.stringify({
+        source: 'thread',
+        id,
+      })
+    );
     event.dataTransfer.setDragImage(node, 0, 0);
 
-    event.dataTransfer.effectAllowed = 'move';
-    event.currentTarget.setAttribute('dragged', 'true');
+    const element = ref.current as HTMLElement;
+    element.classList.add(styles.dragged);
   }
 
-  function handleDragEnd(event: React.DragEvent) {
-    event.currentTarget.setAttribute('dragged', 'false');
+  function handleDragEnd() {
+    const element = ref.current as HTMLElement;
+    element.classList.remove(styles.dragged);
   }
 
   function handleDragOver(event: React.DragEvent) {
@@ -91,11 +80,19 @@ export default function DraggableRow({
 
   function handleDragEnter(event: React.DragEvent) {
     event.preventDefault();
-    event.stopPropagation();
-    event.dataTransfer.dropEffect = 'move';
+    event.dataTransfer.dropEffect = 'copy';
+    const node = ref.current as HTMLElement;
+    node.classList.add(styles.hover);
+  }
+
+  function handleDragLeave() {
+    const node = ref.current as HTMLElement;
+    node.classList.remove(styles.hover);
   }
 
   function handleDrop(event: React.DragEvent) {
+    const node = ref.current as HTMLElement;
+    node.classList.remove(styles.hover);
     const text = event.dataTransfer.getData('text');
     const data = JSON.parse(text);
     if (data.id === id) {
@@ -116,6 +113,7 @@ export default function DraggableRow({
       onDragEnd={handleDragEnd}
       onDragOver={handleDragOver}
       onDragEnter={handleDragEnter}
+      onDragLeave={handleDragLeave}
       onDrop={handleDrop}
       draggable
       ref={ref}

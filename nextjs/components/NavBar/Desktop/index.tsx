@@ -119,11 +119,21 @@ export default function DesktopNavBar({
             });
           }
 
+          function handleDragEnter(event: React.DragEvent) {
+            event.currentTarget.classList.add(styles.hover);
+          }
+
+          function handleDragLeave(event: React.DragEvent) {
+            event.currentTarget.classList.remove(styles.hover);
+          }
+
           return (
             <Link
               className={classNames(styles.item, {
                 [styles.dropzone]: mode === Mode.Drag,
               })}
+              onDragEnter={handleDragEnter}
+              onDragLeave={handleDragLeave}
               onDrop={handleDrop}
               onClick={() => {
                 setHighlights((highlights) => {
