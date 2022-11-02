@@ -1,7 +1,7 @@
 import CustomLinkHelper from 'components/Link/CustomLinkHelper';
 import ButtonPagination from 'components/ButtonPagination';
 
-import ChannelGrid from 'components/Pages/Channel/Content/ChannelGrid';
+import Grid from './Grid';
 import { Settings } from 'serializers/account/settings';
 import { SerializedThread } from 'serializers/thread';
 import { Permissions } from 'types/shared';
@@ -46,7 +46,7 @@ export default function ChannelForBots({
       >
         <div className="sm:pt-6 justify-center">
           <ul className="divide-y sm:max-w-4xl px-1">
-            <ChannelGrid
+            <Grid
               threads={threads}
               permissions={permissions}
               isSubDomainRouting={isSubDomainRouting}

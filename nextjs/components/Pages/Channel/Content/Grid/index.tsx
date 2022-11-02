@@ -1,5 +1,5 @@
-import CustomLink from '../../../../Link/CustomLink';
-import { SerializedThread } from '../../../../../serializers/thread';
+import CustomLink from 'components/Link/CustomLink';
+import { SerializedThread } from 'serializers/thread';
 import ChannelRow from '../ChannelRow';
 import type { Settings } from 'serializers/account/settings';
 import { SerializedUser } from 'serializers/user';
