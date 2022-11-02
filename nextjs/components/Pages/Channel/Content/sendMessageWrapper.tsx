@@ -6,6 +6,7 @@ import { SerializedUser } from 'serializers/user';
 import { SerializedAccount } from 'serializers/account';
 import debounce from 'utilities/debounce';
 import { StartSignUpFn } from 'contexts/Join';
+import { createThreadImitation } from './utilities/thread';
 
 const debouncedSendChannelMessage = debounce(
   ({ message, communityId, channelId, imitationId }: any) => {
@@ -72,51 +73,13 @@ export function sendMessageWrapper({
       });
       return;
     }
-    const imitation: SerializedThread = {
-      id: uuid(),
-      sentAt: new Date().toISOString(),
-      lastReplyAt: new Date().toISOString(),
-      messages: [
-        {
-          id: 'imitation-message-id',
-          body: message,
-          sentAt: new Date().toISOString(),
-          usersId: 'imitation-user-id',
-          mentions: allUsers,
-          attachments: [],
-          reactions: [],
-          threadId: 'imitation-thread-id',
-          messageFormat: MessageFormat.LINEN,
-          author: {
-            id: currentUser.id,
-            displayName: currentUser.displayName,
-            profileImageUrl: currentUser.profileImageUrl,
-            externalUserId: currentUser.externalUserId,
-            isBot: false,
-            isAdmin: false,
-            anonymousAlias: null,
-            accountsId: 'imitation-account-id',
-            authsId: null,
-            role: Roles.MEMBER,
-          },
-        },
-      ],
-      messageCount: 1,
-      channel: {
-        channelName: currentChannel.channelName,
-        hidden: currentChannel.hidden,
-        default: currentChannel.default,
-      },
-      channelId: currentChannel.id,
-      hidden: false,
-      viewCount: 0,
-      incrementId: -1,
-      externalThreadId: null,
-      slug: null,
-      title: null,
-      state: ThreadState.OPEN,
-      pinned: false,
-    };
+    const imitation: SerializedThread = createThreadImitation({
+      message,
+      mentions: allUsers,
+      author: currentUser,
+      channel: currentChannel,
+    });
+
     setThreads((threads: SerializedThread[]) => {
       return [...threads, imitation];
     });
