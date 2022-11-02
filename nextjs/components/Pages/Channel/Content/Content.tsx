@@ -3,14 +3,13 @@ import useInfiniteScroll from 'react-infinite-scroll-hook';
 import { Thread } from 'components/Thread';
 import ChannelGrid from 'components/Pages/Channel/Content/ChannelGrid';
 import { get } from 'utilities/http';
-import MessageForm from 'components/MessageForm';
-import { fetchMentions } from 'components/MessageForm/api';
 import { ThreadState } from '@prisma/client';
 import { useUsersContext } from 'contexts/Users';
 import ChatLayout from 'components/layout/shared/ChatLayout';
 import SidebarLayout from 'components/layout/shared/SidebarLayout';
 import Header from './Header';
 import Empty from './Empty';
+import Chat from './Chat';
 import classNames from 'classnames';
 import PinnedThread from './PinnedThread';
 import ChannelRow from './ChannelRow';
@@ -300,20 +299,12 @@ export default function Channel({
               }
               footer={
                 permissions.chat && (
-                  <div className={styles.chat}>
-                    <MessageForm
-                      onSend={(message: string) => {
-                        return sendMessage({
-                          message,
-                          channelId: currentChannel.id,
-                        });
-                      }}
-                      fetchMentions={(term?: string) => {
-                        if (!term) return Promise.resolve([]);
-                        return fetchMentions(term, settings.communityId);
-                      }}
-                    />
-                  </div>
+                  <Chat
+                    communityId={settings.communityId}
+                    channelId={currentChannel.id}
+                    onDrop={onDrop}
+                    sendMessage={sendMessage}
+                  />
                 )
               }
             />

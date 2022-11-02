@@ -1,0 +1,11 @@
+.chat {
+  background: white;
+  border-top: 1px solid #e5e7eb;
+  padding: 1rem;
+}
+
+@media screen and (max-width: 767px) {
+  .chat {
+    padding: 0.5rem 1rem;
+  }
+}
