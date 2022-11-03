@@ -2,15 +2,18 @@ import { NextApiRequest, NextApiResponse } from 'next/types';
 import prisma from 'client';
 import Permissions from 'services/permissions';
 import CommunityService from 'services/community';
+import { Permissions as PermissionsType } from 'types/shared';
 
 export async function create({
   threadId,
   channelId,
   communityId,
+  permissions,
 }: {
   threadId: string;
   channelId: string;
   communityId: string;
+  permissions: PermissionsType;
 }) {
   if (!channelId || !threadId) {
     return { status: 400 };
@@ -19,7 +22,7 @@ export async function create({
   const community = await CommunityService.find({ communityId });
 
   if (!community) {
-    return { status: 403 };
+    return { status: 404 };
   }
 
   const channel = await prisma.channels.findUnique({
