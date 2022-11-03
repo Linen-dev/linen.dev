@@ -5,17 +5,6 @@ import setup from '__tests__/spec-helpers/integration';
 setup({ truncationStrategy: 'delete' });
 
 describe('create', () => {
-  it('returns 403 if the user does not have permissions to manage', async () => {
-    const permissions = build('permissions', { manage: false });
-    const { status } = await api.create({
-      from: '',
-      to: '1',
-      permissions,
-      communityId: '1',
-    });
-    expect(status).toEqual(401);
-  });
-
   it('returns 400 if from param is empty', async () => {
     const permissions = build('permissions', { manage: true });
     const { status } = await api.create({
@@ -75,6 +64,21 @@ describe('create', () => {
       communityId: community.id,
     });
     expect(status).toEqual(404);
+  });
+
+  it('returns 401 if the user does not have permissions to manage', async () => {
+    const permissions = build('permissions', { manage: false });
+    const community = await create('account');
+    const channel = await create('channel', { accountId: community.id });
+    const thread1 = await create('thread', { channelId: channel.id });
+    const thread2 = await create('thread', { channelId: channel.id });
+    const { status } = await api.create({
+      from: thread1.id,
+      to: thread2.id,
+      permissions,
+      communityId: community.id,
+    });
+    expect(status).toEqual(401);
   });
 
   it('returns 403 if threads are from different communities', async () => {
