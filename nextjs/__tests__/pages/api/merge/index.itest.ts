@@ -1,5 +1,5 @@
 import * as api from 'pages/api/merge';
-import { build, create as factory } from '__tests__/factory';
+import { build, create } from '__tests__/factory';
 import setup from '__tests__/spec-helpers/integration';
 
 setup({ truncationStrategy: 'delete' });
@@ -40,9 +40,9 @@ describe('create', () => {
 
   it('returns 404 if from thread is not found', async () => {
     const permissions = build('permissions', { manage: true });
-    const community = await factory('account');
-    const channel = await factory('channel', { accountId: community.id });
-    const thread = await factory('thread', { channelId: channel.id });
+    const community = await create('account');
+    const channel = await create('channel', { accountId: community.id });
+    const thread = await create('thread', { channelId: channel.id });
     const { status } = await api.create({
       from: '1',
       to: thread.id,
@@ -54,9 +54,9 @@ describe('create', () => {
 
   it('returns 404 if to thread is not found', async () => {
     const permissions = build('permissions', { manage: true });
-    const community = await factory('account');
-    const channel = await factory('channel', { accountId: community.id });
-    const thread = await factory('thread', { channelId: channel.id });
+    const community = await create('account');
+    const channel = await create('channel', { accountId: community.id });
+    const thread = await create('thread', { channelId: channel.id });
     const { status } = await api.create({
       from: thread.id,
       to: '1',
@@ -68,12 +68,12 @@ describe('create', () => {
 
   it('returns 403 if threads are from different communities', async () => {
     const permissions = build('permissions', { manage: true });
-    const community1 = await factory('account');
-    const community2 = await factory('account');
-    const channel1 = await factory('channel', { accountId: community1.id });
-    const channel2 = await factory('channel', { accountId: community2.id });
-    const thread1 = await factory('thread', { channelId: channel1.id });
-    const thread2 = await factory('thread', { channelId: channel2.id });
+    const community1 = await create('account');
+    const community2 = await create('account');
+    const channel1 = await create('channel', { accountId: community1.id });
+    const channel2 = await create('channel', { accountId: community2.id });
+    const thread1 = await create('thread', { channelId: channel1.id });
+    const thread2 = await create('thread', { channelId: channel2.id });
     const { status } = await api.create({
       from: thread1.id,
       to: thread2.id,
@@ -85,10 +85,10 @@ describe('create', () => {
 
   it('returns 200 and merges threads from the same channel', async () => {
     const permissions = build('permissions', { manage: true });
-    const community = await factory('account');
-    const channel = await factory('channel', { accountId: community.id });
-    const thread1 = await factory('thread', { channelId: channel.id });
-    const thread2 = await factory('thread', { channelId: channel.id });
+    const community = await create('account');
+    const channel = await create('channel', { accountId: community.id });
+    const thread1 = await create('thread', { channelId: channel.id });
+    const thread2 = await create('thread', { channelId: channel.id });
     const { status } = await api.create({
       from: thread1.id,
       to: thread2.id,
@@ -100,11 +100,11 @@ describe('create', () => {
 
   it('returns 200 and merges threads from different channel', async () => {
     const permissions = build('permissions', { manage: true });
-    const community = await factory('account');
-    const channel1 = await factory('channel', { accountId: community.id });
-    const channel2 = await factory('channel', { accountId: community.id });
-    const thread1 = await factory('thread', { channelId: channel1.id });
-    const thread2 = await factory('thread', { channelId: channel2.id });
+    const community = await create('account');
+    const channel1 = await create('channel', { accountId: community.id });
+    const channel2 = await create('channel', { accountId: community.id });
+    const thread1 = await create('thread', { channelId: channel1.id });
+    const thread2 = await create('thread', { channelId: channel2.id });
     const { status } = await api.create({
       from: thread1.id,
       to: thread2.id,
