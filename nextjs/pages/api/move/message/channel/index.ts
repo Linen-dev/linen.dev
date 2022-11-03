@@ -24,7 +24,7 @@ export async function create({
   const community = await CommunityService.find({ communityId });
 
   if (!community) {
-    return { status: 403 };
+    return { status: 404 };
   }
 
   const message = await prisma.messages.findUnique({
@@ -36,60 +36,66 @@ export async function create({
   });
   if (!channel || !message) {
     return {
-      status: 403,
+      status: 404,
     };
   }
 
-  if (!permissions.manage) {
+  if (!permissions.user) {
+    return { status: 403 };
+  }
+
+  const owner = permissions.user.id === message.usersId;
+
+  if (permissions.manage || owner) {
+    const { id: threadId } = await prisma.threads.create({
+      data: {
+        channelId: channel.id,
+        sentAt: new Date().getTime(),
+        lastReplyAt: message.sentAt.getTime(),
+        messageCount: 1,
+      },
+    });
+    await prisma.messages.update({
+      where: { id: message.id },
+      data: {
+        threadId: threadId,
+        channelId: channel.id,
+      },
+    });
+
+    const thread = await prisma.threads.findUnique({
+      where: { id: threadId },
+      include: {
+        messages: {
+          include: {
+            author: true,
+            mentions: {
+              include: {
+                users: true,
+              },
+            },
+            reactions: true,
+            attachments: true,
+          },
+          orderBy: { sentAt: 'asc' },
+        },
+        channel: true,
+      },
+    });
+
+    if (!thread) {
+      return { status: 404 };
+    }
+
+    return {
+      status: 200,
+      data: serializeThread(
+        community.anonymizeUsers ? anonymizeMessages(thread) : thread
+      ),
+    };
+  } else {
     return { status: 401 };
   }
-
-  const { id: threadId } = await prisma.threads.create({
-    data: {
-      channelId: channel.id,
-      sentAt: new Date().getTime(),
-      lastReplyAt: message.sentAt.getTime(),
-      messageCount: 1,
-    },
-  });
-  await prisma.messages.update({
-    where: { id: message.id },
-    data: {
-      threadId: threadId,
-      channelId: channel.id,
-    },
-  });
-
-  const thread = await prisma.threads.findUnique({
-    where: { id: threadId },
-    include: {
-      messages: {
-        include: {
-          author: true,
-          mentions: {
-            include: {
-              users: true,
-            },
-          },
-          reactions: true,
-          attachments: true,
-        },
-        orderBy: { sentAt: 'asc' },
-      },
-      channel: true,
-    },
-  });
-
-  if (!thread) {
-    return { status: 404 };
-  }
-
-  return {
-    status: 200,
-    data: serializeThread(
-      community.anonymizeUsers ? anonymizeMessages(thread) : thread
-    ),
-  };
 }
 
 export default async function handler(
