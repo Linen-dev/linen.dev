@@ -5,6 +5,17 @@ import setup from '__tests__/spec-helpers/integration';
 setup({ truncationStrategy: 'delete' });
 
 describe('create', () => {
+  it('returns 403 if the user does not have permissions to manage', async () => {
+    const permissions = build('permissions', { manage: false });
+    const { status } = await api.create({
+      from: '',
+      to: '1',
+      permissions,
+      communityId: '1',
+    });
+    expect(status).toEqual(401);
+  });
+
   it('returns 400 if from param is empty', async () => {
     const permissions = build('permissions', { manage: true });
     const { status } = await api.create({
