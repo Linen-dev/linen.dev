@@ -27,20 +27,30 @@ export async function create({
 
   const thread1 = await prisma.threads.findUnique({
     where: { id: from },
-    include: { messages: true, channel: true },
+    include: {
+      messages: {
+        orderBy: {
+          sentAt: 'asc',
+        },
+      },
+      channel: true,
+    },
   });
   const thread2 = await prisma.threads.findUnique({
     where: { id: to },
-    include: { channel: true },
+    include: {
+      messages: {
+        orderBy: {
+          sentAt: 'asc',
+        },
+      },
+      channel: true,
+    },
   });
   if (!thread1 || !thread2) {
     return {
       status: 404,
     };
-  }
-
-  if (!permissions.manage) {
-    return { status: 401 };
   }
 
   if (
@@ -50,30 +60,49 @@ export async function create({
     return { status: 403 };
   }
 
-  const ids = thread1.messages.map((message) => message.id);
+  if (!permissions.user) {
+    return { status: 403 };
+  }
 
-  await prisma.$transaction([
-    prisma.messages.updateMany({
-      where: {
-        id: {
-          in: ids,
+  const message1 = thread1.messages[0];
+  const message2 = thread1.messages[0];
+
+  if (!message1 || !message2) {
+    return { status: 404 };
+  }
+
+  const owner =
+    message1.usersId === permissions.user.id &&
+    message2.usersId === permissions.user.id;
+
+  if (permissions.manage || owner) {
+    const ids = thread1.messages.map((message) => message.id);
+
+    await prisma.$transaction([
+      prisma.messages.updateMany({
+        where: {
+          id: {
+            in: ids,
+          },
         },
-      },
-      data: {
-        threadId: thread2.id,
-      },
-    }),
-    prisma.threads.delete({
-      where: {
-        id: thread1.id,
-      },
-    }),
-  ]);
+        data: {
+          threadId: thread2.id,
+        },
+      }),
+      prisma.threads.delete({
+        where: {
+          id: thread1.id,
+        },
+      }),
+    ]);
 
-  return {
-    status: 200,
-    data: {},
-  };
+    return {
+      status: 200,
+      data: {},
+    };
+  } else {
+    return { status: 401 };
+  }
 }
 
 export default async function handler(
