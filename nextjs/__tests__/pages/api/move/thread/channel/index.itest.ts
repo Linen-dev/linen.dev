@@ -76,6 +76,21 @@ describe('create', () => {
     expect(status).toEqual(403);
   });
 
+  it('returns 401 when user does not have permissions to manage', async () => {
+    const permissions = build('permissions', { manage: false });
+    const community = await create('account');
+    const channel1 = await create('channel', { accountId: community.id });
+    const channel2 = await create('channel', { accountId: community.id });
+    const thread = await create('thread', { channelId: channel1.id });
+    const { status } = await api.create({
+      threadId: thread.id,
+      channelId: channel2.id,
+      communityId: community.id,
+      permissions,
+    });
+    expect(status).toEqual(401);
+  });
+
   it('returns 200 when thread can be moved to the channel', async () => {
     const permissions = build('permissions', { manage: true });
     const community = await create('account');
