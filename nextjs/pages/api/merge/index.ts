@@ -2,16 +2,23 @@ import { NextApiRequest, NextApiResponse } from 'next/types';
 import prisma from 'client';
 import Permissions from 'services/permissions';
 import CommunityService from 'services/community';
+import { Permissions as PermissionsType } from 'types/shared';
 
 export async function create({
   from,
   to,
+  permissions,
   communityId,
 }: {
   from: string;
   to: string;
+  permissions: PermissionsType;
   communityId: string;
 }) {
+  if (!permissions.manage) {
+    return { status: 401 };
+  }
+
   if (!from || !to) {
     return { status: 400 };
   }
@@ -80,13 +87,14 @@ export default async function handler(
     params: { communityId },
   });
 
-  if (!permissions.manage) {
-    return response.status(401).json({});
-  }
-
   if (request.method === 'POST') {
     const { from, to } = request.body;
-    const { status, data } = await create({ from, to, communityId });
+    const { status, data } = await create({
+      from,
+      to,
+      permissions,
+      communityId,
+    });
     return response.status(status).json(data || {});
   }
   return response.status(200).json({});
