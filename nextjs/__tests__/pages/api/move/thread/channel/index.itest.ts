@@ -77,11 +77,16 @@ describe('create', () => {
   });
 
   it('returns 401 when user does not have permissions to manage', async () => {
-    const permissions = build('permissions', { manage: false });
     const community = await create('account');
+    const user = await create('user', { accountsId: community.id });
+    const permissions = build('permissions', { manage: false, user });
     const channel1 = await create('channel', { accountId: community.id });
     const channel2 = await create('channel', { accountId: community.id });
     const thread = await create('thread', { channelId: channel1.id });
+    await create('message', {
+      threadId: thread.id,
+      channelId: channel1.id,
+    });
     const { status } = await api.create({
       threadId: thread.id,
       channelId: channel2.id,
@@ -91,12 +96,58 @@ describe('create', () => {
     expect(status).toEqual(401);
   });
 
-  it('returns 200 when thread can be moved to the channel', async () => {
-    const permissions = build('permissions', { manage: true });
+  it('returns 401 when the user is not an owner', async () => {
     const community = await create('account');
+    const user = await create('user', { accountsId: community.id });
+    const permissions = build('permissions', { manage: false, user });
     const channel1 = await create('channel', { accountId: community.id });
     const channel2 = await create('channel', { accountId: community.id });
     const thread = await create('thread', { channelId: channel1.id });
+    await create('message', {
+      threadId: thread.id,
+      channelId: channel1.id,
+    });
+    const { status } = await api.create({
+      threadId: thread.id,
+      channelId: channel2.id,
+      communityId: community.id,
+      permissions,
+    });
+    expect(status).toEqual(401);
+  });
+
+  it('returns 200 when thread is moved to the channel by an admin', async () => {
+    const community = await create('account');
+    const user = await create('user', { accountsId: community.id });
+    const permissions = build('permissions', { manage: true, user });
+    const channel1 = await create('channel', { accountId: community.id });
+    const channel2 = await create('channel', { accountId: community.id });
+    const thread = await create('thread', { channelId: channel1.id });
+    await create('message', {
+      threadId: thread.id,
+      channelId: channel1.id,
+    });
+    const { status } = await api.create({
+      threadId: thread.id,
+      channelId: channel2.id,
+      communityId: community.id,
+      permissions,
+    });
+    expect(status).toEqual(200);
+  });
+
+  it('returns 200 when thread is moved to the channel by an owner', async () => {
+    const community = await create('account');
+    const user = await create('user', { accountsId: community.id });
+    const permissions = build('permissions', { manage: false, user });
+    const channel1 = await create('channel', { accountId: community.id });
+    const channel2 = await create('channel', { accountId: community.id });
+    const thread = await create('thread', { channelId: channel1.id });
+    await create('message', {
+      usersId: user.id,
+      threadId: thread.id,
+      channelId: channel1.id,
+    });
     const { status } = await api.create({
       threadId: thread.id,
       channelId: channel2.id,
