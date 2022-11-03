@@ -62,21 +62,23 @@ export default function ChannelRow({
   }): void;
 }) {
   const { messages } = thread;
-  const oldestMessage = messages[0];
+  const message = messages[0];
   let users = messages.map((m) => m.author).filter(Boolean) as SerializedUser[];
   const authors = uniqueUsers(users);
   const avatars = authors
-    .filter((user) => user.id !== oldestMessage.author?.id)
+    .filter((user) => user.id !== message.author?.id)
     .map((a) => ({
       src: a.profileImageUrl,
       text: a.displayName,
     }));
 
+  const owner = currentUser ? currentUser.id === message.usersId : false;
+
   return (
     <DraggableRow
       id={thread.id}
       className={styles.container}
-      draggable={permissions.manage}
+      draggable={permissions.manage || owner}
       onDrop={onDrop}
       mode={mode}
     >
@@ -84,7 +86,7 @@ export default function ChannelRow({
         <Row
           className={className}
           thread={thread}
-          message={oldestMessage}
+          message={message}
           isSubDomainRouting={isSubDomainRouting}
           settings={settings}
           permissions={permissions}
