@@ -31,7 +31,7 @@ export async function create({
 
   const thread = await prisma.threads.findUnique({
     where: { id: threadId },
-    include: { channel: true },
+    include: { messages: { orderBy: { sentAt: 'asc' } }, channel: true },
   });
 
   if (!channel || !thread) {
@@ -47,21 +47,33 @@ export async function create({
     return { status: 403 };
   }
 
-  if (!permissions.manage) {
-    return { status: 401 };
+  if (!permissions.user) {
+    return { status: 403 };
   }
 
-  await prisma.threads.update({
-    where: { id: thread.id },
-    data: {
-      channelId: channel.id,
-    },
-  });
+  const message = thread.messages[0];
 
-  return {
-    status: 200,
-    data: {},
-  };
+  if (!message) {
+    return { status: 404 };
+  }
+
+  const owner = message.usersId === permissions.user.id;
+
+  if (permissions.manage || owner) {
+    await prisma.threads.update({
+      where: { id: thread.id },
+      data: {
+        channelId: channel.id,
+      },
+    });
+
+    return {
+      status: 200,
+      data: {},
+    };
+  } else {
+    return { status: 401 };
+  }
 }
 
 export default async function handler(
