@@ -1,13 +1,13 @@
-import buildMessage from './message';
-import buildThread from './thread';
-import buildResponse from './response';
-import buildRequest from './request';
-import buildAccount from './account';
-import buildAuth from './auth';
-import buildPermissions from './permissions';
-import buildSettings from './settings';
-import buildChannel from './channel';
-import buildUser from './user';
+import buildMessage from './build/message';
+import buildThread from './build/thread';
+import buildResponse from './build/response';
+import buildRequest from './build/request';
+import buildAccount from './build/account';
+import buildAuth from './build/auth';
+import buildPermissions from './build/permissions';
+import buildSettings from './build/settings';
+import buildChannel from './build/channel';
+import buildUser from './build/user';
 
 export function build(name: string, options?: object): any {
   switch (name) {
