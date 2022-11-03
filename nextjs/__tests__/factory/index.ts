@@ -1,36 +1,36 @@
-import createMessage from './message';
-import createThread from './thread';
-import createResponse from './response';
-import createRequest from './request';
-import createAccount from './account';
-import createAuth from './auth';
-import createPermissions from './permissions';
-import createSettings from './settings';
-import createChannel from './channel';
-import createUser from './user';
+import buildMessage from './message';
+import buildThread from './thread';
+import buildResponse from './response';
+import buildRequest from './request';
+import buildAccount from './account';
+import buildAuth from './auth';
+import buildPermissions from './permissions';
+import buildSettings from './settings';
+import buildChannel from './channel';
+import buildUser from './user';
 
-export function create(name: string, options?: object): any {
+export function build(name: string, options?: object): any {
   switch (name) {
     case 'request':
-      return createRequest(options);
+      return buildRequest(options);
     case 'response':
-      return createResponse(options);
+      return buildResponse(options);
     case 'thread':
-      return createThread(options);
+      return buildThread(options);
     case 'message':
-      return createMessage(options);
+      return buildMessage(options);
     case 'account':
-      return createAccount(options);
+      return buildAccount(options);
     case 'user':
-      return createUser(options);
+      return buildUser(options);
     case 'auth':
-      return createAuth(options);
+      return buildAuth(options);
     case 'permissions':
-      return createPermissions(options);
+      return buildPermissions(options);
     case 'settings':
-      return createSettings(options);
+      return buildSettings(options);
     case 'channel':
-      return createChannel(options);
+      return buildChannel(options);
     default:
       throw new Error(`Unknown factory name: ${name}`);
   }

@@ -1,5 +1,5 @@
 import { update } from 'pages/api/threads/[id]';
-import { create } from '__tests__/factory';
+import { build } from '__tests__/factory';
 import prisma from 'client';
 import { SerializedThread } from 'serializers/thread';
 import { ThreadState } from '@prisma/client';
@@ -7,7 +7,7 @@ import { ThreadState } from '@prisma/client';
 describe('update', () => {
   describe('when the user has manage permissions', () => {
     it('allows the user to update the thread', async () => {
-      const permissions = create('permissions', { manage: true });
+      const permissions = build('permissions', { manage: true });
       const community = await prisma.accounts.create({
         data: { name: 'foo ' },
       });
@@ -65,7 +65,7 @@ describe('update', () => {
             usersId: user.id,
           },
         });
-        const permissions = create('permissions', { manage: false, user });
+        const permissions = build('permissions', { manage: false, user });
         const result = await update({
           permissions,
           params: {
@@ -120,7 +120,7 @@ describe('update', () => {
             usersId: user1.id,
           },
         });
-        const permissions = create('permissions', {
+        const permissions = build('permissions', {
           manage: false,
           user: user2,
         });

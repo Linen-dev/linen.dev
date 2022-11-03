@@ -1,5 +1,5 @@
 import handler from 'pages/api/channels';
-import { create } from '__tests__/factory';
+import { build } from '__tests__/factory';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import setup from '__tests__/spec-helpers/integration';
 import prisma from 'client';
@@ -17,7 +17,7 @@ describe('channels', () => {
           name: 'foo',
         },
       });
-      const request = create('request', {
+      const request = build('request', {
         method: 'POST',
         body: {
           communityId: community.id,
@@ -27,7 +27,7 @@ describe('channels', () => {
 
       (PermissionsService.get as jest.Mock).mockReturnValue({ manage: true });
 
-      const response = create('response') as NextApiResponse;
+      const response = build('response') as NextApiResponse;
       await handler(request, response);
       expect(response.status).toHaveBeenCalledWith(200);
       const channel = await prisma.channels.findFirst({
@@ -41,8 +41,8 @@ describe('channels', () => {
 
     describe('when community id is not present', () => {
       it('returns a 400', async () => {
-        const request = create('request');
-        const response = create('response');
+        const request = build('request');
+        const response = build('response');
         await handler(request, response);
         expect(response.status).toHaveBeenCalledWith(400);
       });
@@ -55,7 +55,7 @@ describe('channels', () => {
             name: 'foo',
           },
         });
-        const request = create('request', {
+        const request = build('request', {
           method: 'POST',
           body: {
             communityId: community.id,
@@ -66,7 +66,7 @@ describe('channels', () => {
           manage: false,
         });
 
-        const response = create('response');
+        const response = build('response');
         await handler(request, response);
         expect(response.status).toHaveBeenCalledWith(401);
       });
@@ -85,7 +85,7 @@ describe('channels', () => {
             accountId: community.id,
           },
         });
-        const request = create('request', {
+        const request = build('request', {
           method: 'POST',
           body: {
             communityId: community.id,
@@ -95,7 +95,7 @@ describe('channels', () => {
 
         (PermissionsService.get as jest.Mock).mockReturnValue({ manage: true });
 
-        const response = create('response') as NextApiResponse;
+        const response = build('response') as NextApiResponse;
         await handler(request, response);
         expect(response.status).toHaveBeenCalledWith(400);
       });

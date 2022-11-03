@@ -2,7 +2,6 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import PinnedThread from '.';
-import { create } from '__tests__/factory';
 
 describe('PinnedThread', () => {
   it('renders the content of the first message', () => {

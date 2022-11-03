@@ -1,12 +1,12 @@
 import serialize from './thread';
-import { create } from '../__tests__/factory';
+import { build } from '../__tests__/factory';
 
 describe('#serialize', () => {
   it('serializes reactions with count greater than 0', () => {
     const thread = serialize(
-      create('thread', {
+      build('thread', {
         messages: [
-          create('message', {
+          build('message', {
             reactions: [
               { name: 'yes', count: 1 },
               { name: 'no', count: 0 },
@@ -23,8 +23,8 @@ describe('#serialize', () => {
 
   it('serializers the channel', () => {
     const thread = serialize(
-      create('thread', {
-        channel: create('channel', { channelName: 'general' }),
+      build('thread', {
+        channel: build('channel', { channelName: 'general' }),
       })
     );
     expect(thread.channel.channelName).toEqual('general');
