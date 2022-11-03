@@ -15,10 +15,6 @@ export async function create({
   permissions: PermissionsType;
   communityId: string;
 }) {
-  if (!permissions.manage) {
-    return { status: 401 };
-  }
-
   if (!from || !to) {
     return { status: 400 };
   }
@@ -41,6 +37,10 @@ export async function create({
     return {
       status: 404,
     };
+  }
+
+  if (!permissions.manage) {
+    return { status: 401 };
   }
 
   if (
