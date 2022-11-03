@@ -19,7 +19,7 @@ export async function create({
   const community = await CommunityService.find({ communityId });
 
   if (!community) {
-    return { status: 403 };
+    return { status: 404 };
   }
 
   const thread1 = await prisma.threads.findUnique({
@@ -32,7 +32,7 @@ export async function create({
   });
   if (!thread1 || !thread2) {
     return {
-      status: 403,
+      status: 404,
     };
   }
 
