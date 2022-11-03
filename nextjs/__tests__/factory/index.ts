@@ -5,6 +5,6 @@ export function build(name: string, options?: object): any {
   return buildFactory(name, options);
 }
 
-export async function create(name: string, options?: object): any {
+export async function create(name: string, options?: object): Promise<any> {
   return createFactory(name, options);
 }
