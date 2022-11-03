@@ -55,7 +55,8 @@ export function Row({
   onPin,
 }: Props) {
   const top = !isPreviousMessageFromSameUser;
-  const draggable = permissions.manage;
+  const owner = currentUser ? currentUser.id === message.usersId : false;
+  const draggable = permissions.manage || owner;
   return (
     <DraggableRow
       id={message.id}
