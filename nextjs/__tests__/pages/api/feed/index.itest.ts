@@ -1,5 +1,5 @@
 import handler from 'pages/api/feed';
-import { create } from '__tests__/factory';
+import { build } from '__tests__/factory';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import setup from '__tests__/spec-helpers/integration';
 import prisma from 'client';
@@ -40,7 +40,7 @@ describe('channels', () => {
           sentAt: new Date(),
         },
       });
-      const request = create('request', {
+      const request = build('request', {
         method: 'GET',
         query: {
           communityName: community.name,
@@ -49,7 +49,7 @@ describe('channels', () => {
 
       (PermissionsService.get as jest.Mock).mockReturnValue({ feed: true });
 
-      const response = create('response') as NextApiResponse;
+      const response = build('response') as NextApiResponse;
       await handler(request, response);
       expect(response.status).toHaveBeenCalledWith(200);
       expect(response.json).toHaveBeenCalledWith({
@@ -98,7 +98,7 @@ describe('channels', () => {
             usersId: user.id,
           },
         });
-        const request = create('request', {
+        const request = build('request', {
           method: 'GET',
           query: {
             communityName: community.name,
@@ -107,7 +107,7 @@ describe('channels', () => {
 
         (PermissionsService.get as jest.Mock).mockReturnValue({ feed: true });
 
-        const response = create('response') as NextApiResponse;
+        const response = build('response') as NextApiResponse;
         await handler(request, response);
         expect(response.status).toHaveBeenCalledWith(200);
         expect(response.json).toHaveBeenCalledWith({

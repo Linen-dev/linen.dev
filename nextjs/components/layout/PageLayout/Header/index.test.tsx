@@ -1,7 +1,7 @@
 import React from 'react';
 import Header from '.';
 import { render } from '@testing-library/react';
-import { create } from '__tests__/factory';
+import { build } from '__tests__/factory';
 import { Mode } from 'hooks/mode';
 
 jest.mock('next-auth/react', () => ({
@@ -11,9 +11,9 @@ jest.mock('next-auth/react', () => ({
 describe('Header', () => {
   describe('when the user is a member', () => {
     it('renders the user avatar', () => {
-      const settings = create('settings');
-      const user = create('user');
-      const permissions = create('permissions', { is_member: true, user });
+      const settings = build('settings');
+      const user = build('user');
+      const permissions = build('permissions', { is_member: true, user });
       const { container } = render(
         <Header
           settings={settings}
@@ -30,9 +30,9 @@ describe('Header', () => {
   });
   describe('when the user is not a member', () => {
     it('renders the join button', () => {
-      const settings = create('settings');
-      const user = create('user');
-      const permissions = create('permissions', { is_member: false, user });
+      const settings = build('settings');
+      const user = build('user');
+      const permissions = build('permissions', { is_member: false, user });
       const { container } = render(
         <Header
           settings={settings}

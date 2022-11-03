@@ -1,7 +1,7 @@
 import { prismaMock } from '__tests__/singleton';
 import { create, update } from 'pages/api/accounts';
 import { Session } from 'next-auth';
-import { create as factory } from '__tests__/factory';
+import { build } from '__tests__/factory';
 
 describe('accounts', () => {
   describe('#create', () => {
@@ -10,7 +10,7 @@ describe('accounts', () => {
         it('returns a 200 and the account id', async () => {
           const session = { user: { email: 'john@doe.com' } } as Session;
           await prismaMock.accounts.create.mockResolvedValue(
-            factory('account', { id: 'account-id' })
+            build('account', { id: 'account-id' })
           );
           const { status, data } = await create({
             session,
@@ -48,11 +48,11 @@ describe('accounts', () => {
         describe('and the account is free', () => {
           it('returns a 200', async () => {
             const session = { user: { email: 'john@doe.com' } } as Session;
-            const account = factory('account', {
+            const account = build('account', {
               id: 'account-id',
               premium: false,
             });
-            const auth = factory('auth', { accountId: account.id });
+            const auth = build('auth', { accountId: account.id });
             await prismaMock.auths.findFirst.mockResolvedValue(auth);
             await prismaMock.accounts.findFirst.mockResolvedValue(account);
             await prismaMock.accounts.update.mockResolvedValue(account);
@@ -72,11 +72,11 @@ describe('accounts', () => {
         describe('and the account is premium', () => {
           it('returns a 200', async () => {
             const session = { user: { email: 'john@doe.com' } } as Session;
-            const account = factory('account', {
+            const account = build('account', {
               id: 'account-id',
               premium: true,
             });
-            const auth = factory('auth', { accountId: account.id });
+            const auth = build('auth', { accountId: account.id });
             await prismaMock.auths.findFirst.mockResolvedValue(auth);
             await prismaMock.accounts.findFirst.mockResolvedValue(account);
             await prismaMock.accounts.update.mockResolvedValue(account);
