@@ -2,15 +2,18 @@ import { NextApiRequest, NextApiResponse } from 'next/types';
 import prisma from 'client';
 import Permissions from 'services/permissions';
 import CommunityService from 'services/community';
+import { Permissions as PermissionsType } from 'types/shared';
 
 export async function create({
   messageId,
   threadId,
   communityId,
+  permissions,
 }: {
   messageId: string;
   threadId: string;
   communityId: string;
+  permissions: PermissionsType;
 }) {
   if (!messageId || !threadId) {
     return { status: 400 };
@@ -19,7 +22,7 @@ export async function create({
   const community = await CommunityService.find({ communityId });
 
   if (!community) {
-    return { status: 403 };
+    return { status: 404 };
   }
 
   const message = await prisma.messages.findUnique({
@@ -32,7 +35,7 @@ export async function create({
   });
   if (!thread || !message) {
     return {
-      status: 403,
+      status: 404,
     };
   }
 
@@ -41,70 +44,79 @@ export async function create({
   });
 
   if (!channel) {
-    return { status: 403 };
+    return { status: 404 };
   }
 
   if (
     channel.accountId !== communityId ||
     thread.channel.accountId !== communityId
   ) {
-    return { status: 403 };
+    return { status: 404 };
   }
 
   if (!message.threadId) {
-    return { status: 403 };
+    return { status: 404 };
   }
 
-  const previous = await prisma.threads.findFirst({
-    where: { id: message.threadId },
-    include: { messages: true },
-  });
+  if (!permissions.user) {
+    return { status: 404 };
+  }
 
-  if (!previous || previous.messages.length > 1) {
-    await prisma.messages.update({
-      where: { id: message.id },
-      data: {
-        threadId: thread.id,
-      },
+  const owner = permissions.user.id === message.usersId;
+
+  if (permissions.manage || owner) {
+    const previous = await prisma.threads.findFirst({
+      where: { id: message.threadId },
+      include: { messages: true },
     });
-  } else {
-    await prisma.$transaction([
-      prisma.messages.update({
+
+    if (!previous || previous.messages.length > 1) {
+      await prisma.messages.update({
         where: { id: message.id },
         data: {
           threadId: thread.id,
         },
-      }),
-      prisma.threads.delete({
-        where: { id: previous.id },
-      }),
-    ]);
-  }
+      });
+    } else {
+      await prisma.$transaction([
+        prisma.messages.update({
+          where: { id: message.id },
+          data: {
+            threadId: thread.id,
+          },
+        }),
+        prisma.threads.delete({
+          where: { id: previous.id },
+        }),
+      ]);
+    }
 
-  return {
-    status: 200,
-    data: {},
-  };
+    return {
+      status: 200,
+      data: {},
+    };
+  } else {
+    return { status: 401 };
+  }
 }
 
 export default async function handler(
   request: NextApiRequest,
   response: NextApiResponse
 ) {
-  const { communityId } = request.body;
-  const permissions = await Permissions.get({
-    request,
-    response,
-    params: { communityId },
-  });
-
-  if (!permissions.manage) {
-    return response.status(401).json({});
-  }
-
   if (request.method === 'POST') {
-    const { messageId, threadId } = request.body;
-    const { status, data } = await create({ messageId, threadId, communityId });
+    const { messageId, threadId, communityId } = request.body;
+    const permissions = await Permissions.get({
+      request,
+      response,
+      params: { communityId },
+    });
+    const { status, data } = await create({
+      messageId,
+      threadId,
+      communityId,
+      permissions,
+    });
     return response.status(status).json(data || {});
   }
   return response.status(200).json({});
