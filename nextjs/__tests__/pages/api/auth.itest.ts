@@ -1,5 +1,5 @@
 import handler from '../../../pages/api/auth';
-import { create } from '../../factory';
+import { build } from '__tests__/factory';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { sendNotification } from '../../../services/slack';
 import ApplicationMailer from '../../../mailers/ApplicationMailer';
@@ -13,14 +13,14 @@ jest.mock('../../../mailers/ApplicationMailer');
 describe('auth', () => {
   describe('#create', () => {
     it('creates a new auth', async () => {
-      const request = create('request', {
+      const request = build('request', {
         method: 'POST',
         body: {
           email: 'john@doe.com',
           password: '123456',
         },
       }) as NextApiRequest;
-      const response = create('response') as NextApiResponse;
+      const response = build('response') as NextApiResponse;
       await handler(request, response);
       expect(response.status).toHaveBeenCalledWith(200);
       expect(response.json).toHaveBeenCalledWith({
@@ -29,14 +29,14 @@ describe('auth', () => {
     });
 
     it('sends a notification', async () => {
-      const request = create('request', {
+      const request = build('request', {
         method: 'POST',
         body: {
           email: 'john@doe.com',
           password: '123456',
         },
       }) as NextApiRequest;
-      const response = create('response') as NextApiResponse;
+      const response = build('response') as NextApiResponse;
       await handler(request, response);
       expect(sendNotification).toHaveBeenCalledWith(
         'Email created: john@doe.com'
@@ -44,14 +44,14 @@ describe('auth', () => {
     });
 
     it.skip('sends a verification email', async () => {
-      const request = create('request', {
+      const request = build('request', {
         method: 'POST',
         body: {
           email: 'john@doe.com',
           password: '123456',
         },
       }) as NextApiRequest;
-      const response = create('response') as NextApiResponse;
+      const response = build('response') as NextApiResponse;
       await handler(request, response);
       expect(ApplicationMailer.send).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -63,14 +63,14 @@ describe('auth', () => {
 
     describe('when auth already exists', () => {
       it('returns a 200', async () => {
-        const request = create('request', {
+        const request = build('request', {
           method: 'POST',
           body: {
             email: 'john@doe.com',
             password: '123456',
           },
         }) as NextApiRequest;
-        const response = create('response') as NextApiResponse;
+        const response = build('response') as NextApiResponse;
         await handler(request, response);
         await handler(request, response);
         expect(response.status).toHaveBeenCalledWith(200);
@@ -82,10 +82,10 @@ describe('auth', () => {
 
     describe('when email is missing', () => {
       it('returns an error', async () => {
-        const request = create('request', {
+        const request = build('request', {
           method: 'POST',
         }) as NextApiRequest;
-        const response = create('response') as NextApiResponse;
+        const response = build('response') as NextApiResponse;
         await handler(request, response);
         expect(response.status).toHaveBeenCalledWith(400);
         expect(response.json).toHaveBeenCalledWith({
@@ -96,13 +96,13 @@ describe('auth', () => {
 
     describe('when password is missing', () => {
       it('returns an error', async () => {
-        const request = create('request', {
+        const request = build('request', {
           method: 'POST',
           body: {
             email: 'john@doe.com',
           },
         }) as NextApiRequest;
-        const response = create('response') as NextApiResponse;
+        const response = build('response') as NextApiResponse;
         await handler(request, response);
         expect(response.status).toHaveBeenCalledWith(400);
         expect(response.json).toHaveBeenCalledWith({
@@ -113,14 +113,14 @@ describe('auth', () => {
 
     describe('when password has less than 6 characters', () => {
       it('returns an error', async () => {
-        const request = create('request', {
+        const request = build('request', {
           method: 'POST',
           body: {
             email: 'john@doe.com',
             password: '1234',
           },
         }) as NextApiRequest;
-        const response = create('response') as NextApiResponse;
+        const response = build('response') as NextApiResponse;
         await handler(request, response);
         expect(response.status).toHaveBeenCalledWith(400);
         expect(response.json).toHaveBeenCalledWith({
