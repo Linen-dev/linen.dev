@@ -4,15 +4,18 @@ import Permissions from 'services/permissions';
 import CommunityService from 'services/community';
 import serializeThread from 'serializers/thread';
 import { anonymizeMessages } from 'utilities/anonymizeMessages';
+import { Permissions as PermissionsType } from 'types/shared';
 
 export async function create({
   messageId,
   channelId,
   communityId,
+  permissions,
 }: {
   messageId: string;
   channelId: string;
   communityId: string;
+  permissions: PermissionsType;
 }) {
   if (!messageId || !channelId) {
     return { status: 400 };
@@ -35,6 +38,10 @@ export async function create({
     return {
       status: 403,
     };
+  }
+
+  if (!permissions.manage) {
+    return { status: 401 };
   }
 
   const { id: threadId } = await prisma.threads.create({
@@ -89,23 +96,18 @@ export default async function handler(
   request: NextApiRequest,
   response: NextApiResponse
 ) {
-  const { communityId } = request.body;
-  const permissions = await Permissions.get({
-    request,
-    response,
-    params: { communityId },
-  });
-
-  if (!permissions.manage) {
-    return response.status(401).json({});
-  }
-
   if (request.method === 'POST') {
-    const { messageId, channelId } = request.body;
+    const { messageId, channelId, communityId } = request.body;
+    const permissions = await Permissions.get({
+      request,
+      response,
+      params: { communityId },
+    });
     const { status, data } = await create({
       messageId,
       channelId,
       communityId,
+      permissions,
     });
     return response.status(status).json(data || {});
   }
