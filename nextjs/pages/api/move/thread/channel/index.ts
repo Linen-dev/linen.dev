@@ -47,6 +47,10 @@ export async function create({
     return { status: 403 };
   }
 
+  if (!permissions.manage) {
+    return { status: 401 };
+  }
+
   await prisma.threads.update({
     where: { id: thread.id },
     data: {
@@ -71,13 +75,14 @@ export default async function handler(
     params: { communityId },
   });
 
-  if (!permissions.manage) {
-    return response.status(401).json({});
-  }
-
   if (request.method === 'POST') {
     const { threadId, channelId } = request.body;
-    const { status, data } = await create({ threadId, channelId, communityId });
+    const { status, data } = await create({
+      threadId,
+      channelId,
+      communityId,
+      permissions,
+    });
     return response.status(status).json(data || {});
   }
   return response.status(200).json({});
