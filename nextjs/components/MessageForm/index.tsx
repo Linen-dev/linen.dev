@@ -6,6 +6,7 @@ import toast from 'components/Toast';
 import Suggestions from 'components/Suggestions';
 import Tab from './Tab';
 import Preview from './Preview';
+import FileInput from './FileInput';
 import { isWhitespace } from 'utilities/string';
 import { getCaretPosition, setCaretPosition } from './utilities';
 import { SerializedUser } from 'serializers/user';
@@ -264,6 +265,9 @@ function MessageForm({
           <Preview message={postprocess(message, allUsers)} users={allUsers} />
         )}
         <div className={styles.toolbar}>
+          <FileInput />
+        </div>
+        <div className={styles.buttons}>
           {onSendAndClose && (
             <Button
               onClick={(event: React.SyntheticEvent) =>
