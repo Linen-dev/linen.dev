@@ -1,9 +1,9 @@
 {
   "dependencies": {
     "@types/phoenix": "^1.5.4",
-    "phoenix": "^1.6.11"
+    "phoenix": "^1.6.15"
   },
   "devDependencies": {
-    "dotenv": "^16.0.2"
+    "dotenv": "^16.0.3"
   }
 }
