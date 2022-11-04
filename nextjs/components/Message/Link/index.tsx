@@ -14,7 +14,6 @@ interface Props {
 
 export default function Link({ value }: Props) {
   const [href, name] = value.split('|');
-
   if (isImage(href)) {
     return (
       <Accordion header={name || href}>

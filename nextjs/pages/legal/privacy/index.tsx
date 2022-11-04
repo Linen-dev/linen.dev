@@ -5,10 +5,12 @@ export default function Privacy() {
     <div className="relative py-16 bg-white">
       <div className="lg:block lg:absolute lg:inset-y-0 lg:h-full lg:w-full">
         <div className="relative h-full text-lg max-w-prose mx-auto space-y-4">
-          <Link href="/" passHref>
-            <a className="text-blue-600 hover:text-blue-800 visited:text-purple-600">
-              Back to Home
-            </a>
+          <Link
+            className="text-blue-600 hover:text-blue-800 visited:text-purple-600"
+            href="/"
+            passHref
+          >
+            Back to Home
           </Link>
           <h3 id="privacy-notice">PRIVACY NOTICE</h3>
           <div>Effective date: 08/31/2022</div>

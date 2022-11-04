@@ -8,10 +8,12 @@ export default function Privacy() {
           className="relative h-full text-lg max-w-prose mx-auto space-y-4"
           aria-hidden="true"
         >
-          <Link href="/" passHref>
-            <a className="text-blue-600 hover:text-blue-800 visited:text-purple-600">
-              Back to Home
-            </a>
+          <Link
+            className="text-blue-600 hover:text-blue-800 visited:text-purple-600"
+            href="/"
+            passHref
+          >
+            Back to Home
           </Link>
           <p>
             <strong>TERMS OF SERVICE</strong>

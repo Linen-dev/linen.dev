@@ -35,14 +35,10 @@ describe('Link', () => {
 
   describe('when the link points to an image', () => {
     it('renders it', async () => {
-      const { getByAltText } = render(
-        <Link value="https://foo.com/image.png" />
-      );
+      const { container } = render(<Link value="https://foo.com/image.png" />);
       await waitFor(() => {
-        const image = getByAltText(
-          'https://foo.com/image.png'
-        ) as HTMLImageElement;
-        expect(image.src).toEqual('https://foo.com/image.png');
+        const link = container.querySelector('a') as HTMLAnchorElement;
+        expect(link.href).toEqual('https://foo.com/image.png');
       });
     });
   });
