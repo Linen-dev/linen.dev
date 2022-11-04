@@ -13,6 +13,7 @@ import { getCaretPosition, setCaretPosition } from './utilities';
 import { SerializedUser } from 'serializers/user';
 import { useUsersContext } from 'contexts/Users';
 import { postprocess } from './utilities/message';
+import axios from 'axios';
 
 interface Props {
   id?: string;
@@ -201,18 +202,24 @@ function MessageForm({
     if (files.length > 0) {
       const formData = new FormData();
       files.forEach((file, index) => {
-        formData.append(`file-${index + 1}`, file);
+        formData.append(`file-${index}`, file, file.name);
       });
       setUploading(true);
-      fetch('/api/upload', {
-        method: 'POST',
-        body: formData,
-      })
-        .then((response) => response.json())
-        .then(({ files }: { files: UploadedFile[] }) => {
-          setUploads(files);
+      axios
+        .post('/api/upload', formData, {
+          onUploadProgress: (progressEvent) => {
+            const percentCompleted = Math.round(
+              (progressEvent.loaded * 100) / progressEvent.total
+            );
+            console.log(`upload process: ${percentCompleted}%`);
+          },
         })
-        .finally(() => {
+        .then((response) => {
+          const { files } = response.data;
+          setUploads(files);
+          setUploading(false);
+        })
+        .catch(() => {
           setUploading(false);
         });
     }
