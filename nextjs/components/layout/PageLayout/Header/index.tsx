@@ -56,16 +56,19 @@ export default function Header({
         gap: '24px',
       }}
     >
-      <Link href={homeUrl || '/'} passHref>
-        <a className="cursor-pointer block" target="_blank">
-          <img
-            className="block"
-            style={{ height: '32px' }}
-            src={logoUrl}
-            height="32"
-            alt={`${homeUrl} logo`}
-          />
-        </a>
+      <Link
+        className="cursor-pointer block"
+        href={homeUrl || '/'}
+        passHref
+        target="_blank"
+      >
+        <img
+          className="block"
+          style={{ height: '32px' }}
+          src={logoUrl}
+          height="32"
+          alt={`${homeUrl} logo`}
+        />
       </Link>
       <div
         className="flex w-full items-center"

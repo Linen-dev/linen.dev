@@ -22,16 +22,16 @@ export default function InternalLink({
 }: Props) {
   const path = usePath({ href });
   return (
-    <Link href={path} prefetch={false}>
-      <a
-        onClick={onClick}
-        onDragEnter={onDragEnter}
-        onDragLeave={onDragLeave}
-        onDrop={onDrop}
-        className={className}
-      >
-        {children}
-      </a>
+    <Link
+      href={path}
+      prefetch={false}
+      onClick={onClick}
+      onDragEnter={onDragEnter}
+      onDragLeave={onDragLeave}
+      onDrop={onDrop}
+      className={className}
+    >
+      {children}
     </Link>
   );
 }

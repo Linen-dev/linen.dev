@@ -14,9 +14,7 @@ const Layout = ({ header, children }: Props) => {
     <div className={styles.page}>
       <div className={styles.logo}>
         <Link className="text-center" href="/">
-          <a>
-            <LinenLogo />
-          </a>
+          <LinenLogo />
         </Link>
       </div>
       <Card>
