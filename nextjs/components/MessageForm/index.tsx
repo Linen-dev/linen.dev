@@ -119,6 +119,7 @@ function MessageForm({
   const [message, setMessage] = useState('');
   const [preview, setPreview] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [files, setFiles] = useState<File[]>([]);
   const [users, setUsers] = useState<SerializedUser[]>([]);
   const [allUsers, addUsers] = useUsersContext();
   const [position, setPosition] = useState(0);
@@ -179,6 +180,29 @@ function MessageForm({
       mounted = false;
     };
   }, [mention]);
+
+  const onFileInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files || [];
+    const file = files[0];
+    if (file) {
+      setFiles([file]);
+      const formData = new FormData();
+      fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      })
+        .then((response) => response.json())
+        .then((result) => {
+          console.log(result);
+          console.log('Success:', result);
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+    } else {
+      setFiles([]);
+    }
+  };
 
   return (
     <div className={styles.container}>
@@ -265,7 +289,7 @@ function MessageForm({
           <Preview message={postprocess(message, allUsers)} users={allUsers} />
         )}
         <div className={styles.toolbar}>
-          <FileInput />
+          <FileInput onChange={onFileInputChange} />
         </div>
         <div className={styles.buttons}>
           {onSendAndClose && (
