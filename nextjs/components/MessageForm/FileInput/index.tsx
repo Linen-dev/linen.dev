@@ -3,18 +3,19 @@ import styles from './index.module.scss';
 import { FiUpload } from 'react-icons/fi';
 
 interface Props {
+  id: string;
   disabled: boolean;
   onChange(event: React.ChangeEvent<HTMLInputElement>): void;
 }
 
-export default function FileInput({ disabled, onChange }: Props) {
+export default function FileInput({ id, disabled, onChange }: Props) {
   return (
-    <label className={styles.label} htmlFor="files">
+    <label className={styles.label} htmlFor={id}>
       <FiUpload />
       <input
         className={styles.input}
         type="file"
-        id="files"
+        id={id}
         name="files"
         onChange={onChange}
         multiple

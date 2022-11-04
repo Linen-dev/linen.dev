@@ -15,6 +15,7 @@ import { useUsersContext } from 'contexts/Users';
 import { postprocess } from './utilities/message';
 
 interface Props {
+  id?: string;
   autoFocus?: boolean;
   onSend?(message: string, files: UploadedFile[]): Promise<any>;
   onSendAndClose?(message: string, files: UploadedFile[]): Promise<any>;
@@ -117,6 +118,7 @@ interface UploadedFile {
 }
 
 function MessageForm({
+  id,
   autoFocus,
   onSend,
   onSendAndClose,
@@ -142,7 +144,6 @@ function MessageForm({
       return;
     }
     setLoading(true);
-    setMessage('');
 
     callback?.(postprocess(message, allUsers), uploads)
       .then(() => {
@@ -152,6 +153,10 @@ function MessageForm({
         toast.error('Something went wrong. Please try again.');
         setLoading(false);
       });
+
+    setMessage('');
+    setFiles([]);
+    setUploads([]);
   };
   const handleSend = async (event: React.SyntheticEvent) =>
     handleSubmit(event, onSend);
@@ -298,7 +303,11 @@ function MessageForm({
           <Preview message={postprocess(message, allUsers)} users={allUsers} />
         )}
         <div className={styles.toolbar}>
-          <FileInput disabled={uploading} onChange={onFileInputChange} />
+          <FileInput
+            id={`${id}-files`}
+            disabled={uploading}
+            onChange={onFileInputChange}
+          />
           <FilesCount uploading={uploading} count={files.length} />
         </div>
         <div className={styles.buttons}>

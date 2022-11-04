@@ -8,7 +8,9 @@ import { findMentions } from 'utilities/message/find';
 import { eventNewMessage } from 'services/events';
 import { MessageFormat, Prisma } from '@prisma/client';
 import PermissionsService from 'services/permissions';
+import { v4 as uuid } from 'uuid';
 import unique from 'lodash.uniq';
+import { UploadedFile } from 'types/shared';
 
 async function handler(request: NextApiRequest, response: NextApiResponse) {
   if (request.method === 'POST') {
@@ -21,9 +23,8 @@ export async function create(
   request: NextApiRequest,
   response: NextApiResponse<any>
 ) {
-  const { body, communityId, channelId, threadId, imitationId } = JSON.parse(
-    request.body
-  );
+  const { body, files, communityId, channelId, threadId, imitationId } =
+    JSON.parse(request.body);
 
   if (!threadId) {
     return response.status(400).json({ error: 'thread id is required' });
@@ -97,6 +98,14 @@ export async function create(
       author: { connect: { id: userId } },
       mentions: {
         create: userIds.map((id: string) => ({ usersId: id })),
+      },
+      attachments: {
+        create: files.map((file: UploadedFile) => ({
+          externalId: uuid(),
+          name: file.id,
+          sourceUrl: file.url,
+          internalUrl: file.url,
+        })),
       },
       messageFormat: MessageFormat.LINEN,
     } as Prisma.messagesCreateInput,

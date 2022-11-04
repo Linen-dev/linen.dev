@@ -6,13 +6,29 @@ import { SerializedAccount } from 'serializers/account';
 import debounce from 'utilities/debounce';
 import { StartSignUpFn } from 'contexts/Join';
 import { createMessageImitation } from './utilities/message';
+import { UploadedFile } from 'types/shared';
 
 const debouncedSendThreadMessage = debounce(
-  ({ message, communityId, channelId, threadId, imitationId }: any) => {
+  ({
+    message,
+    files,
+    communityId,
+    channelId,
+    threadId,
+    imitationId,
+  }: {
+    message: string;
+    files: UploadedFile[];
+    communityId: string;
+    channelId: string;
+    threadId: string;
+    imitationId: string;
+  }) => {
     return fetch(`/api/messages/thread`, {
       method: 'POST',
       body: JSON.stringify({
         body: message,
+        files,
         communityId,
         channelId,
         threadId,
@@ -39,10 +55,12 @@ export function sendThreadMessageWrapper({
 }) {
   return async ({
     message,
+    files,
     channelId,
     threadId,
   }: {
     message: string;
+    files: UploadedFile[];
     channelId: string;
     threadId: string;
   }) => {
@@ -69,6 +87,7 @@ export function sendThreadMessageWrapper({
     const imitation: SerializedMessage = createMessageImitation({
       message,
       threadId,
+      files,
       author: currentUser,
       mentions: allUsers,
     });
@@ -88,6 +107,7 @@ export function sendThreadMessageWrapper({
     return debouncedSendThreadMessage({
       message,
       communityId: currentCommunity?.id,
+      files,
       channelId,
       threadId,
       imitationId: imitation.id,

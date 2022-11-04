@@ -1,9 +1,10 @@
 .attachment {
+  align-items: center;
   background-color: #f6f6f6;
   border: 1px solid rgb(225, 225, 225);
   border-radius: 1rem;
   color: #2f3337;
-  display: inline-block;
+  display: inline-flex;
   padding: 0.05rem 0.5rem;
   font-size: 0.75rem;
 }

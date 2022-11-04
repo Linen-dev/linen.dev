@@ -4,14 +4,30 @@ import { v4 as uuid } from 'uuid';
 import { StartSignUpFn } from 'contexts/Join';
 import { SerializedUser, username } from 'serializers/user';
 import { SerializedThread } from 'serializers/thread';
+import { UploadedFile } from 'types/shared';
 import debounce from 'utilities/debounce';
 
 const debouncedSendMessage = debounce(
-  ({ message, communityId, channelId, threadId, imitationId }: any) => {
+  ({
+    message,
+    files,
+    communityId,
+    channelId,
+    threadId,
+    imitationId,
+  }: {
+    message: string;
+    files: UploadedFile[];
+    communityId: string;
+    channelId: string;
+    threadId: string;
+    imitationId: string;
+  }) => {
     return fetch(`/api/messages/thread`, {
       method: 'POST',
       body: JSON.stringify({
         body: message,
+        files,
         communityId,
         channelId,
         threadId,
@@ -37,10 +53,12 @@ export function sendMessageWrapper({
 }) {
   return async ({
     message,
+    files,
     channelId,
     threadId,
   }: {
     message: string;
+    files: UploadedFile[];
     channelId: string;
     threadId: string;
   }) => {
@@ -69,7 +87,9 @@ export function sendMessageWrapper({
       sentAt: new Date().toISOString(),
       usersId: currentUser.id,
       mentions: allUsers,
-      attachments: [],
+      attachments: files.map((file) => {
+        return { name: file.id, url: file.url };
+      }),
       reactions: [],
       threadId,
       messageFormat: MessageFormat.LINEN,
@@ -92,6 +112,7 @@ export function sendMessageWrapper({
 
     return debouncedSendMessage({
       message,
+      files,
       communityId: currentCommunity?.id,
       channelId,
       threadId,
