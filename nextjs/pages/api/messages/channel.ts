@@ -9,6 +9,8 @@ import { eventNewThread } from 'services/events';
 import { MessageFormat, Prisma } from '@prisma/client';
 import PermissionsService from 'services/permissions';
 import unique from 'lodash.uniq';
+import { UploadedFile } from 'types/shared';
+import { v4 as uuid } from 'uuid';
 
 async function handler(request: NextApiRequest, response: NextApiResponse) {
   if (request.method === 'POST') {
@@ -21,7 +23,7 @@ export async function create(
   request: NextApiRequest,
   response: NextApiResponse<any>
 ) {
-  const { body, channelId, imitationId, communityId } = JSON.parse(
+  const { body, files, channelId, imitationId, communityId } = JSON.parse(
     request.body
   );
   if (!channelId) {
@@ -92,6 +94,14 @@ export async function create(
       author: { connect: { id: userId } },
       mentions: {
         create: userIds.map((id: string) => ({ usersId: id })),
+      },
+      attachments: {
+        create: files.map((file: UploadedFile) => ({
+          externalId: uuid(), // TODO should this be optional?
+          name: file.id,
+          sourceUrl: file.url, // TODO should this be optional?
+          internalUrl: file.url,
+        })),
       },
       messageFormat: MessageFormat.LINEN,
     } as Prisma.messagesCreateInput,

@@ -39,7 +39,10 @@
 }
 
 .toolbar {
+  align-items: center;
+  display: flex;
   position: absolute;
+  gap: 0.5rem;
   bottom: 0.375rem;
   left: 0.625rem;
 }

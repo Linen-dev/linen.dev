@@ -1,6 +1,7 @@
 import React, { createRef } from 'react';
 import MessageForm from 'components/MessageForm';
 import { fetchMentions } from 'components/MessageForm/api';
+import { UploadedFile } from 'types/shared';
 import styles from './index.module.scss';
 
 interface Props {
@@ -19,9 +20,11 @@ interface Props {
   }): void;
   sendMessage({
     message,
+    files,
     channelId,
   }: {
     message: string;
+    files: UploadedFile[];
     channelId: string;
   }): Promise<void>;
 }
@@ -64,9 +67,10 @@ export default function Chat({
       ref={ref}
     >
       <MessageForm
-        onSend={(message: string) => {
+        onSend={(message: string, files: UploadedFile[]) => {
           return sendMessage({
             message,
+            files,
             channelId: channelId,
           });
         }}
