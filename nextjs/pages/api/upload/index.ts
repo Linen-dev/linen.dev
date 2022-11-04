@@ -2,7 +2,6 @@ import { NextApiRequest, NextApiResponse } from 'next/types';
 import formidable from 'formidable';
 import { readFile } from 'fs/promises';
 import UploadService from 'services/upload';
-import prisma from 'client';
 
 export const config = {
   api: {
@@ -24,19 +23,22 @@ export default async function handler(
   response: NextApiResponse
 ) {
   if (request.method === 'POST') {
+    // we could refactor this to use fileWriteStreamHandler and send to s3 directly
     const form = formidable({
       maxFileSize: 1024 * 1024, // 1mb
+      maxFields: 10,
+      keepExtensions: true,
+      allowEmptyFiles: false,
     });
     try {
       const files: File[] = await new Promise((resolve, reject) => {
         form.parse(request, function (error, _, files) {
           if (error) {
-            reject(error);
+            return reject(error);
           }
           resolve(Object.values(files) as any);
         });
       });
-      console.log(files);
       const data = await Promise.all(
         files.map(async (file) => {
           const buffer = await readFile(file.filepath);
