@@ -413,6 +413,12 @@ export default function Channel({
       currentChannel.id === channelId &&
       createThreadImitation({
         message: message.body,
+        files: message.attachments.map((attachment) => {
+          return {
+            id: attachment.name,
+            url: attachment.url,
+          };
+        }),
         author: message.author as SerializedUser,
         mentions: allUsers,
         channel: currentChannel,

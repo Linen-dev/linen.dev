@@ -8,7 +8,7 @@ import { SerializedUser } from 'serializers/user';
 import type { Settings } from 'serializers/account/settings';
 import MessageForm from 'components/MessageForm';
 import { fetchMentions } from 'components/MessageForm/api';
-import { Permissions } from 'types/shared';
+import { Permissions, UploadedFile } from 'types/shared';
 import { Mode } from 'hooks/mode';
 import styles from './index.module.scss';
 import classNames from 'classnames';
@@ -25,10 +25,12 @@ interface Props {
   mode?: Mode;
   sendMessage({
     message,
+    files,
     channelId,
     threadId,
   }: {
     message: string;
+    files: UploadedFile[];
     channelId: string;
     threadId: string;
   }): Promise<void>;
@@ -126,14 +128,15 @@ export function Thread({
           {manage && state === ThreadState.OPEN ? (
             <MessageForm
               autoFocus
-              onSend={(message: string) => {
+              id="thread-message-form"
+              onSend={(message: string, files: UploadedFile[]) => {
                 onSend?.();
-                return sendMessage({ message, channelId, threadId: id });
+                return sendMessage({ message, files, channelId, threadId: id });
               }}
-              onSendAndClose={(message: string) => {
+              onSendAndClose={(message: string, files: UploadedFile[]) => {
                 onSend?.();
                 return Promise.all([
-                  sendMessage({ message, channelId, threadId: id }),
+                  sendMessage({ message, files, channelId, threadId: id }),
                   updateThread({ state: ThreadState.CLOSE }),
                 ]);
               }}
@@ -145,10 +148,11 @@ export function Thread({
           ) : (
             <MessageForm
               autoFocus
-              onSend={(message: string) => {
+              id="thread-message-form"
+              onSend={(message: string, files: UploadedFile[]) => {
                 onSend?.();
                 return Promise.all([
-                  sendMessage({ message, channelId, threadId: id }),
+                  sendMessage({ message, files, channelId, threadId: id }),
                   manage && updateThread({ state: ThreadState.OPEN }),
                 ]);
               }}

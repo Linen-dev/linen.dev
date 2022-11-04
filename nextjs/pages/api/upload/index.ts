@@ -36,12 +36,14 @@ export default async function handler(
           resolve(Object.values(files) as any);
         });
       });
+      console.log(files);
       const data = await Promise.all(
         files.map(async (file) => {
           const buffer = await readFile(file.filepath);
+          const name = file.originalFilename.replaceAll('/', '_');
           return await UploadService.upload({
-            id: file.filepath.replaceAll('/', '_'),
-            name: file.newFilename.replaceAll('/', '_'),
+            id: name,
+            name,
             buffer,
           });
         })
