@@ -7,6 +7,7 @@ import Suggestions from 'components/Suggestions';
 import Tab from './Tab';
 import Preview from './Preview';
 import FileInput from './FileInput';
+import FilesCount from './FilesCount';
 import { isWhitespace } from 'utilities/string';
 import { getCaretPosition, setCaretPosition } from './utilities';
 import { SerializedUser } from 'serializers/user';
@@ -15,8 +16,8 @@ import { postprocess } from './utilities/message';
 
 interface Props {
   autoFocus?: boolean;
-  onSend?(message: string): Promise<any>;
-  onSendAndClose?(message: string): Promise<any>;
+  onSend?(message: string, files: UploadedFile[]): Promise<any>;
+  onSendAndClose?(message: string, files: UploadedFile[]): Promise<any>;
   fetchMentions?(term?: string): Promise<SerializedUser[]>;
 }
 
@@ -110,6 +111,11 @@ enum Mode {
   Mention,
 }
 
+interface UploadedFile {
+  id: string;
+  url: string;
+}
+
 function MessageForm({
   autoFocus,
   onSend,
@@ -119,7 +125,9 @@ function MessageForm({
   const [message, setMessage] = useState('');
   const [preview, setPreview] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [files, setFiles] = useState<File[]>([]);
+  const [uploads, setUploads] = useState<UploadedFile[]>([]);
   const [users, setUsers] = useState<SerializedUser[]>([]);
   const [allUsers, addUsers] = useUsersContext();
   const [position, setPosition] = useState(0);
@@ -136,7 +144,7 @@ function MessageForm({
     setLoading(true);
     setMessage('');
 
-    callback?.(postprocess(message, allUsers))
+    callback?.(postprocess(message, allUsers), uploads)
       .then(() => {
         setLoading(false);
       })
@@ -182,25 +190,26 @@ function MessageForm({
   }, [mention]);
 
   const onFileInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files || [];
-    const file = files[0];
-    if (file) {
-      setFiles([file]);
+    const files = Array.from(event.target.files || []);
+    setUploads([]);
+    setFiles(files);
+    if (files.length > 0) {
       const formData = new FormData();
+      files.forEach((file, index) => {
+        formData.append(`file-${index + 1}`, file);
+      });
+      setUploading(true);
       fetch('/api/upload', {
         method: 'POST',
         body: formData,
       })
         .then((response) => response.json())
-        .then((result) => {
-          console.log(result);
-          console.log('Success:', result);
+        .then(({ files }: { files: UploadedFile[] }) => {
+          setUploads(files);
         })
-        .catch((error) => {
-          console.error('Error:', error);
+        .finally(() => {
+          setUploading(false);
         });
-    } else {
-      setFiles([]);
     }
   };
 
@@ -289,7 +298,8 @@ function MessageForm({
           <Preview message={postprocess(message, allUsers)} users={allUsers} />
         )}
         <div className={styles.toolbar}>
-          <FileInput onChange={onFileInputChange} />
+          <FileInput disabled={uploading} onChange={onFileInputChange} />
+          <FilesCount uploading={uploading} count={files.length} />
         </div>
         <div className={styles.buttons}>
           {onSendAndClose && (
@@ -300,12 +310,18 @@ function MessageForm({
               size="xs"
               weight="normal"
               color="gray"
+              disabled={!message || uploading}
             >
               Post &amp; Close
             </Button>
           )}
           {onSend && (
-            <Button type="submit" weight="normal" size="xs">
+            <Button
+              type="submit"
+              weight="normal"
+              size="xs"
+              disabled={!message || uploading}
+            >
               Post
             </Button>
           )}

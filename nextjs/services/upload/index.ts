@@ -7,7 +7,7 @@ import {
 interface File {
   id: string;
   name?: string;
-  body: string;
+  buffer: Buffer;
 }
 
 export default class UploadService {
@@ -17,7 +17,7 @@ export default class UploadService {
       file.id,
       file.name || 'unknown',
     ].join('/');
-    await uploadFile(path, Buffer.from(file.body));
+    await uploadFile(path, file.buffer);
     return {
       id: file.id,
       url: [LINEN_ASSETS_CDN, path].join('/'),

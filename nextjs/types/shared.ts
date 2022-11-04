@@ -25,3 +25,8 @@ export enum Scope {
   All = 'all',
   Participant = 'participant',
 }
+
+export interface UploadedFile {
+  id: string;
+  url: string;
+}

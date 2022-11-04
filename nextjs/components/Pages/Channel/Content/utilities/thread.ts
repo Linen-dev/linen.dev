@@ -3,15 +3,18 @@ import { SerializedThread } from 'serializers/thread';
 import { SerializedUser, username } from 'serializers/user';
 import { MessageFormat, ThreadState } from '@prisma/client';
 import { ChannelSerialized } from 'lib/channel';
+import { UploadedFile } from 'types/shared';
 
 export function createThreadImitation({
   message,
   author,
+  files,
   mentions,
   channel,
 }: {
   message: string;
   author: SerializedUser;
+  files: UploadedFile[];
   mentions: SerializedUser[];
   channel: ChannelSerialized;
 }): SerializedThread {
@@ -26,7 +29,12 @@ export function createThreadImitation({
         sentAt: new Date().toISOString(),
         usersId: 'imitation-user-id',
         mentions,
-        attachments: [],
+        attachments: files.map((file) => {
+          return {
+            name: file.id,
+            url: file.url,
+          };
+        }),
         reactions: [],
         threadId: 'imitation-thread-id',
         messageFormat: MessageFormat.LINEN,
