@@ -67,7 +67,7 @@ const Home = (props: { accounts: Props[] }) => {
       <div className="max-w-rxl mx-auto px-2 sm:px-6">
         <div className="flex justify-between items-center border-b-2 border-gray-100 py-2 md:justify-start md:space-x-10">
           <div className="flex justify-start lg:w-0 lg:flex-1">
-            <Link href="/" passHref>
+            <Link legacyBehavior href="/" passHref>
               <a>
                 <LinenLogo />
               </a>
@@ -87,13 +87,13 @@ const Home = (props: { accounts: Props[] }) => {
             </div>
           </a>
           <div className="flex items-center justify-end md:flex-1 lg:w-0">
-            <Link href="/signin" passHref>
+            <Link legacyBehavior href="/signin" passHref>
               <a className="mr-4 whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900 ">
                 Sign in
               </a>
             </Link>
             <div className="hidden md:block">
-              <Link href="/signup" passHref>
+              <Link legacyBehavior href="/signup" passHref>
                 <a className="ml-4 whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-blue-600 hover:bg-blue-700">
                   Get Started
                 </a>
@@ -119,7 +119,7 @@ const Home = (props: { accounts: Props[] }) => {
           </p>
           <div className="mt-5 sm:mt-8 sm:flex sm:justify-center">
             <div className="rounded-md shadow">
-              <Link href="/signup" passHref>
+              <Link legacyBehavior href="/signup" passHref>
                 <a className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 md:py-4 md:text-lg md:px-10">
                   Get Started
                 </a>
@@ -144,11 +144,7 @@ const Home = (props: { accounts: Props[] }) => {
           </div>
           <div className="flex justify-center my-20 shadow-lg">
             <FadeIn delay={200}>
-              <Image
-                className="rounded-md"
-                src={linenExamplePage}
-                alt={'Linen example page'}
-              />
+              <Image className="rounded-md" src={linenExamplePage} alt={'YC'} />
             </FadeIn>
           </div>
         </div>
@@ -239,7 +235,7 @@ const Home = (props: { accounts: Props[] }) => {
                       attention in a single page
                     </p>
                     <div className="mt-6">
-                      <Link href="/signup">
+                      <Link legacyBehavior href="/signup">
                         <a className="inline-flex rounded-md border border-transparent bg-gradient-to-r from-blue-600 to-indigo-600 bg-origin-border px-4 py-2 text-base font-medium text-white shadow-sm hover:from-blue-700 hover:to-indigo-700">
                           Get started
                         </a>
@@ -279,7 +275,7 @@ const Home = (props: { accounts: Props[] }) => {
                       Google{' '}
                     </p>
                     <div className="mt-6">
-                      <Link href="/signup">
+                      <Link legacyBehavior href="/signup">
                         <a className="inline-flex rounded-md border border-transparent bg-gradient-to-r from-blue-600 to-indigo-600 bg-origin-border px-4 py-2 text-base font-medium text-white shadow-sm hover:from-blue-700 hover:to-indigo-700">
                           Get started
                         </a>
