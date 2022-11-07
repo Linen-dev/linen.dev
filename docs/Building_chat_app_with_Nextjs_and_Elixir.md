@@ -87,7 +87,7 @@ function useWebSockets({ room, token, permissions, onNewMessage }: Props) {
 }
 ```
 
-1. User sends a message to the node backend
+2. User sends a message to the node backend
     1. Client side does optimistic update and renders the text instantly
         
         [Full code example](https://github.com/Linen-dev/linen.dev/blob/176659feee3c093ffd4fbec6541fa4d154ae9c45/nextjs/components/Pages/Channel/Content/sendMessageWrapper.tsx)
@@ -107,7 +107,7 @@ return fetch(`/api/messages/channel`, {
   },
 ```
 
-1. Node backend saves message to Postgres DB
+3. Node backend saves message to Postgres DB
     
     [Full code example](https://github.com/Linen-dev/linen.dev/blob/176659feee3c093ffd4fbec6541fa4d154ae9c45/nextjs/pages/api/messages/channel.ts#L110)
     
@@ -125,7 +125,7 @@ const thread = await prisma.threads.create({
   });
 ```
 
-1. Node backend sends the message that has been created to Elixir push service along with metadata of which channel it exists in
+4. Node backend sends the message that has been created to Elixir push service along with metadata of which channel it exists in
     
     [Full code example](https://github.com/Linen-dev/linen.dev/blob/176659feee3c093ffd4fbec6541fa4d154ae9c45/nextjs/services/push/index.ts#L32)
     
@@ -153,7 +153,7 @@ export const push = ({
 };
 ```
 
-1. Elixir push service then pushes the message to all the users that have joined the channel
+5. Elixir push service then pushes the message to all the users that have joined the channel
     
     [Full code example:](https://github.com/Linen-dev/linen.dev/blob/main/push_service/lib/push_service_web/controllers/channel_controller.ex#L6)
     
