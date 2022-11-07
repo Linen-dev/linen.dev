@@ -3,6 +3,7 @@ import formidable from 'formidable';
 import { readFile } from 'fs/promises';
 import UploadService from 'services/upload';
 import PermissionsService from 'services/permissions';
+import { withSentry } from '@sentry/nextjs';
 
 export const config = {
   api: {
@@ -19,10 +20,7 @@ interface File {
   size: number;
 }
 
-export default async function handler(
-  request: NextApiRequest,
-  response: NextApiResponse
-) {
+async function handler(request: NextApiRequest, response: NextApiResponse) {
   if (request.method === 'POST') {
     const permissions = await PermissionsService.get({
       request,
@@ -74,3 +72,5 @@ export default async function handler(
     return response.status(404).json({});
   }
 }
+
+export default withSentry(handler);
