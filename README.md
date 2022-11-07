@@ -19,9 +19,9 @@ Join our public community: https://linen.dev/s/linen
 - **Import communities**: Linen support imports from all of your public Slack/Discord conversations, attachments, emojis, and members.
 - **Single account across multiple communities**: Linen let's you join multiple communities with a single login without multiple emails and passwords
 - **Private communities**: In addition to public communities we also support private communities that require a password login to access the content. We use this feature for internal team discussions.
+- **Improved Thread management**: Linen let's you drag and drop messages and merge them into a single thread as well as move threads between channels.
 
 ### Roadmap:
-- **Improved Thread management**: Linen let's you drag and drop messages and merge them into a single thread as well as move threads between channels.
 - **Github integration**: Most open source communities use github issues to manage their tickets. We want to let you tag a conversation with a github issue and it will auto post a message when the ticket is closed or has an update.
 - **Improved search**: Currently search is done via full text search with postgres. There are a lot more improvements to be made here we are considering hosting a separate search service
 - **Self deployment flow and documentation**: Linen isn't self ready to be self deployed yet. There are a ton of code that is coupled with the cloud edition also the deployment instructions are missing.
