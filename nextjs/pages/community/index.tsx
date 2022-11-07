@@ -1,15 +1,18 @@
+import { prisma } from 'client';
 import linenExamplePage from 'public/linen-example-page.png';
 import Image from 'next/image';
 import LinenLogo from 'components/Logo/Linen';
 import YCombinatorLogo from 'components/Logo/YCombinator';
 import { GoCheck } from 'react-icons/go';
+import { BsGithub } from 'react-icons/bs';
 
 import Link from 'next/link';
 import FadeIn from 'components/FadeIn';
 import Head from 'next/head';
 import Footer from 'components/Footer';
 
-const Home = () => {
+const Home = (props: { accounts: Props[] }) => {
+  const accounts = props.accounts;
   const tiers = [
     {
       name: 'Community Edition',
@@ -61,29 +64,39 @@ const Home = () => {
         <title>Linen | Slack alternative designed for communities</title>
       </Head>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="flex justify-between items-center border-b-2 border-gray-100 py-6 md:justify-start md:space-x-10">
+      <div className="max-w-rxl mx-auto px-2 sm:px-6">
+        <div className="flex justify-between items-center border-b-2 border-gray-100 py-2 md:justify-start md:space-x-10">
           <div className="flex justify-start lg:w-0 lg:flex-1">
             <Link href="/" passHref>
-              <LinenLogo />
+              <a>
+                <LinenLogo />
+              </a>
             </Link>
           </div>
-
+          <a
+            className="mr-4 whitespace-nowrap text-base font-medium text-gray-600 hover:text-gray-900"
+            href="https://github.com/linen-dev/linen.dev"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <div className="flex flex-row items-center">
+              <div className="pr-2">
+                <BsGithub />
+              </div>
+              Star us on Github
+            </div>
+          </a>
           <div className="flex items-center justify-end md:flex-1 lg:w-0">
-            <Link
-              className="mr-4 whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900"
-              href="/signin"
-              passHref
-            >
-              Sign in
+            <Link href="/signin" passHref>
+              <a className="mr-4 whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900 ">
+                Sign in
+              </a>
             </Link>
             <div className="hidden md:block">
-              <Link
-                className="ml-4 whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-blue-600 hover:bg-blue-700"
-                href="/signup"
-                passHref
-              >
-                Get Started
+              <Link href="/signup" passHref>
+                <a className="ml-4 whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-blue-600 hover:bg-blue-700">
+                  Get Started
+                </a>
               </Link>
             </div>
           </div>
@@ -101,18 +114,15 @@ const Home = () => {
             </div>
           </h1>
           <p className="mt-3 text-base text-gray-500 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl ">
-            Linen is built for community support. Linen is designed to be
-            familiar to existing communities while giving all the benefits of a
-            forum.
+            Sync your Slack and Discord conversations to Linen and get SEO
+            benefits while reducing customer support load
           </p>
           <div className="mt-5 sm:mt-8 sm:flex sm:justify-center">
             <div className="rounded-md shadow">
-              <Link
-                className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 md:py-4 md:text-lg md:px-10"
-                href="/signup"
-                passHref
-              >
-                Get Started
+              <Link href="/signup" passHref>
+                <a className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 md:py-4 md:text-lg md:px-10">
+                  Get Started
+                </a>
               </Link>
             </div>
             <div className="mt-3 sm:mt-0 sm:ml-3">
@@ -134,11 +144,7 @@ const Home = () => {
           </div>
           <div className="flex justify-center my-20 shadow-lg">
             <FadeIn delay={200}>
-              <Image
-                className="rounded-md"
-                alt="Linen Example Page"
-                src={linenExamplePage}
-              />
+              <Image className="rounded-md" src={linenExamplePage} />
             </FadeIn>
           </div>
         </div>
@@ -174,6 +180,37 @@ const Home = () => {
           </div>
         </div>
 
+        <div className="flex flex-col items-center mt-10">
+          <h1 className="text-2xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-4xl">
+            Featured Communities
+          </h1>
+        </div>
+
+        <div className="flex flex-col md:grid md:grid-cols-2 lg:grid-cols-3 gap-3 mt-10">
+          {accounts.map((a, index) => {
+            let url = a.premium
+              ? 'https://' + a.redirectDomain
+              : a.discordDomain
+              ? 'https://linen.dev/d/' + a.discordDomain
+              : 'https://linen.dev/s/' + a.slackDomain;
+
+            // TODO:remove this once supabase sets up domain to discord.supabase.com
+            if (url.includes('supabase')) {
+              url = 'https://839993398554656828.linen.dev/';
+            }
+            return (
+              <CommunityCard
+                url={url}
+                communityName={a.name}
+                description="Community"
+                logoUrl={a.logoUrl}
+                brandColor={a.brandColor}
+                key={a.name + index}
+              ></CommunityCard>
+            );
+          })}
+        </div>
+
         <div className="relative overflow-hidden pt-16 pb-32">
           <div
             aria-hidden="true"
@@ -198,11 +235,10 @@ const Home = () => {
                       attention in a single page
                     </p>
                     <div className="mt-6">
-                      <Link
-                        className="inline-flex rounded-md border border-transparent bg-gradient-to-r from-blue-600 to-indigo-600 bg-origin-border px-4 py-2 text-base font-medium text-white shadow-sm hover:from-blue-700 hover:to-indigo-700"
-                        href="/signup"
-                      >
-                        Get started
+                      <Link href="/signup">
+                        <a className="inline-flex rounded-md border border-transparent bg-gradient-to-r from-blue-600 to-indigo-600 bg-origin-border px-4 py-2 text-base font-medium text-white shadow-sm hover:from-blue-700 hover:to-indigo-700">
+                          Get started
+                        </a>
                       </Link>
                     </div>
                   </div>
@@ -239,11 +275,10 @@ const Home = () => {
                       Google{' '}
                     </p>
                     <div className="mt-6">
-                      <Link
-                        className="inline-flex rounded-md border border-transparent bg-gradient-to-r from-blue-600 to-indigo-600 bg-origin-border px-4 py-2 text-base font-medium text-white shadow-sm hover:from-blue-700 hover:to-indigo-700"
-                        href="/signup"
-                      >
-                        Get started
+                      <Link href="/signup">
+                        <a className="inline-flex rounded-md border border-transparent bg-gradient-to-r from-blue-600 to-indigo-600 bg-origin-border px-4 py-2 text-base font-medium text-white shadow-sm hover:from-blue-700 hover:to-indigo-700">
+                          Get started
+                        </a>
                       </Link>
                     </div>
                   </div>
@@ -444,7 +479,7 @@ const CommunityCard = ({
 }) => {
   return (
     <a
-      className="flex items-center justify-center rounded"
+      className="flex items-center justify-center rounded py-8"
       style={{
         backgroundColor: brandColor,
       }}
@@ -468,8 +503,36 @@ type Props = {
 };
 
 export async function getStaticProps() {
+  const accounts = await prisma.accounts.findMany({
+    where: {
+      NOT: [
+        {
+          logoUrl: null,
+        },
+      ],
+      syncStatus: 'DONE',
+    },
+    select: {
+      logoUrl: true,
+      name: true,
+      premium: true,
+      brandColor: true,
+      redirectDomain: true,
+      slackDomain: true,
+      discordServerId: true,
+      discordDomain: true,
+    },
+  });
+
+  const goodLookingLogos = accounts.filter((a) => a.logoUrl?.includes('.svg'));
+  // since we use 3 columns we want it to only show numbers divisible by 3
+  const remainders = goodLookingLogos.slice(
+    0,
+    goodLookingLogos.length - (goodLookingLogos.length % 3)
+  );
+
   return {
-    props: {},
+    props: { accounts: remainders },
   };
 }
 
