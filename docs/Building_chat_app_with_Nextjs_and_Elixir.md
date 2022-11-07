@@ -28,8 +28,7 @@ Prior to working on Linen I built and maintained a fairly popular Elixir chat ap
 # Architecture
 
 After doing some research we came up with the following architecture:
-
-![Screen Shot 2022-10-17 at 8.37.38 PM.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/09e90478-1004-40df-a032-d2463347255a/Screen_Shot_2022-10-17_at_8.37.38_PM.png)
+<img width="1221" alt="Screen Shot 2022-11-07 at 4 51 15 PM" src="https://user-images.githubusercontent.com/4218509/200422983-21079c4a-bcb6-4f48-bf82-fdf9d01f1d3f.png">
 
 There were a two core decisions for the first version:
 
