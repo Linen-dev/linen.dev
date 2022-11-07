@@ -290,15 +290,12 @@ export async function getStaticProps() {
     },
   });
 
-  const goodLookingLogos = accounts.filter((a) => a.logoUrl?.includes('.svg'));
-  // since we use 3 columns we want it to only show numbers divisible by 3
-  const remainders = goodLookingLogos.slice(
-    0,
-    goodLookingLogos.length - (goodLookingLogos.length % 3)
-  );
-
   return {
-    props: { accounts: remainders },
+    props: {
+      accounts: accounts.filter(
+        ({ logoUrl }) => logoUrl?.includes('.svg') || logoUrl?.includes('.png')
+      ),
+    },
   };
 }
 
