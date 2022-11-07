@@ -55,6 +55,7 @@ export default async function handler(
         files: data,
       });
     } catch (exception) {
+      // we could improve this by using `formidable.errors` and detecting codes
       return response.status(500).json({});
     }
   } else {

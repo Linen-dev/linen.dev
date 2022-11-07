@@ -118,6 +118,8 @@ interface UploadedFile {
   url: string;
 }
 
+const FILE_SIZE_LIMIT_IN_BYTES = 1048576;
+
 function MessageForm({
   id,
   autoFocus,
@@ -129,6 +131,7 @@ function MessageForm({
   const [preview, setPreview] = useState(false);
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [progress, setProgress] = useState(0);
   const [files, setFiles] = useState<File[]>([]);
   const [uploads, setUploads] = useState<UploadedFile[]>([]);
   const [users, setUsers] = useState<SerializedUser[]>([]);
@@ -201,17 +204,24 @@ function MessageForm({
     setFiles(files);
     if (files.length > 0) {
       const formData = new FormData();
-      files.forEach((file, index) => {
+      for (let index = 0, length = files.length; index < length; index += 1) {
+        const file = files[index];
+        if (file.size > FILE_SIZE_LIMIT_IN_BYTES) {
+          event.target.value = '';
+          setFiles([]);
+          return toast.error(`File size is bigger than 1MB: ${file.name}.`);
+        }
         formData.append(`file-${index}`, file, file.name);
-      });
+      }
       setUploading(true);
+      setProgress(0);
       axios
         .post('/api/upload', formData, {
           onUploadProgress: (progressEvent) => {
             const percentCompleted = Math.round(
               (progressEvent.loaded * 100) / progressEvent.total
             );
-            console.log(`upload process: ${percentCompleted}%`);
+            setProgress(percentCompleted);
           },
         })
         .then((response) => {
@@ -221,6 +231,9 @@ function MessageForm({
         })
         .catch(() => {
           setUploading(false);
+        })
+        .finally(() => {
+          event.target.value = '';
         });
     }
   };
@@ -315,7 +328,11 @@ function MessageForm({
             disabled={uploading}
             onChange={onFileInputChange}
           />
-          <FilesCount uploading={uploading} count={files.length} />
+          <FilesCount
+            uploading={uploading}
+            progress={progress}
+            count={files.length}
+          />
         </div>
         <div className={styles.buttons}>
           {onSendAndClose && (
