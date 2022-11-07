@@ -67,6 +67,7 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
     } catch (exception) {
       // we could improve this by using `formidable.errors` and detecting codes
       captureException(exception);
+      console.error(exception);
       return response.status(500).json({});
     }
   } else {
