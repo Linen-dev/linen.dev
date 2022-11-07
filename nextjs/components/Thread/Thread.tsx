@@ -7,7 +7,7 @@ import { SerializedThread } from 'serializers/thread';
 import { SerializedUser } from 'serializers/user';
 import type { Settings } from 'serializers/account/settings';
 import MessageForm from 'components/MessageForm';
-import { fetchMentions } from 'components/MessageForm/api';
+import { fetchMentions, upload } from 'components/MessageForm/api';
 import { Permissions, UploadedFile } from 'types/shared';
 import { Mode } from 'hooks/mode';
 import styles from './index.module.scss';
@@ -144,6 +144,12 @@ export function Thread({
                 if (!term) return Promise.resolve([]);
                 return fetchMentions(term, settings.communityId);
               }}
+              upload={(data, options) => {
+                return upload(
+                  { communityId: settings.communityId, data },
+                  options
+                );
+              }}
             />
           ) : (
             <MessageForm
@@ -159,6 +165,12 @@ export function Thread({
               fetchMentions={(term?: string) => {
                 if (!term) return Promise.resolve([]);
                 return fetchMentions(term, settings.communityId);
+              }}
+              upload={(data, options) => {
+                return upload(
+                  { communityId: settings.communityId, data },
+                  options
+                );
               }}
             />
           )}
