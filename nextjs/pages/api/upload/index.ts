@@ -52,7 +52,7 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
       const data = await Promise.all(
         files.map(async (file) => {
           const buffer = await readFile(file.filepath);
-          const name = file.originalFilename.replaceAll('/', '_');
+          const name = file.originalFilename.replace(/\//g, '_');
           return await UploadService.upload({
             id: name,
             name,
