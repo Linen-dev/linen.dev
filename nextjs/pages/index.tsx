@@ -152,6 +152,7 @@ const Home = ({ accounts }: Props) => {
         <div className="flex flex-col md:grid md:grid-cols-2 lg:grid-cols-3 gap-3 mt-10">
           {communities
             .sort((community) => (community.premium ? -1 : 1))
+            .sort((community) => (community.logoUrl?.endsWith('.svg') ? -1 : 1))
             .map((community, index) => {
               let url = community.premium
                 ? 'https://' + community.redirectDomain
@@ -256,9 +257,9 @@ const CommunityCard = ({
   brandColor: string;
   logoUrl: string;
 }) => {
-  const backgroundColor = brandColor || '#e5e7eb';
+  const backgroundColor = brandColor;
   const fontColor = pickTextColorBasedOnBgColor(
-    brandColor || '#e5e7eb',
+    backgroundColor,
     'white',
     'black'
   );
@@ -301,6 +302,7 @@ export async function getStaticProps() {
     where: {
       type: AccountType.PUBLIC,
       syncStatus: 'DONE',
+      NOT: { brandColor: null },
     },
     select: {
       logoUrl: true,
