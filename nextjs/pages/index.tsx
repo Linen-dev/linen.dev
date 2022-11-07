@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { AccountType } from '@prisma/client';
 import LinenLogo from 'components/Logo/Linen';
 import YCombinatorLogo from 'components/Logo/YCombinator';
+import { pickTextColorBasedOnBgColor } from 'utilities/colors';
 
 import Link from 'next/link';
 import FadeIn from '../components/FadeIn';
@@ -15,9 +16,14 @@ interface Props {
 }
 
 const Home = ({ accounts }: Props) => {
-  const accountsWithLogo = accounts.filter(
-    (a) => a.logoUrl?.endsWith('.svg') || a.logoUrl?.endsWith('.png')
-  );
+  const communities = accounts
+    .filter(({ logoUrl, name }) => logoUrl?.endsWith('.svg') || name)
+    .filter((account) => {
+      if (account.premium) {
+        return account.redirectDomain;
+      }
+      return account.slackDomain || account.discordDomain;
+    });
 
   return (
     <div className="mb-10 pb-10">
@@ -144,28 +150,26 @@ const Home = ({ accounts }: Props) => {
         </div>
 
         <div className="flex flex-col md:grid md:grid-cols-2 lg:grid-cols-3 gap-3 mt-10">
-          {accountsWithLogo.map((a, index) => {
-            let url = a.premium
-              ? 'https://' + a.redirectDomain
-              : a.discordDomain
-              ? 'https://linen.dev/d/' + a.discordDomain
-              : 'https://linen.dev/s/' + a.slackDomain;
+          {communities
+            .sort((community) => (community.premium ? -1 : 1))
+            .map((community, index) => {
+              let url = community.premium
+                ? 'https://' + community.redirectDomain
+                : community.discordDomain
+                ? 'https://linen.dev/d/' + community.discordDomain
+                : 'https://linen.dev/s/' + community.slackDomain;
 
-            // TODO:remove this once supabase sets up domain to discord.supabase.com
-            if (url.includes('supabase')) {
-              url = 'https://839993398554656828.linen.dev/';
-            }
-            return (
-              <CommunityCard
-                url={url}
-                communityName={a.name}
-                description="Community"
-                logoUrl={a.logoUrl}
-                brandColor={a.brandColor}
-                key={a.name + index}
-              ></CommunityCard>
-            );
-          })}
+              return (
+                <CommunityCard
+                  url={url}
+                  name={community.name}
+                  description="Community"
+                  logoUrl={community.logoUrl}
+                  brandColor={community.brandColor}
+                  key={community.name + index}
+                ></CommunityCard>
+              );
+            })}
         </div>
 
         <div className="grid grid-col-1 gap-3 mx-auto text-gray-700 prose prose-lg max-w-4xl mt-10">
@@ -243,25 +247,41 @@ function LandingH2({ children }: H2Props) {
 const CommunityCard = ({
   url,
   brandColor,
+  name,
   logoUrl,
 }: {
   url: string;
-  communityName: string;
+  name: string;
   description: string;
   brandColor: string;
   logoUrl: string;
 }) => {
+  const backgroundColor = brandColor || '#e5e7eb';
+  const fontColor = pickTextColorBasedOnBgColor(
+    brandColor || '#e5e7eb',
+    'white',
+    'black'
+  );
   return (
     <a
-      className="flex items-center justify-center rounded py-8"
+      className="flex items-center justify-center rounded py-6 px-4"
       style={{
-        backgroundColor: brandColor,
+        backgroundColor,
       }}
       href={url}
       target="_blank"
       rel="noreferrer"
     >
-      <Image src={logoUrl} alt="Logo" width="200" height="100"></Image>
+      {logoUrl?.endsWith('.svg') ? (
+        <Image src={logoUrl} alt="Logo" width="200" height="100" />
+      ) : (
+        <div
+          className="text-4xl text-center truncate"
+          style={{ color: fontColor, fontWeight: 900 }}
+        >
+          {name}
+        </div>
+      )}
     </a>
   );
 };

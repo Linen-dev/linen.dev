@@ -13,6 +13,7 @@ export async function createAccounts() {
         logoUrl: 'https://linen-assets.s3.amazonaws.com/linen-white-logo.svg',
         chat: ChatType.MEMBERS,
         syncStatus: 'DONE',
+        name: 'Linen',
       },
       {
         homeUrl: `https://empty.dev`,
@@ -22,6 +23,7 @@ export async function createAccounts() {
         slackDomain: 'empty',
         logoUrl: 'https://linen-assets.s3.amazonaws.com/linen-white-logo.svg',
         chat: ChatType.MEMBERS,
+        name: 'Empty',
       },
       {
         homeUrl: `https://private.dev`,
@@ -33,6 +35,7 @@ export async function createAccounts() {
         type: AccountType.PRIVATE,
         chat: ChatType.MEMBERS,
         syncStatus: 'DONE',
+        name: 'Private',
       },
     ],
   });
