@@ -8,8 +8,7 @@ Linen is a Google-searchable community chat tool. Linen was built as an alternat
 
 Linen is free and offers unlimited message retention you can sign up at Linen.community.
 
-Linen cloud edition: https://linen.dev/community
-
+Linen cloud edition: https://linen.dev
 Join our public community: https://linen.dev/s/linen
 
 ### Core Features:
