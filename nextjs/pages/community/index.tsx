@@ -144,7 +144,11 @@ const Home = (props: { accounts: Props[] }) => {
           </div>
           <div className="flex justify-center my-20 shadow-lg">
             <FadeIn delay={200}>
-              <Image className="rounded-md" src={linenExamplePage} />
+              <Image
+                className="rounded-md"
+                src={linenExamplePage}
+                alt={'Linen example page'}
+              />
             </FadeIn>
           </div>
         </div>
