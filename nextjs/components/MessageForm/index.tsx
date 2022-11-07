@@ -13,7 +13,7 @@ import { getCaretPosition, setCaretPosition } from './utilities';
 import { SerializedUser } from 'serializers/user';
 import { useUsersContext } from 'contexts/Users';
 import { postprocess } from './utilities/message';
-import axios from 'axios';
+import { AxiosRequestConfig, AxiosResponse } from 'axios';
 
 interface Props {
   id?: string;
@@ -21,6 +21,7 @@ interface Props {
   onSend?(message: string, files: UploadedFile[]): Promise<any>;
   onSendAndClose?(message: string, files: UploadedFile[]): Promise<any>;
   fetchMentions?(term?: string): Promise<SerializedUser[]>;
+  upload?(data: FormData, options: AxiosRequestConfig): Promise<AxiosResponse>;
 }
 
 function isUndefined(character: string | undefined) {
@@ -126,6 +127,7 @@ function MessageForm({
   onSend,
   onSendAndClose,
   fetchMentions,
+  upload,
 }: Props) {
   const [message, setMessage] = useState('');
   const [preview, setPreview] = useState(false);
@@ -199,6 +201,9 @@ function MessageForm({
   }, [mention]);
 
   const onFileInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!upload) {
+      return;
+    }
     const files = Array.from(event.target.files || []);
     setUploads([]);
     setFiles(files);
@@ -215,15 +220,14 @@ function MessageForm({
       }
       setUploading(true);
       setProgress(0);
-      axios
-        .post('/api/upload', formData, {
-          onUploadProgress: (progressEvent) => {
-            const percentCompleted = Math.round(
-              (progressEvent.loaded * 100) / progressEvent.total
-            );
-            setProgress(percentCompleted);
-          },
-        })
+      upload(formData, {
+        onUploadProgress: (progressEvent: ProgressEvent) => {
+          const percentCompleted = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total
+          );
+          setProgress(percentCompleted);
+        },
+      })
         .then((response) => {
           const { files } = response.data;
           setUploads(files);
@@ -322,18 +326,20 @@ function MessageForm({
         {preview && (
           <Preview message={postprocess(message, allUsers)} users={allUsers} />
         )}
-        <div className={styles.toolbar}>
-          <FileInput
-            id={`${id}-files`}
-            disabled={uploading}
-            onChange={onFileInputChange}
-          />
-          <FilesCount
-            uploading={uploading}
-            progress={progress}
-            count={files.length}
-          />
-        </div>
+        {upload && (
+          <div className={styles.toolbar}>
+            <FileInput
+              id={`${id}-files`}
+              disabled={uploading}
+              onChange={onFileInputChange}
+            />
+            <FilesCount
+              uploading={uploading}
+              progress={progress}
+              count={files.length}
+            />
+          </div>
+        )}
         <div className={styles.buttons}>
           {onSendAndClose && (
             <Button

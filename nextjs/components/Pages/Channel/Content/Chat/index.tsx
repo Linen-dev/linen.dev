@@ -1,6 +1,6 @@
 import React, { createRef } from 'react';
 import MessageForm from 'components/MessageForm';
-import { fetchMentions } from 'components/MessageForm/api';
+import { fetchMentions, upload } from 'components/MessageForm/api';
 import { UploadedFile } from 'types/shared';
 import styles from './index.module.scss';
 
@@ -78,6 +78,9 @@ export default function Chat({
         fetchMentions={(term?: string) => {
           if (!term) return Promise.resolve([]);
           return fetchMentions(term, communityId);
+        }}
+        upload={(data, options) => {
+          return upload({ communityId, data }, options);
         }}
       />
     </div>

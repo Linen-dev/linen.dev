@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next/types';
 import formidable from 'formidable';
 import { readFile } from 'fs/promises';
 import UploadService from 'services/upload';
+import PermissionsService from 'services/permissions';
 
 export const config = {
   api: {
@@ -23,6 +24,16 @@ export default async function handler(
   response: NextApiResponse
 ) {
   if (request.method === 'POST') {
+    const permissions = await PermissionsService.get({
+      request,
+      response,
+      params: request.query,
+    });
+
+    if (!permissions.chat) {
+      return response.status(401).json({});
+    }
+
     // we could refactor this to use fileWriteStreamHandler and send to s3 directly
     const form = formidable({
       maxFileSize: 1024 * 1024, // 1mb
@@ -30,6 +41,7 @@ export default async function handler(
       keepExtensions: true,
       allowEmptyFiles: false,
     });
+
     try {
       const files: File[] = await new Promise((resolve, reject) => {
         form.parse(request, function (error, _, files) {
