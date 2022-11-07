@@ -102,23 +102,23 @@ export default function Autocomplete({
   }, [activeResultIndex, onSelect, results]);
 
   const handleKeyDown = useCallback(
-    (e) => {
-      switch (e.key) {
+    (event: React.KeyboardEvent<HTMLDivElement>) => {
+      switch (event.key) {
         case 'ArrowDown':
           if (activeResultIndex !== results.length - 1) {
-            e.preventDefault();
+            event.preventDefault();
             setActiveResultIndex(activeResultIndex + 1);
           } else if (activeResultIndex >= 0) {
-            e.preventDefault();
+            event.preventDefault();
             setActiveResultIndex(0);
           }
           break;
         case 'ArrowUp':
           if (activeResultIndex !== 0) {
-            e.preventDefault();
+            event.preventDefault();
             setActiveResultIndex(activeResultIndex - 1);
           } else if (activeResultIndex >= 0) {
-            e.preventDefault();
+            event.preventDefault();
             setActiveResultIndex(results.length - 1);
           }
           break;

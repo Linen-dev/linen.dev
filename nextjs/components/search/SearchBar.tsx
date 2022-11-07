@@ -1,9 +1,12 @@
 import { useCallback } from 'react';
 import axios from 'axios';
+import { MessageFormat } from '@prisma/client';
 import { useRouter } from 'next/router';
 import Autocomplete from '../Autocomplete';
 import type { messages } from '@prisma/client';
 import Suggestion from './Suggestion';
+import { SerializedThread } from 'serializers/thread';
+import { SerializedUser } from 'serializers/user';
 import styles from './index.module.css';
 import { ChannelSerialized } from 'lib/channel';
 
@@ -18,6 +21,14 @@ const parseResults = (data: messages[]) => {
       return true;
     });
 };
+
+interface SearchResult {
+  body: string;
+  channelId: string;
+  usersId: string;
+  mentions: SerializedUser[];
+  messageFormat: MessageFormat;
+}
 
 const SearchBar = ({
   borderColor,
@@ -44,7 +55,7 @@ const SearchBar = ({
   // The first hacked together version literally loaded all the users
   // in the database from channels view
   const renderSuggestion = useCallback(
-    (searchResult) => {
+    (searchResult: SearchResult) => {
       const { body, channelId, usersId, mentions, messageFormat } =
         searchResult;
       const channel = channels.find((c) => c.id === channelId);
@@ -66,7 +77,7 @@ const SearchBar = ({
   );
 
   const handleSelect = useCallback(
-    ({ threads }) => {
+    ({ threads }: { threads: SerializedThread }) => {
       let path = `/t/${threads.incrementId}/${threads.slug || 'topic'}`;
       if (!isSubDomainRouting) {
         path = `/${
