@@ -245,7 +245,7 @@ const CommunityCard = ({
 }) => {
   return (
     <a
-      className="flex items-center justify-center rounded"
+      className="flex items-center justify-center rounded py-8"
       style={{
         backgroundColor: brandColor,
       }}
