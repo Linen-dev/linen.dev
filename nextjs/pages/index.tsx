@@ -1,6 +1,7 @@
 import { prisma } from '../client';
 import linenExamplePage from '../public/linen-example-page.png';
 import Image from 'next/image';
+import { AccountType } from '@prisma/client';
 import LinenLogo from 'components/Logo/Linen';
 import YCombinatorLogo from 'components/Logo/YCombinator';
 
@@ -9,8 +10,15 @@ import FadeIn from '../components/FadeIn';
 import Head from 'next/head';
 import Footer from '../components/Footer';
 
-const Home = (props: { accounts: Props[] }) => {
-  const accounts = props.accounts;
+interface Props {
+  accounts: SerializedAccount[];
+}
+
+const Home = ({ accounts }: Props) => {
+  const accountsWithLogo = accounts.filter(
+    (a) => a.logoUrl?.endsWith('.svg') || a.logoUrl?.endsWith('.png')
+  );
+
   return (
     <div className="mb-10 pb-10">
       <Head>
@@ -136,7 +144,7 @@ const Home = (props: { accounts: Props[] }) => {
         </div>
 
         <div className="flex flex-col md:grid md:grid-cols-2 lg:grid-cols-3 gap-3 mt-10">
-          {accounts.map((a, index) => {
+          {accountsWithLogo.map((a, index) => {
             let url = a.premium
               ? 'https://' + a.redirectDomain
               : a.discordDomain
@@ -253,12 +261,12 @@ const CommunityCard = ({
       target="_blank"
       rel="noreferrer"
     >
-      <Image src={logoUrl} alt="Logo" width="200"></Image>
+      <Image src={logoUrl} alt="Logo" width="200" height="100"></Image>
     </a>
   );
 };
 
-type Props = {
+type SerializedAccount = {
   logoUrl: string;
   name: string;
   brandColor: string;
@@ -271,11 +279,7 @@ type Props = {
 export async function getStaticProps() {
   const accounts = await prisma.accounts.findMany({
     where: {
-      NOT: [
-        {
-          logoUrl: null,
-        },
-      ],
+      type: AccountType.PUBLIC,
       syncStatus: 'DONE',
     },
     select: {
@@ -290,15 +294,8 @@ export async function getStaticProps() {
     },
   });
 
-  const goodLookingLogos = accounts.filter((a) => a.logoUrl?.includes('.svg'));
-  // since we use 3 columns we want it to only show numbers divisible by 3
-  const remainders = goodLookingLogos.slice(
-    0,
-    goodLookingLogos.length - (goodLookingLogos.length % 3)
-  );
-
   return {
-    props: { accounts: remainders },
+    props: { accounts },
   };
 }
 
