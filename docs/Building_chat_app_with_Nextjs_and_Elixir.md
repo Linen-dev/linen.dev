@@ -182,3 +182,5 @@ def join("room:" <> community_id, _params, socket) do
 ## Limitations and trade offs
 
 Going with Elixir there were a few downsides. Setting up deployment process was going to be annoying and we needed to make sure this separate service was secure. Finally this was something that wasn’t well documented and couldn’t find anyone that has attempted this so the architecture wasn’t clear.
+
+### Todo: Document the security aspect of Linen
