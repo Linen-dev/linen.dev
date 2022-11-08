@@ -13,12 +13,15 @@ interface Props {
 
 function getCommunityUrl(community: SerializedAccount) {
   if (community.premium && community.redirectDomain) {
-    return community.redirectDomain;
+    return `https://${community.redirectDomain}`;
   }
   if (community.discordDomain) {
     return `/d/${community.discordDomain}`;
   }
-  return `/s/${community.slackDomain}`;
+  if (community.slackDomain) {
+    return `/s/${community.slackDomain}`;
+  }
+  return null;
 }
 
 export default function Sitemap({ communities }: Props) {
@@ -27,14 +30,19 @@ export default function Sitemap({ communities }: Props) {
       <H1>linen.dev sitemap</H1>
       <H2>Communities</H2>
       <List>
-        {communities.map((community) => {
-          const href = getCommunityUrl(community);
-          return (
-            <li key={href}>
-              <Link href={href}>{community.name}</Link>
-            </li>
-          );
-        })}
+        {communities
+          .map((community) => {
+            const href = getCommunityUrl(community);
+            if (!href) {
+              return null;
+            }
+            return (
+              <li key={href}>
+                <Link href={href}>{community.name}</Link>
+              </li>
+            );
+          })
+          .filter(Boolean)}
       </List>
     </Layout>
   );
