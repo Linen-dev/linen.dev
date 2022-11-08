@@ -23,7 +23,7 @@ const smtpTransport = {
 } as SMTPTransport.Options;
 
 const transport: Record<
-  'development' | 'production' | 'test',
+  'development' | 'production' | 'test' | string,
   SMTPTransport.Options
 > = {
   test: testTransport,
