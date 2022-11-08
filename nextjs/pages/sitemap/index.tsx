@@ -1,6 +1,6 @@
 import serializeAccount, { SerializedAccount } from 'serializers/account';
 import prisma from 'client';
-import { AccountType } from '@prisma/client';
+import { AccountIntegration, AccountType } from '@prisma/client';
 import Layout from 'components/layout/CardLayout';
 import H1 from 'components/H1';
 import H2 from 'components/H2';
@@ -21,7 +21,7 @@ function getCommunityUrl(community: SerializedAccount) {
   if (community.slackDomain) {
     return `/s/${community.slackDomain}`;
   }
-  return null;
+  return `/s/${community.name}`;
 }
 
 export default function Sitemap({ communities }: Props) {
@@ -33,9 +33,6 @@ export default function Sitemap({ communities }: Props) {
         {communities
           .map((community) => {
             const href = getCommunityUrl(community);
-            if (!href) {
-              return null;
-            }
             return (
               <li key={href}>
                 <Link href={href}>{community.name}</Link>
@@ -51,11 +48,11 @@ export default function Sitemap({ communities }: Props) {
 export async function getServerSideProps() {
   const communities = await prisma.accounts.findMany({
     where: {
-      syncStatus: 'DONE',
       type: AccountType.PUBLIC,
       NOT: {
         name: null,
       },
+      OR: [{ syncStatus: 'DONE' }, { integration: AccountIntegration.NONE }],
     },
     orderBy: {
       name: 'asc',
