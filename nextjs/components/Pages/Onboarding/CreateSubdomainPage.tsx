@@ -2,11 +2,6 @@ import { useState } from 'react';
 import Layout from 'components/layout/CardLayout';
 import Button from 'components/Button';
 import TextInput from 'components/TextInput';
-import NativeSelect from 'components/NativeSelect';
-import Toggle from 'components/Toggle';
-import Label from 'components/Label';
-import { AccountType } from '@prisma/client';
-import * as Sentry from '@sentry/nextjs';
 import { toast } from 'components/Toast';
 
 export function CreateSubdomainPage() {
@@ -48,7 +43,6 @@ export function CreateSubdomainPage() {
           return;
         }
       }
-      Sentry.captureException(error);
       toast.error('Something went wrong');
     } finally {
       setLoading(false);

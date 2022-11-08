@@ -1,5 +1,4 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
-import { withSentry } from '@sentry/nextjs';
 import { findMessageById } from 'lib/messages';
 import serializeMessage from 'serializers/message';
 import PermissionsService from 'services/permissions';
@@ -37,4 +36,4 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
   return response.status(405).end();
 }
 
-export default withSentry(handler);
+export default handler;

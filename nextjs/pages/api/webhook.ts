@@ -1,5 +1,4 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { withSentry } from '@sentry/nextjs';
 import { createWebhookJob } from 'queue/jobs';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -14,4 +13,4 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   return;
 }
 
-export default withSentry(handler);
+export default handler;

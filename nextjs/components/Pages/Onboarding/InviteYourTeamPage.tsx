@@ -2,7 +2,6 @@ import Layout from 'components/layout/CardLayout';
 import Button from 'components/Button';
 import EmailField from 'components/EmailField';
 import { useState } from 'react';
-import * as Sentry from '@sentry/nextjs';
 import { toast } from 'components/Toast';
 
 export function InviteYourTeamPage() {
@@ -43,7 +42,6 @@ export function InviteYourTeamPage() {
         onSkip();
       }
     } catch (error) {
-      Sentry.captureException(error);
       toast.error('Something went wrong');
     } finally {
       setLoading(false);

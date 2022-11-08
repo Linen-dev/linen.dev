@@ -3,7 +3,6 @@ import ResetPasswordMailer from '../../../mailers/ResetPasswordMailer';
 import { generateToken } from '../../../utilities/token';
 import prisma from '../../../client';
 import { getCurrentUrl } from '../../../utilities/domain';
-import { captureException, withSentry } from '@sentry/nextjs';
 
 async function create(request: NextApiRequest, response: NextApiResponse) {
   const { email } = JSON.parse(request.body);
@@ -33,7 +32,7 @@ async function create(request: NextApiRequest, response: NextApiResponse) {
       token,
     });
   } catch (exception) {
-    captureException(exception);
+    console.error(exception);
     return response.status(200).json({});
   }
 
@@ -47,4 +46,4 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
   return response.status(404).json({});
 }
 
-export default withSentry(handler);
+export default handler;

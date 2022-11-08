@@ -10,7 +10,6 @@ import {
   type MessageFile,
 } from '../api';
 import prisma from '../../../client';
-import { captureException, flush } from '@sentry/nextjs';
 
 export async function processAttachments(
   m: ConversationHistoryMessage,
@@ -51,16 +50,13 @@ export async function processAttachments(
               update: serializedFile,
             })
             .catch((error) => {
-              console.log('attachment failure', error);
-              captureException(error);
-              return flush(2000);
+              console.error('attachment failure', error);
             });
         })
     );
   }
   return await Promise.all(promises).catch((error) => {
-    captureException(error);
-    return flush(2000);
+    console.error(error);
   });
 }
 
@@ -106,8 +102,6 @@ function processLink(
       };
     } catch (error) {
       console.error(error);
-      captureException(error);
-      await flush(2000);
       return {};
     }
   };

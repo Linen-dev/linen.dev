@@ -1,4 +1,3 @@
-import { withSentry } from '@sentry/nextjs';
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import { OnboardingUpdateAccount, PathDomainError } from 'services/onboarding';
 import PermissionsService from 'services/permissions';
@@ -14,7 +13,7 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
   });
 
   if (!permissions.manage) {
-    return response.status(401).end();
+    return response.status(401).json({});
   }
 
   if (request.method === 'POST') {
@@ -23,14 +22,14 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
       return response.status(200).json(body);
     } catch (error) {
       if (error instanceof PathDomainError) {
-        response.status(400).send(error.message);
-        return response.end();
+        return response.status(400).json({ error: error.message });
       }
-      throw error;
+      console.error(error);
+      return response.status(500).json({});
     }
   }
 
-  return response.status(405).end();
+  return response.status(405).json({});
 }
 
-export default withSentry(handler);
+export default handler;

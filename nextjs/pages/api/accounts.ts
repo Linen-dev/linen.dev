@@ -3,7 +3,6 @@ import prisma from '../../client';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import { stripProtocol } from '../../utilities/url';
 import Session, { SessionType } from 'services/session';
-import { captureException, withSentry } from '@sentry/nextjs';
 import { generateRandomWordSlug } from 'utilities/randomWordSlugs';
 import { findAccountByEmail } from 'lib/models';
 import { AccountType, Roles } from '@prisma/client';
@@ -134,7 +133,6 @@ export async function update({
         },
       };
     }
-    captureException(exception);
     return { status: 500 };
   }
 }
@@ -162,11 +160,11 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
       params: { communityId },
     });
     if (!permissions.manage) {
-      return response.status(401).end();
+      return response.status(401).json({});
     }
     return handle(request, response, update);
   }
   return response.status(404).json({});
 }
 
-export default withSentry(handler);
+export default handler;

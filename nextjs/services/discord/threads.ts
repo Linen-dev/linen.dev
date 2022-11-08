@@ -6,7 +6,6 @@ import { getDiscordWithRetry } from './api';
 import { CrawlType, LIMIT } from './constrains';
 import { createMessages, filterKnownMessagesTypes } from './messages';
 import { parseDiscordSentAt } from '../../utilities/sentAt';
-import { captureException, flush } from '@sentry/nextjs';
 
 async function crawlExistingThread(
   thread: threads & {
@@ -140,9 +139,7 @@ async function updateThread(channel: channels, thread: threads) {
   try {
     return await upsertThread(channel.id, message);
   } catch (err) {
-    captureException(err);
-    await flush(2000);
-    console.error(String(err));
+    console.error(err);
     return;
   }
 }

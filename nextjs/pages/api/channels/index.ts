@@ -1,6 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import { findOrCreateChannel } from 'lib/models';
-import { withSentry } from '@sentry/nextjs';
 import { v4 } from 'uuid';
 import PermissionsService from 'services/permissions';
 import { createSlug } from 'utilities/util';
@@ -29,7 +28,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { communityId }: Props = body;
 
   if (!communityId) {
-    return res.status(400).end();
+    return res.status(400).json({});
   }
 
   const permissions = await PermissionsService.get({
@@ -41,13 +40,13 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   });
 
   if (!permissions.manage) {
-    return res.status(401).end();
+    return res.status(401).json({});
   }
 
   if (req.method === 'PUT') {
     const { communityId, channels }: PutProps = body;
     await ChannelsService.updateChannelsVisibility(channels, communityId);
-    return res.status(200).end();
+    return res.status(200).json({});
   }
 
   if (req.method === 'POST') {
@@ -75,7 +74,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     });
     return res.status(200).json(channel);
   }
-  return res.status(405).end();
+  return res.status(405).json({});
 }
 
-export default withSentry(handler);
+export default handler;

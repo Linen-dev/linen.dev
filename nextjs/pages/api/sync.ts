@@ -1,11 +1,10 @@
-import { withSentry } from '@sentry/nextjs';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { createSyncJob } from 'queue/jobs';
 import PermissionsService from 'services/permissions';
 
 async function handler(request: NextApiRequest, response: NextApiResponse) {
   if (!request.query.account_id) {
-    return response.status(400).end();
+    return response.status(400).json({});
   }
 
   const permissions = await PermissionsService.get({
@@ -16,7 +15,7 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
     },
   });
   if (!permissions.manage) {
-    return response.status(401).end();
+    return response.status(401).json({});
   }
 
   const accountId = request.query.account_id as string;
@@ -27,7 +26,7 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
     file_location: fileLocation,
   });
 
-  return response.status(200).end();
+  return response.status(200).json({});
 }
 
-export default withSentry(handler);
+export default handler;

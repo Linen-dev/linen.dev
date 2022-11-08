@@ -2,7 +2,6 @@ import Button from 'components/Button';
 import { useS3Upload } from 'next-s3-upload';
 import { useRef, useState } from 'react';
 import { SerializedAccount } from 'serializers/account';
-import { captureException } from '@sentry/nextjs';
 import { toast } from 'components/Toast';
 import { qs } from 'utilities/url';
 
@@ -55,7 +54,7 @@ export default function ImportFromSlack({
       }
       toast.success('Import process initiated');
     } catch (error) {
-      captureException(error);
+      console.error(error);
       fail();
     } finally {
       setLoading(false);

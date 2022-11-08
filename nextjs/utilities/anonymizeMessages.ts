@@ -1,7 +1,4 @@
 import { channels, messages, mentions, threads, users } from '@prisma/client';
-import superagent from 'superagent';
-import { captureException, flush } from '@sentry/nextjs';
-
 type Messages =
   | (messages & {
       author: users | null;

@@ -1,5 +1,4 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
-import { captureException, withSentry } from '@sentry/nextjs';
 import prisma from '../../../client';
 import { generateHash } from '../../../utilities/password';
 
@@ -27,7 +26,7 @@ async function create(request: NextApiRequest, response: NextApiResponse) {
       },
     });
   } catch (exception) {
-    captureException(exception);
+    console.error(exception);
     response.status(200).json({});
   }
   return response.status(200).json({});
@@ -37,7 +36,7 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
   if (request.method === 'POST') {
     return create(request, response);
   }
-  return response.status(404);
+  return response.status(404).json({});
 }
 
-export default withSentry(handler);
+export default handler;

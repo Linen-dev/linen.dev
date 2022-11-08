@@ -37,8 +37,3 @@ yarn-error.log*
 *.tsbuildinfo
 
 scratch
-
-
-
-# Sentry
-.sentryclirc

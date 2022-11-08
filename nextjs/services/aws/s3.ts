@@ -1,5 +1,4 @@
 import S3 from 'aws-sdk/clients/s3';
-import { captureException, flush } from '@sentry/nextjs';
 import { awsCredentials } from './credentials';
 
 declare global {
@@ -23,8 +22,6 @@ export async function uploadFile(Key: string, Body: Buffer) {
       })
       .promise();
   } catch (error) {
-    captureException(error);
-    await flush(2000);
     console.error(error);
   }
 }

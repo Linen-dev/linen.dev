@@ -22,7 +22,7 @@ export default async function handler(
   });
 
   if (!permissions.access) {
-    return response.status(401).end();
+    return response.status(401).json({});
   }
 
   if (request.method === 'POST') {
@@ -38,8 +38,8 @@ export default async function handler(
         permissions.auth?.id!
       );
     }
-    return response.status(200).end();
+    return response.status(200).json({});
   }
 
-  return response.status(405).end();
+  return response.status(405).json({});
 }

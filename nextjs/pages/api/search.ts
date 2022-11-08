@@ -9,7 +9,6 @@ import {
   users,
   AccountType,
 } from '@prisma/client';
-import { withSentry } from '@sentry/nextjs';
 import PermissionsService from 'services/permissions';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -24,7 +23,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   });
 
   if (!account) {
-    return res.status(404).end();
+    return res.status(404).json({});
   }
   if (account.type === AccountType.PRIVATE) {
     const permissions = await PermissionsService.get({
@@ -36,7 +35,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     });
 
     if (!permissions.access) {
-      return res.status(403).end();
+      return res.status(403).json({});
     }
   }
 
@@ -269,4 +268,4 @@ export interface Field {
   short: boolean;
 }
 
-export default withSentry(handler);
+export default handler;

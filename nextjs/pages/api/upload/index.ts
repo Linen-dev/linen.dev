@@ -3,7 +3,6 @@ import formidable from 'formidable';
 import { readFile } from 'fs/promises';
 import UploadService from 'services/upload';
 import PermissionsService from 'services/permissions';
-import { captureException, withSentry } from '@sentry/nextjs';
 
 export const config = {
   api: {
@@ -66,7 +65,6 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
       });
     } catch (exception) {
       // we could improve this by using `formidable.errors` and detecting codes
-      captureException(exception);
       console.error(exception);
       return response.status(500).json({});
     }
@@ -75,4 +73,4 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
   }
 }
 
-export default withSentry(handler);
+export default handler;

@@ -1,7 +1,6 @@
 import Layout from 'components/layout/CardLayout';
 import Button from 'components/Button';
 import TextInput from 'components/TextInput';
-import * as Sentry from '@sentry/nextjs';
 import { useState } from 'react';
 import { toast } from 'components/Toast';
 
@@ -28,7 +27,6 @@ export function CreateCommunityPage() {
         window.location.href = '/onboarding/create-subdomain';
       }
     } catch (error) {
-      Sentry.captureException(error);
       toast.error('Something went wrong');
     } finally {
       setLoading(false);

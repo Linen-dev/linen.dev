@@ -1,7 +1,6 @@
 import Layout from 'components/layout/CardLayout';
 import Button from 'components/Button';
 import TextInput from 'components/TextInput';
-import * as Sentry from '@sentry/nextjs';
 import { useState } from 'react';
 import { toast } from 'components/Toast';
 
@@ -37,7 +36,6 @@ export function CreateChannelPage() {
         window.location.href = '/onboarding/invite-your-team';
       }
     } catch (error) {
-      Sentry.captureException(error);
       toast.error('Something went wrong');
     } finally {
       setLoading(false);

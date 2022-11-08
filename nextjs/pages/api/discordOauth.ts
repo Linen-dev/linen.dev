@@ -2,7 +2,6 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import request from 'superagent';
 import prisma from '../../client';
 import { updateAccount } from '../../lib/models';
-import { captureException, withSentry } from '@sentry/nextjs';
 import { createSyncJob } from 'queue/jobs';
 import { AccountIntegration } from '@prisma/client';
 import { createSlug } from 'utilities/util';
@@ -46,7 +45,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
     return res.redirect('/settings');
   } catch (error) {
-    captureException(error);
+    console.error(error);
     return res.redirect('/settings?error=1');
   }
 }
@@ -159,4 +158,4 @@ export interface Tags {
   bot_id: string;
 }
 
-export default withSentry(handler);
+export default handler;

@@ -3,7 +3,6 @@ import EmailProvider from 'next-auth/providers/email';
 import prisma from 'client';
 import { CustomPrismaAdapter } from 'lib/auth';
 import SignInMailer from 'mailers/SignInMailer';
-import { captureException, flush } from '@sentry/nextjs';
 import { NOREPLY_EMAIL } from 'secrets';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { generateHash } from 'utilities/password';
@@ -45,8 +44,7 @@ export const authOptions = {
             );
           }
         } catch (error) {
-          captureException(error);
-          await flush(1000);
+          console.error(error);
         }
       },
     }),

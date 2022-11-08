@@ -1,4 +1,3 @@
-import { withSentry } from '@sentry/nextjs';
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import { getCurrentUrl } from 'utilities/domain';
 import { OnboardingInviteTeam } from 'services/onboarding';
@@ -16,7 +15,7 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
   });
 
   if (!permissions.manage) {
-    return response.status(401).end();
+    return response.status(401).json({});
   }
 
   if (request.method === 'POST') {
@@ -30,10 +29,10 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
       createdByUserId: permissions.user?.id!,
       host,
     });
-    return response.status(200).end();
+    return response.status(200).json({});
   }
 
-  return response.status(405).end();
+  return response.status(405).json({});
 }
 
-export default withSentry(handler);
+export default handler;

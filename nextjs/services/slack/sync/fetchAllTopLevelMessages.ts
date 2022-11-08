@@ -11,7 +11,6 @@ import { sleep } from 'utilities/retryPromises';
 import { parseSlackSentAt, tsToSentAt } from 'utilities/sentAt';
 import { findOrCreateThread } from 'lib/threads';
 import { createSlug } from 'utilities/util';
-import { captureException, flush } from '@sentry/nextjs';
 
 async function saveMessagesTransaction(
   messages: ConversationHistoryMessage[],
@@ -140,8 +139,7 @@ export async function fetchAllTopLevelMessages({
       retries += 1;
       if (retries > 3) {
         nextCursor = undefined;
-        captureException(e);
-        await flush(2000);
+        console.error(e);
       }
     }
     firstLoop = false;
