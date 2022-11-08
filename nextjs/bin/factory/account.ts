@@ -5,6 +5,7 @@ export async function createAccounts() {
   await prisma.accounts.createMany({
     data: [
       {
+        name: 'Linen',
         homeUrl: `https://linen.dev`,
         docsUrl: `https://linen.dev/docs`,
         redirectDomain: 'linen.dev',
@@ -12,17 +13,21 @@ export async function createAccounts() {
         slackDomain: 'linen',
         logoUrl: 'https://linen-assets.s3.amazonaws.com/linen-white-logo.svg',
         chat: ChatType.MEMBERS,
+        syncStatus: 'DONE',
       },
       {
-        homeUrl: `https://empty.dev`,
-        docsUrl: `https://empty.dev/docs`,
-        redirectDomain: 'empty.dev',
+        name: 'Foo',
+        homeUrl: `https://foo.dev`,
+        docsUrl: `https://foo.dev/docs`,
+        redirectDomain: 'foo.dev',
         brandColor: '#000000',
-        slackDomain: 'empty',
+        slackDomain: 'foo',
         logoUrl: 'https://linen-assets.s3.amazonaws.com/linen-white-logo.svg',
         chat: ChatType.MEMBERS,
+        syncStatus: 'DONE',
       },
       {
+        name: 'Private',
         homeUrl: `https://private.dev`,
         docsUrl: `https://private.dev/docs`,
         redirectDomain: 'private.dev',
@@ -31,6 +36,18 @@ export async function createAccounts() {
         logoUrl: 'https://linen-assets.s3.amazonaws.com/linen-white-logo.svg',
         type: AccountType.PRIVATE,
         chat: ChatType.MEMBERS,
+        syncStatus: 'DONE',
+      },
+      {
+        name: 'Empty',
+        homeUrl: `https://empty.dev`,
+        docsUrl: `https://empty.dev/docs`,
+        redirectDomain: 'empty.dev',
+        brandColor: '#000000',
+        slackDomain: 'empty',
+        logoUrl: 'https://linen-assets.s3.amazonaws.com/linen-white-logo.svg',
+        chat: ChatType.MEMBERS,
+        syncStatus: 'DONE',
       },
     ],
   });
