@@ -417,22 +417,6 @@ export default function Privacy() {
               create derivative works, publish, distribute and commercialize)
               Feedback in any manner and for any purpose.
             </p>
-            <p>
-              The third party sites and tools mentioned above include the
-              following:
-            </p>
-          </blockquote>
-          <p>
-            <strong>Sentry</strong>
-          </p>
-          <blockquote>
-            <p>
-              Sentry is open-source error tracking solution provided by
-              Functional Software Inc. More information is available here:
-              <a href="https://sentry.io/privacy/">
-                https://sentry.io/privacy/
-              </a>
-            </p>
           </blockquote>
           <ol>
             <li>

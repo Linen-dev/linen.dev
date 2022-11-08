@@ -2,7 +2,6 @@ import { buffer } from 'micro';
 import prisma from 'client';
 import stripe from 'services/stripe';
 import { NextApiRequest, NextApiResponse } from 'next/types';
-import { captureException, withSentry } from '@sentry/nextjs';
 
 const secret = process.env.STRIPE_WEBHOOK_SECRET;
 
@@ -49,7 +48,7 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
     try {
       event = stripe.webhooks.constructEvent(body, signature, secret);
     } catch (err) {
-      captureException(err);
+      console.error(err);
       return response.status(400).json({ status: 'error' });
     }
 
@@ -73,4 +72,4 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
   return response.status(405).json({ status: 'error' });
 }
 
-export default withSentry(handler);
+export default handler;

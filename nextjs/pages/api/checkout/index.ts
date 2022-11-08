@@ -1,6 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import stripe from 'services/stripe';
-import { withSentry } from '@sentry/nextjs';
 
 const HOST = process.env.NEXTAUTH_URL || 'http://localhost:3000';
 
@@ -51,4 +50,4 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
   return response.status(404).json({});
 }
 
-export default withSentry(handler);
+export default handler;

@@ -1,5 +1,4 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { captureException, withSentry } from '@sentry/nextjs';
 import Session from 'services/session';
 import { Roles } from '@prisma/client';
 import { findAuthByEmail } from 'lib/users';
@@ -33,10 +32,9 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     }
     return res.redirect('/settings');
   } catch (error) {
-    console.error({ error });
-    captureException(error);
+    console.error(error);
     return res.redirect('/');
   }
 }
 
-export default withSentry(handler);
+export default handler;

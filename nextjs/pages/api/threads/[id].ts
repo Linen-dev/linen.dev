@@ -1,6 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import prisma from '../../../client';
-import { withSentry } from '@sentry/nextjs';
 import { findThreadById } from 'lib/threads';
 import serializeThread from 'serializers/thread';
 import PermissionsService from 'services/permissions';
@@ -83,4 +82,4 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
   return response.status(405).json({});
 }
 
-export default withSentry(handler);
+export default handler;

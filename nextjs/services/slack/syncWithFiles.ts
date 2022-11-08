@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { findAccountById } from 'lib/models';
 import { SyncStatus, updateAndNotifySyncStatus } from 'services/sync';
-import { captureException, flush } from '@sentry/nextjs';
 import { SlackFileAdapter } from './file';
 import { syncWrapper } from './syncWrapper';
 import StreamZip from 'node-stream-zip';
@@ -84,7 +83,6 @@ export async function slackSyncWithFiles({
     };
   } catch (err) {
     console.error(err);
-    captureException(err);
 
     await updateAndNotifySyncStatus(
       accountId,
@@ -93,7 +91,6 @@ export async function slackSyncWithFiles({
       account.homeUrl
     );
 
-    await flush(2000);
     throw {
       status: 500,
       error: String(err),

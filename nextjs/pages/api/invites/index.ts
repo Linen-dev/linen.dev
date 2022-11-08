@@ -29,7 +29,7 @@ export default async function handler(
     },
   });
   if (!permissions.manage) {
-    return response.status(401).end();
+    return response.status(401).json({});
   }
 
   const host = getCurrentUrl(request);
@@ -43,8 +43,7 @@ export default async function handler(
       createdByUserId: permissions.user?.id!,
       role,
     });
-    response.status(status).json({ message });
-    return response.end();
+    return response.status(status).json({ message });
   }
   if (request.method === 'PUT') {
     const { communityId, role, inviteId }: PutProps = body;
@@ -53,9 +52,8 @@ export default async function handler(
       inviteId,
       role,
     });
-    response.status(status).json({ message });
-    return response.end();
+    return response.status(status).json({ message });
   }
 
-  return response.status(405).end();
+  return response.status(405).json({});
 }

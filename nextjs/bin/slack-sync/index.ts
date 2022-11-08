@@ -1,6 +1,5 @@
 import { slackSync } from '../../services/slack';
 import { findSlackAccounts } from '../../lib/account';
-import { captureException, flush } from '@sentry/nextjs';
 import { findArgAndParse, findBoolArg } from 'utilities/processArgs';
 
 async function runScript(
@@ -29,8 +28,6 @@ async function runScript(
     })
     .catch((err) => {
       console.error('Syncing error: ', err, account);
-      captureException(err);
-      return flush(2000);
     });
 }
 

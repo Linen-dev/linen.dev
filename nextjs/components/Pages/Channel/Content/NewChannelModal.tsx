@@ -3,7 +3,6 @@ import { Dialog, Transition } from '@headlessui/react';
 import { FiPlus, FiX } from 'react-icons/fi';
 import Button from 'components/Button';
 import TextInput from 'components/TextInput';
-import { captureException } from '@sentry/nextjs';
 import { toast } from 'components/Toast';
 import { useSession } from 'next-auth/react';
 import { useLinkContext } from 'contexts/Link';
@@ -48,7 +47,6 @@ export default function NewChannelModal({
         });
       }
     } catch (error) {
-      captureException(error);
       toast.error('Something went wrong');
     } finally {
       setLoading(false);

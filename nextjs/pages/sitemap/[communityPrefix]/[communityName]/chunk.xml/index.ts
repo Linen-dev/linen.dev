@@ -1,6 +1,5 @@
 import { createSitemapForFree } from 'utilities/sitemap';
 import { GetServerSideProps } from 'next/types';
-import { captureException, flush } from '@sentry/nextjs';
 
 export const getServerSideProps: GetServerSideProps = async ({
   req,
@@ -22,8 +21,6 @@ export const getServerSideProps: GetServerSideProps = async ({
     res.write(sitemap);
     res.end();
   } catch (error) {
-    captureException(error);
-    await flush(2000);
     console.error(error);
     res.statusCode = 500;
     res.write('Something went wrong');

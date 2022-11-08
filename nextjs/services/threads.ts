@@ -7,7 +7,6 @@ import { GetServerSidePropsContext } from 'next';
 import { NotFound } from '../utilities/response';
 import serializeAccount from 'serializers/account';
 import { serialize as serializeSettings } from 'serializers/account/settings';
-import { captureException } from '@sentry/nextjs';
 import { encodeCursor } from 'utilities/cursor';
 import PermissionsService from 'services/permissions';
 import { RedirectTo } from 'utilities/response';
@@ -17,8 +16,6 @@ import {
   redirectThreadToDomain,
   shouldRedirectToDomain,
 } from 'utilities/redirects';
-import Session from 'services/session';
-import serializeUser from 'serializers/user';
 
 export async function threadGetServerSideProps(
   context: GetServerSidePropsContext,
@@ -134,7 +131,6 @@ export async function threadGetServerSideProps(
       },
     };
   } catch (exception) {
-    captureException(exception);
     console.error(exception);
     return NotFound();
   }

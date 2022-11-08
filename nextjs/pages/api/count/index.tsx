@@ -1,6 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import prisma from '../../../client';
-import { withSentry } from '@sentry/nextjs';
 
 async function update(request: NextApiRequest, response: NextApiResponse) {
   const incrementId = request.query.incrementId as string;
@@ -18,4 +17,4 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
   return response.status(404).json({});
 }
 
-export default withSentry(handler);
+export default handler;

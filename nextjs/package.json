@@ -32,7 +32,6 @@
   "dependencies": {
     "@headlessui/react": "^1.7.3",
     "@prisma/client": "^3.15.2",
-    "@sentry/nextjs": "^7.17.4",
     "@types/debug": "^4.1.7",
     "@types/formidable": "^2.0.5",
     "@types/marked": "^4.0.7",

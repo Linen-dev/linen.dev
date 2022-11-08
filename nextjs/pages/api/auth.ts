@@ -1,9 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import prisma from '../../client';
-import { sendNotification } from '../../services/slack';
 import { createAuth } from '../../lib/auth';
 import Session from 'services/session';
-import { captureException, withSentry } from '@sentry/nextjs';
 import { cleanUpString } from 'utilities/string';
 import { AccountType, Roles } from '@prisma/client';
 import { generateRandomWordSlug } from 'utilities/randomWordSlugs';
@@ -46,8 +44,7 @@ async function create(request: NextApiRequest, response: NextApiResponse) {
   try {
     await eventSignUp(newAuth.id, email, newAuth.createdAt);
   } catch (e) {
-    console.log('failed to send: ', e);
-    captureException(e);
+    console.error('failed to send: ', e);
   }
   return response
     .status(200)
@@ -148,4 +145,4 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
   return response.status(404).json({});
 }
 
-export default withSentry(handler);
+export default handler;

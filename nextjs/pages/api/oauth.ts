@@ -2,7 +2,6 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import request from 'superagent';
 import { fetchTeamInfo } from 'services/slack/api';
 import { createSlackAuthorization, updateAccount } from '../../lib/models';
-import { captureException, withSentry } from '@sentry/nextjs';
 import { createSyncJob } from 'queue/jobs';
 import { AccountIntegration } from '@prisma/client';
 
@@ -57,8 +56,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
     return res.redirect('/settings');
   } catch (error) {
-    console.error({ error });
-    captureException(error);
+    console.error(error);
     return res.redirect('/settings?error=1');
   }
 }
@@ -113,4 +111,4 @@ export interface IncomingWebhook {
   url: string;
 }
 
-export default withSentry(handler);
+export default handler;

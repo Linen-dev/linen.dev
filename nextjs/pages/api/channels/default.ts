@@ -1,5 +1,4 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
-import { withSentry } from '@sentry/nextjs';
 import PermissionsService from 'services/permissions';
 import ChannelsService from 'services/channels';
 
@@ -22,7 +21,7 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
   });
 
   if (!permissions.manage) {
-    return response.status(401).end();
+    return response.status(401).json({});
   }
 
   switch (request.method) {
@@ -32,10 +31,10 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
         channelId,
         originalChannelId
       );
-      return response.status(status).end();
+      return response.status(status).json({});
     default:
-      return response.status(405).end();
+      return response.status(405).json({});
   }
 }
 
-export default withSentry(handler);
+export default handler;

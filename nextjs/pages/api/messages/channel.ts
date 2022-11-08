@@ -1,6 +1,5 @@
 import Session from 'services/session';
 import { NextApiRequest, NextApiResponse } from 'next/types';
-import { withSentry } from '@sentry/nextjs';
 import { prisma } from 'client';
 import serializeThread from 'serializers/thread';
 import parse from 'utilities/message/parsers/linen';
@@ -151,4 +150,4 @@ export async function create(
   });
 }
 
-export default withSentry(handler);
+export default handler;

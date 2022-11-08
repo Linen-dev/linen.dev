@@ -1,5 +1,4 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
-import { withSentry } from '@sentry/nextjs';
 import prisma from '../../../client';
 import PermissionsService from 'services/permissions';
 
@@ -34,11 +33,11 @@ async function create(request: NextApiRequest, response: NextApiResponse) {
   });
 
   if (!message) {
-    return response.status(404).end();
+    return response.status(404).json({});
   }
 
   if (message.channel.accountId !== communityId) {
-    return response.status(401).end();
+    return response.status(401).json({});
   }
 
   const reaction = await prisma.messageReactions.findFirst({
@@ -75,7 +74,7 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
   if (request.method === 'POST') {
     return create(request, response);
   }
-  return response.status(404);
+  return response.status(404).json({});
 }
 
-export default withSentry(handler);
+export default handler;

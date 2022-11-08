@@ -6,7 +6,6 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import NativeSelect from 'components/NativeSelect';
 import { Roles } from '@prisma/client';
-import { captureException } from '@sentry/nextjs';
 import { toast } from 'components/Toast';
 import { AiOutlineUser } from 'react-icons/ai';
 
@@ -146,7 +145,6 @@ function RowMember(user: MembersType, communityId: string): JSX.Element {
       }
       setData({ ...data, role });
     } catch (error) {
-      captureException(error);
       toast.error('Something went wrong');
     } finally {
       setLoading(false);
@@ -203,7 +201,6 @@ export default function Members({ account, users }: MembersPageProps) {
         router.reload();
       }
     } catch (error) {
-      captureException(error);
       toast.error('Something went wrong');
     } finally {
       setLoading(false);

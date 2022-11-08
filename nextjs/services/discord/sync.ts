@@ -5,7 +5,6 @@ import { processChannel } from './channels';
 import { CrawlType, DISCORD_TOKEN } from './constrains';
 import { crawlUsers } from './users';
 import { hideEmptyChannels } from '../../lib/channel';
-import { captureException, flush } from '@sentry/nextjs';
 
 async function syncJob(accountId: string, crawlType: CrawlType) {
   console.log('sync stared', { accountId, crawlType });

@@ -16,7 +16,6 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 # Learn more here: https://nextjs.org/telemetry
 ENV NEXT_TELEMETRY_DISABLED 1
-ENV SKIP_SENTRY true
 ENV SKIP_DYNAMO_CACHE true
 ARG DATABASE_URL
 ENV DATABASE_URL $DATABASE_URL

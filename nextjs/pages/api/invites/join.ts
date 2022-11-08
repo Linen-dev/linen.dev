@@ -18,14 +18,14 @@ export default async function handler(
     params: {},
   });
   if (!permissions.auth?.email) {
-    return response.status(401).end();
+    return response.status(401).json({});
   }
 
   if (request.method === 'POST') {
     const { inviteId }: PostProps = JSON.parse(request.body);
     await acceptInvite(inviteId, permissions.auth?.email);
-    return response.status(200).end();
+    return response.status(200).json({});
   }
 
-  return response.status(405).end();
+  return response.status(405).json({});
 }

@@ -28,11 +28,9 @@ export default async function handler(
       throw 'missing user id on authorization token';
     }
 
-    response.send(token.id);
+    return response.send(token.id);
   } catch (error: any) {
     console.error({ error });
-    response.status(error.status || 500).end();
-  } finally {
-    response.end();
+    return response.status(error.status || 500).json({});
   }
 }
