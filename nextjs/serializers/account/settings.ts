@@ -1,10 +1,9 @@
 import { accounts } from '@prisma/client';
-import { CommunityType } from 'serializers/account';
 import { links } from '../../constants/examples';
 
 export type Settings = {
   communityId: string;
-  communityType: CommunityType;
+  communityType: string;
   googleAnalyticsId?: string | undefined;
   googleSiteVerification?: string | undefined;
   name: string | null;
@@ -19,43 +18,33 @@ export type Settings = {
   prefix?: 'd' | 's';
 };
 
-function buildInviteUrl(account: accounts, communityType: CommunityType) {
+function buildInviteUrl(account: accounts) {
   if (account.communityInviteUrl) {
     return account.communityInviteUrl;
-  }
-  if (communityType === CommunityType.discord) {
+  } else if (account.discordServerId) {
     return `https://discord.com/channels/${account.discordServerId}`;
+  } else {
+    return '';
   }
-  if (communityType === CommunityType.slack) {
-    return `https://${account.slackDomain}.slack.com`;
-  }
-  return '';
 }
 
 const communityMapping: Record<string, 'd' | 's'> = {
   discord: 'd',
   slack: 's',
-  linen: 's',
 };
-
-function getCommunityType(account: accounts) {
-  if (account.discordServerId) return CommunityType.discord;
-  if (account.slackTeamId) return CommunityType.slack;
-  else return CommunityType.linen;
-}
 
 export function serialize(account: accounts): Settings {
   const defaultSettings =
     links.find(({ accountId }) => accountId === account.id) || links[0];
 
-  const communityType = getCommunityType(account);
+  const communityType = account.discordServerId ? 'discord' : 'slack';
 
   return {
     communityId: account.id,
     prefix: communityMapping[communityType],
     ...(account.redirectDomain && { redirectDomain: account.redirectDomain }),
     communityUrl: account.communityUrl || '',
-    communityInviteUrl: buildInviteUrl(account, communityType),
+    communityInviteUrl: buildInviteUrl(account),
     communityName:
       account.slackDomain ||
       account.discordDomain ||
