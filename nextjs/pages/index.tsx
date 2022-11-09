@@ -487,7 +487,7 @@ const CommunityCard = ({
       target="_blank"
       rel="noreferrer"
     >
-      <Image src={logoUrl} alt="Logo" width="200"></Image>
+      <Image src={logoUrl} alt="Logo" height="100" width="200"></Image>
     </a>
   );
 };
