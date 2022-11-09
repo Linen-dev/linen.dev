@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-import Avatar from 'components/Avatar';
-import Label from 'components/Label';
-import Field from 'components/Field';
+import AvatarField from './AvatarField';
 import TextField from 'components/TextField';
 import Button from 'components/Button';
 import { toast } from 'components/Toast';
@@ -39,17 +37,7 @@ export default function ProfileForm({ currentUser, onSubmit }: Props) {
           }
         }}
       >
-        <Field>
-          <Label htmlFor="avatar">
-            Avatar
-            <Avatar
-              size="md"
-              shadow="none"
-              src={currentUser.profileImageUrl}
-              text={currentUser.displayName}
-            />
-          </Label>
-        </Field>
+        <AvatarField user={currentUser} />
         <TextField
           id="displayName"
           label="Display name"
