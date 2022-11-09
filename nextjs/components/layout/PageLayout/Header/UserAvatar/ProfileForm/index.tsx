@@ -8,6 +8,7 @@ import {
   FILE_SIZE_LIMIT_IN_BYTES,
   getFileSizeErrorMessage,
 } from 'utilities/files';
+import { AxiosRequestConfig } from 'axios';
 
 interface Props {
   currentUser: SerializedUser;
@@ -18,7 +19,7 @@ interface Props {
     displayName: string;
     userId: string;
   }): void;
-  onUpload(data: FormData): void;
+  onUpload(data: FormData, options: AxiosRequestConfig): void;
 }
 
 export default function ProfileForm({
@@ -28,6 +29,7 @@ export default function ProfileForm({
 }: Props) {
   const [submitting, setSubmitting] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [progress, setProgress] = useState(0);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -55,7 +57,14 @@ export default function ProfileForm({
       formData.set('file', file, file.name);
       try {
         setUploading(true);
-        await onUpload(formData);
+        await onUpload(formData, {
+          onUploadProgress: (progressEvent: ProgressEvent) => {
+            const percentCompleted = Math.round(
+              (progressEvent.loaded * 100) / progressEvent.total
+            );
+            setProgress(percentCompleted);
+          },
+        });
       } catch (exception) {
         event.target.value = '';
         toast.error('Something went wrong. Please try again.');
@@ -72,7 +81,8 @@ export default function ProfileForm({
         <AvatarField
           user={currentUser}
           onChange={onAvatarChange}
-          disabled={uploading}
+          uploading={uploading}
+          progress={progress}
         />
         <TextField
           id="displayName"
