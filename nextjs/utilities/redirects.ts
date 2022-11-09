@@ -37,15 +37,18 @@ export function resolveCrawlerRedirect({
 }
 
 export function shouldRedirectToDomain({
+  isCrawler,
   account,
   communityName,
   isSubdomainbasedRouting,
 }: {
+  isCrawler: boolean;
   account: accounts;
   communityName: string;
   isSubdomainbasedRouting: boolean;
 }) {
   if (process.env.SKIP_REDIRECT === 'true') return false;
+  if (!isCrawler) return false;
   return (
     account.premium &&
     !!account.redirectDomain &&

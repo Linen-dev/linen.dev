@@ -54,7 +54,12 @@ export async function channelGetServerSideProps(
   const settings = serializeSettings(account);
 
   if (
-    shouldRedirectToDomain({ account, communityName, isSubdomainbasedRouting })
+    shouldRedirectToDomain({
+      isCrawler,
+      account,
+      communityName,
+      isSubdomainbasedRouting,
+    })
   ) {
     return redirectChannelToDomain({
       account,
