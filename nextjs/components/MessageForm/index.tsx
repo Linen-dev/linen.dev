@@ -13,6 +13,10 @@ import { getCaretPosition, setCaretPosition } from './utilities';
 import { SerializedUser } from 'serializers/user';
 import { useUsersContext } from 'contexts/Users';
 import { postprocess } from './utilities/message';
+import {
+  FILE_SIZE_LIMIT_IN_BYTES,
+  getFileSizeErrorMessage,
+} from 'utilities/files';
 import { AxiosRequestConfig, AxiosResponse } from 'axios';
 
 interface Props {
@@ -119,8 +123,6 @@ interface UploadedFile {
   url: string;
 }
 
-const FILE_SIZE_LIMIT_IN_BYTES = 1048576;
-
 function MessageForm({
   id,
   autoFocus,
@@ -214,7 +216,7 @@ function MessageForm({
         if (file.size > FILE_SIZE_LIMIT_IN_BYTES) {
           event.target.value = '';
           setFiles([]);
-          return toast.error(`File size is bigger than 1MB: ${file.name}.`);
+          return toast.error(getFileSizeErrorMessage(file.name));
         }
         formData.append(`file-${index}`, file, file.name);
       }

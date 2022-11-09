@@ -16,6 +16,7 @@ interface Props {
     displayName: string;
     userId: string;
   }): Promise<void>;
+  onUpload(data: FormData): void;
 }
 
 enum Mode {
@@ -23,7 +24,11 @@ enum Mode {
   Profile,
 }
 
-export default function UserAvatar({ currentUser, onProfileChange }: Props) {
+export default function UserAvatar({
+  currentUser,
+  onProfileChange,
+  onUpload,
+}: Props) {
   const userNavigation = [
     {
       name: 'Profile',
@@ -98,6 +103,7 @@ export default function UserAvatar({ currentUser, onProfileChange }: Props) {
             await onProfileChange({ displayName, userId });
             setMode(Mode.Menu);
           }}
+          onUpload={onUpload}
         />
       </Modal>
     </>

@@ -75,6 +75,18 @@ function PageLayout({
     });
   };
 
+  const uploadAvatar = (data: FormData) => {
+    return fetch('/api/profile/avatar', {
+      method: 'POST',
+      body: data,
+    }).then((response) => {
+      // same as in the comment above, we could make this dynamic by updating the user in the all user's list
+      if (response.ok) {
+        window.location.reload();
+      }
+    });
+  };
+
   return (
     <LinkContext
       context={{
@@ -92,6 +104,7 @@ function PageLayout({
           permissions={permissions}
           isSubDomainRouting={isSubDomainRouting}
           onProfileChange={updateProfile}
+          onUpload={uploadAvatar}
         />
       </div>
       <div className="sm:hidden w-full">

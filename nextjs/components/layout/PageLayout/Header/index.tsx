@@ -26,6 +26,7 @@ interface Props {
     displayName: string;
     userId: string;
   }): Promise<void>;
+  onUpload(data: FormData): void;
 }
 
 function isWhiteColor(color: string) {
@@ -38,6 +39,7 @@ export default function Header({
   isSubDomainRouting,
   permissions,
   onProfileChange,
+  onUpload,
   mode,
 }: Props) {
   const { brandColor, communityName } = settings;
@@ -100,6 +102,7 @@ export default function Header({
           <UserAvatar
             currentUser={permissions.user}
             onProfileChange={onProfileChange}
+            onUpload={onUpload}
           />
         ) : (
           <JoinButton settings={settings} />

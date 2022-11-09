@@ -1,8 +1,14 @@
 import React from 'react';
+import classNames from 'classnames';
 import styles from './index.module.css';
 
-function Field({ children }: { children: React.ReactNode }) {
-  return <div className={styles.field}>{children}</div>;
+interface Props {
+  className?: string;
+  children: React.ReactNode;
+}
+
+function Field({ className, children }: Props) {
+  return <div className={classNames(styles.field, className)}>{children}</div>;
 }
 
 export default Field;
