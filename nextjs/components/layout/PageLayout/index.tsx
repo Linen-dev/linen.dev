@@ -12,6 +12,7 @@ import { LinkContext } from 'contexts/Link';
 import { Settings } from 'serializers/account/settings';
 import { put } from 'utilities/http';
 import useMode from 'hooks/mode';
+import axios, { AxiosRequestConfig } from 'axios';
 
 interface Props {
   className?: string;
@@ -75,15 +76,10 @@ function PageLayout({
     });
   };
 
-  const uploadAvatar = (data: FormData) => {
-    return fetch('/api/profile/avatar', {
-      method: 'POST',
-      body: data,
-    }).then((response) => {
+  const uploadAvatar = (data: FormData, options: AxiosRequestConfig) => {
+    return axios.post('/api/profile/avatar', data, options).then(() => {
       // same as in the comment above, we could make this dynamic by updating the user in the all user's list
-      if (response.ok) {
-        window.location.reload();
-      }
+      window.location.reload();
     });
   };
 

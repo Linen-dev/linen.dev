@@ -1,7 +1,20 @@
+@import 'styles/colors.scss';
+
 .label {
   cursor: pointer;
 }
 
+.row {
+  align-items: center;
+  display: flex;
+  gap: 0.5rem;
+}
+
 .input {
   display: none;
+}
+
+.text {
+  color: $color-gray-700;
+  font-size: 12px;
 }

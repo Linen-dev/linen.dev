@@ -12,6 +12,7 @@ import type { ChannelSerialized } from 'lib/channel';
 import UserAvatar from './UserAvatar';
 import { Mode } from 'hooks/mode';
 import styles from './index.module.scss';
+import { AxiosRequestConfig } from 'axios';
 
 interface Props {
   settings: Settings;
@@ -26,7 +27,7 @@ interface Props {
     displayName: string;
     userId: string;
   }): Promise<void>;
-  onUpload(data: FormData): void;
+  onUpload(data: FormData, options: AxiosRequestConfig): void;
 }
 
 function isWhiteColor(color: string) {

@@ -5,26 +5,37 @@ import { SerializedUser } from 'serializers/user';
 import styles from './index.module.scss';
 
 interface Props {
-  disabled: boolean;
+  uploading: boolean;
   user: SerializedUser;
+  progress: number;
   onChange(event: React.ChangeEvent<HTMLInputElement>): void;
 }
 
-export default function AvatarField({ disabled, user, onChange }: Props) {
+export default function AvatarField({
+  uploading,
+  user,
+  progress,
+  onChange,
+}: Props) {
   // TODO add loading state to the Avatar
   return (
     <Field>
       <Label className={styles.label} htmlFor="avatar">
         Avatar
-        <Avatar
-          size="md"
-          shadow="none"
-          src={user.profileImageUrl}
-          text={user.displayName}
-        />
+        <div className={styles.row}>
+          <Avatar
+            size="md"
+            shadow="none"
+            src={user.profileImageUrl}
+            text={user.displayName}
+          />
+          {uploading && (
+            <span className={styles.text}>{`Uploading... ${progress}%`}</span>
+          )}
+        </div>
         <input
           className={styles.input}
-          disabled={disabled}
+          disabled={uploading}
           type="file"
           id="avatar"
           name="avatar"

@@ -6,6 +6,7 @@ import { SerializedUser } from 'serializers/user';
 import Avatar from 'components/Avatar';
 import Modal from 'components/Modal';
 import ProfileForm from './ProfileForm';
+import { AxiosRequestConfig } from 'axios';
 
 interface Props {
   currentUser: SerializedUser;
@@ -16,7 +17,7 @@ interface Props {
     displayName: string;
     userId: string;
   }): Promise<void>;
-  onUpload(data: FormData): void;
+  onUpload(data: FormData, options: AxiosRequestConfig): void;
 }
 
 enum Mode {
