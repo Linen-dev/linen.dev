@@ -55,9 +55,11 @@ export async function threadGetServerSideProps(
     }
 
     const settings = serializeSettings(account);
+    const isCrawler = isBot(context?.req?.headers?.['user-agent'] || '');
 
     if (
       shouldRedirectToDomain({
+        isCrawler,
         account,
         communityName,
         isSubdomainbasedRouting,
@@ -71,7 +73,6 @@ export async function threadGetServerSideProps(
         slug,
       });
     }
-    const isCrawler = isBot(context?.req?.headers?.['user-agent'] || '');
 
     const channels = await findChannelsByAccount({
       isCrawler,
