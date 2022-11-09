@@ -1,4 +1,4 @@
-# Building chat app with Nextjs and Elixir
+# Building a chat app with Nextjs and Elixir
 
 Table of content
 
