@@ -102,7 +102,7 @@ export default function Header({
             onProfileChange={onProfileChange}
           />
         ) : (
-          <JoinButton settings={settings} permissions={permissions} />
+          <JoinButton settings={settings} />
         )}
       </div>
     </div>
