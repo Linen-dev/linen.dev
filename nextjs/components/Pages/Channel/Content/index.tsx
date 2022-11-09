@@ -4,6 +4,8 @@ import { Thread } from 'components/Thread';
 import { get } from 'utilities/http';
 import { ThreadState } from '@prisma/client';
 import { useUsersContext } from 'contexts/Users';
+import ButtonPagination from 'components/ButtonPagination';
+import CustomLinkHelper from 'components/Link/CustomLinkHelper';
 import ChatLayout from 'components/layout/shared/ChatLayout';
 import SidebarLayout from 'components/layout/shared/SidebarLayout';
 import Header from './Header';
@@ -294,21 +296,51 @@ export default function Channel({
                   {threads.length === 0 ? (
                     <Empty />
                   ) : (
-                    <ul className="divide-y w-full">
-                      <Grid
-                        threads={threads}
-                        permissions={permissions}
-                        isSubDomainRouting={isSubDomainRouting}
-                        settings={settings}
-                        isBot={isBot}
-                        mode={mode}
-                        currentUser={currentUser}
-                        onClick={selectThread}
-                        onPin={pinThread}
-                        onReaction={sendReaction}
-                        onDrop={handleDrop}
-                      />
-                    </ul>
+                    <>
+                      <ul className="divide-y w-full">
+                        <Grid
+                          threads={threads}
+                          permissions={permissions}
+                          isSubDomainRouting={isSubDomainRouting}
+                          settings={settings}
+                          isBot={isBot}
+                          mode={mode}
+                          currentUser={currentUser}
+                          onClick={selectThread}
+                          onPin={pinThread}
+                          onReaction={sendReaction}
+                          onDrop={handleDrop}
+                        />
+                      </ul>
+
+                      {isBot && (
+                        <div className="text-center p-4">
+                          {nextCursor?.prev && (
+                            <ButtonPagination
+                              href={CustomLinkHelper({
+                                isSubDomainRouting,
+                                communityName: settings.communityName,
+                                communityType: settings.communityType,
+                                path: `/c/${channelName}/${nextCursor.prev}`,
+                              })}
+                              label="Previous"
+                            />
+                          )}
+                          {nextCursor?.next && (
+                            <ButtonPagination
+                              href={CustomLinkHelper({
+                                isSubDomainRouting,
+                                communityName: settings.communityName,
+                                communityType: settings.communityType,
+                                path: `/c/${channelName}/${nextCursor.next}`,
+                              })}
+                              label="Next"
+                              className="ml-3"
+                            />
+                          )}
+                        </div>
+                      )}
+                    </>
                   )}
                 </>
               }
