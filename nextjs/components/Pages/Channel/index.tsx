@@ -3,8 +3,7 @@ import PageLayout from 'components/layout/PageLayout';
 import { toast } from 'components/Toast';
 import { buildChannelSeo } from 'utilities/seo';
 import { ChannelSerialized } from 'lib/channel';
-import ContentForUsers from 'components/Pages/Channel/Content/ContentForUsers';
-import ContentForBots from 'components/Pages/Channel/Content/ContentForBots';
+import Content from 'components/Pages/Channel/Content';
 import { SerializedAccount } from 'serializers/account';
 import { Settings } from 'serializers/account/settings';
 import { SerializedThread } from 'serializers/thread';
@@ -565,38 +564,26 @@ export default function Channel({
       permissions={permissions}
       onDrop={onChannelDrop}
     >
-      {isBot ? (
-        <ContentForBots
-          threads={threads}
-          settings={settings}
-          channelName={channelName}
-          isSubDomainRouting={isSubDomainRouting}
-          nextCursor={nextCursor}
-          isBot={isBot}
-          permissions={permissions}
-        />
-      ) : (
-        <ContentForUsers
-          threads={threads}
-          pinnedThreads={pinnedThreads}
-          currentChannel={currentChannel}
-          currentCommunity={currentCommunity}
-          settings={settings}
-          channelName={channelName}
-          isSubDomainRouting={isSubDomainRouting}
-          nextCursor={nextCursor}
-          pathCursor={pathCursor}
-          isBot={isBot}
-          permissions={permissions}
-          currentThreadId={currentThreadId}
-          setThreads={setThreads}
-          pinThread={pinThread}
-          onDrop={onThreadDrop}
-          sendReaction={sendReaction}
-          onSelectThread={onSelectThread}
-          updateThread={updateThread}
-        />
-      )}
+      <Content
+        threads={threads}
+        pinnedThreads={pinnedThreads}
+        currentChannel={currentChannel}
+        currentCommunity={currentCommunity}
+        settings={settings}
+        channelName={channelName}
+        isSubDomainRouting={isSubDomainRouting}
+        nextCursor={nextCursor}
+        pathCursor={pathCursor}
+        isBot={isBot}
+        permissions={permissions}
+        currentThreadId={currentThreadId}
+        setThreads={setThreads}
+        pinThread={pinThread}
+        onDrop={onThreadDrop}
+        sendReaction={sendReaction}
+        onSelectThread={onSelectThread}
+        updateThread={updateThread}
+      />
     </PageLayout>
   );
 }
