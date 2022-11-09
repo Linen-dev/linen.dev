@@ -4,18 +4,9 @@ import styles from './index.module.css';
 import { useSession } from 'next-auth/react';
 import { toast } from 'components/Toast';
 import { useJoinContext } from 'contexts/Join';
-import { Permissions } from 'types/shared';
 
-import { signOut } from 'next-auth/react';
-
-export default function JoinLinen({
-  accountId,
-  permissions,
-}: {
-  accountId?: string;
-  permissions?: Permissions;
-}) {
-  const { data, status } = useSession();
+export default function JoinLinen({ accountId }: { accountId?: string }) {
+  const { status } = useSession();
   const { startSignUp } = useJoinContext();
 
   const onClick = async () => {
@@ -44,24 +35,8 @@ export default function JoinLinen({
     return <div />;
   }
 
-  // if (permissions?.is_member) {
-  //   return (
-  //     <a
-  //       className={classNames(
-  //         styles.button,
-  //         'shadow-md text-sm font-medium rounded-md text-blue-500',
-  //         'cursor-pointer'
-  //       )}
-  //       onClick={() => signOut()}
-  //     >
-  //       <LinenIcon className={styles.icon} />
-  //       <span>Sign out</span>
-  //     </a>
-  //   );
-  // }
-
   return (
-    <a
+    <div
       className={classNames(
         styles.button,
         'shadow-md text-sm font-medium rounded-md text-blue-500',
@@ -72,6 +47,6 @@ export default function JoinLinen({
       <LinenIcon className={styles.icon} />
       <span className="hidden sm:inline">Join the conversation</span>
       <span className="sm:hidden inline">Join Linen</span>
-    </a>
+    </div>
   );
 }
