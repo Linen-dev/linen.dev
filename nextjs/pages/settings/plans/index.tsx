@@ -42,9 +42,9 @@ export default function SettingsPage({ account, prices }: Props) {
         ],
       },
       {
-        name: 'Starter',
+        name: 'Business',
         href: '#',
-        description: '$150/month 1-1,000 members',
+        description: '1,000+ members',
         features: [
           'Custom domain',
           'Generate SEO from organic content',
@@ -62,46 +62,6 @@ export default function SettingsPage({ account, prices }: Props) {
           {
             type: Period.Yearly,
             price: 1000,
-          },
-        ],
-      },
-      {
-        name: 'Mid-size',
-        href: '#',
-        description: '$350/month 1,000- 3,000 members',
-        features: [
-          'Priority Support',
-          'Everything in Free Edition',
-          'Everything in Starter Edition',
-        ],
-        prices: [
-          {
-            type: Period.Monthly,
-            price: 250,
-          },
-          {
-            type: Period.Yearly,
-            price: 2500,
-          },
-        ],
-      },
-      {
-        name: 'Large',
-        href: '#',
-        description: '$550/month 3,000-10,000 members',
-        features: [
-          'Shared Slack channel customer support',
-          'Everything in Free Edition',
-          'Everything in Mid-size Edition',
-        ],
-        prices: [
-          {
-            type: Period.Monthly,
-            price: 450,
-          },
-          {
-            type: Period.Yearly,
-            price: 4500,
           },
         ],
       },
