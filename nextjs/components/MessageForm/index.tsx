@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import autosize from 'autosize';
 import Button from 'components/Button';
-import styles from './index.module.css';
+import styles from './index.module.scss';
 import toast from 'components/Toast';
 import Suggestions from 'components/Suggestions';
 import Tab from './Tab';

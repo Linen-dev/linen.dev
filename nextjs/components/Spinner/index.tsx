@@ -1,4 +1,5 @@
-import styles from './index.module.css';
+import styles from './index.module.scss';
+
 export default function Spinner() {
   return (
     <div className={styles['spinner-wrapper']}>

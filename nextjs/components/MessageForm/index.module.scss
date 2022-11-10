@@ -1,3 +1,5 @@
+@import 'styles/colors.scss';
+
 .container {
   position: relative;
 }
@@ -22,16 +24,17 @@
   padding-right: 0.625rem;
   border-width: 1px;
   border-radius: 0.375rem;
-  border-color: #e5e7eb;
+  border-color: $color-border;
   width: 100%;
   display: block;
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
+  transition: 0.2s ease-in border-color;
 }
 
 .textarea:focus {
   outline: none;
-  border-color: #0070f3;
+  border-color: $color-primary;
 }
 
 .textarea[hidden] {
