@@ -1,10 +1,12 @@
+@import 'styles/colors.scss';
+
 /* Make clicks pass-through */
 #nprogress {
   pointer-events: none;
 }
 
 #nprogress .bar {
-  background: #29d;
+  background: $color-primary;
 
   position: fixed;
   z-index: 1031;
@@ -22,7 +24,7 @@
   right: 0px;
   width: 100px;
   height: 100%;
-  box-shadow: 0 0 10px #29d, 0 0 5px #29d;
+  box-shadow: 0 0 10px $color-primary, 0 0 5px $color-primary;
   opacity: 1;
 
   -webkit-transform: rotate(3deg) translate(0px, -4px);
@@ -47,8 +49,8 @@
   box-sizing: border-box;
 
   border: solid 2px transparent;
-  border-top-color: #29d;
-  border-left-color: #29d;
+  border-top-color: $color-primary;
+  border-left-color: $color-primary;
   border-radius: 50%;
   flex: content;
 
