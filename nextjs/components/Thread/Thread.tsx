@@ -113,7 +113,7 @@ export function Thread({
 
         <div className={styles.footer}>
           <div className={styles.count}>
-            <span className={styles.subtext}>View count:</span> {viewCount + 1}
+            <span className={styles.subtext}>View count: {viewCount + 1}</span>
           </div>
           {threadUrl && (
             <JoinChannelLink
