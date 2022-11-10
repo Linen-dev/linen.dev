@@ -1,6 +1,6 @@
 import '../styles/reset.css';
 import { useRouter } from 'next/router';
-import '../nprogress.css';
+import '../nprogress.scss';
 import NProgress from 'nprogress';
 import '../styles/globals.css';
 import { SWRConfig } from 'swr';
