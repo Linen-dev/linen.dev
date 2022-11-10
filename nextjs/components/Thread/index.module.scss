@@ -1,11 +1,11 @@
 @import 'styles/colors.scss';
 
 .container {
-  background: white;
+  background: $color-white;
 }
 
 .thread {
-  background: white;
+  background: $color-white;
   max-width: 100%;
   min-width: 480px;
 }
@@ -22,8 +22,8 @@
 }
 
 .chat {
-  background: white;
-  border-top: 1px solid #e5e7eb;
+  background: $color-white;
+  border-top: 1px solid $color-border;
   bottom: 0;
   padding: 1rem;
   position: sticky;
@@ -52,7 +52,7 @@
 }
 
 .subtext {
-  color: #495057;
+  color: $color-gray-500;
 }
 
 .title {
