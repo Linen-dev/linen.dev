@@ -35,7 +35,7 @@ const Home = (props: { accounts: Props[] }) => {
         'Host Linen under your custom url/subdomain',
         'Custom community branding',
         'SEO benefits',
-        'Prioirty Support',
+        'Priority Support',
       ],
     },
   ];
