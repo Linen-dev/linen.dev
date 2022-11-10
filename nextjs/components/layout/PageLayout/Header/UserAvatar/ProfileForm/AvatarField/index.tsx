@@ -24,13 +24,15 @@ export default function AvatarField({
         Avatar
         <div className={styles.row}>
           <Avatar
-            size="md"
+            size="lg"
             shadow="none"
             src={user.profileImageUrl}
             text={user.displayName}
           />
-          {uploading && (
+          {uploading ? (
             <span className={styles.text}>{`Uploading... ${progress}%`}</span>
+          ) : (
+            <span className={styles.edit}>Upload</span>
           )}
         </div>
         <input
