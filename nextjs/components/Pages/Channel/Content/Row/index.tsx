@@ -94,20 +94,24 @@ export default function ChannelRow({
           mode={mode}
           onPin={onPin}
           onReaction={onReaction}
-        >
-          {messages.length > 1 && (
-            <div className={styles.footer}>
-              <Avatars size="sm" users={avatars} />
-              <>
-                {messages.length - 1}{' '}
-                {messages.length > 2 ? 'replies' : 'reply'} &middot;{' '}
-                {`${authors.length} participant${
-                  authors.length > 1 ? 's' : ''
-                }`}
-              </>
-            </div>
-          )}
-        </Row>
+          header={
+            thread.title && <div className={styles.header}>{thread.title}</div>
+          }
+          footer={
+            messages.length > 1 && (
+              <div className={styles.footer}>
+                <Avatars size="sm" users={avatars} />
+                <>
+                  {messages.length - 1}{' '}
+                  {messages.length > 2 ? 'replies' : 'reply'} &middot;{' '}
+                  {`${authors.length} participant${
+                    authors.length > 1 ? 's' : ''
+                  }`}
+                </>
+              </div>
+            )
+          }
+        />
       </div>
     </DraggableRow>
   );
