@@ -15,6 +15,16 @@
   width: 100%;
 }
 
+.header {
+  background: $color-gray-100;
+  border-bottom: 1px solid $color-border;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  margin-top: -1rem;
+  padding: 0.5rem 1rem;
+}
+
 .footer {
   align-items: center;
   color: $color-gray-600;
