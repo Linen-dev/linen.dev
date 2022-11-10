@@ -1,3 +1,5 @@
+@import 'styles/colors.scss';
+
 .container {
   display: block;
   position: relative;
@@ -17,21 +19,26 @@
   padding-right: 0.75rem;
   border-width: 1px;
   border-radius: 0.375rem;
-  border-color: #e5e7eb;
+  border-color: $color-border;
   line-height: 18px;
   width: 100%;
   display: block;
+  transition: 0.2s ease-in border-color;
   -webkit-font-smoothing: antialiased;
+}
+
+.input::placeholder {
+  color: $color-gray-400;
 }
 
 .input:focus {
   outline: none;
-  border-color: #0070f3;
+  border-color: $color-primary;
 }
 
 .icon {
   align-items: center;
-  color: #adb5bd;
+  color: $color-gray-400;
   display: flex;
   height: 36px;
   left: 0;
