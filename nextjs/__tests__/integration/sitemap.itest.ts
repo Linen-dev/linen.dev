@@ -1,8 +1,12 @@
-import { accounts, channels, MessageFormat } from '@prisma/client';
-import prisma from '../../client';
+import { accounts, channels } from '@prisma/client';
 import { v4 } from 'uuid';
-import * as sitemap from '../../utilities/sitemap';
+import {
+  createSitemapForPremium,
+  createSitemapForLinen,
+  createSitemapForFree,
+} from '../../utilities/sitemap';
 import setup from '__tests__/spec-helpers/integration';
+import { create } from '__tests__/factory';
 
 setup({ truncationStrategy: 'none' });
 
@@ -17,42 +21,28 @@ async function createChannel({
   hidden: boolean;
   createThreads: boolean;
 }) {
-  const channel = await prisma.channels.create({
-    data: {
-      channelName: `channel-${random()}`,
-      externalChannelId: `channel-${random()}`,
-      accountId: account.id,
-      hidden,
-    },
+  const channel = await create('channel', {
+    channelName: `channel-${random()}`,
+    accountId: account.id,
+    hidden,
   });
-  const user = await prisma.users.create({
-    data: {
-      isAdmin: true,
-      isBot: false,
-      accountsId: account.id,
-    },
+  const user = await create('user', {
+    isAdmin: true,
+    isBot: false,
+    accountsId: account.id,
   });
   if (createThreads) {
     for (let i = 0; i < 10; i++) {
-      const thread = await prisma.threads.create({
-        data: {
-          channelId: channel.id,
-          slug: `slug-${channel.channelName}-${channel.id}-${i}`,
-          messageCount: 2,
-          externalThreadId: `thread-ts-${random()}`,
-          sentAt: new Date().getTime(),
-        },
+      const thread = await create('thread', {
+        channelId: channel.id,
+        slug: `slug-${channel.channelName}-${channel.id}-${i}`,
+        messageCount: 2,
       });
-      await prisma.messages.create({
-        data: {
-          body: `foo-${i}`,
-          channelId: channel.id,
-          threadId: thread.id,
-          usersId: user.id,
-          sentAt: new Date().toISOString(),
-          externalMessageId: `message-id-${random()}`,
-          messageFormat: MessageFormat.LINEN,
-        },
+      await create('message', {
+        body: `foo-${i}`,
+        channelId: channel.id,
+        threadId: thread.id,
+        usersId: user.id,
       });
     }
   }
@@ -84,14 +74,7 @@ describe('sitemap', () => {
   let freeEmpty: accounts;
 
   beforeAll(async () => {
-    premium = await prisma.accounts.create({
-      data: {
-        premium: true,
-        redirectDomain: `linen.${random()}.com`,
-        slackDomain: `linen-${random()}`,
-        discordDomain: `linen-${random()}`,
-      },
-    });
+    premium = await create('account', {});
     premiumChannels = {
       withThreads: await createChannel({
         account: premium,
@@ -110,11 +93,9 @@ describe('sitemap', () => {
       }),
     };
 
-    free1 = await prisma.accounts.create({
-      data: {
-        premium: false,
-        slackDomain: 'cool',
-      },
+    free1 = await create('account', {
+      premium: false,
+      slackDomain: 'cool',
     });
     free1Channels = {
       withThreads: await createChannel({
@@ -134,11 +115,9 @@ describe('sitemap', () => {
       }),
     };
 
-    free2 = await prisma.accounts.create({
-      data: {
-        premium: false,
-        slackDomain: 'awesome',
-      },
+    free2 = await create('account', {
+      premium: false,
+      slackDomain: 'slack-domain',
     });
     free2Channels = {
       withThreads: await createChannel({
@@ -158,11 +137,9 @@ describe('sitemap', () => {
       }),
     };
 
-    freeEmpty = await prisma.accounts.create({
-      data: {
-        premium: false,
-        discordDomain: 'nice',
-      },
+    freeEmpty = await create('account', {
+      premium: false,
+      discordDomain: 'discord-domain',
     });
   });
 
@@ -172,7 +149,7 @@ describe('sitemap', () => {
 
     beforeAll(async () => {
       sitemapBuilder = jest.fn((e) => e.join());
-      result = await sitemap.createSitemapForPremium(
+      result = await createSitemapForPremium(
         premium.redirectDomain as string,
         sitemapBuilder
       );
@@ -207,7 +184,7 @@ describe('sitemap', () => {
 
     beforeAll(async () => {
       sitemapBuilder = jest.fn((e) => e.join());
-      result = await sitemap.createSitemapForFree(
+      result = await createSitemapForFree(
         'localhost',
         free1.slackDomain as string,
         's',
@@ -241,7 +218,7 @@ describe('sitemap', () => {
     let result: string;
 
     beforeAll(async () => {
-      result = await sitemap.createSitemapForLinen('localhost', sitemapBuilder);
+      result = await createSitemapForLinen('localhost', sitemapBuilder);
     });
 
     it('it should call the sitemap builder once', async () => {
