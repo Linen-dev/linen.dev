@@ -18,3 +18,12 @@
   color: $color-gray-700;
   font-size: 12px;
 }
+
+.edit {
+  color: $color-primary;
+  font-size: 12px;
+}
+
+.edit:hover {
+  text-decoration: underline;
+}
