@@ -18,7 +18,12 @@ function useWebsockets({ room, token, permissions, onNewMessage }: Props) {
       //Set url instead of hard coding
       const socket = new Socket(
         `${process.env.NEXT_PUBLIC_PUSH_SERVICE_URL}/socket`,
-        { params: { token } }
+        {
+          params: { token },
+          reconnectAfterMs: (_) => 10000,
+          rejoinAfterMs: (_) => 10000,
+          heartbeatIntervalMs: 10000,
+        }
       );
 
       socket.connect();
