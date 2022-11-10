@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import { ThreadState } from '@prisma/client';
 import { GoCheck, GoChevronLeft, GoX, GoSync } from 'react-icons/go';
 import { SerializedThread } from 'serializers/thread';
-import styles from './index.module.css';
+import styles from './index.module.scss';
 
 interface Props {
   thread: SerializedThread;
