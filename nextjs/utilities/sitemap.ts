@@ -149,7 +149,6 @@ async function queryThreads(
     chunk: string[] = [];
   try {
     const threads = await findThreadsByChannelAndCursor(channel.id, next);
-
     if (!threads?.length) return {};
 
     chunk.push(`c/${channelName}/${encodeCursor(`asc:gt:${next}`)}`);
@@ -166,6 +165,7 @@ async function queryThreads(
     console.error(error);
     err = error;
   }
+
   return { err, nextCursor, chunk };
 }
 

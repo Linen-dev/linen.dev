@@ -263,7 +263,7 @@ describe('sitemap', () => {
   });
 });
 
-describe.only('createSitemapForFreeByChannel', () => {
+describe('createSitemapForFreeByChannel', () => {
   it('returns a sitemap', async () => {
     const builder = jest.fn();
     const community = await create('account', {
@@ -273,7 +273,11 @@ describe.only('createSitemapForFreeByChannel', () => {
     const channel = await create('channel', {
       accountId: community.id,
     });
-    await create('thread', { channelId: channel.id });
+    await create('thread', {
+      incrementId: 9999,
+      channelId: channel.id,
+      messageCount: 2,
+    });
     await createSitemapForFreeByChannel(
       community.redirectDomain,
       channel.channelName,
@@ -283,6 +287,7 @@ describe.only('createSitemapForFreeByChannel', () => {
     );
     expect(builder).toHaveBeenCalledWith('https://linen.com/s/linen.com/', [
       'c/general/YXNjOmd0OjA=',
+      't/9999/topic',
     ]);
   });
 });
