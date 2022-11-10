@@ -4,7 +4,7 @@
   align-items: center;
   display: flex;
   position: relative;
-  padding: .75rem 0;
+  padding: 1rem 0;
 }
 
 .container[draggable='true']:active {
@@ -18,7 +18,7 @@
 .header {
   font-size: 14px;
   font-weight: 600;
-  padding: 0 0 0.5rem 4rem;
+  padding: 0 0 .75rem 1rem;
 }
 
 .footer {
