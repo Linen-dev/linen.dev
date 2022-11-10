@@ -4,6 +4,7 @@ import {
   createSitemapForPremium,
   createSitemapForLinen,
   createSitemapForFree,
+  createSitemapForFreeByChannel,
 } from '../../utilities/sitemap';
 import setup from '__tests__/spec-helpers/integration';
 import { create } from '__tests__/factory';
@@ -259,5 +260,29 @@ describe('sitemap', () => {
       expect(result).not.toBeFalsy();
       expect(result).not.toBe('');
     });
+  });
+});
+
+describe.only('createSitemapForFreeByChannel', () => {
+  it('returns a sitemap', async () => {
+    const builder = jest.fn();
+    const community = await create('account', {
+      name: 'linen.com',
+      redirectDomain: 'linen.com',
+    });
+    const channel = await create('channel', {
+      accountId: community.id,
+    });
+    await create('thread', { channelId: channel.id });
+    await createSitemapForFreeByChannel(
+      community.redirectDomain,
+      channel.channelName,
+      community.name,
+      's',
+      builder
+    );
+    expect(builder).toHaveBeenCalledWith('https://linen.com/s/linen.com/', [
+      'c/general/YXNjOmd0OjA=',
+    ]);
   });
 });
