@@ -3,6 +3,7 @@ import { AccountType } from '@prisma/client';
 export enum CommunityType {
   'discord' = 'discord',
   'slack' = 'slack',
+  'linen' = 'linen',
 }
 
 export interface SerializedAccount {

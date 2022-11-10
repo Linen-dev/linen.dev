@@ -1,7 +1,4 @@
-const communityMapping: Record<string, string> = {
-  discord: 'd',
-  slack: 's',
-};
+import { communityMapping } from 'serializers/account/settings';
 
 export default function CustomLinkHelper({
   isSubDomainRouting,
