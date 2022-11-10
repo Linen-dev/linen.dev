@@ -1,11 +1,11 @@
 @import 'styles/colors.scss';
 
 .dragged {
-  background-color: lighten($color-tertiary, 40%) !important;
+  background-color: $color-blue-50 !important;
 }
 
 .hover {
-  background-color: $color-gray-100;
+  background-color: $color-blue-50;
   * {
     pointer-events: none;
   }
