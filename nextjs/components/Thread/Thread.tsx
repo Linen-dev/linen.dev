@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { ThreadState } from '@prisma/client';
 import Header from './Header';
 import Messages from './Messages';
@@ -12,6 +12,7 @@ import { Permissions, UploadedFile } from 'types/shared';
 import { Mode } from 'hooks/mode';
 import styles from './index.module.scss';
 import classNames from 'classnames';
+import useThreadWebsockets from 'hooks/websockets/thread';
 
 interface Props {
   thread: SerializedThread;
@@ -23,6 +24,7 @@ interface Props {
   permissions: Permissions;
   currentUser: SerializedUser | null;
   mode?: Mode;
+  token: string | null;
   sendMessage({
     message,
     files,
@@ -61,6 +63,7 @@ export function Thread({
   permissions,
   currentUser,
   mode,
+  token,
   sendMessage,
   updateThread,
   onClose,
@@ -69,13 +72,33 @@ export function Thread({
   onReaction,
 }: Props) {
   const { id, state, viewCount, incrementId } = thread;
+  const [messages, setMessages] = useState(thread.messages);
+
   useEffect(() => {
     onMount?.();
   }, []);
 
   useEffect(() => {
     fetch(`/api/count?incrementId=${incrementId}`, { method: 'PUT' });
-  }, [incrementId]);
+  }, []);
+
+  useThreadWebsockets({
+    id: thread?.id,
+    token,
+    permissions,
+    onMessage(message, messageId, imitationId) {
+      setMessages((messages) => {
+        return [
+          ...messages?.filter(
+            ({ id }: any) => id !== imitationId && id !== messageId
+          ),
+          message,
+        ];
+      });
+      // this call will make it scroll down
+      onSend?.();
+    },
+  });
 
   function isThreadCreator(
     currentUser: SerializedUser | null,
@@ -103,7 +126,7 @@ export function Thread({
       />
       <div className={styles.thread}>
         <Messages
-          thread={thread}
+          thread={{ ...thread, messages }}
           permissions={permissions}
           isSubDomainRouting={isSubDomainRouting}
           currentUser={currentUser}
