@@ -18,6 +18,7 @@ import MobileMenu from './MobileMenu';
 interface Props {
   settings: Settings;
   channels: ChannelSerialized[];
+  channelName?: string;
   isSubDomainRouting: boolean;
   permissions: Permissions;
   mode: Mode;
@@ -38,6 +39,7 @@ function isWhiteColor(color: string) {
 export default function Header({
   settings,
   channels,
+  channelName,
   isSubDomainRouting,
   permissions,
   onProfileChange,
@@ -110,7 +112,12 @@ export default function Header({
               />
             </div>
             <div className="md:hidden">
-              <MobileMenu channels={channels} permissions={permissions} />
+              <MobileMenu
+                channelName={channelName}
+                fontColor={fontColor}
+                channels={channels}
+                permissions={permissions}
+              />
             </div>
           </>
         ) : (
