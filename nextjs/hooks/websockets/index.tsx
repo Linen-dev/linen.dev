@@ -52,7 +52,7 @@ function useWebsockets({ room, token, permissions, onNewMessage }: Props) {
   useEffect(() => {
     channel?.off('new_msg');
     channel?.on('new_msg', onNewMessage);
-  }, [onNewMessage]);
+  }, [room, onNewMessage]);
 
   return { connected, channel };
 }

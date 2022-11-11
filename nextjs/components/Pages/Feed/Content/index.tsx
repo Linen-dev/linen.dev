@@ -127,6 +127,27 @@ export default function Feed({
     [currentUser?.id, scope]
   );
 
+  const onThreadMessage = (
+    message: SerializedMessage,
+    messageId: string,
+    imitationId: string
+  ) => {
+    setThread((thread) => {
+      if (!thread) {
+        return;
+      }
+      return {
+        ...thread,
+        messages: [
+          ...thread.messages.filter(
+            ({ id }: any) => id !== imitationId && id !== messageId
+          ),
+          message,
+        ],
+      };
+    });
+  };
+
   useFeedWebsockets({
     communityId,
     onNewMessage,
@@ -358,6 +379,10 @@ export default function Feed({
               }}
               onMount={() => {
                 permissions.chat && scrollToBottom(ref.current as HTMLElement);
+              }}
+              onMessage={(message, messageId, imitationId) => {
+                onThreadMessage(message, messageId, imitationId);
+                scrollToBottom(ref.current as HTMLElement);
               }}
             />
           )

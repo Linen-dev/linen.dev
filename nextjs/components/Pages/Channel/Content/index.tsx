@@ -30,6 +30,7 @@ import {
 } from 'utilities/scroll';
 import useMode from 'hooks/mode';
 import styles from './index.module.css';
+import { SerializedMessage } from 'serializers/message';
 
 interface Props {
   settings: Settings;
@@ -63,6 +64,11 @@ interface Props {
     active: boolean;
   }): void;
   onSelectThread(thread: SerializedThread): void;
+  onMessage(
+    message: SerializedMessage,
+    messageId: string,
+    imitationId: string
+  ): void;
   onDrop({
     source,
     target,
@@ -93,6 +99,7 @@ export default function Channel({
   currentThreadId,
   setThreads,
   pinThread,
+  onMessage,
   onDrop,
   sendReaction,
   onSelectThread,
@@ -387,6 +394,11 @@ export default function Channel({
                 scrollToBottom(rightRef.current as HTMLElement);
               }}
               onMount={() => {
+                scrollToBottom(rightRef.current as HTMLElement);
+              }}
+              onMessage={(message, messageId, imitationId) => {
+                onMessage(message, messageId, imitationId);
+                handleLeftScroll();
                 scrollToBottom(rightRef.current as HTMLElement);
               }}
             />

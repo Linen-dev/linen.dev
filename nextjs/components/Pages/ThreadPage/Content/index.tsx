@@ -11,6 +11,7 @@ import { SerializedAccount } from 'serializers/account';
 import type { Settings } from 'serializers/account/settings';
 import type { ChannelSerialized } from 'lib/channel';
 import { Permissions } from 'types/shared';
+import { SerializedMessage } from 'serializers/message';
 
 interface Props {
   thread: SerializedThread;
@@ -39,6 +40,24 @@ export default function Content({
   const currentUser = permissions.user;
 
   const ref = useRef<HTMLDivElement>(null);
+
+  const onThreadMessage = (
+    message: SerializedMessage,
+    messageId: string,
+    imitationId: string
+  ) => {
+    setThread((thread) => {
+      return {
+        ...thread,
+        messages: [
+          ...thread.messages.filter(
+            ({ id }: any) => id !== imitationId && id !== messageId
+          ),
+          message,
+        ],
+      };
+    });
+  };
 
   const updateThread = ({
     state: newState,
@@ -100,6 +119,10 @@ export default function Content({
         }}
         onMount={() => {
           permissions.chat && scrollToBottom(ref.current as HTMLElement);
+        }}
+        onMessage={(message, messageId, imitationId) => {
+          onThreadMessage(message, messageId, imitationId);
+          scrollToBottom(ref.current as HTMLElement);
         }}
       />
     </div>
