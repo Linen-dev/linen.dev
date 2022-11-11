@@ -53,3 +53,11 @@ export const isSubdomainbasedRouting = (host: string): boolean => {
 
   return false;
 };
+
+export function isSubdomainNotAllowed(host: string) {
+  return (
+    host.endsWith('linen.dev') &&
+    host.split('.').length > 2 &&
+    !host.startsWith('www')
+  );
+}
