@@ -74,17 +74,15 @@ const Home = (props: { accounts: Props[] }) => {
             </Link>
           </div>
           <a
-            className="mr-4 whitespace-nowrap text-base font-medium text-gray-600 hover:text-gray-900"
+            className="hidden sm:flex flex-row items-center mr-4 whitespace-nowrap text-base font-medium text-gray-600 hover:text-gray-900"
             href="https://github.com/linen-dev/linen.dev"
             target="_blank"
             rel="noreferrer"
           >
-            <div className="flex flex-row items-center">
-              <div className="pr-2">
-                <BsGithub />
-              </div>
-              Star us on Github
+            <div className="pr-2">
+              <BsGithub />
             </div>
+            Star us on Github
           </a>
           <div className="flex items-center justify-end md:flex-1 lg:w-0">
             <Link legacyBehavior href="/signin" passHref>
