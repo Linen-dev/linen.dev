@@ -13,7 +13,6 @@ import { scrollToBottom } from 'utilities/scroll';
 import debounce from 'utilities/debounce';
 import { sendMessageWrapper } from './sendMessageWrapper';
 import usePolling from 'hooks/polling';
-import useThreadWebsockets from 'hooks/websockets/thread';
 import useKeyboard from 'hooks/keyboard';
 import { useUsersContext } from 'contexts/Users';
 import { useJoinContext } from 'contexts/Join';
@@ -65,31 +64,6 @@ export default function Feed({
   const token = permissions.token || null;
   const currentUser = permissions.user || null;
   const { communityId, communityName } = settings;
-
-  useThreadWebsockets({
-    id: thread?.id,
-    token,
-    permissions,
-    onMessage(message, messageId, imitationId) {
-      // race condition bug here if you don't have a console.log
-      // it will not update the thread
-      console.log('new message');
-      setThread((thread) => {
-        if (!thread) {
-          return;
-        }
-        return {
-          ...thread,
-          messages: [
-            ...thread.messages.filter(
-              ({ id }: any) => id !== imitationId && id !== messageId
-            ),
-            message,
-          ],
-        };
-      });
-    },
-  });
 
   function prependThread(
     thread: SerializedThread,
@@ -378,6 +352,7 @@ export default function Feed({
               updateThread={updateThread}
               onClose={() => setThread(undefined)}
               sendMessage={sendMessage}
+              token={token}
               onSend={() => {
                 scrollToBottom(ref.current as HTMLElement);
               }}

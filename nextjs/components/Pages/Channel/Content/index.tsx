@@ -48,6 +48,7 @@ interface Props {
   isBot: boolean;
   permissions: Permissions;
   currentThreadId: string | undefined;
+  token: string | null;
   setThreads: React.Dispatch<React.SetStateAction<SerializedThread[]>>;
   pinThread(threadId: string): void;
   sendReaction({
@@ -87,6 +88,7 @@ export default function Channel({
   nextCursor,
   pathCursor,
   isBot,
+  token,
   permissions,
   currentThreadId,
   setThreads,
@@ -379,6 +381,7 @@ export default function Channel({
               onClose={() => setShowThread(false)}
               sendMessage={sendThreadMessage}
               onReaction={sendReaction}
+              token={token}
               onSend={() => {
                 handleLeftScroll();
                 scrollToBottom(rightRef.current as HTMLElement);

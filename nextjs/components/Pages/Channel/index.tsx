@@ -19,7 +19,6 @@ import {
 } from './Content/utilities/http';
 import { createThreadImitation } from './Content/utilities/thread';
 import useWebsockets from 'hooks/websockets';
-import useThreadWebsockets from 'hooks/websockets/thread';
 import { useUsersContext } from 'contexts/Users';
 import { ThreadState } from '@prisma/client';
 
@@ -124,30 +123,6 @@ export default function Channel({
           console.log(e);
         }
       }
-    },
-  });
-
-  useThreadWebsockets({
-    id: currentThreadId,
-    token,
-    permissions,
-    onMessage(message, messageId, imitationId) {
-      setThreads((threads) => {
-        return threads.map((thread) => {
-          if (thread.id === currentThreadId) {
-            return {
-              ...thread,
-              messages: [
-                ...thread.messages.filter(
-                  ({ id }: any) => id !== imitationId && id !== messageId
-                ),
-                message,
-              ],
-            };
-          }
-          return thread;
-        });
-      });
     },
   });
 
@@ -583,6 +558,7 @@ export default function Channel({
         sendReaction={sendReaction}
         onSelectThread={onSelectThread}
         updateThread={updateThread}
+        token={token}
       />
     </PageLayout>
   );

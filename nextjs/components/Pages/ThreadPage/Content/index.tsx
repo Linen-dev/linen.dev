@@ -2,7 +2,6 @@ import { useState, useRef } from 'react';
 import { Thread } from 'components/Thread';
 import { scrollToBottom } from 'utilities/scroll';
 import { ThreadState } from '@prisma/client';
-import useThreadWebsockets from 'hooks/websockets/thread';
 import { useUsersContext } from 'contexts/Users';
 import { useJoinContext } from 'contexts/Join';
 import { sendMessageWrapper } from './sendMessageWrapper';
@@ -40,25 +39,6 @@ export default function Content({
   const currentUser = permissions.user;
 
   const ref = useRef<HTMLDivElement>(null);
-
-  useThreadWebsockets({
-    id: thread.id,
-    token,
-    permissions,
-    onMessage(message, messageId, imitationId) {
-      setThread((thread) => {
-        return {
-          ...thread,
-          messages: [
-            ...thread.messages.filter(
-              ({ id }: any) => id !== imitationId && id !== messageId
-            ),
-            message,
-          ],
-        };
-      });
-    },
-  });
 
   const updateThread = ({
     state: newState,
@@ -114,6 +94,7 @@ export default function Content({
         permissions={permissions}
         updateThread={updateThread}
         sendMessage={sendMessage}
+        token={token}
         onSend={() => {
           scrollToBottom(ref.current as HTMLElement);
         }}
