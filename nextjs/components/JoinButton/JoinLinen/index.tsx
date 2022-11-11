@@ -39,7 +39,7 @@ export default function JoinLinen({ accountId }: { accountId?: string }) {
     <div
       className={classNames(
         styles.button,
-        'shadow-md text-sm font-medium rounded-md text-blue-500',
+        'shadow-md text-sm font-medium rounded-md text-blue-700',
         'cursor-pointer'
       )}
       onClick={onClick}
