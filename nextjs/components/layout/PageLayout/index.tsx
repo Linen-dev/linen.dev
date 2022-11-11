@@ -1,6 +1,5 @@
 import { ErrorBoundary } from 'react-error-boundary';
 import Header from './Header';
-import SearchBar from '../../search/SearchBar';
 import NavBar from 'components/NavBar';
 import SEO, { type SeoProps } from '../SEO';
 import type { ChannelSerialized } from 'lib/channel';
@@ -103,15 +102,6 @@ function PageLayout({
           onUpload={uploadAvatar}
         />
       </div>
-      <div className="sm:hidden w-full">
-        <SearchBar
-          borderColor="#fff"
-          channels={channels}
-          communityName={settings.communityName}
-          isSubDomainRouting={isSubDomainRouting}
-          communityType={settings.communityType}
-        />
-      </div>
       {seo && <SEO {...seo} />}
       <div className="flex flex-col lg:flex-row">
         <NavBar
@@ -127,8 +117,8 @@ function PageLayout({
             classNames(
               'lg:h-[calc(100vh_-_64px)] lg:w-full',
               'md:flex',
-              'sm:h-[calc(100vh_-_144px)]',
-              'justify-center overflow-auto h-[calc(100vh_-_152px)] w-full'
+              'sm:h-[calc(100vh_-_104px)]',
+              'justify-center overflow-auto h-[calc(100vh_-_64px)] w-full'
             )
           }
           ref={innerRef}

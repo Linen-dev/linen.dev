@@ -13,6 +13,7 @@ import UserAvatar from './UserAvatar';
 import { Mode } from 'hooks/mode';
 import styles from './index.module.scss';
 import { AxiosRequestConfig } from 'axios';
+import MobileMenu from './MobileMenu';
 
 interface Props {
   settings: Settings;
@@ -100,11 +101,18 @@ export default function Header({
           Docs
         </a>
         {permissions.user && permissions.is_member ? (
-          <UserAvatar
-            currentUser={permissions.user}
-            onProfileChange={onProfileChange}
-            onUpload={onUpload}
-          />
+          <>
+            <div className="hidden md:flex">
+              <UserAvatar
+                currentUser={permissions.user}
+                onProfileChange={onProfileChange}
+                onUpload={onUpload}
+              />
+            </div>
+            <div className="md:hidden">
+              <MobileMenu channels={channels} permissions={permissions} />
+            </div>
+          </>
         ) : (
           <JoinButton settings={settings} />
         )}

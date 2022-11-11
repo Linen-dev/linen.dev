@@ -1,0 +1,47 @@
+@import 'styles/colors.scss';
+
+.open {
+  color: white;
+  font-size: 24px;
+}
+
+.header {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.text {
+  font-weight: 900;
+  font-size: 16px;
+  line-height: 24px;
+  margin-top: -2px;
+}
+
+.close {
+  color: black;
+  font-size: 24px;
+}
+
+.list {
+  display: block;
+  width: 100%;
+  min-width: 256px;
+}
+
+.subheader {
+  font-weight: 900;
+  margin-bottom: 0.5rem;
+}
+
+.link {
+  align-items: center;
+  color: $color-blue-700;
+  font-size: 16px;
+  font-weight: 700;
+  display: flex;
+  outline: none;
+  gap: 0.25rem;
+  margin-bottom: 0.5rem;
+}
