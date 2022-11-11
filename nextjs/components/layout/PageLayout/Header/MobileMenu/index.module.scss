@@ -1,7 +1,6 @@
 @import 'styles/colors.scss';
 
 .open {
-  color: white;
   font-size: 24px;
 }
 
@@ -44,4 +43,8 @@
   outline: none;
   gap: 0.25rem;
   margin-bottom: 0.5rem;
+}
+
+.link.active {
+  text-decoration: underline;
 }

@@ -95,6 +95,7 @@ function PageLayout({
         <Header
           mode={mode}
           channels={channels}
+          channelName={currentChannel?.channelName}
           settings={settings}
           permissions={permissions}
           isSubDomainRouting={isSubDomainRouting}

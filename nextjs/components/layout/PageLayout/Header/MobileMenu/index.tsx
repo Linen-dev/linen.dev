@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useRouter } from 'next/router';
 import classNames from 'classnames';
 import { FiBarChart, FiMenu, FiHash, FiRss, FiLogOut } from 'react-icons/fi';
 import Link from 'components/Link/InternalLink';
@@ -7,10 +8,12 @@ import styles from './index.module.scss';
 import { SerializedChannel } from 'serializers/channel';
 import { Permissions } from 'types/shared';
 import { signOut } from 'next-auth/react';
+import usePath from 'hooks/path';
 
 interface Props {
   channels: SerializedChannel[];
   channelName?: string;
+  fontColor: string;
   permissions: Permissions;
 }
 
@@ -18,13 +21,25 @@ export default function MobileMenu({
   channels,
   channelName,
   permissions,
+  fontColor,
 }: Props) {
   const [show, setOpen] = useState(false);
   const open = () => setOpen(true);
   const close = () => setOpen(false);
+  const router = useRouter();
+
+  const paths = {
+    feed: usePath({ href: '/feed' }),
+    metrics: usePath({ href: '/metrics' }),
+  };
+
   return (
     <>
-      <FiMenu className={styles.open} onClick={open} />
+      <FiMenu
+        className={styles.open}
+        style={{ color: fontColor }}
+        onClick={open}
+      />
       <Modal open={show} close={close} fullscreen>
         <div className={styles.header}>
           <div className={styles.text}>Pages</div>
@@ -33,14 +48,26 @@ export default function MobileMenu({
         <ul className={styles.list}>
           {permissions.feed && (
             <li>
-              <Link onClick={close} className={styles.link} href="/feed">
+              <Link
+                onClick={close}
+                className={classNames(styles.link, {
+                  [styles.active]: paths.feed === router.asPath,
+                })}
+                href="/feed"
+              >
                 <FiRss /> Feed
               </Link>
             </li>
           )}
           {permissions.manage && (
             <li>
-              <Link onClick={close} className={styles.link} href="/metrics">
+              <Link
+                onClick={close}
+                className={classNames(styles.link, {
+                  [styles.active]: paths.metrics === router.asPath,
+                })}
+                href="/metrics"
+              >
                 <FiBarChart /> Metrics
               </Link>
             </li>
