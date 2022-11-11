@@ -1,5 +1,6 @@
 import { createSitemapForFreeByChannel } from 'utilities/sitemap';
 import { GetServerSideProps } from 'next/types';
+import { isSubdomainNotAllowed } from 'utilities/domain';
 
 export const getServerSideProps: GetServerSideProps = async ({
   req,
@@ -11,6 +12,13 @@ export const getServerSideProps: GetServerSideProps = async ({
     if (!host) {
       throw 'host missing';
     }
+
+    if (isSubdomainNotAllowed(host)) {
+      res.statusCode = 404;
+      res.end();
+      return { props: {} };
+    }
+
     const { channelName, communityName, communityPrefix } = query;
     const response = await createSitemapForFreeByChannel(
       host,

@@ -1,8 +1,8 @@
 import {
   createSitemapForLinen,
   createSitemapForPremium,
-} from '../utilities/sitemap';
-import { isLinenDomain } from '../utilities/domain';
+} from 'utilities/sitemap';
+import { isLinenDomain, isSubdomainNotAllowed } from 'utilities/domain';
 import { GetServerSideProps } from 'next/types';
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
@@ -10,6 +10,12 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   try {
     if (!host) {
       throw 'host missing';
+    }
+
+    if (isSubdomainNotAllowed(host)) {
+      res.statusCode = 404;
+      res.end();
+      return { props: {} };
     }
 
     const sitemap = isLinenDomain(host)

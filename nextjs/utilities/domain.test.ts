@@ -1,4 +1,8 @@
-import { getCurrentUrl, isSubdomainbasedRouting } from './domain';
+import {
+  getCurrentUrl,
+  isSubdomainbasedRouting,
+  isSubdomainNotAllowed,
+} from './domain';
 
 describe('#getCurrentUrl', () => {
   it('returns http://localhost:3000 in local env', () => {
@@ -55,5 +59,23 @@ describe('isSubdomainCommunity', () => {
     it('it returns true for www.papercups.io', () => {
       expect(isSubdomainbasedRouting('www.papercups.io')).toEqual(true);
     });
+  });
+});
+
+describe('isSubdomainNotAllowed', () => {
+  it('www.linen.dev should be false', () => {
+    expect(isSubdomainNotAllowed('www.linen.dev')).toEqual(false);
+  });
+  it('whatever.linen.dev should be true', () => {
+    expect(isSubdomainNotAllowed('whatever.linen.dev')).toEqual(true);
+  });
+  it('linen.dev should be false', () => {
+    expect(isSubdomainNotAllowed('linen.dev')).toEqual(false);
+  });
+  it('localhost should be false', () => {
+    expect(isSubdomainNotAllowed('localhost')).toEqual(false);
+  });
+  it('www.localhost should be false', () => {
+    expect(isSubdomainNotAllowed('www.localhost')).toEqual(false);
   });
 });
