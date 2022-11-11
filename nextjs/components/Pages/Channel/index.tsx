@@ -498,6 +498,29 @@ export default function Channel({
     }
   }
 
+  function onThreadMessage(
+    message: SerializedMessage,
+    messageId: string,
+    imitationId: string
+  ) {
+    setThreads((threads) => {
+      return threads.map((thread) => {
+        if (thread.id === currentThreadId) {
+          return {
+            ...thread,
+            messages: [
+              ...thread.messages.filter(
+                ({ id }: any) => id !== imitationId && id !== messageId
+              ),
+              message,
+            ],
+          };
+        }
+        return thread;
+      });
+    });
+  }
+
   function onThreadDrop({
     source,
     target,
@@ -554,6 +577,7 @@ export default function Channel({
         currentThreadId={currentThreadId}
         setThreads={setThreads}
         pinThread={pinThread}
+        onMessage={onThreadMessage}
         onDrop={onThreadDrop}
         sendReaction={sendReaction}
         onSelectThread={onSelectThread}

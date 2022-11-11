@@ -13,6 +13,7 @@ import { Mode } from 'hooks/mode';
 import styles from './index.module.scss';
 import classNames from 'classnames';
 import useThreadWebsockets from 'hooks/websockets/thread';
+import { SerializedMessage } from 'serializers/message';
 
 interface Props {
   thread: SerializedThread;
@@ -39,6 +40,11 @@ interface Props {
   updateThread({ state, title }: { state?: ThreadState; title?: string }): void;
   onClose?(): void;
   onSend?(): void;
+  onMessage(
+    message: SerializedMessage,
+    messageId: string,
+    imitationId: string
+  ): void;
   onMount?(): void;
   onReaction?({
     threadId,
@@ -70,9 +76,9 @@ export function Thread({
   onSend,
   onMount,
   onReaction,
+  onMessage,
 }: Props) {
   const { id, state, viewCount, incrementId } = thread;
-  const [messages, setMessages] = useState(thread.messages);
 
   useEffect(() => {
     onMount?.();
@@ -86,18 +92,7 @@ export function Thread({
     id: thread?.id,
     token,
     permissions,
-    onMessage(message, messageId, imitationId) {
-      setMessages((messages) => {
-        return [
-          ...messages?.filter(
-            ({ id }: any) => id !== imitationId && id !== messageId
-          ),
-          message,
-        ];
-      });
-      // this call will make it scroll down
-      onSend?.();
-    },
+    onMessage,
   });
 
   function isThreadCreator(
@@ -126,7 +121,7 @@ export function Thread({
       />
       <div className={styles.thread}>
         <Messages
-          thread={{ ...thread, messages }}
+          thread={thread}
           permissions={permissions}
           isSubDomainRouting={isSubDomainRouting}
           currentUser={currentUser}
