@@ -43,7 +43,7 @@ export default function NavBar({
           onDrop={onDrop}
         />
       </div>
-      <div className="lg:hidden">
+      <div className="hidden sm:block lg:hidden">
         <MobileNavBar
           channels={sortedChannels}
           channelName={channelName}
