@@ -2,7 +2,7 @@ import serializeThread from 'serializers/thread';
 import { findAccountByPath } from '../lib/models';
 import { findThreadByIncrementId } from '../lib/threads';
 import { ThreadByIdProp } from '../types/apiResponses/threads/[threadId]';
-import type { channels, threads, users, Roles } from '@prisma/client';
+import { channels, threads, users, Roles } from '@prisma/client';
 import { GetServerSidePropsContext } from 'next';
 import { NotFound } from '../utilities/response';
 import serializeAccount from 'serializers/account';
