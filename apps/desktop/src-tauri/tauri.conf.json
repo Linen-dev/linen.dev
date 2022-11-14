@@ -61,7 +61,9 @@
         "fullscreen": false,
         "resizable": true,
         "maximized": true,
-        "title": "linen.dev"
+        "title": "linen.dev",
+        "hiddenTitle": true,
+        "titleBarStyle": "Overlay"
       }
     ]
   }
