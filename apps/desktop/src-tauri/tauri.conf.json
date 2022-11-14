@@ -12,7 +12,10 @@
   },
   "tauri": {
     "allowlist": {
-      "all": true
+      "http": {
+        "request": true,
+        "scope": ["https://linen.dev/api/*"]
+      }
     },
     "bundle": {
       "active": true,
