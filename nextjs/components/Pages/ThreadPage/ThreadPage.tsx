@@ -3,6 +3,8 @@ import { ThreadByIdProp } from '../../../types/apiResponses/threads/[threadId]';
 import { useRef } from 'react';
 import { buildThreadSeo } from 'utilities/seo';
 import Content from './Content';
+import ButtonPagination from 'components/ButtonPagination';
+import CustomLinkHelper from 'components/Link/CustomLinkHelper';
 
 export function ThreadPage({
   thread,
@@ -13,6 +15,7 @@ export function ThreadPage({
   isSubDomainRouting,
   settings,
   permissions,
+  pagination,
 }: ThreadByIdProp) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -35,15 +38,46 @@ export function ThreadPage({
       permissions={permissions}
       innerRef={ref}
     >
-      <Content
-        thread={thread}
-        currentChannel={currentChannel}
-        currentCommunity={currentCommunity}
-        threadUrl={threadUrl}
-        isSubDomainRouting={isSubDomainRouting}
-        settings={settings}
-        permissions={permissions}
-      />
+      <div className="flex flex-col w-full">
+        <Content
+          thread={thread}
+          currentChannel={currentChannel}
+          currentCommunity={currentCommunity}
+          threadUrl={threadUrl}
+          isSubDomainRouting={isSubDomainRouting}
+          settings={settings}
+          permissions={permissions}
+        />
+        <div className="text-center p-4">
+          {pagination?.prev && (
+            <ButtonPagination
+              href={CustomLinkHelper({
+                isSubDomainRouting,
+                communityName: settings.communityName,
+                communityType: settings.communityType,
+                path: `/t/${pagination?.prev.incrementId}/${
+                  pagination?.prev.slug?.toLowerCase() || 'topic'
+                }`,
+              })}
+              label="Previous"
+            />
+          )}
+          {pagination?.next && (
+            <ButtonPagination
+              href={CustomLinkHelper({
+                isSubDomainRouting,
+                communityName: settings.communityName,
+                communityType: settings.communityType,
+                path: `/t/${pagination?.next.incrementId}/${
+                  pagination?.next.slug?.toLowerCase() || 'topic'
+                }`,
+              })}
+              label="Next"
+              className="ml-3"
+            />
+          )}
+        </div>
+      </div>
     </PageLayout>
   );
 }

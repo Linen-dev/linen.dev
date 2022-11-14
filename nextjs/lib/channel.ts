@@ -150,7 +150,6 @@ export async function findChannelsByAccount({
           some: {
             hidden: false,
             messages: { some: {} },
-            messageCount: { gt: 1 },
           },
         },
       }),

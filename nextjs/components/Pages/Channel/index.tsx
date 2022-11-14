@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import React, { useEffect, useState } from 'react';
 import PageLayout from 'components/layout/PageLayout';
 import { toast } from 'components/Toast';
@@ -21,8 +22,9 @@ import { createThreadImitation } from './Content/utilities/thread';
 import useWebsockets from 'hooks/websockets';
 import { useUsersContext } from 'contexts/Users';
 import { ThreadState } from '@prisma/client';
+import ChannelForBots from './ChannelForBots';
 
-interface Props {
+export interface ChannelProps {
   settings: Settings;
   channelName: string;
   channels?: ChannelSerialized[];
@@ -40,20 +42,26 @@ interface Props {
   permissions: Permissions;
 }
 
-export default function Channel({
-  threads: initialThreads,
-  pinnedThreads: initialPinnedThreads,
-  channels,
-  currentChannel,
-  currentCommunity,
-  settings,
-  channelName,
-  isSubDomainRouting,
-  nextCursor,
-  pathCursor,
-  isBot,
-  permissions,
-}: Props) {
+export default function Channel(props: ChannelProps) {
+  if (props.isBot) {
+    return <ChannelForBots {...props} />;
+  }
+
+  const {
+    threads: initialThreads,
+    pinnedThreads: initialPinnedThreads,
+    channels,
+    currentChannel,
+    currentCommunity,
+    settings,
+    channelName,
+    isSubDomainRouting,
+    nextCursor,
+    pathCursor,
+    isBot,
+    permissions,
+  } = props;
+
   const [threads, setThreads] = useState<SerializedThread[]>(initialThreads);
   const [pinnedThreads, setPinnedThreads] =
     useState<SerializedThread[]>(initialPinnedThreads);

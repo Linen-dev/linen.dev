@@ -1,7 +1,6 @@
 import type { accounts } from '@prisma/client';
 import { Settings } from 'serializers/account/settings';
 import { RedirectTo } from './response';
-import { encodeCursor } from 'utilities/cursor';
 import { appendProtocol } from './url';
 import { ChannelSerialized } from 'lib/channel';
 
@@ -25,8 +24,6 @@ export function resolveCrawlerRedirect({
     channelName,
     channel,
   });
-
-  url += `/${encodeCursor('asc:gt:0')}`;
 
   return {
     redirect: {

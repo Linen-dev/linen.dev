@@ -2,11 +2,7 @@ import { findAccountByPath } from '../lib/models';
 import { GetServerSidePropsContext } from 'next/types';
 import { NotFound } from '../utilities/response';
 import { serialize as serializeSettings } from 'serializers/account/settings';
-import {
-  findPreviousCursor,
-  findThreadsByCursor,
-  findPinnedThreads,
-} from '../lib/threads';
+import { findThreadsByCursor, findPinnedThreads } from '../lib/threads';
 import serializeAccount from '../serializers/account';
 import serializeThread from '../serializers/thread';
 import { ThreadsWithMessagesFull } from 'types/partialTypes';
@@ -39,7 +35,6 @@ export async function channelGetServerSideProps(
   const communityName = context.params?.communityName as string;
   const channelName = context.params?.channelName as string;
   const page = context.params?.page as string | undefined;
-  const cursor = page && parsePageParam(page);
 
   const account = await findAccountByPath(communityName);
   if (!account) return NotFound();
@@ -72,7 +67,7 @@ export async function channelGetServerSideProps(
 
   if (isCrawler) {
     if (!channelName) {
-      // should be redirect to <default_channel>/<first_page>
+      // should be redirect to default_channel
       return resolveCrawlerRedirect({
         isSubdomainbasedRouting,
         communityName,
@@ -80,7 +75,7 @@ export async function channelGetServerSideProps(
         channel,
       });
     }
-    if (!page) {
+    if (!!page) {
       // should be redirect to first page
       return resolveCrawlerRedirect({
         isSubdomainbasedRouting,
@@ -91,7 +86,7 @@ export async function channelGetServerSideProps(
     }
   }
 
-  const { sort, direction, sentAt } = decodeCursor(cursor);
+  const { sort, direction, sentAt } = decodeCursor(undefined);
 
   const threads = (
     await findThreadsByCursor({
@@ -115,8 +110,6 @@ export async function channelGetServerSideProps(
     sentAt,
     threads,
     pathCursor: page,
-    channelIds: [channel.id],
-    isCrawler,
   });
 
   return {
@@ -168,7 +161,6 @@ export async function channelNextPage(channelId: string, cursor: string) {
     sort,
     sentAt,
     direction,
-    channelIds: [],
     loadMore: true,
   });
 
@@ -176,15 +168,6 @@ export async function channelNextPage(channelId: string, cursor: string) {
     threads: threads.map(serializeThread),
     nextCursor,
   };
-}
-
-function parsePageParam(page: string) {
-  // if is a number we should return undefined
-  if (/^\d+$/.exec(page)) {
-    return undefined;
-  } else {
-    return page;
-  }
 }
 
 function sortBySentAtAsc(
@@ -201,18 +184,14 @@ async function buildCursor({
   sort,
   sentAt,
   direction,
-  channelIds,
   loadMore = false,
-  isCrawler = false,
 }: {
   pathCursor?: string;
   threads: ThreadsWithMessagesFull[];
   sort: string;
   sentAt?: string;
   direction: string;
-  channelIds: string[];
   loadMore?: boolean;
-  isCrawler?: boolean;
 }): Promise<{
   next: string | null;
   prev: string | null;
@@ -238,28 +217,6 @@ async function buildCursor({
   if (sort === 'asc' && sentAt === '0') {
     return {
       prev: null,
-      next: hasMore
-        ? encodeCursor(`asc:gt:${threads[threads.length - 1].sentAt}`)
-        : null,
-    };
-  }
-
-  // if isCrawler we should have the prev cursor as same as the sitemap does
-  if (isCrawler) {
-    // prev: we need to query our db to get the previous page
-    const previousPage = await findPreviousCursor({
-      channelIds,
-      direction: 'lt',
-      sort: 'desc',
-      sentAt,
-    }).then((e) => e.sort((a, b) => Number(a.sentAt) - Number(b.sentAt)));
-    return {
-      prev: !previousPage.length
-        ? null
-        : previousPage.length > CURSOR_LIMIT
-        ? encodeCursor(`asc:gt:${previousPage[0].sentAt}`)
-        : encodeCursor(`asc:gt:0`),
-      // next: last thread sent at
       next: hasMore
         ? encodeCursor(`asc:gt:${threads[threads.length - 1].sentAt}`)
         : null,

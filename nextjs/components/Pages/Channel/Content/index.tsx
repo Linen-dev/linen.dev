@@ -4,8 +4,6 @@ import { Thread } from 'components/Thread';
 import { get } from 'utilities/http';
 import { ThreadState } from '@prisma/client';
 import { useUsersContext } from 'contexts/Users';
-import ButtonPagination from 'components/ButtonPagination';
-import CustomLinkHelper from 'components/Link/CustomLinkHelper';
 import ChatLayout from 'components/layout/shared/ChatLayout';
 import SidebarLayout from 'components/layout/shared/SidebarLayout';
 import Header from './Header';
@@ -93,7 +91,6 @@ export default function Channel({
   isSubDomainRouting,
   nextCursor,
   pathCursor,
-  isBot,
   token,
   permissions,
   currentThreadId,
@@ -312,7 +309,7 @@ export default function Channel({
                           permissions={permissions}
                           isSubDomainRouting={isSubDomainRouting}
                           settings={settings}
-                          isBot={isBot}
+                          isBot={false}
                           mode={mode}
                           currentUser={currentUser}
                           onClick={selectThread}
@@ -321,34 +318,6 @@ export default function Channel({
                           onDrop={handleDrop}
                         />
                       </ul>
-
-                      {isBot && (
-                        <div className="text-center p-4">
-                          {nextCursor?.prev && (
-                            <ButtonPagination
-                              href={CustomLinkHelper({
-                                isSubDomainRouting,
-                                communityName: settings.communityName,
-                                communityType: settings.communityType,
-                                path: `/c/${channelName}/${nextCursor.prev}`,
-                              })}
-                              label="Previous"
-                            />
-                          )}
-                          {nextCursor?.next && (
-                            <ButtonPagination
-                              href={CustomLinkHelper({
-                                isSubDomainRouting,
-                                communityName: settings.communityName,
-                                communityType: settings.communityType,
-                                path: `/c/${channelName}/${nextCursor.next}`,
-                              })}
-                              label="Next"
-                              className="ml-3"
-                            />
-                          )}
-                        </div>
-                      )}
                     </>
                   )}
                 </>
