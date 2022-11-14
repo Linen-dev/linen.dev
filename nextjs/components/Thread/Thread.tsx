@@ -177,7 +177,6 @@ export function Thread({
                 onSend?.();
                 return Promise.all([
                   sendMessage({ message, files, channelId, threadId: id }),
-                  manage && updateThread({ state: ThreadState.OPEN }),
                 ]);
               }}
               fetchMentions={(term?: string) => {
