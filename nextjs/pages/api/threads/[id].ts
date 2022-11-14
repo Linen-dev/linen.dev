@@ -19,33 +19,24 @@ interface UpdateProps {
 export async function update({ permissions, params }: UpdateProps) {
   const { threadId, state, title, pinned } = params;
   if (permissions.manage) {
-    const thread = await prisma.threads.update({
-      where: { id: threadId },
-      data: { state, title, pinned },
-    });
-    return { status: 200, data: serializeThread(thread) };
+    return await updateThread({ threadId, state, title, pinned });
   }
   const thread = await findThreadById(threadId);
   if (!thread) {
-    return { status: 404 };
+    return { status: 404, data: {} };
   }
   // ideally we could keep the creator info on the thread
   const creator = thread.messages[0].author;
 
   if (!creator || !permissions.user) {
-    return { status: 403 };
+    return { status: 403, data: {} };
   }
 
   if (creator.id === permissions.user.id) {
-    const { state, title } = params;
-    const thread = await prisma.threads.update({
-      where: { id: threadId },
-      data: { state, title },
-    });
-    return { status: 200, data: serializeThread(thread) };
+    return await updateThread({ threadId, state, title });
   }
 
-  return { status: 403 };
+  return { status: 403, data: {} };
 }
 
 async function handler(request: NextApiRequest, response: NextApiResponse) {
@@ -83,3 +74,26 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
 }
 
 export default handler;
+
+async function updateThread({
+  threadId,
+  state,
+  title,
+  pinned,
+}: {
+  threadId: string;
+  state: ThreadState;
+  title: string;
+  pinned?: boolean;
+}) {
+  const thread = await prisma.threads.update({
+    where: { id: threadId },
+    data: {
+      state,
+      title,
+      pinned,
+      closeAt: state === ThreadState.CLOSE ? new Date().getTime() : null,
+    },
+  });
+  return { status: 200, data: serializeThread(thread) };
+}

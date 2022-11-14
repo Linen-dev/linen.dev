@@ -1,6 +1,7 @@
 import { mentions } from '@prisma/client';
 import { createChatSyncJob } from 'queue/jobs';
 import { push, pushChannel, pushCommunity } from 'services/push';
+import { updateMetrics } from 'services/threads';
 import { eventNewMentions } from './eventNewMentions';
 
 type MentionNode = {
@@ -9,7 +10,7 @@ type MentionNode = {
   source: string;
 };
 
-type NewMessageEvent = {
+export type NewMessageEvent = {
   channelId: any;
   threadId: any;
   messageId: any;
@@ -44,6 +45,7 @@ export async function eventNewMessage({
     createChatSyncJob(event),
     push(event),
     pushChannel(event),
+    updateMetrics({ messageId, threadId }),
     pushCommunity({ ...event, communityId }),
     eventNewMentions({ mentions, mentionNodes, channelId, threadId }),
   ];
