@@ -56,10 +56,9 @@
     "windows": [
       {
         "fullscreen": false,
-        "height": 600,
         "resizable": true,
-        "title": "desktop",
-        "width": 800
+        "maximized": true,
+        "title": "linen.dev"
       }
     ]
   }
