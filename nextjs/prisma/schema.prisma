@@ -47,21 +47,24 @@ enum MessageFormat {
 }
 
 model threads {
-  id               String      @id @default(uuid())
-  incrementId      Int         @default(autoincrement())
-  channel          channels    @relation(fields: [channelId], references: [id])
-  externalThreadId String?
-  viewCount        Int         @default(0)
-  slug             String?
-  messageCount     Int         @default(1)
-  sentAt           BigInt
-  hidden           Boolean     @default(false)
-  title            String?
-  state            ThreadState @default(OPEN)
-  pinned           Boolean     @default(false)
-  messages         messages[]
-  channelId        String
-  lastReplyAt      BigInt?
+  id                  String      @id @default(uuid())
+  incrementId         Int         @default(autoincrement())
+  channel             channels    @relation(fields: [channelId], references: [id])
+  externalThreadId    String?
+  viewCount           Int         @default(0)
+  slug                String?
+  messageCount        Int         @default(1)
+  sentAt              BigInt
+  hidden              Boolean     @default(false)
+  title               String?
+  state               ThreadState @default(OPEN)
+  pinned              Boolean     @default(false)
+  messages            messages[]
+  channelId           String
+  lastReplyAt         BigInt?
+  closeAt             BigInt?
+  firstUserReplyAt    BigInt?
+  firstManagerReplyAt BigInt?
 
   @@unique([externalThreadId])
   @@unique([incrementId])
