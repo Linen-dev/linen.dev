@@ -2,7 +2,7 @@ import serializeThread from 'serializers/thread';
 import { findAccountByPath } from '../lib/models';
 import { findThreadByIncrementId } from '../lib/threads';
 import { ThreadByIdProp } from '../types/apiResponses/threads/[threadId]';
-import type { users } from '@prisma/client';
+import type { channels, threads, users } from '@prisma/client';
 import { GetServerSidePropsContext } from 'next';
 import { NotFound } from '../utilities/response';
 import serializeAccount from 'serializers/account';
@@ -16,6 +16,7 @@ import {
   redirectThreadToDomain,
   shouldRedirectToDomain,
 } from 'utilities/redirects';
+import prisma from 'client';
 
 export async function threadGetServerSideProps(
   context: GetServerSidePropsContext,
@@ -74,6 +75,10 @@ export async function threadGetServerSideProps(
       });
     }
 
+    const promisePrevNext = isCrawler
+      ? getPrevNextFromThread(thread)
+      : Promise.resolve(null);
+
     const channels = await findChannelsByAccount({
       isCrawler,
       account,
@@ -129,10 +134,33 @@ export async function threadGetServerSideProps(
         pathCursor: encodeCursor(`asc:gte:${thread.sentAt.toString()}`),
         permissions,
         isSubDomainRouting: isSubdomainbasedRouting,
+        pagination: await promisePrevNext,
       },
     };
   } catch (exception) {
     console.error(exception);
     return NotFound();
   }
+}
+async function getPrevNextFromThread(
+  thread: threads & {
+    channel?: channels | undefined;
+  }
+) {
+  const promisePrev = prisma.threads.findFirst({
+    select: { incrementId: true, slug: true },
+    where: { sentAt: { lt: thread.sentAt }, channelId: thread.channel?.id },
+    take: 1,
+    orderBy: { sentAt: 'desc' },
+  });
+  const promiseNext = prisma.threads.findFirst({
+    select: { incrementId: true, slug: true },
+    where: { sentAt: { gt: thread.sentAt }, channelId: thread.channel?.id },
+    take: 1,
+    orderBy: { sentAt: 'asc' },
+  });
+  return {
+    prev: await promisePrev,
+    next: await promiseNext,
+  };
 }

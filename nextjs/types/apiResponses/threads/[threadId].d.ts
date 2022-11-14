@@ -9,6 +9,10 @@ export type ThreadByIdResponse = ThreadById | { notFound: boolean };
 export interface ThreadByIdProp extends ThreadById {
   isSubDomainRouting: boolean;
   permissions: Permissions;
+  pagination: {
+    next: any;
+    prev: any;
+  } | null;
 }
 
 export type ThreadById = {

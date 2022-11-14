@@ -1,7 +1,6 @@
 import type { accounts, channels } from '@prisma/client';
 import { SitemapIndexStream, SitemapStream, streamToPromise } from 'sitemap';
 import { Readable } from 'stream';
-import { encodeCursor } from './cursor';
 import { appendProtocol } from './url';
 import {
   findChannelByNameAndHost,
@@ -112,7 +111,7 @@ async function internalCreateSitemapByChannel(
     throw 'channel not found';
   }
 
-  let chunks: string[] = [];
+  let chunks: string[] = [encodeURI(`c/${channelName}`)];
   let next: bigint | undefined;
 
   for (;;) {
@@ -151,13 +150,10 @@ async function queryThreads(
     const threads = await findThreadsByChannelAndCursor(channel.id, next);
     if (!threads?.length) return {};
 
-    chunk.push(`c/${channelName}/${encodeCursor(`asc:gt:${next}`)}`);
     for (const thread of threads) {
-      if (thread.messageCount > 1) {
-        chunk.push(
-          `t/${thread.incrementId}/${thread.slug?.toLowerCase() || 'topic'}`
-        );
-      }
+      chunk.push(
+        `t/${thread.incrementId}/${thread.slug?.toLowerCase() || 'topic'}`
+      );
     }
 
     nextCursor = threads.pop()?.sentAt;

@@ -24,12 +24,16 @@ export const findThreadsByChannelAndCursor = (
   limit = 10
 ) =>
   prisma.threads.findMany({
-    where: { channelId: channelId, sentAt: { gt: cursor }, hidden: false },
+    where: {
+      channelId: channelId,
+      sentAt: { gt: cursor },
+      hidden: false,
+      messages: { some: {} },
+    },
     orderBy: { sentAt: 'asc' },
     select: {
       incrementId: true,
       slug: true,
-      messageCount: true,
       sentAt: true,
     },
     take: limit,
