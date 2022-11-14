@@ -10,7 +10,14 @@ interface SerializedChannel {
 }
 
 export interface SerializedThread
-  extends Omit<threads, 'sentAt' | 'lastReplyAt'> {
+  extends Omit<
+    threads,
+    | 'sentAt'
+    | 'lastReplyAt'
+    | 'closeAt'
+    | 'firstManagerReplyAt'
+    | 'firstUserReplyAt'
+  > {
   id: string;
   sentAt: string;
   lastReplyAt: string;
@@ -43,9 +50,12 @@ function serializeMessages(
   return messages.map(serializeMessage);
 }
 
-export function serializeThread(
-  thread: ThreadForSerialization
-): SerializedThread {
+export function serializeThread({
+  closeAt,
+  firstManagerReplyAt,
+  firstUserReplyAt,
+  ...thread
+}: ThreadForSerialization): SerializedThread {
   return {
     ...thread,
     sentAt: thread.sentAt.toString(),
