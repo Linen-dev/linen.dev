@@ -1,10 +1,15 @@
 import React from 'react';
+import classNames from 'classnames';
 import styles from './index.module.scss';
 import LinenIcon from '../../Icon/Linen';
 
-export default function LinenLogo() {
+interface Props {
+  className?: string;
+}
+
+export default function LinenLogo({ className }: Props) {
   return (
-    <div className={styles.container}>
+    <div className={classNames(styles.container, className)}>
       <LinenIcon />
       <div className={styles.text}>Linen</div>
     </div>
