@@ -1,16 +1,21 @@
 .button {
-  background: #2563eb;
+  background: linear-gradient(#2563eb, #1d4ed8);
   border: none;
   border-radius: 0.25rem;
+  box-shadow: 0 0px 4px rgba(black, 0.5);
   color: white;
   cursor: pointer;
   font-weight: 500;
   font-size: 16px;
   padding: 0.75rem 4rem;
-  transition: 0.2s ease-in background;
+  transition: 0.2s ease-in box-shadow;
   margin-top: 1rem;
 }
 
 .button:hover {
-  background: #1d4ed8;
+  box-shadow: none;
+}
+
+.button:active {
+  box-shadow: inset 0 0px 4px rgba(black, 0.5);
 }
