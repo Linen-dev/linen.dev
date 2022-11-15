@@ -1,6 +1,6 @@
 import type { auths } from '@prisma/client';
 
-export default function createMessage(options?: Partial<auths>): auths {
+export default function createAuth(options?: Partial<auths>): auths {
   return {
     id: '1',
     createdAt: new Date(),
