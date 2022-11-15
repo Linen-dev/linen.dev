@@ -2,6 +2,14 @@
 
 .container {
   background: $color-white;
+  min-height: calc(100vh - 64px);
+  overflow-y: scroll;
+}
+
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+  .container {
+    min-height: calc(100vh - 102px);
+  }
 }
 
 .thread {
