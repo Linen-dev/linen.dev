@@ -1,8 +1,13 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
 
+export async function index() {
+  return { status: 200 };
+}
+
 export default async function handler(
   request: NextApiRequest,
   response: NextApiResponse
 ) {
-  return response.status(200).json({});
+  const { status } = await index();
+  return response.status(status).json({});
 }
