@@ -46,6 +46,7 @@ export default function Link({ value }: Props) {
   }
 
   const isHrefInvalid = !isUrlValid(href);
+  const isExternalLink = !href.startsWith('https://linen.dev/');
 
   return (
     <a
@@ -55,7 +56,7 @@ export default function Link({ value }: Props) {
       href={href}
       title={isHrefInvalid ? 'Invalid link' : ''}
       rel="noreferrer ugc"
-      target="_blank"
+      target={isExternalLink ? '_blank' : undefined}
     >
       {name || href}
     </a>
