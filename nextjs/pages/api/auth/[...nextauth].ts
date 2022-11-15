@@ -5,7 +5,7 @@ import { CustomPrismaAdapter } from 'lib/auth';
 import SignInMailer from 'mailers/SignInMailer';
 import { NOREPLY_EMAIL } from 'secrets';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import { generateHash } from 'utilities/password';
+import { generateHash, secureCompare } from 'utilities/password';
 
 export const authOptions = {
   pages: {
@@ -66,7 +66,7 @@ export const authOptions = {
         if (!auth) {
           return null;
         }
-        if (auth.password === generateHash(password, auth.salt)) {
+        if (secureCompare(auth.password, generateHash(password, auth.salt))) {
           return {
             email: auth.email,
             id: auth.id,

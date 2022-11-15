@@ -1,4 +1,5 @@
 import createAccount from './account';
+import createAuth from './auth';
 import createChannel from './channel';
 import createMessage from './message';
 import createThread from './thread';
@@ -11,6 +12,8 @@ export default async function create(
   switch (name) {
     case 'account':
       return createAccount(options);
+    case 'auth':
+      return createAuth(options);
     case 'channel':
       return createChannel(options);
     case 'message':
