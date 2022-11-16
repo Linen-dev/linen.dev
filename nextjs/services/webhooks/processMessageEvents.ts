@@ -94,12 +94,12 @@ async function addMessage(
   // This way we don't have to fetch mentions on every message render
   //TODO: replace with blocks in elements
   let mentionUserIds = event.text.match(/<@(.*?)>/g) || [];
-  mentionUserIds = mentionUserIds.map((m) =>
+  let mentionUsersMap = mentionUserIds.map((m) =>
     m.replace('<@', '').replace('>', '')
   );
   const accessToken = channel.account?.slackAuthorizations[0]?.accessToken!;
   const mentionUsers = await Promise.all(
-    mentionUserIds.map((userId) =>
+    mentionUsersMap.map((userId) =>
       findOrCreateUserFromUserInfo(userId, channel.accountId!, accessToken)
     )
   );

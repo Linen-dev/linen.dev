@@ -1,5 +1,6 @@
 {
   "name": "@linen/ui",
+  "private": true,
   "version": "1.0.0",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -8,16 +9,13 @@
     "dist"
   ],
   "scripts": {
-    "preinstall": "npm install && npm run build",
-    "watch": "babel --watch src --out-dir dist --extensions '.ts,.tsx,.js,.jsx'",
-    "prebuild": "rm -rf dist && tsc",
-    "build": "babel src --out-dir dist --extensions '.ts,.tsx,.js,.jsx'",
-    "postbuild": "tsc --project tsconfig.types.json"
+    "watch": "yarn babel --watch src --out-dir dist --extensions '.ts,.tsx,.js,.jsx'",
+    "prebuild": "rm -rf dist && yarn tsc",
+    "build": "yarn babel src --out-dir dist --extensions '.ts,.tsx,.js,.jsx'",
+    "postbuild": "yarn tsc --project tsconfig.types.json"
   },
   "dependencies": {
-    "react": "^18.2.0"
-  },
-  "devDependencies": {
+    "react": "^18.2.0",
     "@babel/cli": "^7.19.3",
     "@babel/core": "^7.20.2",
     "@babel/preset-env": "^7.20.2",
