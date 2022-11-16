@@ -1,3 +1,3 @@
-import List from '../../../../packages/ui/List';
+import List from '@linen/ui/List';
 
 export { List };

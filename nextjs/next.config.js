@@ -4,7 +4,7 @@
  * @type {import('next').NextConfig}
  */
 
-const { addPackagesPathToSwcLoader } = require('../packages/config');
+const { addPackagesPathToSwcLoader } = require('@linen/config');
 
 const nextConfig = {
   reactStrictMode: true,
