@@ -5,7 +5,7 @@ import Layout from 'components/layout/CardLayout';
 import H1 from 'components/H1';
 import H2 from 'components/H2';
 import Link from 'components/Link';
-import List from 'components/List';
+import { List } from 'components';
 
 interface Props {
   communities: SerializedAccount[];

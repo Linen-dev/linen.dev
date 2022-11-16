@@ -3,6 +3,23 @@
 /**
  * @type {import('next').NextConfig}
  */
+
+const { join } = require('path');
+
+function addPackagesPathToSwcLoader(rule) {
+  if (rule.oneOf) {
+    rule.oneOf = rule.oneOf.map((setup) => {
+      if (setup?.use?.loader === 'next-swc-loader') {
+        const path = join(__dirname, '../packages/ui');
+        if (!setup.include.includes(path)) {
+          setup.include.push(path);
+        }
+      }
+      return setup;
+    });
+  }
+}
+
 const nextConfig = {
   reactStrictMode: true,
   images: {
@@ -14,6 +31,10 @@ const nextConfig = {
       `${process.env.S3_UPLOAD_BUCKET}.s3.amazonaws.com`,
       `${process.env.S3_UPLOAD_BUCKET}.s3.${process.env.S3_UPLOAD_REGION}.amazonaws.com`,
     ],
+  },
+  webpack(config) {
+    config.module.rules.forEach(addPackagesPathToSwcLoader);
+    return config;
   },
 };
 
