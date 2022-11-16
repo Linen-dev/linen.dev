@@ -37,3 +37,4 @@ yarn-error.log*
 *.tsbuildinfo
 
 scratch
+dist

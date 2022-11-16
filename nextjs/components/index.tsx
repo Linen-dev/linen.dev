@@ -1,3 +1,1 @@
-import List from '@linen/ui/List';
-
-export { List };
+export { List } from '@linen/ui';

@@ -1,7 +1,32 @@
 {
   "name": "@linen/ui",
-  "version": "0.1.0",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "preinstall": "npm install && npm run build",
+    "watch": "babel --watch src --out-dir dist --extensions '.ts,.tsx,.js,.jsx'",
+    "prebuild": "rm -rf dist && tsc",
+    "build": "babel src --out-dir dist --extensions '.ts,.tsx,.js,.jsx'",
+    "postbuild": "tsc --project tsconfig.types.json"
+  },
   "dependencies": {
     "react": "^18.2.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.19.3",
+    "@babel/core": "^7.20.2",
+    "@babel/preset-env": "^7.20.2",
+    "@babel/preset-react": "^7.18.6",
+    "@babel/preset-typescript": "^7.18.6",
+    "@types/react": "^18.0.25",
+    "babel-plugin-transform-scss": "^1.1.0",
+    "sass": "^1.56.1",
+    "sass-loader": "^13.2.0",
+    "typescript": "^4.9.3"
   }
 }
