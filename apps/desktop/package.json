@@ -8,6 +8,9 @@
     "tauri": "tauri"
   },
   "dependencies": {
+    "@linen/config": "file:../../packages/config",
+    "@linen/scss": "file:../../packages/scss",
+    "@linen/ui": "file:../../packages/ui",
     "@tauri-apps/api": "^1.1.0",
     "classnames": "^2.3.2",
     "next": "^13.0.3",
