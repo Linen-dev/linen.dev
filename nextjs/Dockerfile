@@ -14,6 +14,10 @@ FROM public.ecr.aws/docker/library/node:16-alpine AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+
+# Copy internal packages
+COPY ../packages/ ./
+
 # Learn more here: https://nextjs.org/telemetry
 ENV NEXT_TELEMETRY_DISABLED 1
 ENV SKIP_DYNAMO_CACHE true

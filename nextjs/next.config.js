@@ -4,21 +4,7 @@
  * @type {import('next').NextConfig}
  */
 
-const { join } = require('path');
-
-function addPackagesPathToSwcLoader(rule) {
-  if (rule.oneOf) {
-    rule.oneOf = rule.oneOf.map((setup) => {
-      if (setup?.use?.loader === 'next-swc-loader') {
-        const path = join(__dirname, '../packages/ui');
-        if (!setup.include.includes(path)) {
-          setup.include.push(path);
-        }
-      }
-      return setup;
-    });
-  }
-}
+const { addPackagesPathToSwcLoader } = require('../packages/config');
 
 const nextConfig = {
   reactStrictMode: true,
