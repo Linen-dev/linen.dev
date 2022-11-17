@@ -10,6 +10,7 @@ RUN turbo prune --scope=$MODULE --docker
 FROM public.ecr.aws/docker/library/node:16 AS installer
 ARG MODULE
 RUN echo $MODULE
+ENV DOTS=...
 RUN apt-get update && apt-get install -y openssl
 WORKDIR /app
 COPY .gitignore .gitignore
@@ -18,7 +19,7 @@ COPY --from=builder /app/out/yarn.lock ./yarn.lock
 RUN yarn install
 COPY --from=builder /app/out/full/ .
 COPY turbo.json turbo.json
-RUN yarn turbo run build --filter=$MODULE
+RUN yarn turbo run build --filter=$MODULE$DOTS
 
 FROM public.ecr.aws/docker/library/node:16 AS runner
 RUN apt-get update && apt-get install -y openssl
