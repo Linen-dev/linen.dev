@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import classNames from 'classnames';
 import type { ChannelSerialized } from 'lib/channel';
-import NavItem from '../NavItem';
 import NavLabel from './NavLabel';
 import { Permissions } from 'types/shared';
 import Link from 'components/Link/InternalLink';
@@ -75,19 +74,19 @@ export default function DesktopNavBar({
     <Nav className={styles.navbar}>
       {permissions.feed && (
         <Link onClick={() => setHighlights([])} href="/feed">
-          <NavItem active={paths.feed === router.asPath}>
+          <Nav.Item active={paths.feed === router.asPath}>
             <FiRss className="mr-1" /> Feed
             {highlights.length > 0 && (
               <Badge className="ml-2">{highlights.length}</Badge>
             )}
-          </NavItem>
+          </Nav.Item>
         </Link>
       )}
       {permissions.manage && (
         <Link onClick={() => setHighlights([])} href="/metrics">
-          <NavItem active={paths.metrics === router.asPath}>
+          <Nav.Item active={paths.metrics === router.asPath}>
             <FiBarChart className="mr-1" /> Metrics
-          </NavItem>
+          </Nav.Item>
         </Link>
       )}
       <NavLabel>
@@ -144,16 +143,16 @@ export default function DesktopNavBar({
               key={`${channel.channelName}-${index}`}
               href={`/c/${channel.channelName}`}
             >
-              <NavItem active={channel.channelName === channelName}>
+              <Nav.Item active={channel.channelName === channelName}>
                 <FiHash className="mr-1" /> {channel.channelName}
                 {count > 0 && <Badge className="ml-2">{count}</Badge>}
-              </NavItem>
+              </Nav.Item>
             </Link>
           );
         })}
       </div>
       <a target="_blank" rel="noreferrer" href="https://www.linen.dev">
-        <NavItem>Powered by Linen</NavItem>
+        <Nav.Item>Powered by Linen</Nav.Item>
       </a>
     </Nav>
   );
