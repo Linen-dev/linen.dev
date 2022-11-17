@@ -9,22 +9,22 @@
     "dist"
   ],
   "scripts": {
+    "dev": "npm run watch",
     "watch": "yarn babel --watch src --out-dir dist --extensions '.ts,.tsx,.js,.jsx'",
     "prebuild": "rm -rf dist && yarn tsc",
     "build": "yarn babel src --out-dir dist --extensions '.ts,.tsx,.js,.jsx'",
     "postbuild": "yarn tsc --project tsconfig.types.json"
   },
   "dependencies": {
-    "react": "^18.2.0",
     "@babel/cli": "^7.19.3",
     "@babel/core": "^7.20.2",
     "@babel/preset-env": "^7.20.2",
     "@babel/preset-react": "^7.18.6",
     "@babel/preset-typescript": "^7.18.6",
     "@types/react": "^18.0.25",
-    "babel-plugin-transform-scss": "^1.1.0",
-    "sass": "^1.56.1",
-    "sass-loader": "^13.2.0",
+    "@types/styled-components": "^5.1.26",
+    "react": "^18.2.0",
+    "styled-components": "^5.3.6",
     "typescript": "^4.9.3"
   }
 }
