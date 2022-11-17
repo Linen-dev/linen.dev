@@ -1,12 +1,17 @@
 import React from 'react';
-import styles from './index.module.scss';
+import styled from 'styled-components';
 
 interface Props {
   children: React.ReactNode;
 }
 
+const Wrapper = styled.ul`
+  list-style: disc;
+  margin-left: 1rem;
+`;
+
 export default function List({ children }: Props) {
-  return <ul className={styles.list}>{children}</ul>;
+  return <Wrapper>{children}</Wrapper>;
 }
 
 export { List };

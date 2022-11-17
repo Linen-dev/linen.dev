@@ -12,8 +12,9 @@
   "dependencies": {
     "@types/phoenix": "^1.5.4",
     "@types/react": "^18.0.25",
-    "phoenix": "^1.6.15",
     "dotenv": "^16.0.3",
+    "phoenix": "^1.6.15",
+    "sass": "^1.56.1",
     "turbo": "^1.6.3"
   },
   "scripts": {

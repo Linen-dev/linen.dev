@@ -14,6 +14,7 @@ import { FiRss, FiBarChart, FiHash } from 'react-icons/fi';
 import { useRouter } from 'next/router';
 import usePath from 'hooks/path';
 import { Mode } from 'hooks/mode';
+import { Nav } from '@linen/ui';
 
 interface Props {
   mode: Mode;
@@ -71,7 +72,7 @@ export default function DesktopNavBar({
   };
 
   return (
-    <div className={styles.navbar}>
+    <Nav className={styles.navbar}>
       {permissions.feed && (
         <Link onClick={() => setHighlights([])} href="/feed">
           <NavItem active={paths.feed === router.asPath}>
@@ -154,6 +155,6 @@ export default function DesktopNavBar({
       <a target="_blank" rel="noreferrer" href="https://www.linen.dev">
         <NavItem>Powered by Linen</NavItem>
       </a>
-    </div>
+    </Nav>
   );
 }
