@@ -10,14 +10,16 @@ declare global {
 export const prisma =
   global.prisma ||
   new PrismaClient({
-    datasources: {
-      db: {
-        url: getDatabaseUrl({
-          dbUrl: process.env.DATABASE_URL,
-          cert: process.env.RDS_CERTIFICATE,
-        }),
+    ...(process.env.DATABASE_URL && {
+      datasources: {
+        db: {
+          url: getDatabaseUrl({
+            dbUrl: process.env.DATABASE_URL,
+            cert: process.env.RDS_CERTIFICATE,
+          }),
+        },
       },
-    },
+    }),
     log: ['warn', 'error'],
   });
 
