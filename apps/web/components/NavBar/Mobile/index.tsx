@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { FiRss } from 'react-icons/fi';
 import { useRouter } from 'next/router';
 import Link from 'components/Link/InternalLink';
-import NavItem from '../NavItem';
+import { Nav } from '@linen/ui';
 import type { ChannelSerialized } from 'lib/channel';
 import ChannelSelect from './ChannelSelect';
 import { Permissions } from 'types/shared';
@@ -27,16 +27,16 @@ export default function MobileNavBar({
   };
 
   return (
-    <div
+    <Nav
       className={classNames(styles.container, {
         [styles.list]: permissions.feed,
       })}
     >
       {permissions.feed && (
         <Link className={styles.item} href="/feed">
-          <NavItem active={paths.feed === router.asPath}>
+          <Nav.Item active={paths.feed === router.asPath}>
             <FiRss className="mr-1" /> Feed
-          </NavItem>
+          </Nav.Item>
         </Link>
       )}
       <ChannelSelect
@@ -44,6 +44,6 @@ export default function MobileNavBar({
         channels={channels}
         value={channelName}
       />
-    </div>
+    </Nav>
   );
 }

@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@linen/config": "*",
-    "@linen/scss": "*",
+    "@linen/styles": "*",
     "@linen/ui": "*",
     "@tauri-apps/api": "^1.1.0",
     "classnames": "^2.3.2",
