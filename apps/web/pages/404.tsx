@@ -41,11 +41,4 @@ function NotFoundPage() {
   );
 }
 
-export async function getStaticProps() {
-  return {
-    props: {},
-    revalidate: 5,
-  };
-}
-
 export default NotFoundPage;

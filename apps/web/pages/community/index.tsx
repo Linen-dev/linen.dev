@@ -10,6 +10,7 @@ import Link from 'next/link';
 import FadeIn from 'components/FadeIn';
 import Head from 'next/head';
 import Footer from 'components/Footer';
+import type { GetServerSidePropsContext } from 'next';
 
 const Home = (props: { accounts: Props[] }) => {
   const accounts = props.accounts;
@@ -500,7 +501,7 @@ type Props = {
   discordDomain: string;
 };
 
-export async function getStaticProps() {
+export async function getServerSideProps({ res }: GetServerSidePropsContext) {
   const accounts = await prisma.accounts.findMany({
     where: {
       NOT: [
@@ -528,7 +529,10 @@ export async function getStaticProps() {
     0,
     goodLookingLogos.length - (goodLookingLogos.length % 3)
   );
-
+  res.setHeader(
+    'Cache-Control',
+    'public, s-maxage=43200, stale-while-revalidate=86400'
+  );
   return {
     props: { accounts: remainders },
   };

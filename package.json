@@ -18,7 +18,8 @@
     "turbo": "^1.6.3"
   },
   "scripts": {
-    "web": "yarn turbo --filter=@linen/web",
+    "web": "yarn turbo --filter=@linen/web...",
+    "ui": "yarn turbo --filter=@linen/ui...",
     "dev": "yarn turbo dev",
     "build": "yarn turbo build",
     "prebuild": "yarn turbo build --filter=@linen/ui"
