@@ -1,6 +1,6 @@
 import React from 'react';
 import Title from './Title';
-import StickyHeader from 'components/StickyHeader';
+import { StickyHeader } from '@linen/ui';
 import classNames from 'classnames';
 import { ThreadState } from '@prisma/client';
 import { GoCheck, GoChevronLeft, GoX, GoSync } from 'react-icons/go';

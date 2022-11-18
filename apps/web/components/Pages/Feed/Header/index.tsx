@@ -1,17 +1,16 @@
 import React from 'react';
-import StickyHeader from 'components/StickyHeader';
+import { StickyHeader } from '@linen/ui';
 import { FiRss } from 'react-icons/fi';
-import styles from './index.module.scss';
 
 export default function Header() {
   return (
     <StickyHeader>
-      <div className={styles.title}>
+      <StickyHeader.Title>
         <FiRss /> Feed
-      </div>
-      <div className={styles.subtitle}>
+      </StickyHeader.Title>
+      <StickyHeader.Subtitle>
         All of your channel conversations in one place
-      </div>
+      </StickyHeader.Subtitle>
     </StickyHeader>
   );
 }

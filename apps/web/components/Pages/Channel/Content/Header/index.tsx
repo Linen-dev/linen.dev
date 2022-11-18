@@ -1,5 +1,5 @@
 import React from 'react';
-import StickyHeader from 'components/StickyHeader';
+import { StickyHeader } from '@linen/ui';
 import { FiHash } from 'react-icons/fi';
 import { Mode } from 'hooks/mode';
 import styles from './index.module.css';

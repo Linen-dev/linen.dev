@@ -75,7 +75,7 @@ export default function DesktopNavBar({
       {permissions.feed && (
         <Link onClick={() => setHighlights([])} href="/feed">
           <Nav.Item active={paths.feed === router.asPath}>
-            <FiRss className="mr-1" /> Feed
+            <FiRss /> Feed
             {highlights.length > 0 && (
               <Badge className="ml-2">{highlights.length}</Badge>
             )}
@@ -85,7 +85,7 @@ export default function DesktopNavBar({
       {permissions.manage && (
         <Link onClick={() => setHighlights([])} href="/metrics">
           <Nav.Item active={paths.metrics === router.asPath}>
-            <FiBarChart className="mr-1" /> Metrics
+            <FiBarChart /> Metrics
           </Nav.Item>
         </Link>
       )}
@@ -144,7 +144,7 @@ export default function DesktopNavBar({
               href={`/c/${channel.channelName}`}
             >
               <Nav.Item active={channel.channelName === channelName}>
-                <FiHash className="mr-1" /> {channel.channelName}
+                <FiHash /> {channel.channelName}
                 {count > 0 && <Badge className="ml-2">{count}</Badge>}
               </Nav.Item>
             </Link>
