@@ -3,7 +3,9 @@ import styles from './index.module.scss';
 import Title from './Title';
 import Header from './Header';
 import { FiRss } from 'react-icons/fi';
-import { Nav, StickyHeader } from '@linen/ui';
+import { Nav, Pages } from '@linen/ui';
+
+const { Header: StickyHeader } = Pages.Feed;
 
 export default function Dashboard() {
   return (
@@ -17,14 +19,7 @@ export default function Dashboard() {
           </Nav.Item>
         </Nav>
         <div className={styles.content}>
-          <StickyHeader>
-            <StickyHeader.Title>
-              <FiRss /> Feed
-            </StickyHeader.Title>
-            <StickyHeader.Subtitle>
-              All of your channel conversations in one place
-            </StickyHeader.Subtitle>
-          </StickyHeader>
+          <StickyHeader />
         </div>
       </div>
     </div>

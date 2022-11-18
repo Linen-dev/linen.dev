@@ -1,5 +1,5 @@
 import React from 'react';
-import { StickyHeader } from '@linen/ui';
+import StickyHeader from '../../../StickyHeader';
 import { FiRss } from 'react-icons/fi';
 
 export default function Header() {

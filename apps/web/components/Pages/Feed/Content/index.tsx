@@ -4,7 +4,7 @@ import { ThreadState } from '@prisma/client';
 import { SerializedThread } from 'serializers/thread';
 import { Settings } from 'serializers/account/settings';
 import { Permissions, Scope } from 'types/shared';
-import Header from '../Header';
+import { Pages } from '@linen/ui';
 import Filters from '../Filters';
 import Grid from '../Grid';
 import { FeedResponse, Selections } from '../types';
@@ -21,6 +21,8 @@ import type { CommunityPushType } from 'services/push';
 import { toast } from 'components/Toast';
 import { SerializedMessage } from 'serializers/message';
 import { manageSelections } from '../utilities/selection';
+
+const { Header } = Pages.Feed;
 
 interface Props {
   isSubDomainRouting: boolean;
