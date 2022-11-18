@@ -6,6 +6,7 @@ import '../styles/globals.css';
 import { SWRConfig } from 'swr';
 import { AppProps } from 'next/app';
 import Head from 'next/head';
+import Script from 'next/script';
 import { useEffect } from 'react';
 import { SessionProvider } from 'next-auth/react';
 import { Toaster } from 'components/Toast';
@@ -53,20 +54,16 @@ export default function App(props: AppProps) {
   return (
     <SessionProvider>
       <Head>
-        <script
+        <Script
           defer
           data-domain="linen.dev"
           src="https://plausible.io/js/plausible.js"
-        ></script>
+        />
         <title>Linen Community</title>
         <meta
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width"
         />
-        <link
-          rel="stylesheet"
-          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/styles/stackoverflow-light.min.css"
-        ></link>
       </Head>
 
       <SWRConfig>
