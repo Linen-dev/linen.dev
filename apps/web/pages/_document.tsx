@@ -36,7 +36,12 @@ export default class _Document extends Document {
   render() {
     return (
       <Html lang="en">
-        <Head />
+        <Head>
+          <link
+            rel="stylesheet"
+            href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/styles/stackoverflow-light.min.css"
+          />
+        </Head>
         <body>
           <Main />
           <NextScript />
