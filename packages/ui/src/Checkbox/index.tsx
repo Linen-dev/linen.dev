@@ -1,6 +1,5 @@
 import React from 'react';
-import classNames from 'classnames';
-import styles from './index.module.css';
+import styled from 'styled-components';
 
 interface Props {
   className?: string;
@@ -8,11 +7,15 @@ interface Props {
   onChange(event: React.ChangeEvent<HTMLInputElement>): void;
 }
 
+const Input = styled.input`
+  cursor: pointer;
+`;
+
 export default function Checkbox({ className, checked, onChange }: Props) {
   return (
-    <input
+    <Input
       checked={checked}
-      className={classNames(styles.checkbox, className)}
+      className={className}
       type="checkbox"
       onChange={onChange}
     />
