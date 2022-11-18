@@ -54,11 +54,6 @@ export default function App(props: AppProps) {
   return (
     <SessionProvider>
       <Head>
-        <Script
-          defer
-          data-domain="linen.dev"
-          src="https://plausible.io/js/plausible.js"
-        />
         <title>Linen Community</title>
         <meta
           name="viewport"
@@ -74,6 +69,11 @@ export default function App(props: AppProps) {
           </UsersContext>
         </JoinContext>
       </SWRConfig>
+      <Script
+        defer
+        data-domain="linen.dev"
+        src="https://plausible.io/js/plausible.js"
+      />
     </SessionProvider>
   );
 }
