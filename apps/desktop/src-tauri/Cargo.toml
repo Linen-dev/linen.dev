@@ -1,8 +1,8 @@
 [package]
-name = "desktop"
-version = "0.0.0"
-description = "A Tauri App"
-authors = ["you"]
+name = "linen"
+version = "0.0.1"
+description = "Linen Desktop Client"
+authors = ["linen.dev"]
 license = ""
 repository = ""
 edition = "2021"

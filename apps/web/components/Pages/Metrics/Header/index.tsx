@@ -1,4 +1,4 @@
-import StickyHeader from 'components/StickyHeader';
+import { StickyHeader } from '@linen/ui';
 import { FiBarChart } from 'react-icons/fi';
 import styles from './index.module.scss';
 

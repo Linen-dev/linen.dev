@@ -4,7 +4,7 @@
   background: $color-background;
   border-right: 1px solid $color-border;
   max-height: calc(100vh - 64px);
-  overflow: scroll;
+  overflow-y: scroll;
   width: 200px;
   padding: 0.5rem 0.5rem;
 }

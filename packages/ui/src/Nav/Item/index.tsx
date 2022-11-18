@@ -14,11 +14,11 @@ const Wrapper = styled.div`
   cursor: pointer;
   display: flex;
   font-size: 0.875rem;
+  gap: 0.25rem;
   line-height: 1.25rem;
   font-weight: 500;
 
   padding: 0.5rem;
-  width: 100%;
   margin: 0.25rem 0;
   transition: 0.1s ease-in color, 0.1s ease-in background;
 

@@ -10,7 +10,7 @@ enum Pages {
 }
 
 function App() {
-  const [page, setPage] = useState(Pages.Dashboard);
+  const [page, setPage] = useState(Pages.Splash);
   const [token, setToken] = useState('');
   if (page === Pages.Splash) {
     return <SplashPage onClick={() => setPage(Pages.SignIn)} />;
