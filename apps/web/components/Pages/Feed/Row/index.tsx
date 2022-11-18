@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import Avatar from 'components/Avatar';
-import Checkbox from 'components/Checkbox';
+import { Checkbox } from '@linen/ui';
 import Title from './Title';
 import Description from './Description';
 import styles from './index.module.css';
