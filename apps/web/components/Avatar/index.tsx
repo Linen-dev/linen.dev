@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import classNames from 'classnames';
-import Image from 'next/image';
 import styles from './index.module.scss';
-import { normalizeUrl } from 'utilities/url';
+import { normalizeUrl } from './utilities/url';
 import { getColor } from './utilities/color';
 import { getLetter } from './utilities/string';
 
@@ -52,7 +51,7 @@ function Avatar({ src, text = 'u', size, shadow }: Props) {
             [styles.shadow]: shadow === 'sm',
           })}
         >
-          <Image
+          <img
             className={classNames(styles.image, size && styles[size])}
             src={normalizeUrl(src)}
             onError={() => {
