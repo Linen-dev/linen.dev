@@ -78,7 +78,7 @@ export default function Actions({
             });
           }}
         >
-          <Tooltip text="Like">
+          <Tooltip className={styles.tooltip} text="Like">
             <FiThumbsUp
               className={classNames({
                 [styles.active]: isReactionActive,
@@ -101,7 +101,7 @@ export default function Actions({
           toast.success('Copied to clipboard', text);
         }}
       >
-        <Tooltip text="URL">
+        <Tooltip className={styles.tooltip} text="URL">
           <AiOutlinePaperClip />
         </Tooltip>
       </li>
@@ -113,7 +113,7 @@ export default function Actions({
             onPin(thread.id);
           }}
         >
-          <Tooltip text="Pin">
+          <Tooltip className={styles.tooltip} text="Pin">
             <GoPin className={classNames({ [styles.active]: thread.pinned })} />
           </Tooltip>
         </li>
