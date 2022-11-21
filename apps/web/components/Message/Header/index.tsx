@@ -6,7 +6,6 @@ interface Props {
 }
 
 export default function Header({ depth, children }: Props) {
-  console.log(depth);
   switch (depth) {
     case 1:
       return <h1 className="text-2xl font-bold">{children}</h1>;
