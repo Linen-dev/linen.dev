@@ -1,5 +1,5 @@
 import React from 'react';
-import Avatar from 'components/Avatar';
+import { Avatar } from '@linen/ui';
 import classNames from 'classnames';
 import DraggableRow from './DraggableRow';
 import Message from '../../Message';

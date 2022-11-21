@@ -1,5 +1,5 @@
 import DraggableRow from 'components/Pages/Channel/Content/Row/DraggableRow';
-import Avatars from '../../../../Avatars';
+import { Avatars } from '@linen/ui';
 import type { Settings } from 'serializers/account/settings';
 import Row from 'components/Message/Row';
 import styles from './index.module.scss';

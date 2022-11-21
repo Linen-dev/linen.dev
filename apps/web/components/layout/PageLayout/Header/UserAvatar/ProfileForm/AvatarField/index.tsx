@@ -1,4 +1,4 @@
-import Avatar from 'components/Avatar';
+import { Avatar } from '@linen/ui';
 import Label from 'components/Label';
 import Field from 'components/Field';
 import { SerializedUser } from 'serializers/user';

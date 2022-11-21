@@ -1,6 +1,6 @@
 import React from 'react';
 import { users, MessageFormat } from '@prisma/client';
-import Avatar from '../../Avatar';
+import { Avatar } from '@linen/ui';
 import Message from '../../Message';
 import styles from './index.module.css';
 import { SerializedUser } from 'serializers/user';
