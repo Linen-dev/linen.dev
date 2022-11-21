@@ -1,5 +1,6 @@
 import DraggableRow from 'components/Pages/Channel/Content/Row/DraggableRow';
 import { Avatars } from '@linen/ui';
+import Image from 'next/image';
 import type { Settings } from 'serializers/account/settings';
 import Row from 'components/Message/Row';
 import styles from './index.module.scss';
@@ -100,7 +101,7 @@ export default function ChannelRow({
           footer={
             messages.length > 1 && (
               <div className={styles.footer}>
-                <Avatars size="sm" users={avatars} />
+                <Avatars size="sm" users={avatars} Image={Image} />
                 <>
                   {messages.length - 1}{' '}
                   {messages.length > 2 ? 'replies' : 'reply'} &middot;{' '}

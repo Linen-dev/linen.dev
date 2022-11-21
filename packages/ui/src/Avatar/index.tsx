@@ -10,6 +10,7 @@ interface Props {
   text?: string | null;
   size?: Size;
   shadow?: Shadow;
+  Image?: any;
 }
 
 export type Size = 'sm' | 'md' | 'lg';
@@ -28,11 +29,28 @@ function dimensions(size?: Size) {
   }
 }
 
-function Avatar({ src, text = 'u', size, shadow }: Props) {
+function Avatar({ src, text = 'u', size, shadow, Image }: Props) {
   const [error, setError] = useState(false);
 
   const letter = getLetter(text || '');
   const color = getColor(letter);
+
+  function renderImage({ src }: { src: string }) {
+    const props = {
+      className: classNames(styles.image, size && styles[size]),
+      src: normalizeUrl(src),
+      onError: () => {
+        setError(true);
+      },
+      alt: text || 'avatar',
+      height: dimensions(size),
+      width: dimensions(size),
+    };
+    if (Image) {
+      return <Image {...props} />;
+    }
+    return <img {...props} />;
+  }
 
   return (
     <>
@@ -51,16 +69,7 @@ function Avatar({ src, text = 'u', size, shadow }: Props) {
             [styles.shadow]: shadow === 'sm',
           })}
         >
-          <img
-            className={classNames(styles.image, size && styles[size])}
-            src={normalizeUrl(src)}
-            onError={() => {
-              setError(true);
-            }}
-            alt={text || 'avatar'}
-            height={dimensions(size)}
-            width={dimensions(size)}
-          />
+          {renderImage({ src })}
         </div>
       )}
     </>

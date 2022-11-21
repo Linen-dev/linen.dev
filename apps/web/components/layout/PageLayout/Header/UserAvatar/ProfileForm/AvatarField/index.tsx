@@ -1,4 +1,5 @@
 import { Avatar } from '@linen/ui';
+import Image from 'next/image';
 import Label from 'components/Label';
 import Field from 'components/Field';
 import { SerializedUser } from 'serializers/user';
@@ -28,6 +29,7 @@ export default function AvatarField({
             shadow="none"
             src={user.profileImageUrl}
             text={user.displayName}
+            Image={Image}
           />
           {uploading ? (
             <span className={styles.text}>{`Uploading... ${progress}%`}</span>
