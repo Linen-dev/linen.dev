@@ -1,3 +1,5 @@
+@import '../colors.scss';
+
 .group {
   display: flex;
   justify-content: left;
@@ -9,14 +11,14 @@
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  border: 2px solid #f8f9fa;
+  border: 2px solid $color-gray-50;
   width: 36px;
   height: 36px;
   text-align: center;
   text-transform: lowercase;
   line-height: 32px;
-  background-color: #f8f9fa;
-  color: #000;
+  background-color: $color-gray-50;
+  color: $color-black;
   font-weight: bold;
   font-size: 14px;
 }

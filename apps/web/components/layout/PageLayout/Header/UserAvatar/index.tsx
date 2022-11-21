@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { Menu, Transition } from '@headlessui/react';
 import { signOut } from 'next-auth/react';
 import { SerializedUser } from 'serializers/user';
-import Avatar from 'components/Avatar';
+import { Avatar } from '@linen/ui';
 import Modal from 'components/Modal';
 import ProfileForm from './ProfileForm';
 import { AxiosRequestConfig } from 'axios';

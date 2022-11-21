@@ -12,7 +12,10 @@
     "prebuild": "rm -rf dist && yarn tsc",
     "build": "rollup --config rollup.config.js",
     "dev": "npm run watch",
-    "watch": "npm run build -- --watch"
+    "watch": "npm run build -- --watch",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
   },
   "dependencies": {
     "@rollup/plugin-commonjs": "^23.0.2",
@@ -24,6 +27,15 @@
     "rollup-plugin-postcss": "^4.0.2",
     "sass": "^1.56.1",
     "typescript": "^4.9.3"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^14.4.3",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^29.3.1",
+    "jest-environment-jsdom": "^29.3.1",
+    "ts-jest": "^29.0.3"
   },
   "peerDependencies": {
     "classnames": "^2.3.2",
