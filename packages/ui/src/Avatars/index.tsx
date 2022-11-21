@@ -11,9 +11,10 @@ interface AvatarType {
 interface Props {
   users: AvatarType[];
   size?: Size;
+  Image?: any;
 }
 
-export default function Avatars({ users, size }: Props) {
+export default function Avatars({ users, size, Image }: Props) {
   const avatars = users.slice(0, 2);
   if (avatars.length === 0) {
     return <></>;
@@ -27,6 +28,7 @@ export default function Avatars({ users, size }: Props) {
             text={user.text}
             src={user.src}
             size={size}
+            Image={Image}
           />
         </div>
       ))}

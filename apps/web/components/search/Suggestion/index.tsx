@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { users, MessageFormat } from '@prisma/client';
 import { Avatar } from '@linen/ui';
 import Message from '../../Message';
@@ -27,6 +28,7 @@ export default function Suggestion({
           size="sm"
           src={user?.profileImageUrl}
           text={user?.displayName}
+          Image={Image}
         />
         <div className={styles.text}>
           <strong>{user?.displayName || 'user'}</strong>

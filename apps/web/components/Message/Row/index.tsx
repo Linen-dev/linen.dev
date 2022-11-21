@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { Avatar } from '@linen/ui';
 import classNames from 'classnames';
 import DraggableRow from './DraggableRow';
@@ -76,6 +77,7 @@ export function Row({
               size="lg"
               src={message.author?.profileImageUrl}
               text={message.author?.displayName}
+              Image={Image}
             />
           ) : (
             <span className={styles.date}>{format(message.sentAt, 'p')}</span>

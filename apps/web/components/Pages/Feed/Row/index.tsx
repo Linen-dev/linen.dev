@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import classNames from 'classnames';
 import { Avatar, Checkbox } from '@linen/ui';
 import Title from './Title';
@@ -44,6 +45,7 @@ export default function Row({
             size="md"
             src={message.author?.profileImageUrl}
             text={message.author?.displayName}
+            Image={Image}
           />
           <div>
             {channel && (
