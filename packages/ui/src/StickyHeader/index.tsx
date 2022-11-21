@@ -1,25 +1,16 @@
 import React from 'react';
-import styled from 'styled-components';
-import Colors from '@linen/styles/colors';
+import classNames from 'classnames';
 import Title from './Title';
 import Subtitle from './Subtitle';
+import styles from './index.module.scss';
 
 interface Props {
   className?: string;
   children: React.ReactNode;
 }
 
-const Header = styled.div`
-  background: ${Colors.White};
-  border-bottom: 1px solid ${Colors.Gray200};
-  padding: 1rem;
-  position: sticky;
-  top: 0;
-  z-index: 1;
-`;
-
 function StickyHeader({ className, children }: Props) {
-  return <Header className={className}>{children}</Header>;
+  return <div className={classNames(styles.header, className)}>{children}</div>;
 }
 
 StickyHeader.Title = Title;
