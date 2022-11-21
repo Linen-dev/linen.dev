@@ -50,6 +50,13 @@ function stringify(tree) {
       });
     }
 
+    if (node.type === 'header') {
+      output += `${'#'.repeat(node.depth)} `;
+      node.children.forEach((child) => {
+        output += stringify(child);
+      });
+    }
+
     if (node.type === 'user') {
       output += node.source;
     }

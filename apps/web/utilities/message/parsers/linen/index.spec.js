@@ -11,6 +11,7 @@ import {
   strike,
   quote,
   signal,
+  header,
 } from './spec-helpers';
 
 describe('parse', () => {
@@ -106,5 +107,67 @@ describe('parse', () => {
     expect(parse('> *foo*')).toEqual(root([quote([bold([text('foo')])])]));
     expect(parse('> _foo_')).toEqual(root([quote([italic([text('foo')])])]));
     expect(parse('> ~foo~')).toEqual(root([quote([strike([text('foo')])])]));
+  });
+
+  it('returns a `header` node', () => {
+    expect(parse('# foo')).toEqual(root([header([text('foo')])]));
+    expect(parse('# *foo*')).toEqual(root([header([bold([text('foo')])])]));
+    expect(parse('# _foo_')).toEqual(root([header([italic([text('foo')])])]));
+    expect(parse('# ~foo~')).toEqual(root([header([strike([text('foo')])])]));
+
+    expect(parse('## foo')).toEqual(root([header([text('foo')], 2)]));
+    expect(parse('## *foo*')).toEqual(root([header([bold([text('foo')])], 2)]));
+    expect(parse('## _foo_')).toEqual(
+      root([header([italic([text('foo')])], 2)])
+    );
+    expect(parse('## ~foo~')).toEqual(
+      root([header([strike([text('foo')])], 2)])
+    );
+
+    expect(parse('### foo')).toEqual(root([header([text('foo')], 3)]));
+    expect(parse('### *foo*')).toEqual(
+      root([header([bold([text('foo')])], 3)])
+    );
+    expect(parse('### _foo_')).toEqual(
+      root([header([italic([text('foo')])], 3)])
+    );
+    expect(parse('### ~foo~')).toEqual(
+      root([header([strike([text('foo')])], 3)])
+    );
+
+    expect(parse('#### foo')).toEqual(root([header([text('foo')], 4)]));
+    expect(parse('#### *foo*')).toEqual(
+      root([header([bold([text('foo')])], 4)])
+    );
+    expect(parse('#### _foo_')).toEqual(
+      root([header([italic([text('foo')])], 4)])
+    );
+    expect(parse('#### ~foo~')).toEqual(
+      root([header([strike([text('foo')])], 4)])
+    );
+
+    expect(parse('##### foo')).toEqual(root([header([text('foo')], 5)]));
+    expect(parse('##### *foo*')).toEqual(
+      root([header([bold([text('foo')])], 5)])
+    );
+    expect(parse('##### _foo_')).toEqual(
+      root([header([italic([text('foo')])], 5)])
+    );
+    expect(parse('##### ~foo~')).toEqual(
+      root([header([strike([text('foo')])], 5)])
+    );
+
+    expect(parse('###### foo')).toEqual(root([header([text('foo')], 6)]));
+    expect(parse('###### *foo*')).toEqual(
+      root([header([bold([text('foo')])], 6)])
+    );
+    expect(parse('###### _foo_')).toEqual(
+      root([header([italic([text('foo')])], 6)])
+    );
+    expect(parse('###### ~foo~')).toEqual(
+      root([header([strike([text('foo')])], 6)])
+    );
+
+    expect(parse('####### foo')).toEqual(root([text('####### foo')]));
   });
 });

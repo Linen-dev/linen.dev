@@ -49,3 +49,12 @@ export function quote(children) {
     source: `> ${source(children)}`,
   };
 }
+
+export function header(children, depth = 1) {
+  return {
+    type: 'header',
+    children,
+    depth,
+    source: `${'#'.repeat(depth)} ${source(children)}`,
+  };
+}

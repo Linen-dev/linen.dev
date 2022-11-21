@@ -7,6 +7,7 @@ import InlineCode from './InlineCode';
 import BlockCode from './BlockCode';
 import Emoji from './Emoji';
 import Quote from './Quote';
+import Header from './Header';
 import Reactions from './Reactions';
 import Attachments from './Attachments';
 import transform from './utilities/transform';
@@ -30,6 +31,7 @@ import {
   CodeNode,
   PreNode,
   EmojiNode,
+  HeaderNode,
 } from 'utilities/message/parsers/types';
 import { SerializedUser } from 'serializers/user';
 import { MessageFormat } from '@prisma/client';
@@ -94,6 +96,12 @@ function Message({
           <Quote key={node.cid}>
             {(node as QuoteNode).children.map(render)}
           </Quote>
+        );
+      case 'header':
+        return (
+          <Header depth={node.depth} key={node.cid}>
+            {(node as HeaderNode).children.map(render)}
+          </Header>
         );
       case 'text':
         return (

@@ -83,6 +83,13 @@ export interface PreNode {
   source: string;
 }
 
+export interface HeaderNode {
+  type: string;
+  depth: number;
+  children: Node[];
+  source: string;
+}
+
 export interface EmojiNode {
   type: string;
   name: string;

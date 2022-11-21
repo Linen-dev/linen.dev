@@ -61,7 +61,36 @@ const quote = topline(
   })
 );
 
-const matchers = [bold, italic, strike, quote];
+const header = topline(
+  regexp(/^\#{1,6} (.*)(\n|$)/, (match, _, position) => {
+    const [result, content] = match;
+
+    const entity = content.match(/^((\#{1, 6} )+)(.*)$/);
+
+    const depth = result.split(' ')[0].length;
+
+    return [
+      {
+        type: 'header',
+        depth,
+        children: entity
+          ? [
+              {
+                type: 'text',
+                value: entity[1],
+                source: entity[1],
+              },
+              ...parse(entity[3], matchers),
+            ]
+          : parse(content, matchers),
+        source: result,
+      },
+      position + result.length,
+    ];
+  })
+);
+
+const matchers = [bold, italic, strike, quote, header];
 
 function expand(tokens) {
   return tokens.reduce((result, token) => {
