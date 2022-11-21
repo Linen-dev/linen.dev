@@ -1,0 +1,30 @@
+@host=http://localhost/api/v2
+
+@auth=zzzzz
+###
+
+GET {{host}}/threads?communityName=linen
+# Authorization: Bearer {{auth}}
+
+
+
+###
+
+POST {{host}}/login
+Content-Type: application/json
+
+{
+    "username": "xxxx@linen.dev",
+    "password": "xxxxxxx"
+}
+
+
+####
+
+GET {{host}}/me/admin
+Authorization: Bearer {{auth}}
+
+
+####
+
+GET {{host}}/ping
