@@ -1,6 +1,7 @@
 const resolve = require('@rollup/plugin-node-resolve');
 const commonjs = require('@rollup/plugin-commonjs');
 const typescript = require('@rollup/plugin-typescript');
+const postcss = require('rollup-plugin-postcss');
 const external = require('rollup-plugin-peer-deps-external');
 
 module.exports = {
@@ -11,6 +12,11 @@ module.exports = {
   },
   plugins: [
     resolve(),
+    postcss({
+      extract: true,
+      modules: true,
+      use: ['sass'],
+    }),
     commonjs(),
     typescript({ tsconfig: './tsconfig.json' }),
     external(),

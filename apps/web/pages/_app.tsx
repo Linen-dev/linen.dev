@@ -1,8 +1,9 @@
 import '../styles/reset.css';
-import { useRouter } from 'next/router';
 import '../nprogress.scss';
-import NProgress from 'nprogress';
 import '../styles/globals.css';
+import '@linen/ui/dist/index.css';
+import { useRouter } from 'next/router';
+import NProgress from 'nprogress';
 import { SWRConfig } from 'swr';
 import { AppProps } from 'next/app';
 import Head from 'next/head';

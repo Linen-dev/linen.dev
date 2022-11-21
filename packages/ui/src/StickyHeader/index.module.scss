@@ -1,0 +1,10 @@
+@import '../colors.scss';
+
+.header {
+  background: $color-white;
+  border-bottom: 1px solid $color-gray-200;
+  padding: 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
