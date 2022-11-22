@@ -8,7 +8,6 @@
     "tauri": "tauri"
   },
   "dependencies": {
-    "@linen/config": "*",
     "@linen/styles": "*",
     "@linen/ui": "*",
     "@tauri-apps/api": "^1.1.0",
