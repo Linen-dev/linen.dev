@@ -3,7 +3,7 @@ import { AccountType } from '@prisma/client';
 import { findAccountByPath } from 'lib/models';
 import type { ApiResponse, TenantApiRequest } from 'api/types';
 import passport from 'api/auth/passport';
-import { AccountNotFound, Unauthorized } from 'api/errors';
+import { AccountNotFound, Unauthorized, Validation } from 'api/errors';
 
 const schema = z.object({
   communityName: z.string().min(1),
@@ -14,7 +14,13 @@ export const tenantMiddleware = async (
   res: ApiResponse,
   next: any
 ) => {
-  const { communityName } = schema.parse({ ...req.body, ...req.query });
+  let parsed;
+  try {
+    parsed = schema.parse({ ...req.body, ...req.query });
+  } catch (error) {
+    return Validation(res, error);
+  }
+  const { communityName } = parsed;
   // improvement: cache the findAccountByPath function
   const account = await findAccountByPath(communityName);
   if (!account) {

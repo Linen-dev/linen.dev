@@ -20,6 +20,11 @@ export const Forbidden = (res: any, cause?: any) => {
   res.status(403).json({ error: 'Forbidden', cause });
 };
 
+export const Validation = (res: any, err: any) => {
+  console.error(err.issues);
+  res.status(400).json(err.issues);
+};
+
 export function onError(err: unknown, req: any, res: any) {
   console.error(err);
   // validation errors
