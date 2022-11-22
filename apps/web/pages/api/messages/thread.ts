@@ -2,8 +2,7 @@ import Session from 'services/session';
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import { prisma } from 'client';
 import serializeMessage from 'serializers/message';
-import parse from 'utilities/message/parsers/linen';
-import { findMentions } from 'utilities/message/find';
+import { find, parse } from '@linen/ast';
 import { eventNewMessage } from 'services/events';
 import { MessageFormat, Prisma } from '@prisma/client';
 import PermissionsService from 'services/permissions';
@@ -86,9 +85,9 @@ export async function create(
   const sentAt = new Date();
   const userId = user.id;
 
-  const tree = parse(body);
-  const mentionNodes = findMentions(tree);
-  const userIds = unique(mentionNodes.map(({ id }) => id));
+  const tree = parse.linen(body);
+  const mentionNodes = find.mentions(tree);
+  const userIds = unique(mentionNodes.map(({ id }: { id: string }) => id));
   const messages = {
     create: {
       body,
