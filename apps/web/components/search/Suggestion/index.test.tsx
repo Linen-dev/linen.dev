@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import Suggestion from '.';
-import { MessageFormat } from '@prisma/client';
+import { MessageFormat } from '@linen/types';
 
 describe('Suggestion', () => {
   it('renders a suggestion', () => {

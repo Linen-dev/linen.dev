@@ -1,11 +1,10 @@
 import Branding from 'components/Pages/Settings/Branding';
 import { findAccountAndUserByEmail } from 'lib/models';
-import serializeAccount, { SerializedAccount } from 'serializers/account';
+import serializeAccount from 'serializers/account';
 import { NextPageContext } from 'next';
 import { getSession } from 'next-auth/react';
 import Vercel, { DNSRecord } from 'services/vercel';
-import featureFlags from 'utilities/featureFlags';
-import { Roles } from '@prisma/client';
+import { SerializedAccount, Roles } from '@linen/types';
 
 interface Props {
   account: SerializedAccount;

@@ -12,11 +12,9 @@ import Reactions from './Reactions';
 import Attachments from './Attachments';
 import transform from './utilities/transform';
 import styles from './index.module.scss';
-import { SerializedAttachment } from 'types/shared';
-import { SerializedReaction } from 'serializers/reaction';
+import { SerializedAttachment, SerializedReaction } from '@linen/types';
 import { parse } from '@linen/ast';
 import {
-  Node,
   RootNode,
   BoldNode,
   TextNode,
@@ -31,8 +29,8 @@ import {
   EmojiNode,
   HeaderNode,
 } from '@linen/ast/parse/types';
-import { SerializedUser } from 'serializers/user';
-import { MessageFormat } from '@prisma/client';
+import { SerializedUser } from '@linen/types';
+import { MessageFormat } from '@linen/types';
 
 interface Props {
   text: string;

@@ -1,4 +1,4 @@
-import { threads, ThreadState } from '@prisma/client';
+import { threads } from '@prisma/client';
 import prisma from 'client';
 
 export default async function createThread(

@@ -1,5 +1,6 @@
 import { accounts, Prisma } from '@prisma/client';
 import prisma from '../client';
+import { SerializedChannel } from '@linen/types';
 
 interface FindChannelParams {
   name: string;
@@ -126,18 +127,13 @@ const channelSerialized = Prisma.validator<Prisma.channelsFindManyArgs>()({
     accountId: true,
   },
 });
-
-export type ChannelSerialized = Prisma.channelsGetPayload<
-  typeof channelSerialized
->;
-
 export async function findChannelsByAccount({
   isCrawler,
   account,
 }: {
   isCrawler: boolean;
   account: Partial<accounts>;
-}): Promise<ChannelSerialized[]> {
+}): Promise<SerializedChannel[]> {
   // if crawler, get only channels with threads
   // for normal users, we may see channels empty (e.g. new channels)
   return await prisma.channels.findMany({

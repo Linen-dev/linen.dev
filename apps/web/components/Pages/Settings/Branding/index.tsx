@@ -10,7 +10,7 @@ import classNames from 'classnames';
 import { useS3Upload } from 'next-s3-upload';
 import { useState } from 'react';
 import { toast } from 'components/Toast';
-import { SerializedAccount } from 'serializers/account';
+import { SerializedAccount } from '@linen/types';
 import { useRouter } from 'next/router';
 import { DNSRecord } from 'services/vercel';
 

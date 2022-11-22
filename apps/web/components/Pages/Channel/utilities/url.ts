@@ -1,4 +1,4 @@
-import type { Settings } from 'serializers/account/settings';
+import { Settings } from '@linen/types';
 import { LINEN_URL } from '../../../../constants';
 
 export function getThreadUrl({

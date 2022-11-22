@@ -2,7 +2,6 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import useInfiniteScroll from 'react-infinite-scroll-hook';
 import { Thread } from 'components/Thread';
 import { get } from 'utilities/http';
-import { ThreadState } from '@prisma/client';
 import { useUsersContext } from 'contexts/Users';
 import ChatLayout from 'components/layout/shared/ChatLayout';
 import SidebarLayout from 'components/layout/shared/SidebarLayout';
@@ -16,11 +15,14 @@ import Row from './Row';
 import { useJoinContext } from 'contexts/Join';
 import { sendThreadMessageWrapper } from './sendThreadMessageWrapper';
 import { sendMessageWrapper } from './sendMessageWrapper';
-import type { ChannelSerialized } from 'lib/channel';
-import { SerializedAccount } from 'serializers/account';
-import { Settings } from 'serializers/account/settings';
-import { SerializedThread } from 'serializers/thread';
-import { Permissions } from 'types/shared';
+import {
+  Permissions,
+  SerializedAccount,
+  SerializedChannel,
+  SerializedThread,
+  Settings,
+  ThreadState,
+} from '@linen/types';
 import {
   scrollToBottom,
   isScrollAtBottom,
@@ -28,13 +30,13 @@ import {
 } from 'utilities/scroll';
 import useMode from 'hooks/mode';
 import styles from './index.module.css';
-import { SerializedMessage } from 'serializers/message';
+import { SerializedMessage } from '@linen/types';
 
 interface Props {
   settings: Settings;
   channelName: string;
-  channels?: ChannelSerialized[];
-  currentChannel: ChannelSerialized;
+  channels?: SerializedChannel[];
+  currentChannel: SerializedChannel;
   currentCommunity: SerializedAccount | null;
   threads: SerializedThread[];
   pinnedThreads: SerializedThread[];

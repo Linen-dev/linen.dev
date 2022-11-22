@@ -3,7 +3,7 @@ import { v4 as random } from 'uuid';
 import { prisma } from '../../client';
 import { channelGetServerSideProps, channelNextPage } from 'services/channel';
 import { encodeCursor } from 'utilities/cursor';
-import { SerializedThread } from 'serializers/thread';
+import { SerializedThread } from '@linen/types';
 import { createThreadsOneByDay } from 'bin/factory/threads';
 import setup from '__tests__/spec-helpers/integration';
 

@@ -1,8 +1,8 @@
 import React from 'react';
 import Row from '../Row';
-import { SerializedThread } from 'serializers/thread';
+import { SerializedThread } from '@linen/types';
 import { Selections } from '../types';
-import { Permissions } from 'types/shared';
+import { Permissions } from '@linen/types';
 
 interface Props {
   threads: SerializedThread[];

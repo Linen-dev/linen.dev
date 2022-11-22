@@ -1,10 +1,13 @@
-import { SerializedMessage } from 'serializers/message';
-import { MessageFormat } from '@prisma/client';
 import { v4 as uuid } from 'uuid';
 import { StartSignUpFn } from 'contexts/Join';
-import { SerializedUser, username } from 'serializers/user';
-import { SerializedThread } from 'serializers/thread';
-import { UploadedFile } from 'types/shared';
+import { username } from 'serializers/user';
+import {
+  MessageFormat,
+  SerializedMessage,
+  UploadedFile,
+  SerializedThread,
+  SerializedUser,
+} from '@linen/types';
 import debounce from 'utilities/debounce';
 
 const debouncedSendMessage = debounce(

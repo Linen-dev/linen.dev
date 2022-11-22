@@ -1,4 +1,5 @@
-import { threads, ThreadState } from '@prisma/client';
+import { threads } from '@prisma/client';
+import { ThreadState } from '@linen/types';
 
 export default function createThread(options?: Partial<threads>): threads {
   return {

@@ -8,7 +8,7 @@ import { fetchAllTopLevelMessages } from './fetchAllTopLevelMessages';
 import { conversationHistory } from '__mocks__/slack-api';
 import { parseSlackSentAt, tsToSentAt } from 'utilities/sentAt';
 import { createSlug } from 'utilities/util';
-import { MessageFormat } from '@prisma/client';
+import { MessageFormat } from '@linen/types';
 
 const account = {
   id: 'accountId123',

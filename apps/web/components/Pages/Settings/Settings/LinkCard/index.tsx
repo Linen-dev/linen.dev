@@ -1,5 +1,5 @@
 import React from 'react';
-import { SerializedAccount } from 'serializers/account';
+import { SerializedAccount } from '@linen/types';
 import { getHomeUrl, getHomeText } from 'utilities/home';
 
 interface Props {

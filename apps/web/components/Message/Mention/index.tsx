@@ -1,5 +1,5 @@
 import React from 'react';
-import { SerializedUser } from 'serializers/user';
+import { SerializedUser } from '@linen/types';
 
 function getDisplayName(userId: string, mentions?: SerializedUser[]) {
   if (!mentions) {

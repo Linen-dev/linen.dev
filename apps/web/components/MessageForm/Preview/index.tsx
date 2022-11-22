@@ -1,8 +1,8 @@
 import React from 'react';
 import classNames from 'classnames';
 import Message from 'components/Message';
-import { SerializedUser } from 'serializers/user';
-import { MessageFormat } from '@prisma/client';
+import { SerializedUser } from '@linen/types';
+import { MessageFormat } from '@linen/types';
 import styles from './index.module.scss';
 
 interface Props {

@@ -1,6 +1,6 @@
 import useWebsockets from '.';
-import { Permissions } from 'types/shared';
-import { SerializedMessage } from 'serializers/message';
+import { Permissions } from '@linen/types';
+import { SerializedMessage } from '@linen/types';
 
 interface Props {
   id?: string;

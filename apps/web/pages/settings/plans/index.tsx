@@ -4,14 +4,12 @@ import stripe from 'services/stripe';
 import { StripePricesResponse, StripePrice } from 'services/stripe/types';
 import { getSession } from 'next-auth/react';
 import DashboardLayout from '../../../components/layout/DashboardLayout';
-import serializeAccount, {
-  SerializedAccount,
-} from '../../../serializers/account';
+import serializeAccount from '../../../serializers/account';
 import { findAccountAndUserByEmail } from '../../../lib/models';
 import Billing from 'components/Pages/Billing';
 import Tiers from 'components/Pages/Tiers';
 import { isStripeEnabled } from 'utilities/featureFlags';
-import { Roles } from '@prisma/client';
+import { SerializedAccount, Roles } from '@linen/types';
 
 interface Props {
   account?: SerializedAccount;

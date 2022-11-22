@@ -1,12 +1,12 @@
 import React from 'react';
-import { SerializedThread } from 'serializers/thread';
-import { SerializedMessage } from 'serializers/message';
-import { SerializedUser } from 'serializers/user';
-import { SerializedAccount } from 'serializers/account';
+import { SerializedThread } from '@linen/types';
+import { SerializedMessage } from '@linen/types';
+import { SerializedUser } from '@linen/types';
+import { SerializedAccount } from '@linen/types';
 import debounce from 'utilities/debounce';
 import { StartSignUpFn } from 'contexts/Join';
 import { createMessageImitation } from './utilities/message';
-import { UploadedFile } from 'types/shared';
+import { UploadedFile } from '@linen/types';
 
 const debouncedSendThreadMessage = debounce(
   ({

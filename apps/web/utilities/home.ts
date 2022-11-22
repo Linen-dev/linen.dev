@@ -1,4 +1,4 @@
-import { SerializedAccount } from 'serializers/account';
+import { SerializedAccount } from '@linen/types';
 
 export function getHomeUrl(account?: SerializedAccount): string {
   if (!account) {

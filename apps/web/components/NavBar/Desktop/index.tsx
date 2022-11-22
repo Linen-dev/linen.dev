@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import classNames from 'classnames';
-import type { ChannelSerialized } from 'lib/channel';
 import NavLabel from './NavLabel';
-import { Permissions } from 'types/shared';
+import { Permissions, SerializedChannel } from '@linen/types';
 import Link from 'components/Link/InternalLink';
 import NewChannelModal from 'components/Pages/Channel/Content/NewChannelModal';
 import useWebsockets from 'hooks/websockets';
@@ -17,7 +16,7 @@ import { Nav } from '@linen/ui';
 
 interface Props {
   mode: Mode;
-  channels: ChannelSerialized[];
+  channels: SerializedChannel[];
   channelName: string;
   permissions: Permissions;
   onDrop?({
@@ -96,7 +95,7 @@ export default function DesktopNavBar({
         )}
       </NavLabel>
       <div>
-        {channels.map((channel: ChannelSerialized, index: number) => {
+        {channels.map((channel: SerializedChannel, index: number) => {
           const count = highlights.reduce((count: number, id: string) => {
             if (id === channel.id) {
               return count + 1;

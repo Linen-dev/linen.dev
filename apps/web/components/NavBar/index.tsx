@@ -1,13 +1,12 @@
-import type { ChannelSerialized } from 'lib/channel';
 import { sortByChannelName } from './utilities';
-import { Permissions } from 'types/shared';
+import { Permissions, SerializedChannel } from '@linen/types';
 import DesktopNavBar from './Desktop';
 import MobileNavBar from './Mobile';
 import { Mode } from 'hooks/mode';
 
 interface Props {
   mode: Mode;
-  channels: ChannelSerialized[];
+  channels: SerializedChannel[];
   channelName: string;
   permissions: Permissions;
   onDrop?({

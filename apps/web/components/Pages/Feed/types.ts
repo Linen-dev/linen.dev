@@ -1,4 +1,4 @@
-import { SerializedThread } from 'serializers/thread';
+import { SerializedThread } from '@linen/types';
 
 export interface FeedResponse {
   threads: SerializedThread[];

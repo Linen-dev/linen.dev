@@ -2,7 +2,7 @@ import { Avatar } from '@linen/ui';
 import Image from 'next/image';
 import Label from 'components/Label';
 import Field from 'components/Field';
-import { SerializedUser } from 'serializers/user';
+import { SerializedUser } from '@linen/types';
 import styles from './index.module.scss';
 
 interface Props {

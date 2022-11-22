@@ -1,11 +1,11 @@
-import { SerializedThread } from 'serializers/thread';
+import { SerializedThread } from '@linen/types';
 import { scrollToBottom } from 'utilities/scroll';
-import { SerializedUser } from 'serializers/user';
-import { SerializedAccount } from 'serializers/account';
+import { SerializedUser } from '@linen/types';
+import { SerializedAccount } from '@linen/types';
 import debounce from 'utilities/debounce';
 import { StartSignUpFn } from 'contexts/Join';
 import { createThreadImitation } from './utilities/thread';
-import { UploadedFile } from 'types/shared';
+import { UploadedFile } from '@linen/types';
 
 const debouncedSendChannelMessage = debounce(
   ({

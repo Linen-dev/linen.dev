@@ -1,31 +1,4 @@
-import { AccountType } from '@prisma/client';
-
-export enum CommunityType {
-  'discord' = 'discord',
-  'slack' = 'slack',
-  'linen' = 'linen',
-}
-
-export interface SerializedAccount {
-  id: string;
-  type: AccountType;
-  name?: string;
-  homeUrl?: string;
-  docsUrl?: string;
-  logoUrl?: string;
-  redirectDomain?: string;
-  brandColor?: string;
-  premium: boolean;
-  googleAnalyticsId?: string;
-  syncStatus: string;
-  communityType: CommunityType | null;
-  anonymizeUsers?: boolean;
-  hasAuth?: boolean;
-  slackDomain?: string;
-  discordDomain?: string;
-  discordServerId?: string;
-  communityInviteUrl?: string;
-}
+import { CommunityType, SerializedAccount } from '@linen/types';
 
 function identifyCommunity(account: any) {
   if (account.slackAuthorizations?.length) {

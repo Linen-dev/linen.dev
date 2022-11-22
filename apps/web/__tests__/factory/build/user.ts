@@ -1,4 +1,4 @@
-import { SerializedUser } from 'serializers/user';
+import { SerializedUser } from '@linen/types';
 
 export default function createUser(options?: object): SerializedUser {
   return {

@@ -1,7 +1,7 @@
 import CommunityButton from 'components/CommunityButton';
 import { capitalize } from 'utilities/string';
 import { integrationAuthorizer } from 'utilities/communityAuthorizers';
-import { SerializedAccount } from 'serializers/account';
+import { SerializedAccount } from '@linen/types';
 import { toast } from 'components/Toast';
 import { GoCheck, GoAlert, GoInfo } from 'react-icons/go';
 

@@ -7,8 +7,8 @@ import serializeAccount from '../serializers/account';
 import serializeThread from '../serializers/thread';
 import { ThreadsWithMessagesFull } from 'types/partialTypes';
 import { decodeCursor, encodeCursor } from '../utilities/cursor';
+import { SerializedChannel } from '@linen/types';
 import {
-  ChannelSerialized,
   findChannelsByAccount,
   shouldThisChannelBeAnonymous,
 } from '../lib/channel';
@@ -131,7 +131,7 @@ export async function channelGetServerSideProps(
 }
 
 function findChannelOrDefault(
-  channels: ChannelSerialized[],
+  channels: SerializedChannel[],
   channelName: string
 ) {
   if (channelName) {

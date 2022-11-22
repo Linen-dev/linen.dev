@@ -1,7 +1,7 @@
 import React, { createRef } from 'react';
 import MessageForm from 'components/MessageForm';
 import { fetchMentions, upload } from 'components/MessageForm/api';
-import { UploadedFile } from 'types/shared';
+import { UploadedFile } from '@linen/types';
 import styles from './index.module.scss';
 
 interface Props {

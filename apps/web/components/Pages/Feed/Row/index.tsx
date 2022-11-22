@@ -5,8 +5,8 @@ import { Avatar, Checkbox } from '@linen/ui';
 import Title from './Title';
 import Description from './Description';
 import styles from './index.module.css';
-import { SerializedThread } from 'serializers/thread';
-import { Permissions } from 'types/shared';
+import { SerializedThread } from '@linen/types';
+import { Permissions } from '@linen/types';
 
 interface Props {
   thread: SerializedThread;

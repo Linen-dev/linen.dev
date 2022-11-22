@@ -1,8 +1,7 @@
 import { update } from 'pages/api/threads/[id]';
 import { build } from '__tests__/factory';
 import prisma from 'client';
-import { SerializedThread } from 'serializers/thread';
-import { ThreadState } from '@prisma/client';
+import { SerializedThread, ThreadState } from '@linen/types';
 
 describe('update', () => {
   describe('when the user has manage permissions', () => {

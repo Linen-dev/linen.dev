@@ -1,14 +1,16 @@
 import { useCallback } from 'react';
 import axios from 'axios';
-import { MessageFormat } from '@prisma/client';
+import { MessageFormat } from '@linen/types';
 import { useRouter } from 'next/router';
 import Autocomplete from '../Autocomplete';
 import type { messages } from '@prisma/client';
 import Suggestion from './Suggestion';
-import { SerializedThread } from 'serializers/thread';
-import { SerializedUser } from 'serializers/user';
+import {
+  SerializedChannel,
+  SerializedThread,
+  SerializedUser,
+} from '@linen/types';
 import styles from './index.module.css';
-import { ChannelSerialized } from 'lib/channel';
 
 const parseResults = (data: messages[]) => {
   const allIds = new Set();
@@ -38,7 +40,7 @@ const SearchBar = ({
   communityType,
 }: {
   borderColor: string;
-  channels: ChannelSerialized[];
+  channels: SerializedChannel[];
   communityName: string;
   isSubDomainRouting: boolean;
   communityType: string;

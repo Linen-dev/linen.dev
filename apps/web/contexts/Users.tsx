@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState } from 'react';
-import { SerializedUser } from 'serializers/user';
+import { SerializedUser } from '@linen/types';
 import unionBy from 'lodash.unionby';
 
 const Context = createContext<[SerializedUser[], any]>([[], () => {}]);

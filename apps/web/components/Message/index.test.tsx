@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import Message from '.';
-import { MessageFormat } from '@prisma/client';
+import { MessageFormat } from '@linen/types';
 
 describe('Message', () => {
   describe('linen format', () => {

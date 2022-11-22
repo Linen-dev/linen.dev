@@ -3,8 +3,7 @@ import prisma from '../../../client';
 import { findThreadById } from 'lib/threads';
 import serializeThread from 'serializers/thread';
 import PermissionsService from 'services/permissions';
-import { Permissions } from 'types/shared';
-import { ThreadState } from '@prisma/client';
+import { Permissions, ThreadState } from '@linen/types';
 
 interface UpdateProps {
   permissions: Permissions;

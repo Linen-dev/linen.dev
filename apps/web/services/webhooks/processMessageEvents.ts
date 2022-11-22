@@ -12,10 +12,10 @@ import { createSlug } from 'utilities/util';
 import {
   accounts,
   channels,
-  MessageFormat,
   Prisma,
   slackAuthorizations,
 } from '@prisma/client';
+import { MessageFormat } from '@linen/types';
 import { findOrCreateUserFromUserInfo } from 'lib/users';
 import { parseSlackSentAt, tsToSentAt } from 'utilities/sentAt';
 import { findChannelWithAccountByExternalId } from 'lib/channel';

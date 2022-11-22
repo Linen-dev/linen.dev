@@ -1,13 +1,5 @@
 import type { users } from '@prisma/client';
-
-export interface SerializedUser {
-  id: string;
-  authsId: string | null;
-  username: string | null;
-  displayName: string | null;
-  externalUserId: string | null;
-  profileImageUrl: string | null;
-}
+import { SerializedUser } from '@linen/types';
 
 export function username(displayName: string | null) {
   if (!displayName) {
@@ -16,7 +8,7 @@ export function username(displayName: string | null) {
   return displayName.toLowerCase().replace(/\s+/g, '.');
 }
 
-export default function serialize(user: users) {
+export default function serialize(user: users): SerializedUser {
   return {
     id: user.id,
     authsId: user.authsId,

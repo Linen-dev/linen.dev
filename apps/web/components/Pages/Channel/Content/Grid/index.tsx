@@ -1,9 +1,8 @@
 import CustomLink from 'components/Link/CustomLink';
-import { SerializedThread } from 'serializers/thread';
+import { SerializedThread } from '@linen/types';
 import Row from '../Row';
-import type { Settings } from 'serializers/account/settings';
-import { SerializedUser } from 'serializers/user';
-import { Permissions } from 'types/shared';
+import { SerializedUser } from '@linen/types';
+import { Permissions, Settings } from '@linen/types';
 import { Mode } from 'hooks/mode';
 import styles from './index.module.scss';
 

@@ -1,8 +1,7 @@
 import React from 'react';
 import Reaction from './Reaction';
 import styles from './index.module.css';
-import { SerializedReaction } from 'serializers/reaction';
-import { SerializedUser } from 'serializers/user';
+import { SerializedReaction, SerializedUser } from '@linen/types';
 
 interface Props {
   reactions?: SerializedReaction[];

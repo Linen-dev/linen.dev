@@ -1,5 +1,5 @@
 import NativeSelect from 'components/NativeSelect';
-import { Scope } from 'types/shared';
+import { Scope } from '@linen/types';
 
 interface Props {
   onChange(type: string, value: string): void;

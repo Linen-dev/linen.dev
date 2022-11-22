@@ -3,7 +3,7 @@ import Emoji from '../Emoji';
 import Paragraph from './Paragraph';
 import { decodeHTML } from '../utilities/string';
 import { tokenize, Token } from 'utilities/markdown';
-import { MessageFormat } from '@prisma/client';
+import { MessageFormat } from '@linen/types';
 
 interface Props {
   value: string;

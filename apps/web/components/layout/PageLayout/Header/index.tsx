@@ -6,9 +6,8 @@ import SearchBar from 'components/search/SearchBar';
 import JoinButton from 'components/JoinButton';
 import { addHttpsToUrl } from 'utilities/url';
 import { pickTextColorBasedOnBgColor } from 'utilities/colors';
-import { Permissions } from 'types/shared';
-import { Settings } from 'serializers/account/settings';
-import type { ChannelSerialized } from 'lib/channel';
+import { Permissions } from '@linen/types';
+import { SerializedChannel, Settings } from '@linen/types';
 import UserAvatar from './UserAvatar';
 import { Mode } from 'hooks/mode';
 import styles from './index.module.scss';
@@ -17,7 +16,7 @@ import MobileMenu from './MobileMenu';
 
 interface Props {
   settings: Settings;
-  channels: ChannelSerialized[];
+  channels: SerializedChannel[];
   channelName?: string;
   isSubDomainRouting: boolean;
   permissions: Permissions;

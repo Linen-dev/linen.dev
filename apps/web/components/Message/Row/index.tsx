@@ -5,16 +5,18 @@ import classNames from 'classnames';
 import DraggableRow from './DraggableRow';
 import Message from '../../Message';
 import { format } from 'utilities/date';
-import { SerializedThread } from 'serializers/thread';
-import { SerializedMessage } from 'serializers/message';
-import { Settings } from 'serializers/account/settings';
-import { SerializedUser } from 'serializers/user';
-import { ThreadState } from '@prisma/client';
 import styles from './index.module.scss';
 import CheckIcon from 'components/icons/CheckIcon';
 import Actions from 'components/Actions';
-import { Permissions } from 'types/shared';
 import { Mode } from 'hooks/mode';
+import {
+  Permissions,
+  Settings,
+  SerializedMessage,
+  SerializedThread,
+  SerializedUser,
+  ThreadState,
+} from '@linen/types';
 
 interface Props {
   className?: string;

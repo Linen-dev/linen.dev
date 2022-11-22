@@ -1,8 +1,7 @@
 import React from 'react';
 import PageLayout from 'components/layout/PageLayout';
 import { channels } from '@prisma/client';
-import { Settings } from 'serializers/account/settings';
-import { Permissions } from 'types/shared';
+import { Permissions, Settings } from '@linen/types';
 
 import Content from './Content';
 

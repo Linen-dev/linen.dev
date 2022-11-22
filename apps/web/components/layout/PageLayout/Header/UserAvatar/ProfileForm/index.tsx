@@ -3,7 +3,7 @@ import AvatarField from './AvatarField';
 import TextField from 'components/TextField';
 import Button from 'components/Button';
 import { toast } from 'components/Toast';
-import { SerializedUser } from 'serializers/user';
+import { SerializedUser } from '@linen/types';
 import {
   FILE_SIZE_LIMIT_IN_BYTES,
   getFileSizeErrorMessage,

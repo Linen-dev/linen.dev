@@ -1,6 +1,6 @@
 import React from 'react';
 import { Period } from 'pages/settings/plans';
-import { SerializedAccount } from '../../../serializers/account';
+import { SerializedAccount } from '@linen/types';
 import { isStripeEnabled } from 'utilities/featureFlags';
 import { GoCheck } from 'react-icons/go';
 

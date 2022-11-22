@@ -7,7 +7,7 @@ import { Selections } from '../types';
 import Pagination from './Pagination';
 import ScopeSelect from './ScopeSelect';
 import { GoComment, GoCheck, GoSync } from 'react-icons/go';
-import type { Permissions } from 'types/shared';
+import type { Permissions } from '@linen/types';
 
 interface Props {
   state: string;

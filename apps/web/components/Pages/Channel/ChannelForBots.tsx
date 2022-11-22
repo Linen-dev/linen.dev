@@ -3,7 +3,7 @@ import Grid from './Content/Grid';
 import { ChannelProps } from '.';
 import PageLayout from 'components/layout/PageLayout';
 import { buildChannelSeo } from 'utilities/seo';
-import { ChannelSerialized } from 'lib/channel';
+import { SerializedChannel } from '@linen/types';
 
 export default function ChannelForBots({
   threads,
@@ -28,7 +28,7 @@ export default function ChannelForBots({
           threads,
         }),
       }}
-      channels={channels as ChannelSerialized[]}
+      channels={channels as SerializedChannel[]}
       settings={settings}
       isSubDomainRouting={isSubDomainRouting}
       permissions={permissions}

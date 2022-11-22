@@ -2,9 +2,8 @@ import { NextApiRequest, NextApiResponse } from 'next/types';
 import PermissionsService from 'services/permissions';
 import CommunityService from 'services/community';
 import prisma from 'client';
-import { ThreadState } from '@prisma/client';
 import serializeThread from 'serializers/thread';
-import { Scope } from 'types/shared';
+import { Scope, ThreadState } from '@linen/types';
 import ChannelsService from 'services/channels';
 import { anonymizeMessages } from 'utilities/anonymizeMessages';
 

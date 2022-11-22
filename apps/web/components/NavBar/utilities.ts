@@ -1,8 +1,8 @@
-import type { ChannelSerialized } from 'lib/channel';
+import { SerializedChannel } from '@linen/types';
 
 export function sortByChannelName(
-  channels: ChannelSerialized[]
-): ChannelSerialized[] {
+  channels: SerializedChannel[]
+): SerializedChannel[] {
   return channels.sort((a, b) => {
     if (a.channelName < b.channelName) {
       return -1;

@@ -1,6 +1,7 @@
 import { updateNextPageCursor } from 'lib/models';
 import { AccountWithSlackAuthAndChannels, UserMap } from 'types/partialTypes';
-import { channels, MessageFormat } from '@prisma/client';
+import { channels } from '@prisma/client';
+import { MessageFormat } from '@linen/types';
 
 import prisma from '../../../client';
 import type { ConversationHistoryMessage } from '../api';

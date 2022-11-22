@@ -1,12 +1,11 @@
 import DraggableRow from 'components/Pages/Channel/Content/Row/DraggableRow';
 import { Avatars } from '@linen/ui';
 import Image from 'next/image';
-import type { Settings } from 'serializers/account/settings';
 import Row from 'components/Message/Row';
 import styles from './index.module.scss';
-import { SerializedThread } from 'serializers/thread';
-import { SerializedUser } from 'serializers/user';
-import { Permissions } from 'types/shared';
+import { SerializedThread } from '@linen/types';
+import { SerializedUser } from '@linen/types';
+import { Permissions, Settings } from '@linen/types';
 import { Mode } from 'hooks/mode';
 
 export const uniqueUsers = (users: SerializedUser[]): SerializedUser[] => {

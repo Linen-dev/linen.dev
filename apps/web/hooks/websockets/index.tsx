@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Channel, Socket } from 'phoenix';
-import { Permissions } from 'types/shared';
+import { Permissions } from '@linen/types';
 import type { PushMessageType } from 'services/push';
 
 interface Props {

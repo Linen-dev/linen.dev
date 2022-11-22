@@ -1,10 +1,10 @@
-import type { Settings } from 'serializers/account/settings';
+import { CommunityType, Settings } from '@linen/types';
 
 export default function createSettings(options?: object): Settings {
   return {
     communityId: '1234',
     communityName: 'foo',
-    communityType: 'linen',
+    communityType: CommunityType.linen,
     brandColor: 'black',
     homeUrl: 'https://foo.com',
     docsUrl: 'https://foo.com/docs',

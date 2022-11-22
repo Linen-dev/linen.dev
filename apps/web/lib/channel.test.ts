@@ -1,7 +1,7 @@
 import { findChannelsByAccount } from './channel';
 import prisma from 'client';
 import { v4 } from 'uuid';
-import { AccountType, MessageFormat } from '@prisma/client';
+import { AccountType, MessageFormat } from '@linen/types';
 
 describe('channel lib', () => {
   describe('as crawler, finding channels by account', () => {

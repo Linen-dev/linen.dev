@@ -5,8 +5,7 @@ import { FiBarChart, FiMenu, FiHash, FiRss, FiLogOut } from 'react-icons/fi';
 import Link from 'components/Link/InternalLink';
 import Modal from 'components/Modal';
 import styles from './index.module.scss';
-import { SerializedChannel } from 'serializers/channel';
-import { Permissions } from 'types/shared';
+import { Permissions, SerializedChannel } from '@linen/types';
 import { signOut } from 'next-auth/react';
 import usePath from 'hooks/path';
 

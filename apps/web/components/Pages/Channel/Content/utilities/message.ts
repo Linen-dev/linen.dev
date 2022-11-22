@@ -1,8 +1,11 @@
 import { v4 as uuid } from 'uuid';
-import { SerializedMessage } from 'serializers/message';
-import { username, SerializedUser } from 'serializers/user';
-import { UploadedFile } from 'types/shared';
-import { MessageFormat } from '@prisma/client';
+import { username } from 'serializers/user';
+import {
+  MessageFormat,
+  SerializedMessage,
+  SerializedUser,
+  UploadedFile,
+} from '@linen/types';
 
 export function createMessageImitation({
   message,

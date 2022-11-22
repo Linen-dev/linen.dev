@@ -4,7 +4,7 @@ import Permissions from 'services/permissions';
 import CommunityService from 'services/community';
 import serializeThread from 'serializers/thread';
 import { anonymizeMessages } from 'utilities/anonymizeMessages';
-import { Permissions as PermissionsType } from 'types/shared';
+import { Permissions as PermissionsType } from '@linen/types';
 
 export async function create({
   messageId,

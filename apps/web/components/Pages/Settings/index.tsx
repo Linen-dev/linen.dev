@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import DashboardLayout from 'components/layout/DashboardLayout';
 import { toast } from 'components/Toast';
-import { SerializedAccount } from 'serializers/account';
+import { SerializedAccount } from '@linen/types';
 import type { channels, AccountType } from '@prisma/client';
 import LinkCard from './Settings/LinkCard';
 import ChannelsDefault from './Settings/ChannelsDefault';

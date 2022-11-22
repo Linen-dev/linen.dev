@@ -1,28 +1,17 @@
 import { MessageForSerialization } from '../types/partialTypes';
-import { SerializedAttachment } from '../types/shared';
-import serializeUser, { SerializedUser } from 'serializers/user';
-import serializeReaction, { SerializedReaction } from 'serializers/reaction';
+import {
+  SerializedAttachment,
+  SerializedMessage,
+  SerializedUser,
+} from '@linen/types';
+import serializeUser from 'serializers/user';
+import serializeReaction from 'serializers/reaction';
 import type {
   users,
   mentions,
   messageAttachments,
   messageReactions,
-  MessageFormat,
 } from '@prisma/client';
-
-export interface SerializedMessage {
-  id: string;
-  body: string;
-  sentAt: string;
-  usersId: string;
-  mentions: SerializedUser[];
-  attachments: SerializedAttachment[];
-  reactions: SerializedReaction[];
-  threadId: string;
-  externalId?: string;
-  author?: SerializedUser | null;
-  messageFormat: MessageFormat;
-}
 
 function serializeAttachment(
   attachment: messageAttachments

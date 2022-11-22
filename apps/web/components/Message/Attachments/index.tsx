@@ -1,6 +1,6 @@
 import React from 'react';
 import Attachment from './Attachment';
-import { SerializedAttachment } from 'types/shared';
+import { SerializedAttachment } from '@linen/types';
 import styles from './index.module.css';
 import { isImage } from '../Link/utilities';
 import Image from '../Link/Image';

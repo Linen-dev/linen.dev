@@ -2,7 +2,7 @@ import Message from 'components/Message';
 import { EMOJIS } from 'components/Message/Emoji/utilities/emojis';
 import Example from '../Example';
 
-import { MessageFormat } from '@prisma/client';
+import { MessageFormat } from '@linen/types';
 
 const STACK_TRACE_EXAMPLE = `
 Apr 07 04:38:57 ip-10-0-74-131 kernel: watchdog: BUG: soft lockup - CPU#1 stuck for 22s! [kauditd:22]
