@@ -77,4 +77,4 @@ function stringify(tree) {
   return output;
 }
 
-export default stringify;
+module.exports = stringify;
