@@ -32,7 +32,6 @@
   },
   "dependencies": {
     "@headlessui/react": "^1.7.3",
-    "@linen/config": "*",
     "@linen/styles": "*",
     "@linen/ui": "*",
     "@prisma/client": "^3.15.2",
