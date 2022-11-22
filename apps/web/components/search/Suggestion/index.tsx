@@ -1,10 +1,11 @@
 import React from 'react';
 import Image from 'next/image';
-import { users, MessageFormat } from '@prisma/client';
+import { users } from '@prisma/client';
+import { MessageFormat } from '@linen/types';
 import { Avatar } from '@linen/ui';
 import Message from '../../Message';
 import styles from './index.module.css';
-import { SerializedUser } from 'serializers/user';
+import { SerializedUser } from '@linen/types';
 
 interface Props {
   body: string;

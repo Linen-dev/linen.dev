@@ -4,7 +4,7 @@ import { StickyHeader } from '@linen/ui';
 import classNames from 'classnames';
 import { ThreadState } from '@prisma/client';
 import { GoCheck, GoChevronLeft, GoX, GoSync } from 'react-icons/go';
-import { SerializedThread } from 'serializers/thread';
+import { SerializedThread } from '@linen/types';
 import styles from './index.module.scss';
 
 interface Props {

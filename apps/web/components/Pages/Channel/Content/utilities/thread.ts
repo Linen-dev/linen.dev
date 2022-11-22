@@ -1,9 +1,13 @@
 import { v4 as uuid } from 'uuid';
-import { SerializedThread } from 'serializers/thread';
-import { SerializedUser, username } from 'serializers/user';
-import { MessageFormat, ThreadState } from '@prisma/client';
-import { ChannelSerialized } from 'lib/channel';
-import { UploadedFile } from 'types/shared';
+import { username } from 'serializers/user';
+import {
+  MessageFormat,
+  SerializedChannel,
+  SerializedThread,
+  SerializedUser,
+  ThreadState,
+  UploadedFile,
+} from '@linen/types';
 
 export function createThreadImitation({
   message,
@@ -16,7 +20,7 @@ export function createThreadImitation({
   author: SerializedUser;
   files: UploadedFile[];
   mentions: SerializedUser[];
-  channel: ChannelSerialized;
+  channel: SerializedChannel;
 }): SerializedThread {
   return {
     id: uuid(),
@@ -50,9 +54,11 @@ export function createThreadImitation({
     ],
     messageCount: 1,
     channel: {
+      id: '1',
       channelName: channel.channelName,
       hidden: channel.hidden,
       default: channel.default,
+      accountId: null,
     },
     channelId: channel.id,
     hidden: false,

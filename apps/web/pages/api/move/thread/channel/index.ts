@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next/types';
 import prisma from 'client';
 import Permissions from 'services/permissions';
 import CommunityService from 'services/community';
-import { Permissions as PermissionsType } from 'types/shared';
+import { Permissions as PermissionsType } from '@linen/types';
 
 export async function create({
   threadId,

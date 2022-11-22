@@ -1,6 +1,6 @@
 import QAPageJsonLd, { Question } from 'utilities/seo/QAPageJsonLd';
-import { SerializedThread } from 'serializers/thread';
-import { SerializedMessage } from 'serializers/message';
+import { SerializedThread } from '@linen/types';
+import { SerializedMessage } from '@linen/types';
 import { cleanUpStringForSeo } from 'utilities/string';
 
 function buildNameText(messages: SerializedMessage[]): Question {

@@ -1,10 +1,10 @@
-import { SerializedThread } from 'serializers/thread';
-import { SerializedMessage } from 'serializers/message';
-import { SerializedUser } from 'serializers/user';
+import { SerializedThread } from '@linen/types';
+import { SerializedMessage } from '@linen/types';
+import { SerializedUser } from '@linen/types';
 import styles from './index.module.css';
 import { parse, walk } from '@linen/ast';
 import { truncate } from 'utilities/string';
-import { MessageFormat } from '@prisma/client';
+import { MessageFormat } from '@linen/types';
 
 interface Props {
   thread: SerializedThread;

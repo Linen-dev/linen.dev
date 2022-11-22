@@ -1,6 +1,6 @@
 import { capitalize, cleanUpStringForSeo } from 'utilities/string';
-import { Settings } from 'serializers/account/settings';
-import { SerializedThread } from 'serializers/thread';
+import { Settings } from '@linen/types';
+import { SerializedThread } from '@linen/types';
 import { LINEN_URL } from '../../constants';
 
 export function buildChannelSeo({

@@ -1,8 +1,12 @@
-import { channels, users, ThreadState } from '@prisma/client';
-import { Permissions } from 'types/shared';
-import { SerializedUser } from 'serializers/user';
-import { SerializedAccount } from 'serializers/account';
-import { SerializedThread } from 'serializers/thread';
+import { channels, users } from '@prisma/client';
+import {
+  Permissions,
+  SerializedAccount,
+  SerializedChannel,
+  SerializedThread,
+  SerializedUser,
+  ThreadState,
+} from '@linen/types';
 
 export type ThreadByIdResponse = ThreadById | { notFound: boolean };
 
@@ -19,11 +23,11 @@ export type ThreadById = {
   thread: SerializedThread;
   externalThreadId: string | null;
   channelId: string;
-  currentChannel: ChannelSerialized;
+  currentChannel: SerializedChannel;
   currentCommunity: SerializedAccount | null;
-  channel: ChannelSerialized;
+  channel: SerializedChannel;
   authors: users[];
-  channels: ChannelSerialized[];
+  channels: SerializedChannel[];
   threadUrl: string | null;
   settings: Settings;
   pathCursor: string;

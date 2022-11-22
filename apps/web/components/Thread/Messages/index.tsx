@@ -1,10 +1,10 @@
 import React from 'react';
 import classNames from 'classnames';
 import Row from 'components/Message/Row';
-import { SerializedThread } from 'serializers/thread';
-import { SerializedUser } from 'serializers/user';
-import { Settings } from 'serializers/account/settings';
-import { Permissions } from 'types/shared';
+import { SerializedThread } from '@linen/types';
+import { SerializedUser } from '@linen/types';
+import { Settings } from '@linen/types';
+import { Permissions } from '@linen/types';
 import { Mode } from 'hooks/mode';
 import styles from './index.module.scss';
 

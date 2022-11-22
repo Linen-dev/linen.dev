@@ -1,5 +1,5 @@
 import React from 'react';
-import { SerializedAttachment } from 'types/shared';
+import { SerializedAttachment } from '@linen/types';
 import styles from './index.module.css';
 import { GoCloudDownload } from 'react-icons/go';
 

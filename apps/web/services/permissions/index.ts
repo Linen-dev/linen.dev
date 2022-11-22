@@ -15,7 +15,7 @@ import {
 import Session from '../session';
 import { findAccountByPath } from 'lib/models';
 import prisma from 'client';
-import { Permissions } from 'types/shared';
+import { Permissions } from '@linen/types';
 import { findAuthByEmail } from 'lib/users';
 
 type Request = GetServerSidePropsContext['req'] | NextApiRequest;

@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import { useLinkContext } from 'contexts/Link';
-import type { ChannelSerialized } from 'lib/channel';
+import { SerializedChannel } from '@linen/types';
 import NativeSelect from 'components/NativeSelect';
 import CustomRouterPush from 'components/Link/CustomRouterPush';
 import { FiHash } from 'react-icons/fi';
@@ -11,7 +11,7 @@ import styles from './index.module.scss';
 interface Props {
   className?: string;
   value: string;
-  channels: ChannelSerialized[];
+  channels: SerializedChannel[];
 }
 
 export default function ChannelSelect({ className, value, channels }: Props) {
@@ -28,7 +28,7 @@ export default function ChannelSelect({ className, value, channels }: Props) {
   };
 
   const options = [
-    ...channels.map((channel: ChannelSerialized) => ({
+    ...channels.map((channel: SerializedChannel) => ({
       label: channel.channelName,
       value: channel.channelName,
     })),

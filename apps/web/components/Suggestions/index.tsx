@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import classNames from 'classnames';
 import styles from './index.module.css';
-import { SerializedUser } from 'serializers/user';
+import { SerializedUser } from '@linen/types';
 
 interface Props {
   className?: string;

@@ -1,7 +1,7 @@
 import Button from 'components/Button';
 import { useS3Upload } from 'next-s3-upload';
 import { useRef, useState } from 'react';
-import { SerializedAccount } from 'serializers/account';
+import { SerializedAccount } from '@linen/types';
 import { toast } from 'components/Toast';
 import { qs } from 'utilities/url';
 

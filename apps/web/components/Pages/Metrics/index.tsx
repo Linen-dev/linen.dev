@@ -2,10 +2,12 @@ import React from 'react';
 import PageLayout from 'components/layout/PageLayout';
 import Header from './Header';
 import Content from './Content';
-import { SerializedAccount } from 'serializers/account';
-import { SerializedChannel } from 'serializers/channel';
-import { Settings } from 'serializers/account/settings';
-import { Permissions } from 'types/shared';
+import {
+  Permissions,
+  SerializedAccount,
+  SerializedChannel,
+  Settings,
+} from '@linen/types';
 
 interface Props {
   channels: SerializedChannel[];

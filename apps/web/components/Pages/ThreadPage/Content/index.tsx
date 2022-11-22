@@ -1,21 +1,23 @@
 import { useState, useRef } from 'react';
 import { Thread } from 'components/Thread';
 import { scrollToBottom } from 'utilities/scroll';
-import { ThreadState } from '@prisma/client';
+import { ThreadState } from '@linen/types';
 import { useUsersContext } from 'contexts/Users';
 import { useJoinContext } from 'contexts/Join';
 import { sendMessageWrapper } from './sendMessageWrapper';
 import { toast } from 'components/Toast';
-import { SerializedThread } from 'serializers/thread';
-import { SerializedAccount } from 'serializers/account';
-import type { Settings } from 'serializers/account/settings';
-import type { ChannelSerialized } from 'lib/channel';
-import { Permissions } from 'types/shared';
-import { SerializedMessage } from 'serializers/message';
+import {
+  Permissions,
+  SerializedAccount,
+  SerializedChannel,
+  SerializedMessage,
+  SerializedThread,
+  Settings,
+} from '@linen/types';
 
 interface Props {
   thread: SerializedThread;
-  currentChannel: ChannelSerialized;
+  currentChannel: SerializedChannel;
   currentCommunity: SerializedAccount | null;
   threadUrl: string | null;
   isSubDomainRouting: boolean;

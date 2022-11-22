@@ -10,6 +10,7 @@
   "dependencies": {
     "@linen/ast": "*",
     "@linen/styles": "*",
+    "@linen/types": "*",
     "@linen/ui": "*",
     "@tauri-apps/api": "^1.1.0",
     "classnames": "^2.3.2",

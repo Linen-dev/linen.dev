@@ -1,9 +1,6 @@
 import { useState, useRef, useCallback } from 'react';
 import SidebarLayout from 'components/layout/shared/SidebarLayout';
-import { ThreadState } from '@prisma/client';
-import { SerializedThread } from 'serializers/thread';
-import { Settings } from 'serializers/account/settings';
-import { Permissions, Scope } from 'types/shared';
+import { Permissions, Scope } from '@linen/types';
 import { Pages } from '@linen/ui';
 import Filters from '../Filters';
 import Grid from '../Grid';
@@ -19,8 +16,13 @@ import { useJoinContext } from 'contexts/Join';
 import useFeedWebsockets from 'hooks/websockets/feed';
 import type { CommunityPushType } from 'services/push';
 import { toast } from 'components/Toast';
-import { SerializedMessage } from 'serializers/message';
 import { manageSelections } from '../utilities/selection';
+import {
+  SerializedMessage,
+  SerializedThread,
+  Settings,
+  ThreadState,
+} from '@linen/types';
 
 const { Header } = Pages.Feed;
 

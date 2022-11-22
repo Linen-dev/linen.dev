@@ -1,4 +1,5 @@
-import { accounts, MessageFormat, users } from '@prisma/client';
+import { accounts, users } from '@prisma/client';
+import { MessageFormat } from '@linen/types';
 import prisma from '../../client';
 
 import messages from './messages';

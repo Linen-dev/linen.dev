@@ -1,4 +1,4 @@
-import type { Settings } from 'serializers/account/settings';
+import { Settings } from '@linen/types';
 import { getThreadUrl } from './url';
 
 describe('#getThreadUrl', () => {

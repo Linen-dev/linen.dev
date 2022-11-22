@@ -1,6 +1,10 @@
-import serializeAccount, { SerializedAccount } from 'serializers/account';
+import serializeAccount from 'serializers/account';
 import prisma from 'client';
-import { AccountIntegration, AccountType } from '@prisma/client';
+import {
+  AccountIntegration,
+  AccountType,
+  SerializedAccount,
+} from '@linen/types';
 import Layout from 'components/layout/CardLayout';
 import H1 from 'components/H1';
 import H2 from 'components/H2';

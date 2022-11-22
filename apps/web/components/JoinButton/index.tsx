@@ -2,7 +2,7 @@ import React from 'react';
 import JoinLinen from './JoinLinen';
 import JoinDiscord from './JoinDiscord';
 import JoinSlack from './JoinSlack';
-import type { Settings } from 'serializers/account/settings';
+import { Settings } from '@linen/types';
 
 interface Props {
   settings: Settings;

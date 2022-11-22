@@ -4,15 +4,14 @@ import { FiRss } from 'react-icons/fi';
 import { useRouter } from 'next/router';
 import Link from 'components/Link/InternalLink';
 import { Nav } from '@linen/ui';
-import type { ChannelSerialized } from 'lib/channel';
 import ChannelSelect from './ChannelSelect';
-import { Permissions } from 'types/shared';
+import { Permissions, SerializedChannel } from '@linen/types';
 import usePath from 'hooks/path';
 import styles from './index.module.scss';
 
 interface Props {
   channelName: string;
-  channels: ChannelSerialized[];
+  channels: SerializedChannel[];
   permissions: Permissions;
 }
 

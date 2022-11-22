@@ -1,23 +1,6 @@
 import { accounts } from '@prisma/client';
-import { CommunityType } from 'serializers/account';
 import { links } from '../../constants/examples';
-
-export type Settings = {
-  communityId: string;
-  communityType: CommunityType;
-  googleAnalyticsId?: string | undefined;
-  googleSiteVerification?: string | undefined;
-  name: string | null;
-  brandColor: string;
-  homeUrl: string;
-  docsUrl: string;
-  logoUrl: string;
-  communityUrl: string;
-  communityInviteUrl: string;
-  communityName: string;
-  redirectDomain?: string;
-  prefix?: 'd' | 's';
-};
+import { CommunityType, Settings } from '@linen/types';
 
 function buildInviteUrl(account: accounts, communityType: CommunityType) {
   if (account.communityInviteUrl) {

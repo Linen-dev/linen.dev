@@ -1,19 +1,22 @@
-import { useEffect, useState } from 'react';
-import { ThreadState } from '@prisma/client';
+import { useEffect } from 'react';
 import Header from './Header';
 import Messages from './Messages';
 import JoinChannelLink from 'components/Link/JoinChannelLink';
-import { SerializedThread } from 'serializers/thread';
-import { SerializedUser } from 'serializers/user';
-import type { Settings } from 'serializers/account/settings';
 import MessageForm from 'components/MessageForm';
 import { fetchMentions, upload } from 'components/MessageForm/api';
-import { Permissions, UploadedFile } from 'types/shared';
+import {
+  Permissions,
+  SerializedMessage,
+  SerializedThread,
+  SerializedUser,
+  Settings,
+  ThreadState,
+  UploadedFile,
+} from '@linen/types';
 import { Mode } from 'hooks/mode';
 import styles from './index.module.scss';
 import classNames from 'classnames';
 import useThreadWebsockets from 'hooks/websockets/thread';
-import { SerializedMessage } from 'serializers/message';
 
 interface Props {
   thread: SerializedThread;

@@ -1,5 +1,5 @@
-import { SerializedThread } from 'serializers/thread';
-import { Settings } from 'serializers/account/settings';
+import { SerializedThread } from '@linen/types';
+import { Settings } from '@linen/types';
 import { buildChannelSeo } from './buildChannelSeo';
 
 describe('buildChannelSeo', () => {

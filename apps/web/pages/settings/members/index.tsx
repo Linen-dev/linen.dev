@@ -1,11 +1,12 @@
 import { findAccountAndUserByEmail } from 'lib/models';
-import serializeAccount, { SerializedAccount } from 'serializers/account';
+import serializeAccount from 'serializers/account';
 import { NextPageContext } from 'next';
 import { getSession } from 'next-auth/react';
 import Members, { MembersType } from 'components/Pages/Settings/Members';
 import type { Session } from 'next-auth';
 import { findUsersAndInvitesByAccount } from 'services/invites';
-import { auths, invites, Roles, users } from '@prisma/client';
+import { auths, invites, users } from '@prisma/client';
+import { Roles, SerializedAccount } from '@linen/types';
 
 export interface MembersPageProps {
   session: Session;

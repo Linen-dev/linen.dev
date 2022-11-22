@@ -1,5 +1,6 @@
-import { messages, MessageFormat, Prisma } from '@prisma/client';
+import { messages } from '@prisma/client';
 import prisma from 'client';
+import { MessageFormat } from '@linen/types';
 
 export default async function createMessage(
   options?: Partial<messages>

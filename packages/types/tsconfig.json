@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "moduleResolution": "node",
+    "allowJs": true,
+    "noEmit": false,
+    "strict": true,
+    "esModuleInterop": true,
+    "declaration": true,
+    "declarationDir": "."
+  },
+  "include": ["index.ts"],
+  "exclude": []
+}

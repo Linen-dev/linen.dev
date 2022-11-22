@@ -4,11 +4,12 @@ import { prisma } from 'client';
 import serializeMessage from 'serializers/message';
 import { find, parse } from '@linen/ast';
 import { eventNewMessage } from 'services/events';
-import { MessageFormat, Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client';
+import { MessageFormat } from '@linen/types';
 import PermissionsService from 'services/permissions';
 import { v4 as uuid } from 'uuid';
 import unique from 'lodash.uniq';
-import { UploadedFile } from 'types/shared';
+import { UploadedFile } from '@linen/types';
 
 async function handler(request: NextApiRequest, response: NextApiResponse) {
   if (request.method === 'POST') {

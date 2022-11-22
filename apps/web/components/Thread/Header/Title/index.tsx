@@ -3,7 +3,7 @@ import TextInput from 'components/TextInput';
 import { GoPencil } from 'react-icons/go';
 import classNames from 'classnames';
 import styles from './index.module.css';
-import { ThreadState } from '@prisma/client';
+import { ThreadState } from '@linen/types';
 import CheckIcon from 'components/icons/CheckIcon';
 
 enum Mode {

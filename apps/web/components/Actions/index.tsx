@@ -3,14 +3,11 @@ import classNames from 'classnames';
 import { getThreadUrl } from '../Pages/Channel/utilities/url';
 import { copyToClipboard } from 'utilities/clipboard';
 import { toast } from 'components/Toast';
-import { Permissions } from 'types/shared';
+import { Permissions, Settings, SerializedMessage } from '@linen/types';
 import { GoPin } from 'react-icons/go';
 import { AiOutlinePaperClip } from 'react-icons/ai';
 import { FiThumbsUp } from 'react-icons/fi';
-import type { Settings } from 'serializers/account/settings';
-import { SerializedThread } from 'serializers/thread';
-import { SerializedUser } from 'serializers/user';
-import { SerializedMessage } from 'serializers/message';
+import { SerializedThread, SerializedUser } from '@linen/types';
 import Tooltip from 'components/Tooltip';
 import styles from './index.module.scss';
 

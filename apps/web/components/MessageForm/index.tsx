@@ -10,7 +10,7 @@ import FileInput from './FileInput';
 import FilesCount from './FilesCount';
 import { isWhitespace } from 'utilities/string';
 import { getCaretPosition, setCaretPosition } from './utilities';
-import { SerializedUser } from 'serializers/user';
+import { SerializedUser } from '@linen/types';
 import { useUsersContext } from 'contexts/Users';
 import { postprocess } from './utilities/message';
 import {

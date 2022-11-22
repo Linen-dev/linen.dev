@@ -3,14 +3,17 @@ import React, { useEffect, useState } from 'react';
 import PageLayout from 'components/layout/PageLayout';
 import { toast } from 'components/Toast';
 import { buildChannelSeo } from 'utilities/seo';
-import { ChannelSerialized } from 'lib/channel';
 import Content from 'components/Pages/Channel/Content';
-import { SerializedAccount } from 'serializers/account';
-import { Settings } from 'serializers/account/settings';
-import { SerializedThread } from 'serializers/thread';
-import { SerializedMessage } from 'serializers/message';
-import { SerializedUser } from 'serializers/user';
-import { Permissions } from 'types/shared';
+import {
+  Permissions,
+  SerializedAccount,
+  SerializedChannel,
+  SerializedMessage,
+  SerializedThread,
+  SerializedUser,
+  Settings,
+  ThreadState,
+} from '@linen/types';
 import {
   postReaction,
   mergeThreadsRequest,
@@ -21,14 +24,13 @@ import {
 import { createThreadImitation } from './Content/utilities/thread';
 import useWebsockets from 'hooks/websockets';
 import { useUsersContext } from 'contexts/Users';
-import { ThreadState } from '@prisma/client';
 import ChannelForBots from './ChannelForBots';
 
 export interface ChannelProps {
   settings: Settings;
   channelName: string;
-  channels?: ChannelSerialized[];
-  currentChannel: ChannelSerialized;
+  channels?: SerializedChannel[];
+  currentChannel: SerializedChannel;
   currentCommunity: SerializedAccount | null;
   threads: SerializedThread[];
   pinnedThreads: SerializedThread[];
@@ -564,7 +566,7 @@ export default function Channel(props: ChannelProps) {
           threads,
         }),
       }}
-      channels={channels as ChannelSerialized[]}
+      channels={channels as SerializedChannel[]}
       settings={settings}
       isSubDomainRouting={isSubDomainRouting}
       permissions={permissions}

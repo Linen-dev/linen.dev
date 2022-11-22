@@ -1,13 +1,16 @@
 import React from 'react';
-import { SerializedThread } from 'serializers/thread';
-import { SerializedUser, username } from 'serializers/user';
+import {
+  MessageFormat,
+  SerializedMessage,
+  SerializedThread,
+  SerializedUser,
+  UploadedFile,
+} from '@linen/types';
+import { username } from 'serializers/user';
 import { FeedResponse } from '../types';
-import { SerializedMessage } from 'serializers/message';
 import { v4 as uuid } from 'uuid';
-import { MessageFormat, Roles } from '@prisma/client';
 import debounce from 'utilities/debounce';
 import { StartSignUpFn } from 'contexts/Join';
-import { UploadedFile } from 'types/shared';
 
 const debouncedSendMessage = debounce(
   ({

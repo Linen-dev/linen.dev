@@ -1,7 +1,7 @@
 import React from 'react';
 import SidebarLink from './SidebarLink';
 import { useRouter } from 'next/router';
-import { SerializedAccount } from 'serializers/account';
+import { SerializedAccount } from '@linen/types';
 import Logo from './Logo';
 import { isNewOnboardingButtonEnabled } from 'utilities/featureFlags';
 import {

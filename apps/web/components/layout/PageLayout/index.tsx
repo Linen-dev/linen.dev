@@ -1,24 +1,22 @@
+import axios, { AxiosRequestConfig } from 'axios';
 import { ErrorBoundary } from 'react-error-boundary';
 import Header from './Header';
 import NavBar from 'components/NavBar';
 import SEO, { type SeoProps } from '../SEO';
-import type { ChannelSerialized } from 'lib/channel';
 import GoogleAnalytics from '../GoogleAnalytics';
-import styles from './index.module.css';
 import classNames from 'classnames';
-import { Permissions } from 'types/shared';
+import { Permissions, SerializedChannel, Settings } from '@linen/types';
 import { LinkContext } from 'contexts/Link';
-import { Settings } from 'serializers/account/settings';
 import { put } from 'utilities/http';
 import useMode from 'hooks/mode';
-import axios, { AxiosRequestConfig } from 'axios';
+import styles from './index.module.css';
 
 interface Props {
   className?: string;
   seo?: SeoProps;
   children: React.ReactNode;
-  currentChannel?: ChannelSerialized;
-  channels: ChannelSerialized[];
+  currentChannel?: SerializedChannel;
+  channels: SerializedChannel[];
   settings: Settings;
   isSubDomainRouting: boolean;
   permissions: Permissions;
@@ -48,7 +46,7 @@ function PageLayout({
   innerRef,
   onDrop,
 }: Props) {
-  const channels = initialChannels.filter((c: ChannelSerialized) => !c.hidden);
+  const channels = initialChannels.filter((c: SerializedChannel) => !c.hidden);
   const { googleAnalyticsId, googleSiteVerification } = settings;
   const { mode } = useMode();
 

@@ -1,5 +1,5 @@
 import { parse, stringify, walk } from '@linen/ast';
-import { SerializedUser } from 'serializers/user';
+import { SerializedUser } from '@linen/types';
 
 function getTag(type: string) {
   switch (type) {

@@ -8,7 +8,7 @@ import * as s3Helper from 'services/aws/s3';
 import { saveAllThreads } from './saveAllThreads';
 import { createSlug } from 'utilities/util';
 import { parseSlackSentAt } from 'utilities/sentAt';
-import { MessageFormat } from '@prisma/client';
+import { MessageFormat } from '@linen/types';
 
 const account = {
   id: 'accountId123',
