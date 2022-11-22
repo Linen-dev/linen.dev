@@ -2,10 +2,7 @@ import { SerializedThread } from 'serializers/thread';
 import { SerializedMessage } from 'serializers/message';
 import { SerializedUser } from 'serializers/user';
 import styles from './index.module.css';
-import parseLinenMessage from 'utilities/message/parsers/linen';
-import parseSlackMessage from 'utilities/message/parsers/slack';
-import parseDiscordMessage from 'utilities/message/parsers/discord';
-import walk from 'utilities/message/walk';
+import { parse, walk } from '@linen/ast';
 import { truncate } from 'utilities/string';
 import { MessageFormat } from '@prisma/client';
 
@@ -14,9 +11,9 @@ interface Props {
 }
 
 const parsers = {
-  [MessageFormat.LINEN]: parseLinenMessage,
-  [MessageFormat.SLACK]: parseSlackMessage,
-  [MessageFormat.DISCORD]: parseDiscordMessage,
+  [MessageFormat.LINEN]: parse.linen,
+  [MessageFormat.SLACK]: parse.slack,
+  [MessageFormat.DISCORD]: parse.discord,
 };
 
 function getDisplayName(userId: string, mentions?: SerializedUser[]) {

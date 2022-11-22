@@ -14,9 +14,7 @@ import transform from './utilities/transform';
 import styles from './index.module.scss';
 import { SerializedAttachment } from 'types/shared';
 import { SerializedReaction } from 'serializers/reaction';
-import parseLinenMessage from 'utilities/message/parsers/linen';
-import parseSlackMessage from 'utilities/message/parsers/slack';
-import parseDiscordMessage from 'utilities/message/parsers/discord';
+import { parse } from '@linen/ast';
 import {
   Node,
   RootNode,
@@ -32,7 +30,7 @@ import {
   PreNode,
   EmojiNode,
   HeaderNode,
-} from 'utilities/message/parsers/types';
+} from '@linen/ast/parse/types';
 import { SerializedUser } from 'serializers/user';
 import { MessageFormat } from '@prisma/client';
 
@@ -47,9 +45,9 @@ interface Props {
 }
 
 const parsers = {
-  [MessageFormat.LINEN]: parseLinenMessage,
-  [MessageFormat.SLACK]: parseSlackMessage,
-  [MessageFormat.DISCORD]: parseDiscordMessage,
+  [MessageFormat.LINEN]: parse.linen,
+  [MessageFormat.SLACK]: parse.slack,
+  [MessageFormat.DISCORD]: parse.discord,
 };
 
 function noAttachment(attachments?: SerializedAttachment[]) {

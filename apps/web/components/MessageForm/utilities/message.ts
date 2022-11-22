@@ -1,6 +1,4 @@
-import parse from 'utilities/message/parsers/linen';
-import walk from 'utilities/message/walk';
-import stringify from 'utilities/message/stringify';
+import { parse, stringify, walk } from '@linen/ast';
 import { SerializedUser } from 'serializers/user';
 
 function getTag(type: string) {
@@ -17,7 +15,7 @@ export const postprocess = (
   message: string,
   allUsers: SerializedUser[]
 ): string => {
-  const tree = parse(message);
+  const tree = parse.linen(message);
   walk(tree, (node: any) => {
     if (node.type === 'user' || node.type === 'signal') {
       const user = allUsers.find((user) => user.username === node.id);
