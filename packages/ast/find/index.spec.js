@@ -1,6 +1,6 @@
-const { userIds: findUserIds, mentions: findMentions } = require('.');
+const find = require('.');
 
-describe('findUserIds', () => {
+describe('#find.usersIds', () => {
   it('returns user ids from given tree', () => {
     const tree = {
       type: 'root',
@@ -33,11 +33,11 @@ describe('findUserIds', () => {
       ],
     };
 
-    expect(findUserIds(tree)).toEqual(['1', '2', '3']);
+    expect(find.usersIds(tree)).toEqual(['1', '2', '3']);
   });
 });
 
-describe('findMentions', () => {
+describe('#find.mentions', () => {
   it('returns user ids from given tree', () => {
     const tree = {
       type: 'root',
@@ -70,7 +70,7 @@ describe('findMentions', () => {
       ],
     };
 
-    expect(findMentions(tree)).toEqual([
+    expect(find.mentions(tree)).toEqual([
       {
         type: 'user',
         id: '1',
