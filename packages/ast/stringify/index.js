@@ -1,4 +1,4 @@
-import walk from '../walk';
+const walk = require('../walk');
 
 function stringify(tree) {
   let output = '';
