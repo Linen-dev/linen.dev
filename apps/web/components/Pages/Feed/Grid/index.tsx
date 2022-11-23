@@ -1,8 +1,10 @@
 import React from 'react';
-import Row from '../Row';
 import { SerializedThread } from '@linen/types';
 import { Selections } from '../types';
 import { Permissions } from '@linen/types';
+import { Pages } from '@linen/ui';
+
+const { Row } = Pages.Feed;
 
 interface Props {
   threads: SerializedThread[];
@@ -33,7 +35,9 @@ export default function Grid({
             thread={thread}
             selected={!!selections[thread.id]?.checked}
             permissions={permissions}
-            onChange={(id, checked) => onChange(id, checked, index)}
+            onChange={(id: string, checked: boolean) =>
+              onChange(id, checked, index)
+            }
             onClick={() => onSelect(thread)}
           />
         );

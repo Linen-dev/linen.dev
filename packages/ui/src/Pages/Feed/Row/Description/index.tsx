@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './index.module.css';
+import styles from './index.module.scss';
 import { SerializedMessage } from '@linen/types';
 import { format } from '@linen/utilities/date';
 

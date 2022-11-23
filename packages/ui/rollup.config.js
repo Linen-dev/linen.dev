@@ -17,8 +17,8 @@ module.exports = {
       modules: true,
       use: ['sass'],
     }),
-    commonjs(),
     typescript({ tsconfig: './tsconfig.json' }),
+    commonjs(),
     external(),
   ],
 };

@@ -1,3 +1,5 @@
+@import '../../../colors.scss';
+
 .row {
   align-items: center;
   display: block;
@@ -6,11 +8,11 @@
 }
 
 .row.selected {
-  background-color: #f1f2f4;
+  background-color: $color-gray-100;
 }
 
 .row:hover {
-  background-color: #f6f7f9;
+  background-color: $color-gray-50;
 }
 
 .checkbox {
@@ -38,32 +40,9 @@
 }
 
 .channel {
-  color: #6a707c;
+  color: $color-gray-500;
 }
 
 .row:last-child {
   padding-bottom: 0;
-}
-
-.links {
-  display: block;
-  padding-top: 0.5rem;
-}
-
-.links li {
-  display: inline-block;
-  margin-left: 0.25rem;
-}
-
-.links li:first-child {
-  margin-left: 0;
-}
-
-.links li a {
-  color: rgb(67, 56, 202);
-  cursor: pointer;
-}
-
-.links li a:hover {
-  text-decoration: underline;
 }

@@ -2,10 +2,11 @@
   "name": "@linen/types",
   "private": true,
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "dev": "tsc index.ts --watch",
-    "build": "tsc index.ts"
+    "dev": "tsc --watch",
+    "build": "tsc"
   },
   "devDependencies": {
     "typescript": "^4.9.3"

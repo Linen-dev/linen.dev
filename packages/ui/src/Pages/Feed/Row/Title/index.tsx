@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   SerializedMessage,
   SerializedThread,
@@ -6,7 +7,7 @@ import {
 import { parse, walk } from '@linen/ast';
 import { truncate } from '@linen/utilities/string';
 import { MessageFormat } from '@linen/types';
-import styles from './index.module.css';
+import styles from './index.module.scss';
 
 interface Props {
   thread: SerializedThread;
