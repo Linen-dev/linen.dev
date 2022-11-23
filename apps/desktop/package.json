@@ -12,6 +12,7 @@
     "@linen/styles": "*",
     "@linen/types": "*",
     "@linen/ui": "*",
+    "@linen/utilities": "*",
     "@tauri-apps/api": "^1.1.0",
     "classnames": "^2.3.2",
     "next": "^13.0.3",

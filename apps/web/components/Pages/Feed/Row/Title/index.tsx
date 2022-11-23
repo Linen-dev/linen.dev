@@ -1,10 +1,12 @@
-import { SerializedThread } from '@linen/types';
-import { SerializedMessage } from '@linen/types';
-import { SerializedUser } from '@linen/types';
-import styles from './index.module.css';
+import {
+  SerializedMessage,
+  SerializedThread,
+  SerializedUser,
+} from '@linen/types';
 import { parse, walk } from '@linen/ast';
-import { truncate } from 'utilities/string';
+import { truncate } from '@linen/utilities/string';
 import { MessageFormat } from '@linen/types';
+import styles from './index.module.css';
 
 interface Props {
   thread: SerializedThread;

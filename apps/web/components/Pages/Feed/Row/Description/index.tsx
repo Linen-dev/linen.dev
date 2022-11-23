@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './index.module.css';
 import { SerializedMessage } from '@linen/types';
-import { format } from 'utilities/date';
+import { format } from '@linen/utilities/date';
 
 interface Props {
   messages: SerializedMessage[];
