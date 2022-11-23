@@ -1,12 +1,11 @@
 import React from 'react';
 import PageLayout from 'components/layout/PageLayout';
-import { channels } from '@prisma/client';
-import { Permissions, Settings } from '@linen/types';
+import { Permissions, SerializedChannel, Settings } from '@linen/types';
 
 import Content from './Content';
 
 interface Props {
-  channels: channels[];
+  channels: SerializedChannel[];
   isSubDomainRouting: boolean;
   permissions: Permissions;
   settings: Settings;

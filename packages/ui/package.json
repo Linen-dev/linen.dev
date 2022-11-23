@@ -12,7 +12,7 @@
     "prebuild": "rm -rf dist && yarn tsc",
     "build": "rollup --config rollup.config.js",
     "dev": "npm run watch",
-    "watch": "npm run build -- --watch",
+    "watch": "rollup --config rollup.config.js --watch",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage"

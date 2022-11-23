@@ -6,6 +6,7 @@ import Session from 'services/session';
 import PermissionsService from 'services/permissions';
 import { NotFound, RedirectTo } from 'utilities/response';
 import serializeAccount from 'serializers/account';
+import serializeChannel from 'serializers/channel';
 
 export async function getMetricsServerSideProps(
   context: GetServerSidePropsContext,
@@ -30,7 +31,7 @@ export async function getMetricsServerSideProps(
     props: {
       token: token || null,
       currentCommunity: serializeAccount(community),
-      channels,
+      channels: channels.map(serializeChannel),
       permissions,
       settings,
       isSubDomainRouting,
