@@ -1,0 +1,32 @@
+{
+  "name": "@linen/utilities",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "build": "tsc --project tsconfig.json",
+    "dev": "npm run build --watch",
+    "test": "jest"
+  },
+  "dependencies": {
+    "date-fns": "^2.29.3",
+    "jest": "^29.3.1",
+    "ts-jest": "^29.0.3"
+  },
+  "devDependencies": {
+    "typescript": "^4.9.3"
+  },
+  "exports": {
+    "./string": "./dist/string.js",
+    "./date": "./dist/date.js"
+  },
+  "typesVersions": {
+    "*": {
+      "string": [
+        "dist/string.d.ts"
+      ],
+      "date": [
+        "dist/date.d.ts"
+      ]
+    }
+  }
+}
