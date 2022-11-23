@@ -1,11 +1,11 @@
 import React from 'react';
-import Image from 'next/image';
 import classNames from 'classnames';
-import { Avatar, Checkbox } from '@linen/ui';
+import Avatar from '../../../Avatar';
+import Checkbox from '../../../Checkbox';
+import { Permissions, SerializedThread } from '@linen/types';
 import Title from './Title';
 import Description from './Description';
-import styles from './index.module.css';
-import { Permissions, SerializedThread } from '@linen/types';
+import styles from './index.module.scss';
 
 interface Props {
   thread: SerializedThread;
@@ -44,7 +44,6 @@ export default function Row({
             size="md"
             src={message.author?.profileImageUrl}
             text={message.author?.displayName}
-            Image={Image}
           />
           <div>
             {channel && (
