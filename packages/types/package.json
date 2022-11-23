@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "dev": "tsc index.ts --watch",
     "build": "tsc index.ts"
   },
   "devDependencies": {
