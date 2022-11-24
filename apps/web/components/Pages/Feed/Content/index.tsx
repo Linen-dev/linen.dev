@@ -3,7 +3,6 @@ import SidebarLayout from 'components/layout/shared/SidebarLayout';
 import { Permissions, Scope } from '@linen/types';
 import { Pages } from '@linen/ui';
 import Filters from '../Filters';
-import Grid from '../Grid';
 import { FeedResponse, Selections } from '../types';
 import { Thread } from 'components/Thread';
 import { scrollToBottom } from 'utilities/scroll';
@@ -24,7 +23,7 @@ import {
   ThreadState,
 } from '@linen/types';
 
-const { Header } = Pages.Feed;
+const { Header, Grid } = Pages.Feed;
 
 interface Props {
   isSubDomainRouting: boolean;
