@@ -5,7 +5,7 @@ import { stripProtocol } from '../../utilities/url';
 import Session, { SessionType } from 'services/session';
 import { generateRandomWordSlug } from 'utilities/randomWordSlugs';
 import { findAccountByEmail } from 'lib/models';
-import { AccountType, Roles } from '@prisma/client';
+import { AccountType, Roles } from '@linen/types';
 import PermissionsService from 'services/permissions';
 
 export async function create({

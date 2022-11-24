@@ -3,7 +3,7 @@ import request from 'superagent';
 import { fetchTeamInfo } from 'services/slack/api';
 import { createSlackAuthorization, updateAccount } from '../../lib/models';
 import { createSyncJob } from 'queue/jobs';
-import { AccountIntegration } from '@prisma/client';
+import { AccountIntegration } from '@linen/types';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {

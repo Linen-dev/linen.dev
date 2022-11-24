@@ -1,12 +1,11 @@
+import { auths, type accounts, type users } from '@prisma/client';
 import {
   AccountIntegration,
   AccountType,
-  auths,
   ChatType,
+  Permissions,
   Roles,
-  type accounts,
-  type users,
-} from '@prisma/client';
+} from '@linen/types';
 import {
   GetServerSidePropsContext,
   NextApiRequest,
@@ -15,7 +14,6 @@ import {
 import Session from '../session';
 import { findAccountByPath } from 'lib/models';
 import prisma from 'client';
-import { Permissions } from '@linen/types';
 import { findAuthByEmail } from 'lib/users';
 
 type Request = GetServerSidePropsContext['req'] | NextApiRequest;

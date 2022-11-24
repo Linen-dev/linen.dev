@@ -2,7 +2,7 @@ import { getCurrentUrl } from 'utilities/domain';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { createInvitation, updateInvitation } from 'services/invites';
 import PermissionsService from 'services/permissions';
-import type { Roles } from '@prisma/client';
+import { Roles } from '@linen/types';
 
 type Props = { communityId: string };
 

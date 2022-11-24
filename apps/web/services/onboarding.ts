@@ -1,6 +1,6 @@
 import prisma from '../client';
 import { v4 } from 'uuid';
-import { AccountType, Roles } from '@prisma/client';
+import { AccountType, Roles } from '@linen/types';
 import { createInvitation } from './invites';
 import { createAccountEvent } from './customerIo/trackEvents';
 

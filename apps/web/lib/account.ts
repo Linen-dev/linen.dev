@@ -1,4 +1,4 @@
-import { AccountType } from '@prisma/client';
+import { AccountType } from '@linen/types';
 import prisma from '../client';
 import { stripProtocol } from '../utilities/url';
 

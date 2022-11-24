@@ -3,7 +3,7 @@ import prisma from '../../client';
 import { createAuth } from '../../lib/auth';
 import Session from 'services/session';
 import { cleanUpString } from 'utilities/string';
-import { AccountType, Roles } from '@prisma/client';
+import { AccountType, Roles } from '@linen/types';
 import { generateRandomWordSlug } from 'utilities/randomWordSlugs';
 import { eventSignUp } from 'services/events/eventNewSignUp';
 
