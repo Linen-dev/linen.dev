@@ -1,4 +1,4 @@
-import Button from 'components/Button';
+import { Button } from '@linen/ui';
 import { useS3Upload } from 'next-s3-upload';
 import { useRef, useState } from 'react';
 import { SerializedAccount } from '@linen/types';

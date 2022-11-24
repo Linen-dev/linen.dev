@@ -1,6 +1,5 @@
 import Example from '../Example';
-import ButtonGroup from 'components/ButtonGroup';
-import Button from 'components/Button';
+import { Button, ButtonGroup } from '@linen/ui';
 
 export default function ButtonGroupExample() {
   return (

@@ -1,7 +1,7 @@
 import React from 'react';
-import Button from 'components/Button';
-import ButtonGroup from 'components/ButtonGroup';
-import styles from './index.module.css';
+import Button from '../Button';
+import ButtonGroup from '../ButtonGroup';
+import styles from './index.module.scss';
 
 interface Option {
   label: string;

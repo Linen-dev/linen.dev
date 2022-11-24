@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import AvatarField from './AvatarField';
 import TextField from 'components/TextField';
-import Button from 'components/Button';
+import { Button } from '@linen/ui';
 import { toast } from 'components/Toast';
 import { SerializedUser } from '@linen/types';
 import {

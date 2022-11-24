@@ -1,5 +1,5 @@
 import Layout from 'components/layout/CardLayout';
-import Button from 'components/Button';
+import { Button } from '@linen/ui';
 import EmailField from 'components/EmailField';
 import { useState } from 'react';
 import { toast } from 'components/Toast';

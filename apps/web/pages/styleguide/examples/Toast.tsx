@@ -1,5 +1,5 @@
 import Example from '../Example';
-import Button from 'components/Button';
+import { Button } from '@linen/ui';
 import { toast } from 'components/Toast';
 
 export default function TextareaExample() {
