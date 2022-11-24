@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, ButtonToggle } from '@linen/ui';
-import styles from './index.module.css';
+import styles from './index.module.scss';
 import { Selections } from '../types';
 import Pagination from './Pagination';
 import ScopeSelect from './ScopeSelect';
