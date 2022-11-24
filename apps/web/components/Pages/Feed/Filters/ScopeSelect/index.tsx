@@ -1,4 +1,5 @@
-import NativeSelect from 'components/NativeSelect';
+import React from 'react';
+import { NativeSelect } from '@linen/ui';
 import { Scope } from '@linen/types';
 
 interface Props {
@@ -15,7 +16,9 @@ export default function ScopeSelect({ onChange, defaultValue }: Props) {
         { label: 'All', value: Scope.All },
         { label: 'My conversations', value: Scope.Participant },
       ]}
-      onChange={(event) => onChange('scope', event.target.value)}
+      onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
+        onChange('scope', event.target.value)
+      }
     />
   );
 }

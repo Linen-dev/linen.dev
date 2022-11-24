@@ -1,6 +1,6 @@
 import React from 'react';
 import Field from '../Field';
-import Label from '../Label';
+import { Label } from '@linen/ui';
 import PasswordInput from '../PasswordInput';
 
 interface Props {

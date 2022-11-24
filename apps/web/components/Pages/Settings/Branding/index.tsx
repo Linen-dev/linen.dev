@@ -2,10 +2,9 @@
 import DashboardLayout from 'components/layout/DashboardLayout';
 import TextField from 'components/TextField';
 import ColorField from 'components/ColorField';
-import { Button } from '@linen/ui';
+import { Button, Label } from '@linen/ui';
 import Table, { Thead, Tbody, Th, Td } from 'components/Table';
 import { stripProtocol } from 'utilities/url';
-import Label from 'components/Label';
 import classNames from 'classnames';
 import { useS3Upload } from 'next-s3-upload';
 import { useState } from 'react';

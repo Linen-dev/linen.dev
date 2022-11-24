@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { AccountType } from '@prisma/client';
+import { AccountType } from '@linen/types';
 import Card from '../Card';
-import NativeSelect from 'components/NativeSelect';
+import { NativeSelect } from '@linen/ui';
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 
 interface Props {
