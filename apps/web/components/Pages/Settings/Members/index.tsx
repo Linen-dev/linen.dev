@@ -1,10 +1,9 @@
 import TextInput from 'components/TextInput';
 import { MembersPageProps } from 'pages/settings/members';
 import DashboardLayout from 'components/layout/DashboardLayout';
-import { Button } from '@linen/ui';
+import { Button, NativeSelect } from '@linen/ui';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import NativeSelect from 'components/NativeSelect';
 import { Roles } from '@prisma/client';
 import { toast } from 'components/Toast';
 import { AiOutlineUser } from 'react-icons/ai';
@@ -160,7 +159,9 @@ function RowMember(user: MembersType, communityId: string): JSX.Element {
             <NativeSelect
               id={user.id}
               value={data.role}
-              onChange={(e) => onChange(e, user.status)}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                onChange(e, user.status)
+              }
               disabled={loading}
               icon={<AiOutlineUser />}
               theme="blue"

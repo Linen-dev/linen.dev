@@ -1,6 +1,6 @@
 import React from 'react';
 import NativeSelect from '.';
-import { render, waitFor } from '@testing-library/react';
+import { render } from '@testing-library/react';
 
 describe('NativeSelect', () => {
   it('renders options', () => {

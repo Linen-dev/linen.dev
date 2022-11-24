@@ -2,10 +2,9 @@ import React from 'react';
 import classNames from 'classnames';
 import { useLinkContext } from 'contexts/Link';
 import { SerializedChannel } from '@linen/types';
-import NativeSelect from 'components/NativeSelect';
+import { Label, NativeSelect } from '@linen/ui';
 import CustomRouterPush from 'components/Link/CustomRouterPush';
 import { FiHash } from 'react-icons/fi';
-import Label from 'components/Label';
 import styles from './index.module.scss';
 
 interface Props {
@@ -54,7 +53,9 @@ export default function ChannelSelect({ className, value, channels }: Props) {
         id="channel"
         options={options}
         icon={<FiHash />}
-        onChange={(event) => onChangeChannel(event.currentTarget.value)}
+        onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
+          onChangeChannel(event.currentTarget.value)
+        }
         value={value}
       />
     </div>
