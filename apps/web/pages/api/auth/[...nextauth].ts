@@ -5,7 +5,7 @@ import { CustomPrismaAdapter } from 'lib/auth';
 import SignInMailer from 'mailers/SignInMailer';
 import { NOREPLY_EMAIL } from 'secrets';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import { generateHash, secureCompare } from 'utilities/password';
+import UsersService from 'services/users';
 
 export const authOptions = {
   pages: {
@@ -59,20 +59,7 @@ export const authOptions = {
           return null;
         }
         const { email, password } = credentials;
-        if (!email || !password) {
-          return null;
-        }
-        const auth = await prisma.auths.findUnique({ where: { email } });
-        if (!auth) {
-          return null;
-        }
-        if (secureCompare(auth.password, generateHash(password, auth.salt))) {
-          return {
-            email: auth.email,
-            id: auth.id,
-          };
-        }
-        return null;
+        return UsersService.authorize(email, password);
       },
     }),
   ],
