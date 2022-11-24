@@ -2,7 +2,6 @@ import { useState, useRef, useCallback } from 'react';
 import SidebarLayout from 'components/layout/shared/SidebarLayout';
 import { Permissions, Scope } from '@linen/types';
 import { Pages } from '@linen/ui';
-import Filters from '../Filters';
 import { FeedResponse, Selections } from '../types';
 import { Thread } from 'components/Thread';
 import { scrollToBottom } from 'utilities/scroll';
@@ -23,7 +22,7 @@ import {
   ThreadState,
 } from '@linen/types';
 
-const { Header, Grid } = Pages.Feed;
+const { Header, Filters, Grid } = Pages.Feed;
 
 interface Props {
   isSubDomainRouting: boolean;
@@ -316,7 +315,7 @@ export default function Feed({
               selections={selections}
               defaultScope={scope}
               permissions={permissions}
-              onChange={(type: string, value) => {
+              onChange={(type: string, value: ThreadState | Scope) => {
                 setSelections({});
                 setPage(1);
                 switch (type) {

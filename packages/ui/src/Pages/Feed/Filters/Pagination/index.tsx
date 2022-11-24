@@ -1,8 +1,8 @@
 import React from 'react';
 import classNames from 'classnames';
 import { GoChevronLeft, GoChevronRight } from 'react-icons/go';
-import styles from './index.module.scss';
 import { CgSpinner } from 'react-icons/cg';
+import styles from './index.module.scss';
 
 interface Props {
   total: number;

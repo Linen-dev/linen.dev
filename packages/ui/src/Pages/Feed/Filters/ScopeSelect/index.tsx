@@ -1,5 +1,5 @@
 import React from 'react';
-import { NativeSelect } from '@linen/ui';
+import NativeSelect from '../../../../NativeSelect';
 import { Scope } from '@linen/types';
 
 interface Props {
