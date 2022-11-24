@@ -1,6 +1,6 @@
 import serialize from './account';
 import { build } from '__tests__/factory';
-import { AccountType } from '@prisma/client';
+import { AccountType } from '@linen/types';
 
 describe('#serialize', () => {
   it('serializes the account', () => {

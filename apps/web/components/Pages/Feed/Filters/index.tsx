@@ -1,4 +1,3 @@
-import { ThreadState } from '@prisma/client';
 import React from 'react';
 import { Button, ButtonToggle } from '@linen/ui';
 import styles from './index.module.css';
@@ -6,7 +5,7 @@ import { Selections } from '../types';
 import Pagination from './Pagination';
 import ScopeSelect from './ScopeSelect';
 import { GoComment, GoCheck, GoSync } from 'react-icons/go';
-import type { Permissions } from '@linen/types';
+import { Permissions, ThreadState } from '@linen/types';
 
 interface Props {
   state: string;

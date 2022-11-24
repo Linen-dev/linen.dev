@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import type { Roles } from '@prisma/client';
+import { Roles } from '@linen/types';
 import PermissionsService from 'services/permissions';
 import UsersService from 'services/users';
 

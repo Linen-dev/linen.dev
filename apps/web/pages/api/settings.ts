@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import Session from 'services/session';
-import { Roles } from '@prisma/client';
+import { Roles } from '@linen/types';
 import { findAuthByEmail } from 'lib/users';
 import { getHomeUrl } from 'utilities/home';
 import serializeAccount from 'serializers/account';

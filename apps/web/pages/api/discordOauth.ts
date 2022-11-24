@@ -3,7 +3,7 @@ import request from 'superagent';
 import prisma from '../../client';
 import { updateAccount } from '../../lib/models';
 import { createSyncJob } from 'queue/jobs';
-import { AccountIntegration } from '@prisma/client';
+import { AccountIntegration } from '@linen/types';
 import { createSlug } from 'utilities/util';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {

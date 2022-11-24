@@ -1,5 +1,5 @@
 import { updateInvitation } from './invites';
-import { Roles } from '@prisma/client';
+import { Roles } from '@linen/types';
 import prisma from 'client';
 import { v4 } from 'uuid';
 
