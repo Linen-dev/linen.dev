@@ -2,7 +2,7 @@ import React from 'react';
 import NavBar from '.';
 import { render } from '@testing-library/react';
 import { build } from '__tests__/factory';
-import { Mode } from 'hooks/mode';
+import { Mode } from '@linen/hooks/mode';
 
 describe('NavBar', () => {
   it('renders channels', () => {

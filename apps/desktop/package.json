@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@linen/ast": "*",
+    "@linen/hooks": "*",
     "@linen/styles": "*",
     "@linen/types": "*",
     "@linen/ui": "*",

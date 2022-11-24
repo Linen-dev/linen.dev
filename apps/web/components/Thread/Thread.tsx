@@ -13,7 +13,7 @@ import {
   ThreadState,
   UploadedFile,
 } from '@linen/types';
-import { Mode } from 'hooks/mode';
+import { Mode } from '@linen/hooks/mode';
 import styles from './index.module.scss';
 import classNames from 'classnames';
 import useThreadWebsockets from 'hooks/websockets/thread';

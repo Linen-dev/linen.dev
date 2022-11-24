@@ -2,7 +2,7 @@ import React from 'react';
 import Header from '.';
 import { render } from '@testing-library/react';
 import { build } from '__tests__/factory';
-import { Mode } from 'hooks/mode';
+import { Mode } from '@linen/hooks/mode';
 
 jest.mock('next-auth/react', () => ({
   useSession: () => ({}),
@@ -21,6 +21,7 @@ describe('Header', () => {
           isSubDomainRouting={false}
           permissions={permissions}
           onProfileChange={jest.fn()}
+          onUpload={jest.fn()}
           mode={Mode.Default}
         />
       );
@@ -40,6 +41,7 @@ describe('Header', () => {
           isSubDomainRouting={false}
           permissions={permissions}
           onProfileChange={jest.fn()}
+          onUpload={jest.fn()}
           mode={Mode.Default}
         />
       );

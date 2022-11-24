@@ -8,7 +8,7 @@ import classNames from 'classnames';
 import { Permissions, SerializedChannel, Settings } from '@linen/types';
 import { LinkContext } from 'contexts/Link';
 import { put } from 'utilities/http';
-import useMode from 'hooks/mode';
+import useMode from '@linen/hooks/mode';
 import styles from './index.module.css';
 
 interface Props {

@@ -9,7 +9,7 @@ import { pickTextColorBasedOnBgColor } from 'utilities/colors';
 import { Permissions } from '@linen/types';
 import { SerializedChannel, Settings } from '@linen/types';
 import UserAvatar from './UserAvatar';
-import { Mode } from 'hooks/mode';
+import { Mode } from '@linen/hooks/mode';
 import styles from './index.module.scss';
 import { AxiosRequestConfig } from 'axios';
 import MobileMenu from './MobileMenu';

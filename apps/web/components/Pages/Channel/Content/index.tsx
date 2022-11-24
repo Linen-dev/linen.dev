@@ -28,7 +28,7 @@ import {
   isScrollAtBottom,
   isInViewport,
 } from 'utilities/scroll';
-import useMode from 'hooks/mode';
+import useMode from '@linen/hooks/mode';
 import styles from './index.module.css';
 import { SerializedMessage } from '@linen/types';
 

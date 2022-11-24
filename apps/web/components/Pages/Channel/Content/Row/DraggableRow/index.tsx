@@ -1,6 +1,6 @@
 import React, { createRef } from 'react';
 import classNames from 'classnames';
-import { Mode } from 'hooks/mode';
+import { Mode } from '@linen/hooks/mode';
 import styles from './index.module.scss';
 
 interface Props {

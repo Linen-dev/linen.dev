@@ -2,7 +2,7 @@ import { sortByChannelName } from './utilities';
 import { Permissions, SerializedChannel } from '@linen/types';
 import DesktopNavBar from './Desktop';
 import MobileNavBar from './Mobile';
-import { Mode } from 'hooks/mode';
+import { Mode } from '@linen/hooks/mode';
 
 interface Props {
   mode: Mode;
