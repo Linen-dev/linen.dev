@@ -86,30 +86,16 @@ export async function channelGetServerSideProps(
     }
   }
 
-  const { sort, direction, sentAt } = decodeCursor(undefined);
-
-  const threads = (
-    await findThreadsByCursor({
-      channelIds: [channel.id],
-      sentAt,
-      sort,
-      direction,
-      anonymizeUsers: account.anonymizeUsers,
-    })
-  ).sort(sortBySentAtAsc);
+  const { nextCursor, threads } = await getThreads(
+    channel.id,
+    account.anonymizeUsers,
+    page
+  );
 
   const pinnedThreads = await findPinnedThreads({
     channelIds: [channel.id],
     anonymizeUsers: account.anonymizeUsers,
     limit: 10,
-  });
-
-  const nextCursor = await buildCursor({
-    sort,
-    direction,
-    sentAt,
-    threads,
-    pathCursor: page,
   });
 
   return {
@@ -128,6 +114,33 @@ export async function channelGetServerSideProps(
       permissions,
     },
   };
+}
+
+export async function getThreads(
+  channelId: string,
+  anonymizeUsers: boolean,
+  page?: string
+) {
+  const { sort, direction, sentAt } = decodeCursor(undefined);
+
+  const threads = (
+    await findThreadsByCursor({
+      channelIds: [channelId],
+      sentAt,
+      sort,
+      direction,
+      anonymizeUsers,
+    })
+  ).sort(sortBySentAtAsc);
+
+  const nextCursor = await buildCursor({
+    sort,
+    direction,
+    sentAt,
+    threads,
+    pathCursor: page,
+  });
+  return { nextCursor, threads };
 }
 
 function findChannelOrDefault(
