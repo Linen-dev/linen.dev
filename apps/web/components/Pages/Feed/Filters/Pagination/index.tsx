@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import { GoChevronLeft, GoChevronRight } from 'react-icons/go';
-import styles from './index.module.css';
+import styles from './index.module.scss';
 import { CgSpinner } from 'react-icons/cg';
 
 interface Props {
