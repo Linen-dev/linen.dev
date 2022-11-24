@@ -1,11 +1,18 @@
 import React from 'react';
-import { Button, ButtonToggle } from '@linen/ui';
-import styles from './index.module.scss';
-import { Selections } from '../types';
+import Button from '../../../Button';
+import ButtonToggle from '../../../ButtonToggle';
 import Pagination from './Pagination';
 import ScopeSelect from './ScopeSelect';
 import { GoComment, GoCheck, GoSync } from 'react-icons/go';
 import { Permissions, ThreadState } from '@linen/types';
+import styles from './index.module.scss';
+
+interface Selections {
+  [key: string]: {
+    checked: boolean;
+    index: number;
+  };
+}
 
 interface Props {
   state: string;
