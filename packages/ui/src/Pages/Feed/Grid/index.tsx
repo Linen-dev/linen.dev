@@ -1,10 +1,13 @@
 import React from 'react';
-import { SerializedThread } from '@linen/types';
-import { Selections } from '../types';
-import { Permissions } from '@linen/types';
-import { Pages } from '@linen/ui';
+import { Permissions, SerializedThread } from '@linen/types';
+import Row from '../Row';
 
-const { Row } = Pages.Feed;
+interface Selections {
+  [key: string]: {
+    checked: boolean;
+    index: number;
+  };
+}
 
 interface Props {
   threads: SerializedThread[];
