@@ -1,5 +1,6 @@
 import { Roles } from '@linen/types';
 import prisma from 'client';
+import { generateHash, secureCompare } from 'utilities/password';
 
 export default class UsersService {
   static async updateUserRole({
@@ -51,5 +52,27 @@ export default class UsersService {
       },
       data: { accountId },
     });
+  }
+  static async getUserById(id: string) {
+    return await prisma.auths.findUnique({
+      where: { id },
+      select: { email: true, id: true, users: true },
+    });
+  }
+  static async authorize(email: string, password: string) {
+    if (!email || !password) {
+      return null;
+    }
+    const auth = await prisma.auths.findUnique({ where: { email } });
+    if (!auth) {
+      return null;
+    }
+    if (secureCompare(auth.password, generateHash(password, auth.salt))) {
+      return {
+        email: auth.email,
+        id: auth.id,
+      };
+    }
+    return null;
   }
 }

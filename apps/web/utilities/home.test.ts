@@ -1,5 +1,5 @@
 import { getHomeUrl, getHomeText } from './home';
-import { SerializedAccount, CommunityType } from 'serializers/account';
+import { SerializedAccount, CommunityType } from '@linen/types';
 
 function createAccount(options: object): SerializedAccount {
   return {
