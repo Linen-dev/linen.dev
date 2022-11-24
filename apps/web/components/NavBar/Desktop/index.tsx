@@ -11,7 +11,7 @@ import styles from './index.module.scss';
 import { FiRss, FiBarChart, FiHash } from 'react-icons/fi';
 import { useRouter } from 'next/router';
 import usePath from 'hooks/path';
-import { Mode } from 'hooks/mode';
+import { Mode } from '@linen/hooks/mode';
 import { Nav } from '@linen/ui';
 
 interface Props {

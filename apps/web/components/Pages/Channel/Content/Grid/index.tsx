@@ -3,7 +3,7 @@ import { SerializedThread } from '@linen/types';
 import Row from '../Row';
 import { SerializedUser } from '@linen/types';
 import { Permissions, Settings } from '@linen/types';
-import { Mode } from 'hooks/mode';
+import { Mode } from '@linen/hooks/mode';
 import styles from './index.module.scss';
 
 export default function ChannelGrid({

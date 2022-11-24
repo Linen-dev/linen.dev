@@ -1,8 +1,8 @@
 import React from 'react';
 import classNames from 'classnames';
 import { Transition } from '@headlessui/react';
-import useDevice from 'hooks/device';
-import { Mode } from 'hooks/mode';
+import useDevice from '@linen/hooks/device';
+import { Mode } from '@linen/hooks/mode';
 import styles from './index.module.scss';
 
 interface Props {

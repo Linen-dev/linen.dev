@@ -5,7 +5,7 @@ import { SerializedThread } from '@linen/types';
 import { SerializedUser } from '@linen/types';
 import { Settings } from '@linen/types';
 import { Permissions } from '@linen/types';
-import { Mode } from 'hooks/mode';
+import { Mode } from '@linen/hooks/mode';
 import styles from './index.module.scss';
 
 interface Props {

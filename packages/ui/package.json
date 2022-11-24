@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@linen/ast": "*",
+    "@linen/hooks": "*",
     "@linen/types": "*",
     "@linen/utilities": "*",
     "@rollup/plugin-commonjs": "^23.0.2",

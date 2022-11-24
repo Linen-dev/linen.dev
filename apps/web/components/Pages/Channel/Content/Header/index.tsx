@@ -1,7 +1,7 @@
 import React from 'react';
 import { StickyHeader } from '@linen/ui';
 import { FiHash } from 'react-icons/fi';
-import { Mode } from 'hooks/mode';
+import { Mode } from '@linen/hooks/mode';
 import styles from './index.module.css';
 import classNames from 'classnames';
 

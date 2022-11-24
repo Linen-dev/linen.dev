@@ -6,7 +6,7 @@ import styles from './index.module.scss';
 import { SerializedThread } from '@linen/types';
 import { SerializedUser } from '@linen/types';
 import { Permissions, Settings } from '@linen/types';
-import { Mode } from 'hooks/mode';
+import { Mode } from '@linen/hooks/mode';
 
 export const uniqueUsers = (users: SerializedUser[]): SerializedUser[] => {
   let userMap = new Map<string, SerializedUser>();

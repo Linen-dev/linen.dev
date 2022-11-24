@@ -8,7 +8,7 @@ import { format } from '@linen/utilities/date';
 import styles from './index.module.scss';
 import CheckIcon from 'components/icons/CheckIcon';
 import Actions from 'components/Actions';
-import { Mode } from 'hooks/mode';
+import { Mode } from '@linen/hooks/mode';
 import {
   Permissions,
   Settings,

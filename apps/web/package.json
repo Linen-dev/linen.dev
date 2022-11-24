@@ -33,6 +33,7 @@
   "dependencies": {
     "@headlessui/react": "^1.7.3",
     "@linen/ast": "*",
+    "@linen/hooks": "*",
     "@linen/styles": "*",
     "@linen/types": "*",
     "@linen/ui": "*",
