@@ -1,4 +1,4 @@
-import Button from 'components/Button';
+import { Button } from '@linen/ui';
 import Layout from 'components/layout/CardLayout';
 import { toast } from 'components/Toast';
 import { useState } from 'react';

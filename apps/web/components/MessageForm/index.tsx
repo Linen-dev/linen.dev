@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import autosize from 'autosize';
-import Button from 'components/Button';
+import { Button } from '@linen/ui';
 import styles from './index.module.scss';
 import toast from 'components/Toast';
 import Suggestions from 'components/Suggestions';

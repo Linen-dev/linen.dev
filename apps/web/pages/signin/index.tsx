@@ -1,6 +1,6 @@
 import Layout from 'components/layout/CardLayout';
 import EmailField from 'components/EmailField';
-import Button from 'components/Button';
+import { Button } from '@linen/ui';
 import Link from 'components/Link';
 import { getCsrfToken } from 'next-auth/react';
 import type { NextPageContext } from 'next';

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import EmailField from 'components/EmailField';
-import Button from 'components/Button';
+import { Button } from '@linen/ui';
 import Link from 'components/Link';
 import { qs } from 'utilities/url';
 

@@ -1,7 +1,6 @@
 import { ThreadState } from '@prisma/client';
 import React from 'react';
-import ButtonToggle from 'components/ButtonToggle';
-import Button from 'components/Button';
+import { Button, ButtonToggle } from '@linen/ui';
 import styles from './index.module.css';
 import { Selections } from '../types';
 import Pagination from './Pagination';

@@ -1,7 +1,7 @@
 import TextInput from 'components/TextInput';
 import { MembersPageProps } from 'pages/settings/members';
 import DashboardLayout from 'components/layout/DashboardLayout';
-import Button from 'components/Button';
+import { Button } from '@linen/ui';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import NativeSelect from 'components/NativeSelect';

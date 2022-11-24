@@ -2,7 +2,7 @@
 import DashboardLayout from 'components/layout/DashboardLayout';
 import TextField from 'components/TextField';
 import ColorField from 'components/ColorField';
-import Button from 'components/Button';
+import { Button } from '@linen/ui';
 import Table, { Thead, Tbody, Th, Td } from 'components/Table';
 import { stripProtocol } from 'utilities/url';
 import Label from 'components/Label';
