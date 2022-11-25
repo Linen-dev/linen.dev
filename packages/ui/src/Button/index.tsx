@@ -15,15 +15,6 @@ interface Props {
   weight?: 'medium' | 'normal';
 }
 
-const presetColors: Record<string, string> = {
-  blue: 'text-white bg-blue-700 hover:bg-blue-800 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800',
-  white: 'text-black bg-white',
-  gray: 'text-black bg-gray-100 hover:bg-gray-200',
-  transparent: 'text-black bg-transparent',
-  yellow: 'text-white bg-yellow-600 hover:bg-yellow-500 focus:ring-yellow-600',
-  disabled: 'text-black bg-gray-200',
-};
-
 const Button = ({
   className,
   type,
@@ -41,20 +32,20 @@ const Button = ({
       disabled={disabled}
       type={type}
       onClick={onClick}
-      className={classNames(
-        styles.button,
-        className,
-        'mb-2',
-        {
-          'w-full': block,
-          'font-medium': weight === 'medium',
-          'rounded-lg': rounded === 'lg',
-          'rounded-full': rounded === 'full',
-          'text-sm px-4 py-2': size === 'sm',
-          'text-xs px-4 py-2': size === 'xs',
-        },
-        disabled ? presetColors['disabled'] : presetColors[color]
-      )}
+      className={classNames(styles.button, className, {
+        [styles.block]: block,
+        [styles.medium]: weight === 'medium',
+        [styles['rounded-lg']]: rounded === 'lg',
+        [styles['rounded-full']]: rounded === 'full',
+        [styles.sm]: size === 'sm',
+        [styles.xs]: size === 'xs',
+        [styles.disabled]: disabled,
+        [styles.white]: color === 'white',
+        [styles.gray]: color === 'gray',
+        [styles.blue]: color === 'blue',
+        [styles.yellow]: color === 'yellow',
+        [styles.transparent]: color === 'transparent',
+      })}
     >
       {children}
     </button>
