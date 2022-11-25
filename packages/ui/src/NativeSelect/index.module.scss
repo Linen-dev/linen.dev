@@ -1,3 +1,5 @@
+@import '../colors.scss';
+
 .container {
   display: block;
   position: relative;
@@ -71,6 +73,7 @@
   cursor: not-allowed;
 }
 
-.grey {
-  background: #989898;
+.gray {
+  background: $color-gray-50;
+  color: $color-gray-500;
 }
