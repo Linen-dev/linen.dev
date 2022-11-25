@@ -266,7 +266,6 @@ export default function Channel({
   return (
     <>
       <SidebarLayout
-        mode={mode}
         left={
           <div
             className={classNames(styles.container, {

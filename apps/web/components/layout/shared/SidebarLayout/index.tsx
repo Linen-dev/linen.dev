@@ -2,7 +2,6 @@ import React from 'react';
 import classNames from 'classnames';
 import { Transition } from '@headlessui/react';
 import useDevice from '@linen/hooks/device';
-import { Mode } from '@linen/hooks/mode';
 import styles from './index.module.scss';
 
 interface Props {
@@ -12,7 +11,6 @@ interface Props {
   rightRef?: any;
   onLeftScroll?(): void;
   onRightScroll?(): void;
-  mode?: Mode;
 }
 
 function SidebarLayout({
@@ -22,7 +20,6 @@ function SidebarLayout({
   rightRef,
   onLeftScroll,
   onRightScroll,
-  mode,
 }: Props) {
   const { isMobile } = useDevice();
   return (
