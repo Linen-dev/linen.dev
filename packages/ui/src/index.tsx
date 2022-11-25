@@ -9,6 +9,8 @@ import List from './List';
 import NativeSelect from './NativeSelect';
 import Nav from './Nav';
 import StickyHeader from './StickyHeader';
+
+import Layouts from './Layouts';
 import Pages from './Pages';
 
 export {
@@ -22,6 +24,7 @@ export {
   List,
   NativeSelect,
   Nav,
-  Pages,
   StickyHeader,
+  Layouts,
+  Pages,
 };

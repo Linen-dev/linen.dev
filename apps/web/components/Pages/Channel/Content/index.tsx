@@ -4,7 +4,6 @@ import { Thread } from 'components/Thread';
 import { get } from 'utilities/http';
 import { useUsersContext } from 'contexts/Users';
 import ChatLayout from 'components/layout/shared/ChatLayout';
-import SidebarLayout from 'components/layout/shared/SidebarLayout';
 import Header from './Header';
 import Empty from './Empty';
 import Chat from './Chat';
@@ -31,6 +30,9 @@ import {
 import useMode from '@linen/hooks/mode';
 import styles from './index.module.css';
 import { SerializedMessage } from '@linen/types';
+import { Layouts } from '@linen/ui';
+
+const { SidebarLayout } = Layouts.Shared;
 
 interface Props {
   settings: Settings;
