@@ -1,7 +1,6 @@
 import { useState, useRef, useCallback } from 'react';
-import SidebarLayout from 'components/layout/shared/SidebarLayout';
 import { Permissions, Scope } from '@linen/types';
-import { Pages } from '@linen/ui';
+import { Layouts, Pages } from '@linen/ui';
 import { FeedResponse, Selections } from '../types';
 import { Thread } from 'components/Thread';
 import { scrollToBottom } from 'utilities/scroll';
@@ -23,6 +22,7 @@ import {
 } from '@linen/types';
 
 const { Header, Filters, Grid } = Pages.Feed;
+const { SidebarLayout } = Layouts.Shared;
 
 interface Props {
   isSubDomainRouting: boolean;
