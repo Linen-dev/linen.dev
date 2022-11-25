@@ -49,7 +49,7 @@ function NativeSelect({
         {icon && <div className={styles.icon}>{icon}</div>}
         <select
           className={classNames(styles.select, {
-            'bg-gray-50 text-gray-500': theme === 'gray',
+            [styles.gray]: theme === 'gray',
           })}
           id={id}
           name={id || name}
