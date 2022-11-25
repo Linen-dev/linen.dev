@@ -41,14 +41,16 @@ services:
     depends_on:
       - db
     network_mode: bridge
-    command: sh -c "cd apps/web && npm run start"
+    command: sh -c "cd apps/web && yarn start"
 
   api:
     container_name: api
     profiles: ['apps']
     build:
       context: ..
-      dockerfile: apps/web/api/Dockerfile
+      dockerfile: Dockerfile
+      args:
+        - MODULE=@linen/web
     restart: always
     ports:
       - 3001:3000
@@ -60,6 +62,7 @@ services:
     depends_on:
       - db
     network_mode: bridge
+    command: sh -c "cd apps/web && yarn start:api"
 
 volumes:
   pgdata:
