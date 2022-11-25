@@ -1,5 +1,4 @@
 import React from 'react';
-import classNames from 'classnames';
 import { Transition } from '@headlessui/react';
 import useDevice from '@linen/hooks/device';
 import styles from './index.module.scss';
@@ -26,24 +25,16 @@ function SidebarLayout({
     <>
       <Transition
         show={isMobile && !!right ? false : true}
-        className={
-          'flex-col overflow-auto lg:h-[calc(100vh_-_64px)] md:h-[calc(100vh_-_104px)] h-[calc(100vh_-_64px)] lg:w-[calc(100vw_-_200px)] flex justify-left w-[100vw] relative'
-        }
+        className={styles.left}
         onScroll={onLeftScroll}
         ref={leftRef}
       >
         {left}
       </Transition>
-      <Transition
-        show={!!right}
-        className={classNames(styles.right, 'md:w-[700px]')}
-      >
+      <Transition show={!!right} className={styles.right}>
         {right && (
           <div
-            className={classNames(
-              styles.content,
-              'overflow-auto flex flex-col relative'
-            )}
+            className={styles.content}
             onScroll={onRightScroll}
             ref={rightRef}
           >
