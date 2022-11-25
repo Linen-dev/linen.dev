@@ -47,11 +47,7 @@ export default function Pagination({
     <div className={styles.pagination}>
       <div className={styles.count}>
         {start}-{end} of{' '}
-        {isFetchingTotal ? (
-          <CgSpinner className="inline mb-1 animate-spin" />
-        ) : (
-          total
-        )}
+        {isFetchingTotal ? <CgSpinner className={styles.spinner} /> : total}
       </div>
       <div
         className={classNames(styles.icon, {
