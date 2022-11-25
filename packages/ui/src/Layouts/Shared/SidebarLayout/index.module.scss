@@ -1,8 +1,37 @@
 @import '../../../colors.scss';
 
+.left {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 64px);
+  overflow: auto;
+  position: relative;
+  width: 100vw;
+
+  @media (min-width: 1024px) {
+    height: calc(100vh - 64px);
+    width: calc(100vw - 200px);
+  }
+
+  @media (min-width: 768px) {
+    height: calc(100vh - 104px);
+  }
+}
+
 .right {
   background: white;
   border-left: 1px solid $color-border;
   display: flex;
   flex-direction: column;
+
+  @media (min-width: 768px) {
+    width: 700px;
+  }
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: auto;
 }
