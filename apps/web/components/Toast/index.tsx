@@ -1,7 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import toast from 'react-hot-toast';
-export { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
 import { GoCheck, GoInfo, GoAlert } from 'react-icons/go';
 import styles from './index.module.scss';
 
@@ -12,7 +11,7 @@ function custom({
 }: {
   message: string;
   description?: string;
-  icon: React.ReactNode;
+  icon?: React.ReactNode;
 }) {
   toast.custom(() => (
     <div className={styles.container}>
@@ -31,7 +30,7 @@ const icons = {
   info: <GoInfo className={classNames(styles.icon, styles.blue)} />,
 };
 
-const methods = {
+const Toast = {
   success(message: string, description?: string) {
     custom({ message, description, icon: icons.success });
   },
@@ -41,7 +40,8 @@ const methods = {
   info(message: string, description?: string) {
     custom({ message, description, icon: icons.info });
   },
+  ToastContext: Toaster,
 };
 
-export { methods as toast };
-export default methods;
+export { Toast as toast, Toaster as ToastContext };
+export default Toast;
