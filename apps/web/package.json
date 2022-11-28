@@ -54,7 +54,6 @@
     "@types/uuid": "^8.3.4",
     "autoprefixer": "^10.4.12",
     "autosize": "^5.0.1",
-    "awesome-debounce-promise": "^2.1.0",
     "aws-sdk": "^2.1197.0",
     "axios": "^0.27.2",
     "cheerio": "^1.0.0-rc.12",

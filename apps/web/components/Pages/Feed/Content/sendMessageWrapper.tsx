@@ -9,7 +9,7 @@ import {
 import { username } from 'serializers/user';
 import { FeedResponse } from '../types';
 import { v4 as uuid } from 'uuid';
-import debounce from 'utilities/debounce';
+import debounce from '@linen/utilities/debounce';
 import { StartSignUpFn } from 'contexts/Join';
 
 const debouncedSendMessage = debounce(

@@ -8,6 +8,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "awesome-debounce-promise": "^2.1.0",
     "date-fns": "^2.29.3",
     "jest": "^29.3.1",
     "ts-jest": "^29.0.3"
@@ -17,7 +18,8 @@
   },
   "exports": {
     "./string": "./dist/string.js",
-    "./date": "./dist/date.js"
+    "./date": "./dist/date.js",
+    "./debounce": "./dist/debounce.js"
   },
   "typesVersions": {
     "*": {
@@ -26,6 +28,9 @@
       ],
       "date": [
         "dist/date.d.ts"
+      ],
+      "debounce": [
+        "dist/debounce.d.ts"
       ]
     }
   }

@@ -8,7 +8,7 @@ import {
   SerializedThread,
   SerializedUser,
 } from '@linen/types';
-import debounce from 'utilities/debounce';
+import debounce from '@linen/utilities/debounce';
 
 const debouncedSendMessage = debounce(
   ({
