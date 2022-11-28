@@ -4,7 +4,6 @@ import { Layouts, Pages } from '@linen/ui';
 import { FeedResponse, Selections } from '../types';
 import { Thread } from 'components/Thread';
 import { scrollToBottom } from 'utilities/scroll';
-import debounce from 'utilities/debounce';
 import { sendMessageWrapper } from './sendMessageWrapper';
 import usePolling from '@linen/hooks/polling';
 import useKeyboard from '@linen/hooks/keyboard';
@@ -25,28 +24,24 @@ const { Header, Filters, Grid } = Pages.Feed;
 const { SidebarLayout } = Layouts.Shared;
 
 interface Props {
+  fetchFeed({
+    communityName,
+    state,
+    scope,
+    page,
+  }: {
+    communityName: string;
+    state: ThreadState;
+    scope: Scope;
+    page: number;
+  }): Promise<FeedResponse>;
   isSubDomainRouting: boolean;
   permissions: Permissions;
   settings: Settings;
 }
 
-const debouncedFetch = debounce(
-  ({ communityName, state, scope, page }: any) => {
-    return fetch(
-      `/api/feed?communityName=${communityName}&state=${state}&scope=${scope}&page=${page}`,
-      {
-        method: 'GET',
-      }
-    ).then((response) => {
-      if (response.ok) {
-        return response.json();
-      }
-      throw new Error('Failed to fetch the feed.');
-    });
-  }
-);
-
 export default function Feed({
+  fetchFeed,
   isSubDomainRouting,
   permissions,
   settings,
@@ -197,7 +192,7 @@ export default function Feed({
   const [polling] = usePolling(
     {
       fetch() {
-        return debouncedFetch({ communityName, state, scope, page });
+        return fetchFeed({ communityName, state, scope, page });
       },
       success(data: FeedResponse) {
         setFeed((f) => ({ ...f, threads: data.threads }));
