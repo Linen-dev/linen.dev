@@ -3,7 +3,7 @@ import { GoCheck, GoChevronDown } from 'react-icons/go';
 import { Listbox, Transition } from '@headlessui/react';
 import classNames from 'classnames';
 import { SettingsProps, WaitForIntegration } from '..';
-import { toast } from 'components/Toast';
+import { Toast } from '@linen/ui';
 import { channels } from '@prisma/client';
 import DiscordIcon from 'components/icons/DiscordIcon';
 import SlackIcon from 'components/icons/SlackIcon';
@@ -163,12 +163,12 @@ export default function ChannelsDefault({ channels, account }: SettingsProps) {
         if (response.ok) {
           setDefaultChannel(channelSelected);
           setSelected(channelSelected);
-          toast.success('Saved successfully!');
+          Toast.success('Saved successfully!');
         } else {
-          toast.error('Something went wrong!');
+          Toast.error('Something went wrong!');
         }
       })
-      .catch(() => toast.error('Something went wrong'));
+      .catch(() => Toast.error('Something went wrong'));
   }
 
   return (

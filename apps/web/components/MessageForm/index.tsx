@@ -1,8 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import autosize from 'autosize';
-import { Button } from '@linen/ui';
+import { Button, Toast } from '@linen/ui';
 import styles from './index.module.scss';
-import toast from 'components/Toast';
 import Suggestions from 'components/Suggestions';
 import Tab from './Tab';
 import Preview from './Preview';
@@ -158,7 +157,7 @@ function MessageForm({
         setLoading(false);
       })
       .catch(() => {
-        toast.error('Something went wrong. Please try again.');
+        Toast.error('Something went wrong. Please try again.');
         setLoading(false);
       });
 
@@ -216,7 +215,7 @@ function MessageForm({
         if (file.size > FILE_SIZE_LIMIT_IN_BYTES) {
           event.target.value = '';
           setFiles([]);
-          return toast.error(getFileSizeErrorMessage(file.name));
+          return Toast.error(getFileSizeErrorMessage(file.name));
         }
         formData.append(`file-${index}`, file, file.name);
       }

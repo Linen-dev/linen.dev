@@ -2,7 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import { getThreadUrl } from '../Pages/Channel/utilities/url';
 import { copyToClipboard } from 'utilities/clipboard';
-import { toast } from 'components/Toast';
+import { Toast } from '@linen/ui';
 import { Permissions, Settings, SerializedMessage } from '@linen/types';
 import { GoPin } from 'react-icons/go';
 import { AiOutlinePaperClip } from 'react-icons/ai';
@@ -95,7 +95,7 @@ export default function Actions({
           event.stopPropagation();
           event.preventDefault();
           copyToClipboard(text);
-          toast.success('Copied to clipboard', text);
+          Toast.success('Copied to clipboard', text);
         }}
       >
         <Tooltip className={styles.tooltip} text="URL">

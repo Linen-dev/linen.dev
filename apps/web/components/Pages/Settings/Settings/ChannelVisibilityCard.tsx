@@ -3,7 +3,7 @@ import { useState } from 'react';
 import classNames from 'classnames';
 import { SettingsProps, WaitForIntegration } from '..';
 import { channels } from '@prisma/client';
-import { toast } from 'components/Toast';
+import { Toast } from '@linen/ui';
 import Toggle from 'components/Toggle';
 
 function ChannelToggleList({
@@ -101,7 +101,7 @@ export default function ChannelVisibilityCard({
           throw response;
         }
       })
-      .catch(() => toast.error('Something went wrong. Please try again.'));
+      .catch(() => Toast.error('Something went wrong. Please try again.'));
   }
 
   return (

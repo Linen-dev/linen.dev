@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import Layout from 'components/layout/CardLayout';
-import { Button } from '@linen/ui';
+import { Button, Toast } from '@linen/ui';
 import TextInput from 'components/TextInput';
-import { toast } from 'components/Toast';
 
 export function CreateSubdomainPage() {
   const [premium, setPremium] = useState(false);
@@ -39,11 +38,11 @@ export function CreateSubdomainPage() {
       if (error.status === 400) {
         const text = await error.text();
         if (text) {
-          toast.info(text);
+          Toast.info(text);
           return;
         }
       }
-      toast.error('Something went wrong');
+      Toast.error('Something went wrong');
     } finally {
       setLoading(false);
     }

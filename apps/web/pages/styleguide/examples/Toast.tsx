@@ -1,6 +1,6 @@
 import Example from '../Example';
 import { Button } from '@linen/ui';
-import { toast } from 'components/Toast';
+import { Toast } from '@linen/ui';
 
 export default function TextareaExample() {
   return (
@@ -8,16 +8,16 @@ export default function TextareaExample() {
       <Example description="Toasts can have different states.">
         <div>
           <Button
-            onClick={() => toast.success('Lorem ipsum', 'dolor sit amet')}
+            onClick={() => Toast.success('Lorem ipsum', 'dolor sit amet')}
           >
             Success
           </Button>
         </div>
         <div>
-          <Button onClick={() => toast.error('Lorem ipsum')}>Error</Button>
+          <Button onClick={() => Toast.error('Lorem ipsum')}>Error</Button>
         </div>
         <div>
-          <Button onClick={() => toast.info('Lorem ipsum')}>info</Button>
+          <Button onClick={() => Toast.info('Lorem ipsum')}>info</Button>
         </div>
       </Example>
     </Example>

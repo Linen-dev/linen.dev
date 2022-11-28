@@ -2,7 +2,7 @@ import Layout from 'components/layout/CardLayout';
 import { Button } from '@linen/ui';
 import EmailField from 'components/EmailField';
 import { useState } from 'react';
-import { toast } from 'components/Toast';
+import { Toast } from '@linen/ui';
 
 export function InviteYourTeamPage() {
   const [loading, setLoading] = useState(false);
@@ -42,7 +42,7 @@ export function InviteYourTeamPage() {
         onSkip();
       }
     } catch (error) {
-      toast.error('Something went wrong');
+      Toast.error('Something went wrong');
     } finally {
       setLoading(false);
     }

@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback } from 'react';
 import { Permissions, Scope } from '@linen/types';
-import { Layouts, Pages } from '@linen/ui';
+import { Layouts, Pages, Toast } from '@linen/ui';
 import { FeedResponse, Selections } from '../types';
 import { Thread } from 'components/Thread';
 import { scrollToBottom } from 'utilities/scroll';
@@ -11,7 +11,6 @@ import { useUsersContext } from 'contexts/Users';
 import { useJoinContext } from 'contexts/Join';
 import useFeedWebsockets from 'hooks/websockets/feed';
 import type { CommunityPushType } from 'services/push';
-import { toast } from 'components/Toast';
 import { manageSelections } from './utilities/selection';
 import {
   SerializedMessage,
@@ -198,7 +197,7 @@ export default function Feed({
         setFeed((f) => ({ ...f, threads: data.threads }));
       },
       error() {
-        toast.error('Something went wrong. Please reload the page.');
+        Toast.error('Something went wrong. Please reload the page.');
       },
     },
     [communityName, state, page, scope, key]
@@ -286,7 +285,7 @@ export default function Feed({
         throw new Error('Failed to close the thread.');
       })
       .catch((exception) => {
-        toast.error(exception.message);
+        Toast.error(exception.message);
       });
   };
 

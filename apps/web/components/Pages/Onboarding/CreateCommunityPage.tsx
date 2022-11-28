@@ -1,8 +1,7 @@
 import Layout from 'components/layout/CardLayout';
-import { Button } from '@linen/ui';
+import { Button, Toast } from '@linen/ui';
 import TextInput from 'components/TextInput';
 import { useState } from 'react';
-import { toast } from 'components/Toast';
 
 export function CreateCommunityPage() {
   const [loading, setLoading] = useState(false);
@@ -27,7 +26,7 @@ export function CreateCommunityPage() {
         window.location.href = '/onboarding/create-subdomain';
       }
     } catch (error) {
-      toast.error('Something went wrong');
+      Toast.error('Something went wrong');
     } finally {
       setLoading(false);
     }

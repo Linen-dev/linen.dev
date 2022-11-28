@@ -2,7 +2,7 @@ import LinenIcon from 'components/icons/LinenIcon';
 import classNames from 'classnames';
 import styles from './index.module.css';
 import { useSession } from 'next-auth/react';
-import { toast } from 'components/Toast';
+import { Toast } from '@linen/ui';
 import { useJoinContext } from 'contexts/Join';
 
 export default function JoinLinen({ accountId }: { accountId?: string }) {
@@ -18,9 +18,9 @@ export default function JoinLinen({ accountId }: { accountId?: string }) {
         }),
       });
       if (!res.ok) {
-        toast.info('Something went wrong, please try again');
+        Toast.info('Something went wrong, please try again');
       } else {
-        toast.success('Welcome aboard');
+        Toast.success('Welcome aboard');
         window.location.href = window.location.href;
       }
     } else if (status === 'unauthenticated') {

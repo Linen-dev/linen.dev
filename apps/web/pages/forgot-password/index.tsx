@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Layout from '../../components/layout/CardLayout';
 import EmailField from '../../components/EmailField';
 import { Button } from '@linen/ui';
-import { toast } from 'components/Toast';
+import { Toast } from '@linen/ui';
 import type { NextPageContext } from 'next';
 
 interface Props {
@@ -22,11 +22,11 @@ export default function ForgotPassword({ email }: Props) {
         body: JSON.stringify({ email }),
       });
       if (response.ok) {
-        toast.success('Please check your email for a reset link');
+        Toast.success('Please check your email for a reset link');
       } else throw response;
     } catch (exception) {
       setLoading(false);
-      toast.error('Something went wrong. Please try again.');
+      Toast.error('Something went wrong. Please try again.');
     }
   };
   return (

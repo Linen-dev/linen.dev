@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import React, { useEffect, useState } from 'react';
 import PageLayout from 'components/layout/PageLayout';
-import { toast } from 'components/Toast';
+import { Toast } from '@linen/ui';
 import { buildChannelSeo } from 'utilities/seo';
 import Content from 'components/Pages/Channel/Content';
 import {
@@ -486,7 +486,7 @@ export default function Channel(props: ChannelProps) {
         throw new Error('Failed to close the thread.');
       })
       .catch((exception) => {
-        toast.error(exception.message);
+        Toast.error(exception.message);
       });
   };
 

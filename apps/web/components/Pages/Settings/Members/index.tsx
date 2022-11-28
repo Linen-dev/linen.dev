@@ -5,7 +5,7 @@ import { Button, NativeSelect } from '@linen/ui';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { Roles } from '@prisma/client';
-import { toast } from 'components/Toast';
+import { Toast } from '@linen/ui';
 import { AiOutlineUser } from 'react-icons/ai';
 
 export interface MembersType {
@@ -144,7 +144,7 @@ function RowMember(user: MembersType, communityId: string): JSX.Element {
       }
       setData({ ...data, role });
     } catch (error) {
-      toast.error('Something went wrong');
+      Toast.error('Something went wrong');
     } finally {
       setLoading(false);
     }
@@ -202,7 +202,7 @@ export default function Members({ account, users }: MembersPageProps) {
         router.reload();
       }
     } catch (error) {
-      toast.error('Something went wrong');
+      Toast.error('Something went wrong');
     } finally {
       setLoading(false);
     }

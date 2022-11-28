@@ -2,7 +2,7 @@ import Layout from '../../components/layout/CardLayout';
 import PasswordField from '../../components/PasswordField';
 import { Button } from '@linen/ui';
 import { NextPageContext } from 'next';
-import { toast } from 'components/Toast';
+import { Toast } from '@linen/ui';
 import { useState } from 'react';
 
 interface Props {
@@ -16,7 +16,7 @@ export default function ResetPassword({ token }: Props) {
     const password = form.password.value;
     const passwordConfirmation = form.passwordConfirmation.value;
     if (password !== passwordConfirmation) {
-      toast.error('Passwords do not match');
+      Toast.error('Passwords do not match');
       return;
     }
     try {
@@ -27,7 +27,7 @@ export default function ResetPassword({ token }: Props) {
       await response.json();
       window.location.href = '/signin&mode=creds';
     } catch (exception) {
-      toast.error('Something went wrong. Please try again.');
+      Toast.error('Something went wrong. Please try again.');
     }
   };
   return (

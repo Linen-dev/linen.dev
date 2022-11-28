@@ -1,6 +1,6 @@
 import React from 'react';
 import { AiOutlinePaperClip } from 'react-icons/ai';
-import { toast } from 'components/Toast';
+import { Toast } from '@linen/ui';
 import { copyToClipboard } from 'utilities/clipboard';
 
 interface Props {
@@ -16,7 +16,7 @@ export default function CopyToClipboardIcon({ getText }: Props) {
         event.stopPropagation();
         event.preventDefault();
         copyToClipboard(text);
-        toast.success('Copied to clipboard', text);
+        Toast.success('Copied to clipboard', text);
       }}
     />
   );

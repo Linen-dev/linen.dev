@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import DashboardLayout from 'components/layout/DashboardLayout';
-import { toast } from 'components/Toast';
+import { Toast } from '@linen/ui';
 import { SerializedAccount } from '@linen/types';
 import type { channels, AccountType } from '@prisma/client';
 import LinkCard from './Settings/LinkCard';
@@ -32,10 +32,10 @@ const updateAccount = debounce(
     })
       .then((response) => {
         if (!response.ok) throw response;
-        toast.success('Saved successfully!');
+        Toast.success('Saved successfully!');
       })
       .catch(() => {
-        toast.error('Something went wrong!');
+        Toast.error('Something went wrong!');
       });
   },
   250,
@@ -52,19 +52,19 @@ export default function Settings(props: SettingsProps) {
   useEffect(() => {
     const error = router.query.error as string;
     if (error) {
-      toast.error('Something went wrong, please try again');
+      Toast.error('Something went wrong, please try again');
       router.replace(window.location.pathname, undefined, { shallow: true });
     }
     const forbidden = router.query.forbidden as string;
     if (forbidden) {
-      toast.info(
+      Toast.info(
         'Your current role does not have enough permissions to access this page'
       );
       router.replace(window.location.pathname, undefined, { shallow: true });
     }
     const success = router.query.success as string;
     if (success) {
-      toast.success(decodeURI(success));
+      Toast.success(decodeURI(success));
       router.replace(window.location.pathname, undefined, { shallow: true });
     }
   }, [router.query, router]);

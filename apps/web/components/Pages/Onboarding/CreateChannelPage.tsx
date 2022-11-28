@@ -2,7 +2,7 @@ import Layout from 'components/layout/CardLayout';
 import { Button } from '@linen/ui';
 import TextInput from 'components/TextInput';
 import { useState } from 'react';
-import { toast } from 'components/Toast';
+import { Toast } from '@linen/ui';
 
 export function CreateChannelPage() {
   const [loading, setLoading] = useState(false);
@@ -36,7 +36,7 @@ export function CreateChannelPage() {
         window.location.href = '/onboarding/invite-your-team';
       }
     } catch (error) {
-      toast.error('Something went wrong');
+      Toast.error('Something went wrong');
     } finally {
       setLoading(false);
     }

@@ -9,6 +9,7 @@ import List from './List';
 import NativeSelect from './NativeSelect';
 import Nav from './Nav';
 import StickyHeader from './StickyHeader';
+import Toast from './Toast';
 
 import Layouts from './Layouts';
 import Pages from './Pages';
@@ -25,6 +26,7 @@ export {
   NativeSelect,
   Nav,
   StickyHeader,
+  Toast,
   Layouts,
   Pages,
 };
