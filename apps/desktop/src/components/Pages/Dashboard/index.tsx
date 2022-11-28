@@ -6,9 +6,21 @@ import { FiRss } from 'react-icons/fi';
 import { Nav, Pages } from '@linen/ui';
 import { Scope, ThreadState } from '@linen/types';
 
-const { Header: StickyHeader, Filters } = Pages.Feed;
+const { Header: StickyHeader, Filters, Grid } = Pages.Feed;
 
 export default function Dashboard() {
+  const permissions = {
+    access: false,
+    feed: false,
+    chat: false,
+    manage: false,
+    is_member: false,
+    channel_create: false,
+    accountId: null,
+    token: null,
+    user: null,
+    auth: null,
+  };
   return (
     <div className={styles.container}>
       <Title />
@@ -31,18 +43,15 @@ export default function Dashboard() {
             onUpdate={() => {}}
             onPageChange={() => {}}
             isFetchingTotal={false}
-            permissions={{
-              access: false,
-              feed: false,
-              chat: false,
-              manage: false,
-              is_member: false,
-              channel_create: false,
-              accountId: null,
-              token: null,
-              user: null,
-              auth: null,
-            }}
+            permissions={permissions}
+          />
+          <Grid
+            threads={[]}
+            selections={{}}
+            permissions={permissions}
+            loading={false}
+            onChange={() => {}}
+            onSelect={() => {}}
           />
         </div>
       </div>
