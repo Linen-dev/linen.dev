@@ -28,6 +28,9 @@ export const isSubdomainbasedRouting = (host: string): boolean => {
   if (host.includes('vercel.app')) {
     return false;
   }
+  if (host.includes('linendev.com')) {
+    return false;
+  }
   if (host.includes('www.localhost:3000')) {
     return false;
   }
