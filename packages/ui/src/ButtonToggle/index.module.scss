@@ -1,8 +1,12 @@
+@import '../colors.scss';
+
 .button {
   align-items: center;
-  color: #5e646e;
+  border: none;
+  color: $color-gray-700;
   display: flex;
   font-size: 12px;
   gap: 0.25rem;
   padding: 0.5rem 0.75rem;
+  text-decoration: none;
 }

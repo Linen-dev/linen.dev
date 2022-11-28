@@ -8,7 +8,7 @@
 
 .icon {
   border: 3px solid black;
-  border-radius: 8px;
+  border-radius: 0.5rem;
   margin-bottom: 1rem;
   padding: 8px;
   transform: rotate(15deg);
