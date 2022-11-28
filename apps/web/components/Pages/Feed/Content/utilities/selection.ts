@@ -1,4 +1,4 @@
-import { Selections } from '../types';
+import { Selections } from '../../types';
 
 function getCheckedSelections(selections: Selections): Selections {
   const result: Selections = {};
