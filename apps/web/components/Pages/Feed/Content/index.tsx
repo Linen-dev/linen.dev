@@ -12,7 +12,7 @@ import { useJoinContext } from 'contexts/Join';
 import useFeedWebsockets from 'hooks/websockets/feed';
 import type { CommunityPushType } from 'services/push';
 import { toast } from 'components/Toast';
-import { manageSelections } from '../utilities/selection';
+import { manageSelections } from './utilities/selection';
 import {
   SerializedMessage,
   SerializedThread,
