@@ -191,7 +191,7 @@ export default function Feed({
 
   const [polling] = usePolling(
     {
-      fetch() {
+      fetch(): any {
         return fetchFeed({ communityName, state, scope, page });
       },
       success(data: FeedResponse) {
@@ -206,7 +206,7 @@ export default function Feed({
 
   const [totalPolling] = usePolling(
     {
-      fetch() {
+      fetch(): any {
         return fetch(
           `/api/feed?communityName=${communityName}&state=${state}&scope=${scope}&total=true`,
           {

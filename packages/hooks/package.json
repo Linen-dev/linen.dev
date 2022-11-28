@@ -6,11 +6,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "dev": "tsc --watch",
-    "build": "tsc",
-    "test": "jest"
-  },
-  "dependencies": {
-    "jest": "^29.3.1"
+    "build": "tsc"
   },
   "devDependencies": {
     "typescript": "^4.9.3"

@@ -54,7 +54,7 @@ export default function Autocomplete({
     if (value.length >= minlength) {
       setSearching(true);
       debouncedFetch({ query: value, offset, limit })
-        .then((data) => {
+        .then((data: object[]) => {
           if (!isMounted) {
             return;
           }
@@ -67,12 +67,12 @@ export default function Autocomplete({
           }
           setLoadMoreVisible(data.length >= limit);
         })
-        .catch((e) => {
+        .catch((exception: Error) => {
           if (!isMounted) {
             return;
           }
           setSearching(false);
-          console.error(e);
+          console.error(exception);
         });
     } else {
       setResults([]);

@@ -286,8 +286,7 @@ describe('createSitemapForFreeByChannel', () => {
       builder
     );
     expect(builder).toHaveBeenCalledWith('https://linen.com/s/linen.com/', [
-      'c/general/YXNjOmd0OjA=',
-      't/9999/topic',
+      'c/general',
     ]);
   });
 });

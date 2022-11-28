@@ -1,0 +1,50 @@
+@import 'styles/colors.scss';
+
+.container {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 4px $color-border;
+  max-width: 24rem;
+  overflow: hidden;
+  padding: 1rem;
+  pointer-events: auto;
+  transition: 0.2s ease-in all;
+  width: 100%;
+  z-index: 10;
+}
+
+.toast {
+  align-items: center;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.icon {
+  height: 1.5rem;
+  width: 1.5rem;
+}
+
+.green {
+  color: $color-green-500;
+}
+
+.red {
+  color: $color-red-500;
+}
+
+.blue {
+  color: $color-blue-500;
+}
+
+.message {
+  color: $color-gray-900;
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.description {
+  color: $color-gray-700;
+  font-size: 0.75rem;
+  line-height: 1rem;
+}

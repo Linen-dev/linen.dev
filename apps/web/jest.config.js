@@ -1,5 +1,6 @@
 // jest.config.js
 const nextJest = require('next/jest');
+const { join } = require('path');
 
 const nextConfig = {
   // Provide the path to your Next.js app to load next.config.js and .env files in your test environment
@@ -13,6 +14,12 @@ const customJestConfig = {
   // setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   // if using TypeScript with a baseUrl set to the root directory then you need the below for alias' to work
   moduleDirectories: ['node_modules', '<rootDir>/'],
+  moduleNameMapper: {
+    '@linen/utilities/debounce':
+      '<rootDir>/../../packages/utilities/dist/debounce.js',
+    '@linen/hooks/mode': '<rootDir>/../../packages/hooks/dist/mode.js',
+    '@linen/(.*)': '<rootDir>/../../packages/$1',
+  },
   testEnvironment: 'jest-environment-jsdom',
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   testMatch: ['**/?(*.)+(spec|test).[tj]s?(x)'],
