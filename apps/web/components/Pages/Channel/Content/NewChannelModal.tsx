@@ -1,9 +1,8 @@
 import { Fragment, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { FiPlus, FiX } from 'react-icons/fi';
-import { Button } from '@linen/ui';
+import { Button, Toast } from '@linen/ui';
 import TextInput from 'components/TextInput';
-import { toast } from 'components/Toast';
 import { useSession } from 'next-auth/react';
 import { useLinkContext } from 'contexts/Link';
 import CustomRouterPush from 'components/Link/CustomRouterPush';
@@ -33,7 +32,7 @@ export default function NewChannelModal({
       });
       const data = await response.json();
       if (response.status === 400 && data.error) {
-        return toast.error(data.error);
+        return Toast.error(data.error);
       }
       if (!response.ok) {
         throw response;
@@ -47,7 +46,7 @@ export default function NewChannelModal({
         });
       }
     } catch (error) {
-      toast.error('Something went wrong');
+      Toast.error('Something went wrong');
     } finally {
       setLoading(false);
     }

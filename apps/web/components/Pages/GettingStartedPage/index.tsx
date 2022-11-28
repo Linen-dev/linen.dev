@@ -1,6 +1,5 @@
-import { Button } from '@linen/ui';
+import { Button, Toast } from '@linen/ui';
 import Layout from 'components/layout/CardLayout';
-import { toast } from 'components/Toast';
 import { useState } from 'react';
 
 type Account = {
@@ -70,7 +69,7 @@ export function GettingStartedPage({ session, ...rest }: any) {
         }
         return state;
       });
-      return toast.error('Something went wrong');
+      return Toast.error('Something went wrong');
     }
   }
 
@@ -92,7 +91,7 @@ export function GettingStartedPage({ session, ...rest }: any) {
       if (shouldLog) {
         console.error({ error });
       }
-      return toast.error('Something went wrong');
+      return Toast.error('Something went wrong');
     }
   }
 

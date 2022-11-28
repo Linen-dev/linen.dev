@@ -8,7 +8,7 @@ import { stripProtocol } from 'utilities/url';
 import classNames from 'classnames';
 import { useS3Upload } from 'next-s3-upload';
 import { useState } from 'react';
-import { toast } from 'components/Toast';
+import { Toast } from '@linen/ui';
 import { SerializedAccount } from '@linen/types';
 import { useRouter } from 'next/router';
 import { DNSRecord } from 'services/vercel';
@@ -98,11 +98,11 @@ export default function Branding({ account, records }: Props) {
       }),
     });
     if (response.ok) {
-      toast.success('Saved successfully!');
+      Toast.success('Saved successfully!');
       router.reload();
     } else {
       const data = await response.json();
-      toast.error(data.error || 'Something went wrong!');
+      Toast.error(data.error || 'Something went wrong!');
     }
   };
 

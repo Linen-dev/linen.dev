@@ -5,7 +5,7 @@ import { ThreadState } from '@linen/types';
 import { useUsersContext } from 'contexts/Users';
 import { useJoinContext } from 'contexts/Join';
 import { sendMessageWrapper } from './sendMessageWrapper';
-import { toast } from 'components/Toast';
+import { Toast } from '@linen/ui';
 import {
   Permissions,
   SerializedAccount,
@@ -89,7 +89,7 @@ export default function Content({
         throw new Error('Failed to close the thread.');
       })
       .catch((exception) => {
-        toast.error(exception.message);
+        Toast.error(exception.message);
       });
   };
 

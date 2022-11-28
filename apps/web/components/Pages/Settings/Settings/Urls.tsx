@@ -1,4 +1,4 @@
-import { toast } from 'components/Toast';
+import { Toast } from '@linen/ui';
 import TextField from 'components/TextField';
 import { SettingsProps } from '..';
 
@@ -53,7 +53,7 @@ export default function URLs({ account }: SettingsProps) {
         account[target.id] = target.value;
       })
       .catch(() => {
-        toast.error('Something went wrong!');
+        Toast.error('Something went wrong!');
       });
   };
 

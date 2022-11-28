@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import AvatarField from './AvatarField';
 import TextField from 'components/TextField';
-import { Button } from '@linen/ui';
-import { toast } from 'components/Toast';
+import { Button, Toast } from '@linen/ui';
 import { SerializedUser } from '@linen/types';
 import {
   FILE_SIZE_LIMIT_IN_BYTES,
@@ -40,7 +39,7 @@ export default function ProfileForm({
       setSubmitting(true);
       await onSubmit({ displayName, userId: currentUser.id });
     } catch (exception) {
-      toast.error('Something went wrong. Please try again.');
+      Toast.error('Something went wrong. Please try again.');
     } finally {
       setSubmitting(false);
     }
@@ -51,7 +50,7 @@ export default function ProfileForm({
     if (file) {
       if (file.size > FILE_SIZE_LIMIT_IN_BYTES) {
         event.target.value = '';
-        return toast.error(getFileSizeErrorMessage(file.name));
+        return Toast.error(getFileSizeErrorMessage(file.name));
       }
       const formData = new FormData();
       formData.set('file', file, file.name);
@@ -67,7 +66,7 @@ export default function ProfileForm({
         });
       } catch (exception) {
         event.target.value = '';
-        toast.error('Something went wrong. Please try again.');
+        Toast.error('Something went wrong. Please try again.');
       } finally {
         setUploading(false);
       }

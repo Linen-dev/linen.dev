@@ -2,7 +2,7 @@ import CommunityButton from 'components/CommunityButton';
 import { capitalize } from 'utilities/string';
 import { integrationAuthorizer } from 'utilities/communityAuthorizers';
 import { SerializedAccount } from '@linen/types';
-import { toast } from 'components/Toast';
+import { Toast } from '@linen/ui';
 import { GoCheck, GoAlert, GoInfo } from 'react-icons/go';
 
 const statusMap: any = {
@@ -43,7 +43,7 @@ export default function CommunityIntegration({
       const { id } = account ? account : await createAccount();
       community && integrationAuthorizer(community, id);
     } catch (error) {
-      return toast.error('Something went wrong, please sign in again');
+      return Toast.error('Something went wrong, please sign in again');
     }
   };
 

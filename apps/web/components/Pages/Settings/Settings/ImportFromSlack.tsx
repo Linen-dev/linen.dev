@@ -2,10 +2,10 @@ import { Button } from '@linen/ui';
 import { useS3Upload } from 'next-s3-upload';
 import { useRef, useState } from 'react';
 import { SerializedAccount } from '@linen/types';
-import { toast } from 'components/Toast';
+import { Toast } from '@linen/ui';
 import { qs } from 'utilities/url';
 
-const fail = () => toast.error('Something went wrong');
+const fail = () => Toast.error('Something went wrong');
 
 export default function ImportFromSlack({
   account,
@@ -52,7 +52,7 @@ export default function ImportFromSlack({
       if (!startSync.ok) {
         throw startSync;
       }
-      toast.success('Import process initiated');
+      Toast.success('Import process initiated');
     } catch (error) {
       console.error(error);
       fail();

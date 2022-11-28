@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { SettingsProps, WaitForIntegration } from '..';
-import { toast } from 'components/Toast';
+import { Toast } from '@linen/ui';
 import Toggle from 'components/Toggle';
 
 function AnonymizeCardComponent({
@@ -47,7 +47,7 @@ export default function AnonymizeCard({ account }: SettingsProps) {
 
   async function onChange(toggle: boolean) {
     if (!account) {
-      return toast.error('Missing community integration');
+      return Toast.error('Missing community integration');
     }
     fetch('/api/accounts', {
       method: 'PUT',
@@ -58,13 +58,13 @@ export default function AnonymizeCard({ account }: SettingsProps) {
     })
       .then((response) => {
         if (response.ok) {
-          toast.success('Saved successfully!');
+          Toast.success('Saved successfully!');
           setEnabled(toggle);
         } else {
           throw 'fail to update';
         }
       })
-      .catch(() => toast.error('Something went wrong!'));
+      .catch(() => Toast.error('Something went wrong!'));
   }
 
   return (

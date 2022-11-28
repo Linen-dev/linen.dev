@@ -5,14 +5,13 @@ import { Permissions, SerializedChannel } from '@linen/types';
 import Link from 'components/Link/InternalLink';
 import NewChannelModal from 'components/Pages/Channel/Content/NewChannelModal';
 import useWebsockets from 'hooks/websockets';
-import { toast } from 'components/Toast';
 import Badge from 'components/Badge';
 import styles from './index.module.scss';
 import { FiRss, FiBarChart, FiHash } from 'react-icons/fi';
 import { useRouter } from 'next/router';
 import usePath from 'hooks/path';
 import { Mode } from '@linen/hooks/mode';
-import { Nav } from '@linen/ui';
+import { Nav, Toast } from '@linen/ui';
 
 interface Props {
   mode: Mode;
@@ -55,7 +54,7 @@ export default function DesktopNavBar({
           (channel) => channel.id === payload.channel_id
         );
         if (channel) {
-          toast.info(`You were mentioned in #${channel.channelName}`);
+          Toast.info(`You were mentioned in #${channel.channelName}`);
         }
       }
       setHighlights((highlights) => {

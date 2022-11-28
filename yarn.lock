@@ -8531,7 +8531,7 @@ react-error-boundary@^3.1.4:
 
 react-hot-toast@^2.4.0:
   version "2.4.0"
-  resolved "https://registry.npmjs.org/react-hot-toast/-/react-hot-toast-2.4.0.tgz"
+  resolved "https://registry.yarnpkg.com/react-hot-toast/-/react-hot-toast-2.4.0.tgz#b91e7a4c1b6e3068fc599d3d83b4fb48668ae51d"
   integrity sha512-qnnVbXropKuwUpriVVosgo8QrB+IaPJCpL8oBI6Ov84uvHZ5QQcTp2qg6ku2wNfgJl6rlQXJIQU5q+5lmPOutA==
   dependencies:
     goober "^2.1.10"

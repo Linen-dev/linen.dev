@@ -10,7 +10,7 @@ import Head from 'next/head';
 import Script from 'next/script';
 import { useEffect } from 'react';
 import { SessionProvider } from 'next-auth/react';
-import { ToastContext } from 'components/Toast';
+import { Toast } from '@linen/ui';
 import { usePostHog } from 'next-use-posthog';
 import { JoinContext } from 'contexts/Join';
 import { UsersContext } from 'contexts/Users';
@@ -63,7 +63,7 @@ export default function App(props: AppProps) {
       </Head>
 
       <SWRConfig>
-        <ToastContext />
+        <Toast.ToastContext />
         <JoinContext>
           <UsersContext>
             <Component {...pageProps} />
