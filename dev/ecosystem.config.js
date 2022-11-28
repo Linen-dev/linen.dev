@@ -7,7 +7,7 @@ module.exports = {
     {
       name: 'nextjs',
       script: 'npm run dev',
-      cwd: '../nextjs',
+      cwd: '../apps/web',
       env: {
         PORT,
       },
@@ -15,22 +15,22 @@ module.exports = {
     {
       name: 'queue-chat',
       script: 'npm run queue:worker:chat-sync',
-      cwd: '../nextjs',
+      cwd: '../apps/web',
     },
     {
       name: 'queue-sync',
       script: 'npm run queue:worker:sync',
-      cwd: '../nextjs',
+      cwd: '../apps/web',
     },
     {
       name: 'queue-webhook',
       script: 'npm run queue:worker:webhook',
-      cwd: '../nextjs',
+      cwd: '../apps/web',
     },
     {
       name: 'push-service',
       script: 'mix phx.server',
-      cwd: '../push_service',
+      cwd: '../apps/push_service',
       env: {
         MIX_ENV: 'prod',
         PORT: 4000,

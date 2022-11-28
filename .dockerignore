@@ -14,3 +14,12 @@ cdk
 .env.test
 .env.test.local
 .env.production.local
+
+dev
+.elixir_ls
+.husky
+.github
+.DS_Store
+.vscode
+docs
+apps/push_service
