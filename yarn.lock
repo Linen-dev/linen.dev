@@ -3361,7 +3361,7 @@ available-typed-arrays@^1.0.5:
 
 awesome-debounce-promise@^2.1.0:
   version "2.1.0"
-  resolved "https://registry.npmjs.org/awesome-debounce-promise/-/awesome-debounce-promise-2.1.0.tgz"
+  resolved "https://registry.yarnpkg.com/awesome-debounce-promise/-/awesome-debounce-promise-2.1.0.tgz#7c21cadf2eaa1fa0a29449dd4dfdbd5004811e53"
   integrity sha512-0Dv4j2wKk5BrNZh4jgV2HUdznaeVgEK/WTvcHhZWUElhmQ1RR+iURRoLEwICFyR0S/5VtxfcvY6gR+qSe95jNg==
   dependencies:
     "@types/debounce-promise" "^3.1.1"

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useCallback, useState } from 'react';
-import debounce from 'awesome-debounce-promise';
+import debounce from '@linen/utilities/debounce';
 import TextInput from 'components/TextInput';
 import { AiOutlineSearch, AiOutlineLoading } from 'react-icons/ai';
 import styles from './index.module.css';
@@ -39,10 +39,7 @@ export default function Autocomplete({
   const [activeResultIndex, setActiveResultIndex] = useState(-1);
   const inputRef: any = useRef(null);
 
-  const debouncedFetch = useCallback(
-    debounce(fetch, 250, { leading: true }),
-    []
-  );
+  const debouncedFetch = useCallback(debounce(fetch, 250), []);
 
   useEffect(() => {
     setMounted(true);

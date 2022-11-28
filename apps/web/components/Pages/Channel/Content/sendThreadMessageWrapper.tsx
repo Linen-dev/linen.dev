@@ -3,7 +3,7 @@ import { SerializedThread } from '@linen/types';
 import { SerializedMessage } from '@linen/types';
 import { SerializedUser } from '@linen/types';
 import { SerializedAccount } from '@linen/types';
-import debounce from 'utilities/debounce';
+import debounce from '@linen/utilities/debounce';
 import { StartSignUpFn } from 'contexts/Join';
 import { createMessageImitation } from './utilities/message';
 import { UploadedFile } from '@linen/types';

@@ -11,7 +11,7 @@ import CommunityIntegration from './Settings/CommunityIntegration';
 import AnonymizeCard from './Settings/AnonymizeCard';
 import URLs from './Settings/Urls';
 import ImportFromSlack from './Settings/ImportFromSlack';
-import debounce from 'awesome-debounce-promise';
+import debounce from '@linen/utilities/debounce';
 import { ForbiddenCard } from './Settings/ForbiddenCard';
 import { useRouter } from 'next/router';
 
@@ -22,7 +22,7 @@ export interface SettingsProps {
 }
 
 const updateAccount = debounce(
-  ({ communityId, type }) => {
+  ({ communityId, type }: { communityId: string; type: string }) => {
     fetch('/api/accounts', {
       method: 'PUT',
       body: JSON.stringify({

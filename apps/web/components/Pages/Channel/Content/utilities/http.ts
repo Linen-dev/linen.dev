@@ -1,5 +1,5 @@
 import { post } from 'utilities/http';
-import debounce from 'utilities/debounce';
+import debounce from '@linen/utilities/debounce';
 
 export const postReaction = debounce(
   (params: {
