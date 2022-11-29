@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './index.module.scss';
 import Title from './Title';
 import Header from './Header';
@@ -8,7 +8,18 @@ import { Scope, ThreadState } from '@linen/types';
 
 const { Header: StickyHeader, Filters, Grid } = Pages.Feed;
 
-export default function Dashboard() {
+interface Props {
+  fetchFeed(): Promise<any>;
+}
+
+export default function Dashboard({ fetchFeed }: Props) {
+  const [feed, setFeed] = useState({ threads: [], total: 0 });
+  useEffect(() => {
+    fetchFeed().then((response) => {
+      setFeed(response.data);
+    });
+  }, []);
+
   const permissions = {
     access: false,
     feed: false,
@@ -46,7 +57,7 @@ export default function Dashboard() {
             permissions={permissions}
           />
           <Grid
-            threads={[]}
+            threads={feed.threads}
             selections={{}}
             permissions={permissions}
             loading={false}

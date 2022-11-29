@@ -5,7 +5,13 @@ import { post } from '../../../utilities/http';
 import { message } from '@tauri-apps/api/dialog';
 
 interface Props {
-  onSignIn({ token }: { token: string }): void;
+  onSignIn({
+    token,
+    refreshToken,
+  }: {
+    token: string;
+    refreshToken: string;
+  }): void;
 }
 
 export default function SignIn({ onSignIn }: Props) {
@@ -17,15 +23,20 @@ export default function SignIn({ onSignIn }: Props) {
         onSubmit={async (event) => {
           event.preventDefault();
           const form = event.target as HTMLFormElement;
-          const email = form.email.value;
+          const username = form.username.value;
           const password = form.password.value;
-          if (!email || !password) {
+          if (!username || !password) {
             return;
           }
           try {
-            const response = await post('/api/signin', { email, password });
+            const response = await post('/api/v2/login', {
+              username,
+              password,
+            });
             if (response.ok) {
-              onSignIn(response.data as { token: string });
+              onSignIn(
+                response.data as { token: string; refreshToken: string }
+              );
             } else {
               await message(
                 'Email or password are incorrect. Please try again.',
@@ -43,7 +54,7 @@ export default function SignIn({ onSignIn }: Props) {
         <input
           className={styles.input}
           type="text"
-          name="email"
+          name="username"
           placeholder="Email"
         />
         <input
