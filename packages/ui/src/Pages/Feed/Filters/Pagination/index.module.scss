@@ -1,12 +1,17 @@
+@import '../../../../colors.scss';
+
 .pagination {
   align-items: center;
   display: flex;
 }
 
 .count {
-  color: rgb(51, 65, 85);
+  align-content: center;
+  color: $color-gray-700;
+  display: flex;
   font-size: 12px;
   font-weight: 400;
+  gap: 0.25rem;
   padding: 0.5rem;
 }
 
@@ -21,11 +26,11 @@
 }
 
 .icon:hover {
-  background: #e5e7eb;
+  background: $color-gray-100;
 }
 
 .icon.disabled {
-  color: #b8b8b8;
+  color: $color-gray-400;
   cursor: auto;
 }
 
@@ -33,22 +38,8 @@
   background: inherit;
 }
 
-.spinner {
-  animation: spin 1s linear infinite;
-  display: inline;
-}
-
 @media screen and (max-width: 767px) {
   .count {
     display: none;
-  }
-}
-
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
   }
 }

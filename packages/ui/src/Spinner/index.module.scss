@@ -1,20 +1,22 @@
+@import '../colors.scss';
+
 .spinner {
-  display: inline-block;
+  display: inline;
   position: relative;
-  width: 40px;
-  height: 40px;
+  width: 20px;
+  height: 20px;
 }
 .spinner div {
   box-sizing: border-box;
   display: block;
   position: absolute;
-  width: 32px;
-  height: 32px;
-  margin: 4px;
-  border: 4px solid #fff;
+  width: 16px;
+  height: 16px;
+  margin: 2px;
+  border: 2px solid $color-gray-700;
   border-radius: 50%;
   animation: spin 1.2s ease-in infinite;
-  border-color: #fff transparent transparent transparent;
+  border-color: $color-gray-700 transparent transparent transparent;
 }
 .spinner div:nth-child(1) {
   animation-delay: -0.45s;

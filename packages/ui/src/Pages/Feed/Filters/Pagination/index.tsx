@@ -1,8 +1,8 @@
 import React from 'react';
 import classNames from 'classnames';
 import { GoChevronLeft, GoChevronRight } from 'react-icons/go';
-import { CgSpinner } from 'react-icons/cg';
 import styles from './index.module.scss';
+import Spinner from '../../../../Spinner';
 
 interface Props {
   total: number;
@@ -46,8 +46,13 @@ export default function Pagination({
   return (
     <div className={styles.pagination}>
       <div className={styles.count}>
-        {start}-{end} of{' '}
-        {isFetchingTotal ? <CgSpinner className={styles.spinner} /> : total}
+        {isFetchingTotal ? (
+          <Spinner />
+        ) : (
+          <>
+            {start}-{end} of {total}
+          </>
+        )}
       </div>
       <div
         className={classNames(styles.icon, {
