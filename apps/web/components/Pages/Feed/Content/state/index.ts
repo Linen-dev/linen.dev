@@ -39,3 +39,23 @@ export function filterByScope(
     )
   );
 }
+
+export function addMessageToThread(
+  thread: SerializedThread | undefined,
+  message: SerializedMessage,
+  messageId: string,
+  imitationId: string
+) {
+  if (!thread) {
+    return;
+  }
+  return {
+    ...thread,
+    messages: [
+      ...thread.messages.filter(
+        ({ id }: any) => id !== imitationId && id !== messageId
+      ),
+      message,
+    ],
+  };
+}
