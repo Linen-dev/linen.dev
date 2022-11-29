@@ -44,6 +44,10 @@ const fetchFeed = debounce(
   }
 );
 
+const fetchThread = (threadId: string) => {
+  return fetch('/api/threads/' + threadId).then((response) => response.json());
+};
+
 export default function Feed({
   channels,
   isSubDomainRouting,
@@ -59,6 +63,7 @@ export default function Feed({
     >
       <Content
         fetchFeed={fetchFeed}
+        fetchThread={fetchThread}
         isSubDomainRouting={isSubDomainRouting}
         permissions={permissions}
         settings={settings}
