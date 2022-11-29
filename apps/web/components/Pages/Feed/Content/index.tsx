@@ -38,6 +38,15 @@ interface Props {
   }): Promise<FeedResponse>;
   fetchThread(threadId: string): Promise<SerializedThread>;
   putThread(threadId: string, options: object): Promise<any>;
+  fetchTotal({
+    communityName,
+    state,
+    scope,
+  }: {
+    communityName: string;
+    state: ThreadState;
+    scope: Scope;
+  }): Promise<FeedResponse>;
   isSubDomainRouting: boolean;
   permissions: Permissions;
   settings: Settings;
@@ -47,6 +56,7 @@ export default function Feed({
   fetchFeed,
   fetchThread,
   putThread,
+  fetchTotal,
   isSubDomainRouting,
   permissions,
   settings,
@@ -126,16 +136,7 @@ export default function Feed({
     }
     const newState =
       state === ThreadState.OPEN ? ThreadState.CLOSE : ThreadState.OPEN;
-    await Promise.all(
-      ids.map((id) =>
-        fetch(`/api/threads/${id}`, {
-          method: 'PUT',
-          body: JSON.stringify({
-            state: newState,
-          }),
-        })
-      )
-    );
+    await Promise.all(ids.map((id) => putThread(id, { state: newState })));
     setThread((thread) => {
       if (!thread) {
         return;
@@ -171,17 +172,7 @@ export default function Feed({
   const [totalPolling] = usePolling(
     {
       fetch(): any {
-        return fetch(
-          `/api/feed?communityName=${communityName}&state=${state}&scope=${scope}&total=true`,
-          {
-            method: 'GET',
-          }
-        ).then((response) => {
-          if (response.ok) {
-            return response.json();
-          }
-          throw new Error('Failed to fetch the feed.');
-        });
+        return fetchTotal({ communityName, state, scope });
       },
       success(data: FeedResponse) {
         setFeed((f) => ({ ...f, total: data.total }));
