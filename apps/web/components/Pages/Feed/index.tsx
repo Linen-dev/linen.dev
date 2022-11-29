@@ -48,6 +48,13 @@ const fetchThread = (threadId: string) => {
   return fetch('/api/threads/' + threadId).then((response) => response.json());
 };
 
+const putThread = (threadId: string, options: object) => {
+  return fetch(`/api/threads/${threadId}`, {
+    method: 'PUT',
+    body: JSON.stringify(options),
+  });
+};
+
 export default function Feed({
   channels,
   isSubDomainRouting,
@@ -64,6 +71,7 @@ export default function Feed({
       <Content
         fetchFeed={fetchFeed}
         fetchThread={fetchThread}
+        putThread={putThread}
         isSubDomainRouting={isSubDomainRouting}
         permissions={permissions}
         settings={settings}

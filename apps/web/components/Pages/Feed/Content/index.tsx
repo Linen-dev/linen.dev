@@ -37,6 +37,7 @@ interface Props {
     page: number;
   }): Promise<FeedResponse>;
   fetchThread(threadId: string): Promise<SerializedThread>;
+  putThread(threadId: string, options: object): Promise<any>;
   isSubDomainRouting: boolean;
   permissions: Permissions;
   settings: Settings;
@@ -45,6 +46,7 @@ interface Props {
 export default function Feed({
   fetchFeed,
   fetchThread,
+  putThread,
   isSubDomainRouting,
   permissions,
   settings,
@@ -234,11 +236,8 @@ export default function Feed({
       };
     });
 
-    return fetch(`/api/threads/${thread.id}`, {
-      method: 'PUT',
-      body: JSON.stringify(options),
-    })
-      .then((response) => {
+    return putThread(thread.id, options)
+      .then((response: any) => {
         if (response.ok) {
           if (options.state) {
             setKey((key) => key + 1);
@@ -247,7 +246,7 @@ export default function Feed({
         }
         throw new Error('Failed to close the thread.');
       })
-      .catch((exception) => {
+      .catch((exception: Error) => {
         Toast.error(exception.message);
       });
   };
