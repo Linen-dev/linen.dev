@@ -1,6 +1,7 @@
 import '../styles/reset.css';
 import '../nprogress.scss';
 import '../styles/globals.css';
+import '../styles/highlight.scss';
 import '@linen/ui/dist/index.css';
 import { useRouter } from 'next/router';
 import NProgress from 'nprogress';
