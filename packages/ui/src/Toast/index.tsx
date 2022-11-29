@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import toast, { Toaster } from 'react-hot-toast';
+import { Toaster, toast } from 'react-hot-toast';
 import { GoCheck, GoInfo, GoAlert } from 'react-icons/go';
 import styles from './index.module.scss';
 
