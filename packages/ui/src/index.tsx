@@ -8,6 +8,7 @@ import Label from './Label';
 import List from './List';
 import NativeSelect from './NativeSelect';
 import Nav from './Nav';
+import Spinner from './Spinner';
 import StickyHeader from './StickyHeader';
 import Toast from './Toast';
 
@@ -25,6 +26,7 @@ export {
   List,
   NativeSelect,
   Nav,
+  Spinner,
   StickyHeader,
   Toast,
   Layouts,
