@@ -55,6 +55,28 @@ const putThread = (threadId: string, options: object) => {
   });
 };
 
+const fetchTotal = ({
+  communityName,
+  state,
+  scope,
+}: {
+  communityName: string;
+  state: ThreadState;
+  scope: Scope;
+}) => {
+  return fetch(
+    `/api/feed?communityName=${communityName}&state=${state}&scope=${scope}&total=true`,
+    {
+      method: 'GET',
+    }
+  ).then((response) => {
+    if (response.ok) {
+      return response.json();
+    }
+    throw new Error('Failed to fetch the feed.');
+  });
+};
+
 export default function Feed({
   channels,
   isSubDomainRouting,
@@ -72,6 +94,7 @@ export default function Feed({
         fetchFeed={fetchFeed}
         fetchThread={fetchThread}
         putThread={putThread}
+        fetchTotal={fetchTotal}
         isSubDomainRouting={isSubDomainRouting}
         permissions={permissions}
         settings={settings}
