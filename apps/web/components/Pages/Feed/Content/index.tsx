@@ -36,6 +36,7 @@ interface Props {
     scope: Scope;
     page: number;
   }): Promise<FeedResponse>;
+  fetchThread(threadId: string): Promise<SerializedThread>;
   isSubDomainRouting: boolean;
   permissions: Permissions;
   settings: Settings;
@@ -43,6 +44,7 @@ interface Props {
 
 export default function Feed({
   fetchFeed,
+  fetchThread,
   isSubDomainRouting,
   permissions,
   settings,
@@ -86,9 +88,9 @@ export default function Feed({
         if (thread) {
           setFeed(prependThread(thread, message));
         } else {
-          fetch('/api/threads/' + payload.thread_id)
-            .then((response) => response.json())
-            .then((thread) => setFeed(prependThread(thread, message)));
+          fetchThread(payload.thread_id).then((thread) =>
+            setFeed(prependThread(thread, message))
+          );
         }
       }
     },
