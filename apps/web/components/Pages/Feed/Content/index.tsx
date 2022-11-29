@@ -19,7 +19,7 @@ import {
   Permissions,
   Scope,
 } from '@linen/types';
-import { filterByScope, prependThread } from './state';
+import { addMessageToThread, filterByScope, prependThread } from './state';
 
 const { Header, Filters, Grid } = Pages.Feed;
 const { SidebarLayout } = Layouts.Shared;
@@ -100,20 +100,9 @@ export default function Feed({
     messageId: string,
     imitationId: string
   ) => {
-    setThread((thread) => {
-      if (!thread) {
-        return;
-      }
-      return {
-        ...thread,
-        messages: [
-          ...thread.messages.filter(
-            ({ id }: any) => id !== imitationId && id !== messageId
-          ),
-          message,
-        ],
-      };
-    });
+    setThread((thread) =>
+      addMessageToThread(thread, message, messageId, imitationId)
+    );
   };
 
   useFeedWebsockets({
