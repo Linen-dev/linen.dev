@@ -1,10 +1,9 @@
 import { useState, useRef, useCallback } from 'react';
-import { Permissions, Scope } from '@linen/types';
 import { Layouts, Pages, Toast } from '@linen/ui';
 import { FeedResponse, Selections } from '../types';
 import { Thread } from 'components/Thread';
 import { scrollToBottom } from 'utilities/scroll';
-import { sendMessageWrapper } from './sendMessageWrapper';
+import { sendMessageWrapper } from './utilities/sendMessageWrapper';
 import usePolling from '@linen/hooks/polling';
 import useKeyboard from '@linen/hooks/keyboard';
 import { useUsersContext } from 'contexts/Users';
@@ -17,7 +16,10 @@ import {
   SerializedThread,
   Settings,
   ThreadState,
+  Permissions,
+  Scope,
 } from '@linen/types';
+import { filterByScope, prependThread } from './state';
 
 const { Header, Filters, Grid } = Pages.Feed;
 const { SidebarLayout } = Layouts.Shared;
@@ -61,36 +63,6 @@ export default function Feed({
   const currentUser = permissions.user || null;
   const { communityId, communityName } = settings;
 
-  function prependThread(
-    thread: SerializedThread,
-    message?: SerializedMessage
-  ) {
-    return (feed: FeedResponse) => {
-      const { threads, ...rest } = feed;
-      if (message) {
-        thread.messages = [
-          ...thread.messages.filter((m) => m.id !== message.id),
-          message,
-        ];
-      }
-      return {
-        ...rest,
-        threads: [thread, ...threads.filter((t) => t.id !== thread.id)],
-      };
-    };
-  }
-
-  function filterByScope(scope: Scope, messages: SerializedMessage[]) {
-    return (
-      scope === Scope.Participant &&
-      !messages.find(
-        (m) =>
-          m.author?.id === currentUser?.id ||
-          m.mentions.find((me) => me.id === currentUser?.id)
-      )
-    );
-  }
-
   const onNewMessage = useCallback(
     (payload: CommunityPushType) => {
       const thread: SerializedThread =
@@ -101,13 +73,13 @@ export default function Feed({
         return;
       }
       if (thread) {
-        if (filterByScope(scope, thread.messages)) {
+        if (filterByScope(scope, thread.messages, currentUser)) {
           return;
         }
         setFeed(prependThread(thread));
       }
       if (message) {
-        if (filterByScope(scope, [message])) {
+        if (filterByScope(scope, [message], currentUser)) {
           return;
         }
         const thread = feed.threads.find((t) => t.id === message.threadId);
