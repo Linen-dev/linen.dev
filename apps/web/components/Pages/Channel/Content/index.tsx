@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import useInfiniteScroll from 'react-infinite-scroll-hook';
-import { Thread } from 'components/Thread';
+import Thread from 'components/Thread';
 import { get } from 'utilities/http';
 import { useUsersContext } from 'contexts/Users';
 import ChatLayout from 'components/layout/shared/ChatLayout';
@@ -26,7 +26,7 @@ import {
   scrollToBottom,
   isScrollAtBottom,
   isInViewport,
-} from 'utilities/scroll';
+} from '@linen/utilities/scroll';
 import useMode from '@linen/hooks/mode';
 import styles from './index.module.css';
 import { SerializedMessage } from '@linen/types';

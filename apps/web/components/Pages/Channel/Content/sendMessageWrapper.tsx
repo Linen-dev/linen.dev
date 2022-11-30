@@ -1,5 +1,5 @@
 import { SerializedThread } from '@linen/types';
-import { scrollToBottom } from 'utilities/scroll';
+import { scrollToBottom } from '@linen/utilities/scroll';
 import { SerializedUser } from '@linen/types';
 import { SerializedAccount } from '@linen/types';
 import debounce from '@linen/utilities/debounce';

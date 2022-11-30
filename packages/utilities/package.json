@@ -17,12 +17,16 @@
     "typescript": "^4.9.3"
   },
   "exports": {
+    "./scroll": "./dist/scroll.js",
     "./string": "./dist/string.js",
     "./date": "./dist/date.js",
     "./debounce": "./dist/debounce.js"
   },
   "typesVersions": {
     "*": {
+      "scroll": [
+        "dist/scroll.d.ts"
+      ],
       "string": [
         "dist/string.d.ts"
       ],
