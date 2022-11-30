@@ -2,7 +2,7 @@ import { generateRandomWordSlug } from 'utilities/randomWordSlugs';
 import { auths, invites, Prisma, Roles, users } from '@prisma/client';
 import InviteToJoinMailer from 'mailers/InviteToJoinMailer';
 import prisma from '../client';
-import { cleanUpString } from 'utilities/string';
+import { normalize } from '@linen/utilities/string';
 
 export async function createInvitation({
   createdByUserId,
@@ -226,7 +226,7 @@ export async function joinCommunity(
     await checkoutTenant(authId, accountId);
     return { data: 'user already belongs to tenant' };
   }
-  const displayName = cleanUpString(email.split('@').shift() || email);
+  const displayName = normalize(email.split('@').shift() || email);
   await createUser(accountId, authId, displayName);
   await checkoutTenant(authId, accountId);
 }

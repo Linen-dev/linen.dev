@@ -1,4 +1,4 @@
-import { capitalize, cleanUpStringForSeo } from 'utilities/string';
+import { capitalize, normalize } from '@linen/utilities/string';
 import { Settings } from '@linen/types';
 import { SerializedThread } from '@linen/types';
 import { LINEN_URL } from '../../constants';
@@ -31,9 +31,7 @@ export function buildChannelSeo({
   // we may use keywords-frequency instead
   const description =
     threads
-      ?.map((t) =>
-        cleanUpStringForSeo(t.messages?.[0]?.body || t.slug).substring(0, 43)
-      )
+      ?.map((t) => normalize(t.messages?.[0]?.body || t.slug).substring(0, 43))
       .join('… ') || title;
 
   return { description, title, url, image: settings.logoUrl };

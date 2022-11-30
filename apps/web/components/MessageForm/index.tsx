@@ -6,7 +6,7 @@ import Tab from './Tab';
 import Preview from './Preview';
 import FileInput from './FileInput';
 import FilesCount from './FilesCount';
-import { isWhitespace } from 'utilities/string';
+import { isWhitespace } from '@linen/utilities/string';
 import { getCaretPosition, setCaretPosition } from './utilities';
 import { SerializedUser } from '@linen/types';
 import { useUsersContext } from 'contexts/Users';
@@ -256,7 +256,7 @@ function MessageForm({
         <Suggestions
           className={styles.suggestions}
           users={users}
-          onSelect={(user) => {
+          onSelect={(user: SerializedUser | null) => {
             // we currently assume that users are unique
             // we should track which users were selected
             // to map to the correct user
