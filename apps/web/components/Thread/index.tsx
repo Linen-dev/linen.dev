@@ -62,7 +62,7 @@ interface Props {
   }): void;
 }
 
-export function Thread({
+export default function Thread({
   thread,
   channelId,
   channelName,

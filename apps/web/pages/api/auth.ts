@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next/types';
 import prisma from '../../client';
 import { createAuth } from '../../lib/auth';
 import Session from 'services/session';
-import { cleanUpString } from 'utilities/string';
+import { normalize } from '@linen/utilities/string';
 import { AccountType, Roles } from '@linen/types';
 import { generateRandomWordSlug } from 'utilities/randomWordSlugs';
 import { eventSignUp } from 'services/events/eventNewSignUp';
@@ -70,7 +70,7 @@ async function joinCommunity(
             isAdmin: false,
             isBot: false,
             accountsId: accountId,
-            displayName: cleanUpString(
+            displayName: normalize(
               displayName || email.split('@').shift() || email
             ),
             anonymousAlias: generateRandomWordSlug(),

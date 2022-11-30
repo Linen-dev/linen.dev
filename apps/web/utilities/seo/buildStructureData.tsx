@@ -1,11 +1,11 @@
 import QAPageJsonLd, { Question } from 'utilities/seo/QAPageJsonLd';
 import { SerializedThread } from '@linen/types';
 import { SerializedMessage } from '@linen/types';
-import { cleanUpStringForSeo } from 'utilities/string';
+import { normalize } from '@linen/utilities/string';
 
 function buildNameText(messages: SerializedMessage[]): Question {
   const first = messages[0];
-  const cleanBody = cleanUpStringForSeo(first.body);
+  const cleanBody = normalize(first.body);
   return {
     name: cleanBody.substring(0, 60),
     text: cleanBody,
@@ -16,7 +16,7 @@ function buildNameText(messages: SerializedMessage[]): Question {
     answerCount: messages.length - 1,
     suggestedAnswer: messages.slice(1).map((message) => {
       return {
-        text: cleanUpStringForSeo(message.body),
+        text: normalize(message.body),
         author: {
           name: message.author?.displayName || 'user',
         },

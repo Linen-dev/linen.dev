@@ -3,7 +3,7 @@ import { MessageFormat } from '@linen/types';
 import prisma from '../../client';
 
 import messages from './messages';
-import { random } from '../../utilities/string';
+import { random } from '@linen/utilities/string';
 
 import { truncateTables } from './truncate';
 import { createAccounts } from './account';

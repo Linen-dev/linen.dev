@@ -1,5 +1,5 @@
 import CommunityButton from 'components/CommunityButton';
-import { capitalize } from 'utilities/string';
+import { capitalize } from '@linen/utilities/string';
 import { integrationAuthorizer } from 'utilities/communityAuthorizers';
 import { SerializedAccount } from '@linen/types';
 import { Toast } from '@linen/ui';
