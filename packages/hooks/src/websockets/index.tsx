@@ -1,13 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Channel, Socket } from 'phoenix';
 import { Permissions } from '@linen/types';
-import type { PushMessageType } from 'services/push';
 
 interface Props {
   room?: string | null;
   token: string | null;
   permissions: Permissions;
-  onNewMessage(payload: PushMessageType): void;
+  onNewMessage(payload: any): void;
 }
 
 function useWebsockets({ room, token, permissions, onNewMessage }: Props) {

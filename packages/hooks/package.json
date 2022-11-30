@@ -8,6 +8,10 @@
     "dev": "tsc --watch",
     "build": "tsc"
   },
+  "dependencies": {
+    "@types/phoenix": "^1.5.4",
+    "phoenix": "^1.6.15"
+  },
   "devDependencies": {
     "typescript": "^4.9.3"
   },
@@ -19,7 +23,10 @@
     "./keyboard": "./dist/keyboard.js",
     "./mode": "./dist/mode.js",
     "./polling": "./dist/polling.js",
-    "./resize": "./dist/resize.js"
+    "./resize": "./dist/resize.js",
+    "./websockets": "./dist/websockets/index.js",
+    "./websockets/feed": "./dist/websockets/feed.js",
+    "./websockets/thread": "./dist/websockets/thread.js"
   },
   "typesVersions": {
     "*": {
@@ -37,6 +44,15 @@
       ],
       "resize": [
         "dist/resize.d.ts"
+      ],
+      "websockets": [
+        "dist/websockets/index.d.ts"
+      ],
+      "websockets/feed": [
+        "dist/websockets/feed.d.ts"
+      ],
+      "websockets/thread": [
+        "dist/websockets/thread.d.ts"
       ]
     }
   }

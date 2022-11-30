@@ -8,7 +8,7 @@ import usePolling from '@linen/hooks/polling';
 import useKeyboard from '@linen/hooks/keyboard';
 import { useUsersContext } from 'contexts/Users';
 import { useJoinContext } from 'contexts/Join';
-import useFeedWebsockets from 'hooks/websockets/feed';
+import useFeedWebsockets from '@linen/hooks/websockets/feed';
 import type { CommunityPushType } from 'services/push';
 import { manageSelections } from './utilities/selection';
 import {
