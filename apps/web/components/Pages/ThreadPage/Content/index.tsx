@@ -1,10 +1,10 @@
 import { useState, useRef } from 'react';
-import { Thread } from 'components/Thread';
-import { scrollToBottom } from 'utilities/scroll';
+import Thread from 'components/Thread';
+import { scrollToBottom } from '@linen/utilities/scroll';
 import { ThreadState } from '@linen/types';
 import { useUsersContext } from 'contexts/Users';
 import { useJoinContext } from 'contexts/Join';
-import { sendMessageWrapper } from './sendMessageWrapper';
+import { sendMessageWrapper } from './utilities/sendMessageWrapper';
 import { Toast } from '@linen/ui';
 import {
   Permissions,

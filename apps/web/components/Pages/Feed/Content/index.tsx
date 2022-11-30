@@ -1,8 +1,8 @@
 import { useState, useRef, useCallback } from 'react';
 import { Layouts, Pages, Toast } from '@linen/ui';
 import { FeedResponse, Selections } from '../types';
-import { Thread } from 'components/Thread';
-import { scrollToBottom } from 'utilities/scroll';
+import Thread from 'components/Thread';
+import { scrollToBottom } from '@linen/utilities/scroll';
 import { sendMessageWrapper } from './utilities/sendMessageWrapper';
 import usePolling from '@linen/hooks/polling';
 import useKeyboard from '@linen/hooks/keyboard';
