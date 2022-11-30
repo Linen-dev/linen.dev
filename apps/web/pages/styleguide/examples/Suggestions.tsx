@@ -1,5 +1,5 @@
 import Example from '../Example';
-import Suggestions from 'components/Suggestions';
+import { Suggestions } from '@linen/ui';
 
 export default function SuggestionsExample() {
   return (
