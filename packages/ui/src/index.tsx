@@ -10,6 +10,7 @@ import NativeSelect from './NativeSelect';
 import Nav from './Nav';
 import Spinner from './Spinner';
 import StickyHeader from './StickyHeader';
+import Suggestions from './Suggestions';
 import Toast from './Toast';
 
 import Layouts from './Layouts';
@@ -28,6 +29,7 @@ export {
   Nav,
   Spinner,
   StickyHeader,
+  Suggestions,
   Toast,
   Layouts,
   Pages,
