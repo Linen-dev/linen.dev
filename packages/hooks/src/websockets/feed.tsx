@@ -1,6 +1,5 @@
 import useWebsockets from '.';
 import { Permissions } from '@linen/types';
-import { SerializedThread } from '@linen/types';
 
 interface Props {
   communityId: string;

@@ -16,7 +16,7 @@ import {
 import { Mode } from '@linen/hooks/mode';
 import styles from './index.module.scss';
 import classNames from 'classnames';
-import useThreadWebsockets from 'hooks/websockets/thread';
+import useThreadWebsockets from '@linen/hooks/websockets/thread';
 
 interface Props {
   thread: SerializedThread;
