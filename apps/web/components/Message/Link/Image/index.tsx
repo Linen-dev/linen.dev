@@ -1,6 +1,6 @@
 import React from 'react';
-import Image from 'components/Image';
-import styles from './index.module.css';
+import { Image } from '@linen/ui';
+import styles from './index.module.scss';
 
 interface Props {
   src: string;

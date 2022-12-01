@@ -1,5 +1,7 @@
+@import 'styles/colors.scss';
+
 .image {
-  border: 1px solid #ccc;
+  border: 1px solid $color-border;
   border-radius: 4px;
   max-width: 300px;
   padding: 1px;

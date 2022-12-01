@@ -4,6 +4,7 @@ import Button from './Button';
 import ButtonGroup from './ButtonGroup';
 import ButtonToggle from './ButtonToggle';
 import Checkbox from './Checkbox';
+import Image from './Image';
 import Label from './Label';
 import List from './List';
 import NativeSelect from './NativeSelect';
@@ -24,6 +25,7 @@ export {
   ButtonGroup,
   ButtonToggle,
   Checkbox,
+  Image,
   Label,
   List,
   NativeSelect,
