@@ -1,0 +1,39 @@
+@import 'styles/colors.scss';
+
+.header {
+  background: $color-white;
+  position: sticky;
+  top: 0;
+  width: 100%;
+  z-index: 1;
+}
+
+.icons {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+}
+
+.icon {
+  background: $color-white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $color-gray-700;
+  cursor: pointer;
+  border-radius: 50%;
+  padding: 0.5rem;
+  transition: 0.1s ease-in background, 0.1s ease-in color;
+  position: relative;
+}
+
+.icon:hover {
+  background: $color-gray-50;
+  color: $color-gray-900;
+}
+
+@media screen and (max-width: 767px) {
+  .close {
+    display: none;
+  }
+}

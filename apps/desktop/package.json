@@ -15,6 +15,8 @@
     "@linen/ui": "*",
     "@linen/utilities": "*",
     "@tauri-apps/api": "^1.1.0",
+    "autosize": "^5.0.2",
+    "axios": "0.27.2",
     "classnames": "^2.3.2",
     "next": "^13.0.3",
     "react": "^18.2.0",
