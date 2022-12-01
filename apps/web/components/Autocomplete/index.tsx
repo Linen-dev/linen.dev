@@ -1,6 +1,6 @@
 import { useEffect, useRef, useCallback, useState } from 'react';
 import debounce from '@linen/utilities/debounce';
-import TextInput from 'components/TextInput';
+import { TextInput } from '@linen/ui';
 import { AiOutlineSearch, AiOutlineLoading } from 'react-icons/ai';
 import styles from './index.module.css';
 

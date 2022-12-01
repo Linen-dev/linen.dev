@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import TextInput from 'components/TextInput';
+import { TextInput } from '@linen/ui';
 import { GoPencil } from 'react-icons/go';
 import classNames from 'classnames';
 import styles from './index.module.css';

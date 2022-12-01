@@ -11,6 +11,7 @@ import Nav from './Nav';
 import Spinner from './Spinner';
 import StickyHeader from './StickyHeader';
 import Suggestions from './Suggestions';
+import TextInput from './TextInput';
 import Toast from './Toast';
 
 import Layouts from './Layouts';
@@ -30,6 +31,7 @@ export {
   Spinner,
   StickyHeader,
   Suggestions,
+  TextInput,
   Toast,
   Layouts,
   Pages,

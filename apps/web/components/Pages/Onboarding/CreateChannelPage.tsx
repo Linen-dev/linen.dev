@@ -1,8 +1,6 @@
-import Layout from 'components/layout/CardLayout';
-import { Button } from '@linen/ui';
-import TextInput from 'components/TextInput';
 import { useState } from 'react';
-import { Toast } from '@linen/ui';
+import Layout from 'components/layout/CardLayout';
+import { Button, TextInput, Toast } from '@linen/ui';
 
 export function CreateChannelPage() {
   const [loading, setLoading] = useState(false);

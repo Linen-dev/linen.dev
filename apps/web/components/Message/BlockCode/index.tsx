@@ -1,9 +1,9 @@
 import React from 'react';
 import classNames from 'classnames';
-import styles from './index.module.css';
+import { Code } from '@linen/ui';
 import { decodeHTML } from '../utilities/string';
 import { formatCode, isHighlighted, isFormattable } from './utilities';
-import Code from 'components/Code';
+import styles from './index.module.css';
 
 interface Props {
   value: string;
