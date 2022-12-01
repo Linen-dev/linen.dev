@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { preload } from './utilities';
+import preload from './utilities/preload';
 
 interface Props {
   className?: string;
