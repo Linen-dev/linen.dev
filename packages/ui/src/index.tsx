@@ -4,6 +4,7 @@ import Button from './Button';
 import ButtonGroup from './ButtonGroup';
 import ButtonToggle from './ButtonToggle';
 import Checkbox from './Checkbox';
+import Code from './Code';
 import Image from './Image';
 import Label from './Label';
 import List from './List';
@@ -25,6 +26,7 @@ export {
   ButtonGroup,
   ButtonToggle,
   Checkbox,
+  Code,
   Image,
   Label,
   List,
