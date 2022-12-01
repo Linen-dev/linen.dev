@@ -20,7 +20,28 @@ function App() {
     return get(
       `/api/v2/feed?communityName=linen&scope=${Scope.All}&state=${ThreadState.OPEN}&page=1`,
       token
+    ).then((response) => response.data);
+  };
+
+  const fetchThread = () => {
+    return get(
+      `/api/v2/feed?communityName=linen&scope=${Scope.All}&state=${ThreadState.OPEN}&page=1`,
+      token
     );
+  };
+
+  const putThread = () => {
+    return get(
+      `/api/v2/feed?communityName=linen&scope=${Scope.All}&state=${ThreadState.OPEN}&page=1`,
+      token
+    );
+  };
+
+  const fetchTotal = () => {
+    return get(
+      `/api/v2/feed?communityName=linen&state=${ThreadState.OPEN}&scope=${Scope.All}&total=true`,
+      token
+    ).then((response) => response.data);
   };
 
   if (page === Pages.Splash) {
@@ -40,7 +61,14 @@ function App() {
   }
 
   if (page === Pages.Dashboard) {
-    return <Dashboard fetchFeed={fetchFeed} />;
+    return (
+      <Dashboard
+        fetchFeed={fetchFeed}
+        fetchThread={fetchThread}
+        fetchTotal={fetchTotal}
+        putThread={putThread}
+      />
+    );
   }
 
   return null;

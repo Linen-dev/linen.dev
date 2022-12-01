@@ -10,7 +10,7 @@ interface Selections {
 }
 
 interface Props {
-  threads: SerializedThread[];
+  threads?: SerializedThread[];
   selections: Selections;
   permissions: Permissions;
   loading: boolean;
@@ -26,7 +26,7 @@ export default function Grid({
   onChange,
   onSelect,
 }: Props) {
-  if (threads.length === 0 || loading) {
+  if (!threads || threads.length === 0 || loading) {
     return null;
   }
   return (
