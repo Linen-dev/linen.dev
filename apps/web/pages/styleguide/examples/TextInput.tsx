@@ -1,5 +1,5 @@
 import Example from '../Example';
-import TextInput from '../../../components/TextInput';
+import { TextInput } from '@linen/ui';
 import { AiOutlineSearch } from 'react-icons/ai';
 
 export default function TextInputExample() {

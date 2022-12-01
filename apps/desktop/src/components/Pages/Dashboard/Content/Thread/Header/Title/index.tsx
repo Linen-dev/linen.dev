@@ -3,9 +3,9 @@ import { GoPencil } from 'react-icons/go';
 import classNames from 'classnames';
 import styles from './index.module.css';
 import { ThreadState } from '@linen/types';
+import { TextInput } from '@linen/ui';
 // TODO move to @linen/ui
 import CheckIcon from './CheckIcon';
-import TextInput from './TextInput';
 
 enum Mode {
   Edit,

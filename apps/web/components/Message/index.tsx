@@ -12,7 +12,12 @@ import Reactions from './Reactions';
 import Attachments from './Attachments';
 import transform from './utilities/transform';
 import styles from './index.module.scss';
-import { SerializedAttachment, SerializedReaction } from '@linen/types';
+import {
+  MessageFormat,
+  SerializedAttachment,
+  SerializedReaction,
+  SerializedUser,
+} from '@linen/types';
 import { parse } from '@linen/ast';
 import {
   RootNode,
@@ -29,8 +34,6 @@ import {
   EmojiNode,
   HeaderNode,
 } from '@linen/ast/parse/types';
-import { SerializedUser } from '@linen/types';
-import { MessageFormat } from '@linen/types';
 
 interface Props {
   text: string;

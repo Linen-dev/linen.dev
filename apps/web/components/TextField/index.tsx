@@ -1,7 +1,6 @@
 import React from 'react';
 import Field from '../Field';
-import { Label } from '@linen/ui';
-import TextInput from '../TextInput';
+import { Label, TextInput } from '@linen/ui';
 
 interface Props {
   className?: string;

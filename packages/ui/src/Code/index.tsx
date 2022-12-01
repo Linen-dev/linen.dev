@@ -1,7 +1,7 @@
 import React from 'react';
-import hljs from 'highlight.js';
-import styles from './index.module.css';
 import classNames from 'classnames';
+import hljs from 'highlight.js';
+import styles from './index.module.scss';
 
 interface Props {
   className?: string;

@@ -1,8 +1,7 @@
 import { Fragment, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { FiPlus, FiX } from 'react-icons/fi';
-import { Button, Toast } from '@linen/ui';
-import TextInput from 'components/TextInput';
+import { Button, TextInput, Toast } from '@linen/ui';
 import { useSession } from 'next-auth/react';
 import { useLinkContext } from 'contexts/Link';
 import CustomRouterPush from 'components/Link/CustomRouterPush';

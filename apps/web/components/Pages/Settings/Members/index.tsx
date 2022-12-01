@@ -1,11 +1,9 @@
-import TextInput from 'components/TextInput';
+import { useState } from 'react';
 import { MembersPageProps } from 'pages/settings/members';
 import DashboardLayout from 'components/layout/DashboardLayout';
-import { Button, NativeSelect } from '@linen/ui';
+import { Button, NativeSelect, TextInput, Toast } from '@linen/ui';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
 import { Roles } from '@prisma/client';
-import { Toast } from '@linen/ui';
 import { AiOutlineUser } from 'react-icons/ai';
 
 export interface MembersType {

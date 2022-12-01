@@ -1,7 +1,7 @@
 import React from 'react';
-import styles from './index.module.css';
-import Code from 'components/Code';
+import { Code } from '@linen/ui';
 import { decodeHTML } from '../utilities/string';
+import styles from './index.module.css';
 
 interface Props {
   value: string;

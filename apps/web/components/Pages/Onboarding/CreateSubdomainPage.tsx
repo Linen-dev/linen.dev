@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import Layout from 'components/layout/CardLayout';
-import { Button, Toast } from '@linen/ui';
-import TextInput from 'components/TextInput';
+import { Button, TextInput, Toast } from '@linen/ui';
 
 export function CreateSubdomainPage() {
   const [premium, setPremium] = useState(false);
