@@ -24,17 +24,13 @@ function App() {
   };
 
   const fetchThread = () => {
-    return get(
-      `/api/v2/feed?communityName=linen&scope=${Scope.All}&state=${ThreadState.OPEN}&page=1`,
-      token
-    );
+    // TODO add  v2 api
+    return get(`/api/v2/todo`, token);
   };
 
   const putThread = () => {
-    return get(
-      `/api/v2/feed?communityName=linen&scope=${Scope.All}&state=${ThreadState.OPEN}&page=1`,
-      token
-    );
+    // TODO add v2 api
+    return get(`/api/v2/todo`, token);
   };
 
   const fetchTotal = () => {

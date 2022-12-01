@@ -1,7 +1,7 @@
 import { useState, useRef, useCallback } from 'react';
 import { Layouts, Pages, Toast } from '@linen/ui';
-// import Thread from 'components/Thread';
-// import { scrollToBottom } from '@linen/utilities/scroll';
+import Thread from './Thread';
+import { scrollToBottom } from '@linen/utilities/scroll';
 import { sendMessageWrapper } from './utilities/sendMessageWrapper';
 import usePolling from '@linen/hooks/polling';
 import useKeyboard from '@linen/hooks/keyboard';
@@ -320,31 +320,30 @@ export default function Feed({
         }
         right={
           thread && (
-            <></>
-            // <Thread
-            //   thread={thread}
-            //   key={thread.id}
-            //   channelId={thread.channelId}
-            //   channelName={thread.channel?.channelName as string}
-            //   settings={settings}
-            //   isSubDomainRouting={isSubDomainRouting}
-            //   permissions={permissions}
-            //   currentUser={currentUser}
-            //   updateThread={updateThread}
-            //   onClose={() => setThread(undefined)}
-            //   sendMessage={sendMessage}
-            //   token={token}
-            //   onSend={() => {
-            //     scrollToBottom(ref.current as HTMLElement);
-            //   }}
-            //   onMount={() => {
-            //     permissions.chat && scrollToBottom(ref.current as HTMLElement);
-            //   }}
-            //   onMessage={(message, messageId, imitationId) => {
-            //     onThreadMessage(message, messageId, imitationId);
-            //     scrollToBottom(ref.current as HTMLElement);
-            //   }}
-            // />
+            <Thread
+              thread={thread}
+              key={thread.id}
+              channelId={thread.channelId}
+              channelName={thread.channel?.channelName as string}
+              settings={settings}
+              isSubDomainRouting={isSubDomainRouting}
+              permissions={permissions}
+              currentUser={currentUser}
+              updateThread={updateThread}
+              onClose={() => setThread(undefined)}
+              sendMessage={sendMessage}
+              token={token}
+              onSend={() => {
+                scrollToBottom(ref.current as HTMLElement);
+              }}
+              onMount={() => {
+                permissions.chat && scrollToBottom(ref.current as HTMLElement);
+              }}
+              onMessage={(message, messageId, imitationId) => {
+                onThreadMessage(message, messageId, imitationId);
+                scrollToBottom(ref.current as HTMLElement);
+              }}
+            />
           )
         }
         rightRef={ref}

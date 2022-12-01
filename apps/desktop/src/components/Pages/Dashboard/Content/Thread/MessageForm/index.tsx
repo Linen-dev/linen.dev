@@ -3,13 +3,13 @@ import autosize from 'autosize';
 import { Button, Suggestions, Toast } from '@linen/ui';
 import styles from './index.module.scss';
 import Tab from './Tab';
-import Preview from './Preview';
+// import Preview from './Preview';
 import FileInput from './FileInput';
 import FilesCount from './FilesCount';
 import { isWhitespace } from '@linen/utilities/string';
 import { getCaretPosition, setCaretPosition } from './utilities';
 import { SerializedUser } from '@linen/types';
-import { useUsersContext } from 'contexts/Users';
+// import { useUsersContext } from 'contexts/Users';
 import { postprocess } from './utilities/message';
 import { AxiosRequestConfig, AxiosResponse } from 'axios';
 
@@ -139,7 +139,9 @@ function MessageForm({
   const [files, setFiles] = useState<File[]>([]);
   const [uploads, setUploads] = useState<UploadedFile[]>([]);
   const [users, setUsers] = useState<SerializedUser[]>([]);
-  const [allUsers, addUsers] = useUsersContext();
+  // const [allUsers, addUsers] = useUsersContext();
+  const allUsers = [];
+  const addUsers = (users: any) => {};
   const [position, setPosition] = useState(0);
   const ref = useRef(null);
   const mode = getMode(message, position);
@@ -326,7 +328,8 @@ function MessageForm({
           }}
         />
         {preview && (
-          <Preview message={postprocess(message, allUsers)} users={allUsers} />
+          <>TODO</>
+          // <Preview message={postprocess(message, allUsers)} users={allUsers} />
         )}
         {upload && (
           <div className={styles.toolbar}>
