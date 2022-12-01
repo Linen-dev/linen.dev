@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { TextInput } from '@linen/ui';
 import { GoPencil } from 'react-icons/go';
 import classNames from 'classnames';
@@ -53,11 +53,11 @@ export default function Title({ title, state, manage, onSetTitle }: Props) {
           className="text-lg font-bold"
           id="title"
           defaultValue={title || ''}
-          onBlur={(event) => {
+          onBlur={(event: React.ChangeEvent<HTMLInputElement>) => {
             setMode(Mode.Read);
             onSetTitle(event.currentTarget.value);
           }}
-          onKeyDown={(event) => {
+          onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
             if (event.key === 'Enter') {
               setMode(Mode.Read);
               onSetTitle(event.currentTarget.value);
