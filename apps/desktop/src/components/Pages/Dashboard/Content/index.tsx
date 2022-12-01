@@ -1,14 +1,13 @@
 import { useState, useRef, useCallback } from 'react';
 import { Layouts, Pages, Toast } from '@linen/ui';
-import Thread from 'components/Thread';
-import { scrollToBottom } from '@linen/utilities/scroll';
+// import Thread from 'components/Thread';
+// import { scrollToBottom } from '@linen/utilities/scroll';
 import { sendMessageWrapper } from './utilities/sendMessageWrapper';
 import usePolling from '@linen/hooks/polling';
 import useKeyboard from '@linen/hooks/keyboard';
-import { useUsersContext } from 'contexts/Users';
-import { useJoinContext } from 'contexts/Join';
+// import { useUsersContext } from 'contexts/Users';
 import useFeedWebsockets from '@linen/hooks/websockets/feed';
-import type { CommunityPushType } from 'services/push';
+// import type { CommunityPushType } from 'services/push';
 import { manageSelections } from './utilities/selection';
 import {
   SerializedMessage,
@@ -80,8 +79,9 @@ export default function Feed({
   const [selections, setSelections] = useState<Selections>({});
   const [thread, setThread] = useState<SerializedThread>();
   const ref = useRef<HTMLDivElement>(null);
-  const [allUsers] = useUsersContext();
-  const { startSignUp } = useJoinContext();
+  // const [allUsers] = useUsersContext();
+  const allUsers = [];
+  // const { startSignUp } = useJoinContext();
   const { isShiftPressed } = useKeyboard();
 
   const token = permissions.token || null;
@@ -89,7 +89,7 @@ export default function Feed({
   const { communityId, communityName } = settings;
 
   const onNewMessage = useCallback(
-    (payload: CommunityPushType) => {
+    (payload: any) => {
       const thread: SerializedThread =
         payload.thread && JSON.parse(payload.thread);
       const message: SerializedMessage =
@@ -259,7 +259,6 @@ export default function Feed({
     setThread,
     setFeed,
     communityId,
-    startSignUp,
   });
 
   return (
@@ -321,30 +320,31 @@ export default function Feed({
         }
         right={
           thread && (
-            <Thread
-              thread={thread}
-              key={thread.id}
-              channelId={thread.channelId}
-              channelName={thread.channel?.channelName as string}
-              settings={settings}
-              isSubDomainRouting={isSubDomainRouting}
-              permissions={permissions}
-              currentUser={currentUser}
-              updateThread={updateThread}
-              onClose={() => setThread(undefined)}
-              sendMessage={sendMessage}
-              token={token}
-              onSend={() => {
-                scrollToBottom(ref.current as HTMLElement);
-              }}
-              onMount={() => {
-                permissions.chat && scrollToBottom(ref.current as HTMLElement);
-              }}
-              onMessage={(message, messageId, imitationId) => {
-                onThreadMessage(message, messageId, imitationId);
-                scrollToBottom(ref.current as HTMLElement);
-              }}
-            />
+            <></>
+            // <Thread
+            //   thread={thread}
+            //   key={thread.id}
+            //   channelId={thread.channelId}
+            //   channelName={thread.channel?.channelName as string}
+            //   settings={settings}
+            //   isSubDomainRouting={isSubDomainRouting}
+            //   permissions={permissions}
+            //   currentUser={currentUser}
+            //   updateThread={updateThread}
+            //   onClose={() => setThread(undefined)}
+            //   sendMessage={sendMessage}
+            //   token={token}
+            //   onSend={() => {
+            //     scrollToBottom(ref.current as HTMLElement);
+            //   }}
+            //   onMount={() => {
+            //     permissions.chat && scrollToBottom(ref.current as HTMLElement);
+            //   }}
+            //   onMessage={(message, messageId, imitationId) => {
+            //     onThreadMessage(message, messageId, imitationId);
+            //     scrollToBottom(ref.current as HTMLElement);
+            //   }}
+            // />
           )
         }
         rightRef={ref}
