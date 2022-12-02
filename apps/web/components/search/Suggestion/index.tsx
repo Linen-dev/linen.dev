@@ -2,8 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 import { users } from '@prisma/client';
 import { MessageFormat } from '@linen/types';
-import { Avatar } from '@linen/ui';
-import Message from '../../Message';
+import { Avatar, Message } from '@linen/ui';
 import styles from './index.module.css';
 import { SerializedUser } from '@linen/types';
 

@@ -1,0 +1,20 @@
+@import '../../../colors.scss';
+
+.attachment {
+  align-items: center;
+  background-color: $color-gray-50;
+  border: 1px solid $color-border;
+  border-radius: 1rem;
+  color: $color-gray-700;
+  display: inline-flex;
+  padding: 0.05rem 0.5rem;
+  font-size: 0.75rem;
+}
+
+.attachment + .attachment {
+  margin-left: 0.25rem;
+}
+
+.icon {
+  margin-right: 0.25rem;
+}

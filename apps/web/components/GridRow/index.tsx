@@ -1,8 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
-import { Avatar } from '@linen/ui';
+import { Avatar, Message } from '@linen/ui';
 import Actions from 'components/Actions';
-import Message from 'components/Message';
 import CheckIcon from 'components/icons/CheckIcon';
 import classNames from 'classnames';
 import DraggableRow from './DraggableRow';

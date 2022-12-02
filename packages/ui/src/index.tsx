@@ -1,3 +1,4 @@
+import Accordion from './Accordion';
 import Avatar from './Avatar';
 import Avatars from './Avatars';
 import Button from './Button';
@@ -8,6 +9,7 @@ import Code from './Code';
 import Image from './Image';
 import Label from './Label';
 import List from './List';
+import Message from './Message';
 import NativeSelect from './NativeSelect';
 import Nav from './Nav';
 import Spinner from './Spinner';
@@ -20,6 +22,7 @@ import Layouts from './Layouts';
 import Pages from './Pages';
 
 export {
+  Accordion,
   Avatar,
   Avatars,
   Button,
@@ -30,6 +33,7 @@ export {
   Image,
   Label,
   List,
+  Message,
   NativeSelect,
   Nav,
   Spinner,

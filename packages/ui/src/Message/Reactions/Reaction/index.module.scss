@@ -1,0 +1,20 @@
+@import '../../../colors.scss';
+
+.reaction {
+  background-color: $color-gray-50;
+  border: 1px solid $color-border;
+  border-radius: 1rem;
+  color: $color-gray-700;
+  display: inline-block;
+  padding: 0.05rem 0.5rem;
+  font-size: 0.75rem;
+}
+
+.active {
+  background-color: rgba($color-tertiary, 0.1);
+  border-color: $color-secondary;
+}
+
+.reaction + .reaction {
+  margin-left: 0.25rem;
+}
