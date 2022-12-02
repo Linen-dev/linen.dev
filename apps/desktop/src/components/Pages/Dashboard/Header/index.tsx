@@ -5,7 +5,7 @@ import logo from 'assets/images/linen-white-logo.svg';
 export default function Header() {
   return (
     <div className={styles.header}>
-      <img src={logo.src} height="32" />
+      <img className={styles.logo} src={logo.src} height="32" />
     </div>
   );
 }

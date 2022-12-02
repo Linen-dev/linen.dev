@@ -29,8 +29,8 @@ export default function Header({
   const { title, state } = thread;
   return (
     <StickyHeader>
-      <div className="flex flex-row justify-between items-center">
-        <div className="flex flex-row justify-center">
+      <div className={styles.container}>
+        <div className={styles.title}>
           {onClose && (
             <div className="flex items-center md:hidden mr-2">
               <a onClick={onClose}>

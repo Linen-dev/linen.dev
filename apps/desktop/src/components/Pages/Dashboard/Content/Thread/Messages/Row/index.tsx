@@ -3,7 +3,7 @@ import React from 'react';
 import { Avatar } from '@linen/ui';
 import classNames from 'classnames';
 // import DraggableRow from './DraggableRow';
-// import {Message} from '@linen/ui';
+import { Message } from '@linen/ui';
 import { format } from '@linen/utilities/date';
 import styles from './index.module.scss';
 // import CheckIcon from 'components/icons/CheckIcon';
@@ -71,7 +71,11 @@ export function Row({
     //   draggable={draggable}
     //   mode={mode}
     // >
-    <div>
+    <div
+      className={classNames(className, {
+        [styles.top]: top,
+      })}
+    >
       {header}
       <div className={styles.row}>
         <div className={styles.left}>
@@ -103,14 +107,14 @@ export function Row({
             })}
           >
             {message.body}
-            {/* <Message
+            <Message
               text={message.body}
               format={message.messageFormat}
               mentions={message.mentions}
               reactions={message.reactions}
               attachments={message.attachments}
               currentUser={currentUser}
-            /> */}
+            />
             {footer}
             {/* <div className={styles.actions}>
               <Actions
