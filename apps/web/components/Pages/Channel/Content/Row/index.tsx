@@ -1,7 +1,7 @@
 import DraggableRow from 'components/Pages/Channel/Content/Row/DraggableRow';
 import { Avatars } from '@linen/ui';
 import Image from 'next/image';
-import Row from 'components/Message/Row';
+import Row from 'components/GridRow';
 import styles from './index.module.scss';
 import { SerializedThread } from '@linen/types';
 import { SerializedUser } from '@linen/types';
