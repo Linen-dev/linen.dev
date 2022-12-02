@@ -3,7 +3,7 @@ import React from 'react';
 import { Avatar } from '@linen/ui';
 import classNames from 'classnames';
 // import DraggableRow from './DraggableRow';
-// import Message from '../../Message';
+// import {Message} from '@linen/ui';
 import { format } from '@linen/utilities/date';
 import styles from './index.module.scss';
 // import CheckIcon from 'components/icons/CheckIcon';

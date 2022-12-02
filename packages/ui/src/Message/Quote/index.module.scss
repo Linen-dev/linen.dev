@@ -1,0 +1,10 @@
+@import '../../colors.scss';
+
+.quote {
+  background-color: $color-gray-50;
+  border-color: $color-border;
+  border-left-width: 4px;
+  border-style: solid;
+  padding: 0.75rem;
+  margin: 0.75rem 0;
+}

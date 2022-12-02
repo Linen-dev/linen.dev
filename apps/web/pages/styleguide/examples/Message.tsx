@@ -1,5 +1,4 @@
-import Message from 'components/Message';
-import { EMOJIS } from 'components/Message/Emoji/utilities/emojis';
+import { Message } from '@linen/ui';
 import Example from '../Example';
 
 import { MessageFormat } from '@linen/types';
@@ -262,17 +261,6 @@ export default function MessageExample() {
       </Example>
       <Example description="Renders broken links.">
         <Message text="http://-how-to-register" format={MessageFormat.LINEN} />
-      </Example>
-      <Example description="Renders reactions.">
-        <Message
-          text="Hello, world! :)"
-          reactions={EMOJIS.map((emoji) => ({
-            type: emoji,
-            count: 1,
-            users: [],
-          }))}
-          format={MessageFormat.LINEN}
-        />
       </Example>
     </Example>
   );
