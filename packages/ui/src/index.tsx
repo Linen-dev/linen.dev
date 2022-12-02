@@ -17,6 +17,7 @@ import StickyHeader from './StickyHeader';
 import Suggestions from './Suggestions';
 import TextInput from './TextInput';
 import Toast from './Toast';
+import Tooltip from './Tooltip';
 
 import Layouts from './Layouts';
 import Pages from './Pages';
@@ -41,6 +42,7 @@ export {
   Suggestions,
   TextInput,
   Toast,
+  Tooltip,
   Layouts,
   Pages,
 };
