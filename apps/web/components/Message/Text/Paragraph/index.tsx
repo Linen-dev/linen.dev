@@ -1,7 +1,7 @@
 import React from 'react';
 import Emoji from '../../Emoji';
-import { Token } from 'utilities/markdown';
-import { decodeHTML } from '../../utilities/string';
+import { Token } from '@linen/utilities/markdown';
+import { decodeHTML } from '@linen/utilities/string';
 
 function Whitespace({ raw }: { raw: string }) {
   return <>{raw}</>;

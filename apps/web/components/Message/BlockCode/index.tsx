@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import { Code } from '@linen/ui';
-import { decodeHTML } from '../utilities/string';
+import { decodeHTML } from '@linen/utilities/string';
 import { formatCode, isHighlighted, isFormattable } from './utilities';
 import styles from './index.module.css';
 

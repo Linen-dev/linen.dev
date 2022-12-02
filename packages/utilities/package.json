@@ -20,7 +20,8 @@
     "./scroll": "./dist/scroll.js",
     "./string": "./dist/string.js",
     "./date": "./dist/date.js",
-    "./debounce": "./dist/debounce.js"
+    "./debounce": "./dist/debounce.js",
+    "./markdown": "./dist/markdown.js"
   },
   "typesVersions": {
     "*": {
@@ -35,6 +36,9 @@
       ],
       "debounce": [
         "dist/debounce.d.ts"
+      ],
+      "markdown": [
+        "dist/markdown.d.ts"
       ]
     }
   }
