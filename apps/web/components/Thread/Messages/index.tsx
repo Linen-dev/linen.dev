@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import Row from 'components/Message/Row';
+import Row from 'components/GridRow';
 import { SerializedThread } from '@linen/types';
 import { SerializedUser } from '@linen/types';
 import { Settings } from '@linen/types';

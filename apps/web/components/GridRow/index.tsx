@@ -1,13 +1,13 @@
 import React from 'react';
 import Image from 'next/image';
 import { Avatar } from '@linen/ui';
+import Actions from 'components/Actions';
+import Message from 'components/Message';
+import CheckIcon from 'components/icons/CheckIcon';
 import classNames from 'classnames';
 import DraggableRow from './DraggableRow';
-import Message from '../../Message';
 import { format } from '@linen/utilities/date';
 import styles from './index.module.scss';
-import CheckIcon from 'components/icons/CheckIcon';
-import Actions from 'components/Actions';
 import { Mode } from '@linen/hooks/mode';
 import {
   Permissions,
