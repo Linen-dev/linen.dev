@@ -1,8 +1,8 @@
 import React from 'react';
 import Emoji from '../Emoji';
 import Paragraph from './Paragraph';
-import { decodeHTML } from '../utilities/string';
-import { tokenize, Token } from 'utilities/markdown';
+import { decodeHTML } from '@linen/utilities/string';
+import { tokenize, Token } from '@linen/utilities/markdown';
 import { MessageFormat } from '@linen/types';
 
 interface Props {
@@ -18,7 +18,7 @@ export default function Text({ format, value }: Props) {
   const tokens = tokenize(text);
   return (
     <>
-      {tokens.map((token: Token, index) => {
+      {tokens.map((token: Token, index: number) => {
         const key = `${token.type}-${token.raw}-${index}`;
         switch (token.type) {
           case 'paragraph':

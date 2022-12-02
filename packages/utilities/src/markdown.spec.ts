@@ -1,4 +1,4 @@
-import { tokenize } from '.';
+import { tokenize } from './markdown';
 
 describe('#tokenize', () => {
   it('returns tokens', async () => {
