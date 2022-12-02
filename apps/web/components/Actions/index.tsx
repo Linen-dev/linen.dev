@@ -2,13 +2,12 @@ import React from 'react';
 import classNames from 'classnames';
 import { getThreadUrl } from '../Pages/Channel/utilities/url';
 import { copyToClipboard } from 'utilities/clipboard';
-import { Toast } from '@linen/ui';
+import { Toast, Tooltip } from '@linen/ui';
 import { Permissions, Settings, SerializedMessage } from '@linen/types';
 import { GoPin } from 'react-icons/go';
 import { AiOutlinePaperClip } from 'react-icons/ai';
 import { FiThumbsUp } from 'react-icons/fi';
 import { SerializedThread, SerializedUser } from '@linen/types';
-import Tooltip from 'components/Tooltip';
 import styles from './index.module.scss';
 
 interface Props {
