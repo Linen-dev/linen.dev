@@ -106,7 +106,6 @@ export function Row({
               [styles.basic]: !top,
             })}
           >
-            {message.body}
             <Message
               text={message.body}
               format={message.messageFormat}
