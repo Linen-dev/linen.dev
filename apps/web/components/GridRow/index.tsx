@@ -1,12 +1,11 @@
 import React from 'react';
+import classNames from 'classnames';
 import Image from 'next/image';
 import { Avatar, Message } from '@linen/ui';
 import Actions from 'components/Actions';
 import CheckIcon from 'components/icons/CheckIcon';
-import classNames from 'classnames';
 import DraggableRow from './DraggableRow';
 import { format } from '@linen/utilities/date';
-import styles from './index.module.scss';
 import { Mode } from '@linen/hooks/mode';
 import {
   Permissions,
@@ -16,6 +15,7 @@ import {
   SerializedUser,
   ThreadState,
 } from '@linen/types';
+import styles from './index.module.scss';
 
 interface Props {
   className?: string;

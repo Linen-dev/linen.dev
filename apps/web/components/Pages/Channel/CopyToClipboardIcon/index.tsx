@@ -1,7 +1,7 @@
 import React from 'react';
 import { AiOutlinePaperClip } from 'react-icons/ai';
 import { Toast } from '@linen/ui';
-import { copyToClipboard } from 'utilities/clipboard';
+import { copyToClipboard } from '@linen/utilities/clipboard';
 
 interface Props {
   getText(): string;

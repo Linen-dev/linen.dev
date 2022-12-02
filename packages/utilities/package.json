@@ -21,7 +21,8 @@
     "./string": "./dist/string.js",
     "./date": "./dist/date.js",
     "./debounce": "./dist/debounce.js",
-    "./markdown": "./dist/markdown.js"
+    "./markdown": "./dist/markdown.js",
+    "./clipboard": "./dist/clipboard.js"
   },
   "typesVersions": {
     "*": {
@@ -39,6 +40,9 @@
       ],
       "markdown": [
         "dist/markdown.d.ts"
+      ],
+      "clipboard": [
+        "dist/clipboard.d.ts"
       ]
     }
   }
