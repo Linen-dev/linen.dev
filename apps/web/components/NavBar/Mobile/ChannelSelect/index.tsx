@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import { useLinkContext } from 'contexts/Link';
+import { useLinkContext } from '@linen/contexts/Link';
 import { SerializedChannel } from '@linen/types';
 import { Label, NativeSelect } from '@linen/ui';
 import CustomRouterPush from 'components/Link/CustomRouterPush';

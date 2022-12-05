@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import useInfiniteScroll from 'react-infinite-scroll-hook';
 import Thread from 'components/Thread';
 import { get } from 'utilities/http';
-import { useUsersContext } from 'contexts/Users';
+import { useUsersContext } from '@linen/contexts/Users';
 import ChatLayout from 'components/layout/shared/ChatLayout';
 import Header from './Header';
 import Empty from './Empty';

@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@linen/ast": "*",
+    "@linen/contexts": "*",
     "@linen/hooks": "*",
     "@linen/types": "*",
     "@linen/utilities": "*",

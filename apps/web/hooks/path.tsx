@@ -1,5 +1,5 @@
 import CustomLinkHelper from 'components/Link/CustomLinkHelper';
-import { useLinkContext } from 'contexts/Link';
+import { useLinkContext } from '@linen/contexts/Link';
 
 interface Props {
   href: string;

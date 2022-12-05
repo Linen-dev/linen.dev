@@ -88,7 +88,9 @@ export async function create(
 
   const tree = parse.linen(body);
   const mentionNodes = find.mentions(tree);
-  const userIds = unique(mentionNodes.map(({ id }: { id: string }) => id));
+  const userIds = unique(
+    mentionNodes.map(({ id }: { id: string }) => id)
+  ) as string[];
   const messages = {
     create: {
       body,

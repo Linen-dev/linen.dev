@@ -3,7 +3,7 @@ import { Dialog, Transition } from '@headlessui/react';
 import { FiPlus, FiX } from 'react-icons/fi';
 import { Button, TextInput, Toast } from '@linen/ui';
 import { useSession } from 'next-auth/react';
-import { useLinkContext } from 'contexts/Link';
+import { useLinkContext } from '@linen/contexts/Link';
 import CustomRouterPush from 'components/Link/CustomRouterPush';
 
 export default function NewChannelModal({
