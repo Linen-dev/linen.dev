@@ -1,20 +1,14 @@
+import { useState } from 'react';
 import Logo from '../../Logo/Linen';
 import Button from '../../Button/Gradient';
 import styles from './index.module.scss';
-import { post } from '../../../utilities/http';
-import { message } from '@tauri-apps/api/dialog';
 
 interface Props {
-  onSignIn({
-    token,
-    refreshToken,
-  }: {
-    token: string;
-    refreshToken: string;
-  }): void;
+  signIn({ username, password }: { username: string; password: string });
 }
 
-export default function SignIn({ onSignIn }: Props) {
+export default function SignIn({ signIn }: Props) {
+  const [loading, setLoading] = useState(false);
   return (
     <div className={styles.container}>
       <Logo className={styles.logo} />
@@ -29,25 +23,14 @@ export default function SignIn({ onSignIn }: Props) {
             return;
           }
           try {
-            const response = await post('/api/v2/login', {
+            setLoading(true);
+            await signIn({
+              // const response = await post('/api/v2/login', {
               username,
               password,
             });
-            if (response.ok) {
-              onSignIn(
-                response.data as { token: string; refreshToken: string }
-              );
-            } else {
-              await message(
-                'Email or password are incorrect. Please try again.',
-                { title: 'linen.dev', type: 'error' }
-              );
-            }
-          } catch (exception) {
-            await message('Something went wrong. Please try again.', {
-              title: 'linen.dev',
-              type: 'error',
-            });
+          } finally {
+            setLoading(false);
           }
         }}
       >
@@ -63,7 +46,7 @@ export default function SignIn({ onSignIn }: Props) {
           name="password"
           placeholder="Password"
         />
-        <Button>Continue</Button>
+        <Button disabled={loading}>Continue</Button>
       </form>
     </div>
   );

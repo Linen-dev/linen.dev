@@ -6,6 +6,7 @@ import { getColor } from './utilities/color';
 import { getLetter } from './utilities/string';
 
 interface Props {
+  className?: string;
   src?: string | null;
   text?: string | null;
   size?: Size;
@@ -29,7 +30,7 @@ function dimensions(size?: Size) {
   }
 }
 
-function Avatar({ src, text = 'u', size, shadow, Image }: Props) {
+function Avatar({ className, src, text = 'u', size, shadow, Image }: Props) {
   const [error, setError] = useState(false);
 
   const letter = getLetter(text || '');
@@ -56,18 +57,28 @@ function Avatar({ src, text = 'u', size, shadow, Image }: Props) {
     <>
       {!src || error ? (
         <div
-          className={classNames(styles.placeholder, size && styles[size], {
-            [styles.shadow]: shadow === 'sm',
-            [styles[`color-${color}`]]: color,
-          })}
+          className={classNames(
+            className,
+            styles.placeholder,
+            size && styles[size],
+            {
+              [styles.shadow]: shadow === 'sm',
+              [styles[`color-${color}`]]: color,
+            }
+          )}
         >
           {letter}
         </div>
       ) : (
         <div
-          className={classNames(styles.avatar, size && styles[size], {
-            [styles.shadow]: shadow === 'sm',
-          })}
+          className={classNames(
+            className,
+            styles.avatar,
+            size && styles[size],
+            {
+              [styles.shadow]: shadow === 'sm',
+            }
+          )}
         >
           {renderImage({ src })}
         </div>
