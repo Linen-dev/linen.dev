@@ -9,7 +9,7 @@ import FilesCount from './FilesCount';
 import { isWhitespace } from '@linen/utilities/string';
 import { getCaretPosition, setCaretPosition } from './utilities';
 import { SerializedUser } from '@linen/types';
-// import { useUsersContext } from 'contexts/Users';
+// import { useUsersContext } from '@linen/contexts/Users';
 import { postprocess } from './utilities/message';
 import { AxiosRequestConfig, AxiosResponse } from 'axios';
 
@@ -174,14 +174,14 @@ function MessageForm({
     handleSubmit(event, onSendAndClose);
 
   useEffect(() => {
-    autosize(ref.current);
+    ref.current && autosize(ref.current);
     return () => {
-      autosize.destroy(ref.current);
+      ref.current && autosize.destroy(ref.current);
     };
   }, []);
 
   useEffect(() => {
-    autosize.update(ref.current);
+    ref.current && autosize.update(ref.current);
   }, [message]);
 
   useEffect(() => {

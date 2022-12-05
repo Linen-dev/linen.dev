@@ -1,0 +1,35 @@
+{
+  "name": "@linen/contexts",
+  "version": "1.0.0",
+  "description": "react contexts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "dev": "tsc --watch",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@types/lodash.unionby": "^4.8.7",
+    "lodash.unionby": "^4.8.0"
+  },
+  "devDependencies": {
+    "typescript": "^4.9.3"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0"
+  },
+  "exports": {
+    "./Users": "./dist/Users.js",
+    "./Link": "./dist/Link.js"
+  },
+  "typesVersions": {
+    "*": {
+      "Users": [
+        "dist/Users.d.ts"
+      ],
+      "Link": [
+        "dist/Link.d.ts"
+      ]
+    }
+  }
+}

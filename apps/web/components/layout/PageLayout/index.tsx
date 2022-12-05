@@ -6,7 +6,7 @@ import SEO, { type SeoProps } from '../SEO';
 import GoogleAnalytics from '../GoogleAnalytics';
 import classNames from 'classnames';
 import { Permissions, SerializedChannel, Settings } from '@linen/types';
-import { LinkContext } from 'contexts/Link';
+import { LinkContext } from '@linen/contexts/Link';
 import { put } from 'utilities/http';
 import useMode from '@linen/hooks/mode';
 import styles from './index.module.css';

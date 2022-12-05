@@ -5,7 +5,7 @@ import { scrollToBottom } from '@linen/utilities/scroll';
 import { sendMessageWrapper } from './utilities/sendMessageWrapper';
 import usePolling from '@linen/hooks/polling';
 import useKeyboard from '@linen/hooks/keyboard';
-// import { useUsersContext } from 'contexts/Users';
+// import { useUsersContext } from '@linen/contexts/Users';
 import useFeedWebsockets from '@linen/hooks/websockets/feed';
 // import type { CommunityPushType } from 'services/push';
 import { manageSelections } from './utilities/selection';

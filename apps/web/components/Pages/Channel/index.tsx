@@ -23,7 +23,7 @@ import {
 } from './Content/utilities/http';
 import { createThreadImitation } from './Content/utilities/thread';
 import useWebsockets from '@linen/hooks/websockets';
-import { useUsersContext } from 'contexts/Users';
+import { useUsersContext } from '@linen/contexts/Users';
 import ChannelForBots from './ChannelForBots';
 
 export interface ChannelProps {
