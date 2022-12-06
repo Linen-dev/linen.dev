@@ -1,6 +1,5 @@
 import { useState, useRef } from 'react';
 import Thread from 'components/Thread';
-import { scrollToBottom } from '@linen/utilities/scroll';
 import { ThreadState } from '@linen/types';
 import { useUsersContext } from '@linen/contexts/Users';
 import { useJoinContext } from 'contexts/Join';
@@ -116,15 +115,8 @@ export default function Content({
         updateThread={updateThread}
         sendMessage={sendMessage}
         token={token}
-        onSend={() => {
-          scrollToBottom(ref.current as HTMLElement);
-        }}
-        onMount={() => {
-          permissions.chat && scrollToBottom(ref.current as HTMLElement);
-        }}
         onMessage={(message, messageId, imitationId) => {
           onThreadMessage(message, messageId, imitationId);
-          scrollToBottom(ref.current as HTMLElement);
         }}
       />
     </div>
