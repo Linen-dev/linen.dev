@@ -41,6 +41,7 @@ interface Props {
     type: string;
     active: boolean;
   }): void;
+  onLoad?(): void;
 }
 
 export function Row({
@@ -57,6 +58,7 @@ export function Row({
   footer,
   onReaction,
   onPin,
+  onLoad,
 }: Props) {
   const top = !isPreviousMessageFromSameUser;
   const owner = currentUser ? currentUser.id === message.usersId : false;
@@ -107,6 +109,7 @@ export function Row({
               reactions={message.reactions}
               attachments={message.attachments}
               currentUser={currentUser}
+              onLoad={onLoad}
             />
             {footer}
             <div className={styles.actions}>

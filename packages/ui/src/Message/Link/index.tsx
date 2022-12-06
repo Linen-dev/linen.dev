@@ -9,15 +9,16 @@ import Mail from './Mail';
 
 interface Props {
   value: string;
+  onLoad?(): void;
 }
 
-export default function Link({ value }: Props) {
+export default function Link({ value, onLoad }: Props) {
   const [href, name] = value.split('|');
   if (isImage(href)) {
     return (
       <Accordion header={name || href}>
         <a href={href} target="_blank" rel="noreferrer ugc">
-          <Image src={href} />
+          <Image src={href} onLoad={onLoad} />
         </a>
       </Accordion>
     );
@@ -26,7 +27,7 @@ export default function Link({ value }: Props) {
   if (isVideo(href)) {
     return (
       <Accordion header={name || href}>
-        <Video src={href} />
+        <Video src={href} onLoad={onLoad} />
       </Accordion>
     );
   }

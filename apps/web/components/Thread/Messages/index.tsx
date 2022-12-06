@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import Row from 'components/GridRow';
+import GridRow from 'components/GridRow';
 import { SerializedThread } from '@linen/types';
 import { SerializedUser } from '@linen/types';
 import { Settings } from '@linen/types';
@@ -26,6 +26,7 @@ interface Props {
     type: string;
     active: boolean;
   }): void;
+  onLoad?(): void;
 }
 
 function Messages({
@@ -36,6 +37,7 @@ function Messages({
   currentUser,
   mode,
   onReaction,
+  onLoad,
 }: Props) {
   const { messages } = thread;
   const elements = messages.map((message, index) => {
@@ -44,7 +46,7 @@ function Messages({
       previousMessage && previousMessage.usersId === message.usersId;
     return (
       <div key={`${message.id}-${index}`} className={styles.container}>
-        <Row
+        <GridRow
           className={classNames(styles.row, {
             [styles.top]: !isPreviousMessageFromSameUser,
           })}
@@ -57,6 +59,7 @@ function Messages({
           isSubDomainRouting={isSubDomainRouting}
           mode={mode}
           onReaction={onReaction}
+          onLoad={onLoad}
         />
       </div>
     );

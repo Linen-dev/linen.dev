@@ -5,9 +5,10 @@ interface Props {
   className?: string;
   src: string;
   alt?: string;
+  onLoad?(): void;
 }
 
-export default function Component({ className, src, alt }: Props) {
+export default function Component({ className, src, alt, onLoad }: Props) {
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
   const [loaded, setLoaded] = useState(false);
@@ -36,6 +37,10 @@ export default function Component({ className, src, alt }: Props) {
       mounted = false;
     };
   }, [src]);
+
+  useEffect(() => {
+    loaded && onLoad?.();
+  }, [loaded]);
 
   if (loaded && width > 0 && height > 0) {
     return (
