@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import classNames from 'classnames';
 import Header from './Header';
 import Messages from './Messages';
@@ -16,6 +16,7 @@ import {
 } from '@linen/types';
 import { Mode } from '@linen/hooks/mode';
 import useThreadWebsockets from '@linen/hooks/websockets/thread';
+import { scrollToBottom } from '@linen/utilities/scroll';
 import styles from './index.module.scss';
 
 interface Props {
@@ -81,7 +82,10 @@ export default function Thread({
   onReaction,
   onMessage,
 }: Props) {
+  const ref = useRef<HTMLDivElement>(null);
   const { id, state, viewCount, incrementId } = thread;
+
+  const handleScroll = () => scrollToBottom(ref.current as HTMLDivElement);
 
   useEffect(() => {
     onMount?.();
@@ -111,8 +115,12 @@ export default function Thread({
 
   const manage = permissions.manage || isThreadCreator(currentUser, thread);
 
+  useEffect(() => {
+    permissions.chat && handleScroll();
+  }, []);
+
   return (
-    <div className={classNames(styles.container)}>
+    <div className={classNames(styles.container)} ref={ref}>
       <Header
         thread={thread}
         channelName={channelName}
@@ -152,10 +160,12 @@ export default function Thread({
               id="thread-message-form"
               onSend={(message: string, files: UploadedFile[]) => {
                 onSend?.();
+                handleScroll();
                 return sendMessage({ message, files, channelId, threadId: id });
               }}
               onSendAndClose={(message: string, files: UploadedFile[]) => {
                 onSend?.();
+                handleScroll();
                 return Promise.all([
                   sendMessage({ message, files, channelId, threadId: id }),
                   updateThread({ state: ThreadState.CLOSE }),
@@ -178,6 +188,7 @@ export default function Thread({
               id="thread-message-form"
               onSend={(message: string, files: UploadedFile[]) => {
                 onSend?.();
+                handleScroll();
                 return Promise.all([
                   sendMessage({ message, files, channelId, threadId: id }),
                 ]);

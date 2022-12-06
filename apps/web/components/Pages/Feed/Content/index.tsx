@@ -1,7 +1,6 @@
 import { useState, useRef, useCallback } from 'react';
 import { Layouts, Pages, Toast } from '@linen/ui';
 import Thread from 'components/Thread';
-import { scrollToBottom } from '@linen/utilities/scroll';
 import { sendMessageWrapper } from './utilities/sendMessageWrapper';
 import usePolling from '@linen/hooks/polling';
 import useKeyboard from '@linen/hooks/keyboard';
@@ -334,15 +333,8 @@ export default function Feed({
               onClose={() => setThread(undefined)}
               sendMessage={sendMessage}
               token={token}
-              onSend={() => {
-                scrollToBottom(ref.current as HTMLElement);
-              }}
-              onMount={() => {
-                permissions.chat && scrollToBottom(ref.current as HTMLElement);
-              }}
               onMessage={(message, messageId, imitationId) => {
                 onThreadMessage(message, messageId, imitationId);
-                scrollToBottom(ref.current as HTMLElement);
               }}
             />
           )
