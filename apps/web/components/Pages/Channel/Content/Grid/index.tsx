@@ -6,7 +6,7 @@ import { Permissions, Settings } from '@linen/types';
 import { Mode } from '@linen/hooks/mode';
 import styles from './index.module.scss';
 
-export default function ChannelGrid({
+export default function Grid({
   threads,
   permissions,
   isSubDomainRouting,
@@ -18,6 +18,7 @@ export default function ChannelGrid({
   onPin,
   onReaction,
   onDrop,
+  onLoad,
 }: {
   threads: SerializedThread[];
   permissions: Permissions;
@@ -50,6 +51,7 @@ export default function ChannelGrid({
     from: string;
     to: string;
   }): void;
+  onLoad?(): void;
 }) {
   return (
     <>
@@ -90,6 +92,7 @@ export default function ChannelGrid({
                     onPin={onPin}
                     onReaction={onReaction}
                     onDrop={onDrop}
+                    onLoad={onLoad}
                   />
                 </div>
               )}

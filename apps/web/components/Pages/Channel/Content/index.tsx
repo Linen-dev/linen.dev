@@ -123,14 +123,16 @@ export default function Channel({
 
   const currentUser = permissions.user || null;
 
+  function handleScroll() {
+    scrollToBottom(scrollableRootRef.current as HTMLElement);
+  }
+
   function handleLeftScroll() {
     if (
       isScrollAtBottom(scrollableRootRef.current as HTMLElement) ||
       isInViewport(leftBottomRef.current as HTMLElement)
     ) {
-      setTimeout(() => {
-        scrollToBottom(scrollableRootRef.current as HTMLElement);
-      }, 0);
+      setTimeout(() => handleScroll, 0);
     }
   }
 
@@ -160,7 +162,7 @@ export default function Channel({
   });
 
   useEffect(() => {
-    scrollToBottom(scrollableRootRef.current as HTMLElement);
+    handleScroll();
   }, []);
 
   const leftRef = useCallback(
@@ -319,6 +321,7 @@ export default function Channel({
                           onPin={pinThread}
                           onReaction={sendReaction}
                           onDrop={handleDrop}
+                          onLoad={handleScroll}
                         />
                       </ul>
                     </>
@@ -363,15 +366,10 @@ export default function Channel({
               token={token}
               onSend={() => {
                 handleLeftScroll();
-                scrollToBottom(rightRef.current as HTMLElement);
-              }}
-              onMount={() => {
-                scrollToBottom(rightRef.current as HTMLElement);
               }}
               onMessage={(message, messageId, imitationId) => {
                 onMessage(message, messageId, imitationId);
                 handleLeftScroll();
-                scrollToBottom(rightRef.current as HTMLElement);
               }}
             />
           )

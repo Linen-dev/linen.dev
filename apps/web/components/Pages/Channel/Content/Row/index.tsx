@@ -1,7 +1,7 @@
 import DraggableRow from 'components/Pages/Channel/Content/Row/DraggableRow';
 import { Avatars } from '@linen/ui';
 import Image from 'next/image';
-import Row from 'components/GridRow';
+import GridRow from 'components/GridRow';
 import styles from './index.module.scss';
 import { SerializedThread } from '@linen/types';
 import { SerializedUser } from '@linen/types';
@@ -29,6 +29,7 @@ export default function ChannelRow({
   onPin,
   onReaction,
   onDrop,
+  onLoad,
 }: {
   className?: string;
   thread: SerializedThread;
@@ -60,6 +61,7 @@ export default function ChannelRow({
     from: string;
     to: string;
   }): void;
+  onLoad?(): void;
 }) {
   const { messages } = thread;
   const message = messages[0];
@@ -83,7 +85,7 @@ export default function ChannelRow({
       mode={mode}
     >
       <div className={styles.content}>
-        <Row
+        <GridRow
           className={className}
           thread={thread}
           message={message}
@@ -94,6 +96,7 @@ export default function ChannelRow({
           mode={mode}
           onPin={onPin}
           onReaction={onReaction}
+          onLoad={onLoad}
           header={
             thread.title && <div className={styles.header}>{thread.title}</div>
           }
