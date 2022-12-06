@@ -43,6 +43,7 @@ interface Props {
   reactions?: SerializedReaction[];
   attachments?: SerializedAttachment[];
   currentUser?: SerializedUser | null;
+  onLoad?(): void;
 }
 
 const parsers = {
@@ -62,6 +63,7 @@ function Message({
   reactions,
   attachments,
   currentUser,
+  onLoad,
 }: Props) {
   if (text === '' && noAttachment(attachments)) {
     text = 'message has been deleted';
@@ -135,7 +137,13 @@ function Message({
       case 'pre':
         return <BlockCode key={node.cid} value={(node as PreNode).value} />;
       case 'url':
-        return <Link key={node.cid} value={(node as LinkNode).value} />;
+        return (
+          <Link
+            key={node.cid}
+            value={(node as LinkNode).value}
+            onLoad={onLoad}
+          />
+        );
       case 'emoji':
         return <Emoji key={node.cid} text={(node as EmojiNode).source} />;
     }
@@ -145,7 +153,7 @@ function Message({
   return (
     <div className={styles.message}>
       {render(tree)}
-      <Attachments attachments={attachments} />
+      <Attachments attachments={attachments} onLoad={onLoad} />
       <Reactions reactions={reactions} currentUser={currentUser} />
     </div>
   );

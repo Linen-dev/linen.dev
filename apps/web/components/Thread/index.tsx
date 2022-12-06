@@ -138,6 +138,7 @@ export default function Thread({
           currentUser={currentUser}
           settings={settings}
           onReaction={onReaction}
+          onLoad={handleScroll}
         />
 
         <div className={styles.footer}>

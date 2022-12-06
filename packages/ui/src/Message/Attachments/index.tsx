@@ -7,9 +7,10 @@ import Image from '../Link/Image';
 
 interface Props {
   attachments?: SerializedAttachment[];
+  onLoad?(): void;
 }
 
-function Attachments({ attachments }: Props) {
+function Attachments({ attachments, onLoad }: Props) {
   if (!attachments || attachments.length === 0) {
     return null;
   }
@@ -17,7 +18,11 @@ function Attachments({ attachments }: Props) {
     <div className={styles.attachments}>
       {attachments.map((attachment: SerializedAttachment, index) =>
         isImage(attachment.url) ? (
-          <Image key={attachment.url + index} src={attachment.url} />
+          <Image
+            key={attachment.url + index}
+            src={attachment.url}
+            onLoad={onLoad}
+          />
         ) : (
           <Attachment key={attachment.url + index} attachment={attachment} />
         )
