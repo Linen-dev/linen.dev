@@ -145,7 +145,7 @@ export default function Channel({
     handleLeftScroll();
   }
 
-  const [infiniteRef, { rootRef }] = useInfiniteScroll({
+  const [infiniteTopRef, { rootRef: topRootRef }] = useInfiniteScroll({
     loading: isLoading,
     hasNextPage: !!cursor.prev,
     onLoadMore: loadMore,
@@ -168,10 +168,10 @@ export default function Channel({
   const leftRef = useCallback(
     (node: HTMLDivElement) => {
       bottomRootRef(node);
-      rootRef(node);
+      topRootRef(node);
       scrollableRootRef.current = node;
     },
-    [rootRef, bottomRootRef]
+    [topRootRef, bottomRootRef]
   );
 
   const handleRootScroll = useCallback(() => {
@@ -277,7 +277,7 @@ export default function Channel({
               [styles['is-empty']]: threads.length === 0,
             })}
           >
-            {cursor?.prev && !error?.prev && <div ref={infiniteRef}></div>}
+            {cursor?.prev && !error?.prev && <div ref={infiniteTopRef}></div>}
             <ChatLayout
               content={
                 <>
