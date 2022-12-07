@@ -10,6 +10,10 @@ const config = {
   // coverageDirectory: 'coverage',
   moduleDirectories: ['node_modules', '<rootDir>/'],
   testMatch: ['**/?(*.)+(ispec|itest).[tj]s?(x)'],
+  moduleNameMapper: {
+    '@linen/(.*)/(.*)': '<rootDir>/../../packages/$1/dist/$2',
+    '@linen/(.*)': '<rootDir>/../../packages/$1',
+  },
 };
 
 module.exports = createJestConfig({ ...customJestConfig, ...config });

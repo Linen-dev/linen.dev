@@ -15,9 +15,7 @@ const customJestConfig = {
   // if using TypeScript with a baseUrl set to the root directory then you need the below for alias' to work
   moduleDirectories: ['node_modules', '<rootDir>/'],
   moduleNameMapper: {
-    '@linen/utilities/debounce':
-      '<rootDir>/../../packages/utilities/dist/debounce.js',
-    '@linen/hooks/mode': '<rootDir>/../../packages/hooks/dist/mode.js',
+    '@linen/(.*)/(.*)': '<rootDir>/../../packages/$1/dist/$2',
     '@linen/(.*)': '<rootDir>/../../packages/$1',
   },
   testEnvironment: 'jest-environment-jsdom',
