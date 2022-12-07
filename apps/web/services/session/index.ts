@@ -38,6 +38,17 @@ export default class Session {
     return null;
   }
 
+  static async auth(
+    request: GetServerSidePropsContext['req'] | NextApiRequest,
+    response: GetServerSidePropsContext['res'] | NextApiResponse
+  ) {
+    const session = await Session.find(request, response);
+    if (session && session.user && session.user.email) {
+      return findAuthByEmail(session.user.email);
+    }
+    return null;
+  }
+
   static async token(
     req: GetServerSidePropsContext['req'] | NextApiRequest
   ): Promise<JWT | null> {

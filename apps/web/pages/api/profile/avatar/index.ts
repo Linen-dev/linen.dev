@@ -1,6 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import prisma from 'client';
-import serializeUser from 'serializers/user';
 import formidable from 'formidable';
 import { readFile } from 'fs/promises';
 import UploadService from 'services/upload';
@@ -24,9 +23,9 @@ interface File {
 
 async function handler(request: NextApiRequest, response: NextApiResponse) {
   if (request.method === 'POST') {
-    const currentUser = await Session.user(request, response);
+    const auth = await Session.auth(request, response);
 
-    if (!currentUser) {
+    if (!auth || !auth.users || auth.users.length === 0) {
       return response.status(401).json({});
     }
 
@@ -61,18 +60,16 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
         return response.status(500).json({});
       }
 
-      const user = await prisma.users.update({
+      await prisma.users.updateMany({
         where: {
-          id: currentUser.id,
+          id: { in: auth.users.map(({ id }) => id) },
         },
         data: {
           profileImageUrl: data.url,
         },
       });
 
-      return response.status(200).json({
-        user: serializeUser(user),
-      });
+      return response.status(200).json({});
     } catch (exception) {
       // we could improve this by using `formidable.errors` and detecting codes
       console.error(exception);
