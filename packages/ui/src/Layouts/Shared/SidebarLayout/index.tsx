@@ -1,5 +1,4 @@
 import React from 'react';
-import { Transition } from '@headlessui/react';
 import useDevice from '@linen/hooks/device';
 import styles from './index.module.scss';
 
@@ -23,16 +22,13 @@ function SidebarLayout({
   const { isMobile } = useDevice();
   return (
     <>
-      <Transition
-        show={isMobile && !!right ? false : true}
-        className={styles.left}
-        onScroll={onLeftScroll}
-        ref={leftRef}
-      >
-        {left}
-      </Transition>
-      <Transition show={!!right} className={styles.right}>
-        {right && (
+      {(!isMobile || !right) && (
+        <div className={styles.left} onScroll={onLeftScroll} ref={leftRef}>
+          {left}
+        </div>
+      )}
+      {right && (
+        <div className={styles.right}>
           <div
             className={styles.content}
             onScroll={onRightScroll}
@@ -40,8 +36,8 @@ function SidebarLayout({
           >
             {right}
           </div>
-        )}
-      </Transition>
+        </div>
+      )}
     </>
   );
 }
