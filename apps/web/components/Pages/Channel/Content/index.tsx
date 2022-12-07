@@ -138,10 +138,15 @@ export default function Channel({
 
   async function selectThread(incrementId: number) {
     const currentThread = threads.find((t) => t.incrementId === incrementId);
-    if (currentThread) {
-      onSelectThread(currentThread);
+    if (!currentThread) {
+      return;
     }
+    onSelectThread(currentThread);
     setShowThread(true);
+    const isLastThread = currentThread.id === threads[threads.length - 1].id;
+    if (isLastThread) {
+      setTimeout(() => handleScroll(), 0);
+    }
     handleLeftScroll();
   }
 
@@ -321,7 +326,7 @@ export default function Channel({
                           onPin={pinThread}
                           onReaction={sendReaction}
                           onDrop={handleDrop}
-                          onLoad={handleScroll}
+                          onLoad={handleLeftScroll}
                         />
                       </ul>
                     </>
