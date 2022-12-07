@@ -23,5 +23,8 @@
     "dev": "yarn turbo dev",
     "build": "yarn turbo build",
     "prebuild": "yarn turbo build --filter=@linen/ui"
+  },
+  "resolutions": {
+    "qs": ">=6.9.7"
   }
 }
