@@ -1,0 +1,69 @@
+version: '3.9'
+
+x-uffizzi:
+  ingress:
+    service: web
+    port: 3000
+
+services:
+  db:
+    image: postgres:13
+    container_name: linendev_postgres
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+      - POSTGRES_PORT=5432
+      - PGDATA=/var/lib/postgresql/data/pgdata
+      - APP_DB=linendev,linentest
+    volumes:
+      - pgdata:/var/lib/postgresql/data/pgdata
+      - ./postgres/initdb:/docker-entrypoint-initdb.d
+    network_mode: bridge
+
+  web:
+    container_name: web
+    image: '${APP_IMAGE}'
+    restart: always
+    # volumes:
+    #   - .:/usr/src/app
+    ports:
+      - 3000:3000
+    env_file:
+      - .env
+    environment:
+      - PORT=3000
+      - DATABASE_URL=postgresql://postgres:postgres@localhost:5432/postgres
+    depends_on:
+      - db
+    entrypoint: "/bin/sh"
+    command: 
+      - "-c" 
+      - "cd apps/web && yarn start"
+
+  api:
+    container_name: api
+    image: '${APP_IMAGE}'
+    # build:
+    #   context: ..
+    #   dockerfile: Dockerfile
+    #   args:
+    #     - MODULE=@linen/web
+    restart: always
+    env_file:
+      - .env
+    environment:
+      - PORT=3001
+      - DATABASE_URL=postgresql://postgres:postgres@localhost:5432/postgres
+    depends_on:
+      - db
+    entrypoint: "/bin/sh"
+    command: 
+      - "-c" 
+      - "cd apps/web && yarn start:api"
+
+volumes:
+  pgdata:
