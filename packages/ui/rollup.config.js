@@ -7,7 +7,7 @@ const external = require('rollup-plugin-peer-deps-external');
 module.exports = {
   input: 'src/index.tsx',
   output: {
-    file: 'dist/index.js',
+    dir: 'dist',
     format: 'cjs',
   },
   plugins: [
