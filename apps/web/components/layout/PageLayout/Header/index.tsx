@@ -120,7 +120,17 @@ export default function Header({
             </div>
           </>
         ) : (
-          <JoinButton settings={settings} />
+          <>
+            <JoinButton settings={settings} />
+            <div className="md:hidden">
+              <MobileMenu
+                channelName={channelName}
+                fontColor={fontColor}
+                channels={channels}
+                permissions={permissions}
+              />
+            </div>
+          </>
         )}
       </div>
     </div>
