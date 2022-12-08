@@ -31,22 +31,23 @@ export default function Header({
     <StickyHeader>
       <div className={styles.container}>
         <div className={styles.center}>
-          {onClose && (
-            <div className="flex items-center md:hidden mr-2">
-              <a onClick={onClose}>
-                <GoChevronLeft />
-              </a>
+          <div className={styles.header}>
+            {onClose && (
+              <div className="md:hidden">
+                <a onClick={onClose}>
+                  <GoChevronLeft />
+                </a>
+              </div>
+            )}
+            <div>
+              <Title
+                title={title}
+                state={state}
+                manage={manage}
+                onSetTitle={onSetTitle}
+              />
+              <div className="text-gray-600 text-xs ">#{channelName}</div>
             </div>
-          )}
-
-          <div>
-            <Title
-              title={title}
-              state={state}
-              manage={manage}
-              onSetTitle={onSetTitle}
-            />
-            <div className="text-gray-600 text-xs ">#{channelName}</div>
           </div>
         </div>
         <div className={styles.icons}>
