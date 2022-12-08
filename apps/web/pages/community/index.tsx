@@ -354,7 +354,7 @@ const Home = (props: { accounts: Props[] }) => {
                         <div>
                           <h3
                             className="inline-flex rounded-full bg-indigo-100 px-4 py-1 text-base font-semibold text-indigo-600"
-                            id="tier-standard"
+                            id="tier-business"
                           >
                             {tier.name}
                           </h3>
@@ -383,7 +383,7 @@ const Home = (props: { accounts: Props[] }) => {
                           <a
                             href={tier.href}
                             className="flex items-center justify-center rounded-md border border-transparent bg-gray-800 px-5 py-3 text-base font-medium text-white hover:bg-gray-900"
-                            aria-describedby="tier-standard"
+                            aria-describedby="tier-business"
                           >
                             Get started
                           </a>
