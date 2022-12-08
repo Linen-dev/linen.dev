@@ -1,0 +1,63 @@
+version: '3.9'
+
+x-uffizzi:
+  ingress:
+    service: web
+    port: 3000
+
+services:
+  db:
+    image: postgres:13
+    container_name: linendev_postgres
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+      - POSTGRES_PORT=5432
+      - PGDATA=/var/lib/postgresql/data/pgdata
+      - APP_DB=linendev,linentest
+    volumes:
+      - ./dev/postgres/initdb:/docker-entrypoint-initdb.d
+
+  web:
+    container_name: web
+    image: registry.uffizzi.com/4eb38212-0d43-429f-82fe-5da4205ed642:60d #'${APP_IMAGE}'
+    restart: always
+    ports:
+      - 3000:3000
+    environment:
+      - PORT=3000
+      - DATABASE_URL=postgresql://postgres:postgres@localhost:5432/postgres
+      - NEXTAUTH_SECRET="suchsecretmuchsecurity"
+    depends_on:
+      - db
+    entrypoint: "/bin/sh"
+    command: 
+      - "-c" 
+      - "cd apps/web && npx prisma migrate dev && NEXTAUTH_URL=$$UFFIZZI_URL NEXT_PUBLIC_REDIRECT_URI=$$UFFIZZI_URL/api/oauth yarn start"
+    deploy:
+      resources:
+        limits:
+          memory: 1000M
+
+  api:
+    container_name: api
+    image: registry.uffizzi.com/4eb38212-0d43-429f-82fe-5da4205ed642:60d #'${APP_IMAGE}'
+    restart: always
+    environment:
+      - PORT=3001
+      - DATABASE_URL=postgresql://postgres:postgres@localhost:5432/postgres
+      - NEXTAUTH_SECRET="suchsecretmuchsecurity"
+    depends_on:
+      - db
+    entrypoint: "/bin/sh"
+    command: 
+      - "-c" 
+      - "cd apps/web && NEXTAUTH_URL=$$UFFIZZI_URL yarn start:api"
+    deploy:
+      resources:
+        limits:
+          memory: 1000M
