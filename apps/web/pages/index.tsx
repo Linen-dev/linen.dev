@@ -63,6 +63,10 @@ const Home = (props: { accounts: Props[] }) => {
     <div className="mb-10 pb-10">
       <Head>
         <title>Linen | Slack alternative designed for communities</title>
+        <meta
+          name="description"
+          content="Google-Searchable and community focused Slack alternative. Sync your Slack and Discord conversations to Linen and get SEO benefits while reducing customer support load."
+        />
       </Head>
 
       <div className="max-w-rxl mx-auto px-2 sm:px-6">
