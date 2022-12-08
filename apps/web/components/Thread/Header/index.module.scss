@@ -14,11 +14,9 @@
 }
 
 .header {
-  background: $color-white;
-  position: sticky;
-  top: 0;
-  width: 100%;
-  z-index: 1;
+  align-items: center;
+  display: flex;
+  gap: 0.25rem;
 }
 
 .icons {
