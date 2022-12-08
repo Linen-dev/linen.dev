@@ -23,25 +23,25 @@ function Reaction({ type, count, active }: Props) {
 
   if (UNSUPPORTED_EMOJIS.includes(type)) {
     return (
-      <a className={styles.reaction} title={type}>
+      <div className={styles.reaction} title={type}>
         {normalizeText(type)} {count}
-      </a>
+      </div>
     );
   }
   if (alias) {
     return (
-      <a className={styles.reaction} title={type}>
+      <div className={styles.reaction} title={type}>
         {alias} {count}
-      </a>
+      </div>
     );
   }
   return (
-    <a
+    <div
       className={classNames(styles.reaction, { [styles.active]: active })}
       title={type}
     >
       <Emoji text={normalizeText(type)} /> {count}
-    </a>
+    </div>
   );
 }
 
