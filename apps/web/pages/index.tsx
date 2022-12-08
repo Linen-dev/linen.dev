@@ -1,5 +1,7 @@
 import { prisma } from 'client';
 import linenExamplePage from 'public/linen-example-page.png';
+import linenExampleFeed from 'public/linen-example-feed.png';
+import linenExampleSearch from 'public/linen-example-search.svg';
 import Image from 'next/image';
 import LinenLogo from 'components/Logo/Linen';
 import YCombinatorLogo from 'components/Logo/YCombinator';
@@ -249,9 +251,9 @@ const Home = (props: { accounts: Props[] }) => {
               </div>
               <div className="mt-12 sm:mt-16 lg:mt-0">
                 <div className="-mr-48 pl-4 sm:pl-6 md:-mr-16 lg:relative lg:m-0 lg:h-full lg:px-0">
-                  <img
+                  <Image
                     className="w-full rounded-xl shadow-xl ring-1 ring-black ring-opacity-5 lg:absolute lg:left-0 lg:h-full lg:w-auto lg:max-w-none"
-                    src="https://linen-assets.s3.us-east-1.amazonaws.com/feedExample.png"
+                    src={linenExampleFeed}
                     alt="Inbox user interface"
                   />
                 </div>
@@ -289,9 +291,9 @@ const Home = (props: { accounts: Props[] }) => {
               </div>
               <div className="mt-12 sm:mt-16 lg:col-start-1 lg:mt-0">
                 <div className="-ml-48 pr-4 sm:pr-6 md:-ml-16 lg:relative lg:m-0 lg:h-full lg:px-0">
-                  <img
+                  <Image
                     className="w-full rounded-xl shadow-xl ring-1 ring-black ring-opacity-5 lg:absolute lg:right-0 lg:h-full lg:w-auto lg:max-w-none"
-                    src="https://linen-assets.s3.us-east-1.amazonaws.com/search.svg"
+                    src={linenExampleSearch}
                     alt="Customer profile user interface"
                   />
                 </div>
