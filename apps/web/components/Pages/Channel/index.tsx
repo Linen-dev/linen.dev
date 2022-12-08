@@ -573,6 +573,7 @@ export default function Channel(props: ChannelProps) {
       onDrop={onChannelDrop}
     >
       <Content
+        key={channelName}
         threads={threads}
         pinnedThreads={pinnedThreads}
         currentChannel={currentChannel}
