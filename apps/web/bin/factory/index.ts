@@ -97,6 +97,7 @@ async function createLinenCommunity() {
       channelName: 'general',
     },
   });
+  // 1. Thread with a reaction
   await prisma.threads.create({
     data: {
       channelId: channel.id,
@@ -107,7 +108,7 @@ async function createLinenCommunity() {
             channelId: channel.id,
             body: 'I’m setting up a docker compose file for integration tests so it doesn’t mess with your current db',
             usersId: user3.id,
-            sentAt: new Date().toISOString(),
+            sentAt: '2022-12-09T08:01:00.000Z',
             messageFormat: MessageFormat.LINEN,
             reactions: {
               create: [
@@ -122,6 +123,7 @@ async function createLinenCommunity() {
       },
     },
   });
+  // 2. Thread with inline code blocks
   await prisma.threads.create({
     data: {
       channelId: channel.id,
@@ -132,21 +134,60 @@ async function createLinenCommunity() {
             channelId: channel.id,
             body: "I had a look at optimizing pages and they're being slown down heavily by avatars right now. `Next.js` offers `next/image` which supports lazy loading, so we could fix that, but I would need to spend some time refactoring avatars. Does that make sense?",
             usersId: user1.id,
-            sentAt: new Date().toISOString(),
+            sentAt: '2022-12-09T09:01:00.000Z',
             messageFormat: MessageFormat.LINEN,
           },
           {
             channelId: channel.id,
             body: "Yeah that sounds good i'm only working on backend now",
             usersId: user3.id,
-            sentAt: new Date().toISOString(),
+            sentAt: '2022-12-09T09:01:00.000Z',
             messageFormat: MessageFormat.LINEN,
           },
           {
             channelId: channel.id,
             body: 'Ok, thanks',
             usersId: user1.id,
-            sentAt: new Date().toISOString(),
+            sentAt: '2022-12-09T09:01:00.000Z',
+            messageFormat: MessageFormat.LINEN,
+          },
+        ],
+      },
+    },
+  });
+  // 3. Thread with a link
+  await prisma.threads.create({
+    data: {
+      channelId: channel.id,
+      sentAt: new Date().getTime(),
+      messages: {
+        create: [
+          {
+            channelId: channel.id,
+            body: "btw https://www.linen.dev/sitemap.xml doesn't seem to work",
+            usersId: user3.id,
+            sentAt: '2022-12-09T10:01:00.000Z',
+            messageFormat: MessageFormat.LINEN,
+          },
+          {
+            channelId: channel.id,
+            body: "thanks, I'll have a look tomorrow - focused on the lazy loading of avatars today",
+            usersId: user1.id,
+            sentAt: '2022-12-09T10:02:00.000Z',
+            messageFormat: MessageFormat.LINEN,
+          },
+          {
+            channelId: channel.id,
+            body: 'https://github.com/Linen-dev/linen.dev/pull/21/files',
+            usersId: user1.id,
+            sentAt: '2022-12-09T10:03:00.000Z',
+            messageFormat: MessageFormat.LINEN,
+          },
+          {
+            channelId: channel.id,
+            body: "let's see if this helps",
+            usersId: user1.id,
+            sentAt: '2022-12-09T10:04:00.000Z',
             messageFormat: MessageFormat.LINEN,
           },
         ],
