@@ -42,7 +42,7 @@ export default function Component({ className, src, alt, onLoad }: Props) {
     loaded && onLoad?.();
   }, [loaded]);
 
-  if (loaded && width > 0 && height > 0) {
+  if (loaded) {
     return (
       <img
         className={className}

@@ -3,13 +3,8 @@
 .image {
   border: 1px solid $color-border;
   border-radius: 4px;
-  max-width: 300px;
+  display: block;
+  height: 200px;
   padding: 1px;
-}
-
-@media only screen and (max-width: 767px) {
-  .image {
-    max-width: 100%;
-    height: auto;
-  }
+  width: auto;
 }
