@@ -109,6 +109,14 @@ async function createLinenCommunity() {
             usersId: user3.id,
             sentAt: new Date().toISOString(),
             messageFormat: MessageFormat.LINEN,
+            reactions: {
+              create: [
+                {
+                  name: 'white_heavy_check_mark',
+                  count: 1,
+                },
+              ],
+            },
           },
         ],
       },
