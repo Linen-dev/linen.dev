@@ -308,6 +308,24 @@ async function createLinenCommunity() {
       },
     },
   });
+  // 8. Thread with an image
+  await prisma.threads.create({
+    data: {
+      channelId: channel.id,
+      sentAt: new Date().getTime(),
+      messages: {
+        create: [
+          {
+            channelId: channel.id,
+            body: 'we need to fix the channel view too http://localhost:3000/linen-example-page.png',
+            usersId: user4.id,
+            sentAt: '2021-12-14T09:01:00.000Z',
+            messageFormat: MessageFormat.LINEN,
+          },
+        ],
+      },
+    },
+  });
 }
 
 export const seed = async () => {
