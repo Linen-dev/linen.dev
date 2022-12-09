@@ -108,7 +108,7 @@ async function createLinenCommunity() {
             channelId: channel.id,
             body: 'I’m setting up a docker compose file for integration tests so it doesn’t mess with your current db',
             usersId: user3.id,
-            sentAt: '2022-12-09T08:01:00.000Z',
+            sentAt: '2021-12-09T08:01:00.000Z',
             messageFormat: MessageFormat.LINEN,
             reactions: {
               create: [
@@ -134,21 +134,21 @@ async function createLinenCommunity() {
             channelId: channel.id,
             body: "I had a look at optimizing pages and they're being slown down heavily by avatars right now. `Next.js` offers `next/image` which supports lazy loading, so we could fix that, but I would need to spend some time refactoring avatars. Does that make sense?",
             usersId: user1.id,
-            sentAt: '2022-12-09T09:01:00.000Z',
+            sentAt: '2021-12-09T09:01:00.000Z',
             messageFormat: MessageFormat.LINEN,
           },
           {
             channelId: channel.id,
             body: "Yeah that sounds good i'm only working on backend now",
             usersId: user3.id,
-            sentAt: '2022-12-09T09:02:00.000Z',
+            sentAt: '2021-12-09T09:02:00.000Z',
             messageFormat: MessageFormat.LINEN,
           },
           {
             channelId: channel.id,
             body: 'Ok, thanks',
             usersId: user1.id,
-            sentAt: '2022-12-09T09:03:00.000Z',
+            sentAt: '2021-12-09T09:03:00.000Z',
             messageFormat: MessageFormat.LINEN,
           },
         ],
@@ -166,28 +166,28 @@ async function createLinenCommunity() {
             channelId: channel.id,
             body: "btw https://www.linen.dev/sitemap.xml doesn't seem to work",
             usersId: user3.id,
-            sentAt: '2022-12-09T10:01:00.000Z',
+            sentAt: '2021-12-09T10:01:00.000Z',
             messageFormat: MessageFormat.LINEN,
           },
           {
             channelId: channel.id,
             body: "thanks, I'll have a look tomorrow - focused on the lazy loading of avatars today",
             usersId: user1.id,
-            sentAt: '2022-12-09T10:02:00.000Z',
+            sentAt: '2021-12-09T10:02:00.000Z',
             messageFormat: MessageFormat.LINEN,
           },
           {
             channelId: channel.id,
             body: 'https://github.com/Linen-dev/linen.dev/pull/21/files',
             usersId: user1.id,
-            sentAt: '2022-12-09T10:03:00.000Z',
+            sentAt: '2021-12-09T10:03:00.000Z',
             messageFormat: MessageFormat.LINEN,
           },
           {
             channelId: channel.id,
             body: "let's see if this helps",
             usersId: user1.id,
-            sentAt: '2022-12-09T10:04:00.000Z',
+            sentAt: '2021-12-09T10:04:00.000Z',
             messageFormat: MessageFormat.LINEN,
           },
         ],
@@ -205,7 +205,7 @@ async function createLinenCommunity() {
             channelId: channel.id,
             body: `@${user1.id} do you know any other contractors that you enjoy working with? I need some more help and man power right now`,
             usersId: user3.id,
-            sentAt: '2022-12-11T09:01:00.000Z',
+            sentAt: '2021-12-11T09:01:00.000Z',
             messageFormat: MessageFormat.LINEN,
             mentions: {
               create: [{ usersId: user1.id }],
@@ -215,14 +215,14 @@ async function createLinenCommunity() {
             channelId: channel.id,
             body: "I'll ask around",
             usersId: user1.id,
-            sentAt: '2022-12-11T09:02:00.000Z',
+            sentAt: '2021-12-11T09:02:00.000Z',
             messageFormat: MessageFormat.LINEN,
           },
           {
             channelId: channel.id,
             body: "ok, asked, I'll let you know when someone responds :)",
             usersId: user1.id,
-            sentAt: '2022-12-11T09:17:00.000Z',
+            sentAt: '2021-12-11T09:17:00.000Z',
             messageFormat: MessageFormat.LINEN,
           },
         ],
@@ -240,14 +240,14 @@ async function createLinenCommunity() {
             channelId: channel.id,
             body: "hey, I'm getting errors from the package with tests, do you have same issues? ```\n● Test suite failed to run\n\n    Cannot find module '@linen/hooks/mode' from 'components/NavBar/Desktop/index.tsx'\n\n    Require stack:\n        components/NavBar/Desktop/index.tsx\n        components/NavBar/index.tsx\n        components/NavBar/index.spec.tsx```",
             usersId: user4.id,
-            sentAt: '2022-12-12T09:01:00.000Z',
+            sentAt: '2021-12-12T09:01:00.000Z',
             messageFormat: MessageFormat.LINEN,
           },
           {
             channelId: channel.id,
             body: "ugh yes, sorry for that. Can you `skip` all failing tests for now please? I'll try to bring them back soon",
             usersId: user1.id,
-            sentAt: '2022-12-12T09:02:00.000Z',
+            sentAt: '2021-12-12T09:02:00.000Z',
             messageFormat: MessageFormat.LINEN,
           },
         ],
@@ -265,13 +265,41 @@ async function createLinenCommunity() {
             channelId: channel.id,
             body: "we've reached 1k stars on github",
             usersId: user4.id,
-            sentAt: '2022-12-13T09:01:00.000Z',
+            sentAt: '2021-12-13T09:01:00.000Z',
             messageFormat: MessageFormat.LINEN,
             reactions: {
               create: [
                 {
                   name: 'thumbsup',
                   count: 2,
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  });
+  // 7. Thread with an attachment
+  await prisma.threads.create({
+    data: {
+      channelId: channel.id,
+      sentAt: new Date().getTime(),
+      messages: {
+        create: [
+          {
+            channelId: channel.id,
+            body: 'need to fix the feed',
+            usersId: user3.id,
+            sentAt: '2021-12-14T09:01:00.000Z',
+            messageFormat: MessageFormat.LINEN,
+            attachments: {
+              create: [
+                {
+                  name: 'linen-example-feed.png',
+                  sourceUrl: 'http://localhost:3000/linen-example-feed.png',
+                  internalUrl: 'http://localhost:3000/linen-example-feed.png',
+                  externalId: '1234',
                 },
               ],
             },
