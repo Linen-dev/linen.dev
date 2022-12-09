@@ -254,6 +254,32 @@ async function createLinenCommunity() {
       },
     },
   });
+  // 6. Thread with multiple reactions
+  await prisma.threads.create({
+    data: {
+      channelId: channel.id,
+      sentAt: new Date().getTime(),
+      messages: {
+        create: [
+          {
+            channelId: channel.id,
+            body: "we've reached 1k stars on github",
+            usersId: user4.id,
+            sentAt: '2022-12-13T09:01:00.000Z',
+            messageFormat: MessageFormat.LINEN,
+            reactions: {
+              create: [
+                {
+                  name: 'thumbsup',
+                  count: 2,
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  });
 }
 
 export const seed = async () => {
