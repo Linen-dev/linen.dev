@@ -141,14 +141,14 @@ async function createLinenCommunity() {
             channelId: channel.id,
             body: "Yeah that sounds good i'm only working on backend now",
             usersId: user3.id,
-            sentAt: '2022-12-09T09:01:00.000Z',
+            sentAt: '2022-12-09T09:02:00.000Z',
             messageFormat: MessageFormat.LINEN,
           },
           {
             channelId: channel.id,
             body: 'Ok, thanks',
             usersId: user1.id,
-            sentAt: '2022-12-09T09:01:00.000Z',
+            sentAt: '2022-12-09T09:03:00.000Z',
             messageFormat: MessageFormat.LINEN,
           },
         ],
@@ -188,6 +188,41 @@ async function createLinenCommunity() {
             body: "let's see if this helps",
             usersId: user1.id,
             sentAt: '2022-12-09T10:04:00.000Z',
+            messageFormat: MessageFormat.LINEN,
+          },
+        ],
+      },
+    },
+  });
+  // 4. Thread with mention
+  await prisma.threads.create({
+    data: {
+      channelId: channel.id,
+      sentAt: new Date().getTime(),
+      messages: {
+        create: [
+          {
+            channelId: channel.id,
+            body: `@${user1.id} do you know any other contractors that you enjoy working with? I need some more help and man power right now`,
+            usersId: user3.id,
+            sentAt: '2022-12-11T09:01:00.000Z',
+            messageFormat: MessageFormat.LINEN,
+            mentions: {
+              create: [{ usersId: user1.id }],
+            },
+          },
+          {
+            channelId: channel.id,
+            body: "I'll ask around",
+            usersId: user1.id,
+            sentAt: '2022-12-11T09:02:00.000Z',
+            messageFormat: MessageFormat.LINEN,
+          },
+          {
+            channelId: channel.id,
+            body: "ok, asked, I'll let you know when someone responds :)",
+            usersId: user1.id,
+            sentAt: '2022-12-11T09:17:00.000Z',
             messageFormat: MessageFormat.LINEN,
           },
         ],
