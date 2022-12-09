@@ -10,6 +10,13 @@ interface Props {
 
 export default function Image({ src, alt, onLoad }: Props) {
   return (
-    <Component className={styles.image} src={src} alt={alt} onLoad={onLoad} />
+    <Component
+      className={styles.image}
+      height={200}
+      width={200}
+      src={src}
+      alt={alt}
+      onLoad={onLoad}
+    />
   );
 }
