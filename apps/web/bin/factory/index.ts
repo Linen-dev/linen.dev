@@ -1,153 +1,106 @@
-import { accounts, users } from '@prisma/client';
-import { MessageFormat } from '@linen/types';
 import prisma from '../../client';
-
-import messages from './messages';
-import { random } from '@linen/utilities/string';
-
 import { truncateTables } from './truncate';
-import { createAccounts } from './account';
-import { createAuthsAndUsers } from './auth';
-import { createUsers } from './user';
+import { ChatType, Roles } from '@linen/types';
+import { generateHash } from '../../utilities/password';
 
-export const seed = async () => {
-  await truncateTables();
-  const accounts = await createAccounts();
-  await createAuthsAndUsers(accounts[0]);
-
-  await createMessagesAndThreads(accounts[0]);
-  await createMessagesAndThreads(accounts[1]);
-  await createMessagesAndThreads(accounts[2]);
-};
-
-const createMessagesAndThreads = async (account: accounts) => {
-  const [user1, user2] = await createUsers(account);
-  await createChannelThreadsMessages({
-    name: 'general',
-    account,
-    user1,
-    user2,
-    slug: 'slug',
-    externalChannelId: `slack-channel-id-${random()}`,
-  });
-  await createChannelThreadsMessages({
-    name: 'sql',
-    account,
-    user1,
-    user2,
-    slug: 'something',
-    externalChannelId: `slack-channel-id-${random()}`,
-  });
-  await createChannelThreadsMessages({
-    name: 'alpha',
-    account,
-    user1,
-    user2,
-    slug: 'cool',
-    externalChannelId: `slack-channel-id-${random()}`,
-  });
-  await createChannelThreadsMessages({
-    name: 'hidden',
-    account,
-    user1,
-    user2,
-    slug: 'cool',
-    hidden: true,
-    externalChannelId: `slack-channel-id-${random()}`,
-  });
-};
-
-async function createChannelThreadsMessages({
-  account,
-  user1,
-  user2,
-  name,
-  slug,
-  hidden,
-  externalChannelId,
-}: {
-  account: accounts;
-  user1: users;
-  user2: users;
-  name: string;
-  slug: string;
-  hidden?: boolean;
-  externalChannelId: string;
-}) {
-  const channel = await prisma.channels.create({
+async function createLinenCommunity() {
+  const community = await prisma.accounts.create({
     data: {
-      channelName: name,
-      accountId: account.id,
-      externalChannelId,
-      hidden,
+      name: 'Linen',
+      homeUrl: `https://linen.dev`,
+      docsUrl: `https://linen.dev/docs`,
+      redirectDomain: 'linen.dev',
+      brandColor: '#000000',
+      slackDomain: 'linen',
+      logoUrl: 'https://linen-assets.s3.amazonaws.com/linen-white-logo.svg',
+      chat: ChatType.MEMBERS,
+      syncStatus: 'DONE',
+      premium: true,
+    },
+  });
+  const auth1 = await prisma.auths.create({
+    data: {
+      email: 'emil@linen.dev',
+      password: generateHash('password1!', 'salt'),
+      salt: 'salt',
+      accountId: community.id,
+    },
+  });
+  await prisma.users.create({
+    data: {
+      displayName: 'Emil',
+      accountsId: community.id,
+      authsId: auth1.id,
+      isAdmin: true,
+      isBot: false,
+      role: Roles.ADMIN,
+    },
+  });
+  const auth2 = await prisma.auths.create({
+    data: {
+      email: 'jarek@linen.dev',
+      password: generateHash('password1!', 'salt'),
+      salt: 'salt',
+      accountId: community.id,
+    },
+  });
+  await prisma.users.create({
+    data: {
+      displayName: 'Jarek',
+      accountsId: community.id,
+      authsId: auth2.id,
+      isAdmin: true,
+      isBot: false,
+      role: Roles.ADMIN,
+    },
+  });
+  const auth3 = await prisma.auths.create({
+    data: {
+      email: 'kam@linen.dev',
+      password: generateHash('password1!', 'salt'),
+      salt: 'salt',
+      accountId: community.id,
+    },
+  });
+  await prisma.users.create({
+    data: {
+      displayName: 'Kam',
+      accountsId: community.id,
+      authsId: auth3.id,
+      isAdmin: true,
+      isBot: false,
+      role: Roles.OWNER,
+    },
+  });
+  const auth4 = await prisma.auths.create({
+    data: {
+      email: 'sandro@linen.dev',
+      password: generateHash('password1!', 'salt'),
+      salt: 'salt',
+      accountId: community.id,
+    },
+  });
+  await prisma.users.create({
+    data: {
+      displayName: 'Sandro',
+      accountsId: community.id,
+      authsId: auth4.id,
+      isAdmin: true,
+      isBot: false,
+      role: Roles.ADMIN,
     },
   });
 
-  for (let i = 0; i < 100; i++) {
-    const thread = await prisma.threads.create({
-      data: {
-        channelId: channel.id,
-        slug: `${slug}-${channel.channelName}-${channel.id}-${i}`,
-        messageCount: 2,
-        externalThreadId: `slack-thread-ts-${slug}-${random()}`,
-        sentAt: new Date().getTime(),
-        lastReplyAt: new Date().getTime(),
-      },
-    });
-    const message1 = await prisma.messages.create({
-      data: {
-        body: messages[i] || `foo-${i}-${random()}`,
-        channelId: channel.id,
-        threadId: thread.id,
-        usersId: user1.id,
-        sentAt: new Date().toISOString(),
-        messageFormat: MessageFormat.LINEN,
-      },
-    });
-    await prisma.messageReactions.create({
-      data: {
-        messagesId: message1.id,
-        name: ':thumbsup:',
-        count: 5,
-      },
-    });
-    const message2 = await prisma.messages.create({
-      data: {
-        body: `bar-${i}`,
-        channelId: channel.id,
-        threadId: thread.id,
-        usersId: user1.id,
-        sentAt: new Date().toISOString(),
-        messageFormat: MessageFormat.LINEN,
-      },
-    });
-    await prisma.messageReactions.create({
-      data: {
-        messagesId: message2.id,
-        name: ':thumbsup:',
-        count: 5,
-      },
-    });
-    await prisma.messages.create({
-      data: {
-        body: `baz-${i}`,
-        channelId: channel.id,
-        threadId: thread.id,
-        usersId: user2.id,
-        sentAt: new Date().toISOString(),
-        messageFormat: MessageFormat.LINEN,
-      },
-    });
-    await prisma.messages.create({
-      data: {
-        body: `qux-${i}`,
-        channelId: channel.id,
-        threadId: thread.id,
-        usersId: user2.id,
-        sentAt: new Date().toISOString(),
-        messageFormat: MessageFormat.LINEN,
-      },
-    });
-  }
-  return channel;
+  await prisma.channels.create({
+    data: {
+      accountId: community.id,
+      channelName: 'general',
+    },
+  });
 }
+
+export const seed = async () => {
+  await truncateTables();
+
+  await createLinenCommunity();
+};
