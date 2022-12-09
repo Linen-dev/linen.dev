@@ -1,6 +1,6 @@
 import prisma from '../../client';
 import { truncateTables } from './truncate';
-import { ChatType, Roles } from '@linen/types';
+import { ChatType, MessageFormat, Roles } from '@linen/types';
 import { generateHash } from '../../utilities/password';
 
 async function createLinenCommunity() {
@@ -26,7 +26,7 @@ async function createLinenCommunity() {
       accountId: community.id,
     },
   });
-  await prisma.users.create({
+  const user1 = await prisma.users.create({
     data: {
       displayName: 'Emil',
       accountsId: community.id,
@@ -44,7 +44,7 @@ async function createLinenCommunity() {
       accountId: community.id,
     },
   });
-  await prisma.users.create({
+  const user2 = await prisma.users.create({
     data: {
       displayName: 'Jarek',
       accountsId: community.id,
@@ -62,7 +62,7 @@ async function createLinenCommunity() {
       accountId: community.id,
     },
   });
-  await prisma.users.create({
+  const user3 = await prisma.users.create({
     data: {
       displayName: 'Kam',
       accountsId: community.id,
@@ -80,7 +80,7 @@ async function createLinenCommunity() {
       accountId: community.id,
     },
   });
-  await prisma.users.create({
+  const user4 = await prisma.users.create({
     data: {
       displayName: 'Sandro',
       accountsId: community.id,
@@ -91,10 +91,58 @@ async function createLinenCommunity() {
     },
   });
 
-  await prisma.channels.create({
+  const channel = await prisma.channels.create({
     data: {
       accountId: community.id,
       channelName: 'general',
+    },
+  });
+  await prisma.threads.create({
+    data: {
+      channelId: channel.id,
+      sentAt: new Date().getTime(),
+      messages: {
+        create: [
+          {
+            channelId: channel.id,
+            body: 'I’m setting up a docker compose file for integration tests so it doesn’t mess with your current db',
+            usersId: user3.id,
+            sentAt: new Date().toISOString(),
+            messageFormat: MessageFormat.LINEN,
+          },
+        ],
+      },
+    },
+  });
+  await prisma.threads.create({
+    data: {
+      channelId: channel.id,
+      sentAt: new Date().getTime(),
+      messages: {
+        create: [
+          {
+            channelId: channel.id,
+            body: "I had a look at optimizing pages and they're being slown down heavily by avatars right now. `Next.js` offers `next/image` which supports lazy loading, so we could fix that, but I would need to spend some time refactoring avatars. Does that make sense?",
+            usersId: user1.id,
+            sentAt: new Date().toISOString(),
+            messageFormat: MessageFormat.LINEN,
+          },
+          {
+            channelId: channel.id,
+            body: "Yeah that sounds good i'm only working on backend now",
+            usersId: user3.id,
+            sentAt: new Date().toISOString(),
+            messageFormat: MessageFormat.LINEN,
+          },
+          {
+            channelId: channel.id,
+            body: 'Ok, thanks',
+            usersId: user1.id,
+            sentAt: new Date().toISOString(),
+            messageFormat: MessageFormat.LINEN,
+          },
+        ],
+      },
     },
   });
 }
