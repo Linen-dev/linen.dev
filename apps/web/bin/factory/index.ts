@@ -308,7 +308,7 @@ async function createLinenCommunity() {
       },
     },
   });
-  // 8. Thread with an image
+  // 8. Thread with a big image
   await prisma.threads.create({
     data: {
       channelId: channel.id,
@@ -319,6 +319,24 @@ async function createLinenCommunity() {
             channelId: channel.id,
             body: 'we need to fix the channel view too http://localhost:3000/linen-example-page.png',
             usersId: user4.id,
+            sentAt: '2021-12-14T09:01:00.000Z',
+            messageFormat: MessageFormat.LINEN,
+          },
+        ],
+      },
+    },
+  });
+  // 9. Thread with a small image
+  await prisma.threads.create({
+    data: {
+      channelId: channel.id,
+      sentAt: new Date().getTime(),
+      messages: {
+        create: [
+          {
+            channelId: channel.id,
+            body: 'New avatars http://localhost:3000/linen-example-avatar.png',
+            usersId: user1.id,
             sentAt: '2021-12-14T09:01:00.000Z',
             messageFormat: MessageFormat.LINEN,
           },

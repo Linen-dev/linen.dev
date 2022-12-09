@@ -1,10 +1,15 @@
 @import '../../../colors.scss';
 
 .image {
+  background-color: white;
   border: 1px solid $color-border;
   border-radius: 4px;
   display: block;
   height: 200px;
-  padding: 1px;
+  width: 200px;
+  max-width: 200px;
+  max-height: 200px;
+  padding: 8px;
   width: auto;
+  object-fit: scale-down;
 }
