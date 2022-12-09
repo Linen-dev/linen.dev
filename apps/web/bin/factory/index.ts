@@ -229,6 +229,31 @@ async function createLinenCommunity() {
       },
     },
   });
+  // 5. Thread with code block
+  await prisma.threads.create({
+    data: {
+      channelId: channel.id,
+      sentAt: new Date().getTime(),
+      messages: {
+        create: [
+          {
+            channelId: channel.id,
+            body: "hey, I'm getting errors from the package with tests, do you have same issues? ```\n● Test suite failed to run\n\n    Cannot find module '@linen/hooks/mode' from 'components/NavBar/Desktop/index.tsx'\n\n    Require stack:\n        components/NavBar/Desktop/index.tsx\n        components/NavBar/index.tsx\n        components/NavBar/index.spec.tsx```",
+            usersId: user4.id,
+            sentAt: '2022-12-12T09:01:00.000Z',
+            messageFormat: MessageFormat.LINEN,
+          },
+          {
+            channelId: channel.id,
+            body: "ugh yes, sorry for that. Can you `skip` all failing tests for now please? I'll try to bring them back soon",
+            usersId: user1.id,
+            sentAt: '2022-12-12T09:02:00.000Z',
+            messageFormat: MessageFormat.LINEN,
+          },
+        ],
+      },
+    },
+  });
 }
 
 export const seed = async () => {
