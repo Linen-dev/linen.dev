@@ -1,0 +1,9 @@
+@import '../colors.scss';
+
+.placeholder {
+  align-items: center;
+  border: 1px solid $color-border;
+  border-radius: 4px;
+  display: flex;
+  justify-content: center;
+}

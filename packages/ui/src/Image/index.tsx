@@ -1,16 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import preload from './utilities/preload';
+import Spinner from '../Spinner';
+import styles from './index.module.scss';
 
 interface Props {
   className?: string;
   src: string;
+  height?: number;
+  width?: number;
   alt?: string;
   onLoad?(): void;
 }
 
-export default function Component({ className, src, alt, onLoad }: Props) {
-  const [width, setWidth] = useState(0);
-  const [height, setHeight] = useState(0);
+export default function Component({
+  className,
+  src,
+  height: initialHeight,
+  width: initialWidth,
+  alt,
+  onLoad,
+}: Props) {
+  const [width, setWidth] = useState(initialWidth || 0);
+  const [height, setHeight] = useState(initialHeight || 0);
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
@@ -51,6 +62,14 @@ export default function Component({ className, src, alt, onLoad }: Props) {
         width={width}
         height={height}
       />
+    );
+  }
+
+  if (height) {
+    return (
+      <div className={styles.placeholder} style={{ height, width }}>
+        <Spinner />
+      </div>
     );
   }
 
