@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import classNames from 'classnames';
-import NavLabel from './NavLabel';
 import { Permissions, SerializedChannel } from '@linen/types';
 import Link from 'components/Link/InternalLink';
 import NewChannelModal from 'components/Pages/Channel/Content/NewChannelModal';
@@ -87,12 +86,12 @@ export default function DesktopNavBar({
           </Nav.Item>
         </Link>
       )}
-      <NavLabel>
+      <Nav.Label>
         <div className="grow">Channels</div>
         {permissions.channel_create && !!permissions.accountId && (
           <NewChannelModal communityId={permissions.accountId} />
         )}
-      </NavLabel>
+      </Nav.Label>
       <div>
         {channels.map((channel: SerializedChannel, index: number) => {
           const count = highlights.reduce((count: number, id: string) => {
