@@ -4,13 +4,12 @@ import { Permissions, SerializedChannel } from '@linen/types';
 import Link from 'components/Link/InternalLink';
 import NewChannelModal from 'components/Pages/Channel/Content/NewChannelModal';
 import useWebsockets from '@linen/hooks/websockets';
-import Badge from 'components/Badge';
 import styles from './index.module.scss';
 import { FiRss, FiBarChart, FiHash } from 'react-icons/fi';
 import { useRouter } from 'next/router';
 import usePath from 'hooks/path';
 import { Mode } from '@linen/hooks/mode';
-import { Nav, Toast } from '@linen/ui';
+import { Badge, Nav, Toast } from '@linen/ui';
 
 interface Props {
   mode: Mode;

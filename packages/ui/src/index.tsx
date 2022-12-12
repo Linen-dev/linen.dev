@@ -1,6 +1,7 @@
 import Accordion from './Accordion';
 import Avatar from './Avatar';
 import Avatars from './Avatars';
+import Badge from './Badge';
 import Button from './Button';
 import ButtonGroup from './ButtonGroup';
 import ButtonToggle from './ButtonToggle';
@@ -26,6 +27,7 @@ export {
   Accordion,
   Avatar,
   Avatars,
+  Badge,
   Button,
   ButtonGroup,
   ButtonToggle,
