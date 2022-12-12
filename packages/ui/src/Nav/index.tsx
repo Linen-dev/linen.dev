@@ -1,5 +1,6 @@
 import React from 'react';
 import Item from './Item';
+import Label from './Label';
 
 interface Props {
   className?: string;
@@ -11,5 +12,6 @@ function Nav({ className, children }: Props) {
 }
 
 Nav.Item = Item;
+Nav.Label = Label;
 
 export default Nav;
