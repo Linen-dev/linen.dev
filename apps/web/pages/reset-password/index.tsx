@@ -25,7 +25,7 @@ export default function ResetPassword({ token }: Props) {
         body: JSON.stringify({ password, token }),
       });
       await response.json();
-      window.location.href = '/signin&mode=creds';
+      window.location.href = '/signin?mode=creds';
     } catch (exception) {
       Toast.error('Something went wrong. Please try again.');
     }
@@ -42,7 +42,7 @@ export default function ResetPassword({ token }: Props) {
         <Button type="submit" block>
           Continue
         </Button>
-        <p className="text-xs  text-gray-700">
+        <p className="text-xs text-gray-700">
           Clicking continue will reset your password and redirect you to the
           sign in page.
         </p>

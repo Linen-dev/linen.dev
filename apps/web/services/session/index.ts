@@ -3,28 +3,30 @@ import {
   NextApiRequest,
   NextApiResponse,
 } from 'next/types';
-import type { Session as SessionType } from 'next-auth';
-import { unstable_getServerSession } from 'next-auth/next';
-import { authOptions } from 'pages/api/auth/[...nextauth]';
+import type { Session as SessionType, JWT } from 'utilities/auth/types';
 import type { users } from '@prisma/client';
 import { findAuthByEmail } from 'lib/users';
 export { type SessionType };
-import { getToken, type JWT } from 'next-auth/jwt';
 import prisma from 'client';
+import {
+  getServerSession,
+  getRawTokenFromRequest,
+  getValidSessionTokenFromRequest,
+} from 'utilities/auth/server/session';
 
 export default class Session {
   static async find(
     request: GetServerSidePropsContext['req'] | NextApiRequest,
-    response: GetServerSidePropsContext['res'] | NextApiResponse
+    _?: any
   ): Promise<SessionType | null> {
-    return unstable_getServerSession(request, response, authOptions);
+    return getServerSession(request);
   }
 
   static async user(
     request: GetServerSidePropsContext['req'] | NextApiRequest,
-    response: GetServerSidePropsContext['res'] | NextApiResponse
+    _?: any
   ): Promise<users | null> {
-    const session = await Session.find(request, response);
+    const session = await Session.find(request);
     if (session && session.user && session.user.email) {
       const auth = await findAuthByEmail(session.user.email);
       if (auth) {
@@ -52,13 +54,13 @@ export default class Session {
   static async token(
     req: GetServerSidePropsContext['req'] | NextApiRequest
   ): Promise<JWT | null> {
-    return getToken({ req });
+    return getValidSessionTokenFromRequest(req);
   }
 
   static async tokenRaw(
     req: GetServerSidePropsContext['req'] | NextApiRequest
   ): Promise<string | null> {
-    return getToken({ req, raw: true });
+    return getRawTokenFromRequest(req);
   }
 
   static async canAuthAccessChannel(authId: string, channelId: string) {

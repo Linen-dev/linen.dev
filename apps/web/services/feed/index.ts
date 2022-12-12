@@ -7,6 +7,7 @@ import { NotFound, RedirectTo } from 'utilities/response';
 import Session from 'services/session';
 import serializeUser from 'serializers/user';
 import serializeChannel from 'serializers/channel';
+import { qs } from 'utilities/url';
 
 export async function feedGetServerSideProps(
   context: GetServerSidePropsContext,
@@ -14,10 +15,20 @@ export async function feedGetServerSideProps(
 ) {
   const permissions = await PermissionsService.for(context);
   if (!permissions.access) {
-    return RedirectTo('/signin');
+    return RedirectTo(
+      `/signin?${qs({
+        ...(permissions.auth?.id && { error: 'private' }),
+        callbackUrl: context.req.url,
+      })}`
+    );
   }
   if (!permissions.feed) {
-    return RedirectTo('/signin');
+    return RedirectTo(
+      `/signin?${qs({
+        ...(permissions.auth?.id && { error: 'private' }),
+        callbackUrl: context.req.url,
+      })}`
+    );
   }
   const community = await CommunityService.find(context.params);
   if (!community) {

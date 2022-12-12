@@ -1,6 +1,6 @@
 import { GettingStartedPage } from 'components/Pages/GettingStartedPage';
 import type { NextPageContext } from 'next';
-import { getSession } from 'next-auth/react';
+import Session from 'services/session';
 import { prisma } from 'client';
 import { findInvitesByEmail } from 'services/invites';
 
@@ -8,14 +8,15 @@ export default function CreateCommunity(props: any) {
   return <GettingStartedPage {...props} />;
 }
 
-export async function getServerSideProps(context: NextPageContext) {
-  const session = await getSession(context);
+export async function getServerSideProps({ req, res }: NextPageContext) {
+  const session = await Session.find(req as any, res as any);
 
   if (!session) {
     return {
       redirect: {
         permanent: false,
-        destination: 'signin',
+        destination:
+          'signin?' + new URLSearchParams({ callbackUrl: '/getting-started' }),
       },
     };
   }

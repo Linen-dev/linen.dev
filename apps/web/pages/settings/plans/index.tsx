@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { NextPageContext } from 'next';
 import stripe from 'services/stripe';
 import { StripePricesResponse, StripePrice } from 'services/stripe/types';
-import { getSession } from 'next-auth/react';
+import Session from 'services/session';
 import DashboardLayout from '../../../components/layout/DashboardLayout';
 import serializeAccount from '../../../serializers/account';
 import { findAccountAndUserByEmail } from '../../../lib/models';
@@ -174,8 +174,8 @@ export default function SettingsPage({ account, prices }: Props) {
   );
 }
 
-export async function getServerSideProps(context: NextPageContext) {
-  const session = await getSession(context);
+export async function getServerSideProps({ req, res }: NextPageContext) {
+  const session = await Session.find(req as any, res as any);
   const accountAndUser = await findAccountAndUserByEmail(session?.user?.email);
   const { account, user } = accountAndUser || {};
 
@@ -183,7 +183,9 @@ export async function getServerSideProps(context: NextPageContext) {
     return {
       redirect: {
         permanent: false,
-        destination: '../signin',
+        destination:
+          '../signin?' +
+          new URLSearchParams({ callbackUrl: '/settings/plans' }),
       },
     };
   }

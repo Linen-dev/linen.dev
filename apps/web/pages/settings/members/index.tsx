@@ -1,15 +1,15 @@
 import { findAccountAndUserByEmail } from 'lib/models';
 import serializeAccount from 'serializers/account';
 import { NextPageContext } from 'next';
-import { getSession } from 'next-auth/react';
+import Session from 'services/session';
 import Members, { MembersType } from 'components/Pages/Settings/Members';
-import type { Session } from 'next-auth';
+import type { SessionType } from 'services/session';
 import { findUsersAndInvitesByAccount } from 'services/invites';
 import { auths, invites, users } from '@prisma/client';
 import { Roles, SerializedAccount } from '@linen/types';
 
 export interface MembersPageProps {
-  session: Session;
+  session: SessionType;
   account: SerializedAccount;
   users: MembersType[];
 }
@@ -18,16 +18,18 @@ export default function MembersPage(props: MembersPageProps) {
   return <Members {...props} />;
 }
 
-export async function getServerSideProps(
-  context: NextPageContext
-): Promise<{ props?: MembersPageProps; redirect?: any }> {
-  const session = await getSession(context);
-
+export async function getServerSideProps({
+  req,
+  res,
+}: NextPageContext): Promise<{ props?: MembersPageProps; redirect?: any }> {
+  const session = await Session.find(req as any, res as any);
   if (!session?.user?.email) {
     return {
       redirect: {
         permanent: false,
-        destination: '../signin',
+        destination:
+          '../signin?' +
+          new URLSearchParams({ callbackUrl: '/settings/members' }),
       },
     };
   }

@@ -7,6 +7,7 @@ import PermissionsService from 'services/permissions';
 import { NotFound, RedirectTo } from 'utilities/response';
 import serializeAccount from 'serializers/account';
 import serializeChannel from 'serializers/channel';
+import { qs } from 'utilities/url';
 
 export async function getMetricsServerSideProps(
   context: GetServerSidePropsContext,
@@ -19,7 +20,12 @@ export async function getMetricsServerSideProps(
 
   const permissions = await PermissionsService.for(context);
   if (!permissions.access || !permissions.manage) {
-    return RedirectTo('/signin');
+    return RedirectTo(
+      `/signin?${qs({
+        ...(permissions.auth?.id && { error: 'private' }),
+        callbackUrl: context.req.url,
+      })}`
+    );
   }
 
   const channels = await ChannelsService.find(community.id);

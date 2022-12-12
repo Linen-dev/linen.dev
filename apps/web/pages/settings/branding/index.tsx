@@ -2,7 +2,7 @@ import Branding from 'components/Pages/Settings/Branding';
 import { findAccountAndUserByEmail } from 'lib/models';
 import serializeAccount from 'serializers/account';
 import { NextPageContext } from 'next';
-import { getSession } from 'next-auth/react';
+import Session from 'services/session';
 import Vercel, { DNSRecord } from 'services/vercel';
 import { SerializedAccount, Roles } from '@linen/types';
 
@@ -15,8 +15,8 @@ export default function BrandingPage({ account, records }: Props) {
   return <Branding account={account} records={records} />;
 }
 
-export async function getServerSideProps(context: NextPageContext) {
-  const session = await getSession(context);
+export async function getServerSideProps({ req, res }: NextPageContext) {
+  const session = await Session.find(req as any, res as any);
   const accountAndUser = await findAccountAndUserByEmail(session?.user?.email);
   const { account, user } = accountAndUser || {};
 
@@ -24,7 +24,9 @@ export async function getServerSideProps(context: NextPageContext) {
     return {
       redirect: {
         permanent: false,
-        destination: '../signin',
+        destination:
+          '../signin?' +
+          new URLSearchParams({ callbackUrl: '/settings/branding' }),
       },
     };
   }
