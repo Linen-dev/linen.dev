@@ -93,6 +93,7 @@ model channels {
   default            Boolean       @default(false)
   externalPageCursor String?
   memberships        memberships[]
+  readStatus         readStatus[]
 
   @@unique([externalChannelId])
   @@index([accountId])
@@ -159,10 +160,11 @@ model auths {
   salt          String
   token         String?
 
-  account   accounts? @relation(fields: [accountId], references: [id])
-  accountId String?
-  users     users[]
-  session   session[]
+  account    accounts?    @relation(fields: [accountId], references: [id])
+  accountId  String?
+  users      users[]
+  session    session[]
+  readStatus readStatus[]
 
   @@unique([email])
 }
@@ -311,4 +313,16 @@ model invites {
   role      Roles    @default(MEMBER)
 
   @@unique([email, accountsId])
+}
+
+model readStatus {
+  authId     String
+  auth       auths    @relation(fields: [authId], references: [id], onDelete: Cascade)
+  channelId  String
+  channel    channels @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  lastReadAt BigInt
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@id([authId, channelId])
 }
