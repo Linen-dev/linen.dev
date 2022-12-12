@@ -1,5 +1,6 @@
 import classNames from 'classnames';
 import React from 'react';
+import styles from './index.module.scss';
 
 interface Props {
   className?: string;
@@ -8,14 +9,7 @@ interface Props {
 
 function Badge({ className, children }: Props) {
   return (
-    <span
-      className={classNames(
-        'inline-flex items-center rounded-full bg-indigo-100 px-2.5 py-0.5 text-xs font-medium text-indigo-800',
-        className
-      )}
-    >
-      {children}
-    </span>
+    <span className={classNames(styles.badge, className)}>{children}</span>
   );
 }
 
