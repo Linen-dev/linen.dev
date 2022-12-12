@@ -301,6 +301,12 @@ async function createLinenCommunity() {
                   internalUrl: 'http://localhost:3000/linen-example-feed.png',
                   externalId: '1234',
                 },
+                {
+                  name: 'linen-example-test.png',
+                  sourceUrl: 'http://localhost:3000/linen-example-test.png',
+                  internalUrl: 'http://localhost:3000/linen-example-test.png',
+                  externalId: '5678',
+                },
               ],
             },
           },
