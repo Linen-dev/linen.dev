@@ -1,0 +1,13 @@
+@import 'styles/colors.scss';
+
+.badge {
+  align-items: center;
+  background: $color-indigo-100;
+  border-radius: 9999px;
+  color: $color-indigo-800;
+  display: inline-flex;
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1rem;
+  padding: 0.125rem 0.625rem;
+}

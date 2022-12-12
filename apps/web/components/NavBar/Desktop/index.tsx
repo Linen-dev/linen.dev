@@ -73,9 +73,7 @@ export default function DesktopNavBar({
         <Link onClick={() => setHighlights([])} href="/feed">
           <Nav.Item active={paths.feed === router.asPath}>
             <FiRss /> Feed
-            {highlights.length > 0 && (
-              <Badge className="ml-2">{highlights.length}</Badge>
-            )}
+            {highlights.length > 0 && <Badge>{highlights.length}</Badge>}
           </Nav.Item>
         </Link>
       )}
