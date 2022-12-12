@@ -2,7 +2,7 @@ import React, { Fragment, useState } from 'react';
 import Image from 'next/image';
 import classNames from 'classnames';
 import { Menu, Transition } from '@headlessui/react';
-import { signOut } from 'next-auth/react';
+import { signOut } from 'utilities/auth/react';
 import { SerializedUser } from '@linen/types';
 import { Avatar } from '@linen/ui';
 import Modal from 'components/Modal';

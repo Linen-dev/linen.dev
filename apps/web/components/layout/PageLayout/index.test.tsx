@@ -2,7 +2,7 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import PageLayout from '.';
 import { build } from '__tests__/factory';
-import { SessionProvider } from 'next-auth/react';
+import { SessionProvider } from 'utilities/auth/react';
 
 describe('PageLayout', () => {
   it('renders the home url', () => {

@@ -13,6 +13,7 @@ import FadeIn from 'components/FadeIn';
 import Head from 'next/head';
 import Footer from 'components/Footer';
 import type { GetServerSidePropsContext } from 'next';
+import { signIn } from 'utilities/auth/react';
 
 const Home = (props: { accounts: Props[] }) => {
   const accounts = props.accounts;

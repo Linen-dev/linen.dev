@@ -4,7 +4,7 @@ import { render } from '@testing-library/react';
 import { build } from '__tests__/factory';
 import { Mode } from '@linen/hooks/mode';
 
-jest.mock('next-auth/react', () => ({
+jest.mock('utilities/auth/react', () => ({
   useSession: () => ({}),
 }));
 

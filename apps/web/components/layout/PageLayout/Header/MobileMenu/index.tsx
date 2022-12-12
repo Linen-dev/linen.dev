@@ -6,7 +6,7 @@ import Link from 'components/Link/InternalLink';
 import Modal from 'components/Modal';
 import styles from './index.module.scss';
 import { Permissions, SerializedChannel } from '@linen/types';
-import { signOut } from 'next-auth/react';
+import { signOut } from 'utilities/auth/react';
 import usePath from 'hooks/path';
 
 interface Props {

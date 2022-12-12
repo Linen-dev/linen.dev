@@ -1,8 +1,10 @@
 import Modal from 'components/Modal';
-import SignUpWithCredentials from 'components/Pages/SignUp/Credentials';
-import { Session } from 'next-auth';
-import { getSession, useSession } from 'next-auth/react';
-import React, { createContext, useContext, useState } from 'react';
+import type { SessionType } from 'services/session';
+import { getSession } from 'utilities/auth/react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import SignUp from 'pages/signup';
+import SignIn from 'pages/signin';
+import { SignInMode } from 'components/Auth';
 
 const Context = createContext<{
   startSignUp?: StartSignUpFn;
@@ -21,27 +23,42 @@ type onSignInType = {
   init: any;
   params: any;
 };
+type AuthFlow = 'signup' | 'signin';
 
 export type StartSignUpFn = (props: StartSignUpProps) => any;
 
 export const JoinContext = ({ children }: Props) => {
-  const { data, status } = useSession();
   const [open, setOpen] = useState(false);
   const [communityId, setCommunityId] = useState<string>();
   const [onSignInAction, setOnSignInAction] = useState<onSignInType>();
+  const [flow, setFlow] = useState<AuthFlow>('signup');
+  const [mode, setMode] = useState<SignInMode>('creds');
+
+  const [callbackUrl, setCallbackUrl] = useState<string>();
+
+  useEffect(() => {
+    if (!callbackUrl) {
+      setCallbackUrl(window.location.href);
+    }
+  }, [callbackUrl]);
+
+  async function join({ communityId }: { communityId: string }) {
+    return await fetch('/api/invites/join-button', {
+      method: 'post',
+      body: JSON.stringify({
+        communityId,
+      }),
+    });
+  }
 
   const startSignUp = async (props: StartSignUpProps) => {
     setOnSignInAction(props.onSignIn);
     setCommunityId(props.communityId);
-    if (status === 'authenticated') {
-      const res = await fetch('/api/invites/join-button', {
-        method: 'post',
-        body: JSON.stringify({
-          communityId: props.communityId,
-        }),
-      });
+    const session = await getSession();
+    if (session) {
+      const res = await join(props);
       if (res.ok) {
-        await callAfterSignInFunction(props.onSignIn, data);
+        await callAfterSignInFunction(props.onSignIn, session);
         return;
       }
     }
@@ -49,14 +66,20 @@ export const JoinContext = ({ children }: Props) => {
   };
 
   const onSuccessfulSignIn = async () => {
-    setOpen(false);
     const session = await getSession();
-    await callAfterSignInFunction(onSignInAction, session);
+    if (session && communityId) {
+      const res = await join({ communityId });
+      if (res.ok) {
+        await callAfterSignInFunction(onSignInAction, session);
+        return;
+      }
+    }
+    setOpen(false);
   };
 
   async function callAfterSignInFunction(
     onSignInAction: onSignInType | undefined,
-    session: Session | null
+    session: SessionType | null
   ) {
     await onSignInAction?.run({
       currentUser: session?.user,
@@ -72,6 +95,11 @@ export const JoinContext = ({ children }: Props) => {
     setOpen(e);
   };
 
+  const mapText = {
+    signup: 'up',
+    signin: 'in',
+  };
+
   return (
     <Context.Provider value={{ startSignUp }}>
       <Modal
@@ -79,16 +107,37 @@ export const JoinContext = ({ children }: Props) => {
           open,
           close: onCloseModal,
           title: 'Join the community',
-          subtitle: 'Sign up to join the community and start to chat',
+          subtitle: `Sign ${mapText[flow]} to join the community and start to chat`,
         }}
       >
-        <SignUpWithCredentials
-          {...{
-            state: communityId,
-            noFollow: true,
-            onSignIn: onSuccessfulSignIn,
-          }}
-        />
+        {flow === 'signup' && (
+          <SignUp
+            mode={mode}
+            withLayout={false}
+            callbackUrl={callbackUrl}
+            showSignIn={(mode) => {
+              setFlow('signin');
+              setMode(mode);
+            }}
+            onSignIn={onSuccessfulSignIn}
+            state={communityId}
+            // email, error,
+          />
+        )}
+        {flow === 'signin' && (
+          <SignIn
+            mode={mode}
+            withLayout={false}
+            callbackUrl={callbackUrl}
+            showSignUp={(mode) => {
+              setFlow('signup');
+              setMode(mode);
+            }}
+            onSignIn={onSuccessfulSignIn}
+            state={communityId}
+            // email, error
+          />
+        )}
       </Modal>
       {children}
     </Context.Provider>

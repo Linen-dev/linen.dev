@@ -1,6 +1,7 @@
 import { Roles } from '@linen/types';
 import prisma from 'client';
 import { generateHash, secureCompare } from 'utilities/password';
+import { v4 } from 'uuid';
 
 export default class UsersService {
   static async updateUserRole({
@@ -74,5 +75,17 @@ export default class UsersService {
       };
     }
     return null;
+  }
+  static async getOrCreateUserWithEmail(email: string) {
+    const auth = await prisma.auths.findUnique({ where: { email } });
+    if (auth) return auth;
+    return await prisma.auths.create({
+      data: {
+        email,
+        password: v4(),
+        salt: v4(),
+        emailVerified: new Date(),
+      },
+    });
   }
 }

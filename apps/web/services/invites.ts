@@ -3,6 +3,8 @@ import { auths, invites, Prisma, Roles, users } from '@prisma/client';
 import InviteToJoinMailer from 'mailers/InviteToJoinMailer';
 import prisma from '../client';
 import { normalize } from '@linen/utilities/string';
+import PermissionsService from './permissions';
+import { Unauthorized } from 'utilities/exceptions';
 
 export async function createInvitation({
   createdByUserId,
@@ -260,4 +262,30 @@ async function findUser(accountId: string, authId: string) {
 
 async function checkoutTenant(authId: string, accountId: string) {
   await prisma.auths.update({ where: { id: authId }, data: { accountId } });
+}
+
+export async function joinAfterMagicLinkSignIn({
+  request,
+  response,
+  communityId,
+  authId,
+  displayName,
+}: {
+  request: any;
+  response: any;
+  communityId: string;
+  authId: string;
+  displayName: string;
+}) {
+  const permissions = await PermissionsService.get({
+    request,
+    response,
+    params: { communityId },
+  });
+
+  if (!permissions.access) {
+    throw new Unauthorized();
+  }
+  await createUser(communityId, authId, displayName);
+  await checkoutTenant(authId, communityId);
 }

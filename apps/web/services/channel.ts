@@ -20,6 +20,7 @@ import {
   resolveCrawlerRedirect,
   shouldRedirectToDomain,
 } from 'utilities/redirects';
+import { qs } from 'utilities/url';
 
 const CURSOR_LIMIT = 30;
 
@@ -29,7 +30,12 @@ export async function channelGetServerSideProps(
 ) {
   const permissions = await PermissionsService.for(context);
   if (!permissions.access) {
-    return RedirectTo('/signin');
+    return RedirectTo(
+      `/signin?${qs({
+        ...(permissions.auth?.id && { error: 'private' }),
+        callbackUrl: context.req.url,
+      })}`
+    );
   }
   const isCrawler = isBot(context?.req?.headers?.['user-agent'] || '');
   const communityName = context.params?.communityName as string;

@@ -18,6 +18,7 @@ import {
   shouldRedirectToDomain,
 } from 'utilities/redirects';
 import { prisma } from 'client';
+import { qs } from 'utilities/url';
 
 export async function threadGetServerSideProps(
   context: GetServerSidePropsContext,
@@ -29,7 +30,12 @@ export async function threadGetServerSideProps(
 }> {
   const permissions = await PermissionsService.for(context);
   if (!permissions.access) {
-    return RedirectTo('/signin');
+    return RedirectTo(
+      `/signin?${qs({
+        ...(permissions.auth?.id && { error: 'private' }),
+        callbackUrl: context.req.url,
+      })}`
+    );
   }
   const threadId = context.params?.threadId as string;
   const communityName = context.params?.communityName as string;

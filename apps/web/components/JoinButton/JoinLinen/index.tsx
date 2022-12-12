@@ -1,7 +1,7 @@
 import LinenIcon from 'components/icons/LinenIcon';
 import classNames from 'classnames';
 import styles from './index.module.css';
-import { useSession } from 'next-auth/react';
+import { useSession } from 'utilities/auth/react';
 import { Toast } from '@linen/ui';
 import { useJoinContext } from 'contexts/Join';
 
