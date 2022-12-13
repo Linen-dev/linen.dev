@@ -11,6 +11,8 @@ Linen is free and offers unlimited message retention you can sign up at Linen.co
 Linen cloud edition: https://linen.dev
 Join our public community: https://linen.dev/s/linen
 
+### See project roadmap: https://github.com/orgs/Linen-dev/projects/2
+
 ### Core Features:
 
 - **Search engine friendly**: Linen communities have over 50,000 pages indexed on Google with over 200,000 search impresssions. Most chat apps are not search engine friendly because they are very JS heavy. We made Linen search engine friendly by offering a sitemap, conditionally rendering a static version of our page to search engines, and using cursor based pagination so pages will be consistant.
