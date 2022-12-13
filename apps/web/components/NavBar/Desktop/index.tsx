@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import classNames from 'classnames';
 import { Permissions, SerializedChannel } from '@linen/types';
 import Link from 'components/Link/InternalLink';
@@ -10,6 +10,8 @@ import { useRouter } from 'next/router';
 import usePath from 'hooks/path';
 import { Mode } from '@linen/hooks/mode';
 import { Badge, Nav, Toast } from '@linen/ui';
+import { get, post } from 'utilities/http';
+import { timestamp } from '@linen/utilities/date'
 
 interface Props {
   mode: Mode;
@@ -36,6 +38,7 @@ export default function DesktopNavBar({
   permissions,
   onDrop,
 }: Props) {
+  const [readStatuses, setReadStatuses] = useState<any>([])
   const [highlights, setHighlights] = useState<string[]>([]);
   const router = useRouter();
 
@@ -60,6 +63,25 @@ export default function DesktopNavBar({
       });
     },
   });
+
+  const currentUser = permissions.user || null
+
+  useEffect(() => {
+    let mounted = true
+    if (currentUser) {
+      Promise.all(channels.map(channel => {
+        return get('/api/read-status', { channelId: channel.id }).then(status => {
+          if (status || !mounted) { return Promise.resolve(status) }
+          return post('/api/read-status', { channelId: channel.id, timestamp: timestamp() })
+        })
+      })).then(statuses => {
+        if (mounted) { setReadStatuses(statuses) }
+      })
+    }
+    return () => {
+      mounted = false
+    }
+  }, [])
 
   const paths = {
     feed: usePath({ href: '/feed' }),

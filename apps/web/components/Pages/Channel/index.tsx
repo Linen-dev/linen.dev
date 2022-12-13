@@ -29,7 +29,7 @@ import ChannelForBots from './ChannelForBots';
 export interface ChannelProps {
   settings: Settings;
   channelName: string;
-  channels?: SerializedChannel[];
+  channels: SerializedChannel[];
   currentChannel: SerializedChannel;
   currentCommunity: SerializedAccount | null;
   threads: SerializedThread[];
@@ -566,7 +566,7 @@ export default function Channel(props: ChannelProps) {
           threads,
         }),
       }}
-      channels={channels as SerializedChannel[]}
+      channels={channels}
       settings={settings}
       isSubDomainRouting={isSubDomainRouting}
       permissions={permissions}
