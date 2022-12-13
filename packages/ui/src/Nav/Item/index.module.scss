@@ -25,6 +25,11 @@
 .active:hover {
   background-color: $color-gray-100;
   color: $color-gray-900;
+}
+
+.highlighted,
+.highlighted:hover {
+  color: black;
   font-weight: 700;
 }
 

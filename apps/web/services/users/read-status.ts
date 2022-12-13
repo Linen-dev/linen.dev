@@ -1,5 +1,4 @@
 import { prisma } from 'client';
-import superjson from 'superjson';
 
 export async function updateReadStatus({
   authId,
@@ -30,9 +29,32 @@ export async function getReadStatus({
   authId: string;
   channelId: string;
 }) {
+  // to be more precise, we could find the latest message in the whole channel
+  // vs the last message in the last thread
   return await prisma.readStatus
     .findUnique({
-      select: { channelId: true, lastReadAt: true },
+      select: {
+        channelId: true,
+        lastReadAt: true,
+        channel: {
+          select: {
+            threads: {
+              orderBy: {
+                sentAt: 'desc'
+              },
+              take: 1,
+              select: {
+                messages: {
+                  orderBy: {
+                    sentAt: 'desc'
+                  },
+                  take: 1,
+                }
+              }
+            }
+          }
+        }
+      },
       where: {
         authId_channelId: {
           authId,
@@ -40,5 +62,4 @@ export async function getReadStatus({
         },
       },
     })
-    .then((e) => superjson.serialize(e).json);
 }

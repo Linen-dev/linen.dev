@@ -128,6 +128,12 @@ export interface SerializedThread {
   channel: SerializedChannel | null;
 }
 
+export interface SerializedReadStatus {
+  channelId: string;
+  lastReadAt: string;
+  lastReplyAt?: string;
+}
+
 export type Settings = {
   communityId: string;
   communityType: CommunityType;

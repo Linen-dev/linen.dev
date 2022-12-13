@@ -25,6 +25,8 @@ import { createThreadImitation } from './Content/utilities/thread';
 import useWebsockets from '@linen/hooks/websockets';
 import { useUsersContext } from '@linen/contexts/Users';
 import ChannelForBots from './ChannelForBots';
+import { post } from 'utilities/http'
+import { timestamp } from '@linen/utilities/date'
 
 export interface ChannelProps {
   settings: Settings;
@@ -82,6 +84,12 @@ export default function Channel(props: ChannelProps) {
     setPinnedThreads(initialPinnedThreads);
     setCurrentThreadId(undefined);
   }, [initialPinnedThreads]);
+
+  useEffect(() => {
+    if (currentUser) {
+      post('/api/read-status', { channelId: currentChannel.id, timestamp: timestamp() })
+    }
+  }, [currentChannel])
 
   useWebsockets({
     room: `room:lobby:${currentChannel.id}`,

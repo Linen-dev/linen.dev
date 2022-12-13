@@ -3,6 +3,7 @@ import Session from 'services/session';
 import { getReadStatus, updateReadStatus } from 'services/users/read-status';
 import to from 'utilities/await-to-js';
 import { z } from 'zod';
+import serializeReadStatus from 'serializers/read-status'
 
 async function post(request: NextApiRequest, response: NextApiResponse) {
   // identify user
@@ -60,8 +61,7 @@ async function get(request: NextApiRequest, response: NextApiResponse) {
     console.error(err);
     return response.status(500).json({});
   }
-
-  return response.status(200).json(data);
+  return response.status(200).json(serializeReadStatus(data));
 }
 
 export default async function handler(
