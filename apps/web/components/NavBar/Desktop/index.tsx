@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import classNames from 'classnames';
-import { Permissions, SerializedChannel } from '@linen/types';
+import { Permissions, SerializedChannel, SerializedReadStatus } from '@linen/types';
 import Link from 'components/Link/InternalLink';
 import NewChannelModal from 'components/Pages/Channel/Content/NewChannelModal';
 import useWebsockets from '@linen/hooks/websockets';
@@ -12,6 +12,7 @@ import { Mode } from '@linen/hooks/mode';
 import { Badge, Nav, Toast } from '@linen/ui';
 import { get, post } from 'utilities/http';
 import { timestamp } from '@linen/utilities/date'
+import unique from 'lodash.uniq'
 
 interface Props {
   mode: Mode;
@@ -38,7 +39,6 @@ export default function DesktopNavBar({
   permissions,
   onDrop,
 }: Props) {
-  const [readStatuses, setReadStatuses] = useState<any>([])
   const [highlights, setHighlights] = useState<string[]>([]);
   const router = useRouter();
 
@@ -75,7 +75,15 @@ export default function DesktopNavBar({
           return post('/api/read-status', { channelId: channel.id, timestamp: timestamp() })
         })
       })).then(statuses => {
-        if (mounted) { setReadStatuses(statuses) }
+        if (mounted) {
+          setHighlights(highlights => {
+            const channelIds = statuses.filter((status: SerializedReadStatus) => {
+              if (!status.lastReplyAt) { return false }
+              return Number(status.lastReplyAt) > Number(status.lastReadAt)
+            }).map((status) => status.channelId)
+            return unique([...highlights, ...channelIds])
+          })
+        }
       })
     }
     return () => {
@@ -94,7 +102,6 @@ export default function DesktopNavBar({
         <Link onClick={() => setHighlights([])} href="/feed">
           <Nav.Item active={paths.feed === router.asPath}>
             <FiRss /> Feed
-            {highlights.length > 0 && <Badge>{highlights.length}</Badge>}
           </Nav.Item>
         </Link>
       )}
@@ -143,6 +150,9 @@ export default function DesktopNavBar({
             event.currentTarget.classList.remove(styles.hover);
           }
 
+          const active = channel.channelName === channelName
+          const highlighted = !active && count > 0
+
           return (
             <Link
               className={classNames(styles.item, {
@@ -159,9 +169,8 @@ export default function DesktopNavBar({
               key={`${channel.channelName}-${index}`}
               href={`/c/${channel.channelName}`}
             >
-              <Nav.Item active={channel.channelName === channelName}>
+              <Nav.Item active={active} highlighted={highlighted}>
                 <FiHash /> {channel.channelName}
-                {count > 0 && <Badge className="ml-2">{count}</Badge>}
               </Nav.Item>
             </Link>
           );
