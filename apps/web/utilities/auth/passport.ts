@@ -44,10 +44,17 @@ export const magicLinkStrategy = new MagicLoginStrategy({
   // "href" is your confirmUrl with the confirmation token,
   sendMagicLink: async (destination, href, _, req) => {
     try {
+      const { host } = req.headers
+      if (!host) {
+        throw new Error('Host header is not present')
+      }
+      const url = host.startsWith('localhost') ?
+        `http://${host}${href}` :
+        `${host}${href}`
       const to = destination.split(',').shift()!;
       const result = await SignInMailer.send({
         to,
-        url: req.headers.host + href,
+        url,
       });
 
       const failed = result?.rejected?.concat(result.pending).filter(Boolean);
