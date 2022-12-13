@@ -8,7 +8,7 @@ async function post(request: NextApiRequest, response: NextApiResponse) {
   // identify user
   const user = await Session.auth(request, response);
   if (!user) {
-    return response.status(401).end();
+    return response.status(401).json({});
   }
 
   // validate input
@@ -18,7 +18,7 @@ async function post(request: NextApiRequest, response: NextApiResponse) {
   });
   const [badRequest, body] = await to(schema.parseAsync(request.body));
   if (badRequest) {
-    return response.status(400).send(badRequest.message);
+    return response.status(400).json({ error: badRequest.message });
   }
 
   // call service
@@ -31,17 +31,17 @@ async function post(request: NextApiRequest, response: NextApiResponse) {
   );
   if (err) {
     console.error(err);
-    return response.status(500).end();
+    return response.status(500).json({});
   }
 
-  return response.status(200).end();
+  return response.status(200).json({});
 }
 
 async function get(request: NextApiRequest, response: NextApiResponse) {
   // identify user
   const user = await Session.auth(request, response);
   if (!user) {
-    return response.status(401).end();
+    return response.status(401).json({});
   }
 
   // validate input
@@ -50,7 +50,7 @@ async function get(request: NextApiRequest, response: NextApiResponse) {
   });
   const [badRequest, body] = await to(schema.parseAsync(request.query));
   if (badRequest) {
-    return response.status(400).end(badRequest);
+    return response.status(400).json({ error: badRequest.message });
   }
 
   // call service
@@ -58,7 +58,7 @@ async function get(request: NextApiRequest, response: NextApiResponse) {
   const [err, data] = await to(getReadStatus({ authId: user.id, channelId }));
   if (err) {
     console.error(err);
-    return response.status(500).end();
+    return response.status(500).json({});
   }
 
   return response.status(200).json(data);
