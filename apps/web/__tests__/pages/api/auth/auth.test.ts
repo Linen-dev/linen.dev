@@ -4,7 +4,7 @@ import { v4 } from 'uuid';
 import { testApiHandler } from 'next-test-api-route-handler';
 import handlerSession from 'pages/api/auth/session';
 import handlerToken from 'pages/api/auth/token';
-import { login } from './login';
+import { login } from '__tests__/pages/api/auth/login';
 import { createCSRFToken } from 'utilities/auth/server/csrf';
 
 type auths = {};

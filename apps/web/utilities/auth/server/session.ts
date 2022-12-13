@@ -34,8 +34,6 @@ function parseUser(session: any) {
 
 // SSR only
 export async function getServerSession(req: any, res?: any) {
-  if (typeof window !== 'undefined') return;
-
   try {
     const sessionCookie = getToken(req);
     if (!!sessionCookie) {

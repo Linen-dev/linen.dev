@@ -9,7 +9,7 @@ jest.mock('utilities/auth/server/tokens', () => {
     __esModule: true,
     ...originalModule,
     signToken: jest.fn().mockImplementation((val) => {
-      return JSON.stringify({ data: { ...val, exp: now() } });
+      return JSON.stringify({ data: { ...val }, exp: now() });
     }),
     verifyToken: jest.fn().mockImplementation((val, _) => {
       return JSON.parse(val);
