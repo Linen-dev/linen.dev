@@ -12,13 +12,14 @@ function split(tokens) {
       if (matches) {
         let indexes = [];
         let needles = [];
-
+        let search = value.slice()
         for (const match of matches) {
-          const start = value.indexOf(match);
+          const start = search.indexOf(match);
           const end = start + match.length;
           indexes.push(start);
           needles.push(start);
           indexes.push(end);
+          search = search.replace(match, '_'.repeat(match.length))
         }
 
         if (indexes[0] !== 0) {
