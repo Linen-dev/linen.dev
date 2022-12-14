@@ -70,7 +70,7 @@ export default function DesktopNavBar({
     let mounted = true
     if (currentUser) {
       Promise.all(channels.map(channel => {
-        return get('/api/read-status', { channelId: channel.id }).then(status => {
+        return get(`/api/read-status/${channel.id}`).then(status => {
           if (status || !mounted) { return Promise.resolve(status) }
           return post('/api/read-status', { channelId: channel.id, timestamp: timestamp() })
         })
