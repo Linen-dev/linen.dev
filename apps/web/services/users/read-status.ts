@@ -29,8 +29,6 @@ export async function getReadStatus({
   authId: string;
   channelId: string;
 }) {
-  // to be more precise, we could find the latest message in the whole channel
-  // vs the last message in the last thread
   return await prisma.readStatus
     .findUnique({
       select: {
@@ -43,14 +41,6 @@ export async function getReadStatus({
                 sentAt: 'desc'
               },
               take: 1,
-              select: {
-                messages: {
-                  orderBy: {
-                    sentAt: 'desc'
-                  },
-                  take: 1,
-                }
-              }
             }
           }
         }
