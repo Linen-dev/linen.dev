@@ -10,7 +10,7 @@ import { useRouter } from 'next/router';
 import usePath from 'hooks/path';
 import { Mode } from '@linen/hooks/mode';
 import { Badge, Nav, Toast } from '@linen/ui';
-import { get, post } from 'utilities/http';
+import { get, put } from 'utilities/http';
 import { timestamp } from '@linen/utilities/date'
 import unique from 'lodash.uniq'
 
@@ -72,7 +72,7 @@ export default function DesktopNavBar({
       Promise.all(channels.map(channel => {
         return get(`/api/read-status/${channel.id}`).then(status => {
           if (status || !mounted) { return Promise.resolve(status) }
-          return post('/api/read-status', { channelId: channel.id, timestamp: timestamp() })
+          return put(`/api/read-status/${channel.id}`, { timestamp: timestamp() })
         })
       })).then(statuses => {
         if (mounted) {
