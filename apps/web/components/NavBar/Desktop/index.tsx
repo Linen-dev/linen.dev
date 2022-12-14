@@ -9,9 +9,8 @@ import { FiRss, FiBarChart, FiHash } from 'react-icons/fi';
 import { useRouter } from 'next/router';
 import usePath from 'hooks/path';
 import { Mode } from '@linen/hooks/mode';
-import { Badge, Nav, Toast } from '@linen/ui';
-import { get, put } from 'utilities/http';
-import { timestamp } from '@linen/utilities/date'
+import { Nav, Toast } from '@linen/ui';
+import { post } from 'utilities/http';
 import unique from 'lodash.uniq'
 
 interface Props {
@@ -69,21 +68,17 @@ export default function DesktopNavBar({
   useEffect(() => {
     let mounted = true
     if (currentUser) {
-      Promise.all(channels.map(channel => {
-        return get(`/api/read-status/${channel.id}`).then(status => {
-          if (status || !mounted) { return Promise.resolve(status) }
-          return put(`/api/read-status/${channel.id}`, { timestamp: timestamp() })
-        })
-      })).then(statuses => {
-        if (mounted) {
-          setHighlights(highlights => {
-            const channelIds = statuses.filter((status: SerializedReadStatus) => {
-              if (!status.lastReplyAt) { return false }
-              return Number(status.lastReplyAt) > Number(status.lastReadAt)
-            }).map((status) => status.channelId)
-            return unique([...highlights, ...channelIds])
-          })
-        }
+      post('/api/read-status', { channelIds: channels.map(({ id }) => id)})
+        .then(({ readStatuses }) => {
+          if (mounted) {
+            setHighlights(highlights => {
+              const channelIds = readStatuses.filter((status: SerializedReadStatus) => {
+                if (!status.lastReplyAt) { return false }
+                return Number(status.lastReplyAt) > Number(status.lastReadAt)
+              }).map((readStatus: SerializedReadStatus) => readStatus.channelId)
+              return unique([...highlights, ...channelIds])
+            })
+          }
       })
     }
     return () => {
