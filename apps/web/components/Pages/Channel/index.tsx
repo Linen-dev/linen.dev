@@ -25,7 +25,7 @@ import { createThreadImitation } from './Content/utilities/thread';
 import useWebsockets from '@linen/hooks/websockets';
 import { useUsersContext } from '@linen/contexts/Users';
 import ChannelForBots from './ChannelForBots';
-import { post } from 'utilities/http'
+import { put } from 'utilities/http'
 import { timestamp } from '@linen/utilities/date'
 
 export interface ChannelProps {
@@ -87,7 +87,7 @@ export default function Channel(props: ChannelProps) {
 
   useEffect(() => {
     if (currentUser) {
-      post('/api/read-status', { channelId: currentChannel.id, timestamp: timestamp() })
+      put(`/api/read-status/${currentChannel.id}`, { timestamp: timestamp() })
     }
   }, [currentChannel])
 
