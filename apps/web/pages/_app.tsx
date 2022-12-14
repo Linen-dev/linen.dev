@@ -15,12 +15,14 @@ import { Toast } from '@linen/ui';
 import { usePostHog } from 'next-use-posthog';
 import { JoinContext } from 'contexts/Join';
 import { UsersContext } from '@linen/contexts/Users';
+import TrpcHOC from 'components/TrpcHOC';
 
 const POSTHOG_API_KEY = process.env.NEXT_PUBLIC_POSTHOG_API_KEY!;
-export default function App(props: AppProps) {
+
+function App(props: AppProps) {
   usePostHog(POSTHOG_API_KEY, {
     api_host: 'https://app.posthog.com',
-    loaded: (posthog) => {
+    loaded: (posthog: any) => {
       if (
         !process.env.NEXT_PUBLIC_POSTHOG_API_KEY ||
         process.env.NODE_ENV === 'development'
@@ -77,5 +79,13 @@ export default function App(props: AppProps) {
         src="https://plausible.io/js/plausible.js"
       />
     </SessionProvider>
+  );
+}
+
+export default function AppWrapper(props: AppProps) {
+  return (
+    <TrpcHOC>
+      <App {...props} />
+    </TrpcHOC>
   );
 }
