@@ -103,13 +103,21 @@ describe('Message', () => {
       expect(container).toHaveTextContent('@User');
     });
 
-    it('renders links', () => {
+    it('renders https links', () => {
       const { getByText } = render(
         <Message text="Hey <https://foo.com>" format={MessageFormat.SLACK} />
       );
       const link = getByText('https://foo.com') as HTMLLinkElement;
       expect(link.href).toEqual('https://foo.com/');
     });
+
+    it('renders http links', () => {
+      const { getByText } = render(
+        <Message text="Hey <http://foo.com>" format={MessageFormat.SLACK} />
+      );
+      const link = getByText('http://foo.com') as HTMLLinkElement;
+      expect(link.href).toEqual('http://foo.com/');
+    })
 
     it('renders links with labels', () => {
       const { getByText } = render(
