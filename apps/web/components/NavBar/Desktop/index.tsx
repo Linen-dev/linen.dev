@@ -69,13 +69,12 @@ export default function DesktopNavBar({
     let mounted = true
     if (currentUser) {
       post('/api/read-status', { channelIds: channels.map(({ id }) => id)})
-        .then(({ readStatuses }) => {
+        .then(({ readStatuses }: { readStatuses: SerializedReadStatus[] }) => {
           if (mounted) {
             setHighlights(highlights => {
-              const channelIds = readStatuses.filter((status: SerializedReadStatus) => {
-                if (!status.lastReplyAt) { return false }
-                return Number(status.lastReplyAt) > Number(status.lastReadAt)
-              }).map((readStatus: SerializedReadStatus) => readStatus.channelId)
+              const channelIds = readStatuses
+                .filter(({ read }) => !read)
+                .map(({ channelId }) => channelId)
               return unique([...highlights, ...channelIds])
             })
           }
