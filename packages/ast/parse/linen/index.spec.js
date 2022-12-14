@@ -83,7 +83,7 @@ describe('parse', () => {
     expect(parse('```foo `` bar```')).toEqual(root([pre('foo `` bar')]));
   });
 
-  it.skip('returns a `url` node', () => {
+  it('returns a `url` node', () => {
     expect(parse('https://foo.bar')).toEqual(root([url('https://foo.bar')]));
     expect(parse('http://foo.bar')).toEqual(root([url('http://foo.bar')]));
     expect(parse('foo https://bar.baz')).toEqual(
@@ -100,6 +100,14 @@ describe('parse', () => {
         url('http://quux.quuux'),
       ])
     );
+    expect(parse('http://foo.bar http://foo.bar')).toEqual(
+      root([
+
+        url('http://foo.bar'),
+        text(' '),
+        url('http://foo.bar')
+      ])
+    )
     expect(parse('http://foo.bar baz:http://foo.bar')).toEqual(
       root([
 
