@@ -132,6 +132,7 @@ export interface SerializedReadStatus {
   channelId: string;
   lastReadAt: string;
   lastReplyAt?: string;
+  read: boolean;
 }
 
 export type Settings = {

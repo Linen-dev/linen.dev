@@ -9,6 +9,7 @@ import {
   SerializedAccount,
   SerializedChannel,
   SerializedMessage,
+  SerializedReadStatus,
   SerializedThread,
   SerializedUser,
   Settings,
@@ -25,7 +26,7 @@ import { createThreadImitation } from './Content/utilities/thread';
 import useWebsockets from '@linen/hooks/websockets';
 import { useUsersContext } from '@linen/contexts/Users';
 import ChannelForBots from './ChannelForBots';
-import { put } from 'utilities/http'
+import { get, put } from 'utilities/http'
 import { timestamp } from '@linen/utilities/date'
 
 export interface ChannelProps {
@@ -86,8 +87,20 @@ export default function Channel(props: ChannelProps) {
   }, [initialPinnedThreads]);
 
   useEffect(() => {
+    let mounted = true
     if (currentUser) {
-      put(`/api/read-status/${currentChannel.id}`, { timestamp: timestamp() })
+      get(`/api/read-status/${currentChannel.id}`)
+        .then((readStatus: SerializedReadStatus) => {
+          if (mounted) {
+            if (!readStatus.read) {
+              Toast.info('You have unread threads in this channel')
+            }
+            return put(`/api/read-status/${currentChannel.id}`, { timestamp: timestamp() })
+          }
+        })
+    }
+    return () => {
+      mounted = false
     }
   }, [currentChannel])
 
