@@ -24,7 +24,7 @@ describe('read-status', function () {
     token = body.token;
   });
 
-  it('mark timestamp as read for specific channel', async function () {
+  it.skip('mark timestamp as read for specific channel', async function () {
     await testApiHandler({
       handler,
       url: '/api/read-status',
@@ -45,7 +45,7 @@ describe('read-status', function () {
     });
   });
 
-  it('get read mark for specific channel', async function () {
+  it.skip('get read mark for specific channel', async function () {
     await testApiHandler({
       handler,
       url: '/api/read-status?channelId=' + mockChannel.id,
