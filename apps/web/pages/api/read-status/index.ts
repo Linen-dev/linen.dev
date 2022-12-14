@@ -3,6 +3,7 @@ import Session from 'services/session';
 import to from 'utilities/await-to-js';
 import { z } from 'zod';
 import { prisma } from 'client';
+import serializeReadStatus from 'serializers/read-status'
 
 async function post(request: NextApiRequest, response: NextApiResponse) {
   const user = await Session.auth(request, response);
@@ -20,19 +21,32 @@ async function post(request: NextApiRequest, response: NextApiResponse) {
 
   const [err, readStatuses] = await to(prisma.$transaction(
     body.channelIds.map((channelId: string) => {
-      const data = {
-        authId: user.id,
-        channelId,
-        lastReadAt: BigInt(new Date().getTime())
-      };
       return prisma.readStatus.upsert({
-        create: data,
-        update: data,
+        create: {
+          authId: user.id,
+          channelId,
+          lastReadAt: BigInt(new Date().getTime())
+        },
+        update: {},
         where: {
           authId_channelId: {
             authId: user.id,
             channelId,
           },
+        },
+        select: {
+          channelId: true,
+          lastReadAt: true,
+          channel: {
+            select: {
+              threads: {
+                orderBy: {
+                  sentAt: 'desc'
+                },
+                take: 1,
+              }
+            }
+          }
         },
       });
     })
@@ -43,7 +57,7 @@ async function post(request: NextApiRequest, response: NextApiResponse) {
     return response.status(500).json({});
   }
 
-  return response.status(200).json({ readStatuses });
+  return response.status(200).json({ readStatuses: readStatuses.map(serializeReadStatus) });
 }
 
 export default async function handler(
