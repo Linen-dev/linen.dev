@@ -50,7 +50,7 @@ export default function DraggableRow({
     node.style.padding = '0.5rem 1rem';
     node.style.left = '-999px';
     node.style.top = '-999px';
-    node.style.cursor = 'move';
+    node.style.cursor = 'grab';
     node.innerText = 'Move thread';
 
     document.body.appendChild(node);

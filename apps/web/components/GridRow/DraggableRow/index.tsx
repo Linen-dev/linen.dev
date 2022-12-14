@@ -40,7 +40,7 @@ export default function DraggableRow({
     node.style.padding = '0.5rem 1rem';
     node.style.left = '-999px';
     node.style.top = '-999px';
-    node.style.cursor = 'move';
+    node.style.cursor = 'grab';
     node.innerText = 'Move message';
 
     document.body.appendChild(node);
@@ -53,7 +53,7 @@ export default function DraggableRow({
       })
     );
     event.dataTransfer.setDragImage(node, 0, 0);
-    (event.currentTarget as HTMLElement).style.cursor = 'move';
+    (event.currentTarget as HTMLElement).style.cursor = 'grab';
 
     const element = ref.current as HTMLElement;
     element.classList.add(styles.dragged);
