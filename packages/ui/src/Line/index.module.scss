@@ -1,0 +1,29 @@
+@import '../colors.scss';
+
+.line {
+  color: $color-gray-700;
+  overflow: hidden;
+  text-align: center;
+  font-size: 14px;
+}
+
+.line:before,
+.line:after {
+  background-color: $color-border;
+  content: "";
+  display: inline-block;
+  height: 1px;
+  position: relative;
+  vertical-align: middle;
+  width: 50%;
+}
+
+.line:before {
+  right: 1rem;
+  margin-left: -50%;
+}
+
+.line:after {
+  left: 1rem;
+  margin-right: -50%;
+}

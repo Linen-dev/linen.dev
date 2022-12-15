@@ -1,8 +1,7 @@
 import CustomLink from 'components/Link/CustomLink';
-import { SerializedReadStatus, SerializedThread } from '@linen/types';
 import Row from '../Row';
-import { SerializedUser } from '@linen/types';
-import { Permissions, Settings } from '@linen/types';
+import { Line } from '@linen/ui';
+import { Permissions, SerializedReadStatus, SerializedThread, SerializedUser, Settings } from '@linen/types';
 import { Mode } from '@linen/hooks/mode';
 import styles from './index.module.scss';
 
@@ -34,7 +33,7 @@ export default function Grid({
 }: {
   threads: SerializedThread[];
   permissions: Permissions;
-  readStatus: SerializedReadStatus;
+  readStatus?: SerializedReadStatus;
   isSubDomainRouting: boolean;
   settings: Settings;
   isBot: boolean;
@@ -66,56 +65,65 @@ export default function Grid({
   }): void;
   onLoad?(): void;
 }) {
-  const rows: RowItem[] = [
+  const rows = [
     ...threads.filter((thread) => thread.messages.length > 0).map((thread) => {
       return { type: RowType.Thread, content: thread, timestamp: Number(thread.sentAt) }
-    })
-  ].filter(Boolean)
+    }),
+    readStatus && !readStatus.read && { type: RowType.ReadStatus, content: readStatus, timestamp: Number(readStatus.lastReadAt) }
+  ].filter(Boolean) as RowItem[]
+
   return (
     <>
       {rows
+        .sort((a, b) => {
+          return a.timestamp - b.timestamp
+        })
         .map((item, index) => {
-          const thread = item.content as SerializedThread
-          const { incrementId, slug } = thread;
-          return (
-            <li key={`feed-${incrementId}-${index}`} className={styles.li}>
-              {isBot ? (
-                <>
-                  <CustomLink
-                    isSubDomainRouting={isSubDomainRouting}
-                    communityName={settings.communityName}
-                    communityType={settings.communityType}
-                    path={`/t/${incrementId}/${slug || 'topic'}`.toLowerCase()}
-                    key={`${incrementId}-desktop`}
-                  >
+          if (item.type === RowType.ReadStatus) {
+            return <Line>New</Line>
+          } else if (item.type === RowType.Thread) {
+            const thread = item.content as SerializedThread
+            const { incrementId, slug } = thread;
+            return (
+              <li key={`feed-${incrementId}-${index}`} className={styles.li}>
+                {isBot ? (
+                  <>
+                    <CustomLink
+                      isSubDomainRouting={isSubDomainRouting}
+                      communityName={settings.communityName}
+                      communityType={settings.communityType}
+                      path={`/t/${incrementId}/${slug || 'topic'}`.toLowerCase()}
+                      key={`${incrementId}-desktop`}
+                    >
+                      <Row
+                        thread={thread}
+                        permissions={permissions}
+                        isSubDomainRouting={isSubDomainRouting}
+                        settings={settings}
+                        currentUser={currentUser}
+                      />
+                    </CustomLink>
+                  </>
+                ) : (
+                  <div onClick={() => onClick(incrementId)}>
                     <Row
+                      className={styles.row}
                       thread={thread}
                       permissions={permissions}
                       isSubDomainRouting={isSubDomainRouting}
                       settings={settings}
                       currentUser={currentUser}
+                      mode={mode}
+                      onPin={onPin}
+                      onReaction={onReaction}
+                      onDrop={onDrop}
+                      onLoad={onLoad}
                     />
-                  </CustomLink>
-                </>
-              ) : (
-                <div onClick={() => onClick(incrementId)}>
-                  <Row
-                    className={styles.row}
-                    thread={thread}
-                    permissions={permissions}
-                    isSubDomainRouting={isSubDomainRouting}
-                    settings={settings}
-                    currentUser={currentUser}
-                    mode={mode}
-                    onPin={onPin}
-                    onReaction={onReaction}
-                    onDrop={onDrop}
-                    onLoad={onLoad}
-                  />
-                </div>
-              )}
-            </li>
-          );
+                  </div>
+                )}
+              </li>
+            );
+          }
         })}
     </>
   );
