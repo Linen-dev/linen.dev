@@ -1,5 +1,5 @@
 import Example from '../Example';
-import { Badge, Nav } from '@linen/ui';
+import { Nav } from '@linen/ui';
 import { FiBarChart, FiHash, FiRss } from 'react-icons/fi';
 
 export default function NavExample() {
@@ -17,9 +17,8 @@ export default function NavExample() {
         <Nav.Item active>
           <FiHash /> general
         </Nav.Item>
-        <Nav.Item>
+        <Nav.Item highlighted>
           <FiHash /> ideas
-          <Badge>3</Badge>
         </Nav.Item>
       </Nav>
     </Example>
