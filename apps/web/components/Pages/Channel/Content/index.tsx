@@ -29,11 +29,12 @@ import {
   isInViewport,
 } from '@linen/utilities/scroll';
 import useMode from '@linen/hooks/mode';
-import styles from './index.module.css';
+import styles from './index.module.scss';
 import { SerializedMessage } from '@linen/types';
 import { Layouts } from '@linen/ui';
 import { timestamp } from '@linen/utilities/date'
 import debounce from '@linen/utilities/debounce';
+import { FiArrowDown } from 'react-icons/fi'
 
 const { SidebarLayout } = Layouts.Shared;
 
@@ -115,6 +116,7 @@ export default function Channel({
   updateThread,
 }: Props) {
   const [isLoading, setIsLoading] = useState(false);
+  const [isLeftScrollAtBottom, setIsLeftScrollAtBottom] = useState(true)
   const [readStatus, setReadStatus] = useState<SerializedReadStatus>();
   const scrollableRootRef = useRef<HTMLDivElement | null>(null);
   const rightRef = useRef<HTMLDivElement>(null);
@@ -166,7 +168,7 @@ export default function Channel({
 
   function handleLeftScroll() {
     if (
-      isScrollAtBottom(scrollableRootRef.current as HTMLElement) ||
+      isLeftScrollAtBottom ||
       isInViewport(leftBottomRef.current as HTMLElement)
     ) {
       setTimeout(() => handleScroll, 0);
@@ -216,14 +218,15 @@ export default function Channel({
     [topRootRef, bottomRootRef]
   );
 
-  const handleRootScroll = useCallback(() => {
+  const handleRootScroll = () => {
     const rootNode = scrollableRootRef.current;
     if (rootNode) {
+      setIsLeftScrollAtBottom(isScrollAtBottom(rootNode))
       const scrollDistanceToBottom = rootNode.scrollHeight - rootNode.scrollTop;
       lastDistanceToBottomRef.current = scrollDistanceToBottom;
       lastDistanceToTopRef.current = rootNode.scrollTop;
     }
-  }, []);
+  }
 
   async function loadMore(next: boolean = false) {
     const key = next ? 'next' : 'prev';
@@ -345,6 +348,7 @@ export default function Channel({
                         />
                       </PinnedThread>
                     )}
+                    <div className={classNames(styles.jump, { [styles.hidden]: isLeftScrollAtBottom })} onClick={handleScroll}><FiArrowDown className={styles.icon} /></div>
                   </Header>
                   {threads.length === 0 ? (
                     <Empty />
