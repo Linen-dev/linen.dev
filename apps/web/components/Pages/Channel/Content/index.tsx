@@ -145,6 +145,7 @@ export default function Channel({
         })
     }
     return () => {
+      debouncedUpdateReadStatus(channelId)
       mounted = false
     }
   }, [currentChannel])
