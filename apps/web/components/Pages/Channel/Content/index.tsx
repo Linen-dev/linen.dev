@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import useInfiniteScroll from 'react-infinite-scroll-hook';
 import Thread from 'components/Thread';
-import { get } from 'utilities/http';
+import { get, put } from 'utilities/http';
 import { useUsersContext } from '@linen/contexts/Users';
 import ChatLayout from 'components/layout/shared/ChatLayout';
 import Header from './Header';
@@ -18,6 +18,7 @@ import {
   Permissions,
   SerializedAccount,
   SerializedChannel,
+  SerializedReadStatus,
   SerializedThread,
   Settings,
   ThreadState,
@@ -30,7 +31,8 @@ import {
 import useMode from '@linen/hooks/mode';
 import styles from './index.module.css';
 import { SerializedMessage } from '@linen/types';
-import { Layouts } from '@linen/ui';
+import { Layouts, Toast } from '@linen/ui';
+import { timestamp } from '@linen/utilities/date'
 
 const { SidebarLayout } = Layouts.Shared;
 
@@ -122,6 +124,24 @@ export default function Channel({
   const [showThread, setShowThread] = useState(false);
 
   const currentUser = permissions.user || null;
+
+  useEffect(() => {
+    let mounted = true
+    if (currentUser) {
+      get(`/api/read-status/${currentChannel.id}`)
+        .then((readStatus: SerializedReadStatus) => {
+          if (mounted) {
+            if (!readStatus.read) {
+              Toast.info('You have unread threads in this channel')
+            }
+            return put(`/api/read-status/${currentChannel.id}`, { timestamp: timestamp() })
+          }
+        })
+    }
+    return () => {
+      mounted = false
+    }
+  }, [currentChannel])
 
   function handleScroll() {
     scrollToBottom(scrollableRootRef.current as HTMLElement);
