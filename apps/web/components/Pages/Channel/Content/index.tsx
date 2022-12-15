@@ -33,6 +33,7 @@ import styles from './index.module.css';
 import { SerializedMessage } from '@linen/types';
 import { Layouts } from '@linen/ui';
 import { timestamp } from '@linen/utilities/date'
+import debounce from '@linen/utilities/debounce';
 
 const { SidebarLayout } = Layouts.Shared;
 
@@ -87,6 +88,11 @@ interface Props {
   updateThread({ state, title }: { state?: ThreadState; title?: string }): void;
 }
 
+const debouncedGetReadStatus = debounce((channelId: string) => get(`/api/read-status/${channelId}`));
+const debouncedUpdateReadStatus = debounce((channelId: string) => put(`/api/read-status/${channelId}`, { timestamp: timestamp() }))
+
+const UPDATE_READ_STATUS_INTERVAL_IN_MS = 30000
+
 export default function Channel({
   threads,
   pinnedThreads,
@@ -128,17 +134,28 @@ export default function Channel({
 
   useEffect(() => {
     let mounted = true
+    const channelId = currentChannel.id
     if (currentUser) {
-      get(`/api/read-status/${currentChannel.id}`)
+      debouncedGetReadStatus(channelId)
         .then((readStatus: SerializedReadStatus) => {
           if (mounted) {
             setReadStatus(readStatus)
-            return put(`/api/read-status/${currentChannel.id}`, { timestamp: timestamp() })
+            return debouncedUpdateReadStatus(channelId)
           }
         })
     }
     return () => {
       mounted = false
+    }
+  }, [currentChannel])
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const channelId = currentChannel.id
+      debouncedUpdateReadStatus(channelId)
+    }, UPDATE_READ_STATUS_INTERVAL_IN_MS)
+    return () => {
+      clearInterval(interval)
     }
   }, [currentChannel])
 
