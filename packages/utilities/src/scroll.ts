@@ -11,13 +11,14 @@ export function scrollToBottom(node: HTMLElement, smooth?: boolean) {
   }
 }
 
+const SCROLL_AT_BOTTOM_TOLERANCE = 3
+
 export function isScrollAtBottom(node: HTMLElement) {
   if (!node) {
     return false;
   }
   return (
-    Math.ceil(node.scrollTop) + Math.ceil(node.clientHeight) ===
-    Math.ceil(node.scrollHeight)
+    Math.abs(node.scrollHeight - node.scrollTop - node.clientHeight) <= SCROLL_AT_BOTTOM_TOLERANCE
   );
 }
 
