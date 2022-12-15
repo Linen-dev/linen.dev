@@ -31,7 +31,7 @@ import {
 import useMode from '@linen/hooks/mode';
 import styles from './index.module.css';
 import { SerializedMessage } from '@linen/types';
-import { Layouts, Toast } from '@linen/ui';
+import { Layouts } from '@linen/ui';
 import { timestamp } from '@linen/utilities/date'
 
 const { SidebarLayout } = Layouts.Shared;
@@ -109,6 +109,7 @@ export default function Channel({
   updateThread,
 }: Props) {
   const [isLoading, setIsLoading] = useState(false);
+  const [readStatus, setReadStatus] = useState<SerializedReadStatus>();
   const scrollableRootRef = useRef<HTMLDivElement | null>(null);
   const rightRef = useRef<HTMLDivElement>(null);
   const leftBottomRef = useRef<HTMLDivElement>(null);
@@ -131,9 +132,7 @@ export default function Channel({
       get(`/api/read-status/${currentChannel.id}`)
         .then((readStatus: SerializedReadStatus) => {
           if (mounted) {
-            if (!readStatus.read) {
-              Toast.info('You have unread threads in this channel')
-            }
+            setReadStatus(readStatus)
             return put(`/api/read-status/${currentChannel.id}`, { timestamp: timestamp() })
           }
         })
@@ -337,6 +336,7 @@ export default function Channel({
                         <Grid
                           threads={threads}
                           permissions={permissions}
+                          readStatus={readStatus}
                           isSubDomainRouting={isSubDomainRouting}
                           settings={settings}
                           isBot={false}
