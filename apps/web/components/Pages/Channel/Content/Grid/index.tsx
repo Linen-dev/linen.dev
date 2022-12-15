@@ -66,21 +66,23 @@ export default function Grid({
   onLoad?(): void;
 }) {
   const rows = [
+    readStatus && !readStatus.read && { type: RowType.ReadStatus, content: readStatus, timestamp: Number(readStatus.lastReadAt) },
     ...threads.filter((thread) => thread.messages.length > 0).map((thread) => {
       return { type: RowType.Thread, content: thread, timestamp: Number(thread.sentAt) }
-    }),
-    readStatus && !readStatus.read && { type: RowType.ReadStatus, content: readStatus, timestamp: Number(readStatus.lastReadAt) }
+    })
   ].filter(Boolean) as RowItem[]
+
+  const sorted = rows
+    .sort((a, b) => {
+      return a.timestamp - b.timestamp
+    })
 
   return (
     <>
-      {rows
-        .sort((a, b) => {
-          return a.timestamp - b.timestamp
-        })
+      {sorted
         .map((item, index) => {
           if (item.type === RowType.ReadStatus) {
-            return <div className={styles.line}><Line>New</Line></div>
+            return <div className={styles.line} key={`feed-line-${index}`} ><Line>New</Line></div>
           } else if (item.type === RowType.Thread) {
             const thread = item.content as SerializedThread
             const { incrementId, slug } = thread;
