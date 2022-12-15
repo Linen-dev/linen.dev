@@ -9,6 +9,7 @@ import Checkbox from './Checkbox';
 import Code from './Code';
 import Image from './Image';
 import Label from './Label';
+import Line from './Line';
 import List from './List';
 import Message from './Message';
 import NativeSelect from './NativeSelect';
@@ -35,6 +36,7 @@ export {
   Code,
   Image,
   Label,
+  Line,
   List,
   Message,
   NativeSelect,
