@@ -5,61 +5,6 @@ import to from 'utilities/await-to-js';
 import { z } from 'zod';
 import serializeReadStatus from 'serializers/read-status'
 
-export async function updateReadStatus({
-  authId,
-  channelId,
-  timestamp,
-}: {
-  authId: string;
-  channelId: string;
-  timestamp: bigint;
-}) {
-  const data = { authId, channelId, lastReadAt: timestamp };
-  return await prisma.readStatus.upsert({
-    create: data,
-    update: data,
-    where: {
-      authId_channelId: {
-        authId,
-        channelId,
-      },
-    },
-  });
-}
-
-export async function getReadStatus({
-  authId,
-  channelId,
-}: {
-  authId: string;
-  channelId: string;
-}) {
-  return await prisma.readStatus
-    .findUnique({
-      select: {
-        channelId: true,
-        lastReadAt: true,
-        channel: {
-          select: {
-            threads: {
-              orderBy: {
-                sentAt: 'desc'
-              },
-              take: 1,
-            }
-          }
-        }
-      },
-      where: {
-        authId_channelId: {
-          authId,
-          channelId,
-        },
-      },
-    })
-}
-
-
 async function put(request: NextApiRequest, response: NextApiResponse) {
   const user = await Session.auth(request, response);
   if (!user) {
@@ -78,11 +23,21 @@ async function put(request: NextApiRequest, response: NextApiResponse) {
     return response.status(400).json({ error: badRequest.message });
   }
 
+  const { channelId } = body
+  const authId = user.id
+  const timestamp = BigInt(body.timestamp)
+  const data = { authId, channelId, lastReadAt: timestamp };
+
   const [err, _] = await to(
-    updateReadStatus({
-      channelId: body.channelId,
-      authId: user.id,
-      timestamp: BigInt(body.timestamp),
+    prisma.readStatus.upsert({
+      create: data,
+      update: data,
+      where: {
+        authId_channelId: {
+          authId,
+          channelId,
+        },
+      },
     })
   );
   if (err) {
@@ -108,7 +63,31 @@ async function get(request: NextApiRequest, response: NextApiResponse) {
   }
 
   const { channelId } = body;
-  const [err, data] = await to(getReadStatus({ authId: user.id, channelId }));
+  const [err, data] = await to(
+    prisma.readStatus
+    .findUnique({
+      select: {
+        channelId: true,
+        lastReadAt: true,
+        channel: {
+          select: {
+            threads: {
+              orderBy: {
+                sentAt: 'desc'
+              },
+              take: 1,
+            }
+          }
+        }
+      },
+      where: {
+        authId_channelId: {
+          authId: user.id,
+          channelId,
+        },
+      },
+    })
+  )
   if (err) {
     console.error(err);
     return response.status(500).json({});
