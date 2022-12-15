@@ -1,5 +1,5 @@
 import CustomLink from 'components/Link/CustomLink';
-import { SerializedThread } from '@linen/types';
+import { SerializedReadStatus, SerializedThread } from '@linen/types';
 import Row from '../Row';
 import { SerializedUser } from '@linen/types';
 import { Permissions, Settings } from '@linen/types';
@@ -9,6 +9,7 @@ import styles from './index.module.scss';
 export default function Grid({
   threads,
   permissions,
+  readStatus,
   isSubDomainRouting,
   settings,
   isBot,
@@ -22,6 +23,7 @@ export default function Grid({
 }: {
   threads: SerializedThread[];
   permissions: Permissions;
+  readStatus: SerializedReadStatus;
   isSubDomainRouting: boolean;
   settings: Settings;
   isBot: boolean;
