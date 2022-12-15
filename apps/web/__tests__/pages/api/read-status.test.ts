@@ -8,7 +8,7 @@ import handler from 'pages/api/read-status';
 type auths = { id: string };
 type channels = { id: string };
 
-describe('read-status', function () {
+describe.skip('read-status', function () {
   let mockAuth: auths;
   let mockChannel: channels;
   let token: string;
