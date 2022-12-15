@@ -1,9 +1,64 @@
 import { NextApiRequest, NextApiResponse } from 'next';
+import { prisma } from 'client';
 import Session from 'services/session';
-import { getReadStatus, updateReadStatus } from 'services/users/read-status';
 import to from 'utilities/await-to-js';
 import { z } from 'zod';
 import serializeReadStatus from 'serializers/read-status'
+
+export async function updateReadStatus({
+  authId,
+  channelId,
+  timestamp,
+}: {
+  authId: string;
+  channelId: string;
+  timestamp: bigint;
+}) {
+  const data = { authId, channelId, lastReadAt: timestamp };
+  return await prisma.readStatus.upsert({
+    create: data,
+    update: data,
+    where: {
+      authId_channelId: {
+        authId,
+        channelId,
+      },
+    },
+  });
+}
+
+export async function getReadStatus({
+  authId,
+  channelId,
+}: {
+  authId: string;
+  channelId: string;
+}) {
+  return await prisma.readStatus
+    .findUnique({
+      select: {
+        channelId: true,
+        lastReadAt: true,
+        channel: {
+          select: {
+            threads: {
+              orderBy: {
+                sentAt: 'desc'
+              },
+              take: 1,
+            }
+          }
+        }
+      },
+      where: {
+        authId_channelId: {
+          authId,
+          channelId,
+        },
+      },
+    })
+}
+
 
 async function put(request: NextApiRequest, response: NextApiResponse) {
   const user = await Session.auth(request, response);
