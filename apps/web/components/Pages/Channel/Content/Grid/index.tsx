@@ -6,6 +6,17 @@ import { Permissions, Settings } from '@linen/types';
 import { Mode } from '@linen/hooks/mode';
 import styles from './index.module.scss';
 
+enum RowType {
+  Thread,
+  ReadStatus
+}
+
+interface RowItem {
+  type: RowType;
+  content: SerializedThread | SerializedReadStatus;
+  timestamp: number;
+}
+
 export default function Grid({
   threads,
   permissions,
@@ -55,11 +66,16 @@ export default function Grid({
   }): void;
   onLoad?(): void;
 }) {
+  const rows: RowItem[] = [
+    ...threads.filter((thread) => thread.messages.length > 0).map((thread) => {
+      return { type: RowType.Thread, content: thread, timestamp: Number(thread.sentAt) }
+    })
+  ].filter(Boolean)
   return (
     <>
-      {threads
-        .filter((thread) => thread.messages.length > 0)
-        .map((thread, index) => {
+      {rows
+        .map((item, index) => {
+          const thread = item.content as SerializedThread
           const { incrementId, slug } = thread;
           return (
             <li key={`feed-${incrementId}-${index}`} className={styles.li}>
