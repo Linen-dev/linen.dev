@@ -24,6 +24,7 @@ import {
 import { createThreadImitation } from './Content/utilities/thread';
 import useWebsockets from '@linen/hooks/websockets';
 import { useUsersContext } from '@linen/contexts/Users';
+import storage from '@linen/utilities/storage'
 import ChannelForBots from './ChannelForBots';
 
 export interface ChannelProps {
@@ -82,6 +83,10 @@ export default function Channel(props: ChannelProps) {
     setPinnedThreads(initialPinnedThreads);
     setCurrentThreadId(undefined);
   }, [initialPinnedThreads]);
+
+  useEffect(() => {
+    storage.set("pages.last", { communityId: currentCommunity?.id, page: 'channel', channelId: currentChannel.id })
+  }, [currentCommunity, currentChannel])
 
   useWebsockets({
     room: `room:lobby:${currentChannel.id}`,
