@@ -1,18 +1,21 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PageLayout from 'components/layout/PageLayout';
 import {
   Permissions,
   Scope,
+  SerializedAccount,
   SerializedChannel,
   Settings,
   ThreadState,
 } from '@linen/types';
 import debounce from '@linen/utilities/debounce';
+import storage from '@linen/utilities/storage'
 
 import Content from './Content';
 
 interface Props {
   channels: SerializedChannel[];
+  currentCommunity: SerializedAccount;
   isSubDomainRouting: boolean;
   permissions: Permissions;
   settings: Settings;
@@ -79,10 +82,16 @@ const fetchTotal = ({
 
 export default function Feed({
   channels,
+  currentCommunity,
   isSubDomainRouting,
   permissions,
   settings,
 }: Props) {
+
+  useEffect(() => {
+    storage.set("pages.last", { communityId: currentCommunity.id, page: 'feed' })
+  }, [currentCommunity])
+
   return (
     <PageLayout
       channels={channels}

@@ -5,8 +5,9 @@ import ChannelsService from 'services/channels';
 import { serialize as serializeSettings } from 'serializers/account/settings';
 import { NotFound, RedirectTo } from 'utilities/response';
 import Session from 'services/session';
-import serializeUser from 'serializers/user';
+import serializeAccount from 'serializers/account';
 import serializeChannel from 'serializers/channel';
+import serializeUser from 'serializers/user';
 import { qs } from 'utilities/url';
 
 export async function feedGetServerSideProps(
@@ -46,6 +47,7 @@ export async function feedGetServerSideProps(
       communityId: community.id,
       isSubDomainRouting,
       settings: serializeSettings(community),
+      currentCommunity: serializeAccount(community),
       currentUser: currentUser && serializeUser(currentUser),
       channels: channels.map(serializeChannel),
       permissions,
