@@ -9,7 +9,6 @@ async function createLinenCommunity() {
       name: 'Linen',
       homeUrl: `https://linen.dev`,
       docsUrl: `https://linen.dev/docs`,
-      redirectDomain: 'linen.dev',
       brandColor: '#000000',
       slackDomain: 'linen',
       logoUrl: 'https://linen-assets.s3.amazonaws.com/linen-white-logo.svg',
