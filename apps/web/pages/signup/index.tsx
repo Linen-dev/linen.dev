@@ -9,7 +9,7 @@ export async function getServerSideProps(context: NextPageContext) {
     props: {
       csrfToken: createCSRFToken(),
       error: context.query.error || null,
-      callbackUrl: context.query.callbackUrl || '/api/settings',
+      callbackUrl: context.query.callbackUrl || '/api/router',
       email: context.query.email || '',
       state: context.query.state || null,
       mode: context.query.mode || null,
