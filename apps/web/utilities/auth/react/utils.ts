@@ -88,7 +88,8 @@ export function BroadcastChannel(name = 'linen.message') {
 
 export function cleanUpStorage() {
   if (typeof window === 'undefined') return;
-  localStorage.clear();
+  localStorage.removeItem('jwt');
+  localStorage.removeItem('linen.message')
 }
 
 export function getJwtToken() {
