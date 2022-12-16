@@ -1,7 +1,7 @@
 import CardLayout from 'components/layout/CardLayout';
 import EmailField from 'components/EmailField';
 import { Button } from '@linen/ui';
-import Link from 'components/Link';
+import storage from '@linen/utilities/storage';
 import Error from 'components/Auth/Error';
 import PasswordField from 'components/PasswordField';
 import { useState } from 'react';
@@ -25,6 +25,14 @@ interface SignInProps {
   onSignIn?: () => void;
 }
 
+function prepareUrl (url?: string) {
+  const page = storage.get('pages.last')
+  if (page && url === '/api/router') {
+    return `${url}?${qs(page)}`
+  }
+  return url
+}
+
 export default function SignIn({
   csrfToken,
   callbackUrl,
@@ -43,6 +51,8 @@ export default function SignIn({
     ? CardLayout
     : (props: any) => <>{props.children}</>;
 
+  const redirectUrl = prepareUrl(callbackUrl)
+
   return (
     <Layout header="Sign In">
       <Error error={error} />
@@ -53,7 +63,7 @@ export default function SignIn({
           onSignInSubmit({
             setError,
             setLoading,
-            callbackUrl,
+            callbackUrl: redirectUrl,
             onSignIn,
             state,
           })(e, mode)
