@@ -1,7 +1,11 @@
 const storage = {
   get (key: string) {
     try {
-      return window.localStorage.getItem(key)
+      const value = window.localStorage.getItem(key)
+      if (value && value.startsWith('{') && value?.endsWith('}')) {
+        return JSON.parse(value)
+      }
+      return value
     } catch (exception) {
       return null
     }
