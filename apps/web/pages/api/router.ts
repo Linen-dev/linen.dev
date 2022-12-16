@@ -21,7 +21,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       auth.users.find((u) => u.accountsId === auth.accountId)?.account
     );
     if (!account) {
-      return res.redirect('/getting-started').end();
+      return res.redirect('/getting-started');
     }
 
     const url = getHomeUrl(account);
