@@ -19,6 +19,7 @@
   "exports": {
     "./scroll": "./dist/scroll.js",
     "./string": "./dist/string.js",
+    "./storage": "./dist/storage.js",
     "./date": "./dist/date.js",
     "./debounce": "./dist/debounce.js",
     "./markdown": "./dist/markdown.js",
@@ -31,6 +32,9 @@
       ],
       "string": [
         "dist/string.d.ts"
+      ],
+      "storage": [
+        "dist/storage.d.ts"
       ],
       "date": [
         "dist/date.d.ts"
