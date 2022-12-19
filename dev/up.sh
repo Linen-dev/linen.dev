@@ -4,7 +4,7 @@
 trap func exit
 # Declare the function
 function func() {
-  pm2 delete ecosystem.config.js
+  npx pm2 delete ecosystem.config.js
 }
 
-pm2 start ecosystem.config.js && pm2 logs
+npx pm2 start ecosystem.config.js && npx pm2 logs
