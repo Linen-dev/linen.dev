@@ -11,6 +11,7 @@ import usePath from 'hooks/path';
 import { Mode } from '@linen/hooks/mode';
 import { Nav, Toast } from '@linen/ui';
 import { post } from 'utilities/http';
+import { notify } from 'utilities/notification'
 import unique from 'lodash.uniq'
 
 interface Props {
@@ -54,7 +55,9 @@ export default function DesktopNavBar({
           (channel) => channel.id === payload.channel_id
         );
         if (channel) {
-          Toast.info(`You were mentioned in #${channel.channelName}`);
+          const text = `You were mentioned in #${channel.channelName}`
+          Toast.info(text);
+          notify(text);
         }
       }
       setHighlights((highlights) => {
