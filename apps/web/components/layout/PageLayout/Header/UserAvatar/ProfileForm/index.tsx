@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import AvatarField from './AvatarField';
+import PermissionsField from './PermissionsField'
 import TextField from 'components/TextField';
 import { Button, Toast } from '@linen/ui';
 import { SerializedUser } from '@linen/types';
@@ -89,6 +90,7 @@ export default function ProfileForm({
           placeholder="John Doe"
           defaultValue={currentUser.displayName || ''}
         />
+        <PermissionsField />
         <div className="text-right">
           <Button
             className="mt-3 text-right"
