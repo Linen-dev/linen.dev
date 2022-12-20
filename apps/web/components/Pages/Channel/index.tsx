@@ -90,12 +90,16 @@ export default function Channel(props: ChannelProps) {
 
   useEffect(() => {
     if (currentUser && window.Notification) {
-      window.Notification.requestPermission((permission) => {
-        if (permission === 'granted') {
-          Toast.info('Notifications are enabled')
-          new Notification('Notifications are enabled')
-        }
-      })
+      const permission = storage.get('notification.permission')
+      if (!permission) {
+        window.Notification.requestPermission((permission) => {
+          storage.set('notification.permission', permission)
+          if (permission === 'granted') {
+            Toast.info('Notifications are enabled')
+            new Notification('Notifications are enabled')
+          }
+        })
+      }
     }
   }, [])
 
