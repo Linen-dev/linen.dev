@@ -16,6 +16,7 @@ export default function PermissionsField () {
           if (checked) {
             storage.set('notification.permission', 'denied')
             Toast.info('Notifications are disabled')
+            new Notification('Notifications are disabled')
             setChecked(false)
           } else if (window.Notification) {
             window.Notification.requestPermission((permission) => {
