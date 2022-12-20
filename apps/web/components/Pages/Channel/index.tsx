@@ -88,6 +88,17 @@ export default function Channel(props: ChannelProps) {
     storage.set("pages.last", { communityId: currentCommunity?.id, page: 'channel', channelId: currentChannel.id })
   }, [currentCommunity, currentChannel])
 
+  useEffect(() => {
+    if (currentUser && window.Notification) {
+      window.Notification.requestPermission((permission) => {
+        if (permission === 'granted') {
+          Toast.info('Notifications are enabled')
+          new Notification('Notifications are enabled')
+        }
+      })
+    }
+  }, [])
+
   useWebsockets({
     room: `room:lobby:${currentChannel.id}`,
     token,
