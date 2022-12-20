@@ -6,6 +6,8 @@ export const isNotificationEnabled = (): boolean => {
 
 export const notify = (text: string): void => {
   if (window.Notification && isNotificationEnabled()) {
-    new window.Notification(text)
+    new window.Notification('Linen Notification', {
+      body: text
+    })
   }
 }
