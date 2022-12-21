@@ -431,8 +431,11 @@ export default function Channel({
                 handleLeftScroll();
               }}
               onMessage={(message, messageId, imitationId) => {
+                const pinned = isLeftScrollAtBottom
                 onMessage(message, messageId, imitationId);
-                handleLeftScroll();
+                if (pinned) {
+                  handleScroll();
+                }
               }}
             />
           )

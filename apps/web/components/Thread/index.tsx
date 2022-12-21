@@ -85,7 +85,7 @@ export default function Thread({
   const ref = useRef<HTMLDivElement>(null);
   const { id, state, viewCount, incrementId } = thread;
 
-  const handleScroll = () => scrollToBottom(ref.current as HTMLDivElement);
+  const handleScroll = () => setTimeout(() => scrollToBottom(ref.current as HTMLDivElement), 0);
 
   useEffect(() => {
     onMount?.();
@@ -99,7 +99,10 @@ export default function Thread({
     id: thread?.id,
     token,
     permissions,
-    onMessage,
+    onMessage (message, messageId, imitationId) {
+      onMessage(message, messageId, imitationId)
+      handleScroll()
+    },
   });
 
   function isThreadCreator(
@@ -161,8 +164,9 @@ export default function Thread({
               id="thread-message-form"
               onSend={(message: string, files: UploadedFile[]) => {
                 onSend?.();
+                const promise = sendMessage({ message, files, channelId, threadId: id });
                 handleScroll();
-                return sendMessage({ message, files, channelId, threadId: id });
+                return promise
               }}
               onSendAndClose={(message: string, files: UploadedFile[]) => {
                 onSend?.();
@@ -189,10 +193,9 @@ export default function Thread({
               id="thread-message-form"
               onSend={(message: string, files: UploadedFile[]) => {
                 onSend?.();
+                const promise = sendMessage({ message, files, channelId, threadId: id })
                 handleScroll();
-                return Promise.all([
-                  sendMessage({ message, files, channelId, threadId: id }),
-                ]);
+                return promise
               }}
               fetchMentions={(term?: string) => {
                 if (!term) return Promise.resolve([]);
