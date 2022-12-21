@@ -9,6 +9,7 @@ interface Props {
   onDrop?(event: React.DragEvent): void;
   href: string;
   children: React.ReactNode;
+  refresh?: boolean
 }
 
 export default function InternalLink({
@@ -19,8 +20,21 @@ export default function InternalLink({
   onDrop,
   href,
   children,
+  refresh
 }: Props) {
   const path = usePath({ href });
+  if (refresh) {
+    return <a
+      href={path}
+      onClick={onClick}
+      onDragEnter={onDragEnter}
+      onDragLeave={onDragLeave}
+      onDrop={onDrop}
+      className={className}
+    >
+      {children}
+    </a>
+  }
   return (
     <Link
       href={path}
