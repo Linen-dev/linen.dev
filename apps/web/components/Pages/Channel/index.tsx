@@ -54,7 +54,7 @@ export default function Channel(props: ChannelProps) {
     threads: initialThreads,
     pinnedThreads: initialPinnedThreads,
     channels,
-    currentChannel,
+    currentChannel: initialChannel,
     currentCommunity,
     settings,
     channelName,
@@ -62,12 +62,13 @@ export default function Channel(props: ChannelProps) {
     nextCursor,
     pathCursor,
     isBot,
-    permissions,
+    permissions
   } = props;
 
   const [threads, setThreads] = useState<SerializedThread[]>(initialThreads);
   const [pinnedThreads, setPinnedThreads] =
     useState<SerializedThread[]>(initialPinnedThreads);
+  const [currentChannel, setCurrentChannel] = useState(initialChannel)
   const [currentThreadId, setCurrentThreadId] = useState<string>();
   const [allUsers] = useUsersContext();
 
@@ -83,6 +84,10 @@ export default function Channel(props: ChannelProps) {
     setPinnedThreads(initialPinnedThreads);
     setCurrentThreadId(undefined);
   }, [initialPinnedThreads]);
+
+  useEffect(() => {
+    setCurrentChannel(initialChannel)
+  }, [initialChannel])
 
   useEffect(() => {
     storage.set("pages.last", { communityId: currentCommunity?.id, page: 'channel', channelId: currentChannel.id })
@@ -593,7 +598,7 @@ export default function Channel(props: ChannelProps) {
       onDrop={onChannelDrop}
     >
       <Content
-        key={channelName}
+        key={currentChannel.channelName}
         threads={threads}
         pinnedThreads={pinnedThreads}
         currentChannel={currentChannel}
