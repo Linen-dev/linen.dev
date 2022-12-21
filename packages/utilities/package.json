@@ -21,6 +21,7 @@
     "./string": "./dist/string.js",
     "./storage": "./dist/storage.js",
     "./date": "./dist/date.js",
+    "./event": "./dist/event.js",
     "./debounce": "./dist/debounce.js",
     "./markdown": "./dist/markdown.js",
     "./clipboard": "./dist/clipboard.js"
@@ -38,6 +39,9 @@
       ],
       "date": [
         "dist/date.d.ts"
+      ],
+      "event": [
+        "dist/event.d.ts"
       ],
       "debounce": [
         "dist/debounce.d.ts"
