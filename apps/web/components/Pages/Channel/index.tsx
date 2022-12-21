@@ -108,58 +108,53 @@ export default function Channel(props: ChannelProps) {
     }
   }, [])
 
-  useWebsockets({
-    room: `room:lobby:${currentChannel.id}`,
-    token,
-    permissions,
-    onNewMessage(payload) {
-      try {
-        if (payload.is_reply) {
-          const threadId = payload.thread_id;
-          const messageId = payload.message_id;
-          const imitationId = payload.imitation_id;
-          const message: SerializedMessage =
-            payload.message && JSON.parse(payload.message);
-          if (!message) {
-            return;
+  const onSocket = (payload: any) => {
+    try {
+      if (payload.is_reply) {
+        const threadId = payload.thread_id;
+        const messageId = payload.message_id;
+        const imitationId = payload.imitation_id;
+        const message: SerializedMessage =
+          payload.message && JSON.parse(payload.message);
+        if (!message) {
+          return;
+        }
+        setThreads((threads) => {
+          const index = threads.findIndex(({ id }) => id === threadId);
+          const newThreads = [...threads];
+          if (index > -1) {
+            newThreads[index].messages = [
+              ...newThreads[index].messages.filter(
+                ({ id }) => id !== imitationId && id !== messageId
+              ),
+              message,
+            ];
           }
-          setThreads((threads) => {
-            const index = threads.findIndex(({ id }) => id === threadId);
-            const newThreads = [...threads];
-            if (index > -1) {
-              newThreads[index].messages = [
-                ...newThreads[index].messages.filter(
-                  ({ id }) => id !== imitationId && id !== messageId
-                ),
-                message,
-              ];
-            }
-            return newThreads;
-          });
-        }
-
-        if (payload.is_thread) {
-          const threadId = payload.thread_id;
-          const imitationId = payload.imitation_id;
-          const thread: SerializedThread =
-            payload.thread && JSON.parse(payload.thread);
-          if (!thread) {
-            return;
-          }
-          setThreads((threads) => [
-            ...threads.filter(
-              ({ id }) => id !== imitationId && id !== threadId
-            ),
-            thread,
-          ]);
-        }
-      } catch (e) {
-        if (process.env.NODE_ENV === 'development') {
-          console.log(e);
-        }
+          return newThreads;
+        });
       }
-    },
-  });
+
+      if (payload.is_thread) {
+        const threadId = payload.thread_id;
+        const imitationId = payload.imitation_id;
+        const thread: SerializedThread =
+          payload.thread && JSON.parse(payload.thread);
+        if (!thread) {
+          return;
+        }
+        setThreads((threads) => [
+          ...threads.filter(
+            ({ id }) => id !== imitationId && id !== threadId
+          ),
+          thread,
+        ]);
+      }
+    } catch (e) {
+      if (process.env.NODE_ENV === 'development') {
+        console.log(e);
+      }
+    }
+  }
 
   function onSelectThread(thread: SerializedThread) {
     setCurrentThreadId(thread.id);
@@ -618,6 +613,7 @@ export default function Channel(props: ChannelProps) {
         sendReaction={sendReaction}
         onSelectThread={onSelectThread}
         updateThread={updateThread}
+        onThreadMessage={onSocket}
         token={token}
       />
     </PageLayout>
