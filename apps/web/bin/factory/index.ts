@@ -349,6 +349,74 @@ async function createLinenCommunity() {
       },
     },
   });
+
+  // 10. Thread with many messages
+  await prisma.threads.create({
+    data: {
+      channelId: channel.id,
+      sentAt: new Date().getTime(),
+      messages: {
+        create: [
+          {
+            channelId: channel.id,
+            body: 'Notifications are ready!',
+            usersId: user1.id,
+            sentAt: '2021-12-14T09:01:00.000Z',
+            messageFormat: MessageFormat.LINEN,
+          },
+          {
+            channelId: channel.id,
+            body: 'You can set them in the profile page.',
+            usersId: user1.id,
+            sentAt: '2021-12-14T09:02:00.000Z',
+            messageFormat: MessageFormat.LINEN,
+          },
+          {
+            channelId: channel.id,
+            body: 'Preferences are kept inside of local storage.',
+            usersId: user1.id,
+            sentAt: '2021-12-14T09:03:00.000Z',
+            messageFormat: MessageFormat.LINEN,
+          },
+          {
+            channelId: channel.id,
+            body: 'Cool!',
+            usersId: user2.id,
+            sentAt: '2021-12-14T09:04:00.000Z',
+            messageFormat: MessageFormat.LINEN,
+          },
+          {
+            channelId: channel.id,
+            body: 'Great!',
+            usersId: user3.id,
+            sentAt: '2021-12-14T09:05:00.000Z',
+            messageFormat: MessageFormat.LINEN,
+          },
+          {
+            channelId: channel.id,
+            body: 'Awesome!',
+            usersId: user4.id,
+            sentAt: '2021-12-14T09:06:00.000Z',
+            messageFormat: MessageFormat.LINEN,
+          },
+          {
+            channelId: channel.id,
+            body: 'We are going to release it soon.',
+            usersId: user3.id,
+            sentAt: '2021-12-14T09:07:00.000Z',
+            messageFormat: MessageFormat.LINEN,
+          },
+          {
+            channelId: channel.id,
+            body: 'We\'ll try to track it.',
+            usersId: user1.id,
+            sentAt: '2021-12-14T09:08:00.000Z',
+            messageFormat: MessageFormat.LINEN,
+          },
+        ],
+      },
+    },
+  });
 }
 
 export const seed = async () => {
