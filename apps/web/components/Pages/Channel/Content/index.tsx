@@ -29,6 +29,7 @@ import {
   isInViewport,
 } from '@linen/utilities/scroll';
 import useMode from '@linen/hooks/mode';
+import useWebsockets from '@linen/hooks/websockets';
 import styles from './index.module.scss';
 import { SerializedMessage } from '@linen/types';
 import { Layouts } from '@linen/ui';
@@ -75,6 +76,7 @@ interface Props {
     messageId: string,
     imitationId: string
   ): void;
+  onThreadMessage(payload: any): void;
   onDrop({
     source,
     target,
@@ -114,6 +116,7 @@ export default function Channel({
   sendReaction,
   onSelectThread,
   updateThread,
+  onThreadMessage,
 }: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const [isLeftScrollAtBottom, setIsLeftScrollAtBottom] = useState(true)
@@ -133,6 +136,19 @@ export default function Channel({
   const [showThread, setShowThread] = useState(false);
 
   const currentUser = permissions.user || null;
+
+  useWebsockets({
+    room: `room:lobby:${currentChannel.id}`,
+    token,
+    permissions,
+    onNewMessage(payload) {
+      const pinned = isLeftScrollAtBottom
+      onThreadMessage(payload)
+      if (pinned) {
+        setTimeout(() => handleScroll(), 0)
+      }
+    }
+  });
 
   useEffect(() => {
     let mounted = true
