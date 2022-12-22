@@ -60,13 +60,21 @@ export async function findChannelWithAccountByExternalId(
   });
 }
 
-export function createChannel({
+export async function createChannel({
   name,
   accountId,
   externalChannelId,
   hidden,
 }: CreateChannelParams) {
-  return prisma.channels.create({
+  const exists = await prisma.channels.findUnique({
+    where: {
+      externalChannelId,
+    },
+  });
+  if (exists) {
+    return exists;
+  }
+  return await prisma.channels.create({
     data: {
       channelName: name,
       accountId,

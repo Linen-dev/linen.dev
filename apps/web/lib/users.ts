@@ -1,8 +1,8 @@
-import { ChannelWithAccountAndSlackAuth, UserMap } from '../types/partialTypes';
+import { UserMap } from 'types/partialTypes';
 import prisma from '../client';
 import type { Prisma, users } from '@prisma/client';
-import { UserInfo } from '../types/slackResponses//slackUserInfoInterface';
-import { generateRandomWordSlug } from '../utilities/randomWordSlugs';
+import { UserInfo } from 'types/slackResponses/slackUserInfoInterface';
+import { generateRandomWordSlug } from 'utilities/randomWordSlugs';
 import { getSlackUser } from 'services/slack/api';
 
 export async function findUsersByAccountId(
@@ -32,10 +32,26 @@ export const findUser = async (
 };
 
 export const createUser = async (user: Prisma.usersUncheckedCreateInput) => {
+  if (user.accountsId && user.externalUserId) {
+    const exist = await prisma.users.findUnique({
+      where: {
+        externalUserId_accountsId: {
+          accountsId: user.accountsId,
+          externalUserId: user.externalUserId!,
+        },
+      },
+    });
+    if (exist) {
+      return exist;
+    }
+  }
   return await prisma.users.create({ data: user });
 };
 
-function buildUserFromInfo(user: UserInfo, accountId: string) {
+function buildUserFromInfo(
+  user: UserInfo,
+  accountId: string
+): Prisma.usersUncheckedCreateInput {
   const profile = user.profile;
   const name =
     profile.display_name ||

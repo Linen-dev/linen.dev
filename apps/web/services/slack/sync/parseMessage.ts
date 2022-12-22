@@ -25,6 +25,9 @@ export function filterMessages<
   T extends SlackMessageEvent | ConversationHistoryMessage
 >(message: T) {
   if (message.subtype) {
+    if (message.subtype === 'channel_join') {
+      return false;
+    }
     return message.subtype === 'bot_message' && isNotLinenBot(message);
   }
   return true;

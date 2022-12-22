@@ -2,9 +2,9 @@ import { updateNextPageCursor } from 'lib/models';
 import { AccountWithSlackAuthAndChannels, UserMap } from 'types/partialTypes';
 import { channels } from '@prisma/client';
 import { MessageFormat } from '@linen/types';
-
+import { getBotUserId } from './getBotUserId';
 import prisma from '../../../client';
-import type { ConversationHistoryMessage } from '../api';
+import { ConversationHistoryMessage } from '../api';
 import { processReactions } from './reactions';
 import { processAttachments } from './attachments';
 import { getMentionedUsers } from './getMentionedUsers';
@@ -40,6 +40,9 @@ async function saveMessagesTransaction(
     const thread = threads.find((t) => t.externalThreadId === m.ts);
 
     let user: UserMap | undefined;
+    if (!m.user && !!m.bot_id) {
+      m.user = await getBotUserId(m.bot_id, token);
+    }
     if (!!m.user) {
       user = users.find((u) => u.externalUserId === m.user);
     }
@@ -71,15 +74,6 @@ async function saveMessagesTransaction(
         },
       },
     });
-    if (!!message.threadId) {
-      await prisma.threads.updateMany({
-        where: {
-          id: message.threadId,
-          lastReplyAt: { lt: message.sentAt.getTime() },
-        },
-        data: { lastReplyAt: message.sentAt.getTime() },
-      });
-    }
     await Promise.all([
       processReactions(m, message),
       processAttachments(m, message, token),

@@ -139,7 +139,7 @@ describe('webhook :: users', () => {
         select: { id: true },
         where: { slackTeamId: userUpdateEvent.team_id },
       });
-      expect(usersFindUniqueMock).toHaveBeenCalledTimes(1);
+      expect(usersFindUniqueMock).toHaveBeenCalledTimes(2);
       expect(usersFindUniqueMock).toHaveBeenCalledWith({
         where: {
           externalUserId_accountsId: {

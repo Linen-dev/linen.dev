@@ -1,4 +1,4 @@
-import type { ConversationHistoryMessage } from '../api';
+import { ConversationHistoryMessage } from '../api';
 import { findOrCreateThread, findThreadsByChannel } from 'lib/threads';
 import { retryPromise } from 'utilities/retryPromises';
 import { UserMap } from 'types/partialTypes';
@@ -11,6 +11,7 @@ import { processAttachments } from './attachments';
 import { getMentionedUsers } from './getMentionedUsers';
 import { parseSlackSentAt, tsToSentAt } from 'utilities/sentAt';
 import { filterMessages, parseMessage } from './parseMessage';
+import { getBotUserId } from './getBotUserId';
 
 async function saveMessagesSynchronous(
   messages: ConversationHistoryMessage[],
@@ -41,8 +42,10 @@ async function saveMessagesSynchronous(
       lastReplyAt: parseSlackSentAt(ts),
       slug: createSlug(m.text),
     });
-
     let user: UserMap | undefined;
+    if (!m.user && !!m.bot_id) {
+      m.user = await getBotUserId(m.bot_id, token);
+    }
     if (!!m.user) {
       user = users.find((u) => u.externalUserId === m.user);
     }
@@ -145,8 +148,8 @@ export async function saveAllThreads({
               token
             );
           }
-        } catch (e) {
-          console.error(e);
+        } catch (e: any) {
+          console.error(e.message || e);
         }
       })
     );

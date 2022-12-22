@@ -46,6 +46,7 @@ export interface SlackMessageEvent {
   thread_ts?: string;
   files?: MessageFile[];
   app_id?: string;
+  bot_id?: string;
   attachments?: {
     fallback: string;
     pretext: string;

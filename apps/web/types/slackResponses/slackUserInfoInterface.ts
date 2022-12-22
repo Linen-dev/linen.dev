@@ -52,3 +52,17 @@ export interface Profile {
   status_text_canonical: string;
   team: string;
 }
+
+export interface BotInfo {
+  id: string;
+  deleted: boolean;
+  name: string;
+  updated: number;
+  app_id: string;
+  user_id: string;
+  icons: {
+    image_36: string;
+    image_48: string;
+    image_72: string;
+  };
+}

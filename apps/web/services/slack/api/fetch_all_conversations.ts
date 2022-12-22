@@ -2,6 +2,7 @@ import request from 'superagent';
 import { createManyUsers } from 'lib/users';
 import { generateRandomWordSlug } from 'utilities/randomWordSlugs';
 import {
+  BotInfo,
   UserInfo,
   UserInfoResponseBody,
 } from 'types/slackResponses/slackUserInfoInterface';
@@ -401,4 +402,17 @@ export const getSlackUser = async (
 
   const responseBody = response.body as UserInfoResponseBody;
   return responseBody.user;
+};
+
+export const getSlackBot = async (
+  botId: string,
+  token: string
+): Promise<BotInfo> => {
+  const url = 'https://slack.com/api/bots.info?';
+
+  const response = await request
+    .get(url + 'bot=' + botId)
+    .set('Authorization', 'Bearer ' + token);
+
+  return response.body.ok === true ? response.body.bot : {};
 };

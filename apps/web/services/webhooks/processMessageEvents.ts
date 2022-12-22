@@ -24,6 +24,7 @@ import { processAttachments } from 'services/slack';
 import { serializeMessage } from 'serializers/message';
 import { serializeThread } from 'serializers/thread';
 import { filterMessages, parseMessage } from 'services/slack/sync/parseMessage';
+import { getBotUserId } from 'services/slack/sync/getBotUserId';
 
 export async function processMessageEvent(body: SlackEvent) {
   const event = body.event as SlackMessageEvent;
@@ -33,16 +34,16 @@ export async function processMessageEvent(body: SlackEvent) {
 
   if (channel === null) {
     console.error('Channel does not exist in db ');
-    return { status: 403, error: 'Channel not found', metadata: { channelId } };
+    return { status: 404, error: 'Channel not found', metadata: { channelId } };
   }
 
   if (channel.account === null) {
     console.error('Account does not exist in db ');
-    return { status: 403, error: 'Account not found', metadata: { teamId } };
+    return { status: 404, error: 'Account not found', metadata: { teamId } };
   }
 
   if (!filterMessages(event)) {
-    return 'Skip message from Linen bot';
+    return 'Skip message by filter';
   }
 
   let message;
@@ -59,17 +60,12 @@ export async function processMessageEvent(body: SlackEvent) {
   ) {
     message = await changeMessage(channel, parseMessage(event));
   } else {
-    try {
-      message = await addMessage(channel, parseMessage(event));
-    } catch (error) {
-      console.error(error);
-      console.error('Event not supported!!', event.type, event.subtype);
-    }
+    message = await addMessage(channel, parseMessage(event));
   }
 
   return {
     status: 200,
-    message,
+    ok: true,
   };
 }
 
@@ -110,6 +106,10 @@ async function addMessage(
   );
 
   const mentionIds = mentionUsers.filter(Boolean).map((x) => x!.id);
+
+  if (!event.user && !!event.bot_id) {
+    event.user = await getBotUserId(event.bot_id, accessToken);
+  }
 
   let user = await findOrCreateUserFromUserInfo(
     event.user,

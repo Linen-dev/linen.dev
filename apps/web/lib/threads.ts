@@ -128,7 +128,12 @@ export const findThreadsByChannel = ({
   limit?: number;
 }) => {
   return prisma.threads.findMany({
-    where: { channelId, sentAt: { gt: cursor || 0 }, hidden: false },
+    where: {
+      channelId,
+      sentAt: { gt: cursor || 0 },
+      hidden: false,
+      messageCount: { gt: 1 },
+    },
     take: limit,
     orderBy: { sentAt: 'asc' },
   });

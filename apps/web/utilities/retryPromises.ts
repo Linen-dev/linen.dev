@@ -37,7 +37,7 @@ export async function retryPromise({
       await sleep(sleepSeconds * 1000);
     }
   }
-  throw lastError;
+  throw lastError.message || lastError;
 }
 
 export const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
