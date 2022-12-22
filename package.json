@@ -25,6 +25,7 @@
     "prebuild": "yarn turbo build --filter=@linen/ui"
   },
   "resolutions": {
-    "qs": ">=6.9.7"
+    "qs": ">=6.9.7",
+    "jsonwebtoken": ">=9.0.0"
   }
 }
