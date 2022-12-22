@@ -1,7 +1,7 @@
 import { capitalize, normalize } from '@linen/utilities/string';
 import { Settings } from '@linen/types';
 import { SerializedMessage } from '@linen/types';
-import { LINEN_URL } from '../../constants';
+import { LINEN_URL } from 'secrets';
 
 export function buildThreadSeo({
   isSubDomainRouting,

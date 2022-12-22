@@ -1,8 +1,5 @@
 import { uploadFile } from 'services/aws/s3';
-import {
-  BUCKET_PREFIX_FOR_ATTACHMENTS,
-  LINEN_ASSETS_CDN,
-} from '../../constants';
+import { BUCKET_PREFIX_FOR_ATTACHMENTS, LINEN_ASSETS_CDN } from 'secrets';
 
 interface File {
   id: string;

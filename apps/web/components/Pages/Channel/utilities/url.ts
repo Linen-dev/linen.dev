@@ -1,5 +1,5 @@
 import { Settings } from '@linen/types';
-import { LINEN_URL } from '../../../../constants';
+import { LINEN_URL } from 'secrets';
 
 export function getThreadUrl({
   isSubDomainRouting,
