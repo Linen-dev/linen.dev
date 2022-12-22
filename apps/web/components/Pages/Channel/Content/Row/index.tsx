@@ -1,4 +1,4 @@
-import DraggableRow from 'components/Pages/Channel/Content/Row/DraggableRow';
+import Droppable from './Droppable';
 import { Avatars } from '@linen/ui';
 import Image from 'next/image';
 import GridRow from 'components/GridRow';
@@ -74,15 +74,11 @@ export default function ChannelRow({
       text: a.displayName,
     }));
 
-  const owner = currentUser ? currentUser.id === message.usersId : false;
-
   return (
-    <DraggableRow
+    <Droppable
       id={thread.id}
       className={styles.container}
-      draggable={permissions.manage || owner}
       onDrop={onDrop}
-      mode={mode}
     >
       <div className={styles.content}>
         <GridRow
@@ -94,6 +90,7 @@ export default function ChannelRow({
           permissions={permissions}
           currentUser={currentUser}
           mode={mode}
+          drag='thread'
           onPin={onPin}
           onReaction={onReaction}
           onLoad={onLoad}
@@ -116,6 +113,6 @@ export default function ChannelRow({
           }
         />
       </div>
-    </DraggableRow>
+    </Droppable>
   );
 }

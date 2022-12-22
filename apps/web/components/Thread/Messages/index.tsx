@@ -58,6 +58,7 @@ function Messages({
           settings={settings}
           isSubDomainRouting={isSubDomainRouting}
           mode={mode}
+          drag='message'
           onReaction={onReaction}
           onLoad={onLoad}
         />

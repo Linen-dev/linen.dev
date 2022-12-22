@@ -7,13 +7,15 @@ interface Props {
   draggable: boolean;
   children: React.ReactNode;
   id: string;
+  source: 'thread' | 'message';
   mode?: Mode;
 }
 
-export default function DraggableRow({
+export default function Draggable({
   id,
   className,
   draggable,
+  source,
   children,
 }: Props) {
   const ref = createRef<HTMLDivElement>();
@@ -41,14 +43,14 @@ export default function DraggableRow({
     node.style.left = '-999px';
     node.style.top = '-999px';
     node.style.cursor = 'grab';
-    node.innerText = 'Move message';
+    node.innerText = 'Drag and drop';
 
     document.body.appendChild(node);
     event.dataTransfer.effectAllowed = 'copyMove';
     event.dataTransfer.setData(
       'text',
       JSON.stringify({
-        source: 'message',
+        source,
         id,
       })
     );
