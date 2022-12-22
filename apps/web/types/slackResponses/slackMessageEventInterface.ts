@@ -45,6 +45,16 @@ export interface SlackMessageEvent {
   channel_type: string;
   thread_ts?: string;
   files?: MessageFile[];
+  app_id?: string;
+  attachments?: {
+    fallback: string;
+    pretext: string;
+    author_name: string;
+    author_icon: string;
+    title: string;
+    text: string;
+    footer: string;
+  }[];
 }
 export interface SlackMessageReactionRemovedEvent {
   type: 'reaction_removed';

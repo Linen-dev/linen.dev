@@ -23,6 +23,7 @@ import { eventNewMessage, eventNewThread } from 'services/events';
 import { processAttachments } from 'services/slack';
 import { serializeMessage } from 'serializers/message';
 import { serializeThread } from 'serializers/thread';
+import { filterMessages, parseMessage } from 'services/slack/sync/parseMessage';
 
 export async function processMessageEvent(body: SlackEvent) {
   const event = body.event as SlackMessageEvent;
@@ -40,26 +41,30 @@ export async function processMessageEvent(body: SlackEvent) {
     return { status: 403, error: 'Account not found', metadata: { teamId } };
   }
 
+  if (!filterMessages(event)) {
+    return 'Skip message from Linen bot';
+  }
+
   let message;
   if (
-    event.type === 'message' &&
-    (!event.subtype || ['file_share'].includes(event.subtype))
-  ) {
-    message = await addMessage(channel, event);
-  } else if (
     event.type === 'message' &&
     event.subtype &&
     event.subtype === 'message_deleted'
   ) {
-    message = await deleteMessage(channel, event);
+    message = await deleteMessage(channel, parseMessage(event));
   } else if (
     event.type === 'message' &&
     event.subtype &&
     event.subtype === 'message_changed'
   ) {
-    message = await changeMessage(channel, event);
+    message = await changeMessage(channel, parseMessage(event));
   } else {
-    console.error('Event not supported!!', event.type, event.subtype);
+    try {
+      message = await addMessage(channel, parseMessage(event));
+    } catch (error) {
+      console.error(error);
+      console.error('Event not supported!!', event.type, event.subtype);
+    }
   }
 
   return {

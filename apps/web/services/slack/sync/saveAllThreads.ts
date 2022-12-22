@@ -10,6 +10,7 @@ import { processReactions } from './reactions';
 import { processAttachments } from './attachments';
 import { getMentionedUsers } from './getMentionedUsers';
 import { parseSlackSentAt, tsToSentAt } from 'utilities/sentAt';
+import { filterMessages, parseMessage } from './parseMessage';
 
 async function saveMessagesSynchronous(
   messages: ConversationHistoryMessage[],
@@ -127,7 +128,8 @@ export async function saveAllThreads({
             sleepSeconds: 30,
           });
           const replyMessages: ConversationHistoryMessage[] =
-            replies?.body?.messages;
+            replies?.body?.messages?.filter(filterMessages).map(parseMessage) ||
+            [];
 
           console.log(
             thread.externalThreadId,

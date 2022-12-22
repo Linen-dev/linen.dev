@@ -12,6 +12,7 @@ import { sleep } from 'utilities/retryPromises';
 import { parseSlackSentAt, tsToSentAt } from 'utilities/sentAt';
 import { findOrCreateThread } from 'lib/threads';
 import { createSlug } from 'utilities/util';
+import { filterMessages, parseMessage } from './parseMessage';
 
 async function saveMessagesTransaction(
   messages: ConversationHistoryMessage[],
@@ -125,7 +126,10 @@ export async function fetchAllTopLevelMessages({
         nextCursor
       );
 
-      const additionalMessages = additionalConversations.messages;
+      const additionalMessages =
+        additionalConversations.messages
+          ?.filter(filterMessages)
+          .map(parseMessage) || [];
       console.log('messages.length', additionalMessages.length);
       //save all messages
       await saveMessagesTransaction(additionalMessages, c.id, usersInDb, token);

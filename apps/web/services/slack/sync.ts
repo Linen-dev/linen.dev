@@ -28,8 +28,11 @@ export async function slackSync({
 
   const account = await findAccountById(accountId);
 
-  if (!account || !account.slackTeamId) {
-    throw { status: 404, error: 'Account not found' };
+  if (!account) {
+    throw new Error('Account not found');
+  }
+  if (!account.slackTeamId) {
+    throw new Error('slackTeamId not found');
   }
 
   await updateAndNotifySyncStatus(

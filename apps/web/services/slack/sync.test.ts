@@ -12,7 +12,7 @@ describe('slackSync', () => {
         slackSync({
           accountId: 'notExist',
         })
-      ).rejects.toMatchObject({ status: 404, error: 'Account not found' });
+      ).rejects.toThrowError('Account not found');
       expect(accountsFindUniqueMock).toHaveBeenCalledWith({
         where: {
           id: 'notExist',

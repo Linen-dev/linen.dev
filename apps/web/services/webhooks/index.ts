@@ -12,9 +12,7 @@ import {
 import { processUserProfileChanged } from './processUserProfileChanged';
 import { processTeamJoin } from './processTeamJoin';
 
-export const handleWebhook = async (
-  body: SlackEvent
-): Promise<{ status: number; error?: string; message?: any }> => {
+export const handleWebhook = async (body: SlackEvent) => {
   if (body.event.type === 'team_join') {
     return processTeamJoin(body);
   } else if (body.event.type === 'message') {

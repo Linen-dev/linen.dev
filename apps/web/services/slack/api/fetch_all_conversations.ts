@@ -55,6 +55,16 @@ export type ConversationHistoryMessage = {
   inviter?: string;
   files?: MessageFile[];
   reactions?: MessageReaction[];
+  app_id?: string;
+  attachments?: {
+    fallback: string;
+    pretext: string;
+    author_name: string;
+    author_icon: string;
+    title: string;
+    text: string;
+    footer: string;
+  }[];
 };
 
 export interface MessageReaction {
