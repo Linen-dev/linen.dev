@@ -10,6 +10,7 @@ import { useRouter } from 'next/router';
 import usePath from 'hooks/path';
 import { Mode } from '@linen/hooks/mode';
 import { Nav, Toast } from '@linen/ui';
+import debounce from '@linen/utilities/debounce'
 import { post } from 'utilities/http';
 import { notify } from 'utilities/notification'
 import unique from 'lodash.uniq'
@@ -31,6 +32,8 @@ interface Props {
     from: string;
   }): void;
 }
+
+const debouncedReadStatus = debounce(({ channelIds }: { channelIds: string[] }) => post('/api/read-status', { channelIds }))
 
 export default function DesktopNavBar({
   mode,
@@ -71,7 +74,7 @@ export default function DesktopNavBar({
   useEffect(() => {
     let mounted = true
     if (currentUser) {
-      post('/api/read-status', { channelIds: channels.map(({ id }) => id)})
+      debouncedReadStatus({ channelIds: channels.map(({ id }) => id)})
         .then(({ readStatuses }: { readStatuses: SerializedReadStatus[] }) => {
           if (mounted) {
             setHighlights(highlights => {
@@ -86,7 +89,7 @@ export default function DesktopNavBar({
     return () => {
       mounted = false
     }
-  }, [])
+  }, [channelName])
 
   const paths = {
     feed: usePath({ href: '/feed' }),
@@ -96,14 +99,14 @@ export default function DesktopNavBar({
   return (
     <Nav className={styles.navbar}>
       {permissions.feed && (
-        <Link onClick={() => setHighlights([])} href="/feed">
+        <Link href="/feed">
           <Nav.Item active={paths.feed === router.asPath}>
             <FiRss /> Feed
           </Nav.Item>
         </Link>
       )}
       {permissions.manage && (
-        <Link onClick={() => setHighlights([])} href="/metrics">
+        <Link href="/metrics">
           <Nav.Item active={paths.metrics === router.asPath}>
             <FiBarChart /> Metrics
           </Nav.Item>
