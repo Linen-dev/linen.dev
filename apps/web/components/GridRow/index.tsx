@@ -4,7 +4,6 @@ import Image from 'next/image';
 import { Avatar, Message } from '@linen/ui';
 import Actions from 'components/Actions';
 import CheckIcon from 'components/icons/CheckIcon';
-import DraggableRow from './DraggableRow';
 import { format } from '@linen/utilities/date';
 import { Mode } from '@linen/hooks/mode';
 import {
@@ -27,6 +26,7 @@ interface Props {
   permissions: Permissions;
   currentUser: SerializedUser | null;
   mode?: Mode;
+  drag: 'thread' | 'message';
   header?: React.ReactNode;
   footer?: React.ReactNode;
   onPin?(threadId: string): void;
@@ -54,6 +54,7 @@ export function Row({
   settings,
   permissions,
   mode,
+  drag,
   header,
   footer,
   onReaction,
@@ -61,16 +62,11 @@ export function Row({
   onLoad,
 }: Props) {
   const top = !isPreviousMessageFromSameUser;
-  const owner = currentUser ? currentUser.id === message.usersId : false;
-  const draggable = permissions.manage || owner;
   return (
-    <DraggableRow
-      id={message.id}
+    <div
       className={classNames(className, {
         [styles.top]: top,
       })}
-      draggable={draggable}
-      mode={mode}
     >
       {header}
       <div className={styles.row}>
@@ -120,14 +116,16 @@ export function Row({
                 permissions={permissions}
                 currentUser={currentUser}
                 isSubDomainRouting={isSubDomainRouting}
+                drag={drag}
                 onPin={onPin}
                 onReaction={onReaction}
+                mode={mode}
               />
             </div>
           </div>
         </div>
       </div>
-    </DraggableRow>
+    </div>
   );
 }
 
