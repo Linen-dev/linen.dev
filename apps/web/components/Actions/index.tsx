@@ -84,7 +84,7 @@ export default function Actions({
             source={drag}
             mode={mode}
           >
-            <Tooltip className={styles.tooltip} text="Drag and drop">
+            <Tooltip className={styles.tooltip} text={drag === 'thread' ? 'Move thread' : 'Move message'}>
               <RxDragHandleDots2 />
             </Tooltip>
           </Draggable>
