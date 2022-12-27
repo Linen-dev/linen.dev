@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from 'react';
 import autosize from 'autosize';
 import { Button, Suggestions, Toast } from '@linen/ui';
 import styles from './index.module.scss';
-import Tab from './Tab';
 import Preview from './Preview';
 import FileInput from './FileInput';
 import FilesCount from './FilesCount';
@@ -22,6 +21,7 @@ export function getFileSizeErrorMessage(filename: string) {
 interface Props {
   id?: string;
   autoFocus?: boolean;
+  currentUser?: SerializedUser | null;
   onSend?(message: string, files: UploadedFile[]): Promise<any>;
   onSendAndClose?(message: string, files: UploadedFile[]): Promise<any>;
   fetchMentions?(term?: string): Promise<SerializedUser[]>;
@@ -126,6 +126,7 @@ interface UploadedFile {
 function MessageForm({
   id,
   autoFocus,
+  currentUser,
   onSend,
   onSendAndClose,
   fetchMentions,
@@ -278,20 +279,23 @@ function MessageForm({
         />
       )}
       {message && (
-        <Preview message={
-          {
-            body: postprocess(message, allUsers),
-            sentAt: new Date().toISOString(),
-            author: null,
-            usersId: '1',
-            mentions: allUsers,
-            attachments: [],
-            reactions: [],
-            id: '1',
-            threadId: '1',
-            messageFormat: MessageFormat.LINEN
+        <Preview
+          currentUser={currentUser}
+          message={
+            {
+              body: postprocess(message, allUsers),
+              sentAt: new Date().toISOString(),
+              author: currentUser,
+              usersId: currentUser?.id || '1',
+              mentions: allUsers,
+              attachments: [],
+              reactions: [],
+              id: '1',
+              threadId: '1',
+              messageFormat: MessageFormat.LINEN
+            }
           }
-        } />
+        />
       )}
       <form className={styles.form} onSubmit={handleSend}>
         <textarea

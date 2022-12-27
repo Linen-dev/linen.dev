@@ -162,6 +162,7 @@ export default function Thread({
             <MessageForm
               autoFocus
               id="thread-message-form"
+              currentUser={currentUser}
               onSend={(message: string, files: UploadedFile[]) => {
                 onSend?.();
                 const promise = sendMessage({ message, files, channelId, threadId: id });
@@ -191,6 +192,7 @@ export default function Thread({
             <MessageForm
               autoFocus
               id="thread-message-form"
+              currentUser={currentUser}
               onSend={(message: string, files: UploadedFile[]) => {
                 onSend?.();
                 const promise = sendMessage({ message, files, channelId, threadId: id })
