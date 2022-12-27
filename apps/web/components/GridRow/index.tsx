@@ -64,7 +64,7 @@ export function Row({
   const top = !isPreviousMessageFromSameUser;
   return (
     <div
-      className={classNames(className, {
+      className={classNames(className, styles.container, {
         [styles.top]: top,
       })}
     >
@@ -108,22 +108,22 @@ export function Row({
               onLoad={onLoad}
             />
             {footer}
-            <div className={styles.actions}>
-              <Actions
-                thread={thread}
-                message={message}
-                settings={settings}
-                permissions={permissions}
-                currentUser={currentUser}
-                isSubDomainRouting={isSubDomainRouting}
-                drag={drag}
-                onPin={onPin}
-                onReaction={onReaction}
-                mode={mode}
-              />
-            </div>
           </div>
         </div>
+      </div>
+      <div className={styles.actions}>
+        <Actions
+          thread={thread}
+          message={message}
+          settings={settings}
+          permissions={permissions}
+          currentUser={currentUser}
+          isSubDomainRouting={isSubDomainRouting}
+          drag={drag}
+          onPin={onPin}
+          onReaction={onReaction}
+          mode={mode}
+        />
       </div>
     </div>
   );

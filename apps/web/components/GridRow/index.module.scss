@@ -1,15 +1,14 @@
 @import 'styles/colors.scss';
 
+.container {
+  padding: 1rem;
+}
+
 .row {
   display: flex;
   gap: 0.75rem;
-  padding: 0 1rem;
   position: relative;
   width: 100%;
-}
-
-.row.top {
-  padding: 1rem 1rem 0.25rem;
 }
 
 .left {
@@ -87,11 +86,15 @@
   border: 1px solid $color-border;
   box-shadow: 0 1px 2px $color-border;
   position: absolute;
-  top: -1rem;
-  right: 0;
+  top: -1.625rem;
+  right: 1.5rem;
   padding: 0;
 }
 
-.message:hover .actions {
+.top .actions {
+  top: 0.25rem;
+}
+
+.container:hover .actions {
   display: flex;
 }
