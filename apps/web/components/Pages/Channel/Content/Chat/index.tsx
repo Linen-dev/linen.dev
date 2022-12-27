@@ -1,12 +1,13 @@
 import React, { createRef } from 'react';
 import MessageForm from 'components/MessageForm';
 import { fetchMentions, upload } from 'components/MessageForm/api';
-import { UploadedFile } from '@linen/types';
+import { SerializedUser, UploadedFile } from '@linen/types';
 import styles from './index.module.scss';
 
 interface Props {
   communityId: string;
   channelId: string;
+  currentUser?: SerializedUser | null;
   onDrop({
     source,
     target,
@@ -32,6 +33,7 @@ interface Props {
 export default function Chat({
   channelId,
   communityId,
+  currentUser,
   onDrop,
   sendMessage,
 }: Props) {
@@ -68,6 +70,7 @@ export default function Chat({
     >
       <MessageForm
         id="channel-message-form"
+        currentUser={currentUser}
         onSend={(message: string, files: UploadedFile[]) => {
           return sendMessage({
             message,

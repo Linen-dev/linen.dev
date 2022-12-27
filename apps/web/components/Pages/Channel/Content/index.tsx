@@ -396,6 +396,7 @@ export default function Channel({
                   <Chat
                     communityId={settings.communityId}
                     channelId={currentChannel.id}
+                    currentUser={currentUser}
                     onDrop={handleDrop}
                     sendMessage={sendMessage}
                   />
