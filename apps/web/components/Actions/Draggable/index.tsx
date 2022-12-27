@@ -43,7 +43,7 @@ export default function Draggable({
     node.style.left = '-999px';
     node.style.top = '-999px';
     node.style.cursor = 'grab';
-    node.innerText = 'Drag and drop';
+    node.innerText = source === 'thread' ? 'Move thread' : 'Move message';
 
     document.body.appendChild(node);
     event.dataTransfer.effectAllowed = 'copyMove';
