@@ -8,7 +8,7 @@ import FileInput from './FileInput';
 import FilesCount from './FilesCount';
 import { isWhitespace } from '@linen/utilities/string';
 import { getCaretPosition, setCaretPosition } from './utilities';
-import { SerializedUser } from '@linen/types';
+import { MessageFormat, SerializedUser } from '@linen/types';
 import { useUsersContext } from '@linen/contexts/Users';
 import { postprocess } from './utilities/message';
 import { AxiosRequestConfig, AxiosResponse } from 'axios';
@@ -132,7 +132,6 @@ function MessageForm({
   upload,
 }: Props) {
   const [message, setMessage] = useState('');
-  const [preview, setPreview] = useState(false);
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -246,15 +245,7 @@ function MessageForm({
 
   return (
     <div className={styles.container}>
-      <div className={styles.actions}>
-        <Tab onClick={() => setPreview(false)} active={!preview}>
-          Write
-        </Tab>
-        <Tab onClick={() => setPreview(true)} active={preview}>
-          Preview
-        </Tab>
-      </div>
-      {mode === Mode.Mention && !preview && (
+      {mode === Mode.Mention && (
         <Suggestions
           className={styles.suggestions}
           users={users}
@@ -286,6 +277,22 @@ function MessageForm({
           }}
         />
       )}
+      {message && (
+        <Preview message={
+          {
+            body: postprocess(message, allUsers),
+            sentAt: new Date().toISOString(),
+            author: null,
+            usersId: '1',
+            mentions: allUsers,
+            attachments: [],
+            reactions: [],
+            id: '1',
+            threadId: '1',
+            messageFormat: MessageFormat.LINEN
+          }
+        } />
+      )}
       <form className={styles.form} onSubmit={handleSend}>
         <textarea
           ref={ref}
@@ -293,7 +300,6 @@ function MessageForm({
           className={styles.textarea}
           name="message"
           placeholder="Add your comment..."
-          hidden={preview}
           rows={2}
           value={message}
           onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -325,9 +331,6 @@ function MessageForm({
             }
           }}
         />
-        {preview && (
-          <Preview message={postprocess(message, allUsers)} users={allUsers} />
-        )}
         {upload && (
           <div className={styles.toolbar}>
             <FileInput
