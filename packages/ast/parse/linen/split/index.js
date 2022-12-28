@@ -60,10 +60,11 @@ function splitByList (tokens) {
     if (token.type === 'text') {
       const { value } = token;
       const lines = value.split(/\r?\n/)
-      lines.forEach((line) => {
+      for (let j = 0, jlen = lines.length; j < jlen; j++) {
+        const line = lines[j]
         if (line.startsWith('- ')) {
           const value = line.substr(2)
-          result.push({
+          const list = {
             type: 'list',
             children: [
               {
@@ -79,11 +80,30 @@ function splitByList (tokens) {
               }
             ],
             source: line
-          })
+          }
+          let next = lines[j + 1]
+          if (next && next.startsWith('- ')) {
+            const value = next.substr(2)
+            list.children.push({
+              type: 'item',
+              children: [
+                {
+                  type: 'text',
+                  value,
+                  source: value
+                }
+              ],
+              source: value
+            })
+            list.source += `\n${next}`
+            j++
+            next = lines[j]
+          }
+          result.push(list)
         } else {
           result.push({ type: 'text', value: line, source: line })
         }
-      })
+      }
     } else {
       result.push(token)
     }

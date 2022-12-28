@@ -191,5 +191,15 @@ describe('parse', () => {
 
   it('returns a `list` node', () => {
     expect(parse('- foo')).toEqual(root([list([item([text('foo')])])]));
+    expect(parse('- *foo*')).toEqual(root([list([item([bold([text('foo')])])])]));
+    expect(parse('- foo *bar*')).toEqual(root([list([item([text('foo '), bold([text('bar')])])])]));
+    expect(parse('- foo\n- bar')).toEqual(
+      root([
+        list([
+          item([text('foo')]),
+          item([text('bar')])
+        ])
+      ])
+    );
   })
 });

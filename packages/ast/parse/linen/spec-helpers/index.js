@@ -63,7 +63,7 @@ function list(children) {
   return {
     type: 'list',
     children,
-    source: `- ${source(children)}`
+    source: children.map(child => `- ${child.source}`).join('\n')
   }
 }
 
