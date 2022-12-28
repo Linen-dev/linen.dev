@@ -210,5 +210,33 @@ describe('parse', () => {
         ])
       ])
     );
+
+    expect(parse('1. foo')).toEqual(root([list([item([text('foo')])], { ordered: true })]));
+    expect(parse('1. *foo*')).toEqual(root([list([item([bold([text('foo')])])], { ordered: true })]));
+    expect(parse('1. foo *bar*')).toEqual(root([list([item([text('foo '), bold([text('bar')])])], { ordered: true })]));
+    expect(parse('1. foo\n2. bar')).toEqual(
+      root([
+        list([
+          item([text('foo')]),
+          item([text('bar')])
+        ], { ordered: true })
+      ])
+    );
+    expect(parse('1. foo\n2. bar\n3. baz\n4. foo\n5. bar\n6. baz\n7. foo\n8. bar\n9. baz\n10. foo')).toEqual(
+      root([
+        list([
+          item([text('foo')]),
+          item([text('bar')]),
+          item([text('baz')]),
+          item([text('foo')]),
+          item([text('bar')]),
+          item([text('baz')]),
+          item([text('foo')]),
+          item([text('bar')]),
+          item([text('baz')]),
+          item([text('foo')])
+        ], { ordered: true })
+      ])
+    );
   })
 });

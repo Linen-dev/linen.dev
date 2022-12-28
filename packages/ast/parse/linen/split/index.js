@@ -62,11 +62,12 @@ function splitByList (tokens) {
       const lines = value.split(/\r?\n/)
       for (let j = 0, jlen = lines.length; j < jlen; j++) {
         const line = lines[j]
-        if (line.startsWith('- ')) {
-          const value = line.substr(2)
+        if (line.startsWith('- ') || line.match(/^\d+\. /)) {
+          const index = line.indexOf(' ') + 1
+          const value = line.substr(index)
           const list = {
             type: 'list',
-            ordered: false,
+            ordered: index >= 3,
             children: [
               {
                 type: 'item',
@@ -83,8 +84,9 @@ function splitByList (tokens) {
             source: line
           }
           let next = lines[j + 1]
-          while (next && next.startsWith('- ')) {
-            const value = next.substr(2)
+          while (next && (next.startsWith('- ') || next.match(/^\d+\. /))) {
+            const index = next.indexOf(' ') + 1
+            const value = next.substr(index)
             list.children.push({
               type: 'item',
               children: [
