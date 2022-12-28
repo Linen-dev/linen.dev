@@ -94,6 +94,9 @@ const matchers = [bold, italic, strike, quote, header];
 
 function expand(tokens) {
   return tokens.reduce((result, token) => {
+    if (token.children) {
+      token.children = expand(token.children)
+    }
     if (token.type === 'text') {
       const { value } = token;
       const nodes = parse(value, matchers);
