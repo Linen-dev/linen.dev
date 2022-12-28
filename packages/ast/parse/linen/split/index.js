@@ -66,6 +66,7 @@ function splitByList (tokens) {
           const value = line.substr(2)
           const list = {
             type: 'list',
+            ordered: false,
             children: [
               {
                 type: 'item',
