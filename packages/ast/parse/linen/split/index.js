@@ -82,7 +82,7 @@ function splitByList (tokens) {
             source: line
           }
           let next = lines[j + 1]
-          if (next && next.startsWith('- ')) {
+          while (next && next.startsWith('- ')) {
             const value = next.substr(2)
             list.children.push({
               type: 'item',
@@ -96,8 +96,8 @@ function splitByList (tokens) {
               source: value
             })
             list.source += `\n${next}`
-            j++
-            next = lines[j]
+            j+= 1
+            next = lines[j + 1]
           }
           result.push(list)
         } else {

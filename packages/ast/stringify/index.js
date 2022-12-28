@@ -57,6 +57,10 @@ function stringify(tree) {
       });
     }
 
+    if (node.type === 'list') {
+      output += node.children.map(child => `- ${stringify(child)}`).join('\n')
+    }
+
     if (node.type === 'user') {
       output += node.source;
     }

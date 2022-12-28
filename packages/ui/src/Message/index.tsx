@@ -2,6 +2,7 @@ import React from 'react';
 import Text from './Text';
 import Mention from './Mention';
 import Link from './Link';
+import List from './List';
 import Channel from './Channel';
 import InlineCode from './InlineCode';
 import BlockCode from './BlockCode';
@@ -70,6 +71,7 @@ function Message({
   }
   const parse = parsers[format];
   const input = text.trim();
+  console.log(text)
   const tree = transform(parse(input));
 
   function render(node: any): React.ReactNode {
@@ -121,6 +123,10 @@ function Message({
             mentions={mentions}
           />
         );
+      case 'list':
+        return <List>{node.children.map(render)}</List>
+      case 'item':
+        return <li>{node.children.map(render)}</li>
       case 'signal':
         return (
           <Mention
