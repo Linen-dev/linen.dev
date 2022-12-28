@@ -211,6 +211,27 @@ describe('parse', () => {
       ])
     );
 
+    expect(parse('• foo')).toEqual(root([list([item([text('foo')])], { prefix: '•' })]));
+    expect(parse('• *foo*')).toEqual(root([list([item([bold([text('foo')])])], { prefix: '•' })]));
+    expect(parse('• foo *bar*')).toEqual(root([list([item([text('foo '), bold([text('bar')])])], { prefix: '•' })]));
+    expect(parse('• foo\n• bar')).toEqual(
+      root([
+        list([
+          item([text('foo')]),
+          item([text('bar')])
+        ], { prefix: '•' })
+      ])
+    );
+    expect(parse('• foo\n• bar\n• baz')).toEqual(
+      root([
+        list([
+          item([text('foo')]),
+          item([text('bar')]),
+          item([text('baz')])
+        ], { prefix: '•' })
+      ])
+    );
+
     expect(parse('1. foo')).toEqual(root([list([item([text('foo')])], { ordered: true })]));
     expect(parse('1. *foo*')).toEqual(root([list([item([bold([text('foo')])])], { ordered: true })]));
     expect(parse('1. foo *bar*')).toEqual(root([list([item([text('foo '), bold([text('bar')])])], { ordered: true })]));
