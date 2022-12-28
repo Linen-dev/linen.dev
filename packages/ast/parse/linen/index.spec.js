@@ -201,5 +201,14 @@ describe('parse', () => {
         ])
       ])
     );
+    expect(parse('- foo\n- bar\n- baz')).toEqual(
+      root([
+        list([
+          item([text('foo')]),
+          item([text('bar')]),
+          item([text('baz')])
+        ])
+      ])
+    );
   })
 });
