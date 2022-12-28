@@ -62,6 +62,7 @@ function header(children, depth = 1) {
 function list(children) {
   return {
     type: 'list',
+    ordered: false,
     children,
     source: children.map(child => `- ${child.source}`).join('\n')
   }
