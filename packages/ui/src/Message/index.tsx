@@ -71,7 +71,6 @@ function Message({
   }
   const parse = parsers[format];
   const input = text.trim();
-  console.log(text)
   const tree = transform(parse(input));
 
   function render(node: any): React.ReactNode {
@@ -124,7 +123,7 @@ function Message({
           />
         );
       case 'list':
-        return <List>{node.children.map(render)}</List>
+        return <List ordered={node.ordered}>{node.children.map(render)}</List>
       case 'item':
         return <li>{node.children.map(render)}</li>
       case 'signal':
