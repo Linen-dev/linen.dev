@@ -20,7 +20,7 @@ export function parseMessage<
   }
   if (!message.text && message.files?.length) {
     message.text = message.files
-      .map((f) => f.url_private || f.name)
+      .map((f) => f.name)
       .filter(Boolean)
       .join();
   }
