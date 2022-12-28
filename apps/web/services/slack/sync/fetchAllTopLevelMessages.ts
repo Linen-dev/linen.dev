@@ -23,22 +23,15 @@ async function saveMessagesTransaction(
   if (!messages.length) return;
   console.log('Starting to save messages: ', new Date());
 
-  const threads = await Promise.all(
-    messages.map((m) => {
-      return findOrCreateThread({
-        channelId,
-        externalThreadId: m.ts,
-        sentAt: parseSlackSentAt(m.ts),
-        lastReplyAt: parseSlackSentAt(m.ts),
-        slug: createSlug(m.text),
-        messageCount: (m.reply_count || 0) + 1,
-      });
-    })
-  );
-
-  const createMessagesTransaction = messages.map(async (m) => {
-    const thread = threads.find((t) => t.externalThreadId === m.ts);
-
+  for (const m of messages) {
+    const thread = await findOrCreateThread({
+      channelId,
+      externalThreadId: m.ts,
+      sentAt: parseSlackSentAt(m.ts),
+      lastReplyAt: parseSlackSentAt(m.ts),
+      slug: createSlug(m.text),
+      messageCount: (m.reply_count || 0) + 1,
+    });
     let user: UserMap | undefined;
     if (!m.user && !!m.bot_id) {
       m.user = await getBotUserId(m.bot_id, token);
@@ -51,7 +44,7 @@ async function saveMessagesTransaction(
     const mentionedUsers = getMentionedUsers(text, users);
     const serializedMessage = {
       body: m.text,
-      blocks: m.blocks,
+      ...(m.blocks && { blocks: m.blocks }),
       sentAt: tsToSentAt(m.ts),
       channelId,
       externalMessageId: m.ts as string,
@@ -78,8 +71,7 @@ async function saveMessagesTransaction(
       processReactions(m, message),
       processAttachments(m, message, token),
     ]);
-  });
-  await Promise.all(createMessagesTransaction);
+  }
   console.log('Finished saving messages', new Date());
 }
 

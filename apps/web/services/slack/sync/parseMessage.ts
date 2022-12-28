@@ -18,6 +18,12 @@ export function parseMessage<
     }, '');
     return message;
   }
+  if (!message.text && message.files?.length) {
+    message.text = message.files
+      .map((f) => f.url_private || f.name)
+      .filter(Boolean)
+      .join();
+  }
   return message;
 }
 

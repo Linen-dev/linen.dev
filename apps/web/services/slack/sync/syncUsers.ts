@@ -20,9 +20,9 @@ export async function syncUsers({
     const usersListResponse = await listUsers(token);
     const members: UserInfo[] = usersListResponse.body.members;
 
-    await Promise.all(
-      members?.map((user) => user && createOrUpdateUser(user, accountId))
-    );
+    for (const user of members) {
+      await createOrUpdateUser(user, accountId);
+    }
 
     let userCursor: string | null =
       usersListResponse?.body?.response_metadata?.next_cursor;
@@ -33,11 +33,9 @@ export async function syncUsers({
         const usersListResponse = await listUsers(token, userCursor);
         const additionalMembers: UserInfo[] = usersListResponse?.body?.members;
         if (!!additionalMembers) {
-          await Promise.all(
-            additionalMembers?.map(
-              (user) => user && createOrUpdateUser(user, accountId)
-            )
-          );
+          for (const user of additionalMembers) {
+            await createOrUpdateUser(user, accountId);
+          }
         }
         userCursor = usersListResponse?.body?.response_metadata?.next_cursor;
       } catch (e) {
