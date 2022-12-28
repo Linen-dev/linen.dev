@@ -12,6 +12,8 @@ const {
   quote,
   signal,
   header,
+  list,
+  item,
 } = require('./spec-helpers');
 
 describe('parse', () => {
@@ -186,4 +188,8 @@ describe('parse', () => {
 
     expect(parse('####### foo')).toEqual(root([text('####### foo')]));
   });
+
+  it('returns a `list` node', () => {
+    expect(parse('- foo')).toEqual(root([list([item([text('foo')])])]));
+  })
 });

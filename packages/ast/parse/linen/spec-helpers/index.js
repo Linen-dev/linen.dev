@@ -59,6 +59,22 @@ function header(children, depth = 1) {
   };
 }
 
+function list(children) {
+  return {
+    type: 'list',
+    children,
+    source: `- ${source(children)}`
+  }
+}
+
+function item(children) {
+  return {
+    type: 'item',
+    children,
+    source: source(children)
+  }
+}
+
 module.exports = {
   source,
   root,
@@ -73,4 +89,6 @@ module.exports = {
   url,
   quote,
   header,
+  list,
+  item,
 };

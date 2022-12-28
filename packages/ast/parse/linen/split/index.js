@@ -1,7 +1,4 @@
-const pattern =
-  /(\b(https?):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi;
-
-function split(tokens) {
+function splitByPattern(tokens, pattern) {
   const result = [];
   for (let index = 0, length = tokens.length; index < length; index++) {
     const token = tokens[index];
@@ -56,4 +53,45 @@ function split(tokens) {
   return result;
 }
 
-module.exports = split;
+function splitByList (tokens) {
+  const result = []
+  for (let i = 0, ilen = tokens.length; i < ilen; i++) {
+    const token = tokens[i];
+    if (token.type === 'text') {
+      const { value } = token;
+      const lines = value.split(/\r?\n/)
+      lines.forEach((line) => {
+        if (line.startsWith('- ')) {
+          const value = line.substr(2)
+          result.push({
+            type: 'list',
+            children: [
+              {
+                type: 'item',
+                children: [
+                  {
+                    type: 'text',
+                    value,
+                    source: value
+                  }
+                ],
+                source: value
+              }
+            ],
+            source: line
+          })
+        } else {
+          result.push({ type: 'text', value: line, source: line })
+        }
+      })
+    } else {
+      result.push(token)
+    }
+  }
+  return result
+}
+
+module.exports = (tokens) => {
+  const result = splitByPattern(tokens, /(\b(https?):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi)
+  return splitByList(result)
+};
