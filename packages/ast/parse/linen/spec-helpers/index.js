@@ -59,12 +59,12 @@ function header(children, depth = 1) {
   };
 }
 
-function list(children, { ordered = false } = {}) {
+function list(children, { ordered = false, prefix = '-' } = {}) {
   return {
     type: 'list',
     ordered: ordered,
     children,
-    source: children.map((child, index) => `${ordered ? `${index + 1}.` : '-'} ${child.source}`).join('\n')
+    source: children.map((child, index) => `${ordered ? `${index + 1}.` : prefix} ${child.source}`).join('\n')
   }
 }
 
