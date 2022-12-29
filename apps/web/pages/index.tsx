@@ -24,6 +24,7 @@ const Home = (props: { accounts: Props[] }) => {
       priceMonthly: 'Free',
       description: 'Free for open source and non profit communities',
       features: [
+        'Google indexable',
         'Unlimited history retention',
         'Hosted under Linen.dev',
         'Community support',
