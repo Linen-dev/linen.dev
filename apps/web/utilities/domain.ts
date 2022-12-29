@@ -64,3 +64,30 @@ export function isSubdomainNotAllowed(host: string) {
     !host.startsWith('www')
   );
 }
+
+export function getLinenUrl() {
+  if (process.env.NODE_ENV === 'test') {
+    return '';
+  }
+  if (process.env.BRANCH === 'main') {
+    return `linen.dev`;
+  }
+  if (process.env.VERCEL_GIT_COMMIT_REF === 'main') {
+    return `linen.dev`;
+  }
+  if (process.env.VERCEL_URL) {
+    return `${process.env.VERCEL_URL}`;
+  }
+  if (process.env.BRANCH) {
+    return `linen-dev-git-${process.env.BRANCH}-linen.vercel.app`.toLowerCase();
+  }
+  // assume localhost
+  return `localhost:${process.env.PORT ?? 3000}`;
+}
+
+export function getPushUrlSSR() {
+  if (!!process.env.VERCEL_GIT_COMMIT_REF) {
+    return `https://push.${process.env.VERCEL_GIT_COMMIT_REF}.linendev.com`;
+  }
+  return `http://localhost:${process.env.PUSH_PORT ?? 4000}`;
+}

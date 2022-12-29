@@ -1,4 +1,5 @@
 import { verifyToken, JwtPayload, getToken } from './tokens';
+import type { SessionType } from 'services/session';
 
 async function _getValidToken(req: any) {
   if (typeof window !== 'undefined') return;
@@ -33,7 +34,10 @@ function parseUser(session: any) {
 }
 
 // SSR only
-export async function getServerSession(req: any, res?: any) {
+export async function getServerSession(
+  req: any,
+  _?: any
+): Promise<SessionType | null> {
   try {
     const sessionCookie = getToken(req);
     if (!!sessionCookie) {
