@@ -1,7 +1,7 @@
 import request from 'superagent';
+import { getPushUrlSSR } from 'utilities/domain';
 
 const token = process.env.PUSH_SERVICE_KEY;
-const pushURL = process.env.PUSH_SERVICE_URL;
 
 type PushType = {
   channelId: string;
@@ -39,7 +39,7 @@ export const push = ({
   message,
   thread,
 }: PushType) => {
-  return request.post(`${pushURL}/api/message`).send({
+  return request.post(`${getPushUrlSSR()}/api/message`).send({
     channel_id: channelId,
     thread_id: threadId,
     message_id: messageId,
@@ -62,7 +62,7 @@ export const pushChannel = ({
   message,
   thread,
 }: PushType) => {
-  return request.post(`${pushURL}/api/channel`).send({
+  return request.post(`${getPushUrlSSR()}/api/channel`).send({
     channel_id: channelId,
     thread_id: threadId,
     message_id: messageId,
@@ -86,7 +86,7 @@ export const pushUserMention = ({
   channelId: string;
   mentionType: string;
 }) => {
-  return request.post(`${pushURL}/api/user`).send({
+  return request.post(`${getPushUrlSSR()}/api/user`).send({
     user_id: userId,
     thread_id: threadId,
     channel_id: channelId,
@@ -110,7 +110,7 @@ export const pushCommunity = ({
   communityId: string;
 } & PushType) => {
   if (!communityId) return Promise.resolve();
-  return request.post(`${pushURL}/api/community`).send({
+  return request.post(`${getPushUrlSSR()}/api/community`).send({
     community_id: communityId,
     channel_id: channelId,
     thread_id: threadId,

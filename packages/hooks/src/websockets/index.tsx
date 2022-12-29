@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Channel, Socket } from 'phoenix';
 import { Permissions } from '@linen/types';
+import { getPushUrl } from './getPushUrl';
 
 interface Props {
   room?: string | null;
@@ -15,15 +16,12 @@ function useWebsockets({ room, token, permissions, onNewMessage }: Props) {
   useEffect(() => {
     if (permissions.chat && token && room) {
       //Set url instead of hard coding
-      const socket = new Socket(
-        `${process.env.NEXT_PUBLIC_PUSH_SERVICE_URL}/socket`,
-        {
-          params: { token },
-          reconnectAfterMs: (_) => 10000,
-          rejoinAfterMs: (_) => 10000,
-          heartbeatIntervalMs: 10000,
-        }
-      );
+      const socket = new Socket(`${getPushUrl()}/socket`, {
+        params: { token },
+        reconnectAfterMs: (_) => 10000,
+        rejoinAfterMs: (_) => 10000,
+        heartbeatIntervalMs: 10000,
+      });
 
       socket.connect();
       const channel = socket.channel(room);
