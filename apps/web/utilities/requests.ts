@@ -1,9 +1,8 @@
 import axios from 'axios';
 import useSWR from 'swr';
-import isBrowser from '../utilities/isBrowser';
+import isBrowser from './isBrowser';
 
-// const baseUrl = 'https://papercups-io.linen.dev/api'; // set this
-const baseUrl = '/api/'; // set this
+const baseUrl = '/api'; // set this
 
 const catchError = (e: { response: any }) => {
   const { response } = e;
@@ -67,7 +66,7 @@ export const useRequest = (url: string) => {
     error,
     update: async (updates: any) => {
       mutate((prevData: any) => ({ ...prevData, ...updates }), false);
-      await patch(url, updates);
+      await put(url, updates);
       mutate();
     },
     mutate,
