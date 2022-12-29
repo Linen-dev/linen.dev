@@ -130,6 +130,8 @@ describe('parse', () => {
 
   it('returns a `header` node', () => {
     expect(parse('# foo')).toEqual(root([header([text('foo')])]));
+    expect(parse('# foo\n')).toEqual(root([header([text('foo\n')])]));
+    expect(parse('# foo\nbar')).toEqual(root([header([text('foo\n')]), text('bar')]));
     expect(parse('# *foo*')).toEqual(root([header([bold([text('foo')])])]));
     expect(parse('# _foo_')).toEqual(root([header([italic([text('foo')])])]));
     expect(parse('# ~foo~')).toEqual(root([header([strike([text('foo')])])]));
