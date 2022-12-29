@@ -30,11 +30,13 @@ handler.use(init);
 handler.get(jwtMiddleware(), async (req: any, res) => {
   await refreshTokenAction(req, res);
 
+  const user = req.user?.users.find((e: any) => e);
   res.status(200).json({
     user: {
       email: req.user.email,
       id: req.user.id,
-      name: req.user?.users?.find((u: any) => !!u?.displayName)?.displayName,
+      name: user?.displayName,
+      image: user?.profileImageUrl,
     },
     ...(req.user?.exp && {
       expires: new Date(req.user?.exp * 1000).toISOString(),

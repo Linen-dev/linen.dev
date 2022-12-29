@@ -1,6 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import Session from 'services/session';
-import serializeUser from 'serializers/user';
 import prisma from 'client';
 
 interface CreateParams {
@@ -20,9 +19,13 @@ export async function create({
   if (userId !== currentUserId) {
     return { status: 403 };
   }
-  const user = await prisma.users.update({
+  const users = await prisma.users.findMany({
+    select: { id: true },
+    where: { authsId: currentUserId },
+  });
+  await prisma.users.updateMany({
     where: {
-      id: currentUserId,
+      id: { in: users.map((u) => u.id) },
     },
     data: {
       displayName,
@@ -30,9 +33,7 @@ export async function create({
   });
   return {
     status: 200,
-    data: {
-      user: serializeUser(user),
-    },
+    data: { ok: true },
   };
 }
 
@@ -41,13 +42,13 @@ export default async function handler(
   response: NextApiResponse
 ) {
   if (request.method === 'PUT') {
-    const user = await Session.user(request, response);
-    if (!user) {
+    const session = await Session.find(request, response);
+    if (!session?.user) {
       return response.status(401).end({});
     }
     const { status, data } = await create({
       ...request.body,
-      currentUserId: user.id,
+      currentUserId: session.user.id,
     });
     return response.status(status).json(data || {});
   }
