@@ -37,23 +37,13 @@ const strike = explicit(
 
 const quote = topline(
   regexp(/^\> (.*)(\n|$)/, (match, _, position) => {
-    const [result, content] = match;
-
-    const entity = content.match(/^((\> )+)(.*)$/);
+    const [result] = match;
+    const content = result.substr(2)
 
     return [
       {
         type: 'quote',
-        children: entity
-          ? [
-              {
-                type: 'text',
-                value: entity[1],
-                source: entity[1],
-              },
-              ...parse(entity[3], matchers),
-            ]
-          : parse(content, matchers),
+        children: parse(content, matchers),
         source: result,
       },
       position + result.length,
