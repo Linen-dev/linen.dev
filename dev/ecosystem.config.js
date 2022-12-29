@@ -28,6 +28,11 @@ module.exports = {
       cwd: '../apps/web',
     },
     {
+      name: 'queue-email-notification',
+      script: 'npx tsx watch queue/workers/email-notification.ts',
+      cwd: '../apps/web',
+    },
+    {
       name: 'push-service',
       script: 'mix phx.server',
       cwd: '../apps/push_service',

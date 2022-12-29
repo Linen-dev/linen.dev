@@ -20,6 +20,7 @@ const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 function isTopLevelPathname(pathname: string) {
   return (
     // PAGES.includes(pathname) ||
+    pathname.startsWith('/profile') ||
     pathname.startsWith('/signup') ||
     pathname.startsWith('/signin') ||
     pathname.startsWith('/settings') ||

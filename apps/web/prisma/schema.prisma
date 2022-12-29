@@ -33,6 +33,7 @@ model messages {
   textsearchable_index_col Unsupported("tsvector")?
   blocks                   Json?
   messageFormat            MessageFormat?
+  notifications            notifications[]
 
   @@unique([channelId, externalMessageId])
   @@index([textsearchable_index_col], type: Gin)
@@ -66,6 +67,8 @@ model threads {
   firstUserReplyAt    BigInt?
   firstManagerReplyAt BigInt?
 
+  notifications notifications[]
+
   @@unique([externalThreadId])
   @@unique([incrementId])
   @@index([channelId])
@@ -94,6 +97,8 @@ model channels {
   externalPageCursor String?
   memberships        memberships[]
   readStatus         readStatus[]
+
+  notifications notifications[]
 
   @@unique([externalChannelId])
   @@index([accountId])
@@ -129,6 +134,7 @@ model accounts {
   invites               invites[]
   chat                  ChatType                @default(MANAGERS)
   integration           AccountIntegration      @default(NONE)
+  notifications         notifications[]
 
   @@unique([redirectDomain])
   @@unique([slackDomain])
@@ -165,6 +171,10 @@ model auths {
   users      users[]
   session    session[]
   readStatus readStatus[]
+
+  notifications        notifications[] @relation("user")
+  notificationsAuthor  notifications[] @relation("author")
+  notificationsByEmail Boolean         @default(true)
 
   @@unique([email])
 }
@@ -325,4 +335,31 @@ model readStatus {
   updatedAt  DateTime @updatedAt
 
   @@id([authId, channelId])
+}
+
+enum notificationType {
+  MENTION
+  THREAD
+  CHANNEL
+}
+
+model notifications {
+  id               String           @id @default(uuid())
+  authId           String
+  communityId      String
+  notificationType notificationType
+  channelId        String
+  threadId         String?
+  messageId        String?
+  authorId         String
+
+  auth      auths     @relation("user", fields: [authId], references: [id], onDelete: Cascade)
+  community accounts  @relation(fields: [communityId], references: [id], onDelete: Cascade)
+  channel   channels  @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  thread    threads?  @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  message   messages? @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  author    auths     @relation("author", fields: [authorId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
