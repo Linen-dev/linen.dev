@@ -35,7 +35,7 @@ export default function SignUp({
   onSignIn,
   ...props
 }: SignUpProps) {
-  const [mode, setMode] = useState<SignInMode>(props.mode);
+  const [mode, setMode] = useState<SignInMode>(props.mode || 'magic');
   const [error, setError] = useState(props.error);
   const [email, setEmail] = useState(props.email);
   const [loading, setLoading] = useState(false);

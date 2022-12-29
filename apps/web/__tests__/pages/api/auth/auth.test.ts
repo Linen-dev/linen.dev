@@ -2,8 +2,7 @@ import '__mocks__/tokens';
 import { create } from '__tests__/factory';
 import { v4 } from 'uuid';
 import { testApiHandler } from 'next-test-api-route-handler';
-import handlerSession from 'pages/api/auth/session';
-import handlerToken from 'pages/api/auth/token';
+import handler from 'pages/api/auth/[[...slug]]';
 import { login } from '__tests__/pages/api/auth/login';
 import { createCSRFToken } from 'utilities/auth/server/csrf';
 
@@ -45,7 +44,7 @@ describe('auth routes', function () {
     let csrfToken = createCSRFToken();
 
     await testApiHandler({
-      handler: handlerToken,
+      handler,
       url: '/api/auth/token',
       test: async ({ fetch }: any) => {
         const response = await fetch({
@@ -64,7 +63,7 @@ describe('auth routes', function () {
     });
 
     await testApiHandler({
-      handler: handlerSession,
+      handler,
       url: '/api/auth/session',
       test: async ({ fetch }: any) => {
         const response = await fetch({

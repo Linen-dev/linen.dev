@@ -3,7 +3,7 @@ import passportLocal from 'passport-local';
 import MagicLoginStrategy from 'passport-magic-login';
 import UsersService from 'services/users';
 import { z } from 'zod';
-import { CredentialsSignin } from 'utilities/exceptions';
+import { CredentialsSignin } from 'server/exceptions';
 import SignInMailer from 'mailers/SignInMailer';
 
 passport.use(
@@ -44,13 +44,13 @@ export const magicLinkStrategy = new MagicLoginStrategy({
   // "href" is your confirmUrl with the confirmation token,
   sendMagicLink: async (destination, href, _, req) => {
     try {
-      const { host } = req.headers
+      const { host } = req.headers;
       if (!host) {
-        throw new Error('Host header is not present')
+        throw new Error('Host header is not present');
       }
-      const url = host.startsWith('localhost') ?
-        `http://${host}${href}` :
-        `${host}${href}`
+      const url = host.startsWith('localhost')
+        ? `http://${host}${href}`
+        : `${host}${href}`;
       const to = destination.split(',').shift()!;
       const result = await SignInMailer.send({
         to,
@@ -100,3 +100,13 @@ export const magicLinkStrategy = new MagicLoginStrategy({
 passport.use(magicLinkStrategy);
 
 export default passport;
+
+export const loginPassport = passport.authenticate('local', {
+  session: false,
+  failWithError: true,
+});
+
+export const magicLink = passport.authenticate('magiclogin', {
+  session: false,
+  failWithError: true,
+});

@@ -4,7 +4,7 @@ import InviteToJoinMailer from 'mailers/InviteToJoinMailer';
 import prisma from '../client';
 import { normalize } from '@linen/utilities/string';
 import PermissionsService from './permissions';
-import { Unauthorized } from 'utilities/exceptions';
+import { Unauthorized } from 'server/exceptions';
 
 export async function createInvitation({
   createdByUserId,
