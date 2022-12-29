@@ -1,6 +1,6 @@
 import '__mocks__/tokens';
 import { testApiHandler } from 'next-test-api-route-handler';
-const handler = require('pages/api/auth/callback/credentials');
+import handler from 'pages/api/auth/[[...slug]]';
 import { createCSRFToken } from 'utilities/auth/server/csrf';
 
 export async function login({ email, password }: any) {

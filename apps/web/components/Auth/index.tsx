@@ -152,7 +152,7 @@ export function onSignUpWithCredsSubmit({
     }
     try {
       setLoading(true);
-      const signUpResponse = await fetch('/api/auth', {
+      const signUpResponse = await fetch('/api/signup', {
         method: 'POST',
         body: JSON.stringify({
           email,

@@ -1,7 +1,8 @@
-import { Router, Request, Response } from 'express';
+import { Router, Response } from 'express';
+import { AuthedRequest, AuthedRequestWithBody } from 'server/types';
 import * as notificationService from 'services/notifications';
-import jwtMiddleware from 'utilities/middlewares/jwt';
-import validationMiddleware from 'utilities/middlewares/validation';
+import jwtMiddleware from 'server/middlewares/jwt';
+import validationMiddleware from 'server/middlewares/validation';
 import {
   putMarkSchema,
   putMarkType,
@@ -11,20 +12,24 @@ import {
 
 const prefix = '/api/notifications';
 const notificationsRouter = Router();
-notificationsRouter.use(jwtMiddleware());
 
-notificationsRouter.get(`${prefix}`, async (req: any, res: Response) => {
-  const authId = req.user.id;
-  const data = await notificationService.get({ authId });
-  res.json(data);
-  res.end();
-});
+notificationsRouter.get(
+  `${prefix}`,
+  jwtMiddleware(),
+  async (req: AuthedRequest, res: Response) => {
+    const authId = req.session_user?.id!;
+    const data = await notificationService.get({ authId });
+    res.json(data);
+    res.end();
+  }
+);
 
 notificationsRouter.put(
   `${prefix}/mark`,
+  jwtMiddleware(),
   validationMiddleware(putMarkSchema, 'body'),
-  async (req: any, res: Response) => {
-    const authId = req.user.id;
+  async (req: AuthedRequestWithBody<putMarkType>, res: Response) => {
+    const authId = req.session_user?.id!;
     const data = await notificationService.mark({
       authId,
       threadId: req.body.threadId,
@@ -36,8 +41,9 @@ notificationsRouter.put(
 
 notificationsRouter.get(
   `${prefix}/settings`,
-  async (req: any, res: Response) => {
-    const authId = req.user.id;
+  jwtMiddleware(),
+  async (req: AuthedRequest, res: Response) => {
+    const authId = req.session_user?.id!;
     const data = await notificationService.getSettings({ authId });
     res.json(data);
     res.end();
@@ -46,9 +52,10 @@ notificationsRouter.get(
 
 notificationsRouter.put(
   `${prefix}/settings`,
+  jwtMiddleware(),
   validationMiddleware(putSettingsSchema, 'body'),
-  async (req: any, res: Response) => {
-    const authId = req.user.id;
+  async (req: AuthedRequestWithBody<putSettingsType>, res: Response) => {
+    const authId = req.session_user?.id!;
     const data = await notificationService.updateSettings({
       authId,
       ...req.body,

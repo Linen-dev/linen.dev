@@ -29,7 +29,7 @@ module.exports = {
     },
     {
       name: 'queue-email-notification',
-      script: 'npx tsx watch queue/workers/email-notification.ts',
+      script: 'npx tsx queue/workers/email-notification.ts',
       cwd: '../apps/web',
     },
     {

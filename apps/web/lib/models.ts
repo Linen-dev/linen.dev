@@ -62,6 +62,14 @@ export const deleteMessageWithMentions = async (messageId: string) => {
   ]);
 };
 
+export const getAccountById = async (accountId: string) => {
+  return await prisma.accounts.findUnique({
+    where: {
+      id: accountId,
+    },
+  });
+};
+
 export const findAccountById = async (
   accountId: string
 ): Promise<AccountWithSlackAuthAndChannels | null> => {

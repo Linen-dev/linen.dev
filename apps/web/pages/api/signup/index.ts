@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
-import prisma from '../../client';
-import { createAuth } from '../../lib/auth';
+import prisma from 'client';
+import { createAuth } from 'lib/auth';
 import Session from 'services/session';
 import { normalize } from '@linen/utilities/string';
 import { AccountType, Roles } from '@linen/types';
