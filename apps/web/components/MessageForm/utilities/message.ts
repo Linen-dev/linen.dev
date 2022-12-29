@@ -27,3 +27,16 @@ export const postprocess = (
   });
   return stringify(tree);
 };
+
+const IGNORED_TYPES = ['root', 'text']
+
+export const previewable = (message: string): boolean => {
+  let boolean = false
+  const tree = parse.linen(message);
+  walk(tree, (node: any) => {
+    if (!IGNORED_TYPES.includes(node.type)) {
+      boolean = true
+    }
+  })
+  return boolean
+}

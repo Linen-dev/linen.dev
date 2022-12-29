@@ -9,7 +9,7 @@ import { isWhitespace } from '@linen/utilities/string';
 import { getCaretPosition, setCaretPosition } from './utilities';
 import { MessageFormat, SerializedUser } from '@linen/types';
 import { useUsersContext } from '@linen/contexts/Users';
-import { postprocess } from './utilities/message';
+import { postprocess, previewable } from './utilities/message';
 import { AxiosRequestConfig, AxiosResponse } from 'axios';
 
 export const FILE_SIZE_LIMIT_IN_BYTES = 1048576;
@@ -278,7 +278,7 @@ function MessageForm({
           }}
         />
       )}
-      {message && (
+      {message && previewable(message) && (
         <Preview
           currentUser={currentUser}
           message={
