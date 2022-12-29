@@ -2,6 +2,8 @@ import prisma from '../../client';
 import { truncateTables } from './truncate';
 import { ChatType, MessageFormat, Roles } from '@linen/types';
 import { generateHash } from '../../utilities/password';
+import { join } from 'path'
+import { readFileSync } from 'fs'
 
 async function createLinenCommunity() {
   const community = await prisma.accounts.create({
@@ -445,6 +447,32 @@ async function createLinenCommunity() {
                 },
               ],
             },
+          },
+        ],
+      },
+    },
+  });
+
+  const channel3 = await prisma.channels.create({
+    data: {
+      accountId: community.id,
+      channelName: 'blog',
+    },
+  });
+
+  // 11. Blog post
+  await prisma.threads.create({
+    data: {
+      channelId: channel3.id,
+      sentAt: new Date().getTime(),
+      messages: {
+        create: [
+          {
+            channelId: channel3.id,
+            body: readFileSync(join(__dirname, 'messages/blog.md'), 'utf8'),
+            usersId: user1.id,
+            sentAt: '2021-12-14T09:01:00.000Z',
+            messageFormat: MessageFormat.LINEN,
           },
         ],
       },
