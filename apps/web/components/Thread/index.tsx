@@ -18,6 +18,7 @@ import { Mode } from '@linen/hooks/mode';
 import useThreadWebsockets from '@linen/hooks/websockets/thread';
 import { scrollToBottom } from '@linen/utilities/scroll';
 import styles from './index.module.scss';
+import { put } from 'utilities/requests';
 
 interface Props {
   thread: SerializedThread;
@@ -85,23 +86,27 @@ export default function Thread({
   const ref = useRef<HTMLDivElement>(null);
   const { id, state, viewCount, incrementId } = thread;
 
-  const handleScroll = () => setTimeout(() => scrollToBottom(ref.current as HTMLDivElement), 0);
+  const handleScroll = () =>
+    setTimeout(() => scrollToBottom(ref.current as HTMLDivElement), 0);
 
   useEffect(() => {
     onMount?.();
   }, []);
 
   useEffect(() => {
-    fetch(`/api/count?incrementId=${incrementId}`, { method: 'PUT' });
+    put(`/count?incrementId=${incrementId}`);
+    if (currentUser?.id) {
+      put('/notifications/mark', { threadId: thread.id });
+    }
   }, []);
 
   useThreadWebsockets({
     id: thread?.id,
     token,
     permissions,
-    onMessage (message, messageId, imitationId) {
-      onMessage(message, messageId, imitationId)
-      handleScroll()
+    onMessage(message, messageId, imitationId) {
+      onMessage(message, messageId, imitationId);
+      handleScroll();
     },
   });
 
@@ -165,9 +170,14 @@ export default function Thread({
               currentUser={currentUser}
               onSend={(message: string, files: UploadedFile[]) => {
                 onSend?.();
-                const promise = sendMessage({ message, files, channelId, threadId: id });
+                const promise = sendMessage({
+                  message,
+                  files,
+                  channelId,
+                  threadId: id,
+                });
                 handleScroll();
-                return promise
+                return promise;
               }}
               onSendAndClose={(message: string, files: UploadedFile[]) => {
                 onSend?.();
@@ -195,9 +205,14 @@ export default function Thread({
               currentUser={currentUser}
               onSend={(message: string, files: UploadedFile[]) => {
                 onSend?.();
-                const promise = sendMessage({ message, files, channelId, threadId: id })
+                const promise = sendMessage({
+                  message,
+                  files,
+                  channelId,
+                  threadId: id,
+                });
                 handleScroll();
-                return promise
+                return promise;
               }}
               fetchMentions={(term?: string) => {
                 if (!term) return Promise.resolve([]);

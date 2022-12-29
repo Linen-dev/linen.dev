@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import AvatarField from './AvatarField';
-import PermissionsField from './PermissionsField'
+import PermissionsField from './PermissionsField';
 import TextField from 'components/TextField';
 import { Button, Toast } from '@linen/ui';
 import { SerializedUser } from '@linen/types';
@@ -77,7 +77,7 @@ export default function ProfileForm({
   return (
     <>
       <h1 className="text-xl font-bold mb-3">Profile</h1>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-2">
         <AvatarField
           user={currentUser}
           onChange={onAvatarChange}
