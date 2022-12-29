@@ -469,8 +469,27 @@ async function createLinenCommunity() {
         create: [
           {
             channelId: channel3.id,
-            body: readFileSync(join(__dirname, 'messages/blog.md'), 'utf8'),
+            body: readFileSync(join(__dirname, 'messages/blog1.md'), 'utf8'),
             usersId: user1.id,
+            sentAt: '2021-12-14T09:01:00.000Z',
+            messageFormat: MessageFormat.LINEN,
+          },
+        ],
+      },
+    },
+  });
+
+  // 11. Blog post
+  await prisma.threads.create({
+    data: {
+      channelId: channel3.id,
+      sentAt: new Date().getTime(),
+      messages: {
+        create: [
+          {
+            channelId: channel3.id,
+            body: readFileSync(join(__dirname, 'messages/blog2.md'), 'utf8'),
+            usersId: user3.id,
             sentAt: '2021-12-14T09:01:00.000Z',
             messageFormat: MessageFormat.LINEN,
           },
