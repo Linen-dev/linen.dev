@@ -19,6 +19,7 @@ const {
 describe('parse', () => {
   it('returns a `text` node', () => {
     expect(parse('foo')).toEqual(root([text('foo')]));
+    expect(parse('foo\nbar')).toEqual(root([text('foo\nbar')]));
     expect(parse('john@doe.com')).toEqual(root([text('john@doe.com')]));
     expect(parse('@ @')).toEqual(root([text('@ @')]));
     expect(parse('@@')).toEqual(root([text('@@')]));
