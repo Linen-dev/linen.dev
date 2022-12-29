@@ -1,7 +1,8 @@
-import { mentions } from '@prisma/client';
+import type { mentions, users } from '@prisma/client';
 import { createChatSyncJob } from 'queue/jobs';
 import { push, pushChannel, pushCommunity } from 'services/push';
 import { eventNewMentions } from './eventNewMentions';
+import { notificationListener } from 'services/notifications';
 
 interface MentionNode {
   type: string;
@@ -14,7 +15,9 @@ type NewThreadEvent = {
   threadId: any;
   messageId: any;
   imitationId: string;
-  mentions: mentions[];
+  mentions: (mentions & {
+    users: users | null;
+  })[];
   mentionNodes: MentionNode[];
   communityId: string;
   thread: string;
@@ -46,6 +49,7 @@ export async function eventNewThread({
     pushChannel(event),
     pushCommunity({ ...event, communityId }),
     eventNewMentions({ mentions, mentionNodes, channelId, threadId }),
+    notificationListener({ ...event, communityId, mentions }),
   ];
 
   await Promise.allSettled(promises);

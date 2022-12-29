@@ -1,6 +1,6 @@
 import '__mocks__/tokens';
 import { testApiHandler } from 'next-test-api-route-handler';
-import handlerLogin from 'pages/api/auth/callback/credentials';
+const handler = require('pages/api/auth/callback/credentials');
 import { createCSRFToken } from 'utilities/auth/server/csrf';
 
 export async function login({ email, password }: any) {
@@ -9,7 +9,7 @@ export async function login({ email, password }: any) {
 
   let csrfToken = createCSRFToken();
   await testApiHandler({
-    handler: handlerLogin,
+    handler,
     url: '/api/auth/callback/credentials',
     test: async ({ fetch }: any) => {
       const response = await fetch({
@@ -24,4 +24,13 @@ export async function login({ email, password }: any) {
     },
   });
   return { body, status };
+}
+
+export function addTokenHeader(token: string) {
+  return {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  };
 }
