@@ -36,7 +36,7 @@ describe('Link', () => {
   describe('when the link is not valid', () => {
     it('renders a line through', () => {
       const { getByText } = render(
-        <Link url="https://-how-to-register" title="bar" />
+        <Link url="https://-how-to-register" title="foo" />
       );
       const link = getByText('foo');
       expect(link).toHaveClass(styles.line);

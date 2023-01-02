@@ -3,19 +3,30 @@ import classNames from 'classnames';
 import styles from './index.module.scss';
 
 interface Props {
-  value: string;
+  url: string;
+  title: string;
 }
 
-function Mail({ value }: Props) {
-  const [href, name] = value.split('|');
+function getTitle (url: string, title: string) {
+  if (title) {
+    if (title.startsWith('mailto:')) {
+      return title.split(':')[1]
+    }
+    return title
+  }
+
+  return url.split(':')[1]
+}
+
+function Mail({ url, title }: Props) {
   return (
     <a
       className={classNames('text-indigo-700', styles.link)}
-      href={href}
+      href={url}
       target="_blank"
       rel="noreferrer"
     >
-      {name || href.split(':')[1]}
+      {getTitle(url, title)}
     </a>
   );
 }

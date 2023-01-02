@@ -33,7 +33,7 @@ export default function Link({ url, title, onLoad }: Props) {
   }
 
   if (isMail(url)) {
-    return <Mail value={url} />;
+    return <Mail url={url} title={title} />;
   }
 
   const isHrefInvalid = !isUrlValid(url);

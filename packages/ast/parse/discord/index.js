@@ -59,13 +59,15 @@ const link1 = explicit(
     /^((https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])(?=[\s.,\])}!?\-=]|$)/gi,
     (match, _, position) => {
       const [result, content] = match;
+      const [url, title] = result.split('|')
 
       return [
         {
           type: 'url',
-          url: result,
+          url,
           value: result,
           source: result,
+          title: title || url,
         },
         position + result.length,
       ];
@@ -78,13 +80,15 @@ const link2 = explicit(
     /^(mailto:[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])(?=[\s.,\])}!?\-=]|$)/gi,
     (match, _, position) => {
       const [result, content] = match;
+      const [url, title] = result.split('|')
 
       return [
         {
           type: 'url',
-          url: result,
+          url,
           value: result,
           source: result,
+          title: title || url.split(':')[1],
         },
         position + result.length,
       ];

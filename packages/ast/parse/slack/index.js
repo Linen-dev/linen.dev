@@ -133,6 +133,7 @@ const link = regexp(
             label: labels,
             value: link + (label ? `|${label}` : ''),
             source: result,
+            title: label || link
           },
           next,
         ];
