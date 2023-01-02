@@ -32,14 +32,26 @@ function splitByPattern(tokens, pattern) {
           if (typeof current === 'number' && typeof next === 'number') {
             const text = value.substring(current, next);
             if (needles.includes(current)) {
-              const [url, title] = text.split('|')
-              result.push({
-                type: 'url',
-                url: url,
-                value: url,
-                source: title ? `${url}|${title}` : url,
-                title: title || url,
-              });
+              if (text.startsWith('[') && text.endsWith(')')) {
+                const title = text.substring(1, text.indexOf(']'))
+                const url = text.substring(text.indexOf('(') + 1, text.lastIndexOf(')'))
+                result.push({
+                  type: 'url',
+                  url: url,
+                  value: url,
+                  source: text,
+                  title: title,
+                });
+              } else {
+                const [url, title] = text.split('|')
+                result.push({
+                  type: 'url',
+                  url: url,
+                  value: url,
+                  source: title ? `${url}|${title}` : url,
+                  title: title || url,
+                });
+              }
             } else {
               result.push({ type: 'text', value: text, source: text });
             }
@@ -128,6 +140,7 @@ function splitByList (tokens) {
 }
 
 module.exports = (tokens) => {
-  const result = splitByPattern(tokens, /(\b(https?):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi)
+  let result = splitByPattern(tokens, /\[([\w\s\d]+)\]\((\b(https?):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])\)/gi)
+  result = splitByPattern(result, /(\b(https?):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi)
   return splitByList(result)
 };

@@ -119,7 +119,8 @@ describe('parse', () => {
         url('http://foo.bar')
       ])
     )
-    expect(parse('https://foo.bar|baz')).toEqual(root([url('https://foo.bar', 'baz')]));
+    expect(parse('https://foo.bar|baz')).toEqual(root([url('https://foo.bar|baz')]));
+    expect(parse('[baz](https://foo.bar)')).toEqual(root([url('[baz](https://foo.bar)')]));
   });
 
   it('returns a `quote` node', () => {
