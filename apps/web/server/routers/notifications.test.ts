@@ -1,7 +1,7 @@
 import '__mocks__/tokens';
 import { v4 } from 'uuid';
 import { create } from '__tests__/factory';
-import { addTokenHeader, login } from '__tests__/pages/api/auth/login';
+import { attachHeaders, login } from '__tests__/pages/api/auth/login';
 import { testApiHandler } from 'next-test-api-route-handler';
 import * as notificationService from 'services/notifications';
 import {
@@ -71,7 +71,7 @@ describe('user.notification', function () {
       test: async ({ fetch }: any) => {
         const response = await fetch({
           method: 'GET',
-          ...addTokenHeader(token),
+          ...attachHeaders({ token }),
         });
         const notifications = await response.json();
         expect(notifications).toHaveLength(1);
@@ -95,7 +95,7 @@ describe('user.notification', function () {
           body: JSON.stringify({
             threadId: notification.threadId,
           }),
-          ...addTokenHeader(token2),
+          ...attachHeaders({ token: token2 }),
         });
         const result = await response.json();
         expect(result).toStrictEqual({ ok: false, result: 'not_found' });
@@ -113,7 +113,7 @@ describe('user.notification', function () {
           body: JSON.stringify({
             threadId: v4(),
           }),
-          ...addTokenHeader(token),
+          ...attachHeaders({ token }),
         });
         const result = await response.json();
         expect(result).toStrictEqual({ ok: false, result: 'not_found' });
@@ -131,7 +131,7 @@ describe('user.notification', function () {
           body: JSON.stringify({
             threadId: notification.threadId,
           }),
-          ...addTokenHeader(token),
+          ...attachHeaders({ token }),
         });
         const result = await response.json();
         expect(result).toStrictEqual({ ok: true, result: 'deleted' });

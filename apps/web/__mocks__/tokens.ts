@@ -12,7 +12,11 @@ jest.mock('utilities/auth/server/tokens', () => {
       return JSON.stringify({ data: { ...val }, exp: now() });
     }),
     verifyToken: jest.fn().mockImplementation((val, _) => {
-      return JSON.parse(val);
+      try {
+        return JSON.parse(val);
+      } catch (error) {
+        return null;
+      }
     }),
     refreshTokenAction: jest.fn().mockImplementation((req, _) => {
       const token = getToken(req);
