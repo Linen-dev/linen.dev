@@ -1,31 +1,27 @@
-import { prismaMock } from '__tests__/singleton';
-import { create, update } from 'pages/api/accounts';
-import { Session } from 'next-auth';
-import { build } from '__tests__/factory';
+import { create } from '__tests__/factory';
+import accountsService from 'services/accounts';
+import { v4 } from 'uuid';
+import { accounts, auths } from '@prisma/client';
+import { z } from 'zod';
 
 describe('accounts', () => {
   describe('#create', () => {
     describe('when the user is logged in', () => {
       describe('and the account was created successfully', () => {
         it('returns a 200 and the account id', async () => {
-          const session = { user: { email: 'john@doe.com' } } as Session;
-          await prismaMock.accounts.create.mockResolvedValue(
-            build('account', { id: 'account-id' })
-          );
-          const { status, data } = await create({
-            session,
+          const auth: auths = await create('auth', { email: v4() });
+          const { status, ...data } = await accountsService.create({
+            email: auth.email,
           });
           expect(status).toEqual(200);
-          expect(data).toEqual({ id: 'account-id' });
+          expect(z.string().uuid().safeParse(data.id).success).toBe(true);
         });
       });
 
       describe('and the account creation failed', () => {
         it('returns a 500', async () => {
-          const session = { user: { email: 'john@doe.com' } } as Session;
-          await prismaMock.accounts.create.mockRejectedValue({});
-          const { status } = await create({
-            session,
+          const { status } = await accountsService.create({
+            email: 'john@doe.com',
           });
           expect(status).toEqual(500);
         });
@@ -34,8 +30,8 @@ describe('accounts', () => {
 
     describe('when the user is not logged in', () => {
       it('returns 401', async () => {
-        const { status } = await create({
-          session: null,
+        const { status } = await accountsService.create({
+          email: null,
         });
         expect(status).toEqual(401);
       });
@@ -47,71 +43,45 @@ describe('accounts', () => {
       describe('and the account exists', () => {
         describe('and the account is free', () => {
           it('returns a 200', async () => {
-            const session = { user: { email: 'john@doe.com' } } as Session;
-            const account = build('account', {
-              id: 'account-id',
+            const account: accounts = await create('account', {
               premium: false,
             });
-            const auth = build('auth', { accountId: account.id });
-            await prismaMock.auths.findFirst.mockResolvedValue(auth);
-            await prismaMock.accounts.findFirst.mockResolvedValue(account);
-            await prismaMock.accounts.update.mockResolvedValue(account);
-            const { status } = await update({
+
+            const { status, record } = await accountsService.update({
               params: { homeUrl: 'https://foo.com', type: 'PRIVATE' },
-              session,
+              accountId: account.id,
             });
             expect(status).toEqual(200);
-            expect(prismaMock.accounts.update).toHaveBeenCalledWith(
-              expect.objectContaining({
-                data: { homeUrl: 'https://foo.com' },
-              })
-            );
+            expect(record).toMatchObject({ homeUrl: 'https://foo.com' });
           });
         });
 
         describe('and the account is premium', () => {
           it('returns a 200', async () => {
-            const session = { user: { email: 'john@doe.com' } } as Session;
-            const account = build('account', {
-              id: 'account-id',
+            const account: accounts = await create('account', {
               premium: true,
             });
-            const auth = build('auth', { accountId: account.id });
-            await prismaMock.auths.findFirst.mockResolvedValue(auth);
-            await prismaMock.accounts.findFirst.mockResolvedValue(account);
-            await prismaMock.accounts.update.mockResolvedValue(account);
-            const { status } = await update({
+
+            const { status, record } = await accountsService.update({
               params: { homeUrl: 'https://foo.com', type: 'PRIVATE' },
-              session,
+              accountId: account.id,
             });
             expect(status).toEqual(200);
-            expect(prismaMock.accounts.update).toHaveBeenCalledWith(
-              expect.objectContaining({
-                data: { homeUrl: 'https://foo.com', type: 'PRIVATE' },
-              })
-            );
+            expect(record).toMatchObject({
+              homeUrl: 'https://foo.com',
+              type: 'PRIVATE',
+            });
           });
         });
       });
       describe('and the account does not exist', () => {
         it('returns a 404', async () => {
-          const session = { user: { email: 'john@doe.com' } } as Session;
-          const { status } = await update({
+          const { status } = await accountsService.update({
             params: {},
-            session,
+            accountId: 'not-exist',
           });
           expect(status).toEqual(404);
         });
-      });
-    });
-
-    describe('when the user is not logged in', () => {
-      it('returns 401', async () => {
-        const { status } = await update({
-          params: {},
-          session: null,
-        });
-        expect(status).toEqual(401);
       });
     });
   });

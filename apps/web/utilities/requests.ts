@@ -70,3 +70,5 @@ export const useRequest = (url: string) => {
     isLoading: isBrowser() && !error && !data,
   };
 };
+
+export const getAccounts = () => get('/api/accounts');
