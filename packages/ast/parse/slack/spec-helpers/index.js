@@ -68,6 +68,7 @@ function url(link, label) {
     label,
     value: link + (label ? '|' + source(label) : ''),
     source: `<${link}${label ? '|' + source(label) : ''}>`,
+    title: label ? source(label) : link
   };
 }
 

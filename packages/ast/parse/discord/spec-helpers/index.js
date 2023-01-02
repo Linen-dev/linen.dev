@@ -48,6 +48,7 @@ function url(link) {
     url: link,
     value: link,
     source: link,
+    title: link.startsWith('mailto:') ? link.split(':')[1] : link,
   };
 }
 
