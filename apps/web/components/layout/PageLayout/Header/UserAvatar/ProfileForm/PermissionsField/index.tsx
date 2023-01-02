@@ -9,7 +9,7 @@ import { useRequest } from 'utilities/requests';
 export default function PermissionsField() {
   const granted = storage.get('notification.permission') === 'granted';
   const [checked, setChecked] = useState<boolean>(granted);
-  const settings = useRequest('/notifications/settings');
+  const settings = useRequest('/api/notifications/settings');
   const [checkedEmail, setCheckedEmail] = useState<boolean>(false);
 
   useEffect(() => {
