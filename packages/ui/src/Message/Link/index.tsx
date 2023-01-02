@@ -8,48 +8,48 @@ import Video from './Video';
 import Mail from './Mail';
 
 interface Props {
-  value: string;
+  url: string;
+  title: string;
   onLoad?(): void;
 }
 
-export default function Link({ value, onLoad }: Props) {
-  const [href, name] = value.split('|');
-  if (isImage(href)) {
+export default function Link({ url, title, onLoad }: Props) {
+  if (isImage(url)) {
     return (
-      <Accordion header={name || href}>
-        <a href={href} target="_blank" rel="noreferrer ugc">
-          <Image src={href} onLoad={onLoad} />
+      <Accordion header={title}>
+        <a href={url} target="_blank" rel="noreferrer ugc">
+          <Image src={url} onLoad={onLoad} />
         </a>
       </Accordion>
     );
   }
 
-  if (isVideo(href)) {
+  if (isVideo(url)) {
     return (
-      <Accordion header={name || href}>
-        <Video src={href} onLoad={onLoad} />
+      <Accordion header={title}>
+        <Video src={url} onLoad={onLoad} />
       </Accordion>
     );
   }
 
-  if (isMail(href)) {
-    return <Mail value={value} />;
+  if (isMail(url)) {
+    return <Mail value={url} />;
   }
 
-  const isHrefInvalid = !isUrlValid(href);
-  const isExternalLink = !href.startsWith('https://linen.dev/');
+  const isHrefInvalid = !isUrlValid(url);
+  const isExternalLink = !url.startsWith('https://linen.dev/');
 
   return (
     <a
       className={classNames('text-indigo-700', styles.link, {
         [styles.line]: isHrefInvalid,
       })}
-      href={href}
+      href={url}
       title={isHrefInvalid ? 'Invalid link' : ''}
       rel="noreferrer ugc"
       target={isExternalLink ? '_blank' : undefined}
     >
-      {name || href}
+      {title}
     </a>
   );
 }

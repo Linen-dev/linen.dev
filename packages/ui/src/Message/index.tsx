@@ -145,7 +145,8 @@ function Message({
         return (
           <Link
             key={node.cid}
-            value={(node as LinkNode).value}
+            url={(node as LinkNode).url}
+            title={(node as LinkNode).title}
             onLoad={onLoad}
           />
         );
