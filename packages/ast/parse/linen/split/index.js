@@ -32,11 +32,13 @@ function splitByPattern(tokens, pattern) {
           if (typeof current === 'number' && typeof next === 'number') {
             const text = value.substring(current, next);
             if (needles.includes(current)) {
+              const [url, title] = text.split('|')
               result.push({
                 type: 'url',
-                url: text,
-                value: text,
-                source: text,
+                url: url,
+                value: url,
+                source: title ? `${url}|${title}` : url,
+                title: title || url,
               });
             } else {
               result.push({ type: 'text', value: text, source: text });
