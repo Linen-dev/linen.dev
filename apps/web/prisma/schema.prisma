@@ -134,6 +134,7 @@ model accounts {
   invites               invites[]
   chat                  ChatType                @default(MANAGERS)
   integration           AccountIntegration      @default(NONE)
+  apiKeys               apiKeys[]
   notifications         notifications[]
 
   @@unique([redirectDomain])
@@ -362,4 +363,18 @@ model notifications {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model apiKeys {
+  id        String   @id @default(uuid())
+  accountId String
+  account   accounts @relation(fields: [accountId], references: [id])
+  name      String
+  hash      String
+  scope     Json?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([hash])
+  @@index([accountId])
 }
