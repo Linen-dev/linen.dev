@@ -2,8 +2,6 @@ import axios from 'axios';
 import useSWR from 'swr';
 import isBrowser from './isBrowser';
 
-const baseUrl = '/api'; // set this
-
 const catchError = (e: { response: any }) => {
   const { response } = e;
   console.error(e);
@@ -19,7 +17,6 @@ const catchError = (e: { response: any }) => {
 };
 
 axios.interceptors.request.use(async (request) => {
-  request.baseURL = baseUrl;
   request.headers = {
     'Content-Type': 'application/json',
     Accept: 'application/json',

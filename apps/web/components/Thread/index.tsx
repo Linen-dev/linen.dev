@@ -94,9 +94,9 @@ export default function Thread({
   }, []);
 
   useEffect(() => {
-    put(`/count?incrementId=${incrementId}`);
+    put(`/api/count?incrementId=${incrementId}`);
     if (currentUser?.id) {
-      put('/notifications/mark', { threadId: thread.id });
+      put('/api/notifications/mark', { threadId: thread.id });
     }
   }, []);
 
