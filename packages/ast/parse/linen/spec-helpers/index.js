@@ -38,8 +38,14 @@ function signal(id) {
   return { type: 'signal', id, source: `!${id}` };
 }
 
-function url(value, title) {
-  return { type: 'url', url: value, value, source: title ? `${value}|${title}` : value, title: title || value };
+function url(value) {
+  if (value.startsWith('[') && value.endsWith(')')) {
+    const title = value.substring(1, value.indexOf(']'))
+    const url = value.substring(value.indexOf('(') + 1, value.lastIndexOf(')'))
+    return { type: 'url', url, value: url, source: value, title: title };
+  }
+  const [url, title] = value.split('|')
+  return { type: 'url', url, value: url, source: value, title: title || url };
 }
 
 function quote(children) {
