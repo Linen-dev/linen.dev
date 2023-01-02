@@ -49,6 +49,12 @@ export default function tenantMiddleware(roles?: string[]) {
       }
 
       if (roles && roles.length) {
+        if (!req.session_user) {
+          return next(new Unauthorized());
+        }
+        req.tenant_user = req.session_user?.users?.find(
+          (u) => u.accountsId === req.tenant?.id!
+        );
         // session must have a tenant_user
         if (!req.tenant_user) {
           return next(new Forbidden());
