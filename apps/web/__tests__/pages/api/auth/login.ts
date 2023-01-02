@@ -9,7 +9,7 @@ export async function login({ email, password }: any) {
 
   let csrfToken = createCSRFToken();
   await testApiHandler({
-    handler,
+    handler: handler as any,
     url: '/api/auth/callback/credentials',
     test: async ({ fetch }: any) => {
       const response = await fetch({
@@ -26,11 +26,11 @@ export async function login({ email, password }: any) {
   return { body, status };
 }
 
-export function addTokenHeader(token: string) {
+export function attachHeaders({ token }: { token?: string } = {}) {
   return {
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
+      ...(!!token && { Authorization: `Bearer ${token}` }),
     },
   };
 }
