@@ -4,7 +4,7 @@ import { Button, Suggestions, Toast } from '@linen/ui';
 import styles from './index.module.scss';
 import Preview from './Preview';
 import FileInput from './FileInput';
-import FilesCount from './FilesCount';
+import FilesSummary from './FilesSummary';
 import { isWhitespace } from '@linen/utilities/string';
 import { getCaretPosition, setCaretPosition } from './utilities';
 import { MessageFormat, SerializedUser } from '@linen/types';
@@ -208,6 +208,7 @@ function MessageForm({
     }
     const files = Array.from(event.target.files || []);
     setUploads([]);
+    console.log(files)
     setFiles(files);
     if (files.length > 0) {
       const formData = new FormData();
@@ -342,10 +343,11 @@ function MessageForm({
               disabled={uploading}
               onChange={onFileInputChange}
             />
-            <FilesCount
+            <FilesSummary
               uploading={uploading}
               progress={progress}
-              count={files.length}
+              files={files}
+              uploads={uploads}
             />
           </div>
         )}
