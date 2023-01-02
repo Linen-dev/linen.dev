@@ -38,8 +38,8 @@ function signal(id) {
   return { type: 'signal', id, source: `!${id}` };
 }
 
-function url(value) {
-  return { type: 'url', url: value, value, source: value };
+function url(value, title) {
+  return { type: 'url', url: value, value, source: title ? `${value}|${title}` : value, title: title || value };
 }
 
 function quote(children) {

@@ -30,9 +30,9 @@ export interface ChannelNode {
 export interface LinkNode {
   type: string;
   url: string;
-  label?: string;
-  source: string;
+  title: string;
   value: string;
+  source: string;
 }
 
 export interface BoldNode {
