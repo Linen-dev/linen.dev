@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import request from 'superagent';
 import { fetchTeamInfo } from 'services/slack/api';
 import { createSlackAuthorization, updateAccount } from '../../lib/models';
-import { createSyncJob } from 'queue/jobs';
+import { eventNewIntegration } from 'services/events/eventNewIntegration';
 import { AccountIntegration } from '@linen/types';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -50,9 +50,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       authedUserId: user.id,
     });
 
-    await createSyncJob({
-      account_id: accountId,
-    });
+    await eventNewIntegration({ accountId });
 
     return res.redirect('/settings');
   } catch (error) {
