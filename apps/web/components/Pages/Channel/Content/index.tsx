@@ -124,9 +124,6 @@ export default function Channel({
   const scrollableRootRef = useRef<HTMLDivElement | null>(null);
   const rightRef = useRef<HTMLDivElement>(null);
   const leftBottomRef = useRef<HTMLDivElement>(null);
-  const lastDistanceToBottomRef = useRef<number>(0);
-  const lastDistanceToTopRef = useRef<number>(60);
-  const [lastDirection, setLastDirection] = useState<'top' | 'bottom'>();
   const [cursor, setCursor] = useState(nextCursor);
   const [error, setError] = useState<{ prev?: unknown; next?: unknown }>();
   const [allUsers] = useUsersContext();
@@ -210,7 +207,7 @@ export default function Channel({
     hasNextPage: !!cursor.prev,
     onLoadMore: loadMore,
     disabled: !!error?.prev || !cursor.prev,
-    rootMargin: '800px 0px 0px 0px',
+    rootMargin: '0px 0px 0px 0px',
   });
 
   const [infiniteBottomRef, { rootRef: bottomRootRef }] = useInfiniteScroll({
@@ -218,7 +215,7 @@ export default function Channel({
     hasNextPage: !!cursor.next,
     onLoadMore: loadMoreNext,
     disabled: !!error?.next || !cursor.next,
-    rootMargin: '0px 0px 800px 0px',
+    rootMargin: '0px 0px 0px 0px',
   });
 
   useEffect(() => {
@@ -238,9 +235,6 @@ export default function Channel({
     const rootNode = scrollableRootRef.current;
     if (rootNode) {
       setIsLeftScrollAtBottom(isScrollAtBottom(rootNode))
-      const scrollDistanceToBottom = rootNode.scrollHeight - rootNode.scrollTop;
-      lastDistanceToBottomRef.current = scrollDistanceToBottom;
-      lastDistanceToTopRef.current = rootNode.scrollTop;
     }
   }
 
@@ -250,7 +244,6 @@ export default function Channel({
     if (isLoading) return;
     if (!cursor[key]) return;
     try {
-      setLastDirection(dir);
       setIsLoading(true);
       if (cursor[key]) {
         const data = await get('/api/threads', {
@@ -259,23 +252,21 @@ export default function Channel({
         });
         setCursor({ ...cursor, [key]: data?.nextCursor?.[key] });
         if (next) {
-          setThreads([...threads, ...data.threads]);
+          setThreads((threads) => [...threads, ...data.threads]);
         } else {
-          setThreads([...data.threads, ...threads]);
+          setThreads((threads) => [...data.threads, ...threads]);
         }
       }
       const scrollableRoot = scrollableRootRef.current;
-      const lastScrollDistanceToBottom = lastDistanceToBottomRef.current;
-      const lastScrollDistanceToTop = lastDistanceToTopRef.current;
       if (scrollableRoot) {
-        if (pathCursor) {
-          scrollableRoot.scrollTop = lastDistanceToBottomRef.current;
-        } else if (lastDirection === 'top') {
-          scrollableRoot.scrollTop =
-            scrollableRoot.scrollHeight - lastScrollDistanceToBottom;
-        } else {
-          scrollableRoot.scrollTop = lastScrollDistanceToTop;
-        }
+        const index = dir === 'top' ? 0 : threads.length
+        const id = threads[index].id
+        setTimeout(() => {
+          const node = document.getElementById(`channel-thread-${id}`)
+          if (node) {
+            node.scrollIntoView()
+          }
+        }, 0)
       }
     } catch (err) {
       setError({ ...error, [key]: err });
