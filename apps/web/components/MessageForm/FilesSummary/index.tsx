@@ -17,26 +17,21 @@ export default function FilesSummary({ uploading, progress, files, uploads }: Pr
     return null;
   }
   return (
-    <div className={styles.text}>
-      {uploading ? `Uploading... ${progress}%` : `Files: ${count}`}
-      {uploads.length > 0 && (
-        <ul>
-          {uploads.map((file) => {
-            return (
-              <li key={file.id}>
-                <span
-                  className={styles.file}
-                  onClick={() => {
-                    copyToClipboard(file.url)
-                    Toast.info('Copied url to clipboard.')
-                  }}
-                >{file.id}</span>
-              </li>
-            )
-          })}
-        </ul>
-      )}
-      
-    </div>
+    <ul className={styles.list}>
+      {uploading && <li className={styles.text}>{`Uploading... ${progress}%`}</li>}
+      {uploads.map((file, index) => {
+        return (
+          <li key={file.id}>
+            <div
+              className={styles.file}
+              onClick={() => {
+                copyToClipboard(file.url)
+                Toast.info('Copied url to clipboard.')
+              }}
+            >File {index + 1}</div>
+          </li>
+        )
+      })}
+    </ul>
   );
 }
