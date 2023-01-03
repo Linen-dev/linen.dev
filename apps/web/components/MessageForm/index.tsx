@@ -153,7 +153,7 @@ function MessageForm({
     }
     setLoading(true);
 
-    callback?.(postprocess(message, allUsers), uploads)
+    callback?.(postprocess(message, allUsers), uploads.filter((upload) => !message.includes(upload.url)))
       .then(() => {
         setLoading(false);
       })
@@ -208,7 +208,6 @@ function MessageForm({
     }
     const files = Array.from(event.target.files || []);
     setUploads([]);
-    console.log(files)
     setFiles(files);
     if (files.length > 0) {
       const formData = new FormData();
