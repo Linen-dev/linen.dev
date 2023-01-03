@@ -253,6 +253,9 @@ export async function findThreadsByCursor({
         in: channelIds,
       },
       hidden: false,
+      messageCount: {
+        gte: 1
+      },
     },
     include: {
       messages: {
