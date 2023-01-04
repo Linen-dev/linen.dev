@@ -82,7 +82,7 @@ export default function Grid({
       {sorted
         .map((item, index) => {
           if (item.type === RowType.ReadStatus) {
-            return <div className={styles.line} key={`feed-line-${index}`} ><Line>New</Line></div>
+            return <li key={`feed-line-${index}`}><div className={styles.line}><Line>New</Line></div></li>
           } else if (item.type === RowType.Thread) {
             const thread = item.content as SerializedThread
             const { incrementId, slug } = thread;
