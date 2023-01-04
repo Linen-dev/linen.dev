@@ -69,7 +69,7 @@ export function Row({
       })}
     >
       {header}
-      <div className={styles.row}>
+      <div className={classNames(styles.row, { [styles.drag]: mode === Mode.Drag })}>
         <div className={styles.left}>
           {top ? (
             <Avatar

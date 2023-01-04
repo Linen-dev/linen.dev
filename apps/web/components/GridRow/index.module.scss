@@ -98,3 +98,7 @@
 .container:hover .actions {
   display: flex;
 }
+
+.drag {
+  pointer-events: none;
+}
