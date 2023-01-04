@@ -1,13 +1,13 @@
-import prisma from '../../client';
+import prisma from 'client';
 import { channels } from '@prisma/client';
 import { processNewThreads } from './threads';
 import {
   discordChannel,
   DiscordMessage,
-} from '../../types/discordResponses/discordMessagesInterface';
+} from 'types/discordResponses/discordMessagesInterface';
 import { getDiscordWithRetry } from './api';
 import { CrawlType, LIMIT } from './constrains';
-import { findOrCreateChannel } from '../../lib/models';
+import { findOrCreateChannel } from 'lib/models';
 
 async function updateCursor(channel: channels, cursor?: string | null) {
   if (cursor) {
@@ -24,6 +24,7 @@ async function getDiscordChannels(
 ): Promise<discordChannel[]> {
   const result = await getDiscordWithRetry({
     path: `/guilds/${serverId}/channels`,
+    token,
   });
   return result.filter((c: discordChannel) => {
     // type	0	:: a text channel within a server
@@ -31,11 +32,17 @@ async function getDiscordChannels(
   });
 }
 
-async function crawlChannel(
-  channel: channels,
-  onboardingTimestamp: Date,
-  crawlType: CrawlType
-): Promise<{
+async function crawlChannel({
+  channel,
+  onboardingTimestamp,
+  crawlType,
+  token,
+}: {
+  channel: channels;
+  onboardingTimestamp: Date;
+  crawlType: CrawlType;
+  token: string;
+}): Promise<{
   channelMessages?: DiscordMessage[];
   cursor?: string;
 }> {
@@ -62,6 +69,7 @@ async function crawlChannel(
     const messages: DiscordMessage[] = await getDiscordWithRetry({
       path: `/channels/${channel.externalChannelId}/messages`,
       query: { limit: LIMIT, ...query },
+      token,
     });
     // if there is less than the limit, means that there is no more messages
     if (messages.length < LIMIT) {
@@ -82,36 +90,45 @@ async function crawlChannel(
       channelMessages.push(message);
       if (channelMessages.length >= 400) {
         const newThreads = channelMessages.splice(0, channelMessages.length);
-        await processNewThreads(
+        await processNewThreads({
           newThreads,
           channel,
           crawlType,
-          onboardingTimestamp
-        );
+          onboardingTimestamp,
+          token,
+        });
       }
     }
   }
   if (channelMessages.length) {
-    await processNewThreads(
-      channelMessages,
+    await processNewThreads({
+      newThreads: channelMessages,
       channel,
       crawlType,
-      onboardingTimestamp
-    );
+      onboardingTimestamp,
+      token,
+    });
   }
   return { cursor: after };
 }
 
-export async function processChannel(
-  channel: channels,
-  onboardingTimestamp: Date,
-  crawlType: CrawlType
-) {
-  const { cursor } = await crawlChannel(
+export async function processChannel({
+  channel,
+  onboardingTimestamp,
+  crawlType,
+  token,
+}: {
+  channel: channels;
+  onboardingTimestamp: Date;
+  crawlType: CrawlType;
+  token: string;
+}) {
+  const { cursor } = await crawlChannel({
     channel,
     onboardingTimestamp,
-    crawlType
-  );
+    crawlType,
+    token,
+  });
 
   // if everything is fine, persist cursor
   if (cursor) {

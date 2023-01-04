@@ -13,3 +13,10 @@ export const updateAccountSchema = z.object({
   type: z.enum([AccountType.PRIVATE, AccountType.PUBLIC]).optional(),
 });
 export type updateAccountType = z.infer<typeof updateAccountSchema>;
+
+export const integrationDiscordSchema = z.object({
+  accountId: z.string().uuid(),
+  discordServerId: z.string().min(1),
+  botToken: z.string().min(1),
+});
+export type integrationDiscordType = z.infer<typeof integrationDiscordSchema>;

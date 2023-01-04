@@ -1,11 +1,11 @@
-import prisma from '../../client';
+import prisma from 'client';
 import { users } from '@prisma/client';
 import {
   DiscordMessage,
   Author,
   GuildMember,
-} from '../../types/discordResponses/discordMessagesInterface';
-import { generateRandomWordSlug } from '../../utilities/randomWordSlugs';
+} from 'types/discordResponses/discordMessagesInterface';
+import { generateRandomWordSlug } from 'utilities/randomWordSlugs';
 import { LIMIT } from './constrains';
 import { getDiscordWithRetry } from './api';
 
@@ -92,13 +92,22 @@ export function getUsersInMessages(messages: DiscordMessage[]) {
   }, []);
 }
 
-export async function crawlUsers(accountId: string, discordId: string) {
+export async function crawlUsers({
+  accountId,
+  discordId,
+  token,
+}: {
+  accountId: string;
+  discordId: string;
+  token: string;
+}) {
   let hasMore = true;
   let after;
   do {
     const users: GuildMember[] = await getDiscordWithRetry({
       path: `/guilds/${discordId}/members`,
       query: { limit: LIMIT, after },
+      token,
     });
     await createUsers(
       accountId,

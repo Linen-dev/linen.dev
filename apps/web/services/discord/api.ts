@@ -1,17 +1,19 @@
-import { retryPromise, sleep } from '../../utilities/retryPromises';
+import { retryPromise, sleep } from 'utilities/retryPromises';
 import request from 'superagent';
-import { DISCORD_TOKEN, SECONDS } from './constrains';
+import { SECONDS } from './constrains';
 
 export async function getDiscordWithRetry({
   path,
   query = {},
+  token,
 }: {
   path: string;
   query?: any;
+  token: string;
 }): Promise<any> {
   try {
     const response = await retryPromise({
-      promise: getDiscord({ path, query }),
+      promise: getDiscord({ path, query, token }),
     });
     const rateLimit = {
       limit: Number(response.headers['x-ratelimit-limit']),
@@ -30,11 +32,19 @@ export async function getDiscordWithRetry({
   }
 }
 
-async function getDiscord({ path, query }: { path: string; query?: any }) {
+async function getDiscord({
+  path,
+  query,
+  token,
+}: {
+  path: string;
+  query?: any;
+  token: string;
+}) {
   const url = 'https://discord.com/api';
   const response = await request
     .get(url + path)
     .query(query)
-    .set('Authorization', 'Bot ' + DISCORD_TOKEN);
+    .set('Authorization', `Bot ${token}`);
   return response;
 }

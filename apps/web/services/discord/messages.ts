@@ -1,9 +1,8 @@
-import prisma from '../../client';
+import prisma from 'client';
 import { channels, threads, users } from '@prisma/client';
 import { MessageFormat } from '@linen/types';
-import { DiscordMessage } from '../../types/discordResponses/discordMessagesInterface';
+import { DiscordMessage } from 'types/discordResponses/discordMessagesInterface';
 import { findUsers, getMentions, getUsersInMessages } from './users';
-import { parseDiscordSentAt } from 'utilities/sentAt';
 import { updateLastReplyAt } from './threads';
 
 type ProcessMessageType = Record<

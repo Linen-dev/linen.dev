@@ -281,12 +281,13 @@ model slackAuthorizations {
 }
 
 model discordAuthorizations {
-  id           String   @id @default(uuid())
-  createdAt    DateTime @default(now())
+  id           String    @id @default(uuid())
+  createdAt    DateTime  @default(now())
   accessToken  String
   scope        String
-  refreshToken String
-  expiresAt    DateTime
+  refreshToken String?
+  expiresAt    DateTime?
+  customBot    Boolean   @default(false)
 
   account accounts? @relation(fields: [accountsId], references: [id])
 
