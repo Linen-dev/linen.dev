@@ -4,6 +4,8 @@ import { stripProtocol } from 'utilities/url';
 import { generateRandomWordSlug } from 'utilities/randomWordSlugs';
 import { getAccountById } from 'lib/models';
 import { AccountType, Roles } from '@linen/types';
+import { eventNewIntegration } from './events/eventNewIntegration';
+import { encrypt } from 'utilities/crypto';
 
 export default class AccountsService {
   static async create({ email }: { email: string }) {
@@ -130,5 +132,46 @@ export default class AccountsService {
       select: { role: true, accountsId: true },
       where: { authsId: authId },
     });
+  }
+
+  static async setCustomBotDiscord({
+    accountId,
+    discordServerId,
+    botToken,
+  }: {
+    accountId: string;
+    discordServerId: string;
+    botToken: string;
+  }) {
+    if (!accountId) {
+      throw new Error('missing accountId');
+    }
+    if (!discordServerId) {
+      throw new Error('missing discordServerId');
+    }
+    if (!botToken) {
+      throw new Error('missing botToken');
+    }
+
+    await prisma.accounts.update({
+      where: { id: accountId },
+      data: {
+        discordServerId,
+      },
+    });
+
+    await prisma.discordAuthorizations.create({
+      data: {
+        accessToken: encrypt(botToken),
+        scope: 'bot',
+        accountsId: accountId,
+        customBot: true,
+      },
+    });
+
+    // dispatch sync job
+    await eventNewIntegration({ accountId });
+
+    return { ok: true };
   }
 }

@@ -8,7 +8,13 @@ import tenantMiddleware, { Roles } from 'server/middlewares/tenant';
 import validationMiddleware from 'server/middlewares/validation';
 import jwtMiddleware from 'server/middlewares/jwt';
 import AccountsService from 'services/accounts';
-import { updateAccountSchema, updateAccountType } from './accounts.types';
+import {
+  integrationDiscordSchema,
+  integrationDiscordType,
+  updateAccountSchema,
+  updateAccountType,
+} from './accounts.types';
+import { onError } from 'server/middlewares/error';
 
 const prefix = '/api/accounts';
 const accountsRouter = Router();
@@ -55,4 +61,22 @@ accountsRouter.put(
   }
 );
 
-export default accountsRouter;
+accountsRouter.post(
+  `${prefix}/integration/discord`,
+  tenantMiddleware([Roles.OWNER, Roles.ADMIN]),
+  validationMiddleware(integrationDiscordSchema, 'body'),
+  async (
+    req: AuthedRequestWithTenantAndBody<integrationDiscordType>,
+    res: Response
+  ) => {
+    const accountId = req.tenant?.id!;
+    const data = await AccountsService.setCustomBotDiscord({
+      accountId,
+      ...req.body,
+    });
+    res.json(data);
+    res.end();
+  }
+);
+
+export default accountsRouter.use(onError);

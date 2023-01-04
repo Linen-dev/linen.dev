@@ -1,20 +1,25 @@
-import prisma from '../../client';
+import prisma from 'client';
 import type { channels, threads } from '@prisma/client';
-import { DiscordMessage } from '../../types/discordResponses/discordMessagesInterface';
-import { createSlug } from '../../utilities/util';
+import { DiscordMessage } from 'types/discordResponses/discordMessagesInterface';
+import { createSlug } from 'utilities/util';
 import { getDiscordWithRetry } from './api';
 import { CrawlType, LIMIT } from './constrains';
 import { createMessages, filterKnownMessagesTypes } from './messages';
-import { parseDiscordSentAt } from '../../utilities/sentAt';
+import { parseDiscordSentAt } from 'utilities/sentAt';
 
-async function crawlExistingThread(
+async function crawlExistingThread({
+  thread,
+  onboardingTimestamp,
+  token,
+}: {
   thread: threads & {
     messages?: {
       externalMessageId: string;
     }[];
-  },
-  onboardingTimestamp: Date
-) {
+  };
+  onboardingTimestamp: Date;
+  token: string;
+}) {
   const messagesInThread: DiscordMessage[] = [];
 
   const threadId = thread.externalThreadId;
@@ -41,6 +46,7 @@ async function crawlExistingThread(
     const messages: DiscordMessage[] = await getDiscordWithRetry({
       path: `/channels/${threadId}/messages`,
       query: { limit: LIMIT, ...query },
+      token,
     });
     // if there is less than the limit, means that there is no more messages
     if (messages.length < LIMIT) {
@@ -68,13 +74,20 @@ async function crawlExistingThread(
   return messagesInThread;
 }
 
-async function upsertThreadWithNewMessages(
-  accountId: string,
-  channel: channels,
-  thread: threads,
-  messages: DiscordMessage[]
-) {
-  const persistedThread = await updateThread(channel, thread);
+async function upsertThreadWithNewMessages({
+  accountId,
+  channel,
+  thread,
+  messages,
+  token,
+}: {
+  accountId: string;
+  channel: channels;
+  thread: threads;
+  messages: DiscordMessage[];
+  token: string;
+}) {
+  const persistedThread = await updateThread({ channel, thread, token });
   await createMessages({
     accountId,
     channel,
@@ -132,9 +145,18 @@ export async function updateLastReplyAt({
   }
 }
 
-async function updateThread(channel: channels, thread: threads) {
+async function updateThread({
+  channel,
+  thread,
+  token,
+}: {
+  channel: channels;
+  thread: threads;
+  token: string;
+}) {
   const message: DiscordMessage = await getDiscordWithRetry({
     path: `/channels/${channel.externalChannelId}/messages/${thread.externalThreadId}`,
+    token,
   });
   try {
     return await upsertThread(channel.id, message);
@@ -156,30 +178,55 @@ export async function updateThreadMessageCount(threadId: string) {
   });
 }
 
-async function processThread(
-  crawlType: CrawlType,
-  thread: threads & { messages?: { externalMessageId: string }[] },
-  onboardingTimestamp: Date,
-  accountId: string,
-  channel: channels
-) {
+async function processThread({
+  crawlType,
+  thread,
+  onboardingTimestamp,
+  accountId,
+  channel,
+  token,
+}: {
+  crawlType: CrawlType;
+  thread: threads & { messages?: { externalMessageId: string }[] };
+  onboardingTimestamp: Date;
+  accountId: string;
+  channel: channels;
+  token: string;
+}) {
   if ([CrawlType.historic, CrawlType.from_onboarding].includes(crawlType)) {
     // this will force sync all messages until reach onboardingTimestamp,
     thread.messages = [];
   }
-  const messages = await crawlExistingThread(thread, onboardingTimestamp);
+  const messages = await crawlExistingThread({
+    thread,
+    onboardingTimestamp,
+    token,
+  });
   // persist thread with messages
-  await upsertThreadWithNewMessages(accountId, channel, thread, messages);
+  await upsertThreadWithNewMessages({
+    accountId,
+    channel,
+    thread,
+    messages,
+    token,
+  });
 
   await updateThreadMessageCount(thread.id);
 }
 
-export async function processNewThreads(
-  newThreads: DiscordMessage[] | undefined,
-  channel: channels,
-  crawlType: CrawlType,
-  onboardingTimestamp: Date
-) {
+export async function processNewThreads({
+  newThreads,
+  channel,
+  crawlType,
+  onboardingTimestamp,
+  token,
+}: {
+  newThreads: DiscordMessage[] | undefined;
+  channel: channels;
+  crawlType: CrawlType;
+  onboardingTimestamp: Date;
+  token: string;
+}) {
   if (newThreads) {
     console.log({
       channel: channel.channelName,
@@ -196,13 +243,14 @@ export async function processNewThreads(
         });
         // if thread found, we crawl for messages
         if (newThread.thread?.id === newThread.id) {
-          await processThread(
+          await processThread({
             crawlType,
             thread,
             onboardingTimestamp,
-            channel.accountId as string,
-            channel
-          );
+            accountId: channel.accountId as string,
+            channel,
+            token,
+          });
         }
       }
     }

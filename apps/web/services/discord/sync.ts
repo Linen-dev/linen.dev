@@ -1,12 +1,17 @@
-import { SyncStatus, updateAndNotifySyncStatus } from '../sync';
-import prisma from '../../client';
+import { SyncStatus, updateAndNotifySyncStatus } from 'services/sync';
+import prisma from 'client';
 import { listChannelsAndPersist } from './channels';
 import { processChannel } from './channels';
 import { CrawlType, DISCORD_TOKEN } from './constrains';
 import { crawlUsers } from './users';
-import { hideEmptyChannels } from '../../lib/channel';
+import { hideEmptyChannels } from 'lib/channel';
+import { decrypt } from 'utilities/crypto';
 
-async function syncJob(accountId: string, crawlType: CrawlType) {
+async function syncJob(
+  accountId: string,
+  crawlType: CrawlType,
+  decodeBotToken: (accessToken: string) => string
+) {
   console.log('sync stared', { accountId, crawlType });
 
   const account = await prisma.accounts.findUnique({
@@ -16,22 +21,40 @@ async function syncJob(accountId: string, crawlType: CrawlType) {
     },
   });
 
+  if (!account) {
+    throw new Error('account not found');
+  }
+  if (!account.discordServerId) {
+    throw new Error('discord server id not found');
+  }
+  if (!account.discordAuthorizations || !account.discordAuthorizations.length) {
+    throw new Error('discord authorization not found');
+  }
+
+  const discordAuthorizations = account.discordAuthorizations.find(Boolean);
+
   // for a full sync, aka historic fetch, we should use onboardingTimestamp as new Date(0)
   // also we need to clean up all channels cursors
   const onboardingTimestamp = [CrawlType.historic].includes(crawlType)
     ? new Date(0)
-    : account?.discordAuthorizations.shift()?.createdAt ||
-      account?.createdAt ||
-      new Date();
+    : discordAuthorizations?.createdAt || account.createdAt || new Date();
 
   console.log({ onboardingTimestamp });
 
-  await crawlUsers(accountId, account?.discordServerId as string);
+  const token = discordAuthorizations?.customBot
+    ? decodeBotToken(discordAuthorizations.accessToken)
+    : DISCORD_TOKEN;
+
+  await crawlUsers({
+    accountId,
+    discordId: account.discordServerId,
+    token,
+  });
 
   const channels = await listChannelsAndPersist({
-    serverId: account?.discordServerId as string,
+    serverId: account.discordServerId,
     accountId,
-    token: DISCORD_TOKEN,
+    token,
   });
 
   console.log({ channels: channels.length });
@@ -41,7 +64,7 @@ async function syncJob(accountId: string, crawlType: CrawlType) {
       // this will force sync all messages until reach onboardingTimestamp,
       channel.externalPageCursor = null;
     }
-    await processChannel(channel, onboardingTimestamp, crawlType);
+    await processChannel({ channel, onboardingTimestamp, crawlType, token });
   }
   await hideEmptyChannels(accountId);
   console.log('sync finished', { accountId });
@@ -58,7 +81,7 @@ export async function discordSync({
     const crawlType = fullSync ? CrawlType.historic : CrawlType.new_only;
     await updateAndNotifySyncStatus(accountId, SyncStatus.IN_PROGRESS);
 
-    await syncJob(accountId, crawlType);
+    await syncJob(accountId, crawlType, decrypt);
 
     await updateAndNotifySyncStatus(accountId, SyncStatus.DONE);
     return {
