@@ -309,6 +309,7 @@ function MessageForm({
             }
             if (event.key === 'Enter') {
               if (event.ctrlKey || event.shiftKey) {
+                event.preventDefault();
                 const position = getCaretPosition(ref);
                 setMessage((message) => {
                   return [
