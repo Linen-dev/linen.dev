@@ -13,6 +13,7 @@ import {
   revokeKeySchema,
   revokeKeyType,
 } from './api-keys.types';
+import { onError } from 'server/middlewares/error';
 
 const prefix = '/api/api-keys';
 const apiKeysRouter = Router();
@@ -54,4 +55,4 @@ apiKeysRouter.delete(
   }
 );
 
-export default apiKeysRouter;
+export default apiKeysRouter.use(onError);

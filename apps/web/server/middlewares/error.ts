@@ -1,7 +1,7 @@
 import { ZodError } from 'zod';
 import { expireSessionCookies } from 'utilities/auth/server/cookies';
 
-export function onError(error: any, req: any, res: any) {
+export function onError(error: any, req: any, res: any, _: any) {
   if (error.message === 'jwt expired') {
     try {
       expireSessionCookies({ req, res });

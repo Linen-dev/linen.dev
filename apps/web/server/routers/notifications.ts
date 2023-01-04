@@ -9,6 +9,7 @@ import {
   putSettingsSchema,
   putSettingsType,
 } from './notifications.types';
+import { onError } from 'server/middlewares/error';
 
 const prefix = '/api/notifications';
 const notificationsRouter = Router();
@@ -65,4 +66,4 @@ notificationsRouter.put(
   }
 );
 
-export default notificationsRouter;
+export default notificationsRouter.use(onError);
