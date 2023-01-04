@@ -1,6 +1,5 @@
-import React, { createRef } from 'react';
+import React, { createRef, useState } from 'react';
 import classNames from 'classnames';
-import { Mode } from '@linen/hooks/mode';
 import styles from './index.module.scss';
 
 interface Props {
@@ -26,10 +25,12 @@ export default function Droppable({
   children,
   onDrop,
 }: Props) {
+  const [hover, setHover] = useState(false)
   const ref = createRef<HTMLDivElement>();
   if (!onDrop) {
     return <div className={className}>{children}</div>;
   }
+
 
   function handleDragOver(event: React.DragEvent) {
     event.preventDefault();
@@ -39,18 +40,15 @@ export default function Droppable({
   function handleDragEnter(event: React.DragEvent) {
     event.preventDefault();
     event.dataTransfer.dropEffect = 'copy';
-    const node = ref.current as HTMLElement;
-    node.classList.add(styles.hover);
+    setHover(true)
   }
 
   function handleDragLeave() {
-    const node = ref.current as HTMLElement;
-    node.classList.remove(styles.hover);
+    setHover(false)
   }
 
   function handleDrop(event: React.DragEvent) {
-    const node = ref.current as HTMLElement;
-    node.classList.remove(styles.hover);
+    setHover(false)
     const text = event.dataTransfer.getData('text');
     const data = JSON.parse(text);
     if (data.id === id) {
@@ -67,7 +65,7 @@ export default function Droppable({
   return (
     <div
       id={`channel-thread-${id}`}
-      className={classNames(className, styles.row)}
+      className={classNames(className, styles.row, hover && styles.hover)}
       onDragOver={handleDragOver}
       onDragEnter={handleDragEnter}
       onDragLeave={handleDragLeave}

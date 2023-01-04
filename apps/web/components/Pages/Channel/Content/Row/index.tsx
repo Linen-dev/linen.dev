@@ -1,3 +1,5 @@
+import React from 'react'
+import classNames from 'classnames'
 import Droppable from './Droppable';
 import { Avatars } from '@linen/ui';
 import Image from 'next/image';
@@ -80,7 +82,7 @@ export default function ChannelRow({
       className={styles.container}
       onDrop={onDrop}
     >
-      <div className={styles.content}>
+      <div className={classNames(styles.content, { [styles.drag]: mode === Mode.Drag })}>
         <GridRow
           className={className}
           thread={thread}
