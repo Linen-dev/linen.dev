@@ -23,6 +23,7 @@ import { qs } from 'utilities/url';
 import jwtMiddleware from 'server/middlewares/jwt';
 import { SessionType } from 'services/session';
 import { Unauthorized } from 'server/exceptions';
+import { onError } from 'server/middlewares/error';
 
 const prefix = '/api/auth';
 const authRouter = Router();
@@ -155,4 +156,4 @@ authRouter.post(
   }
 );
 
-export default authRouter;
+export default authRouter.use(onError);
