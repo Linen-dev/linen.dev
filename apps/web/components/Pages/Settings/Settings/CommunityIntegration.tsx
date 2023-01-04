@@ -4,6 +4,9 @@ import { integrationAuthorizer } from 'utilities/communityAuthorizers';
 import { SerializedAccount } from '@linen/types';
 import { Toast } from '@linen/ui';
 import { GoCheck, GoAlert, GoInfo } from 'react-icons/go';
+import { onSubmitType, RightPanel } from './CustomDiscordBot';
+import { useState } from 'react';
+import { setDiscordIntegrationCustomBot } from 'utilities/requests';
 
 const statusMap: any = {
   NOT_STARTED: (
@@ -34,6 +37,9 @@ export default function CommunityIntegration({
 }: {
   account?: SerializedAccount;
 }) {
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   const newOnboarding = !account || !account.communityType;
   const communityType =
     account && account.communityType ? account.communityType : 'Slack/Discord';
@@ -47,10 +53,36 @@ export default function CommunityIntegration({
     }
   };
 
+  const onSubmit = async ({ discordServerId, botToken }: onSubmitType) => {
+    try {
+      const { id } = account ? account : await createAccount();
+      setLoading(true);
+      await setDiscordIntegrationCustomBot({
+        discordServerId,
+        botToken,
+        accountId: id,
+      });
+      setOpen(false);
+      window.location.reload();
+    } catch (error) {
+      return Toast.error('Something went wrong, please sign in again');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const syncStatus =
     !!account?.hasAuth &&
     !!account?.syncStatus &&
     statusMap[account.syncStatus];
+
+  function onReconnectClick(community: string): void {
+    if (community === 'slack') {
+      integrationAuthorizer(community, account?.id!);
+    } else {
+      setOpen(true);
+    }
+  }
 
   return (
     <div className="bg-white">
@@ -86,7 +118,7 @@ export default function CommunityIntegration({
                 <CommunityButton
                   communityType={'discord'}
                   label="Connect to"
-                  onClick={onClick}
+                  onClick={() => setOpen(true)}
                   iconSize="20"
                 />
               </div>
@@ -94,15 +126,22 @@ export default function CommunityIntegration({
               <CommunityButton
                 communityType={communityType}
                 label="Reconnect to"
-                onClick={(community) =>
-                  integrationAuthorizer(community, account.id)
-                }
+                onClick={onReconnectClick}
                 iconSize="20"
               />
             )}
           </div>
         </div>
       </div>
+      <RightPanel
+        {...{
+          open,
+          setOpen,
+          loading,
+          onSubmit,
+          discordServerId: account?.discordServerId,
+        }}
+      />
     </div>
   );
 }
