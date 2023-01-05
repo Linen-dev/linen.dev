@@ -47,7 +47,13 @@ interface Props {
     page: number;
   }): Promise<FeedResponse>;
   fetchThread(threadId: string): Promise<SerializedThread>;
-  putThread(threadId: string, options: object): Promise<any>;
+  putThread(
+    threadId: string,
+    options: {
+      state?: ThreadState | undefined;
+      title?: string | undefined;
+    }
+  ): Promise<SerializedThread>;
   fetchTotal({
     communityName,
     state,
@@ -238,17 +244,14 @@ export default function Feed({
     });
 
     return putThread(thread.id, options)
-      .then((response: any) => {
-        if (response.ok) {
-          if (options.state) {
-            setKey((key) => key + 1);
-          }
-          return;
+      .then((_) => {
+        if (options.state) {
+          setKey((key) => key + 1);
         }
-        throw new Error('Failed to close the thread.');
+        return;
       })
-      .catch((exception: Error) => {
-        Toast.error(exception.message);
+      .catch((_: Error) => {
+        Toast.error('Failed to close the thread.');
       });
   };
 

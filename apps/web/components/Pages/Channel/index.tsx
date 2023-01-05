@@ -25,6 +25,7 @@ import { createThreadImitation } from './Content/utilities/thread';
 import { useUsersContext } from '@linen/contexts/Users';
 import storage from '@linen/utilities/storage';
 import ChannelForBots from './ChannelForBots';
+import * as api from 'utilities/requests';
 
 export interface ChannelProps {
   settings: Settings;
@@ -223,18 +224,14 @@ export default function Channel(props: ChannelProps) {
         return pinnedThreads.filter(({ id }) => id !== threadId);
       }
     });
-    return fetch(`/api/threads/${thread.id}`, {
-      method: 'PUT',
-      body: JSON.stringify({ pinned: newPinned }),
-    })
-      .then((response) => {
-        if (response.ok) {
-          return;
-        }
-        throw new Error('Failed to pin the thread.');
+    return api
+      .updateThread({
+        accountId: settings.communityId,
+        id: thread.id,
+        pinned: newPinned,
       })
-      .catch((exception) => {
-        alert(exception.message);
+      .catch((_) => {
+        Toast.error('Failed to pin the thread.');
       });
   }
 
@@ -537,18 +534,14 @@ export default function Channel(props: ChannelProps) {
         return thread;
       });
     });
-    return fetch(`/api/threads/${currentThreadId}`, {
-      method: 'PUT',
-      body: JSON.stringify(options),
-    })
-      .then((response) => {
-        if (response.ok) {
-          return;
-        }
-        throw new Error('Failed to close the thread.');
+    return api
+      .updateThread({
+        accountId: settings.communityId,
+        id: currentThreadId,
+        ...options,
       })
-      .catch((exception) => {
-        Toast.error(exception.message);
+      .catch((_) => {
+        Toast.error('Failed to close the thread.');
       });
   };
 

@@ -6,6 +6,7 @@ import debounce from '@linen/utilities/debounce';
 import { StartSignUpFn } from 'contexts/Join';
 import { createThreadImitation } from './utilities/thread';
 import { UploadedFile } from '@linen/types';
+import * as api from 'utilities/requests';
 
 const debouncedSendChannelMessage = debounce(
   ({
@@ -20,18 +21,14 @@ const debouncedSendChannelMessage = debounce(
     communityId: string;
     channelId: string;
     imitationId: string;
-  }) => {
-    return fetch(`/api/messages/channel`, {
-      method: 'POST',
-      body: JSON.stringify({
-        communityId,
-        body: message,
-        files,
-        channelId,
-        imitationId,
-      }),
-    });
-  },
+  }) =>
+    api.createThread({
+      accountId: communityId,
+      body: message,
+      files,
+      channelId,
+      imitationId,
+    }),
   100
 );
 
@@ -106,8 +103,8 @@ export function sendMessageWrapper({
       imitationId: imitation.id,
     })
       .then((response: any) => {
-        if (response.ok) {
-          return response.json();
+        if (response) {
+          return response;
         }
         throw 'Could not send a message';
       })

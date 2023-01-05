@@ -23,6 +23,8 @@ import {
 } from 'utilities/redirects';
 import { qs } from 'utilities/url';
 import { z } from 'zod';
+import type { channelNextPageType } from './channel.types';
+
 import { PAGE_SIZE } from 'secrets';
 
 export async function channelGetServerSideProps(
@@ -190,9 +192,17 @@ function findChannelOrDefault(
   return channels[0];
 }
 
+// TODO: move this to thread service since it seek for threads
+
 // aka loadMore, it could be asc (gt) or desc (lt)
 // it should return just one cursor, the one to keep loading into same direction
-export async function channelNextPage(channelId: string, cursor: string) {
+export async function channelNextPage({
+  channelId,
+  cursor,
+}: {
+  channelId: string;
+  cursor?: string;
+}): Promise<channelNextPageType> {
   const { sort, direction, sentAt } = decodeCursor(cursor);
   const anonymizeUsers = await shouldThisChannelBeAnonymous(channelId);
   const threads = await findThreadsByCursor({

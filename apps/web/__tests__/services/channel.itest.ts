@@ -110,10 +110,10 @@ describe('channels services', () => {
         };
       };
       beforeAll(async () => {
-        fetchMore = await channelNextPage(
-          channelProps.props?.currentChannel.id!,
-          channelProps.props?.nextCursor.prev!
-        );
+        fetchMore = await channelNextPage({
+          channelId: channelProps.props?.currentChannel.id!,
+          cursor: channelProps.props?.nextCursor.prev!,
+        });
       });
 
       it('it should return the previous 10 threads', async () => {
@@ -230,10 +230,10 @@ describe('channels services', () => {
         expect(channelProps.props?.nextCursor.next).not.toBeNull();
       });
       it('next cursor should return the next 10 threads', async () => {
-        const fetchMore = await channelNextPage(
-          channelProps.props?.currentChannel.id!,
-          channelProps.props?.nextCursor.next!
-        );
+        const fetchMore = await channelNextPage({
+          channelId: channelProps.props?.currentChannel.id!,
+          cursor: channelProps.props?.nextCursor.next!,
+        });
         for (let idx = 0; idx < fetchMore.threads.length; idx++) {
           expect(fetchMore.threads[idx].incrementId).toBe(
             scope.threads[idx + scope.threadIndex + 10].incrementId
@@ -244,10 +244,10 @@ describe('channels services', () => {
         expect(channelProps.props?.nextCursor.prev).not.toBeNull();
       });
       it('prev cursor should return the prev 10 threads', async () => {
-        const fetchMore = await channelNextPage(
-          channelProps.props?.currentChannel.id!,
-          channelProps.props?.nextCursor.prev!
-        );
+        const fetchMore = await channelNextPage({
+          channelId: channelProps.props?.currentChannel.id!,
+          cursor: channelProps.props?.nextCursor.prev!,
+        });
         for (let idx = 0; idx < fetchMore.threads.length; idx++) {
           expect(fetchMore.threads[idx].incrementId).toBe(
             scope.threads[scope.threadIndex - 10 + idx].incrementId

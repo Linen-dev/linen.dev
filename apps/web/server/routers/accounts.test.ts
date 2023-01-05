@@ -2,24 +2,12 @@ jest.mock('services/accounts');
 import '__mocks__/tokens';
 import { v4 as random } from 'uuid';
 import { create } from '__tests__/factory';
-import { attachHeaders, login } from '__tests__/pages/api/auth/login';
+import { attachHeaders } from '__tests__/pages/api/auth/login';
 import { testApiHandler } from 'next-test-api-route-handler';
 import handler from 'pages/api/accounts/[[...slug]]';
 import { integrationDiscordType } from './accounts.types';
 import { Roles } from 'server/middlewares/tenant';
-
-async function createUser(accountId: string, role: string) {
-  const creds = { email: random(), password: random() };
-  const auth = await create('auth', { ...creds });
-  await create('user', {
-    accountsId: accountId,
-    authsId: auth.id,
-    role,
-  });
-  return await (
-    await login({ ...creds })
-  ).body.token;
-}
+import { createUser } from '__tests__/factory/login';
 
 describe('accounts api', () => {
   describe('POST /api/accounts/integration/discord', () => {
@@ -42,22 +30,22 @@ describe('accounts api', () => {
 
       cases['admin user expected 200 status'] = {
         accountId: account.id,
-        token: tokenAdmin,
+        token: tokenAdmin.token,
         expected: 200,
       };
       cases['owner user expected 200 status'] = {
         accountId: account.id,
-        token: tokenOwner,
+        token: tokenOwner.token,
         expected: 200,
       };
       cases['member user expected 403 status'] = {
         accountId: account.id,
-        token: tokenMember,
+        token: tokenMember.token,
         expected: 403,
       };
       cases['owner user from another tenant expected 403 status'] = {
         accountId: account.id,
-        token: tokenOwnerAccount2,
+        token: tokenOwnerAccount2.token,
         expected: 403,
       };
       cases['unauthenticated user expected 401 status'] = {
