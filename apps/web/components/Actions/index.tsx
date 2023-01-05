@@ -1,6 +1,5 @@
-import React from 'react';
 import classNames from 'classnames';
-import Draggable from './Draggable'
+import Draggable from './Draggable';
 import { getThreadUrl } from '../Pages/Channel/utilities/url';
 import { Toast, Tooltip } from '@linen/ui';
 import {
@@ -13,7 +12,7 @@ import {
 import { copyToClipboard } from '@linen/utilities/clipboard';
 import { GoPin } from 'react-icons/go';
 import { AiOutlinePaperClip } from 'react-icons/ai';
-import { RxDragHandleDots2 } from 'react-icons/rx'
+import { RxDragHandleDots2 } from 'react-icons/rx';
 import { FiThumbsUp } from 'react-icons/fi';
 import styles from './index.module.scss';
 import { Mode } from '@linen/hooks/mode';
@@ -84,7 +83,10 @@ export default function Actions({
             source={drag}
             mode={mode}
           >
-            <Tooltip className={styles.tooltip} text={drag === 'thread' ? 'Move thread' : 'Move message'}>
+            <Tooltip
+              className={styles.tooltip}
+              text={drag === 'thread' ? 'Move thread' : 'Move message'}
+            >
               <RxDragHandleDots2 />
             </Tooltip>
           </Draggable>

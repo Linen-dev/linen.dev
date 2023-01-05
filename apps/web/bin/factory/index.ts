@@ -2,8 +2,8 @@ import prisma from '../../client';
 import { truncateTables } from './truncate';
 import { ChatType, MessageFormat, Roles } from '@linen/types';
 import { generateHash } from '../../utilities/password';
-import { join } from 'path'
-import { readFileSync } from 'fs'
+import { join } from 'path';
+import { readFileSync } from 'fs';
 
 async function createLinenCommunity() {
   const community = await prisma.accounts.create({
@@ -410,7 +410,7 @@ async function createLinenCommunity() {
           },
           {
             channelId: channel1.id,
-            body: 'We\'ll try to track it.',
+            body: "We'll try to track it.",
             usersId: user1.id,
             sentAt: '2021-12-14T09:08:00.000Z',
             messageFormat: MessageFormat.LINEN,
@@ -435,7 +435,7 @@ async function createLinenCommunity() {
         create: [
           {
             channelId: channel1.id,
-            body: "We could create an api",
+            body: 'We could create an api',
             usersId: user4.id,
             sentAt: '2021-12-13T09:01:00.000Z',
             messageFormat: MessageFormat.LINEN,

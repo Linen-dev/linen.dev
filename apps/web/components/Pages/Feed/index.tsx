@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import PageLayout from 'components/layout/PageLayout';
 import {
   Permissions,
@@ -9,7 +9,7 @@ import {
   ThreadState,
 } from '@linen/types';
 import debounce from '@linen/utilities/debounce';
-import storage from '@linen/utilities/storage'
+import storage from '@linen/utilities/storage';
 
 import Content from './Content';
 
@@ -87,10 +87,12 @@ export default function Feed({
   permissions,
   settings,
 }: Props) {
-
   useEffect(() => {
-    storage.set("pages.last", { communityId: currentCommunity.id, page: 'feed' })
-  }, [currentCommunity])
+    storage.set('pages.last', {
+      communityId: currentCommunity.id,
+      page: 'feed',
+    });
+  }, [currentCommunity]);
 
   return (
     <PageLayout

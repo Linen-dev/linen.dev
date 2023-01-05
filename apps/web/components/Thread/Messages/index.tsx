@@ -1,4 +1,3 @@
-import React from 'react';
 import classNames from 'classnames';
 import GridRow from 'components/GridRow';
 import { SerializedThread } from '@linen/types';
@@ -58,7 +57,7 @@ function Messages({
           settings={settings}
           isSubDomainRouting={isSubDomainRouting}
           mode={mode}
-          drag='message'
+          drag="message"
           onReaction={onReaction}
           onLoad={onLoad}
         />

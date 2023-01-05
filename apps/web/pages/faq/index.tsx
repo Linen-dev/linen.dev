@@ -12,9 +12,10 @@ const faqs = [
       'Linen is an async first, open source community chat tool designed to be searchable by crawlers.',
   },
   {
-    question: "What does Google Searchable mean?",
-    answer: 'It means that the content here can be found on Google. It can take time to get it indexed but using the community url on other websites can help speed it up.'
-  }
+    question: 'What does Google Searchable mean?',
+    answer:
+      'It means that the content here can be found on Google. It can take time to get it indexed but using the community url on other websites can help speed it up.',
+  },
 ];
 
 export default function Example() {

@@ -19,18 +19,12 @@ interface Props {
   }): void;
 }
 
-export default function Droppable({
-  id,
-  className,
-  children,
-  onDrop,
-}: Props) {
-  const [hover, setHover] = useState(false)
+export default function Droppable({ id, className, children, onDrop }: Props) {
+  const [hover, setHover] = useState(false);
   const ref = createRef<HTMLDivElement>();
   if (!onDrop) {
     return <div className={className}>{children}</div>;
   }
-
 
   function handleDragOver(event: React.DragEvent) {
     event.preventDefault();
@@ -40,15 +34,15 @@ export default function Droppable({
   function handleDragEnter(event: React.DragEvent) {
     event.preventDefault();
     event.dataTransfer.dropEffect = 'copy';
-    setHover(true)
+    setHover(true);
   }
 
   function handleDragLeave() {
-    setHover(false)
+    setHover(false);
   }
 
   function handleDrop(event: React.DragEvent) {
-    setHover(false)
+    setHover(false);
     const text = event.dataTransfer.getData('text');
     if (text) {
       const data = JSON.parse(text);

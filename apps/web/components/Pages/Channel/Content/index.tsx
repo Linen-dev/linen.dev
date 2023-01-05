@@ -35,9 +35,9 @@ import useWebsockets from '@linen/hooks/websockets';
 import styles from './index.module.scss';
 import { SerializedMessage } from '@linen/types';
 import { Layouts } from '@linen/ui';
-import { timestamp } from '@linen/utilities/date'
+import { timestamp } from '@linen/utilities/date';
 import debounce from '@linen/utilities/debounce';
-import { FiArrowDown } from 'react-icons/fi'
+import { FiArrowDown } from 'react-icons/fi';
 
 const { SidebarLayout } = Layouts.Shared;
 
@@ -93,10 +93,14 @@ interface Props {
   updateThread({ state, title }: { state?: ThreadState; title?: string }): void;
 }
 
-const debouncedGetReadStatus = debounce((channelId: string) => get(`/api/read-status/${channelId}`));
-const debouncedUpdateReadStatus = debounce((channelId: string) => put(`/api/read-status/${channelId}`, { timestamp: timestamp() }))
+const debouncedGetReadStatus = debounce((channelId: string) =>
+  get(`/api/read-status/${channelId}`)
+);
+const debouncedUpdateReadStatus = debounce((channelId: string) =>
+  put(`/api/read-status/${channelId}`, { timestamp: timestamp() })
+);
 
-const UPDATE_READ_STATUS_INTERVAL_IN_MS = 30000
+const UPDATE_READ_STATUS_INTERVAL_IN_MS = 30000;
 
 export default function Channel({
   threads,
@@ -121,15 +125,15 @@ export default function Channel({
   onThreadMessage,
 }: Props) {
   const [isLoading, setIsLoading] = useState(false);
-  const [isLeftScrollAtBottom, setIsLeftScrollAtBottom] = useState(true)
+  const [isLeftScrollAtBottom, setIsLeftScrollAtBottom] = useState(true);
   const [readStatus, setReadStatus] = useState<SerializedReadStatus>();
   const scrollableRootRef = useRef<HTMLDivElement | null>(null);
   const rightRef = useRef<HTMLDivElement>(null);
   const leftBottomRef = useRef<HTMLDivElement>(null);
   const [cursor, setCursor] = useState(nextCursor);
   const [error, setError] = useState<{ prev?: unknown; next?: unknown }>();
-  const [progress, setProgress] = useState(0)
-  const [uploading, setUploading] = useState(false)
+  const [progress, setProgress] = useState(0);
+  const [uploading, setUploading] = useState(false);
   const [uploads, setUploads] = useState<UploadedFile[]>([]);
   const [allUsers] = useUsersContext();
   const { startSignUp } = useJoinContext();
@@ -144,41 +148,42 @@ export default function Channel({
     token,
     permissions,
     onNewMessage(payload) {
-      const pinned = isLeftScrollAtBottom
-      onThreadMessage(payload)
+      const pinned = isLeftScrollAtBottom;
+      onThreadMessage(payload);
       if (pinned) {
-        setTimeout(() => handleScroll(), 0)
+        setTimeout(() => handleScroll(), 0);
       }
-    }
+    },
   });
 
   useEffect(() => {
-    let mounted = true
-    const channelId = currentChannel.id
+    let mounted = true;
+    const channelId = currentChannel.id;
     if (currentUser) {
-      debouncedGetReadStatus(channelId)
-        .then((readStatus: SerializedReadStatus) => {
+      debouncedGetReadStatus(channelId).then(
+        (readStatus: SerializedReadStatus) => {
           if (mounted) {
-            setReadStatus(readStatus)
-            return debouncedUpdateReadStatus(channelId)
+            setReadStatus(readStatus);
+            return debouncedUpdateReadStatus(channelId);
           }
-        })
+        }
+      );
     }
     return () => {
-      debouncedUpdateReadStatus(channelId)
-      mounted = false
-    }
-  }, [currentChannel])
+      debouncedUpdateReadStatus(channelId);
+      mounted = false;
+    };
+  }, [currentChannel]);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      const channelId = currentChannel.id
-      debouncedUpdateReadStatus(channelId)
-    }, UPDATE_READ_STATUS_INTERVAL_IN_MS)
+      const channelId = currentChannel.id;
+      debouncedUpdateReadStatus(channelId);
+    }, UPDATE_READ_STATUS_INTERVAL_IN_MS);
     return () => {
-      clearInterval(interval)
-    }
-  }, [currentChannel])
+      clearInterval(interval);
+    };
+  }, [currentChannel]);
 
   function handleScroll() {
     scrollToBottom(scrollableRootRef.current as HTMLElement);
@@ -239,9 +244,9 @@ export default function Channel({
   const handleRootScroll = () => {
     const rootNode = scrollableRootRef.current;
     if (rootNode) {
-      setIsLeftScrollAtBottom(isScrollAtBottom(rootNode))
+      setIsLeftScrollAtBottom(isScrollAtBottom(rootNode));
     }
-  }
+  };
 
   async function loadMore(next: boolean = false) {
     const key = next ? 'next' : 'prev';
@@ -264,14 +269,14 @@ export default function Channel({
       }
       const scrollableRoot = scrollableRootRef.current;
       if (scrollableRoot) {
-        const index = dir === 'top' ? 0 : threads.length
-        const id = threads[index].id
+        const index = dir === 'top' ? 0 : threads.length;
+        const id = threads[index].id;
         setTimeout(() => {
-          const node = document.getElementById(`channel-thread-${id}`)
+          const node = document.getElementById(`channel-thread-${id}`);
           if (node) {
-            node.scrollIntoView()
+            node.scrollIntoView();
           }
-        }, 0)
+        }, 0);
       }
     } catch (err) {
       setError({ ...error, [key]: err });
@@ -293,7 +298,7 @@ export default function Channel({
     scrollableRootRef,
     currentCommunity,
     startSignUp,
-  })
+  });
 
   const sendThreadMessage = sendThreadMessageWrapper({
     currentUser: permissions.is_member ? currentUser : null,
@@ -326,31 +331,36 @@ export default function Channel({
     handleLeftScroll();
   };
 
-  function uploadFiles (files: File[]) {
+  function uploadFiles(files: File[]) {
     setProgress(0);
-    setUploading(true)
-    setUploads([])
+    setUploading(true);
+    setUploads([]);
     const data = new FormData();
     files.forEach((file, index) => {
       data.append(`file-${index}`, file, file.name);
-    })
-    return upload({ communityId: settings.communityId, data }, {
-      onUploadProgress: (progressEvent: ProgressEvent) => {
-        const percentCompleted = Math.round(
-          (progressEvent.loaded * 100) / progressEvent.total
-        );
-        setProgress(percentCompleted);
-      },
-    }).then((response) => {
-      setUploading(false)
-      const { files } = response.data;
-      setUploads(files);
-      return response
-    }).catch((response) => {
-      setUploading(false)
-      setUploads([])
-      return response
-    })
+    });
+    return upload(
+      { communityId: settings.communityId, data },
+      {
+        onUploadProgress: (progressEvent: ProgressEvent) => {
+          const percentCompleted = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total
+          );
+          setProgress(percentCompleted);
+        },
+      }
+    )
+      .then((response) => {
+        setUploading(false);
+        const { files } = response.data;
+        setUploads(files);
+        return response;
+      })
+      .catch((response) => {
+        setUploading(false);
+        setUploads([]);
+        return response;
+      });
   }
 
   return (
@@ -366,10 +376,12 @@ export default function Channel({
             {cursor?.prev && !error?.prev && <div ref={infiniteTopRef}></div>}
             <ChatLayout
               onDrop={(event: React.DragEvent) => {
-                event.preventDefault()
-                event.stopPropagation()
-                const files = Array.from(event.dataTransfer.files || [])
-                if (files.length > 0) { uploadFiles(files) }
+                event.preventDefault();
+                event.stopPropagation();
+                const files = Array.from(event.dataTransfer.files || []);
+                if (files.length > 0) {
+                  uploadFiles(files);
+                }
               }}
               content={
                 <>
@@ -395,7 +407,14 @@ export default function Channel({
                         />
                       </PinnedThread>
                     )}
-                    <div className={classNames(styles.jump, { [styles.hidden]: isLeftScrollAtBottom })} onClick={handleScroll}><FiArrowDown className={styles.icon} /></div>
+                    <div
+                      className={classNames(styles.jump, {
+                        [styles.hidden]: isLeftScrollAtBottom,
+                      })}
+                      onClick={handleScroll}
+                    >
+                      <FiArrowDown className={styles.icon} />
+                    </div>
                   </Header>
                   {threads.length === 0 ? (
                     <Empty />
@@ -467,7 +486,7 @@ export default function Channel({
                 handleLeftScroll();
               }}
               onMessage={(message, messageId, imitationId) => {
-                const pinned = isLeftScrollAtBottom
+                const pinned = isLeftScrollAtBottom;
                 onMessage(message, messageId, imitationId);
                 if (pinned) {
                   handleScroll();

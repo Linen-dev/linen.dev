@@ -10,7 +10,6 @@ import { getCaretPosition, setCaretPosition } from './utilities';
 import { MessageFormat, SerializedUser } from '@linen/types';
 import { useUsersContext } from '@linen/contexts/Users';
 import { postprocess, previewable } from './utilities/message';
-import { AxiosResponse } from 'axios';
 
 export const FILE_SIZE_LIMIT_IN_BYTES = 1048576;
 
@@ -155,7 +154,10 @@ function MessageForm({
     }
     setLoading(true);
 
-    callback?.(postprocess(message, allUsers), uploads.filter((upload) => !message.includes(upload.url)))
+    callback?.(
+      postprocess(message, allUsers),
+      uploads.filter((upload) => !message.includes(upload.url))
+    )
       .then(() => {
         setLoading(false);
       })
@@ -203,11 +205,11 @@ function MessageForm({
   }, [mention]);
 
   const clearFileInput = () => {
-    const node = document.getElementById(`${id}-files`) as HTMLInputElement
+    const node = document.getElementById(`${id}-files`) as HTMLInputElement;
     if (node) {
-      node.value = ''
+      node.value = '';
     }
-  }
+  };
   const uploadFiles = (files: File[]) => {
     if (!upload) {
       return;
@@ -218,33 +220,31 @@ function MessageForm({
         if (file.size > FILE_SIZE_LIMIT_IN_BYTES) {
           clearFileInput();
           Toast.error(getFileSizeErrorMessage(file.name));
-          return Promise.reject()
+          return Promise.reject();
         }
       }
-      return upload(files)
-        .finally(() => {
-          clearFileInput();
-        })
+      return upload(files).finally(() => {
+        clearFileInput();
+      });
     }
   };
 
   const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(event.target.files || []);
-    uploadFiles(files)
+    uploadFiles(files);
   };
 
   const onDrop = (event: React.DragEvent) => {
-    event.preventDefault()
-    event.stopPropagation()
-    const files = Array.from(event.dataTransfer.files || [])
-    if (files.length > 0) { uploadFiles(files) }
-  }
+    event.preventDefault();
+    event.stopPropagation();
+    const files = Array.from(event.dataTransfer.files || []);
+    if (files.length > 0) {
+      uploadFiles(files);
+    }
+  };
 
   return (
-    <div
-      className={styles.container}
-      onDrop={onDrop}
-    >
+    <div className={styles.container} onDrop={onDrop}>
       {mode === Mode.Mention && (
         <Suggestions
           className={styles.suggestions}
@@ -280,20 +280,18 @@ function MessageForm({
       {message && previewable(message) && (
         <Preview
           currentUser={currentUser}
-          message={
-            {
-              body: postprocess(message, allUsers),
-              sentAt: new Date().toISOString(),
-              author: currentUser,
-              usersId: currentUser?.id || '1',
-              mentions: allUsers,
-              attachments: [],
-              reactions: [],
-              id: '1',
-              threadId: '1',
-              messageFormat: MessageFormat.LINEN
-            }
-          }
+          message={{
+            body: postprocess(message, allUsers),
+            sentAt: new Date().toISOString(),
+            author: currentUser,
+            usersId: currentUser?.id || '1',
+            mentions: allUsers,
+            attachments: [],
+            reactions: [],
+            id: '1',
+            threadId: '1',
+            messageFormat: MessageFormat.LINEN,
+          }}
         />
       )}
       <form className={styles.form} onSubmit={handleSend}>

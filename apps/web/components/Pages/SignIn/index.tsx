@@ -25,12 +25,12 @@ interface SignInProps {
   onSignIn?: () => void;
 }
 
-function prepareUrl (url?: string) {
-  const page = storage.get('pages.last')
+function prepareUrl(url?: string) {
+  const page = storage.get('pages.last');
   if (page && url === '/api/router') {
-    return `${url}?${qs(page)}`
+    return `${url}?${qs(page)}`;
   }
-  return url
+  return url;
 }
 
 export default function SignIn({
@@ -51,7 +51,7 @@ export default function SignIn({
     ? CardLayout
     : (props: any) => <>{props.children}</>;
 
-  const redirectUrl = prepareUrl(callbackUrl)
+  const redirectUrl = prepareUrl(callbackUrl);
 
   return (
     <Layout header="Sign In">

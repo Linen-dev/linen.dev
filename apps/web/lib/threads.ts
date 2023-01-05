@@ -254,11 +254,11 @@ export async function findThreadsByCursor({
       },
       hidden: false,
       messageCount: {
-        gte: 1
+        gte: 1,
       },
       messages: {
-        some: {}
-      }
+        some: {},
+      },
     },
     include: {
       messages: {

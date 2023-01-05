@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import PageLayout from 'components/layout/PageLayout';
 import Header from './Header';
 import Content from './Content';
@@ -8,7 +8,7 @@ import {
   SerializedChannel,
   Settings,
 } from '@linen/types';
-import storage from '@linen/utilities/storage'
+import storage from '@linen/utilities/storage';
 
 interface Props {
   channels: SerializedChannel[];
@@ -23,10 +23,12 @@ export default function Metrics({
   settings,
   permissions,
 }: Props) {
-
   useEffect(() => {
-    storage.set("pages.last", { communityId: currentCommunity.id, page: 'metrics' })
-  }, [currentCommunity])
+    storage.set('pages.last', {
+      communityId: currentCommunity.id,
+      page: 'metrics',
+    });
+  }, [currentCommunity]);
 
   return (
     <PageLayout
