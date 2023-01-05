@@ -65,5 +65,6 @@ notificationsRouter.put(
     res.end();
   }
 );
+notificationsRouter.use(onError);
 
-export default notificationsRouter.use(onError);
+export default notificationsRouter;

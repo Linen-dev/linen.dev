@@ -76,12 +76,14 @@ accountsRouter.post(
   ) => {
     const accountId = req.tenant?.id!;
     const data = await AccountsService.setCustomBotDiscord({
-      accountId,
       ...req.body,
+      accountId,
     });
     res.json(data);
     res.end();
   }
 );
+
+accountsRouter.use(onError);
 
 export default accountsRouter.use(onError);

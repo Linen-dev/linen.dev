@@ -251,4 +251,6 @@ authRouter.post(
   }
 );
 
-export default authRouter.use(onError);
+authRouter.use(onError);
+
+export default authRouter;

@@ -55,4 +55,6 @@ apiKeysRouter.delete(
   }
 );
 
-export default apiKeysRouter.use(onError);
+apiKeysRouter.use(onError);
+
+export default apiKeysRouter;
