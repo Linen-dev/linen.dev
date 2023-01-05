@@ -86,6 +86,7 @@ export default function Thread({
   const ref = useRef<HTMLDivElement>(null);
   const [progress, setProgress] = useState(0)
   const [uploading, setUploading] = useState(false);
+  const [uploads, setUploads] = useState<UploadedFile[]>([]);
   const { id, state, viewCount, incrementId } = thread;
 
   const handleScroll = () =>
@@ -126,6 +127,7 @@ export default function Thread({
   const uploadFiles = (data: FormData) => {
     setProgress(0);
     setUploading(true)
+    setUploads([])
     return upload(
       { communityId: settings.communityId, data }, {
         onUploadProgress: (progressEvent: ProgressEvent) => {
@@ -137,6 +139,8 @@ export default function Thread({
       }
     ).then((response) => {
       setUploading(false)
+      const { files } = response.data;
+      setUploads(files);
       return response
     }).catch((response) => {
       setUploading(false)
@@ -198,6 +202,8 @@ export default function Thread({
                   files,
                   channelId,
                   threadId: id,
+                }).then(() => {
+                  setUploads([]);
                 });
                 handleScroll();
                 return promise;
@@ -208,7 +214,9 @@ export default function Thread({
                 return Promise.all([
                   sendMessage({ message, files, channelId, threadId: id }),
                   updateThread({ state: ThreadState.CLOSE }),
-                ]);
+                ]).then(() => {
+                  setUploads([])
+                });
               }}
               fetchMentions={(term?: string) => {
                 if (!term) return Promise.resolve([]);
@@ -216,6 +224,7 @@ export default function Thread({
               }}
               progress={progress}
               uploading={uploading}
+              uploads={uploads}
               upload={uploadFiles}
             />
           ) : (
@@ -240,6 +249,7 @@ export default function Thread({
               }}
               progress={progress}
               uploading={uploading}
+              uploads={uploads}
               upload={uploadFiles}
             />
           )}
