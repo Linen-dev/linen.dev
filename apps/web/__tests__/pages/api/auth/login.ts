@@ -26,11 +26,15 @@ export async function login({ email, password }: any) {
   return { body, status };
 }
 
-export function attachHeaders({ token }: { token?: string } = {}) {
+export function attachHeaders({
+  token,
+  apiKey,
+}: { token?: string; apiKey?: string } = {}) {
   return {
     headers: {
       'Content-Type': 'application/json',
       ...(!!token && { Authorization: `Bearer ${token}` }),
+      ...(!!apiKey && { 'X-Api-Key': apiKey }),
     },
   };
 }

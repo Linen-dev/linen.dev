@@ -24,6 +24,11 @@ export type AuthedRequestWithBody<Body> = AuthedRequest<any, any, Body, any>;
 export type AuthedRequestWithTenant = AuthedRequest<any, any, any, any> & {
   tenant?: accounts | null;
   tenant_user?: users;
+  tenant_api?: {
+    id: string;
+    name: string;
+    scope: any;
+  };
 };
 
 export type AuthedRequestWithTenantAndBody<Body> = AuthedRequestWithBody<Body> &
