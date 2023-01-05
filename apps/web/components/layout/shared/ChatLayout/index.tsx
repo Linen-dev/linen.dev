@@ -5,11 +5,12 @@ import styles from './index.module.css';
 interface Props {
   content: React.ReactNode;
   footer: React.ReactNode;
+  onDrop?(event: React.DragEvent): void;
 }
 
-function ChatLayout({ content, footer }: Props) {
+function ChatLayout({ content, footer, onDrop }: Props) {
   return (
-    <div className={classNames(styles.table)}>
+    <div className={classNames(styles.table)} onDrop={onDrop}>
       <div className={styles.main}>
         <div className={styles.content}>{content}</div>
       </div>

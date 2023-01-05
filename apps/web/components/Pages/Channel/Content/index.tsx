@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import useInfiniteScroll from 'react-infinite-scroll-hook';
 import Thread from 'components/Thread';
 import { get, put } from 'utilities/http';
@@ -365,6 +365,12 @@ export default function Channel({
           >
             {cursor?.prev && !error?.prev && <div ref={infiniteTopRef}></div>}
             <ChatLayout
+              onDrop={(event: React.DragEvent) => {
+                event.preventDefault()
+                event.stopPropagation()
+                const files = Array.from(event.dataTransfer.files || [])
+                uploadFiles(files)
+              }}
               content={
                 <>
                   <Header
