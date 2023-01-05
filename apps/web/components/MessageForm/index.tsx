@@ -10,7 +10,7 @@ import { getCaretPosition, setCaretPosition } from './utilities';
 import { MessageFormat, SerializedUser } from '@linen/types';
 import { useUsersContext } from '@linen/contexts/Users';
 import { postprocess, previewable } from './utilities/message';
-import { AxiosRequestConfig, AxiosResponse } from 'axios';
+import { AxiosResponse } from 'axios';
 
 export const FILE_SIZE_LIMIT_IN_BYTES = 1048576;
 
@@ -22,10 +22,11 @@ interface Props {
   id?: string;
   autoFocus?: boolean;
   currentUser?: SerializedUser | null;
+  progress: number;
   onSend?(message: string, files: UploadedFile[]): Promise<any>;
   onSendAndClose?(message: string, files: UploadedFile[]): Promise<any>;
   fetchMentions?(term?: string): Promise<SerializedUser[]>;
-  upload?(data: FormData, options: AxiosRequestConfig): Promise<AxiosResponse>;
+  upload?(data: FormData): Promise<AxiosResponse>;
 }
 
 function isUndefined(character: string | undefined) {
@@ -127,6 +128,7 @@ function MessageForm({
   id,
   autoFocus,
   currentUser,
+  progress,
   onSend,
   onSendAndClose,
   fetchMentions,
@@ -135,7 +137,6 @@ function MessageForm({
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const [progress, setProgress] = useState(0);
   const [files, setFiles] = useState<File[]>([]);
   const [uploads, setUploads] = useState<UploadedFile[]>([]);
   const [users, setUsers] = useState<SerializedUser[]>([]);
@@ -228,15 +229,7 @@ function MessageForm({
         formData.append(`file-${index}`, file, file.name);
       })
       setUploading(true);
-      setProgress(0);
-      return upload(formData, {
-        onUploadProgress: (progressEvent: ProgressEvent) => {
-          const percentCompleted = Math.round(
-            (progressEvent.loaded * 100) / progressEvent.total
-          );
-          setProgress(percentCompleted);
-        },
-      })
+      return upload(formData)
         .then((response) => {
           const { files } = response.data;
           setUploads(files);

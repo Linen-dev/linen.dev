@@ -5,7 +5,7 @@ export default function MessageFormExample() {
   return (
     <Example header="MessageForm">
       <Example description="Renders a label.">
-        <MessageForm />
+        <MessageForm progress={0} />
       </Example>
     </Example>
   );
