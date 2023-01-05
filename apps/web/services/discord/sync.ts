@@ -17,7 +17,7 @@ async function syncJob(
   const account = await prisma.accounts.findUnique({
     where: { id: accountId },
     include: {
-      discordAuthorizations: { take: 1, orderBy: { createdAt: 'asc' } },
+      discordAuthorizations: { take: 1, orderBy: { createdAt: 'desc' } },
     },
   });
 
