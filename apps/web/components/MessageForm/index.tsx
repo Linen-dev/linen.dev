@@ -202,7 +202,7 @@ function MessageForm({
     };
   }, [mention]);
 
-  const uploadFiles = (event: React.ChangeEvent<HTMLInputElement>, files: File[]) => {
+  const uploadFiles = (files: File[]) => {
     if (!upload) {
       return;
     }
@@ -213,7 +213,10 @@ function MessageForm({
       for (let index = 0, length = files.length; index < length; index += 1) {
         const file = files[index];
         if (file.size > FILE_SIZE_LIMIT_IN_BYTES) {
-          event.target.value = '';
+          if (ref && ref.current) {
+            const node = ref.current as HTMLTextAreaElement
+            node.value = ''
+          }
           setFiles([]);
           return Toast.error(getFileSizeErrorMessage(file.name));
         }
@@ -221,7 +224,7 @@ function MessageForm({
       }
       setUploading(true);
       setProgress(0);
-      upload(formData, {
+      return upload(formData, {
         onUploadProgress: (progressEvent: ProgressEvent) => {
           const percentCompleted = Math.round(
             (progressEvent.loaded * 100) / progressEvent.total
@@ -238,21 +241,23 @@ function MessageForm({
           setUploading(false);
         })
         .finally(() => {
-          event.target.value = '';
-        });
+          if (ref && ref.current) {
+            const node = ref.current as HTMLTextAreaElement
+            node.value = ''
+          }
+        })
     }
   };
 
   const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (!upload) {
-      return;
-    }
     const files = Array.from(event.target.files || []);
-    uploadFiles(event, files)
+    uploadFiles(files)
   };
 
   const onDrop = (event: React.DragEvent) => {
     event.preventDefault()
+    const files = Array.from(event.dataTransfer.files || [])
+    uploadFiles(files)
   }
 
   return (
