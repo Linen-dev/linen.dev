@@ -208,7 +208,6 @@ function MessageForm({
       node.value = ''
     }
   }
-
   const uploadFiles = (files: File[]) => {
     if (!upload) {
       return;
@@ -224,8 +223,10 @@ function MessageForm({
           setFiles([]);
           return Toast.error(getFileSizeErrorMessage(file.name));
         }
-        formData.append(`file-${index}`, file, file.name);
       }
+      files.forEach((file, index) => {
+        formData.append(`file-${index}`, file, file.name);
+      })
       setUploading(true);
       setProgress(0);
       return upload(formData, {
