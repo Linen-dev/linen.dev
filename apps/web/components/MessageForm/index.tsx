@@ -28,7 +28,7 @@ interface Props {
   onSend?(message: string, files: UploadedFile[]): Promise<any>;
   onSendAndClose?(message: string, files: UploadedFile[]): Promise<any>;
   fetchMentions?(term?: string): Promise<SerializedUser[]>;
-  upload?(data: FormData): Promise<AxiosResponse>;
+  upload?(files: File[]): Promise<AxiosResponse>;
 }
 
 function isUndefined(character: string | undefined) {
@@ -140,7 +140,6 @@ function MessageForm({
 }: Props) {
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
-  const [files, setFiles] = useState<File[]>([]);
   const [users, setUsers] = useState<SerializedUser[]>([]);
   const [allUsers, addUsers] = useUsersContext();
   const [position, setPosition] = useState(0);
@@ -166,7 +165,6 @@ function MessageForm({
       });
 
     setMessage('');
-    setFiles([]);
   };
   const handleSend = async (event: React.SyntheticEvent) =>
     handleSubmit(event, onSend);
@@ -214,25 +212,16 @@ function MessageForm({
     if (!upload) {
       return;
     }
-    setFiles(files);
     if (files.length > 0) {
-      const formData = new FormData();
       for (let index = 0, length = files.length; index < length; index += 1) {
         const file = files[index];
         if (file.size > FILE_SIZE_LIMIT_IN_BYTES) {
           clearFileInput();
-          setFiles([]);
-          return Toast.error(getFileSizeErrorMessage(file.name));
+          Toast.error(getFileSizeErrorMessage(file.name));
+          return Promise.reject()
         }
       }
-      files.forEach((file, index) => {
-        formData.append(`file-${index}`, file, file.name);
-      })
-      return upload(formData)
-        .then((response) => {
-        })
-        .catch(() => {
-        })
+      return upload(files)
         .finally(() => {
           clearFileInput();
         })
@@ -356,7 +345,6 @@ function MessageForm({
             <FilesSummary
               uploading={uploading}
               progress={progress}
-              files={files}
               uploads={uploads}
             />
           </div>

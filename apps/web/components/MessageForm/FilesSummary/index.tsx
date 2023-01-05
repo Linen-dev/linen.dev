@@ -7,13 +7,11 @@ import { Toast } from '@linen/ui'
 interface Props {
   uploading?: boolean;
   progress: number;
-  files: File[];
   uploads: UploadedFile[];
 }
 
-export default function FilesSummary({ uploading, progress, files, uploads }: Props) {
-  const count = files.length
-  if (count === 0) {
+export default function FilesSummary({ uploading, progress, uploads }: Props) {
+  if (!uploading && uploads.length === 0) {
     return null;
   }
   return (

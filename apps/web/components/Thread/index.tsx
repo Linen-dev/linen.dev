@@ -124,10 +124,14 @@ export default function Thread({
     return currentUser.id === creator.id;
   }
 
-  const uploadFiles = (data: FormData) => {
+  const uploadFiles = (files: File[]) => {
     setProgress(0);
     setUploading(true)
     setUploads([])
+    const data = new FormData();
+    files.forEach((file, index) => {
+      data.append(`file-${index}`, file, file.name);
+    })
     return upload(
       { communityId: settings.communityId, data }, {
         onUploadProgress: (progressEvent: ProgressEvent) => {

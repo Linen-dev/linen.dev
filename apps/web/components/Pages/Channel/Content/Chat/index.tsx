@@ -93,10 +93,14 @@ export default function Chat({
         progress={progress}
         uploading={uploading}
         uploads={uploads}
-        upload={(data) => {
+        upload={(files) => {
           setProgress(0);
           setUploading(true)
           setUploads([])
+          const data = new FormData();
+          files.forEach((file, index) => {
+            data.append(`file-${index}`, file, file.name);
+          })
           return upload({ communityId, data }, {
             onUploadProgress: (progressEvent: ProgressEvent) => {
               const percentCompleted = Math.round(
@@ -111,6 +115,7 @@ export default function Chat({
             return response
           }).catch((response) => {
             setUploading(false)
+            setUploads([])
             return response
           })
         }}
