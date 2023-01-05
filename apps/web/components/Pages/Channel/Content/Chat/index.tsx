@@ -40,6 +40,7 @@ export default function Chat({
   const ref = createRef<HTMLDivElement>();
   const [progress, setProgress] = useState(0)
   const [uploading, setUploading] = useState(false)
+  const [uploads, setUploads] = useState<UploadedFile[]>([]);
 
   function handleDragEnter() {
     const node = ref.current as HTMLElement;
@@ -81,7 +82,9 @@ export default function Chat({
             message,
             files,
             channelId: channelId,
-          });
+          }).then(() => {
+            setUploads([])
+          })
         }}
         fetchMentions={(term?: string) => {
           if (!term) return Promise.resolve([]);
@@ -89,9 +92,11 @@ export default function Chat({
         }}
         progress={progress}
         uploading={uploading}
+        uploads={uploads}
         upload={(data) => {
           setProgress(0);
           setUploading(true)
+          setUploads([])
           return upload({ communityId, data }, {
             onUploadProgress: (progressEvent: ProgressEvent) => {
               const percentCompleted = Math.round(
@@ -101,6 +106,8 @@ export default function Chat({
             },
           }).then((response) => {
             setUploading(false)
+            const { files } = response.data;
+            setUploads(files);
             return response
           }).catch((response) => {
             setUploading(false)

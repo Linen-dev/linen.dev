@@ -24,6 +24,7 @@ interface Props {
   currentUser?: SerializedUser | null;
   progress: number;
   uploading?: boolean;
+  uploads: UploadedFile[];
   onSend?(message: string, files: UploadedFile[]): Promise<any>;
   onSendAndClose?(message: string, files: UploadedFile[]): Promise<any>;
   fetchMentions?(term?: string): Promise<SerializedUser[]>;
@@ -131,6 +132,7 @@ function MessageForm({
   currentUser,
   progress,
   uploading,
+  uploads,
   onSend,
   onSendAndClose,
   fetchMentions,
@@ -139,7 +141,6 @@ function MessageForm({
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [files, setFiles] = useState<File[]>([]);
-  const [uploads, setUploads] = useState<UploadedFile[]>([]);
   const [users, setUsers] = useState<SerializedUser[]>([]);
   const [allUsers, addUsers] = useUsersContext();
   const [position, setPosition] = useState(0);
@@ -166,7 +167,6 @@ function MessageForm({
 
     setMessage('');
     setFiles([]);
-    setUploads([]);
   };
   const handleSend = async (event: React.SyntheticEvent) =>
     handleSubmit(event, onSend);
@@ -214,7 +214,6 @@ function MessageForm({
     if (!upload) {
       return;
     }
-    setUploads([]);
     setFiles(files);
     if (files.length > 0) {
       const formData = new FormData();
@@ -231,8 +230,6 @@ function MessageForm({
       })
       return upload(formData)
         .then((response) => {
-          const { files } = response.data;
-          setUploads(files);
         })
         .catch(() => {
         })
