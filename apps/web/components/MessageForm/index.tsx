@@ -23,6 +23,7 @@ interface Props {
   autoFocus?: boolean;
   currentUser?: SerializedUser | null;
   progress: number;
+  uploading?: boolean;
   onSend?(message: string, files: UploadedFile[]): Promise<any>;
   onSendAndClose?(message: string, files: UploadedFile[]): Promise<any>;
   fetchMentions?(term?: string): Promise<SerializedUser[]>;
@@ -129,6 +130,7 @@ function MessageForm({
   autoFocus,
   currentUser,
   progress,
+  uploading,
   onSend,
   onSendAndClose,
   fetchMentions,
@@ -136,7 +138,6 @@ function MessageForm({
 }: Props) {
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
-  const [uploading, setUploading] = useState(false);
   const [files, setFiles] = useState<File[]>([]);
   const [uploads, setUploads] = useState<UploadedFile[]>([]);
   const [users, setUsers] = useState<SerializedUser[]>([]);
@@ -228,15 +229,12 @@ function MessageForm({
       files.forEach((file, index) => {
         formData.append(`file-${index}`, file, file.name);
       })
-      setUploading(true);
       return upload(formData)
         .then((response) => {
           const { files } = response.data;
           setUploads(files);
-          setUploading(false);
         })
         .catch(() => {
-          setUploading(false);
         })
         .finally(() => {
           clearFileInput();
@@ -251,6 +249,7 @@ function MessageForm({
 
   const onDrop = (event: React.DragEvent) => {
     event.preventDefault()
+    event.stopPropagation()
     const files = Array.from(event.dataTransfer.files || [])
     uploadFiles(files)
   }

@@ -39,6 +39,7 @@ export default function Chat({
 }: Props) {
   const ref = createRef<HTMLDivElement>();
   const [progress, setProgress] = useState(0)
+  const [uploading, setUploading] = useState(false)
 
   function handleDragEnter() {
     const node = ref.current as HTMLElement;
@@ -87,8 +88,10 @@ export default function Chat({
           return fetchMentions(term, communityId);
         }}
         progress={progress}
+        uploading={uploading}
         upload={(data) => {
           setProgress(0);
+          setUploading(true)
           return upload({ communityId, data }, {
             onUploadProgress: (progressEvent: ProgressEvent) => {
               const percentCompleted = Math.round(
@@ -96,7 +99,13 @@ export default function Chat({
               );
               setProgress(percentCompleted);
             },
-          });
+          }).then((response) => {
+            setUploading(false)
+            return response
+          }).catch((response) => {
+            setUploading(false)
+            return response
+          })
         }}
       />
     </div>

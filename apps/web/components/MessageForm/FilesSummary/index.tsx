@@ -5,7 +5,7 @@ import { copyToClipboard } from '@linen/utilities/clipboard';
 import { Toast } from '@linen/ui'
 
 interface Props {
-  uploading: boolean;
+  uploading?: boolean;
   progress: number;
   files: File[];
   uploads: UploadedFile[];
