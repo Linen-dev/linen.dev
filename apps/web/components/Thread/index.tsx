@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import classNames from 'classnames';
 import Header from './Header';
 import Messages from './Messages';
@@ -152,6 +152,13 @@ export default function Thread({
     })
   }
 
+  const onDrop = (event: React.DragEvent) => {
+    event.preventDefault()
+    event.stopPropagation()
+    const files = Array.from(event.dataTransfer.files || [])
+    if (files.length > 0) { uploadFiles(files) }
+  }
+
   const manage = permissions.manage || isThreadCreator(currentUser, thread);
 
   useEffect(() => {
@@ -159,7 +166,7 @@ export default function Thread({
   }, []);
 
   return (
-    <div className={classNames(styles.container)} ref={ref}>
+    <div className={classNames(styles.container)} ref={ref} onDrop={onDrop}>
       <Header
         thread={thread}
         channelName={channelName}
