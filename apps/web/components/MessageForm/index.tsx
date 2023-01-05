@@ -237,7 +237,7 @@ function MessageForm({
     event.preventDefault()
     event.stopPropagation()
     const files = Array.from(event.dataTransfer.files || [])
-    uploadFiles(files)
+    if (files.length > 0) { uploadFiles(files) }
   }
 
   return (
