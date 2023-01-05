@@ -202,11 +202,10 @@ function MessageForm({
     };
   }, [mention]);
 
-  const onFileInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const uploadFiles = (event: React.ChangeEvent<HTMLInputElement>, files: File[]) => {
     if (!upload) {
       return;
     }
-    const files = Array.from(event.target.files || []);
     setUploads([]);
     setFiles(files);
     if (files.length > 0) {
@@ -242,6 +241,14 @@ function MessageForm({
           event.target.value = '';
         });
     }
+  };
+
+  const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!upload) {
+      return;
+    }
+    const files = Array.from(event.target.files || []);
+    uploadFiles(event, files)
   };
 
   const onDrop = (event: React.DragEvent) => {
@@ -348,7 +355,7 @@ function MessageForm({
             <FileInput
               id={`${id}-files`}
               disabled={uploading}
-              onChange={onFileInputChange}
+              onChange={onFileChange}
             />
             <FilesSummary
               uploading={uploading}
