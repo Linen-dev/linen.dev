@@ -1,4 +1,4 @@
-import React, { createRef } from 'react';
+import React, { createRef, useState } from 'react';
 import MessageForm from 'components/MessageForm';
 import { fetchMentions, upload } from 'components/MessageForm/api';
 import { SerializedUser, UploadedFile } from '@linen/types';
@@ -38,6 +38,7 @@ export default function Chat({
   sendMessage,
 }: Props) {
   const ref = createRef<HTMLDivElement>();
+  const [progress, setProgress] = useState(0)
 
   function handleDragEnter() {
     const node = ref.current as HTMLElement;
@@ -85,8 +86,17 @@ export default function Chat({
           if (!term) return Promise.resolve([]);
           return fetchMentions(term, communityId);
         }}
-        upload={(data, options) => {
-          return upload({ communityId, data }, options);
+        progress={progress}
+        upload={(data) => {
+          setProgress(0);
+          return upload({ communityId, data }, {
+            onUploadProgress: (progressEvent: ProgressEvent) => {
+              const percentCompleted = Math.round(
+                (progressEvent.loaded * 100) / progressEvent.total
+              );
+              setProgress(percentCompleted);
+            },
+          });
         }}
       />
     </div>

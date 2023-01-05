@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import classNames from 'classnames';
 import Header from './Header';
 import Messages from './Messages';
@@ -84,6 +84,7 @@ export default function Thread({
   onMessage,
 }: Props) {
   const ref = useRef<HTMLDivElement>(null);
+  const [progress, setProgress] = useState(0)
   const { id, state, viewCount, incrementId } = thread;
 
   const handleScroll = () =>
@@ -119,6 +120,20 @@ export default function Thread({
       return false;
     }
     return currentUser.id === creator.id;
+  }
+
+  const uploadFiles = (data: FormData) => {
+    setProgress(0);
+    return upload(
+      { communityId: settings.communityId, data }, {
+        onUploadProgress: (progressEvent: ProgressEvent) => {
+          const percentCompleted = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total
+          );
+          setProgress(percentCompleted);
+        },
+      }
+    );
   }
 
   const manage = permissions.manage || isThreadCreator(currentUser, thread);
@@ -191,12 +206,8 @@ export default function Thread({
                 if (!term) return Promise.resolve([]);
                 return fetchMentions(term, settings.communityId);
               }}
-              upload={(data, options) => {
-                return upload(
-                  { communityId: settings.communityId, data },
-                  options
-                );
-              }}
+              progress={progress}
+              upload={uploadFiles}
             />
           ) : (
             <MessageForm
@@ -218,12 +229,8 @@ export default function Thread({
                 if (!term) return Promise.resolve([]);
                 return fetchMentions(term, settings.communityId);
               }}
-              upload={(data, options) => {
-                return upload(
-                  { communityId: settings.communityId, data },
-                  options
-                );
-              }}
+              progress={progress}
+              upload={uploadFiles}
             />
           )}
         </div>
