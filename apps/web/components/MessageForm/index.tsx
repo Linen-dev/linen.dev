@@ -202,6 +202,13 @@ function MessageForm({
     };
   }, [mention]);
 
+  const clearFileInput = () => {
+    const node = document.getElementById(`${id}-files`) as HTMLInputElement
+    if (node) {
+      node.value = ''
+    }
+  }
+
   const uploadFiles = (files: File[]) => {
     if (!upload) {
       return;
@@ -213,10 +220,7 @@ function MessageForm({
       for (let index = 0, length = files.length; index < length; index += 1) {
         const file = files[index];
         if (file.size > FILE_SIZE_LIMIT_IN_BYTES) {
-          if (ref && ref.current) {
-            const node = ref.current as HTMLTextAreaElement
-            node.value = ''
-          }
+          clearFileInput();
           setFiles([]);
           return Toast.error(getFileSizeErrorMessage(file.name));
         }
@@ -241,10 +245,7 @@ function MessageForm({
           setUploading(false);
         })
         .finally(() => {
-          if (ref && ref.current) {
-            const node = ref.current as HTMLTextAreaElement
-            node.value = ''
-          }
+          clearFileInput();
         })
     }
   };
