@@ -4,7 +4,7 @@ import { FiUpload } from 'react-icons/fi';
 
 interface Props {
   id: string;
-  disabled: boolean;
+  disabled?: boolean;
   onChange(event: React.ChangeEvent<HTMLInputElement>): void;
 }
 

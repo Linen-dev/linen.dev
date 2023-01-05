@@ -85,6 +85,7 @@ export default function Thread({
 }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const [progress, setProgress] = useState(0)
+  const [uploading, setUploading] = useState(false);
   const { id, state, viewCount, incrementId } = thread;
 
   const handleScroll = () =>
@@ -124,6 +125,7 @@ export default function Thread({
 
   const uploadFiles = (data: FormData) => {
     setProgress(0);
+    setUploading(true)
     return upload(
       { communityId: settings.communityId, data }, {
         onUploadProgress: (progressEvent: ProgressEvent) => {
@@ -133,7 +135,13 @@ export default function Thread({
           setProgress(percentCompleted);
         },
       }
-    );
+    ).then((response) => {
+      setUploading(false)
+      return response
+    }).catch((response) => {
+      setUploading(false)
+      return response
+    })
   }
 
   const manage = permissions.manage || isThreadCreator(currentUser, thread);
@@ -207,6 +215,7 @@ export default function Thread({
                 return fetchMentions(term, settings.communityId);
               }}
               progress={progress}
+              uploading={uploading}
               upload={uploadFiles}
             />
           ) : (
@@ -230,6 +239,7 @@ export default function Thread({
                 return fetchMentions(term, settings.communityId);
               }}
               progress={progress}
+              uploading={uploading}
               upload={uploadFiles}
             />
           )}
