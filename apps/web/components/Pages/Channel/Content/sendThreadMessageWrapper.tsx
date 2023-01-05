@@ -41,6 +41,7 @@ const debouncedSendThreadMessage = debounce(
 export function sendThreadMessageWrapper({
   currentUser,
   allUsers,
+  setUploads,
   setThreads,
   currentThreadId,
   currentCommunity,
@@ -48,6 +49,7 @@ export function sendThreadMessageWrapper({
 }: {
   currentUser: SerializedUser | null;
   allUsers: SerializedUser[];
+  setUploads: any;
   setThreads: React.Dispatch<React.SetStateAction<SerializedThread[]>>;
   currentThreadId: string | undefined;
   currentCommunity: SerializedAccount | null;
@@ -91,7 +93,7 @@ export function sendThreadMessageWrapper({
       author: currentUser,
       mentions: allUsers,
     });
-
+    setUploads([]);
     setThreads((threads) => {
       return threads.map((thread) => {
         if (thread.id === currentThreadId) {

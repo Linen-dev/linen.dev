@@ -4,6 +4,7 @@ import Thread from 'components/Thread';
 import { get, put } from 'utilities/http';
 import { useUsersContext } from '@linen/contexts/Users';
 import ChatLayout from 'components/layout/shared/ChatLayout';
+import { upload } from 'components/MessageForm/api';
 import Header from './Header';
 import Empty from './Empty';
 import Chat from './Chat';
@@ -22,6 +23,7 @@ import {
   SerializedThread,
   Settings,
   ThreadState,
+  UploadedFile,
 } from '@linen/types';
 import {
   scrollToBottom,
@@ -126,6 +128,9 @@ export default function Channel({
   const leftBottomRef = useRef<HTMLDivElement>(null);
   const [cursor, setCursor] = useState(nextCursor);
   const [error, setError] = useState<{ prev?: unknown; next?: unknown }>();
+  const [progress, setProgress] = useState(0)
+  const [uploading, setUploading] = useState(false)
+  const [uploads, setUploads] = useState<UploadedFile[]>([]);
   const [allUsers] = useUsersContext();
   const { startSignUp } = useJoinContext();
   const { mode } = useMode();
@@ -283,15 +288,17 @@ export default function Channel({
     currentUser: permissions.is_member ? currentUser : null,
     allUsers,
     currentChannel,
+    setUploads,
     setThreads,
     scrollableRootRef,
     currentCommunity,
     startSignUp,
-  });
+  })
 
   const sendThreadMessage = sendThreadMessageWrapper({
     currentUser: permissions.is_member ? currentUser : null,
     allUsers,
+    setUploads,
     setThreads,
     currentThreadId,
     currentCommunity,
@@ -318,6 +325,33 @@ export default function Channel({
     onDrop({ source, target, from, to });
     handleLeftScroll();
   };
+
+  function uploadFiles (files: File[]) {
+    setProgress(0);
+    setUploading(true)
+    setUploads([])
+    const data = new FormData();
+    files.forEach((file, index) => {
+      data.append(`file-${index}`, file, file.name);
+    })
+    return upload({ communityId: settings.communityId, data }, {
+      onUploadProgress: (progressEvent: ProgressEvent) => {
+        const percentCompleted = Math.round(
+          (progressEvent.loaded * 100) / progressEvent.total
+        );
+        setProgress(percentCompleted);
+      },
+    }).then((response) => {
+      setUploading(false)
+      const { files } = response.data;
+      setUploads(files);
+      return response
+    }).catch((response) => {
+      setUploading(false)
+      setUploads([])
+      return response
+    })
+  }
 
   return (
     <>
@@ -390,6 +424,10 @@ export default function Channel({
                     currentUser={currentUser}
                     onDrop={handleDrop}
                     sendMessage={sendMessage}
+                    progress={progress}
+                    uploads={uploads}
+                    uploading={uploading}
+                    uploadFiles={uploadFiles}
                   />
                 )
               }
