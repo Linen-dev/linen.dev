@@ -52,6 +52,33 @@ export default function Chat({
     node.classList.remove(styles.hover);
   }
 
+  function uploadFiles (files: File[]) {
+    setProgress(0);
+    setUploading(true)
+    setUploads([])
+    const data = new FormData();
+    files.forEach((file, index) => {
+      data.append(`file-${index}`, file, file.name);
+    })
+    return upload({ communityId, data }, {
+      onUploadProgress: (progressEvent: ProgressEvent) => {
+        const percentCompleted = Math.round(
+          (progressEvent.loaded * 100) / progressEvent.total
+        );
+        setProgress(percentCompleted);
+      },
+    }).then((response) => {
+      setUploading(false)
+      const { files } = response.data;
+      setUploads(files);
+      return response
+    }).catch((response) => {
+      setUploading(false)
+      setUploads([])
+      return response
+    })
+  }
+
   return (
     <div
       className={styles.chat}
@@ -93,32 +120,7 @@ export default function Chat({
         progress={progress}
         uploading={uploading}
         uploads={uploads}
-        upload={(files) => {
-          setProgress(0);
-          setUploading(true)
-          setUploads([])
-          const data = new FormData();
-          files.forEach((file, index) => {
-            data.append(`file-${index}`, file, file.name);
-          })
-          return upload({ communityId, data }, {
-            onUploadProgress: (progressEvent: ProgressEvent) => {
-              const percentCompleted = Math.round(
-                (progressEvent.loaded * 100) / progressEvent.total
-              );
-              setProgress(percentCompleted);
-            },
-          }).then((response) => {
-            setUploading(false)
-            const { files } = response.data;
-            setUploads(files);
-            return response
-          }).catch((response) => {
-            setUploading(false)
-            setUploads([])
-            return response
-          })
-        }}
+        upload={uploadFiles}
       />
     </div>
   );
