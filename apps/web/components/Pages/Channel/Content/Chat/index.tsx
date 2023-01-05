@@ -55,16 +55,19 @@ export default function Chat({
       onDragEnter={handleDragEnter}
       onDragLeave={handleDragLeave}
       onDrop={(event: React.DragEvent) => {
+        event.preventDefault()
         const node = ref.current as HTMLElement;
         node.classList.remove(styles.hover);
         const text = event.dataTransfer.getData('text');
-        const data = JSON.parse(text);
-        onDrop({
-          source: data.source,
-          target: 'channel',
-          from: data.id,
-          to: channelId,
-        });
+        if (text) {
+          const data = JSON.parse(text);
+          onDrop({
+            source: data.source,
+            target: 'channel',
+            from: data.id,
+            to: channelId,
+          });
+        }
       }}
       ref={ref}
     >

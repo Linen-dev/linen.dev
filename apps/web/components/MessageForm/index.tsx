@@ -244,8 +244,15 @@ function MessageForm({
     }
   };
 
+  const onDrop = (event: React.DragEvent) => {
+    event.preventDefault()
+  }
+
   return (
-    <div className={styles.container}>
+    <div
+      className={styles.container}
+      onDrop={onDrop}
+    >
       {mode === Mode.Mention && (
         <Suggestions
           className={styles.suggestions}
