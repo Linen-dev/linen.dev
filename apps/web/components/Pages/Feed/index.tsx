@@ -10,7 +10,7 @@ import {
 } from '@linen/types';
 import debounce from '@linen/utilities/debounce';
 import storage from '@linen/utilities/storage';
-
+import * as api from 'utilities/requests';
 import Content from './Content';
 
 interface Props {
@@ -47,17 +47,23 @@ const fetchFeed = debounce(
     });
   }
 );
+const fetchThread = (accountId: string) => (threadId: string) =>
+  api.getThread({ id: threadId, accountId });
 
-const fetchThread = (threadId: string) => {
-  return fetch('/api/threads/' + threadId).then((response) => response.json());
-};
-
-const putThread = (threadId: string, options: object) => {
-  return fetch(`/api/threads/${threadId}`, {
-    method: 'PUT',
-    body: JSON.stringify(options),
-  });
-};
+const putThread =
+  (accountId: string) =>
+  (
+    threadId: string,
+    options: {
+      state?: ThreadState | undefined;
+      title?: string | undefined;
+    }
+  ) =>
+    api.updateThread({
+      accountId,
+      id: threadId,
+      ...options,
+    });
 
 const fetchTotal = ({
   communityName,
@@ -107,8 +113,8 @@ export default function Feed({
     >
       <Content
         fetchFeed={fetchFeed}
-        fetchThread={fetchThread}
-        putThread={putThread}
+        fetchThread={fetchThread(settings.communityId)}
+        putThread={putThread(settings.communityId)}
         fetchTotal={fetchTotal}
         isSubDomainRouting={isSubDomainRouting}
         permissions={permissions}

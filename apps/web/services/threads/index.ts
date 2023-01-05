@@ -1,4 +1,8 @@
+import { ThreadState } from '@prisma/client';
 import prisma from 'client';
+import { findThreadById } from 'lib/threads';
+import serializeThread from 'serializers/thread';
+import { channelNextPage } from 'services/channel';
 import {
   areAuthorSameAsReplier,
   areRepliesAtFilled,
@@ -7,6 +11,8 @@ import {
   isReplierMember,
   updateThreadMetrics,
 } from './metrics';
+import { createSlug } from 'utilities/util';
+import { GetType, FindType, UpdateType } from './types';
 
 class ThreadsServices {
   static async updateMetrics({
@@ -41,6 +47,34 @@ class ThreadsServices {
       }
     }
     return Promise.resolve('nothing to update');
+  }
+
+  static async find({ channelId, cursor }: FindType) {
+    return await channelNextPage({ channelId, cursor });
+  }
+
+  static async get({ id }: GetType) {
+    const thread = await findThreadById(id);
+    if (!thread) {
+      return null;
+    }
+    return serializeThread(thread);
+  }
+
+  static async update({ id, state, title, pinned }: UpdateType) {
+    const thread = await prisma.threads.update({
+      where: { id },
+      data: {
+        pinned,
+        ...(title && { title, slug: createSlug(title) }),
+        ...(state && {
+          state,
+          closeAt: state === ThreadState.CLOSE ? new Date().getTime() : null,
+        }),
+      },
+    });
+    // TODO: call eventThreadUpdate
+    return serializeThread(thread);
   }
 }
 

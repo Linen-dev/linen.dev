@@ -38,6 +38,7 @@ import { Layouts } from '@linen/ui';
 import { timestamp } from '@linen/utilities/date';
 import debounce from '@linen/utilities/debounce';
 import { FiArrowDown } from 'react-icons/fi';
+import * as api from 'utilities/requests';
 
 const { SidebarLayout } = Layouts.Shared;
 
@@ -256,9 +257,10 @@ export default function Channel({
     try {
       setIsLoading(true);
       if (cursor[key]) {
-        const data = await get('/api/threads', {
+        const data = await api.getThreads({
           channelId: currentChannel.id,
-          cursor: cursor[key],
+          cursor: cursor[key] || undefined,
+          accountId: settings.communityId,
         });
         setCursor({ ...cursor, [key]: data?.nextCursor?.[key] });
         if (next) {

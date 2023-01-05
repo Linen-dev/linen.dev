@@ -13,6 +13,7 @@ import {
   SerializedThread,
   Settings,
 } from '@linen/types';
+import * as api from 'utilities/requests';
 
 interface Props {
   thread: SerializedThread;
@@ -69,7 +70,7 @@ export default function Content({
   }) => {
     const options = {
       state: newState || thread.state,
-      title: newTitle || thread.title,
+      title: newTitle || thread.title || undefined,
     };
     setThread((thread) => {
       return {
@@ -77,18 +78,14 @@ export default function Content({
         ...options,
       };
     });
-    return fetch(`/api/threads/${thread.id}`, {
-      method: 'PUT',
-      body: JSON.stringify(options),
-    })
-      .then((response) => {
-        if (response.ok) {
-          return;
-        }
-        throw new Error('Failed to close the thread.');
+    return api
+      .updateThread({
+        accountId: settings.communityId,
+        id: thread.id,
+        ...options,
       })
-      .catch((exception) => {
-        Toast.error(exception.message);
+      .catch((_) => {
+        Toast.error('Failed to close the thread.');
       });
   };
 

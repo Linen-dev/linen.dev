@@ -16,8 +16,8 @@ export class Unauthorized extends HttpException {
 }
 
 export class Forbidden extends HttpException {
-  constructor() {
-    super(403, 'Forbidden');
+  constructor(reason?: string) {
+    super(403, reason || 'Forbidden');
   }
 }
 

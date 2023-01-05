@@ -1,11 +1,11 @@
 import axios from 'axios';
-import type {
-  createAccountType,
-  integrationDiscordType,
-  updateAccountType,
-} from 'server/routers/accounts.types';
+import { qs } from './url';
 import useSWR from 'swr';
 import isBrowser from './isBrowser';
+import type { SerializedThread } from '@linen/types';
+import type * as AccountsTypes from 'server/routers/accounts.types';
+import type * as ThreadsTypes from 'server/routers/threads/types';
+import type { channelNextPageType } from 'services/channel.types';
 
 const catchError = (e: { response: any }) => {
   const { response } = e;
@@ -79,12 +79,24 @@ export const useRequest = (url: string) => {
 export const getAccounts = () => get('/api/accounts');
 
 export const createAccount = (
-  props: createAccountType
+  props: AccountsTypes.createAccountType
 ): Promise<{ id: string }> => post('/api/accounts', props);
 
-export const updateAccount = (
-  props: updateAccountType & { accountId: string }
-) => put('/api/accounts', props);
+export const updateAccount = (props: AccountsTypes.updateAccountType) =>
+  put('/api/accounts', props);
 
-export const setDiscordIntegrationCustomBot = (props: integrationDiscordType) =>
-  post('/api/accounts/integration/discord', props);
+export const setDiscordIntegrationCustomBot = (
+  props: AccountsTypes.integrationDiscordType
+) => post('/api/accounts/integration/discord', props);
+
+export const getThreads = (
+  props: ThreadsTypes.findType & { accountId: string }
+): Promise<channelNextPageType> => get(`/api/threads?${qs(props)}`);
+
+export const getThread = (
+  props: ThreadsTypes.getType & { accountId: string }
+): Promise<SerializedThread> => get(`/api/threads/${props.id}`);
+
+export const updateThread = (
+  props: ThreadsTypes.putType & { accountId: string }
+): Promise<SerializedThread> => put(`/api/threads/${props.id}`, props);
