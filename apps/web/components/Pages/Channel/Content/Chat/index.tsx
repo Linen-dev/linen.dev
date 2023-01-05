@@ -28,10 +28,10 @@ interface Props {
     files: UploadedFile[];
     channelId: string;
   }): Promise<void>;
-  uploadFiles(files: File[]): Promise<void>
+  uploadFiles(files: File[]): Promise<void>;
   progress: number;
   uploading: boolean;
-  uploads: UploadedFile[]
+  uploads: UploadedFile[];
 }
 
 export default function Chat({
@@ -63,12 +63,12 @@ export default function Chat({
       onDragEnter={handleDragEnter}
       onDragLeave={handleDragLeave}
       onDrop={(event: React.DragEvent) => {
-        event.preventDefault()
+        event.preventDefault();
         const node = ref.current as HTMLElement;
         node.classList.remove(styles.hover);
-        const files = Array.from(event.dataTransfer.files || [])
+        const files = Array.from(event.dataTransfer.files || []);
         if (files.length > 0) {
-          return uploadFiles(files)
+          return uploadFiles(files);
         }
         const text = event.dataTransfer.getData('text');
         if (text) {
@@ -91,7 +91,7 @@ export default function Chat({
             message,
             files,
             channelId: channelId,
-          })
+          });
         }}
         fetchMentions={(term?: string) => {
           if (!term) return Promise.resolve([]);

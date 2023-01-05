@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import PageLayout from 'components/layout/PageLayout';
 import { Toast } from '@linen/ui';
 import { buildChannelSeo } from 'utilities/seo';
@@ -22,9 +22,8 @@ import {
   moveThreadToChannelRequest,
 } from './Content/utilities/http';
 import { createThreadImitation } from './Content/utilities/thread';
-import useWebsockets from '@linen/hooks/websockets';
 import { useUsersContext } from '@linen/contexts/Users';
-import storage from '@linen/utilities/storage'
+import storage from '@linen/utilities/storage';
 import ChannelForBots from './ChannelForBots';
 
 export interface ChannelProps {
@@ -62,13 +61,13 @@ export default function Channel(props: ChannelProps) {
     nextCursor,
     pathCursor,
     isBot,
-    permissions
+    permissions,
   } = props;
 
   const [threads, setThreads] = useState<SerializedThread[]>(initialThreads);
   const [pinnedThreads, setPinnedThreads] =
     useState<SerializedThread[]>(initialPinnedThreads);
-  const [currentChannel, setCurrentChannel] = useState(initialChannel)
+  const [currentChannel, setCurrentChannel] = useState(initialChannel);
   const [currentThreadId, setCurrentThreadId] = useState<string>();
   const [allUsers] = useUsersContext();
 
@@ -86,27 +85,31 @@ export default function Channel(props: ChannelProps) {
   }, [initialPinnedThreads]);
 
   useEffect(() => {
-    setCurrentChannel(initialChannel)
-  }, [initialChannel])
+    setCurrentChannel(initialChannel);
+  }, [initialChannel]);
 
   useEffect(() => {
-    storage.set("pages.last", { communityId: currentCommunity?.id, page: 'channel', channelId: currentChannel.id })
-  }, [currentCommunity, currentChannel])
+    storage.set('pages.last', {
+      communityId: currentCommunity?.id,
+      page: 'channel',
+      channelId: currentChannel.id,
+    });
+  }, [currentCommunity, currentChannel]);
 
   useEffect(() => {
     if (currentUser && window.Notification) {
-      const permission = storage.get('notification.permission')
+      const permission = storage.get('notification.permission');
       if (!permission) {
         window.Notification.requestPermission((permission) => {
-          storage.set('notification.permission', permission)
+          storage.set('notification.permission', permission);
           if (permission === 'granted') {
-            Toast.info('Notifications are enabled')
-            new Notification('Notifications are enabled')
+            Toast.info('Notifications are enabled');
+            new Notification('Notifications are enabled');
           }
-        })
+        });
       }
     }
-  }, [])
+  }, []);
 
   const onSocket = (payload: any) => {
     try {
@@ -143,9 +146,7 @@ export default function Channel(props: ChannelProps) {
           return;
         }
         setThreads((threads) => [
-          ...threads.filter(
-            ({ id }) => id !== imitationId && id !== threadId
-          ),
+          ...threads.filter(({ id }) => id !== imitationId && id !== threadId),
           thread,
         ]);
       }
@@ -154,7 +155,7 @@ export default function Channel(props: ChannelProps) {
         console.log(e);
       }
     }
-  }
+  };
 
   function onSelectThread(thread: SerializedThread) {
     setCurrentThreadId(thread.id);

@@ -3,7 +3,7 @@ import { prisma } from 'client';
 import Session from 'services/session';
 import to from 'utilities/await-to-js';
 import { z } from 'zod';
-import serializeReadStatus from 'serializers/read-status'
+import serializeReadStatus from 'serializers/read-status';
 
 async function put(request: NextApiRequest, response: NextApiResponse) {
   const user = await Session.auth(request, response);
@@ -16,16 +16,16 @@ async function put(request: NextApiRequest, response: NextApiResponse) {
     timestamp: z.number(),
   });
 
-  const params = { ...request.query, ...request.body }
+  const params = { ...request.query, ...request.body };
 
   const [badRequest, body] = await to(schema.parseAsync(params));
   if (badRequest) {
     return response.status(400).json({ error: badRequest.message });
   }
 
-  const { channelId } = body
-  const authId = user.id
-  const timestamp = BigInt(body.timestamp)
+  const { channelId } = body;
+  const authId = user.id;
+  const timestamp = BigInt(body.timestamp);
   const data = { authId, channelId, lastReadAt: timestamp };
 
   const [err, _] = await to(
@@ -64,8 +64,7 @@ async function get(request: NextApiRequest, response: NextApiResponse) {
 
   const { channelId } = body;
   const [err, data] = await to(
-    prisma.readStatus
-    .findUnique({
+    prisma.readStatus.findUnique({
       select: {
         channelId: true,
         lastReadAt: true,
@@ -73,12 +72,12 @@ async function get(request: NextApiRequest, response: NextApiResponse) {
           select: {
             threads: {
               orderBy: {
-                sentAt: 'desc'
+                sentAt: 'desc',
               },
               take: 1,
-            }
-          }
-        }
+            },
+          },
+        },
       },
       where: {
         authId_channelId: {
@@ -87,7 +86,7 @@ async function get(request: NextApiRequest, response: NextApiResponse) {
         },
       },
     })
-  )
+  );
   if (err) {
     console.error(err);
     return response.status(500).json({});

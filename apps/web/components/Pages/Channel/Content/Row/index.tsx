@@ -1,4 +1,3 @@
-import React from 'react'
 import Droppable from './Droppable';
 import { Avatars } from '@linen/ui';
 import Image from 'next/image';
@@ -76,11 +75,7 @@ export default function ChannelRow({
     }));
 
   return (
-    <Droppable
-      id={thread.id}
-      className={styles.container}
-      onDrop={onDrop}
-    >
+    <Droppable id={thread.id} className={styles.container} onDrop={onDrop}>
       <div className={styles.content}>
         <GridRow
           className={className}
@@ -91,7 +86,7 @@ export default function ChannelRow({
           permissions={permissions}
           currentUser={currentUser}
           mode={mode}
-          drag='thread'
+          drag="thread"
           onPin={onPin}
           onReaction={onReaction}
           onLoad={onLoad}

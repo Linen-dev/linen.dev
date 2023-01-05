@@ -1,6 +1,7 @@
 # Building a chat app with Nextjs and Elixir
 
 Table of content
+
 1. Context: What is Linen.dev
 2. Why did we choose Elixir
 3. What is the architecture
@@ -13,6 +14,7 @@ Linen.dev is an open source Slack alternative for communities. We started out as
 ## Why did we choose Elixir
 
 After some preliminary research we narrowed down our choose to 3 options:
+
 1. A hosted websocket service like Pusher
 2. A websocket service written in Nodejs with Socket.io
 3. A websocket service written in Elixir with Phoenix
@@ -26,8 +28,9 @@ After doing some research we came up with the following architecture:
 https://user-images.githubusercontent.com/4218509/200422983-21079c4a-bcb6-4f48-bf82-fdf9d01f1d3f.png
 
 There were a two core decisions for the first version:
+
 1. All write database interactions were happening with our existing node service.
-2. Elixir was only responsible for maintaining a websocket and pushing real time notifications to the client. This lead to our Elixir service being very simple and lightweight. The only thing it was responsible for was broadcasting events to the client side given the proper channels. By keeping the scope of the Elixir service limited we didn’t need to duplicate a bunch of our JS code and rewrite it in Elixir. By design Elixir processes(Figure out right word) are very fault tolerant and a single failure will not cause failures in other services. One lesson we learned from our previous project was not to handle inserting data over phoneix channels/WebSockets. Sockets could disconnect which could cause messages to be dropped and security implications meant that Elixir had to understand a lot more of the scope and  permissioning logic. In total we have under 200 lines of custom Elixir code.
+2. Elixir was only responsible for maintaining a websocket and pushing real time notifications to the client. This lead to our Elixir service being very simple and lightweight. The only thing it was responsible for was broadcasting events to the client side given the proper channels. By keeping the scope of the Elixir service limited we didn’t need to duplicate a bunch of our JS code and rewrite it in Elixir. By design Elixir processes(Figure out right word) are very fault tolerant and a single failure will not cause failures in other services. One lesson we learned from our previous project was not to handle inserting data over phoneix channels/WebSockets. Sockets could disconnect which could cause messages to be dropped and security implications meant that Elixir had to understand a lot more of the scope and permissioning logic. In total we have under 200 lines of custom Elixir code.
 
 ### Message sending flow
 
@@ -82,7 +85,7 @@ function useWebSockets({ room, token, permissions, onNewMessage }: Props) {
 - User sends a message to the node backend
 - Client side does optimistic update and renders the text instantly
 
-https://github.com/Linen-dev/linen.dev/blob/176659feee3c093ffd4fbec6541fa4d154ae9c45/nextjs/components/Pages/Channel/Content/sendMessageWrapper.tsx   
+https://github.com/Linen-dev/linen.dev/blob/176659feee3c093ffd4fbec6541fa4d154ae9c45/nextjs/components/Pages/Channel/Content/sendMessageWrapper.tsx
 
 ```
 return fetch(`/api/messages/channel`, {

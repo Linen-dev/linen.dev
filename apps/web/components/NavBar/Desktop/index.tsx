@@ -1,6 +1,10 @@
 import { useEffect, useState } from 'react';
 import classNames from 'classnames';
-import { Permissions, SerializedChannel, SerializedReadStatus } from '@linen/types';
+import {
+  Permissions,
+  SerializedChannel,
+  SerializedReadStatus,
+} from '@linen/types';
 import Link from 'components/Link/InternalLink';
 import NewChannelModal from 'components/Pages/Channel/Content/NewChannelModal';
 import useWebsockets from '@linen/hooks/websockets';
@@ -10,10 +14,10 @@ import { useRouter } from 'next/router';
 import usePath from 'hooks/path';
 import { Mode } from '@linen/hooks/mode';
 import { Nav, Toast } from '@linen/ui';
-import debounce from '@linen/utilities/debounce'
+import debounce from '@linen/utilities/debounce';
 import { post } from 'utilities/http';
-import { notify } from 'utilities/notification'
-import unique from 'lodash.uniq'
+import { notify } from 'utilities/notification';
+import unique from 'lodash.uniq';
 
 interface Props {
   mode: Mode;
@@ -33,7 +37,10 @@ interface Props {
   }): void;
 }
 
-const debouncedReadStatus = debounce(({ channelIds }: { channelIds: string[] }) => post('/api/read-status', { channelIds }))
+const debouncedReadStatus = debounce(
+  ({ channelIds }: { channelIds: string[] }) =>
+    post('/api/read-status', { channelIds })
+);
 
 export default function DesktopNavBar({
   mode,
@@ -58,7 +65,7 @@ export default function DesktopNavBar({
           (channel) => channel.id === payload.channel_id
         );
         if (channel) {
-          const text = `You were mentioned in #${channel.channelName}`
+          const text = `You were mentioned in #${channel.channelName}`;
           Toast.info(text);
           notify(text);
         }
@@ -69,27 +76,28 @@ export default function DesktopNavBar({
     },
   });
 
-  const currentUser = permissions.user || null
+  const currentUser = permissions.user || null;
 
   useEffect(() => {
-    let mounted = true
+    let mounted = true;
     if (currentUser) {
-      debouncedReadStatus({ channelIds: channels.map(({ id }) => id)})
-        .then(({ readStatuses }: { readStatuses: SerializedReadStatus[] }) => {
+      debouncedReadStatus({ channelIds: channels.map(({ id }) => id) }).then(
+        ({ readStatuses }: { readStatuses: SerializedReadStatus[] }) => {
           if (mounted) {
-            setHighlights(highlights => {
+            setHighlights((highlights) => {
               const channelIds = readStatuses
                 .filter(({ read }) => !read)
-                .map(({ channelId }) => channelId)
-              return unique([...highlights, ...channelIds])
-            })
+                .map(({ channelId }) => channelId);
+              return unique([...highlights, ...channelIds]);
+            });
           }
-      })
+        }
+      );
     }
     return () => {
-      mounted = false
-    }
-  }, [channelName])
+      mounted = false;
+    };
+  }, [channelName]);
 
   const paths = {
     feed: usePath({ href: '/feed' }),
@@ -150,8 +158,8 @@ export default function DesktopNavBar({
             event.currentTarget.classList.remove(styles.hover);
           }
 
-          const active = channel.channelName === channelName
-          const highlighted = !active && count > 0
+          const active = channel.channelName === channelName;
+          const highlighted = !active && count > 0;
 
           return (
             <Link

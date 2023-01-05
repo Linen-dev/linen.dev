@@ -3,7 +3,7 @@ import Session from 'services/session';
 import to from 'utilities/await-to-js';
 import { z } from 'zod';
 import { prisma } from 'client';
-import serializeReadStatus from 'serializers/read-status'
+import serializeReadStatus from 'serializers/read-status';
 
 async function post(request: NextApiRequest, response: NextApiResponse) {
   const user = await Session.auth(request, response);
@@ -12,52 +12,56 @@ async function post(request: NextApiRequest, response: NextApiResponse) {
   }
 
   const schema = z.object({
-    channelIds: z.string().array().min(1)
+    channelIds: z.string().array().min(1),
   });
   const [badRequest, body] = await to(schema.parseAsync(request.body));
   if (badRequest) {
     return response.status(400).json({ error: badRequest.message });
   }
 
-  const [err, readStatuses] = await to(prisma.$transaction(
-    body.channelIds.map((channelId: string) => {
-      return prisma.readStatus.upsert({
-        create: {
-          authId: user.id,
-          channelId,
-          lastReadAt: BigInt(new Date().getTime())
-        },
-        update: {},
-        where: {
-          authId_channelId: {
+  const [err, readStatuses] = await to(
+    prisma.$transaction(
+      body.channelIds.map((channelId: string) => {
+        return prisma.readStatus.upsert({
+          create: {
             authId: user.id,
             channelId,
+            lastReadAt: BigInt(new Date().getTime()),
           },
-        },
-        select: {
-          channelId: true,
-          lastReadAt: true,
-          channel: {
-            select: {
-              threads: {
-                orderBy: {
-                  sentAt: 'desc'
+          update: {},
+          where: {
+            authId_channelId: {
+              authId: user.id,
+              channelId,
+            },
+          },
+          select: {
+            channelId: true,
+            lastReadAt: true,
+            channel: {
+              select: {
+                threads: {
+                  orderBy: {
+                    sentAt: 'desc',
+                  },
+                  take: 1,
                 },
-                take: 1,
-              }
-            }
-          }
-        },
-      });
-    })
-  ))
+              },
+            },
+          },
+        });
+      })
+    )
+  );
 
   if (err) {
     console.error(err);
     return response.status(500).json({});
   }
 
-  return response.status(200).json({ readStatuses: readStatuses.map(serializeReadStatus) });
+  return response
+    .status(200)
+    .json({ readStatuses: readStatuses.map(serializeReadStatus) });
 }
 
 export default async function handler(

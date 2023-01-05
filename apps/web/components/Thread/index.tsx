@@ -84,7 +84,7 @@ export default function Thread({
   onMessage,
 }: Props) {
   const ref = useRef<HTMLDivElement>(null);
-  const [progress, setProgress] = useState(0)
+  const [progress, setProgress] = useState(0);
   const [uploading, setUploading] = useState(false);
   const [uploads, setUploads] = useState<UploadedFile[]>([]);
   const { id, state, viewCount, incrementId } = thread;
@@ -126,14 +126,15 @@ export default function Thread({
 
   const uploadFiles = (files: File[]) => {
     setProgress(0);
-    setUploading(true)
-    setUploads([])
+    setUploading(true);
+    setUploads([]);
     const data = new FormData();
     files.forEach((file, index) => {
       data.append(`file-${index}`, file, file.name);
-    })
+    });
     return upload(
-      { communityId: settings.communityId, data }, {
+      { communityId: settings.communityId, data },
+      {
         onUploadProgress: (progressEvent: ProgressEvent) => {
           const percentCompleted = Math.round(
             (progressEvent.loaded * 100) / progressEvent.total
@@ -141,23 +142,27 @@ export default function Thread({
           setProgress(percentCompleted);
         },
       }
-    ).then((response) => {
-      setUploading(false)
-      const { files } = response.data;
-      setUploads(files);
-      return response
-    }).catch((response) => {
-      setUploading(false)
-      return response
-    })
-  }
+    )
+      .then((response) => {
+        setUploading(false);
+        const { files } = response.data;
+        setUploads(files);
+        return response;
+      })
+      .catch((response) => {
+        setUploading(false);
+        return response;
+      });
+  };
 
   const onDrop = (event: React.DragEvent) => {
-    event.preventDefault()
-    event.stopPropagation()
-    const files = Array.from(event.dataTransfer.files || [])
-    if (files.length > 0) { uploadFiles(files) }
-  }
+    event.preventDefault();
+    event.stopPropagation();
+    const files = Array.from(event.dataTransfer.files || []);
+    if (files.length > 0) {
+      uploadFiles(files);
+    }
+  };
 
   const manage = permissions.manage || isThreadCreator(currentUser, thread);
 
@@ -226,7 +231,7 @@ export default function Thread({
                   sendMessage({ message, files, channelId, threadId: id }),
                   updateThread({ state: ThreadState.CLOSE }),
                 ]).then(() => {
-                  setUploads([])
+                  setUploads([]);
                 });
               }}
               fetchMentions={(term?: string) => {
