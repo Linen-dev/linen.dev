@@ -1,6 +1,6 @@
-import React, { createRef, useState } from 'react';
+import React, { createRef } from 'react';
 import MessageForm from 'components/MessageForm';
-import { fetchMentions, upload } from 'components/MessageForm/api';
+import { fetchMentions } from 'components/MessageForm/api';
 import { SerializedUser, UploadedFile } from '@linen/types';
 import styles from './index.module.scss';
 
@@ -28,19 +28,24 @@ interface Props {
     files: UploadedFile[];
     channelId: string;
   }): Promise<void>;
+  uploadFiles(files: File[]): Promise<void>
+  progress: number;
+  uploading: boolean;
+  uploads: UploadedFile[]
 }
 
 export default function Chat({
   channelId,
   communityId,
   currentUser,
+  progress,
+  uploading,
+  uploads,
   onDrop,
   sendMessage,
+  uploadFiles,
 }: Props) {
   const ref = createRef<HTMLDivElement>();
-  const [progress, setProgress] = useState(0)
-  const [uploading, setUploading] = useState(false)
-  const [uploads, setUploads] = useState<UploadedFile[]>([]);
 
   function handleDragEnter() {
     const node = ref.current as HTMLElement;
@@ -50,33 +55,6 @@ export default function Chat({
   function handleDragLeave() {
     const node = ref.current as HTMLElement;
     node.classList.remove(styles.hover);
-  }
-
-  function uploadFiles (files: File[]) {
-    setProgress(0);
-    setUploading(true)
-    setUploads([])
-    const data = new FormData();
-    files.forEach((file, index) => {
-      data.append(`file-${index}`, file, file.name);
-    })
-    return upload({ communityId, data }, {
-      onUploadProgress: (progressEvent: ProgressEvent) => {
-        const percentCompleted = Math.round(
-          (progressEvent.loaded * 100) / progressEvent.total
-        );
-        setProgress(percentCompleted);
-      },
-    }).then((response) => {
-      setUploading(false)
-      const { files } = response.data;
-      setUploads(files);
-      return response
-    }).catch((response) => {
-      setUploading(false)
-      setUploads([])
-      return response
-    })
   }
 
   return (
@@ -113,8 +91,6 @@ export default function Chat({
             message,
             files,
             channelId: channelId,
-          }).then(() => {
-            setUploads([])
           })
         }}
         fetchMentions={(term?: string) => {

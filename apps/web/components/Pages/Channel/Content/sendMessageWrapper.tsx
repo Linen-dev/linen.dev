@@ -39,6 +39,7 @@ export function sendMessageWrapper({
   currentUser,
   allUsers,
   currentChannel,
+  setUploads,
   setThreads,
   scrollableRootRef,
   currentCommunity,
@@ -53,6 +54,7 @@ export function sendMessageWrapper({
     hidden: boolean;
     default: boolean;
   };
+  setUploads: any;
   setThreads: any;
   scrollableRootRef: any;
   currentCommunity: SerializedAccount | null;
@@ -94,7 +96,7 @@ export function sendMessageWrapper({
       author: currentUser,
       channel: currentChannel,
     });
-
+    setUploads([]);
     setThreads((threads: SerializedThread[]) => {
       return [...threads, imitation];
     });
