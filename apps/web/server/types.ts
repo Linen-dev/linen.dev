@@ -21,7 +21,12 @@ export type AuthedRequest<
 
 export type AuthedRequestWithBody<Body> = AuthedRequest<any, any, Body, any>;
 
-export type AuthedRequestWithTenant = AuthedRequest<any, any, any, any> & {
+export type AuthedRequestWithTenant<Body = any> = AuthedRequest<
+  any,
+  any,
+  Body,
+  any
+> & {
   tenant?: accounts | null;
   tenant_user?: users;
   tenant_api?: {
@@ -32,7 +37,7 @@ export type AuthedRequestWithTenant = AuthedRequest<any, any, any, any> & {
 };
 
 export type AuthedRequestWithTenantAndBody<Body> = AuthedRequestWithBody<Body> &
-  AuthedRequestWithTenant;
+  AuthedRequestWithTenant<Body>;
 
 export type LoggedUser = {
   email: string;

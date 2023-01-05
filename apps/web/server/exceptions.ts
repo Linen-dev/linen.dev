@@ -38,3 +38,15 @@ export class CredentialsSignin extends HttpException {
     super(401, 'CredentialsSignin');
   }
 }
+
+export class NotImplemented extends HttpException {
+  constructor() {
+    super(501, 'NotImplemented');
+  }
+}
+
+export class BadRequest extends HttpException {
+  constructor(reason?: string) {
+    super(400, reason || 'BadRequest');
+  }
+}
