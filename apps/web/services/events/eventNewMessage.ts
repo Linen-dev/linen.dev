@@ -1,7 +1,7 @@
 import type { mentions, users } from '@prisma/client';
 import { createChatSyncJob } from 'queue/jobs';
 import { push, pushChannel, pushCommunity } from 'services/push';
-import { updateMetrics } from 'services/threads';
+import ThreadsServices from 'services/threads';
 import { eventNewMentions } from 'services/events/eventNewMentions';
 import { notificationListener } from 'services/notifications';
 
@@ -48,7 +48,7 @@ export async function eventNewMessage({
     createChatSyncJob(event),
     push(event),
     pushChannel(event),
-    updateMetrics({ messageId, threadId }),
+    ThreadsServices.updateMetrics({ messageId, threadId }),
     pushCommunity({ ...event, communityId }),
     eventNewMentions({ mentions, mentionNodes, channelId, threadId }),
     notificationListener({ ...event, communityId, mentions }),
