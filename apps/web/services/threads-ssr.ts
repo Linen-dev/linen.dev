@@ -4,7 +4,6 @@ import CommunitiesService from 'services/communities';
 import { findThreadByIncrementId } from '../lib/threads';
 import { ThreadByIdProp } from '../types/apiResponses/threads/[threadId]';
 import { channels, threads, users } from '@prisma/client';
-import { Roles } from '@linen/types';
 import { GetServerSidePropsContext } from 'next';
 import { NotFound } from '../utilities/response';
 import serializeAccount from 'serializers/account';
@@ -154,6 +153,7 @@ export async function threadGetServerSideProps(
     return NotFound();
   }
 }
+
 async function getPrevNextFromThread(
   thread: threads & {
     channel?: channels | undefined;
@@ -175,108 +175,4 @@ async function getPrevNextFromThread(
     prev: await promisePrev,
     next: await promiseNext,
   };
-}
-
-export async function updateMetrics({
-  messageId,
-  threadId,
-}: {
-  messageId: string;
-  threadId: string;
-}) {
-  const thread = await prisma.threads.findFirst({
-    select: { firstManagerReplyAt: true, firstUserReplyAt: true },
-    where: { id: threadId },
-  });
-
-  if (areRepliesAtFilled(thread)) {
-    return Promise.resolve('nothing to update, already updated');
-  } else {
-    const [firstMessage, lastMessage] = await getFirstAndLastMessages(
-      threadId,
-      messageId
-    );
-    if (areAuthorSameAsReplier(firstMessage, lastMessage)) {
-      return Promise.resolve('nothing to update, same author');
-    }
-    if (lastMessage && isReplierManager(thread, lastMessage)) {
-      await updateThread(threadId, lastMessage, 'firstManagerReplyAt');
-      return Promise.resolve('done, firstManagerReplyAt');
-    }
-    if (lastMessage && isReplierMember(thread, lastMessage)) {
-      await updateThread(threadId, lastMessage, 'firstUserReplyAt');
-      return Promise.resolve('done, firstUserReplyAt');
-    }
-  }
-  return Promise.resolve('nothing to update');
-}
-
-async function updateThread(
-  threadId: string,
-  lastMessage: { sentAt: Date; author: users | null },
-  field: 'firstManagerReplyAt' | 'firstUserReplyAt'
-) {
-  await prisma.threads.update({
-    where: { id: threadId },
-    data: { [field]: lastMessage.sentAt.getTime() },
-  });
-}
-
-async function getFirstAndLastMessages(threadId: string, messageId: string) {
-  return await Promise.all([
-    prisma.messages.findFirst({
-      where: { threads: { id: threadId } },
-      take: 1,
-      orderBy: { sentAt: 'asc' },
-      select: { author: true },
-    }),
-    prisma.messages.findFirst({
-      where: { id: messageId },
-      select: { author: true, sentAt: true },
-    }),
-  ]);
-}
-
-function isReplierMember(
-  thread: {
-    firstManagerReplyAt: bigint | null;
-    firstUserReplyAt: bigint | null;
-  } | null,
-  last: { sentAt: Date; author: users | null } | null
-) {
-  return (
-    !thread?.firstUserReplyAt &&
-    last?.author?.role &&
-    last?.author?.role === Roles.MEMBER
-  );
-}
-
-function isReplierManager(
-  thread: {
-    firstManagerReplyAt: bigint | null;
-    firstUserReplyAt: bigint | null;
-  } | null,
-  last: { sentAt: Date; author: users | null } | null
-) {
-  return (
-    !thread?.firstManagerReplyAt &&
-    last?.author?.role &&
-    (last?.author?.role === Roles.ADMIN || last?.author?.role === Roles.OWNER)
-  );
-}
-
-function areAuthorSameAsReplier(
-  first: { author: users | null } | null,
-  last: { sentAt: Date; author: users | null } | null
-) {
-  return first?.author?.id === last?.author?.id;
-}
-
-function areRepliesAtFilled(
-  thread: {
-    firstManagerReplyAt: bigint | null;
-    firstUserReplyAt: bigint | null;
-  } | null
-) {
-  return thread?.firstManagerReplyAt && thread?.firstUserReplyAt;
 }

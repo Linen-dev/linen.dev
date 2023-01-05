@@ -1,6 +1,6 @@
 import { ThreadPage } from 'components/Pages/ThreadPage';
 import { GetServerSidePropsContext } from 'next';
-import { threadGetServerSideProps } from '../../../../../../services/threads';
+import { threadGetServerSideProps } from 'services/threads-ssr';
 
 export default ThreadPage;
 
