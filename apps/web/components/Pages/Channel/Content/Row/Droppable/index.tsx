@@ -50,16 +50,18 @@ export default function Droppable({
   function handleDrop(event: React.DragEvent) {
     setHover(false)
     const text = event.dataTransfer.getData('text');
-    const data = JSON.parse(text);
-    if (data.id === id) {
-      return event.stopPropagation();
+    if (text) {
+      const data = JSON.parse(text);
+      if (data.id === id) {
+        return event.stopPropagation();
+      }
+      return onDrop?.({
+        source: data.source,
+        target: 'thread',
+        from: data.id,
+        to: id,
+      });
     }
-    return onDrop?.({
-      source: data.source,
-      target: 'thread',
-      from: data.id,
-      to: id,
-    });
   }
 
   return (
