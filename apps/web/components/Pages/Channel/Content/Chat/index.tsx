@@ -88,6 +88,10 @@ export default function Chat({
         event.preventDefault()
         const node = ref.current as HTMLElement;
         node.classList.remove(styles.hover);
+        const files = Array.from(event.dataTransfer.files || [])
+        if (files.length > 0) {
+          return uploadFiles(files)
+        }
         const text = event.dataTransfer.getData('text');
         if (text) {
           const data = JSON.parse(text);
