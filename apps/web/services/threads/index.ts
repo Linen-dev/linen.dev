@@ -13,6 +13,11 @@ import {
 } from './metrics';
 import { createSlug } from 'utilities/util';
 import { GetType, FindType, UpdateType } from './types';
+import { MessageFormat, UploadedFile } from '@linen/types';
+import { v4 as uuid } from 'uuid';
+import { eventNewThread } from 'services/events';
+import { parse, find } from '@linen/ast';
+import unique from 'lodash.uniq';
 
 class ThreadsServices {
   static async updateMetrics({
@@ -75,6 +80,99 @@ class ThreadsServices {
     });
     // TODO: call eventThreadUpdate
     return serializeThread(thread);
+  }
+
+  static async create({
+    authorId,
+    channelId,
+    body,
+    files,
+    imitationId,
+  }: {
+    authorId: string;
+    channelId: string;
+    body: string;
+    files?: UploadedFile[];
+    imitationId?: string;
+  }) {
+    const channel = await prisma.channels.findUnique({
+      where: { id: channelId },
+    });
+
+    if (!channel || !channel.accountId) {
+      throw { error: "Can't find the channel" };
+    }
+
+    const sentAt = new Date();
+
+    const tree = parse.linen(body);
+    const mentionNodes = find.mentions(tree);
+    const userIds = unique(
+      mentionNodes.map(({ id }: { id: string }) => id)
+    ) as string[];
+
+    const thread = await prisma.threads.create({
+      data: {
+        channel: { connect: { id: channelId } },
+        sentAt: sentAt.getTime(),
+        lastReplyAt: sentAt.getTime(),
+        slug: createSlug(body),
+        messageCount: 1,
+        messages: {
+          create: {
+            body,
+            channel: { connect: { id: channelId } },
+            sentAt,
+            author: { connect: { id: authorId } },
+            mentions: {
+              create: userIds.map((id: string) => ({ usersId: id })),
+            },
+            ...(files &&
+              files.length && {
+                attachments: {
+                  create: files.map((file) => ({
+                    externalId: uuid(), // TODO should this be optional?
+                    name: file.id,
+                    sourceUrl: file.url, // TODO should this be optional?
+                    internalUrl: file.url,
+                  })),
+                },
+              }),
+            messageFormat: MessageFormat.LINEN,
+          },
+        },
+      },
+      include: {
+        messages: {
+          include: {
+            author: true,
+            mentions: {
+              include: {
+                users: true,
+              },
+            },
+            reactions: true,
+            attachments: true,
+          },
+          take: 1,
+        },
+        channel: true,
+      },
+    });
+
+    const serializedThread = serializeThread(thread);
+    await eventNewThread({
+      communityId: channel.accountId,
+      channelId,
+      messageId: thread.messages[0].id,
+      threadId: thread.id,
+      imitationId: imitationId || thread.messages[0].id,
+      mentions: thread.messages[0].mentions,
+      mentionNodes,
+      thread: JSON.stringify(serializedThread),
+    });
+
+    return serializedThread;
   }
 }
 

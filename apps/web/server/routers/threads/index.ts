@@ -1,3 +1,4 @@
+import { ChatType } from '@linen/types';
 import { Router } from 'express';
 import { Forbidden, NotFound, NotImplemented } from 'server/exceptions';
 import { onError } from 'server/middlewares/error';
@@ -14,6 +15,8 @@ import {
   findType,
   getSchema,
   getType,
+  postSchema,
+  postType,
   putSchema,
   putType,
 } from './types';
@@ -46,7 +49,7 @@ class ThreadsController {
     // if pinned, must be admin/owner
     if (typeof req.body.pinned === 'boolean') {
       if (
-        req.tenant_user?.role !== Roles.OWNER ||
+        req.tenant_user?.role !== Roles.OWNER &&
         req.tenant_user?.role !== Roles.ADMIN
       ) {
         return next(new Forbidden('User not allow to pin messages'));
@@ -66,6 +69,30 @@ class ThreadsController {
     const thread = await ThreadsServices.update({ ...req.body });
     res.json(thread);
   }
+  static async post(
+    req: AuthedRequestWithTenantAndBody<postType>,
+    res: Response,
+    next: NextFunction
+  ) {
+    if (req.tenant?.chat === ChatType.NONE) {
+      return next(new Forbidden('Community has chat disabled'));
+    }
+
+    if (req.tenant?.chat === ChatType.MANAGERS) {
+      if (
+        req.tenant_user?.role !== Roles.OWNER &&
+        req.tenant_user?.role !== Roles.ADMIN
+      ) {
+        return next(new Forbidden('User is not allow to chat'));
+      }
+    }
+
+    const thread = await ThreadsServices.create({
+      ...req.body,
+      authorId: req.tenant_user?.id!,
+    });
+    res.json(thread);
+  }
 
   static async notImplemented(_: any, _2: any, next: NextFunction) {
     next(new NotImplemented());
@@ -79,6 +106,12 @@ const threadsRouter = Router()
     tenantMiddleware(),
     validationMiddleware(findSchema),
     ThreadsController.find
+  )
+  .post(
+    `${prefix}`,
+    tenantMiddleware([Roles.ADMIN, Roles.MEMBER, Roles.OWNER]),
+    validationMiddleware(postSchema),
+    ThreadsController.post
   )
   .get(
     `${prefix}/:id`,

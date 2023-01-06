@@ -19,3 +19,20 @@ export const putSchema = z.object({
   pinned: z.boolean().optional(),
 });
 export type putType = z.infer<typeof putSchema>;
+
+export const postSchema = z.object({
+  accountId: z.string().uuid(),
+  channelId: z.string().uuid(),
+  imitationId: z.string().uuid().optional(),
+  body: z.string().min(1),
+  title: z.string().optional(),
+  files: z
+    .array(
+      z.object({
+        id: z.string().min(1),
+        url: z.string().min(1),
+      })
+    )
+    .optional(),
+});
+export type postType = z.infer<typeof postSchema>;

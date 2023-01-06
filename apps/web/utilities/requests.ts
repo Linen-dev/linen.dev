@@ -100,3 +100,8 @@ export const getThread = (
 export const updateThread = (
   props: ThreadsTypes.putType & { accountId: string }
 ): Promise<SerializedThread> => put(`/api/threads/${props.id}`, props);
+
+export const createThread = (
+  props: ThreadsTypes.postType & { accountId: string }
+): Promise<{ thread: SerializedThread; imitationId: string }> =>
+  post(`/api/threads`, props);
