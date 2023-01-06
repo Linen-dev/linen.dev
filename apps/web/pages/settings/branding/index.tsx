@@ -1,4 +1,4 @@
-import Branding from 'components/Pages/Settings/Branding';
+import Branding from 'components/Pages/DeprecatedSettings/Branding';
 import { findAccountAndUserByEmail } from 'lib/models';
 import serializeAccount from 'serializers/account';
 import { NextPageContext } from 'next';
