@@ -479,7 +479,7 @@ async function createLinenCommunity() {
     },
   });
 
-  // 11. Blog post
+  // 12. Blog post
   await prisma.threads.create({
     data: {
       channelId: channel3.id,
@@ -495,6 +495,34 @@ async function createLinenCommunity() {
           },
         ],
       },
+    },
+  });
+
+  const channel4 = await prisma.channels.create({
+    data: {
+      accountId: community.id,
+      channelName: 'docs',
+    },
+  });
+
+
+  // 13. Markdown documentation
+  await prisma.threads.create({
+    data: {
+      channelId: channel4.id,
+      sentAt: new Date().getTime(),
+      messages: {
+        create: [
+          {
+            channelId: channel4.id,
+            body: readFileSync(join(__dirname, 'docs/markdown.md'), 'utf8'),
+            usersId: user1.id,
+            sentAt: '2021-12-14T09:01:00.000Z',
+            messageFormat: MessageFormat.LINEN,
+          },
+        ],
+      },
+      title: 'Markdown syntax in Linen'
     },
   });
 }
