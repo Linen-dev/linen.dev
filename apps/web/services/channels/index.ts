@@ -5,7 +5,6 @@ class ChannelsService {
   static async find(communityId: string): Promise<channels[]> {
     return prisma.channels.findMany({
       where: {
-        hidden: false,
         accountId: communityId,
       },
     });
