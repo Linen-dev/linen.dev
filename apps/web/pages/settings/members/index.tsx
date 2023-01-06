@@ -2,7 +2,7 @@ import { findAccountAndUserByEmail } from 'lib/models';
 import serializeAccount from 'serializers/account';
 import { NextPageContext } from 'next';
 import Session from 'services/session';
-import Members, { MembersType } from 'components/Pages/Settings/Members';
+import Members, { MembersType } from 'components/Pages/DeprecatedSettings/Members';
 import type { SessionType } from 'services/session';
 import { findUsersAndInvitesByAccount } from 'services/invites';
 import { auths, invites, users } from '@prisma/client';

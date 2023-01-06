@@ -3,7 +3,7 @@ import { NextPageContext } from 'next';
 import Session from 'services/session';
 import serializeAccount from 'serializers/account';
 import { channelIndex, findAccountAndUserByEmail } from 'lib/models';
-import Settings, { SettingsProps } from 'components/Pages/Settings';
+import Settings, { SettingsProps } from 'components/Pages/DeprecatedSettings';
 import { sortBy } from 'utilities/sort';
 import { Roles } from '@prisma/client';
 

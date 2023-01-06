@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import classNames from 'classnames';
-import { FiBarChart, FiMenu, FiHash, FiRss, FiLogOut } from 'react-icons/fi';
+import { FiBarChart, FiMenu, FiHash, FiRss, FiLogOut, FiSettings } from 'react-icons/fi';
 import Link from 'components/Link/InternalLink';
 import Modal from 'components/Modal';
 import styles from './index.module.scss';
@@ -30,6 +30,7 @@ export default function MobileMenu({
   const paths = {
     feed: usePath({ href: '/feed' }),
     metrics: usePath({ href: '/metrics' }),
+    settings: usePath({ href: '/settings' })
   };
 
   return (
@@ -68,6 +69,19 @@ export default function MobileMenu({
                 href="/metrics"
               >
                 <FiBarChart /> Metrics
+              </Link>
+            </li>
+          )}
+          {permissions.manage && (
+            <li>
+              <Link
+                onClick={close}
+                className={classNames(styles.link, {
+                  [styles.active]: paths.settings === router.asPath,
+                })}
+                href="/settings"
+              >
+                <FiSettings /> Settings
               </Link>
             </li>
           )}

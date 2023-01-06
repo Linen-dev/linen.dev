@@ -9,7 +9,7 @@ import Link from 'components/Link/InternalLink';
 import NewChannelModal from 'components/Pages/Channel/Content/NewChannelModal';
 import useWebsockets from '@linen/hooks/websockets';
 import styles from './index.module.scss';
-import { FiRss, FiBarChart, FiHash } from 'react-icons/fi';
+import { FiRss, FiBarChart, FiHash, FiSettings } from 'react-icons/fi';
 import { useRouter } from 'next/router';
 import usePath from 'hooks/path';
 import { Mode } from '@linen/hooks/mode';
@@ -102,6 +102,7 @@ export default function DesktopNavBar({
   const paths = {
     feed: usePath({ href: '/feed' }),
     metrics: usePath({ href: '/metrics' }),
+    settings: usePath({ href: '/settings' })
   };
 
   return (
@@ -117,6 +118,13 @@ export default function DesktopNavBar({
         <Link href="/metrics">
           <Nav.Item active={paths.metrics === router.asPath}>
             <FiBarChart /> Metrics
+          </Nav.Item>
+        </Link>
+      )}
+      {permissions.manage && (
+        <Link href="/settings">
+          <Nav.Item active={paths.settings === router.asPath}>
+            <FiSettings /> Settings
           </Nav.Item>
         </Link>
       )}
