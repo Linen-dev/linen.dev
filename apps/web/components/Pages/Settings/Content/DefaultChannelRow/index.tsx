@@ -66,7 +66,7 @@ export default function DefaultChannelRow({ channels, currentCommunity }: Props)
             <NativeSelect
               icon={<CommunityIcon color='#fff' />}
               theme='blue'
-              defaultValue={selected}
+              defaultValue={selected?.id}
               onChange={onChange}
               options={channels?.map(channel => ({ label: channel.channelName, value: channel.id }))}
             />
