@@ -39,7 +39,7 @@ export default function SettingsPage({
       className="w-full"
     >
       <Header />
-      <Content communityId={currentCommunity.id} />
+      <Content channels={channels} currentCommunity={currentCommunity} />
     </PageLayout>
   );
 }
