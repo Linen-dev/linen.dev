@@ -1,15 +1,18 @@
+import { SerializedAccount, SerializedChannel } from '@linen/types'
 import React from 'react';
 import styles from './index.module.scss';
+import DefaultChannelRow from './DefaultChannelRow';
 
 interface Props {
-  communityId: string;
+  channels: SerializedChannel[]
+  currentCommunity: SerializedAccount;
 }
 
-export default function Content({ communityId }: Props) {
+export default function Content({ channels, currentCommunity }: Props) {
 
   return (
     <div className={styles.container}>
-      Hello, world!
+      <DefaultChannelRow channels={channels} currentCommunity={currentCommunity} />
     </div>
   );
 }
