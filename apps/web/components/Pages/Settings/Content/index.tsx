@@ -5,6 +5,7 @@ import styles from './index.module.scss';
 import AnonymizeUsersRow from './AnonymizeUsersRow';
 import DefaultChannelRow from './DefaultChannelRow';
 import ChannelVisibilityRow from './ChannelVisibilityRow';
+import UrlsRow from './UrlsRow'
 import CommunityTypeRow from './CommunityTypeRow'
 import debounce from '@linen/utilities/debounce';
 
@@ -40,6 +41,8 @@ export default function Content({ channels, currentCommunity }: Props) {
       <DefaultChannelRow channels={channels} currentCommunity={currentCommunity} />
       <hr className="my-3"/>
       <ChannelVisibilityRow channels={channels} currentCommunity={currentCommunity} />
+      <hr className="my-3"/>
+      <UrlsRow currentCommunity={currentCommunity} />
       <hr className="my-3"/>
       <CommunityTypeRow
         type={currentCommunity.type}
