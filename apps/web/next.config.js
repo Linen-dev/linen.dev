@@ -9,6 +9,7 @@ const nextConfig = {
     domains: [
       'avatars.slack-edge.com',
       'cdn.discordapp.com',
+      'avatars.githubusercontent.com',
       `linen-assets.s3.amazonaws.com`,
       'linen-assets.s3.us-east-1.amazonaws.com',
       `${process.env.S3_UPLOAD_BUCKET}.s3.amazonaws.com`,

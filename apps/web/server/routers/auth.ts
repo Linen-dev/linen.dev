@@ -8,6 +8,7 @@ import {
 } from 'server/types';
 import csrfMiddleware from 'server/middlewares/csrf';
 import {
+  githubSignIn,
   loginPassport,
   magicLink,
   magicLinkStrategy,
@@ -17,13 +18,15 @@ import {
   expireSessionCookies,
   setSessionCookies,
 } from 'utilities/auth/server/cookies';
-import { joinAfterMagicLinkSignIn } from 'services/invites';
+import { joinCommunityAfterSignIn } from 'services/invites';
 import { createCSRFToken } from 'utilities/auth/server/csrf';
 import { qs } from 'utilities/url';
 import jwtMiddleware from 'server/middlewares/jwt';
 import { SessionType } from 'services/session';
 import { Unauthorized } from 'server/exceptions';
-import { onError } from 'server/middlewares/error';
+import { onError, onGetError } from 'server/middlewares/error';
+import { encrypt, decrypt } from 'utilities/crypto';
+import { normalize } from '@linen/utilities/string';
 
 const prefix = '/api/auth';
 const authRouter = Router();
@@ -60,11 +63,11 @@ authRouter.get(
 
     const callbackUrl = logged_user.callbackUrl;
     const state = logged_user.state;
-    const displayName = logged_user.displayName || logged_user.email;
+    const displayName = normalize(logged_user.displayName || logged_user.email);
 
     if (state) {
       // join community
-      await joinAfterMagicLinkSignIn({
+      await joinCommunityAfterSignIn({
         request: req,
         response: res,
         communityId: state,
@@ -84,6 +87,85 @@ authRouter.get(
   }
 );
 
+authRouter
+  .get(
+    `${prefix}/callback/github`,
+    async function (req, res, next) {
+      // github code
+      const code = req.query.code;
+
+      // we may redirect to the origin
+      const state = req.query.state;
+
+      if (typeof state === 'string') {
+        const decryptedState = decrypt(state);
+        const parsedState = JSON.parse(decryptedState);
+
+        if (parsedState.origin) {
+          // delete origin from state
+          const state = JSON.stringify({
+            callbackUrl: parsedState.callbackUrl,
+            state: parsedState.state,
+          });
+          const encryptedState = encrypt(state);
+          // redirect
+          return res.redirect(
+            `${parsedState.origin}${prefix}/callback/github?${qs({
+              code,
+              state: encryptedState,
+            })}`
+          );
+        }
+      }
+      next();
+    },
+    githubSignIn(),
+    async function (req, res) {
+      if (!req.user) {
+        return res.redirect('/500');
+      }
+
+      let callbackUrl = '/'; // page redirect
+
+      const logged_user = req.user as LoggedUser;
+
+      const state = req.query.state;
+      if (typeof state === 'string') {
+        const decryptedState = decrypt(state);
+        const parsedState = JSON.parse(decryptedState);
+        if (parsedState.callbackUrl) {
+          callbackUrl = parsedState.callbackUrl;
+        }
+
+        if (parsedState.state) {
+          // join community
+          await joinCommunityAfterSignIn({
+            request: req,
+            response: res,
+            communityId: parsedState.state,
+            authId: logged_user.id,
+            displayName: normalize(
+              logged_user.displayName ||
+                logged_user.email.split('@').shift() ||
+                logged_user.email
+            ),
+            profileImageUrl: logged_user.profileImageUrl,
+          });
+        }
+      }
+
+      const token = await signToken({
+        id: logged_user.id,
+        email: logged_user.email,
+      });
+      // persist cookies for SSR
+      setSessionCookies({ token, req, res });
+      // ===
+      return res.redirect(callbackUrl);
+    }
+  )
+  .use(`${prefix}/callback/github`, onGetError);
+
 authRouter.get(`${prefix}/csrf`, async (req: Request, res: Response) => {
   const csrfToken = createCSRFToken();
   res.json({ csrfToken });
@@ -93,6 +175,19 @@ authRouter.post(
   `${prefix}/magic-link`,
   csrfMiddleware(),
   magicLinkStrategy.send
+);
+
+authRouter.get(
+  `${prefix}/github`,
+  async (req: Request, res: Response, next: NextFunction) => {
+    const state = JSON.stringify({
+      callbackUrl: req.query.callbackUrl,
+      state: req.query.state,
+      origin: req.query.origin,
+    });
+    const encryptedState = encrypt(state);
+    return githubSignIn(encryptedState)(req, res, next);
+  }
 );
 
 authRouter.get(`${prefix}/providers`, async (req: Request, res: Response) => {

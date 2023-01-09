@@ -23,6 +23,14 @@ export function onError(error: any, req: any, res: any, _: any) {
   res.status(error.status).json({ message: error.message });
 }
 
+export function onGetError(error: any, req: any, res: any, _: any) {
+  const path = !!req.baseUrl ? req.baseUrl : req.url;
+  console.error(
+    `[${req.method}] ${path} >> StatusCode:: 500, Message:: ${error.message}`
+  );
+  return res.redirect('/500');
+}
+
 export function onNoMatch(req: any, res: any) {
   res.status(404).json({ message: 'Not Found' });
 }

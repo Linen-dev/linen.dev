@@ -1,39 +1,45 @@
 import passport from 'passport';
 import passportLocal from 'passport-local';
 import MagicLoginStrategy from 'passport-magic-login';
+import GitHubStrategy from 'passport-github2';
 import UsersService from 'services/users';
 import { z } from 'zod';
 import { CredentialsSignin } from 'server/exceptions';
 import SignInMailer from 'mailers/SignInMailer';
 
-passport.use(
-  new passportLocal.Strategy(
-    { passReqToCallback: true },
-    async (req, username, password, done) => {
-      try {
-        const schema = z.object({
-          username: z.string().min(1),
-          password: z.string().min(1),
-        });
-        const userPass = schema.parse({ username, password });
+const localStrategy = new passportLocal.Strategy(
+  { passReqToCallback: true },
+  async (req, username, password, done) => {
+    try {
+      const schema = z.object({
+        username: z.string().min(1),
+        password: z.string().min(1),
+      });
+      const userPass = schema.parse({ username, password });
 
-        const user = await UsersService.authorize(
-          userPass.username,
-          userPass.password
-        );
+      const user = await UsersService.authorize(
+        userPass.username,
+        userPass.password
+      );
 
-        if (!user) {
-          return done(new CredentialsSignin());
-        }
-
-        done(null, user);
-      } catch (error) {
-        console.error({ error });
-        done(error);
+      if (!user) {
+        return done(new CredentialsSignin());
       }
+
+      done(null, user);
+    } catch (error) {
+      console.error({ error });
+      done(error);
     }
-  )
+  }
 );
+
+passport.use(localStrategy);
+
+export const loginPassport = passport.authenticate('local', {
+  session: false,
+  failWithError: true,
+});
 
 export const magicLinkStrategy = new MagicLoginStrategy({
   secret: process.env.NEXTAUTH_SECRET!,
@@ -99,14 +105,60 @@ export const magicLinkStrategy = new MagicLoginStrategy({
 
 passport.use(magicLinkStrategy);
 
-export default passport;
-
-export const loginPassport = passport.authenticate('local', {
-  session: false,
-  failWithError: true,
-});
-
 export const magicLink = passport.authenticate('magiclogin', {
   session: false,
   failWithError: true,
 });
+
+const githubStrategy = new GitHubStrategy.Strategy(
+  {
+    clientID: process.env.AUTH_GITHUB_ID!,
+    clientSecret: process.env.AUTH_GITHUB_SECRET!,
+    callbackURL: `${process.env.NEXTAUTH_URL}/api/auth/callback/github`,
+    passReqToCallback: true,
+    scope: ['user:email'],
+  },
+  async function (
+    req: any,
+    accessToken: any,
+    refreshToken: any,
+    profile: any,
+    cb: any
+  ) {
+    try {
+      const user = {
+        displayName: profile.displayName || profile.username,
+        profileImageUrl: profile.photos?.find(Boolean)?.value,
+        email: profile.emails?.find(Boolean)?.value,
+      };
+
+      if (!user.email) {
+        throw new Error('email not found');
+      }
+
+      const auth = await UsersService.getOrCreateUserWithEmail(user.email);
+
+      return cb(null, {
+        ...user,
+        id: auth.id,
+        email: auth.email,
+      });
+    } catch (error: any) {
+      console.log('error %j', error);
+    }
+
+    return cb(null, null); // it will fail on controller
+  }
+);
+
+passport.use(githubStrategy);
+
+export const githubSignIn = (state?: string) =>
+  passport.authenticate('github', {
+    session: false,
+    failWithError: true,
+    scope: ['user:email'],
+    state,
+  });
+
+export default passport;

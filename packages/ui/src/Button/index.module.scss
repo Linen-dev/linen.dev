@@ -66,6 +66,15 @@
   }
 }
 
+.black {
+  background: black;
+  color: white;
+
+  &:hover {
+    background: black
+  }
+}
+
 .sm {
   font-size: 0.875rem;
   line-height: 1.25rem;

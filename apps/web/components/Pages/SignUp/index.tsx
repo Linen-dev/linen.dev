@@ -13,6 +13,7 @@ import EmailField from 'components/EmailField';
 import { Button } from '@linen/ui';
 import PasswordField from 'components/PasswordField';
 import { qs } from 'utilities/url';
+import GitHubButton from 'components/Auth/GitHubButton';
 
 export interface SignUpProps {
   csrfToken?: string;
@@ -152,6 +153,8 @@ export default function SignUp({
             </p>
           )}
         </div>
+        <div className="my-5"></div>
+        <GitHubButton flow="sign-up" {...{ callbackUrl, state }} />
       </form>
     </Layout>
   );

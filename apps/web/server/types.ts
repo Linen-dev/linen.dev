@@ -35,4 +35,5 @@ export type LoggedUser = {
   callbackUrl?: string;
   state?: string;
   displayName?: string;
+  profileImageUrl?: string;
 };
