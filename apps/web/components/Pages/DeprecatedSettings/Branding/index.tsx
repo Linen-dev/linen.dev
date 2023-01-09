@@ -7,7 +7,7 @@ import Table, { Thead, Tbody, Th, Td } from 'components/Table';
 import { stripProtocol } from 'utilities/url';
 import classNames from 'classnames';
 import { useS3Upload } from 'next-s3-upload';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Toast } from '@linen/ui';
 import { SerializedAccount } from '@linen/types';
 import { useRouter } from 'next/router';
@@ -57,14 +57,30 @@ function Card({
 
 interface Props {
   account?: SerializedAccount;
-  records?: DNSRecord[];
 }
 
-export default function Branding({ account, records }: Props) {
+export default function Branding({ account }: Props) {
+  const [records, setRecords] = useState<DNSRecord[]>()
   const router = useRouter();
   let [logoUrl, setLogoUrl] = useState<string>();
   let { FileInput, openFileDialog, uploadToS3, files } = useS3Upload();
   const isUploading = files && files.length > 0 && files[0].progress < 100;
+
+  useEffect(() => {
+    let mounted = true
+    if (account && account.premium && account.redirectDomain) {
+      fetch(`/api/dns?communityId=${account.id}`)
+        .then((response) => response.json())
+        .then((response) => {
+          if (mounted && response && response.records) {
+            setRecords(response.records)
+          }
+        })
+    }
+    return () => {
+      mounted = false
+    }
+  }, [])
 
   let handleLogoChange = async (file: File) => {
     let { url } = await uploadToS3(file, {
