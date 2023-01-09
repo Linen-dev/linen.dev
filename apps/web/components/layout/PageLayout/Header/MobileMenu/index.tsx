@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import classNames from 'classnames';
-import { FiBarChart, FiMenu, FiHash, FiRss, FiLogOut, FiSettings } from 'react-icons/fi';
+import { FiBarChart, FiMenu, FiHash, FiRss, FiLogOut, FiSettings, FiDollarSign, FiSliders } from 'react-icons/fi';
 import Link from 'components/Link/InternalLink';
 import Modal from 'components/Modal';
 import styles from './index.module.scss';
@@ -30,7 +30,9 @@ export default function MobileMenu({
   const paths = {
     feed: usePath({ href: '/feed' }),
     metrics: usePath({ href: '/metrics' }),
-    settings: usePath({ href: '/settings' })
+    settings: usePath({ href: '/settings' }),
+    branding: usePath({ href: '/branding' }),
+    plans: usePath({ href: '/plans' }),
   };
 
   return (
@@ -82,6 +84,32 @@ export default function MobileMenu({
                 href="/settings"
               >
                 <FiSettings /> Settings
+              </Link>
+            </li>
+          )}
+          {permissions.manage && (
+            <li>
+              <Link
+                onClick={close}
+                className={classNames(styles.link, {
+                  [styles.active]: paths.branding === router.asPath,
+                })}
+                href="/branding"
+              >
+                <FiSliders /> Branding
+              </Link>
+            </li>
+          )}
+          {permissions.manage && (
+            <li>
+              <Link
+                onClick={close}
+                className={classNames(styles.link, {
+                  [styles.active]: paths.plans === router.asPath,
+                })}
+                href="/plans"
+              >
+                <FiDollarSign /> Plans
               </Link>
             </li>
           )}
