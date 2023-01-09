@@ -15,6 +15,7 @@ interface Props {
   currentCommunity: SerializedAccount;
   permissions: Permissions;
   settings: Settings;
+  isSubDomainRouting: boolean
 }
 
 export default function SettingsPage({
@@ -22,6 +23,7 @@ export default function SettingsPage({
   currentCommunity,
   settings,
   permissions,
+  isSubDomainRouting,
 }: Props) {
   useEffect(() => {
     storage.set('pages.last', {
@@ -35,7 +37,7 @@ export default function SettingsPage({
       channels={channels}
       permissions={permissions}
       settings={settings}
-      isSubDomainRouting={false}
+      isSubDomainRouting={isSubDomainRouting}
       className="w-full"
     >
       <Header />
