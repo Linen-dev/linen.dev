@@ -39,12 +39,6 @@ export default function UserAvatar({
       },
     },
     {
-      name: 'Settings',
-      onClick() {
-        window.location.href = '/settings';
-      },
-    },
-    {
       name: 'Sign out',
       onClick() {
         signOut();

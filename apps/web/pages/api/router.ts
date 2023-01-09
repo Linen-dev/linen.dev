@@ -54,7 +54,8 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
     if (user && user.role === Roles.MEMBER) {
       return response.redirect(url);
     }
-    return response.redirect('/settings');
+
+    return response.redirect(`${url}/settings`);
   } catch (error) {
     console.error(error);
     return response.redirect('/');

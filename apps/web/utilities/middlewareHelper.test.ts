@@ -19,7 +19,6 @@ describe('rewrite', () => {
     'c/default',
     'signup',
     'signin',
-    'settings',
     'forgot-password',
     'reset-password',
     'api',
@@ -103,7 +102,6 @@ describe('rewrite', () => {
     const signPaths = [
       '/signup',
       '/signin',
-      '/settings',
       '/forgot-password',
       '/reset-password',
     ];

@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import Tiers from '.';
-import { Period } from 'pages/settings/plans';
+import { Period } from 'components/Pages/Plans';
 jest.mock('../../../client');
 
 describe('Tiers', () => {

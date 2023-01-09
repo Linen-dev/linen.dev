@@ -14,7 +14,7 @@ export function InviteYourTeamPage() {
     window.location.href =
       pathDomain && channelName
         ? `/s/${pathDomain}/c/${channelName}`
-        : '/settings';
+        : `/s/${pathDomain}/settings`
   }
 
   async function onSubmit(e: any) {

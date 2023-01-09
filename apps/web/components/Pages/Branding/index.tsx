@@ -12,6 +12,7 @@ import { useEffect, useState } from 'react';
 import { Toast } from '@linen/ui';
 import { SerializedAccount, SerializedChannel, Permissions, Settings } from '@linen/types';
 import { useRouter } from 'next/router';
+import usePath from 'hooks/path'
 import { DNSRecord } from 'services/vercel';
 
 function Description({ children }: { children: React.ReactNode }) {
@@ -234,6 +235,8 @@ export default function Branding({ channels, currentCommunity, permissions, sett
     </>
   );
 
+  const path = usePath({ href: '/plans' })
+
   const settingsComponent = (
     <form onSubmit={onSubmit} className="p-3">
       <div className="grid grid-cols-1">
@@ -243,7 +246,7 @@ export default function Branding({ channels, currentCommunity, permissions, sett
             {!currentCommunity.premium ? (
               <Button
                 color="yellow"
-                onClick={() => router.push('/settings/plans')} // TODO
+                onClick={() => router.push(path)}
               >
                 Upgrade your account
               </Button>

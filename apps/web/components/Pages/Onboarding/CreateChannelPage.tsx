@@ -5,10 +5,6 @@ import { Button, TextInput, Toast } from '@linen/ui';
 export function CreateChannelPage() {
   const [loading, setLoading] = useState(false);
 
-  async function onSkip() {
-    window.location.href = '/settings';
-  }
-
   async function onSubmit(e: any) {
     setLoading(true);
     try {
@@ -60,9 +56,6 @@ export function CreateChannelPage() {
 
         <Button type="submit" block disabled={loading}>
           {loading ? 'Loading...' : 'Create your channel'}
-        </Button>
-        <Button onClick={onSkip} block color="disabled">
-          Skip for now
         </Button>
       </form>
     </Layout>

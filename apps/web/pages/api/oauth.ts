@@ -3,7 +3,10 @@ import request from 'superagent';
 import { fetchTeamInfo } from 'services/slack/api';
 import { createSlackAuthorization, updateAccount } from '../../lib/models';
 import { eventNewIntegration } from 'services/events/eventNewIntegration';
-import { AccountIntegration } from '@linen/types';
+import { AccountIntegration, SerializedAccount } from '@linen/types';
+import { getHomeUrl } from 'utilities/home';
+import serializeAccount from 'serializers/account'
+import prisma from '../../client'
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
@@ -52,10 +55,18 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
     await eventNewIntegration({ accountId });
 
-    return res.redirect('/settings');
+    const url = getHomeUrl(serializeAccount(account) as SerializedAccount);
+    return res.redirect(`${url}/settings`);
   } catch (error) {
     console.error(error);
-    return res.redirect('/settings?error=1');
+    const accountId = req.query.state as string;
+    const account = await prisma.accounts.findFirst({
+      where: {
+        id: accountId
+      }
+    })
+    const url = getHomeUrl(serializeAccount(account) as SerializedAccount);
+    return res.redirect(`${url}/settings?error=1`);
   }
 }
 
