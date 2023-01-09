@@ -9,7 +9,14 @@ interface Props {
   children?: ReactNode;
   onClick?(event: React.SyntheticEvent): void;
   disabled?: boolean;
-  color?: 'blue' | 'white' | 'gray' | 'transparent' | 'yellow' | 'disabled';
+  color?:
+    | 'blue'
+    | 'white'
+    | 'gray'
+    | 'transparent'
+    | 'yellow'
+    | 'disabled'
+    | 'black';
   rounded?: 'lg' | 'full';
   size?: 'sm' | 'xs';
   weight?: 'medium' | 'normal';
@@ -44,6 +51,7 @@ const Button = ({
         [styles.gray]: color === 'gray',
         [styles.blue]: color === 'blue',
         [styles.yellow]: color === 'yellow',
+        [styles.black]: color === 'black',
         [styles.transparent]: color === 'transparent',
       })}
     >

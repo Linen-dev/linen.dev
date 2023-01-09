@@ -229,15 +229,21 @@ export async function joinCommunity(
     return { data: 'user already belongs to tenant' };
   }
   const displayName = normalize(email.split('@').shift() || email);
-  await createUser(accountId, authId, displayName);
+  await createUser({ accountId, authId, displayName });
   await checkoutTenant(authId, accountId);
 }
 
-async function createUser(
-  accountId: string,
-  authId: string,
-  displayName: string
-) {
+async function createUser({
+  accountId,
+  authId,
+  displayName,
+  profileImageUrl,
+}: {
+  accountId: string;
+  authId: string;
+  displayName: string;
+  profileImageUrl?: string;
+}) {
   await prisma.users.create({
     data: {
       isAdmin: false,
@@ -247,6 +253,7 @@ async function createUser(
       displayName,
       anonymousAlias: generateRandomWordSlug(),
       role: Roles.MEMBER,
+      profileImageUrl,
     },
   });
 }
@@ -264,18 +271,20 @@ async function checkoutTenant(authId: string, accountId: string) {
   await prisma.auths.update({ where: { id: authId }, data: { accountId } });
 }
 
-export async function joinAfterMagicLinkSignIn({
+export async function joinCommunityAfterSignIn({
   request,
   response,
   communityId,
   authId,
   displayName,
+  profileImageUrl,
 }: {
   request: any;
   response: any;
   communityId: string;
   authId: string;
   displayName: string;
+  profileImageUrl?: string;
 }) {
   const permissions = await PermissionsService.get({
     request,
@@ -286,6 +295,11 @@ export async function joinAfterMagicLinkSignIn({
   if (!permissions.access) {
     throw new Unauthorized();
   }
-  await createUser(communityId, authId, displayName);
+  await createUser({
+    accountId: communityId,
+    authId,
+    displayName,
+    profileImageUrl,
+  });
   await checkoutTenant(authId, communityId);
 }

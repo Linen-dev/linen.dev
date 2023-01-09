@@ -12,6 +12,7 @@ import {
   SignInMode,
   TermsAndPolicy,
 } from 'components/Auth';
+import GitHubButton from 'components/Auth/GitHubButton';
 
 interface SignInProps {
   csrfToken?: string;
@@ -137,6 +138,8 @@ export default function SignIn({
             </p>
           )}
         </div>
+        <div className="my-5"></div>
+        <GitHubButton flow="sign-in" {...{ callbackUrl, state }} />
       </form>
     </Layout>
   );
