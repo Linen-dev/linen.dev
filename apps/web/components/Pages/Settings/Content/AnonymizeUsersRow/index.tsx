@@ -1,30 +1,27 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Toast } from '@linen/ui';
 import Toggle from 'components/Toggle';
-import { SerializedAccount } from '@linen/types'
+import { SerializedAccount } from '@linen/types';
+import * as api from 'utilities/requests';
 
 interface Props {
-  currentCommunity: SerializedAccount
+  currentCommunity: SerializedAccount;
 }
 
 export default function AnonymizeCard({ currentCommunity }: Props) {
-  const [enabled, setEnabled] = useState(currentCommunity.anonymizeUsers || false);
+  const [enabled, setEnabled] = useState(
+    currentCommunity.anonymizeUsers || false
+  );
 
   async function onChange(toggle: boolean) {
-    fetch('/api/accounts', {
-      method: 'PUT',
-      body: JSON.stringify({
-        communityId: currentCommunity.id,
+    api
+      .updateAccount({
+        accountId: currentCommunity.id,
         anonymizeUsers: toggle,
-      }),
-    })
-      .then((response) => {
-        if (response.ok) {
-          Toast.success('Saved successfully!');
-          setEnabled(toggle);
-        } else {
-          throw 'fail to update';
-        }
+      })
+      .then((_) => {
+        Toast.success('Saved successfully!');
+        setEnabled(toggle);
       })
       .catch(() => Toast.error('Something went wrong!'));
   }
@@ -37,8 +34,8 @@ export default function AnonymizeCard({ currentCommunity }: Props) {
         </h3>
         <div className="mt-2 sm:flex sm:items-start sm:justify-between">
           <div className="max-w-xl text-sm text-gray-500">
-            Replace your community member&apos;s display name and profile
-            images with randomly generated words.
+            Replace your community member&apos;s display name and profile images
+            with randomly generated words.
           </div>
         </div>
       </div>

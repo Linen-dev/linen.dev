@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import PageLayout from 'components/layout/PageLayout';
-import Header from './Header'
+import Header from './Header';
 import TextField from 'components/TextField';
 import ColorField from 'components/ColorField';
 import { Button, Label } from '@linen/ui';
@@ -10,10 +10,16 @@ import classNames from 'classnames';
 import { useS3Upload } from 'next-s3-upload';
 import { useEffect, useState } from 'react';
 import { Toast } from '@linen/ui';
-import { SerializedAccount, SerializedChannel, Permissions, Settings } from '@linen/types';
+import {
+  SerializedAccount,
+  SerializedChannel,
+  Permissions,
+  Settings,
+} from '@linen/types';
 import { useRouter } from 'next/router';
-import usePath from 'hooks/path'
+import usePath from 'hooks/path';
 import { DNSRecord } from 'services/vercel';
+import * as api from 'utilities/requests';
 
 function Description({ children }: { children: React.ReactNode }) {
   return <div className="text-sm mb-2 text-gray-600">{children}</div>;
@@ -62,31 +68,41 @@ interface Props {
   currentCommunity: SerializedAccount;
   permissions: Permissions;
   settings: Settings;
-  isSubDomainRouting: boolean
+  isSubDomainRouting: boolean;
 }
 
-export default function Branding({ channels, currentCommunity, permissions, settings, isSubDomainRouting }: Props) {
-  const [records, setRecords] = useState<DNSRecord[]>()
+export default function Branding({
+  channels,
+  currentCommunity,
+  permissions,
+  settings,
+  isSubDomainRouting,
+}: Props) {
+  const [records, setRecords] = useState<DNSRecord[]>();
   const router = useRouter();
   let [logoUrl, setLogoUrl] = useState<string>();
   let { FileInput, openFileDialog, uploadToS3, files } = useS3Upload();
   const isUploading = files && files.length > 0 && files[0].progress < 100;
 
   useEffect(() => {
-    let mounted = true
-    if (currentCommunity && currentCommunity.premium && currentCommunity.redirectDomain) {
+    let mounted = true;
+    if (
+      currentCommunity &&
+      currentCommunity.premium &&
+      currentCommunity.redirectDomain
+    ) {
       fetch(`/api/dns?communityId=${currentCommunity.id}`)
         .then((response) => response.json())
         .then((response) => {
           if (mounted && response && response.records) {
-            setRecords(response.records)
+            setRecords(response.records);
           }
-        })
+        });
     }
     return () => {
-      mounted = false
-    }
-  }, [])
+      mounted = false;
+    };
+  }, []);
 
   let handleLogoChange = async (file: File) => {
     let { url } = await uploadToS3(file, {
@@ -109,22 +125,20 @@ export default function Branding({ channels, currentCommunity, permissions, sett
     const redirectDomain = stripProtocol(form.redirectDomain.value);
     const googleAnalyticsId = form.googleAnalyticsId?.value;
     const brandColor = form.brandColor.value;
-    const response = await fetch('/api/accounts', {
-      method: 'PUT',
-      body: JSON.stringify({
-        communityId: currentCommunity.id,
+    try {
+      const response = await api.updateAccount({
+        accountId: currentCommunity.id,
         logoUrl,
         redirectDomain,
         brandColor,
         googleAnalyticsId,
-      }),
-    });
-    if (response.ok) {
-      Toast.success('Saved successfully!');
-      router.reload();
-    } else {
-      const data = await response.json();
-      Toast.error(data.error || 'Something went wrong!');
+      });
+      if (response) {
+        Toast.success('Saved successfully!');
+        router.reload();
+      }
+    } catch (error) {
+      Toast.error(error || 'Something went wrong!');
     }
   };
 
@@ -136,7 +150,11 @@ export default function Branding({ channels, currentCommunity, permissions, sett
         <TextField
           placeholder="linen.yourwebsite.com"
           id="redirectDomain"
-          defaultValue={currentCommunity.premium ? currentCommunity.redirectDomain : undefined}
+          defaultValue={
+            currentCommunity.premium
+              ? currentCommunity.redirectDomain
+              : undefined
+          }
           disabled={!currentCommunity.premium}
           readOnly={!currentCommunity.premium}
         />
@@ -177,7 +195,9 @@ export default function Branding({ channels, currentCommunity, permissions, sett
         </Description>
         <ColorField
           id="brandColor"
-          defaultValue={currentCommunity.premium ? currentCommunity.brandColor : '#E2E2E2'}
+          defaultValue={
+            currentCommunity.premium ? currentCommunity.brandColor : '#E2E2E2'
+          }
           required
           readOnly={!currentCommunity.premium}
           disabled={!currentCommunity.premium}
@@ -226,7 +246,9 @@ export default function Branding({ channels, currentCommunity, permissions, sett
           placeholder="G-XXXXXXX or UA-XXXXXX-X"
           id="googleAnalyticsId"
           defaultValue={
-            currentCommunity.premium ? currentCommunity.googleAnalyticsId : undefined
+            currentCommunity.premium
+              ? currentCommunity.googleAnalyticsId
+              : undefined
           }
           disabled={!currentCommunity.premium}
           readOnly={!currentCommunity.premium}
@@ -235,7 +257,7 @@ export default function Branding({ channels, currentCommunity, permissions, sett
     </>
   );
 
-  const path = usePath({ href: '/plans' })
+  const path = usePath({ href: '/plans' });
 
   const settingsComponent = (
     <form onSubmit={onSubmit} className="p-3">
@@ -244,10 +266,7 @@ export default function Branding({ channels, currentCommunity, permissions, sett
           {premiumAccountSettings}
           <div className="flex justify-end">
             {!currentCommunity.premium ? (
-              <Button
-                color="yellow"
-                onClick={() => router.push(path)}
-              >
+              <Button color="yellow" onClick={() => router.push(path)}>
                 Upgrade your account
               </Button>
             ) : (
@@ -267,7 +286,7 @@ export default function Branding({ channels, currentCommunity, permissions, sett
       isSubDomainRouting={isSubDomainRouting}
       className="w-full"
     >
-      <Header/>
+      <Header />
       {settingsComponent}
     </PageLayout>
   );

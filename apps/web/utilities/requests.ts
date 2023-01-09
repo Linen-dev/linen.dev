@@ -1,5 +1,8 @@
 import axios from 'axios';
-import type { integrationDiscordType } from 'server/routers/accounts.types';
+import type {
+  integrationDiscordType,
+  updateAccountType,
+} from 'server/routers/accounts.types';
 import useSWR from 'swr';
 import isBrowser from './isBrowser';
 
@@ -73,6 +76,10 @@ export const useRequest = (url: string) => {
 };
 
 export const getAccounts = () => get('/api/accounts');
+
+export const updateAccount = (
+  props: updateAccountType & { accountId: string }
+) => put('/api/accounts', props);
 
 export const setDiscordIntegrationCustomBot = (props: integrationDiscordType) =>
   post('/api/accounts/integration/discord', props);
