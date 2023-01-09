@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import PageLayout from 'components/layout/PageLayout';
+import Header from './Header'
 import { Button, NativeSelect, TextInput, Toast } from '@linen/ui';
 import { useRouter } from 'next/router';
 import { Roles } from '@prisma/client';
@@ -235,8 +236,10 @@ export default function Members({ channels, settings, permissions, currentCommun
       settings={settings}
       permissions={permissions}
       isSubDomainRouting={isSubDomainRouting}
+      className="w-full"
     >
-      <div>
+      <Header/>
+      <div className="p-3">
         <InviteMember onSubmit={createInvite} loading={loading} />
         <TableMembers users={users} communityId={currentCommunity.id} />
       </div>
