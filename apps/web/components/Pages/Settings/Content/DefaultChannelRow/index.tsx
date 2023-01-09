@@ -46,32 +46,28 @@ export default function DefaultChannelRow({ channels, currentCommunity }: Props)
   }
 
   return (
-    <div className="bg-white">
-      <div className="py-3">
-        <div className="flex">
-          <div className="grow">
-            <h3 className="text-lg leading-6 font-medium text-gray-900">
-              Default channel
-            </h3>
-            <div className="mt-2 sm:flex sm:items-start sm:justify-between">
-              <div className="max-w-xl text-sm text-gray-500">
-                <p>
-                  Select the first channel that gets displayed when a user lands
-                  on your Linen page.
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="self-center">
-            <NativeSelect
-              icon={<CommunityIcon color='#fff' />}
-              theme='blue'
-              defaultValue={selected?.id}
-              onChange={onChange}
-              options={channels?.map(channel => ({ label: channel.channelName, value: channel.id }))}
-            />
+    <div className="flex">
+      <div className="grow">
+        <h3 className="text-lg leading-6 font-medium text-gray-900">
+          Default channel
+        </h3>
+        <div className="mt-2 sm:flex sm:items-start sm:justify-between">
+          <div className="max-w-xl text-sm text-gray-500">
+            <p>
+              Select the first channel that gets displayed when a user lands
+              on your Linen page.
+            </p>
           </div>
         </div>
+      </div>
+      <div className="self-center">
+        <NativeSelect
+          icon={<CommunityIcon color='#fff' />}
+          theme='blue'
+          defaultValue={selected?.id}
+          onChange={onChange}
+          options={channels?.map(channel => ({ label: channel.channelName, value: channel.id }))}
+        />
       </div>
     </div>
   );

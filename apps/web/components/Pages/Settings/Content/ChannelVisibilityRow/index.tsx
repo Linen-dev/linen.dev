@@ -66,31 +66,27 @@ export default function ChannelVisibilityRow({
   }
 
   return (
-    <div className="bg-white">
-      <div className="py-3">
-        <div className="flex">
-          <div className="grow">
-            <h3 className="text-lg leading-6 font-medium text-gray-900">
-              Channels visibility
-            </h3>
-            <div className="mt-2 sm:flex sm:items-start sm:justify-between">
-              <div className="max-w-xl text-sm text-gray-500">
-                <p>Pick which channels to display or hide.</p>
-              </div>
-            </div>
-            <div className="mt-2 sm:flex sm:items-end sm:justify-between">
-              <div className="flex-grow">
-                {channels?.map((channel) => {
-                  return (
-                    <ChannelToggleList
-                      key={channel.id}
-                      channel={channel}
-                      onChange={onChange}
-                    />
-                  );
-                })}
-              </div>
-            </div>
+    <div className="flex">
+      <div className="grow">
+        <h3 className="text-lg leading-6 font-medium text-gray-900">
+          Channels visibility
+        </h3>
+        <div className="mt-2 sm:flex sm:items-start sm:justify-between">
+          <div className="max-w-xl text-sm text-gray-500">
+            <p>Pick which channels to display or hide.</p>
+          </div>
+        </div>
+        <div className="mt-2 sm:flex sm:items-end sm:justify-between">
+          <div className="flex-grow">
+            {channels?.map((channel) => {
+              return (
+                <ChannelToggleList
+                  key={channel.id}
+                  channel={channel}
+                  onChange={onChange}
+                />
+              );
+            })}
           </div>
         </div>
       </div>
