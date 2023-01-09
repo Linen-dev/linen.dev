@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { MembersPageProps } from 'pages/settings/members';
 import DashboardLayout from 'components/layout/DashboardLayout';
 import { Button, NativeSelect, TextInput, Toast } from '@linen/ui';
@@ -179,9 +179,26 @@ function RowMember(user: MembersType, communityId: string): JSX.Element {
   );
 }
 
-export default function Members({ account, users }: MembersPageProps) {
+export default function Members({ account }: MembersPageProps) {
+  const [users, setUsers] = useState<MembersType[]>([]);
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    let mounted = true
+    if (account) {
+      fetch(`/api/members?communityId=${account?.id}`)
+        .then((response) => response.json())
+        .then((response: any) => {
+          if (response && response.users) {
+            setUsers(response.users)
+          }
+        })
+    }
+    return () => {
+      mounted = false
+    }
+  }, [])
 
   async function createInvite(event: any) {
     event.preventDefault();
