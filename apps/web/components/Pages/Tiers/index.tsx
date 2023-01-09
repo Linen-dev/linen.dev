@@ -1,7 +1,6 @@
 import React from 'react';
-import { Period } from 'pages/settings/plans';
+import { Period } from 'components/Pages/Plans';
 import { SerializedAccount } from '@linen/types';
-import { isStripeEnabled } from 'utilities/featureFlags';
 import { GoCheck } from 'react-icons/go';
 
 interface Price {
@@ -37,26 +36,6 @@ export default function Tiers({ tiers, activePeriod, account }: Props) {
               {tier.name}
             </h2>
             <p className="mt-4 text-sm text-gray-500">{tier.description}</p>
-            <p className="mt-8">
-              {isStripeEnabled &&
-                (tier.prices ? (
-                  <>
-                    <span className="text-4xl font-extrabold text-gray-900">
-                      $
-                      {activePeriod === Period.Monthly
-                        ? tier.prices[0].amount
-                        : tier.prices[1].amount}
-                    </span>{' '}
-                    <span className="text-base font-medium text-gray-500">
-                      /{activePeriod === Period.Monthly ? 'mo' : 'yr'}
-                    </span>
-                  </>
-                ) : (
-                  <span className="text-4xl font-extrabold text-gray-900">
-                    Free
-                  </span>
-                ))}
-            </p>
 
             {!account && tier.prices ? (
               <a
@@ -66,38 +45,12 @@ export default function Tiers({ tiers, activePeriod, account }: Props) {
                 Contact Us
               </a>
             ) : !!account && !account.premium && tier.prices ? (
-              isStripeEnabled ? (
-                <button
-                  onClick={async () => {
-                    if (!tier.prices) {
-                      return;
-                    }
-                    const response = await fetch('/api/checkout', {
-                      method: 'POST',
-                      body: JSON.stringify({
-                        accountId: account.id,
-                        priceId:
-                          activePeriod === Period.Monthly
-                            ? tier?.prices[0].id
-                            : tier.prices[1].id,
-                      }),
-                    });
-                    const { redirectUrl } = await response.json();
-                    window.location = redirectUrl;
-                  }}
-                  type="submit"
-                  className="shadow-sm mt-8 block w-full bg-blue-500 border border-blue-500 rounded-md py-2 text-sm font-semibold text-white text-center hover:bg-blue-600"
-                >
-                  Buy {tier.name}
-                </button>
-              ) : (
-                <a
+              <a
                   className="shadow-sm mt-8 block w-full bg-blue-500 border border-blue-500 rounded-md py-2 text-sm font-semibold text-white text-center hover:bg-blue-600"
                   href="mailto:help@linen.dev?subject=Linen%20Premium"
                 >
                   Contact Us
                 </a>
-              )
             ) : (
               <a className="shadow-sm mt-8 block w-full bg-green-500 border border-green-500 rounded-md py-2 text-sm font-semibold text-white text-center">
                 <GoCheck className="inline-block h-4 ml-1" />

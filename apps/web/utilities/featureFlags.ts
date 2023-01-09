@@ -1,9 +1,6 @@
-export const isStripeEnabled = false;
 export const isRedirectToNewOnboardingEnabled = false;
 export const isNewOnboardingButtonEnabled = false;
 
-const featureFlags = {
-  isStripeEnabled,
-};
+const featureFlags = {};
 
 export default featureFlags;

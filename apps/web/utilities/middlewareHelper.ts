@@ -12,7 +12,6 @@ const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 // const PAGES = [
 //   '/signup',
 //   '/signin',
-//   '/settings',
 //   '/forgot-password',
 //   '/reset-password',
 //   '/verify-request',
@@ -23,7 +22,6 @@ function isTopLevelPathname(pathname: string) {
     pathname.startsWith('/profile') ||
     pathname.startsWith('/signup') ||
     pathname.startsWith('/signin') ||
-    pathname.startsWith('/settings') ||
     pathname.startsWith('/forgot-password') ||
     pathname.startsWith('/reset-password') ||
     pathname.startsWith('/verify-request') ||
