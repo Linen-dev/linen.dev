@@ -9,7 +9,7 @@ import Link from 'components/Link/InternalLink';
 import NewChannelModal from 'components/Pages/Channel/Content/NewChannelModal';
 import useWebsockets from '@linen/hooks/websockets';
 import styles from './index.module.scss';
-import { FiRss, FiBarChart, FiHash, FiSettings, FiSliders, FiDollarSign } from 'react-icons/fi';
+import { FiRss, FiBarChart, FiHash, FiSettings, FiSliders, FiDollarSign, FiUsers } from 'react-icons/fi';
 import { useRouter } from 'next/router';
 import usePath from 'hooks/path';
 import { Mode } from '@linen/hooks/mode';
@@ -104,6 +104,7 @@ export default function DesktopNavBar({
     metrics: usePath({ href: '/metrics' }),
     settings: usePath({ href: '/settings' }),
     branding: usePath({ href: '/branding' }),
+    members: usePath({ href: '/members' }),
     plans: usePath({ href: '/plans' })
   };
 
@@ -134,6 +135,13 @@ export default function DesktopNavBar({
         <Link href="/branding">
           <Nav.Item active={paths.branding === router.asPath}>
             <FiSliders /> Branding
+          </Nav.Item>
+        </Link>
+      )}
+      {permissions.manage && (
+        <Link href="/members">
+          <Nav.Item active={paths.members === router.asPath}>
+            <FiUsers /> Members
           </Nav.Item>
         </Link>
       )}

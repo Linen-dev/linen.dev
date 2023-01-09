@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import classNames from 'classnames';
-import { FiBarChart, FiMenu, FiHash, FiRss, FiLogOut, FiSettings, FiDollarSign, FiSliders } from 'react-icons/fi';
+import { FiBarChart, FiMenu, FiHash, FiRss, FiLogOut, FiSettings, FiDollarSign, FiSliders, FiUsers } from 'react-icons/fi';
 import Link from 'components/Link/InternalLink';
 import Modal from 'components/Modal';
 import styles from './index.module.scss';
@@ -32,6 +32,7 @@ export default function MobileMenu({
     metrics: usePath({ href: '/metrics' }),
     settings: usePath({ href: '/settings' }),
     branding: usePath({ href: '/branding' }),
+    members: usePath({ href: '/members' }),
     plans: usePath({ href: '/plans' }),
   };
 
@@ -97,6 +98,19 @@ export default function MobileMenu({
                 href="/branding"
               >
                 <FiSliders /> Branding
+              </Link>
+            </li>
+          )}
+          {permissions.manage && (
+            <li>
+              <Link
+                onClick={close}
+                className={classNames(styles.link, {
+                  [styles.active]: paths.members === router.asPath,
+                })}
+                href="/members"
+              >
+                <FiUsers /> Members
               </Link>
             </li>
           )}
