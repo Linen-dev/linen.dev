@@ -1,32 +1,33 @@
-import { AccountType, SerializedAccount, SerializedChannel } from '@linen/types'
+import {
+  AccountType,
+  SerializedAccount,
+  SerializedChannel,
+} from '@linen/types';
 import { Toast } from '@linen/ui';
-import React from 'react';
 import styles from './index.module.scss';
 import CommunityIntegrationRow from './CommunityIntegrationRow';
-import SlackImportRow from './SlackImportRow'
+import SlackImportRow from './SlackImportRow';
 import AnonymizeUsersRow from './AnonymizeUsersRow';
 import DefaultChannelRow from './DefaultChannelRow';
 import ChannelVisibilityRow from './ChannelVisibilityRow';
-import UrlsRow from './UrlsRow'
-import CommunityTypeRow from './CommunityTypeRow'
+import UrlsRow from './UrlsRow';
+import CommunityTypeRow from './CommunityTypeRow';
 import debounce from '@linen/utilities/debounce';
+import * as api from 'utilities/requests';
 
 interface Props {
-  channels: SerializedChannel[]
+  channels: SerializedChannel[];
   currentCommunity: SerializedAccount;
 }
 
 const updateAccount = debounce(
-  ({ communityId, type }: { communityId: string; type: string }) => {
-    fetch('/api/accounts', {
-      method: 'PUT',
-      body: JSON.stringify({
-        communityId,
+  ({ communityId, type }: { communityId: string; type: any }) => {
+    api
+      .updateAccount({
+        accountId: communityId,
         type,
-      }),
-    })
-      .then((response) => {
-        if (!response.ok) throw response;
+      })
+      .then((_) => {
         Toast.success('Saved successfully!');
       })
       .catch(() => {
@@ -39,21 +40,27 @@ export default function Content({ channels, currentCommunity }: Props) {
   return (
     <div className={styles.container}>
       <CommunityIntegrationRow currentCommunity={currentCommunity} />
-      <hr className="my-3"/>
+      <hr className="my-3" />
       {currentCommunity.communityType !== 'discord' && (
         <>
-          <SlackImportRow currentCommunity={currentCommunity}/>
-          <hr className="my-3"/>
+          <SlackImportRow currentCommunity={currentCommunity} />
+          <hr className="my-3" />
         </>
       )}
       <AnonymizeUsersRow currentCommunity={currentCommunity} />
-      <hr className="my-3"/>
-      <DefaultChannelRow channels={channels} currentCommunity={currentCommunity} />
-      <hr className="my-3"/>
-      <ChannelVisibilityRow channels={channels} currentCommunity={currentCommunity} />
-      <hr className="my-3"/>
+      <hr className="my-3" />
+      <DefaultChannelRow
+        channels={channels}
+        currentCommunity={currentCommunity}
+      />
+      <hr className="my-3" />
+      <ChannelVisibilityRow
+        channels={channels}
+        currentCommunity={currentCommunity}
+      />
+      <hr className="my-3" />
       <UrlsRow currentCommunity={currentCommunity} />
-      <hr className="my-3"/>
+      <hr className="my-3" />
       <CommunityTypeRow
         type={currentCommunity.type}
         disabled={!currentCommunity.premium}

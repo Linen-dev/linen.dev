@@ -1,6 +1,7 @@
-import { SerializedAccount } from '@linen/types'
+import { SerializedAccount } from '@linen/types';
 import { Toast } from '@linen/ui';
 import TextField from 'components/TextField';
+import * as api from 'utilities/requests';
 
 function URLsCard({
   title,
@@ -33,23 +34,24 @@ function URLsCard({
 }
 
 interface Props {
-  currentCommunity: SerializedAccount
+  currentCommunity: SerializedAccount;
 }
 
 export default function URLs({ currentCommunity }: Props) {
   const onSubmit = (target: { id: string; value: string }) => {
     if (!target.id || !target.value) return;
-    // @ts-ignore
-    if (target.id in currentCommunity && currentCommunity[target.id] === target.value) return;
-    fetch('/api/accounts', {
-      method: 'PUT',
-      body: JSON.stringify({
-        communityId: currentCommunity.id,
+    if (
+      target.id in currentCommunity &&
+      // @ts-ignore
+      currentCommunity[target.id] === target.value
+    )
+      return;
+    api
+      .updateAccount({
+        accountId: currentCommunity.id,
         [target.id]: target.value,
-      }),
-    })
-      .then((response) => {
-        if (!response.ok) throw response;
+      })
+      .then((_) => {
         // @ts-ignore
         currentCommunity[target.id] = target.value;
       })
@@ -70,7 +72,7 @@ export default function URLs({ currentCommunity }: Props) {
           onBlur: (e: any) => onSubmit(e.target),
         }}
       />
-      <hr className="my-3"/>
+      <hr className="my-3" />
       <URLsCard
         title="Docs URL"
         subtitle="Link to your documentation."
@@ -81,7 +83,7 @@ export default function URLs({ currentCommunity }: Props) {
           onBlur: (e: any) => onSubmit(e.target),
         }}
       />
-      <hr className="my-3"/>
+      <hr className="my-3" />
       <URLsCard
         title="Community Invitation URL"
         subtitle="Link to your community invite."
