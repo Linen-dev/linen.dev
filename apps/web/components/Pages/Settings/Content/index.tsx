@@ -2,6 +2,7 @@ import { AccountType, SerializedAccount, SerializedChannel } from '@linen/types'
 import { Toast } from '@linen/ui';
 import React from 'react';
 import styles from './index.module.scss';
+import CommunityIntegrationRow from './CommunityIntegrationRow';
 import SlackImportRow from './SlackImportRow'
 import AnonymizeUsersRow from './AnonymizeUsersRow';
 import DefaultChannelRow from './DefaultChannelRow';
@@ -37,6 +38,8 @@ const updateAccount = debounce(
 export default function Content({ channels, currentCommunity }: Props) {
   return (
     <div className={styles.container}>
+      <CommunityIntegrationRow currentCommunity={currentCommunity} />
+      <hr className="my-3"/>
       {currentCommunity.communityType !== 'discord' && (
         <>
           <SlackImportRow currentCommunity={currentCommunity}/>
