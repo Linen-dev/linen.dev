@@ -61,6 +61,10 @@ export default function App(props: AppProps) {
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width"
         />
+        <meta
+          name="google-site-verification"
+          content="PQcYPgLYmDXcT1ORhCBmPiwKISJnj1UCEbZpQXQPiVU"
+        />
       </Head>
 
       <SWRConfig>
