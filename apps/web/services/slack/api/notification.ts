@@ -3,6 +3,7 @@ import request from 'superagent';
 const token = process.env.COMPANY_SLACK_BOT_TOKEN || '';
 // send notification to events-and-metrics channel
 export const sendNotification = async (message: string) => {
+  if (skipNotification()) return;
   if (!token) {
     console.log('no token');
     return;

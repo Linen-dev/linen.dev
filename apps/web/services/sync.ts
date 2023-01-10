@@ -28,8 +28,6 @@ export async function updateAndNotifySyncStatus(
 ) {
   await updateAccountSyncStatus(accountId, status);
 
-  if (skipNotification()) return;
-
   await slackNotification(status, accountId, accountName || '', homeUrl || '');
   await emailNotification(status, accountId, accountName || '', homeUrl || '');
 }
@@ -40,6 +38,7 @@ async function emailNotification(
   accountName: string,
   homeUrl: string
 ) {
+  if (skipNotification()) return;
   try {
     await ApplicationMailer.send({
       to: SUPPORT_EMAIL,

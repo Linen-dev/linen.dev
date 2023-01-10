@@ -2,7 +2,6 @@ import { load } from 'cheerio';
 import axios from 'axios';
 import { findAccountsPremium } from 'lib/account';
 import { sendNotification } from 'services/slack';
-import { skipNotification } from 'services/slack/api/notification';
 
 function getResult(text: string) {
   let result = text.split(/\(.+\)/).join('');
@@ -41,6 +40,5 @@ export async function crawlGoogleResults() {
 
   console.log('message', message);
 
-  if (skipNotification()) return;
   await sendNotification(message.join('\n'));
 }
