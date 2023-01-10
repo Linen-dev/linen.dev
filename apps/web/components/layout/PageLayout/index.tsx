@@ -50,15 +50,8 @@ function PageLayout({
   const { googleAnalyticsId, googleSiteVerification } = settings;
   const { mode } = useMode();
 
-  const updateProfile = ({
-    displayName,
-    userId,
-  }: {
-    displayName: string;
-    userId: string;
-  }) => {
+  const updateProfile = ({ displayName }: { displayName: string }) => {
     return put('/api/profile', {
-      userId,
       displayName,
     }).then(() => {
       // Potential improvement:

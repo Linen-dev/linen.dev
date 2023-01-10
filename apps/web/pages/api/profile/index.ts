@@ -4,25 +4,18 @@ import prisma from 'client';
 
 interface CreateParams {
   displayName: string;
-  userId: string;
-  currentUserId: string;
+  authId: string;
 }
 
-export async function create({
-  displayName,
-  userId,
-  currentUserId,
-}: CreateParams) {
-  if (!displayName) {
+export async function update({ displayName, authId }: CreateParams) {
+  if (!displayName || typeof displayName !== 'string') {
     return { status: 400 };
-  }
-  if (userId !== currentUserId) {
-    return { status: 403 };
   }
   const users = await prisma.users.findMany({
     select: { id: true },
-    where: { authsId: currentUserId },
+    where: { authsId: authId },
   });
+
   await prisma.users.updateMany({
     where: {
       id: { in: users.map((u) => u.id) },
@@ -46,9 +39,9 @@ export default async function handler(
     if (!session?.user) {
       return response.status(401).end({});
     }
-    const { status, data } = await create({
+    const { status, data } = await update({
       ...request.body,
-      currentUserId: session.user.id,
+      authId: session.user.id,
     });
     return response.status(status).json(data || {});
   }

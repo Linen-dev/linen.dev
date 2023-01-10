@@ -21,13 +21,7 @@ interface Props {
   isSubDomainRouting: boolean;
   permissions: Permissions;
   mode: Mode;
-  onProfileChange({
-    displayName,
-    userId,
-  }: {
-    displayName: string;
-    userId: string;
-  }): Promise<void>;
+  onProfileChange({ displayName }: { displayName: string }): Promise<void>;
   onUpload(data: FormData, options: AxiosRequestConfig): void;
 }
 

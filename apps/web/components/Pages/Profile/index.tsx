@@ -8,15 +8,8 @@ export default function Profile() {
   const session = useSession({ required: true });
 
   // dup with apps/web/components/layout/PageLayout/index.tsx
-  const updateProfile = ({
-    displayName,
-    userId,
-  }: {
-    displayName: string;
-    userId: string;
-  }) => {
+  const updateProfile = ({ displayName }: { displayName: string }) => {
     return put('/api/profile', {
-      userId,
       displayName,
     }).then(() => {
       window.location.reload();
@@ -46,8 +39,8 @@ export default function Profile() {
                 username: session.data.user?.name!,
                 externalUserId: null,
               }}
-              onSubmit={async ({ displayName, userId }) => {
-                await updateProfile({ displayName, userId });
+              onSubmit={async ({ displayName }) => {
+                await updateProfile({ displayName });
               }}
               onUpload={uploadAvatar}
             />

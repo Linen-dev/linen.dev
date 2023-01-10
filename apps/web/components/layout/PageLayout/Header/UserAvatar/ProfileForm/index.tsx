@@ -12,13 +12,7 @@ import { AxiosRequestConfig } from 'axios';
 
 interface Props {
   currentUser: SerializedUser;
-  onSubmit({
-    displayName,
-    userId,
-  }: {
-    displayName: string;
-    userId: string;
-  }): void;
+  onSubmit({ displayName }: { displayName: string }): void;
   onUpload(data: FormData, options: AxiosRequestConfig): void;
 }
 
@@ -38,7 +32,7 @@ export default function ProfileForm({
     const displayName = form.displayName.value;
     try {
       setSubmitting(true);
-      await onSubmit({ displayName, userId: currentUser.id });
+      await onSubmit({ displayName });
     } catch (exception) {
       Toast.error('Something went wrong. Please try again.');
     } finally {
