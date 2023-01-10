@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import prisma from 'client';
-import { createAuth } from 'lib/auth';
+import UsersService from 'services/users';
 import Session from 'services/session';
 import { normalize } from '@linen/utilities/string';
 import { AccountType, Roles } from '@linen/types';
@@ -32,7 +32,7 @@ async function create(request: NextApiRequest, response: NextApiResponse) {
       .status(200)
       .json({ message: 'Account exists, please sign in!' });
   }
-  const newAuth = await createAuth({
+  const newAuth = await UsersService.createAuth({
     password,
     email,
   });

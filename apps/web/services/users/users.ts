@@ -1,8 +1,13 @@
 import { Roles } from '@linen/types';
 import prisma from 'client';
 import { eventSignUp } from 'services/events/eventNewSignUp';
-import { generateHash, secureCompare } from 'utilities/password';
+import { generateHash, generateSalt, secureCompare } from 'utilities/password';
 import { v4 } from 'uuid';
+
+interface CreateAuthParams {
+  email: string;
+  password: string;
+}
 
 export default class UsersService {
   static async updateUserRole({
@@ -92,5 +97,17 @@ export default class UsersService {
 
     await eventSignUp(newAuth.id, email, newAuth.createdAt);
     return newAuth;
+  }
+  static async createAuth({ email, password }: CreateAuthParams) {
+    const salt = generateSalt();
+    const hash = generateHash(password, salt);
+
+    return prisma.auths.create({
+      data: {
+        salt,
+        password: hash,
+        email,
+      },
+    });
   }
 }
