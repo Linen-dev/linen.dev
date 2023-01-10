@@ -17,6 +17,8 @@ import {
   FiSliders,
   FiDollarSign,
   FiUsers,
+  FiChevronDown,
+  FiChevronUp,
 } from 'react-icons/fi';
 import { useRouter } from 'next/router';
 import usePath from 'hooks/path';
@@ -57,8 +59,27 @@ export default function DesktopNavBar({
   permissions,
   onDrop,
 }: Props) {
-  const [highlights, setHighlights] = useState<string[]>([]);
   const router = useRouter();
+  const paths = {
+    feed: usePath({ href: '/feed' }),
+    metrics: usePath({ href: '/metrics' }),
+    settings: usePath({ href: '/settings' }),
+    branding: usePath({ href: '/branding' }),
+    members: usePath({ href: '/members' }),
+    plans: usePath({ href: '/plans' }),
+  };
+
+  const isSettingsPath = () => {
+    return [
+      paths.settings,
+      paths.branding,
+      paths.members,
+      paths.plans,
+    ].includes(router.asPath);
+  };
+
+  const [highlights, setHighlights] = useState<string[]>([]);
+  const [expanded, setExpanded] = useState(isSettingsPath());
 
   const userId = permissions.auth?.id || null;
   const token = permissions.token || null;
@@ -107,15 +128,6 @@ export default function DesktopNavBar({
     };
   }, [channelName]);
 
-  const paths = {
-    feed: usePath({ href: '/feed' }),
-    metrics: usePath({ href: '/metrics' }),
-    settings: usePath({ href: '/settings' }),
-    branding: usePath({ href: '/branding' }),
-    members: usePath({ href: '/members' }),
-    plans: usePath({ href: '/plans' }),
-  };
-
   return (
     <Nav className={styles.navbar}>
       {permissions.feed && (
@@ -129,34 +141,6 @@ export default function DesktopNavBar({
         <Link href="/metrics">
           <Nav.Item active={paths.metrics === router.asPath}>
             <FiBarChart /> Metrics
-          </Nav.Item>
-        </Link>
-      )}
-      {permissions.manage && (
-        <Link href="/settings">
-          <Nav.Item active={paths.settings === router.asPath}>
-            <FiSettings /> Settings
-          </Nav.Item>
-        </Link>
-      )}
-      {permissions.manage && (
-        <Link href="/branding">
-          <Nav.Item active={paths.branding === router.asPath}>
-            <FiSliders /> Branding
-          </Nav.Item>
-        </Link>
-      )}
-      {permissions.manage && (
-        <Link href="/members">
-          <Nav.Item active={paths.members === router.asPath}>
-            <FiUsers /> Members
-          </Nav.Item>
-        </Link>
-      )}
-      {permissions.manage && (
-        <Link href="/plans">
-          <Nav.Item active={paths.plans === router.asPath}>
-            <FiDollarSign /> Plans
           </Nav.Item>
         </Link>
       )}
@@ -224,6 +208,36 @@ export default function DesktopNavBar({
           );
         })}
       </div>
+      <Nav.Label
+        className={styles.label}
+        onClick={() => setExpanded((expanded) => !expanded)}
+      >
+        Settings {expanded ? <FiChevronUp /> : <FiChevronDown />}
+      </Nav.Label>
+      {expanded && permissions.manage && (
+        <>
+          <Link href="/settings">
+            <Nav.Item active={paths.settings === router.asPath}>
+              <FiSettings /> Integrations
+            </Nav.Item>
+          </Link>
+          <Link href="/branding">
+            <Nav.Item active={paths.branding === router.asPath}>
+              <FiSliders /> Branding
+            </Nav.Item>
+          </Link>
+          <Link href="/members">
+            <Nav.Item active={paths.members === router.asPath}>
+              <FiUsers /> Members
+            </Nav.Item>
+          </Link>
+          <Link href="/plans">
+            <Nav.Item active={paths.plans === router.asPath}>
+              <FiDollarSign /> Plans
+            </Nav.Item>
+          </Link>
+        </>
+      )}
       <a target="_blank" rel="noreferrer" href="https://www.linen.dev">
         <Nav.Item>Powered by Linen</Nav.Item>
       </a>
