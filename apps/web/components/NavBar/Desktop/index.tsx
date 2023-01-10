@@ -9,7 +9,15 @@ import Link from 'components/Link/InternalLink';
 import NewChannelModal from 'components/Pages/Channel/Content/NewChannelModal';
 import useWebsockets from '@linen/hooks/websockets';
 import styles from './index.module.scss';
-import { FiRss, FiBarChart, FiHash, FiSettings, FiSliders, FiDollarSign, FiUsers } from 'react-icons/fi';
+import {
+  FiRss,
+  FiBarChart,
+  FiHash,
+  FiSettings,
+  FiSliders,
+  FiDollarSign,
+  FiUsers,
+} from 'react-icons/fi';
 import { useRouter } from 'next/router';
 import usePath from 'hooks/path';
 import { Mode } from '@linen/hooks/mode';
@@ -105,7 +113,7 @@ export default function DesktopNavBar({
     settings: usePath({ href: '/settings' }),
     branding: usePath({ href: '/branding' }),
     members: usePath({ href: '/members' }),
-    plans: usePath({ href: '/plans' })
+    plans: usePath({ href: '/plans' }),
   };
 
   return (
@@ -153,7 +161,7 @@ export default function DesktopNavBar({
         </Link>
       )}
       <Nav.Label>
-        <div className="grow">Channels</div>
+        Channels
         {permissions.channel_create && !!permissions.accountId && (
           <NewChannelModal communityId={permissions.accountId} />
         )}
