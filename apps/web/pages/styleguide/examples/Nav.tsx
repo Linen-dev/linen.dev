@@ -1,6 +1,6 @@
 import Example from '../Example';
 import { Nav } from '@linen/ui';
-import { FiBarChart, FiHash, FiRss } from 'react-icons/fi';
+import { FiBarChart, FiHash, FiRss, FiPlus, FiMenu } from 'react-icons/fi';
 
 export default function NavExample() {
   return (
@@ -13,13 +13,18 @@ export default function NavExample() {
           <FiBarChart />
           Metrics
         </Nav.Item>
-        <Nav.Label>Channels</Nav.Label>
+        <Nav.Label>
+          Channels <FiPlus />
+        </Nav.Label>
         <Nav.Item active>
           <FiHash /> general
         </Nav.Item>
         <Nav.Item highlighted>
           <FiHash /> ideas
         </Nav.Item>
+        <Nav.Label>
+          Settings <FiMenu />
+        </Nav.Label>
       </Nav>
     </Example>
   );

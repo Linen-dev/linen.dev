@@ -6,7 +6,7 @@ export default function Header() {
   return (
     <StickyHeader>
       <div className={styles.title}>
-        <FiSettings /> Settings
+        <FiSettings /> Integrations
       </div>
       <div className={styles.subtitle}>
         All of your community settings in one place
