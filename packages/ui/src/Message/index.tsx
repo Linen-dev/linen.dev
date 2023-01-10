@@ -123,9 +123,13 @@ function Message({
           />
         );
       case 'list':
-        return <List ordered={node.ordered}>{node.children.map(render)}</List>
+        return (
+          <List key={node.cid} ordered={node.ordered}>
+            {node.children.map(render)}
+          </List>
+        );
       case 'item':
-        return <li>{node.children.map(render)}</li>
+        return <li key={node.cid}>{node.children.map(render)}</li>;
       case 'signal':
         return (
           <Mention
