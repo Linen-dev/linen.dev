@@ -11,13 +11,7 @@ import { AxiosRequestConfig } from 'axios';
 
 interface Props {
   currentUser: SerializedUser;
-  onProfileChange({
-    displayName,
-    userId,
-  }: {
-    displayName: string;
-    userId: string;
-  }): Promise<void>;
+  onProfileChange({ displayName }: { displayName: string }): Promise<void>;
   onUpload(data: FormData, options: AxiosRequestConfig): void;
 }
 
@@ -96,8 +90,8 @@ export default function UserAvatar({
       <Modal open={mode === Mode.Profile} close={() => setMode(Mode.Menu)}>
         <ProfileForm
           currentUser={currentUser}
-          onSubmit={async ({ displayName, userId }) => {
-            await onProfileChange({ displayName, userId });
+          onSubmit={async ({ displayName }) => {
+            await onProfileChange({ displayName });
             setMode(Mode.Menu);
           }}
           onUpload={onUpload}
