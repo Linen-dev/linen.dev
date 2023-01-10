@@ -1,5 +1,6 @@
 import { Roles } from '@linen/types';
 import prisma from 'client';
+import { eventSignUp } from 'services/events/eventNewSignUp';
 import { generateHash, secureCompare } from 'utilities/password';
 import { v4 } from 'uuid';
 
@@ -79,7 +80,8 @@ export default class UsersService {
   static async getOrCreateUserWithEmail(email: string) {
     const auth = await prisma.auths.findUnique({ where: { email } });
     if (auth) return auth;
-    return await prisma.auths.create({
+
+    const newAuth = await prisma.auths.create({
       data: {
         email,
         password: v4(),
@@ -87,5 +89,8 @@ export default class UsersService {
         emailVerified: new Date(),
       },
     });
+
+    await eventSignUp(newAuth.id, email, newAuth.createdAt);
+    return newAuth;
   }
 }
