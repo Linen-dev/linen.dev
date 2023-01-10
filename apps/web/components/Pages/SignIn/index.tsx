@@ -13,6 +13,7 @@ import {
   TermsAndPolicy,
 } from 'components/Auth';
 import GitHubButton from 'components/Auth/GitHubButton';
+import GoogleButton from 'components/Auth/GoogleButton';
 
 interface SignInProps {
   csrfToken?: string;
@@ -140,6 +141,8 @@ export default function SignIn({
         </div>
         <div className="my-5"></div>
         <GitHubButton flow="sign-in" {...{ callbackUrl, state }} />
+        <div className="my-5"></div>
+        <GoogleButton flow="sign-in" {...{ callbackUrl, state }} />
       </form>
     </Layout>
   );

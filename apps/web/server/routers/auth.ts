@@ -11,8 +11,9 @@ import {
   githubSignIn,
   loginPassport,
   magicLink,
-  magicLinkStrategy,
+  googleSignIn,
 } from 'utilities/auth/passport';
+import { magicLinkStrategy } from 'utilities/auth/passport/magicLinkStrategy';
 import { refreshTokenAction, signToken } from 'utilities/auth/server/tokens';
 import {
   expireSessionCookies,
@@ -166,6 +167,85 @@ authRouter
   )
   .use(`${prefix}/callback/github`, onGetError);
 
+authRouter
+  .get(
+    `${prefix}/callback/google`,
+    async function (req, res, next) {
+      // google code
+      const code = req.query.code;
+
+      // we may redirect to the origin
+      const state = req.query.state;
+
+      if (typeof state === 'string') {
+        const decryptedState = decrypt(state);
+        const parsedState = JSON.parse(decryptedState);
+
+        if (parsedState.origin) {
+          // delete origin from state
+          const state = JSON.stringify({
+            callbackUrl: parsedState.callbackUrl,
+            state: parsedState.state,
+          });
+          const encryptedState = encrypt(state);
+          // redirect
+          return res.redirect(
+            `${parsedState.origin}${prefix}/callback/google?${qs({
+              code,
+              state: encryptedState,
+            })}`
+          );
+        }
+      }
+      next();
+    },
+    googleSignIn(),
+    async function (req, res) {
+      if (!req.user) {
+        return res.redirect('/500');
+      }
+
+      let callbackUrl = '/'; // page redirect
+
+      const logged_user = req.user as LoggedUser;
+
+      const state = req.query.state;
+      if (typeof state === 'string') {
+        const decryptedState = decrypt(state);
+        const parsedState = JSON.parse(decryptedState);
+        if (parsedState.callbackUrl) {
+          callbackUrl = parsedState.callbackUrl;
+        }
+
+        if (parsedState.state) {
+          // join community
+          await joinCommunityAfterSignIn({
+            request: req,
+            response: res,
+            communityId: parsedState.state,
+            authId: logged_user.id,
+            displayName: normalize(
+              logged_user.displayName ||
+                logged_user.email.split('@').shift() ||
+                logged_user.email
+            ),
+            profileImageUrl: logged_user.profileImageUrl,
+          });
+        }
+      }
+
+      const token = await signToken({
+        id: logged_user.id,
+        email: logged_user.email,
+      });
+      // persist cookies for SSR
+      setSessionCookies({ token, req, res });
+      // ===
+      return res.redirect(callbackUrl);
+    }
+  )
+  .use(`${prefix}/callback/google`, onGetError);
+
 authRouter.get(`${prefix}/csrf`, async (req: Request, res: Response) => {
   const csrfToken = createCSRFToken();
   res.json({ csrfToken });
@@ -187,6 +267,19 @@ authRouter.get(
     });
     const encryptedState = encrypt(state);
     return githubSignIn(encryptedState)(req, res, next);
+  }
+);
+
+authRouter.get(
+  `${prefix}/google`,
+  async (req: Request, res: Response, next: NextFunction) => {
+    const state = JSON.stringify({
+      callbackUrl: req.query.callbackUrl,
+      state: req.query.state,
+      origin: req.query.origin,
+    });
+    const encryptedState = encrypt(state);
+    return googleSignIn(encryptedState)(req, res, next);
   }
 );
 
