@@ -4,7 +4,7 @@ import formidable from 'formidable';
 import { readFile } from 'fs/promises';
 import UploadService from 'services/upload';
 import Session from 'services/session';
-import { FILE_SIZE_LIMIT_IN_BYTES } from 'utilities/files';
+import { normalizeFilename, FILE_SIZE_LIMIT_IN_BYTES } from 'utilities/files';
 
 export const config = {
   api: {
@@ -48,7 +48,7 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
       });
       const file = files[0];
       const buffer = await readFile(file.filepath);
-      const name = file.originalFilename.replace(/\//g, '_');
+      const name = normalizeFilename(file.originalFilename);
       const data = await UploadService.upload({
         id: name,
         name,
