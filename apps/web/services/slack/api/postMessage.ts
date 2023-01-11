@@ -91,7 +91,7 @@ export async function slackChatSync({
     isAllowToSendMessages(s)
   );
   if (!slackToken?.accessToken) {
-    throw 'missing scope on slack token';
+    return 'missing scope on slack token';
   }
 
   const message = await prisma.messages.findUnique({
@@ -99,10 +99,10 @@ export async function slackChatSync({
     include: { author: true, threads: true },
   });
   if (!message) {
-    throw 'message not found';
+    return 'message not found';
   }
   if (!message.threads) {
-    throw 'thread is missing from message';
+    return 'thread is missing from message';
   }
   if (!!message.externalMessageId) {
     return 'message has externalId already';
