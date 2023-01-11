@@ -13,5 +13,6 @@ export default function serializeChannel(
     hidden: channel.hidden,
     default: channel.default,
     accountId: channel.accountId,
+    pages: channel.pages,
   };
 }

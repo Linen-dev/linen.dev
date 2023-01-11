@@ -68,6 +68,7 @@ model threads {
   firstManagerReplyAt BigInt?
 
   notifications notifications[]
+  page          Int?
 
   @@unique([externalThreadId])
   @@unique([incrementId])
@@ -75,6 +76,7 @@ model threads {
   @@index([channelId, sentAt])
   @@index([channelId, sentAt, hidden])
   @@index([channelId, hidden, state, lastReplyAt])
+  @@index([channelId, page])
 }
 
 enum ThreadState {
@@ -98,7 +100,9 @@ model channels {
   memberships        memberships[]
   readStatus         readStatus[]
 
-  notifications notifications[]
+  notifications   notifications[]
+  pages           Int?
+  lastPageBuildAt BigInt?
 
   @@unique([externalChannelId])
   @@index([accountId])

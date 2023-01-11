@@ -133,6 +133,7 @@ const channelSerialized = Prisma.validator<Prisma.channelsFindManyArgs>()({
     default: true,
     hidden: true,
     accountId: true,
+    pages: true,
   },
 });
 export async function findChannelsByAccount({
