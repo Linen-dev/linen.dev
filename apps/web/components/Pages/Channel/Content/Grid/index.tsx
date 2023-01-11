@@ -110,23 +110,17 @@ export default function Grid({
           return (
             <li key={`feed-${incrementId}-${index}`} className={styles.li}>
               {isBot ? (
-                <>
-                  <CustomLink
-                    isSubDomainRouting={isSubDomainRouting}
-                    communityName={settings.communityName}
-                    communityType={settings.communityType}
-                    path={`/t/${incrementId}/${slug || 'topic'}`.toLowerCase()}
-                    key={`${incrementId}-desktop`}
-                  >
-                    <Row
-                      thread={thread}
-                      permissions={permissions}
-                      isSubDomainRouting={isSubDomainRouting}
-                      settings={settings}
-                      currentUser={currentUser}
-                    />
-                  </CustomLink>
-                </>
+                <RowForBots
+                  {...{
+                    thread,
+                    isSubDomainRouting,
+                    settings,
+                    incrementId,
+                    slug,
+                    permissions,
+                    currentUser,
+                  }}
+                />
               ) : (
                 <div onClick={() => onClick(incrementId)}>
                   <Row
@@ -149,5 +143,45 @@ export default function Grid({
         }
       })}
     </>
+  );
+}
+
+function RowForBots({
+  thread,
+  isSubDomainRouting,
+  settings,
+  incrementId,
+  slug,
+  permissions,
+  currentUser,
+}: {
+  thread: SerializedThread;
+  isSubDomainRouting: boolean;
+  settings: Settings;
+  incrementId: number;
+  slug: string | null;
+  permissions: Permissions;
+  currentUser: SerializedUser | null;
+}) {
+  const WithoutLink = ({ children }: any) => <>{children}</>;
+
+  const Wrap = thread?.messages?.length > 1 ? CustomLink : WithoutLink;
+
+  return (
+    <Wrap
+      isSubDomainRouting={isSubDomainRouting}
+      communityName={settings.communityName}
+      communityType={settings.communityType}
+      path={`/t/${incrementId}/${slug || 'topic'}`.toLowerCase()}
+      key={`${incrementId}-desktop`}
+    >
+      <Row
+        thread={thread}
+        permissions={permissions}
+        isSubDomainRouting={isSubDomainRouting}
+        settings={settings}
+        currentUser={currentUser}
+      />
+    </Wrap>
   );
 }
