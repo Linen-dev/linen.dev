@@ -208,12 +208,14 @@ export default function DesktopNavBar({
           );
         })}
       </div>
-      <Nav.Label
-        className={styles.label}
-        onClick={() => setExpanded((expanded) => !expanded)}
-      >
-        Settings {expanded ? <FiChevronUp /> : <FiChevronDown />}
-      </Nav.Label>
+      {permissions.manage && (
+        <Nav.Label
+          className={styles.label}
+          onClick={() => setExpanded((expanded) => !expanded)}
+        >
+          Settings {expanded ? <FiChevronUp /> : <FiChevronDown />}
+        </Nav.Label>
+      )}
       {expanded && permissions.manage && (
         <>
           <Link href="/settings">
