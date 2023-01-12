@@ -137,7 +137,7 @@ export default function DesktopNavBar({
       {communities.length > 1 && (
         <div className={styles.switch}>
           {communities.map((community) => {
-            return <CommunityLink community={community} />;
+            return <CommunityLink key={community.id} community={community} />;
           })}
         </div>
       )}
