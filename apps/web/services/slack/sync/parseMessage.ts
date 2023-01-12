@@ -30,11 +30,11 @@ export function parseMessage<
 export function filterMessages<
   T extends SlackMessageEvent | ConversationHistoryMessage
 >(message: T) {
-  if (message.subtype) {
-    if (message.subtype === 'channel_join') {
-      return false;
-    }
-    return message.subtype === 'bot_message' && isNotLinenBot(message);
+  if (message.subtype && message.subtype === 'channel_join') {
+    return false;
+  }
+  if (message.subtype && message.subtype === 'bot_message') {
+    return isNotLinenBot(message);
   }
   return true;
 }
