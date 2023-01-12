@@ -30,6 +30,7 @@ export interface ChannelProps {
   settings: Settings;
   channelName: string;
   channels: SerializedChannel[];
+  communities: SerializedAccount[];
   currentChannel: SerializedChannel;
   currentCommunity: SerializedAccount | null;
   threads: SerializedThread[];
@@ -53,6 +54,7 @@ export default function Channel(props: ChannelProps) {
     threads: initialThreads,
     pinnedThreads: initialPinnedThreads,
     channels,
+    communities,
     currentChannel: initialChannel,
     currentCommunity,
     settings,
@@ -588,6 +590,7 @@ export default function Channel(props: ChannelProps) {
         }),
       }}
       channels={channels}
+      communities={communities}
       settings={settings}
       isSubDomainRouting={isSubDomainRouting}
       permissions={permissions}

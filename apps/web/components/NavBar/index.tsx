@@ -1,5 +1,9 @@
 import { sortByChannelName } from './utilities';
-import { Permissions, SerializedChannel } from '@linen/types';
+import {
+  Permissions,
+  SerializedAccount,
+  SerializedChannel,
+} from '@linen/types';
 import DesktopNavBar from './Desktop';
 import MobileNavBar from './Mobile';
 import { Mode } from '@linen/hooks/mode';
@@ -8,6 +12,7 @@ interface Props {
   mode: Mode;
   channels: SerializedChannel[];
   channelName: string;
+  communities: SerializedAccount[];
   permissions: Permissions;
   onDrop?({
     source,
@@ -26,6 +31,7 @@ export default function NavBar({
   mode,
   channelName,
   channels,
+  communities,
   permissions,
   onDrop,
 }: Props) {
@@ -38,6 +44,7 @@ export default function NavBar({
           mode={mode}
           channels={sortedChannels}
           channelName={channelName}
+          communities={communities}
           permissions={permissions}
           onDrop={onDrop}
         />

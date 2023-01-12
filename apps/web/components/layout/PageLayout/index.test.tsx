@@ -15,6 +15,7 @@ describe('PageLayout', () => {
         <PageLayout
           settings={settings}
           channels={channels}
+          communities={[]}
           currentChannel={channels[0]}
           isSubDomainRouting
           permissions={build('permissions')}

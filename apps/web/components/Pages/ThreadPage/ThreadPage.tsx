@@ -9,6 +9,7 @@ import CustomLinkHelper from 'components/Link/CustomLinkHelper';
 export function ThreadPage({
   thread,
   channels,
+  communities,
   currentChannel,
   currentCommunity,
   threadUrl,
@@ -33,6 +34,7 @@ export function ThreadPage({
       }}
       currentChannel={currentChannel}
       channels={channels}
+      communities={communities}
       settings={settings}
       isSubDomainRouting={isSubDomainRouting}
       permissions={permissions}

@@ -65,6 +65,7 @@ function Card({
 
 interface Props {
   channels: SerializedChannel[];
+  communities: SerializedAccount[];
   currentCommunity: SerializedAccount;
   permissions: Permissions;
   settings: Settings;
@@ -73,6 +74,7 @@ interface Props {
 
 export default function Branding({
   channels,
+  communities,
   currentCommunity,
   permissions,
   settings,
@@ -281,6 +283,7 @@ export default function Branding({
   return (
     <PageLayout
       channels={channels}
+      communities={communities}
       permissions={permissions}
       settings={settings}
       isSubDomainRouting={isSubDomainRouting}

@@ -13,6 +13,7 @@ import storage from '@linen/utilities/storage';
 interface Props {
   channels: SerializedChannel[];
   currentCommunity: SerializedAccount;
+  communities: SerializedAccount[];
   permissions: Permissions;
   settings: Settings;
 }
@@ -20,6 +21,7 @@ interface Props {
 export default function Metrics({
   channels,
   currentCommunity,
+  communities,
   settings,
   permissions,
 }: Props) {
@@ -33,6 +35,7 @@ export default function Metrics({
   return (
     <PageLayout
       channels={channels}
+      communities={communities}
       permissions={permissions}
       settings={settings}
       isSubDomainRouting={false}

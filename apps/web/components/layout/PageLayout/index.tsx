@@ -5,7 +5,12 @@ import NavBar from 'components/NavBar';
 import SEO, { type SeoProps } from '../SEO';
 import GoogleAnalytics from '../GoogleAnalytics';
 import classNames from 'classnames';
-import { Permissions, SerializedChannel, Settings } from '@linen/types';
+import {
+  Permissions,
+  SerializedAccount,
+  SerializedChannel,
+  Settings,
+} from '@linen/types';
 import { LinkContext } from '@linen/contexts/Link';
 import { put } from 'utilities/http';
 import useMode from '@linen/hooks/mode';
@@ -17,6 +22,7 @@ interface Props {
   children: React.ReactNode;
   currentChannel?: SerializedChannel;
   channels: SerializedChannel[];
+  communities: SerializedAccount[];
   settings: Settings;
   isSubDomainRouting: boolean;
   permissions: Permissions;
@@ -39,6 +45,7 @@ function PageLayout({
   seo,
   children,
   channels: initialChannels,
+  communities,
   currentChannel,
   settings,
   isSubDomainRouting,
@@ -100,6 +107,7 @@ function PageLayout({
           key={currentChannel?.channelName || ''}
           mode={mode}
           channels={channels}
+          communities={communities}
           channelName={currentChannel?.channelName || ''}
           permissions={permissions}
           onDrop={onDrop}

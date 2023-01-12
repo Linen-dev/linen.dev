@@ -1,14 +1,20 @@
 import React from 'react';
 import PageLayout from 'components/layout/PageLayout';
 import Tiers from 'components/Pages/Tiers';
-import { SerializedAccount, SerializedChannel, Permissions, Settings } from '@linen/types';
+import {
+  SerializedAccount,
+  SerializedChannel,
+  Permissions,
+  Settings,
+} from '@linen/types';
 
 interface Props {
   channels: SerializedChannel[];
+  communities: SerializedAccount[];
   currentCommunity: SerializedAccount;
   permissions: Permissions;
   settings: Settings;
-  isSubDomainRouting: boolean
+  isSubDomainRouting: boolean;
 }
 
 export enum Period {
@@ -16,7 +22,14 @@ export enum Period {
   Yearly,
 }
 
-export default function PlansPage({ channels, permissions, settings, currentCommunity, isSubDomainRouting }: Props) {
+export default function PlansPage({
+  channels,
+  communities,
+  permissions,
+  settings,
+  currentCommunity,
+  isSubDomainRouting,
+}: Props) {
   const tiers = [
     {
       name: 'Free edition',
@@ -60,6 +73,7 @@ export default function PlansPage({ channels, permissions, settings, currentComm
   return (
     <PageLayout
       channels={channels}
+      communities={communities}
       settings={settings}
       permissions={permissions}
       isSubDomainRouting={isSubDomainRouting}
@@ -75,7 +89,11 @@ export default function PlansPage({ channels, permissions, settings, currentComm
             Paid plans unlock additional features.
           </p>
         </div>
-        <Tiers activePeriod={Period.Monthly} tiers={tiers} account={currentCommunity} />
+        <Tiers
+          activePeriod={Period.Monthly}
+          tiers={tiers}
+          account={currentCommunity}
+        />
       </div>
     </PageLayout>
   );

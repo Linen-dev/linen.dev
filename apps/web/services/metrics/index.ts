@@ -8,6 +8,7 @@ import { NotFound, RedirectTo } from 'utilities/response';
 import serializeAccount from 'serializers/account';
 import serializeChannel from 'serializers/channel';
 import { qs } from 'utilities/url';
+import prisma from 'client';
 
 export async function getMetricsServerSideProps(
   context: GetServerSidePropsContext,
@@ -30,6 +31,14 @@ export async function getMetricsServerSideProps(
 
   const channels = await ChannelsService.find(community.id);
   const settings = serializeSettings(community);
+  const auth = await Session.auth(context.req, context.res);
+  const communities = await prisma.accounts.findMany({
+    where: {
+      id: {
+        in: auth?.users.map((user) => user.accountsId),
+      },
+    },
+  });
 
   const token = await Session.tokenRaw(context.req);
 
@@ -38,6 +47,7 @@ export async function getMetricsServerSideProps(
       token: token || null,
       currentCommunity: serializeAccount(community),
       channels: channels.map(serializeChannel),
+      communities: communities.map(serializeAccount),
       permissions,
       settings,
       isSubDomainRouting,

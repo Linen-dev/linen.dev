@@ -13,14 +13,16 @@ import storage from '@linen/utilities/storage';
 interface Props {
   channels: SerializedChannel[];
   currentCommunity: SerializedAccount;
+  communities: SerializedAccount[];
   permissions: Permissions;
   settings: Settings;
-  isSubDomainRouting: boolean
+  isSubDomainRouting: boolean;
 }
 
 export default function SettingsPage({
   channels,
   currentCommunity,
+  communities,
   settings,
   permissions,
   isSubDomainRouting,
@@ -35,6 +37,7 @@ export default function SettingsPage({
   return (
     <PageLayout
       channels={channels}
+      communities={communities}
       permissions={permissions}
       settings={settings}
       isSubDomainRouting={isSubDomainRouting}

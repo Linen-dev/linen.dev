@@ -29,6 +29,7 @@ export default function ChannelForBots({
         }),
       }}
       channels={channels as SerializedChannel[]}
+      communities={[]}
       settings={settings}
       isSubDomainRouting={isSubDomainRouting}
       permissions={permissions}
