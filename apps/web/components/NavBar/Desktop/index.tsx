@@ -129,120 +129,128 @@ export default function DesktopNavBar({
   }, [channelName]);
 
   return (
-    <Nav className={styles.navbar}>
-      {permissions.feed && (
-        <Link href="/feed">
-          <Nav.Item active={paths.feed === router.asPath}>
-            <FiRss /> Feed
-          </Nav.Item>
-        </Link>
+    <div className={styles.container}>
+      {false && (
+        <div className={styles.switch}>
+          <a className={styles.item}>L</a>
+          <a className={styles.item}>X</a>
+        </div>
       )}
-      {permissions.manage && (
-        <Link href="/metrics">
-          <Nav.Item active={paths.metrics === router.asPath}>
-            <FiBarChart /> Metrics
-          </Nav.Item>
-        </Link>
-      )}
-      <Nav.Label>
-        Channels
-        {permissions.channel_create && !!permissions.accountId && (
-          <NewChannelModal communityId={permissions.accountId} />
+      <Nav className={styles.navbar}>
+        {permissions.feed && (
+          <Link href="/feed">
+            <Nav.Item active={paths.feed === router.asPath}>
+              <FiRss /> Feed
+            </Nav.Item>
+          </Link>
         )}
-      </Nav.Label>
-      <div>
-        {channels.map((channel: SerializedChannel, index: number) => {
-          const count = highlights.reduce((count: number, id: string) => {
-            if (id === channel.id) {
-              return count + 1;
+        {permissions.manage && (
+          <Link href="/metrics">
+            <Nav.Item active={paths.metrics === router.asPath}>
+              <FiBarChart /> Metrics
+            </Nav.Item>
+          </Link>
+        )}
+        <Nav.Label>
+          Channels
+          {permissions.channel_create && !!permissions.accountId && (
+            <NewChannelModal communityId={permissions.accountId} />
+          )}
+        </Nav.Label>
+        <div>
+          {channels.map((channel: SerializedChannel, index: number) => {
+            const count = highlights.reduce((count: number, id: string) => {
+              if (id === channel.id) {
+                return count + 1;
+              }
+              return count;
+            }, 0);
+
+            function handleDrop(event: React.DragEvent) {
+              const id = channel.id;
+              const text = event.dataTransfer.getData('text');
+              const data = JSON.parse(text);
+              if (data.id === id) {
+                return event.stopPropagation();
+              }
+              return onDrop?.({
+                source: data.source,
+                target: 'channel',
+                from: data.id,
+                to: id,
+              });
             }
-            return count;
-          }, 0);
 
-          function handleDrop(event: React.DragEvent) {
-            const id = channel.id;
-            const text = event.dataTransfer.getData('text');
-            const data = JSON.parse(text);
-            if (data.id === id) {
-              return event.stopPropagation();
+            function handleDragEnter(event: React.DragEvent) {
+              event.currentTarget.classList.add(styles.hover);
             }
-            return onDrop?.({
-              source: data.source,
-              target: 'channel',
-              from: data.id,
-              to: id,
-            });
-          }
 
-          function handleDragEnter(event: React.DragEvent) {
-            event.currentTarget.classList.add(styles.hover);
-          }
+            function handleDragLeave(event: React.DragEvent) {
+              event.currentTarget.classList.remove(styles.hover);
+            }
 
-          function handleDragLeave(event: React.DragEvent) {
-            event.currentTarget.classList.remove(styles.hover);
-          }
+            const active = channel.channelName === channelName;
+            const highlighted = !active && count > 0;
 
-          const active = channel.channelName === channelName;
-          const highlighted = !active && count > 0;
-
-          return (
-            <Link
-              className={classNames(styles.item, {
-                [styles.dropzone]: mode === Mode.Drag,
-              })}
-              onDragEnter={handleDragEnter}
-              onDragLeave={handleDragLeave}
-              onDrop={handleDrop}
-              onClick={() => {
-                setHighlights((highlights) => {
-                  return highlights.filter((id) => id !== channel.id);
-                });
-              }}
-              key={`${channel.channelName}-${index}`}
-              href={`/c/${channel.channelName}`}
-            >
-              <Nav.Item active={active} highlighted={highlighted}>
-                <FiHash /> {channel.channelName}
+            return (
+              <Link
+                className={classNames(styles.item, {
+                  [styles.dropzone]: mode === Mode.Drag,
+                })}
+                onDragEnter={handleDragEnter}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+                onClick={() => {
+                  setHighlights((highlights) => {
+                    return highlights.filter((id) => id !== channel.id);
+                  });
+                }}
+                key={`${channel.channelName}-${index}`}
+                href={`/c/${channel.channelName}`}
+              >
+                <Nav.Item active={active} highlighted={highlighted}>
+                  <FiHash /> {channel.channelName}
+                </Nav.Item>
+              </Link>
+            );
+          })}
+        </div>
+        {permissions.manage && (
+          <Nav.Label
+            className={styles.label}
+            onClick={() => setExpanded((expanded) => !expanded)}
+          >
+            Settings {expanded ? <FiChevronUp /> : <FiChevronDown />}
+          </Nav.Label>
+        )}
+        {expanded && permissions.manage && (
+          <>
+            <Link href="/settings">
+              <Nav.Item active={paths.settings === router.asPath}>
+                <FiSettings /> Integrations
               </Nav.Item>
             </Link>
-          );
-        })}
-      </div>
-      {permissions.manage && (
-        <Nav.Label
-          className={styles.label}
-          onClick={() => setExpanded((expanded) => !expanded)}
-        >
-          Settings {expanded ? <FiChevronUp /> : <FiChevronDown />}
-        </Nav.Label>
-      )}
-      {expanded && permissions.manage && (
-        <>
-          <Link href="/settings">
-            <Nav.Item active={paths.settings === router.asPath}>
-              <FiSettings /> Integrations
-            </Nav.Item>
-          </Link>
-          <Link href="/branding">
-            <Nav.Item active={paths.branding === router.asPath}>
-              <FiSliders /> Branding
-            </Nav.Item>
-          </Link>
-          <Link href="/members">
-            <Nav.Item active={paths.members === router.asPath}>
-              <FiUsers /> Members
-            </Nav.Item>
-          </Link>
-          <Link href="/plans">
-            <Nav.Item active={paths.plans === router.asPath}>
-              <FiDollarSign /> Plans
-            </Nav.Item>
-          </Link>
-        </>
-      )}
-      <a target="_blank" rel="noreferrer" href="https://www.linen.dev">
-        <Nav.Item>Powered by Linen</Nav.Item>
-      </a>
-    </Nav>
+            <Link href="/branding">
+              <Nav.Item active={paths.branding === router.asPath}>
+                <FiSliders /> Branding
+              </Nav.Item>
+            </Link>
+            <Link href="/members">
+              <Nav.Item active={paths.members === router.asPath}>
+                <FiUsers /> Members
+              </Nav.Item>
+            </Link>
+            <Link href="/plans">
+              <Nav.Item active={paths.plans === router.asPath}>
+                <FiDollarSign /> Plans
+              </Nav.Item>
+            </Link>
+          </>
+        )}
+        <a target="_blank" rel="noreferrer" href="https://www.linen.dev">
+          <Nav.Item>Powered by Linen</Nav.Item>
+        </a>
+      </Nav>
+    </div>
   );
 }
