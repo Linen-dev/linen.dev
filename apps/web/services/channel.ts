@@ -1,6 +1,5 @@
 import { findAccountByPath } from '../lib/models';
 import { GetServerSidePropsContext } from 'next/types';
-import Session from 'services/session';
 import { NotFound } from '../utilities/response';
 import { serialize as serializeSettings } from 'serializers/account/settings';
 import { findThreadsByCursor, findPinnedThreads } from '../lib/threads';
@@ -23,7 +22,7 @@ import {
   shouldRedirectToDomain,
 } from 'utilities/redirects';
 import { qs } from 'utilities/url';
-import prisma from 'client';
+import { z } from 'zod';
 import { PAGE_SIZE } from 'secrets';
 
 export async function channelGetServerSideProps(
@@ -83,7 +82,9 @@ export async function channelGetServerSideProps(
         channel,
       });
     }
-    if (!!page) {
+    // if page exists, it must be a number between 1 and channel's pages field
+    // otherwise redirect to latest (no-page)
+    if (!!page && isPageNotValid(page, channel.pages)) {
       // should be redirect to first page
       return resolveCrawlerRedirect({
         isSubdomainbasedRouting,
@@ -100,13 +101,17 @@ export async function channelGetServerSideProps(
     page
   );
 
-  const pinnedThreads = await findPinnedThreads({
-    channelIds: [channel.id],
-    anonymizeUsers: account.anonymizeUsers,
-    limit: 10,
-  });
+  const pinnedThreads = !isCrawler
+    ? await findPinnedThreads({
+        channelIds: [channel.id],
+        anonymizeUsers: account.anonymizeUsers,
+        limit: 10,
+      })
+    : [];
 
-  const communities = await CommunitiesService.find(context.req, context.res);
+  const communities = !isCrawler
+    ? await CommunitiesService.find(context.req, context.res)
+    : [];
 
   return {
     props: {
@@ -132,6 +137,24 @@ export async function getThreads(
   anonymizeUsers: boolean,
   page?: string
 ) {
+  if (!!page) {
+    const threads = (
+      await findThreadsByCursor({
+        channelIds: [channelId],
+        page: parsePage(page),
+        anonymizeUsers,
+      })
+    ).sort(sortBySentAtAsc);
+
+    return {
+      nextCursor: {
+        next: null,
+        prev: null,
+      },
+      threads,
+    };
+  }
+
   const { sort, direction, sentAt } = decodeCursor(undefined);
 
   const threads = (
@@ -212,9 +235,9 @@ async function buildCursor({
 }: {
   pathCursor?: string;
   threads: ThreadsWithMessagesFull[];
-  sort: string;
+  sort?: string;
   sentAt?: string;
-  direction: string;
+  direction?: string;
   loadMore?: boolean;
 }): Promise<{
   next: string | null;
@@ -270,4 +293,25 @@ async function buildCursor({
     prev: encodeCursor(`desc:lt:${threads[0].sentAt}`),
     next: null,
   };
+}
+
+function isPageNotValid(page: string, pages: number | null) {
+  return !isPageValid(page, pages);
+}
+
+function isPageValid(page: string, pages: number | null) {
+  if (!pages) return false;
+  if (!page) return false;
+
+  const validation = z.coerce.number().positive().lte(pages);
+  const result = validation.safeParse(page);
+  return result.success;
+}
+
+function parsePage(page: string): number | undefined {
+  try {
+    return z.coerce.number().parse(page);
+  } catch (error) {
+    return undefined;
+  }
 }
