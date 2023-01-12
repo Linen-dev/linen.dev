@@ -3,6 +3,7 @@ import { FindThreadsByCursorType } from 'types/cursor';
 import { ThreadsWithMessagesFull } from 'types/partialTypes';
 import prisma from '../client';
 import { anonymizeMessages } from 'utilities/anonymizeMessages';
+import { PAGE_SIZE } from 'secrets';
 
 export type Thread = {
   externalThreadId: string;
@@ -233,7 +234,7 @@ export async function findThreadsByCursor({
   channelIds,
   sentAt = '0',
   sort = 'desc',
-  limit = 30,
+  limit = PAGE_SIZE,
   direction = 'lt',
   anonymizeUsers = false,
 }: {

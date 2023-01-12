@@ -24,8 +24,7 @@ import {
 } from 'utilities/redirects';
 import { qs } from 'utilities/url';
 import prisma from 'client';
-
-const CURSOR_LIMIT = 30;
+import { PAGE_SIZE } from 'secrets';
 
 export async function channelGetServerSideProps(
   context: GetServerSidePropsContext,
@@ -221,7 +220,7 @@ async function buildCursor({
   next: string | null;
   prev: string | null;
 }> {
-  const hasMore = threads?.length === CURSOR_LIMIT;
+  const hasMore = threads?.length === PAGE_SIZE;
 
   // if empty, there is no cursor to return
   if (!threads?.length) return { prev: null, next: null };
