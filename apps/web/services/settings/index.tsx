@@ -2,6 +2,7 @@ import { GetServerSidePropsContext } from 'next';
 import serializeSettings from 'serializers/account/settings';
 import ChannelsService from 'services/channels';
 import CommunityService from 'services/community';
+import CommunitiesService from 'services/communities';
 import Session from 'services/session';
 import PermissionsService from 'services/permissions';
 import { NotFound, RedirectTo } from 'utilities/response';
@@ -31,14 +32,7 @@ export async function getSettingsServerSideProps(
 
   const channels = await ChannelsService.find(community.id);
   const settings = serializeSettings(community);
-  const auth = await Session.auth(context.req, context.res);
-  const communities = await prisma.accounts.findMany({
-    where: {
-      id: {
-        in: auth?.users.map((user) => user.accountsId),
-      },
-    },
-  });
+  const communities = await CommunitiesService.find(context.req, context.res);
 
   const token = await Session.tokenRaw(context.req);
 

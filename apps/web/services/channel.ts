@@ -15,6 +15,7 @@ import {
 } from '../lib/channel';
 import { isBot } from 'next/dist/server/web/spec-extension/user-agent';
 import PermissionsService from 'services/permissions';
+import CommunitiesService from 'services/communities';
 import { RedirectTo } from 'utilities/response';
 import {
   redirectChannelToDomain,
@@ -106,14 +107,7 @@ export async function channelGetServerSideProps(
     limit: 10,
   });
 
-  const auth = await Session.auth(context.req, context.res);
-  const communities = await prisma.accounts.findMany({
-    where: {
-      id: {
-        in: auth?.users.map((user) => user.accountsId),
-      },
-    },
-  });
+  const communities = await CommunitiesService.find(context.req, context.res);
 
   return {
     props: {

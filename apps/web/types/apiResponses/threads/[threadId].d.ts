@@ -13,6 +13,7 @@ export type ThreadByIdResponse = ThreadById | { notFound: boolean };
 export interface ThreadByIdProp extends ThreadById {
   isSubDomainRouting: boolean;
   permissions: Permissions;
+  communities: SerializedAccount[];
   pagination: {
     next: any;
     prev: any;
@@ -25,7 +26,6 @@ export type ThreadById = {
   channelId: string;
   currentChannel: SerializedChannel;
   currentCommunity: SerializedAccount | null;
-  communities: SerializedAccount[];
   channel: SerializedChannel;
   authors: users[];
   channels: SerializedChannel[];
