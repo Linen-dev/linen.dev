@@ -34,6 +34,24 @@ export default async function createIpsumCommunity() {
     },
   });
 
+  const user2 = await prisma.users.findFirst({
+    where: {
+      displayName: 'Emil',
+    },
+  });
+  if (user2) {
+    await prisma.users.create({
+      data: {
+        displayName: 'John',
+        accountsId: community.id,
+        authsId: user2.authsId,
+        isAdmin: true,
+        isBot: false,
+        role: Roles.ADMIN,
+      },
+    });
+  }
+
   const channel1 = await prisma.channels.create({
     data: {
       accountId: community.id,
