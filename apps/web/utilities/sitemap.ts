@@ -110,20 +110,27 @@ async function internalCreateSitemapByChannel(
   if (!channel) {
     throw 'channel not found';
   }
+  if (!channel.pages) {
+    throw 'channel is empty';
+  }
 
-  let chunks: string[] = [encodeURI(`c/${channelName}`)];
-  let next: bigint | undefined;
+  let chunks: string[] = [];
+  let next = BigInt(Date.now() * 1000);
 
   for (;;) {
-    const { err, nextCursor, chunk } = await queryThreads(
+    const result = await queryThreads({
       channel,
-      channelName,
-      next
-    );
-    if (err) break;
-    chunk?.length && chunks.push(...chunk.map((c) => encodeURI(c)));
-    next = nextCursor;
-    if (!next) break;
+      next,
+    });
+    if (result.err) break;
+    result.chunk?.length &&
+      chunks.push(...result.chunk.map((c) => encodeURI(c)));
+
+    if (!result.nextCursor) {
+      break;
+    } else {
+      next = result.nextCursor;
+    }
 
     if (chunks?.length && chunks.length >= 10000) {
       console.error({
@@ -135,14 +142,27 @@ async function internalCreateSitemapByChannel(
     }
   }
 
+  chunks.push(encodeURI(`c/${channelName}`)); // latest
+
+  const max = 50000;
+  const total = channel.pages;
+  const spotsAvail = max - chunks.length;
+  const loopUntil = spotsAvail > total ? 0 : total - spotsAvail;
+
+  for (let idx = total; idx > loopUntil; idx--) {
+    chunks.push(encodeURI(`c/${channelName}/${idx}`));
+  }
+
   return chunks;
 }
 
-async function queryThreads(
-  channel: channels,
-  channelName: string,
-  next: bigint = BigInt(0)
-) {
+async function queryThreads({
+  channel,
+  next,
+}: {
+  channel: channels;
+  next: bigint;
+}) {
   let err: any,
     nextCursor: bigint | undefined,
     chunk: string[] = [];

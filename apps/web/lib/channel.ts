@@ -151,12 +151,7 @@ export async function findChannelsByAccount({
       hidden: false,
       account: { id: account.id },
       ...(isCrawler && {
-        threads: {
-          some: {
-            hidden: false,
-            messages: { some: {} },
-          },
-        },
+        pages: { not: null },
       }),
     },
   });

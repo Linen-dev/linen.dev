@@ -90,15 +90,10 @@ export async function findFreeAccountsWithThreads() {
       channels: {
         some: {
           hidden: false,
-          threads: {
-            some: {
-              hidden: false,
-              messages: { some: {} },
-              messageCount: { gt: 1 },
-            },
-          },
+          pages: { not: null },
         },
       },
     },
+    orderBy: { createdAt: 'desc' },
   });
 }
