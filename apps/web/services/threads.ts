@@ -1,5 +1,6 @@
 import serializeThread from 'serializers/thread';
 import { findAccountByPath } from '../lib/models';
+import Session from 'services/session';
 import { findThreadByIncrementId } from '../lib/threads';
 import { ThreadByIdProp } from '../types/apiResponses/threads/[threadId]';
 import { channels, threads, users } from '@prisma/client';
@@ -125,6 +126,14 @@ export async function threadGetServerSideProps(
     }
 
     const currentChannel = channels.find((c) => c.id === thread.channel?.id)!;
+    const auth = await Session.auth(context.req, context.res);
+    const communities = await prisma.accounts.findMany({
+      where: {
+        id: {
+          in: auth?.users.map((user) => user.accountsId),
+        },
+      },
+    });
 
     return {
       props: {
@@ -133,6 +142,7 @@ export async function threadGetServerSideProps(
         channelId: currentChannel.id,
         currentCommunity: serializeAccount(account),
         channel: currentChannel,
+        communities: communities.map(serializeAccount),
         authors: authors,
         currentChannel,
         channels,

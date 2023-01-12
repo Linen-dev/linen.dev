@@ -15,6 +15,7 @@ import Content from './Content';
 
 interface Props {
   channels: SerializedChannel[];
+  communities: SerializedAccount[];
   currentCommunity: SerializedAccount;
   isSubDomainRouting: boolean;
   permissions: Permissions;
@@ -83,6 +84,7 @@ const fetchTotal = ({
 export default function Feed({
   channels,
   currentCommunity,
+  communities,
   isSubDomainRouting,
   permissions,
   settings,
@@ -97,6 +99,7 @@ export default function Feed({
   return (
     <PageLayout
       channels={channels}
+      communities={communities}
       isSubDomainRouting={isSubDomainRouting}
       permissions={permissions}
       settings={settings}

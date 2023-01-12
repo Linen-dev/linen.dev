@@ -8,6 +8,7 @@ import { NotFound, RedirectTo } from 'utilities/response';
 import serializeAccount from 'serializers/account';
 import serializeChannel from 'serializers/channel';
 import { qs } from 'utilities/url';
+import prisma from 'client';
 
 export async function getPlansServerSideProps(
   context: GetServerSidePropsContext,
@@ -30,6 +31,14 @@ export async function getPlansServerSideProps(
 
   const channels = await ChannelsService.find(community.id);
   const settings = serializeSettings(community);
+  const auth = await Session.auth(context.req, context.res);
+  const communities = await prisma.accounts.findMany({
+    where: {
+      id: {
+        in: auth?.users.map((user) => user.accountsId),
+      },
+    },
+  });
 
   const token = await Session.tokenRaw(context.req);
 
@@ -37,6 +46,7 @@ export async function getPlansServerSideProps(
     props: {
       token: token || null,
       currentCommunity: serializeAccount(community),
+      communities: communities.map(serializeAccount),
       channels: channels.map(serializeChannel),
       permissions,
       settings,

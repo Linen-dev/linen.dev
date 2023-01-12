@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import classNames from 'classnames';
 import {
   Permissions,
+  SerializedAccount,
   SerializedChannel,
   SerializedReadStatus,
 } from '@linen/types';
@@ -28,11 +29,13 @@ import debounce from '@linen/utilities/debounce';
 import { post } from 'utilities/http';
 import { notify } from 'utilities/notification';
 import unique from 'lodash.uniq';
+import CommunityLink from './CommunityLink';
 
 interface Props {
   mode: Mode;
   channels: SerializedChannel[];
   channelName: string;
+  communities: SerializedAccount[];
   permissions: Permissions;
   onDrop?({
     source,
@@ -56,6 +59,7 @@ export default function DesktopNavBar({
   mode,
   channelName,
   channels,
+  communities,
   permissions,
   onDrop,
 }: Props) {
@@ -130,10 +134,11 @@ export default function DesktopNavBar({
 
   return (
     <div className={styles.container}>
-      {false && (
+      {communities.length > 1 && (
         <div className={styles.switch}>
-          <a className={styles.item}>L</a>
-          <a className={styles.item}>X</a>
+          {communities.map((community) => {
+            return <CommunityLink community={community} />;
+          })}
         </div>
       )}
       <Nav className={styles.navbar}>

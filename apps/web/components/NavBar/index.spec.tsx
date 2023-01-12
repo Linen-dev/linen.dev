@@ -13,6 +13,7 @@ describe('NavBar', () => {
       <NavBar
         channelName={channel1.channelName}
         channels={channels}
+        communities={[]}
         permissions={build('permissions')}
         mode={Mode.Default}
       />

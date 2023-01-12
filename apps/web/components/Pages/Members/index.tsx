@@ -1,14 +1,20 @@
 import { useEffect, useState } from 'react';
 import PageLayout from 'components/layout/PageLayout';
-import Header from './Header'
+import Header from './Header';
 import { Button, NativeSelect, TextInput, Toast } from '@linen/ui';
 import { useRouter } from 'next/router';
 import { Roles } from '@prisma/client';
 import { AiOutlineUser } from 'react-icons/ai';
-import { SerializedAccount, SerializedChannel, Settings, Permissions } from '@linen/types';
+import {
+  SerializedAccount,
+  SerializedChannel,
+  Settings,
+  Permissions,
+} from '@linen/types';
 
 interface Props {
   channels: SerializedChannel[];
+  communities: SerializedAccount[];
   currentCommunity: SerializedAccount;
   settings: Settings;
   permissions: Permissions;
@@ -188,24 +194,31 @@ function RowMember(user: MembersType, communityId: string): JSX.Element {
   );
 }
 
-export default function Members({ channels, settings, permissions, currentCommunity, isSubDomainRouting }: Props) {
+export default function Members({
+  channels,
+  communities,
+  settings,
+  permissions,
+  currentCommunity,
+  isSubDomainRouting,
+}: Props) {
   const [users, setUsers] = useState<MembersType[]>([]);
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    let mounted = true
+    let mounted = true;
     fetch(`/api/members?communityId=${currentCommunity.id}`)
       .then((response) => response.json())
       .then((response: any) => {
         if (response && response.users) {
-          setUsers(response.users)
+          setUsers(response.users);
         }
-      })
+      });
     return () => {
-      mounted = false
-    }
-  }, [])
+      mounted = false;
+    };
+  }, []);
 
   async function createInvite(event: any) {
     event.preventDefault();
@@ -233,12 +246,13 @@ export default function Members({ channels, settings, permissions, currentCommun
   return (
     <PageLayout
       channels={channels}
+      communities={communities}
       settings={settings}
       permissions={permissions}
       isSubDomainRouting={isSubDomainRouting}
       className="w-full"
     >
-      <Header/>
+      <Header />
       <div className="p-3">
         <InviteMember onSubmit={createInvite} loading={loading} />
         <TableMembers users={users} communityId={currentCommunity.id} />

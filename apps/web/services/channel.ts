@@ -1,5 +1,6 @@
 import { findAccountByPath } from '../lib/models';
 import { GetServerSidePropsContext } from 'next/types';
+import Session from 'services/session';
 import { NotFound } from '../utilities/response';
 import { serialize as serializeSettings } from 'serializers/account/settings';
 import { findThreadsByCursor, findPinnedThreads } from '../lib/threads';
@@ -21,6 +22,7 @@ import {
   shouldRedirectToDomain,
 } from 'utilities/redirects';
 import { qs } from 'utilities/url';
+import prisma from 'client';
 
 const CURSOR_LIMIT = 30;
 
@@ -104,6 +106,15 @@ export async function channelGetServerSideProps(
     limit: 10,
   });
 
+  const auth = await Session.auth(context.req, context.res);
+  const communities = await prisma.accounts.findMany({
+    where: {
+      id: {
+        in: auth?.users.map((user) => user.accountsId),
+      },
+    },
+  });
+
   return {
     props: {
       nextCursor,
@@ -111,6 +122,7 @@ export async function channelGetServerSideProps(
       currentCommunity: serializeAccount(account),
       channelName: channel.channelName,
       channels,
+      communities: communities.map(serializeAccount),
       threads: threads.map(serializeThread),
       pinnedThreads: pinnedThreads.map(serializeThread),
       settings,

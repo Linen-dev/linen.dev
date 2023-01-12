@@ -1,0 +1,17 @@
+.link {
+  align-items: center;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  margin: 0.5rem;
+  border-radius: 4px;
+  text-transform: uppercase;
+  transition: 0.1s ease-in opacity;
+
+  &:hover {
+    opacity: 0.75;
+  }
+}
