@@ -10,6 +10,7 @@
   border-radius: 4px;
   text-transform: uppercase;
   transition: 0.1s ease-in opacity;
+  overflow: hidden;
 
   &:hover {
     opacity: 0.75;

@@ -48,9 +48,11 @@ export interface SerializedAccount {
   id: string;
   type: AccountType;
   name?: string;
+  description?: string;
   homeUrl?: string;
   docsUrl?: string;
   logoUrl?: string;
+  logoSquareUrl?: string;
   redirectDomain?: string;
   brandColor?: string;
   premium: boolean;
