@@ -3,6 +3,7 @@ import styles from './index.module.scss';
 import { SerializedAccount } from '@linen/types';
 import { getHomeUrl } from 'utilities/home';
 import { pickTextColorBasedOnBgColor } from 'utilities/colors';
+import Image from 'next/image';
 
 interface Props {
   community: SerializedAccount;
@@ -22,13 +23,27 @@ export default function CommunityLink({ community }: Props) {
     'white',
     'black'
   );
+
   return (
     <a
       href={getHomeUrl(community)}
       className={styles.link}
-      style={{ color: fontColor, background: backgroundColor }}
+      style={
+        community.logoSquareUrl
+          ? undefined
+          : { color: fontColor, background: backgroundColor }
+      }
     >
-      {getLetter(community.name)}
+      {community.logoSquareUrl ? (
+        <Image
+          src={community.logoSquareUrl}
+          alt={community.description || community.name || 'Community'}
+          width={36}
+          height={36}
+        />
+      ) : (
+        getLetter(community.name)
+      )}
     </a>
   );
 }
