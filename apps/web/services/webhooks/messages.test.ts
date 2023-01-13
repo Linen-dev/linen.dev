@@ -1,0 +1,148 @@
+jest.mock('services/events');
+jest.mock('services/slack/sync/getBotUserId');
+import { accounts, channels } from '@prisma/client';
+import { v4 } from 'uuid';
+import { create } from '__tests__/factory';
+import { handleWebhook } from '.';
+
+describe('webhook', () => {
+  describe('bot messages', () => {
+    let account: accounts;
+    let channel: channels;
+    let messageBody: string;
+    let ts = '1673634786.206689';
+
+    const bot_profile = (account: any) => ({
+      id: 'id',
+      deleted: false,
+      name: 'name',
+      updated: 1671716222,
+      app_id: 'app_id',
+      icons: {
+        image_36: 'image_36',
+        image_48: 'image_48',
+        image_72: 'image_72',
+      },
+      team_id: account.slackTeamId,
+    });
+
+    const attachments = [
+      {
+        id: 1,
+        footer_icon: 'footer_icon',
+        ts: 1673634784,
+        color: 'color',
+        fallback: 'fallback',
+        pretext: 'pretext',
+        title: 'title',
+        callback_id: 'callback_id',
+        footer: 'footer',
+        fields: [],
+        mrkdwn_in: ['text'],
+        actions: [],
+      },
+    ];
+
+    beforeAll(async () => {
+      account = await create('account', {
+        slackTeamId: v4(),
+      });
+      channel = await create('channel', {
+        externalChannelId: v4(),
+        accountId: account.id,
+      });
+    });
+
+    test('new message', async () => {
+      const newMessage = {
+        token: v4(),
+        team_id: account.slackTeamId,
+        context_team_id: account.slackTeamId,
+        context_enterprise_id: null,
+        api_app_id: v4(),
+        event: {
+          bot_id: v4(),
+          type: 'message',
+          text: '',
+          user: v4(),
+          ts,
+          app_id: v4(),
+          team: account.slackTeamId,
+          bot_profile: bot_profile(account),
+          attachments,
+          channel: channel.externalChannelId,
+          event_ts: ts,
+          channel_type: 'channel',
+        },
+        type: 'event_callback',
+        event_id: v4(),
+        event_time: 1673634786,
+        authorizations: [],
+        is_ext_shared_channel: false,
+        event_context: v4(),
+      };
+
+      const result = await handleWebhook(newMessage);
+      expect(result?.message?.body).not.toBe('');
+
+      messageBody = result?.message?.body;
+    });
+
+    test('edit message', async () => {
+      const editMessage = {
+        token: v4(),
+        team_id: account.slackTeamId,
+        context_team_id: account.slackTeamId,
+        context_enterprise_id: null,
+        api_app_id: v4(),
+        event: {
+          type: 'message',
+          subtype: 'message_changed',
+          message: {
+            bot_id: v4(),
+            type: 'message',
+            text: '',
+            user: v4(),
+            app_id: v4(),
+            team: account.slackTeamId,
+            bot_profile: bot_profile(account),
+            edited: {
+              user: v4(),
+              ts: '1673634786.000000',
+            },
+            attachments,
+            ts,
+            source_team: account.slackTeamId,
+            user_team: account.slackTeamId,
+          },
+          previous_message: {
+            bot_id: v4(),
+            type: 'message',
+            text: '',
+            user: v4(),
+            ts,
+            app_id: v4(),
+            team: account.slackTeamId,
+            bot_profile: bot_profile(account),
+            attachments,
+          },
+          channel: channel.externalChannelId,
+          hidden: true, // ???
+          ts: '1673634786.001900',
+          event_ts: '1673634786.001900',
+          channel_type: 'channel',
+        },
+        type: 'event_callback',
+        event_id: v4(),
+        event_time: 1673634786,
+        authorizations: [],
+        is_ext_shared_channel: false,
+        event_context: v4(),
+      };
+
+      const result = await handleWebhook(editMessage);
+      expect(result?.message?.body).not.toBe('');
+      expect(result?.message?.body).toBe(messageBody);
+    });
+  });
+});

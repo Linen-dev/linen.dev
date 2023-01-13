@@ -66,6 +66,7 @@ export async function processMessageEvent(body: SlackEvent) {
   return {
     status: 200,
     ok: true,
+    message,
   };
 }
 
@@ -205,11 +206,6 @@ async function changeMessage(
   },
   event: SlackMessageEvent
 ) {
-  if (event.previous_message?.subtype === 'bot_message') {
-    // nothing to do
-    return;
-  }
-
   // First remove previous message
   if (event.previous_message) {
     const message = await findMessageByChannelIdAndTs(
@@ -225,7 +221,7 @@ async function changeMessage(
 
   let message = {};
   if (event.message) {
-    message = await addMessage(channel, event.message);
+    message = await addMessage(channel, parseMessage(event.message));
   }
 
   return message;
