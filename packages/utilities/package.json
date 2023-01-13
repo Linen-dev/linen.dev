@@ -5,7 +5,8 @@
   "scripts": {
     "build": "tsc --project tsconfig.json",
     "dev": "npm run build --watch",
-    "test": "jest"
+    "test": "jest",
+    "test:watch": "jest --watch"
   },
   "dependencies": {
     "awesome-debounce-promise": "^2.1.0",
@@ -24,6 +25,7 @@
     "./event": "./dist/event.js",
     "./debounce": "./dist/debounce.js",
     "./markdown": "./dist/markdown.js",
+    "./object": "./dist/object.js",
     "./clipboard": "./dist/clipboard.js"
   },
   "typesVersions": {
@@ -48,6 +50,9 @@
       ],
       "markdown": [
         "dist/markdown.d.ts"
+      ],
+      "object": [
+        "dist/object.d.ts"
       ],
       "clipboard": [
         "dist/clipboard.d.ts"
