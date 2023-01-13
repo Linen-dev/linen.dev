@@ -39,17 +39,20 @@ export const push = ({
   message,
   thread,
 }: PushType) => {
-  return request.post(`${getPushUrlSSR()}/api/message`).send({
-    channel_id: channelId,
-    thread_id: threadId,
-    message_id: messageId,
-    imitation_id: imitationId,
-    is_thread: isThread,
-    is_reply: isReply,
-    message,
-    thread,
-    token,
-  });
+  return request
+    .post(`${getPushUrlSSR()}/api/message`)
+    .send({
+      channel_id: channelId,
+      thread_id: threadId,
+      message_id: messageId,
+      imitation_id: imitationId,
+      is_thread: isThread,
+      is_reply: isReply,
+      message,
+      thread,
+      token,
+    })
+    .then((e) => e.status);
 };
 
 export const pushChannel = ({
@@ -62,17 +65,20 @@ export const pushChannel = ({
   message,
   thread,
 }: PushType) => {
-  return request.post(`${getPushUrlSSR()}/api/channel`).send({
-    channel_id: channelId,
-    thread_id: threadId,
-    message_id: messageId,
-    imitation_id: imitationId,
-    is_thread: isThread,
-    is_reply: isReply,
-    message,
-    thread,
-    token,
-  });
+  return request
+    .post(`${getPushUrlSSR()}/api/channel`)
+    .send({
+      channel_id: channelId,
+      thread_id: threadId,
+      message_id: messageId,
+      imitation_id: imitationId,
+      is_thread: isThread,
+      is_reply: isReply,
+      message,
+      thread,
+      token,
+    })
+    .then((e) => e.status);
 };
 
 export const pushUserMention = ({
@@ -86,14 +92,17 @@ export const pushUserMention = ({
   channelId: string;
   mentionType: string;
 }) => {
-  return request.post(`${getPushUrlSSR()}/api/user`).send({
-    user_id: userId,
-    thread_id: threadId,
-    channel_id: channelId,
-    is_mention: true,
-    mention_type: mentionType,
-    token,
-  });
+  return request
+    .post(`${getPushUrlSSR()}/api/user`)
+    .send({
+      user_id: userId,
+      thread_id: threadId,
+      channel_id: channelId,
+      is_mention: true,
+      mention_type: mentionType,
+      token,
+    })
+    .then((e) => e.status);
 };
 
 export const pushCommunity = ({
@@ -110,16 +119,19 @@ export const pushCommunity = ({
   communityId: string;
 } & PushType) => {
   if (!communityId) return Promise.resolve();
-  return request.post(`${getPushUrlSSR()}/api/community`).send({
-    community_id: communityId,
-    channel_id: channelId,
-    thread_id: threadId,
-    message_id: messageId,
-    imitation_id: imitationId,
-    is_thread: isThread,
-    is_reply: isReply,
-    message,
-    thread,
-    token,
-  });
+  return request
+    .post(`${getPushUrlSSR()}/api/community`)
+    .send({
+      community_id: communityId,
+      channel_id: channelId,
+      thread_id: threadId,
+      message_id: messageId,
+      imitation_id: imitationId,
+      is_thread: isThread,
+      is_reply: isReply,
+      message,
+      thread,
+      token,
+    })
+    .then((e) => e.status);
 };

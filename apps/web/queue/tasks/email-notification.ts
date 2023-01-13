@@ -52,7 +52,7 @@ export async function createMailingJob(
 ) {
   const worker = await WorkerSingleton.getInstance();
   return await worker.addJob(QUEUE_2_SEND_EMAIL, payload, {
-    jobKey,
+    jobKey: `${QUEUE_2_SEND_EMAIL}:${jobKey}`,
     maxAttempts: 1,
     runAt,
     jobKeyMode: 'preserve_run_at',
@@ -65,7 +65,7 @@ export async function createNewEventJob(
 ) {
   const worker = await WorkerSingleton.getInstance();
   return await worker.addJob(QUEUE_1_NEW_EVENT, payload, {
-    jobKey,
+    jobKey: `${QUEUE_1_NEW_EVENT}:${jobKey}`,
     maxAttempts: 1,
   });
 }
