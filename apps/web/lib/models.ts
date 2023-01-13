@@ -47,6 +47,21 @@ export const createMessageWithMentions = async (
   return newMessage;
 };
 
+export const deleteMessageFromThread = async (
+  messageId: string,
+  threadId: string | null
+) => {
+  await deleteMessageWithMentions(messageId);
+
+  // if thread exists and has no messages, we will remove it
+  if (threadId) {
+    const messages = await prisma.messages.count({ where: { threadId } });
+    if (messages === 0) {
+      await prisma.threads.delete({ where: { id: threadId } });
+    }
+  }
+};
+
 export const deleteMessageWithMentions = async (messageId: string) => {
   return await prisma.$transaction([
     prisma.mentions.deleteMany({

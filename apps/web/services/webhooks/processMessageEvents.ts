@@ -2,6 +2,7 @@ import {
   createMessageWithMentions,
   findMessageByChannelIdAndTs,
   deleteMessageWithMentions,
+  deleteMessageFromThread,
 } from 'lib/models';
 import { findOrCreateThread, updateSlackThread } from 'lib/threads';
 import {
@@ -191,7 +192,9 @@ async function deleteMessage(
       event.deleted_ts
     );
     try {
-      message && (await deleteMessageWithMentions(message.id));
+      if (message) {
+        await deleteMessageFromThread(message.id, message.threadId);
+      }
     } catch (error) {
       console.warn('Message not found!', channel.id, event.deleted_ts);
     }
