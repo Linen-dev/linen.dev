@@ -1,4 +1,4 @@
-export function clean(input: object) {
+export function clean(input: any): any {
   return Object.entries(input).reduce((output, [key, value]) => {
     if (value) {
       // @ts-ignore
