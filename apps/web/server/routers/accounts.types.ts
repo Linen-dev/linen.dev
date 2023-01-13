@@ -2,9 +2,11 @@ import { z } from 'zod';
 import { AccountType } from '@linen/types';
 
 export const updateAccountSchema = z.object({
+  description: z.string().optional(),
   homeUrl: z.string().url().optional(),
   docsUrl: z.string().url().optional(),
   logoUrl: z.string().url().optional(),
+  logoSquareUrl: z.string().url().optional(),
   redirectDomain: z.string().url().or(z.literal('')).optional(),
   brandColor: z.string().optional(),
   googleAnalyticsId: z.string().optional(),

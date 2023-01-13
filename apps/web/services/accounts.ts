@@ -62,9 +62,11 @@ export default class AccountsService {
     accountId,
   }: {
     params: {
+      description?: string;
       homeUrl?: string;
       docsUrl?: string;
       logoUrl?: string;
+      logoSquareUrl?: string;
       redirectDomain?: string;
       brandColor?: string;
       googleAnalyticsId?: string;
@@ -80,9 +82,11 @@ export default class AccountsService {
     }
 
     const {
+      description,
       homeUrl,
       docsUrl,
       logoUrl,
+      logoSquareUrl,
       redirectDomain,
       brandColor,
       googleAnalyticsId,
@@ -100,8 +104,10 @@ export default class AccountsService {
       ? {
           ...freeAccount,
           brandColor,
+          description,
           googleAnalyticsId,
           logoUrl,
+          logoSquareUrl,
           type,
           ...(redirectDomain && {
             redirectDomain: stripProtocol(redirectDomain),
