@@ -109,6 +109,7 @@ model accounts {
   createdAt              DateTime    @default(now())
   type                   AccountType @default(PUBLIC)
   name                   String?
+  description            String?
   slackDomain            String?
   discordDomain          String?
   discordServerId        String?
@@ -122,6 +123,7 @@ model accounts {
   homeUrl                String?
   docsUrl                String?
   logoUrl                String?
+  logoSquareUrl          String?
   premium                Boolean     @default(false)
   googleAnalyticsId      String?
   googleSiteVerification String?
