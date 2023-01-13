@@ -128,12 +128,12 @@ export default function Branding({
     const redirectDomain = stripProtocol(form.redirectDomain.value);
     const googleAnalyticsId = form.googleAnalyticsId?.value;
     const brandColor = form.brandColor.value;
-    const params = clean({
+    const params = {
       logoUrl,
       redirectDomain,
       brandColor,
       googleAnalyticsId,
-    });
+    };
     try {
       const response = await api.updateAccount({
         accountId: currentCommunity.id,
