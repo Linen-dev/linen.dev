@@ -10,6 +10,7 @@ import classNames from 'classnames';
 import { useS3Upload } from 'next-s3-upload';
 import { useEffect, useState } from 'react';
 import { Toast } from '@linen/ui';
+import { clean } from '@linen/utilities/object';
 import {
   SerializedAccount,
   SerializedChannel,
@@ -127,13 +128,16 @@ export default function Branding({
     const redirectDomain = stripProtocol(form.redirectDomain.value);
     const googleAnalyticsId = form.googleAnalyticsId?.value;
     const brandColor = form.brandColor.value;
+    const params = clean({
+      logoUrl,
+      redirectDomain,
+      brandColor,
+      googleAnalyticsId,
+    });
     try {
       const response = await api.updateAccount({
         accountId: currentCommunity.id,
-        logoUrl,
-        redirectDomain,
-        brandColor,
-        googleAnalyticsId,
+        ...params,
       });
       if (response) {
         Toast.success('Saved successfully!');
