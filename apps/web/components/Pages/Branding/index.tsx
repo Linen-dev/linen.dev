@@ -3,14 +3,13 @@ import PageLayout from 'components/layout/PageLayout';
 import Header from './Header';
 import TextField from 'components/TextField';
 import ColorField from 'components/ColorField';
+import LogoField from './LogoField';
 import { Button, Label } from '@linen/ui';
 import Table, { Thead, Tbody, Th, Td } from 'components/Table';
 import { stripProtocol } from 'utilities/url';
 import classNames from 'classnames';
-import { useS3Upload } from 'next-s3-upload';
 import { useEffect, useState } from 'react';
 import { Toast } from '@linen/ui';
-import { clean } from '@linen/utilities/object';
 import {
   SerializedAccount,
   SerializedChannel,
@@ -54,7 +53,7 @@ function Card({
   return (
     <div
       className={classNames(
-        'p-3 mb-3 rounded border-gray-200 border-solid border',
+        '',
         readOnly ? 'bg-slate-50 pointer-events-none' : '',
         className
       )}
@@ -83,9 +82,12 @@ export default function Branding({
 }: Props) {
   const [records, setRecords] = useState<DNSRecord[]>();
   const router = useRouter();
-  let [logoUrl, setLogoUrl] = useState<string>();
-  let { FileInput, openFileDialog, uploadToS3, files } = useS3Upload();
-  const isUploading = files && files.length > 0 && files[0].progress < 100;
+  let [logoUrl, setLogoUrl] = useState<string | undefined>(
+    currentCommunity.logoUrl
+  );
+  let [logoSquareUrl, setLogoSquareUrl] = useState<string | undefined>(
+    currentCommunity.logoSquareUrl
+  );
 
   useEffect(() => {
     let mounted = true;
@@ -107,29 +109,17 @@ export default function Branding({
     };
   }, []);
 
-  let handleLogoChange = async (file: File) => {
-    let { url } = await uploadToS3(file, {
-      endpoint: {
-        request: {
-          body: {
-            asset: 'logos',
-            accountId: currentCommunity.id,
-          },
-          headers: {},
-        },
-      },
-    });
-    setLogoUrl(url);
-  };
-
   const onSubmit = async (event: any) => {
     event.preventDefault();
     const form = event.target;
     const redirectDomain = stripProtocol(form.redirectDomain.value);
     const googleAnalyticsId = form.googleAnalyticsId?.value;
     const brandColor = form.brandColor.value;
+    const description = form.description.value;
     const params = {
+      description,
       logoUrl,
+      logoSquareUrl,
       redirectDomain,
       brandColor,
       googleAnalyticsId,
@@ -151,6 +141,23 @@ export default function Branding({
   const premiumAccountSettings = (
     <>
       <PremiumCard isPremium={currentCommunity.premium}>
+        <Label htmlFor="description">Description</Label>
+        <Description>
+          Few sentences that describe your community. Maximum of 160 characters
+          is preferred.
+        </Description>
+        <TextField
+          placeholder=""
+          id="description"
+          defaultValue={
+            currentCommunity.premium ? currentCommunity.description : undefined
+          }
+          disabled={!currentCommunity.premium}
+          readOnly={!currentCommunity.premium}
+        />
+      </PremiumCard>
+      <hr className="my-5" />
+      <PremiumCard isPremium={currentCommunity.premium}>
         <Label htmlFor="redirectDomain">Redirect Domain</Label>
         <Description>Unique domain to redirect to.</Description>
         <TextField
@@ -165,33 +172,37 @@ export default function Branding({
           readOnly={!currentCommunity.premium}
         />
       </PremiumCard>
+      <hr className="my-5" />
       {currentCommunity.premium && records && records.length > 0 && (
-        <PremiumCard isPremium={currentCommunity.premium}>
-          <Label htmlFor="dnsRecords">DNS</Label>
-          <Description>
-            Subdomain routing setup can be achieved by verifying the ownership
-            of a domain. Copy the TXT and/or CNAME records from below and paste
-            them into your DNS settings.
-          </Description>
-          <Table>
-            <Thead>
-              <tr>
-                <Th>Type</Th>
-                <Th>Name</Th>
-                <Th>Value</Th>
-              </tr>
-            </Thead>
-            <Tbody>
-              {records.map((record: DNSRecord, index) => (
-                <tr key={record.type + index}>
-                  <Td>{record.type}</Td>
-                  <Td>{record.name}</Td>
-                  <Td>{record.value}</Td>
+        <>
+          <PremiumCard isPremium={currentCommunity.premium}>
+            <Label htmlFor="dnsRecords">DNS</Label>
+            <Description>
+              Subdomain routing setup can be achieved by verifying the ownership
+              of a domain. Copy the TXT and/or CNAME records from below and
+              paste them into your DNS settings.
+            </Description>
+            <Table>
+              <Thead>
+                <tr>
+                  <Th>Type</Th>
+                  <Th>Name</Th>
+                  <Th>Value</Th>
                 </tr>
-              ))}
-            </Tbody>
-          </Table>
-        </PremiumCard>
+              </Thead>
+              <Tbody>
+                {records.map((record: DNSRecord, index) => (
+                  <tr key={record.type + index}>
+                    <Td>{record.type}</Td>
+                    <Td>{record.name}</Td>
+                    <Td>{record.value}</Td>
+                  </tr>
+                ))}
+              </Tbody>
+            </Table>
+          </PremiumCard>
+          <hr className="my-5" />
+        </>
       )}
       <PremiumCard isPremium={currentCommunity.premium}>
         <Label htmlFor="brandColor">Brand Color</Label>
@@ -209,39 +220,28 @@ export default function Branding({
           disabled={!currentCommunity.premium}
         />
       </PremiumCard>
+      <hr className="my-5" />
       <PremiumCard isPremium={currentCommunity.premium}>
-        <Label htmlFor="logo">Logo</Label>
-        <Description>Logo of your brand.</Description>
-        <FileInput onChange={handleLogoChange} />
-        {logoUrl ? (
-          <img
-            alt=""
-            src={logoUrl}
-            style={{
-              backgroundColor: currentCommunity.brandColor,
-            }}
-            className={classNames('mb-2 mt-2')}
-          />
-        ) : (
-          currentCommunity.logoUrl && (
-            <img
-              alt=""
-              src={currentCommunity.logoUrl}
-              style={{
-                backgroundColor: currentCommunity.brandColor,
-              }}
-              className={classNames('mb-2 mt-2')}
-            />
-          )
-        )}
-        <Button
-          onClick={() => !isUploading && openFileDialog()}
-          disabled={!currentCommunity.premium || isUploading}
-        >
-          {isUploading ? 'Uploading...' : 'Upload file'}
-        </Button>
+        <LogoField
+          header="Logo"
+          description="Logo of your brand."
+          currentCommunity={currentCommunity}
+          onChange={(url) => setLogoUrl(url)}
+          logoUrl={logoUrl}
+        />
       </PremiumCard>
+      <hr className="my-5" />
       <PremiumCard isPremium={currentCommunity.premium}>
+        <LogoField
+          header="Logo Square"
+          description="Squared version of your logo that is going to be displayed in the navigation bar."
+          currentCommunity={currentCommunity}
+          onChange={(url) => setLogoSquareUrl(url)}
+          logoUrl={logoSquareUrl}
+        />
+      </PremiumCard>
+      <hr className="my-5" />
+      <PremiumCard className="mb-5" isPremium={currentCommunity.premium}>
         <Label htmlFor="googleAnalyticsId">Google Analytics ID</Label>
         <Description>
           You can collect data from your website with Google Analytics.

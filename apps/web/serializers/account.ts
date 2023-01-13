@@ -31,9 +31,11 @@ export default function serialize(account?: any): SerializedAccount | null {
     return null;
   }
   const {
+    description,
     homeUrl,
     docsUrl,
     logoUrl,
+    logoSquareUrl,
     redirectDomain,
     brandColor,
     premium,
@@ -53,9 +55,11 @@ export default function serialize(account?: any): SerializedAccount | null {
   const hasAuth = hasAuthFn(account);
 
   return {
+    description,
     homeUrl,
     docsUrl,
     logoUrl,
+    logoSquareUrl,
     redirectDomain,
     brandColor,
     premium,
