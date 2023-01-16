@@ -7,6 +7,7 @@ import ButtonGroup from './ButtonGroup';
 import ButtonToggle from './ButtonToggle';
 import Checkbox from './Checkbox';
 import Code from './Code';
+import Container from './Container';
 import Image from './Image';
 import Label from './Label';
 import Line from './Line';
@@ -34,6 +35,7 @@ export {
   ButtonToggle,
   Checkbox,
   Code,
+  Container,
   Image,
   Label,
   Line,
