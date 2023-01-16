@@ -59,6 +59,7 @@ export function createThreadImitation({
       hidden: channel.hidden,
       default: channel.default,
       accountId: null,
+      pages: null,
     },
     channelId: channel.id,
     hidden: false,

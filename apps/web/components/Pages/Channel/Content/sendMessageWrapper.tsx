@@ -1,4 +1,4 @@
-import { SerializedThread } from '@linen/types';
+import { SerializedChannel, SerializedThread } from '@linen/types';
 import { scrollToBottom } from '@linen/utilities/scroll';
 import { SerializedUser } from '@linen/types';
 import { SerializedAccount } from '@linen/types';
@@ -47,13 +47,7 @@ export function sendMessageWrapper({
 }: {
   currentUser: SerializedUser | null;
   allUsers: SerializedUser[];
-  currentChannel: {
-    id: string;
-    channelName: string;
-    accountId: string | null;
-    hidden: boolean;
-    default: boolean;
-  };
+  currentChannel: SerializedChannel;
   setUploads: any;
   setThreads: any;
   scrollableRootRef: any;
