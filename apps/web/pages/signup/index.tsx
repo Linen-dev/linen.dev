@@ -12,7 +12,7 @@ export async function getServerSideProps(context: NextPageContext) {
       callbackUrl: context.query.callbackUrl || '/api/router',
       email: context.query.email || '',
       state: context.query.state || null,
-      mode: context.query.mode || null,
+      mode: context.query.mode || 'magic',
     },
   };
 }

@@ -32,7 +32,7 @@ export const JoinContext = ({ children }: Props) => {
   const [communityId, setCommunityId] = useState<string>();
   const [onSignInAction, setOnSignInAction] = useState<onSignInType>();
   const [flow, setFlow] = useState<AuthFlow>('signup');
-  const [mode, setMode] = useState<SignInMode>('creds');
+  const [mode, setMode] = useState<SignInMode>('magic');
 
   const [callbackUrl, setCallbackUrl] = useState<string>();
 
