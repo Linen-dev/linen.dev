@@ -25,7 +25,6 @@ import { processAttachments } from 'services/slack';
 import { serializeMessage } from 'serializers/message';
 import { serializeThread } from 'serializers/thread';
 import { filterMessages, parseMessage } from 'services/slack/sync/parseMessage';
-import { getBotUserId } from 'services/slack/sync/getBotUserId';
 
 export async function processMessageEvent(body: SlackEvent) {
   const event = body.event as SlackMessageEvent;
@@ -109,12 +108,8 @@ async function addMessage(
 
   const mentionIds = mentionUsers.filter(Boolean).map((x) => x!.id);
 
-  if (!event.user && !!event.bot_id) {
-    event.user = await getBotUserId(event.bot_id, accessToken);
-  }
-
   let user = await findOrCreateUserFromUserInfo(
-    event.user,
+    event.bot_id || event.user,
     channel.accountId!,
     accessToken
   );

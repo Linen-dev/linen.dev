@@ -1,10 +1,9 @@
+import memoize from 'utilities/promises/memoize';
 import { getSlackBot } from '../api';
 
-let botCache: Record<string, string> = {};
+const memoizedGetSlackBot = memoize(getSlackBot);
+
 export async function getBotUserId(botId: string, token: string) {
-  if (!botCache[botId]) {
-    const bot = await getSlackBot(botId, token);
-    botCache[botId] = bot.user_id;
-  }
-  return botCache[botId];
+  const bot = await memoizedGetSlackBot(botId, token);
+  return bot.user_id;
 }

@@ -59,7 +59,7 @@ export interface BotInfo {
   name: string;
   updated: number;
   app_id: string;
-  user_id: string;
+  user_id?: string;
   icons: {
     image_36: string;
     image_48: string;

@@ -1,5 +1,4 @@
 jest.mock('services/events');
-jest.mock('services/slack/sync/getBotUserId');
 import { accounts, channels } from '@prisma/client';
 import { v4 } from 'uuid';
 import { create } from '__tests__/factory';

@@ -1,9 +1,9 @@
 import { UserMap } from 'types/partialTypes';
 import prisma from '../client';
 import type { Prisma, users } from '@prisma/client';
-import { UserInfo } from 'types/slackResponses/slackUserInfoInterface';
+import { BotInfo, UserInfo } from 'types/slackResponses/slackUserInfoInterface';
 import { generateRandomWordSlug } from 'utilities/randomWordSlugs';
-import { getSlackUser } from 'services/slack/api';
+import { getSlackBot, getSlackUser } from 'services/slack/api';
 
 export async function findUsersByAccountId(
   accountId: string
@@ -71,11 +71,36 @@ function buildUserFromInfo(
   return param;
 }
 
+function buildUserBotFromInfo(
+  bot: BotInfo,
+  accountId: string
+): Prisma.usersUncheckedCreateInput {
+  const param = {
+    displayName: bot?.name,
+    externalUserId: bot?.id,
+    profileImageUrl:
+      bot?.icons?.image_72 || bot?.icons?.image_48 || bot?.icons?.image_36,
+    accountsId: accountId,
+    isBot: true,
+    isAdmin: false,
+    anonymousAlias: generateRandomWordSlug(),
+  };
+  return param;
+}
+
 export const createUserFromUserInfo = async (
   user: UserInfo,
   accountId: string
 ) => {
   const param = buildUserFromInfo(user, accountId);
+  return await createUser(param);
+};
+
+export const createUserFromBotInfo = async (
+  user: BotInfo,
+  accountId: string
+) => {
+  const param = buildUserBotFromInfo(user, accountId);
   return await createUser(param);
 };
 
@@ -112,9 +137,14 @@ export const findOrCreateUserFromUserInfo = async (
   let user = await findUser(externalUserId, accountId);
   if (user === null) {
     if (!!accessToken) {
-      const slackUser = await getSlackUser(externalUserId, accessToken);
-      //check done above in channel check
-      user = await createUserFromUserInfo(slackUser, accountId!);
+      let slackUser = await getSlackUser(externalUserId, accessToken);
+      if (!!slackUser) {
+        return await createUserFromUserInfo(slackUser, accountId!);
+      }
+      let botUser = await getSlackBot(externalUserId, accessToken);
+      if (!!botUser) {
+        return await createUserFromBotInfo(botUser, accountId!);
+      }
     }
   }
   return user;
