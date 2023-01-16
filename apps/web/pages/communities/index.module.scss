@@ -1,0 +1,114 @@
+@import 'styles/colors.scss';
+
+.header {
+  position: fixed;
+  width: 100%;
+  box-shadow: 0px 2px 8px -4px rgba($color-gray-700, 0.5);
+}
+
+.header .nav {
+  align-items: center;
+  display: flex;
+  height: 64px;
+  justify-content: space-between;
+}
+
+.header .nav ul {
+  display: flex;
+  gap: 1rem;
+
+  li a {
+    border-radius: 9999px;
+    border: 1px solid $color-gray-900;
+    color: $color-gray-900;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 0.5rem 1rem;
+    transition: 0.1s ease-in color, 0.1s ease-in background;
+  }
+
+  li a:hover {
+    background: $color-gray-900;
+    color: $color-white;
+  }
+}
+
+.image {
+  display: block;
+  height: 24px;
+  max-height: 24px;
+}
+
+.main {
+  padding-top: 64px + 64px;
+}
+
+.banner {
+  max-width: 320px;
+}
+
+.banner .h1 {
+  color: $color-gray-900;
+  font-size: 32px;
+  line-height: 48px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.underscore {
+  background-image: linear-gradient(
+    180deg,
+    $color-green-300 0%,
+    $color-green-300 100%
+  );
+  background-position: 0 90%;
+  background-repeat: no-repeat;
+  background-size: 100% 0.5rem;
+  padding: 0;
+  position: relative;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-top: 32px;
+}
+
+.card {
+  align-items: center;
+  border-radius: 8px;
+  box-shadow: 0px 2px 8px -4px rgba($color-gray-700, 0.5);
+  cursor: pointer;
+  display: flex;
+  padding: 1rem;
+  transition: box-shadow 0.1s ease-in;
+  gap: 0.5rem;
+}
+
+.card a {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.card > img {
+  width: 36px;
+  height: 36px;
+}
+
+.card:hover {
+  box-shadow: 0px 4px 24px -4px rgba($color-gray-700, 0.5);
+}
+
+.card h2 {
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 24px;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.card p {
+  font-size: 14px;
+}
