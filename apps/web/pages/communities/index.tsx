@@ -101,7 +101,7 @@ export default function Communities({ communities }: Props) {
                     href={getHomeUrl(community)}
                     className={styles.card}
                     style={{
-                      background: community.brandColor,
+                      background: community.brandColor || '#000',
                       color: pickTextColorBasedOnBgColor(
                         community.brandColor || '#000',
                         'white',
