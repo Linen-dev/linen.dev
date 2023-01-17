@@ -7,16 +7,13 @@ import LinenLogo from 'components/Logo/Linen';
 import YCombinatorLogo from 'components/Logo/YCombinator';
 import { GoCheck } from 'react-icons/go';
 import { BsGithub } from 'react-icons/bs';
-
 import Link from 'next/link';
 import FadeIn from 'components/FadeIn';
 import Head from 'next/head';
 import Footer from 'components/Footer';
 import type { GetServerSidePropsContext } from 'next';
-import { signIn } from 'utilities/auth/react';
 
-const Home = (props: { accounts: Props[] }) => {
-  const accounts = props.accounts;
+const Home = ({ accounts }: Props) => {
   const tiers = [
     {
       name: 'Community Edition',
@@ -195,19 +192,9 @@ const Home = (props: { accounts: Props[] }) => {
 
         <div className="flex flex-col md:grid md:grid-cols-2 lg:grid-cols-3 gap-3 mt-10">
           {accounts.map((a, index) => {
-            let url = a.premium
-              ? 'https://' + a.redirectDomain
-              : a.discordDomain
-              ? 'https://linen.dev/d/' + a.discordDomain
-              : 'https://linen.dev/s/' + a.slackDomain;
-
-            // TODO:remove this once supabase sets up domain to discord.supabase.com
-            if (url.includes('supabase')) {
-              url = 'https://839993398554656828.linen.dev/';
-            }
             return (
               <CommunityCard
-                url={url}
+                url={a.url}
                 communityName={a.name}
                 description="Community"
                 logoUrl={a.logoUrl}
@@ -500,13 +487,12 @@ const CommunityCard = ({
 };
 
 type Props = {
-  logoUrl: string;
-  name: string;
-  brandColor: string;
-  redirectDomain: string;
-  premium: boolean;
-  slackDomain: string;
-  discordDomain: string;
+  accounts: {
+    url: string;
+    name: string;
+    logoUrl: string;
+    brandColor: string;
+  }[];
 };
 
 export async function getServerSideProps({ res }: GetServerSidePropsContext) {
@@ -531,12 +517,31 @@ export async function getServerSideProps({ res }: GetServerSidePropsContext) {
     },
   });
 
-  const goodLookingLogos = accounts.filter((a) => a.logoUrl?.includes('.svg'));
-  // since we use 3 columns we want it to only show numbers divisible by 3
-  const remainders = goodLookingLogos.slice(
-    0,
-    goodLookingLogos.length - (goodLookingLogos.length % 3)
+  const goodLookingLogos = accounts.filter(
+    (a) =>
+      !!a.name && !!a.brandColor && !!a.logoUrl && a.logoUrl.includes('.svg')
   );
+
+  // since we use 3 columns we want it to only show numbers divisible by 3
+  const remainders = goodLookingLogos
+    .slice(0, goodLookingLogos.length - (goodLookingLogos.length % 3))
+    .map((a) => {
+      return {
+        name: a.name,
+        logoUrl: a.logoUrl,
+        brandColor: a.brandColor,
+        url:
+          a.premium && a.redirectDomain
+            ? 'https://' + a.redirectDomain
+            : a.discordDomain
+            ? 'https://linen.dev/d/' + a.discordDomain
+            : 'https://linen.dev/s/' + a.slackDomain,
+        // TODO:remove this once supabase sets up domain to discord.supabase.com
+        ...(a.discordServerId === '839993398554656828' && {
+          url: 'https://839993398554656828.linen.dev',
+        }),
+      };
+    });
 
   res.setHeader(
     'Cache-Control',
