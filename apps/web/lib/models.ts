@@ -63,6 +63,10 @@ export const deleteMessageFromThread = async (
 
 export const deleteMessageWithMentions = async (messageId: string) => {
   return await prisma.$transaction([
+    prisma.messages.update({
+      where: { id: messageId },
+      data: { threads: { update: { messageCount: { decrement: 1 } } } },
+    }),
     prisma.mentions.deleteMany({
       where: {
         messagesId: messageId,
