@@ -132,7 +132,6 @@ describe('slackSync :: saveAllThreads', () => {
 
     const messageInsertBuilder = (index: number) => ({
       create: {
-        blocks: [],
         body: conversationReplies.messages[index].text,
         externalMessageId: conversationReplies.messages[index].ts,
         channelId: internalChannel.id,
@@ -143,7 +142,6 @@ describe('slackSync :: saveAllThreads', () => {
         messageFormat: MessageFormat.SLACK,
       },
       update: {
-        blocks: [],
         body: conversationReplies.messages[index].text,
         externalMessageId: conversationReplies.messages[index].ts,
         channelId: internalChannel.id,

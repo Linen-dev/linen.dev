@@ -94,7 +94,6 @@ async function addMessage(
 
   //TODO: create render text object and save that on creation of message
   // This way we don't have to fetch mentions on every message render
-  //TODO: replace with blocks in elements
   let mentionUserIds = event.text.match(/<@(.*?)>/g) || [];
   let mentionUsersMap = mentionUserIds.map((m) =>
     m.replace('<@', '').replace('>', '')
@@ -116,7 +115,6 @@ async function addMessage(
 
   const param: Prisma.messagesUncheckedCreateInput = {
     body: event.text,
-    blocks: event.blocks as any,
     channelId: channel.id,
     sentAt: tsToSentAt(event.ts),
     threadId: thread?.id,

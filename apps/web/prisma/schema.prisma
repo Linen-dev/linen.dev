@@ -31,7 +31,6 @@ model messages {
   author                   users?                   @relation(fields: [usersId], references: [id])
   usersId                  String?
   textsearchable_index_col Unsupported("tsvector")?
-  blocks                   Json?
   messageFormat            MessageFormat?
   notifications            notifications[]
 

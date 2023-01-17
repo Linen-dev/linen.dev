@@ -108,7 +108,6 @@ describe('slackSync :: fetchAllTopLevelMessages', () => {
 
     const messageUpsertBuilder = (index: number) => ({
       create: {
-        blocks: [],
         body: conversationHistory.messages[index].text,
         channelId: internalChannel.id,
         externalMessageId: conversationHistory.messages[index].ts,
@@ -121,7 +120,6 @@ describe('slackSync :: fetchAllTopLevelMessages', () => {
         messageFormat: MessageFormat.SLACK,
       },
       update: {
-        blocks: [],
         body: conversationHistory.messages[index].text,
         channelId: internalChannel.id,
         externalMessageId: conversationHistory.messages[index].ts,

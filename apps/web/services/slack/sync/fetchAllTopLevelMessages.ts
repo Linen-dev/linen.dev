@@ -44,7 +44,6 @@ async function saveMessagesTransaction(
     const mentionedUsers = getMentionedUsers(text, users);
     const serializedMessage = {
       body: m.text,
-      ...(m.blocks && { blocks: m.blocks }),
       sentAt: tsToSentAt(m.ts),
       channelId,
       externalMessageId: m.ts as string,

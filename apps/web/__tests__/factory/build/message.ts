@@ -11,7 +11,6 @@ export default function createMessage(options?: Partial<messages>): messages {
     threadId: '1',
     channelId: '1',
     usersId: null,
-    blocks: null,
     messageFormat: MessageFormat.LINEN,
     ...options,
   };

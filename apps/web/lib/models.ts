@@ -9,7 +9,6 @@ export const createMessageWithMentions = async (
 ) => {
   const msg = {
     body: message.body,
-    blocks: message.blocks,
     threadId: message.threadId,
     externalMessageId: message.externalMessageId,
     channelId: message.channelId,
