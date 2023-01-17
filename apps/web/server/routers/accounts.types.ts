@@ -1,6 +1,19 @@
 import { z } from 'zod';
 import { AccountType } from '@linen/types';
 
+const regex = {
+  communityName: /^[A-Za-z][A-Za-z0-9-_ ']+/,
+  path: /^[A-Za-z][A-Za-z0-9-_]+/,
+};
+
+export const createAccountSchema = z.object({
+  name: z.string().regex(regex.communityName).optional(),
+  slackDomain: z.string().regex(regex.path).optional(),
+  channels: z.string().regex(regex.path).array().optional(),
+  members: z.string().email().array().optional(),
+});
+export type createAccountType = z.infer<typeof createAccountSchema>;
+
 export const updateAccountSchema = z.object({
   description: z.string().optional(),
   homeUrl: z.string().url().or(z.literal('')).optional(),

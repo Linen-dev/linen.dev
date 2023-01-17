@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import {
   AuthedRequest,
+  AuthedRequestWithBody,
   AuthedRequestWithTenantAndBody,
   Response,
 } from 'server/types';
@@ -9,6 +10,8 @@ import validationMiddleware from 'server/middlewares/validation';
 import jwtMiddleware from 'server/middlewares/jwt';
 import AccountsService from 'services/accounts';
 import {
+  createAccountSchema,
+  createAccountType,
   integrationDiscordSchema,
   integrationDiscordType,
   updateAccountSchema,
@@ -34,9 +37,11 @@ accountsRouter.get(
 accountsRouter.post(
   `${prefix}`,
   jwtMiddleware(),
-  async (req: AuthedRequest, res: Response) => {
+  validationMiddleware(createAccountSchema, 'body'),
+  async (req: AuthedRequestWithBody<createAccountType>, res: Response) => {
     const { status, ...data } = await AccountsService.create({
       email: req.session_user?.email!,
+      ...req.body,
     });
     res.status(status).json(data);
     res.end();

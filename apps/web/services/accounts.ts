@@ -6,17 +6,40 @@ import { getAccountById } from 'lib/models';
 import { AccountType, Roles } from '@linen/types';
 import { eventNewIntegration } from './events/eventNewIntegration';
 import { encrypt } from 'utilities/crypto';
+import { v4 } from 'uuid';
+import { createAccountEvent } from './customerIo/trackEvents';
+import { createInvitation } from './invites';
+import { getCurrentUrl } from 'utilities/domain';
+import { users } from '@prisma/client';
+import { unique } from 'utilities/util';
 
 export default class AccountsService {
-  static async create({ email }: { email: string }) {
+  static async create({
+    email,
+    name,
+    slackDomain,
+    channels = [],
+    emails = [],
+  }: {
+    email: string;
+    name?: string;
+    slackDomain?: string;
+    channels?: string[];
+    emails?: string[];
+  }) {
     if (!email) {
       return { status: 401 };
     }
 
     try {
+      const channelsToInsert = unique(['default', ...(channels || [])]);
+
       const displayName = email.split('@').shift() || email;
-      const { id } = await prisma.accounts.create({
+      const { id, users } = await prisma.accounts.create({
+        select: { id: true, users: true },
         data: {
+          name,
+          slackDomain,
           auths: {
             connect: {
               email,
@@ -38,12 +61,68 @@ export default class AccountsService {
               role: Roles.OWNER,
             },
           },
+          channels: {
+            createMany: {
+              data: channelsToInsert.map((c) => ({
+                ...(c === 'default' && { default: true }),
+                channelName: c,
+                externalChannelId: v4(),
+              })),
+            },
+          },
         },
       });
+
+      try {
+        const ownerUser = users?.shift();
+        if (ownerUser) {
+          await AccountsService.inviteNewMembers({
+            emails,
+            ownerUser,
+            accountId: id,
+          });
+        }
+      } catch (error) {}
+
+      await createAccountEvent(email, id);
+
       return { status: 200, id };
-    } catch (exception) {
-      console.error(exception, { email });
+    } catch (error: any) {
+      if (
+        error.code === 'P2002' &&
+        error.meta.target.length &&
+        error.meta.target[0] === 'slackDomain'
+      ) {
+        return {
+          status: 400,
+          message:
+            'Path domain must be unique, please try again with another path domain',
+        };
+      }
+      console.error(error, { email });
       return { status: 500 };
+    }
+  }
+
+  private static async inviteNewMembers({
+    emails = [],
+    ownerUser,
+    accountId,
+  }: {
+    emails: string[];
+    ownerUser: users;
+    accountId: string;
+  }) {
+    if (emails.length) {
+      for (const email of unique(emails)) {
+        await createInvitation({
+          createdByUserId: ownerUser.id,
+          email,
+          accountId,
+          host: getCurrentUrl(),
+          role: Roles.MEMBER,
+        });
+      }
     }
   }
 

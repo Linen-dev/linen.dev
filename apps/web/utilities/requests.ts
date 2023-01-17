@@ -1,5 +1,6 @@
 import axios from 'axios';
 import type {
+  createAccountType,
   integrationDiscordType,
   updateAccountType,
 } from 'server/routers/accounts.types';
@@ -76,6 +77,10 @@ export const useRequest = (url: string) => {
 };
 
 export const getAccounts = () => get('/api/accounts');
+
+export const createAccount = (
+  props: createAccountType
+): Promise<{ id: string }> => post('/api/accounts', props);
 
 export const updateAccount = (
   props: updateAccountType & { accountId: string }

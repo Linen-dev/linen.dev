@@ -1,4 +1,169 @@
-export { InviteYourTeamPage } from './InviteYourTeamPage';
-export { CreateChannelPage } from './CreateChannelPage';
-export { CreateSubdomainPage } from './CreateSubdomainPage';
-export { CreateCommunityPage } from './CreateCommunityPage';
+import Layout from 'components/layout/CardLayout';
+import { Button, TextInput, Toast, Label } from '@linen/ui';
+import { useState } from 'react';
+import * as api from 'utilities/requests';
+import { createSlug, unique } from 'utilities/util';
+import { Badge } from 'components/Badge';
+
+export default function OnboardingPage() {
+  const [loading, setLoading] = useState(false);
+  const [channels, setChannels] = useState<string[]>([]);
+  const [emails, setEmails] = useState<string[]>([]);
+  const [suggestion, setSuggestion] = useState<string>('');
+
+  async function onSubmit1(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const target = e.target as typeof e.target & {
+        name: { value: string };
+        slackDomain: { value: string };
+      };
+      const name = target.name.value;
+      const slackDomain = target.slackDomain.value;
+
+      const response = await api.createAccount({
+        name,
+        slackDomain,
+        channels,
+        members: emails,
+      });
+      if (response.id) {
+        window.location.href = `/s/${slackDomain}/settings`;
+      }
+    } catch (error: any) {
+      Toast.error(error.message || 'Something went wrong');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function addChannel() {
+    const c = document.getElementById('channel') as HTMLInputElement;
+    if (!!c.value && c.checkValidity()) {
+      setChannels(unique([...channels, createSlug(c.value)]));
+      c.value = '';
+    } else {
+      return c.reportValidity();
+    }
+  }
+
+  async function addEmail() {
+    const e = document.getElementById('email') as HTMLInputElement;
+    if (!!e.value && e.checkValidity()) {
+      setEmails(unique([...emails, e.value]));
+      e.value = '';
+    } else {
+      return e.reportValidity();
+    }
+  }
+
+  function removeChannel(channel: string) {
+    setChannels(channels.filter((c) => c !== channel));
+  }
+
+  function removeEmail(email: string) {
+    setEmails(emails.filter((e) => e !== email));
+  }
+
+  return (
+    <Layout header="What's the name of your community?">
+      <form onSubmit={onSubmit1} id="form">
+        {/* STEP 1 =============== */}
+        <TextInput
+          id="name"
+          placeholder="Community name"
+          required
+          type="text"
+          {...{
+            pattern: "^[A-Za-z][a-zA-Z0-9_- ']+",
+            title:
+              "Community name should only contain letters, space and apostrophe. e.g. Linen's Community",
+          }}
+          onBlur={(e: React.FocusEvent<HTMLInputElement, Element>) =>
+            e.target.value && setSuggestion(createSlug(e.target.value))
+          }
+        />
+        <span className="text-xs">
+          Community name should only contain letters, space and apostrophe. e.g.
+          Linen&apos;s Community
+        </span>
+        <div className="p-4"></div>
+
+        {/* STEP 2 =============== */}
+        <TextInput
+          id="slackDomain"
+          placeholder="E.g. cool-community"
+          label="What should be your community path?"
+          {...{
+            pattern: '^[A-Za-z][A-Za-z0-9_-]+',
+            required: true,
+            title:
+              'Community path should start with letter and could contain letters, underscore, numbers and hyphens. e.g. linen-community',
+          }}
+          value={suggestion}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setSuggestion(e.target.value)
+          }
+        />
+        <span className="text-xs">
+          Community path should start with letter and could contain letters,
+          underscore, numbers and hyphens. This will define the url to access
+          your community. e.g. linen.dev/s/cool-community
+        </span>
+        <div className="p-4"></div>
+
+        {/* STEP 3 =============== */}
+        <Label htmlFor="channelName">Add channels to your workspace</Label>
+        <div className="flex flex-wrap">
+          {channels?.map((channel) => {
+            return (
+              <div className="pr-1 pb-1" key={channel}>
+                <Badge onClose={() => removeChannel(channel)}>{channel}</Badge>
+              </div>
+            );
+          })}
+        </div>
+        <div className="flex">
+          <TextInput
+            id="channel"
+            placeholder="E.g. new-channel"
+            {...{
+              pattern: '^[A-Za-z][A-Za-z0-9_-]+',
+              title:
+                'Channels name should start with letter and could contain letters, underscore, numbers and hyphens. e.g. announcements',
+            }}
+          />
+          <Button onClick={() => addChannel()}>+</Button>
+        </div>
+        <span className="text-xs">
+          Channels name should start with letter and could contain letters,
+          underscore, numbers and hyphens. e.g. announcements
+        </span>
+        <div className="p-4"></div>
+
+        {/* STEP 4 =============== */}
+        <Label htmlFor="email">Invite members from your team</Label>
+        <div className="flex flex-wrap">
+          {emails?.map((email) => {
+            return (
+              <div className="pr-1 pb-1" key={email}>
+                <Badge onClose={() => removeEmail(email)}>{email}</Badge>
+              </div>
+            );
+          })}
+        </div>
+        <div className="flex w-full">
+          <TextInput id="email" type="email" placeholder="name@team.com" />
+          <Button onClick={() => addEmail()}>+</Button>
+        </div>
+        <div className="p-4"></div>
+
+        {/* SUBMIT =============== */}
+        <Button type="submit" block disabled={loading}>
+          {loading ? 'Loading...' : 'Create your new community'}
+        </Button>
+      </form>
+    </Layout>
+  );
+}

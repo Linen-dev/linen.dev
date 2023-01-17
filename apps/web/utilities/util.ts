@@ -12,3 +12,6 @@ export const createSlug = (message: string) => {
   }
   return slug;
 };
+
+export const unique = <T>(arr: T[]): T[] =>
+  arr.filter((el, i, array) => array.indexOf(el) === i);
