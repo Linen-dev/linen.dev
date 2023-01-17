@@ -10,15 +10,17 @@ interface Props {
   required?: boolean;
   disabled?: boolean;
   readOnly?: boolean;
+  onChange?(event: React.ChangeEvent<HTMLInputElement>): void;
 }
 
-export default function TextField({
+export default function ColorField({
   label,
   id,
   defaultValue,
   required,
   disabled = false,
   readOnly = false,
+  onChange,
 }: Props) {
   return (
     <Field>
@@ -29,6 +31,7 @@ export default function TextField({
         required={required}
         disabled={disabled}
         readOnly={readOnly}
+        onChange={onChange}
       />
     </Field>
   );

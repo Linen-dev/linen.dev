@@ -20,7 +20,7 @@ export const updateAccountSchema = z.object({
   docsUrl: z.string().url().or(z.literal('')).optional(),
   logoUrl: z.string().url().or(z.literal('')).optional(),
   logoSquareUrl: z.string().url().or(z.literal('')).optional(),
-  redirectDomain: z.string().url().or(z.literal('')).optional(),
+  redirectDomain: z.string().or(z.literal('')).optional(),
   brandColor: z.string().optional(),
   googleAnalyticsId: z.string().optional(),
   anonymizeUsers: z.boolean().optional(),
