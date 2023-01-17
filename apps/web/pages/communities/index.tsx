@@ -139,6 +139,20 @@ export async function getServerSideProps() {
   const communities = await prisma.accounts.findMany({
     where: {
       type: AccountType.PUBLIC,
+      channels: {
+        some: {
+          threads: {
+            some: {
+              messages: {
+                some: {},
+              },
+            },
+          },
+        },
+      },
+      users: {
+        some: {},
+      },
       NOT: {
         name: null,
       },
