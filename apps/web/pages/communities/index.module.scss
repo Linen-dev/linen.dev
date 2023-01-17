@@ -16,7 +16,7 @@
 
 .header .nav ul {
   display: flex;
-  gap: 1rem;
+  gap: 0.5rem;
 
   li a {
     border-radius: 9999px;
@@ -71,9 +71,27 @@
 
 .cards {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: 1fr;
   gap: 1rem;
   margin-top: 32px;
+}
+
+@media (min-width: 768px) {
+  .cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .cards {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1280px) {
+  .cards {
+    grid-template-columns: repeat(4, 1fr);
+  }
 }
 
 .card {
