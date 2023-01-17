@@ -7,6 +7,7 @@ interface Props {
   required?: boolean;
   disabled?: boolean;
   readOnly?: boolean;
+  onChange?(event: React.ChangeEvent<HTMLInputElement>): void;
 }
 
 function ColorInput({
@@ -15,6 +16,7 @@ function ColorInput({
   required,
   disabled = false,
   readOnly = false,
+  onChange,
 }: Props) {
   return (
     <input
@@ -25,6 +27,7 @@ function ColorInput({
       required={required}
       disabled={disabled}
       readOnly={readOnly}
+      onChange={onChange}
     />
   );
 }
