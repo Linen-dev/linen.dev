@@ -66,6 +66,8 @@ export type ConversationHistoryMessage = {
     text: string;
     footer: string;
   }[];
+  message?: ConversationHistoryMessage;
+  previous_message?: ConversationHistoryMessage;
 };
 
 export interface MessageReaction {

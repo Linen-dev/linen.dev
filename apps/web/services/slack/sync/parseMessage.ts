@@ -36,13 +36,29 @@ export function filterMessages<
   if (message.subtype && message.subtype === 'bot_message') {
     return isNotLinenBot(message);
   }
+  if (!!message.app_id && !!message.message?.app_id) {
+    return isNotLinenBot(message);
+  }
+  if (
+    message.subtype &&
+    message.subtype === 'message_changed' &&
+    message.message &&
+    !!message.message.app_id
+  ) {
+    return isNotLinenBot(message);
+  }
   return true;
 }
 
 function isNotLinenBot<
   T extends SlackMessageEvent | ConversationHistoryMessage
 >(message: T) {
-  if (!message.app_id) return true;
-  if (!SlackAppIds.includes(message.app_id)) return true;
+  if (message.message) {
+    if (!message.message.app_id) return true;
+    if (!SlackAppIds.includes(message.message.app_id)) return true;
+  } else {
+    if (!message.app_id) return true;
+    if (!SlackAppIds.includes(message.app_id)) return true;
+  }
   return false;
 }
