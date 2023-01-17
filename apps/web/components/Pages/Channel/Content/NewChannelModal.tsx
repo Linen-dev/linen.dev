@@ -5,6 +5,7 @@ import { Button, TextInput, Toast } from '@linen/ui';
 import { useSession } from 'utilities/auth/react';
 import { useLinkContext } from '@linen/contexts/Link';
 import CustomRouterPush from 'components/Link/CustomRouterPush';
+import { patterns } from 'utilities/util';
 
 export default function NewChannelModal({
   communityId,
@@ -129,9 +130,9 @@ export default function NewChannelModal({
                           required
                           placeholder="e.g. javascript"
                           {...{
-                            pattern: '[a-z-]+',
+                            pattern: patterns.channelName.source,
                             title:
-                              'Channels name should only contain lower case letters and hyphens. e.g. javascript',
+                              'Channels name should start with letter and could contain letters, underscore, numbers and hyphens. e.g. announcements',
                           }}
                         />
 

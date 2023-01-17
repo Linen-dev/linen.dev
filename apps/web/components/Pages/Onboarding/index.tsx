@@ -2,7 +2,7 @@ import Layout from 'components/layout/CardLayout';
 import { Button, TextInput, Toast, Label } from '@linen/ui';
 import { useState } from 'react';
 import * as api from 'utilities/requests';
-import { createSlug, unique } from 'utilities/util';
+import { createSlug, patterns, unique } from 'utilities/util';
 import { Badge } from 'components/Badge';
 
 export default function OnboardingPage() {
@@ -41,7 +41,7 @@ export default function OnboardingPage() {
   async function addChannel() {
     const c = document.getElementById('channel') as HTMLInputElement;
     if (!!c.value && c.checkValidity()) {
-      setChannels(unique([...channels, createSlug(c.value)]));
+      setChannels(unique([...channels, c.value]));
       c.value = '';
     } else {
       return c.reportValidity();
@@ -76,7 +76,7 @@ export default function OnboardingPage() {
           required
           type="text"
           {...{
-            pattern: "^[A-Za-z][a-zA-Z0-9_- ']+",
+            pattern: patterns.communityName.source,
             title:
               "Community name should only contain letters, space and apostrophe. e.g. Linen's Community",
           }}
@@ -96,7 +96,7 @@ export default function OnboardingPage() {
           placeholder="E.g. cool-community"
           label="What should be your community path?"
           {...{
-            pattern: '^[A-Za-z][A-Za-z0-9_-]+',
+            pattern: patterns.communityPath.source,
             required: true,
             title:
               'Community path should start with letter and could contain letters, underscore, numbers and hyphens. e.g. linen-community',
@@ -129,7 +129,7 @@ export default function OnboardingPage() {
             id="channel"
             placeholder="E.g. new-channel"
             {...{
-              pattern: '^[A-Za-z][A-Za-z0-9_-]+',
+              pattern: patterns.channelName.source,
               title:
                 'Channels name should start with letter and could contain letters, underscore, numbers and hyphens. e.g. announcements',
             }}

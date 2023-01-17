@@ -2,9 +2,10 @@ import { NextApiRequest, NextApiResponse } from 'next/types';
 import { findOrCreateChannel } from 'lib/models';
 import { v4 } from 'uuid';
 import PermissionsService from 'services/permissions';
-import { createSlug } from 'utilities/util';
+import { patterns } from 'utilities/util';
 import ChannelsService from 'services/channels';
 import prisma from 'client';
+import { z } from 'zod';
 
 type Props = {
   communityId?: string;
@@ -52,11 +53,17 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
     const { channelName, communityId, slackChannelId }: PostProps = body;
 
-    const slug = createSlug(channelName);
+    if (
+      !z.string().regex(patterns.channelName).safeParse(channelName).success
+    ) {
+      return res.status(400).json({
+        error: 'Channel must have the pattern: ' + patterns.channelName.source,
+      });
+    }
 
     const result = await prisma.channels.findFirst({
       where: {
-        channelName: slug,
+        channelName,
         accountId: communityId,
       },
     });
@@ -69,7 +76,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
     const channel = await findOrCreateChannel({
       externalChannelId: slackChannelId || v4(),
-      channelName: slug,
+      channelName,
       accountId: communityId,
     });
     return res.status(200).json(channel);
