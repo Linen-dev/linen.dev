@@ -94,6 +94,7 @@ export default function Communities({ communities }: Props) {
                 return community.premium ? -1 : 1;
               })
               .map((community, index) => {
+                const brandColor = community.brandColor || '#ffffff';
                 return (
                   <Link
                     key={
@@ -104,9 +105,9 @@ export default function Communities({ communities }: Props) {
                     href={getHomeUrl(community)}
                     className={styles.card}
                     style={{
-                      background: community.brandColor || '#fff',
+                      background: brandColor,
                       color: pickTextColorBasedOnBgColor(
-                        community.brandColor || '#fff',
+                        brandColor,
                         'white',
                         'black'
                       ),
