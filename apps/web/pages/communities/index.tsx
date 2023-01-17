@@ -60,7 +60,7 @@ export default function Communities({ communities }: Props) {
             {communities
               .filter((community) => {
                 // naive way to filter out test communities created by users
-                if (community.name?.toLowerCase()?.startsWith('test')) {
+                if (community.name?.toLowerCase()?.includes('test')) {
                   return false;
                 }
 
@@ -90,6 +90,9 @@ export default function Communities({ communities }: Props) {
                 }
                 return 1;
               })
+              .sort((community) => {
+                return community.premium ? -1 : 1;
+              })
               .map((community, index) => {
                 return (
                   <Link
@@ -101,9 +104,9 @@ export default function Communities({ communities }: Props) {
                     href={getHomeUrl(community)}
                     className={styles.card}
                     style={{
-                      background: community.brandColor || '#000',
+                      background: community.brandColor || '#fff',
                       color: pickTextColorBasedOnBgColor(
-                        community.brandColor || '#000',
+                        community.brandColor || '#fff',
                         'white',
                         'black'
                       ),
