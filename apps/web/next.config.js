@@ -7,6 +7,7 @@
 const nextConfig = {
   images: {
     domains: [
+      'a.slack-edge.com',
       'avatars.slack-edge.com',
       'cdn.discordapp.com',
       'avatars.githubusercontent.com',
