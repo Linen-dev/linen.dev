@@ -20,6 +20,7 @@ import {
   FiUsers,
   FiChevronDown,
   FiChevronUp,
+  FiFileText,
 } from 'react-icons/fi';
 import { useRouter } from 'next/router';
 import usePath from 'hooks/path';
@@ -68,6 +69,7 @@ export default function DesktopNavBar({
     feed: usePath({ href: '/feed' }),
     metrics: usePath({ href: '/metrics' }),
     settings: usePath({ href: '/settings' }),
+    configurations: usePath({ href: '/configurations' }),
     branding: usePath({ href: '/branding' }),
     members: usePath({ href: '/members' }),
     plans: usePath({ href: '/plans' }),
@@ -76,6 +78,7 @@ export default function DesktopNavBar({
   const isSettingsPath = () => {
     return [
       paths.settings,
+      paths.configurations,
       paths.branding,
       paths.members,
       paths.plans,
@@ -233,6 +236,11 @@ export default function DesktopNavBar({
             <Link href="/settings">
               <Nav.Item active={paths.settings === router.asPath}>
                 <FiSettings /> Integrations
+              </Nav.Item>
+            </Link>
+            <Link href="/configurations">
+              <Nav.Item active={paths.configurations === router.asPath}>
+                <FiFileText /> Configurations
               </Nav.Item>
             </Link>
             <Link href="/branding">

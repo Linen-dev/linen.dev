@@ -10,8 +10,6 @@ import SlackImportRow from './SlackImportRow';
 import AnonymizeUsersRow from './AnonymizeUsersRow';
 import DefaultChannelRow from './DefaultChannelRow';
 import ChannelVisibilityRow from './ChannelVisibilityRow';
-import UrlsRow from './UrlsRow';
-import CommunityTypeRow from './CommunityTypeRow';
 import debounce from '@linen/utilities/debounce';
 import * as api from 'utilities/requests';
 
@@ -57,16 +55,6 @@ export default function Content({ channels, currentCommunity }: Props) {
       <ChannelVisibilityRow
         channels={channels}
         currentCommunity={currentCommunity}
-      />
-      <hr className="my-3" />
-      <UrlsRow currentCommunity={currentCommunity} />
-      <hr className="my-3" />
-      <CommunityTypeRow
-        type={currentCommunity.type}
-        disabled={!currentCommunity.premium}
-        onChange={(type: AccountType) => {
-          updateAccount({ communityId: currentCommunity.id, type });
-        }}
       />
     </div>
   );
