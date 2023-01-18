@@ -4,11 +4,11 @@ import Header from './Header';
 import TextField from 'components/TextField';
 import ColorField from 'components/ColorField';
 import LogoField from './LogoField';
-import { Button, Label } from '@linen/ui';
+import { Label } from '@linen/ui';
 import Table, { Thead, Tbody, Th, Td } from 'components/Table';
 import { stripProtocol } from 'utilities/url';
 import classNames from 'classnames';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Toast } from '@linen/ui';
 import {
   SerializedAccount,
@@ -79,13 +79,15 @@ interface Props {
 export default function Branding({
   channels,
   communities,
-  currentCommunity,
+  currentCommunity: initialCommunity,
   permissions,
   settings,
   isSubDomainRouting,
 }: Props) {
   const [records, setRecords] = useState<DNSRecord[]>();
   const router = useRouter();
+  const [currentCommunity, setCurrentCommunity] =
+    useState<SerializedAccount>(initialCommunity);
 
   useEffect(() => {
     let mounted = true;
@@ -234,7 +236,15 @@ export default function Branding({
                 required
                 readOnly={!currentCommunity.premium}
                 disabled={!currentCommunity.premium}
-                onChange={() => updateAccount()}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                  setCurrentCommunity((community) => {
+                    return {
+                      ...community,
+                      brandColor: event.target.value,
+                    };
+                  });
+                  updateAccount();
+                }}
               />
             </PremiumCard>
             <hr className="my-5" />
