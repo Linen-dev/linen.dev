@@ -1,5 +1,4 @@
 import { accounts } from '@prisma/client';
-import { links } from '../../constants/examples';
 import { CommunityType, Settings } from '@linen/types';
 import { appendProtocol } from 'utilities/url';
 import { getLinenUrl } from 'utilities/domain';
@@ -69,9 +68,6 @@ export function getCommunityUrl(
 }
 
 export function serialize(account: accounts): Settings {
-  const defaultSettings =
-    links.find(({ accountId }) => accountId === account.id) || links[0];
-
   const communityType = getCommunityType(account);
 
   return {
@@ -82,10 +78,12 @@ export function serialize(account: accounts): Settings {
     communityInviteUrl: buildInviteUrl(account, communityType),
     communityName: getCommunityName(account),
     name: account.name,
-    brandColor: account.brandColor || defaultSettings.brandColor,
-    homeUrl: account.homeUrl || defaultSettings.homeUrl,
-    docsUrl: account.docsUrl || defaultSettings.docsUrl,
-    logoUrl: account.logoUrl || defaultSettings.logoUrl,
+    brandColor: account.brandColor || '#111827',
+    homeUrl: account.homeUrl || 'https://linen.dev',
+    docsUrl: account.docsUrl || 'https://linen.dev',
+    logoUrl:
+      account.logoUrl ||
+      'https://linen-assets.s3.amazonaws.com/linen-white-logo.svg',
     ...(account.premium &&
       account.googleAnalyticsId && {
         googleAnalyticsId: account.googleAnalyticsId,

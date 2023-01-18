@@ -74,6 +74,7 @@ export default function PlansPage({
     <PageLayout
       channels={channels}
       communities={communities}
+      currentCommunity={currentCommunity}
       settings={settings}
       permissions={permissions}
       isSubDomainRouting={isSubDomainRouting}

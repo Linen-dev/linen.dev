@@ -100,6 +100,7 @@ export default function Feed({
     <PageLayout
       channels={channels}
       communities={communities}
+      currentCommunity={currentCommunity}
       isSubDomainRouting={isSubDomainRouting}
       permissions={permissions}
       settings={settings}

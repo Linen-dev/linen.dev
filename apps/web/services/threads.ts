@@ -134,7 +134,7 @@ export async function threadGetServerSideProps(
         thread: serializeThread(thread),
         externalThreadId: thread.externalThreadId,
         channelId: currentChannel.id,
-        currentCommunity: serializeAccount(account),
+        currentCommunity: serializeAccount(account) as SerializedAccount,
         channel: currentChannel,
         communities: communities.map(serializeAccount) as SerializedAccount[],
         authors: authors,

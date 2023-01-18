@@ -14,10 +14,12 @@ describe('Header', () => {
       const settings = build('settings');
       const user = build('user');
       const permissions = build('permissions', { is_member: true, user });
+      const currentCommunity = build('account');
       const { container } = render(
         <Header
           settings={settings}
           channels={[]}
+          currentCommunity={currentCommunity}
           isSubDomainRouting={false}
           permissions={permissions}
           onProfileChange={jest.fn()}
@@ -34,10 +36,12 @@ describe('Header', () => {
       const settings = build('settings');
       const user = build('user');
       const permissions = build('permissions', { is_member: false, user });
+      const currentCommunity = build('account');
       const { container } = render(
         <Header
           settings={settings}
           channels={[]}
+          currentCommunity={currentCommunity}
           isSubDomainRouting={false}
           permissions={permissions}
           onProfileChange={jest.fn()}

@@ -57,7 +57,7 @@ export default function ChannelVisibilityRow({
     return fetch('/api/channels', {
       method: 'PUT',
       body: JSON.stringify({
-        communityId: currentCommunity?.id,
+        communityId: currentCommunity.id,
         channels: [value],
       }),
     })

@@ -36,6 +36,7 @@ export default function Metrics({
     <PageLayout
       channels={channels}
       communities={communities}
+      currentCommunity={currentCommunity}
       permissions={permissions}
       settings={settings}
       isSubDomainRouting={false}

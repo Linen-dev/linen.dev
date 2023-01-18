@@ -140,6 +140,7 @@ export default function Branding({
     <PageLayout
       channels={channels}
       communities={communities}
+      currentCommunity={currentCommunity}
       permissions={permissions}
       settings={settings}
       isSubDomainRouting={isSubDomainRouting}
