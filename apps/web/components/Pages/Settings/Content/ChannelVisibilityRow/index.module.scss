@@ -1,0 +1,44 @@
+@import 'styles/colors.scss';
+
+.toggles {
+  display: grid;
+  grid-template-columns: 1fr;
+  margin-top: 0.5rem;
+}
+
+@media (min-width: 768px) {
+  .toggles {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1440px) {
+  .toggles {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.toggle {
+  align-items: center;
+  display: flex;
+  margin-bottom: 0.25rem;
+}
+
+.toggle:last-child {
+  margin-bottom: 0;
+}
+
+.text {
+  font-size: 14px;
+  margin-left: 0.5rem;
+  font-weight: 500;
+}
+
+.enabled {
+  color: $color-gray-900;
+}
+
+.disabled {
+  color: $color-gray-400;
+  text-decoration: line-through;
+}
