@@ -78,7 +78,7 @@ interface Props {
 
 export default function Branding({
   channels,
-  communities,
+  communities: initialCommunities,
   currentCommunity: initialCommunity,
   permissions,
   settings,
@@ -88,6 +88,8 @@ export default function Branding({
   const router = useRouter();
   const [currentCommunity, setCurrentCommunity] =
     useState<SerializedAccount>(initialCommunity);
+  const [communities, setCommunities] =
+    useState<SerializedAccount[]>(initialCommunities);
 
   useEffect(() => {
     let mounted = true;
@@ -237,11 +239,28 @@ export default function Branding({
                 readOnly={!currentCommunity.premium}
                 disabled={!currentCommunity.premium}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                  const brandColor = event.target.value;
                   setCurrentCommunity((community) => {
                     return {
                       ...community,
-                      brandColor: event.target.value,
+                      brandColor,
                     };
+                  });
+                  setCommunities((communities) => {
+                    if (!communities || communities.length === 0) {
+                      return communities;
+                    }
+                    return [
+                      ...communities.map((community) => {
+                        if (community.id === currentCommunity.id) {
+                          return {
+                            ...community,
+                            brandColor,
+                          };
+                        }
+                        return community;
+                      }),
+                    ];
                   });
                   updateAccount();
                 }}
