@@ -6,7 +6,7 @@ import SearchBar from 'components/search/SearchBar';
 import JoinButton from 'components/JoinButton';
 import { addHttpsToUrl } from 'utilities/url';
 import { pickTextColorBasedOnBgColor } from 'utilities/colors';
-import { Permissions } from '@linen/types';
+import { Permissions, SerializedAccount } from '@linen/types';
 import { SerializedChannel, Settings } from '@linen/types';
 import UserAvatar from './UserAvatar';
 import { Mode } from '@linen/hooks/mode';
@@ -18,6 +18,7 @@ interface Props {
   settings: Settings;
   channels: SerializedChannel[];
   channelName?: string;
+  currentCommunity: SerializedAccount;
   isSubDomainRouting: boolean;
   permissions: Permissions;
   mode: Mode;
@@ -33,13 +34,14 @@ export default function Header({
   settings,
   channels,
   channelName,
+  currentCommunity,
   isSubDomainRouting,
   permissions,
   onProfileChange,
   onUpload,
   mode,
 }: Props) {
-  const { brandColor, communityName } = settings;
+  const brandColor = currentCommunity.brandColor || '#111827';
   const homeUrl = addHttpsToUrl(settings.homeUrl);
   const docsUrl = addHttpsToUrl(settings.docsUrl);
   const logoUrl = addHttpsToUrl(settings.logoUrl);
@@ -80,7 +82,7 @@ export default function Header({
           <SearchBar
             borderColor={borderColor}
             channels={channels}
-            communityName={communityName}
+            communityName={settings.communityName}
             isSubDomainRouting={isSubDomainRouting}
             communityType={settings.communityType}
           />

@@ -46,7 +46,7 @@ interface Props {
   channelName: string;
   channels?: SerializedChannel[];
   currentChannel: SerializedChannel;
-  currentCommunity: SerializedAccount | null;
+  currentCommunity: SerializedAccount;
   threads: SerializedThread[];
   pinnedThreads: SerializedThread[];
   isSubDomainRouting: boolean;

@@ -17,7 +17,7 @@ import {
 interface Props {
   thread: SerializedThread;
   currentChannel: SerializedChannel;
-  currentCommunity: SerializedAccount | null;
+  currentCommunity: SerializedAccount;
   threadUrl: string | null;
   isSubDomainRouting: boolean;
   settings: Settings;

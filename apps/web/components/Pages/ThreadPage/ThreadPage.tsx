@@ -35,6 +35,7 @@ export function ThreadPage({
       currentChannel={currentChannel}
       channels={channels}
       communities={communities}
+      currentCommunity={currentCommunity}
       settings={settings}
       isSubDomainRouting={isSubDomainRouting}
       permissions={permissions}

@@ -21,6 +21,7 @@ interface Props {
   seo?: SeoProps;
   children: React.ReactNode;
   currentChannel?: SerializedChannel;
+  currentCommunity: SerializedAccount;
   channels: SerializedChannel[];
   communities: SerializedAccount[];
   settings: Settings;
@@ -47,6 +48,7 @@ function PageLayout({
   channels: initialChannels,
   communities,
   currentChannel,
+  currentCommunity,
   settings,
   isSubDomainRouting,
   permissions,
@@ -94,6 +96,7 @@ function PageLayout({
           mode={mode}
           channels={channels}
           channelName={currentChannel?.channelName}
+          currentCommunity={currentCommunity}
           settings={settings}
           permissions={permissions}
           isSubDomainRouting={isSubDomainRouting}

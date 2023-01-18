@@ -38,6 +38,7 @@ export default function SettingsPage({
     <PageLayout
       channels={channels}
       communities={communities}
+      currentCommunity={currentCommunity}
       permissions={permissions}
       settings={settings}
       isSubDomainRouting={isSubDomainRouting}

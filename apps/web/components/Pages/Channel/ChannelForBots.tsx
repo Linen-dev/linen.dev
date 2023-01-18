@@ -12,6 +12,7 @@ export default function ChannelForBots({
   settings,
   isSubDomainRouting,
   currentChannel,
+  currentCommunity,
   channelName,
   pathCursor,
   channels,
@@ -34,6 +35,7 @@ export default function ChannelForBots({
       communities={[]}
       settings={settings}
       isSubDomainRouting={isSubDomainRouting}
+      currentCommunity={currentCommunity}
       permissions={permissions}
       onDrop={() => {}}
     >

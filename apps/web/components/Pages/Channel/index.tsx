@@ -32,7 +32,7 @@ export interface ChannelProps {
   channels: SerializedChannel[];
   communities: SerializedAccount[];
   currentChannel: SerializedChannel;
-  currentCommunity: SerializedAccount | null;
+  currentCommunity: SerializedAccount;
   threads: SerializedThread[];
   pinnedThreads: SerializedThread[];
   isSubDomainRouting: boolean;
@@ -92,7 +92,7 @@ export default function Channel(props: ChannelProps) {
 
   useEffect(() => {
     storage.set('pages.last', {
-      communityId: currentCommunity?.id,
+      communityId: currentCommunity.id,
       page: 'channel',
       channelId: currentChannel.id,
     });
@@ -286,7 +286,7 @@ export default function Channel(props: ChannelProps) {
     setThreads(addReaction);
     setPinnedThreads(addReaction);
     postReaction({
-      communityId: currentCommunity?.id,
+      communityId: currentCommunity.id,
       messageId,
       type,
       action: active ? 'decrement' : 'increment',
@@ -328,7 +328,7 @@ export default function Channel(props: ChannelProps) {
     return mergeThreadsRequest({
       from: source.id,
       to: target.id,
-      communityId: currentCommunity?.id,
+      communityId: currentCommunity.id,
     });
   };
 
@@ -377,7 +377,7 @@ export default function Channel(props: ChannelProps) {
     return moveMessageToThreadRequest({
       messageId,
       threadId,
-      communityId: currentCommunity?.id,
+      communityId: currentCommunity.id,
     });
   };
 
@@ -400,7 +400,7 @@ export default function Channel(props: ChannelProps) {
     return moveThreadToChannelRequest({
       threadId,
       channelId,
-      communityId: currentCommunity?.id,
+      communityId: currentCommunity.id,
     });
   };
 
@@ -454,7 +454,7 @@ export default function Channel(props: ChannelProps) {
     return moveMessageToChannelRequest({
       messageId,
       channelId,
-      communityId: currentCommunity?.id,
+      communityId: currentCommunity.id,
     }).then((thread: SerializedThread) => {
       setThreads((threads) => {
         if (imitation) {
@@ -591,6 +591,7 @@ export default function Channel(props: ChannelProps) {
       }}
       channels={channels}
       communities={communities}
+      currentCommunity={currentCommunity}
       settings={settings}
       isSubDomainRouting={isSubDomainRouting}
       permissions={permissions}

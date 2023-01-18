@@ -51,7 +51,7 @@ export function sendMessageWrapper({
   setUploads: any;
   setThreads: any;
   scrollableRootRef: any;
-  currentCommunity: SerializedAccount | null;
+  currentCommunity: SerializedAccount;
   startSignUp?: StartSignUpFn;
 }) {
   return async ({
@@ -65,7 +65,7 @@ export function sendMessageWrapper({
   }) => {
     if (!currentUser) {
       startSignUp?.({
-        communityId: currentCommunity?.id!,
+        communityId: currentCommunity.id,
         onSignIn: {
           run: sendMessageWrapper,
           init: {
@@ -101,7 +101,7 @@ export function sendMessageWrapper({
     return debouncedSendChannelMessage({
       message,
       files,
-      communityId: currentCommunity?.id,
+      communityId: currentCommunity.id,
       channelId,
       imitationId: imitation.id,
     })

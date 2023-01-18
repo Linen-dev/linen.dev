@@ -67,7 +67,7 @@ export function sendMessageWrapper({
   }) => {
     if (!currentUser) {
       startSignUp?.({
-        communityId: currentCommunity?.id!,
+        communityId: currentCommunity.id,
         onSignIn: {
           run: sendMessageWrapper,
           init: {
@@ -116,7 +116,7 @@ export function sendMessageWrapper({
     return debouncedSendMessage({
       message,
       files,
-      communityId: currentCommunity?.id,
+      communityId: currentCommunity.id,
       channelId,
       threadId,
       imitationId: imitation.id,

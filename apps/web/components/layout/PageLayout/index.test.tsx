@@ -10,6 +10,7 @@ describe('PageLayout', () => {
     const settings = build('settings', {
       homeUrl: 'https://foo.com',
     });
+    const community = build('account');
     const { baseElement } = render(
       <SessionProvider>
         <PageLayout
@@ -17,6 +18,7 @@ describe('PageLayout', () => {
           channels={channels}
           communities={[]}
           currentChannel={channels[0]}
+          currentCommunity={community}
           isSubDomainRouting
           permissions={build('permissions')}
         >

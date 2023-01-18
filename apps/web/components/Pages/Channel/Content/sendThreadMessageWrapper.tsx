@@ -52,7 +52,7 @@ export function sendThreadMessageWrapper({
   setUploads: any;
   setThreads: React.Dispatch<React.SetStateAction<SerializedThread[]>>;
   currentThreadId: string | undefined;
-  currentCommunity: SerializedAccount | null;
+  currentCommunity: SerializedAccount;
   startSignUp?: StartSignUpFn;
 }) {
   return async ({
@@ -68,7 +68,7 @@ export function sendThreadMessageWrapper({
   }) => {
     if (!currentUser) {
       startSignUp?.({
-        communityId: currentCommunity?.id!,
+        communityId: currentCommunity.id,
         onSignIn: {
           run: sendThreadMessageWrapper,
           init: {
@@ -108,7 +108,7 @@ export function sendThreadMessageWrapper({
 
     return debouncedSendThreadMessage({
       message,
-      communityId: currentCommunity?.id,
+      communityId: currentCommunity.id,
       files,
       channelId,
       threadId,

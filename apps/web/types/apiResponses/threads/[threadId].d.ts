@@ -25,7 +25,7 @@ export type ThreadById = {
   externalThreadId: string | null;
   channelId: string;
   currentChannel: SerializedChannel;
-  currentCommunity: SerializedAccount | null;
+  currentCommunity: SerializedAccount;
   channel: SerializedChannel;
   authors: users[];
   channels: SerializedChannel[];
