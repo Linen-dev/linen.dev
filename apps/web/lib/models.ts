@@ -219,22 +219,43 @@ export const createManyChannel = async (
   });
 };
 
-export const findOrCreateChannel = async (channels: {
-  externalChannelId: string;
-  channelName: string;
+export const findOrCreateChannel = async ({
+  accountId,
+  channelName,
+  externalChannelId,
+  hidden,
+}: {
   accountId: string;
+  channelName: string;
+  externalChannelId: string;
   hidden?: boolean;
 }) => {
-  return await prisma.channels.upsert({
+  const channel = await prisma.channels.findFirst({
     where: {
-      externalChannelId: channels.externalChannelId,
+      accountId,
+      OR: [{ externalChannelId }, { channelName }],
     },
-    update: {},
-    create: {
-      accountId: channels.accountId,
-      channelName: channels.channelName,
-      externalChannelId: channels.externalChannelId,
-      hidden: channels.hidden,
+  });
+
+  if (channel) {
+    if (channel.externalChannelId !== externalChannelId) {
+      return await prisma.channels.update({
+        where: { id: channel.id },
+        data: {
+          externalChannelId,
+          hidden,
+        },
+      });
+    }
+    return channel;
+  }
+
+  return await prisma.channels.create({
+    data: {
+      accountId,
+      channelName,
+      externalChannelId,
+      hidden,
     },
   });
 };
