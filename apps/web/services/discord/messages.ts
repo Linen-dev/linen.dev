@@ -1,96 +1,189 @@
 import prisma from 'client';
 import { channels, threads, users } from '@prisma/client';
 import { MessageFormat } from '@linen/types';
-import { DiscordMessage } from 'types/discordResponses/discordMessagesInterface';
+import { DiscordMessage } from 'types/discord';
 import { findUsers, getMentions, getUsersInMessages } from './users';
-import { updateLastReplyAt } from './threads';
+import { CrawlType, LIMIT } from './constrains';
+import { createSlug } from 'utilities/util';
+import { parseDiscordSentAt } from 'utilities/sentAt';
+import ChannelsService from 'services/channels';
+import { upsertThreadByExternalId } from 'lib/threads';
+import DiscordApi from './api';
+import to from 'utilities/await-to-js';
 
-type ProcessMessageType = Record<
-  number,
-  (
-    channel: channels,
-    message: DiscordMessage,
-    users: users[],
-    thread?: threads
-  ) => {
-    body: string;
-    sentAt: string;
-    externalMessageId: string;
-    threadId?: string;
-    channelId: string;
-    authorId: string;
-    mentions?: { usersId: string }[];
+export async function getMessages({
+  channel,
+  onboardingTimestamp,
+  crawlType,
+  token,
+}: {
+  channel: channels;
+  onboardingTimestamp: Date;
+  crawlType: CrawlType;
+  token: string;
+}) {
+  console.log('getMessages >> started');
+  const { cursor } = await crawlChannel({
+    channel,
+    onboardingTimestamp,
+    crawlType,
+    token,
+  });
+
+  // if everything is fine, persist cursor
+  if (cursor) {
+    await ChannelsService.updateCursor(channel.id, cursor);
   }
->;
+  console.log('getMessages >> finished');
+}
 
-const processMessageTypeMap: ProcessMessageType = {
-  0: processMessageType0,
-  18: processMessageType18,
-  21: processMessageType21,
-};
+async function crawlChannel({
+  channel,
+  onboardingTimestamp,
+  crawlType,
+  token,
+}: {
+  channel: channels;
+  onboardingTimestamp: Date;
+  crawlType: CrawlType;
+  token: string;
+}): Promise<{
+  channelMessages?: DiscordMessage[];
+  cursor?: string;
+}> {
+  const channelMessages: DiscordMessage[] = [];
 
-function processMessageType0(
-  channel: channels,
-  message: DiscordMessage,
-  users: users[],
-  thread?: threads
-) {
-  const mentions = getMentions(message.mentions, users);
-  const authorId = users.find(
-    (user) => user.externalUserId === message.author.id
-  )?.id as string;
+  let hasMore = true;
+  // before will have the last messageId from request to be used on next pagination request
+  let before;
+  // cursor/after should be the first messageId receive from the last run
+  let after = channel.externalPageCursor || undefined;
+  while (hasMore) {
+    const query = {
+      // before should have priority because the API always return messages sort by timestamp desc
+      // so in the second run we will have a cursor assign, we should use it to get messages from the cursorId forward
+      // but if there is more than the limit, we will need to paginate backwards, so in case of hasMore
+      // we will need to use the "before" parameter, that has the oldest message from the latest batch
+      ...(before ? { before } : { after }),
+    };
+    // if query has after, it means we should clean up the after variable to receive a new cursor
+    if ('after' in query) {
+      after = undefined;
+    }
+    // messages are return in desc timestamp order
+    const [err, response] = await to(
+      DiscordApi.getMessages({
+        limit: LIMIT,
+        externalId: channel.externalChannelId!,
+        query,
+        token,
+      })
+    );
+    if (err) {
+      console.warn('crawlChannel failure:', err);
+      break;
+    }
+    const messages = response as DiscordMessage[];
+    // if there is less than the limit, means that there is no more messages
+    if (messages.length < LIMIT) {
+      hasMore = false;
+    }
+    for (const message of messages) {
+      if (!after) {
+        after = message.id;
+      }
+      // if we found messages that has timestamp lower then the onboarding, we stop
+      if (onboardingTimestamp > new Date(message.timestamp)) {
+        hasMore = false;
+        break;
+      } else {
+        // we know that messages arrives sort by timestamp desc, latest will always be the lowest
+        before = message.id;
+      }
+      channelMessages.push(message);
+      if (channelMessages.length >= 400) {
+        const messagesChunk = channelMessages.splice(0, channelMessages.length);
+        await processMessagesChunk({
+          messagesChunk,
+          channel,
+        });
+      }
+    }
+  }
+  if (channelMessages.length) {
+    await processMessagesChunk({
+      messagesChunk: channelMessages,
+      channel,
+    });
+  }
+  return { cursor: after };
+}
+
+export async function processMessagesChunk({
+  messagesChunk,
+  channel,
+}: {
+  channel: channels;
+  messagesChunk: DiscordMessage[];
+}) {
+  console.log('processMessagesChunk >> started', messagesChunk.length);
+  for (const message of messagesChunk) {
+    if (!filterKnownMessagesTypes(message)) {
+      continue;
+    }
+    const usersInMessages = getUsersInMessages([message]);
+    const users = await findUsers(channel.accountId!, usersInMessages);
+    const messageParsed = parseMessage(channel, message, users, undefined);
+    const threadParsed = await parseThreadFromMessage(messageParsed);
+    const thread = await upsertThreadByExternalId(threadParsed);
+    await upsertMessage({
+      ...messageParsed,
+      threadId: thread.id,
+    });
+  }
+  console.log('processMessagesChunk >> finished');
+}
+
+async function parseThreadFromMessage(messageParsed: {
+  authorId: string;
+  body: string;
+  channelId: string;
+  sentAt: string;
+  externalMessageId: string;
+  threadId: string | undefined;
+  mentions: { usersId: string }[] | undefined;
+}) {
   return {
-    authorId,
-    body: message.content,
-    channelId: channel.id,
-    sentAt: message.timestamp,
-    externalMessageId: message.id,
-    threadId: thread?.id,
-    mentions,
+    sentAt: parseDiscordSentAt(messageParsed.sentAt),
+    channelId: messageParsed.channelId,
+    externalThreadId: messageParsed.externalMessageId,
+    messageCount: 1,
+    slug: createSlug(messageParsed.body),
+    title: null,
+    lastReplyAt: parseDiscordSentAt(messageParsed.sentAt),
   };
 }
 
-function processMessageType18(
-  channel: channels,
-  message: DiscordMessage,
-  users: users[],
-  thread?: threads
-) {
-  const mentions = getMentions(message.mentions, users);
-  const authorId = users.find(
-    (user) => user.externalUserId === message.author.id
-  )?.id as string;
-  return {
-    authorId,
-    body: message.content,
-    channelId: channel.id,
-    sentAt: message.timestamp,
-    externalMessageId: message.id,
-    threadId: thread?.id,
-    mentions,
-  };
+export async function createMessages({
+  channel,
+  thread,
+  messages,
+}: {
+  channel: channels;
+  thread?: threads;
+  messages: DiscordMessage[];
+}) {
+  const usersInMessages = getUsersInMessages(messages);
+  const users = await findUsers(channel.accountId!, usersInMessages);
+  await Promise.all(
+    messages.filter(filterKnownMessagesTypes).map((message) => {
+      return upsertMessage(parseMessage(channel, message, users, thread?.id));
+    })
+  );
 }
 
-function processMessageType21(
-  channel: channels,
-  message: DiscordMessage,
-  users: users[],
-  thread?: threads
-) {
-  const mentions = getMentions(message.referenced_message?.mentions, users);
-  const authorId = users.find(
-    (user) => user.externalUserId === message.referenced_message?.author.id
-  )?.id as string;
-
-  return {
-    authorId,
-    body: message.referenced_message?.content as string,
-    channelId: channel.id,
-    sentAt: message.referenced_message?.timestamp as string,
-    externalMessageId: message.referenced_message?.id as string,
-    threadId: thread?.id,
-    mentions,
-  };
+function filterKnownMessagesTypes(message: DiscordMessage) {
+  return message.type === 0;
 }
 
 function upsertMessage(message: {
@@ -132,65 +225,23 @@ function upsertMessage(message: {
   });
 }
 
-export function filterKnownMessagesTypes(message: DiscordMessage) {
-  if (supportedMessageType.includes(message.type)) {
-    return true;
-  }
-  console.error(
-    'message not supported',
-    messageTypes[message.type],
-    JSON.stringify(message)
-  );
-  return false;
+function parseMessage(
+  channel: channels,
+  message: DiscordMessage,
+  users: users[],
+  threadId?: string
+) {
+  const mentions = getMentions(message.mentions, users);
+  const authorId = users.find(
+    (user) => user.externalUserId === message.author.id
+  )?.id as string;
+  return {
+    authorId,
+    body: message.content,
+    channelId: channel.id,
+    sentAt: message.timestamp,
+    externalMessageId: message.id,
+    threadId,
+    mentions,
+  };
 }
-
-export const supportedMessageType = [0, 18, 21];
-
-export async function createMessages({
-  accountId,
-  channel,
-  thread,
-  messages,
-}: {
-  accountId: string;
-  channel: channels;
-  thread?: threads;
-  messages: DiscordMessage[];
-}) {
-  const usersInMessages = getUsersInMessages(messages);
-  const users = await findUsers(accountId, usersInMessages);
-  await Promise.all(
-    messages.filter(filterKnownMessagesTypes).map((message) => {
-      return upsertMessage(
-        processMessageTypeMap[message.type](channel, message, users, thread)
-      );
-    })
-  );
-  await updateLastReplyAt({ messages, thread });
-}
-
-const messageTypes: any = {
-  0: 'DEFAULT',
-  1: 'RECIPIENT_ADD',
-  2: 'RECIPIENT_REMOVE',
-  3: 'CALL',
-  4: 'CHANNEL_NAME_CHANGE',
-  5: 'CHANNEL_ICON_CHANGE',
-  6: 'CHANNEL_PINNED_MESSAGE',
-  7: 'GUILD_MEMBER_JOIN',
-  8: 'USER_PREMIUM_GUILD_SUBSCRIPTION',
-  9: 'USER_PREMIUM_GUILD_SUBSCRIPTION_TIER_1',
-  10: 'USER_PREMIUM_GUILD_SUBSCRIPTION_TIER_2',
-  11: 'USER_PREMIUM_GUILD_SUBSCRIPTION_TIER_3',
-  12: 'CHANNEL_FOLLOW_ADD',
-  14: 'GUILD_DISCOVERY_DISQUALIFIED',
-  15: 'GUILD_DISCOVERY_REQUALIFIED',
-  16: 'GUILD_DISCOVERY_GRACE_PERIOD_INITIAL_WARNING',
-  17: 'GUILD_DISCOVERY_GRACE_PERIOD_FINAL_WARNING',
-  18: 'THREAD_CREATED',
-  19: 'REPLY',
-  20: 'CHAT_INPUT_COMMAND',
-  21: 'THREAD_STARTER_MESSAGE',
-  22: 'GUILD_INVITE_REMINDER',
-  23: 'CONTEXT_MENU_COMMAND',
-};

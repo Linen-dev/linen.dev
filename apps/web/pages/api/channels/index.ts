@@ -1,5 +1,4 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
-import { findOrCreateChannel } from 'lib/models';
 import { v4 } from 'uuid';
 import PermissionsService from 'services/permissions';
 import { patterns } from 'utilities/util';
@@ -74,7 +73,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         .json({ error: 'Channel with this name already exists' });
     }
 
-    const channel = await findOrCreateChannel({
+    const channel = await ChannelsService.findOrCreateChannel({
       externalChannelId: slackChannelId || v4(),
       channelName,
       accountId: communityId,

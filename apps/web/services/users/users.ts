@@ -110,4 +110,38 @@ export default class UsersService {
       },
     });
   }
+  static async upsertUser(user: {
+    externalUserId: string;
+    accountsId: string;
+    isAdmin: boolean;
+    isBot: boolean;
+    displayName: string;
+    anonymousAlias?: string;
+    profileImageUrl?: string;
+    role?: Roles;
+  }) {
+    return prisma.users.upsert({
+      create: {
+        ...user,
+      },
+      update: {
+        displayName: user.displayName,
+        profileImageUrl: user.profileImageUrl,
+      },
+      where: {
+        externalUserId_accountsId: {
+          accountsId: user.accountsId,
+          externalUserId: user.externalUserId!,
+        },
+      },
+    });
+  }
+  static async findUsersByExternalId(accountId: string, externalIds: string[]) {
+    return await prisma.users.findMany({
+      where: {
+        externalUserId: { in: externalIds },
+        account: { id: accountId },
+      },
+    });
+  }
 }

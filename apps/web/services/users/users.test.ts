@@ -1,4 +1,4 @@
-import UsersServices from './users';
+import UsersServices from '.';
 import { Roles } from '@linen/types';
 import prisma from 'client';
 import { v4 } from 'uuid';

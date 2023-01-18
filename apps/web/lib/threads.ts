@@ -31,6 +31,7 @@ export const findOrCreateThread = async (thread: {
   lastReplyAt: number;
   slug?: string;
   messageCount?: number;
+  title?: string;
 }) => {
   return await prisma.threads.upsert({
     where: {
@@ -285,4 +286,40 @@ export async function findThreadsByCursor({
   return (
     anonymizeUsers ? threads.map(anonymizeMessages) : threads
   ) as ThreadsWithMessagesFull[];
+}
+
+export async function updateLastReplyAt({
+  lastReplyAt,
+  threadId,
+}: {
+  lastReplyAt: number;
+  threadId: string;
+}) {
+  await prisma.threads.update({
+    data: {
+      lastReplyAt,
+    },
+    where: {
+      id: threadId,
+    },
+  });
+}
+
+export async function upsertThreadByExternalId(upsertData: {
+  sentAt: number;
+  channelId: string;
+  externalThreadId: string;
+  messageCount: number;
+  slug: string;
+  title: null;
+  lastReplyAt: number;
+}) {
+  return await prisma.threads.upsert({
+    select: { id: true },
+    where: {
+      externalThreadId: upsertData.externalThreadId,
+    },
+    update: upsertData,
+    create: upsertData,
+  });
 }

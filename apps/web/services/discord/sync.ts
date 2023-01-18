@@ -1,11 +1,11 @@
 import { SyncStatus, updateAndNotifySyncStatus } from 'services/sync';
 import prisma from 'client';
 import { listChannelsAndPersist } from './channels';
-import { processChannel } from './channels';
 import { CrawlType, DISCORD_TOKEN } from './constrains';
 import { crawlUsers } from './users';
-import { hideEmptyChannels } from 'lib/channel';
 import { decrypt } from 'utilities/crypto';
+import { getMessages } from './messages';
+import { getActiveThreads, getArchivedThreads } from './threads';
 
 async function syncJob(
   accountId: string,
@@ -47,7 +47,7 @@ async function syncJob(
 
   await crawlUsers({
     accountId,
-    discordId: account.discordServerId,
+    serverId: account.discordServerId,
     token,
   });
 
@@ -57,16 +57,33 @@ async function syncJob(
     token,
   });
 
-  console.log({ channels: channels.length });
-  for (const channel of channels) {
-    // look for new threads and new single messages
-    if ([CrawlType.historic, CrawlType.from_onboarding].includes(crawlType)) {
-      // this will force sync all messages until reach onboardingTimestamp,
-      channel.externalPageCursor = null;
+  // active threads are global (not channel specific)
+  await getActiveThreads({
+    serverId: account.discordServerId,
+    token,
+    crawlType,
+    onboardingTimestamp,
+  });
+
+  if (channels?.length) {
+    console.log({ channels: channels.length });
+    for (const channel of channels) {
+      console.log(channel.channelName + ' channel tasks started');
+      if ([CrawlType.historic, CrawlType.from_onboarding].includes(crawlType)) {
+        // this will force sync all messages until reach onboardingTimestamp,
+        channel.externalPageCursor = null;
+      }
+      await getArchivedThreads({
+        channel,
+        token,
+        crawlType,
+        onboardingTimestamp,
+      });
+      await getMessages({ channel, onboardingTimestamp, crawlType, token });
+      console.log(channel.channelName + ' channel tasks finished');
     }
-    await processChannel({ channel, onboardingTimestamp, crawlType, token });
   }
-  await hideEmptyChannels(accountId);
+
   console.log('sync finished', { accountId });
 }
 
