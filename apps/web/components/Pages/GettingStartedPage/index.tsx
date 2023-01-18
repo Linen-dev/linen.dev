@@ -105,11 +105,7 @@ export function GettingStartedPage({ session, ...rest }: any) {
               Linen gives your community a home — a place where they can work
               together. To create a new community, click the button below.
             </span>
-            <Button
-              onClick={() =>
-                (window.location.href = '/onboarding/create-community')
-              }
-            >
+            <Button onClick={() => (window.location.href = '/onboarding')}>
               Create a community
             </Button>
           </div>
