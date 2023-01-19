@@ -67,7 +67,7 @@ export default function Component({
           onClick={() => setPreview(true)}
         />
         {preview && (
-          <Preview q   onClick={() => setPreview(false)}>
+          <Preview onClick={() => setPreview(false)}>
             <img src={src} />
           </Preview>
         )}
