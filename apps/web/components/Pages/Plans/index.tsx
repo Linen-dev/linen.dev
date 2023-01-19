@@ -79,8 +79,8 @@ export default function PlansPage({
       permissions={permissions}
       isSubDomainRouting={isSubDomainRouting}
     >
-      <div className="mx-auto">
-        <div className="sm:flex sm:flex-col sm:align-center pt-12">
+      <div className="mx-auto p-3">
+        <div className="sm:flex sm:flex-col sm:align-center pt-10">
           <h1 className="text-5xl font-extrabold text-gray-900 sm:text-center">
             Pricing Plans
           </h1>
