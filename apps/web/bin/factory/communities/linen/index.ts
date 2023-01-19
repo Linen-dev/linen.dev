@@ -15,7 +15,8 @@ export default async function createLinenCommunity() {
       logoUrl: 'https://linen-assets.s3.amazonaws.com/linen-white-logo.svg',
       chat: ChatType.MEMBERS,
       syncStatus: 'DONE',
-      premium: true
+      premium: true,
+      description: 'Modern chat platform.',
     },
   });
   const auth1 = await prisma.auths.create({
@@ -504,7 +505,6 @@ export default async function createLinenCommunity() {
     },
   });
 
-
   // 13. Markdown documentation
   await prisma.threads.create({
     data: {
@@ -521,7 +521,7 @@ export default async function createLinenCommunity() {
           },
         ],
       },
-      title: 'Markdown syntax in Linen'
+      title: 'Markdown syntax in Linen',
     },
   });
 }

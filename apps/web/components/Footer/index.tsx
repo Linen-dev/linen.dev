@@ -3,7 +3,7 @@ const navigation = {
     { name: 'Privacy', href: '/legal/privacy' },
     { name: 'Terms', href: '/legal/terms' },
     { name: 'Support', href: 'mailto:help@linen.dev' },
-    { name: 'communities', href: '/sitemap' },
+    { name: 'Communities', href: '/communities' },
   ],
 };
 
