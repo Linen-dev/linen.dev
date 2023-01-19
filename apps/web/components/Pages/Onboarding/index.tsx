@@ -29,7 +29,7 @@ export default function OnboardingPage() {
         members: emails,
       });
       if (response.id) {
-        window.location.href = `/s/${slackDomain}/settings`;
+        window.location.href = `/s/${slackDomain}/integrations`;
       }
     } catch (error: any) {
       Toast.error(error.message || 'Something went wrong');

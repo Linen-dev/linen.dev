@@ -55,7 +55,7 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
       return response.redirect(url);
     }
 
-    return response.redirect(`${url}/settings`);
+    return response.redirect(`${url}/integrations`);
   } catch (error) {
     console.error(error);
     return response.redirect('/');

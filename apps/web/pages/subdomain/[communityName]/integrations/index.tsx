@@ -1,8 +1,8 @@
 import { GetServerSidePropsContext } from 'next';
-import Settings from 'components/Pages/Settings';
+import Integrations from 'components/Pages/Integrations';
 import { getSettingsServerSideProps } from 'services/settings';
 
-export default Settings;
+export default Integrations;
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return getSettingsServerSideProps(context, true);
