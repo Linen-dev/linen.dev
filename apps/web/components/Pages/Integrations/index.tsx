@@ -43,7 +43,7 @@ const debouncedChannelsVisibilityUpdate = debounce(
     })
 );
 
-export default function SettingsPage({
+export default function IntegrationsPage({
   channels: initialChannels,
   currentCommunity,
   communities,

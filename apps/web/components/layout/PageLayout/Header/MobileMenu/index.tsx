@@ -41,7 +41,7 @@ export default function MobileMenu({
   const paths = {
     feed: usePath({ href: '/feed' }),
     metrics: usePath({ href: '/metrics' }),
-    settings: usePath({ href: '/settings' }),
+    integrations: usePath({ href: '/integrations' }),
     configurations: usePath({ href: '/configurations' }),
     branding: usePath({ href: '/branding' }),
     members: usePath({ href: '/members' }),
@@ -92,9 +92,9 @@ export default function MobileMenu({
               <Link
                 onClick={close}
                 className={classNames(styles.link, {
-                  [styles.active]: paths.settings === router.asPath,
+                  [styles.active]: paths.integrations === router.asPath,
                 })}
-                href="/settings"
+                href="/integrations"
               >
                 <FiSettings /> Settings
               </Link>

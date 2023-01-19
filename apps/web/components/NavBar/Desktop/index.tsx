@@ -68,7 +68,7 @@ export default function DesktopNavBar({
   const paths = {
     feed: usePath({ href: '/feed' }),
     metrics: usePath({ href: '/metrics' }),
-    settings: usePath({ href: '/settings' }),
+    integrations: usePath({ href: '/integrations' }),
     configurations: usePath({ href: '/configurations' }),
     branding: usePath({ href: '/branding' }),
     members: usePath({ href: '/members' }),
@@ -77,7 +77,7 @@ export default function DesktopNavBar({
 
   const isSettingsPath = () => {
     return [
-      paths.settings,
+      paths.integrations,
       paths.configurations,
       paths.branding,
       paths.members,
@@ -233,8 +233,8 @@ export default function DesktopNavBar({
         )}
         {expanded && permissions.manage && (
           <>
-            <Link href="/settings">
-              <Nav.Item active={paths.settings === router.asPath}>
+            <Link href="/integrations">
+              <Nav.Item active={paths.integrations === router.asPath}>
                 <FiSettings /> Integrations
               </Nav.Item>
             </Link>
