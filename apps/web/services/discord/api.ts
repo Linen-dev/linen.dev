@@ -40,7 +40,9 @@ async function discordApi({
     } catch (error: any) {
       handleRateLimit(error?.response);
       retriesLeft--;
-      lastFailure = error?.response?.data || error?.request || error?.message;
+      lastFailure = JSON.stringify(
+        error?.response?.data || error?.request || error?.message
+      );
       if ([404, 403, 401].includes(error?.status)) {
         throw lastFailure;
       }
@@ -52,7 +54,7 @@ async function discordApi({
 async function handleRateLimitSleep() {
   const sleepTime = rateLimitControl.waitUntil - Date.now();
   if (sleepTime > 0) {
-    console.warn('rate limit sleep', sleepTime);
+    console.warn('[RATE-LIMIT] sleep', sleepTime);
     await sleep(sleepTime);
   }
 }

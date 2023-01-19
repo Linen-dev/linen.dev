@@ -3,50 +3,51 @@ import { channels, threads, users } from '@prisma/client';
 import { MessageFormat } from '@linen/types';
 import { DiscordMessage } from 'types/discord';
 import { findUsers, getMentions, getUsersInMessages } from './users';
-import { CrawlType, LIMIT } from './constrains';
+import { LIMIT } from './constrains';
 import { createSlug } from 'utilities/util';
 import { parseDiscordSentAt } from 'utilities/sentAt';
 import ChannelsService from 'services/channels';
 import { upsertThreadByExternalId } from 'lib/threads';
 import DiscordApi from './api';
 import to from 'utilities/await-to-js';
+import Logger from './logger';
 
 export async function getMessages({
   channel,
   onboardingTimestamp,
-  crawlType,
   token,
+  logger,
 }: {
   channel: channels;
   onboardingTimestamp: Date;
-  crawlType: CrawlType;
   token: string;
+  logger: Logger;
 }) {
-  console.log('getMessages >> started');
+  logger.log('getMessages >> started');
   const { cursor } = await crawlChannel({
     channel,
     onboardingTimestamp,
-    crawlType,
     token,
+    logger,
   });
 
   // if everything is fine, persist cursor
   if (cursor) {
     await ChannelsService.updateCursor(channel.id, cursor);
   }
-  console.log('getMessages >> finished');
+  logger.log('getMessages >> finished');
 }
 
 async function crawlChannel({
   channel,
   onboardingTimestamp,
-  crawlType,
   token,
+  logger,
 }: {
   channel: channels;
   onboardingTimestamp: Date;
-  crawlType: CrawlType;
   token: string;
+  logger: Logger;
 }): Promise<{
   channelMessages?: DiscordMessage[];
   cursor?: string;
@@ -80,7 +81,7 @@ async function crawlChannel({
       })
     );
     if (err) {
-      console.warn('crawlChannel failure:', err);
+      logger.error(`crawlChannel failure: ${err}`);
       break;
     }
     const messages = response as DiscordMessage[];
@@ -106,6 +107,7 @@ async function crawlChannel({
         await processMessagesChunk({
           messagesChunk,
           channel,
+          logger,
         });
       }
     }
@@ -114,6 +116,7 @@ async function crawlChannel({
     await processMessagesChunk({
       messagesChunk: channelMessages,
       channel,
+      logger,
     });
   }
   return { cursor: after };
@@ -122,11 +125,13 @@ async function crawlChannel({
 export async function processMessagesChunk({
   messagesChunk,
   channel,
+  logger,
 }: {
   channel: channels;
   messagesChunk: DiscordMessage[];
+  logger: Logger;
 }) {
-  console.log('processMessagesChunk >> started', messagesChunk.length);
+  logger.log(`processMessagesChunk >> started: ${messagesChunk.length}`);
   for (const message of messagesChunk) {
     if (!filterKnownMessagesTypes(message)) {
       continue;
@@ -136,12 +141,15 @@ export async function processMessagesChunk({
     const messageParsed = parseMessage(channel, message, users, undefined);
     const threadParsed = await parseThreadFromMessage(messageParsed);
     const thread = await upsertThreadByExternalId(threadParsed);
-    await upsertMessage({
-      ...messageParsed,
-      threadId: thread.id,
-    });
+    await upsertMessage(
+      {
+        ...messageParsed,
+        threadId: thread.id,
+      },
+      logger
+    );
   }
-  console.log('processMessagesChunk >> finished');
+  logger.log('processMessagesChunk >> finished');
 }
 
 async function parseThreadFromMessage(messageParsed: {
@@ -168,17 +176,21 @@ export async function createMessages({
   channel,
   thread,
   messages,
+  logger,
 }: {
   channel: channels;
   thread?: threads;
   messages: DiscordMessage[];
+  logger: Logger;
 }) {
   const usersInMessages = getUsersInMessages(messages);
   const users = await findUsers(channel.accountId!, usersInMessages);
   await Promise.all(
-    messages.filter(filterKnownMessagesTypes).map((message) => {
-      return upsertMessage(parseMessage(channel, message, users, thread?.id));
-    })
+    messages
+      .filter(filterKnownMessagesTypes)
+      .map((message) =>
+        upsertMessage(parseMessage(channel, message, users, thread?.id), logger)
+      )
   );
 }
 
@@ -186,15 +198,18 @@ function filterKnownMessagesTypes(message: DiscordMessage) {
   return message.type === 0;
 }
 
-function upsertMessage(message: {
-  body: string;
-  sentAt: string;
-  externalMessageId: string;
-  threadId?: string;
-  channelId: string;
-  authorId: string;
-  mentions?: { usersId: string }[];
-}) {
+async function upsertMessage(
+  message: {
+    body: string;
+    sentAt: string;
+    externalMessageId: string;
+    threadId?: string;
+    channelId: string;
+    authorId: string;
+    mentions?: { usersId: string }[];
+  },
+  logger: Logger
+) {
   const toInsert = {
     body: message.body,
     sentAt: message.sentAt,
@@ -212,17 +227,25 @@ function upsertMessage(message: {
       },
     }),
   };
-
-  return prisma.messages.upsert({
-    create: toInsert,
-    update: toInsert,
-    where: {
-      channelId_externalMessageId: {
-        channelId: message.channelId,
-        externalMessageId: message.externalMessageId,
+  try {
+    await prisma.messages.upsert({
+      create: toInsert,
+      update: toInsert,
+      where: {
+        channelId_externalMessageId: {
+          channelId: message.channelId,
+          externalMessageId: message.externalMessageId,
+        },
       },
-    },
-  });
+    });
+  } catch (error: any) {
+    logger.error(
+      `${JSON.stringify({
+        error: error.message || error.error || error,
+        toInsert,
+      })}`
+    );
+  }
 }
 
 function parseMessage(

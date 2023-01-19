@@ -12,19 +12,22 @@ import { parseDiscordSentAt } from 'utilities/sentAt';
 import to from 'utilities/await-to-js';
 import { findOrCreateThread, updateLastReplyAt } from 'lib/threads';
 import ChannelsService from 'services/channels';
+import Logger from './logger';
 
 export async function getActiveThreads({
   serverId,
   token,
   crawlType,
   onboardingTimestamp,
+  logger,
 }: {
   serverId: string;
   token: string;
   crawlType: CrawlType;
   onboardingTimestamp: Date;
+  logger: Logger;
 }) {
-  console.log('getActiveThreads >> started');
+  logger.log('getActiveThreads >> started');
 
   const [err, response] = await to(
     DiscordApi.getActiveThreads({
@@ -33,19 +36,19 @@ export async function getActiveThreads({
     })
   );
   if (err) {
-    console.log('getActiveThreads >> finished with failure: ', err);
+    logger.error(`getActiveThreads >> finished with failure: ${err}`);
     return;
   }
 
-  console.log('threads', response.threads.length);
+  logger.log(`threads found: ${response.threads.length}`);
   for (const thread of response.threads) {
     if (!thread.parent_id) {
-      console.warn('thread without channel: %j', thread);
+      logger.error(`thread without channel: ${JSON.stringify(thread)}`);
       continue;
     }
     const channel = await ChannelsService.findByExternalId(thread.parent_id);
     if (!channel) {
-      console.warn('channel not found on linen db: ', thread.parent_id);
+      logger.error(`channel not found on linen db: ${JSON.stringify(thread)}`);
       continue;
     }
     await processThread({
@@ -54,9 +57,10 @@ export async function getActiveThreads({
       onboardingTimestamp,
       channel,
       token,
+      logger,
     });
   }
-  console.log('getActiveThreads >> finished');
+  logger.log('getActiveThreads >> finished');
 }
 
 export async function getArchivedThreads({
@@ -64,16 +68,18 @@ export async function getArchivedThreads({
   token,
   crawlType,
   onboardingTimestamp,
+  logger,
 }: {
   channel: channels;
   token: string;
   crawlType: CrawlType;
   onboardingTimestamp: Date;
+  logger: Logger;
 }) {
   if (!channel.externalChannelId) {
     return;
   }
-  console.log('getArchivedThreads >> started');
+  logger.log('getArchivedThreads >> started');
   let has_more;
   do {
     const [err, result] = await to(
@@ -85,7 +91,7 @@ export async function getArchivedThreads({
       })
     );
     if (err) {
-      console.log('getArchivedThreads >> finished with failure: ', err);
+      logger.error(`getArchivedThreads >> finished with failure: ${err}`);
       return;
     }
     const response = result as DiscordArchivedPublicThreads;
@@ -101,10 +107,11 @@ export async function getArchivedThreads({
         onboardingTimestamp,
         channel,
         token,
+        logger,
       });
     }
   } while (has_more);
-  console.log('getArchivedThreads >> finished');
+  logger.log('getArchivedThreads >> finished');
 }
 
 async function processThread({
@@ -113,12 +120,14 @@ async function processThread({
   onboardingTimestamp,
   channel,
   token,
+  logger,
 }: {
   crawlType: CrawlType;
   thread: DiscordThread;
   onboardingTimestamp: Date;
   channel: channels;
   token: string;
+  logger: Logger;
 }) {
   let linenThread = await findOrCreateThread(parseThread(thread, channel));
 
@@ -140,6 +149,7 @@ async function processThread({
     onboardingTimestamp,
     token,
     lastExternalMessageId,
+    logger,
   });
 
   // persist thread with messages
@@ -147,6 +157,7 @@ async function processThread({
     channel,
     thread: linenThread,
     messages,
+    logger,
   });
 }
 
@@ -168,17 +179,19 @@ async function crawlExistingThread({
   onboardingTimestamp,
   token,
   lastExternalMessageId,
+  logger,
 }: {
   thread: threads;
   lastExternalMessageId?: string;
   onboardingTimestamp: Date;
   token: string;
+  logger: Logger;
 }) {
   const messagesInThread: DiscordMessage[] = [];
 
   const threadId = thread.externalThreadId;
   if (!threadId) {
-    console.warn('crawlExistingThread finished: missing externalThreadId');
+    logger.error('crawlExistingThread finished: missing externalThreadId');
     return [];
   }
 
@@ -210,7 +223,7 @@ async function crawlExistingThread({
       })
     );
     if (err) {
-      console.warn('crawlExistingThread failure:', err);
+      logger.error(`crawlExistingThread failure: ${err}`);
       return [];
     }
     const messages = response as DiscordMessage[];
@@ -233,10 +246,9 @@ async function crawlExistingThread({
       messagesInThread.push(message);
     }
   }
-  console.log({
-    thread: thread.incrementId,
-    messages: messagesInThread.length,
-  });
+  logger.log(
+    `thread: ${thread.incrementId} with ${messagesInThread.length} messages found`
+  );
   return messagesInThread;
 }
 
@@ -244,25 +256,29 @@ async function upsertThreadWithNewMessages({
   channel,
   thread,
   messages,
+  logger,
 }: {
   channel: channels;
   thread: threads;
   messages: DiscordMessage[];
+  logger: Logger;
 }) {
   await createMessages({
     channel,
     thread,
     messages,
+    logger,
   });
 
   try {
-    const lastReplyAt = parseDiscordSentAt(
-      messages[messages.length - 1].timestamp
-    );
-    if (lastReplyAt && thread.id) {
-      await updateLastReplyAt({ lastReplyAt, threadId: thread.id });
+    if (messages.length) {
+      const lastMessage = messages[messages.length - 1];
+      const lastReplyAt = parseDiscordSentAt(lastMessage.timestamp);
+      if (lastReplyAt && thread.id) {
+        await updateLastReplyAt({ lastReplyAt, threadId: thread.id });
+      }
     }
   } catch (error) {
-    console.warn(error);
+    logger.error(JSON.stringify(error));
   }
 }

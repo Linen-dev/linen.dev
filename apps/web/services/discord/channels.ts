@@ -2,6 +2,7 @@ import { DiscordChannel } from 'types/discord';
 import DiscordApi from './api';
 import to from 'utilities/await-to-js';
 import ChannelsService from 'services/channels';
+import Logger from './logger';
 
 enum ChannelType {
   TEXT = 0,
@@ -12,17 +13,19 @@ export async function listChannelsAndPersist({
   serverId,
   accountId,
   token,
+  logger,
 }: {
   serverId: string;
   accountId: string;
   token: string;
+  logger: Logger;
 }) {
-  console.log('listChannelsAndPersist >> started');
+  logger.log('listChannelsAndPersist >> started');
   const [err, channels] = await to(
     DiscordApi.getDiscordChannels({ serverId, token })
   );
   if (err) {
-    console.log('listChannelsAndPersist >> finished with error:', err);
+    logger.error(`listChannelsAndPersist >> finished with error: ${err}`);
     return;
   }
   const channelPromises = await Promise.all(
@@ -32,7 +35,7 @@ export async function listChannelsAndPersist({
         ChannelsService.findOrCreateChannel(parseChannel(channel, accountId))
       )
   );
-  console.log('listChannelsAndPersist >> finished');
+  logger.log('listChannelsAndPersist >> finished');
   return channelPromises;
 }
 

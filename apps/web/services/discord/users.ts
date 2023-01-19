@@ -9,6 +9,7 @@ import { LIMIT } from './constrains';
 import DiscordApi from './api';
 import to from 'utilities/await-to-js';
 import UsersService from 'services/users';
+import Logger from './logger';
 
 // helper for messages
 export function getMentions(
@@ -40,12 +41,14 @@ export async function crawlUsers({
   accountId,
   serverId,
   token,
+  logger,
 }: {
   accountId: string;
   serverId: string;
   token: string;
+  logger: Logger;
 }) {
-  console.log('crawlUsers >> started');
+  logger.log('crawlUsers >> started');
   let hasMore = true;
   let after;
   do {
@@ -53,21 +56,21 @@ export async function crawlUsers({
       DiscordApi.getDiscordUsers({ limit: LIMIT, serverId, token, after })
     );
     if (err) {
-      console.warn('crawlUsers >> finished with failure:', err);
+      logger.error(`crawlUsers >> finished with failure: ${err}`);
       return;
     }
     const users = response as DiscordGuildMember[];
     await Promise.all(
       users.map((u) => parseUser(u, accountId)).map(UsersService.upsertUser)
     );
-    console.log('users.length', users.length);
+    logger.log(`users found: ${users.length}`);
     if (users.length) {
       after = users.pop()?.user?.id;
     } else {
       hasMore = false;
     }
   } while (hasMore);
-  console.log('crawlUsers >> finished');
+  logger.log('crawlUsers >> finished');
 }
 
 const parseUser = (guildMember: DiscordGuildMember, accountId: string) => {

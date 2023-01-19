@@ -6,24 +6,19 @@ import { crawlUsers } from './users';
 import { decrypt } from 'utilities/crypto';
 import { getMessages } from './messages';
 import { getActiveThreads, getArchivedThreads } from './threads';
+import Logger from './logger';
+import { accounts, discordAuthorizations } from '@prisma/client';
 
 async function syncJob(
-  accountId: string,
+  account: accounts & {
+    discordAuthorizations: discordAuthorizations[];
+  },
   crawlType: CrawlType,
-  decodeBotToken: (accessToken: string) => string
+  decodeBotToken: (accessToken: string) => string,
+  logger: Logger
 ) {
-  console.log('sync stared', { accountId, crawlType });
+  logger.log(`sync stared: ${crawlType}`);
 
-  const account = await prisma.accounts.findUnique({
-    where: { id: accountId },
-    include: {
-      discordAuthorizations: { take: 1, orderBy: { createdAt: 'desc' } },
-    },
-  });
-
-  if (!account) {
-    throw new Error('account not found');
-  }
   if (!account.discordServerId) {
     throw new Error('discord server id not found');
   }
@@ -39,22 +34,24 @@ async function syncJob(
     ? new Date(0)
     : discordAuthorizations?.createdAt || account.createdAt || new Date();
 
-  console.log({ onboardingTimestamp });
+  logger.log(`onboardingTimestamp: ${onboardingTimestamp}`);
 
   const token = discordAuthorizations?.customBot
     ? decodeBotToken(discordAuthorizations.accessToken)
     : DISCORD_TOKEN;
 
   await crawlUsers({
-    accountId,
+    accountId: account.id,
     serverId: account.discordServerId,
     token,
+    logger,
   });
 
   const channels = await listChannelsAndPersist({
     serverId: account.discordServerId,
-    accountId,
+    accountId: account.id,
     token,
+    logger,
   });
 
   // active threads are global (not channel specific)
@@ -63,12 +60,13 @@ async function syncJob(
     token,
     crawlType,
     onboardingTimestamp,
+    logger,
   });
 
   if (channels?.length) {
-    console.log({ channels: channels.length });
+    logger.log(`channels found: ${channels.length}`);
     for (const channel of channels) {
-      console.log(channel.channelName + ' channel tasks started');
+      logger.log(channel.channelName + ' channel tasks started');
       if ([CrawlType.historic, CrawlType.from_onboarding].includes(crawlType)) {
         // this will force sync all messages until reach onboardingTimestamp,
         channel.externalPageCursor = null;
@@ -78,13 +76,14 @@ async function syncJob(
         token,
         crawlType,
         onboardingTimestamp,
+        logger,
       });
-      await getMessages({ channel, onboardingTimestamp, crawlType, token });
-      console.log(channel.channelName + ' channel tasks finished');
+      await getMessages({ channel, onboardingTimestamp, token, logger });
+      logger.log(channel.channelName + ' channel tasks finished');
     }
   }
 
-  console.log('sync finished', { accountId });
+  logger.log('sync finished');
 }
 
 export async function discordSync({
@@ -96,17 +95,34 @@ export async function discordSync({
 }) {
   try {
     const crawlType = fullSync ? CrawlType.historic : CrawlType.new_only;
+
+    const account = await prisma.accounts.findUnique({
+      where: { id: accountId },
+      include: {
+        discordAuthorizations: { take: 1, orderBy: { createdAt: 'desc' } },
+      },
+    });
+    if (!account) {
+      throw new Error('account not found');
+    }
+
+    // TODO: add more data
     await updateAndNotifySyncStatus(accountId, SyncStatus.IN_PROGRESS);
 
-    await syncJob(accountId, crawlType, decrypt);
+    const logger = new Logger(getAccountName(account));
+    await syncJob(account, crawlType, decrypt, logger);
 
+    // TODO: add more data
     await updateAndNotifySyncStatus(accountId, SyncStatus.DONE);
-    return {
-      status: 200,
-      body: {},
-    };
   } catch (error) {
+    // TODO: add error
     await updateAndNotifySyncStatus(accountId, SyncStatus.ERROR);
     throw error;
   }
+}
+
+function getAccountName(account: accounts): string {
+  return (
+    account.name || account.redirectDomain || account.slackDomain || account.id
+  );
 }
