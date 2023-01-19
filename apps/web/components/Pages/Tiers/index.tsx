@@ -46,11 +46,11 @@ export default function Tiers({ tiers, activePeriod, account }: Props) {
               </a>
             ) : !!account && !account.premium && tier.prices ? (
               <a
-                  className="shadow-sm mt-8 block w-full bg-blue-500 border border-blue-500 rounded-md py-2 text-sm font-semibold text-white text-center hover:bg-blue-600"
-                  href="mailto:help@linen.dev?subject=Linen%20Premium"
-                >
-                  Contact Us
-                </a>
+                className="shadow-sm mt-8 block w-full bg-blue-500 border border-blue-500 rounded-md py-2 text-sm font-semibold text-white text-center hover:bg-blue-600"
+                href="mailto:help@linen.dev?subject=Linen%20Premium"
+              >
+                Contact Us
+              </a>
             ) : (
               <a className="shadow-sm mt-8 block w-full bg-green-500 border border-green-500 rounded-md py-2 text-sm font-semibold text-white text-center">
                 <GoCheck className="inline-block h-4 ml-1" />
