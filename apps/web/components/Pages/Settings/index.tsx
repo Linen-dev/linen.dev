@@ -1,7 +1,6 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import PageLayout from 'components/layout/PageLayout';
 import Header from './Header';
-import Content from './Content';
 import {
   Permissions,
   SerializedAccount,
@@ -9,6 +8,14 @@ import {
   Settings,
 } from '@linen/types';
 import storage from '@linen/utilities/storage';
+import styles from './index.module.scss';
+import CommunityIntegrationRow from './CommunityIntegrationRow';
+import SlackImportRow from './SlackImportRow';
+import AnonymizeUsersRow from './AnonymizeUsersRow';
+import DefaultChannelRow from './DefaultChannelRow';
+import ChannelVisibilityRow from './ChannelVisibilityRow';
+import { Toast } from '@linen/ui';
+import debounce from '@linen/utilities/debounce';
 
 interface Props {
   channels: SerializedChannel[];
@@ -19,14 +26,34 @@ interface Props {
   isSubDomainRouting: boolean;
 }
 
+const debouncedChannelsVisibilityUpdate = debounce(
+  ({
+    communityId,
+    value,
+  }: {
+    communityId: string;
+    value: { id: string; hidden: boolean };
+  }) =>
+    fetch('/api/channels', {
+      method: 'PUT',
+      body: JSON.stringify({
+        communityId,
+        channels: [value],
+      }),
+    })
+);
+
 export default function SettingsPage({
-  channels,
+  channels: initialChannels,
   currentCommunity,
   communities,
   settings,
   permissions,
   isSubDomainRouting,
 }: Props) {
+  const [channels, setChannels] =
+    useState<SerializedChannel[]>(initialChannels);
+
   useEffect(() => {
     storage.set('pages.last', {
       communityId: currentCommunity.id,
@@ -34,9 +61,34 @@ export default function SettingsPage({
     });
   }, [currentCommunity]);
 
+  async function onChannelsVisibilityChange(value: {
+    id: string;
+    hidden: boolean;
+  }) {
+    setChannels((channels) => {
+      return channels.map((channel) => {
+        if (channel.id === value.id) {
+          return {
+            ...channel,
+            hidden: value.hidden,
+          };
+        }
+        return channel;
+      });
+    });
+    return debouncedChannelsVisibilityUpdate({
+      communityId: currentCommunity.id,
+      value,
+    }).catch(() => Toast.error('Something went wrong. Please try again.'));
+  }
+
+  const sortedChannels = channels.sort((a, b) => {
+    return a.channelName.localeCompare(b.channelName);
+  });
+
   return (
     <PageLayout
-      channels={channels}
+      channels={sortedChannels}
       communities={communities}
       currentCommunity={currentCommunity}
       permissions={permissions}
@@ -45,7 +97,27 @@ export default function SettingsPage({
       className="w-full"
     >
       <Header />
-      <Content channels={channels} currentCommunity={currentCommunity} />
+      <div className={styles.container}>
+        <CommunityIntegrationRow currentCommunity={currentCommunity} />
+        <hr className="my-3" />
+        {currentCommunity.communityType !== 'discord' && (
+          <>
+            <SlackImportRow currentCommunity={currentCommunity} />
+            <hr className="my-3" />
+          </>
+        )}
+        <AnonymizeUsersRow currentCommunity={currentCommunity} />
+        <hr className="my-3" />
+        <DefaultChannelRow
+          channels={sortedChannels}
+          currentCommunity={currentCommunity}
+        />
+        <hr className="my-3" />
+        <ChannelVisibilityRow
+          channels={sortedChannels}
+          onChange={onChannelsVisibilityChange}
+        />
+      </div>
     </PageLayout>
   );
 }

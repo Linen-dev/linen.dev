@@ -28,9 +28,12 @@
   margin-bottom: 0;
 }
 
-.text {
+.label {
+  align-items: center;
+  cursor: pointer;
+  display: flex;
   font-size: 14px;
-  margin-left: 0.5rem;
+  gap: 0.25rem;
   font-weight: 500;
 }
 
