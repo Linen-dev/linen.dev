@@ -8,9 +8,7 @@ export default function Header() {
       <div className={styles.title}>
         <FiSettings /> Integrations
       </div>
-      <div className={styles.subtitle}>
-        All of your community settings in one place
-      </div>
+      <div className={styles.subtitle}>Integrate with third-party tools</div>
     </StickyHeader>
   );
 }
