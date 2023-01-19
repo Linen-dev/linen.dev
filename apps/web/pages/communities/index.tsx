@@ -64,6 +64,10 @@ export default function Communities({ communities }: Props) {
                   return false;
                 }
 
+                if (!community.description) {
+                  return false;
+                }
+
                 if (getHomeUrl(community) === '/') {
                   return false;
                 }

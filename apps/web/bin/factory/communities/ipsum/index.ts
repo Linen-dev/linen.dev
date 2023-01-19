@@ -13,6 +13,7 @@ export default async function createIpsumCommunity() {
       chat: ChatType.MEMBERS,
       syncStatus: 'DONE',
       premium: true,
+      description: 'Lorem ipsum dolor sit amet.',
     },
   });
   const auth1 = await prisma.auths.create({
