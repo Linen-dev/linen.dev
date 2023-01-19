@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import preload from './utilities/preload';
 import Spinner from '../Spinner';
 import styles from './index.module.scss';
+import Preview from '../Preview';
 
 interface Props {
   className?: string;
@@ -23,7 +24,7 @@ export default function Component({
   const [width, setWidth] = useState(initialWidth || 0);
   const [height, setHeight] = useState(initialHeight || 0);
   const [loaded, setLoaded] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [preview, setPreview] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -63,33 +64,12 @@ export default function Component({
           alt={alt || src}
           width={width}
           height={height}
-          onClick={() => setIsModalOpen(true)}
+          onClick={() => setPreview(true)}
         />
-        {isModalOpen && (
-          <div
-            style={{
-              position: 'fixed',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              background: 'rgba(0, 0, 0, 0.7)',
-              zIndex: 1000,
-            }}
-            onClick={() => setIsModalOpen(false)}
-          >
-            <img
-              src={src}
-              style={{
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                maxWidth: '90%',
-                maxHeight: '90%',
-              }}
-            />
-          </div>
+        {preview && (
+          <Preview q   onClick={() => setPreview(false)}>
+            <img src={src} />
+          </Preview>
         )}
       </div>
     );
