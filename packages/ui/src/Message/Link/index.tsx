@@ -17,9 +17,7 @@ export default function Link({ url, title, onLoad }: Props) {
   if (isImage(url)) {
     return (
       <Accordion header={title}>
-        <a href={url} target="_blank" rel="noreferrer ugc">
-          <Image src={url} onLoad={onLoad} />
-        </a>
+        <Image src={url} onLoad={onLoad} />
       </Accordion>
     );
   }
