@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { AccountType } from '@linen/types';
+import { AccountType, ChatType } from '@linen/types';
 import { patterns } from 'utilities/util';
 
 export const createAccountSchema = z.object({
@@ -22,6 +22,7 @@ export const updateAccountSchema = z.object({
   anonymizeUsers: z.boolean().optional(),
   communityInviteUrl: z.string().url().or(z.literal('')).optional(),
   type: z.enum([AccountType.PRIVATE, AccountType.PUBLIC]).optional(),
+  chat: z.enum([ChatType.MANAGERS, ChatType.MEMBERS, ChatType.NONE]).optional(),
 });
 export type updateAccountType = z.infer<typeof updateAccountSchema>;
 

@@ -3,7 +3,7 @@ import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import { stripProtocol } from 'utilities/url';
 import { generateRandomWordSlug } from 'utilities/randomWordSlugs';
 import { getAccountById } from 'lib/models';
-import { AccountType, Roles } from '@linen/types';
+import { AccountType, ChatType, Roles } from '@linen/types';
 import { eventNewIntegration } from './events/eventNewIntegration';
 import { encrypt } from 'utilities/crypto';
 import { v4 } from 'uuid';
@@ -152,6 +152,7 @@ export default class AccountsService {
       anonymizeUsers?: boolean;
       communityInviteUrl?: string;
       type?: AccountType;
+      chat?: ChatType;
     };
     accountId: string;
   }) {
@@ -172,12 +173,14 @@ export default class AccountsService {
       anonymizeUsers,
       communityInviteUrl,
       type,
+      chat,
     } = params;
     const freeAccount = {
       homeUrl,
       docsUrl,
       anonymizeUsers,
       communityInviteUrl,
+      chat,
     };
     const data = account.premium
       ? {

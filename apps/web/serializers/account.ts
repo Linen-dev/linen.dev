@@ -49,6 +49,7 @@ export default function serialize(account?: any): SerializedAccount | null {
     discordDomain,
     discordServerId,
     communityInviteUrl,
+    chat,
   } = account;
 
   const communityType = identifyCommunity(account);
@@ -75,5 +76,6 @@ export default function serialize(account?: any): SerializedAccount | null {
     discordDomain,
     discordServerId,
     communityInviteUrl,
+    chat,
   };
 }
