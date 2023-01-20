@@ -28,15 +28,23 @@ export async function listChannelsAndPersist({
     logger.error(`listChannelsAndPersist >> finished with error: ${err}`);
     return;
   }
-  const channelPromises = await Promise.all(
-    channels
-      .filter((c) => [ChannelType.TEXT, ChannelType.FORUM].includes(c.type))
-      .map((channel) =>
-        ChannelsService.findOrCreateChannel(parseChannel(channel, accountId))
-      )
-  );
-  logger.log('listChannelsAndPersist >> finished');
-  return channelPromises;
+  try {
+    const channelPromises = await Promise.all(
+      channels
+        .filter((c) => [ChannelType.TEXT, ChannelType.FORUM].includes(c.type))
+        .map((channel) =>
+          ChannelsService.findOrCreateChannel(parseChannel(channel, accountId))
+        )
+    );
+    return channelPromises;
+  } catch (error) {
+    logger.error(
+      `listChannelsAndPersist >> finished with error: ${JSON.stringify(error)}`
+    );
+    return;
+  } finally {
+    logger.log('listChannelsAndPersist >> finished');
+  }
 }
 
 function parseChannel(

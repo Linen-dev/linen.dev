@@ -1,49 +1,47 @@
-import prisma from '../../client';
-import { discordSync } from '../../services/discord/sync';
+import prisma from 'client';
+import PQueue from 'p-queue';
+import { discordSync } from 'services/discord/sync';
 
-function isInfiniteSync() {
-  return process.env.LONG_RUNNING === 'true';
-}
+const queue = new PQueue({ concurrency: 10 });
 
-async function init() {
-  if (isInfiniteSync()) {
-    for (;;) {
-      await runSync();
-    }
+// @ts-ignore
+queue.on('error', (error) => {
+  console.error('error', error);
+});
+
+// @ts-ignore
+queue.on('completed', (result) => {
+  console.log('completed', result);
+  queue.add(() => discordSync({ ...result, loop: (result.loop || 1) + 1 }));
+});
+
+process.on('uncaughtException', (error, source) => {
+  console.error(process.stderr.fd, error, source);
+});
+
+(async () => {
+  const fullSync = !!process.argv.find((arg) => arg === '--full-sync');
+  const accountIdFlag = process.argv.find((arg) =>
+    arg.startsWith('--account-id=')
+  );
+  let accountId = accountIdFlag?.split('=')?.pop();
+
+  if (accountId) {
+    await discordSync({ accountId, fullSync });
   } else {
-    const fullSync = !!process.argv.find((arg) => arg === '--full-sync');
-
-    const accountIdFlag = process.argv.find((arg) =>
-      arg.startsWith('--account-id=')
-    );
-
-    let accountId;
-
-    if (accountIdFlag) {
-      console.log({ accountIdFlag });
-      accountId = accountIdFlag.split('=').pop() as string;
-    }
-    await runSync(accountId, fullSync);
+    await createJobs();
   }
-}
+})();
 
-async function runSync(accountId?: string, fullSync?: boolean) {
-  const discordAccounts = await prisma.accounts.findMany({
+async function createJobs() {
+  const accounts = await prisma.accounts.findMany({
     select: { id: true },
-    where: { discordServerId: { not: null }, id: accountId },
+    where: { discordServerId: { not: null } },
+    orderBy: { createdAt: 'desc' },
   });
-
-  console.log({ discordAccounts });
-
-  for (const account of discordAccounts) {
-    await discordSync({ accountId: account.id, fullSync })
-      .then(() => {
-        console.log('Syncing done!', account);
-      })
-      .catch((err) => {
-        console.error('Syncing error: ', err, account);
-      });
-  }
+  const jobs: any = [];
+  accounts.map((acc) =>
+    jobs.push(queue.add(() => discordSync({ accountId: acc.id })))
+  );
+  return jobs;
 }
-
-init();

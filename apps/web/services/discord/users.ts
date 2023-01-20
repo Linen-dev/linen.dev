@@ -10,6 +10,7 @@ import DiscordApi from './api';
 import to from 'utilities/await-to-js';
 import UsersService from 'services/users';
 import Logger from './logger';
+import { toObject } from 'utilities/util';
 
 // helper for messages
 export function getMentions(
@@ -104,8 +105,48 @@ export async function findUsers(
   accountId: string,
   usersInMessages: DiscordAuthor[]
 ) {
-  return UsersService.findUsersByExternalId(
+  const usersToReturn = toObject(usersInMessages, 'id');
+  const usersStatus: Record<string, boolean> = {};
+  const usersFromStore = await UsersService.findUsersByExternalId(
     accountId,
     usersInMessages.map((u) => u.id)
   );
+  usersFromStore.forEach((u) => {
+    if (u.externalUserId && usersToReturn[u.externalUserId]) {
+      usersStatus[u.externalUserId] = true;
+    }
+  });
+  usersInMessages.forEach((u) => {
+    if (!usersStatus[u.id]) {
+      usersStatus[u.id] = false;
+    }
+  });
+  const usersToCreate = Object.keys(usersStatus).filter(
+    (k) => usersStatus[k] === false
+  );
+  await Promise.all(
+    usersToCreate.map(async (externalId) => {
+      const dataFromDiscord = usersToReturn[externalId];
+      const toInsert = parseAuthor(dataFromDiscord, accountId);
+      usersFromStore.push(await UsersService.upsertUser(toInsert));
+    })
+  );
+  return usersFromStore;
 }
+
+const parseAuthor = (author: DiscordAuthor, accountId: string) => {
+  return {
+    externalUserId: author.id,
+    accountsId: accountId,
+    displayName: author.username,
+    anonymousAlias: generateRandomWordSlug(),
+    isAdmin: false,
+    isBot: author.bot || false,
+    ...(author.avatar && {
+      profileImageUrl: buildUserAvatar({
+        userId: author.id,
+        avatarId: author.avatar,
+      }),
+    }),
+  };
+};

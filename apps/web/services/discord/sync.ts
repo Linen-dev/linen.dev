@@ -40,12 +40,15 @@ async function syncJob(
     ? decodeBotToken(discordAuthorizations.accessToken)
     : DISCORD_TOKEN;
 
-  await crawlUsers({
-    accountId: account.id,
-    serverId: account.discordServerId,
-    token,
-    logger,
-  });
+  // avoid run it on new_only executions
+  if (crawlType === CrawlType.historic) {
+    await crawlUsers({
+      accountId: account.id,
+      serverId: account.discordServerId,
+      token,
+      logger,
+    });
+  }
 
   const channels = await listChannelsAndPersist({
     serverId: account.discordServerId,
@@ -86,18 +89,15 @@ async function syncJob(
   logger.log('sync finished');
 }
 
-export async function discordSync({
-  accountId,
-  fullSync = false,
-}: {
+export async function discordSync(args: {
   accountId: string;
   fullSync?: boolean;
 }) {
   try {
-    const crawlType = fullSync ? CrawlType.historic : CrawlType.new_only;
+    const crawlType = !args.fullSync ? CrawlType.new_only : CrawlType.historic;
 
     const account = await prisma.accounts.findUnique({
-      where: { id: accountId },
+      where: { id: args.accountId },
       include: {
         discordAuthorizations: { take: 1, orderBy: { createdAt: 'desc' } },
       },
@@ -107,16 +107,18 @@ export async function discordSync({
     }
 
     // TODO: add more data
-    await updateAndNotifySyncStatus(accountId, SyncStatus.IN_PROGRESS);
+    await updateAndNotifySyncStatus(args.accountId, SyncStatus.IN_PROGRESS);
 
     const logger = new Logger(getAccountName(account));
     await syncJob(account, crawlType, decrypt, logger);
 
     // TODO: add more data
-    await updateAndNotifySyncStatus(accountId, SyncStatus.DONE);
+    await updateAndNotifySyncStatus(args.accountId, SyncStatus.DONE);
+
+    return args;
   } catch (error) {
     // TODO: add error
-    await updateAndNotifySyncStatus(accountId, SyncStatus.ERROR);
+    await updateAndNotifySyncStatus(args.accountId, SyncStatus.ERROR);
     throw error;
   }
 }

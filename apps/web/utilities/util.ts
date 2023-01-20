@@ -21,3 +21,8 @@ export const patterns = {
   communityPath: /^[A-Za-z][A-Za-z0-9-_]+/, // starts with letter, allowed number, hyphen, underscore
   channelName: /^[A-Za-z][A-Za-z0-9-_]+/, // starts with letter, allowed number, hyphen, underscore
 };
+
+export const toObject = <T extends Record<string, any>, K extends keyof T>(
+  arr: T[],
+  key: K
+): Record<string, T> => arr.reduce((a, b) => ({ ...a, [b[key]]: b }), {});
