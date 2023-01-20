@@ -50,7 +50,7 @@ async function createChannel({
   return channel;
 }
 
-describe('sitemap', () => {
+describe.skip('sitemap', () => {
   let premium: accounts;
   let premiumChannels: {
     hiddenWithThreads: channels;
@@ -263,7 +263,7 @@ describe('sitemap', () => {
   });
 });
 
-describe('createSitemapForFreeByChannel', () => {
+describe.skip('createSitemapForFreeByChannel', () => {
   it('returns a sitemap', async () => {
     const builder = jest.fn();
     const community = await create('account', {

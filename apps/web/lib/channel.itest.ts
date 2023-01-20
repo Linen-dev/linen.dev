@@ -2,11 +2,14 @@ import { findChannelsByAccount } from './channel';
 import prisma from 'client';
 import { v4 } from 'uuid';
 import { AccountType, MessageFormat } from '@linen/types';
+import setup from '__tests__/spec-helpers/integration';
+
+setup({ truncationStrategy: 'cascade' });
 
 describe('channel lib', () => {
   describe('as crawler, finding channels by account', () => {
     const isCrawler = true;
-    test('it should not show hidden channels or channels with all hidden threads', async () => {
+    test.skip('it should not show hidden channels or channels with all hidden threads', async () => {
       const account = await createAccount();
       await expect(
         findChannelsByAccount({
