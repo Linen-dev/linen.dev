@@ -1,6 +1,5 @@
 import React from 'react';
 import Image from 'next/image';
-import { users } from '@prisma/client';
 import { MessageFormat } from '@linen/types';
 import { Avatar, Message } from '@linen/ui';
 import styles from './index.module.css';
@@ -10,7 +9,7 @@ interface Props {
   body: string;
   format: MessageFormat;
   mentions: SerializedUser[];
-  user?: users;
+  user?: SerializedUser;
   channelName?: string;
 }
 
