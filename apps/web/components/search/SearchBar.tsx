@@ -26,7 +26,7 @@ const parseResults = (data: messages[]) => {
 interface SearchResult {
   body: string;
   channelId: string;
-  user: SerializedUser;
+  user?: SerializedUser;
   mentions: SerializedUser[];
   messageFormat: MessageFormat;
 }

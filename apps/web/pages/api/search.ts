@@ -10,6 +10,8 @@ import {
   AccountType,
 } from '@prisma/client';
 import PermissionsService from 'services/permissions';
+import unique from 'lodash.uniq';
+import serializeUser from 'serializers/user';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   const query = req.query.query as string;
@@ -90,8 +92,11 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     WHERE "public"."mentions"."messagesId" IN (${Prisma.join(messageIds)})`
       : [];
 
-  // Get mentioned users
-  const userIds = mentionsResult.map((mr) => mr.usersId);
+  // Get users
+  const userIds = unique([
+    ...mentionsResult.map((mr) => mr.usersId),
+    ...messagesResult.map((mr) => mr.usersId),
+  ]);
   const usersResult =
     userIds.length > 0
       ? await prisma.$queryRaw<users[]>`SELECT "public"."users"."id",
@@ -108,9 +113,11 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
   // Map the results
   const searchResults = messagesResult.map((mr) => {
+    const user = usersResult.find((user) => user.id === mr.usersId);
     return {
       ...mr,
       threads: threadsResult.find((str) => str.id === mr.threadId),
+      user: user ? serializeUser(user) : null,
       mentions: mentionsResult.map((msr) => {
         return {
           ...msr,
