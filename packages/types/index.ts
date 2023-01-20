@@ -154,6 +154,7 @@ export type Settings = {
   communityName: string;
   redirectDomain?: string;
   prefix?: 'd' | 's';
+  chat: ChatType | null;
 };
 
 export interface Permissions {

@@ -1,5 +1,5 @@
 import { accounts } from '@prisma/client';
-import { CommunityType, Settings } from '@linen/types';
+import { ChatType, CommunityType, Settings } from '@linen/types';
 import { appendProtocol } from 'utilities/url';
 import { getLinenUrl } from 'utilities/domain';
 
@@ -92,6 +92,7 @@ export function serialize(account: accounts): Settings {
     ...(!!account.googleSiteVerification && {
       googleSiteVerification: account.googleSiteVerification,
     }),
+    chat: (account.chat as ChatType) || null,
   };
 }
 
