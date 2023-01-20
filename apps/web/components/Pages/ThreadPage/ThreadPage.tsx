@@ -22,6 +22,7 @@ export function ThreadPage({
 
   return (
     <PageLayout
+      key={thread.id}
       seo={{
         ...buildThreadSeo({
           isSubDomainRouting,
