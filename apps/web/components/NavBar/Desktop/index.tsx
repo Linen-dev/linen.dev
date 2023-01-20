@@ -119,7 +119,7 @@ export default function DesktopNavBar({
     if (currentUser) {
       debouncedReadStatus({ channelIds: channels.map(({ id }) => id) }).then(
         ({ readStatuses }: { readStatuses: SerializedReadStatus[] }) => {
-          if (mounted) {
+          if (mounted && readStatuses?.length > 0) {
             setHighlights((highlights) => {
               const channelIds = readStatuses
                 .filter(({ read }) => !read)

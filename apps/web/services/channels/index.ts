@@ -69,7 +69,6 @@ class ChannelsService {
         where: {
           id: { in: channelsIdToHide },
           accountId,
-          default: false,
         },
         data: {
           hidden: true,
