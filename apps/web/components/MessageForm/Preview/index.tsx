@@ -15,7 +15,6 @@ export function Row({ message, currentUser }: Props) {
       <div className={styles.row}>
         <div className={styles.left}>
           <Avatar
-            size="lg"
             src={message.author?.profileImageUrl}
             text={message.author?.displayName}
             Image={Image}

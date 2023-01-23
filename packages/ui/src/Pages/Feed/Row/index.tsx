@@ -41,7 +41,6 @@ export default function Row({
 
         <div className={styles.body} onClick={onClick}>
           <Avatar
-            size="md"
             src={message.author?.profileImageUrl}
             text={message.author?.displayName}
           />

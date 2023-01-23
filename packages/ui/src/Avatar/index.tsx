@@ -14,19 +14,15 @@ interface Props {
   Image?: any;
 }
 
-export type Size = 'sm' | 'md' | 'lg';
+export type Size = 'sm' | 'md';
 export type Shadow = 'none' | 'sm';
 
 function dimensions(size?: Size) {
   switch (size) {
     case 'sm':
       return 26;
-    case 'md':
-      return 36;
-    case 'lg':
-      return 38;
     default:
-      return 32;
+      return 36;
   }
 }
 

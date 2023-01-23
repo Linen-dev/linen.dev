@@ -8,8 +8,9 @@
   background-position: center;
   background-repeat: no-repeat;
   width: 36px;
-  height: 36px;
   min-width: 36px;
+  height: 36px;
+  line-height: 36px;
   user-select: none;
 }
 
@@ -18,9 +19,10 @@
 }
 
 .image {
-  display: block;
   border-radius: 50%;
+  display: block;
   height: 36px;
+  object-fit: cover;
 }
 
 .placeholder {
@@ -44,13 +46,6 @@
 
 .placeholder.shadow {
   box-shadow: 0 1px 2px #ccc;
-}
-
-.lg {
-  width: 36px;
-  min-width: 36px;
-  height: 36px;
-  line-height: 36px;
 }
 
 .sm {
