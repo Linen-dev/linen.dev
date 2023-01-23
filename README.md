@@ -48,6 +48,7 @@ Linen is in it's early stages of development so we are looking for a ton of feed
 3. Custom domain hosting for Cloud edition
 4. Attachments support
 5. Emoji support
+6. Discord Forum support
 
 Our documentation is divided into several sections:
 
