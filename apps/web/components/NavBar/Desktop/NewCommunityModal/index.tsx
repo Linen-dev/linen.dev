@@ -1,6 +1,7 @@
 import Modal from 'components/Modal';
 import H3 from 'components/H3';
 import { FiX } from 'react-icons/fi';
+import Form from 'components/Pages/Onboarding/Form';
 
 interface Props {
   open: boolean;
@@ -20,12 +21,8 @@ export default function NewCommunityModal({ open, close }: Props) {
           <FiX />
         </div>
       </div>
-      <div className="mt-2 mb-8">
-        <p className="text-sm text-gray-500">
-          Community name should only contain letters, space and apostrophe. e.g.
-          Linen's Community.
-        </p>
-      </div>
+      <div className="py-4"></div>
+      <Form />
     </Modal>
   );
 }
