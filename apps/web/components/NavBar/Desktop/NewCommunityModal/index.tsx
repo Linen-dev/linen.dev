@@ -20,7 +20,7 @@ export default function NewCommunityModal({ open, close }: Props) {
           <FiX />
         </div>
       </div>
-      <div className="mt-2">
+      <div className="mt-2 mb-8">
         <p className="text-sm text-gray-500">
           Community name should only contain letters, space and apostrophe. e.g.
           Linen's Community.

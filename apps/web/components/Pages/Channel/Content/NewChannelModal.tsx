@@ -88,6 +88,7 @@ export default function NewChannelModal({
               autoFocus
               id="channelName"
               label="Channel name"
+              
               disabled={loading}
               required
               placeholder="e.g. javascript"
