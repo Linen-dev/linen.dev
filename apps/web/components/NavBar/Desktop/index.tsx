@@ -31,6 +31,8 @@ import { post } from 'utilities/http';
 import { notify } from 'utilities/notification';
 import unique from 'lodash.uniq';
 import CommunityLink from './CommunityLink';
+import AddCommunityLink from './AddCommunityLink';
+import NewCommunityModal from './NewCommunityModal';
 
 interface Props {
   mode: Mode;
@@ -87,6 +89,7 @@ export default function DesktopNavBar({
 
   const [highlights, setHighlights] = useState<string[]>([]);
   const [expanded, setExpanded] = useState(isSettingsPath());
+  const [modal, setModal] = useState(false);
 
   const userId = permissions.auth?.id || null;
   const token = permissions.token || null;
@@ -142,6 +145,8 @@ export default function DesktopNavBar({
           {communities.map((community) => {
             return <CommunityLink key={community.id} community={community} />;
           })}
+          <AddCommunityLink onClick={() => setModal(true)} />
+          <NewCommunityModal open={modal} close={() => setModal(false)} />
         </div>
       )}
       <Nav className={styles.navbar}>
