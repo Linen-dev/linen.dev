@@ -49,7 +49,6 @@ export default function UserAvatar({
               <Menu.Button className="flex items-center ">
                 <span className="sr-only">Open user menu</span>
                 <Avatar
-                  size="md"
                   shadow="none"
                   src={currentUser.profileImageUrl}
                   text={currentUser.displayName}

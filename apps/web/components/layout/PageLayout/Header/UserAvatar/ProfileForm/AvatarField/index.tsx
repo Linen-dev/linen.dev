@@ -24,7 +24,6 @@ export default function AvatarField({
         Avatar
         <div className={styles.row}>
           <Avatar
-            size="lg"
             shadow="none"
             src={user.profileImageUrl}
             text={user.displayName}

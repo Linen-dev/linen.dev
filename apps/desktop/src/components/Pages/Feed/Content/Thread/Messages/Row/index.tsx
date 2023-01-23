@@ -81,7 +81,6 @@ export function Row({
         <div className={styles.left}>
           {top ? (
             <Avatar
-              size="lg"
               src={message.author?.profileImageUrl}
               text={message.author?.displayName}
               // Image={Image}
