@@ -119,7 +119,6 @@ class ChannelsService {
           where: { id: channel.id },
           data: {
             externalChannelId,
-            hidden,
           },
         });
       }
