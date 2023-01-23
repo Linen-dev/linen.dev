@@ -6,26 +6,32 @@ import { normalize } from '@linen/utilities/string';
 import { AccountType, Roles } from '@linen/types';
 import { generateRandomWordSlug } from 'utilities/randomWordSlugs';
 import { eventSignUp } from 'services/events/eventNewSignUp';
+import { z } from 'zod';
+
+const createSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(6),
+  accountId: z.string().uuid().optional(),
+  displayName: z.string().min(1).optional(),
+});
 
 async function create(request: NextApiRequest, response: NextApiResponse) {
-  const body = JSON.parse(request.body);
-  const { email, password, accountId, displayName } = body;
+  let body;
+  try {
+    body = JSON.parse(request.body);
+  } catch (error) {
+    body = request.body;
+  }
 
-  if (!email) {
+  const requestBody = createSchema.safeParse(body);
+  if (!requestBody.success) {
     return response.status(400).json({
-      error: 'Please provide email',
+      error: requestBody.error,
     });
   }
-  if (!password) {
-    return response.status(400).json({
-      error: 'Please provide password',
-    });
-  }
-  if (password.length < 6) {
-    return response.status(400).json({
-      error: 'Password too short',
-    });
-  }
+
+  const { email, password, accountId, displayName } = requestBody.data;
+
   const auth = await prisma.auths.findFirst({ where: { email } });
   if (auth) {
     return response
@@ -38,7 +44,12 @@ async function create(request: NextApiRequest, response: NextApiResponse) {
   });
 
   if (accountId) {
-    await joinCommunity(accountId, newAuth.id, displayName, email);
+    await joinCommunity({
+      accountId,
+      newAuthId: newAuth.id,
+      displayName,
+      email,
+    });
   }
 
   try {
@@ -51,12 +62,17 @@ async function create(request: NextApiRequest, response: NextApiResponse) {
     .json({ message: 'Account created, please sign in!' });
 }
 
-async function joinCommunity(
-  accountId: string,
-  newAuthId: string,
-  displayName: string,
-  email: string
-) {
+async function joinCommunity({
+  accountId,
+  newAuthId,
+  displayName,
+  email,
+}: {
+  accountId: string;
+  newAuthId: string;
+  displayName?: string;
+  email: string;
+}) {
   const account = await prisma.accounts.findUnique({
     where: { id: accountId },
   });
