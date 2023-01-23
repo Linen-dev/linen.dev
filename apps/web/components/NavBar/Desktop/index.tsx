@@ -166,9 +166,11 @@ export default function DesktopNavBar({
         )}
         <Nav.Label>
           Channels
-          {permissions.channel_create && !!permissions.accountId && (
-            <NewChannelModal communityId={permissions.accountId} />
-          )}
+          {currentUser &&
+            permissions.channel_create &&
+            !!permissions.accountId && (
+              <NewChannelModal communityId={permissions.accountId} />
+            )}
         </Nav.Label>
         <div>
           {channels.map((channel: SerializedChannel, index: number) => {
