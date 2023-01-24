@@ -34,7 +34,7 @@ export default function Communities({ communities }: Props) {
                 <Link href="/signin">Sign In</Link>
               </li>
               <li>
-                <Link href="/signin">Sign Up</Link>
+                <Link href="/signup">Sign Up</Link>
               </li>
             </ul>
           </div>
