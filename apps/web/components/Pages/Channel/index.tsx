@@ -163,6 +163,32 @@ export default function Channel(props: ChannelProps) {
     setCurrentThreadId(thread.id);
   }
 
+  async function deleteMessage(messageId: string) {
+    setThreads((threads) => {
+      return threads
+        .map((thread) => {
+          const message = thread.messages.find(
+            (message) => message.id === messageId
+          );
+          if (message) {
+            const messages = thread.messages.filter(
+              (message) => message.id !== messageId
+            );
+            if (messages.length === 0) {
+              return null;
+            }
+            return {
+              ...thread,
+              messages,
+              messageCount: thread.messageCount - 1,
+            };
+          }
+          return thread;
+        })
+        .filter(Boolean) as SerializedThread[];
+    });
+  }
+
   async function pinThread(threadId: string) {
     const thread = threads.find(({ id }) => id === threadId);
     if (!thread) {
@@ -612,6 +638,7 @@ export default function Channel(props: ChannelProps) {
         permissions={permissions}
         currentThreadId={currentThreadId}
         setThreads={setThreads}
+        deleteMessage={deleteMessage}
         pinThread={pinThread}
         onMessage={onThreadMessage}
         onDrop={onThreadDrop}

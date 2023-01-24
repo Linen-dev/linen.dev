@@ -32,10 +32,11 @@ export default function Grid({
   currentUser,
   mode,
   onClick,
-  onPin,
-  onReaction,
+  onDelete,
   onDrop,
   onLoad,
+  onPin,
+  onReaction,
 }: {
   threads: SerializedThread[];
   permissions: Permissions;
@@ -46,6 +47,7 @@ export default function Grid({
   currentUser: SerializedUser | null;
   mode?: Mode;
   onClick: (threadId: number) => void;
+  onDelete: (messageId: string) => void;
   onPin: (threadId: string) => void;
   onReaction({
     threadId,
@@ -131,9 +133,10 @@ export default function Grid({
                     settings={settings}
                     currentUser={currentUser}
                     mode={mode}
+                    onDelete={onDelete}
+                    onDrop={onDrop}
                     onPin={onPin}
                     onReaction={onReaction}
-                    onDrop={onDrop}
                     onLoad={onLoad}
                   />
                 </div>

@@ -60,6 +60,7 @@ interface Props {
   currentThreadId: string | undefined;
   token: string | null;
   setThreads: React.Dispatch<React.SetStateAction<SerializedThread[]>>;
+  deleteMessage(messageId: string): void;
   pinThread(threadId: string): void;
   sendReaction({
     threadId,
@@ -116,6 +117,7 @@ export default function Channel({
   permissions,
   currentThreadId,
   setThreads,
+  deleteMessage,
   pinThread,
   onMessage,
   onDrop,
@@ -402,6 +404,7 @@ export default function Channel({
                           isSubDomainRouting={isSubDomainRouting}
                           settings={settings}
                           currentUser={currentUser}
+                          onDelete={deleteMessage}
                           onPin={pinThread}
                           onReaction={sendReaction}
                         />
@@ -431,6 +434,7 @@ export default function Channel({
                           mode={mode}
                           currentUser={currentUser}
                           onClick={selectThread}
+                          onDelete={deleteMessage}
                           onPin={pinThread}
                           onReaction={sendReaction}
                           onDrop={handleDrop}
@@ -480,6 +484,7 @@ export default function Channel({
               updateThread={updateThread}
               onClose={() => setShowThread(false)}
               sendMessage={sendThreadMessage}
+              onDelete={deleteMessage}
               onReaction={sendReaction}
               token={token}
               onSend={() => {

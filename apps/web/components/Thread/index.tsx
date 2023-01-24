@@ -44,6 +44,7 @@ interface Props {
   }): Promise<void>;
   updateThread({ state, title }: { state?: ThreadState; title?: string }): void;
   onClose?(): void;
+  onDelete?(messageId: string): void;
   onSend?(): void;
   onMessage(
     message: SerializedMessage,
@@ -78,6 +79,7 @@ export default function Thread({
   sendMessage,
   updateThread,
   onClose,
+  onDelete,
   onSend,
   onMount,
   onReaction,
@@ -188,6 +190,7 @@ export default function Thread({
           isSubDomainRouting={isSubDomainRouting}
           currentUser={currentUser}
           settings={settings}
+          onDelete={onDelete}
           onReaction={onReaction}
           onLoad={handleScroll}
         />
