@@ -14,6 +14,8 @@ interface Props {
   isSubDomainRouting: boolean;
   currentUser: SerializedUser | null;
   mode?: Mode;
+  onDelete?(messageId: string): void;
+  onLoad?(): void;
   onReaction?({
     threadId,
     messageId,
@@ -25,7 +27,6 @@ interface Props {
     type: string;
     active: boolean;
   }): void;
-  onLoad?(): void;
 }
 
 function Messages({
@@ -35,8 +36,9 @@ function Messages({
   isSubDomainRouting,
   currentUser,
   mode,
-  onReaction,
+  onDelete,
   onLoad,
+  onReaction,
 }: Props) {
   const { messages } = thread;
   const elements = messages.map((message, index) => {
@@ -58,8 +60,9 @@ function Messages({
           isSubDomainRouting={isSubDomainRouting}
           mode={mode}
           drag="message"
-          onReaction={onReaction}
+          onDelete={onDelete}
           onLoad={onLoad}
+          onReaction={onReaction}
         />
       </div>
     );

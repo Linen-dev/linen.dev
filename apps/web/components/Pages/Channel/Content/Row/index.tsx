@@ -26,10 +26,11 @@ export default function ChannelRow({
   settings,
   currentUser,
   mode,
-  onPin,
-  onReaction,
+  onDelete,
   onDrop,
   onLoad,
+  onPin,
+  onReaction,
 }: {
   className?: string;
   thread: SerializedThread;
@@ -38,6 +39,8 @@ export default function ChannelRow({
   settings: Settings;
   currentUser: SerializedUser | null;
   mode?: Mode;
+  onDelete?(messageId: string): void;
+  onLoad?(): void;
   onPin?(threadId: string): void;
   onReaction?({
     threadId,
@@ -61,7 +64,6 @@ export default function ChannelRow({
     from: string;
     to: string;
   }): void;
-  onLoad?(): void;
 }) {
   const { messages } = thread;
   const message = messages[0];
@@ -87,9 +89,10 @@ export default function ChannelRow({
           currentUser={currentUser}
           mode={mode}
           drag="thread"
+          onDelete={onDelete}
+          onLoad={onLoad}
           onPin={onPin}
           onReaction={onReaction}
-          onLoad={onLoad}
           header={
             thread.title && <div className={styles.header}>{thread.title}</div>
           }
