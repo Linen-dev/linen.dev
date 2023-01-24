@@ -1,6 +1,6 @@
 import { AccountWithSlackAuthAndChannels } from 'types/partialTypes';
-import { channelIndex, createManyChannel } from 'lib/models';
 import { sleep } from 'utilities/retryPromises';
+import ChannelsService from 'services/channels';
 
 export async function createChannels({
   slackTeamId,
@@ -15,46 +15,44 @@ export async function createChannels({
   getSlackChannels: Function;
   joinChannel: Function;
 }) {
-  const channelsResponse = await getSlackChannels(slackTeamId, token);
-  const channelsParam = channelsResponse.body.channels.map(
-    (channel: { id: any; name: any }) => {
-      return {
-        externalChannelId: channel.id,
-        channelName: channel.name,
-        accountId,
-      };
-    }
-  );
-
   try {
-    await createManyChannel(channelsParam);
+    const channelsResponse = await getSlackChannels(slackTeamId, token);
+    const channels = await Promise.all(
+      channelsResponse.body.channels.map(
+        (channel: { id: string; name: string }) =>
+          ChannelsService.findOrCreateChannel({
+            externalChannelId: channel.id,
+            channelName: channel.name,
+            accountId,
+          })
+      )
+    );
+
+    console.log('Joining channels started');
+    let sleeping = sleep(60 * 1000);
+    let counter = 0;
+    const filteredChannels = channels.filter(
+      (c) => c.externalPageCursor !== 'completed'
+    );
+
+    for (let channel of filteredChannels) {
+      counter++;
+      await joinChannel(channel.externalChannelId, token);
+      // Slack's api can handle bursts
+      // so only wait for requests if there are more than 50 messages
+      if (counter >= 50) {
+        await sleeping;
+        counter = 0;
+        sleeping = sleep(60 * 1000);
+      }
+    }
+    console.log('Joining channels ended');
+
+    return channels;
   } catch (e) {
     console.error('Error creating Channels:', e);
+    return [];
   }
-
-  const channels = await channelIndex(accountId);
-
-  console.log('Joining channels started');
-  let sleeping = sleep(60 * 1000);
-  let counter = 0;
-  const filteredChannels = channels.filter(
-    (c) => c.externalPageCursor !== 'completed'
-  );
-
-  for (let channel of filteredChannels) {
-    counter++;
-    await joinChannel(channel.externalChannelId, token);
-    // Slack's api can handle bursts
-    // so only wait for requests if there are more than 50 messages
-    if (counter >= 50) {
-      await sleeping;
-      counter = 0;
-      sleeping = sleep(60 * 1000);
-    }
-  }
-  console.log('Joining channels ended');
-
-  return channels;
 }
 
 export async function syncChannels({

@@ -1,58 +1,58 @@
 jest.mock('services/slack/api');
 
-import { prismaMock } from '__tests__/singleton';
 import { syncChannels } from './syncChannels';
 import * as fetch_all_conversations from 'services/slack/api';
-import { conversationList } from '__mocks__/slack-api';
+import { create } from '__tests__/factory';
+import { accounts, channels, slackAuthorizations } from '@prisma/client';
+import { v4 } from 'uuid';
 
-const account = {
-  id: 'accountId123',
-  slackTeamId: 'slackTeamId123',
-  slackAuthorizations: [{ accessToken: 'token123' }],
-};
+const CHANNELS_COUNT = 5;
 
-const externalChannels = conversationList.channels.map(({ id, name }) => {
-  return { name, id };
+const externalChannels = Array.from(Array(CHANNELS_COUNT).keys()).map(() => {
+  return { name: v4(), id: v4() };
 });
 
-const internalChannel = {
-  id: 'uuid123',
-  channelName: externalChannels[0].name,
-  externalPageCursor: null,
-  externalChannelId: externalChannels[0].id,
-};
-
-const internalChannel2 = {
-  id: 'uuid234',
-  channelName: externalChannels[1].name,
-  externalPageCursor: 'completed',
-  externalChannelId: externalChannels[1].id,
-};
-
-const internalChannel3 = {
-  id: 'uuid345',
-  channelName: externalChannels[2].name,
-  externalPageCursor: 'completed',
-  externalChannelId: externalChannels[2].id,
-};
-
 describe('slackSync :: syncChannels', () => {
+  let account: accounts & {
+    slackAuthorizations: slackAuthorizations[];
+    channels: channels[];
+  };
+
+  beforeAll(async () => {
+    const newAccount = await create('account', {
+      slackTeamId: v4(),
+      slackAuthorizations: {
+        create: {
+          accessToken: v4(),
+          botUserId: v4(),
+          scope: v4(),
+        },
+      },
+      channels: {
+        create: {
+          channelName: externalChannels[0].name,
+        },
+      },
+    });
+
+    account = await prisma?.accounts.findUnique({
+      where: { id: newAccount.id },
+      include: { slackAuthorizations: true, channels: true },
+    });
+  });
+
   test('syncChannels', async () => {
     const getSlackChannelsSpy = jest
       .spyOn(fetch_all_conversations, 'getSlackChannels')
       .mockReturnValueOnce({
-        body: conversationList,
+        body: { ok: true, channels: externalChannels },
       } as any);
     const joinChannelSpy = jest
       .spyOn(fetch_all_conversations, 'joinChannel')
       .mockReturnValueOnce({
         body: {},
       } as any);
-    const channelsCreateManyMock =
-      prismaMock.channels.createMany.mockResolvedValue({} as any);
-    const channelsFindManyMock = prismaMock.channels.findMany.mockResolvedValue(
-      [internalChannel, internalChannel2, internalChannel3] as any
-    );
+
     const response = await syncChannels({
       token: account.slackAuthorizations[0].accessToken,
       account,
@@ -60,11 +60,12 @@ describe('slackSync :: syncChannels', () => {
       getSlackChannels: fetch_all_conversations.getSlackChannels,
       joinChannel: fetch_all_conversations.joinChannel,
     });
-    expect(response).toMatchObject([
-      internalChannel,
-      internalChannel2,
-      internalChannel3,
-    ]);
+    expect(response).toMatchObject(
+      externalChannels.map((e) => ({
+        channelName: e.name,
+        externalChannelId: e.id,
+      }))
+    );
 
     expect(getSlackChannelsSpy).toBeCalledTimes(1);
     expect(getSlackChannelsSpy).toHaveBeenNthCalledWith(
@@ -73,39 +74,6 @@ describe('slackSync :: syncChannels', () => {
       account.slackAuthorizations[0].accessToken
     );
 
-    expect(joinChannelSpy).toBeCalledTimes(1);
-    expect(joinChannelSpy).toHaveBeenNthCalledWith(
-      1,
-      internalChannel.externalChannelId,
-      account.slackAuthorizations[0].accessToken
-    );
-
-    expect(channelsFindManyMock).toBeCalledTimes(1);
-    expect(channelsFindManyMock).toHaveBeenCalledWith({
-      where: {
-        accountId: account.id,
-      },
-    });
-    expect(channelsCreateManyMock).toBeCalledTimes(1);
-    expect(channelsCreateManyMock).toHaveBeenNthCalledWith(1, {
-      data: [
-        {
-          externalChannelId: externalChannels[0].id,
-          channelName: externalChannels[0].name,
-          accountId: account.id,
-        },
-        {
-          externalChannelId: externalChannels[1].id,
-          channelName: externalChannels[1].name,
-          accountId: account.id,
-        },
-        {
-          externalChannelId: externalChannels[2].id,
-          channelName: externalChannels[2].name,
-          accountId: account.id,
-        },
-      ],
-      skipDuplicates: true,
-    });
+    expect(joinChannelSpy).toBeCalledTimes(CHANNELS_COUNT);
   });
 });

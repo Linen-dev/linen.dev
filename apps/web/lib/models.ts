@@ -177,18 +177,6 @@ export const updateAccountRedirectDomain = async (
   });
 };
 
-export const channelIndex = async (
-  accountId: string,
-  { hidden }: { hidden?: boolean } = {}
-) => {
-  return await prisma.channels.findMany({
-    where: {
-      accountId,
-      ...(!!String(hidden) && { hidden }),
-    },
-  });
-};
-
 export const findAccountByPath = async (path: string) => {
   return await prisma.accounts.findFirst({
     where: {
@@ -207,15 +195,6 @@ export const findAccountByPath = async (path: string) => {
         },
       ],
     },
-  });
-};
-
-export const createManyChannel = async (
-  channels: Prisma.channelsCreateManyInput
-) => {
-  return await prisma.channels.createMany({
-    data: channels,
-    skipDuplicates: true,
   });
 };
 
