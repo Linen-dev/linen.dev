@@ -2,6 +2,10 @@ function isWhitespace(character) {
   return /\s/gi.test(character);
 }
 
+function isSpecialCharacter(character) {
+  return ['!', '?', '.', ','].includes(character);
+}
+
 function tokenize(input) {
   const tokens = [];
   const length = input.length;
@@ -25,12 +29,9 @@ function tokenize(input) {
       } else {
         const previous = input[index - 1];
         const next = input[index + 1];
-        if (
-          next &&
-          next !== tag &&
-          !isWhitespace(next) &&
-          (!previous || isWhitespace(previous))
-        ) {
+        if (next === tag || isWhitespace(next)) {
+          value += current;
+        } else if (next && (!previous || isWhitespace(previous))) {
           flush();
           value += current;
           type = node;
@@ -40,11 +41,11 @@ function tokenize(input) {
       }
     }
 
-    if (current === '@') {
+    if (current === '@' && !['user', 'signal'].includes(type)) {
       serialize('@', 'user');
-    } else if (current === '!') {
+    } else if (current === '!' && !['user', 'signal'].includes(type)) {
       serialize('!', 'signal');
-    } else if (isWhitespace(current)) {
+    } else if (isWhitespace(current) || isSpecialCharacter(current)) {
       if (type === 'user' || type === 'signal') {
         flush();
         type = 'text';

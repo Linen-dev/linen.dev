@@ -63,6 +63,10 @@ describe('parse', () => {
     expect(parse('foo `bar` baz')).toEqual(
       root([text('foo '), code('bar'), text(' baz')])
     );
+    expect(parse('`foo.bar`')).toEqual(root([code('foo.bar')]));
+    expect(parse('`foo?.bar`')).toEqual(root([code('foo?.bar')]));
+    expect(parse('`[foo,bar]`')).toEqual(root([code('[foo,bar]')]));
+    expect(parse('`""!!`')).toEqual(root([code('""!!')]));
   });
 
   it('returns a `user` node', () => {
@@ -71,6 +75,12 @@ describe('parse', () => {
       root([user('uid1'), text(' '), user('uid2')])
     );
     expect(parse('hey @uid1')).toEqual(root([text('hey '), user('uid1')]));
+    expect(parse('@uid1?')).toEqual(root([user('uid1'), text('?')]));
+    expect(parse('@uid1!')).toEqual(root([user('uid1'), text('!')]));
+    expect(parse('@uid1.')).toEqual(root([user('uid1'), text('.')]));
+    expect(parse('@uid1, @uid2')).toEqual(
+      root([user('uid1'), text(', '), user('uid2')])
+    );
   });
 
   it('returns a `signal` node', () => {
@@ -104,28 +114,24 @@ describe('parse', () => {
       ])
     );
     expect(parse('http://foo.bar http://foo.bar')).toEqual(
-      root([
-
-        url('http://foo.bar'),
-        text(' '),
-        url('http://foo.bar')
-      ])
-    )
+      root([url('http://foo.bar'), text(' '), url('http://foo.bar')])
+    );
     expect(parse('http://foo.bar baz:http://foo.bar')).toEqual(
-      root([
-
-        url('http://foo.bar'),
-        text(' baz:'),
-        url('http://foo.bar')
-      ])
-    )
-    expect(parse('https://foo.bar|baz')).toEqual(root([url('https://foo.bar|baz')]));
-    expect(parse('[baz](https://foo.bar)')).toEqual(root([url('[baz](https://foo.bar)')]));
+      root([url('http://foo.bar'), text(' baz:'), url('http://foo.bar')])
+    );
+    expect(parse('https://foo.bar|baz')).toEqual(
+      root([url('https://foo.bar|baz')])
+    );
+    expect(parse('[baz](https://foo.bar)')).toEqual(
+      root([url('[baz](https://foo.bar)')])
+    );
   });
 
   it('returns a `quote` node', () => {
     expect(parse('> foo')).toEqual(root([quote([text('foo')])]));
-    expect(parse('> foo\n> bar')).toEqual(root([quote([text('foo\n')]), quote([text('bar')])]));
+    expect(parse('> foo\n> bar')).toEqual(
+      root([quote([text('foo\n')]), quote([text('bar')])])
+    );
     expect(parse('> *foo*')).toEqual(root([quote([bold([text('foo')])])]));
     expect(parse('> _foo_')).toEqual(root([quote([italic([text('foo')])])]));
     expect(parse('> ~foo~')).toEqual(root([quote([strike([text('foo')])])]));
@@ -134,7 +140,9 @@ describe('parse', () => {
   it('returns a `header` node', () => {
     expect(parse('# foo')).toEqual(root([header([text('foo')])]));
     expect(parse('# foo\n')).toEqual(root([header([text('foo\n')])]));
-    expect(parse('# foo\nbar')).toEqual(root([header([text('foo\n')]), text('bar')]));
+    expect(parse('# foo\nbar')).toEqual(
+      root([header([text('foo\n')]), text('bar')])
+    );
     expect(parse('# *foo*')).toEqual(root([header([bold([text('foo')])])]));
     expect(parse('# _foo_')).toEqual(root([header([italic([text('foo')])])]));
     expect(parse('# ~foo~')).toEqual(root([header([strike([text('foo')])])]));
@@ -197,73 +205,79 @@ describe('parse', () => {
 
   it('returns a `list` node', () => {
     expect(parse('- foo')).toEqual(root([list([item([text('foo')])])]));
-    expect(parse('- *foo*')).toEqual(root([list([item([bold([text('foo')])])])]));
-    expect(parse('- foo *bar*')).toEqual(root([list([item([text('foo '), bold([text('bar')])])])]));
+    expect(parse('- *foo*')).toEqual(
+      root([list([item([bold([text('foo')])])])])
+    );
+    expect(parse('- foo *bar*')).toEqual(
+      root([list([item([text('foo '), bold([text('bar')])])])])
+    );
     expect(parse('- foo\n- bar')).toEqual(
-      root([
-        list([
-          item([text('foo')]),
-          item([text('bar')])
-        ])
-      ])
+      root([list([item([text('foo')]), item([text('bar')])])])
     );
     expect(parse('- foo\n- bar\n- baz')).toEqual(
       root([
-        list([
-          item([text('foo')]),
-          item([text('bar')]),
-          item([text('baz')])
-        ])
+        list([item([text('foo')]), item([text('bar')]), item([text('baz')])]),
       ])
     );
 
-    expect(parse('• foo')).toEqual(root([list([item([text('foo')])], { prefix: '•' })]));
-    expect(parse('• *foo*')).toEqual(root([list([item([bold([text('foo')])])], { prefix: '•' })]));
-    expect(parse('• foo *bar*')).toEqual(root([list([item([text('foo '), bold([text('bar')])])], { prefix: '•' })]));
+    expect(parse('• foo')).toEqual(
+      root([list([item([text('foo')])], { prefix: '•' })])
+    );
+    expect(parse('• *foo*')).toEqual(
+      root([list([item([bold([text('foo')])])], { prefix: '•' })])
+    );
+    expect(parse('• foo *bar*')).toEqual(
+      root([list([item([text('foo '), bold([text('bar')])])], { prefix: '•' })])
+    );
     expect(parse('• foo\n• bar')).toEqual(
-      root([
-        list([
-          item([text('foo')]),
-          item([text('bar')])
-        ], { prefix: '•' })
-      ])
+      root([list([item([text('foo')]), item([text('bar')])], { prefix: '•' })])
     );
     expect(parse('• foo\n• bar\n• baz')).toEqual(
       root([
-        list([
-          item([text('foo')]),
-          item([text('bar')]),
-          item([text('baz')])
-        ], { prefix: '•' })
+        list([item([text('foo')]), item([text('bar')]), item([text('baz')])], {
+          prefix: '•',
+        }),
       ])
     );
 
-    expect(parse('1. foo')).toEqual(root([list([item([text('foo')])], { ordered: true })]));
-    expect(parse('1. *foo*')).toEqual(root([list([item([bold([text('foo')])])], { ordered: true })]));
-    expect(parse('1. foo *bar*')).toEqual(root([list([item([text('foo '), bold([text('bar')])])], { ordered: true })]));
+    expect(parse('1. foo')).toEqual(
+      root([list([item([text('foo')])], { ordered: true })])
+    );
+    expect(parse('1. *foo*')).toEqual(
+      root([list([item([bold([text('foo')])])], { ordered: true })])
+    );
+    expect(parse('1. foo *bar*')).toEqual(
+      root([
+        list([item([text('foo '), bold([text('bar')])])], { ordered: true }),
+      ])
+    );
     expect(parse('1. foo\n2. bar')).toEqual(
       root([
-        list([
-          item([text('foo')]),
-          item([text('bar')])
-        ], { ordered: true })
+        list([item([text('foo')]), item([text('bar')])], { ordered: true }),
       ])
     );
-    expect(parse('1. foo\n2. bar\n3. baz\n4. foo\n5. bar\n6. baz\n7. foo\n8. bar\n9. baz\n10. foo')).toEqual(
+    expect(
+      parse(
+        '1. foo\n2. bar\n3. baz\n4. foo\n5. bar\n6. baz\n7. foo\n8. bar\n9. baz\n10. foo'
+      )
+    ).toEqual(
       root([
-        list([
-          item([text('foo')]),
-          item([text('bar')]),
-          item([text('baz')]),
-          item([text('foo')]),
-          item([text('bar')]),
-          item([text('baz')]),
-          item([text('foo')]),
-          item([text('bar')]),
-          item([text('baz')]),
-          item([text('foo')])
-        ], { ordered: true })
+        list(
+          [
+            item([text('foo')]),
+            item([text('bar')]),
+            item([text('baz')]),
+            item([text('foo')]),
+            item([text('bar')]),
+            item([text('baz')]),
+            item([text('foo')]),
+            item([text('bar')]),
+            item([text('baz')]),
+            item([text('foo')]),
+          ],
+          { ordered: true }
+        ),
       ])
     );
-  })
+  });
 });
