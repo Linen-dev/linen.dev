@@ -13,7 +13,7 @@ import { copyToClipboard } from '@linen/utilities/clipboard';
 import { GoPin } from 'react-icons/go';
 import { AiOutlinePaperClip } from 'react-icons/ai';
 import { RxDragHandleDots2 } from 'react-icons/rx';
-import { FiThumbsUp } from 'react-icons/fi';
+import { FiThumbsUp, FiTrash2 } from 'react-icons/fi';
 import styles from './index.module.scss';
 import { Mode } from '@linen/hooks/mode';
 
@@ -27,6 +27,7 @@ interface Props {
   currentUser: SerializedUser | null;
   mode?: Mode;
   drag: 'thread' | 'message';
+  onDelete?(messageId: string): void;
   onPin?(threadId: string): void;
   onReaction?({
     threadId,
@@ -66,8 +67,9 @@ export default function Actions({
   currentUser,
   mode,
   drag,
-  onReaction,
+  onDelete,
   onPin,
+  onReaction,
 }: Props) {
   const isReactionActive = hasReaction(message, ':thumbsup:', currentUser?.id);
   const owner = currentUser ? currentUser.id === message.usersId : false;
@@ -142,6 +144,13 @@ export default function Actions({
         >
           <Tooltip className={styles.tooltip} text="Pin">
             <GoPin className={classNames({ [styles.active]: thread.pinned })} />
+          </Tooltip>
+        </li>
+      )}
+      {onDelete && permissions.manage && (
+        <li onClick={() => onDelete(message.id)}>
+          <Tooltip className={styles.tooltip} text="Delete">
+            <FiTrash2 />
           </Tooltip>
         </li>
       )}
