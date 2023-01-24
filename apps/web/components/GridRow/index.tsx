@@ -29,6 +29,8 @@ interface Props {
   drag: 'thread' | 'message';
   header?: React.ReactNode;
   footer?: React.ReactNode;
+  onDelete?(messageId: string): void;
+  onLoad?(): void;
   onPin?(threadId: string): void;
   onReaction?({
     threadId,
@@ -41,7 +43,6 @@ interface Props {
     type: string;
     active: boolean;
   }): void;
-  onLoad?(): void;
 }
 
 export function Row({
@@ -57,9 +58,10 @@ export function Row({
   drag,
   header,
   footer,
+  onDelete,
+  onLoad,
   onReaction,
   onPin,
-  onLoad,
 }: Props) {
   const top = !isPreviousMessageFromSameUser;
   return (
@@ -123,6 +125,7 @@ export function Row({
           currentUser={currentUser}
           isSubDomainRouting={isSubDomainRouting}
           drag={drag}
+          onDelete={onDelete}
           onPin={onPin}
           onReaction={onReaction}
           mode={mode}
