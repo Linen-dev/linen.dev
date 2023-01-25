@@ -147,13 +147,15 @@ export default function Actions({
           </Tooltip>
         </li>
       )}
-      {onDelete && permissions.manage && (
-        <li onClick={() => onDelete(message.id)}>
-          <Tooltip className={styles.tooltip} text="Delete">
-            <FiTrash2 />
-          </Tooltip>
-        </li>
-      )}
+      {onDelete &&
+        currentUser &&
+        (permissions.manage || currentUser.id === message.usersId) && (
+          <li onClick={() => onDelete(message.id)}>
+            <Tooltip className={styles.tooltip} text="Delete">
+              <FiTrash2 />
+            </Tooltip>
+          </li>
+        )}
     </ul>
   );
 }
