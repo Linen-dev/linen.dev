@@ -1,3 +1,5 @@
+import { z } from 'zod';
+
 /*
   This package redefines enums from `schema.prisma`.
   Ideally this package should be considered as a source of truth
@@ -182,3 +184,56 @@ export interface UploadedFile {
   id: string;
   url: string;
 }
+
+/**
+ * integrations
+ */
+
+export const threadPostSchema = z.object({
+  channelId: z.string().uuid(),
+  body: z.string().min(1),
+  title: z.string().optional(),
+  externalThreadId: z.string().min(1),
+  authorId: z.string().uuid(),
+  accountId: z.string().uuid(),
+});
+export type threadPostType = z.infer<typeof threadPostSchema>;
+
+export const threadPutSchema = z.object({
+  title: z.string().optional(),
+  accountId: z.string().uuid(),
+  channelId: z.string().uuid(),
+  externalThreadId: z.string().min(1),
+  status: z.enum(['OPEN', 'CLOSE']),
+});
+export type threadPutType = z.infer<typeof threadPutSchema>;
+
+export const threadFindSchema = z.object({
+  channelId: z.string().uuid(),
+  externalThreadId: z.string().min(1),
+});
+export type threadFindType = z.infer<typeof threadFindSchema>;
+
+export const channelGetSchema = z.object({
+  channelId: z.string().uuid().optional(),
+  installationId: z.string().min(1).optional(),
+});
+export type channelGetType = z.infer<typeof channelGetSchema>;
+
+export const messagePostSchema = z.object({
+  accountId: z.string().uuid(),
+  channelId: z.string().uuid(),
+  threadId: z.string().uuid(),
+  authorId: z.string().uuid(),
+  externalMessageId: z.string().min(1),
+  body: z.string().min(1),
+});
+export type messagePostType = z.infer<typeof messagePostSchema>;
+
+export const userPostSchema = z.object({
+  externalUserId: z.string().min(1),
+  accountsId: z.string().uuid(),
+  displayName: z.string().min(1),
+  profileImageUrl: z.string().min(1).optional(),
+});
+export type userPostType = z.infer<typeof userPostSchema>;
