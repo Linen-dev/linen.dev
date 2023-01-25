@@ -1,8 +1,7 @@
 import type { Response, NextFunction, Request } from 'server/types';
-import { z } from 'zod';
 
 export default function validationMiddleware(
-  schema: z.Schema,
+  schema: any,
   value: 'body' | 'query' | 'params' = 'body' // DEPRECATE this param
 ) {
   return (req: Request, _: Response, next: NextFunction) => {
