@@ -187,6 +187,19 @@ export default function Channel(props: ChannelProps) {
         })
         .filter(Boolean) as SerializedThread[];
     });
+
+    return fetch(`/api/messages/${messageId}`, {
+      method: 'DELETE',
+    })
+      .then((response) => {
+        if (response.ok) {
+          return;
+        }
+        throw new Error('Failed to delete the message.');
+      })
+      .catch((exception) => {
+        alert(exception.message);
+      });
   }
 
   async function pinThread(threadId: string) {

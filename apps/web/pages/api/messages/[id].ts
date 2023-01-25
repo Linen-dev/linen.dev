@@ -36,8 +36,16 @@ async function destroy(request: NextApiRequest, response: NextApiResponse) {
   if (!message) {
     return response.status(404).json({});
   }
-  if (!message.channel.accountId || !message.usersId) {
-    return response.status(401).json({});
+  if (!message.channel.accountId) {
+    return response.status(401).json({
+      error: 'Message does not have a related channel',
+    });
+  }
+
+  if (!message.usersId) {
+    return response.status(401).json({
+      error: 'Message does not have an author',
+    });
   }
 
   const permissions = await PermissionsService.get({
@@ -48,11 +56,18 @@ async function destroy(request: NextApiRequest, response: NextApiResponse) {
     },
   });
   if (!permissions.access) {
-    return response.status(401).json({});
+    return response.status(401).json({
+      error: 'No access permissions',
+    });
   }
 
-  if (permissions.user.usersId !== message.usersId || !permissions.manage) {
-    return response.status(401).json({});
+  const canDelete =
+    permissions.user.id === message.usersId || permissions.manage;
+
+  if (!canDelete) {
+    return response.status(401).json({
+      error: 'No manage permissions',
+    });
   }
 
   await prisma.messages.delete({
