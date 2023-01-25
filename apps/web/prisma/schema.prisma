@@ -99,12 +99,35 @@ model channels {
   memberships        memberships[]
   readStatus         readStatus[]
 
-  notifications   notifications[]
-  pages           Int?
-  lastPageBuildAt BigInt?
+  notifications       notifications[]
+  pages               Int?
+  lastPageBuildAt     BigInt?
+  channelsIntegration channelsIntegration[]
 
   @@unique([externalChannelId])
   @@index([accountId])
+}
+
+model channelsIntegration {
+  id              String                  @id @default(uuid())
+  createdAt       DateTime                @default(now())
+  updatedAt       DateTime?               @updatedAt
+  channel         channels                @relation(fields: [channelId], references: [id])
+  channelId       String
+  type            channelsIntegrationType
+  externalId      String
+  data            Json?
+  createdBy       users                   @relation("createdBy", fields: [createdByUserId], references: [id])
+  createdByUserId String
+  updatedBy       users?                  @relation("updatedBy", fields: [updatedByUserId], references: [id])
+  updatedByUserId String?
+
+  @@index([externalId])
+}
+
+enum channelsIntegrationType {
+  GITHUB
+  EMAIL
 }
 
 model accounts {
@@ -211,11 +234,13 @@ model users {
   account    accounts @relation(fields: [accountsId], references: [id])
   accountsId String
 
-  auth        auths?        @relation(fields: [authsId], references: [id])
-  authsId     String?
-  memberships memberships[]
-  invites     invites[]
-  role        Roles         @default(MEMBER)
+  auth                       auths?                @relation(fields: [authsId], references: [id])
+  authsId                    String?
+  memberships                memberships[]
+  invites                    invites[]
+  role                       Roles                 @default(MEMBER)
+  channelsIntegrationCreated channelsIntegration[] @relation("createdBy")
+  channelsIntegrationUpdated channelsIntegration[] @relation("updatedBy")
 
   @@unique([externalUserId, accountsId])
   @@index([authsId])
