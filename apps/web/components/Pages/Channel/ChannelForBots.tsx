@@ -48,6 +48,7 @@ export default function ChannelForBots({
           isBot={isBot}
           mode={undefined}
           currentUser={null}
+          onDelete={() => {}}
           onClick={() => {}}
           onPin={() => {}}
           onReaction={() => {}}
