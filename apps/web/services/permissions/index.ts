@@ -145,12 +145,12 @@ export default class PermissionsService {
       return false;
     }
 
-    if (community?.integration === AccountIntegration.DISCORD) {
-      return false;
-    }
-    if (community?.integration === AccountIntegration.SLACK) {
-      return false;
-    }
+    // if (community?.integration === AccountIntegration.DISCORD) {
+    //   return false;
+    // }
+    // if (community?.integration === AccountIntegration.SLACK) {
+    //   return false;
+    // }
 
     if (user.role === Roles.ADMIN) return true;
     if (user.role === Roles.OWNER) return true;
