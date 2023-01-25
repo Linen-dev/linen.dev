@@ -228,7 +228,7 @@ enum Roles {
 }
 
 model mentions {
-  messages   messages? @relation(fields: [messagesId], references: [id])
+  messages   messages? @relation(fields: [messagesId], references: [id], onDelete: Cascade)
   messagesId String
   users      users?    @relation(fields: [usersId], references: [id])
   usersId    String
