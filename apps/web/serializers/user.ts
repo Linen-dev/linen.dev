@@ -5,7 +5,7 @@ export function username(displayName: string | null) {
   if (!displayName) {
     return null;
   }
-  return displayName.toLowerCase().replace(/\s+/g, '.');
+  return displayName.toLowerCase().replace(/\s+/g, '');
 }
 
 export default function serialize(user: users): SerializedUser {
