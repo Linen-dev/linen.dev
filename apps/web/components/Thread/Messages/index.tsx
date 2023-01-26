@@ -11,6 +11,7 @@ interface Props {
   thread: SerializedThread;
   permissions: Permissions;
   settings: Settings;
+  isBot?: boolean;
   isSubDomainRouting: boolean;
   currentUser: SerializedUser | null;
   mode?: Mode;
@@ -33,6 +34,7 @@ function Messages({
   thread,
   permissions,
   settings,
+  isBot,
   isSubDomainRouting,
   currentUser,
   mode,
@@ -53,6 +55,7 @@ function Messages({
           })}
           thread={thread}
           message={message}
+          isBot={isBot}
           isPreviousMessageFromSameUser={isPreviousMessageFromSameUser}
           permissions={permissions}
           currentUser={currentUser}

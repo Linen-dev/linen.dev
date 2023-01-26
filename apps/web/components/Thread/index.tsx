@@ -25,6 +25,7 @@ interface Props {
   channelId: string;
   channelName: string;
   threadUrl?: string | null;
+  isBot?: boolean;
   isSubDomainRouting: boolean;
   settings: Settings;
   permissions: Permissions;
@@ -70,6 +71,7 @@ export default function Thread({
   channelId,
   channelName,
   threadUrl,
+  isBot,
   isSubDomainRouting,
   settings,
   permissions,
@@ -187,6 +189,7 @@ export default function Thread({
         <Messages
           thread={thread}
           permissions={permissions}
+          isBot={isBot}
           isSubDomainRouting={isSubDomainRouting}
           currentUser={currentUser}
           settings={settings}

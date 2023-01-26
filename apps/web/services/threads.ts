@@ -144,6 +144,7 @@ export async function threadGetServerSideProps(
         settings,
         pathCursor: encodeCursor(`asc:gte:${thread.sentAt.toString()}`),
         permissions,
+        isBot: isCrawler,
         isSubDomainRouting: isSubdomainbasedRouting,
         pagination: await promisePrevNext,
       },

@@ -12,6 +12,7 @@ interface Props {
   size?: Size;
   shadow?: Shadow;
   Image?: any;
+  placeholder?: boolean;
 }
 
 export type Size = 'sm' | 'md';
@@ -26,7 +27,15 @@ function dimensions(size?: Size) {
   }
 }
 
-function Avatar({ className, src, text = 'u', size, shadow, Image }: Props) {
+function Avatar({
+  className,
+  src,
+  text = 'u',
+  size,
+  shadow,
+  Image,
+  placeholder,
+}: Props) {
   const [error, setError] = useState(false);
 
   const letter = getLetter(text || '');
@@ -51,7 +60,7 @@ function Avatar({ className, src, text = 'u', size, shadow, Image }: Props) {
 
   return (
     <>
-      {!src || error ? (
+      {placeholder || !src || error ? (
         <div
           className={classNames(
             className,

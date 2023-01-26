@@ -20,6 +20,7 @@ interface Props {
   className?: string;
   thread: SerializedThread;
   message: SerializedMessage;
+  isBot?: boolean;
   isPreviousMessageFromSameUser?: boolean;
   isSubDomainRouting: boolean;
   settings: Settings;
@@ -49,6 +50,7 @@ export function Row({
   className,
   thread,
   message,
+  isBot,
   isPreviousMessageFromSameUser,
   isSubDomainRouting,
   currentUser,
@@ -82,6 +84,7 @@ export function Row({
               src={message.author?.profileImageUrl}
               text={message.author?.displayName}
               Image={Image}
+              placeholder={isBot}
             />
           ) : (
             <span className={styles.date}>{format(message.sentAt, 'p')}</span>

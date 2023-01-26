@@ -182,6 +182,7 @@ function RowForBots({
         thread={thread}
         permissions={permissions}
         isSubDomainRouting={isSubDomainRouting}
+        isBot={true}
         settings={settings}
         currentUser={currentUser}
       />
