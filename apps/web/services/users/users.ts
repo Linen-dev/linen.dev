@@ -2,6 +2,7 @@ import { Roles } from '@linen/types';
 import prisma from 'client';
 import { eventSignUp } from 'services/events/eventNewSignUp';
 import { generateHash, generateSalt, secureCompare } from 'utilities/password';
+import { generateRandomWordSlug } from 'utilities/randomWordSlugs';
 import { v4 } from 'uuid';
 
 interface CreateAuthParams {
@@ -110,11 +111,16 @@ export default class UsersService {
       },
     });
   }
-  static async upsertUser(user: {
+  static async upsertUser({
+    isAdmin = false,
+    isBot = false,
+    anonymousAlias = generateRandomWordSlug(),
+    ...user
+  }: {
     externalUserId: string;
     accountsId: string;
-    isAdmin: boolean;
-    isBot: boolean;
+    isAdmin?: boolean;
+    isBot?: boolean;
     displayName: string;
     anonymousAlias?: string;
     profileImageUrl?: string;
@@ -123,6 +129,9 @@ export default class UsersService {
     return prisma.users.upsert({
       create: {
         ...user,
+        isAdmin,
+        isBot,
+        anonymousAlias,
       },
       update: {
         displayName: user.displayName,
