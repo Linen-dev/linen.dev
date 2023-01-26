@@ -11,6 +11,7 @@ import {
 export type ThreadByIdResponse = ThreadById | { notFound: boolean };
 
 export interface ThreadByIdProp extends ThreadById {
+  isBot?: boolean;
   isSubDomainRouting: boolean;
   permissions: Permissions;
   communities: SerializedAccount[];

@@ -22,6 +22,7 @@ export default function ChannelRow({
   className,
   thread,
   permissions,
+  isBot,
   isSubDomainRouting,
   settings,
   currentUser,
@@ -35,6 +36,7 @@ export default function ChannelRow({
   className?: string;
   thread: SerializedThread;
   permissions: Permissions;
+  isBot?: boolean;
   isSubDomainRouting: boolean;
   settings: Settings;
   currentUser: SerializedUser | null;
@@ -84,6 +86,7 @@ export default function ChannelRow({
           thread={thread}
           message={message}
           isSubDomainRouting={isSubDomainRouting}
+          isBot={isBot}
           settings={settings}
           permissions={permissions}
           currentUser={currentUser}
@@ -99,7 +102,12 @@ export default function ChannelRow({
           footer={
             messages.length > 1 && (
               <div className={styles.footer}>
-                <Avatars size="sm" users={avatars} Image={Image} />
+                <Avatars
+                  size="sm"
+                  users={avatars}
+                  Image={Image}
+                  placeholder={isBot}
+                />
                 <>
                   {messages.length - 1}{' '}
                   {messages.length > 2 ? 'replies' : 'reply'} &middot;{' '}

@@ -13,6 +13,7 @@ export function ThreadPage({
   currentChannel,
   currentCommunity,
   threadUrl,
+  isBot,
   isSubDomainRouting,
   settings,
   permissions,
@@ -48,6 +49,7 @@ export function ThreadPage({
           currentChannel={currentChannel}
           currentCommunity={currentCommunity}
           threadUrl={threadUrl}
+          isBot={isBot}
           isSubDomainRouting={isSubDomainRouting}
           settings={settings}
           permissions={permissions}
