@@ -140,6 +140,23 @@ class ChannelsService {
       where: { externalChannelId },
     });
   }
+
+  static async findById(id: string) {
+    return await prisma.channels.findUnique({
+      where: { id },
+    });
+  }
+
+  static async findByExternalIntegrationId(externalId: string) {
+    return await prisma.channelsIntegration
+      .findFirst({
+        select: { channel: true },
+        where: {
+          externalId,
+        },
+      })
+      .then((r) => r?.channel);
+  }
 }
 
 export default ChannelsService;
