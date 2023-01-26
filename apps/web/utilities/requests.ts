@@ -2,9 +2,10 @@ import axios from 'axios';
 import { qs } from './url';
 import useSWR from 'swr';
 import isBrowser from './isBrowser';
-import type { SerializedThread } from '@linen/types';
+import type { SerializedMessage, SerializedThread } from '@linen/types';
 import type * as AccountsTypes from 'server/routers/accounts.types';
 import type * as ThreadsTypes from 'server/routers/threads/types';
+import type * as MessagesTypes from 'server/routers/messages/types';
 import type { channelNextPageType } from 'services/channel.types';
 
 const catchError = (e: { response: any }) => {
@@ -105,3 +106,17 @@ export const createThread = (
   props: ThreadsTypes.postType
 ): Promise<{ thread: SerializedThread; imitationId: string }> =>
   post(`/api/threads`, props);
+
+// export const getMessage = (
+//   props: MessagesTypes.getType
+// ): Promise<SerializedMessage> => get(`/api/messages/${props.id}`);
+
+export const deleteMessage = (
+  props: MessagesTypes.deleteType
+): Promise<{ ok: boolean }> =>
+  deleteReq(`/api/messages/${props.id}?accountId=${props.accountId}`);
+
+export const createMessage = (
+  props: MessagesTypes.postType
+): Promise<{ message: SerializedMessage; imitationId: string }> =>
+  post(`/api/messages`, props);

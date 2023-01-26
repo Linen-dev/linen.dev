@@ -189,17 +189,17 @@ export default function Channel(props: ChannelProps) {
         .filter(Boolean) as SerializedThread[];
     });
 
-    return fetch(`/api/messages/${messageId}`, {
-      method: 'DELETE',
-    })
+    return api
+      .deleteMessage({ id: messageId, accountId: settings.communityId })
       .then((response) => {
         if (response.ok) {
           return;
         }
         throw new Error('Failed to delete the message.');
       })
-      .catch((exception) => {
-        alert(exception.message);
+
+      .catch((_) => {
+        Toast.error('Failed to delete the message.');
       });
   }
 

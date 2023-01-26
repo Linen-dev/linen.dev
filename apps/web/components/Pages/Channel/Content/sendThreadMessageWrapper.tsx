@@ -7,6 +7,7 @@ import debounce from '@linen/utilities/debounce';
 import { StartSignUpFn } from 'contexts/Join';
 import { createMessageImitation } from './utilities/message';
 import { UploadedFile } from '@linen/types';
+import * as api from 'utilities/requests';
 
 const debouncedSendThreadMessage = debounce(
   ({
@@ -24,16 +25,13 @@ const debouncedSendThreadMessage = debounce(
     threadId: string;
     imitationId: string;
   }) => {
-    return fetch(`/api/messages/thread`, {
-      method: 'POST',
-      body: JSON.stringify({
-        body: message,
-        files,
-        communityId,
-        channelId,
-        threadId,
-        imitationId,
-      }),
+    return api.createMessage({
+      body: message,
+      files,
+      accountId: communityId,
+      channelId,
+      threadId,
+      imitationId,
     });
   },
   100
@@ -113,45 +111,38 @@ export function sendThreadMessageWrapper({
       channelId,
       threadId,
       imitationId: imitation.id,
-    })
-      .then((response: any) => {
-        if (response.ok) {
-          return response.json();
-        }
-        throw 'Could not send a message';
-      })
-      .then(
-        ({
-          message,
-          imitationId,
-        }: {
-          message: SerializedMessage;
-          imitationId: string;
-        }) => {
-          setThreads((threads) => {
-            return threads.map((thread) => {
-              if (thread.id === currentThreadId) {
-                const messageId = message.id;
-                const index = thread.messages.findIndex(
-                  (message: SerializedMessage) => message.id === messageId
-                );
-                if (index >= 0) {
-                  return thread;
-                }
-                return {
-                  ...thread,
-                  messages: [
-                    ...thread.messages.filter(
-                      (message: SerializedMessage) => message.id !== imitationId
-                    ),
-                    message,
-                  ],
-                };
+    }).then(
+      ({
+        message,
+        imitationId,
+      }: {
+        message: SerializedMessage;
+        imitationId: string;
+      }) => {
+        setThreads((threads) => {
+          return threads.map((thread) => {
+            if (thread.id === currentThreadId) {
+              const messageId = message.id;
+              const index = thread.messages.findIndex(
+                (message: SerializedMessage) => message.id === messageId
+              );
+              if (index >= 0) {
+                return thread;
               }
-              return thread;
-            });
+              return {
+                ...thread,
+                messages: [
+                  ...thread.messages.filter(
+                    (message: SerializedMessage) => message.id !== imitationId
+                  ),
+                  message,
+                ],
+              };
+            }
+            return thread;
           });
-        }
-      );
+        });
+      }
+    );
   };
 }
