@@ -6,13 +6,11 @@ import {
   accounts,
   discordAuthorizations,
   slackAuthorizations,
-  Prisma,
 } from '@prisma/client';
 import { discordSync } from './discord/sync';
 import { slackSyncWithFiles } from './slack/syncWithFiles';
 import prisma from '../client';
 import { skipNotification } from './slack/api/notification';
-import { slackChatSync } from './slack/api/postMessage';
 
 export enum SyncStatus {
   IN_PROGRESS = 'IN_PROGRESS',
@@ -113,61 +111,4 @@ export async function syncJob({ account_id, file_location }: SyncJobType) {
     fullSync: true, // discord only
     fileLocation,
   });
-}
-
-export type ChatSyncJobType = {
-  channelId: string;
-  threadId: string;
-  messageId: string;
-  isThread?: boolean;
-  isReply?: boolean;
-};
-
-const include = Prisma.validator<Prisma.channelsArgs>()({
-  include: {
-    account: {
-      include: { slackAuthorizations: true, discordAuthorizations: true },
-    },
-  },
-});
-
-export type ChannelWithAccountAndAuthorizations = Prisma.channelsGetPayload<
-  typeof include
->;
-
-export async function chatSyncJob({
-  channelId,
-  messageId,
-  threadId,
-  isThread,
-  isReply,
-}: ChatSyncJobType) {
-  console.log({ isThread, isReply });
-
-  const channel = await prisma.channels.findFirst({
-    where: {
-      id: channelId,
-    },
-    ...include,
-  });
-
-  if (!channel) {
-    return 'channel not found';
-  }
-  if (!channel.account) {
-    return 'account not found';
-  }
-  if (!channel.externalChannelId) {
-    return 'channel belongs to linen';
-  }
-  // check if is slack
-  if (channel.account.slackAuthorizations.length) {
-    return slackChatSync({ channel, threadId, messageId, isThread, isReply });
-  }
-  // check if is discord
-  if (channel.account.discordAuthorizations.length) {
-    return 'discord is not implemented yet';
-  }
-
-  return 'account without authorization';
 }

@@ -1,5 +1,5 @@
 import type { mentions, users } from '@prisma/client';
-import { createChatSyncJob } from 'queue/jobs';
+import { createTwoWaySyncJob } from 'queue/jobs';
 import { push, pushChannel, pushCommunity } from 'services/push';
 import { eventNewMentions } from './eventNewMentions';
 import { notificationListener } from 'services/notifications';
@@ -44,7 +44,7 @@ export async function eventNewThread({
   };
 
   const promises: Promise<any>[] = [
-    createChatSyncJob(event),
+    createTwoWaySyncJob({ ...event, event: 'newThread', id: messageId }),
     push(event),
     pushChannel(event),
     pushCommunity({ ...event, communityId }),
