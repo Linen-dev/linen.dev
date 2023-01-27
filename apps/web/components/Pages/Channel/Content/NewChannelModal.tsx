@@ -1,11 +1,10 @@
 import { useState } from 'react';
 import H3 from 'components/H3';
 import { FiPlus, FiX } from 'react-icons/fi';
-import { Button, TextInput, Toast } from '@linen/ui';
+import { Button, Modal, TextInput, Toast } from '@linen/ui';
 import { useLinkContext } from '@linen/contexts/Link';
 import CustomRouterPush from 'components/Link/CustomRouterPush';
 import { patterns } from 'utilities/util';
-import Modal from 'components/Modal';
 
 export default function NewChannelModal({
   communityId,
@@ -88,7 +87,6 @@ export default function NewChannelModal({
               autoFocus
               id="channelName"
               label="Channel name"
-              
               disabled={loading}
               required
               placeholder="e.g. javascript"

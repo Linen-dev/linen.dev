@@ -1,4 +1,4 @@
-import Modal from 'components/Modal';
+import { Modal } from '@linen/ui';
 import type { SessionType } from 'services/session';
 import { getSession } from 'utilities/auth/react';
 import React, { createContext, useContext, useEffect, useState } from 'react';
@@ -106,10 +106,18 @@ export const JoinContext = ({ children }: Props) => {
         {...{
           open,
           close: onCloseModal,
-          title: 'Join the community',
-          subtitle: `Sign ${mapText[flow]} to join the community and start to chat`,
         }}
       >
+        <div className="m-5 text-center">
+          <h3 className="text-lg font-medium leading-6 text-gray-900">
+            Join the community
+          </h3>
+          <div className="mt-2">
+            <p className="text-sm text-gray-500">
+              Sign {mapText[flow]} to join the community and start to chat
+            </p>
+          </div>
+        </div>
         {flow === 'signup' && (
           <SignUp
             mode={mode}

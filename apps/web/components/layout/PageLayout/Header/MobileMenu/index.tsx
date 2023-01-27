@@ -14,7 +14,7 @@ import {
   FiFileText,
 } from 'react-icons/fi';
 import Link from 'components/Link/InternalLink';
-import Modal from 'components/Modal';
+import { Modal } from '@linen/ui';
 import styles from './index.module.scss';
 import { Permissions, SerializedChannel } from '@linen/types';
 import { signOut } from 'utilities/auth/react';
