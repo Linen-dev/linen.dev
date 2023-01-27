@@ -4,8 +4,7 @@ import classNames from 'classnames';
 import { Menu, Transition } from '@headlessui/react';
 import { signOut } from 'utilities/auth/react';
 import { SerializedUser } from '@linen/types';
-import { Avatar } from '@linen/ui';
-import Modal from 'components/Modal';
+import { Avatar, Modal } from '@linen/ui';
 import ProfileForm from './ProfileForm';
 import { AxiosRequestConfig } from 'axios';
 

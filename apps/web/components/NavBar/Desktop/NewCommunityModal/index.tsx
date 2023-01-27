@@ -1,4 +1,4 @@
-import Modal from 'components/Modal';
+import { Modal } from '@linen/ui';
 import H3 from 'components/H3';
 import { FiX } from 'react-icons/fi';
 import Form from 'components/Pages/Onboarding/Form';

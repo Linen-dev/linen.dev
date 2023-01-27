@@ -13,6 +13,7 @@ import Label from './Label';
 import Line from './Line';
 import List from './List';
 import Message from './Message';
+import Modal from './Modal';
 import NativeSelect from './NativeSelect';
 import Nav from './Nav';
 import Spinner from './Spinner';
@@ -41,6 +42,7 @@ export {
   Line,
   List,
   Message,
+  Modal,
   NativeSelect,
   Nav,
   Spinner,
