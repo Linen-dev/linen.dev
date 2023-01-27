@@ -1,7 +1,8 @@
+import { useState } from 'react';
 import classNames from 'classnames';
 import Draggable from './Draggable';
 import { getThreadUrl } from '../Pages/Channel/utilities/url';
-import { Toast, Tooltip } from '@linen/ui';
+import { Toast, Tooltip, ConfirmationModal } from '@linen/ui';
 import {
   Permissions,
   Settings,
@@ -71,6 +72,7 @@ export default function Actions({
   onPin,
   onReaction,
 }: Props) {
+  const [modal, setModal] = useState(false);
   const isReactionActive = hasReaction(message, ':thumbsup:', currentUser?.id);
   const owner = currentUser ? currentUser.id === message.usersId : false;
   const draggable = permissions.manage || owner;
@@ -150,11 +152,24 @@ export default function Actions({
       {onDelete &&
         currentUser &&
         (permissions.manage || currentUser.id === message.usersId) && (
-          <li onClick={() => onDelete(message.id)}>
-            <Tooltip className={styles.tooltip} text="Delete">
-              <FiTrash2 />
-            </Tooltip>
-          </li>
+          <>
+            <li onClick={() => setModal(true)}>
+              <Tooltip className={styles.tooltip} text="Delete">
+                <FiTrash2 />
+              </Tooltip>
+            </li>
+            <ConfirmationModal
+              title="Delete message"
+              description="Permanently delete this message?"
+              confirm="Delete"
+              open={modal}
+              close={() => setModal(false)}
+              onConfirm={() => {
+                onDelete(message.id);
+                setModal(false);
+              }}
+            />
+          </>
         )}
     </ul>
   );

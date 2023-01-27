@@ -7,6 +7,7 @@ import ButtonGroup from './ButtonGroup';
 import ButtonToggle from './ButtonToggle';
 import Checkbox from './Checkbox';
 import Code from './Code';
+import ConfirmationModal from './ConfirmationModal';
 import Container from './Container';
 import Image from './Image';
 import Label from './Label';
@@ -36,6 +37,7 @@ export {
   ButtonToggle,
   Checkbox,
   Code,
+  ConfirmationModal,
   Container,
   Image,
   Label,
