@@ -13,6 +13,7 @@ import {
 import { copyToClipboard } from '@linen/utilities/clipboard';
 import { GoPin } from 'react-icons/go';
 import { AiOutlinePaperClip } from 'react-icons/ai';
+import { BsFillVolumeMuteFill } from 'react-icons/bs';
 import { RxDragHandleDots2 } from 'react-icons/rx';
 import { FiThumbsUp, FiTrash2 } from 'react-icons/fi';
 import styles from './index.module.scss';
@@ -29,6 +30,7 @@ interface Props {
   mode?: Mode;
   drag: 'thread' | 'message';
   onDelete?(messageId: string): void;
+  onMute?(threadId: string): void;
   onPin?(threadId: string): void;
   onReaction?({
     threadId,
@@ -69,6 +71,7 @@ export default function Actions({
   mode,
   drag,
   onDelete,
+  onMute,
   onPin,
   onReaction,
 }: Props) {
@@ -113,6 +116,23 @@ export default function Actions({
             <FiThumbsUp
               className={classNames({
                 [styles.active]: isReactionActive,
+              })}
+            />
+          </Tooltip>
+        </li>
+      )}
+      {onMute && currentUser && (
+        <li
+          onClick={(event) => {
+            event.stopPropagation();
+            event.preventDefault();
+            onMute(thread.id);
+          }}
+        >
+          <Tooltip className={styles.tooltip} text="Mute">
+            <BsFillVolumeMuteFill
+              className={classNames({
+                [styles.active]: false,
               })}
             />
           </Tooltip>
