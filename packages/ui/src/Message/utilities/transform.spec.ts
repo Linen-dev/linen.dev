@@ -29,4 +29,34 @@ describe('transport', () => {
       })
     );
   });
+
+  it('converts json like messages to code blocks', () => {
+    const tree = {
+      type: 'root',
+      children: [
+        {
+          type: 'text',
+          value: '{ "foo": "bar" }',
+          source: '{ "foo": "bar" }',
+        },
+      ],
+      source: '{ "foo": "bar" }',
+    };
+
+    const output = transform(tree);
+
+    expect(output).toEqual(
+      expect.objectContaining({
+        type: 'root',
+        children: [
+          expect.objectContaining({
+            type: 'pre',
+            value: '{ "foo": "bar" }',
+            source: '{ "foo": "bar" }',
+          }),
+        ],
+        source: '{ "foo": "bar" }',
+      })
+    );
+  });
 });
