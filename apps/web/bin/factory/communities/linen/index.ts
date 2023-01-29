@@ -91,6 +91,14 @@ export default async function createLinenCommunity() {
       role: Roles.ADMIN,
     },
   });
+  const bot = await prisma.users.create({
+    data: {
+      displayName: 'aws-deployment',
+      accountsId: community.id,
+      isAdmin: false,
+      isBot: true,
+    },
+  });
 
   const channel1 = await prisma.channels.create({
     data: {
@@ -522,6 +530,34 @@ export default async function createLinenCommunity() {
         ],
       },
       title: 'Markdown syntax in Linen',
+    },
+  });
+
+  const channel5 = await prisma.channels.create({
+    data: {
+      accountId: community.id,
+      channelName: 'notifications',
+    },
+  });
+
+  await prisma.threads.create({
+    data: {
+      channelId: channel5.id,
+      sentAt: new Date().getTime(),
+      messages: {
+        create: [
+          {
+            channelId: channel5.id,
+            body: readFileSync(
+              join(__dirname, 'notifications/aws.json'),
+              'utf8'
+            ),
+            usersId: bot.id,
+            sentAt: '2021-12-15T09:01:00.000Z',
+            messageFormat: MessageFormat.LINEN,
+          },
+        ],
+      },
     },
   });
 }

@@ -1,0 +1,16 @@
+{
+  "account": "775327867774",
+  "detailType": "CodePipeline Pipeline Execution State Change",
+  "region": "us-east-1",
+  "source": "aws.codepipeline",
+  "time": "2023-01-27T12:53:48Z",
+  "notificationRuleArn": "arn:aws:codestar-notifications:us-east-1:775327867774:notificationrule/684d2f8a271a06921a1b5ed6b473f4c27781d342",
+  "detail": {
+    "pipeline": "linen-aws-prod",
+    "execution-id": "6973f45e-e225-4fb0-9f08-e5deed1025a5",
+    "state": "SUPERSEDED",
+    "version": 5.0
+  },
+  "resources": ["arn:aws:codepipeline:us-east-1:775327867774:linen-aws-prod"],
+  "additionalAttributes": {}
+}
