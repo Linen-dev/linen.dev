@@ -53,7 +53,6 @@ export enum ThreadStatus {
 }
 
 export interface SerializedUserThreadStatus {
-  id: string;
   threadId: string;
   userId: string;
   muted: boolean;

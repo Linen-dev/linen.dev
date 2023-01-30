@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import PermissionsService from 'services/permissions';
+import serializeUserThreadStatus from 'serializers/user-thread-status';
 import prisma from 'client';
 import { z } from 'zod';
 
@@ -60,7 +61,7 @@ export async function create(params: {
     },
   });
 
-  return { status: 200, data: status };
+  return { status: 200, data: serializeUserThreadStatus(status) };
 }
 
 export default async function handler(
@@ -78,6 +79,11 @@ export default async function handler(
     if (!permissions.access) {
       return response.status(401).json({});
     }
+
+    if (!permissions.user) {
+      return response.status(401).json({});
+    }
+
     const { status, data } = await create({
       ...request.body,
       userId: permissions.user.id,

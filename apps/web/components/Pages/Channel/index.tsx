@@ -28,6 +28,7 @@ import { useUsersContext } from '@linen/contexts/Users';
 import storage from '@linen/utilities/storage';
 import ChannelForBots from './ChannelForBots';
 import * as api from 'utilities/requests';
+import debounce from '@linen/utilities/debounce';
 
 export interface ChannelProps {
   settings: Settings;
@@ -38,6 +39,7 @@ export interface ChannelProps {
   currentCommunity: SerializedAccount;
   threads: SerializedThread[];
   pinnedThreads: SerializedThread[];
+  userThreadStatuses: SerializedUserThreadStatus[];
   isSubDomainRouting: boolean;
   nextCursor: {
     next: string | null;
@@ -48,6 +50,23 @@ export interface ChannelProps {
   permissions: Permissions;
 }
 
+async function upsertUserThreadStatus(params: {
+  communityId: string;
+  threadId: string;
+  muted: boolean;
+  read: boolean;
+}) {
+  return fetch('/api/user-thread-status', {
+    method: 'POST',
+    body: JSON.stringify(params),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+}
+
+const debouncedUpserUserThreadStatus = debounce(upsertUserThreadStatus);
+
 export default function Channel(props: ChannelProps) {
   if (props.isBot) {
     return <ChannelForBots {...props} />;
@@ -56,6 +75,7 @@ export default function Channel(props: ChannelProps) {
   const {
     threads: initialThreads,
     pinnedThreads: initialPinnedThreads,
+    userThreadStatuses: initialUserThreadStatuses,
     channels,
     communities,
     currentChannel: initialChannel,
@@ -78,7 +98,7 @@ export default function Channel(props: ChannelProps) {
   const [allUsers] = useUsersContext();
   const [userThreadStatuses, setUserThreadStatuses] = useState<
     SerializedUserThreadStatus[]
-  >([]);
+  >(initialUserThreadStatuses);
 
   const currentUser = permissions.user || null;
   const token = permissions.token || null;
@@ -217,6 +237,12 @@ export default function Channel(props: ChannelProps) {
     threadId: string,
     { muted, read }: { muted: boolean; read: boolean }
   ) {
+    debouncedUpserUserThreadStatus({
+      communityId: currentCommunity.id,
+      threadId,
+      muted,
+      read,
+    });
     setUserThreadStatuses((statuses) => {
       const status = statuses.find((status) => status.threadId === threadId);
 
@@ -224,7 +250,6 @@ export default function Channel(props: ChannelProps) {
         return [
           ...statuses,
           {
-            id: 'fake-id',
             userId: currentUser.id,
             muted,
             read,
@@ -678,7 +703,7 @@ export default function Channel(props: ChannelProps) {
     );
     if (userThreadStatus) {
       const { muted, read } = userThreadStatus;
-      const isUnread = status === ThreadStatus.UNREAD && !read;
+      const isUnread = status === ThreadStatus.UNREAD && !read && !muted;
       const isRead = status === ThreadStatus.READ && read && !muted;
       const isMuted = status === ThreadStatus.MUTED && muted;
       if (isUnread || isRead || isMuted) {
