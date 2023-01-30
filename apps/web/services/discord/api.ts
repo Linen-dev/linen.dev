@@ -9,10 +9,6 @@ import {
   DiscordGuildMember,
 } from 'types/discord';
 
-const rateLimitControl = {
-  waitUntil: Date.now(),
-};
-
 async function discordApi({
   path,
   query = {},
@@ -25,7 +21,6 @@ async function discordApi({
   let retriesLeft = 3;
   let lastFailure;
   do {
-    await handleRateLimitSleep();
     try {
       const response = await axios.get(
         `https://discord.com/api${path}?${qs(query)}`,
@@ -35,10 +30,16 @@ async function discordApi({
           },
         }
       );
-      handleRateLimit(response);
+      const rateLimit = {
+        remaining: Number(response.headers['x-ratelimit-remaining']),
+        resetAfter: Number(response.headers['x-ratelimit-reset-after']),
+      };
+      if (rateLimit.remaining === 0) {
+        console.warn('cool down to avoid rate limit ::', rateLimit);
+        await sleep(rateLimit.resetAfter * SECONDS);
+      }
       return response.data;
     } catch (error: any) {
-      handleRateLimit(error?.response);
       retriesLeft--;
       lastFailure = JSON.stringify(
         error?.response?.data || error?.request || error?.message
@@ -46,27 +47,10 @@ async function discordApi({
       if ([404, 403, 401].includes(error?.status)) {
         throw lastFailure;
       }
+      await sleep(15 * SECONDS);
     }
   } while (retriesLeft);
   throw lastFailure;
-}
-
-async function handleRateLimitSleep() {
-  const sleepTime = rateLimitControl.waitUntil - Date.now();
-  if (sleepTime > 0) {
-    console.warn('[RATE-LIMIT] sleep', sleepTime);
-    await sleep(sleepTime);
-  }
-}
-
-function handleRateLimit(response: any) {
-  const rateLimit = {
-    remaining: Number(response?.headers?.['x-ratelimit-remaining']),
-    resetAfter: Number(response?.headers?.['x-ratelimit-reset-after']),
-  };
-  if (rateLimit.remaining === 0) {
-    rateLimitControl.waitUntil = Date.now() + rateLimit.resetAfter * SECONDS;
-  }
 }
 
 export default class DiscordApi {
