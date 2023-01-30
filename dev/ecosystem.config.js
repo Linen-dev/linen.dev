@@ -1,7 +1,5 @@
 require('dotenv').config();
 
-const PORT = process.env.PORT || 3000;
-
 module.exports = {
   apps: [
     {
@@ -9,12 +7,12 @@ module.exports = {
       script: 'npm run dev',
       cwd: '../apps/web',
       env: {
-        PORT,
+        PORT: 80,
       },
     },
     {
-      name: 'queue-chat',
-      script: 'npm run queue:worker:chat-sync',
+      name: 'queue-two-way',
+      script: 'npx tsx queue/workers/two-way-sync.ts',
       cwd: '../apps/web',
     },
     {
@@ -45,9 +43,17 @@ module.exports = {
       },
     },
     {
+      name: 'linen-bridge-github',
+      script: 'npm run dev',
+      cwd: '../apps/linen-bridge-github',
+      env: {
+        PORT: 81,
+      },
+    },
+    {
       name: 'https-proxy',
       cwd: '/opt/homebrew/bin/',
-      script: `ngrok http --region=us --hostname=linen-san.ngrok.io ${PORT}`,
+      script: `ngrok http --region=us --hostname=linen-san.ngrok.io 80`,
     },
   ],
 };
