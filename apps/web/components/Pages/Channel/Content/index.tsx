@@ -62,6 +62,7 @@ interface Props {
   token: string | null;
   setThreads: React.Dispatch<React.SetStateAction<SerializedThread[]>>;
   deleteMessage(messageId: string): void;
+  muteThread(threadId: string): void;
   pinThread(threadId: string): void;
   sendReaction({
     threadId,
@@ -119,6 +120,7 @@ export default function Channel({
   currentThreadId,
   setThreads,
   deleteMessage,
+  muteThread,
   pinThread,
   onMessage,
   onDrop,
@@ -408,6 +410,7 @@ export default function Channel({
                           currentUser={currentUser}
                           onDelete={deleteMessage}
                           onPin={pinThread}
+                          onMute={muteThread}
                           onReaction={sendReaction}
                         />
                       </PinnedThread>
@@ -437,6 +440,7 @@ export default function Channel({
                           currentUser={currentUser}
                           onClick={selectThread}
                           onDelete={deleteMessage}
+                          onMute={muteThread}
                           onPin={pinThread}
                           onReaction={sendReaction}
                           onDrop={handleDrop}

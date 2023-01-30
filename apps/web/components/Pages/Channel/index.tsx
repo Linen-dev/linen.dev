@@ -73,6 +73,7 @@ export default function Channel(props: ChannelProps) {
   const [currentChannel, setCurrentChannel] = useState(initialChannel);
   const [currentThreadId, setCurrentThreadId] = useState<string>();
   const [allUsers] = useUsersContext();
+  const [userThreadStatuses, setUserThreadStatuses] = useState<any>([]);
 
   const currentUser = permissions.user || null;
   const token = permissions.token || null;
@@ -113,6 +114,20 @@ export default function Channel(props: ChannelProps) {
       }
     }
   }, []);
+
+  useEffect(() => {
+    setThreads((threads) => {
+      return threads.filter((thread) => {
+        const status = userThreadStatuses.find(
+          (status: any) => status.threadId === thread.id
+        );
+        if (status && status.muted) {
+          return false;
+        }
+        return thread;
+      });
+    });
+  }, [userThreadStatuses]);
 
   const onSocket = (payload: any) => {
     try {
@@ -201,6 +216,33 @@ export default function Channel(props: ChannelProps) {
       .catch((_) => {
         Toast.error('Failed to delete the message.');
       });
+  }
+
+  async function muteThread(threadId: string) {
+    Toast.info('Thread was muted successfully.');
+    setUserThreadStatuses((statuses: any) => {
+      const status = statuses.find(
+        (status: any) => status.threadId === threadId
+      );
+
+      if (!status) {
+        return [
+          ...statuses,
+          { userId: currentUser.id, muted: true, read: true, threadId },
+        ];
+      }
+
+      return statuses.map((status: any) => {
+        if (status.threadId === threadId) {
+          return {
+            ...status,
+            muted: true,
+            read: true,
+          };
+        }
+        return status;
+      });
+    });
   }
 
   async function pinThread(threadId: string) {
@@ -645,6 +687,7 @@ export default function Channel(props: ChannelProps) {
         currentThreadId={currentThreadId}
         setThreads={setThreads}
         deleteMessage={deleteMessage}
+        muteThread={muteThread}
         pinThread={pinThread}
         onMessage={onThreadMessage}
         onDrop={onThreadDrop}
