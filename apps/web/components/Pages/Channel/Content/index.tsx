@@ -70,6 +70,8 @@ interface Props {
   muteThread(threadId: string): void;
   unmuteThread(threadId: string): void;
   pinThread(threadId: string): void;
+  readThread(threadId: string): void;
+  unreadThread(threadId: string): void;
   sendReaction({
     threadId,
     messageId,
@@ -132,6 +134,8 @@ export default function Channel({
   muteThread,
   unmuteThread,
   pinThread,
+  readThread,
+  unreadThread,
   onMessage,
   onDrop,
   sendReaction,
@@ -459,6 +463,8 @@ export default function Channel({
                           onUnmute={unmuteThread}
                           onPin={pinThread}
                           onReaction={sendReaction}
+                          onRead={readThread}
+                          onUnread={unreadThread}
                           onDrop={handleDrop}
                           onLoad={handleLeftScroll}
                         />

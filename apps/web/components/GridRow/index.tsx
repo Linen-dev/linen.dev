@@ -48,6 +48,8 @@ interface Props {
     type: string;
     active: boolean;
   }): void;
+  onRead?(threadId: string): void;
+  onUnread?(threadId: string): void;
 }
 
 export function Row({
@@ -69,8 +71,10 @@ export function Row({
   onLoad,
   onMute,
   onUnmute,
-  onReaction,
   onPin,
+  onReaction,
+  onRead,
+  onUnread,
 }: Props) {
   const top = !isPreviousMessageFromSameUser;
   return (
@@ -141,6 +145,8 @@ export function Row({
           onUnmute={onUnmute}
           onPin={onPin}
           onReaction={onReaction}
+          onRead={onRead}
+          onUnread={onUnread}
           mode={mode}
         />
       </div>

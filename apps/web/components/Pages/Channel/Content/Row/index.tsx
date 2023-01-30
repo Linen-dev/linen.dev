@@ -55,6 +55,8 @@ interface Props {
     from: string;
     to: string;
   }): void;
+  onRead?(threadId: string): void;
+  onUnread?(threadId: string): void;
 }
 
 export default function ChannelRow({
@@ -74,6 +76,8 @@ export default function ChannelRow({
   onUnmute,
   onPin,
   onReaction,
+  onRead,
+  onUnread,
 }: Props) {
   const { messages } = thread;
   const message = messages[0];
@@ -107,6 +111,8 @@ export default function ChannelRow({
           onUnmute={onUnmute}
           onPin={onPin}
           onReaction={onReaction}
+          onRead={onRead}
+          onUnread={onUnread}
           header={
             thread.title && <div className={styles.header}>{thread.title}</div>
           }
