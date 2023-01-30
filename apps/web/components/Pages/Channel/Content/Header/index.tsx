@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { StickyHeader } from '@linen/ui';
 import { BiMessageRoundedCheck, BiMessageRoundedDetail } from 'react-icons/bi';
 import styles from './index.module.css';
-import classNames from 'classnames';
 import { SerializedUser } from '@linen/types';
 import { NativeSelect } from '@linen/ui';
 import { FaVolumeMute } from 'react-icons/fa';
@@ -38,7 +37,7 @@ export default function Header({
   }
 
   return (
-    <StickyHeader className={classNames(styles.header, className)}>
+    <StickyHeader className={className}>
       <div className={styles.header}>
         <div className={styles.title}>
           <FiHash /> {channelName}

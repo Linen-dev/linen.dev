@@ -445,7 +445,7 @@ export default function Channel({
                   {threads.length === 0 ? (
                     <Empty />
                   ) : (
-                    <>
+                    <div className={styles.full}>
                       <ul className="divide-y w-full">
                         <Grid
                           threads={threads}
@@ -469,7 +469,7 @@ export default function Channel({
                           onLoad={handleLeftScroll}
                         />
                       </ul>
-                    </>
+                    </div>
                   )}
                 </>
               }
