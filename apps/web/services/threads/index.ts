@@ -18,6 +18,8 @@ import { v4 as uuid } from 'uuid';
 import { eventNewThread } from 'services/events';
 import { parse, find } from '@linen/ast';
 import unique from 'lodash.uniq';
+import { eventThreadClosed } from 'services/events/eventThreadClosed';
+import { eventThreadReopened } from 'services/events/eventThreadReopened';
 
 class ThreadsServices {
   static async updateMetrics({
@@ -99,6 +101,22 @@ class ThreadsServices {
         }),
       },
     });
+    if (exist.state !== thread.state) {
+      if (thread.state === ThreadState.CLOSE) {
+        await eventThreadClosed({
+          accountId,
+          channelId: thread.channelId,
+          threadId: id,
+        });
+      }
+      if (thread.state === ThreadState.OPEN) {
+        await eventThreadReopened({
+          accountId,
+          channelId: thread.channelId,
+          threadId: id,
+        });
+      }
+    }
     // TODO: call eventThreadUpdate
     return serializeThread(thread);
   }
