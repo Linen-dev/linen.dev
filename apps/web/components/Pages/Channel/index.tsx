@@ -248,7 +248,7 @@ export default function Channel(props: ChannelProps) {
 
   async function muteThread(threadId: string) {
     Toast.info('Thread was muted.');
-    markUserThreadStatuses(threadId, { muted: true, read: true });
+    markUserThreadStatuses(threadId, { muted: true, read: false });
   }
 
   async function unmuteThread(threadId: string) {
