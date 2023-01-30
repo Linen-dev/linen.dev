@@ -4,6 +4,7 @@ import { run, type JobHelpers } from 'graphile-worker';
 import { downloadCert } from 'utilities/database';
 import settings from '../settings';
 import { slackChatSync } from 'services/slack/api/postMessage';
+import { processGithubIntegration } from 'services/integrations/processGithubIntegration';
 
 export async function runWorker() {
   await downloadCert();
@@ -23,8 +24,14 @@ async function twoWaySync(payload: any, helpers: JobHelpers) {
   helpers.logger.info(JSON.stringify(result));
 }
 
-type TwoWaySyncType = {
-  event: 'newMessage' | 'newThread' | 'threadReopened' | 'threadClosed';
+export type TwoWaySyncEvent =
+  | 'newMessage'
+  | 'newThread'
+  | 'threadReopened'
+  | 'threadClosed';
+
+export type TwoWaySyncType = {
+  event: TwoWaySyncEvent;
   id: string;
   channelId?: string;
   threadId?: string;
@@ -58,9 +65,26 @@ async function twoWaySyncJob({
   if (!channel.account) {
     return 'account not found';
   }
-  if (!channel.externalChannelId) {
-    return 'channel belongs to linen';
+
+  // integration by channel
+  if (channel.channelsIntegration.length) {
+    for (const integration of channel.channelsIntegration) {
+      if (integration.type === 'GITHUB') {
+        return await processGithubIntegration({
+          channelId,
+          messageId,
+          threadId,
+          event,
+          integration,
+          id,
+        });
+      }
+      if (integration.type === 'EMAIL') {
+        return 'NotImplemented';
+      }
+    }
   }
+
   // check if is slack
   if (channel.account.slackAuthorizations.length) {
     if (event !== 'newMessage' && event !== 'newThread') {
