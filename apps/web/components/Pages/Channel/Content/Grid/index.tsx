@@ -47,7 +47,7 @@ export default function Grid({
   threads: SerializedThread[];
   permissions: Permissions;
   readStatus?: SerializedReadStatus;
-  userThreadStatuses: SerializedUserThreadStatus[];
+  userThreadStatuses?: SerializedUserThreadStatus[];
   isSubDomainRouting: boolean;
   settings: Settings;
   isBot: boolean;
@@ -55,8 +55,8 @@ export default function Grid({
   mode?: Mode;
   onClick: (threadId: number) => void;
   onDelete: (messageId: string) => void;
-  onMute: (threadId: string) => void;
-  onUnmute: (threadId: string) => void;
+  onMute?: (threadId: string) => void;
+  onUnmute?: (threadId: string) => void;
   onPin: (threadId: string) => void;
   onReaction({
     threadId,
@@ -119,7 +119,7 @@ export default function Grid({
           );
         } else if (item.type === RowType.Thread) {
           const thread = item.content as SerializedThread;
-          const userThreadStatus = userThreadStatuses.find(
+          const userThreadStatus = userThreadStatuses?.find(
             (status) => status.threadId === thread.id
           );
           const { incrementId, slug } = thread;
