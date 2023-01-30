@@ -5,6 +5,7 @@ import { serialize as serializeSettings } from 'serializers/account/settings';
 import { findThreadsByCursor, findPinnedThreads } from '../lib/threads';
 import serializeAccount from '../serializers/account';
 import serializeThread from '../serializers/thread';
+import serializeUserThreadStatus from '../serializers/user-thread-status';
 import { ThreadsWithMessagesFull } from 'types/partialTypes';
 import { decodeCursor, encodeCursor } from '../utilities/cursor';
 import { SerializedChannel } from '@linen/types';
@@ -24,6 +25,7 @@ import {
 import { qs } from 'utilities/url';
 import { z } from 'zod';
 import type { channelNextPageType } from './channel.types';
+import prisma from 'client';
 
 import { PAGE_SIZE } from 'secrets';
 
@@ -111,6 +113,18 @@ export async function channelGetServerSideProps(
       })
     : [];
 
+  const userThreadStatuses =
+    !isCrawler && permissions.user
+      ? await prisma.userThreadStatus.findMany({
+          where: {
+            userId: permissions.user.id,
+            threadId: {
+              in: threads.map(({ id }) => id),
+            },
+          },
+        })
+      : [];
+
   const communities = !isCrawler
     ? await CommunitiesService.find(context.req, context.res)
     : [];
@@ -125,6 +139,7 @@ export async function channelGetServerSideProps(
       communities: communities.map(serializeAccount),
       threads: threads.map(serializeThread),
       pinnedThreads: pinnedThreads.map(serializeThread),
+      userThreadStatuses: userThreadStatuses.map(serializeUserThreadStatus),
       settings,
       isSubDomainRouting: isSubdomainbasedRouting,
       pathCursor: page || null,
