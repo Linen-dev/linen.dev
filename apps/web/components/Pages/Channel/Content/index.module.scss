@@ -15,6 +15,7 @@
 }
 
 .jump {
+  bottom: -10px;
   display: block;
   position: absolute;
   left: calc(50% - 24px);
@@ -47,4 +48,12 @@
     background: $color-blue-700;
     color: white;
   }
+}
+
+.full {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: 100%;
 }
