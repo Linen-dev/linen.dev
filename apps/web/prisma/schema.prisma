@@ -65,6 +65,7 @@ model threads {
   closeAt             BigInt?
   firstUserReplyAt    BigInt?
   firstManagerReplyAt BigInt?
+  userThreadStatus    userThreadStatus[]
 
   notifications notifications[]
   page          Int?
@@ -242,6 +243,8 @@ model users {
   channelsIntegrationCreated channelsIntegration[] @relation("createdBy")
   channelsIntegrationUpdated channelsIntegration[] @relation("updatedBy")
 
+  userThreadStatus    userThreadStatus[]
+
   @@unique([externalUserId, accountsId])
   @@index([authsId])
 }
@@ -367,6 +370,19 @@ model readStatus {
   updatedAt  DateTime @updatedAt
 
   @@id([authId, channelId])
+}
+
+model userThreadStatus {
+  userId    String
+  user      users   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  threadId  String
+  thread    threads @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  muted     Boolean
+  read      Boolean
+
+  @@id([userId, threadId])
 }
 
 enum notificationType {
