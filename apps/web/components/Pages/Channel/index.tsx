@@ -213,8 +213,10 @@ export default function Channel(props: ChannelProps) {
       });
   }
 
-  async function muteThread(threadId: string) {
-    Toast.info('Thread was muted successfully.');
+  function markUserThreadStatuses(
+    threadId: string,
+    { muted, read }: { muted: boolean; read: boolean }
+  ) {
     setUserThreadStatuses((statuses) => {
       const status = statuses.find((status) => status.threadId === threadId);
 
@@ -224,8 +226,8 @@ export default function Channel(props: ChannelProps) {
           {
             id: 'fake-id',
             userId: currentUser.id,
-            muted: true,
-            read: true,
+            muted,
+            read,
             threadId,
           },
         ];
@@ -235,8 +237,8 @@ export default function Channel(props: ChannelProps) {
         if (status.threadId === threadId) {
           return {
             ...status,
-            muted: true,
-            read: true,
+            muted,
+            read,
           } as SerializedUserThreadStatus;
         }
         return status;
@@ -244,31 +246,24 @@ export default function Channel(props: ChannelProps) {
     });
   }
 
+  async function muteThread(threadId: string) {
+    Toast.info('Thread was muted.');
+    markUserThreadStatuses(threadId, { muted: true, read: true });
+  }
+
   async function unmuteThread(threadId: string) {
-    Toast.info('Thread was unmuted successfully.');
-    setUserThreadStatuses((statuses: any) => {
-      const status = statuses.find(
-        (status: any) => status.threadId === threadId
-      );
+    Toast.info('Thread was unmuted.');
+    markUserThreadStatuses(threadId, { muted: false, read: false });
+  }
 
-      if (!status) {
-        return [
-          ...statuses,
-          { userId: currentUser.id, muted: false, read: false, threadId },
-        ];
-      }
+  async function readThread(threadId: string) {
+    Toast.info('Thread was marked as read.');
+    markUserThreadStatuses(threadId, { muted: false, read: true });
+  }
 
-      return statuses.map((status: any) => {
-        if (status.threadId === threadId) {
-          return {
-            ...status,
-            muted: false,
-            read: false,
-          };
-        }
-        return status;
-      });
-    });
+  async function unreadThread(threadId: string) {
+    Toast.info('Thread was marked as read.');
+    markUserThreadStatuses(threadId, { muted: false, read: false });
   }
 
   async function pinThread(threadId: string) {
@@ -738,6 +733,8 @@ export default function Channel(props: ChannelProps) {
         muteThread={muteThread}
         unmuteThread={unmuteThread}
         pinThread={pinThread}
+        readThread={readThread}
+        unreadThread={unreadThread}
         onMessage={onThreadMessage}
         onDrop={onThreadDrop}
         sendReaction={sendReaction}

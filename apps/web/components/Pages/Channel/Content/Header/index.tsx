@@ -6,7 +6,7 @@ import classNames from 'classnames';
 import { SerializedUser } from '@linen/types';
 import { NativeSelect } from '@linen/ui';
 import { FaVolumeMute } from 'react-icons/fa';
-import { FiHash } from 'react-icons/fi';
+import { FiHash, FiInbox } from 'react-icons/fi';
 import { ThreadStatus } from '@linen/types';
 
 interface Props {
@@ -29,7 +29,7 @@ export default function Header({
   function getIcon(status: ThreadStatus) {
     switch (status) {
       case ThreadStatus.UNREAD:
-        return <BiMessageRoundedDetail />;
+        return <FiInbox />;
       case ThreadStatus.READ:
         return <BiMessageRoundedCheck />;
       case ThreadStatus.MUTED:
@@ -51,7 +51,7 @@ export default function Header({
               theme="gray"
               value={status}
               options={[
-                { label: 'Unread', value: ThreadStatus.UNREAD },
+                { label: 'Inbox', value: ThreadStatus.UNREAD },
                 { label: 'Read', value: ThreadStatus.READ },
                 { label: 'Muted', value: ThreadStatus.MUTED },
               ]}

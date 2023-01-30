@@ -41,6 +41,8 @@ export default function Grid({
   onUnmute,
   onPin,
   onReaction,
+  onRead,
+  onUnread,
 }: {
   threads: SerializedThread[];
   permissions: Permissions;
@@ -78,6 +80,8 @@ export default function Grid({
     from: string;
     to: string;
   }): void;
+  onRead?(threadId: string): void;
+  onUnread?(threadId: string): void;
   onLoad?(): void;
 }) {
   const rows = [
@@ -150,6 +154,8 @@ export default function Grid({
                     onUnmute={onUnmute}
                     onPin={onPin}
                     onReaction={onReaction}
+                    onRead={onRead}
+                    onUnread={onUnread}
                     onLoad={onLoad}
                   />
                 </div>
