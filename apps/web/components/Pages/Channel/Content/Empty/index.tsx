@@ -9,7 +9,6 @@ export default function Empty() {
         <GoCommentDiscussion className="text-3xl" />
       </div>
       <h2 className="font-bold text-2xl mb-2">No messages</h2>
-      <p className="text-gray-700 text-sm">Looks like the channel is empty.</p>
     </div>
   );
 }

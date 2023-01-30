@@ -46,6 +46,20 @@ export enum ThreadState {
   OPEN = 'OPEN',
 }
 
+export enum ThreadStatus {
+  UNREAD = 'unread',
+  READ = 'read',
+  MUTED = 'muted',
+}
+
+export interface SerializedUserThreadStatus {
+  id: string;
+  threadId: string;
+  userId: string;
+  muted: boolean;
+  read: boolean;
+}
+
 export interface SerializedAccount {
   id: string;
   type: AccountType;

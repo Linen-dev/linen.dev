@@ -3,7 +3,7 @@ import { Avatars } from '@linen/ui';
 import Image from 'next/image';
 import GridRow from 'components/GridRow';
 import styles from './index.module.scss';
-import { SerializedThread } from '@linen/types';
+import { SerializedThread, SerializedUserThreadStatus } from '@linen/types';
 import { SerializedUser } from '@linen/types';
 import { Permissions, Settings } from '@linen/types';
 import { Mode } from '@linen/hooks/mode';
@@ -26,10 +26,12 @@ interface Props {
   isSubDomainRouting: boolean;
   settings: Settings;
   currentUser: SerializedUser | null;
+  userThreadStatus?: SerializedUserThreadStatus;
   mode?: Mode;
   onDelete?(messageId: string): void;
   onLoad?(): void;
   onMute?(threadId: string): void;
+  onUnmute?(threadId: string): void;
   onPin?(threadId: string): void;
   onReaction?({
     threadId,
@@ -63,11 +65,13 @@ export default function ChannelRow({
   isSubDomainRouting,
   settings,
   currentUser,
+  userThreadStatus,
   mode,
   onDelete,
   onDrop,
   onLoad,
   onMute,
+  onUnmute,
   onPin,
   onReaction,
 }: Props) {
@@ -94,11 +98,13 @@ export default function ChannelRow({
           settings={settings}
           permissions={permissions}
           currentUser={currentUser}
+          userThreadStatus={userThreadStatus}
           mode={mode}
           drag="thread"
           onDelete={onDelete}
           onLoad={onLoad}
           onMute={onMute}
+          onUnmute={onUnmute}
           onPin={onPin}
           onReaction={onReaction}
           header={

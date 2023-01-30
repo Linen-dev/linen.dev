@@ -21,8 +21,10 @@ import {
   SerializedChannel,
   SerializedReadStatus,
   SerializedThread,
+  SerializedUserThreadStatus,
   Settings,
   ThreadState,
+  ThreadStatus,
   UploadedFile,
 } from '@linen/types';
 import {
@@ -60,9 +62,13 @@ interface Props {
   permissions: Permissions;
   currentThreadId: string | undefined;
   token: string | null;
+  userThreadStatuses: SerializedUserThreadStatus[];
+  status: ThreadStatus;
+  onStatusChange(status: ThreadStatus): void;
   setThreads: React.Dispatch<React.SetStateAction<SerializedThread[]>>;
   deleteMessage(messageId: string): void;
   muteThread(threadId: string): void;
+  unmuteThread(threadId: string): void;
   pinThread(threadId: string): void;
   sendReaction({
     threadId,
@@ -118,9 +124,13 @@ export default function Channel({
   token,
   permissions,
   currentThreadId,
+  userThreadStatuses,
+  status,
+  onStatusChange,
   setThreads,
   deleteMessage,
   muteThread,
+  unmuteThread,
   pinThread,
   onMessage,
   onDrop,
@@ -396,7 +406,12 @@ export default function Channel({
                       [styles.pinned]: !!pinnedThread,
                     })}
                     channelName={currentChannel.channelName}
-                    mode={mode}
+                    currentUser={currentUser}
+                    status={status}
+                    onStatusChange={(status: ThreadStatus) => {
+                      onStatusChange(status);
+                      setTimeout(() => handleScroll(), 0);
+                    }}
                   >
                     {pinnedThread && (
                       <PinnedThread
@@ -410,7 +425,6 @@ export default function Channel({
                           currentUser={currentUser}
                           onDelete={deleteMessage}
                           onPin={pinThread}
-                          onMute={muteThread}
                           onReaction={sendReaction}
                         />
                       </PinnedThread>
@@ -433,6 +447,7 @@ export default function Channel({
                           threads={threads}
                           permissions={permissions}
                           readStatus={readStatus}
+                          userThreadStatuses={userThreadStatuses}
                           isSubDomainRouting={isSubDomainRouting}
                           settings={settings}
                           isBot={false}
@@ -441,6 +456,7 @@ export default function Channel({
                           onClick={selectThread}
                           onDelete={deleteMessage}
                           onMute={muteThread}
+                          onUnmute={unmuteThread}
                           onPin={pinThread}
                           onReaction={sendReaction}
                           onDrop={handleDrop}

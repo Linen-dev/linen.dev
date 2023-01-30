@@ -43,14 +43,13 @@ function NativeSelect({
       <div
         className={classNames(className, styles.container, {
           [styles.blue]: theme === 'blue',
+          [styles.gray]: theme === 'gray',
           [styles.disabled]: disabled,
         })}
       >
         {icon && <div className={styles.icon}>{icon}</div>}
         <select
-          className={classNames(styles.select, {
-            [styles.gray]: theme === 'gray',
-          })}
+          className={styles.select}
           id={id}
           name={id || name}
           required={required}

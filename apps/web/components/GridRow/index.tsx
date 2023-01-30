@@ -13,6 +13,7 @@ import {
   SerializedThread,
   SerializedUser,
   ThreadState,
+  SerializedUserThreadStatus,
 } from '@linen/types';
 import styles from './index.module.scss';
 
@@ -26,6 +27,7 @@ interface Props {
   settings: Settings;
   permissions: Permissions;
   currentUser: SerializedUser | null;
+  userThreadStatus?: SerializedUserThreadStatus;
   mode?: Mode;
   drag: 'thread' | 'message';
   header?: React.ReactNode;
@@ -33,6 +35,7 @@ interface Props {
   onDelete?(messageId: string): void;
   onLoad?(): void;
   onMute?(threadId: string): void;
+  onUnmute?(threadId: string): void;
   onPin?(threadId: string): void;
   onReaction?({
     threadId,
@@ -55,6 +58,7 @@ export function Row({
   isPreviousMessageFromSameUser,
   isSubDomainRouting,
   currentUser,
+  userThreadStatus,
   settings,
   permissions,
   mode,
@@ -64,6 +68,7 @@ export function Row({
   onDelete,
   onLoad,
   onMute,
+  onUnmute,
   onReaction,
   onPin,
 }: Props) {
@@ -128,10 +133,12 @@ export function Row({
           settings={settings}
           permissions={permissions}
           currentUser={currentUser}
+          userThreadStatus={userThreadStatus}
           isSubDomainRouting={isSubDomainRouting}
           drag={drag}
           onDelete={onDelete}
           onMute={onMute}
+          onUnmute={onUnmute}
           onPin={onPin}
           onReaction={onReaction}
           mode={mode}

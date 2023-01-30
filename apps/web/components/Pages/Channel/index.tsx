@@ -11,8 +11,10 @@ import {
   SerializedMessage,
   SerializedThread,
   SerializedUser,
+  SerializedUserThreadStatus,
   Settings,
   ThreadState,
+  ThreadStatus,
 } from '@linen/types';
 import {
   postReaction,
@@ -67,13 +69,16 @@ export default function Channel(props: ChannelProps) {
     permissions,
   } = props;
 
+  const [status, setStatus] = useState<ThreadStatus>(ThreadStatus.UNREAD);
   const [threads, setThreads] = useState<SerializedThread[]>(initialThreads);
   const [pinnedThreads, setPinnedThreads] =
     useState<SerializedThread[]>(initialPinnedThreads);
   const [currentChannel, setCurrentChannel] = useState(initialChannel);
   const [currentThreadId, setCurrentThreadId] = useState<string>();
   const [allUsers] = useUsersContext();
-  const [userThreadStatuses, setUserThreadStatuses] = useState<any>([]);
+  const [userThreadStatuses, setUserThreadStatuses] = useState<
+    SerializedUserThreadStatus[]
+  >([]);
 
   const currentUser = permissions.user || null;
   const token = permissions.token || null;
@@ -115,19 +120,9 @@ export default function Channel(props: ChannelProps) {
     }
   }, []);
 
-  useEffect(() => {
-    setThreads((threads) => {
-      return threads.filter((thread) => {
-        const status = userThreadStatuses.find(
-          (status: any) => status.threadId === thread.id
-        );
-        if (status && status.muted) {
-          return false;
-        }
-        return thread;
-      });
-    });
-  }, [userThreadStatuses]);
+  const onStatusChange = (status: ThreadStatus) => {
+    setStatus(status);
+  };
 
   const onSocket = (payload: any) => {
     try {
@@ -220,6 +215,37 @@ export default function Channel(props: ChannelProps) {
 
   async function muteThread(threadId: string) {
     Toast.info('Thread was muted successfully.');
+    setUserThreadStatuses((statuses) => {
+      const status = statuses.find((status) => status.threadId === threadId);
+
+      if (!status) {
+        return [
+          ...statuses,
+          {
+            id: 'fake-id',
+            userId: currentUser.id,
+            muted: true,
+            read: true,
+            threadId,
+          },
+        ];
+      }
+
+      return statuses.map((status) => {
+        if (status.threadId === threadId) {
+          return {
+            ...status,
+            muted: true,
+            read: true,
+          } as SerializedUserThreadStatus;
+        }
+        return status;
+      });
+    });
+  }
+
+  async function unmuteThread(threadId: string) {
+    Toast.info('Thread was unmuted successfully.');
     setUserThreadStatuses((statuses: any) => {
       const status = statuses.find(
         (status: any) => status.threadId === threadId
@@ -228,7 +254,7 @@ export default function Channel(props: ChannelProps) {
       if (!status) {
         return [
           ...statuses,
-          { userId: currentUser.id, muted: true, read: true, threadId },
+          { userId: currentUser.id, muted: false, read: false, threadId },
         ];
       }
 
@@ -236,8 +262,8 @@ export default function Channel(props: ChannelProps) {
         if (status.threadId === threadId) {
           return {
             ...status,
-            muted: true,
-            read: true,
+            muted: false,
+            read: false,
           };
         }
         return status;
@@ -651,6 +677,25 @@ export default function Channel(props: ChannelProps) {
     }
   }
 
+  const threadsToRender = threads.filter((thread) => {
+    const userThreadStatus = userThreadStatuses.find(
+      (userThreadStatus: any) => userThreadStatus.threadId === thread.id
+    );
+    if (userThreadStatus) {
+      const { muted, read } = userThreadStatus;
+      const isUnread = status === ThreadStatus.UNREAD && !read;
+      const isRead = status === ThreadStatus.READ && read && !muted;
+      const isMuted = status === ThreadStatus.MUTED && muted;
+      if (isUnread || isRead || isMuted) {
+        return thread;
+      }
+      return false;
+    } else if (status === ThreadStatus.READ || status === ThreadStatus.MUTED) {
+      return false;
+    }
+    return thread;
+  });
+
   return (
     <PageLayout
       currentChannel={currentChannel}
@@ -673,7 +718,7 @@ export default function Channel(props: ChannelProps) {
     >
       <Content
         key={currentChannel.channelName}
-        threads={threads}
+        threads={threadsToRender}
         pinnedThreads={pinnedThreads}
         currentChannel={currentChannel}
         currentCommunity={currentCommunity}
@@ -685,9 +730,13 @@ export default function Channel(props: ChannelProps) {
         isBot={isBot}
         permissions={permissions}
         currentThreadId={currentThreadId}
+        userThreadStatuses={userThreadStatuses}
+        status={status}
+        onStatusChange={onStatusChange}
         setThreads={setThreads}
         deleteMessage={deleteMessage}
         muteThread={muteThread}
+        unmuteThread={unmuteThread}
         pinThread={pinThread}
         onMessage={onThreadMessage}
         onDrop={onThreadDrop}
