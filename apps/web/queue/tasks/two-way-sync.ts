@@ -48,6 +48,7 @@ async function twoWaySyncJob({
       account: {
         include: { slackAuthorizations: true, discordAuthorizations: true },
       },
+      channelsIntegration: true,
     },
   });
 

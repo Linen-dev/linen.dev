@@ -1,5 +1,13 @@
-import { messages, slackAuthorizations, threads, users } from '@prisma/client';
-import { ChannelWithAccountAndAuthorizations } from 'services/sync';
+import {
+  accounts,
+  channels,
+  channelsIntegration,
+  discordAuthorizations,
+  messages,
+  slackAuthorizations,
+  threads,
+  users,
+} from '@prisma/client';
 import request from 'superagent';
 import prisma from '../../../client';
 
@@ -79,7 +87,16 @@ export async function slackChatSync({
   isThread,
   isReply,
 }: {
-  channel: ChannelWithAccountAndAuthorizations;
+  channel:
+    | channels & {
+        channelsIntegration: channelsIntegration[];
+        account:
+          | (accounts & {
+              slackAuthorizations: slackAuthorizations[];
+              discordAuthorizations: discordAuthorizations[];
+            })
+          | null;
+      };
   threadId?: string;
   messageId: string;
   isThread?: boolean;
