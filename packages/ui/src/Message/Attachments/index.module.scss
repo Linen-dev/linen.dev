@@ -8,3 +8,8 @@
 .image {
   display: inline-block;
 }
+@media screen and (max-width: 767px) {
+  .attachments {
+    flex-direction: column;
+  }
+}
