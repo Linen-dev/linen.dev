@@ -32,6 +32,7 @@ interface Props {
   footer?: React.ReactNode;
   onDelete?(messageId: string): void;
   onLoad?(): void;
+  onMute?(threadId: string): void;
   onPin?(threadId: string): void;
   onReaction?({
     threadId,
@@ -62,6 +63,7 @@ export function Row({
   footer,
   onDelete,
   onLoad,
+  onMute,
   onReaction,
   onPin,
 }: Props) {
@@ -129,6 +131,7 @@ export function Row({
           isSubDomainRouting={isSubDomainRouting}
           drag={drag}
           onDelete={onDelete}
+          onMute={onMute}
           onPin={onPin}
           onReaction={onReaction}
           mode={mode}

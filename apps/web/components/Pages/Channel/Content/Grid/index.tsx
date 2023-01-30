@@ -35,6 +35,7 @@ export default function Grid({
   onDelete,
   onDrop,
   onLoad,
+  onMute,
   onPin,
   onReaction,
 }: {
@@ -48,6 +49,7 @@ export default function Grid({
   mode?: Mode;
   onClick: (threadId: number) => void;
   onDelete: (messageId: string) => void;
+  onMute: (threadId: string) => void;
   onPin: (threadId: string) => void;
   onReaction({
     threadId,
@@ -135,6 +137,7 @@ export default function Grid({
                     mode={mode}
                     onDelete={onDelete}
                     onDrop={onDrop}
+                    onMute={onMute}
                     onPin={onPin}
                     onReaction={onReaction}
                     onLoad={onLoad}

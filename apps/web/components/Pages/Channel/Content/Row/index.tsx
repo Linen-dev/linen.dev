@@ -18,21 +18,7 @@ export const uniqueUsers = (users: SerializedUser[]): SerializedUser[] => {
   return Array.from(userMap.values());
 };
 
-export default function ChannelRow({
-  className,
-  thread,
-  permissions,
-  isBot,
-  isSubDomainRouting,
-  settings,
-  currentUser,
-  mode,
-  onDelete,
-  onDrop,
-  onLoad,
-  onPin,
-  onReaction,
-}: {
+interface Props {
   className?: string;
   thread: SerializedThread;
   permissions: Permissions;
@@ -43,6 +29,7 @@ export default function ChannelRow({
   mode?: Mode;
   onDelete?(messageId: string): void;
   onLoad?(): void;
+  onMute?(threadId: string): void;
   onPin?(threadId: string): void;
   onReaction?({
     threadId,
@@ -66,7 +53,24 @@ export default function ChannelRow({
     from: string;
     to: string;
   }): void;
-}) {
+}
+
+export default function ChannelRow({
+  className,
+  thread,
+  permissions,
+  isBot,
+  isSubDomainRouting,
+  settings,
+  currentUser,
+  mode,
+  onDelete,
+  onDrop,
+  onLoad,
+  onMute,
+  onPin,
+  onReaction,
+}: Props) {
   const { messages } = thread;
   const message = messages[0];
   let users = messages.map((m) => m.author).filter(Boolean) as SerializedUser[];
@@ -94,6 +98,7 @@ export default function ChannelRow({
           drag="thread"
           onDelete={onDelete}
           onLoad={onLoad}
+          onMute={onMute}
           onPin={onPin}
           onReaction={onReaction}
           header={

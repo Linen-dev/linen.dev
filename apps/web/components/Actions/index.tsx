@@ -13,9 +13,9 @@ import {
 import { copyToClipboard } from '@linen/utilities/clipboard';
 import { GoPin } from 'react-icons/go';
 import { AiOutlinePaperClip } from 'react-icons/ai';
-import { BsFillVolumeMuteFill } from 'react-icons/bs';
 import { RxDragHandleDots2 } from 'react-icons/rx';
 import { FiThumbsUp, FiTrash2 } from 'react-icons/fi';
+import { FaVolumeMute } from 'react-icons/fa';
 import styles from './index.module.scss';
 import { Mode } from '@linen/hooks/mode';
 
@@ -130,7 +130,7 @@ export default function Actions({
           }}
         >
           <Tooltip className={styles.tooltip} text="Mute">
-            <BsFillVolumeMuteFill
+            <FaVolumeMute
               className={classNames({
                 [styles.active]: false,
               })}
