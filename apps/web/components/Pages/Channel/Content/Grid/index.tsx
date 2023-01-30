@@ -6,6 +6,7 @@ import {
   SerializedReadStatus,
   SerializedThread,
   SerializedUser,
+  SerializedUserThreadStatus,
   Settings,
 } from '@linen/types';
 import { Mode } from '@linen/hooks/mode';
@@ -26,6 +27,7 @@ export default function Grid({
   threads,
   permissions,
   readStatus,
+  userThreadStatuses,
   isSubDomainRouting,
   settings,
   isBot,
@@ -36,12 +38,14 @@ export default function Grid({
   onDrop,
   onLoad,
   onMute,
+  onUnmute,
   onPin,
   onReaction,
 }: {
   threads: SerializedThread[];
   permissions: Permissions;
   readStatus?: SerializedReadStatus;
+  userThreadStatuses: SerializedUserThreadStatus[];
   isSubDomainRouting: boolean;
   settings: Settings;
   isBot: boolean;
@@ -50,6 +54,7 @@ export default function Grid({
   onClick: (threadId: number) => void;
   onDelete: (messageId: string) => void;
   onMute: (threadId: string) => void;
+  onUnmute: (threadId: string) => void;
   onPin: (threadId: string) => void;
   onReaction({
     threadId,
@@ -110,6 +115,9 @@ export default function Grid({
           );
         } else if (item.type === RowType.Thread) {
           const thread = item.content as SerializedThread;
+          const userThreadStatus = userThreadStatuses.find(
+            (status) => status.threadId === thread.id
+          );
           const { incrementId, slug } = thread;
           return (
             <li key={`feed-${incrementId}-${index}`} className={styles.li}>
@@ -130,6 +138,7 @@ export default function Grid({
                   <Row
                     className={styles.row}
                     thread={thread}
+                    userThreadStatus={userThreadStatus}
                     permissions={permissions}
                     isSubDomainRouting={isSubDomainRouting}
                     settings={settings}
@@ -138,6 +147,7 @@ export default function Grid({
                     onDelete={onDelete}
                     onDrop={onDrop}
                     onMute={onMute}
+                    onUnmute={onUnmute}
                     onPin={onPin}
                     onReaction={onReaction}
                     onLoad={onLoad}

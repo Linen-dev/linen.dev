@@ -73,7 +73,13 @@
   cursor: not-allowed;
 }
 
-.gray {
+.gray .select {
   background: $color-gray-50;
-  color: $color-gray-500;
+  border-color: $color-gray-50;
+  color: black;
+  font-weight: bold;
+}
+
+.gray .icon {
+  color: black;
 }

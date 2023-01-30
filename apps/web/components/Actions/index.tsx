@@ -9,13 +9,14 @@ import {
   SerializedMessage,
   SerializedThread,
   SerializedUser,
+  SerializedUserThreadStatus,
 } from '@linen/types';
 import { copyToClipboard } from '@linen/utilities/clipboard';
 import { GoPin } from 'react-icons/go';
 import { AiOutlinePaperClip } from 'react-icons/ai';
 import { RxDragHandleDots2 } from 'react-icons/rx';
 import { FiThumbsUp, FiTrash2 } from 'react-icons/fi';
-import { FaVolumeMute } from 'react-icons/fa';
+import { FaVolumeMute, FaVolumeUp } from 'react-icons/fa';
 import styles from './index.module.scss';
 import { Mode } from '@linen/hooks/mode';
 
@@ -27,10 +28,12 @@ interface Props {
   settings: Settings;
   isSubDomainRouting: boolean;
   currentUser: SerializedUser | null;
+  userThreadStatus?: SerializedUserThreadStatus;
   mode?: Mode;
   drag: 'thread' | 'message';
   onDelete?(messageId: string): void;
   onMute?(threadId: string): void;
+  onUnmute?(threadId: string): void;
   onPin?(threadId: string): void;
   onReaction?({
     threadId,
@@ -68,10 +71,12 @@ export default function Actions({
   settings,
   isSubDomainRouting,
   currentUser,
+  userThreadStatus,
   mode,
   drag,
   onDelete,
   onMute,
+  onUnmute,
   onPin,
   onReaction,
 }: Props) {
@@ -121,7 +126,7 @@ export default function Actions({
           </Tooltip>
         </li>
       )}
-      {onMute && currentUser && (
+      {onMute && currentUser && (!userThreadStatus || !userThreadStatus.muted) && (
         <li
           onClick={(event) => {
             event.stopPropagation();
@@ -131,6 +136,23 @@ export default function Actions({
         >
           <Tooltip className={styles.tooltip} text="Mute">
             <FaVolumeMute
+              className={classNames({
+                [styles.active]: false,
+              })}
+            />
+          </Tooltip>
+        </li>
+      )}
+      {onUnmute && currentUser && userThreadStatus && userThreadStatus.muted && (
+        <li
+          onClick={(event) => {
+            event.stopPropagation();
+            event.preventDefault();
+            onUnmute(thread.id);
+          }}
+        >
+          <Tooltip className={styles.tooltip} text="Unmute">
+            <FaVolumeUp
               className={classNames({
                 [styles.active]: false,
               })}

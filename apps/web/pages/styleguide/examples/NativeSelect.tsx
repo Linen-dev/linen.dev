@@ -23,10 +23,19 @@ export default function NativeSelectExample() {
             { label: 'Option 2', value: 'option-2' },
           ]}
         />
+        <NativeSelect
+          label="Name"
+          id="select-input-c"
+          theme="gray"
+          options={[
+            { label: 'Option 1', value: 'option-1' },
+            { label: 'Option 2', value: 'option-2' },
+          ]}
+        />
       </Example>
       <Example description="NativeSelect can have an icon.">
         <NativeSelect
-          id="select-input-c"
+          id="select-input-e"
           icon={<AiOutlineNumber />}
           options={[
             { label: 'Option 1', value: 'option-1' },
@@ -34,7 +43,7 @@ export default function NativeSelectExample() {
           ]}
         />
         <NativeSelect
-          id="select-input-d"
+          id="select-input-f"
           icon={<AiOutlineNumber />}
           theme="blue"
           options={[
@@ -45,7 +54,7 @@ export default function NativeSelectExample() {
       </Example>
       <Example description="NativeSelect can be disabled.">
         <NativeSelect
-          id="select-input-e"
+          id="select-input-g"
           icon={<AiOutlineNumber />}
           disabled
           options={[
@@ -54,7 +63,7 @@ export default function NativeSelectExample() {
           ]}
         />
         <NativeSelect
-          id="select-input-f"
+          id="select-input-h"
           icon={<AiOutlineNumber />}
           theme="blue"
           disabled
