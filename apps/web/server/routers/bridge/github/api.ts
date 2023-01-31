@@ -1,9 +1,11 @@
 import axios from 'axios';
 import * as LinenTypes from '@linen/types';
 import env from './config';
+import { getLinenUrl } from 'utilities/domain';
+import { appendProtocol } from 'utilities/url';
 
 const instance = axios.create({
-  baseURL: `${env.LINEN_API}/api/integrations`,
+  baseURL: `${appendProtocol(getLinenUrl())}/api/integrations`,
   headers: { 'x-api-internal': env.INTERNAL_API_KEY },
 });
 

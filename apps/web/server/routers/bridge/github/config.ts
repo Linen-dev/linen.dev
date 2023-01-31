@@ -8,9 +8,7 @@ const env = cleanEnv(process.env, {
   GITHUB_PRIVATE_KEY: str(),
   GITHUB_WEBHOOK_SECRET: str(),
   NODE_ENV: str({ choices: ['development', 'test', 'production', 'staging'] }),
-  PORT: num(),
   INTERNAL_API_KEY: str(),
-  LINEN_API: str(),
   BOT_SENDER_ID: num(),
   BOT_SENDER_LOGIN: str(),
 });

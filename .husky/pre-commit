@@ -3,4 +3,3 @@
 
 yarn audit
 yarn web test
-yarn turbo --filter=@linen/bridge-github... test

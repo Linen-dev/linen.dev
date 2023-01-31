@@ -89,5 +89,8 @@ export function getPushUrlSSR() {
   if (!!process.env.VERCEL_GIT_COMMIT_REF) {
     return `https://push.${process.env.VERCEL_GIT_COMMIT_REF}.linendev.com`;
   }
+  if (!!process.env.PUSH_SERVICE_URL) {
+    return process.env.PUSH_SERVICE_URL;
+  }
   return `http://localhost:${process.env.PUSH_PORT ?? 4000}`;
 }

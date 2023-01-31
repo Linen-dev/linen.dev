@@ -6,7 +6,7 @@ import * as GitHubTypes from '@octokit/webhooks-types';
 
 const githubApp = new App({
   appId: env.GITHUB_APP_ID,
-  privateKey: env.GITHUB_PRIVATE_KEY,
+  privateKey: env.GITHUB_PRIVATE_KEY.replace(/\\n/g, '\n'),
   webhooks: {
     secret: env.GITHUB_WEBHOOK_SECRET,
   },

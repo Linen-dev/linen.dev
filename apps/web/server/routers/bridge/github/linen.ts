@@ -93,33 +93,33 @@ function buildMessage(body: string, displayName?: string) {
   return body;
 }
 
-const linenRouter = Router().use(json(), urlencoded({ extended: true }));
-
-linenRouter.post(`/events`, integrationMiddleware(), async (req, res, next) => {
-  try {
-    const { event, data } = reqBodySchema.parse(req.body);
-    if (event === 'newMessage') {
-      await processMessage(data);
-      // we may need the external message id in the future to allow us to update the message
-      return res.sendStatus(200);
+const linenRouter = Router()
+  // .use(json(), urlencoded({ extended: true }))
+  .post(`/events`, integrationMiddleware(), async (req, res, next) => {
+    try {
+      const { event, data } = reqBodySchema.parse(req.body);
+      if (event === 'newMessage') {
+        await processMessage(data);
+        // we may need the external message id in the future to allow us to update the message
+        return res.sendStatus(200);
+      }
+      if (event === 'newThread') {
+        const result = await processThread(data);
+        return res.status(200).send(result);
+      }
+      if (event === 'threadClosed') {
+        await processThreadState(data, 'closed');
+        return res.sendStatus(200);
+      }
+      if (event === 'threadReopened') {
+        await processThreadState(data, 'open');
+        return res.sendStatus(200);
+      }
+      return res.sendStatus(405).end();
+    } catch (error) {
+      console.error(error);
+      return res.sendStatus(500);
     }
-    if (event === 'newThread') {
-      const result = await processThread(data);
-      return res.status(200).send(result);
-    }
-    if (event === 'threadClosed') {
-      await processThreadState(data, 'closed');
-      return res.sendStatus(200);
-    }
-    if (event === 'threadReopened') {
-      await processThreadState(data, 'open');
-      return res.sendStatus(200);
-    }
-    return res.sendStatus(405).end();
-  } catch (error) {
-    console.error(error);
-    return res.sendStatus(500);
-  }
-});
+  });
 
 export default linenRouter;

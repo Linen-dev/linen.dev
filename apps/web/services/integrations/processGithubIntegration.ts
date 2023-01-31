@@ -2,6 +2,8 @@ import prisma from 'client';
 import { channelsIntegration, Prisma } from '@prisma/client';
 import axios from 'axios';
 import { TwoWaySyncEvent, TwoWaySyncType } from 'queue/tasks/two-way-sync';
+import { getLinenUrl } from 'utilities/domain';
+import { appendProtocol } from 'utilities/url';
 
 export async function processGithubIntegration({
   channelId,
@@ -172,9 +174,13 @@ async function processThreadUpdate(
 
 async function callBridgeApi(data: any) {
   return await axios
-    .post(`${process.env.LINEN_BRIDGE_GITHUB}/api/linen/events`, data, {
-      headers: { 'x-api-internal': process.env.INTERNAL_API_KEY! },
-    })
+    .post(
+      `${appendProtocol(getLinenUrl())}/api/bridge/github/out/events`,
+      data,
+      {
+        headers: { 'x-api-internal': process.env.INTERNAL_API_KEY! },
+      }
+    )
     .then((r) => r.data)
     .catch((e) => {
       throw e.message || e.error;
