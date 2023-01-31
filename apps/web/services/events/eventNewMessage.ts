@@ -2,6 +2,7 @@ import type { mentions, users } from '@prisma/client';
 import { createTwoWaySyncJob } from 'queue/jobs';
 import { push, pushChannel, pushCommunity } from 'services/push';
 import ThreadsServices from 'services/threads';
+import UserThreadStatusService from 'services/user-thread-status';
 import { eventNewMentions } from 'services/events/eventNewMentions';
 import { notificationListener } from 'services/notifications';
 
@@ -49,6 +50,7 @@ export async function eventNewMessage({
     push(event),
     pushChannel(event),
     ThreadsServices.updateMetrics({ messageId, threadId }),
+    UserThreadStatusService.markAsUnread(threadId),
     pushCommunity({ ...event, communityId }),
     eventNewMentions({ mentions, mentionNodes, channelId, threadId }),
     notificationListener({ ...event, communityId, mentions }),
