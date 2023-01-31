@@ -114,6 +114,10 @@ export default function Channel(props: ChannelProps) {
   }, [initialPinnedThreads]);
 
   useEffect(() => {
+    setUserThreadStatuses(initialUserThreadStatuses);
+  }, [initialUserThreadStatuses]);
+
+  useEffect(() => {
     setCurrentChannel(initialChannel);
   }, [initialChannel]);
 
@@ -287,7 +291,7 @@ export default function Channel(props: ChannelProps) {
   }
 
   async function unreadThread(threadId: string) {
-    Toast.info('Thread was marked as read.');
+    Toast.info('Thread was marked as unread.');
     markUserThreadStatuses(threadId, { muted: false, read: false });
   }
 
