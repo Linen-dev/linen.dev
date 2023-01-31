@@ -54,9 +54,10 @@ export default function Header({
                 { label: 'Read', value: ThreadStatus.READ },
                 { label: 'Muted', value: ThreadStatus.MUTED },
               ]}
-              onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                onStatusChange(event.target.value as ThreadStatus)
-              }
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                onStatusChange(event.target.value as ThreadStatus);
+                document.getElementById('user-thread-status')?.blur();
+              }}
             />
           </div>
         )}

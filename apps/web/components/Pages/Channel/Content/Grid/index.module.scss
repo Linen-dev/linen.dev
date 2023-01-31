@@ -6,6 +6,10 @@
   width: 100%;
 }
 
+.li.active {
+  background: $color-gray-50;
+}
+
 .line {
   margin-top: -0.75rem;
   position: absolute;

@@ -214,7 +214,6 @@ export default function Thread({
         <div className={styles.chat}>
           {manage && state === ThreadState.OPEN ? (
             <MessageForm
-              autoFocus
               id="thread-message-form"
               currentUser={currentUser}
               onSend={(message: string, files: UploadedFile[]) => {
@@ -251,7 +250,6 @@ export default function Thread({
             />
           ) : (
             <MessageForm
-              autoFocus
               id="thread-message-form"
               currentUser={currentUser}
               onSend={(message: string, files: UploadedFile[]) => {

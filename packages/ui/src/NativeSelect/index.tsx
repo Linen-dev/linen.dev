@@ -19,6 +19,7 @@ interface Props {
   disabled?: boolean;
   icon?: React.ReactNode;
   onChange?(event: React.ChangeEvent<HTMLSelectElement>): void;
+  onKeyDown?(event: React.KeyboardEvent<HTMLSelectElement>): void;
   options: Option[];
   theme?: 'white' | 'blue' | 'gray';
 }
@@ -34,6 +35,7 @@ function NativeSelect({
   disabled = false,
   icon,
   onChange,
+  onKeyDown,
   options,
   theme,
 }: Props) {
@@ -57,6 +59,7 @@ function NativeSelect({
           value={value}
           disabled={disabled}
           onChange={onChange}
+          onKeyDown={onKeyDown}
         >
           {options.map((option: Option, index: number) => (
             <option key={`${option.value}-${index}`} value={option.value}>
