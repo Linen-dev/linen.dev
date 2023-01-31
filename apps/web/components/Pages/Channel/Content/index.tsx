@@ -440,7 +440,7 @@ export default function Channel({
                     </div>
                   </Header>
                   {threads.length === 0 ? (
-                    <Empty />
+                    <Empty status={status} />
                   ) : (
                     <div className={styles.full}>
                       <ul className="divide-y w-full">

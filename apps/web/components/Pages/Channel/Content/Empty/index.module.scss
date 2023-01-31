@@ -1,0 +1,29 @@
+@import 'styles/colors.scss';
+
+.container {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  background: repeating-linear-gradient(
+    45deg,
+    #fff,
+    #fff 8px,
+    $color-gray-50 8px,
+    $color-gray-50 16px
+  );
+}
+
+.icon {
+  font-size: 5rem;
+  line-height: 1;
+  margin: 0;
+}
+
+.header {
+  font-size: 3.5rem;
+  font-weight: bold;
+  margin: 0;
+  line-height: 1;
+}

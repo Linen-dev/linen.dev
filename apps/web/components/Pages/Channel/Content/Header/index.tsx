@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { StickyHeader } from '@linen/ui';
-import { BiMessageRoundedCheck, BiMessageRoundedDetail } from 'react-icons/bi';
 import styles from './index.module.css';
 import { SerializedUser } from '@linen/types';
 import { NativeSelect } from '@linen/ui';
-import { FaVolumeMute } from 'react-icons/fa';
-import { FiHash, FiInbox } from 'react-icons/fi';
+import { FiHash } from 'react-icons/fi';
 import { ThreadStatus } from '@linen/types';
+import ThreadStatusIcon from '../ThreadStatusIcon';
 
 interface Props {
   className?: string;
@@ -25,17 +24,6 @@ export default function Header({
   status,
   onStatusChange,
 }: Props) {
-  function getIcon(status: ThreadStatus) {
-    switch (status) {
-      case ThreadStatus.UNREAD:
-        return <FiInbox />;
-      case ThreadStatus.READ:
-        return <BiMessageRoundedCheck />;
-      case ThreadStatus.MUTED:
-        return <FaVolumeMute />;
-    }
-  }
-
   return (
     <StickyHeader className={className}>
       <div className={styles.header}>
@@ -46,7 +34,7 @@ export default function Header({
           <div className={styles.select}>
             <NativeSelect
               id="user-thread-status"
-              icon={getIcon(status)}
+              icon={<ThreadStatusIcon status={status} />}
               theme="gray"
               value={status}
               options={[
