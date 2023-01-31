@@ -1,5 +1,6 @@
 import CustomLink from 'components/Link/CustomLink';
 import Row from '../Row';
+import classNames from 'classnames';
 import { Line } from '@linen/ui';
 import {
   Permissions,
@@ -29,6 +30,7 @@ export default function Grid({
   readStatus,
   userThreadStatuses,
   isSubDomainRouting,
+  currentThreadId,
   settings,
   isBot,
   currentUser,
@@ -49,6 +51,7 @@ export default function Grid({
   readStatus?: SerializedReadStatus;
   userThreadStatuses?: SerializedUserThreadStatus[];
   isSubDomainRouting: boolean;
+  currentThreadId?: string;
   settings: Settings;
   isBot: boolean;
   currentUser: SerializedUser | null;
@@ -124,7 +127,12 @@ export default function Grid({
           );
           const { incrementId, slug } = thread;
           return (
-            <li key={`feed-${incrementId}-${index}`} className={styles.li}>
+            <li
+              key={`feed-${incrementId}-${index}`}
+              className={classNames(styles.li, {
+                [styles.active]: thread.id === currentThreadId,
+              })}
+            >
               {isBot ? (
                 <RowForBots
                   {...{

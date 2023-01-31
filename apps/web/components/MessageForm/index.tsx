@@ -294,8 +294,9 @@ function MessageForm({
           }}
         />
       )}
-      <form className={styles.form} onSubmit={handleSend}>
+      <form id={id} className={styles.form} onSubmit={handleSend}>
         <textarea
+          id={`${id}-textarea`}
           ref={ref}
           autoFocus={autoFocus}
           className={styles.textarea}

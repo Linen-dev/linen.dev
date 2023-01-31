@@ -83,7 +83,7 @@ interface Props {
     type: string;
     active: boolean;
   }): void;
-  onSelectThread(thread: SerializedThread): void;
+  onSelectThread(threadId?: string): void;
   onMessage(
     message: SerializedMessage,
     messageId: string,
@@ -158,8 +158,6 @@ export default function Channel({
   const { startSignUp } = useJoinContext();
   const { mode } = useMode();
 
-  const [showThread, setShowThread] = useState(false);
-
   const currentUser = permissions.user || null;
 
   useWebsockets({
@@ -222,8 +220,7 @@ export default function Channel({
     if (!currentThread) {
       return;
     }
-    onSelectThread(currentThread);
-    setShowThread(true);
+    onSelectThread(currentThread.id);
     const isLastThread = currentThread.id === threads[threads.length - 1].id;
     if (isLastThread) {
       setTimeout(() => handleScroll(), 0);
@@ -453,6 +450,7 @@ export default function Channel({
                           readStatus={readStatus}
                           userThreadStatuses={userThreadStatuses}
                           isSubDomainRouting={isSubDomainRouting}
+                          currentThreadId={currentThreadId}
                           settings={settings}
                           isBot={false}
                           mode={mode}
@@ -496,7 +494,6 @@ export default function Channel({
         leftRef={leftRef}
         onLeftScroll={handleRootScroll}
         right={
-          showThread &&
           threadToRender && (
             <Thread
               thread={threadToRender}
@@ -510,7 +507,7 @@ export default function Channel({
               currentUser={currentUser}
               mode={mode}
               updateThread={updateThread}
-              onClose={() => setShowThread(false)}
+              onClose={() => onSelectThread(undefined)}
               sendMessage={sendThreadMessage}
               onDelete={deleteMessage}
               onReaction={sendReaction}
