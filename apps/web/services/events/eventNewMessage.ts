@@ -51,6 +51,10 @@ export async function eventNewMessage({
     pushChannel(event),
     ThreadsServices.updateMetrics({ messageId, threadId }),
     UserThreadStatusService.markAsUnread(threadId),
+    UserThreadStatusService.markAsUnmuted(
+      threadId,
+      mentions.map((mention) => mention.usersId)
+    ),
     pushCommunity({ ...event, communityId }),
     eventNewMentions({ mentions, mentionNodes, channelId, threadId }),
     notificationListener({ ...event, communityId, mentions }),
