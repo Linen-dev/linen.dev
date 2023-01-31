@@ -17,7 +17,6 @@ import { AiOutlinePaperClip } from 'react-icons/ai';
 import { RxDragHandleDots2 } from 'react-icons/rx';
 import { FiThumbsUp, FiTrash2 } from 'react-icons/fi';
 import { FaVolumeMute, FaVolumeUp } from 'react-icons/fa';
-import { BsCheck2All } from 'react-icons/bs';
 import { BiMessageCheck } from 'react-icons/bi';
 import styles from './index.module.scss';
 import { Mode } from '@linen/hooks/mode';
@@ -115,7 +114,7 @@ export default function Actions({
           }}
         >
           <Tooltip className={styles.tooltip} text="Unread">
-            <BsCheck2All className={classNames({ [styles.active]: true })} />
+            <BiMessageCheck className={classNames({ [styles.active]: true })} />
           </Tooltip>
         </li>
       )}
