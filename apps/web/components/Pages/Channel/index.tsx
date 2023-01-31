@@ -144,7 +144,7 @@ export default function Channel(props: ChannelProps) {
           if (
             status.muted &&
             payload.is_mention &&
-            payload.user_id === currentUser.id
+            payload.user_id === authId
           ) {
             return {
               ...status,
