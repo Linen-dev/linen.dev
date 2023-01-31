@@ -29,6 +29,7 @@ import storage from '@linen/utilities/storage';
 import ChannelForBots from './ChannelForBots';
 import * as api from 'utilities/requests';
 import debounce from '@linen/utilities/debounce';
+import useWebsockets from '@linen/hooks/websockets';
 
 export interface ChannelProps {
   settings: Settings;
@@ -129,6 +130,45 @@ export default function Channel(props: ChannelProps) {
     });
   }, [currentCommunity, currentChannel]);
 
+  const auth = permissions.auth || null;
+  const authId = auth?.id;
+
+  function updateUserThreadStatusesOnWebsocketEvents(payload: any) {
+    const threadId = payload.thread_id;
+    if (!threadId) {
+      return;
+    }
+    setUserThreadStatuses((statuses) => {
+      return statuses.map((status) => {
+        if (status.threadId === threadId) {
+          if (
+            status.muted &&
+            payload.is_mention &&
+            payload.user_id === currentUser.id
+          ) {
+            return {
+              ...status,
+              muted: false,
+            };
+          } else if (status.read) {
+            return {
+              ...status,
+              read: false,
+            };
+          }
+        }
+        return status;
+      });
+    });
+  }
+
+  useWebsockets({
+    room: authId && `user:${authId}`,
+    permissions,
+    token,
+    onNewMessage: updateUserThreadStatusesOnWebsocketEvents,
+  });
+
   useEffect(() => {
     if (currentUser && window.Notification) {
       const permission = storage.get('notification.permission');
@@ -172,6 +212,8 @@ export default function Channel(props: ChannelProps) {
           }
           return newThreads;
         });
+
+        updateUserThreadStatusesOnWebsocketEvents(payload);
       }
 
       if (payload.is_thread) {
