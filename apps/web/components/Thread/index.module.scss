@@ -16,6 +16,17 @@
   background: $color-white;
   max-width: 100%;
   min-width: 480px;
+  animation-name: opacity-animation;
+  animation-duration: 0.15s;
+}
+
+@keyframes opacity-animation {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .footer {

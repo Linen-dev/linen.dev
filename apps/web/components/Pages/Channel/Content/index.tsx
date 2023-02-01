@@ -63,6 +63,7 @@ interface Props {
   status: ThreadStatus;
   onStatusChange(status: ThreadStatus): void;
   setThreads: React.Dispatch<React.SetStateAction<SerializedThread[]>>;
+  onThreadsChange(threads: SerializedThread[]): void;
   deleteMessage(messageId: string): void;
   muteThread(threadId: string): void;
   unmuteThread(threadId: string): void;
@@ -125,6 +126,7 @@ export default function Channel({
   status,
   onStatusChange,
   setThreads,
+  onThreadsChange,
   deleteMessage,
   muteThread,
   unmuteThread,
@@ -261,7 +263,7 @@ export default function Channel({
   };
 
   const handleStatusChange = async (status: ThreadStatus) => {
-    setThreads([]);
+    onThreadsChange([]);
     onStatusChange(status);
     setLoading(true);
     try {
@@ -272,7 +274,7 @@ export default function Channel({
         status,
       });
       setCursor(() => data.nextCursor);
-      setThreads(() => data.threads);
+      onThreadsChange(data.threads);
       setTimeout(() => handleScroll(), 0);
     } catch (exception) {
       alert('Something went wrong, please try again.');
