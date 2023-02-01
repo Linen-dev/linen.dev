@@ -15,9 +15,9 @@ export class ChannelsController extends BaseController {
       return res.json(channel);
     }
 
-    if (!!req.body.installationId) {
+    if (!!req.body.integrationId) {
       const channel = await ChannelsService.findByExternalIntegrationId(
-        req.body.installationId
+        req.body.integrationId
       );
       return res.json(channel);
     }

@@ -1,8 +1,10 @@
 import { App } from 'octokit';
-import Api from './api';
+import LinenApi from '@linen/bridge-api';
 import env from './config';
 import Serializer from './serializer';
 import * as GitHubTypes from '@octokit/webhooks-types';
+import { appendProtocol } from 'utilities/url';
+import { getLinenUrl } from 'utilities/domain';
 
 const githubApp = new App({
   appId: env.GITHUB_APP_ID,
@@ -16,6 +18,11 @@ const githubApp = new App({
     clientSecret: '',
   },
 });
+
+const linenApi = new LinenApi(
+  env.INTERNAL_API_KEY,
+  appendProtocol(getLinenUrl())
+);
 
 githubApp.webhooks.on('issues.opened', async ({ payload }) => {
   await handleIssuesOpened(payload);
@@ -81,7 +88,7 @@ async function handleCommon(
     throw new Error('Missing installation data');
   }
   // identify channel
-  const channel = await Api.getChannel(payload.installation.id);
+  const channel = await linenApi.getChannel(String(payload.installation.id));
   if (!channel) {
     throw new Error('channel not found');
   }
@@ -100,22 +107,22 @@ async function handleUser(
   channel: { id: string; accountId: string }
 ) {
   const parsedUser = Serializer.githubUserToLinenUser(user, channel.accountId);
-  return await Api.findOrCreateUser(parsedUser);
+  return await linenApi.findOrCreateUser(parsedUser);
 }
 
 async function handleIssuesOpened(payload: GitHubTypes.IssuesOpenedEvent) {
   const thread = await handleIssue(payload);
-  await Api.createNewThread(thread);
+  await linenApi.createNewThread(thread);
 }
 
 async function handleIssuesClosed(payload: GitHubTypes.IssuesClosedEvent) {
   const thread = await handleIssue(payload);
-  await Api.updateThread({ ...thread, status: 'CLOSE' });
+  await linenApi.updateThread({ ...thread, status: 'CLOSE' });
 }
 
 async function handleIssuesReopened(payload: GitHubTypes.IssuesReopenedEvent) {
   const thread = await handleIssue(payload);
-  await Api.updateThread({ ...thread, status: 'OPEN' });
+  await linenApi.updateThread({ ...thread, status: 'OPEN' });
 }
 
 async function handleIssueCommentCreated(
@@ -124,7 +131,7 @@ async function handleIssueCommentCreated(
   const { channel, externalThreadId } = await handleCommon(payload);
   const user = await handleUser(payload.comment.user, channel);
 
-  const thread = await Api.getThread(externalThreadId, channel.id);
+  const thread = await linenApi.getThread(externalThreadId, channel.id);
   if (!thread) {
     throw new Error('thread not found');
   }
@@ -136,5 +143,5 @@ async function handleIssueCommentCreated(
     channel.accountId,
     thread.id
   );
-  await Api.createNewMessage(message);
+  await linenApi.createNewMessage(message);
 }

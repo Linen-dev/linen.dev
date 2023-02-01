@@ -1,8 +1,9 @@
 import { Router, json, urlencoded } from 'express';
 import githubApp from './github';
 import { z } from 'zod';
-import integrationMiddleware from './middleware';
 import Serializer from './serializer';
+import { integrationMiddleware } from '@linen/bridge-api';
+import env from './config';
 
 const messageSchema = z.object({
   displayName: z.string().min(1).optional(),
@@ -95,31 +96,35 @@ function buildMessage(body: string, displayName?: string) {
 
 const linenRouter = Router()
   // .use(json(), urlencoded({ extended: true }))
-  .post(`/events`, integrationMiddleware(), async (req, res, next) => {
-    try {
-      const { event, data } = reqBodySchema.parse(req.body);
-      if (event === 'newMessage') {
-        await processMessage(data);
-        // we may need the external message id in the future to allow us to update the message
-        return res.sendStatus(200);
+  .post(
+    `/events`,
+    integrationMiddleware(env.INTERNAL_API_KEY),
+    async (req, res, next) => {
+      try {
+        const { event, data } = reqBodySchema.parse(req.body);
+        if (event === 'newMessage') {
+          await processMessage(data);
+          // we may need the external message id in the future to allow us to update the message
+          return res.sendStatus(200);
+        }
+        if (event === 'newThread') {
+          const result = await processThread(data);
+          return res.status(200).send(result);
+        }
+        if (event === 'threadClosed') {
+          await processThreadState(data, 'closed');
+          return res.sendStatus(200);
+        }
+        if (event === 'threadReopened') {
+          await processThreadState(data, 'open');
+          return res.sendStatus(200);
+        }
+        return res.sendStatus(405).end();
+      } catch (error) {
+        console.error(error);
+        return res.sendStatus(500);
       }
-      if (event === 'newThread') {
-        const result = await processThread(data);
-        return res.status(200).send(result);
-      }
-      if (event === 'threadClosed') {
-        await processThreadState(data, 'closed');
-        return res.sendStatus(200);
-      }
-      if (event === 'threadReopened') {
-        await processThreadState(data, 'open');
-        return res.sendStatus(200);
-      }
-      return res.sendStatus(405).end();
-    } catch (error) {
-      console.error(error);
-      return res.sendStatus(500);
     }
-  });
+  );
 
 export default linenRouter;

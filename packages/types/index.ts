@@ -229,7 +229,7 @@ export type threadFindType = z.infer<typeof threadFindSchema>;
 
 export const channelGetSchema = z.object({
   channelId: z.string().uuid().optional(),
-  installationId: z.string().min(1).optional(),
+  integrationId: z.string().min(1).optional(),
 });
 export type channelGetType = z.infer<typeof channelGetSchema>;
 

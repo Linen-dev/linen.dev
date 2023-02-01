@@ -41,6 +41,7 @@
     "@linen/types": "*",
     "@linen/ui": "*",
     "@linen/utilities": "*",
+    "@linen/bridge-api": "*",
     "@next/bundle-analyzer": "^13.0.2",
     "@panva/hkdf": "^1.0.2",
     "@prisma/client": "^3.15.2",

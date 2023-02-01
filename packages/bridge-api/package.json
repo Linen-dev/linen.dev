@@ -1,0 +1,17 @@
+{
+  "name": "@linen/bridge-api",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "dev": "tsc --watch",
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "typescript": "^4.9.3"
+  },
+  "dependencies": {
+    "@linen/types": "*",
+    "axios": "^1.2.4"
+  }
+}
