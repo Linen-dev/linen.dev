@@ -11,7 +11,6 @@ import {
   SerializedMessage,
   SerializedThread,
   SerializedUser,
-  SerializedUserThreadStatus,
   Settings,
   ThreadState,
   ThreadStatus,
@@ -68,29 +67,6 @@ async function upsertUserThreadStatus(params: {
 
 const debouncedUpserUserThreadStatus = debounce(upsertUserThreadStatus);
 
-function getThreadsToRender(
-  threads: SerializedThread[],
-  userThreadStatuses: SerializedUserThreadStatus[],
-  status: ThreadStatus
-) {
-  return threads.filter((thread) => {
-    const userThreadStatus = userThreadStatuses.find(
-      (userThreadStatus: any) => userThreadStatus.threadId === thread.id
-    );
-    if (userThreadStatus) {
-      const { muted, read } = userThreadStatus;
-      const isUnread = status === ThreadStatus.UNREAD && !read && !muted;
-      const isRead = status === ThreadStatus.READ && read && !muted;
-      const isMuted = status === ThreadStatus.MUTED && muted;
-      if (isUnread || isRead || isMuted) {
-        return thread;
-      }
-      return false;
-    }
-    return thread;
-  });
-}
-
 export default function Channel(props: ChannelProps) {
   if (props.isBot) {
     return <ChannelForBots {...props} />;
@@ -118,35 +94,22 @@ export default function Channel(props: ChannelProps) {
     useState<SerializedThread[]>(initialPinnedThreads);
   const [currentChannel, setCurrentChannel] = useState(initialChannel);
   const [allUsers] = useUsersContext();
-  const [userThreadStatuses, setUserThreadStatuses] = useState<
-    SerializedUserThreadStatus[]
-  >([]);
-
-  const threadsToRender = getThreadsToRender(
-    threads,
-    userThreadStatuses,
-    status
-  );
 
   const [currentThreadId, setCurrentThreadId] = useState<string | undefined>(
-    threadsToRender[threadsToRender.length - 1]?.id
+    threads[threads.length - 1]?.id
   );
 
   const currentUser = permissions.user || null;
   const token = permissions.token || null;
 
   useEffect(() => {
-    const threadsToRender = getThreadsToRender(
-      threads,
-      userThreadStatuses,
-      status
-    );
-    setCurrentThreadId(threadsToRender[threadsToRender.length - 1]?.id);
+    setCurrentThreadId(threads[threads.length - 1]?.id);
   }, [status]);
 
   useEffect(() => {
     setThreads(initialThreads);
     setStatus(ThreadStatus.UNREAD);
+    setCurrentThreadId(initialThreads[initialThreads.length - 1]?.id);
   }, [initialThreads]);
 
   useEffect(() => {
@@ -173,21 +136,21 @@ export default function Channel(props: ChannelProps) {
           return false;
         }
         function selectPreviousThread() {
-          const index = threadsToRender.findIndex(
+          const index = threads.findIndex(
             (thread) => thread.id === currentThreadId
           );
           if (index > 0) {
-            const threadId = threadsToRender[index - 1].id;
+            const threadId = threads[index - 1].id;
             setCurrentThreadId(threadId);
           }
         }
 
         function selectNextThread() {
-          const index = threadsToRender.findIndex(
+          const index = threads.findIndex(
             (thread) => thread.id === currentThreadId
           );
-          if (index < threadsToRender.length - 1) {
-            const threadId = threadsToRender[index + 1].id;
+          if (index < threads.length - 1) {
+            const threadId = threads[index + 1].id;
             setCurrentThreadId(threadId);
           }
         }
@@ -196,54 +159,52 @@ export default function Channel(props: ChannelProps) {
           selectPreviousThread();
         } else if (currentThreadId && event.key === 'ArrowDown') {
           selectNextThread();
-        } else if (currentThreadId && event.shiftKey && event.key === 'E') {
-          const userThreadStatus = userThreadStatuses.find(
-            (status) => status.threadId === currentThreadId
-          );
-          if (userThreadStatus?.read) {
-            markUserThreadStatuses(currentThreadId, {
-              muted: false,
-              read: false,
-            });
-            selectPreviousThread();
-          }
-        } else if (currentThreadId && event.key === 'e') {
-          const userThreadStatus = userThreadStatuses.find(
-            (status) => status.threadId === currentThreadId
-          );
-          if (!userThreadStatus || !userThreadStatus?.read) {
-            markUserThreadStatuses(currentThreadId, {
-              muted: false,
-              read: true,
-            });
-            selectPreviousThread();
-          }
-        } else if (currentThreadId && event.shiftKey && event.key === 'M') {
-          const userThreadStatus = userThreadStatuses.find(
-            (status) => status.threadId === currentThreadId
-          );
-          if (!userThreadStatus || userThreadStatus?.muted) {
-            markUserThreadStatuses(currentThreadId, {
-              muted: false,
-              read: false,
-            });
-            selectPreviousThread();
-          }
-        } else if (currentThreadId && event.key === 'm') {
-          const userThreadStatus = userThreadStatuses.find(
-            (status) => status.threadId === currentThreadId
-          );
-          if (!userThreadStatus || !userThreadStatus?.muted) {
-            markUserThreadStatuses(currentThreadId, {
-              muted: true,
-              read: false,
-            });
-            selectPreviousThread();
-          }
+        } else if (
+          currentThreadId &&
+          event.shiftKey &&
+          event.key === 'E' &&
+          status === ThreadStatus.READ
+        ) {
+          markUserThreadStatuses(currentThreadId, {
+            muted: false,
+            read: false,
+          });
+          selectPreviousThread();
+        } else if (
+          currentThreadId &&
+          event.key === 'e' &&
+          [ThreadStatus.UNREAD || ThreadStatus.MUTED].includes(status)
+        ) {
+          markUserThreadStatuses(currentThreadId, {
+            muted: false,
+            read: true,
+          });
+          selectPreviousThread();
+        } else if (
+          currentThreadId &&
+          event.shiftKey &&
+          event.key === 'M' &&
+          status === ThreadStatus.MUTED
+        ) {
+          markUserThreadStatuses(currentThreadId, {
+            muted: false,
+            read: false,
+          });
+          selectPreviousThread();
+        } else if (
+          currentThreadId &&
+          event.key === 'm' &&
+          [ThreadStatus.UNREAD, ThreadStatus.READ].includes(status)
+        ) {
+          markUserThreadStatuses(currentThreadId, {
+            muted: true,
+            read: false,
+          });
+          selectPreviousThread();
         }
       },
     },
-    [threadsToRender, userThreadStatuses, currentThreadId]
+    [threads, currentThreadId]
   );
 
   const auth = permissions.auth || null;
@@ -254,28 +215,30 @@ export default function Channel(props: ChannelProps) {
     if (!threadId) {
       return;
     }
-    setUserThreadStatuses((statuses) => {
-      return statuses.map((status) => {
-        if (status.threadId === threadId) {
-          if (
-            status.muted &&
-            payload.is_mention &&
-            payload.user_id === authId
-          ) {
-            return {
-              ...status,
-              muted: false,
-            };
-          } else if (status.read) {
-            return {
-              ...status,
-              read: false,
-            };
-          }
-        }
-        return status;
-      });
-    });
+    // TODO show the thread again if you got a new message or mention
+    // from a message from this channel
+    // setUserThreadStatuses((statuses) => {
+    //   return statuses.map((status) => {
+    //     if (status.threadId === threadId) {
+    //       if (
+    //         status.muted &&
+    //         payload.is_mention &&
+    //         payload.user_id === authId
+    //       ) {
+    //         return {
+    //           ...status,
+    //           muted: false,
+    //         };
+    //       } else if (status.read) {
+    //         return {
+    //           ...status,
+    //           read: false,
+    //         };
+    //       }
+    //     }
+    //     return status;
+    //   });
+    // });
   }
 
   useWebsockets({
@@ -411,31 +374,8 @@ export default function Channel(props: ChannelProps) {
       muted,
       read,
     });
-    setUserThreadStatuses((statuses) => {
-      const status = statuses.find((status) => status.threadId === threadId);
-
-      if (!status) {
-        return [
-          ...statuses,
-          {
-            userId: currentUser.id,
-            muted,
-            read,
-            threadId,
-          },
-        ];
-      }
-
-      return statuses.map((status) => {
-        if (status.threadId === threadId) {
-          return {
-            ...status,
-            muted,
-            read,
-          } as SerializedUserThreadStatus;
-        }
-        return status;
-      });
+    setThreads((threads) => {
+      return threads.filter((thread) => thread.id !== threadId);
     });
   }
 
@@ -887,7 +827,7 @@ export default function Channel(props: ChannelProps) {
     >
       <Content
         key={currentChannel.channelName}
-        threads={threadsToRender}
+        threads={threads}
         pinnedThreads={pinnedThreads}
         currentChannel={currentChannel}
         currentCommunity={currentCommunity}
@@ -895,11 +835,9 @@ export default function Channel(props: ChannelProps) {
         channelName={channelName}
         isSubDomainRouting={isSubDomainRouting}
         nextCursor={nextCursor}
-        pathCursor={pathCursor}
         isBot={isBot}
         permissions={permissions}
         currentThreadId={currentThreadId}
-        userThreadStatuses={userThreadStatuses}
         status={status}
         onStatusChange={onStatusChange}
         setThreads={setThreads}

@@ -24,7 +24,6 @@ import {
 import { qs } from 'utilities/url';
 import { z } from 'zod';
 import type { channelNextPageType } from './channel.types';
-import prisma from 'client';
 
 import { PAGE_SIZE } from 'secrets';
 

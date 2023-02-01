@@ -7,7 +7,6 @@ import {
   SerializedReadStatus,
   SerializedThread,
   SerializedUser,
-  SerializedUserThreadStatus,
   Settings,
   ThreadStatus,
 } from '@linen/types';
@@ -30,7 +29,6 @@ export default function Grid({
   permissions,
   status,
   readStatus,
-  userThreadStatuses,
   isSubDomainRouting,
   currentThreadId,
   settings,
@@ -52,7 +50,6 @@ export default function Grid({
   permissions: Permissions;
   status?: ThreadStatus;
   readStatus?: SerializedReadStatus;
-  userThreadStatuses?: SerializedUserThreadStatus[];
   isSubDomainRouting: boolean;
   currentThreadId?: string;
   settings: Settings;
@@ -125,9 +122,6 @@ export default function Grid({
           );
         } else if (item.type === RowType.Thread) {
           const thread = item.content as SerializedThread;
-          const userThreadStatus = userThreadStatuses?.find(
-            (status) => status.threadId === thread.id
-          );
           const { incrementId, slug } = thread;
           return (
             <li
@@ -154,7 +148,6 @@ export default function Grid({
                     className={styles.row}
                     thread={thread}
                     status={status}
-                    userThreadStatus={userThreadStatus}
                     permissions={permissions}
                     isSubDomainRouting={isSubDomainRouting}
                     settings={settings}

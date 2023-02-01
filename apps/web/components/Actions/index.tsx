@@ -9,7 +9,6 @@ import {
   SerializedMessage,
   SerializedThread,
   SerializedUser,
-  SerializedUserThreadStatus,
   ThreadStatus,
 } from '@linen/types';
 import { copyToClipboard } from '@linen/utilities/clipboard';
@@ -31,7 +30,6 @@ interface Props {
   settings: Settings;
   isSubDomainRouting: boolean;
   currentUser: SerializedUser | null;
-  userThreadStatus?: SerializedUserThreadStatus;
   mode?: Mode;
   drag: 'thread' | 'message';
   onDelete?(messageId: string): void;
@@ -77,7 +75,6 @@ export default function Actions({
   settings,
   isSubDomainRouting,
   currentUser,
-  userThreadStatus,
   mode,
   drag,
   onDelete,

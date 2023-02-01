@@ -13,7 +13,6 @@ import {
   SerializedThread,
   SerializedUser,
   ThreadState,
-  SerializedUserThreadStatus,
   ThreadStatus,
 } from '@linen/types';
 import styles from './index.module.scss';
@@ -28,7 +27,6 @@ interface Props {
   settings: Settings;
   permissions: Permissions;
   currentUser: SerializedUser | null;
-  userThreadStatus?: SerializedUserThreadStatus;
   mode?: Mode;
   status?: ThreadStatus;
   drag: 'thread' | 'message';
@@ -62,7 +60,6 @@ export function Row({
   isPreviousMessageFromSameUser,
   isSubDomainRouting,
   currentUser,
-  userThreadStatus,
   settings,
   permissions,
   mode,
@@ -141,7 +138,6 @@ export function Row({
           settings={settings}
           permissions={permissions}
           currentUser={currentUser}
-          userThreadStatus={userThreadStatus}
           isSubDomainRouting={isSubDomainRouting}
           drag={drag}
           onDelete={onDelete}

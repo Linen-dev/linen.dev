@@ -21,7 +21,6 @@ import {
   SerializedChannel,
   SerializedReadStatus,
   SerializedThread,
-  SerializedUserThreadStatus,
   Settings,
   ThreadState,
   ThreadStatus,
@@ -57,12 +56,10 @@ interface Props {
     next: string | null;
     prev: string | null;
   };
-  pathCursor: string | null;
   isBot: boolean;
   permissions: Permissions;
   currentThreadId: string | undefined;
   token: string | null;
-  userThreadStatuses: SerializedUserThreadStatus[];
   status: ThreadStatus;
   onStatusChange(status: ThreadStatus): void;
   setThreads: React.Dispatch<React.SetStateAction<SerializedThread[]>>;
@@ -122,11 +119,9 @@ export default function Channel({
   channelName,
   isSubDomainRouting,
   nextCursor,
-  pathCursor,
   token,
   permissions,
   currentThreadId,
-  userThreadStatuses,
   status,
   onStatusChange,
   setThreads,
@@ -462,7 +457,6 @@ export default function Channel({
                           threads={threads}
                           permissions={permissions}
                           readStatus={readStatus}
-                          userThreadStatuses={userThreadStatuses}
                           isSubDomainRouting={isSubDomainRouting}
                           currentThreadId={currentThreadId}
                           settings={settings}
