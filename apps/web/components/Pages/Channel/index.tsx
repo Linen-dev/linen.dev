@@ -155,9 +155,12 @@ export default function Channel(props: ChannelProps) {
           }
         }
 
-        if (currentThreadId && event.key === 'ArrowUp') {
+        if (currentThreadId && (event.key === 'ArrowUp' || event.key === 'k')) {
           selectPreviousThread();
-        } else if (currentThreadId && event.key === 'ArrowDown') {
+        } else if (
+          currentThreadId &&
+          (event.key === 'ArrowDown' || event.key === 'j')
+        ) {
           selectNextThread();
         } else if (
           currentThreadId &&
