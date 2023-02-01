@@ -9,6 +9,7 @@ import Header from './Header';
 import Empty from './Empty';
 import Chat from './Chat';
 import Grid from './Grid';
+import Footer from './Footer';
 import classNames from 'classnames';
 import PinnedThread from './PinnedThread';
 import Row from './Row';
@@ -492,7 +493,7 @@ export default function Channel({
                 </>
               }
               footer={
-                permissions.chat && (
+                permissions.chat && status === ThreadStatus.UNREAD ? (
                   <Chat
                     communityId={settings.communityId}
                     channelId={currentChannel.id}
@@ -504,6 +505,8 @@ export default function Channel({
                     uploading={uploading}
                     uploadFiles={uploadFiles}
                   />
+                ) : (
+                  <Footer />
                 )
               }
             />
