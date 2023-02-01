@@ -1,3 +1,4 @@
+import { ThreadStatus } from '@linen/types';
 import { ThreadState } from '@prisma/client';
 import { z } from 'zod';
 
@@ -5,6 +6,10 @@ export const findSchema = z.object({
   accountId: z.string().uuid(),
   channelId: z.string().uuid(),
   cursor: z.string().min(1).optional(),
+  userId: z.string().optional(),
+  status: z
+    .enum([ThreadStatus.UNREAD, ThreadStatus.READ, ThreadStatus.MUTED])
+    .optional(),
 });
 export type findType = z.infer<typeof findSchema>;
 

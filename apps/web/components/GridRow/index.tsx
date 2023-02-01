@@ -14,6 +14,7 @@ import {
   SerializedUser,
   ThreadState,
   SerializedUserThreadStatus,
+  ThreadStatus,
 } from '@linen/types';
 import styles from './index.module.scss';
 
@@ -29,6 +30,7 @@ interface Props {
   currentUser: SerializedUser | null;
   userThreadStatus?: SerializedUserThreadStatus;
   mode?: Mode;
+  status?: ThreadStatus;
   drag: 'thread' | 'message';
   header?: React.ReactNode;
   footer?: React.ReactNode;
@@ -64,6 +66,7 @@ export function Row({
   settings,
   permissions,
   mode,
+  status,
   drag,
   header,
   footer,
@@ -134,6 +137,7 @@ export function Row({
         <Actions
           thread={thread}
           message={message}
+          status={status}
           settings={settings}
           permissions={permissions}
           currentUser={currentUser}

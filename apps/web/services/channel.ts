@@ -2,13 +2,12 @@ import { findAccountByPath } from '../lib/models';
 import { GetServerSidePropsContext } from 'next/types';
 import { NotFound } from '../utilities/response';
 import { serialize as serializeSettings } from 'serializers/account/settings';
-import { findThreadsByCursor, findPinnedThreads } from '../lib/threads';
+import { findThreadsByCursor, findPinnedThreads, Thread } from '../lib/threads';
 import serializeAccount from '../serializers/account';
 import serializeThread from '../serializers/thread';
-import serializeUserThreadStatus from '../serializers/user-thread-status';
 import { ThreadsWithMessagesFull } from 'types/partialTypes';
 import { decodeCursor, encodeCursor } from '../utilities/cursor';
-import { SerializedChannel } from '@linen/types';
+import { SerializedChannel, ThreadStatus } from '@linen/types';
 import {
   findChannelsByAccount,
   shouldThisChannelBeAnonymous,
@@ -45,6 +44,8 @@ export async function channelGetServerSideProps(
   const isCrawler = isBot(context?.req?.headers?.['user-agent'] || '');
   const communityName = context.params?.communityName as string;
   const channelName = context.params?.channelName as string;
+  const status =
+    (context.params?.status as ThreadStatus) || ThreadStatus.UNREAD;
   const page = context.params?.page as string | undefined;
 
   const account = await findAccountByPath(communityName);
@@ -99,11 +100,13 @@ export async function channelGetServerSideProps(
     }
   }
 
-  const { nextCursor, threads } = await getThreads(
-    channel.id,
-    account.anonymizeUsers,
-    page
-  );
+  const { nextCursor, threads } = await getThreads({
+    channelId: channel.id,
+    anonymizeUsers: account.anonymizeUsers,
+    page,
+    userId: permissions.user?.id,
+    status: permissions.user && status,
+  });
 
   const pinnedThreads = !isCrawler
     ? await findPinnedThreads({
@@ -112,18 +115,6 @@ export async function channelGetServerSideProps(
         limit: 10,
       })
     : [];
-
-  const userThreadStatuses =
-    !isCrawler && permissions.user
-      ? await prisma.userThreadStatus.findMany({
-          where: {
-            userId: permissions.user.id,
-            threadId: {
-              in: threads.map(({ id }) => id),
-            },
-          },
-        })
-      : [];
 
   const communities = !isCrawler
     ? await CommunitiesService.find(context.req, context.res)
@@ -139,7 +130,6 @@ export async function channelGetServerSideProps(
       communities: communities.map(serializeAccount),
       threads: threads.map(serializeThread),
       pinnedThreads: pinnedThreads.map(serializeThread),
-      userThreadStatuses: userThreadStatuses.map(serializeUserThreadStatus),
       settings,
       isSubDomainRouting: isSubdomainbasedRouting,
       pathCursor: page || null,
@@ -149,17 +139,27 @@ export async function channelGetServerSideProps(
   };
 }
 
-export async function getThreads(
-  channelId: string,
-  anonymizeUsers: boolean,
-  page?: string
-) {
+export async function getThreads({
+  channelId,
+  anonymizeUsers,
+  page,
+  status,
+  userId,
+}: {
+  channelId: string;
+  anonymizeUsers: boolean;
+  page?: string;
+  status?: ThreadStatus;
+  userId?: string;
+}) {
   if (!!page) {
     const threads = (
       await findThreadsByCursor({
         channelIds: [channelId],
         page: parsePage(page),
+        status,
         anonymizeUsers,
+        userId,
       })
     ).sort(sortBySentAtAsc);
 
@@ -180,7 +180,9 @@ export async function getThreads(
       sentAt,
       sort,
       direction,
+      status,
       anonymizeUsers,
+      userId,
     })
   ).sort(sortBySentAtAsc);
 
@@ -214,9 +216,13 @@ function findChannelOrDefault(
 export async function channelNextPage({
   channelId,
   cursor,
+  status,
+  userId,
 }: {
   channelId: string;
   cursor?: string;
+  status?: ThreadStatus;
+  userId?: string;
 }): Promise<channelNextPageType> {
   const { sort, direction, sentAt } = decodeCursor(cursor);
   const anonymizeUsers = await shouldThisChannelBeAnonymous(channelId);
@@ -225,7 +231,9 @@ export async function channelNextPage({
     sentAt,
     sort,
     direction,
+    status,
     anonymizeUsers,
+    userId,
   }).then((t) => t.sort(sortBySentAtAsc));
 
   const nextCursor = await buildCursor({
