@@ -7,7 +7,6 @@ import {
   Permissions,
   Settings,
   SerializedThread,
-  SerializedUserThreadStatus,
   SerializedUser,
   ThreadStatus,
 } from '@linen/types';
@@ -32,7 +31,6 @@ interface Props {
   settings: Settings;
   currentUser: SerializedUser | null;
   status?: ThreadStatus;
-  userThreadStatus?: SerializedUserThreadStatus;
   mode?: Mode;
   onDelete?(messageId: string): void;
   onLoad?(): void;
@@ -74,7 +72,6 @@ export default function ChannelRow({
   settings,
   currentUser,
   status,
-  userThreadStatus,
   mode,
   onDelete,
   onDrop,
@@ -109,7 +106,6 @@ export default function ChannelRow({
           settings={settings}
           permissions={permissions}
           currentUser={currentUser}
-          userThreadStatus={userThreadStatus}
           mode={mode}
           status={status}
           drag="thread"
