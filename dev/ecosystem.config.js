@@ -43,14 +43,6 @@ module.exports = {
       },
     },
     {
-      name: 'linen-bridge-github',
-      script: 'npm run dev',
-      cwd: '../apps/linen-bridge-github',
-      env: {
-        PORT: 81,
-      },
-    },
-    {
       name: 'https-proxy',
       cwd: '/opt/homebrew/bin/',
       script: `ngrok http --region=us --hostname=linen-san.ngrok.io 80`,

@@ -5,6 +5,7 @@ import { downloadCert } from 'utilities/database';
 import settings from '../settings';
 import { slackChatSync } from 'services/slack/api/postMessage';
 import { processGithubIntegration } from 'services/integrations/processGithubIntegration';
+import { processEmailIntegration } from 'services/integrations/processEmailIntegration';
 
 export async function runWorker() {
   await downloadCert();
@@ -80,7 +81,14 @@ async function twoWaySyncJob({
         });
       }
       if (integration.type === 'EMAIL') {
-        return 'NotImplemented';
+        return await processEmailIntegration({
+          channelId,
+          messageId,
+          threadId,
+          event,
+          integration,
+          id,
+        });
       }
     }
   }
