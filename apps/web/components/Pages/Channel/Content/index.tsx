@@ -287,6 +287,7 @@ export default function Channel({
     const key = next ? 'next' : 'prev';
     const dir = next ? 'bottom' : 'top';
     if (isInfiniteScrollLoading) return;
+    if (isLoading) return;
     if (!cursor[key]) return;
     try {
       setInfiniteScrollLoading(true);
