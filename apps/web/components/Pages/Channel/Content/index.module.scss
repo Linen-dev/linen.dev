@@ -42,7 +42,7 @@
   width: 48px;
   border-radius: 9999px;
   padding: 3px;
-  transition: 0.1s ease-in all;
+  transition: 0.2s ease-in all;
 
   &:hover {
     background: $color-blue-700;
@@ -56,4 +56,15 @@
   flex-direction: column;
   justify-content: flex-end;
   height: 100%;
+  animation-name: opacity-animation;
+  animation-duration: 0.1s;
+}
+
+@keyframes opacity-animation {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
