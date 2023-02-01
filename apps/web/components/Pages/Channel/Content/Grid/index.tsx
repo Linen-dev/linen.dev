@@ -9,6 +9,7 @@ import {
   SerializedUser,
   SerializedUserThreadStatus,
   Settings,
+  ThreadStatus,
 } from '@linen/types';
 import { Mode } from '@linen/hooks/mode';
 import styles from './index.module.scss';
@@ -27,6 +28,7 @@ interface RowItem {
 export default function Grid({
   threads,
   permissions,
+  status,
   readStatus,
   userThreadStatuses,
   isSubDomainRouting,
@@ -48,6 +50,7 @@ export default function Grid({
 }: {
   threads: SerializedThread[];
   permissions: Permissions;
+  status?: ThreadStatus;
   readStatus?: SerializedReadStatus;
   userThreadStatuses?: SerializedUserThreadStatus[];
   isSubDomainRouting: boolean;
@@ -150,6 +153,7 @@ export default function Grid({
                   <Row
                     className={styles.row}
                     thread={thread}
+                    status={status}
                     userThreadStatus={userThreadStatus}
                     permissions={permissions}
                     isSubDomainRouting={isSubDomainRouting}

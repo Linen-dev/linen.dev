@@ -264,6 +264,20 @@ export default function Channel({
     }
   };
 
+  const handleStatusChange = async (status: ThreadStatus) => {
+    setThreads([]);
+    onStatusChange(status);
+    const data = await api.getThreads({
+      channelId: currentChannel.id,
+      accountId: settings.communityId,
+      userId: currentUser?.id,
+      status,
+    });
+    setCursor(() => data.nextCursor);
+    setThreads(() => data.threads);
+    setTimeout(() => handleScroll(), 0);
+  };
+
   async function loadMore(next: boolean = false) {
     const key = next ? 'next' : 'prev';
     const dir = next ? 'bottom' : 'top';
@@ -276,6 +290,8 @@ export default function Channel({
           channelId: currentChannel.id,
           cursor: cursor[key] || undefined,
           accountId: settings.communityId,
+          userId: currentUser?.id,
+          status,
         });
         setCursor({ ...cursor, [key]: data?.nextCursor?.[key] });
         if (next) {
@@ -404,17 +420,15 @@ export default function Channel({
                 <>
                   <Header
                     className={classNames(styles.header, {
-                      [styles.pinned]: !!pinnedThread,
+                      [styles.pinned]:
+                        !!pinnedThread && status === ThreadStatus.UNREAD,
                     })}
                     channelName={currentChannel.channelName}
                     currentUser={currentUser}
                     status={status}
-                    onStatusChange={(status: ThreadStatus) => {
-                      onStatusChange(status);
-                      setTimeout(() => handleScroll(), 0);
-                    }}
+                    onStatusChange={handleStatusChange}
                   >
-                    {pinnedThread && (
+                    {pinnedThread && status === ThreadStatus.UNREAD && (
                       <PinnedThread
                         onClick={() => selectThread(pinnedThread.incrementId)}
                       >
@@ -452,6 +466,7 @@ export default function Channel({
                           isSubDomainRouting={isSubDomainRouting}
                           currentThreadId={currentThreadId}
                           settings={settings}
+                          status={status}
                           isBot={false}
                           mode={mode}
                           currentUser={currentUser}

@@ -3,9 +3,14 @@ import { Avatars } from '@linen/ui';
 import Image from 'next/image';
 import GridRow from 'components/GridRow';
 import styles from './index.module.scss';
-import { SerializedThread, SerializedUserThreadStatus } from '@linen/types';
-import { SerializedUser } from '@linen/types';
-import { Permissions, Settings } from '@linen/types';
+import {
+  Permissions,
+  Settings,
+  SerializedThread,
+  SerializedUserThreadStatus,
+  SerializedUser,
+  ThreadStatus,
+} from '@linen/types';
 import { Mode } from '@linen/hooks/mode';
 
 export const uniqueUsers = (users: SerializedUser[]): SerializedUser[] => {
@@ -26,6 +31,7 @@ interface Props {
   isSubDomainRouting: boolean;
   settings: Settings;
   currentUser: SerializedUser | null;
+  status?: ThreadStatus;
   userThreadStatus?: SerializedUserThreadStatus;
   mode?: Mode;
   onDelete?(messageId: string): void;
@@ -67,6 +73,7 @@ export default function ChannelRow({
   isSubDomainRouting,
   settings,
   currentUser,
+  status,
   userThreadStatus,
   mode,
   onDelete,
@@ -104,6 +111,7 @@ export default function ChannelRow({
           currentUser={currentUser}
           userThreadStatus={userThreadStatus}
           mode={mode}
+          status={status}
           drag="thread"
           onDelete={onDelete}
           onLoad={onLoad}

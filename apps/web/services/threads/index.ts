@@ -54,14 +54,20 @@ class ThreadsServices {
     return Promise.resolve('nothing to update');
   }
 
-  static async find({ channelId, cursor, accountId }: FindType) {
+  static async find({
+    channelId,
+    cursor,
+    accountId,
+    userId,
+    status,
+  }: FindType) {
     const channel = await prisma.channels.findFirst({
       where: { id: channelId, accountId },
     });
     if (!channel) {
       return null;
     }
-    return await channelNextPage({ channelId, cursor });
+    return await channelNextPage({ channelId, cursor, userId, status });
   }
 
   static async get({ id, accountId }: GetType) {

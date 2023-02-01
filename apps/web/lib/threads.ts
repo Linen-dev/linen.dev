@@ -4,6 +4,7 @@ import { ThreadsWithMessagesFull } from 'types/partialTypes';
 import prisma from '../client';
 import { anonymizeMessages } from 'utilities/anonymizeMessages';
 import { PAGE_SIZE } from 'secrets';
+import { ThreadStatus } from '@linen/types';
 
 export type Thread = {
   externalThreadId: string;
@@ -233,16 +234,20 @@ export async function findPinnedThreads({
 
 export async function findThreadsByCursor({
   channelIds,
+  userId,
   sentAt,
   sort = 'desc',
   limit = PAGE_SIZE,
   direction,
   anonymizeUsers = false,
+  status,
   page,
 }: {
   channelIds: string[];
+  userId?: string;
   limit?: number;
   anonymizeUsers?: boolean;
+  status?: ThreadStatus;
   page?: number;
 } & FindThreadsByCursorType): Promise<ThreadsWithMessagesFull[]> {
   if (!channelIds.length) {
@@ -265,6 +270,20 @@ export async function findThreadsByCursor({
       messages: {
         some: {},
       },
+      ...(userId &&
+        status === ThreadStatus.UNREAD && {
+          userThreadStatus: {
+            none: { userId, OR: [{ read: true }, { muted: true }] },
+          },
+        }),
+      ...(userId &&
+        status === ThreadStatus.READ && {
+          userThreadStatus: { some: { userId, read: true, muted: false } },
+        }),
+      ...(userId &&
+        status === ThreadStatus.MUTED && {
+          userThreadStatus: { some: { userId, read: false, muted: true } },
+        }),
     },
     include: {
       messages: {

@@ -41,7 +41,6 @@ export interface ChannelProps {
   currentCommunity: SerializedAccount;
   threads: SerializedThread[];
   pinnedThreads: SerializedThread[];
-  userThreadStatuses: SerializedUserThreadStatus[];
   isSubDomainRouting: boolean;
   nextCursor: {
     next: string | null;
@@ -87,8 +86,6 @@ function getThreadsToRender(
         return thread;
       }
       return false;
-    } else if (status === ThreadStatus.READ || status === ThreadStatus.MUTED) {
-      return false;
     }
     return thread;
   });
@@ -102,7 +99,6 @@ export default function Channel(props: ChannelProps) {
   const {
     threads: initialThreads,
     pinnedThreads: initialPinnedThreads,
-    userThreadStatuses: initialUserThreadStatuses,
     channels,
     communities,
     currentChannel: initialChannel,
@@ -124,7 +120,7 @@ export default function Channel(props: ChannelProps) {
   const [allUsers] = useUsersContext();
   const [userThreadStatuses, setUserThreadStatuses] = useState<
     SerializedUserThreadStatus[]
-  >(initialUserThreadStatuses);
+  >([]);
 
   const threadsToRender = getThreadsToRender(
     threads,
@@ -149,11 +145,8 @@ export default function Channel(props: ChannelProps) {
   }, [status]);
 
   useEffect(() => {
-    setUserThreadStatuses(initialUserThreadStatuses);
-  }, [initialUserThreadStatuses]);
-
-  useEffect(() => {
     setThreads(initialThreads);
+    setStatus(ThreadStatus.UNREAD);
   }, [initialThreads]);
 
   useEffect(() => {

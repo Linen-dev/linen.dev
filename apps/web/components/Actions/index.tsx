@@ -10,6 +10,7 @@ import {
   SerializedThread,
   SerializedUser,
   SerializedUserThreadStatus,
+  ThreadStatus,
 } from '@linen/types';
 import { copyToClipboard } from '@linen/utilities/clipboard';
 import { GoPin } from 'react-icons/go';
@@ -26,6 +27,7 @@ interface Props {
   thread: SerializedThread;
   message: SerializedMessage;
   permissions: Permissions;
+  status?: ThreadStatus;
   settings: Settings;
   isSubDomainRouting: boolean;
   currentUser: SerializedUser | null;
@@ -71,6 +73,7 @@ export default function Actions({
   thread,
   message,
   permissions,
+  status,
   settings,
   isSubDomainRouting,
   currentUser,
@@ -92,20 +95,22 @@ export default function Actions({
 
   return (
     <ul className={classNames(styles.actions, className)}>
-      {onRead && currentUser && (!userThreadStatus || !userThreadStatus.read) && (
-        <li
-          onClick={(event) => {
-            event.stopPropagation();
-            event.preventDefault();
-            onRead(thread.id);
-          }}
-        >
-          <Tooltip className={styles.tooltip} text="Read">
-            <BiMessageCheck />
-          </Tooltip>
-        </li>
-      )}
-      {onUnread && currentUser && userThreadStatus && userThreadStatus.read && (
+      {onRead &&
+        currentUser &&
+        (status === ThreadStatus.UNREAD || status === ThreadStatus.MUTED) && (
+          <li
+            onClick={(event) => {
+              event.stopPropagation();
+              event.preventDefault();
+              onRead(thread.id);
+            }}
+          >
+            <Tooltip className={styles.tooltip} text="Read">
+              <BiMessageCheck />
+            </Tooltip>
+          </li>
+        )}
+      {onUnread && currentUser && status === ThreadStatus.READ && (
         <li
           onClick={(event) => {
             event.stopPropagation();
@@ -114,24 +119,26 @@ export default function Actions({
           }}
         >
           <Tooltip className={styles.tooltip} text="Unread">
-            <BiMessageCheck className={classNames({ [styles.active]: true })} />
+            <BiMessageCheck className={styles.active} />
           </Tooltip>
         </li>
       )}
-      {onMute && currentUser && (!userThreadStatus || !userThreadStatus.muted) && (
-        <li
-          onClick={(event) => {
-            event.stopPropagation();
-            event.preventDefault();
-            onMute(thread.id);
-          }}
-        >
-          <Tooltip className={styles.tooltip} text="Mute">
-            <FaVolumeMute />
-          </Tooltip>
-        </li>
-      )}
-      {onUnmute && currentUser && userThreadStatus && userThreadStatus.muted && (
+      {onMute &&
+        currentUser &&
+        (status === ThreadStatus.UNREAD || status === ThreadStatus.READ) && (
+          <li
+            onClick={(event) => {
+              event.stopPropagation();
+              event.preventDefault();
+              onMute(thread.id);
+            }}
+          >
+            <Tooltip className={styles.tooltip} text="Mute">
+              <FaVolumeMute />
+            </Tooltip>
+          </li>
+        )}
+      {onUnmute && currentUser && status === ThreadStatus.MUTED && (
         <li
           onClick={(event) => {
             event.stopPropagation();
@@ -140,22 +147,8 @@ export default function Actions({
           }}
         >
           <Tooltip className={styles.tooltip} text="Unmute">
-            <FaVolumeUp />
+            <FaVolumeMute className={styles.active} />
           </Tooltip>
-        </li>
-      )}
-      {currentUser && draggable && (
-        <li>
-          <Draggable
-            id={drag === 'thread' ? thread.id : message.id}
-            draggable={draggable}
-            source={drag}
-            mode={mode}
-          >
-            <Tooltip className={styles.tooltip} text="Move">
-              <RxDragHandleDots2 />
-            </Tooltip>
-          </Draggable>
         </li>
       )}
       {onReaction && currentUser && (
@@ -180,6 +173,33 @@ export default function Actions({
           </Tooltip>
         </li>
       )}
+      {onPin && permissions.manage && (
+        <li
+          onClick={(event) => {
+            event.stopPropagation();
+            event.preventDefault();
+            onPin(thread.id);
+          }}
+        >
+          <Tooltip className={styles.tooltip} text="Pin">
+            <GoPin className={classNames({ [styles.active]: thread.pinned })} />
+          </Tooltip>
+        </li>
+      )}
+      {currentUser && draggable && (
+        <li>
+          <Draggable
+            id={drag === 'thread' ? thread.id : message.id}
+            draggable={draggable}
+            source={drag}
+            mode={mode}
+          >
+            <Tooltip className={styles.tooltip} text="Move">
+              <RxDragHandleDots2 />
+            </Tooltip>
+          </Draggable>
+        </li>
+      )}
       <li
         onClick={(event) => {
           const text = getThreadUrl({
@@ -198,19 +218,6 @@ export default function Actions({
           <AiOutlinePaperClip />
         </Tooltip>
       </li>
-      {onPin && permissions.manage && (
-        <li
-          onClick={(event) => {
-            event.stopPropagation();
-            event.preventDefault();
-            onPin(thread.id);
-          }}
-        >
-          <Tooltip className={styles.tooltip} text="Pin">
-            <GoPin className={classNames({ [styles.active]: thread.pinned })} />
-          </Tooltip>
-        </li>
-      )}
       {onDelete &&
         currentUser &&
         (permissions.manage || currentUser.id === message.usersId) && (
