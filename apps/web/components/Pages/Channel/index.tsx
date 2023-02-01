@@ -173,7 +173,7 @@ export default function Channel(props: ChannelProps) {
         } else if (
           currentThreadId &&
           event.key === 'e' &&
-          [ThreadStatus.UNREAD || ThreadStatus.MUTED].includes(status)
+          [ThreadStatus.UNREAD, ThreadStatus.MUTED].includes(status)
         ) {
           markUserThreadStatuses(currentThreadId, {
             muted: false,
@@ -805,6 +805,11 @@ export default function Channel(props: ChannelProps) {
     }
   }
 
+  function onThreadsChange(threads: SerializedThread[]) {
+    setThreads(threads);
+    setCurrentThreadId(threads[threads.length - 1]?.id);
+  }
+
   return (
     <PageLayout
       currentChannel={currentChannel}
@@ -841,6 +846,7 @@ export default function Channel(props: ChannelProps) {
         status={status}
         onStatusChange={onStatusChange}
         setThreads={setThreads}
+        onThreadsChange={onThreadsChange}
         deleteMessage={deleteMessage}
         muteThread={muteThread}
         unmuteThread={unmuteThread}
