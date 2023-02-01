@@ -12,13 +12,13 @@
   background: repeating-linear-gradient(
     45deg,
     #fff,
-    #fff 8px,
-    $color-gray-50 8px,
-    $color-gray-50 16px
+    #fff 2px,
+    $color-gray-50 2px,
+    $color-gray-50 4px
   );
   margin: 1rem;
   animation-name: opacity-animation;
-  animation-duration: 0.2s;
+  animation-duration: 0.15s;
 }
 
 @keyframes opacity-animation {
@@ -31,14 +31,17 @@
 }
 
 .icon {
-  font-size: 5rem;
+  color: $color-gray-900;
+  font-size: 64px;
   line-height: 1;
   margin: 0;
 }
 
 .header {
-  font-size: 3.5rem;
+  color: $color-gray-900;
+  font-size: 24px;
   font-weight: bold;
   margin: 0;
   line-height: 1;
+  user-select: none;
 }
