@@ -138,7 +138,8 @@ export default function Channel({
   updateThread,
   onThreadMessage,
 }: Props) {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setLoading] = useState(false);
+  const [isInfiniteScrollLoading, setInfiniteScrollLoading] = useState(false);
   const [isLeftScrollAtBottom, setIsLeftScrollAtBottom] = useState(true);
   const [readStatus, setReadStatus] = useState<SerializedReadStatus>();
   const scrollableRootRef = useRef<HTMLDivElement | null>(null);
@@ -224,7 +225,7 @@ export default function Channel({
   }
 
   const [infiniteTopRef, { rootRef: topRootRef }] = useInfiniteScroll({
-    loading: isLoading,
+    loading: isInfiniteScrollLoading,
     hasNextPage: !!cursor.prev,
     onLoadMore: loadMore,
     disabled: !!error?.prev || !cursor.prev,
@@ -232,7 +233,7 @@ export default function Channel({
   });
 
   const [infiniteBottomRef, { rootRef: bottomRootRef }] = useInfiniteScroll({
-    loading: isLoading,
+    loading: isInfiniteScrollLoading,
     hasNextPage: !!cursor.next,
     onLoadMore: loadMoreNext,
     disabled: !!error?.next || !cursor.next,
@@ -262,24 +263,31 @@ export default function Channel({
   const handleStatusChange = async (status: ThreadStatus) => {
     setThreads([]);
     onStatusChange(status);
-    const data = await api.getThreads({
-      channelId: currentChannel.id,
-      accountId: settings.communityId,
-      userId: currentUser?.id,
-      status,
-    });
-    setCursor(() => data.nextCursor);
-    setThreads(() => data.threads);
-    setTimeout(() => handleScroll(), 0);
+    setLoading(true);
+    try {
+      const data = await api.getThreads({
+        channelId: currentChannel.id,
+        accountId: settings.communityId,
+        userId: currentUser?.id,
+        status,
+      });
+      setCursor(() => data.nextCursor);
+      setThreads(() => data.threads);
+      setTimeout(() => handleScroll(), 0);
+    } catch (exception) {
+      alert('Something went wrong, please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   async function loadMore(next: boolean = false) {
     const key = next ? 'next' : 'prev';
     const dir = next ? 'bottom' : 'top';
-    if (isLoading) return;
+    if (isInfiniteScrollLoading) return;
     if (!cursor[key]) return;
     try {
-      setIsLoading(true);
+      setInfiniteScrollLoading(true);
       if (cursor[key]) {
         const data = await api.getThreads({
           channelId: currentChannel.id,
@@ -309,7 +317,7 @@ export default function Channel({
     } catch (err) {
       setError({ ...error, [key]: err });
     } finally {
-      setIsLoading(false);
+      setInfiniteScrollLoading(false);
     }
   }
 
@@ -449,7 +457,7 @@ export default function Channel({
                     </div>
                   </Header>
                   {threads.length === 0 ? (
-                    <Empty status={status} />
+                    <Empty status={status} loading={isLoading} />
                   ) : (
                     <div className={styles.full}>
                       <ul className="divide-y w-full">

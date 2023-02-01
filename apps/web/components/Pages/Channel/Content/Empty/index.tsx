@@ -1,10 +1,12 @@
 import React from 'react';
+import classNames from 'classnames';
 import styles from './index.module.scss';
 import { ThreadStatus } from '@linen/types';
 import ThreadStatusIcon from '../ThreadStatusIcon';
 
 interface Props {
   status: ThreadStatus;
+  loading: boolean;
 }
 
 function description(status: ThreadStatus) {
@@ -18,9 +20,12 @@ function description(status: ThreadStatus) {
   }
 }
 
-export default function Empty({ status }: Props) {
+export default function Empty({ status, loading }: Props) {
+  if (loading) {
+    return <div className={styles.container}></div>;
+  }
   return (
-    <div className={styles.container}>
+    <div className={classNames(styles.container, styles.stripe)}>
       <div className={styles.icon}>
         <ThreadStatusIcon status={status} />
       </div>
