@@ -14,6 +14,7 @@ import {
   SerializedUser,
   ThreadState,
   ThreadStatus,
+  ReminderTypes,
 } from '@linen/types';
 import styles from './index.module.scss';
 
@@ -49,6 +50,7 @@ interface Props {
     active: boolean;
   }): void;
   onRead?(threadId: string): void;
+  onRemind?(threadId: string, reminder: ReminderTypes): void;
   onUnread?(threadId: string): void;
 }
 
@@ -74,6 +76,7 @@ export function Row({
   onPin,
   onReaction,
   onRead,
+  onRemind,
   onUnread,
 }: Props) {
   const top = !isPreviousMessageFromSameUser;
@@ -146,6 +149,7 @@ export function Row({
           onPin={onPin}
           onReaction={onReaction}
           onRead={onRead}
+          onRemind={onRemind}
           onUnread={onUnread}
           mode={mode}
         />

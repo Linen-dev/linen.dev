@@ -18,6 +18,7 @@ import { sendThreadMessageWrapper } from './sendThreadMessageWrapper';
 import { sendMessageWrapper } from './sendMessageWrapper';
 import {
   Permissions,
+  ReminderTypes,
   SerializedAccount,
   SerializedChannel,
   SerializedReadStatus,
@@ -70,6 +71,7 @@ interface Props {
   unmuteThread(threadId: string): void;
   pinThread(threadId: string): void;
   readThread(threadId: string): void;
+  onRemind(threadId: string, reminder: ReminderTypes): void;
   unreadThread(threadId: string): void;
   sendReaction({
     threadId,
@@ -137,6 +139,7 @@ export default function Channel({
   unreadThread,
   onMessage,
   onDrop,
+  onRemind,
   sendReaction,
   onSelectThread,
   updateThread,
@@ -496,6 +499,7 @@ export default function Channel({
                           onPin={pinThread}
                           onReaction={sendReaction}
                           onRead={readThread}
+                          onRemind={onRemind}
                           onUnread={unreadThread}
                           onDrop={handleDrop}
                           onLoad={handleLeftScroll}

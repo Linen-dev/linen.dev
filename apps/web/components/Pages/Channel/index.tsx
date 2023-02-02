@@ -6,6 +6,7 @@ import { buildChannelSeo } from 'utilities/seo';
 import Content from 'components/Pages/Channel/Content';
 import {
   Permissions,
+  ReminderTypes,
   SerializedAccount,
   SerializedChannel,
   SerializedMessage,
@@ -179,7 +180,11 @@ export default function Channel(props: ChannelProps) {
         } else if (
           currentThreadId &&
           event.key === 'e' &&
-          [ThreadStatus.UNREAD, ThreadStatus.MUTED].includes(status)
+          [
+            ThreadStatus.UNREAD,
+            ThreadStatus.MUTED,
+            ThreadStatus.REMINDER,
+          ].includes(status)
         ) {
           markUserThreadStatuses(currentThreadId, {
             muted: false,
@@ -200,7 +205,11 @@ export default function Channel(props: ChannelProps) {
         } else if (
           currentThreadId &&
           event.key === 'm' &&
-          [ThreadStatus.UNREAD, ThreadStatus.READ].includes(status)
+          [
+            ThreadStatus.UNREAD,
+            ThreadStatus.READ,
+            ThreadStatus.REMINDER,
+          ].includes(status)
         ) {
           markUserThreadStatuses(currentThreadId, {
             muted: true,
@@ -831,6 +840,10 @@ export default function Channel(props: ChannelProps) {
     });
   }
 
+  function onRemind(threadId: string, reminder: ReminderTypes) {
+    alert(threadId + reminder);
+  }
+
   return (
     <PageLayout
       currentChannel={currentChannel}
@@ -876,6 +889,7 @@ export default function Channel(props: ChannelProps) {
         unreadThread={unreadThread}
         onMessage={onThreadMessage}
         onDrop={onThreadDrop}
+        onRemind={onRemind}
         sendReaction={sendReaction}
         onSelectThread={onSelectThread}
         updateThread={updateThread}
