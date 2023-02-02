@@ -2,7 +2,7 @@ import { findAccountByPath } from '../lib/models';
 import { GetServerSidePropsContext } from 'next/types';
 import { NotFound } from '../utilities/response';
 import { serialize as serializeSettings } from 'serializers/account/settings';
-import { findThreadsByCursor, findPinnedThreads, Thread } from '../lib/threads';
+import { findThreadsByCursor, findPinnedThreads } from '../lib/threads';
 import serializeAccount from '../serializers/account';
 import serializeThread from '../serializers/thread';
 import { ThreadsWithMessagesFull } from 'types/partialTypes';
