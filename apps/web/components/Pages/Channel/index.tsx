@@ -52,7 +52,7 @@ export interface ChannelProps {
 
 async function upsertUserThreadStatus(params: {
   communityId: string;
-  threadId: string;
+  threadIds: string[];
   muted: boolean;
   read: boolean;
 }) {
