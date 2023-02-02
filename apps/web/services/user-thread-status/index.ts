@@ -26,6 +26,25 @@ class UserThreadStatusService {
       },
     });
   }
+
+  static async markAsAllRead(channelId: string, userId: string) {
+    const threads = await prisma.threads.findMany({
+      where: {
+        channelId,
+      },
+      select: { id: true },
+    });
+    await prisma.userThreadStatus.createMany({
+      data: threads.map((thread) => {
+        return {
+          threadId: thread.id,
+          userId,
+          read: true,
+          muted: false,
+        };
+      }),
+    });
+  }
 }
 
 export default UserThreadStatusService;
