@@ -266,9 +266,9 @@ export default function Channel({
   };
 
   const handleStatusChange = async (status: ThreadStatus) => {
+    setLoading(true);
     onThreadsChange([]);
     onStatusChange(status);
-    setLoading(true);
     try {
       const data = await api.getThreads({
         channelId: currentChannel.id,
@@ -281,6 +281,15 @@ export default function Channel({
       setTimeout(() => handleScroll(), 0);
     } catch (exception) {
       alert('Something went wrong, please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleMarkAsRead = async () => {
+    setLoading(true);
+    try {
+      await onMarkAllAsRead();
     } finally {
       setLoading(false);
     }
@@ -436,7 +445,7 @@ export default function Channel({
                     currentUser={currentUser}
                     status={status}
                     threads={threads}
-                    onMarkAllAsRead={onMarkAllAsRead}
+                    onMarkAllAsRead={handleMarkAsRead}
                     onStatusChange={handleStatusChange}
                   >
                     {pinnedThread && status === ThreadStatus.UNREAD && (
