@@ -1,10 +1,9 @@
 import React from 'react';
-import { StickyHeader } from '@linen/ui';
+import { Button, NativeSelect, StickyHeader } from '@linen/ui';
 import styles from './index.module.css';
-import { SerializedUser } from '@linen/types';
-import { NativeSelect } from '@linen/ui';
+import { SerializedThread, SerializedUser, ThreadStatus } from '@linen/types';
 import { FiHash } from 'react-icons/fi';
-import { ThreadStatus } from '@linen/types';
+import { BiMessageCheck } from 'react-icons/bi';
 import ThreadStatusIcon from '../ThreadStatusIcon';
 
 interface Props {
@@ -13,6 +12,8 @@ interface Props {
   children: React.ReactNode;
   currentUser?: SerializedUser;
   status: ThreadStatus;
+  threads: SerializedThread[];
+  onMarkAllAsRead(): void;
   onStatusChange(status: ThreadStatus): void;
 }
 
@@ -22,6 +23,8 @@ export default function Header({
   children,
   currentUser,
   status,
+  threads,
+  onMarkAllAsRead,
   onStatusChange,
 }: Props) {
   return (
@@ -31,22 +34,30 @@ export default function Header({
           <FiHash /> {channelName}
         </div>
         {currentUser && (
-          <div className={styles.select}>
-            <NativeSelect
-              id="user-thread-status"
-              icon={<ThreadStatusIcon status={status} />}
-              theme="gray"
-              value={status}
-              options={[
-                { label: 'Inbox', value: ThreadStatus.UNREAD },
-                { label: 'Read', value: ThreadStatus.READ },
-                { label: 'Muted', value: ThreadStatus.MUTED },
-              ]}
-              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                onStatusChange(event.target.value as ThreadStatus);
-                document.getElementById('user-thread-status')?.blur();
-              }}
-            />
+          <div className={styles.actions}>
+            {status === ThreadStatus.UNREAD && threads.length > 0 && (
+              <Button onClick={onMarkAllAsRead} color="gray" weight="bold">
+                <BiMessageCheck /> All Done
+              </Button>
+            )}
+
+            <div className={styles.select}>
+              <NativeSelect
+                id="user-thread-status"
+                icon={<ThreadStatusIcon status={status} />}
+                theme="gray"
+                value={status}
+                options={[
+                  { label: 'Inbox', value: ThreadStatus.UNREAD },
+                  { label: 'Done', value: ThreadStatus.READ },
+                  { label: 'Muted', value: ThreadStatus.MUTED },
+                ]}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                  onStatusChange(event.target.value as ThreadStatus);
+                  document.getElementById('user-thread-status')?.blur();
+                }}
+              />
+            </div>
           </div>
         )}
       </div>

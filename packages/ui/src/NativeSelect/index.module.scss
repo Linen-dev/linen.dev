@@ -74,10 +74,15 @@
 }
 
 .gray .select {
-  background: $color-gray-50;
-  border-color: $color-gray-50;
+  background: $color-gray-100;
+  border-color: $color-gray-100;
   color: black;
   font-weight: bold;
+}
+
+.gray .select:hover {
+  background: $color-gray-200;
+  border-color: $color-gray-200;
 }
 
 .gray .icon {

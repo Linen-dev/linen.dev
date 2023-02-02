@@ -816,6 +816,21 @@ export default function Channel(props: ChannelProps) {
     setCurrentThreadId(threads[threads.length - 1]?.id);
   }
 
+  function onMarkAllAsRead() {
+    setCurrentThreadId(undefined);
+    setThreads([]);
+    return fetch('/api/user-thread-status/channel', {
+      method: 'POST',
+      body: JSON.stringify({
+        channelId: currentChannel.id,
+        communityId: currentCommunity.id,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+  }
+
   return (
     <PageLayout
       currentChannel={currentChannel}
@@ -865,6 +880,7 @@ export default function Channel(props: ChannelProps) {
         onSelectThread={onSelectThread}
         updateThread={updateThread}
         onThreadMessage={onSocket}
+        onMarkAllAsRead={onMarkAllAsRead}
         token={token}
       />
     </PageLayout>

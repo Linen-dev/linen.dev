@@ -19,6 +19,10 @@
   font-weight: medium;
 }
 
+.bold {
+  font-weight: bold;
+}
+
 .white {
   background: white;
   color: black;
@@ -71,7 +75,7 @@
   color: white;
 
   &:hover {
-    background: black
+    background: black;
   }
 }
 

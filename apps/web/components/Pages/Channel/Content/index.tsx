@@ -101,6 +101,7 @@ interface Props {
     to: string;
   }): void;
   updateThread({ state, title }: { state?: ThreadState; title?: string }): void;
+  onMarkAllAsRead(): void;
 }
 
 const debouncedGetReadStatus = debounce((channelId: string) =>
@@ -140,6 +141,7 @@ export default function Channel({
   onSelectThread,
   updateThread,
   onThreadMessage,
+  onMarkAllAsRead,
 }: Props) {
   const [isLoading, setLoading] = useState(false);
   const [isInfiniteScrollLoading, setInfiniteScrollLoading] = useState(false);
@@ -433,6 +435,8 @@ export default function Channel({
                     channelName={currentChannel.channelName}
                     currentUser={currentUser}
                     status={status}
+                    threads={threads}
+                    onMarkAllAsRead={onMarkAllAsRead}
                     onStatusChange={handleStatusChange}
                   >
                     {pinnedThread && status === ThreadStatus.UNREAD && (

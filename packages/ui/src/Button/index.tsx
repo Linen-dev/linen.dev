@@ -19,7 +19,7 @@ interface Props {
     | 'black';
   rounded?: 'lg' | 'full';
   size?: 'sm' | 'xs';
-  weight?: 'medium' | 'normal';
+  weight?: 'bold' | 'medium' | 'normal';
 }
 
 const Button = ({
@@ -42,6 +42,7 @@ const Button = ({
       className={classNames(styles.button, className, {
         [styles.block]: block,
         [styles.medium]: weight === 'medium',
+        [styles.bold]: weight === 'bold',
         [styles['rounded-lg']]: rounded === 'lg',
         [styles['rounded-full']]: rounded === 'full',
         [styles.sm]: size === 'sm',

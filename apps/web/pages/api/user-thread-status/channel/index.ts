@@ -15,7 +15,12 @@ export async function create(params: { channelId: string; userId: string }) {
 
   const { channelId, userId } = params;
 
-  await UserThreadStatusService.markAsAllRead(channelId, userId);
+  try {
+    await UserThreadStatusService.markAllAsRead(channelId, userId);
+  } catch (exception) {
+    console.log(exception);
+    return { status: 500 };
+  }
 
   return { status: 200 };
 }
