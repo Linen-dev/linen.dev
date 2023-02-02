@@ -50,6 +50,13 @@ export enum ThreadStatus {
   UNREAD = 'unread',
   READ = 'read',
   MUTED = 'muted',
+  REMINDER = 'reminder',
+}
+
+export enum ReminderTypes {
+  SOON = 'soon',
+  TOMORROW = 'tomorrow',
+  NEXT_WEEK = 'next-week',
 }
 
 export interface SerializedUserThreadStatus {

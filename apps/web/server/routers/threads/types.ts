@@ -8,7 +8,12 @@ export const findSchema = z.object({
   cursor: z.string().min(1).optional(),
   userId: z.string().optional(),
   status: z
-    .enum([ThreadStatus.UNREAD, ThreadStatus.READ, ThreadStatus.MUTED])
+    .enum([
+      ThreadStatus.UNREAD,
+      ThreadStatus.READ,
+      ThreadStatus.MUTED,
+      ThreadStatus.REMINDER,
+    ])
     .optional(),
 });
 export type findType = z.infer<typeof findSchema>;

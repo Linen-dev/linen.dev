@@ -9,6 +9,7 @@ import {
   SerializedThread,
   SerializedUser,
   ThreadStatus,
+  ReminderTypes,
 } from '@linen/types';
 import { Mode } from '@linen/hooks/mode';
 
@@ -60,6 +61,7 @@ interface Props {
     to: string;
   }): void;
   onRead?(threadId: string): void;
+  onRemind?(threadId: string, reminder: ReminderTypes): void;
   onUnread?(threadId: string): void;
 }
 
@@ -81,6 +83,7 @@ export default function ChannelRow({
   onPin,
   onReaction,
   onRead,
+  onRemind,
   onUnread,
 }: Props) {
   const { messages } = thread;
@@ -116,6 +119,7 @@ export default function ChannelRow({
           onPin={onPin}
           onReaction={onReaction}
           onRead={onRead}
+          onRemind={onRemind}
           onUnread={onUnread}
           header={
             thread.title && <div className={styles.header}>{thread.title}</div>

@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import { Line } from '@linen/ui';
 import {
   Permissions,
+  ReminderTypes,
   SerializedReadStatus,
   SerializedThread,
   SerializedUser,
@@ -44,6 +45,7 @@ export default function Grid({
   onPin,
   onReaction,
   onRead,
+  onRemind,
   onUnread,
 }: {
   threads: SerializedThread[];
@@ -84,6 +86,7 @@ export default function Grid({
     to: string;
   }): void;
   onRead?(threadId: string): void;
+  onRemind?(threaId: string, reminder: ReminderTypes): void;
   onUnread?(threadId: string): void;
   onLoad?(): void;
 }) {
@@ -160,6 +163,7 @@ export default function Grid({
                     onPin={onPin}
                     onReaction={onReaction}
                     onRead={onRead}
+                    onRemind={onRemind}
                     onUnread={onUnread}
                     onLoad={onLoad}
                   />
