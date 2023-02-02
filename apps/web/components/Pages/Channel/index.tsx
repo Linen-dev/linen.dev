@@ -130,9 +130,12 @@ export default function Channel(props: ChannelProps) {
 
   useKeyboard(
     {
-      onKeyDown(event: KeyboardEvent) {
+      onKeyUp(event: KeyboardEvent) {
         const element = document.activeElement;
         if (element && element.id) {
+          return false;
+        }
+        if (!currentUser) {
           return false;
         }
         function selectPreviousThread() {
@@ -207,7 +210,7 @@ export default function Channel(props: ChannelProps) {
         }
       },
     },
-    [threads, currentThreadId]
+    [threads, currentThreadId, currentUser]
   );
 
   const auth = permissions.auth || null;
