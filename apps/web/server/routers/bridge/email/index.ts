@@ -119,7 +119,7 @@ async function handleInbound(reqBody: any) {
 
 async function handleOutbound({
   event,
-  data: { to, from, body, channelInbox, externalThreadId },
+  data: { to, from, body, channelInbox, externalThreadId, title },
 }: {
   event: string;
   data: {
@@ -128,6 +128,7 @@ async function handleOutbound({
     body: string;
     channelInbox: string;
     externalThreadId: string;
+    title: string;
   };
 }) {
   const transporter = nodemailer.createTransport({
@@ -144,6 +145,7 @@ async function handleOutbound({
     from: from ? `${from} ${channelInbox}` : channelInbox,
     to: extractEmail(to)?.join(),
     text: body,
+    subject: `Re: ${title}`,
   });
   console.log(sendResponse);
 }

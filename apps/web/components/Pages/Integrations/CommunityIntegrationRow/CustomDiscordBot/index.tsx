@@ -85,11 +85,11 @@ function Instructions({
           <div className="divide-y divide-gray-200 px-4 sm:px-6 gap-0">
             {html.map((row) =>
               row.startsWith('https://') ? (
-                <div className="flex justify-center">
+                <div className="flex justify-center" key={row}>
                   <Image src={row} alt={row} className="p-4 w-auto max-h-40" />
                 </div>
               ) : (
-                <Message format={MessageFormat.LINEN} text={row} />
+                <Message format={MessageFormat.LINEN} text={row} key={row} />
               )
             )}
           </div>

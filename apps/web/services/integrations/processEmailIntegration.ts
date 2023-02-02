@@ -43,6 +43,7 @@ async function processNewMessage(
       threads: {
         select: {
           externalThreadId: true,
+          title: true,
           messages: {
             orderBy: { sentAt: 'asc' },
             take: 1,
@@ -71,6 +72,7 @@ async function processNewMessage(
     from: message.author?.displayName,
     to: message.threads.messages.find(Boolean)?.author?.displayName,
     body: message.body,
+    title: message.threads.title,
     channelInbox: integration.externalId,
     externalThreadId: message.threads.externalThreadId,
   };
