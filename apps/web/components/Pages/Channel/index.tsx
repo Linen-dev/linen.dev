@@ -376,7 +376,7 @@ export default function Channel(props: ChannelProps) {
   ) {
     debouncedUpserUserThreadStatus({
       communityId: currentCommunity.id,
-      threadId,
+      threadIds: [threadId],
       muted,
       read,
     });

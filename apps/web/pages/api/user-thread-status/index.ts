@@ -1,18 +1,16 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import PermissionsService from 'services/permissions';
-import serializeUserThreadStatus from 'serializers/user-thread-status';
 import prisma from 'client';
 import { z } from 'zod';
 
 const createSchema = z.object({
-  threadId: z.string(),
+  threadIds: z.array(z.string()),
   muted: z.boolean(),
   read: z.boolean(),
 });
 
 export async function create(params: {
-  threadId: string;
-  communityId: string;
+  threadIds: string[];
   userId: string;
   muted: boolean;
   read: boolean;
@@ -22,46 +20,28 @@ export async function create(params: {
     return { status: 400, data: { error: body.error } };
   }
 
-  const { threadId, communityId, userId, muted, read } = params;
+  const { threadIds, userId, muted, read } = params;
 
-  const thread = await prisma.threads.findFirst({
-    where: {
-      id: threadId,
-    },
-    include: {
-      channel: {
-        select: {
-          accountId: true,
-        },
+  await prisma.$transaction([
+    prisma.userThreadStatus.deleteMany({
+      where: {
+        userId,
+        threadId: { in: threadIds },
       },
-    },
-  });
+    }),
+    prisma.userThreadStatus.createMany({
+      data: threadIds.map((threadId) => {
+        return {
+          userId,
+          threadId,
+          muted,
+          read,
+        };
+      }),
+    }),
+  ]);
 
-  if (!thread) {
-    return { status: 404 };
-  }
-
-  if (thread.channel.accountId !== communityId) {
-    return { status: 403 };
-  }
-
-  const status = await prisma.userThreadStatus.upsert({
-    where: {
-      userId_threadId: { userId, threadId },
-    },
-    update: {
-      muted,
-      read,
-    },
-    create: {
-      userId,
-      threadId,
-      muted,
-      read,
-    },
-  });
-
-  return { status: 200, data: serializeUserThreadStatus(status) };
+  return { status: 200 };
 }
 
 export default async function handler(
