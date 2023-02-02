@@ -12,3 +12,12 @@
   font-size: 16px;
   font-weight: bold;
 }
+
+.actions {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.actions button {
+  margin-bottom: 0;
+}

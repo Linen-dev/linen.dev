@@ -50,8 +50,8 @@ export async function eventNewMessage({
     push(event),
     pushChannel(event),
     ThreadsServices.updateMetrics({ messageId, threadId }),
-    UserThreadStatusService.markAsUnread(threadId),
-    UserThreadStatusService.markAsUnmuted(
+    UserThreadStatusService.markAsUnreadForAllUsers(threadId),
+    UserThreadStatusService.markAsUnmutedForMentionedUsers(
       threadId,
       mentions.map((mention) => mention.usersId)
     ),

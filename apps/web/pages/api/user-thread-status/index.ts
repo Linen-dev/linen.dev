@@ -22,24 +22,35 @@ export async function create(params: {
 
   const { threadIds, userId, muted, read } = params;
 
-  await prisma.$transaction([
-    prisma.userThreadStatus.deleteMany({
+  const creation = muted || read;
+
+  if (creation) {
+    await prisma.$transaction([
+      prisma.userThreadStatus.deleteMany({
+        where: {
+          userId,
+          threadId: { in: threadIds },
+        },
+      }),
+      prisma.userThreadStatus.createMany({
+        data: threadIds.map((threadId) => {
+          return {
+            userId,
+            threadId,
+            muted,
+            read,
+          };
+        }),
+      }),
+    ]);
+  } else {
+    await prisma.userThreadStatus.deleteMany({
       where: {
         userId,
         threadId: { in: threadIds },
       },
-    }),
-    prisma.userThreadStatus.createMany({
-      data: threadIds.map((threadId) => {
-        return {
-          userId,
-          threadId,
-          muted,
-          read,
-        };
-      }),
-    }),
-  ]);
+    });
+  }
 
   return { status: 200 };
 }
