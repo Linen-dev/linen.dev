@@ -3,9 +3,9 @@ import { TwoWaySyncEvent, TwoWaySyncType } from 'queue/tasks/two-way-sync';
 import prisma from 'client';
 import axios from 'axios';
 import { appendProtocol } from 'utilities/url';
-import { getLinenUrl } from 'utilities/domain';
+import { getIntegrationUrl } from 'utilities/domain';
 
-const LINEN_URL = appendProtocol(getLinenUrl());
+const LINEN_URL = appendProtocol(getIntegrationUrl());
 
 export async function processEmailIntegration({
   channelId,
