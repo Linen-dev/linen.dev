@@ -57,6 +57,7 @@ async function upsertUserThreadStatus(params: {
   muted: boolean;
   read: boolean;
   reminder: boolean;
+  reminderType?: ReminderTypes;
 }) {
   return fetch('/api/user-thread-status', {
     method: 'POST',
@@ -390,7 +391,13 @@ export default function Channel(props: ChannelProps) {
       muted,
       read,
       reminder,
-    }: { muted: boolean; read: boolean; reminder: boolean }
+      reminderType,
+    }: {
+      muted: boolean;
+      read: boolean;
+      reminder: boolean;
+      reminderType?: ReminderTypes;
+    }
   ) {
     debouncedUpserUserThreadStatus({
       communityId: currentCommunity.id,
@@ -398,6 +405,7 @@ export default function Channel(props: ChannelProps) {
       muted,
       read,
       reminder,
+      reminderType,
     });
     setThreads((threads) => {
       return threads.filter((thread) => thread.id !== threadId);
@@ -437,6 +445,16 @@ export default function Channel(props: ChannelProps) {
       muted: false,
       read: false,
       reminder: false,
+    });
+  }
+
+  function onRemind(threadId: string, reminderType: ReminderTypes) {
+    Toast.info('We will remind you later about this thread.');
+    markUserThreadStatuses(threadId, {
+      muted: false,
+      read: false,
+      reminder: true,
+      reminderType,
     });
   }
 
@@ -864,10 +882,6 @@ export default function Channel(props: ChannelProps) {
         'Content-Type': 'application/json',
       },
     });
-  }
-
-  function onRemind(threadId: string, reminder: ReminderTypes) {
-    alert(threadId + reminder);
   }
 
   return (

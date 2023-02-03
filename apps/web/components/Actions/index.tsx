@@ -276,7 +276,7 @@ export default function Actions({
           open={modal === ModalView.REMINDER}
           close={() => setModal(ModalView.NONE)}
           onConfirm={(reminder: ReminderTypes) => {
-            onRemind(message.id, reminder);
+            onRemind(thread.id, reminder);
             setModal(ModalView.NONE);
           }}
         />
