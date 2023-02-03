@@ -2,7 +2,7 @@ import { Router, json, urlencoded } from 'express';
 import githubApp from './github';
 import { z } from 'zod';
 import Serializer from './serializer';
-import { integrationMiddleware } from '@linen/bridge-api';
+import { integrationMiddleware } from '@linen/sdk';
 import env from './config';
 
 const messageSchema = z.object({
@@ -119,7 +119,7 @@ const linenRouter = Router()
           await processThreadState(data, 'open');
           return res.status(200);
         }
-        return res.status(405).end();
+        return res.status(405);
       } catch (error) {
         console.error(error);
         return res.status(500);

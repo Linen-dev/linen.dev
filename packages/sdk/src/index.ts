@@ -37,14 +37,12 @@ export default class Api {
       .then((res) => res.data)
       .catch(this.catchError);
 
-  constructor(apiKey: string, linenUrl: string = 'https://linen.dev') {
+  constructor(apiKey: string, linenUrl: string = 'https://main.linendev.com') {
     this.instance = axios.create({
       baseURL: `${linenUrl}/api/integrations`,
       headers: { 'x-api-internal': apiKey },
     });
   }
-
-  // appendProtocol(getLinenUrl())
 
   getChannel(
     integrationId: string

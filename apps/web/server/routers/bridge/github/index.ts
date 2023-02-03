@@ -16,5 +16,5 @@ export const bridgeGithubRouter = Router()
     console.log('req.query', req.query);
     console.log('req.params', req.params);
     console.log('req.path', req.path);
-    res.send(200);
+    res.redirect('https://linen.dev');
   });

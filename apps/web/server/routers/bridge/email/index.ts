@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import LinenApi, { integrationMiddleware } from '@linen/bridge-api';
+import LinenApi, { integrationMiddleware } from '@linen/sdk';
 import { appendProtocol } from 'utilities/url';
 import { getLinenUrl } from 'utilities/domain';
 import { v4 } from 'uuid';

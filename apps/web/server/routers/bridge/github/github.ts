@@ -1,5 +1,5 @@
 import { App } from 'octokit';
-import LinenApi from '@linen/bridge-api';
+import LinenApi from '@linen/sdk';
 import env from './config';
 import Serializer from './serializer';
 import * as GitHubTypes from '@octokit/webhooks-types';
