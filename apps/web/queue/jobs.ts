@@ -29,6 +29,8 @@ class WorkerSingleton {
 export const QUEUE_1_NEW_EVENT = 'notification-new-event';
 export const QUEUE_2_SEND_EMAIL = 'notification-send-email';
 
+export const QUEUE_REMIND_ME_LATER = 'remind-me-later-queue';
+
 export async function createWebhookJob(payload: SlackEvent) {
   const worker = await WorkerSingleton.getInstance();
   return await worker.addJob('webhook', payload, {
@@ -56,6 +58,20 @@ export async function createMailingJob(
     maxAttempts: 1,
     runAt,
     jobKeyMode: 'preserve_run_at',
+  });
+}
+
+export async function createRemindMeJob(
+  jobKey: string,
+  runAt: Date,
+  payload: any
+) {
+  const worker = await WorkerSingleton.getInstance();
+  return await worker.addJob(QUEUE_REMIND_ME_LATER, payload, {
+    jobKey: `${QUEUE_REMIND_ME_LATER}:${jobKey}`,
+    maxAttempts: 1,
+    runAt,
+    jobKeyMode: 'replace'
   });
 }
 
