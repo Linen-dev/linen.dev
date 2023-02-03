@@ -21,7 +21,7 @@ Join our public community: https://linen.dev/s/linen
 - **Import communities**: Linen support imports from all of your public Slack/Discord conversations, attachments, emojis, and members.
 - **Single account across multiple communities**: Linen let's you join multiple communities with a single login without multiple emails and passwords
 - **Private communities**: In addition to public communities we also support private communities that require a password login to access the content. We use this feature for internal team discussions.
-- **Improved Thread management**: Linen let's you drag and drop messages and merge them into a single thread as well as move threads between channels.
+- **Move threads and messages**: Linen let's you drag and drop messages and merge them into a single thread as well as move threads between channels.
 - **Discord Forum Support**: Linen will sync Discord and make the search engine friendly
 
 ### Roadmap:
