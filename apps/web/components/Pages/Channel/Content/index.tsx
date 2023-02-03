@@ -236,7 +236,7 @@ export default function Channel({
     loading: isInfiniteScrollLoading,
     hasNextPage: !!cursor.prev,
     onLoadMore: loadMore,
-    disabled: !!error?.prev || !cursor.prev,
+    disabled: !!error?.prev || !cursor.prev || isLoading,
     rootMargin: '0px 0px 0px 0px',
   });
 
@@ -244,7 +244,7 @@ export default function Channel({
     loading: isInfiniteScrollLoading,
     hasNextPage: !!cursor.next,
     onLoadMore: loadMoreNext,
-    disabled: !!error?.next || !cursor.next,
+    disabled: !!error?.next || !cursor.next || isLoading,
     rootMargin: '0px 0px 0px 0px',
   });
 
@@ -271,6 +271,7 @@ export default function Channel({
   const handleStatusChange = async (status: ThreadStatus) => {
     setLoading(true);
     onThreadsChange([]);
+    setCursor({ prev: null, next: null });
     onStatusChange(status);
     try {
       const data = await api.getThreads({
@@ -279,9 +280,11 @@ export default function Channel({
         userId: currentUser?.id,
         status,
       });
-      setCursor(() => data.nextCursor);
       onThreadsChange(data.threads);
-      setTimeout(() => handleScroll(), 0);
+      setTimeout(() => {
+        handleScroll();
+        setCursor(data.nextCursor);
+      }, 0);
     } catch (exception) {
       alert('Something went wrong, please try again.');
     } finally {
