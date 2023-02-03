@@ -1,8 +1,8 @@
 .header {
   align-items: center;
   display: flex;
-  gap: 0.25rem;
-  justify-content: space-between;
+  gap: 1rem;
+  justify-content: flex-start;
   width: 100%;
 }
 
