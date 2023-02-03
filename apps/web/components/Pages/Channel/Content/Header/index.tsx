@@ -3,8 +3,6 @@ import { Button, NativeSelect, StickyHeader } from '@linen/ui';
 import styles from './index.module.css';
 import { SerializedThread, SerializedUser, ThreadStatus } from '@linen/types';
 import { FiHash } from 'react-icons/fi';
-import { BiMessageCheck } from 'react-icons/bi';
-import ThreadStatusIcon from '../ThreadStatusIcon';
 
 interface Props {
   className?: string;
@@ -35,16 +33,9 @@ export default function Header({
         </div>
         {currentUser && (
           <div className={styles.actions}>
-            {status === ThreadStatus.UNREAD && threads.length > 0 && (
-              <Button onClick={onMarkAllAsRead} color="gray" weight="bold">
-                <BiMessageCheck /> All Done
-              </Button>
-            )}
-
             <div className={styles.select}>
               <NativeSelect
                 id="user-thread-status"
-                icon={<ThreadStatusIcon status={status} />}
                 theme="gray"
                 value={status}
                 options={[
@@ -59,6 +50,11 @@ export default function Header({
                 }}
               />
             </div>
+            {status === ThreadStatus.UNREAD && threads.length > 0 && (
+              <Button onClick={onMarkAllAsRead} color="gray" weight="bold">
+                All Done
+              </Button>
+            )}
           </div>
         )}
       </div>

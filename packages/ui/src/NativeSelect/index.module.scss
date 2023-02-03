@@ -13,15 +13,19 @@
 .select {
   appearance: none;
   background-color: white;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23374151' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 0.5rem center;
+  background-repeat: no-repeat;
+  background-size: 1.5em 1.5em;
   cursor: pointer;
   font-size: 0.875rem;
   line-height: 1.25rem;
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
   padding-left: 0.75rem;
-  padding-right: 0.75rem;
+  padding-right: 2.5rem;
   border-width: 1px;
-  border-radius: 0.375rem;
+  border-radius: 0.5rem;
   border-color: #e5e7eb;
   min-width: 96px;
   width: 100%;
@@ -36,7 +40,7 @@
 
 .icon {
   align-items: center;
-  color: #adb5bd;
+  color: #000000;
   display: flex;
   height: 36px;
   left: 0;
@@ -52,16 +56,21 @@
   padding-left: 32px;
 }
 
+.disabled .select {
+  cursor: not-allowed;
+}
+
 .blue .select {
-  background: #1149e0;
+  background-color: #1149e0;
   border-color: #1149e0;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
   color: white;
   font-weight: bold;
 }
 
 .blue .select:hover,
 .blue .select:focus {
-  background: #193cb7;
+  background-color: #193cb7;
   border-color: #193cb7;
 }
 
@@ -69,22 +78,27 @@
   color: white;
 }
 
-.disabled .select {
-  cursor: not-allowed;
-}
-
 .gray .select {
-  background: $color-gray-100;
+  background-color: $color-gray-100;
   border-color: $color-gray-100;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23000000' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
   color: black;
   font-weight: bold;
 }
 
 .gray .select:hover {
-  background: $color-gray-200;
+  background-color: $color-gray-200;
   border-color: $color-gray-200;
 }
 
 .gray .icon {
   color: black;
+}
+
+.disabled .icon {
+  color: $color-gray-400;
+}
+
+.disabled.blue .icon {
+  color: white;
 }
