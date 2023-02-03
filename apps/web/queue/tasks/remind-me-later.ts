@@ -8,6 +8,9 @@ interface Payload {
 
 export async function reminderMeLaterTask(payload: Payload, helpers: any) {
   const { threadId, userId } = payload;
+  helpers.logger.info(
+    `Setting remind me later for thread ${threadId}, user ${userId}`
+  );
   const status = await prisma.userThreadStatus.findFirst({
     where: {
       threadId,
@@ -31,13 +34,17 @@ export async function reminderMeLaterTask(payload: Payload, helpers: any) {
     });
     if (thread && thread.messages.length > 0) {
       const message = thread.messages[0];
-      push({
-        channelId: thread.channelId,
-        threadId,
-        messageId: message.id,
-        isThread: true,
-        isReply: false,
-      });
+      try {
+        await push({
+          channelId: thread.channelId,
+          threadId,
+          messageId: message.id,
+          isThread: true,
+          isReply: false,
+        });
+      } catch (exception) {}
+
+      helpers.logger.info(`Push websocket for thread ${threadId}`);
     }
   }
 }
