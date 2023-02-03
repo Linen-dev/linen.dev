@@ -2,27 +2,46 @@ import { NextApiRequest, NextApiResponse } from 'next/types';
 import PermissionsService from 'services/permissions';
 import prisma from 'client';
 import { z } from 'zod';
+import { ReminderTypes } from '@linen/types';
+import { soon, tomorrow, nextWeek } from '@linen/utilities/date';
 
 const createSchema = z.object({
   threadIds: z.array(z.string()),
   muted: z.boolean(),
   read: z.boolean(),
+  reminder: z.boolean(),
+  reminderType: z
+    .enum([ReminderTypes.SOON, ReminderTypes.TOMORROW, ReminderTypes.NEXT_WEEK])
+    .optional(),
 });
+
+function getRemindAt(reminder: ReminderTypes) {
+  switch (reminder) {
+    case ReminderTypes.SOON:
+      return soon();
+    case ReminderTypes.TOMORROW:
+      return tomorrow();
+    case ReminderTypes.NEXT_WEEK:
+      return nextWeek();
+  }
+}
 
 export async function create(params: {
   threadIds: string[];
   userId: string;
   muted: boolean;
   read: boolean;
+  reminder: boolean;
+  reminderType?: ReminderTypes;
 }) {
   const body = createSchema.safeParse(params);
   if (!body.success) {
     return { status: 400, data: { error: body.error } };
   }
 
-  const { threadIds, userId, muted, read } = params;
+  const { threadIds, userId, muted, read, reminder, reminderType } = params;
 
-  const creation = muted || read;
+  const creation = muted || read || reminder;
 
   if (creation) {
     await prisma.$transaction([
@@ -34,11 +53,22 @@ export async function create(params: {
       }),
       prisma.userThreadStatus.createMany({
         data: threadIds.map((threadId) => {
+          if (reminderType) {
+            return {
+              userId,
+              threadId,
+              muted,
+              read,
+              reminder,
+              remindAt: getRemindAt(reminderType),
+            };
+          }
           return {
             userId,
             threadId,
             muted,
             read,
+            reminder,
           };
         }),
       }),

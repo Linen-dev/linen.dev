@@ -56,6 +56,7 @@ async function upsertUserThreadStatus(params: {
   threadIds: string[];
   muted: boolean;
   read: boolean;
+  reminder: boolean;
 }) {
   return fetch('/api/user-thread-status', {
     method: 'POST',
@@ -175,6 +176,7 @@ export default function Channel(props: ChannelProps) {
           markUserThreadStatuses(currentThreadId, {
             muted: false,
             read: false,
+            reminder: false,
           });
           selectPreviousThread();
         } else if (
@@ -189,6 +191,7 @@ export default function Channel(props: ChannelProps) {
           markUserThreadStatuses(currentThreadId, {
             muted: false,
             read: true,
+            reminder: false,
           });
           selectPreviousThread();
         } else if (
@@ -200,6 +203,7 @@ export default function Channel(props: ChannelProps) {
           markUserThreadStatuses(currentThreadId, {
             muted: false,
             read: false,
+            reminder: false,
           });
           selectPreviousThread();
         } else if (
@@ -214,6 +218,7 @@ export default function Channel(props: ChannelProps) {
           markUserThreadStatuses(currentThreadId, {
             muted: true,
             read: false,
+            reminder: false,
           });
           selectPreviousThread();
         }
@@ -381,13 +386,18 @@ export default function Channel(props: ChannelProps) {
 
   function markUserThreadStatuses(
     threadId: string,
-    { muted, read }: { muted: boolean; read: boolean }
+    {
+      muted,
+      read,
+      reminder,
+    }: { muted: boolean; read: boolean; reminder: boolean }
   ) {
     debouncedUpserUserThreadStatus({
       communityId: currentCommunity.id,
       threadIds: [threadId],
       muted,
       read,
+      reminder,
     });
     setThreads((threads) => {
       return threads.filter((thread) => thread.id !== threadId);
@@ -396,22 +406,38 @@ export default function Channel(props: ChannelProps) {
 
   async function muteThread(threadId: string) {
     Toast.info('Thread was muted.');
-    markUserThreadStatuses(threadId, { muted: true, read: false });
+    markUserThreadStatuses(threadId, {
+      muted: true,
+      read: false,
+      reminder: false,
+    });
   }
 
   async function unmuteThread(threadId: string) {
     Toast.info('Thread was unmuted.');
-    markUserThreadStatuses(threadId, { muted: false, read: false });
+    markUserThreadStatuses(threadId, {
+      muted: false,
+      read: false,
+      reminder: false,
+    });
   }
 
   async function readThread(threadId: string) {
     Toast.info('Thread was marked as read.');
-    markUserThreadStatuses(threadId, { muted: false, read: true });
+    markUserThreadStatuses(threadId, {
+      muted: false,
+      read: true,
+      reminder: false,
+    });
   }
 
   async function unreadThread(threadId: string) {
     Toast.info('Thread was marked as unread.');
-    markUserThreadStatuses(threadId, { muted: false, read: false });
+    markUserThreadStatuses(threadId, {
+      muted: false,
+      read: false,
+      reminder: false,
+    });
   }
 
   async function pinThread(threadId: string) {
