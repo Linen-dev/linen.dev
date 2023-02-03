@@ -29,6 +29,9 @@ export async function processGithubIntegration({
   if (event === 'newMessage') {
     return await processNewMessage(messageId!, integration, event);
   }
+  if (event === 'threadUpdated') {
+    return await processThreadUpdate(messageId!, integration, event);
+  }
 }
 
 async function processNewMessage(

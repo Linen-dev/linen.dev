@@ -28,7 +28,13 @@ const threadUpdateSchema = z.object({
   externalThreadId: z.string().min(1),
 });
 const reqBodySchema = z.object({
-  event: z.enum(['newMessage', 'newThread', 'threadReopened', 'threadClosed']),
+  event: z.enum([
+    'newMessage',
+    'newThread',
+    'threadReopened',
+    'threadClosed',
+    'threadUpdated',
+  ]),
   data: z.any(),
 });
 
@@ -87,6 +93,23 @@ async function processThreadState(data: any, state: 'closed' | 'open') {
   });
 }
 
+async function processThreadUpdate(data: any) {
+  const thread = threadUpdateSchema.parse(data);
+
+  const octokit = await githubApp.getInstallationOctokit(thread.integrationId);
+
+  const { issueNumber, owner, repo } = Serializer.extractDataFromExternalId(
+    thread.externalThreadId
+  );
+
+  await octokit.rest.issues.update({
+    issue_number: issueNumber,
+    owner,
+    repo,
+    title: thread.title,
+  });
+}
+
 function buildMessage(body: string, displayName?: string) {
   if (displayName) {
     return `${displayName}: ${body}`;
@@ -119,10 +142,14 @@ const linenRouter = Router()
           await processThreadState(data, 'open');
           return res.status(200);
         }
+        if (event === 'threadUpdated') {
+          await processThreadUpdate(data);
+          return res.status(200);
+        }
         return res.status(405);
       } catch (error) {
         console.error(error);
-        return res.status(500);
+        return next(500);
       }
     }
   );

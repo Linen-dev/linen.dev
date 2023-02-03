@@ -14,7 +14,8 @@ export type TwoWaySyncEvent =
   | 'newMessage'
   | 'newThread'
   | 'threadReopened'
-  | 'threadClosed';
+  | 'threadClosed'
+  | 'threadUpdated';
 
 export type TwoWaySyncType = {
   event: TwoWaySyncEvent;

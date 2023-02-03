@@ -20,6 +20,7 @@ import { parse, find } from '@linen/ast';
 import unique from 'lodash.uniq';
 import { eventThreadClosed } from 'services/events/eventThreadClosed';
 import { eventThreadReopened } from 'services/events/eventThreadReopened';
+import { eventThreadUpdated } from 'services/events/eventThreadUpdated';
 
 class ThreadsServices {
   static async updateMetrics({
@@ -117,8 +118,21 @@ class ThreadsServices {
         });
       }
     }
-    // TODO: call eventThreadUpdate
-    return serializeThread(thread);
+
+    const serialized = serializeThread(thread);
+
+    await eventThreadUpdated({
+      communityId: accountId,
+      channelId: thread.channelId,
+      messageId: thread.id,
+      threadId: thread.id,
+      imitationId: thread.id,
+      thread: JSON.stringify(serialized),
+      mentionNodes: [],
+      mentions: [],
+    });
+
+    return serialized;
   }
 
   static async create({
