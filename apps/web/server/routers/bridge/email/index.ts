@@ -1,14 +1,14 @@
 import { Router } from 'express';
-import LinenApi, { integrationMiddleware } from '@linen/sdk';
+import LinenSdk, { integrationMiddleware } from '@linen/sdk';
 import { appendProtocol } from 'utilities/url';
-import { getLinenUrl } from 'utilities/domain';
+import { getIntegrationUrl } from 'utilities/domain';
 import { v4 } from 'uuid';
 import nodemailer from 'nodemailer';
 import { cleanUpQuotedEmail, extractEmail } from './parser';
 
-const linenApi = new LinenApi(
+const linenApi = new LinenSdk(
   process.env.INTERNAL_API_KEY!,
-  appendProtocol(getLinenUrl())
+  appendProtocol(getIntegrationUrl())
 );
 
 const prefix = '/api/bridge/email';
@@ -48,7 +48,7 @@ async function findChannel(params: RegExpMatchArray | null) {
 async function findThread(ids: string[], channelId: string) {
   if (!ids || !ids.length) return null;
   for (const id of ids) {
-    const thread = await linenApi.getThread(id, channelId);
+    const thread = await linenApi.getThread(decodeURIComponent(id), channelId);
     if (thread) return thread;
   }
   return null;
