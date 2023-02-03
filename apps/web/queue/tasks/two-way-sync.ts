@@ -1,25 +1,10 @@
 import prisma from 'client';
-import WorkerSingleton from 'queue/singleton';
-import { run, type JobHelpers } from 'graphile-worker';
-import { downloadCert } from 'utilities/database';
-import settings from '../settings';
+import { type JobHelpers } from 'graphile-worker';
 import { slackChatSync } from 'services/slack/api/postMessage';
 import { processGithubIntegration } from 'services/integrations/processGithubIntegration';
 import { processEmailIntegration } from 'services/integrations/processEmailIntegration';
 
-export async function runWorker() {
-  await downloadCert();
-  const runner = await run({
-    ...settings,
-    concurrency: 1,
-    taskList: {
-      ['two-way-sync']: twoWaySync,
-    },
-  });
-  await runner.promise;
-}
-
-async function twoWaySync(payload: any, helpers: JobHelpers) {
+export async function twoWaySync(payload: any, helpers: JobHelpers) {
   helpers.logger.info(JSON.stringify(payload));
   const result = await twoWaySyncJob(payload);
   helpers.logger.info(JSON.stringify(result));
@@ -112,12 +97,4 @@ async function twoWaySyncJob({
   }
 
   return 'account without authorization';
-}
-
-export async function createTwoWaySyncJob(payload: TwoWaySyncType) {
-  const worker = await WorkerSingleton.getInstance();
-  return await worker.addJob('two-way-sync', payload, {
-    jobKey: `two-way-sync:${payload.id}`,
-    maxAttempts: 2,
-  });
 }

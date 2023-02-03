@@ -11,23 +11,8 @@ module.exports = {
       },
     },
     {
-      name: 'queue-two-way',
-      script: 'npx tsx queue/workers/two-way-sync.ts',
-      cwd: '../apps/web',
-    },
-    {
-      name: 'queue-sync',
-      script: 'npm run queue:worker:sync',
-      cwd: '../apps/web',
-    },
-    {
-      name: 'queue-webhook',
-      script: 'npm run queue:worker:webhook',
-      cwd: '../apps/web',
-    },
-    {
-      name: 'queue-email-notification',
-      script: 'npx tsx queue/workers/email-notification.ts',
+      name: 'queue',
+      script: 'npx tsx queue/index.ts',
       cwd: '../apps/web',
     },
     {

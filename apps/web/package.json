@@ -4,7 +4,6 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "next dev",
-    "dev:api": "dotenv -e .env -- tsup api/server.ts --watch --onSuccess \"node dist/server.js\"",
     "prebuild": "prisma generate",
     "build": "next build",
     "start": "next start",
@@ -17,20 +16,10 @@
     "db:migrate": "npx prisma generate && npx prisma migrate dev",
     "db:migrate:test": "dotenv -e .env.test -- npx prisma generate && npx prisma migrate dev",
     "db:seed": "ts-node --skip-project bin/seed.ts",
-    "script:sync:discord": "pm2-runtime --raw \"npx dotenv -e .env -- npx tsx bin/discord-sync/index.ts\"",
-    "script:sync:slack": "ts-node -P tsconfig.commonjs.json bin/slack-sync/index.ts",
-    "script:remove-community": "ts-node -P tsconfig.commonjs.json bin/remove-community/index.ts",
-    "script:maintenance": "ts-node -P tsconfig.commonjs.json bin/maintenance/index.ts",
-    "start:queue:webhook": "pm2-runtime --raw \"npm run queue:worker:webhook\"",
-    "queue:worker:webhook": "dotenv -e .env -- npx ts-node -P tsconfig.commonjs.json queue/workers/webhook.ts",
-    "start:queue:sync": "pm2-runtime --raw \"npm run queue:worker:sync\"",
-    "queue:worker:sync": "dotenv -e .env -- npx ts-node -P tsconfig.commonjs.json queue/workers/sync.ts",
-    "start:queue:chat-sync": "pm2-runtime --raw \"npm run queue:worker:chat-sync\"",
-    "queue:worker:chat-sync": "dotenv -e .env -- npx ts-node -P tsconfig.commonjs.json queue/workers/two-way-sync.ts",
-    "start:queue:email-notification": "pm2-runtime --raw \"npm run queue:worker:email-notification\"",
-    "queue:worker:email-notification": "dotenv -e .env -- npx ts-node -P tsconfig.commonjs.json queue/workers/email-notification.ts",
-    "script:import-users": "ts-node -P tsconfig.commonjs.json bin/import-users/index.ts",
-    "start:build-pagination": "pm2-runtime --raw \"npx dotenv -e .env -- npx tsx bin/build-page-field-on-threads/index.ts\""
+    "start:discord-sync": "pm2-runtime --raw \"npx tsx bin/discord-sync/index.ts\"",
+    "start:maintenance-script": "npx tsx bin/maintenance/index.ts",
+    "start:build-pagination": "pm2-runtime --raw \"npx tsx bin/build-page-field-on-threads/index.ts\"",
+    "start:queue": "pm2-runtime --raw \"npx tsx queue/index.ts\""
   },
   "dependencies": {
     "@headlessui/react": "^1.7.3",

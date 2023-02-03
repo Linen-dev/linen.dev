@@ -11,12 +11,12 @@ import {
 import { v4 } from 'uuid';
 import { create } from '__tests__/factory';
 import * as service from './notifications';
-import * as queue from 'queue/tasks/email-notification';
+import * as queue from 'queue/jobs';
 import prisma from 'client';
 import serializeThread from 'serializers/thread';
 import serializeMessage from 'serializers/message';
 
-jest.mock('queue/tasks/email-notification');
+jest.mock('queue/jobs');
 
 const mockTimestamp = 0;
 const minutes15 = 1000 * 60 * 15;

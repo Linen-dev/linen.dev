@@ -1,10 +1,7 @@
 import { type mentions, Prisma, notificationType, users } from '@prisma/client';
 import prisma from 'client';
 import NotificationMailer from 'mailers/NotificationMailer';
-import {
-  createMailingJob,
-  createNewEventJob,
-} from 'queue/tasks/email-notification';
+import { createMailingJob, createNewEventJob } from 'queue/jobs';
 import { getCommunityUrl } from 'serializers/account/settings';
 import { getLinenUrl } from 'utilities/domain';
 import { appendProtocol } from 'utilities/url';
