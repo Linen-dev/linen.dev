@@ -4,7 +4,9 @@ import styles from './index.module.scss';
 export default function Footer() {
   return (
     <footer className={styles.footer}>
-      <a href="https://linen.dev">Powered by Linen</a>
+      <a href="https://linen.dev" target="_blank">
+        Powered by Linen
+      </a>
     </footer>
   );
 }
