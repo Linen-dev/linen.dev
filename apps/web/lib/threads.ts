@@ -273,16 +273,29 @@ export async function findThreadsByCursor({
       ...(userId &&
         status === ThreadStatus.UNREAD && {
           userThreadStatus: {
-            none: { userId, OR: [{ read: true }, { muted: true }] },
+            none: {
+              userId,
+              OR: [{ read: true }, { muted: true }, { reminder: true }],
+            },
           },
         }),
       ...(userId &&
         status === ThreadStatus.READ && {
-          userThreadStatus: { some: { userId, read: true, muted: false } },
+          userThreadStatus: {
+            some: { userId, read: true, muted: false, reminder: false },
+          },
         }),
       ...(userId &&
         status === ThreadStatus.MUTED && {
-          userThreadStatus: { some: { userId, read: false, muted: true } },
+          userThreadStatus: {
+            some: { userId, read: false, muted: true, reminder: false },
+          },
+        }),
+      ...(userId &&
+        status === ThreadStatus.REMINDER && {
+          userThreadStatus: {
+            some: { userId, read: false, muted: false, reminder: true },
+          },
         }),
     },
     include: {

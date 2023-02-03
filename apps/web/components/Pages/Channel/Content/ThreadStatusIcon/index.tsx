@@ -2,7 +2,7 @@ import React from 'react';
 import { ThreadStatus } from '@linen/types';
 import { FaVolumeMute } from 'react-icons/fa';
 import { BiMessageCheck } from 'react-icons/bi';
-import { FiInbox } from 'react-icons/fi';
+import { FiClock, FiInbox } from 'react-icons/fi';
 
 interface Props {
   status: ThreadStatus;
@@ -16,5 +16,7 @@ export default function ThreadStatusIcon({ status }: Props) {
       return <BiMessageCheck />;
     case ThreadStatus.MUTED:
       return <FaVolumeMute />;
+    case ThreadStatus.REMINDER:
+      return <FiClock />;
   }
 }

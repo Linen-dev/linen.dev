@@ -17,6 +17,8 @@ function description(status: ThreadStatus) {
       return 'Done Zero';
     case ThreadStatus.MUTED:
       return 'Muted Zero';
+    case ThreadStatus.REMINDER:
+      return 'Later Zero';
   }
 }
 

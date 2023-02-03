@@ -51,6 +51,7 @@ export default function Header({
                   { label: 'Inbox', value: ThreadStatus.UNREAD },
                   { label: 'Done', value: ThreadStatus.READ },
                   { label: 'Muted', value: ThreadStatus.MUTED },
+                  { label: 'Later', value: ThreadStatus.REMINDER },
                 ]}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                   onStatusChange(event.target.value as ThreadStatus);
