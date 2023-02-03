@@ -4,6 +4,7 @@ import prisma from 'client';
 import { z } from 'zod';
 import { ReminderTypes } from '@linen/types';
 import { soon, tomorrow, nextWeek } from '@linen/utilities/date';
+import { createRemindMeJob } from 'queue/jobs';
 
 const createSchema = z.object({
   threadIds: z.array(z.string()),
@@ -54,13 +55,18 @@ export async function create(params: {
       prisma.userThreadStatus.createMany({
         data: threadIds.map((threadId) => {
           if (reminderType) {
+            const remindAt = getRemindAt(reminderType);
+            createRemindMeJob(`${threadId}_${userId}`, remindAt, {
+              threadId,
+              userId,
+            });
             return {
               userId,
               threadId,
               muted,
               read,
               reminder,
-              remindAt: getRemindAt(reminderType),
+              remindAt,
             };
           }
           return {
