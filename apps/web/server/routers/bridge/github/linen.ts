@@ -105,7 +105,7 @@ const linenRouter = Router()
         if (event === 'newMessage') {
           await processMessage(data);
           // we may need the external message id in the future to allow us to update the message
-          return res.sendStatus(200);
+          return res.status(200);
         }
         if (event === 'newThread') {
           const result = await processThread(data);
@@ -113,16 +113,16 @@ const linenRouter = Router()
         }
         if (event === 'threadClosed') {
           await processThreadState(data, 'closed');
-          return res.sendStatus(200);
+          return res.status(200);
         }
         if (event === 'threadReopened') {
           await processThreadState(data, 'open');
-          return res.sendStatus(200);
+          return res.status(200);
         }
-        return res.sendStatus(405).end();
+        return res.status(405).end();
       } catch (error) {
         console.error(error);
-        return res.sendStatus(500);
+        return res.status(500);
       }
     }
   );
