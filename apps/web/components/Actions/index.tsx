@@ -105,21 +105,21 @@ export default function Actions({
     currentUser &&
     (status === ThreadStatus.UNREAD ||
       status === ThreadStatus.MUTED ||
-      ThreadStatus.REMINDER);
+      status === ThreadStatus.REMINDER);
 
   const isRemindVisible =
     onRemind &&
     currentUser &&
     (status === ThreadStatus.UNREAD ||
       status === ThreadStatus.READ ||
-      ThreadStatus.MUTED);
+      status === ThreadStatus.MUTED);
 
   const isMuteVisible =
     onMute &&
     currentUser &&
     (status === ThreadStatus.UNREAD ||
       status === ThreadStatus.READ ||
-      ThreadStatus.REMINDER);
+      status === ThreadStatus.REMINDER);
 
   const isDeleteVisible =
     onDelete &&

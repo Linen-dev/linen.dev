@@ -381,6 +381,8 @@ model userThreadStatus {
   updatedAt DateTime @updatedAt
   muted     Boolean
   read      Boolean
+  reminder  Boolean @default(false)
+  remindAt  DateTime?
 
   @@id([userId, threadId])
 }
