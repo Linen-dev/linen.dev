@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
-import prisma from 'client';
+import { prisma } from '@linen/database';
 import UsersService from 'services/users';
 import Session from 'services/session';
 import { normalize } from '@linen/utilities/string';

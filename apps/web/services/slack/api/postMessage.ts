@@ -7,9 +7,9 @@ import {
   slackAuthorizations,
   threads,
   users,
-} from '@prisma/client';
+  prisma,
+} from '@linen/database';
 import request from 'superagent';
-import prisma from '../../../client';
 
 type AuthorUser = {
   username: string;

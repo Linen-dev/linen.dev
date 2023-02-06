@@ -1,4 +1,4 @@
-import type { accounts, users } from '@prisma/client';
+import type { accounts, users } from '@linen/database';
 import * as express from 'express';
 
 export type Response = express.Response;

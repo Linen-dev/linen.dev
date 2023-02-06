@@ -1,4 +1,4 @@
-jest.mock('../../../client');
+jest.mock('@linen/database');
 jest.mock('services/slack/api');
 import { fetchToken } from './fetchToken';
 import * as fetch_all_conversations from 'services/slack/api';

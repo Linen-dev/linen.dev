@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
-import prisma from 'client';
+import { prisma } from '@linen/database';
 import PermissionsService from 'services/permissions';
 
 export default async function handler(

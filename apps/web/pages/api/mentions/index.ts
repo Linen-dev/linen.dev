@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import prisma from 'client';
+import { prisma } from '@linen/database';
 import serializeUser from 'serializers/user';
 import PermissionsService from 'services/permissions';
 

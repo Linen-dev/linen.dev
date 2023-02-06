@@ -17,6 +17,7 @@ const customJestConfig = {
   moduleNameMapper: {
     '@linen/(.*)/(.*)': '<rootDir>/../../packages/$1/dist/$2',
     '@linen/(.*)': '<rootDir>/../../packages/$1',
+    '^axios$': require.resolve('axios'),
   },
   testEnvironment: 'jest-environment-jsdom',
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],

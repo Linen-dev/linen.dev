@@ -1,7 +1,7 @@
 import * as api from 'pages/api/profile';
 import { build, create } from '__tests__/factory';
 import setup from '__tests__/spec-helpers/integration';
-import prisma from 'client';
+import { prisma } from '@linen/database';
 
 setup({ truncationStrategy: 'cascade' });
 

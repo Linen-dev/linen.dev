@@ -1,7 +1,7 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import Autocomplete from '../Autocomplete';
-import type { messages } from '@prisma/client';
+import type { messages } from '@linen/database';
 import Suggestion from './Suggestion';
 import {
   MessageFormat,

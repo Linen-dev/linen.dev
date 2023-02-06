@@ -1,4 +1,4 @@
-import type { mentions, users } from '@prisma/client';
+import type { mentions, users } from '@linen/database';
 import { createTwoWaySyncJob } from 'queue/jobs';
 import { push, pushChannel, pushCommunity } from 'services/push';
 import ThreadsServices from 'services/threads';

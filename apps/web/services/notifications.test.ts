@@ -3,16 +3,15 @@ import {
   auths,
   channels,
   messages,
-  notifications,
   notificationType,
   threads,
   users,
-} from '@prisma/client';
+  prisma,
+} from '@linen/database';
 import { v4 } from 'uuid';
 import { create } from '__tests__/factory';
 import * as service from './notifications';
 import * as queue from 'queue/jobs';
-import prisma from 'client';
 import serializeThread from 'serializers/thread';
 import serializeMessage from 'serializers/message';
 
@@ -118,7 +117,7 @@ describe('notification service', () => {
     expect(result?.ok).toBe(true);
     expect(result?.howMany).toBe(2);
 
-    const links = result?.links?.map((e) => e.url);
+    const links = result?.links?.map((e: any) => e.url);
     expect(links).toStrictEqual([
       `https://${mockCommunity.redirectDomain}/t/${mockThread2.incrementId}`,
       `https://${mockCommunity.redirectDomain}/t/${mockThread1.incrementId}`,

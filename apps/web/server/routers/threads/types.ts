@@ -1,5 +1,5 @@
 import { ThreadStatus } from '@linen/types';
-import { ThreadState } from '@prisma/client';
+import { ThreadState } from '@linen/database';
 import { z } from 'zod';
 
 export const findSchema = z.object({

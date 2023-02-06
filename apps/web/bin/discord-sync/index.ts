@@ -1,4 +1,4 @@
-import prisma from 'client';
+import { prisma } from '@linen/database';
 import PQueue from 'p-queue';
 import { discordSync } from 'services/discord/sync';
 

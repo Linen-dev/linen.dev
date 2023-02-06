@@ -1,6 +1,5 @@
-import type { accounts, channels, threads } from '@prisma/client';
+import { accounts, channels, threads, prisma } from '@linen/database';
 import { v4 as random } from 'uuid';
-import { prisma } from '../../client';
 import { threadGetServerSideProps } from 'services/threads-ssr';
 import { encodeCursor } from 'utilities/cursor';
 import { createThreadsOneByDay } from 'bin/factory/threads';

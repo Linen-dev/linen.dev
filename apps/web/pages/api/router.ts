@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import Session from 'services/session';
-import prisma from '../../client';
+import { prisma } from '@linen/database';
 import { Roles } from '@linen/types';
 import { findAuthByEmail } from 'lib/users';
 import { getHomeUrl } from 'utilities/home';

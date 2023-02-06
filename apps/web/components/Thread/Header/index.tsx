@@ -2,7 +2,7 @@ import React from 'react';
 import Title from './Title';
 import { StickyHeader } from '@linen/ui';
 import classNames from 'classnames';
-import { ThreadState } from '@prisma/client';
+import { ThreadState } from '@linen/database';
 import { GoCheck, GoChevronLeft, GoX, GoSync } from 'react-icons/go';
 import { SerializedThread } from '@linen/types';
 import styles from './index.module.scss';

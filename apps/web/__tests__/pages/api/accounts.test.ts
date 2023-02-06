@@ -1,7 +1,7 @@
 import { create } from '__tests__/factory';
 import accountsService from 'services/accounts';
 import { v4 } from 'uuid';
-import { accounts, auths } from '@prisma/client';
+import { accounts, auths } from '@linen/database';
 import { z } from 'zod';
 
 describe('accounts', () => {

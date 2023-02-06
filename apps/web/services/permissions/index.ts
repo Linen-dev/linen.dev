@@ -1,4 +1,4 @@
-import { auths, type accounts, type users } from '@prisma/client';
+import { auths, type accounts, type users, prisma } from '@linen/database';
 import {
   AccountIntegration,
   AccountType,
@@ -13,7 +13,6 @@ import {
 } from 'next/types';
 import Session from '../session';
 import { findAccountByPath } from 'lib/models';
-import prisma from 'client';
 import { findAuthByEmail } from 'lib/users';
 
 type Request = GetServerSidePropsContext['req'] | NextApiRequest;

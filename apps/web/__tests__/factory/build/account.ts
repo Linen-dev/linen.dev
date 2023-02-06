@@ -1,5 +1,4 @@
-import type { accounts } from '@prisma/client';
-import { AccountType } from '@prisma/client';
+import { accounts, AccountType } from '@linen/database';
 
 export default function createAccount(options?: Partial<accounts>): accounts {
   return {

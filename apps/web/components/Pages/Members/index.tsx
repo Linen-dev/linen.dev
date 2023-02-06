@@ -3,7 +3,7 @@ import PageLayout from 'components/layout/PageLayout';
 import Header from './Header';
 import { Button, NativeSelect, TextInput, Toast } from '@linen/ui';
 import { useRouter } from 'next/router';
-import { Roles } from '@prisma/client';
+import { Roles } from '@linen/database';
 import { AiOutlineUser } from 'react-icons/ai';
 import {
   SerializedAccount,

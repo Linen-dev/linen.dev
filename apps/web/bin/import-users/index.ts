@@ -1,9 +1,8 @@
 import Papa from 'papaparse';
 import fs from 'fs';
-import { Prisma, Roles } from '@prisma/client';
+import { Prisma, Roles, prisma } from '@linen/database';
 import { generateRandomWordSlug } from 'utilities/randomWordSlugs';
 import { v4 } from 'uuid';
-import prisma from '../../client';
 
 type SlackRole =
   | 'Member'

@@ -1,5 +1,5 @@
-import { generateRandomWordSlug } from '../../utilities/randomWordSlugs';
-import prisma from '../../client';
+import { generateRandomWordSlug } from 'utilities/randomWordSlugs';
+import { prisma } from '@linen/database';
 
 async function run() {
   console.log('start', new Date());

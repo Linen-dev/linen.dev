@@ -3,7 +3,7 @@ import { Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { Image } from '@linen/ui';
 import { Message } from '@linen/ui';
-import { MessageFormat } from '@prisma/client';
+import { MessageFormat } from '@linen/database';
 import TextField from 'components/TextField';
 import { Label } from '@linen/ui';
 

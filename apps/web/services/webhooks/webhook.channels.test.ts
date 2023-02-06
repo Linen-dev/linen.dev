@@ -1,4 +1,4 @@
-import { accounts, channels } from '@prisma/client';
+import { accounts, channels } from '@linen/database';
 import { prismaMock } from '__tests__/singleton';
 import { handleWebhook } from 'services/webhooks';
 

@@ -1,4 +1,4 @@
-import type { users } from '@prisma/client';
+import type { users } from '@linen/database';
 import { SerializedUser } from '@linen/types';
 
 export function username(displayName: string | null) {

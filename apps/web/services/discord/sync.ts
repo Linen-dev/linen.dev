@@ -1,5 +1,4 @@
 import { SyncStatus, updateAndNotifySyncStatus } from 'services/sync';
-import prisma from 'client';
 import { listChannelsAndPersist } from './channels';
 import { CrawlType, DISCORD_TOKEN } from './constrains';
 import { crawlUsers } from './users';
@@ -7,7 +6,7 @@ import { decrypt } from 'utilities/crypto';
 import { getMessages } from './messages';
 import { getActiveThreads, getArchivedThreads } from './threads';
 import Logger from './logger';
-import { accounts, discordAuthorizations } from '@prisma/client';
+import { accounts, discordAuthorizations, prisma } from '@linen/database';
 
 async function syncJob(
   account: accounts & {

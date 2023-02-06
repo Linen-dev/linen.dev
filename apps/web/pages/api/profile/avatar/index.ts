@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
-import prisma from 'client';
+import { prisma } from '@linen/database';
 import formidable from 'formidable';
 import { readFile } from 'fs/promises';
 import UploadService from 'services/upload';

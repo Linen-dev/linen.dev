@@ -6,10 +6,10 @@ import {
   accounts,
   discordAuthorizations,
   slackAuthorizations,
-} from '@prisma/client';
+  prisma,
+} from '@linen/database';
 import { discordSync } from './discord/sync';
 import { slackSyncWithFiles } from './slack/syncWithFiles';
-import prisma from '../client';
 import { skipNotification } from './slack/api/notification';
 import { getCommunityUrl } from 'serializers/account/settings';
 

@@ -1,9 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
-import { auths, invites, users, Roles } from '@prisma/client';
+import { auths, invites, users, Roles } from '@linen/database';
 import { findUsersAndInvitesByAccount } from 'services/invites';
 import CommunityService from 'services/community';
-import Permissions from 'services/permissions'
-import { Permissions as PermissionsType } from '@linen/types'
+import Permissions from 'services/permissions';
+import { Permissions as PermissionsType } from '@linen/types';
 
 interface MembersType {
   id: string;
@@ -43,11 +43,15 @@ function inviteToMember({ email, status, role, id }: invites): MembersType {
   };
 }
 
-
-export async function index({ communityId, permissions }: { communityId: string, permissions: PermissionsType }) {
-
+export async function index({
+  communityId,
+  permissions,
+}: {
+  communityId: string;
+  permissions: PermissionsType;
+}) {
   if (!permissions.user || !permissions.manage) {
-    return { status: 403 }
+    return { status: 403 };
   }
   const community = await CommunityService.find({ communityId });
 

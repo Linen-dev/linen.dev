@@ -1,4 +1,4 @@
-import prisma from 'client';
+import { prisma } from '@linen/database';
 
 class UserThreadStatusService {
   static async markAsUnreadForAllUsers(threadId: string) {

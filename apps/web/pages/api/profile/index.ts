@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import Session from 'services/session';
-import prisma from 'client';
+import { prisma } from '@linen/database';
 
 interface CreateParams {
   displayName: string;

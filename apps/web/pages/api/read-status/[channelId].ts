@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { prisma } from 'client';
+import { prisma } from '@linen/database';
 import Session from 'services/session';
 import to from 'utilities/await-to-js';
 import { z } from 'zod';

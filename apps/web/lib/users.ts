@@ -1,6 +1,5 @@
 import { UserMap } from 'types/partialTypes';
-import prisma from '../client';
-import type { Prisma, users } from '@prisma/client';
+import { Prisma, users, prisma } from '@linen/database';
 import { BotInfo, UserInfo } from 'types/slackResponses/slackUserInfoInterface';
 import { generateRandomWordSlug } from 'utilities/randomWordSlugs';
 import { getSlackBot, getSlackUser } from 'services/slack/api';

@@ -1,5 +1,4 @@
-import type { auths } from '@prisma/client';
-import prisma from 'client';
+import { auths, prisma } from '@linen/database';
 import { generateHash, generateSalt } from 'utilities/password';
 
 export default function createAuth(options?: Partial<auths>): Promise<auths> {

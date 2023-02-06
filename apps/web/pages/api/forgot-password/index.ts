@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
-import ResetPasswordMailer from '../../../mailers/ResetPasswordMailer';
-import { generateToken } from '../../../utilities/token';
-import prisma from '../../../client';
-import { getCurrentUrl } from '../../../utilities/domain';
+import ResetPasswordMailer from 'mailers/ResetPasswordMailer';
+import { generateToken } from 'utilities/token';
+import { prisma } from '@linen/database';
+import { getCurrentUrl } from 'utilities/domain';
 
 async function create(request: NextApiRequest, response: NextApiResponse) {
   const { email } = JSON.parse(request.body);

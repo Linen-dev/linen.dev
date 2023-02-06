@@ -1,4 +1,4 @@
-import { prisma } from 'client';
+import { prisma } from '@linen/database';
 import linenExamplePage from 'public/linen-example-page.png';
 import Image from 'next/image';
 import LinenLogo from 'components/Logo/Linen';

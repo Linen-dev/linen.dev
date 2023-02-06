@@ -1,5 +1,5 @@
 import { findChannelsByAccount } from './channel';
-import prisma from 'client';
+import { prisma } from '@linen/database';
 import { v4 } from 'uuid';
 import { AccountType, MessageFormat } from '@linen/types';
 import setup from '__tests__/spec-helpers/integration';

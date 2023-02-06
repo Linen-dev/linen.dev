@@ -2,7 +2,7 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import Tiers from '.';
 import { Period } from 'components/Pages/Plans';
-jest.mock('../../../client');
+jest.mock('@linen/database');
 
 describe('Tiers', () => {
   it('renders tiers', () => {

@@ -1,12 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import request from 'superagent';
 import { fetchTeamInfo } from 'services/slack/api';
-import { createSlackAuthorization, updateAccount } from '../../lib/models';
+import { createSlackAuthorization, updateAccount } from 'lib/models';
 import { eventNewIntegration } from 'services/events/eventNewIntegration';
 import { AccountIntegration, SerializedAccount } from '@linen/types';
 import { getHomeUrl } from 'utilities/home';
 import serializeAccount from 'serializers/account';
-import prisma from '../../client';
+import { prisma } from '@linen/database';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {

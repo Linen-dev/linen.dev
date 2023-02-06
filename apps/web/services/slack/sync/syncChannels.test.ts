@@ -3,7 +3,7 @@ jest.mock('services/slack/api');
 import { syncChannels } from './syncChannels';
 import * as fetch_all_conversations from 'services/slack/api';
 import { create } from '__tests__/factory';
-import { accounts, channels, slackAuthorizations } from '@prisma/client';
+import { accounts, channels, slackAuthorizations } from '@linen/database';
 import { v4 } from 'uuid';
 
 const CHANNELS_COUNT = 5;

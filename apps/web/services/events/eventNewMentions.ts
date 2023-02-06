@@ -1,5 +1,4 @@
-import { mentions } from '@prisma/client';
-import { prisma } from 'client';
+import { mentions, prisma } from '@linen/database';
 import { pushUserMention } from 'services/push';
 
 type MentionNode = {

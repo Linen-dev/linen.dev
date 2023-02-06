@@ -1,5 +1,4 @@
-import prisma from 'client';
-import { channels } from '@prisma/client';
+import { channels, prisma } from '@linen/database';
 
 class ChannelsService {
   static async find(communityId: string): Promise<channels[]> {

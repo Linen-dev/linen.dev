@@ -5,7 +5,7 @@ const mockAccount = {
   redirectDomain: 'osquery.fleetdm.com',
 };
 
-jest.mock('../../../client', () => ({
+jest.mock('@linen/database', () => ({
   accounts: {
     findFirst: jest.fn(() => Promise.resolve(mockAccount)),
   },

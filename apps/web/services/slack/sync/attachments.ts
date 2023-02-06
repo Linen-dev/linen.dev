@@ -1,12 +1,11 @@
 import { uploadFile } from 'services/aws/s3';
 import { BUCKET_PREFIX_FOR_ATTACHMENTS, LINEN_ASSETS_CDN } from 'secrets';
-import { messages } from '@prisma/client';
+import { messages, prisma } from '@linen/database';
 import {
   type ConversationHistoryMessage,
   fetchFile,
   type MessageFile,
 } from '../api';
-import prisma from '../../../client';
 
 export async function processAttachments(
   m: ConversationHistoryMessage,

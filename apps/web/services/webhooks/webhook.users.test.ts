@@ -1,5 +1,5 @@
 import { prismaMock } from '__tests__/singleton';
-import type { accounts } from '@prisma/client';
+import type { accounts } from '@linen/database';
 import { handleWebhook } from 'services/webhooks';
 
 const userUpdateEvent = {

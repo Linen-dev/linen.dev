@@ -1,4 +1,4 @@
-import { channels, threads } from '@prisma/client';
+import { channels, threads } from '@linen/database';
 import {
   DiscordArchivedPublicThreads,
   DiscordMessage,

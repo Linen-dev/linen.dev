@@ -1,5 +1,5 @@
 import serializeAccount from 'serializers/account';
-import prisma from 'client';
+import { prisma } from '@linen/database';
 import {
   AccountIntegration,
   AccountType,

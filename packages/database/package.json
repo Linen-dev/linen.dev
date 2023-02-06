@@ -1,0 +1,26 @@
+{
+  "name": "@linen/database",
+  "private": true,
+  "version": "1.0.0",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "with-env": "yarn dotenv -e ../../apps/web/.env --",
+    "generate": "yarn with-env prisma generate",
+    "migrate": "yarn with-env prisma migrate",
+    "build": "yarn generate && rm -rf dist && yarn tsc"
+  },
+  "dependencies": {
+    "@prisma/client": "^3.15.2",
+    "axios": "^1.3.2"
+  },
+  "devDependencies": {
+    "dotenv-cli": "^6.0.0",
+    "prisma": "^3.15.2",
+    "typescript": "^4.9.5"
+  },
+  "browser": {
+    "fs": false,
+    "os": false
+  }
+}

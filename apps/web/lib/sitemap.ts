@@ -1,5 +1,5 @@
 import { AccountType } from '@linen/types';
-import prisma from '../client';
+import { prisma } from '@linen/database';
 
 export const findChannelByNameAndHost = (channelName: string, host: string) =>
   prisma.channels.findFirst({

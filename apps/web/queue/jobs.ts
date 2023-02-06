@@ -5,7 +5,7 @@ import {
 import type { SyncJobType } from 'services/sync';
 import type { SlackEvent } from 'types/slackResponses/slackMessageEventInterface';
 import { makeWorkerUtils, type WorkerUtils } from 'graphile-worker';
-import { getDatabaseUrl } from '../utilities/database';
+import { downloadCert, getDatabaseUrl } from '@linen/database';
 import { TwoWaySyncType } from './tasks/two-way-sync';
 
 let instance: WorkerUtils | undefined;
@@ -71,7 +71,7 @@ export async function createRemindMeJob(
     jobKey: `${QUEUE_REMIND_ME_LATER}:${jobKey}`,
     maxAttempts: 1,
     runAt,
-    jobKeyMode: 'replace'
+    jobKeyMode: 'replace',
   });
 }
 

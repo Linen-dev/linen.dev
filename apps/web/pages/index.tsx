@@ -1,4 +1,4 @@
-import { prisma } from 'client';
+import { prisma } from '@linen/database';
 import linenExamplePage from 'public/linen-example-page.png';
 import linenExampleFeed from 'public/linen-example-feed.png';
 import linenExampleSearch from 'public/linen-example-search.svg';

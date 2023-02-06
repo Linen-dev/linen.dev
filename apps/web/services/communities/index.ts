@@ -4,8 +4,7 @@ import {
   NextApiResponse,
 } from 'next/types';
 import Session from '../session';
-import prisma from 'client';
-import { accounts } from '@prisma/client';
+import { accounts, prisma } from '@linen/database';
 
 export default class CommunitiesService {
   static async find(

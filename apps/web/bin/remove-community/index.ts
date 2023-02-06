@@ -1,5 +1,5 @@
 import { findArgAndParseOrThrow } from 'utilities/processArgs';
-import prisma from '../../client';
+import { prisma } from '@linen/database';
 
 console.log(process.env.DATABASE_URL);
 

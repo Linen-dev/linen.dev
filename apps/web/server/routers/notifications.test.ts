@@ -11,7 +11,7 @@ import {
   channels,
   auths,
   threads,
-} from '@prisma/client';
+} from '@linen/database';
 const handler = require('pages/api/notifications/[[...slug]]');
 
 describe('user.notification', function () {
