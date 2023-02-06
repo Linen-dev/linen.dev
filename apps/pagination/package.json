@@ -1,0 +1,24 @@
+{
+  "name": "@linen/pagination",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.mjs",
+  "scripts": {
+    "build": "rm -rf dist && tsup",
+    "test": "jest",
+    "dev": "tsup --watch",
+    "start": "pm2-runtime --raw \"node dist/index.mjs\""
+  },
+  "dependencies": {
+    "@linen/database": "*",
+    "@linen/factory": "*",
+    "p-queue": "^7.3.3",
+    "pm2": "^5.2.2"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "tsup": "^6.5.0"
+  }
+}

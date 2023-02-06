@@ -1,5 +1,6 @@
 import { prisma } from '@linen/database';
-import { PAGE_SIZE } from 'secrets';
+
+const PAGE_SIZE = 30;
 
 export async function buildPages(accountId: string) {
   const account = await prisma.accounts.findUnique({
