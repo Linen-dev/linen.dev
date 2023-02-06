@@ -1,5 +1,5 @@
 import { auths, prisma } from '@linen/database';
-import { generateHash, generateSalt } from 'utilities/password';
+import { generateHash, generateSalt } from '@linen/utilities/password';
 
 export default function createAuth(options?: Partial<auths>): Promise<auths> {
   const password = options?.password || 'password';

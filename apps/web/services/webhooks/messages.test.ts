@@ -1,7 +1,7 @@
 jest.mock('services/events');
 import { accounts, channels } from '@linen/database';
 import { v4 } from 'uuid';
-import { create } from '__tests__/factory';
+import { create } from '@linen/factory';
 import { handleWebhook } from '.';
 
 describe('webhook', () => {

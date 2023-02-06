@@ -1,7 +1,7 @@
 import React from 'react';
 import NavBar from '.';
 import { render } from '@testing-library/react';
-import { build } from '__tests__/factory';
+import { build } from '@linen/factory';
 import { Mode } from '@linen/hooks/mode';
 
 describe('NavBar', () => {

@@ -1,0 +1,21 @@
+{
+  "name": "@linen/factory",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "build": "rm -rf dist && tsc",
+    "dev": "npm run build --watch"
+  },
+  "dependencies": {
+    "@linen/database": "*",
+    "@linen/types": "*",
+    "@linen/utilities": "*",
+    "jest": "^29.4.1"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.4.0",
+    "typescript": "^4.9.3"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts"
+}

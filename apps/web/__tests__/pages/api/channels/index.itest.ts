@@ -1,5 +1,5 @@
 import handler from 'pages/api/channels';
-import { build } from '__tests__/factory';
+import { build } from '@linen/factory';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import setup from '__tests__/spec-helpers/integration';
 import { prisma } from '@linen/database';

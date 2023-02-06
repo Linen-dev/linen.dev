@@ -1,6 +1,6 @@
 import '__mocks__/tokens';
 import { v4 } from 'uuid';
-import { create } from '__tests__/factory';
+import { create } from '@linen/factory';
 import { attachHeaders, login } from '__tests__/pages/api/auth/login';
 import { testApiHandler } from 'next-test-api-route-handler';
 import { accounts, auths } from '@linen/database';

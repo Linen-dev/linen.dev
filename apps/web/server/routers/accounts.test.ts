@@ -1,13 +1,13 @@
 jest.mock('services/accounts');
 import '__mocks__/tokens';
 import { v4 as random } from 'uuid';
-import { create } from '__tests__/factory';
+import { create } from '@linen/factory';
 import { attachHeaders } from '__tests__/pages/api/auth/login';
 import { testApiHandler } from 'next-test-api-route-handler';
 import handler from 'pages/api/accounts/[[...slug]]';
 import { integrationDiscordType } from './accounts.types';
 import { Roles } from 'server/middlewares/tenant';
-import { createUser } from '__tests__/factory/login';
+import { createUser } from '__tests__/login';
 
 describe('accounts api', () => {
   describe('POST /api/accounts/integration/discord', () => {

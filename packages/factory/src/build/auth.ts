@@ -10,6 +10,7 @@ export default function createAuth(options?: Partial<auths>): auths {
     salt: 'salt',
     token: 'token',
     accountId: 'account-id',
+    notificationsByEmail: false,
     ...options,
   };
 }

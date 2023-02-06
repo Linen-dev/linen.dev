@@ -1,5 +1,5 @@
 import * as api from 'pages/api/signin';
-import { create } from '__tests__/factory';
+import { create } from '@linen/factory';
 import setup from '__tests__/spec-helpers/integration';
 
 setup({ truncationStrategy: 'delete' });

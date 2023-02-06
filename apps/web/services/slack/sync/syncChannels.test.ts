@@ -2,7 +2,7 @@ jest.mock('services/slack/api');
 
 import { syncChannels } from './syncChannels';
 import * as fetch_all_conversations from 'services/slack/api';
-import { create } from '__tests__/factory';
+import { create } from '@linen/factory';
 import { accounts, channels, slackAuthorizations } from '@linen/database';
 import { v4 } from 'uuid';
 

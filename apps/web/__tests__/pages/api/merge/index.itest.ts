@@ -1,5 +1,5 @@
 import * as api from 'pages/api/merge';
-import { build, create } from '__tests__/factory';
+import { build, create } from '@linen/factory';
 import setup from '__tests__/spec-helpers/integration';
 
 setup({ truncationStrategy: 'cascade' });

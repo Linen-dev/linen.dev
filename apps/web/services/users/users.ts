@@ -1,7 +1,11 @@
 import { Roles } from '@linen/types';
 import { prisma } from '@linen/database';
 import { eventSignUp } from 'services/events/eventNewSignUp';
-import { generateHash, generateSalt, secureCompare } from 'utilities/password';
+import {
+  generateHash,
+  generateSalt,
+  secureCompare,
+} from '@linen/utilities/password';
 import { generateRandomWordSlug } from 'utilities/randomWordSlugs';
 import { v4 } from 'uuid';
 

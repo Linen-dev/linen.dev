@@ -1,6 +1,6 @@
 import { prisma } from '@linen/database';
 import { ChatType, MessageFormat, Roles } from '@linen/types';
-import { generateHash } from 'utilities/password';
+import { generateHash } from '@linen/utilities/password';
 
 export default async function createIpsumCommunity() {
   const community = await prisma.accounts.create({

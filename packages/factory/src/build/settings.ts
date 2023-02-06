@@ -12,6 +12,11 @@ export default function createSettings(options?: object): Settings {
     name: 'foo',
     communityUrl: 'https://foo.com/community',
     communityInviteUrl: '',
+    chat: null,
+    googleAnalyticsId: '',
+    googleSiteVerification: '',
+    prefix: 's',
+    redirectDomain: '',
     ...options,
   };
 }

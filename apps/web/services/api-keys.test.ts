@@ -1,5 +1,5 @@
 import { accounts } from '@linen/database';
-import { create } from '__tests__/factory';
+import { create } from '@linen/factory';
 import { ApiKeysService } from './api-keys';
 
 describe('api-keys service', () => {

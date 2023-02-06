@@ -1,8 +1,8 @@
 jest.mock('services/threads');
 import { testApiHandler } from 'next-test-api-route-handler';
 import '__mocks__/tokens';
-import { create } from '__tests__/factory';
-import { createUser } from '__tests__/factory/login';
+import { create } from '@linen/factory';
+import { createUser } from '__tests__/login';
 import handler from 'pages/api/threads/[[...slug]]';
 import { attachHeaders } from '__tests__/pages/api/auth/login';
 import { v4 } from 'uuid';

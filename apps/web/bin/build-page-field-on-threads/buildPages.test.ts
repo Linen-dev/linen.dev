@@ -1,6 +1,6 @@
 import { accounts } from '@linen/database';
 import { v4 as random } from 'uuid';
-import { create } from '__tests__/factory';
+import { create } from '@linen/factory';
 
 describe.skip('build pagination', () => {
   const store = {
