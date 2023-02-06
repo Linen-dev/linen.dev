@@ -3,6 +3,8 @@ import DiscordApi from './api';
 import to from 'utilities/await-to-js';
 import ChannelsService from 'services/channels';
 import Logger from './logger';
+import { createSlug } from 'utilities/util';
+import { channels } from '@prisma/client';
 
 enum ChannelType {
   TEXT = 0,
@@ -29,13 +31,26 @@ export async function listChannelsAndPersist({
     return;
   }
   try {
-    const channelPromises = await Promise.all(
-      channels
-        .filter((c) => [ChannelType.TEXT, ChannelType.FORUM].includes(c.type))
-        .map((channel) =>
-          ChannelsService.findOrCreateChannel(parseChannel(channel, accountId))
-        )
+    const channelPromises: channels[] = [];
+    const filteredChannels = channels.filter((c) =>
+      [ChannelType.TEXT, ChannelType.FORUM].includes(c.type)
     );
+    for (const channel of filteredChannels) {
+      try {
+        const newChannel = await ChannelsService.findOrCreateChannel(
+          parseChannel(channel, accountId)
+        );
+        channelPromises.push(newChannel);
+      } catch (error) {
+        logger.error(
+          `listChannelsAndPersist >> failure: ${JSON.stringify({
+            error,
+            channel,
+          })}`
+        );
+      }
+    }
+
     return channelPromises;
   } catch (error) {
     logger.error(
@@ -58,7 +73,7 @@ function parseChannel(
 } {
   return {
     externalChannelId: channel.id,
-    channelName: channel.name,
+    channelName: createSlug(channel.name),
     accountId,
     hidden: isPrivate(channel),
   };
