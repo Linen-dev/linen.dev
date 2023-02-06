@@ -1,5 +1,5 @@
 jest.mock('services/events/eventNewIntegration');
-import { create } from '__tests__/factory';
+import { create } from '@linen/factory';
 import { accounts, prisma } from '@linen/database';
 import { v4 } from 'uuid';
 import AccountsService from './accounts';

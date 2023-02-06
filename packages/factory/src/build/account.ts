@@ -24,6 +24,8 @@ export default function createAccount(options?: Partial<accounts>): accounts {
     premium: false,
     chat: 'NONE',
     integration: 'NONE',
+    description: null,
+    logoSquareUrl: null,
     ...options,
   };
 }

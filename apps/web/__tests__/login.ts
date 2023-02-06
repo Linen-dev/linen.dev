@@ -1,6 +1,6 @@
 import { v4 } from 'uuid';
 import { login } from '__tests__/pages/api/auth/login';
-import create from './create';
+import { create } from '@linen/factory';
 
 export async function createUser(accountId: string, role: string) {
   const creds = { email: v4(), password: v4() };

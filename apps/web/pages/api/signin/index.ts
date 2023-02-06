@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import { prisma } from '@linen/database';
-import { generateHash, secureCompare } from 'utilities/password';
+import { generateHash, secureCompare } from '@linen/utilities/password';
 
 interface CreateParams {
   email: string;

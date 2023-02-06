@@ -9,7 +9,7 @@ import {
   prisma,
 } from '@linen/database';
 import { v4 } from 'uuid';
-import { create } from '__tests__/factory';
+import { create } from '@linen/factory';
 import * as service from './notifications';
 import * as queue from 'queue/jobs';
 import serializeThread from 'serializers/thread';

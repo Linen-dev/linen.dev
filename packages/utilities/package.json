@@ -11,7 +11,9 @@
   "dependencies": {
     "awesome-debounce-promise": "^2.1.0",
     "date-fns": "^2.29.3",
+    "entities": "^4.4.0",
     "jest": "^29.3.1",
+    "marked": "^4.2.12",
     "ts-jest": "^29.0.3"
   },
   "devDependencies": {
@@ -26,7 +28,8 @@
     "./debounce": "./dist/debounce.js",
     "./markdown": "./dist/markdown.js",
     "./object": "./dist/object.js",
-    "./clipboard": "./dist/clipboard.js"
+    "./clipboard": "./dist/clipboard.js",
+    "./password": "./dist/password.js"
   },
   "typesVersions": {
     "*": {
@@ -56,6 +59,9 @@
       ],
       "clipboard": [
         "dist/clipboard.d.ts"
+      ],
+      "password": [
+        "dist/password.d.ts"
       ]
     }
   }

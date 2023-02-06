@@ -1,5 +1,3 @@
-import type { NextApiResponse } from 'next';
-
 export default function createResponse(options?: object) {
   const response = {
     status: jest.fn().mockReturnThis() as unknown,
@@ -8,6 +6,6 @@ export default function createResponse(options?: object) {
     setHeader: jest.fn() as unknown,
     end: jest.fn() as unknown,
     ...options,
-  } as NextApiResponse;
+  } as any;
   return response;
 }

@@ -1,4 +1,4 @@
-import { create } from '__tests__/factory';
+import { create } from '@linen/factory';
 import accountsService from 'services/accounts';
 import { v4 } from 'uuid';
 import { accounts, auths } from '@linen/database';

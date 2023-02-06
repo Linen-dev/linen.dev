@@ -30,6 +30,7 @@
     "@linen/types": "*",
     "@linen/ui": "*",
     "@linen/utilities": "*",
+    "@linen/factory": "*",
     "@linen/sdk": "*",
     "@linen/database": "*",
     "@next/bundle-analyzer": "^13.0.2",

@@ -1,5 +1,5 @@
 import * as api from 'pages/api/profile';
-import { build, create } from '__tests__/factory';
+import { build, create } from '@linen/factory';
 import setup from '__tests__/spec-helpers/integration';
 import { prisma } from '@linen/database';
 

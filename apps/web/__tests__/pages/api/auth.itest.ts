@@ -1,5 +1,5 @@
 import handler from 'pages/api/signup';
-import { build } from '__tests__/factory';
+import { build } from '@linen/factory';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { sendNotification } from 'services/slack';
 import ApplicationMailer from 'mailers/ApplicationMailer';

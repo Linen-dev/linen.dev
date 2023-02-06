@@ -1,5 +1,5 @@
 import '__mocks__/tokens';
-import { create } from '__tests__/factory';
+import { create } from '@linen/factory';
 import { v4 } from 'uuid';
 import { testApiHandler } from 'next-test-api-route-handler';
 import { login } from '__tests__/pages/api/auth/login';

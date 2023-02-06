@@ -1,5 +1,5 @@
 import { getHomeUrl, getHomeText } from './home';
-import { build } from '__tests__/factory';
+import { build } from '@linen/factory';
 
 describe('getHomeUrl', () => {
   it('returns the correct url for a premium account', () => {

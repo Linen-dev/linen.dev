@@ -1,6 +1,6 @@
 import { prisma } from '@linen/database';
 import { ChatType, MessageFormat, Roles } from '@linen/types';
-import { generateHash } from 'utilities/password';
+import { generateHash } from '@linen/utilities/password';
 import { join } from 'path';
 import { readFileSync } from 'fs';
 

@@ -16,6 +16,10 @@ export default function createThread(options?: Partial<threads>): threads {
     hidden: false,
     state: ThreadState.OPEN,
     pinned: false,
+    closeAt: null,
+    firstManagerReplyAt: null,
+    firstUserReplyAt: null,
+    page: null,
     ...options,
   };
 }

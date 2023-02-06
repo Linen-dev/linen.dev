@@ -1,6 +1,6 @@
 import { ThreadState } from '@linen/types';
 import ThreadsServices from '.';
-import { create } from '__tests__/factory';
+import { create } from '@linen/factory';
 
 describe('ThreadsServices', () => {
   describe('update', () => {

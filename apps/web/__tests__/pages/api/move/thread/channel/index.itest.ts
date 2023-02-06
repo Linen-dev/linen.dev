@@ -1,5 +1,5 @@
 import * as api from 'pages/api/move/thread/channel';
-import { build, create } from '__tests__/factory';
+import { build, create } from '@linen/factory';
 
 describe('create', () => {
   it('returns 400 when threadId is missing', async () => {

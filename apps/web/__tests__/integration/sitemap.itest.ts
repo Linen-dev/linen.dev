@@ -7,7 +7,7 @@ import {
   createSitemapForFreeByChannel,
 } from '../../utilities/sitemap';
 import setup from '__tests__/spec-helpers/integration';
-import { create } from '__tests__/factory';
+import { create } from '@linen/factory';
 
 setup({ truncationStrategy: 'none' });
 
