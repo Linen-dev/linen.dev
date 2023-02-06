@@ -1,5 +1,4 @@
-import prisma from 'client';
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
+import { prisma, users, Prisma } from '@linen/database';
 import { stripProtocol } from 'utilities/url';
 import { generateRandomWordSlug } from 'utilities/randomWordSlugs';
 import { getAccountById } from 'lib/models';
@@ -10,7 +9,6 @@ import { v4 } from 'uuid';
 import { createAccountEvent } from './customerIo/trackEvents';
 import { createInvitation } from './invites';
 import { getCurrentUrl } from 'utilities/domain';
-import { users } from '@prisma/client';
 import { unique } from 'utilities/util';
 
 export default class AccountsService {
@@ -128,7 +126,7 @@ export default class AccountsService {
 
   private static isRedirectDomainNotUniqueError(exception: unknown) {
     return (
-      exception instanceof PrismaClientKnownRequestError &&
+      exception instanceof Prisma.PrismaClientKnownRequestError &&
       exception.code === 'P2002' &&
       exception.meta &&
       Array.isArray(exception.meta.target) &&

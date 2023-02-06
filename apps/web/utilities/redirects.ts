@@ -1,4 +1,4 @@
-import type { accounts } from '@prisma/client';
+import type { accounts } from '@linen/database';
 import { Settings, SerializedChannel } from '@linen/types';
 import { RedirectTo } from './response';
 import { appendProtocol } from './url';

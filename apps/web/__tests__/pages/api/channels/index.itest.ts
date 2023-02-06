@@ -2,7 +2,7 @@ import handler from 'pages/api/channels';
 import { build } from '__tests__/factory';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import setup from '__tests__/spec-helpers/integration';
-import prisma from 'client';
+import { prisma } from '@linen/database';
 import PermissionsService from 'services/permissions';
 
 jest.mock('services/permissions');

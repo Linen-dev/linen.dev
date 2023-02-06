@@ -1,5 +1,5 @@
 import { sortByChannelName } from './utilities';
-import { channels } from '@prisma/client';
+import { channels } from '@linen/database';
 
 describe('sortByChannelName', () => {
   it('sorts channels by name', () => {

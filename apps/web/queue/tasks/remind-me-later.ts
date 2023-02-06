@@ -1,4 +1,4 @@
-import prisma from 'client';
+import { prisma } from '@linen/database';
 import { push } from 'services/push';
 
 interface Payload {

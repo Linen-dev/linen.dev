@@ -1,4 +1,4 @@
-import { accounts } from '@prisma/client';
+import { accounts } from '@linen/database';
 import { create } from '__tests__/factory';
 import { ApiKeysService } from './api-keys';
 

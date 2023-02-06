@@ -1,4 +1,4 @@
-import prisma from '../../client';
+import { prisma } from '@linen/database';
 import { createSlug } from '../../utilities/util';
 
 export async function slugify() {

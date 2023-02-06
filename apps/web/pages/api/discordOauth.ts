@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import request from 'superagent';
-import prisma from '../../client';
-import { updateAccount } from '../../lib/models';
+import { prisma } from '@linen/database';
+import { updateAccount } from 'lib/models';
 import { eventNewIntegration } from 'services/events/eventNewIntegration';
 import { AccountIntegration, SerializedAccount } from '@linen/types';
 import { createSlug } from 'utilities/util';

@@ -1,4 +1,4 @@
-import prisma from '../../client';
+import { prisma } from '@linen/database';
 
 export async function truncateTables() {
   const tablenames = await prisma.$queryRaw<

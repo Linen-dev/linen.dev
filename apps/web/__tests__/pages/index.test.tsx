@@ -1,4 +1,4 @@
-jest.mock('../../client');
+jest.mock('@linen/database');
 import { render } from '@testing-library/react';
 import Home from '../../pages/index';
 

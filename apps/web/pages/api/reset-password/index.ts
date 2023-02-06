@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
-import prisma from '../../../client';
-import { generateHash } from '../../../utilities/password';
+import { prisma } from '@linen/database';
+import { generateHash } from 'utilities/password';
 
 async function create(request: NextApiRequest, response: NextApiResponse) {
   const { password, token }: { password?: string; token?: string } = JSON.parse(

@@ -1,5 +1,4 @@
-import prisma from 'client';
-import { channelsIntegration, Prisma } from '@prisma/client';
+import { channelsIntegration, Prisma, prisma } from '@linen/database';
 import axios from 'axios';
 import { TwoWaySyncEvent, TwoWaySyncType } from 'queue/tasks/two-way-sync';
 import { getIntegrationUrl } from 'utilities/domain';

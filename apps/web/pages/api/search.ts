@@ -1,6 +1,5 @@
 import { anonymizeMessagesMentions } from 'utilities/anonymizeMessages';
 import { NextApiRequest, NextApiResponse } from 'next/types';
-import prisma from '../../client';
 import {
   messages,
   Prisma,
@@ -8,7 +7,8 @@ import {
   threads,
   users,
   AccountType,
-} from '@prisma/client';
+  prisma,
+} from '@linen/database';
 import PermissionsService from 'services/permissions';
 import unique from 'lodash.uniq';
 import serializeUser from 'serializers/user';

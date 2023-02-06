@@ -1,5 +1,5 @@
 import { AccountType } from '@linen/types';
-import prisma from '../client';
+import { prisma } from '@linen/database';
 import { stripProtocol } from '../utilities/url';
 
 interface FindAccountParams {

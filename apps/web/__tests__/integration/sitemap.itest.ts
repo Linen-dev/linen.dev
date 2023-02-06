@@ -1,4 +1,4 @@
-import { accounts, channels } from '@prisma/client';
+import { accounts, channels } from '@linen/database';
 import { v4 } from 'uuid';
 import {
   createSitemapForPremium,

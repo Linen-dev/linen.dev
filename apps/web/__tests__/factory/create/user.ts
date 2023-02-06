@@ -1,5 +1,4 @@
-import { users } from '@prisma/client';
-import prisma from 'client';
+import { users, prisma } from '@linen/database';
 
 export default async function createUser(options?: object): Promise<users> {
   return prisma.users.create({

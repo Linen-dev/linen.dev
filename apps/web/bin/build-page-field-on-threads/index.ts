@@ -1,5 +1,5 @@
 import { buildPages } from './buildPages';
-import prisma from 'client';
+import { prisma } from '@linen/database';
 import PQueue from 'p-queue';
 
 const queue = new PQueue({ concurrency: 5 });

@@ -15,7 +15,7 @@ import {
   channels,
   Prisma,
   slackAuthorizations,
-} from '@prisma/client';
+} from '@linen/database';
 import { MessageFormat } from '@linen/types';
 import { findOrCreateUserFromUserInfo } from 'lib/users';
 import { parseSlackSentAt, tsToSentAt } from 'utilities/sentAt';

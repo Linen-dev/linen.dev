@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
-import prisma from '../../../client';
+import { prisma } from '@linen/database';
 
 async function update(request: NextApiRequest, response: NextApiResponse) {
   const incrementId = request.query.incrementId as string;

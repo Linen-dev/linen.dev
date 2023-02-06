@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import PermissionsService from 'services/permissions';
 import CommunityService from 'services/community';
-import prisma from 'client';
+import { prisma } from '@linen/database';
 import serializeThread from 'serializers/thread';
 import { Scope, ThreadState } from '@linen/types';
 import ChannelsService from 'services/channels';

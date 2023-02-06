@@ -2,7 +2,7 @@ jest.mock('lib/users');
 jest.mock('services/events');
 import { handleWebhook } from 'services/webhooks';
 import { v4 } from 'uuid';
-import { prisma } from 'client';
+import { prisma } from '@linen/database';
 
 const addMessageEvent = {
   token: 'RudepRJuMOjy8zENRCLdXW7t',

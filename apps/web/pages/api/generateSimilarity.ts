@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
-import prisma from '../../client';
+import { prisma } from '@linen/database';
 import superagent from 'superagent';
 import fs from 'fs';
 

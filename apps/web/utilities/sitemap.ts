@@ -1,4 +1,4 @@
-import type { accounts, channels } from '@prisma/client';
+import type { accounts, channels } from '@linen/database';
 import { SitemapIndexStream, SitemapStream, streamToPromise } from 'sitemap';
 import { Readable } from 'stream';
 import { appendProtocol } from './url';

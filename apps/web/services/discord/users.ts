@@ -1,4 +1,4 @@
-import { users } from '@prisma/client';
+import { users } from '@linen/database';
 import {
   DiscordMessage,
   DiscordAuthor,

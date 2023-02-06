@@ -1,5 +1,4 @@
-import type { channels } from '@prisma/client';
-import prisma from 'client';
+import { channels, prisma } from '@linen/database';
 
 export default async function createChannel(
   options?: Partial<channels>

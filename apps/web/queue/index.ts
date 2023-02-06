@@ -1,12 +1,16 @@
-import { downloadCert, getDatabaseUrl } from 'utilities/database';
+import { downloadCert, getDatabaseUrl } from '@linen/database';
 import { run } from 'graphile-worker';
 import { emailNotificationTask } from './tasks/email-notification-sender';
 import { processNewEventTask } from './tasks/email-notification-event';
-import { reminderMeLaterTask } from './tasks/remind-me-later'
+import { reminderMeLaterTask } from './tasks/remind-me-later';
 import { twoWaySync } from './tasks/two-way-sync';
 import { sync } from './tasks/sync';
 import { webhook } from './tasks/webhook';
-import { QUEUE_1_NEW_EVENT, QUEUE_2_SEND_EMAIL, QUEUE_REMIND_ME_LATER } from './jobs';
+import {
+  QUEUE_1_NEW_EVENT,
+  QUEUE_2_SEND_EMAIL,
+  QUEUE_REMIND_ME_LATER,
+} from './jobs';
 
 async function runWorker() {
   await downloadCert();

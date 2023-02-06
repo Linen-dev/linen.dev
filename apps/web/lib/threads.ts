@@ -1,7 +1,6 @@
-import type { Prisma } from '@prisma/client';
+import { Prisma, prisma } from '@linen/database';
 import { FindThreadsByCursorType } from 'types/cursor';
 import { ThreadsWithMessagesFull } from 'types/partialTypes';
-import prisma from '../client';
 import { anonymizeMessages } from 'utilities/anonymizeMessages';
 import { PAGE_SIZE } from 'secrets';
 import { ThreadStatus } from '@linen/types';

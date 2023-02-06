@@ -1,5 +1,5 @@
 jest.mock('services/events');
-import { accounts, channels } from '@prisma/client';
+import { accounts, channels } from '@linen/database';
 import { v4 } from 'uuid';
 import { create } from '__tests__/factory';
 import { handleWebhook } from '.';

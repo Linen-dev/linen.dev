@@ -1,4 +1,4 @@
-import { channels, users } from '@prisma/client';
+import { channels, users } from '@linen/database';
 import {
   Permissions,
   SerializedAccount,

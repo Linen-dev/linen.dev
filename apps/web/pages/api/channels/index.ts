@@ -3,7 +3,7 @@ import { v4 } from 'uuid';
 import PermissionsService from 'services/permissions';
 import { patterns } from 'utilities/util';
 import ChannelsService from 'services/channels';
-import prisma from 'client';
+import { prisma } from '@linen/database';
 import { z } from 'zod';
 
 type Props = {

@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import Session from 'services/session';
 import to from 'utilities/await-to-js';
 import { z } from 'zod';
-import { prisma } from 'client';
+import { prisma } from '@linen/database';
 import serializeReadStatus from 'serializers/read-status';
 
 async function post(request: NextApiRequest, response: NextApiResponse) {

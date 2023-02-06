@@ -3,7 +3,7 @@ import { v4 } from 'uuid';
 import { create } from '__tests__/factory';
 import { attachHeaders, login } from '__tests__/pages/api/auth/login';
 import { testApiHandler } from 'next-test-api-route-handler';
-import { accounts, auths } from '@prisma/client';
+import { accounts, auths } from '@linen/database';
 import handler from 'pages/api/api-keys/[[...slug]]';
 import { createKeyType, revokeKeyType } from './api-keys.types';
 import { qs } from 'utilities/url';

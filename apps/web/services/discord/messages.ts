@@ -1,5 +1,4 @@
-import prisma from 'client';
-import { channels, threads, users } from '@prisma/client';
+import { channels, threads, users, prisma } from '@linen/database';
 import { MessageFormat } from '@linen/types';
 import { DiscordMessage } from 'types/discord';
 import { findUsers, getMentions, getUsersInMessages } from './users';

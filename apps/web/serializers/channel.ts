@@ -1,4 +1,4 @@
-import type { channels } from '@prisma/client';
+import type { channels } from '@linen/database';
 import { SerializedChannel } from '@linen/types';
 
 export default function serializeChannel(

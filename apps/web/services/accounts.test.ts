@@ -1,9 +1,8 @@
 jest.mock('services/events/eventNewIntegration');
 import { create } from '__tests__/factory';
-import type { accounts } from '@prisma/client';
+import { accounts, prisma } from '@linen/database';
 import { v4 } from 'uuid';
 import AccountsService from './accounts';
-import prisma from 'client';
 import { decrypt } from 'utilities/crypto';
 
 describe('accounts service', () => {

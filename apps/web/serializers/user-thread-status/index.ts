@@ -1,5 +1,5 @@
 import { SerializedUserThreadStatus } from '@linen/types';
-import { userThreadStatus } from '@prisma/client';
+import { userThreadStatus } from '@linen/database';
 
 export default function serialize(
   status: userThreadStatus

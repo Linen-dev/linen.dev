@@ -1,7 +1,7 @@
 import { GettingStartedPage } from 'components/Pages/GettingStartedPage';
 import type { NextPageContext } from 'next';
 import Session from 'services/session';
-import { prisma } from 'client';
+import { prisma } from '@linen/database';
 import { findInvitesByEmail } from 'services/invites';
 
 export default function CreateCommunity(props: any) {

@@ -1,4 +1,4 @@
-import { accounts } from '@prisma/client';
+import { accounts } from '@linen/database';
 import { v4 as random } from 'uuid';
 import { create } from '__tests__/factory';
 

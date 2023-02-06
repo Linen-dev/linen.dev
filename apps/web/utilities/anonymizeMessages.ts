@@ -1,4 +1,4 @@
-import { channels, messages, mentions, threads, users } from '@prisma/client';
+import { channels, messages, mentions, threads, users } from '@linen/database';
 type Messages =
   | (messages & {
       author: users | null;

@@ -1,5 +1,5 @@
 import { Roles } from '@linen/types';
-import prisma from 'client';
+import { prisma } from '@linen/database';
 import { eventSignUp } from 'services/events/eventNewSignUp';
 import { generateHash, generateSalt, secureCompare } from 'utilities/password';
 import { generateRandomWordSlug } from 'utilities/randomWordSlugs';

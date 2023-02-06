@@ -1,10 +1,9 @@
-import prisma from '../../client';
 import {
   SlackMessageReactionRemovedEvent,
   SlackMessageReactionAddedEvent,
   SlackEvent,
 } from '../../types/slackResponses/slackMessageEventInterface';
-import { Prisma } from '@prisma/client';
+import { Prisma, prisma } from '@linen/database';
 import { findChannelWithAccountByExternalId } from 'lib/channel';
 
 async function processMessageReactionEvent(

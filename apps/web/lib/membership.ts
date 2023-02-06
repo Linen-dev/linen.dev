@@ -1,5 +1,4 @@
-import { Prisma } from '@prisma/client';
-import prisma from '../client';
+import { Prisma, prisma } from '@linen/database';
 
 export const createMembership = async (
   membership: Prisma.membershipsCreateInput

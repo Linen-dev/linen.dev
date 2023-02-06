@@ -1,4 +1,4 @@
-import prisma from '../../client';
+import { prisma } from '@linen/database';
 
 async function run() {
   let page = 0;

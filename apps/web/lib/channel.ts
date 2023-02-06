@@ -1,5 +1,4 @@
-import { accounts, Prisma } from '@prisma/client';
-import prisma from '../client';
+import { accounts, Prisma, prisma } from '@linen/database';
 import { SerializedChannel } from '@linen/types';
 
 interface FindChannelParams {
@@ -126,7 +125,7 @@ export async function shouldThisChannelBeAnonymous(channelId: string) {
     .then((account) => account?.anonymizeUsers);
 }
 
-const channelSerialized = Prisma.validator<Prisma.channelsFindManyArgs>()({
+const channelSerialized = {
   select: {
     id: true,
     channelName: true,
@@ -135,7 +134,7 @@ const channelSerialized = Prisma.validator<Prisma.channelsFindManyArgs>()({
     accountId: true,
     pages: true,
   },
-});
+};
 export async function findChannelsByAccount({
   isCrawler,
   account,

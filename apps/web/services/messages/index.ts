@@ -1,8 +1,7 @@
-import { prisma } from 'client';
 import serializeMessage from 'serializers/message';
 import { find, parse } from '@linen/ast';
 import { eventNewMessage } from 'services/events';
-import { Prisma } from '@prisma/client';
+import { Prisma, prisma } from '@linen/database';
 import { MessageFormat } from '@linen/types';
 import { v4 as uuid } from 'uuid';
 import unique from 'lodash.uniq';

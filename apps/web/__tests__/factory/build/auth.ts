@@ -1,4 +1,4 @@
-import type { auths } from '@prisma/client';
+import type { auths } from '@linen/database';
 
 export default function createAuth(options?: Partial<auths>): auths {
   return {

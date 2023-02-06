@@ -1,5 +1,10 @@
-import { type mentions, Prisma, notificationType, users } from '@prisma/client';
-import prisma from 'client';
+import {
+  type mentions,
+  Prisma,
+  notificationType,
+  users,
+  prisma,
+} from '@linen/database';
 import NotificationMailer from 'mailers/NotificationMailer';
 import { createMailingJob, createNewEventJob } from 'queue/jobs';
 import { getCommunityUrl } from 'serializers/account/settings';

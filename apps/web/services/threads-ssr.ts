@@ -3,7 +3,7 @@ import { findAccountByPath } from '../lib/models';
 import CommunitiesService from 'services/communities';
 import { findThreadByIncrementId } from '../lib/threads';
 import { ThreadByIdProp } from '../types/apiResponses/threads/[threadId]';
-import { channels, threads, users } from '@prisma/client';
+import { channels, threads, users, prisma } from '@linen/database';
 import { GetServerSidePropsContext } from 'next';
 import { NotFound } from '../utilities/response';
 import serializeAccount from 'serializers/account';
@@ -17,7 +17,6 @@ import {
   redirectThreadToDomain,
   shouldRedirectToDomain,
 } from 'utilities/redirects';
-import { prisma } from 'client';
 import { qs } from 'utilities/url';
 import { SerializedAccount } from '@linen/types';
 

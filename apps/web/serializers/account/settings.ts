@@ -1,4 +1,4 @@
-import { accounts } from '@prisma/client';
+import { accounts } from '@linen/database';
 import { ChatType, CommunityType, Settings } from '@linen/types';
 import { appendProtocol } from 'utilities/url';
 import { getLinenUrl } from 'utilities/domain';

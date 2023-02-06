@@ -1,5 +1,4 @@
-import { Roles, users } from '@prisma/client';
-import prisma from 'client';
+import { Roles, users, prisma } from '@linen/database';
 
 export async function updateThreadMetrics(
   threadId: string,

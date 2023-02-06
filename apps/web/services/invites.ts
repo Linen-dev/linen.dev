@@ -1,7 +1,6 @@
 import { generateRandomWordSlug } from 'utilities/randomWordSlugs';
-import { auths, invites, Prisma, Roles, users } from '@prisma/client';
+import { auths, invites, Prisma, Roles, users, prisma } from '@linen/database';
 import InviteToJoinMailer from 'mailers/InviteToJoinMailer';
-import prisma from '../client';
 import { normalize } from '@linen/utilities/string';
 import PermissionsService from './permissions';
 import { Unauthorized } from 'server/exceptions';

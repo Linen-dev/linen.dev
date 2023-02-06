@@ -1,5 +1,4 @@
-import { threads } from '@prisma/client';
-import prisma from 'client';
+import { threads, prisma } from '@linen/database';
 
 export default async function createThread(
   options?: Partial<threads>

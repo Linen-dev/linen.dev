@@ -1,6 +1,5 @@
-import { accounts, channels } from '@prisma/client';
+import { accounts, channels, prisma } from '@linen/database';
 import { v4 as random } from 'uuid';
-import { prisma } from '../../client';
 import { MessageFormat } from '@linen/types';
 
 /** this function will create N threads (threadsCount parameter)

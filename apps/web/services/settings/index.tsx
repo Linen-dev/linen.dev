@@ -9,7 +9,6 @@ import { NotFound, RedirectTo } from 'utilities/response';
 import serializeAccount from 'serializers/account';
 import serializeChannel from 'serializers/channel';
 import { qs } from 'utilities/url';
-import prisma from 'client';
 
 export async function getSettingsServerSideProps(
   context: GetServerSidePropsContext,

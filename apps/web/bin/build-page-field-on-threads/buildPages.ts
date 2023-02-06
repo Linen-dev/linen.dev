@@ -1,4 +1,4 @@
-import prisma from 'client';
+import { prisma } from '@linen/database';
 import { PAGE_SIZE } from 'secrets';
 
 export async function buildPages(accountId: string) {

@@ -1,5 +1,4 @@
-import { Prisma } from '@prisma/client';
-import prisma from '../client';
+import { Prisma, prisma } from '@linen/database';
 import { stripProtocol } from '../utilities/url';
 import { AccountWithSlackAuthAndChannels } from '../types/partialTypes';
 

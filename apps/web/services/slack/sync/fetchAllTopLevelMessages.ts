@@ -1,9 +1,8 @@
 import { updateNextPageCursor } from 'lib/models';
 import { AccountWithSlackAuthAndChannels, UserMap } from 'types/partialTypes';
-import { channels } from '@prisma/client';
+import { channels, prisma } from '@linen/database';
 import { MessageFormat } from '@linen/types';
 import { getBotUserId } from './getBotUserId';
-import prisma from '../../../client';
 import { ConversationHistoryMessage } from '../api';
 import { processReactions } from './reactions';
 import { processAttachments } from './attachments';

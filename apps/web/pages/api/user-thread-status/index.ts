@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import PermissionsService from 'services/permissions';
-import prisma from 'client';
+import { prisma } from '@linen/database';
 import { z } from 'zod';
 import { ReminderTypes } from '@linen/types';
 import { soon, tomorrow, nextWeek } from '@linen/utilities/date';

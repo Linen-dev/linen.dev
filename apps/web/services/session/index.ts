@@ -4,10 +4,9 @@ import {
   NextApiResponse,
 } from 'next/types';
 import type { Session as SessionType, JWT } from 'utilities/auth/types';
-import type { users } from '@prisma/client';
+import { users, prisma } from '@linen/database';
 import { findAuthByEmail } from 'lib/users';
 export { type SessionType };
-import prisma from 'client';
 import {
   getServerSession,
   getRawTokenFromRequest,

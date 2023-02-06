@@ -1,6 +1,6 @@
 import { updateInvitation } from './invites';
 import { Roles } from '@linen/types';
-import prisma from 'client';
+import { prisma } from '@linen/database';
 import { v4 } from 'uuid';
 
 describe('invite service', () => {

@@ -11,7 +11,7 @@ import type {
   mentions,
   messageAttachments,
   messageReactions,
-} from '@prisma/client';
+} from '@linen/database';
 
 function serializeAttachment(
   attachment: messageAttachments

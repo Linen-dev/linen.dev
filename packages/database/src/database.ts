@@ -57,7 +57,7 @@ export function getDatabaseUrl({
   dbUrl?: string;
   cert?: string;
 }) {
-  if (!dbUrl) throw 'missing dbUrl variable';
+  if (!dbUrl) return '';
 
   const certLocation = createCertFile({ cert });
   if (!certLocation) return dbUrl;

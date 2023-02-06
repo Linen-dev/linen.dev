@@ -1,4 +1,3 @@
-import prisma from '../../client';
 import { SlackEvent } from '../../types/slackResponses/slackMessageEventInterface';
 import { processMessageEvent } from './processMessageEvents';
 import {

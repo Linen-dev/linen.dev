@@ -1,5 +1,5 @@
 import { createRobotsTxt } from '../utilities/robots';
-import prisma from '../client';
+import { prisma } from '@linen/database';
 import { GetServerSideProps } from 'next/types';
 
 function notFound(res: any) {
