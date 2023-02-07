@@ -1,0 +1,134 @@
+.section {
+  display: flex;
+  justify-content: space-around;
+  height: 100vh;
+  align-content: center;
+  flex: 1;
+}
+
+.section > div {
+  align-items: center;
+  display: flex;
+  flex-direction: column;;
+  justify-content: center;
+  height: 100vh;
+  width: 100%;
+  padding: 0 4rem;
+  text-align: center;
+  gap: 0;
+}
+
+.section h2 {
+  font-size: 1rem;
+  letter-spacing: 0.25rem;
+  font-weight: 400;
+  margin: 0 0 1rem;
+  text-transform: uppercase;
+  font-weight: 400;
+  padding: 0;
+}
+
+.section h3 {
+  font-size: 4rem;
+  letter-spacing: -.025rem;
+  margin: 0;
+  line-height: 1.3;
+  font-weight: bold;
+  padding: 0;
+}
+
+.section p {
+  letter-spacing: -0.3px;
+}
+
+.left {
+  background: black;
+  color: white;
+  text-shadow: 0 0 16px #000;
+}
+
+.left p {
+  color: #f7f9fa;
+}
+
+.center {
+  background: #a855f7;
+  color: white;
+  text-shadow: 0 0 16px #a855f7;
+}
+
+.center p {
+  color: #f7f9fa;
+}
+
+.right {
+  background: white;
+  color: black;
+  text-shadow: 0 0 16px white;
+}
+
+.right p {
+  color: #374151;
+}
+
+.left {
+  background: repeating-linear-gradient(
+  45deg,
+  black,
+  black 2px,
+  #111827 2px,
+  #111827 8px
+);
+}
+
+.center {
+  background: repeating-linear-gradient(
+  45deg,
+  #a855f7,
+  #a855f7 2px,
+  #9333ea 2px,
+  #9333ea 8px
+);
+}
+
+.right {
+  background: repeating-linear-gradient(
+  45deg,
+  white,
+  white 2px,
+  #f7f9fa 2px,
+  #f7f9fa 8px
+);
+}
+
+.left, .center, .right {
+  background-size: 400% 400%;
+  animation: gradient 200s ease infinite;
+}
+
+
+@keyframes gradient {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+}
+@media screen and (min-width: 1024px) and (max-width: 1439px) {
+  .section h2 {
+    font-size: 0.875rem;
+  }
+  .section h3 {
+    font-size: 3rem;
+  }
+}
+
+@media screen and (max-width: 1023px) {
+  .section {
+    display: none;
+  }
+}

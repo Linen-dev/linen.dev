@@ -3,14 +3,13 @@ const navigation = {
     { name: 'Privacy', href: '/legal/privacy' },
     { name: 'Terms', href: '/legal/terms' },
     { name: 'Support', href: 'mailto:help@linen.dev' },
-    { name: 'Communities', href: '/communities' },
   ],
 };
 
 export default function Footer() {
   return (
     <footer className="bg-white">
-      <div className="max-w-7xl mx-auto pt-16 px-4 overflow-hidden sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto py-16 px-4 overflow-hidden sm:px-6 lg:px-8">
         <nav
           className="-mx-5 -my-2 flex flex-wrap justify-center"
           aria-label="Footer"
@@ -29,7 +28,7 @@ export default function Footer() {
           ))}
         </nav>
         <p className="mt-8 text-center text-base text-gray-400">
-          &copy; 2022 Linen. All rights reserved.
+          &copy; 2023 Linen. All rights reserved.
         </p>
       </div>
     </footer>

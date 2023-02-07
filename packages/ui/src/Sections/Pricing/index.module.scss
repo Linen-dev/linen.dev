@@ -1,0 +1,146 @@
+.section {
+  height: 100vh;
+  color: black;
+  text-align: center;
+  position: relative;
+}
+
+.section h2 {
+  font-size: 4rem;
+  margin: 0;
+  padding: 5rem 0;
+  font-weight: bold;
+}
+
+.section h3 {
+  text-transform: lowercase;
+  font-weight: 400;
+  padding-bottom: 2rem;
+  border-bottom: 4px solid #000;
+}
+
+.section .cards {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+}
+
+.card {
+  border-radius: 1rem;
+  border: 4px solid black;
+  font-size: 1rem;
+  min-width: 480px;
+  padding: 1.5rem 0 2.5rem;
+}
+
+.section ul {
+  list-style-type: none;
+  margin: 0;
+  padding:0;
+  padding-top: 0.25rem;
+}
+
+.section ul li {
+  margin: 1rem 0;
+}
+
+.section img {
+  margin: 1rem auto;
+  user-select: none;
+}
+
+.card.free {
+  font-family: monospace;
+  text-transform: uppercase;
+  letter-spacing: 0rem;
+  font-weight: 300;
+  padding-bottom: 1rem;
+  background: rgba(255, 255, 255, 1);
+}
+
+.card.premium {
+  text-transform: uppercase;
+  letter-spacing: 0;
+  font-weight: 400;
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 2px,
+    transparent 2px,
+    #f7f9fa 8px
+  );
+}
+
+.card.premium h3 {
+  font-weight: 900;
+  color: #a855f7;
+  letter-spacing: 1px;;
+}
+
+.card.premium {
+  background-size: 400% 400%;
+  animation: gradient 120s ease infinite;
+}
+
+.clouds:before {
+  content: ' ';
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: url('/images/fluffy.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: 50% 0;
+  z-index: -1;
+  animation: opacity-animation 1s ease-in;
+  opacity: 1;
+}
+
+.section a {
+  color: #a855f7;
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+
+@keyframes gradient {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+}
+
+@media screen and (max-width: 1023px) {
+  .clouds:before {
+    background: none;
+  }
+  .section .cards {
+    flex-direction: column;
+  }
+  .section h2 {
+    font-size: 3rem;
+    padding: 2rem 0;
+  }
+  .card {
+    margin: 0 auto;
+    min-width: 480px;
+    max-width: 600px;
+  }
+}
+@media screen and (max-width: 767px) {
+  .card {
+    font-size: 0.875rem;
+    min-width: 240px;
+  }
+  .card h3 {
+    font-size: 0.875rem;
+  }
+}
