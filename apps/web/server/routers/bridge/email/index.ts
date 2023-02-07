@@ -49,6 +49,7 @@ async function findThread(ids: string[], channelId: string) {
   if (!ids || !ids.length) return null;
   for (const id of ids) {
     const thread = await linenApi.getThread(decodeURIComponent(id), channelId);
+    console.log(JSON.stringify(thread));
     if (thread) return thread;
   }
   return null;

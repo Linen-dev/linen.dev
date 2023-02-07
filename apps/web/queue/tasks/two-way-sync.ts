@@ -6,7 +6,7 @@ import { processEmailIntegration } from 'services/integrations/processEmailInteg
 
 export async function twoWaySync(payload: any, helpers: JobHelpers) {
   helpers.logger.info(JSON.stringify(payload));
-  const result = await twoWaySyncJob(payload);
+  const result = await twoWaySyncJob(payload, helpers.logger);
   helpers.logger.info(JSON.stringify(result));
 }
 
@@ -25,14 +25,11 @@ export type TwoWaySyncType = {
   messageId?: string;
 };
 
-async function twoWaySyncJob({
-  channelId,
-  messageId,
-  threadId,
-  id,
-  event,
-}: TwoWaySyncType) {
-  console.log({ event });
+async function twoWaySyncJob(
+  { channelId, messageId, threadId, id, event }: TwoWaySyncType,
+  logger: Logger
+) {
+  logger.info(JSON.stringify(event));
 
   const channel = await prisma.channels.findFirst({
     where: {

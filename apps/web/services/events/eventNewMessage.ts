@@ -60,5 +60,6 @@ export async function eventNewMessage({
     notificationListener({ ...event, communityId, mentions }),
   ];
 
-  await Promise.allSettled(promises);
+  const result = await Promise.allSettled(promises);
+  console.log(JSON.stringify(result));
 }
