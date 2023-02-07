@@ -11,6 +11,7 @@ import { TwoWaySyncType } from './tasks/two-way-sync';
 let instance: WorkerUtils | undefined;
 class WorkerSingleton {
   private static async createInstance() {
+    await downloadCert();
     return makeWorkerUtils({
       connectionString: getDatabaseUrl({
         dbUrl: process.env.DATABASE_URL,
