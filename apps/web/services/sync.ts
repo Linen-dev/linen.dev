@@ -11,6 +11,7 @@ import { discordSync } from './discord/sync';
 import { slackSyncWithFiles } from './slack/syncWithFiles';
 import prisma from '../client';
 import { skipNotification } from './slack/api/notification';
+import { getCommunityUrl } from 'serializers/account/settings';
 
 export enum SyncStatus {
   IN_PROGRESS = 'IN_PROGRESS',
@@ -22,27 +23,29 @@ export async function updateAndNotifySyncStatus(
   accountId: string,
   status: SyncStatus,
   accountName?: string | null,
-  homeUrl?: string | null
+  homeUrl?: string | null,
+  communityUrl?: string | null
 ) {
   await updateAccountSyncStatus(accountId, status);
 
-  await slackNotification(status, accountId, accountName || '', homeUrl || '');
-  await emailNotification(status, accountId, accountName || '', homeUrl || '');
+  await slackNotification(status, accountId, accountName || '', homeUrl || '', communityUrl || '');
+  await emailNotification(status, accountId, accountName || '', homeUrl || '', communityUrl || '');
 }
 
 async function emailNotification(
   status: SyncStatus,
   accountId: string,
   accountName: string,
-  homeUrl: string
+  homeUrl: string,
+  communityUrl: string,
 ) {
   if (skipNotification()) return;
   try {
     await ApplicationMailer.send({
       to: SUPPORT_EMAIL,
       subject: `Linen.dev - Sync progress is ${status} for account: ${accountId}`,
-      text: `Syncing process is ${status} for account:  ${accountId}, ${accountName}, ${homeUrl}`,
-      html: `Syncing process is ${status} for account:  ${accountId}, ${accountName}, ${homeUrl}`,
+      text: `Syncing process is ${status} for account:  ${accountId}, ${accountName}, ${homeUrl}, ${communityUrl}`,
+      html: `Syncing process is ${status} for account:  ${accountId}, ${accountName}, ${homeUrl}, ${communityUrl}`,
     }).catch((err) => {
       console.log('Failed to send Email notification', err);
     });
@@ -55,11 +58,12 @@ async function slackNotification(
   status: SyncStatus,
   accountId: string,
   accountName: string,
-  homeUrl: string
+  homeUrl: string,
+  communityUrl: string,
 ) {
   try {
     await sendNotification(
-      `Syncing process is ${status} for account: ${accountId}, ${accountName}, ${homeUrl}.`
+      `Syncing process is ${status} for account: ${accountId}, ${accountName}, ${homeUrl}, ${communityUrl}.`
     );
   } catch (e) {
     console.error('Failed to send Slack notification: ', e);

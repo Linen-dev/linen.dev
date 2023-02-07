@@ -39,7 +39,8 @@ export async function slackSync({
     accountId,
     SyncStatus.IN_PROGRESS,
     account.name,
-    account.homeUrl
+    account.homeUrl,
+    account.communityUrl,
   );
 
   try {
