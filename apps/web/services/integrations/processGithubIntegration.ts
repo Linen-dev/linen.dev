@@ -1,8 +1,8 @@
 import { channelsIntegration, Prisma, prisma } from '@linen/database';
 import axios from 'axios';
 import { TwoWaySyncEvent, TwoWaySyncType } from 'queue/tasks/two-way-sync';
-import { getIntegrationUrl } from 'utilities/domain';
-import { appendProtocol } from 'utilities/url';
+import { getIntegrationUrl } from '@linen/utilities/domain';
+import { appendProtocol } from '@linen/utilities/url';
 
 const LINEN_URL = appendProtocol(getIntegrationUrl());
 

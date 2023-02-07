@@ -1,5 +1,3 @@
-import type { NextApiRequest } from 'next';
-
 const LINEN_HOSTNAMES = [
   'localhost',
   'localhost:3000',
@@ -15,7 +13,7 @@ export function isLinenDomain(host?: string) {
   );
 }
 
-export function getCurrentUrl(request?: NextApiRequest) {
+export function getCurrentUrl(request?: any) {
   return (
     process.env.NEXTAUTH_URL ||
     request?.headers?.origin ||

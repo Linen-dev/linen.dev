@@ -3,9 +3,10 @@
   "private": true,
   "version": "1.0.0",
   "scripts": {
+    "with-env": "yarn dotenv -e ../../apps/web/.env",
     "build": "tsc --project tsconfig.json",
     "dev": "npm run build --watch",
-    "test": "jest",
+    "test": "yarn with-env jest",
     "test:watch": "jest --watch"
   },
   "dependencies": {
@@ -17,6 +18,7 @@
     "ts-jest": "^29.0.3"
   },
   "devDependencies": {
+    "dotenv-cli": "^6.0.0",
     "@types/marked": "^4.0.8",
     "typescript": "^4.9.3"
   },
@@ -30,7 +32,9 @@
     "./markdown": "./dist/markdown.js",
     "./object": "./dist/object.js",
     "./clipboard": "./dist/clipboard.js",
-    "./password": "./dist/password.js"
+    "./password": "./dist/password.js",
+    "./domain": "./dist/domain.js",
+    "./url": "./dist/url.js"
   },
   "typesVersions": {
     "*": {
@@ -63,6 +67,12 @@
       ],
       "password": [
         "dist/password.d.ts"
+      ],
+      "domain": [
+        "dist/domain.d.ts"
+      ],
+      "url": [
+        "dist/url.d.ts"
       ]
     }
   }

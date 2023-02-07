@@ -1,6 +1,6 @@
 import { AccountType } from '@linen/types';
 import { prisma } from '@linen/database';
-import { stripProtocol } from '../utilities/url';
+import { stripProtocol } from '@linen/utilities/url';
 
 interface FindAccountParams {
   redirectDomain: string;

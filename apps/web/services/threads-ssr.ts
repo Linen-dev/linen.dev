@@ -17,7 +17,7 @@ import {
   redirectThreadToDomain,
   shouldRedirectToDomain,
 } from 'utilities/redirects';
-import { qs } from 'utilities/url';
+import { qs } from '@linen/utilities/url';
 import { SerializedAccount } from '@linen/types';
 
 export async function threadGetServerSideProps(

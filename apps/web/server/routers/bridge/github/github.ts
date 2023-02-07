@@ -3,8 +3,8 @@ import LinenSdk from '@linen/sdk';
 import env from './config';
 import Serializer from './serializer';
 import * as GitHubTypes from '@octokit/webhooks-types';
-import { appendProtocol } from 'utilities/url';
-import { getIntegrationUrl } from 'utilities/domain';
+import { appendProtocol } from '@linen/utilities/url';
+import { getIntegrationUrl } from '@linen/utilities/domain';
 
 const githubApp = new App({
   appId: env.GITHUB_APP_ID,

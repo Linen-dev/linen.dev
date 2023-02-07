@@ -6,7 +6,7 @@ import ColorField from 'components/ColorField';
 import LogoField from './LogoField';
 import { Label } from '@linen/ui';
 import Table, { Thead, Tbody, Th, Td } from 'components/Table';
-import { stripProtocol } from 'utilities/url';
+import { stripProtocol } from '@linen/utilities/url';
 import classNames from 'classnames';
 import React, { useEffect, useState } from 'react';
 import { Toast } from '@linen/ui';

@@ -1,7 +1,7 @@
 import { sleep } from 'utilities/retryPromises';
 import { SECONDS } from './constrains';
 import axios from 'axios';
-import { qs } from 'utilities/url';
+import { qs } from '@linen/utilities/url';
 import {
   DiscordChannel,
   DiscordActiveThreads,

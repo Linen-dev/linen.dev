@@ -21,7 +21,7 @@ import {
   resolveCrawlerRedirect,
   shouldRedirectToDomain,
 } from 'utilities/redirects';
-import { qs } from 'utilities/url';
+import { qs } from '@linen/utilities/url';
 import { z } from 'zod';
 import type { channelNextPageType } from './channel.types';
 

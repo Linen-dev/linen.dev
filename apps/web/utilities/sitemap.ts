@@ -1,7 +1,7 @@
 import type { accounts, channels } from '@linen/database';
 import { SitemapIndexStream, SitemapStream, streamToPromise } from 'sitemap';
 import { Readable } from 'stream';
-import { appendProtocol } from './url';
+import { appendProtocol } from '@linen/utilities/url';
 import {
   findChannelByNameAndHost,
   findThreadsByChannelAndCursor,

@@ -8,7 +8,7 @@ import PermissionsService from 'services/permissions';
 import { NotFound, RedirectTo } from 'utilities/response';
 import serializeAccount from 'serializers/account';
 import serializeChannel from 'serializers/channel';
-import { qs } from 'utilities/url';
+import { qs } from '@linen/utilities/url';
 
 export async function getSettingsServerSideProps(
   context: GetServerSidePropsContext,

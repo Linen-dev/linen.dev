@@ -1,5 +1,5 @@
 import { NextURL } from 'next/dist/server/web/next-url';
-import { isSubdomainbasedRouting } from 'utilities/domain';
+import { isSubdomainbasedRouting } from '@linen/utilities/domain';
 
 export const getCommunityName = (isProd: boolean, hostname: string | null) => {
   if (isProd) {

@@ -9,7 +9,7 @@ import Session from 'services/session';
 import serializeAccount from 'serializers/account';
 import serializeChannel from 'serializers/channel';
 import serializeUser from 'serializers/user';
-import { qs } from 'utilities/url';
+import { qs } from '@linen/utilities/url';
 
 export async function feedGetServerSideProps(
   context: GetServerSidePropsContext,
