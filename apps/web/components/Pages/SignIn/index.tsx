@@ -5,7 +5,7 @@ import storage from '@linen/utilities/storage';
 import Error from 'components/Auth/Error';
 import PasswordField from 'components/PasswordField';
 import { useState } from 'react';
-import { qs } from 'utilities/url';
+import { qs } from '@linen/utilities/url';
 import {
   AnchorCss,
   onSignInSubmit,

@@ -6,7 +6,7 @@ import { testApiHandler } from 'next-test-api-route-handler';
 import { accounts, auths } from '@linen/database';
 import handler from 'pages/api/api-keys/[[...slug]]';
 import { createKeyType, revokeKeyType } from './api-keys.types';
-import { qs } from 'utilities/url';
+import { qs } from '@linen/utilities/url';
 
 describe('api-keys endpoints', () => {
   const store = {

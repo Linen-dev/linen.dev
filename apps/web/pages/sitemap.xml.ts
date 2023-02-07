@@ -2,7 +2,7 @@ import {
   createSitemapForLinen,
   createSitemapForPremium,
 } from 'utilities/sitemap';
-import { isLinenDomain, isSubdomainNotAllowed } from 'utilities/domain';
+import { isLinenDomain, isSubdomainNotAllowed } from '@linen/utilities/domain';
 import { GetServerSideProps } from 'next/types';
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {

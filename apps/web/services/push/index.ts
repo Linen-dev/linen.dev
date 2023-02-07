@@ -1,5 +1,5 @@
 import request from 'superagent';
-import { getPushUrlSSR } from 'utilities/domain';
+import { getPushUrlSSR } from '@linen/utilities/domain';
 
 const token = process.env.PUSH_SERVICE_KEY;
 

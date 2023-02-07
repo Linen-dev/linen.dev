@@ -1,6 +1,6 @@
 import { createSitemapForPremiumByChannel } from 'utilities/sitemap';
 import { GetServerSideProps } from 'next/types';
-import { isSubdomainNotAllowed } from 'utilities/domain';
+import { isSubdomainNotAllowed } from '@linen/utilities/domain';
 
 export const getServerSideProps: GetServerSideProps = async ({
   req,

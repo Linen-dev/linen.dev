@@ -4,7 +4,7 @@ import Link from 'next/link';
 import classNames from 'classnames';
 import SearchBar from 'components/search/SearchBar';
 import JoinButton from 'components/JoinButton';
-import { addHttpsToUrl } from 'utilities/url';
+import { addHttpsToUrl } from '@linen/utilities/url';
 import { pickTextColorBasedOnBgColor } from 'utilities/colors';
 import { Permissions, SerializedAccount } from '@linen/types';
 import { SerializedChannel, Settings } from '@linen/types';

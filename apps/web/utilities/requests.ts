@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { qs } from './url';
+import { qs } from '@linen/utilities/url';
 import useSWR from 'swr';
 import isBrowser from './isBrowser';
 import type { SerializedMessage, SerializedThread } from '@linen/types';

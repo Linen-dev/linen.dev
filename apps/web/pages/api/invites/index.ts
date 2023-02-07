@@ -1,4 +1,4 @@
-import { getCurrentUrl } from 'utilities/domain';
+import { getCurrentUrl } from '@linen/utilities/domain';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { createInvitation, updateInvitation } from 'services/invites';
 import PermissionsService from 'services/permissions';

@@ -20,7 +20,7 @@ import {
 } from 'utilities/auth/server/cookies';
 import { joinCommunityAfterSignIn } from 'services/invites';
 import { createCSRFToken } from 'utilities/auth/server/csrf';
-import { qs } from 'utilities/url';
+import { qs } from '@linen/utilities/url';
 import jwtMiddleware from 'server/middlewares/jwt';
 import { SessionType } from 'services/session';
 import { Unauthorized } from 'server/exceptions';

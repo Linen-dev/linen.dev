@@ -1,7 +1,7 @@
 import type { accounts } from '@linen/database';
 import { Settings, SerializedChannel } from '@linen/types';
 import { RedirectTo } from './response';
-import { appendProtocol } from './url';
+import { appendProtocol } from '@linen/utilities/url';
 
 export function resolveCrawlerRedirect({
   isSubdomainbasedRouting,

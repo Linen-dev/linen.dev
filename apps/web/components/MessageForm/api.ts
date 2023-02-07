@@ -1,7 +1,7 @@
 import { get } from 'utilities/http';
 import axios, { AxiosRequestConfig } from 'axios';
 import debounce from '@linen/utilities/debounce';
-import { qs } from 'utilities/url';
+import { qs } from '@linen/utilities/url';
 
 const debouncedFetchMentions = debounce(
   (term: string, communityId: string) =>

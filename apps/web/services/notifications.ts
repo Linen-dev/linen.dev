@@ -8,8 +8,8 @@ import {
 import NotificationMailer from 'mailers/NotificationMailer';
 import { createMailingJob, createNewEventJob } from 'queue/jobs';
 import { getCommunityUrl } from 'serializers/account/settings';
-import { getLinenUrl } from 'utilities/domain';
-import { appendProtocol } from 'utilities/url';
+import { getLinenUrl } from '@linen/utilities/domain';
+import { appendProtocol } from '@linen/utilities/url';
 import React from 'react';
 import * as ReactDOMServer from 'react-dom/server';
 import { Message } from '@linen/ui';

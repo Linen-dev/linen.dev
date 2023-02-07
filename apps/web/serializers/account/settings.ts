@@ -1,7 +1,7 @@
 import { accounts } from '@linen/database';
 import { ChatType, CommunityType, Settings } from '@linen/types';
-import { appendProtocol } from 'utilities/url';
-import { getLinenUrl } from 'utilities/domain';
+import { appendProtocol } from '@linen/utilities/url';
+import { getLinenUrl } from '@linen/utilities/domain';
 
 function buildInviteUrl(account: accounts, communityType: CommunityType) {
   if (account.communityInviteUrl) {

@@ -3,7 +3,7 @@ import { useS3Upload } from 'next-s3-upload';
 import { useRef, useState } from 'react';
 import { SerializedAccount } from '@linen/types';
 import { Toast } from '@linen/ui';
-import { qs } from 'utilities/url';
+import { qs } from '@linen/utilities/url';
 
 const fail = () => Toast.error('Something went wrong');
 
@@ -68,9 +68,9 @@ export default function SlackImportRow({
         <div className="mt-2 sm:flex sm:items-start sm:justify-between">
           <div className="max-w-xl text-sm text-gray-500">
             <p>
-              You can import all your public channel conversations
-              beyond 90 days from Slack (even on free tier). See
-              instructions on how to export it{' '}
+              You can import all your public channel conversations beyond 90
+              days from Slack (even on free tier). See instructions on how to
+              export it{' '}
               <a
                 rel="noreferrer"
                 href="https://slack.com/help/articles/201658943-Export-your-workspace-data"

@@ -6,7 +6,7 @@ import { createUser } from '__tests__/login';
 import handler from 'pages/api/threads/[[...slug]]';
 import { attachHeaders } from '__tests__/pages/api/auth/login';
 import { v4 } from 'uuid';
-import { qs } from 'utilities/url';
+import { qs } from '@linen/utilities/url';
 import { AccountType, ChatType } from '@linen/types';
 import mockThreadsServices from 'services/threads';
 import { postType } from './types';

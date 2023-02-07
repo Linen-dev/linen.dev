@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import LinenSdk, { integrationMiddleware } from '@linen/sdk';
-import { appendProtocol } from 'utilities/url';
-import { getIntegrationUrl } from 'utilities/domain';
+import { appendProtocol } from '@linen/utilities/url';
+import { getIntegrationUrl } from '@linen/utilities/domain';
 import { v4 } from 'uuid';
 import nodemailer from 'nodemailer';
 import { cleanUpQuotedEmail, extractEmail } from './parser';

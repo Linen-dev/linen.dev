@@ -1,5 +1,5 @@
 import { Prisma, prisma } from '@linen/database';
-import { stripProtocol } from '../utilities/url';
+import { stripProtocol } from '@linen/utilities/url';
 import { AccountWithSlackAuthAndChannels } from '../types/partialTypes';
 
 export const createMessageWithMentions = async (

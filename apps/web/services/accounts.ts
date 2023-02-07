@@ -1,5 +1,5 @@
 import { prisma, users, Prisma } from '@linen/database';
-import { stripProtocol } from 'utilities/url';
+import { stripProtocol } from '@linen/utilities/url';
 import { generateRandomWordSlug } from 'utilities/randomWordSlugs';
 import { getAccountById } from 'lib/models';
 import { AccountType, ChatType, Roles, AccountIntegration } from '@linen/types';
@@ -8,7 +8,7 @@ import { encrypt } from 'utilities/crypto';
 import { v4 } from 'uuid';
 import { createAccountEvent } from './customerIo/trackEvents';
 import { createInvitation } from './invites';
-import { getCurrentUrl } from 'utilities/domain';
+import { getCurrentUrl } from '@linen/utilities/domain';
 import { unique } from 'utilities/util';
 
 export default class AccountsService {
