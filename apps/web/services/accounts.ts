@@ -3,7 +3,7 @@ import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import { stripProtocol } from 'utilities/url';
 import { generateRandomWordSlug } from 'utilities/randomWordSlugs';
 import { getAccountById } from 'lib/models';
-import { AccountType, ChatType, Roles } from '@linen/types';
+import { AccountType, ChatType, Roles, AccountIntegration } from '@linen/types';
 import { eventNewIntegration } from './events/eventNewIntegration';
 import { encrypt } from 'utilities/crypto';
 import { v4 } from 'uuid';
@@ -245,6 +245,7 @@ export default class AccountsService {
       where: { id: accountId },
       data: {
         discordServerId,
+        integration: AccountIntegration.DISCORD,
       },
     });
 
