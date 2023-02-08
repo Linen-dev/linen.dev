@@ -157,6 +157,7 @@ export interface SerializedThread {
   lastReplyAt: string;
   messages: SerializedMessage[];
   channel: SerializedChannel | null;
+  resolutionId: string | null;
 }
 
 export interface SerializedReadStatus {
