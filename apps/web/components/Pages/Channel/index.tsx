@@ -231,8 +231,32 @@ export default function Channel(props: ChannelProps) {
   const auth = permissions.auth || null;
   const authId = auth?.id;
 
-  function updateUserThreadStatusesOnWebsocketEvents(payload: any) {
-    console.log(payload);
+  async function updateUserThreadStatusesOnWebsocketEvents(payload: any) {
+    const channelId = payload.channel_id;
+    const threadId = payload.thread_id;
+    if (
+      status === ThreadStatus.UNREAD &&
+      threadId &&
+      currentChannel.id === channelId
+    ) {
+      const thread = threads.find((thread) => thread.id === threadId);
+      if (!thread) {
+        // get full thread from an endpoint and push it to threads
+        try {
+          const thread = await fetch(
+            `/api/threads/${threadId}?accountId=${currentCommunity.id}`,
+            {
+              method: 'GET',
+            }
+          ).then((response) => response.json());
+          setThreads((threads) => [...threads, thread]);
+        } catch (exception) {
+          if (process.env.NODE_ENV === 'development') {
+            console.error(exception);
+          }
+        }
+      }
+    }
   }
 
   useWebsockets({
@@ -289,7 +313,7 @@ export default function Channel(props: ChannelProps) {
         updateUserThreadStatusesOnWebsocketEvents(payload);
       }
 
-      if (payload.is_thread) {
+      if (payload.is_thread && status === ThreadStatus.UNREAD) {
         const threadId = payload.thread_id;
         const imitationId = payload.imitation_id;
         const thread: SerializedThread =
