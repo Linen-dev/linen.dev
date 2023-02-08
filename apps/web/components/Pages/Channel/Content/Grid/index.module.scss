@@ -1,9 +1,11 @@
 @import 'styles/colors.scss';
 
-.li:hover {
-  background: $color-gray-50;
-  cursor: pointer;
-  width: 100%;
+.mouse {
+  .li:hover {
+    background: $color-gray-50;
+    cursor: pointer;
+    width: 100%;
+  }
 }
 
 .li.active {

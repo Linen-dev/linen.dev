@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import { Line } from '@linen/ui';
 import {
   Permissions,
+  Priority,
   ReminderTypes,
   SerializedReadStatus,
   SerializedThread,
@@ -12,6 +13,7 @@ import {
   ThreadStatus,
 } from '@linen/types';
 import { Mode } from '@linen/hooks/mode';
+import usePriority from '@linen/hooks/priority';
 import styles from './index.module.scss';
 
 enum RowType {
@@ -111,9 +113,12 @@ export default function Grid({
   const sorted = rows.sort((a, b) => {
     return a.timestamp - b.timestamp;
   });
+  const { priority } = usePriority();
 
   return (
-    <>
+    <div
+      className={classNames({ [styles.mouse]: priority === Priority.MOUSE })}
+    >
       {sorted.map((item, index) => {
         if (item.type === RowType.ReadStatus) {
           return (
@@ -173,7 +178,7 @@ export default function Grid({
           );
         }
       })}
-    </>
+    </div>
   );
 }
 
