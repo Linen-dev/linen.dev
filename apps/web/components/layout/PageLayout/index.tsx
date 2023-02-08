@@ -107,7 +107,6 @@ function PageLayout({
       {seo && <SEO {...seo} />}
       <div className="flex flex-col lg:flex-row">
         <NavBar
-          key={currentChannel?.channelName || ''}
           mode={mode}
           channels={channels}
           communities={communities}
