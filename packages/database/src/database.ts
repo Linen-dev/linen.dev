@@ -12,7 +12,9 @@ const isSsl = () => process.env.RDS_CERTIFICATE;
 const AWS_CERT_URL =
   'https://s3.amazonaws.com/rds-downloads/rds-ca-2019-root.pem';
 
-const certOut = `${os.tmpdir()}/rds-ca-2019-root.pem`;
+const certOut = `${
+  typeof window === 'undefined' ? os.tmpdir() : '/tmp'
+}/rds-ca-2019-root.pem`;
 
 function isFileExist() {
   if (!fs.existsSync(certOut)) throw 'pem not found';
