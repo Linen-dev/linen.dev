@@ -560,4 +560,10 @@ export default async function createLinenCommunity() {
       },
     },
   });
+  await prisma.channels.createMany({
+    data: [...(Array(20).keys() as any)].map((index) => ({
+      accountId: community.id,
+      channelName: `team-${index + 1}`,
+    })),
+  });
 }
