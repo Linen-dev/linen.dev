@@ -72,7 +72,6 @@ model threads {
 
   notifications notifications[]
   page          Int?
-  messagesId    String?
 
   @@unique([externalThreadId])
   @@unique([incrementId])
