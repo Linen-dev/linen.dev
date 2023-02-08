@@ -70,5 +70,6 @@ export function createThreadImitation({
     title: null,
     state: ThreadState.OPEN,
     pinned: false,
+    resolutionId: null,
   };
 }
