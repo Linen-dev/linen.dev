@@ -14,7 +14,7 @@ import {
 } from '@linen/types';
 import { copyToClipboard } from '@linen/utilities/clipboard';
 import { GoPin } from 'react-icons/go';
-import { AiOutlinePaperClip } from 'react-icons/ai';
+import { AiOutlinePaperClip, AiOutlineHighlight } from 'react-icons/ai';
 import { RxDragHandleDots2 } from 'react-icons/rx';
 import { FiClock, FiThumbsUp, FiTrash2 } from 'react-icons/fi';
 import { FaVolumeMute } from 'react-icons/fa';
@@ -38,6 +38,7 @@ interface Props {
   onMute?(threadId: string): void;
   onUnmute?(threadId: string): void;
   onPin?(threadId: string): void;
+  onResolution?(threadId: string, messageId: string): void;
   onReaction?({
     threadId,
     messageId,
@@ -90,6 +91,7 @@ export default function Actions({
   onMute,
   onUnmute,
   onPin,
+  onResolution,
   onReaction,
   onRead,
   onRemind,
@@ -227,6 +229,21 @@ export default function Actions({
             <Tooltip className={styles.tooltip} text="Pin">
               <GoPin
                 className={classNames({ [styles.active]: thread.pinned })}
+              />
+            </Tooltip>
+          </li>
+        )}
+        {onResolution && (
+          <li
+            onClick={(event) => {
+              event.stopPropagation();
+              event.preventDefault();
+              onResolution(thread.id, message.id);
+            }}
+          >
+            <Tooltip className={styles.tooltip} text="Mark resolution">
+              <AiOutlineHighlight
+                className={classNames({ [styles.active]: thread.resolutionId === message.id })}
               />
             </Tooltip>
           </li>

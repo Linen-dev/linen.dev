@@ -84,7 +84,7 @@ class ThreadsServices {
     return serializeThread(thread);
   }
 
-  static async update({ id, state, title, pinned, accountId }: UpdateType) {
+  static async update({ id, state, title, pinned, accountId, resolutionId }: UpdateType) {
     const exist = await prisma.threads.findFirst({
       where: { id, channel: { accountId } },
     });
@@ -100,6 +100,7 @@ class ThreadsServices {
           state,
           closeAt: state === ThreadState.CLOSE ? new Date().getTime() : null,
         }),
+        resolutionId
       },
     });
     if (exist.state !== thread.state) {

@@ -4,6 +4,21 @@
   padding: 1rem;
 }
 
+.resolution {
+  background-color: $color-green-50;
+}
+
+.resolutionLabel {
+  font-size: 10px;
+  border-radius: 1rem;
+  font-weight: bold;
+  background-color: $color-green-600;
+  color: white;
+  margin: 0.5rem 0 0.5rem;
+  padding: 0.25rem 0.5rem;
+  width: fit-content
+}
+
 .row {
   display: flex;
   gap: 0.75rem;

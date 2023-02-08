@@ -38,6 +38,7 @@ interface Props {
   onMute?(threadId: string): void;
   onUnmute?(threadId: string): void;
   onPin?(threadId: string): void;
+  onResolution?(threadId: string, messageId: string): void;
   onReaction?({
     threadId,
     messageId,
@@ -74,15 +75,18 @@ export function Row({
   onMute,
   onUnmute,
   onPin,
+  onResolution,
   onReaction,
   onRead,
   onRemind,
   onUnread,
 }: Props) {
   const top = !isPreviousMessageFromSameUser;
+  const isResolution = thread.resolutionId === message.id
+  const resolutionStyle = isResolution ? styles.resolution: {};
   return (
     <div
-      className={classNames(className, styles.container, {
+      className={classNames(className, styles.container, resolutionStyle, {
         [styles.top]: top,
       })}
     >
@@ -128,7 +132,11 @@ export function Row({
               attachments={message.attachments}
               currentUser={currentUser}
               onLoad={onLoad}
+              isResolution={thread.resolutionId === message.id}
             />
+            {isResolution && (
+              <div className={styles.resolutionLabel}>Marked as resolution</div>
+            )}
             {footer}
           </div>
         </div>
@@ -147,6 +155,7 @@ export function Row({
           onMute={onMute}
           onUnmute={onUnmute}
           onPin={onPin}
+          onResolution={onResolution}
           onReaction={onReaction}
           onRead={onRead}
           onRemind={onRemind}

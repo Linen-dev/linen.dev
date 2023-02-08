@@ -64,6 +64,7 @@ interface Props {
     type: string;
     active: boolean;
   }): void;
+  onResolution?(threadId: string, messageId: string): void;
 }
 
 export default function Thread({
@@ -86,6 +87,7 @@ export default function Thread({
   onMount,
   onReaction,
   onMessage,
+  onResolution,
 }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const [progress, setProgress] = useState(0);
@@ -196,6 +198,7 @@ export default function Thread({
           onDelete={onDelete}
           onReaction={onReaction}
           onLoad={handleScroll}
+          onResolution={onResolution}
         />
 
         <div className={styles.footer}>

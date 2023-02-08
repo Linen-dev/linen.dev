@@ -38,6 +38,7 @@ interface Props {
   onMute?(threadId: string): void;
   onUnmute?(threadId: string): void;
   onPin?(threadId: string): void;
+  onResolution?(threadId: string, messageId: string): void;
   onReaction?({
     threadId,
     messageId,
@@ -81,6 +82,7 @@ export default function ChannelRow({
   onMute,
   onUnmute,
   onPin,
+  onResolution,
   onReaction,
   onRead,
   onRemind,
@@ -117,6 +119,7 @@ export default function ChannelRow({
           onMute={onMute}
           onUnmute={onUnmute}
           onPin={onPin}
+          onResolution={onResolution}
           onReaction={onReaction}
           onRead={onRead}
           onRemind={onRemind}

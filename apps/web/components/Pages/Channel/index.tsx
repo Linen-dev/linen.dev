@@ -487,6 +487,27 @@ export default function Channel(props: ChannelProps) {
       });
   }
 
+  async function markMessageAsResolution(threadId: string, messageId: string) {
+    setThreads((threads) => {
+      return threads.map((thread) => {
+        if (thread.id === threadId) {
+          return { ...thread, resolutionId: messageId };
+        }
+        return thread;
+      });
+    });
+
+    return api
+      .updateThread({
+        id: threadId,
+        resolutionId: messageId,
+        accountId: settings.communityId,
+      })
+      .catch((_) => {
+        Toast.error('Failed to mark as resolution');
+      });
+  }
+
   async function sendReaction({
     threadId,
     messageId,
@@ -922,6 +943,7 @@ export default function Channel(props: ChannelProps) {
         muteThread={muteThread}
         unmuteThread={unmuteThread}
         pinThread={pinThread}
+        markMessageAsResolution={markMessageAsResolution}
         readThread={readThread}
         unreadThread={unreadThread}
         onMessage={onThreadMessage}

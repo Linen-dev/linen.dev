@@ -16,6 +16,7 @@ interface Props {
   currentUser: SerializedUser | null;
   mode?: Mode;
   onDelete?(messageId: string): void;
+  onResolution?(threadId: string, messageId: string): void;
   onLoad?(): void;
   onReaction?({
     threadId,
@@ -41,6 +42,7 @@ function Messages({
   onDelete,
   onLoad,
   onReaction,
+  onResolution,
 }: Props) {
   const { messages } = thread;
   const elements = messages.map((message, index) => {
@@ -66,6 +68,7 @@ function Messages({
           onDelete={onDelete}
           onLoad={onLoad}
           onReaction={onReaction}
+          onResolution={onResolution}
         />
       </div>
     );

@@ -47,19 +47,22 @@ enum MessageFormat {
 }
 
 model threads {
-  id                  String      @id @default(uuid())
-  incrementId         Int         @default(autoincrement())
-  channel             channels    @relation(fields: [channelId], references: [id])
-  externalThreadId    String?
-  viewCount           Int         @default(0)
-  slug                String?
-  messageCount        Int         @default(1)
-  sentAt              BigInt
-  hidden              Boolean     @default(false)
-  title               String?
-  state               ThreadState @default(OPEN)
-  pinned              Boolean     @default(false)
-  messages            messages[]
+  id               String      @id @default(uuid())
+  incrementId      Int         @default(autoincrement())
+  channel          channels    @relation(fields: [channelId], references: [id])
+  externalThreadId String?
+  viewCount        Int         @default(0)
+  slug             String?
+  messageCount     Int         @default(1)
+  sentAt           BigInt
+  hidden           Boolean     @default(false)
+  title            String?
+  state            ThreadState @default(OPEN)
+  pinned           Boolean     @default(false)
+  messages         messages[]
+  //resolution points to a message
+  resolutionId     String?
+
   channelId           String
   lastReplyAt         BigInt?
   closeAt             BigInt?
@@ -69,6 +72,7 @@ model threads {
 
   notifications notifications[]
   page          Int?
+  messagesId    String?
 
   @@unique([externalThreadId])
   @@unique([incrementId])
@@ -243,7 +247,7 @@ model users {
   channelsIntegrationCreated channelsIntegration[] @relation("createdBy")
   channelsIntegrationUpdated channelsIntegration[] @relation("updatedBy")
 
-  userThreadStatus    userThreadStatus[]
+  userThreadStatus userThreadStatus[]
 
   @@unique([externalUserId, accountsId])
   @@index([authsId])
@@ -374,14 +378,14 @@ model readStatus {
 
 model userThreadStatus {
   userId    String
-  user      users   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      users     @relation(fields: [userId], references: [id], onDelete: Cascade)
   threadId  String
-  thread    threads @relation(fields: [threadId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  thread    threads   @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
   muted     Boolean
   read      Boolean
-  reminder  Boolean @default(false)
+  reminder  Boolean   @default(false)
   remindAt  DateTime?
 
   @@id([userId, threadId])

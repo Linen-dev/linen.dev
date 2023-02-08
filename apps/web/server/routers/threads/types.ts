@@ -30,6 +30,7 @@ export const putSchema = z.object({
   state: z.enum([ThreadState.OPEN, ThreadState.CLOSE]).optional(),
   title: z.string().optional(),
   pinned: z.boolean().optional(),
+  resolutionId: z.string().uuid().optional(),
 });
 export type putType = z.infer<typeof putSchema>;
 
