@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Priority } from '@linen/types';
 
 function usePriority() {
-  const [priority, setPriority] = useState(Priority.MOUSE);
+  const [priority, setPriority] = useState(Priority.KEYBOARD);
   useEffect(() => {
     const onMouseAction = () => {
       setPriority(Priority.MOUSE);

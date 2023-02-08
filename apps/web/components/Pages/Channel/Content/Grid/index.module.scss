@@ -1,15 +1,19 @@
 @import 'styles/colors.scss';
 
-.mouse {
-  .li:hover {
-    background: $color-gray-50;
-    cursor: pointer;
-    width: 100%;
-  }
-}
 
+.li {
+  border: 1px solid transparent;
+  transition: border-color 0.1s ease-in, background 0.1s ease-in;
+}
 .li.active {
   background: $color-gray-50;
+}
+
+.mouse {
+  .li:hover {
+    border-color: $color-gray-200;
+    cursor: pointer;
+  }
 }
 
 .line {
