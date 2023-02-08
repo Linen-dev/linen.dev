@@ -23,6 +23,7 @@
     "./keyboard": "./dist/keyboard.js",
     "./mode": "./dist/mode.js",
     "./polling": "./dist/polling.js",
+    "./priority": "./dist/priority.js",
     "./resize": "./dist/resize.js",
     "./websockets": "./dist/websockets/index.js",
     "./websockets/feed": "./dist/websockets/feed.js",
@@ -41,6 +42,9 @@
       ],
       "polling": [
         "dist/polling.d.ts"
+      ],
+      "priority": [
+        "dist/priority.d.ts"
       ],
       "resize": [
         "dist/resize.d.ts"

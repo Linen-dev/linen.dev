@@ -59,6 +59,11 @@ export enum ReminderTypes {
   NEXT_WEEK = 'next-week',
 }
 
+export enum Priority {
+  MOUSE,
+  KEYBOARD,
+}
+
 export interface SerializedUserThreadStatus {
   threadId: string;
   userId: string;
