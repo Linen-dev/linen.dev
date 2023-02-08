@@ -232,34 +232,7 @@ export default function Channel(props: ChannelProps) {
   const authId = auth?.id;
 
   function updateUserThreadStatusesOnWebsocketEvents(payload: any) {
-    const threadId = payload.thread_id;
-    if (!threadId) {
-      return;
-    }
-    // TODO show the thread again if you got a new message or mention
-    // from a message from this channel
-    // setUserThreadStatuses((statuses) => {
-    //   return statuses.map((status) => {
-    //     if (status.threadId === threadId) {
-    //       if (
-    //         status.muted &&
-    //         payload.is_mention &&
-    //         payload.user_id === authId
-    //       ) {
-    //         return {
-    //           ...status,
-    //           muted: false,
-    //         };
-    //       } else if (status.read) {
-    //         return {
-    //           ...status,
-    //           read: false,
-    //         };
-    //       }
-    //     }
-    //     return status;
-    //   });
-    // });
+    console.log(payload);
   }
 
   useWebsockets({

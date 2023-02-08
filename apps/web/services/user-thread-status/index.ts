@@ -6,7 +6,6 @@ class UserThreadStatusService {
       where: {
         threadId,
         read: true,
-        muted: false,
       },
     });
   }
@@ -24,7 +23,6 @@ class UserThreadStatusService {
         userId: {
           in: userIds,
         },
-        read: false,
         muted: true,
       },
     });
@@ -37,6 +35,7 @@ class UserThreadStatusService {
       from threads as t
       join channels as c on t."channelId" = c.id
       where c.id = ${channelId}
+      ON CONFLICT DO NOTHING
     `;
   }
 }
