@@ -482,7 +482,7 @@ export default function Channel({
                   {threads.length === 0 ? (
                     <Empty status={status} loading={isLoading} />
                   ) : (
-                    <div className={styles.full}>
+                    <div className={styles.full} key={status}>
                       <ul className="divide-y w-full">
                         <Grid
                           threads={threads}
