@@ -88,7 +88,9 @@ async function handleCommon(
     throw new Error('Missing installation data');
   }
   // identify channel
-  const channel = await linenSdk.getChannel(String(payload.installation.id));
+  const channel = await linenSdk.getChannel({
+    integrationId: String(payload.installation.id),
+  });
   if (!channel) {
     throw new Error('channel not found');
   }
@@ -131,7 +133,10 @@ async function handleIssueCommentCreated(
   const { channel, externalThreadId } = await handleCommon(payload);
   const user = await handleUser(payload.comment.user, channel);
 
-  const thread = await linenSdk.getThread(externalThreadId, channel.id);
+  const thread = await linenSdk.getThread({
+    externalThreadId,
+    channelId: channel.id,
+  });
   if (!thread) {
     throw new Error('thread not found');
   }

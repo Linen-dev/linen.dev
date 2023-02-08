@@ -57,7 +57,7 @@ module.exports.handler = async function (event, context, callback) {
     console.log('attachments:', parsed.attachments);
 
     const instance = await buildAxios();
-    await instance.post(URL, parsed);
+    await instance.post(`${URL}/api/bridge/email/in`, parsed);
     callback(null, null);
   } catch (err) {
     console.log(err, err.stack);

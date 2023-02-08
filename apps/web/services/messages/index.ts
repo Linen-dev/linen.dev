@@ -2,7 +2,14 @@ import serializeMessage from 'serializers/message';
 import { find, parse } from '@linen/ast';
 import { eventNewMessage } from 'services/events';
 import { Prisma, prisma } from '@linen/database';
-import { MessageFormat } from '@linen/types';
+import {
+  messageFindResponseType,
+  messageFindType,
+  MessageFormat,
+  messageGetResponseType,
+  messageGetType,
+  messagePutType,
+} from '@linen/types';
 import { v4 as uuid } from 'uuid';
 import unique from 'lodash.uniq';
 import { UploadedFile } from '@linen/types';
@@ -189,5 +196,48 @@ export default class MessagesService {
     }
 
     return { ok: true };
+  }
+
+  static async find({
+    channelId,
+    externalMessageId,
+    threadId,
+    where,
+  }: messageFindType): Promise<messageFindResponseType> {
+    return await prisma.messages.findFirst({
+      select: { threadId: true, id: true, externalMessageId: true },
+      where: {
+        ...(externalMessageId && { externalMessageId }),
+        channelId,
+        threadId,
+        ...(where?.externalMessageId && { externalMessageId: {} }),
+      },
+      ...(where?.sort &&
+        where?.order && {
+          orderBy: { [where.sort]: where.order },
+        }),
+    });
+  }
+
+  static async getOne({
+    messageId,
+  }: messageGetType): Promise<messageGetResponseType> {
+    return await prisma.messages.findUnique({
+      where: { id: messageId },
+      select: {
+        body: true,
+        channelId: true,
+        externalMessageId: true,
+        threadId: true,
+        author: { select: { displayName: true } },
+      },
+    });
+  }
+
+  static async update({ messageId, externalMessageId }: messagePutType) {
+    return await prisma.messages.update({
+      where: { id: messageId },
+      data: { externalMessageId },
+    });
   }
 }
