@@ -132,7 +132,6 @@ export function Row({
               attachments={message.attachments}
               currentUser={currentUser}
               onLoad={onLoad}
-              isResolution={thread.resolutionId === message.id}
             />
             {isResolution && (
               <div className={styles.resolutionLabel}>Marked as resolution</div>

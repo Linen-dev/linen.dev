@@ -112,7 +112,6 @@ export function Row({
               reactions={message.reactions}
               attachments={message.attachments}
               currentUser={currentUser}
-              isResolution={thread.resolutionId === message.id}
             />
             {footer}
             {/* <div className={styles.actions}>

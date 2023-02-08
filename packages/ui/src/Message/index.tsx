@@ -45,7 +45,6 @@ interface Props {
   attachments?: SerializedAttachment[];
   currentUser?: SerializedUser | null;
   onLoad?(): void;
-  isResolution: boolean;
 }
 
 const parsers = {
