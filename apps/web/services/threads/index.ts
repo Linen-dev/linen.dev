@@ -12,7 +12,12 @@ import {
 } from './metrics';
 import { createSlug } from 'utilities/util';
 import { GetType, FindType, UpdateType } from './types';
-import { MessageFormat, UploadedFile } from '@linen/types';
+import {
+  MessageFormat,
+  threadFindResponseType,
+  threadFindType,
+  UploadedFile,
+} from '@linen/types';
 import { v4 as uuid } from 'uuid';
 import { eventNewThread } from 'services/events';
 import { parse, find } from '@linen/ast';
@@ -239,16 +244,23 @@ class ThreadsServices {
     return serializedThread;
   }
 
-  static async findByExternalId({
+  static async findBy({
     externalThreadId,
     channelId,
-  }: {
-    externalThreadId: string;
-    channelId: string;
-  }) {
+    threadId,
+  }: threadFindType): Promise<threadFindResponseType> {
     return await prisma.threads.findFirst({
-      select: { id: true },
-      where: { externalThreadId, channelId },
+      select: {
+        id: true,
+        title: true,
+        externalThreadId: true,
+        messages: {
+          select: { author: { select: { displayName: true } } },
+          orderBy: { sentAt: 'asc' },
+          take: 1,
+        },
+      },
+      where: { externalThreadId, channelId, id: threadId },
     });
   }
 }

@@ -2,7 +2,7 @@ import { prisma } from '@linen/database';
 import type { JobHelpers, Logger } from 'graphile-worker';
 import { slackChatSync } from 'services/slack/api/postMessage';
 import { processGithubIntegration } from 'services/integrations/processGithubIntegration';
-import { processEmailIntegration } from 'services/integrations/processEmailIntegration';
+import { processEmailIntegration } from '@linen/integration-email';
 
 export async function twoWaySync(payload: any, helpers: JobHelpers) {
   helpers.logger.info(JSON.stringify(payload));

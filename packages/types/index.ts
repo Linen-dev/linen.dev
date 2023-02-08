@@ -236,15 +236,59 @@ export type threadPutType = z.infer<typeof threadPutSchema>;
 
 export const threadFindSchema = z.object({
   channelId: z.string().uuid(),
-  externalThreadId: z.string().min(1),
+  externalThreadId: z.string().min(1).optional(),
+  threadId: z.string().uuid().optional(),
 });
 export type threadFindType = z.infer<typeof threadFindSchema>;
+export type threadFindResponseType = {
+  id: string;
+  title: string | null;
+  externalThreadId: string | null;
+  messages: {
+    author: {
+      displayName: string | null;
+    } | null;
+  }[];
+} | null;
 
 export const channelGetSchema = z.object({
   channelId: z.string().uuid().optional(),
   integrationId: z.string().min(1).optional(),
 });
 export type channelGetType = z.infer<typeof channelGetSchema>;
+
+export const messageGetSchema = z.object({
+  messageId: z.string().uuid(),
+});
+export type messageGetType = z.infer<typeof messageGetSchema>;
+export type messageGetResponseType = {
+  body: string;
+  author: {
+    displayName: string | null;
+  } | null;
+  channelId: string;
+  externalMessageId: string | null;
+  threadId: string | null;
+} | null;
+
+export const messageFindSchema = z.object({
+  channelId: z.string().uuid(),
+  externalMessageId: z.string().min(1).optional(),
+  threadId: z.string().uuid().optional(),
+  where: z
+    .object({
+      sort: z.enum(['sentAt']).optional(),
+      order: z.enum(['asc', 'desc']).optional(),
+      externalMessageId: z.boolean().optional(),
+    })
+    .optional(),
+});
+export type messageFindType = z.infer<typeof messageFindSchema>;
+export type messageFindResponseType = {
+  externalMessageId: string | null;
+  threadId: string | null;
+  id: string;
+} | null;
 
 export const messagePostSchema = z.object({
   accountId: z.string().uuid(),
@@ -255,6 +299,12 @@ export const messagePostSchema = z.object({
   body: z.string().min(1),
 });
 export type messagePostType = z.infer<typeof messagePostSchema>;
+
+export const messagePutSchema = z.object({
+  messageId: z.string().uuid(),
+  externalMessageId: z.string().min(1).optional(),
+});
+export type messagePutType = z.infer<typeof messagePutSchema>;
 
 export const userPostSchema = z.object({
   externalUserId: z.string().min(1),

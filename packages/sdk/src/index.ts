@@ -1,5 +1,6 @@
 import axios, { Axios } from 'axios';
 import * as LinenTypes from '@linen/types';
+import { qs } from '@linen/utilities/url';
 export { integrationMiddleware } from './middleware';
 
 export default class Api {
@@ -44,23 +45,26 @@ export default class Api {
     });
   }
 
-  getChannel(
-    integrationId: string
-  ): Promise<{ id: string; accountId: string } | null> {
-    return this.get(`/channels?integrationId=${integrationId}`);
+  // channels ----
+
+  getChannel({
+    integrationId,
+  }: {
+    integrationId: string;
+  }): Promise<{ id: string; accountId: string } | null> {
+    return this.get(`/channels?${qs({ integrationId })}`);
   }
 
-  getThread(
-    externalThreadId: string,
-    channelId: string
-  ): Promise<{ id: string } | null> {
+  // threads -----
+
+  getThread({
+    externalThreadId,
+    channelId,
+    threadId,
+  }: LinenTypes.threadFindType): Promise<LinenTypes.threadFindResponseType> {
     return this.get(
-      `/threads?externalThreadId=${externalThreadId}&channelId=${channelId}`
+      `/threads?${qs({ externalThreadId, channelId, threadId })}`
     );
-  }
-
-  findOrCreateUser(user: LinenTypes.userPostType): Promise<{ id: string }> {
-    return this.post(`/users`, user);
   }
 
   createNewThread(thread: LinenTypes.threadPostType) {
@@ -71,7 +75,31 @@ export default class Api {
     return this.put(`/threads`, thread);
   }
 
+  // messages ----
+
   createNewMessage(message: LinenTypes.messagePostType) {
     return this.post(`/messages`, message);
+  }
+
+  findMessage(
+    search: LinenTypes.messageFindType
+  ): Promise<LinenTypes.messageFindResponseType> {
+    return this.get(`/messages?${qs(search)}`);
+  }
+
+  getMessage({
+    messageId,
+  }: LinenTypes.messageGetType): Promise<LinenTypes.messageGetResponseType> {
+    return this.get(`/messages/${messageId}`);
+  }
+
+  updateMessage(message: LinenTypes.messagePutType) {
+    return this.put(`/messages`, message);
+  }
+
+  // users ----
+
+  findOrCreateUser(user: LinenTypes.userPostType): Promise<{ id: string }> {
+    return this.post(`/users`, user);
   }
 }

@@ -10,7 +10,7 @@ export class ThreadsController extends BaseController {
     res: Response,
     next: NextFunction
   ) {
-    const thread = await ThreadsServices.findByExternalId({
+    const thread = await ThreadsServices.findBy({
       ...req.body,
     });
     res.json(thread);
@@ -32,7 +32,7 @@ export class ThreadsController extends BaseController {
     res: Response,
     next: NextFunction
   ) {
-    const thread = await ThreadsServices.findByExternalId({
+    const thread = await ThreadsServices.findBy({
       channelId: req.body.channelId,
       externalThreadId: req.body.externalThreadId,
     });

@@ -12,8 +12,13 @@ module.exports = {
     },
     {
       name: 'queue',
-      script: 'npx tsx queue/index.ts',
+      script: 'npx tsx watch queue/index.ts',
       cwd: '../apps/web',
+    },
+    {
+      name: 'packages',
+      script: 'yarn turbo --filter=@linen/web^... dev',
+      cwd: '..',
     },
     {
       name: 'push-service',

@@ -1,4 +1,4 @@
 import nextConnectWrapper from 'server/next-connect-wrapper';
-import { bridgeEmailRouter } from 'server/routers/bridge/email';
+import { inboundRouter } from '@linen/integration-email';
 
-export default nextConnectWrapper().use(bridgeEmailRouter as any);
+export default nextConnectWrapper().use(inboundRouter as any);
