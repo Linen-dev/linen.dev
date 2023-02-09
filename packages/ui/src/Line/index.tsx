@@ -1,10 +1,12 @@
-import React from 'react'
-import styles from './index.module.scss'
+import React from 'react';
+import classNames from 'classnames';
+import styles from './index.module.scss';
 
 interface Props {
-  children: React.ReactNode
+  className?: string;
+  children: React.ReactNode;
 }
 
-export default function Line ({ children }: Props) {
-  return <div className={styles.line}>{children}</div>
+export default function Line({ className, children }: Props) {
+  return <div className={classNames(styles.line, className)}>{children}</div>;
 }
