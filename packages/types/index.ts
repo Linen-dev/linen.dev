@@ -110,6 +110,7 @@ export type SerializedChannel = {
   hidden: boolean;
   accountId: string | null;
   pages: number | null;
+  stats?: string;
 };
 
 export interface SerializedUser {

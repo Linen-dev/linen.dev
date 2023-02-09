@@ -9,6 +9,34 @@ class ChannelsService {
     });
   }
 
+  static async findWithStats(
+    communityId: string
+  ): Promise<(channels & { lastThreadAt?: bigint; threadCount: number })[]> {
+    return await prisma.channels
+      .findMany({
+        include: {
+          _count: { select: { threads: true } },
+          threads: {
+            take: 1,
+            orderBy: { sentAt: 'desc' },
+            select: { sentAt: true },
+          },
+        },
+        where: {
+          accountId: communityId,
+        },
+      })
+      .then((channels) =>
+        channels.map(({ threads, _count, ...channel }) => {
+          return {
+            ...channel,
+            lastThreadAt: threads.find(Boolean)?.sentAt,
+            threadCount: _count.threads,
+          };
+        })
+      );
+  }
+
   static async setDefaultChannel(
     newDefaultChannelId: string,
     oldDefaultChannelId: string
