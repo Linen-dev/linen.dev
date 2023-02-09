@@ -41,7 +41,10 @@ export default function ChannelVisibilityRow({ channels, onChange }: Props) {
                     checked={enabled}
                     onChange={(checked) => onChannelToggle(checked, channel.id)}
                   />
-                  {channel.channelName}
+                  {channel.channelName}{' '}
+                  <label className="text-xs text-gray-400 italic">
+                    {channel.stats}
+                  </label>
                 </label>
 
                 <input
