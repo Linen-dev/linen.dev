@@ -13,6 +13,7 @@ const config = {
   moduleNameMapper: {
     '@linen/(.*)/(.*)': '<rootDir>/../../packages/$1/dist/$2',
     '@linen/(.*)': '<rootDir>/../../packages/$1',
+    '^axios$': require.resolve('axios'),
   },
 };
 

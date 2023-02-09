@@ -20,6 +20,7 @@ export default function createThread(options?: Partial<threads>): threads {
     firstManagerReplyAt: null,
     firstUserReplyAt: null,
     page: null,
+    resolutionId: null,
     ...options,
   };
 }
