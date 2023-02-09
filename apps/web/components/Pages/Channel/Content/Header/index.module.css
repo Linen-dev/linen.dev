@@ -11,6 +11,7 @@
   display: flex;
   font-size: 16px;
   font-weight: bold;
+  white-space: nowrap;
 }
 
 .actions {
