@@ -123,9 +123,7 @@ export default function Grid({
         if (item.type === RowType.ReadStatus) {
           return (
             <li key={`feed-line-${index}`}>
-              <div className={styles.line}>
-                <Line>New</Line>
-              </div>
+              <Line className={styles.line}>New</Line>
             </li>
           );
         } else if (item.type === RowType.Thread) {
