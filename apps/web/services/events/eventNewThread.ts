@@ -3,6 +3,7 @@ import { createTwoWaySyncJob } from 'queue/jobs';
 import { push, pushChannel, pushCommunity } from 'services/push';
 import { eventNewMentions } from './eventNewMentions';
 import { notificationListener } from 'services/notifications';
+import { stringify } from 'superjson';
 
 interface MentionNode {
   type: string;
@@ -53,5 +54,5 @@ export async function eventNewThread({
   ];
 
   const result = await Promise.allSettled(promises);
-  console.log(JSON.stringify(result));
+  console.log(stringify(result));
 }

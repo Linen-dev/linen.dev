@@ -1,4 +1,5 @@
 import { createTwoWaySyncJob } from 'queue/jobs';
+import { stringify } from 'superjson';
 
 type ThreadReopenedEvent = {
   channelId: string;
@@ -21,5 +22,6 @@ export async function eventThreadReopened({
     createTwoWaySyncJob({ ...event, event: 'threadReopened', id: threadId }),
   ];
 
-  await Promise.allSettled(promises);
+  const result = await Promise.allSettled(promises);
+  console.log(stringify(result));
 }

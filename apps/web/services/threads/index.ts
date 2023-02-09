@@ -25,6 +25,7 @@ import unique from 'lodash.uniq';
 import { eventThreadClosed } from 'services/events/eventThreadClosed';
 import { eventThreadReopened } from 'services/events/eventThreadReopened';
 import { eventThreadUpdated } from 'services/events/eventThreadUpdated';
+import { stringify } from 'superjson';
 
 class ThreadsServices {
   static async updateMetrics({
@@ -118,6 +119,9 @@ class ThreadsServices {
         externalThreadId,
       },
     });
+
+    console.log(stringify({ if: exist.state !== thread.state, exist, thread }));
+
     if (exist.state !== thread.state) {
       if (thread.state === ThreadState.CLOSE) {
         await eventThreadClosed({
@@ -125,8 +129,7 @@ class ThreadsServices {
           channelId: thread.channelId,
           threadId: id,
         });
-      }
-      if (thread.state === ThreadState.OPEN) {
+      } else if (thread.state === ThreadState.OPEN) {
         await eventThreadReopened({
           accountId: accountId || thread.channel.accountId!,
           channelId: thread.channelId,
