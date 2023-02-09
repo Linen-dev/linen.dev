@@ -197,11 +197,11 @@ export default function DesktopNavBar({
             }
 
             function handleDragEnter(event: React.DragEvent) {
-              event.currentTarget.classList.add(styles.hover);
+              event.currentTarget.classList.add(styles.drop);
             }
 
             function handleDragLeave(event: React.DragEvent) {
-              event.currentTarget.classList.remove(styles.hover);
+              event.currentTarget.classList.remove(styles.drop);
             }
 
             const active = channel.channelName === channelName;
