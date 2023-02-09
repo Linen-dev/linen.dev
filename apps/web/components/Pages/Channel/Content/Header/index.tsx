@@ -57,9 +57,6 @@ export default function Header({
                 button={
                   <Icon>
                     <FiMoreVertical />
-                    {/* <Button onClick={onMarkAllAsRead} color="gray" weight="bold">
-                  All Done
-                </Button> */}
                   </Icon>
                 }
                 items={[
