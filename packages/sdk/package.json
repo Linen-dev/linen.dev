@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@linen/types": "*",
+    "@linen/utilities": "*",
     "axios": "^1.2.4"
   }
 }

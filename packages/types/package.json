@@ -5,14 +5,12 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "dev": "tsup --watch",
-    "build": "tsup"
-  },
-  "devDependencies": {
-    "typescript": "^4.9.3",
-    "tsup": "^6.5.0"
+    "dev": "yarn tsup --watch",
+    "build": "yarn tsup"
   },
   "dependencies": {
+    "typescript": "^4.9.3",
+    "tsup": "^6.5.0",
     "zod": "^3.20.2"
   }
 }
