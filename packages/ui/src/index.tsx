@@ -9,6 +9,7 @@ import Checkbox from './Checkbox';
 import Code from './Code';
 import ConfirmationModal from './ConfirmationModal';
 import Container from './Container';
+import Dropdown from './Dropdown';
 import Image from './Image';
 import Label from './Label';
 import Line from './Line';
@@ -39,6 +40,7 @@ export {
   Code,
   ConfirmationModal,
   Container,
+  Dropdown,
   Image,
   Label,
   Line,

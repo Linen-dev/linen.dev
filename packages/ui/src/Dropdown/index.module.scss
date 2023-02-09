@@ -1,0 +1,22 @@
+@import '../colors.scss';
+
+.menu {
+  display: inline-block;
+  position: relative;
+  text-align: left;
+}
+
+.action {
+  align-items: center;
+  cursor: pointer;
+  display: flex;
+  font-size: 14px;
+  gap: 0.5rem;
+  white-space: nowrap;
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+}
+
+.action[data-headlessui-state="active"] {
+  background: $color-gray-100;
+}

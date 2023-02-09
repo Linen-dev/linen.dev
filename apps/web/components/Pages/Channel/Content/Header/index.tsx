@@ -1,8 +1,10 @@
 import React from 'react';
-import { Button, NativeSelect, StickyHeader } from '@linen/ui';
+import { Dropdown, NativeSelect, StickyHeader } from '@linen/ui';
 import styles from './index.module.css';
 import { SerializedThread, SerializedUser, ThreadStatus } from '@linen/types';
-import { FiHash } from 'react-icons/fi';
+import { FiHash, FiMoreVertical } from 'react-icons/fi';
+import { BiMessageCheck } from 'react-icons/bi';
+import Icon from './Icon';
 
 interface Props {
   className?: string;
@@ -51,9 +53,23 @@ export default function Header({
               />
             </div>
             {status === ThreadStatus.UNREAD && threads.length > 0 && (
-              <Button onClick={onMarkAllAsRead} color="gray" weight="bold">
-                All Done
-              </Button>
+              <Dropdown
+                button={
+                  <Icon>
+                    <FiMoreVertical />
+                    {/* <Button onClick={onMarkAllAsRead} color="gray" weight="bold">
+                  All Done
+                </Button> */}
+                  </Icon>
+                }
+                items={[
+                  {
+                    icon: <BiMessageCheck />,
+                    label: 'Mark all as done',
+                    onClick: onMarkAllAsRead,
+                  },
+                ]}
+              />
             )}
           </div>
         )}
