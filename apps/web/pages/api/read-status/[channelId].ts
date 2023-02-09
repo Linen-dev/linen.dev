@@ -28,7 +28,7 @@ async function put(request: NextApiRequest, response: NextApiResponse) {
   const timestamp = BigInt(body.timestamp);
   const data = { authId, channelId, lastReadAt: timestamp };
 
-  const [err, _] = await to(
+  const [err, status] = await to(
     prisma.readStatus.upsert({
       create: data,
       update: data,
@@ -38,6 +38,20 @@ async function put(request: NextApiRequest, response: NextApiResponse) {
           channelId,
         },
       },
+      select: {
+        channelId: true,
+        lastReadAt: true,
+        channel: {
+          select: {
+            threads: {
+              orderBy: {
+                sentAt: 'desc',
+              },
+              take: 1,
+            },
+          },
+        },
+      },
     })
   );
   if (err) {
@@ -45,7 +59,7 @@ async function put(request: NextApiRequest, response: NextApiResponse) {
     return response.status(500).json({});
   }
 
-  return response.status(200).json({});
+  return response.status(200).json(serializeReadStatus(status));
 }
 
 async function get(request: NextApiRequest, response: NextApiResponse) {
@@ -63,7 +77,7 @@ async function get(request: NextApiRequest, response: NextApiResponse) {
   }
 
   const { channelId } = body;
-  const [err, data] = await to(
+  const [err, status] = await to(
     prisma.readStatus.findUnique({
       select: {
         channelId: true,
@@ -91,7 +105,7 @@ async function get(request: NextApiRequest, response: NextApiResponse) {
     console.error(err);
     return response.status(500).json({});
   }
-  return response.status(200).json(serializeReadStatus(data));
+  return response.status(200).json(serializeReadStatus(status));
 }
 
 export default async function handler(

@@ -107,11 +107,13 @@ interface Props {
   onMarkAllAsRead(): void;
 }
 
-const debouncedGetReadStatus = debounce((channelId: string) =>
-  get(`/api/read-status/${channelId}`)
+const debouncedGetReadStatus = debounce(
+  (channelId: string): Promise<SerializedReadStatus> =>
+    get(`/api/read-status/${channelId}`)
 );
-const debouncedUpdateReadStatus = debounce((channelId: string) =>
-  put(`/api/read-status/${channelId}`, { timestamp: timestamp() })
+const debouncedUpdateReadStatus = debounce(
+  (channelId: string): Promise<SerializedReadStatus> =>
+    put(`/api/read-status/${channelId}`, { timestamp: timestamp() })
 );
 
 const UPDATE_READ_STATUS_INTERVAL_IN_MS = 30000;
@@ -199,12 +201,20 @@ export default function Channel({
   }, [currentChannel]);
 
   useEffect(() => {
+    let mounted = true;
     const interval = setInterval(() => {
       const channelId = currentChannel.id;
-      debouncedUpdateReadStatus(channelId);
+      debouncedUpdateReadStatus(channelId).then(
+        (readStatus: SerializedReadStatus) => {
+          if (mounted) {
+            setReadStatus(readStatus);
+          }
+        }
+      );
     }, UPDATE_READ_STATUS_INTERVAL_IN_MS);
     return () => {
       clearInterval(interval);
+      mounted = false;
     };
   }, [currentChannel]);
 
