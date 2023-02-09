@@ -5,6 +5,7 @@ import ThreadsServices from 'services/threads';
 import UserThreadStatusService from 'services/user-thread-status';
 import { eventNewMentions } from 'services/events/eventNewMentions';
 import { notificationListener } from 'services/notifications';
+import { stringify } from 'superjson';
 
 type MentionNode = {
   type: string;
@@ -61,5 +62,5 @@ export async function eventNewMessage({
   ];
 
   const result = await Promise.allSettled(promises);
-  console.log(JSON.stringify(result));
+  console.log(stringify(result));
 }
