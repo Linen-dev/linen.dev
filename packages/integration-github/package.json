@@ -1,5 +1,5 @@
 {
-  "name": "@linen/integration-email",
+  "name": "@linen/integration-github",
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
@@ -8,7 +8,7 @@
     "clean": "rm -rf dist",
     "build": "yarn clean && yarn tsc",
     "dev": "yarn tsc --watch",
-    "test": "jest"
+    "test": "jest --passWithNoTests"
   },
   "keywords": [],
   "author": "",
@@ -17,8 +17,10 @@
     "@linen/sdk": "*",
     "@linen/utilities": "*",
     "express": "^4.18.2",
-    "nodemailer": "^6.9.1",
-    "uuid": "^9.0.0"
+    "dotenv": "^16.0.3",
+    "envalid": "^7.3.1",
+    "octokit": "^2.0.14",
+    "zod": "^3.20.0"
   },
   "devDependencies": {
     "@types/jest": "^29.4.0",
