@@ -44,8 +44,8 @@ export default class Serializer {
     externalThreadId: string
   ): LinenTypes.threadPostType {
     return {
-      title: `${issue.title} #${issue.number}`,
-      body: issue.body || '',
+      title: issue.title,
+      body: issue.body || issue.title,
       authorId,
       channelId,
       externalThreadId,

@@ -88,14 +88,24 @@ class ThreadsServices {
     return serializeThread(thread);
   }
 
-  static async update({ id, state, title, pinned, accountId, resolutionId }: UpdateType) {
+  static async update({
+    id,
+    state,
+    title,
+    pinned,
+    accountId,
+    channelId,
+    resolutionId,
+    externalThreadId,
+  }: UpdateType) {
     const exist = await prisma.threads.findFirst({
-      where: { id, channel: { accountId } },
+      where: { id, channel: { accountId, id: channelId } },
     });
     if (!exist) {
       return null;
     }
     const thread = await prisma.threads.update({
+      include: { channel: { select: { accountId: true } } },
       where: { id },
       data: {
         pinned,
@@ -104,20 +114,21 @@ class ThreadsServices {
           state,
           closeAt: state === ThreadState.CLOSE ? new Date().getTime() : null,
         }),
-        resolutionId
+        resolutionId,
+        externalThreadId,
       },
     });
     if (exist.state !== thread.state) {
       if (thread.state === ThreadState.CLOSE) {
         await eventThreadClosed({
-          accountId,
+          accountId: accountId || thread.channel.accountId!,
           channelId: thread.channelId,
           threadId: id,
         });
       }
       if (thread.state === ThreadState.OPEN) {
         await eventThreadReopened({
-          accountId,
+          accountId: accountId || thread.channel.accountId!,
           channelId: thread.channelId,
           threadId: id,
         });
@@ -127,7 +138,7 @@ class ThreadsServices {
     const serialized = serializeThread(thread);
 
     await eventThreadUpdated({
-      communityId: accountId,
+      communityId: accountId || thread.channel.accountId!,
       channelId: thread.channelId,
       messageId: thread.id,
       threadId: thread.id,
@@ -255,12 +266,15 @@ class ThreadsServices {
         title: true,
         externalThreadId: true,
         messages: {
-          select: { author: { select: { displayName: true } } },
+          select: {
+            body: true,
+            author: { select: { displayName: true } },
+          },
           orderBy: { sentAt: 'asc' },
           take: 1,
         },
       },
-      where: { externalThreadId, channelId, id: threadId },
+      where: { channelId, OR: [{ externalThreadId }, { id: threadId }] },
     });
   }
 }

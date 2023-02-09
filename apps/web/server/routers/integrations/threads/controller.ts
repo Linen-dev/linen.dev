@@ -33,8 +33,7 @@ export class ThreadsController extends BaseController {
     next: NextFunction
   ) {
     const thread = await ThreadsServices.findBy({
-      channelId: req.body.channelId,
-      externalThreadId: req.body.externalThreadId,
+      ...req.body,
     });
     if (!thread) {
       return next(new NotFound());
@@ -42,6 +41,7 @@ export class ThreadsController extends BaseController {
     await ThreadsServices.update({
       id: thread.id,
       accountId: req.body.accountId,
+      externalThreadId: req.body.externalThreadId,
       state: req.body.status,
     });
     res.json(thread);

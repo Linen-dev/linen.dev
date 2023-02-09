@@ -20,7 +20,7 @@ const messagesRouter = Router()
     MessagesController.find
   )
   .get(
-    `${prefix}/:id`,
+    `${prefix}/:messageId`,
     integrationMiddleware(),
     validationMiddleware(messageGetSchema),
     MessagesController.get

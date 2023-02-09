@@ -1,12 +1,13 @@
-import { App } from 'octokit';
-import LinenSdk from '@linen/sdk';
-import env from './config';
-import Serializer from './serializer';
+import { App, createNodeMiddleware } from 'octokit';
+import env from './helpers/config';
+import Serializer from './helpers/serializer';
 import * as GitHubTypes from '@octokit/webhooks-types';
-import { appendProtocol } from '@linen/utilities/url';
-import { getIntegrationUrl } from '@linen/utilities/domain';
+import { Router } from 'express';
+import { linenSdk } from './helpers/linen';
 
-const githubApp = new App({
+const prefix = '/api/bridge/github';
+
+export const githubApp = new App({
   appId: env.GITHUB_APP_ID,
   privateKey: env.GITHUB_PRIVATE_KEY.replace(/\\n/g, '\n'),
   webhooks: {
@@ -19,32 +20,50 @@ const githubApp = new App({
   },
 });
 
-const linenSdk = new LinenSdk(
-  env.INTERNAL_API_KEY,
-  appendProtocol(getIntegrationUrl())
-);
+export const bridgeGithubRouter = Router()
+  .use(
+    createNodeMiddleware(githubApp, {
+      pathPrefix: `${prefix}/in`,
+    })
+  )
+  .get(`${prefix}/setup`, (req, res) => {
+    console.log('req.query', req.query);
+    console.log('req.params', req.params);
+    console.log('req.path', req.path);
+    res.redirect('https://linen.dev');
+  });
 
 githubApp.webhooks.on('issues.opened', async ({ payload }) => {
-  await handleIssuesOpened(payload);
+  try {
+    await handleIssuesOpened(payload);
+  } catch (error) {
+    console.error(JSON.stringify(error));
+  }
 });
 
 githubApp.webhooks.on('issues.closed', async ({ payload }) => {
-  await handleIssuesClosed(payload);
+  try {
+    await handleIssuesClosed(payload);
+  } catch (error) {
+    console.error(JSON.stringify(error));
+  }
 });
 
 githubApp.webhooks.on('issues.reopened', async ({ payload }) => {
-  await handleIssuesReopened(payload);
+  try {
+    await handleIssuesReopened(payload);
+  } catch (error) {
+    console.error(JSON.stringify(error));
+  }
 });
 
 githubApp.webhooks.on('issue_comment.created', async ({ payload }) => {
-  await handleIssueCommentCreated(payload);
+  try {
+    await handleIssueCommentCreated(payload);
+  } catch (error) {
+    console.error(JSON.stringify(error));
+  }
 });
-
-// githubApp.webhooks.on('meta', console.log);
-// githubApp.webhooks.on('pull_request', console.log);
-// githubApp.webhooks.on('pull_request_review', console.log);
-
-export default githubApp;
 
 function isFromOurBot(sender: GitHubTypes.User) {
   return (

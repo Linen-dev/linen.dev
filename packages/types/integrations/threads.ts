@@ -12,10 +12,11 @@ export type threadPostType = z.infer<typeof threadPostSchema>;
 
 export const threadPutSchema = z.object({
   title: z.string().optional(),
-  accountId: z.string().uuid(),
+  accountId: z.string().uuid().optional(),
   channelId: z.string().uuid(),
-  externalThreadId: z.string().min(1),
-  status: z.enum(['OPEN', 'CLOSE']),
+  externalThreadId: z.string().min(1).optional(),
+  status: z.enum(['OPEN', 'CLOSE']).optional(),
+  threadId: z.string().uuid().optional(),
 });
 export type threadPutType = z.infer<typeof threadPutSchema>;
 
@@ -30,6 +31,7 @@ export type threadFindResponseType = {
   title: string | null;
   externalThreadId: string | null;
   messages: {
+    body: string;
     author: {
       displayName: string | null;
     } | null;

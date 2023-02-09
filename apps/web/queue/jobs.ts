@@ -36,7 +36,7 @@ export async function createWebhookJob(payload: SlackEvent) {
   const worker = await WorkerSingleton.getInstance();
   return await worker.addJob('webhook', payload, {
     jobKey: `webhook:${payload.event_id}`,
-    maxAttempts: 2,
+    maxAttempts: 1,
   });
 }
 
@@ -44,7 +44,7 @@ export async function createSyncJob(payload: SyncJobType) {
   const worker = await WorkerSingleton.getInstance();
   return await worker.addJob('sync', payload, {
     jobKey: `sync:${payload.account_id}`,
-    maxAttempts: 2,
+    maxAttempts: 1,
   });
 }
 
@@ -91,6 +91,6 @@ export async function createTwoWaySyncJob(payload: TwoWaySyncType) {
   const worker = await WorkerSingleton.getInstance();
   return await worker.addJob('two-way-sync', payload, {
     jobKey: `two-way-sync:${payload.id}`,
-    maxAttempts: 2,
+    maxAttempts: 1,
   });
 }
