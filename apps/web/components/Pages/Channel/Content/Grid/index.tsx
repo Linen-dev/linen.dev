@@ -120,7 +120,8 @@ export default function Grid({
       className={classNames({ [styles.mouse]: priority === Priority.MOUSE })}
     >
       {sorted.map((item, index) => {
-        if (item.type === RowType.ReadStatus) {
+        const last = index === sorted.length - 1;
+        if (item.type === RowType.ReadStatus && !last) {
           return (
             <li key={`feed-line-${index}`}>
               <Line className={styles.line}>New</Line>
