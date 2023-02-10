@@ -27,12 +27,13 @@ import usePath from 'hooks/path';
 import { Mode } from '@linen/hooks/mode';
 import { Nav, Toast } from '@linen/ui';
 import debounce from '@linen/utilities/debounce';
-import { post } from 'utilities/http';
+import { post, put } from 'utilities/http';
 import { notify } from 'utilities/notification';
 import unique from 'lodash.uniq';
 import CommunityLink from './CommunityLink';
 import AddCommunityLink from './AddCommunityLink';
 import NewCommunityModal from './NewCommunityModal';
+import { timestamp } from '@linen/utilities/date';
 
 interface Props {
   mode: Mode;
@@ -56,6 +57,11 @@ interface Props {
 const debouncedReadStatus = debounce(
   ({ channelIds }: { channelIds: string[] }) =>
     post('/api/read-status', { channelIds })
+);
+
+const debouncedUpdateReadStatus = debounce(
+  (channelId: string): Promise<SerializedReadStatus> =>
+    put(`/api/read-status/${channelId}`, { timestamp: timestamp() })
 );
 
 export default function DesktopNavBar({
@@ -216,6 +222,7 @@ export default function DesktopNavBar({
                 onDragLeave={handleDragLeave}
                 onDrop={handleDrop}
                 onClick={() => {
+                  debouncedUpdateReadStatus(channel.id);
                   setHighlights((highlights) => {
                     return highlights.filter((id) => id !== channel.id);
                   });
