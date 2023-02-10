@@ -14,42 +14,6 @@
   }
 }
 
-.jump {
-  bottom: -10px;
-  display: block;
-  position: absolute;
-  left: calc(50% - 24px);
-  opacity: 1;
-  transition: 0.1s ease-in opacity;
-}
-
-.hidden {
-  pointer-events: none;
-  opacity: 0;
-  z-index: -1;
-}
-
-.icon {
-  align-items: center;
-  background: $color-blue-50;
-  color: $color-blue-700;
-  box-shadow: 0 1px 2px $color-shadow;
-  cursor: pointer;
-  display: inline-flex;
-  justify-content: center;
-  font-size: 14px;
-  height: 20px;
-  width: 48px;
-  border-radius: 9999px;
-  padding: 3px;
-  transition: 0.2s ease-in all;
-
-  &:hover {
-    background: $color-blue-700;
-    color: white;
-  }
-}
-
 .full {
   align-items: center;
   display: flex;
