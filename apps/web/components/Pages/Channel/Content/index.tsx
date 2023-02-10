@@ -183,37 +183,32 @@ export default function Channel({
 
   useEffect(() => {
     let mounted = true;
+    let interval: any;
     const channelId = currentChannel.id;
     if (currentUser) {
       debouncedGetReadStatus(channelId).then(
         (readStatus: SerializedReadStatus) => {
           if (mounted) {
             setReadStatus(readStatus);
-            return debouncedUpdateReadStatus(channelId);
           }
         }
       );
+      interval = setInterval(() => {
+        const channelId = currentChannel.id;
+        debouncedUpdateReadStatus(channelId).then(
+          (readStatus: SerializedReadStatus) => {
+            if (mounted) {
+              setReadStatus(readStatus);
+            }
+          }
+        );
+      }, UPDATE_READ_STATUS_INTERVAL_IN_MS);
     }
     return () => {
+      if (interval) {
+        clearInterval(interval);
+      }
       debouncedUpdateReadStatus(channelId);
-      mounted = false;
-    };
-  }, [currentChannel]);
-
-  useEffect(() => {
-    let mounted = true;
-    const interval = setInterval(() => {
-      const channelId = currentChannel.id;
-      debouncedUpdateReadStatus(channelId).then(
-        (readStatus: SerializedReadStatus) => {
-          if (mounted) {
-            setReadStatus(readStatus);
-          }
-        }
-      );
-    }, UPDATE_READ_STATUS_INTERVAL_IN_MS);
-    return () => {
-      clearInterval(interval);
       mounted = false;
     };
   }, [currentChannel]);
