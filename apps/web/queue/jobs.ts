@@ -90,7 +90,6 @@ export async function createNewEventJob(
 export async function createTwoWaySyncJob(payload: TwoWaySyncType) {
   const worker = await WorkerSingleton.getInstance();
   return await worker.addJob('two-way-sync', payload, {
-    jobKey: `two-way-sync:${payload.id}`,
     maxAttempts: 1,
   });
 }
