@@ -492,7 +492,11 @@ export default function Channel({
                     </div>
                   </Header>
                   {threads.length === 0 ? (
-                    <Empty status={status} loading={isLoading} />
+                    <Empty
+                      currentUser={currentUser}
+                      status={status}
+                      loading={isLoading}
+                    />
                   ) : (
                     <div className={styles.full} key={status}>
                       <ul className="divide-y w-full">
