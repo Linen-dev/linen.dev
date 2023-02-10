@@ -40,8 +40,8 @@ import { SerializedMessage } from '@linen/types';
 import { Layouts } from '@linen/ui';
 import { timestamp } from '@linen/utilities/date';
 import debounce from '@linen/utilities/debounce';
-import { FiArrowDown } from 'react-icons/fi';
 import * as api from 'utilities/requests';
+import ScrollToBottomIcon from './ScrollToBottomIcon';
 
 const { SidebarLayout } = Layouts.Shared;
 
@@ -283,6 +283,7 @@ export default function Channel({
   const handleStatusChange = async (status: ThreadStatus) => {
     setLoading(true);
     onThreadsChange([]);
+    setIsLeftScrollAtBottom(true);
     setCursor({ prev: null, next: null });
     onStatusChange(status);
     try {
@@ -482,14 +483,10 @@ export default function Channel({
                         />
                       </PinnedThread>
                     )}
-                    <div
-                      className={classNames(styles.jump, {
-                        [styles.hidden]: isLeftScrollAtBottom,
-                      })}
+                    <ScrollToBottomIcon
+                      show={!isLeftScrollAtBottom && threads.length > 0}
                       onClick={handleScroll}
-                    >
-                      <FiArrowDown className={styles.icon} />
-                    </div>
+                    />
                   </Header>
                   {threads.length === 0 ? (
                     <Empty
