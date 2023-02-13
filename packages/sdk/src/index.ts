@@ -2,21 +2,21 @@ import axios, { Axios } from 'axios';
 import * as LinenTypes from '@linen/types';
 import { qs } from '@linen/utilities/url';
 export { integrationMiddleware } from './middleware';
-import { stringify } from 'superjson';
 
 export default class Api {
   private instance: Axios;
 
   private catchError = (error: any) => {
     if (error.response) {
-      console.error(stringify(error.response.data));
-      console.error(stringify(error.response.status));
-      console.error(stringify(error.response.headers));
+      console.error(error.response.data);
+      console.error(error.response.status);
+      console.error(error.response.headers);
     } else if (error.request) {
-      console.error(stringify(error.request));
+      console.error(error.request);
     } else {
-      console.error(stringify(error.message));
+      console.error(error.message);
     }
+    console.error(error.config);
     throw error;
   };
 
@@ -40,7 +40,7 @@ export default class Api {
 
   constructor(apiKey: string, linenUrl: string = 'https://main.linendev.com') {
     this.instance = axios.create({
-      baseURL: `${linenUrl}`,
+      baseURL: `${linenUrl}/api/integrations`,
       headers: { 'x-api-internal': apiKey },
     });
   }
@@ -52,7 +52,7 @@ export default class Api {
   }: {
     integrationId: string;
   }): Promise<{ id: string; accountId: string } | null> {
-    return this.get(`/api/integrations/channels?${qs({ integrationId })}`);
+    return this.get(`/channels?${qs({ integrationId })}`);
   }
 
   // threads -----
@@ -63,47 +63,43 @@ export default class Api {
     threadId,
   }: LinenTypes.threadFindType): Promise<LinenTypes.threadFindResponseType> {
     return this.get(
-      `/api/integrations/threads?${qs({
-        externalThreadId,
-        channelId,
-        threadId,
-      })}`
+      `/threads?${qs({ externalThreadId, channelId, threadId })}`
     );
   }
 
   createNewThread(thread: LinenTypes.threadPostType) {
-    return this.post(`/api/integrations/threads`, thread);
+    return this.post(`/threads`, thread);
   }
 
   updateThread(thread: LinenTypes.threadPutType) {
-    return this.put(`/api/integrations/threads`, thread);
+    return this.put(`/threads`, thread);
   }
 
   // messages ----
 
   createNewMessage(message: LinenTypes.messagePostType) {
-    return this.post(`/api/integrations/messages`, message);
+    return this.post(`/messages`, message);
   }
 
   findMessage(
     search: LinenTypes.messageFindType
   ): Promise<LinenTypes.messageFindResponseType> {
-    return this.get(`/api/integrations/messages?${qs(search)}`);
+    return this.get(`/messages?${qs(search)}`);
   }
 
   getMessage({
     messageId,
   }: LinenTypes.messageGetType): Promise<LinenTypes.messageGetResponseType> {
-    return this.get(`/api/integrations/messages/${messageId}`);
+    return this.get(`/messages/${messageId}`);
   }
 
   updateMessage(message: LinenTypes.messagePutType) {
-    return this.put(`/api/integrations/messages`, message);
+    return this.put(`/messages`, message);
   }
 
   // users ----
 
   findOrCreateUser(user: LinenTypes.userPostType): Promise<{ id: string }> {
-    return this.post(`/api/integrations/users`, user);
+    return this.post(`/users`, user);
   }
 }

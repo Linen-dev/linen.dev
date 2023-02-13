@@ -7,17 +7,14 @@ import { channelGetSchema } from '@linen/types';
 
 const prefix = '/api/integrations/channels';
 
-const channelsRouter = Router();
-
-channelsRouter.get(
-  `${prefix}`,
-  integrationMiddleware(),
-  validationMiddleware(channelGetSchema),
-  ChannelsController.get
-);
-
-channelsRouter.all(`${prefix}*`, ChannelsController.notImplemented);
-
-channelsRouter.use(onError);
+const channelsRouter = Router()
+  .get(
+    `${prefix}`,
+    integrationMiddleware(),
+    validationMiddleware(channelGetSchema),
+    ChannelsController.get
+  )
+  .all(`${prefix}*`, ChannelsController.notImplemented)
+  .use(onError);
 
 export default channelsRouter;

@@ -7,9 +7,9 @@ export default function validationMiddleware(
   return (req: Request, _: Response, next: NextFunction) => {
     try {
       req.body = schema.parse({ ...req.params, ...req.query, ...req.body });
-      return next();
+      next();
     } catch (error) {
-      return next(error);
+      next(error);
     }
   };
 }

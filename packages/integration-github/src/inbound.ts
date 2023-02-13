@@ -4,7 +4,6 @@ import Serializer from './helpers/serializer';
 import * as GitHubTypes from '@octokit/webhooks-types';
 import { Router } from 'express';
 import { linenSdk } from './helpers/linen';
-import { stringify } from 'superjson';
 
 const prefix = '/api/bridge/github';
 
@@ -38,7 +37,7 @@ githubApp.webhooks.on('issues.opened', async ({ payload }) => {
   try {
     await handleIssuesOpened(payload);
   } catch (error) {
-    console.error(stringify(error));
+    console.error(JSON.stringify(error));
   }
 });
 
@@ -46,7 +45,7 @@ githubApp.webhooks.on('issues.closed', async ({ payload }) => {
   try {
     await handleIssuesClosed(payload);
   } catch (error) {
-    console.error(stringify(error));
+    console.error(JSON.stringify(error));
   }
 });
 
@@ -54,7 +53,7 @@ githubApp.webhooks.on('issues.reopened', async ({ payload }) => {
   try {
     await handleIssuesReopened(payload);
   } catch (error) {
-    console.error(stringify(error));
+    console.error(JSON.stringify(error));
   }
 });
 
@@ -62,7 +61,7 @@ githubApp.webhooks.on('issue_comment.created', async ({ payload }) => {
   try {
     await handleIssueCommentCreated(payload);
   } catch (error) {
-    console.error(stringify(error));
+    console.error(JSON.stringify(error));
   }
 });
 
