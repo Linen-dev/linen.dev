@@ -3,6 +3,7 @@ import { extractEmail, parseResponse } from './helper/parser';
 import LinenSdk from '@linen/sdk';
 import { appendProtocol } from '@linen/utilities/url';
 import { getIntegrationUrl } from '@linen/utilities/domain';
+import { stringify } from 'superjson';
 
 const linenSdk = new LinenSdk(
   process.env.INTERNAL_API_KEY!,
@@ -62,11 +63,9 @@ async function processNewMessage(
   const lastReply = await linenSdk.findMessage({
     threadId: message.threadId,
     channelId: message.channelId,
-    where: {
-      externalMessageId: true,
-      order: 'desc',
-      sort: 'sentAt',
-    },
+    mustHave: ['externalMessageId'],
+    orderBy: 'desc',
+    sortBy: 'sentAt',
   });
 
   const data = {
@@ -123,6 +122,6 @@ async function sendMail({
     text: body,
     subject: `Re: ${title}`,
   });
-  console.log(sendResponse);
+  console.log(stringify(sendResponse));
   return parseResponse(sendResponse.response);
 }

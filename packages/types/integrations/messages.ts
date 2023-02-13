@@ -18,13 +18,12 @@ export const messageFindSchema = z.object({
   channelId: z.string().uuid(),
   externalMessageId: z.string().min(1).optional(),
   threadId: z.string().uuid().optional(),
-  where: z
-    .object({
-      sort: z.enum(['sentAt']).optional(),
-      order: z.enum(['asc', 'desc']).optional(),
-      externalMessageId: z.boolean().optional(),
-    })
-    .optional(),
+  mustHave: z.preprocess(
+    (val) => (!!val ? decodeURIComponent(val as string).split(',') : undefined),
+    z.array(z.string()).optional()
+  ),
+  sortBy: z.enum(['sentAt']).optional(),
+  orderBy: z.enum(['asc', 'desc']).optional(),
 });
 export type messageFindType = z.infer<typeof messageFindSchema>;
 export type messageFindResponseType = {

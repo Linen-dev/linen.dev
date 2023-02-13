@@ -3,6 +3,7 @@ import LinenSdk from '@linen/sdk';
 import { cleanUpQuotedEmail, extractEmail } from './helper/parser';
 import { appendProtocol } from '@linen/utilities/url';
 import { getIntegrationUrl } from '@linen/utilities/domain';
+import { stringify } from 'superjson';
 
 const linenSdk = new LinenSdk(
   process.env.INTERNAL_API_KEY!,
@@ -16,11 +17,11 @@ inboundRouter.post(`/api/bridge/email/in`, async (req, res, next) => {
     next(new Error('missing api-key'));
   }
   try {
-    console.log('handleInbound', req.body);
+    console.log(stringify(req.body));
     await handleInbound(req.body);
     res.send(200);
   } catch (error) {
-    console.error(error);
+    console.error(stringify(error));
     res.send(500);
   }
 });
@@ -89,10 +90,12 @@ async function handleInbound(reqBody: any) {
   });
 
   // "inReplyTo" must find or create a thread
-  const message = await linenSdk.findMessage({
-    externalMessageId: reqBody.inReplyTo,
-    channelId: channel.id,
-  });
+  const message =
+    !!reqBody.inReplyTo &&
+    (await linenSdk.findMessage({
+      externalMessageId: reqBody.inReplyTo,
+      channelId: channel.id,
+    }));
   // if message exists, we create a new message
   if (message && message.threadId) {
     await linenSdk.createNewMessage({

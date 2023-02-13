@@ -25,9 +25,7 @@ describe('parser test', () => {
         '250 Ok 010101862d5e96ce-4e90e58d-52b6-435e-baec-91c9780fa598-000000'
       )
     ).toBe(
-      encodeURIComponent(
-        '<010101862d5e96ce-4e90e58d-52b6-435e-baec-91c9780fa598-000000@us-west-2.amazonses.com>'
-      )
+      '<010101862d5e96ce-4e90e58d-52b6-435e-baec-91c9780fa598-000000@us-west-2.amazonses.com>'
     );
   });
 });

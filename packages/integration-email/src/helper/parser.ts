@@ -20,7 +20,5 @@ export function cleanUpQuotedEmail(text: string) {
 
 export function parseResponse(text: string) {
   // TODO: improve this
-  return encodeURIComponent(
-    `<${text.split('250 Ok ').join('')}@us-west-2.amazonses.com>`
-  );
+  return `<${text.split('250 Ok ').join('')}@us-west-2.amazonses.com>`;
 }

@@ -21,6 +21,11 @@ export const addHttpsToUrl = (url: string) => {
 export const qs = (params: any) => {
   return Object.entries(params)
     .filter(([key, value]) => !!key && !!value)
-    .map(([key, value]) => `${key}=${encodeURIComponent(value as string)}`)
+    .map(
+      ([key, value]) =>
+        `${key}=${encodeURIComponent(
+          (Array.isArray(value) ? value.join() : value) as string
+        )}`
+    )
     .join('&');
 };

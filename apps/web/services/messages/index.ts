@@ -202,7 +202,9 @@ export default class MessagesService {
     channelId,
     externalMessageId,
     threadId,
-    where,
+    mustHave,
+    orderBy,
+    sortBy,
   }: messageFindType): Promise<messageFindResponseType> {
     return await prisma.messages.findFirst({
       select: { threadId: true, id: true, externalMessageId: true },
@@ -210,11 +212,17 @@ export default class MessagesService {
         ...(externalMessageId && { externalMessageId }),
         channelId,
         threadId,
-        ...(where?.externalMessageId && { externalMessageId: {} }),
+        ...mustHave?.reduce(
+          (prev, cur) => ({
+            ...prev,
+            ...(!!cur && { [cur as any]: {} }),
+          }),
+          {}
+        ),
       },
-      ...(where?.sort &&
-        where?.order && {
-          orderBy: { [where.sort]: where.order },
+      ...(sortBy &&
+        orderBy && {
+          orderBy: { [sortBy]: orderBy },
         }),
     });
   }
