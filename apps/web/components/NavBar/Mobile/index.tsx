@@ -33,7 +33,10 @@ export default function MobileNavBar({
     >
       {permissions.feed && (
         <Link className={styles.item} href="/feed">
-          <Nav.Item active={paths.feed === router.asPath}>
+          <Nav.Item
+            className={styles.feed}
+            active={paths.feed === router.asPath}
+          >
             <FiRss className="mr-1" /> Feed
           </Nav.Item>
         </Link>
