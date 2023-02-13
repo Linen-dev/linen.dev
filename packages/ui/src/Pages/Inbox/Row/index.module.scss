@@ -37,3 +37,8 @@
 .row:last-child {
   padding-bottom: 0;
 }
+
+.line {
+  white-space: nowrap;
+  overflow: hidden;
+}
