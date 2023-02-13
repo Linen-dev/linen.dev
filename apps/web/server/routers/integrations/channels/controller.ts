@@ -3,7 +3,7 @@ import { AuthedRequestWithBody, NextFunction, Response } from 'server/types';
 import { channelGetType } from '@linen/types';
 import ChannelsService from 'services/channels';
 import { BadRequest } from 'server/exceptions';
-import { stringify } from 'superjson';
+import { stringify, serialize } from 'superjson';
 
 export class ChannelsController extends BaseController {
   static async get(
@@ -14,14 +14,14 @@ export class ChannelsController extends BaseController {
     try {
       if (!!req.body.channelId) {
         const channel = await ChannelsService.findById(req.body.channelId);
-        return res.json(channel);
+        return res.json(serialize(channel).json);
       }
 
       if (!!req.body.integrationId) {
         const channel = await ChannelsService.findByExternalIntegrationId(
           req.body.integrationId
         );
-        return res.json(channel);
+        return res.json(serialize(channel).json);
       }
 
       return res.status(400);
