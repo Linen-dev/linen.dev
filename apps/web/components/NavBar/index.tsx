@@ -7,6 +7,7 @@ import {
 import DesktopNavBar from './Desktop';
 import MobileNavBar from './Mobile';
 import { Mode } from '@linen/hooks/mode';
+import styles from './index.module.scss';
 
 interface Props {
   mode: Mode;
@@ -39,7 +40,7 @@ export default function NavBar({
 
   return (
     <>
-      <div className="hidden lg:flex">
+      <div className={styles.desktop}>
         <DesktopNavBar
           mode={mode}
           channels={sortedChannels}
@@ -49,7 +50,7 @@ export default function NavBar({
           onDrop={onDrop}
         />
       </div>
-      <div className="hidden sm:block lg:hidden">
+      <div className={styles.mobile}>
         <MobileNavBar
           channels={sortedChannels}
           channelName={channelName}
