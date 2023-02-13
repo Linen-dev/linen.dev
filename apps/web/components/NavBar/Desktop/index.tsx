@@ -11,7 +11,7 @@ import NewChannelModal from 'components/Pages/Channel/Content/NewChannelModal';
 import useWebsockets from '@linen/hooks/websockets';
 import styles from './index.module.scss';
 import {
-  FiRss,
+  FiInbox,
   FiBarChart,
   FiHash,
   FiSettings,
@@ -159,7 +159,7 @@ export default function DesktopNavBar({
         {permissions.inbox && (
           <Link href="/inbox">
             <Nav.Item active={paths.inbox === router.asPath}>
-              <FiRss /> Inbox
+              <FiInbox /> Inbox
             </Nav.Item>
           </Link>
         )}

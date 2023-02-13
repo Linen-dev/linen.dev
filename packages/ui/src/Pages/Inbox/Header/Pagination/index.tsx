@@ -43,6 +43,9 @@ export default function Pagination({
   const { start, end } = getRange(page, total);
   const isBackDisabled = page === 1;
   const isNextDisabled = total <= 10 || end === total;
+  if (isBackDisabled && isNextDisabled) {
+    return null;
+  }
   return (
     <div className={styles.pagination}>
       <div className={styles.count}>

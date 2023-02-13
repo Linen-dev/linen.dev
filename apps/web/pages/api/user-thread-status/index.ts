@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { ReminderTypes } from '@linen/types';
 import { soon, tomorrow, nextWeek } from '@linen/utilities/date';
 import { createRemindMeJob } from 'queue/jobs';
+import UserThreadStatusService from 'services/user-thread-status';
 
 const createSchema = z.object({
   threadIds: z.array(z.string()),
@@ -44,7 +45,7 @@ export async function create(params: {
 
   const creation = muted || read || reminder;
 
-  if (creation) {
+  if (creation && threadIds.length > 0) {
     await prisma.$transaction([
       prisma.userThreadStatus.deleteMany({
         where: {
@@ -79,13 +80,22 @@ export async function create(params: {
         }),
       }),
     ]);
-  } else {
+  } else if (threadIds.length > 0) {
     await prisma.userThreadStatus.deleteMany({
       where: {
         userId,
         threadId: { in: threadIds },
       },
     });
+  } else if (threadIds.length === 0 && read) {
+    try {
+      await UserThreadStatusService.markAllAsRead({ userId });
+    } catch (exception) {
+      console.log(exception);
+      return { status: 500 };
+    }
+
+    return { status: 200 };
   }
 
   return { status: 200 };

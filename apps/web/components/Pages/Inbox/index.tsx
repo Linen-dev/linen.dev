@@ -116,6 +116,7 @@ export default function Inbox({
         fetchThread={fetchThread(settings.communityId)}
         putThread={putThread(settings.communityId)}
         fetchTotal={fetchTotal}
+        currentCommunity={currentCommunity}
         isSubDomainRouting={isSubDomainRouting}
         permissions={permissions}
         settings={settings}
