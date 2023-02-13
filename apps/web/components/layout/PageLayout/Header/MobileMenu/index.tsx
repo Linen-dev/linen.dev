@@ -39,7 +39,7 @@ export default function MobileMenu({
   const router = useRouter();
 
   const paths = {
-    feed: usePath({ href: '/feed' }),
+    inbox: usePath({ href: '/inbox' }),
     metrics: usePath({ href: '/metrics' }),
     integrations: usePath({ href: '/integrations' }),
     configurations: usePath({ href: '/configurations' }),
@@ -61,16 +61,16 @@ export default function MobileMenu({
           <FiMenu className={styles.close} onClick={close} />
         </div>
         <ul className={styles.list}>
-          {permissions.feed && (
+          {permissions.inbox && (
             <li>
               <Link
                 onClick={close}
                 className={classNames(styles.link, {
-                  [styles.active]: paths.feed === router.asPath,
+                  [styles.active]: paths.inbox === router.asPath,
                 })}
-                href="/feed"
+                href="/inbox"
               >
-                <FiRss /> Feed
+                <FiRss /> Inbox
               </Link>
             </li>
           )}

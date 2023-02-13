@@ -19,7 +19,7 @@ export default function SignIn() {
           const { token } = response.data as any;
           setToken(token);
 
-          router.push('/feed');
+          router.push('/inbox');
         } else {
           await message('Email or password are incorrect. Please try again.', {
             title: 'linen.dev',

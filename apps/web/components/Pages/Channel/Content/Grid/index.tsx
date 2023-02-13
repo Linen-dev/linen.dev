@@ -123,7 +123,7 @@ export default function Grid({
         const last = index === sorted.length - 1;
         if (item.type === RowType.ReadStatus && !last) {
           return (
-            <li key={`feed-line-${index}`}>
+            <li key={`inbox-line-${index}`}>
               <Line className={styles.line}>New</Line>
             </li>
           );
@@ -132,7 +132,7 @@ export default function Grid({
           const { incrementId, slug } = thread;
           return (
             <li
-              key={`feed-${incrementId}-${index}`}
+              key={`inbox-${incrementId}-${index}`}
               className={classNames(styles.li, {
                 [styles.active]: thread.id === currentThreadId,
               })}

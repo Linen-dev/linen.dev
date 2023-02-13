@@ -15,7 +15,7 @@ function usePolling({ fetch, success, error }: Props, dependencies?: any[]) {
   useEffect(() => {
     let mounted = true;
     setLoading(true);
-    const fetchFeed = () =>
+    const fetchInbox = () =>
       fetch()
         .then((data: any) => {
           if (mounted) {
@@ -32,10 +32,10 @@ function usePolling({ fetch, success, error }: Props, dependencies?: any[]) {
             setLoading(false);
           }
         });
-    fetchFeed();
+    fetchInbox();
 
     const intervalId = setInterval(() => {
-      fetchFeed();
+      fetchInbox();
     }, POLL_INTERVAL);
 
     return () => {

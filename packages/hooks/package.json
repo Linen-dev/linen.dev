@@ -27,7 +27,7 @@
     "./priority": "./dist/priority.js",
     "./resize": "./dist/resize.js",
     "./websockets": "./dist/websockets/index.js",
-    "./websockets/feed": "./dist/websockets/feed.js",
+    "./websockets/inbox": "./dist/websockets/inbox.js",
     "./websockets/thread": "./dist/websockets/thread.js"
   },
   "typesVersions": {
@@ -53,8 +53,8 @@
       "websockets": [
         "dist/websockets/index.d.ts"
       ],
-      "websockets/feed": [
-        "dist/websockets/feed.d.ts"
+      "websockets/inbox": [
+        "dist/websockets/inbox.d.ts"
       ],
       "websockets/thread": [
         "dist/websockets/thread.d.ts"

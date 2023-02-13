@@ -38,13 +38,13 @@ export default class PermissionsService {
     const account = user?.account || null;
     const access = PermissionsService._access(community, account);
     const chat = PermissionsService._chat(community, user);
-    const feed = PermissionsService._feed(community);
+    const inbox = PermissionsService._inbox(community, user);
     const is_member = PermissionsService._is_member(community, account, user);
     const manage = PermissionsService._manage(community, account, user);
     const channel_create = PermissionsService._channel_create(community, user);
     const permissions = {
       access,
-      feed,
+      inbox,
       chat,
       manage,
       is_member,
@@ -112,8 +112,11 @@ export default class PermissionsService {
     return true;
   }
 
-  static _feed(community: accounts | null): boolean {
+  static _inbox(community: accounts | null, user: users | null): boolean {
     if (!community) {
+      return false;
+    }
+    if (!user) {
       return false;
     }
     return true;

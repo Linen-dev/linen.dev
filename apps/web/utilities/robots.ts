@@ -9,7 +9,6 @@ Allow: /s/
 Allow: /d/
 Allow: /t/
 Allow: /c/
-Disallow: /feed
 Allow: /sitemap
 Allow: /_next/
 Allow: *.css

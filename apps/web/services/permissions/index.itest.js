@@ -28,7 +28,7 @@ describe('#get', () => {
         };
         Session.find.mockResolvedValue(null);
         const permissions = await PermissionsService.for(context);
-        expect(permissions.feed).toEqual(false);
+        expect(permissions.chat).toEqual(false);
       });
     });
   });

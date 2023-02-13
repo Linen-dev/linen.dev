@@ -229,7 +229,7 @@ const Home = (props: { accounts: Props[] }) => {
                     <p className="mt-4 text-lg text-gray-500">
                       It is easy to miss conversations in traditional chat apps.
                       In Linen you can manage all of your conversations from
-                      multiple channels in a single Feed view. With open/close
+                      multiple channels in a single Inbox view. With open/close
                       states you can view all the conversations that need your
                       attention in a single page
                     </p>

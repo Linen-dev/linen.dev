@@ -46,7 +46,7 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
           return response.redirect(`${url}/c/${channel.channelName}`);
         }
       }
-      if (page === 'feed' || page === 'metrics') {
+      if (page === 'inbox' || page === 'metrics') {
         return response.redirect(`${url}/${page}`);
       }
     }

@@ -7,7 +7,7 @@ export default function NavExample() {
     <Example header="Nav">
       <Nav>
         <Nav.Item>
-          <FiRss /> Feed
+          <FiRss /> Inbox
         </Nav.Item>
         <Nav.Item>
           <FiBarChart />
