@@ -15,11 +15,10 @@ import {
   Settings,
   ThreadState,
   Permissions,
-  Scope,
 } from '@linen/types';
-import { addMessageToThread, filterByScope, prependThread } from './state';
+import { addMessageToThread, prependThread } from './state';
 
-const { Header, Filters, Grid } = Pages.Inbox;
+const { Header, Grid } = Pages.Inbox;
 const { SidebarLayout } = Layouts.Shared;
 
 interface InboxResponse {
@@ -37,13 +36,9 @@ interface Selections {
 interface Props {
   fetchInbox({
     communityName,
-    state,
-    scope,
     page,
   }: {
     communityName: string;
-    state: ThreadState;
-    scope: Scope;
     page: number;
   }): Promise<InboxResponse>;
   fetchThread(threadId: string): Promise<SerializedThread>;
@@ -56,12 +51,8 @@ interface Props {
   ): Promise<SerializedThread>;
   fetchTotal({
     communityName,
-    state,
-    scope,
   }: {
     communityName: string;
-    state: ThreadState;
-    scope: Scope;
   }): Promise<InboxResponse>;
   isSubDomainRouting: boolean;
   permissions: Permissions;
@@ -78,8 +69,6 @@ export default function Inbox({
   settings,
 }: Props) {
   const [inbox, setInbox] = useState<InboxResponse>({ threads: [], total: 0 });
-  const [state, setState] = useState<ThreadState>(ThreadState.OPEN);
-  const [scope, setScope] = useState<Scope>(Scope.All);
   const [page, setPage] = useState<number>(1);
   const [key, setKey] = useState(0);
   const [selections, setSelections] = useState<Selections>({});
@@ -103,15 +92,9 @@ export default function Inbox({
         return;
       }
       if (thread) {
-        if (filterByScope(scope, thread.messages, currentUser)) {
-          return;
-        }
         setInbox(prependThread(thread));
       }
       if (message) {
-        if (filterByScope(scope, [message], currentUser)) {
-          return;
-        }
         const thread = inbox.threads.find((t) => t.id === message.threadId);
         if (thread) {
           setInbox(prependThread(thread, message));
@@ -122,7 +105,7 @@ export default function Inbox({
         }
       }
     },
-    [currentUser?.id, scope]
+    [currentUser?.id]
   );
 
   const onThreadMessage = (
@@ -142,60 +125,32 @@ export default function Inbox({
     token,
   });
 
-  const updateThreads = async () => {
-    const ids: string[] = [];
-    for (const key in selections) {
-      const selection = selections[key];
-      if (selection?.checked) {
-        ids.push(key);
-      }
-    }
-    const newState =
-      state === ThreadState.OPEN ? ThreadState.CLOSE : ThreadState.OPEN;
-    await Promise.all(ids.map((id) => putThread(id, { state: newState })));
-    setThread((thread) => {
-      if (!thread) {
-        return;
-      }
-      if (ids.includes(thread.id)) {
-        return {
-          ...thread,
-          state: newState,
-        };
-      }
-      return thread;
-    });
-
-    setSelections({});
-    setKey((key) => key + 1);
-  };
-
   const [polling] = usePolling(
     {
       fetch(): any {
-        return fetchInbox({ communityName, state, scope, page });
+        return fetchInbox({ communityName, page });
       },
       success(data: InboxResponse) {
-        setInbox((f) => ({ ...f, threads: data.threads }));
+        setInbox((inbox) => ({ ...inbox, threads: data.threads }));
       },
       error() {
         Toast.error('Something went wrong. Please reload the page.');
       },
     },
-    [communityName, state, page, scope, key]
+    [communityName, page, key]
   );
 
   const [totalPolling] = usePolling(
     {
       fetch(): any {
-        return fetchTotal({ communityName, state, scope });
+        return fetchTotal({ communityName });
       },
       success(data: InboxResponse) {
-        setInbox((f) => ({ ...f, total: data.total }));
+        setInbox((inbox) => ({ ...inbox, total: data.total }));
       },
       error() {},
     },
-    [communityName, state, scope]
+    [communityName]
   );
 
   const updateThread = ({
@@ -269,25 +224,9 @@ export default function Inbox({
       <SidebarLayout
         left={
           <>
-            <Header />
-            <Filters
-              state={state}
-              selections={selections}
-              defaultScope={scope}
-              permissions={permissions}
-              onChange={(type: string, value: ThreadState | Scope) => {
-                setSelections({});
-                setPage(1);
-                switch (type) {
-                  case 'state':
-                    return setState(value as ThreadState);
-                  case 'scope':
-                    return setScope(value as Scope);
-                }
-              }}
+            <Header
               total={inbox.total}
               isFetchingTotal={totalPolling}
-              onUpdate={updateThreads}
               page={page}
               onPageChange={(type: string) => {
                 switch (type) {
