@@ -3,7 +3,7 @@ import styles from './index.module.scss';
 import Title from './Title';
 import Header from './Header';
 import Content from './Content';
-import { FiRss } from 'react-icons/fi';
+import { FiInbox } from 'react-icons/fi';
 import { Nav } from '@linen/ui';
 import { CommunityType } from '@linen/types';
 
@@ -51,7 +51,7 @@ export default function Dashboard({
       <div className={styles.main}>
         <Nav className={styles.nav}>
           <Nav.Item active>
-            <FiRss /> Inbox
+            <FiInbox /> Inbox
           </Nav.Item>
         </Nav>
         <Content

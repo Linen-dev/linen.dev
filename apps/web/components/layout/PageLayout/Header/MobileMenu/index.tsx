@@ -5,7 +5,7 @@ import {
   FiBarChart,
   FiMenu,
   FiHash,
-  FiRss,
+  FiInbox,
   FiLogOut,
   FiSettings,
   FiDollarSign,
@@ -70,7 +70,7 @@ export default function MobileMenu({
                 })}
                 href="/inbox"
               >
-                <FiRss /> Inbox
+                <FiInbox /> Inbox
               </Link>
             </li>
           )}

@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import { FiRss } from 'react-icons/fi';
+import { FiInbox } from 'react-icons/fi';
 import { useRouter } from 'next/router';
 import Link from 'components/Link/InternalLink';
 import { Nav } from '@linen/ui';
@@ -37,7 +37,7 @@ export default function MobileNavBar({
             className={styles.inbox}
             active={paths.inbox === router.asPath}
           >
-            <FiRss className="mr-1" /> Inbox
+            <FiInbox className="mr-1" /> Inbox
           </Nav.Item>
         </Link>
       )}

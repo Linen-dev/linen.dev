@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback } from 'react';
 import { Layouts, Pages, Toast } from '@linen/ui';
 import Thread from 'components/Thread';
+import Empty from './Empty';
 import { sendMessageWrapper } from './utilities/sendMessageWrapper';
 import usePolling from '@linen/hooks/polling';
 import useKeyboard from '@linen/hooks/keyboard';
@@ -15,6 +16,7 @@ import {
   Settings,
   ThreadState,
   Permissions,
+  SerializedAccount,
 } from '@linen/types';
 import { addMessageToThread, prependThread } from './state';
 
@@ -54,6 +56,7 @@ interface Props {
   }: {
     communityName: string;
   }): Promise<InboxResponse>;
+  currentCommunity: SerializedAccount;
   isSubDomainRouting: boolean;
   permissions: Permissions;
   settings: Settings;
@@ -64,10 +67,12 @@ export default function Inbox({
   fetchThread,
   putThread,
   fetchTotal,
+  currentCommunity,
   isSubDomainRouting,
   permissions,
   settings,
 }: Props) {
+  const [loading, setLoading] = useState(true);
   const [inbox, setInbox] = useState<InboxResponse>({ threads: [], total: 0 });
   const [page, setPage] = useState<number>(1);
   const [key, setKey] = useState(0);
@@ -131,6 +136,7 @@ export default function Inbox({
         return fetchInbox({ communityName, page });
       },
       success(data: InboxResponse) {
+        setLoading(false);
         setInbox((inbox) => ({ ...inbox, threads: data.threads }));
       },
       error() {
@@ -210,6 +216,24 @@ export default function Inbox({
       });
   };
 
+  function onMarkAllAsRead() {
+    setThread(undefined);
+    setInbox({ threads: [], total: 0 });
+    return fetch('/api/user-thread-status', {
+      method: 'POST',
+      body: JSON.stringify({
+        communityId: currentCommunity.id,
+        threadIds: [],
+        muted: false,
+        reminder: false,
+        read: true,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+  }
+
   const sendMessage = sendMessageWrapper({
     currentUser: permissions.is_member ? currentUser : null,
     allUsers,
@@ -219,6 +243,8 @@ export default function Inbox({
     startSignUp,
   });
 
+  const { threads } = inbox;
+
   return (
     <>
       <SidebarLayout
@@ -226,8 +252,10 @@ export default function Inbox({
           <>
             <Header
               total={inbox.total}
+              threads={inbox.threads}
               isFetchingTotal={totalPolling}
               page={page}
+              onMarkAllAsRead={onMarkAllAsRead}
               onPageChange={(type: string) => {
                 switch (type) {
                   case 'back':
@@ -237,27 +265,31 @@ export default function Inbox({
                 }
               }}
             />
-            <Grid
-              threads={inbox.threads}
-              loading={polling}
-              selections={selections}
-              permissions={permissions}
-              onChange={(id: string, checked: boolean, index: number) => {
-                setSelections((selections: Selections) => {
-                  return manageSelections({
-                    id,
-                    checked,
-                    index,
-                    selections,
-                    ids: inbox.threads.map((thread) => thread.id),
-                    isShiftPressed,
+            {threads.length > 0 ? (
+              <Grid
+                threads={inbox.threads}
+                loading={polling}
+                selections={selections}
+                permissions={permissions}
+                onChange={(id: string, checked: boolean, index: number) => {
+                  setSelections((selections: Selections) => {
+                    return manageSelections({
+                      id,
+                      checked,
+                      index,
+                      selections,
+                      ids: inbox.threads.map((thread) => thread.id),
+                      isShiftPressed,
+                    });
                   });
-                });
-              }}
-              onSelect={(thread: SerializedThread) => {
-                setThread(thread);
-              }}
-            />
+                }}
+                onSelect={(thread: SerializedThread) => {
+                  setThread(thread);
+                }}
+              />
+            ) : (
+              <Empty loading={loading} />
+            )}
           </>
         }
         right={

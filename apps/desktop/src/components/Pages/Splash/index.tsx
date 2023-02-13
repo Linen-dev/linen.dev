@@ -1,7 +1,7 @@
 import styles from './index.module.scss';
 import Logo from '../../Logo/Linen';
 import Button from '../../Button/Gradient';
-import { FiRss } from 'react-icons/fi';
+import { FiInbox } from 'react-icons/fi';
 import Link from 'next/link';
 
 export default function SplashPage() {
@@ -24,7 +24,7 @@ export default function SplashPage() {
         </Link>
       </div>
       <div className={styles.column}>
-        <FiRss className={styles.icon} />
+        <FiInbox className={styles.icon} />
       </div>
     </div>
   );
