@@ -13,6 +13,7 @@
   "dependencies": {
     "@linen/types": "*",
     "@linen/utilities": "*",
-    "axios": "^1.2.4"
+    "axios": "^1.2.4",
+    "superjson": "^1.12.2"
   }
 }
