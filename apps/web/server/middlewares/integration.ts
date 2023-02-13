@@ -1,5 +1,6 @@
 import { Request, NextFunction } from 'server/types';
 import { Unauthorized } from 'server/exceptions';
+import { stringify } from 'superjson';
 
 function getInternalApiKey(req: any) {
   const authorizationHeader =
@@ -26,7 +27,7 @@ export default function integrationMiddleware(_?: never) {
       }
       return next();
     } catch (error) {
-      console.error(error);
+      console.error(stringify(error));
       return next(new Unauthorized());
     }
   };
