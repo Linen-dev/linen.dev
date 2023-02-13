@@ -26,31 +26,14 @@ export default function Row({
   const { channel, id } = thread;
   return (
     <div className={classNames(styles.row, { [styles.selected]: selected })}>
-      <div className={styles.content}>
-        {permissions.manage && (
-          <Checkbox
-            className={styles.checkbox}
-            checked={selected}
-            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-              event.stopPropagation();
-              const { checked } = event.target;
-              onChange(id, checked);
-            }}
-          />
-        )}
-
-        <div className={styles.body} onClick={onClick}>
-          <Avatar
-            src={message.author?.profileImageUrl}
-            text={message.author?.displayName}
-          />
-          <div>
-            {channel && (
-              <div className={styles.channel}>#{channel.channelName}</div>
-            )}
-            <Title thread={thread} />
-            <Description messages={thread.messages} />
-          </div>
+      <div className={styles.body} onClick={onClick}>
+        <Avatar
+          src={message.author?.profileImageUrl}
+          text={message.author?.displayName}
+        />
+        <div className={styles.line}>
+          <Title thread={thread} />
+          <Description thread={thread} />
         </div>
       </div>
     </div>

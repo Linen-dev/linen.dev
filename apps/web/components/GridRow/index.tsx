@@ -82,8 +82,8 @@ export function Row({
   onUnread,
 }: Props) {
   const top = !isPreviousMessageFromSameUser;
-  const isResolution = thread.resolutionId === message.id
-  const resolutionStyle = isResolution ? styles.resolution: {};
+  const isResolution = thread.resolutionId === message.id;
+  const resolutionStyle = isResolution ? styles.resolution : {};
   return (
     <div
       className={classNames(className, styles.container, resolutionStyle, {
