@@ -3,7 +3,6 @@ import PermissionsService from 'services/permissions';
 import CommunityService from 'services/community';
 import { prisma } from '@linen/database';
 import serializeThread from 'serializers/thread';
-import { Scope, ThreadState } from '@linen/types';
 import ChannelsService from 'services/channels';
 import { anonymizeMessages } from 'utilities/anonymizeMessages';
 
@@ -16,44 +15,26 @@ function getPage(page?: number) {
 
 export async function index({
   params,
-  currentUserId,
 }: {
   params: {
     communityName?: string;
-    state?: ThreadState;
-    scope?: Scope;
     page?: number;
     total?: boolean;
   };
-  currentUserId?: string;
 }) {
   const community = await CommunityService.find(params);
   if (!community) {
     return { status: 404 };
   }
   const page = getPage(params.page);
-  const scope = params.scope || Scope.All;
   const limit = 10;
   const channels = await ChannelsService.find(community.id);
   const condition = {
     hidden: false,
-    state: params.state || ThreadState.OPEN,
     channelId: { in: channels.map((channel) => channel.id) },
-    messageCount: { gte: 1 },
-    messages: {
-      some: {},
-    },
-    lastReplyAt: { lt: new Date().getTime() },
   } as any;
 
-  if (!!currentUserId && scope === Scope.Participant) {
-    condition.messages.some.OR = [
-      { usersId: currentUserId },
-      { mentions: { some: { usersId: currentUserId } } },
-    ];
-  }
-
-  if (!!params.total) {
+  if (params.total) {
     const total = await prisma.threads.count({
       where: condition,
     });
@@ -83,7 +64,6 @@ export async function index({
       },
       channel: true,
     },
-    orderBy: { lastReplyAt: 'desc' },
     take: limit,
     skip: (page - 1) * limit,
   });
@@ -118,7 +98,6 @@ const handlers = {
       }
       const { status, data } = await index({
         params: request.query,
-        currentUserId: permissions.user?.id || undefined,
       });
       response.status(status).json(data);
     } catch (exception) {
