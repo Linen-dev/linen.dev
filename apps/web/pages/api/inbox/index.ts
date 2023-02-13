@@ -15,12 +15,14 @@ function getPage(page?: number) {
 
 export async function index({
   params,
+  currentUserId,
 }: {
   params: {
     communityName?: string;
     page?: number;
     total?: boolean;
   };
+  currentUserId: string;
 }) {
   const community = await CommunityService.find(params);
   if (!community) {
@@ -32,6 +34,12 @@ export async function index({
   const condition = {
     hidden: false,
     channelId: { in: channels.map((channel) => channel.id) },
+    userThreadStatus: {
+      none: {
+        userId: currentUserId,
+        OR: [{ read: true }, { muted: true }, { reminder: true }],
+      },
+    },
   } as any;
 
   if (params.total) {
@@ -64,6 +72,7 @@ export async function index({
       },
       channel: true,
     },
+    orderBy: { sentAt: 'desc' },
     take: limit,
     skip: (page - 1) * limit,
   });
@@ -98,6 +107,7 @@ const handlers = {
       }
       const { status, data } = await index({
         params: request.query,
+        currentUserId: permissions.user.id,
       });
       response.status(status).json(data);
     } catch (exception) {
