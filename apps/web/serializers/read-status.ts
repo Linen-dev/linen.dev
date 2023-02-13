@@ -11,12 +11,12 @@ function isChannelRead(
 }
 
 function serialize(status: any): SerializedReadStatus {
-  const thread = status.channel.threads[0];
-  const lastReadAt = status.lastReadAt;
+  const thread = status?.channel?.threads[0];
+  const lastReadAt = status?.lastReadAt;
   const lastReplyAt = thread?.sentAt;
   return {
-    channelId: status.channelId,
-    lastReadAt: lastReadAt.toString(),
+    channelId: status?.channelId,
+    lastReadAt: lastReadAt?.toString(),
     lastReplyAt: lastReplyAt ? lastReplyAt.toString() : null,
     read: isChannelRead(lastReadAt, lastReplyAt),
   };
