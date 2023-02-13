@@ -4,7 +4,7 @@ import useMode from './mode';
 import usePolling from './polling';
 import useResize from './resize';
 import useWebsockets from './websockets';
-import useFeedWebsockets from './websockets/feed';
+import useInboxWebsockets from './websockets/inbox';
 import useThreadWebsockets from './websockets/thread';
 
 export {
@@ -14,6 +14,6 @@ export {
   usePolling,
   useResize,
   useWebsockets,
-  useFeedWebsockets,
+  useInboxWebsockets,
   useThreadWebsockets,
 };

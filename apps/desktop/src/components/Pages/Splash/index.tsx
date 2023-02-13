@@ -14,7 +14,7 @@ export default function SplashPage() {
           <p>
             It is easy to miss conversations in traditional chat apps. In Linen
             you can manage all of your conversations from multiple channels in a
-            single Feed view. With open/close states you can view all the
+            single Inbox view. With open/close states you can view all the
             conversations that need your attention in a single page.
           </p>
         </header>

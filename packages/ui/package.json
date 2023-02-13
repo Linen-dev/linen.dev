@@ -53,8 +53,8 @@
   },
   "typesVersions": {
     "*": {
-      "Pages/Feed/Filters": [
-        "dist/Pages/Feed/Filters/index.d.ts"
+      "Pages/Inbox/Filters": [
+        "dist/Pages/Inbox/Filters/index.d.ts"
       ]
     }
   }

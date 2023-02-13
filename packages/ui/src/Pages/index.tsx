@@ -1,3 +1,3 @@
-import Feed from './Feed';
+import Inbox from './Inbox';
 
-export default { Feed };
+export default { Inbox };

@@ -74,7 +74,7 @@ export default function DesktopNavBar({
 }: Props) {
   const router = useRouter();
   const paths = {
-    feed: usePath({ href: '/feed' }),
+    inbox: usePath({ href: '/inbox' }),
     metrics: usePath({ href: '/metrics' }),
     integrations: usePath({ href: '/integrations' }),
     configurations: usePath({ href: '/configurations' }),
@@ -156,10 +156,10 @@ export default function DesktopNavBar({
         </div>
       )}
       <Nav className={styles.navbar}>
-        {permissions.feed && (
-          <Link href="/feed">
-            <Nav.Item active={paths.feed === router.asPath}>
-              <FiRss /> Feed
+        {permissions.inbox && (
+          <Link href="/inbox">
+            <Nav.Item active={paths.inbox === router.asPath}>
+              <FiRss /> Inbox
             </Nav.Item>
           </Link>
         )}

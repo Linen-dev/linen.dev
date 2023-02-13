@@ -191,7 +191,7 @@ export type Settings = {
 
 export interface Permissions {
   access: boolean;
-  feed: boolean;
+  inbox: boolean;
   chat: boolean;
   manage: boolean;
   channel_create: boolean;

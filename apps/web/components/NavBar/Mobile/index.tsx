@@ -22,22 +22,22 @@ export default function MobileNavBar({
 }: Props) {
   const router = useRouter();
   const paths = {
-    feed: usePath({ href: '/feed' }),
+    inbox: usePath({ href: '/inbox' }),
   };
 
   return (
     <Nav
       className={classNames(styles.container, {
-        [styles.list]: permissions.feed,
+        [styles.list]: permissions.inbox,
       })}
     >
-      {permissions.feed && (
-        <Link className={styles.item} href="/feed">
+      {permissions.inbox && (
+        <Link className={styles.item} href="/inbox">
           <Nav.Item
-            className={styles.feed}
-            active={paths.feed === router.asPath}
+            className={styles.inbox}
+            active={paths.inbox === router.asPath}
           >
-            <FiRss className="mr-1" /> Feed
+            <FiRss className="mr-1" /> Inbox
           </Nav.Item>
         </Link>
       )}
