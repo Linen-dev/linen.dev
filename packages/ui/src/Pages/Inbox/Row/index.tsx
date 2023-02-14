@@ -16,6 +16,7 @@ interface Props {
   onChange(id: string, checked: boolean): void;
   onClick(): void;
   onRead?(threadId: string): void;
+  onMute?(threadId: string): void;
 }
 
 export default function Row({
@@ -26,6 +27,7 @@ export default function Row({
   onChange,
   onClick,
   onRead,
+  onMute,
 }: Props) {
   const message = thread.messages[thread.messages.length - 1];
   return (
@@ -45,7 +47,12 @@ export default function Row({
           <Description thread={thread} />
         </div>
       </div>
-      <Actions className={styles.actions} thread={thread} onRead={onRead} />
+      <Actions
+        className={styles.actions}
+        thread={thread}
+        onRead={onRead}
+        onMute={onMute}
+      />
     </div>
   );
 }

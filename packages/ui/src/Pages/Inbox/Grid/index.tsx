@@ -18,6 +18,7 @@ interface Props {
   onChange(id: string, checked: boolean, index: number): void;
   onSelect(thread: SerializedThread): void;
   onRead?(threadId: string): void;
+  onMute?(threadId: string): void;
 }
 
 export default function Grid({
@@ -29,6 +30,7 @@ export default function Grid({
   onChange,
   onSelect,
   onRead,
+  onMute,
 }: Props) {
   if (!threads || threads.length === 0 || loading) {
     return null;
@@ -48,6 +50,7 @@ export default function Grid({
             }
             onClick={() => onSelect(thread)}
             onRead={onRead}
+            onMute={onMute}
           />
         );
       })}

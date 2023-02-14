@@ -142,6 +142,7 @@ export default function Inbox({
       success(data: InboxResponse) {
         setLoading(false);
         setInbox((inbox) => ({ ...inbox, threads: data.threads }));
+        setThread(data.threads[0]);
       },
       error() {
         Toast.error('Something went wrong. Please reload the page.');
@@ -160,7 +161,7 @@ export default function Inbox({
       },
       error() {},
     },
-    [communityName]
+    [communityName, key]
   );
 
   const updateThread = ({
@@ -241,20 +242,54 @@ export default function Inbox({
     });
   }
 
-  function markThreadAsRead(threadId: string) {
-    setKey((key) => key + 1);
+  function markUserThreadStatuses({
+    threadId,
+    muted,
+    reminder,
+    read,
+  }: {
+    threadId: string;
+    muted: boolean;
+    reminder: boolean;
+    read: boolean;
+  }) {
+    setLoading(true);
     return fetch('/api/user-thread-status', {
       method: 'POST',
       body: JSON.stringify({
         communityId: currentCommunity.id,
         threadIds: [threadId],
-        muted: false,
-        reminder: false,
-        read: true,
+        muted,
+        reminder,
+        read,
       }),
       headers: {
         'Content-Type': 'application/json',
       },
+    })
+      .then(() => {
+        setKey((key) => key + 1);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }
+
+  function markThreadAsRead(threadId: string) {
+    markUserThreadStatuses({
+      threadId,
+      read: true,
+      muted: false,
+      reminder: false,
+    });
+  }
+
+  function markThreadAsMuted(threadId: string) {
+    markUserThreadStatuses({
+      threadId,
+      read: false,
+      muted: true,
+      reminder: false,
     });
   }
 
@@ -266,6 +301,56 @@ export default function Inbox({
     communityId,
     startSignUp,
   });
+
+  useKeyboard(
+    {
+      onKeyUp(event: KeyboardEvent) {
+        const element = document.activeElement;
+        if (element && element.id) {
+          return false;
+        }
+        const { threads } = inbox;
+
+        if (threads.length === 0) {
+          return false;
+        }
+        const currentThreadId = thread?.id;
+        if (!currentThreadId) {
+          return false;
+        }
+        function selectPreviousThread() {
+          const index = threads.findIndex(
+            (thread) => thread.id === currentThreadId
+          );
+          if (index > 0) {
+            const thread = threads[index - 1];
+            setThread(thread);
+          }
+        }
+
+        function selectNextThread() {
+          const index = threads.findIndex(
+            (thread) => thread.id === currentThreadId
+          );
+          if (index < threads.length - 1) {
+            const thread = threads[index + 1];
+            setThread(thread);
+          }
+        }
+
+        if (event.key === 'ArrowUp' || event.key === 'k') {
+          selectPreviousThread();
+        } else if (event.key === 'ArrowDown' || event.key === 'j') {
+          selectNextThread();
+        } else if (event.key === 'e') {
+          markThreadAsRead(currentThreadId);
+        } else if (event.key === 'm') {
+          markThreadAsMuted(currentThreadId);
+        }
+      },
+    },
+    [inbox, thread]
+  );
 
   const { threads } = inbox;
 
@@ -297,6 +382,7 @@ export default function Inbox({
                 selections={selections}
                 permissions={permissions}
                 onRead={markThreadAsRead}
+                onMute={markThreadAsMuted}
                 onChange={(id: string, checked: boolean, index: number) => {
                   setSelections((selections: Selections) => {
                     return manageSelections({
