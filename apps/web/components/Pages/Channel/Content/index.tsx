@@ -17,6 +17,7 @@ import { useJoinContext } from 'contexts/Join';
 import { sendThreadMessageWrapper } from './sendThreadMessageWrapper';
 import { sendMessageWrapper } from './sendMessageWrapper';
 import {
+  onResolve,
   Permissions,
   ReminderTypes,
   SerializedAccount,
@@ -70,7 +71,7 @@ interface Props {
   muteThread(threadId: string): void;
   unmuteThread(threadId: string): void;
   pinThread(threadId: string): void;
-  updateThreadResolution(threadId: string, messageId: string): void;
+  updateThreadResolution: onResolve;
   readThread(threadId: string): void;
   onRemind(threadId: string, reminder: ReminderTypes): void;
   unreadThread(threadId: string): void;
