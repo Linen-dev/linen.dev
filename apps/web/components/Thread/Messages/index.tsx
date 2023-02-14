@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import GridRow from 'components/GridRow';
 import { SerializedThread } from '@linen/types';
 import { SerializedUser } from '@linen/types';
-import { Settings } from '@linen/types';
+import { Settings, onResolve } from '@linen/types';
 import { Permissions } from '@linen/types';
 import { Mode } from '@linen/hooks/mode';
 import styles from './index.module.scss';
@@ -16,7 +16,7 @@ interface Props {
   currentUser: SerializedUser | null;
   mode?: Mode;
   onDelete?(messageId: string): void;
-  onResolution?(threadId: string, messageId: string): void;
+  onResolution?: onResolve;
   onLoad?(): void;
   onReaction?({
     threadId,

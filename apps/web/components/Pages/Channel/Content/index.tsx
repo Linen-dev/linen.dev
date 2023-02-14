@@ -70,7 +70,7 @@ interface Props {
   muteThread(threadId: string): void;
   unmuteThread(threadId: string): void;
   pinThread(threadId: string): void;
-  markMessageAsResolution(threadId: string, messageId: string): void;
+  updateThreadResolution(threadId: string, messageId: string): void;
   readThread(threadId: string): void;
   onRemind(threadId: string, reminder: ReminderTypes): void;
   unreadThread(threadId: string): void;
@@ -138,7 +138,7 @@ export default function Channel({
   muteThread,
   unmuteThread,
   pinThread,
-  markMessageAsResolution,
+  updateThreadResolution,
   readThread,
   unreadThread,
   onMessage,
@@ -559,7 +559,7 @@ export default function Channel({
               mode={mode}
               updateThread={updateThread}
               onClose={() => onSelectThread(undefined)}
-              onResolution={markMessageAsResolution}
+              onResolution={updateThreadResolution}
               sendMessage={sendThreadMessage}
               onDelete={deleteMessage}
               onReaction={sendReaction}

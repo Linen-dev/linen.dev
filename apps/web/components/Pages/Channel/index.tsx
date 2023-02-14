@@ -487,7 +487,7 @@ export default function Channel(props: ChannelProps) {
       });
   }
 
-  async function markMessageAsResolution(threadId: string, messageId: string) {
+  async function updateThreadResolution(threadId: string, messageId?: string) {
     setThreads((threads) => {
       return threads.map((thread) => {
         if (thread.id === threadId) {
@@ -943,7 +943,7 @@ export default function Channel(props: ChannelProps) {
         muteThread={muteThread}
         unmuteThread={unmuteThread}
         pinThread={pinThread}
-        markMessageAsResolution={markMessageAsResolution}
+        updateThreadResolution={updateThreadResolution}
         readThread={readThread}
         unreadThread={unreadThread}
         onMessage={onThreadMessage}

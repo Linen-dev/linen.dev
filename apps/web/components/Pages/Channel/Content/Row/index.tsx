@@ -38,7 +38,7 @@ interface Props {
   onMute?(threadId: string): void;
   onUnmute?(threadId: string): void;
   onPin?(threadId: string): void;
-  onResolution?(threadId: string, messageId: string): void;
+  onResolution?: onResolve;
   onReaction?({
     threadId,
     messageId,

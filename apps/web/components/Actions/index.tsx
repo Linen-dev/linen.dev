@@ -11,6 +11,7 @@ import {
   SerializedUser,
   ThreadStatus,
   ReminderTypes,
+  onResolve,
 } from '@linen/types';
 import { copyToClipboard } from '@linen/utilities/clipboard';
 import { GoPin } from 'react-icons/go';
@@ -38,7 +39,7 @@ interface Props {
   onMute?(threadId: string): void;
   onUnmute?(threadId: string): void;
   onPin?(threadId: string): void;
-  onResolution?(threadId: string, messageId: string): void;
+  onResolution?: onResolve;
   onReaction?({
     threadId,
     messageId,
@@ -238,12 +239,18 @@ export default function Actions({
             onClick={(event) => {
               event.stopPropagation();
               event.preventDefault();
-              onResolution(thread.id, message.id);
+              if (thread.resolutionId !== message.id) {
+                onResolution(thread.id, message.id);
+              } else {
+                onResolution(thread.id);
+              }
             }}
           >
             <Tooltip className={styles.tooltip} text="Mark resolution">
               <AiOutlineHighlight
-                className={classNames({ [styles.active]: thread.resolutionId === message.id })}
+                className={classNames({
+                  [styles.active]: thread.resolutionId === message.id,
+                })}
               />
             </Tooltip>
           </li>

@@ -6,6 +6,7 @@ import JoinChannelLink from 'components/Link/JoinChannelLink';
 import MessageForm from 'components/MessageForm';
 import { fetchMentions, upload } from 'components/MessageForm/api';
 import {
+  onResolve,
   Permissions,
   SerializedMessage,
   SerializedThread,
@@ -64,7 +65,7 @@ interface Props {
     type: string;
     active: boolean;
   }): void;
-  onResolution?(threadId: string, messageId: string): void;
+  onResolution?: onResolve;
 }
 
 export default function Thread({

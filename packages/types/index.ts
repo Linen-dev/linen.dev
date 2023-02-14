@@ -161,7 +161,7 @@ export interface SerializedThread {
   lastReplyAt: string;
   messages: SerializedMessage[];
   channel: SerializedChannel | null;
-  resolutionId: string | null;
+  resolutionId?: string | null;
 }
 
 export interface SerializedReadStatus {
@@ -214,3 +214,5 @@ export interface UploadedFile {
   id: string;
   url: string;
 }
+
+export type onResolve = (threadId: string, messageId?: string) => void;
