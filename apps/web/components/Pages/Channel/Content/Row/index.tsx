@@ -10,6 +10,7 @@ import {
   SerializedUser,
   ThreadStatus,
   ReminderTypes,
+  onResolve,
 } from '@linen/types';
 import { Mode } from '@linen/hooks/mode';
 
