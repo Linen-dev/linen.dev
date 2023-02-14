@@ -11,6 +11,7 @@ interface Selections {
 
 interface Props {
   threads?: SerializedThread[];
+  currentThreadId?: string;
   selections: Selections;
   permissions: Permissions;
   loading: boolean;
@@ -21,6 +22,7 @@ interface Props {
 
 export default function Grid({
   threads,
+  currentThreadId,
   selections,
   permissions,
   loading,
@@ -39,6 +41,7 @@ export default function Grid({
             key={thread.id + index}
             thread={thread}
             selected={!!selections[thread.id]?.checked}
+            active={thread.id === currentThreadId}
             permissions={permissions}
             onChange={(id: string, checked: boolean) =>
               onChange(id, checked, index)
