@@ -36,28 +36,30 @@ export default function Header({
             All of your channel conversations in one place
           </StickyHeader.Subtitle>
         </div>
-        {threads.length > 0 && (
-          <Dropdown
-            button={
-              <Icon>
-                <FiMoreVertical />
-              </Icon>
-            }
-            items={[
-              {
-                icon: <BiMessageCheck />,
-                label: 'Mark all as done',
-                onClick: onMarkAllAsRead,
-              },
-            ]}
+        <div className={styles.right}>
+          {threads.length > 0 && (
+            <Dropdown
+              button={
+                <Icon>
+                  <FiMoreVertical />
+                </Icon>
+              }
+              items={[
+                {
+                  icon: <BiMessageCheck />,
+                  label: 'Mark all as done',
+                  onClick: onMarkAllAsRead,
+                },
+              ]}
+            />
+          )}
+          <Pagination
+            page={page}
+            total={total}
+            onPageChange={onPageChange}
+            isFetchingTotal={isFetchingTotal}
           />
-        )}
-        <Pagination
-          page={page}
-          total={total}
-          onPageChange={onPageChange}
-          isFetchingTotal={isFetchingTotal}
-        />
+        </div>
       </div>
     </StickyHeader>
   );
