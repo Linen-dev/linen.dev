@@ -16,7 +16,16 @@
   color: white;
   margin: 0.5rem 0 0.5rem;
   padding: 0.25rem 0.5rem;
-  width: fit-content
+  width: fit-content;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+}
+
+.resolutionCheck {
+  margin-right: 3px;
+  font-size: 10px
 }
 
 .row {

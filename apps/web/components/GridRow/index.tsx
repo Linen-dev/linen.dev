@@ -5,6 +5,7 @@ import { Avatar, Message } from '@linen/ui';
 import Actions from 'components/Actions';
 import CheckIcon from 'components/icons/CheckIcon';
 import { format } from '@linen/utilities/date';
+import { BsCheckCircleFill } from 'react-icons/bs';
 import { Mode } from '@linen/hooks/mode';
 import {
   Permissions,
@@ -134,7 +135,10 @@ export function Row({
               onLoad={onLoad}
             />
             {isResolution && (
-              <div className={styles.resolutionLabel}>Marked as resolution</div>
+              <div className={styles.resolutionLabel}>
+                <BsCheckCircleFill className={styles.resolutionCheck} />
+                <>Resolution</>
+              </div>
             )}
             {footer}
           </div>
