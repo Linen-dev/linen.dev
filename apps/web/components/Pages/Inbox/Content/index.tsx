@@ -39,9 +39,11 @@ interface Props {
   fetchInbox({
     communityName,
     page,
+    limit,
   }: {
     communityName: string;
     page: number;
+    limit: number;
   }): Promise<InboxResponse>;
   fetchThread(threadId: string): Promise<SerializedThread>;
   putThread(
@@ -61,6 +63,8 @@ interface Props {
   permissions: Permissions;
   settings: Settings;
 }
+
+const LIMIT = 10;
 
 export default function Inbox({
   fetchInbox,
@@ -133,7 +137,7 @@ export default function Inbox({
   const [polling] = usePolling(
     {
       fetch(): any {
-        return fetchInbox({ communityName, page });
+        return fetchInbox({ communityName, page, limit: LIMIT });
       },
       success(data: InboxResponse) {
         setLoading(false);
@@ -218,12 +222,15 @@ export default function Inbox({
 
   function onMarkAllAsRead() {
     setThread(undefined);
+    const { threads } = inbox;
+    const threadIds =
+      threads.length < LIMIT && page === 1 ? threads.map(({ id }) => id) : [];
     setInbox({ threads: [], total: 0 });
     return fetch('/api/user-thread-status', {
       method: 'POST',
       body: JSON.stringify({
         communityId: currentCommunity.id,
-        threadIds: [],
+        threadIds,
         muted: false,
         reminder: false,
         read: true,

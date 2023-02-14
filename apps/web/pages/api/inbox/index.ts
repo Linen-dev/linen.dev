@@ -21,6 +21,7 @@ export async function index({
     communityName?: string;
     page?: number;
     total?: boolean;
+    limit?: number;
   };
   currentUserId: string;
 }) {
@@ -28,8 +29,8 @@ export async function index({
   if (!community) {
     return { status: 404 };
   }
+
   const page = getPage(params.page);
-  const limit = 10;
   const channels = await ChannelsService.find(community.id);
   const condition = {
     hidden: false,
@@ -53,6 +54,11 @@ export async function index({
       },
     };
   }
+  if (!params.limit) {
+    return { status: 400 };
+  }
+
+  const limit = Number(params.limit);
 
   const threads = await prisma.threads.findMany({
     where: condition,
