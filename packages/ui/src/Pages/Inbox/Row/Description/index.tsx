@@ -14,6 +14,7 @@ export default function Description({ thread }: Props) {
     const date = format(message.sentAt, 'Pp');
     return (
       <div className={styles.description}>
+        {channel && <>#{channel.channelName} &middot; </>}
         {message.author?.displayName || 'User'} started this thread &middot;{' '}
         {date}
       </div>
