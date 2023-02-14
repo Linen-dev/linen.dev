@@ -5,6 +5,7 @@ import Checkbox from '../../../Checkbox';
 import { Permissions, SerializedThread } from '@linen/types';
 import Title from './Title';
 import Description from './Description';
+import Actions from './Actions';
 import styles from './index.module.scss';
 
 interface Props {
@@ -13,6 +14,7 @@ interface Props {
   permissions: Permissions;
   onChange(id: string, checked: boolean): void;
   onClick(): void;
+  onRead?(threadId: string): void;
 }
 
 export default function Row({
@@ -21,9 +23,9 @@ export default function Row({
   permissions,
   onChange,
   onClick,
+  onRead,
 }: Props) {
   const message = thread.messages[thread.messages.length - 1];
-  const { channel, id } = thread;
   return (
     <div className={classNames(styles.row, { [styles.selected]: selected })}>
       <div className={styles.body} onClick={onClick}>
@@ -36,6 +38,7 @@ export default function Row({
           <Description thread={thread} />
         </div>
       </div>
+      <Actions className={styles.actions} thread={thread} onRead={onRead} />
     </div>
   );
 }

@@ -241,6 +241,23 @@ export default function Inbox({
     });
   }
 
+  function markThreadAsRead(threadId: string) {
+    setKey((key) => key + 1);
+    return fetch('/api/user-thread-status', {
+      method: 'POST',
+      body: JSON.stringify({
+        communityId: currentCommunity.id,
+        threadIds: [threadId],
+        muted: false,
+        reminder: false,
+        read: true,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+  }
+
   const sendMessage = sendMessageWrapper({
     currentUser: permissions.is_member ? currentUser : null,
     allUsers,
@@ -278,6 +295,7 @@ export default function Inbox({
                 loading={polling}
                 selections={selections}
                 permissions={permissions}
+                onRead={markThreadAsRead}
                 onChange={(id: string, checked: boolean, index: number) => {
                   setSelections((selections: Selections) => {
                     return manageSelections({
