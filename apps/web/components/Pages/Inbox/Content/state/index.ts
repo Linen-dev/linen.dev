@@ -1,9 +1,4 @@
-import {
-  Scope,
-  SerializedMessage,
-  SerializedThread,
-  SerializedUser,
-} from '@linen/types';
+import { SerializedMessage, SerializedThread } from '@linen/types';
 import { InboxResponse } from '../../types';
 
 export function prependThread(
@@ -23,21 +18,6 @@ export function prependThread(
       threads: [thread, ...threads.filter((t) => t.id !== thread.id)],
     };
   };
-}
-
-export function filterByScope(
-  scope: Scope,
-  messages: SerializedMessage[],
-  currentUser?: SerializedUser
-) {
-  return (
-    scope === Scope.Participant &&
-    !messages.find(
-      (m) =>
-        m.author?.id === currentUser?.id ||
-        m.mentions.find((me) => me.id === currentUser?.id)
-    )
-  );
 }
 
 export function addMessageToThread(

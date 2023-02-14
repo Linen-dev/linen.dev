@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 import PageLayout from 'components/layout/PageLayout';
 import {
   Permissions,
-  Scope,
   SerializedAccount,
   SerializedChannel,
   Settings,
@@ -25,17 +24,15 @@ interface Props {
 const fetchInbox = debounce(
   ({
     communityName,
-    state,
-    scope,
     page,
+    limit,
   }: {
     communityName: string;
-    state: ThreadState;
-    scope: Scope;
     page: number;
+    limit: number;
   }) => {
     return fetch(
-      `/api/inbox?communityName=${communityName}&state=${state}&scope=${scope}&page=${page}`,
+      `/api/inbox?communityName=${communityName}&page=${page}&limit=${limit}`,
       {
         method: 'GET',
       }
@@ -65,21 +62,10 @@ const putThread =
       ...options,
     });
 
-const fetchTotal = ({
-  communityName,
-  state,
-  scope,
-}: {
-  communityName: string;
-  state: ThreadState;
-  scope: Scope;
-}) => {
-  return fetch(
-    `/api/inbox?communityName=${communityName}&state=${state}&scope=${scope}&total=true`,
-    {
-      method: 'GET',
-    }
-  ).then((response) => {
+const fetchTotal = ({ communityName }: { communityName: string }) => {
+  return fetch(`/api/inbox?communityName=${communityName}&total=true`, {
+    method: 'GET',
+  }).then((response) => {
     if (response.ok) {
       return response.json();
     }
