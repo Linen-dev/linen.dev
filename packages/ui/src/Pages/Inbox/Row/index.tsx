@@ -11,6 +11,7 @@ import styles from './index.module.scss';
 interface Props {
   thread: SerializedThread;
   selected: boolean;
+  active: boolean;
   permissions: Permissions;
   onChange(id: string, checked: boolean): void;
   onClick(): void;
@@ -20,6 +21,7 @@ interface Props {
 export default function Row({
   thread,
   selected,
+  active,
   permissions,
   onChange,
   onClick,
@@ -27,7 +29,12 @@ export default function Row({
 }: Props) {
   const message = thread.messages[thread.messages.length - 1];
   return (
-    <div className={classNames(styles.row, { [styles.selected]: selected })}>
+    <div
+      className={classNames(styles.row, {
+        [styles.selected]: selected,
+        [styles.active]: active,
+      })}
+    >
       <div className={styles.body} onClick={onClick}>
         <Avatar
           src={message.author?.profileImageUrl}

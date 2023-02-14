@@ -11,6 +11,10 @@
   background-color: $color-gray-100;
 }
 
+.row.active {
+  background-color: $color-gray-50;
+}
+
 .row:hover {
   background-color: $color-gray-50;
 }

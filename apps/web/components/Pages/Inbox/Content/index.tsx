@@ -291,6 +291,7 @@ export default function Inbox({
             />
             {threads.length > 0 ? (
               <Grid
+                currentThreadId={thread?.id}
                 threads={inbox.threads}
                 loading={polling}
                 selections={selections}
