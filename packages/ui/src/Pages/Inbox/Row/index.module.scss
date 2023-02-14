@@ -4,6 +4,7 @@
   align-items: center;
   display: block;
   padding: 0 1rem;
+  position: relative;
 }
 
 .row.selected {
@@ -41,4 +42,19 @@
 .line {
   white-space: nowrap;
   overflow: hidden;
+}
+
+.actions {
+  display: none;
+}
+
+.row:hover .actions {
+  position: absolute;
+  display: flex;
+  top: 0;
+  bottom: 0;
+  vertical-align: middle;
+  height: 100%;
+  align-items: center;
+  right: 1rem;
 }
