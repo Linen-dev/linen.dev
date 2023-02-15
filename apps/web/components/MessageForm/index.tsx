@@ -28,7 +28,7 @@ interface Props {
   onSend?(message: string, files: UploadedFile[]): Promise<any>;
   onSendAndClose?(message: string, files: UploadedFile[]): Promise<any>;
   fetchMentions?(term?: string): Promise<SerializedUser[]>;
-  upload?(files: File[]): Promise<void>;
+  upload?(files: File[]): Promise<any>;
 }
 
 function isUndefined(character: string | undefined) {

@@ -10,7 +10,6 @@ import { username } from 'serializers/user';
 import { InboxResponse } from '../../types';
 import { v4 as uuid } from 'uuid';
 import debounce from '@linen/utilities/debounce';
-import { StartSignUpFn } from 'contexts/Join';
 import * as api from 'utilities/requests';
 
 const debouncedSendMessage = debounce(
@@ -47,14 +46,12 @@ export function sendMessageWrapper({
   setThread,
   setInbox,
   communityId,
-  startSignUp,
 }: {
-  currentUser: SerializedUser | null;
+  currentUser: SerializedUser;
   allUsers: SerializedUser[];
   setThread: React.Dispatch<React.SetStateAction<SerializedThread | undefined>>;
   setInbox: React.Dispatch<React.SetStateAction<InboxResponse>>;
   communityId: string;
-  startSignUp?: StartSignUpFn;
 }) {
   return async ({
     message,
@@ -67,26 +64,6 @@ export function sendMessageWrapper({
     channelId: string;
     threadId: string;
   }) => {
-    if (!currentUser) {
-      startSignUp?.({
-        communityId,
-        onSignIn: {
-          run: sendMessageWrapper,
-          init: {
-            allUsers,
-            setThread,
-            setInbox,
-            communityId,
-          },
-          params: {
-            message,
-            channelId,
-            threadId,
-          },
-        },
-      });
-      return;
-    }
     const imitation: SerializedMessage = {
       id: uuid(),
       body: message,

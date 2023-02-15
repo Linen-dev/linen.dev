@@ -7,7 +7,6 @@ import { sendMessageWrapper } from './utilities/sendMessageWrapper';
 import usePolling from '@linen/hooks/polling';
 import useKeyboard from '@linen/hooks/keyboard';
 import { useUsersContext } from '@linen/contexts/Users';
-import { useJoinContext } from 'contexts/Join';
 import useInboxWebsockets from '@linen/hooks/websockets/inbox';
 import type { CommunityPushType } from 'services/push';
 import { manageSelections } from './utilities/selection';
@@ -93,7 +92,6 @@ export default function Inbox({
   const [thread, setThread] = useState<SerializedThread>();
   const ref = useRef<HTMLDivElement>(null);
   const [allUsers] = useUsersContext();
-  const { startSignUp } = useJoinContext();
   const { isShiftPressed } = useKeyboard();
 
   const token = permissions.token || null;
@@ -308,7 +306,6 @@ export default function Inbox({
     setThread,
     setInbox,
     communityId,
-    startSignUp,
   });
 
   useKeyboard(
@@ -442,9 +439,14 @@ export default function Inbox({
         rightRef={ref}
       />
       <AddThreadModal
+        communityId={currentCommunity.id}
+        currentUser={currentUser}
         channels={channels}
         open={modal === ModalView.ADD_THREAD}
         close={() => setModal(undefined)}
+        onSend={({ channelId, title, message }) => {
+          return Promise.resolve();
+        }}
       />
     </>
   );

@@ -16,6 +16,6 @@ export function fetchMentions(term: string, communityId: string) {
 export function upload(
   { communityId, data }: { communityId: string; data: FormData },
   options: AxiosRequestConfig
-) {
+): Promise<any> {
   return axios.post(`/api/upload?communityId=${communityId}`, data, options);
 }
