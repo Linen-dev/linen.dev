@@ -8,7 +8,11 @@ async function signInWithCreds(
   return await fetch(`/api/auth/callback/credentials`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ username: email, password, csrfToken }),
+    body: JSON.stringify({
+      username: String(email).toLowerCase(),
+      password,
+      csrfToken,
+    }),
   }).then((r) => {
     if (r.ok) r.json();
     else throw r.json();
@@ -23,7 +27,11 @@ async function signInWithMagicLink(
   return await fetch(`/api/auth/magic-link`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ destination: email, csrfToken, ...opts }),
+    body: JSON.stringify({
+      destination: String(email).toLowerCase(),
+      csrfToken,
+      ...opts,
+    }),
   }).then((r) => {
     if (r.ok) r.json();
     else throw r.json();
@@ -72,7 +80,10 @@ export function onSignInSubmit({
         }
       }
       if (mode === 'magic') {
-        await signInWithMagicLink(email, csrfToken, { callbackUrl, state });
+        await signInWithMagicLink(email, csrfToken, {
+          callbackUrl,
+          state,
+        });
         window.location.href = '/verify-request';
       }
     } catch (error: any) {
@@ -155,7 +166,7 @@ export function onSignUpWithCredsSubmit({
       const signUpResponse = await fetch('/api/signup', {
         method: 'POST',
         body: JSON.stringify({
-          email,
+          email: String(email).toLowerCase(),
           password,
           ...(!!state && {
             displayName: form.displayName.value,

@@ -111,7 +111,7 @@ export default class UsersService {
       data: {
         salt,
         password: hash,
-        email,
+        email: String(email).toLowerCase(),
       },
     });
   }
