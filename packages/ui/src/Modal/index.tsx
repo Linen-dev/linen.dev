@@ -9,6 +9,7 @@ type ModalProps = {
   close: (value: boolean) => void;
   children: any;
   fullscreen?: boolean;
+  size?: 'md' | 'lg';
 };
 
 export default function Modal({
@@ -17,6 +18,7 @@ export default function Modal({
   close,
   children,
   fullscreen,
+  size,
 }: ModalProps) {
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -51,6 +53,7 @@ export default function Modal({
               <Dialog.Panel
                 className={classNames(styles.content, {
                   [styles.fullscreen]: fullscreen,
+                  [styles.lg]: size === 'lg',
                 })}
               >
                 <div>{children}</div>

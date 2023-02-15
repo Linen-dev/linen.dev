@@ -24,6 +24,7 @@ interface Props {
   progress: number;
   uploading?: boolean;
   uploads: UploadedFile[];
+  rows?: number;
   onSend?(message: string, files: UploadedFile[]): Promise<any>;
   onSendAndClose?(message: string, files: UploadedFile[]): Promise<any>;
   fetchMentions?(term?: string): Promise<SerializedUser[]>;
@@ -132,6 +133,7 @@ function MessageForm({
   progress,
   uploading,
   uploads,
+  rows,
   onSend,
   onSendAndClose,
   fetchMentions,
@@ -302,7 +304,7 @@ function MessageForm({
           className={styles.textarea}
           name="message"
           placeholder="Add your comment..."
-          rows={2}
+          rows={rows || 2}
           value={message}
           onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) => {
             const message = event.target.value;
