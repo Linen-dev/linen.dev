@@ -106,7 +106,7 @@ async function getFileFromS3(fileLocation: string) {
       const target = tmpdir() + '/' + v4();
       fs.mkdirSync(target, { recursive: true });
       const response = await axios({
-        baseURL: fileLocation,
+        url: encodeURI(fileLocation),
         method: 'get',
         responseType: 'stream',
       });

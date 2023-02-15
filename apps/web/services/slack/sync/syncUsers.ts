@@ -19,9 +19,15 @@ export async function syncUsers({
     console.log('Syncing users for account: ', accountId);
     const usersListResponse = await listUsers(token);
     const members: UserInfo[] = usersListResponse.body.members;
+    console.log('members total:', members.length);
 
+    let count = members.length;
     for (const user of members) {
       await createOrUpdateUser(user, accountId);
+      count--;
+      if (count % 50 === 0) {
+        console.log('members left:', count);
+      }
     }
 
     let userCursor: string | null =
