@@ -3,7 +3,7 @@ import Dropdown from '../../../Dropdown';
 import StickyHeader from '../../../StickyHeader';
 import Pagination from './Pagination';
 import Icon from './Icon';
-import { FiInbox, FiMoreVertical } from 'react-icons/fi';
+import { FiInbox, FiPlus, FiMoreVertical } from 'react-icons/fi';
 import { BiMessageCheck } from 'react-icons/bi';
 import styles from './index.module.scss';
 import { SerializedThread } from '@linen/types';
@@ -12,6 +12,7 @@ interface Props {
   page: number;
   total: number;
   threads: SerializedThread[];
+  onAddClick(): void;
   onPageChange(type: string): void;
   onMarkAllAsRead(): void;
   isFetchingTotal: boolean;
@@ -21,6 +22,7 @@ export default function Header({
   page,
   total,
   threads,
+  onAddClick,
   onPageChange,
   onMarkAllAsRead,
   isFetchingTotal,
@@ -37,6 +39,9 @@ export default function Header({
           </StickyHeader.Subtitle>
         </div>
         <div className={styles.right}>
+          <Icon onClick={onAddClick}>
+            <FiPlus />
+          </Icon>
           {threads.length > 0 && (
             <Dropdown
               button={

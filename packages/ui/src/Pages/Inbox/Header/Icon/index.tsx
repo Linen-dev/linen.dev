@@ -3,8 +3,13 @@ import styles from './index.module.scss';
 
 interface Props {
   children: React.ReactNode;
+  onClick?(): void;
 }
 
-export default function Icon({ children }: Props) {
-  return <div className={styles.icon}>{children}</div>;
+export default function Icon({ children, onClick }: Props) {
+  return (
+    <div className={styles.icon} onClick={onClick}>
+      {children}
+    </div>
+  );
 }

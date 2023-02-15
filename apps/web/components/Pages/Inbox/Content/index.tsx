@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback } from 'react';
 import { Layouts, Pages, Toast } from '@linen/ui';
 import Thread from 'components/Thread';
+import AddThreadModal from './AddThreadModal';
 import Empty from './Empty';
 import { sendMessageWrapper } from './utilities/sendMessageWrapper';
 import usePolling from '@linen/hooks/polling';
@@ -11,6 +12,7 @@ import useInboxWebsockets from '@linen/hooks/websockets/inbox';
 import type { CommunityPushType } from 'services/push';
 import { manageSelections } from './utilities/selection';
 import {
+  SerializedChannel,
   SerializedMessage,
   SerializedThread,
   Settings,
@@ -58,6 +60,7 @@ interface Props {
   }: {
     communityName: string;
   }): Promise<InboxResponse>;
+  channels: SerializedChannel[];
   currentCommunity: SerializedAccount;
   isSubDomainRouting: boolean;
   permissions: Permissions;
@@ -66,11 +69,16 @@ interface Props {
 
 const LIMIT = 10;
 
+enum ModalView {
+  ADD_THREAD,
+}
+
 export default function Inbox({
   fetchInbox,
   fetchThread,
   putThread,
   fetchTotal,
+  channels,
   currentCommunity,
   isSubDomainRouting,
   permissions,
@@ -79,6 +87,7 @@ export default function Inbox({
   const [loading, setLoading] = useState(true);
   const [inbox, setInbox] = useState<InboxResponse>({ threads: [], total: 0 });
   const [page, setPage] = useState<number>(1);
+  const [modal, setModal] = useState<ModalView>();
   const [key, setKey] = useState(0);
   const [selections, setSelections] = useState<Selections>({});
   const [thread, setThread] = useState<SerializedThread>();
@@ -352,6 +361,10 @@ export default function Inbox({
     [inbox, thread]
   );
 
+  function showAddThreadModal() {
+    setModal(ModalView.ADD_THREAD);
+  }
+
   const { threads } = inbox;
 
   return (
@@ -364,6 +377,7 @@ export default function Inbox({
               threads={inbox.threads}
               isFetchingTotal={totalPolling}
               page={page}
+              onAddClick={showAddThreadModal}
               onMarkAllAsRead={onMarkAllAsRead}
               onPageChange={(type: string) => {
                 switch (type) {
@@ -426,6 +440,11 @@ export default function Inbox({
           )
         }
         rightRef={ref}
+      />
+      <AddThreadModal
+        channels={channels}
+        open={modal === ModalView.ADD_THREAD}
+        close={() => setModal(undefined)}
       />
     </>
   );
