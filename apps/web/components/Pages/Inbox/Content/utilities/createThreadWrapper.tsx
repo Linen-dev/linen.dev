@@ -150,12 +150,16 @@ export function createThreadWrapper({
         setInbox((inbox: InboxResponse) => {
           return {
             ...inbox,
-            threads: inbox.threads.map((current) => {
-              if (current.id === imitation.id) {
-                return thread;
-              }
-              return current;
-            }),
+            threads: inbox.threads
+              .filter((current) => {
+                return current.id !== thread.id;
+              })
+              .map((current) => {
+                if (current.id === imitationId) {
+                  return thread;
+                }
+                return current;
+              }),
           };
         });
       }
