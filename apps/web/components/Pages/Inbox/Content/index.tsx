@@ -4,6 +4,7 @@ import Thread from 'components/Thread';
 import AddThreadModal from './AddThreadModal';
 import Empty from './Empty';
 import { sendMessageWrapper } from './utilities/sendMessageWrapper';
+import { createThreadWrapper } from './utilities/createThreadWrapper';
 import usePolling from '@linen/hooks/polling';
 import useKeyboard from '@linen/hooks/keyboard';
 import { useUsersContext } from '@linen/contexts/Users';
@@ -301,7 +302,15 @@ export default function Inbox({
   }
 
   const sendMessage = sendMessageWrapper({
-    currentUser: permissions.is_member ? currentUser : null,
+    currentUser,
+    allUsers,
+    setThread,
+    setInbox,
+    communityId,
+  });
+
+  const createThread = createThreadWrapper({
+    currentUser,
     allUsers,
     setThread,
     setInbox,
@@ -445,7 +454,15 @@ export default function Inbox({
         open={modal === ModalView.ADD_THREAD}
         close={() => setModal(undefined)}
         onSend={({ channelId, title, message }) => {
-          return Promise.resolve();
+          setModal(undefined);
+          return createThread({
+            message,
+            title,
+            files: [],
+            channel: channels.find(
+              (channel) => channel.id === channelId
+            ) as SerializedChannel,
+          });
         }}
       />
     </>
