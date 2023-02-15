@@ -18,8 +18,15 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
       throw 'missing auth';
     }
 
+    const { communityId, channelId, page } = request.query as {
+      communityId: string;
+      channelId?: string;
+      page: string;
+    };
+
     const account = serializeAccount(
-      auth.users.find((u) => u.accountsId === auth.accountId)?.account
+      auth.users.find((u) => u.accountsId === (communityId || auth.accountId))
+        ?.account
     );
     if (!account) {
       return response.redirect('/getting-started');
@@ -27,12 +34,6 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
 
     const url = getHomeUrl(account);
     const user = auth.users.find((u) => u.accountsId === auth.accountId);
-
-    const { communityId, channelId, page } = request.query as {
-      communityId: string;
-      channelId?: string;
-      page: string;
-    };
 
     if (account.id === communityId) {
       if (channelId) {
