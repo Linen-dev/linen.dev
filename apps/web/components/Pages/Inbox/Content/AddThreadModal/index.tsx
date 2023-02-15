@@ -70,6 +70,7 @@ export default function AddThreadModal({
           uploading={false}
           currentUser={currentUser}
           onSend={(message: string) => {
+            setTitle('');
             return onSend({ channelId, title, message });
           }}
           fetchMentions={(term?: string) => {

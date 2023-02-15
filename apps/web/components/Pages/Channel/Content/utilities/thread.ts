@@ -22,8 +22,9 @@ export function createThreadImitation({
   mentions: SerializedUser[];
   channel: SerializedChannel;
 }): SerializedThread {
+  const id = uuid();
   return {
-    id: uuid(),
+    id,
     sentAt: new Date().toISOString(),
     lastReplyAt: new Date().toISOString(),
     messages: [
@@ -40,7 +41,7 @@ export function createThreadImitation({
           };
         }),
         reactions: [],
-        threadId: 'imitation-thread-id',
+        threadId: id,
         messageFormat: MessageFormat.LINEN,
         author: {
           id: author.id,
