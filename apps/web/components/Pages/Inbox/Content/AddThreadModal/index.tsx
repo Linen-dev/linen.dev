@@ -25,6 +25,14 @@ interface Props {
   }): Promise<any>;
 }
 
+function findDefaultChannel(channels: SerializedChannel[]): SerializedChannel {
+  const channel = channels.find((channel) => channel.default);
+  if (channel) {
+    return channel;
+  }
+  return channels[0];
+}
+
 export default function AddThreadModal({
   communityId,
   currentUser,
@@ -33,7 +41,12 @@ export default function AddThreadModal({
   close,
   onSend,
 }: Props) {
-  const [channelId, setChannelId] = useState<string>(channels[0].id);
+  const sortedChannels = channels.sort((a, b) => {
+    return a.channelName.localeCompare(b.channelName);
+  });
+  const [channelId, setChannelId] = useState<string>(
+    findDefaultChannel(sortedChannels).id
+  );
   const [title, setTitle] = useState<string>('');
   return (
     <Modal open={open} close={close} size="lg">
@@ -41,7 +54,7 @@ export default function AddThreadModal({
       <Field>
         <NativeSelect
           label="Channel"
-          options={channels.map((channel) => ({
+          options={sortedChannels.map((channel) => ({
             label: channel.channelName,
             value: channel.id,
           }))}
