@@ -3,6 +3,7 @@ import type { JobHelpers, Logger } from 'graphile-worker';
 import { slackChatSync } from 'services/slack/api/postMessage';
 import { processGithubIntegration } from '@linen/integration-github';
 import { processEmailIntegration } from '@linen/integration-email';
+import { processLinearIntegration } from '@linen/integration-linear';
 
 export async function twoWaySync(payload: any, helpers: JobHelpers) {
   helpers.logger.info(JSON.stringify(payload));
@@ -65,6 +66,16 @@ async function twoWaySyncJob(
       }
       if (integration.type === 'EMAIL') {
         return await processEmailIntegration({
+          channelId,
+          messageId,
+          threadId,
+          event,
+          integration,
+          id,
+        });
+      }
+      if (integration.type === 'LINEAR') {
+        return await processLinearIntegration({
           channelId,
           messageId,
           threadId,

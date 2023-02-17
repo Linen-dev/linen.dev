@@ -132,6 +132,7 @@ model channelsIntegration {
 enum channelsIntegrationType {
   GITHUB
   EMAIL
+  LINEAR
 }
 
 model accounts {
