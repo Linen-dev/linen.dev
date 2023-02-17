@@ -75,17 +75,6 @@ interface Props {
   readThread(threadId: string): void;
   onRemind(threadId: string, reminder: ReminderTypes): void;
   unreadThread(threadId: string): void;
-  sendReaction({
-    threadId,
-    messageId,
-    type,
-    active,
-  }: {
-    threadId: string;
-    messageId: string;
-    type: string;
-    active: boolean;
-  }): void;
   onSelectThread(threadId?: string): void;
   onMessage(
     message: SerializedMessage,
@@ -103,6 +92,17 @@ interface Props {
     target: string;
     from: string;
     to: string;
+  }): void;
+  sendReaction({
+    threadId,
+    messageId,
+    type,
+    active,
+  }: {
+    threadId: string;
+    messageId: string;
+    type: string;
+    active: boolean;
   }): void;
   updateThread({ state, title }: { state?: ThreadState; title?: string }): void;
   onMarkAllAsRead(): void;
@@ -145,11 +145,11 @@ export default function Channel({
   onMessage,
   onDrop,
   onRemind,
-  sendReaction,
   onSelectThread,
   updateThread,
   onThreadMessage,
   onMarkAllAsRead,
+  sendReaction,
 }: Props) {
   const [isLoading, setLoading] = useState(false);
   const [isInfiniteScrollLoading, setInfiniteScrollLoading] = useState(false);
@@ -548,13 +548,12 @@ export default function Channel({
         right={
           threadToRender && (
             <Thread
-              thread={threadToRender}
               key={threadToRender.id}
+              thread={threadToRender}
               channelId={threadToRender.channelId}
               channelName={channelName}
               settings={settings}
               isSubDomainRouting={isSubDomainRouting}
-              threadUrl={null}
               permissions={permissions}
               currentUser={currentUser}
               updateThread={updateThread}

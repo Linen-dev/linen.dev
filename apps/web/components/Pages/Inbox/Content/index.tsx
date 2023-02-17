@@ -21,6 +21,8 @@ import {
   SerializedAccount,
 } from '@linen/types';
 import { addMessageToThread, prependThread } from './state';
+import { addReactionToThread } from 'utilities/state/reaction';
+import { postReaction } from 'components/Pages/Channel/Content/utilities/http';
 
 const { Header, Grid } = Pages.Inbox;
 const { SidebarLayout } = Layouts.Shared;
@@ -98,6 +100,53 @@ export default function Inbox({
   const token = permissions.token || null;
   const currentUser = permissions.user || null;
   const { communityId, communityName } = settings;
+
+  async function sendReaction({
+    threadId,
+    messageId,
+    type,
+    active,
+  }: {
+    threadId: string;
+    messageId: string;
+    type: string;
+    active: boolean;
+  }) {
+    setThread((thread) => {
+      if (!thread) {
+        return thread;
+      }
+      return addReactionToThread(thread, {
+        threadId,
+        messageId,
+        type,
+        active,
+        currentUser,
+      });
+    });
+    setInbox((inbox) => {
+      const { threads, ...rest } = inbox;
+
+      return {
+        threads: threads.map((thread) =>
+          addReactionToThread(thread, {
+            threadId,
+            messageId,
+            type,
+            active,
+            currentUser,
+          })
+        ),
+        ...rest,
+      };
+    });
+    postReaction({
+      communityId: currentCommunity.id,
+      messageId,
+      type,
+      action: active ? 'decrement' : 'increment',
+    });
+  }
 
   const onNewMessage = useCallback(
     (payload: CommunityPushType) => {
@@ -445,16 +494,17 @@ export default function Inbox({
         right={
           thread && (
             <Thread
-              thread={thread}
               key={thread.id}
+              thread={thread}
               channelId={thread.channelId}
               channelName={thread.channel?.channelName as string}
               settings={settings}
               isSubDomainRouting={isSubDomainRouting}
               permissions={permissions}
               currentUser={currentUser}
-              updateThread={updateThread}
               onClose={() => setThread(undefined)}
+              onReaction={sendReaction}
+              updateThread={updateThread}
               sendMessage={sendMessage}
               token={token}
               onMessage={(message, messageId, imitationId) => {
