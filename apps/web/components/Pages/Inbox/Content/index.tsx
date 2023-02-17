@@ -190,13 +190,23 @@ export default function Inbox({
       }
       if (thread) {
         setInbox((inbox) => {
+          const imitation = inbox.threads.find(({ id }) => id === imitationId);
+          if (imitation) {
+            return {
+              threads: inbox.threads.map((current) => {
+                if (current.id === imitationId) {
+                  return thread;
+                }
+                return current;
+              }),
+              total: inbox.total,
+            };
+          }
           return {
-            threads: inbox.threads.map((current) => {
-              if (current.id === imitationId) {
-                return thread;
-              }
-              return current;
-            }),
+            threads: [
+              thread,
+              ...inbox.threads.filter(({ id }) => id !== thread.id),
+            ].splice(0, 10),
             total: inbox.total,
           };
         });
