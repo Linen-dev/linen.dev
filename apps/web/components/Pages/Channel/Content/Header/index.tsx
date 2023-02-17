@@ -5,6 +5,8 @@ import { SerializedThread, SerializedUser, ThreadStatus } from '@linen/types';
 import { FiHash, FiMoreVertical } from 'react-icons/fi';
 import { BiMessageCheck } from 'react-icons/bi';
 import Icon from './Icon';
+import { BsFillGearFill } from 'react-icons/bs';
+import { ShowIntegrationDetail } from '../IntegrationsModal';
 
 interface Props {
   className?: string;
@@ -15,6 +17,7 @@ interface Props {
   threads: SerializedThread[];
   onMarkAllAsRead(): void;
   onStatusChange(status: ThreadStatus): void;
+  handleOpenIntegrations(): void;
 }
 
 export default function Header({
@@ -26,12 +29,14 @@ export default function Header({
   threads,
   onMarkAllAsRead,
   onStatusChange,
+  handleOpenIntegrations,
 }: Props) {
   return (
     <StickyHeader className={className}>
       <div className={styles.header}>
         <div className={styles.title}>
           <FiHash /> {channelName}
+          <ShowIntegrationDetail />
         </div>
         {currentUser && (
           <div className={styles.actions}>
@@ -52,7 +57,7 @@ export default function Header({
                 }}
               />
             </div>
-            {status === ThreadStatus.UNREAD && threads.length > 0 && (
+            {status === ThreadStatus.UNREAD && (
               <Dropdown
                 button={
                   <Icon>
@@ -60,10 +65,19 @@ export default function Header({
                   </Icon>
                 }
                 items={[
+                  ...(threads.length > 0
+                    ? [
+                        {
+                          icon: <BiMessageCheck />,
+                          label: 'Mark all as done',
+                          onClick: onMarkAllAsRead,
+                        },
+                      ]
+                    : []),
                   {
-                    icon: <BiMessageCheck />,
-                    label: 'Mark all as done',
-                    onClick: onMarkAllAsRead,
+                    icon: <BsFillGearFill />,
+                    label: 'Integrations',
+                    onClick: handleOpenIntegrations,
                   },
                 ]}
               />

@@ -43,6 +43,8 @@ import { timestamp } from '@linen/utilities/date';
 import debounce from '@linen/utilities/debounce';
 import * as api from 'utilities/requests';
 import ScrollToBottomIcon from './ScrollToBottomIcon';
+import SettingsModal from './IntegrationsModal';
+import { useRouter } from 'next/router';
 
 const { SidebarLayout } = Layouts.Shared;
 
@@ -166,6 +168,10 @@ export default function Channel({
   const [allUsers] = useUsersContext();
   const { startSignUp } = useJoinContext();
   const { mode } = useMode();
+  const { query } = useRouter();
+  const [integrationsModal, setIntegrationsModal] = useState(
+    !!query.integration || false
+  );
 
   const currentUser = permissions.user || null;
 
@@ -308,6 +314,10 @@ export default function Channel({
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleOpenIntegrations = async () => {
+    setIntegrationsModal(true);
   };
 
   async function loadMore(next: boolean = false) {
@@ -462,6 +472,7 @@ export default function Channel({
                     threads={threads}
                     onMarkAllAsRead={handleMarkAsRead}
                     onStatusChange={handleStatusChange}
+                    handleOpenIntegrations={handleOpenIntegrations}
                   >
                     {pinnedThread && status === ThreadStatus.UNREAD && (
                       <PinnedThread
@@ -577,6 +588,11 @@ export default function Channel({
           )
         }
         rightRef={rightRef}
+      />
+      <SettingsModal
+        permissions={permissions}
+        open={integrationsModal}
+        close={() => setIntegrationsModal(false)}
       />
     </>
   );

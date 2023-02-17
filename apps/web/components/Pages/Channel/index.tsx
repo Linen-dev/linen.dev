@@ -32,6 +32,7 @@ import debounce from '@linen/utilities/debounce';
 import useWebsockets from '@linen/hooks/websockets';
 import useKeyboard from '@linen/hooks/keyboard';
 import { addReaction } from 'utilities/state/reaction';
+import { ChannelContext } from 'contexts/channel';
 
 export interface ChannelProps {
   settings: Settings;
@@ -859,40 +860,42 @@ export default function Channel(props: ChannelProps) {
       permissions={permissions}
       onDrop={onChannelDrop}
     >
-      <Content
-        key={currentChannel.channelName}
-        threads={threads}
-        pinnedThreads={pinnedThreads}
-        currentChannel={currentChannel}
-        currentCommunity={currentCommunity}
-        settings={settings}
-        channelName={channelName}
-        isSubDomainRouting={isSubDomainRouting}
-        nextCursor={nextCursor}
-        isBot={isBot}
-        permissions={permissions}
-        currentThreadId={currentThreadId}
-        status={status}
-        onStatusChange={onStatusChange}
-        setThreads={setThreads}
-        onThreadsChange={onThreadsChange}
-        deleteMessage={deleteMessage}
-        muteThread={muteThread}
-        unmuteThread={unmuteThread}
-        pinThread={pinThread}
-        updateThreadResolution={updateThreadResolution}
-        readThread={readThread}
-        unreadThread={unreadThread}
-        onMessage={onThreadMessage}
-        onDrop={onThreadDrop}
-        onRemind={onRemind}
-        sendReaction={sendReaction}
-        onSelectThread={onSelectThread}
-        updateThread={updateThread}
-        onThreadMessage={onSocket}
-        onMarkAllAsRead={onMarkAllAsRead}
-        token={token}
-      />
+      <ChannelContext.Provider value={currentChannel}>
+        <Content
+          key={currentChannel.channelName}
+          threads={threads}
+          pinnedThreads={pinnedThreads}
+          currentChannel={currentChannel}
+          currentCommunity={currentCommunity}
+          settings={settings}
+          channelName={channelName}
+          isSubDomainRouting={isSubDomainRouting}
+          nextCursor={nextCursor}
+          isBot={isBot}
+          permissions={permissions}
+          currentThreadId={currentThreadId}
+          status={status}
+          onStatusChange={onStatusChange}
+          setThreads={setThreads}
+          onThreadsChange={onThreadsChange}
+          deleteMessage={deleteMessage}
+          muteThread={muteThread}
+          unmuteThread={unmuteThread}
+          pinThread={pinThread}
+          updateThreadResolution={updateThreadResolution}
+          readThread={readThread}
+          unreadThread={unreadThread}
+          onMessage={onThreadMessage}
+          onDrop={onThreadDrop}
+          onRemind={onRemind}
+          sendReaction={sendReaction}
+          onSelectThread={onSelectThread}
+          updateThread={updateThread}
+          onThreadMessage={onSocket}
+          onMarkAllAsRead={onMarkAllAsRead}
+          token={token}
+        />
+      </ChannelContext.Provider>
     </PageLayout>
   );
 }
