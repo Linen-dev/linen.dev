@@ -22,6 +22,7 @@ interface Props {
   onChange?(event: React.ChangeEvent<HTMLInputElement>): void;
   onBlur?(event: React.ChangeEvent<HTMLInputElement>): void;
   onKeyDown?(event: React.KeyboardEvent<HTMLInputElement>): void;
+  onKeyUp?(event: React.KeyboardEvent<HTMLInputElement>): void;
 }
 
 function TextInput({
@@ -42,6 +43,7 @@ function TextInput({
   onChange,
   onBlur,
   onKeyDown,
+  onKeyUp,
   autoFocus,
   ...rest
 }: Props) {
@@ -65,6 +67,7 @@ function TextInput({
           onChange={onChange}
           onBlur={onBlur}
           onKeyDown={onKeyDown}
+          onKeyUp={onKeyUp}
           autoFocus={autoFocus}
           style={style}
           {...rest}
