@@ -15,7 +15,6 @@ interface Props {
   onAddClick(): void;
   onPageChange(type: string): void;
   onMarkAllAsRead(): void;
-  isFetchingTotal: boolean;
 }
 
 export default function Header({
@@ -25,7 +24,6 @@ export default function Header({
   onAddClick,
   onPageChange,
   onMarkAllAsRead,
-  isFetchingTotal,
 }: Props) {
   return (
     <StickyHeader>
@@ -58,12 +56,7 @@ export default function Header({
               ]}
             />
           )}
-          <Pagination
-            page={page}
-            total={total}
-            onPageChange={onPageChange}
-            isFetchingTotal={isFetchingTotal}
-          />
+          <Pagination page={page} total={total} onPageChange={onPageChange} />
         </div>
       </div>
     </StickyHeader>

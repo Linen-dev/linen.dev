@@ -62,17 +62,6 @@ const putThread =
       ...options,
     });
 
-const fetchTotal = ({ communityName }: { communityName: string }) => {
-  return fetch(`/api/inbox?communityName=${communityName}&total=true`, {
-    method: 'GET',
-  }).then((response) => {
-    if (response.ok) {
-      return response.json();
-    }
-    throw new Error('Failed to fetch the inbox.');
-  });
-};
-
 export default function Inbox({
   channels,
   currentCommunity,
@@ -101,7 +90,6 @@ export default function Inbox({
         fetchInbox={fetchInbox}
         fetchThread={fetchThread(settings.communityId)}
         putThread={putThread(settings.communityId)}
-        fetchTotal={fetchTotal}
         channels={channels}
         currentCommunity={currentCommunity}
         isSubDomainRouting={isSubDomainRouting}

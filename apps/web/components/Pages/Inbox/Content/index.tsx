@@ -58,11 +58,6 @@ interface Props {
       title?: string | undefined;
     }
   ): Promise<SerializedThread>;
-  fetchTotal({
-    communityName,
-  }: {
-    communityName: string;
-  }): Promise<InboxResponse>;
   channels: SerializedChannel[];
   currentCommunity: SerializedAccount;
   isSubDomainRouting: boolean;
@@ -80,7 +75,6 @@ export default function Inbox({
   fetchInbox,
   fetchThread,
   putThread,
-  fetchTotal,
   channels,
   currentCommunity,
   isSubDomainRouting,
@@ -250,29 +244,16 @@ export default function Inbox({
       fetch(): any {
         return fetchInbox({ communityName, page, limit: LIMIT });
       },
-      success(data: InboxResponse) {
+      success(inbox: InboxResponse) {
         setLoading(false);
-        setInbox((inbox) => ({ ...inbox, threads: data.threads }));
-        setThread(data.threads[0]);
+        setInbox(inbox);
+        setThread(inbox.threads[0]);
       },
       error() {
         Toast.error('Something went wrong. Please reload the page.');
       },
     },
     [communityName, page, key]
-  );
-
-  const [totalPolling] = usePolling(
-    {
-      fetch(): any {
-        return fetchTotal({ communityName });
-      },
-      success(data: InboxResponse) {
-        setInbox((inbox) => ({ ...inbox, total: data.total }));
-      },
-      error() {},
-    },
-    [communityName, key]
   );
 
   const updateThread = ({
@@ -365,6 +346,23 @@ export default function Inbox({
     read: boolean;
   }) {
     setLoading(true);
+    setInbox((inbox) => {
+      const { threads, ...rest } = inbox;
+
+      return {
+        threads: threads.filter((thread) => thread.id !== threadId),
+        ...rest,
+      };
+    });
+    setThread((thread) => {
+      if (thread) {
+        if (thread.id === threadId) {
+          const index = threads.findIndex((thread) => thread.id === threadId);
+          return threads[index + 1] || threads[0];
+        }
+      }
+      return thread;
+    });
     return fetch('/api/user-thread-status', {
       method: 'POST',
       body: JSON.stringify({
@@ -379,7 +377,9 @@ export default function Inbox({
       },
     })
       .then(() => {
-        setKey((key) => key + 1);
+        fetchInbox({ communityName, page, limit: LIMIT }).then((inbox) => {
+          setInbox(inbox);
+        });
       })
       .finally(() => {
         setLoading(false);
@@ -486,7 +486,6 @@ export default function Inbox({
             <Header
               total={inbox.total}
               threads={inbox.threads}
-              isFetchingTotal={totalPolling}
               page={page}
               onAddClick={showAddThreadModal}
               onMarkAllAsRead={onMarkAllAsRead}

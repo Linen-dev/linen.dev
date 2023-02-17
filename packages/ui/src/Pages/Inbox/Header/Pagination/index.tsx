@@ -7,7 +7,6 @@ interface Props {
   total: number;
   page: number;
   onPageChange(type: string): void;
-  isFetchingTotal: boolean;
 }
 
 export default function Pagination({ total, page, onPageChange }: Props) {

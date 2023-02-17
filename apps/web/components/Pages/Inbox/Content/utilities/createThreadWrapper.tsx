@@ -2,7 +2,6 @@ import React from 'react';
 import {
   MessageFormat,
   SerializedChannel,
-  SerializedMessage,
   SerializedThread,
   SerializedUser,
   ThreadState,
