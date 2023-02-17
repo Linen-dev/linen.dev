@@ -11,38 +11,15 @@ interface Props {
   isFetchingTotal: boolean;
 }
 
-interface Range {
-  start: number;
-  end: number;
-}
-
-function getRange(page: number, total: number): Range {
-  const start = 1 + (page - 1) * 10;
-  const end = (() => {
-    if (total < 10) {
-      return total;
-    }
-    const max = 10 * page;
-    if (max > total) {
-      return total;
-    }
-    return max;
-  })();
-  return {
-    start,
-    end,
-  };
-}
-
 export default function Pagination({
   total,
   page,
   onPageChange,
   isFetchingTotal,
 }: Props) {
-  const { start, end } = getRange(page, total);
   const isBackDisabled = page === 1;
-  const isNextDisabled = total <= 10 || end === total;
+  const lastPage = Math.ceil(total / 10);
+  const isNextDisabled = total <= 10 || page === lastPage;
   if (isBackDisabled && isNextDisabled) {
     return null;
   }
@@ -53,7 +30,7 @@ export default function Pagination({
           <Spinner />
         ) : (
           <>
-            {start}-{end} of {total}
+            {page} of {lastPage}
           </>
         )}
       </div>
