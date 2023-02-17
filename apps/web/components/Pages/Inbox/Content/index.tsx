@@ -23,6 +23,7 @@ import {
 import { addMessageToThread, prependThread } from './state';
 import { addReactionToThread } from 'utilities/state/reaction';
 import { postReaction } from 'components/Pages/Channel/Content/utilities/http';
+import * as api from 'utilities/requests';
 
 const { Header, Grid } = Pages.Inbox;
 const { SidebarLayout } = Layouts.Shared;
@@ -146,6 +147,41 @@ export default function Inbox({
       type,
       action: active ? 'decrement' : 'increment',
     });
+  }
+
+  async function updateThreadResolution(threadId: string, messageId?: string) {
+    setInbox((inbox) => {
+      const { threads, ...rest } = inbox;
+      return {
+        threads: threads.map((thread) => {
+          if (thread.id === threadId) {
+            return { ...thread, resolutionId: messageId };
+          }
+          return thread;
+        }),
+        ...rest,
+      };
+    });
+
+    setThread((thread) => {
+      if (thread?.id === threadId) {
+        return {
+          ...thread,
+          resolutionId: messageId,
+        };
+      }
+      return thread;
+    });
+
+    return api
+      .updateThread({
+        id: threadId,
+        resolutionId: messageId,
+        accountId: settings.communityId,
+      })
+      .catch((_) => {
+        Toast.error('Failed to mark as resolution');
+      });
   }
 
   const onNewMessage = useCallback(
@@ -504,6 +540,7 @@ export default function Inbox({
               currentUser={currentUser}
               onClose={() => setThread(undefined)}
               onReaction={sendReaction}
+              onResolution={updateThreadResolution}
               updateThread={updateThread}
               sendMessage={sendMessage}
               token={token}
