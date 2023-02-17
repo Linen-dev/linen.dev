@@ -557,7 +557,6 @@ export default function Channel({
               threadUrl={null}
               permissions={permissions}
               currentUser={currentUser}
-              mode={mode}
               updateThread={updateThread}
               onClose={() => onSelectThread(undefined)}
               onResolution={updateThreadResolution}
