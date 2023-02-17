@@ -20,17 +20,10 @@ function App() {
     return get(`/api/v2/todo`);
   };
 
-  const fetchTotal = () => {
-    return get(
-      `/api/v2/inbox?communityName=linen&state=${ThreadState.OPEN}&scope=${Scope.All}&total=true`
-    ).then((response) => response.data);
-  };
-
   return (
     <Inbox
       fetchInbox={fetchInbox}
       fetchThread={fetchThread}
-      fetchTotal={fetchTotal}
       putThread={putThread}
     />
   );

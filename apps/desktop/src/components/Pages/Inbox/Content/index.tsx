@@ -12,7 +12,6 @@ import {
   Settings,
   ThreadState,
   Permissions,
-  Scope,
 } from '@linen/types';
 import { addMessageToThread, prependThread } from './state';
 
@@ -41,11 +40,6 @@ interface Props {
   }): Promise<InboxResponse>;
   fetchThread(threadId: string): Promise<SerializedThread>;
   putThread(threadId: string, options: object): Promise<any>;
-  fetchTotal({
-    communityName,
-  }: {
-    communityName: string;
-  }): Promise<InboxResponse>;
   isSubDomainRouting: boolean;
   permissions: Permissions;
   settings: Settings;
@@ -55,7 +49,6 @@ export default function Inbox({
   fetchInbox,
   fetchThread,
   putThread,
-  fetchTotal,
   isSubDomainRouting,
   permissions,
   settings,
@@ -129,19 +122,6 @@ export default function Inbox({
       },
     },
     [communityName, page, key]
-  );
-
-  const [totalPolling] = usePolling(
-    {
-      fetch(): any {
-        return fetchTotal({ communityName });
-      },
-      success(data: InboxResponse) {
-        setInbox((f) => ({ ...f, total: data.total }));
-      },
-      error() {},
-    },
-    [communityName]
   );
 
   const updateThread = ({

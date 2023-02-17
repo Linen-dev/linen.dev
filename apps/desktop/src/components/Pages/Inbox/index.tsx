@@ -10,14 +10,12 @@ import { CommunityType } from '@linen/types';
 interface Props {
   fetchInbox(): Promise<any>;
   fetchThread(): Promise<any>;
-  fetchTotal(): Promise<any>;
   putThread(): Promise<any>;
 }
 
 export default function Dashboard({
   fetchInbox,
   fetchThread,
-  fetchTotal,
   putThread,
 }: Props) {
   const permissions = {
@@ -58,7 +56,6 @@ export default function Dashboard({
           fetchInbox={fetchInbox}
           fetchThread={fetchThread}
           putThread={putThread}
-          fetchTotal={fetchTotal}
           isSubDomainRouting={false}
           permissions={permissions}
           settings={settings}

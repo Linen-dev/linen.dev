@@ -20,7 +20,6 @@ export async function index({
   params: {
     communityName?: string;
     page?: number;
-    total?: boolean;
     limit?: number;
   };
   currentUserId: string;
@@ -43,17 +42,6 @@ export async function index({
     },
   } as any;
 
-  if (params.total) {
-    const total = await prisma.threads.count({
-      where: condition,
-    });
-    return {
-      status: 200,
-      data: {
-        total,
-      },
-    };
-  }
   if (!params.limit) {
     return { status: 400 };
   }
@@ -83,9 +71,14 @@ export async function index({
     skip: (page - 1) * limit,
   });
 
+  const total = await prisma.threads.count({
+    where: condition,
+  });
+
   return {
     status: 200,
     data: {
+      total,
       threads: threads
         .map((thread) => {
           if (community.anonymizeUsers) {
