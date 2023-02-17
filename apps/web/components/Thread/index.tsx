@@ -15,7 +15,6 @@ import {
   ThreadState,
   UploadedFile,
 } from '@linen/types';
-import { Mode } from '@linen/hooks/mode';
 import useThreadWebsockets from '@linen/hooks/websockets/thread';
 import { scrollToBottom } from '@linen/utilities/scroll';
 import styles from './index.module.scss';
@@ -31,7 +30,6 @@ interface Props {
   settings: Settings;
   permissions: Permissions;
   currentUser: SerializedUser | null;
-  mode?: Mode;
   token: string | null;
   sendMessage({
     message,
@@ -78,7 +76,6 @@ export default function Thread({
   settings,
   permissions,
   currentUser,
-  mode,
   token,
   sendMessage,
   updateThread,
