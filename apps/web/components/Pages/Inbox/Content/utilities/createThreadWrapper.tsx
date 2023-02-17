@@ -48,12 +48,16 @@ export function createThreadWrapper({
   setThread,
   setInbox,
   communityId,
+  page,
+  limit,
 }: {
   currentUser: SerializedUser;
   allUsers: SerializedUser[];
   setThread: React.Dispatch<React.SetStateAction<SerializedThread | undefined>>;
   setInbox: React.Dispatch<React.SetStateAction<InboxResponse>>;
   communityId: string;
+  page: number;
+  limit: number;
 }) {
   return async ({
     message,
@@ -115,13 +119,25 @@ export function createThreadWrapper({
       resolutionId: null,
     };
 
-    setThread(imitation);
+    setThread((thread) => {
+      if (page === 1) {
+        return imitation;
+      }
+      return thread;
+    });
 
     setInbox((inbox) => {
-      return {
-        ...inbox,
-        threads: [imitation, ...inbox.threads],
-      };
+      if (page === 1) {
+        const threads = [imitation, ...inbox.threads];
+        if (threads.length > limit) {
+          threads.pop();
+        }
+        return {
+          ...inbox,
+          threads,
+        };
+      }
+      return inbox;
     });
 
     return debouncedCreateThread({
