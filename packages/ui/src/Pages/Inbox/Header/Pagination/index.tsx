@@ -2,7 +2,6 @@ import React from 'react';
 import classNames from 'classnames';
 import { GoChevronLeft, GoChevronRight } from 'react-icons/go';
 import styles from './index.module.scss';
-import Spinner from '../../../../Spinner';
 
 interface Props {
   total: number;
@@ -11,12 +10,7 @@ interface Props {
   isFetchingTotal: boolean;
 }
 
-export default function Pagination({
-  total,
-  page,
-  onPageChange,
-  isFetchingTotal,
-}: Props) {
+export default function Pagination({ total, page, onPageChange }: Props) {
   const isBackDisabled = page === 1;
   const lastPage = Math.ceil(total / 10);
   const isNextDisabled = total <= 10 || page === lastPage;
@@ -25,15 +19,6 @@ export default function Pagination({
   }
   return (
     <div className={styles.pagination}>
-      <div className={styles.count}>
-        {isFetchingTotal ? (
-          <Spinner />
-        ) : (
-          <>
-            {page} of {lastPage}
-          </>
-        )}
-      </div>
       <div
         className={classNames(styles.icon, {
           [styles.disabled]: isBackDisabled,

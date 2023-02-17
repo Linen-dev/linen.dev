@@ -418,6 +418,8 @@ export default function Inbox({
     setThread,
     setInbox,
     communityId,
+    page,
+    limit: LIMIT,
   });
 
   useKeyboard(
