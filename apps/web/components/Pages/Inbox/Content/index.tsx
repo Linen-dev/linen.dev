@@ -105,11 +105,29 @@ export default function Inbox({
         payload.thread && JSON.parse(payload.thread);
       const message: SerializedMessage =
         payload.message && JSON.parse(payload.message);
+      const imitationId: string = payload.imitation_id;
       if (page > 1) {
         return;
       }
       if (thread) {
-        setInbox(prependThread(thread));
+        setInbox((inbox) => {
+          const { threads, ...rest } = inbox;
+
+          return {
+            ...rest,
+            threads: [
+              thread,
+              ...(threads
+                .map((t) => {
+                  if (t.id === imitationId || t.id === thread.id) {
+                    return null;
+                  }
+                  return t;
+                })
+                .filter(Boolean) as SerializedThread[]),
+            ],
+          };
+        });
       }
       if (message) {
         const thread = inbox.threads.find((t) => t.id === message.threadId);
