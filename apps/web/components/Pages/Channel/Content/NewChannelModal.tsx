@@ -5,6 +5,7 @@ import { Button, Modal, TextInput, Toast } from '@linen/ui';
 import { useLinkContext } from '@linen/contexts/Link';
 import CustomRouterPush from 'components/Link/CustomRouterPush';
 import { patterns } from 'utilities/util';
+import * as api from 'utilities/requests';
 
 export default function NewChannelModal({
   communityId,
@@ -21,33 +22,21 @@ export default function NewChannelModal({
       e.preventDefault();
       const form = e.target;
       const channelName = form.channelName.value;
-      const response = await fetch('/api/channels', {
-        method: 'POST',
-        body: JSON.stringify({
-          communityId,
-          channelName,
-        }),
+      await api.createChannel({
+        accountId: communityId,
+        channelName,
       });
-      const data = await response.json();
-      if (response.status === 400 && data.error) {
-        setLoading(false);
-        return Toast.error(data.error);
-      }
-      if (!response.ok) {
-        setLoading(false);
-        throw response;
-      } else {
-        setOpen(false);
-        CustomRouterPush({
-          isSubDomainRouting,
-          communityName,
-          communityType,
-          path: `/c/${channelName}`,
-        });
-      }
+      setOpen(false);
+      CustomRouterPush({
+        isSubDomainRouting,
+        communityName,
+        communityType,
+        path: `/c/${channelName}`,
+      });
     } catch (error) {
-      setLoading(false);
       Toast.error('Something went wrong');
+    } finally {
+      setLoading(false);
     }
   }
 

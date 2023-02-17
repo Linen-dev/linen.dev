@@ -47,12 +47,22 @@ export default class Api {
 
   // channels ----
 
-  getChannel({
-    integrationId,
-  }: {
-    integrationId: string;
-  }): Promise<{ id: string; accountId: string } | null> {
-    return this.get(`/api/integrations/channels?${qs({ integrationId })}`);
+  getChannel(
+    search: LinenTypes.channelGetType
+  ): Promise<{ id: string; accountId: string } | null> {
+    return this.get(`/api/integrations/channels?${qs(search)}`);
+  }
+
+  getChannelIntegration(
+    search: LinenTypes.channelGetIntegrationType
+  ): Promise<LinenTypes.ChannelsIntegration | null> {
+    return this.get(`/api/integrations/channels/integration?${qs(search)}`);
+  }
+
+  updateChannelIntegration(
+    data: LinenTypes.channelPutIntegrationType
+  ): Promise<{ data: any } | null> {
+    return this.put(`/api/integrations/channels/integration`, data);
   }
 
   // threads -----
@@ -102,6 +112,9 @@ export default class Api {
   }
 
   // users ----
+  findUser(search: LinenTypes.userGetType): Promise<{ id: string }> {
+    return this.get(`/api/integrations/users?${qs(search)}`);
+  }
 
   findOrCreateUser(user: LinenTypes.userPostType): Promise<{ id: string }> {
     return this.post(`/api/integrations/users`, user);

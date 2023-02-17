@@ -1,7 +1,8 @@
 import { BaseController } from 'server/routers/integrations/base-controller';
 import { AuthedRequestWithBody, NextFunction, Response } from 'server/types';
-import { userPostType } from '@linen/types';
+import { userGetType, userPostType } from '@linen/types';
 import UsersService from 'services/users';
+import { NotFound } from 'server/exceptions';
 
 export class UsersController extends BaseController {
   static async post(
@@ -12,6 +13,22 @@ export class UsersController extends BaseController {
     const user = await UsersService.upsertUser({
       ...req.body,
     });
-    res.json(user);
+    return res.json(user);
+  }
+
+  static async get(
+    req: AuthedRequestWithBody<userGetType>,
+    res: Response,
+    next: NextFunction
+  ) {
+    const users = await UsersService.findUsersByExternalId({
+      accountId: req.body.accountsId,
+      externalIds: [req.body.externalUserId],
+    });
+    if (users && users.length) {
+      return res.json({ id: users?.shift()?.id });
+    } else {
+      return next(new NotFound());
+    }
   }
 }

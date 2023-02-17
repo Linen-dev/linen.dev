@@ -107,10 +107,10 @@ export async function findUsers(
 ) {
   const usersToReturn = toObject(usersInMessages, 'id');
   const usersStatus: Record<string, boolean> = {};
-  const usersFromStore = await UsersService.findUsersByExternalId(
+  const usersFromStore = await UsersService.findUsersByExternalId({
     accountId,
-    usersInMessages.map((u) => u.id)
-  );
+    externalIds: usersInMessages.map((u) => u.id),
+  });
   usersFromStore.forEach((u) => {
     if (u.externalUserId && usersToReturn[u.externalUserId]) {
       usersStatus[u.externalUserId] = true;

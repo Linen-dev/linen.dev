@@ -2,7 +2,16 @@ import axios from 'axios';
 import { qs } from '@linen/utilities/url';
 import useSWR from 'swr';
 import isBrowser from './isBrowser';
-import type { SerializedMessage, SerializedThread } from '@linen/types';
+import type {
+  SerializedMessage,
+  SerializedThread,
+  createChannelType,
+  bulkHideChannelsType,
+  setDefaultChannelType,
+  SerializedChannel,
+  getChannelIntegrationsType,
+  postChannelIntegrationsType,
+} from '@linen/types';
 import type * as AccountsTypes from 'server/routers/accounts.types';
 import type * as ThreadsTypes from 'server/routers/threads/types';
 import type * as MessagesTypes from 'server/routers/messages/types';
@@ -120,3 +129,29 @@ export const createMessage = (
   props: MessagesTypes.postType
 ): Promise<{ message: SerializedMessage; imitationId: string }> =>
   post(`/api/messages`, props);
+
+export const createChannel = (
+  props: createChannelType
+): Promise<SerializedChannel> => post(`/api/channels`, props);
+
+export const setDefaultChannel = (props: setDefaultChannelType): Promise<{}> =>
+  post(`/api/channels/default`, props);
+
+export const hideChannels = (props: bulkHideChannelsType): Promise<{}> =>
+  post(`/api/channels/hide`, props);
+
+export const getChannelIntegrations = ({
+  channelId,
+  ...props
+}: getChannelIntegrationsType): Promise<{
+  data: any;
+  type: string;
+  externalId: string;
+}> => get(`/api/channels/${channelId}/integrations?${qs(props)}`);
+
+export const postChannelIntegrations = ({
+  channelId,
+  ...props
+}: postChannelIntegrationsType): Promise<{
+  id: string;
+}> => post(`/api/channels/${channelId}/integrations`, props);

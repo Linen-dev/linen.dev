@@ -3,11 +3,17 @@ import { onError } from 'server/middlewares/error';
 import integrationMiddleware from 'server/middlewares/integration';
 import validationMiddleware from 'server/middlewares/validation';
 import { UsersController } from 'server/routers/integrations/users/controller';
-import { userPostSchema } from '@linen/types';
+import { userGetSchema, userPostSchema } from '@linen/types';
 
 const prefix = '/api/integrations/users';
 
 const usersRouter = Router()
+  .get(
+    `${prefix}`,
+    integrationMiddleware(),
+    validationMiddleware(userGetSchema),
+    UsersController.get
+  )
   .post(
     `${prefix}`,
     integrationMiddleware(),

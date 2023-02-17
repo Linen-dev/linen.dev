@@ -268,10 +268,11 @@ class ThreadsServices {
         id: true,
         title: true,
         externalThreadId: true,
+        channelId: true,
         messages: {
           select: {
             body: true,
-            author: { select: { displayName: true } },
+            author: { select: { displayName: true, profileImageUrl: true } },
           },
           orderBy: { sentAt: 'asc' },
           take: 1,

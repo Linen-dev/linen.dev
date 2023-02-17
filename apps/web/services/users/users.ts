@@ -149,7 +149,13 @@ export default class UsersService {
       },
     });
   }
-  static async findUsersByExternalId(accountId: string, externalIds: string[]) {
+  static async findUsersByExternalId({
+    accountId,
+    externalIds,
+  }: {
+    accountId: string;
+    externalIds: string[];
+  }) {
     return await prisma.users.findMany({
       where: {
         externalUserId: { in: externalIds },

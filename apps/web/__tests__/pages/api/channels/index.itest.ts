@@ -1,4 +1,4 @@
-import handler from 'pages/api/channels';
+import handler from 'pages/api/channels/[[...slug]]';
 import { build } from '@linen/factory';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import setup from '__tests__/spec-helpers/integration';

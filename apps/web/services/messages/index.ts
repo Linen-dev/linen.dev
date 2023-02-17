@@ -237,7 +237,7 @@ export default class MessagesService {
         channelId: true,
         externalMessageId: true,
         threadId: true,
-        author: { select: { displayName: true } },
+        author: { select: { displayName: true, profileImageUrl: true } },
       },
     });
   }

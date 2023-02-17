@@ -16,6 +16,7 @@ import DefaultChannelRow from './DefaultChannelRow';
 import ChannelVisibilityRow from './ChannelVisibilityRow';
 import { Toast } from '@linen/ui';
 import debounce from '@linen/utilities/debounce';
+import * as api from 'utilities/requests';
 
 interface Props {
   channels: SerializedChannel[];
@@ -33,14 +34,7 @@ const debouncedChannelsVisibilityUpdate = debounce(
   }: {
     communityId: string;
     value: { id: string; hidden: boolean };
-  }) =>
-    fetch('/api/channels', {
-      method: 'PUT',
-      body: JSON.stringify({
-        communityId,
-        channels: [value],
-      }),
-    })
+  }) => api.hideChannels({ accountId: communityId, channels: [value] })
 );
 
 export default function IntegrationsPage({

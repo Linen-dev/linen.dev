@@ -8,6 +8,7 @@ export type messageGetResponseType = {
   body: string;
   author: {
     displayName: string | null;
+    profileImageUrl?: string | null;
   } | null;
   channelId: string;
   externalMessageId: string | null;

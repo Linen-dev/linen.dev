@@ -3,6 +3,8 @@ export * from './integrations/channels';
 export * from './integrations/messages';
 export * from './integrations/users';
 
+export * from './api/channels';
+
 /*
   This package redefines enums from `schema.prisma`.
   Ideally this package should be considered as a source of truth
@@ -214,5 +216,16 @@ export interface UploadedFile {
   id: string;
   url: string;
 }
+
+export enum channelsIntegrationType {
+  'GITHUB' = 'GITHUB',
+  'EMAIL' = 'EMAIL',
+  'LINEAR' = 'LINEAR',
+}
+
+export type ChannelsIntegration = {
+  externalId: string;
+  data: any;
+};
 
 export type onResolve = (threadId: string, messageId?: string) => void;

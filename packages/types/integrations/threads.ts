@@ -21,7 +21,7 @@ export const threadPutSchema = z.object({
 export type threadPutType = z.infer<typeof threadPutSchema>;
 
 export const threadFindSchema = z.object({
-  channelId: z.string().uuid(),
+  channelId: z.string().uuid().optional(),
   externalThreadId: z.string().min(1).optional(),
   threadId: z.string().uuid().optional(),
 });
@@ -30,10 +30,12 @@ export type threadFindResponseType = {
   id: string;
   title: string | null;
   externalThreadId: string | null;
+  channelId: string;
   messages: {
     body: string;
     author: {
       displayName: string | null;
+      profileImageUrl?: string | null;
     } | null;
   }[];
 } | null;

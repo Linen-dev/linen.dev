@@ -1,4 +1,5 @@
-import { channels, prisma } from '@linen/database';
+import { channels, channelsIntegrationType, prisma } from '@linen/database';
+import { channelPutIntegrationType } from '@linen/types';
 
 class ChannelsService {
   static async find(communityId: string): Promise<channels[]> {
@@ -37,14 +38,20 @@ class ChannelsService {
       );
   }
 
-  static async setDefaultChannel(
-    newDefaultChannelId: string,
-    oldDefaultChannelId: string
-  ) {
+  static async setDefaultChannel({
+    newDefaultChannelId,
+    oldDefaultChannelId,
+    accountId,
+  }: {
+    newDefaultChannelId: string;
+    oldDefaultChannelId?: string;
+    accountId: string;
+  }) {
     const transactions = [
-      prisma.channels.update({
+      prisma.channels.updateMany({
         where: {
           id: newDefaultChannelId,
+          accountId,
         },
         data: {
           default: true,
@@ -54,9 +61,10 @@ class ChannelsService {
     ];
     if (oldDefaultChannelId) {
       transactions.push(
-        prisma.channels.update({
+        prisma.channels.updateMany({
           where: {
             id: oldDefaultChannelId,
+            accountId,
           },
           data: {
             default: false,
@@ -68,10 +76,13 @@ class ChannelsService {
     return { status: 200 };
   }
 
-  static async updateChannelsVisibility(
-    channels: Partial<channels>[],
-    accountId: string
-  ) {
+  static async updateChannelsVisibility({
+    channels,
+    accountId,
+  }: {
+    channels: Partial<channels>[];
+    accountId: string;
+  }) {
     const { channelsIdToHide, channelsIdToShow } = channels.reduce(
       (prev, curr) => {
         if (curr.hidden === true) {
@@ -183,6 +194,48 @@ class ChannelsService {
         },
       })
       .then((r) => r?.channel);
+  }
+
+  static async getChannelIntegration({
+    channelId,
+    type,
+  }: {
+    channelId: string;
+    type: channelsIntegrationType;
+  }) {
+    return await prisma.channelsIntegration.findFirst({
+      select: { data: true, externalId: true },
+      where: {
+        type,
+        channelId,
+      },
+    });
+  }
+
+  static async putChannelIntegration({
+    integrationId,
+    data,
+    externalId,
+  }: channelPutIntegrationType) {
+    const integration = await prisma.channelsIntegration.findUnique({
+      where: { id: integrationId },
+    });
+
+    if (!integration) {
+      return null;
+    }
+
+    return await prisma.channelsIntegration.update({
+      select: { data: true },
+      where: { id: integrationId },
+      data: {
+        externalId,
+        data: {
+          ...(integration.data as any), // current data
+          ...data, // new data
+        },
+      },
+    });
   }
 }
 
