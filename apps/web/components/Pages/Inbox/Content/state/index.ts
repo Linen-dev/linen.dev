@@ -15,7 +15,10 @@ export function prependThread(
     }
     return {
       ...rest,
-      threads: [thread, ...threads.filter((t) => t.id !== thread.id)],
+      threads: [thread, ...threads.filter((t) => t.id !== thread.id)].splice(
+        0,
+        10
+      ),
     };
   };
 }
