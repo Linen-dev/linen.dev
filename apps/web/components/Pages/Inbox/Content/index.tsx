@@ -190,25 +190,17 @@ export default function Inbox({
       }
       if (thread) {
         setInbox((inbox) => {
-          const { threads, ...rest } = inbox;
-
           return {
-            ...rest,
-            threads: [
-              thread,
-              ...(threads
-                .map((t) => {
-                  if (t.id === imitationId || t.id === thread.id) {
-                    return null;
-                  }
-                  return t;
-                })
-                .filter(Boolean) as SerializedThread[]),
-            ],
+            threads: inbox.threads.map((current) => {
+              if (current.id === imitationId) {
+                return thread;
+              }
+              return current;
+            }),
+            total: inbox.total,
           };
         });
-      }
-      if (message) {
+      } else if (message) {
         const thread = inbox.threads.find((t) => t.id === message.threadId);
         if (thread) {
           setInbox(prependThread(thread, message));
@@ -425,12 +417,14 @@ export default function Inbox({
   useKeyboard(
     {
       onKeyUp(event: KeyboardEvent) {
+        if (modal) {
+          return false;
+        }
         const element = document.activeElement;
         if (element && element.id) {
           return false;
         }
         const { threads } = inbox;
-
         if (threads.length === 0) {
           return false;
         }
@@ -469,7 +463,7 @@ export default function Inbox({
         }
       },
     },
-    [inbox, thread]
+    [inbox, thread, modal]
   );
 
   function showAddThreadModal() {

@@ -69,7 +69,7 @@ export function createThreadWrapper({
     files: UploadedFile[];
     channel: SerializedChannel;
   }) => {
-    const id = uuid();
+    const id = `imitation-${uuid()}`;
     const imitation: SerializedThread = {
       id,
       sentAt: new Date().toISOString(),
@@ -165,16 +165,19 @@ export function createThreadWrapper({
         setInbox((inbox: InboxResponse) => {
           return {
             ...inbox,
-            threads: inbox.threads
-              .filter((current) => {
-                return current.id !== thread.id;
-              })
-              .map((current) => {
-                if (current.id === imitationId) {
-                  return thread;
-                }
-                return current;
-              }),
+            threads: [
+              thread,
+              ...inbox.threads
+                .filter((current) => {
+                  return current.id !== thread.id;
+                })
+                .map((current) => {
+                  if (current.id === imitationId) {
+                    return thread;
+                  }
+                  return current;
+                }),
+            ],
           };
         });
       }

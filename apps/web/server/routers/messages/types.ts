@@ -10,7 +10,7 @@ export const postSchema = z.object({
   accountId: z.string().uuid(),
   channelId: z.string().uuid(),
   threadId: z.string().uuid(),
-  imitationId: z.string().uuid().optional(),
+  imitationId: z.string().optional(),
   body: z.string().min(1),
   files: z
     .array(

@@ -37,7 +37,7 @@ export type putType = z.infer<typeof putSchema>;
 export const postSchema = z.object({
   accountId: z.string().uuid(),
   channelId: z.string().uuid(),
-  imitationId: z.string().uuid().optional(),
+  imitationId: z.string().optional(),
   body: z.string().min(1),
   title: z.string().optional(),
   files: z

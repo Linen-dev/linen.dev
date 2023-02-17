@@ -73,6 +73,10 @@ export default function AddThreadModal({
           onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
             setTitle(event.target.value)
           }
+          onKeyUp={(event: React.KeyboardEvent<HTMLInputElement>) => {
+            event.stopPropagation();
+            event.preventDefault();
+          }}
         />
       </Field>
       <Field>
