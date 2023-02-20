@@ -1,29 +1,26 @@
 import React from 'react';
-import Dropdown from '../../../Dropdown';
+import Dropdown, { DropdownItem } from '../../../Dropdown';
 import StickyHeader from '../../../StickyHeader';
 import Pagination from './Pagination';
 import Icon from './Icon';
 import { FiInbox, FiPlus, FiMoreVertical } from 'react-icons/fi';
-import { BiMessageCheck } from 'react-icons/bi';
 import styles from './index.module.scss';
 import { SerializedThread } from '@linen/types';
 
 interface Props {
   page: number;
   total: number;
-  threads: SerializedThread[];
   onAddClick(): void;
   onPageChange(type: string): void;
-  onMarkAllAsRead(): void;
+  dropdown: DropdownItem[];
 }
 
 export default function Header({
   page,
   total,
-  threads,
   onAddClick,
   onPageChange,
-  onMarkAllAsRead,
+  dropdown,
 }: Props) {
   return (
     <StickyHeader>
@@ -40,20 +37,14 @@ export default function Header({
           <Icon onClick={onAddClick}>
             <FiPlus />
           </Icon>
-          {threads.length > 0 && (
+          {dropdown.length > 0 && (
             <Dropdown
               button={
                 <Icon>
                   <FiMoreVertical />
                 </Icon>
               }
-              items={[
-                {
-                  icon: <BiMessageCheck />,
-                  label: 'Mark all as done',
-                  onClick: onMarkAllAsRead,
-                },
-              ]}
+              items={dropdown}
             />
           )}
           <Pagination page={page} total={total} onPageChange={onPageChange} />

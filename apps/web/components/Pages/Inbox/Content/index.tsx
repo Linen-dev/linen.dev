@@ -9,6 +9,7 @@ import usePolling from '@linen/hooks/polling';
 import useKeyboard from '@linen/hooks/keyboard';
 import { useUsersContext } from '@linen/contexts/Users';
 import useInboxWebsockets from '@linen/hooks/websockets/inbox';
+import { BiMessageCheck } from 'react-icons/bi';
 import type { CommunityPushType } from 'services/push';
 import { manageSelections } from './utilities/selection';
 import {
@@ -482,6 +483,16 @@ export default function Inbox({
 
   const { threads } = inbox;
 
+  const dropdown = [];
+
+  if (threads.length > 0) {
+    dropdown.unshift({
+      icon: <BiMessageCheck />,
+      label: 'Mark all as done',
+      onClick: onMarkAllAsRead,
+    });
+  }
+
   return (
     <>
       <SidebarLayout
@@ -489,10 +500,8 @@ export default function Inbox({
           <>
             <Header
               total={inbox.total}
-              threads={inbox.threads}
               page={page}
               onAddClick={showAddThreadModal}
-              onMarkAllAsRead={onMarkAllAsRead}
               onPageChange={(type: string) => {
                 switch (type) {
                   case 'back':
@@ -501,6 +510,7 @@ export default function Inbox({
                     return setPage((page) => page + 1);
                 }
               }}
+              dropdown={dropdown}
             />
             {threads.length > 0 ? (
               <Grid
