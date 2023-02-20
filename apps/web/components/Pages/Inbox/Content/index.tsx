@@ -2,6 +2,7 @@ import { useState, useRef, useCallback } from 'react';
 import { Layouts, Pages, Toast } from '@linen/ui';
 import Thread from 'components/Thread';
 import AddThreadModal from './AddThreadModal';
+import ConfigureInboxModal from './ConfigureInboxModal';
 import Empty from './Empty';
 import { sendMessageWrapper } from './utilities/sendMessageWrapper';
 import { createThreadWrapper } from './utilities/createThreadWrapper';
@@ -25,6 +26,7 @@ import { addMessageToThread, prependThread } from './state';
 import { addReactionToThread } from 'utilities/state/reaction';
 import { postReaction } from 'components/Pages/Channel/Content/utilities/http';
 import * as api from 'utilities/requests';
+import { FiSettings } from 'react-icons/fi';
 
 const { Header, Grid } = Pages.Inbox;
 const { SidebarLayout } = Layouts.Shared;
@@ -70,6 +72,7 @@ const LIMIT = 10;
 
 enum ModalView {
   ADD_THREAD,
+  CONFIGURE_INBOX,
 }
 
 export default function Inbox({
@@ -483,7 +486,15 @@ export default function Inbox({
 
   const { threads } = inbox;
 
-  const dropdown = [];
+  const dropdown = [
+    {
+      icon: <FiSettings />,
+      label: 'Configure',
+      onClick: () => {
+        setModal(ModalView.CONFIGURE_INBOX);
+      },
+    },
+  ];
 
   if (threads.length > 0) {
     dropdown.unshift({
@@ -584,6 +595,11 @@ export default function Inbox({
             ) as SerializedChannel,
           });
         }}
+      />
+      <ConfigureInboxModal
+        channels={channels}
+        open={modal === ModalView.CONFIGURE_INBOX}
+        close={() => setModal(undefined)}
       />
     </>
   );

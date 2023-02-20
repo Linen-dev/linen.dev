@@ -15,6 +15,7 @@
   white-space: nowrap;
   padding: 0.5rem 1rem;
   font-weight: 500;
+  transition: background 0.1s ease-in, color 0.1s ease-in;
 }
 
 .active {
