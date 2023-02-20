@@ -3,9 +3,8 @@ import Dropdown, { DropdownItem } from '../../../Dropdown';
 import StickyHeader from '../../../StickyHeader';
 import Pagination from './Pagination';
 import Icon from './Icon';
-import { FiInbox, FiPlus, FiMoreVertical } from 'react-icons/fi';
+import { FiInbox, FiEdit3, FiMoreVertical } from 'react-icons/fi';
 import styles from './index.module.scss';
-import { SerializedThread } from '@linen/types';
 
 interface Props {
   page: number;
@@ -35,7 +34,7 @@ export default function Header({
         </div>
         <div className={styles.right}>
           <Icon onClick={onAddClick}>
-            <FiPlus />
+            <FiEdit3 />
           </Icon>
           {dropdown.length > 0 && (
             <Dropdown

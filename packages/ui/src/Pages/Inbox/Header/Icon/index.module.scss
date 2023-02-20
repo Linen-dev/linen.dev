@@ -10,11 +10,13 @@
   border-radius: 50%;
   height: 32px;
   width: 32px;
-  transition: 0.1s ease-in background, 0.1s ease-in color;
+  transition: background 0.1s ease-in, color 0.1s ease-in, box-shadow 0.2s ease-in;
   position: relative;
+  box-shadow: 0 -2px 4px transparent;
 }
 
 .icon:hover {
   background: $color-gray-50;
-  color: $color-gray-900;
+  color: black;
+  box-shadow: 0 2px 4px $color-gray-200;
 }
