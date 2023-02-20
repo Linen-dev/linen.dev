@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Field from 'components/Field';
-import Toggle from 'components/Toggle';
-import { Label } from '@linen/ui';
-import { Toast } from '@linen/ui';
+import { Label, Toast, Toggle } from '@linen/ui';
 import storage from '@linen/utilities/storage';
 import { useRequest } from 'utilities/requests';
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import { SerializedChannel } from '@linen/types';
-import Toggle from 'components/Toggle';
+import { Toggle } from '@linen/ui';
 import styles from './index.module.scss';
 
 interface Props {
@@ -39,7 +39,9 @@ export default function ChannelVisibilityRow({ channels, onChange }: Props) {
                 >
                   <Toggle
                     checked={enabled}
-                    onChange={(checked) => onChannelToggle(checked, channel.id)}
+                    onChange={(checked: boolean) =>
+                      onChannelToggle(checked, channel.id)
+                    }
                   />
                   {channel.channelName}{' '}
                   <label className="text-xs text-gray-400 italic">
