@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { Toast } from '@linen/ui';
-import Toggle from 'components/Toggle';
+import { Toast, Toggle } from '@linen/ui';
 import { SerializedAccount } from '@linen/types';
 import * as api from 'utilities/requests';
 
