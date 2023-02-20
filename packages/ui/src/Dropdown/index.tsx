@@ -4,7 +4,7 @@ import { Menu, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 import styles from './index.module.scss';
 
-interface Item {
+export interface DropdownItem {
   label: string;
   icon: React.ReactNode;
   onClick(): void;
@@ -12,7 +12,7 @@ interface Item {
 
 interface Props {
   button: React.ReactNode;
-  items: Item[];
+  items: DropdownItem[];
 }
 
 export default function Example({ button, items }: Props) {
