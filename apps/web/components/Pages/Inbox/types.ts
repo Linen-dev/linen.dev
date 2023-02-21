@@ -1,4 +1,4 @@
-import { SerializedChannel, SerializedThread } from '@linen/types';
+import { SerializedThread } from '@linen/types';
 
 export interface InboxResponse {
   threads: SerializedThread[];
@@ -10,7 +10,7 @@ export interface InboxConfig {
 }
 
 export interface InboxChannelConfig {
-  channel: SerializedChannel;
+  channelId: string;
   subscribed: boolean;
 }
 
