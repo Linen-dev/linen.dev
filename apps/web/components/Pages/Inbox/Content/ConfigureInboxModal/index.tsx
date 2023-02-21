@@ -3,20 +3,12 @@ import { Modal, Toggle } from '@linen/ui';
 import { SerializedChannel } from '@linen/types';
 import { FiHash } from 'react-icons/fi';
 import styles from './index.module.scss';
+import { InboxConfig, InboxChannelConfig } from '../../types';
 
 interface Props {
   open: boolean;
   close(): void;
   channels: SerializedChannel[];
-}
-
-interface InboxConfig {
-  channels: InboxChannelConfig[];
-}
-
-interface InboxChannelConfig {
-  channel: SerializedChannel;
-  subscribed: boolean;
 }
 
 export default function ConfigureInboxModal({ open, close, channels }: Props) {
