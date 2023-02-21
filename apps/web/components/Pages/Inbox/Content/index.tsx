@@ -454,9 +454,6 @@ export default function Inbox({
           return false;
         }
         const { threads } = inbox;
-        if (threads.length === 0) {
-          return false;
-        }
         const currentThreadId = thread?.id;
         if (!currentThreadId) {
           return false;
@@ -481,14 +478,19 @@ export default function Inbox({
           }
         }
 
-        if (event.key === 'ArrowUp' || event.key === 'k') {
-          selectPreviousThread();
-        } else if (event.key === 'ArrowDown' || event.key === 'j') {
-          selectNextThread();
-        } else if (event.key === 'e') {
-          markThreadAsRead(currentThreadId);
-        } else if (event.key === 'm') {
-          markThreadAsMuted(currentThreadId);
+        if (threads.length > 0) {
+          if (event.key === 'ArrowUp' || event.key === 'k') {
+            selectPreviousThread();
+          } else if (event.key === 'ArrowDown' || event.key === 'j') {
+            selectNextThread();
+          } else if (event.key === 'e') {
+            markThreadAsRead(currentThreadId);
+          } else if (event.key === 'm') {
+            markThreadAsMuted(currentThreadId);
+          }
+        }
+        if (event.key === 'c') {
+          setModal(ModalView.ADD_THREAD);
         }
       },
     },
