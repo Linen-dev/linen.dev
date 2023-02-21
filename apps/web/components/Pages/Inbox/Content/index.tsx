@@ -27,6 +27,7 @@ import { addReactionToThread } from 'utilities/state/reaction';
 import { postReaction } from 'components/Pages/Channel/Content/utilities/http';
 import * as api from 'utilities/requests';
 import { FiSettings } from 'react-icons/fi';
+import { InboxConfig } from '../types';
 
 const { Header, Grid } = Pages.Inbox;
 const { SidebarLayout } = Layouts.Shared;
@@ -89,6 +90,14 @@ export default function Inbox({
   const [inbox, setInbox] = useState<InboxResponse>({ threads: [], total: 0 });
   const [page, setPage] = useState<number>(1);
   const [modal, setModal] = useState<ModalView>();
+  const [configuration, setConfiguration] = useState<InboxConfig>({
+    channels: channels.map((channel) => {
+      return {
+        channel,
+        subscribed: true,
+      };
+    }),
+  });
   const [key, setKey] = useState(0);
   const [selections, setSelections] = useState<Selections>({});
   const [thread, setThread] = useState<SerializedThread>();
@@ -597,9 +606,25 @@ export default function Inbox({
         }}
       />
       <ConfigureInboxModal
-        channels={channels}
+        configuration={configuration}
         open={modal === ModalView.CONFIGURE_INBOX}
         close={() => setModal(undefined)}
+        onChange={(channelId: string) => {
+          setConfiguration((configuration) => {
+            return {
+              ...configuration,
+              channels: configuration.channels.map((config) => {
+                if (config.channel.id === channelId) {
+                  return {
+                    ...config,
+                    subscribed: !config.subscribed,
+                  };
+                }
+                return config;
+              }),
+            };
+          });
+        }}
       />
     </>
   );
