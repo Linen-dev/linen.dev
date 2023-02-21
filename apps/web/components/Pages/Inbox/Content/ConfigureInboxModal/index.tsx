@@ -36,7 +36,7 @@ export default function ConfigureInboxModal({
           }
           const { subscribed } = config;
           return (
-            <li className={styles.toggle}>
+            <li className={styles.toggle} key={`config-channel-${channel.id}`}>
               <Toggle
                 checked={subscribed}
                 onChange={() => onChange(channel.id)}
