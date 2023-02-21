@@ -21,6 +21,7 @@ export async function index({
     communityName?: string;
     page?: number;
     limit?: number;
+    channelIds?: string[];
   };
   currentUserId: string;
 }) {
@@ -33,7 +34,16 @@ export async function index({
   const channels = await ChannelsService.find(community.id);
   const condition = {
     hidden: false,
-    channelId: { in: channels.map((channel) => channel.id) },
+    channelId: {
+      in: channels
+        .map((channel) => channel.id)
+        .filter((channelId) => {
+          if (!params.channelIds || params.channelIds.length === 0) {
+            return true;
+          }
+          return params.channelIds.includes(channelId);
+        }),
+    },
     userThreadStatus: {
       none: {
         userId: currentUserId,
