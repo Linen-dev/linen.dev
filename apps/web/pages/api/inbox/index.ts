@@ -108,14 +108,14 @@ const handlers = {
         request,
         response,
         params: {
-          communityName: request.query.communityName as string,
+          communityName: request.body.communityName as string,
         },
       });
       if (!permissions.inbox) {
         return response.status(401).json({});
       }
       const { status, data } = await index({
-        params: request.query,
+        params: request.body,
         currentUserId: permissions.user.id,
       });
       response.status(status).json(data);
@@ -132,7 +132,8 @@ export default async function handler(
   request: NextApiRequest,
   response: NextApiResponse
 ) {
-  if (request.method === 'GET') {
+  // using POST to prevent url length limit
+  if (request.method === 'POST') {
     return handlers.index(request, response);
   }
   return response.status(404).json({});

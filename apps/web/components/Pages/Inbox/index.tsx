@@ -11,6 +11,8 @@ import debounce from '@linen/utilities/debounce';
 import storage from '@linen/utilities/storage';
 import * as api from 'utilities/requests';
 import Content from './Content';
+import { InboxConfig } from './types';
+import { post } from 'utilities/http';
 
 interface Props {
   channels: SerializedChannel[];
@@ -26,20 +28,22 @@ const fetchInbox = debounce(
     communityName,
     page,
     limit,
+    configuration,
   }: {
     communityName: string;
     page: number;
     limit: number;
+    configuration: InboxConfig;
   }) => {
-    return fetch(
-      `/api/inbox?communityName=${communityName}&page=${page}&limit=${limit}`,
-      {
-        method: 'GET',
-      }
-    ).then((response) => {
-      if (response.ok) {
-        return response.json();
-      }
+    const channelIds = configuration.channels
+      .filter((config) => config.subscribed)
+      .map((config) => config.channelId);
+    return post('/api/inbox', {
+      communityName,
+      page,
+      limit,
+      channelIds,
+    }).catch(() => {
       throw new Error('Failed to fetch the inbox.');
     });
   }

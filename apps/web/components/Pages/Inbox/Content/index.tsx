@@ -51,10 +51,12 @@ interface Props {
     communityName,
     page,
     limit,
+    configuration,
   }: {
     communityName: string;
     page: number;
     limit: number;
+    configuration: InboxConfig;
   }): Promise<InboxResponse>;
   fetchThread(threadId: string): Promise<SerializedThread>;
   putThread(
@@ -254,7 +256,12 @@ export default function Inbox({
   const [polling] = usePolling(
     {
       fetch(): any {
-        return fetchInbox({ communityName, page, limit: LIMIT });
+        return fetchInbox({
+          communityName,
+          page,
+          configuration,
+          limit: LIMIT,
+        });
       },
       success(inbox: InboxResponse) {
         setLoading(false);
@@ -389,9 +396,11 @@ export default function Inbox({
       },
     })
       .then(() => {
-        fetchInbox({ communityName, page, limit: LIMIT }).then((inbox) => {
-          setInbox(inbox);
-        });
+        fetchInbox({ communityName, page, configuration, limit: LIMIT }).then(
+          (inbox) => {
+            setInbox(inbox);
+          }
+        );
       })
       .finally(() => {
         setLoading(false);
@@ -512,6 +521,7 @@ export default function Inbox({
 
   useEffect(() => {
     storage.set('inbox.configuration', configuration);
+    setKey((key) => key + 1);
   }, [configuration]);
 
   return (
