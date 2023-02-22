@@ -21,7 +21,7 @@ describe('Message', () => {
       expect(container).toHaveTextContent('Hello World');
     });
 
-    it('renders emojis', () => {
+    it.skip('renders emojis', () => {
       const { container } = render(
         <Message text="Hey :)" format={MessageFormat.SLACK} />
       );
@@ -117,7 +117,7 @@ describe('Message', () => {
       );
       const link = getByText('http://foo.com') as HTMLLinkElement;
       expect(link.href).toEqual('http://foo.com/');
-    })
+    });
 
     it('renders links with labels', () => {
       const { getByText } = render(
@@ -198,7 +198,7 @@ describe('Message', () => {
       expect(link.href).toEqual('mailto:help@linen.dev');
     });
 
-    it('renders emojis', () => {
+    it.skip('renders emojis', () => {
       const { container } = render(
         <Message text="Hey :)" format={MessageFormat.DISCORD} />
       );

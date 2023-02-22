@@ -1,5 +1,6 @@
 import { uploadFile } from 'services/aws/s3';
 import { BUCKET_PREFIX_FOR_ATTACHMENTS, LINEN_ASSETS_CDN } from 'secrets';
+import { v4 } from 'uuid';
 
 interface File {
   id: string;
@@ -11,7 +12,7 @@ export default class UploadService {
   static async upload(file: File) {
     const path = [
       BUCKET_PREFIX_FOR_ATTACHMENTS,
-      file.id,
+      v4(),
       file.name || 'unknown',
     ].join('/');
     await uploadFile(path, file.buffer);
