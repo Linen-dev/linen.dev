@@ -34,7 +34,6 @@
     "identity-obj-proxy": "^3.0.0",
     "jest": "^29.3.1",
     "jest-environment-jsdom": "^29.3.1",
-    "marked": "^4.2.3",
     "react-emoji-render": "^1.2.4",
     "react-switch": "^7.0.0",
     "rollup": "^3.3.0",
