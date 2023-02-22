@@ -14,12 +14,15 @@ import {
   onResolve,
 } from '@linen/types';
 import { copyToClipboard } from '@linen/utilities/clipboard';
-import { GoPin } from 'react-icons/go';
-import { AiOutlinePaperClip, AiOutlineHighlight } from 'react-icons/ai';
-import { RxDragHandleDots2 } from 'react-icons/rx';
-import { FiClock, FiThumbsUp, FiTrash2 } from 'react-icons/fi';
-import { FaVolumeMute } from 'react-icons/fa';
-import { BiMessageCheck } from 'react-icons/bi';
+import { GoPin } from '@react-icons/all-files/go/GoPin';
+import { AiOutlinePaperClip } from '@react-icons/all-files/ai/AiOutlinePaperClip';
+import { AiOutlineHighlight } from '@react-icons/all-files/ai/AiOutlineHighlight';
+import { GrDrag } from '@react-icons/all-files/gr/GrDrag';
+import { FiClock } from '@react-icons/all-files/fi/FiClock';
+import { FiThumbsUp } from '@react-icons/all-files/fi/FiThumbsUp';
+import { FiTrash2 } from '@react-icons/all-files/fi/FiTrash2';
+import { FaVolumeMute } from '@react-icons/all-files/fa/FaVolumeMute';
+import { BiMessageCheck } from '@react-icons/all-files/bi/BiMessageCheck';
 import styles from './index.module.scss';
 import { Mode } from '@linen/hooks/mode';
 import ReminderModal from './ReminderModal';
@@ -264,7 +267,7 @@ export default function Actions({
               mode={mode}
             >
               <Tooltip className={styles.tooltip} text="Move">
-                <RxDragHandleDots2 />
+                <GrDrag />
               </Tooltip>
             </Draggable>
           </li>

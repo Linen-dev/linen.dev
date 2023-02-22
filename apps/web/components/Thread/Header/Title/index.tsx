@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { TextInput } from '@linen/ui';
-import { GoPencil } from 'react-icons/go';
+import { GoPencil } from '@react-icons/all-files/go/GoPencil';
 import classNames from 'classnames';
 import styles from './index.module.css';
 import { ThreadState } from '@linen/types';

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Period } from 'components/Pages/Plans';
 import { SerializedAccount } from '@linen/types';
-import { GoCheck } from 'react-icons/go';
+import { GoCheck } from '@react-icons/all-files/go/GoCheck';
 
 interface Price {
   id?: string;

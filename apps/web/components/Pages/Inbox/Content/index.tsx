@@ -10,7 +10,7 @@ import usePolling from '@linen/hooks/polling';
 import useKeyboard from '@linen/hooks/keyboard';
 import { useUsersContext } from '@linen/contexts/Users';
 import useInboxWebsockets from '@linen/hooks/websockets/inbox';
-import { BiMessageCheck } from 'react-icons/bi';
+import { BiMessageCheck } from '@react-icons/all-files/bi/BiMessageCheck';
 import type { CommunityPushType } from 'services/push';
 import { manageSelections } from './utilities/selection';
 import {
@@ -27,7 +27,7 @@ import { defaultConfiguration } from './utilities/inbox';
 import { addReactionToThread } from 'utilities/state/reaction';
 import { postReaction } from 'components/Pages/Channel/Content/utilities/http';
 import * as api from 'utilities/requests';
-import { FiSettings } from 'react-icons/fi';
+import { FiSettings } from '@react-icons/all-files/fi/FiSettings';
 import { InboxConfig } from '../types';
 import storage from '@linen/utilities/storage';
 

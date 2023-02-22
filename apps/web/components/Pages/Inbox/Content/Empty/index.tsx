@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import styles from './index.module.scss';
-import { FiInbox } from 'react-icons/fi';
+import { FiInbox } from '@react-icons/all-files/fi/FiInbox';
 
 interface Props {
   loading: boolean;

@@ -1,6 +1,10 @@
 import Example from '../Example';
 import { Nav } from '@linen/ui';
-import { FiBarChart, FiHash, FiInbox, FiPlus, FiMenu } from 'react-icons/fi';
+import { FiInbox } from '@react-icons/all-files/fi/FiInbox';
+import { FiHash } from '@react-icons/all-files/fi/FiHash';
+import { FiBarChart } from '@react-icons/all-files/fi/FiBarChart';
+import { FiPlus } from '@react-icons/all-files/fi/FiPlus';
+import { FiMenu } from '@react-icons/all-files/fi/FiMenu';
 
 export default function NavExample() {
   return (

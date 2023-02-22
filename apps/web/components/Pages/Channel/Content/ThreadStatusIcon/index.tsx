@@ -1,8 +1,9 @@
 import React from 'react';
 import { ThreadStatus } from '@linen/types';
-import { FaVolumeMute } from 'react-icons/fa';
-import { BiMessageCheck } from 'react-icons/bi';
-import { FiClock, FiInbox } from 'react-icons/fi';
+import { FaVolumeMute } from '@react-icons/all-files/fa/FaVolumeMute';
+import { BiMessageCheck } from '@react-icons/all-files/bi/BiMessageCheck';
+import { FiInbox } from '@react-icons/all-files/fi/FiInbox';
+import { FiClock } from '@react-icons/all-files/fi/FiClock';
 
 interface Props {
   status: ThreadStatus;

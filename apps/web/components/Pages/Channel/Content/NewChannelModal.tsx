@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import H3 from 'components/H3';
-import { FiPlus, FiX } from 'react-icons/fi';
+import { FiPlus } from '@react-icons/all-files/fi/FiPlus';
+import { FiX } from '@react-icons/all-files/fi/FiX';
 import { Button, Modal, TextInput, Toast } from '@linen/ui';
 import { useLinkContext } from '@linen/contexts/Link';
 import CustomRouterPush from 'components/Link/CustomRouterPush';

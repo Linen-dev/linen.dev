@@ -1,5 +1,5 @@
 import React from 'react';
-import { AiOutlineLink } from 'react-icons/ai';
+import { AiOutlineLink } from '@react-icons/all-files/ai/AiOutlineLink';
 import styles from './index.module.css';
 
 interface Props {

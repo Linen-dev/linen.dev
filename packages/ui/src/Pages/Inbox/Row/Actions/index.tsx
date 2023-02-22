@@ -2,8 +2,8 @@ import React from 'react';
 import classNames from 'classnames';
 import styles from './index.module.scss';
 import Tooltip from '../../../../Tooltip';
-import { BiMessageCheck } from 'react-icons/bi';
-import { FaVolumeMute } from 'react-icons/fa';
+import { BiMessageCheck } from '@react-icons/all-files/bi/BiMessageCheck';
+import { FaVolumeMute } from '@react-icons/all-files/fa/FaVolumeMute';
 import { SerializedThread } from '@linen/types';
 
 interface Props {

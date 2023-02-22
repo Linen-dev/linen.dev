@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal, Toggle } from '@linen/ui';
 import { SerializedChannel } from '@linen/types';
-import { FiHash } from 'react-icons/fi';
+import { FiHash } from '@react-icons/all-files/fi/FiHash';
 import styles from './index.module.scss';
 import { InboxConfig, InboxChannelConfig } from '../../types';
 

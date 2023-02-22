@@ -1,7 +1,8 @@
 import { useEffect, useRef, useCallback, useState } from 'react';
 import debounce from '@linen/utilities/debounce';
 import { TextInput } from '@linen/ui';
-import { AiOutlineSearch, AiOutlineLoading } from 'react-icons/ai';
+import { AiOutlineSearch } from '@react-icons/all-files/ai/AiOutlineSearch';
+import { AiOutlineLoading } from '@react-icons/all-files/ai/AiOutlineLoading';
 import styles from './index.module.css';
 
 export default function Autocomplete({

@@ -2,15 +2,16 @@ import React, { useContext, useEffect, useState } from 'react';
 import H3 from 'components/H3';
 import { Modal } from '@linen/ui';
 import { channelsIntegrationType, Permissions } from '@linen/types';
-import { CgLinear } from 'react-icons/cg';
+import { CgLinear } from '@react-icons/all-files/cg/CgLinear';
 import { Button } from '@linen/ui';
-import { FiGithub, FiMail } from 'react-icons/fi';
+import { FiGithub } from '@react-icons/all-files/fi/FiGithub';
+import { FiMail } from '@react-icons/all-files/fi/FiMail';
 import { qs } from '@linen/utilities/url';
 import { Toast } from '@linen/ui';
 import { useSession } from 'utilities/auth/react';
 import { ChannelContext } from 'contexts/channel';
 import * as api from 'utilities/requests';
-import { GoX } from 'react-icons/go';
+import { GoX } from '@react-icons/all-files/go/GoX';
 
 interface IntegrationsModalProps {
   permissions: Permissions;

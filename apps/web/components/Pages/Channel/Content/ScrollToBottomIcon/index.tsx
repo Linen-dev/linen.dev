@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import { FiArrowDown } from 'react-icons/fi';
+import { FiArrowDown } from '@react-icons/all-files/fi/FiArrowDown';
 import styles from './index.module.scss';
 
 interface Props {

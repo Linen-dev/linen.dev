@@ -3,7 +3,10 @@ import Title from './Title';
 import { StickyHeader } from '@linen/ui';
 import classNames from 'classnames';
 import { ThreadState } from '@linen/database';
-import { GoCheck, GoChevronLeft, GoX, GoSync } from 'react-icons/go';
+import { GoCheck } from '@react-icons/all-files/go/GoCheck';
+import { GoChevronLeft } from '@react-icons/all-files/go/GoChevronLeft';
+import { GoX } from '@react-icons/all-files/go/GoX';
+import { GoSync } from '@react-icons/all-files/go/GoSync';
 import { SerializedThread } from '@linen/types';
 import styles from './index.module.scss';
 

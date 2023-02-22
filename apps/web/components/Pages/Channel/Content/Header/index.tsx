@@ -2,10 +2,11 @@ import React from 'react';
 import { Dropdown, NativeSelect, StickyHeader } from '@linen/ui';
 import styles from './index.module.css';
 import { SerializedThread, SerializedUser, ThreadStatus } from '@linen/types';
-import { FiHash, FiMoreVertical } from 'react-icons/fi';
-import { BiMessageCheck } from 'react-icons/bi';
+import { FiHash } from '@react-icons/all-files/fi/FiHash';
+import { FiMoreVertical } from '@react-icons/all-files/fi/FiMoreVertical';
+import { BiMessageCheck } from '@react-icons/all-files/bi/BiMessageCheck';
 import Icon from './Icon';
-import { BsFillGearFill } from 'react-icons/bs';
+import { BsFillGearFill } from '@react-icons/all-files/bs/BsFillGearFill';
 import { ShowIntegrationDetail } from '../IntegrationsModal';
 
 interface Props {

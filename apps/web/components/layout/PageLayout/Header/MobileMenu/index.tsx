@@ -1,18 +1,16 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import classNames from 'classnames';
-import {
-  FiBarChart,
-  FiMenu,
-  FiHash,
-  FiInbox,
-  FiLogOut,
-  FiSettings,
-  FiDollarSign,
-  FiSliders,
-  FiUsers,
-  FiFileText,
-} from 'react-icons/fi';
+import { FiBarChart } from '@react-icons/all-files/fi/FiBarChart';
+import { FiMenu } from '@react-icons/all-files/fi/FiMenu';
+import { FiHash } from '@react-icons/all-files/fi/FiHash';
+import { FiInbox } from '@react-icons/all-files/fi/FiInbox';
+import { FiLogOut } from '@react-icons/all-files/fi/FiLogOut';
+import { FiSettings } from '@react-icons/all-files/fi/FiSettings';
+import { FiDollarSign } from '@react-icons/all-files/fi/FiDollarSign';
+import { FiSliders } from '@react-icons/all-files/fi/FiSliders';
+import { FiUsers } from '@react-icons/all-files/fi/FiUsers';
+import { FiFileText } from '@react-icons/all-files/fi/FiFileText';
 import Link from 'components/Link/InternalLink';
 import { Modal } from '@linen/ui';
 import styles from './index.module.scss';

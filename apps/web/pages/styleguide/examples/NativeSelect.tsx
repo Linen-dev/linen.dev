@@ -1,6 +1,6 @@
 import Example from '../Example';
 import { NativeSelect } from '@linen/ui';
-import { AiOutlineNumber } from 'react-icons/ai';
+import { AiOutlineNumber } from '@react-icons/all-files/ai/AiOutlineNumber';
 
 export default function NativeSelectExample() {
   return (

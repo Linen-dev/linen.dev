@@ -1,5 +1,5 @@
 import { StickyHeader } from '@linen/ui';
-import { FiSliders } from 'react-icons/fi';
+import { FiSliders } from '@react-icons/all-files/fi/FiSliders';
 import styles from './index.module.scss';
 
 export default function Header() {
@@ -8,9 +8,7 @@ export default function Header() {
       <div className={styles.title}>
         <FiSliders /> Branding
       </div>
-      <div className={styles.subtitle}>
-        Design made simple
-      </div>
+      <div className={styles.subtitle}>Design made simple</div>
     </StickyHeader>
   );
 }

@@ -1,5 +1,5 @@
 import { Button } from '@linen/ui';
-import { GoMarkGithub } from 'react-icons/go';
+import { GoMarkGithub } from '@react-icons/all-files/go/GoMarkGithub';
 import { qs } from '@linen/utilities/url';
 
 export default function GitHubButton({

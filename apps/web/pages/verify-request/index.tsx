@@ -1,5 +1,5 @@
 import Layout from 'components/layout/CardLayout';
-import { GoMailRead } from 'react-icons/go';
+import { GoMailRead } from '@react-icons/all-files/go/GoMailRead';
 
 export default function VerifyRequest({}: {}) {
   return (

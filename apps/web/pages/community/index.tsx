@@ -3,8 +3,8 @@ import linenExamplePage from 'public/linen-example-page.png';
 import Image from 'next/image';
 import LinenLogo from 'components/Logo/Linen';
 import YCombinatorLogo from 'components/Logo/YCombinator';
-import { GoCheck } from 'react-icons/go';
-import { BsGithub } from 'react-icons/bs';
+import { GoCheck } from '@react-icons/all-files/go/GoCheck';
+import { AiFillGithub } from '@react-icons/all-files/ai/AiFillGithub';
 
 import Link from 'next/link';
 import FadeIn from 'components/FadeIn';
@@ -81,7 +81,7 @@ const Home = (props: { accounts: Props[] }) => {
             rel="noreferrer"
           >
             <div className="pr-2">
-              <BsGithub />
+              <AiFillGithub />
             </div>
             Star us on Github
           </a>

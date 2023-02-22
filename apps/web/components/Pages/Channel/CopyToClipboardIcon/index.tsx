@@ -1,5 +1,5 @@
 import React from 'react';
-import { AiOutlinePaperClip } from 'react-icons/ai';
+import { AiOutlinePaperClip } from '@react-icons/all-files/ai/AiOutlinePaperClip';
 import { Toast } from '@linen/ui';
 import { copyToClipboard } from '@linen/utilities/clipboard';
 

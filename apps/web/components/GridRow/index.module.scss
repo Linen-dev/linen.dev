@@ -9,23 +9,18 @@
 }
 
 .resolutionLabel {
-  font-size: 10px;
+  align-items: center;
+  display: flex;
+  gap: 0.25rem;
+  font-size: 12px;
   border-radius: 1rem;
-  font-weight: bold;
+  font-weight: 500;
   background-color: $color-green-600;
   color: white;
   margin: 0.5rem 0 0.5rem;
-  padding: 0.25rem 0.5rem;
+  padding: 0.125rem 0.5rem;
   width: fit-content;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-
-}
-
-.resolutionCheck {
-  margin-right: 3px;
-  font-size: 10px
+  user-select: none;
 }
 
 .row {
