@@ -4,7 +4,7 @@ import { useLinkContext } from '@linen/contexts/Link';
 import { SerializedChannel } from '@linen/types';
 import { Label, NativeSelect } from '@linen/ui';
 import CustomRouterPush from 'components/Link/CustomRouterPush';
-import { FiHash } from 'react-icons/fi';
+import { FiHash } from '@react-icons/all-files/fi/FiHash';
 import styles from './index.module.scss';
 
 interface Props {

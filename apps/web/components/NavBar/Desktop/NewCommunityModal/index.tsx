@@ -1,6 +1,6 @@
 import { Modal } from '@linen/ui';
 import H3 from 'components/H3';
-import { FiX } from 'react-icons/fi';
+import { FiX } from '@react-icons/all-files/fi/FiX';
 import Form from 'components/Pages/Onboarding/Form';
 
 interface Props {

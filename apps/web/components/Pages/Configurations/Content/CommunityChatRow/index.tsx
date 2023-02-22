@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { ChatType } from '@linen/types';
 import Row from '../Row';
 import { NativeSelect } from '@linen/ui';
-import { RiChatCheckLine, RiChatDeleteLine } from 'react-icons/ri';
+import { RiChatCheckLine } from '@react-icons/all-files/ri/RiChatCheckLine';
+import { RiChatDeleteLine } from '@react-icons/all-files/ri/RiChatDeleteLine';
 
 interface Props {
   chat: ChatType | null;

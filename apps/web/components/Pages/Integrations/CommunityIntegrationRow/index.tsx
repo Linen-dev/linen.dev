@@ -3,7 +3,9 @@ import { capitalize } from '@linen/utilities/string';
 import { integrationAuthorizer } from 'utilities/communityAuthorizers';
 import { SerializedAccount } from '@linen/types';
 import { Toast } from '@linen/ui';
-import { GoCheck, GoAlert, GoInfo } from 'react-icons/go';
+import { GoCheck } from '@react-icons/all-files/go/GoCheck';
+import { GoAlert } from '@react-icons/all-files/go/GoAlert';
+import { GoInfo } from '@react-icons/all-files/go/GoInfo';
 import { onSubmitType, RightPanel } from './CustomDiscordBot';
 import { useState } from 'react';
 import { setDiscordIntegrationCustomBot } from 'utilities/requests';
@@ -41,8 +43,9 @@ export default function CommunityIntegration({
   const [loading, setLoading] = useState(false);
 
   const newOnboarding = !currentCommunity.communityType;
-  const communityType =
-    currentCommunity.communityType ? currentCommunity.communityType : 'Slack/Discord';
+  const communityType = currentCommunity.communityType
+    ? currentCommunity.communityType
+    : 'Slack/Discord';
 
   const onClick = async (community: string) => {
     try {

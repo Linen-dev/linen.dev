@@ -5,7 +5,7 @@ import { Avatar, Message } from '@linen/ui';
 import Actions from 'components/Actions';
 import CheckIcon from 'components/icons/CheckIcon';
 import { format } from '@linen/utilities/date';
-import { BsCheckCircleFill } from 'react-icons/bs';
+import { BsCheck } from '@react-icons/all-files/bs/BsCheck';
 import { Mode } from '@linen/hooks/mode';
 import {
   Permissions,
@@ -84,11 +84,11 @@ export function Row({
   onUnread,
 }: Props) {
   const top = !isPreviousMessageFromSameUser;
-  const isResolution = thread.resolutionId === message.id;
-  const resolutionStyle = isResolution ? styles.resolution : {};
+  const resolution = thread.resolutionId === message.id;
   return (
     <div
-      className={classNames(className, styles.container, resolutionStyle, {
+      className={classNames(className, styles.container, {
+        [styles.resolution]: resolution,
         [styles.top]: top,
       })}
     >
@@ -135,10 +135,10 @@ export function Row({
               currentUser={currentUser}
               onLoad={onLoad}
             />
-            {isResolution && (
+            {resolution && (
               <div className={styles.resolutionLabel}>
-                <BsCheckCircleFill className={styles.resolutionCheck} />
-                <>Resolution</>
+                <BsCheck className={styles.resolutionCheck} />
+                Resolution
               </div>
             )}
             {footer}

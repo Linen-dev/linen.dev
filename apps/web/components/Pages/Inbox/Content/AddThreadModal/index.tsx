@@ -6,7 +6,7 @@ import Field from 'components/Field';
 import { NativeSelect, Modal, TextInput } from '@linen/ui';
 import styles from './index.module.scss';
 import { SerializedChannel, SerializedUser } from '@linen/types';
-import { FiHash } from 'react-icons/fi';
+import { FiHash } from '@react-icons/all-files/fi/FiHash';
 
 interface Props {
   communityId: string;

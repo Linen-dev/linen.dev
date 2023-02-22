@@ -4,7 +4,7 @@ import Header from './Header';
 import { Button, NativeSelect, TextInput, Toast } from '@linen/ui';
 import { useRouter } from 'next/router';
 import { Roles } from '@linen/database';
-import { AiOutlineUser } from 'react-icons/ai';
+import { AiOutlineUser } from '@react-icons/all-files/ai/AiOutlineUser';
 import {
   SerializedAccount,
   SerializedChannel,

@@ -1,5 +1,5 @@
 import { StickyHeader } from '@linen/ui';
-import { FiBarChart } from 'react-icons/fi';
+import { FiBarChart } from '@react-icons/all-files/fi/FiBarChart';
 import styles from './index.module.scss';
 
 export default function Header() {

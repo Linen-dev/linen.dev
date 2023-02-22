@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { AccountType } from '@linen/types';
 import Row from '../Row';
 import { NativeSelect } from '@linen/ui';
-import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
+import { AiFillEye } from '@react-icons/all-files/ai/AiFillEye';
+import { AiFillEyeInvisible } from '@react-icons/all-files/ai/AiFillEyeInvisible';
 
 interface Props {
   type: AccountType;

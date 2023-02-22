@@ -1,7 +1,9 @@
 import React from 'react';
 import classNames from 'classnames';
 import { Toaster, toast } from 'react-hot-toast';
-import { GoCheck, GoInfo, GoAlert } from 'react-icons/go';
+import { GoCheck } from '@react-icons/all-files/go/GoCheck';
+import { GoInfo } from '@react-icons/all-files/go/GoInfo';
+import { GoAlert } from '@react-icons/all-files/go/GoAlert';
 import styles from './index.module.scss';
 
 function custom({

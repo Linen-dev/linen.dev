@@ -1,7 +1,7 @@
 import Layout from 'components/layout/BlankLayout';
 import classNames from 'classnames';
 import { Disclosure } from '@headlessui/react';
-import { FiChevronDown } from 'react-icons/fi';
+import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
 import Logo from 'components/Logo/Linen';
 import H1 from 'components/H1';
 

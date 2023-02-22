@@ -1,7 +1,7 @@
 import styles from './index.module.scss';
 import Logo from '../../Logo/Linen';
 import Button from '../../Button/Gradient';
-import { FiInbox } from 'react-icons/fi';
+import { FiInbox } from '@react-icons/all-files/fi/FiInbox';
 import Link from 'next/link';
 
 export default function SplashPage() {

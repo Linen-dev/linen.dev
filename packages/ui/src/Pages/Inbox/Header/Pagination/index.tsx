@@ -1,6 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
-import { GoChevronLeft, GoChevronRight } from 'react-icons/go';
+import { GoChevronLeft } from '@react-icons/all-files/go/GoChevronLeft';
+import { GoChevronRight } from '@react-icons/all-files/go/GoChevronRight';
 import styles from './index.module.scss';
 
 interface Props {

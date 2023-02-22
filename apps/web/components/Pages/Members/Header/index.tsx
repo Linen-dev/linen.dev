@@ -1,5 +1,5 @@
 import { StickyHeader } from '@linen/ui';
-import { FiUsers } from 'react-icons/fi';
+import { FiUsers } from '@react-icons/all-files/fi/FiUsers';
 import styles from './index.module.scss';
 
 export default function Header() {

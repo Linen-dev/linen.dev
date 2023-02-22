@@ -3,7 +3,7 @@ import styles from './index.module.scss';
 import Title from './Title';
 import Header from './Header';
 import Content from './Content';
-import { FiInbox } from 'react-icons/fi';
+import { FiInbox } from '@react-icons/all-files/fi/FiInbox';
 import { Nav } from '@linen/ui';
 import { CommunityType } from '@linen/types';
 

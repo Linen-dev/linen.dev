@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { Container, TextInput } from '@linen/ui';
 import styles from './index.module.scss';
 import logo from 'public/images/logo/linen.svg';
-import { AiOutlineSearch } from 'react-icons/ai';
+import { AiOutlineSearch } from '@react-icons/all-files/ai/AiOutlineSearch';
 import serializeAccount from 'serializers/account';
 import { prisma } from '@linen/database';
 import {

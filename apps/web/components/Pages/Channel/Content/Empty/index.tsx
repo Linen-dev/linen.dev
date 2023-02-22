@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import styles from './index.module.scss';
 import { SerializedUser, ThreadStatus } from '@linen/types';
 import ThreadStatusIcon from '../ThreadStatusIcon';
-import { FiMessageSquare } from 'react-icons/fi';
+import { FiMessageSquare } from '@react-icons/all-files/fi/FiMessageSquare';
 
 interface Props {
   currentUser?: SerializedUser;

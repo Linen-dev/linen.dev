@@ -10,18 +10,16 @@ import Link from 'components/Link/InternalLink';
 import NewChannelModal from 'components/Pages/Channel/Content/NewChannelModal';
 import useWebsockets from '@linen/hooks/websockets';
 import styles from './index.module.scss';
-import {
-  FiInbox,
-  FiBarChart,
-  FiHash,
-  FiSettings,
-  FiSliders,
-  FiDollarSign,
-  FiUsers,
-  FiChevronDown,
-  FiChevronUp,
-  FiFileText,
-} from 'react-icons/fi';
+import { FiInbox } from '@react-icons/all-files/fi/FiInbox';
+import { FiBarChart } from '@react-icons/all-files/fi/FiBarChart';
+import { FiHash } from '@react-icons/all-files/fi/FiHash';
+import { FiSettings } from '@react-icons/all-files/fi/FiSettings';
+import { FiSliders } from '@react-icons/all-files/fi/FiSliders';
+import { FiDollarSign } from '@react-icons/all-files/fi/FiDollarSign';
+import { FiUsers } from '@react-icons/all-files/fi/FiUsers';
+import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
+import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp';
+import { FiFileText } from '@react-icons/all-files/fi/FiFileText';
 import { useRouter } from 'next/router';
 import usePath from 'hooks/path';
 import { Mode } from '@linen/hooks/mode';

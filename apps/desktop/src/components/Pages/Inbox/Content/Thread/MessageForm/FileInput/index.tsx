@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './index.module.scss';
-import { FiUpload } from 'react-icons/fi';
+import { FiUpload } from '@react-icons/all-files/fi/FiUpload';
 
 interface Props {
   id: string;
