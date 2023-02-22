@@ -106,13 +106,7 @@ function Message({
           </Header>
         );
       case 'text':
-        return (
-          <Text
-            key={node.cid}
-            format={format}
-            value={(node as TextNode).value}
-          />
-        );
+        return <Text key={node.cid} value={(node as TextNode).value} />;
       case 'user':
         return (
           <Mention
