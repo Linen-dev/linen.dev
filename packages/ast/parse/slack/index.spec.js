@@ -292,6 +292,10 @@ describe('parse', () => {
       expect(parse('*foo*.')).toEqual(root([bold([text('foo')]), text('.')]));
     });
 
+    it('parses ":" as a delimiter', () => {
+      expect(parse('*foo*:')).toEqual(root([bold([text('foo')]), text(':')]));
+    });
+
     it('parses "()" as a delimiter', () => {
       expect(parse('(*foo*)')).toEqual(
         root([text('('), bold([text('foo')]), text(')')])

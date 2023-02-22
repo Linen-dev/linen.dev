@@ -21,7 +21,7 @@ const pre = explicit(
 
 const bold = explicit(
   regexp(
-    /^\*(\S([^*\n]*?|[^*\n]*? `.*?` )\S|\S)\*(?=[\s.,\])}!?\-=]|$)/,
+    /^\*(\S([^*\n]*?|[^*\n]*? `.*?` )\S|\S)\*(?=[\s.,\])}!?\-=:]|$)/,
     deep('bold', (content) => parse(content, matchers))
   )
 );
@@ -133,7 +133,7 @@ const link = regexp(
             label: labels,
             value: link + (label ? `|${label}` : ''),
             source: result,
-            title: label || link
+            title: label || link,
           },
           next,
         ];
