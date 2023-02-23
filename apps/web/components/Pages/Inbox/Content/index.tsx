@@ -534,6 +534,7 @@ export default function Inbox({
         left={
           <>
             <Header
+              permissions={permissions}
               total={inbox.total}
               page={page}
               onAddClick={showAddThreadModal}

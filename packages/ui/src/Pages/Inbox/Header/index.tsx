@@ -7,8 +7,10 @@ import { FiInbox } from '@react-icons/all-files/fi/FiInbox';
 import { FiEdit3 } from '@react-icons/all-files/fi/FiEdit3';
 import { FiMoreVertical } from '@react-icons/all-files/fi/FiMoreVertical';
 import styles from './index.module.scss';
+import { Permissions } from '@linen/types';
 
 interface Props {
+  permissions: Permissions;
   page: number;
   total: number;
   onAddClick(): void;
@@ -17,6 +19,7 @@ interface Props {
 }
 
 export default function Header({
+  permissions,
   page,
   total,
   onAddClick,
@@ -35,9 +38,11 @@ export default function Header({
           </StickyHeader.Subtitle>
         </div>
         <div className={styles.right}>
-          <Icon onClick={onAddClick}>
-            <FiEdit3 />
-          </Icon>
+          {permissions.chat && (
+            <Icon onClick={onAddClick}>
+              <FiEdit3 />
+            </Icon>
+          )}
           {dropdown.length > 0 && (
             <Dropdown
               button={
