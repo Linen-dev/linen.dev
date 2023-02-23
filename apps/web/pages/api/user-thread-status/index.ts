@@ -15,7 +15,7 @@ const createSchema = z.object({
   reminderType: z
     .enum([ReminderTypes.SOON, ReminderTypes.TOMORROW, ReminderTypes.NEXT_WEEK])
     .optional(),
-  limit: z.number(),
+  limit: z.number().optional(),
 });
 
 function getRemindAt(reminder: ReminderTypes) {
@@ -36,7 +36,7 @@ export async function create(params: {
   read: boolean;
   reminder: boolean;
   reminderType?: ReminderTypes;
-  limit: number;
+  limit?: number;
 }) {
   const body = createSchema.safeParse(params);
   if (!body.success) {
@@ -90,7 +90,7 @@ export async function create(params: {
         threadId: { in: threadIds },
       },
     });
-  } else if (threadIds.length === 0 && read) {
+  } else if (threadIds.length === 0 && read && limit) {
     try {
       const count = await prisma.threads.count({
         where: {
