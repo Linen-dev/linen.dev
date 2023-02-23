@@ -37,3 +37,17 @@ export async function get(url = '', params = {}) {
   const response = await fetch(buildURL(url, params));
   return response.json();
 }
+
+export async function bulk({
+  callback,
+  next,
+}: {
+  callback(): Promise<any>;
+  next(data: any): boolean;
+}): Promise<void> {
+  const data = await callback();
+  if (next(data)) {
+    return bulk({ callback, next });
+  }
+  return Promise.resolve();
+}

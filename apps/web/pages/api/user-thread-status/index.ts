@@ -92,25 +92,49 @@ export async function create(params: {
     });
   } else if (threadIds.length === 0 && read) {
     try {
-      await UserThreadStatusService.markManyAsRead({ userId, limit });
+      const count = await prisma.threads.count({
+        where: {
+          hidden: false,
+          userThreadStatus: {
+            none: {
+              userId,
+              OR: [{ read: true }, { muted: true }, { reminder: true }],
+            },
+          },
+        },
+      });
+
+      if (count < limit) {
+        await UserThreadStatusService.markAllAsRead({ userId });
+        return { status: 200, data: { count: 0 } };
+      }
+
+      const threads = await prisma.threads.findMany({
+        select: { id: true },
+        where: {
+          hidden: false,
+          userThreadStatus: {
+            none: {
+              userId,
+              OR: [{ read: true }, { muted: true }, { reminder: true }],
+            },
+          },
+        },
+        take: limit,
+      });
+      const threadIds = threads.map(({ id }) => id);
+
+      await prisma.userThreadStatus.createMany({
+        data: threadIds.map((threadId) => {
+          return { threadId, userId, read: true, muted: false };
+        }),
+      });
+
+      return { status: 200, data: { count: count - limit } };
     } catch (exception) {
       console.log(exception);
       return { status: 500 };
     }
-
-    const count = await prisma.threads.count({
-      where: {
-        hidden: false,
-        userThreadStatus: {
-          none: {
-            userId,
-            OR: [{ read: true }, { muted: true }, { reminder: true }],
-          },
-        },
-      },
-    });
-
-    return { status: 200, data: { count } };
   }
 
   return { status: 200 };
