@@ -247,7 +247,7 @@ const Home = (props: { accounts: Props[] }) => {
                 <div className="-mr-48 pl-4 sm:pl-6 md:-mr-16 lg:relative lg:m-0 lg:h-full lg:px-0">
                   <img
                     className="w-full rounded-xl shadow-xl ring-1 ring-black ring-opacity-5 lg:absolute lg:left-0 lg:h-full lg:w-auto lg:max-w-none"
-                    src="https://linen-assets.s3.us-east-1.amazonaws.com/feedExample.png"
+                    src="https://static.main.linendev.com/feedExample.png"
                     alt="Inbox user interface"
                   />
                 </div>
@@ -287,7 +287,7 @@ const Home = (props: { accounts: Props[] }) => {
                 <div className="-ml-48 pr-4 sm:pr-6 md:-ml-16 lg:relative lg:m-0 lg:h-full lg:px-0">
                   <img
                     className="w-full rounded-xl shadow-xl ring-1 ring-black ring-opacity-5 lg:absolute lg:right-0 lg:h-full lg:w-auto lg:max-w-none"
-                    src="https://linen-assets.s3.us-east-1.amazonaws.com/search.svg"
+                    src="https://static.main.linendev.com/search.svg"
                     alt="Customer profile user interface"
                   />
                 </div>

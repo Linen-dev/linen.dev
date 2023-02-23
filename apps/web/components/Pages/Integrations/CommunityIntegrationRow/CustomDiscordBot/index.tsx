@@ -143,11 +143,11 @@ const html = [
 
 You should see a page like this:
 `,
-  `https://linen-assets.s3.amazonaws.com/guide/create-app.png`,
+  `https://static.main.linendev.com/guide/create-app.png`,
   `
 You can edit your application's name, description, and avatar here. Once you've saved your changes, move on by selecting the "Bot" tab in the left pane.
 `,
-  `https://linen-assets.s3.amazonaws.com/guide/create-bot.png`,
+  `https://static.main.linendev.com/guide/create-bot.png`,
   `
 Click the "Add Bot" button on the right and confirm the pop-up window by clicking "Yes, do it!".
 
@@ -155,7 +155,7 @@ Click the "Add Bot" button on the right and confirm the pop-up window by clickin
 
 After creating a bot user, you'll see a section like this:
 `,
-  `https://linen-assets.s3.amazonaws.com/guide/created-bot.png`,
+  `https://static.main.linendev.com/guide/created-bot.png`,
   `
 In this panel, you can give your bot an avatar, set its username, and make it public or private. Your bot's token will be revealed when you press the "Reset Token" button and confirm.
 
@@ -169,7 +169,7 @@ To enable privileged intents, select the "Bot" tab in the left pane then scroll 
 - Server Members Intent 
 - Message Content Intent 
 `,
-  `https://linen-assets.s3.amazonaws.com/guide/privileged-gateway-intents.png`,
+  `https://static.main.linendev.com/guide/privileged-gateway-intents.png`,
   `
 #### Adding your bot to servers
 
@@ -185,15 +185,15 @@ In the sidebar, under the "OAuth2" section, you'll find the OAuth2 URL generator
 
 Grab the link via the "Copy" button and enter it in your browser. You should see something like this (with your bot's username and avatar):
 `,
-  `https://linen-assets.s3.amazonaws.com/guide/bot-auth-page.png`,
+  `https://static.main.linendev.com/guide/bot-auth-page.png`,
   `
 Choose the server you want to add it to and click "Authorize". Do note that you'll need the "Manage Server" permission on a server to add your bot there. This should then present you a nice confirmation message:
 `,
-  `https://linen-assets.s3.amazonaws.com/guide/bot-authorized.png`,
+  `https://static.main.linendev.com/guide/bot-authorized.png`,
   `
 It should show up in your server's member list somewhat like this:
 `,
-  `https://linen-assets.s3.amazonaws.com/guide/bot-in-memberlist.png`,
+  `https://static.main.linendev.com/guide/bot-in-memberlist.png`,
   `
 #### Find your Guild ID (Server ID)
 

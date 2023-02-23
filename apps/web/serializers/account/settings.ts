@@ -83,7 +83,7 @@ export function serialize(account: accounts): Settings {
     docsUrl: account.docsUrl || 'https://linen.dev',
     logoUrl:
       account.logoUrl ||
-      'https://linen-assets.s3.amazonaws.com/linen-white-logo.svg',
+      'https://static.main.linendev.com/linen-white-logo.svg',
     ...(account.premium &&
       account.googleAnalyticsId && {
         googleAnalyticsId: account.googleAnalyticsId,
