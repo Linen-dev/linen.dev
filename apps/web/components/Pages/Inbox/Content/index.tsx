@@ -346,7 +346,7 @@ export default function Inbox({
             muted: false,
             reminder: false,
             read: true,
-            limit: 1,
+            limit: 1000,
           }),
           headers: {
             'Content-Type': 'application/json',
