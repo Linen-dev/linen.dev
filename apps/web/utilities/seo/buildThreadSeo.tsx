@@ -1,6 +1,6 @@
 import { normalize } from '@linen/utilities/string';
 import { SerializedThread, Settings } from '@linen/types';
-import { LINEN_URL } from 'secrets';
+import { buildUrl } from './buildUrl';
 
 export function buildThreadSeo({
   isSubDomainRouting,
@@ -22,13 +22,7 @@ export function buildThreadSeo({
     .filter(Boolean)
     .join(' ');
 
-  let url = isSubDomainRouting
-    ? `https://${settings.redirectDomain}/t/${thread.incrementId}`
-    : `${LINEN_URL}/${settings.prefix}/${settings.communityName}/t/${thread.incrementId}`;
-
-  if (thread.slug) {
-    url += '/' + thread.slug.toLowerCase();
-  }
+  const url = buildUrl(isSubDomainRouting, settings, thread);
 
   return {
     title,

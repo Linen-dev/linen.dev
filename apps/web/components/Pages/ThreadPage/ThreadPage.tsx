@@ -1,7 +1,7 @@
 import PageLayout from 'components/layout/PageLayout';
 import { ThreadByIdProp } from '../../../types/apiResponses/threads/[threadId]';
 import { useRef } from 'react';
-import { buildThreadSeo } from 'utilities/seo';
+import { buildThreadSeo, buildStructureData } from 'utilities/seo';
 import Content from './Content';
 import ButtonPagination from 'components/ButtonPagination';
 import CustomLinkHelper from 'components/Link/CustomLinkHelper';
@@ -41,6 +41,7 @@ export function ThreadPage({
       permissions={permissions}
       innerRef={ref}
     >
+      {buildStructureData({ thread, isSubDomainRouting, settings })}
       <div className="flex flex-col w-full">
         <Content
           thread={thread}

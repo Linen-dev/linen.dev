@@ -1,46 +1,62 @@
 import QAPageJsonLd, { Question } from 'utilities/seo/QAPageJsonLd';
-import { SerializedThread } from '@linen/types';
+import { SerializedThread, Settings } from '@linen/types';
 import { SerializedMessage } from '@linen/types';
 import { normalize } from '@linen/utilities/string';
+import { buildUrl } from './buildUrl';
 
-function buildNameText(messages: SerializedMessage[]): Question {
-  const first = messages[0];
+function parseDate(data: any) {
+  try {
+    return new Date(data).toISOString();
+  } catch (error) {
+    return data;
+  }
+}
+
+function buildNameText(thread: SerializedThread, url: string): Question {
+  const first = thread.messages[0];
   const cleanBody = normalize(first.body);
   return {
-    name: cleanBody.substring(0, 60),
+    name: thread.title || cleanBody.substring(0, 60),
     text: cleanBody,
     author: {
       name: first.author?.displayName || 'user',
     },
-    dateCreated: first.sentAt.toString(),
-    answerCount: messages.length - 1,
-    suggestedAnswer: messages.slice(1).map((message) => {
+    upvoteCount: thread.viewCount,
+    dateCreated: parseDate(first.sentAt),
+    answerCount: thread.messages.length - 1,
+    suggestedAnswer: thread.messages.slice(1).map((message) => {
       return {
+        url: `${url}#${message.id}`,
         text: normalize(message.body),
         author: {
           name: message.author?.displayName || 'user',
         },
-        dateCreated: message.sentAt.toString(),
+        dateCreated: parseDate(message.sentAt),
       };
     }),
   };
 }
 
-function filterThreadsWithMessages(thread: SerializedThread) {
-  return !!thread.messages.length;
-}
+export function buildStructureData({
+  thread,
+  isSubDomainRouting,
+  settings,
+}: {
+  thread?: SerializedThread;
+  isSubDomainRouting: boolean;
+  settings: Settings;
+}) {
+  if (!thread) return <></>;
 
-export function buildStructureData(threads?: SerializedThread[]) {
+  const url = buildUrl(isSubDomainRouting, settings, thread);
+
   return (
-    !!threads &&
-    threads.filter(filterThreadsWithMessages).map((thread) => (
-      <QAPageJsonLd
-        keyOverride={thread.incrementId}
-        mainEntity={{
-          ...buildNameText(thread.messages),
-        }}
-        key={thread.incrementId}
-      />
-    ))
+    <QAPageJsonLd
+      keyOverride={thread.incrementId}
+      mainEntity={{
+        ...buildNameText(thread, url),
+      }}
+      key={thread.incrementId}
+    />
   );
 }
