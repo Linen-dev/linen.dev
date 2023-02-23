@@ -15,7 +15,6 @@ const createSchema = z.object({
   reminderType: z
     .enum([ReminderTypes.SOON, ReminderTypes.TOMORROW, ReminderTypes.NEXT_WEEK])
     .optional(),
-  limit: z.number().optional(),
 });
 
 function getRemindAt(reminder: ReminderTypes) {
@@ -36,15 +35,13 @@ export async function create(params: {
   read: boolean;
   reminder: boolean;
   reminderType?: ReminderTypes;
-  limit?: number;
 }) {
   const body = createSchema.safeParse(params);
   if (!body.success) {
     return { status: 400, data: { error: body.error } };
   }
 
-  const { threadIds, userId, muted, read, reminder, reminderType, limit } =
-    params;
+  const { threadIds, userId, muted, read, reminder, reminderType } = params;
 
   const creation = muted || read || reminder;
 
@@ -90,47 +87,10 @@ export async function create(params: {
         threadId: { in: threadIds },
       },
     });
-  } else if (threadIds.length === 0 && read && limit) {
+  } else if (threadIds.length === 0 && read) {
     try {
-      const count = await prisma.threads.count({
-        where: {
-          hidden: false,
-          userThreadStatus: {
-            none: {
-              userId,
-              OR: [{ read: true }, { muted: true }, { reminder: true }],
-            },
-          },
-        },
-      });
-
-      if (count < limit) {
-        await UserThreadStatusService.markAllAsRead({ userId });
-        return { status: 200, data: { count: 0 } };
-      }
-
-      const threads = await prisma.threads.findMany({
-        select: { id: true },
-        where: {
-          hidden: false,
-          userThreadStatus: {
-            none: {
-              userId,
-              OR: [{ read: true }, { muted: true }, { reminder: true }],
-            },
-          },
-        },
-        take: limit,
-      });
-      const threadIds = threads.map(({ id }) => id);
-
-      await prisma.userThreadStatus.createMany({
-        data: threadIds.map((threadId) => {
-          return { threadId, userId, read: true, muted: false };
-        }),
-      });
-
-      return { status: 200, data: { count: count - limit } };
+      await UserThreadStatusService.markAllAsRead({ userId });
+      return { status: 200 };
     } catch (exception) {
       console.log(exception);
       return { status: 500 };
