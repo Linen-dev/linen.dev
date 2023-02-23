@@ -1,5 +1,5 @@
 import { uploadFile } from 'services/aws/s3';
-import { BUCKET_PREFIX_FOR_ATTACHMENTS, LINEN_ASSETS_CDN } from 'secrets';
+import { BUCKET_PREFIX_FOR_ATTACHMENTS, LINEN_STATIC_CDN } from 'secrets';
 import { v4 } from 'uuid';
 
 interface File {
@@ -18,7 +18,7 @@ export default class UploadService {
     await uploadFile(path, file.buffer);
     return {
       id: file.id,
-      url: [LINEN_ASSETS_CDN, path].join('/'),
+      url: [LINEN_STATIC_CDN, path].join('/'),
     };
   }
 }

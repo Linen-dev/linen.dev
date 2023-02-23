@@ -1,22 +1,22 @@
 //https://vercel.com/support/articles/can-i-redirect-from-a-subdomain-to-a-subpath
 
+const staticCdn =
+  process.env.LINEN_STATIC_CDN || 'https://static.main.linendev.com'; // default to prod
+
 /**
  * @type {import('next').NextConfig}
  */
-
 const nextConfig = {
+  async rewrites() {
+    return [
+      {
+        source: '/sitemap/:path*',
+        destination: `${staticCdn}/sitemap/:path*`,
+      },
+    ];
+  },
   images: {
     unoptimized: true,
-    // domains: [
-    //   'a.slack-edge.com',
-    //   'avatars.slack-edge.com',
-    //   'cdn.discordapp.com',
-    //   'avatars.githubusercontent.com',
-    //   `linen-assets.s3.amazonaws.com`,
-    //   'linen-assets.s3.us-east-1.amazonaws.com',
-    //   `${process.env.S3_UPLOAD_BUCKET}.s3.amazonaws.com`,
-    //   `${process.env.S3_UPLOAD_BUCKET}.s3.${process.env.S3_UPLOAD_REGION}.amazonaws.com`,
-    // ],
   },
 };
 

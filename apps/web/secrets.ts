@@ -9,7 +9,7 @@ export const SlackAppIds = [
 ];
 
 export const BUCKET_PREFIX_FOR_ATTACHMENTS = 'attachments';
-export const LINEN_ASSETS_CDN = process.env.LINEN_STATIC_CDN;
+export const LINEN_STATIC_CDN = process.env.LINEN_STATIC_CDN;
 export const LINEN_URL = 'https://linen.dev';
 
 export const PAGE_SIZE = 30;

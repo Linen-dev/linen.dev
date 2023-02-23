@@ -1,5 +1,6 @@
 import { NextURL } from 'next/dist/server/web/next-url';
 import { isSubdomainbasedRouting } from '@linen/utilities/domain';
+import { LINEN_STATIC_CDN } from 'secrets';
 
 export const getCommunityName = (isProd: boolean, hostname: string | null) => {
   if (isProd) {
@@ -41,6 +42,17 @@ export function rewrite({
   pathname: string;
   url: NextURL;
 }) {
+  if (pathname === '/sitemap.xml') {
+    return {
+      rewrite: `${LINEN_STATIC_CDN}/sitemap/${hostname}/sitemap.xml`,
+    };
+  }
+  if (pathname === '/robots.txt') {
+    return {
+      rewrite: `${LINEN_STATIC_CDN}/sitemap/${hostname}/robots.txt`,
+    };
+  }
+
   if (!isSubdomainbasedRouting(hostname || '')) {
     return;
   }

@@ -22,9 +22,7 @@ describe('rewrite', () => {
     'forgot-password',
     'reset-password',
     'api',
-    'sitemap.xml',
-    'sitemap/chunk.xml',
-    'robots.txt',
+
     '_next',
   ];
 
@@ -55,13 +53,7 @@ describe('rewrite', () => {
   });
 
   it('custom.domain.com should redirect', () => {
-    const paths = [
-      'api',
-      'sitemap.xml',
-      'sitemap/chunk.xml',
-      'robots.txt',
-      '_next',
-    ];
+    const paths = ['api', '_next'];
 
     const result = paths.map((path) => {
       const url = new URL(`https://custom.domain.com/${path}`);

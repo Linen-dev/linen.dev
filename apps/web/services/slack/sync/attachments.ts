@@ -1,5 +1,5 @@
 import { uploadFile } from 'services/aws/s3';
-import { BUCKET_PREFIX_FOR_ATTACHMENTS, LINEN_ASSETS_CDN } from 'secrets';
+import { BUCKET_PREFIX_FOR_ATTACHMENTS, LINEN_STATIC_CDN } from 'secrets';
 import { messages, prisma } from '@linen/database';
 import {
   type ConversationHistoryMessage,
@@ -94,7 +94,7 @@ function processLink(
       await uploadFile(s3Key, Buffer.from(response.text || response.body));
       return {
         fileId: file.id,
-        internalUrl: [LINEN_ASSETS_CDN, s3Key].join('/'),
+        internalUrl: [LINEN_STATIC_CDN, s3Key].join('/'),
       };
     } catch (error) {
       console.error(error);
