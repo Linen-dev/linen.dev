@@ -833,6 +833,7 @@ export default function Channel(props: ChannelProps) {
       body: JSON.stringify({
         channelId: currentChannel.id,
         communityId: currentCommunity.id,
+        limit: 1000,
       }),
       headers: {
         'Content-Type': 'application/json',

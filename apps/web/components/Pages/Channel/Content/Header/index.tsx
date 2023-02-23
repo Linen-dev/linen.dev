@@ -48,7 +48,7 @@ export default function Header({
                 value={status}
                 options={[
                   { label: 'Inbox', value: ThreadStatus.UNREAD },
-                  { label: 'Done', value: ThreadStatus.READ },
+                  { label: 'Read', value: ThreadStatus.READ },
                   { label: 'Muted', value: ThreadStatus.MUTED },
                   { label: 'Later', value: ThreadStatus.REMINDER },
                 ]}
@@ -70,7 +70,7 @@ export default function Header({
                     ? [
                         {
                           icon: <BiMessageCheck />,
-                          label: 'Mark all as done',
+                          label: 'Mark all as read',
                           onClick: onMarkAllAsRead,
                         },
                       ]

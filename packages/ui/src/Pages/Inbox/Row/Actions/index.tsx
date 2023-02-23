@@ -25,7 +25,7 @@ export default function Actions({ className, thread, onRead, onMute }: Props) {
               onRead(thread.id);
             }}
           >
-            <Tooltip className={styles.tooltip} text="Done">
+            <Tooltip className={styles.tooltip} text="Read">
               <BiMessageCheck />
             </Tooltip>
           </li>

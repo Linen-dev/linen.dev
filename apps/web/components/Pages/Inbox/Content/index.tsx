@@ -346,6 +346,7 @@ export default function Inbox({
         muted: false,
         reminder: false,
         read: true,
+        limit: 1000,
       }),
       headers: {
         'Content-Type': 'application/json',
@@ -518,7 +519,7 @@ export default function Inbox({
   if (threads.length > 0) {
     dropdown.unshift({
       icon: <BiMessageCheck />,
-      label: 'Mark all as done',
+      label: 'Mark all as read',
       onClick: onMarkAllAsRead,
     });
   }
