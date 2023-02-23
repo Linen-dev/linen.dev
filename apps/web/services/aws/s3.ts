@@ -6,7 +6,7 @@ declare global {
   var s3Client: S3 | undefined;
 }
 
-const s3Client = global.s3Client || new S3(awsCredentials);
+export const s3Client = global.s3Client || new S3(awsCredentials);
 
 if (process.env.NODE_ENV !== 'production') global.s3Client = s3Client;
 

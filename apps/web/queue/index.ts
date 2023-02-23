@@ -16,7 +16,9 @@ import {
   QUEUE_MAINTENANCE_MESSAGE_COUNT,
   QUEUE_MAINTENANCE_SLUGIFY,
   QUEUE_REMIND_ME_LATER,
+  QUEUE_SITEMAP,
 } from './jobs';
+import { sitemap } from './tasks/sitemap';
 
 async function runWorker() {
   await downloadCert();
@@ -38,6 +40,7 @@ async function runWorker() {
       [QUEUE_MAINTENANCE_SLUGIFY]: slugify,
       [QUEUE_MAINTENANCE_MESSAGE_COUNT]: updateMessagesCount,
       [QUEUE_CRAWL_GOOGLE_STATS]: crawlGoogleResults,
+      [QUEUE_SITEMAP]: sitemap,
     },
     parsedCronItems: parseCronItems([
       {

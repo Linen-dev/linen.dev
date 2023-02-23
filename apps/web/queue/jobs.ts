@@ -34,6 +34,7 @@ export const QUEUE_REMIND_ME_LATER = 'remind-me-later-queue';
 export const QUEUE_MAINTENANCE_SLUGIFY = 'slugify';
 export const QUEUE_MAINTENANCE_MESSAGE_COUNT = 'update-message-count';
 export const QUEUE_CRAWL_GOOGLE_STATS = 'google-stats';
+export const QUEUE_SITEMAP = 'sitemap';
 
 export async function createWebhookJob(payload: SlackEvent) {
   const worker = await WorkerSingleton.getInstance();
