@@ -26,7 +26,7 @@ import {
 import { createThreadImitation } from './Content/utilities/thread';
 import { useUsersContext } from '@linen/contexts/Users';
 import storage from '@linen/utilities/storage';
-import ChannelForBots from './ChannelForBots';
+import ChannelForBots from './Bots/ChannelForBots';
 import * as api from 'utilities/requests';
 import debounce from '@linen/utilities/debounce';
 import useWebsockets from '@linen/hooks/websockets';
