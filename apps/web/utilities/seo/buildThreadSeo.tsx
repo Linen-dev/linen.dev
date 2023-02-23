@@ -1,38 +1,33 @@
-import { capitalize, normalize } from '@linen/utilities/string';
-import { Settings } from '@linen/types';
-import { SerializedMessage } from '@linen/types';
+import { normalize } from '@linen/utilities/string';
+import { SerializedThread, Settings } from '@linen/types';
 import { LINEN_URL } from 'secrets';
 
 export function buildThreadSeo({
   isSubDomainRouting,
   channelName,
-  messages,
   settings,
-  incrementId,
-  slug,
+  thread,
 }: {
   isSubDomainRouting: boolean;
   channelName: string;
-  messages: SerializedMessage[];
   settings: Settings;
-  incrementId: number;
-  slug: string;
+  thread: SerializedThread;
 }) {
-  const cleanBody = normalize(messages?.[0]?.body || slug);
+  const cleanBody = normalize(thread.messages?.[0]?.body || thread.slug);
   const title = [
-    cleanBody.slice(0, 60),
-    capitalize(channelName),
-    capitalize(settings.communityName),
+    thread.title || cleanBody.slice(0, 60),
+    settings.communityName,
+    '#' + channelName,
   ]
     .filter(Boolean)
-    .join(' | ');
+    .join(' ');
 
   let url = isSubDomainRouting
-    ? `https://${settings.redirectDomain}/t/${incrementId}`
-    : `${LINEN_URL}/${settings.prefix}/${settings.communityName}/t/${incrementId}`;
+    ? `https://${settings.redirectDomain}/t/${thread.incrementId}`
+    : `${LINEN_URL}/${settings.prefix}/${settings.communityName}/t/${thread.incrementId}`;
 
-  if (slug) {
-    url += '/' + slug.toLowerCase();
+  if (thread.slug) {
+    url += '/' + thread.slug.toLowerCase();
   }
 
   return {

@@ -28,10 +28,8 @@ export function ThreadPage({
         ...buildThreadSeo({
           isSubDomainRouting,
           channelName: currentChannel.channelName,
-          messages: thread.messages,
           settings,
-          incrementId: thread.incrementId,
-          slug: thread.slug || '',
+          thread,
         }),
       }}
       currentChannel={currentChannel}
