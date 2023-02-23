@@ -98,7 +98,19 @@ export async function create(params: {
       return { status: 500 };
     }
 
-    return { status: 200 };
+    const count = await prisma.threads.count({
+      where: {
+        hidden: false,
+        userThreadStatus: {
+          none: {
+            userId,
+            OR: [{ read: true }, { muted: true }, { reminder: true }],
+          },
+        },
+      },
+    });
+
+    return { status: 200, data: { count } };
   }
 
   return { status: 200 };
