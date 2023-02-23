@@ -167,16 +167,9 @@ export function createThreadWrapper({
             ...inbox,
             threads: [
               thread,
-              ...inbox.threads
-                .filter((current) => {
-                  return current.id !== thread.id;
-                })
-                .map((current) => {
-                  if (current.id === imitationId) {
-                    return thread;
-                  }
-                  return current;
-                }),
+              ...inbox.threads.filter((current) => {
+                return current.id !== thread.id && current.id !== imitationId;
+              }),
             ],
           };
         });
