@@ -16,7 +16,6 @@ interface Props {
   currentUser?: SerializedUser;
   status: ThreadStatus;
   threads: SerializedThread[];
-  onMarkAllAsRead(): void;
   onStatusChange(status: ThreadStatus): void;
   handleOpenIntegrations(): void;
 }
@@ -28,7 +27,6 @@ export default function Header({
   currentUser,
   status,
   threads,
-  onMarkAllAsRead,
   onStatusChange,
   handleOpenIntegrations,
 }: Props) {
@@ -66,15 +64,6 @@ export default function Header({
                   </Icon>
                 }
                 items={[
-                  ...(threads.length > 0
-                    ? [
-                        {
-                          icon: <BiMessageCheck />,
-                          label: 'Mark all as read',
-                          onClick: onMarkAllAsRead,
-                        },
-                      ]
-                    : []),
                   {
                     icon: <BsFillGearFill />,
                     label: 'Integrations',
