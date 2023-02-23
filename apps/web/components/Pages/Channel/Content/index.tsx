@@ -107,7 +107,6 @@ interface Props {
     active: boolean;
   }): void;
   updateThread({ state, title }: { state?: ThreadState; title?: string }): void;
-  onMarkAllAsRead(): void;
 }
 
 const debouncedGetReadStatus = debounce(
@@ -150,7 +149,6 @@ export default function Channel({
   onSelectThread,
   updateThread,
   onThreadMessage,
-  onMarkAllAsRead,
   sendReaction,
 }: Props) {
   const [isLoading, setLoading] = useState(false);
@@ -302,15 +300,6 @@ export default function Channel({
       }, 0);
     } catch (exception) {
       alert('Something went wrong, please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleMarkAsRead = async () => {
-    setLoading(true);
-    try {
-      await onMarkAllAsRead();
     } finally {
       setLoading(false);
     }
@@ -470,7 +459,6 @@ export default function Channel({
                     currentUser={currentUser}
                     status={status}
                     threads={threads}
-                    onMarkAllAsRead={handleMarkAsRead}
                     onStatusChange={handleStatusChange}
                     handleOpenIntegrations={handleOpenIntegrations}
                   >
