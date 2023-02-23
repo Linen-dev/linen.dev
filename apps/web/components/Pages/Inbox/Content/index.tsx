@@ -453,6 +453,11 @@ export default function Inbox({
         if (element && element.id) {
           return false;
         }
+
+        if (event.key === 'c') {
+          setModal(ModalView.ADD_THREAD);
+        }
+
         const { threads } = inbox;
         const currentThreadId = thread?.id;
         if (!currentThreadId) {
@@ -488,9 +493,6 @@ export default function Inbox({
           } else if (event.key === 'm') {
             markThreadAsMuted(currentThreadId);
           }
-        }
-        if (event.key === 'c') {
-          setModal(ModalView.ADD_THREAD);
         }
       },
     },
