@@ -30,7 +30,7 @@ export function ThreadPage({
           channelName: currentChannel.channelName,
           messages: thread.messages,
           settings,
-          threadId: thread.id,
+          incrementId: thread.incrementId,
           slug: thread.slug || '',
         }),
       }}

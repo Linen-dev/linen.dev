@@ -8,14 +8,14 @@ export function buildThreadSeo({
   channelName,
   messages,
   settings,
-  threadId,
+  incrementId,
   slug,
 }: {
   isSubDomainRouting: boolean;
   channelName: string;
   messages: SerializedMessage[];
   settings: Settings;
-  threadId: string;
+  incrementId: number;
   slug: string;
 }) {
   const cleanBody = normalize(messages?.[0]?.body || slug);
@@ -28,8 +28,8 @@ export function buildThreadSeo({
     .join(' | ');
 
   let url = isSubDomainRouting
-    ? `https://${settings.redirectDomain}/t/${threadId}`
-    : `${LINEN_URL}/${settings.prefix}/${settings.communityName}/t/${threadId}`;
+    ? `https://${settings.redirectDomain}/t/${incrementId}`
+    : `${LINEN_URL}/${settings.prefix}/${settings.communityName}/t/${incrementId}`;
 
   if (slug) {
     url += '/' + slug.toLowerCase();
