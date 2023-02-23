@@ -831,10 +831,10 @@ export default function Channel(props: ChannelProps) {
       seo={{
         ...buildChannelSeo({
           settings,
-          channelName,
+          currentChannel,
           isSubDomainRouting,
           pathCursor,
-          threads,
+          currentCommunity,
         }),
       }}
       channels={channels}

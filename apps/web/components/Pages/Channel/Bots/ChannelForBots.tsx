@@ -24,10 +24,10 @@ export default function ChannelForBots({
       seo={{
         ...buildChannelSeo({
           settings,
-          channelName,
+          currentChannel,
           isSubDomainRouting,
           pathCursor,
-          threads,
+          currentCommunity,
         }),
       }}
       channels={channels as SerializedChannel[]}

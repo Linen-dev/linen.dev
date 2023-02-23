@@ -1,38 +1,39 @@
-import { capitalize, normalize } from '@linen/utilities/string';
-import { Settings } from '@linen/types';
-import { SerializedThread } from '@linen/types';
+import { SerializedChannel, Settings } from '@linen/types';
 import { LINEN_URL } from 'secrets';
+import { SerializedAccount } from '@linen/types';
 
 export function buildChannelSeo({
   settings,
-  channelName,
+  currentChannel,
   isSubDomainRouting,
   pathCursor,
-  threads,
+  currentCommunity,
 }: {
   settings: Settings;
-  channelName: string;
+  currentChannel: SerializedChannel;
   isSubDomainRouting: boolean;
   pathCursor: string | null;
-  threads?: SerializedThread[];
+  currentCommunity: SerializedAccount;
 }) {
-  const title = [capitalize(settings.communityName), capitalize(channelName)]
+  const title = [settings.communityName, '#' + currentChannel.channelName]
     .filter(Boolean)
-    .join(' | ');
+    .join(' ');
 
   let url = isSubDomainRouting
-    ? `https://${settings.redirectDomain}/c/${channelName}`
-    : `${LINEN_URL}/${settings.prefix}/${settings.communityName}/c/${channelName}`;
+    ? `https://${settings.redirectDomain}/c/${currentChannel.channelName}`
+    : `${LINEN_URL}/${settings.prefix}/${settings.communityName}/c/${currentChannel.channelName}`;
 
   if (pathCursor) {
     url += '/' + pathCursor;
   }
 
-  // we may use keywords-frequency instead
-  const description =
-    threads
-      ?.map((t) => normalize(t.messages?.[0]?.body || t.slug).substring(0, 43))
-      .join('… ') || title;
+  const description = [
+    currentCommunity.description,
+    title,
+    pathCursor ? 'Page ' + pathCursor : 'Latest',
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   return { description, title, url, image: settings.logoUrl };
 }
