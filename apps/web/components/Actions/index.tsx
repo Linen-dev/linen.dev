@@ -279,6 +279,7 @@ export default function Actions({
               settings,
               incrementId: thread.incrementId,
               slug: thread.slug,
+              messageId: message.id,
             });
             event.stopPropagation();
             event.preventDefault();
