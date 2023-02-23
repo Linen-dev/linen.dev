@@ -5,18 +5,23 @@ import UserThreadStatusService from 'services/user-thread-status';
 
 const createSchema = z.object({
   channelId: z.string(),
+  limit: z.number(),
 });
 
-export async function create(params: { channelId: string; userId: string }) {
+export async function create(params: {
+  channelId: string;
+  userId: string;
+  limit: number;
+}) {
   const body = createSchema.safeParse(params);
   if (!body.success) {
     return { status: 400, data: { error: body.error } };
   }
 
-  const { channelId, userId } = params;
+  const { channelId, userId, limit } = params;
 
   try {
-    await UserThreadStatusService.markAllAsRead({ channelId, userId });
+    await UserThreadStatusService.markManyAsRead({ channelId, userId, limit });
   } catch (exception) {
     console.log(exception);
     return { status: 500 };

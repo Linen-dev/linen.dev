@@ -16,7 +16,7 @@ function description(status: ThreadStatus) {
     case ThreadStatus.UNREAD:
       return 'Inbox Zero';
     case ThreadStatus.READ:
-      return 'Done Zero';
+      return 'Read Zero';
     case ThreadStatus.MUTED:
       return 'Muted Zero';
     case ThreadStatus.REMINDER:

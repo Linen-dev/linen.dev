@@ -28,27 +28,31 @@ class UserThreadStatusService {
     });
   }
 
-  static async markAllAsRead({
+  static async markManyAsRead({
     channelId,
     userId,
+    limit,
   }: {
     channelId?: string;
     userId: string;
+    limit: number;
   }) {
     if (channelId) {
       return prisma.$queryRaw`
         INSERT INTO "userThreadStatus" ("userId", "threadId", "muted", "read", "createdAt", "updatedAt")
         SELECT ${userId}, t.id, false, true, current_timestamp, current_timestamp
-        from threads as t
-        join channels as c on t."channelId" = c.id
-        where c.id = ${channelId}
+        FROM threads as t
+        LIMIT ${limit}
+        JOIN channels as c on t."channelId" = c.id
+        WHERE c.id = ${channelId}
         ON CONFLICT DO NOTHING
       `;
     }
     return prisma.$queryRaw`
       INSERT INTO "userThreadStatus" ("userId", "threadId", "muted", "read", "createdAt", "updatedAt")
       SELECT ${userId}, t.id, false, true, current_timestamp, current_timestamp
-      from threads as t
+      FROM threads as t
+      LIMIT ${limit}
       ON CONFLICT DO NOTHING
     `;
   }

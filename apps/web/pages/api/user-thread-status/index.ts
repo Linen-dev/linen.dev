@@ -15,6 +15,7 @@ const createSchema = z.object({
   reminderType: z
     .enum([ReminderTypes.SOON, ReminderTypes.TOMORROW, ReminderTypes.NEXT_WEEK])
     .optional(),
+  limit: z.number(),
 });
 
 function getRemindAt(reminder: ReminderTypes) {
@@ -35,13 +36,15 @@ export async function create(params: {
   read: boolean;
   reminder: boolean;
   reminderType?: ReminderTypes;
+  limit: number;
 }) {
   const body = createSchema.safeParse(params);
   if (!body.success) {
     return { status: 400, data: { error: body.error } };
   }
 
-  const { threadIds, userId, muted, read, reminder, reminderType } = params;
+  const { threadIds, userId, muted, read, reminder, reminderType, limit } =
+    params;
 
   const creation = muted || read || reminder;
 
@@ -89,7 +92,7 @@ export async function create(params: {
     });
   } else if (threadIds.length === 0 && read) {
     try {
-      await UserThreadStatusService.markAllAsRead({ userId });
+      await UserThreadStatusService.markManyAsRead({ userId, limit });
     } catch (exception) {
       console.log(exception);
       return { status: 500 };

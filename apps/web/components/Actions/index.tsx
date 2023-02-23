@@ -143,7 +143,7 @@ export default function Actions({
               onRead(thread.id);
             }}
           >
-            <Tooltip className={styles.tooltip} text="Done">
+            <Tooltip className={styles.tooltip} text="Read">
               <BiMessageCheck />
             </Tooltip>
           </li>
@@ -156,7 +156,7 @@ export default function Actions({
               onUnread(thread.id);
             }}
           >
-            <Tooltip className={styles.tooltip} text="Undone">
+            <Tooltip className={styles.tooltip} text="Unread">
               <BiMessageCheck className={styles.active} />
             </Tooltip>
           </li>
