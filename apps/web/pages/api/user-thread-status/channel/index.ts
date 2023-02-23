@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next/types';
 import PermissionsService from 'services/permissions';
 import { z } from 'zod';
 import UserThreadStatusService from 'services/user-thread-status';
+import { prisma } from '@linen/database';
 
 const createSchema = z.object({
   channelId: z.string(),
@@ -27,7 +28,20 @@ export async function create(params: {
     return { status: 500 };
   }
 
-  return { status: 200 };
+  const count = await prisma.threads.count({
+    where: {
+      channelId,
+      hidden: false,
+      userThreadStatus: {
+        none: {
+          userId,
+          OR: [{ read: true }, { muted: true }, { reminder: true }],
+        },
+      },
+    },
+  });
+
+  return { status: 200, data: { count } };
 }
 
 export default async function handler(
