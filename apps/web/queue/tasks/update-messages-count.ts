@@ -1,9 +1,13 @@
+import { type JobHelpers } from 'graphile-worker';
 import {
   findThreadsWithWrongMessageCount,
   updateSlackThread,
-} from '../../../lib/threads';
+} from 'lib/threads';
 
-export async function updateMessagesCount() {
+export const updateMessagesCount = async (
+  payload: any,
+  helpers: JobHelpers
+) => {
   let page = 0;
   let hasMore;
   do {
@@ -12,7 +16,7 @@ export async function updateMessagesCount() {
       await updateSlackThread(thread.id, { messageCount: thread.count });
     }
     hasMore = threads.length;
-    console.log(hasMore * page);
+    helpers.logger.info(String(hasMore * page));
     page++;
   } while (hasMore > 0);
-}
+};

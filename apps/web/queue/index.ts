@@ -1,14 +1,20 @@
 import { downloadCert, getDatabaseUrl } from '@linen/database';
-import { run } from 'graphile-worker';
+import { run, parseCronItems } from 'graphile-worker';
 import { emailNotificationTask } from './tasks/email-notification-sender';
 import { processNewEventTask } from './tasks/email-notification-event';
 import { reminderMeLaterTask } from './tasks/remind-me-later';
 import { twoWaySync } from './tasks/two-way-sync';
 import { sync } from './tasks/sync';
 import { webhook } from './tasks/webhook';
+import { slugify } from './tasks/slugify';
+import { updateMessagesCount } from './tasks/update-messages-count';
+import { crawlGoogleResults } from './tasks/google-results';
 import {
   QUEUE_1_NEW_EVENT,
   QUEUE_2_SEND_EMAIL,
+  QUEUE_CRAWL_GOOGLE_STATS,
+  QUEUE_MAINTENANCE_MESSAGE_COUNT,
+  QUEUE_MAINTENANCE_SLUGIFY,
   QUEUE_REMIND_ME_LATER,
 } from './jobs';
 
@@ -29,7 +35,39 @@ async function runWorker() {
       ['two-way-sync']: twoWaySync,
       ['sync']: sync,
       ['webhook']: webhook,
+      [QUEUE_MAINTENANCE_SLUGIFY]: slugify,
+      [QUEUE_MAINTENANCE_MESSAGE_COUNT]: updateMessagesCount,
+      [QUEUE_CRAWL_GOOGLE_STATS]: crawlGoogleResults,
     },
+    parsedCronItems: parseCronItems([
+      {
+        pattern: '00 3 * * *',
+        options: {
+          queueName: QUEUE_MAINTENANCE_SLUGIFY,
+          backfillPeriod: 0,
+        },
+        task: QUEUE_MAINTENANCE_SLUGIFY,
+        identifier: QUEUE_MAINTENANCE_SLUGIFY,
+      },
+      {
+        pattern: '00 3 * * *',
+        options: {
+          queueName: QUEUE_MAINTENANCE_MESSAGE_COUNT,
+          backfillPeriod: 0,
+        },
+        task: QUEUE_MAINTENANCE_MESSAGE_COUNT,
+        identifier: QUEUE_MAINTENANCE_MESSAGE_COUNT,
+      },
+      {
+        pattern: '00 3 * * 1,5',
+        options: {
+          queueName: QUEUE_CRAWL_GOOGLE_STATS,
+          backfillPeriod: 0,
+        },
+        task: QUEUE_CRAWL_GOOGLE_STATS,
+        identifier: QUEUE_CRAWL_GOOGLE_STATS,
+      },
+    ]),
   });
   await runner.promise;
 }
