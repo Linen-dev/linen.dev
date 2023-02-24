@@ -77,4 +77,29 @@ export default async function createIpsumCommunity() {
       },
     },
   });
+
+  const channel2 = await prisma.channels.create({
+    data: {
+      accountId: community.id,
+      channelName: 'bugs',
+    },
+  });
+
+  await prisma.threads.create({
+    data: {
+      channelId: channel2.id,
+      sentAt: new Date().getTime(),
+      messages: {
+        create: [
+          {
+            channelId: channel2.id,
+            body: 'Can you see this image? https://static.main.linendev.com/not-found.png',
+            usersId: user1.id,
+            sentAt: '2021-12-09T08:02:00.000Z',
+            messageFormat: MessageFormat.LINEN,
+          },
+        ],
+      },
+    },
+  });
 }
