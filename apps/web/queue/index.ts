@@ -70,6 +70,15 @@ async function runWorker() {
         task: QUEUE_CRAWL_GOOGLE_STATS,
         identifier: QUEUE_CRAWL_GOOGLE_STATS,
       },
+      {
+        pattern: '0 0 * * *',
+        options: {
+          queueName: QUEUE_SITEMAP,
+          backfillPeriod: 0,
+        },
+        task: QUEUE_SITEMAP,
+        identifier: QUEUE_SITEMAP,
+      },
     ]),
   });
   await runner.promise;
