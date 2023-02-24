@@ -33,6 +33,9 @@ function isTopLevelPathname(pathname: string) {
   );
 }
 
+const cleanLinenHost = (hostname: string) =>
+  hostname.indexOf('linen.dev') ? 'linen.dev' : hostname;
+
 export function rewrite({
   hostname,
   pathname,
@@ -44,12 +47,16 @@ export function rewrite({
 }) {
   if (pathname === '/sitemap.xml') {
     return {
-      rewrite: `${LINEN_STATIC_CDN}/sitemap/${hostname}/sitemap.xml`,
+      rewrite: `${LINEN_STATIC_CDN}/sitemap/${cleanLinenHost(
+        hostname || 'linen.dev'
+      )}/sitemap.xml`,
     };
   }
   if (pathname === '/robots.txt') {
     return {
-      rewrite: `${LINEN_STATIC_CDN}/sitemap/${hostname}/robots.txt`,
+      rewrite: `${LINEN_STATIC_CDN}/sitemap/${cleanLinenHost(
+        hostname || 'linen.dev'
+      )}/robots.txt`,
     };
   }
 
