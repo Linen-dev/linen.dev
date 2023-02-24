@@ -6,6 +6,7 @@ import ConfigureInboxModal from './ConfigureInboxModal';
 import Empty from './Empty';
 import { sendMessageWrapper } from './utilities/sendMessageWrapper';
 import { createThreadWrapper } from './utilities/createThreadWrapper';
+import { upload } from 'components/MessageForm/api';
 import usePolling from '@linen/hooks/polling';
 import useKeyboard from '@linen/hooks/keyboard';
 import { useUsersContext } from '@linen/contexts/Users';
@@ -21,6 +22,7 @@ import {
   ThreadState,
   Permissions,
   SerializedAccount,
+  UploadedFile,
 } from '@linen/types';
 import { addMessageToThread, prependThread } from './state';
 import { defaultConfiguration } from './utilities/inbox';
@@ -101,6 +103,9 @@ export default function Inbox({
   const [key, setKey] = useState(0);
   const [selections, setSelections] = useState<Selections>({});
   const [thread, setThread] = useState<SerializedThread>();
+  const [progress, setProgress] = useState(0);
+  const [uploading, setUploading] = useState(false);
+  const [uploads, setUploads] = useState<UploadedFile[]>([]);
   const ref = useRef<HTMLDivElement>(null);
   const [allUsers] = useUsersContext();
   const { isShiftPressed } = useKeyboard();
@@ -332,6 +337,38 @@ export default function Inbox({
         Toast.error('Failed to close the thread.');
       });
   };
+
+  function uploadFiles(files: File[]) {
+    setProgress(0);
+    setUploading(true);
+    setUploads([]);
+    const data = new FormData();
+    files.forEach((file, index) => {
+      data.append(`file-${index}`, file, file.name);
+    });
+    return upload(
+      { communityId: settings.communityId, data },
+      {
+        onUploadProgress: (progressEvent: ProgressEvent) => {
+          const percentCompleted = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total
+          );
+          setProgress(percentCompleted);
+        },
+      }
+    )
+      .then((response) => {
+        setUploading(false);
+        const { files } = response.data;
+        setUploads(files);
+        return response;
+      })
+      .catch((response) => {
+        setUploading(false);
+        setUploads([]);
+        return response;
+      });
+  }
 
   async function onMarkAllAsRead() {
     setThread(undefined);
@@ -619,12 +656,18 @@ export default function Inbox({
           return createThread({
             message,
             title,
-            files: [],
+            files: uploads,
             channel: channels.find(
               (channel) => channel.id === channelId
             ) as SerializedChannel,
+          }).then(() => {
+            setUploads([]);
           });
         }}
+        progress={progress}
+        uploading={uploading}
+        uploads={uploads}
+        uploadFiles={uploadFiles}
       />
       <ConfigureInboxModal
         configuration={configuration}

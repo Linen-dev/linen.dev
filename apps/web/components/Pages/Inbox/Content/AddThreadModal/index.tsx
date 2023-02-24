@@ -5,7 +5,7 @@ import H3 from 'components/H3';
 import Field from 'components/Field';
 import { NativeSelect, Modal, TextInput } from '@linen/ui';
 import styles from './index.module.scss';
-import { SerializedChannel, SerializedUser } from '@linen/types';
+import { SerializedChannel, SerializedUser, UploadedFile } from '@linen/types';
 import { FiHash } from '@react-icons/all-files/fi/FiHash';
 
 interface Props {
@@ -23,6 +23,10 @@ interface Props {
     title?: string;
     message: string;
   }): Promise<any>;
+  uploadFiles(files: File[]): Promise<void>;
+  progress: number;
+  uploading: boolean;
+  uploads: UploadedFile[];
 }
 
 function findDefaultChannel(channels: SerializedChannel[]): SerializedChannel {
@@ -40,6 +44,10 @@ export default function AddThreadModal({
   open,
   close,
   onSend,
+  uploadFiles,
+  progress,
+  uploading,
+  uploads,
 }: Props) {
   const sortedChannels = channels.sort((a, b) => {
     return a.channelName.localeCompare(b.channelName);
@@ -82,9 +90,6 @@ export default function AddThreadModal({
       <Field>
         <MessageForm
           id="inbox-message-form"
-          progress={100}
-          uploads={[]}
-          uploading={false}
           currentUser={currentUser}
           onSend={(message: string) => {
             setTitle('');
@@ -95,6 +100,10 @@ export default function AddThreadModal({
             return fetchMentions(term, communityId);
           }}
           rows={4}
+          upload={uploadFiles}
+          progress={progress}
+          uploading={uploading}
+          uploads={uploads}
         />
       </Field>
     </Modal>
