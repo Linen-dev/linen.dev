@@ -2,6 +2,7 @@ import { createWriteStream } from 'fs';
 import { resolve } from 'path';
 import { SitemapAndIndexStream, SitemapStream } from 'sitemap';
 import { Account, SitemapItem, Channel, Thread } from './types';
+import { finished } from 'node:stream/promises';
 
 type buildSitemapType = {
   account: Account;
@@ -24,9 +25,11 @@ export async function buildSitemap({
 }: buildSitemapType) {
   const hostname = `https://${account.redirectDomain}`;
 
+  let pages;
   const sms = new SitemapAndIndexStream({
     limit: 10000,
     getSitemapStream: (i: number) => {
+      pages = i;
       const sitemapStream = new SitemapStream({ hostname });
       const path = `./sitemap/${account.redirectDomain}/sitemap-${i}.xml`;
       const ws = sitemapStream.pipe(createWriteStream(resolve(workDir, path)));
@@ -59,4 +62,6 @@ export async function buildSitemap({
   }
 
   sms.end();
+  await finished(sms);
+  console.log('pages', pages);
 }
