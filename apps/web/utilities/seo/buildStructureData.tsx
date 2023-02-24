@@ -23,16 +23,19 @@ function buildNameText(thread: SerializedThread, url: string): Question {
     upvoteCount: thread.viewCount,
     dateCreated: parseDate(first.sentAt),
     answerCount: thread.messages.length - 1,
-    suggestedAnswer: thread.messages.slice(1).map((message) => {
-      return {
-        url: `${url}#${message.id}`,
-        text: normalize(message.body),
-        author: {
-          name: message.author?.displayName || 'user',
-        },
-        dateCreated: parseDate(message.sentAt),
-      };
-    }),
+    suggestedAnswer: thread.messages
+      .slice(1)
+      .map((message) => {
+        return {
+          url: `${url}#${message.id}`,
+          text: normalize(message.body).trim(),
+          author: {
+            name: message.author?.displayName || 'user',
+          },
+          dateCreated: parseDate(message.sentAt),
+        };
+      })
+      .filter((m) => !!m.text),
   };
 }
 
