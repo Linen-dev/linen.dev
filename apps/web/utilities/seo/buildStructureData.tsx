@@ -1,6 +1,5 @@
 import QAPageJsonLd, { Question } from 'utilities/seo/QAPageJsonLd';
 import { SerializedThread, Settings } from '@linen/types';
-import { SerializedMessage } from '@linen/types';
 import { normalize } from '@linen/utilities/string';
 import { buildUrl } from './buildUrl';
 
@@ -14,7 +13,7 @@ function parseDate(data: any) {
 
 function buildNameText(thread: SerializedThread, url: string): Question {
   const first = thread.messages[0];
-  const cleanBody = normalize(first.body);
+  const cleanBody = normalize(first.body).trim();
   return {
     name: thread.title || cleanBody.substring(0, 60),
     text: cleanBody,
@@ -49,12 +48,15 @@ export function buildStructureData({
   if (!thread) return <></>;
 
   const url = buildUrl(isSubDomainRouting, settings, thread);
+  const data = buildNameText(thread, url);
+
+  if (!data.name) return <></>;
 
   return (
     <QAPageJsonLd
       keyOverride={thread.incrementId}
       mainEntity={{
-        ...buildNameText(thread, url),
+        ...data,
       }}
       key={thread.incrementId}
     />
