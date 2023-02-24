@@ -31,14 +31,13 @@ export default function Example({ button, items }: Props) {
         <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           {items.map((item, index) => {
             return (
-              <Menu.Item>
+              <Menu.Item key={`menu-item-${item.label}-${index}`}>
                 {({ active }) => (
                   <div
                     className={classNames(styles.action, {
                       [styles.active]: active,
                     })}
                     onClick={item.onClick}
-                    key={`menu-item-${item.label}-${index}`}
                   >
                     {item.icon}
                     {item.label}

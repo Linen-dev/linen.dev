@@ -4,6 +4,23 @@
   align-items: center;
   border: 1px solid $color-border;
   border-radius: 4px;
+  color: $color-gray-400;
   display: flex;
   justify-content: center;
+}
+
+.error {
+  color: $color-gray-400;
+  display: flex;
+  flex-direction: column;
+  font-size: 12px;
+  gap: 0.5rem;
+  letter-spacing: 2px;
+  text-align: center;
+  text-transform: uppercase;
+  user-select: none;
+
+  .icon {
+    font-size: 24px;
+  }
 }
