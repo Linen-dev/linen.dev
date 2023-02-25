@@ -69,31 +69,47 @@ export async function* getThreadsAsyncIterable(account: Account) {
 }
 
 export async function getChannelsFreeTier(_: Account) {
-  return await prisma.channels.findMany({
-    select: {
-      channelName: true,
-      pages: true,
-      account: {
-        select: {
-          id: true,
-          name: true,
-          redirectDomain: true,
-          discordDomain: true,
-          slackDomain: true,
-          discordServerId: true,
-        },
-      },
-    },
-    where: {
-      hidden: false,
-      account: {
-        premium: false,
-        type: 'PUBLIC',
-      },
-      threads: {},
-    },
-    orderBy: { account: { createdAt: 'desc' } },
+  const accounts = await prisma.accounts.findMany({
+    select: { id: true },
+    where: { premium: false, type: 'PUBLIC' },
+    orderBy: { createdAt: 'desc' },
   });
+  const channels = [];
+
+  for (const account of accounts) {
+    channels.push(
+      ...(await prisma.channels.findMany({
+        select: {
+          channelName: true,
+          pages: true,
+          account: {
+            select: {
+              id: true,
+              name: true,
+              redirectDomain: true,
+              discordDomain: true,
+              slackDomain: true,
+              discordServerId: true,
+            },
+          },
+        },
+        where: {
+          hidden: false,
+          account: {
+            id: account.id,
+          },
+          threads: {
+            some: {
+              messageCount: { gte: 1 },
+              messages: { some: {} },
+            },
+          },
+        },
+        orderBy: { lastPageBuildAt: 'desc' },
+      }))
+    );
+  }
+  return channels;
 }
 
 export async function* getThreadsAsyncIterableFreeTier(_: Account) {
