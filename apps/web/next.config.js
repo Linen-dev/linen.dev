@@ -13,6 +13,10 @@ const nextConfig = {
         source: '/sitemap/:path*',
         destination: `${staticCdn}/sitemap/:path*`,
       },
+      {
+        source: '/d/:path*',
+        destination: `/s/:path*`,
+      },
     ];
   },
   images: {
