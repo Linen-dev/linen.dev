@@ -279,5 +279,9 @@ describe('parse', () => {
         ),
       ])
     );
+
+    expect(parse('foo\n1. bar')).toEqual(
+      root([text('foo\n'), list([item([text('bar')])], { ordered: true })])
+    );
   });
 });
