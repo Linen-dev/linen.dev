@@ -336,6 +336,11 @@ function MessageForm({
                 handleSend(event);
               }
             }
+
+            if (event.key === 'Escape' && ref.current) {
+              const node = ref.current as HTMLTextAreaElement;
+              node.blur();
+            }
           }}
         />
         {upload && (
