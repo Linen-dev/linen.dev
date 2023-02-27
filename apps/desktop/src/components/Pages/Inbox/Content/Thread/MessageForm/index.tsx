@@ -328,10 +328,6 @@ function MessageForm({
             }
           }}
         />
-        {preview && (
-          <>TODO</>
-          // <Preview message={postprocess(message, allUsers)} users={allUsers} />
-        )}
         {upload && (
           <div className={styles.toolbar}>
             <FileInput
