@@ -104,6 +104,7 @@ export default function AddThreadModal({
           progress={progress}
           uploading={uploading}
           uploads={uploads}
+          sendOnEnter={false}
         />
       </Field>
     </Modal>
