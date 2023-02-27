@@ -47,6 +47,7 @@ interface Props {
   onDelete?(messageId: string): void;
   onSend?(): void;
   onMessage(
+    threadId: string,
     message: SerializedMessage,
     messageId: string,
     imitationId: string
@@ -110,11 +111,11 @@ export default function Thread({
   }, []);
 
   useThreadWebsockets({
-    id: thread?.id,
+    id: thread.id,
     token,
     permissions,
     onMessage(message, messageId, imitationId) {
-      onMessage(message, messageId, imitationId);
+      onMessage(thread.id, message, messageId, imitationId);
       handleScroll();
     },
   });

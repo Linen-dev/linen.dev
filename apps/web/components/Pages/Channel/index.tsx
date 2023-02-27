@@ -777,13 +777,14 @@ export default function Channel(props: ChannelProps) {
   }
 
   function onThreadMessage(
+    threadId: string,
     message: SerializedMessage,
     messageId: string,
     imitationId: string
   ) {
     setThreads((threads) => {
       return threads.map((thread) => {
-        if (thread.id === currentThreadId) {
+        if (thread.id === threadId) {
           return {
             ...thread,
             messages: [

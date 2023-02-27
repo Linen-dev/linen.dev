@@ -90,10 +90,13 @@ export function sendMessageWrapper({
       if (!thread) {
         return;
       }
-      return {
-        ...thread,
-        messages: [...thread.messages, imitation],
-      };
+      if (threadId === thread.id) {
+        return {
+          ...thread,
+          messages: [...thread.messages, imitation],
+        };
+      }
+      return thread;
     });
 
     setInbox((inbox) => {

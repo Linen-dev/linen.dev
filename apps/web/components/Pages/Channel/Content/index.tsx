@@ -79,6 +79,7 @@ interface Props {
   unreadThread(threadId: string): void;
   onSelectThread(threadId?: string): void;
   onMessage(
+    threadId: string,
     message: SerializedMessage,
     messageId: string,
     imitationId: string
@@ -565,9 +566,9 @@ export default function Channel({
               onSend={() => {
                 handleLeftScroll();
               }}
-              onMessage={(message, messageId, imitationId) => {
+              onMessage={(threadId, message, messageId, imitationId) => {
                 const pinned = isLeftScrollAtBottom;
-                onMessage(message, messageId, imitationId);
+                onMessage(threadId, message, messageId, imitationId);
                 if (pinned) {
                   handleScroll();
                 }

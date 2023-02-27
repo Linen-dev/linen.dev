@@ -243,12 +243,13 @@ export default function Inbox({
   );
 
   const onThreadMessage = (
+    threadId: string,
     message: SerializedMessage,
     messageId: string,
     imitationId: string
   ) => {
     setThread((thread) =>
-      addMessageToThread(thread, message, messageId, imitationId)
+      addMessageToThread(thread, threadId, message, messageId, imitationId)
     );
   };
 
@@ -637,8 +638,8 @@ export default function Inbox({
               updateThread={updateThread}
               sendMessage={sendMessage}
               token={token}
-              onMessage={(message, messageId, imitationId) => {
-                onThreadMessage(message, messageId, imitationId);
+              onMessage={(threadId, message, messageId, imitationId) => {
+                onThreadMessage(threadId, message, messageId, imitationId);
               }}
             />
           )

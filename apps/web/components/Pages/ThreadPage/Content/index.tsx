@@ -46,20 +46,24 @@ export default function Content({
   const ref = useRef<HTMLDivElement>(null);
 
   const onThreadMessage = (
+    threadId: string,
     message: SerializedMessage,
     messageId: string,
     imitationId: string
   ) => {
     setThread((thread) => {
-      return {
-        ...thread,
-        messages: [
-          ...thread.messages.filter(
-            ({ id }: any) => id !== imitationId && id !== messageId
-          ),
-          message,
-        ],
-      };
+      if (thread.id === threadId) {
+        return {
+          ...thread,
+          messages: [
+            ...thread.messages.filter(
+              ({ id }: any) => id !== imitationId && id !== messageId
+            ),
+            message,
+          ],
+        };
+      }
+      return thread;
     });
   };
 
@@ -115,8 +119,8 @@ export default function Content({
         updateThread={updateThread}
         sendMessage={sendMessage}
         token={token}
-        onMessage={(message, messageId, imitationId) => {
-          onThreadMessage(message, messageId, imitationId);
+        onMessage={(threadId, message, messageId, imitationId) => {
+          onThreadMessage(threadId, message, messageId, imitationId);
         }}
       />
     </div>
