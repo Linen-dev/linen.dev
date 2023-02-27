@@ -231,8 +231,8 @@ export default function Channel({
     }
   }
 
-  async function selectThread(incrementId: number) {
-    const currentThread = threads.find((t) => t.incrementId === incrementId);
+  async function selectThread(threadId: string) {
+    const currentThread = threads.find((t) => t.id === threadId);
     if (!currentThread) {
       return;
     }
@@ -464,7 +464,7 @@ export default function Channel({
                   >
                     {pinnedThread && status === ThreadStatus.UNREAD && (
                       <PinnedThread
-                        onClick={() => selectThread(pinnedThread.incrementId)}
+                        onClick={() => selectThread(pinnedThread.id)}
                       >
                         <Row
                           thread={pinnedThread}
