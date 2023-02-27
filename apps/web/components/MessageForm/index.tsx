@@ -25,6 +25,7 @@ interface Props {
   uploading?: boolean;
   uploads: UploadedFile[];
   rows?: number;
+  sendOnEnter?: boolean;
   onSend?(message: string, files: UploadedFile[]): Promise<any>;
   onSendAndClose?(message: string, files: UploadedFile[]): Promise<any>;
   fetchMentions?(term?: string): Promise<SerializedUser[]>;
@@ -134,6 +135,7 @@ function MessageForm({
   uploading,
   uploads,
   rows,
+  sendOnEnter,
   onSend,
   onSendAndClose,
   fetchMentions,
@@ -316,7 +318,7 @@ function MessageForm({
               return event.preventDefault();
             }
             if (event.key === 'Enter') {
-              if (event.ctrlKey || event.shiftKey) {
+              if (event.ctrlKey || event.shiftKey || !sendOnEnter) {
                 event.preventDefault();
                 const position = getCaretPosition(ref);
                 setMessage((message) => {
@@ -379,5 +381,9 @@ function MessageForm({
     </div>
   );
 }
+
+MessageForm.defaultProps = {
+  sendOnEnter: true,
+};
 
 export default MessageForm;
