@@ -60,7 +60,7 @@ export default function Grid({
   isBot: boolean;
   currentUser: SerializedUser | null;
   mode?: Mode;
-  onClick: (threadId: number) => void;
+  onClick: (threadId: string) => void;
   onDelete: (messageId: string) => void;
   onMute?: (threadId: string) => void;
   onUnmute?: (threadId: string) => void;
@@ -129,7 +129,7 @@ export default function Grid({
           );
         } else if (item.type === RowType.Thread) {
           const thread = item.content as SerializedThread;
-          const { incrementId, slug } = thread;
+          const { incrementId, slug, id } = thread;
           return (
             <li
               key={`inbox-${incrementId}-${index}`}
@@ -150,7 +150,7 @@ export default function Grid({
                   }}
                 />
               ) : (
-                <div onClick={() => onClick(incrementId)}>
+                <div onClick={() => onClick(id)}>
                   <Row
                     className={styles.row}
                     thread={thread}
