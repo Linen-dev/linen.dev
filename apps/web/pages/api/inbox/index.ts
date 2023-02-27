@@ -44,6 +44,9 @@ export async function index({
           return params.channelIds.includes(channelId);
         }),
     },
+    messages: {
+      some: {},
+    },
     userThreadStatus: {
       none: {
         userId: currentUserId,
