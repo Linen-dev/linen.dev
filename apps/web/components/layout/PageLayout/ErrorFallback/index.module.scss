@@ -1,0 +1,37 @@
+@import 'styles/colors.scss';
+
+.container {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  height: calc(100vh - 64px);
+  align-items: center;
+  justify-content: center;
+}
+
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+  .container {
+    min-height: calc(100vh - 102px);
+  }
+}
+
+.h1 {
+  color: $color-red-700;
+  font-size: 72px;
+  font-weight: bold;
+  line-height: 1.2;
+}
+
+.h6 {
+  font-size: 32px;
+  font-weight: bold;
+}
+
+.p {
+  color: $color-gray-400;
+  font-size: 16px;
+}
+
+.a {
+  color: $color-blue-700;
+}

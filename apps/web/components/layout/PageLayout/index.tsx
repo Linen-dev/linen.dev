@@ -1,6 +1,8 @@
+import React from 'react';
 import axios, { AxiosRequestConfig } from 'axios';
 import { ErrorBoundary } from 'react-error-boundary';
 import Header from './Header';
+import ErrorFallback from './ErrorFallback';
 import NavBar from 'components/NavBar';
 import SEO, { type SeoProps } from '../SEO';
 import GoogleAnalytics from '../GoogleAnalytics';
@@ -126,22 +128,7 @@ function PageLayout({
           }
           ref={innerRef}
         >
-          <ErrorBoundary
-            FallbackComponent={() => (
-              <>
-                <h1 className="font-bold text-blue-600 text-center text-9xl pt-6">
-                  500
-                </h1>
-                <h6 className="mb-2 text-2xl font-bold text-center text-gray-800 md:text-3xl">
-                  <span className="text-red-500">Oops!</span> Something went
-                  wrong
-                </h6>
-                <p className="mb-8 text-center text-gray-500 md:text-lg">
-                  Please try again or contact us
-                </p>
-              </>
-            )}
-          >
+          <ErrorBoundary FallbackComponent={ErrorFallback}>
             {children}
           </ErrorBoundary>
         </div>
