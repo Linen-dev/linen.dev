@@ -458,7 +458,9 @@ export default function Channel(props: ChannelProps) {
   }
 
   async function pinThread(threadId: string) {
-    const thread = threads.find(({ id }) => id === threadId);
+    const thread =
+      threads.find(({ id }) => id === threadId) ||
+      pinnedThreads.find(({ id }) => id === threadId);
     if (!thread) {
       return;
     }
