@@ -1,7 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
 import Avatar from '../../../Avatar';
-import Checkbox from '../../../Checkbox';
 import { Permissions, SerializedThread } from '@linen/types';
 import Title from './Title';
 import Description from './Description';
