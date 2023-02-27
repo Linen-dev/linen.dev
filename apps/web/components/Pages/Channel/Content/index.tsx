@@ -233,7 +233,10 @@ export default function Channel({
   }
 
   async function selectThread(threadId: string) {
-    const currentThread = threads.find((t) => t.id === threadId);
+    const currentThread =
+      threads.find((t) => t.id === threadId) ||
+      pinnedThreads.find((t) => t.id === threadId);
+
     if (!currentThread) {
       return;
     }
