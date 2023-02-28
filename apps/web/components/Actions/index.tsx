@@ -9,7 +9,6 @@ import {
   SerializedMessage,
   SerializedThread,
   SerializedUser,
-  ThreadStatus,
   ReminderTypes,
   onResolve,
 } from '@linen/types';
@@ -32,7 +31,6 @@ interface Props {
   thread: SerializedThread;
   message: SerializedMessage;
   permissions: Permissions;
-  status?: ThreadStatus;
   settings: Settings;
   isSubDomainRouting: boolean;
   currentUser: SerializedUser | null;
@@ -85,7 +83,6 @@ export default function Actions({
   thread,
   message,
   permissions,
-  status,
   settings,
   isSubDomainRouting,
   currentUser,
@@ -106,27 +103,15 @@ export default function Actions({
   const owner = currentUser ? currentUser.id === message.usersId : false;
   const draggable = permissions.manage || owner;
 
-  const isReadVisible =
-    onRead &&
-    currentUser &&
-    (status === ThreadStatus.UNREAD ||
-      status === ThreadStatus.MUTED ||
-      status === ThreadStatus.REMINDER);
-
-  const isRemindVisible =
-    onRemind &&
-    currentUser &&
-    (status === ThreadStatus.UNREAD ||
-      status === ThreadStatus.READ ||
-      status === ThreadStatus.MUTED);
-
-  const isMuteVisible =
-    onMute &&
-    currentUser &&
-    (status === ThreadStatus.UNREAD ||
-      status === ThreadStatus.READ ||
-      status === ThreadStatus.REMINDER);
-
+  const isReadVisible = false && onRead && currentUser;
+  const isUnreadVisible = false && onUnread && currentUser;
+  const isRemindVisible = false && onRemind && currentUser;
+  const isMuteVisible = false && onMute && currentUser;
+  const isOnmuteVisible = false && onUnmute && currentUser;
+  const isPinVisible = onPin && permissions.manage;
+  const isReactionVisible = onReaction && currentUser;
+  const isResolutionVisible = onResolution && currentUser;
+  const isDragVisible = currentUser && draggable;
   const isDeleteVisible =
     onDelete &&
     currentUser &&
@@ -148,7 +133,7 @@ export default function Actions({
             </Tooltip>
           </li>
         )}
-        {onUnread && currentUser && status === ThreadStatus.READ && (
+        {isUnreadVisible && (
           <li
             onClick={(event) => {
               event.stopPropagation();
@@ -174,7 +159,7 @@ export default function Actions({
             </Tooltip>
           </li>
         )}
-        {onUnmute && currentUser && status === ThreadStatus.MUTED && (
+        {isOnmuteVisible && (
           <li
             onClick={(event) => {
               event.stopPropagation();
@@ -200,7 +185,7 @@ export default function Actions({
             </Tooltip>
           </li>
         )}
-        {onReaction && currentUser && (
+        {isReactionVisible && (
           <li
             onClick={(event) => {
               event.stopPropagation();
@@ -222,7 +207,7 @@ export default function Actions({
             </Tooltip>
           </li>
         )}
-        {onPin && permissions.manage && (
+        {isPinVisible && (
           <li
             onClick={(event) => {
               event.stopPropagation();
@@ -237,7 +222,7 @@ export default function Actions({
             </Tooltip>
           </li>
         )}
-        {onResolution && (
+        {isResolutionVisible && (
           <li
             onClick={(event) => {
               event.stopPropagation();
@@ -258,7 +243,7 @@ export default function Actions({
             </Tooltip>
           </li>
         )}
-        {currentUser && draggable && (
+        {isDragVisible && (
           <li>
             <Draggable
               id={drag === 'thread' ? thread.id : message.id}

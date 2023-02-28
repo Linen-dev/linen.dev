@@ -65,10 +65,7 @@ interface Props {
   permissions: Permissions;
   currentThreadId: string | undefined;
   token: string | null;
-  status: ThreadStatus;
-  onStatusChange(status: ThreadStatus): void;
   setThreads: React.Dispatch<React.SetStateAction<SerializedThread[]>>;
-  onThreadsChange(threads: SerializedThread[]): void;
   deleteMessage(messageId: string): void;
   muteThread(threadId: string): void;
   unmuteThread(threadId: string): void;
@@ -133,10 +130,7 @@ export default function Channel({
   token,
   permissions,
   currentThreadId,
-  status,
-  onStatusChange,
   setThreads,
-  onThreadsChange,
   deleteMessage,
   muteThread,
   unmuteThread,
@@ -152,7 +146,6 @@ export default function Channel({
   onThreadMessage,
   sendReaction,
 }: Props) {
-  const [isLoading, setLoading] = useState(false);
   const [isInfiniteScrollLoading, setInfiniteScrollLoading] = useState(false);
   const [isLeftScrollAtBottom, setIsLeftScrollAtBottom] = useState(true);
   const [readStatus, setReadStatus] = useState<SerializedReadStatus>();
@@ -252,7 +245,7 @@ export default function Channel({
     loading: isInfiniteScrollLoading,
     hasNextPage: !!cursor.prev,
     onLoadMore: loadMore,
-    disabled: !!error?.prev || !cursor.prev || isLoading,
+    disabled: !!error?.prev || !cursor.prev,
     rootMargin: '0px 0px 0px 0px',
   });
 
@@ -260,7 +253,7 @@ export default function Channel({
     loading: isInfiniteScrollLoading,
     hasNextPage: !!cursor.next,
     onLoadMore: loadMoreNext,
-    disabled: !!error?.next || !cursor.next || isLoading,
+    disabled: !!error?.next || !cursor.next,
     rootMargin: '0px 0px 0px 0px',
   });
 
@@ -284,31 +277,6 @@ export default function Channel({
     }
   };
 
-  const handleStatusChange = async (status: ThreadStatus) => {
-    setLoading(true);
-    onThreadsChange([]);
-    setIsLeftScrollAtBottom(true);
-    setCursor({ prev: null, next: null });
-    onStatusChange(status);
-    try {
-      const data = await api.getThreads({
-        channelId: currentChannel.id,
-        accountId: settings.communityId,
-        userId: currentUser?.id,
-        status,
-      });
-      onThreadsChange(data.threads);
-      setTimeout(() => {
-        handleScroll();
-        setCursor(data.nextCursor);
-      }, 0);
-    } catch (exception) {
-      alert('Something went wrong, please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handleOpenIntegrations = async () => {
     setIntegrationsModal(true);
   };
@@ -317,7 +285,6 @@ export default function Channel({
     const key = next ? 'next' : 'prev';
     const dir = next ? 'bottom' : 'top';
     if (isInfiniteScrollLoading) return;
-    if (isLoading) return;
     if (!cursor[key]) return;
     try {
       setInfiniteScrollLoading(true);
@@ -326,8 +293,6 @@ export default function Channel({
           channelId: currentChannel.id,
           cursor: cursor[key] || undefined,
           accountId: settings.communityId,
-          userId: currentUser?.id,
-          status,
         });
         setCursor({ ...cursor, [key]: data?.nextCursor?.[key] });
         if (next) {
@@ -456,17 +421,13 @@ export default function Channel({
                 <>
                   <Header
                     className={classNames(styles.header, {
-                      [styles.pinned]:
-                        !!pinnedThread && status === ThreadStatus.UNREAD,
+                      [styles.pinned]: !!pinnedThread,
                     })}
                     channelName={currentChannel.channelName}
                     currentUser={currentUser}
-                    status={status}
-                    threads={threads}
-                    onStatusChange={handleStatusChange}
                     handleOpenIntegrations={handleOpenIntegrations}
                   >
-                    {pinnedThread && status === ThreadStatus.UNREAD && (
+                    {pinnedThread && (
                       <PinnedThread
                         onClick={() => selectThread(pinnedThread.id)}
                       >
@@ -488,13 +449,9 @@ export default function Channel({
                     />
                   </Header>
                   {threads.length === 0 ? (
-                    <Empty
-                      currentUser={currentUser}
-                      status={status}
-                      loading={isLoading}
-                    />
+                    <Empty />
                   ) : (
-                    <div className={styles.full} key={status}>
+                    <div className={styles.full}>
                       <ul className="divide-y w-full">
                         <Grid
                           threads={threads}
@@ -503,7 +460,6 @@ export default function Channel({
                           isSubDomainRouting={isSubDomainRouting}
                           currentThreadId={currentThreadId}
                           settings={settings}
-                          status={status}
                           isBot={false}
                           mode={mode}
                           currentUser={currentUser}
@@ -525,7 +481,7 @@ export default function Channel({
                 </>
               }
               footer={
-                permissions.chat && status === ThreadStatus.UNREAD ? (
+                permissions.chat ? (
                   <Chat
                     communityId={settings.communityId}
                     channelId={currentChannel.id}

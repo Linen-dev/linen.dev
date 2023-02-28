@@ -43,8 +43,6 @@ export async function channelGetServerSideProps(
   const isCrawler = isBot(context?.req?.headers?.['user-agent'] || '');
   const communityName = context.params?.communityName as string;
   const channelName = context.params?.channelName as string;
-  const status =
-    (context.params?.status as ThreadStatus) || ThreadStatus.UNREAD;
   const page = context.params?.page as string | undefined;
 
   const account = await findAccountByPath(communityName);
@@ -103,8 +101,6 @@ export async function channelGetServerSideProps(
     channelId: channel.id,
     anonymizeUsers: account.anonymizeUsers,
     page,
-    userId: permissions.user?.id,
-    status: permissions.user && status,
   });
 
   const pinnedThreads = !isCrawler
@@ -142,23 +138,17 @@ export async function getThreads({
   channelId,
   anonymizeUsers,
   page,
-  status,
-  userId,
 }: {
   channelId: string;
   anonymizeUsers: boolean;
   page?: string;
-  status?: ThreadStatus;
-  userId?: string;
 }) {
   if (!!page) {
     const threads = (
       await findThreadsByCursor({
         channelIds: [channelId],
         page: parsePage(page),
-        status,
         anonymizeUsers,
-        userId,
       })
     ).sort(sortBySentAtAsc);
 
@@ -179,9 +169,7 @@ export async function getThreads({
       sentAt,
       sort,
       direction,
-      status,
       anonymizeUsers,
-      userId,
     })
   ).sort(sortBySentAtAsc);
 
@@ -215,13 +203,9 @@ function findChannelOrDefault(
 export async function channelNextPage({
   channelId,
   cursor,
-  status,
-  userId,
 }: {
   channelId: string;
   cursor?: string;
-  status?: ThreadStatus;
-  userId?: string;
 }): Promise<channelNextPageType> {
   const { sort, direction, sentAt } = decodeCursor(cursor);
   const anonymizeUsers = await shouldThisChannelBeAnonymous(channelId);
@@ -230,9 +214,7 @@ export async function channelNextPage({
     sentAt,
     sort,
     direction,
-    status,
     anonymizeUsers,
-    userId,
   }).then((t) => t.sort(sortBySentAtAsc));
 
   const nextCursor = await buildCursor({
