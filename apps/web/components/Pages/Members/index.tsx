@@ -11,6 +11,7 @@ import {
   Settings,
   Permissions,
 } from '@linen/types';
+import { put } from 'utilities/requests';
 
 interface Props {
   channels: SerializedChannel[];
@@ -148,13 +149,14 @@ function RowMember(user: MembersType, communityId: string): JSX.Element {
       if (status === 'ACCEPTED') {
         url = '/api/users';
       }
-      const response = await fetch(url, {
-        method: 'PUT',
-        body: JSON.stringify({ userId: id, inviteId: id, role, communityId }),
+      await put(url, {
+        userId: id,
+        inviteId: id,
+        role,
+        communityId,
+        accountId: communityId,
       });
-      if (!response.ok) {
-        throw response;
-      }
+
       setData({ ...data, role });
     } catch (error) {
       Toast.error('Something went wrong');
