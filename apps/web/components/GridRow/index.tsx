@@ -14,7 +14,6 @@ import {
   SerializedThread,
   SerializedUser,
   ThreadState,
-  ThreadStatus,
   ReminderTypes,
   onResolve,
 } from '@linen/types';
@@ -31,7 +30,6 @@ interface Props {
   permissions: Permissions;
   currentUser: SerializedUser | null;
   mode?: Mode;
-  status?: ThreadStatus;
   drag: 'thread' | 'message';
   header?: React.ReactNode;
   footer?: React.ReactNode;
@@ -68,7 +66,6 @@ export function Row({
   settings,
   permissions,
   mode,
-  status,
   drag,
   header,
   footer,
@@ -149,7 +146,6 @@ export function Row({
         <Actions
           thread={thread}
           message={message}
-          status={status}
           settings={settings}
           permissions={permissions}
           currentUser={currentUser}

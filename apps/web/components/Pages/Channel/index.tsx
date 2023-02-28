@@ -14,7 +14,6 @@ import {
   SerializedUser,
   Settings,
   ThreadState,
-  ThreadStatus,
 } from '@linen/types';
 import {
   postReaction,
@@ -72,6 +71,8 @@ async function upsertUserThreadStatus(params: {
 
 const debouncedUpserUserThreadStatus = debounce(upsertUserThreadStatus);
 
+const SHORTCUTS_ENABLED = false;
+
 export default function Channel(props: ChannelProps) {
   if (props.isBot) {
     return <ChannelForBots {...props} />;
@@ -93,7 +94,6 @@ export default function Channel(props: ChannelProps) {
     permissions,
   } = props;
 
-  const [status, setStatus] = useState<ThreadStatus>(ThreadStatus.UNREAD);
   const [threads, setThreads] = useState<SerializedThread[]>(initialThreads);
   const [pinnedThreads, setPinnedThreads] =
     useState<SerializedThread[]>(initialPinnedThreads);
@@ -108,12 +108,7 @@ export default function Channel(props: ChannelProps) {
   const token = permissions.token || null;
 
   useEffect(() => {
-    setCurrentThreadId(threads[threads.length - 1]?.id);
-  }, [status]);
-
-  useEffect(() => {
     setThreads(initialThreads);
-    setStatus(ThreadStatus.UNREAD);
     setCurrentThreadId(initialThreads[initialThreads.length - 1]?.id);
   }, [initialThreads]);
 
@@ -171,10 +166,10 @@ export default function Channel(props: ChannelProps) {
         ) {
           selectNextThread();
         } else if (
+          SHORTCUTS_ENABLED &&
           currentThreadId &&
           event.shiftKey &&
-          event.key === 'E' &&
-          status === ThreadStatus.READ
+          event.key === 'E'
         ) {
           markUserThreadStatuses(currentThreadId, {
             muted: false,
@@ -182,15 +177,7 @@ export default function Channel(props: ChannelProps) {
             reminder: false,
           });
           selectPreviousThread();
-        } else if (
-          currentThreadId &&
-          event.key === 'e' &&
-          [
-            ThreadStatus.UNREAD,
-            ThreadStatus.MUTED,
-            ThreadStatus.REMINDER,
-          ].includes(status)
-        ) {
+        } else if (SHORTCUTS_ENABLED && currentThreadId && event.key === 'e') {
           markUserThreadStatuses(currentThreadId, {
             muted: false,
             read: true,
@@ -198,10 +185,10 @@ export default function Channel(props: ChannelProps) {
           });
           selectPreviousThread();
         } else if (
+          SHORTCUTS_ENABLED &&
           currentThreadId &&
           event.shiftKey &&
-          event.key === 'M' &&
-          status === ThreadStatus.MUTED
+          event.key === 'M'
         ) {
           markUserThreadStatuses(currentThreadId, {
             muted: false,
@@ -209,15 +196,7 @@ export default function Channel(props: ChannelProps) {
             reminder: false,
           });
           selectPreviousThread();
-        } else if (
-          currentThreadId &&
-          event.key === 'm' &&
-          [
-            ThreadStatus.UNREAD,
-            ThreadStatus.READ,
-            ThreadStatus.REMINDER,
-          ].includes(status)
-        ) {
+        } else if (SHORTCUTS_ENABLED && currentThreadId && event.key === 'm') {
           markUserThreadStatuses(currentThreadId, {
             muted: true,
             read: false,
@@ -236,11 +215,7 @@ export default function Channel(props: ChannelProps) {
   async function updateUserThreadStatusesOnWebsocketEvents(payload: any) {
     const channelId = payload.channel_id;
     const threadId = payload.thread_id;
-    if (
-      status === ThreadStatus.UNREAD &&
-      threadId &&
-      currentChannel.id === channelId
-    ) {
+    if (threadId && currentChannel.id === channelId) {
       const thread = threads.find((thread) => thread.id === threadId);
       if (!thread) {
         // get full thread from an endpoint and push it to threads
@@ -283,10 +258,6 @@ export default function Channel(props: ChannelProps) {
     }
   }, []);
 
-  const onStatusChange = (status: ThreadStatus) => {
-    setStatus(status);
-  };
-
   const onSocket = (payload: any) => {
     try {
       if (payload.is_reply) {
@@ -315,7 +286,7 @@ export default function Channel(props: ChannelProps) {
         updateUserThreadStatusesOnWebsocketEvents(payload);
       }
 
-      if (payload.is_thread && status === ThreadStatus.UNREAD) {
+      if (payload.is_thread) {
         const threadId = payload.thread_id;
         const imitationId = payload.imitation_id;
         const thread: SerializedThread =
@@ -823,11 +794,6 @@ export default function Channel(props: ChannelProps) {
     }
   }
 
-  function onThreadsChange(threads: SerializedThread[]) {
-    setThreads(threads);
-    setCurrentThreadId(threads[threads.length - 1]?.id);
-  }
-
   return (
     <PageLayout
       currentChannel={currentChannel}
@@ -862,10 +828,7 @@ export default function Channel(props: ChannelProps) {
           isBot={isBot}
           permissions={permissions}
           currentThreadId={currentThreadId}
-          status={status}
-          onStatusChange={onStatusChange}
           setThreads={setThreads}
-          onThreadsChange={onThreadsChange}
           deleteMessage={deleteMessage}
           muteThread={muteThread}
           unmuteThread={unmuteThread}

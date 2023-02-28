@@ -8,7 +8,6 @@ import {
   Settings,
   SerializedThread,
   SerializedUser,
-  ThreadStatus,
   ReminderTypes,
   onResolve,
 } from '@linen/types';
@@ -32,7 +31,6 @@ interface Props {
   isSubDomainRouting: boolean;
   settings: Settings;
   currentUser: SerializedUser | null;
-  status?: ThreadStatus;
   mode?: Mode;
   onDelete?(messageId: string): void;
   onLoad?(): void;
@@ -75,7 +73,6 @@ export default function ChannelRow({
   isSubDomainRouting,
   settings,
   currentUser,
-  status,
   mode,
   onDelete,
   onDrop,
@@ -113,7 +110,6 @@ export default function ChannelRow({
           permissions={permissions}
           currentUser={currentUser}
           mode={mode}
-          status={status}
           drag="thread"
           onDelete={onDelete}
           onLoad={onLoad}
