@@ -25,6 +25,11 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
       throw 'missing auth';
     }
 
+    if (!auth?.users?.length) {
+      return response.redirect('https://linen.dev/getting-started');
+    }
+
+    // these only works if the user browse the community before sign-in
     const { communityId, channelId, page } = request.query as {
       communityId: string;
       channelId?: string;
@@ -36,7 +41,7 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
         ?.account
     );
     if (!account) {
-      return response.redirect('https://linen.dev/getting-started');
+      return response.redirect('/');
     }
 
     const url = getHomeUrl(account);
