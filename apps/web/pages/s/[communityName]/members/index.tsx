@@ -5,5 +5,5 @@ import { getMembersServerSideProps } from 'services/members';
 export default Members;
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  return getMembersServerSideProps(context, false);
+  return getMembersServerSideProps(context, context.query.customDomain === '1');
 }

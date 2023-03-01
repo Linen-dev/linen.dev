@@ -77,7 +77,7 @@ describe('rewrite', () => {
       })
     ).toStrictEqual({
       rewrite:
-        'https://custom.domain.com/subdomain/custom.domain.com/s/community/c/default',
+        'https://custom.domain.com/s/custom.domain.com/s/community/c/default?customDomain=1',
     });
 
     expect(
@@ -88,7 +88,7 @@ describe('rewrite', () => {
       })
     ).toStrictEqual({
       rewrite:
-        'https://custom.domain.com/subdomain/custom.domain.com/c/default',
+        'https://custom.domain.com/s/custom.domain.com/c/default?customDomain=1&customDomain=1',
     });
 
     const signPaths = [

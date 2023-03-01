@@ -6,5 +6,5 @@ import Inbox from 'components/Pages/Inbox';
 export default Inbox;
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  return inboxGetServerSideProps(context, false);
+  return inboxGetServerSideProps(context, context.query.customDomain === '1');
 }

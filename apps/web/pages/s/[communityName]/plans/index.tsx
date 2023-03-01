@@ -5,5 +5,5 @@ import { getPlansServerSideProps } from 'services/plans';
 export default Plans;
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  return getPlansServerSideProps(context, false);
+  return getPlansServerSideProps(context, context.query.customDomain === '1');
 }
