@@ -34,3 +34,10 @@ export function normalize(str?: string | null) {
   if (!str) return '';
   return str.replace(/[^a-zA-Z0-9 ]/g, ' ').replace(/\s+/g, ' ');
 }
+
+export function pad(string: string, length: number) {
+  if (string.length < length) {
+    return `0`.repeat(length - string.length) + string;
+  }
+  return string;
+}

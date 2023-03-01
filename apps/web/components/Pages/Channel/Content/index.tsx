@@ -309,6 +309,8 @@ export default function Channel({
           const node = document.getElementById(`channel-thread-${id}`);
           if (node) {
             node.scrollIntoView();
+            scrollableRoot.scrollTop =
+              scrollableRoot.scrollTop - scrollableRoot.offsetTop;
           }
         }, 0);
       }
