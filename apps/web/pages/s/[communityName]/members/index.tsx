@@ -1,9 +1,11 @@
-import { GetServerSidePropsContext } from 'next';
-import Members from 'components/Pages/Members';
+import { GetServerSideProps } from 'next';
+import Members, { Props } from 'components/Pages/Members';
 import { getMembersServerSideProps } from 'services/members';
 
 export default Members;
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
+export const getServerSideProps: GetServerSideProps<Props> = async (
+  context
+) => {
   return getMembersServerSideProps(context, context.query.customDomain === '1');
-}
+};

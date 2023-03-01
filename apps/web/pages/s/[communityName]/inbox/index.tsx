@@ -1,10 +1,11 @@
-import { GetServerSidePropsContext } from 'next';
+import { GetServerSideProps } from 'next';
 import { inboxGetServerSideProps } from 'services/inbox';
-
-import Inbox from 'components/Pages/Inbox';
+import Inbox, { Props } from 'components/Pages/Inbox';
 
 export default Inbox;
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
+export const getServerSideProps: GetServerSideProps<Props> = async (
+  context
+) => {
   return inboxGetServerSideProps(context, context.query.customDomain === '1');
-}
+};

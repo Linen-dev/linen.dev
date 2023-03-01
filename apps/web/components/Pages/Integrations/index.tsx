@@ -18,7 +18,7 @@ import { Toast } from '@linen/ui';
 import debounce from '@linen/utilities/debounce';
 import * as api from 'utilities/requests';
 
-interface Props {
+export interface Props {
   channels: SerializedChannel[];
   currentCommunity: SerializedAccount;
   communities: SerializedAccount[];

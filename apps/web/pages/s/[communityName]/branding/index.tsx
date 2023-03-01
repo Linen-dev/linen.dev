@@ -1,12 +1,14 @@
-import { GetServerSidePropsContext } from 'next';
-import Branding from 'components/Pages/Branding';
+import { GetServerSideProps } from 'next';
+import Branding, { Props } from 'components/Pages/Branding';
 import { getBrandingServerSideProps } from 'services/branding';
 
 export default Branding;
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
+export const getServerSideProps: GetServerSideProps<Props> = async (
+  context
+) => {
   return getBrandingServerSideProps(
     context,
     context.query.customDomain === '1'
   );
-}
+};

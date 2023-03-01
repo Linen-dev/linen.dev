@@ -1,5 +1,5 @@
 interface NotFoundResponse {
-  notFound: boolean;
+  notFound: true;
 }
 
 export function NotFound(): NotFoundResponse {

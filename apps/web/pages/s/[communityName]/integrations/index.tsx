@@ -1,12 +1,14 @@
-import { GetServerSidePropsContext } from 'next';
-import Integrations from 'components/Pages/Integrations';
+import { GetServerSideProps } from 'next';
+import Integrations, { Props } from 'components/Pages/Integrations';
 import { getSettingsServerSideProps } from 'services/settings';
 
 export default Integrations;
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
+export const getServerSideProps: GetServerSideProps<Props> = async (
+  context
+) => {
   return getSettingsServerSideProps(
     context,
     context.query.customDomain === '1'
   );
-}
+};

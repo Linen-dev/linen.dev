@@ -2,7 +2,6 @@ import serializeThread from 'serializers/thread';
 import { findAccountByPath } from '../lib/models';
 import CommunitiesService from 'services/communities';
 import { findThreadByIncrementId } from '../lib/threads';
-import { ThreadByIdProp } from '../types/apiResponses/threads/[threadId]';
 import { channels, threads, users, prisma } from '@linen/database';
 import { GetServerSidePropsContext } from 'next';
 import { NotFound } from '../utilities/response';
@@ -23,11 +22,7 @@ import { SerializedAccount } from '@linen/types';
 export async function threadGetServerSideProps(
   context: GetServerSidePropsContext,
   isSubdomainbasedRouting: boolean
-): Promise<{
-  props?: ThreadByIdProp;
-  notFound?: boolean;
-  redirect?: object;
-}> {
+) {
   const permissions = await PermissionsService.for(context);
   if (!permissions.access) {
     return RedirectTo(
