@@ -15,6 +15,7 @@ import { BiMessageCheck } from '@react-icons/all-files/bi/BiMessageCheck';
 import type { CommunityPushType } from 'services/push';
 import { manageSelections } from './utilities/selection';
 import {
+  ReminderTypes,
   SerializedChannel,
   SerializedMessage,
   SerializedThread,
@@ -401,11 +402,13 @@ export default function Inbox({
     muted,
     reminder,
     read,
+    reminderType,
   }: {
     threadId: string;
     muted: boolean;
     reminder: boolean;
     read: boolean;
+    reminderType?: ReminderTypes;
   }) {
     setLoading(true);
     setInbox((inbox) => {
@@ -433,6 +436,7 @@ export default function Inbox({
         muted,
         reminder,
         read,
+        reminderType,
       }),
       headers: {
         'Content-Type': 'application/json',
@@ -465,6 +469,16 @@ export default function Inbox({
       read: false,
       muted: true,
       reminder: false,
+    });
+  }
+
+  function onRemind(threadId: string, reminderType: ReminderTypes) {
+    markUserThreadStatuses({
+      threadId,
+      muted: false,
+      read: false,
+      reminder: true,
+      reminderType,
     });
   }
 
@@ -600,6 +614,7 @@ export default function Inbox({
                 permissions={permissions}
                 onRead={markThreadAsRead}
                 onMute={markThreadAsMuted}
+                onRemind={onRemind}
                 onChange={(id: string, checked: boolean, index: number) => {
                   setSelections((selections: Selections) => {
                     return manageSelections({

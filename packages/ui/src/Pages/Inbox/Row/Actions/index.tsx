@@ -1,19 +1,34 @@
-import React from 'react';
+import React, { useState } from 'react';
 import classNames from 'classnames';
 import styles from './index.module.scss';
 import Tooltip from '../../../../Tooltip';
+import ReminderModal from '../../../../ReminderModal';
 import { BiMessageCheck } from '@react-icons/all-files/bi/BiMessageCheck';
 import { FaVolumeMute } from '@react-icons/all-files/fa/FaVolumeMute';
-import { SerializedThread } from '@linen/types';
+import { FiClock } from '@react-icons/all-files/fi/FiClock';
+import { ReminderTypes, SerializedThread } from '@linen/types';
 
 interface Props {
   className?: string;
   onRead?(threadId: string): void;
   onMute?(threadId: string): void;
+  onRemind?(threadId: string, reminderType: ReminderTypes): void;
   thread: SerializedThread;
 }
 
-export default function Actions({ className, thread, onRead, onMute }: Props) {
+enum ModalView {
+  NONE,
+  REMINDER,
+}
+
+export default function Actions({
+  className,
+  thread,
+  onRead,
+  onMute,
+  onRemind,
+}: Props) {
+  const [modal, setModal] = useState<ModalView>(ModalView.NONE);
   return (
     <div className={classNames(styles.actions, className)}>
       <ul>
@@ -43,7 +58,30 @@ export default function Actions({ className, thread, onRead, onMute }: Props) {
             </Tooltip>
           </li>
         )}
+        {onRemind && (
+          <li
+            onClick={(event) => {
+              event.stopPropagation();
+              event.preventDefault();
+              setModal(ModalView.REMINDER);
+            }}
+          >
+            <Tooltip className={styles.tooltip} text="Reminder">
+              <FiClock />
+            </Tooltip>
+          </li>
+        )}
       </ul>
+      {onRemind && (
+        <ReminderModal
+          open={modal === ModalView.REMINDER}
+          close={() => setModal(ModalView.NONE)}
+          onConfirm={(reminder: ReminderTypes) => {
+            onRemind(thread.id, reminder);
+            setModal(ModalView.NONE);
+          }}
+        />
+      )}
     </div>
   );
 }

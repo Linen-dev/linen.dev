@@ -18,6 +18,7 @@ import Message from './Message';
 import Modal from './Modal';
 import NativeSelect from './NativeSelect';
 import Nav from './Nav';
+import ReminderModal from './ReminderModal';
 import Spinner from './Spinner';
 import StickyHeader from './StickyHeader';
 import Suggestions from './Suggestions';
@@ -50,6 +51,7 @@ export {
   Modal,
   NativeSelect,
   Nav,
+  ReminderModal,
   Spinner,
   StickyHeader,
   Suggestions,

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { FiClock } from '@react-icons/all-files/fi/FiClock';
-import { Button, NativeSelect, Modal } from '@linen/ui';
+import Button from '../Button';
+import NativeSelect from '../NativeSelect';
+import Modal from '../Modal';
 import { ReminderTypes } from '@linen/types';
 import styles from './index.module.scss';
 
@@ -15,7 +17,7 @@ export default function ReminderModal({ open, close, onConfirm }: Props) {
   return (
     <Modal open={open} close={close}>
       <h3 className={styles.header}>
-        <FiClock /> Remind me
+        <FiClock /> Reminder
       </h3>
       <form className={styles.form}>
         <NativeSelect
