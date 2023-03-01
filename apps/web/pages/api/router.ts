@@ -5,12 +5,19 @@ import { Roles } from '@linen/types';
 import { findAuthByEmail } from 'lib/users';
 import { getHomeUrl } from 'utilities/home';
 import serializeAccount from 'serializers/account';
+import { acceptInvite, findInvitesByEmail } from 'services/invites';
 
 async function handler(request: NextApiRequest, response: NextApiResponse) {
   try {
     const session = await Session.find(request, response);
     if (!session?.user?.email) {
       throw 'missing session';
+    }
+
+    // accept invites
+    const invites = await findInvitesByEmail(session.user.email);
+    for (const invite of invites) {
+      await acceptInvite(invite.id, session.user.email).catch(console.error);
     }
 
     const auth = await findAuthByEmail(session.user.email);
@@ -29,7 +36,7 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
         ?.account
     );
     if (!account) {
-      return response.redirect('/getting-started');
+      return response.redirect('https://linen.dev/getting-started');
     }
 
     const url = getHomeUrl(account);
