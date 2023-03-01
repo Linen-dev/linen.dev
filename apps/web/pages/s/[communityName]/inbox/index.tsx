@@ -1,5 +1,5 @@
 import { GetServerSideProps } from 'next';
-import { inboxGetServerSideProps } from 'services/inbox';
+import { inboxGetServerSideProps } from 'services/ssr/inbox';
 import Inbox, { Props } from 'components/Pages/Inbox';
 
 export default Inbox;

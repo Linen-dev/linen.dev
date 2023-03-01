@@ -1,6 +1,6 @@
 import { GetServerSideProps } from 'next';
 import Metrics, { Props } from 'components/Pages/Metrics';
-import { getMetricsServerSideProps } from 'services/metrics';
+import { getMetricsServerSideProps } from 'services/ssr/metrics';
 
 export default Metrics;
 

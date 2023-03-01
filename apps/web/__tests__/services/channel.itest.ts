@@ -1,10 +1,11 @@
 import { accounts, channels, threads, prisma } from '@linen/database';
 import { v4 as random } from 'uuid';
-import { channelGetServerSideProps, channelNextPage } from 'services/channel';
+import { channelGetServerSideProps } from 'services/ssr/channels';
 import { encodeCursor } from 'utilities/cursor';
 import { SerializedThread } from '@linen/types';
 import { createThreadsOneByDay } from 'bin/factory/threads';
 import setup from '__tests__/spec-helpers/integration';
+import { channelNextPage } from 'services/channels/channelNextPage';
 
 setup({ truncationStrategy: 'cascade' });
 

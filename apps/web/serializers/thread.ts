@@ -23,7 +23,7 @@ export function serializeThread({
     ...thread,
     sentAt: thread.sentAt.toString(),
     lastReplyAt: thread.lastReplyAt?.toString() || thread.sentAt.toString(),
-    channel: serializeChannel(thread.channel),
+    channel: thread.channel ? serializeChannel(thread.channel) : null,
     messages: serializeMessages(thread.messages),
   };
 }

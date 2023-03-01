@@ -1,6 +1,6 @@
 import { accounts, channels, threads, prisma } from '@linen/database';
 import { v4 as random } from 'uuid';
-import { threadGetServerSideProps } from 'services/threads-ssr';
+import { threadGetServerSideProps } from 'services/ssr/threads';
 import { encodeCursor } from 'utilities/cursor';
 import { createThreadsOneByDay } from 'bin/factory/threads';
 jest.mock('services/session');

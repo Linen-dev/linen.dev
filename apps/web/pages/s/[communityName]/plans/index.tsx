@@ -1,6 +1,6 @@
 import { GetServerSideProps } from 'next';
 import Plans, { Props } from 'components/Pages/Plans';
-import { getPlansServerSideProps } from 'services/plans';
+import { getPlansServerSideProps } from 'services/ssr/plans';
 
 export default Plans;
 

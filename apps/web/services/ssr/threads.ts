@@ -1,10 +1,10 @@
 import serializeThread from 'serializers/thread';
-import { findAccountByPath } from '../lib/models';
+import { findAccountByPath } from 'lib/models';
 import CommunitiesService from 'services/communities';
-import { findThreadByIncrementId } from '../lib/threads';
+import { findThreadByIncrementId } from 'lib/threads';
 import { channels, threads, users, prisma } from '@linen/database';
 import { GetServerSidePropsContext } from 'next';
-import { NotFound } from '../utilities/response';
+import { NotFound } from 'utilities/response';
 import serializeAccount from 'serializers/account';
 import { serialize as serializeSettings } from 'serializers/account/settings';
 import { encodeCursor } from 'utilities/cursor';
@@ -58,18 +58,20 @@ export async function threadGetServerSideProps(
     }
 
     const settings = serializeSettings(account);
+    const currentCommunity = serializeAccount(account);
+
     const isCrawler = isBot(context?.req?.headers?.['user-agent'] || '');
 
     if (
+      isCrawler &&
       shouldRedirectToDomain({
-        isCrawler,
-        account,
+        account: currentCommunity,
         communityName,
         isSubdomainbasedRouting,
       })
     ) {
       return redirectThreadToDomain({
-        account,
+        account: currentCommunity,
         communityName,
         settings,
         threadId,
@@ -127,7 +129,7 @@ export async function threadGetServerSideProps(
         thread: serializeThread(thread),
         externalThreadId: thread.externalThreadId,
         channelId: currentChannel.id,
-        currentCommunity: serializeAccount(account) as SerializedAccount,
+        currentCommunity,
         channel: currentChannel,
         communities: communities.map(serializeAccount) as SerializedAccount[],
         authors: authors,
