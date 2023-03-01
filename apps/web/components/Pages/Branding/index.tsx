@@ -67,7 +67,7 @@ function Card({
   );
 }
 
-interface Props {
+export interface Props {
   channels: SerializedChannel[];
   communities: SerializedAccount[];
   currentCommunity: SerializedAccount;

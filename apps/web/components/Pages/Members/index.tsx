@@ -13,7 +13,7 @@ import {
 } from '@linen/types';
 import { put } from 'utilities/requests';
 
-interface Props {
+export interface Props {
   channels: SerializedChannel[];
   communities: SerializedAccount[];
   currentCommunity: SerializedAccount;

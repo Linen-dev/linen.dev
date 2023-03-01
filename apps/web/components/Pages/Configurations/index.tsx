@@ -10,7 +10,7 @@ import {
 } from '@linen/types';
 import storage from '@linen/utilities/storage';
 
-interface Props {
+export interface Props {
   channels: SerializedChannel[];
   currentCommunity: SerializedAccount;
   communities: SerializedAccount[];

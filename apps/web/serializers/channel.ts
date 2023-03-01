@@ -2,14 +2,11 @@ import type { channels } from '@linen/database';
 import { SerializedChannel } from '@linen/types';
 
 export default function serializeChannel(
-  channel?: channels & {
+  channel: channels & {
     lastThreadAt?: bigint;
     threadCount?: number;
   }
-): SerializedChannel | null {
-  if (!channel) {
-    return null;
-  }
+): SerializedChannel {
   return {
     id: channel.id,
     channelName: channel.channelName,

@@ -36,16 +36,17 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
       page: string;
     };
 
-    const account = serializeAccount(
-      auth.users.find((u) => u.accountsId === (communityId || auth.accountId))
-        ?.account
+    const user = auth.users.find(
+      (u) => u.accountsId === (communityId || auth.accountId)
     );
-    if (!account) {
+
+    if (!user?.account) {
       return response.redirect('/');
     }
 
+    const account = serializeAccount(user.account);
+
     const url = getHomeUrl(account);
-    const user = auth.users.find((u) => u.accountsId === auth.accountId);
 
     if (account.id === communityId) {
       if (channelId) {

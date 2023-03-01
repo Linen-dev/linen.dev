@@ -26,10 +26,7 @@ function hasAuthFn(account: any) {
   return false;
 }
 
-export default function serialize(account?: any): SerializedAccount | null {
-  if (!account) {
-    return null;
-  }
+export default function serialize(account?: any): SerializedAccount {
   const {
     description,
     homeUrl,

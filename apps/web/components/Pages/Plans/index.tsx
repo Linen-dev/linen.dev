@@ -8,7 +8,7 @@ import {
   Settings,
 } from '@linen/types';
 
-interface Props {
+export interface Props {
   channels: SerializedChannel[];
   communities: SerializedAccount[];
   currentCommunity: SerializedAccount;

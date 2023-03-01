@@ -14,7 +14,7 @@ import Content from './Content';
 import { InboxConfig } from './types';
 import { post } from 'utilities/http';
 
-interface Props {
+export interface Props {
   channels: SerializedChannel[];
   communities: SerializedAccount[];
   currentCommunity: SerializedAccount;
