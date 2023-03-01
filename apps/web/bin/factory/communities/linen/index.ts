@@ -1,6 +1,7 @@
 import { prisma } from '@linen/database';
 import { ChatType, MessageFormat, Roles } from '@linen/types';
 import { generateHash } from '@linen/utilities/password';
+import { pad } from '@linen/utilities/string';
 import { join } from 'path';
 import { readFileSync } from 'fs';
 
@@ -581,6 +582,34 @@ export default async function createLinenCommunity() {
       },
     },
   });
+
+  const channel6 = await prisma.channels.create({
+    data: {
+      accountId: community.id,
+      channelName: 'pagination',
+    },
+  });
+
+  [...(Array(60).keys() as any)].map(async (index) => {
+    await prisma.threads.create({
+      data: {
+        channelId: channel6.id,
+        sentAt: 1677666130042 + index,
+        messages: {
+          create: [
+            {
+              channelId: channel6.id,
+              body: `Thread ${index}`,
+              usersId: user1.id,
+              sentAt: `2021-12-15T09:01:${pad(index.toString(), 2)}.000Z`,
+              messageFormat: MessageFormat.LINEN,
+            },
+          ],
+        },
+      },
+    });
+  });
+
   await prisma.channels.createMany({
     data: [...(Array(20).keys() as any)].map((index) => ({
       accountId: community.id,

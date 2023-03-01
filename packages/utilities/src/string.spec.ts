@@ -1,4 +1,4 @@
-import { decodeHTML, truncate } from './string';
+import { decodeHTML, pad, truncate } from './string';
 
 describe('#decodeHTML', () => {
   it('replaces &lt; with <', () => {
@@ -49,5 +49,21 @@ describe('truncate', () => {
 
   it('does not truncate a string if it equals the limit', () => {
     expect(truncate('foo', 3)).toEqual('foo');
+  });
+});
+
+describe('pad', () => {
+  it('pads the string with 0', () => {
+    expect(pad('1', 2)).toEqual('01');
+    expect(pad('1', 3)).toEqual('001');
+    expect(pad('1', 4)).toEqual('0001');
+    expect(pad('1', 5)).toEqual('00001');
+  });
+
+  it('does nothing if string has the required length', () => {
+    expect(pad('11', 2)).toEqual('11');
+    expect(pad('111', 2)).toEqual('111');
+    expect(pad('1111', 2)).toEqual('1111');
+    expect(pad('11111', 2)).toEqual('11111');
   });
 });
