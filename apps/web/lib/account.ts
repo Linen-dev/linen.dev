@@ -19,7 +19,10 @@ interface CreateAccountParams {
 
 export function findAccount({ redirectDomain, logoUrl }: FindAccountParams) {
   return prisma.accounts.findFirst({
-    where: { redirectDomain: stripProtocol(redirectDomain), logoUrl },
+    where: {
+      redirectDomain: stripProtocol(redirectDomain).toLowerCase(),
+      logoUrl,
+    },
   });
 }
 
@@ -43,11 +46,11 @@ export function createAccount({
     data: {
       homeUrl,
       docsUrl,
-      redirectDomain: stripProtocol(redirectDomain),
+      redirectDomain: stripProtocol(redirectDomain).toLowerCase(),
       brandColor,
       logoUrl,
-      discordDomain,
-      slackDomain,
+      discordDomain: discordDomain?.toLowerCase(),
+      slackDomain: slackDomain?.toLowerCase(),
     },
   });
 }

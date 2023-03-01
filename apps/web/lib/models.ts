@@ -172,11 +172,12 @@ export const updateAccountRedirectDomain = async (
 ) => {
   return await prisma.accounts.update({
     where: { id: accountId },
-    data: { redirectDomain: stripProtocol(domain), communityUrl },
+    data: { redirectDomain: stripProtocol(domain).toLowerCase(), communityUrl },
   });
 };
 
-export const findAccountByPath = async (path: string) => {
+export const findAccountByPath = async (domain: string) => {
+  const path = domain.toLowerCase();
   return await prisma.accounts.findFirst({
     where: {
       OR: [

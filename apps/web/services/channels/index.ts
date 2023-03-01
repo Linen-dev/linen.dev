@@ -166,7 +166,7 @@ class ChannelsService {
     return await prisma.channels.create({
       data: {
         accountId,
-        channelName,
+        channelName: channelName.toLowerCase(),
         externalChannelId,
         hidden,
       },

@@ -5,6 +5,8 @@ export * from './integrations/users';
 
 export * from './api/channels';
 
+export * from './patterns';
+
 /*
   This package redefines enums from `schema.prisma`.
   Ideally this package should be considered as a source of truth

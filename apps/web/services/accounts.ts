@@ -37,7 +37,7 @@ export default class AccountsService {
         select: { id: true, users: true },
         data: {
           name,
-          slackDomain,
+          slackDomain: slackDomain?.toLowerCase(),
           auths: {
             connect: {
               email,
@@ -63,7 +63,7 @@ export default class AccountsService {
             createMany: {
               data: channelsToInsert.map((c) => ({
                 ...(c === 'default' && { default: true }),
-                channelName: c,
+                channelName: c.toLowerCase(),
                 externalChannelId: v4(),
               })),
             },
@@ -190,7 +190,7 @@ export default class AccountsService {
           logoSquareUrl,
           type,
           ...(redirectDomain && {
-            redirectDomain: stripProtocol(redirectDomain),
+            redirectDomain: stripProtocol(redirectDomain).toLowerCase(),
           }),
         }
       : freeAccount;

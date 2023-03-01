@@ -116,7 +116,9 @@ export default function Branding({
     if (!form) {
       return;
     }
-    const redirectDomain = stripProtocol(form.redirectDomain.value);
+    const redirectDomain = stripProtocol(
+      form.redirectDomain.value
+    ).toLowerCase();
     const googleAnalyticsId = form.googleAnalyticsId?.value;
     const brandColor = form.brandColor.value;
     const description = form.description.value;

@@ -19,7 +19,7 @@ export default function Form() {
         slackDomain: { value: string };
       };
       const name = target.name.value;
-      const slackDomain = target.slackDomain.value;
+      const slackDomain = target.slackDomain.value.toLowerCase();
 
       const response = await api.createAccount({
         name,
@@ -40,7 +40,7 @@ export default function Form() {
   async function addChannel() {
     const c = document.getElementById('channel') as HTMLInputElement;
     if (!!c.value && c.checkValidity()) {
-      setChannels(unique([...channels, c.value]));
+      setChannels(unique([...channels, c.value.toLowerCase()]));
       c.value = '';
     } else {
       return c.reportValidity();
@@ -96,7 +96,7 @@ export default function Form() {
             pattern: patterns.communityPath.source,
             required: true,
             title:
-              'Community path should start with letter and could contain letters, underscore, numbers and hyphens. e.g. linen-community',
+              'Community path should start with lower case letter and could contain lower case letters, underscore, numbers and hyphens. e.g. linen-community',
           }}
           value={suggestion}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -104,9 +104,9 @@ export default function Form() {
           }
         />
         <span className="text-xs">
-          Community path should start with letter and could contain letters,
-          underscore, numbers and hyphens. This will define the url to access
-          your community. e.g. linen.dev/s/cool-community
+          Community path should start with lower case letter and could contain
+          lower case letters, underscore, numbers and hyphens. This will define
+          the url to access your community. e.g. linen.dev/s/cool-community
         </span>
         <div className="p-4"></div>
 
@@ -127,7 +127,7 @@ export default function Form() {
             {...{
               pattern: patterns.channelName.source,
               title:
-                'Channels name should start with letter and could contain letters, underscore, numbers and hyphens. e.g. announcements',
+                'Channels name should start with lower case letter and could contain lower case letters, underscore, numbers and hyphens. e.g. announcements',
             }}
           />
           <Button onClick={() => addChannel()}>+</Button>

@@ -26,7 +26,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     const account = await updateAccount(accountId, {
       discordServerId: guild.id,
       name: guild.name,
-      discordDomain: createSlug(guild.name),
+      discordDomain: createSlug(guild.name).toLowerCase(),
       integration: AccountIntegration.DISCORD,
     });
 

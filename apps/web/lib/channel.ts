@@ -75,7 +75,7 @@ export async function createChannel({
   }
   return await prisma.channels.create({
     data: {
-      channelName: name,
+      channelName: name.toLowerCase(),
       accountId,
       externalChannelId,
       hidden,
@@ -89,7 +89,7 @@ export function renameChannel({ name, id }: RenameChannelParams) {
       id,
     },
     data: {
-      channelName: name,
+      channelName: name.toLowerCase(),
     },
   });
 }
