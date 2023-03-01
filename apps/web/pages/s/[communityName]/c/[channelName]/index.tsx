@@ -3,6 +3,6 @@ import { GetServerSidePropsContext } from 'next/types';
 import { channelGetServerSideProps } from 'services/channel';
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  return channelGetServerSideProps(context, false);
+  return channelGetServerSideProps(context, context.query.customDomain === '1');
 }
 export default Channel;

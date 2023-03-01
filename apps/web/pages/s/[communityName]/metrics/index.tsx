@@ -5,5 +5,5 @@ import { getMetricsServerSideProps } from 'services/metrics';
 export default Metrics;
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  return getMetricsServerSideProps(context, false);
+  return getMetricsServerSideProps(context, context.query.customDomain === '1');
 }

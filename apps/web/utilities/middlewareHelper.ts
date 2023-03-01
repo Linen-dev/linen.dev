@@ -68,7 +68,8 @@ export function rewrite({
   const communityName = getCommunityName(IS_PRODUCTION, hostname);
 
   if (!isTopLevelPathname(pathname) && communityName !== '') {
-    url.pathname = `/subdomain/${communityName}${pathname}`;
+    url.pathname = `/s/${communityName}${pathname}`;
+    url.searchParams.append('customDomain', '1');
     return { rewrite: url.toString() };
   }
 

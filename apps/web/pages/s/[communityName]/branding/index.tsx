@@ -5,5 +5,8 @@ import { getBrandingServerSideProps } from 'services/branding';
 export default Branding;
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  return getBrandingServerSideProps(context, false);
+  return getBrandingServerSideProps(
+    context,
+    context.query.customDomain === '1'
+  );
 }

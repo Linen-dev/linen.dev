@@ -5,5 +5,8 @@ import { getSettingsServerSideProps } from 'services/settings';
 export default Integrations;
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  return getSettingsServerSideProps(context, false);
+  return getSettingsServerSideProps(
+    context,
+    context.query.customDomain === '1'
+  );
 }
