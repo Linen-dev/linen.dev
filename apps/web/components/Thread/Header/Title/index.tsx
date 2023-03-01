@@ -5,6 +5,7 @@ import classNames from 'classnames';
 import styles from './index.module.css';
 import { ThreadState } from '@linen/types';
 import CheckIcon from 'components/icons/CheckIcon';
+import useKeyboard from '@linen/hooks/keyboard';
 
 enum Mode {
   Edit,
@@ -37,9 +38,30 @@ function getTitle({
   return title;
 }
 
+const INPUT_ID = 'thread-title';
+
 export default function Title({ title, state, manage, onSetTitle }: Props) {
   const [mode, setMode] = useState(Mode.Read);
   const text = getTitle({ title, closed: state === ThreadState.CLOSE });
+
+  useKeyboard(
+    {
+      onKeyUp(event) {
+        const node = event.target as HTMLInputElement;
+        if (
+          node?.id === INPUT_ID &&
+          event.key === 'Escape' &&
+          mode === Mode.Edit
+        ) {
+          event.preventDefault();
+          event.stopPropagation();
+          setMode(Mode.Read);
+        }
+      },
+    },
+    [mode]
+  );
+
   if (!manage) {
     return <div className={styles.title}>{text}</div>;
   }
@@ -51,7 +73,7 @@ export default function Title({ title, state, manage, onSetTitle }: Props) {
       {mode === Mode.Edit && (
         <TextInput
           className="text-lg font-bold"
-          id="title"
+          id={INPUT_ID}
           defaultValue={title || ''}
           onBlur={(event: React.ChangeEvent<HTMLInputElement>) => {
             setMode(Mode.Read);
