@@ -2,7 +2,7 @@ import { useState } from 'react';
 import classNames from 'classnames';
 import Draggable from './Draggable';
 import { getThreadUrl } from '../Pages/Channel/utilities/url';
-import { Toast, Tooltip, ConfirmationModal } from '@linen/ui';
+import { Toast, Tooltip, ConfirmationModal, ReminderModal } from '@linen/ui';
 import {
   Permissions,
   Settings,
@@ -24,7 +24,6 @@ import { FaVolumeMute } from '@react-icons/all-files/fa/FaVolumeMute';
 import { BiMessageCheck } from '@react-icons/all-files/bi/BiMessageCheck';
 import styles from './index.module.scss';
 import { Mode } from '@linen/hooks/mode';
-import ReminderModal from './ReminderModal';
 
 interface Props {
   className?: string;
@@ -180,7 +179,7 @@ export default function Actions({
               setModal(ModalView.REMINDER);
             }}
           >
-            <Tooltip className={styles.tooltip} text="Remind me">
+            <Tooltip className={styles.tooltip} text="Reminder">
               <FiClock />
             </Tooltip>
           </li>

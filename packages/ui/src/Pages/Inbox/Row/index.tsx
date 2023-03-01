@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import Avatar from '../../../Avatar';
-import { Permissions, SerializedThread } from '@linen/types';
+import { Permissions, ReminderTypes, SerializedThread } from '@linen/types';
 import Title from './Title';
 import Description from './Description';
 import Actions from './Actions';
@@ -16,6 +16,7 @@ interface Props {
   onClick(): void;
   onRead?(threadId: string): void;
   onMute?(threadId: string): void;
+  onRemind?(threadId: string, reminderType: ReminderTypes): void;
 }
 
 export default function Row({
@@ -27,6 +28,7 @@ export default function Row({
   onClick,
   onRead,
   onMute,
+  onRemind,
 }: Props) {
   const message = thread.messages[thread.messages.length - 1];
   return (
@@ -51,6 +53,7 @@ export default function Row({
         thread={thread}
         onRead={onRead}
         onMute={onMute}
+        onRemind={onRemind}
       />
     </div>
   );
