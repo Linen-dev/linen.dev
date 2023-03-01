@@ -1,6 +1,6 @@
 import { GetServerSideProps } from 'next';
 import Members, { Props } from 'components/Pages/Members';
-import { getMembersServerSideProps } from 'services/members';
+import { getMembersServerSideProps } from 'services/ssr/members';
 
 export default Members;
 

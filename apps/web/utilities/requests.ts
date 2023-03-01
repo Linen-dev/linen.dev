@@ -15,7 +15,7 @@ import type {
 import type * as AccountsTypes from 'server/routers/accounts.types';
 import type * as ThreadsTypes from 'server/routers/threads/types';
 import type * as MessagesTypes from 'server/routers/messages/types';
-import type { channelNextPageType } from 'services/channel.types';
+import { channelNextPageType } from 'services/channels/channelNextPage';
 
 const catchError = (e: { response: any }) => {
   const { response } = e;

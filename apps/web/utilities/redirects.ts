@@ -1,5 +1,4 @@
-import type { accounts } from '@linen/database';
-import { Settings, SerializedChannel } from '@linen/types';
+import { Settings, SerializedChannel, SerializedAccount } from '@linen/types';
 import { RedirectTo } from './response';
 import { appendProtocol } from '@linen/utilities/url';
 
@@ -33,18 +32,15 @@ export function resolveCrawlerRedirect({
 }
 
 export function shouldRedirectToDomain({
-  isCrawler,
   account,
   communityName,
   isSubdomainbasedRouting,
 }: {
-  isCrawler: boolean;
-  account: accounts;
+  account: SerializedAccount;
   communityName: string;
   isSubdomainbasedRouting: boolean;
 }) {
   if (process.env.SKIP_REDIRECT === 'true') return false;
-  if (!isCrawler) return false;
   return (
     account.premium &&
     !!account.redirectDomain &&
@@ -60,7 +56,7 @@ export function redirectChannelToDomain({
   channelName,
   channel,
 }: {
-  account: accounts;
+  account: SerializedAccount;
   communityName: string;
   settings: Settings;
   channelName: string;
@@ -87,7 +83,7 @@ export function redirectThreadToDomain({
   threadId,
   slug,
 }: {
-  account: accounts;
+  account: SerializedAccount;
   communityName: string;
   settings: Settings;
   threadId: string;
