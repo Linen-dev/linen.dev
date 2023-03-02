@@ -497,7 +497,6 @@ export default function Inbox({
     currentUser,
     allUsers,
     setThread,
-    setInbox,
     communityId,
     page,
     limit: LIMIT,
