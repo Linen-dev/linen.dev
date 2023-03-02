@@ -6,6 +6,7 @@ import UsersService from 'services/users';
 import { z } from 'zod';
 import { CredentialsSignin } from 'server/exceptions';
 import SignInMailer from 'mailers/SignInMailer';
+import { addHttpsToUrl } from '@linen/utilities/url';
 
 const localStrategy = new passportLocal.Strategy(
   { passReqToCallback: true },
@@ -54,9 +55,7 @@ export const magicLinkStrategy = new MagicLoginStrategy({
       if (!host) {
         throw new Error('Host header is not present');
       }
-      const url = host.startsWith('localhost')
-        ? `http://${host}${href}`
-        : `${host}${href}`;
+      const url = addHttpsToUrl(`${host}${href}`);
       const to = destination.split(',').shift()!;
       const result = await SignInMailer.send({
         to,
