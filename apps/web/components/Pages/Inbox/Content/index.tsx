@@ -197,51 +197,51 @@ export default function Inbox({
       });
   }
 
-  const onNewMessage = useCallback(
-    (payload: CommunityPushType) => {
-      const thread: SerializedThread =
-        payload.thread && JSON.parse(payload.thread);
-      const message: SerializedMessage =
-        payload.message && JSON.parse(payload.message);
-      const imitationId: string = payload.imitation_id;
-      if (page > 1) {
-        return;
+  const onNewMessage = (payload: CommunityPushType) => {
+    const thread: SerializedThread =
+      payload.thread && JSON.parse(payload.thread);
+    const message: SerializedMessage =
+      payload.message && JSON.parse(payload.message);
+    const imitationId: string = payload.imitation_id;
+    if (page > 1) {
+      return;
+    }
+    if (thread) {
+      if (currentUser.id === message.author?.id) {
+        return null;
       }
-      if (thread) {
-        setInbox((inbox) => {
-          const imitation = inbox.threads.find(({ id }) => id === imitationId);
-          if (imitation) {
-            return {
-              threads: inbox.threads.map((current) => {
-                if (current.id === imitationId) {
-                  return thread;
-                }
-                return current;
-              }),
-              total: inbox.total,
-            };
-          }
+      setInbox((inbox) => {
+        const imitation = inbox.threads.find(({ id }) => id === imitationId);
+        if (imitation) {
           return {
-            threads: [
-              thread,
-              ...inbox.threads.filter(({ id }) => id !== thread.id),
-            ].splice(0, 10),
+            threads: inbox.threads.map((current) => {
+              if (current.id === imitationId) {
+                return thread;
+              }
+              return current;
+            }),
             total: inbox.total,
           };
-        });
-      } else if (message) {
-        const thread = inbox.threads.find((t) => t.id === message.threadId);
-        if (thread) {
-          setInbox(prependThread(thread, message));
-        } else {
-          fetchThread(payload.thread_id).then((thread) =>
-            setInbox(prependThread(thread, message))
-          );
         }
+        return {
+          threads: [
+            thread,
+            ...inbox.threads.filter(({ id }) => id !== thread.id),
+          ].splice(0, 10),
+          total: inbox.total,
+        };
+      });
+    } else if (message) {
+      const thread = inbox.threads.find((t) => t.id === message.threadId);
+      if (thread) {
+        setInbox(prependThread(thread, message));
+      } else {
+        fetchThread(payload.thread_id).then((thread) =>
+          setInbox(prependThread(thread, message))
+        );
       }
-    },
-    [currentUser?.id]
-  );
+    }
+  };
 
   const onThreadMessage = (
     threadId: string,
