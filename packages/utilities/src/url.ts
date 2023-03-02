@@ -1,3 +1,5 @@
+const isProd = () => process.env.NODE_ENV === 'production';
+
 export function stripProtocol(url: string): string {
   return url.replace(/^https?:\/\//, '');
 }
@@ -7,12 +9,12 @@ export function normalizeUrl(url: string): string {
 }
 
 export const appendProtocol = (host: string) =>
-  (process.env.NODE_ENV === 'development' ? 'http' : 'https') + '://' + host;
+  `${isProd() ? 'https' : 'http'}://${host}`;
 
 // TODO: Should handle this on validation/save when creating an account
 export const addHttpsToUrl = (url: string) => {
   if (!url.startsWith('http://') && !url.startsWith('https://')) {
-    return `https://${url}`;
+    return appendProtocol(url);
   }
   return url;
 };
