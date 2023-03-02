@@ -1,5 +1,7 @@
+import React from 'react';
 import Example from '../Example';
-import { Button, ButtonGroup } from '@linen/ui';
+import Button from '../../../Button';
+import ButtonGroup from '../../../ButtonGroup';
 
 export default function ButtonGroupExample() {
   return (

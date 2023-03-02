@@ -1,6 +1,6 @@
-import { Message } from '@linen/ui';
+import React from 'react';
+import Message from '../../../Message';
 import Example from '../Example';
-
 import { MessageFormat } from '@linen/types';
 
 const STACK_TRACE_EXAMPLE = `
