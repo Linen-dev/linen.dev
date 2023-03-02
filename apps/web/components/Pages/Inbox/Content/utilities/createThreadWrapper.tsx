@@ -45,7 +45,6 @@ export function createThreadWrapper({
   currentUser,
   allUsers,
   setThread,
-  setInbox,
   communityId,
   page,
   limit,
@@ -53,7 +52,6 @@ export function createThreadWrapper({
   currentUser: SerializedUser;
   allUsers: SerializedUser[];
   setThread: React.Dispatch<React.SetStateAction<SerializedThread | undefined>>;
-  setInbox: React.Dispatch<React.SetStateAction<InboxResponse>>;
   communityId: string;
   page: number;
   limit: number;
@@ -125,20 +123,6 @@ export function createThreadWrapper({
       return thread;
     });
 
-    setInbox((inbox) => {
-      if (page === 1) {
-        const threads = [imitation, ...inbox.threads];
-        if (threads.length > limit) {
-          threads.pop();
-        }
-        return {
-          ...inbox,
-          threads,
-        };
-      }
-      return inbox;
-    });
-
     return debouncedCreateThread({
       message,
       title,
@@ -160,18 +144,6 @@ export function createThreadWrapper({
           }
 
           return current;
-        });
-
-        setInbox((inbox: InboxResponse) => {
-          return {
-            ...inbox,
-            threads: [
-              thread,
-              ...inbox.threads.filter((current) => {
-                return current.id !== thread.id && current.id !== imitationId;
-              }),
-            ],
-          };
         });
       }
     );
