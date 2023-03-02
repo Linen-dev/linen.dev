@@ -108,6 +108,7 @@ export default function IntegrationsPage({
         />
         <hr className="my-3" />
         <ChannelVisibilityRow
+          currentCommunity={currentCommunity}
           channels={sortedChannels}
           onChange={onChannelsVisibilityChange}
         />
