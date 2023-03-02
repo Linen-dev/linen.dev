@@ -1,15 +1,27 @@
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import classNames from 'classnames';
-import { SerializedChannel } from '@linen/types';
+import { SerializedAccount, SerializedChannel } from '@linen/types';
 import { Toggle } from '@linen/ui';
 import styles from './index.module.scss';
+import { getChannelsStats } from 'utilities/requests';
 
 interface Props {
   channels: SerializedChannel[];
   onChange: (event: any) => Promise<void>;
+  currentCommunity: SerializedAccount;
 }
 
-export default function ChannelVisibilityRow({ channels, onChange }: Props) {
+export default function ChannelVisibilityRow({
+  channels,
+  onChange,
+  currentCommunity,
+}: Props) {
+  const { data } = useChannelsStats(currentCommunity.id);
+
+  function getStats(id: string) {
+    return data?.find((d) => d.id === id)?.stats || 'loading stats...';
+  }
+
   return (
     <div className="flex">
       <div className="grow">
@@ -45,7 +57,7 @@ export default function ChannelVisibilityRow({ channels, onChange }: Props) {
                   />
                   {channel.channelName}{' '}
                   <label className="text-xs text-gray-400 italic">
-                    {channel.stats}
+                    {getStats(channel.id)}
                   </label>
                 </label>
 
@@ -62,3 +74,29 @@ export default function ChannelVisibilityRow({ channels, onChange }: Props) {
     </div>
   );
 }
+
+const useChannelsStats = (accountId: string) => {
+  const [value, setValue] = useState<
+    | {
+        stats: string;
+        id: string;
+      }[]
+    | null
+  >(null);
+
+  const execute = useCallback(async () => {
+    setValue(null);
+    try {
+      const response = await getChannelsStats({ accountId });
+      setValue(response);
+    } catch (error: any) {
+      console.error(error);
+    }
+  }, [accountId]);
+
+  useEffect(() => {
+    execute();
+  }, [execute]);
+
+  return { data: value };
+};

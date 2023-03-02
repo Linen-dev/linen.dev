@@ -62,6 +62,19 @@ channelsRouter.get(
   }
 );
 
+channelsRouter.get(
+  `${prefix}/stats`,
+  tenantMiddleware([Roles.ADMIN, Roles.OWNER]),
+  async (
+    req: AuthedRequestWithTenantAndBody<{}>,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const channels = await ChannelsService.findWithStats(req.tenant?.id!);
+    return res.json(channels);
+  }
+);
+
 channelsRouter.post(
   `${prefix}/:channelId/integrations`,
   tenantMiddleware([Roles.ADMIN, Roles.OWNER]),

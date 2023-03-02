@@ -29,7 +29,7 @@ export async function getSettingsServerSideProps(
     );
   }
 
-  const channels = await ChannelsService.findWithStats(community.id);
+  const channels = await ChannelsService.find(community.id);
   const settings = serializeSettings(community);
   const communities = await CommunitiesService.find(context.req, context.res);
 

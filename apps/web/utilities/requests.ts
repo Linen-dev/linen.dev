@@ -149,6 +149,15 @@ export const getChannelIntegrations = ({
   externalId: string;
 }> => get(`/api/channels/${channelId}/integrations?${qs(props)}`);
 
+export const getChannelsStats = (props: {
+  accountId: string;
+}): Promise<
+  {
+    stats: string;
+    id: string;
+  }[]
+> => get(`/api/channels/stats?${qs(props)}`);
+
 export const postChannelIntegrations = ({
   channelId,
   ...props

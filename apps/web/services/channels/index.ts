@@ -1,5 +1,6 @@
 import { channels, channelsIntegrationType, prisma } from '@linen/database';
 import { channelPutIntegrationType } from '@linen/types';
+import { formatDistance } from '@linen/utilities/date';
 
 class ChannelsService {
   static async find(communityId: string): Promise<channels[]> {
@@ -10,12 +11,11 @@ class ChannelsService {
     });
   }
 
-  static async findWithStats(
-    communityId: string
-  ): Promise<(channels & { lastThreadAt?: bigint; threadCount: number })[]> {
+  static async findWithStats(communityId: string) {
     return await prisma.channels
       .findMany({
-        include: {
+        select: {
+          id: true,
           _count: { select: { threads: true } },
           threads: {
             take: 1,
@@ -28,12 +28,19 @@ class ChannelsService {
         },
       })
       .then((channels) =>
-        channels.map(({ threads, _count, ...channel }) => {
-          return {
-            ...channel,
-            lastThreadAt: threads.find(Boolean)?.sentAt,
-            threadCount: _count.threads,
-          };
+        channels.map(({ threads, _count, id }) => {
+          const lastThreadAt = threads.find(Boolean)?.sentAt;
+          const threadCount = _count.threads;
+
+          let stats = `${threadCount} thread${threadCount > 1 ? 's' : ''}`;
+
+          if (lastThreadAt) {
+            const date = new Date(
+              Math.floor(Number(lastThreadAt))
+            ).toISOString();
+            stats += `, latest from ${formatDistance(date)}`;
+          }
+          return { stats, id };
         })
       );
   }
