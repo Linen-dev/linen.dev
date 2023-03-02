@@ -1,5 +1,6 @@
+import React from 'react';
 import Example from '../Example';
-import Alert from '../../../components/Alert';
+import Alert from '../../../../../../apps/web/components/Alert';
 
 export default function AlertExample() {
   return (

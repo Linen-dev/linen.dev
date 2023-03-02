@@ -1,5 +1,6 @@
+import React from 'react';
 import Example from '../Example';
-import Textarea from 'components/Textarea';
+import Textarea from '../../../../../../apps/web/components/Textarea';
 
 export default function TextareaExample() {
   return (

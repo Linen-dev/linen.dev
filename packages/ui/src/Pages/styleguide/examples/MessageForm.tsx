@@ -1,5 +1,6 @@
+import React from 'react';
 import Example from '../Example';
-import MessageForm from 'components/MessageForm';
+import MessageForm from '../../../../../../apps/web/components/MessageForm';
 
 export default function MessageFormExample() {
   return (

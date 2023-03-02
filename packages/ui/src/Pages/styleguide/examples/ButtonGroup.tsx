@@ -1,3 +1,4 @@
+import React from 'react';
 import Example from '../Example';
 import { Button, ButtonGroup } from '@linen/ui';
 

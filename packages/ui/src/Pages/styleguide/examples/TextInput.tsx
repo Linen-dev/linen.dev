@@ -1,3 +1,4 @@
+import React from 'react';
 import Example from '../Example';
 import { TextInput } from '@linen/ui';
 import { AiOutlineSearch } from '@react-icons/all-files/ai/AiOutlineSearch';

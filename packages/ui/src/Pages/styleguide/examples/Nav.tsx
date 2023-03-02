@@ -1,3 +1,4 @@
+import React from 'react';
 import Example from '../Example';
 import { Nav } from '@linen/ui';
 import { FiInbox } from '@react-icons/all-files/fi/FiInbox';
