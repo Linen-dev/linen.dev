@@ -138,6 +138,16 @@ export default function Channel(props: ChannelProps) {
         if (!currentUser) {
           return false;
         }
+        function scrollToBottomThread(threadId: string) {
+          const node = document.getElementById(`channel-thread-${threadId}`);
+          const layout = document.getElementById('sidebar-layout-left');
+          const footer = document.getElementById('chat-layout-footer');
+          if (node && layout && footer) {
+            node.scrollIntoView({ block: 'end' });
+            const offset = footer.clientHeight;
+            layout.scrollTop = layout.scrollTop + offset;
+          }
+        }
         function selectPreviousThread() {
           const index = threads.findIndex(
             (thread) => thread.id === currentThreadId
@@ -145,6 +155,7 @@ export default function Channel(props: ChannelProps) {
           if (index > 0) {
             const threadId = threads[index - 1].id;
             setCurrentThreadId(threadId);
+            scrollToBottomThread(threadId);
           }
         }
 
@@ -155,6 +166,7 @@ export default function Channel(props: ChannelProps) {
           if (index < threads.length - 1) {
             const threadId = threads[index + 1].id;
             setCurrentThreadId(threadId);
+            scrollToBottomThread(threadId);
           }
         }
 

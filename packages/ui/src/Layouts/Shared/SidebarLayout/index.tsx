@@ -23,12 +23,17 @@ function SidebarLayout({
   return (
     <>
       {(!isMobile || !right) && (
-        <div className={styles.left} onScroll={onLeftScroll} ref={leftRef}>
+        <div
+          id="sidebar-layout-left"
+          className={styles.left}
+          onScroll={onLeftScroll}
+          ref={leftRef}
+        >
           {left}
         </div>
       )}
       {right && (
-        <div className={styles.right}>
+        <div id="sidebar-layout-right" className={styles.right}>
           <div
             className={styles.content}
             onScroll={onRightScroll}
