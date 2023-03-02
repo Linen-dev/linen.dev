@@ -1,6 +1,8 @@
 import { users, prisma } from '@linen/database';
 
-export default async function createUser(options?: object): Promise<users> {
+export default async function createUser(
+  options?: Partial<users>
+): Promise<users> {
   return prisma.users.create({
     data: {
       displayName: 'John Doe',
