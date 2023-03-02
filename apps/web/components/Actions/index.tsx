@@ -268,7 +268,7 @@ export default function Actions({
             event.stopPropagation();
             event.preventDefault();
             copyToClipboard(text);
-            Toast.success('Copied to clipboard', text);
+            Toast.success('Copied to clipboard');
           }}
         >
           <Tooltip className={styles.tooltip} text="URL">

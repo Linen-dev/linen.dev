@@ -1,46 +1,41 @@
 import React from 'react';
 import classNames from 'classnames';
 import { Toaster, toast } from 'react-hot-toast';
-import { GoCheck } from '@react-icons/all-files/go/GoCheck';
-import { GoInfo } from '@react-icons/all-files/go/GoInfo';
-import { GoAlert } from '@react-icons/all-files/go/GoAlert';
+import { FiCheckSquare } from '@react-icons/all-files/fi/FiCheckSquare';
+import { FiInfo } from '@react-icons/all-files/fi/FiInfo';
+import { FiAlertTriangle } from '@react-icons/all-files/fi/FiAlertTriangle';
 import styles from './index.module.scss';
 
-function custom({
-  message,
-  description,
-  icon,
-}: {
-  message: string;
-  description?: string;
-  icon?: React.ReactNode;
-}) {
-  toast.custom(() => (
-    <div className={styles.container}>
-      <div className={styles.toast}>
-        {icon}
-        <p className={styles.message}>{message}</p>
-      </div>
-      {description && <p className={styles.description}>{description}</p>}
-    </div>
-  ));
-}
-
 const icons = {
-  success: <GoCheck className={classNames(styles.icon, styles.green)} />,
-  error: <GoAlert className={classNames(styles.icon, styles.red)} />,
-  info: <GoInfo className={classNames(styles.icon, styles.blue)} />,
+  success: <FiCheckSquare className={classNames(styles.icon, styles.green)} />,
+  error: <FiAlertTriangle className={classNames(styles.icon, styles.red)} />,
+  info: <FiInfo className={classNames(styles.icon, styles.blue)} />,
+};
+
+const style = {
+  color: '#374151',
+  fontSize: '14px',
+  fontWeight: 500,
 };
 
 const Toast = {
-  success(message: string, description?: string) {
-    custom({ message, description, icon: icons.success });
+  success(message: string) {
+    toast.success(message, {
+      style,
+      icon: icons.success,
+    });
   },
-  error(message: string, description?: string) {
-    custom({ message, description, icon: icons.error });
+  error(message: string) {
+    toast.error(message, {
+      style,
+      icon: icons.error,
+    });
   },
-  info(message: string, description?: string) {
-    custom({ message, description, icon: icons.info });
+  info(message: string) {
+    toast.success(message, {
+      style,
+      icon: icons.info,
+    });
   },
   ToastContext: Toaster,
 };

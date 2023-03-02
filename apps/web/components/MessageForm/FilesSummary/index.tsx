@@ -25,7 +25,7 @@ export default function FilesSummary({ uploading, progress, uploads }: Props) {
               className={styles.file}
               onClick={() => {
                 copyToClipboard(file.url);
-                Toast.info('Copied url to clipboard.');
+                Toast.success('Copied to clipboard');
               }}
             >
               File {index + 1}

@@ -1,50 +1,27 @@
 @import '../colors.scss';
 
-.container {
-  background-color: white;
-  border-radius: 0.5rem;
-  box-shadow: 0 2px 4px $color-border;
-  max-width: 24rem;
-  overflow: hidden;
-  padding: 1rem;
-  pointer-events: auto;
-  transition: 0.2s ease-in all;
-  width: 100%;
-  z-index: 10;
-}
-
-.toast {
-  align-items: center;
-  display: flex;
-  gap: 0.5rem;
-}
-
 .icon {
-  height: 1.5rem;
-  width: 1.5rem;
+  height: 1.25rem;
+  width: 1.25rem;
 }
 
 .green {
-  color: $color-green-500;
+  color: $color-green-400;
+  animation: fadein 1s;
 }
 
 .red {
-  color: $color-red-500;
+  color: $color-red-400;
+  animation: fadein 1s;
 }
 
 .blue {
-  color: $color-blue-500;
+  color: $color-blue-400;
+  animation: fadein 1s;
 }
 
-.message {
-  color: $color-gray-900;
-  font-weight: 500;
-  font-size: 0.875rem;
-  line-height: 1.25rem;
+@keyframes fadein {
+  from {bottom: 0; opacity: 0;}
+  to {bottom: 30px; opacity: 1;}
 }
 
-.description {
-  color: $color-gray-700;
-  font-size: 0.75rem;
-  line-height: 1rem;
-}

@@ -7,11 +7,7 @@ export default function TextareaExample() {
     <Example header="Toast">
       <Example description="Toasts can have different states.">
         <div>
-          <Button
-            onClick={() => Toast.success('Lorem ipsum', 'dolor sit amet')}
-          >
-            Success
-          </Button>
+          <Button onClick={() => Toast.success('Lorem ipsum')}>Success</Button>
         </div>
         <div>
           <Button onClick={() => Toast.error('Lorem ipsum')}>Error</Button>
