@@ -4,8 +4,8 @@ module.exports = {
   apps: [
     {
       name: 'nextjs',
-      script: 'npm run dev',
-      cwd: '../apps/web',
+      script: 'yarn turbo --filter=@linen/web... dev',
+      cwd: '..',
       env: {
         PORT: 80,
       },
@@ -14,11 +14,6 @@ module.exports = {
       name: 'queue',
       script: 'npx tsx watch queue/index.ts',
       cwd: '../apps/web',
-    },
-    {
-      name: 'packages',
-      script: 'yarn turbo --filter=@linen/web^... dev',
-      cwd: '..',
     },
     {
       name: 'push-service',
