@@ -79,7 +79,7 @@ describe('user.notification', function () {
           id: notification.id,
           notificationType: notification.notificationType,
           threadId: notification.threadId,
-          url: `https:///s/${mockAccount.slackDomain}/t/${mockThread1.incrementId}`,
+          url: `http:///s/${mockAccount.slackDomain}/t/${mockThread1.incrementId}`,
         });
       },
     });

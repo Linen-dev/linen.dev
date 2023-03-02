@@ -119,8 +119,8 @@ describe('notification service', () => {
 
     const links = result?.links?.map((e: any) => e.url);
     expect(links).toStrictEqual([
-      `https://${mockCommunity.redirectDomain}/t/${mockThread2.incrementId}`,
-      `https://${mockCommunity.redirectDomain}/t/${mockThread1.incrementId}`,
+      `http://${mockCommunity.redirectDomain}/t/${mockThread2.incrementId}`,
+      `http://${mockCommunity.redirectDomain}/t/${mockThread1.incrementId}`,
     ]);
   });
 
