@@ -14,7 +14,9 @@ function ChatLayout({ content, footer, onDrop }: Props) {
       <div className={styles.main}>
         <div className={styles.content}>{content}</div>
       </div>
-      <div className={styles.footer}>{footer}</div>
+      <div id="chat-layout-footer" className={styles.footer}>
+        {footer}
+      </div>
     </div>
   );
 }
