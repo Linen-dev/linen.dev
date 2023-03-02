@@ -3,6 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { createInvitation, updateInvitation } from 'services/invites';
 import PermissionsService from 'services/permissions';
 import { Roles } from '@linen/types';
+import { addHttpsToUrl } from '@linen/utilities/url';
 
 type Props = { communityId: string };
 
@@ -32,7 +33,9 @@ export default async function handler(
     return response.status(401).json({});
   }
 
-  const host = getCurrentUrl(request);
+  const host = addHttpsToUrl(
+    request.headers.origin || request.headers.host || getCurrentUrl(request)
+  );
 
   if (request.method === 'POST') {
     const { communityId, email, role }: PostProps = body;
