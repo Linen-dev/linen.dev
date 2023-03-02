@@ -1,5 +1,6 @@
+import React from 'react';
 import Example from '../Example';
-import { Textarea } from '@linen/ui';
+import Textarea from '../../../Textarea';
 
 export default function TextareaExample() {
   return (
