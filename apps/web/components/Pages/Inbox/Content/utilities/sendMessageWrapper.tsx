@@ -140,15 +140,19 @@ export function sendMessageWrapper({
           if (index >= 0) {
             return thread;
           }
-          return {
-            ...thread,
-            messages: [
-              ...thread.messages.filter(
-                (message: SerializedMessage) => message.id !== imitationId
-              ),
-              message,
-            ],
-          };
+          if (thread.id === threadId) {
+            return {
+              ...thread,
+              messages: [
+                ...thread.messages.filter(
+                  (message: SerializedMessage) => message.id !== imitationId
+                ),
+                message,
+              ],
+            };
+          }
+
+          return thread;
         });
 
         setInbox((inbox) => {
