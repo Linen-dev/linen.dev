@@ -443,11 +443,14 @@ export default function Inbox({
       },
     })
       .then(() => {
-        fetchInbox({ communityName, page, configuration, limit: LIMIT }).then(
-          (inbox) => {
-            setInbox(inbox);
-          }
-        );
+        return fetchInbox({
+          communityName,
+          page,
+          configuration,
+          limit: LIMIT,
+        }).then((inbox) => {
+          setInbox(inbox);
+        });
       })
       .finally(() => {
         setLoading(false);

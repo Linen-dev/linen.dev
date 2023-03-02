@@ -68,7 +68,10 @@ export default function App(props: AppProps) {
       </Head>
 
       <SWRConfig>
-        <Toast.ToastContext />
+        <Toast.ToastContext
+          containerStyle={{ bottom: '2rem', left: '2rem' }}
+          position="bottom-left"
+        />
         <JoinContext>
           <UsersContext>
             <Component {...pageProps} />

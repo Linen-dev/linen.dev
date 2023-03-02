@@ -16,7 +16,7 @@ export default function CopyToClipboardIcon({ getText }: Props) {
         event.stopPropagation();
         event.preventDefault();
         copyToClipboard(text);
-        Toast.success('Copied to clipboard', text);
+        Toast.success('Copied to clipboard');
       }}
     />
   );
