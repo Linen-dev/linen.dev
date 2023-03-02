@@ -218,6 +218,13 @@ class ThreadsServices {
             messageFormat: MessageFormat.LINEN,
           },
         },
+        userThreadStatus: {
+          create: {
+            read: true,
+            muted: false,
+            userId: authorId,
+          },
+        },
       },
       include: {
         messages: {
