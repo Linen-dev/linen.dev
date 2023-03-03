@@ -20,6 +20,7 @@ export interface Props {
   settings: Settings;
   permissions: Permissions;
   isSubDomainRouting: boolean;
+  dms: SerializedChannel[];
 }
 
 export interface MembersType {
@@ -203,6 +204,7 @@ export default function Members({
   permissions,
   currentCommunity,
   isSubDomainRouting,
+  dms,
 }: Props) {
   const [users, setUsers] = useState<MembersType[]>([]);
   const router = useRouter();
@@ -254,6 +256,7 @@ export default function Members({
       permissions={permissions}
       isSubDomainRouting={isSubDomainRouting}
       className="w-full"
+      dms={dms}
     >
       <Header />
       <div className="p-3">

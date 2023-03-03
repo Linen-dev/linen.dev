@@ -25,6 +25,7 @@ interface Props {
   currentChannel?: SerializedChannel;
   currentCommunity: SerializedAccount;
   channels: SerializedChannel[];
+  dms: SerializedChannel[];
   communities: SerializedAccount[];
   settings: Settings;
   isSubDomainRouting: boolean;
@@ -55,6 +56,7 @@ function PageLayout({
   isSubDomainRouting,
   permissions,
   innerRef,
+  dms,
   onDrop,
 }: Props) {
   const channels = initialChannels.filter((c: SerializedChannel) => !c.hidden);
@@ -115,6 +117,7 @@ function PageLayout({
           channelName={currentChannel?.channelName || ''}
           permissions={permissions}
           onDrop={onDrop}
+          dms={dms}
         />
         <div
           className={

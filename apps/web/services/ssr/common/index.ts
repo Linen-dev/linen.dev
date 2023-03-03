@@ -8,6 +8,7 @@ import { GetServerSidePropsContext } from 'next';
 import { Permissions } from '@linen/types';
 import serializeAccount from 'serializers/account';
 import serializeChannel from 'serializers/channel';
+import { getDMs } from 'lib/channel';
 
 type validatePermissionsResponse = {
   redirect: Boolean;
@@ -39,14 +40,24 @@ export async function ssr(
   const settings = serializeSettings(community);
   const communities = await CommunitiesService.find(context.req, context.res);
 
+  const currentCommunity = serializeAccount(community);
+
+  const dms = !!permissions.user?.id
+    ? await getDMs({
+        accountId: currentCommunity.id,
+        userId: permissions.user.id,
+      })
+    : [];
+
   return {
     props: {
       token: permissions.token,
-      currentCommunity: serializeAccount(community),
+      currentCommunity,
       channels: channels.map(serializeChannel),
       communities: communities.map(serializeAccount),
       permissions,
       settings,
+      dms,
     },
   };
 }

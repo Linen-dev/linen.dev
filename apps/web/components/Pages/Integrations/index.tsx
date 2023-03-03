@@ -25,6 +25,7 @@ export interface Props {
   permissions: Permissions;
   settings: Settings;
   isSubDomainRouting: boolean;
+  dms: SerializedChannel[];
 }
 
 const debouncedChannelsVisibilityUpdate = debounce(
@@ -44,6 +45,7 @@ export default function IntegrationsPage({
   settings,
   permissions,
   isSubDomainRouting,
+  dms,
 }: Props) {
   const [channels, setChannels] =
     useState<SerializedChannel[]>(initialChannels);
@@ -89,6 +91,7 @@ export default function IntegrationsPage({
       settings={settings}
       isSubDomainRouting={isSubDomainRouting}
       className="w-full"
+      dms={dms}
     >
       <Header />
       <div className={styles.container}>

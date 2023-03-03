@@ -11,6 +11,7 @@ import type {
   SerializedChannel,
   getChannelIntegrationsType,
   postChannelIntegrationsType,
+  createDmType,
 } from '@linen/types';
 import type * as AccountsTypes from 'server/routers/accounts.types';
 import type * as ThreadsTypes from 'server/routers/threads/types';
@@ -164,3 +165,6 @@ export const postChannelIntegrations = ({
 }: postChannelIntegrationsType): Promise<{
   id: string;
 }> => post(`/api/channels/${channelId}/integrations`, props);
+
+export const createDm = (props: createDmType): Promise<SerializedChannel> =>
+  post(`/api/channels/dm`, props);

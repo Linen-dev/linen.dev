@@ -1,1 +1,1 @@
-export { ThreadPage } from './ThreadPage';
+export { ThreadPage, type Props } from './ThreadPage';

@@ -1,10 +1,34 @@
 import PageLayout from 'components/layout/PageLayout';
-import { ThreadByIdProp } from '../../../types/apiResponses/threads/[threadId]';
+import {
+  Permissions,
+  SerializedAccount,
+  SerializedChannel,
+  SerializedThread,
+  Settings,
+} from '@linen/types';
 import { useRef } from 'react';
 import { buildThreadSeo, buildStructureData } from 'utilities/seo';
 import Content from './Content';
 import ButtonPagination from 'components/ButtonPagination';
 import CustomLinkHelper from 'components/Link/CustomLinkHelper';
+
+export interface Props {
+  isBot?: boolean;
+  isSubDomainRouting: boolean;
+  permissions: Permissions;
+  communities: SerializedAccount[];
+  pagination: {
+    next: any;
+    prev: any;
+  } | null;
+  thread: SerializedThread;
+  currentChannel: SerializedChannel;
+  currentCommunity: SerializedAccount;
+  channels: SerializedChannel[];
+  threadUrl: string | null;
+  settings: Settings;
+  dms: SerializedChannel[];
+}
 
 export function ThreadPage({
   thread,
@@ -18,7 +42,8 @@ export function ThreadPage({
   settings,
   permissions,
   pagination,
-}: ThreadByIdProp) {
+  dms,
+}: Props) {
   const ref = useRef<HTMLDivElement>(null);
 
   return (
@@ -40,6 +65,7 @@ export function ThreadPage({
       isSubDomainRouting={isSubDomainRouting}
       permissions={permissions}
       innerRef={ref}
+      dms={dms}
     >
       {buildStructureData({ thread, isSubDomainRouting, settings })}
       <div className="flex flex-col w-full">

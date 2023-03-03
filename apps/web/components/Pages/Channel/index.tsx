@@ -37,6 +37,7 @@ export interface ChannelProps {
   settings: Settings;
   channelName: string;
   channels: SerializedChannel[];
+  dms: SerializedChannel[];
   communities: SerializedAccount[];
   currentChannel: SerializedChannel;
   currentCommunity: SerializedAccount;
@@ -92,6 +93,7 @@ export default function Channel(props: ChannelProps) {
     pathCursor,
     isBot,
     permissions,
+    dms,
   } = props;
 
   const [threads, setThreads] = useState<SerializedThread[]>(initialThreads);
@@ -819,6 +821,7 @@ export default function Channel(props: ChannelProps) {
         }),
       }}
       channels={channels}
+      dms={dms}
       communities={communities}
       currentCommunity={currentCommunity}
       settings={settings}

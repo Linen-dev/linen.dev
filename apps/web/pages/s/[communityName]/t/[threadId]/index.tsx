@@ -1,11 +1,10 @@
-import { ThreadPage } from 'components/Pages/ThreadPage';
-import { ThreadByIdProp } from 'types/apiResponses/threads/[threadId]';
+import { ThreadPage, Props } from 'components/Pages/ThreadPage';
 import { GetServerSideProps } from 'next';
 import { threadGetServerSideProps } from 'services/ssr/threads';
 
 export default ThreadPage;
 
-export const getServerSideProps: GetServerSideProps<ThreadByIdProp> = async (
+export const getServerSideProps: GetServerSideProps<Props> = async (
   context
 ) => {
   return threadGetServerSideProps(context, context.query.customDomain === '1');

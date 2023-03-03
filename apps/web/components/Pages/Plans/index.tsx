@@ -15,6 +15,7 @@ export interface Props {
   permissions: Permissions;
   settings: Settings;
   isSubDomainRouting: boolean;
+  dms: SerializedChannel[];
 }
 
 export enum Period {
@@ -29,6 +30,7 @@ export default function PlansPage({
   settings,
   currentCommunity,
   isSubDomainRouting,
+  dms,
 }: Props) {
   const tiers = [
     {
@@ -78,6 +80,7 @@ export default function PlansPage({
       settings={settings}
       permissions={permissions}
       isSubDomainRouting={isSubDomainRouting}
+      dms={dms}
     >
       <div className="mx-auto p-3">
         <div className="sm:flex sm:flex-col sm:align-center pt-10">

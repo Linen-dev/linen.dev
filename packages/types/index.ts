@@ -100,6 +100,7 @@ export interface SerializedAccount {
   discordServerId?: string;
   communityInviteUrl?: string;
   chat: ChatType | null;
+  communityUrl?: string;
 }
 
 export interface SerializedAttachment {

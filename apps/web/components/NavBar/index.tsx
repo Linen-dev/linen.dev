@@ -12,6 +12,7 @@ import styles from './index.module.scss';
 interface Props {
   mode: Mode;
   channels: SerializedChannel[];
+  dms: SerializedChannel[];
   channelName: string;
   communities: SerializedAccount[];
   permissions: Permissions;
@@ -34,6 +35,7 @@ export default function NavBar({
   channels,
   communities,
   permissions,
+  dms,
   onDrop,
 }: Props) {
   const sortedChannels = sortByChannelName(channels);
@@ -48,6 +50,7 @@ export default function NavBar({
           communities={communities}
           permissions={permissions}
           onDrop={onDrop}
+          dms={dms}
         />
       </div>
       <div className={styles.mobile}>

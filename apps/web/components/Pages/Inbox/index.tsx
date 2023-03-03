@@ -21,6 +21,7 @@ export interface Props {
   isSubDomainRouting: boolean;
   permissions: Permissions;
   settings: Settings;
+  dms: SerializedChannel[];
 }
 
 const fetchInbox = debounce(
@@ -73,6 +74,7 @@ export default function Inbox({
   isSubDomainRouting,
   permissions,
   settings,
+  dms,
 }: Props) {
   useEffect(() => {
     storage.set('pages.last', {
@@ -89,6 +91,7 @@ export default function Inbox({
       isSubDomainRouting={isSubDomainRouting}
       permissions={permissions}
       settings={settings}
+      dms={dms}
     >
       <Content
         fetchInbox={fetchInbox}
