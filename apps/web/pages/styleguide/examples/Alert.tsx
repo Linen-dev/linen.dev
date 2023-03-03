@@ -1,5 +1,5 @@
 import Example from '../Example';
-import Alert from '../../../components/Alert';
+import { Alert } from '@linen/ui';
 
 export default function AlertExample() {
   return (

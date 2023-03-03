@@ -1,4 +1,5 @@
 import Accordion from './Accordion';
+import Alert from './Alert';
 import Avatar from './Avatar';
 import Avatars from './Avatars';
 import Badge from './Badge';
@@ -32,6 +33,7 @@ import Pages from './Pages';
 
 export {
   Accordion,
+  Alert,
   Avatar,
   Avatars,
   Badge,
