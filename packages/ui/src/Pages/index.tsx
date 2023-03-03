@@ -1,3 +1,4 @@
 import Inbox from './Inbox';
+import Styleguide from './Styleguide';
 
-export default { Inbox };
+export default { Inbox, Styleguide };
