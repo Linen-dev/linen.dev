@@ -133,22 +133,15 @@ export function sendMessageWrapper({
           if (!thread) {
             return;
           }
-          const messageId = message.id;
-          const index = thread.messages.findIndex(
-            (message: SerializedMessage) => message.id === messageId
-          );
-          if (index >= 0) {
-            return thread;
-          }
           if (thread.id === threadId) {
             return {
               ...thread,
-              messages: [
-                ...thread.messages.filter(
-                  (message: SerializedMessage) => message.id !== imitationId
-                ),
-                message,
-              ],
+              messages: thread.messages.map((current: SerializedMessage) => {
+                if (current.id === imitationId) {
+                  return message;
+                }
+                return current;
+              }),
             };
           }
 
@@ -160,21 +153,16 @@ export function sendMessageWrapper({
             ...inbox,
             threads: inbox.threads.map((thread) => {
               if (thread.id === threadId) {
-                const messageId = message.id;
-                const index = thread.messages.findIndex(
-                  (message: SerializedMessage) => message.id === messageId
-                );
-                if (index >= 0) {
-                  return thread;
-                }
                 return {
                   ...thread,
-                  messages: [
-                    ...thread.messages.filter(
-                      (message: SerializedMessage) => message.id !== imitationId
-                    ),
-                    message,
-                  ],
+                  messages: thread.messages.map(
+                    (current: SerializedMessage) => {
+                      if (current.id === imitationId) {
+                        return message;
+                      }
+                      return current;
+                    }
+                  ),
                 };
               }
               return thread;
