@@ -27,12 +27,7 @@ export function anonymizeMessages(thread: ThreadWithMessages) {
   if (thread) {
     thread.messages = thread.messages.map((message) => {
       if (message.author) {
-        message.author = {
-          ...message.author,
-          displayName:
-            (message.author?.anonymousAlias as string) || 'anonymous',
-          profileImageUrl: null,
-        };
+        message.author = anonymizeUser(message.author);
       }
 
       return anonymizeMentions(message);
@@ -44,16 +39,19 @@ export function anonymizeMessages(thread: ThreadWithMessages) {
 function anonymizeMentions(message: Messages): any {
   if (message.mentions) {
     message.mentions = message.mentions.map((mention) => {
-      mention.users &&
-        (mention.users = {
-          ...mention.users,
-          displayName: mention.users.anonymousAlias || 'anonymous',
-          profileImageUrl: null,
-        });
+      mention.users && (mention.users = anonymizeUser(mention.users));
       return mention;
     });
   }
   return message;
+}
+
+export function anonymizeUser(users: users): users {
+  return {
+    ...users,
+    displayName: users.anonymousAlias || 'anonymous',
+    profileImageUrl: null,
+  };
 }
 
 export function anonymizeMessagesMentions(messages: Messages[]) {
