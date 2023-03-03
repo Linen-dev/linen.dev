@@ -16,6 +16,7 @@ export interface Props {
   communities: SerializedAccount[];
   permissions: Permissions;
   settings: Settings;
+  dms: SerializedChannel[];
 }
 
 export default function Metrics({
@@ -24,6 +25,7 @@ export default function Metrics({
   communities,
   settings,
   permissions,
+  dms,
 }: Props) {
   useEffect(() => {
     storage.set('pages.last', {
@@ -41,6 +43,7 @@ export default function Metrics({
       settings={settings}
       isSubDomainRouting={false}
       className="w-full"
+      dms={dms}
     >
       <Header />
       <Content communityId={currentCommunity.id} />

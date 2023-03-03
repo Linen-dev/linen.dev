@@ -32,10 +32,12 @@ import CommunityLink from './CommunityLink';
 import AddCommunityLink from './AddCommunityLink';
 import NewCommunityModal from './NewCommunityModal';
 import { timestamp } from '@linen/utilities/date';
+import { DMs } from './DMs';
 
 interface Props {
   mode: Mode;
   channels: SerializedChannel[];
+  dms: SerializedChannel[];
   channelName: string;
   communities: SerializedAccount[];
   permissions: Permissions;
@@ -68,6 +70,7 @@ export default function DesktopNavBar({
   channels,
   communities,
   permissions,
+  dms,
   onDrop,
 }: Props) {
   const router = useRouter();
@@ -167,6 +170,18 @@ export default function DesktopNavBar({
               <FiBarChart /> Metrics
             </Nav.Item>
           </Link>
+        )}
+        {currentUser && permissions.chat && (
+          <DMs
+            {...{
+              channelName,
+              debouncedUpdateReadStatus,
+              dms,
+              highlights,
+              permissions,
+              setHighlights,
+            }}
+          />
         )}
         <Nav.Label>
           Channels

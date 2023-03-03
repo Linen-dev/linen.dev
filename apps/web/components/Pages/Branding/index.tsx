@@ -74,6 +74,7 @@ export interface Props {
   permissions: Permissions;
   settings: Settings;
   isSubDomainRouting: boolean;
+  dms: SerializedChannel[];
 }
 
 export default function Branding({
@@ -83,6 +84,7 @@ export default function Branding({
   permissions,
   settings,
   isSubDomainRouting,
+  dms,
 }: Props) {
   const [records, setRecords] = useState<DNSRecord[]>();
   const router = useRouter();
@@ -151,6 +153,7 @@ export default function Branding({
       settings={settings}
       isSubDomainRouting={isSubDomainRouting}
       className="w-full"
+      dms={dms}
     >
       <Header />
       <form id="branding-form" onSubmit={onSubmit} className="p-3">

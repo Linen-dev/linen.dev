@@ -12,7 +12,6 @@ export default function ChannelForBots({
   isSubDomainRouting,
   currentChannel,
   currentCommunity,
-  channelName,
   pathCursor,
   channels,
   isBot,
@@ -37,6 +36,7 @@ export default function ChannelForBots({
       currentCommunity={currentCommunity}
       permissions={permissions}
       onDrop={() => {}}
+      dms={[]}
     >
       <ul className="divide-y w-full">
         <Grid
