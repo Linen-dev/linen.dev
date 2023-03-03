@@ -2,7 +2,6 @@ import serializeSettings from 'serializers/account/settings';
 import ChannelsService from 'services/channels';
 import CommunityService from 'services/community';
 import CommunitiesService from 'services/communities';
-import Session from 'services/session';
 import PermissionsService from 'services/permissions';
 import { qs } from '@linen/utilities/url';
 import { GetServerSidePropsContext } from 'next';
@@ -10,9 +9,14 @@ import { Permissions } from '@linen/types';
 import serializeAccount from 'serializers/account';
 import serializeChannel from 'serializers/channel';
 
+type validatePermissionsResponse = {
+  redirect: Boolean;
+  error: string;
+};
+
 export async function ssr(
   context: GetServerSidePropsContext,
-  validatePermissions: (permissions: Permissions) => Boolean
+  validatePermissions: (permissions: Permissions) => validatePermissionsResponse
 ) {
   const community = await CommunityService.find(context.params);
   if (!community) {
@@ -20,11 +24,12 @@ export async function ssr(
   }
 
   const permissions = await PermissionsService.for(context);
-  if (validatePermissions(permissions)) {
+  const isAllow = validatePermissions(permissions);
+  if (isAllow.redirect) {
     return {
       redirect: true,
       location: `/signin?${qs({
-        ...(permissions.auth?.id && { error: 'private' }),
+        error: isAllow.error,
         callbackUrl: context.req.url,
       })}`,
     };
@@ -46,14 +51,26 @@ export async function ssr(
   };
 }
 
-export function allowAccess(permissions: Permissions) {
-  return !permissions.access;
+export function allowAccess(
+  permissions: Permissions
+): validatePermissionsResponse {
+  return { redirect: !permissions.access, error: 'private' };
 }
 
-export function allowInbox(permissions: Permissions) {
-  return !permissions.access || !permissions.inbox;
+export function allowInbox(
+  permissions: Permissions
+): validatePermissionsResponse {
+  if (!permissions.access) {
+    return { redirect: true, error: 'private' };
+  }
+  return { redirect: !permissions.inbox, error: 'forbidden' };
 }
 
-export function allowManagers(permissions: Permissions) {
-  return !permissions.access || !permissions.manage;
+export function allowManagers(
+  permissions: Permissions
+): validatePermissionsResponse {
+  if (!permissions.access) {
+    return { redirect: true, error: 'private' };
+  }
+  return { redirect: !permissions.manage, error: 'forbidden' };
 }
