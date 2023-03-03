@@ -107,9 +107,21 @@ model channels {
   pages               Int?
   lastPageBuildAt     BigInt?
   channelsIntegration channelsIntegration[]
+  createdByUserId     String?
+  createdBy           users?                @relation(fields: [createdByUserId], references: [id])
+  type                ChannelType?          @default(PUBLIC)
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime?             @updatedAt
+  archived            Boolean               @default(false)
 
   @@unique([externalChannelId])
   @@index([accountId])
+}
+
+enum ChannelType {
+  PUBLIC
+  PRIVATE
+  DM
 }
 
 model channelsIntegration {
@@ -219,6 +231,7 @@ model memberships {
 
   usersId    String
   channelsId String
+  archived   Boolean?
 
   @@unique([usersId, channelsId])
   @@index([usersId])
@@ -247,7 +260,8 @@ model users {
   channelsIntegrationCreated channelsIntegration[] @relation("createdBy")
   channelsIntegrationUpdated channelsIntegration[] @relation("updatedBy")
 
-  userThreadStatus userThreadStatus[]
+  userThreadStatus  userThreadStatus[]
+  channelsCreatedBy channels[]
 
   @@unique([externalUserId, accountsId])
   @@index([authsId])

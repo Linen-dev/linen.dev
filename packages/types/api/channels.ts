@@ -44,3 +44,9 @@ export const postChannelIntegrationsSchema = z.object({
 export type postChannelIntegrationsType = z.infer<
   typeof postChannelIntegrationsSchema
 >;
+
+export const createDmSchema = z.object({
+  accountId: z.string().uuid(),
+  userId: z.string().uuid(),
+});
+export type createDmType = z.infer<typeof createDmSchema>;
