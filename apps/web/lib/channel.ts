@@ -1,5 +1,11 @@
-import { accounts, Prisma, prisma } from '@linen/database';
-import { SerializedChannel } from '@linen/types';
+import {
+  accounts,
+  channels,
+  ChannelType,
+  prisma,
+  users,
+} from '@linen/database';
+import serializeChannel from 'serializers/channel';
 
 interface FindChannelParams {
   name: string;
@@ -133,15 +139,18 @@ const channelSerialized = {
     hidden: true,
     accountId: true,
     pages: true,
+    type: true,
   },
 };
+
+// TODO: unit tests
 export async function findChannelsByAccount({
   isCrawler,
   account,
 }: {
   isCrawler: boolean;
   account: Partial<accounts>;
-}): Promise<SerializedChannel[]> {
+}) {
   // if crawler, get only channels with threads
   // for normal users, we may see channels empty (e.g. new channels)
   return await prisma.channels.findMany({
@@ -157,6 +166,46 @@ export async function findChannelsByAccount({
           },
         },
       }),
+      type: ChannelType.PUBLIC,
     },
   });
+}
+
+const serializeDm =
+  (me: string) =>
+  (
+    dm: channels & {
+      memberships: {
+        user: users;
+      }[];
+    }
+  ) => {
+    const { memberships, ...channel } = dm;
+    const user = memberships.find((m) => m.user.id !== me)?.user;
+    return serializeChannel({
+      ...channel,
+      channelName: user?.displayName!,
+    });
+  };
+
+export async function getDMs({
+  accountId,
+  userId,
+}: {
+  accountId: string;
+  userId: string;
+}) {
+  return await prisma.channels
+    .findMany({
+      include: {
+        memberships: { select: { user: true } },
+      },
+      where: {
+        accountId,
+        type: ChannelType.DM,
+        memberships: { some: { usersId: userId } },
+      },
+      orderBy: { createdAt: 'desc' },
+    })
+    .then((e) => e.map(serializeDm(userId)));
 }

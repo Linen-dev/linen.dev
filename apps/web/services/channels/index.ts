@@ -1,4 +1,9 @@
-import { channels, channelsIntegrationType, prisma } from '@linen/database';
+import {
+  channels,
+  channelsIntegrationType,
+  ChannelType,
+  prisma,
+} from '@linen/database';
 import { channelPutIntegrationType } from '@linen/types';
 import { formatDistance } from '@linen/utilities/date';
 
@@ -7,6 +12,8 @@ class ChannelsService {
     return prisma.channels.findMany({
       where: {
         accountId: communityId,
+        type: ChannelType.PUBLIC,
+        hidden: false,
       },
     });
   }
@@ -25,6 +32,7 @@ class ChannelsService {
         },
         where: {
           accountId: communityId,
+          type: { not: ChannelType.DM },
         },
       })
       .then((channels) =>

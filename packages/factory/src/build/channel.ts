@@ -11,6 +11,11 @@ export default function createChannel(options?: Partial<channels>): channels {
     externalPageCursor: null,
     lastPageBuildAt: null,
     pages: null,
+    archived: false,
+    createdByUserId: null,
+    type: 'PUBLIC',
+    createdAt: new Date(),
+    updatedAt: null,
     ...options,
   };
 }

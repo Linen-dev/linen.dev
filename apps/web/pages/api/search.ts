@@ -61,6 +61,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
           AND m."id" IS NOT NULL
           and m."threadId" is not null
           and c.hidden is false
+          and c.type = 'PUBLIC'
           AND textsearchable_index_col @@ websearch_to_tsquery('english', ${query})
       ORDER BY rank DESC
       LIMIT ${Number(limit)}

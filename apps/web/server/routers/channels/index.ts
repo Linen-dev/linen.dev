@@ -10,12 +10,14 @@ import {
 } from 'server/types';
 import { v4 } from 'uuid';
 import ChannelsService from 'services/channels';
-import { Prisma, prisma } from '@linen/database';
+import { ChannelType, prisma } from '@linen/database';
 import {
   bulkHideChannelsSchema,
   bulkHideChannelsType,
   createChannelSchema,
   createChannelType,
+  createDmSchema,
+  createDmType,
   getChannelIntegrationsSchema,
   getChannelIntegrationsType,
   postChannelIntegrationsType,
@@ -136,6 +138,54 @@ channelsRouter.post(
       accountId: req.tenant?.id!,
     });
     return res.status(200).json(serializeChannel(channel));
+  }
+);
+
+channelsRouter.post(
+  `${prefix}/dm`,
+  tenantMiddleware([Roles.ADMIN, Roles.OWNER, Roles.MEMBER]),
+  validationMiddleware(createDmSchema),
+  async (
+    req: AuthedRequestWithTenantAndBody<createDmType>,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const { userId } = req.body;
+
+    const dms = await prisma.channels.findMany({
+      include: { memberships: true },
+      where: {
+        accountId: req.tenant?.id!,
+        type: ChannelType.DM,
+        memberships: { some: { usersId: req.tenant_user?.id! } },
+      },
+    });
+
+    const exist = dms.find((dm) =>
+      dm.memberships.find((m) => m.usersId === userId)
+    );
+
+    if (exist) {
+      return res.status(200).json(serializeChannel(exist));
+    }
+
+    const uuid = v4();
+    const dm = await prisma.channels.create({
+      data: {
+        id: uuid,
+        channelName: uuid,
+        accountId: req.tenant?.id!,
+        createdByUserId: req.tenant_user?.id!,
+        type: ChannelType.DM,
+        memberships: {
+          createMany: {
+            data: [{ usersId: req.tenant_user?.id! }, { usersId: userId }],
+          },
+        },
+      },
+    });
+
+    return res.status(200).json(serializeChannel(dm));
   }
 );
 
