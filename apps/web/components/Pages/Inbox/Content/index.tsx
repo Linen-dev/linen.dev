@@ -499,7 +499,6 @@ export default function Inbox({
     setThread,
     communityId,
     page,
-    limit: LIMIT,
   });
 
   useKeyboard(

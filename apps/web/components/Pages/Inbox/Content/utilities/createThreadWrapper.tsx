@@ -8,10 +8,11 @@ import {
   UploadedFile,
 } from '@linen/types';
 import { username } from 'serializers/user';
-import { InboxResponse } from '../../types';
 import { v4 as uuid } from 'uuid';
 import debounce from '@linen/utilities/debounce';
 import * as api from 'utilities/requests';
+import { Toast } from '@linen/ui';
+import MessageSentToast from '../MessageSentToast';
 
 const debouncedCreateThread = debounce(
   ({
@@ -47,14 +48,12 @@ export function createThreadWrapper({
   setThread,
   communityId,
   page,
-  limit,
 }: {
   currentUser: SerializedUser;
   allUsers: SerializedUser[];
   setThread: React.Dispatch<React.SetStateAction<SerializedThread | undefined>>;
   communityId: string;
   page: number;
-  limit: number;
 }) {
   return async ({
     message,
@@ -116,36 +115,37 @@ export function createThreadWrapper({
       resolutionId: null,
     };
 
-    setThread((thread) => {
-      if (page === 1) {
-        return imitation;
-      }
-      return thread;
-    });
+    function onUndo() {
+      setThread((thread) => {
+        if (thread?.id === imitation.id) {
+          return undefined;
+        }
+        return thread;
+      });
+    }
 
-    return debouncedCreateThread({
-      message,
-      title,
-      files,
-      communityId,
-      channelId: channel.id,
-      imitationId: imitation.id,
-    }).then(
-      ({
-        thread,
-        imitationId,
-      }: {
-        thread: SerializedThread;
-        imitationId: string;
-      }) => {
-        setThread((current: any) => {
-          if (current.id === imitationId) {
-            return thread;
-          }
+    function onContinue() {
+      debouncedCreateThread({
+        message,
+        title,
+        files,
+        communityId,
+        channelId: channel.id,
+        imitationId: imitation.id,
+      });
+    }
 
-          return current;
-        });
-      }
+    const TIMEOUT = 2000;
+
+    Toast.success(
+      <MessageSentToast
+        onUndo={onUndo}
+        onContinue={onContinue}
+        timeout={TIMEOUT}
+      />,
+      { duration: TIMEOUT * 2 }
     );
+
+    return new Promise((resolve) => setTimeout(resolve, TIMEOUT));
   };
 }

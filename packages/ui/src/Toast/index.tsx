@@ -6,6 +6,10 @@ import { FiInfo } from '@react-icons/all-files/fi/FiInfo';
 import { FiAlertTriangle } from '@react-icons/all-files/fi/FiAlertTriangle';
 import styles from './index.module.scss';
 
+interface Options {
+  duration?: number;
+}
+
 const icons = {
   success: <FiCheckSquare className={classNames(styles.icon, styles.green)} />,
   error: <FiAlertTriangle className={classNames(styles.icon, styles.red)} />,
@@ -13,28 +17,33 @@ const icons = {
 };
 
 const style = {
-  color: '#374151',
+  background: 'black',
+  borderRadius: '4px',
+  color: 'white',
   fontSize: '14px',
-  fontWeight: 500,
+  fontWeight: 600,
 };
 
 const Toast = {
-  success(message: string) {
+  success(message: string, options?: Options) {
     toast.success(message, {
       style,
       icon: icons.success,
+      ...options,
     });
   },
-  error(message: string) {
+  error(message: string, options?: Options) {
     toast.error(message, {
       style,
       icon: icons.error,
+      ...options,
     });
   },
-  info(message: string) {
+  info(message: string, options?: Options) {
     toast.success(message, {
       style,
       icon: icons.info,
+      ...options,
     });
   },
   ToastContext: Toaster,
