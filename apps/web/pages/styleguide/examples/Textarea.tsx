@@ -1,5 +1,5 @@
 import Example from '../Example';
-import Textarea from 'components/Textarea';
+import { Textarea } from '@linen/ui';
 
 export default function TextareaExample() {
   return (

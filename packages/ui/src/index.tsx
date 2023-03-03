@@ -23,6 +23,7 @@ import ReminderModal from './ReminderModal';
 import Spinner from './Spinner';
 import StickyHeader from './StickyHeader';
 import Suggestions from './Suggestions';
+import Textarea from './Textarea';
 import TextInput from './TextInput';
 import Toast from './Toast';
 import Toggle from './Toggle';
@@ -57,6 +58,7 @@ export {
   Spinner,
   StickyHeader,
   Suggestions,
+  Textarea,
   TextInput,
   Toast,
   Toggle,
