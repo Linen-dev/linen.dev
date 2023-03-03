@@ -9,6 +9,9 @@ function getErrorMessage(error: string) {
   if (error === 'private') {
     return 'The community you are trying to access is private.';
   }
+  if (error === 'forbidden') {
+    return 'You are not allow to access this page.';
+  }
   if (error === 'CredentialsSignin') {
     return 'Credentials are invalid.';
   }
