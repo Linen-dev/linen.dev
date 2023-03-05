@@ -1,27 +1,4 @@
 import { SerializedMessage, SerializedThread } from '@linen/types';
-import { InboxResponse } from '../../types';
-
-export function prependThread(
-  thread: SerializedThread,
-  message?: SerializedMessage
-) {
-  return (inbox: InboxResponse) => {
-    const { threads, ...rest } = inbox;
-    if (message) {
-      thread.messages = [
-        ...thread.messages.filter((m) => m.id !== message.id),
-        message,
-      ];
-    }
-    return {
-      ...rest,
-      threads: [thread, ...threads.filter((t) => t.id !== thread.id)].splice(
-        0,
-        10
-      ),
-    };
-  };
-}
 
 export function addMessageToThread(
   thread: SerializedThread | undefined,
