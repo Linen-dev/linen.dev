@@ -354,7 +354,7 @@ export default function Channel(props: ChannelProps) {
     });
 
     return api
-      .deleteMessage({ id: messageId, accountId: settings.communityId })
+      .deleteMessage({ id: messageId, accountId: currentCommunity.id })
       .then((response) => {
         if (response.ok) {
           return;
