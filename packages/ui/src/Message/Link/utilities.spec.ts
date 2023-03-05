@@ -41,6 +41,7 @@ describe('isVideo', () => {
       expect(isVideo('https://www.youtube.com/watch')).toBe(true);
       expect(isVideo('https://youtube.com/watch')).toBe(true);
       expect(isVideo('https://youtu.be/tgbNymZ7vqY')).toBe(true);
+      expect(isVideo('https://foo.com/bar.mov')).toBe(true);
     });
   });
 
