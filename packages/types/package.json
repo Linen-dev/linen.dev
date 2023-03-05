@@ -5,8 +5,8 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "dev": "yarn tsup --watch",
-    "build": "yarn tsup"
+    "dev": "rm -rf dist && yarn tsup --watch",
+    "build": "rm -rf dist && yarn tsup"
   },
   "dependencies": {
     "typescript": "^4.9.3",

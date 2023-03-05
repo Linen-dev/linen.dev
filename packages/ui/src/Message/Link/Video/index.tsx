@@ -8,6 +8,16 @@ interface Props {
 }
 
 export default function Video({ src, onLoad }: Props) {
+  if (src.endsWith('.mov')) {
+    return (
+      <div className={styles.video}>
+        <video controls>
+          <source src={src} type="video/mp4" />
+        </video>
+      </div>
+    );
+  }
+
   return (
     <div className={styles.video}>
       <iframe

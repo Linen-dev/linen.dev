@@ -3,11 +3,19 @@
   overflow: hidden;
 }
 
+.video video {
+  max-height: 360px;
+  max-width: 640px;
+  min-height: 240px;
+  min-width: 240px;
+  width: 100%;
+}
+
 .iframe {
   max-height: 360px;
   max-width: 640px;
-  min-height: 280px;
-  min-width: 280px;
+  min-height: 240px;
+  min-width: 240px;
   width: 100%;
 }
 
