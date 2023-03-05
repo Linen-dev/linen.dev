@@ -481,6 +481,65 @@ export default function Inbox({
       });
   }
 
+  async function deleteMessage(messageId: string) {
+    setInbox((inbox) => {
+      const { threads, ...rest } = inbox;
+      return {
+        threads: threads
+          .map((thread) => {
+            const message = thread.messages.find(
+              (message) => message.id === messageId
+            );
+            if (message) {
+              const messages = thread.messages.filter(
+                (message) => message.id !== messageId
+              );
+              if (messages.length === 0) {
+                return null;
+              }
+              return {
+                ...thread,
+                messages,
+                messageCount: thread.messageCount - 1,
+              };
+            }
+            return thread;
+          })
+          .filter(Boolean) as SerializedThread[],
+        ...rest,
+      };
+    });
+
+    setThread((thread) => {
+      if (thread) {
+        const messageIds = thread.messages.map(({ id }) => id);
+        if (messageIds.includes(messageId)) {
+          const messages = thread.messages.filter(({ id }) => id !== messageId);
+          if (messages.length === 0) {
+            return undefined;
+          }
+          return {
+            ...thread,
+            messages,
+          };
+        }
+      }
+      return thread;
+    });
+
+    return api
+      .deleteMessage({ id: messageId, accountId: currentCommunity.id })
+      .then((response) => {
+        if (response.ok) {
+          return;
+        }
+        throw new Error('Failed to delete the message.');
+      })
+      .catch((_) => {
+        Toast.error('Failed to delete the message.');
+      });
+  }
+
   function markThreadAsRead(threadId: string) {
     markUserThreadStatuses({
       threadId,
@@ -675,6 +734,7 @@ export default function Inbox({
               onClose={() => setThread(undefined)}
               onReaction={sendReaction}
               onResolution={updateThreadResolution}
+              onDelete={deleteMessage}
               updateThread={updateThread}
               sendMessage={sendMessage}
               token={token}
