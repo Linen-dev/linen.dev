@@ -25,7 +25,7 @@ import {
   SerializedAccount,
   UploadedFile,
 } from '@linen/types';
-import { addMessageToThread, prependThread } from './state';
+import { addMessageToThread } from './state';
 import { defaultConfiguration } from './utilities/inbox';
 import { addReactionToThread } from 'utilities/state/reaction';
 import { postReaction } from 'components/Pages/Channel/Content/utilities/http';
@@ -210,6 +210,7 @@ export default function Inbox({
       if (currentUser.id === message.author?.id) {
         return null;
       }
+
       setInbox((inbox) => {
         const imitation = inbox.threads.find(({ id }) => id === imitationId);
         if (imitation) {
@@ -234,10 +235,33 @@ export default function Inbox({
     } else if (message) {
       const thread = inbox.threads.find((t) => t.id === message.threadId);
       if (thread) {
-        setInbox(prependThread(thread, message));
+        setInbox((inbox: InboxResponse) => {
+          const { threads, ...rest } = inbox;
+          if (message) {
+            thread.messages = [
+              ...thread.messages.filter(
+                (m) => m.id !== message.id && m.id !== imitationId
+              ),
+              message,
+            ];
+          }
+          return {
+            ...rest,
+            threads: [thread, ...threads.filter((t) => t.id !== thread.id)],
+          };
+        });
       } else {
         fetchThread(payload.thread_id).then((thread) =>
-          setInbox(prependThread(thread, message))
+          setInbox((inbox: InboxResponse) => {
+            const { threads, ...rest } = inbox;
+            return {
+              ...rest,
+              threads: [
+                thread,
+                ...threads.filter((t) => t.id !== thread.id),
+              ].splice(0, 10),
+            };
+          })
         );
       }
     }
