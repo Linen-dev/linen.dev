@@ -64,8 +64,9 @@ export function sendMessageWrapper({
     channelId: string;
     threadId: string;
   }) => {
+    const id = `imitation-${uuid()}`;
     const imitation: SerializedMessage = {
-      id: uuid(),
+      id,
       body: message,
       sentAt: new Date().toISOString(),
       usersId: currentUser.id,
