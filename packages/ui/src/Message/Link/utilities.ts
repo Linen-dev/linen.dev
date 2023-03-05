@@ -35,7 +35,7 @@ function isYoutubeUrl(href: string): boolean {
 }
 
 export function isVideo(href: string): boolean {
-  return isYoutubeUrl(href);
+  return isYoutubeUrl(href) || href.endsWith('.mov');
 }
 
 export function isMail(href: string): boolean {
