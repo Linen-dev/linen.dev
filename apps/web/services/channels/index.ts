@@ -6,6 +6,8 @@ import {
 } from '@linen/database';
 import { channelPutIntegrationType } from '@linen/types';
 import { formatDistance } from '@linen/utilities/date';
+import serializeChannel from 'serializers/channel';
+import { v4 } from 'uuid';
 
 class ChannelsService {
   static async find(communityId: string): Promise<channels[]> {
@@ -250,6 +252,76 @@ class ChannelsService {
           ...data, // new data
         },
       },
+    });
+  }
+
+  static async findOrCreateDM({
+    accountId,
+    userId,
+    dmWithUserId,
+  }: {
+    accountId: string;
+    userId: string;
+    dmWithUserId: string;
+  }) {
+    const dms = await prisma.channels.findMany({
+      include: { memberships: true },
+      where: {
+        accountId,
+        type: ChannelType.DM,
+        memberships: { some: { usersId: userId } },
+      },
+    });
+
+    const exist = dms.find((dm) =>
+      dm.memberships.find((m) => m.usersId === dmWithUserId)
+    );
+
+    if (exist) {
+      // remove archived toggle
+      await prisma.memberships.update({
+        data: { archived: false },
+        where: {
+          usersId_channelsId: { channelsId: exist.id, usersId: userId },
+        },
+      });
+      return serializeChannel(exist);
+    }
+
+    const uuid = v4();
+    const dm = await prisma.channels.create({
+      data: {
+        id: uuid,
+        channelName: uuid,
+        accountId,
+        createdByUserId: userId,
+        type: ChannelType.DM,
+        memberships: {
+          createMany: {
+            data: [
+              { usersId: userId },
+              // by default we set as archived for the other user
+              // when a new message arrive we toggle to archived false
+              { usersId: dmWithUserId, archived: true },
+            ],
+          },
+        },
+      },
+    });
+
+    return serializeChannel(dm);
+  }
+
+  static async archiveChannel({
+    channelId,
+    userId,
+  }: {
+    channelId: string;
+    userId: string;
+  }) {
+    await prisma.memberships.update({
+      data: { archived: true },
+      where: { usersId_channelsId: { channelsId: channelId, usersId: userId } },
     });
   }
 }

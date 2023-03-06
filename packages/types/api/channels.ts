@@ -50,3 +50,9 @@ export const createDmSchema = z.object({
   userId: z.string().uuid(),
 });
 export type createDmType = z.infer<typeof createDmSchema>;
+
+export const archiveChannelSchema = z.object({
+  channelId: z.string().uuid(),
+  accountId: z.string().uuid(),
+});
+export type archiveChannelType = z.infer<typeof archiveChannelSchema>;

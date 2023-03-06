@@ -8,10 +8,16 @@ import CustomRouterPush from 'components/Link/CustomRouterPush';
 import { createDm } from 'utilities/requests';
 import { fetchMentions } from 'components/MessageForm/api';
 import { Suggestions } from '@linen/ui';
-import { SerializedUser } from '@linen/types';
+import { SerializedChannel, SerializedUser } from '@linen/types';
 import styles from './index.module.scss';
 
-export default function NewDmModal({ communityId }: { communityId: string }) {
+export default function NewDmModal({
+  communityId,
+  setDms,
+}: {
+  communityId: string;
+  setDms: React.Dispatch<React.SetStateAction<SerializedChannel[]>>;
+}) {
   const ref = useRef(null);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -32,7 +38,10 @@ export default function NewDmModal({ communityId }: { communityId: string }) {
         accountId: communityId,
         userId: user.id,
       });
-
+      setDms((dms) => {
+        dms.unshift({ ...result, channelName: user.displayName! });
+        return dms;
+      });
       setOpen(false);
       CustomRouterPush({
         isSubDomainRouting,
