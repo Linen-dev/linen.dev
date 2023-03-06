@@ -109,7 +109,6 @@ export default function Inbox({
   const [uploads, setUploads] = useState<UploadedFile[]>([]);
   const ref = useRef<HTMLDivElement>(null);
   const [allUsers] = useUsersContext();
-  const { isShiftPressed } = useKeyboard();
 
   const token = permissions.token || null;
   const currentUser = permissions.user || null;
@@ -584,7 +583,7 @@ export default function Inbox({
     page,
   });
 
-  useKeyboard(
+  const { isShiftPressed } = useKeyboard(
     {
       onKeyUp(event: KeyboardEvent) {
         if (modal) {
