@@ -176,15 +176,18 @@ const serializeDm =
   (
     dm: channels & {
       memberships: {
+        archived: boolean | null;
         user: users;
       }[];
     }
   ) => {
     const { memberships, ...channel } = dm;
     const user = memberships.find((m) => m.user.id !== me)?.user;
+    const hidden = memberships.find((m) => m.user.id === me)?.archived;
     return serializeChannel({
       ...channel,
       channelName: user?.displayName!,
+      hidden: hidden || false,
     });
   };
 
@@ -198,7 +201,12 @@ export async function getDMs({
   return await prisma.channels
     .findMany({
       include: {
-        memberships: { select: { user: true } },
+        memberships: {
+          select: {
+            user: true,
+            archived: true,
+          },
+        },
       },
       where: {
         accountId,
