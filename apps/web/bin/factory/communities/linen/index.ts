@@ -112,6 +112,7 @@ export default async function createLinenCommunity() {
     data: {
       channelId: channel1.id,
       sentAt: new Date().getTime(),
+      lastReplyAt: new Date('2021-12-09T08:01:00.000Z').getTime(),
       messages: {
         create: [
           {
@@ -138,6 +139,7 @@ export default async function createLinenCommunity() {
     data: {
       channelId: channel1.id,
       sentAt: new Date().getTime(),
+      lastReplyAt: new Date('2021-12-09T09:03:00.000Z').getTime(),
       messages: {
         create: [
           {
@@ -170,6 +172,7 @@ export default async function createLinenCommunity() {
     data: {
       channelId: channel1.id,
       sentAt: new Date().getTime(),
+      lastReplyAt: new Date('2021-12-09T10:04:00.000Z').getTime(),
       messages: {
         create: [
           {
@@ -209,6 +212,7 @@ export default async function createLinenCommunity() {
     data: {
       channelId: channel1.id,
       sentAt: new Date().getTime(),
+      lastReplyAt: new Date('2021-12-11T09:17:00.000Z').getTime(),
       messages: {
         create: [
           {
@@ -244,6 +248,7 @@ export default async function createLinenCommunity() {
     data: {
       channelId: channel1.id,
       sentAt: new Date().getTime(),
+      lastReplyAt: new Date('2021-12-12T09:02:00.000Z').getTime(),
       messages: {
         create: [
           {
@@ -269,6 +274,7 @@ export default async function createLinenCommunity() {
     data: {
       channelId: channel1.id,
       sentAt: new Date().getTime(),
+      lastReplyAt: new Date('2021-12-13T09:01:00.000Z').getTime(),
       messages: {
         create: [
           {
@@ -295,6 +301,7 @@ export default async function createLinenCommunity() {
     data: {
       channelId: channel1.id,
       sentAt: new Date().getTime(),
+      lastReplyAt: new Date('2021-12-14T09:01:00.000Z').getTime(),
       messages: {
         create: [
           {
@@ -329,6 +336,7 @@ export default async function createLinenCommunity() {
     data: {
       channelId: channel1.id,
       sentAt: new Date().getTime(),
+      lastReplyAt: new Date('2021-12-14T09:01:00.000Z').getTime(),
       messages: {
         create: [
           {
@@ -347,6 +355,7 @@ export default async function createLinenCommunity() {
     data: {
       channelId: channel1.id,
       sentAt: new Date().getTime(),
+      lastReplyAt: new Date('2021-12-14T09:01:00.000Z').getTime(),
       messages: {
         create: [
           {
@@ -366,6 +375,7 @@ export default async function createLinenCommunity() {
     data: {
       channelId: channel1.id,
       sentAt: new Date().getTime(),
+      lastReplyAt: new Date('2021-12-14T09:08:00.000Z').getTime(),
       messages: {
         create: [
           {
@@ -440,6 +450,7 @@ export default async function createLinenCommunity() {
     data: {
       channelId: channel2.id,
       sentAt: new Date().getTime(),
+      lastReplyAt: new Date('2021-12-13T09:01:00.000Z').getTime(),
       messages: {
         create: [
           {
@@ -474,6 +485,7 @@ export default async function createLinenCommunity() {
     data: {
       channelId: channel3.id,
       sentAt: new Date().getTime(),
+      lastReplyAt: new Date('2021-12-14T09:01:00.000Z').getTime(),
       messages: {
         create: [
           {
@@ -493,6 +505,7 @@ export default async function createLinenCommunity() {
     data: {
       channelId: channel3.id,
       sentAt: new Date().getTime(),
+      lastReplyAt: new Date('2021-12-14T09:01:00.000Z').getTime(),
       messages: {
         create: [
           {
@@ -519,6 +532,7 @@ export default async function createLinenCommunity() {
     data: {
       channelId: channel4.id,
       sentAt: new Date().getTime(),
+      lastReplyAt: new Date('2021-12-14T09:01:00.000Z').getTime(),
       messages: {
         create: [
           {
@@ -545,6 +559,7 @@ export default async function createLinenCommunity() {
     data: {
       channelId: channel5.id,
       sentAt: new Date().getTime(),
+      lastReplyAt: new Date('2021-12-15T09:01:00.000Z').getTime(),
       messages: {
         create: [
           {
@@ -566,6 +581,7 @@ export default async function createLinenCommunity() {
     data: {
       channelId: channel5.id,
       sentAt: new Date().getTime(),
+      lastReplyAt: new Date('2021-12-15T09:01:00.000Z').getTime(),
       messages: {
         create: [
           {
@@ -591,17 +607,19 @@ export default async function createLinenCommunity() {
   });
 
   [...(Array(60).keys() as any)].map(async (index) => {
+    const sentAt = `2021-12-15T09:01:${pad(index.toString(), 2)}.000Z`;
     await prisma.threads.create({
       data: {
         channelId: channel6.id,
         sentAt: 1677666130042 + index,
+        lastReplyAt: new Date(sentAt).getTime(),
         messages: {
           create: [
             {
               channelId: channel6.id,
               body: `Thread ${index}`,
               usersId: user1.id,
-              sentAt: `2021-12-15T09:01:${pad(index.toString(), 2)}.000Z`,
+              sentAt,
               messageFormat: MessageFormat.LINEN,
             },
           ],
