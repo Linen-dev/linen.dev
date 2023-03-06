@@ -7,6 +7,7 @@ export type Account = {
   discordDomain: string | null;
   slackDomain: string | null;
   discordServerId: string | null;
+  premium: boolean;
 };
 
 export type Thread = {

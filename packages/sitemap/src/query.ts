@@ -1,5 +1,25 @@
-import { prisma } from '@linen/database';
+import { AccountType, ChannelType, prisma } from '@linen/database';
 import { Account } from './types';
+
+const threadNotHiddenWithMessage = {
+  messageCount: { gte: 1 },
+  messages: { some: {} },
+  hidden: false,
+};
+
+const channelPublicNotHidden = {
+  type: ChannelType.PUBLIC,
+  hidden: false,
+};
+
+const channelPublicNotHiddenWithMessages = {
+  ...channelPublicNotHidden,
+  threads: {
+    some: {
+      ...threadNotHiddenWithMessage,
+    },
+  },
+};
 
 /**
  * return all premium communities with redirect domain and PUBLIC
@@ -13,13 +33,16 @@ export async function getCommunities() {
       discordDomain: true,
       slackDomain: true,
       discordServerId: true,
+      premium: true,
     },
     where: {
       premium: true,
       redirectDomain: { not: null },
-      type: 'PUBLIC',
+      type: AccountType.PUBLIC,
       channels: {
-        some: { hidden: false, threads: { some: { messageCount: { gt: 1 } } } },
+        some: {
+          ...channelPublicNotHiddenWithMessages,
+        },
       },
     },
   });
@@ -29,9 +52,8 @@ export async function getChannels(account: Account) {
   return await prisma.channels.findMany({
     select: { channelName: true, pages: true },
     where: {
-      hidden: false,
+      ...channelPublicNotHiddenWithMessages,
       account: { id: account.id },
-      pages: { gt: 0 },
     },
   });
 }
@@ -51,11 +73,12 @@ export async function* getThreadsAsyncIterable(account: Account) {
         channel: { select: { channelName: true } },
       },
       where: {
-        hidden: false,
-        channel: { account: { id: account.id } },
-        messages: {},
+        ...threadNotHiddenWithMessage,
+        channel: {
+          ...channelPublicNotHidden,
+          account: { id: account.id },
+        },
         sentAt: { lt: sentAt },
-        messageCount: { gt: 1 },
       },
       take: 50,
       orderBy: [{ viewCount: 'desc' }, { sentAt: 'desc' }],
@@ -71,7 +94,7 @@ export async function* getThreadsAsyncIterable(account: Account) {
 export async function getChannelsFreeTier(_: Account) {
   const accounts = await prisma.accounts.findMany({
     select: { id: true },
-    where: { premium: false, type: 'PUBLIC' },
+    where: { premium: false, type: AccountType.PUBLIC },
     orderBy: { createdAt: 'desc' },
   });
   const channels = [];
@@ -82,27 +105,21 @@ export async function getChannelsFreeTier(_: Account) {
         select: {
           channelName: true,
           pages: true,
-          account: {
-            select: {
-              id: true,
-              name: true,
-              redirectDomain: true,
-              discordDomain: true,
-              slackDomain: true,
-              discordServerId: true,
-            },
-          },
+          // account: {
+          //   select: {
+          //     id: true,
+          //     name: true,
+          //     redirectDomain: true,
+          //     discordDomain: true,
+          //     slackDomain: true,
+          //     discordServerId: true,
+          //   },
+          // },
         },
         where: {
-          hidden: false,
+          ...channelPublicNotHiddenWithMessages,
           account: {
             id: account.id,
-          },
-          threads: {
-            some: {
-              messageCount: { gte: 1 },
-              messages: { some: {} },
-            },
           },
         },
         orderBy: { lastPageBuildAt: 'desc' },
@@ -127,30 +144,30 @@ export async function* getThreadsAsyncIterableFreeTier(_: Account) {
         channel: {
           select: {
             channelName: true,
-            account: {
-              select: {
-                id: true,
-                name: true,
-                redirectDomain: true,
-                discordDomain: true,
-                slackDomain: true,
-                discordServerId: true,
-              },
-            },
+            // account: {
+            //   select: {
+            //     id: true,
+            //     name: true,
+            //     redirectDomain: true,
+            //     discordDomain: true,
+            //     slackDomain: true,
+            //     discordServerId: true,
+            //   },
+            // },
           },
         },
       },
       where: {
-        hidden: false,
+        ...threadNotHiddenWithMessage,
         channel: {
+          ...channelPublicNotHidden,
           account: {
             premium: false,
-            type: 'PUBLIC',
+            type: AccountType.PUBLIC,
           },
         },
-        messages: {},
         sentAt: { lt: sentAt },
-        messageCount: { gt: 1 },
+        messageCount: { gt: 1 }, // prioritize threads with replies
       },
       take: 50,
       orderBy: [{ viewCount: 'desc' }, { sentAt: 'desc' }],

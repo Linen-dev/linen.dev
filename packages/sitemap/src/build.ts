@@ -25,6 +25,7 @@ export async function processLinen(workDir: string, logger: Logger) {
     discordDomain: null,
     discordServerId: null,
     slackDomain: null,
+    premium: false,
   };
   const start = new Date().getTime();
   logger(linen);
