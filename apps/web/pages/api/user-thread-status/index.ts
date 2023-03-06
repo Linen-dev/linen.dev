@@ -4,8 +4,7 @@ import { prisma } from '@linen/database';
 import { z } from 'zod';
 import { ReminderTypes } from '@linen/types';
 import { soon, tomorrow, nextWeek } from '@linen/utilities/date';
-import { createRemindMeJob } from 'queue/jobs';
-import UserThreadStatusService from 'services/user-thread-status';
+import { createRemindMeJob, createMarkAllAsReadJob } from 'queue/jobs';
 
 const createSchema = z.object({
   threadIds: z.array(z.string()),
@@ -89,7 +88,7 @@ export async function create(params: {
     });
   } else if (threadIds.length === 0 && read) {
     try {
-      await UserThreadStatusService.markAllAsRead({ userId });
+      await createMarkAllAsReadJob(userId, { userId });
       return { status: 200 };
     } catch (exception) {
       console.log(exception);

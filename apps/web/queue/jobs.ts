@@ -31,6 +31,7 @@ export const QUEUE_1_NEW_EVENT = 'notification-new-event';
 export const QUEUE_2_SEND_EMAIL = 'notification-send-email';
 
 export const QUEUE_REMIND_ME_LATER = 'remind-me-later-queue';
+export const QUEUE_MARK_ALL_AS_READ = 'mark-all-as-read-queue';
 export const QUEUE_MAINTENANCE_SLUGIFY = 'slugify';
 export const QUEUE_MAINTENANCE_MESSAGE_COUNT = 'update-message-count';
 export const QUEUE_CRAWL_GOOGLE_STATS = 'google-stats';
@@ -76,6 +77,18 @@ export async function createRemindMeJob(
     jobKey: `${QUEUE_REMIND_ME_LATER}:${jobKey}`,
     maxAttempts: 1,
     runAt,
+    jobKeyMode: 'replace',
+  });
+}
+
+export async function createMarkAllAsReadJob(
+  jobKey: string,
+  payload: { userId: string }
+) {
+  const worker = await WorkerSingleton.getInstance();
+  return await worker.addJob(QUEUE_MARK_ALL_AS_READ, payload, {
+    jobKey: `${QUEUE_MARK_ALL_AS_READ}:${jobKey}`,
+    maxAttempts: 1,
     jobKeyMode: 'replace',
   });
 }
