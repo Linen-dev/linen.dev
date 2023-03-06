@@ -30,7 +30,6 @@ import { defaultConfiguration } from './utilities/inbox';
 import { addReactionToThread } from 'utilities/state/reaction';
 import { postReaction } from 'components/Pages/Channel/Content/utilities/http';
 import * as api from 'utilities/requests';
-import { bulk } from 'utilities/http';
 import { FiSettings } from '@react-icons/all-files/fi/FiSettings';
 import { InboxConfig } from '../types';
 import storage from '@linen/utilities/storage';
@@ -398,24 +397,17 @@ export default function Inbox({
   async function onMarkAllAsRead() {
     setThread(undefined);
     setInbox({ threads: [], total: 0 });
-    await bulk({
-      callback() {
-        return fetch('/api/user-thread-status', {
-          method: 'POST',
-          body: JSON.stringify({
-            communityId: currentCommunity.id,
-            threadIds: [],
-            muted: false,
-            reminder: false,
-            read: true,
-          }),
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }).then((response) => response.json());
-      },
-      next(data) {
-        return data && data.count > 0;
+    await fetch('/api/user-thread-status', {
+      method: 'POST',
+      body: JSON.stringify({
+        communityId: currentCommunity.id,
+        threadIds: [],
+        muted: false,
+        reminder: false,
+        read: true,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
       },
     });
   }
