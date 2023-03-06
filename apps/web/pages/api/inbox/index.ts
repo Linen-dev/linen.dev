@@ -47,6 +47,7 @@ export async function index({
     messages: {
       some: {},
     },
+    lastReplyAt: { lt: new Date().getTime() },
     userThreadStatus: {
       none: {
         userId: currentUserId,
@@ -79,7 +80,7 @@ export async function index({
       },
       channel: true,
     },
-    orderBy: { sentAt: 'desc' },
+    orderBy: { lastReplyAt: 'desc' },
     take: limit,
     skip: (page - 1) * limit,
   });
