@@ -19,6 +19,7 @@ import Message from './Message';
 import Modal from './Modal';
 import NativeSelect from './NativeSelect';
 import Nav from './Nav';
+import Progress from './Progress';
 import ProgressModal from './ProgressModal';
 import ReminderModal from './ReminderModal';
 import Spinner from './Spinner';
@@ -55,6 +56,7 @@ export {
   Modal,
   NativeSelect,
   Nav,
+  Progress,
   ProgressModal,
   ReminderModal,
   Spinner,
