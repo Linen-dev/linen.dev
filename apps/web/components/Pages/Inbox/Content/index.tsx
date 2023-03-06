@@ -398,15 +398,14 @@ export default function Inbox({
 
   async function onMarkAllAsRead() {
     setModal(ModalView.PROGRESS);
-    await new Promise((resolve) => setTimeout(resolve, 500));
     setThread(undefined);
     setInbox({ threads: [], total: 0 });
     setMarkAllAsReadProgress(0);
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     setMarkAllAsReadProgress(20);
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     setMarkAllAsReadProgress(40);
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     setMarkAllAsReadProgress(60);
     await fetch('/api/user-thread-status', {
       method: 'POST',
@@ -421,10 +420,11 @@ export default function Inbox({
         'Content-Type': 'application/json',
       },
     });
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     setMarkAllAsReadProgress(80);
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     setMarkAllAsReadProgress(100);
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     setModal(undefined);
   }
 
@@ -803,6 +803,8 @@ export default function Inbox({
         open={modal === ModalView.PROGRESS}
         close={() => setModal(undefined)}
         progress={markAllAsReadProgress}
+        header="Mark all as read"
+        description="This action will run in the background and can take a while to complete, depending on the size of your of your history."
       />
     </>
   );

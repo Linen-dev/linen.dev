@@ -1,0 +1,22 @@
+@import '../colors.scss';
+
+.progress {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  margin-bottom: 1rem;
+  height: 8px;
+}
+
+.progress::-webkit-progress-bar {
+  background-color: $color-gray-100;
+  border-radius: 4px;
+}
+
+.progress::-webkit-progress-value {
+  background: $color-primary;
+  accent-color: $color-primary;
+  color: $color-primary;
+  border-radius: 4px;
+  transition: width 0.2s ease-in;
+}
