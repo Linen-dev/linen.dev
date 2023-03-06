@@ -4,6 +4,7 @@ import { push, pushChannel, pushCommunity } from 'services/push';
 import { eventNewMentions } from './eventNewMentions';
 import { notificationListener } from 'services/notifications';
 import { stringify } from 'superjson';
+import ChannelsService from 'services/channels';
 
 interface MentionNode {
   type: string;
@@ -51,6 +52,7 @@ export async function eventNewThread({
     pushCommunity({ ...event, communityId }),
     eventNewMentions({ mentions, mentionNodes, channelId, threadId }),
     notificationListener({ ...event, communityId, mentions }),
+    ChannelsService.unarchiveDM({ channelId }),
   ];
 
   const result = await Promise.allSettled(promises);
