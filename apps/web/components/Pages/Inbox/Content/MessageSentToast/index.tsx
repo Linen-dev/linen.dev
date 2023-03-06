@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import useKeyboard from '@linen/hooks/keyboard';
 import styles from './index.module.scss';
 
 interface Props {
@@ -29,6 +30,27 @@ export default function MessageSentToast({
     };
   }, [undo]);
 
+  function handleUndo() {
+    setUndo(true);
+    onUndo();
+  }
+
+  useKeyboard(
+    {
+      onKeyUp(event) {
+        const element = document.activeElement;
+        if (element && element.id) {
+          return false;
+        }
+
+        if (!sent && !undo && event.key === 'u') {
+          handleUndo();
+        }
+      },
+    },
+    [sent, undo]
+  );
+
   if (undo) {
     return <div className={styles.toast}>Sending was canceled.</div>;
   }
@@ -41,13 +63,7 @@ export default function MessageSentToast({
         <>
           Sending the message…
           {!undo && (
-            <a
-              className={styles.undo}
-              onClick={() => {
-                setUndo(true);
-                onUndo();
-              }}
-            >
+            <a className={styles.undo} onClick={handleUndo}>
               Undo
             </a>
           )}
