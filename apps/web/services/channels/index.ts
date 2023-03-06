@@ -324,6 +324,22 @@ class ChannelsService {
       where: { usersId_channelsId: { channelsId: channelId, usersId: userId } },
     });
   }
+
+  static async unarchiveDM({ channelId }: { channelId: string }) {
+    const dm = await prisma.channels.findFirst({
+      where: { id: channelId, type: ChannelType.DM },
+    });
+    if (dm) {
+      await this.unarchiveChannel({ channelId });
+    }
+  }
+
+  static async unarchiveChannel({ channelId }: { channelId: string }) {
+    await prisma.memberships.updateMany({
+      data: { archived: false },
+      where: { channelsId: channelId },
+    });
+  }
 }
 
 export default ChannelsService;
