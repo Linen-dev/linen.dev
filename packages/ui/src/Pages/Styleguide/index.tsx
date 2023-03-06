@@ -8,10 +8,12 @@ import TextInputExample from './examples/TextInput';
 import NativeSelectExample from './examples/NativeSelect';
 import NavExample from './examples/Nav';
 import ToastExample from './examples/Toast';
+import ProgressExample from './examples/Progress';
 
 export default function Styleguide() {
   return (
     <Layout>
+      <ProgressExample />
       <NavExample />
       <ButtonGroupExample />
       <MessageExample />
