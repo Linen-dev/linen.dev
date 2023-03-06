@@ -3,6 +3,7 @@ import { run, parseCronItems } from 'graphile-worker';
 import { emailNotificationTask } from './tasks/email-notification-sender';
 import { processNewEventTask } from './tasks/email-notification-event';
 import { reminderMeLaterTask } from './tasks/remind-me-later';
+import { markAllAsReadTask } from './tasks/mark-all-as-read';
 import { twoWaySync } from './tasks/two-way-sync';
 import { sync } from './tasks/sync';
 import { webhook } from './tasks/webhook';
@@ -16,6 +17,7 @@ import {
   QUEUE_MAINTENANCE_MESSAGE_COUNT,
   QUEUE_MAINTENANCE_SLUGIFY,
   QUEUE_REMIND_ME_LATER,
+  QUEUE_MARK_ALL_AS_READ,
   QUEUE_SITEMAP,
 } from './jobs';
 import { sitemap } from './tasks/sitemap';
@@ -34,6 +36,7 @@ async function runWorker() {
       [QUEUE_1_NEW_EVENT]: processNewEventTask as any,
       [QUEUE_2_SEND_EMAIL]: emailNotificationTask as any,
       [QUEUE_REMIND_ME_LATER]: reminderMeLaterTask as any,
+      [QUEUE_MARK_ALL_AS_READ]: markAllAsReadTask as any,
       ['two-way-sync']: twoWaySync,
       ['sync']: sync,
       ['webhook']: webhook,
