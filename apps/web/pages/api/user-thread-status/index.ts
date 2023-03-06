@@ -34,13 +34,22 @@ export async function create(params: {
   read: boolean;
   reminder: boolean;
   reminderType?: ReminderTypes;
+  communityId: string;
 }) {
   const body = createSchema.safeParse(params);
   if (!body.success) {
     return { status: 400, data: { error: body.error } };
   }
 
-  const { threadIds, userId, muted, read, reminder, reminderType } = params;
+  const {
+    threadIds,
+    userId,
+    muted,
+    read,
+    reminder,
+    reminderType,
+    communityId,
+  } = params;
 
   const creation = muted || read || reminder;
 
@@ -88,7 +97,7 @@ export async function create(params: {
     });
   } else if (threadIds.length === 0 && read) {
     try {
-      await createMarkAllAsReadJob(userId, { userId });
+      await createMarkAllAsReadJob(`${communityId}:${userId}`, { userId });
       return { status: 200 };
     } catch (exception) {
       console.log(exception);
@@ -121,6 +130,7 @@ export default async function handler(
 
     const { status, data } = await create({
       ...request.body,
+      communityId: request.body.communityId,
       userId: permissions.user.id,
     });
     return response.status(status).json(data || {});
