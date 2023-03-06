@@ -1,5 +1,6 @@
 import React from 'react';
 import Modal from '../Modal';
+import styles from './index.module.scss';
 
 interface Props {
   open: boolean;
@@ -10,7 +11,7 @@ interface Props {
 export default function ProgressModal({ open, close, progress }: Props) {
   return (
     <Modal open={open} close={close}>
-      <progress max={100} value={progress}>
+      <progress className={styles.progress} max={100} value={progress}>
         {progress}%
       </progress>
     </Modal>

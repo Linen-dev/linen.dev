@@ -1,5 +1,5 @@
-import { useEffect, useState, useRef, useCallback } from 'react';
-import { Layouts, Pages, Toast } from '@linen/ui';
+import { useEffect, useState, useRef } from 'react';
+import { Layouts, Pages, ProgressModal, Toast } from '@linen/ui';
 import Thread from 'components/Thread';
 import AddThreadModal from './AddThreadModal';
 import ConfigureInboxModal from './ConfigureInboxModal';
@@ -81,6 +81,7 @@ const LIMIT = 10;
 enum ModalView {
   ADD_THREAD,
   CONFIGURE_INBOX,
+  PROGRESS,
 }
 
 export default function Inbox({
@@ -105,6 +106,7 @@ export default function Inbox({
   const [thread, setThread] = useState<SerializedThread>();
   const [progress, setProgress] = useState(0);
   const [uploading, setUploading] = useState(false);
+  const [markAllAsReadProgress, setMarkAllAsReadProgress] = useState<number>(0);
   const [uploads, setUploads] = useState<UploadedFile[]>([]);
   const ref = useRef<HTMLDivElement>(null);
   const [allUsers] = useUsersContext();
@@ -395,8 +397,17 @@ export default function Inbox({
   }
 
   async function onMarkAllAsRead() {
+    setModal(ModalView.PROGRESS);
+    await new Promise((resolve) => setTimeout(resolve, 500));
     setThread(undefined);
     setInbox({ threads: [], total: 0 });
+    setMarkAllAsReadProgress(0);
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    setMarkAllAsReadProgress(20);
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    setMarkAllAsReadProgress(40);
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    setMarkAllAsReadProgress(60);
     await fetch('/api/user-thread-status', {
       method: 'POST',
       body: JSON.stringify({
@@ -410,6 +421,11 @@ export default function Inbox({
         'Content-Type': 'application/json',
       },
     });
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    setMarkAllAsReadProgress(80);
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    setMarkAllAsReadProgress(100);
+    setModal(undefined);
   }
 
   function markUserThreadStatuses({
@@ -782,6 +798,11 @@ export default function Inbox({
             };
           });
         }}
+      />
+      <ProgressModal
+        open={modal === ModalView.PROGRESS}
+        close={() => setModal(undefined)}
+        progress={markAllAsReadProgress}
       />
     </>
   );
