@@ -4,6 +4,7 @@ import { TextInput } from '@linen/ui';
 import { AiOutlineSearch } from '@react-icons/all-files/ai/AiOutlineSearch';
 import { AiOutlineLoading } from '@react-icons/all-files/ai/AiOutlineLoading';
 import styles from './index.module.css';
+import NoResults from './NoResults';
 
 export default function Autocomplete({
   fetch,
@@ -231,19 +232,7 @@ export default function Autocomplete({
           }}
         >
           {results.length > 0 && renderSuggestions(results)}
-          {results.length === 0 && !isSearching && (
-            <p
-              style={{
-                fontSize: '14px',
-                margin: 0,
-                padding: '8px 12px',
-                textAlign: 'left',
-                color: '#888',
-              }}
-            >
-              No results found.
-            </p>
-          )}
+          {results.length === 0 && !isSearching && <NoResults search={value} />}
         </div>
       )}
     </div>
