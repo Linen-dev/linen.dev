@@ -15,6 +15,7 @@ const customJestConfig = {
   // if using TypeScript with a baseUrl set to the root directory then you need the below for alias' to work
   moduleDirectories: ['node_modules', '<rootDir>/'],
   moduleNameMapper: {
+    '@linen/hooks/(.*)/(.*)': '<rootDir>/../../packages/hooks/dist/$1/$2',
     '@linen/(.*)/(.*)': '<rootDir>/../../packages/$1/dist/$2',
     '@linen/(.*)': '<rootDir>/../../packages/$1',
     '^axios$': require.resolve('axios'),

@@ -33,7 +33,7 @@ import AddCommunityLink from './AddCommunityLink';
 import NewCommunityModal from './NewCommunityModal';
 import { timestamp } from '@linen/utilities/date';
 import { DMs } from './DMs';
-import { useInboxWebsockets } from '@linen/hooks';
+import useInboxWebsockets from '@linen/hooks/websockets/inbox';
 
 interface Props {
   mode: Mode;
