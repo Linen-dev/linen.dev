@@ -12,7 +12,7 @@ export default class CommunitiesService {
     response: GetServerSidePropsContext['res'] | NextApiResponse
   ): Promise<accounts[]> {
     const auth = await Session.auth(request, response);
-    if (!auth || auth.users.length <= 1) {
+    if (!auth || !auth.users.length) {
       return [];
     }
     return prisma.accounts.findMany({

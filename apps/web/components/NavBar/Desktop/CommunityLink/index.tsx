@@ -24,9 +24,12 @@ export default function CommunityLink({ community }: Props) {
     'black'
   );
 
+  const href = getHomeUrl(community);
+  if (href === '/') return <></>;
+
   return (
     <a
-      href={getHomeUrl(community)}
+      href={href}
       className={styles.link}
       style={
         community.logoSquareUrl
