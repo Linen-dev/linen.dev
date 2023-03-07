@@ -4,10 +4,11 @@ import InviteToJoinMailer from 'mailers/InviteToJoinMailer';
 import { normalize } from '@linen/utilities/string';
 import PermissionsService from './permissions';
 import { Unauthorized } from 'server/exceptions';
+import { serializeEmail } from 'utilities/email';
 
 export async function createInvitation({
   createdByUserId,
-  email,
+  email: rawEmail,
   accountId,
   host,
   role,
@@ -18,6 +19,7 @@ export async function createInvitation({
   host: string;
   role: Roles;
 }) {
+  const email = serializeEmail(rawEmail);
   const invite = await prisma.invites.create({
     select: {
       accounts: true,
