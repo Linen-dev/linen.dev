@@ -1,4 +1,5 @@
 import React from 'react';
+import classNames from 'classnames';
 import useDevice from '@linen/hooks/device';
 import styles from './index.module.scss';
 
@@ -7,6 +8,8 @@ interface Props {
   right?: React.ReactNode;
   leftRef?: any;
   rightRef?: any;
+  leftClassName?: any;
+  rightClassName?: any;
   onLeftScroll?(): void;
   onRightScroll?(): void;
 }
@@ -16,6 +19,8 @@ function SidebarLayout({
   right,
   leftRef,
   rightRef,
+  leftClassName,
+  rightClassName,
   onLeftScroll,
   onRightScroll,
 }: Props) {
@@ -25,7 +30,7 @@ function SidebarLayout({
       {(!isMobile || !right) && (
         <div
           id="sidebar-layout-left"
-          className={styles.left}
+          className={classNames(styles.left, leftClassName)}
           onScroll={onLeftScroll}
           ref={leftRef}
         >
@@ -33,7 +38,10 @@ function SidebarLayout({
         </div>
       )}
       {right && (
-        <div id="sidebar-layout-right" className={styles.right}>
+        <div
+          id="sidebar-layout-right"
+          className={classNames(styles.right, rightClassName)}
+        >
           <div
             className={styles.content}
             onScroll={onRightScroll}
