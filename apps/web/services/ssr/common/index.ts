@@ -9,6 +9,7 @@ import { Permissions } from '@linen/types';
 import serializeAccount from 'serializers/account';
 import serializeChannel from 'serializers/channel';
 import { getDMs } from 'lib/channel';
+import { cleanUpUrl } from 'utilities/util';
 
 type validatePermissionsResponse = {
   redirect: Boolean;
@@ -27,11 +28,12 @@ export async function ssr(
   const permissions = await PermissionsService.for(context);
   const isAllow = validatePermissions(permissions);
   if (isAllow.redirect) {
+    const url = cleanUpUrl(context.req.url);
     return {
       redirect: true,
       location: `/signin?${qs({
         error: isAllow.error,
-        callbackUrl: context.req.url,
+        callbackUrl: url,
       })}`,
     };
   }

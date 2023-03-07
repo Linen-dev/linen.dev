@@ -1,4 +1,4 @@
-import { createSlug } from './util';
+import { cleanUpUrl, createSlug } from './util';
 
 const longString = 'THIS Is a really long String'.repeat(100);
 
@@ -23,5 +23,14 @@ describe('slugify', () => {
     expect(createSlug('! @ #$* *#! <> something space @*$(& ')).toEqual(
       'something-space'
     );
+  });
+});
+
+describe('cleanUpUrl', () => {
+  test('clean up customDomain', () => {
+    expect(cleanUpUrl('/?customDomain=1')).toBe('/');
+    expect(cleanUpUrl('/?customDomain=1&something=2')).toBe('/?something=2');
+    expect(cleanUpUrl('/')).toBe('/');
+    expect(cleanUpUrl()).toBe(undefined);
   });
 });
