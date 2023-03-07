@@ -36,3 +36,12 @@
 .suggestions {
   position: relative
 }
+
+.is-collapsed {
+  visibility: hidden;
+  width: 0%;
+}
+
+.is-expanded {
+  width: 100%;
+}

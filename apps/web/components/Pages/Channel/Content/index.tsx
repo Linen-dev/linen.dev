@@ -146,6 +146,7 @@ export default function Channel({
   onThreadMessage,
   sendReaction,
 }: Props) {
+  const [collapsed, setCollapsed] = useState(false);
   const [isInfiniteScrollLoading, setInfiniteScrollLoading] = useState(false);
   const [isLeftScrollAtBottom, setIsLeftScrollAtBottom] = useState(true);
   const [readStatus, setReadStatus] = useState<SerializedReadStatus>();
@@ -519,6 +520,8 @@ export default function Channel({
               currentUser={currentUser}
               updateThread={updateThread}
               onClose={() => onSelectThread(undefined)}
+              expanded={collapsed}
+              onExpandClick={() => setCollapsed((collapsed) => !collapsed)}
               onResolution={updateThreadResolution}
               sendMessage={sendThreadMessage}
               onDelete={deleteMessage}
@@ -538,6 +541,12 @@ export default function Channel({
           )
         }
         rightRef={rightRef}
+        leftClassName={{
+          [styles['is-collapsed']]: collapsed,
+        }}
+        rightClassName={{
+          [styles['is-expanded']]: collapsed,
+        }}
       />
       <SettingsModal
         permissions={permissions}

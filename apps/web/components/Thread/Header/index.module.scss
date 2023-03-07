@@ -43,6 +43,13 @@
   color: $color-gray-900;
 }
 
+.expand {
+  cursor: pointer;
+  position: absolute;
+  top: 0.25rem;
+  left: 0.25rem;
+}
+
 @media screen and (max-width: 767px) {
   .close {
     display: none;
