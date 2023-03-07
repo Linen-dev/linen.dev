@@ -104,9 +104,8 @@ export default function Form() {
           }
         />
         <span className="text-xs">
-          Community path should start with lower case letter and could contain
-          lower case letters, underscore, numbers and hyphens. This will define
-          the url to access your community. e.g. linen.dev/s/cool-community
+          Community path will define the url to access your community. e.g.
+          https://linen.dev/s/cool-community
         </span>
         <div className="p-4"></div>
 
@@ -120,7 +119,7 @@ export default function Form() {
             );
           })}
         </div>
-        <div className="flex">
+        <div className="flex gap-2">
           <TextInput
             id="channel"
             placeholder="E.g. new-channel"
@@ -133,8 +132,8 @@ export default function Form() {
           <Button onClick={() => addChannel()}>+</Button>
         </div>
         <span className="text-xs">
-          Channels name should start with letter and could contain letters,
-          underscore, numbers and hyphens. e.g. announcements
+          Channels name should contain letter, underscore, numbers and hyphens.
+          e.g. announcements
         </span>
         <div className="p-4"></div>
 
@@ -148,7 +147,7 @@ export default function Form() {
             );
           })}
         </div>
-        <div className="flex w-full">
+        <div className="flex w-full gap-2">
           <TextInput id="email" type="email" placeholder="name@team.com" />
           <Button onClick={() => addEmail()}>+</Button>
         </div>

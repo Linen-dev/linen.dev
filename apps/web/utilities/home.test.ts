@@ -1,34 +1,36 @@
 import { getHomeUrl, getHomeText } from './home';
 import { build } from '@linen/factory';
 
+const PORT = process.env.PORT || 3000;
+
 describe('getHomeUrl', () => {
   it('returns the correct url for a premium account', () => {
     const account = build('account', {
       premium: true,
       redirectDomain: 'example.com',
     });
-    expect(getHomeUrl(account)).toEqual('https://example.com');
+    expect(getHomeUrl(account)).toEqual('http://example.com');
   });
 
   it('returns the correct url for a slack domain', () => {
     const account = build('account', {
       slackDomain: 'example',
     });
-    expect(getHomeUrl(account)).toEqual('/s/example');
+    expect(getHomeUrl(account)).toEqual(`http://localhost:${PORT}/s/example`);
   });
 
   it('returns the correct url for a discord domain', () => {
     const account = build('account', {
       discordDomain: 'example',
     });
-    expect(getHomeUrl(account)).toEqual('/d/example');
+    expect(getHomeUrl(account)).toEqual(`http://localhost:${PORT}/d/example`);
   });
 
   it('returns the correct url for a discord server id', () => {
     const account = build('account', {
       discordServerId: 'example',
     });
-    expect(getHomeUrl(account)).toEqual('/d/example');
+    expect(getHomeUrl(account)).toEqual(`http://localhost:${PORT}/d/example`);
   });
 
   it('returns the correct url for a non-premium account', () => {
