@@ -20,18 +20,43 @@ export async function createInvitation({
   role: Roles;
 }) {
   const email = serializeEmail(rawEmail);
-  const invite = await prisma.invites.create({
+
+  const exist = await prisma.users.findFirst({
+    where: {
+      account: { id: accountId },
+      auth: { email: email },
+    },
+  });
+
+  if (exist) {
+    return { status: 400, message: 'user already belongs to community' };
+  }
+
+  let invite = await prisma.invites.findFirst({
     select: {
       accounts: true,
       createdBy: { include: { auth: { select: { email: true } } } },
     },
-    data: {
+    where: {
       email,
       accountsId: accountId,
-      createdById: createdByUserId,
-      role,
     },
   });
+
+  if (!invite) {
+    invite = await prisma.invites.create({
+      select: {
+        accounts: true,
+        createdBy: { include: { auth: { select: { email: true } } } },
+      },
+      data: {
+        email,
+        accountsId: accountId,
+        createdById: createdByUserId,
+        role,
+      },
+    });
+  }
 
   await sendInvitationByEmail({
     email,
