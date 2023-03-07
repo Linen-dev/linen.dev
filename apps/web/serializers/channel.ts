@@ -1,4 +1,4 @@
-import type { channels } from '@linen/database';
+import type { channels, users } from '@linen/database';
 import { SerializedChannel } from '@linen/types';
 
 export default function serializeChannel(
@@ -16,3 +16,23 @@ export default function serializeChannel(
     pages: channel.pages,
   };
 }
+
+export const serializeDm =
+  (me: string) =>
+  (
+    dm: channels & {
+      memberships: {
+        archived: boolean | null;
+        user: Pick<users, 'id' | 'displayName'>;
+      }[];
+    }
+  ) => {
+    const { memberships, ...channel } = dm;
+    const user = memberships.find((m) => m.user.id !== me)?.user;
+    const hidden = memberships.find((m) => m.user.id === me)?.archived;
+    return serializeChannel({
+      ...channel,
+      channelName: user?.displayName!,
+      hidden: hidden || false,
+    });
+  };

@@ -70,6 +70,7 @@ interface Props {
     }
   ): Promise<SerializedThread>;
   channels: SerializedChannel[];
+  dms: SerializedChannel[];
   currentCommunity: SerializedAccount;
   isSubDomainRouting: boolean;
   permissions: Permissions;
@@ -93,13 +94,14 @@ export default function Inbox({
   isSubDomainRouting,
   permissions,
   settings,
+  dms,
 }: Props) {
   const [loading, setLoading] = useState(true);
   const [inbox, setInbox] = useState<InboxResponse>({ threads: [], total: 0 });
   const [page, setPage] = useState<number>(1);
   const [modal, setModal] = useState<ModalView>();
   const [configuration, setConfiguration] = useState<InboxConfig>(
-    defaultConfiguration({ channels })
+    defaultConfiguration({ channels: [...channels, ...dms] })
   );
   const [key, setKey] = useState(0);
   const [selections, setSelections] = useState<Selections>({});
@@ -207,7 +209,10 @@ export default function Inbox({
       return;
     }
     if (thread) {
-      if (currentUser.id === message.author?.id) {
+      if (
+        thread.messages.length &&
+        currentUser.id === thread.messages[0]?.author?.id
+      ) {
         return null;
       }
 
@@ -780,6 +785,7 @@ export default function Inbox({
       <ConfigureInboxModal
         configuration={configuration}
         channels={channels}
+        dms={dms}
         open={modal === ModalView.CONFIGURE_INBOX}
         close={() => setModal(undefined)}
         onChange={(channelId: string) => {

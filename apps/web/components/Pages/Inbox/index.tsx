@@ -102,6 +102,7 @@ export default function Inbox({
         isSubDomainRouting={isSubDomainRouting}
         permissions={permissions}
         settings={settings}
+        dms={dms}
       />
     </PageLayout>
   );

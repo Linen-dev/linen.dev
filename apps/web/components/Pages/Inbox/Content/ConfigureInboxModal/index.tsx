@@ -10,6 +10,7 @@ interface Props {
   close(): void;
   configuration: InboxConfig;
   channels: SerializedChannel[];
+  dms: SerializedChannel[];
   onChange(channelId: string): void;
 }
 
@@ -19,12 +20,33 @@ export default function ConfigureInboxModal({
   configuration,
   channels,
   onChange,
+  dms,
 }: Props) {
   return (
     <Modal open={open} close={close} size="lg">
       <h2 className={styles.h2}>Inbox</h2>
+      {showOptions({ title: 'Channels', channels, configuration, onChange })}
+      <div className="p-2"></div>
+      {showOptions({ title: 'DMs', channels: dms, configuration, onChange })}
+    </Modal>
+  );
+}
+
+function showOptions({
+  title,
+  channels,
+  configuration,
+  onChange,
+}: {
+  title: string;
+  channels: SerializedChannel[];
+  configuration: InboxConfig;
+  onChange(channelId: string): void;
+}) {
+  return (
+    <>
       <h3 className={styles.h3}>
-        <FiHash /> Channels
+        <FiHash /> {title}
       </h3>
       <ul className={styles.toggles}>
         {configuration.channels.map((config: InboxChannelConfig) => {
@@ -46,6 +68,6 @@ export default function ConfigureInboxModal({
           );
         })}
       </ul>
-    </Modal>
+    </>
   );
 }

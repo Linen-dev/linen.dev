@@ -1,11 +1,5 @@
-import {
-  accounts,
-  channels,
-  ChannelType,
-  prisma,
-  users,
-} from '@linen/database';
-import serializeChannel from 'serializers/channel';
+import { accounts, ChannelType, prisma } from '@linen/database';
+import { serializeDm } from 'serializers/channel';
 
 interface FindChannelParams {
   name: string;
@@ -170,26 +164,6 @@ export async function findChannelsByAccount({
     },
   });
 }
-
-const serializeDm =
-  (me: string) =>
-  (
-    dm: channels & {
-      memberships: {
-        archived: boolean | null;
-        user: users;
-      }[];
-    }
-  ) => {
-    const { memberships, ...channel } = dm;
-    const user = memberships.find((m) => m.user.id !== me)?.user;
-    const hidden = memberships.find((m) => m.user.id === me)?.archived;
-    return serializeChannel({
-      ...channel,
-      channelName: user?.displayName!,
-      hidden: hidden || false,
-    });
-  };
 
 export async function getDMs({
   accountId,

@@ -5,6 +5,8 @@ import { prisma } from '@linen/database';
 import serializeThread from 'serializers/thread';
 import ChannelsService from 'services/channels';
 import { anonymizeMessages } from 'utilities/anonymizeMessages';
+import { getDMs } from 'lib/channel';
+import { SerializedChannel } from '@linen/types';
 
 function getPage(page?: number) {
   if (!page || page < 1) {
@@ -32,10 +34,24 @@ export async function index({
 
   const page = getPage(params.page);
   const channels = await ChannelsService.find(community.id);
+  const dms = !!currentUserId
+    ? await getDMs({
+        accountId: community.id,
+        userId: currentUserId,
+      })
+    : [];
+
+  const channelsMap = [...channels, ...dms].reduce((prev, curr) => {
+    return {
+      ...prev,
+      [curr.id]: curr,
+    };
+  }, {} as Record<string, SerializedChannel>);
+
   const condition = {
     hidden: false,
     channelId: {
-      in: channels
+      in: [...channels, ...dms]
         .map((channel) => channel.id)
         .filter((channelId) => {
           if (!params.channelIds || params.channelIds.length === 0) {
@@ -78,7 +94,6 @@ export async function index({
         },
         orderBy: { sentAt: 'asc' },
       },
-      channel: true,
     },
     orderBy: { lastReplyAt: 'desc' },
     take: limit,
@@ -98,7 +113,7 @@ export async function index({
           if (community.anonymizeUsers) {
             return anonymizeMessages(thread);
           }
-          return thread;
+          return { ...thread, channel: channelsMap[thread.channelId] };
         })
         .map(serializeThread),
     },

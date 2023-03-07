@@ -105,9 +105,11 @@ export const getThreads = (
   props: ThreadsTypes.findType
 ): Promise<channelNextPageType> => get(`/api/threads?${qs(props)}`);
 
-export const getThread = (
-  props: ThreadsTypes.getType
-): Promise<SerializedThread> => get(`/api/threads/${props.id}`);
+export const getThread = ({
+  id,
+  ...props
+}: ThreadsTypes.getType): Promise<SerializedThread> =>
+  get(`/api/threads/${id}?${qs(props)}`);
 
 export const updateThread = (
   props: ThreadsTypes.putType
