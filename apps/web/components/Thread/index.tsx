@@ -31,6 +31,7 @@ interface Props {
   permissions: Permissions;
   currentUser: SerializedUser | null;
   token: string | null;
+  expanded?: boolean;
   sendMessage({
     message,
     files,
@@ -44,6 +45,7 @@ interface Props {
   }): Promise<void>;
   updateThread({ state, title }: { state?: ThreadState; title?: string }): void;
   onClose?(): void;
+  onExpandClick?(): void;
   onDelete?(messageId: string): void;
   onSend?(): void;
   onMessage(
@@ -78,9 +80,11 @@ export default function Thread({
   permissions,
   currentUser,
   token,
+  expanded,
   sendMessage,
   updateThread,
   onClose,
+  onExpandClick,
   onDelete,
   onSend,
   onMount,
@@ -184,6 +188,8 @@ export default function Thread({
         channelName={channelName}
         onClose={onClose}
         onCloseThread={() => updateThread({ state: ThreadState.CLOSE })}
+        expanded={expanded}
+        onExpandClick={onExpandClick}
         onReopenThread={() => updateThread({ state: ThreadState.OPEN })}
         onSetTitle={(title) => updateThread({ title })}
         manage={manage}
