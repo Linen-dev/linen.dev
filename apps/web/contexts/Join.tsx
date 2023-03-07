@@ -112,7 +112,7 @@ export const JoinContext = ({ children }: Props) => {
           <h3 className="text-lg font-medium leading-6 text-gray-900">
             Join the community
           </h3>
-          <div className="mt-2">
+          <div className="mt-5 pb-3">
             <p className="text-sm text-gray-500">
               Sign {mapText[flow]} to join the community and start to chat
             </p>

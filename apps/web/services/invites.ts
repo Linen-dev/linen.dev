@@ -296,11 +296,14 @@ export async function joinCommunityAfterSignIn({
   if (!permissions.access) {
     throw new Unauthorized();
   }
-  await createUser({
-    accountId: communityId,
-    authId,
-    displayName,
-    profileImageUrl,
-  });
+  const exist = await findUser(communityId, authId);
+  if (!exist) {
+    await createUser({
+      accountId: communityId,
+      authId,
+      displayName,
+      profileImageUrl,
+    });
+  }
   await checkoutTenant(authId, communityId);
 }
