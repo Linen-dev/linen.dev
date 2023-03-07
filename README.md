@@ -6,6 +6,10 @@
 
 Linen is a Google-searchable community chat tool. Linen was built as an alternative to closed tools like Slack and Discord.
 
+### Philosophy
+
+Modern communities are built on chat, Slack and Discord is great to get fast realtime answers from teams but it can become a chaotic blackhole of information. Historically these communities existed in forums where they had better structure and search-engine friendliness. We believe the future of communiation is in a hybrid model where you have all the benefits of a real time chat as well as the organizational benefits of a forum.
+
 Linen is free and offers unlimited message retention you can sign up at Linen.community.
 
 Linen cloud edition: https://linen.dev
