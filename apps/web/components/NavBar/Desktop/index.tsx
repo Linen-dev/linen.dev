@@ -33,6 +33,7 @@ import AddCommunityLink from './AddCommunityLink';
 import NewCommunityModal from './NewCommunityModal';
 import { timestamp } from '@linen/utilities/date';
 import { DMs } from './DMs';
+import { useInboxWebsockets } from '@linen/hooks';
 
 interface Props {
   mode: Mode;
@@ -101,25 +102,49 @@ export default function DesktopNavBar({
   const userId = permissions.auth?.id || null;
   const token = permissions.token || null;
 
+  const onNewMessage = (payload: any) => {
+    if (payload.is_thread) {
+      const thread = JSON.parse(payload.thread);
+      if (
+        thread?.messages?.length &&
+        thread?.messages[0]?.author?.authsId === userId
+      ) {
+        return; // skip own messages
+      }
+    }
+    if (payload.is_reply) {
+      const message = JSON.parse(payload.message);
+      if (message?.author?.authsId === userId) {
+        return; // skip own messages
+      }
+    }
+    if (payload.mention_type === 'signal') {
+      const channel = channels.find(
+        (channel) => channel.id === payload.channel_id
+      );
+      if (channel) {
+        const text = `You were mentioned in #${channel.channelName}`;
+        Toast.info(text);
+        notify(text);
+      }
+    }
+    setHighlights((highlights) => {
+      return [...highlights, payload.channel_id];
+    });
+  };
+
   useWebsockets({
     room: userId && `user:${userId}`,
     permissions,
     token,
-    onNewMessage(payload) {
-      if (payload.mention_type === 'signal') {
-        const channel = channels.find(
-          (channel) => channel.id === payload.channel_id
-        );
-        if (channel) {
-          const text = `You were mentioned in #${channel.channelName}`;
-          Toast.info(text);
-          notify(text);
-        }
-      }
-      setHighlights((highlights) => {
-        return [...highlights, payload.channel_id];
-      });
-    },
+    onNewMessage,
+  });
+
+  useInboxWebsockets({
+    communityId: permissions.accountId!,
+    token,
+    permissions,
+    onNewMessage,
   });
 
   const currentUser = permissions.user || null;
