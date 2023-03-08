@@ -46,10 +46,6 @@ export default function Grid({
             thread={thread}
             selected={!!selections[thread.id]?.checked}
             active={thread.id === currentThreadId}
-            permissions={permissions}
-            onChange={(id: string, checked: boolean) =>
-              onChange(id, checked, index)
-            }
             onClick={() => onSelect(thread)}
             onRead={onRead}
             onMute={onMute}

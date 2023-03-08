@@ -26,7 +26,6 @@ import {
   SerializedThread,
   Settings,
   ThreadState,
-  ThreadStatus,
   UploadedFile,
 } from '@linen/types';
 import {
