@@ -59,7 +59,6 @@ export default function SignIn({
       <Error error={error} />
 
       <form
-        className="px-2"
         onSubmit={(e) =>
           onSignInSubmit({
             setError,

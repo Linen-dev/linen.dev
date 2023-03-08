@@ -1,0 +1,29 @@
+@import '../colors.scss';
+
+.alert {
+  align-items: center;
+  color: black;
+  display: flex;
+  font-size: 14px;
+  gap: 0.5rem;
+  font-weight: 500;
+  letter-spacing: -0.3px;
+  border-radius: 0.25rem;
+  padding: 0.75rem 1rem;
+}
+
+.danger {
+  background: $color-red-100;
+  border: 1px solid $color-red-700;
+  color: $color-red-900;
+}
+
+.info {
+  background: $color-blue-100;
+  border: 1px solid $color-blue-700;
+  color: $color-blue-900;
+}
+
+.icon {
+  font-size: 20px;
+}

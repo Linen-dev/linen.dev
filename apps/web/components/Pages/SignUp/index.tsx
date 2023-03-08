@@ -59,7 +59,7 @@ export default function SignUp({
   return (
     <Layout header="Sign Up">
       <Error error={error} />
-      <form className="px-2" onSubmit={onSubmit(mode)}>
+      <form onSubmit={onSubmit(mode)}>
         <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
 
         <TextField

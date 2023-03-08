@@ -31,7 +31,7 @@ export default function ForgotPassword({ email }: Props) {
   };
   return (
     <Layout header="Forgot Password">
-      <form onSubmit={onSubmit} className="px-2">
+      <form onSubmit={onSubmit}>
         <EmailField
           placeholder="Email address"
           id="email"
