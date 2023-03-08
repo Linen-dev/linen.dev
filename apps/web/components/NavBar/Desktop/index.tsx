@@ -187,13 +187,7 @@ export default function DesktopNavBar({
             </Nav.Item>
           </Link>
         )}
-        {permissions.manage && (
-          <Link href="/metrics">
-            <Nav.Item active={paths.metrics === router.asPath}>
-              <FiBarChart /> Metrics
-            </Nav.Item>
-          </Link>
-        )}
+
         {currentUser && permissions.chat && (
           <DMs
             {...{
@@ -288,6 +282,11 @@ export default function DesktopNavBar({
                 <FiSettings /> Integrations
               </Nav.Item>
             </Link>
+              <Link href="/metrics">
+                <Nav.Item active={paths.metrics === router.asPath}>
+                  <FiBarChart /> Metrics
+                </Nav.Item>
+              </Link>
             <Link href="/configurations">
               <Nav.Item active={paths.configurations === router.asPath}>
                 <FiFileText /> Configurations
