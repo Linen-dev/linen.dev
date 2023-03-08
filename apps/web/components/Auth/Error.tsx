@@ -23,9 +23,9 @@ function Error({ error }: Props) {
     return null;
   }
   return (
-    <Alert type="danger">
-      <strong>Error:</strong> {getErrorMessage(error)}
-    </Alert>
+    <div className="pb-3">
+      <Alert type="danger">{getErrorMessage(error)}</Alert>
+    </div>
   );
 }
 

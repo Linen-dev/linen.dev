@@ -1,30 +1,36 @@
 import React from 'react';
+import classNames from 'classnames';
+import styles from './index.module.scss';
+import { FiAlertTriangle } from '@react-icons/all-files/fi/FiAlertTriangle';
+import { FiInfo } from '@react-icons/all-files/fi/FiInfo';
+
+type AlertType = 'info' | 'danger';
 
 interface Props {
-  type: 'danger' | 'info';
+  type: AlertType;
   children: React.ReactNode;
 }
 
+function icon(type: AlertType) {
+  switch (type) {
+    case 'danger':
+      return <FiAlertTriangle className={styles.icon} />;
+    case 'info':
+      return <FiInfo className={styles.icon} />;
+  }
+}
+
 export default function Alert({ type, children }: Props) {
-  if (type === 'danger') {
-    return (
-      <div
-        className="p-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800"
-        role="alert"
-      >
-        {children}
-      </div>
-    );
-  }
-  if (type === 'info') {
-    return (
-      <div
-        className="p-4 text-sm text-blue-700 bg-blue-100 rounded-lg dark:bg-blue-200 dark:text-blue-800"
-        role="alert"
-      >
-        {children}
-      </div>
-    );
-  }
-  return null;
+  return (
+    <div
+      className={classNames(styles.alert, {
+        [styles.danger]: type === 'danger',
+        [styles.info]: type === 'info',
+      })}
+      role="alert"
+    >
+      {icon(type)}
+      <span>{children}</span>
+    </div>
+  );
 }

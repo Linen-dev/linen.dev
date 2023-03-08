@@ -32,7 +32,7 @@ export default function ResetPassword({ token }: Props) {
   };
   return (
     <Layout header="Reset Password">
-      <form onSubmit={onSubmit} className="px-2">
+      <form onSubmit={onSubmit}>
         <PasswordField placeholder="Password" id="password" required />
         <PasswordField
           placeholder="Password confirmation"
