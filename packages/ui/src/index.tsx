@@ -30,6 +30,7 @@ import TextInput from './TextInput';
 import Toast from './Toast';
 import Toggle from './Toggle';
 import Tooltip from './Tooltip';
+import UserMessage from './UserMessage';
 
 import Layouts from './Layouts';
 import Pages from './Pages';
@@ -67,6 +68,7 @@ export {
   Toast,
   Toggle,
   Tooltip,
+  UserMessage,
   Layouts,
   Pages,
 };

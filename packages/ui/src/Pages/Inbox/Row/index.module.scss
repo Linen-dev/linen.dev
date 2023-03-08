@@ -1,53 +1,5 @@
 @import '../../../colors.scss';
 
-.row {
-  align-items: center;
-  display: block;
-  padding: 0 1rem;
-  position: relative;
-}
-
-.row.selected {
-  background-color: $color-gray-100;
-}
-
-.row.active {
-  background-color: $color-gray-50;
-}
-
-.row:hover {
-  background-color: $color-gray-50;
-}
-
-.checkbox {
-  margin: 0.75rem;
-}
-
-.body {
-  align-items: center;
-  cursor: pointer;
-  display: flex;
-  gap: 1rem;
-  padding: 0.75rem 0;
-}
-
-.channel {
-  font-size: 14px;
-}
-
-.channel {
-  color: $color-gray-500;
-}
-
-.row:last-child {
-  padding-bottom: 0;
-}
-
-.line {
-  white-space: nowrap;
-  overflow: hidden;
-}
-
 .actions {
   display: none;
 }

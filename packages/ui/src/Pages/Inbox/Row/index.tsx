@@ -1,9 +1,6 @@
 import React from 'react';
-import classNames from 'classnames';
-import Avatar from '../../../Avatar';
-import { Permissions, ReminderTypes, SerializedThread } from '@linen/types';
-import Title from './Title';
-import Description from './Description';
+import UserMessage from '../../../UserMessage/Summary';
+import { ReminderTypes, SerializedThread } from '@linen/types';
 import Actions from './Actions';
 import styles from './index.module.scss';
 
@@ -11,8 +8,6 @@ interface Props {
   thread: SerializedThread;
   selected: boolean;
   active: boolean;
-  permissions: Permissions;
-  onChange(id: string, checked: boolean): void;
   onClick(): void;
   onRead?(threadId: string): void;
   onMute?(threadId: string): void;
@@ -23,31 +18,19 @@ export default function Row({
   thread,
   selected,
   active,
-  permissions,
-  onChange,
   onClick,
   onRead,
   onMute,
   onRemind,
 }: Props) {
-  const message = thread.messages[thread.messages.length - 1];
   return (
-    <div
-      className={classNames(styles.row, {
-        [styles.selected]: selected,
-        [styles.active]: active,
-      })}
+    <UserMessage
+      className={styles.row}
+      thread={thread}
+      selected={selected}
+      active={active}
+      onClick={onClick}
     >
-      <div className={styles.body} onClick={onClick}>
-        <Avatar
-          src={message.author?.profileImageUrl}
-          text={message.author?.displayName}
-        />
-        <div className={styles.line}>
-          <Title thread={thread} />
-          <Description thread={thread} />
-        </div>
-      </div>
       <Actions
         className={styles.actions}
         thread={thread}
@@ -55,6 +38,6 @@ export default function Row({
         onMute={onMute}
         onRemind={onRemind}
       />
-    </div>
+    </UserMessage>
   );
 }
