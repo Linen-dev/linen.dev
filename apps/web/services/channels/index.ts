@@ -384,6 +384,7 @@ class ChannelsService {
         type: ChannelType.PRIVATE,
         memberships: {
           createMany: {
+            skipDuplicates: true,
             data: members,
           },
         },
