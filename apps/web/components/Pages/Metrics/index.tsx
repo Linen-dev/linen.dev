@@ -17,6 +17,7 @@ export interface Props {
   permissions: Permissions;
   settings: Settings;
   dms: SerializedChannel[];
+  isSubDomainRouting: boolean;
 }
 
 export default function Metrics({
@@ -26,6 +27,7 @@ export default function Metrics({
   settings,
   permissions,
   dms,
+  isSubDomainRouting,
 }: Props) {
   useEffect(() => {
     storage.set('pages.last', {
@@ -41,7 +43,7 @@ export default function Metrics({
       currentCommunity={currentCommunity}
       permissions={permissions}
       settings={settings}
-      isSubDomainRouting={false}
+      isSubDomainRouting={isSubDomainRouting}
       className="w-full"
       dms={dms}
     >
