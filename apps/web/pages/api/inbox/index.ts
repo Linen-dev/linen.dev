@@ -40,18 +40,27 @@ export async function index({
         userId: currentUserId,
       })
     : [];
+  const privateChannels = !!currentUserId
+    ? await ChannelsService.findPrivates({
+        accountId: community.id,
+        userId: currentUserId,
+      })
+    : [];
 
-  const channelsMap = [...channels, ...dms].reduce((prev, curr) => {
-    return {
-      ...prev,
-      [curr.id]: curr,
-    };
-  }, {} as Record<string, SerializedChannel>);
+  const channelsMap = [...channels, ...dms, ...privateChannels].reduce(
+    (prev, curr) => {
+      return {
+        ...prev,
+        [curr.id]: curr,
+      };
+    },
+    {} as Record<string, SerializedChannel>
+  );
 
   const condition = {
     hidden: false,
     channelId: {
-      in: [...channels, ...dms]
+      in: [...channels, ...dms, ...privateChannels]
         .map((channel) => channel.id)
         .filter((channelId) => {
           if (!params.channelIds || params.channelIds.length === 0) {
