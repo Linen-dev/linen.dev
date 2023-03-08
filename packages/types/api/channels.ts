@@ -6,6 +6,8 @@ export const createChannelSchema = z.object({
   channelName: z.string().regex(patterns.channelName),
   accountId: z.string().uuid(),
   slackChannelId: z.string().optional(),
+  channelPrivate: z.boolean().optional(),
+  usersId: z.array(z.string().uuid()).optional(),
 });
 export type createChannelType = z.infer<typeof createChannelSchema>;
 
@@ -56,3 +58,16 @@ export const archiveChannelSchema = z.object({
   accountId: z.string().uuid(),
 });
 export type archiveChannelType = z.infer<typeof archiveChannelSchema>;
+
+export const getChannelMembersSchema = z.object({
+  channelId: z.string().uuid(),
+  accountId: z.string().uuid(),
+});
+export type getChannelMembersType = z.infer<typeof getChannelMembersSchema>;
+
+export const putChannelMembersSchema = z.object({
+  channelId: z.string().uuid(),
+  accountId: z.string().uuid(),
+  usersId: z.array(z.string().uuid()),
+});
+export type putChannelMembersType = z.infer<typeof putChannelMembersSchema>;

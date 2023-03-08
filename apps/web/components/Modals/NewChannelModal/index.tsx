@@ -1,21 +1,36 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import H3 from 'components/H3';
 import { FiPlus } from '@react-icons/all-files/fi/FiPlus';
 import { FiX } from '@react-icons/all-files/fi/FiX';
-import { Button, Modal, TextInput, Toast } from '@linen/ui';
+import {
+  Button,
+  Modal,
+  TextInput,
+  Toast,
+  Toggle,
+  Suggestions,
+  Label,
+} from '@linen/ui';
 import { useLinkContext } from '@linen/contexts/Link';
 import CustomRouterPush from 'components/Link/CustomRouterPush';
-import { patterns } from 'utilities/util';
+import { patterns, unique } from 'utilities/util';
 import * as api from 'utilities/requests';
+import styles from './index.module.scss';
+import classNames from 'classnames';
+import { Permissions, SerializedUser } from '@linen/types';
+import { fetchMentions } from 'components/MessageForm/api';
+import { Badge } from 'components/Badge';
 
 export default function NewChannelModal({
-  communityId,
+  permissions,
 }: {
-  communityId: string;
+  permissions: Permissions;
 }) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [channelPrivate, setChannelPrivate] = useState(false);
   const { isSubDomainRouting, communityName, communityType } = useLinkContext();
+  const [users, setUsers] = useState<SerializedUser[]>([permissions.user]);
 
   async function onSubmit(e: any) {
     setLoading(true);
@@ -23,10 +38,21 @@ export default function NewChannelModal({
       e.preventDefault();
       const form = e.target;
       const channelName = form.channelName.value;
-      await api.createChannel({
-        accountId: communityId,
-        channelName,
-      });
+
+      if (channelPrivate) {
+        await api.createChannel({
+          accountId: permissions.accountId!,
+          channelName,
+          channelPrivate: true,
+          usersId: users.map((u) => u.id),
+        });
+      } else {
+        await api.createChannel({
+          accountId: permissions.accountId!,
+          channelName,
+        });
+      }
+
       setOpen(false);
       CustomRouterPush({
         isSubDomainRouting,
@@ -39,6 +65,14 @@ export default function NewChannelModal({
     } finally {
       setLoading(false);
     }
+  }
+
+  function onPrivateToggle(checked: boolean) {
+    setChannelPrivate(checked);
+  }
+
+  function removeUser(user: SerializedUser) {
+    setUsers((users) => users.filter((u) => u.id !== user.id));
   }
 
   return (
@@ -72,7 +106,6 @@ export default function NewChannelModal({
                 best when organized around a topic. e.g. javascript.
               </p>
             </div>
-
             <TextInput
               autoFocus
               id="channelName"
@@ -86,10 +119,33 @@ export default function NewChannelModal({
                   'Channels name should start with letter and could contain letters, underscore, numbers and hyphens. e.g. announcements',
               }}
             />
-
             <span className="text-xs text-gray-500">
               Be sure to choose an url friendly name.
             </span>
+            <div className={classNames(styles.toggle, 'py-4')}>
+              <label className={classNames(styles.label, styles.enabled)}>
+                <Toggle
+                  checked={channelPrivate}
+                  onChange={(checked: boolean) => onPrivateToggle(checked)}
+                />
+                Private
+              </label>
+              <input
+                type="hidden"
+                name={'channelPrivate'}
+                value={channelPrivate ? 'true' : 'false'}
+              />
+            </div>
+            <ShowUsers
+              {...{
+                communityId: permissions.accountId!,
+                channelPrivate,
+                users,
+                setUsers,
+                removeUser,
+                currentUser: permissions.user,
+              }}
+            />
           </div>
           <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
             <Button color="blue" type="submit" disabled={loading}>
@@ -98,6 +154,80 @@ export default function NewChannelModal({
           </div>
         </form>
       </Modal>
+    </>
+  );
+}
+
+export function ShowUsers({
+  communityId,
+  channelPrivate,
+  setUsers,
+  users,
+  removeUser,
+  currentUser,
+}: {
+  communityId: string;
+  channelPrivate: boolean;
+  users: SerializedUser[];
+  setUsers: React.Dispatch<React.SetStateAction<SerializedUser[]>>;
+  removeUser(user: SerializedUser): void;
+  currentUser: SerializedUser;
+}) {
+  const ref = useRef(null);
+  const [query, setQuery] = useState<SerializedUser[]>([]);
+  const [val, setVal] = useState<string>();
+
+  if (!channelPrivate) {
+    return <></>;
+  }
+
+  return (
+    <>
+      <Label htmlFor="userId">Add member</Label>
+      <TextInput
+        inputRef={ref}
+        autoFocus
+        id="userId"
+        name="userId"
+        value={val}
+        autocomplete="off"
+        onInput={(e: any) => {
+          setVal(e.target.value);
+          fetchMentions(e.target.value, communityId).then(setQuery);
+        }}
+      />
+      <Suggestions
+        className={styles.suggestions}
+        users={query}
+        onSelect={(user: SerializedUser | null) => {
+          if (user) {
+            setUsers(unique([...users, user]));
+            setVal('');
+            (ref.current as any).focus();
+            setQuery([]);
+          }
+        }}
+      />
+      <span className="text-xs text-gray-500">Type for search users</span>
+
+      {users.length > 0 && (
+        <>
+          <Label className="pt-4">Members</Label>
+          <div className="flex flex-wrap pb-2">
+            {users.map((user) => {
+              const props =
+                currentUser.id !== user.id
+                  ? { onClose: () => removeUser(user) }
+                  : {};
+              return (
+                <div className="pr-1 pb-1" key={user.id}>
+                  <Badge {...props}>{user.displayName}</Badge>
+                </div>
+              );
+            })}
+          </div>
+        </>
+      )}
     </>
   );
 }

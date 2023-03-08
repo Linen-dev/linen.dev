@@ -39,6 +39,13 @@ export async function ssr(
   }
 
   const channels = await ChannelsService.find(community.id);
+  const privateChannels = !!permissions.user?.id
+    ? await ChannelsService.findPrivates({
+        accountId: community.id,
+        userId: permissions.user.id,
+      })
+    : [];
+
   const settings = serializeSettings(community);
   const communities = await CommunitiesService.find(context.req, context.res);
 
@@ -55,7 +62,7 @@ export async function ssr(
     props: {
       token: permissions.token,
       currentCommunity,
-      channels: channels.map(serializeChannel),
+      channels: [...channels, ...privateChannels].map(serializeChannel),
       communities: communities.map(serializeAccount),
       permissions,
       settings,

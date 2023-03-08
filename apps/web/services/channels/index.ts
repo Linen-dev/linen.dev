@@ -20,6 +20,23 @@ class ChannelsService {
     });
   }
 
+  static async findPrivates({
+    accountId,
+    userId,
+  }: {
+    accountId: string;
+    userId: string;
+  }): Promise<channels[]> {
+    return prisma.channels.findMany({
+      where: {
+        accountId,
+        type: ChannelType.PRIVATE,
+        hidden: false,
+        memberships: { some: { usersId: userId } },
+      },
+    });
+  }
+
   static async findWithStats(communityId: string) {
     return await prisma.channels
       .findMany({
@@ -338,6 +355,39 @@ class ChannelsService {
     await prisma.memberships.updateMany({
       data: { archived: false },
       where: { channelsId: channelId },
+    });
+  }
+
+  static async createPrivateChannel({
+    channelName,
+    externalChannelId,
+    accountId,
+    usersId = [],
+    ownerId,
+  }: {
+    externalChannelId: string;
+    channelName: string;
+    accountId: string;
+    ownerId: string;
+    usersId: string[] | undefined;
+  }) {
+    const members = [ownerId, ...usersId].map((u) => ({
+      usersId: u,
+    }));
+
+    return await prisma.channels.create({
+      data: {
+        channelName,
+        accountId,
+        createdByUserId: ownerId,
+        externalChannelId,
+        type: ChannelType.PRIVATE,
+        memberships: {
+          createMany: {
+            data: members,
+          },
+        },
+      },
     });
   }
 }

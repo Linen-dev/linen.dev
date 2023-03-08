@@ -13,6 +13,9 @@ import type {
   postChannelIntegrationsType,
   createDmType,
   archiveChannelType,
+  getChannelMembersType,
+  SerializedUser,
+  putChannelMembersType,
 } from '@linen/types';
 import type * as AccountsTypes from 'server/routers/accounts.types';
 import type * as ThreadsTypes from 'server/routers/threads/types';
@@ -174,3 +177,15 @@ export const createDm = (props: createDmType): Promise<SerializedChannel> =>
 
 export const archiveChannel = (props: archiveChannelType): Promise<{}> =>
   post(`/api/channels/archive`, props);
+
+export const getChannelMembers = ({
+  channelId,
+  ...props
+}: getChannelMembersType): Promise<SerializedUser[]> =>
+  get(`/api/channels/${channelId}/members?${qs(props)}`);
+
+export const updateChannelMembers = ({
+  channelId,
+  ...props
+}: putChannelMembersType): Promise<SerializedUser[]> =>
+  put(`/api/channels/${channelId}/members`, props);

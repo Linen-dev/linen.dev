@@ -13,6 +13,7 @@ import styles from './index.module.scss';
 import { FiInbox } from '@react-icons/all-files/fi/FiInbox';
 import { FiBarChart } from '@react-icons/all-files/fi/FiBarChart';
 import { FiHash } from '@react-icons/all-files/fi/FiHash';
+import { FiLock } from '@react-icons/all-files/fi/FiLock';
 import { FiSettings } from '@react-icons/all-files/fi/FiSettings';
 import { FiSliders } from '@react-icons/all-files/fi/FiSliders';
 import { FiDollarSign } from '@react-icons/all-files/fi/FiDollarSign';
@@ -203,9 +204,7 @@ export default function DesktopNavBar({
           Channels
           {currentUser &&
             permissions.channel_create &&
-            !!permissions.accountId && (
-              <NewChannelModal communityId={permissions.accountId} />
-            )}
+            !!permissions.accountId && <NewChannelModal {...{ permissions }} />}
         </Nav.Label>
         <div>
           {channels.map((channel: SerializedChannel, index: number) => {
@@ -242,6 +241,8 @@ export default function DesktopNavBar({
             const active = channel.channelName === channelName;
             const highlighted = !active && count > 0;
 
+            const Icon = channel.type === 'PRIVATE' ? FiLock : FiHash;
+
             return (
               <Link
                 className={classNames(styles.item, {
@@ -260,7 +261,7 @@ export default function DesktopNavBar({
                 href={`/c/${channel.channelName}`}
               >
                 <Nav.Item active={active} highlighted={highlighted}>
-                  <FiHash /> {channel.channelName}
+                  <Icon /> {channel.channelName}
                 </Nav.Item>
               </Link>
             );

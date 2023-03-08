@@ -2,7 +2,12 @@ import { Router } from 'express';
 import { onError } from 'server/middlewares/error';
 import tenantMiddleware, { Roles } from 'server/middlewares/tenant';
 import validationMiddleware from 'server/middlewares/validation';
-import { BadRequest, NotFound, NotImplemented } from 'server/exceptions';
+import {
+  BadRequest,
+  Forbidden,
+  NotFound,
+  NotImplemented,
+} from 'server/exceptions';
 import {
   AuthedRequestWithTenantAndBody,
   NextFunction,
@@ -28,7 +33,14 @@ import {
 } from '@linen/types';
 import serializeChannel from 'serializers/channel';
 import { serialize } from 'superjson';
-import { postChannelIntegrationsSchema } from '@linen/types';
+import {
+  postChannelIntegrationsSchema,
+  getChannelMembersSchema,
+  getChannelMembersType,
+  putChannelMembersSchema,
+  putChannelMembersType,
+} from '@linen/types';
+import serializeUser from 'serializers/user';
 
 const prefix = '/api/channels';
 
@@ -120,7 +132,7 @@ channelsRouter.post(
     res: Response,
     next: NextFunction
   ) => {
-    const { channelName, slackChannelId } = req.body;
+    const { channelName, slackChannelId, channelPrivate, usersId } = req.body;
 
     // TODO: move to services
     const result = await prisma.channels.findFirst({
@@ -132,6 +144,17 @@ channelsRouter.post(
 
     if (result) {
       return next(new BadRequest('Channel with this name already exists'));
+    }
+
+    if (channelPrivate) {
+      const channel = await ChannelsService.createPrivateChannel({
+        externalChannelId: v4(),
+        channelName,
+        accountId: req.tenant?.id!,
+        ownerId: req.tenant_user?.id!,
+        usersId,
+      });
+      return res.status(200).json(serializeChannel(channel));
     }
 
     const channel = await ChannelsService.findOrCreateChannel({
@@ -213,6 +236,93 @@ channelsRouter.post(
       accountId: req.tenant?.id!,
     });
     return res.status(200).json({});
+  }
+);
+
+channelsRouter.get(
+  `${prefix}/:channelId/members`,
+  tenantMiddleware([Roles.ADMIN, Roles.OWNER, Roles.MEMBER]),
+  validationMiddleware(getChannelMembersSchema),
+  async (
+    req: AuthedRequestWithTenantAndBody<getChannelMembersType>,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const members = await prisma.channels.findFirst({
+      select: { memberships: { select: { user: true } } },
+      where: {
+        accountId: req.tenant?.id,
+        id: req.body.channelId,
+      },
+    });
+
+    if (!members) {
+      return next(new NotFound());
+    }
+    const canAccess = members.memberships.find(
+      (m) => m.user.id === req.tenant_user?.id
+    );
+    if (!canAccess) {
+      return next(new Forbidden());
+    }
+    const serializedMembers = members.memberships.map((m) =>
+      serializeUser(m.user)
+    );
+    return res.json(serializedMembers);
+  }
+);
+
+channelsRouter.put(
+  `${prefix}/:channelId/members`,
+  tenantMiddleware([Roles.ADMIN, Roles.OWNER, Roles.MEMBER]),
+  validationMiddleware(putChannelMembersSchema),
+  async (
+    req: AuthedRequestWithTenantAndBody<putChannelMembersType>,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const members = await prisma.channels.findFirst({
+      select: { memberships: { select: { user: true } } },
+      where: {
+        accountId: req.tenant?.id,
+        id: req.body.channelId,
+      },
+    });
+
+    if (!members) {
+      return next(new NotFound());
+    }
+    const canAccess = members.memberships.find(
+      (m) => m.user.id === req.tenant_user?.id
+    );
+    if (!canAccess) {
+      return next(new Forbidden());
+    }
+
+    const toRemove = members.memberships
+      .filter((m) => !req.body.usersId.some((u) => m.user.id === u))
+      .map((u) => u.user.id);
+
+    const toInsert = req.body.usersId
+      .filter((u) => !members.memberships.some((m) => m.user.id === u))
+      .map((userId) => ({
+        usersId: userId,
+        channelsId: req.body.channelId,
+      }));
+
+    toRemove.length > 0 &&
+      (await prisma.memberships.deleteMany({
+        where: {
+          channelsId: req.body.channelId,
+          usersId: { in: toRemove },
+        },
+      }));
+    toInsert.length > 0 &&
+      (await prisma.memberships.createMany({
+        data: toInsert,
+      }));
+
+    return res.json({});
   }
 );
 

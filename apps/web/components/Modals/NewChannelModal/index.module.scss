@@ -1,0 +1,28 @@
+@import 'styles/colors.scss';
+
+.toggle {
+  align-items: center;
+  display: flex;
+  margin-bottom: 0.25rem;
+}
+
+.toggle:last-child {
+  margin-bottom: 0;
+}
+
+.label {
+  align-items: center;
+  cursor: pointer;
+  display: flex;
+  font-size: 14px;
+  gap: 0.25rem;
+  font-weight: 500;
+}
+
+.enabled {
+  color: $color-gray-900;
+}
+
+.suggestions {
+  position: relative
+}

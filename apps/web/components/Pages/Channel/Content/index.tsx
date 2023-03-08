@@ -42,8 +42,9 @@ import { timestamp } from '@linen/utilities/date';
 import debounce from '@linen/utilities/debounce';
 import * as api from 'utilities/requests';
 import ScrollToBottomIcon from './ScrollToBottomIcon';
-import SettingsModal from 'components/Modals/IntegrationsModal';
+import IntegrationsModal from 'components/Modals/IntegrationsModal';
 import { useRouter } from 'next/router';
+import MembersModal from 'components/Modals/MembersModal';
 
 const { SidebarLayout } = Layouts.Shared;
 
@@ -164,6 +165,7 @@ export default function Channel({
   const [integrationsModal, setIntegrationsModal] = useState(
     !!query.integration || false
   );
+  const [membersModal, setMembersModal] = useState(false);
 
   const currentUser = permissions.user || null;
 
@@ -279,6 +281,10 @@ export default function Channel({
 
   const handleOpenIntegrations = async () => {
     setIntegrationsModal(true);
+  };
+
+  const handleOpenMembers = async () => {
+    setMembersModal(true);
   };
 
   async function loadMore(next: boolean = false) {
@@ -425,9 +431,10 @@ export default function Channel({
                     className={classNames(styles.header, {
                       [styles.pinned]: !!pinnedThread,
                     })}
-                    channelName={currentChannel.channelName}
+                    channel={currentChannel}
                     currentUser={currentUser}
                     handleOpenIntegrations={handleOpenIntegrations}
+                    handleOpenMembers={handleOpenMembers}
                   >
                     {pinnedThread && (
                       <PinnedThread
@@ -547,10 +554,15 @@ export default function Channel({
           [styles['is-expanded']]: collapsed,
         }}
       />
-      <SettingsModal
+      <IntegrationsModal
         permissions={permissions}
         open={integrationsModal}
         close={() => setIntegrationsModal(false)}
+      />
+      <MembersModal
+        permissions={permissions}
+        open={membersModal}
+        close={() => setMembersModal(false)}
       />
     </>
   );

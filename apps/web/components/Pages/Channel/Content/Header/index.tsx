@@ -7,30 +7,49 @@ import { FiMoreVertical } from '@react-icons/all-files/fi/FiMoreVertical';
 import Icon from './Icon';
 import { BsFillGearFill } from '@react-icons/all-files/bs/BsFillGearFill';
 import { ShowIntegrationDetail } from 'components/Modals/IntegrationsModal';
+import { FiUsers } from '@react-icons/all-files/fi/FiUsers';
+import { SerializedChannel } from '@linen/types';
 
 interface Props {
   className?: string;
-  channelName: string;
+  channel: SerializedChannel;
   children: React.ReactNode;
   currentUser?: SerializedUser;
   handleOpenIntegrations(): void;
+  handleOpenMembers(): void;
 }
 
 export default function Header({
   className,
-  channelName,
+  channel,
   children,
   currentUser,
   handleOpenIntegrations,
+  handleOpenMembers,
 }: Props) {
+  const items = [];
+  if (channel.type !== 'DM') {
+    items.push({
+      icon: <BsFillGearFill />,
+      label: 'Integrations',
+      onClick: handleOpenIntegrations,
+    });
+  }
+  if (channel.type === 'PRIVATE') {
+    items.push({
+      icon: <FiUsers />,
+      label: 'Members',
+      onClick: handleOpenMembers,
+    });
+  }
   return (
     <StickyHeader className={className}>
       <div className={styles.header}>
         <div className={styles.title}>
-          <FiHash /> {channelName}
+          <FiHash /> {channel.channelName}
           <ShowIntegrationDetail />
         </div>
-        {currentUser && (
+        {currentUser && items.length > 0 && (
           <div className={styles.actions}>
             <Dropdown
               button={
@@ -38,13 +57,7 @@ export default function Header({
                   <FiMoreVertical />
                 </Icon>
               }
-              items={[
-                {
-                  icon: <BsFillGearFill />,
-                  label: 'Integrations',
-                  onClick: handleOpenIntegrations,
-                },
-              ]}
+              items={items}
             />
           </div>
         )}

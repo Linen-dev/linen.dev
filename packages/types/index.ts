@@ -116,6 +116,7 @@ export type SerializedChannel = {
   accountId: string | null;
   pages: number | null;
   stats?: string;
+  type?: 'DM' | 'PUBLIC' | 'PRIVATE' | null;
 };
 
 export interface SerializedUser {
