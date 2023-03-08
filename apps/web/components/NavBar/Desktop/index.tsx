@@ -187,13 +187,6 @@ export default function DesktopNavBar({
             </Nav.Item>
           </Link>
         )}
-        {permissions.manage && (
-          <Link href="/metrics">
-            <Nav.Item active={paths.metrics === router.asPath}>
-              <FiBarChart /> Metrics
-            </Nav.Item>
-          </Link>
-        )}
         {currentUser && permissions.chat && (
           <DMs
             {...{
@@ -309,6 +302,13 @@ export default function DesktopNavBar({
               </Nav.Item>
             </Link>
           </>
+        )}
+        {permissions.manage && (
+          <Link href="/metrics">
+            <Nav.Item active={paths.metrics === router.asPath}>
+              <FiBarChart /> Metrics
+            </Nav.Item>
+          </Link>
         )}
         <a target="_blank" rel="noreferrer" href="https://www.linen.dev">
           <Nav.Item>Powered by Linen</Nav.Item>
