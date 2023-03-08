@@ -7,7 +7,7 @@ import {
   SerializedReadStatus,
 } from '@linen/types';
 import Link from 'components/Link/InternalLink';
-import NewChannelModal from 'components/Pages/Channel/Content/NewChannelModal';
+import NewChannelModal from 'components/Modals/NewChannelModal';
 import useWebsockets from '@linen/hooks/websockets';
 import styles from './index.module.scss';
 import { FiInbox } from '@react-icons/all-files/fi/FiInbox';
@@ -30,7 +30,7 @@ import { notify } from 'utilities/notification';
 import unique from 'lodash.uniq';
 import CommunityLink from './CommunityLink';
 import AddCommunityLink from './AddCommunityLink';
-import NewCommunityModal from './NewCommunityModal';
+import NewCommunityModal from 'components/Modals/NewCommunityModal';
 import { timestamp } from '@linen/utilities/date';
 import { DMs } from './DMs';
 import useInboxWebsockets from '@linen/hooks/websockets/inbox';

@@ -42,7 +42,7 @@ import { timestamp } from '@linen/utilities/date';
 import debounce from '@linen/utilities/debounce';
 import * as api from 'utilities/requests';
 import ScrollToBottomIcon from './ScrollToBottomIcon';
-import SettingsModal from './IntegrationsModal';
+import SettingsModal from 'components/Modals/IntegrationsModal';
 import { useRouter } from 'next/router';
 
 const { SidebarLayout } = Layouts.Shared;

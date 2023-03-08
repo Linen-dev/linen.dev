@@ -1,4 +1,4 @@
-import NewDmModal from 'components/Pages/Channel/Content/NewDmModal';
+import NewDmModal from 'components/Modals/NewDmModal';
 import { FiUser } from '@react-icons/all-files/fi/FiUser';
 import { Nav } from '@linen/ui';
 import Link from 'components/Link/InternalLink';

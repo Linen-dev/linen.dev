@@ -6,7 +6,7 @@ import { FiHash } from '@react-icons/all-files/fi/FiHash';
 import { FiMoreVertical } from '@react-icons/all-files/fi/FiMoreVertical';
 import Icon from './Icon';
 import { BsFillGearFill } from '@react-icons/all-files/bs/BsFillGearFill';
-import { ShowIntegrationDetail } from '../IntegrationsModal';
+import { ShowIntegrationDetail } from 'components/Modals/IntegrationsModal';
 
 interface Props {
   className?: string;
