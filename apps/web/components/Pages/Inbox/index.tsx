@@ -8,7 +8,7 @@ import {
   ThreadState,
 } from '@linen/types';
 import debounce from '@linen/utilities/debounce';
-import storage from '@linen/utilities/storage';
+import { localStorage } from '@linen/utilities/storage';
 import * as api from 'utilities/requests';
 import Content from './Content';
 import { InboxConfig } from './types';
@@ -77,7 +77,7 @@ export default function Inbox({
   dms,
 }: Props) {
   useEffect(() => {
-    storage.set('pages.last', {
+    localStorage.set('pages.last', {
       communityId: currentCommunity.id,
       page: 'inbox',
     });

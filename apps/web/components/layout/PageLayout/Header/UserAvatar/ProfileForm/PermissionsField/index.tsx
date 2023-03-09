@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import Field from 'components/Field';
 import { Label, Toast, Toggle } from '@linen/ui';
-import storage from '@linen/utilities/storage';
+import { localStorage } from '@linen/utilities/storage';
 import { useRequest } from 'utilities/requests';
 
 export default function PermissionsField() {
-  const granted = storage.get('notification.permission') === 'granted';
+  const granted = localStorage.get('notification.permission') === 'granted';
   const [checked, setChecked] = useState<boolean>(granted);
   const settings = useRequest('/api/notifications/settings');
   const [checkedEmail, setCheckedEmail] = useState<boolean>(false);
@@ -36,13 +36,13 @@ export default function PermissionsField() {
             checked={checked}
             onChange={() => {
               if (checked) {
-                storage.set('notification.permission', 'denied');
+                localStorage.set('notification.permission', 'denied');
                 Toast.info('Notifications are disabled');
                 new Notification('Notifications are disabled');
                 setChecked(false);
               } else if (window.Notification) {
                 window.Notification.requestPermission((permission) => {
-                  storage.set('notification.permission', permission);
+                  localStorage.set('notification.permission', permission);
                   if (permission === 'granted') {
                     setChecked(true);
                     Toast.info('Notifications are enabled');

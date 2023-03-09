@@ -1,13 +1,13 @@
 import { InboxChannelConfig, InboxConfig } from '../../types';
 import { SerializedChannel } from '@linen/types';
-import storage from '@linen/utilities/storage';
+import { localStorage } from '@linen/utilities/storage';
 
 export function defaultConfiguration({
   channels,
 }: {
   channels: SerializedChannel[];
 }): InboxConfig {
-  const configuration = storage.get('inbox.configuration') as InboxConfig;
+  const configuration = localStorage.get('inbox.configuration') as InboxConfig;
   if (configuration && configuration.channels) {
     const result: InboxChannelConfig[] = [];
     channels.forEach((channel) => {

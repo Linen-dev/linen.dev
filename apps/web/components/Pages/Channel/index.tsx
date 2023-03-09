@@ -24,7 +24,7 @@ import {
 } from './Content/utilities/http';
 import { createThreadImitation } from './Content/utilities/thread';
 import { useUsersContext } from '@linen/contexts/Users';
-import storage from '@linen/utilities/storage';
+import { localStorage } from '@linen/utilities/storage';
 import ChannelForBots from './Bots/ChannelForBots';
 import * as api from 'utilities/requests';
 import debounce from '@linen/utilities/debounce';
@@ -123,7 +123,7 @@ export default function Channel(props: ChannelProps) {
   }, [initialChannel]);
 
   useEffect(() => {
-    storage.set('pages.last', {
+    localStorage.set('pages.last', {
       communityId: currentCommunity.id,
       page: 'channel',
       channelId: currentChannel.id,
@@ -259,10 +259,10 @@ export default function Channel(props: ChannelProps) {
 
   useEffect(() => {
     if (currentUser && window.Notification) {
-      const permission = storage.get('notification.permission');
+      const permission = localStorage.get('notification.permission');
       if (!permission) {
         window.Notification.requestPermission((permission) => {
-          storage.set('notification.permission', permission);
+          localStorage.set('notification.permission', permission);
           if (permission === 'granted') {
             Toast.info('Notifications are enabled');
             new Notification('Notifications are enabled');

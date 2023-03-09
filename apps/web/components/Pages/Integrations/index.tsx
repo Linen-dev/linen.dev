@@ -7,7 +7,7 @@ import {
   SerializedChannel,
   Settings,
 } from '@linen/types';
-import storage from '@linen/utilities/storage';
+import { localStorage } from '@linen/utilities/storage';
 import styles from './index.module.scss';
 import CommunityIntegrationRow from './CommunityIntegrationRow';
 import SlackImportRow from './SlackImportRow';
@@ -51,7 +51,7 @@ export default function IntegrationsPage({
     useState<SerializedChannel[]>(initialChannels);
 
   useEffect(() => {
-    storage.set('pages.last', {
+    localStorage.set('pages.last', {
       communityId: currentCommunity.id,
       page: 'settings',
     });

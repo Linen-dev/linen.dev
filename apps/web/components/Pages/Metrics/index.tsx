@@ -8,7 +8,7 @@ import {
   SerializedChannel,
   Settings,
 } from '@linen/types';
-import storage from '@linen/utilities/storage';
+import { localStorage } from '@linen/utilities/storage';
 
 export interface Props {
   channels: SerializedChannel[];
@@ -30,7 +30,7 @@ export default function Metrics({
   isSubDomainRouting,
 }: Props) {
   useEffect(() => {
-    storage.set('pages.last', {
+    localStorage.set('pages.last', {
       communityId: currentCommunity.id,
       page: 'metrics',
     });
