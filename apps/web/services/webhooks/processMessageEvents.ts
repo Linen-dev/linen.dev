@@ -167,6 +167,7 @@ async function addMessage(
       mentions: message.mentions,
       mentionNodes: [],
       message: JSON.stringify(serializedMessage),
+      userId: user?.id,
     });
   }
 

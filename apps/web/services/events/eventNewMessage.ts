@@ -25,6 +25,7 @@ export type NewMessageEvent = {
   mentionNodes: MentionNode[];
   communityId: string;
   message: string;
+  userId?: string;
 };
 
 export async function eventNewMessage({
@@ -36,6 +37,7 @@ export async function eventNewMessage({
   mentionNodes = [],
   communityId,
   message,
+  userId,
 }: NewMessageEvent) {
   const event = {
     channelId,
@@ -52,7 +54,7 @@ export async function eventNewMessage({
     push(event),
     pushChannel(event),
     ThreadsServices.updateMetrics({ messageId, threadId }),
-    UserThreadStatusService.markAsUnreadForAllUsers(threadId),
+    UserThreadStatusService.markAsUnread(threadId, userId),
     UserThreadStatusService.markAsUnmutedForMentionedUsers(
       threadId,
       mentions.map((mention) => mention.usersId)
