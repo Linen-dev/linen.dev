@@ -47,7 +47,7 @@ export function DMs({
             return count;
           }, 0);
 
-          const active = channel.id === channelName;
+          const active = channel.channelName === channelName;
           const highlighted = !active && count > 0;
 
           if (!highlighted && channel.hidden) {
