@@ -21,7 +21,7 @@ export async function processLinen(workDir: string, logger: Logger) {
   const account = {
     id: linen,
     name: linen,
-    redirectDomain: linen,
+    redirectDomain: `www.${linen}`,
     discordDomain: null,
     discordServerId: null,
     slackDomain: null,

@@ -1,6 +1,7 @@
 import { normalize } from '@linen/utilities/string';
 import { SerializedThread, Settings } from '@linen/types';
-import { buildUrl } from './buildUrl';
+import { buildUrl } from './utils/buildThreadUrl';
+import { replaceMentions } from './utils/replaceMentions';
 
 export function buildThreadSeo({
   isSubDomainRouting,
@@ -13,7 +14,13 @@ export function buildThreadSeo({
   settings: Settings;
   thread: SerializedThread;
 }) {
-  const cleanBody = normalize(thread.messages?.[0]?.body || thread.slug);
+  const firstMessage = thread.messages.find(Boolean);
+  const cleanBody = normalize(
+    replaceMentions({
+      body: firstMessage?.body || thread.slug,
+      mentions: firstMessage?.mentions || [],
+    })
+  );
   const title = [
     thread.title || cleanBody.slice(0, 60),
     settings.communityName,

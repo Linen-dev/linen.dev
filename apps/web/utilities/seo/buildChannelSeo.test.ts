@@ -34,7 +34,7 @@ describe('buildChannelSeo', () => {
     });
     expect(title).toEqual('communityName #channelName');
     expect(description).toEqual('hi communityName #channelName Latest');
-    expect(url).toEqual('https://linen.dev/d/communityName/c/channelName');
+    expect(url).toEqual('https://www.linen.dev/d/communityName/c/channelName');
     expect(image).toEqual(defaultProps.settings.logoUrl);
     expect(rest).toEqual({});
   });
@@ -49,7 +49,7 @@ describe('buildChannelSeo', () => {
     });
     expect(title).toEqual('communityName #channelName');
     expect(description).toEqual('hi communityName #channelName Latest');
-    expect(url).toEqual('https://linen.dev/s/communityName/c/channelName');
+    expect(url).toEqual('https://www.linen.dev/s/communityName/c/channelName');
     expect(image).toEqual(defaultProps.settings.logoUrl);
     expect(rest).toEqual({});
   });

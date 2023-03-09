@@ -9,6 +9,6 @@ describe('#getThreadUrl', () => {
       slug: 'test',
       incrementId: 1,
     });
-    expect(url).toBe('https://linen.dev/s/linen/t/1/test');
+    expect(url).toBe('https://www.linen.dev/s/linen/t/1/test');
   });
 });

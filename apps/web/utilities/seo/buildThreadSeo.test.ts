@@ -31,7 +31,9 @@ describe('buildThreadSeo', () => {
     });
     expect(title).toEqual('slug cool communityName #channelName');
     expect(description).toEqual('slug cool');
-    expect(url).toEqual('https://linen.dev/d/communityName/t/123/slug-cool');
+    expect(url).toEqual(
+      'https://www.linen.dev/d/communityName/t/123/slug-cool'
+    );
     expect(image).toEqual(defaultProps.settings.logoUrl);
     expect(rest).toEqual({});
   });
@@ -46,7 +48,9 @@ describe('buildThreadSeo', () => {
     });
     expect(title).toEqual('slug cool communityName #channelName');
     expect(description).toEqual('slug cool');
-    expect(url).toEqual('https://linen.dev/s/communityName/t/123/slug-cool');
+    expect(url).toEqual(
+      'https://www.linen.dev/s/communityName/t/123/slug-cool'
+    );
     expect(image).toEqual(defaultProps.settings.logoUrl);
     expect(rest).toEqual({});
   });
@@ -70,7 +74,9 @@ describe('buildThreadSeo', () => {
     });
     expect(title).toEqual('message on the body communityName #channelName');
     expect(description).toEqual('message on the body');
-    expect(url).toEqual('https://linen.dev/s/communityName/t/123/slug-cool');
+    expect(url).toEqual(
+      'https://www.linen.dev/s/communityName/t/123/slug-cool'
+    );
     expect(image).toEqual(defaultProps.settings.logoUrl);
     expect(rest).toEqual({});
   });
@@ -95,7 +101,9 @@ describe('buildThreadSeo', () => {
     });
     expect(title).toEqual('well hello communityName #channelName');
     expect(description).toEqual('message on the body');
-    expect(url).toEqual('https://linen.dev/s/communityName/t/123/slug-cool');
+    expect(url).toEqual(
+      'https://www.linen.dev/s/communityName/t/123/slug-cool'
+    );
     expect(image).toEqual(defaultProps.settings.logoUrl);
     expect(rest).toEqual({});
   });
@@ -115,7 +123,9 @@ describe('buildThreadSeo', () => {
     });
     expect(title).toEqual('Slug COOL communityName #channelName');
     expect(description).toEqual('Slug COOL');
-    expect(url).toEqual('https://linen.dev/s/communityName/t/123/slug-cool');
+    expect(url).toEqual(
+      'https://www.linen.dev/s/communityName/t/123/slug-cool'
+    );
     expect(image).toEqual(defaultProps.settings.logoUrl);
     expect(rest).toEqual({});
   });
@@ -147,7 +157,9 @@ describe('buildThreadSeo', () => {
       `this is a loo ${ooo(11)} oo communityName #channelName`
     );
     expect(description).toEqual(`this is a loo ${ooo(46)} oo`);
-    expect(url).toEqual('https://linen.dev/s/communityName/t/123/slug-cool');
+    expect(url).toEqual(
+      'https://www.linen.dev/s/communityName/t/123/slug-cool'
+    );
     expect(image).toEqual(defaultProps.settings.logoUrl);
     expect(rest).toEqual({});
   });

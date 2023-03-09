@@ -32,7 +32,7 @@ export function isWhitespace(character: string) {
 
 export function normalize(str?: string | null) {
   if (!str) return '';
-  return str.replace(/[^a-zA-Z0-9 ]/g, ' ').replace(/\s+/g, ' ');
+  return str.replace(/[\p{P}$+<=>^`|~]/gu, ' ').replace(/\s+/g, ' ');
 }
 
 export function pad(string: string, length: number) {
