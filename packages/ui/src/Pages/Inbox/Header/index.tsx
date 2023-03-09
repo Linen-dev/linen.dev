@@ -33,9 +33,9 @@ export default function Header({
           <StickyHeader.Title>
             <FiInbox /> Inbox
           </StickyHeader.Title>
-          <StickyHeader.Subtitle>
+          {/* <StickyHeader.Subtitle>
             All of your channel conversations in one place
-          </StickyHeader.Subtitle>
+          </StickyHeader.Subtitle> */}
         </div>
         <div className={styles.right}>
           {permissions.chat && (
