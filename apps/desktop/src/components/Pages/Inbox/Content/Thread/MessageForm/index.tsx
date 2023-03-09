@@ -13,10 +13,10 @@ import { SerializedUser } from '@linen/types';
 import { postprocess } from './utilities/message';
 import { AxiosRequestConfig, AxiosResponse } from 'axios';
 
-export const FILE_SIZE_LIMIT_IN_BYTES = 1048576;
+export const FILE_SIZE_LIMIT_IN_BYTES = 2 * 1024 * 1024;
 
 export function getFileSizeErrorMessage(filename: string) {
-  return `File size is bigger than 1MB: ${filename}.`;
+  return `File size is bigger than 2MB: ${filename}.`;
 }
 
 interface Props {
