@@ -107,4 +107,16 @@ describe('rewrite', () => {
       ).toBeUndefined();
     });
   });
+
+  it('slack-chats.kotlinlang.org', () => {
+    const url = new URL(`https://slack-chats.kotlinlang.org/robots.txt`);
+    const response = rewrite({
+      hostname: url.host,
+      pathname: url.pathname,
+      url,
+    });
+    expect(response).toStrictEqual({
+      rewrite: `${process.env.LINEN_STATIC_CDN}/sitemap/slack-chats.kotlinlang.org/robots.txt`,
+    });
+  });
 });

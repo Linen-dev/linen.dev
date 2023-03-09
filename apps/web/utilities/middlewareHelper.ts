@@ -34,7 +34,7 @@ function isTopLevelPathname(pathname: string) {
 }
 
 const cleanLinenHost = (hostname: string) =>
-  hostname.indexOf('linen.dev') ? 'www.linen.dev' : hostname;
+  hostname.indexOf('linen.dev') > -1 ? 'www.linen.dev' : hostname;
 
 export function rewrite({
   hostname,
