@@ -322,12 +322,16 @@ export default function Channel(props: ChannelProps) {
 
   function onSelectThread(threadId?: string) {
     setCurrentThreadId(threadId);
-    setTimeout(() => {
-      const node = document.getElementById('thread-message-form-textarea');
-      if (node) {
-        node.focus();
-      }
-    }, 0);
+    if (threadId) {
+      setTimeout(() => {
+        const node = document.getElementById(
+          `thread-message-form-${threadId}-textarea`
+        );
+        if (node) {
+          node.focus();
+        }
+      }, 0);
+    }
   }
 
   async function deleteMessage(messageId: string) {
