@@ -13,7 +13,8 @@ export function replaceMentions({
 
   return mentions.reduce((prev, curr) => {
     if (curr?.externalUserId && curr?.displayName) {
-      return prev?.replaceAll(curr.externalUserId, curr.displayName);
+      const regexp = new RegExp(curr.externalUserId, 'g');
+      return prev?.replace(regexp, curr.displayName);
     }
     return prev;
   }, body);
