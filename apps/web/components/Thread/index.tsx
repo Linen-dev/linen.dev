@@ -224,7 +224,7 @@ export default function Thread({
         <div className={styles.chat}>
           {manage && state === ThreadState.OPEN ? (
             <MessageForm
-              id="thread-message-form"
+              id={`thread-message-form-${thread.id}`}
               currentUser={currentUser}
               onSend={(message: string, files: UploadedFile[]) => {
                 onSend?.();
@@ -260,7 +260,7 @@ export default function Thread({
             />
           ) : (
             <MessageForm
-              id="thread-message-form"
+              id={`thread-message-form-${thread.id}`}
               currentUser={currentUser}
               onSend={(message: string, files: UploadedFile[]) => {
                 onSend?.();

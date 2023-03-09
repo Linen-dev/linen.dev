@@ -1,8 +1,15 @@
-import storage from './storage'
+import { localStorage, sessionStorage } from './storage';
 
-describe('#storage', () => {
+describe('#localStorage', () => {
   it('exposes set and get methods', () => {
-    expect(typeof storage.get).toEqual('function')
-    expect(typeof storage.set).toEqual('function')
-  })
-})
+    expect(typeof localStorage.get).toEqual('function');
+    expect(typeof localStorage.set).toEqual('function');
+  });
+});
+
+describe('#sessionStorage', () => {
+  it('exposes set and get methods', () => {
+    expect(typeof sessionStorage.get).toEqual('function');
+    expect(typeof sessionStorage.set).toEqual('function');
+  });
+});

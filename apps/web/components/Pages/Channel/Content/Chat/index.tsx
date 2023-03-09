@@ -84,7 +84,7 @@ export default function Chat({
       ref={ref}
     >
       <MessageForm
-        id="channel-message-form"
+        id={`channel-message-form-${channelId}`}
         currentUser={currentUser}
         onSend={(message: string, files: UploadedFile[]) => {
           return sendMessage({

@@ -1,8 +1,8 @@
-import storage from '@linen/utilities/storage';
+import { localStorage } from '@linen/utilities/storage';
 
 export const isNotificationEnabled = (): boolean => {
   return (
-    storage.get('notification.permission') === 'granted' &&
+    localStorage.get('notification.permission') === 'granted' &&
     window.Notification?.permission === 'granted'
   );
 };

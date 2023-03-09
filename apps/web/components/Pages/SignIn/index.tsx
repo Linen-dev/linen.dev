@@ -1,7 +1,7 @@
 import CardLayout from 'components/layout/CardLayout';
 import EmailField from 'components/EmailField';
 import { Button } from '@linen/ui';
-import storage from '@linen/utilities/storage';
+import { localStorage } from '@linen/utilities/storage';
 import Error from 'components/Auth/Error';
 import PasswordField from 'components/PasswordField';
 import { useState } from 'react';
@@ -27,7 +27,7 @@ interface SignInProps {
 }
 
 function prepareUrl(url?: string) {
-  const page = storage.get('pages.last');
+  const page = localStorage.get('pages.last');
   if (page && url === '/api/router') {
     return `${url}?${qs(page)}`;
   }

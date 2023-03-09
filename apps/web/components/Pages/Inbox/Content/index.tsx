@@ -32,7 +32,7 @@ import { postReaction } from 'components/Pages/Channel/Content/utilities/http';
 import * as api from 'utilities/requests';
 import { FiSettings } from '@react-icons/all-files/fi/FiSettings';
 import { InboxConfig } from '../types';
-import storage from '@linen/utilities/storage';
+import { localStorage } from '@linen/utilities/storage';
 
 const { Header, Grid } = Pages.Inbox;
 const { SidebarLayout } = Layouts.Shared;
@@ -677,7 +677,7 @@ export default function Inbox({
   }
 
   useEffect(() => {
-    storage.set('inbox.configuration', configuration);
+    localStorage.set('inbox.configuration', configuration);
     setKey((key) => key + 1);
   }, [configuration]);
 

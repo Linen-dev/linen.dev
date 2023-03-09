@@ -150,7 +150,7 @@ export default function Thread({
           {manage && state === ThreadState.OPEN ? (
             <MessageForm
               autoFocus
-              id="thread-message-form"
+              id={`thread-message-form-${thread.id}`}
               onSend={(message: string, files: UploadedFile[]) => {
                 onSend?.();
                 return sendMessage({ message, files, channelId, threadId: id });
@@ -176,7 +176,7 @@ export default function Thread({
           ) : (
             <MessageForm
               autoFocus
-              id="thread-message-form"
+              id={`thread-message-form-${thread.id}`}
               onSend={(message: string, files: UploadedFile[]) => {
                 onSend?.();
                 return Promise.all([

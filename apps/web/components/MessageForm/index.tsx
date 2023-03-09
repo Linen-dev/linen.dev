@@ -14,6 +14,7 @@ import {
   FILE_SIZE_LIMIT_IN_BYTES,
   getFileSizeErrorMessage,
 } from 'utilities/files';
+import { sessionStorage } from '@linen/utilities/storage';
 
 interface Props {
   id?: string;
@@ -139,7 +140,10 @@ function MessageForm({
   fetchMentions,
   upload,
 }: Props) {
-  const [message, setMessage] = useState('');
+  const STORAGE_KEY = `message.draft.${id}`;
+  const [message, setMessage] = useState<string>(
+    sessionStorage.get(STORAGE_KEY) || ''
+  );
   const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState<SerializedUser[]>([]);
   const [allUsers, addUsers] = useUsersContext();
@@ -147,6 +151,13 @@ function MessageForm({
   const ref = useRef(null);
   const mode = getMode(message, position);
   const mention = getMention(message, position);
+
+  useEffect(() => {
+    sessionStorage.set(STORAGE_KEY, message);
+    return () => {
+      sessionStorage.set(STORAGE_KEY, message);
+    };
+  }, [message]);
 
   const handleSubmit = async (event: React.SyntheticEvent, callback?: any) => {
     event.preventDefault();
@@ -260,7 +271,7 @@ function MessageForm({
             // username in the db
             // in that case we don't need to do any postprocessing
 
-            setMessage((message) => {
+            setMessage((message: string) => {
               if (!user) {
                 return message;
               }
@@ -319,7 +330,7 @@ function MessageForm({
               if (event.ctrlKey || event.shiftKey || !sendOnEnter) {
                 event.preventDefault();
                 const position = getCaretPosition(ref);
-                setMessage((message) => {
+                setMessage((message: string) => {
                   return [
                     message.slice(0, position),
                     '\n',
