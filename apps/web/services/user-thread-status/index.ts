@@ -1,7 +1,18 @@
 import { prisma } from '@linen/database';
 
 class UserThreadStatusService {
-  static async markAsUnreadForAllUsers(threadId: string) {
+  static async markAsUnread(threadId: string, userId?: string) {
+    if (userId) {
+      return prisma.userThreadStatus.deleteMany({
+        where: {
+          threadId,
+          read: true,
+          NOT: {
+            userId,
+          },
+        },
+      });
+    }
     return prisma.userThreadStatus.deleteMany({
       where: {
         threadId,

@@ -137,6 +137,7 @@ export default class MessagesService {
       mentions: message.mentions,
       mentionNodes,
       message: JSON.stringify(serializedMessage),
+      userId,
     });
 
     return {
