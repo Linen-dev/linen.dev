@@ -173,13 +173,15 @@ export default function DesktopNavBar({
 
   return (
     <div className={styles.container}>
-      <div className={styles.switch}>
-        {communities?.map((community) => {
-          return <CommunityLink key={community.id} community={community} />;
-        })}
-        <AddCommunityLink onClick={() => setModal(true)} />
-        <NewCommunityModal open={modal} close={() => setModal(false)} />
-      </div>
+      {currentUser && (
+        <div className={styles.switch}>
+          {communities?.map((community) => {
+            return <CommunityLink key={community.id} community={community} />;
+          })}
+          <AddCommunityLink onClick={() => setModal(true)} />
+          <NewCommunityModal open={modal} close={() => setModal(false)} />
+        </div>
+      )}
       <Nav className={styles.navbar}>
         {permissions.inbox && (
           <Link href="/inbox">
