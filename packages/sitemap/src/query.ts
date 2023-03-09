@@ -105,16 +105,17 @@ export async function getChannelsFreeTier(_: Account) {
         select: {
           channelName: true,
           pages: true,
-          // account: {
-          //   select: {
-          //     id: true,
-          //     name: true,
-          //     redirectDomain: true,
-          //     discordDomain: true,
-          //     slackDomain: true,
-          //     discordServerId: true,
-          //   },
-          // },
+          account: {
+            select: {
+              id: true,
+              name: true,
+              redirectDomain: true,
+              discordDomain: true,
+              slackDomain: true,
+              discordServerId: true,
+              premium: true,
+            },
+          },
         },
         where: {
           ...channelPublicNotHiddenWithMessages,
@@ -144,16 +145,17 @@ export async function* getThreadsAsyncIterableFreeTier(_: Account) {
         channel: {
           select: {
             channelName: true,
-            // account: {
-            //   select: {
-            //     id: true,
-            //     name: true,
-            //     redirectDomain: true,
-            //     discordDomain: true,
-            //     slackDomain: true,
-            //     discordServerId: true,
-            //   },
-            // },
+            account: {
+              select: {
+                id: true,
+                name: true,
+                redirectDomain: true,
+                discordDomain: true,
+                slackDomain: true,
+                discordServerId: true,
+                premium: true,
+              },
+            },
           },
         },
       },
