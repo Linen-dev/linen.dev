@@ -86,7 +86,24 @@ export default class MessagesService {
       },
     });
 
-    // TODO we could try to optimize this by combining this and previous query
+    await prisma.userThreadStatus.upsert({
+      create: {
+        threadId,
+        read: true,
+        muted: false,
+        userId,
+      },
+      update: {
+        read: true,
+        muted: false,
+        reminder: false,
+        remindAt: null,
+      },
+      where: {
+        userId_threadId: { userId, threadId },
+      },
+    });
+
     const message = await prisma.messages.findFirst({
       where: {
         body,
