@@ -35,9 +35,13 @@
   background-color: $color-zinc-50;
   max-height: calc(100vh - 64px);
   min-height: calc(100vh - 64px);
-  overflow-y: scroll;
+  overflow: hidden;
   width: 200px;
   padding: 0.5rem 0.5rem;
+}
+
+.navbar:hover{
+  overflow-y: scroll;
 }
 
 .item {
