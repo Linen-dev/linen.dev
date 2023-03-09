@@ -17,11 +17,11 @@ import fs from 'fs/promises';
 import { Account, Logger } from './types';
 
 export async function processLinen(workDir: string, logger: Logger) {
-  const linen = 'linen.dev';
+  const linen = 'www.linen.dev';
   const account = {
     id: linen,
     name: linen,
-    redirectDomain: `www.${linen}`,
+    redirectDomain: linen,
     discordDomain: null,
     discordServerId: null,
     slackDomain: null,
