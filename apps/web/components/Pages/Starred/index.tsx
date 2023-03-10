@@ -23,7 +23,7 @@ export interface Props {
   dms: SerializedChannel[];
 }
 
-const fetchInbox = debounce(
+const fetchData = debounce(
   ({
     communityName,
     page,
@@ -33,7 +33,7 @@ const fetchInbox = debounce(
     page: number;
     limit: number;
   }) => {
-    return post('/api/inbox', {
+    return post('/api/starred', {
       communityName,
       page,
       limit,
@@ -87,7 +87,7 @@ export default function Starred({
       dms={dms}
     >
       <Content
-        fetchInbox={fetchInbox}
+        fetchData={fetchData}
         fetchThread={fetchThread(settings.communityId)}
         putThread={putThread(settings.communityId)}
         currentCommunity={currentCommunity}

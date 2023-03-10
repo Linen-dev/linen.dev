@@ -1,6 +1,6 @@
 import { SerializedThread } from '@linen/types';
 
-export interface InboxResponse {
+export interface DataResponse {
   threads: SerializedThread[];
   total: number;
 }
