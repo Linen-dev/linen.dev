@@ -7,7 +7,7 @@
 .switch {
   max-width: 52px;
   border-right: 1px solid $color-border;
-  background-color: $color-zinc-50;
+  background-color: white;
 }
 
 .switch .item {
@@ -32,7 +32,8 @@
 
 .navbar {
   background: $color-background;
-  background-color: $color-zinc-50;
+  background-color: white;
+  border-right: 1px solid $color-border;
   max-height: calc(100vh - 64px);
   min-height: calc(100vh - 64px);
   overflow: hidden;
