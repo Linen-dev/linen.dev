@@ -1,12 +1,10 @@
-import { useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Layouts, Pages, Toast } from '@linen/ui';
 import Thread from 'components/Thread';
 import Empty from './Empty';
 import { sendMessageWrapper } from './utilities/sendMessageWrapper';
-import usePolling from '@linen/hooks/polling';
 import useKeyboard from '@linen/hooks/keyboard';
 import { useUsersContext } from '@linen/contexts/Users';
-import useInboxWebsockets from '@linen/hooks/websockets/inbox';
 import type { CommunityPushType } from 'services/push';
 import {
   ReminderTypes,
@@ -22,18 +20,17 @@ import { addMessageToThread } from './state';
 import { addReactionToThread } from 'utilities/state/reaction';
 import { postReaction } from 'components/Pages/Channel/Content/utilities/http';
 import * as api from 'utilities/requests';
-import { InboxConfig } from '../types';
 
 const { Header, Grid } = Pages.Starred;
 const { SidebarLayout } = Layouts.Shared;
 
-interface InboxResponse {
+interface DataResponse {
   threads: SerializedThread[];
   total: number;
 }
 
 interface Props {
-  fetchInbox({
+  fetchData({
     communityName,
     page,
     limit,
@@ -41,7 +38,7 @@ interface Props {
     communityName: string;
     page: number;
     limit: number;
-  }): Promise<InboxResponse>;
+  }): Promise<DataResponse>;
   fetchThread(threadId: string): Promise<SerializedThread>;
   putThread(
     threadId: string,
@@ -60,7 +57,7 @@ interface Props {
 const LIMIT = 10;
 
 export default function Content({
-  fetchInbox,
+  fetchData,
   fetchThread,
   putThread,
   currentCommunity,
@@ -70,7 +67,7 @@ export default function Content({
   dms,
 }: Props) {
   const [loading, setLoading] = useState(true);
-  const [inbox, setInbox] = useState<InboxResponse>({ threads: [], total: 0 });
+  const [data, setData] = useState<DataResponse>({ threads: [], total: 0 });
   const [page, setPage] = useState<number>(1);
   const [key, setKey] = useState(0);
   const [thread, setThread] = useState<SerializedThread>();
@@ -104,8 +101,8 @@ export default function Content({
         currentUser,
       });
     });
-    setInbox((inbox) => {
-      const { threads, ...rest } = inbox;
+    setData((data) => {
+      const { threads, ...rest } = data;
 
       return {
         threads: threads.map((thread) =>
@@ -129,8 +126,8 @@ export default function Content({
   }
 
   async function updateThreadResolution(threadId: string, messageId?: string) {
-    setInbox((inbox) => {
-      const { threads, ...rest } = inbox;
+    setData((data) => {
+      const { threads, ...rest } = data;
       return {
         threads: threads.map((thread) => {
           if (thread.id === threadId) {
@@ -180,32 +177,32 @@ export default function Content({
         return null;
       }
 
-      setInbox((inbox) => {
-        const imitation = inbox.threads.find(({ id }) => id === imitationId);
+      setData((data) => {
+        const imitation = data.threads.find(({ id }) => id === imitationId);
         if (imitation) {
           return {
-            threads: inbox.threads.map((current) => {
+            threads: data.threads.map((current) => {
               if (current.id === imitationId) {
                 return thread;
               }
               return current;
             }),
-            total: inbox.total,
+            total: data.total,
           };
         }
         return {
           threads: [
             thread,
-            ...inbox.threads.filter(({ id }) => id !== thread.id),
+            ...data.threads.filter(({ id }) => id !== thread.id),
           ].splice(0, 10),
-          total: inbox.total,
+          total: data.total,
         };
       });
     } else if (message) {
-      const thread = inbox.threads.find((t) => t.id === message.threadId);
+      const thread = data.threads.find((t) => t.id === message.threadId);
       if (thread) {
-        setInbox((inbox: InboxResponse) => {
-          const { threads, ...rest } = inbox;
+        setData((data: DataResponse) => {
+          const { threads, ...rest } = data;
           if (message) {
             thread.messages = [
               ...thread.messages.filter(
@@ -221,8 +218,8 @@ export default function Content({
         });
       } else {
         fetchThread(payload.thread_id).then((thread) =>
-          setInbox((inbox: InboxResponse) => {
-            const { threads, ...rest } = inbox;
+          setData((data: DataResponse) => {
+            const { threads, ...rest } = data;
             return {
               ...rest,
               threads: [
@@ -247,33 +244,27 @@ export default function Content({
     );
   };
 
-  useInboxWebsockets({
-    communityId,
-    onNewMessage,
-    permissions,
-    token,
-  });
-
-  const [polling] = usePolling(
-    {
-      fetch(): any {
-        return fetchInbox({
-          communityName,
-          page,
-          limit: LIMIT,
-        });
-      },
-      success(inbox: InboxResponse) {
-        setLoading(false);
-        setInbox(inbox);
-        setThread(inbox.threads[0]);
-      },
-      error() {
-        Toast.error('Something went wrong. Please reload the page.');
-      },
-    },
-    [communityName, page, key]
-  );
+  useEffect(() => {
+    let mounted = true;
+    fetchData({
+      communityName,
+      page,
+      limit: LIMIT,
+    })
+      .then((data: DataResponse) => {
+        if (mounted) {
+          setLoading(false);
+          setData(data);
+          setThread(data.threads[0]);
+        }
+      })
+      .catch(() => {
+        Toast.error('Something went wrong. Please try again.');
+      });
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   const updateThread = ({
     state,
@@ -305,17 +296,17 @@ export default function Content({
       };
     });
 
-    setInbox((inbox) => {
+    setData((data) => {
       return {
-        ...inbox,
-        threads: inbox.threads.map((inboxThread) => {
-          if (inboxThread.id === thread.id) {
+        ...data,
+        threads: data.threads.map((dataThread) => {
+          if (dataThread.id === thread.id) {
             return {
-              ...inboxThread,
+              ...dataThread,
               ...options,
             };
           }
-          return inboxThread;
+          return dataThread;
         }),
       };
     });
@@ -346,8 +337,8 @@ export default function Content({
     reminderType?: ReminderTypes;
   }) {
     setLoading(true);
-    setInbox((inbox) => {
-      const { threads, ...rest } = inbox;
+    setData((data) => {
+      const { threads, ...rest } = data;
 
       return {
         threads: threads.filter((thread) => thread.id !== threadId),
@@ -378,12 +369,12 @@ export default function Content({
       },
     })
       .then(() => {
-        return fetchInbox({
+        return fetchData({
           communityName,
           page,
           limit: LIMIT,
-        }).then((inbox) => {
-          setInbox(inbox);
+        }).then((data) => {
+          setData(data);
         });
       })
       .finally(() => {
@@ -392,8 +383,8 @@ export default function Content({
   }
 
   async function deleteMessage(messageId: string) {
-    setInbox((inbox) => {
-      const { threads, ...rest } = inbox;
+    setData((data) => {
+      const { threads, ...rest } = data;
       return {
         threads: threads
           .map((thread) => {
@@ -482,7 +473,7 @@ export default function Content({
     currentUser,
     allUsers,
     setThread,
-    setInbox,
+    setData,
     communityId,
   });
 
@@ -494,7 +485,7 @@ export default function Content({
           return false;
         }
 
-        const { threads } = inbox;
+        const { threads } = data;
         const currentThreadId = thread?.id;
         if (!currentThreadId) {
           return false;
@@ -532,10 +523,10 @@ export default function Content({
         }
       },
     },
-    [inbox, thread]
+    [data, thread]
   );
 
-  const { threads } = inbox;
+  const { threads } = data;
 
   return (
     <>
@@ -543,7 +534,7 @@ export default function Content({
         left={
           <>
             <Header
-              total={inbox.total}
+              total={data.total}
               page={page}
               onPageChange={(type: string) => {
                 switch (type) {
@@ -557,8 +548,7 @@ export default function Content({
             {threads.length > 0 ? (
               <Grid
                 currentThreadId={thread?.id}
-                threads={inbox.threads}
-                loading={polling}
+                threads={data.threads}
                 onRead={markThreadAsRead}
                 onMute={markThreadAsMuted}
                 onRemind={onRemind}

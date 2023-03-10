@@ -7,7 +7,7 @@ import {
   UploadedFile,
 } from '@linen/types';
 import { username } from 'serializers/user';
-import { InboxResponse } from '../../types';
+import { DataResponse } from '../../types';
 import { v4 as uuid } from 'uuid';
 import debounce from '@linen/utilities/debounce';
 import * as api from 'utilities/requests';
@@ -44,13 +44,13 @@ export function sendMessageWrapper({
   currentUser,
   allUsers,
   setThread,
-  setInbox,
+  setData,
   communityId,
 }: {
   currentUser: SerializedUser;
   allUsers: SerializedUser[];
   setThread: React.Dispatch<React.SetStateAction<SerializedThread | undefined>>;
-  setInbox: React.Dispatch<React.SetStateAction<InboxResponse>>;
+  setData: React.Dispatch<React.SetStateAction<DataResponse>>;
   communityId: string;
 }) {
   return async ({
@@ -100,10 +100,10 @@ export function sendMessageWrapper({
       return thread;
     });
 
-    setInbox((inbox) => {
+    setData((data) => {
       return {
-        ...inbox,
-        threads: inbox.threads.map((thread) => {
+        ...data,
+        threads: data.threads.map((thread) => {
           if (thread.id === threadId) {
             return {
               ...thread,
@@ -149,10 +149,10 @@ export function sendMessageWrapper({
           return thread;
         });
 
-        setInbox((inbox) => {
+        setData((data) => {
           return {
-            ...inbox,
-            threads: inbox.threads.map((thread) => {
+            ...data,
+            threads: data.threads.map((thread) => {
               if (thread.id === threadId) {
                 return {
                   ...thread,
