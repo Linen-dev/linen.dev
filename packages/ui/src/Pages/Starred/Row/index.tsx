@@ -1,7 +1,7 @@
 import React from 'react';
 import UserMessage from '../../../UserMessage/Summary';
 import { ReminderTypes, SerializedThread } from '@linen/types';
-import Actions from './Actions';
+// import Actions from './Actions';
 import styles from './index.module.scss';
 
 interface Props {
@@ -29,13 +29,13 @@ export default function Row({
       active={active}
       onClick={onClick}
     >
-      <Actions
+      {/* <Actions
         className={styles.actions}
         thread={thread}
         onRead={onRead}
         onMute={onMute}
         onRemind={onRemind}
-      />
+      /> */}
     </UserMessage>
   );
 }
