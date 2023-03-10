@@ -39,12 +39,14 @@ export default class PermissionsService {
     const access = PermissionsService._access(community, account);
     const chat = PermissionsService._chat(community, user);
     const inbox = PermissionsService._inbox(community, user);
+    const starred = PermissionsService._starred(community, user);
     const is_member = PermissionsService._is_member(community, account, user);
     const manage = PermissionsService._manage(community, account, user);
     const channel_create = PermissionsService._channel_create(community, user);
     const permissions = {
       access,
       inbox,
+      starred,
       chat,
       manage,
       is_member,
@@ -113,6 +115,16 @@ export default class PermissionsService {
   }
 
   static _inbox(community: accounts | null, user: users | null): boolean {
+    if (!community) {
+      return false;
+    }
+    if (!user) {
+      return false;
+    }
+    return true;
+  }
+
+  static _starred(community: accounts | null, user: users | null): boolean {
     if (!community) {
       return false;
     }
