@@ -2,17 +2,9 @@ import React from 'react';
 import { ReminderTypes, SerializedThread } from '@linen/types';
 import Row from '../Row';
 
-interface Selections {
-  [key: string]: {
-    checked: boolean;
-    index: number;
-  };
-}
-
 interface Props {
   threads?: SerializedThread[];
   currentThreadId?: string;
-  selections: Selections;
   loading: boolean;
   onSelect(thread: SerializedThread): void;
   onRead?(threadId: string): void;
@@ -23,7 +15,6 @@ interface Props {
 export default function Grid({
   threads,
   currentThreadId,
-  selections,
   loading,
   onSelect,
   onRead,
@@ -40,7 +31,6 @@ export default function Grid({
           <Row
             key={thread.id + index}
             thread={thread}
-            selected={!!selections[thread.id]?.checked}
             active={thread.id === currentThreadId}
             onClick={() => onSelect(thread)}
             onRead={onRead}

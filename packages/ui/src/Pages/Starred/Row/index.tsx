@@ -6,7 +6,6 @@ import styles from './index.module.scss';
 
 interface Props {
   thread: SerializedThread;
-  selected: boolean;
   active: boolean;
   onClick(): void;
   onRead?(threadId: string): void;
@@ -16,7 +15,6 @@ interface Props {
 
 export default function Row({
   thread,
-  selected,
   active,
   onClick,
   onRead,
@@ -27,7 +25,7 @@ export default function Row({
     <UserMessage
       className={styles.row}
       thread={thread}
-      selected={selected}
+      selected={false}
       active={active}
       onClick={onClick}
     >
