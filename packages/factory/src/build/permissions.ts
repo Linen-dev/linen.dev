@@ -6,6 +6,7 @@ export default function createPermissions(
   return {
     access: false,
     inbox: false,
+    starred: false,
     chat: false,
     manage: false,
     channel_create: false,

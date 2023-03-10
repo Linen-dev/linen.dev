@@ -11,7 +11,7 @@ import debounce from '@linen/utilities/debounce';
 import { localStorage } from '@linen/utilities/storage';
 import * as api from 'utilities/requests';
 import Content from './Content';
-import { post } from 'utilities/http';
+import { get } from 'utilities/http';
 
 export interface Props {
   channels: SerializedChannel[];
@@ -33,13 +33,18 @@ const fetchData = debounce(
     page: number;
     limit: number;
   }) => {
-    return post('/api/starred', {
-      communityName,
-      page,
-      limit,
-    }).catch(() => {
-      throw new Error('Failed to fetch the inbox.');
-    });
+    return fetch(
+      `/api/starred?communityName=${communityName}&page=${page}&limit=${limit}`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    )
+      .then((response) => response.json())
+      .catch(() => {
+        throw new Error('Failed to fetch the inbox.');
+      });
   }
 );
 const fetchThread = (accountId: string) => (threadId: string) =>

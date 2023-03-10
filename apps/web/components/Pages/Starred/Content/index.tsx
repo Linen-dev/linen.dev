@@ -264,7 +264,7 @@ export default function Content({
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [key, page]);
 
   const updateThread = ({
     state,
