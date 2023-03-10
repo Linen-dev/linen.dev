@@ -11,6 +11,7 @@ import NewChannelModal from 'components/Modals/NewChannelModal';
 import useWebsockets from '@linen/hooks/websockets';
 import styles from './index.module.scss';
 import { FiInbox } from '@react-icons/all-files/fi/FiInbox';
+import { FiStar } from '@react-icons/all-files/fi/FiStar';
 import { FiBarChart } from '@react-icons/all-files/fi/FiBarChart';
 import { FiHash } from '@react-icons/all-files/fi/FiHash';
 import { FiLock } from '@react-icons/all-files/fi/FiLock';
@@ -78,6 +79,7 @@ export default function DesktopNavBar({
   const router = useRouter();
   const paths = {
     inbox: usePath({ href: '/inbox' }),
+    starred: usePath({ href: '/starred' }),
     metrics: usePath({ href: '/metrics' }),
     integrations: usePath({ href: '/integrations' }),
     configurations: usePath({ href: '/configurations' }),
@@ -187,6 +189,13 @@ export default function DesktopNavBar({
           <Link href="/inbox">
             <Nav.Item active={paths.inbox === router.asPath}>
               <FiInbox /> Inbox
+            </Nav.Item>
+          </Link>
+        )}
+        {permissions.starred && (
+          <Link href="/starred">
+            <Nav.Item active={paths.starred === router.asPath}>
+              <FiStar /> Starred
             </Nav.Item>
           </Link>
         )}
