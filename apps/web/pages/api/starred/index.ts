@@ -5,8 +5,6 @@ import { prisma } from '@linen/database';
 import serializeThread from 'serializers/thread';
 import ChannelsService from 'services/channels';
 import { anonymizeMessages } from 'utilities/anonymizeMessages';
-import { getDMs } from 'lib/channel';
-import { SerializedChannel } from '@linen/types';
 
 function getPage(page?: number) {
   if (!page || page < 1) {
