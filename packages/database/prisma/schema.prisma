@@ -70,8 +70,9 @@ model threads {
   firstManagerReplyAt BigInt?
   userThreadStatus    userThreadStatus[]
 
-  notifications notifications[]
-  page          Int?
+  notifications     notifications[]
+  page              Int?
+  userStarredThread userStarredThread[]
 
   @@unique([externalThreadId])
   @@unique([incrementId])
@@ -262,6 +263,7 @@ model users {
 
   userThreadStatus  userThreadStatus[]
   channelsCreatedBy channels[]
+  userStarredThread userStarredThread[]
 
   @@unique([externalUserId, accountsId])
   @@index([authsId])
@@ -401,6 +403,15 @@ model userThreadStatus {
   read      Boolean
   reminder  Boolean   @default(false)
   remindAt  DateTime?
+
+  @@id([userId, threadId])
+}
+
+model userStarredThread {
+  userId   String
+  user     users   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  threadId String
+  thread   threads @relation(fields: [threadId], references: [id], onDelete: Cascade)
 
   @@id([userId, threadId])
 }
