@@ -492,7 +492,9 @@ export default function Channel(props: ChannelProps) {
       },
     })
       .then((response) => {
-        if (response.ok) {
+        if (response.status === 409) {
+          Toast.info('Thread is already starred.');
+        } else if (response.ok) {
           Toast.success('Starred successfully.');
           return response.json();
         } else {

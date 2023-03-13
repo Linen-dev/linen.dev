@@ -109,11 +109,20 @@ export async function create({
   if (!params.threadId) {
     return { status: 400 };
   }
-  await prisma.userStarredThread.create({
-    data: {
-      userId: currentUserId,
-      threadId: params.threadId,
+  const data = {
+    userId: currentUserId,
+    threadId: params.threadId,
+  };
+  const starred = await prisma.userStarredThread.findUnique({
+    where: {
+      userId_threadId: data,
     },
+  });
+  if (starred) {
+    return { status: 409 };
+  }
+  await prisma.userStarredThread.create({
+    data,
   });
 
   return { status: 200 };
