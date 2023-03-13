@@ -14,6 +14,7 @@ import {
 } from '@linen/types';
 import { copyToClipboard } from '@linen/utilities/clipboard';
 import { GoPin } from '@react-icons/all-files/go/GoPin';
+import { FiStar } from '@react-icons/all-files/fi/FiStar';
 import { AiOutlinePaperClip } from '@react-icons/all-files/ai/AiOutlinePaperClip';
 import { AiOutlineHighlight } from '@react-icons/all-files/ai/AiOutlineHighlight';
 import { GrDrag } from '@react-icons/all-files/gr/GrDrag';
@@ -39,6 +40,7 @@ interface Props {
   onMute?(threadId: string): void;
   onUnmute?(threadId: string): void;
   onPin?(threadId: string): void;
+  onStar?(threadId: string): void;
   onResolution?: onResolve;
   onReaction?({
     threadId,
@@ -91,6 +93,7 @@ export default function Actions({
   onMute,
   onUnmute,
   onPin,
+  onStar,
   onResolution,
   onReaction,
   onRead,
@@ -108,6 +111,7 @@ export default function Actions({
   const isMuteVisible = false && onMute && currentUser;
   const isOnmuteVisible = false && onUnmute && currentUser;
   const isPinVisible = onPin && permissions.manage;
+  const isStarVisible = onStar && permissions.starred;
   const isReactionVisible = onReaction && currentUser;
   const isResolutionVisible = onResolution && currentUser;
   const isDragVisible = currentUser && draggable;
@@ -218,6 +222,19 @@ export default function Actions({
               <GoPin
                 className={classNames({ [styles.active]: thread.pinned })}
               />
+            </Tooltip>
+          </li>
+        )}
+        {isStarVisible && (
+          <li
+            onClick={(event) => {
+              event.stopPropagation();
+              event.preventDefault();
+              onStar(thread.id);
+            }}
+          >
+            <Tooltip className={styles.tooltip} text="Star">
+              <FiStar className={classNames({ [styles.active]: false })} />
             </Tooltip>
           </li>
         )}

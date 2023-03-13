@@ -471,12 +471,37 @@ export default function Channel(props: ChannelProps) {
     });
     return api
       .updateThread({
-        accountId: settings.communityId,
+        accountId: currentCommunity.id,
         id: thread.id,
         pinned: newPinned,
       })
       .catch((_) => {
         Toast.error('Failed to pin the thread.');
+      });
+  }
+
+  async function starThread(threadId: string) {
+    return fetch('/api/starred', {
+      method: 'POST',
+      body: JSON.stringify({
+        communityId: currentCommunity.id,
+        threadId,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('Failed to star the thread.');
+        }
+      })
+      .catch((exception) => {
+        Toast.error(
+          exception?.message || 'Something went wrong. Please try again.'
+        );
       });
   }
 
@@ -852,6 +877,7 @@ export default function Channel(props: ChannelProps) {
           muteThread={muteThread}
           unmuteThread={unmuteThread}
           pinThread={pinThread}
+          starThread={starThread}
           updateThreadResolution={updateThreadResolution}
           readThread={readThread}
           unreadThread={unreadThread}

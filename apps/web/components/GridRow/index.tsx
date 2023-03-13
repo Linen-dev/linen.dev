@@ -38,6 +38,7 @@ interface Props {
   onMute?(threadId: string): void;
   onUnmute?(threadId: string): void;
   onPin?(threadId: string): void;
+  onStar?(threadId: string): void;
   onResolution?: onResolve;
   onReaction?({
     threadId,
@@ -74,6 +75,7 @@ export function Row({
   onMute,
   onUnmute,
   onPin,
+  onStar,
   onResolution,
   onReaction,
   onRead,
@@ -155,6 +157,7 @@ export function Row({
           onMute={onMute}
           onUnmute={onUnmute}
           onPin={onPin}
+          onStar={onStar}
           onResolution={onResolution}
           onReaction={onReaction}
           onRead={onRead}
