@@ -50,6 +50,7 @@ export default function ChannelForBots({
           onDelete={() => {}}
           onClick={() => {}}
           onPin={() => {}}
+          onStar={() => {}}
           onReaction={() => {}}
           onDrop={() => {}}
         />
