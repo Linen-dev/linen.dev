@@ -160,78 +160,44 @@ export default function Content({
       });
   }
 
-  const onNewMessage = (payload: CommunityPushType) => {
-    const thread: SerializedThread =
-      payload.thread && JSON.parse(payload.thread);
-    const message: SerializedMessage =
-      payload.message && JSON.parse(payload.message);
-    const imitationId: string = payload.imitation_id;
-    if (page > 1) {
-      return;
-    }
-    if (thread) {
-      if (
-        thread.messages.length &&
-        currentUser.id === thread.messages[0]?.author?.id
-      ) {
-        return null;
+  async function unstarThread(threadId: string) {
+    setData((data) => {
+      const { threads, ...rest } = data;
+      return {
+        threads: threads.filter((thread) => thread.id !== threadId),
+        ...rest,
+      };
+    });
+    setThread((thread) => {
+      if (thread?.id === threadId) {
+        return undefined;
       }
+      return thread;
+    });
 
-      setData((data) => {
-        const imitation = data.threads.find(({ id }) => id === imitationId);
-        if (imitation) {
-          return {
-            threads: data.threads.map((current) => {
-              if (current.id === imitationId) {
-                return thread;
-              }
-              return current;
-            }),
-            total: data.total,
-          };
+    return fetch('/api/starred', {
+      method: 'DELETE',
+      body: JSON.stringify({
+        communityId: currentCommunity.id,
+        threadId,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('Failed to star the thread.');
         }
-        return {
-          threads: [
-            thread,
-            ...data.threads.filter(({ id }) => id !== thread.id),
-          ].splice(0, 10),
-          total: data.total,
-        };
-      });
-    } else if (message) {
-      const thread = data.threads.find((t) => t.id === message.threadId);
-      if (thread) {
-        setData((data: DataResponse) => {
-          const { threads, ...rest } = data;
-          if (message) {
-            thread.messages = [
-              ...thread.messages.filter(
-                (m) => m.id !== message.id && m.id !== imitationId
-              ),
-              message,
-            ];
-          }
-          return {
-            ...rest,
-            threads: [thread, ...threads.filter((t) => t.id !== thread.id)],
-          };
-        });
-      } else {
-        fetchThread(payload.thread_id).then((thread) =>
-          setData((data: DataResponse) => {
-            const { threads, ...rest } = data;
-            return {
-              ...rest,
-              threads: [
-                thread,
-                ...threads.filter((t) => t.id !== thread.id),
-              ].splice(0, 10),
-            };
-          })
+      })
+      .catch((exception) => {
+        Toast.error(
+          exception?.message || 'Something went wrong. Please try again.'
         );
-      }
-    }
-  };
+      });
+  }
 
   const onThreadMessage = (
     threadId: string,
@@ -552,6 +518,7 @@ export default function Content({
                 onRead={markThreadAsRead}
                 onMute={markThreadAsMuted}
                 onRemind={onRemind}
+                onUnstar={unstarThread}
                 onSelect={(thread: SerializedThread) => {
                   setThread(thread);
                 }}
