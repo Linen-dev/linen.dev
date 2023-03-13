@@ -168,6 +168,7 @@ export interface SerializedThread {
   messages: SerializedMessage[];
   channel: SerializedChannel | null;
   resolutionId?: string | null;
+  page: number | null;
 }
 
 export interface SerializedReadStatus {

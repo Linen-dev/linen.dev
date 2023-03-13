@@ -19,6 +19,7 @@ import useThreadWebsockets from '@linen/hooks/websockets/thread';
 import { scrollToBottom } from '@linen/utilities/scroll';
 import styles from './index.module.scss';
 import { put } from 'utilities/requests';
+import { CustomLinkHelper } from 'utilities/url';
 
 interface Props {
   thread: SerializedThread;
@@ -213,10 +214,13 @@ export default function Thread({
             <span className={styles.subtext}>View count: {viewCount + 1}</span>
           </div>
           {threadUrl && (
-            <JoinChannelLink
-              href={threadUrl}
-              communityType={settings.communityType}
-            />
+            <>
+              {ChannelButton({ thread, isSubDomainRouting, settings })}
+              <JoinChannelLink
+                href={threadUrl}
+                communityType={settings.communityType}
+              />
+            </>
           )}
         </div>
       </div>
@@ -286,5 +290,39 @@ export default function Thread({
         </div>
       )}
     </div>
+  );
+}
+
+function ChannelButton({
+  thread,
+  settings,
+  isSubDomainRouting,
+}: {
+  thread: SerializedThread;
+  settings: Settings;
+  isSubDomainRouting: boolean;
+}) {
+  const channelLink = thread.channel
+    ? {
+        isSubDomainRouting,
+        communityName: settings.communityName,
+        communityType: settings.communityType,
+        path: `/c/${thread.channel.channelName}${
+          thread.page ? `/${thread.page}` : ''
+        }#${thread.id}`,
+      }
+    : null;
+
+  return (
+    <>
+      {channelLink && (
+        <a
+          href={CustomLinkHelper(channelLink)}
+          className="ml-3 hover:underline text-sm"
+        >
+          Back to #{thread.channel?.channelName}
+        </a>
+      )}
+    </>
   );
 }

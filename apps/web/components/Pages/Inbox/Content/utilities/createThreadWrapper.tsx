@@ -113,6 +113,7 @@ export function createThreadWrapper({
       state: ThreadState.OPEN,
       pinned: false,
       resolutionId: null,
+      page: null,
     };
 
     function onUndo() {

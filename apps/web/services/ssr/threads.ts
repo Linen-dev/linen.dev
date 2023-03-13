@@ -1,6 +1,6 @@
 import serializeThread from 'serializers/thread';
 import { findThreadByIncrementId } from 'lib/threads';
-import { channels, threads, prisma } from '@linen/database';
+import { channels, threads } from '@linen/database';
 import { GetServerSidePropsContext } from 'next';
 import { NotFound } from 'utilities/response';
 import { RedirectTo } from 'utilities/response';
@@ -67,10 +67,6 @@ export async function threadGetServerSideProps(
       });
     }
 
-    const promisePrevNext = isCrawler
-      ? getPrevNextFromThread(thread)
-      : Promise.resolve(null);
-
     const threadUrl: string | null = getThreadUrl(thread, currentCommunity);
 
     const currentChannel = [...channels, ...dms].find(
@@ -85,36 +81,12 @@ export async function threadGetServerSideProps(
         threadUrl,
         isBot: isCrawler,
         isSubDomainRouting: isSubdomainbasedRouting,
-        pagination: await promisePrevNext,
       },
     };
   } catch (exception) {
     console.error(exception);
     return NotFound();
   }
-}
-
-async function getPrevNextFromThread(
-  thread: threads & {
-    channel?: channels | undefined;
-  }
-) {
-  const promisePrev = prisma.threads.findFirst({
-    select: { incrementId: true, slug: true },
-    where: { sentAt: { lt: thread.sentAt }, channelId: thread.channel?.id },
-    take: 1,
-    orderBy: { sentAt: 'desc' },
-  });
-  const promiseNext = prisma.threads.findFirst({
-    select: { incrementId: true, slug: true },
-    where: { sentAt: { gt: thread.sentAt }, channelId: thread.channel?.id },
-    take: 1,
-    orderBy: { sentAt: 'asc' },
-  });
-  return {
-    prev: await promisePrev,
-    next: await promiseNext,
-  };
 }
 
 function getThreadUrl(

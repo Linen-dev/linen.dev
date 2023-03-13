@@ -101,7 +101,7 @@ export default function ChannelRow({
 
   return (
     <Droppable id={thread.id} className={styles.container} onDrop={onDrop}>
-      <div className={styles.content}>
+      <div id={thread.id} className={styles.content}>
         <GridRow
           className={className}
           thread={thread}
