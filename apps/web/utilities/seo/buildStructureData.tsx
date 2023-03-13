@@ -28,7 +28,10 @@ function buildNameText(thread: SerializedThread, url: string): Question {
     .filter((m) => !!m.text);
 
   return {
-    name: thread.title || cleanBody.substring(0, 60),
+    name:
+      !!thread.title && !!thread.title.trim()
+        ? thread.title.trim()
+        : cleanBody.substring(0, 60),
     text: cleanBody,
     author: {
       name: first.author?.displayName || 'user',
