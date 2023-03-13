@@ -9,6 +9,7 @@ interface Props {
   onSelect(thread: SerializedThread): void;
   onRead?(threadId: string): void;
   onMute?(threadId: string): void;
+  onUnstar?(threadId: string): void;
   onRemind?(threadId: string, reminderType: ReminderTypes): void;
 }
 
@@ -20,6 +21,7 @@ export default function Grid({
   onRead,
   onMute,
   onRemind,
+  onUnstar,
 }: Props) {
   if (!threads || threads.length === 0 || loading) {
     return null;
@@ -36,6 +38,7 @@ export default function Grid({
             onRead={onRead}
             onMute={onMute}
             onRemind={onRemind}
+            onUnstar={onUnstar}
           />
         );
       })}

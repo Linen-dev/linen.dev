@@ -493,6 +493,7 @@ export default function Channel(props: ChannelProps) {
     })
       .then((response) => {
         if (response.ok) {
+          Toast.success('Starred successfully.');
           return response.json();
         } else {
           throw new Error('Failed to star the thread.');
