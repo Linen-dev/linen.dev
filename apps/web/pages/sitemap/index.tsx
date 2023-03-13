@@ -20,12 +20,11 @@ function getCommunityUrl(community: SerializedAccount) {
     return `https://${community.redirectDomain}`;
   }
   if (community.discordDomain) {
-    return `/d/${community.discordDomain}`;
+    return `/d/${encodeURIComponent(community.discordDomain)}`;
   }
   if (community.slackDomain) {
-    return `/s/${community.slackDomain}`;
+    return `/s/${encodeURIComponent(community.slackDomain)}`;
   }
-  return `/s/${community.name}`;
 }
 
 export default function Sitemap({ communities }: Props) {
@@ -37,6 +36,7 @@ export default function Sitemap({ communities }: Props) {
         {communities
           .map((community) => {
             const href = getCommunityUrl(community);
+            if (!href) return <></>;
             return (
               <li key={href}>
                 <Link href={href}>{community.name}</Link>
