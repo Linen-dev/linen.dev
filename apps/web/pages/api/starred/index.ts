@@ -97,6 +97,49 @@ export async function index({
   };
 }
 
+export async function create({
+  params,
+  currentUserId,
+}: {
+  params: {
+    threadId?: string;
+  };
+  currentUserId: string;
+}) {
+  if (!params.threadId) {
+    return { status: 400 };
+  }
+  await prisma.userStarredThread.create({
+    data: {
+      userId: currentUserId,
+      threadId: params.threadId,
+    },
+  });
+
+  return { status: 200 };
+}
+
+export async function destroy({
+  params,
+  currentUserId,
+}: {
+  params: {
+    threadId?: string;
+  };
+  currentUserId: string;
+}) {
+  if (!params.threadId) {
+    return { status: 400 };
+  }
+  await prisma.userStarredThread.delete({
+    where: {
+      userId_threadId: { userId: currentUserId, threadId: params.threadId },
+    },
+  });
+
+  return { status: 200 };
+}
+
 const handlers = {
   async index(request: NextApiRequest, response: NextApiResponse) {
     try {
@@ -107,7 +150,7 @@ const handlers = {
           communityName: request.query.communityName as string,
         },
       });
-      if (!permissions.inbox) {
+      if (!permissions.starred) {
         return response.status(401).json({});
       }
       const { status, data } = await index({
@@ -115,6 +158,54 @@ const handlers = {
         currentUserId: permissions.user.id,
       });
       response.status(status).json(data);
+    } catch (exception) {
+      if (process.env.NODE_ENV === 'development') {
+        console.log(exception);
+      }
+      response.status(500).json({});
+    }
+  },
+  async create(request: NextApiRequest, response: NextApiResponse) {
+    try {
+      const permissions = await PermissionsService.get({
+        request,
+        response,
+        params: {
+          communityName: request.body.communityName as string,
+        },
+      });
+      if (!permissions.starred) {
+        return response.status(401).json({});
+      }
+      const { status } = await create({
+        params: request.body,
+        currentUserId: permissions.user.id,
+      });
+      response.status(status).json({});
+    } catch (exception) {
+      if (process.env.NODE_ENV === 'development') {
+        console.log(exception);
+      }
+      response.status(500).json({});
+    }
+  },
+  async destroy(request: NextApiRequest, response: NextApiResponse) {
+    try {
+      const permissions = await PermissionsService.get({
+        request,
+        response,
+        params: {
+          communityName: request.body.communityName as string,
+        },
+      });
+      if (!permissions.starred) {
+        return response.status(401).json({});
+      }
+      const { status } = await destroy({
+        params: request.body,
+        currentUserId: permissions.user.id,
+      });
+      response.status(status).json({});
     } catch (exception) {
       if (process.env.NODE_ENV === 'development') {
         console.log(exception);
@@ -130,6 +221,12 @@ export default async function handler(
 ) {
   if (request.method === 'GET') {
     return handlers.index(request, response);
+  }
+  if (request.method === 'POST') {
+    return handlers.create(request, response);
+  }
+  if (request.method === 'DELETE') {
+    return handlers.destroy(request, response);
   }
   return response.status(404).json({});
 }
