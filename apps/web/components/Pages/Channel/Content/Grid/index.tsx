@@ -43,6 +43,7 @@ export default function Grid({
   onMute,
   onUnmute,
   onPin,
+  onStar,
   onReaction,
   onRead,
   onRemind,
@@ -62,6 +63,7 @@ export default function Grid({
   onMute?: (threadId: string) => void;
   onUnmute?: (threadId: string) => void;
   onPin: (threadId: string) => void;
+  onStar: (threadId: string) => void;
   onReaction({
     threadId,
     messageId,
@@ -161,6 +163,7 @@ export default function Grid({
                     onMute={onMute}
                     onUnmute={onUnmute}
                     onPin={onPin}
+                    onStar={onStar}
                     onReaction={onReaction}
                     onRead={onRead}
                     onRemind={onRemind}

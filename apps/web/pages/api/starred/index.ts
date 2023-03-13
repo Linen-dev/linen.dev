@@ -171,7 +171,7 @@ const handlers = {
         request,
         response,
         params: {
-          communityName: request.body.communityName as string,
+          communityId: request.body.communityId as string,
         },
       });
       if (!permissions.starred) {
@@ -195,7 +195,7 @@ const handlers = {
         request,
         response,
         params: {
-          communityName: request.body.communityName as string,
+          communityId: request.body.communityId as string,
         },
       });
       if (!permissions.starred) {
