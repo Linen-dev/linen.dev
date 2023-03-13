@@ -33,19 +33,26 @@ export async function index({
   const page = getPage(params.page);
   const channels = await ChannelsService.find(community.id);
 
-  const condition = {
-    hidden: false,
-    messages: {
-      some: {},
-    },
-    channelId: { in: channels.map(({ id }) => id) },
-  } as any;
-
   if (!params.limit) {
     return { status: 400 };
   }
 
   const limit = Number(params.limit);
+
+  const userStarredThreads = await prisma.userStarredThread.findMany({
+    where: {
+      userId: currentUserId,
+    },
+  });
+
+  const condition = {
+    hidden: false,
+    messages: {
+      some: {},
+    },
+    id: { in: userStarredThreads.map(({ threadId }) => threadId) },
+    channelId: { in: channels.map(({ id }) => id) },
+  } as any;
 
   const threads = await prisma.threads.findMany({
     where: condition,
@@ -70,8 +77,8 @@ export async function index({
     skip: (page - 1) * limit,
   });
 
-  const total = await prisma.threads.count({
-    where: condition,
+  const total = await prisma.userStarredThread.count({
+    where: { userId: currentUserId },
   });
 
   return {
