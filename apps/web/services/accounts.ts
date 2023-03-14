@@ -10,6 +10,7 @@ import { createAccountEvent } from './customerIo/trackEvents';
 import { createInvitation } from './invites';
 import { getCurrentUrl } from '@linen/utilities/domain';
 import unique from 'lodash.uniq';
+import { replaceS3byCDN } from 'utilities/util';
 
 export default class AccountsService {
   static async create({
@@ -163,8 +164,6 @@ export default class AccountsService {
       description,
       homeUrl,
       docsUrl,
-      logoUrl,
-      logoSquareUrl,
       redirectDomain,
       brandColor,
       googleAnalyticsId,
@@ -173,6 +172,11 @@ export default class AccountsService {
       type,
       chat,
     } = params;
+
+    let { logoUrl, logoSquareUrl } = params;
+    logoSquareUrl = replaceS3byCDN(logoSquareUrl);
+    logoUrl = replaceS3byCDN(logoUrl);
+
     const freeAccount = {
       homeUrl,
       docsUrl,

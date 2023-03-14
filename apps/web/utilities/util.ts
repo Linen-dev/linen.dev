@@ -1,3 +1,5 @@
+import { LINEN_STATIC_CDN, S3_UPLOAD_BUCKET } from 'secrets';
+
 export const toObject = <T extends Record<string, any>, K extends keyof T>(
   arr: T[],
   key: K
@@ -8,4 +10,13 @@ export function cleanUpUrl(reqUrl?: string) {
   const url = new URL(reqUrl, 'http://fa.ke');
   url.searchParams.delete('customDomain');
   return url.toString().split('http://fa.ke').join('');
+}
+
+export function replaceS3byCDN(url: string | undefined) {
+  try {
+    if (url && url.indexOf(S3_UPLOAD_BUCKET!) > -1) {
+      return [LINEN_STATIC_CDN!, ...url.split('/').slice(3)].join('/');
+    }
+  } catch (error) {}
+  return url;
 }

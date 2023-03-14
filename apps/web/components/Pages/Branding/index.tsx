@@ -20,6 +20,7 @@ import { useRouter } from 'next/router';
 import { DNSRecord } from 'services/vercel';
 import * as api from 'utilities/requests';
 import debounce from '@linen/utilities/debounce';
+import styles from './index.module.scss';
 
 const debouncedUpdateAccount = debounce((params: any) =>
   api.updateAccount(params)
@@ -155,172 +156,179 @@ export default function Branding({
       className="w-full"
       dms={dms}
     >
-      <Header />
-      <form id="branding-form" onSubmit={onSubmit} className="p-3">
-        <div className="grid grid-cols-1">
-          <div className="flex flex-col">
-            <PremiumCard isPremium={currentCommunity.premium}>
-              <Label htmlFor="description">Description</Label>
-              <Description>
-                Few sentences that describe your community. Maximum of 160
-                characters is preferred.
-              </Description>
-              <TextField
-                placeholder=""
-                id="description"
-                defaultValue={
-                  currentCommunity.premium
-                    ? currentCommunity.description
-                    : undefined
-                }
-                disabled={!currentCommunity.premium}
-                readOnly={!currentCommunity.premium}
-                onChange={() => updateAccount()}
-              />
-            </PremiumCard>
-            <hr className="my-5" />
-            <PremiumCard isPremium={currentCommunity.premium}>
-              <Label htmlFor="redirectDomain">Redirect Domain</Label>
-              <Description>Unique domain to redirect to.</Description>
-              <TextField
-                placeholder="linen.yourwebsite.com"
-                id="redirectDomain"
-                defaultValue={
-                  currentCommunity.premium
-                    ? currentCommunity.redirectDomain
-                    : undefined
-                }
-                disabled={!currentCommunity.premium}
-                readOnly={!currentCommunity.premium}
-                onChange={() => updateAccount()}
-              />
-            </PremiumCard>
-            <hr className="my-5" />
-            {currentCommunity.premium && records && records.length > 0 && (
-              <>
-                <PremiumCard isPremium={currentCommunity.premium}>
-                  <Label htmlFor="dnsRecords">DNS</Label>
-                  <Description>
-                    Subdomain routing setup can be achieved by verifying the
-                    ownership of a domain. Copy the TXT and/or CNAME records
-                    from below and paste them into your DNS settings.
-                  </Description>
-                  <Table>
-                    <Thead>
-                      <tr>
-                        <Th>Type</Th>
-                        <Th>Name</Th>
-                        <Th>Value</Th>
-                      </tr>
-                    </Thead>
-                    <Tbody>
-                      {records.map((record: DNSRecord, index) => (
-                        <tr key={record.type + index}>
-                          <Td>{record.type}</Td>
-                          <Td>{record.name}</Td>
-                          <Td>{record.value}</Td>
+      <div className={styles.container}>
+        <Header />
+        <form id="branding-form" onSubmit={onSubmit} className="p-3">
+          <div className="grid grid-cols-1">
+            <div className="flex flex-col">
+              <PremiumCard isPremium={currentCommunity.premium}>
+                <Label htmlFor="description">Description</Label>
+                <Description>
+                  Few sentences that describe your community. Maximum of 160
+                  characters is preferred.
+                </Description>
+                <TextField
+                  placeholder=""
+                  id="description"
+                  defaultValue={
+                    currentCommunity.premium
+                      ? currentCommunity.description
+                      : undefined
+                  }
+                  disabled={!currentCommunity.premium}
+                  readOnly={!currentCommunity.premium}
+                  onChange={() => updateAccount()}
+                />
+              </PremiumCard>
+              <hr className="my-5" />
+              <PremiumCard isPremium={currentCommunity.premium}>
+                <Label htmlFor="redirectDomain">Redirect Domain</Label>
+                <Description>Unique domain to redirect to.</Description>
+                <TextField
+                  placeholder="linen.yourwebsite.com"
+                  id="redirectDomain"
+                  defaultValue={
+                    currentCommunity.premium
+                      ? currentCommunity.redirectDomain
+                      : undefined
+                  }
+                  disabled={!currentCommunity.premium}
+                  readOnly={!currentCommunity.premium}
+                  onChange={() => updateAccount()}
+                />
+              </PremiumCard>
+              <hr className="my-5" />
+              {currentCommunity.premium && records && records.length > 0 && (
+                <>
+                  <PremiumCard isPremium={currentCommunity.premium}>
+                    <Label htmlFor="dnsRecords">DNS</Label>
+                    <Description>
+                      Subdomain routing setup can be achieved by verifying the
+                      ownership of a domain. Copy the TXT and/or CNAME records
+                      from below and paste them into your DNS settings.
+                    </Description>
+                    <Table>
+                      <Thead>
+                        <tr>
+                          <Th>Type</Th>
+                          <Th>Name</Th>
+                          <Th>Value</Th>
                         </tr>
-                      ))}
-                    </Tbody>
-                  </Table>
-                </PremiumCard>
-                <hr className="my-5" />
-              </>
-            )}
-            <PremiumCard isPremium={currentCommunity.premium}>
-              <Label htmlFor="brandColor">Brand Color</Label>
-              <Description>
-                Color that matches your brand. We&apos;ll use it for the header
-                background.
-              </Description>
-              <ColorField
-                id="brandColor"
-                defaultValue={
-                  currentCommunity.premium
-                    ? currentCommunity.brandColor
-                    : '#E2E2E2'
-                }
-                required
-                readOnly={!currentCommunity.premium}
-                disabled={!currentCommunity.premium}
-                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                  const brandColor = event.target.value;
-                  setCurrentCommunity((community) => {
-                    return {
-                      ...community,
-                      brandColor,
-                    };
-                  });
-                  setCommunities((communities) => {
-                    if (!communities || communities.length === 0) {
-                      return communities;
-                    }
-                    return [
-                      ...communities.map((community) => {
-                        if (community.id === currentCommunity.id) {
-                          return {
-                            ...community,
-                            brandColor,
-                          };
-                        }
-                        return community;
-                      }),
-                    ];
-                  });
-                  updateAccount();
-                }}
-              />
-            </PremiumCard>
-            <hr className="my-5" />
-            <PremiumCard isPremium={currentCommunity.premium}>
-              <LogoField
-                header="Logo"
-                description="Logo of your brand."
-                currentCommunity={currentCommunity}
-                onChange={(logoUrl) => {
-                  updateAccount({ logoUrl });
-                  router.reload();
-                }}
-                logoUrl={currentCommunity.logoUrl}
-              />
-            </PremiumCard>
-            <hr className="my-5" />
-            <PremiumCard isPremium={currentCommunity.premium}>
-              <LogoField
-                header="Logo Square"
-                description="Squared version of your logo that is going to be displayed in the navigation bar."
-                currentCommunity={currentCommunity}
-                onChange={(logoSquareUrl) => {
-                  updateAccount({ logoSquareUrl });
-                  router.reload();
-                }}
-                logoUrl={currentCommunity.logoSquareUrl}
-              />
-            </PremiumCard>
-            <hr className="my-5" />
-            <PremiumCard className="mb-5" isPremium={currentCommunity.premium}>
-              <Label htmlFor="googleAnalyticsId">Google Analytics ID</Label>
-              <Description>
-                You can collect data from your website with Google Analytics.
-                <br />
-                Enter a valid Analytics Property ID.
-              </Description>
-              <TextField
-                placeholder="G-XXXXXXX or UA-XXXXXX-X"
-                id="googleAnalyticsId"
-                defaultValue={
-                  currentCommunity.premium
-                    ? currentCommunity.googleAnalyticsId
-                    : undefined
-                }
-                disabled={!currentCommunity.premium}
-                readOnly={!currentCommunity.premium}
-                onChange={() => updateAccount()}
-              />
-            </PremiumCard>
+                      </Thead>
+                      <Tbody>
+                        {records.map((record: DNSRecord, index) => (
+                          <tr key={record.type + index}>
+                            <Td>{record.type}</Td>
+                            <Td>{record.name}</Td>
+                            <Td>{record.value}</Td>
+                          </tr>
+                        ))}
+                      </Tbody>
+                    </Table>
+                  </PremiumCard>
+                  <hr className="my-5" />
+                </>
+              )}
+              <PremiumCard isPremium={currentCommunity.premium}>
+                <Label htmlFor="brandColor">Brand Color</Label>
+                <Description>
+                  Color that matches your brand. We&apos;ll use it for the
+                  header background.
+                </Description>
+                <ColorField
+                  id="brandColor"
+                  defaultValue={
+                    currentCommunity.premium
+                      ? currentCommunity.brandColor
+                      : '#E2E2E2'
+                  }
+                  required
+                  readOnly={!currentCommunity.premium}
+                  disabled={!currentCommunity.premium}
+                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                    const brandColor = event.target.value;
+                    setCurrentCommunity((community) => {
+                      return {
+                        ...community,
+                        brandColor,
+                      };
+                    });
+                    setCommunities((communities) => {
+                      if (!communities || communities.length === 0) {
+                        return communities;
+                      }
+                      return [
+                        ...communities.map((community) => {
+                          if (community.id === currentCommunity.id) {
+                            return {
+                              ...community,
+                              brandColor,
+                            };
+                          }
+                          return community;
+                        }),
+                      ];
+                    });
+                    updateAccount();
+                  }}
+                />
+              </PremiumCard>
+              <hr className="my-5" />
+              <PremiumCard isPremium={currentCommunity.premium}>
+                <LogoField
+                  header="Logo"
+                  description="Logo of your brand."
+                  currentCommunity={currentCommunity}
+                  onChange={(logoUrl) => {
+                    updateAccount({ logoUrl }).then(() => {
+                      router.reload();
+                    });
+                  }}
+                  logoUrl={currentCommunity.logoUrl}
+                />
+              </PremiumCard>
+              <hr className="my-5" />
+              <PremiumCard isPremium={currentCommunity.premium}>
+                <LogoField
+                  header="Logo Square"
+                  description="Squared version of your logo that is going to be displayed in the navigation bar."
+                  currentCommunity={currentCommunity}
+                  onChange={(logoSquareUrl) => {
+                    updateAccount({ logoSquareUrl }).then(() => {
+                      router.reload();
+                    });
+                  }}
+                  logoUrl={currentCommunity.logoSquareUrl}
+                />
+              </PremiumCard>
+              <hr className="my-5" />
+              <PremiumCard
+                className="mb-5"
+                isPremium={currentCommunity.premium}
+              >
+                <Label htmlFor="googleAnalyticsId">Google Analytics ID</Label>
+                <Description>
+                  You can collect data from your website with Google Analytics.
+                  <br />
+                  Enter a valid Analytics Property ID.
+                </Description>
+                <TextField
+                  placeholder="G-XXXXXXX or UA-XXXXXX-X"
+                  id="googleAnalyticsId"
+                  defaultValue={
+                    currentCommunity.premium
+                      ? currentCommunity.googleAnalyticsId
+                      : undefined
+                  }
+                  disabled={!currentCommunity.premium}
+                  readOnly={!currentCommunity.premium}
+                  onChange={() => updateAccount()}
+                />
+              </PremiumCard>
+            </div>
           </div>
-        </div>
-      </form>
+        </form>
+      </div>
     </PageLayout>
   );
 }

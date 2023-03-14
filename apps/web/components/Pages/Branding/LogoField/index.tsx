@@ -23,7 +23,6 @@ export default function LogoField({
   header,
   description,
 }: Props) {
-  console.log(logoUrl);
   let { FileInput, openFileDialog, uploadToS3, files } = useS3Upload();
   const isUploading = files && files.length > 0 && files[0].progress < 100;
 
@@ -54,7 +53,7 @@ export default function LogoField({
           style={{
             backgroundColor: currentCommunity.brandColor,
           }}
-          className={classNames('mb-2 mt-2')}
+          className={classNames('mb-2 mt-2 max-h-60')}
         />
       )}
       <Button
