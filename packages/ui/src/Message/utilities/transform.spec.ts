@@ -1,6 +1,6 @@
 import transform from './transform';
 
-describe('transport', () => {
+describe('transform', () => {
   it('transforms code tokens to pre tokens if they contain newlines', () => {
     const tree = {
       type: 'root',
@@ -56,6 +56,37 @@ describe('transport', () => {
           }),
         ],
         source: '{ "foo": "bar" }',
+      })
+    );
+  });
+
+  it('converts html templates to code blocks', () => {
+    const tree = {
+      type: 'root',
+      children: [
+        {
+          type: 'text',
+          value: '<!DOCTYPE html><html><body><h1>Hello, world!</body></html>',
+          source: '<!DOCTYPE html><html><body><h1>Hello, world!</body></html>',
+        },
+      ],
+      source: '<!DOCTYPE html><html><body><h1>Hello, world!</body></html>',
+    };
+
+    const output = transform(tree);
+
+    expect(output).toEqual(
+      expect.objectContaining({
+        type: 'root',
+        children: [
+          expect.objectContaining({
+            type: 'pre',
+            value: '<!DOCTYPE html><html><body><h1>Hello, world!</body></html>',
+            source:
+              '<!DOCTYPE html><html><body><h1>Hello, world!</body></html>',
+          }),
+        ],
+        source: '<!DOCTYPE html><html><body><h1>Hello, world!</body></html>',
       })
     );
   });

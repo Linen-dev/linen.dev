@@ -7,12 +7,16 @@ export default function transform(node: any, count = 1) {
     }
   }
   if (node.type === 'text') {
-    const value = node.value.trim();
+    const value = node.value.trim().toLowerCase();
     if (value.startsWith('{') && value.endsWith('}')) {
       try {
         JSON.parse(value);
         node.type = 'pre';
       } catch (exception) {}
+    }
+
+    if (value.startsWith('<!doctype html>') && value.endsWith('</html>')) {
+      node.type = 'pre';
     }
   }
   if (node.children) {
