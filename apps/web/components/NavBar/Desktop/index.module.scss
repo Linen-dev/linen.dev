@@ -45,8 +45,17 @@
   overflow-y: scroll;
 }
 
-.navbar.collapsed {
-  display: none;
+.animation {
+  opacity: 1;
+  width: 200px;
+  transition: width 0.2s ease-in, opacity 0.2s ease-in;
+}
+
+.animation.collapsed {
+  width: 0;
+  z-index: -1;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .item {
