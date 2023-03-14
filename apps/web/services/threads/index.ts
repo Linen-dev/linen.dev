@@ -254,6 +254,7 @@ class ThreadsServices {
       mentions: thread.messages[0].mentions,
       mentionNodes,
       thread: JSON.stringify(serializedThread),
+      userId: authorId,
     });
 
     return serializedThread;

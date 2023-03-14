@@ -1,5 +1,6 @@
 import request from 'superagent';
 import { getPushUrlSSR } from '@linen/utilities/domain';
+import { ChannelType } from '@linen/database';
 
 const token = process.env.PUSH_SERVICE_KEY;
 
@@ -81,6 +82,32 @@ export const pushChannel = ({
     .then((e) => e.status);
 };
 
+export const pushUser = async ({
+  channelId,
+  threadId,
+  messageId,
+  imitationId,
+  isThread,
+  isReply,
+  message,
+  thread,
+  userId,
+}: PushType & { userId: string }) => {
+  const e = await request.post(`${getPushUrlSSR()}/api/user`).send({
+    user_id: userId,
+    channel_id: channelId,
+    thread_id: threadId,
+    message_id: messageId,
+    imitation_id: imitationId,
+    is_thread: isThread,
+    is_reply: isReply,
+    message,
+    thread,
+    token,
+  });
+  return e.status;
+};
+
 export const pushUserMention = ({
   userId,
   threadId,
@@ -135,3 +162,55 @@ export const pushCommunity = ({
     })
     .then((e) => e.status);
 };
+
+export function resolvePush({
+  channel,
+  userId,
+  event,
+  communityId,
+}: {
+  channel: {
+    id: string;
+    memberships: {
+      archived: boolean | null;
+      user: {
+        id: string;
+        authsId: string | null;
+      };
+    }[];
+    type: ChannelType | null;
+  } | null;
+  userId: string | undefined;
+  event: any;
+  communityId: string;
+}) {
+  const promises: Promise<any>[] = [];
+
+  if (channel?.type === ChannelType.DM) {
+    channel.memberships.forEach((member) => {
+      if (member.user.id !== userId && member.user.authsId) {
+        promises.push(pushUser({ ...event, userId: member.user.authsId }));
+      }
+    });
+  } else if (channel?.type === ChannelType.PRIVATE) {
+    channel.memberships.forEach((member) => {
+      if (
+        member.user.id !== userId &&
+        member.user.authsId &&
+        !member.archived
+      ) {
+        promises.push(pushUser({ ...event, userId: member.user.authsId }));
+      }
+    });
+  } else {
+    promises.push(
+      ...[
+        // public push
+        push(event),
+        pushChannel(event),
+        pushCommunity({ ...event, communityId }),
+      ]
+    );
+  }
+  return promises;
+}

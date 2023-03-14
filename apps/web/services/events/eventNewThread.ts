@@ -1,9 +1,8 @@
-import type { mentions, users } from '@linen/database';
+import { ChannelType, mentions, users } from '@linen/database';
 import { createTwoWaySyncJob } from 'queue/jobs';
-import { push, pushChannel, pushCommunity } from 'services/push';
+import { resolvePush } from 'services/push';
 import { eventNewMentions } from './eventNewMentions';
 import { notificationListener } from 'services/notifications';
-import { stringify } from 'superjson';
 import ChannelsService from 'services/channels';
 
 interface MentionNode {
@@ -23,6 +22,7 @@ type NewThreadEvent = {
   mentionNodes: MentionNode[];
   communityId: string;
   thread: string;
+  userId?: string;
 };
 
 export async function eventNewThread({
@@ -34,6 +34,7 @@ export async function eventNewThread({
   mentionNodes = [],
   communityId,
   thread,
+  userId,
 }: NewThreadEvent) {
   const event = {
     channelId,
@@ -45,16 +46,18 @@ export async function eventNewThread({
     thread,
   };
 
+  const channel = await ChannelsService.getChannelAndMembersWithAuth(channelId);
+
   const promises: Promise<any>[] = [
     createTwoWaySyncJob({ ...event, event: 'newThread', id: messageId }),
-    push(event),
-    pushChannel(event),
-    pushCommunity({ ...event, communityId }),
     eventNewMentions({ mentions, mentionNodes, channelId, threadId }),
     notificationListener({ ...event, communityId, mentions }),
-    ChannelsService.unarchiveDM({ channelId }),
+    ...resolvePush({ channel, userId, event, communityId }),
   ];
 
-  const result = await Promise.allSettled(promises);
-  console.log(stringify(result));
+  if (channel?.type === ChannelType.DM) {
+    promises.push(ChannelsService.unarchiveChannel({ channelId: channel.id }));
+  }
+
+  await Promise.allSettled(promises);
 }

@@ -154,6 +154,7 @@ async function addMessage(
       mentions: message.mentions,
       mentionNodes: [],
       thread: JSON.stringify(serializedThread),
+      userId: user?.id,
     });
   } else if (!!event.thread_ts && event.ts !== event.thread_ts) {
     // is a reply

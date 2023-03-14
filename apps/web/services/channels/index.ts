@@ -342,15 +342,6 @@ class ChannelsService {
     });
   }
 
-  static async unarchiveDM({ channelId }: { channelId: string }) {
-    const dm = await prisma.channels.findFirst({
-      where: { id: channelId, type: ChannelType.DM },
-    });
-    if (dm) {
-      await this.unarchiveChannel({ channelId });
-    }
-  }
-
   static async unarchiveChannel({ channelId }: { channelId: string }) {
     await prisma.memberships.updateMany({
       data: { archived: false },
@@ -389,6 +380,27 @@ class ChannelsService {
           },
         },
       },
+    });
+  }
+
+  static async getChannelAndMembersWithAuth(channelId: string) {
+    return await prisma.channels.findUnique({
+      select: {
+        id: true,
+        memberships: {
+          select: {
+            archived: true,
+            user: {
+              select: {
+                id: true,
+                authsId: true,
+              },
+            },
+          },
+        },
+        type: true,
+      },
+      where: { id: channelId },
     });
   }
 }
