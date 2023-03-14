@@ -327,7 +327,9 @@ function MessageForm({
               return event.preventDefault();
             }
             if (event.key === 'Enter') {
-              if (event.ctrlKey || event.shiftKey || !sendOnEnter) {
+              if (event.metaKey) {
+                handleSend(event);
+              } else if (event.ctrlKey || event.shiftKey || !sendOnEnter) {
                 event.preventDefault();
                 const position = getCaretPosition(ref);
                 setMessage((message: string) => {
