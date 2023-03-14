@@ -37,6 +37,7 @@ import NewCommunityModal from 'components/Modals/NewCommunityModal';
 import { timestamp } from '@linen/utilities/date';
 import { DMs } from './DMs';
 import useInboxWebsockets from '@linen/hooks/websockets/inbox';
+import MenuIcon from './MenuIcon';
 
 interface Props {
   mode: Mode;
@@ -101,7 +102,8 @@ export default function DesktopNavBar({
   };
 
   const [highlights, setHighlights] = useState<string[]>([]);
-  const [expanded, setExpanded] = useState(isSettingsPath());
+  const [collapsed, setCollapsed] = useState(false);
+  const [showSettings, toggleSettings] = useState(isSettingsPath());
   const [modal, setModal] = useState(false);
 
   const userId = permissions.auth?.id || null;
@@ -179,6 +181,7 @@ export default function DesktopNavBar({
     <div className={styles.container}>
       {currentUser && (
         <div className={styles.switch}>
+          <MenuIcon onClick={() => setCollapsed((collapsed) => !collapsed)} />
           {communities?.map((community) => {
             return <CommunityLink key={community.id} community={community} />;
           })}
@@ -186,7 +189,9 @@ export default function DesktopNavBar({
           <NewCommunityModal open={modal} close={() => setModal(false)} />
         </div>
       )}
-      <Nav className={styles.navbar}>
+      <Nav
+        className={classNames(styles.navbar, { [styles.collapsed]: collapsed })}
+      >
         {permissions.inbox && (
           <Link href="/inbox">
             <Nav.Item active={paths.inbox === router.asPath}>
@@ -290,12 +295,12 @@ export default function DesktopNavBar({
         {permissions.manage && (
           <Nav.Label
             className={styles.label}
-            onClick={() => setExpanded((expanded) => !expanded)}
+            onClick={() => toggleSettings((showSettings) => !showSettings)}
           >
-            Settings {expanded ? <FiChevronUp /> : <FiChevronDown />}
+            Settings {showSettings ? <FiChevronUp /> : <FiChevronDown />}
           </Nav.Label>
         )}
-        {expanded && permissions.manage && (
+        {showSettings && permissions.manage && (
           <>
             <Link href="/integrations">
               <Nav.Item active={paths.integrations === router.asPath}>

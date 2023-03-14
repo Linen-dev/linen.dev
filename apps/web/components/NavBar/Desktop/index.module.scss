@@ -45,6 +45,10 @@
   overflow-y: scroll;
 }
 
+.navbar.collapsed {
+  display: none;
+}
+
 .item {
   display: block;
 }
