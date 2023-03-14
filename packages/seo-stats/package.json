@@ -1,0 +1,21 @@
+{
+  "name": "seo-stats",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "with-env": "yarn dotenv -e ../../.env",
+    "dev": "yarn with-env tsx src/index.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "envalid": "^7.3.1",
+    "googleapis": "^113.0.0",
+    "tsx": "^3.12.5",
+    "open": "^8.4.2",
+    "server-destroy": "^1.0.1"
+  }
+}
