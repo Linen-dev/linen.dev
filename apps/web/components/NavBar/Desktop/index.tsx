@@ -12,6 +12,7 @@ import useWebsockets from '@linen/hooks/websockets';
 import styles from './index.module.scss';
 import { FiInbox } from '@react-icons/all-files/fi/FiInbox';
 import { FiStar } from '@react-icons/all-files/fi/FiStar';
+import { FiLayers } from '@react-icons/all-files/fi/FiLayers';
 import { FiBarChart } from '@react-icons/all-files/fi/FiBarChart';
 import { FiHash } from '@react-icons/all-files/fi/FiHash';
 import { FiLock } from '@react-icons/all-files/fi/FiLock';
@@ -80,6 +81,7 @@ export default function DesktopNavBar({
   const paths = {
     inbox: usePath({ href: '/inbox' }),
     starred: usePath({ href: '/starred' }),
+    all: usePath({ href: '/all' }),
     metrics: usePath({ href: '/metrics' }),
     integrations: usePath({ href: '/integrations' }),
     configurations: usePath({ href: '/configurations' }),
@@ -196,6 +198,13 @@ export default function DesktopNavBar({
           <Link href="/starred">
             <Nav.Item active={paths.starred === router.asPath}>
               <FiStar /> Starred
+            </Nav.Item>
+          </Link>
+        )}
+        {currentUser && (
+          <Link href="/all">
+            <Nav.Item active={paths.all === router.asPath}>
+              <FiLayers /> All
             </Nav.Item>
           </Link>
         )}

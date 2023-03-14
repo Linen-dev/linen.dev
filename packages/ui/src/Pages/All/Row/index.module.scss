@@ -1,0 +1,16 @@
+@import '../../../colors.scss';
+
+.actions {
+  display: none;
+}
+
+.row:hover .actions {
+  position: absolute;
+  display: flex;
+  top: 0;
+  bottom: 0;
+  vertical-align: middle;
+  height: 100%;
+  align-items: center;
+  right: 2rem;
+}

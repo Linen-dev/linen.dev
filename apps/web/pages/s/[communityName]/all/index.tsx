@@ -1,8 +1,8 @@
 import { GetServerSideProps } from 'next';
-import { ssrGetServerSideProps } from 'services/ssr/starred';
-import Starred, { Props } from 'components/Pages/Starred';
+import { ssrGetServerSideProps } from 'services/ssr/all';
+import All, { Props } from 'components/Pages/All';
 
-export default Starred;
+export default All;
 
 export const getServerSideProps: GetServerSideProps<Props> = async (
   context
