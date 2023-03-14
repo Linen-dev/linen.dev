@@ -1,0 +1,21 @@
+@import 'styles/colors.scss';
+
+.icon {
+  align-items: center;
+  background: $color-gray-100;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  margin: 0.5rem;
+  border-radius: 4px;
+  text-transform: uppercase;
+  transition: 0.1s ease-in background;
+  overflow: hidden;
+
+  &:hover {
+    background: $color-gray-50;
+  }
+}

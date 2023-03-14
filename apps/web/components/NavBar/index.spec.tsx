@@ -16,6 +16,7 @@ describe('NavBar', () => {
         communities={[]}
         permissions={build('permissions')}
         mode={Mode.Default}
+        dms={[]}
       />
     );
     expect(container).toHaveTextContent(channel1.channelName);
