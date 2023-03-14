@@ -8,6 +8,18 @@
   max-width: 52px;
   border-right: 1px solid $color-border;
   background-color: white;
+  max-height: calc(100vh - 64px);
+  overflow: hidden;
+}
+
+.switch:hover {
+  overflow-y: auto;
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  scrollbar-width: none; /* Firefox */
+}
+
+.switch:hover::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
 }
 
 .switch .item {
@@ -41,7 +53,7 @@
   padding: 0.5rem 0.5rem;
 }
 
-.navbar:hover{
+.navbar:hover {
   overflow-y: scroll;
 }
 
