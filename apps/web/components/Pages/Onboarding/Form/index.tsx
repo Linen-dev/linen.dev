@@ -1,9 +1,9 @@
-import { Button, TextInput, Toast, Label } from '@linen/ui';
+import { Badge, Button, TextInput, Toast, Label } from '@linen/ui';
 import { useState } from 'react';
 import { createSlug } from 'utilities/util';
 import { patterns } from '@linen/types';
 import unique from 'lodash.uniq';
-import { Badge } from 'components/Badge';
+import { FiX } from '@react-icons/all-files/fi/FiX';
 
 interface Props {
   createAccount({
@@ -132,7 +132,9 @@ export default function Form({ createAccount }: Props) {
           {channels?.map((channel) => {
             return (
               <div className="pr-1 pb-1" key={channel}>
-                <Badge onClose={() => removeChannel(channel)}>{channel}</Badge>
+                <Badge onClick={() => removeChannel(channel)}>
+                  {channel} <FiX />
+                </Badge>
               </div>
             );
           })}

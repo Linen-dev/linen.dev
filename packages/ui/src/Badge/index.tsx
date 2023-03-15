@@ -5,11 +5,19 @@ import styles from './index.module.scss';
 interface Props {
   className?: string;
   children: React.ReactNode;
+  onClick?(): void;
 }
 
-function Badge({ className, children }: Props) {
+function Badge({ className, children, onClick }: Props) {
   return (
-    <span className={classNames(styles.badge, className)}>{children}</span>
+    <span
+      className={classNames(styles.badge, className, {
+        [styles.action]: onClick,
+      })}
+      onClick={onClick}
+    >
+      {children}
+    </span>
   );
 }
 

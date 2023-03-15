@@ -3,6 +3,7 @@ import H3 from 'components/H3';
 import { FiPlus } from '@react-icons/all-files/fi/FiPlus';
 import { FiX } from '@react-icons/all-files/fi/FiX';
 import {
+  Badge,
   Button,
   Modal,
   TextInput,
@@ -20,7 +21,6 @@ import styles from './index.module.scss';
 import classNames from 'classnames';
 import { Permissions, SerializedUser } from '@linen/types';
 import { fetchMentions } from 'components/MessageForm/api';
-import { Badge } from 'components/Badge';
 
 export default function NewChannelModal({
   permissions,
