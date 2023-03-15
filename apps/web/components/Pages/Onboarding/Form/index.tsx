@@ -38,12 +38,15 @@ export default function Form() {
   }
 
   async function addChannel() {
-    const c = document.getElementById('channel') as HTMLInputElement;
-    if (!!c.value && c.checkValidity()) {
-      setChannels(unique([...channels, c.value.toLowerCase()]));
-      c.value = '';
+    const input = document.getElementById(
+      'new-channel-name'
+    ) as HTMLInputElement;
+    if (input.value && input.checkValidity()) {
+      const channelName = input.value.toLowerCase();
+      setChannels((channels) => unique([...channels, channelName]));
+      input.value = '';
     } else {
-      return c.reportValidity();
+      return input.reportValidity();
     }
   }
 
@@ -121,7 +124,7 @@ export default function Form() {
         </div>
         <div className="flex gap-2">
           <TextInput
-            id="channel"
+            id="new-channel-name"
             placeholder="E.g. new-channel"
             {...{
               pattern: patterns.channelName.source,
