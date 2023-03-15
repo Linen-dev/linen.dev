@@ -1,7 +1,6 @@
 import React from 'react';
 import Title from './Title';
 import { Icon, StickyHeader } from '@linen/ui';
-import classNames from 'classnames';
 import { ThreadState } from '@prisma/client';
 import { GoCheck } from '@react-icons/all-files/go/GoCheck';
 import { FiChevronLeft } from '@react-icons/all-files/fi/FiChevronLeft';
@@ -80,12 +79,9 @@ export default function Header({
             </>
           )}
           {onClose && (
-            <a
-              onClick={onClose}
-              className={classNames(styles.icon, styles.close)}
-            >
+            <Icon onClick={onClose} className={styles.close}>
               <FiX />
-            </a>
+            </Icon>
           )}
         </div>
       </div>
