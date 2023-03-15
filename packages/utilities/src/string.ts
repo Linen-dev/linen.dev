@@ -41,3 +41,17 @@ export function pad(string: string, length: number) {
   }
   return string;
 }
+
+export const slugify = (message: string) => {
+  let slug = message
+    .replace(/[^A-Za-z0-9\s]/g, ' ')
+    .replace(/[^\w\s$*_+~.()'"!\-:@]+/g, '')
+    .trim()
+    .replace(/\s+/g, '-')
+    .substring(0, 60)
+    .toLowerCase();
+  if (slug === '') {
+    return 'conversation';
+  }
+  return slug;
+};

@@ -1,4 +1,4 @@
-import { decodeHTML, pad, truncate } from './string';
+import { decodeHTML, pad, slugify, truncate } from './string';
 
 describe('#decodeHTML', () => {
   it('replaces &lt; with <', () => {
@@ -65,5 +65,29 @@ describe('pad', () => {
     expect(pad('111', 2)).toEqual('111');
     expect(pad('1111', 2)).toEqual('1111');
     expect(pad('11111', 2)).toEqual('11111');
+  });
+});
+
+describe('slugify', () => {
+  it('join spaces', () => {
+    expect(slugify(' something space  ')).toEqual('something-space');
+  });
+  it('removes emojis', () => {
+    expect(slugify('something 😉 space ')).toEqual('something-space');
+  });
+  it('replaces underscores', () => {
+    expect(slugify('something_space ')).toEqual('something-space');
+  });
+  it('has default string', () => {
+    expect(slugify(' ')).toEqual('conversation');
+  });
+  it('handles long strings', () => {
+    expect(slugify('x'.repeat(100)).length).toEqual(60);
+  });
+
+  it('handles punctunations', () => {
+    expect(slugify('! @ #$* *#! <> something space @*$(& ')).toEqual(
+      'something-space'
+    );
   });
 });
