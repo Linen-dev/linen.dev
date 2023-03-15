@@ -10,7 +10,7 @@ import {
   isReplierMember,
   updateThreadMetrics,
 } from './metrics';
-import { createSlug } from 'utilities/util';
+import { slugify } from 'utilities/util';
 import { GetType, FindType, UpdateType } from './types';
 import {
   MessageFormat,
@@ -104,7 +104,7 @@ class ThreadsServices {
       where: { id },
       data: {
         pinned,
-        ...(title && { title, slug: createSlug(title) }),
+        ...(title && { title, slug: slugify(title) }),
         ...(state && {
           state,
           closeAt: state === ThreadState.CLOSE ? new Date().getTime() : null,
@@ -190,7 +190,7 @@ class ThreadsServices {
         channel: { connect: { id: channelId } },
         sentAt: sentAt.getTime(),
         lastReplyAt: sentAt.getTime(),
-        slug: createSlug(title || body),
+        slug: slugify(title || body),
         messageCount: 1,
         title,
         externalThreadId,

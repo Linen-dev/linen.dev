@@ -3,7 +3,7 @@ import DiscordApi from './api';
 import to from 'utilities/await-to-js';
 import ChannelsService from 'services/channels';
 import Logger from './logger';
-import { createSlug } from 'utilities/util';
+import { slugify } from 'utilities/util';
 import { channels } from '@linen/database';
 
 enum ChannelType {
@@ -73,7 +73,7 @@ function parseChannel(
 } {
   return {
     externalChannelId: channel.id,
-    channelName: createSlug(channel.name),
+    channelName: slugify(channel.name),
     accountId,
     hidden: isPrivate(channel),
   };

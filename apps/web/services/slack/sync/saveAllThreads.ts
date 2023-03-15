@@ -4,7 +4,7 @@ import { retryPromise } from 'utilities/retryPromises';
 import { UserMap } from 'types/partialTypes';
 import { channels, prisma } from '@linen/database';
 import { MessageFormat } from '@linen/types';
-import { createSlug } from 'utilities/util';
+import { slugify } from 'utilities/util';
 import { processReactions } from './reactions';
 import { processAttachments } from './attachments';
 import { getMentionedUsers } from './getMentionedUsers';
@@ -24,7 +24,7 @@ async function saveMessagesSynchronous(
       where: { externalThreadId: threadHead.thread_ts },
       data: {
         messageCount: (threadHead.reply_count || 0) + 1,
-        slug: createSlug(threadHead.text),
+        slug: slugify(threadHead.text),
       },
     });
   }
@@ -39,7 +39,7 @@ async function saveMessagesSynchronous(
       channelId: channelId,
       sentAt: parseSlackSentAt(ts),
       lastReplyAt: parseSlackSentAt(ts),
-      slug: createSlug(m.text),
+      slug: slugify(m.text),
     });
     let user: UserMap | undefined;
     if (!m.user && !!m.bot_id) {

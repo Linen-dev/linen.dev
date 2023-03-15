@@ -4,7 +4,7 @@ import { prisma } from '@linen/database';
 import { updateAccount } from 'lib/models';
 import { eventNewIntegration } from 'services/events/eventNewIntegration';
 import { AccountIntegration, SerializedAccount } from '@linen/types';
-import { createSlug } from 'utilities/util';
+import { slugify } from 'utilities/util';
 import { getHomeUrl } from 'utilities/home';
 import serializeAccount from 'serializers/account';
 
@@ -26,7 +26,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     const account = await updateAccount(accountId, {
       discordServerId: guild.id,
       name: guild.name,
-      discordDomain: createSlug(guild.name).toLowerCase(),
+      discordDomain: slugify(guild.name).toLowerCase(),
       integration: AccountIntegration.DISCORD,
     });
 

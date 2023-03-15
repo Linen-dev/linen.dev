@@ -1,6 +1,6 @@
 import { type JobHelpers } from 'graphile-worker';
 import { prisma } from '@linen/database';
-import { createSlug } from 'utilities/util';
+import { slugify } from 'utilities/util';
 
 const findThreadsWithNoSlugs = (skip: number) => {
   return prisma.threads.findMany({
@@ -32,7 +32,7 @@ export const slugify = async (payload: any, helpers: JobHelpers) => {
     skip += 100;
     const slugsTransaction = threadsWithNoSlug.map((t) => {
       const message = t.messages[0];
-      const slug = createSlug(message?.body || '');
+      const slug = slugify(message?.body || '');
       return prisma.threads.update({
         where: {
           id: t.id,
