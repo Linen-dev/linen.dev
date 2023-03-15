@@ -9,7 +9,7 @@ import { v4 } from 'uuid';
 import { createAccountEvent } from './customerIo/trackEvents';
 import { createInvitation } from './invites';
 import { getCurrentUrl } from '@linen/utilities/domain';
-import { unique } from 'utilities/util';
+import unique from 'lodash.uniq';
 
 export default class AccountsService {
   static async create({
