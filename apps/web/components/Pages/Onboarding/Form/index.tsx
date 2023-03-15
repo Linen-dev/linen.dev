@@ -1,7 +1,7 @@
 import { Badge, Button, TextInput, Toast, Label } from '@linen/ui';
 import { useState } from 'react';
-import { createSlug } from 'utilities/util';
 import { patterns } from '@linen/types';
+import { slugify } from '@linen/utilities/string';
 import unique from 'lodash.uniq';
 import { FiX } from '@react-icons/all-files/fi/FiX';
 import { FiPlus } from '@react-icons/all-files/fi/FiPlus';
@@ -97,9 +97,10 @@ export default function Form({ createAccount }: Props) {
             title:
               "Community name should only contain letters, space and apostrophe. e.g. Linen's Community",
           }}
-          onBlur={(e: React.FocusEvent<HTMLInputElement, Element>) =>
-            e.target.value && setSuggestion(createSlug(e.target.value))
-          }
+          onChange={(event: React.FocusEvent<HTMLInputElement, Element>) => {
+            const name = event.target.value;
+            setSuggestion(name ? slugify(name) : '');
+          }}
         />
         <span className="text-xs text-gray-700">
           Community name should only contain letters, space and apostrophe. e.g.
