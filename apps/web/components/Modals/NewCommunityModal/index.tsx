@@ -2,6 +2,7 @@ import { Modal } from '@linen/ui';
 import H3 from 'components/H3';
 import { FiX } from '@react-icons/all-files/fi/FiX';
 import Form from 'components/Pages/Onboarding/Form';
+import { createAccount } from 'utilities/requests';
 
 interface Props {
   open: boolean;
@@ -22,7 +23,7 @@ export default function NewCommunityModal({ open, close }: Props) {
         </div>
       </div>
       <div className="py-4"></div>
-      <Form />
+      <Form createAccount={createAccount} />
     </Modal>
   );
 }
