@@ -55,7 +55,7 @@ export default function Form({ createAccount }: Props) {
 
   async function addChannel() {
     const input = document.getElementById(
-      'new-channel-name'
+      'new-channel-onboarding'
     ) as HTMLInputElement;
     if (input.value && input.checkValidity()) {
       const channelName = input.value.toLowerCase();
@@ -67,7 +67,9 @@ export default function Form({ createAccount }: Props) {
   }
 
   async function addEmail() {
-    const e = document.getElementById('email') as HTMLInputElement;
+    const e = document.getElementById(
+      'new-email-onboarding'
+    ) as HTMLInputElement;
     if (!!e.value && e.checkValidity()) {
       setEmails(unique([...emails, e.value]));
       e.value = '';
@@ -144,12 +146,19 @@ export default function Form({ createAccount }: Props) {
         </div>
         <div className="flex gap-2">
           <TextInput
-            id="new-channel-name"
+            id="new-channel-onboarding"
             placeholder="E.g. new-channel"
             {...{
               pattern: patterns.channelName.source,
               title:
                 'Channels name should start with lower case letter and could contain lower case letters, underscore, numbers and hyphens. e.g. announcements',
+            }}
+            onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
+              if (event.key === 'Enter') {
+                event.preventDefault();
+                event.stopPropagation();
+                addChannel();
+              }
             }}
           />
           <Button onClick={() => addChannel()}>
@@ -167,13 +176,26 @@ export default function Form({ createAccount }: Props) {
           {emails?.map((email) => {
             return (
               <div className="pr-1 pb-1" key={email}>
-                <Badge onClose={() => removeEmail(email)}>{email}</Badge>
+                <Badge onClick={() => removeEmail(email)}>
+                  {email} <FiX />
+                </Badge>
               </div>
             );
           })}
         </div>
         <div className="flex w-full gap-2">
-          <TextInput id="email" type="email" placeholder="name@team.com" />
+          <TextInput
+            id="new-email-onboarding"
+            type="email"
+            placeholder="name@team.com"
+            onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
+              if (event.key === 'Enter') {
+                event.preventDefault();
+                event.stopPropagation();
+                addEmail();
+              }
+            }}
+          />
           <Button onClick={() => addEmail()}>
             Add <FiPlus />
           </Button>
