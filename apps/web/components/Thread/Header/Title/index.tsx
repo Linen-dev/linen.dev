@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { TextInput } from '@linen/ui';
-import { GoPencil } from '@react-icons/all-files/go/GoPencil';
+import { Icon, TextInput } from '@linen/ui';
+import { FiEdit } from '@react-icons/all-files/fi/FiEdit';
 import classNames from 'classnames';
 import styles from './index.module.css';
 import { ThreadState } from '@linen/types';
@@ -91,7 +91,7 @@ export default function Title({ title, state, manage, onSetTitle }: Props) {
       {mode === Mode.Read && (
         <>
           {text}
-          <GoPencil className={styles.icon} />
+          <FiEdit />
         </>
       )}
     </div>

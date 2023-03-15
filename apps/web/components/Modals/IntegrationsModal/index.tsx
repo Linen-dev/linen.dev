@@ -11,7 +11,7 @@ import { Toast } from '@linen/ui';
 import { useSession } from 'utilities/auth/react';
 import { ChannelContext } from 'contexts/channel';
 import * as api from 'utilities/requests';
-import { GoX } from '@react-icons/all-files/go/GoX';
+import { FiX } from '@react-icons/all-files/fi/FiX';
 
 interface IntegrationsModalProps {
   permissions: Permissions;
@@ -218,7 +218,7 @@ function Remove(onClick: () => Promise<void>) {
       className="flex items-center gap-1 text-xs pl-4 cursor-pointer"
       onClick={onClick}
     >
-      <GoX /> Remove
+      <FiX /> Remove
     </span>
   );
 }

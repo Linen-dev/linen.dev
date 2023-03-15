@@ -11,6 +11,7 @@ import Code from './Code';
 import ConfirmationModal from './ConfirmationModal';
 import Container from './Container';
 import Dropdown from './Dropdown';
+import Icon from './Icon';
 import Image from './Image';
 import Label from './Label';
 import Line from './Line';
@@ -49,6 +50,7 @@ export {
   ConfirmationModal,
   Container,
   Dropdown,
+  Icon,
   Image,
   Label,
   Line,

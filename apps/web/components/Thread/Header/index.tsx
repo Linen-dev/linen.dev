@@ -1,14 +1,13 @@
 import React from 'react';
 import Title from './Title';
-import { StickyHeader } from '@linen/ui';
-import classNames from 'classnames';
+import { Icon, StickyHeader } from '@linen/ui';
 import { ThreadState } from '@linen/database';
-import { GoCheck } from '@react-icons/all-files/go/GoCheck';
-import { GoChevronLeft } from '@react-icons/all-files/go/GoChevronLeft';
-import { GoX } from '@react-icons/all-files/go/GoX';
-import { GoSync } from '@react-icons/all-files/go/GoSync';
-import { GoScreenFull } from '@react-icons/all-files/go/GoScreenFull';
-import { GoScreenNormal } from '@react-icons/all-files/go/GoScreenNormal';
+import { FiCheck } from '@react-icons/all-files/fi/FiCheck';
+import { FiChevronLeft } from '@react-icons/all-files/fi/FiChevronLeft';
+import { FiX } from '@react-icons/all-files/fi/FiX';
+import { FiRefreshCcw } from '@react-icons/all-files/fi/FiRefreshCcw';
+import { FiMaximize } from '@react-icons/all-files/fi/FiMaximize';
+import { FiMinimize } from '@react-icons/all-files/fi/FiMinimize';
 import { SerializedThread } from '@linen/types';
 import styles from './index.module.scss';
 
@@ -44,7 +43,7 @@ export default function Header({
             {onClose && (
               <div className="md:hidden">
                 <a onClick={onClose}>
-                  <GoChevronLeft />
+                  <FiChevronLeft />
                 </a>
               </div>
             )}
@@ -61,43 +60,36 @@ export default function Header({
         </div>
         <div className={styles.icons}>
           {onExpandClick && (
-            <a className={styles.icon} onClick={onExpandClick}>
-              {expanded ? <GoScreenNormal /> : <GoScreenFull />}
-            </a>
+            <Icon onClick={onExpandClick}>
+              {expanded ? <FiMinimize /> : <FiMaximize />}
+            </Icon>
           )}
           {manage && (
             <>
               {state === ThreadState.OPEN && (
-                <a
-                  className={styles.icon}
-                  title="Close thread"
+                <Icon
                   onClick={() => {
                     onCloseThread();
                   }}
                 >
-                  <GoCheck />
-                </a>
+                  <FiCheck />
+                </Icon>
               )}
               {state === ThreadState.CLOSE && (
-                <a
-                  className={styles.icon}
-                  title="Reopen thread"
+                <Icon
                   onClick={() => {
                     onReopenThread();
                   }}
                 >
-                  <GoSync />
-                </a>
+                  <FiRefreshCcw />
+                </Icon>
               )}
             </>
           )}
           {onClose && (
-            <a
-              onClick={onClose}
-              className={classNames(styles.icon, styles.close)}
-            >
-              <GoX />
-            </a>
+            <Icon onClick={onClose} className={styles.close}>
+              <FiX />
+            </Icon>
           )}
         </div>
       </div>

@@ -1,11 +1,11 @@
 import React from 'react';
 import Title from './Title';
-import { StickyHeader } from '@linen/ui';
+import { Icon, StickyHeader } from '@linen/ui';
 import classNames from 'classnames';
 import { ThreadState } from '@prisma/client';
 import { GoCheck } from '@react-icons/all-files/go/GoCheck';
-import { GoChevronLeft } from '@react-icons/all-files/go/GoChevronLeft';
-import { GoX } from '@react-icons/all-files/go/GoX';
+import { FiChevronLeft } from '@react-icons/all-files/fi/FiChevronLeft';
+import { FiX } from '@react-icons/all-files/fi/FiX';
 import { GoSync } from '@react-icons/all-files/go/GoSync';
 import { SerializedThread } from '@linen/types';
 import styles from './index.module.scss';
@@ -37,7 +37,7 @@ export default function Header({
           {onClose && (
             <div className="flex items-center md:hidden mr-2">
               <a onClick={onClose}>
-                <GoChevronLeft />
+                <FiChevronLeft />
               </a>
             </div>
           )}
@@ -84,7 +84,7 @@ export default function Header({
               onClick={onClose}
               className={classNames(styles.icon, styles.close)}
             >
-              <GoX />
+              <FiX />
             </a>
           )}
         </div>

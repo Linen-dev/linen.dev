@@ -25,24 +25,6 @@
   position: relative;
 }
 
-.icon {
-  background: $color-white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: $color-gray-700;
-  cursor: pointer;
-  border-radius: 50%;
-  padding: 0.5rem;
-  transition: 0.1s ease-in background, 0.1s ease-in color;
-  position: relative;
-}
-
-.icon:hover {
-  background: $color-gray-50;
-  color: $color-gray-900;
-}
-
 .expand {
   cursor: pointer;
   position: absolute;
