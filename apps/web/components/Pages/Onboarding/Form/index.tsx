@@ -1,7 +1,8 @@
 import { Button, TextInput, Toast, Label } from '@linen/ui';
 import { useState } from 'react';
 import * as api from 'utilities/requests';
-import { createSlug, patterns } from 'utilities/util';
+import { createSlug } from 'utilities/util';
+import { patterns } from '@linen/types';
 import unique from 'lodash.uniq';
 import { Badge } from 'components/Badge';
 

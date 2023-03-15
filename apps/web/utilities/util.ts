@@ -1,4 +1,3 @@
-export { patterns } from '@linen/types';
 //Todos: Probably want to strip @ channel @ here later
 //remove the, if, of, for etc words
 export const createSlug = (message: string) => {
