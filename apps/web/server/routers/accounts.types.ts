@@ -1,6 +1,5 @@
 import { z } from 'zod';
-import { AccountType, ChatType } from '@linen/types';
-import { patterns } from 'utilities/util';
+import { AccountType, ChatType, patterns } from '@linen/types';
 
 export const createAccountSchema = z.object({
   name: z.string().regex(patterns.communityName).optional(),
