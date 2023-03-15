@@ -3,7 +3,7 @@ import DiscordApi from './api';
 import to from 'utilities/await-to-js';
 import ChannelsService from 'services/channels';
 import Logger from './logger';
-import { slugify } from 'utilities/util';
+import { slugify } from '@linen/utilities/string';
 import { channels } from '@linen/database';
 
 enum ChannelType {

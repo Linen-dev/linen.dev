@@ -9,7 +9,7 @@ import {
   SlackEvent,
   SlackMessageEvent,
 } from 'types/slackResponses/slackMessageEventInterface';
-import { slugify } from 'utilities/util';
+import { slugify } from '@linen/utilities/string';
 import {
   accounts,
   channels,

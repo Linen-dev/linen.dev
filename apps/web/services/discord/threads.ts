@@ -7,7 +7,7 @@ import {
 import DiscordApi from './api';
 import { CrawlType, LIMIT } from './constrains';
 import { createMessages } from './messages';
-import { slugify } from 'utilities/util';
+import { slugify } from '@linen/utilities/string';
 import { parseDiscordSentAt } from 'utilities/sentAt';
 import to from 'utilities/await-to-js';
 import { findOrCreateThread, updateLastReplyAt } from 'lib/threads';

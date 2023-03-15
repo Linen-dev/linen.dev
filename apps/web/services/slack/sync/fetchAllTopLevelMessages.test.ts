@@ -7,7 +7,7 @@ import * as fetch_all_conversations from 'services/slack/api';
 import { fetchAllTopLevelMessages } from './fetchAllTopLevelMessages';
 import { conversationHistory } from '__mocks__/slack-api';
 import { parseSlackSentAt, tsToSentAt } from 'utilities/sentAt';
-import { slugify } from 'utilities/util';
+import { slugify } from '@linen/utilities/string';
 import { MessageFormat } from '@linen/types';
 
 const account = {

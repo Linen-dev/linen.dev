@@ -1,6 +1,6 @@
 import { type JobHelpers } from 'graphile-worker';
 import { prisma } from '@linen/database';
-import { slugify } from 'utilities/util';
+import { slugify } from '@linen/utilities/string';
 
 const findThreadsWithNoSlugs = (skip: number) => {
   return prisma.threads.findMany({

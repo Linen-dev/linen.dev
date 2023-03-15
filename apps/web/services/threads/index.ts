@@ -10,7 +10,7 @@ import {
   isReplierMember,
   updateThreadMetrics,
 } from './metrics';
-import { slugify } from 'utilities/util';
+import { slugify } from '@linen/utilities/string';
 import { GetType, FindType, UpdateType } from './types';
 import {
   MessageFormat,

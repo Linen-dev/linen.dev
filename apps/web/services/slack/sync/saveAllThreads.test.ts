@@ -6,7 +6,7 @@ import { conversationHistory, conversationReplies } from '__mocks__/slack-api';
 import * as fetch_all_conversations from 'services/slack/api';
 import * as s3Helper from 'services/aws/s3';
 import { saveAllThreads } from './saveAllThreads';
-import { slugify } from 'utilities/util';
+import { slugify } from '@linen/utilities/string';
 import { parseSlackSentAt } from 'utilities/sentAt';
 import { MessageFormat } from '@linen/types';
 
