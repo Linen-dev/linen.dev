@@ -1,6 +1,6 @@
 //Todos: Probably want to strip @ channel @ here later
 //remove the, if, of, for etc words
-export const createSlug = (message: string) => {
+export const slugify = (message: string) => {
   let slug = message
     .replace(/[^A-Za-z0-9\s]/g, ' ')
     .replace(/[^\w\s$*_+~.()'"!\-:@]+/g, '')

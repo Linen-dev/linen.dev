@@ -1,26 +1,26 @@
-import { cleanUpUrl, createSlug } from './util';
+import { cleanUpUrl, slugify } from './util';
 
 const longString = 'THIS Is a really long String'.repeat(100);
 
 describe('slugify', () => {
   it('join spaces', () => {
-    expect(createSlug(' something space  ')).toEqual('something-space');
+    expect(slugify(' something space  ')).toEqual('something-space');
   });
   it('removes emojis', () => {
-    expect(createSlug('something 😉 space ')).toEqual('something-space');
+    expect(slugify('something 😉 space ')).toEqual('something-space');
   });
   it('replaces underscores', () => {
-    expect(createSlug('something_space ')).toEqual('something-space');
+    expect(slugify('something_space ')).toEqual('something-space');
   });
   it('has default string', () => {
-    expect(createSlug(' ')).toEqual('conversation');
+    expect(slugify(' ')).toEqual('conversation');
   });
   it('handles long strings', () => {
-    expect(createSlug(longString).length).toEqual(60);
+    expect(slugify(longString).length).toEqual(60);
   });
 
   it('handles punctunations', () => {
-    expect(createSlug('! @ #$* *#! <> something space @*$(& ')).toEqual(
+    expect(slugify('! @ #$* *#! <> something space @*$(& ')).toEqual(
       'something-space'
     );
   });

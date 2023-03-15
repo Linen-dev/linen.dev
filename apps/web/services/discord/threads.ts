@@ -7,7 +7,7 @@ import {
 import DiscordApi from './api';
 import { CrawlType, LIMIT } from './constrains';
 import { createMessages } from './messages';
-import { createSlug } from 'utilities/util';
+import { slugify } from 'utilities/util';
 import { parseDiscordSentAt } from 'utilities/sentAt';
 import to from 'utilities/await-to-js';
 import { findOrCreateThread, updateLastReplyAt } from 'lib/threads';
@@ -167,7 +167,7 @@ function parseThread(thread: DiscordThread, channel: channels) {
     channelId: channel.id,
     externalThreadId: thread.id,
     messageCount: (thread.message_count || 0) + 1,
-    ...(thread.name && { slug: createSlug(thread.name) }),
+    ...(thread.name && { slug: slugify(thread.name) }),
     title: thread.name,
     sentAt: new Date(date).getTime(),
     lastReplyAt: new Date(date).getTime(),

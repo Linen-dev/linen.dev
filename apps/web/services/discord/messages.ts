@@ -3,7 +3,7 @@ import { MessageFormat } from '@linen/types';
 import { DiscordMessage } from 'types/discord';
 import { findUsers, getMentions, getUsersInMessages } from './users';
 import { LIMIT } from './constrains';
-import { createSlug } from 'utilities/util';
+import { slugify } from 'utilities/util';
 import { parseDiscordSentAt } from 'utilities/sentAt';
 import ChannelsService from 'services/channels';
 import { upsertThreadByExternalId } from 'lib/threads';
@@ -165,7 +165,7 @@ async function parseThreadFromMessage(messageParsed: {
     channelId: messageParsed.channelId,
     externalThreadId: messageParsed.externalMessageId,
     messageCount: 1,
-    slug: createSlug(messageParsed.body),
+    slug: slugify(messageParsed.body),
     title: null,
     lastReplyAt: parseDiscordSentAt(messageParsed.sentAt),
   };

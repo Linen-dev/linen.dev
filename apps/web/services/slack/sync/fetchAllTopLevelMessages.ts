@@ -10,7 +10,7 @@ import { getMentionedUsers } from './getMentionedUsers';
 import { sleep } from 'utilities/retryPromises';
 import { parseSlackSentAt, tsToSentAt } from 'utilities/sentAt';
 import { findOrCreateThread } from 'lib/threads';
-import { createSlug } from 'utilities/util';
+import { slugify } from 'utilities/util';
 import { filterMessages, parseMessage } from './parseMessage';
 
 async function saveMessagesTransaction(
@@ -28,7 +28,7 @@ async function saveMessagesTransaction(
       externalThreadId: m.ts,
       sentAt: parseSlackSentAt(m.ts),
       lastReplyAt: parseSlackSentAt(m.ts),
-      slug: createSlug(m.text),
+      slug: slugify(m.text),
       messageCount: (m.reply_count || 0) + 1,
     });
     let user: UserMap | undefined;

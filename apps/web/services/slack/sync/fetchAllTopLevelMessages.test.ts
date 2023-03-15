@@ -7,7 +7,7 @@ import * as fetch_all_conversations from 'services/slack/api';
 import { fetchAllTopLevelMessages } from './fetchAllTopLevelMessages';
 import { conversationHistory } from '__mocks__/slack-api';
 import { parseSlackSentAt, tsToSentAt } from 'utilities/sentAt';
-import { createSlug } from 'utilities/util';
+import { slugify } from 'utilities/util';
 import { MessageFormat } from '@linen/types';
 
 const account = {
@@ -88,7 +88,7 @@ describe('slackSync :: fetchAllTopLevelMessages', () => {
         externalThreadId: conversationHistory.messages[index].ts,
         sentAt: parseSlackSentAt(conversationHistory.messages[index].ts),
         lastReplyAt: parseSlackSentAt(conversationHistory.messages[index].ts),
-        slug: createSlug(conversationHistory.messages[index].text),
+        slug: slugify(conversationHistory.messages[index].text),
         messageCount:
           (conversationHistory.messages[index]?.reply_count || 0) + 1,
       },

@@ -6,7 +6,7 @@ import { conversationHistory, conversationReplies } from '__mocks__/slack-api';
 import * as fetch_all_conversations from 'services/slack/api';
 import * as s3Helper from 'services/aws/s3';
 import { saveAllThreads } from './saveAllThreads';
-import { createSlug } from 'utilities/util';
+import { slugify } from 'utilities/util';
 import { parseSlackSentAt } from 'utilities/sentAt';
 import { MessageFormat } from '@linen/types';
 
@@ -101,7 +101,7 @@ describe('slackSync :: saveAllThreads', () => {
     expect(threadsUpdateMock).toHaveBeenNthCalledWith(1, {
       data: {
         messageCount: conversationReplies.messages.length,
-        slug: createSlug(conversationReplies.messages[0].text),
+        slug: slugify(conversationReplies.messages[0].text),
       },
       where: {
         externalThreadId: threads[0].id,
@@ -115,7 +115,7 @@ describe('slackSync :: saveAllThreads', () => {
         externalThreadId: threads[0].id,
         sentAt: parseSlackSentAt(threads[0].externalThreadId),
         lastReplyAt: parseSlackSentAt(threads[0].externalThreadId),
-        slug: createSlug(conversationReplies.messages[index].text),
+        slug: slugify(conversationReplies.messages[index].text),
       },
       include: {
         messages: true,

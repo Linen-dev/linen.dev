@@ -9,7 +9,7 @@ import {
   SlackEvent,
   SlackMessageEvent,
 } from 'types/slackResponses/slackMessageEventInterface';
-import { createSlug } from 'utilities/util';
+import { slugify } from 'utilities/util';
 import {
   accounts,
   channels,
@@ -82,7 +82,7 @@ async function addMessage(
     channelId: channel.id,
     sentAt: parseSlackSentAt(event.ts),
     lastReplyAt: parseSlackSentAt(event.ts),
-    slug: createSlug(event.text),
+    slug: slugify(event.text),
   });
 
   if (!!event.thread_ts) {
