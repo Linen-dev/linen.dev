@@ -15,9 +15,6 @@ export const createSlug = (message: string) => {
   return slug;
 };
 
-export const unique = <T>(arr: T[]): T[] =>
-  arr.filter((el, i, array) => array.indexOf(el) === i);
-
 export const toObject = <T extends Record<string, any>, K extends keyof T>(
   arr: T[],
   key: K

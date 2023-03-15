@@ -13,7 +13,8 @@ import {
 } from '@linen/ui';
 import { useLinkContext } from '@linen/contexts/Link';
 import CustomRouterPush from 'components/Link/CustomRouterPush';
-import { patterns, unique } from 'utilities/util';
+import { patterns } from 'utilities/util';
+import unique from 'lodash.uniq';
 import * as api from 'utilities/requests';
 import styles from './index.module.scss';
 import classNames from 'classnames';
