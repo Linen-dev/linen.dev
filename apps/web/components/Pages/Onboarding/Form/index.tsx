@@ -2,9 +2,10 @@ import { Badge, Button, TextInput, Toast, Label } from '@linen/ui';
 import { useState } from 'react';
 import { patterns } from '@linen/types';
 import { slugify } from '@linen/utilities/string';
-import unique from 'lodash.uniq';
 import { FiX } from '@react-icons/all-files/fi/FiX';
 import { FiPlus } from '@react-icons/all-files/fi/FiPlus';
+import { FiHash } from '@react-icons/all-files/fi/FiHash';
+import { FiUser } from '@react-icons/all-files/fi/FiUser';
 
 interface Props {
   createAccount({
@@ -58,23 +59,32 @@ export default function Form({ createAccount }: Props) {
       'new-channel-onboarding'
     ) as HTMLInputElement;
     if (input.value && input.checkValidity()) {
-      const channelName = input.value.toLowerCase();
-      setChannels((channels) => unique([...channels, channelName]));
-      input.value = '';
+      const channel = input.value.toLowerCase();
+      if (channels.includes(channel)) {
+        Toast.error('Channel already added.');
+      } else {
+        setChannels((channels) => [...channels, channel]);
+        input.value = '';
+      }
     } else {
       return input.reportValidity();
     }
   }
 
   async function addEmail() {
-    const e = document.getElementById(
+    const input = document.getElementById(
       'new-email-onboarding'
     ) as HTMLInputElement;
-    if (!!e.value && e.checkValidity()) {
-      setEmails(unique([...emails, e.value]));
-      e.value = '';
+    if (input.value && input.checkValidity()) {
+      const email = input.value;
+      if (emails.includes(email)) {
+        Toast.error('Email already added.');
+      } else {
+        setEmails((emails) => [...emails, email]);
+        input.value = '';
+      }
     } else {
-      return e.reportValidity();
+      return input.reportValidity();
     }
   }
 
@@ -138,7 +148,7 @@ export default function Form({ createAccount }: Props) {
             return (
               <div className="pr-1 pb-1" key={channel}>
                 <Badge onClick={() => removeChannel(channel)}>
-                  {channel} <FiX />
+                  <FiHash /> {channel} <FiX />
                 </Badge>
               </div>
             );
@@ -177,6 +187,7 @@ export default function Form({ createAccount }: Props) {
             return (
               <div className="pr-1 pb-1" key={email}>
                 <Badge onClick={() => removeEmail(email)}>
+                  <FiUser />
                   {email} <FiX />
                 </Badge>
               </div>
