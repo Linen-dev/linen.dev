@@ -2,7 +2,7 @@ import React from 'react';
 import Dropdown, { DropdownItem } from '../../../Dropdown';
 import StickyHeader from '../../../StickyHeader';
 import Pagination from './Pagination';
-import Icon from './Icon';
+import Icon from '../../../Icon';
 import { FiInbox } from '@react-icons/all-files/fi/FiInbox';
 import { FiEdit3 } from '@react-icons/all-files/fi/FiEdit3';
 import { FiMoreVertical } from '@react-icons/all-files/fi/FiMoreVertical';

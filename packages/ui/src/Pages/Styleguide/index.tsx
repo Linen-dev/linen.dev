@@ -9,10 +9,12 @@ import NativeSelectExample from './examples/NativeSelect';
 import NavExample from './examples/Nav';
 import ToastExample from './examples/Toast';
 import ProgressExample from './examples/Progress';
+import IconExample from './examples/Icon';
 
 export default function Styleguide() {
   return (
     <Layout>
+      <IconExample />
       <ProgressExample />
       <NavExample />
       <ButtonGroupExample />
