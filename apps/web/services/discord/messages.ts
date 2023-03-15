@@ -3,7 +3,7 @@ import { MessageFormat } from '@linen/types';
 import { DiscordMessage } from 'types/discord';
 import { findUsers, getMentions, getUsersInMessages } from './users';
 import { LIMIT } from './constrains';
-import { slugify } from 'utilities/util';
+import { slugify } from '@linen/utilities/string';
 import { parseDiscordSentAt } from 'utilities/sentAt';
 import ChannelsService from 'services/channels';
 import { upsertThreadByExternalId } from 'lib/threads';

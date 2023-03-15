@@ -4,7 +4,7 @@ import { prisma } from '@linen/database';
 import { updateAccount } from 'lib/models';
 import { eventNewIntegration } from 'services/events/eventNewIntegration';
 import { AccountIntegration, SerializedAccount } from '@linen/types';
-import { slugify } from 'utilities/util';
+import { slugify } from '@linen/utilities/string';
 import { getHomeUrl } from 'utilities/home';
 import serializeAccount from 'serializers/account';
 

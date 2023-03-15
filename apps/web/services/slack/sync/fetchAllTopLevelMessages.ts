@@ -10,7 +10,7 @@ import { getMentionedUsers } from './getMentionedUsers';
 import { sleep } from 'utilities/retryPromises';
 import { parseSlackSentAt, tsToSentAt } from 'utilities/sentAt';
 import { findOrCreateThread } from 'lib/threads';
-import { slugify } from 'utilities/util';
+import { slugify } from '@linen/utilities/string';
 import { filterMessages, parseMessage } from './parseMessage';
 
 async function saveMessagesTransaction(
