@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
-import { GoChevronLeft } from '@react-icons/all-files/go/GoChevronLeft';
-import { GoChevronRight } from '@react-icons/all-files/go/GoChevronRight';
+import { FiChevronLeft } from '@react-icons/all-files/fi/FiChevronLeft';
+import { FiChevronRight } from '@react-icons/all-files/fi/FiChevronRight';
 import styles from './index.module.scss';
 
 interface Props {
@@ -27,7 +27,7 @@ export default function Pagination({ total, page, onPageChange }: Props) {
           !isBackDisabled && onPageChange('back');
         }}
       >
-        <GoChevronLeft />
+        <FiChevronLeft />
       </div>
       <div
         className={classNames(styles.icon, {
@@ -37,7 +37,7 @@ export default function Pagination({ total, page, onPageChange }: Props) {
           !isNextDisabled && onPageChange('next');
         }}
       >
-        <GoChevronRight />
+        <FiChevronRight />
       </div>
     </div>
   );
