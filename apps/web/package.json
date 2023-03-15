@@ -22,7 +22,7 @@
     "start:queue": "pm2-runtime --raw \"npx tsx queue/index.ts\""
   },
   "dependencies": {
-    "@headlessui/react": "^1.7.3",
+    "@headlessui/react": "^1.7.13",
     "@linen/ast": "*",
     "@linen/contexts": "*",
     "@linen/database": "*",
@@ -85,7 +85,7 @@
     "formidable": "^2.0.1",
     "graphile-worker": "^0.13.0",
     "helmet": "^6.0.0",
-    "highlight.js": "^11.6.0",
+    "highlight.js": "^11.7.0",
     "hpp": "^0.2.3",
     "jest": "^27.5.1",
     "jest-mock-extended": "^2.0.7",
