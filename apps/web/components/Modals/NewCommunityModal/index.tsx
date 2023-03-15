@@ -1,8 +1,10 @@
-import { Modal } from '@linen/ui';
+import React from 'react';
+import { Icon, Modal } from '@linen/ui';
+import Form from 'components/Pages/Onboarding/Form';
 import H3 from 'components/H3';
 import { FiX } from '@react-icons/all-files/fi/FiX';
-import Form from 'components/Pages/Onboarding/Form';
 import { createAccount } from 'utilities/requests';
+import styles from './index.module.scss';
 
 interface Props {
   open: boolean;
@@ -11,18 +13,13 @@ interface Props {
 
 export default function NewCommunityModal({ open, close }: Props) {
   return (
-    <Modal open={open} close={close}>
-      <div className="flex items-center justify-between">
+    <Modal open={open} close={close} size="lg">
+      <div className={styles.header}>
         <H3>Create a community</H3>
-        <div
-          className="rounded-md bg-white text-gray-400 hover:text-gray-500 cursor-pointer"
-          onClick={close}
-        >
-          <span className="sr-only">Close</span>
+        <Icon onClick={close}>
           <FiX />
-        </div>
+        </Icon>
       </div>
-      <div className="py-4"></div>
       <Form createAccount={createAccount} />
     </Modal>
   );
