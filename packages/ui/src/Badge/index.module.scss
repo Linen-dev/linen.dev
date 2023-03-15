@@ -6,8 +6,27 @@
   border-radius: 9999px;
   color: $color-indigo-800;
   display: inline-flex;
+  gap: 0.25rem;
   font-size: 0.75rem;
   font-weight: 500;
-  line-height: 1rem;
   padding: 0.125rem 0.625rem;
+  transition: background 0.2s ease-in, color 0.2s ease-in;
+}
+
+.badge svg {
+  color: $color-indigo-800;
+  transition: color 0.2s ease-in;
+}
+
+.action {
+  cursor: pointer;
+}
+
+.action:hover {
+  background: $color-indigo-800;
+  color: $color-white;
+}
+
+.action:hover svg {
+  color: $color-white;
 }
