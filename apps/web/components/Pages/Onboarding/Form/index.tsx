@@ -122,7 +122,7 @@ export default function Form({ createAccount }: Props) {
 
         <TextInput
           id="slackDomain"
-          placeholder="E.g. cool-community"
+          placeholder="cool-community"
           label="What should be your community path?"
           {...{
             pattern: patterns.communityPath.source,
@@ -157,7 +157,8 @@ export default function Form({ createAccount }: Props) {
         <div className="flex gap-2">
           <TextInput
             id="new-channel-onboarding"
-            placeholder="E.g. new-channel"
+            placeholder="general"
+            icon={<FiHash />}
             {...{
               pattern: patterns.channelName.source,
               title:
@@ -198,7 +199,8 @@ export default function Form({ createAccount }: Props) {
           <TextInput
             id="new-email-onboarding"
             type="email"
-            placeholder="name@team.com"
+            placeholder={`user@${suggestion || 'domain'}.com`}
+            icon={<FiUser />}
             onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
               if (event.key === 'Enter') {
                 event.preventDefault();
@@ -211,10 +213,10 @@ export default function Form({ createAccount }: Props) {
             Add <FiPlus />
           </Button>
         </div>
-        <div className="p-4"></div>
+        <div className="pb-4"></div>
 
-        <Button type="submit" block disabled={loading}>
-          {loading ? 'Loading...' : 'Create your new community'}
+        <Button type="submit" disabled={loading}>
+          Create your new community
         </Button>
       </form>
     </>
