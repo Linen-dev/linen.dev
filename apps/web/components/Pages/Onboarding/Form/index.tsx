@@ -4,6 +4,7 @@ import { createSlug } from 'utilities/util';
 import { patterns } from '@linen/types';
 import unique from 'lodash.uniq';
 import { FiX } from '@react-icons/all-files/fi/FiX';
+import { FiPlus } from '@react-icons/all-files/fi/FiPlus';
 
 interface Props {
   createAccount({
@@ -100,7 +101,7 @@ export default function Form({ createAccount }: Props) {
             e.target.value && setSuggestion(createSlug(e.target.value))
           }
         />
-        <span className="text-xs">
+        <span className="text-xs text-gray-700">
           Community name should only contain letters, space and apostrophe. e.g.
           Linen&apos;s Community
         </span>
@@ -121,9 +122,10 @@ export default function Form({ createAccount }: Props) {
             setSuggestion(e.target.value)
           }
         />
-        <span className="text-xs">
-          Community path will define the url to access your community. e.g.
-          https://linen.dev/s/cool-community
+        <span className="text-xs text-gray-700">
+          Community path will define the url to access your community.
+          <br />
+          https://linen.dev/s/{suggestion || 'cool-community'}
         </span>
         <div className="p-4"></div>
 
@@ -149,9 +151,11 @@ export default function Form({ createAccount }: Props) {
                 'Channels name should start with lower case letter and could contain lower case letters, underscore, numbers and hyphens. e.g. announcements',
             }}
           />
-          <Button onClick={() => addChannel()}>+</Button>
+          <Button onClick={() => addChannel()}>
+            Add <FiPlus />
+          </Button>
         </div>
-        <span className="text-xs">
+        <span className="text-xs text-gray-700">
           Channels name should contain letter, underscore, numbers and hyphens.
           e.g. announcements
         </span>
@@ -169,7 +173,9 @@ export default function Form({ createAccount }: Props) {
         </div>
         <div className="flex w-full gap-2">
           <TextInput id="email" type="email" placeholder="name@team.com" />
-          <Button onClick={() => addEmail()}>+</Button>
+          <Button onClick={() => addEmail()}>
+            Add <FiPlus />
+          </Button>
         </div>
         <div className="p-4"></div>
 
