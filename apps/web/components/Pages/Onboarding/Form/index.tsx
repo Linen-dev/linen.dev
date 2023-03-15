@@ -1,12 +1,25 @@
 import { Button, TextInput, Toast, Label } from '@linen/ui';
 import { useState } from 'react';
-import * as api from 'utilities/requests';
 import { createSlug } from 'utilities/util';
 import { patterns } from '@linen/types';
 import unique from 'lodash.uniq';
 import { Badge } from 'components/Badge';
 
-export default function Form() {
+interface Props {
+  createAccount({
+    name,
+    slackDomain,
+    channels,
+    members,
+  }: {
+    name: string;
+    slackDomain: string;
+    channels: string[];
+    members: string[];
+  }): Promise<any>;
+}
+
+export default function Form({ createAccount }: Props) {
   const [loading, setLoading] = useState(false);
   const [channels, setChannels] = useState<string[]>([]);
   const [emails, setEmails] = useState<string[]>([]);
@@ -23,7 +36,7 @@ export default function Form() {
       const name = target.name.value;
       const slackDomain = target.slackDomain.value.toLowerCase();
 
-      const response = await api.createAccount({
+      const response = await createAccount({
         name,
         slackDomain,
         channels,
