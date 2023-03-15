@@ -1,7 +1,7 @@
 import React from 'react';
 import { SerializedChannel, Settings } from '@linen/types';
 import ButtonPagination from 'components/ButtonPagination';
-import CustomLinkHelper from 'components/Link/CustomLinkHelper';
+import { CustomLinkHelper } from 'utilities/url';
 
 export function PaginationForBots({
   currentChannel,

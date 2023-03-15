@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import CustomLinkHelper from './CustomLinkHelper';
+import { CustomLinkHelper } from 'utilities/url';
 
 export default function CustomTableRowLink({
   isSubDomainRouting,

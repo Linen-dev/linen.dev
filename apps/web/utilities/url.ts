@@ -1,6 +1,6 @@
 import { communityMapping } from 'serializers/account/settings';
 
-export default function CustomLinkHelper({
+export function CustomLinkHelper({
   isSubDomainRouting,
   path,
   communityName,
