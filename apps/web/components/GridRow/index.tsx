@@ -5,7 +5,7 @@ import { Avatar, Message } from '@linen/ui';
 import Actions from 'components/Actions';
 import CheckIcon from 'components/icons/CheckIcon';
 import { format } from '@linen/utilities/date';
-import { BsCheck } from '@react-icons/all-files/bs/BsCheck';
+import { FiCheck } from '@react-icons/all-files/fi/FiCheck';
 import { Mode } from '@linen/hooks/mode';
 import {
   Permissions,
@@ -136,7 +136,7 @@ export function Row({
             />
             {resolution && (
               <div className={styles.resolutionLabel}>
-                <BsCheck className={styles.resolutionCheck} />
+                <FiCheck className={styles.resolutionCheck} />
                 Resolution
               </div>
             )}
