@@ -38,6 +38,7 @@ import { timestamp } from '@linen/utilities/date';
 import { DMs } from './DMs';
 import useInboxWebsockets from '@linen/hooks/websockets/inbox';
 import MenuIcon from './MenuIcon';
+import PoweredByLinen from './PoweredByLinen';
 
 interface Props {
   mode: Mode;
@@ -195,6 +196,7 @@ export default function DesktopNavBar({
         })}
       >
         <Nav className={styles.navbar}>
+          {currentUser && <Nav.Group>Menu</Nav.Group>}
           {permissions.inbox && (
             <Link href="/inbox">
               <Nav.Item active={paths.inbox === router.asPath}>
@@ -343,9 +345,7 @@ export default function DesktopNavBar({
               </Link>
             </>
           )}
-          <a target="_blank" rel="noreferrer" href="https://www.linen.dev">
-            <Nav.Item>Powered by Linen</Nav.Item>
-          </a>
+          <PoweredByLinen />
         </Nav>
       </div>
     </div>
