@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import classNames from 'classnames';
 import styles from './index.module.scss';
 import { normalizeUrl } from './utilities/url';
 import { getColor } from './utilities/color';
 import { getLetter } from './utilities/string';
+import preload from '../Image/utilities/preload';
+import { useInView } from 'react-intersection-observer';
 
 interface Props {
   className?: string;
@@ -27,6 +29,43 @@ function dimensions(size?: Size) {
   }
 }
 
+function TextAvatar({ className, size, shadow, text }: Props) {
+  const letter = getLetter(text || '');
+  const color = getColor(letter);
+  return (
+    <div
+      className={classNames(
+        className,
+        styles.placeholder,
+        size && styles[size],
+        {
+          [styles.shadow]: shadow === 'sm',
+          [styles[`color-${color}`]]: color,
+        }
+      )}
+    >
+      {letter}
+    </div>
+  );
+}
+
+function ImageAvatar({ className, src, size, shadow, text }: Props) {
+  if (!src) {
+    return null;
+  }
+  return (
+    <img
+      className={classNames(className, styles.image, size && styles[size], {
+        [styles.shadow]: shadow === 'sm',
+      })}
+      src={normalizeUrl(src)}
+      alt={text || 'avatar'}
+      height={dimensions(size)}
+      width={dimensions(size)}
+    />
+  );
+}
+
 function Avatar({
   className,
   src,
@@ -36,59 +75,59 @@ function Avatar({
   Image,
   placeholder,
 }: Props) {
-  const [error, setError] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+  const { ref, inView } = useInView({ threshold: 0, skip: !src });
 
-  const letter = getLetter(text || '');
-  const color = getColor(letter);
-
-  function renderImage({ src }: { src: string }) {
-    const props = {
-      className: classNames(styles.image, size && styles[size]),
-      src: normalizeUrl(src),
-      onError: () => {
-        setError(true);
-      },
-      alt: text || 'avatar',
-      height: dimensions(size),
-      width: dimensions(size),
-    };
-    if (Image) {
-      return <Image {...props} />;
+  useEffect(() => {
+    let mounted = true;
+    if (src && !loaded && inView) {
+      preload(normalizeUrl(src)).then(() => {
+        if (mounted) {
+          setLoaded(true);
+        }
+      });
     }
-    return <img {...props} />;
+    return () => {
+      mounted = false;
+    };
+  }, [inView, loaded]);
+
+  if (placeholder) {
+    return (
+      <div ref={ref}>
+        <TextAvatar
+          className={className}
+          text={text}
+          size={size}
+          shadow={shadow}
+        />
+      </div>
+    );
+  }
+
+  if (loaded) {
+    return (
+      <div ref={ref}>
+        <ImageAvatar
+          className={className}
+          text={text}
+          size={size}
+          shadow={shadow}
+          src={src}
+        />
+      </div>
+    );
   }
 
   return (
-    <>
-      {placeholder || !src || error ? (
-        <div
-          className={classNames(
-            className,
-            styles.placeholder,
-            size && styles[size],
-            {
-              [styles.shadow]: shadow === 'sm',
-              [styles[`color-${color}`]]: color,
-            }
-          )}
-        >
-          {letter}
-        </div>
-      ) : (
-        <div
-          className={classNames(
-            className,
-            styles.avatar,
-            size && styles[size],
-            {
-              [styles.shadow]: shadow === 'sm',
-            }
-          )}
-        >
-          {renderImage({ src })}
-        </div>
-      )}
-    </>
+    <div ref={ref}>
+      <TextAvatar
+        className={className}
+        text={text}
+        size={size}
+        shadow={shadow}
+      />
+    </div>
   );
 }
 

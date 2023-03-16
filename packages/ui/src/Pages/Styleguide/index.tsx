@@ -15,13 +15,13 @@ import IconExample from './examples/Icon';
 export default function Styleguide() {
   return (
     <Layout>
-      <AvatarExample />
       <IconExample />
       <ProgressExample />
       <NavExample />
       <ButtonGroupExample />
       <MessageExample />
       <TextInputExample />
+      <AvatarExample />
       <TextareaExample />
       <NativeSelectExample />
       <AlertExample />
