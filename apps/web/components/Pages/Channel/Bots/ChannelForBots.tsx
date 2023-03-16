@@ -12,7 +12,7 @@ export default function ChannelForBots({
   isSubDomainRouting,
   currentChannel,
   currentCommunity,
-  pathCursor,
+  page,
   channels,
   isBot,
   permissions,
@@ -25,7 +25,7 @@ export default function ChannelForBots({
           settings,
           currentChannel,
           isSubDomainRouting,
-          pathCursor,
+          page,
           currentCommunity,
         }),
       }}
@@ -59,7 +59,7 @@ export default function ChannelForBots({
             currentChannel,
             isSubDomainRouting,
             settings,
-            page: pathCursor ? Number(pathCursor) : null,
+            page,
           }}
         />
       </ul>

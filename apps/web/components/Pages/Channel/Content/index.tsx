@@ -57,10 +57,7 @@ interface Props {
   threads: SerializedThread[];
   pinnedThreads: SerializedThread[];
   isSubDomainRouting: boolean;
-  nextCursor: {
-    next: string | null;
-    prev: string | null;
-  };
+  page: number | null;
   isBot: boolean;
   permissions: Permissions;
   currentThreadId: string | undefined;
@@ -127,7 +124,7 @@ export default function Channel({
   settings,
   channelName,
   isSubDomainRouting,
-  nextCursor,
+  page,
   token,
   permissions,
   currentThreadId,
@@ -155,7 +152,10 @@ export default function Channel({
   const scrollableRootRef = useRef<HTMLDivElement | null>(null);
   const rightRef = useRef<HTMLDivElement>(null);
   const leftBottomRef = useRef<HTMLDivElement>(null);
-  const [cursor, setCursor] = useState(nextCursor);
+  const [nextCursor, setNextCursor] = useState(page ? page + 1 : null);
+  const [prevCursor, setPrevCursor] = useState(
+    page ? page - 1 : currentChannel.pages ? currentChannel.pages - 1 : null
+  );
   const [error, setError] = useState<{ prev?: unknown; next?: unknown }>();
   const [progress, setProgress] = useState(0);
   const [uploading, setUploading] = useState(false);
@@ -247,17 +247,20 @@ export default function Channel({
 
   const [infiniteTopRef, { rootRef: topRootRef }] = useInfiniteScroll({
     loading: isInfiniteScrollLoading,
-    hasNextPage: !!cursor.prev,
+    hasNextPage: !!currentChannel.pages && !!prevCursor && prevCursor > 0,
     onLoadMore: loadMore,
-    disabled: !!error?.prev || !cursor.prev,
+    disabled: !!error?.prev || !prevCursor,
     rootMargin: '0px 0px 0px 0px',
   });
 
   const [infiniteBottomRef, { rootRef: bottomRootRef }] = useInfiniteScroll({
     loading: isInfiniteScrollLoading,
-    hasNextPage: !!cursor.next,
+    hasNextPage:
+      !!currentChannel.pages &&
+      !!nextCursor &&
+      nextCursor <= currentChannel.pages,
     onLoadMore: loadMoreNext,
-    disabled: !!error?.next || !cursor.next,
+    disabled: !!error?.next || !nextCursor,
     rootMargin: '0px 0px 0px 0px',
   });
 
@@ -289,38 +292,44 @@ export default function Channel({
     setMembersModal(true);
   };
 
+  function scrollToIdTop(id: string) {
+    const scrollableRoot = scrollableRootRef.current;
+    if (scrollableRoot) {
+      setTimeout(() => {
+        const node = document.getElementById(`channel-thread-${id}`);
+        if (node) {
+          node.scrollIntoView();
+          scrollableRoot.scrollTop =
+            scrollableRoot.scrollTop - scrollableRoot.offsetTop;
+        }
+      }, 0);
+    }
+  }
+
   async function loadMore(next: boolean = false) {
     const key = next ? 'next' : 'prev';
     const dir = next ? 'bottom' : 'top';
+    const state = next ? nextCursor : prevCursor;
     if (isInfiniteScrollLoading) return;
-    if (!cursor[key]) return;
+    if (!state) return;
     try {
       setInfiniteScrollLoading(true);
-      if (cursor[key]) {
+      if (state) {
         const data = await api.getThreads({
           channelId: currentChannel.id,
-          cursor: cursor[key] || undefined,
+          page: state,
           accountId: settings.communityId,
         });
-        setCursor({ ...cursor, [key]: data?.nextCursor?.[key] });
         if (next) {
-          setThreads((threads) => [...threads, ...data.threads]);
+          setNextCursor(state + 1);
+          setThreads((threads) => [...threads, ...data]);
         } else {
-          setThreads((threads) => [...data.threads, ...threads]);
+          const index = dir === 'top' ? 0 : threads.length - 1;
+          const id = threads[index].id;
+          setPrevCursor(state - 1);
+          setThreads((threads) => [...data, ...threads]);
+          scrollToIdTop(id);
         }
-      }
-      const scrollableRoot = scrollableRootRef.current;
-      if (scrollableRoot) {
-        const index = dir === 'top' ? 0 : threads.length;
-        const id = threads[index].id;
-        setTimeout(() => {
-          const node = document.getElementById(`channel-thread-${id}`);
-          if (node) {
-            node.scrollIntoView();
-            scrollableRoot.scrollTop =
-              scrollableRoot.scrollTop - scrollableRoot.offsetTop;
-          }
-        }, 0);
       }
     } catch (err) {
       setError({ ...error, [key]: err });
@@ -417,7 +426,7 @@ export default function Channel({
               [styles['is-empty']]: threads.length === 0,
             })}
           >
-            {cursor?.prev && !error?.prev && <div ref={infiniteTopRef}></div>}
+            <div ref={infiniteTopRef}></div>
             <ChatLayout
               onDrop={(event: React.DragEvent) => {
                 event.preventDefault();
@@ -510,7 +519,7 @@ export default function Channel({
                 )
               }
             />
-            {cursor.next && !error?.next && <div ref={infiniteBottomRef}></div>}
+            <div ref={infiniteBottomRef}></div>
             <div ref={leftBottomRef}></div>
           </div>
         }

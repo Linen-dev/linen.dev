@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { ThreadState } from '..';
 
 export const threadPostSchema = z.object({
   channelId: z.string().uuid(),
@@ -15,7 +16,7 @@ export const threadPutSchema = z.object({
   accountId: z.string().uuid().optional(),
   channelId: z.string().uuid(),
   externalThreadId: z.string().min(1).optional(),
-  status: z.enum(['OPEN', 'CLOSE']).optional(),
+  status: z.enum([ThreadState.OPEN, ThreadState.CLOSE]).optional(),
   threadId: z.string().uuid().optional(),
 });
 export type threadPutType = z.infer<typeof threadPutSchema>;

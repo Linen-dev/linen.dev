@@ -4,6 +4,7 @@ export * from './integrations/messages';
 export * from './integrations/users';
 
 export * from './api/channels';
+export * from './api/threads';
 
 export * from './patterns';
 

@@ -5,6 +5,7 @@ import * as GitHubTypes from '@octokit/webhooks-types';
 import { Router } from 'express';
 import { linenSdk } from './helpers/linen';
 import { stringify } from 'superjson';
+import { ThreadState } from '@linen/types';
 
 const prefix = '/api/bridge/github';
 
@@ -139,12 +140,12 @@ async function handleIssuesOpened(payload: GitHubTypes.IssuesOpenedEvent) {
 
 async function handleIssuesClosed(payload: GitHubTypes.IssuesClosedEvent) {
   const thread = await handleIssue(payload);
-  await linenSdk.updateThread({ ...thread, status: 'CLOSE' });
+  await linenSdk.updateThread({ ...thread, status: ThreadState.CLOSE });
 }
 
 async function handleIssuesReopened(payload: GitHubTypes.IssuesReopenedEvent) {
   const thread = await handleIssue(payload);
-  await linenSdk.updateThread({ ...thread, status: 'OPEN' });
+  await linenSdk.updateThread({ ...thread, status: ThreadState.OPEN });
 }
 
 async function handleIssueCommentCreated(

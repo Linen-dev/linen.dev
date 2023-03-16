@@ -16,11 +16,13 @@ import type {
   getChannelMembersType,
   SerializedUser,
   putChannelMembersType,
+  findThreadType,
+  getThreadType,
+  updateThreadType,
+  createThreadType,
 } from '@linen/types';
 import type * as AccountsTypes from 'server/routers/accounts.types';
-import type * as ThreadsTypes from 'server/routers/threads/types';
 import type * as MessagesTypes from 'server/routers/messages/types';
-import { channelNextPageType } from 'services/channels/channelNextPage';
 
 const catchError = (e: { response: any }) => {
   const { response } = e;
@@ -105,21 +107,21 @@ export const setDiscordIntegrationCustomBot = (
 ) => post('/api/accounts/integration/discord', props);
 
 export const getThreads = (
-  props: ThreadsTypes.findType
-): Promise<channelNextPageType> => get(`/api/threads?${qs(props)}`);
+  props: findThreadType
+): Promise<SerializedThread[]> => get(`/api/threads?${qs(props)}`);
 
 export const getThread = ({
   id,
   ...props
-}: ThreadsTypes.getType): Promise<SerializedThread> =>
+}: getThreadType): Promise<SerializedThread> =>
   get(`/api/threads/${id}?${qs(props)}`);
 
 export const updateThread = (
-  props: ThreadsTypes.putType
+  props: updateThreadType
 ): Promise<SerializedThread> => put(`/api/threads/${props.id}`, props);
 
 export const createThread = (
-  props: ThreadsTypes.postType
+  props: createThreadType
 ): Promise<{ thread: SerializedThread; imitationId: string }> =>
   post(`/api/threads`, props);
 

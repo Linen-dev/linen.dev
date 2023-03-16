@@ -5,13 +5,11 @@ import { appendProtocol } from '@linen/utilities/url';
 export function resolveCrawlerRedirect({
   isSubdomainbasedRouting,
   communityName,
-  channelName,
   settings,
   channel,
 }: {
   isSubdomainbasedRouting: boolean;
   communityName: string;
-  channelName?: string;
   settings: Settings;
   channel: SerializedChannel;
 }) {
@@ -19,7 +17,6 @@ export function resolveCrawlerRedirect({
     isSubdomainbasedRouting,
     settings,
     communityName,
-    channelName,
     channel,
   });
 
@@ -53,13 +50,11 @@ export function redirectChannelToDomain({
   account,
   communityName,
   settings,
-  channelName,
   channel,
 }: {
   account: SerializedAccount;
   communityName: string;
   settings: Settings;
-  channelName: string;
   channel: SerializedChannel;
 }) {
   return RedirectTo(
@@ -69,7 +64,6 @@ export function redirectChannelToDomain({
           isSubdomainbasedRouting: true,
           settings,
           communityName,
-          channelName,
           channel,
         })
     )
@@ -107,20 +101,18 @@ function buildChannelUrl({
   isSubdomainbasedRouting,
   settings,
   communityName,
-  channelName,
   channel,
 }: {
   isSubdomainbasedRouting: boolean;
   settings: Settings;
   communityName: string;
-  channelName: string | undefined;
   channel: SerializedChannel;
 }) {
   let url = isSubdomainbasedRouting
     ? ''
     : `/${settings.prefix}/${communityName}`;
 
-  url += channelName ? `/c/${channelName}` : `/c/${channel.channelName}`;
+  url += `/c/${channel.channelName}`;
   return url;
 }
 

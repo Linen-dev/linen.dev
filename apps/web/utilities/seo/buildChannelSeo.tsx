@@ -6,16 +6,20 @@ export function buildChannelSeo({
   settings,
   currentChannel,
   isSubDomainRouting,
-  pathCursor,
+  page,
   currentCommunity,
 }: {
   settings: Settings;
   currentChannel: SerializedChannel;
   isSubDomainRouting: boolean;
-  pathCursor: string | null;
+  page: number | null;
   currentCommunity: SerializedAccount;
 }) {
-  const title = [settings.communityName, '#' + currentChannel.channelName]
+  const title = [
+    settings.communityName,
+    '#' + currentChannel.channelName,
+    page ? 'Page ' + page : '',
+  ]
     .filter(Boolean)
     .join(' ');
 
@@ -23,15 +27,11 @@ export function buildChannelSeo({
     ? `https://${settings.redirectDomain}/c/${currentChannel.channelName}`
     : `${LINEN_URL}/${settings.prefix}/${settings.communityName}/c/${currentChannel.channelName}`;
 
-  if (pathCursor) {
-    url += '/' + pathCursor;
+  if (page) {
+    url += '/' + page;
   }
 
-  const description = [
-    currentCommunity.description,
-    title,
-    pathCursor ? 'Page ' + pathCursor : 'Latest',
-  ]
+  const description = [currentCommunity.description, title]
     .filter(Boolean)
     .join(' ');
 

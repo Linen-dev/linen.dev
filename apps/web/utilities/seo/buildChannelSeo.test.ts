@@ -5,7 +5,6 @@ import { buildChannelSeo } from './buildChannelSeo';
 describe('buildChannelSeo', () => {
   const defaultProps = {
     isSubDomainRouting: true,
-    pathCursor: '',
     currentChannel: { channelName: 'channelName' },
     threads: [] as SerializedThread[],
     settings: {
@@ -21,7 +20,7 @@ describe('buildChannelSeo', () => {
       defaultProps
     );
     expect(title).toEqual('communityName #channelName');
-    expect(description).toEqual('hi communityName #channelName Latest');
+    expect(description).toEqual('hi communityName #channelName');
     expect(url).toEqual('https://redirectDomain/c/channelName');
     expect(image).toEqual(defaultProps.settings.logoUrl);
     expect(rest).toEqual({});
@@ -33,7 +32,7 @@ describe('buildChannelSeo', () => {
       isSubDomainRouting: false,
     });
     expect(title).toEqual('communityName #channelName');
-    expect(description).toEqual('hi communityName #channelName Latest');
+    expect(description).toEqual('hi communityName #channelName');
     expect(url).toEqual('https://www.linen.dev/d/communityName/c/channelName');
     expect(image).toEqual(defaultProps.settings.logoUrl);
     expect(rest).toEqual({});
@@ -48,7 +47,7 @@ describe('buildChannelSeo', () => {
       },
     });
     expect(title).toEqual('communityName #channelName');
-    expect(description).toEqual('hi communityName #channelName Latest');
+    expect(description).toEqual('hi communityName #channelName');
     expect(url).toEqual('https://www.linen.dev/s/communityName/c/channelName');
     expect(image).toEqual(defaultProps.settings.logoUrl);
     expect(rest).toEqual({});
@@ -57,11 +56,11 @@ describe('buildChannelSeo', () => {
   test('channel with cursor', async () => {
     const { description, title, url, image, ...rest } = await buildChannelSeo({
       ...defaultProps,
-      pathCursor: 'fx1Fgn4',
+      page: 1,
     });
-    expect(title).toEqual('communityName #channelName');
-    expect(description).toEqual('hi communityName #channelName Page fx1Fgn4');
-    expect(url).toEqual('https://redirectDomain/c/channelName/fx1Fgn4');
+    expect(title).toEqual('communityName #channelName Page 1');
+    expect(description).toEqual('hi communityName #channelName Page 1');
+    expect(url).toEqual('https://redirectDomain/c/channelName/1');
     expect(image).toEqual(defaultProps.settings.logoUrl);
     expect(rest).toEqual({});
   });
