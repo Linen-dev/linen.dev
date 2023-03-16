@@ -41,10 +41,8 @@ export default function Header({
         <div className={styles.center}>
           <div className={styles.header}>
             {onClose && (
-              <div className="md:hidden">
-                <a onClick={onClose}>
-                  <FiChevronLeft />
-                </a>
+              <div className="md:hidden" onClick={onClose}>
+                <FiChevronLeft />
               </div>
             )}
             <div>
