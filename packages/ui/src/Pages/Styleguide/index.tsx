@@ -1,5 +1,6 @@
 import React from 'react';
 import Layout from './Layout';
+import AvatarExample from './examples/Avatar';
 import AlertExample from './examples/Alert';
 import ButtonGroupExample from './examples/ButtonGroup';
 import TextareaExample from './examples/Textarea';
@@ -14,6 +15,7 @@ import IconExample from './examples/Icon';
 export default function Styleguide() {
   return (
     <Layout>
+      <AvatarExample />
       <IconExample />
       <ProgressExample />
       <NavExample />
