@@ -64,7 +64,7 @@ export default function Header({
         target="_blank"
       >
         <img
-          className="block"
+          className={styles.logo}
           style={{ height: '32px' }}
           src={logoUrl}
           height="32"

@@ -2,3 +2,9 @@
   align-items: center;
   display: flex;
 }
+
+.logo {
+  display: block;
+  max-width: max-content;
+  object-fit: contain;
+}
