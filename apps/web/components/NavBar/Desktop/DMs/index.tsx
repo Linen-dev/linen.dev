@@ -32,12 +32,12 @@ export function DMs({
   }
   return (
     <>
-      <Nav.Label>
+      <Nav.Group>
         DMs
         {!!permissions.accountId && (
           <NewDmModal communityId={permissions.accountId} setDms={setDms} />
         )}
-      </Nav.Label>
+      </Nav.Group>
       <div>
         {dms.map((channel: SerializedChannel, index: number) => {
           const count = highlights.reduce((count: number, id: string) => {
