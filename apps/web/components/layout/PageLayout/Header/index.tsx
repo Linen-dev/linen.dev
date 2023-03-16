@@ -65,9 +65,8 @@ export default function Header({
       >
         <img
           className={styles.logo}
-          style={{ height: '32px' }}
           src={logoUrl}
-          height="32"
+          height="24"
           alt={`${homeUrl} logo`}
         />
       </Link>
