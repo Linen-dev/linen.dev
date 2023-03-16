@@ -37,7 +37,9 @@ export default function IntegrationsModal({
         })
         .then(setIntegration)
         .catch((e) => {
-          console.error(e);
+          if (process.env.NODE_ENV === 'development') {
+            console.error(e);
+          }
         });
   }, [channel]);
 
