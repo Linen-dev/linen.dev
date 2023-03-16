@@ -41,7 +41,8 @@
     "rollup-plugin-postcss": "^4.0.2",
     "sass": "^1.59.3",
     "ts-jest": "^29.0.5",
-    "typescript": "^4.9.5"
+    "typescript": "^4.9.5",
+    "react-intersection-observer": "^9.4.0"
   },
   "peerDependencies": {
     "@headlessui/react": "^1.7.13",
@@ -49,8 +50,7 @@
     "classnames": "^2.3.2",
     "highlight.js": "^11.7.0",
     "react": "^18.2.0",
-    "react-hot-toast": "^2.4.0",
-    "react-intersection-observer": "^9.4.0"
+    "react-hot-toast": "^2.4.0"
   },
   "typesVersions": {
     "*": {
