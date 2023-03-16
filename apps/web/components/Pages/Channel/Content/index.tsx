@@ -127,7 +127,7 @@ export default function Channel({
   page,
   token,
   permissions,
-  currentThreadId,
+  currentThreadId: initCurrentThreadId,
   setThreads,
   deleteMessage,
   muteThread,
@@ -163,13 +163,26 @@ export default function Channel({
   const [allUsers] = useUsersContext();
   const { startSignUp } = useJoinContext();
   const { mode } = useMode();
-  const { query } = useRouter();
+  const { query, isReady } = useRouter();
   const [integrationsModal, setIntegrationsModal] = useState(
     !!query.integration || false
   );
   const [membersModal, setMembersModal] = useState(false);
 
   const currentUser = permissions.user || null;
+  const [currentThreadId, setCurrentThreadId] = useState(initCurrentThreadId);
+
+  useEffect(() => {
+    if (isReady && typeof window !== undefined) {
+      const urlHash = new URL(window.document.URL).hash;
+      if (!!urlHash) {
+        const theadId = urlHash.split('#').join('');
+        selectThread(theadId);
+        setCurrentThreadId(theadId);
+        scrollToIdTop(theadId);
+      }
+    }
+  }, [isReady]);
 
   useWebsockets({
     room: `room:lobby:${currentChannel.id}`,
@@ -237,6 +250,7 @@ export default function Channel({
     if (!currentThread) {
       return;
     }
+    setCurrentThreadId(threadId);
     onSelectThread(currentThread.id);
     const isLastThread = currentThread.id === threads[threads.length - 1].id;
     if (isLastThread) {
