@@ -4,7 +4,7 @@ import {
   ChannelType,
   prisma,
 } from '@linen/database';
-import { channelPutIntegrationType } from '@linen/types';
+import { findChannelsWithStats, channelPutIntegrationType } from '@linen/types';
 import { formatDistance } from '@linen/utilities/date';
 import serializeChannel from 'serializers/channel';
 import { v4 } from 'uuid';
@@ -37,11 +37,12 @@ class ChannelsService {
     });
   }
 
-  static async findWithStats(communityId: string) {
+  static async findWithStats(
+    communityId: string
+  ): Promise<findChannelsWithStats> {
     return await prisma.channels
       .findMany({
-        select: {
-          id: true,
+        include: {
           _count: { select: { threads: true } },
           threads: {
             take: 1,
@@ -51,11 +52,11 @@ class ChannelsService {
         },
         where: {
           accountId: communityId,
-          type: { not: ChannelType.DM },
+          type: ChannelType.PUBLIC,
         },
       })
       .then((channels) =>
-        channels.map(({ threads, _count, id }) => {
+        channels.map(({ threads, _count, ...rest }) => {
           const lastThreadAt = threads.find(Boolean)?.sentAt;
           const threadCount = _count.threads;
 
@@ -67,7 +68,7 @@ class ChannelsService {
             ).toISOString();
             stats += `, latest from ${formatDistance(date)}`;
           }
-          return { stats, id };
+          return { ...serializeChannel(rest), stats };
         })
       );
   }

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { channelsIntegrationType } from '..';
+import { channelsIntegrationType, SerializedChannel } from '..';
 import { patterns } from '../patterns';
 
 export const createChannelSchema = z.object({
@@ -71,3 +71,5 @@ export const putChannelMembersSchema = z.object({
   usersId: z.array(z.string().uuid()),
 });
 export type putChannelMembersType = z.infer<typeof putChannelMembersSchema>;
+
+export type findChannelsWithStats = (SerializedChannel & { stats: string })[];

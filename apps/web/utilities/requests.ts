@@ -20,6 +20,7 @@ import type {
   getThreadType,
   updateThreadType,
   createThreadType,
+  findChannelsWithStats,
 } from '@linen/types';
 import type * as AccountsTypes from 'server/routers/accounts.types';
 import type * as MessagesTypes from 'server/routers/messages/types';
@@ -160,12 +161,7 @@ export const getChannelIntegrations = ({
 
 export const getChannelsStats = (props: {
   accountId: string;
-}): Promise<
-  {
-    stats: string;
-    id: string;
-  }[]
-> => get(`/api/channels/stats?${qs(props)}`);
+}): Promise<findChannelsWithStats> => get(`/api/channels/stats?${qs(props)}`);
 
 export const postChannelIntegrations = ({
   channelId,

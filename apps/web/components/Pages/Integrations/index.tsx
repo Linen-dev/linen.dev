@@ -14,9 +14,6 @@ import SlackImportRow from './SlackImportRow';
 import AnonymizeUsersRow from './AnonymizeUsersRow';
 import DefaultChannelRow from './DefaultChannelRow';
 import ChannelVisibilityRow from './ChannelVisibilityRow';
-import { Toast } from '@linen/ui';
-import debounce from '@linen/utilities/debounce';
-import * as api from 'utilities/requests';
 
 export interface Props {
   channels: SerializedChannel[];
@@ -27,16 +24,6 @@ export interface Props {
   isSubDomainRouting: boolean;
   dms: SerializedChannel[];
 }
-
-const debouncedChannelsVisibilityUpdate = debounce(
-  ({
-    communityId,
-    value,
-  }: {
-    communityId: string;
-    value: { id: string; hidden: boolean };
-  }) => api.hideChannels({ accountId: communityId, channels: [value] })
-);
 
 export default function IntegrationsPage({
   channels: initialChannels,
@@ -56,27 +43,6 @@ export default function IntegrationsPage({
       page: 'settings',
     });
   }, [currentCommunity]);
-
-  async function onChannelsVisibilityChange(value: {
-    id: string;
-    hidden: boolean;
-  }) {
-    setChannels((channels) => {
-      return channels.map((channel) => {
-        if (channel.id === value.id) {
-          return {
-            ...channel,
-            hidden: value.hidden,
-          };
-        }
-        return channel;
-      });
-    });
-    return debouncedChannelsVisibilityUpdate({
-      communityId: currentCommunity.id,
-      value,
-    }).catch(() => Toast.error('Something went wrong. Please try again.'));
-  }
 
   const sortedChannels = channels.sort((a, b) => {
     return a.channelName.localeCompare(b.channelName);
@@ -112,8 +78,7 @@ export default function IntegrationsPage({
         <hr className="my-3" />
         <ChannelVisibilityRow
           currentCommunity={currentCommunity}
-          channels={sortedChannels}
-          onChange={onChannelsVisibilityChange}
+          onChange={setChannels}
         />
       </div>
     </PageLayout>
