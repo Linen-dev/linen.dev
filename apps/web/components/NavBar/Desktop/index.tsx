@@ -228,14 +228,14 @@ export default function DesktopNavBar({
               }}
             />
           )}
-          <Nav.Label>
+          <Nav.Group>
             Channels
             {currentUser &&
               permissions.channel_create &&
               !!permissions.accountId && (
                 <NewChannelModal {...{ permissions }} />
               )}
-          </Nav.Label>
+          </Nav.Group>
           <div>
             {channels.map((channel: SerializedChannel, index: number) => {
               const count = highlights.reduce((count: number, id: string) => {
@@ -298,12 +298,11 @@ export default function DesktopNavBar({
             })}
           </div>
           {permissions.manage && (
-            <Nav.Label
-              className={styles.label}
+            <Nav.Group
               onClick={() => toggleSettings((showSettings) => !showSettings)}
             >
               Settings {showSettings ? <FiChevronUp /> : <FiChevronDown />}
-            </Nav.Label>
+            </Nav.Group>
           )}
           {showSettings && permissions.manage && (
             <>
@@ -335,11 +334,14 @@ export default function DesktopNavBar({
             </>
           )}
           {permissions.manage && (
-            <Link href="/metrics">
-              <Nav.Item active={paths.metrics === router.asPath}>
-                <FiBarChart /> Metrics
-              </Nav.Item>
-            </Link>
+            <>
+              <Nav.Group>Analytics</Nav.Group>
+              <Link href="/metrics">
+                <Nav.Item active={paths.metrics === router.asPath}>
+                  <FiBarChart /> Metrics
+                </Nav.Item>
+              </Link>
+            </>
           )}
           <a target="_blank" rel="noreferrer" href="https://www.linen.dev">
             <Nav.Item>Powered by Linen</Nav.Item>
