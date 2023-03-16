@@ -18,6 +18,15 @@
   transition: color 0.2s ease-in;
 }
 
+.success {
+  background-color: $color-green-600;
+  color: white;
+}
+
+.success svg {
+  color: white;
+}
+
 .action {
   cursor: pointer;
 }

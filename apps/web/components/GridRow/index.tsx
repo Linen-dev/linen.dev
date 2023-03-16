@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import Image from 'next/image';
-import { Avatar, Message } from '@linen/ui';
+import { Avatar, Badge, Message } from '@linen/ui';
 import Actions from 'components/Actions';
 import CheckIcon from 'components/icons/CheckIcon';
 import { format } from '@linen/utilities/date';
@@ -135,10 +135,10 @@ export function Row({
               onLoad={onLoad}
             />
             {resolution && (
-              <div className={styles.resolutionLabel}>
+              <Badge className={styles.badge} type="success">
                 <FiCheck className={styles.resolutionCheck} />
                 Resolution
-              </div>
+              </Badge>
             )}
             {footer}
           </div>
