@@ -101,10 +101,6 @@ export const createAccount = (
 export const updateAccount = (props: AccountsTypes.updateAccountType) =>
   put('/api/accounts', props);
 
-export const setDiscordIntegrationCustomBot = (
-  props: AccountsTypes.integrationDiscordType
-) => post('/api/accounts/integration/discord', props);
-
 export const getThreads = (
   props: ThreadsTypes.findType
 ): Promise<channelNextPageType> => get(`/api/threads?${qs(props)}`);

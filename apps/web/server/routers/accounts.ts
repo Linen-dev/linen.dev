@@ -12,8 +12,6 @@ import AccountsService from 'services/accounts';
 import {
   createAccountSchema,
   createAccountType,
-  integrationDiscordSchema,
-  integrationDiscordType,
   updateAccountSchema,
   updateAccountType,
 } from './accounts.types';
@@ -62,24 +60,6 @@ accountsRouter.put(
       params: req.body,
     });
     res.status(status).json(data);
-    res.end();
-  }
-);
-
-accountsRouter.post(
-  `${prefix}/integration/discord`,
-  tenantMiddleware([Roles.OWNER, Roles.ADMIN]),
-  validationMiddleware(integrationDiscordSchema, 'body'),
-  async (
-    req: AuthedRequestWithTenantAndBody<integrationDiscordType>,
-    res: Response
-  ) => {
-    const accountId = req.tenant?.id!;
-    const data = await AccountsService.setCustomBotDiscord({
-      ...req.body,
-      accountId,
-    });
-    res.json(data);
     res.end();
   }
 );

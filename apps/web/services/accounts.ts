@@ -228,10 +228,12 @@ export default class AccountsService {
     accountId,
     discordServerId,
     botToken,
+    scope = 'bot',
   }: {
     accountId: string;
     discordServerId: string;
     botToken: string;
+    scope?: string;
   }) {
     if (!accountId) {
       throw new Error('missing accountId');
@@ -254,7 +256,7 @@ export default class AccountsService {
     await prisma.discordAuthorizations.create({
       data: {
         accessToken: encrypt(botToken),
-        scope: 'bot',
+        scope,
         accountsId: accountId,
         customBot: true,
       },

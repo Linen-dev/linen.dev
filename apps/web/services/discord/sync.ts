@@ -1,12 +1,13 @@
 import { SyncStatus, updateAndNotifySyncStatus } from 'services/sync';
 import { listChannelsAndPersist } from './channels';
-import { CrawlType, DISCORD_TOKEN } from './constrains';
+import { CrawlType } from './constrains';
 import { crawlUsers } from './users';
 import { decrypt } from 'utilities/crypto';
 import { getMessages } from './messages';
 import { getActiveThreads, getArchivedThreads } from './threads';
 import Logger from './logger';
 import { accounts, discordAuthorizations, prisma } from '@linen/database';
+import { botV1 } from 'config/discord';
 
 async function syncJob(
   account: accounts & {
@@ -37,7 +38,7 @@ async function syncJob(
 
   const token = discordAuthorizations?.customBot
     ? decodeBotToken(discordAuthorizations.accessToken)
-    : DISCORD_TOKEN;
+    : botV1().PRIVATE_TOKEN;
 
   // avoid run it on new_only executions
   if (crawlType === CrawlType.historic) {

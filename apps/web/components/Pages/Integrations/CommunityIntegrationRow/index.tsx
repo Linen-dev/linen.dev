@@ -1,14 +1,11 @@
 import CommunityButton from 'components/CommunityButton';
 import { capitalize } from '@linen/utilities/string';
-import { integrationAuthorizer } from 'utilities/communityAuthorizers';
+import { qs } from '@linen/utilities/url';
 import { SerializedAccount } from '@linen/types';
 import { Toast } from '@linen/ui';
 import { GoCheck } from '@react-icons/all-files/go/GoCheck';
 import { GoAlert } from '@react-icons/all-files/go/GoAlert';
 import { GoInfo } from '@react-icons/all-files/go/GoInfo';
-import { onSubmitType, RightPanel } from './CustomDiscordBot';
-import { useState } from 'react';
-import { setDiscordIntegrationCustomBot } from 'utilities/requests';
 
 const statusMap: any = {
   NOT_STARTED: (
@@ -34,14 +31,19 @@ const statusMap: any = {
   ),
 };
 
+const integrationAuthorizer = (
+  community: string,
+  accountId: string
+): Promise<{ url: string }> =>
+  fetch(`/api/integration-oauth?${qs({ community, accountId })}`).then((e) =>
+    e.json()
+  );
+
 export default function CommunityIntegration({
   currentCommunity,
 }: {
   currentCommunity: SerializedAccount;
 }) {
-  const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
-
   const newOnboarding = !currentCommunity.communityType;
   const communityType = currentCommunity.communityType
     ? currentCommunity.communityType
@@ -50,27 +52,12 @@ export default function CommunityIntegration({
   const onClick = async (community: string) => {
     try {
       const { id } = currentCommunity;
-      community && integrationAuthorizer(community, id);
+      community &&
+        integrationAuthorizer(community, id).then(({ url }) => {
+          window.location.href = url;
+        });
     } catch (error) {
       return Toast.error('Something went wrong, please sign in again');
-    }
-  };
-
-  const onSubmit = async ({ discordServerId, botToken }: onSubmitType) => {
-    try {
-      const { id } = currentCommunity;
-      setLoading(true);
-      await setDiscordIntegrationCustomBot({
-        discordServerId,
-        botToken,
-        accountId: id,
-      });
-      setOpen(false);
-      window.location.reload();
-    } catch (error) {
-      return Toast.error('Something went wrong, please sign in again');
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -78,14 +65,6 @@ export default function CommunityIntegration({
     !!currentCommunity.hasAuth &&
     !!currentCommunity.syncStatus &&
     statusMap[currentCommunity.syncStatus];
-
-  function onReconnectClick(community: string): void {
-    if (community === 'slack') {
-      integrationAuthorizer(community, currentCommunity.id!);
-    } else {
-      setOpen(true);
-    }
-  }
 
   return (
     <>
@@ -120,7 +99,7 @@ export default function CommunityIntegration({
               <CommunityButton
                 communityType={'discord'}
                 label="Connect to"
-                onClick={() => setOpen(true)}
+                onClick={onClick}
                 iconSize="20"
               />
             </div>
@@ -128,21 +107,18 @@ export default function CommunityIntegration({
             <CommunityButton
               communityType={communityType}
               label="Reconnect to"
-              onClick={onReconnectClick}
+              onClick={(community) =>
+                integrationAuthorizer(community, currentCommunity.id).then(
+                  ({ url }) => {
+                    window.location.href = url;
+                  }
+                )
+              }
               iconSize="20"
             />
           )}
         </div>
       </div>
-      <RightPanel
-        {...{
-          open,
-          setOpen,
-          loading,
-          onSubmit,
-          discordServerId: currentCommunity.discordServerId,
-        }}
-      />
     </>
   );
 }

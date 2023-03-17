@@ -1,25 +1,25 @@
+import { NextApiRequest, NextApiResponse } from 'next/types';
+import { getCurrentConfig } from 'config/discord';
+import { z } from 'zod';
+
 const REDIRECT_URI_SLACK =
   process.env.NEXT_PUBLIC_REDIRECT_URI || 'https://linen.dev/api/oauth';
 const SLACK_CLIENT_ID =
   process.env.NEXT_PUBLIC_SLACK_CLIENT_ID || '1250901093238.3006399856353';
 
-const DISCORD_CLIENT_ID = process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID as string;
-const REDIRECT_URI_DISCORD = encodeURI(
-  process.env.NEXT_PUBLIC_DISCORD_REDIRECT_URI as string
-);
-
-export function integrationAuthorizer(community: string, accountId: string) {
+function integrationAuthorizer(community: string, accountId: string) {
   switch (community) {
     case 'discord':
-      window.location.href =
+      const discord = getCurrentConfig();
+      return (
         `https://discord.com/api/oauth2/authorize` +
-        `?client_id=${DISCORD_CLIENT_ID}` +
-        `&permissions=17179878400` +
-        `&redirect_uri=${REDIRECT_URI_DISCORD}` +
+        `?client_id=${discord.PUBLIC_CLIENT_ID}` +
+        `&permissions=${discord.permissions}` +
+        `&redirect_uri=${discord.PUBLIC_REDIRECT_URI}` +
         `&response_type=code` +
-        `&scope=guilds.members.read%20guilds%20bot` +
-        `&state=${accountId}`;
-      break;
+        `&scope=${encodeURIComponent(discord.scope.join(' '))}` +
+        `&state=${accountId}`
+      );
     case 'slack':
       const scope = [
         'channels:history',
@@ -39,15 +39,30 @@ export function integrationAuthorizer(community: string, accountId: string) {
         'users:read',
         'reactions:read',
       ];
-      window.location.href =
+      return (
         'https://slack.com/oauth/v2/authorize' +
         `?client_id=${SLACK_CLIENT_ID}` +
         `&scope=${scope.join()}` +
         `&user_scope=${user_scope.join()}` +
         `&state=${accountId}` +
-        `&redirect_uri=${REDIRECT_URI_SLACK}`;
-      break;
+        `&redirect_uri=${REDIRECT_URI_SLACK}`
+      );
     default:
-      break;
+      throw new Error('not implemented');
   }
+}
+
+export default async function handler(
+  request: NextApiRequest,
+  response: NextApiResponse
+) {
+  const schema = z.object({
+    community: z.string(),
+    accountId: z.string().uuid(),
+  });
+
+  const body = schema.parse(request.query);
+  return response.json({
+    url: integrationAuthorizer(body.community, body.accountId),
+  });
 }

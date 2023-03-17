@@ -1,12 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import request from 'superagent';
 import { prisma } from '@linen/database';
-import { updateAccount } from 'lib/models';
+import AccountsService from 'services/accounts';
 import { eventNewIntegration } from 'services/events/eventNewIntegration';
-import { AccountIntegration, SerializedAccount } from '@linen/types';
-import { slugify } from '@linen/utilities/string';
+import { SerializedAccount } from '@linen/types';
 import { getHomeUrl } from 'utilities/home';
 import serializeAccount from 'serializers/account';
+import { getCurrentConfig } from 'config/discord';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
@@ -23,22 +23,15 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
     const guild = body.guild;
 
-    const account = await updateAccount(accountId, {
-      discordServerId: guild.id,
-      name: guild.name,
-      discordDomain: slugify(guild.name).toLowerCase(),
-      integration: AccountIntegration.DISCORD,
+    const account = await prisma.accounts.findUnique({
+      where: { id: accountId },
     });
 
-    await prisma.discordAuthorizations.create({
-      data: {
-        accountsId: account.id,
-        accessToken: body.access_token,
-        scope: body.scope,
-        refreshToken: body.refresh_token,
-        //Expires in returns the seconds until the token expires
-        expiresAt: new Date(new Date().getTime() + body.expires_in * 1000),
-      },
+    await AccountsService.setCustomBotDiscord({
+      accountId,
+      botToken: getCurrentConfig().PRIVATE_TOKEN,
+      discordServerId: guild.id,
+      scope: 'linen-bot-2',
     });
 
     await eventNewIntegration({ accountId });
@@ -59,9 +52,9 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 }
 
 export const getDiscordAccessToken = async (code: string) => {
-  const redirectUri = process.env.NEXT_PUBLIC_DISCORD_REDIRECT_URI as string;
-  const clientId = process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID as string;
-  const clientSecret = process.env.DISCORD_CLIENT_SECRET as string;
+  const redirectUri = getCurrentConfig().PUBLIC_REDIRECT_URI;
+  const clientId = getCurrentConfig().PUBLIC_CLIENT_ID;
+  const clientSecret = getCurrentConfig().PRIVATE_CLIENT_SECRET;
   const url = 'https://discord.com/api/oauth2/token';
   return await request
     .post(url)
@@ -73,26 +66,6 @@ export const getDiscordAccessToken = async (code: string) => {
       grant_type: 'authorization_code',
       redirect_uri: encodeURI(redirectUri),
     });
-};
-
-export const getSlackAccessToken = async (
-  code: string,
-  clientId: string,
-  clientSecret: string
-) => {
-  const url = 'https://slack.com/api/oauth.v2.access';
-
-  const response = await request.get(
-    url +
-      '?code=' +
-      code +
-      '&client_id=' +
-      clientId +
-      '&client_secret=' +
-      clientSecret
-  );
-
-  return response;
 };
 
 export interface DiscordAuthorizationResponse {
