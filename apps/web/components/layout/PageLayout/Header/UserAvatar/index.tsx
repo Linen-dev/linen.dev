@@ -1,5 +1,4 @@
 import React, { Fragment, useState } from 'react';
-import Image from 'next/image';
 import classNames from 'classnames';
 import { Menu, Transition } from '@headlessui/react';
 import { signOut } from 'utilities/auth/react';
@@ -51,7 +50,6 @@ export default function UserAvatar({
                   shadow="none"
                   src={currentUser.profileImageUrl}
                   text={currentUser.displayName}
-                  Image={Image}
                 />
               </Menu.Button>
             </div>

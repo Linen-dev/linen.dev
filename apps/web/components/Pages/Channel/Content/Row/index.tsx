@@ -1,6 +1,5 @@
 import Droppable from './Droppable';
 import { Avatars } from '@linen/ui';
-import Image from 'next/image';
 import GridRow from 'components/GridRow';
 import styles from './index.module.scss';
 import {
@@ -130,12 +129,7 @@ export default function ChannelRow({
           footer={
             messages.length > 1 && (
               <div className={styles.footer}>
-                <Avatars
-                  size="sm"
-                  users={avatars}
-                  Image={Image}
-                  placeholder={isBot}
-                />
+                <Avatars size="sm" users={avatars} placeholder={isBot} />
                 <>
                   {messages.length - 1}{' '}
                   {messages.length > 2 ? 'replies' : 'reply'} &middot;{' '}

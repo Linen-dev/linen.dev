@@ -13,7 +13,6 @@ interface Props {
   text?: string | null;
   size?: Size;
   shadow?: Shadow;
-  Image?: any;
   placeholder?: boolean;
 }
 
@@ -72,7 +71,6 @@ function Avatar({
   text = 'u',
   size,
   shadow,
-  Image,
   placeholder,
 }: Props) {
   const [loaded, setLoaded] = useState(false);

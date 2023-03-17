@@ -1,5 +1,4 @@
 import React from 'react';
-import Image from 'next/image';
 import { MessageFormat } from '@linen/types';
 import { Avatar, Message } from '@linen/ui';
 import styles from './index.module.css';
@@ -27,7 +26,6 @@ export default function Suggestion({
           size="sm"
           src={user?.profileImageUrl}
           text={user?.displayName}
-          Image={Image}
         />
         <div className={styles.text}>
           <strong>{user?.displayName || 'user'}</strong>

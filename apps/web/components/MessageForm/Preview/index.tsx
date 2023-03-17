@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import { Avatar, Message } from '@linen/ui';
 import { SerializedMessage, SerializedUser } from '@linen/types';
 import styles from './index.module.scss';
@@ -17,7 +16,6 @@ export function Row({ message, currentUser }: Props) {
           <Avatar
             src={message.author?.profileImageUrl}
             text={message.author?.displayName}
-            Image={Image}
           />
         </div>
         <div className={styles.content}>
