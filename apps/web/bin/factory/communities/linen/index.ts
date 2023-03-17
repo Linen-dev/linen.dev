@@ -36,6 +36,7 @@ export default async function createLinenCommunity() {
       isAdmin: true,
       isBot: false,
       role: Roles.ADMIN,
+      profileImageUrl: '/images/avatar/example.jpg',
     },
   });
   const auth2 = await prisma.auths.create({
@@ -603,15 +604,17 @@ export default async function createLinenCommunity() {
     data: {
       accountId: community.id,
       channelName: 'pagination',
+      pages: 100,
     },
   });
 
-  [...(Array(60).keys() as any)].map(async (index) => {
-    const sentAt = `2021-12-15T09:01:${pad(index.toString(), 2)}.000Z`;
+  [...(Array(999).keys() as any)].map(async (index) => {
+    const number = 999 - index;
+    const sentAt = `2022-12-15T09:01:00.${pad(number.toString(), 3)}Z`;
     await prisma.threads.create({
       data: {
         channelId: channel6.id,
-        sentAt: 1677666130042 + index,
+        sentAt: new Date(sentAt).getTime(),
         lastReplyAt: new Date(sentAt).getTime(),
         messages: {
           create: [
@@ -624,6 +627,7 @@ export default async function createLinenCommunity() {
             },
           ],
         },
+        page: Math.ceil(number / 10),
       },
     });
   });
