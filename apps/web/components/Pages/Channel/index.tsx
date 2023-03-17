@@ -106,6 +106,14 @@ export default function Channel(props: ChannelProps) {
 
   useEffect(() => {
     setThreads(initialThreads);
+    if (typeof window !== undefined) {
+      const urlHash = new URL(window.document.URL).hash;
+      if (!!urlHash) {
+        const theadId = urlHash.split('#').join('');
+        setCurrentThreadId(theadId);
+        return;
+      }
+    }
     setCurrentThreadId(initialThreads[initialThreads.length - 1]?.id);
   }, [initialThreads]);
 
