@@ -4,7 +4,7 @@ module.exports = {
   moduleDirectories: ['node_modules', '<rootDir>/'],
   testEnvironment: 'jest-environment-jsdom',
   testMatch: ['**/?(*.)+(spec|test).[tj]s?(x)'],
-  setupFilesAfterEnv: ['@testing-library/jest-dom'],
+  setupFilesAfterEnv: ['@testing-library/jest-dom', './jest.setup.js'],
   moduleNameMapper: {
     '\\.(css|scss)$': 'identity-obj-proxy',
   },
