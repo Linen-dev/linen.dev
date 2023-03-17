@@ -1,6 +1,7 @@
 @import '../../../colors.scss';
 
-.image {
+.image,
+.placeholder {
   background-color: white;
   border: 1px solid $color-gray-200;
   border-radius: 4px;
@@ -11,6 +12,5 @@
   max-width: 200px;
   max-height: 200px;
   padding: 8px;
-  width: auto;
   object-fit: scale-down;
 }
