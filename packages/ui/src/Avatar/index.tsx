@@ -28,7 +28,12 @@ function dimensions(size?: Size) {
   }
 }
 
-function TextAvatar({ className, size, shadow, text }: Props) {
+const TextAvatar = memo(function TextAvatar({
+  className,
+  size,
+  shadow,
+  text,
+}: Props) {
   const letter = getLetter(text || '');
   const color = getColor(letter);
   return (
@@ -46,9 +51,15 @@ function TextAvatar({ className, size, shadow, text }: Props) {
       {letter}
     </div>
   );
-}
+});
 
-function ImageAvatar({ className, src, size, shadow, text }: Props) {
+const ImageAvatar = memo(function ImageAvatar({
+  className,
+  src,
+  size,
+  shadow,
+  text,
+}: Props) {
   if (!src) {
     return null;
   }
@@ -63,7 +74,7 @@ function ImageAvatar({ className, src, size, shadow, text }: Props) {
       width={dimensions(size)}
     />
   );
-}
+});
 
 function Avatar({
   className,
@@ -75,6 +86,8 @@ function Avatar({
 }: Props) {
   const [loaded, setLoaded] = useState(false);
   const { ref, inView } = useInView({ threshold: 0, skip: !src });
+  console.trace();
+  console.log(inView);
 
   useEffect(() => {
     let mounted = true;

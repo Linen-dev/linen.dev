@@ -122,7 +122,7 @@ export default function Grid({
         const last = index === sorted.length - 1;
         if (item.type === RowType.ReadStatus && !last) {
           return (
-            <li key={`inbox-line-${index}`}>
+            <li key={`inbox-line`}>
               <Line className={styles.line}>New</Line>
             </li>
           );
