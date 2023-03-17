@@ -3,7 +3,8 @@
   overflow: hidden;
 }
 
-.video video {
+.video video,
+.video .placeholder {
   max-height: 360px;
   max-width: 640px;
   min-height: 240px;
