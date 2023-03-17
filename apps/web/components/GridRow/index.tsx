@@ -1,6 +1,5 @@
 import React from 'react';
 import classNames from 'classnames';
-import Image from 'next/image';
 import { Avatar, Badge, Message } from '@linen/ui';
 import Actions from 'components/Actions';
 import CheckIcon from 'components/icons/CheckIcon';
@@ -102,7 +101,6 @@ export function Row({
             <Avatar
               src={message.author?.profileImageUrl}
               text={message.author?.displayName}
-              Image={Image}
               placeholder={isBot}
             />
           ) : (

@@ -11,11 +11,10 @@ interface AvatarType {
 interface Props {
   users: AvatarType[];
   size?: Size;
-  Image?: any;
   placeholder?: boolean;
 }
 
-export default function Avatars({ users, size, Image, placeholder }: Props) {
+export default function Avatars({ users, size, placeholder }: Props) {
   const avatars = users.slice(0, 2);
   if (avatars.length === 0) {
     return <></>;
@@ -29,7 +28,6 @@ export default function Avatars({ users, size, Image, placeholder }: Props) {
             text={user.text}
             src={user.src}
             size={size}
-            Image={Image}
             placeholder={placeholder}
           />
         </div>
