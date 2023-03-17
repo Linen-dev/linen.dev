@@ -42,7 +42,7 @@ export default function Header({
     });
   }
   return (
-    <StickyHeader className={className}>
+    <StickyHeader id="chat-layout-header" className={className}>
       <div className={styles.header}>
         <div className={styles.title}>
           <FiHash /> {channel.channelName}

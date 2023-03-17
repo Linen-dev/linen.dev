@@ -5,12 +5,17 @@ import Subtitle from './Subtitle';
 import styles from './index.module.scss';
 
 interface Props {
+  id?: string;
   className?: string;
   children: React.ReactNode;
 }
 
-function StickyHeader({ className, children }: Props) {
-  return <div className={classNames(styles.header, className)}>{children}</div>;
+function StickyHeader({ id, className, children }: Props) {
+  return (
+    <div id={id} className={classNames(styles.header, className)}>
+      {children}
+    </div>
+  );
 }
 
 StickyHeader.Title = Title;
