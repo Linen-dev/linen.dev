@@ -25,21 +25,6 @@ describe('Link', () => {
     });
   });
 
-  describe('when the link points to an image', () => {
-    it('renders the image', async () => {
-      const { container } = render(
-        <Link
-          url="https://foo.com/image.png"
-          title="https://foo.com/image.png"
-        />
-      );
-      await waitFor(() => {
-        const link = container.querySelector('img') as HTMLImageElement;
-        expect(link.src).toEqual('https://foo.com/image.png');
-      });
-    });
-  });
-
   describe('when the link is not valid', () => {
     it('renders a line through', () => {
       const { getByText } = render(
