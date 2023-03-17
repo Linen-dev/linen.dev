@@ -23,9 +23,9 @@ export default function Avatars({ users, size, Image, placeholder }: Props) {
   return (
     <div className={styles.group}>
       {avatars.map((user, index) => (
-        <div key={`${user.text}-${index}`} className={styles.item}>
+        <div key={`${user.text}-${user.src || index}`} className={styles.item}>
           <Avatar
-            key={`${index}-avatar`}
+            key={`${user.text}-avatar`}
             text={user.text}
             src={user.src}
             size={size}

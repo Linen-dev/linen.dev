@@ -28,10 +28,10 @@ export default function Grid({
   }
   return (
     <>
-      {threads.map((thread, index) => {
+      {threads.map((thread) => {
         return (
           <Row
-            key={thread.id + index}
+            key={thread.id}
             thread={thread}
             active={thread.id === currentThreadId}
             onClick={() => onSelect(thread)}

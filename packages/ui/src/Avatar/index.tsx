@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, memo } from 'react';
 import classNames from 'classnames';
 import styles from './index.module.scss';
 import { normalizeUrl } from './utilities/url';
@@ -136,4 +136,4 @@ Avatar.defaultProps = {
   shadow: 'sm',
 };
 
-export default Avatar;
+export default memo(Avatar);

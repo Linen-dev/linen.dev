@@ -50,11 +50,7 @@ function Messages({
     const isPreviousMessageFromSameUser =
       previousMessage && previousMessage.usersId === message.usersId;
     return (
-      <div
-        id={message.id}
-        key={`${message.id}-${index}`}
-        className={styles.container}
-      >
+      <div id={message.id} key={`${message.id}`} className={styles.container}>
         <GridRow
           className={classNames(styles.row, {
             [styles.top]: !isPreviousMessageFromSameUser,

@@ -39,10 +39,10 @@ export default function Grid({
   }
   return (
     <>
-      {threads.map((thread, index) => {
+      {threads.map((thread) => {
         return (
           <Row
-            key={thread.id + index}
+            key={thread.id}
             thread={thread}
             selected={!!selections[thread.id]?.checked}
             active={thread.id === currentThreadId}
