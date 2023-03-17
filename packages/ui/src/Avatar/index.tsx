@@ -86,8 +86,6 @@ function Avatar({
 }: Props) {
   const [loaded, setLoaded] = useState(false);
   const { ref, inView } = useInView({ threshold: 0, skip: !src });
-  console.trace();
-  console.log(inView);
 
   useEffect(() => {
     let mounted = true;
