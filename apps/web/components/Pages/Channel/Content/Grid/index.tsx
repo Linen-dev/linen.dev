@@ -131,7 +131,7 @@ export default function Grid({
           const { incrementId, slug, id } = thread;
           return (
             <li
-              key={`inbox-${incrementId}-${index}`}
+              key={`channel-grid-item-${id}`}
               className={classNames(styles.li, {
                 [styles.active]: thread.id === currentThreadId,
               })}
