@@ -4,9 +4,10 @@
   "description": "",
   "main": "dist/index.mjs",
   "scripts": {
+    "with-env": "yarn dotenv -e ../web/.env",
     "build": "rm -rf dist && tsup",
     "test": "jest",
-    "dev": "tsup --watch",
+    "dev": "yarn with-env tsx src/index",
     "start": "pm2-runtime --raw \"node dist/index.mjs\""
   },
   "dependencies": {
@@ -19,6 +20,8 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "tsup": "^6.5.0"
+    "dotenv-cli": "^7.1.0",
+    "tsup": "^6.5.0",
+    "tsx": "^3.12.5"
   }
 }
