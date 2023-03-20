@@ -31,6 +31,7 @@
     "@linen/integration-email": "*",
     "@linen/integration-github": "*",
     "@linen/integration-linear": "*",
+    "@linen/integration-discord": "*",
     "@linen/sdk": "*",
     "@linen/styles": "*",
     "@linen/types": "*",

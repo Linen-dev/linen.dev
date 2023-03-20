@@ -4,6 +4,7 @@ import { slackChatSync } from 'services/slack/api/postMessage';
 import { processGithubIntegration } from '@linen/integration-github';
 import { processEmailIntegration } from '@linen/integration-email';
 import { processLinearIntegration } from '@linen/integration-linear';
+import { processDiscordIntegration } from '@linen/integration-discord';
 import { TwoWaySyncType } from '@linen/types';
 
 export async function twoWaySync(payload: any, helpers: JobHelpers) {
@@ -88,7 +89,16 @@ async function twoWaySyncJob(
   }
   // check if is discord
   if (channel.account.discordAuthorizations.length) {
-    return 'discord is not implemented yet';
+    if (event !== 'newMessage' && event !== 'newThread') {
+      return 'event not supported yet';
+    }
+    return processDiscordIntegration({
+      channelId,
+      messageId,
+      threadId,
+      id,
+      event,
+    });
   }
 
   return 'account without authorization';
