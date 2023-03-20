@@ -5,7 +5,6 @@ import { normalizeUrl } from './utilities/url';
 import { getColor } from './utilities/color';
 import { getLetter } from './utilities/string';
 import preload from '../Image/utilities/preload';
-import { useInView } from 'react-intersection-observer';
 
 interface Props {
   className?: string;
@@ -85,11 +84,10 @@ function Avatar({
   placeholder,
 }: Props) {
   const [loaded, setLoaded] = useState(false);
-  const { ref, inView } = useInView({ threshold: 0, skip: !src });
 
   useEffect(() => {
     let mounted = true;
-    if (src && !loaded && inView) {
+    if (src && !loaded) {
       preload(normalizeUrl(src)).then(() => {
         if (mounted) {
           setLoaded(true);
@@ -99,44 +97,33 @@ function Avatar({
     return () => {
       mounted = false;
     };
-  }, [inView, loaded]);
+  }, [loaded]);
 
   if (placeholder) {
     return (
-      <div ref={ref}>
-        <TextAvatar
-          className={className}
-          text={text}
-          size={size}
-          shadow={shadow}
-        />
-      </div>
-    );
-  }
-
-  if (loaded) {
-    return (
-      <div ref={ref}>
-        <ImageAvatar
-          className={className}
-          text={text}
-          size={size}
-          shadow={shadow}
-          src={src}
-        />
-      </div>
-    );
-  }
-
-  return (
-    <div ref={ref}>
       <TextAvatar
         className={className}
         text={text}
         size={size}
         shadow={shadow}
       />
-    </div>
+    );
+  }
+
+  if (loaded) {
+    return (
+      <ImageAvatar
+        className={className}
+        text={text}
+        size={size}
+        shadow={shadow}
+        src={src}
+      />
+    );
+  }
+
+  return (
+    <TextAvatar className={className} text={text} size={size} shadow={shadow} />
   );
 }
 
