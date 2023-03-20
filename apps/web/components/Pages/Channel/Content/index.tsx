@@ -306,7 +306,7 @@ export default function Channel({
     const scrollableRoot = scrollableRootRef.current;
     if (scrollableRoot) {
       setTimeout(() => {
-        const node = document.getElementById(`channel-thread-${id}`);
+        const node = document.getElementById(id);
         if (node) {
           node.scrollIntoView();
           scrollableRoot.scrollTop =
