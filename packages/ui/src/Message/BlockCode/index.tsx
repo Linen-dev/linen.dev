@@ -7,16 +7,17 @@ import styles from './index.module.scss';
 
 interface Props {
   value: string;
+  placeholder?: boolean;
 }
 
-export default function BlockCode({ value }: Props) {
+export default function BlockCode({ value, placeholder }: Props) {
   const input = value.trim();
   const content = decodeHTML(input);
   return (
     <Code
       className={classNames(styles.code, 'block')}
       content={isFormattable(content) ? formatCode(content) : content}
-      highlight={isHighlighted(value)}
+      highlight={!placeholder && isHighlighted(value)}
     />
   );
 }

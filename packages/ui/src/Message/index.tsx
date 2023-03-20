@@ -44,6 +44,7 @@ interface Props {
   reactions?: SerializedReaction[];
   attachments?: SerializedAttachment[];
   currentUser?: SerializedUser | null;
+  placeholder?: boolean;
   onLoad?(): void;
 }
 
@@ -64,6 +65,7 @@ function Message({
   reactions,
   attachments,
   currentUser,
+  placeholder,
   onLoad,
 }: Props) {
   if (text === '' && noAttachment(attachments)) {
@@ -138,7 +140,13 @@ function Message({
       case 'code':
         return <InlineCode key={node.cid} value={(node as CodeNode).value} />;
       case 'pre':
-        return <BlockCode key={node.cid} value={(node as PreNode).value} />;
+        return (
+          <BlockCode
+            key={node.cid}
+            value={(node as PreNode).value}
+            placeholder={placeholder}
+          />
+        );
       case 'url':
         return (
           <Link
