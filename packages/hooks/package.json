@@ -21,6 +21,7 @@
   },
   "exports": {
     "./device": "./dist/device.js",
+    "./hover": "./dist/hover.js",
     "./keyboard": "./dist/keyboard.js",
     "./mode": "./dist/mode.js",
     "./polling": "./dist/polling.js",
@@ -34,6 +35,9 @@
     "*": {
       "device": [
         "dist/device.d.ts"
+      ],
+      "hover": [
+        "dist/hover.d.ts"
       ],
       "keyboard": [
         "dist/keyboard.d.ts"
