@@ -4,6 +4,7 @@ const navigation = {
     { name: 'Terms', href: '/legal/terms' },
     { name: 'Support', href: 'mailto:help@linen.dev' },
     { name: 'Communities', href: '/communities' },
+    { name: 'FAQ', href: '/faq' },
   ],
 };
 

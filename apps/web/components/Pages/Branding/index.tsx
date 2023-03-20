@@ -182,10 +182,10 @@ export default function Branding({
               </PremiumCard>
               <hr className="my-5" />
               <PremiumCard isPremium={currentCommunity.premium}>
-                <Label htmlFor="redirectDomain">Redirect Domain</Label>
-                <Description>Unique domain to redirect to.</Description>
+                <Label htmlFor="redirectDomain">Custom Domain</Label>
+                <Description>Choose the custom url that Linen will live under. i.e linen.yourwebsite.com</Description>
                 <TextField
-                  placeholder="linen.yourwebsite.com"
+                  placeholder="linen.yourwebsite.com or chat.yourwebsite.com"
                   id="redirectDomain"
                   defaultValue={
                     currentCommunity.premium
