@@ -14,7 +14,7 @@ function Code({ className, content, highlight, inline }: Props): JSX.Element {
 
   useEffect(() => {
     let mounted = true;
-    if (!highlighted) {
+    if (highlight && !highlighted) {
       import('highlight.js').then((hljs: any) => {
         if (mounted) {
           setHighlighted(hljs.default.highlightAuto(content));
@@ -24,7 +24,15 @@ function Code({ className, content, highlight, inline }: Props): JSX.Element {
     return () => {
       mounted = false;
     };
-  }, [highlighted]);
+  }, [highlight, highlighted]);
+
+  if (!highlight) {
+    return (
+      <pre className={classNames({ [styles.inline]: inline })}>
+        <code className={className}>{content}</code>
+      </pre>
+    );
+  }
 
   if (highlighted) {
     return (
