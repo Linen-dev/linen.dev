@@ -56,6 +56,37 @@ interface Props {
   onUnread?(threadId: string): void;
 }
 
+function Left({
+  top,
+  message,
+  isBot,
+  hover,
+}: {
+  top: boolean;
+  message: SerializedMessage;
+  isBot?: boolean;
+  hover?: boolean;
+}) {
+  if (top) {
+    return (
+      <Avatar
+        className={styles.left}
+        src={message.author?.profileImageUrl}
+        text={message.author?.displayName}
+        placeholder={isBot}
+      />
+    );
+  }
+
+  return (
+    <div className={styles.left}>
+      {hover && (
+        <span className={styles.date}>{format(message.sentAt, 'p')}</span>
+      )}
+    </div>
+  );
+}
+
 export function Row({
   className,
   thread,
@@ -99,26 +130,14 @@ export function Row({
           [styles.drag]: mode === Mode.Drag,
         })}
       >
-        <div className={styles.left}>
-          {top ? (
-            <Avatar
-              src={message.author?.profileImageUrl}
-              text={message.author?.displayName}
-              placeholder={isBot}
-            />
-          ) : (
-            hover && (
-              <span className={styles.date}>{format(message.sentAt, 'p')}</span>
-            )
-          )}
-        </div>
+        <Left message={message} top={top} isBot={isBot} hover={hover} />
         <div className={styles.content}>
           {top && (
             <div className={styles.header}>
               <p className={styles.username}>
                 {message.author?.displayName || 'user'}
               </p>
-              <div className={styles.date}>{format(message.sentAt, 'Pp')}</div>
+              {format(message.sentAt, 'Pp')}
               {thread.state === ThreadState.CLOSE && <CheckIcon />}
             </div>
           )}
