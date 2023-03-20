@@ -14,6 +14,13 @@ module.exports = {
       name: 'queue',
       script: 'npx tsx watch queue/index.ts',
       cwd: '../apps/web',
+      restart_delay: 3000,
+    },
+    {
+      name: 'discord-bots',
+      script: 'bash up.sh',
+      cwd: '../apps/discord-bots',
+      restart_delay: 3000,
     },
     {
       name: 'push-service',
