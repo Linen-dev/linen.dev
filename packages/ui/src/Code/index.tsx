@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import classNames from 'classnames';
 import styles from './index.module.scss';
-import { useInView } from 'react-intersection-observer';
 
 interface Props {
   className?: string;
@@ -11,12 +10,11 @@ interface Props {
 }
 
 function Code({ className, content, highlight, inline }: Props): JSX.Element {
-  const { ref, inView } = useInView({ threshold: 0, skip: !highlight });
   const [highlighted, setHighlighted] = useState<any>();
 
   useEffect(() => {
     let mounted = true;
-    if (!highlighted && inView) {
+    if (!highlighted) {
       import('highlight.js').then((hljs: any) => {
         if (mounted) {
           setHighlighted(hljs.default.highlightAuto(content));
@@ -26,12 +24,11 @@ function Code({ className, content, highlight, inline }: Props): JSX.Element {
     return () => {
       mounted = false;
     };
-  }, [highlighted, inView]);
+  }, [highlighted]);
 
-  if (highlighted && inView) {
+  if (highlighted) {
     return (
       <pre
-        ref={ref}
         className={classNames('hljs', styles.pre, { [styles.inline]: inline })}
       >
         <code
@@ -43,7 +40,7 @@ function Code({ className, content, highlight, inline }: Props): JSX.Element {
   }
 
   return (
-    <pre ref={ref} className={classNames({ [styles.inline]: inline })}>
+    <pre className={classNames({ [styles.inline]: inline })}>
       <code className={className}>{content}</code>
     </pre>
   );
