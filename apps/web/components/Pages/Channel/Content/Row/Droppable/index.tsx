@@ -67,7 +67,7 @@ export default function Droppable({
 
   return (
     <div
-      id={`channel-thread-${id}`}
+      id={id}
       className={classNames(className, styles.row, hover && styles.hover)}
       onClick={onClick}
       onDragOver={handleDragOver}

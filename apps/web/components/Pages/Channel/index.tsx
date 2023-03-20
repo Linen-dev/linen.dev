@@ -144,7 +144,7 @@ export default function Channel(props: ChannelProps) {
           return false;
         }
         function scrollToBottomThread(threadId: string) {
-          const node = document.getElementById(`channel-thread-${threadId}`);
+          const node = document.getElementById(threadId);
           const layout = document.getElementById('sidebar-layout-left');
           const footer = document.getElementById('chat-layout-footer');
           if (node && layout && footer) {
