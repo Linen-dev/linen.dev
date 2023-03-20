@@ -4,7 +4,7 @@ import styles from './index.module.scss';
 import { normalizeUrl } from './utilities/url';
 import { getColor } from './utilities/color';
 import { getLetter } from './utilities/string';
-import preload from '../Image/utilities/preload';
+import preload, { cache } from '../Image/utilities/preload';
 
 interface Props {
   className?: string;
@@ -89,6 +89,7 @@ function Avatar({
     let mounted = true;
     if (src && !loaded) {
       preload(normalizeUrl(src)).then(() => {
+        console.log(src);
         if (mounted) {
           setLoaded(true);
         }
@@ -110,7 +111,9 @@ function Avatar({
     );
   }
 
-  if (loaded) {
+  const preloaded = src && cache[src];
+
+  if (loaded || preloaded) {
     return (
       <ImageAvatar
         className={className}
