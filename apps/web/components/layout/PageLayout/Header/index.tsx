@@ -13,6 +13,7 @@ import { Mode } from '@linen/hooks/mode';
 import styles from './index.module.scss';
 import { AxiosRequestConfig } from 'axios';
 import MobileMenu from './MobileMenu';
+import Logo from './Logo';
 
 interface Props {
   settings: Settings;
@@ -63,12 +64,7 @@ export default function Header({
         passHref
         target="_blank"
       >
-        <img
-          className={styles.logo}
-          src={logoUrl}
-          height="24"
-          alt={`${homeUrl} logo`}
-        />
+        <Logo src={logoUrl} alt={`${homeUrl} logo`} />
       </Link>
       <div
         className="flex w-full items-center"
