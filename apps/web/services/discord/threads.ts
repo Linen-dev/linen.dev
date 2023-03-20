@@ -97,7 +97,8 @@ export async function getArchivedThreads({
     const response = result as DiscordArchivedPublicThreads;
 
     has_more = response.has_more
-      ? response.threads[response.threads.length - 1].id
+      ? response.threads[response.threads.length - 1].thread_metadata
+          ?.create_timestamp
       : null;
 
     for (const thread of response.threads) {
