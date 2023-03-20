@@ -1,0 +1,19 @@
+@import 'styles/colors.scss';
+
+.logo {
+  display: block;
+  height: 24px;
+  max-width: max-content;
+  object-fit: contain;
+}
+
+.linen {
+  height: 24px;
+  width: 108px;
+  transition: opacity 0.1s ease-in, filter 0.1s ease-in;
+}
+
+.linen:hover {
+  opacity: 0.8;
+  filter: grayscale(1);
+}
