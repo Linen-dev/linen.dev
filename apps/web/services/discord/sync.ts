@@ -105,14 +105,24 @@ export async function discordSync(args: {
       throw new Error('account not found');
     }
 
-    // TODO: add more data
-    await updateAndNotifySyncStatus(args.accountId, SyncStatus.IN_PROGRESS);
+    await updateAndNotifySyncStatus(
+      args.accountId,
+      SyncStatus.IN_PROGRESS,
+      account.name || account.slackDomain,
+      account.homeUrl,
+      account.communityUrl
+    );
 
     const logger = new Logger(getAccountName(account));
     await syncJob(account, crawlType, decrypt, logger);
 
-    // TODO: add more data
-    await updateAndNotifySyncStatus(args.accountId, SyncStatus.DONE);
+    await updateAndNotifySyncStatus(
+      args.accountId,
+      SyncStatus.DONE,
+      account.name || account.slackDomain,
+      account.homeUrl,
+      account.communityUrl
+    );
 
     return args;
   } catch (error) {
