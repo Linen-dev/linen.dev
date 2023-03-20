@@ -1,4 +1,4 @@
-const cache: { [key: string]: Promise<HTMLImageElement> } = {};
+export const cache: { [key: string]: Promise<HTMLImageElement> } = {};
 
 export default async function preload(src: string): Promise<HTMLImageElement> {
   if (cache.hasOwnProperty(src)) {
