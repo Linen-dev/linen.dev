@@ -5,7 +5,6 @@ import { normalizeUrl } from './utilities/url';
 import { getColor } from './utilities/color';
 import { getLetter } from './utilities/string';
 import preload, { cache } from '../Image/utilities/preload';
-import { useInView } from 'react-intersection-observer';
 
 interface Props {
   className?: string;
@@ -90,7 +89,6 @@ function Avatar({
     let mounted = true;
     if (src && !placeholder && !loaded) {
       preload(normalizeUrl(src)).then(() => {
-        console.log(src);
         if (mounted) {
           setLoaded(true);
         }
@@ -100,17 +98,6 @@ function Avatar({
       mounted = false;
     };
   }, [loaded, placeholder]);
-
-  if (placeholder) {
-    return (
-      <TextAvatar
-        className={className}
-        text={text}
-        size={size}
-        shadow={shadow}
-      />
-    );
-  }
 
   const preloaded = src && cache[src];
 

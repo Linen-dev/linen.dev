@@ -1,5 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
+import { useInView } from 'react-intersection-observer';
 import { Avatar, Badge, Message } from '@linen/ui';
 import Actions from 'components/Actions';
 import CheckIcon from 'components/icons/CheckIcon';
@@ -61,11 +62,13 @@ function Left({
   message,
   isBot,
   hover,
+  inView,
 }: {
   top: boolean;
   message: SerializedMessage;
   isBot?: boolean;
   hover?: boolean;
+  inView: boolean;
 }) {
   if (top) {
     return (
@@ -73,7 +76,7 @@ function Left({
         className={styles.left}
         src={message.author?.profileImageUrl}
         text={message.author?.displayName}
-        placeholder={isBot}
+        placeholder={!inView || isBot}
       />
     );
   }
@@ -114,8 +117,10 @@ export function Row({
   onUnread,
 }: Props) {
   const [ref, hover] = useHover<HTMLDivElement>();
+  const { ref: inViewRef, inView } = useInView();
   const top = !isPreviousMessageFromSameUser;
   const resolution = thread.resolutionId === message.id;
+
   return (
     <div
       ref={ref}
@@ -126,11 +131,18 @@ export function Row({
     >
       {header}
       <div
+        ref={inViewRef}
         className={classNames(styles.row, {
           [styles.drag]: mode === Mode.Drag,
         })}
       >
-        <Left message={message} top={top} isBot={isBot} hover={hover} />
+        <Left
+          message={message}
+          top={top}
+          isBot={isBot}
+          hover={hover}
+          inView={inView}
+        />
         <div className={styles.content}>
           {top && (
             <div className={styles.header}>
