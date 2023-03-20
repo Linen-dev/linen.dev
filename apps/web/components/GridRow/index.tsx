@@ -167,6 +167,7 @@ export function Row({
               attachments={message.attachments}
               currentUser={currentUser}
               onLoad={onLoad}
+              placeholder={!inView}
             />
             {resolution && (
               <Badge className={styles.badge} type="success">
