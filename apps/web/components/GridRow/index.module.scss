@@ -32,10 +32,6 @@
 }
 
 .left .date {
-  display: none;
-}
-
-.row:hover .left .date {
   align-self: center;
   display: flex;
   font-size: 10px;
@@ -77,19 +73,6 @@
 
 .message.basic {
   padding: 0.25rem 0;
-}
-
-.message .date {
-  display: none;
-}
-
-.message:hover .date {
-  position: absolute;
-  top: 4px;
-  left: -3rem;
-  display: block;
-  font-size: 1px;
-  z-index: 1;
 }
 
 .actions {

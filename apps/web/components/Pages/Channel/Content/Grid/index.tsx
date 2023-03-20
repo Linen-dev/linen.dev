@@ -149,28 +149,27 @@ export default function Grid({
                   }}
                 />
               ) : (
-                <div onClick={() => onClick(id)}>
-                  <Row
-                    className={styles.row}
-                    thread={thread}
-                    permissions={permissions}
-                    isSubDomainRouting={isSubDomainRouting}
-                    settings={settings}
-                    currentUser={currentUser}
-                    mode={mode}
-                    onDelete={onDelete}
-                    onDrop={onDrop}
-                    onMute={onMute}
-                    onUnmute={onUnmute}
-                    onPin={onPin}
-                    onStar={onStar}
-                    onReaction={onReaction}
-                    onRead={onRead}
-                    onRemind={onRemind}
-                    onUnread={onUnread}
-                    onLoad={onLoad}
-                  />
-                </div>
+                <Row
+                  className={styles.row}
+                  thread={thread}
+                  permissions={permissions}
+                  isSubDomainRouting={isSubDomainRouting}
+                  settings={settings}
+                  currentUser={currentUser}
+                  mode={mode}
+                  onClick={() => onClick(id)}
+                  onDelete={onDelete}
+                  onDrop={onDrop}
+                  onMute={onMute}
+                  onUnmute={onUnmute}
+                  onPin={onPin}
+                  onStar={onStar}
+                  onReaction={onReaction}
+                  onRead={onRead}
+                  onRemind={onRemind}
+                  onUnread={onUnread}
+                  onLoad={onLoad}
+                />
               )}
             </li>
           );

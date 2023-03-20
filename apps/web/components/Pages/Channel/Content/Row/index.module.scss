@@ -4,14 +4,11 @@
   align-items: center;
   display: flex;
   position: relative;
+  width: 100%;
 }
 
 .container[draggable='true']:active {
   cursor: grabbing;
-}
-
-.content {
-  width: 100%;
 }
 
 .header {
