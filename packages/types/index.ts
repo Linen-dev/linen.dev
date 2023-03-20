@@ -235,3 +235,18 @@ export type ChannelsIntegration = {
 };
 
 export type onResolve = (threadId: string, messageId?: string) => void;
+
+export type TwoWaySyncEvent =
+  | 'newMessage'
+  | 'newThread'
+  | 'threadReopened'
+  | 'threadClosed'
+  | 'threadUpdated';
+
+export type TwoWaySyncType = {
+  event: TwoWaySyncEvent;
+  id: string;
+  channelId?: string;
+  threadId?: string;
+  messageId?: string;
+};

@@ -6,7 +6,7 @@ import type { SyncJobType } from 'services/sync';
 import type { SlackEvent } from 'types/slackResponses/slackMessageEventInterface';
 import { makeWorkerUtils, type WorkerUtils } from 'graphile-worker';
 import { downloadCert, getDatabaseUrl } from '@linen/database';
-import { TwoWaySyncType } from './tasks/two-way-sync';
+import { TwoWaySyncType } from '@linen/types';
 
 let instance: WorkerUtils | undefined;
 class WorkerSingleton {

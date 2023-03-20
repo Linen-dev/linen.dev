@@ -4,27 +4,13 @@ import { slackChatSync } from 'services/slack/api/postMessage';
 import { processGithubIntegration } from '@linen/integration-github';
 import { processEmailIntegration } from '@linen/integration-email';
 import { processLinearIntegration } from '@linen/integration-linear';
+import { TwoWaySyncType } from '@linen/types';
 
 export async function twoWaySync(payload: any, helpers: JobHelpers) {
   helpers.logger.info(JSON.stringify(payload));
   const result = await twoWaySyncJob(payload, helpers.logger);
   helpers.logger.info(JSON.stringify(result));
 }
-
-export type TwoWaySyncEvent =
-  | 'newMessage'
-  | 'newThread'
-  | 'threadReopened'
-  | 'threadClosed'
-  | 'threadUpdated';
-
-export type TwoWaySyncType = {
-  event: TwoWaySyncEvent;
-  id: string;
-  channelId?: string;
-  threadId?: string;
-  messageId?: string;
-};
 
 async function twoWaySyncJob(
   { channelId, messageId, threadId, id, event }: TwoWaySyncType,
