@@ -171,16 +171,6 @@ export default function Channel({
 
   const currentUser = permissions.user || null;
 
-  useEffect(() => {
-    if (typeof window !== undefined) {
-      const urlHash = new URL(window.document.URL).hash;
-      if (!!urlHash) {
-        const theadId = urlHash.split('#').join('');
-        scrollToIdTop(theadId);
-      }
-    }
-  }, []);
-
   useWebsockets({
     room: `room:lobby:${currentChannel.id}`,
     token,
