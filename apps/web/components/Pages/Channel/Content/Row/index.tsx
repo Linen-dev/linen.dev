@@ -132,10 +132,14 @@ export default function ChannelRow({
         header={
           thread.title && <div className={styles.header}>{thread.title}</div>
         }
-        footer={
+        footer={({ inView }) =>
           messages.length > 1 && (
             <div className={styles.footer}>
-              <Avatars size="sm" users={avatars} placeholder={isBot} />
+              <Avatars
+                size="sm"
+                users={avatars}
+                placeholder={!inView || isBot}
+              />
               <>
                 {messages.length - 1}{' '}
                 {messages.length > 2 ? 'replies' : 'reply'} &middot;{' '}

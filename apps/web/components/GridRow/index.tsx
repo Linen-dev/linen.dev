@@ -33,7 +33,7 @@ interface Props {
   mode?: Mode;
   drag: 'thread' | 'message';
   header?: React.ReactNode;
-  footer?: React.ReactNode;
+  footer?({ inView }: { inView: boolean }): React.ReactNode;
   onDelete?(messageId: string): void;
   onLoad?(): void;
   onMute?(threadId: string): void;
@@ -174,7 +174,7 @@ export function Row({
                 Resolution
               </Badge>
             )}
-            {footer}
+            {footer?.({ inView })}
           </div>
         </div>
       </div>
