@@ -2,9 +2,7 @@ import { prisma, users, Prisma } from '@linen/database';
 import { stripProtocol } from '@linen/utilities/url';
 import { generateRandomWordSlug } from 'utilities/randomWordSlugs';
 import { getAccountById } from 'lib/models';
-import { AccountType, ChatType, Roles, AccountIntegration } from '@linen/types';
-import { eventNewIntegration } from './events/eventNewIntegration';
-import { encrypt } from 'utilities/crypto';
+import { AccountType, ChatType, Roles } from '@linen/types';
 import { v4 } from 'uuid';
 import { createAccountEvent } from './customerIo/trackEvents';
 import { createInvitation } from './invites';
@@ -222,49 +220,5 @@ export default class AccountsService {
       select: { role: true, accountsId: true },
       where: { authsId: authId },
     });
-  }
-
-  static async setCustomBotDiscord({
-    accountId,
-    discordServerId,
-    botToken,
-    scope = 'bot',
-  }: {
-    accountId: string;
-    discordServerId: string;
-    botToken: string;
-    scope?: string;
-  }) {
-    if (!accountId) {
-      throw new Error('missing accountId');
-    }
-    if (!discordServerId) {
-      throw new Error('missing discordServerId');
-    }
-    if (!botToken) {
-      throw new Error('missing botToken');
-    }
-
-    await prisma.accounts.update({
-      where: { id: accountId },
-      data: {
-        discordServerId,
-        integration: AccountIntegration.DISCORD,
-      },
-    });
-
-    await prisma.discordAuthorizations.create({
-      data: {
-        accessToken: encrypt(botToken),
-        scope,
-        accountsId: accountId,
-        customBot: true,
-      },
-    });
-
-    // dispatch sync job
-    await eventNewIntegration({ accountId });
-
-    return { ok: true };
   }
 }

@@ -1,12 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import request from 'superagent';
-import { prisma } from '@linen/database';
-import AccountsService from 'services/accounts';
+import { AccountIntegration, prisma } from '@linen/database';
 import { eventNewIntegration } from 'services/events/eventNewIntegration';
 import { SerializedAccount } from '@linen/types';
 import { getHomeUrl } from 'utilities/home';
 import serializeAccount from 'serializers/account';
 import { getCurrentConfig } from 'config/discord';
+import { createIntegrationDiscord } from 'queue/jobs';
+import { encrypt } from 'utilities/crypto';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
@@ -27,14 +28,37 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       where: { id: accountId },
     });
 
-    await AccountsService.setCustomBotDiscord({
-      accountId,
-      botToken: getCurrentConfig().PRIVATE_TOKEN,
-      discordServerId: guild.id,
-      scope: 'linen-bot-2',
-    });
+    if (!account) {
+      throw new Error('account not found');
+    }
+
+    await prisma.$transaction([
+      prisma.accounts.update({
+        where: { id: account.id },
+        data: {
+          discordServerId: guild.id,
+          integration: AccountIntegration.DISCORD,
+        },
+      }),
+      prisma.discordAuthorizations.deleteMany({
+        where: {
+          accountsId: account.id,
+        },
+      }),
+      prisma.discordAuthorizations.create({
+        data: {
+          accountsId: account.id,
+          accessToken: encrypt(getCurrentConfig().PRIVATE_TOKEN),
+          scope: getCurrentConfig().PRIVATE_SCOPE,
+          refreshToken: body.refresh_token,
+          expiresAt: new Date(new Date().getTime() + body.expires_in * 1000),
+          customBot: true,
+        },
+      }),
+    ]);
 
     await eventNewIntegration({ accountId });
+    await createIntegrationDiscord();
 
     const url = getHomeUrl(serializeAccount(account) as SerializedAccount);
     return res.redirect(`${url}/integrations`);

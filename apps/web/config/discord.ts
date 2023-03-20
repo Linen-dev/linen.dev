@@ -24,6 +24,13 @@ export const botV2 = () => {
   };
 };
 
+export const getAllBots = () => {
+  return [
+    { ...botV1(), botNum: 1 },
+    { ...botV2(), botNum: 2 },
+  ];
+};
+
 export const getCurrentConfig = () => {
   return {
     ...botV2(),

@@ -19,9 +19,11 @@ import {
   QUEUE_REMIND_ME_LATER,
   QUEUE_MARK_ALL_AS_READ,
   QUEUE_SITEMAP,
+  QUEUE_INTEGRATION_DISCORD,
   QUEUE_REMOVE_COMMUNITY,
 } from './jobs';
 import { sitemap } from './tasks/sitemap';
+import { discordIntegration } from './tasks/discord-integration';
 import { removeCommunity } from './tasks/remove-community';
 
 export type TaskInterface = (
@@ -51,6 +53,7 @@ async function runWorker() {
       [QUEUE_MAINTENANCE_MESSAGE_COUNT]: updateMessagesCount,
       [QUEUE_CRAWL_GOOGLE_STATS]: crawlGoogleResults,
       [QUEUE_SITEMAP]: sitemap,
+      [QUEUE_INTEGRATION_DISCORD]: discordIntegration,
       [QUEUE_REMOVE_COMMUNITY]: removeCommunity,
     },
     parsedCronItems: parseCronItems([

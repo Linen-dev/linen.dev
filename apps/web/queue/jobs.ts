@@ -35,6 +35,7 @@ export const QUEUE_MAINTENANCE_SLUGIFY = 'slugify';
 export const QUEUE_MAINTENANCE_MESSAGE_COUNT = 'update-message-count';
 export const QUEUE_CRAWL_GOOGLE_STATS = 'google-stats';
 export const QUEUE_SITEMAP = 'sitemap';
+export const QUEUE_INTEGRATION_DISCORD = 'integration-discord';
 export const QUEUE_REMOVE_COMMUNITY = 'remove-community';
 
 export async function createWebhookJob(payload: SlackEvent) {
@@ -109,6 +110,17 @@ export async function createTwoWaySyncJob(payload: TwoWaySyncType) {
   return await worker.addJob('two-way-sync', payload, {
     maxAttempts: 1,
   });
+}
+
+export async function createIntegrationDiscord() {
+  const worker = await WorkerSingleton.getInstance();
+  return await worker.addJob(
+    QUEUE_INTEGRATION_DISCORD,
+    {},
+    {
+      maxAttempts: 1,
+    }
+  );
 }
 
 export async function createRemoveCommunityJob(accountId: string) {
