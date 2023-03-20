@@ -31,6 +31,7 @@ interface Props {
   settings: Settings;
   currentUser: SerializedUser | null;
   mode?: Mode;
+  onClick?(): void;
   onDelete?(messageId: string): void;
   onLoad?(): void;
   onMute?(threadId: string): void;
@@ -74,6 +75,7 @@ export default function ChannelRow({
   settings,
   currentUser,
   mode,
+  onClick,
   onDelete,
   onDrop,
   onLoad,
@@ -99,49 +101,52 @@ export default function ChannelRow({
     }));
 
   return (
-    <Droppable id={thread.id} className={styles.container} onDrop={onDrop}>
-      <div id={thread.id} className={styles.content}>
-        <GridRow
-          className={className}
-          thread={thread}
-          message={message}
-          isSubDomainRouting={isSubDomainRouting}
-          isBot={isBot}
-          settings={settings}
-          permissions={permissions}
-          currentUser={currentUser}
-          mode={mode}
-          drag="thread"
-          onDelete={onDelete}
-          onLoad={onLoad}
-          onMute={onMute}
-          onUnmute={onUnmute}
-          onPin={onPin}
-          onStar={onStar}
-          onResolution={onResolution}
-          onReaction={onReaction}
-          onRead={onRead}
-          onRemind={onRemind}
-          onUnread={onUnread}
-          header={
-            thread.title && <div className={styles.header}>{thread.title}</div>
-          }
-          footer={
-            messages.length > 1 && (
-              <div className={styles.footer}>
-                <Avatars size="sm" users={avatars} placeholder={isBot} />
-                <>
-                  {messages.length - 1}{' '}
-                  {messages.length > 2 ? 'replies' : 'reply'} &middot;{' '}
-                  {`${authors.length} participant${
-                    authors.length > 1 ? 's' : ''
-                  }`}
-                </>
-              </div>
-            )
-          }
-        />
-      </div>
+    <Droppable
+      id={thread.id}
+      className={styles.container}
+      onClick={onClick}
+      onDrop={onDrop}
+    >
+      <GridRow
+        className={className}
+        thread={thread}
+        message={message}
+        isSubDomainRouting={isSubDomainRouting}
+        isBot={isBot}
+        settings={settings}
+        permissions={permissions}
+        currentUser={currentUser}
+        mode={mode}
+        drag="thread"
+        onDelete={onDelete}
+        onLoad={onLoad}
+        onMute={onMute}
+        onUnmute={onUnmute}
+        onPin={onPin}
+        onStar={onStar}
+        onResolution={onResolution}
+        onReaction={onReaction}
+        onRead={onRead}
+        onRemind={onRemind}
+        onUnread={onUnread}
+        header={
+          thread.title && <div className={styles.header}>{thread.title}</div>
+        }
+        footer={
+          messages.length > 1 && (
+            <div className={styles.footer}>
+              <Avatars size="sm" users={avatars} placeholder={isBot} />
+              <>
+                {messages.length - 1}{' '}
+                {messages.length > 2 ? 'replies' : 'reply'} &middot;{' '}
+                {`${authors.length} participant${
+                  authors.length > 1 ? 's' : ''
+                }`}
+              </>
+            </div>
+          )
+        }
+      />
     </Droppable>
   );
 }

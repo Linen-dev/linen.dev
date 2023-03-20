@@ -6,6 +6,7 @@ interface Props {
   className?: string;
   children: React.ReactNode;
   id: string;
+  onClick?(): void;
   onDrop?({
     source,
     target,
@@ -19,7 +20,13 @@ interface Props {
   }): void;
 }
 
-export default function Droppable({ id, className, children, onDrop }: Props) {
+export default function Droppable({
+  id,
+  className,
+  children,
+  onClick,
+  onDrop,
+}: Props) {
   const [hover, setHover] = useState(false);
   const ref = createRef<HTMLDivElement>();
   if (!onDrop) {
@@ -62,6 +69,7 @@ export default function Droppable({ id, className, children, onDrop }: Props) {
     <div
       id={`channel-thread-${id}`}
       className={classNames(className, styles.row, hover && styles.hover)}
+      onClick={onClick}
       onDragOver={handleDragOver}
       onDragEnter={handleDragEnter}
       onDragLeave={handleDragLeave}

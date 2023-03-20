@@ -107,7 +107,9 @@ export function Row({
               placeholder={isBot}
             />
           ) : (
-            <span className={styles.date}>{format(message.sentAt, 'p')}</span>
+            hover && (
+              <span className={styles.date}>{format(message.sentAt, 'p')}</span>
+            )
           )}
         </div>
         <div className={styles.content}>
