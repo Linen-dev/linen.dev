@@ -20,13 +20,13 @@ const faqs = [
     If you are not seeing any traffic after a few weeks please contact us at help@linen.dev`,
   },
   {
-    question: 'How do I check if my content is showing up on Google',
+    question: 'How do I check if my content is showing up on Google?',
     answer: `
     You can check by Googling site:linen.dev/s/YOUR_COMMUNITY_NAME or your custom domain if you have set one
     `,
   },
   {
-    question: 'Does the free version get indexed by Google',
+    question: 'Does the free version get indexed by Google?',
     answer: 'Yes! Google will index all the content on the free tier.'
   },
   {
