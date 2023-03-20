@@ -5,6 +5,7 @@ import { normalizeUrl } from './utilities/url';
 import { getColor } from './utilities/color';
 import { getLetter } from './utilities/string';
 import preload, { cache } from '../Image/utilities/preload';
+import { useInView } from 'react-intersection-observer';
 
 interface Props {
   className?: string;
@@ -13,6 +14,7 @@ interface Props {
   size?: Size;
   shadow?: Shadow;
   placeholder?: boolean;
+  innerRef?: any;
 }
 
 export type Size = 'sm' | 'md';
@@ -32,11 +34,13 @@ const TextAvatar = memo(function TextAvatar({
   size,
   shadow,
   text,
+  innerRef,
 }: Props) {
   const letter = getLetter(text || '');
   const color = getColor(letter);
   return (
     <div
+      ref={innerRef}
       className={classNames(
         className,
         styles.placeholder,
@@ -58,12 +62,14 @@ const ImageAvatar = memo(function ImageAvatar({
   size,
   shadow,
   text,
+  innerRef,
 }: Props) {
   if (!src) {
     return null;
   }
   return (
     <img
+      ref={innerRef}
       className={classNames(className, styles.image, size && styles[size], {
         [styles.shadow]: shadow === 'sm',
       })}
@@ -84,10 +90,11 @@ function Avatar({
   placeholder,
 }: Props) {
   const [loaded, setLoaded] = useState(false);
+  const { ref, inView } = useInView();
 
   useEffect(() => {
     let mounted = true;
-    if (src && !loaded) {
+    if (src && inView && !loaded) {
       preload(normalizeUrl(src)).then(() => {
         console.log(src);
         if (mounted) {
@@ -98,11 +105,12 @@ function Avatar({
     return () => {
       mounted = false;
     };
-  }, [loaded]);
+  }, [loaded, inView]);
 
   if (placeholder) {
     return (
       <TextAvatar
+        innerRef={ref}
         className={className}
         text={text}
         size={size}
@@ -116,6 +124,7 @@ function Avatar({
   if (loaded || preloaded) {
     return (
       <ImageAvatar
+        innerRef={ref}
         className={className}
         text={text}
         size={size}
@@ -126,7 +135,13 @@ function Avatar({
   }
 
   return (
-    <TextAvatar className={className} text={text} size={size} shadow={shadow} />
+    <TextAvatar
+      innerRef={ref}
+      className={className}
+      text={text}
+      size={size}
+      shadow={shadow}
+    />
   );
 }
 
