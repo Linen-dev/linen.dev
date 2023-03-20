@@ -323,19 +323,10 @@ export default function Channel({
           setThreads((threads) => [...data.threads, ...threads]);
         }
       }
-      const scrollableRoot = scrollableRootRef.current;
-      if (scrollableRoot) {
-        const index = dir === 'top' ? 0 : threads.length;
-        const id = threads[index].id;
-        setTimeout(() => {
-          const node = document.getElementById(`channel-thread-${id}`);
-          if (node) {
-            node.scrollIntoView();
-            scrollableRoot.scrollTop =
-              scrollableRoot.scrollTop - scrollableRoot.offsetTop;
-          }
-        }, 0);
-      }
+
+      const index = dir === 'top' ? 0 : threads.length;
+      const id = threads[index].id;
+      scrollToIdTop(id);
     } catch (err) {
       setError({ ...error, [key]: err });
     } finally {
