@@ -44,9 +44,13 @@ export interface ChannelProps {
   threads: SerializedThread[];
   pinnedThreads: SerializedThread[];
   isSubDomainRouting: boolean;
+  nextCursor: {
+    next: string | null;
+    prev: string | null;
+  };
+  pathCursor: string | null;
   isBot: boolean;
   permissions: Permissions;
-  page: number | null;
 }
 
 async function upsertUserThreadStatus(params: {
@@ -85,7 +89,8 @@ export default function Channel(props: ChannelProps) {
     settings,
     channelName,
     isSubDomainRouting,
-    page,
+    nextCursor,
+    pathCursor,
     isBot,
     permissions,
     dms,
@@ -851,7 +856,7 @@ export default function Channel(props: ChannelProps) {
           settings,
           currentChannel,
           isSubDomainRouting,
-          page,
+          pathCursor,
           currentCommunity,
         }),
       }}
@@ -874,7 +879,7 @@ export default function Channel(props: ChannelProps) {
           settings={settings}
           channelName={channelName}
           isSubDomainRouting={isSubDomainRouting}
-          page={page}
+          nextCursor={nextCursor}
           isBot={isBot}
           permissions={permissions}
           currentThreadId={currentThreadId}

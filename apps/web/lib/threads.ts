@@ -232,21 +232,28 @@ export async function findPinnedThreads({
 
 export async function findThreadsByCursor({
   channelIds,
+  sentAt,
+  sort = 'desc',
+  limit = PAGE_SIZE,
+  direction,
   anonymizeUsers = false,
   page,
 }: {
   channelIds: string[];
+  limit?: number;
   anonymizeUsers?: boolean;
-  page: number | null;
-}): Promise<ThreadsWithMessagesFull[]> {
+  page?: number;
+} & FindThreadsByCursorType): Promise<ThreadsWithMessagesFull[]> {
   if (!channelIds.length) {
     return [];
   }
 
   const threads = await prisma.threads.findMany({
-    take: PAGE_SIZE,
+    take: limit,
     where: {
-      page,
+      ...(!!sentAt &&
+        !!direction && { sentAt: { [direction]: BigInt(sentAt) } }),
+      ...(!!page && { page }),
       channelId: {
         in: channelIds,
       },
@@ -273,7 +280,7 @@ export async function findThreadsByCursor({
         orderBy: { sentAt: 'asc' },
       },
     },
-    orderBy: { sentAt: 'asc' },
+    ...(!!sort && { orderBy: { sentAt: sort } }),
   });
   return (
     anonymizeUsers ? threads.map(anonymizeMessages) : threads

@@ -57,7 +57,10 @@ interface Props {
   threads: SerializedThread[];
   pinnedThreads: SerializedThread[];
   isSubDomainRouting: boolean;
-  page: number | null;
+  nextCursor: {
+    next: string | null;
+    prev: string | null;
+  };
   isBot: boolean;
   permissions: Permissions;
   currentThreadId: string | undefined;
@@ -124,7 +127,7 @@ export default function Channel({
   settings,
   channelName,
   isSubDomainRouting,
-  page,
+  nextCursor,
   token,
   permissions,
   currentThreadId,
@@ -152,10 +155,7 @@ export default function Channel({
   const scrollableRootRef = useRef<HTMLDivElement | null>(null);
   const rightRef = useRef<HTMLDivElement>(null);
   const leftBottomRef = useRef<HTMLDivElement>(null);
-  const [nextCursor, setNextCursor] = useState(page ? page + 1 : null);
-  const [prevCursor, setPrevCursor] = useState(
-    page ? page - 1 : currentChannel.pages ? currentChannel.pages - 1 : null
-  );
+  const [cursor, setCursor] = useState(nextCursor);
   const [error, setError] = useState<{ prev?: unknown; next?: unknown }>();
   const [progress, setProgress] = useState(0);
   const [uploading, setUploading] = useState(false);
@@ -257,20 +257,17 @@ export default function Channel({
 
   const [infiniteTopRef, { rootRef: topRootRef }] = useInfiniteScroll({
     loading: isInfiniteScrollLoading,
-    hasNextPage: !!currentChannel.pages && !!prevCursor && prevCursor > 0,
+    hasNextPage: !!cursor.prev,
     onLoadMore: loadMore,
-    disabled: !!error?.prev || !prevCursor,
+    disabled: !!error?.prev || !cursor.prev,
     rootMargin: '0px 0px 0px 0px',
   });
 
   const [infiniteBottomRef, { rootRef: bottomRootRef }] = useInfiniteScroll({
     loading: isInfiniteScrollLoading,
-    hasNextPage:
-      !!currentChannel.pages &&
-      !!nextCursor &&
-      nextCursor <= currentChannel.pages,
+    hasNextPage: !!cursor.next,
     onLoadMore: loadMoreNext,
-    disabled: !!error?.next || !nextCursor,
+    disabled: !!error?.next || !cursor.next,
     rootMargin: '0px 0px 0px 0px',
   });
 
@@ -319,27 +316,35 @@ export default function Channel({
   async function loadMore(next: boolean = false) {
     const key = next ? 'next' : 'prev';
     const dir = next ? 'bottom' : 'top';
-    const state = next ? nextCursor : prevCursor;
     if (isInfiniteScrollLoading) return;
-    if (!state) return;
+    if (!cursor[key]) return;
     try {
       setInfiniteScrollLoading(true);
-      if (state) {
+      if (cursor[key]) {
         const data = await api.getThreads({
           channelId: currentChannel.id,
-          page: state,
+          cursor: cursor[key] || undefined,
           accountId: settings.communityId,
         });
+        setCursor({ ...cursor, [key]: data?.nextCursor?.[key] });
         if (next) {
-          setNextCursor(state + 1);
-          setThreads((threads) => [...threads, ...data]);
+          setThreads((threads) => [...threads, ...data.threads]);
         } else {
-          const index = dir === 'top' ? 0 : threads.length - 1;
-          const id = threads[index].id;
-          setPrevCursor(state - 1);
-          setThreads((threads) => [...data, ...threads]);
-          scrollToIdTop(id);
+          setThreads((threads) => [...data.threads, ...threads]);
         }
+      }
+      const scrollableRoot = scrollableRootRef.current;
+      if (scrollableRoot) {
+        const index = dir === 'top' ? 0 : threads.length;
+        const id = threads[index].id;
+        setTimeout(() => {
+          const node = document.getElementById(`channel-thread-${id}`);
+          if (node) {
+            node.scrollIntoView();
+            scrollableRoot.scrollTop =
+              scrollableRoot.scrollTop - scrollableRoot.offsetTop;
+          }
+        }, 0);
       }
     } catch (err) {
       setError({ ...error, [key]: err });
@@ -436,7 +441,7 @@ export default function Channel({
               [styles['is-empty']]: threads.length === 0,
             })}
           >
-            <div ref={infiniteTopRef}></div>
+            {cursor?.prev && !error?.prev && <div ref={infiniteTopRef}></div>}
             <ChatLayout
               onDrop={(event: React.DragEvent) => {
                 event.preventDefault();
@@ -529,7 +534,7 @@ export default function Channel({
                 )
               }
             />
-            <div ref={infiniteBottomRef}></div>
+            {cursor.next && !error?.next && <div ref={infiniteBottomRef}></div>}
             <div ref={leftBottomRef}></div>
           </div>
         }

@@ -11,7 +11,7 @@ import {
   updateThreadMetrics,
 } from './metrics';
 import { slugify } from '@linen/utilities/string';
-import { findThreadType, getThreadType, updateThreadType } from '@linen/types';
+import { GetType, FindType, UpdateType } from './types';
 import {
   MessageFormat,
   threadFindResponseType,
@@ -25,6 +25,7 @@ import unique from 'lodash.uniq';
 import { eventThreadClosed } from 'services/events/eventThreadClosed';
 import { eventThreadReopened } from 'services/events/eventThreadReopened';
 import { eventThreadUpdated } from 'services/events/eventThreadUpdated';
+import { stringify } from 'superjson';
 
 class ThreadsServices {
   static async updateMetrics({
@@ -61,17 +62,17 @@ class ThreadsServices {
     return Promise.resolve('nothing to update');
   }
 
-  static async find({ channelId, accountId, page }: findThreadType) {
+  static async find({ channelId, cursor, accountId }: FindType) {
     const channel = await prisma.channels.findFirst({
       where: { id: channelId, accountId },
     });
     if (!channel) {
       return null;
     }
-    return await channelNextPage({ channelId, page: page || null });
+    return await channelNextPage({ channelId, cursor });
   }
 
-  static async get({ id, accountId }: getThreadType) {
+  static async get({ id, accountId }: GetType) {
     const thread = await findThreadById(id);
     if (!thread) {
       return null;
@@ -91,7 +92,7 @@ class ThreadsServices {
     channelId,
     resolutionId,
     externalThreadId,
-  }: updateThreadType & { accountId?: string }) {
+  }: UpdateType) {
     const exist = await prisma.threads.findFirst({
       where: { id, channel: { accountId, id: channelId } },
     });
@@ -112,6 +113,8 @@ class ThreadsServices {
         externalThreadId,
       },
     });
+
+    console.log(stringify({ if: exist.state !== thread.state, exist, thread }));
 
     if (exist.state !== thread.state) {
       if (thread.state === ThreadState.CLOSE) {

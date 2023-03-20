@@ -1,10 +1,11 @@
+import { ThreadStatus } from '@linen/types';
+import { ThreadState } from '@linen/database';
 import { z } from 'zod';
-import { ThreadState, ThreadStatus } from '..';
 
-export const findThreadSchema = z.object({
+export const findSchema = z.object({
   accountId: z.string().uuid(),
   channelId: z.string().uuid(),
-  page: z.coerce.number().optional(),
+  cursor: z.string().min(1).optional(),
   userId: z.string().optional(),
   status: z
     .enum([
@@ -15,28 +16,25 @@ export const findThreadSchema = z.object({
     ])
     .optional(),
 });
+export type findType = z.infer<typeof findSchema>;
 
-export type findThreadType = z.infer<typeof findThreadSchema>;
-
-export const getThreadSchema = z.object({
+export const getSchema = z.object({
   accountId: z.string().uuid(),
   id: z.string().uuid(),
 });
-export type getThreadType = z.infer<typeof getThreadSchema>;
+export type getType = z.infer<typeof getSchema>;
 
-export const updateThreadSchema = z.object({
-  accountId: z.string().uuid().optional(),
+export const putSchema = z.object({
+  accountId: z.string().uuid(),
   id: z.string().uuid(),
   state: z.enum([ThreadState.OPEN, ThreadState.CLOSE]).optional(),
   title: z.string().optional(),
   pinned: z.boolean().optional(),
   resolutionId: z.string().uuid().optional(),
-  channelId: z.string().uuid().optional(),
-  externalThreadId: z.string().optional(),
 });
-export type updateThreadType = z.infer<typeof updateThreadSchema>;
+export type putType = z.infer<typeof putSchema>;
 
-export const createThreadSchema = z.object({
+export const postSchema = z.object({
   accountId: z.string().uuid(),
   channelId: z.string().uuid(),
   imitationId: z.string().optional(),
@@ -51,4 +49,4 @@ export const createThreadSchema = z.object({
     )
     .optional(),
 });
-export type createThreadType = z.infer<typeof createThreadSchema>;
+export type postType = z.infer<typeof postSchema>;

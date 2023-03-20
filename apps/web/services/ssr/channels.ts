@@ -2,6 +2,7 @@ import { GetServerSidePropsContext } from 'next/types';
 import { NotFound } from 'utilities/response';
 import { findThreadsByCursor, findPinnedThreads } from 'lib/threads';
 import serializeThread from 'serializers/thread';
+import { decodeCursor } from 'utilities/cursor';
 import { SerializedChannel } from '@linen/types';
 import { isBot } from 'next/dist/server/web/spec-extension/user-agent';
 import { RedirectTo } from 'utilities/response';
@@ -11,8 +12,9 @@ import {
   shouldRedirectToDomain,
 } from 'utilities/redirects';
 import { z } from 'zod';
+import { buildCursor } from 'utilities/buildCursor';
+import { sortBySentAtAsc } from 'utilities/sortBySentAtAsc';
 import { ssr, allowAccess } from 'services/ssr/common';
-import { PAGE_SIZE } from 'secrets';
 
 export async function channelGetServerSideProps(
   context: GetServerSidePropsContext,
@@ -31,14 +33,9 @@ export async function channelGetServerSideProps(
   const { channels, currentCommunity, settings, dms } = props;
 
   const isCrawler = isBot(context?.req?.headers?.['user-agent'] || '');
-
-  const schema = z.object({
-    communityName: z.string(),
-    channelName: z.string().optional(),
-    page: z.coerce.number().optional(),
-  });
-
-  const { channelName, communityName, page } = schema.parse(context.params);
+  const communityName = context.params?.communityName as string;
+  const channelName = context.params?.channelName as string;
+  const page = context.params?.page as string | undefined;
 
   const channel = findChannelOrDefault([...channels, ...dms], channelName);
   if (!channel) return NotFound();
@@ -55,6 +52,7 @@ export async function channelGetServerSideProps(
         account: currentCommunity,
         communityName,
         settings,
+        channelName,
         channel,
       });
     }
@@ -70,7 +68,7 @@ export async function channelGetServerSideProps(
     }
     // if page exists, it must be a number between 1 and channel's pages field
     // otherwise redirect to latest (no-page)
-    if (!!page && !isPageValid(page, channel.pages)) {
+    if (!!page && isPageNotValid(page, channel.pages)) {
       // should be redirect to first page
       return resolveCrawlerRedirect({
         isSubdomainbasedRouting,
@@ -81,23 +79,11 @@ export async function channelGetServerSideProps(
     }
   }
 
-  let pageCursor = page || null;
-
-  const threads = await findThreadsByCursor({
-    channelIds: [channel.id],
-    page: pageCursor,
+  const { nextCursor, threads } = await getThreads({
+    channelId: channel.id,
     anonymizeUsers: currentCommunity.anonymizeUsers || false,
+    page,
   });
-
-  if (!isCrawler && threads.length < PAGE_SIZE && channel.pages) {
-    const more = await findThreadsByCursor({
-      channelIds: [channel.id],
-      page: channel.pages,
-      anonymizeUsers: currentCommunity.anonymizeUsers || false,
-    });
-    threads.unshift(...more);
-    pageCursor = channel.pages;
-  }
 
   const pinnedThreads = !isCrawler
     ? await findPinnedThreads({
@@ -110,20 +96,70 @@ export async function channelGetServerSideProps(
   return {
     props: {
       ...props,
+      nextCursor,
       currentChannel: channel,
       channelName: channel.channelName,
       threads: threads.map(serializeThread),
       pinnedThreads: pinnedThreads.map(serializeThread),
       isSubDomainRouting: isSubdomainbasedRouting,
-      page: pageCursor,
+      pathCursor: page || null,
       isBot: isCrawler,
     },
   };
 }
 
+async function getThreads({
+  channelId,
+  anonymizeUsers,
+  page,
+}: {
+  channelId: string;
+  anonymizeUsers: boolean;
+  page?: string;
+}) {
+  if (!!page) {
+    const threads = (
+      await findThreadsByCursor({
+        channelIds: [channelId],
+        page: parsePage(page),
+        anonymizeUsers,
+      })
+    ).sort(sortBySentAtAsc);
+
+    return {
+      nextCursor: {
+        next: null,
+        prev: null,
+      },
+      threads,
+    };
+  }
+
+  const { sort, direction, sentAt } = decodeCursor(undefined);
+
+  const threads = (
+    await findThreadsByCursor({
+      channelIds: [channelId],
+      sentAt,
+      sort,
+      direction,
+      anonymizeUsers,
+    })
+  ).sort(sortBySentAtAsc);
+
+  const nextCursor = await buildCursor({
+    sort,
+    direction,
+    sentAt,
+    threads,
+    pathCursor: page,
+  });
+  return { nextCursor, threads };
+}
+
 function findChannelOrDefault(
   channels: SerializedChannel[],
-  channelName?: string
+  channelName: string
 ) {
   if (channelName) {
     return channels.find(
@@ -136,11 +172,23 @@ function findChannelOrDefault(
   return channels[0];
 }
 
-function isPageValid(page: number, pages: number | null) {
+function isPageNotValid(page: string, pages: number | null) {
+  return !isPageValid(page, pages);
+}
+
+function isPageValid(page: string, pages: number | null) {
   if (!pages) return false;
   if (!page) return false;
 
   const validation = z.coerce.number().positive().lte(pages);
   const result = validation.safeParse(page);
   return result.success;
+}
+
+function parsePage(page: string): number | undefined {
+  try {
+    return z.coerce.number().parse(page);
+  } catch (error) {
+    return undefined;
+  }
 }

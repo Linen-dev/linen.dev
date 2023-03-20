@@ -1,10 +1,4 @@
-import {
-  findThreadType,
-  getThreadType,
-  ChatType,
-  updateThreadType,
-  createThreadType,
-} from '@linen/types';
+import { ChatType } from '@linen/types';
 import { Forbidden, NotFound, NotImplemented } from 'server/exceptions';
 import { Roles } from 'server/middlewares/tenant';
 import {
@@ -13,10 +7,11 @@ import {
   Response,
 } from 'server/types';
 import ThreadsServices from 'services/threads';
+import { findType, getType, postType, putType } from './types';
 
 export class ThreadsController {
   static async get(
-    req: AuthedRequestWithTenantAndBody<getThreadType>,
+    req: AuthedRequestWithTenantAndBody<getType>,
     res: Response,
     next: NextFunction
   ) {
@@ -30,7 +25,7 @@ export class ThreadsController {
     res.json(thread);
   }
   static async find(
-    req: AuthedRequestWithTenantAndBody<findThreadType>,
+    req: AuthedRequestWithTenantAndBody<findType>,
     res: Response,
     _: NextFunction
   ) {
@@ -41,7 +36,7 @@ export class ThreadsController {
     res.json(threads);
   }
   static async put(
-    req: AuthedRequestWithTenantAndBody<updateThreadType>,
+    req: AuthedRequestWithTenantAndBody<putType>,
     res: Response,
     next: NextFunction
   ) {
@@ -73,7 +68,7 @@ export class ThreadsController {
     res.json(thread);
   }
   static async post(
-    req: AuthedRequestWithTenantAndBody<createThreadType>,
+    req: AuthedRequestWithTenantAndBody<postType>,
     res: Response,
     next: NextFunction
   ) {
