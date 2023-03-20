@@ -6,6 +6,7 @@ import CheckIcon from 'components/icons/CheckIcon';
 import { format } from '@linen/utilities/date';
 import { FiCheck } from '@react-icons/all-files/fi/FiCheck';
 import { Mode } from '@linen/hooks/mode';
+import useHover from '@linen/hooks/hover';
 import {
   Permissions,
   Settings,
@@ -81,10 +82,12 @@ export function Row({
   onRemind,
   onUnread,
 }: Props) {
+  const [ref, hover] = useHover<HTMLDivElement>();
   const top = !isPreviousMessageFromSameUser;
   const resolution = thread.resolutionId === message.id;
   return (
     <div
+      ref={ref}
       className={classNames(className, styles.container, {
         [styles.resolution]: resolution,
         [styles.top]: top,
@@ -142,28 +145,30 @@ export function Row({
           </div>
         </div>
       </div>
-      <div className={styles.actions}>
-        <Actions
-          thread={thread}
-          message={message}
-          settings={settings}
-          permissions={permissions}
-          currentUser={currentUser}
-          isSubDomainRouting={isSubDomainRouting}
-          drag={drag}
-          onDelete={onDelete}
-          onMute={onMute}
-          onUnmute={onUnmute}
-          onPin={onPin}
-          onStar={onStar}
-          onResolution={onResolution}
-          onReaction={onReaction}
-          onRead={onRead}
-          onRemind={onRemind}
-          onUnread={onUnread}
-          mode={mode}
-        />
-      </div>
+      {hover && (
+        <div className={styles.actions}>
+          <Actions
+            thread={thread}
+            message={message}
+            settings={settings}
+            permissions={permissions}
+            currentUser={currentUser}
+            isSubDomainRouting={isSubDomainRouting}
+            drag={drag}
+            onDelete={onDelete}
+            onMute={onMute}
+            onUnmute={onUnmute}
+            onPin={onPin}
+            onStar={onStar}
+            onResolution={onResolution}
+            onReaction={onReaction}
+            onRead={onRead}
+            onRemind={onRemind}
+            onUnread={onUnread}
+            mode={mode}
+          />
+        </div>
+      )}
     </div>
   );
 }
