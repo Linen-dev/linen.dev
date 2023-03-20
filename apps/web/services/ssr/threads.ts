@@ -11,7 +11,6 @@ import {
 } from 'utilities/redirects';
 import { SerializedAccount } from '@linen/types';
 import { allowAccess, ssr } from 'services/ssr/common';
-import { CustomLinkHelper } from 'utilities/url';
 
 export async function threadGetServerSideProps(
   context: GetServerSidePropsContext,
@@ -50,19 +49,6 @@ export async function threadGetServerSideProps(
     }
 
     const isCrawler = isBot(context?.req?.headers?.['user-agent'] || '');
-
-    if (!isCrawler) {
-      return RedirectTo(
-        CustomLinkHelper({
-          isSubDomainRouting: isSubdomainbasedRouting,
-          communityName: settings.communityName,
-          communityType: settings.communityType,
-          path: `/c/${thread.channel.channelName}${
-            thread.page ? `/${thread.page}` : ''
-          }#${thread.id}`,
-        })
-      );
-    }
 
     if (
       isCrawler &&
