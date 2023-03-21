@@ -58,7 +58,7 @@ export default function Header({
         </div>
         <div className={styles.icons}>
           {onExpandClick && (
-            <Icon onClick={onExpandClick}>
+            <Icon className={styles.expand} onClick={onExpandClick}>
               {expanded ? <FiMinimize /> : <FiMaximize />}
             </Icon>
           )}
