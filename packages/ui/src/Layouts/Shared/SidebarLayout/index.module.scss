@@ -28,6 +28,10 @@
   @media (min-width: 768px) {
     width: 700px;
   }
+
+  @media (max-width: 767px) {
+    border-left: none;
+  }
 }
 
 .content {
