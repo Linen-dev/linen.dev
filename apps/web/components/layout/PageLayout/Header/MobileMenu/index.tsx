@@ -55,7 +55,7 @@ export default function MobileMenu({
       />
       <Modal open={show} close={close} fullscreen>
         <div className={styles.header}>
-          <div className={styles.text}>Pages</div>
+          <div className={styles.text}>Menu</div>
           <FiMenu className={styles.close} onClick={close} />
         </div>
         <ul className={styles.list}>
