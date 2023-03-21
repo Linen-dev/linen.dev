@@ -77,19 +77,6 @@ export default function MobileMenu({
               <Link
                 onClick={close}
                 className={classNames(styles.link, {
-                  [styles.active]: paths.metrics === router.asPath,
-                })}
-                href="/metrics"
-              >
-                <FiBarChart /> Metrics
-              </Link>
-            </li>
-          )}
-          {permissions.manage && (
-            <li>
-              <Link
-                onClick={close}
-                className={classNames(styles.link, {
                   [styles.active]: paths.integrations === router.asPath,
                 })}
                 href="/integrations"
@@ -168,6 +155,23 @@ export default function MobileMenu({
                 </li>
               );
             })}
+
+          {permissions.manage && (
+            <li className={styles.subheader}>Analytics</li>
+          )}
+          {permissions.manage && (
+            <li>
+              <Link
+                onClick={close}
+                className={classNames(styles.link, {
+                  [styles.active]: paths.metrics === router.asPath,
+                })}
+                href="/metrics"
+              >
+                <FiBarChart /> Metrics
+              </Link>
+            </li>
+          )}
           {permissions.user && permissions.is_member && (
             <li className={styles.subheader}>Actions</li>
           )}
