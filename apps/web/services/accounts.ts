@@ -18,13 +18,13 @@ export default class AccountsService {
     name,
     slackDomain,
     channels = [],
-    emails = [],
+    members = [],
   }: {
     email: string;
     name?: string;
     slackDomain?: string;
     channels?: string[];
-    emails?: string[];
+    members?: string[];
   }) {
     if (!email) {
       return { status: 401 };
@@ -76,7 +76,7 @@ export default class AccountsService {
         const ownerUser = users?.shift();
         if (ownerUser) {
           await AccountsService.inviteNewMembers({
-            emails,
+            emails: members,
             ownerUser,
             accountId: id,
           });

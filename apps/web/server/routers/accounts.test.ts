@@ -1,80 +1,97 @@
-jest.mock('services/accounts');
 import '__mocks__/tokens';
-import { v4 as random } from 'uuid';
 import { create } from '@linen/factory';
-import { attachHeaders } from '__tests__/pages/api/auth/login';
+import { attachHeaders, login } from '__tests__/pages/api/auth/login';
 import { testApiHandler } from 'next-test-api-route-handler';
+import { auths, prisma } from '@linen/database';
 import handler from 'pages/api/accounts/[[...slug]]';
-import { integrationDiscordType } from './accounts.types';
-import { Roles } from 'server/middlewares/tenant';
-import { createUser } from '__tests__/login';
+import { createAccountType } from './accounts.types';
+import InviteToJoinMailer from 'mailers/InviteToJoinMailer';
+import * as domain from '@linen/utilities/domain';
 
-describe('accounts api', () => {
-  describe('POST /api/accounts/integration/discord', () => {
-    const cases: Record<string, any> = {
-      'admin user expected 200 status': {},
-      'owner user expected 200 status': {},
-      'member user expected 403 status': {},
-      'owner user from another tenant expected 403 status': {},
-      'unauthenticated user expected 401 status': {},
-    };
+const host = 'http://localhost';
+jest.mock('services/customerIo/trackEvents');
+jest.spyOn(domain, 'getCurrentUrl').mockReturnValue(host);
+const mockSend = jest.spyOn(InviteToJoinMailer, 'send').mockImplementation();
+const random = () => 's' + (Math.random() + 1).toString(36).substring(2);
+const randomEmail = () => random() + '@' + random() + '.com';
 
-    beforeAll(async () => {
-      const account = await create('account', {});
-      const account2 = await create('account', {});
+describe('accounts endpoints', () => {
+  const store = {
+    creds: { email: randomEmail(), password: random() },
+    auth: {} as auths,
+    token: '',
+  };
 
-      const tokenAdmin = await createUser(account.id, Roles.ADMIN);
-      const tokenMember = await createUser(account.id, Roles.MEMBER);
-      const tokenOwner = await createUser(account.id, Roles.OWNER);
-      const tokenOwnerAccount2 = await createUser(account2.id, Roles.OWNER);
-
-      cases['admin user expected 200 status'] = {
-        accountId: account.id,
-        token: tokenAdmin.token,
-        expected: 200,
-      };
-      cases['owner user expected 200 status'] = {
-        accountId: account.id,
-        token: tokenOwner.token,
-        expected: 200,
-      };
-      cases['member user expected 403 status'] = {
-        accountId: account.id,
-        token: tokenMember.token,
-        expected: 403,
-      };
-      cases['owner user from another tenant expected 403 status'] = {
-        accountId: account.id,
-        token: tokenOwnerAccount2.token,
-        expected: 403,
-      };
-      cases['unauthenticated user expected 401 status'] = {
-        accountId: account.id,
-        token: '',
-        expected: 401,
-      };
+  beforeAll(async () => {
+    store.auth = await create('auth', {
+      ...store.creds,
     });
+    const response = await login({ ...store.creds });
+    store.token = response.body.token;
+  });
 
-    for (const testCase of Object.keys(cases)) {
-      test(testCase, async () => {
-        await testApiHandler({
-          handler: handler as any,
-          url: '/api/accounts/integration/discord',
-          test: async ({ fetch }) => {
-            const body: integrationDiscordType = {
-              accountId: cases[testCase].accountId,
-              botToken: random(),
-              discordServerId: random(),
-            };
-            const response = await fetch({
-              method: 'POST',
-              ...attachHeaders({ token: cases[testCase].token }),
-              body: JSON.stringify(body),
-            });
-            expect(response?.status).toBe(cases[testCase].expected);
-          },
+  test('create', async () => {
+    await testApiHandler({
+      handler: handler as any,
+      url: '/api/accounts',
+      test: async ({ fetch }: any) => {
+        const body: createAccountType = {
+          name: random(),
+          members: [randomEmail(), randomEmail()],
+          channels: [random()],
+          slackDomain: random(),
+        };
+
+        const response = await fetch({
+          method: 'POST',
+          ...attachHeaders({ token: store.token }),
+          body: JSON.stringify(body),
         });
-      });
-    }
+        expect(response.status).toBe(200);
+        const result = await response.json();
+        expect(result.id).toBeDefined();
+
+        const newAccount = await prisma.accounts.findUnique({
+          include: {
+            invites: true,
+            channels: true,
+          },
+          where: { id: result.id },
+        });
+
+        const inviter = store.creds.email.split('@').shift();
+
+        expect(mockSend).toBeCalledTimes(2);
+        expect(mockSend).toHaveBeenNthCalledWith(1, {
+          communityName: body.name,
+          host,
+          to: body.members?.[0],
+          inviterName: inviter,
+        });
+        expect(mockSend).toHaveBeenNthCalledWith(2, {
+          communityName: body.name,
+          host,
+          to: body.members?.[1],
+          inviterName: inviter,
+        });
+
+        expect(newAccount?.name).toBe(body.name);
+        expect(newAccount?.slackDomain).toBe(body.slackDomain);
+        expect(newAccount?.invites).toHaveLength(2);
+        expect(newAccount?.channels).toHaveLength(2);
+        expect(
+          newAccount?.invites.find((i) => i.email === body.members?.[0])
+        ).toBeDefined();
+        expect(
+          newAccount?.invites.find((i) => i.email === body.members?.[1])
+        ).toBeDefined();
+        expect(
+          newAccount?.channels.find((i) => i.channelName === body.channels?.[0])
+        ).toBeDefined();
+        expect(
+          newAccount?.channels.find((i) => i.channelName === 'default')
+        ).toBeDefined();
+      },
+    });
   });
 });
