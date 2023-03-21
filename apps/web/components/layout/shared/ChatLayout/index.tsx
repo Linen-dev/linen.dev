@@ -3,17 +3,16 @@ import classNames from 'classnames';
 import styles from './index.module.css';
 
 interface Props {
+  className?: string;
   content: React.ReactNode;
   footer: React.ReactNode;
   onDrop?(event: React.DragEvent): void;
 }
 
-function ChatLayout({ content, footer, onDrop }: Props) {
+function ChatLayout({ className, content, footer, onDrop }: Props) {
   return (
-    <div className={classNames(styles.table)} onDrop={onDrop}>
-      <div className={styles.main}>
-        <div className={styles.content}>{content}</div>
-      </div>
+    <div className={classNames(styles.layout, className)} onDrop={onDrop}>
+      {content}
       <div id="chat-layout-footer" className={styles.footer}>
         {footer}
       </div>
