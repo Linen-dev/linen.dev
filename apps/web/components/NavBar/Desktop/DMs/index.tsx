@@ -123,6 +123,7 @@ function Archive({
   };
   return (
     <button
+      aria-label="Archive Conversation"
       title="archive"
       type="button"
       onClick={() => {

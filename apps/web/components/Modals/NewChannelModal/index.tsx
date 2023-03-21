@@ -79,6 +79,7 @@ export default function NewChannelModal({
   return (
     <>
       <button
+        aria-label="New Channel"
         type="button"
         onClick={() => {
           setOpen(true);

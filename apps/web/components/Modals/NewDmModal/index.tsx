@@ -59,6 +59,7 @@ export default function NewDmModal({
   return (
     <>
       <button
+        aria-label="New Direct Message"
         type="button"
         onClick={() => {
           setOpen(true);
