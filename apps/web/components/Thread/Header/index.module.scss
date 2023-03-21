@@ -26,14 +26,15 @@
 }
 
 .expand {
-  cursor: pointer;
-  position: absolute;
-  top: 0.25rem;
-  left: 0.25rem;
+  display: flex;
 }
 
 @media screen and (max-width: 767px) {
   .close {
+    display: none;
+  }
+
+  .expand {
     display: none;
   }
 }
