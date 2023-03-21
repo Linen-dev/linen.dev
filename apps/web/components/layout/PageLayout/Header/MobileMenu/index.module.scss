@@ -11,11 +11,18 @@
   margin-bottom: 0.5rem;
 }
 
-.text {
-  font-weight: 900;
-  font-size: 16px;
-  line-height: 24px;
-  margin-top: -2px;
+.text,
+.subheader {
+  color: $color-gray-500;
+  font-weight: 500;
+  font-size: 0.75rem;
+  line-height: 1.25rem;
+  text-transform: uppercase;
+  letter-spacing: 1.3px;
+}
+
+.subheader {
+  margin-bottom: 0.5rem;
 }
 
 .close {
@@ -29,16 +36,11 @@
   min-width: 256px;
 }
 
-.subheader {
-  font-weight: 900;
-  margin-bottom: 0.5rem;
-}
-
 .link {
   align-items: center;
-  color: $color-blue-700;
-  font-size: 16px;
-  font-weight: 700;
+  color: $color-gray-700;
+  font-size: 0.875rem;
+  font-weight: 500;
   display: flex;
   outline: none;
   gap: 0.25rem;
