@@ -22,6 +22,7 @@ export default function CommunityButton({
 
   return (
     <button
+      aria-label={`${label}  ${capitalize(communityType)}`}
       className={classNames(
         'flex rounded-md border p-2 justify-around border-gray-300',
         fontSize
