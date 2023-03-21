@@ -250,6 +250,17 @@ async function upsertMessage(
     }),
   };
   try {
+    const exist = await prisma.messages.findUnique({
+      where: {
+        channelId_externalMessageId: {
+          channelId: message.channelId,
+          externalMessageId: message.externalMessageId,
+        },
+      },
+    });
+    if (exist && exist.messageFormat === 'LINEN') {
+      return;
+    }
     await prisma.messages.upsert({
       create: toInsert,
       update: {
