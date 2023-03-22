@@ -15,10 +15,37 @@ interface Props {
 }
 
 export default function Avatars({ users, size, placeholder }: Props) {
-  const avatars = users.slice(0, 2);
-  if (avatars.length === 0) {
+  if (users.length === 0) {
     return <></>;
   }
+  if (users.length > 3) {
+    const avatars = users.slice(0, 2);
+    return (
+      <div className={styles.group}>
+        {avatars.map((user, index) => (
+          <div
+            key={`${user.text}-${user.src || index}`}
+            className={styles.item}
+          >
+            <Avatar
+              key={`${user.text}-avatar`}
+              text={user.text}
+              src={user.src}
+              size={size}
+              placeholder={placeholder}
+              shadow="sm"
+            />
+          </div>
+        ))}
+        <div className={styles.item}>
+          <div
+            className={classNames(styles.placeholder, size && styles[size])}
+          >{`+${users.length - 2}`}</div>
+        </div>
+      </div>
+    );
+  }
+  const avatars = users.slice(0, 3);
   return (
     <div className={styles.group}>
       {avatars.map((user, index) => (
@@ -29,16 +56,10 @@ export default function Avatars({ users, size, placeholder }: Props) {
             src={user.src}
             size={size}
             placeholder={placeholder}
+            shadow="sm"
           />
         </div>
       ))}
-      {users.length > 2 && (
-        <div className={styles.item}>
-          <div
-            className={classNames(styles.placeholder, size && styles[size])}
-          >{`+${users.length - 2}`}</div>
-        </div>
-      )}
     </div>
   );
 }

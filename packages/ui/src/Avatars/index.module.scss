@@ -11,16 +11,16 @@
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  border: 2px solid $color-gray-50;
   width: 36px;
   height: 36px;
   text-align: center;
   text-transform: lowercase;
   line-height: 32px;
-  background-color: $color-gray-50;
-  color: $color-black;
+  background-color: $color-gray-100;
+  color: $color-gray-700;
   font-weight: bold;
   font-size: 14px;
+  box-shadow: 0 1px 2px #ccc;
 }
 
 .sm {
