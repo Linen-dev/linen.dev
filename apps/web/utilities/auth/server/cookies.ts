@@ -43,7 +43,7 @@ function setCookie(res: any, cookie: Cookie) {
 function buildCookie({
   cookieName,
   value,
-  maxAge,
+  maxAge = 30 * 24 * 60 * 60, // 30 days
   secureCookie,
 }: {
   cookieName: string;
