@@ -25,6 +25,7 @@
     "./string": "./dist/string.js",
     "./storage": "./dist/storage.js",
     "./date": "./dist/date.js",
+    "./document": "./dist/document.js",
     "./event": "./dist/event.js",
     "./debounce": "./dist/debounce.js",
     "./markdown": "./dist/markdown.js",
@@ -47,6 +48,9 @@
       ],
       "date": [
         "dist/date.d.ts"
+      ],
+      "document": [
+        "dist/document.d.ts"
       ],
       "event": [
         "dist/event.d.ts"

@@ -40,6 +40,7 @@ import { SerializedMessage } from '@linen/types';
 import { Layouts } from '@linen/ui';
 import { timestamp } from '@linen/utilities/date';
 import debounce from '@linen/utilities/debounce';
+import { getSelectedText } from '@linen/utilities/document';
 import * as api from 'utilities/requests';
 import ScrollToBottomIcon from './ScrollToBottomIcon';
 import IntegrationsModal from 'components/Modals/IntegrationsModal';
@@ -230,6 +231,10 @@ export default function Channel({
   }
 
   async function selectThread(threadId: string) {
+    const text = getSelectedText();
+    if (text) {
+      return null;
+    }
     const currentThread =
       threads.find((t) => t.id === threadId) ||
       pinnedThreads.find((t) => t.id === threadId);
