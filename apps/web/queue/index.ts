@@ -1,5 +1,5 @@
 import { downloadCert, getDatabaseUrl } from '@linen/database';
-import { run, parseCronItems } from 'graphile-worker';
+import { run, parseCronItems, JobHelpers } from 'graphile-worker';
 import { emailNotificationTask } from './tasks/email-notification-sender';
 import { processNewEventTask } from './tasks/email-notification-event';
 import { reminderMeLaterTask } from './tasks/remind-me-later';
@@ -19,8 +19,15 @@ import {
   QUEUE_REMIND_ME_LATER,
   QUEUE_MARK_ALL_AS_READ,
   QUEUE_SITEMAP,
+  QUEUE_REMOVE_COMMUNITY,
 } from './jobs';
 import { sitemap } from './tasks/sitemap';
+import { removeCommunity } from './tasks/remove-community';
+
+export type TaskInterface = (
+  payload: any,
+  helpers: JobHelpers
+) => Promise<void>;
 
 async function runWorker() {
   await downloadCert();
@@ -44,6 +51,7 @@ async function runWorker() {
       [QUEUE_MAINTENANCE_MESSAGE_COUNT]: updateMessagesCount,
       [QUEUE_CRAWL_GOOGLE_STATS]: crawlGoogleResults,
       [QUEUE_SITEMAP]: sitemap,
+      [QUEUE_REMOVE_COMMUNITY]: removeCommunity,
     },
     parsedCronItems: parseCronItems([
       {

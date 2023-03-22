@@ -7,6 +7,7 @@ import type { SlackEvent } from 'types/slackResponses/slackMessageEventInterface
 import { makeWorkerUtils, type WorkerUtils } from 'graphile-worker';
 import { downloadCert, getDatabaseUrl } from '@linen/database';
 import { TwoWaySyncType } from '@linen/types';
+import { sendNotification } from 'services/slack';
 
 let instance: WorkerUtils | undefined;
 class WorkerSingleton {
@@ -36,6 +37,7 @@ export const QUEUE_MAINTENANCE_SLUGIFY = 'slugify';
 export const QUEUE_MAINTENANCE_MESSAGE_COUNT = 'update-message-count';
 export const QUEUE_CRAWL_GOOGLE_STATS = 'google-stats';
 export const QUEUE_SITEMAP = 'sitemap';
+export const QUEUE_REMOVE_COMMUNITY = 'remove-community';
 
 export async function createWebhookJob(payload: SlackEvent) {
   const worker = await WorkerSingleton.getInstance();
@@ -109,4 +111,23 @@ export async function createTwoWaySyncJob(payload: TwoWaySyncType) {
   return await worker.addJob('two-way-sync', payload, {
     maxAttempts: 1,
   });
+}
+
+export async function createRemoveCommunityJob(accountId: string) {
+  const worker = await WorkerSingleton.getInstance();
+  const dayInMs = 24 * 60 * 60 * 1000;
+  const runAt = new Date(Date.now() + dayInMs);
+  const job = await worker.addJob(
+    QUEUE_REMOVE_COMMUNITY,
+    { accountId },
+    {
+      jobKey: `${QUEUE_REMOVE_COMMUNITY}:${accountId}`,
+      maxAttempts: 1,
+      runAt,
+    }
+  );
+  await sendNotification(
+    `Account ${accountId} was scheduled to be removed at ${runAt.toISOString()}`
+  );
+  return job;
 }

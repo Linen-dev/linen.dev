@@ -25,3 +25,19 @@ export async function uploadFile(Key: string, Body: Buffer) {
     console.error(error);
   }
 }
+
+export async function deleteFiles(
+  Objects: {
+    Key: string;
+  }[]
+) {
+  return await s3Client
+    .deleteObjects({
+      Bucket,
+      Delete: {
+        Objects,
+        Quiet: true,
+      },
+    })
+    .promise();
+}
