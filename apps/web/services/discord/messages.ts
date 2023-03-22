@@ -10,6 +10,7 @@ import { upsertThreadByExternalId } from 'lib/threads';
 import DiscordApi from './api';
 import to from 'utilities/await-to-js';
 import Logger from './logger';
+import { handleAttachments } from './attachments';
 
 export async function getMessages({
   channel,
@@ -137,7 +138,12 @@ export async function processMessagesChunk({
     }
     const usersInMessages = getUsersInMessages([message]);
     const users = await findUsers(channel.accountId!, usersInMessages);
-    const messageParsed = parseMessage(channel, message, users, undefined);
+    const messageParsed = await parseMessage(
+      channel,
+      message,
+      users,
+      undefined
+    );
     const threadParsed = await parseThreadFromMessage(messageParsed);
     const thread = await upsertThreadByExternalId(threadParsed);
     await upsertMessage(
@@ -188,7 +194,9 @@ export async function createMessages({
     messages
       .filter(filterKnownMessagesTypes)
       .map((message) =>
-        upsertMessage(parseMessage(channel, message, users, thread?.id), logger)
+        parseMessage(channel, message, users, thread?.id).then((m) =>
+          upsertMessage(m, logger)
+        )
       )
   );
 }
@@ -206,6 +214,13 @@ async function upsertMessage(
     channelId: string;
     authorId: string;
     mentions?: { usersId: string }[];
+    attachments?: {
+      externalId: string;
+      name: string;
+      sourceUrl: string;
+      internalUrl?: string;
+      mimetype?: string;
+    }[];
   },
   logger: Logger
 ) {
@@ -225,11 +240,29 @@ async function upsertMessage(
         },
       },
     }),
+    ...(message.attachments && {
+      attachments: {
+        createMany: {
+          skipDuplicates: true,
+          data: message.attachments,
+        },
+      },
+    }),
   };
   try {
     await prisma.messages.upsert({
       create: toInsert,
-      update: toInsert,
+      update: {
+        ...toInsert,
+        mentions: {
+          deleteMany: {},
+          ...toInsert.mentions,
+        },
+        attachments: {
+          deleteMany: {},
+          ...toInsert.attachments,
+        },
+      },
       where: {
         channelId_externalMessageId: {
           channelId: message.channelId,
@@ -247,7 +280,7 @@ async function upsertMessage(
   }
 }
 
-function parseMessage(
+async function parseMessage(
   channel: channels,
   message: DiscordMessage,
   users: users[],
@@ -257,6 +290,12 @@ function parseMessage(
   const authorId = users.find(
     (user) => user.externalUserId === message.author.id
   )?.id as string;
+
+  const attachments =
+    message.attachments && message.attachments.length
+      ? await handleAttachments(message.attachments, channel)
+      : [];
+
   return {
     authorId,
     body: message.content,
@@ -265,5 +304,6 @@ function parseMessage(
     externalMessageId: message.id,
     threadId,
     mentions,
+    attachments,
   };
 }

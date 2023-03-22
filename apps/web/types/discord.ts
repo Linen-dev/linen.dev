@@ -98,7 +98,7 @@ interface DiscordThreadMetadata {
   invitable?: boolean;
 }
 
-interface DiscordAttachments {
+export interface DiscordAttachments {
   id: string;
   filename: string;
   description?: string;
