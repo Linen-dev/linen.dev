@@ -1,11 +1,13 @@
-import { cookiesName } from '../constrains';
+import { cookiesName } from '..';
 import { buildCookieName, CookieStore, setSessionCookies } from './cookies';
 export type JwtPayload = jose.JWTPayload & { data: any };
 import * as jose from 'jose';
 import hkdf from '@panva/hkdf';
 import { v4 as uuid } from 'uuid';
 
-const expirationTime = '30 days';
+const DEFAULT_MAX_AGE = 30 * 24 * 60 * 60; // 30 days
+
+const now = () => (Date.now() / 1000) | 0;
 
 /** Issues a JWT. By default, the JWT is encrypted using "A256GCM". */
 async function encode(user: any) {
@@ -15,7 +17,7 @@ async function encode(user: any) {
   return await new jose.EncryptJWT({ data: user })
     .setProtectedHeader({ alg: 'dir', enc: 'A256GCM' })
     .setIssuedAt()
-    .setExpirationTime(expirationTime)
+    .setExpirationTime(now() + DEFAULT_MAX_AGE)
     .setJti(uuid())
     .encrypt(encryptionSecret);
 }
@@ -26,15 +28,10 @@ async function decode(token: string): Promise<JwtPayload | null> {
   const encryptionSecret = await getDerivedEncryptionKey(
     process.env.NEXTAUTH_SECRET!
   );
-  try {
-    const { payload } = await jose.jwtDecrypt(token, encryptionSecret, {
-      clockTolerance: 15,
-    });
-    return payload as JwtPayload;
-  } catch (error) {
-    console.error('[debug-session]', error);
-    throw error;
-  }
+  const { payload } = await jose.jwtDecrypt(token, encryptionSecret, {
+    clockTolerance: 15,
+  });
+  return payload as JwtPayload;
 }
 
 async function getDerivedEncryptionKey(secret: string | Buffer) {
