@@ -6,6 +6,9 @@ import {
   fetchFile,
   type MessageFile,
 } from '../api';
+import path from 'path';
+import { v4 as random } from 'uuid';
+import { slugify } from '@linen/utilities/string';
 
 export async function processAttachments(
   m: ConversationHistoryMessage,
@@ -16,7 +19,7 @@ export async function processAttachments(
 
   let files: Record<string, string>;
   if (m.files) {
-    files = await processLinks(m.files, token);
+    files = await processLinks(m.files, token, message.channelId);
   }
 
   if (m.files && m.files.length) {
@@ -65,32 +68,34 @@ export async function processAttachments(
  */
 async function processLinks(
   files: MessageFile[],
-  token: string
+  token: string,
+  channelId: string
 ): Promise<Record<string, string>> {
   if (!files || !files.length) return {};
 
-  return (await Promise.all(files.map(processLink(token)))).reduce(
+  return (await Promise.all(files.map(processLink(token, channelId)))).reduce(
     arrayToMap,
     {}
   );
 }
 
 function processLink(
-  token: string
-): (
-  value: MessageFile,
-  index: number,
-  array: MessageFile[]
-) => Promise<{ fileId?: string; internalUrl?: string }> {
+  token: string,
+  channelId: string
+): (file: MessageFile) => Promise<{ fileId?: string; internalUrl?: string }> {
   return async function (file: MessageFile) {
     if (!file.url_private) return {};
     try {
       const response = await fetchFile(file.url_private, token);
+      const ext = path.extname(file.name);
+      const name = slugify(file.name.substring(0, file.name.indexOf(ext)));
+
       const s3Key = [
         BUCKET_PREFIX_FOR_ATTACHMENTS,
-        file.id,
-        file.name || 'unknown',
+        channelId,
+        random() + name + ext,
       ].join('/');
+
       await uploadFile(s3Key, Buffer.from(response.text || response.body));
       return {
         fileId: file.id,
