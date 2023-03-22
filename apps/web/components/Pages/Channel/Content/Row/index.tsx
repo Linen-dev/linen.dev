@@ -11,6 +11,9 @@ import {
   onResolve,
 } from '@linen/types';
 import { Mode } from '@linen/hooks/mode';
+import { FiMessageCircle } from '@react-icons/all-files/fi/FiMessageCircle';
+import { FiUsers } from '@react-icons/all-files/fi/FiUsers';
+import { FiUser } from '@react-icons/all-files/fi/FiUser';
 
 export const uniqueUsers = (users: SerializedUser[]): SerializedUser[] => {
   let userMap = new Map<string, SerializedUser>();
@@ -140,13 +143,15 @@ export default function ChannelRow({
                 users={avatars}
                 placeholder={!inView || isBot}
               />
-              <>
-                {messages.length - 1}{' '}
-                {messages.length > 2 ? 'replies' : 'reply'} &middot;{' '}
-                {`${authors.length} participant${
-                  authors.length > 1 ? 's' : ''
-                }`}
-              </>
+              <ul className={styles.list}>
+                <li className={styles.info}>
+                  {authors.length}{' '}
+                  {authors.length > 1 ? <FiUsers /> : <FiUser />}
+                </li>
+                <li className={styles.info}>
+                  {messages.length - 1} <FiMessageCircle />
+                </li>
+              </ul>
             </div>
           )
         }
