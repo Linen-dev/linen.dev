@@ -1,5 +1,5 @@
 import { CookieSerializeOptions, serialize } from 'cookie';
-import { cookiesName } from '..';
+import { cookiesName } from '../constrains';
 import { Cookie } from '../types';
 
 export class CookieStore {
