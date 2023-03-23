@@ -2,34 +2,22 @@
   "type": "root",
   "children": [
     {
-      "source": "- \n- ",
+      "source": "- ",
       "type": "list",
       "ordered": false,
       "children": [
         {
           "type": "item",
           "source": "",
-          "children": [
-            {
-              "type": "text",
-              "value": "",
-              "source": ""
-            }
-          ]
+          "children": []
         },
         {
           "type": "item",
           "source": "",
-          "children": [
-            {
-              "type": "text",
-              "value": "",
-              "source": ""
-            }
-          ]
+          "children": []
         }
       ]
     }
   ],
-  "source": "- \n- "
+  "source": "- \n-"
 }

@@ -30,7 +30,11 @@
         }
       ]
     },
-
+    {
+      "type": "text",
+      "source": "\n",
+      "value": "\n"
+    },
     {
       "source": "1. baz\n2. qux",
       "type": "list",

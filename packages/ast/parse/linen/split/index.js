@@ -81,52 +81,49 @@ function tokenize(input) {
   let ordered = false;
 
   function flush() {
-    if (value) {
-      if (type === 'list') {
+    if (type === 'list') {
+      const previous = tokens[tokens.length - 1];
+      if (
+        previous &&
+        previous.type === 'list' &&
+        previous.ordered === ordered
+      ) {
+        previous.source += `\n${prefix} ${value}`;
+        previous.children.push({
+          type: 'item',
+          source: value,
+          children: [{ type: 'text', source: value, value }],
+        });
+      } else {
+        tokens.push({
+          type: 'list',
+          source: `${prefix} ${value}`,
+          ordered,
+          children: [
+            {
+              type: 'item',
+              source: value,
+              children: [{ type: 'text', source: value, value }],
+            },
+          ],
+        });
+      }
+    } else if (type === 'text') {
+      if (value) {
         const previous = tokens[tokens.length - 1];
-        if (
-          previous &&
-          previous.type === 'list' &&
-          previous.ordered === ordered
-        ) {
-          previous.source += `\n${prefix} ${value}`;
-          previous.children.push({
-            type: 'item',
-            source: value,
-            children: [{ type: 'text', source: value, value }],
-          });
+        if (previous && previous.type === 'text') {
+          previous.value += value;
         } else {
-          tokens.push({
-            type: 'list',
-            source: `${prefix} ${value}`,
-            ordered,
-            children: [
-              {
-                type: 'item',
-                source: value,
-                children: [{ type: 'text', source: value, value }],
-              },
-            ],
-          });
-        }
-      } else if (type === 'text') {
-        if (value) {
-          const previous = tokens[tokens.length - 1];
-          if (previous && previous.type === 'text') {
-            previous.value += value;
-          } else {
-            tokens.push({ type, value });
-          }
+          tokens.push({ type, value });
         }
       }
-      value = '';
     }
+    value = '';
   }
 
   while (index < length) {
     let current = input[index];
     let next = input[index + 1];
-
     if (current === '\n') {
       if (type === 'text') {
         value += current;
@@ -134,7 +131,7 @@ function tokenize(input) {
       } else if (type === 'list') {
         flush();
         prefix = '';
-        type === 'text';
+        type = 'text';
       }
       newline = true;
       index++;

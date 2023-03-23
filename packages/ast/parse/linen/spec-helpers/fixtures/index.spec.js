@@ -8,11 +8,14 @@ function test(dir) {
     const output = JSON.parse(
       readFileSync(join(__dirname, dir, 'output.json'), 'utf8')
     );
+    let result = parse(input);
     try {
-      expect(parse(input)).toStrictEqual(output);
+      expect(result).toStrictEqual(output);
     } catch (exception) {
-      console.error(JSON.stringify(parse(input), null, 2));
-      console.log(JSON.stringify(output, null, 2));
+      if (process.env.DEBUG) {
+        console.error(JSON.stringify(result, null, 2));
+        console.log(JSON.stringify(output, null, 2));
+      }
       throw new Error(`spec ${dir} failed`);
     }
   });
@@ -29,4 +32,5 @@ describe('#fixtures', () => {
   // test('list-5');
   test('list-6');
   test('list-7');
+  test('mixed-1');
 });
