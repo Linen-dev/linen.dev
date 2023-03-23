@@ -81,41 +81,41 @@ function tokenize(input) {
   let ordered = false;
 
   function flush() {
-    if (type === 'list') {
-      const previous = tokens[tokens.length - 1];
-      if (previous && previous.type === 'list') {
-        previous.source += `\n${prefix} ${value}`;
-        previous.children.push({
-          type: 'item',
-          source: value,
-          children: [{ type: 'text', source: value, value }],
-        });
-      } else {
-        tokens.push({
-          type: 'list',
-          source: `${prefix} ${value}`,
-          ordered,
-          children: [
-            {
-              type: 'item',
-              source: value,
-              children: [{ type: 'text', source: value, value }],
-            },
-          ],
-        });
-      }
-
-      value = '';
-    } else if (type === 'text') {
-      if (value) {
+    if (value) {
+      if (type === 'list') {
         const previous = tokens[tokens.length - 1];
-        if (previous && previous.type === 'text') {
-          previous.value += value;
+        if (previous && previous.type === 'list') {
+          previous.source += `\n${prefix} ${value}`;
+          previous.children.push({
+            type: 'item',
+            source: value,
+            children: [{ type: 'text', source: value, value }],
+          });
         } else {
-          tokens.push({ type, value });
-          value = '';
+          tokens.push({
+            type: 'list',
+            source: `${prefix} ${value}`,
+            ordered,
+            children: [
+              {
+                type: 'item',
+                source: value,
+                children: [{ type: 'text', source: value, value }],
+              },
+            ],
+          });
+        }
+      } else if (type === 'text') {
+        if (value) {
+          const previous = tokens[tokens.length - 1];
+          if (previous && previous.type === 'text') {
+            previous.value += value;
+          } else {
+            tokens.push({ type, value });
+          }
         }
       }
+      value = '';
     }
   }
 
@@ -156,7 +156,7 @@ function tokenize(input) {
       index++;
     } else if (newline && current.match(/\d/) && next && next.match(/\d/)) {
       prefix = current;
-      while (next.match(/\d/)) {
+      while (next && next.match(/\d/)) {
         prefix += next;
         index++;
         current = input[index];
@@ -170,13 +170,12 @@ function tokenize(input) {
         index++;
         index++;
         index++;
-      } else {
-        // ...
+      } else if (next === ' ' || next === '\n') {
+        value += `\n${prefix}`;
+        prefix = '';
+        type = 'text';
+        index++;
       }
-    } else if (type === 'list') {
-      value += current;
-      newline = false;
-      index++;
     } else {
       value += current;
       newline = false;
