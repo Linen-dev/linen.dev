@@ -1,0 +1,24 @@
+{
+  "type": "root",
+  "children": [
+    {
+      "source": "1. foo",
+      "type": "list",
+      "ordered": true,
+      "children": [
+        {
+          "type": "item",
+          "source": "foo",
+          "children": [
+            {
+              "type": "text",
+              "value": "foo",
+              "source": "foo"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "source": "1. foo"
+}

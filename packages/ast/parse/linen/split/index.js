@@ -78,6 +78,7 @@ function tokenize(input) {
   let value = '';
   let newline = true;
   let prefix = '';
+  let ordered = false;
 
   function flush() {
     if (value) {
@@ -94,7 +95,7 @@ function tokenize(input) {
           tokens.push({
             type: 'list',
             source: `${prefix} ${value}`,
-            ordered: false,
+            ordered,
             children: [
               {
                 type: 'item',
@@ -126,8 +127,22 @@ function tokenize(input) {
       index++;
     } else if (newline && ['-', '•'].includes(current) && next === ' ') {
       prefix = current;
+      ordered = false;
       type = 'list';
       newline = false;
+      index++;
+      index++;
+    } else if (
+      newline &&
+      current.match(/\d/) &&
+      next === '.' &&
+      input[index + 2] === ' '
+    ) {
+      prefix = current + next;
+      ordered = true;
+      type = 'list';
+      newline = false;
+      index++;
       index++;
       index++;
     } else if (type === 'list') {
