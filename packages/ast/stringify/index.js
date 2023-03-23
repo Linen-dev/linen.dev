@@ -59,9 +59,14 @@ function stringify(tree) {
 
     if (node.type === 'list') {
       if (node.ordered) {
-        output += node.children.map((child, index) => `${index + 1}. ${stringify(child)}`).join('\n')
+        output +=
+          node.children
+            .map((child, index) => `${index + 1}. ${stringify(child)}`)
+            .join('\n') + '\n';
       } else {
-        output += node.children.map(child => `- ${stringify(child)}`).join('\n')
+        output +=
+          node.children.map((child) => `- ${stringify(child)}`).join('\n') +
+          '\n';
       }
     }
 
