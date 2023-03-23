@@ -9,15 +9,7 @@ function test(dir) {
       readFileSync(join(__dirname, dir, 'output.json'), 'utf8')
     );
     let result = parse(input);
-    try {
-      expect(result).toStrictEqual(output);
-    } catch (exception) {
-      if (process.env.DEBUG) {
-        console.error(JSON.stringify(result, null, 2));
-        console.log(JSON.stringify(output, null, 2));
-      }
-      throw new Error(`spec ${dir} failed`);
-    }
+    expect(result).toStrictEqual(output);
   });
 }
 
@@ -32,5 +24,6 @@ describe('#fixtures', () => {
   // test('list-5');
   test('list-6');
   test('list-7');
+  test('list-8');
   test('mixed-1');
 });
