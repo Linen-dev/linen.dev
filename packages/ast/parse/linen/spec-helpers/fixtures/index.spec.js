@@ -27,4 +27,5 @@ describe('#fixtures', () => {
   test('list-3');
   test('list-4');
   // test('list-5');
+  test('list-6');
 });

@@ -84,7 +84,11 @@ function tokenize(input) {
     if (value) {
       if (type === 'list') {
         const previous = tokens[tokens.length - 1];
-        if (previous && previous.type === 'list') {
+        if (
+          previous &&
+          previous.type === 'list' &&
+          previous.ordered === ordered
+        ) {
           previous.source += `\n${prefix} ${value}`;
           previous.children.push({
             type: 'item',
