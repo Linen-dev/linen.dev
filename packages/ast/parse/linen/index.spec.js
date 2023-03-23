@@ -203,7 +203,7 @@ describe('parse', () => {
     expect(parse('####### foo')).toEqual(root([text('####### foo')]));
   });
 
-  it('returns a `list` node', () => {
+  it.skip('returns a `list` node', () => {
     expect(parse('- foo')).toEqual(root([list([item([text('foo')])])]));
     expect(parse('- *foo*')).toEqual(
       root([list([item([bold([text('foo')])])])])
