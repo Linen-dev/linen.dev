@@ -21,7 +21,7 @@ function test(dir) {
 describe('#fixtures', () => {
   test('line-1');
   test('line-2');
-  // test('line-3');
+  test('line-3');
   test('list-1');
   test('list-2');
   test('list-3');

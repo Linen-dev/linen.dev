@@ -106,10 +106,15 @@ function tokenize(input) {
       }
 
       value = '';
-    } else {
+    } else if (type === 'text') {
       if (value) {
-        tokens.push({ type, value });
-        value = '';
+        const previous = tokens[tokens.length - 1];
+        if (previous && previous.type === 'text') {
+          previous.value += value;
+        } else {
+          tokens.push({ type, value });
+          value = '';
+        }
       }
     }
   }
