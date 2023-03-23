@@ -113,7 +113,7 @@ export async function slackChatSync({
 
   const message = await prisma.messages.findUnique({
     where: { id: messageId },
-    include: { author: true, threads: true },
+    include: { author: true, threads: true, attachments: true },
   });
   if (!message) {
     return 'message not found';
@@ -127,7 +127,12 @@ export async function slackChatSync({
 
   const token = slackToken.accessToken;
   const externalChannelId = channel.externalChannelId!;
-  const body = message.body;
+
+  const body = [
+    message.body,
+    ...message.attachments.map((a) => a.internalUrl),
+  ].join('\n');
+
   const author = message.author;
   const user =
     !!author && isAllowToCustomizeAuthor(slackToken)
@@ -138,32 +143,44 @@ export async function slackChatSync({
       : undefined;
 
   if (isThread) {
-    return await newThread(
+    return await newThread({
       threadId,
       token,
       body,
       externalChannelId,
       user,
-      message
-    );
+      messageId: message.id,
+    });
   }
 
   if (isReply) {
-    return await newReply(message, token, body, externalChannelId, user);
+    return await newReply({
+      messageId: message.id,
+      token,
+      body,
+      externalChannelId,
+      user,
+      externalThreadId: message.threads.externalThreadId,
+    });
   }
 }
 
-async function newReply(
-  message: messages & {
-    threads: threads | null;
-    author: users | null;
-  },
-  token: string,
-  body: string,
-  externalChannelId: string,
-  user: AuthorUser | undefined
-) {
-  if (!message.threads?.externalThreadId) {
+async function newReply({
+  messageId,
+  token,
+  body,
+  externalChannelId,
+  user,
+  externalThreadId,
+}: {
+  messageId: string;
+  token: string;
+  body: string;
+  externalChannelId: string;
+  user: AuthorUser | undefined;
+  externalThreadId: string | null;
+}) {
+  if (!externalThreadId) {
     throw 'thread external id is missing from message';
   }
   // reply
@@ -171,12 +188,12 @@ async function newReply(
     token,
     body,
     externalChannelId,
-    externalThreadId: message.threads.externalThreadId,
+    externalThreadId,
     user,
   });
   if (response.ok && response.message && response.message.ts) {
     await prisma.messages.update({
-      where: { id: message.id },
+      where: { id: messageId },
       data: { externalMessageId: response.message.ts },
     });
     return 'reply sent';
@@ -185,17 +202,21 @@ async function newReply(
   throw 'something went wrong';
 }
 
-async function newThread(
-  threadId: string | undefined,
-  token: string,
-  body: string,
-  externalChannelId: string,
-  user: AuthorUser | undefined,
-  message: messages & {
-    threads: threads | null;
-    author: users | null;
-  }
-) {
+async function newThread({
+  threadId,
+  token,
+  body,
+  externalChannelId,
+  user,
+  messageId,
+}: {
+  threadId: string | undefined;
+  token: string;
+  body: string;
+  externalChannelId: string;
+  user: AuthorUser | undefined;
+  messageId: string;
+}) {
   const thread = await prisma.threads.findUnique({ where: { id: threadId } });
   if (!thread) {
     throw 'thread not found';
@@ -209,11 +230,11 @@ async function newThread(
   });
   if (response.ok && response.message && response.message.ts) {
     await prisma.threads.update({
-      where: { id: message.threads?.id },
+      where: { id: threadId },
       data: { externalThreadId: response.message.ts },
     });
     await prisma.messages.update({
-      where: { id: message.id },
+      where: { id: messageId },
       data: { externalMessageId: response.message.ts },
     });
     return 'thread created';
