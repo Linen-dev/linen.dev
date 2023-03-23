@@ -1,11 +1,11 @@
 {
   "children": [
     {
-      "source": "foo\n\nbar",
+      "source": "foo - bar\nbaz - qux",
       "type": "text",
-      "value": "foo\n\nbar"
+      "value": "foo - bar\nbaz - qux"
     }
   ],
-  "source": "foo\n\nbar",
+  "source": "foo - bar\nbaz - qux",
   "type": "root"
 }
