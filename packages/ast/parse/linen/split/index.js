@@ -128,6 +128,7 @@ function tokenize(input) {
       if (type === 'text') {
         value += current;
         flush();
+        prefix = '';
       } else if (type === 'list') {
         flush();
         prefix = '';
