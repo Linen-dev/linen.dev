@@ -149,7 +149,7 @@ function tokenize(input) {
       index++;
       index++;
       index++;
-    } else if (newline && current.match(/\d/) && next.match(/\d/)) {
+    } else if (newline && current.match(/\d/) && next && next.match(/\d/)) {
       prefix = current;
       while (next.match(/\d/)) {
         prefix += next;
