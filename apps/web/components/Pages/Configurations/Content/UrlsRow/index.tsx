@@ -64,7 +64,7 @@ export default function URLs({ currentCommunity }: Props) {
     <>
       <URLsCard
         title="Home URL"
-        subtitle="Link to your home page."
+        subtitle="Link to your home page. When users clicks on your logo this is the link they go to."
         textFieldOptions={{
           placeholder: 'https://yourwebsite.com',
           id: 'homeUrl',
