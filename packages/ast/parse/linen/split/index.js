@@ -70,6 +70,81 @@ function splitByPattern(tokens, pattern) {
   return result;
 }
 
+function tokenize(input) {
+  const tokens = [];
+  const length = input.length;
+  let index = 0;
+  let type = 'text';
+  let value = '';
+  let newline = true;
+  let prefix = '';
+
+  function flush() {
+    if (value) {
+      if (type === 'list') {
+        const previous = tokens[tokens.length - 1];
+        if (previous && previous.type === 'list') {
+          previous.source += `\n${prefix} ${value}`;
+          previous.children.push({
+            type: 'item',
+            source: value,
+            children: [{ type: 'text', source: value, value }],
+          });
+        } else {
+          tokens.push({
+            type: 'list',
+            source: `${prefix} ${value}`,
+            ordered: false,
+            children: [
+              {
+                type: 'item',
+                source: value,
+                children: [{ type: 'text', source: value, value }],
+              },
+            ],
+          });
+        }
+
+        value = '';
+      } else {
+        tokens.push({ type, value });
+        value = '';
+      }
+    }
+  }
+
+  while (index < length) {
+    const current = input[index];
+    const next = input[index + 1];
+
+    if (current === '\n') {
+      if (type === 'list') {
+        flush();
+        type === 'text';
+      }
+      newline = true;
+      index++;
+    } else if (newline && ['-', '•'].includes(current) && next === ' ') {
+      prefix = current;
+      type = 'list';
+      newline = false;
+      index++;
+      index++;
+    } else if (type === 'list') {
+      value += current;
+      newline = false;
+      index++;
+    } else {
+      value += current;
+      newline = false;
+      index++;
+    }
+  }
+  flush();
+
+  return tokens;
+}
+
 function splitByList(tokens) {
   const result = [];
   for (let i = 0, ilen = tokens.length; i < ilen; i++) {
@@ -81,65 +156,7 @@ function splitByList(tokens) {
         value.includes('• ') ||
         value.match(/\d+\. /)
       ) {
-        const lines = value.split(/\r?\n/);
-        for (let j = 0, jlen = lines.length; j < jlen; j++) {
-          const line = lines[j];
-          if (
-            line.startsWith('- ') ||
-            line.startsWith('• ') ||
-            line.match(/^\d+\. /)
-          ) {
-            const index = line.indexOf(' ') + 1;
-            const value = line.substr(index);
-            const list = {
-              type: 'list',
-              ordered: index >= 3,
-              children: [
-                {
-                  type: 'item',
-                  children: [
-                    {
-                      type: 'text',
-                      value,
-                      source: value,
-                    },
-                  ],
-                  source: value,
-                },
-              ],
-              source: line,
-            };
-            let next = lines[j + 1];
-            while (
-              next &&
-              (next.startsWith('- ') ||
-                next.startsWith('• ') ||
-                next.match(/^\d+\. /))
-            ) {
-              const index = next.indexOf(' ') + 1;
-              const value = next.substr(index);
-              list.children.push({
-                type: 'item',
-                children: [
-                  {
-                    type: 'text',
-                    value,
-                    source: value,
-                  },
-                ],
-                source: value,
-              });
-              list.source += `\n${next}`;
-              j += 1;
-              next = lines[j + 1];
-            }
-            result.push(list);
-          } else {
-            const last = j == jlen - 1;
-            const string = last ? line : `${line}\n`;
-            result.push({ type: 'text', value: string, source: string });
-          }
-        }
+        tokenize(value).forEach((token) => result.push(token));
       } else {
         result.push(token);
       }
