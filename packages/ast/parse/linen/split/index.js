@@ -81,33 +81,33 @@ function tokenize(input) {
   let ordered = false;
 
   function flush() {
-    if (value) {
-      if (type === 'list') {
-        const previous = tokens[tokens.length - 1];
-        if (previous && previous.type === 'list') {
-          previous.source += `\n${prefix} ${value}`;
-          previous.children.push({
-            type: 'item',
-            source: value,
-            children: [{ type: 'text', source: value, value }],
-          });
-        } else {
-          tokens.push({
-            type: 'list',
-            source: `${prefix} ${value}`,
-            ordered,
-            children: [
-              {
-                type: 'item',
-                source: value,
-                children: [{ type: 'text', source: value, value }],
-              },
-            ],
-          });
-        }
-
-        value = '';
+    if (type === 'list') {
+      const previous = tokens[tokens.length - 1];
+      if (previous && previous.type === 'list') {
+        previous.source += `\n${prefix} ${value}`;
+        previous.children.push({
+          type: 'item',
+          source: value,
+          children: [{ type: 'text', source: value, value }],
+        });
       } else {
+        tokens.push({
+          type: 'list',
+          source: `${prefix} ${value}`,
+          ordered,
+          children: [
+            {
+              type: 'item',
+              source: value,
+              children: [{ type: 'text', source: value, value }],
+            },
+          ],
+        });
+      }
+
+      value = '';
+    } else {
+      if (value) {
         tokens.push({ type, value });
         value = '';
       }
