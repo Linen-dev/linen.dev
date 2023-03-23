@@ -69,13 +69,18 @@ export async function processDiscordIntegration({
     return;
   }
 
+  const body = [
+    message.body,
+    ...message.attachments.map((a) => a.internalUrl),
+  ].join('\n');
+
   switch (event) {
     case 'newThread':
       const { thread: externalThread, message: externalMessage } =
         await processNewThread({
           token,
           externalChannelId: channel.externalChannelId,
-          body: message.body,
+          body,
           title: thread.title || undefined,
           author:
             message.author?.externalUserId ||
@@ -99,7 +104,7 @@ export async function processDiscordIntegration({
           token,
           externalThreadId: thread.externalThreadId,
           externalChannelId: channel.externalChannelId,
-          body: message.body,
+          body,
           author:
             message.author?.externalUserId ||
             message.author?.displayName ||

@@ -225,7 +225,7 @@ export async function findThreadWithMessage(threadId: string) {
     where: { id: threadId },
     include: {
       messages: {
-        include: { author: true },
+        include: { author: true, attachments: true },
       },
     },
   });
