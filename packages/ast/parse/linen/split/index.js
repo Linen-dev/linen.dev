@@ -115,12 +115,16 @@ function tokenize(input) {
   }
 
   while (index < length) {
-    const current = input[index];
-    const next = input[index + 1];
+    let current = input[index];
+    let next = input[index + 1];
 
     if (current === '\n') {
-      if (type === 'list') {
+      if (type === 'text') {
+        value += current;
         flush();
+      } else if (type === 'list') {
+        flush();
+        prefix = '';
         type === 'text';
       }
       newline = true;
@@ -145,6 +149,25 @@ function tokenize(input) {
       index++;
       index++;
       index++;
+    } else if (newline && current.match(/\d/) && next.match(/\d/)) {
+      prefix = current;
+      while (next.match(/\d/)) {
+        prefix += next;
+        index++;
+        current = input[index];
+        next = input[index + 1];
+      }
+      if (next === '.' && input[index + 2] === ' ') {
+        prefix += next;
+        ordered = true;
+        type = 'list';
+        newline = false;
+        index++;
+        index++;
+        index++;
+      } else {
+        // ...
+      }
     } else if (type === 'list') {
       value += current;
       newline = false;
