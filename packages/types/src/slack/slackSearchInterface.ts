@@ -1,4 +1,5 @@
-// export module SlackSearchResponse {
+import { Block } from '.';
+
 export interface Pagination {
   total_count: number;
   page: number;
@@ -65,36 +66,6 @@ export interface Text {
   type: string;
   text: string;
   emoji: boolean;
-}
-
-export interface Element {
-  type: string;
-  elements: Element2[];
-  style: string;
-  indent?: number;
-  action_id: string;
-  text: Text;
-  value: string;
-}
-
-export interface Text2 {
-  type: string;
-  text: string;
-  verbatim: boolean;
-}
-
-export interface Field {
-  type: string;
-  text: string;
-  verbatim: boolean;
-}
-
-export interface Block {
-  type: string;
-  block_id: string;
-  elements: Element[];
-  text: Text2;
-  fields: Field[];
 }
 
 export interface File {

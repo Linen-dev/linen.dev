@@ -1,7 +1,5 @@
-import {
-  handleNewEvent,
-  notificationListenerType,
-} from 'services/notifications';
+import { notificationListenerType } from '@linen/types';
+import { handleNewEvent } from 'services/notifications';
 
 export async function processNewEventTask(
   payload: notificationListenerType,

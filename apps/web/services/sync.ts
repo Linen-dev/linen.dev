@@ -11,7 +11,7 @@ import {
 import { discordSync } from './discord/sync';
 import { slackSyncWithFiles } from './slack/syncWithFiles';
 import { skipNotification } from './slack/api/notification';
-import { getCommunityUrl } from 'serializers/account/settings';
+import { SyncJobType } from '@linen/types';
 
 export enum SyncStatus {
   IN_PROGRESS = 'IN_PROGRESS',
@@ -28,8 +28,20 @@ export async function updateAndNotifySyncStatus(
 ) {
   await updateAccountSyncStatus(accountId, status);
 
-  await slackNotification(status, accountId, accountName || '', homeUrl || '', communityUrl || '');
-  await emailNotification(status, accountId, accountName || '', homeUrl || '', communityUrl || '');
+  await slackNotification(
+    status,
+    accountId,
+    accountName || '',
+    homeUrl || '',
+    communityUrl || ''
+  );
+  await emailNotification(
+    status,
+    accountId,
+    accountName || '',
+    homeUrl || '',
+    communityUrl || ''
+  );
 }
 
 async function emailNotification(
@@ -37,7 +49,7 @@ async function emailNotification(
   accountId: string,
   accountName: string,
   homeUrl: string,
-  communityUrl: string,
+  communityUrl: string
 ) {
   if (skipNotification()) return;
   try {
@@ -59,7 +71,7 @@ async function slackNotification(
   accountId: string,
   accountName: string,
   homeUrl: string,
-  communityUrl: string,
+  communityUrl: string
 ) {
   try {
     await sendNotification(
@@ -86,11 +98,6 @@ function identifySyncType(
   }
   throw 'authorization missing';
 }
-
-export type SyncJobType = {
-  account_id: string;
-  file_location?: string;
-};
 
 export async function syncJob({ account_id, file_location }: SyncJobType) {
   const accountId = account_id;

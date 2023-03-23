@@ -1,9 +1,8 @@
-import { ConversationHistoryMessage } from '../api';
 import { findOrCreateThread, findThreadsByChannel } from 'lib/threads';
 import { retryPromise } from 'utilities/retryPromises';
 import { UserMap } from 'types/partialTypes';
 import { channels, prisma } from '@linen/database';
-import { MessageFormat } from '@linen/types';
+import { MessageFormat, ConversationHistoryMessage } from '@linen/types';
 import { slugify } from '@linen/utilities/string';
 import { processReactions } from './reactions';
 import { processAttachments } from './attachments';

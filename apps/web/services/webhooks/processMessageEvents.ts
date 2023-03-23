@@ -5,10 +5,6 @@ import {
   deleteMessageFromThread,
 } from 'lib/models';
 import { findOrCreateThread, updateSlackThread } from 'lib/threads';
-import {
-  SlackEvent,
-  SlackMessageEvent,
-} from 'types/slackResponses/slackMessageEventInterface';
 import { slugify } from '@linen/utilities/string';
 import {
   accounts,
@@ -16,7 +12,7 @@ import {
   Prisma,
   slackAuthorizations,
 } from '@linen/database';
-import { MessageFormat } from '@linen/types';
+import { MessageFormat, SlackEvent, SlackMessageEvent } from '@linen/types';
 import { findOrCreateUserFromUserInfo } from 'lib/users';
 import { parseSlackSentAt, tsToSentAt } from 'utilities/sentAt';
 import { findChannelWithAccountByExternalId } from 'lib/channel';

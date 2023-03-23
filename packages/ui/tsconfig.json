@@ -9,7 +9,8 @@
     "esModuleInterop": true,
     "jsx": "react",
     "declaration": true,
-    "declarationDir": "dist"
+    "declarationDir": "dist",
+    "skipLibCheck": true
   },
   "include": ["src", "types.d.ts"]
 }

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { channelsIntegrationType, SerializedChannel } from '..';
+import { channelsIntegrationType, SerializedChannel } from '../channels';
 import { patterns } from '../patterns';
 
 export const createChannelSchema = z.object({

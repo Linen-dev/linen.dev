@@ -10,6 +10,6 @@
     "declarationDir": "dist",
     "outDir": "dist"
   },
-  "include": ["index.ts"],
+  "include": ["src"],
   "exclude": []
 }

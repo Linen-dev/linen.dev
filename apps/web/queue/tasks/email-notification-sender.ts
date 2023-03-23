@@ -1,7 +1,5 @@
-import {
-  emailNotificationPayloadType,
-  sendEmailNotificationTask,
-} from 'services/notifications';
+import { emailNotificationPayloadType } from '@linen/types';
+import { sendEmailNotificationTask } from 'services/notifications';
 
 export async function emailNotificationTask(
   payload: emailNotificationPayloadType,

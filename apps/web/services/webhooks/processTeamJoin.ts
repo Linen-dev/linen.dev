@@ -1,9 +1,6 @@
-import { findAccountBySlackTeamId } from '../../lib/models';
-import {
-  SlackEvent,
-  SlackTeamJoinEvent,
-} from '../../types/slackResponses/slackMessageEventInterface';
-import { createUserFromUserInfo } from '../../lib/users';
+import { findAccountBySlackTeamId } from 'lib/models';
+import { SlackEvent, SlackTeamJoinEvent } from '@linen/types';
+import { createUserFromUserInfo } from 'lib/users';
 
 export async function processTeamJoin(body: SlackEvent) {
   const event = body.event as SlackTeamJoinEvent;

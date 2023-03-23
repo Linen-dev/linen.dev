@@ -1,5 +1,5 @@
 import { messages, prisma } from '@linen/database';
-import type { ConversationHistoryMessage } from '../api';
+import type { ConversationHistoryMessage } from '@linen/types';
 
 export async function processReactions(
   m: ConversationHistoryMessage,

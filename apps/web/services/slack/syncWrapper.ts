@@ -5,7 +5,7 @@ import { syncUsers } from './sync/syncUsers';
 import { fetchAllTopLevelMessages } from './sync/fetchAllTopLevelMessages';
 import { saveAllThreads } from './sync/saveAllThreads';
 import { AccountWithSlackAuthAndChannels } from 'types/partialTypes';
-import type { ConversationHistoryBody } from './api';
+import type { ConversationHistoryBody } from '@linen/types';
 import { syncMemberships } from './sync/membership';
 
 export type FetchTeamInfoResponseType = { body?: { team?: { url?: string } } };

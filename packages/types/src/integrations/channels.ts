@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { channelsIntegrationType } from '../index';
+import { channelsIntegrationType } from '../channels';
 
 export const channelGetSchema = z.object({
   channelId: z.string().uuid().optional(),

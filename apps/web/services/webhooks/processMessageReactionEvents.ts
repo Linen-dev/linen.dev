@@ -2,7 +2,7 @@ import {
   SlackMessageReactionRemovedEvent,
   SlackMessageReactionAddedEvent,
   SlackEvent,
-} from '../../types/slackResponses/slackMessageEventInterface';
+} from '@linen/types';
 import { Prisma, prisma } from '@linen/database';
 import { findChannelWithAccountByExternalId } from 'lib/channel';
 

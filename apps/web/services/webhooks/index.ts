@@ -1,4 +1,4 @@
-import { SlackEvent } from '../../types/slackResponses/slackMessageEventInterface';
+import { SlackEvent } from '@linen/types';
 import { processMessageEvent } from './processMessageEvents';
 import {
   processMessageReactionAddedEvent,

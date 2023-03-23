@@ -1,3 +1,8 @@
+export * from './channels';
+export * from './threads';
+export * from './messages';
+export * from './users';
+
 export * from './integrations/threads';
 export * from './integrations/channels';
 export * from './integrations/messages';
@@ -6,6 +11,9 @@ export * from './integrations/users';
 export * from './api/channels';
 
 export * from './patterns';
+export * from './notification';
+export * from './sync';
+export * from './slack';
 
 /*
   This package redefines enums from `schema.prisma`.
@@ -36,21 +44,10 @@ export enum CommunityType {
   'linen' = 'linen',
 }
 
-export enum MessageFormat {
-  DISCORD = 'DISCORD',
-  SLACK = 'SLACK',
-  LINEN = 'LINEN',
-}
-
 export enum Roles {
   OWNER = 'OWNER',
   ADMIN = 'ADMIN',
   MEMBER = 'MEMBER',
-}
-
-export enum ThreadState {
-  CLOSE = 'CLOSE',
-  OPEN = 'OPEN',
 }
 
 export enum ThreadStatus {
@@ -101,76 +98,6 @@ export interface SerializedAccount {
   communityInviteUrl?: string;
   chat: ChatType | null;
   communityUrl?: string;
-}
-
-export interface SerializedAttachment {
-  url: string;
-  name: string;
-}
-
-export type SerializedChannel = {
-  id: string;
-  channelName: string;
-  default: boolean;
-  hidden: boolean;
-  accountId: string | null;
-  pages: number | null;
-  stats?: string;
-  type?: 'DM' | 'PUBLIC' | 'PRIVATE' | null;
-};
-
-export interface SerializedUser {
-  id: string;
-  authsId: string | null;
-  username: string | null;
-  displayName: string | null;
-  externalUserId: string | null;
-  profileImageUrl: string | null;
-}
-
-export interface SerializedMessage {
-  id: string;
-  body: string;
-  sentAt: string;
-  usersId: string;
-  mentions: SerializedUser[];
-  attachments: SerializedAttachment[];
-  reactions: SerializedReaction[];
-  threadId: string;
-  externalId?: string;
-  author?: SerializedUser | null;
-  messageFormat: MessageFormat;
-}
-
-export interface SerializedReaction {
-  type: string;
-  count: number;
-  users: SerializedUser[];
-}
-
-export interface SerializedThread {
-  id: string;
-  incrementId: number;
-  externalThreadId?: string | null;
-  viewCount: number;
-  slug: string | null;
-  messageCount: number;
-  hidden: boolean;
-  title?: string | null;
-  question?: string | null;
-  answer?: string | null;
-  state: ThreadState;
-  pinned: boolean;
-  channelId: string;
-  closeAt?: string;
-  firstUserReplyAt?: string | null;
-  firstManagerReplyAt?: string | null;
-  sentAt: string;
-  lastReplyAt: string;
-  messages: SerializedMessage[];
-  channel: SerializedChannel | null;
-  resolutionId?: string | null;
-  page: number | null;
 }
 
 export interface SerializedReadStatus {
@@ -225,30 +152,9 @@ export interface UploadedFile {
   url: string;
 }
 
-export enum channelsIntegrationType {
-  'GITHUB' = 'GITHUB',
-  'EMAIL' = 'EMAIL',
-  'LINEAR' = 'LINEAR',
-}
-
 export type ChannelsIntegration = {
   externalId: string;
   data: any;
 };
 
 export type onResolve = (threadId: string, messageId?: string) => void;
-
-export type TwoWaySyncEvent =
-  | 'newMessage'
-  | 'newThread'
-  | 'threadReopened'
-  | 'threadClosed'
-  | 'threadUpdated';
-
-export type TwoWaySyncType = {
-  event: TwoWaySyncEvent;
-  id: string;
-  channelId?: string;
-  threadId?: string;
-  messageId?: string;
-};

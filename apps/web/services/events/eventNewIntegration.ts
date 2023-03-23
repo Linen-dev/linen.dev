@@ -1,5 +1,5 @@
 import { createSyncJob } from 'queue/jobs';
-import { SyncJobType } from 'services/sync';
+import { SyncJobType } from '@linen/types';
 
 export type NewMessageEvent = {
   accountId: string;

@@ -1,12 +1,12 @@
 import {
+  TwoWaySyncType,
   emailNotificationPayloadType,
   notificationListenerType,
-} from 'services/notifications';
-import type { SyncJobType } from 'services/sync';
-import type { SlackEvent } from 'types/slackResponses/slackMessageEventInterface';
+  SyncJobType,
+  SlackEvent,
+} from '@linen/types';
 import { makeWorkerUtils, type WorkerUtils } from 'graphile-worker';
 import { downloadCert, getDatabaseUrl } from '@linen/database';
-import { TwoWaySyncType } from '@linen/types';
 
 let instance: WorkerUtils | undefined;
 class WorkerSingleton {
@@ -29,7 +29,6 @@ class WorkerSingleton {
 
 export const QUEUE_1_NEW_EVENT = 'notification-new-event';
 export const QUEUE_2_SEND_EMAIL = 'notification-send-email';
-
 export const QUEUE_REMIND_ME_LATER = 'remind-me-later-queue';
 export const QUEUE_MARK_ALL_AS_READ = 'mark-all-as-read-queue';
 export const QUEUE_MAINTENANCE_SLUGIFY = 'slugify';

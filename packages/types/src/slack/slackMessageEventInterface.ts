@@ -1,4 +1,4 @@
-import { MessageFile } from 'services/slack';
+import { MessageFile } from '.';
 import { UserInfo } from './slackUserInfoInterface';
 
 export interface SlackEvent {
@@ -87,16 +87,30 @@ export interface Block {
   type: string;
   block_id: string;
   elements: Element[];
+  text: Text2;
+  fields: Field[];
+}
+
+export interface Text2 {
+  type: string;
+  text: string;
+  verbatim: boolean;
+}
+
+export interface Field {
+  type: string;
+  text: string;
+  verbatim: boolean;
 }
 
 export interface Element {
   type: string;
-  elements: Element2[];
-}
-
-export interface Element2 {
-  type: string;
-  text: string;
+  elements: Element[];
+  style: string;
+  indent?: number;
+  action_id: string;
+  text: Text;
+  value: string;
 }
 
 export interface Authorization {

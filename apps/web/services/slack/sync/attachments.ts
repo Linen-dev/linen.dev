@@ -1,11 +1,8 @@
 import { uploadFile } from 'services/aws/s3';
 import { BUCKET_PREFIX_FOR_ATTACHMENTS, LINEN_STATIC_CDN } from 'secrets';
 import { messages, prisma } from '@linen/database';
-import {
-  type ConversationHistoryMessage,
-  fetchFile,
-  type MessageFile,
-} from '../api';
+import { MessageFile, ConversationHistoryMessage } from '@linen/types';
+import { fetchFile } from '../api';
 import path from 'path';
 import { v4 as random } from 'uuid';
 import { slugify } from '@linen/utilities/string';

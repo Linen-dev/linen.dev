@@ -1,4 +1,4 @@
-import type { ConversationHistoryBody } from '../api';
+import { ConversationHistoryBody } from '@linen/types';
 import type {
   FetchConversationsTypedFnType,
   FetchRepliesFnType,

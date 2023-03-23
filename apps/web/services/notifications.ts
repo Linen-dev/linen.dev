@@ -1,10 +1,4 @@
-import {
-  type mentions,
-  Prisma,
-  notificationType,
-  users,
-  prisma,
-} from '@linen/database';
+import { Prisma, notificationType, prisma } from '@linen/database';
 import NotificationMailer from 'mailers/NotificationMailer';
 import { createMailingJob, createNewEventJob } from 'queue/jobs';
 import { getCommunityUrl } from 'serializers/account/settings';
@@ -13,7 +7,11 @@ import { appendProtocol } from '@linen/utilities/url';
 import React from 'react';
 import * as ReactDOMServer from 'react-dom/server';
 import { Message } from '@linen/ui';
-import { MessageFormat } from '@linen/types';
+import {
+  emailNotificationPayloadType,
+  notificationListenerType,
+  MessageFormat,
+} from '@linen/types';
 import serializeUser from 'serializers/user';
 import { format as formatDate } from '@linen/utilities/date';
 
@@ -103,24 +101,6 @@ export async function create(data: Prisma.notificationsUncheckedCreateInput) {
   }
   return await prisma.notifications.create({ data });
 }
-
-export type emailNotificationPayloadType = {
-  authId: string;
-  notificationType: notificationType;
-};
-
-export type notificationListenerType = {
-  channelId: any;
-  messageId: any;
-  threadId: any;
-  communityId: string;
-  isThread: boolean;
-  isReply: boolean;
-  mentions: (mentions & { users: users | null })[];
-  imitationId?: string; // unused here
-  thread?: string;
-  message?: string;
-};
 
 // message event listener
 export async function notificationListener(data: notificationListenerType) {

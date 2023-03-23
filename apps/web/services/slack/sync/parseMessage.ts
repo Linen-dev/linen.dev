@@ -1,6 +1,8 @@
 import { SlackAppIds } from 'secrets';
-import type { SlackMessageEvent } from 'types/slackResponses/slackMessageEventInterface';
-import type { ConversationHistoryMessage } from '../api';
+import type {
+  SlackMessageEvent,
+  ConversationHistoryMessage,
+} from '@linen/types';
 
 export function parseMessage<
   T extends SlackMessageEvent | ConversationHistoryMessage

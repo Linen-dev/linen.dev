@@ -1,6 +1,6 @@
 import { AccountWithSlackAuthAndChannels, UserMap } from 'types/partialTypes';
 import { createOrUpdateUser, findUsersByAccountId } from 'lib/users';
-import { UserInfo } from 'types/slackResponses/slackUserInfoInterface';
+import { UserInfo } from '@linen/types';
 
 export async function syncUsers({
   accountId,

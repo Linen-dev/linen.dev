@@ -2,13 +2,13 @@ import {
   SlackEvent,
   SlackChannelCreatedEvent,
   SlackChannelRenameEvent,
-} from '../../types/slackResponses/slackMessageEventInterface';
+} from '@linen/types';
 import {
   createChannel,
   findChannelByExternalId,
   renameChannel,
-} from '../../lib/channel';
-import { findAccountIdByExternalId } from '../../lib/account';
+} from 'lib/channel';
+import { findAccountIdByExternalId } from 'lib/account';
 
 export async function processChannelCreated(body: SlackEvent) {
   const teamId = body.team_id;

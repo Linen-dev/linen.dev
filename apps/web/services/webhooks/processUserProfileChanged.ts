@@ -1,13 +1,10 @@
-import {
-  SlackEvent,
-  UserProfileUpdateEvent,
-} from '../../types/slackResponses/slackMessageEventInterface';
-import { findAccountIdByExternalId } from '../../lib/account';
+import { SlackEvent, UserProfileUpdateEvent } from '@linen/types';
+import { findAccountIdByExternalId } from 'lib/account';
 import {
   createUserFromUserInfo,
   findUser,
   updateUserFromUserInfo,
-} from '../../lib/users';
+} from 'lib/users';
 
 export async function processUserProfileChanged(body: SlackEvent) {
   const teamId = body.team_id;
