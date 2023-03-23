@@ -203,16 +203,6 @@ function splitByList(tokens) {
     }
   }
 
-  for (let i = 1, ilen = result.length; i < ilen; i++) {
-    const previous = result[i - 1];
-    const current = result[i];
-    if (previous.type === 'text' && current.type === 'text') {
-      current.value = `${previous.value}\n${current.value}`;
-      current.source = `${previous.source}\n${current.source}`;
-      result[i - 1] = null;
-    }
-  }
-
   return result.filter(Boolean);
 }
 
