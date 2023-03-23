@@ -1,0 +1,11 @@
+{
+  "children": [
+    {
+      "source": "foo",
+      "type": "text",
+      "value": "foo"
+    }
+  ],
+  "source": "foo",
+  "type": "root"
+}
