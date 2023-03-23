@@ -7,7 +7,6 @@ import type { SlackEvent } from 'types/slackResponses/slackMessageEventInterface
 import { makeWorkerUtils, type WorkerUtils } from 'graphile-worker';
 import { downloadCert, getDatabaseUrl } from '@linen/database';
 import { TwoWaySyncType } from '@linen/types';
-import { sendNotification } from 'services/slack';
 
 let instance: WorkerUtils | undefined;
 class WorkerSingleton {
@@ -117,7 +116,7 @@ export async function createRemoveCommunityJob(accountId: string) {
   const worker = await WorkerSingleton.getInstance();
   const dayInMs = 24 * 60 * 60 * 1000;
   const runAt = new Date(Date.now() + dayInMs);
-  const job = await worker.addJob(
+  return await worker.addJob(
     QUEUE_REMOVE_COMMUNITY,
     { accountId },
     {
@@ -126,8 +125,4 @@ export async function createRemoveCommunityJob(accountId: string) {
       runAt,
     }
   );
-  await sendNotification(
-    `Account ${accountId} was scheduled to be removed at ${runAt.toISOString()}`
-  );
-  return job;
 }
