@@ -150,7 +150,6 @@ export function Row({
                 {message.author?.displayName || 'user'}
               </p>
               {format(message.sentAt, 'Pp')}
-              {thread.state === ThreadState.CLOSE && <CheckIcon />}
             </div>
           )}
           <div

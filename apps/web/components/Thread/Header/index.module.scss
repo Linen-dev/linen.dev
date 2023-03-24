@@ -29,6 +29,10 @@
   display: flex;
 }
 
+.back {
+  cursor: pointer;
+}
+
 @media screen and (max-width: 1023px) {
   .close {
     display: none;
