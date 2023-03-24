@@ -125,7 +125,6 @@ function PageLayout({
             classNames(
               'lg:h-[calc(100vh_-_64px)] lg:w-full',
               'lg:flex',
-              'sm:h-[calc(100vh_-_104px)]',
               'justify-center overflow-auto h-[calc(100vh_-_64px)] w-full'
             )
           }

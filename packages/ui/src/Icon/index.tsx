@@ -5,6 +5,7 @@ import styles from './index.module.scss';
 interface Props {
   className?: string;
   children: React.ReactNode;
+  active?: boolean;
   disabled?: boolean;
   onClick?(): void;
 }
@@ -12,12 +13,14 @@ interface Props {
 export default function Icon({
   className,
   children,
+  active,
   disabled,
   onClick,
 }: Props) {
   return (
     <div
       className={classNames(className, styles.icon, {
+        [styles.active]: active,
         [styles.disabled]: disabled,
       })}
       onClick={onClick}

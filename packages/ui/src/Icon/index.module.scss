@@ -27,6 +27,11 @@
   border: 2px solid $color-blue-700;
 }
 
+.icon.active {
+  background: $color-blue-700;
+  color: white;
+}
+
 .icon.disabled {
   color: $color-gray-400;
   cursor: auto;

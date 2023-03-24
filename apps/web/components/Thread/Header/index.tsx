@@ -4,7 +4,6 @@ import { Icon, StickyHeader } from '@linen/ui';
 import { ThreadState } from '@linen/database';
 import { FiCheck } from '@react-icons/all-files/fi/FiCheck';
 import { FiChevronLeft } from '@react-icons/all-files/fi/FiChevronLeft';
-import { FiX } from '@react-icons/all-files/fi/FiX';
 import { FiRefreshCcw } from '@react-icons/all-files/fi/FiRefreshCcw';
 import { FiMaximize } from '@react-icons/all-files/fi/FiMaximize';
 import { FiMinimize } from '@react-icons/all-files/fi/FiMinimize';
@@ -41,9 +40,9 @@ export default function Header({
         <div className={styles.center}>
           <div className={styles.header}>
             {onClose && (
-              <div onClick={onClose}>
+              <Icon onClick={onClose}>
                 <FiChevronLeft />
-              </div>
+              </Icon>
             )}
             <div>
               <Title
@@ -63,30 +62,18 @@ export default function Header({
             </Icon>
           )}
           {manage && (
-            <>
-              {state === ThreadState.OPEN && (
-                <Icon
-                  onClick={() => {
-                    onCloseThread();
-                  }}
-                >
-                  <FiCheck />
-                </Icon>
-              )}
-              {state === ThreadState.CLOSE && (
-                <Icon
-                  onClick={() => {
-                    onReopenThread();
-                  }}
-                >
-                  <FiRefreshCcw />
-                </Icon>
-              )}
-            </>
-          )}
-          {onClose && (
-            <Icon onClick={onClose} className={styles.close}>
-              <FiX />
+            <Icon
+              active={state === ThreadState.CLOSE}
+              onClick={() => {
+                if (state === ThreadState.OPEN) {
+                  onCloseThread();
+                }
+                if (state === ThreadState.CLOSE) {
+                  onReopenThread();
+                }
+              }}
+            >
+              <FiCheck />
             </Icon>
           )}
         </div>
