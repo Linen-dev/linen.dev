@@ -33,12 +33,16 @@
   cursor: pointer;
 }
 
+.mobile {
+  display: none;
+}
+
 @media screen and (max-width: 1023px) {
-  .close {
+  .desktop {
     display: none;
   }
 
-  .expand {
-    display: none;
+  .mobile {
+    display: block;
   }
 }
