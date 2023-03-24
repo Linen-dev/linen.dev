@@ -14,10 +14,14 @@
 
 .thread {
   background: $color-white;
-  max-width: 100%;
+  max-width: 520px;
   min-width: 520px;
   animation-name: opacity-animation;
   animation-duration: 0.15s;
+}
+
+.thread.expanded {
+  max-width: 100%;
 }
 
 @keyframes opacity-animation {
@@ -52,6 +56,7 @@
 @media (max-width: 767px) {
   .thread {
     min-width: 320px;
+    max-width: 100%;
   }
 
   .footer {

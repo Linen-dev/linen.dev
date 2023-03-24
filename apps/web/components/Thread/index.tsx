@@ -195,7 +195,9 @@ export default function Thread({
         onSetTitle={(title) => updateThread({ title })}
         manage={manage}
       />
-      <div className={styles.thread}>
+      <div
+        className={classNames(styles.thread, { [styles.expanded]: expanded })}
+      >
         <Messages
           thread={thread}
           permissions={permissions}
