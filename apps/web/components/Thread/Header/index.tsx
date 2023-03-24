@@ -4,9 +4,7 @@ import { Icon, StickyHeader } from '@linen/ui';
 import { ThreadState } from '@linen/database';
 import { FiCheck } from '@react-icons/all-files/fi/FiCheck';
 import { FiChevronLeft } from '@react-icons/all-files/fi/FiChevronLeft';
-import { FiRefreshCcw } from '@react-icons/all-files/fi/FiRefreshCcw';
-import { FiMaximize } from '@react-icons/all-files/fi/FiMaximize';
-import { FiMinimize } from '@react-icons/all-files/fi/FiMinimize';
+import { FiChevronRight } from '@react-icons/all-files/fi/FiChevronRight';
 import { SerializedThread } from '@linen/types';
 import styles from './index.module.scss';
 
@@ -39,11 +37,20 @@ export default function Header({
       <div className={styles.container}>
         <div className={styles.center}>
           <div className={styles.header}>
-            {onClose && (
-              <Icon onClick={onClose}>
-                <FiChevronLeft />
-              </Icon>
-            )}
+            <div className={styles.mobile}>
+              {onClose && (
+                <Icon onClick={onClose}>
+                  <FiChevronLeft />
+                </Icon>
+              )}
+            </div>
+            <div className={styles.desktop}>
+              {onExpandClick && (
+                <Icon className={styles.expand} onClick={onExpandClick}>
+                  {expanded ? <FiChevronRight /> : <FiChevronLeft />}
+                </Icon>
+              )}
+            </div>
             <div>
               <Title
                 title={title}
@@ -56,11 +63,6 @@ export default function Header({
           </div>
         </div>
         <div className={styles.icons}>
-          {onExpandClick && (
-            <Icon className={styles.expand} onClick={onExpandClick}>
-              {expanded ? <FiMinimize /> : <FiMaximize />}
-            </Icon>
-          )}
           {manage && (
             <Icon
               active={state === ThreadState.CLOSE}
