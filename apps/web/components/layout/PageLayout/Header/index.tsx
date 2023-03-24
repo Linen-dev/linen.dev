@@ -73,7 +73,7 @@ export default function Header({
           gap: '24px',
         }}
       >
-        <div className="hidden sm:flex grow">
+        <div className="hidden lg:flex grow">
           <SearchBar
             borderColor={borderColor}
             channels={channels}
@@ -83,7 +83,7 @@ export default function Header({
           />
         </div>
         <a
-          className="hidden sm:flex items-center text-sm"
+          className="hidden lg:flex items-center text-sm"
           style={{ color: fontColor, fontWeight: 500 }}
           rel="noreferrer"
           title="Documentation"
@@ -94,14 +94,14 @@ export default function Header({
         </a>
         {permissions.user && permissions.is_member ? (
           <>
-            <div className="hidden md:flex">
+            <div className="hidden lg:flex">
               <UserAvatar
                 currentUser={permissions.user}
                 onProfileChange={onProfileChange}
                 onUpload={onUpload}
               />
             </div>
-            <div className="md:hidden">
+            <div className="lg:hidden">
               <MobileMenu
                 channelName={channelName}
                 fontColor={fontColor}
@@ -113,7 +113,7 @@ export default function Header({
         ) : (
           <>
             <JoinButton settings={settings} />
-            <div className="md:hidden">
+            <div className="lg:hidden">
               <MobileMenu
                 channelName={channelName}
                 fontColor={fontColor}

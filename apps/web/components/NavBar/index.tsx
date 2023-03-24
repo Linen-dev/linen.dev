@@ -5,7 +5,6 @@ import {
   SerializedChannel,
 } from '@linen/types';
 import DesktopNavBar from './Desktop';
-import MobileNavBar from './Mobile';
 import { Mode } from '@linen/hooks/mode';
 import styles from './index.module.scss';
 
@@ -51,13 +50,6 @@ export default function NavBar({
           permissions={permissions}
           onDrop={onDrop}
           dms={dms}
-        />
-      </div>
-      <div className={styles.mobile}>
-        <MobileNavBar
-          channels={sortedChannels}
-          channelName={channelName}
-          permissions={permissions}
         />
       </div>
     </>
