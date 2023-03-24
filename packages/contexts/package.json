@@ -9,7 +9,8 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@linen/utilities": "*"
+    "@linen/utilities": "*",
+    "@linen/types": "*"
   },
   "devDependencies": {
     "typescript": "^4.9.3"
