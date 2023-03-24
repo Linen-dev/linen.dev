@@ -6,7 +6,7 @@ function useDevice() {
 
   useResize({
     onResize() {
-      if (window.innerWidth < 768) {
+      if (window.innerWidth < 1024) {
         setMobile(true);
       } else {
         setMobile(false);

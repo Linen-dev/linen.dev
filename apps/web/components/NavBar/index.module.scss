@@ -7,19 +7,3 @@
       display: flex;
   }
 }
-
-.mobile {
-  display: none;
-}
-
-@media (min-width: 640px) {
-  .mobile {
-    display: block;
-  }
-}
-
-@media (min-width: 1024px) {
-  .mobile {
-    display: none;
-  }
-}
