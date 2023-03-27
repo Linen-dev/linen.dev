@@ -24,6 +24,7 @@ export default class MessagesService {
     imitationId,
     userId,
     externalMessageId,
+    mentions,
   }: {
     body: string;
     files?: UploadedFile[];
@@ -33,6 +34,7 @@ export default class MessagesService {
     imitationId?: string;
     userId: string;
     externalMessageId?: string;
+    mentions?: { id: string }[];
   }) {
     const channel = await prisma.channels.findFirst({
       where: { id: channelId, accountId },
@@ -45,10 +47,10 @@ export default class MessagesService {
     const sentAt = new Date();
 
     const tree = parse.linen(body);
-    const mentionNodes = find.mentions(tree);
-    const userIds = unique(
+    const mentionNodes = mentions || find.mentions(tree);
+    const userIds = unique<string>(
       mentionNodes.map(({ id }: { id: string }) => id)
-    ) as string[];
+    );
     const messages = {
       create: {
         body,

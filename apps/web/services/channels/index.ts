@@ -187,11 +187,23 @@ class ChannelsService {
     });
 
     if (channel) {
-      if (channel.externalChannelId !== externalChannelId) {
+      if (
+        externalChannelId &&
+        channel.externalChannelId !== externalChannelId
+      ) {
         return await prisma.channels.update({
           where: { id: channel.id },
           data: {
             externalChannelId,
+          },
+        });
+      }
+
+      if (channelName && channelName.toLowerCase() !== channel.channelName) {
+        return await prisma.channels.update({
+          where: { id: channel.id },
+          data: {
+            channelName: channelName.toLowerCase(),
           },
         });
       }

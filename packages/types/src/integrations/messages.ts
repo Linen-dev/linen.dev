@@ -40,6 +40,13 @@ export const messagePostSchema = z.object({
   authorId: z.string().uuid(),
   externalMessageId: z.string().min(1),
   body: z.string().min(1),
+  mentions: z
+    .array(
+      z.object({
+        id: z.string().uuid(),
+      })
+    )
+    .optional(),
 });
 export type messagePostType = z.infer<typeof messagePostSchema>;
 

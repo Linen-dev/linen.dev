@@ -158,6 +158,7 @@ class ThreadsServices {
     externalThreadId,
     sentAt,
     accountId,
+    mentions,
   }: {
     authorId: string;
     channelId: string;
@@ -168,6 +169,7 @@ class ThreadsServices {
     externalThreadId?: string;
     sentAt?: Date;
     accountId: string;
+    mentions?: { id: string }[];
   }) {
     const channel = await prisma.channels.findFirst({
       where: { id: channelId, accountId },
@@ -180,10 +182,10 @@ class ThreadsServices {
     sentAt = sentAt || new Date();
 
     const tree = parse.linen(body);
-    const mentionNodes = find.mentions(tree);
-    const userIds = unique(
+    const mentionNodes = mentions || find.mentions(tree);
+    const userIds = unique<string>(
       mentionNodes.map(({ id }: { id: string }) => id)
-    ) as string[];
+    );
 
     const thread = await prisma.threads.create({
       data: {

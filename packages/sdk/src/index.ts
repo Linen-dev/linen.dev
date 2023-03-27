@@ -53,6 +53,12 @@ export default class Api {
     return this.get(`/api/integrations/channels?${qs(search)}`);
   }
 
+  findOrCreateChannel(
+    props: LinenTypes.channelFindOrCreateType
+  ): Promise<{ id: string }> {
+    return this.post(`/api/integrations/channels`, props);
+  }
+
   getChannelIntegration(
     search: LinenTypes.channelGetIntegrationType
   ): Promise<LinenTypes.ChannelsIntegration | null> {

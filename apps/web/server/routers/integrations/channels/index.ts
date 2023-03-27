@@ -7,6 +7,7 @@ import {
   channelGetIntegrationSchema,
   channelGetSchema,
   channelPutIntegrationSchema,
+  channelFindOrCreateSchema,
 } from '@linen/types';
 
 const prefix = '/api/integrations/channels';
@@ -30,6 +31,12 @@ channelsRouter.put(
   integrationMiddleware(),
   validationMiddleware(channelPutIntegrationSchema),
   ChannelsController.putIntegration
+);
+channelsRouter.post(
+  `${prefix}`,
+  integrationMiddleware(),
+  validationMiddleware(channelFindOrCreateSchema),
+  ChannelsController.findOrCreate
 );
 
 channelsRouter.all(`${prefix}*`, ChannelsController.notImplemented);

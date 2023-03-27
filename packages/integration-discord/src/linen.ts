@@ -1,29 +1,23 @@
-import {
-  accounts,
-  channels,
-  MessageFormat,
-  messages,
-  prisma,
-  threads,
-  users,
-} from '@linen/database';
+import { prisma } from '@linen/database';
 
-export type LinenUser = Pick<
-  users,
-  'isBot' | 'displayName' | 'profileImageUrl'
-> & {
+export type LinenUser = {
+  displayName: string;
   externalUserId: string;
+  profileImageUrl: string | undefined;
 };
 
-export type LinenChannel = Pick<channels, 'channelName'> & {
+export type LinenChannel = {
   externalChannelId: string;
+  channelName: string;
 };
 
-export type LinenThread = Pick<threads, 'title' | 'sentAt' | 'slug'> & {
+export type LinenThread = {
   externalThreadId: string;
+  title: string | null;
 };
 
-export type LinenMessage = Pick<messages, 'body' | 'sentAt'> & {
+export type LinenMessage = {
+  body: string;
   externalMessageId: string;
 };
 
@@ -54,155 +48,6 @@ export async function checkIntegrations(externalId: string[], botId: number) {
         }
       });
     });
-}
-
-export async function findOrCreateUser(account: accounts, user: LinenUser) {
-  return await prisma.users.upsert({
-    where: {
-      externalUserId_accountsId: {
-        accountsId: account.id,
-        externalUserId: user.externalUserId,
-      },
-    },
-    create: {
-      accountsId: account.id,
-      externalUserId: user.externalUserId,
-      displayName: user.displayName,
-      profileImageUrl: user.profileImageUrl,
-      isBot: user.isBot,
-      isAdmin: false,
-      // anonymousAlias, // TODO: generate
-    },
-    update: {
-      displayName: user.displayName,
-      profileImageUrl: user.profileImageUrl,
-    },
-  });
-}
-
-export async function findOrCreateChannel(
-  account: accounts,
-  channel: LinenChannel
-) {
-  const exist = await prisma.channels.findFirst({
-    where: {
-      accountId: account.id,
-      externalChannelId: channel.externalChannelId,
-    },
-  });
-
-  if (exist) {
-    if (exist.channelName !== channel.channelName) {
-      return await prisma.channels.update({
-        where: {
-          id: exist.id,
-        },
-        data: {
-          channelName: channel.channelName,
-        },
-      });
-    } else {
-      return exist;
-    }
-  }
-  return await prisma.channels.create({
-    data: {
-      channelName: channel.channelName,
-      accountId: account.id,
-      externalChannelId: channel.externalChannelId,
-    },
-  });
-}
-
-export async function findOrCreateThread(
-  channel: channels,
-  thread: LinenThread
-) {
-  const exist = await prisma.threads.findFirst({
-    include: { channel: { select: { account: true } } },
-    where: {
-      externalThreadId: thread.externalThreadId,
-    },
-  });
-
-  if (!exist) {
-    return await prisma.threads.create({
-      data: {
-        sentAt: thread.sentAt,
-        channelId: channel.id,
-        externalThreadId: thread.externalThreadId,
-        slug: thread.slug,
-        title: thread.title,
-      },
-    });
-  }
-
-  if (exist.channel.account?.id === channel.accountId) {
-    if (exist.title !== thread.title) {
-      return await prisma.threads.update({
-        where: { id: exist.id },
-        data: { title: thread.title },
-      });
-    }
-    return exist;
-  } else {
-    throw new Error('thread belongs to another account');
-  }
-}
-
-export async function findOrCreateMessage(
-  message: LinenMessage,
-  thread: threads,
-  user: users,
-  mentions: users[]
-) {
-  const exist = await prisma.messages.findUnique({
-    include: { mentions: true },
-    where: {
-      channelId_externalMessageId: {
-        channelId: thread.channelId,
-        externalMessageId: message.externalMessageId,
-      },
-    },
-  });
-
-  if (exist) {
-    return await prisma.messages.update({
-      where: {
-        channelId_externalMessageId: {
-          channelId: thread.channelId,
-          externalMessageId: message.externalMessageId,
-        },
-      },
-      data: {
-        body: message.body,
-        mentions: {
-          createMany: {
-            data: mentions.map((m) => ({ usersId: m.id })),
-            skipDuplicates: true,
-          },
-        },
-      },
-    });
-  }
-
-  return await prisma.messages.create({
-    data: {
-      body: message.body,
-      sentAt: message.sentAt,
-      usersId: user.id,
-      channelId: thread.channelId,
-      threadId: thread.id,
-      externalMessageId: message.externalMessageId,
-      messageFormat: MessageFormat.DISCORD,
-      mentions: {
-        createMany: {
-          data: mentions.map((m) => ({ usersId: m.id })),
-          skipDuplicates: true,
-        },
-      },
-    },
-  });
 }
 
 export async function findChannelById(id: string) {

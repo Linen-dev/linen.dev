@@ -27,3 +27,11 @@ export const channelPutIntegrationSchema = z.object({
 export type channelPutIntegrationType = z.infer<
   typeof channelPutIntegrationSchema
 >;
+
+export const channelFindOrCreateSchema = z.object({
+  accountId: z.string().uuid(),
+  channelName: z.string(),
+  externalChannelId: z.string(),
+  hidden: z.boolean().optional(),
+});
+export type channelFindOrCreateType = z.infer<typeof channelFindOrCreateSchema>;

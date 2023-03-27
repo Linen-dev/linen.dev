@@ -7,6 +7,13 @@ export const threadPostSchema = z.object({
   externalThreadId: z.string().min(1),
   authorId: z.string().uuid(),
   accountId: z.string().uuid(),
+  mentions: z
+    .array(
+      z.object({
+        id: z.string().uuid(),
+      })
+    )
+    .optional(),
 });
 export type threadPostType = z.infer<typeof threadPostSchema>;
 

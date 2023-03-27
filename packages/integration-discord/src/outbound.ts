@@ -76,6 +76,10 @@ export async function processDiscordIntegration({
 
   switch (event) {
     case 'newThread':
+      if (thread.externalThreadId) {
+        return;
+      }
+
       const { thread: externalThread, message: externalMessage } =
         await processNewThread({
           token,
@@ -96,6 +100,9 @@ export async function processDiscordIntegration({
     case 'newMessage':
       if (!thread.externalThreadId) {
         console.warn('thread does not have external id');
+        return;
+      }
+      if (message.externalMessageId) {
         return;
       }
 

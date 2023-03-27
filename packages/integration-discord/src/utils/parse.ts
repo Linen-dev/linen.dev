@@ -15,8 +15,7 @@ export const parseUser = (
   return {
     externalUserId: author.id,
     displayName: member?.displayName || author.username,
-    profileImageUrl: member?.avatarURL() || author.avatarURL(),
-    isBot: member?.user.bot || author.bot,
+    profileImageUrl: member?.avatarURL() || author.avatarURL() || undefined,
   };
 };
 
@@ -24,8 +23,7 @@ export const parseGuildUser = (member: GuildMember): LinenUser => {
   return {
     externalUserId: member.user.id,
     displayName: member.displayName,
-    profileImageUrl: member.avatarURL(),
-    isBot: member.user.bot,
+    profileImageUrl: member.avatarURL() || undefined,
   };
 };
 
@@ -66,8 +64,6 @@ export const parseThreadFromChannel = (
 ): LinenThread => {
   return {
     externalThreadId: channel.id,
-    sentAt: BigInt(channel.createdTimestamp || Date.now()),
-    slug: channel.name,
     title: channel.name,
   };
 };
@@ -75,16 +71,15 @@ export const parseThreadFromChannel = (
 export const parseThreadFromMessage = (message: Message): LinenThread => {
   return {
     externalThreadId: message.id,
-    sentAt: BigInt(message.createdTimestamp),
-    slug: message.content, // TODO: slugify
     title: message.content,
   };
 };
 
 export const parseMessage = (message: Message): LinenMessage => {
   return {
-    body: message.content,
+    body: [message.content, ...message.attachments.map((a) => a.url)].join(
+      '\n'
+    ),
     externalMessageId: message.id,
-    sentAt: new Date(message.createdAt), // TODO: validate this parse
   };
 };
