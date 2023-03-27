@@ -2,20 +2,19 @@ import axios, { Axios } from 'axios';
 import * as LinenTypes from '@linen/types';
 import { qs } from '@linen/utilities/url';
 export { integrationMiddleware } from './middleware';
-import { stringify } from 'superjson';
 
 export default class Api {
   private instance: Axios;
 
   private catchError = (error: any) => {
     if (error.response) {
-      console.error(stringify(error.response.data));
-      console.error(stringify(error.response.status));
-      console.error(stringify(error.response.headers));
+      console.error(error.response.data);
+      console.error(error.response.status);
+      console.error(error.response.headers);
     } else if (error.request) {
-      console.error(stringify(error.request));
+      console.error(error.request);
     } else {
-      console.error(stringify(error.message));
+      console.error(error.message);
     }
     throw error;
   };

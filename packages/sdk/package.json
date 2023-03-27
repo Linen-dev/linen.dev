@@ -5,7 +5,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "dev": "tsc --watch",
-    "build": "tsc"
+    "build": "rm -rf dist && tsc"
   },
   "devDependencies": {
     "typescript": "^4.9.3"
@@ -13,7 +13,6 @@
   "dependencies": {
     "@linen/types": "*",
     "@linen/utilities": "*",
-    "axios": "^1.2.4",
-    "superjson": "^1.12.2"
+    "axios": "^1.2.4"
   }
 }
