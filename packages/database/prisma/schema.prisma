@@ -57,6 +57,8 @@ model threads {
   sentAt           BigInt
   hidden           Boolean     @default(false)
   title            String?
+  question         String?
+  answer           String?
   state            ThreadState @default(OPEN)
   pinned           Boolean     @default(false)
   messages         messages[]
