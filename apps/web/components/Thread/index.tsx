@@ -194,7 +194,18 @@ export default function Thread({
         onReopenThread={() => updateThread({ state: ThreadState.OPEN })}
         onSetTitle={(title) => updateThread({ title })}
         manage={manage}
-      />
+      />{' '}
+      {thread.question && thread.answer && (
+        <div className={styles.summary}>
+          <div className={styles.content}>
+            <p className={styles.description}>Question</p>
+            <h1>{thread.question}</h1>
+          </div>
+
+          <p className={styles.description}>Answer</p>
+          <p>{thread.answer}</p>
+        </div>
+      )}
       <div
         className={classNames(styles.thread, { [styles.expanded]: expanded })}
       >

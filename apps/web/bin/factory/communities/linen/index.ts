@@ -440,6 +440,42 @@ export default async function createLinenCommunity() {
     },
   });
 
+  // 11. Thread with an answer and question
+  await prisma.threads.create({
+    data: {
+      channelId: channel1.id,
+      sentAt: new Date().getTime(),
+      lastReplyAt: new Date('2021-12-14T09:02:01.000Z').getTime(),
+      messages: {
+        create: [
+          {
+            channelId: channel1.id,
+            body: 'How can I generate a random number in javascript?',
+            usersId: user1.id,
+            sentAt: '2021-12-14T09:02:01.001Z',
+            messageFormat: MessageFormat.LINEN,
+          },
+          {
+            channelId: channel1.id,
+            body: 'You can use lodash.',
+            usersId: user2.id,
+            sentAt: '2021-12-14T09:02:02.002Z',
+            messageFormat: MessageFormat.LINEN,
+          },
+          {
+            channelId: channel1.id,
+            body: '`Maybe use Math.random()`?',
+            usersId: user3.id,
+            sentAt: '2021-12-14T09:02:02.002Z',
+            messageFormat: MessageFormat.LINEN,
+          },
+        ],
+      },
+      question: 'How can you generate a random number in javascript?',
+      answer: 'You can use `Math.random()` or use a library like lodash.',
+    },
+  });
+
   const channel2 = await prisma.channels.create({
     data: {
       accountId: community.id,
@@ -481,7 +517,7 @@ export default async function createLinenCommunity() {
     },
   });
 
-  // 11. Blog post
+  // 12. Blog post
   await prisma.threads.create({
     data: {
       channelId: channel3.id,
@@ -501,7 +537,7 @@ export default async function createLinenCommunity() {
     },
   });
 
-  // 12. Blog post
+  // 13. Blog post
   await prisma.threads.create({
     data: {
       channelId: channel3.id,
@@ -528,7 +564,7 @@ export default async function createLinenCommunity() {
     },
   });
 
-  // 13. Markdown documentation
+  // 14. Markdown documentation
   await prisma.threads.create({
     data: {
       channelId: channel4.id,
