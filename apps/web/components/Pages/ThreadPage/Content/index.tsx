@@ -122,6 +122,7 @@ export default function Content({
         onMessage={(threadId, message, messageId, imitationId) => {
           onThreadMessage(threadId, message, messageId, imitationId);
         }}
+        expanded
       />
     </div>
   );
