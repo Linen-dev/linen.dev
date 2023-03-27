@@ -157,6 +157,8 @@ export interface SerializedThread {
   messageCount: number;
   hidden: boolean;
   title?: string | null;
+  question?: string | null;
+  answer?: string | null;
   state: ThreadState;
   pinned: boolean;
   channelId: string;
