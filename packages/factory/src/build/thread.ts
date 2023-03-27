@@ -21,6 +21,8 @@ export default function createThread(options?: Partial<threads>): threads {
     firstUserReplyAt: null,
     page: null,
     resolutionId: null,
+    answer: null,
+    question: null,
     ...options,
   };
 }
