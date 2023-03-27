@@ -105,3 +105,15 @@
 .summary h1, .summary p {
   font-size: 14px;
 }
+
+.summary .answer .header {
+  align-items: center;
+  display: flex;
+  gap: 0.25rem;
+}
+
+.summary .tooltip {
+  cursor: help;
+  color: $color-gray-500;
+  font-size: 11px;
+}
