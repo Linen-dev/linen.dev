@@ -20,6 +20,8 @@ import { scrollToBottom } from '@linen/utilities/scroll';
 import styles from './index.module.scss';
 import { put } from 'utilities/requests';
 import { CustomLinkHelper } from 'utilities/url';
+import { FiInfo } from '@react-icons/all-files/fi/FiInfo';
+import { Tooltip } from '@linen/ui';
 
 interface Props {
   thread: SerializedThread;
@@ -202,8 +204,15 @@ export default function Thread({
             <h1>{thread.question}</h1>
           </div>
 
-          <p className={styles.description}>Answer</p>
-          <p>{thread.answer}</p>
+          <div className={styles.answer}>
+            <div className={styles.header}>
+              <p className={styles.description}>Answer</p>
+              <Tooltip className={styles.tooltip} text="Summarized by GPT-3.5">
+                <FiInfo />
+              </Tooltip>
+            </div>
+            <p>{thread.answer}</p>
+          </div>
         </div>
       )}
       <div
