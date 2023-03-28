@@ -82,16 +82,6 @@ export default function Header({
             communityType={settings.communityType}
           />
         </div>
-        <a
-          className="hidden lg:flex items-center text-sm"
-          style={{ color: fontColor, fontWeight: 500 }}
-          rel="noreferrer"
-          title="Documentation"
-          target="_blank"
-          href={docsUrl}
-        >
-          Docs
-        </a>
         {permissions.user && permissions.is_member ? (
           <>
             <div className="hidden lg:flex">
