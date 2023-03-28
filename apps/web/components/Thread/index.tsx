@@ -196,7 +196,7 @@ export default function Thread({
         onSetTitle={(title) => updateThread({ title })}
         manage={manage}
       />{' '}
-      <Summary thread={thread} />
+      <Summary thread={thread} expanded={expanded} />
       <div
         className={classNames(styles.thread, { [styles.expanded]: expanded })}
       >
