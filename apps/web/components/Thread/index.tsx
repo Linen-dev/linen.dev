@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import classNames from 'classnames';
 import Header from './Header';
+import Summary from './Summary';
 import Messages from './Messages';
 import JoinChannelLink from 'components/Link/JoinChannelLink';
 import MessageForm from 'components/MessageForm';
@@ -20,8 +21,6 @@ import { scrollToBottom } from '@linen/utilities/scroll';
 import styles from './index.module.scss';
 import { put } from 'utilities/requests';
 import { CustomLinkHelper } from 'utilities/url';
-import { FiInfo } from '@react-icons/all-files/fi/FiInfo';
-import { Tooltip } from '@linen/ui';
 
 interface Props {
   thread: SerializedThread;
@@ -197,24 +196,7 @@ export default function Thread({
         onSetTitle={(title) => updateThread({ title })}
         manage={manage}
       />{' '}
-      {thread.question && thread.answer && (
-        <div className={styles.summary}>
-          <div className={styles.content}>
-            <p className={styles.description}>Question</p>
-            <h1>{thread.question}</h1>
-          </div>
-
-          <div className={styles.answer}>
-            <div className={styles.header}>
-              <p className={styles.description}>Answer</p>
-              <Tooltip className={styles.tooltip} text="Summarized by GPT-3.5">
-                <FiInfo />
-              </Tooltip>
-            </div>
-            <p>{thread.answer}</p>
-          </div>
-        </div>
-      )}
+      <Summary thread={thread} />
       <div
         className={classNames(styles.thread, { [styles.expanded]: expanded })}
       >
