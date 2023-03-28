@@ -4,6 +4,11 @@
   background: $color-gray-50;
   border-bottom: 1px solid $color-border;
   padding: 1rem;
+  width: 520px;
+}
+
+.summary.expanded {
+  width: 100%;
 }
 
 .summary .description {
