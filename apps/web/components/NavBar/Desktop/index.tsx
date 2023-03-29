@@ -7,12 +7,9 @@ import {
   SerializedReadStatus,
 } from '@linen/types';
 import Link from 'components/Link/InternalLink';
-import NewChannelModal from 'components/Modals/NewChannelModal';
 import useWebsockets from '@linen/hooks/websockets';
 import styles from './index.module.scss';
 import { FiBarChart } from '@react-icons/all-files/fi/FiBarChart';
-import { FiHash } from '@react-icons/all-files/fi/FiHash';
-import { FiLock } from '@react-icons/all-files/fi/FiLock';
 import { FiSettings } from '@react-icons/all-files/fi/FiSettings';
 import { FiSliders } from '@react-icons/all-files/fi/FiSliders';
 import { FiDollarSign } from '@react-icons/all-files/fi/FiDollarSign';
@@ -35,6 +32,7 @@ import { timestamp } from '@linen/utilities/date';
 import { DMs } from './DMs';
 import useInboxWebsockets from '@linen/hooks/websockets/inbox';
 import MenuGroup from './MenuGroup';
+import ChannelsGroup from './ChannelsGroup';
 import MenuIcon from './MenuIcon';
 import PoweredByLinen from './PoweredByLinen';
 
@@ -212,75 +210,21 @@ export default function DesktopNavBar({
               }}
             />
           )}
-          <Nav.Group>
-            Channels
-            {currentUser &&
-              permissions.channel_create &&
-              !!permissions.accountId && (
-                <NewChannelModal {...{ permissions }} />
-              )}
-          </Nav.Group>
-          <div>
-            {channels.map((channel: SerializedChannel, index: number) => {
-              const count = highlights.reduce((count: number, id: string) => {
-                if (id === channel.id) {
-                  return count + 1;
-                }
-                return count;
-              }, 0);
-
-              function handleDrop(event: React.DragEvent) {
-                const id = channel.id;
-                const text = event.dataTransfer.getData('text');
-                const data = JSON.parse(text);
-                if (data.id === id) {
-                  return event.stopPropagation();
-                }
-                return onDrop?.({
-                  source: data.source,
-                  target: 'channel',
-                  from: data.id,
-                  to: id,
-                });
-              }
-
-              function handleDragEnter(event: React.DragEvent) {
-                event.currentTarget.classList.add(styles.drop);
-              }
-
-              function handleDragLeave(event: React.DragEvent) {
-                event.currentTarget.classList.remove(styles.drop);
-              }
-
-              const active = channel.channelName === channelName;
-              const highlighted = !active && count > 0;
-
-              const Icon = channel.type === 'PRIVATE' ? FiLock : FiHash;
-
-              return (
-                <Link
-                  className={classNames(styles.item, {
-                    [styles.dropzone]: mode === Mode.Drag,
-                  })}
-                  onDragEnter={handleDragEnter}
-                  onDragLeave={handleDragLeave}
-                  onDrop={handleDrop}
-                  onClick={() => {
-                    debouncedUpdateReadStatus(channel.id);
-                    setHighlights((highlights) => {
-                      return highlights.filter((id) => id !== channel.id);
-                    });
-                  }}
-                  key={`${channel.channelName}-${index}`}
-                  href={`/c/${channel.channelName}`}
-                >
-                  <Nav.Item active={active} highlighted={highlighted}>
-                    <Icon /> {channel.channelName}
-                  </Nav.Item>
-                </Link>
-              );
-            })}
-          </div>
+          <ChannelsGroup
+            channelName={channelName}
+            channels={channels}
+            currentUser={currentUser}
+            highlights={highlights}
+            mode={mode}
+            permissions={permissions}
+            onChannelClick={(channelId) => {
+              debouncedUpdateReadStatus(channelId);
+              setHighlights((highlights) => {
+                return highlights.filter((id) => id !== channelId);
+              });
+            }}
+            onDrop={onDrop}
+          />
           {permissions.manage && (
             <Nav.Group
               onClick={() => toggleSettings((showSettings) => !showSettings)}
