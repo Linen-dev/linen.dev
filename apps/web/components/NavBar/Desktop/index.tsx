@@ -198,18 +198,6 @@ export default function DesktopNavBar({
             permissions={permissions}
             paths={paths}
           />
-          {currentUser && permissions.chat && (
-            <DMs
-              {...{
-                channelName,
-                debouncedUpdateReadStatus,
-                dms,
-                highlights,
-                permissions,
-                setHighlights,
-              }}
-            />
-          )}
           <ChannelsGroup
             channelName={channelName}
             channels={channels}
@@ -225,6 +213,18 @@ export default function DesktopNavBar({
             }}
             onDrop={onDrop}
           />
+          {currentUser && permissions.chat && (
+            <DMs
+              {...{
+                channelName,
+                debouncedUpdateReadStatus,
+                dms,
+                highlights,
+                permissions,
+                setHighlights,
+              }}
+            />
+          )}
           {permissions.manage && (
             <Nav.Group
               onClick={() => toggleSettings((showSettings) => !showSettings)}
