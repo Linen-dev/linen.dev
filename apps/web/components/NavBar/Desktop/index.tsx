@@ -10,9 +10,6 @@ import Link from 'components/Link/InternalLink';
 import NewChannelModal from 'components/Modals/NewChannelModal';
 import useWebsockets from '@linen/hooks/websockets';
 import styles from './index.module.scss';
-import { FiInbox } from '@react-icons/all-files/fi/FiInbox';
-import { FiStar } from '@react-icons/all-files/fi/FiStar';
-import { FiLayers } from '@react-icons/all-files/fi/FiLayers';
 import { FiBarChart } from '@react-icons/all-files/fi/FiBarChart';
 import { FiHash } from '@react-icons/all-files/fi/FiHash';
 import { FiLock } from '@react-icons/all-files/fi/FiLock';
@@ -37,6 +34,7 @@ import NewCommunityModal from 'components/Modals/NewCommunityModal';
 import { timestamp } from '@linen/utilities/date';
 import { DMs } from './DMs';
 import useInboxWebsockets from '@linen/hooks/websockets/inbox';
+import MenuGroup from './MenuGroup';
 import MenuIcon from './MenuIcon';
 import PoweredByLinen from './PoweredByLinen';
 
@@ -196,28 +194,12 @@ export default function DesktopNavBar({
         })}
       >
         <Nav className={styles.navbar}>
-          {currentUser && <Nav.Group>Menu</Nav.Group>}
-          {permissions.inbox && (
-            <Link href="/inbox">
-              <Nav.Item active={paths.inbox === router.asPath}>
-                <FiInbox /> Inbox
-              </Nav.Item>
-            </Link>
-          )}
-          {permissions.starred && (
-            <Link href="/starred">
-              <Nav.Item active={paths.starred === router.asPath}>
-                <FiStar /> Starred
-              </Nav.Item>
-            </Link>
-          )}
-          {currentUser && (
-            <Link href="/all">
-              <Nav.Item active={paths.all === router.asPath}>
-                <FiLayers /> All
-              </Nav.Item>
-            </Link>
-          )}
+          <MenuGroup
+            currentUser={currentUser}
+            currentUrl={router.asPath}
+            permissions={permissions}
+            paths={paths}
+          />
           {currentUser && permissions.chat && (
             <DMs
               {...{
