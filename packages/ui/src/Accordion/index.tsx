@@ -4,10 +4,15 @@ import styles from './index.module.scss';
 interface Props {
   header: string;
   children: React.ReactNode;
+  expanded?: boolean;
 }
 
-export default function Accordion({ header, children }: Props) {
-  const [visible, setVisible] = useState(true);
+export default function Accordion({
+  header,
+  children,
+  expanded = true,
+}: Props) {
+  const [visible, setVisible] = useState(expanded);
 
   return (
     <div>

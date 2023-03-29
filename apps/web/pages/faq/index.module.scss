@@ -1,0 +1,14 @@
+@import 'styles/colors.scss';
+
+.container {
+  border: 1px solid $color-border;
+  border-radius: 4px;
+  padding: 2rem;
+}
+
+@media screen and (max-width: 767px) {
+  .container {
+    padding: 0;
+    border: none;
+  }
+}
