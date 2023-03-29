@@ -22,12 +22,13 @@ import classNames from 'classnames';
 import { Permissions, SerializedUser } from '@linen/types';
 import { fetchMentions } from 'components/MessageForm/api';
 
-export default function NewChannelModal({
-  permissions,
-}: {
+interface Props {
   permissions: Permissions;
-}) {
-  const [open, setOpen] = useState(false);
+  show: boolean;
+  close(): void;
+}
+
+export default function NewChannelModal({ permissions, show, close }: Props) {
   const [loading, setLoading] = useState(false);
   const [channelPrivate, setChannelPrivate] = useState(false);
   const { isSubDomainRouting, communityName, communityType } = useLinkContext();
@@ -54,7 +55,7 @@ export default function NewChannelModal({
         });
       }
 
-      setOpen(false);
+      close();
       CustomRouterPush({
         isSubDomainRouting,
         communityName,
@@ -77,86 +78,74 @@ export default function NewChannelModal({
   }
 
   return (
-    <>
-      <button
-        aria-label="New Channel"
-        type="button"
-        onClick={() => {
-          setOpen(true);
-        }}
-        className="inline-flex items-center text-gray-400 hover:text-gray-500 text-sm font-medium"
-      >
-        <FiPlus />
-      </button>
-      <Modal open={open} close={() => setOpen(false)}>
-        <form onSubmit={onSubmit}>
-          <div>
-            <div className="flex items-center justify-between">
-              <H3>Create a channel</H3>
+    <Modal open={show} close={close}>
+      <form onSubmit={onSubmit}>
+        <div>
+          <div className="flex items-center justify-between">
+            <H3>Create a channel</H3>
 
-              <div
-                className="rounded-md bg-white text-gray-400 hover:text-gray-500 cursor-pointer"
-                onClick={() => setOpen(false)}
-              >
-                <span className="sr-only">Close</span>
-                <FiX />
-              </div>
+            <div
+              className="rounded-md bg-white text-gray-400 hover:text-gray-500 cursor-pointer"
+              onClick={close}
+            >
+              <span className="sr-only">Close</span>
+              <FiX />
             </div>
-            <div className="mt-2 mb-8">
-              <p className="text-sm text-gray-500">
-                Channels are where your community communicates. They&apos;re
-                best when organized around a topic. e.g. javascript.
-              </p>
-            </div>
-            <TextInput
-              autoFocus
-              id="channelName"
-              label="Channel name"
-              disabled={loading}
-              required
-              placeholder="e.g. javascript"
-              {...{
-                pattern: patterns.channelName.source,
-                title:
-                  'Channels name should start with letter and could contain letters, underscore, numbers and hyphens. e.g. announcements',
-              }}
-            />
-            <span className="text-xs text-gray-500">
-              Be sure to choose an url friendly name.
-            </span>
-            <div className={classNames(styles.toggle, 'py-4')}>
-              <label className={classNames(styles.label, styles.enabled)}>
-                <Toggle
-                  checked={channelPrivate}
-                  onChange={(checked: boolean) => onPrivateToggle(checked)}
-                />
-                Private
-              </label>
-              <input
-                type="hidden"
-                name={'channelPrivate'}
-                value={channelPrivate ? 'true' : 'false'}
+          </div>
+          <div className="mt-2 mb-8">
+            <p className="text-sm text-gray-500">
+              Channels are where your community communicates. They&apos;re best
+              when organized around a topic. e.g. javascript.
+            </p>
+          </div>
+          <TextInput
+            autoFocus
+            id="channelName"
+            label="Channel name"
+            disabled={loading}
+            required
+            placeholder="e.g. javascript"
+            {...{
+              pattern: patterns.channelName.source,
+              title:
+                'Channels name should start with letter and could contain letters, underscore, numbers and hyphens. e.g. announcements',
+            }}
+          />
+          <span className="text-xs text-gray-500">
+            Be sure to choose an url friendly name.
+          </span>
+          <div className={classNames(styles.toggle, 'py-4')}>
+            <label className={classNames(styles.label, styles.enabled)}>
+              <Toggle
+                checked={channelPrivate}
+                onChange={(checked: boolean) => onPrivateToggle(checked)}
               />
-            </div>
-            <ShowUsers
-              {...{
-                communityId: permissions.accountId!,
-                channelPrivate,
-                users,
-                setUsers,
-                removeUser,
-                currentUser: permissions.user,
-              }}
+              Private
+            </label>
+            <input
+              type="hidden"
+              name={'channelPrivate'}
+              value={channelPrivate ? 'true' : 'false'}
             />
           </div>
-          <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
-            <Button color="blue" type="submit" disabled={loading}>
-              Create
-            </Button>
-          </div>
-        </form>
-      </Modal>
-    </>
+          <ShowUsers
+            {...{
+              communityId: permissions.accountId!,
+              channelPrivate,
+              users,
+              setUsers,
+              removeUser,
+              currentUser: permissions.user,
+            }}
+          />
+        </div>
+        <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
+          <Button color="blue" type="submit" disabled={loading}>
+            Create
+          </Button>
+        </div>
+      </form>
+    </Modal>
   );
 }
 
