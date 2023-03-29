@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState } from 'react';
 import { SerializedUser } from '@linen/types';
-import unionBy from 'lodash.unionby';
+import { unionBy } from '@linen/utilities/array';
 
 const Context = createContext<[SerializedUser[], any]>([[], () => {}]);
 
@@ -13,7 +13,7 @@ export const UsersContext = ({ children }: Props) => {
 
   function addUsers(users: SerializedUser[]) {
     setUsers((allUsers) => {
-      return unionBy(allUsers, users, 'id');
+      return unionBy(allUsers, users, 'id') as SerializedUser[];
     });
   }
 

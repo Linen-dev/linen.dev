@@ -4311,13 +4311,6 @@
   dependencies:
     "@types/node" "*"
 
-"@types/lodash.unionby@^4.8.7":
-  version "4.8.7"
-  resolved "https://registry.npmjs.org/@types/lodash.unionby/-/lodash.unionby-4.8.7.tgz"
-  integrity sha512-Hf8IGRLQlcsxo1JpFWSoefjedUVM1Kp6W7RAk2WKitYj4dt/oHfOXi9wkLPAlIzjvTH3oPJizcey2SLSBW4TwQ==
-  dependencies:
-    "@types/lodash" "*"
-
 "@types/lodash.uniq@^4.5.7":
   version "4.5.7"
   resolved "https://registry.npmjs.org/@types/lodash.uniq/-/lodash.uniq-4.5.7.tgz"
@@ -10746,11 +10739,6 @@ lodash.sortby@^4.7.0:
   version "4.7.0"
   resolved "https://registry.npmjs.org/lodash.sortby/-/lodash.sortby-4.7.0.tgz"
   integrity sha512-HDWXG8isMntAyRF5vZ7xKuEvOhT4AhlRt/3czTSjvGUxjYCBVRQY48ViDHyfYz9VIoBkW4TMGQNapx+l3RUwdA==
-
-lodash.unionby@^4.8.0:
-  version "4.8.0"
-  resolved "https://registry.npmjs.org/lodash.unionby/-/lodash.unionby-4.8.0.tgz"
-  integrity sha512-e60kn4GJIunNkw6v9MxRnUuLYI/Tyuanch7ozoCtk/1irJTYBj+qNTxr5B3qVflmJhwStJBv387Cb+9VOfABMg==
 
 lodash.uniq@^4.5.0:
   version "4.5.0"

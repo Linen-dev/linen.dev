@@ -9,8 +9,7 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@types/lodash.unionby": "^4.8.7",
-    "lodash.unionby": "^4.8.0"
+    "@linen/utilities": "*"
   },
   "devDependencies": {
     "typescript": "^4.9.3"

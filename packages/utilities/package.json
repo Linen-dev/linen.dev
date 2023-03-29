@@ -21,6 +21,7 @@
     "typescript": "^4.9.3"
   },
   "exports": {
+    "./array": "./dist/array.js",
     "./scroll": "./dist/scroll.js",
     "./string": "./dist/string.js",
     "./storage": "./dist/storage.js",
@@ -37,6 +38,9 @@
   },
   "typesVersions": {
     "*": {
+      "array": [
+        "dist/array.d.ts"
+      ],
       "scroll": [
         "dist/scroll.d.ts"
       ],
