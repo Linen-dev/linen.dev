@@ -11,6 +11,7 @@ import { getTokenByIntegration } from './utils/token';
 import { Routes } from 'discord.js';
 import { discordChannelType, nonce } from './utils/constrains';
 import { getClient } from './utils/rest';
+import { logger } from '@linen/logger';
 
 export async function processDiscordIntegration({
   event,
@@ -24,28 +25,28 @@ export async function processDiscordIntegration({
 
   const channel = await findChannelById(channelId);
   if (!channel) {
-    console.warn('channel not found');
+    logger.warn('channel not found');
     return;
   }
   if (!channel.accountId) {
-    console.warn('channel does not have account');
+    logger.warn('channel does not have account');
     return;
   }
 
   if (!channel.externalChannelId) {
-    console.warn('channel does not have external id');
+    logger.warn('channel does not have external id');
     return;
   }
 
   const account = await findAccountById(channel.accountId);
   if (!account) {
-    console.warn('account not found');
+    logger.warn('account not found');
     return;
   }
 
   const integration = await findIntegrationByAccountId(account.id);
   if (!integration) {
-    console.warn('account does not have discord integration');
+    logger.warn('account does not have discord integration');
     return;
   }
 
@@ -53,11 +54,11 @@ export async function processDiscordIntegration({
 
   const thread = await findThreadWithMessage(threadId);
   if (!thread) {
-    console.warn('thread not found');
+    logger.warn('thread not found');
     return;
   }
   if (!thread.messages.length) {
-    console.warn('thread without messages');
+    logger.warn('thread without messages');
     return;
   }
 
@@ -65,7 +66,7 @@ export async function processDiscordIntegration({
     ? thread.messages.find((m) => m.id === messageId)
     : thread.messages.shift();
   if (!message) {
-    console.warn('message not found in thread');
+    logger.warn('message not found in thread');
     return;
   }
 
@@ -99,7 +100,7 @@ export async function processDiscordIntegration({
 
     case 'newMessage':
       if (!thread.externalThreadId) {
-        console.warn('thread does not have external id');
+        logger.warn('thread does not have external id');
         return;
       }
       if (message.externalMessageId) {

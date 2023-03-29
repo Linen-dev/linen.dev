@@ -25,6 +25,7 @@ import LinenSdk from '@linen/sdk';
 import env from './utils/config';
 import { appendProtocol } from '@linen/utilities/url';
 import { getIntegrationUrl } from '@linen/utilities/domain';
+import { logger } from '@linen/logger';
 
 const linenSdk = new LinenSdk(
   env.INTERNAL_API_KEY,
@@ -32,31 +33,31 @@ const linenSdk = new LinenSdk(
 );
 
 export async function onMessageCreate(message: Message) {
-  console.log('onMessageCreate', message);
+  logger.info('onMessageCreate', message);
 
   if (message.nonce === nonce) {
-    console.warn('message from linen');
+    logger.warn('message from linen');
     return;
   }
 
   if (!message.guildId) {
-    console.warn('message does not have guild id');
+    logger.warn('message does not have guild id');
     return;
   }
 
   if (filterMessageType(message)) {
-    console.warn('message type not supported');
+    logger.warn('message type not supported');
     return;
   }
 
   if (filterSupportedChannel(message.channel)) {
-    console.warn('channel type not supported');
+    logger.warn('channel type not supported');
     return;
   }
 
   const linenAccount = await findAccount(message.guildId);
   if (!linenAccount) {
-    console.warn('account not found');
+    logger.warn('account not found');
     return;
   }
 
@@ -69,7 +70,7 @@ export async function onMessageCreate(message: Message) {
   let { thread, channel } = await parseChannelAndThread(message);
 
   if (!channel) {
-    console.warn('channel not found');
+    logger.warn('channel not found');
     return;
   }
 
@@ -102,7 +103,7 @@ export async function onMessageCreate(message: Message) {
       externalThreadId: thread.externalThreadId,
     });
     if (!linenThread) {
-      console.warn('thread not found');
+      logger.warn('thread not found');
       return;
     }
     await linenSdk.createNewMessage({
@@ -127,79 +128,79 @@ export async function onMessageCreate(message: Message) {
     });
   }
 
-  console.log('onMessageCreate success');
+  logger.info('onMessageCreate success');
 }
 
 export async function onMessageDelete(message: Message | PartialMessage) {
-  console.log('onMessageDelete', message);
+  logger.info('onMessageDelete', message);
 }
 
 export async function onMessageUpdate(message: Message | PartialMessage) {
-  console.log('onMessageUpdate', message);
+  logger.info('onMessageUpdate', message);
 }
 
 export async function onMessageReactionAdd(
   reaction: MessageReaction | PartialMessageReaction
 ) {
-  console.log('onMessageReactionAdd', reaction);
+  logger.info('onMessageReactionAdd', reaction);
 }
 
 export async function onMessageReactionRemove(
   reaction: MessageReaction | PartialMessageReaction
 ) {
-  console.log('onMessageReactionRemove', reaction);
+  logger.info('onMessageReactionRemove', reaction);
 }
 
 export async function onMessageReactionRemoveAll(
   message: Message<boolean> | PartialMessage
 ) {
-  console.log('onMessageReactionRemoveAll', message);
+  logger.info('onMessageReactionRemoveAll', message);
 }
 
 export async function onMessageReactionRemoveEmoji(
   reaction: MessageReaction | PartialMessageReaction
 ) {
-  console.log('onMessageReactionRemoveEmoji', reaction);
+  logger.info('onMessageReactionRemoveEmoji', reaction);
 }
 
 export async function onChannelCreate(channel: NonThreadGuildBasedChannel) {
-  console.log('onChannelCreate', channel);
+  logger.info('onChannelCreate', channel);
 }
 
 export async function onChannelUpdate(
   channel: DMChannel | NonThreadGuildBasedChannel
 ) {
-  console.log('onChannelUpdate', channel);
+  logger.info('onChannelUpdate', channel);
 }
 
 export async function onThreadCreate(thread: AnyThreadChannel<boolean>) {
-  console.log('onThreadCreate', thread);
+  logger.info('onThreadCreate', thread);
 }
 
 export async function onThreadDelete(thread: AnyThreadChannel<boolean>) {
-  console.log('onThreadDelete', thread);
+  logger.info('onThreadDelete', thread);
 }
 
 export async function onThreadUpdate(thread: AnyThreadChannel<boolean>) {
-  console.log('onThreadUpdate', thread);
+  logger.info('onThreadUpdate', thread);
 }
 
 export async function onUserUpdate(user: User | PartialUser) {
-  console.log('onUserUpdate', user);
+  logger.info('onUserUpdate', user);
 }
 
 export async function onGuildMemberAdd(member: GuildMember) {
-  console.log('onGuildMemberAdd', member);
+  logger.info('onGuildMemberAdd', member);
 }
 
 export async function onGuildMemberRemove(
   member: GuildMember | PartialGuildMember
 ) {
-  console.log('onGuildMemberRemove', member);
+  logger.info('onGuildMemberRemove', member);
 }
 
 export async function onGuildMemberUpdate(
   member: GuildMember | PartialGuildMember
 ) {
-  console.log('onGuildMemberUpdate', member);
+  logger.info('onGuildMemberUpdate', member);
 }

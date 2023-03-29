@@ -19,6 +19,7 @@ import {
   onUserUpdate,
 } from './discord';
 import { Client, Events, GatewayIntentBits } from 'discord.js';
+import { logger } from '@linen/logger';
 
 function initializeBot() {
   const bot = new Client({
@@ -32,7 +33,7 @@ function initializeBot() {
   });
 
   bot.on(Events.ClientReady, () => {
-    console.log('Ready!');
+    logger.info('Ready!', { bot: env.BOT });
   });
 
   bot.on(Events.ShardDisconnect, () => {
@@ -40,7 +41,7 @@ function initializeBot() {
   });
 
   bot.on(Events.Error, (err) => {
-    console.error(err);
+    logger.error(err);
   });
 
   bot.on(Events.MessageCreate, onMessageCreate);

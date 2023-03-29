@@ -1,5 +1,6 @@
 import { checkIntegrations } from '../linen';
 import { Routes, Client, GatewayIntentBits } from 'discord.js';
+import { logger } from '@linen/logger';
 
 async function fetchAllAccounts(bot: Client<boolean>) {
   const accounts: string[] = [];
@@ -25,12 +26,12 @@ export async function cleanUpIntegrations(token: string, botNum: number) {
   await bot.login(token);
 
   const accounts = await fetchAllAccounts(bot);
-  console.log('accounts', accounts);
+  logger.info('accounts', accounts);
 
   const accountsToLeave = await checkIntegrations(accounts, botNum).then((e) =>
     accounts.filter((a) => !e.some((acc) => acc.discordServerId === a))
   );
-  console.log('accountsToLeave', accountsToLeave);
+  logger.info('accountsToLeave', accountsToLeave);
 
   for (const acc of accountsToLeave) {
     await bot.rest.delete(Routes.userGuild(acc));
