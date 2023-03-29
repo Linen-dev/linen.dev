@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Nav } from '@linen/ui';
 import { Permissions, SerializedUser } from '@linen/types';
 import { FiInbox } from '@react-icons/all-files/fi/FiInbox';
 import { FiLayers } from '@react-icons/all-files/fi/FiLayers';
 import { FiStar } from '@react-icons/all-files/fi/FiStar';
+import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
+import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp';
 import Link from 'components/Link/InternalLink';
 
 interface Props {
@@ -19,29 +21,38 @@ export default function MenuGroup({
   permissions,
   paths,
 }: Props) {
+  const [show, toggle] = useState(true);
   return (
     <>
-      {currentUser && <Nav.Group>Menu</Nav.Group>}
-      {permissions.inbox && (
-        <Link href="/inbox">
-          <Nav.Item active={paths.inbox === currentUrl}>
-            <FiInbox /> Inbox
-          </Nav.Item>
-        </Link>
-      )}
-      {permissions.starred && (
-        <Link href="/starred">
-          <Nav.Item active={paths.starred === currentUrl}>
-            <FiStar /> Starred
-          </Nav.Item>
-        </Link>
-      )}
       {currentUser && (
-        <Link href="/all">
-          <Nav.Item active={paths.all === currentUrl}>
-            <FiLayers /> All
-          </Nav.Item>
-        </Link>
+        <Nav.Group onClick={() => toggle((show) => !show)}>
+          Menu {show ? <FiChevronUp /> : <FiChevronDown />}
+        </Nav.Group>
+      )}
+      {show && (
+        <>
+          {permissions.inbox && (
+            <Link href="/inbox">
+              <Nav.Item active={paths.inbox === currentUrl}>
+                <FiInbox /> Inbox
+              </Nav.Item>
+            </Link>
+          )}
+          {permissions.starred && (
+            <Link href="/starred">
+              <Nav.Item active={paths.starred === currentUrl}>
+                <FiStar /> Starred
+              </Nav.Item>
+            </Link>
+          )}
+          {currentUser && (
+            <Link href="/all">
+              <Nav.Item active={paths.all === currentUrl}>
+                <FiLayers /> All
+              </Nav.Item>
+            </Link>
+          )}
+        </>
       )}
     </>
   );
