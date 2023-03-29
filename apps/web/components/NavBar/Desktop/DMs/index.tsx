@@ -5,6 +5,7 @@ import Link from 'components/Link/InternalLink';
 import classNames from 'classnames';
 import styles from '../index.module.scss';
 import { Permissions, SerializedChannel } from '@linen/types';
+import { FiPlus } from '@react-icons/all-files/fi/FiPlus';
 import { FiX } from '@react-icons/all-files/fi/FiX';
 import { useState } from 'react';
 import { archiveChannel } from 'utilities/requests';
@@ -20,22 +21,28 @@ type Props = {
 
 export function DMs({
   permissions,
-  dms: initDms,
+  dms: initialDms,
   channelName,
   highlights,
   debouncedUpdateReadStatus,
   setHighlights,
 }: Props) {
-  const [dms, setDms] = useState(initDms);
-  if (!dms || !dms.length) {
-    return <></>;
-  }
+  const [modal, setModal] = useState(false);
+  const [dms, setDms] = useState(initialDms);
   return (
     <>
       <Nav.Group>
-        DMs
+        Direct Messages
         {!!permissions.accountId && (
-          <NewDmModal communityId={permissions.accountId} setDms={setDms} />
+          <>
+            <FiPlus className="cursor-pointer" onClick={() => setModal(true)} />
+            <NewDmModal
+              communityId={permissions.accountId}
+              setDms={setDms}
+              show={modal}
+              close={() => setModal(false)}
+            />
+          </>
         )}
       </Nav.Group>
       <div>
