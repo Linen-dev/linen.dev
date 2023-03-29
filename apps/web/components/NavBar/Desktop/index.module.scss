@@ -70,21 +70,6 @@
   pointer-events: none;
 }
 
-.item {
-  display: block;
-}
-
-.drop {
-  background: $color-blue-50;
-  border-radius: 4px;
-  color: $color-gray-900;
-}
-
-.drop > div {
-  background: $color-blue-50;
-  color: $color-gray-900;
-}
-
 .label {
   cursor: pointer;
 }
