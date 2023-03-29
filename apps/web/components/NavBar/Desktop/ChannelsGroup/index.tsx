@@ -10,6 +10,7 @@ import Link from 'components/Link/InternalLink';
 import NewChannelModal from 'components/Modals/NewChannelModal';
 import styles from './index.module.scss';
 import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
+import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp';
 
 interface Props {
   channelName: string;
@@ -62,7 +63,7 @@ export default function ChannelsGroup({
                   setModal(true);
                 }}
               />
-              <FiChevronDown />
+              {show ? <FiChevronUp /> : <FiChevronDown />}
             </div>
 
             <NewChannelModal
