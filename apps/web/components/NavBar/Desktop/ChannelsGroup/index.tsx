@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import classNames from 'classnames';
 import { Nav } from '@linen/ui';
 import { Permissions, SerializedChannel, SerializedUser } from '@linen/types';
 import { Mode } from '@linen/hooks/mode';
 import { FiHash } from '@react-icons/all-files/fi/FiHash';
 import { FiLock } from '@react-icons/all-files/fi/FiLock';
+import { FiPlus } from '@react-icons/all-files/fi/FiPlus';
 import Link from 'components/Link/InternalLink';
 import NewChannelModal from 'components/Modals/NewChannelModal';
 import styles from '../index.module.scss';
@@ -40,13 +41,21 @@ export default function ChannelsGroup({
   onChannelClick,
   onDrop,
 }: Props) {
+  const [modal, setModal] = useState(false);
   return (
     <>
       <Nav.Group>
         Channels
-        {currentUser &&
-          permissions.channel_create &&
-          !!permissions.accountId && <NewChannelModal {...{ permissions }} />}
+        {currentUser && permissions.channel_create && !!permissions.accountId && (
+          <>
+            <FiPlus className="cursor-pointer" onClick={() => setModal(true)} />
+            <NewChannelModal
+              permissions={permissions}
+              show={modal}
+              close={() => setModal(false)}
+            />
+          </>
+        )}
       </Nav.Group>
       <div>
         {channels.map((channel: SerializedChannel, index: number) => {

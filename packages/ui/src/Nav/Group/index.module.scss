@@ -3,7 +3,7 @@
 .group {
   align-items: center;
   color: $color-gray-500;
-  border-radius: 0.5rem;
+  border-radius: 0.25rem;
   display: flex;
   font-size: 0.75rem;
   letter-spacing: 1.3px;
@@ -25,6 +25,6 @@
 }
 
 .action:hover {
-  background-color: $color-gray-100;
+  background-color: $color-gray-50;
   color: $color-gray-900;
 }
