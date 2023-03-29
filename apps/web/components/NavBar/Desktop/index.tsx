@@ -35,6 +35,7 @@ import MenuGroup from './MenuGroup';
 import ChannelsGroup from './ChannelsGroup';
 import MenuIcon from './MenuIcon';
 import PoweredByLinen from './PoweredByLinen';
+import AnalyticsGroup from './AnalyticsGroup';
 
 interface Props {
   mode: Mode;
@@ -261,16 +262,12 @@ export default function DesktopNavBar({
               </Link>
             </>
           )}
-          {permissions.manage && (
-            <>
-              <Nav.Group>Analytics</Nav.Group>
-              <Link href="/metrics">
-                <Nav.Item active={paths.metrics === router.asPath}>
-                  <FiBarChart /> Metrics
-                </Nav.Item>
-              </Link>
-            </>
-          )}
+          <AnalyticsGroup
+            currentUser={currentUser}
+            currentUrl={router.asPath}
+            permissions={permissions}
+            paths={paths}
+          />
           <PoweredByLinen />
         </Nav>
       </div>

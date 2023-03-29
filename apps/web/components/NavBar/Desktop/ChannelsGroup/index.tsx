@@ -43,7 +43,10 @@ export default function ChannelsGroup({
   onChannelClick,
   onDrop,
 }: Props) {
-  const [show, toggle] = useState(true);
+  const initialShow = channels.some(
+    (channel) => channel.channelName === channelName
+  );
+  const [show, toggle] = useState(initialShow);
   const [modal, setModal] = useState(false);
   return (
     <>
