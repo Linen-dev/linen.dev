@@ -2,7 +2,7 @@ import { useState } from 'react';
 import classNames from 'classnames';
 import Draggable from './Draggable';
 import { getThreadUrl } from '../Pages/Channel/utilities/url';
-import { Toast, Tooltip, ConfirmationModal, ReminderModal } from '@linen/ui';
+import { Toast, Tooltip } from '@linen/ui';
 import {
   Permissions,
   Settings,
@@ -36,7 +36,7 @@ interface Props {
   currentUser: SerializedUser | null;
   mode?: Mode;
   drag: 'thread' | 'message';
-  onDelete?(messageId: string): void;
+  onDelete?(): void;
   onMute?(threadId: string): void;
   onUnmute?(threadId: string): void;
   onPin?(threadId: string): void;
@@ -54,7 +54,7 @@ interface Props {
     active: boolean;
   }): void;
   onRead?(threadId: string): void;
-  onRemind?(threadId: string, reminder: ReminderTypes): void;
+  onRemind?(): void;
   onUnread?(threadId: string): void;
 }
 
@@ -180,7 +180,7 @@ export default function Actions({
             onClick={(event) => {
               event.stopPropagation();
               event.preventDefault();
-              setModal(ModalView.REMINDER);
+              onRemind();
             }}
           >
             <Tooltip className={styles.tooltip} text="Reminder">
@@ -293,36 +293,19 @@ export default function Actions({
           </Tooltip>
         </li>
         {isDeleteVisible && (
-          <li onClick={() => setModal(ModalView.DELETE)}>
+          <li
+            onClick={(event) => {
+              event.stopPropagation();
+              event.preventDefault();
+              onDelete();
+            }}
+          >
             <Tooltip className={styles.tooltip} text="Delete">
               <FiTrash2 />
             </Tooltip>
           </li>
         )}
       </ul>
-      {isRemindVisible && (
-        <ReminderModal
-          open={modal === ModalView.REMINDER}
-          close={() => setModal(ModalView.NONE)}
-          onConfirm={(reminder: ReminderTypes) => {
-            onRemind(thread.id, reminder);
-            setModal(ModalView.NONE);
-          }}
-        />
-      )}
-      {isDeleteVisible && (
-        <ConfirmationModal
-          title="Delete message"
-          description="Permanently delete this message?"
-          confirm="Delete"
-          open={modal === ModalView.DELETE}
-          close={() => setModal(ModalView.NONE)}
-          onConfirm={() => {
-            onDelete(message.id);
-            setModal(ModalView.NONE);
-          }}
-        />
-      )}
     </>
   );
 }
