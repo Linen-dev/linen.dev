@@ -18,7 +18,11 @@ function Attachments({ attachments, onLoad }: Props) {
     <div className={styles.attachments}>
       {attachments.map((attachment: SerializedAttachment, index) =>
         isImage(attachment.url) ? (
-          <Image key={attachment.url + index} src={attachment.url} onLoad={onLoad} />
+          <Image
+            key={attachment.url + index}
+            src={attachment.url}
+            onLoad={onLoad}
+          />
         ) : (
           <Attachment key={attachment.url + index} attachment={attachment} />
         )
