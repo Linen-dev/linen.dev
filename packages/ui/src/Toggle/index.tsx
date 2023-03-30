@@ -1,5 +1,6 @@
 import React from 'react';
-import ReactSwitch from 'react-switch';
+import classNames from 'classnames';
+import styles from './index.module.scss';
 
 interface Props {
   checked: boolean;
@@ -8,19 +9,13 @@ interface Props {
 
 export default function Toggle({ checked, onChange }: Props) {
   return (
-    <ReactSwitch
+    <input
+      className={classNames(styles.checkbox, styles.switch)}
+      type="checkbox"
       checked={checked}
-      onChange={onChange}
-      onColor="#1149e0"
-      offColor="#e5e7eb"
-      onHandleColor="#ffffff"
-      offHandleColor="#ffffff"
-      activeBoxShadow="0 0 1px 0 #1149e0"
-      checkedIcon={false}
-      uncheckedIcon={false}
-      height={24}
-      width={44}
-      handleDiameter={20}
+      onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+        onChange(event.target.checked)
+      }
     />
   );
 }

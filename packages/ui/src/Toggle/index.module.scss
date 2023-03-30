@@ -1,0 +1,41 @@
+@import '../colors.scss';
+
+.checkbox {
+  appearance: none;
+  background: $color-gray-200;
+  border-radius: 16px;
+  cursor: pointer;
+  display: flex;
+  height: 24px;
+  margin: 0;
+  outline: none;
+  padding: 0;
+  position: relative;
+  outline: none;
+  transition: background .2s, border-color .2s, box-shadow .2s;
+  user-select: none;
+  width: 44px;
+
+  &:after {
+    background: white;
+    border-radius: 50%;
+    content: '';
+    display: block;
+    height: 20px;
+    left: 2px;
+    position: absolute;
+    top: 2px;
+    transform: translateX(0);
+    transition: transform .2s, opacity .2s;
+    width: 20px;
+  }
+
+  &:checked {
+    background: $color-primary;
+  }
+
+  &:checked:after  {
+    transform: translateX(20px);
+  }
+}
+
