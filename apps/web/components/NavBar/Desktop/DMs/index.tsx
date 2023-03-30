@@ -45,6 +45,7 @@ export function DMs({
   const [show, toggle] = useState(true);
   const [modal, setModal] = useState(false);
   const [dms, setDms] = useState(initialDms);
+
   return (
     <>
       <Nav.Group onClick={() => toggle((show) => !show)}>
@@ -85,11 +86,10 @@ export function DMs({
             const highlighted = !active && count > 0;
 
             if (!highlighted && channel.hidden) {
-              return <></>;
+              return null;
             }
 
             const onArchiveClick = () => {
-              console.log('archive!');
               const id = channel.id;
               const accountId = permissions.accountId;
               accountId &&
