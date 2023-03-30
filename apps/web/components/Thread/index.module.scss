@@ -4,6 +4,11 @@
   background: $color-white;
   min-height: calc(100vh - 64px);
   overflow-y: scroll;
+  width: 520px;
+}
+
+.container.expanded {
+  width: 100%;
 }
 
 @media screen and (min-width: 768px) and (max-width: 1023px) {
@@ -14,13 +19,8 @@
 
 .thread {
   background: $color-white;
-  width: 520px;
   animation-name: opacity-animation;
   animation-duration: 0.15s;
-}
-
-.thread.expanded {
-  width: 100%;
 }
 
 @keyframes opacity-animation {
@@ -53,7 +53,7 @@
 }
 
 @media (max-width: 767px) {
-  .thread {
+  .container {
     min-width: 320px;
     max-width: 100%;
   }

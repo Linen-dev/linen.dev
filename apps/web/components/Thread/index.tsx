@@ -184,7 +184,11 @@ export default function Thread({
   }, []);
 
   return (
-    <div className={classNames(styles.container)} ref={ref} onDrop={onDrop}>
+    <div
+      className={classNames(styles.container, { [styles.expanded]: expanded })}
+      ref={ref}
+      onDrop={onDrop}
+    >
       <Header
         thread={thread}
         channelName={channelName}
@@ -196,10 +200,8 @@ export default function Thread({
         onSetTitle={(title) => updateThread({ title })}
         manage={manage}
       />{' '}
-      <Summary thread={thread} expanded={expanded} />
-      <div
-        className={classNames(styles.thread, { [styles.expanded]: expanded })}
-      >
+      <Summary thread={thread} />
+      <div className={styles.thread}>
         <Messages
           thread={thread}
           permissions={permissions}
