@@ -1,9 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import classNames from 'classnames';
 import { useInView } from 'react-intersection-observer';
-import { Avatar, Badge, Message } from '@linen/ui';
+import {
+  Avatar,
+  Badge,
+  Message,
+  ConfirmationModal,
+  ReminderModal,
+} from '@linen/ui';
 import Actions from 'components/Actions';
-import CheckIcon from 'components/icons/CheckIcon';
 import { format } from '@linen/utilities/date';
 import { FiCheck } from '@react-icons/all-files/fi/FiCheck';
 import { Mode } from '@linen/hooks/mode';
@@ -90,6 +95,12 @@ function Left({
   );
 }
 
+enum ModalView {
+  NONE,
+  REMINDER,
+  DELETE,
+}
+
 export function Row({
   className,
   thread,
@@ -116,6 +127,7 @@ export function Row({
   onRemind,
   onUnread,
 }: Props) {
+  const [modal, setModal] = useState<ModalView>(ModalView.NONE);
   const [ref, hover] = useHover<HTMLDivElement>();
   const { ref: inViewRef, inView } = useInView();
   const top = !isPreviousMessageFromSameUser;
@@ -188,7 +200,7 @@ export function Row({
             currentUser={currentUser}
             isSubDomainRouting={isSubDomainRouting}
             drag={drag}
-            onDelete={onDelete}
+            onDelete={onDelete ? () => setModal(ModalView.DELETE) : undefined}
             onMute={onMute}
             onUnmute={onUnmute}
             onPin={onPin}
@@ -196,11 +208,38 @@ export function Row({
             onResolution={onResolution}
             onReaction={onReaction}
             onRead={onRead}
-            onRemind={onRemind}
+            onRemind={onRemind ? () => setModal(ModalView.REMINDER) : undefined}
             onUnread={onUnread}
             mode={mode}
           />
         </div>
+      )}
+      {onRemind && (
+        <ReminderModal
+          open={modal === ModalView.REMINDER}
+          close={() => {
+            setModal(ModalView.NONE);
+          }}
+          onConfirm={(reminder: ReminderTypes) => {
+            onRemind(thread.id, reminder);
+            setModal(ModalView.NONE);
+          }}
+        />
+      )}
+      {onDelete && (
+        <ConfirmationModal
+          title="Delete message"
+          description="Permanently delete this message?"
+          confirm="Delete"
+          open={modal === ModalView.DELETE}
+          close={() => {
+            setModal(ModalView.NONE);
+          }}
+          onConfirm={() => {
+            onDelete(message.id);
+            setModal(ModalView.NONE);
+          }}
+        />
       )}
     </div>
   );
