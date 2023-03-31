@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import classNames from 'classnames';
 import styles from './index.module.scss';
+import { highlightCode } from './utilities/highlight';
 
 interface Props {
   className?: string;
@@ -15,9 +16,9 @@ function Code({ className, content, highlight, inline }: Props): JSX.Element {
   useEffect(() => {
     let mounted = true;
     if (highlight && !highlighted) {
-      import('highlight.js').then((hljs: any) => {
+      highlightCode(content).then((output) => {
         if (mounted) {
-          setHighlighted(hljs.default.highlightAuto(content));
+          setHighlighted(output);
         }
       });
     }
@@ -41,7 +42,7 @@ function Code({ className, content, highlight, inline }: Props): JSX.Element {
       >
         <code
           className={styles.code}
-          dangerouslySetInnerHTML={{ __html: highlighted.value }}
+          dangerouslySetInnerHTML={{ __html: highlighted }}
         />
       </pre>
     );
