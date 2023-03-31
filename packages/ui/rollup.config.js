@@ -3,6 +3,7 @@ const commonjs = require('@rollup/plugin-commonjs');
 const typescript = require('@rollup/plugin-typescript');
 const postcss = require('rollup-plugin-postcss');
 const external = require('rollup-plugin-peer-deps-external');
+const { visualizer } = require('rollup-plugin-visualizer');
 
 module.exports = {
   input: 'src/index.tsx',
@@ -20,5 +21,6 @@ module.exports = {
     typescript({ tsconfig: './tsconfig.json' }),
     commonjs(),
     external(),
-  ],
+    process.env.ANALYZE && visualizer(),
+  ].filter(Boolean),
 };
