@@ -8,13 +8,16 @@ import Toast from '@linen/ui/Toast';
 import { useRouter } from 'next/router';
 import { Roles } from '@linen/database';
 import { AiOutlineUser } from '@react-icons/all-files/ai/AiOutlineUser';
+import { AiOutlineDelete } from '@react-icons/all-files/ai/AiOutlineDelete';
+
 import {
   SerializedAccount,
   SerializedChannel,
   Settings,
   Permissions,
 } from '@linen/types';
-import { put } from 'utilities/requests';
+import { put, deleteUser } from 'utilities/requests';
+import ConfirmationModal from '@linen/ui/ConfirmationModal';
 
 export interface Props {
   channels: SerializedChannel[];
@@ -142,6 +145,7 @@ function TableMembers({
 function RowMember(user: MembersType, communityId: string): JSX.Element {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState(user);
+  const [modal, setModal] = useState(false);
 
   const onChange = async (e: any, status: string) => {
     e?.preventDefault();
@@ -169,12 +173,29 @@ function RowMember(user: MembersType, communityId: string): JSX.Element {
     }
   };
 
+  const onDeleteClick = async (user: MembersType) => {
+    await deleteUser({
+      userId: user.id,
+      accountId: communityId,
+    }).then((_) => {
+      window.location.reload();
+    });
+  };
+
   return (
     <li key={user.id} className="mb-1">
       <div className="border-gray-200 border-solid border rounded-md">
-        <div className="flex justify-start items-center p-4">
-          <p className="grow text-sm font-medium truncate">{user.email}</p>
-          <div className="flex pr-4">
+        <div className="flex justify-start items-center px-4 py-2 gap-4">
+          <p className="text-sm font-medium truncate">{user.email}</p>
+          {user.status === 'PENDING' ? (
+            <div className="flex items-center">
+              <MemberStatus status={user.status} />
+            </div>
+          ) : (
+            <></>
+          )}
+          <div className="grow" />
+          <div className="">
             <NativeSelect
               id={user.id}
               value={data.role}
@@ -183,7 +204,7 @@ function RowMember(user: MembersType, communityId: string): JSX.Element {
               }
               disabled={loading}
               icon={<AiOutlineUser />}
-              theme="blue"
+              theme="white"
               options={[
                 { label: 'Member', value: Roles.MEMBER },
                 { label: 'Admin', value: Roles.ADMIN },
@@ -191,8 +212,32 @@ function RowMember(user: MembersType, communityId: string): JSX.Element {
               ]}
             />
           </div>
-          <div className="flex items-center">
-            <MemberStatus status={user.status} />
+          <div className="items-center">
+            {user.role !== Roles.OWNER ? (
+              <>
+                {modal && (
+                  <ConfirmationModal
+                    title="Remove user"
+                    description="Please confirm to remove the user"
+                    confirm="Remove"
+                    open={modal}
+                    close={() => {
+                      setModal(false);
+                    }}
+                    onConfirm={() => {
+                      onDeleteClick(user);
+                      setModal(false);
+                    }}
+                  />
+                )}
+                <AiOutlineDelete
+                  onClick={() => setModal(true)}
+                  className="cursor-pointer"
+                />
+              </>
+            ) : (
+              <div className="w-4" />
+            )}
           </div>
         </div>
       </div>

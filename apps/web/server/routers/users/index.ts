@@ -9,10 +9,9 @@ import {
   Response,
 } from 'server/types';
 import { prisma } from '@linen/database';
-import { Roles } from '@linen/types';
+import { Roles, deleteUserSchema, deleteUserType } from '@linen/types';
 import UsersService from 'services/users';
 import { z } from 'zod';
-import serialize from 'serializers/user';
 
 const prefix = '/api/users';
 
@@ -71,6 +70,44 @@ usersRouter.put(
 
     await UsersService.updateUserRole({ userId, role });
     return res.status(200).json({});
+  }
+);
+
+usersRouter.delete(
+  `${prefix}`,
+  tenantMiddleware([Roles.ADMIN, Roles.OWNER]),
+  validationMiddleware(deleteUserSchema),
+  async (
+    req: AuthedRequestWithTenantAndBody<deleteUserType>,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const { userId } = req.body;
+
+    const user = await prisma.users.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+    if (user && user.accountsId === req.tenant?.id) {
+      await prisma.users.update({
+        where: { id: user.id },
+        data: {
+          authsId: null,
+          displayName: 'deleted-user',
+          profileImageUrl: null,
+        },
+      });
+      return res.status(200).json({});
+    }
+
+    const invite = await prisma.invites.findUnique({ where: { id: userId } });
+    if (invite && invite.accountsId === req.tenant?.id) {
+      await prisma.invites.delete({ where: { id: userId } });
+      return res.status(200).json({});
+    }
+
+    return next(new BadRequest('user not found'));
   }
 );
 

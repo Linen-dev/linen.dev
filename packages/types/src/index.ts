@@ -9,6 +9,7 @@ export * from './integrations/messages';
 export * from './integrations/users';
 
 export * from './api/channels';
+export * from './api/users';
 
 export * from './patterns';
 export * from './notification';

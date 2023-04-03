@@ -17,6 +17,7 @@ import type {
   SerializedUser,
   putChannelMembersType,
   findChannelsWithStats,
+  deleteUserType,
 } from '@linen/types';
 import type * as AccountsTypes from 'server/routers/accounts.types';
 import type * as ThreadsTypes from 'server/routers/threads/types';
@@ -181,3 +182,6 @@ export const updateChannelMembers = ({
   ...props
 }: putChannelMembersType): Promise<SerializedUser[]> =>
   put(`/api/channels/${channelId}/members`, props);
+
+export const deleteUser = ({ ...props }: deleteUserType): Promise<{}> =>
+  deleteReq(`/api/users?${qs(props)}`);
