@@ -1,4 +1,5 @@
 import React from 'react';
+import classNames from 'classnames';
 import Title from './Title';
 import { Icon, StickyHeader } from '@linen/ui';
 import { ThreadState } from '@linen/database';
@@ -33,7 +34,11 @@ export default function Header({
 }: Props) {
   const { title, state } = thread;
   return (
-    <StickyHeader>
+    <StickyHeader
+      className={classNames({
+        [styles.expanded]: expanded,
+      })}
+    >
       <div className={styles.container}>
         <div className={styles.center}>
           <div className={styles.header}>

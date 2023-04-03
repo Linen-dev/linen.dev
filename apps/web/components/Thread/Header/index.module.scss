@@ -25,6 +25,12 @@
   position: relative;
 }
 
+.expanded {
+  border-bottom: none;
+  padding: 1rem 1rem 0;
+  position: relative;
+}
+
 .expand {
   display: flex;
 }
