@@ -33,7 +33,7 @@
 }
 
 .container.expanded .footer {
-  padding-bottom: 0;
+  padding-bottom: 1rem;
 }
 
 .chat {
@@ -47,6 +47,7 @@
 
 .container.expanded .chat {
   border-top: none;
+  padding-top: 0;
 }
 
 @media (max-width: 1023px) {
