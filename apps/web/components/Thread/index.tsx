@@ -21,6 +21,7 @@ import { scrollToBottom } from '@linen/utilities/scroll';
 import styles from './index.module.scss';
 import { put } from 'utilities/requests';
 import { CustomLinkHelper } from 'utilities/url';
+import { FiEye } from '@react-icons/all-files/fi/FiEye';
 
 interface Props {
   thread: SerializedThread;
@@ -183,6 +184,8 @@ export default function Thread({
     permissions.chat && handleScroll();
   }, []);
 
+  const views = viewCount + 1;
+
   return (
     <div
       className={classNames(styles.container, { [styles.expanded]: expanded })}
@@ -217,9 +220,15 @@ export default function Thread({
 
         <div className={styles.footer}>
           <div className={styles.count}>
-            <span className={styles.views}>
-              <div className={styles.text}>Views</div>
-              <div className={styles.count}>{viewCount + 1}</div>
+            <span className={styles.badge}>
+              <a className={styles.text} href="https://linen.dev">
+                Powered by Linen
+              </a>
+              {views > 1 && (
+                <div className={styles.count}>
+                  Viewed {views} {views === 1 ? 'time' : 'times'}
+                </div>
+              )}
             </span>
           </div>
           {threadUrl && (
@@ -325,11 +334,10 @@ function ChannelButton({
   return (
     <>
       {channelLink && (
-        <a
-          href={CustomLinkHelper(channelLink)}
-          className="ml-3 hover:underline text-sm"
-        >
-          Back to #{thread.channel?.channelName}
+        <a href={CustomLinkHelper(channelLink)} className={styles.badge}>
+          <span className={styles.count}>
+            Back to #{thread.channel?.channelName}
+          </span>
         </a>
       )}
     </>
