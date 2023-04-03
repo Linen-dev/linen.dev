@@ -20,18 +20,7 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  animation-name: opacity-animation;
-  animation-duration: 0.15s;
   flex-grow: 1;
-}
-
-@keyframes opacity-animation {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
 }
 
 .suggestions {

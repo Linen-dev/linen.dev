@@ -19,17 +19,6 @@
 
 .thread {
   background: $color-white;
-  animation-name: opacity-animation;
-  animation-duration: 0.15s;
-}
-
-@keyframes opacity-animation {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
 }
 
 .footer {
