@@ -1,9 +1,13 @@
+@import 'styles/colors.scss';
+
 .join {
   align-items: center;
-  color: #1c7ed6;
+  color: $color-indigo-700;
   display: flex;
-  float: left;
-  font-size: 14px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1.3px;
+  font-weight: 500;
 }
 
 .join:hover {

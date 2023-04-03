@@ -1,6 +1,6 @@
 import React from 'react';
-import { AiOutlineLink } from '@react-icons/all-files/ai/AiOutlineLink';
-import styles from './index.module.css';
+import { FiExternalLink } from '@react-icons/all-files/fi/FiExternalLink';
+import styles from './index.module.scss';
 
 interface Props {
   href: string;
@@ -10,7 +10,7 @@ interface Props {
 export default function JoinChannelLink({ href, communityType }: Props) {
   return (
     <a className={styles.join} href={href} target="_blank" rel="noreferrer">
-      <AiOutlineLink className={styles.icon} size={18} />
+      <FiExternalLink className={styles.icon} size={18} />
       {`Join thread in ${communityType === 'discord' ? 'Discord' : 'Slack'}`}
     </a>
   );
