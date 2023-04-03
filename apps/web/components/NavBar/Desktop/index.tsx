@@ -99,13 +99,14 @@ export default function DesktopNavBar({
     ].includes(router.asPath);
   };
 
-  const [highlights, setHighlights] = useState<string[]>([]);
-  const [collapsed, setCollapsed] = useState(false);
-  const [showSettings, toggleSettings] = useState(isSettingsPath());
-  const [modal, setModal] = useState(false);
-
+  const currentUser = permissions.user || null;
   const userId = permissions.auth?.id || null;
   const token = permissions.token || null;
+
+  const [highlights, setHighlights] = useState<string[]>([]);
+  const [collapsed, setCollapsed] = useState(!currentUser);
+  const [showSettings, toggleSettings] = useState(isSettingsPath());
+  const [modal, setModal] = useState(false);
 
   const onNewMessage = (payload: any) => {
     if (payload.is_thread) {
@@ -152,8 +153,6 @@ export default function DesktopNavBar({
     onNewMessage,
   });
 
-  const currentUser = permissions.user || null;
-
   useEffect(() => {
     let mounted = true;
     if (currentUser) {
@@ -177,16 +176,22 @@ export default function DesktopNavBar({
 
   return (
     <div className={styles.container}>
-      {currentUser && (
-        <div className={styles.switch}>
-          <MenuIcon onClick={() => setCollapsed((collapsed) => !collapsed)} />
-          {communities?.map((community) => {
-            return <CommunityLink key={community.id} community={community} />;
-          })}
-          <AddCommunityLink onClick={() => setModal(true)} />
-          <NewCommunityModal open={modal} close={() => setModal(false)} />
-        </div>
-      )}
+      <div className={styles.switch}>
+        <MenuIcon onClick={() => setCollapsed((collapsed) => !collapsed)} />
+        {currentUser && (
+          <>
+            {communities?.map((community) => {
+              return <CommunityLink key={community.id} community={community} />;
+            })}
+          </>
+        )}
+        {currentUser && (
+          <>
+            <AddCommunityLink onClick={() => setModal(true)} />
+            <NewCommunityModal open={modal} close={() => setModal(false)} />
+          </>
+        )}
+      </div>
       <div
         className={classNames(styles.animation, {
           [styles.collapsed]: collapsed,

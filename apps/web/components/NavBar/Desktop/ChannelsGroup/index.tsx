@@ -43,9 +43,9 @@ export default function ChannelsGroup({
   onChannelClick,
   onDrop,
 }: Props) {
-  const initialShow = channels.some(
-    (channel) => channel.channelName === channelName
-  );
+  const initialShow =
+    !!currentUser &&
+    channels.some((channel) => channel.channelName === channelName);
   const [show, toggle] = useState(initialShow);
   const [modal, setModal] = useState(false);
   return (
@@ -56,7 +56,9 @@ export default function ChannelsGroup({
         }}
       >
         Channels
-        {currentUser && permissions.channel_create && !!permissions.accountId && (
+        {currentUser &&
+        !!permissions.channel_create &&
+        !!permissions.accountId ? (
           <>
             <div className={styles.flex}>
               <FiPlus
@@ -75,6 +77,8 @@ export default function ChannelsGroup({
               close={() => setModal(false)}
             />
           </>
+        ) : (
+          <>{show ? <FiChevronUp /> : <FiChevronDown />}</>
         )}
       </Nav.Group>
       {show && (
