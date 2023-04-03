@@ -8,7 +8,8 @@
 }
 
 .container.expanded {
-  width: 100%;
+  margin: 0 auto;
+  width: 52rem;
 }
 
 @media screen and (min-width: 768px) and (max-width: 1023px) {
@@ -39,6 +40,10 @@
   padding: 1rem;
   position: sticky;
   width: 100%;
+}
+
+.container.expanded .chat {
+  border-top: none;
 }
 
 @media (max-width: 1023px) {
