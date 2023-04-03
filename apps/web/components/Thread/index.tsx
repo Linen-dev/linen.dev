@@ -217,7 +217,10 @@ export default function Thread({
 
         <div className={styles.footer}>
           <div className={styles.count}>
-            <span className={styles.subtext}>View count: {viewCount + 1}</span>
+            <span className={styles.views}>
+              <div className={styles.text}>Views</div>
+              <div className={styles.count}>{viewCount + 1}</div>
+            </span>
           </div>
           {threadUrl && (
             <>
