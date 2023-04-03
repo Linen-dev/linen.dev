@@ -22,6 +22,9 @@ export const postprocess = (
       if (user) {
         node.source = `${getTag(node.type)}${user.id}`;
         node.id = user.id;
+      } else {
+        node.type = 'text';
+        node.value = node.source.substr(1);
       }
     }
   });
