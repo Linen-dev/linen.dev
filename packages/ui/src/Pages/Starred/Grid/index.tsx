@@ -5,7 +5,7 @@ import Row from '../Row';
 interface Props {
   threads?: SerializedThread[];
   currentThreadId?: string;
-  loading: boolean;
+  loading?: boolean;
   onSelect(thread: SerializedThread): void;
   onRead?(threadId: string): void;
   onMute?(threadId: string): void;

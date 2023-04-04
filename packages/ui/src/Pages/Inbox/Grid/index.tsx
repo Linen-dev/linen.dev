@@ -14,7 +14,7 @@ interface Props {
   currentThreadId?: string;
   selections: Selections;
   permissions: Permissions;
-  loading: boolean;
+  loading?: boolean;
   onChange(id: string, checked: boolean, index: number): void;
   onSelect(thread: SerializedThread): void;
   onRead?(threadId: string): void;

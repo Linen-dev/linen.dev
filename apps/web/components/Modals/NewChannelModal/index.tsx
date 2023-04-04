@@ -178,7 +178,7 @@ export function ShowUsers({
         id="userId"
         name="userId"
         value={val}
-        autocomplete="off"
+        autoComplete="off"
         onInput={(e: any) => {
           setVal(e.target.value);
           fetchMentions(e.target.value, communityId).then(setQuery);
@@ -200,7 +200,9 @@ export function ShowUsers({
 
       {users.length > 0 && (
         <>
-          <Label className="pt-4">Members</Label>
+          <Label htmlFor="members" className="pt-4">
+            Members
+          </Label>
           <div className="flex flex-wrap pb-2">
             {users.map((user) => {
               const props =
