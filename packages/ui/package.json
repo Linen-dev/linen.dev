@@ -9,7 +9,7 @@
     "dist"
   ],
   "scripts": {
-    "prebuild": "rm -rf dist && yarn tsc",
+    "prebuild": "rm -rf dist",
     "build": "rollup --config rollup.config.js",
     "dev": "npm run watch",
     "watch": "rollup --config rollup.config.js --watch",
