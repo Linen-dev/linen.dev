@@ -221,9 +221,11 @@ export default function Thread({
         <div className={styles.footer}>
           <div className={styles.count}>
             <span className={styles.badge}>
-              <a className={styles.text} href="https://linen.dev">
-                Powered by Linen
-              </a>
+              {!currentUser && (
+                <a className={styles.text} href="https://linen.dev">
+                  Powered by Linen
+                </a>
+              )}
               {views > 1 && (
                 <div className={styles.count}>
                   Viewed {views} {views === 1 ? 'time' : 'times'}
