@@ -18,7 +18,15 @@ module.exports = {
       modules: true,
       use: ['sass'],
     }),
-    typescript(),
+    typescript({
+      compilerOptions: {
+        target: 'esnext',
+        module: 'esnext',
+        strict: true,
+        esModuleInterop: true,
+        jsx: 'react',
+      },
+    }),
     commonjs(),
     external(),
     process.env.ANALYZE && visualizer(),
