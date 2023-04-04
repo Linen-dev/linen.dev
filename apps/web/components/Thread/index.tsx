@@ -21,7 +21,6 @@ import { scrollToBottom } from '@linen/utilities/scroll';
 import styles from './index.module.scss';
 import { put } from 'utilities/requests';
 import { CustomLinkHelper } from 'utilities/url';
-import { FiEye } from '@react-icons/all-files/fi/FiEye';
 
 interface Props {
   thread: SerializedThread;
