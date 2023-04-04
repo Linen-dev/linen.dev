@@ -4,20 +4,21 @@ const typescript = require('@rollup/plugin-typescript');
 const postcss = require('rollup-plugin-postcss');
 const external = require('rollup-plugin-peer-deps-external');
 const { visualizer } = require('rollup-plugin-visualizer');
+const path = require('path');
 
 module.exports = {
-  input: 'src/index.tsx',
+  input: ['src/Accordion/index.tsx', 'src/Alert/index.tsx'],
   output: {
     dir: 'dist',
     format: 'cjs',
+    entryFileNames(chunk) {
+      const file = chunk.facadeModuleId
+        .replace(path.join(__dirname, 'src/'), '')
+        .replace('index.tsx', '[name].js');
+      return file;
+    },
   },
   plugins: [
-    resolve(),
-    postcss({
-      extract: true,
-      modules: true,
-      use: ['sass'],
-    }),
     typescript({
       compilerOptions: {
         target: 'esnext',
@@ -26,6 +27,12 @@ module.exports = {
         esModuleInterop: true,
         jsx: 'react',
       },
+    }),
+    resolve(),
+    postcss({
+      extract: true,
+      modules: true,
+      use: ['sass'],
     }),
     commonjs(),
     external(),
