@@ -25,21 +25,21 @@ const style = {
 };
 
 const Toast = {
-  success(message: string, options?: Options) {
+  success(message: any, options?: Options) {
     toast.success(message, {
       style,
       icon: icons.success,
       ...options,
     });
   },
-  error(message: string, options?: Options) {
+  error(message: any, options?: Options) {
     toast.error(message, {
       style,
       icon: icons.error,
       ...options,
     });
   },
-  info(message: string, options?: Options) {
+  info(message: any, options?: Options) {
     toast.success(message, {
       style,
       icon: icons.info,

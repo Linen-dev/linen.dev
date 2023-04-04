@@ -16,10 +16,12 @@ interface Props {
   disabled?: boolean;
   readOnly?: boolean;
   icon?: React.ReactNode;
+  autoComplete?: string;
   autoFocus?: boolean;
   style?: object;
   inputRef?: React.RefObject<HTMLInputElement>;
   onChange?(event: React.ChangeEvent<HTMLInputElement>): void;
+  onInput?(event: React.ChangeEvent<HTMLInputElement>): void;
   onBlur?(event: React.ChangeEvent<HTMLInputElement>): void;
   onKeyDown?(event: React.KeyboardEvent<HTMLInputElement>): void;
   onKeyUp?(event: React.KeyboardEvent<HTMLInputElement>): void;
@@ -41,9 +43,11 @@ function TextInput({
   icon,
   inputRef,
   onChange,
+  onInput,
   onBlur,
   onKeyDown,
   onKeyUp,
+  autoComplete,
   autoFocus,
   ...rest
 }: Props) {
@@ -65,9 +69,11 @@ function TextInput({
           disabled={disabled}
           readOnly={readOnly}
           onChange={onChange}
+          onInput={onInput}
           onBlur={onBlur}
           onKeyDown={onKeyDown}
           onKeyUp={onKeyUp}
+          autoComplete={autoComplete}
           autoFocus={autoFocus}
           style={style}
           {...rest}

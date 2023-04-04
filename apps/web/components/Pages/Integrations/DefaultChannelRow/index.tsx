@@ -61,6 +61,7 @@ export default function DefaultChannelRow({
       </div>
       <div className="self-center">
         <NativeSelect
+          id="default-channel-integration-select"
           icon={<CommunityIcon color="#fff" />}
           theme="blue"
           defaultValue={selected?.id}

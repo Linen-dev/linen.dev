@@ -63,6 +63,7 @@ export default function AddThreadModal({
       <H3 className={styles.h3}>New Thread</H3>
       <Field>
         <NativeSelect
+          id="new-thread-channel"
           label="Channel"
           options={sortedChannels.map((channel) => ({
             label: channel.channelName,
@@ -78,6 +79,7 @@ export default function AddThreadModal({
       </Field>
       <Field>
         <TextInput
+          id="new-thread-title"
           label="Title"
           value={title}
           onChange={(event: React.ChangeEvent<HTMLInputElement>) =>

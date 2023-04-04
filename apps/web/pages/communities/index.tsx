@@ -49,6 +49,7 @@ export default function Communities({ communities }: Props) {
             </h1>
             <div className={styles.search}>
               <TextInput
+                id="communities-search"
                 icon={<AiOutlineSearch />}
                 placeholder="Search"
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
