@@ -18,7 +18,7 @@ module.exports = {
       modules: true,
       use: ['sass'],
     }),
-    typescript({ tsconfig: './tsconfig.json' }),
+    typescript(),
     commonjs(),
     external(),
     process.env.ANALYZE && visualizer(),
