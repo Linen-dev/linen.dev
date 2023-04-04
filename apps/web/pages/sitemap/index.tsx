@@ -9,7 +9,7 @@ import Layout from 'components/layout/CardLayout';
 import H1 from 'components/H1';
 import H2 from 'components/H2';
 import Link from 'components/Link';
-import { List } from 'components';
+import List from '@linen/ui/List';
 
 interface Props {
   communities: SerializedAccount[];

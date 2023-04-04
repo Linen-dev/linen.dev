@@ -1,5 +1,6 @@
 import React from 'react';
-import { Modal, Toggle } from '@linen/ui';
+import Toggle from '@linen/ui/Toggle';
+import Modal from '@linen/ui/Modal';
 import { SerializedChannel } from '@linen/types';
 import { FiHash } from '@react-icons/all-files/fi/FiHash';
 import styles from './index.module.scss';

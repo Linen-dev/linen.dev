@@ -1,13 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react';
 import H3 from 'components/H3';
-import { Modal } from '@linen/ui';
+import Modal from '@linen/ui/Modal';
 import { channelsIntegrationType, Permissions } from '@linen/types';
 import { CgLinear } from '@react-icons/all-files/cg/CgLinear';
-import { Button } from '@linen/ui';
+import Button from '@linen/ui/Button';
 import { FiGithub } from '@react-icons/all-files/fi/FiGithub';
 import { FiMail } from '@react-icons/all-files/fi/FiMail';
 import { qs } from '@linen/utilities/url';
-import { Toast } from '@linen/ui';
+import Toast from '@linen/ui/Toast';
 import { useSession } from 'utilities/auth/react';
 import { ChannelContext } from 'contexts/channel';
 import * as api from 'utilities/requests';

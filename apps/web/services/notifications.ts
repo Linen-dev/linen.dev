@@ -6,7 +6,7 @@ import { getLinenUrl } from '@linen/utilities/domain';
 import { appendProtocol } from '@linen/utilities/url';
 import React from 'react';
 import * as ReactDOMServer from 'react-dom/server';
-import { Message } from '@linen/ui';
+import Message from '@linen/ui/Message';
 import {
   emailNotificationPayloadType,
   notificationListenerType,

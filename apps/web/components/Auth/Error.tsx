@@ -1,5 +1,5 @@
 import React from 'react';
-import { Alert } from '@linen/ui';
+import Alert from '@linen/ui/Alert';
 
 interface Props {
   error?: string;

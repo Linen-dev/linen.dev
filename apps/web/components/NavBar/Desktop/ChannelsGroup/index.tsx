@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import classNames from 'classnames';
-import { Nav } from '@linen/ui';
+import Nav from '@linen/ui/Nav';
 import { Permissions, SerializedChannel, SerializedUser } from '@linen/types';
 import { Mode } from '@linen/hooks/mode';
 import { FiHash } from '@react-icons/all-files/fi/FiHash';

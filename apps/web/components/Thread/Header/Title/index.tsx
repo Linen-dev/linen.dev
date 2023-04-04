@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TextInput } from '@linen/ui';
+import TextInput from '@linen/ui/TextInput';
 import { FiEdit } from '@react-icons/all-files/fi/FiEdit';
 import classNames from 'classnames';
 import styles from './index.module.css';

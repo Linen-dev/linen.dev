@@ -2,7 +2,7 @@ import CommunityButton from 'components/CommunityButton';
 import { capitalize } from '@linen/utilities/string';
 import { qs } from '@linen/utilities/url';
 import { SerializedAccount } from '@linen/types';
-import { Toast } from '@linen/ui';
+import Toast from '@linen/ui/Toast';
 import { GoCheck } from '@react-icons/all-files/go/GoCheck';
 import { GoAlert } from '@react-icons/all-files/go/GoAlert';
 import { GoInfo } from '@react-icons/all-files/go/GoInfo';

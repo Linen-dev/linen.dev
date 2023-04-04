@@ -1,5 +1,8 @@
 import { useEffect, useState, useRef } from 'react';
-import { Layouts, Pages, ProgressModal, Toast } from '@linen/ui';
+import Layouts from '@linen/ui/Layouts';
+import Pages from '@linen/ui/Pages';
+import ProgressModal from '@linen/ui/ProgressModal';
+import Toast from '@linen/ui/Toast';
 import Thread from 'components/Thread';
 import AddThreadModal from './AddThreadModal';
 import ConfigureInboxModal from './ConfigureInboxModal';

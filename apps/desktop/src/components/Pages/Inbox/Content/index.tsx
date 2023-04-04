@@ -1,5 +1,7 @@
 import { useState, useRef, useCallback } from 'react';
-import { Layouts, Pages, Toast } from '@linen/ui';
+import Layouts from '@linen/ui/Layouts';
+import Pages from '@linen/ui/Pages';
+import Toast from '@linen/ui/Toast';
 import Thread from './Thread';
 import { sendMessageWrapper } from './utilities/sendMessageWrapper';
 import usePolling from '@linen/hooks/polling';

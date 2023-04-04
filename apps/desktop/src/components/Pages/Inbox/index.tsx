@@ -4,7 +4,7 @@ import Title from './Title';
 import Header from './Header';
 import Content from './Content';
 import { FiInbox } from '@react-icons/all-files/fi/FiInbox';
-import { Nav } from '@linen/ui';
+import Nav from '@linen/ui/Nav';
 import { CommunityType } from '@linen/types';
 
 interface Props {

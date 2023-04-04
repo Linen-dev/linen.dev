@@ -2,7 +2,7 @@ import React from 'react';
 import { SerializedThread } from '@linen/types';
 import styles from './index.module.scss';
 // import { FiInfo } from '@react-icons/all-files/fi/FiInfo';
-// import { Tooltip } from '@linen/ui';
+// import Tooltip from '@linen/ui/Tooltip';
 
 interface Props {
   thread: SerializedThread;

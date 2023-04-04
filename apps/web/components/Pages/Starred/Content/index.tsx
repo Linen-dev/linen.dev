@@ -1,11 +1,12 @@
 import { useEffect, useState, useRef } from 'react';
-import { Layouts, Pages, Toast } from '@linen/ui';
+import Layouts from '@linen/ui/Layouts';
+import Pages from '@linen/ui/Pages';
+import Toast from '@linen/ui/Toast';
 import Thread from 'components/Thread';
 import Empty from './Empty';
 import { sendMessageWrapper } from './utilities/sendMessageWrapper';
 import useKeyboard from '@linen/hooks/keyboard';
 import { useUsersContext } from '@linen/contexts/Users';
-import type { CommunityPushType } from 'services/push';
 import {
   ReminderTypes,
   SerializedChannel,

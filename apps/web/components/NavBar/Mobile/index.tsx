@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { FiInbox } from '@react-icons/all-files/fi/FiInbox';
 import { useRouter } from 'next/router';
 import Link from 'components/Link/InternalLink';
-import { Nav } from '@linen/ui';
+import Nav from '@linen/ui/Nav';
 import ChannelSelect from './ChannelSelect';
 import { Permissions, SerializedChannel } from '@linen/types';
 import usePath from 'hooks/path';

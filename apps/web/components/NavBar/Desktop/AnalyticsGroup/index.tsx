@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Nav } from '@linen/ui';
+import Nav from '@linen/ui/Nav';
 import { Permissions, SerializedUser } from '@linen/types';
 import Link from 'components/Link/InternalLink';
 import { FiBarChart } from '@react-icons/all-files/fi/FiBarChart';

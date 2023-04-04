@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { useEffect, useState } from 'react';
 import PageLayout from 'components/layout/PageLayout';
-import { Toast } from '@linen/ui';
+import Toast from '@linen/ui/Toast';
 import { buildChannelSeo } from 'utilities/seo';
 import Content from 'components/Pages/Channel/Content';
 import {

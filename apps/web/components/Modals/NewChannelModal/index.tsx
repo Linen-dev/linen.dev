@@ -1,17 +1,14 @@
 import { useRef, useState } from 'react';
 import H3 from 'components/H3';
-import { FiPlus } from '@react-icons/all-files/fi/FiPlus';
 import { FiX } from '@react-icons/all-files/fi/FiX';
-import {
-  Badge,
-  Button,
-  Modal,
-  TextInput,
-  Toast,
-  Toggle,
-  Suggestions,
-  Label,
-} from '@linen/ui';
+import Button from '@linen/ui/Button';
+import Modal from '@linen/ui/Modal';
+import Label from '@linen/ui/Label';
+import Badge from '@linen/ui/Badge';
+import TextInput from '@linen/ui/TextInput';
+import Toast from '@linen/ui/Toast';
+import Toggle from '@linen/ui/Toggle';
+import Suggestions from '@linen/ui/Suggestions';
 import { useLinkContext } from '@linen/contexts/Link';
 import CustomRouterPush from 'components/Link/CustomRouterPush';
 import { patterns } from '@linen/types';

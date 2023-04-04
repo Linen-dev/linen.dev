@@ -1,12 +1,15 @@
 import { useRef, useState } from 'react';
 import H3 from 'components/H3';
 import { FiX } from '@react-icons/all-files/fi/FiX';
-import { Button, Modal, TextInput, Toast } from '@linen/ui';
 import { useLinkContext } from '@linen/contexts/Link';
 import CustomRouterPush from 'components/Link/CustomRouterPush';
 import { createDm } from 'utilities/requests';
 import { fetchMentions } from 'components/MessageForm/api';
-import { Suggestions } from '@linen/ui';
+import Modal from '@linen/ui/Modal';
+import TextInput from '@linen/ui/TextInput';
+import Toast from '@linen/ui/Toast';
+import Button from '@linen/ui/Button';
+import Suggestions from '@linen/ui/Suggestions';
 import { SerializedChannel, SerializedUser } from '@linen/types';
 import styles from './index.module.scss';
 

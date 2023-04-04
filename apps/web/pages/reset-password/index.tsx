@@ -1,8 +1,8 @@
 import Layout from '../../components/layout/CardLayout';
 import PasswordField from '../../components/PasswordField';
-import { Button } from '@linen/ui';
+import Button from '@linen/ui/Button';
 import { NextPageContext } from 'next';
-import { Toast } from '@linen/ui';
+import Toast from '@linen/ui/Toast';
 import { useState } from 'react';
 
 interface Props {

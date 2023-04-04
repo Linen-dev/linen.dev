@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import classNames from 'classnames';
 import { useInView } from 'react-intersection-observer';
-import {
-  Avatar,
-  Badge,
-  Message,
-  ConfirmationModal,
-  ReminderModal,
-} from '@linen/ui';
+import Avatar from '@linen/ui/Avatar';
+import Badge from '@linen/ui/Badge';
+import Message from '@linen/ui/Message';
+import ConfirmationModal from '@linen/ui/ConfirmationModal';
+import ReminderModal from '@linen/ui/ReminderModal';
 import Actions from 'components/Actions';
 import { format } from '@linen/utilities/date';
 import { FiCheck } from '@react-icons/all-files/fi/FiCheck';

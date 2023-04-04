@@ -1,4 +1,4 @@
-import { Pages } from '@linen/ui';
+import Pages from '@linen/ui/Pages';
 
 const { Styleguide } = Pages;
 

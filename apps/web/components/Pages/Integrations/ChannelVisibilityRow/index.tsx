@@ -5,7 +5,8 @@ import {
   findChannelsWithStats,
   SerializedChannel,
 } from '@linen/types';
-import { Toggle, Toast } from '@linen/ui';
+import Toast from '@linen/ui/Toast';
+import Toggle from '@linen/ui/Toggle';
 import styles from './index.module.scss';
 import { getChannelsStats, hideChannels } from 'utilities/requests';
 import debounce from '@linen/utilities/debounce';

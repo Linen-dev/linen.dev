@@ -1,7 +1,8 @@
 import React from 'react';
 import classNames from 'classnames';
 import Title from './Title';
-import { Icon, StickyHeader } from '@linen/ui';
+import Icon from '@linen/ui/Icon';
+import StickyHeader from '@linen/ui/StickyHeader';
 import { ThreadState } from '@linen/database';
 import { FiCheck } from '@react-icons/all-files/fi/FiCheck';
 import { FiChevronLeft } from '@react-icons/all-files/fi/FiChevronLeft';

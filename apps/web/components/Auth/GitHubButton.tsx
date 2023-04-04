@@ -1,4 +1,4 @@
-import { Button } from '@linen/ui';
+import Button from '@linen/ui/Button';
 import { GoMarkGithub } from '@react-icons/all-files/go/GoMarkGithub';
 import { qs } from '@linen/utilities/url';
 

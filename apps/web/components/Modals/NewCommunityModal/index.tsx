@@ -1,5 +1,6 @@
 import React from 'react';
-import { Icon, Modal } from '@linen/ui';
+import Icon from '@linen/ui/Icon';
+import Modal from '@linen/ui/Modal';
 import Form from 'components/Pages/Onboarding/Form';
 import H3 from 'components/H3';
 import { FiX } from '@react-icons/all-files/fi/FiX';

@@ -1,6 +1,7 @@
 import React from 'react';
 import { MessageFormat } from '@linen/types';
-import { Avatar, Message } from '@linen/ui';
+import Avatar from '@linen/ui/Avatar';
+import Message from '@linen/ui/Message';
 import styles from './index.module.css';
 import { SerializedUser } from '@linen/types';
 

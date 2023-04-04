@@ -1,4 +1,4 @@
-import { Modal } from '@linen/ui';
+import Modal from '@linen/ui/Modal';
 import type { SessionType } from 'services/session';
 import { getSession } from 'utilities/auth/react';
 import React, { createContext, useContext, useEffect, useState } from 'react';

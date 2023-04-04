@@ -12,7 +12,7 @@ import { FiSliders } from '@react-icons/all-files/fi/FiSliders';
 import { FiUsers } from '@react-icons/all-files/fi/FiUsers';
 import { FiFileText } from '@react-icons/all-files/fi/FiFileText';
 import Link from 'components/Link/InternalLink';
-import { Modal } from '@linen/ui';
+import Modal from '@linen/ui/Modal';
 import styles from './index.module.scss';
 import { Permissions, SerializedChannel } from '@linen/types';
 import { signOut } from 'utilities/auth/react';

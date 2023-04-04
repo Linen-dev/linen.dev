@@ -1,4 +1,5 @@
-import { Avatar, Message } from '@linen/ui';
+import Avatar from '@linen/ui/Avatar';
+import Message from '@linen/ui/Message';
 import { SerializedMessage, SerializedUser } from '@linen/types';
 import styles from './index.module.scss';
 import { format } from '@linen/utilities/date';

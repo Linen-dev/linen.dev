@@ -1,6 +1,6 @@
 import NewDmModal from 'components/Modals/NewDmModal';
 import { FiUser } from '@react-icons/all-files/fi/FiUser';
-import { Nav } from '@linen/ui';
+import Nav from '@linen/ui/Nav';
 import Link from 'components/Link/InternalLink';
 import classNames from 'classnames';
 import styles from './index.module.scss';

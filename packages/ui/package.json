@@ -53,6 +53,7 @@
     "react-hot-toast": "^2.4.0"
   },
   "exports": {
+    "./index.css": "./dist/index.css",
     "./Accordion": "./dist/Accordion/index.js",
     "./Alert": "./dist/Alert/index.js",
     "./Avatar": "./dist/Avatar/index.js",
