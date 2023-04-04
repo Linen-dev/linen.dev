@@ -1,14 +1,27 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import PageLayout from 'components/layout/PageLayout';
 import Header from './Header';
-import Content from './Content';
 import {
   Permissions,
-  SerializedAccount,
   SerializedChannel,
   Settings,
+  AccountType,
+  SerializedAccount,
+  ChatType,
 } from '@linen/types';
 import { localStorage } from '@linen/utilities/storage';
+import styles from './index.module.scss';
+import CommunityIntegrationRow from './CommunityIntegrationRow';
+import SlackImportRow from './SlackImportRow';
+import AnonymizeUsersRow from './AnonymizeUsersRow';
+import DefaultChannelRow from './DefaultChannelRow';
+import ChannelVisibilityRow from './ChannelVisibilityRow';
+import UrlsRow from './UrlsRow';
+import CommunityTypeRow from './CommunityTypeRow';
+import CommunityChatRow from './CommunityChatRow';
+import debounce from '@linen/utilities/debounce';
+import * as api from 'utilities/requests';
+import Toast from '@linen/ui/Toast';
 
 export interface Props {
   channels: SerializedChannel[];
@@ -20,8 +33,33 @@ export interface Props {
   dms: SerializedChannel[];
 }
 
-export default function SettingsPage({
-  channels,
+const updateAccount = debounce(
+  ({
+    communityId,
+    type,
+    chat,
+  }: {
+    communityId: string;
+    type: any;
+    chat: any;
+  }) => {
+    api
+      .updateAccount({
+        accountId: communityId,
+        type,
+        chat,
+      })
+      .then((_) => {
+        Toast.success('Saved successfully!');
+      })
+      .catch(() => {
+        Toast.error('Something went wrong!');
+      });
+  }
+);
+
+export default function ConfigurationsPage({
+  channels: initialChannels,
   currentCommunity,
   communities,
   settings,
@@ -29,16 +67,23 @@ export default function SettingsPage({
   isSubDomainRouting,
   dms,
 }: Props) {
+  const [channels, setChannels] =
+    useState<SerializedChannel[]>(initialChannels);
+
   useEffect(() => {
     localStorage.set('pages.last', {
       communityId: currentCommunity.id,
-      page: 'configurations',
+      page: 'settings',
     });
   }, [currentCommunity]);
 
+  const sortedChannels = channels.sort((a, b) => {
+    return a.channelName.localeCompare(b.channelName);
+  });
+
   return (
     <PageLayout
-      channels={channels}
+      channels={sortedChannels}
       communities={communities}
       currentCommunity={currentCommunity}
       permissions={permissions}
@@ -48,7 +93,45 @@ export default function SettingsPage({
       dms={dms}
     >
       <Header />
-      <Content currentCommunity={currentCommunity} />
+      <div className={styles.container}>
+        <CommunityIntegrationRow currentCommunity={currentCommunity} />
+        <hr className="my-3" />
+        {currentCommunity.communityType !== 'discord' && (
+          <>
+            <SlackImportRow currentCommunity={currentCommunity} />
+            <hr className="my-3" />
+          </>
+        )}
+        <AnonymizeUsersRow currentCommunity={currentCommunity} />
+        <hr className="my-3" />
+        <DefaultChannelRow
+          channels={sortedChannels}
+          currentCommunity={currentCommunity}
+        />
+        <hr className="my-3" />
+        <ChannelVisibilityRow
+          currentCommunity={currentCommunity}
+          onChange={setChannels}
+        />
+        <hr className="my-3" />
+        <UrlsRow currentCommunity={currentCommunity} />
+        <hr className="my-3" />
+        <CommunityTypeRow
+          type={currentCommunity.type}
+          disabled={!currentCommunity.premium}
+          onChange={(type: AccountType) => {
+            updateAccount({ communityId: currentCommunity.id, type });
+          }}
+        />
+        <hr className="my-3" />
+        <CommunityChatRow
+          chat={currentCommunity.chat}
+          disabled={!currentCommunity.premium}
+          onChange={(chat: ChatType) => {
+            updateAccount({ communityId: currentCommunity.id, chat });
+          }}
+        />
+      </div>
     </PageLayout>
   );
 }

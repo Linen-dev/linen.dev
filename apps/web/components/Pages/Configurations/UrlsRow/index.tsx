@@ -14,8 +14,8 @@ function URLsCard({
 }) {
   return (
     <>
-      <div className="flex">
-        <div className="grow">
+      <div className="flex gap-4">
+        <div className="flex-1">
           <h3 className="text-lg leading-6 font-medium text-gray-900">
             {title}
           </h3>
@@ -25,9 +25,9 @@ function URLsCard({
             </div>
           </div>
         </div>
-      </div>
-      <div className="mt-3">
-        <TextField {...textFieldOptions} />
+        <div className="flex-1 m-auto">
+          <TextField {...textFieldOptions} />
+        </div>
       </div>
     </>
   );

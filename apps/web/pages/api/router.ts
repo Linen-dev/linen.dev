@@ -69,7 +69,7 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
       return response.redirect(url);
     }
 
-    return response.redirect(`${url}/integrations`);
+    return response.redirect(`${url}/configurations`);
   } catch (error) {
     console.error(error);
     return response.redirect('/');

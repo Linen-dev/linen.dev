@@ -41,7 +41,7 @@ const faqs = [
     question: 'How can I get my entire Slack history on Linen?',
     answer: `If you are on the preimum version of Slack it will automatically fetch the entire history.
     If you would like access to the entire history without upgrading to a premium Slack account you can download the link https://slack.com/help/articles/201658943-Export-your-workspace-data. 
-    You can then upload it under linen.dev/s/YOUR_COMMUNITY_NAME/integrations
+    You can then upload it under linen.dev/s/YOUR_COMMUNITY_NAME/configurations
     `,
   },
   {

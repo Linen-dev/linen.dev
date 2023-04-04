@@ -49,7 +49,7 @@ export default function Form({ createAccount }: Props) {
         members: emails,
       });
       if (response.id) {
-        window.location.href = `/s/${slackDomain}/integrations`;
+        window.location.href = `/s/${slackDomain}/configurations`;
       }
     } catch (error: any) {
       Toast.error(error.message || 'Something went wrong');

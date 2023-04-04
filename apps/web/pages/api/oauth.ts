@@ -56,7 +56,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     await eventNewIntegration({ accountId });
 
     const url = getHomeUrl(serializeAccount(account) as SerializedAccount);
-    return res.redirect(`${url}/integrations`);
+    return res.redirect(`${url}/configurations`);
   } catch (error) {
     console.error(error);
     const accountId = req.query.state as string;
@@ -66,7 +66,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       },
     });
     const url = getHomeUrl(serializeAccount(account) as SerializedAccount);
-    return res.redirect(`${url}/integrations?error=1`);
+    return res.redirect(`${url}/configurations?error=1`);
   }
 }
 

@@ -6,7 +6,6 @@ import { FiMenu } from '@react-icons/all-files/fi/FiMenu';
 import { FiHash } from '@react-icons/all-files/fi/FiHash';
 import { FiInbox } from '@react-icons/all-files/fi/FiInbox';
 import { FiLogOut } from '@react-icons/all-files/fi/FiLogOut';
-import { FiSettings } from '@react-icons/all-files/fi/FiSettings';
 import { FiDollarSign } from '@react-icons/all-files/fi/FiDollarSign';
 import { FiSliders } from '@react-icons/all-files/fi/FiSliders';
 import { FiUsers } from '@react-icons/all-files/fi/FiUsers';
@@ -39,7 +38,6 @@ export default function MobileMenu({
   const paths = {
     inbox: usePath({ href: '/inbox' }),
     metrics: usePath({ href: '/metrics' }),
-    integrations: usePath({ href: '/integrations' }),
     configurations: usePath({ href: '/configurations' }),
     branding: usePath({ href: '/branding' }),
     members: usePath({ href: '/members' }),
@@ -69,19 +67,6 @@ export default function MobileMenu({
                 href="/inbox"
               >
                 <FiInbox /> Inbox
-              </Link>
-            </li>
-          )}
-          {permissions.manage && (
-            <li>
-              <Link
-                onClick={close}
-                className={classNames(styles.link, {
-                  [styles.active]: paths.integrations === router.asPath,
-                })}
-                href="/integrations"
-              >
-                <FiSettings /> Settings
               </Link>
             </li>
           )}

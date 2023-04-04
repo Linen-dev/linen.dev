@@ -9,14 +9,12 @@ import {
 import Link from 'components/Link/InternalLink';
 import useWebsockets from '@linen/hooks/websockets';
 import styles from './index.module.scss';
-import { FiBarChart } from '@react-icons/all-files/fi/FiBarChart';
 import { FiSettings } from '@react-icons/all-files/fi/FiSettings';
 import { FiSliders } from '@react-icons/all-files/fi/FiSliders';
 import { FiDollarSign } from '@react-icons/all-files/fi/FiDollarSign';
 import { FiUsers } from '@react-icons/all-files/fi/FiUsers';
 import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
 import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp';
-import { FiFileText } from '@react-icons/all-files/fi/FiFileText';
 import { useRouter } from 'next/router';
 import usePath from 'hooks/path';
 import { Mode } from '@linen/hooks/mode';
@@ -83,7 +81,6 @@ export default function DesktopNavBar({
     starred: usePath({ href: '/starred' }),
     all: usePath({ href: '/all' }),
     metrics: usePath({ href: '/metrics' }),
-    integrations: usePath({ href: '/integrations' }),
     configurations: usePath({ href: '/configurations' }),
     branding: usePath({ href: '/branding' }),
     members: usePath({ href: '/members' }),
@@ -92,7 +89,6 @@ export default function DesktopNavBar({
 
   const isSettingsPath = () => {
     return [
-      paths.integrations,
       paths.configurations,
       paths.branding,
       paths.members,
@@ -241,14 +237,9 @@ export default function DesktopNavBar({
           )}
           {showSettings && permissions.manage && (
             <>
-              <Link href="/integrations">
-                <Nav.Item active={paths.integrations === router.asPath}>
-                  <FiSettings /> Integrations
-                </Nav.Item>
-              </Link>
               <Link href="/configurations">
                 <Nav.Item active={paths.configurations === router.asPath}>
-                  <FiFileText /> Configurations
+                  <FiSettings /> Configurations
                 </Nav.Item>
               </Link>
               <Link href="/branding">
