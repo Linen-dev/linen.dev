@@ -22,6 +22,7 @@ import CommunityChatRow from './CommunityChatRow';
 import debounce from '@linen/utilities/debounce';
 import * as api from 'utilities/requests';
 import Toast from '@linen/ui/Toast';
+import RemoveCommunity from './RemoveCommunity';
 
 export interface Props {
   channels: SerializedChannel[];
@@ -131,6 +132,8 @@ export default function ConfigurationsPage({
             updateAccount({ communityId: currentCommunity.id, chat });
           }}
         />
+        <hr className="my-3" />
+        <RemoveCommunity currentCommunity={currentCommunity} />
       </div>
     </PageLayout>
   );

@@ -9,6 +9,8 @@ import { createInvitation } from './invites';
 import { getCurrentUrl } from '@linen/utilities/domain';
 import unique from 'lodash.uniq';
 import { replaceS3byCDN } from 'utilities/util';
+import { createRemoveCommunityJob } from 'queue/jobs';
+import { sendNotification } from 'services/slack';
 
 export default class AccountsService {
   static async create({
@@ -220,5 +222,10 @@ export default class AccountsService {
       select: { role: true, accountsId: true },
       where: { authsId: authId },
     });
+  }
+
+  static async remove({ accountId }: { accountId: string }) {
+    await createRemoveCommunityJob(accountId);
+    await sendNotification(`Account ${accountId} was scheduled to be removed`);
   }
 }

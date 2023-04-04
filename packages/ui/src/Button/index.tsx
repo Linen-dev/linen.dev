@@ -16,7 +16,8 @@ interface Props {
     | 'transparent'
     | 'yellow'
     | 'disabled'
-    | 'black';
+    | 'black'
+    | 'danger';
   rounded?: 'lg' | 'full';
   size?: 'sm' | 'xs';
   weight?: 'bold' | 'medium' | 'normal';
@@ -54,6 +55,7 @@ const Button = ({
         [styles.yellow]: color === 'yellow',
         [styles.black]: color === 'black',
         [styles.transparent]: color === 'transparent',
+        [styles.danger]: color === 'danger',
       })}
     >
       {children}

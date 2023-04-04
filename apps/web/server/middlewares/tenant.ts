@@ -22,7 +22,11 @@ export default function tenantMiddleware(roles?: string[]) {
     next: NextFunction
   ) => {
     try {
-      const { accountId } = schema.parse({ ...req.body, ...req.query });
+      const { accountId } = schema.parse({
+        ...req.body,
+        ...req.query,
+        ...req.params,
+      });
       // assign the tenant in the req object for easy access later
       req.tenant = await getAccountById(accountId); // improvement: cache the findAccountByPath function
       if (!req.tenant) {

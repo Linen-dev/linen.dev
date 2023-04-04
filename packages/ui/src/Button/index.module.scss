@@ -114,3 +114,14 @@
 .rounded-full {
   border-radius: 9999px;
 }
+
+.danger {
+  background: $color-gray-100;
+  color: black;
+
+  &:focus-visible,
+  &:hover {
+    background: $color-red-500;
+    color: white;
+  }
+}

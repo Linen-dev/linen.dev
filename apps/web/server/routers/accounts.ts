@@ -64,6 +64,17 @@ accountsRouter.put(
   }
 );
 
+accountsRouter.delete(
+  `${prefix}/:accountId`,
+  tenantMiddleware([Roles.OWNER]),
+  async (req: AuthedRequestWithTenantAndBody<{}>, res: Response) => {
+    const accountId = req.tenant?.id!;
+    await AccountsService.remove({ accountId });
+    res.json({});
+    res.end();
+  }
+);
+
 accountsRouter.use(onError);
 
 export default accountsRouter.use(onError);

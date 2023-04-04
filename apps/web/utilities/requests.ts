@@ -185,3 +185,6 @@ export const updateChannelMembers = ({
 
 export const deleteUser = ({ ...props }: deleteUserType): Promise<{}> =>
   deleteReq(`/api/users?${qs(props)}`);
+
+export const deleteAccount = (props: { accountId: string }): Promise<{}> =>
+  deleteReq(`/api/accounts/${props.accountId}`);
