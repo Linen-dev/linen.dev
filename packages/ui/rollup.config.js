@@ -5,9 +5,14 @@ const postcss = require('rollup-plugin-postcss');
 const external = require('rollup-plugin-peer-deps-external');
 const { visualizer } = require('rollup-plugin-visualizer');
 const path = require('path');
+const glob = require('glob');
+
+const input = glob
+  .sync(path.join(__dirname, 'src/**/*.tsx'))
+  .filter((file) => !file.includes('.test.') && !file.includes('.spec.'));
 
 module.exports = {
-  input: ['src/Accordion/index.tsx', 'src/Alert/index.tsx'],
+  input,
   output: {
     dir: 'dist',
     format: 'cjs',
@@ -20,13 +25,7 @@ module.exports = {
   },
   plugins: [
     typescript({
-      compilerOptions: {
-        target: 'esnext',
-        module: 'esnext',
-        strict: true,
-        esModuleInterop: true,
-        jsx: 'react',
-      },
+      tsconfig: './tsconfig.json',
     }),
     resolve(),
     postcss({
