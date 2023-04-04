@@ -92,7 +92,7 @@ describe('webhook :: channels', () => {
           channelName: channelCreatedEvent.event.channel.name,
           accountId,
           externalChannelId: channelCreatedEvent.event.channel.id,
-          hidden: false,
+          hidden: true,
         },
       });
     });
@@ -201,7 +201,7 @@ describe('webhook :: channels', () => {
           channelName: channelRenameEvent.event.channel.name,
           accountId,
           externalChannelId: channelRenameEvent.event.channel.id,
-          hidden: false,
+          hidden: true,
         },
       });
     });

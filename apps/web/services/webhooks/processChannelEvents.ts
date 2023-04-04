@@ -20,7 +20,7 @@ export async function processChannelCreated(body: SlackEvent) {
     accountId: account.id,
     name: event.channel.name,
     externalChannelId: event.channel.id,
-    hidden: false,
+    hidden: true,
   });
   return { status: 200, message: 'channel created' };
 }

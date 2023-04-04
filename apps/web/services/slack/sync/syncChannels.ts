@@ -24,6 +24,7 @@ export async function createChannels({
             externalChannelId: channel.id,
             channelName: channel.name,
             accountId,
+            hidden: true,
           })
       )
     );

@@ -77,6 +77,7 @@ export async function onMessageCreate(message: Message) {
   const linenChannel = await linenSdk.findOrCreateChannel({
     accountId: linenAccount.id,
     ...channel,
+    hidden: true,
   });
 
   let threadOrReply: 'reply' | 'thread' = 'reply';

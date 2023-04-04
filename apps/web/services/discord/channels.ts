@@ -75,18 +75,6 @@ function parseChannel(
     externalChannelId: channel.id,
     channelName: slugify(channel.name),
     accountId,
-    hidden: isPrivate(channel),
+    hidden: true,
   };
-}
-
-function isPrivate(channel: DiscordChannel): boolean {
-  if (channel.nsfw) {
-    return true;
-  }
-  // we assume that if there any permission it is a private channel
-  // customer should toggle it on settings page if want to make it public
-  if (channel.permission_overwrites && channel.permission_overwrites.length) {
-    return true;
-  }
-  return false;
 }
