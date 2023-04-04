@@ -1,6 +1,6 @@
 import CardLayout from 'components/layout/CardLayout';
 import EmailField from 'components/EmailField';
-import { Button } from '@linen/ui';
+import Button from '@linen/ui/Button';
 import { localStorage } from '@linen/utilities/storage';
 import Error from 'components/Auth/Error';
 import PasswordField from 'components/PasswordField';

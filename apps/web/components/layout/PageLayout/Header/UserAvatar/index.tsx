@@ -3,7 +3,8 @@ import classNames from 'classnames';
 import { Menu, Transition } from '@headlessui/react';
 import { signOut } from 'utilities/auth/react';
 import { SerializedUser } from '@linen/types';
-import { Avatar, Modal } from '@linen/ui';
+import Avatar from '@linen/ui/Avatar';
+import Modal from '@linen/ui/Modal';
 import ProfileForm from './ProfileForm';
 import { AxiosRequestConfig } from 'axios';
 

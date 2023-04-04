@@ -4,12 +4,12 @@ import Header from './Header';
 import TextField from 'components/TextField';
 import ColorField from 'components/ColorField';
 import LogoField from './LogoField';
-import { Label } from '@linen/ui';
+import Label from '@linen/ui/Label';
 import Table, { Thead, Tbody, Th, Td } from 'components/Table';
 import { stripProtocol } from '@linen/utilities/url';
 import classNames from 'classnames';
 import React, { useEffect, useState } from 'react';
-import { Toast } from '@linen/ui';
+import Toast from '@linen/ui/Toast';
 import {
   SerializedAccount,
   SerializedChannel,
@@ -183,7 +183,10 @@ export default function Branding({
               <hr className="my-5" />
               <PremiumCard isPremium={currentCommunity.premium}>
                 <Label htmlFor="redirectDomain">Custom Domain</Label>
-                <Description>Choose the custom url that Linen will live under. i.e linen.yourwebsite.com</Description>
+                <Description>
+                  Choose the custom url that Linen will live under. i.e
+                  linen.yourwebsite.com
+                </Description>
                 <TextField
                   placeholder="linen.yourwebsite.com or chat.yourwebsite.com"
                   id="redirectDomain"

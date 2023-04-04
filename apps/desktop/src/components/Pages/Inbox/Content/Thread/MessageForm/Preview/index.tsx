@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import { Message } from '@linen/ui';
+import Message from '@linen/ui/Message';
 import { SerializedUser } from '@linen/types';
 import { MessageFormat } from '@linen/types';
 import styles from './index.module.scss';

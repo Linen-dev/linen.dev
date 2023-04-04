@@ -11,7 +11,7 @@ import { username } from 'serializers/user';
 import { v4 as uuid } from 'uuid';
 import debounce from '@linen/utilities/debounce';
 import * as api from 'utilities/requests';
-import { Toast } from '@linen/ui';
+import Toast from '@linen/ui/Toast';
 import MessageSentToast from '../MessageSentToast';
 
 const debouncedCreateThread = debounce(

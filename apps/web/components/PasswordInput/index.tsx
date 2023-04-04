@@ -1,4 +1,4 @@
-import { TextInput } from '@linen/ui';
+import TextInput from '@linen/ui/TextInput';
 
 interface Props {
   id: string;

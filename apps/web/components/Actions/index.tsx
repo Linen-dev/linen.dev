@@ -2,7 +2,8 @@ import { useState } from 'react';
 import classNames from 'classnames';
 import Draggable from './Draggable';
 import { getThreadUrl } from '../Pages/Channel/utilities/url';
-import { Toast, Tooltip } from '@linen/ui';
+import Toast from '@linen/ui/Toast';
+import Tooltip from '@linen/ui/Tooltip';
 import {
   Permissions,
   Settings,

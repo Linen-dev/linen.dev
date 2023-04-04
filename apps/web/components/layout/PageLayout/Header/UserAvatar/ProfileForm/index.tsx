@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import AvatarField from './AvatarField';
 import PermissionsField from './PermissionsField';
 import TextField from 'components/TextField';
-import { Button, Toast } from '@linen/ui';
+import Button from '@linen/ui/Button';
+import Toast from '@linen/ui/Toast';
 import { SerializedUser } from '@linen/types';
 import {
   FILE_SIZE_LIMIT_IN_BYTES,

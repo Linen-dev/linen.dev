@@ -1,5 +1,5 @@
 import Droppable from './Droppable';
-import { Avatars } from '@linen/ui';
+import Avatars from '@linen/ui/Avatars';
 import GridRow from 'components/GridRow';
 import styles from './index.module.scss';
 import {

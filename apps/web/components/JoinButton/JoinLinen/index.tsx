@@ -2,7 +2,7 @@ import LinenIcon from 'components/icons/LinenIcon';
 import classNames from 'classnames';
 import styles from './index.module.css';
 import { useSession } from 'utilities/auth/react';
-import { Toast } from '@linen/ui';
+import Toast from '@linen/ui/Toast';
 import { useJoinContext } from 'contexts/Join';
 
 export default function JoinLinen({ accountId }: { accountId?: string }) {

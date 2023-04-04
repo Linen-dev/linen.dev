@@ -1,4 +1,4 @@
-import { StickyHeader } from '@linen/ui';
+import StickyHeader from '@linen/ui/StickyHeader';
 import { FiFileText } from '@react-icons/all-files/fi/FiFileText';
 import styles from './index.module.scss';
 

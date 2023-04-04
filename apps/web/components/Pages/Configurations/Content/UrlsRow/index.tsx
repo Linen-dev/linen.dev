@@ -1,5 +1,5 @@
 import { SerializedAccount } from '@linen/types';
-import { Toast } from '@linen/ui';
+import Toast from '@linen/ui/Toast';
 import TextField from 'components/TextField';
 import * as api from 'utilities/requests';
 

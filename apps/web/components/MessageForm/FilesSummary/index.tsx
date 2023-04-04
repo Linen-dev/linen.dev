@@ -1,7 +1,7 @@
 import styles from './index.module.scss';
 import { UploadedFile } from '@linen/types';
 import { copyToClipboard } from '@linen/utilities/clipboard';
-import { Toast } from '@linen/ui';
+import Toast from '@linen/ui/Toast';
 
 interface Props {
   uploading?: boolean;

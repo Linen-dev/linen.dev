@@ -1,4 +1,8 @@
-import { Badge, Button, TextInput, Toast, Label } from '@linen/ui';
+import Button from '@linen/ui/Button';
+import Label from '@linen/ui/Label';
+import Badge from '@linen/ui/Badge';
+import TextInput from '@linen/ui/TextInput';
+import Toast from '@linen/ui/Toast';
 import { useState } from 'react';
 import { patterns } from '@linen/types';
 import { slugify } from '@linen/utilities/string';

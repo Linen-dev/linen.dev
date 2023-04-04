@@ -37,7 +37,7 @@ import useMode from '@linen/hooks/mode';
 import useWebsockets from '@linen/hooks/websockets';
 import styles from './index.module.scss';
 import { SerializedMessage } from '@linen/types';
-import { Layouts } from '@linen/ui';
+import Layouts from '@linen/ui/Layouts';
 import { timestamp } from '@linen/utilities/date';
 import debounce from '@linen/utilities/debounce';
 import { getSelectedText } from '@linen/utilities/document';

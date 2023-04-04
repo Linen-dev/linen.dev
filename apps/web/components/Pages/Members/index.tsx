@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react';
 import PageLayout from 'components/layout/PageLayout';
 import Header from './Header';
-import { Button, NativeSelect, TextInput, Toast } from '@linen/ui';
+import Button from '@linen/ui/Button';
+import NativeSelect from '@linen/ui/NativeSelect';
+import TextInput from '@linen/ui/TextInput';
+import Toast from '@linen/ui/Toast';
 import { useRouter } from 'next/router';
 import { Roles } from '@linen/database';
 import { AiOutlineUser } from '@react-icons/all-files/ai/AiOutlineUser';

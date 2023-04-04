@@ -1,5 +1,7 @@
 import React from 'react';
-import { Dropdown, Icon, StickyHeader } from '@linen/ui';
+import Dropdown from '@linen/ui/Dropdown';
+import Icon from '@linen/ui/Icon';
+import StickyHeader from '@linen/ui/StickyHeader';
 import styles from './index.module.css';
 import { SerializedUser } from '@linen/types';
 import { FiHash } from '@react-icons/all-files/fi/FiHash';

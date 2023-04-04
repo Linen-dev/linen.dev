@@ -1,5 +1,5 @@
 import Layout from 'components/layout/BlankLayout';
-import { Accordion } from '@linen/ui';
+import Accordion from '@linen/ui/Accordion';
 import Logo from 'components/Logo/Linen';
 import H1 from 'components/H1';
 import styles from './index.module.scss';

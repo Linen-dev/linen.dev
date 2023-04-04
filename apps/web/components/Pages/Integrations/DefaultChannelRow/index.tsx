@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Toast } from '@linen/ui';
+import Toast from '@linen/ui/Toast';
 import { SerializedAccount, SerializedChannel } from '@linen/types';
 import DiscordIcon from 'components/icons/DiscordIcon';
 import SlackIcon from 'components/icons/SlackIcon';
-import { NativeSelect } from '@linen/ui';
+import NativeSelect from '@linen/ui/NativeSelect';
 import * as api from 'utilities/requests';
 
 interface Props {

@@ -1,5 +1,5 @@
 import { AccountType, SerializedAccount, ChatType } from '@linen/types';
-import { Toast } from '@linen/ui';
+import Toast from '@linen/ui/Toast';
 import styles from './index.module.scss';
 import UrlsRow from './UrlsRow';
 import CommunityTypeRow from './CommunityTypeRow';

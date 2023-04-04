@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import autosize from 'autosize';
-import { Button, Suggestions, Toast } from '@linen/ui';
+import Button from '@linen/ui/Button';
+import Suggestions from '@linen/ui/Suggestions';
+import Toast from '@linen/ui/Toast';
 import styles from './index.module.scss';
 import Tab from './Tab';
 // import Preview from './Preview';

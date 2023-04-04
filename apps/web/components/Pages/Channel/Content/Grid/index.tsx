@@ -1,7 +1,7 @@
 import CustomLink from 'components/Link/CustomLink';
 import Row from '../Row';
 import classNames from 'classnames';
-import { Line } from '@linen/ui';
+import Line from '@linen/ui/Line';
 import {
   Permissions,
   Priority,

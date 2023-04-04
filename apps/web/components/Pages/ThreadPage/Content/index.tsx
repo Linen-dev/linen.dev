@@ -4,7 +4,7 @@ import { ThreadState } from '@linen/types';
 import { useUsersContext } from '@linen/contexts/Users';
 import { useJoinContext } from 'contexts/Join';
 import { sendMessageWrapper } from './utilities/sendMessageWrapper';
-import { Toast } from '@linen/ui';
+import Toast from '@linen/ui/Toast';
 import {
   Permissions,
   SerializedAccount,

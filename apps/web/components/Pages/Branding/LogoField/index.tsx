@@ -1,7 +1,8 @@
 import React from 'react';
 import classNames from 'classnames';
 import { useS3Upload } from 'next-s3-upload';
-import { Button, Label } from '@linen/ui';
+import Button from '@linen/ui/Button';
+import Label from '@linen/ui/Label';
 import { SerializedAccount } from '@linen/types';
 
 interface Props {

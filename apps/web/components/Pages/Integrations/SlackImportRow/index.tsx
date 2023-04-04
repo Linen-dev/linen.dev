@@ -1,8 +1,8 @@
-import { Button } from '@linen/ui';
+import Button from '@linen/ui/Button';
 import { useS3Upload } from 'next-s3-upload';
 import { useRef, useState } from 'react';
 import { SerializedAccount } from '@linen/types';
-import { Toast } from '@linen/ui';
+import Toast from '@linen/ui/Toast';
 import { qs } from '@linen/utilities/url';
 
 const fail = () => Toast.error('Something went wrong');
