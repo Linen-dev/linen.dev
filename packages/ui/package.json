@@ -52,10 +52,161 @@
     "react": "^18.2.0",
     "react-hot-toast": "^2.4.0"
   },
+  "exports": {
+    "./Accordion": "./dist/Accordion/index.js",
+    "./Alert": "./dist/Alert/index.js",
+    "./Avatar": "./dist/Avatar/index.js",
+    "./Avatars": "./dist/Avatars/index.js",
+    "./Badge": "./dist/Badge/index.js",
+    "./Button": "./dist/Button/index.js",
+    "./ButtonGroup": "./dist/ButtonGroup/index.js",
+    "./ButtonToggle": "./dist/ButtonToggle/index.js",
+    "./Checkbox": "./dist/Checkbox/index.js",
+    "./Code": "./dist/Code/index.js",
+    "./ConfirmationModal": "./dist/ConfirmationModal/index.js",
+    "./Container": "./dist/Container/index.js",
+    "./Dropdown": "./dist/Dropdown/index.js",
+    "./Icon": "./dist/Icon/index.js",
+    "./Image": "./dist/Image/index.js",
+    "./Label": "./dist/Label/index.js",
+    "./Layouts": "./dist/Layouts/index.js",
+    "./Line": "./dist/Line/index.js",
+    "./List": "./dist/List/index.js",
+    "./Message": "./dist/Message/index.js",
+    "./Modal": "./dist/Modal/index.js",
+    "./NativeSelect": "./dist/NativeSelect/index.js",
+    "./Nav": "./dist/Nav/index.js",
+    "./Pages": "./dist/Pages/index.js",
+    "./Pagination": "./dist/Pagination/index.js",
+    "./Preview": "./dist/Preview/index.js",
+    "./Progress": "./dist/Progress/index.js",
+    "./ProgressModal": "./dist/ProgressModal/index.js",
+    "./ReminderModal": "./dist/ReminderModal/index.js",
+    "./Spinner": "./dist/Spinner/index.js",
+    "./StickyHeader": "./dist/StickyHeader/index.js",
+    "./Suggestions": "./dist/Suggestions/index.js",
+    "./Textarea": "./dist/Textarea/index.js",
+    "./TextInput": "./dist/TextInput/index.js",
+    "./Toast": "./dist/Toast/index.js",
+    "./Toggle": "./dist/Toggle/index.js",
+    "./Tooltip": "./dist/Tooltip/index.js",
+    "./UserMessage": "./dist/UserMessage/index.js"
+  },
   "typesVersions": {
     "*": {
-      "Pages/Inbox/Filters": [
-        "dist/Pages/Inbox/Filters/index.d.ts"
+      "Accordion": [
+        "dist/Accordion/index.d.ts"
+      ],
+      "Alert": [
+        "dist/Alert/index.d.ts"
+      ],
+      "Avatar": [
+        "dist/Avatar/index.d.ts"
+      ],
+      "Avatars": [
+        "dist/Avatars/index.d.ts"
+      ],
+      "Badge": [
+        "dist/Badge/index.d.ts"
+      ],
+      "Button": [
+        "dist/Button/index.d.ts"
+      ],
+      "ButtonGroup": [
+        "dist/ButtonGroup/index.d.ts"
+      ],
+      "ButtonToggle": [
+        "dist/ButtonToggle/index.d.ts"
+      ],
+      "Checkbox": [
+        "dist/Checkbox/index.d.ts"
+      ],
+      "Code": [
+        "dist/Code/index.d.ts"
+      ],
+      "ConfirmationModal": [
+        "dist/ConfirmationModal/index.d.ts"
+      ],
+      "Container": [
+        "dist/Container/index.d.ts"
+      ],
+      "Dropdown": [
+        "dist/Dropdown/index.d.ts"
+      ],
+      "Icon": [
+        "dist/Icon/index.d.ts"
+      ],
+      "Image": [
+        "dist/Image/index.d.ts"
+      ],
+      "Label": [
+        "dist/Label/index.d.ts"
+      ],
+      "Layouts": [
+        "dist/Layouts/index.d.ts"
+      ],
+      "Line": [
+        "dist/Line/index.d.ts"
+      ],
+      "List": [
+        "dist/List/index.d.ts"
+      ],
+      "Message": [
+        "dist/Message/index.d.ts"
+      ],
+      "Modal": [
+        "dist/Modal/index.d.ts"
+      ],
+      "NativeSelect": [
+        "dist/NativeSelect/index.d.ts"
+      ],
+      "Nav": [
+        "dist/Nav/index.d.ts"
+      ],
+      "Pages": [
+        "dist/Pages/index.d.ts"
+      ],
+      "Pagination": [
+        "dist/Pagination/index.d.ts"
+      ],
+      "Preview": [
+        "dist/Preview/index.d.ts"
+      ],
+      "Progress": [
+        "dist/Progress/index.d.ts"
+      ],
+      "ProgressModal": [
+        "dist/ProgressModal/index.d.ts"
+      ],
+      "ReminderModal": [
+        "dist/ReminderModal/index.d.ts"
+      ],
+      "Spinner": [
+        "dist/Spinner/index.d.ts"
+      ],
+      "StickyHeader": [
+        "dist/StickyHeader/index.d.ts"
+      ],
+      "Suggestions": [
+        "dist/Suggestions/index.d.ts"
+      ],
+      "Textarea": [
+        "dist/Textarea/index.d.ts"
+      ],
+      "TextInput": [
+        "dist/TextInput/index.d.ts"
+      ],
+      "Toast": [
+        "dist/Toast/index.d.ts"
+      ],
+      "Toggle": [
+        "dist/Toggle/index.d.ts"
+      ],
+      "Tooltip": [
+        "dist/Tooltip/index.d.ts"
+      ],
+      "UserMessage": [
+        "dist/UserMessage/index.d.ts"
       ]
     }
   }

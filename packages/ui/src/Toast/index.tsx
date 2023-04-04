@@ -49,5 +49,4 @@ const Toast = {
   ToastContext: Toaster,
 };
 
-export { Toast as toast, Toaster as ToastContext };
 export default Toast;

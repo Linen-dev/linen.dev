@@ -8,5 +8,3 @@ interface Props {
 export default function List({ children }: Props) {
   return <div className={styles.list}>{children}</div>;
 }
-
-export { List };
