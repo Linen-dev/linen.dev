@@ -10,7 +10,7 @@
 
   @media (min-width: 768px) {
     height: calc(100vh - 104px);
-    overflow-y: scroll;
+    overflow-y: auto;
   }
 
   @media (min-width: 1024px) {
