@@ -6,16 +6,16 @@ interface Props {
 }
 
 function getErrorMessage(error: string) {
-  if (error === 'private') {
-    return 'The community you are trying to access is private.';
+  switch (error) {
+    case 'private':
+      return 'The community you are trying to access is private.';
+    case 'forbidden':
+      return 'You are not allowed to access this page.';
+    case 'CredentialsSignin':
+      return 'Credentials are invalid.';
+    default:
+      return 'An unexpected error occurred. Please try again later.';
   }
-  if (error === 'forbidden') {
-    return 'You are not allow to access this page.';
-  }
-  if (error === 'CredentialsSignin') {
-    return 'Credentials are invalid.';
-  }
-  return 'An unexpected error occurred. Please try again later.';
 }
 
 function Error({ error }: Props) {
