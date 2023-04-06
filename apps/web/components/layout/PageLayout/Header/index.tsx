@@ -43,10 +43,9 @@ export default function Header({
   mode,
 }: Props) {
   const brandColor = currentCommunity.brandColor || '#111827';
-  const homeUrl = addHttpsToUrl(settings.homeUrl);
-  const docsUrl = addHttpsToUrl(settings.docsUrl);
-  const logoUrl = addHttpsToUrl(settings.logoUrl);
   const fontColor = pickTextColorBasedOnBgColor(brandColor, 'white', 'black');
+  const homeUrl = addHttpsToUrl(settings.homeUrl);
+  const logoUrl = addHttpsToUrl(settings.logoUrl);
   const borderColor = isWhiteColor(brandColor) ? '#e5e7eb' : brandColor;
   return (
     <div
@@ -55,7 +54,7 @@ export default function Header({
         backgroundColor: brandColor,
         borderBottom: `1px solid ${borderColor}`,
         borderTop: `1px solid ${brandColor}`,
-        gap: '24px',
+        gap: '16px',
       }}
     >
       <Link
@@ -70,7 +69,7 @@ export default function Header({
         className="flex w-full items-center"
         style={{
           justifyContent: 'flex-end',
-          gap: '24px',
+          gap: '16px',
         }}
       >
         <div className="hidden lg:flex grow">
@@ -102,7 +101,11 @@ export default function Header({
           </>
         ) : (
           <>
-            <JoinButton settings={settings} />
+            <JoinButton
+              fontColor={fontColor}
+              currentCommunity={currentCommunity}
+              settings={settings}
+            />
             <div className="lg:hidden">
               <MobileMenu
                 channelName={channelName}
