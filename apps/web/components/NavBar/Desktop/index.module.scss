@@ -72,7 +72,7 @@
 .animation {
   opacity: 1;
   width: 200px;
-  transition: width 0.2s ease-in, opacity 0.2s ease-in;
+  transition: width 0.1s ease, opacity 0.1s ease;
 }
 
 .animation.collapsed {

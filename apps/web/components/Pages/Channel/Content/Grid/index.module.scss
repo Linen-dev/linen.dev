@@ -2,17 +2,16 @@
 
 
 .li {
-  border: 1px solid white;
-  transition: border-color 0.1s ease-in, background 0.1s ease-in;
+  border: 1px solid transparent;
 }
 .li.active {
-  border: 1px solid $color-gray-100;
+  border-top: 1px solid $color-gray-100;
+  border-bottom: 1px solid $color-gray-100;
 }
 
 .mouse {
   .li:hover {
     background: $color-gray-50;
-
     cursor: pointer;
   }
 }
