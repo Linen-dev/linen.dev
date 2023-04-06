@@ -1,15 +1,21 @@
-import LinenIcon from 'components/icons/LinenIcon';
-import classNames from 'classnames';
-import styles from './index.module.css';
+import React from 'react';
 import { useSession } from 'utilities/auth/react';
 import Toast from '@linen/ui/Toast';
 import { useJoinContext } from 'contexts/Join';
+import Link from '../Link';
 
-export default function JoinLinen({ accountId }: { accountId?: string }) {
+interface Props {
+  fontColor: string;
+  accountId: string;
+}
+
+export default function JoinLinen({ fontColor, accountId }: Props) {
   const { status } = useSession();
   const { startSignUp } = useJoinContext();
 
-  const onClick = async () => {
+  const onClick = async (event: React.MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
     if (status === 'authenticated') {
       const res = await fetch('/api/invites/join-button', {
         method: 'post',
@@ -24,10 +30,9 @@ export default function JoinLinen({ accountId }: { accountId?: string }) {
         window.location.href = window.location.href;
       }
     } else if (status === 'unauthenticated') {
-      accountId &&
-        startSignUp?.({
-          communityId: accountId,
-        });
+      startSignUp?.({
+        communityId: accountId,
+      });
     }
   };
 
@@ -36,17 +41,12 @@ export default function JoinLinen({ accountId }: { accountId?: string }) {
   }
 
   return (
-    <div
-      className={classNames(
-        styles.button,
-        'shadow-md text-sm font-medium rounded-md text-blue-700',
-        'cursor-pointer'
-      )}
+    <Link
+      fontColor={fontColor}
+      href="https://linen.dev/signup"
       onClick={onClick}
     >
-      <LinenIcon className={styles.icon} />
-      <span className="hidden sm:inline">Join the conversation</span>
-      <span className="sm:hidden inline">Join Linen</span>
-    </div>
+      Join Linen
+    </Link>
   );
 }
