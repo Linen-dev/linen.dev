@@ -46,14 +46,10 @@
   background-color: white;
   max-height: calc(100vh - 64px);
   min-height: calc(100vh - 64px);
-  overflow: hidden;
+  overflow-y: auto;
   width: 200px;
   padding: 0.5rem 0 0.5rem 0.625rem;
   scrollbar-gutter: stable;
-}
-
-.navbar:hover {
-  overflow-y: auto;
 }
 
 .navbar::-webkit-scrollbar {
