@@ -86,8 +86,13 @@ export function onSignInSubmit({
         });
         window.location.href = '/verify-request';
       }
-    } catch (error: any) {
-      setError(error);
+    } catch (exception: any) {
+      if (typeof exception.then === 'function') {
+        const error = await exception;
+        setError(error.message);
+      } else {
+        setError(exception);
+      }
     } finally {
       setLoading(false);
     }

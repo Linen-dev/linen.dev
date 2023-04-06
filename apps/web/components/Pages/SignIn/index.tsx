@@ -4,7 +4,7 @@ import Button from '@linen/ui/Button';
 import { localStorage } from '@linen/utilities/storage';
 import Error from 'components/Auth/Error';
 import PasswordField from 'components/PasswordField';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { qs } from '@linen/utilities/url';
 import {
   AnchorCss,
