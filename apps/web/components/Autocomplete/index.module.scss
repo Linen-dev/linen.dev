@@ -2,10 +2,13 @@
 
 .input {
   border-radius: 32px;
+  background-color: transparent;
+  border-color: transparent;
 }
 
 .input:focus {
-  border-color: white;
+  background-color: white;
+  border-color: transparent;
 }
 
 .spin {

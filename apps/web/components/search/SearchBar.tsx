@@ -32,12 +32,13 @@ interface SearchResult {
 }
 
 const SearchBar = ({
-  borderColor,
+  brandColor,
   channels = [],
   communityName,
   isSubDomainRouting,
   communityType,
 }: {
+  brandColor: string;
   borderColor: string;
   channels: SerializedChannel[];
   communityName: string;
@@ -94,22 +95,13 @@ const SearchBar = ({
       .then((response) => parseResults(response));
   };
 
-  const style =
-    borderColor === '#000000'
-      ? {
-          background: 'transparent',
-          borderColor: '#ffffff80',
-          color: '#ffffff',
-        }
-      : { borderColor };
-
   return (
     <Autocomplete
+      brandColor={brandColor}
       fetch={fetchResults}
       onSelect={handleSelect}
       renderSuggestion={renderSuggestion}
       placeholder="Search"
-      style={style}
     />
   );
 };

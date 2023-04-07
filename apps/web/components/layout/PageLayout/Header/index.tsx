@@ -74,6 +74,7 @@ export default function Header({
       >
         <div className="hidden lg:flex grow">
           <SearchBar
+            brandColor={brandColor}
             borderColor={borderColor}
             channels={channels}
             communityName={settings.communityName}

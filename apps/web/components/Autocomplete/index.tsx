@@ -5,8 +5,10 @@ import { AiOutlineSearch } from '@react-icons/all-files/ai/AiOutlineSearch';
 import { AiOutlineLoading } from '@react-icons/all-files/ai/AiOutlineLoading';
 import styles from './index.module.scss';
 import NoResults from './NoResults';
+import { pickTextColorBasedOnBgColor } from 'utilities/colors';
 
 export default function Autocomplete({
+  brandColor,
   fetch,
   onSelect = (any) => {},
   renderSuggestion = (any) => null,
@@ -15,6 +17,7 @@ export default function Autocomplete({
   minlength = 3,
   style,
 }: {
+  brandColor: string;
   fetch: ({
     query,
     offset,
@@ -180,12 +183,29 @@ export default function Autocomplete({
     );
   }
 
+  //when it is focused the font color should be black
+  //when it is focused the background color should be white
+  //when it is not focused and the brand color is light the font color should be black
+  //when it is not focused and the brand color is dark the font color should be white
+
+  const fontColor = (brandColor: string) => {
+    if (isFocused) return 'black';
+    //gray-100
+    //gray-900
+    return pickTextColorBasedOnBgColor(brandColor, '#f3f4f6', '#111827');
+  };
+
+  const fontStyle = {
+    color: fontColor(brandColor),
+  };
+
   return (
     <div
       style={{
         position: 'relative',
         flex: '1 1 auto',
         zIndex: 100,
+        color: fontColor(brandColor),
       }}
       onFocus={handleFocus}
       onBlur={handleBlur}
@@ -200,7 +220,7 @@ export default function Autocomplete({
           isSearching ? (
             <AiOutlineLoading className={styles.spin} />
           ) : (
-            <AiOutlineSearch />
+            <AiOutlineSearch style={{ color: fontColor(brandColor) }} />
           )
         }
         placeholder={placeholder}
