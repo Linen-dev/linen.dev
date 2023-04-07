@@ -94,13 +94,22 @@ const SearchBar = ({
       .then((response) => parseResults(response));
   };
 
+  const style =
+    borderColor === '#000000'
+      ? {
+          background: 'transparent',
+          borderColor: '#ffffff80',
+          color: '#ffffff',
+        }
+      : { borderColor };
+
   return (
     <Autocomplete
       fetch={fetchResults}
       onSelect={handleSelect}
       renderSuggestion={renderSuggestion}
       placeholder="Search"
-      style={{ borderColor }}
+      style={style}
     />
   );
 };
