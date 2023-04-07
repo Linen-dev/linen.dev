@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { useRef } from 'react';
 import classNames from 'classnames';
 import styles from './index.module.scss';
 
@@ -19,17 +19,24 @@ export default function Modal({
   fullscreen,
   size,
 }: ModalProps) {
+  const ref = useRef(null);
   if (!open) {
     return null;
   }
+
   return (
-    <div
-      className={classNames(styles.modal, className)}
-      onClick={() => close(true)}
-    >
+    <div className={classNames(styles.modal, className)}>
       <div className={styles.overlay} />
       <div className={styles.container}>
-        <div className={styles.center}>
+        <div
+          className={styles.center}
+          onClick={(event) => {
+            if (event.target === ref.current) {
+              close(true);
+            }
+          }}
+          ref={ref}
+        >
           <div
             className={classNames(styles.content, {
               [styles.fullscreen]: fullscreen,
