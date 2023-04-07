@@ -6,6 +6,10 @@
   text-align: left;
 }
 
+.button {
+  cursor: pointer;
+}
+
 .action {
   align-items: center;
   cursor: pointer;
@@ -34,6 +38,7 @@
   transform: scale(0.9);
   pointer-events: none;
   transition: opacity 0.1s ease-in, transform 0.1s ease-in;
+  overflow: hidden;
 }
 
 .menu.open {
