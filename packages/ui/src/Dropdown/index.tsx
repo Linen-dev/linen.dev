@@ -1,7 +1,5 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import classNames from 'classnames';
-import { Menu, Transition } from '@headlessui/react';
-import { Fragment } from 'react';
 import styles from './index.module.scss';
 
 export interface DropdownItem {
@@ -16,38 +14,37 @@ interface Props {
 }
 
 export default function Example({ button, items }: Props) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+  const onOutsideClick = (event: any) => {
+    const node = ref.current as HTMLDivElement | null;
+    if (node && !node.contains(event.target)) {
+      setOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('click', onOutsideClick, false);
+    return () => {
+      document.removeEventListener('click', onOutsideClick, false);
+    };
+  }, []);
+
   return (
-    <Menu as="div" className={styles.menu}>
-      <Menu.Button>{button}</Menu.Button>
-      <Transition
-        as={Fragment}
-        enter="transition ease-out duration-100"
-        enterFrom="transform opacity-0 scale-95"
-        enterTo="transform opacity-100 scale-100"
-        leave="transition ease-in duration-75"
-        leaveFrom="transform opacity-100 scale-100"
-        leaveTo="transform opacity-0 scale-95"
-      >
-        <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-          {items.map((item, index) => {
-            return (
-              <Menu.Item key={`menu-item-${item.label}-${index}`}>
-                {({ active }) => (
-                  <div
-                    className={classNames(styles.action, {
-                      [styles.active]: active,
-                    })}
-                    onClick={item.onClick}
-                  >
-                    {item.icon}
-                    {item.label}
-                  </div>
-                )}
-              </Menu.Item>
-            );
-          })}
-        </Menu.Items>
-      </Transition>
-    </Menu>
+    <div ref={ref} className={styles.dropdown}>
+      <div onClick={() => setOpen((open) => !open)}>{button}</div>
+      <div className={classNames(styles.menu, { [styles.open]: open })}>
+        {items.map((item, index) => {
+          return (
+            <div key={`menu-item-${item.label}-${index}`}>
+              <div className={styles.action} onClick={item.onClick}>
+                {item.icon}
+                {item.label}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
   );
 }
