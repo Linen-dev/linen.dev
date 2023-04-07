@@ -21,7 +21,8 @@ export const removeCommunity: TaskInterface = async (
     await sendNotification(
       `[ERROR] Remove account ${payload.accountId} process failed`
     );
-    helpers.logger.error(JSON.stringify(error));
+    console.error(error)
+    throw error;
   }
 };
 
