@@ -3,7 +3,7 @@ import debounce from '@linen/utilities/debounce';
 import TextInput from '@linen/ui/TextInput';
 import { AiOutlineSearch } from '@react-icons/all-files/ai/AiOutlineSearch';
 import { AiOutlineLoading } from '@react-icons/all-files/ai/AiOutlineLoading';
-import styles from './index.module.css';
+import styles from './index.module.scss';
 import NoResults from './NoResults';
 
 export default function Autocomplete({
@@ -218,18 +218,7 @@ export default function Autocomplete({
             e.stopPropagation();
             handleSelect();
           }}
-          style={{
-            backgroundColor: 'white',
-            overflow: 'auto',
-            maxWidth: 'unset',
-            borderRadius: '4px',
-            position: 'absolute',
-            top: '40px',
-            left: 0,
-            right: 0,
-            boxShadow: '2px 3px 7px rgba(0, 0, 0, 0.15)',
-            maxHeight: 'calc(100vh - 200px)',
-          }}
+          className={styles.suggestions}
         >
           {results.length > 0 && renderSuggestions(results)}
           {results.length === 0 && !isSearching && <NoResults search={value} />}
