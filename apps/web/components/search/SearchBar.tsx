@@ -99,7 +99,7 @@ const SearchBar = ({
       fetch={fetchResults}
       onSelect={handleSelect}
       renderSuggestion={renderSuggestion}
-      placeholder="Search messages"
+      placeholder="Search"
       style={{ borderColor }}
     />
   );
