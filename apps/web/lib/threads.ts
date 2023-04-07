@@ -261,9 +261,6 @@ export async function findThreadsByCursor({
       messageCount: {
         gte: 1,
       },
-      messages: {
-        some: {},
-      },
     },
     include: {
       messages: {
