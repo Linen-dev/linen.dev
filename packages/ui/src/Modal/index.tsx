@@ -1,6 +1,5 @@
 import React, { Fragment } from 'react';
 import classNames from 'classnames';
-import { Dialog, Transition } from '@headlessui/react';
 import styles from './index.module.scss';
 
 type ModalProps = {
@@ -20,48 +19,27 @@ export default function Modal({
   fullscreen,
   size,
 }: ModalProps) {
+  if (!open) {
+    return null;
+  }
   return (
-    <Transition.Root show={open} as={Fragment}>
-      <Dialog
-        as="div"
-        className={classNames(styles.modal, className)}
-        onClose={close}
-      >
-        <Transition.Child
-          as={Fragment}
-          enter={styles.enter}
-          enterFrom={styles.hidden}
-          enterTo={styles.visible}
-          leave={styles.leave}
-          leaveFrom={styles.visible}
-          leaveTo={styles.hidden}
-        >
-          <div className={styles.overlay} />
-        </Transition.Child>
-
-        <div className={styles.container}>
-          <div className={styles.center}>
-            <Transition.Child
-              as={Fragment}
-              enter={styles.enter}
-              enterFrom={styles.start}
-              enterTo={styles.stop}
-              leave={styles.leave}
-              leaveFrom={styles.stop}
-              leaveTo={styles.start}
-            >
-              <Dialog.Panel
-                className={classNames(styles.content, {
-                  [styles.fullscreen]: fullscreen,
-                  [styles.lg]: size === 'lg',
-                })}
-              >
-                <div>{children}</div>
-              </Dialog.Panel>
-            </Transition.Child>
+    <div
+      className={classNames(styles.modal, className)}
+      onClick={() => close(true)}
+    >
+      <div className={styles.overlay} />
+      <div className={styles.container}>
+        <div className={styles.center}>
+          <div
+            className={classNames(styles.content, {
+              [styles.fullscreen]: fullscreen,
+              [styles.lg]: size === 'lg',
+            })}
+          >
+            <div>{children}</div>
           </div>
         </div>
-      </Dialog>
-    </Transition.Root>
+      </div>
+    </div>
   );
 }

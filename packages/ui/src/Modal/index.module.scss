@@ -12,10 +12,11 @@
   bottom: 0px;
   left: 0px;
   transition-property: opacity;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms;
+  transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  transition-duration: 300ms;
   opacity: 1;
   position: fixed;
+  animation: animatedOverlay 0.2s ease-in;
 }
 
 .container {
@@ -44,26 +45,6 @@
   opacity: 1;
 }
 
-.enter {
-  transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
-  transition-duration: 300ms;
-}
-
-.leave {
-  transition-timing-function: cubic-bezier(0.4, 0, 1, 1);
-  transition-duration: 200ms;
-}
-
-.start {
-  opacity: 0;
-  transform: scaleX(0.95) scaleY(0.95);
-}
-
-.stop {
-  opacity: 1;
-  transform: scaleX(1) scaleY(1);
-}
-
 .content {
   background: white;
   border-radius: 0.5rem;
@@ -75,6 +56,7 @@
   transition-duration: 150ms;
   padding: 1rem;
   position: relative;
+  animation: animatedContent 0.2s ease-in;
 
   @media (min-width: 640px) {
     margin-bottom: 2rem;
@@ -96,4 +78,25 @@
   border-radius: 0;
   min-height: 100vh;
   width: 100vh;
+}
+
+
+@keyframes animatedOverlay {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes animatedContent {
+  from {
+    transform: scaleX(0.95) scaleY(0.95);
+  }
+
+  to {
+    transform: scaleX(1) scaleY(1);
+  }
 }
