@@ -32,7 +32,9 @@ export default function Example({ button, items }: Props) {
 
   return (
     <div ref={ref} className={styles.dropdown}>
-      <div onClick={() => setOpen((open) => !open)}>{button}</div>
+      <div className={styles.button} onClick={() => setOpen((open) => !open)}>
+        {button}
+      </div>
       <div className={classNames(styles.menu, { [styles.open]: open })}>
         {items.map((item, index) => {
           return (
