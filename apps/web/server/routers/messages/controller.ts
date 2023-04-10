@@ -13,6 +13,7 @@ import {
 } from 'server/types';
 import MessagesService from 'services/messages';
 import { getType, postType, deleteType } from './types';
+import { ApiEvent, trackApiEvent } from 'utilities/ssr-metrics';
 
 export class MessagesController {
   static async get(
@@ -85,6 +86,9 @@ export class MessagesController {
       ...req.body,
       userId: req.tenant_user?.id!,
     });
+
+    await trackApiEvent({ req, res }, ApiEvent.user_send_message);
+
     res.json(message);
   }
 

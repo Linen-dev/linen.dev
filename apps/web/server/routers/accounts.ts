@@ -16,6 +16,7 @@ import {
   updateAccountType,
 } from './accounts.types';
 import { onError } from 'server/middlewares/error';
+import { ApiEvent, trackApiEvent } from 'utilities/ssr-metrics';
 
 const prefix = '/api/accounts';
 const accountsRouter = Router();
@@ -41,6 +42,9 @@ accountsRouter.post(
       email: req.session_user?.email!,
       ...req.body,
     });
+    if (status === 200) {
+      await trackApiEvent({ req, res }, ApiEvent.user_create_community);
+    }
     res.status(status).json(data);
     res.end();
   }

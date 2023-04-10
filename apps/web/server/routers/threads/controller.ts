@@ -8,6 +8,7 @@ import {
 } from 'server/types';
 import ThreadsServices from 'services/threads';
 import { findType, getType, postType, putType } from './types';
+import { trackApiEvent, ApiEvent } from 'utilities/ssr-metrics';
 
 export class ThreadsController {
   static async get(
@@ -89,6 +90,9 @@ export class ThreadsController {
       ...req.body,
       authorId: req.tenant_user?.id!,
     });
+
+    await trackApiEvent({ req, res }, ApiEvent.user_send_message);
+
     res.json({ thread, imitationId: req.body.imitationId });
   }
 

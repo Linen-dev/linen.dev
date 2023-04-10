@@ -15,6 +15,7 @@ import {
 import { truncate } from '@linen/utilities/string';
 import { pickTextColorBasedOnBgColor } from 'utilities/colors';
 import { getHomeUrl } from 'utilities/home';
+import { trackPageView } from 'utilities/ssr-metrics';
 
 interface Props {
   communities: SerializedAccount[];
@@ -142,7 +143,9 @@ export default function Communities({ communities }: Props) {
   );
 }
 
-export async function getServerSideProps() {
+export async function getServerSideProps(context: any) {
+  const track = trackPageView(context);
+
   const communities = await prisma.accounts.findMany({
     where: {
       type: AccountType.PUBLIC,
@@ -169,7 +172,7 @@ export async function getServerSideProps() {
       name: 'asc',
     },
   });
-
+  await track.flush();
   return {
     props: {
       communities: communities.map(serializeAccount),

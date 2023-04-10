@@ -11,6 +11,7 @@ import FadeIn from 'components/FadeIn';
 import Head from 'next/head';
 import Footer from 'components/Footer';
 import type { GetServerSidePropsContext } from 'next';
+import { trackPageView } from 'utilities/ssr-metrics';
 
 const Home = (props: { accounts: Props[] }) => {
   const accounts = props.accounts;
@@ -501,7 +502,11 @@ type Props = {
   discordDomain: string;
 };
 
-export async function getServerSideProps({ res }: GetServerSidePropsContext) {
+export async function getServerSideProps({
+  req,
+  res,
+}: GetServerSidePropsContext) {
+  const track = trackPageView({ req, res });
   const accounts = await prisma.accounts.findMany({
     where: {
       NOT: [
@@ -533,6 +538,7 @@ export async function getServerSideProps({ res }: GetServerSidePropsContext) {
     'Cache-Control',
     'public, s-maxage=43200, stale-while-revalidate=86400'
   );
+  await track.flush();
   return {
     props: { accounts: remainders },
   };

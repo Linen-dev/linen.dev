@@ -7,6 +7,7 @@ import { AccountType, Roles } from '@linen/types';
 import { generateRandomWordSlug } from 'utilities/randomWordSlugs';
 import { eventSignUp } from 'services/events/eventNewSignUp';
 import { z } from 'zod';
+import { ApiEvent, trackApiEvent } from 'utilities/ssr-metrics';
 
 const createSchema = z.object({
   email: z.string().email(),
@@ -53,6 +54,10 @@ async function create(request: NextApiRequest, response: NextApiResponse) {
   }
 
   try {
+    await trackApiEvent(
+      { req: { ...request, user: newAuth }, res: response },
+      ApiEvent.sign_up
+    );
     await eventSignUp(newAuth.id, email, newAuth.createdAt);
   } catch (e) {
     console.error('failed to send: ', e);

@@ -3,7 +3,7 @@ import PasswordField from '../../components/PasswordField';
 import Button from '@linen/ui/Button';
 import { NextPageContext } from 'next';
 import Toast from '@linen/ui/Toast';
-import { useState } from 'react';
+import { trackPageView } from 'utilities/ssr-metrics';
 
 interface Props {
   token: string;
@@ -52,6 +52,7 @@ export default function ResetPassword({ token }: Props) {
 }
 
 export async function getServerSideProps(context: NextPageContext) {
+  await trackPageView(context).flush();
   return {
     props: {
       token: context.query.token,

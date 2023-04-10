@@ -27,6 +27,7 @@ import { Unauthorized } from 'server/exceptions';
 import { onError, onGetError } from 'server/middlewares/error';
 import { encrypt, decrypt } from 'utilities/crypto';
 import { normalize } from '@linen/utilities/string';
+import { ApiEvent, trackApiEvent } from 'utilities/ssr-metrics';
 
 const prefix = '/api/auth';
 const authRouter = Router();
@@ -40,6 +41,9 @@ authRouter.post(
       return next(new Unauthorized());
     }
     const logged_user = req.user as LoggedUser;
+    await trackApiEvent({ req, res }, ApiEvent.sign_in, {
+      provider: 'credentials',
+    });
 
     const token = await signToken({
       id: logged_user.id,
@@ -60,6 +64,9 @@ authRouter.get(
       return res.redirect('/500');
     }
     const logged_user = req.user as LoggedUser;
+    await trackApiEvent({ req, res }, ApiEvent.sign_in, {
+      provider: 'magic-link',
+    });
 
     const callbackUrl = logged_user.callbackUrl;
     const state = logged_user.state;
@@ -124,6 +131,10 @@ authRouter
       if (!req.user) {
         return res.redirect('/500');
       }
+
+      await trackApiEvent({ req, res }, ApiEvent.sign_in, {
+        provider: 'github',
+      });
 
       let callbackUrl = '/'; // page redirect
 
@@ -233,6 +244,7 @@ authRouter.post(
   `${prefix}/signout`,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
+      await trackApiEvent({ req, res }, ApiEvent.sign_out);
       expireSessionCookies({ req, res });
       res.status(200).json({});
     } catch (error) {

@@ -4,6 +4,7 @@ import EmailField from '../../components/EmailField';
 import Button from '@linen/ui/Button';
 import Toast from '@linen/ui/Toast';
 import type { NextPageContext } from 'next';
+import { trackPageView } from 'utilities/ssr-metrics';
 
 interface Props {
   email: string;
@@ -50,6 +51,7 @@ export default function ForgotPassword({ email }: Props) {
 }
 
 export async function getServerSideProps(context: NextPageContext) {
+  await trackPageView(context).flush();
   return {
     props: {
       email: context.query.email || '',

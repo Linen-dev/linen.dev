@@ -3,12 +3,15 @@ import type { NextPageContext } from 'next';
 import Session from 'services/session';
 import { prisma } from '@linen/database';
 import { findInvitesByEmail } from 'services/invites';
+import { trackPageView } from 'utilities/ssr-metrics';
 
 export default function CreateCommunity(props: any) {
   return <GettingStartedPage {...props} />;
 }
 
 export async function getServerSideProps({ req, res }: NextPageContext) {
+  const track = trackPageView({ req, res });
+
   const session = await Session.find(req as any, res as any);
 
   if (!session) {
@@ -20,10 +23,13 @@ export async function getServerSideProps({ req, res }: NextPageContext) {
       },
     };
   }
+  session.user?.id && track.knownUser(session.user.id);
 
   const auth = await findAccountsFromAuth(session?.user?.email!);
 
   const invites = await findInvitesByEmail(session?.user?.email!);
+
+  await track.flush();
 
   return {
     props: {

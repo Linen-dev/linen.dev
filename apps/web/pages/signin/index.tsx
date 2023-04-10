@@ -1,10 +1,12 @@
 import { createCSRFToken } from 'utilities/auth/server/csrf';
 import type { NextPageContext } from 'next';
 import SignIn from 'components/Pages/SignIn';
+import { trackPageView } from 'utilities/ssr-metrics';
 
 export default SignIn;
 
 export async function getServerSideProps(context: NextPageContext) {
+  await trackPageView(context).flush();
   return {
     props: {
       csrfToken: createCSRFToken(),

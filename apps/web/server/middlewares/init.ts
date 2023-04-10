@@ -6,6 +6,7 @@ import hpp from 'hpp';
 import passport from 'utilities/auth/passport';
 import morgan from 'morgan';
 import nextConnect from 'next-connect';
+import { Sentry } from 'utilities/ssr-metrics';
 
 export const init = nextConnect().use(
   morgan('tiny'),
@@ -15,7 +16,9 @@ export const init = nextConnect().use(
   compression() as any,
   // express.json(),
   // express.urlencoded({ extended: true }),
-  passport.initialize() as any
+  passport.initialize() as any,
+  Sentry.Handlers.requestHandler(),
+  Sentry.Handlers.tracingHandler()
 );
 
 export default init;
