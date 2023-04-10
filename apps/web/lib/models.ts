@@ -1,6 +1,7 @@
 import { Prisma, prisma } from '@linen/database';
 import { stripProtocol } from '@linen/utilities/url';
 import { AccountWithSlackAuthAndChannels } from '../types/partialTypes';
+import { promiseMemoize } from 'utilities/promises/memo';
 
 export const createMessageWithMentions = async (
   message: Prisma.messagesUncheckedCreateInput,
@@ -176,7 +177,7 @@ export const updateAccountRedirectDomain = async (
   });
 };
 
-export const findAccountByPath = async (domain: string) => {
+const _findAccountByPath = async (domain: string) => {
   const path = domain.toLowerCase();
   return await prisma.accounts.findFirst({
     where: {
@@ -197,6 +198,8 @@ export const findAccountByPath = async (domain: string) => {
     },
   });
 };
+
+export const findAccountByPath = promiseMemoize(_findAccountByPath);
 
 export const updateAccount = async (
   accountId: string,
