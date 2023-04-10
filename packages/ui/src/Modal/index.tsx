@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import classNames from 'classnames';
+import Portal from '../Portal';
 import styles from './index.module.scss';
 
 type ModalProps = {
@@ -25,28 +26,30 @@ export default function Modal({
   }
 
   return (
-    <div className={classNames(styles.modal, className)}>
-      <div className={styles.overlay} />
-      <div className={styles.container}>
-        <div
-          className={styles.center}
-          onClick={(event) => {
-            if (event.target === ref.current) {
-              close(true);
-            }
-          }}
-          ref={ref}
-        >
+    <Portal node={document.getElementById('modal-wrapper')}>
+      <div className={classNames(styles.modal, className)}>
+        <div className={styles.overlay} />
+        <div className={styles.container}>
           <div
-            className={classNames(styles.content, {
-              [styles.fullscreen]: fullscreen,
-              [styles.lg]: size === 'lg',
-            })}
+            className={styles.center}
+            onClick={(event) => {
+              if (event.target === ref.current) {
+                close(true);
+              }
+            }}
+            ref={ref}
           >
-            <div>{children}</div>
+            <div
+              className={classNames(styles.content, {
+                [styles.fullscreen]: fullscreen,
+                [styles.lg]: size === 'lg',
+              })}
+            >
+              <div>{children}</div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </Portal>
   );
 }
