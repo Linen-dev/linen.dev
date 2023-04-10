@@ -5,5 +5,10 @@ interface Props {
 }
 
 export default function BlankLayout({ children }: Props) {
-  return <div>{children}</div>;
+  return (
+    <>
+      <div>{children}</div>
+      <div id="modal-wrapper"></div>
+    </>
+  );
 }

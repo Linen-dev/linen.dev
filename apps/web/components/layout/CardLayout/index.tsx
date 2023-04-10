@@ -11,19 +11,22 @@ interface Props {
 
 const Layout = ({ header, children }: Props) => {
   return (
-    <div className={styles.page}>
-      <div className={styles.logo}>
-        <Link className="text-center" href="/">
-          <LinenLogo />
-        </Link>
-      </div>
-      <Card>
-        <div className={styles.content}>
-          {header && <h1 className={styles.header}>{header}</h1>}
-          {children}
+    <>
+      <div className={styles.page}>
+        <div className={styles.logo}>
+          <Link className="text-center" href="/">
+            <LinenLogo />
+          </Link>
         </div>
-      </Card>
-    </div>
+        <Card>
+          <div className={styles.content}>
+            {header && <h1 className={styles.header}>{header}</h1>}
+            {children}
+          </div>
+        </Card>
+      </div>
+      <div id="modal-wrapper"></div>
+    </>
   );
 };
 
