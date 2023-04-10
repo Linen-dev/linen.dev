@@ -26,6 +26,7 @@
   },
   "resolutions": {
     "qs": ">=6.9.7",
-    "jsonwebtoken": ">=9.0.0"
+    "jsonwebtoken": ">=9.0.0",
+    "vm2": ">=3.9.15"
   }
 }
