@@ -26,7 +26,7 @@ export default function Modal({
   }
 
   return (
-    <Portal node={document.getElementById('modal-wrapper')}>
+    <Portal>
       <div className={classNames(styles.modal, className)}>
         <div className={styles.overlay} />
         <div className={styles.container}>

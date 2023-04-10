@@ -7,17 +7,13 @@ interface Props {
 }
 
 export default function Portal({ node, children }: Props) {
-  const root = document.createElement('div');
+  if (typeof window === 'undefined') {
+    return null;
+  }
+  const root = document.getElementById('portal');
+  if (!root) {
+    return null;
+  }
 
-  useEffect(() => {
-    if (!node) {
-      document.body.appendChild(root);
-
-      return () => {
-        document.body.removeChild(root);
-      };
-    }
-  }, [node]);
-
-  return ReactDOM.createPortal(children, node || root);
+  return ReactDOM.createPortal(children, root);
 }

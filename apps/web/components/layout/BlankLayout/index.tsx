@@ -8,7 +8,7 @@ export default function BlankLayout({ children }: Props) {
   return (
     <>
       <div>{children}</div>
-      <div id="modal-wrapper"></div>
+      <div id="portal"></div>
     </>
   );
 }
