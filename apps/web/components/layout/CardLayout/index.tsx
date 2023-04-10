@@ -25,7 +25,7 @@ const Layout = ({ header, children }: Props) => {
           </div>
         </Card>
       </div>
-      <div id="modal-wrapper"></div>
+      <div id="portal"></div>
     </>
   );
 };

@@ -135,7 +135,7 @@ function PageLayout({
           </ErrorBoundary>
         </div>
       </div>
-      <div id="modal-wrapper"></div>
+      <div id="portal"></div>
       <GoogleAnalytics
         googleAnalyticsId={googleAnalyticsId}
         googleSiteVerification={googleSiteVerification}

@@ -91,8 +91,8 @@ export const JoinContext = ({ children }: Props) => {
     window.location.href = window.location.href;
   }
 
-  const onCloseModal = (e: boolean) => {
-    setOpen(e);
+  const onCloseModal = () => {
+    setOpen(false);
   };
 
   const mapText = {
@@ -102,12 +102,7 @@ export const JoinContext = ({ children }: Props) => {
 
   return (
     <Context.Provider value={{ startSignUp }}>
-      <Modal
-        {...{
-          open,
-          close: onCloseModal,
-        }}
-      >
+      <Modal open={open} close={onCloseModal}>
         <div className="m-5 text-center">
           <h3 className="text-lg font-medium leading-6 text-gray-900">
             Join the community
