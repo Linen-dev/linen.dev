@@ -2,21 +2,26 @@ import { PostHog } from 'posthog-node';
 import { serialize } from 'cookie';
 import * as Sentry from '@sentry/node';
 
+const POSTHOG_APIKEY = process.env.NEXT_PUBLIC_POSTHOG_API_KEY!;
+const SENTRY_DNS = process.env.SENTRY_DNS!;
+
 Sentry.init({
-  dsn: process.env.SENTRY_DNS,
+  dsn: SENTRY_DNS,
   integrations: [new Sentry.Integrations.Http({ tracing: true })],
   tracesSampleRate: 1.0,
-  debug: true,
-  enabled: process.env.NODE_ENV === 'production',
+  debug: process.env.NODE_ENV === 'development',
+  enabled: !!SENTRY_DNS && process.env.NODE_ENV === 'production',
 });
 
 export { Sentry };
 
-const postHog = new PostHog(process.env.NEXT_PUBLIC_POSTHOG_API_KEY!, {
-  flushAt: 1,
-  flushInterval: 0,
-  enable: process.env.NODE_ENV === 'production',
-});
+const postHog = !!POSTHOG_APIKEY
+  ? new PostHog(POSTHOG_APIKEY, {
+      flushAt: 1,
+      flushInterval: 0,
+      enable: process.env.NODE_ENV === 'production',
+    })
+  : undefined;
 
 const random = () => (Math.random() + 1).toString(36).substring(2);
 
@@ -63,7 +68,7 @@ export const trackPageView = (context: any) => {
   const transaction = Sentry.startTransaction({ name: url });
   Sentry.setUser({ id: distinctId });
 
-  postHog.capture({
+  postHog?.capture({
     distinctId,
     event: '$pageview',
     properties: {
@@ -73,14 +78,14 @@ export const trackPageView = (context: any) => {
 
   return {
     knownUser: (userId: string) => {
-      postHog.alias({
+      postHog?.alias({
         distinctId,
         alias: userId,
       });
     },
     flush: async () => {
       transaction.finish();
-      await postHog.shutdownAsync();
+      await postHog?.shutdownAsync();
       await Sentry.flush();
       Sentry.setUser(null);
     },
@@ -107,7 +112,7 @@ export const trackApiEvent = (
   const distinctId = identifyUserSession({ req, res });
   const url = identifyUrl({ req });
 
-  postHog.capture({
+  postHog?.capture({
     distinctId,
     event,
     properties: {
@@ -119,10 +124,10 @@ export const trackApiEvent = (
   const userId = req.session_user?.id || req.user?.id;
 
   if (userId) {
-    postHog.alias({
+    postHog?.alias({
       distinctId,
       alias: userId,
     });
   }
-  return postHog.shutdownAsync();
+  return postHog?.shutdownAsync();
 };
