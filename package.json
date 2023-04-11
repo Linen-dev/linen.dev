@@ -18,11 +18,9 @@
     "turbo": "^1.6.3"
   },
   "scripts": {
-    "web": "yarn turbo --filter=@linen/web...",
-    "ui": "yarn turbo --filter=@linen/ui...",
-    "dev": "yarn turbo dev",
-    "build": "yarn turbo build",
-    "prebuild": "yarn turbo build --filter=@linen/ui"
+    "dev:web": "yarn turbo --filter=@linen/web dev",
+    "dev:ui": "yarn turbo --filter=@linen/ui dev",
+    "build": "yarn turbo build"
   },
   "resolutions": {
     "qs": ">=6.9.7",
