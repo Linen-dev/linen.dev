@@ -17,6 +17,10 @@ const nextConfig = {
         source: '/d/:path*',
         destination: `/s/:path*`,
       },
+      {
+        source: '/ph/:path*',
+        destination: 'https://app.posthog.com/:path*',
+      },
     ];
   },
   images: {
