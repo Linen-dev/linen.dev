@@ -121,7 +121,7 @@ function buildChannelUrl({
     : `/${settings.prefix}/${communityName}`;
 
   url += channelName ? `/c/${channelName}` : `/c/${channel.channelName}`;
-  return url;
+  return encodeURI(url);
 }
 
 function buildThreadUrl({
@@ -142,5 +142,5 @@ function buildThreadUrl({
     : `/${settings.prefix}/${communityName}`;
 
   url += `/t/${threadId}` + (slug ? `/${slug}` : ``);
-  return url;
+  return encodeURI(url);
 }
