@@ -5,6 +5,11 @@
   text-decoration: underline;
   word-break: break-word;
   word-wrap: break-word;
+  text-decoration: none;
+}
+
+.link:hover {
+  text-decoration: underline;
 }
 
 .line {
