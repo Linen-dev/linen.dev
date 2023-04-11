@@ -296,14 +296,17 @@ async function step3_signIn(store: storeType) {
 
       expect(response.status).toEqual(307);
       expect(response.cookies).toBeDefined();
-      expect(response.cookies[0]).toMatchObject({
+      const sessionCookie = response.cookies.find(
+        (c) => !!c['linen.session-token']
+      );
+      expect(sessionCookie).toMatchObject({
         'linen.session-token': expect.any(String),
         Path: '/',
         path: '/',
         SameSite: 'Lax',
         samesite: 'Lax',
       });
-      store.invited.token = response.cookies[0]['linen.session-token'];
+      store.invited.token = sessionCookie!['linen.session-token'];
 
       expect(response.headers).toBeDefined();
       const location = response.headers.get('location');

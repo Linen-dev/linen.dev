@@ -11,13 +11,9 @@ jest.mock('utilities/auth/server/tokens', () => {
     signToken: jest.fn().mockImplementation((val) => {
       return JSON.stringify({ data: { ...val }, exp: now() });
     }),
-    verifyToken: jest.fn().mockImplementation((val, _) => {
-      try {
-        return JSON.parse(val);
-      } catch (error) {
-        return null;
-      }
-    }),
+    verifyToken: jest
+      .fn()
+      .mockImplementation(async (val, _) => JSON.parse(val)),
     refreshTokenAction: jest.fn().mockImplementation((req, _) => {
       const token = getToken(req);
       const newToken = JSON.parse(token!);

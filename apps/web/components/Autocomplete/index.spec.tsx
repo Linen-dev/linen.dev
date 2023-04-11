@@ -7,6 +7,7 @@ describe('Autocomplete', () => {
   it('renders an input', () => {
     const { container } = render(
       <Autocomplete
+        brandColor="#fff"
         fetch={() => Promise.resolve([])}
         onSelect={jest.fn()}
         renderSuggestion={() => null}
@@ -18,6 +19,7 @@ describe('Autocomplete', () => {
   it('renders results', async () => {
     const { container, getByPlaceholderText } = render(
       <Autocomplete
+        brandColor="#fff"
         fetch={() => Promise.resolve([{ id: 1, name: 'super test' }])}
         onSelect={jest.fn()}
         renderSuggestion={({ name }) => <div>{name}</div>}
@@ -33,6 +35,7 @@ describe('Autocomplete', () => {
       const onSelect = jest.fn();
       const { container, getByPlaceholderText, getByText } = render(
         <Autocomplete
+          brandColor="#fff"
           fetch={() => Promise.resolve([{ id: 1, name: 'super test' }])}
           onSelect={onSelect}
           renderSuggestion={({ name }) => <div>{name}</div>}
@@ -50,6 +53,7 @@ describe('Autocomplete', () => {
     it('renders a custom placeholder', () => {
       const { getByPlaceholderText } = render(
         <Autocomplete
+          brandColor="#fff"
           fetch={() => Promise.resolve([])}
           onSelect={jest.fn()}
           renderSuggestion={() => null}

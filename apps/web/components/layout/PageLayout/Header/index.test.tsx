@@ -49,7 +49,7 @@ describe('Header', () => {
           mode={Mode.Default}
         />
       );
-      expect(container).toHaveTextContent('Join the conversation');
+      expect(container).toHaveTextContent('Sign InSign Up');
       expect(container).not.toHaveTextContent('Open user menu');
     });
   });

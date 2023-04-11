@@ -20,6 +20,7 @@
   "scripts": {
     "dev:web": "yarn turbo --filter=@linen/web dev",
     "dev:ui": "yarn turbo --filter=@linen/ui dev",
+    "web": "yarn turbo --filter=@linen/web...",
     "build": "yarn turbo build"
   },
   "resolutions": {
