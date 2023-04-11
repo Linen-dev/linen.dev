@@ -12,33 +12,39 @@ import Script from 'next/script';
 import { useEffect } from 'react';
 import { SessionProvider } from 'utilities/auth/react';
 import Toast from '@linen/ui/Toast';
-import { usePostHog } from 'next-use-posthog';
+import posthog from 'posthog-js';
 import { JoinContext } from 'contexts/Join';
 import { UsersContext } from '@linen/contexts/Users';
+import PostHogUser from 'components/PostHogUser';
+import { PostHogProvider } from 'posthog-js/react';
 
 const POSTHOG_API_KEY = process.env.NEXT_PUBLIC_POSTHOG_API_KEY!;
 export default function App(props: AppProps) {
-  usePostHog(POSTHOG_API_KEY, {
-    api_host: 'https://app.posthog.com',
-    loaded: (posthog) => {
-      if (
-        !process.env.NEXT_PUBLIC_POSTHOG_API_KEY ||
-        process.env.NODE_ENV === 'development'
-      )
-        posthog.opt_out_capturing();
-    },
-  });
-
   const router = useRouter();
 
   const { Component, pageProps } = props;
 
   useEffect(() => {
+    if (!!POSTHOG_API_KEY && typeof window !== 'undefined') {
+      posthog.init(POSTHOG_API_KEY, {
+        api_host: '/ph' || 'https://app.posthog.com',
+        autocapture: true,
+        loaded: (posthog) => {
+          if (process.env.NODE_ENV === 'development') {
+            posthog.opt_out_capturing();
+          } else if (posthog.has_opted_out_capturing()) {
+            posthog.opt_in_capturing();
+          }
+        },
+      });
+    }
+
     const handleStart = (url: string) => {
       console.log(`Loading: ${url}`);
       NProgress.start();
     };
     const handleStop = () => {
+      posthog?.capture('$pageview');
       NProgress.done();
     };
 
@@ -74,7 +80,10 @@ export default function App(props: AppProps) {
         />
         <JoinContext>
           <UsersContext>
-            <Component {...pageProps} />
+            <PostHogProvider client={posthog}>
+              <PostHogUser />
+              <Component {...pageProps} />
+            </PostHogProvider>
           </UsersContext>
         </JoinContext>
       </SWRConfig>
