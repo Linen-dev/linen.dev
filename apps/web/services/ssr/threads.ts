@@ -51,7 +51,6 @@ export async function threadGetServerSideProps(
     const isCrawler = isBot(context?.req?.headers?.['user-agent'] || '');
 
     if (
-      isCrawler &&
       shouldRedirectToDomain({
         account: currentCommunity,
         communityName,

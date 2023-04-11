@@ -40,23 +40,23 @@ export async function channelGetServerSideProps(
   const channel = findChannelOrDefault([...channels, ...dms], channelName);
   if (!channel) return NotFound();
 
-  if (isCrawler) {
-    if (
-      shouldRedirectToDomain({
-        account: currentCommunity,
-        communityName,
-        isSubdomainbasedRouting,
-      })
-    ) {
-      return redirectChannelToDomain({
-        account: currentCommunity,
-        communityName,
-        settings,
-        channelName,
-        channel,
-      });
-    }
+  if (
+    shouldRedirectToDomain({
+      account: currentCommunity,
+      communityName,
+      isSubdomainbasedRouting,
+    })
+  ) {
+    return redirectChannelToDomain({
+      account: currentCommunity,
+      communityName,
+      settings,
+      channelName,
+      channel,
+    });
+  }
 
+  if (isCrawler) {
     if (!channelName) {
       // should be redirect to default_channel
       return resolveCrawlerRedirect({
