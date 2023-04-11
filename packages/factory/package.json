@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "scripts": {
     "build": "rm -rf dist && tsc",
-    "dev": "npm run build --watch"
+    "dev": "tsc --watch"
   },
   "dependencies": {
     "@linen/database": "*",

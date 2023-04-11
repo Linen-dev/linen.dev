@@ -4,7 +4,7 @@ module.exports = {
   apps: [
     {
       name: 'nextjs',
-      script: 'yarn dev:web',
+      script: 'yarn dev',
       cwd: '..',
       env: {
         PORT: 80,

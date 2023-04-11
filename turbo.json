@@ -10,7 +10,7 @@
     },
     "dev": {
       "cache": false,
-      "dependsOn": ["^build"]
+      "persistent": true
     },
     "clean": {
       "cache": false
