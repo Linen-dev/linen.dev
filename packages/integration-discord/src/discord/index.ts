@@ -16,6 +16,8 @@ import { logger } from '@linen/logger';
 export { onMessageCreate } from './onMessageCreate';
 export { onMessageDelete } from './onMessageDelete';
 export { onMessageUpdate } from './onMessageUpdate';
+export { onThreadUpdate } from './onThreadUpdate';
+export { onThreadCreate } from './onThreadCreate';
 
 export async function onMessageReactionAdd(
   reaction: MessageReaction | PartialMessageReaction
@@ -51,16 +53,8 @@ export async function onChannelUpdate(
   logger.info('onChannelUpdate', channel);
 }
 
-export async function onThreadCreate(thread: AnyThreadChannel<boolean>) {
-  logger.info('onThreadCreate', thread);
-}
-
 export async function onThreadDelete(thread: AnyThreadChannel<boolean>) {
   logger.info('onThreadDelete', thread);
-}
-
-export async function onThreadUpdate(thread: AnyThreadChannel<boolean>) {
-  logger.info('onThreadUpdate', thread);
 }
 
 export async function onUserUpdate(user: User | PartialUser) {

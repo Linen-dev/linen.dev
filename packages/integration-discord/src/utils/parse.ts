@@ -73,7 +73,7 @@ export const parseThreadFromChannel = (
 export const parseThreadFromMessage = (message: Message): LinenThread => {
   return {
     externalThreadId: message.id,
-    title: message.content,
+    title: message.thread?.name || null,
   };
 };
 

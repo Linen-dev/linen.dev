@@ -3,6 +3,7 @@ import env from './config';
 import { appendProtocol } from '@linen/utilities/url';
 import { getIntegrationUrl } from '@linen/utilities/domain';
 import { PrismaPromise, prisma } from '@linen/database';
+import { slugify } from '@linen/utilities/string';
 
 export type LinenUser = {
   displayName: string;
@@ -96,6 +97,48 @@ export async function findThreadWithMessage(threadId: string) {
       messages: {
         include: { author: true, attachments: true },
       },
+    },
+  });
+}
+
+export async function findThreadByExternalId(externalThreadId: string) {
+  return await prisma.threads.findUnique({
+    include: { channel: { include: { account: { select: { id: true } } } } },
+    where: { externalThreadId },
+  });
+}
+
+export async function createThread({
+  thread,
+  externalThreadId,
+  channelId,
+}: {
+  thread: {
+    messageCount: number | null;
+    name: string;
+    createdTimestamp: number | null;
+  };
+  externalThreadId: string;
+  channelId: string;
+}) {
+  await prisma.threads.create({
+    data: {
+      sentAt: BigInt(thread.createdTimestamp || Date.now()),
+      externalThreadId,
+      channelId,
+      messageCount: thread.messageCount || undefined,
+      title: thread.name,
+      slug: slugify(thread.name),
+    },
+  });
+}
+
+export async function updateThread(id: string, title: string) {
+  await prisma.threads.update({
+    where: { id },
+    data: {
+      title,
+      slug: slugify(title),
     },
   });
 }
