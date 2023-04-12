@@ -1,20 +1,19 @@
 import React from 'react';
+import classNames from 'classnames';
 import { Period } from 'components/Pages/Plans';
 import { SerializedAccount } from '@linen/types';
-import { GoCheck } from '@react-icons/all-files/go/GoCheck';
-
-interface Price {
-  id?: string;
-  amount?: number;
-  type: Period;
-}
+import { FiCheck } from '@react-icons/all-files/fi/FiCheck';
+import { FiZap } from '@react-icons/all-files/fi/FiZap';
+import Card from './Card';
+import styles from './index.module.scss';
 
 interface Tier {
   name: string;
   description: string;
   href: string;
   features: string[];
-  prices?: Price[];
+  prices: { [key: string]: number };
+  active?: boolean;
 }
 
 interface Props {
@@ -25,55 +24,53 @@ interface Props {
 
 export default function Tiers({ tiers, activePeriod, account }: Props) {
   return (
-    <div className="mt-12 space-y-4 sm:mt-16 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-6 lg:max-w-4xl lg:mx-auto xl:max-w-none xl:mx-0 xl:grid-cols-2">
+    <div className={styles.grid}>
       {tiers.map((tier) => (
-        <div
+        <Card
           key={tier.name}
-          className="border-solid border-1 border border-gray-200 rounded-lg shadow-lg divide-y divide-gray-200"
+          title={tier.name}
+          description={tier.description}
+          price={tier.prices[activePeriod]}
+          period={activePeriod}
+          active={tier.active}
         >
-          <div className="p-6">
-            <h2 className="text-lg leading-6 font-medium text-gray-900">
-              {tier.name}
-            </h2>
-            <p className="mt-4 text-sm text-gray-500">{tier.description}</p>
-
+          <div>
             {!account && tier.prices ? (
               <a
-                className="shadow-sm mt-8 block w-full bg-blue-500 border border-blue-500 rounded-md py-2 text-sm font-semibold text-white text-center hover:bg-blue-600"
+                className="shadow-sm mt-8 block w-full bg-indigo-500 border border-indigo-500 rounded-md py-2 text-sm font-semibold text-white text-center hover:bg-indigo-600"
                 href="mailto:help@linen.dev?subject=Linen%20Premium"
               >
                 Contact Us
               </a>
             ) : !!account && !account.premium && tier.prices ? (
               <a
-                className="shadow-sm mt-8 block w-full bg-blue-500 border border-blue-500 rounded-md py-2 text-sm font-semibold text-white text-center hover:bg-blue-600"
+                className="shadow-sm mt-8 block w-full bg-indigo-500 border border-indigo-500 rounded-md py-2 text-sm font-semibold text-white text-center hover:bg-indigo-600"
                 href="mailto:help@linen.dev?subject=Linen%20Premium"
               >
                 Contact Us
               </a>
             ) : (
-              <a className="shadow-sm mt-8 block w-full bg-green-500 border border-green-500 rounded-md py-2 text-sm font-semibold text-white text-center">
-                <GoCheck className="inline-block h-4 ml-1" />
+              <a
+                className={classNames(styles.button, {
+                  [styles.active]: tier.active,
+                })}
+              >
+                {tier.active && <FiZap />}
+                Buy plan
               </a>
             )}
           </div>
-          <div className="pt-6 pb-8 px-6">
-            <h3 className="text-xs font-medium text-gray-900 tracking-wide uppercase">
-              What&apos;s included
-            </h3>
-            <ul role="list" className="mt-6 space-y-4">
+          <div>
+            <ul className={styles.list}>
               {tier.features.map((feature) => (
-                <li key={feature} className="flex space-x-3">
-                  <GoCheck
-                    className="flex-shrink-0 h-5 w-5 text-green-500"
-                    aria-hidden="true"
-                  />
-                  <span className="text-sm text-gray-500">{feature}</span>
+                <li>
+                  <FiCheck />
+                  {feature}
                 </li>
               ))}
             </ul>
           </div>
-        </div>
+        </Card>
       ))}
     </div>
   );
