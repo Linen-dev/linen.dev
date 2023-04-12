@@ -15,10 +15,7 @@ import { logger } from '@linen/logger';
 
 export { onMessageCreate } from './onMessageCreate';
 export { onMessageDelete } from './onMessageDelete';
-
-export async function onMessageUpdate(message: Message | PartialMessage) {
-  logger.info('onMessageUpdate', message);
-}
+export { onMessageUpdate } from './onMessageUpdate';
 
 export async function onMessageReactionAdd(
   reaction: MessageReaction | PartialMessageReaction

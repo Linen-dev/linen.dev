@@ -77,7 +77,9 @@ export const parseThreadFromMessage = (message: Message): LinenThread => {
   };
 };
 
-export const parseMessage = (message: Message): LinenMessage => {
+export const parseMessage = (
+  message: Pick<Message, 'content' | 'attachments' | 'id'>
+): LinenMessage => {
   return {
     body: [message.content, ...message.attachments.map((a) => a.url)].join(
       '\n'

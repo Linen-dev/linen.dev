@@ -107,6 +107,42 @@ export async function setThreadExternalId(id: string, externalId: string) {
   });
 }
 
+export async function findMessageByChannelIdAndExternalId({
+  channelId,
+  externalMessageId,
+}: {
+  channelId: string;
+  externalMessageId: string;
+}) {
+  return await prisma.messages.findUnique({
+    select: {
+      id: true,
+      body: true,
+    },
+    where: {
+      channelId_externalMessageId: {
+        channelId,
+        externalMessageId,
+      },
+    },
+  });
+}
+
+export async function updateMessage({
+  id,
+  body,
+}: {
+  id: string;
+  body: string;
+}) {
+  await prisma.messages.update({
+    where: { id },
+    data: {
+      body,
+    },
+  });
+}
+
 export async function setMessageExternalId(id: string, externalId: string) {
   await prisma.messages.update({
     where: { id },
