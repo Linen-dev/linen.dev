@@ -14,6 +14,7 @@ import styles from './index.module.scss';
 import { AxiosRequestConfig } from 'axios';
 import MobileMenu from './MobileMenu';
 import Logo from './Logo';
+import UpgradeButton from './UpgradeButton';
 
 interface Props {
   settings: Settings;
@@ -84,7 +85,10 @@ export default function Header({
         </div>
         {permissions.user && permissions.is_member ? (
           <>
-            <div className="hidden lg:flex">
+            <div className="hidden lg:flex gap-2">
+              {!currentCommunity.premium && permissions.manage && (
+                <UpgradeButton />
+              )}
               <UserAvatar
                 currentUser={permissions.user}
                 onProfileChange={onProfileChange}
