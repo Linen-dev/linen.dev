@@ -11,7 +11,7 @@ import useWebsockets from '@linen/hooks/websockets';
 import styles from './index.module.scss';
 import { FiSettings } from '@react-icons/all-files/fi/FiSettings';
 import { FiSliders } from '@react-icons/all-files/fi/FiSliders';
-import { FiDollarSign } from '@react-icons/all-files/fi/FiDollarSign';
+import { FiZap } from '@react-icons/all-files/fi/FiZap';
 import { FiUsers } from '@react-icons/all-files/fi/FiUsers';
 import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
 import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp';
@@ -254,7 +254,7 @@ export default function DesktopNavBar({
               </Link>
               <Link href="/plans">
                 <Nav.Item active={paths.plans === router.asPath}>
-                  <FiDollarSign /> Plans
+                  <FiZap /> Plans
                 </Nav.Item>
               </Link>
             </>

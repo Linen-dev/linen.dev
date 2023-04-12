@@ -6,7 +6,7 @@ import { FiMenu } from '@react-icons/all-files/fi/FiMenu';
 import { FiHash } from '@react-icons/all-files/fi/FiHash';
 import { FiInbox } from '@react-icons/all-files/fi/FiInbox';
 import { FiLogOut } from '@react-icons/all-files/fi/FiLogOut';
-import { FiDollarSign } from '@react-icons/all-files/fi/FiDollarSign';
+import { FiZap } from '@react-icons/all-files/fi/FiZap';
 import { FiSliders } from '@react-icons/all-files/fi/FiSliders';
 import { FiUsers } from '@react-icons/all-files/fi/FiUsers';
 import { FiFileText } from '@react-icons/all-files/fi/FiFileText';
@@ -118,7 +118,7 @@ export default function MobileMenu({
                 })}
                 href="/plans"
               >
-                <FiDollarSign /> Plans
+                <FiZap /> Plans
               </Link>
             </li>
           )}
