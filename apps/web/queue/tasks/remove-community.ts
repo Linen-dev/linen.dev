@@ -3,23 +3,27 @@ import type { TaskInterface } from 'queue';
 import { prisma, messageAttachments } from '@linen/database';
 import { deleteFiles } from 'services/aws/s3';
 import { sendNotification } from 'services/slack';
+import AccountsService from 'services/accounts';
 
 export const removeCommunity: TaskInterface = async (
   payload: { accountId: string },
   helpers: JobHelpers
 ) => {
   helpers.logger.info(JSON.stringify(payload));
+  const account = await AccountsService.getMoreInfo(payload.accountId);
+  const moreInfo = JSON.stringify(account);
+
   await sendNotification(
-    `[INFO] Remove account ${payload.accountId} process started`
+    `[INFO] Remove account ${payload.accountId} process started: ${moreInfo}`
   );
   try {
     await cleanUp(payload.accountId, helpers.logger);
     await sendNotification(
-      `[INFO] Remove account ${payload.accountId} process finished`
+      `[INFO] Remove account ${payload.accountId} process finished: ${moreInfo}`
     );
   } catch (error) {
     await sendNotification(
-      `[ERROR] Remove account ${payload.accountId} process failed`
+      `[ERROR] Remove account ${payload.accountId} process failed: ${moreInfo}`
     );
     console.error(error);
     throw error;

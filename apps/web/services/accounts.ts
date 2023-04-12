@@ -226,6 +226,23 @@ export default class AccountsService {
 
   static async remove({ accountId }: { accountId: string }) {
     await createRemoveCommunityJob(accountId);
-    await sendNotification(`Account ${accountId} was scheduled to be removed`);
+    const account = await AccountsService.getMoreInfo(accountId);
+    const moreInfo = JSON.stringify(account);
+    await sendNotification(
+      `Account ${accountId} was scheduled to be removed: ${moreInfo}`
+    );
+  }
+
+  static async getMoreInfo(accountId: string) {
+    return await prisma.accounts.findUnique({
+      where: { id: accountId },
+      select: {
+        id: true,
+        name: true,
+        redirectDomain: true,
+        slackDomain: true,
+        integration: true,
+      },
+    });
   }
 }
