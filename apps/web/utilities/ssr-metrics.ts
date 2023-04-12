@@ -3,14 +3,14 @@ import { serialize } from 'cookie';
 import * as Sentry from '@sentry/node';
 
 const POSTHOG_APIKEY = process.env.NEXT_PUBLIC_POSTHOG_API_KEY!;
-const SENTRY_DNS = process.env.SENTRY_DNS!;
+const SENTRY_DSN = process.env.SENTRY_DSN!;
 
 Sentry.init({
-  dsn: SENTRY_DNS,
+  dsn: SENTRY_DSN,
   integrations: [new Sentry.Integrations.Http({ tracing: true })],
   tracesSampleRate: 1.0,
   debug: process.env.NODE_ENV === 'development',
-  enabled: !!SENTRY_DNS && process.env.NODE_ENV === 'production',
+  enabled: !!SENTRY_DSN && process.env.NODE_ENV === 'production',
 });
 
 export { Sentry };
