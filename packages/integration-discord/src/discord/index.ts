@@ -14,10 +14,7 @@ import type {
 import { logger } from '@linen/logger';
 
 export { onMessageCreate } from './onMessageCreate';
-
-export async function onMessageDelete(message: Message | PartialMessage) {
-  logger.info('onMessageDelete', message);
-}
+export { onMessageDelete } from './onMessageDelete';
 
 export async function onMessageUpdate(message: Message | PartialMessage) {
   logger.info('onMessageUpdate', message);

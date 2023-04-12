@@ -2,7 +2,7 @@ import LinenSdk from '@linen/sdk';
 import env from './config';
 import { appendProtocol } from '@linen/utilities/url';
 import { getIntegrationUrl } from '@linen/utilities/domain';
-import { prisma } from '@linen/database';
+import { PrismaPromise, prisma } from '@linen/database';
 
 export type LinenUser = {
   displayName: string;
@@ -30,9 +30,20 @@ export const linenSdk = new LinenSdk(
   appendProtocol(getIntegrationUrl())
 );
 
-export async function findAccount(externalId: string) {
+export async function findAccountByExternalId(externalId: string) {
   return await prisma.accounts.findFirst({
     where: { discordServerId: externalId },
+  });
+}
+
+export async function findAccountById(id: string) {
+  return await prisma.accounts.findUnique({ where: { id } });
+}
+
+export async function findIntegrationByAccountId(accountId: string) {
+  return await prisma.discordAuthorizations.findFirst({
+    where: { accountsId: accountId },
+    orderBy: { createdAt: 'desc' },
   });
 }
 
@@ -63,14 +74,18 @@ export async function findChannelById(id: string) {
   return await prisma.channels.findUnique({ where: { id } });
 }
 
-export async function findAccountById(id: string) {
-  return await prisma.accounts.findUnique({ where: { id } });
-}
-
-export async function findIntegrationByAccountId(accountId: string) {
-  return await prisma.discordAuthorizations.findFirst({
-    where: { accountsId: accountId },
-    orderBy: { createdAt: 'desc' },
+export async function findChannelByAccountIdAndExternalId({
+  accountId,
+  externalChannelId,
+}: {
+  accountId: string;
+  externalChannelId: string;
+}) {
+  return await prisma.channels.findFirst({
+    where: {
+      externalChannelId,
+      accountId,
+    },
   });
 }
 
@@ -97,4 +112,47 @@ export async function setMessageExternalId(id: string, externalId: string) {
     where: { id },
     data: { externalMessageId: externalId },
   });
+}
+
+export async function deleteMessage({
+  channelId,
+  externalMessageId,
+}: {
+  channelId: string;
+  externalMessageId: string;
+}) {
+  const existMessage = await prisma.messages.findUnique({
+    select: {
+      id: true,
+      threads: {
+        select: { messageCount: true, id: true },
+      },
+    },
+    where: {
+      channelId_externalMessageId: {
+        channelId,
+        externalMessageId,
+      },
+    },
+  });
+
+  if (existMessage) {
+    const transactions: PrismaPromise<any>[] = [
+      prisma.messages.delete({ where: { id: existMessage.id } }),
+    ];
+    if (existMessage.threads) {
+      transactions.push(
+        // if the thread has only one message
+        existMessage.threads.messageCount === 1
+          ? // delete the thread
+            prisma.threads.delete({ where: { id: existMessage.threads.id } })
+          : // otherwise, decrement message count
+            prisma.threads.update({
+              where: { id: existMessage.threads.id },
+              data: { messageCount: { decrement: 1 } },
+            })
+      );
+    }
+    await prisma.$transaction(transactions);
+  }
 }

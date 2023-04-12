@@ -34,7 +34,9 @@ export const parseChannel = (channel: TextChannel): LinenChannel => {
   };
 };
 
-export const parseChannelAndThread = async (message: Message) => {
+export const parseChannelAndThread = async (
+  message: Pick<Message, 'channel' | 'client'>
+) => {
   let thread, channel;
   // thread reply
   if (message.channel.type === discordChannelType.PUBLIC_THREAD) {

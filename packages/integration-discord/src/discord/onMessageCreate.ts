@@ -9,7 +9,7 @@ import { nonce } from '../utils/constrains';
 import { filterMessageType, filterSupportedChannel } from '../utils/filter';
 import type { Message } from 'discord.js';
 import { logger } from '@linen/logger';
-import { linenSdk, findAccount } from '../utils/linen';
+import { linenSdk, findAccountByExternalId } from '../utils/linen';
 
 export async function onMessageCreate(message: Message) {
   logger.info('onMessageCreate', message);
@@ -34,7 +34,7 @@ export async function onMessageCreate(message: Message) {
     return;
   }
 
-  const linenAccount = await findAccount(message.guildId);
+  const linenAccount = await findAccountByExternalId(message.guildId);
   if (!linenAccount) {
     logger.warn('account not found');
     return;
