@@ -1,0 +1,75 @@
+@import 'styles/colors.scss';
+
+
+
+.button {
+  align-items: center;
+  background: white;
+  border: 2px solid $color-primary;
+  color: $color-gray-900;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  gap: 0.25rem;
+  width: 100%;
+  margin-top: 1.5rem;
+  border-radius: 9999px;
+  background: white;
+  padding: 0.5rem;
+  text-align: center;
+  font-weight: 500;
+  transition: 0.2s ease background, 0.2s ease color;
+}
+
+.button:hover,
+.button.active {
+  background: $color-primary;
+  color: white;
+}
+
+.button.active:hover {
+  background: rgba($color-primary, 0.9);
+  color: white;
+}
+
+.list {
+  list-style-type: none;
+  margin: 32px 0 0;
+  padding: 0;
+}
+
+.list li {
+  align-items: center;
+  color: $color-gray-600;
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.875rem;
+}
+
+.list svg {
+  color: $color-primary;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(1,minmax(0,1fr));
+  gap: 1rem;
+  padding: 0 1rem;
+}
+
+@media (min-width: 768px) {
+  .grid {
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap: 2rem;
+      padding: 0 2rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .grid {
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap: 2rem;
+      padding: 0 2rem;
+  }
+}

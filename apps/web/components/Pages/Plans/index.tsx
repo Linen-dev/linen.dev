@@ -7,6 +7,8 @@ import {
   Permissions,
   Settings,
 } from '@linen/types';
+import { FiZap } from '@react-icons/all-files/fi/FiZap';
+import styles from './index.module.scss';
 
 export interface Props {
   channels: SerializedChannel[];
@@ -34,41 +36,68 @@ export default function PlansPage({
 }: Props) {
   const tiers = [
     {
-      name: 'Free edition',
+      name: 'Veni',
       href: '#',
-      description: 'Great for non profits and open source communities',
+      description:
+        'The essentials to see Linen on your own domain with custom branding.',
       features: [
-        'Hosting on Linen.dev domain',
-        'Sync Discord or Slack community',
-        'Anonymize community members',
-        'Unlimited message retention history',
-        'Show or hide channels',
-        'Custom community invite URL',
+        'Up to 10,000 members',
+        'Custom domain',
+        'Custom branding',
+        'SEO benefits',
+        'Private communities',
+        'Analytics',
+        'Priority support',
       ],
+      prices: { [Period.Monthly]: 200, [Period.Yearly]: 2000 },
     },
     {
-      name: 'Business',
+      name: 'Vidi',
       href: '#',
-      description: '1,000+ members',
+      description:
+        'The essentials to see Linen on your own domain with custom branding.',
       features: [
+        'Up to 15,000 members',
         'Custom domain',
-        'Generate SEO from organic content',
-        'Google analytics support',
-        'Custom logo',
-        'Custom brand colors',
-        'Generated sitemap to improve SEO',
+        'Custom branding',
+        'SEO benefits',
         'Private communities',
+        'Analytics',
+        'Priority support',
       ],
-      prices: [
-        {
-          type: Period.Monthly,
-          price: 100,
-        },
-        {
-          type: Period.Yearly,
-          price: 1000,
-        },
+      prices: { [Period.Monthly]: 250, [Period.Yearly]: 2500 },
+    },
+    {
+      name: 'Vici',
+      href: '#',
+      description:
+        'Recommended plan that supports the ongoing growth of the platform.',
+      features: [
+        'Up to 20,000 members',
+        'Custom domain',
+        'Custom branding',
+        'SEO benefits',
+        'Private communities',
+        'Analytics',
+        'Priority support',
       ],
+      prices: { [Period.Monthly]: 300, [Period.Yearly]: 3000 },
+      active: true,
+    },
+    {
+      name: 'Enterprise',
+      href: '#',
+      description: 'Dedicated support and infrastructure for your community.',
+      features: [
+        'Unlimited members',
+        'Custom domain',
+        'Custom branding',
+        'SEO benefits',
+        'Private communities',
+        'Analytics',
+        'Priority support',
+      ],
+      prices: { [Period.Monthly]: 'Custom', [Period.Yearly]: 'Custom' },
     },
   ];
 
@@ -82,17 +111,17 @@ export default function PlansPage({
       isSubDomainRouting={isSubDomainRouting}
       dms={dms}
     >
-      <div className="mx-auto p-3">
-        <div className="sm:flex sm:flex-col sm:align-center pt-10">
-          <h1 className="text-5xl font-extrabold text-gray-900 sm:text-center">
-            Pricing Plans
-          </h1>
-          <p className="mt-5 text-xl text-gray-500 sm:text-center">
-            Start using for free.
-            <br />
-            Paid plans unlock additional features.
-          </p>
-        </div>
+      <div>
+        <h1 className={styles.header}>
+          <span>
+            <FiZap />
+            Upgrade
+          </span>
+        </h1>
+        <p className={styles.description}>
+          Choose an affordable plan that matches your community size and unlock
+          additional features of the platform.
+        </p>
         <Tiers
           activePeriod={Period.Monthly}
           tiers={tiers}
