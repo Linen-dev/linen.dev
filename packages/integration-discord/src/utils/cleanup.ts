@@ -1,4 +1,4 @@
-import { checkIntegrations } from '../linen';
+import { checkIntegrations } from './linen';
 import { Routes, Client, GatewayIntentBits } from 'discord.js';
 import { logger } from '@linen/logger';
 

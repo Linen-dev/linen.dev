@@ -6,7 +6,7 @@ import {
   findThreadWithMessage,
   setMessageExternalId,
   setThreadExternalId,
-} from './linen';
+} from './utils/linen';
 import { getTokenByIntegration } from './utils/token';
 import { Routes } from 'discord.js';
 import { discordChannelType, nonce } from './utils/constrains';

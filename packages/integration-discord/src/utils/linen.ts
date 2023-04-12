@@ -1,3 +1,7 @@
+import LinenSdk from '@linen/sdk';
+import env from './config';
+import { appendProtocol } from '@linen/utilities/url';
+import { getIntegrationUrl } from '@linen/utilities/domain';
 import { prisma } from '@linen/database';
 
 export type LinenUser = {
@@ -20,6 +24,11 @@ export type LinenMessage = {
   body: string;
   externalMessageId: string;
 };
+
+export const linenSdk = new LinenSdk(
+  env.INTERNAL_API_KEY,
+  appendProtocol(getIntegrationUrl())
+);
 
 export async function findAccount(externalId: string) {
   return await prisma.accounts.findFirst({

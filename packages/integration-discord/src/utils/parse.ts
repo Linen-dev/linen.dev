@@ -1,4 +1,4 @@
-import { LinenChannel, LinenMessage, LinenThread, LinenUser } from '../linen';
+import { LinenChannel, LinenMessage, LinenThread, LinenUser } from './linen';
 import { discordChannelType } from './constrains';
 import type {
   Message,
