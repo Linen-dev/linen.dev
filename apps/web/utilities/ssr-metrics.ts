@@ -9,7 +9,7 @@ Sentry.init({
   dsn: SENTRY_DNS,
   integrations: [new Sentry.Integrations.Http({ tracing: true })],
   tracesSampleRate: 1.0,
-  debug: true,
+  debug: process.env.NODE_ENV === 'development',
   enabled: !!SENTRY_DNS && process.env.NODE_ENV === 'production',
 });
 
