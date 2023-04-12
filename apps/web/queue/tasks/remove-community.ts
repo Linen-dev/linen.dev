@@ -61,6 +61,13 @@ export async function cleanUp(accountId: string, logger: Logger) {
     logger.info(
       `${channel.channelName} channelMembershipCount ${channelMembershipCount.count}`
     );
+    const channelIntegrationsCount =
+      await prisma.channelsIntegration.deleteMany({
+        where: { channelId: channel.id },
+      });
+    logger.info(
+      `${channel.channelName} channelIntegrationsCount ${channelIntegrationsCount.count}`
+    );
     await prisma.channels.delete({
       where: { id: channel.id },
     });
