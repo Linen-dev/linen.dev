@@ -1,4 +1,4 @@
-import type { JobHelpers } from 'graphile-worker';
+import type { JobHelpers, Logger } from 'graphile-worker';
 import type { TaskInterface } from 'queue';
 import { prisma, messageAttachments } from '@linen/database';
 import { deleteFiles } from 'services/aws/s3';
@@ -13,7 +13,7 @@ export const removeCommunity: TaskInterface = async (
     `[INFO] Remove account ${payload.accountId} process started`
   );
   try {
-    await cleanUp(payload.accountId, helpers.logger.info);
+    await cleanUp(payload.accountId, helpers.logger);
     await sendNotification(
       `[INFO] Remove account ${payload.accountId} process finished`
     );
@@ -21,81 +21,78 @@ export const removeCommunity: TaskInterface = async (
     await sendNotification(
       `[ERROR] Remove account ${payload.accountId} process failed`
     );
-    console.error(error)
+    console.error(error);
     throw error;
   }
 };
 
-export async function cleanUp(
-  accountId: string,
-  log: (message: string) => void
-) {
+export async function cleanUp(accountId: string, logger: Logger) {
   const channels = await prisma.channels.findMany({ where: { accountId } });
 
   for (const channel of channels) {
-    log(channel.channelName);
+    logger.info(channel.channelName);
 
     const mentionsCount = await prisma.mentions.deleteMany({
       where: { messages: { channelId: channel.id } },
     });
-    log(`${channel.channelName} mentionsCount ${mentionsCount.count}`);
+    logger.info(`${channel.channelName} mentionsCount ${mentionsCount.count}`);
     const attachments = await prisma.messageAttachments.findMany({
       where: { messages: { channelId: channel.id } },
     });
-    log(`${channel.channelName} attachments ${attachments.length}`);
+    logger.info(`${channel.channelName} attachments ${attachments.length}`);
     await processAttachments(attachments);
 
     const messageCount = await prisma.messages.deleteMany({
       where: { channelId: channel.id },
     });
-    log(`${channel.channelName} messageCount ${messageCount.count}`);
+    logger.info(`${channel.channelName} messageCount ${messageCount.count}`);
     const threadCount = await prisma.threads.deleteMany({
       where: { channel: { id: channel.id } },
     });
-    log(`${channel.channelName} threadCount ${threadCount.count}`);
+    logger.info(`${channel.channelName} threadCount ${threadCount.count}`);
 
     const channelMembershipCount = await prisma.memberships.deleteMany({
       where: { channelsId: channel.id },
     });
-    log(
+    logger.info(
       `${channel.channelName} channelMembershipCount ${channelMembershipCount.count}`
     );
     await prisma.channels.delete({
       where: { id: channel.id },
     });
   }
-  log(`channelsCount ${channels.length}`);
+  logger.info(`channelsCount ${channels.length}`);
 
   const invitesCount = await prisma.invites.deleteMany({
     where: { accountsId: accountId },
   });
-  log(`invitesCount ${invitesCount.count}`);
+  logger.info(`invitesCount ${invitesCount.count}`);
 
   const usersCount = await prisma.users.deleteMany({
     where: { accountsId: accountId },
   });
-  log(`usersCount ${usersCount.count}`);
+  logger.info(`usersCount ${usersCount.count}`);
 
   const authsCount = await prisma.auths.updateMany({
     where: { accountId },
     data: { accountId: null },
   });
-  log(`authsCount ${authsCount.count}`);
+  logger.info(`authsCount ${authsCount.count}`);
 
   const slackCount = await prisma.slackAuthorizations.deleteMany({
     where: { accountsId: accountId },
   });
-  log(`slackCount ${slackCount.count}`);
+  logger.info(`slackCount ${slackCount.count}`);
 
   const discordCount = await prisma.discordAuthorizations.deleteMany({
     where: { accountsId: accountId },
   });
-  log(`discordCount ${discordCount.count}`);
+  logger.info(`discordCount ${discordCount.count}`);
 
   const accountCount = await prisma.accounts.delete({
     where: { id: accountId },
   });
-  log(`accountCount ${accountCount.id}`);
+  logger.info(`accountCount ${accountCount.id}`);
 }
 
 async function processAttachments(attachments: messageAttachments[]) {
