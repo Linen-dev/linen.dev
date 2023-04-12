@@ -120,6 +120,7 @@
     "react-intersection-observer": "^9.4.0",
     "react-twitter-embed": "^4.0.4",
     "sass": "^1.55.0",
+    "stripe": "^12.0.0",
     "superagent": "^7.1.5",
     "superjson": "^1.12.2",
     "swr": "^1.3.0",
