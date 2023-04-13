@@ -25,6 +25,7 @@ jobs:
             core.setOutput('urls', urls);
 
       - name: Run Lighthouse on urls and upload data to private lhci server
+        id: LHCIAction
         uses: treosh/lighthouse-ci-action@v9
         with:
           urls: |
@@ -39,6 +40,6 @@ jobs:
         uses: slackapi/slack-github-action@v1.23.0
         with:      
           channel-id: ${{ secrets.SLACK_CHANNEL }}
-          slack-message: '${{steps.LHCIAction.outputs.manifest}}'
+          slack-message: ${{ steps.LHCIAction.outputs.manifest }}
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
