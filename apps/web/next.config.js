@@ -21,6 +21,14 @@ const nextConfig = {
         source: '/ph/:path*',
         destination: 'https://app.posthog.com/:path*',
       },
+      {
+        source: '/pp/js/script.js',
+        destination: 'https://plausible.io/js/script.js',
+      },
+      {
+        source: '/pp/api/event',
+        destination: 'https://plausible.io/api/event',
+      },
     ];
   },
   images: {
