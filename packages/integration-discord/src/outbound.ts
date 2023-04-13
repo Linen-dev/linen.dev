@@ -81,22 +81,22 @@ export async function processDiscordIntegration({
         return;
       }
 
-      const { thread: externalThread, message: externalMessage } =
-        await processNewThread({
-          token,
-          externalChannelId: channel.externalChannelId,
-          body,
-          title: thread.title || undefined,
-          author:
-            message.author?.externalUserId ||
-            message.author?.displayName ||
-            'user',
-        });
+      await processNewThread({
+        token,
+        externalChannelId: channel.externalChannelId,
+        body,
+        title: thread.title || undefined,
+        author:
+          message.author?.externalUserId ||
+          message.author?.displayName ||
+          'user',
+        setThreadExternalId: (externalId) =>
+          setThreadExternalId(threadId, externalId),
+        setMessageExternalId: (externalId) =>
+          setMessageExternalId(messageId, externalId),
+      });
 
-      await setThreadExternalId(threadId, externalThread.id);
-      await setMessageExternalId(messageId, externalMessage.id);
-
-      return externalThread;
+      return;
 
     case 'newMessage':
       if (!thread.externalThreadId) {
@@ -107,28 +107,27 @@ export async function processDiscordIntegration({
         return;
       }
 
-      const { thread: externalThread2, message: externalMessage2 } =
-        await processNewMessage({
-          token,
-          externalThreadId: thread.externalThreadId,
-          externalChannelId: channel.externalChannelId,
-          body,
-          author:
-            message.author?.externalUserId ||
-            message.author?.displayName ||
-            'user',
-          title:
-            thread.title || thread.messages.length
-              ? thread.messages[0].body
-              : 'Thread',
-        });
+      await processNewMessage({
+        token,
+        externalThreadId: thread.externalThreadId,
+        externalChannelId: channel.externalChannelId,
+        body,
+        author:
+          message.author?.externalUserId ||
+          message.author?.displayName ||
+          'user',
+        title:
+          thread.title || thread.messages.length
+            ? thread.messages[0].body
+            : 'Thread',
 
-      if (externalThread2) {
-        await setThreadExternalId(threadId, externalThread2.id);
-      }
-      await setMessageExternalId(messageId, externalMessage2.id);
+        setThreadExternalId: (externalId) =>
+          setThreadExternalId(threadId, externalId),
+        setMessageExternalId: (externalId) =>
+          setMessageExternalId(messageId, externalId),
+      });
 
-      return externalMessage2;
+      return;
 
     default:
       break;
@@ -141,7 +140,11 @@ async function processNewThread({
   body,
   title,
   author,
+  setThreadExternalId,
+  setMessageExternalId,
 }: {
+  setThreadExternalId: (externalId: string) => Promise<void>;
+  setMessageExternalId: (externalId: string) => Promise<void>;
   token: string;
   externalChannelId: string;
   body: string;
@@ -157,18 +160,21 @@ async function processNewThread({
         content: `${author}: ${body}`,
         nonce,
       },
+      nonce,
     },
   });
+  await setThreadExternalId(thread.id);
 
   if (thread.message) {
-    return { thread, message: thread.message };
+    await setMessageExternalId(thread.message.id);
+    return;
   }
 
   const message: any = await client.post(Routes.channelMessages(thread.id), {
     body: { content: `${author}: ${body}`, nonce },
   });
-
-  return { thread, message };
+  await setMessageExternalId(message.id);
+  return;
 }
 
 async function processNewMessage({
@@ -178,7 +184,11 @@ async function processNewMessage({
   body,
   author,
   title,
+  setThreadExternalId,
+  setMessageExternalId,
 }: {
+  setThreadExternalId: (externalId: string) => Promise<void>;
+  setMessageExternalId: (externalId: string) => Promise<void>;
   token: string;
   externalThreadId: string;
   externalChannelId: string;
@@ -190,9 +200,13 @@ async function processNewMessage({
 
   const thread: any = await client
     .post(Routes.threads(externalChannelId, externalThreadId), {
-      body: { name: title },
+      body: { name: title, nonce },
     })
     .catch(() => null);
+
+  if (thread) {
+    await setThreadExternalId(thread.id);
+  }
 
   const message: any = await client.post(
     Routes.channelMessages(thread ? thread.id : externalThreadId),
@@ -200,5 +214,6 @@ async function processNewMessage({
       body: { content: `${author}: ${body}`, nonce },
     }
   );
-  return { message, thread };
+  await setMessageExternalId(message.id);
+  return;
 }
