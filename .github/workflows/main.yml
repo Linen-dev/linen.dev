@@ -35,11 +35,21 @@ jobs:
           basicAuthUsername: ${{ secrets.LHCI_SERVER_BASIC_AUTH_USERNAME }}
           basicAuthPassword: ${{ secrets.LHCI_SERVER_BASIC_AUTH_PASSWORD }}
 
+      - name: Parse output
+        id: parsedOutput
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const manifest = ${{ steps.LHCIAction.outputs.manifest }}
+            core.setOutput('manifest', manifest.reduce((prev,cur)=>{ 
+              return prev + "\n" + cur.url.substring(8).padEnd(50,'.') + String(Math.floor( cur.summary.performance*100 )).padStart(2,'.')  
+            },"Lighthouse results:"));
+
       - name: Post to a Slack channel
         id: slack
         uses: slackapi/slack-github-action@v1.23.0
         with:      
           channel-id: ${{ secrets.SLACK_CHANNEL }}
-          slack-message: ${{ steps.LHCIAction.outputs.manifest }}
+          slack-message: "```${{ steps.parsedOutput.outputs.manifest }}```"
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
