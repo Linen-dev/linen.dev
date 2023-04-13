@@ -90,7 +90,8 @@ export default function App(props: AppProps) {
       <Script
         defer
         data-domain="linen.dev"
-        src="https://plausible.io/js/plausible.js"
+        src="/pp/js/script.js"
+        data-api="/pp/api/event"
       />
     </SessionProvider>
   );
