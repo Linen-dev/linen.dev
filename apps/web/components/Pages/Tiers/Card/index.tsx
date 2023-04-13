@@ -20,17 +20,22 @@ export default function Card({
   period,
   children,
 }: Props) {
+  const formattedPrice = Number(price);
   return (
     <div className={classNames(styles.card, { [styles.active]: active })}>
       {title && <div className={styles.title}>{title}</div>}
       {description && <div className={styles.description}>{description}</div>}
       {price && (
         <div className={styles.price}>
-          {typeof price === 'number' ? `$${price}` : price}
-          {typeof price === 'number' && (
-            <span className={styles.length}>
-              {period === Period.Monthly ? '/month' : '/year'}
-            </span>
+          {formattedPrice ? (
+            <>
+              ${price}
+              <span className={styles.length}>
+                {period === Period.Monthly ? '/month' : '/year'}
+              </span>
+            </>
+          ) : (
+            'Custom'
           )}
         </div>
       )}
