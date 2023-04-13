@@ -1,0 +1,44 @@
+name: Lighthouse CI
+
+on:
+  push:
+    branches:
+      - 'main'
+
+jobs:
+  lighthouse:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Generate URLs
+        id: urls
+        uses: actions/github-script@v6
+        env:
+          COMMUNITIES_URL: ${{ secrets.COMMUNITIES_URL }}
+        with:
+          script: |
+            const { COMMUNITIES_URL } = process.env
+            const response = await fetch(COMMUNITIES_URL);
+            const data = await response.json();
+            const urls = data.join('\n');
+            core.setOutput('urls', urls);
+
+      - name: Run Lighthouse on urls and upload data to private lhci server
+        uses: treosh/lighthouse-ci-action@v9
+        with:
+          urls: |
+            ${{ steps.urls.outputs.urls }}
+          serverBaseUrl: ${{ secrets.LHCI_SERVER_URL }}
+          serverToken: ${{ secrets.LHCI_SERVER_TOKEN }}
+          basicAuthUsername: ${{ secrets.LHCI_SERVER_BASIC_AUTH_USERNAME }}
+          basicAuthPassword: ${{ secrets.LHCI_SERVER_BASIC_AUTH_PASSWORD }}
+
+      - name: Post to a Slack channel
+        id: slack
+        uses: slackapi/slack-github-action@v1.23.0
+        with:      
+          channel-id: ${{ secrets.SLACK_CHANNEL }}
+          slack-message: '${{steps.LHCIAction.outputs.manifest}}'
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}

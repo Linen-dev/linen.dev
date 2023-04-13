@@ -17,9 +17,33 @@ import {
 } from './accounts.types';
 import { onError } from 'server/middlewares/error';
 import { ApiEvent, trackApiEvent } from 'utilities/ssr-metrics';
+import { promiseMemoize } from 'utilities/promises/memo';
 
 const prefix = '/api/accounts';
 const accountsRouter = Router();
+
+async function _findCommunities(includeFreeTier: boolean = false) {
+  const data = await AccountsService.showcase(includeFreeTier);
+  const urls = await Promise.all(
+    data.map(async (url) =>
+      fetch(url, { method: 'HEAD' })
+        .then((r) => (r.ok ? url : null))
+        .catch((_) => null)
+    )
+  );
+  return urls.filter((e) => !!e);
+}
+
+const findCommunities = promiseMemoize(_findCommunities);
+
+accountsRouter.get(
+  `${prefix}/showcase`,
+  async (req: AuthedRequest, res: Response) => {
+    const { includeFreeTier } = req.query;
+    res.json(await findCommunities(!!includeFreeTier));
+    res.end();
+  }
+);
 
 accountsRouter.get(
   `${prefix}`,

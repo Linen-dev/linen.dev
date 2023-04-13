@@ -245,4 +245,69 @@ export default class AccountsService {
       },
     });
   }
+
+  static async showcase(showFreeTier: boolean = false) {
+    const premium = await prisma.accounts
+      .findMany({
+        select: { redirectDomain: true },
+        where: {
+          premium: true,
+          redirectDomain: { not: null },
+          type: 'PUBLIC',
+          channels: { some: { hidden: false } },
+        },
+      })
+      .then((rows) => rows.map((row) => 'https://' + row.redirectDomain));
+
+    const premiumWithoutDomain = await prisma.accounts
+      .findMany({
+        select: { slackDomain: true, discordDomain: true },
+        where: {
+          premium: true,
+          redirectDomain: null,
+          OR: [
+            { slackDomain: { not: null } },
+            { discordDomain: { not: null } },
+          ],
+          type: 'PUBLIC',
+          channels: { some: { hidden: false } },
+        },
+      })
+      .then((rows) =>
+        rows.map(
+          (row) =>
+            'https://www.linen.dev' +
+            (!!row.slackDomain
+              ? `/s/${row.slackDomain}`
+              : `/d/${row.discordDomain}`)
+        )
+      );
+
+    const freeTier = showFreeTier
+      ? await prisma.accounts
+          .findMany({
+            select: { slackDomain: true, discordDomain: true },
+            where: {
+              premium: false,
+              OR: [
+                { slackDomain: { not: null } },
+                { discordDomain: { not: null } },
+              ],
+              type: 'PUBLIC',
+              channels: { some: { pages: { gt: 250 }, hidden: false } },
+            },
+          })
+          .then((rows) =>
+            rows.map(
+              (row) =>
+                'https://www.linen.dev' +
+                (!!row.slackDomain
+                  ? `/s/${row.slackDomain}`
+                  : `/d/${row.discordDomain}`)
+            )
+          )
+      : [];
+
+    return [...premium, ...premiumWithoutDomain, ...freeTier];
+  }
 }
