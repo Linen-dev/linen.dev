@@ -29,7 +29,9 @@ function isTopLevelPathname(pathname: string) {
     pathname.startsWith('/api') ||
     pathname.startsWith('/sitemap') ||
     pathname.startsWith('/robots.txt') ||
-    pathname.startsWith('/_next')
+    pathname.startsWith('/_next') ||
+    pathname.startsWith('/pp') ||
+    pathname.startsWith('/ph')
   );
 }
 
