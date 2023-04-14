@@ -40,6 +40,22 @@ export async function index() {
   return { status: 200, data: { plans: plans } };
 }
 
+async function findOrCreateCustomer(communityId: string) {
+  const { data } = await stripe.customers.search({
+    query: `name:\'CUSTOMER ${communityId}\'`,
+  });
+
+  return (
+    data[0] ||
+    (await stripe.customers.create({
+      name: `CUSTOMER ${communityId}`,
+      metadata: {
+        communityId,
+      },
+    }))
+  );
+}
+
 export async function create({
   email,
   communityId,
@@ -53,6 +69,8 @@ export async function create({
   successUrl: string;
   cancelUrl: string;
 }) {
+  const customer = findOrCreateCustomer(communityId);
+
   const session = await stripe.checkout.sessions.create({
     mode: 'subscription',
     customer_email: email,
@@ -67,6 +85,7 @@ export async function create({
     },
     success_url: `${successUrl}?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: cancelUrl,
+    customer: customer.id,
   });
   return session.url;
 }

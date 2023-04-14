@@ -12,7 +12,7 @@ export default async function createIpsumCommunity() {
       slackDomain: 'ipsum',
       chat: ChatType.MEMBERS,
       syncStatus: 'DONE',
-      premium: true,
+      premium: false,
       description: 'Lorem ipsum dolor sit amet.',
     },
   });
