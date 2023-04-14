@@ -84,7 +84,7 @@ describe('webhook :: channels', () => {
       expect(res.message).toStrictEqual('channel created');
 
       expect(accountsFindFirstMock).toHaveBeenCalledWith({
-        select: { id: true },
+        select: { id: true, newChannelsConfig: true },
         where: { slackTeamId: channelCreatedEvent.team_id },
       });
       expect(channelsCreateMock).toHaveBeenCalledWith({
@@ -92,7 +92,7 @@ describe('webhook :: channels', () => {
           channelName: channelCreatedEvent.event.channel.name,
           accountId,
           externalChannelId: channelCreatedEvent.event.channel.id,
-          hidden: true,
+          hidden: false,
         },
       });
     });
@@ -107,7 +107,7 @@ describe('webhook :: channels', () => {
       expect(res.error).toStrictEqual('account not found');
 
       expect(accountsFindFirstMock).toHaveBeenCalledWith({
-        select: { id: true },
+        select: { id: true, newChannelsConfig: true },
         where: { slackTeamId: channelCreatedEvent.team_id },
       });
     });
@@ -135,7 +135,7 @@ describe('webhook :: channels', () => {
       expect(res.message).toStrictEqual('channel renamed');
 
       expect(accountsFindFirstMock).toHaveBeenCalledWith({
-        select: { id: true },
+        select: { id: true, newChannelsConfig: true },
         where: { slackTeamId: channelRenameEvent.team_id },
       });
       expect(channelsFindFirstMock).toHaveBeenCalledWith({
@@ -164,7 +164,7 @@ describe('webhook :: channels', () => {
       expect(res.error).toStrictEqual('account not found');
 
       expect(accountsFindFirstMock).toHaveBeenCalledWith({
-        select: { id: true },
+        select: { id: true, newChannelsConfig: true },
         where: { slackTeamId: channelRenameEvent.team_id },
       });
     });
@@ -187,7 +187,7 @@ describe('webhook :: channels', () => {
       expect(res.message).toStrictEqual('channel created');
 
       expect(accountsFindFirstMock).toHaveBeenCalledWith({
-        select: { id: true },
+        select: { id: true, newChannelsConfig: true },
         where: { slackTeamId: channelRenameEvent.team_id },
       });
       expect(channelsFindFirstMock).toHaveBeenCalledWith({
@@ -201,7 +201,7 @@ describe('webhook :: channels', () => {
           channelName: channelRenameEvent.event.channel.name,
           accountId,
           externalChannelId: channelRenameEvent.event.channel.id,
-          hidden: true,
+          hidden: false,
         },
       });
     });

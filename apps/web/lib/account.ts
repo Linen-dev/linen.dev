@@ -28,7 +28,7 @@ export function findAccount({ redirectDomain, logoUrl }: FindAccountParams) {
 
 export function findAccountIdByExternalId(externalId: string) {
   return prisma.accounts.findFirst({
-    select: { id: true },
+    select: { id: true, newChannelsConfig: true },
     where: { slackTeamId: externalId },
   });
 }

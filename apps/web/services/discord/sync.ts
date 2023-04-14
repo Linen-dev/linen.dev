@@ -50,11 +50,14 @@ async function syncJob(
     });
   }
 
+  const hideChannels = account.newChannelsConfig === 'HIDDEN';
+
   const channels = await listChannelsAndPersist({
     serverId: account.discordServerId,
     accountId: account.id,
     token,
     logger,
+    hideChannels,
   });
 
   // active threads are global (not channel specific)

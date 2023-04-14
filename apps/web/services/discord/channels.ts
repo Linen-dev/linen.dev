@@ -16,11 +16,13 @@ export async function listChannelsAndPersist({
   accountId,
   token,
   logger,
+  hideChannels,
 }: {
   serverId: string;
   accountId: string;
   token: string;
   logger: Logger;
+  hideChannels: boolean;
 }) {
   logger.log('listChannelsAndPersist >> started');
   const [err, channels] = await to(
@@ -38,7 +40,7 @@ export async function listChannelsAndPersist({
     for (const channel of filteredChannels) {
       try {
         const newChannel = await ChannelsService.findOrCreateChannel(
-          parseChannel(channel, accountId)
+          parseChannel({ channel, accountId, hidden: hideChannels })
         );
         channelPromises.push(newChannel);
       } catch (error) {
@@ -62,19 +64,19 @@ export async function listChannelsAndPersist({
   }
 }
 
-function parseChannel(
-  channel: DiscordChannel,
-  accountId: string
-): {
+function parseChannel({
+  channel,
+  accountId,
+  hidden,
+}: {
+  channel: DiscordChannel;
   accountId: string;
-  channelName: string;
-  externalChannelId: string;
-  hidden?: boolean | undefined;
-} {
+  hidden: boolean;
+}) {
   return {
     externalChannelId: channel.id,
     channelName: slugify(channel.name),
     accountId,
-    hidden: true,
+    hidden,
   };
 }

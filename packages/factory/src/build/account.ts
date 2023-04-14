@@ -26,6 +26,7 @@ export default function createAccount(options?: Partial<accounts>): accounts {
     integration: 'NONE',
     description: null,
     logoSquareUrl: null,
+    newChannelsConfig: 'NOT_HIDDEN',
     ...options,
   };
 }

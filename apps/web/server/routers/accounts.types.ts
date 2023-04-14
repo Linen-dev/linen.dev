@@ -23,5 +23,6 @@ export const updateAccountSchema = z.object({
   communityInviteUrl: z.string().url().or(z.literal('')).optional(),
   type: z.enum([AccountType.PRIVATE, AccountType.PUBLIC]).optional(),
   chat: z.enum([ChatType.MANAGERS, ChatType.MEMBERS, ChatType.NONE]).optional(),
+  newChannelsConfig: z.enum(['HIDDEN', 'NOT_HIDDEN']).optional(),
 });
 export type updateAccountType = z.infer<typeof updateAccountSchema>;

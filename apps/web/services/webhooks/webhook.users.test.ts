@@ -90,7 +90,7 @@ describe('webhook :: users', () => {
 
       expect(accountsFindFirstMock).toHaveBeenCalledTimes(1);
       expect(accountsFindFirstMock).toHaveBeenCalledWith({
-        select: { id: true },
+        select: { id: true, newChannelsConfig: true },
         where: { slackTeamId: userUpdateEvent.team_id },
       });
       expect(usersFindUniqueMock).toHaveBeenCalledTimes(1);
@@ -136,7 +136,7 @@ describe('webhook :: users', () => {
 
       expect(accountsFindFirstMock).toHaveBeenCalledTimes(1);
       expect(accountsFindFirstMock).toHaveBeenCalledWith({
-        select: { id: true },
+        select: { id: true, newChannelsConfig: true },
         where: { slackTeamId: userUpdateEvent.team_id },
       });
       expect(usersFindUniqueMock).toHaveBeenCalledTimes(2);

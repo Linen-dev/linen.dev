@@ -8,12 +8,14 @@ export async function createChannels({
   accountId,
   getSlackChannels,
   joinChannel,
+  hideChannels,
 }: {
   slackTeamId: string;
   token: string;
   accountId: string;
   getSlackChannels: Function;
   joinChannel: Function;
+  hideChannels: boolean;
 }) {
   try {
     const channelsResponse = await getSlackChannels(slackTeamId, token);
@@ -24,7 +26,7 @@ export async function createChannels({
             externalChannelId: channel.id,
             channelName: channel.name,
             accountId,
-            hidden: true,
+            hidden: hideChannels,
           })
       )
     );
@@ -77,6 +79,7 @@ export async function syncChannels({
     accountId,
     getSlackChannels,
     joinChannel,
+    hideChannels: account.newChannelsConfig === 'HIDDEN',
   });
 
   // If channelId is part of parameter only sync the specific channel

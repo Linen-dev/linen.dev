@@ -23,6 +23,7 @@ import debounce from '@linen/utilities/debounce';
 import * as api from 'utilities/requests';
 import Toast from '@linen/ui/Toast';
 import RemoveCommunity from './RemoveCommunity';
+import ChannelsConfig from './ChannelsConfig';
 
 export interface Props {
   channels: SerializedChannel[];
@@ -114,6 +115,8 @@ export default function ConfigurationsPage({
           currentCommunity={currentCommunity}
           onChange={setChannels}
         />
+        <hr className="my-3" />
+        <ChannelsConfig currentCommunity={currentCommunity} />
         <hr className="my-3" />
         <UrlsRow currentCommunity={currentCommunity} />
         <hr className="my-3" />

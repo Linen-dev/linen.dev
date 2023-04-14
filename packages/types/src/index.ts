@@ -99,6 +99,7 @@ export interface SerializedAccount {
   communityInviteUrl?: string;
   chat: ChatType | null;
   communityUrl?: string;
+  newChannelsConfig: string;
 }
 
 export interface SerializedReadStatus {

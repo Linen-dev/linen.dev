@@ -152,6 +152,7 @@ export default class AccountsService {
       communityInviteUrl?: string;
       type?: AccountType;
       chat?: ChatType;
+      newChannelsConfig?: string;
     };
     accountId: string;
   }) {
@@ -171,6 +172,7 @@ export default class AccountsService {
       communityInviteUrl,
       type,
       chat,
+      newChannelsConfig,
     } = params;
 
     let { logoUrl, logoSquareUrl } = params;
@@ -183,6 +185,7 @@ export default class AccountsService {
       anonymizeUsers,
       communityInviteUrl,
       chat,
+      newChannelsConfig,
     };
     const data = account.premium
       ? {

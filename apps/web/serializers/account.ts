@@ -48,6 +48,7 @@ export default function serialize(account?: any): SerializedAccount {
     communityInviteUrl,
     chat,
     communityUrl,
+    newChannelsConfig,
   } = account;
 
   const communityType = identifyCommunity(account);
@@ -76,5 +77,6 @@ export default function serialize(account?: any): SerializedAccount {
     communityInviteUrl,
     chat,
     communityUrl,
+    newChannelsConfig,
   };
 }
