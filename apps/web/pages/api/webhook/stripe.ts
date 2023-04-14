@@ -16,9 +16,9 @@ export const config = {
   },
 };
 
-async function promoteAccount(accountId: string) {
+async function promoteAccount(communityId: string) {
   return prisma.accounts.update({
-    where: { id: accountId },
+    where: { id: communityId },
     data: {
       premium: true,
     },
@@ -55,16 +55,19 @@ export default async function handler(
     return response.status(400).json({});
   }
 
-  const communityId = await getCommunityId(event);
+  let communityId;
 
   switch (event.type) {
     case 'checkout.session.completed':
+      communityId = await getCommunityId(event);
       await promoteAccount(communityId);
       break;
     case 'invoice.paid':
+      communityId = await getCommunityId(event);
       await promoteAccount(communityId);
       break;
     case 'invoice.payment_failed':
+      communityId = await getCommunityId(event);
       await downgradeAccount(communityId);
       break;
 
