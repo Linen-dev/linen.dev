@@ -14,7 +14,7 @@ interface Tier {
   href: string;
   features: string[];
   priceId: string;
-  prices: { [key: string]: number };
+  price: string;
   active?: boolean;
 }
 
@@ -36,7 +36,7 @@ const ENTERPRISE_PLAN = {
     'Analytics',
     'Priority Support',
   ],
-  prices: { monthly: 'Custom', yearly: 'Custom' },
+  price: 'Custom',
 };
 
 export default function Tiers({
@@ -53,7 +53,7 @@ export default function Tiers({
             key={tier.name}
             title={tier.name}
             description={tier.description}
-            price={tier.prices[activePeriod]}
+            price={tier.price}
             period={activePeriod}
             active={active}
           >

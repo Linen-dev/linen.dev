@@ -10,6 +10,7 @@ import {
 import { FiZap } from '@react-icons/all-files/fi/FiZap';
 import styles from './index.module.scss';
 import Spinner from '@linen/ui/Spinner';
+import Toggle from '@linen/ui/Toggle';
 
 export interface Props {
   channels: SerializedChannel[];
@@ -41,6 +42,7 @@ export default function PlansPage({
 
   useEffect(() => {
     let mounted = true;
+    setLoading(true);
     fetch(`/api/plans?period=${period}`, {
       headers: { 'Content-Type': 'application/json' },
     })
@@ -96,6 +98,17 @@ export default function PlansPage({
             Choose an affordable plan that matches your community size and
             unlock additional features of the platform.
           </p>
+          <div className={styles.period}>
+            <span>monthly</span>
+            <Toggle
+              checked={period === Period.Yearly}
+              onChange={(checked) =>
+                setPeriod(checked ? Period.Yearly : Period.Monthly)
+              }
+            />
+            <span>yearly</span>
+          </div>
+
           {loading ? (
             <Spinner className={styles.loader} />
           ) : (

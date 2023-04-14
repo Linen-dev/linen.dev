@@ -7,13 +7,13 @@ const stripe = new Stripe(process.env.STRIPE_API_KEY!, {
 });
 
 function getMembersCount({ price }: { price: string }): string {
-  if (price === '150') {
+  if (price === '150' || price === '1500') {
     return '5,000';
-  } else if (price === '200') {
+  } else if (price === '200' || price === '2000') {
     return '10,000';
-  } else if (price === '250') {
+  } else if (price === '250' || price === '2500') {
     return '15,000';
-  } else if (price === '300') {
+  } else if (price === '300' || price === '3000') {
     return '20,000';
   }
   return 'Unlimited';
@@ -39,10 +39,6 @@ function serializeProduct(product: any) {
       'Analytics',
       'Priority Support',
     ],
-    prices: {
-      monthly: price,
-      yearly: 2000,
-    },
   };
 }
 
