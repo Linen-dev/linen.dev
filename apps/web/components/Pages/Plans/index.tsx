@@ -65,27 +65,42 @@ export default function PlansPage({
       isSubDomainRouting={isSubDomainRouting}
       dms={dms}
     >
-      <div>
-        <h1 className={styles.header}>
-          <span>
-            <FiZap />
-            Upgrade
-          </span>
-        </h1>
-        <p className={styles.description}>
-          Choose an affordable plan that matches your community size and unlock
-          additional features of the platform.
-        </p>
-        {loading ? (
-          <Spinner className={styles.loader} />
-        ) : (
-          <Tiers
-            activePeriod={Period.Monthly}
-            tiers={tiers}
-            currentCommunity={currentCommunity}
-          />
-        )}
-      </div>
+      {currentCommunity.premium ? (
+        <div>
+          <h1 className={styles.header}>
+            <span>
+              <FiZap />
+              Thank you!
+            </span>
+          </h1>
+          <p className={styles.description}>
+            Your subscription is currently active and you&apos;re on a premium
+            plan.
+          </p>
+        </div>
+      ) : (
+        <div>
+          <h1 className={styles.header}>
+            <span>
+              <FiZap />
+              Upgrade
+            </span>
+          </h1>
+          <p className={styles.description}>
+            Choose an affordable plan that matches your community size and
+            unlock additional features of the platform.
+          </p>
+          {loading ? (
+            <Spinner className={styles.loader} />
+          ) : (
+            <Tiers
+              activePeriod={Period.Monthly}
+              tiers={tiers}
+              currentCommunity={currentCommunity}
+            />
+          )}
+        </div>
+      )}
     </PageLayout>
   );
 }

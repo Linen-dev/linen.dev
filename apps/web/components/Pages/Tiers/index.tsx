@@ -87,7 +87,7 @@ export default function Tiers({
             <div>
               <ul className={styles.list}>
                 {tier.features.map((feature) => (
-                  <li>
+                  <li key={feature}>
                     <FiCheck />
                     {feature}
                   </li>
@@ -111,7 +111,7 @@ export default function Tiers({
         <div>
           <ul className={styles.list}>
             {ENTERPRISE_PLAN.features.map((feature) => (
-              <li>
+              <li key={feature}>
                 <FiCheck />
                 {feature}
               </li>
