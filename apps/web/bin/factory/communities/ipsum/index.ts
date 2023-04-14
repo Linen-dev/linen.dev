@@ -8,7 +8,7 @@ export default async function createIpsumCommunity() {
       name: 'Ipsum',
       homeUrl: `https://ipsum.dev`,
       docsUrl: `https://ipsum.dev/docs`,
-      brandColor: '#ff0000',
+      brandColor: '#000000',
       slackDomain: 'ipsum',
       chat: ChatType.MEMBERS,
       syncStatus: 'DONE',
