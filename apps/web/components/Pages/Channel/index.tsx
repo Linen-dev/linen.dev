@@ -32,6 +32,7 @@ import useWebsockets from '@linen/hooks/websockets';
 import useKeyboard from '@linen/hooks/keyboard';
 import { addReaction } from 'utilities/state/reaction';
 import { ChannelContext } from 'contexts/channel';
+import { useViewport } from 'hooks/useViewport';
 
 export interface ChannelProps {
   settings: Settings;
@@ -96,6 +97,7 @@ export default function Channel(props: ChannelProps) {
     dms,
   } = props;
 
+  const viewport = useViewport();
   const [threads, setThreads] = useState<SerializedThread[]>(initialThreads);
   const [pinnedThreads, setPinnedThreads] =
     useState<SerializedThread[]>(initialPinnedThreads);
@@ -103,7 +105,7 @@ export default function Channel(props: ChannelProps) {
   const [allUsers] = useUsersContext();
 
   const [currentThreadId, setCurrentThreadId] = useState<string | undefined>(
-    threads[threads.length - 1]?.id
+    viewport === 'desktop' ? threads[threads.length - 1]?.id : undefined
   );
 
   const currentUser = permissions.user || null;
@@ -111,8 +113,10 @@ export default function Channel(props: ChannelProps) {
 
   useEffect(() => {
     setThreads(initialThreads);
-    setCurrentThreadId(initialThreads[initialThreads.length - 1]?.id);
-  }, [initialThreads]);
+    if (viewport === 'desktop') {
+      setCurrentThreadId(initialThreads[initialThreads.length - 1]?.id);
+    }
+  }, [initialThreads, viewport]);
 
   useEffect(() => {
     setPinnedThreads(initialPinnedThreads);
