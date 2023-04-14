@@ -69,7 +69,7 @@ export async function create({
   successUrl: string;
   cancelUrl: string;
 }) {
-  const customer = findOrCreateCustomer(communityId);
+  const customer = await findOrCreateCustomer(communityId);
 
   const session = await stripe.checkout.sessions.create({
     mode: 'subscription',
