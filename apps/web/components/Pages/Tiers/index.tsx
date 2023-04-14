@@ -25,7 +25,7 @@ interface Props {
 }
 
 const ENTERPRISE_PLAN = {
-  name: 'Enterprise',
+  name: 'Community',
   description: 'Dedicated support and infrastructure for your community.',
   features: [
     'Unlimited members',

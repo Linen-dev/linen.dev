@@ -45,8 +45,13 @@ export default function PlansPage({
     })
       .then((response) => response.json())
       .then((data) => {
-        if (data && data.plans) {
+        if (mounted && data && data.plans) {
           setTiers(data.plans);
+          setLoading(false);
+        }
+      })
+      .catch(() => {
+        if (mounted) {
           setLoading(false);
         }
       });
