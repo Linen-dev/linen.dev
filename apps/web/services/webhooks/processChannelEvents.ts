@@ -8,7 +8,8 @@ import {
   findChannelByExternalId,
   renameChannel,
 } from 'lib/channel';
-import { findAccountIdByExternalId } from 'lib/account';
+import { findAccountIdByExternalId, findSlackToken } from 'lib/account';
+import { joinChannel } from 'services/slack';
 
 export async function processChannelCreated(body: SlackEvent) {
   const teamId = body.team_id;
@@ -22,6 +23,10 @@ export async function processChannelCreated(body: SlackEvent) {
     externalChannelId: event.channel.id,
     hidden: true,
   });
+  const oauth = await findSlackToken(account.id);
+  if (oauth?.accessToken) {
+    await joinChannel(event.channel.id, oauth.accessToken);
+  }
   return { status: 200, message: 'channel created' };
 }
 

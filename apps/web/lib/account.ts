@@ -100,3 +100,12 @@ export async function findFreeAccountsWithThreads() {
     orderBy: { createdAt: 'desc' },
   });
 }
+
+export async function findSlackToken(accountId: string) {
+  return await prisma.slackAuthorizations.findFirst({
+    where: {
+      accountsId: accountId,
+    },
+    orderBy: { createdAt: 'desc' },
+  });
+}
