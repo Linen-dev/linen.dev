@@ -176,7 +176,7 @@ export const updateAccountRedirectDomain = async (
   });
 };
 
-const findAccountByPath = async (domain: string) => {
+export const findAccountByPath = async (domain: string) => {
   const path = domain.toLowerCase();
   return await prisma.accounts.findFirst({
     where: {
