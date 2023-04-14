@@ -42,7 +42,7 @@ describe('Tiers', () => {
           },
         ]}
         activePeriod={Period.Monthly}
-        account={{ id: '1234', premium: false, syncStatus: 'synced' }}
+        currentCommunity={{ id: '1234', premium: false, syncStatus: 'synced' }}
       />
     );
     expect(container).toHaveTextContent('Standard');
