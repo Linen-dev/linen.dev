@@ -46,10 +46,11 @@ function serializeProduct(product: any) {
   };
 }
 
-export async function index() {
+export async function index({ period }: { period: string }) {
   const { data } = await stripe.products.list({ active: true });
   const plans = data
     .map(serializeProduct)
+    .filter((product) => product.period === period)
     .sort((a, b) => Number(a.price) - Number(b.price));
   return { status: 200, data: { plans: plans } };
 }
@@ -134,6 +135,7 @@ export default async function handler(
     }
     return response.status(500).json({});
   }
-  const { status, data } = await index();
+  const period = request.query.period as string;
+  const { status, data } = await index({ period });
   return response.status(status).json(data);
 }
