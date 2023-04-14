@@ -40,7 +40,7 @@ export default function PlansPage({
 
   useEffect(() => {
     let mounted = true;
-    fetch('/api/plans', {
+    fetch('/api/plans?period=monthly', {
       headers: { 'Content-Type': 'application/json' },
     })
       .then((response) => response.json())
