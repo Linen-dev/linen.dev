@@ -16,7 +16,7 @@ import {
 import { LinkContext } from '@linen/contexts/Link';
 import { put } from 'utilities/http';
 import useMode from '@linen/hooks/mode';
-import styles from './index.module.css';
+import styles from './index.module.scss';
 
 interface Props {
   className?: string;
@@ -123,6 +123,7 @@ function PageLayout({
           className={
             className ||
             classNames(
+              styles.container,
               'lg:h-[calc(100vh_-_64px)] lg:w-full',
               'lg:flex',
               'justify-center overflow-auto h-[calc(100vh_-_64px)] w-full'

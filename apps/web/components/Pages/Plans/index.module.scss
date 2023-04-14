@@ -30,9 +30,22 @@
   color: $color-gray-600;
   font-size: 1.125rem;
   line-height: 2rem;
-  margin: 24px auto 72px;
+  margin: 24px auto 36px;
   max-width: 34rem;
   text-align: center;
+}
+
+.period {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
+  gap: 0.5rem;
+  font-size: 11px;
+  color: $color-gray-700;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .loader {
