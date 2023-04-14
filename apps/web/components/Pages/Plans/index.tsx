@@ -35,12 +35,13 @@ export default function PlansPage({
   isSubDomainRouting,
   dms,
 }: Props) {
+  const [period, setPeriod] = useState(Period.Monthly);
   const [loading, setLoading] = useState(true);
   const [tiers, setTiers] = useState([]);
 
   useEffect(() => {
     let mounted = true;
-    fetch('/api/plans?period=monthly', {
+    fetch(`/api/plans?period=${period}`, {
       headers: { 'Content-Type': 'application/json' },
     })
       .then((response) => response.json())
@@ -58,7 +59,7 @@ export default function PlansPage({
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [period]);
 
   return (
     <PageLayout
@@ -99,7 +100,7 @@ export default function PlansPage({
             <Spinner className={styles.loader} />
           ) : (
             <Tiers
-              activePeriod={Period.Monthly}
+              activePeriod={period}
               tiers={tiers}
               currentCommunity={currentCommunity}
             />
