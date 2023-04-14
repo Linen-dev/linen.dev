@@ -6,9 +6,22 @@ const stripe = new Stripe(process.env.STRIPE_API_KEY!, {
   apiVersion: '2022-11-15',
 });
 
+function getMembersCount({ price }: { price: string }): string {
+  if (price === '150') {
+    return '5,000';
+  } else if (price === '200') {
+    return '10,000';
+  } else if (price === '250') {
+    return '15,000';
+  } else if (price === '300') {
+    return '20,000';
+  }
+  return 'Unlimited';
+}
+
 function serializeProduct(product: any) {
   const { id, name, description, metadata, default_price } = product;
-  const { price, currency } = metadata;
+  const { price, currency, period } = metadata;
   return {
     id,
     name,
@@ -16,8 +29,9 @@ function serializeProduct(product: any) {
     price,
     priceId: default_price,
     currency,
+    period,
     features: [
-      'Up to 10,000 members',
+      `Up to ${getMembersCount({ price })} members`,
       'Custom domain',
       'Custom branding',
       'SEO benefits',
