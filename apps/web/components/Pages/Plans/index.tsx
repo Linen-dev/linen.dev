@@ -102,9 +102,10 @@ export default function PlansPage({
             <span>monthly</span>
             <Toggle
               checked={period === Period.Yearly}
-              onChange={(checked) =>
-                setPeriod(checked ? Period.Yearly : Period.Monthly)
-              }
+              onChange={(checked) => {
+                setLoading(true);
+                setPeriod(checked ? Period.Yearly : Period.Monthly);
+              }}
             />
             <span>yearly</span>
           </div>
