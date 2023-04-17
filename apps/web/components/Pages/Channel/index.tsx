@@ -896,6 +896,7 @@ export default function Channel(props: ChannelProps) {
           updateThread={updateThread}
           onThreadMessage={onSocket}
           token={token}
+          pathCursor={pathCursor}
         />
       </ChannelContext.Provider>
     </PageLayout>

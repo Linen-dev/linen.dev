@@ -46,6 +46,7 @@ import ScrollToBottomIcon from './ScrollToBottomIcon';
 import IntegrationsModal from 'components/Modals/IntegrationsModal';
 import { useRouter } from 'next/router';
 import MembersModal from 'components/Modals/MembersModal';
+import { PaginationForBots } from '../Bots/PaginationForBots';
 
 const { SidebarLayout } = Layouts.Shared;
 
@@ -62,6 +63,7 @@ interface Props {
     next: string | null;
     prev: string | null;
   };
+  pathCursor: string | null;
   isBot: boolean;
   permissions: Permissions;
   currentThreadId: string | undefined;
@@ -132,6 +134,7 @@ export default function Channel({
   token,
   permissions,
   currentThreadId,
+  pathCursor,
   setThreads,
   deleteMessage,
   muteThread,
@@ -417,6 +420,10 @@ export default function Channel({
       });
   }
 
+  function isPaginationView() {
+    return pathCursor && Number(pathCursor) > 0;
+  }
+
   return (
     <>
       <SidebarLayout
@@ -503,7 +510,19 @@ export default function Channel({
                 </>
               }
               footer={
-                permissions.chat ? (
+                isPaginationView() ? (
+                  <>
+                    <PaginationForBots
+                      {...{
+                        currentChannel,
+                        isSubDomainRouting,
+                        settings,
+                        page: pathCursor ? Number(pathCursor) : null,
+                      }}
+                    />
+                    <Footer />
+                  </>
+                ) : permissions.chat ? (
                   <Chat
                     communityId={settings.communityId}
                     channelId={currentChannel.id}
