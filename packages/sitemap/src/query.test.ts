@@ -4,6 +4,7 @@ import {
   createChannel,
   createThread,
   createMessage,
+  createUser,
 } from '@linen/factory';
 import {
   getChannels,
@@ -232,6 +233,8 @@ async function bulkCreateChannels(accountId: string) {
     type: ChannelType.DM,
   });
 
+  const user = await createUser({ accountsId: accountId, isBot: false });
+
   for (const channel of [
     hidden_public_channel,
     hidden_private_channel,
@@ -247,7 +250,11 @@ async function bulkCreateChannels(accountId: string) {
       viewCount: randomNum(),
       messageCount: 3,
     });
-    await bulkCreateMessages(channel.id, thread.id);
+    await bulkCreateMessages({
+      channelId: channel.id,
+      threadId: thread.id,
+      userId: user.id,
+    });
 
     const hidden_thread = await createThread({
       channelId: channel.id,
@@ -256,7 +263,11 @@ async function bulkCreateChannels(accountId: string) {
       viewCount: randomNum(),
       messageCount: 3,
     });
-    await bulkCreateMessages(channel.id, hidden_thread.id);
+    await bulkCreateMessages({
+      channelId: channel.id,
+      threadId: hidden_thread.id,
+      userId: user.id,
+    });
 
     const empty_thread = await createThread({
       channelId: channel.id,
@@ -267,17 +278,24 @@ async function bulkCreateChannels(accountId: string) {
   }
 }
 
-async function bulkCreateMessages(
-  channelId: string,
-  threadId: string,
-  num = 3
-) {
+async function bulkCreateMessages({
+  channelId,
+  threadId,
+  num = 3,
+  userId,
+}: {
+  channelId: string;
+  threadId: string;
+  num?: number;
+  userId: string;
+}) {
   await Promise.all(
     Array.from(Array(num).keys()).map(() =>
       createMessage({
         body: random(),
         channelId,
         threadId,
+        usersId: userId,
       })
     )
   );
@@ -293,6 +311,9 @@ async function unSeed() {
   const deleteChannels = prisma.channels.deleteMany({
     where: { account: { name: { in: accountsList } } },
   });
+  const deleteUsers = prisma.users.deleteMany({
+    where: { account: { name: { in: accountsList } } },
+  });
   const deleteAccounts = prisma.accounts.deleteMany({
     where: { name: { in: accountsList } },
   });
@@ -301,6 +322,7 @@ async function unSeed() {
     deleteMessages,
     deleteThreads,
     deleteChannels,
+    deleteUsers,
     deleteAccounts,
   ]);
 }

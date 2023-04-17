@@ -4,7 +4,7 @@ function resolveDomain(
   account: Pick<Account, 'discordDomain' | 'discordServerId' | 'slackDomain'>
 ) {
   return (
-    account.discordDomain || account.slackDomain || account.discordServerId
+    account.slackDomain || account.discordDomain || account.discordServerId
   );
 }
 

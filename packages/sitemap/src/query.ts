@@ -2,8 +2,22 @@ import { AccountType, ChannelType, prisma } from '@linen/database';
 import { Account } from './types';
 
 const threadNotHiddenWithMessage = {
-  messageCount: { gte: 1 },
-  messages: { some: {} },
+  OR: [
+    {
+      messageCount: { gt: 1 },
+    },
+    {
+      viewCount: { gt: 1 },
+    },
+  ],
+  messages: {
+    some: {
+      author: {
+        is: { id: {} },
+        isNot: { isBot: true },
+      },
+    },
+  },
   hidden: false,
 };
 
@@ -81,7 +95,7 @@ export async function* getThreadsAsyncIterable(account: Account) {
         sentAt: { lt: sentAt },
       },
       take: 50,
-      orderBy: [{ viewCount: 'desc' }, { sentAt: 'desc' }],
+      orderBy: [{ lastReplyAt: 'desc' }, { sentAt: 'desc' }],
     });
 
     if (!threads.length) return;
@@ -169,10 +183,9 @@ export async function* getThreadsAsyncIterableFreeTier(_: Account) {
           },
         },
         sentAt: { lt: sentAt },
-        messageCount: { gt: 1 }, // prioritize threads with replies
       },
       take: 50,
-      orderBy: [{ viewCount: 'desc' }, { sentAt: 'desc' }],
+      orderBy: [{ lastReplyAt: 'desc' }, { sentAt: 'desc' }],
     });
 
     if (!threads.length) return;
