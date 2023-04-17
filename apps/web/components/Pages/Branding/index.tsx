@@ -59,7 +59,7 @@ function Card({
     <div
       className={classNames(
         '',
-        readOnly ? 'bg-slate-50 pointer-events-none' : '',
+        readOnly ? 'pointer-events-none' : '',
         className
       )}
     >
@@ -302,6 +302,20 @@ export default function Branding({
                     });
                   }}
                   logoUrl={currentCommunity.logoSquareUrl}
+                />
+              </PremiumCard>
+              <hr className="my-5" />
+              <PremiumCard isPremium={currentCommunity.premium}>
+                <LogoField
+                  header="Favicon"
+                  description="An icon associated with your website, displayed in the address bar of a browser."
+                  currentCommunity={currentCommunity}
+                  onChange={(faviconUrl) => {
+                    updateAccount({ faviconUrl }).then(() => {
+                      router.reload();
+                    });
+                  }}
+                  logoUrl={currentCommunity.faviconUrl}
                 />
               </PremiumCard>
               <hr className="my-5" />

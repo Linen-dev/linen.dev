@@ -6,6 +6,7 @@ import ErrorFallback from './ErrorFallback';
 import NavBar from 'components/NavBar';
 import SEO, { type SeoProps } from '../SEO';
 import GoogleAnalytics from '../GoogleAnalytics';
+import Favicon from './Favicon';
 import classNames from 'classnames';
 import {
   Permissions,
@@ -137,6 +138,7 @@ function PageLayout({
         </div>
       </div>
       <div id="portal"></div>
+      <Favicon url={currentCommunity.faviconUrl} />
       <GoogleAnalytics
         googleAnalyticsId={googleAnalyticsId}
         googleSiteVerification={googleSiteVerification}

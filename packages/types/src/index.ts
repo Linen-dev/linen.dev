@@ -85,6 +85,7 @@ export interface SerializedAccount {
   docsUrl?: string;
   logoUrl?: string;
   logoSquareUrl?: string;
+  faviconUrl?: string;
   redirectDomain?: string;
   brandColor?: string;
   premium: boolean;
