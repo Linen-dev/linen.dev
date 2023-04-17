@@ -7,7 +7,7 @@ export const useViewport = () => {
       'screen and (min-width: 1px) and (max-width: 513px)',
     ],
     ['desktop', 'mobile'],
-    'mobile'
+    'desktop'
   );
 
   return viewport;
