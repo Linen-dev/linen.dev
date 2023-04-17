@@ -1,6 +1,5 @@
 import React from 'react';
 import { decodeHTML } from '@linen/utilities/string';
-import { MessageFormat } from '@linen/types';
 
 interface Props {
   value: string;
