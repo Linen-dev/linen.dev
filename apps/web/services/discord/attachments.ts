@@ -73,7 +73,7 @@ async function upload({
       ]
         .filter((e) => e)
         .join('/');
-      await uploadFile(s3Key, response.data);
+      await uploadFile({ Key: s3Key, Body: response.data });
       return [LINEN_STATIC_CDN, s3Key].join('/');
     }
   } catch (error) {

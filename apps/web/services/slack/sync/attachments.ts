@@ -93,7 +93,10 @@ function processLink(
         random() + name + ext,
       ].join('/');
 
-      await uploadFile(s3Key, Buffer.from(response.text || response.body));
+      await uploadFile({
+        Key: s3Key,
+        Body: Buffer.from(response.text || response.body),
+      });
       return {
         fileId: file.id,
         internalUrl: [LINEN_STATIC_CDN, s3Key].join('/'),

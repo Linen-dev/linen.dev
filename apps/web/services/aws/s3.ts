@@ -1,28 +1,34 @@
-import S3 from 'aws-sdk/clients/s3';
+import {
+  S3Client,
+  PutObjectCommand,
+  DeleteObjectsCommand,
+  type PutObjectCommandInput,
+} from '@aws-sdk/client-s3';
 import path from 'path';
 import { awsCredentials } from './credentials';
 
 declare global {
   // eslint-disable-next-line no-var
-  var s3Client: S3 | undefined;
+  var s3Client: S3Client | undefined;
 }
 
-export const s3Client = global.s3Client || new S3(awsCredentials);
+export const s3Client = global.s3Client || new S3Client(awsCredentials);
 
 if (process.env.NODE_ENV !== 'production') global.s3Client = s3Client;
 
 const Bucket = process.env.S3_UPLOAD_BUCKET as string;
 
-export async function uploadFile(Key: string, Body: Buffer) {
+export type UploadFileInput = Pick<PutObjectCommandInput, 'Key' | 'Body'>;
+
+export async function uploadFile({ Key, Body }: UploadFileInput) {
   try {
-    return await s3Client
-      .putObject({
-        Bucket,
-        Key,
-        Body,
-        ContentType: getMimeType(path.extname(Key)),
-      })
-      .promise();
+    const command = new PutObjectCommand({
+      Bucket,
+      Key,
+      Body,
+      ContentType: getMimeType(path.extname(Key!)),
+    });
+    return await s3Client.send(command);
   } catch (error) {
     console.error(error);
   }
@@ -33,15 +39,14 @@ export async function deleteFiles(
     Key: string;
   }[]
 ) {
-  return await s3Client
-    .deleteObjects({
-      Bucket,
-      Delete: {
-        Objects,
-        Quiet: true,
-      },
-    })
-    .promise();
+  const command = new DeleteObjectsCommand({
+    Bucket,
+    Delete: {
+      Objects,
+      Quiet: true,
+    },
+  });
+  return await s3Client.send(command);
 }
 
 const getMimeType = (ext: string) => {

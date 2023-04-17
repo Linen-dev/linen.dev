@@ -8,8 +8,7 @@ import { msToHuman } from './parser';
 import { Logger } from './types';
 
 export async function task(
-  s3Client: any,
-  bucketOutput: string,
+  uploadFile: (args: { Key: string; Body: any }) => Promise<any>,
   logger: Logger
 ) {
   const start = new Date().getTime();
@@ -27,7 +26,7 @@ export async function task(
   await processLinen(workDir, logger);
 
   // upload to s3
-  const result = await uploadDir(s3Client, resolve(workDir), bucketOutput);
+  const result = await uploadDir(uploadFile, resolve(workDir));
   logger('files uploaded', result.length);
   // refresh cdn
   const total = new Date().getTime() - start;

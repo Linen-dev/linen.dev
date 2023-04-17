@@ -22,6 +22,7 @@
     "start:queue": "pm2-runtime --raw \"npx tsx queue/index.ts\""
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.312.0",
     "@linen/ast": "*",
     "@linen/contexts": "*",
     "@linen/database": "*",
@@ -68,7 +69,6 @@
     "@types/uuid": "^8.3.4",
     "autoprefixer": "^10.4.12",
     "autosize": "^5.0.1",
-    "aws-sdk": "^2.1354.0",
     "axios": "^0.27.2",
     "cheerio": "^1.0.0-rc.12",
     "classnames": "^2.3.2",

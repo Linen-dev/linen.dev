@@ -15,7 +15,7 @@ export default class UploadService {
       v4(),
       file.name || 'unknown',
     ].join('/');
-    await uploadFile(path, file.buffer);
+    await uploadFile({ Key: path, Body: file.buffer });
     return {
       id: file.id,
       url: [LINEN_STATIC_CDN, path].join('/'),
