@@ -170,6 +170,7 @@ model accounts {
   docsUrl                String?
   logoUrl                String?
   logoSquareUrl          String?
+  faviconUrl             String?
   premium                Boolean     @default(false)
   googleAnalyticsId      String?
   googleSiteVerification String?

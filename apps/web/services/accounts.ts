@@ -145,6 +145,7 @@ export default class AccountsService {
       docsUrl?: string;
       logoUrl?: string;
       logoSquareUrl?: string;
+      faviconUrl?: string;
       redirectDomain?: string;
       brandColor?: string;
       googleAnalyticsId?: string;
@@ -175,9 +176,10 @@ export default class AccountsService {
       newChannelsConfig,
     } = params;
 
-    let { logoUrl, logoSquareUrl } = params;
+    let { logoUrl, logoSquareUrl, faviconUrl } = params;
     logoSquareUrl = replaceS3byCDN(logoSquareUrl);
     logoUrl = replaceS3byCDN(logoUrl);
+    faviconUrl = replaceS3byCDN(faviconUrl);
 
     const freeAccount = {
       homeUrl,
@@ -195,6 +197,7 @@ export default class AccountsService {
           googleAnalyticsId,
           logoUrl,
           logoSquareUrl,
+          faviconUrl,
           type,
           ...(redirectDomain && {
             redirectDomain: stripProtocol(redirectDomain).toLowerCase(),

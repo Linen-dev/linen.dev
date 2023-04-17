@@ -14,6 +14,7 @@ export default async function createLinenCommunity() {
       brandColor: '#000000',
       slackDomain: 'linen',
       logoUrl: 'https://static.main.linendev.com/linen-white-logo.svg',
+      faviconUrl: 'https://www.linen.dev/favicon.ico',
       chat: ChatType.MEMBERS,
       syncStatus: 'DONE',
       premium: true,
