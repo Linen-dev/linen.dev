@@ -1,5 +1,5 @@
 import Button from '@linen/ui/Button';
-import { useS3Upload } from 'next-s3-upload';
+import { usePresignedUpload } from 'next-s3-upload';
 import { useRef, useState } from 'react';
 import { SerializedAccount } from '@linen/types';
 import Toast from '@linen/ui/Toast';
@@ -15,7 +15,7 @@ export default function SlackImportRow({
   const [loading, setLoading] = useState(false);
   let ref = useRef<HTMLInputElement>(null);
 
-  let { uploadToS3, files } = useS3Upload();
+  let { uploadToS3, files } = usePresignedUpload();
   const openFileDialog = () => {
     if (ref.current) {
       ref.current.value = '';

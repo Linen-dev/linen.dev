@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import { useS3Upload } from 'next-s3-upload';
+import { usePresignedUpload } from 'next-s3-upload';
 import Button from '@linen/ui/Button';
 import Label from '@linen/ui/Label';
 import { SerializedAccount } from '@linen/types';
@@ -24,7 +24,7 @@ export default function LogoField({
   header,
   description,
 }: Props) {
-  let { FileInput, openFileDialog, uploadToS3, files } = useS3Upload();
+  let { FileInput, openFileDialog, uploadToS3, files } = usePresignedUpload();
   const isUploading = files && files.length > 0 && files[0].progress < 100;
 
   let handleLogoChange = async (file: File) => {
