@@ -134,5 +134,8 @@
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^1.2.3"
   }
 }
