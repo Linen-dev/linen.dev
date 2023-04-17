@@ -29,10 +29,9 @@ export default function Card({
         <div className={styles.price}>
           {formattedPrice ? (
             <>
-              ${price}
-              <span className={styles.length}>
-                {period === Period.Monthly ? '/month' : '/year'}
-              </span>
+              $
+              {period === Period.Yearly ? Math.ceil(Number(price) / 12) : price}
+              <span className={styles.length}>/month</span>
             </>
           ) : (
             'Custom'
