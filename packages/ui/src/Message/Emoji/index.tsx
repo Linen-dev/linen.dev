@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactEmoji from 'react-emoji-render';
+import { toArray } from 'react-emoji-render';
 
 interface Props {
   text?: string;
@@ -9,5 +9,14 @@ export default function Emoji({ text }: Props) {
   if (!text) {
     return null;
   }
-  return <ReactEmoji text={text} />;
+  return (
+    <>
+      {toArray(text).reduce((previous, current: any) => {
+        if (typeof current === 'string') {
+          return previous + current;
+        }
+        return previous + current.props.children;
+      }, '')}
+    </>
+  );
 }
