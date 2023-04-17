@@ -41,15 +41,51 @@ jobs:
         with:
           script: |
             const manifest = ${{ steps.LHCIAction.outputs.manifest }}
-            core.setOutput('manifest', manifest.reduce((prev,cur)=>{ 
-              return prev + "\n" + cur.url.substring(8).padEnd(50,'.') + String(Math.floor( cur.summary.performance*100 )).padStart(2,'.')  
-            },"Lighthouse results:"));
+            function median(numbers) {
+              return numbers.slice().sort((a, b) => a - b)[Math.floor(numbers.length / 2)];
+            }
+            function avg(numbers) {
+              return numbers.slice().reduce((p, c) => p + c, 0) / numbers.length;
+            }
+            function build(manifest, attr) {
+              let data = manifest.reduce(
+                (p, c) => {
+                  if (c.summary[attr] >= p.best_score) {
+                    p.best_score = c.summary[attr];
+                    p.best_site = c.url;
+                  }
+                  if (c.summary[attr] <= p.worst_score) {
+                    p.worst_score = c.summary[attr];
+                    p.worst_site = c.url;
+                  }
+                  p.scores.push(c.summary[attr]);
+                  return p;
+                },
+                {
+                  best_site: undefined,
+                  best_score: 0,
+                  worst_site: undefined,
+                  worst_score: 1,
+                  scores: [],
+                }
+              );
+              data.median = median(data.scores);
+              data.avg = avg(data.scores);
+              return data;
+            }
+            const stats = {
+              performance: build(manifest, 'performance'),
+              accessibility: build(manifest, 'accessibility'),
+              best_practices: build(manifest, 'best-practices'),
+              seo: build(manifest, 'seo'),
+            };
+            core.setOutput('manifest', JSON.stringify(stats));
 
       - name: Post to a Slack channel
         id: slack
         uses: slackapi/slack-github-action@v1.23.0
         with:      
           channel-id: ${{ secrets.SLACK_CHANNEL }}
-          slack-message: "```${{ steps.parsedOutput.outputs.manifest }}```"
+          slack-message: "Lighthouse results: ${{ steps.parsedOutput.outputs.manifest }}"
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
