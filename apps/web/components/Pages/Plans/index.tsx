@@ -11,6 +11,7 @@ import { FiZap } from '@react-icons/all-files/fi/FiZap';
 import styles from './index.module.scss';
 import Spinner from '@linen/ui/Spinner';
 import Toggle from '@linen/ui/Toggle';
+import ActivePlan from './ActivePlan';
 
 export interface Props {
   channels: SerializedChannel[];
@@ -74,18 +75,7 @@ export default function PlansPage({
       dms={dms}
     >
       {currentCommunity.premium ? (
-        <div>
-          <h1 className={styles.header}>
-            <span>
-              <FiZap />
-              Thank you!
-            </span>
-          </h1>
-          <p className={styles.description}>
-            Your subscription is currently active and you&apos;re on a premium
-            plan.
-          </p>
-        </div>
+        <ActivePlan currentCommunity={currentCommunity} />
       ) : (
         <div>
           <h1 className={styles.header}>
