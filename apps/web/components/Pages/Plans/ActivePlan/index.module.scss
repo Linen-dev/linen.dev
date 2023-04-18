@@ -1,0 +1,42 @@
+@import 'styles/colors.scss';
+
+.header {
+  color: $color-gray-900;
+  font-size: 2.5rem;
+  font-weight: bold;
+  gap: 0.5rem;
+  letter-spacing: 0.3px;
+  line-height: 1;
+  margin: 72px auto 0;
+  padding: 0;
+  text-align: center;
+}
+
+.header span {
+  align-items: center;
+  background-image: linear-gradient(to right, $color-primary 0%, $color-yellow-100 100%);
+  background-repeat: repeat-x; 
+  background-position: 0 100%; 
+  background-size: 100% 2px; 
+  display: inline-flex;
+  justify-content: center;
+}
+
+.header svg {
+  height: 36px;
+}
+
+.description {
+  color: $color-gray-600;
+  font-size: 1.125rem;
+  line-height: 2rem;
+  margin: 24px auto 36px;
+  max-width: 34rem;
+  text-align: center;
+}
+
+.loader {
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+}
