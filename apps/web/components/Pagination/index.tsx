@@ -1,9 +1,8 @@
 import React from 'react';
 import { SerializedChannel, Settings } from '@linen/types';
-import ButtonPagination from 'components/ButtonPagination';
 import { CustomLinkHelper } from 'utilities/url';
 
-export function PaginationForBots({
+export default function Pagination({
   currentChannel,
   isSubDomainRouting,
   settings,
@@ -19,9 +18,9 @@ export function PaginationForBots({
     count: currentChannel.pages,
   });
 
-  function Page({ num }: { num: number }) {
+  function Page({ num, curr = false }: { num: number; curr?: boolean }) {
     return (
-      <ButtonPagination
+      <a
         key={num}
         href={CustomLinkHelper({
           isSubDomainRouting,
@@ -29,14 +28,25 @@ export function PaginationForBots({
           communityType: settings.communityType,
           path: `/c/${currentChannel.channelName}/${num}`,
         })}
-        label={String(num)}
-      />
+        {...(curr
+          ? {
+              className:
+                'inline-flex items-center border-t-2 border-blue-500 px-4 pt-4 text-sm font-medium text-blue-600',
+              ['aria-current']: 'page',
+            }
+          : {
+              className:
+                'inline-flex items-center border-t-2 border-transparent px-4 pt-4 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700',
+            })}
+      >
+        {String(num)}
+      </a>
     );
   }
 
   function Latest() {
     return (
-      <ButtonPagination
+      <a
         key={'latest'}
         href={CustomLinkHelper({
           isSubDomainRouting,
@@ -44,26 +54,38 @@ export function PaginationForBots({
           communityType: settings.communityType,
           path: `/c/${currentChannel.channelName}`,
         })}
-        label={String('Latest')}
-      />
+        className="inline-flex items-center border-t-2 border-transparent px-4 pt-4 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700"
+      >
+        {String('Latest')}
+      </a>
     );
   }
 
   function Dots() {
-    return <span className="p-4">...</span>;
+    return (
+      <span className="inline-flex items-center border-t-2 border-transparent px-4 pt-4 text-sm font-medium text-gray-500">
+        ...
+      </span>
+    );
   }
 
   return (
     <>
       {currentChannel && currentChannel.pages ? (
         <div className="text-center p-4">
-          <Latest />
           {pagination.items?.map((item) => {
             if (item.type === 'ellipsis') {
               return <Dots key={'dots'} />;
             }
-            return <Page num={item.page!} key={item.page} />;
+            return (
+              <Page
+                num={item.page!}
+                key={item.page}
+                curr={item.page === page}
+              />
+            );
           })}
+          <Latest />
         </div>
       ) : (
         <></>
@@ -130,19 +152,17 @@ function usePagination(props: { page: number; count: number | null }) {
     ...endPages,
   ];
 
-  const items = itemList
-    .map((item) => {
-      return typeof item === 'number'
-        ? {
-            type: 'page',
-            page: item,
-            selected: item === page,
-          }
-        : {
-            type: item,
-          };
-    })
-    .reverse();
+  const items = itemList.map((item) => {
+    return typeof item === 'number'
+      ? {
+          type: 'page',
+          page: item,
+          selected: item === page,
+        }
+      : {
+          type: item,
+        };
+  });
 
   return {
     items,

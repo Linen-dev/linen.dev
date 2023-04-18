@@ -4,7 +4,7 @@ import { ChannelProps } from '..';
 import PageLayout from 'components/layout/PageLayout';
 import { buildChannelSeo } from 'utilities/seo';
 import { SerializedChannel } from '@linen/types';
-import { PaginationForBots } from './PaginationForBots';
+import Pagination from 'components/Pagination';
 
 export default function ChannelForBots({
   threads,
@@ -54,7 +54,7 @@ export default function ChannelForBots({
           onReaction={() => {}}
           onDrop={() => {}}
         />
-        <PaginationForBots
+        <Pagination
           {...{
             currentChannel,
             isSubDomainRouting,

@@ -46,7 +46,7 @@ import ScrollToBottomIcon from './ScrollToBottomIcon';
 import IntegrationsModal from 'components/Modals/IntegrationsModal';
 import { useRouter } from 'next/router';
 import MembersModal from 'components/Modals/MembersModal';
-import { PaginationForBots } from '../Bots/PaginationForBots';
+import Pagination from 'components/Pagination';
 import { playNotificationSound } from 'utilities/util';
 import { PushType } from 'services/push';
 
@@ -515,7 +515,7 @@ export default function Channel({
               footer={
                 isPaginationView() ? (
                   <>
-                    <PaginationForBots
+                    <Pagination
                       {...{
                         currentChannel,
                         isSubDomainRouting,
