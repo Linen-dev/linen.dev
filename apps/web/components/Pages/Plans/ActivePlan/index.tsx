@@ -16,6 +16,7 @@ interface Customer {
 export default function ActivePlan({ currentCommunity }: Props) {
   const [customer, setCustomer] = useState<Customer>();
   const [subscription, setSubscription] = useState<any>();
+  const [paymentMethod, setPaymentMethod] = useState<any>();
   useEffect(() => {
     fetch(`/api/subscriptions?communityId=${currentCommunity.id}`, {
       method: 'GET',
@@ -27,6 +28,7 @@ export default function ActivePlan({ currentCommunity }: Props) {
       .then((data) => {
         setCustomer(data.customer);
         setSubscription(data.subscription);
+        setPaymentMethod(data.paymentMethod);
       });
   }, []);
 
@@ -64,6 +66,20 @@ export default function ActivePlan({ currentCommunity }: Props) {
                 {subscription.plan.interval === 'month' ? 'monthly' : 'yearly'}
               </Td>
             </tr>
+            <tr>
+              <Td>
+                <strong>Payment method</strong>
+              </Td>
+              <Td>{paymentMethod.type}</Td>
+            </tr>
+            {paymentMethod.type === 'card' && (
+              <tr>
+                <Td>
+                  <strong>Card number</strong>
+                </Td>
+                <Td>.. .... .... .... .... {paymentMethod.card.last4}</Td>
+              </tr>
+            )}
           </Tbody>
         </Table>
       ) : (
