@@ -1,6 +1,7 @@
 import React from 'react';
 
 interface Props {
+  monospaced?: boolean;
   children: React.ReactNode;
 }
 
@@ -28,12 +29,16 @@ export function Tbody({ children }: Props) {
   );
 }
 
-export default function Table({ children }: Props) {
+export default function Table({ monospaced, children }: Props) {
   return (
     <div className="overflow-x-auto">
       <div className="inline-block min-w-full py-2 align-middle">
         <div className="overflow-hidden shadow-sm ring-1 ring-black ring-opacity-5">
-          <table className="min-w-full divide-y divide-gray-300">
+          <table
+            className={`min-w-full divide-y divide-gray-300 ${
+              monospaced ? 'font-mono' : ''
+            }`}
+          >
             {children}
           </table>
         </div>
