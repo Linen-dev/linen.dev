@@ -15,6 +15,7 @@ interface Customer {
 
 export default function ActivePlan({ currentCommunity }: Props) {
   const [customer, setCustomer] = useState<Customer>();
+  const [subscription, setSubscription] = useState<any>();
   useEffect(() => {
     fetch(`/api/subscriptions?communityId=${currentCommunity.id}`, {
       method: 'GET',
@@ -25,6 +26,7 @@ export default function ActivePlan({ currentCommunity }: Props) {
       .then((response) => response.json())
       .then((data) => {
         setCustomer(data.customer);
+        setSubscription(data.subscription);
       });
   }, []);
 
@@ -39,14 +41,28 @@ export default function ActivePlan({ currentCommunity }: Props) {
       <p className={styles.description}>
         Your subscription is currently active and you&apos;re on a premium plan.
       </p>
-      {customer ? (
+      {customer && subscription ? (
         <Table>
           <Tbody>
+            <tr>
+              <Td>
+                <strong>Amount</strong>
+              </Td>
+              <Td>${subscription.plan.amount / 100}</Td>
+            </tr>
             <tr>
               <Td>
                 <strong>Billing address</strong>
               </Td>
               <Td>{customer.email}</Td>
+            </tr>
+            <tr>
+              <Td>
+                <strong>Billing cycle</strong>
+              </Td>
+              <Td>
+                {subscription.plan.interval === 'month' ? 'monthly' : 'yearly'}
+              </Td>
             </tr>
           </Tbody>
         </Table>

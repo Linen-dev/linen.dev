@@ -7,14 +7,19 @@ const stripe = new Stripe(process.env.STRIPE_API_KEY!, {
 });
 
 export async function index({ communityId }: { communityId: string }) {
-  const { data } = await stripe.customers.search({
+  const response1 = await stripe.customers.search({
     query: `name:\'CUSTOMER ${communityId}\'`,
   });
-  const customer = data[0];
+  const customer = response1.data[0];
+  const response2 = await stripe.subscriptions.list({
+    customer: customer.id,
+  });
+  const subscription = response2.data[0];
   return {
     status: 200,
     data: {
       customer,
+      subscription,
     },
   };
 }
