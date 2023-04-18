@@ -6,6 +6,30 @@ const stripe = new Stripe(process.env.STRIPE_API_KEY!, {
   apiVersion: '2022-11-15',
 });
 
+function serializeCustomer(data: any) {
+  return {
+    email: data.email,
+  };
+}
+
+function serializeSubscription(data: any) {
+  return {
+    plan: {
+      amount: data.plan.amount,
+      interval: data.plan.interval,
+    },
+  };
+}
+
+function serializePaymentMethod(data: any) {
+  return {
+    type: data.type,
+    card: {
+      last4: data.card.last4,
+    },
+  };
+}
+
 export async function index({ communityId }: { communityId: string }) {
   const response1 = await stripe.customers.search({
     query: `name:\'CUSTOMER ${communityId}\'`,
@@ -15,11 +39,14 @@ export async function index({ communityId }: { communityId: string }) {
     customer: customer.id,
   });
   const subscription = response2.data[0];
+  const paymentMethodId = subscription.default_payment_method as string;
+  const paymentMethod = await stripe.paymentMethods.retrieve(paymentMethodId);
   return {
     status: 200,
     data: {
-      customer,
-      subscription,
+      customer: serializeCustomer(customer),
+      subscription: serializeSubscription(subscription),
+      paymentMethod: serializePaymentMethod(paymentMethod),
     },
   };
 }
