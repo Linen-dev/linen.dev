@@ -44,7 +44,7 @@ export default function ActivePlan({ currentCommunity }: Props) {
         Your subscription is currently active and you&apos;re on a premium plan.
       </p>
       {customer && subscription ? (
-        <Table>
+        <Table monospaced>
           <Tbody>
             <tr>
               <Td>
