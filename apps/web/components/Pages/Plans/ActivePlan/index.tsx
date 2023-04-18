@@ -4,6 +4,7 @@ import { FiZap } from '@react-icons/all-files/fi/FiZap';
 import { SerializedAccount } from '@linen/types';
 import Table, { Tbody, Td } from 'components/Table';
 import Spinner from '@linen/ui/Spinner';
+import Link from 'components/Link';
 
 interface Props {
   currentCommunity: SerializedAccount;
@@ -43,45 +44,56 @@ export default function ActivePlan({ currentCommunity }: Props) {
       <p className={styles.description}>
         Your subscription is currently active and you&apos;re on a premium plan.
       </p>
-      {customer && subscription ? (
-        <Table monospaced>
-          <Tbody>
-            <tr>
-              <Td>
-                <strong>Amount</strong>
-              </Td>
-              <Td>${subscription.plan.amount / 100}</Td>
-            </tr>
-            <tr>
-              <Td>
-                <strong>Billing address</strong>
-              </Td>
-              <Td>{customer.email}</Td>
-            </tr>
-            <tr>
-              <Td>
-                <strong>Billing cycle</strong>
-              </Td>
-              <Td>
-                {subscription.plan.interval === 'month' ? 'monthly' : 'yearly'}
-              </Td>
-            </tr>
-            <tr>
-              <Td>
-                <strong>Payment method</strong>
-              </Td>
-              <Td>{paymentMethod.type}</Td>
-            </tr>
-            {paymentMethod.type === 'card' && (
+      {customer && subscription && paymentMethod ? (
+        <>
+          <Table monospaced>
+            <Tbody>
               <tr>
                 <Td>
-                  <strong>Card number</strong>
+                  <strong>Amount</strong>
                 </Td>
-                <Td>.. .... .... .... .... {paymentMethod.card.last4}</Td>
+                <Td>${subscription.plan.amount / 100}</Td>
               </tr>
-            )}
-          </Tbody>
-        </Table>
+              <tr>
+                <Td>
+                  <strong>Billing address</strong>
+                </Td>
+                <Td>{customer.email}</Td>
+              </tr>
+              <tr>
+                <Td>
+                  <strong>Billing cycle</strong>
+                </Td>
+                <Td>
+                  {subscription.plan.interval === 'month'
+                    ? 'monthly'
+                    : 'yearly'}
+                </Td>
+              </tr>
+              <tr>
+                <Td>
+                  <strong>Payment method</strong>
+                </Td>
+                <Td>{paymentMethod.type}</Td>
+              </tr>
+              {paymentMethod.type === 'card' && (
+                <tr>
+                  <Td>
+                    <strong>Card number</strong>
+                  </Td>
+                  <Td>.. .... .... .... .... {paymentMethod.card.last4}</Td>
+                </tr>
+              )}
+            </Tbody>
+          </Table>
+          <div className={styles.manage}>
+            <Link
+              href={`https://billing.stripe.com/p/login/00g9CMchu0ywgVOaEE?prefilled_email=${customer.email}`}
+            >
+              Manage subscription
+            </Link>
+          </div>
+        </>
       ) : (
         <Spinner className={styles.loader} />
       )}
