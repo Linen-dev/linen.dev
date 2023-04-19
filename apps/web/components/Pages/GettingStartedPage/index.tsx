@@ -20,14 +20,18 @@ const shouldLog = process.env.NODE_ENV === 'development';
 const Or = <div className="p-4 text-sm text-gray-400 text-center"> or </div>;
 const Space = <div className="p-4"></div>;
 
-export function GettingStartedPage({ session, ...rest }: any) {
+export function GettingStartedPage({
+  session,
+  invites: initialInvites,
+  accounts: initialAccounts,
+}: any) {
   const [invites, setInvites] = useState<Invite[]>(
-    rest.invites.map((i: Invite) => ({
-      ...i,
+    initialInvites.map((invite: Invite) => ({
+      ...invite,
       loading: false,
     }))
   );
-  const [accounts] = useState<Account[]>(rest.accounts);
+  const [accounts] = useState<Account[]>(initialAccounts);
 
   const [freeCommunities] = useState<Account[]>([
     {
@@ -142,7 +146,7 @@ export function GettingStartedPage({ session, ...rest }: any) {
         </>
       )}
 
-      {!!accounts.length && (
+      {!!accounts.filter((account) => account.domain !== 'linen').length && (
         <>
           {Space}
           <div className="flex flex-col gap-2">
