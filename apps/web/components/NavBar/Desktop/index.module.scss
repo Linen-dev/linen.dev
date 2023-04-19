@@ -7,7 +7,7 @@
 .switch {
   max-width: 52px;
   background-color: white;
-  max-height: calc(100vh - 64px);
+  max-height: calc(100vh - 54px);
   overflow: hidden;
 }
 
@@ -44,8 +44,8 @@
 .navbar {
   background: $color-background;
   background-color: white;
-  max-height: calc(100vh - 64px);
-  min-height: calc(100vh - 64px);
+  max-height: calc(100vh - 54px);
+  min-height: calc(100vh - 54px);
   overflow-y: auto;
   width: 200px;
   padding: 0.5rem 0 0.5rem 0.625rem;

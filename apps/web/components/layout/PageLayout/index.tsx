@@ -125,9 +125,9 @@ function PageLayout({
             className ||
             classNames(
               styles.container,
-              'lg:h-[calc(100vh_-_64px)] lg:w-full',
+              'lg:h-[calc(100vh_-_54px)] lg:w-full',
               'lg:flex',
-              'justify-center overflow-auto h-[calc(100vh_-_64px)] w-full'
+              'justify-center overflow-auto h-[calc(100vh_-_54px)] w-full'
             )
           }
           ref={innerRef}
