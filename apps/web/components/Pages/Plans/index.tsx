@@ -79,14 +79,15 @@ export default function PlansPage({
       ) : (
         <div>
           <h1 className={styles.header}>
-            <span>
+            <span className={styles.underline}>
               <FiZap />
               Upgrade
             </span>
           </h1>
           <p className={styles.description}>
             Choose an affordable plan that matches your community size and
-            unlock additional features of the platform.
+            unlock additional features of the platform.{' '}
+            <span className={styles.underline}>7-day free trial.</span>
           </p>
           <div className={styles.period}>
             <span>monthly</span>
