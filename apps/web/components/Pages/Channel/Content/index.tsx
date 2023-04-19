@@ -182,7 +182,7 @@ export default function Channel({
     token,
     permissions,
     onNewMessage(payload: PushType) {
-      alertUser(payload) && playNotificationSound(0.2);
+      playNotificationSound(0.2);
       const pinned = isLeftScrollAtBottom;
       onThreadMessage(payload);
       if (pinned) {
@@ -190,10 +190,6 @@ export default function Channel({
       }
     },
   });
-
-  const alertUser = (payload: PushType, currentUser: string): boolean => {
-    return true;
-  };
 
   useEffect(() => {
     let mounted = true;
