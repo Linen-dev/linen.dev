@@ -2,8 +2,12 @@ import Button from '@linen/ui/Button';
 import Toast from '@linen/ui/Toast';
 import Layout from 'components/layout/SplitLayout';
 import { useState } from 'react';
+import { FiMessageSquare } from '@react-icons/all-files/fi/FiMessageSquare';
+import { FiPlus } from '@react-icons/all-files/fi/FiPlus';
 import styles from './index.module.scss';
+import Link from 'components/Link';
 
+import logo from 'public/images/logo/linen.svg';
 type Account = {
   id: string;
   name: string;
@@ -15,10 +19,7 @@ type Invite = Account & {
   loading: boolean;
 };
 
-const shouldLog = process.env.NODE_ENV === 'development';
-
-const Or = <div className="p-4 text-sm text-gray-400 text-center"> or </div>;
-const Space = <div className="p-4"></div>;
+const DEVELOPMENT = process.env.NODE_ENV === 'development';
 
 export function GettingStartedPage({
   session,
@@ -40,6 +41,12 @@ export function GettingStartedPage({
       name: 'Linen',
     },
   ]);
+
+  const LINEN_COMMUNITY = {
+    domain: 'linen',
+    id: 'id',
+    name: 'Linen',
+  };
 
   async function acceptInvite(invite: Invite) {
     try {
@@ -64,7 +71,7 @@ export function GettingStartedPage({
 
       openTenant(invite.id, `/s/${invite.domain}`);
     } catch (error) {
-      if (shouldLog) {
+      if (DEVELOPMENT) {
         console.error({ error });
       }
 
@@ -94,7 +101,7 @@ export function GettingStartedPage({
 
       window.location.href = redirectTo;
     } catch (error) {
-      if (shouldLog) {
+      if (DEVELOPMENT) {
         console.error({ error });
       }
       return Toast.error('Something went wrong');
@@ -102,101 +109,96 @@ export function GettingStartedPage({
   }
 
   return (
-    <Layout className={styles.container}>
-      <>
-        <h1 className="text-xl font-bold pb-2 pt-8">
-          Welcome {session?.user?.email}
-        </h1>
-        <div className="flex flex-col gap-2">
-          <h2 className="font-bold">Create a new community</h2>
-          <span className="text-sm text-justify">
-            Linen gives your community a home — a place where they can work
-            together. To create a new community, click the button below.
-          </span>
-          <Button onClick={() => (window.location.href = '/onboarding')}>
-            Create a community
-          </Button>
-        </div>
-      </>
-
-      {!!freeCommunities.length && (
+    <Layout
+      left={
         <>
-          {Or}
-          <div className="flex flex-col gap-2">
-            <h2 className="font-bold">Visit our free community</h2>
-            <div className="flex flex-col gap-2 divide-y divide-solid divide-gray-200">
-              {freeCommunities.map((account: Account) => (
-                <div className="flex items-center" key={account.id}>
-                  <div className="flex flex-col grow">
-                    {account.name || account.id}
-                    <span className="text-sm text-gray-500">{`linen.dev/s/${account.domain}`}</span>
-                  </div>
-                  <Button
-                    className="-mb-2"
-                    onClick={() =>
-                      (window.location.href = `/s/${account.domain}`)
-                    }
-                  >
-                    Open
-                  </Button>
-                </div>
-              ))}
-            </div>
+          {/* <h1 className="text-xl font-bold pb-2 pt-8">
+            Welcome {session?.user?.email}
+          </h1> */}
+          <div className="text-center">
+            <img
+              className={styles.logo}
+              width={133}
+              height={30}
+              src={logo.src}
+            />
+            <p className="text-gray-700 mb-4">
+              Linen gives your community a home,
+              <br />a place where they can work together.
+            </p>
+            <Button
+              rounded="full"
+              weight="bold"
+              size="md"
+              onClick={() => (window.location.href = '/onboarding')}
+            >
+              <FiPlus />
+              Add a free community
+            </Button>
+            <p className=" text-gray-700 text-sm mb-2">
+              Alternatively,{' '}
+              <Link className="text-sm" href={`/s/${LINEN_COMMUNITY.domain}`}>
+                join our community
+              </Link>
+              .
+            </p>
           </div>
         </>
-      )}
-
-      {!!accounts.filter((account) => account.domain !== 'linen').length && (
+      }
+      right={
         <>
-          {Space}
-          <div className="flex flex-col gap-2">
-            <h1 className="font-bold">Open a community</h1>
-            <div className="flex flex-col gap-2 divide-y divide-solid divide-gray-200">
-              {accounts.map((account: Account) => (
-                <div className="flex items-center" key={account.id}>
-                  <div className="flex flex-col grow">
-                    {account.name || account.id}
-                    <span className="text-sm text-gray-500">{`linen.dev/s/${account.domain}`}</span>
-                  </div>
-                  <Button
-                    className="-mb-2"
-                    onClick={() =>
-                      openTenant(account.id, `/s/${account.domain}`)
-                    }
-                  >
-                    Open
-                  </Button>
+          {!!accounts.filter((account) => account.domain !== 'linen')
+            .length && (
+            <>
+              <div className="flex flex-col gap-2">
+                <h1 className="font-bold">Open a community</h1>
+                <div className="flex flex-col gap-2 divide-y divide-solid divide-gray-200">
+                  {accounts.map((account: Account) => (
+                    <div className="flex items-center" key={account.id}>
+                      <div className="flex flex-col grow">
+                        {account.name || account.id}
+                        <span className="text-sm text-gray-500">{`linen.dev/s/${account.domain}`}</span>
+                      </div>
+                      <Button
+                        className="-mb-2"
+                        onClick={() =>
+                          openTenant(account.id, `/s/${account.domain}`)
+                        }
+                      >
+                        Open
+                      </Button>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          </div>
-        </>
-      )}
+              </div>
+            </>
+          )}
 
-      {!!invites.length && (
-        <>
-          {Space}
-          <div className="flex flex-col gap-2">
-            <h1 className="font-bold">Accept an invitation</h1>
-            <div className="flex flex-col gap-2 divide-y divide-solid divide-gray-200">
-              {invites.map((invite: Invite) => (
-                <div className="flex items-center" key={invite.inviteId}>
-                  <div className="flex flex-col grow">
-                    {invite.name || invite.id}
-                    <span className="text-sm text-gray-500">{`linen.dev/s/${invite.domain}`}</span>
-                  </div>
-                  <Button
-                    className="-mb-2"
-                    onClick={() => acceptInvite(invite)}
-                  >
-                    {invite.loading ? 'Joining...' : 'Join'}
-                  </Button>
+          {!!invites.length && (
+            <>
+              <div className="flex flex-col gap-2">
+                <h1 className="font-bold">Accept an invitation</h1>
+                <div className="flex flex-col gap-2 divide-y divide-solid divide-gray-200">
+                  {invites.map((invite: Invite) => (
+                    <div className="flex items-center" key={invite.inviteId}>
+                      <div className="flex flex-col grow">
+                        {invite.name || invite.id}
+                        <span className="text-sm text-gray-500">{`linen.dev/s/${invite.domain}`}</span>
+                      </div>
+                      <Button
+                        className="-mb-2"
+                        onClick={() => acceptInvite(invite)}
+                      >
+                        {invite.loading ? 'Joining...' : 'Join'}
+                      </Button>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          </div>
+              </div>
+            </>
+          )}
         </>
-      )}
-    </Layout>
+      }
+    />
   );
 }
