@@ -174,19 +174,6 @@ export const findThreadsWithNoMessages = async (
   return await prisma.$queryRawUnsafe(query);
 };
 
-export async function findThreadsWithWrongMessageCount() {
-  return await prisma.$queryRaw<
-    { id: string; count: number; messageCount: number }[]
-  >`
-  select "threads".id, count(1), "messageCount"
-  from "threads" 
-  left join messages on messages."threadId" = "threads"."id"
-  group by "threads"."id"
-  having count(1) != "messageCount" 
-  order by "threads"."id" desc
-  limit 100`;
-}
-
 export async function findPinnedThreads({
   channelIds,
   limit = 3,
