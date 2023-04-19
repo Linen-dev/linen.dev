@@ -47,6 +47,8 @@ import IntegrationsModal from 'components/Modals/IntegrationsModal';
 import { useRouter } from 'next/router';
 import MembersModal from 'components/Modals/MembersModal';
 import { PaginationForBots } from '../Bots/PaginationForBots';
+import { playNotificationSound } from 'utilities/util';
+import { PushType } from 'services/push';
 
 const { SidebarLayout } = Layouts.Shared;
 
@@ -179,7 +181,8 @@ export default function Channel({
     room: `room:lobby:${currentChannel.id}`,
     token,
     permissions,
-    onNewMessage(payload) {
+    onNewMessage(payload: PushType) {
+      alertUser(payload) && playNotificationSound(0.2);
       const pinned = isLeftScrollAtBottom;
       onThreadMessage(payload);
       if (pinned) {
@@ -187,6 +190,10 @@ export default function Channel({
       }
     },
   });
+
+  const alertUser = (payload: PushType, currentUser: string): boolean => {
+    return true;
+  };
 
   useEffect(() => {
     let mounted = true;

@@ -4,7 +4,7 @@ import { ChannelType } from '@linen/database';
 
 const token = process.env.PUSH_SERVICE_KEY;
 
-type PushType = {
+export type PushType = {
   channelId: string;
   threadId: string;
   messageId: string;
