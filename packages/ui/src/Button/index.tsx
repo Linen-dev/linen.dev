@@ -19,8 +19,9 @@ interface Props {
     | 'black'
     | 'danger';
   rounded?: 'lg' | 'full';
-  size?: 'sm' | 'xs';
+  size?: 'md' | 'sm' | 'xs';
   weight?: 'bold' | 'medium' | 'normal';
+  outlined?: boolean;
 }
 
 const Button = ({
@@ -34,6 +35,7 @@ const Button = ({
   rounded = 'lg',
   size = 'sm',
   weight = 'medium',
+  outlined,
 }: Props) => {
   return (
     <button
@@ -46,6 +48,7 @@ const Button = ({
         [styles.bold]: weight === 'bold',
         [styles['rounded-lg']]: rounded === 'lg',
         [styles['rounded-full']]: rounded === 'full',
+        [styles.md]: size === 'md',
         [styles.sm]: size === 'sm',
         [styles.xs]: size === 'xs',
         [styles.disabled]: disabled,
@@ -56,6 +59,7 @@ const Button = ({
         [styles.black]: color === 'black',
         [styles.transparent]: color === 'transparent',
         [styles.danger]: color === 'danger',
+        [styles.outlined]: outlined,
       })}
     >
       {children}

@@ -5,11 +5,11 @@ import logo from 'public/images/logo/white/linen.svg';
 import styles from './index.module.scss';
 
 interface Props {
-  className?: string;
-  children: React.ReactNode;
+  left: React.ReactNode;
+  right: React.ReactNode;
 }
 
-export default function SplitLayout({ className, children }: Props) {
+export default function SplitLayout({ left, right }: Props) {
   return (
     <>
       <header className={styles.header}>
@@ -17,7 +17,10 @@ export default function SplitLayout({ className, children }: Props) {
           <img width={108} height={24} src={logo.src} />
         </Link>
       </header>
-      <Container className={className}>{children}</Container>
+      <div className={styles.grid}>
+        <div className={styles.left}>{left}</div>
+        <div className={styles.right}>{right}</div>
+      </div>
       <div id="portal"></div>
     </>
   );
