@@ -26,6 +26,9 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
     }
 
     if (!auth?.users?.length) {
+      if (process.env.NODE_ENV === 'development') {
+        return response.redirect('http://localhost:3000/getting-started');
+      }
       return response.redirect('https://linen.dev/getting-started');
     }
 

@@ -22,7 +22,7 @@ async function signInWithCreds(
 async function signInWithMagicLink(
   email: string,
   csrfToken: string,
-  opts: { callbackUrl?: string; displayName?: string; state?: string } = {}
+  options: { callbackUrl?: string; displayName?: string; state?: string } = {}
 ) {
   return await fetch(`/api/auth/magic-link`, {
     method: 'POST',
@@ -30,7 +30,7 @@ async function signInWithMagicLink(
     body: JSON.stringify({
       destination: String(email).toLowerCase(),
       csrfToken,
-      ...opts,
+      ...options,
     }),
   }).then((r) => {
     if (r.ok) r.json();
