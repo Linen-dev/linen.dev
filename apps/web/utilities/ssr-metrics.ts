@@ -9,7 +9,7 @@ Sentry.init({
   dsn: SENTRY_DSN,
   integrations: [new Sentry.Integrations.Http({ tracing: true })],
   tracesSampleRate: 1.0,
-  debug: process.env.NODE_ENV === 'development',
+  debug: process.env.SENTRY_DEBUG === 'true',
   enabled: !!SENTRY_DSN && process.env.NODE_ENV === 'production',
 });
 
