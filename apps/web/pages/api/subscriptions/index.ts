@@ -32,7 +32,7 @@ function serializePaymentMethod(data: any) {
 
 export async function index({ communityId }: { communityId: string }) {
   const response1 = await stripe.customers.search({
-    query: `name:\'CUSTOMER ${communityId}\'`,
+    query: `metadata["communityId"]:"${communityId}"`,
   });
   const customer = response1.data[0];
   const response2 = await stripe.subscriptions.list({

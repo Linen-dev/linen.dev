@@ -53,7 +53,7 @@ export async function index({ period }: { period: string }) {
 
 async function findOrCreateCustomer(communityId: string) {
   const { data } = await stripe.customers.search({
-    query: `name:\'CUSTOMER ${communityId}\'`,
+    query: `metadata["communityId"]:"${communityId}"`,
   });
 
   return (
