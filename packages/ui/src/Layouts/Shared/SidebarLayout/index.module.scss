@@ -3,7 +3,7 @@
 .left {
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 64px);
+  height: calc(100vh - 54px);
   overflow: auto;
   position: relative;
   width: 100vw;
@@ -14,7 +14,7 @@
   }
 
   @media (min-width: 1024px) {
-    height: calc(100vh - 64px);
+    height: calc(100vh - 54px);
     width: 100%;
   }
 }
