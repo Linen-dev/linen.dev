@@ -105,14 +105,11 @@ export default function Form({ createAccount }: Props) {
       <form onSubmit={onSubmit} id="form">
         <TextInput
           id="name"
-          placeholder="Community name"
+          label="Community name"
           required
           type="text"
-          {...{
-            pattern: patterns.communityName.source,
-            title:
-              "Community name should only contain letters, space and apostrophe. e.g. Linen's Community",
-          }}
+          title="Community name should only contain letters, space and apostrophe. e.g. Linen's Community"
+          pattern={patterns.communityName.source}
           onChange={(event: React.FocusEvent<HTMLInputElement, Element>) => {
             const name = event.target.value;
             setSuggestion(name ? slugify(name) : '');

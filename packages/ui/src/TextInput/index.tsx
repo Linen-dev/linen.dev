@@ -19,6 +19,8 @@ interface Props {
   autoComplete?: string;
   autoFocus?: boolean;
   style?: object;
+  title?: string;
+  pattern?: string;
   inputRef?: React.RefObject<HTMLInputElement>;
   onChange?(event: React.ChangeEvent<HTMLInputElement>): void;
   onInput?(event: React.ChangeEvent<HTMLInputElement>): void;
@@ -49,6 +51,8 @@ function TextInput({
   onKeyUp,
   autoComplete,
   autoFocus,
+  title,
+  pattern,
   ...rest
 }: Props) {
   return (
@@ -76,6 +80,8 @@ function TextInput({
           autoComplete={autoComplete}
           autoFocus={autoFocus}
           style={style}
+          title={title}
+          pattern={pattern}
           {...rest}
         />
       </div>
