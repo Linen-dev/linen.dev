@@ -6,6 +6,7 @@
     "dev": "next dev",
     "prebuild": "prisma generate",
     "build": "next build",
+    "export": "next export",
     "start": "next start",
     "start:prod": "pm2-runtime --raw \"npm run start\"",
     "lint": "next lint",
