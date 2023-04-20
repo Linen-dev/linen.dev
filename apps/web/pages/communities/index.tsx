@@ -13,9 +13,9 @@ import {
   SerializedAccount,
 } from '@linen/types';
 import { truncate } from '@linen/utilities/string';
-import { pickTextColorBasedOnBgColor } from 'utilities/colors';
 import { getHomeUrl } from 'utilities/home';
 import { trackPageView } from 'utilities/ssr-metrics';
+import CommunityLink from 'components/NavBar/Desktop/CommunityLink';
 
 interface Props {
   communities: SerializedAccount[];
@@ -101,7 +101,6 @@ export default function Communities({ communities }: Props) {
                 return community.premium ? -1 : 1;
               })
               .map((community, index) => {
-                const brandColor = community.brandColor || '#ffffff';
                 return (
                   <Link
                     key={
@@ -111,22 +110,8 @@ export default function Communities({ communities }: Props) {
                     }
                     href={getHomeUrl(community)}
                     className={styles.card}
-                    style={{
-                      background: brandColor,
-                      color: pickTextColorBasedOnBgColor(
-                        brandColor,
-                        'white',
-                        'black'
-                      ),
-                    }}
                   >
-                    {community.logoSquareUrl && (
-                      <img
-                        width={36}
-                        height={36}
-                        src={community.logoSquareUrl}
-                      />
-                    )}
+                    <CommunityLink community={community} />
                     <div className={styles.content}>
                       <h2>{community.name}</h2>
                       {community.description && (
