@@ -2,19 +2,15 @@ import Button from '@linen/ui/Button';
 import Toast from '@linen/ui/Toast';
 import Layout from 'components/layout/SplitLayout';
 import { useState } from 'react';
-import { FiMessageSquare } from '@react-icons/all-files/fi/FiMessageSquare';
 import { FiPlus } from '@react-icons/all-files/fi/FiPlus';
 import styles from './index.module.scss';
 import Link from 'components/Link';
+import CommunityLink from 'components/NavBar/Desktop/CommunityLink';
+import { SerializedAccount } from '@linen/types';
 
 import logo from 'public/images/logo/linen.svg';
-type Account = {
-  id: string;
-  name: string;
-  domain: string;
-};
 
-type Invite = Account & {
+type Invite = SerializedAccount & {
   inviteId: string;
   loading: boolean;
 };
@@ -32,15 +28,7 @@ export function GettingStartedPage({
       loading: false,
     }))
   );
-  const [accounts] = useState<Account[]>(initialAccounts);
-
-  const [freeCommunities] = useState<Account[]>([
-    {
-      domain: 'linen',
-      id: 'id',
-      name: 'Linen',
-    },
-  ]);
+  const [accounts] = useState<SerializedAccount[]>(initialAccounts);
 
   const LINEN_COMMUNITY = {
     domain: 'linen',
@@ -69,7 +57,7 @@ export function GettingStartedPage({
         throw join;
       }
 
-      openTenant(invite.id, `/s/${invite.domain}`);
+      openTenant(invite.id, `/s/${invite.slackDomain || invite.discordDomain}`);
     } catch (error) {
       if (DEVELOPMENT) {
         console.error({ error });
@@ -147,55 +135,73 @@ export function GettingStartedPage({
       }
       right={
         <>
-          {!!accounts.filter((account) => account.domain !== 'linen')
-            .length && (
-            <>
-              <div className="flex flex-col gap-2">
-                <h1 className="font-bold">Open a community</h1>
-                <div className="flex flex-col gap-2 divide-y divide-solid divide-gray-200">
-                  {accounts.map((account: Account) => (
-                    <div className="flex items-center" key={account.id}>
-                      <div className="flex flex-col grow">
-                        {account.name || account.id}
-                        <span className="text-sm text-gray-500">{`linen.dev/s/${account.domain}`}</span>
+          {!!accounts.filter(
+            (account) =>
+              account.slackDomain !== 'linen' &&
+              account.discordDomain !== 'linen'
+          ).length && (
+            <div className={styles.list}>
+              <h2 className={styles.header}>Communities</h2>
+              <div className={styles.grid}>
+                {accounts
+                  .filter(
+                    (account) =>
+                      account.slackDomain !== 'linen' &&
+                      account.discordDomain !== 'linen'
+                  )
+                  .map((account) => (
+                    <div className={styles.item} key={account.id}>
+                      <CommunityLink
+                        className={styles.link}
+                        community={account}
+                        onClick={(event) => {
+                          event.preventDefault();
+                          event.stopPropagation();
+                          openTenant(
+                            account.id,
+                            `/s/${account.slackDomain || account.discordDomain}`
+                          );
+                        }}
+                      />
+                      <div>
+                        <div className="text-sm">
+                          {account.name || account.id}
+                        </div>
+                        <div className="text-xs text-gray-500">{`linen.dev/s/${
+                          account.slackDomain || account.discordDomain
+                        }`}</div>
                       </div>
-                      <Button
-                        className="-mb-2"
-                        onClick={() =>
-                          openTenant(account.id, `/s/${account.domain}`)
-                        }
-                      >
-                        Open
-                      </Button>
                     </div>
                   ))}
-                </div>
               </div>
-            </>
+            </div>
           )}
 
           {!!invites.length && (
-            <>
-              <div className="flex flex-col gap-2">
-                <h1 className="font-bold">Accept an invitation</h1>
-                <div className="flex flex-col gap-2 divide-y divide-solid divide-gray-200">
-                  {invites.map((invite: Invite) => (
-                    <div className="flex items-center" key={invite.inviteId}>
-                      <div className="flex flex-col grow">
-                        {invite.name || invite.id}
-                        <span className="text-sm text-gray-500">{`linen.dev/s/${invite.domain}`}</span>
-                      </div>
-                      <Button
-                        className="-mb-2"
-                        onClick={() => acceptInvite(invite)}
-                      >
-                        {invite.loading ? 'Joining...' : 'Join'}
-                      </Button>
+            <div className={styles.list}>
+              <h2 className={styles.header}>Invites</h2>
+              <div className={styles.grid}>
+                {invites.map((invite) => (
+                  <div className={styles.item} key={invite.id}>
+                    <CommunityLink
+                      className={styles.link}
+                      community={invite}
+                      onClick={(event) => {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        acceptInvite(invite);
+                      }}
+                    />
+                    <div>
+                      <div className="text-sm">{invite.name || invite.id}</div>
+                      <div className="text-xs text-gray-500">{`linen.dev/s/${
+                        invite.slackDomain || invite.discordDomain
+                      }`}</div>
                     </div>
-                  ))}
-                </div>
+                  </div>
+                ))}
               </div>
-            </>
+            </div>
           )}
         </>
       }
