@@ -14,9 +14,9 @@ interface Props {
 
 export default function NewCommunityModal({ open, close }: Props) {
   return (
-    <Modal open={open} close={close} size="lg">
+    <Modal open={open} close={close} size="md">
       <div className={styles.header}>
-        <H3>Create a community</H3>
+        <H3>New community</H3>
         <Icon onClick={close}>
           <FiX />
         </Icon>

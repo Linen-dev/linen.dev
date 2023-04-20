@@ -4,7 +4,7 @@ import { createAccount } from 'utilities/requests';
 
 export default function OnboardingPage() {
   return (
-    <Layout header="What's the name of your community?">
+    <Layout header="New community">
       <Form createAccount={createAccount} />
     </Layout>
   );
