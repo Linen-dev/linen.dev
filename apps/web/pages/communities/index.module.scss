@@ -4,13 +4,13 @@
   background: white;
   position: fixed;
   width: 100%;
-  box-shadow: 0px 2px 8px -4px rgba($color-gray-700, 0.5);
+  border-bottom: 1px solid $color-gray-100;
 }
 
 .header .nav {
   align-items: center;
   display: flex;
-  height: 64px;
+  height: 54px;
   justify-content: space-between;
 }
 
@@ -41,7 +41,7 @@
 }
 
 .main {
-  padding-top: 64px + 64px;
+  padding-top: 64px + 54px;
 }
 
 .banner {
@@ -101,15 +101,9 @@
   box-shadow: 0px 2px 8px -4px rgba($color-gray-700, 0.5);
   cursor: pointer;
   display: flex;
-  padding: 1rem;
+  padding: 0.5rem;
   transition: box-shadow 0.1s ease-in;
   gap: 0.5rem;
-}
-
-.card a {
-  display: block;
-  width: 100%;
-  height: 100%;
 }
 
 .card > img {
@@ -122,13 +116,14 @@
 }
 
 .card h2 {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: bold;
-  line-height: 24px;
+  line-height: 16px;
   margin: 0;
   text-transform: uppercase;
 }
 
 .card p {
-  font-size: 14px;
+  font-size: 12px;
+  color: $color-gray-700;
 }
