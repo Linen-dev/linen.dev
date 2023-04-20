@@ -9,7 +9,7 @@ import { FiMail } from '@react-icons/all-files/fi/FiMail';
 import { qs } from '@linen/utilities/url';
 import Toast from '@linen/ui/Toast';
 import { useSession } from 'utilities/auth/react';
-import { ChannelContext } from 'contexts/channel';
+import { ChannelContext } from '@linen/contexts/channel';
 import * as api from 'utilities/requests';
 import { FiX } from '@react-icons/all-files/fi/FiX';
 

@@ -4,7 +4,7 @@ import Button from '@linen/ui/Button';
 import Modal from '@linen/ui/Modal';
 import ConfirmationModal from '@linen/ui/ConfirmationModal';
 import { Permissions, SerializedUser } from '@linen/types';
-import { ChannelContext } from 'contexts/channel';
+import { ChannelContext } from '@linen/contexts/channel';
 import { ShowUsers } from 'components/Modals/NewChannelModal';
 import { getChannelMembers, updateChannelMembers } from 'utilities/requests';
 import Toast from '@linen/ui/Toast';

@@ -31,7 +31,7 @@ import debounce from '@linen/utilities/debounce';
 import useWebsockets from '@linen/hooks/websockets';
 import useKeyboard from '@linen/hooks/keyboard';
 import { addReaction } from 'utilities/state/reaction';
-import { ChannelContext } from 'contexts/channel';
+import { ChannelContext } from '@linen/contexts/channel';
 import { useViewport } from 'hooks/useViewport';
 
 export interface ChannelProps {

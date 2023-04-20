@@ -20,7 +20,8 @@
   },
   "exports": {
     "./Users": "./dist/Users.js",
-    "./Link": "./dist/Link.js"
+    "./Link": "./dist/Link.js",
+    "./channel": "./dist/channel.js"
   },
   "typesVersions": {
     "*": {
@@ -29,6 +30,9 @@
       ],
       "Link": [
         "dist/Link.d.ts"
+      ],
+      "channel": [
+        "dist/channel.d.ts"
       ]
     }
   }
