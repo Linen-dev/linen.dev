@@ -103,47 +103,53 @@ export default function Form({ createAccount }: Props) {
   return (
     <>
       <form onSubmit={onSubmit} id="form">
+        <Label htmlFor="name">
+          Name
+          <br />
+          <span className="text-xs font-normal text-gray-700">
+            Letters, spaces and apostrophes.
+          </span>
+        </Label>
         <TextInput
           id="name"
-          label="Community name"
           required
           type="text"
-          title="Community name should only contain letters, space and apostrophe. e.g. Linen's Community"
+          title="Letters, spaces and apostrophes."
           pattern={patterns.communityName.source}
           onChange={(event: React.FocusEvent<HTMLInputElement, Element>) => {
             const name = event.target.value;
             setSuggestion(name ? slugify(name) : '');
           }}
         />
-        <span className="text-xs text-gray-700">
-          Community name should only contain letters, space and apostrophe. e.g.
-          Linen&apos;s Community
-        </span>
-        <div className="p-4"></div>
+        <div className="p-2"></div>
 
+        <Label htmlFor="slackDomain">
+          Path
+          <br />
+          <span className="text-xs font-normal text-gray-700">
+            https://linen.dev/s/
+            {suggestion || 'community-path'}
+          </span>
+        </Label>
         <TextInput
           id="slackDomain"
-          placeholder="cool-community"
-          label="What should be your community path?"
-          {...{
-            pattern: patterns.communityPath.source,
-            required: true,
-            title:
-              'Community path should start with lower case letter and could contain lower case letters, underscore, numbers and hyphens. e.g. linen-community',
-          }}
+          required
+          pattern={patterns.communityPath.source}
+          title="Lowercased letters, underscores, numbers and hyphens."
           value={suggestion}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setSuggestion(e.target.value)
           }
         />
-        <span className="text-xs text-gray-700">
-          Community path will define the url to access your community.
-          <br />
-          https://linen.dev/s/{suggestion || 'cool-community'}
-        </span>
-        <div className="p-4"></div>
+        <div className="p-2"></div>
 
-        <Label htmlFor="channelName">Add channels to your workspace</Label>
+        <Label htmlFor="channelName">
+          Channels
+          <br />
+          <span className="text-xs font-normal text-gray-700">
+            Lowercased letters, underscores, numbers and hyphens.
+          </span>
+        </Label>
         <div className="flex flex-wrap">
           {channels?.map((channel) => {
             return (
@@ -160,11 +166,8 @@ export default function Form({ createAccount }: Props) {
             id="new-channel-onboarding"
             placeholder="general"
             icon={<FiHash />}
-            {...{
-              pattern: patterns.channelName.source,
-              title:
-                'Channels name should start with lower case letter and could contain lower case letters, underscore, numbers and hyphens. e.g. announcements',
-            }}
+            pattern={patterns.channelName.source}
+            title="Lowercased letters, underscores, numbers and hyphens."
             onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
               if (event.key === 'Enter') {
                 event.preventDefault();
@@ -173,17 +176,19 @@ export default function Form({ createAccount }: Props) {
               }
             }}
           />
-          <Button onClick={() => addChannel()}>
+          <Button style={{ marginBottom: 0 }} onClick={() => addChannel()}>
             Add <FiPlus />
           </Button>
         </div>
-        <span className="text-xs text-gray-700">
-          Channels name should contain letter, underscore, numbers and hyphens.
-          e.g. announcements
-        </span>
-        <div className="p-4"></div>
+        <div className="p-2"></div>
 
-        <Label htmlFor="email">Invite members from your team</Label>
+        <Label htmlFor="email">
+          Members
+          <br />
+          <span className="text-xs font-normal text-gray-700">
+            Send invitations via email.
+          </span>
+        </Label>
         <div className="flex flex-wrap">
           {emails?.map((email) => {
             return (
@@ -210,14 +215,19 @@ export default function Form({ createAccount }: Props) {
               }
             }}
           />
-          <Button onClick={() => addEmail()}>
+          <Button style={{ marginBottom: 0 }} onClick={() => addEmail()}>
             Add <FiPlus />
           </Button>
         </div>
-        <div className="pb-4"></div>
+        <div className="pb-8"></div>
 
-        <Button type="submit" disabled={loading}>
-          Create your new community
+        <Button
+          style={{ width: '100% ' }}
+          type="submit"
+          disabled={loading}
+          weight="medium"
+        >
+          <FiPlus /> Create your community
         </Button>
       </form>
     </>

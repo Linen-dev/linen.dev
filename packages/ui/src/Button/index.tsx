@@ -22,6 +22,7 @@ interface Props {
   size?: 'md' | 'sm' | 'xs';
   weight?: 'bold' | 'medium' | 'normal';
   outlined?: boolean;
+  style?: object;
 }
 
 const Button = ({
@@ -36,12 +37,14 @@ const Button = ({
   size = 'sm',
   weight = 'medium',
   outlined,
+  style,
 }: Props) => {
   return (
     <button
       disabled={disabled}
       type={type}
       onClick={onClick}
+      style={style}
       className={classNames(styles.button, className, {
         [styles.block]: block,
         [styles.medium]: weight === 'medium',
