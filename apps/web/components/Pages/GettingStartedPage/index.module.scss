@@ -10,3 +10,34 @@
 .logo {
   margin: 0 auto 1rem;
 }
+
+.header {
+  color: $color-gray-500;
+  text-transform: uppercase;
+  font-size: .75rem;
+  font-weight: 500;
+  letter-spacing: 1.3px;
+  margin-bottom: 0.5rem;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+}
+
+.list + .list {
+  margin-top: 1rem;
+}
+
+.grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.item {
+  align-items: center;
+  border: 1px solid $color-gray-200;
+  border-radius: 0.25rem;
+  display: flex;
+}

@@ -232,14 +232,7 @@ export async function findInvitesByEmail(
     where,
     select: {
       id: true,
-      accounts: {
-        select: {
-          id: true,
-          name: true,
-          discordDomain: true,
-          slackDomain: true,
-        },
-      },
+      accounts: true,
     },
   });
 }

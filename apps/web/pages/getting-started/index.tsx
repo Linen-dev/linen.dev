@@ -4,6 +4,7 @@ import Session from 'services/session';
 import { prisma } from '@linen/database';
 import { findInvitesByEmail } from 'services/invites';
 import { trackPageView } from 'utilities/ssr-metrics';
+import serializeAccount from 'serializers/account';
 
 export default function CreateCommunity(props: any) {
   return <GettingStartedPage {...props} />;
@@ -36,10 +37,10 @@ export async function getServerSideProps({ req, res }: NextPageContext) {
       session,
       accounts: auth?.users
         .filter(filterAccounts)
-        .map((e) => mapAccounts(e.account)),
+        .map((e) => serializeAccount(e.account)),
       invites: invites
         .filter(filterAccounts)
-        .map((e) => ({ inviteId: e.id, ...mapAccounts(e.accounts) })),
+        .map((e) => ({ inviteId: e.id, ...serializeAccount(e.accounts) })),
     },
   };
 }
@@ -56,29 +57,9 @@ async function findAccountsFromAuth(email: string) {
     include: {
       users: {
         include: {
-          account: {
-            select: {
-              id: true,
-              name: true,
-              discordDomain: true,
-              slackDomain: true,
-            },
-          },
+          account: true,
         },
       },
     },
   });
 }
-
-const mapAccounts = (
-  account?: {
-    id: string;
-    name: string | null;
-    discordDomain: string | null;
-    slackDomain: string | null;
-  } | null
-) => ({
-  id: account?.id,
-  name: account?.name,
-  domain: account?.slackDomain || account?.discordDomain,
-});
