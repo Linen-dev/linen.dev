@@ -8,7 +8,7 @@
     "clean": "rm -rf dist",
     "build": "yarn clean && yarn tsc",
     "dev": "yarn tsc --watch",
-    "test": "dotenv -e ../../apps/web/.env.test -- jest"
+    "test": "dotenv -e ../../apps/web/.env.test -- jest --passWithNoTests"
   },
   "keywords": [],
   "author": "",

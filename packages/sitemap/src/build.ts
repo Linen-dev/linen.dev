@@ -1,75 +1,47 @@
-import {
-  parseChannel,
-  parseThread,
-  parseThreadFreeTier,
-  parseChannelFreeTier,
-  msToHuman,
-} from './parser';
-import {
-  getChannels,
-  getThreadsAsyncIterable,
-  getThreadsAsyncIterableFreeTier,
-  getChannelsFreeTier,
-} from './query';
-import { buildRobots } from './robots';
-import { buildSitemap } from './sitemap';
 import fs from 'fs/promises';
-import { Account, Logger } from './types';
+import { resolve } from 'path';
+import os from 'os';
+import { buildRobots } from './robots';
+import { uploadDir } from './s3-sync';
+import { UrlType, ChannelType, AccountType } from './utils/types';
+import { getThreads } from './utils/getThreads';
+import { getAccountsAndChannels } from './utils/getAccountsAndChannels';
+import { buildCustomDomainSitemap } from './utils/buildCustomDomainSitemap';
+import { buildLinenSitemap } from './utils/buildLinenSitemap';
+import { linenDomain } from './config';
 
-export async function processLinen(workDir: string, logger: Logger) {
-  const linen = 'www.linen.dev';
-  const account = {
-    id: linen,
-    name: linen,
-    redirectDomain: linen,
-    discordDomain: null,
-    discordServerId: null,
-    slackDomain: null,
-    premium: false,
-  };
-  const start = new Date().getTime();
-  logger(linen);
-
-  await fs.mkdir(`${workDir}/sitemap/${linen}`, { recursive: true });
-
-  await buildSitemap({
-    account,
-    getThreadsAsyncIterable: getThreadsAsyncIterableFreeTier,
-    parseThread: parseThreadFreeTier,
-    getChannels: getChannelsFreeTier,
-    parseChannel: parseChannelFreeTier,
-    workDir,
-  }).catch(logger);
-  await buildRobots(linen, workDir).catch(logger);
-
-  const total = new Date().getTime() - start;
-  logger(linen, msToHuman(total));
-}
-
-export async function processAccount(
-  account: Account,
-  workDir: string,
-  logger: Logger
+export async function build(
+  uploadFile: (args: { Key: string; Body: any }) => Promise<any>
 ) {
-  const start = new Date().getTime();
-  logger(account.redirectDomain);
+  const {
+    channels,
+    accountsPremium,
+    accountsFree,
+  }: {
+    channels: Record<string, ChannelType>;
+    accountsPremium: Record<string, AccountType>;
+    accountsFree: Record<string, AccountType>;
+  } = await getAccountsAndChannels();
 
-  await fs.mkdir(`${workDir}/sitemap/${account.redirectDomain}`, {
-    recursive: true,
-  });
+  const {
+    sitemapPremium,
+    sitemapFree,
+  }: { sitemapPremium: Record<string, UrlType[]>; sitemapFree: UrlType[] } =
+    await getThreads(channels);
 
-  // build sitemaps
-  await buildSitemap({
-    account,
-    getThreadsAsyncIterable,
-    parseThread,
-    getChannels,
-    parseChannel,
-    workDir,
-  }).catch(logger);
-  // build robots
-  await buildRobots(account.redirectDomain, workDir).catch(logger);
+  const workDir = resolve(os.tmpdir(), Date.now().toString());
+  // const workDir = resolve('./sitemap', Date.now().toString()); // run-local
+  await fs.mkdir(workDir, { recursive: true });
 
-  const total = new Date().getTime() - start;
-  logger(account.redirectDomain, msToHuman(total));
+  for (let [accountId, threads] of Object.entries(sitemapPremium)) {
+    const account = accountsPremium[accountId];
+    await buildCustomDomainSitemap(workDir, account, threads);
+    await buildRobots(account.customDomain, workDir).catch(console.error);
+  }
+
+  await buildLinenSitemap(workDir, sitemapFree, accountsFree);
+  await buildRobots(linenDomain, workDir).catch(console.error);
+
+  const result = await uploadDir(uploadFile, resolve(workDir));
+  console.log('files uploaded', result.length);
 }
