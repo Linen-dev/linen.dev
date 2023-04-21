@@ -10,6 +10,8 @@ interface MembersType {
   email: string | null;
   role: Roles;
   status: 'PENDING' | 'ACCEPTED' | 'UNKNOWN' | string;
+  displayName: string | null;
+  profileImageUrl: string | null;
 }
 
 function serializeUsers(
@@ -31,6 +33,8 @@ function userToMember(
     email: user.auth?.email || user.displayName,
     role: user.role,
     status: 'ACCEPTED',
+    displayName: user.displayName,
+    profileImageUrl: user.profileImageUrl,
   };
 }
 
@@ -40,6 +44,8 @@ function inviteToMember({ email, status, role, id }: invites): MembersType {
     email,
     role,
     status,
+    displayName: null,
+    profileImageUrl: null,
   };
 }
 

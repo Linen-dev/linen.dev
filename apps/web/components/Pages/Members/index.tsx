@@ -1,14 +1,17 @@
 import { useEffect, useState } from 'react';
 import PageLayout from 'components/layout/PageLayout';
 import Header from './Header';
+import Avatar from '@linen/ui/Avatar';
+import Badge from '@linen/ui/Badge';
 import Button from '@linen/ui/Button';
+import Label from '@linen/ui/Label';
 import NativeSelect from '@linen/ui/NativeSelect';
 import TextInput from '@linen/ui/TextInput';
 import Toast from '@linen/ui/Toast';
 import { useRouter } from 'next/router';
 import { Roles } from '@linen/database';
-import { AiOutlineUser } from '@react-icons/all-files/ai/AiOutlineUser';
-import { AiOutlineDelete } from '@react-icons/all-files/ai/AiOutlineDelete';
+import { FiUser } from '@react-icons/all-files/fi/FiUser';
+import { FiTrash2 } from '@react-icons/all-files/fi/FiTrash2';
 
 import {
   SerializedAccount,
@@ -34,6 +37,8 @@ export interface MembersType {
   email: string | null;
   role: Roles;
   status: 'PENDING' | 'ACCEPTED' | 'UNKNOWN' | string;
+  displayName: string | null;
+  profileImageUrl: string | null;
 }
 
 function InviteMember({
@@ -44,20 +49,28 @@ function InviteMember({
   loading: boolean;
 }) {
   return (
-    <div>
-      <form onSubmit={onSubmit} className="flex flex-row gap-2">
+    <form onSubmit={onSubmit}>
+      <Label htmlFor="email">
+        Invite
+        <br />
+        <span className="text-xs font-normal text-gray-700">
+          Send invitations via email.
+        </span>
+      </Label>
+      <div className="flex flex-row gap-2">
         <div className="grow">
           <TextInput
             id="email"
-            placeholder="Invite by email"
             type="email"
+            icon={<FiUser />}
+            placeholder="user@domain.com"
             required
           />
         </div>
         <div className="shrink">
           <NativeSelect
             id="role"
-            icon={<AiOutlineUser />}
+            icon={<FiUser />}
             theme="blue"
             options={[
               { label: 'Member', value: Roles.MEMBER },
@@ -70,28 +83,8 @@ function InviteMember({
             {loading ? 'Loading...' : 'Invite member'}
           </Button>
         </div>
-      </form>
-    </div>
-  );
-}
-
-function MemberStatus({ status }: { status: string }) {
-  if (status === 'PENDING')
-    return (
-      <p className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-        {status}
-      </p>
-    );
-  if (status === 'ACCEPTED')
-    return (
-      <p className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
-        {status}
-      </p>
-    );
-  return (
-    <p className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-grey-100 text-grey-800">
-      {status}
-    </p>
+      </div>
+    </form>
   );
 }
 
@@ -127,8 +120,7 @@ function TableMembers({
         <div className="grow mb-2">
           <TextInput
             id="filterByEmail"
-            label="Filters"
-            placeholder="Filter by Email"
+            label="Search"
             {...{
               onKeyUp: filterByEmail,
             }}
@@ -183,19 +175,24 @@ function RowMember(user: MembersType, communityId: string): JSX.Element {
   };
 
   return (
-    <li key={user.id} className="mb-1">
-      <div className="border-gray-200 border-solid border rounded-md">
-        <div className="flex justify-start items-center px-4 py-2 gap-4">
-          <p className="text-sm font-medium truncate">{user.email}</p>
-          {user.status === 'PENDING' ? (
-            <div className="flex items-center">
-              <MemberStatus status={user.status} />
-            </div>
-          ) : (
-            <></>
-          )}
+    <li key={user.id} className="mb-2">
+      <div className="border-gray-100 border-solid border rounded-md">
+        <div className="flex justify-start items-center px-2 py-2 gap-2">
+          <Avatar src={user.profileImageUrl} text={user.displayName} />
+          <p className="text-sm font-medium truncate">
+            {user.displayName}
+            {user.status === 'PENDING' && (
+              <Badge className="ml-1" type="info">
+                {user.status}
+              </Badge>
+            )}
+            <br />
+            <span className="text-xs font-normal text-gray-700">
+              {user.email}
+            </span>
+          </p>
           <div className="grow" />
-          <div className="">
+          <div>
             <NativeSelect
               id={user.id}
               value={data.role}
@@ -203,7 +200,7 @@ function RowMember(user: MembersType, communityId: string): JSX.Element {
                 onChange(e, user.status)
               }
               disabled={loading}
-              icon={<AiOutlineUser />}
+              icon={<FiUser />}
               theme="white"
               options={[
                 { label: 'Member', value: Roles.MEMBER },
@@ -230,7 +227,7 @@ function RowMember(user: MembersType, communityId: string): JSX.Element {
                     }}
                   />
                 )}
-                <AiOutlineDelete
+                <FiTrash2
                   onClick={() => setModal(true)}
                   className="cursor-pointer"
                 />
