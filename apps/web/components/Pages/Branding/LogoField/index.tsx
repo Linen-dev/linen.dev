@@ -4,6 +4,9 @@ import { usePresignedUpload } from 'next-s3-upload';
 import Button from '@linen/ui/Button';
 import Label from '@linen/ui/Label';
 import { SerializedAccount } from '@linen/types';
+import { FiUploadCloud } from '@react-icons/all-files/fi/FiUploadCloud';
+import { FiLoader } from '@react-icons/all-files/fi/FiLoader';
+import styles from './index.module.scss';
 
 interface Props {
   currentCommunity: SerializedAccount;
@@ -11,6 +14,13 @@ interface Props {
   logoUrl?: string;
   header: string;
   description: string;
+  preview?({
+    logoUrl,
+    brandColor,
+  }: {
+    logoUrl: string;
+    brandColor?: string;
+  }): React.ReactNode;
 }
 
 function Description({ children }: { children: React.ReactNode }) {
@@ -23,6 +33,7 @@ export default function LogoField({
   logoUrl,
   header,
   description,
+  preview,
 }: Props) {
   let { FileInput, openFileDialog, uploadToS3, files } = usePresignedUpload();
   const isUploading = files && files.length > 0 && files[0].progress < 100;
@@ -49,21 +60,26 @@ export default function LogoField({
         <Description>{description}</Description>
       </Label>
       <FileInput onChange={handleLogoChange} />
-      {logoUrl && (
-        <img
-          alt=""
-          src={logoUrl}
-          style={{
-            backgroundColor: currentCommunity.brandColor,
-          }}
-          className={classNames('mb-2 mt-2 max-h-60')}
-        />
-      )}
+
+      {logoUrl &&
+        (preview ? (
+          preview({ logoUrl, brandColor: currentCommunity.brandColor })
+        ) : (
+          <img
+            alt=""
+            src={logoUrl}
+            style={{
+              backgroundColor: currentCommunity.brandColor,
+            }}
+            className={classNames('mb-2 mt-2 max-h-60')}
+          />
+        ))}
       <Button
         onClick={() => !isUploading && openFileDialog()}
         disabled={!currentCommunity.premium || isUploading}
       >
-        {isUploading ? 'Uploading...' : 'Upload file'}
+        {isUploading ? <FiLoader className={styles.spin} /> : <FiUploadCloud />}
+        Upload
       </Button>
     </>
   );

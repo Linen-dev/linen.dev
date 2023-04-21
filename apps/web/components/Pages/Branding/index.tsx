@@ -296,6 +296,22 @@ export default function Branding({
                     });
                   }}
                   logoUrl={currentCommunity.logoUrl}
+                  preview={({ logoUrl, brandColor }) => {
+                    return (
+                      <div
+                        style={{
+                          backgroundColor: brandColor,
+                          height: 54,
+                          display: 'flex',
+                          alignItems: 'center',
+                          padding: '0 1rem',
+                          marginBottom: '0.5rem',
+                        }}
+                      >
+                        <img src={logoUrl} height="24" style={{ height: 24 }} />
+                      </div>
+                    );
+                  }}
                 />
               </PremiumCard>
               <hr className="my-5" />
