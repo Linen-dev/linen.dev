@@ -10,9 +10,9 @@ export default function email({
   url: string;
 }): string {
   return layout(`
-    <h1>Join ${communityName} on Linen</h1>
-    <p>${inviterName} invited you to join ${communityName} on <a href="https://linen.dev">linen.dev</a>.</p>
-    <p>Click the link below to securely sign in.<p>
-    <p><a href='${url}'>Sign in to Linen</a></p>
+    <h1>Join ${communityName}</h1>
+    <p>${inviterName} invited you to join the <strong>${communityName}</strong> community on <a href="https://linen.dev">linen.dev</a>.</p>
+    <p>Click the link below to securely sign up.<p>
+    <p><a href='${url}'>Sign up</a></p>
   `);
 }

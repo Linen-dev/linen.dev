@@ -20,7 +20,7 @@ export default function layout(children: string) {
           [
             img({
               src: 'https://linen.dev/images/logo/linen.png',
-              height: '36',
+              height: '24',
               style: 'margin: 0 auto; display: block;',
             }),
             div(

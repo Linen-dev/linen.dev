@@ -58,15 +58,17 @@ export async function createInvitation({
     });
   }
 
-  await sendInvitationByEmail({
-    email,
-    host,
-    communityName: (invite.accounts?.name ||
-      invite.accounts?.discordDomain ||
-      invite.accounts?.slackDomain)!,
-    inviterName: (invite.createdBy?.displayName ||
-      invite.createdBy?.auth?.email)!,
-  });
+  if (invite.accounts) {
+    await sendInvitationByEmail({
+      email,
+      host,
+      communityName: (invite.accounts.name ||
+        invite.accounts.discordDomain ||
+        invite.accounts.slackDomain)!,
+      inviterName: (invite.createdBy?.displayName ||
+        invite.createdBy?.auth?.email)!,
+    });
+  }
 
   return { status: 200, message: 'invitation sent' };
 }
@@ -77,7 +79,7 @@ async function sendInvitationByEmail({
   communityName,
   inviterName,
 }: {
-  communityName: string | null;
+  communityName: string;
   email: string;
   host: string;
   inviterName: string;

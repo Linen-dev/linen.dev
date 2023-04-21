@@ -16,7 +16,7 @@ export default class InviteToJoinMailer {
     )}`;
     return ApplicationMailer.send({
       to,
-      subject: `${inviterName} invited you to join Linen.dev`,
+      subject: `${inviterName} invited you to join the ${communityName} community on linen.dev`,
       text: content,
       html: view({ communityName, inviterName, url }),
     });
