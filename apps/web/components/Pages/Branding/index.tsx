@@ -326,6 +326,28 @@ export default function Branding({
                     });
                   }}
                   logoUrl={currentCommunity.logoSquareUrl}
+                  preview={({ logoUrl, brandColor }) => {
+                    return (
+                      <div
+                        style={{
+                          backgroundColor: brandColor,
+                          height: 36,
+                          width: 36,
+                          minWidth: 36,
+                          borderRadius: '4px',
+                          overflow: 'hidden',
+                          marginBottom: '0.5rem',
+                        }}
+                      >
+                        <img
+                          src={logoUrl}
+                          height="36"
+                          width="36"
+                          style={{ height: 36, width: 36 }}
+                        />
+                      </div>
+                    );
+                  }}
                 />
               </PremiumCard>
               <hr className="my-5" />
@@ -340,6 +362,33 @@ export default function Branding({
                     });
                   }}
                   logoUrl={currentCommunity.faviconUrl}
+                  preview={({ logoUrl, brandColor }) => {
+                    return (
+                      <div
+                        style={{
+                          backgroundColor: 'white',
+                          borderRadius: '4px',
+                          overflow: 'hidden',
+                          marginBottom: '0.5rem',
+                          border: '1px solid #e5e7eb',
+                          width: 34,
+                          height: 34,
+                          padding: '8px',
+                        }}
+                      >
+                        <img
+                          src={logoUrl}
+                          height="16"
+                          width="16"
+                          style={{
+                            display: 'block',
+                            height: 16,
+                            width: 16,
+                          }}
+                        />
+                      </div>
+                    );
+                  }}
                 />
               </PremiumCard>
               <hr className="my-5" />
