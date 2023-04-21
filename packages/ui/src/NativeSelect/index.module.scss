@@ -19,6 +19,7 @@
   background-size: 1.5em 1.5em;
   cursor: pointer;
   font-size: 0.875rem;
+  font-weight: 500;
   line-height: 1.25rem;
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
@@ -65,7 +66,7 @@
   border-color: #1149e0;
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
   color: white;
-  font-weight: bold;
+  font-weight: 500;
 }
 
 .blue .select:hover,
@@ -83,7 +84,7 @@
   border-color: $color-gray-100;
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23000000' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
   color: black;
-  font-weight: bold;
+  font-weight: 500;
 }
 
 .gray .select:hover {
