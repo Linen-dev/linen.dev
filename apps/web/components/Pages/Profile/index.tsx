@@ -2,7 +2,7 @@ import { signOut, useSession } from 'utilities/auth/react';
 import CardLayout from 'components/layout/CardLayout';
 import ProfileForm from 'components/layout/PageLayout/Header/UserAvatar/ProfileForm';
 import axios, { AxiosRequestConfig } from 'axios';
-import { put } from 'utilities/http';
+import { put } from 'utilities/requests';
 
 export default function Profile() {
   const session = useSession({ required: true });

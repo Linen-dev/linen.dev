@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { get } from 'utilities/http';
+import { get } from 'utilities/requests';
 import styles from './index.module.scss';
+import { qs } from '@linen/utilities/url';
 
 interface Metrics {
   members: number;
@@ -14,9 +15,11 @@ export default function Content({ communityId }: Props) {
   const [metrics, setMetrics] = useState<Metrics>();
   useEffect(() => {
     let mounted = true;
-    get('/api/metrics', {
-      communityId,
-    }).then((data) => {
+    get(
+      `/api/metrics?${qs({
+        communityId,
+      })}`
+    ).then((data) => {
       setTimeout(() => {
         if (mounted) {
           setMetrics(data);

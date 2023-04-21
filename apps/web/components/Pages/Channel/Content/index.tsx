@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import useInfiniteScroll from 'react-infinite-scroll-hook';
 import Thread from 'components/Thread';
-import { get, put } from 'utilities/http';
+import { get, put } from 'utilities/requests';
 import { useUsersContext } from '@linen/contexts/Users';
 import ChatLayout from 'components/layout/shared/ChatLayout';
 import { upload } from 'components/MessageForm/api';

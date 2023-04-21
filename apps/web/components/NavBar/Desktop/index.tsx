@@ -21,7 +21,7 @@ import { Mode } from '@linen/hooks/mode';
 import Toast from '@linen/ui/Toast';
 import Nav from '@linen/ui/Nav';
 import debounce from '@linen/utilities/debounce';
-import { post, put } from 'utilities/http';
+import { post, put } from 'utilities/requests';
 import { notify } from 'utilities/notification';
 import unique from 'lodash.uniq';
 import CommunityLink from './CommunityLink';

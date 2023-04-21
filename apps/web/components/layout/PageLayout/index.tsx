@@ -15,7 +15,7 @@ import {
   Settings,
 } from '@linen/types';
 import { LinkContext } from '@linen/contexts/Link';
-import { put } from 'utilities/http';
+import { put } from 'utilities/requests';
 import useMode from '@linen/hooks/mode';
 import styles from './index.module.scss';
 

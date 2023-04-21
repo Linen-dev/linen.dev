@@ -12,7 +12,7 @@ import { localStorage } from '@linen/utilities/storage';
 import * as api from 'utilities/requests';
 import Content from './Content';
 import { InboxConfig } from './types';
-import { post } from 'utilities/http';
+import { post } from 'utilities/requests';
 
 export interface Props {
   channels: SerializedChannel[];

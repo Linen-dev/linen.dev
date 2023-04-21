@@ -11,7 +11,6 @@ import debounce from '@linen/utilities/debounce';
 import { localStorage } from '@linen/utilities/storage';
 import * as api from 'utilities/requests';
 import Content from './Content';
-import { get } from 'utilities/http';
 
 export interface Props {
   channels: SerializedChannel[];

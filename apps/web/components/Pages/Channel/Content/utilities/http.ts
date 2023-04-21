@@ -1,4 +1,4 @@
-import { post } from 'utilities/http';
+import { post } from 'utilities/requests';
 import debounce from '@linen/utilities/debounce';
 
 export const postReaction = debounce(

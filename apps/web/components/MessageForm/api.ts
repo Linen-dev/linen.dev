@@ -1,4 +1,4 @@
-import { get } from 'utilities/http';
+import { get } from 'utilities/requests';
 import axios, { AxiosRequestConfig } from 'axios';
 import debounce from '@linen/utilities/debounce';
 import { qs } from '@linen/utilities/url';
