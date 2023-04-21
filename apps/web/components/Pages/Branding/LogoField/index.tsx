@@ -14,7 +14,7 @@ interface Props {
 }
 
 function Description({ children }: { children: React.ReactNode }) {
-  return <div className="text-sm mb-2 text-gray-600">{children}</div>;
+  return <div className="text-xs font-normal text-gray-600">{children}</div>;
 }
 
 export default function LogoField({
@@ -44,8 +44,10 @@ export default function LogoField({
 
   return (
     <>
-      <Label htmlFor="logo">{header}</Label>
-      <Description>{description}</Description>
+      <Label htmlFor="logo">
+        {header}
+        <Description>{description}</Description>
+      </Label>
       <FileInput onChange={handleLogoChange} />
       {logoUrl && (
         <img
