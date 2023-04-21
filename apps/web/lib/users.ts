@@ -1,6 +1,6 @@
 import { Prisma, users, prisma } from '@linen/database';
 import { BotInfo, UserInfo, UserMap } from '@linen/types';
-import { generateRandomWordSlug } from 'utilities/randomWordSlugs';
+import { generateRandomWordSlug } from '@linen/utilities/randomWordSlugs';
 import { getSlackBot, getSlackUser } from 'services/slack/api';
 
 export async function findUsersByAccountId(

@@ -9,7 +9,7 @@ import { Permissions } from '@linen/types';
 import { serializeAccount } from '@linen/serializers/account';
 import { serializeChannel } from '@linen/serializers/channel';
 import { getDMs } from 'lib/channel';
-import { cleanUpUrl } from 'utilities/util';
+import { cleanUpUrl } from '@linen/utilities/url';
 
 type validatePermissionsResponse = {
   redirect: Boolean;

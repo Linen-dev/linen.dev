@@ -1,5 +1,5 @@
 import { AccountWithSlackAuthAndChannels } from '@linen/types';
-import { sleep } from 'utilities/retryPromises';
+import { sleep } from '@linen/utilities/promises';
 import ChannelsService from 'services/channels';
 
 export async function createChannels({

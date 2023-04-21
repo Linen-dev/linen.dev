@@ -62,10 +62,10 @@ const jitter = (n: number) => {
   return Math.floor(temp / 2 + random_between(0, temp / 2));
 };
 
-export function timeoutAfter(seconds: number) {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      reject(new Error('request timed-out'));
-    }, seconds * 1000);
-  });
-}
+// export function timeoutAfter(seconds: number) {
+//   return new Promise((resolve, reject) => {
+//     setTimeout(() => {
+//       reject(new Error('request timed-out'));
+//     }, seconds * 1000);
+//   });
+// }

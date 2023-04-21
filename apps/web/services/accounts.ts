@@ -1,6 +1,6 @@
 import { prisma, users, Prisma } from '@linen/database';
 import { stripProtocol } from '@linen/utilities/url';
-import { generateRandomWordSlug } from 'utilities/randomWordSlugs';
+import { generateRandomWordSlug } from '@linen/utilities/randomWordSlugs';
 import { getAccountById } from 'lib/models';
 import { AccountType, ChatType, Roles } from '@linen/types';
 import { v4 } from 'uuid';

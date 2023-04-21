@@ -31,3 +31,10 @@ export const qs = (params: any) => {
     )
     .join('&');
 };
+
+export function cleanUpUrl(reqUrl?: string) {
+  if (!reqUrl) return;
+  const url = new URL(reqUrl, 'http://fa.ke');
+  url.searchParams.delete('customDomain');
+  return url.toString().split('http://fa.ke').join('');
+}

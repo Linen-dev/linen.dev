@@ -3,7 +3,7 @@ import { shouldThisChannelBeAnonymous } from 'lib/channel';
 import { findThreadsByCursor } from 'lib/threads';
 import { serializeThread } from '@linen/serializers/thread';
 import { decodeCursor } from 'utilities/cursor';
-import { sortBySentAtAsc } from '../../utilities/sortBySentAtAsc';
+import { sortBySentAtAsc } from '@linen/utilities/object';
 import { buildCursor } from '../../utilities/buildCursor';
 
 export type channelNextPageType = {

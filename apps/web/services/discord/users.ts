@@ -4,13 +4,13 @@ import {
   DiscordAuthor,
   DiscordGuildMember,
 } from '@linen/types';
-import { generateRandomWordSlug } from 'utilities/randomWordSlugs';
+import { generateRandomWordSlug } from '@linen/utilities/randomWordSlugs';
 import { LIMIT } from './constrains';
 import DiscordApi from './api';
 import to from '@linen/utilities/await-to-js';
 import UsersService from 'services/users';
 import Logger from './logger';
-import { toObject } from 'utilities/util';
+import { toObject } from '@linen/utilities/object';
 
 // helper for messages
 export function getMentions(

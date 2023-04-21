@@ -13,7 +13,7 @@ import {
 } from 'utilities/redirects';
 import { z } from 'zod';
 import { buildCursor } from 'utilities/buildCursor';
-import { sortBySentAtAsc } from 'utilities/sortBySentAtAsc';
+import { sortBySentAtAsc } from '@linen/utilities/object';
 import { ssr, allowAccess } from 'services/ssr/common';
 
 export async function channelGetServerSideProps(

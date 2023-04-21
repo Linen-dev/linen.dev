@@ -5,7 +5,6 @@ import '../styles/highlight.scss';
 import '@linen/ui/index.css';
 import { useRouter } from 'next/router';
 import NProgress from 'nprogress';
-import { SWRConfig } from 'swr';
 import { AppProps } from 'next/app';
 import Head from 'next/head';
 import Script from 'next/script';
@@ -73,20 +72,18 @@ export default function App(props: AppProps) {
         />
       </Head>
 
-      <SWRConfig>
-        <Toast.ToastContext
-          containerStyle={{ bottom: '2rem', left: '2rem' }}
-          position="bottom-left"
-        />
-        <JoinContext>
-          <UsersContext>
-            <PostHogProvider client={posthog}>
-              <PostHogUser />
-              <Component {...pageProps} />
-            </PostHogProvider>
-          </UsersContext>
-        </JoinContext>
-      </SWRConfig>
+      <Toast.ToastContext
+        containerStyle={{ bottom: '2rem', left: '2rem' }}
+        position="bottom-left"
+      />
+      <JoinContext>
+        <UsersContext>
+          <PostHogProvider client={posthog}>
+            <PostHogUser />
+            <Component {...pageProps} />
+          </PostHogProvider>
+        </UsersContext>
+      </JoinContext>
       <Script
         defer
         data-domain="linen.dev"

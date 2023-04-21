@@ -4,27 +4,31 @@ import Label from '@linen/ui/Label';
 import Toast from '@linen/ui/Toast';
 import Toggle from '@linen/ui/Toggle';
 import { localStorage } from '@linen/utilities/storage';
-import { useRequest } from 'utilities/requests';
+import { get, put } from 'utilities/requests';
 
 export default function PermissionsField() {
   const granted = localStorage.get('notification.permission') === 'granted';
   const [checked, setChecked] = useState<boolean>(granted);
-  const settings = useRequest('/api/notifications/settings');
+  const [settings, setSettings] = useState();
   const [checkedEmail, setCheckedEmail] = useState<boolean>(false);
 
   useEffect(() => {
-    if (settings.data) {
-      setCheckedEmail(settings.data.notificationsByEmail);
+    if (!settings) {
+      get('/api/notifications/settings').then((res) => {
+        setSettings(res);
+        setCheckedEmail(res.notificationsByEmail);
+      });
     }
-  }, [settings.data]);
+  }, []);
 
   const onEmailSettingsChange = async () => {
     const notificationsByEmail = !checkedEmail;
     try {
+      await put('/api/notifications/settings', {
+        notificationsByEmail,
+      });
       setCheckedEmail(notificationsByEmail);
-      await settings.update({ notificationsByEmail });
     } catch (error) {
-      setCheckedEmail(!notificationsByEmail);
       Toast.info('Something went wrong');
     }
   };
@@ -62,7 +66,7 @@ export default function PermissionsField() {
           <span>Web</span>
         </div>
         <div className="flex h-6 gap-1 items-center">
-          {settings.isLoading ? (
+          {!settings ? (
             'Loading...'
           ) : (
             <Toggle checked={checkedEmail} onChange={onEmailSettingsChange} />

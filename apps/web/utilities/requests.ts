@@ -1,7 +1,5 @@
 import axios from 'axios';
 import { qs } from '@linen/utilities/url';
-import useSWR from 'swr';
-import isBrowser from './isBrowser';
 import type {
   SerializedMessage,
   SerializedThread,
@@ -72,26 +70,6 @@ export const deleteReq = (path: string) =>
     .delete(path)
     .then((res) => res.data)
     .catch(catchError);
-
-export const useRequest = (url: string) => {
-  const { data, mutate, error } = useSWR(url, get, {
-    revalidateOnReconnect: true,
-    revalidateIfStale: true,
-    revalidateOnMount: true,
-  });
-
-  return {
-    data,
-    error,
-    update: async (updates: any) => {
-      mutate((prevData: any) => ({ ...prevData, ...updates }), false);
-      await put(url, updates);
-      mutate();
-    },
-    mutate,
-    isLoading: isBrowser() && !error && !data,
-  };
-};
 
 export const getAccounts = () => get('/api/accounts');
 

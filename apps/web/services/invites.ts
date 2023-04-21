@@ -1,4 +1,4 @@
-import { generateRandomWordSlug } from 'utilities/randomWordSlugs';
+import { generateRandomWordSlug } from '@linen/utilities/randomWordSlugs';
 import { auths, invites, Prisma, Roles, users, prisma } from '@linen/database';
 import InviteToJoinMailer from 'mailers/InviteToJoinMailer';
 import { normalize } from '@linen/utilities/string';

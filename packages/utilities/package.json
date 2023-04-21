@@ -5,8 +5,8 @@
   "scripts": {
     "with-env": "yarn dotenv -e ../../apps/web/.env.test",
     "prebuild": "node ../scripts/rebuild-package.mjs",
-    "build": "tsc --project tsconfig.json",
-    "dev": "npm run build --watch",
+    "build": "rm -rf dist && tsc",
+    "dev": "tsc --watch",
     "test": "yarn with-env jest",
     "test:watch": "jest --watch"
   },
@@ -32,8 +32,11 @@
     "./domain": "./dist/domain.js",
     "./event": "./dist/event.js",
     "./files": "./dist/files.js",
+    "./memoize": "./dist/memoize.js",
     "./object": "./dist/object.js",
     "./password": "./dist/password.js",
+    "./promises": "./dist/promises.js",
+    "./randomWordSlugs": "./dist/randomWordSlugs.js",
     "./scroll": "./dist/scroll.js",
     "./storage": "./dist/storage.js",
     "./string": "./dist/string.js",
@@ -71,11 +74,20 @@
       "files": [
         "./dist/files.d.ts"
       ],
+      "memoize": [
+        "./dist/memoize.d.ts"
+      ],
       "object": [
         "./dist/object.d.ts"
       ],
       "password": [
         "./dist/password.d.ts"
+      ],
+      "promises": [
+        "./dist/promises.d.ts"
+      ],
+      "randomWordSlugs": [
+        "./dist/randomWordSlugs.d.ts"
       ],
       "scroll": [
         "./dist/scroll.d.ts"

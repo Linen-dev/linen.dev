@@ -1,4 +1,7 @@
-import BaseLogger from 'utilities/logger/base';
+abstract class BaseLogger {
+  abstract log(msg: string): void;
+  abstract error(msg: string): void;
+}
 
 export default class Logger extends BaseLogger {
   private account: string;

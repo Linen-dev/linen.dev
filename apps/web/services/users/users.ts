@@ -6,7 +6,7 @@ import {
   generateSalt,
   secureCompare,
 } from '@linen/utilities/password';
-import { generateRandomWordSlug } from 'utilities/randomWordSlugs';
+import { generateRandomWordSlug } from '@linen/utilities/randomWordSlugs';
 import { v4 } from 'uuid';
 
 interface CreateAuthParams {

@@ -1,4 +1,4 @@
-import { generateRandomWordSlug } from 'utilities/randomWordSlugs';
+import { generateRandomWordSlug } from '@linen/utilities/randomWordSlugs';
 import { prisma } from '@linen/database';
 
 async function getUsersWithoutAlias() {

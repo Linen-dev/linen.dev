@@ -1,5 +1,5 @@
 import { findOrCreateThread, findThreadsByChannel } from 'lib/threads';
-import { retryPromise } from 'utilities/retryPromises';
+import { retryPromise } from '@linen/utilities/promises';
 import { channels, prisma } from '@linen/database';
 import {
   UserMap,

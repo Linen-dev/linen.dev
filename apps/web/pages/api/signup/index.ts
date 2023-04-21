@@ -4,7 +4,7 @@ import UsersService from 'services/users';
 import Session from 'services/session';
 import { normalize } from '@linen/utilities/string';
 import { AccountType, Roles } from '@linen/types';
-import { generateRandomWordSlug } from 'utilities/randomWordSlugs';
+import { generateRandomWordSlug } from '@linen/utilities/randomWordSlugs';
 import { eventSignUp } from 'services/events/eventNewSignUp';
 import { z } from 'zod';
 import { ApiEvent, trackApiEvent } from 'utilities/ssr-metrics';

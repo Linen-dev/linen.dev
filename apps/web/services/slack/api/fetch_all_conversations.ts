@@ -1,6 +1,6 @@
 import request from 'superagent';
 import { createManyUsers } from 'lib/users';
-import { generateRandomWordSlug } from 'utilities/randomWordSlugs';
+import { generateRandomWordSlug } from '@linen/utilities/randomWordSlugs';
 import {
   BotInfo,
   UserInfo,

@@ -17,7 +17,7 @@ import {
 } from './accounts.types';
 import { onError } from 'server/middlewares/error';
 import { ApiEvent, trackApiEvent } from 'utilities/ssr-metrics';
-import { promiseMemoize } from 'utilities/promises/memo';
+import { promiseMemoize } from '@linen/utilities/memoize';
 
 const prefix = '/api/accounts';
 const accountsRouter = Router();
