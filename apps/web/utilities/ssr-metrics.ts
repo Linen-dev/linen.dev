@@ -19,7 +19,7 @@ const postHog = !!POSTHOG_APIKEY
   ? new PostHog(POSTHOG_APIKEY, {
       flushAt: 1,
       flushInterval: 0,
-      enable: process.env.NODE_ENV === 'production',
+      enable: process.env.POSTHOG_SERVER_ENABLE === 'true',
     })
   : undefined;
 
