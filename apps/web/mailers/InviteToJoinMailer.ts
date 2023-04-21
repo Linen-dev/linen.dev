@@ -1,7 +1,8 @@
 import ApplicationMailer from './ApplicationMailer';
+import view from './views/emails/invite';
 
 interface Options {
-  communityName: string | null;
+  communityName: string;
   inviterName: string;
   host: string;
   to: string;
@@ -9,6 +10,7 @@ interface Options {
 
 export default class InviteToJoinMailer {
   static async send({ inviterName, communityName, host, to }: Options) {
+    const url = `${host}/signup?email=${encodeURIComponent(to)}`;
     const content = `Join your team ${communityName} on Linen.dev and start collaborating. ${host}/signup?email=${encodeURIComponent(
       to
     )}`;
@@ -16,7 +18,7 @@ export default class InviteToJoinMailer {
       to,
       subject: `${inviterName} invited you to join Linen.dev`,
       text: content,
-      html: content,
+      html: view({ communityName, inviterName, url }),
     });
   }
 }
