@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './index.module.css';
+import styles from './index.module.scss';
 
 interface Props {
   id: string;
@@ -10,7 +10,7 @@ interface Props {
   onChange?(event: React.ChangeEvent<HTMLInputElement>): void;
 }
 
-function ColorInput({
+export default function ColorInput({
   id,
   defaultValue,
   required,
@@ -19,17 +19,18 @@ function ColorInput({
   onChange,
 }: Props) {
   return (
-    <input
-      type="color"
-      id={id}
-      className={styles.input}
-      defaultValue={defaultValue}
-      required={required}
-      disabled={disabled}
-      readOnly={readOnly}
-      onChange={onChange}
-    />
+    <>
+      <input
+        type="color"
+        id={id}
+        className={styles.input}
+        defaultValue={defaultValue}
+        required={required}
+        disabled={disabled}
+        readOnly={readOnly}
+        onChange={onChange}
+      />
+      <span className={styles.text}>Hex Color Code: {defaultValue}</span>
+    </>
   );
 }
-
-export default ColorInput;

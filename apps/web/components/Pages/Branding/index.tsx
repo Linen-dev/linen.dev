@@ -27,7 +27,7 @@ const debouncedUpdateAccount = debounce((params: any) =>
 );
 
 function Description({ children }: { children: React.ReactNode }) {
-  return <div className="text-sm mb-2 text-gray-600">{children}</div>;
+  return <div className="text-xs font-normal text-gray-600">{children}</div>;
 }
 
 function PremiumCard({
@@ -162,11 +162,13 @@ export default function Branding({
           <div className="grid grid-cols-1">
             <div className="flex flex-col">
               <PremiumCard isPremium={currentCommunity.premium}>
-                <Label htmlFor="description">Description</Label>
-                <Description>
-                  Few sentences that describe your community. Maximum of 160
-                  characters is preferred.
-                </Description>
+                <Label htmlFor="description">
+                  Description
+                  <Description>
+                    Few sentences that describe your community. Maximum of 160
+                    characters is preferred.
+                  </Description>
+                </Label>
                 <TextField
                   placeholder=""
                   id="description"
@@ -182,11 +184,13 @@ export default function Branding({
               </PremiumCard>
               <hr className="my-5" />
               <PremiumCard isPremium={currentCommunity.premium}>
-                <Label htmlFor="redirectDomain">Custom Domain</Label>
-                <Description>
-                  Choose the custom url that Linen will live under. i.e
-                  linen.yourwebsite.com
-                </Description>
+                <Label htmlFor="redirectDomain">
+                  Custom Domain
+                  <Description>
+                    Choose the custom url that Linen will live under. i.e
+                    linen.yourwebsite.com
+                  </Description>
+                </Label>
                 <TextField
                   placeholder="linen.yourwebsite.com or chat.yourwebsite.com"
                   id="redirectDomain"
@@ -204,12 +208,14 @@ export default function Branding({
               {currentCommunity.premium && records && records.length > 0 && (
                 <>
                   <PremiumCard isPremium={currentCommunity.premium}>
-                    <Label htmlFor="dnsRecords">DNS</Label>
-                    <Description>
-                      Subdomain routing setup can be achieved by verifying the
-                      ownership of a domain. Copy the TXT and/or CNAME records
-                      from below and paste them into your DNS settings.
-                    </Description>
+                    <Label htmlFor="dnsRecords">
+                      DNS
+                      <Description>
+                        Subdomain routing setup can be achieved by verifying the
+                        ownership of a domain. Copy the TXT and/or CNAME records
+                        from below and paste them into your DNS settings.
+                      </Description>
+                    </Label>
                     <Table>
                       <Thead>
                         <tr>
@@ -233,11 +239,13 @@ export default function Branding({
                 </>
               )}
               <PremiumCard isPremium={currentCommunity.premium}>
-                <Label htmlFor="brandColor">Brand Color</Label>
-                <Description>
-                  Color that matches your brand. We&apos;ll use it for the
-                  header background.
-                </Description>
+                <Label htmlFor="brandColor">
+                  Brand Color
+                  <Description>
+                    Color that matches your brand. We&apos;ll use it for the
+                    header background.
+                  </Description>
+                </Label>
                 <ColorField
                   id="brandColor"
                   defaultValue={
@@ -323,12 +331,12 @@ export default function Branding({
                 className="mb-5"
                 isPremium={currentCommunity.premium}
               >
-                <Label htmlFor="googleAnalyticsId">Google Analytics ID</Label>
-                <Description>
-                  You can collect data from your website with Google Analytics.
-                  <br />
-                  Enter a valid Analytics Property ID.
-                </Description>
+                <Label htmlFor="googleAnalyticsId">
+                  Google Analytics ID
+                  <Description>
+                    Enter a valid Analytics Property ID.
+                  </Description>
+                </Label>
                 <TextField
                   placeholder="G-XXXXXXX or UA-XXXXXX-X"
                   id="googleAnalyticsId"
