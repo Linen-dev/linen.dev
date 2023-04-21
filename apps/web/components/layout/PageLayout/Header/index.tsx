@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import SearchBar from 'components/search/SearchBar';
 import JoinButton from 'components/JoinButton';
 import { addHttpsToUrl } from '@linen/utilities/url';
-import { pickTextColorBasedOnBgColor } from 'utilities/colors';
+import { pickTextColorBasedOnBgColor } from '@linen/utilities/colors';
 import { Permissions, SerializedAccount } from '@linen/types';
 import { SerializedChannel, Settings } from '@linen/types';
 import UserAvatar from './UserAvatar';

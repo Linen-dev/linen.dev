@@ -3,13 +3,13 @@ import {
   DiscordArchivedPublicThreads,
   DiscordMessage,
   DiscordThread,
-} from 'types/discord';
+} from '@linen/types';
 import DiscordApi from './api';
 import { CrawlType, LIMIT } from './constrains';
 import { createMessages } from './messages';
 import { slugify } from '@linen/utilities/string';
-import { parseDiscordSentAt } from 'utilities/sentAt';
-import to from 'utilities/await-to-js';
+import { parseDiscordSentAt } from '@linen/serializers/sentAt';
+import to from '@linen/utilities/await-to-js';
 import { findOrCreateThread, updateLastReplyAt } from 'lib/threads';
 import ChannelsService from 'services/channels';
 import Logger from './logger';

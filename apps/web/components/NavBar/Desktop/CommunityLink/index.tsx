@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import styles from './index.module.scss';
 import { SerializedAccount } from '@linen/types';
 import { getHomeUrl } from 'utilities/home';
-import { pickTextColorBasedOnBgColor } from 'utilities/colors';
+import { pickTextColorBasedOnBgColor } from '@linen/utilities/colors';
 import Image from 'next/image';
 
 interface Props {

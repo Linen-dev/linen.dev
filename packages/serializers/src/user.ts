@@ -8,7 +8,7 @@ export function username(displayName: string | null) {
   return displayName.toLowerCase().replace(/\s+/g, '');
 }
 
-export default function serialize(user: users): SerializedUser {
+export function serializeUser(user: users): SerializedUser {
   return {
     id: user.id,
     authsId: user.authsId,

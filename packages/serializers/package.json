@@ -1,0 +1,73 @@
+{
+  "name": "@linen/serializers",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "tsc --watch",
+    "prebuild": "node ../scripts/rebuild-package.mjs",
+    "build": "rm -rf dist && tsc",
+    "test": "jest"
+  },
+  "sideEffect": false,
+  "dependencies": {
+    "@linen/database": "*",
+    "@linen/factory": "*",
+    "@linen/types": "*",
+    "@linen/utilities": "*"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.1",
+    "jest": "^29.5.0",
+    "ts-jest": "^29.1.0",
+    "typescript": "^5.0.4"
+  },
+  "exports": {
+    "./account": "./dist/account.js",
+    "./channel": "./dist/channel.js",
+    "./email": "./dist/email.js",
+    "./message": "./dist/message.js",
+    "./reaction": "./dist/reaction.js",
+    "./read-status": "./dist/read-status.js",
+    "./sentAt": "./dist/sentAt.js",
+    "./settings": "./dist/settings.js",
+    "./thread": "./dist/thread.js",
+    "./user-thread-status": "./dist/user-thread-status.js",
+    "./user": "./dist/user.js"
+  },
+  "typesVersions": {
+    "*": {
+      "account": [
+        "./dist/account.d.ts"
+      ],
+      "channel": [
+        "./dist/channel.d.ts"
+      ],
+      "email": [
+        "./dist/email.d.ts"
+      ],
+      "message": [
+        "./dist/message.d.ts"
+      ],
+      "reaction": [
+        "./dist/reaction.d.ts"
+      ],
+      "read-status": [
+        "./dist/read-status.d.ts"
+      ],
+      "sentAt": [
+        "./dist/sentAt.d.ts"
+      ],
+      "settings": [
+        "./dist/settings.d.ts"
+      ],
+      "thread": [
+        "./dist/thread.d.ts"
+      ],
+      "user-thread-status": [
+        "./dist/user-thread-status.d.ts"
+      ],
+      "user": [
+        "./dist/user.d.ts"
+      ]
+    }
+  }
+}

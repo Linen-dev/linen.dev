@@ -1,7 +1,7 @@
 import { SerializedThread } from '@linen/types';
 import { shouldThisChannelBeAnonymous } from 'lib/channel';
 import { findThreadsByCursor } from 'lib/threads';
-import serializeThread from 'serializers/thread';
+import { serializeThread } from '@linen/serializers/thread';
 import { decodeCursor } from 'utilities/cursor';
 import { sortBySentAtAsc } from '../../utilities/sortBySentAtAsc';
 import { buildCursor } from '../../utilities/buildCursor';

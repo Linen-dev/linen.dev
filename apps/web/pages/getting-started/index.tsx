@@ -4,7 +4,7 @@ import Session from 'services/session';
 import { prisma } from '@linen/database';
 import { findInvitesByEmail } from 'services/invites';
 import { trackPageView } from 'utilities/ssr-metrics';
-import serializeAccount from 'serializers/account';
+import { serializeAccount } from '@linen/serializers/account';
 
 export default function CreateCommunity(props: any) {
   return <GettingStartedPage {...props} />;

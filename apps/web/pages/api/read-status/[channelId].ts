@@ -1,9 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from '@linen/database';
 import Session from 'services/session';
-import to from 'utilities/await-to-js';
+import to from '@linen/utilities/await-to-js';
 import { z } from 'zod';
-import serializeReadStatus from 'serializers/read-status';
+import { serializeReadStatus } from '@linen/serializers/read-status';
 
 async function put(request: NextApiRequest, response: NextApiResponse) {
   const user = await Session.auth(request, response);

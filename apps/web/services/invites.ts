@@ -4,7 +4,7 @@ import InviteToJoinMailer from 'mailers/InviteToJoinMailer';
 import { normalize } from '@linen/utilities/string';
 import PermissionsService from './permissions';
 import { Unauthorized } from 'server/exceptions';
-import { serializeEmail } from 'utilities/email';
+import { serializeEmail } from '@linen/serializers/email';
 
 export async function createInvitation({
   createdByUserId,

@@ -8,7 +8,7 @@ import { SerializedUser } from '@linen/types';
 import {
   FILE_SIZE_LIMIT_IN_BYTES,
   getFileSizeErrorMessage,
-} from 'utilities/files';
+} from '@linen/utilities/files';
 import { AxiosRequestConfig } from 'axios';
 
 interface Props {

@@ -1,4 +1,4 @@
-import { UserMap } from 'types/partialTypes';
+import { UserMap } from '@linen/types';
 
 export function getMentionedUsers(text: string, users: UserMap[]) {
   let mentionExternalUserIds = text.match(/<@(.*?)>/g);

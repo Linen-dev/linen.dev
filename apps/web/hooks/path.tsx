@@ -1,4 +1,4 @@
-import { CustomLinkHelper } from 'utilities/url';
+import { CustomLinkHelper } from 'utilities/CustomLinkHelper';
 import { useLinkContext } from '@linen/contexts/Link';
 
 interface Props {

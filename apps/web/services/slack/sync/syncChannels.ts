@@ -1,4 +1,4 @@
-import { AccountWithSlackAuthAndChannels } from 'types/partialTypes';
+import { AccountWithSlackAuthAndChannels } from '@linen/types';
 import { sleep } from 'utilities/retryPromises';
 import ChannelsService from 'services/channels';
 

@@ -4,7 +4,7 @@ import { AccountIntegration, prisma } from '@linen/database';
 import { eventNewIntegration } from 'services/events/eventNewIntegration';
 import { SerializedAccount } from '@linen/types';
 import { getHomeUrl } from 'utilities/home';
-import serializeAccount from 'serializers/account';
+import { serializeAccount } from '@linen/serializers/account';
 import { getCurrentConfig } from 'config/discord';
 import { createIntegrationDiscord } from 'queue/jobs';
 import { encrypt } from 'utilities/crypto';

@@ -1,4 +1,4 @@
-import serializeMessage from 'serializers/message';
+import { serializeMessage } from '@linen/serializers/message';
 import { find, parse } from '@linen/ast';
 import { eventNewMessage } from 'services/events';
 import { Prisma, prisma } from '@linen/database';
@@ -9,10 +9,10 @@ import {
   messageGetResponseType,
   messageGetType,
   messagePutType,
+  UploadedFile,
 } from '@linen/types';
 import { v4 as uuid } from 'uuid';
 import unique from 'lodash.uniq';
-import { UploadedFile } from '@linen/types';
 
 export default class MessagesService {
   static async create({

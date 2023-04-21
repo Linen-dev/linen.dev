@@ -36,6 +36,7 @@
     "@linen/sitemap": "*",
     "@linen/styles": "*",
     "@linen/types": "*",
+    "@linen/serializers": "*",
     "@linen/ui": "*",
     "@linen/utilities": "*",
     "@next/bundle-analyzer": "^13.0.2",

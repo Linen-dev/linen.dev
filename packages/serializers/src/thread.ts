@@ -1,8 +1,10 @@
-import { MessageForSerialization } from '../types/partialTypes';
-import serializeMessage from './message';
-import serializeChannel from './channel';
-
-import { SerializedMessage, SerializedThread, ThreadState } from '@linen/types';
+import { serializeMessage } from './message';
+import { serializeChannel } from './channel';
+import {
+  SerializedMessage,
+  SerializedThread,
+  MessageForSerialization,
+} from '@linen/types';
 
 function serializeMessages(
   messages?: MessageForSerialization[]
@@ -27,5 +29,3 @@ export function serializeThread({
     messages: serializeMessages(thread.messages),
   };
 }
-
-export default serializeThread;

@@ -8,7 +8,7 @@ import {
 } from '@linen/types';
 import ChannelsService from 'services/channels';
 import { BadRequest, NotFound } from 'server/exceptions';
-import serializeChannel from 'serializers/channel';
+import { serializeChannel } from '@linen/serializers/channel';
 
 export class ChannelsController extends BaseController {
   static async get(

@@ -1,7 +1,7 @@
 import type { channels, users } from '@linen/database';
 import { SerializedChannel } from '@linen/types';
 
-export default function serializeChannel(
+export function serializeChannel(
   channel: channels & {
     lastThreadAt?: bigint;
     threadCount?: number;

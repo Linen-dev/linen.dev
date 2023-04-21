@@ -31,7 +31,7 @@ import {
   setDefaultChannelSchema,
   setDefaultChannelType,
 } from '@linen/types';
-import serializeChannel from 'serializers/channel';
+import { serializeChannel } from '@linen/serializers/channel';
 import { serialize } from 'superjson';
 import {
   postChannelIntegrationsSchema,
@@ -40,7 +40,7 @@ import {
   putChannelMembersSchema,
   putChannelMembersType,
 } from '@linen/types';
-import serializeUser from 'serializers/user';
+import { serializeUser } from '@linen/serializers/user';
 
 const prefix = '/api/channels';
 

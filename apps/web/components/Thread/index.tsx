@@ -20,7 +20,7 @@ import useThreadWebsockets from '@linen/hooks/websockets/thread';
 import { scrollToBottom } from '@linen/utilities/scroll';
 import styles from './index.module.scss';
 import { put } from 'utilities/requests';
-import { CustomLinkHelper } from 'utilities/url';
+import { CustomLinkHelper } from 'utilities/CustomLinkHelper';
 
 interface Props {
   thread: SerializedThread;

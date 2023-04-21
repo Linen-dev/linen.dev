@@ -1,6 +1,6 @@
 import { v4 as uuid } from 'uuid';
 import { StartSignUpFn } from 'contexts/Join';
-import { username } from 'serializers/user';
+import { username } from '@linen/serializers/user';
 import {
   MessageFormat,
   SerializedMessage,

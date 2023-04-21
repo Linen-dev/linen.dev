@@ -4,7 +4,10 @@ import formidable from 'formidable';
 import { readFile } from 'fs/promises';
 import UploadService from 'services/upload';
 import Session from 'services/session';
-import { normalizeFilename, FILE_SIZE_LIMIT_IN_BYTES } from 'utilities/files';
+import {
+  normalizeFilename,
+  FILE_SIZE_LIMIT_IN_BYTES,
+} from '@linen/utilities/files';
 
 export const config = {
   api: {

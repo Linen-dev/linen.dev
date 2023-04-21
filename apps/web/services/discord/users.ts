@@ -3,11 +3,11 @@ import {
   DiscordMessage,
   DiscordAuthor,
   DiscordGuildMember,
-} from 'types/discord';
+} from '@linen/types';
 import { generateRandomWordSlug } from 'utilities/randomWordSlugs';
 import { LIMIT } from './constrains';
 import DiscordApi from './api';
-import to from 'utilities/await-to-js';
+import to from '@linen/utilities/await-to-js';
 import UsersService from 'services/users';
 import Logger from './logger';
 import { toObject } from 'utilities/util';

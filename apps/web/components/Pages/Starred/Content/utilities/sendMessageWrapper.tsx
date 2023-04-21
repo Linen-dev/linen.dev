@@ -6,7 +6,7 @@ import {
   SerializedUser,
   UploadedFile,
 } from '@linen/types';
-import { username } from 'serializers/user';
+import { username } from '@linen/serializers/user';
 import { DataResponse } from '../../types';
 import { v4 as uuid } from 'uuid';
 import debounce from '@linen/utilities/debounce';

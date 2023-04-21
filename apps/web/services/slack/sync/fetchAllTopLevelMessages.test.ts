@@ -6,7 +6,7 @@ import * as s3Helper from 'services/aws/s3';
 import * as fetch_all_conversations from 'services/slack/api';
 import { fetchAllTopLevelMessages } from './fetchAllTopLevelMessages';
 import { conversationHistory } from '__mocks__/slack-api';
-import { parseSlackSentAt, tsToSentAt } from 'utilities/sentAt';
+import { parseSlackSentAt, tsToSentAt } from '@linen/serializers/sentAt';
 import { slugify } from '@linen/utilities/string';
 import { MessageFormat } from '@linen/types';
 

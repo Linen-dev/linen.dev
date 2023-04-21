@@ -47,7 +47,7 @@ import IntegrationsModal from 'components/Modals/IntegrationsModal';
 import { useRouter } from 'next/router';
 import MembersModal from 'components/Modals/MembersModal';
 import Pagination from 'components/Pagination';
-import { playNotificationSound } from 'utilities/util';
+import { playNotificationSound } from 'utilities/playNotificationSound';
 import { PushType } from 'services/push';
 
 const { SidebarLayout } = Layouts.Shared;

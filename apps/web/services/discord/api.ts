@@ -7,7 +7,7 @@ import {
   DiscordActiveThreads,
   DiscordArchivedPublicThreads,
   DiscordGuildMember,
-} from 'types/discord';
+} from '@linen/types';
 
 async function discordApi({
   path,

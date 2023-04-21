@@ -4,7 +4,7 @@ import { prisma } from '@linen/database';
 import { Roles } from '@linen/types';
 import { findAuthByEmail } from 'lib/users';
 import { getHomeUrl } from 'utilities/home';
-import serializeAccount from 'serializers/account';
+import { serializeAccount } from '@linen/serializers/account';
 import { acceptInvite, findInvitesByEmail } from 'services/invites';
 
 async function handler(request: NextApiRequest, response: NextApiResponse) {

@@ -1,4 +1,4 @@
-import { FindThreadsByCursorType } from 'types/cursor';
+import { FindThreadsByCursorType } from '@linen/types';
 
 // flag to help debug locally, it will use the cursor without encode it
 const SKIP_ENCODE_CURSOR = process.env.SKIP_ENCODE_CURSOR === 'true';

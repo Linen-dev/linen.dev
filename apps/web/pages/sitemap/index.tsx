@@ -1,4 +1,4 @@
-import serializeAccount from 'serializers/account';
+import { serializeAccount } from '@linen/serializers/account';
 import { prisma } from '@linen/database';
 import {
   AccountIntegration,

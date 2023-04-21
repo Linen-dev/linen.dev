@@ -1,4 +1,4 @@
-import serializeSettings from 'serializers/account/settings';
+import { serializeSettings } from '@linen/serializers/settings';
 import ChannelsService from 'services/channels';
 import CommunityService from 'services/community';
 import CommunitiesService from 'services/communities';
@@ -6,8 +6,8 @@ import PermissionsService from 'services/permissions';
 import { qs } from '@linen/utilities/url';
 import { GetServerSidePropsContext } from 'next';
 import { Permissions } from '@linen/types';
-import serializeAccount from 'serializers/account';
-import serializeChannel from 'serializers/channel';
+import { serializeAccount } from '@linen/serializers/account';
+import { serializeChannel } from '@linen/serializers/channel';
 import { getDMs } from 'lib/channel';
 import { cleanUpUrl } from 'utilities/util';
 

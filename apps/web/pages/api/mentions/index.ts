@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from '@linen/database';
-import serializeUser from 'serializers/user';
+import { serializeUser } from '@linen/serializers/user';
 import PermissionsService from 'services/permissions';
 
 export default async function handler(

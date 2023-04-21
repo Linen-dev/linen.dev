@@ -14,12 +14,12 @@ import {
 } from '@linen/database';
 import { MessageFormat, SlackEvent, SlackMessageEvent } from '@linen/types';
 import { findOrCreateUserFromUserInfo } from 'lib/users';
-import { parseSlackSentAt, tsToSentAt } from 'utilities/sentAt';
+import { parseSlackSentAt, tsToSentAt } from '@linen/serializers/sentAt';
 import { findChannelWithAccountByExternalId } from 'lib/channel';
 import { eventNewMessage, eventNewThread } from 'services/events';
 import { processAttachments } from 'services/slack';
-import { serializeMessage } from 'serializers/message';
-import { serializeThread } from 'serializers/thread';
+import { serializeMessage } from '@linen/serializers/message';
+import { serializeThread } from '@linen/serializers/thread';
 import { filterMessages, parseMessage } from 'services/slack/sync/parseMessage';
 
 export async function processMessageEvent(body: SlackEvent) {

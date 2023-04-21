@@ -1,4 +1,4 @@
-import { ThreadsWithMessagesFull } from 'types/partialTypes';
+import { ThreadsWithMessagesFull } from '@linen/types';
 
 export function sortBySentAtAsc(
   a: ThreadsWithMessagesFull,

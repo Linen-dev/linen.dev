@@ -5,7 +5,7 @@ import { createSlackAuthorization, updateAccount } from 'lib/models';
 import { eventNewIntegration } from 'services/events/eventNewIntegration';
 import { AccountIntegration, SerializedAccount } from '@linen/types';
 import { getHomeUrl } from 'utilities/home';
-import serializeAccount from 'serializers/account';
+import { serializeAccount } from '@linen/serializers/account';
 import { prisma } from '@linen/database';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {

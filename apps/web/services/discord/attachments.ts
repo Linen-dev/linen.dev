@@ -4,7 +4,7 @@ import axios from 'axios';
 import path from 'path';
 import { BUCKET_PREFIX_FOR_ATTACHMENTS, LINEN_STATIC_CDN } from 'secrets';
 import { uploadFile } from 'services/aws/s3';
-import { DiscordAttachments } from 'types/discord';
+import { DiscordAttachments } from '@linen/types';
 import { v4 as random } from 'uuid';
 
 export async function handleAttachments(

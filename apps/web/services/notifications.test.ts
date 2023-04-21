@@ -12,8 +12,8 @@ import { v4 } from 'uuid';
 import { create } from '@linen/factory';
 import * as service from './notifications';
 import * as queue from 'queue/jobs';
-import serializeThread from 'serializers/thread';
-import serializeMessage from 'serializers/message';
+import { serializeThread } from '@linen/serializers/thread';
+import { serializeMessage } from '@linen/serializers/message';
 
 jest.mock('queue/jobs');
 

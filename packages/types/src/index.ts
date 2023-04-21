@@ -15,6 +15,9 @@ export * from './patterns';
 export * from './notification';
 export * from './sync';
 export * from './slack';
+export * from './cursor';
+export * from './discord';
+export * from './partialTypes';
 
 /*
   This package redefines enums from `schema.prisma`.

@@ -1,7 +1,7 @@
 import { Prisma, notificationType, prisma } from '@linen/database';
 import NotificationMailer from 'mailers/NotificationMailer';
 import { createMailingJob, createNewEventJob } from 'queue/jobs';
-import { getCommunityUrl } from 'serializers/account/settings';
+import { getCommunityUrl } from '@linen/serializers/settings';
 import { getLinenUrl } from '@linen/utilities/domain';
 import { appendProtocol } from '@linen/utilities/url';
 import React from 'react';
@@ -12,7 +12,7 @@ import {
   notificationListenerType,
   MessageFormat,
 } from '@linen/types';
-import serializeUser from 'serializers/user';
+import { serializeUser } from '@linen/serializers/user';
 import { format as formatDate } from '@linen/utilities/date';
 
 function buildScheduleDate(type: notificationType) {

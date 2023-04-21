@@ -67,7 +67,7 @@ export function getCommunityUrl(
   );
 }
 
-export function serialize(account: accounts): Settings {
+export function serializeSettings(account: accounts): Settings {
   const communityType = getCommunityType(account);
 
   return {
@@ -95,5 +95,3 @@ export function serialize(account: accounts): Settings {
     chat: (account.chat as ChatType) || null,
   };
 }
-
-export default serialize;

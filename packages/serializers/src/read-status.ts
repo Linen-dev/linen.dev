@@ -10,7 +10,7 @@ function isChannelRead(
   return lastReadAt >= lastReplyAt;
 }
 
-function serialize(status: any): SerializedReadStatus {
+export function serializeReadStatus(status: any): SerializedReadStatus {
   const thread = status?.channel?.threads[0];
   const lastReadAt = status?.lastReadAt;
   const lastReplyAt = thread?.sentAt;
@@ -21,5 +21,3 @@ function serialize(status: any): SerializedReadStatus {
     read: isChannelRead(lastReadAt, lastReplyAt),
   };
 }
-
-export default serialize;

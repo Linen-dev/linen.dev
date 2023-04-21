@@ -1,5 +1,5 @@
 import { accounts, ChannelType, prisma } from '@linen/database';
-import { serializeDm } from 'serializers/channel';
+import { serializeDm } from '@linen/serializers/channel';
 
 interface FindChannelParams {
   name: string;

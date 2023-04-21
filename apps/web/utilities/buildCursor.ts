@@ -1,4 +1,4 @@
-import { ThreadsWithMessagesFull } from 'types/partialTypes';
+import { ThreadsWithMessagesFull } from '@linen/types';
 import { encodeCursor } from 'utilities/cursor';
 import { PAGE_SIZE } from 'secrets';
 

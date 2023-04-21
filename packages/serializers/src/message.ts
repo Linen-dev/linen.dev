@@ -1,11 +1,11 @@
-import { MessageForSerialization } from '../types/partialTypes';
 import {
   SerializedAttachment,
   SerializedMessage,
   SerializedUser,
+  MessageForSerialization,
 } from '@linen/types';
-import serializeUser from 'serializers/user';
-import serializeReaction from 'serializers/reaction';
+import { serializeUser } from './user';
+import { serializeReaction } from './reaction';
 import type {
   users,
   mentions,
@@ -22,7 +22,7 @@ function serializeAttachment(
   };
 }
 
-type MentionsForSerialization = mentions & { users?: users };
+type MentionsForSerialization = mentions & { users?: users | null };
 
 function serializeMentions(
   mentions?: MentionsForSerialization[]
@@ -42,13 +42,13 @@ export function serializeMessage(
 ): SerializedMessage {
   return {
     id: message.id,
-    externalId: message.externalMessageId,
-    threadId: message.threadId,
+    externalId: message.externalMessageId || undefined,
+    threadId: message.threadId!,
     body: message.body,
     sentAt: message.sentAt.toString(),
     author: message.author ? serializeUser(message.author) : null,
-    usersId: message.usersId,
-    messageFormat: message.messageFormat,
+    usersId: message.usersId!,
+    messageFormat: message.messageFormat!,
     mentions: serializeMentions(message.mentions),
     attachments:
       message.attachments
@@ -63,5 +63,3 @@ export function serializeMessage(
         ?.map(serializeReaction) || [],
   };
 }
-
-export default serializeMessage;

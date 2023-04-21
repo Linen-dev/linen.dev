@@ -11,7 +11,7 @@ import {
 } from '@linen/database';
 import PermissionsService from 'services/permissions';
 import unique from 'lodash.uniq';
-import serializeUser from 'serializers/user';
+import { serializeUser } from '@linen/serializers/user';
 import { SerializedUser } from '@linen/types';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {

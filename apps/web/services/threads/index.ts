@@ -1,6 +1,6 @@
 import { ThreadState, prisma } from '@linen/database';
 import { findThreadById } from 'lib/threads';
-import serializeThread from 'serializers/thread';
+import { serializeThread } from '@linen/serializers/thread';
 import { channelNextPage } from 'services/channels/channelNextPage';
 import {
   areAuthorSameAsReplier,

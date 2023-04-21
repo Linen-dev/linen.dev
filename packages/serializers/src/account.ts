@@ -26,7 +26,7 @@ function hasAuthFn(account: any) {
   return false;
 }
 
-export default function serialize(account?: any): SerializedAccount {
+export function serializeAccount(account?: any): SerializedAccount {
   const {
     description,
     homeUrl,

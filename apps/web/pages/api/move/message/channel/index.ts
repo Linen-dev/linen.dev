@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next/types';
 import { prisma } from '@linen/database';
 import Permissions from 'services/permissions';
 import CommunityService from 'services/community';
-import serializeThread from 'serializers/thread';
+import { serializeThread } from '@linen/serializers/thread';
 import { anonymizeMessages } from 'utilities/anonymizeMessages';
 import { Permissions as PermissionsType } from '@linen/types';
 

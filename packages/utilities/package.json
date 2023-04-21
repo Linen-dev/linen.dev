@@ -3,7 +3,8 @@
   "private": true,
   "version": "1.0.0",
   "scripts": {
-    "with-env": "yarn dotenv -e ../../apps/web/.env",
+    "with-env": "yarn dotenv -e ../../apps/web/.env.test",
+    "prebuild": "node ../scripts/rebuild-package.mjs",
     "build": "tsc --project tsconfig.json",
     "dev": "npm run build --watch",
     "test": "yarn with-env jest",
@@ -22,63 +23,71 @@
   },
   "exports": {
     "./array": "./dist/array.js",
-    "./scroll": "./dist/scroll.js",
-    "./string": "./dist/string.js",
-    "./storage": "./dist/storage.js",
-    "./date": "./dist/date.js",
-    "./document": "./dist/document.js",
-    "./event": "./dist/event.js",
-    "./debounce": "./dist/debounce.js",
-    "./markdown": "./dist/markdown.js",
-    "./object": "./dist/object.js",
+    "./await-to-js": "./dist/await-to-js.js",
     "./clipboard": "./dist/clipboard.js",
-    "./password": "./dist/password.js",
+    "./colors": "./dist/colors.js",
+    "./date": "./dist/date.js",
+    "./debounce": "./dist/debounce.js",
+    "./document": "./dist/document.js",
     "./domain": "./dist/domain.js",
+    "./event": "./dist/event.js",
+    "./files": "./dist/files.js",
+    "./object": "./dist/object.js",
+    "./password": "./dist/password.js",
+    "./scroll": "./dist/scroll.js",
+    "./storage": "./dist/storage.js",
+    "./string": "./dist/string.js",
     "./url": "./dist/url.js"
   },
   "typesVersions": {
     "*": {
       "array": [
-        "dist/array.d.ts"
+        "./dist/array.d.ts"
       ],
-      "scroll": [
-        "dist/scroll.d.ts"
-      ],
-      "string": [
-        "dist/string.d.ts"
-      ],
-      "storage": [
-        "dist/storage.d.ts"
-      ],
-      "date": [
-        "dist/date.d.ts"
-      ],
-      "document": [
-        "dist/document.d.ts"
-      ],
-      "event": [
-        "dist/event.d.ts"
-      ],
-      "debounce": [
-        "dist/debounce.d.ts"
-      ],
-      "markdown": [
-        "dist/markdown.d.ts"
-      ],
-      "object": [
-        "dist/object.d.ts"
+      "await-to-js": [
+        "./dist/await-to-js.d.ts"
       ],
       "clipboard": [
-        "dist/clipboard.d.ts"
+        "./dist/clipboard.d.ts"
       ],
-      "password": [
-        "dist/password.d.ts"
+      "colors": [
+        "./dist/colors.d.ts"
+      ],
+      "date": [
+        "./dist/date.d.ts"
+      ],
+      "debounce": [
+        "./dist/debounce.d.ts"
+      ],
+      "document": [
+        "./dist/document.d.ts"
       ],
       "domain": [
-        "dist/domain.d.ts"
+        "./dist/domain.d.ts"
+      ],
+      "event": [
+        "./dist/event.d.ts"
+      ],
+      "files": [
+        "./dist/files.d.ts"
+      ],
+      "object": [
+        "./dist/object.d.ts"
+      ],
+      "password": [
+        "./dist/password.d.ts"
+      ],
+      "scroll": [
+        "./dist/scroll.d.ts"
+      ],
+      "storage": [
+        "./dist/storage.d.ts"
+      ],
+      "string": [
+        "./dist/string.d.ts"
       ],
       "url": [
-        "dist/url.d.ts"
+        "./dist/url.d.ts"
       ]
     }
   }

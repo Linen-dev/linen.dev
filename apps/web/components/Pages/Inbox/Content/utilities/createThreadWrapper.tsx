@@ -7,7 +7,7 @@ import {
   ThreadState,
   UploadedFile,
 } from '@linen/types';
-import { username } from 'serializers/user';
+import { username } from '@linen/serializers/user';
 import { v4 as uuid } from 'uuid';
 import debounce from '@linen/utilities/debounce';
 import * as api from 'utilities/requests';

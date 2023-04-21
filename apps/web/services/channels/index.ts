@@ -6,7 +6,7 @@ import {
 } from '@linen/database';
 import { findChannelsWithStats, channelPutIntegrationType } from '@linen/types';
 import { formatDistance } from '@linen/utilities/date';
-import serializeChannel from 'serializers/channel';
+import { serializeChannel } from '@linen/serializers/channel';
 import { v4 } from 'uuid';
 
 class ChannelsService {

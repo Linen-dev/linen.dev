@@ -1,6 +1,5 @@
 import { Prisma, prisma } from '@linen/database';
-import { FindThreadsByCursorType } from 'types/cursor';
-import { ThreadsWithMessagesFull } from 'types/partialTypes';
+import { FindThreadsByCursorType, ThreadsWithMessagesFull } from '@linen/types';
 import { anonymizeMessages } from 'utilities/anonymizeMessages';
 import { PAGE_SIZE } from 'secrets';
 

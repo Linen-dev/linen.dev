@@ -1,5 +1,12 @@
 import { SerializedUser } from './users';
 
+export type MessageFormat = 'DISCORD' | 'SLACK' | 'LINEN';
+export const MessageFormat = {
+  DISCORD: 'DISCORD' as MessageFormat,
+  SLACK: 'SLACK' as MessageFormat,
+  LINEN: 'LINEN' as MessageFormat,
+};
+
 export interface SerializedMessage {
   id: string;
   body: string;
@@ -12,12 +19,6 @@ export interface SerializedMessage {
   externalId?: string;
   author?: SerializedUser | null;
   messageFormat: MessageFormat;
-}
-
-export enum MessageFormat {
-  DISCORD = 'DISCORD',
-  SLACK = 'SLACK',
-  LINEN = 'LINEN',
 }
 
 export interface SerializedReaction {

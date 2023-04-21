@@ -1,7 +1,7 @@
 import { SerializedUserThreadStatus } from '@linen/types';
 import { userThreadStatus } from '@linen/database';
 
-export default function serialize(
+export function serializeUserThreadStatus(
   status: userThreadStatus
 ): SerializedUserThreadStatus {
   const { userId, threadId, muted, read } = status;

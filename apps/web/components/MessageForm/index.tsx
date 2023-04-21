@@ -15,7 +15,7 @@ import { postprocess, previewable } from './utilities/message';
 import {
   FILE_SIZE_LIMIT_IN_BYTES,
   getFileSizeErrorMessage,
-} from 'utilities/files';
+} from '@linen/utilities/files';
 import { sessionStorage } from '@linen/utilities/storage';
 
 interface Props {

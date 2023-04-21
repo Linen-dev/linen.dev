@@ -1,4 +1,4 @@
-import { communityMapping } from 'serializers/account/settings';
+import { communityMapping } from '@linen/serializers/settings';
 
 export function CustomLinkHelper({
   isSubDomainRouting,

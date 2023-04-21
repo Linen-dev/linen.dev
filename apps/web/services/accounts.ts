@@ -8,7 +8,7 @@ import { createAccountEvent } from './customerIo/trackEvents';
 import { createInvitation } from './invites';
 import { getCurrentUrl } from '@linen/utilities/domain';
 import unique from 'lodash.uniq';
-import { replaceS3byCDN } from 'utilities/util';
+import { replaceS3byCDN } from 'utilities/replaceS3byCDN';
 import { createRemoveCommunityJob } from 'queue/jobs';
 import { sendNotification } from 'services/slack';
 

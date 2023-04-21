@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { CustomLinkHelper } from 'utilities/url';
+import { CustomLinkHelper } from 'utilities/CustomLinkHelper';
 
 export default function CustomLink({
   isSubDomainRouting,

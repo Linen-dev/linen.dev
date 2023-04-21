@@ -1,7 +1,7 @@
 import type { messageReactions } from '@linen/database';
 import { SerializedReaction } from '@linen/types';
 
-export default function serialize(
+export function serializeReaction(
   reaction: messageReactions
 ): SerializedReaction {
   return {

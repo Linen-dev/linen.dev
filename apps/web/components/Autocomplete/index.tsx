@@ -5,7 +5,7 @@ import { AiOutlineSearch } from '@react-icons/all-files/ai/AiOutlineSearch';
 import { AiOutlineLoading } from '@react-icons/all-files/ai/AiOutlineLoading';
 import styles from './index.module.scss';
 import NoResults from './NoResults';
-import { pickTextColorBasedOnBgColor } from 'utilities/colors';
+import { pickTextColorBasedOnBgColor } from '@linen/utilities/colors';
 
 export default function Autocomplete({
   brandColor,
