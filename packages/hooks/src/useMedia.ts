@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
-import isBrowser from 'utilities/isBrowser';
+
+function isBrowser() {
+  return typeof window !== 'undefined';
+}
 
 export const useMedia = <T>(
   queries: string[],

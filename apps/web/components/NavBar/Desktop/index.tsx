@@ -29,7 +29,7 @@ import AddCommunityLink from './AddCommunityLink';
 import NewCommunityModal from 'components/Modals/NewCommunityModal';
 import { timestamp } from '@linen/utilities/date';
 import { DMs } from './DMs';
-import useInboxWebsockets from '@linen/hooks/websockets/inbox';
+import useInboxWebsockets from '@linen/hooks/websockets-inbox';
 import MenuGroup from './MenuGroup';
 import ChannelsGroup from './ChannelsGroup';
 import MenuIcon from './MenuIcon';

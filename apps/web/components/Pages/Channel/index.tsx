@@ -32,7 +32,7 @@ import useWebsockets from '@linen/hooks/websockets';
 import useKeyboard from '@linen/hooks/keyboard';
 import { addReaction } from 'utilities/state/reaction';
 import { ChannelContext } from '@linen/contexts/channel';
-import { useViewport } from 'hooks/useViewport';
+import { useViewport } from '@linen/hooks/useViewport';
 
 export interface ChannelProps {
   settings: Settings;

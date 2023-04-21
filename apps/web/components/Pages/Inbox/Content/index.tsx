@@ -13,7 +13,7 @@ import { upload } from 'components/MessageForm/api';
 import usePolling from '@linen/hooks/polling';
 import useKeyboard from '@linen/hooks/keyboard';
 import { useUsersContext } from '@linen/contexts/Users';
-import useInboxWebsockets from '@linen/hooks/websockets/inbox';
+import useInboxWebsockets from '@linen/hooks/websockets-inbox';
 import { BiMessageCheck } from '@react-icons/all-files/bi/BiMessageCheck';
 import type { CommunityPushType } from 'services/push';
 import { manageSelections } from './utilities/selection';

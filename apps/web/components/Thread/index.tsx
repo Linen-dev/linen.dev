@@ -16,7 +16,7 @@ import {
   ThreadState,
   UploadedFile,
 } from '@linen/types';
-import useThreadWebsockets from '@linen/hooks/websockets/thread';
+import useThreadWebsockets from '@linen/hooks/websockets-thread';
 import { scrollToBottom } from '@linen/utilities/scroll';
 import styles from './index.module.scss';
 import { put } from 'utilities/requests';

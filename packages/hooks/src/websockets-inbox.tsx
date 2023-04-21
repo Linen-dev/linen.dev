@@ -1,4 +1,4 @@
-import useWebsockets from '.';
+import useWebsockets from './websockets';
 import { Permissions } from '@linen/types';
 
 interface Props {

@@ -6,7 +6,8 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "dev": "tsc --watch",
-    "build": "tsc"
+    "prebuild": "node ../scripts/rebuild-package.mjs",
+    "build": "rm -rf dist && tsc"
   },
   "dependencies": {
     "@types/phoenix": "^1.5.4",
@@ -27,41 +28,53 @@
     "./polling": "./dist/polling.js",
     "./priority": "./dist/priority.js",
     "./resize": "./dist/resize.js",
-    "./websockets": "./dist/websockets/index.js",
-    "./websockets/inbox": "./dist/websockets/inbox.js",
-    "./websockets/thread": "./dist/websockets/thread.js"
+    "./useMedia": "./dist/useMedia.js",
+    "./useViewport": "./dist/useViewport.js",
+    "./utils": "./dist/utils.js",
+    "./websockets-inbox": "./dist/websockets-inbox.js",
+    "./websockets-thread": "./dist/websockets-thread.js",
+    "./websockets": "./dist/websockets.js"
   },
   "typesVersions": {
     "*": {
       "device": [
-        "dist/device.d.ts"
+        "./dist/device.d.ts"
       ],
       "hover": [
-        "dist/hover.d.ts"
+        "./dist/hover.d.ts"
       ],
       "keyboard": [
-        "dist/keyboard.d.ts"
+        "./dist/keyboard.d.ts"
       ],
       "mode": [
-        "dist/mode.d.ts"
+        "./dist/mode.d.ts"
       ],
       "polling": [
-        "dist/polling.d.ts"
+        "./dist/polling.d.ts"
       ],
       "priority": [
-        "dist/priority.d.ts"
+        "./dist/priority.d.ts"
       ],
       "resize": [
-        "dist/resize.d.ts"
+        "./dist/resize.d.ts"
+      ],
+      "useMedia": [
+        "./dist/useMedia.d.ts"
+      ],
+      "useViewport": [
+        "./dist/useViewport.d.ts"
+      ],
+      "utils": [
+        "./dist/utils.d.ts"
+      ],
+      "websockets-inbox": [
+        "./dist/websockets-inbox.d.ts"
+      ],
+      "websockets-thread": [
+        "./dist/websockets-thread.d.ts"
       ],
       "websockets": [
-        "dist/websockets/index.d.ts"
-      ],
-      "websockets/inbox": [
-        "dist/websockets/inbox.d.ts"
-      ],
-      "websockets/thread": [
-        "dist/websockets/thread.d.ts"
+        "./dist/websockets.d.ts"
       ]
     }
   }

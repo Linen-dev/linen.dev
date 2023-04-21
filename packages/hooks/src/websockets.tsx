@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Channel, Socket } from 'phoenix';
 import { Permissions } from '@linen/types';
-import { getPushUrl } from './getPushUrl';
+import { getPushUrl } from './utils/getPushUrl';
 
 interface Props {
   room?: string | null;
