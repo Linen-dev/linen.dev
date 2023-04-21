@@ -71,6 +71,7 @@ jobs:
               );
               data.median = median(data.scores);
               data.avg = avg(data.scores);
+              delete data.scores
               return data;
             }
             const stats = {
@@ -79,7 +80,7 @@ jobs:
               best_practices: build(manifest, 'best-practices'),
               seo: build(manifest, 'seo'),
             };
-            core.setOutput('manifest', JSON.stringify(stats));
+            core.setOutput('manifest', JSON.stringify(stats,null,2));
 
       - name: Post to a Slack channel
         id: slack
