@@ -182,8 +182,8 @@ function RowMember(user: MembersType, communityId: string): JSX.Element {
           <p className="text-sm font-medium truncate">
             {user.displayName}
             {user.status === 'PENDING' && (
-              <Badge className="ml-1" type="info">
-                {user.status}
+              <Badge className={user.displayName ? 'ml-1' : ''} type="info">
+                Pending
               </Badge>
             )}
             <br />
