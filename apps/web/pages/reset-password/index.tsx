@@ -1,5 +1,5 @@
-import Layout from '../../components/layout/CardLayout';
-import PasswordField from '../../components/PasswordField';
+import Layout from 'components/layout/CardLayout';
+import PasswordField from '@linen/ui/PasswordField';
 import Button from '@linen/ui/Button';
 import { NextPageContext } from 'next';
 import Toast from '@linen/ui/Toast';

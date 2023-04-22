@@ -2,7 +2,7 @@ import React from 'react';
 import Icon from '@linen/ui/Icon';
 import Modal from '@linen/ui/Modal';
 import Form from 'components/Pages/Onboarding/Form';
-import H3 from 'components/H3';
+import H3 from '@linen/ui/H3';
 import { FiX } from '@react-icons/all-files/fi/FiX';
 import { createAccount } from 'utilities/requests';
 import styles from './index.module.scss';

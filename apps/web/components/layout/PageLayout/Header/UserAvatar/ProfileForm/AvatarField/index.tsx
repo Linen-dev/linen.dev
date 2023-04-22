@@ -1,6 +1,6 @@
 import Avatar from '@linen/ui/Avatar';
 import Label from '@linen/ui/Label';
-import Field from 'components/Field';
+import Field from '@linen/ui/Field';
 import { SerializedUser } from '@linen/types';
 import styles from './index.module.scss';
 

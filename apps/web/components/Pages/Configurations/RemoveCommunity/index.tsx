@@ -2,7 +2,7 @@ import Button from '@linen/ui/Button';
 import { SerializedAccount } from '@linen/types';
 import Modal from '@linen/ui/Modal';
 import { useState } from 'react';
-import H3 from 'components/H3';
+import H3 from '@linen/ui/H3';
 import { FiX } from '@react-icons/all-files/fi/FiX';
 import TextInput from '@linen/ui/TextInput';
 import { deleteAccount } from 'utilities/requests';

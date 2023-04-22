@@ -11,7 +11,7 @@ import {
 import TextField from 'components/TextField';
 import EmailField from 'components/EmailField';
 import Button from '@linen/ui/Button';
-import PasswordField from 'components/PasswordField';
+import PasswordField from '@linen/ui/PasswordField';
 import { qs } from '@linen/utilities/url';
 import GitHubButton from 'components/Auth/GitHubButton';
 

@@ -2,7 +2,7 @@
 import PageLayout from 'components/layout/PageLayout';
 import Header from './Header';
 import TextField from 'components/TextField';
-import ColorField from 'components/ColorField';
+import ColorField from '@linen/ui/ColorField';
 import LogoField from './LogoField';
 import Label from '@linen/ui/Label';
 import Table, { Thead, Tbody, Th, Td } from 'components/Table';

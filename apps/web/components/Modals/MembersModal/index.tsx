@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import H3 from 'components/H3';
+import H3 from '@linen/ui/H3';
 import Button from '@linen/ui/Button';
 import Modal from '@linen/ui/Modal';
 import ConfirmationModal from '@linen/ui/ConfirmationModal';

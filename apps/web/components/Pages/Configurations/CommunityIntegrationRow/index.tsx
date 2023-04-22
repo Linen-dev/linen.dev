@@ -1,4 +1,4 @@
-import CommunityButton from 'components/CommunityButton';
+import CommunityButton from '@linen/ui/CommunityButton';
 import { capitalize } from '@linen/utilities/string';
 import { qs } from '@linen/utilities/url';
 import { SerializedAccount } from '@linen/types';

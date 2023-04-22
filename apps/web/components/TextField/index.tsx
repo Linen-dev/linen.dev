@@ -1,5 +1,5 @@
 import React from 'react';
-import Field from '../Field';
+import Field from '@linen/ui/Field';
 import Label from '@linen/ui/Label';
 import TextInput from '@linen/ui/TextInput';
 

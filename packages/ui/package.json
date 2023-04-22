@@ -9,7 +9,7 @@
     "dist"
   ],
   "scripts": {
-    "prebuild": "rm -rf dist",
+    "prebuild": "node ../scripts/rebuild-package.mjs ui && rm -rf dist",
     "build": "rollup --config rollup.config.js",
     "dev": "npm run watch",
     "watch": "rollup --config rollup.config.js --watch",
@@ -23,6 +23,12 @@
     "@linen/hooks": "*",
     "@linen/types": "*",
     "@linen/utilities": "*",
+    "entities": "^4.4.0",
+    "identity-obj-proxy": "^3.0.0",
+    "react-emoji-render": "^2.0.1",
+    "react-intersection-observer": "^9.4.0"
+  },
+  "devDependencies": {
     "@rollup/plugin-commonjs": "^24.0.1",
     "@rollup/plugin-node-resolve": "^15.0.1",
     "@rollup/plugin-typescript": "^11.0.0",
@@ -30,12 +36,8 @@
     "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^14.4.3",
     "@types/react": "^18.0.25",
-    "entities": "^4.4.0",
-    "identity-obj-proxy": "^3.0.0",
     "jest": "^29.5.0",
     "jest-environment-jsdom": "^29.3.1",
-    "react-emoji-render": "^2.0.1",
-    "react-intersection-observer": "^9.4.0",
     "rollup": "^3.19.1",
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "rollup-plugin-postcss": "^4.0.2",
@@ -53,25 +55,37 @@
     "react-hot-toast": "^2.4.0"
   },
   "exports": {
-    "./index.css": "./dist/index.css",
     "./Accordion": "./dist/Accordion/index.js",
     "./Alert": "./dist/Alert/index.js",
+    "./Autocomplete": "./dist/Autocomplete/index.js",
     "./Avatar": "./dist/Avatar/index.js",
     "./Avatars": "./dist/Avatars/index.js",
     "./Badge": "./dist/Badge/index.js",
     "./Button": "./dist/Button/index.js",
     "./ButtonGroup": "./dist/ButtonGroup/index.js",
     "./ButtonToggle": "./dist/ButtonToggle/index.js",
+    "./Card": "./dist/Card/index.js",
     "./Checkbox": "./dist/Checkbox/index.js",
     "./Code": "./dist/Code/index.js",
+    "./ColorField": "./dist/ColorField/index.js",
+    "./ColorInput": "./dist/ColorInput/index.js",
+    "./CommunityButton": "./dist/CommunityButton/index.js",
     "./ConfirmationModal": "./dist/ConfirmationModal/index.js",
     "./Container": "./dist/Container/index.js",
+    "./DiscordIcon": "./dist/DiscordIcon/index.js",
     "./Dropdown": "./dist/Dropdown/index.js",
+    "./FadeIn": "./dist/FadeIn/index.js",
+    "./Field": "./dist/Field/index.js",
+    "./H1": "./dist/H1/index.js",
+    "./H2": "./dist/H2/index.js",
+    "./H3": "./dist/H3/index.js",
     "./Icon": "./dist/Icon/index.js",
     "./Image": "./dist/Image/index.js",
     "./Label": "./dist/Label/index.js",
     "./Layouts": "./dist/Layouts/index.js",
     "./Line": "./dist/Line/index.js",
+    "./LinenIcon": "./dist/LinenIcon/index.js",
+    "./LinenLogo": "./dist/LinenLogo/index.js",
     "./List": "./dist/List/index.js",
     "./Message": "./dist/Message/index.js",
     "./Modal": "./dist/Modal/index.js",
@@ -79,135 +93,199 @@
     "./Nav": "./dist/Nav/index.js",
     "./Pages": "./dist/Pages/index.js",
     "./Pagination": "./dist/Pagination/index.js",
+    "./PasswordField": "./dist/PasswordField/index.js",
+    "./PasswordInput": "./dist/PasswordInput/index.js",
+    "./PinIcon": "./dist/PinIcon/index.js",
+    "./Portal": "./dist/Portal/index.js",
     "./Preview": "./dist/Preview/index.js",
     "./Progress": "./dist/Progress/index.js",
     "./ProgressModal": "./dist/ProgressModal/index.js",
     "./ReminderModal": "./dist/ReminderModal/index.js",
+    "./SlackIcon": "./dist/SlackIcon/index.js",
     "./Spinner": "./dist/Spinner/index.js",
     "./StickyHeader": "./dist/StickyHeader/index.js",
     "./Suggestions": "./dist/Suggestions/index.js",
-    "./Textarea": "./dist/Textarea/index.js",
     "./TextInput": "./dist/TextInput/index.js",
+    "./Textarea": "./dist/Textarea/index.js",
     "./Toast": "./dist/Toast/index.js",
     "./Toggle": "./dist/Toggle/index.js",
     "./Tooltip": "./dist/Tooltip/index.js",
-    "./UserMessage": "./dist/UserMessage/index.js"
+    "./UserMessage": "./dist/UserMessage/index.js",
+    "./YCombinatorLogo": "./dist/YCombinatorLogo/index.js",
+    "./index.css": "./dist/index.css"
   },
   "typesVersions": {
     "*": {
       "Accordion": [
-        "dist/Accordion/index.d.ts"
+        "./dist/Accordion/index.d.ts"
       ],
       "Alert": [
-        "dist/Alert/index.d.ts"
+        "./dist/Alert/index.d.ts"
+      ],
+      "Autocomplete": [
+        "./dist/Autocomplete/index.d.ts"
       ],
       "Avatar": [
-        "dist/Avatar/index.d.ts"
+        "./dist/Avatar/index.d.ts"
       ],
       "Avatars": [
-        "dist/Avatars/index.d.ts"
+        "./dist/Avatars/index.d.ts"
       ],
       "Badge": [
-        "dist/Badge/index.d.ts"
+        "./dist/Badge/index.d.ts"
       ],
       "Button": [
-        "dist/Button/index.d.ts"
+        "./dist/Button/index.d.ts"
       ],
       "ButtonGroup": [
-        "dist/ButtonGroup/index.d.ts"
+        "./dist/ButtonGroup/index.d.ts"
       ],
       "ButtonToggle": [
-        "dist/ButtonToggle/index.d.ts"
+        "./dist/ButtonToggle/index.d.ts"
+      ],
+      "Card": [
+        "./dist/Card/index.d.ts"
       ],
       "Checkbox": [
-        "dist/Checkbox/index.d.ts"
+        "./dist/Checkbox/index.d.ts"
       ],
       "Code": [
-        "dist/Code/index.d.ts"
+        "./dist/Code/index.d.ts"
+      ],
+      "ColorField": [
+        "./dist/ColorField/index.d.ts"
+      ],
+      "ColorInput": [
+        "./dist/ColorInput/index.d.ts"
+      ],
+      "CommunityButton": [
+        "./dist/CommunityButton/index.d.ts"
       ],
       "ConfirmationModal": [
-        "dist/ConfirmationModal/index.d.ts"
+        "./dist/ConfirmationModal/index.d.ts"
       ],
       "Container": [
-        "dist/Container/index.d.ts"
+        "./dist/Container/index.d.ts"
+      ],
+      "DiscordIcon": [
+        "./dist/DiscordIcon/index.d.ts"
       ],
       "Dropdown": [
-        "dist/Dropdown/index.d.ts"
+        "./dist/Dropdown/index.d.ts"
+      ],
+      "FadeIn": [
+        "./dist/FadeIn/index.d.ts"
+      ],
+      "Field": [
+        "./dist/Field/index.d.ts"
+      ],
+      "H1": [
+        "./dist/H1/index.d.ts"
+      ],
+      "H2": [
+        "./dist/H2/index.d.ts"
+      ],
+      "H3": [
+        "./dist/H3/index.d.ts"
       ],
       "Icon": [
-        "dist/Icon/index.d.ts"
+        "./dist/Icon/index.d.ts"
       ],
       "Image": [
-        "dist/Image/index.d.ts"
+        "./dist/Image/index.d.ts"
       ],
       "Label": [
-        "dist/Label/index.d.ts"
+        "./dist/Label/index.d.ts"
       ],
       "Layouts": [
-        "dist/Layouts/index.d.ts"
+        "./dist/Layouts/index.d.ts"
       ],
       "Line": [
-        "dist/Line/index.d.ts"
+        "./dist/Line/index.d.ts"
+      ],
+      "LinenIcon": [
+        "./dist/LinenIcon/index.d.ts"
+      ],
+      "LinenLogo": [
+        "./dist/LinenLogo/index.d.ts"
       ],
       "List": [
-        "dist/List/index.d.ts"
+        "./dist/List/index.d.ts"
       ],
       "Message": [
-        "dist/Message/index.d.ts"
+        "./dist/Message/index.d.ts"
       ],
       "Modal": [
-        "dist/Modal/index.d.ts"
+        "./dist/Modal/index.d.ts"
       ],
       "NativeSelect": [
-        "dist/NativeSelect/index.d.ts"
+        "./dist/NativeSelect/index.d.ts"
       ],
       "Nav": [
-        "dist/Nav/index.d.ts"
+        "./dist/Nav/index.d.ts"
       ],
       "Pages": [
-        "dist/Pages/index.d.ts"
+        "./dist/Pages/index.d.ts"
       ],
       "Pagination": [
-        "dist/Pagination/index.d.ts"
+        "./dist/Pagination/index.d.ts"
+      ],
+      "PasswordField": [
+        "./dist/PasswordField/index.d.ts"
+      ],
+      "PasswordInput": [
+        "./dist/PasswordInput/index.d.ts"
+      ],
+      "PinIcon": [
+        "./dist/PinIcon/index.d.ts"
+      ],
+      "Portal": [
+        "./dist/Portal/index.d.ts"
       ],
       "Preview": [
-        "dist/Preview/index.d.ts"
+        "./dist/Preview/index.d.ts"
       ],
       "Progress": [
-        "dist/Progress/index.d.ts"
+        "./dist/Progress/index.d.ts"
       ],
       "ProgressModal": [
-        "dist/ProgressModal/index.d.ts"
+        "./dist/ProgressModal/index.d.ts"
       ],
       "ReminderModal": [
-        "dist/ReminderModal/index.d.ts"
+        "./dist/ReminderModal/index.d.ts"
+      ],
+      "SlackIcon": [
+        "./dist/SlackIcon/index.d.ts"
       ],
       "Spinner": [
-        "dist/Spinner/index.d.ts"
+        "./dist/Spinner/index.d.ts"
       ],
       "StickyHeader": [
-        "dist/StickyHeader/index.d.ts"
+        "./dist/StickyHeader/index.d.ts"
       ],
       "Suggestions": [
-        "dist/Suggestions/index.d.ts"
-      ],
-      "Textarea": [
-        "dist/Textarea/index.d.ts"
+        "./dist/Suggestions/index.d.ts"
       ],
       "TextInput": [
-        "dist/TextInput/index.d.ts"
+        "./dist/TextInput/index.d.ts"
+      ],
+      "Textarea": [
+        "./dist/Textarea/index.d.ts"
       ],
       "Toast": [
-        "dist/Toast/index.d.ts"
+        "./dist/Toast/index.d.ts"
       ],
       "Toggle": [
-        "dist/Toggle/index.d.ts"
+        "./dist/Toggle/index.d.ts"
       ],
       "Tooltip": [
-        "dist/Tooltip/index.d.ts"
+        "./dist/Tooltip/index.d.ts"
       ],
       "UserMessage": [
-        "dist/UserMessage/index.d.ts"
+        "./dist/UserMessage/index.d.ts"
+      ],
+      "YCombinatorLogo": [
+        "./dist/YCombinatorLogo/index.d.ts"
       ]
     }
   }

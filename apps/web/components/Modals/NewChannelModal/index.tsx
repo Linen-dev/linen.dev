@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import H3 from 'components/H3';
+import H3 from '@linen/ui/H3';
 import { FiX } from '@react-icons/all-files/fi/FiX';
 import Button from '@linen/ui/Button';
 import Modal from '@linen/ui/Modal';

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import H3 from 'components/H3';
+import H3 from '@linen/ui/H3';
 import Modal from '@linen/ui/Modal';
 import { channelsIntegrationType, Permissions } from '@linen/types';
 import { CgLinear } from '@react-icons/all-files/cg/CgLinear';

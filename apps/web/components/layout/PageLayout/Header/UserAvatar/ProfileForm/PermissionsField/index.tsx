@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Field from 'components/Field';
+import Field from '@linen/ui/Field';
 import Label from '@linen/ui/Label';
 import Toast from '@linen/ui/Toast';
 import Toggle from '@linen/ui/Toggle';

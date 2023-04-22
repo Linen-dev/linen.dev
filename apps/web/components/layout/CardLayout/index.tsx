@@ -1,8 +1,8 @@
 import { ReactNode } from 'react';
 import styles from './index.module.css';
-import Card from '../../Card';
+import Card from '@linen/ui/Card';
 import Link from 'next/link';
-import LinenLogo from 'components/Logo/Linen';
+import LinenLogo from '@linen/ui/LinenLogo';
 
 interface Props {
   header?: string;
