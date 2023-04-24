@@ -17,19 +17,19 @@
   "license": "ISC",
   "dependencies": {
     "@linen/database": "*",
+    "@linen/logger": "*",
+    "@linen/sdk": "*",
     "@linen/types": "*",
     "@linen/utilities": "*",
-    "@linen/sdk": "*",
-    "@linen/logger": "*",
     "discord.js": "^14.8.0",
     "envalid": "^7.3.1",
-    "pm2": "^5.3.0",
-    "tsup": "^6.6.3"
+    "pm2": "^5.3.0"
   },
   "devDependencies": {
     "@types/jest": "^29.4.0",
     "jest": "^29.4.2",
     "ts-jest": "^29.0.5",
+    "tsx": "^3.12.6",
     "typescript": "^4.9.5"
   }
 }
