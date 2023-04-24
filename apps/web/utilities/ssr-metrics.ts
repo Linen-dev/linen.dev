@@ -8,9 +8,9 @@ const SENTRY_DSN = process.env.SENTRY_DSN!;
 Sentry.init({
   dsn: SENTRY_DSN,
   integrations: [new Sentry.Integrations.Http({ tracing: true })],
-  tracesSampleRate: Number(process.env.SENTRY_SAMPLE_RATE || 0.2),
+  tracesSampleRate: 1.0,
   debug: process.env.SENTRY_DEBUG === 'true',
-  enabled: process.env.SENTRY_ENABLED === 'true',
+  enabled: !!SENTRY_DSN && process.env.NODE_ENV === 'production',
 });
 
 export { Sentry };
