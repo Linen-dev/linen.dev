@@ -1,10 +1,43 @@
+@import '../../../colors.scss';
+
 .video {
   max-width: 100%;
   overflow: hidden;
 }
 
-.video video,
-.video .placeholder {
+
+.placeholder {
+  align-items: center;
+  background: white;
+  border: 1px solid $color-gray-200;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  height: 180px;
+  width: 240px;
+  position: relative;
+  background-size: cover;
+}
+
+.play {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background: $color-red-600;
+  color: white;
+  border-radius: 9999px;
+  box-shadow: 0 2px 16px $color-black;
+}
+
+.play svg {
+  margin-left: 4px;
+  font-size: 16px;
+}
+
+.video video {
   max-height: 360px;
   max-width: 640px;
   min-height: 240px;
@@ -23,5 +56,10 @@
 @media screen and (max-width: 767px) {
   .iframe {
     min-width: 240px;
+  }
+
+  .placeholder {
+    height: 120px;
+    width: 160px;
   }
 }

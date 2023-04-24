@@ -12,3 +12,14 @@ export function normalizeVideoUrl(url: string): string {
   }
   return url;
 }
+
+export function getVideoId(url: string) {
+  if (isYoutubeShortUrl(url)) {
+    return url.split('/').pop();
+  }
+  if (isYoutubeWatchUrl(url)) {
+    const params = new URLSearchParams(url.split('?')[1]);
+    return params.get('v');
+  }
+  return null;
+}

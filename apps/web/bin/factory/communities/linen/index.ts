@@ -111,7 +111,7 @@ export default async function createLinenCommunity() {
       channelName: 'general',
     },
   });
-  // 1. Thread with a reaction
+  // Thread with a reaction
   await prisma.threads.create({
     data: {
       channelId: channel1.id,
@@ -138,7 +138,7 @@ export default async function createLinenCommunity() {
       },
     },
   });
-  // 2. Thread with inline code blocks
+  // Thread with inline code blocks
   await prisma.threads.create({
     data: {
       channelId: channel1.id,
@@ -171,7 +171,7 @@ export default async function createLinenCommunity() {
       },
     },
   });
-  // 3. Thread with a link
+  // Thread with a link
   await prisma.threads.create({
     data: {
       channelId: channel1.id,
@@ -211,7 +211,7 @@ export default async function createLinenCommunity() {
       },
     },
   });
-  // 4. Thread with mention
+  // Thread with mention
   await prisma.threads.create({
     data: {
       channelId: channel1.id,
@@ -247,7 +247,7 @@ export default async function createLinenCommunity() {
       },
     },
   });
-  // 5. Thread with code block
+  // Thread with code block
   await prisma.threads.create({
     data: {
       channelId: channel1.id,
@@ -273,7 +273,7 @@ export default async function createLinenCommunity() {
       },
     },
   });
-  // 6. Thread with multiple reactions
+  // Thread with multiple reactions
   await prisma.threads.create({
     data: {
       channelId: channel1.id,
@@ -300,7 +300,7 @@ export default async function createLinenCommunity() {
       },
     },
   });
-  // 7. Thread with an attachment
+  // Thread with an attachment
   await prisma.threads.create({
     data: {
       channelId: channel1.id,
@@ -335,7 +335,7 @@ export default async function createLinenCommunity() {
       },
     },
   });
-  // 8. Thread with a big image
+  // Thread with a big image
   await prisma.threads.create({
     data: {
       channelId: channel1.id,
@@ -354,7 +354,7 @@ export default async function createLinenCommunity() {
       },
     },
   });
-  // 9. Thread with a small image
+  // Thread with a small image
   await prisma.threads.create({
     data: {
       channelId: channel1.id,
@@ -374,7 +374,7 @@ export default async function createLinenCommunity() {
     },
   });
 
-  // 10. Thread with many messages
+  // Thread with many messages
   await prisma.threads.create({
     data: {
       channelId: channel1.id,
@@ -443,7 +443,7 @@ export default async function createLinenCommunity() {
     },
   });
 
-  // 11. Thread with an answer and question
+  // Thread with an answer and question
   await prisma.threads.create({
     data: {
       channelId: channel1.id,
@@ -520,7 +520,7 @@ export default async function createLinenCommunity() {
     },
   });
 
-  // 12. Blog post
+  // Blog post
   await prisma.threads.create({
     data: {
       channelId: channel3.id,
@@ -540,7 +540,7 @@ export default async function createLinenCommunity() {
     },
   });
 
-  // 13. Blog post
+  // Blog post
   await prisma.threads.create({
     data: {
       channelId: channel3.id,
@@ -567,7 +567,7 @@ export default async function createLinenCommunity() {
     },
   });
 
-  // 14. Markdown documentation
+  // Markdown documentation
   await prisma.threads.create({
     data: {
       channelId: channel4.id,
