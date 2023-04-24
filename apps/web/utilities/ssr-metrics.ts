@@ -11,6 +11,7 @@ Sentry.init({
   tracesSampleRate: Number(process.env.SENTRY_SAMPLE_RATE || 0.2),
   debug: process.env.SENTRY_DEBUG === 'true',
   enabled: process.env.SENTRY_ENABLED === 'true',
+  shutdownTimeout: 1000,
 });
 
 export { Sentry };
@@ -20,6 +21,7 @@ const postHog = !!POSTHOG_APIKEY
       flushAt: 1,
       flushInterval: 0,
       enable: process.env.POSTHOG_SERVER_ENABLE === 'true',
+      requestTimeout: 1000,
     })
   : undefined;
 
