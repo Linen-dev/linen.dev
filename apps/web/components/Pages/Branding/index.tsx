@@ -1,11 +1,15 @@
 /* eslint-disable @next/next/no-img-element */
 import PageLayout from 'components/layout/PageLayout';
 import Header from './Header';
-import TextField from 'components/TextField';
+import TextField from '@linen/ui/TextField';
 import ColorField from '@linen/ui/ColorField';
 import LogoField from './LogoField';
 import Label from '@linen/ui/Label';
-import Table, { Thead, Tbody, Th, Td } from 'components/Table';
+import Table from '@linen/ui/Table';
+import Thead from '@linen/ui/Thead';
+import Th from '@linen/ui/Th';
+import Tbody from '@linen/ui/Tbody';
+import Td from '@linen/ui/Td';
 import { stripProtocol } from '@linen/utilities/url';
 import classNames from 'classnames';
 import React, { useEffect, useState } from 'react';

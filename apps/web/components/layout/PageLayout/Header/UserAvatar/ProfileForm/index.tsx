@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import AvatarField from './AvatarField';
 import PermissionsField from './PermissionsField';
-import TextField from 'components/TextField';
+import TextField from '@linen/ui/TextField';
 import Button from '@linen/ui/Button';
 import Toast from '@linen/ui/Toast';
 import { SerializedUser } from '@linen/types';

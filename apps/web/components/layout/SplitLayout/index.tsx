@@ -1,5 +1,4 @@
 import React from 'react';
-import Container from '@linen/ui/Container';
 import Link from 'next/link';
 import logo from 'public/images/logo/white/linen.svg';
 import styles from './index.module.scss';

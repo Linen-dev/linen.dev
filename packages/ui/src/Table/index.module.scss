@@ -1,0 +1,33 @@
+@import '../colors.scss';
+
+.wrapper {
+  overflow-x: auto;
+}
+
+.wrapper2 {
+  display: inline-block;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  vertical-align: middle;
+  min-width: 100%;
+}
+
+.wrapper3 {
+  overflow: hidden;
+  box-shadow: 0 1px 4px 0 $color-gray-300;
+}
+
+.table {
+  min-width: 100%;
+}
+
+.table > :not([hidden]) ~ :not([hidden]) {
+  border-top-width: 1px;
+  border-bottom-width: 1px;
+  border-color: $color-gray-300;
+}
+
+.font-mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    'Liberation Mono', 'Courier New', monospace;
+}

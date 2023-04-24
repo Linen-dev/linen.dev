@@ -1,9 +1,8 @@
 import React from 'react';
-import { MessageFormat } from '@linen/types';
-import Avatar from '@linen/ui/Avatar';
-import Message from '@linen/ui/Message';
-import styles from './index.module.css';
-import { SerializedUser } from '@linen/types';
+import Avatar from '../Avatar';
+import Message from '../Message';
+import styles from './index.module.scss';
+import { MessageFormat, SerializedUser } from '@linen/types';
 
 interface Props {
   body: string;

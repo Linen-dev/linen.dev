@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import Layout from '../../components/layout/CardLayout';
-import EmailField from '../../components/EmailField';
+import EmailField from '@linen/ui/EmailField';
 import Button from '@linen/ui/Button';
 import Toast from '@linen/ui/Toast';
 import type { NextPageContext } from 'next';

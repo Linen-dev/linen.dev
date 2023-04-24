@@ -2,7 +2,7 @@ import React from 'react';
 import { useRouter } from 'next/router';
 import Autocomplete from '@linen/ui/Autocomplete';
 import type { messages } from '@linen/database';
-import Suggestion from './Suggestion';
+import Suggestion from '@linen/ui/Suggestion';
 import {
   MessageFormat,
   SerializedChannel,

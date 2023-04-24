@@ -8,8 +8,8 @@ import {
   SignInMode,
   TermsAndPolicy,
 } from 'components/Auth';
-import TextField from 'components/TextField';
-import EmailField from 'components/EmailField';
+import TextField from '@linen/ui/TextField';
+import EmailField from '@linen/ui/EmailField';
 import Button from '@linen/ui/Button';
 import PasswordField from '@linen/ui/PasswordField';
 import { qs } from '@linen/utilities/url';

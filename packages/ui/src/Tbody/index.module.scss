@@ -1,0 +1,8 @@
+@import '../colors.scss';
+
+.tbody > :not([hidden]) ~ :not([hidden]) {
+  border-top-width: 1px;
+  border-bottom-width: 1px;
+  background-color: $color-white;
+  border-color: $color-gray-200;
+}

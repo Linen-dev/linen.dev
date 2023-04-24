@@ -1,0 +1,9 @@
+@import '../colors.scss';
+
+.td {
+  padding: 0.75rem;
+  color: $color-gray-900;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  white-space: nowrap;
+}

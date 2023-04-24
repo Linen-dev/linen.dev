@@ -74,6 +74,7 @@
     "./Container": "./dist/Container/index.js",
     "./DiscordIcon": "./dist/DiscordIcon/index.js",
     "./Dropdown": "./dist/Dropdown/index.js",
+    "./EmailField": "./dist/EmailField/index.js",
     "./FadeIn": "./dist/FadeIn/index.js",
     "./Field": "./dist/Field/index.js",
     "./H1": "./dist/H1/index.js",
@@ -104,9 +105,16 @@
     "./SlackIcon": "./dist/SlackIcon/index.js",
     "./Spinner": "./dist/Spinner/index.js",
     "./StickyHeader": "./dist/StickyHeader/index.js",
+    "./Suggestion": "./dist/Suggestion/index.js",
     "./Suggestions": "./dist/Suggestions/index.js",
+    "./Table": "./dist/Table/index.js",
+    "./Tbody": "./dist/Tbody/index.js",
+    "./Td": "./dist/Td/index.js",
+    "./TextField": "./dist/TextField/index.js",
     "./TextInput": "./dist/TextInput/index.js",
     "./Textarea": "./dist/Textarea/index.js",
+    "./Th": "./dist/Th/index.js",
+    "./Thead": "./dist/Thead/index.js",
     "./Toast": "./dist/Toast/index.js",
     "./Toggle": "./dist/Toggle/index.js",
     "./Tooltip": "./dist/Tooltip/index.js",
@@ -172,6 +180,9 @@
       ],
       "Dropdown": [
         "./dist/Dropdown/index.d.ts"
+      ],
+      "EmailField": [
+        "./dist/EmailField/index.d.ts"
       ],
       "FadeIn": [
         "./dist/FadeIn/index.d.ts"
@@ -263,14 +274,35 @@
       "StickyHeader": [
         "./dist/StickyHeader/index.d.ts"
       ],
+      "Suggestion": [
+        "./dist/Suggestion/index.d.ts"
+      ],
       "Suggestions": [
         "./dist/Suggestions/index.d.ts"
+      ],
+      "Table": [
+        "./dist/Table/index.d.ts"
+      ],
+      "Tbody": [
+        "./dist/Tbody/index.d.ts"
+      ],
+      "Td": [
+        "./dist/Td/index.d.ts"
+      ],
+      "TextField": [
+        "./dist/TextField/index.d.ts"
       ],
       "TextInput": [
         "./dist/TextInput/index.d.ts"
       ],
       "Textarea": [
         "./dist/Textarea/index.d.ts"
+      ],
+      "Th": [
+        "./dist/Th/index.d.ts"
+      ],
+      "Thead": [
+        "./dist/Thead/index.d.ts"
       ],
       "Toast": [
         "./dist/Toast/index.d.ts"

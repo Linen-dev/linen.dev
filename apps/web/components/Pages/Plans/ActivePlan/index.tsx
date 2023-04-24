@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react';
 import styles from './index.module.scss';
 import { FiZap } from '@react-icons/all-files/fi/FiZap';
 import { SerializedAccount } from '@linen/types';
-import Table, { Tbody, Td } from 'components/Table';
+import Table from '@linen/ui/Table';
+import Tbody from '@linen/ui/Tbody';
+import Td from '@linen/ui/Td';
 import Spinner from '@linen/ui/Spinner';
 import Link from 'components/Link';
 
