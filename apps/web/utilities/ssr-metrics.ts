@@ -8,9 +8,10 @@ const SENTRY_DSN = process.env.SENTRY_DSN!;
 Sentry.init({
   dsn: SENTRY_DSN,
   integrations: [new Sentry.Integrations.Http({ tracing: true })],
-  tracesSampleRate: 1.0,
+  tracesSampleRate: Number(process.env.SENTRY_SAMPLE_RATE || 0.5),
   debug: process.env.SENTRY_DEBUG === 'true',
-  enabled: !!SENTRY_DSN && process.env.NODE_ENV === 'production',
+  enabled: process.env.SENTRY_ENABLED === 'true',
+  shutdownTimeout: Number(process.env.SENTRY_TIMEOUT || 1000),
 });
 
 export { Sentry };
@@ -20,6 +21,7 @@ const postHog = !!POSTHOG_APIKEY
       flushAt: 1,
       flushInterval: 0,
       enable: process.env.POSTHOG_SERVER_ENABLE === 'true',
+      requestTimeout: Number(process.env.POSTHOG_TIMEOUT || 1000),
     })
   : undefined;
 
