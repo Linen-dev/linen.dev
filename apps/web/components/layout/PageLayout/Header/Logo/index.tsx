@@ -1,6 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import styles from './index.module.scss';
+import { getImageWidth } from './utilities/dimensions';
 
 interface Props {
   src: string;
@@ -39,5 +40,13 @@ export default function Logo({ src, alt }: Props) {
     );
   }
 
-  return <img className={styles.logo} src={src} height="24" alt={alt} />;
+  return (
+    <img
+      className={styles.logo}
+      src={src}
+      height="24"
+      width={getImageWidth(src)}
+      alt={alt}
+    />
+  );
 }
