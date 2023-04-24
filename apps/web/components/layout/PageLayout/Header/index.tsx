@@ -56,6 +56,7 @@ export default function Header({
         borderBottom: `1px solid ${borderColor}`,
         borderTop: `1px solid ${brandColor}`,
         gap: '16px',
+        height: '54px',
       }}
     >
       <Link
