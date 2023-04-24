@@ -8,7 +8,6 @@ export default ThreadPage;
 export const getServerSideProps: GetServerSideProps<Props> = async (
   context
 ) => {
-  console.time('threadGetServerSideProps');
   const track = trackPageView(context);
   const data = await threadGetServerSideProps(
     context,
@@ -17,8 +16,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   if ((data as any)?.props?.permissions?.auth?.id) {
     track.knownUser((data as any).props.permissions.auth.id);
   }
-  console.timeLog('threadGetServerSideProps');
   await track.flush();
-  console.timeEnd('threadGetServerSideProps');
   return data;
 };

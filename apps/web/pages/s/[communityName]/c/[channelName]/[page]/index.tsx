@@ -8,7 +8,6 @@ export default Channel;
 export const getServerSideProps: GetServerSideProps<ChannelProps> = async (
   context
 ) => {
-  console.time('channelGetServerSideProps');
   const track = trackPageView(context);
   const data = await channelGetServerSideProps(
     context,
@@ -17,8 +16,6 @@ export const getServerSideProps: GetServerSideProps<ChannelProps> = async (
   if ((data as any)?.props?.permissions?.auth?.id) {
     track.knownUser((data as any).props.permissions.auth.id);
   }
-  console.timeLog('channelGetServerSideProps');
   await track.flush();
-  console.timeEnd('channelGetServerSideProps');
   return data;
 };
