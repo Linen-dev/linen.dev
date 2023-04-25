@@ -1,4 +1,4 @@
-import { createMembership } from 'lib/membership';
+import { createMembership } from 'services/membership';
 import { GetMembershipsFnType } from '../syncWrapper';
 
 export async function syncMemberships({

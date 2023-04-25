@@ -10,7 +10,7 @@ import { createMessages } from './messages';
 import { slugify } from '@linen/utilities/string';
 import { parseDiscordSentAt } from '@linen/serializers/sentAt';
 import to from '@linen/utilities/await-to-js';
-import { findOrCreateThread, updateLastReplyAt } from 'lib/threads';
+import { findOrCreateThread, updateLastReplyAt } from 'services/threads';
 import ChannelsService from 'services/channels';
 import Logger from './logger';
 

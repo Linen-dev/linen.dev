@@ -1,5 +1,5 @@
 import { accounts, prisma } from '@linen/database';
-import { findAccountByPath } from 'lib/models';
+import { findAccountByPath } from 'services/accounts';
 
 class CommunityService {
   static async find(params: any): Promise<accounts | null> {

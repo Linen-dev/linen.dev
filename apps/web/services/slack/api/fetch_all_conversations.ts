@@ -1,5 +1,5 @@
 import request from 'superagent';
-import { createManyUsers } from 'lib/users';
+import { createManyUsers } from 'services/users';
 import { generateRandomWordSlug } from '@linen/utilities/randomWordSlugs';
 import {
   BotInfo,

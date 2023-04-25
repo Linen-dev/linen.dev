@@ -18,6 +18,7 @@ import {
 import { onError } from 'server/middlewares/error';
 import { ApiEvent, trackApiEvent } from 'utilities/ssr-metrics';
 import { promiseMemoize } from '@linen/utilities/memoize';
+import { inviteNewMembers } from 'services/invites';
 
 const prefix = '/api/accounts';
 const accountsRouter = Router();
@@ -67,6 +68,15 @@ accountsRouter.post(
       ...req.body,
     });
     if (status === 200) {
+      try {
+        if (data.ownerUser && req.body.members && data.id) {
+          await inviteNewMembers({
+            emails: req.body.members,
+            ownerUser: data.ownerUser,
+            accountId: data.id,
+          });
+        }
+      } catch (error) {}
       await trackApiEvent({ req, res }, ApiEvent.user_create_community);
     }
     res.status(status).json(data);

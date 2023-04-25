@@ -1,4 +1,4 @@
-import { updateAccountRedirectDomain } from 'lib/models';
+import { updateAccountRedirectDomain } from 'services/accounts';
 import { AccountWithSlackAuthAndChannels } from '@linen/types';
 
 export async function fetchToken({

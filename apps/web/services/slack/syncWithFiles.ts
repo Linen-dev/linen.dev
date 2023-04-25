@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { findAccountById } from 'lib/models';
+import { findAccountById } from 'services/accounts';
 import { SyncStatus, updateAndNotifySyncStatus } from 'services/sync';
 import { SlackFileAdapter } from './file';
 import { syncWrapper } from './syncWrapper';

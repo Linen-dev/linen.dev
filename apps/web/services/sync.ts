@@ -1,6 +1,6 @@
-import ApplicationMailer from '../mailers/ApplicationMailer';
-import { updateAccountSyncStatus } from '../lib/models';
-import { sendNotification, slackSync } from './slack';
+import ApplicationMailer from 'mailers/ApplicationMailer';
+import { updateAccountSyncStatus } from 'services/accounts';
+import { sendNotification, slackSync } from 'services/slack';
 import { SUPPORT_EMAIL } from 'secrets';
 import {
   accounts,
@@ -8,9 +8,9 @@ import {
   slackAuthorizations,
   prisma,
 } from '@linen/database';
-import { discordSync } from './discord/sync';
-import { slackSyncWithFiles } from './slack/syncWithFiles';
-import { skipNotification } from './slack/api/notification';
+import { discordSync } from 'services/discord/sync';
+import { slackSyncWithFiles } from 'services/slack/syncWithFiles';
+import { skipNotification } from 'services/slack/api/notification';
 import { SyncJobType } from '@linen/types';
 
 export enum SyncStatus {

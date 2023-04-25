@@ -1,5 +1,3 @@
-import { findAuthByEmail } from 'lib/users';
-
 const { TrackClient, RegionEU } = require('customerio-node');
 const siteId = process.env.CUSTOMER_IO_SITE_ID;
 const apiKey = process.env.CUSTOMER_IO_API_KEY;

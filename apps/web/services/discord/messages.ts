@@ -5,7 +5,7 @@ import { LIMIT } from './constrains';
 import { slugify } from '@linen/utilities/string';
 import { parseDiscordSentAt } from '@linen/serializers/sentAt';
 import ChannelsService from 'services/channels';
-import { upsertThreadByExternalId } from 'lib/threads';
+import { upsertThreadByExternalId } from 'services/threads';
 import DiscordApi from './api';
 import to from '@linen/utilities/await-to-js';
 import Logger from './logger';

@@ -1,12 +1,14 @@
 import { prisma, users, Prisma } from '@linen/database';
 import { stripProtocol } from '@linen/utilities/url';
 import { generateRandomWordSlug } from '@linen/utilities/randomWordSlugs';
-import { getAccountById } from 'lib/models';
-import { AccountType, ChatType, Roles } from '@linen/types';
+import {
+  AccountType,
+  AccountWithSlackAuthAndChannels,
+  ChatType,
+  Roles,
+} from '@linen/types';
 import { v4 } from 'uuid';
 import { createAccountEvent } from './customerIo/trackEvents';
-import { createInvitation } from './invites';
-import { getCurrentUrl } from '@linen/utilities/domain';
 import unique from 'lodash.uniq';
 import { replaceS3byCDN } from 'utilities/replaceS3byCDN';
 import { createRemoveCommunityJob } from 'queue/jobs';
@@ -71,21 +73,11 @@ export default class AccountsService {
           },
         },
       });
-
-      try {
-        const ownerUser = users?.shift();
-        if (ownerUser) {
-          await AccountsService.inviteNewMembers({
-            emails: members,
-            ownerUser,
-            accountId: id,
-          });
-        }
-      } catch (error) {}
+      const ownerUser = users?.shift();
 
       await createAccountEvent(email, id);
 
-      return { status: 200, id };
+      return { status: 200, id, ownerUser };
     } catch (error: any) {
       if (
         error.code === 'P2002' &&
@@ -100,28 +92,6 @@ export default class AccountsService {
       }
       console.error(error, { email });
       return { status: 500 };
-    }
-  }
-
-  private static async inviteNewMembers({
-    emails = [],
-    ownerUser,
-    accountId,
-  }: {
-    emails: string[];
-    ownerUser: users;
-    accountId: string;
-  }) {
-    if (emails.length) {
-      for (const email of unique(emails)) {
-        await createInvitation({
-          createdByUserId: ownerUser.id,
-          email,
-          accountId,
-          host: getCurrentUrl(),
-          role: Roles.MEMBER,
-        });
-      }
     }
   }
 
@@ -317,3 +287,132 @@ export default class AccountsService {
     return [...premium, ...premiumWithoutDomain, ...freeTier];
   }
 }
+
+export async function findAccountsPremium() {
+  return await prisma.accounts.findMany({
+    select: {
+      type: true,
+      redirectDomain: true,
+      name: true,
+    },
+    where: {
+      redirectDomain: { not: null },
+      type: AccountType.PUBLIC,
+    },
+    orderBy: { redirectDomain: 'asc' },
+  });
+}
+
+export function findAccountIdByExternalId(externalId: string) {
+  return prisma.accounts.findFirst({
+    select: { id: true, newChannelsConfig: true },
+    where: { slackTeamId: externalId },
+  });
+}
+
+export async function findSlackToken(accountId: string) {
+  return await prisma.slackAuthorizations.findFirst({
+    where: {
+      accountsId: accountId,
+    },
+    orderBy: { createdAt: 'desc' },
+  });
+}
+
+export const createSlackAuthorization = async (
+  slackAuthorization: Prisma.slackAuthorizationsCreateManyInput
+) => {
+  return await prisma.slackAuthorizations.create({ data: slackAuthorization });
+};
+
+export const updateAccount = async (
+  accountId: string,
+  account: Prisma.accountsUpdateInput
+) => {
+  return await prisma.accounts.update({
+    where: {
+      id: accountId,
+    },
+    data: account,
+  });
+};
+
+export const getAccountById = async (accountId: string) => {
+  return await prisma.accounts.findUnique({
+    where: {
+      id: accountId,
+    },
+  });
+};
+
+export const updateAccountSyncStatus = async (
+  accountId: string,
+  status: string
+) => {
+  return await prisma.accounts.update({
+    where: { id: accountId },
+    data: { syncStatus: status },
+  });
+};
+
+export const findAccountByPath = async (domain: string) => {
+  const path = domain.toLowerCase();
+  return await prisma.accounts.findFirst({
+    where: {
+      OR: [
+        {
+          redirectDomain: path,
+        },
+        {
+          slackDomain: path,
+        },
+        {
+          discordDomain: path,
+        },
+        {
+          discordServerId: path,
+        },
+      ],
+    },
+  });
+};
+
+export const findAccountById = async (
+  accountId: string
+): Promise<AccountWithSlackAuthAndChannels | null> => {
+  return await prisma.accounts.findUnique({
+    where: {
+      id: accountId,
+    },
+    include: {
+      slackAuthorizations: {
+        orderBy: {
+          createdAt: 'desc',
+        },
+      },
+      channels: true,
+    },
+  });
+};
+
+export const updateAccountRedirectDomain = async (
+  accountId: string,
+  domain: string,
+  communityUrl: string
+) => {
+  return await prisma.accounts.update({
+    where: { id: accountId },
+    data: { redirectDomain: stripProtocol(domain).toLowerCase(), communityUrl },
+  });
+};
+
+export const findAccountBySlackTeamId = async (slackTeamId: string) => {
+  return await prisma.accounts.findFirst({
+    where: {
+      slackTeamId,
+    },
+    select: {
+      id: true,
+    },
+  });
+};

@@ -5,7 +5,7 @@ import {
 } from 'next/types';
 import type { Session as SessionType, JWT } from 'utilities/auth/types';
 import { users, prisma } from '@linen/database';
-import { findAuthByEmail } from 'lib/users';
+import { findAuthByEmail } from 'services/users';
 export { type SessionType };
 import {
   getServerSession,

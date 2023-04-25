@@ -5,6 +5,8 @@ import { normalize } from '@linen/utilities/string';
 import PermissionsService from './permissions';
 import { Unauthorized } from 'server/exceptions';
 import { serializeEmail } from '@linen/serializers/email';
+import unique from 'lodash.uniq';
+import { getCurrentUrl } from '@linen/utilities/domain';
 
 export async function createInvitation({
   createdByUserId,
@@ -326,4 +328,26 @@ export async function joinCommunityAfterSignIn({
     });
   }
   await checkoutTenant(authId, communityId);
+}
+
+export async function inviteNewMembers({
+  emails = [],
+  ownerUser,
+  accountId,
+}: {
+  emails: string[];
+  ownerUser: users;
+  accountId: string;
+}) {
+  if (emails.length) {
+    for (const email of unique(emails)) {
+      await createInvitation({
+        createdByUserId: ownerUser.id,
+        email,
+        accountId,
+        host: getCurrentUrl(),
+        role: Roles.MEMBER,
+      });
+    }
+  }
 }

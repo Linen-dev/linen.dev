@@ -269,3 +269,92 @@ export default class MessagesService {
     });
   }
 }
+
+export const createMessageWithMentions = async (
+  message: Prisma.messagesUncheckedCreateInput,
+  mentionsId: string[]
+) => {
+  const msg = {
+    body: message.body,
+    threadId: message.threadId,
+    externalMessageId: message.externalMessageId,
+    channelId: message.channelId,
+    sentAt: message.sentAt,
+    usersId: message.usersId,
+    messageFormat: message.messageFormat,
+  };
+  const newMessage = await prisma.messages.upsert({
+    include: { mentions: { include: { users: true } }, author: true },
+    create: {
+      ...msg,
+      mentions: {
+        create: mentionsId.map((id) => ({ usersId: id })),
+      },
+    },
+    where: {
+      channelId_externalMessageId: {
+        externalMessageId: message.externalMessageId!,
+        channelId: message.channelId,
+      },
+    },
+    update: {
+      ...msg,
+    },
+  });
+  if (!!newMessage.threadId) {
+    await prisma.threads.updateMany({
+      where: {
+        id: newMessage.threadId,
+        lastReplyAt: { lt: newMessage.sentAt.getTime() },
+      },
+      data: { lastReplyAt: newMessage.sentAt.getTime() },
+    });
+  }
+  return newMessage;
+};
+
+export const deleteMessageFromThread = async (
+  messageId: string,
+  threadId: string | null
+) => {
+  await deleteMessageWithMentions(messageId);
+
+  // if thread exists and has no messages, we will remove it
+  if (threadId) {
+    const messages = await prisma.messages.count({ where: { threadId } });
+    if (messages === 0) {
+      await prisma.threads.delete({ where: { id: threadId } });
+    }
+  }
+};
+
+export const deleteMessageWithMentions = async (messageId: string) => {
+  return await prisma.$transaction([
+    prisma.messages.update({
+      where: { id: messageId },
+      data: { threads: { update: { messageCount: { decrement: 1 } } } },
+    }),
+    prisma.mentions.deleteMany({
+      where: {
+        messagesId: messageId,
+      },
+    }),
+    prisma.messages.delete({
+      where: {
+        id: messageId,
+      },
+    }),
+  ]);
+};
+
+export const findMessageByChannelIdAndTs = async (
+  channelId: string,
+  ts: string
+) => {
+  return prisma.messages.findFirst({
+    where: {
+      channelId: channelId,
+      externalMessageId: ts,
+    },
+  });
+};

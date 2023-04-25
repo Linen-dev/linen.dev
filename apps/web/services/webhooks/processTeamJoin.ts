@@ -1,6 +1,7 @@
-import { findAccountBySlackTeamId } from 'lib/models';
+import { findAccountBySlackTeamId } from 'services/accounts';
 import { SlackEvent, SlackTeamJoinEvent } from '@linen/types';
-import { createUserFromUserInfo } from 'lib/users';
+import { createUser } from 'services/users';
+import { buildUserFromInfo } from '../slack/serializers/buildUserFromInfo';
 
 export async function processTeamJoin(body: SlackEvent) {
   const event = body.event as SlackTeamJoinEvent;
@@ -14,7 +15,8 @@ export async function processTeamJoin(body: SlackEvent) {
       metadata: { team_id },
     };
   }
-  await createUserFromUserInfo(event.user, account.id);
+  const param = buildUserFromInfo(event.user, account.id);
+  await createUser(param);
   return {
     status: 201,
     message: 'User created',

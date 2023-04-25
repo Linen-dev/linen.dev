@@ -1,19 +1,13 @@
 import { auths, type accounts, type users, prisma } from '@linen/database';
-import {
-  AccountIntegration,
-  AccountType,
-  ChatType,
-  Permissions,
-  Roles,
-} from '@linen/types';
+import { AccountType, ChatType, Permissions, Roles } from '@linen/types';
 import {
   GetServerSidePropsContext,
   NextApiRequest,
   NextApiResponse,
 } from 'next/types';
 import Session from '../session';
-import { findAccountByPath } from 'lib/models';
-import { findAuthByEmail } from 'lib/users';
+import { findAccountByPath } from 'services/accounts';
+import { findAuthByEmail } from 'services/users';
 
 type Request = GetServerSidePropsContext['req'] | NextApiRequest;
 type Response = GetServerSidePropsContext['res'] | NextApiResponse;

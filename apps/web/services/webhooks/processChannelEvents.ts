@@ -7,8 +7,8 @@ import {
   createChannel,
   findChannelByExternalId,
   renameChannel,
-} from 'lib/channel';
-import { findAccountIdByExternalId, findSlackToken } from 'lib/account';
+} from 'services/channels';
+import { findAccountIdByExternalId, findSlackToken } from 'services/accounts';
 import { joinChannel } from 'services/slack';
 
 export async function processChannelCreated(body: SlackEvent) {

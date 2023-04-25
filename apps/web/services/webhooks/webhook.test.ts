@@ -1,4 +1,4 @@
-jest.mock('lib/users');
+jest.mock('services/users');
 jest.mock('services/events');
 import { handleWebhook } from 'services/webhooks';
 import { v4 } from 'uuid';

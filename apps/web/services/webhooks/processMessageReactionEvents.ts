@@ -4,7 +4,7 @@ import {
   SlackEvent,
 } from '@linen/types';
 import { Prisma, prisma } from '@linen/database';
-import { findChannelWithAccountByExternalId } from 'lib/channel';
+import { findChannelWithAccountByExternalId } from 'services/channels';
 
 async function processMessageReactionEvent(
   event: SlackMessageReactionAddedEvent | SlackMessageReactionRemovedEvent,

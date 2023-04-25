@@ -3,8 +3,8 @@ import {
   findMessageByChannelIdAndTs,
   deleteMessageWithMentions,
   deleteMessageFromThread,
-} from 'lib/models';
-import { findOrCreateThread, updateSlackThread } from 'lib/threads';
+} from 'services/messages';
+import { findOrCreateThread, updateSlackThread } from 'services/threads';
 import { slugify } from '@linen/utilities/string';
 import {
   accounts,
@@ -13,14 +13,43 @@ import {
   slackAuthorizations,
 } from '@linen/database';
 import { MessageFormat, SlackEvent, SlackMessageEvent } from '@linen/types';
-import { findOrCreateUserFromUserInfo } from 'lib/users';
+import { findUser, createUser } from 'services/users';
 import { parseSlackSentAt, tsToSentAt } from '@linen/serializers/sentAt';
-import { findChannelWithAccountByExternalId } from 'lib/channel';
+import { findChannelWithAccountByExternalId } from 'services/channels';
 import { eventNewMessage, eventNewThread } from 'services/events';
-import { processAttachments } from 'services/slack';
+import {
+  processAttachments,
+  getSlackBot,
+  getSlackUser,
+  buildUserFromInfo,
+  buildUserBotFromInfo,
+} from 'services/slack';
 import { serializeMessage } from '@linen/serializers/message';
 import { serializeThread } from '@linen/serializers/thread';
 import { filterMessages, parseMessage } from 'services/slack/sync/parseMessage';
+
+const findOrCreateUserFromUserInfo = async (
+  externalUserId: string,
+  accountId: string,
+  accessToken?: string
+) => {
+  let user = await findUser(externalUserId, accountId);
+  if (user === null) {
+    if (!!accessToken) {
+      let slackUser = await getSlackUser(externalUserId, accessToken);
+      if (!!slackUser) {
+        const param = buildUserFromInfo(slackUser, accountId);
+        return await createUser(param);
+      }
+      let botUser = await getSlackBot(externalUserId, accessToken);
+      if (!!botUser) {
+        const param = buildUserBotFromInfo(botUser, accountId);
+        return await createUser(param);
+      }
+    }
+  }
+  return user;
+};
 
 export async function processMessageEvent(body: SlackEvent) {
   const event = body.event as SlackMessageEvent;

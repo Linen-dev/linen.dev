@@ -1,10 +1,10 @@
 import { SerializedThread } from '@linen/types';
-import { shouldThisChannelBeAnonymous } from 'lib/channel';
-import { findThreadsByCursor } from 'lib/threads';
+import { shouldThisChannelBeAnonymous } from 'services/channels';
+import { findThreadsByCursor } from 'services/threads';
 import { serializeThread } from '@linen/serializers/thread';
 import { decodeCursor } from 'utilities/cursor';
 import { sortBySentAtAsc } from '@linen/utilities/object';
-import { buildCursor } from '../../utilities/buildCursor';
+import { buildCursor } from 'utilities/buildCursor';
 
 export type channelNextPageType = {
   threads: SerializedThread[];

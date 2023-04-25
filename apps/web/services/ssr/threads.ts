@@ -1,5 +1,5 @@
 import { serializeThread } from '@linen/serializers/thread';
-import { findThreadByIncrementId } from 'lib/threads';
+import { findThreadByIncrementId } from 'services/threads';
 import { channels, threads } from '@linen/database';
 import { GetServerSidePropsContext } from 'next';
 import { NotFound } from 'utilities/response';

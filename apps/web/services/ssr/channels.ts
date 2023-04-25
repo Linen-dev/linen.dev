@@ -1,6 +1,6 @@
 import { GetServerSidePropsContext } from 'next/types';
 import { NotFound } from 'utilities/response';
-import { findThreadsByCursor, findPinnedThreads } from 'lib/threads';
+import { findThreadsByCursor, findPinnedThreads } from 'services/threads';
 import { serializeThread } from '@linen/serializers/thread';
 import { decodeCursor } from 'utilities/cursor';
 import { SerializedChannel } from '@linen/types';

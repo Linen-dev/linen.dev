@@ -1,4 +1,4 @@
-import { findAccountById } from 'lib/models';
+import { findAccountById } from 'services/accounts';
 import { SyncStatus, updateAndNotifySyncStatus } from 'services/sync';
 import {
   fetchTeamInfo,

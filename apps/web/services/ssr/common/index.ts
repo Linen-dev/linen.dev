@@ -1,5 +1,5 @@
 import { serializeSettings } from '@linen/serializers/settings';
-import ChannelsService from 'services/channels';
+import ChannelsService, { getDMs } from 'services/channels';
 import CommunityService from 'services/community';
 import CommunitiesService from 'services/communities';
 import PermissionsService from 'services/permissions';
@@ -8,7 +8,6 @@ import { GetServerSidePropsContext } from 'next';
 import { Permissions } from '@linen/types';
 import { serializeAccount } from '@linen/serializers/account';
 import { serializeChannel } from '@linen/serializers/channel';
-import { getDMs } from 'lib/channel';
 import { cleanUpUrl } from '@linen/utilities/url';
 
 type validatePermissionsResponse = {

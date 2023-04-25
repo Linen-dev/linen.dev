@@ -1,4 +1,4 @@
-import { updateNextPageCursor } from 'lib/models';
+import { updateNextPageCursor } from 'services/channels';
 import { channels, prisma } from '@linen/database';
 import {
   AccountWithSlackAuthAndChannels,
@@ -12,7 +12,7 @@ import { processAttachments } from './attachments';
 import { getMentionedUsers } from './getMentionedUsers';
 import { sleep } from '@linen/utilities/promises';
 import { parseSlackSentAt, tsToSentAt } from '@linen/serializers/sentAt';
-import { findOrCreateThread } from 'lib/threads';
+import { findOrCreateThread } from 'services/threads';
 import { slugify } from '@linen/utilities/string';
 import { filterMessages, parseMessage } from './parseMessage';
 

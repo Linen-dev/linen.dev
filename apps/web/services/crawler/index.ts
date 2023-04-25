@@ -1,6 +1,6 @@
 import { load } from 'cheerio';
 import axios from 'axios';
-import { findAccountsPremium } from 'lib/account';
+import { findAccountsPremium } from 'services/accounts';
 import { sendNotification } from 'services/slack';
 
 function getResult(text: string) {

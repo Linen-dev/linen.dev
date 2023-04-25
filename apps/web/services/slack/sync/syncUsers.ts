@@ -1,9 +1,10 @@
-import { createOrUpdateUser, findUsersByAccountId } from 'lib/users';
+import { createUser, findUsersByAccountId } from 'services/users';
 import {
   AccountWithSlackAuthAndChannels,
   UserMap,
   UserInfo,
 } from '@linen/types';
+import { buildUserFromInfo } from '../serializers/buildUserFromInfo';
 
 export async function syncUsers({
   accountId,
@@ -26,7 +27,7 @@ export async function syncUsers({
 
     let count = members.length;
     for (const user of members) {
-      await createOrUpdateUser(user, accountId);
+      await createUser(buildUserFromInfo(user, accountId));
       count--;
       if (count % 50 === 0) {
         console.log('members left:', count);
@@ -43,7 +44,7 @@ export async function syncUsers({
         const additionalMembers: UserInfo[] = usersListResponse?.body?.members;
         if (!!additionalMembers) {
           for (const user of additionalMembers) {
-            await createOrUpdateUser(user, accountId);
+            await createUser(buildUserFromInfo(user, accountId));
           }
         }
         userCursor = usersListResponse?.body?.response_metadata?.next_cursor;

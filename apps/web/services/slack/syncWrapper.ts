@@ -1,4 +1,4 @@
-import { hideEmptyChannels } from 'lib/channel';
+import { hideEmptyChannels } from 'services/channels';
 import { fetchToken } from './sync/fetchToken';
 import { syncChannels } from './sync/syncChannels';
 import { syncUsers } from './sync/syncUsers';

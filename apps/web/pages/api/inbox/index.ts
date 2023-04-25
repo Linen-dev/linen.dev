@@ -3,9 +3,8 @@ import PermissionsService from 'services/permissions';
 import CommunityService from 'services/community';
 import { prisma } from '@linen/database';
 import { serializeThread } from '@linen/serializers/thread';
-import ChannelsService from 'services/channels';
+import ChannelsService, { getDMs } from 'services/channels';
 import { anonymizeMessages } from 'utilities/anonymizeMessages';
-import { getDMs } from 'lib/channel';
 import { SerializedChannel } from '@linen/types';
 
 function getPage(page?: number) {

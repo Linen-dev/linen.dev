@@ -6,7 +6,7 @@ import {
 } from '@linen/database';
 import { findChannelsWithStats, channelPutIntegrationType } from '@linen/types';
 import { formatDistance } from '@linen/utilities/date';
-import { serializeChannel } from '@linen/serializers/channel';
+import { serializeChannel, serializeDm } from '@linen/serializers/channel';
 import { v4 } from 'uuid';
 
 class ChannelsService {
@@ -419,3 +419,148 @@ class ChannelsService {
 }
 
 export default ChannelsService;
+
+export async function getDMs({
+  accountId,
+  userId,
+}: {
+  accountId: string;
+  userId: string;
+}) {
+  return await prisma.channels
+    .findMany({
+      include: {
+        memberships: {
+          select: {
+            user: true,
+            archived: true,
+          },
+        },
+      },
+      where: {
+        accountId,
+        type: ChannelType.DM,
+        memberships: { some: { usersId: userId } },
+      },
+      orderBy: { createdAt: 'desc' },
+    })
+    .then((e) => e.map(serializeDm(userId)));
+}
+
+export async function shouldThisChannelBeAnonymous(channelId: string) {
+  return await prisma.accounts
+    .findFirst({
+      where: {
+        channels: {
+          some: { id: channelId },
+        },
+      },
+      select: { anonymizeUsers: true },
+    })
+    .then((account) => account?.anonymizeUsers);
+}
+
+export async function hideEmptyChannels(accountId: string) {
+  const channels = await prisma.channels.findMany({
+    include: { _count: true },
+    where: { accountId },
+  });
+  const promise = channels
+    .map(async (channel) => {
+      if (!channel._count.threads && !channel._count.messages) {
+        await prisma.channels.update({
+          where: { id: channel.id },
+          data: { hidden: true },
+        });
+      }
+    })
+    .filter(Boolean);
+  return Promise.all(promise);
+}
+
+export async function createChannel({
+  name,
+  accountId,
+  externalChannelId,
+  hidden,
+}: {
+  name: string;
+  accountId: string;
+  externalChannelId: string;
+  hidden?: boolean;
+}) {
+  const exists = await prisma.channels.findUnique({
+    where: {
+      externalChannelId,
+    },
+  });
+  if (exists) {
+    return exists;
+  }
+  return await prisma.channels.create({
+    data: {
+      channelName: name.toLowerCase(),
+      accountId,
+      externalChannelId,
+      hidden,
+    },
+  });
+}
+
+export function findChannelByExternalId({
+  externalId,
+  accountId,
+}: {
+  externalId: string;
+  accountId: string;
+}) {
+  return prisma.channels.findFirst({
+    where: { externalChannelId: externalId, accountId },
+  });
+}
+
+export function renameChannel({ name, id }: { name: string; id: string }) {
+  return prisma.channels.update({
+    where: {
+      id,
+    },
+    data: {
+      channelName: name.toLowerCase(),
+    },
+  });
+}
+
+export async function findChannelWithAccountByExternalId(
+  externalId: string,
+  externalAccountId: string
+) {
+  return await prisma.channels.findUnique({
+    where: {
+      externalChannelId: externalId,
+    },
+    include: {
+      account: {
+        include: {
+          slackAuthorizations: {
+            orderBy: { createdAt: 'desc' },
+            take: 1,
+          },
+        },
+      },
+    },
+  });
+}
+
+export const updateNextPageCursor = async (
+  channelId: string,
+  externalPageCursor: string
+) => {
+  return await prisma.channels.update({
+    where: {
+      id: channelId,
+    },
+    data: {
+      externalPageCursor,
+    },
+  });
+};
