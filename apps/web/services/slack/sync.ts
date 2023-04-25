@@ -1,5 +1,5 @@
 import { findAccountById } from 'services/accounts';
-import { SyncStatus, updateAndNotifySyncStatus } from 'services/sync';
+import { SyncStatus, updateAndNotifySyncStatus } from 'services/accounts/sync';
 import {
   fetchTeamInfo,
   fetchReplies,

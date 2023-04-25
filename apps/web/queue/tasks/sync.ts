@@ -1,4 +1,4 @@
-import { syncJob } from 'services/sync';
+import { syncJob } from 'services/accounts/sync';
 import { type JobHelpers } from 'graphile-worker';
 
 export const sync = async (payload: any, helpers: JobHelpers) => {

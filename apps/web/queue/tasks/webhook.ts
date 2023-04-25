@@ -1,4 +1,4 @@
-import { handleWebhook } from 'services/webhooks';
+import { handleWebhook } from 'services/slack/webhooks';
 import { type JobHelpers } from 'graphile-worker';
 
 export const webhook = async (payload: any, helpers: JobHelpers) => {

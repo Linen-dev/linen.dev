@@ -1,7 +1,6 @@
 import { serializeSettings } from '@linen/serializers/settings';
 import ChannelsService, { getDMs } from 'services/channels';
 import CommunityService from 'services/community';
-import CommunitiesService from 'services/communities';
 import PermissionsService from 'services/permissions';
 import { qs } from '@linen/utilities/url';
 import { GetServerSidePropsContext } from 'next';
@@ -46,7 +45,9 @@ export async function ssr(
     : [];
 
   const settings = serializeSettings(community);
-  const communities = await CommunitiesService.find(context.req, context.res);
+  const communities = !!permissions.auth?.id
+    ? await CommunityService.findByAuthId(permissions.auth.id)
+    : [];
 
   const currentCommunity = serializeAccount(community);
 

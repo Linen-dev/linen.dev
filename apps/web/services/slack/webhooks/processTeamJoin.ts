@@ -1,7 +1,7 @@
 import { findAccountBySlackTeamId } from 'services/accounts';
 import { SlackEvent, SlackTeamJoinEvent } from '@linen/types';
 import { createUser } from 'services/users';
-import { buildUserFromInfo } from '../slack/serializers/buildUserFromInfo';
+import { buildUserFromInfo } from '../serializers/buildUserFromInfo';
 
 export async function processTeamJoin(body: SlackEvent) {
   const event = body.event as SlackTeamJoinEvent;

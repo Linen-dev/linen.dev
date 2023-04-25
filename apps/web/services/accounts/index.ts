@@ -8,7 +8,7 @@ import {
   Roles,
 } from '@linen/types';
 import { v4 } from 'uuid';
-import { createAccountEvent } from './customerIo/trackEvents';
+import { createAccountEvent } from 'services/customerIo/trackEvents';
 import unique from 'lodash.uniq';
 import { replaceS3byCDN } from 'utilities/replaceS3byCDN';
 import { createRemoveCommunityJob } from 'queue/jobs';

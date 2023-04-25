@@ -21,6 +21,19 @@ class CommunityService {
     }
     return null;
   }
+
+  static async findByAuthId(authId: string): Promise<accounts[]> {
+    return prisma.auths
+      .findMany({
+        where: {
+          id: authId,
+        },
+        select: { users: { select: { account: true } } },
+      })
+      .then((rows) =>
+        rows.map((row) => row.users.map((user) => user.account)).flat()
+      );
+  }
 }
 
 export default CommunityService;

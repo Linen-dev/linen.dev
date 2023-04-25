@@ -1,4 +1,4 @@
-import { SyncStatus, updateAndNotifySyncStatus } from 'services/sync';
+import { SyncStatus, updateAndNotifySyncStatus } from 'services/accounts/sync';
 import { listChannelsAndPersist } from './channels';
 import { CrawlType } from './constrains';
 import { crawlUsers } from './users';

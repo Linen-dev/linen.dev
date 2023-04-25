@@ -1,6 +1,6 @@
 jest.mock('services/users');
 jest.mock('services/events');
-import { handleWebhook } from 'services/webhooks';
+import { handleWebhook } from 'services/slack/webhooks';
 import { v4 } from 'uuid';
 import { prisma } from '@linen/database';
 

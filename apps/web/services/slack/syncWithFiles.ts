@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { findAccountById } from 'services/accounts';
-import { SyncStatus, updateAndNotifySyncStatus } from 'services/sync';
+import { SyncStatus, updateAndNotifySyncStatus } from 'services/accounts/sync';
 import { SlackFileAdapter } from './file';
 import { syncWrapper } from './syncWrapper';
 import StreamZip from 'node-stream-zip';

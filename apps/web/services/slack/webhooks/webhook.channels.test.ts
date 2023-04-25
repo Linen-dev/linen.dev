@@ -1,6 +1,6 @@
 import { accounts, channels } from '@linen/database';
 import { prismaMock } from '__tests__/singleton';
-import { handleWebhook } from 'services/webhooks';
+import { handleWebhook } from 'services/slack/webhooks';
 
 const channelRenameEvent = {
   token: 'xacv5epJ26YAuNHJeO4UoaNf',

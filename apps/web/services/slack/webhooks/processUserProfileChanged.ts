@@ -1,7 +1,7 @@
 import { SlackEvent, UserProfileUpdateEvent } from '@linen/types';
 import { findAccountIdByExternalId } from 'services/accounts';
 import { createUser, findUser, updateUser } from 'services/users';
-import { buildUserFromInfo } from '../slack/serializers/buildUserFromInfo';
+import { buildUserFromInfo } from '../serializers/buildUserFromInfo';
 
 export async function processUserProfileChanged(body: SlackEvent) {
   const teamId = body.team_id;

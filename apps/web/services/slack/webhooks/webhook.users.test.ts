@@ -1,6 +1,6 @@
 import { prismaMock } from '__tests__/singleton';
 import type { accounts } from '@linen/database';
-import { handleWebhook } from 'services/webhooks';
+import { handleWebhook } from 'services/slack/webhooks';
 
 const userUpdateEvent = {
   token: 'xacv5epJ26YAuNHJeO4UoaNf',
