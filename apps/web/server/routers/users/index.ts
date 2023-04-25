@@ -7,9 +7,11 @@ import {
   AuthedRequestWithTenantAndBody,
   NextFunction,
   Response,
-} from 'server/types';
+  Roles,
+  deleteUserSchema,
+  deleteUserType,
+} from '@linen/types';
 import { prisma } from '@linen/database';
-import { Roles, deleteUserSchema, deleteUserType } from '@linen/types';
 import UsersService from 'services/users';
 import { z } from 'zod';
 

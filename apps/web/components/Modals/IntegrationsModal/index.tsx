@@ -8,7 +8,7 @@ import { FiGithub } from '@react-icons/all-files/fi/FiGithub';
 import { FiMail } from '@react-icons/all-files/fi/FiMail';
 import { qs } from '@linen/utilities/url';
 import Toast from '@linen/ui/Toast';
-import { useSession } from 'utilities/auth/react';
+import { useSession } from '@linen/auth/client';
 import { ChannelContext } from '@linen/contexts/channel';
 import * as api from 'utilities/requests';
 import { FiX } from '@react-icons/all-files/fi/FiX';

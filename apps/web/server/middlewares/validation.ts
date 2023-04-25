@@ -1,4 +1,4 @@
-import type { Response, NextFunction, Request } from 'server/types';
+import type { Response, NextFunction, Request } from '@linen/types';
 
 export default function validationMiddleware(
   schema: any,

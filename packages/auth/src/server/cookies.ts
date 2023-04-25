@@ -1,6 +1,11 @@
 import { CookieSerializeOptions, serialize } from 'cookie';
-import { cookiesName } from '..';
-import { Cookie } from '../types';
+import { cookiesName } from './constraints';
+
+interface Cookie {
+  name: string;
+  value: string;
+  options: CookieSerializeOptions;
+}
 
 export class CookieStore {
   store: Record<string, Cookie>;

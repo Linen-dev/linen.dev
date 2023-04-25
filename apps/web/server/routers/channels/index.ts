@@ -8,15 +8,13 @@ import {
   NotFound,
   NotImplemented,
 } from 'server/exceptions';
-import {
-  AuthedRequestWithTenantAndBody,
-  NextFunction,
-  Response,
-} from 'server/types';
 import { v4 } from 'uuid';
 import ChannelsService from 'services/channels';
 import { prisma } from '@linen/database';
 import {
+  AuthedRequestWithTenantAndBody,
+  NextFunction,
+  Response,
   archiveChannelSchema,
   archiveChannelType,
   bulkHideChannelsSchema,
@@ -30,16 +28,14 @@ import {
   postChannelIntegrationsType,
   setDefaultChannelSchema,
   setDefaultChannelType,
-} from '@linen/types';
-import { serializeChannel } from '@linen/serializers/channel';
-import { serialize } from 'superjson';
-import {
   postChannelIntegrationsSchema,
   getChannelMembersSchema,
   getChannelMembersType,
   putChannelMembersSchema,
   putChannelMembersType,
 } from '@linen/types';
+import { serializeChannel } from '@linen/serializers/channel';
+import { serialize } from 'superjson';
 import { serializeUser } from '@linen/serializers/user';
 
 const prefix = '/api/channels';

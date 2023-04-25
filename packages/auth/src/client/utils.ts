@@ -1,9 +1,43 @@
-import {
-  BroadcastMessage,
-  CtxOrReq,
-  LoggerInstance,
-  LinenAuthClientConfig,
-} from '../types';
+interface BroadcastMessage {
+  event?: 'session';
+  data?: { trigger?: 'signout' | 'getSession' };
+  clientId: string;
+  timestamp: number;
+}
+
+export interface CtxOrReq {
+  req?: any;
+  ctx?: { req: any };
+}
+
+type LoggerInstance = any;
+
+export interface LinenAuthClientConfig {
+  basePath: string;
+  /** Stores last session response */
+  _session?: Session | null | undefined;
+  /** Used for timestamp since last synced (in seconds) */
+  _lastSync: number;
+  /**
+   * Stores the `SessionProvider`'s session update method to be able to
+   * trigger session updates from places like `signIn` or `signOut`
+   */
+  _getSession: (...args: any[]) => any;
+}
+
+type ISODateString = string;
+
+interface DefaultSession {
+  user?: {
+    name?: string | null;
+    email?: string | null;
+    image?: string | null;
+    id?: string | null;
+  };
+  expires: ISODateString;
+}
+
+export interface Session extends DefaultSession {}
 
 /**
  * If passed 'appContext' via getInitialProps() in _app.js

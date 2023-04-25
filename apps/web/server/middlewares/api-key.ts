@@ -1,4 +1,4 @@
-import { AuthedRequestWithTenant, NextFunction } from 'server/types';
+import { AuthedRequestWithTenant, NextFunction } from '@linen/types';
 import { Forbidden, Unauthorized } from 'server/exceptions';
 import { ApiKeysService } from 'services/api-keys';
 

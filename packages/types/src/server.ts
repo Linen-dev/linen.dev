@@ -1,16 +1,20 @@
 import type { accounts, users } from '@linen/database';
-import * as express from 'express';
+import {
+  type Request as eRequest,
+  type Response as eResponse,
+  type NextFunction as eNextFunction,
+} from 'express';
 
-export type Response = express.Response;
-export type Request = express.Request;
-export type NextFunction = express.NextFunction;
+export type Response = eResponse;
+export type Request = eRequest;
+export type NextFunction = eNextFunction;
 
 export type AuthedRequest<
   Params = any,
   ResBody = any,
   Body = any,
   Query = any
-> = express.Request<Params, ResBody, Body, Query> & {
+> = eRequest<Params, ResBody, Body, Query> & {
   session_user?: {
     users: users[];
     email: string;

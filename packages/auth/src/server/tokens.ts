@@ -1,11 +1,9 @@
-import { cookiesName } from '..';
 import { buildCookieName, CookieStore, setSessionCookies } from './cookies';
 export type JwtPayload = jose.JWTPayload & { data: any };
 import * as jose from 'jose';
 import hkdf from '@panva/hkdf';
 import { v4 as uuid } from 'uuid';
-
-const DEFAULT_MAX_AGE = 30 * 24 * 60 * 60; // 30 days
+import { cookiesName, DEFAULT_MAX_AGE } from './constraints';
 
 const now = () => (Date.now() / 1000) | 0;
 
@@ -56,10 +54,7 @@ export function getToken(req: any, cookieName = cookiesName.session) {
   const sessionStore = new CookieStore(req.cookies);
   let token = sessionStore.store[_cookieName]?.value;
 
-  const authorizationHeader =
-    req.headers instanceof Headers
-      ? req.headers.get('authorization')
-      : req.headers.authorization;
+  const authorizationHeader = req.headers.authorization;
 
   if (!token && authorizationHeader?.split(' ')[0] === 'Bearer') {
     const urlEncodedToken = authorizationHeader.split(' ')[1];

@@ -1,4 +1,4 @@
-import { Request, NextFunction } from 'server/types';
+import { Request, NextFunction } from '@linen/types';
 import { Unauthorized } from 'server/exceptions';
 import { stringify } from 'superjson';
 

@@ -14,7 +14,7 @@ import Link from 'components/Link/InternalLink';
 import Modal from '@linen/ui/Modal';
 import styles from './index.module.scss';
 import { Permissions, SerializedChannel } from '@linen/types';
-import { signOut } from 'utilities/auth/react';
+import { signOut } from '@linen/auth/client';
 import usePath from 'hooks/path';
 
 interface Props {

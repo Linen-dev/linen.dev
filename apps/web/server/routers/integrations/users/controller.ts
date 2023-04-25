@@ -1,6 +1,11 @@
 import { BaseController } from 'server/routers/integrations/base-controller';
-import { AuthedRequestWithBody, NextFunction, Response } from 'server/types';
-import { userGetType, userPostType } from '@linen/types';
+import {
+  AuthedRequestWithBody,
+  NextFunction,
+  Response,
+  userGetType,
+  userPostType,
+} from '@linen/types';
 import UsersService from 'services/users';
 import { NotFound } from 'server/exceptions';
 

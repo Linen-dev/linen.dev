@@ -3,10 +3,10 @@ import cors from 'cors';
 // import express from 'express';
 import helmet from 'helmet';
 import hpp from 'hpp';
-import passport from 'utilities/auth/passport';
 import morgan from 'morgan';
 import nextConnect from 'next-connect';
 import { Sentry } from 'utilities/ssr-metrics';
+import { passport } from 'server/auth';
 
 export const init = nextConnect().use(
   morgan('tiny'),

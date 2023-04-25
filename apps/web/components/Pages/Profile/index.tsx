@@ -1,4 +1,4 @@
-import { signOut, useSession } from 'utilities/auth/react';
+import { signOut, useSession } from '@linen/auth/client';
 import CardLayout from 'components/layout/CardLayout';
 import ProfileForm from 'components/layout/PageLayout/Header/UserAvatar/ProfileForm';
 import axios, { AxiosRequestConfig } from 'axios';

@@ -1,4 +1,4 @@
-import { getCsrfToken } from 'utilities/auth/react';
+import { getCsrfToken } from '@linen/auth/client';
 
 async function signInWithCreds(
   email: string,

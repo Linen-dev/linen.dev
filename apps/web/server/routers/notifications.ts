@@ -1,5 +1,5 @@
 import { Router, Response } from 'express';
-import { AuthedRequest, AuthedRequestWithBody } from 'server/types';
+import { AuthedRequest, AuthedRequestWithBody } from '@linen/types';
 import * as notificationService from 'services/notifications';
 import jwtMiddleware from 'server/middlewares/jwt';
 import validationMiddleware from 'server/middlewares/validation';

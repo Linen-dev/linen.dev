@@ -1,6 +1,8 @@
+/**
+ * @jest-environment node
+ */
 jest.mock('services/threads');
 import { testApiHandler } from 'next-test-api-route-handler';
-import '__mocks__/tokens';
 import { create } from '@linen/factory';
 import { createUser } from '__tests__/login';
 import handler from 'pages/api/threads/[[...slug]]';

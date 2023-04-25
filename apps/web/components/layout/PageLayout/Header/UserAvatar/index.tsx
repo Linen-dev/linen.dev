@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Dropdown from '@linen/ui/Dropdown';
-import { signOut } from 'utilities/auth/react';
+import { signOut } from '@linen/auth/client';
 import { SerializedUser } from '@linen/types';
 import Avatar from '@linen/ui/Avatar';
 import Modal from '@linen/ui/Modal';

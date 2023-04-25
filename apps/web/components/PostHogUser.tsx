@@ -1,6 +1,6 @@
 import { usePostHog } from 'posthog-js/react';
 import { useEffect } from 'react';
-import { useSession } from 'utilities/auth/react';
+import { useSession } from '@linen/auth/client';
 
 function PostHogUser() {
   const posthog = usePostHog();

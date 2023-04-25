@@ -1,6 +1,8 @@
 import { BaseController } from 'server/routers/integrations/base-controller';
-import { AuthedRequestWithBody, NextFunction, Response } from 'server/types';
 import {
+  AuthedRequestWithBody,
+  NextFunction,
+  Response,
   messageFindType,
   messageGetType,
   messagePostType,

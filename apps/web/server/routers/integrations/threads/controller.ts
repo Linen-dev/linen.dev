@@ -1,7 +1,13 @@
 import { BaseController } from 'server/routers/integrations/base-controller';
-import { AuthedRequestWithBody, NextFunction, Response } from 'server/types';
+import {
+  AuthedRequestWithBody,
+  NextFunction,
+  Response,
+  threadPostType,
+  threadFindType,
+  threadPutType,
+} from '@linen/types';
 import ThreadsServices from 'services/threads';
-import { threadPostType, threadFindType, threadPutType } from '@linen/types';
 import { NotFound } from 'server/exceptions';
 
 export class ThreadsController extends BaseController {

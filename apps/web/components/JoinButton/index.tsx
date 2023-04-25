@@ -3,7 +3,7 @@ import JoinLinen from './JoinLinen';
 import JoinDiscord from './JoinDiscord';
 import JoinSlack from './JoinSlack';
 import { ChatType, SerializedAccount, Settings } from '@linen/types';
-import { useSession } from 'utilities/auth/react';
+import { useSession } from '@linen/auth/client';
 
 interface Props {
   fontColor: string;

@@ -1,4 +1,4 @@
-import { createCSRFToken } from 'utilities/auth/server/csrf';
+import { createCSRFToken } from '@linen/auth/server';
 import type { NextPageContext } from 'next';
 import SignIn from 'components/Pages/SignIn';
 import { trackPageView } from 'utilities/ssr-metrics';

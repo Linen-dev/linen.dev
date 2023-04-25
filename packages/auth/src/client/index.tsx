@@ -1,32 +1,116 @@
-// Note about signIn() and signOut() methods:
-//
-// On signIn() and signOut() we pass 'json: true' to request a response in JSON
-// instead of HTTP as redirect URLs on other domains are not returned to
-// requests made using the fetch API in the browser, and we need to ask the API
-// to return the response as a JSON object (the end point still defaults to
-// returning an HTTP response with a redirect for non-JavaScript clients).
-//
-// We use HTTP POST requests with CSRF Tokens to protect against CSRF attacks.
 import * as React from 'react';
-import { BroadcastChannel, fetchData, now, cleanUpStorage } from './utils';
-import type {
+import {
+  BroadcastChannel,
+  fetchData,
+  now,
+  cleanUpStorage,
   Session,
-  ClientSafeProvider,
-  LiteralUnion,
-  SessionProviderProps,
-  SignInAuthorizationParams,
-  SignInOptions,
-  SignInResponse,
-  SignOutParams,
-  SignOutResponse,
-  UseSessionOptions,
-  BuiltInProviderType,
-  RedirectableProviderType,
   LinenAuthClientConfig,
   CtxOrReq,
-  GetSessionParams,
-  SessionContextValue,
-} from '../types';
+} from './utils';
+
+export {
+  BroadcastChannel,
+  fetchData,
+  now,
+  cleanUpStorage,
+  Session,
+  LinenAuthClientConfig,
+  CtxOrReq,
+};
+
+interface UseSessionOptions<R extends boolean> {
+  required: R;
+  /** Defaults to `signIn` */
+  onUnauthenticated?: () => void;
+}
+
+type LiteralUnion<T extends U, U = string> = T | (U & Record<never, never>);
+
+interface ClientSafeProvider {
+  id: LiteralUnion<BuiltInProviderType>;
+  name: string;
+  type: ProviderType;
+  signinUrl: string;
+  callbackUrl: string;
+}
+
+interface SignInOptions extends Record<string, unknown> {
+  callbackUrl?: string;
+  redirect?: boolean;
+}
+
+interface SignInResponse {
+  error: string | undefined;
+  status: number;
+  ok: boolean;
+  url: string | null;
+}
+
+type SignInAuthorizationParams =
+  | string
+  | string[][]
+  | Record<string, string>
+  | URLSearchParams;
+
+interface SignOutResponse {
+  url: string;
+}
+
+interface SignOutParams<R extends boolean = true> {
+  callbackUrl?: string;
+  redirect?: R;
+}
+
+interface SessionProviderProps {
+  children: React.ReactNode;
+  session?: Session | null;
+  baseUrl?: string;
+  basePath?: string;
+  refetchInterval?: number;
+  refetchOnWindowFocus?: boolean;
+  refetchWhenOffline?: false;
+}
+
+type BuiltInProviderType = any;
+type RedirectableProviderType = any;
+type ProviderType = any;
+
+interface InternalUrl {
+  /** @default "http://localhost:3000" */
+  origin: string;
+  /** @default "localhost:3000" */
+  host: string;
+  /** @default "/api/auth" */
+  path: string;
+  /** @default "http://localhost:3000/api/auth" */
+  base: string;
+  /** @default "http://localhost:3000/api/auth" */
+  toString: () => string;
+}
+
+type GetSessionParams = CtxOrReq & {
+  event?: 'storage' | 'timer' | 'hidden' | string;
+  triggerEvent?: boolean;
+  broadcast?: boolean;
+};
+
+type SessionContextValue<R extends boolean = false> = R extends true
+  ?
+      | { data: Session; status: 'authenticated' }
+      | { data: null; status: 'loading' }
+  :
+      | { data: Session; status: 'authenticated' }
+      | { data: null; status: 'unauthenticated' | 'loading' };
+
+interface DefaultJWT extends Record<string, unknown> {
+  name?: string | null;
+  email?: string | null;
+  picture?: string | null;
+  sub?: string;
+}
+
+export interface JWT extends Record<string, unknown>, DefaultJWT {}
 
 // This behavior mirrors the default behavior for getting the site name that
 // happens server side in server/index.js

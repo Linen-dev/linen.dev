@@ -1,4 +1,7 @@
-import '__mocks__/tokens';
+/**
+ * @jest-environment node
+ */
+
 import { createUser } from '__tests__/login';
 import ApplicationMailer from 'mailers/ApplicationMailer';
 import { eventNewThread } from '__mocks__/eventNewThreadMock';
@@ -21,7 +24,7 @@ import handlerAuth from 'pages/api/auth/[[...slug]]';
 import handlerRouter from 'pages/api/router';
 import handlerThreads from 'pages/api/threads/[[...slug]]';
 import { testApiHandler } from 'next-test-api-route-handler';
-import { createCSRFToken } from 'utilities/auth/server/csrf';
+import { createCSRFToken } from '@linen/auth/server';
 
 const acceptInviteMock = jest.spyOn(invitesServices, 'acceptInvite');
 

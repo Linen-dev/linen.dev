@@ -1,6 +1,6 @@
 import Modal from '@linen/ui/Modal';
 import type { SessionType } from 'services/session';
-import { getSession } from 'utilities/auth/react';
+import { getSession } from '@linen/auth/client';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import SignUp from 'pages/signup';
 import SignIn from 'pages/signin';

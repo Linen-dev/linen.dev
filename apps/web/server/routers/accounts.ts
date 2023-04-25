@@ -4,7 +4,7 @@ import {
   AuthedRequestWithBody,
   AuthedRequestWithTenantAndBody,
   Response,
-} from 'server/types';
+} from '@linen/types';
 import tenantMiddleware, { Roles } from 'server/middlewares/tenant';
 import validationMiddleware from 'server/middlewares/validation';
 import jwtMiddleware from 'server/middlewares/jwt';

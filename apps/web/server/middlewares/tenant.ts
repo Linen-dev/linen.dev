@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { getAccountById } from 'services/accounts';
 import { Forbidden, NotFound, Unauthorized } from 'server/exceptions';
 import jwtMiddleware from 'server/middlewares/jwt';
-import { AuthedRequestWithTenant, NextFunction, Response } from 'server/types';
+import { AuthedRequestWithTenant, NextFunction, Response } from '@linen/types';
 import { identifyUserSession, Sentry } from 'utilities/ssr-metrics';
 
 // improvement: be able to use typed Roles from prisma

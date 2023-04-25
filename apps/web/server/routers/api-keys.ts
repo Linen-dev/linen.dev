@@ -3,7 +3,7 @@ import {
   AuthedRequestWithTenant,
   AuthedRequestWithTenantAndBody,
   Response,
-} from 'server/types';
+} from '@linen/types';
 import { ApiKeysService } from 'services/api-keys';
 import tenantMiddleware, { Roles } from 'server/middlewares/tenant';
 import validationMiddleware from 'server/middlewares/validation';

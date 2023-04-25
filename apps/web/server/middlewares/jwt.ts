@@ -1,9 +1,12 @@
-import { AuthedRequest, Response, NextFunction } from 'server/types';
+import { AuthedRequest, Response, NextFunction } from '@linen/types';
 import UsersService from 'services/users';
-import { getToken, verifyToken } from 'utilities/auth/server/tokens';
+import {
+  getToken,
+  verifyToken,
+  expireSessionCookies,
+} from '@linen/auth/server';
 import { Unauthorized } from 'server/exceptions';
 import to from '@linen/utilities/await-to-js';
-import { expireSessionCookies } from 'utilities/auth/server/cookies';
 
 export default function jwtMiddleware(_?: never) {
   return async (req: AuthedRequest, res: any, next: NextFunction) => {

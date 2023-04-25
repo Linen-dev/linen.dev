@@ -18,6 +18,7 @@ export * from './slack';
 export * from './cursor';
 export * from './discord';
 export * from './partialTypes';
+export * from './server';
 
 /*
   This package redefines enums from `schema.prisma`.

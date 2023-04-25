@@ -1,4 +1,6 @@
-import '__mocks__/tokens';
+/**
+ * @jest-environment node
+ */
 import { v4 } from 'uuid';
 import { create } from '@linen/factory';
 import { attachHeaders, login } from '__tests__/pages/api/auth/login';

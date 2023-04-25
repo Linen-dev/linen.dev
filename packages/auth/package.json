@@ -1,0 +1,48 @@
+{
+  "name": "@linen/auth",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "tsc --watch",
+    "prebuild": "node ../scripts/rebuild-package.mjs",
+    "build": "rm -rf dist && tsc",
+    "test": "jest --passWithNoTests"
+  },
+  "sideEffect": false,
+  "dependencies": {
+    "@linen/utilities": "*",
+    "@linen/types": "*",
+    "@panva/hkdf": "^1.0.4",
+    "cookie": "^0.5.0",
+    "crypto": "^1.0.1",
+    "jose": "^4.14.1",
+    "passport": "^0.6.0",
+    "passport-github2": "^0.1.12",
+    "passport-local": "^1.0.0",
+    "passport-magic-login": "^1.2.2",
+    "uuid": "^9.0.0",
+    "zod": "^3.21.4"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.1",
+    "jest": "^29.5.0",
+    "ts-jest": "^29.1.0",
+    "typescript": "^5.0.4"
+  },
+  "exports": {
+    "./client": "./dist/client.js",
+    "./server": "./dist/server.js"
+  },
+  "typesVersions": {
+    "*": {
+      "client": [
+        "./dist/client.d.ts"
+      ],
+      "server": [
+        "./dist/server.d.ts"
+      ]
+    }
+  }
+}

@@ -1,4 +1,9 @@
-import { ChatType } from '@linen/types';
+import {
+  AuthedRequestWithTenantAndBody,
+  NextFunction,
+  Response,
+  ChatType,
+} from '@linen/types';
 import {
   BadRequest,
   Forbidden,
@@ -6,11 +11,6 @@ import {
   NotImplemented,
 } from 'server/exceptions';
 import { Roles } from 'server/middlewares/tenant';
-import {
-  AuthedRequestWithTenantAndBody,
-  NextFunction,
-  Response,
-} from 'server/types';
 import MessagesService from 'services/messages';
 import { getType, postType, deleteType } from './types';
 import { ApiEvent, trackApiEvent } from 'utilities/ssr-metrics';

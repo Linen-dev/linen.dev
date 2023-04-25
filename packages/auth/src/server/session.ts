@@ -1,5 +1,4 @@
 import { verifyToken, JwtPayload, getToken } from './tokens';
-import type { SessionType } from 'services/session';
 
 async function _getValidToken(req: any) {
   if (typeof window !== 'undefined') return;
@@ -30,14 +29,11 @@ function parseUser(session: any) {
       ...session.data,
     },
     expires: new Date(session.exp * 1000).toISOString(),
-  } as any;
+  };
 }
 
 // SSR only
-export async function getServerSession(
-  req: any,
-  _?: any
-): Promise<SessionType | null> {
+export async function getServerSession(req: any, _?: any) {
   try {
     const sessionCookie = getToken(req);
     if (!!sessionCookie) {

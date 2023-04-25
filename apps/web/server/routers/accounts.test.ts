@@ -1,4 +1,6 @@
-import '__mocks__/tokens';
+/**
+ * @jest-environment node
+ */
 import { create } from '@linen/factory';
 import { attachHeaders, login } from '__tests__/pages/api/auth/login';
 import { testApiHandler } from 'next-test-api-route-handler';
