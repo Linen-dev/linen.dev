@@ -26,9 +26,12 @@ interface Props {
   uploading?: boolean;
   uploads: UploadedFile[];
   rows?: number;
+  preview?: boolean;
   sendOnEnter?: boolean;
+  message?: string;
   onSend?(message: string, files: UploadedFile[]): Promise<any>;
   onSendAndClose?(message: string, files: UploadedFile[]): Promise<any>;
+  onMessageChange?(message: string): void;
   fetchMentions?(term?: string): Promise<SerializedUser[]>;
   upload?(files: File[]): Promise<any>;
 }
@@ -137,15 +140,19 @@ function MessageForm({
   uploads,
   rows,
   sendOnEnter,
+  preview,
+  message: initialMessage,
   onSend,
   onSendAndClose,
+  onMessageChange,
   fetchMentions,
   upload,
 }: Props) {
   const STORAGE_KEY = `message.draft.${id}`;
   const [message, setMessage] = useState<string>(
-    sessionStorage.get(STORAGE_KEY) || ''
+    sessionStorage.get(STORAGE_KEY) || initialMessage || ''
   );
+
   const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState<SerializedUser[]>([]);
   const [allUsers, addUsers] = useUsersContext();
@@ -155,6 +162,7 @@ function MessageForm({
   const mention = getMention(message, position);
 
   useEffect(() => {
+    onMessageChange?.(message);
     sessionStorage.set(STORAGE_KEY, message);
     return () => {
       sessionStorage.set(STORAGE_KEY, message);
@@ -180,7 +188,6 @@ function MessageForm({
         Toast.error('Something went wrong. Please try again.');
         setLoading(false);
       });
-
     setMessage('');
   };
   const handleSend = async (event: React.SyntheticEvent) =>
@@ -272,7 +279,6 @@ function MessageForm({
             // other, ideal solution would be that users just have a unique
             // username in the db
             // in that case we don't need to do any postprocessing
-
             setMessage((message: string) => {
               if (!user) {
                 return message;
@@ -292,7 +298,7 @@ function MessageForm({
           }}
         />
       )}
-      {message && previewable(message) && (
+      {message && preview && previewable(message) && (
         <Preview
           currentUser={currentUser}
           message={{
@@ -402,6 +408,7 @@ function MessageForm({
 
 MessageForm.defaultProps = {
   sendOnEnter: true,
+  preview: true,
 };
 
 export default MessageForm;

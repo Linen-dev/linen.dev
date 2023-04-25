@@ -52,126 +52,128 @@ export default function MobileMenu({
         onClick={open}
       />
       <Modal open={show} close={close} fullscreen>
-        <div className={styles.header}>
-          <div className={styles.text}>Menu</div>
-          <FiMenu className={styles.close} onClick={close} />
-        </div>
-        <ul className={styles.list}>
-          {permissions.inbox && (
-            <li>
-              <Link
-                onClick={close}
-                className={classNames(styles.link, {
-                  [styles.active]: paths.inbox === router.asPath,
-                })}
-                href="/inbox"
-              >
-                <FiInbox /> Inbox
-              </Link>
-            </li>
-          )}
-          {permissions.manage && (
-            <li>
-              <Link
-                onClick={close}
-                className={classNames(styles.link, {
-                  [styles.active]: paths.configurations === router.asPath,
-                })}
-                href="/configurations"
-              >
-                <FiFileText /> Configurations
-              </Link>
-            </li>
-          )}
-          {permissions.manage && (
-            <li>
-              <Link
-                onClick={close}
-                className={classNames(styles.link, {
-                  [styles.active]: paths.branding === router.asPath,
-                })}
-                href="/branding"
-              >
-                <FiSliders /> Branding
-              </Link>
-            </li>
-          )}
-          {permissions.manage && (
-            <li>
-              <Link
-                onClick={close}
-                className={classNames(styles.link, {
-                  [styles.active]: paths.members === router.asPath,
-                })}
-                href="/members"
-              >
-                <FiUsers /> Members
-              </Link>
-            </li>
-          )}
-          {permissions.manage && (
-            <li>
-              <Link
-                onClick={close}
-                className={classNames(styles.link, {
-                  [styles.active]: paths.plans === router.asPath,
-                })}
-                href="/plans"
-              >
-                <FiZap /> Plans
-              </Link>
-            </li>
-          )}
-          <li className={styles.subheader}>Channels</li>
-          {channels
-            .sort((a, b) => a.channelName.localeCompare(b.channelName))
-            .map((channel, index) => {
-              return (
-                <li key={channel.channelName + index}>
-                  <Link
-                    className={classNames(styles.link, {
-                      [styles.active]: channel.channelName === channelName,
-                    })}
-                    onClick={close}
-                    href={`/c/${channel.channelName}`}
-                  >
-                    <FiHash /> {channel.channelName}
-                  </Link>
-                </li>
-              );
-            })}
+        <div className={styles.content}>
+          <div className={styles.header}>
+            <div className={styles.text}>Menu</div>
+            <FiMenu className={styles.close} onClick={close} />
+          </div>
+          <ul className={styles.list}>
+            {permissions.inbox && (
+              <li>
+                <Link
+                  onClick={close}
+                  className={classNames(styles.link, {
+                    [styles.active]: paths.inbox === router.asPath,
+                  })}
+                  href="/inbox"
+                >
+                  <FiInbox /> Inbox
+                </Link>
+              </li>
+            )}
+            {permissions.manage && (
+              <li>
+                <Link
+                  onClick={close}
+                  className={classNames(styles.link, {
+                    [styles.active]: paths.configurations === router.asPath,
+                  })}
+                  href="/configurations"
+                >
+                  <FiFileText /> Configurations
+                </Link>
+              </li>
+            )}
+            {permissions.manage && (
+              <li>
+                <Link
+                  onClick={close}
+                  className={classNames(styles.link, {
+                    [styles.active]: paths.branding === router.asPath,
+                  })}
+                  href="/branding"
+                >
+                  <FiSliders /> Branding
+                </Link>
+              </li>
+            )}
+            {permissions.manage && (
+              <li>
+                <Link
+                  onClick={close}
+                  className={classNames(styles.link, {
+                    [styles.active]: paths.members === router.asPath,
+                  })}
+                  href="/members"
+                >
+                  <FiUsers /> Members
+                </Link>
+              </li>
+            )}
+            {permissions.manage && (
+              <li>
+                <Link
+                  onClick={close}
+                  className={classNames(styles.link, {
+                    [styles.active]: paths.plans === router.asPath,
+                  })}
+                  href="/plans"
+                >
+                  <FiZap /> Plans
+                </Link>
+              </li>
+            )}
+            <li className={styles.subheader}>Channels</li>
+            {channels
+              .sort((a, b) => a.channelName.localeCompare(b.channelName))
+              .map((channel, index) => {
+                return (
+                  <li key={channel.channelName + index}>
+                    <Link
+                      className={classNames(styles.link, {
+                        [styles.active]: channel.channelName === channelName,
+                      })}
+                      onClick={close}
+                      href={`/c/${channel.channelName}`}
+                    >
+                      <FiHash /> {channel.channelName}
+                    </Link>
+                  </li>
+                );
+              })}
 
-          {permissions.manage && (
-            <li className={styles.subheader}>Analytics</li>
-          )}
-          {permissions.manage && (
-            <li>
-              <Link
-                onClick={close}
-                className={classNames(styles.link, {
-                  [styles.active]: paths.metrics === router.asPath,
-                })}
-                href="/metrics"
+            {permissions.manage && (
+              <li className={styles.subheader}>Analytics</li>
+            )}
+            {permissions.manage && (
+              <li>
+                <Link
+                  onClick={close}
+                  className={classNames(styles.link, {
+                    [styles.active]: paths.metrics === router.asPath,
+                  })}
+                  href="/metrics"
+                >
+                  <FiBarChart /> Metrics
+                </Link>
+              </li>
+            )}
+            {permissions.user && permissions.is_member && (
+              <li className={styles.subheader}>Actions</li>
+            )}
+            {permissions.user && permissions.is_member && (
+              <li
+                onClick={() => {
+                  close();
+                  signOut();
+                }}
+                className={styles.link}
               >
-                <FiBarChart /> Metrics
-              </Link>
-            </li>
-          )}
-          {permissions.user && permissions.is_member && (
-            <li className={styles.subheader}>Actions</li>
-          )}
-          {permissions.user && permissions.is_member && (
-            <li
-              onClick={() => {
-                close();
-                signOut();
-              }}
-              className={styles.link}
-            >
-              <FiLogOut /> Sign Out
-            </li>
-          )}
-        </ul>
+                <FiLogOut /> Sign Out
+              </li>
+            )}
+          </ul>
+        </div>
       </Modal>
     </>
   );
