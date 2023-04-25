@@ -18,6 +18,7 @@ interface Props {
   onChange(id: string, checked: boolean, index: number): void;
   onSelect(thread: SerializedThread): void;
   onRead?(threadId: string): void;
+  onStar?(threadId: string): void;
   onMute?(threadId: string): void;
   onRemind?(threadId: string, reminderType: ReminderTypes): void;
 }
@@ -31,6 +32,7 @@ export default function Grid({
   onChange,
   onSelect,
   onRead,
+  onStar,
   onMute,
   onRemind,
 }: Props) {
@@ -50,6 +52,7 @@ export default function Grid({
             onRead={onRead}
             onMute={onMute}
             onRemind={onRemind}
+            onStar={onStar}
           />
         );
       })}
