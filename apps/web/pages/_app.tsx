@@ -65,7 +65,7 @@ export default function App(props: AppProps) {
         <title>Linen Community</title>
         <meta
           name="viewport"
-          content="height=device-height, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"
+          content="height=device-height, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0"
         />
         <meta
           name="google-site-verification"
