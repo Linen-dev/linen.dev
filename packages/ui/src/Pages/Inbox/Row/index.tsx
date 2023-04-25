@@ -11,6 +11,7 @@ interface Props {
   onClick(): void;
   onRead?(threadId: string): void;
   onMute?(threadId: string): void;
+  onStar?(threadId: string): void;
   onRemind?(threadId: string, reminderType: ReminderTypes): void;
 }
 
@@ -21,6 +22,7 @@ export default function Row({
   onClick,
   onRead,
   onMute,
+  onStar,
   onRemind,
 }: Props) {
   return (
@@ -37,6 +39,7 @@ export default function Row({
         onRead={onRead}
         onMute={onMute}
         onRemind={onRemind}
+        onStar={onStar}
       />
     </UserMessage>
   );

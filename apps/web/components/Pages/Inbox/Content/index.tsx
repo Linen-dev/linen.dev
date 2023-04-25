@@ -167,6 +167,34 @@ export default function Inbox({
     });
   }
 
+  async function starThread(threadId: string) {
+    return fetch('/api/starred', {
+      method: 'POST',
+      body: JSON.stringify({
+        communityId: currentCommunity.id,
+        threadId,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => {
+        if (response.status === 409) {
+          Toast.info('Thread is already starred.');
+        } else if (response.ok) {
+          Toast.success('Starred successfully.');
+          return response.json();
+        } else {
+          throw new Error('Failed to star the thread.');
+        }
+      })
+      .catch((exception) => {
+        Toast.error(
+          exception?.message || 'Something went wrong. Please try again.'
+        );
+      });
+  }
+
   async function updateThreadResolution(threadId: string, messageId?: string) {
     setInbox((inbox) => {
       const { threads, ...rest } = inbox;
@@ -713,6 +741,7 @@ export default function Inbox({
                 permissions={permissions}
                 onRead={markThreadAsRead}
                 onMute={markThreadAsMuted}
+                onStar={starThread}
                 onRemind={onRemind}
                 onChange={(id: string, checked: boolean, index: number) => {
                   setSelections((selections: Selections) => {

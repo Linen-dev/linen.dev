@@ -5,6 +5,7 @@ import Tooltip from '../../../../Tooltip';
 import ReminderModal from '../../../../ReminderModal';
 import { BiMessageCheck } from '@react-icons/all-files/bi/BiMessageCheck';
 import { FaVolumeMute } from '@react-icons/all-files/fa/FaVolumeMute';
+import { FiStar } from '@react-icons/all-files/fi/FiStar';
 import { FiClock } from '@react-icons/all-files/fi/FiClock';
 import { ReminderTypes, SerializedThread } from '@linen/types';
 
@@ -12,6 +13,7 @@ interface Props {
   className?: string;
   onRead?(threadId: string): void;
   onMute?(threadId: string): void;
+  onStar?(threadId: string): void;
   onRemind?(threadId: string, reminderType: ReminderTypes): void;
   thread: SerializedThread;
 }
@@ -26,6 +28,7 @@ export default function Actions({
   thread,
   onRead,
   onMute,
+  onStar,
   onRemind,
 }: Props) {
   const [modal, setModal] = useState<ModalView>(ModalView.NONE);
@@ -68,6 +71,19 @@ export default function Actions({
           >
             <Tooltip className={styles.tooltip} text="Reminder">
               <FiClock />
+            </Tooltip>
+          </li>
+        )}
+        {onStar && (
+          <li
+            onClick={(event) => {
+              event.stopPropagation();
+              event.preventDefault();
+              onStar(thread.id);
+            }}
+          >
+            <Tooltip className={styles.tooltip} text="Star">
+              <FiStar />
             </Tooltip>
           </li>
         )}
