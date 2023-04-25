@@ -349,7 +349,7 @@ const Home = ({ accounts }: Props) => {
                         <div>
                           <h3
                             className="inline-flex rounded-full bg-indigo-100 px-4 py-1 text-base font-semibold text-indigo-600"
-                            id="tier-standard"
+                            id={`tier-${tier.name}`}
                           >
                             {tier.name}
                           </h3>
