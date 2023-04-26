@@ -7,5 +7,6 @@ module.exports = {
   setupFilesAfterEnv: ['@testing-library/jest-dom', './jest.setup.js'],
   moduleNameMapper: {
     '\\.(css|scss)$': 'identity-obj-proxy',
+    '@/(.*)$': '<rootDir>/src/$1',
   },
 };

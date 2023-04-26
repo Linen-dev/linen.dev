@@ -1,0 +1,14 @@
+.wrapper {
+  display: flex;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.subWrapper {
+  display: flex;
+  align-items: center;
+  height: 1.5rem;
+  gap: 0.25rem;
+}

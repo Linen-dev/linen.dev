@@ -1,6 +1,7 @@
-import Avatar from '@linen/ui/Avatar';
-import Label from '@linen/ui/Label';
-import Field from '@linen/ui/Field';
+import React from 'react';
+import Avatar from '@/Avatar';
+import Label from '@/Label';
+import Field from '@/Field';
 import { SerializedUser } from '@linen/types';
 import styles from './index.module.scss';
 

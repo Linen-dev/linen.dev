@@ -1,0 +1,54 @@
+.container {
+  align-items: center;
+  display: flex;
+  padding-left: 1rem /* 16px */;
+  padding-right: 1rem /* 16px */;
+  padding-top: 0.5rem /* 8px */;
+  padding-bottom: 0.5rem /* 8px */;
+  gap: '16px';
+  height: '54px';
+}
+
+.logo {
+  cursor: pointer;
+  display: block;
+  padding-right: 1rem;
+}
+
+.subContainer {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
+}
+
+.searchBar {
+  display: none;
+  flex-grow: 1;
+}
+
+@media (min-width: 1024px) {
+  .searchBar {
+    display: flex;
+    flex-grow: 1;
+  }
+}
+
+.upgrade {
+  display: none;
+  gap: 0.5rem /* 8px */;
+}
+
+@media (min-width: 1024px) {
+  .upgrade {
+    display: flex;
+    gap: 0.5rem /* 8px */;
+  }
+}
+
+@media (min-width: 1024px) {
+  .lgHidden {
+    display: none;
+  }
+}

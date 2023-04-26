@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import Field from '@linen/ui/Field';
-import Label from '@linen/ui/Label';
-import Toast from '@linen/ui/Toast';
-import Toggle from '@linen/ui/Toggle';
+import Field from '@/Field';
+import Label from '@/Label';
+import Toast from '@/Toast';
+import Toggle from '@/Toggle';
 import { localStorage } from '@linen/utilities/storage';
-import { get, put } from 'utilities/requests';
+import styles from './index.module.scss';
 
 export default function PermissionsField() {
   const granted = localStorage.get('notification.permission') === 'granted';
@@ -14,18 +14,24 @@ export default function PermissionsField() {
 
   useEffect(() => {
     if (!settings) {
-      get('/api/notifications/settings').then((res) => {
-        setSettings(res);
-        setCheckedEmail(res.notificationsByEmail);
-      });
+      fetch('/api/notifications/settings')
+        .then((res) => res.json())
+        .then((res) => {
+          setSettings(res);
+          setCheckedEmail(res.notificationsByEmail);
+        });
     }
   }, []);
 
   const onEmailSettingsChange = async () => {
     const notificationsByEmail = !checkedEmail;
     try {
-      await put('/api/notifications/settings', {
-        notificationsByEmail,
+      await fetch('/api/notifications/settings', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ notificationsByEmail }),
       });
       setCheckedEmail(notificationsByEmail);
     } catch (error) {
@@ -36,8 +42,8 @@ export default function PermissionsField() {
   return (
     <Field>
       <Label htmlFor="notification">Notifications</Label>
-      <div className="flex flex-col gap-1 text-sm">
-        <div className="flex h-6 gap-1 items-center">
+      <div className={styles.wrapper}>
+        <div className={styles.subWrapper}>
           <Toggle
             checked={checked}
             onChange={() => {
@@ -65,7 +71,7 @@ export default function PermissionsField() {
           />
           <span>Web</span>
         </div>
-        <div className="flex h-6 gap-1 items-center">
+        <div className={styles.subWrapper}>
           {!settings ? (
             'Loading...'
           ) : (

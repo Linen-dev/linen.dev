@@ -80,6 +80,7 @@
     "./H1": "./dist/H1/index.js",
     "./H2": "./dist/H2/index.js",
     "./H3": "./dist/H3/index.js",
+    "./Header": "./dist/Header/index.js",
     "./Icon": "./dist/Icon/index.js",
     "./Image": "./dist/Image/index.js",
     "./Label": "./dist/Label/index.js",
@@ -99,6 +100,7 @@
     "./PinIcon": "./dist/PinIcon/index.js",
     "./Portal": "./dist/Portal/index.js",
     "./Preview": "./dist/Preview/index.js",
+    "./ProfileForm": "./dist/ProfileForm/index.js",
     "./Progress": "./dist/Progress/index.js",
     "./ProgressModal": "./dist/ProgressModal/index.js",
     "./ReminderModal": "./dist/ReminderModal/index.js",
@@ -199,6 +201,9 @@
       "H3": [
         "./dist/H3/index.d.ts"
       ],
+      "Header": [
+        "./dist/Header/index.d.ts"
+      ],
       "Icon": [
         "./dist/Icon/index.d.ts"
       ],
@@ -255,6 +260,9 @@
       ],
       "Preview": [
         "./dist/Preview/index.d.ts"
+      ],
+      "ProfileForm": [
+        "./dist/ProfileForm/index.d.ts"
       ],
       "Progress": [
         "./dist/Progress/index.d.ts"

@@ -10,7 +10,11 @@
     "jsx": "react",
     "declaration": true,
     "declarationDir": "dist",
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   },
   "include": ["src", "types.d.ts"]
 }

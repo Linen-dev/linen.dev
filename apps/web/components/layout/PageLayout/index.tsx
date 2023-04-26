@@ -1,7 +1,7 @@
 import React from 'react';
 import axios, { AxiosRequestConfig } from 'axios';
 import { ErrorBoundary } from 'react-error-boundary';
-import Header from './Header';
+import Header from '@linen/ui/Header';
 import ErrorFallback from './ErrorFallback';
 import NavBar from 'components/NavBar';
 import SEO, { type SeoProps } from '../SEO';
@@ -18,6 +18,13 @@ import { LinkContext } from '@linen/contexts/Link';
 import { put } from 'utilities/requests';
 import useMode from '@linen/hooks/mode';
 import styles from './index.module.scss';
+import Link from 'next/link';
+import SearchBar from 'components/search/SearchBar';
+import JoinButton from 'components/JoinButton';
+import InternalLink from 'components/Link/InternalLink';
+import { signOut } from '@linen/auth/client';
+import usePath from 'hooks/path';
+import { useRouter } from 'next/router';
 
 interface Props {
   className?: string;
@@ -63,6 +70,7 @@ function PageLayout({
   const channels = initialChannels.filter((c: SerializedChannel) => !c.hidden);
   const { googleAnalyticsId, googleSiteVerification } = settings;
   const { mode } = useMode();
+  const router = useRouter();
 
   const updateProfile = ({ displayName }: { displayName: string }) => {
     return put('/api/profile', {
@@ -98,7 +106,6 @@ function PageLayout({
       <div className={styles.push} />
       <div className={styles.header}>
         <Header
-          mode={mode}
           channels={channels}
           channelName={currentChannel?.channelName}
           currentCommunity={currentCommunity}
@@ -107,6 +114,14 @@ function PageLayout({
           isSubDomainRouting={isSubDomainRouting}
           onProfileChange={updateProfile}
           onUpload={uploadAvatar}
+          // dep injection
+          InternalLink={InternalLink}
+          JoinButton={JoinButton}
+          Link={Link}
+          SearchBar={SearchBar}
+          routerAsPath={router.asPath}
+          signOut={signOut}
+          usePath={usePath}
         />
       </div>
       {seo && <SEO {...seo} />}

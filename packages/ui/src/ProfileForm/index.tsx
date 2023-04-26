@@ -1,20 +1,20 @@
 import React, { useState } from 'react';
 import AvatarField from './AvatarField';
 import PermissionsField from './PermissionsField';
-import TextField from '@linen/ui/TextField';
-import Button from '@linen/ui/Button';
-import Toast from '@linen/ui/Toast';
+import TextField from '@/TextField';
+import Button from '@/Button';
+import Toast from '@/Toast';
 import { SerializedUser } from '@linen/types';
 import {
   FILE_SIZE_LIMIT_IN_BYTES,
   getFileSizeErrorMessage,
 } from '@linen/utilities/files';
-import { AxiosRequestConfig } from 'axios';
+import styles from './index.module.scss';
 
 interface Props {
   currentUser: SerializedUser;
   onSubmit({ displayName }: { displayName: string }): void;
-  onUpload(data: FormData, options: AxiosRequestConfig): void;
+  onUpload(data: FormData, options: any): void;
 }
 
 export default function ProfileForm({
@@ -71,8 +71,8 @@ export default function ProfileForm({
 
   return (
     <>
-      <h1 className="text-xl font-bold mb-3">Profile</h1>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-2">
+      <h1 className={styles.h1Profile}>Profile</h1>
+      <form onSubmit={handleSubmit} className={styles.form}>
         <AvatarField
           user={currentUser}
           onChange={onAvatarChange}
@@ -86,12 +86,8 @@ export default function ProfileForm({
           defaultValue={currentUser.displayName || ''}
         />
         <PermissionsField />
-        <div className="text-right">
-          <Button
-            className="mt-3 text-right"
-            type="submit"
-            disabled={submitting}
-          >
+        <div className={styles.btnWrapper}>
+          <Button className={styles.btn} type="submit" disabled={submitting}>
             Save
           </Button>
         </div>

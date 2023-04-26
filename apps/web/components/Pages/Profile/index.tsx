@@ -1,6 +1,6 @@
 import { signOut, useSession } from '@linen/auth/client';
 import CardLayout from 'components/layout/CardLayout';
-import ProfileForm from 'components/layout/PageLayout/Header/UserAvatar/ProfileForm';
+import ProfileForm from '@linen/ui/ProfileForm';
 import axios, { AxiosRequestConfig } from 'axios';
 import { put } from 'utilities/requests';
 

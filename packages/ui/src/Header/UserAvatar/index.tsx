@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
-import Dropdown from '@linen/ui/Dropdown';
-import { signOut } from '@linen/auth/client';
+import Dropdown from '@/Dropdown';
 import { SerializedUser } from '@linen/types';
-import Avatar from '@linen/ui/Avatar';
-import Modal from '@linen/ui/Modal';
-import ProfileForm from './ProfileForm';
-import { AxiosRequestConfig } from 'axios';
+import Avatar from '@/Avatar';
+import Modal from '@/Modal';
+import ProfileForm from '@/ProfileForm';
 import { FiUser } from '@react-icons/all-files/fi/FiUser';
 import { FiLogOut } from '@react-icons/all-files/fi/FiLogOut';
+import styles from './index.module.scss';
 
 interface Props {
   currentUser: SerializedUser;
   onProfileChange({ displayName }: { displayName: string }): Promise<void>;
-  onUpload(data: FormData, options: AxiosRequestConfig): void;
+  onUpload(data: FormData, options: any): void;
+  signOut: () => void;
 }
 
 enum Mode {
@@ -24,6 +24,7 @@ export default function UserAvatar({
   currentUser,
   onProfileChange,
   onUpload,
+  signOut,
 }: Props) {
   const userNavigation = [
     {
@@ -47,7 +48,7 @@ export default function UserAvatar({
       <Dropdown
         button={
           <>
-            <span className="sr-only">Open user menu</span>
+            <span className={styles.srOnly}>Open user menu</span>
             <Avatar
               shadow="none"
               src={currentUser.profileImageUrl}

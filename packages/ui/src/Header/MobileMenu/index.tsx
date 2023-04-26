@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useRouter } from 'next/router';
 import classNames from 'classnames';
 import { FiBarChart } from '@react-icons/all-files/fi/FiBarChart';
 import { FiMenu } from '@react-icons/all-files/fi/FiMenu';
@@ -10,18 +9,19 @@ import { FiZap } from '@react-icons/all-files/fi/FiZap';
 import { FiSliders } from '@react-icons/all-files/fi/FiSliders';
 import { FiUsers } from '@react-icons/all-files/fi/FiUsers';
 import { FiFileText } from '@react-icons/all-files/fi/FiFileText';
-import Link from 'components/Link/InternalLink';
-import Modal from '@linen/ui/Modal';
+import Modal from '@/Modal';
 import styles from './index.module.scss';
 import { Permissions, SerializedChannel } from '@linen/types';
-import { signOut } from '@linen/auth/client';
-import usePath from 'hooks/path';
 
 interface Props {
   channels: SerializedChannel[];
   channelName?: string;
   fontColor: string;
   permissions: Permissions;
+  InternalLink: (args: any) => JSX.Element;
+  routerAsPath: string;
+  signOut: () => void;
+  usePath: (args: { href: string }) => string;
 }
 
 export default function MobileMenu({
@@ -29,11 +29,14 @@ export default function MobileMenu({
   channelName,
   permissions,
   fontColor,
+  InternalLink,
+  routerAsPath,
+  signOut,
+  usePath,
 }: Props) {
   const [show, setOpen] = useState(false);
   const open = () => setOpen(true);
   const close = () => setOpen(false);
-  const router = useRouter();
 
   const paths = {
     inbox: usePath({ href: '/inbox' }),
@@ -60,67 +63,67 @@ export default function MobileMenu({
           <ul className={styles.list}>
             {permissions.inbox && (
               <li>
-                <Link
+                <InternalLink
                   onClick={close}
                   className={classNames(styles.link, {
-                    [styles.active]: paths.inbox === router.asPath,
+                    [styles.active]: paths.inbox === routerAsPath,
                   })}
                   href="/inbox"
                 >
                   <FiInbox /> Inbox
-                </Link>
+                </InternalLink>
               </li>
             )}
             {permissions.manage && (
               <li>
-                <Link
+                <InternalLink
                   onClick={close}
                   className={classNames(styles.link, {
-                    [styles.active]: paths.configurations === router.asPath,
+                    [styles.active]: paths.configurations === routerAsPath,
                   })}
                   href="/configurations"
                 >
                   <FiFileText /> Configurations
-                </Link>
+                </InternalLink>
               </li>
             )}
             {permissions.manage && (
               <li>
-                <Link
+                <InternalLink
                   onClick={close}
                   className={classNames(styles.link, {
-                    [styles.active]: paths.branding === router.asPath,
+                    [styles.active]: paths.branding === routerAsPath,
                   })}
                   href="/branding"
                 >
                   <FiSliders /> Branding
-                </Link>
+                </InternalLink>
               </li>
             )}
             {permissions.manage && (
               <li>
-                <Link
+                <InternalLink
                   onClick={close}
                   className={classNames(styles.link, {
-                    [styles.active]: paths.members === router.asPath,
+                    [styles.active]: paths.members === routerAsPath,
                   })}
                   href="/members"
                 >
                   <FiUsers /> Members
-                </Link>
+                </InternalLink>
               </li>
             )}
             {permissions.manage && (
               <li>
-                <Link
+                <InternalLink
                   onClick={close}
                   className={classNames(styles.link, {
-                    [styles.active]: paths.plans === router.asPath,
+                    [styles.active]: paths.plans === routerAsPath,
                   })}
                   href="/plans"
                 >
                   <FiZap /> Plans
-                </Link>
+                </InternalLink>
               </li>
             )}
             <li className={styles.subheader}>Channels</li>
@@ -129,7 +132,7 @@ export default function MobileMenu({
               .map((channel, index) => {
                 return (
                   <li key={channel.channelName + index}>
-                    <Link
+                    <InternalLink
                       className={classNames(styles.link, {
                         [styles.active]: channel.channelName === channelName,
                       })}
@@ -137,7 +140,7 @@ export default function MobileMenu({
                       href={`/c/${channel.channelName}`}
                     >
                       <FiHash /> {channel.channelName}
-                    </Link>
+                    </InternalLink>
                   </li>
                 );
               })}
@@ -147,15 +150,15 @@ export default function MobileMenu({
             )}
             {permissions.manage && (
               <li>
-                <Link
+                <InternalLink
                   onClick={close}
                   className={classNames(styles.link, {
-                    [styles.active]: paths.metrics === router.asPath,
+                    [styles.active]: paths.metrics === routerAsPath,
                   })}
                   href="/metrics"
                 >
                   <FiBarChart /> Metrics
-                </Link>
+                </InternalLink>
               </li>
             )}
             {permissions.user && permissions.is_member && (

@@ -1,0 +1,21 @@
+.h1Profile {
+  margin-bottom: 0.75rem;
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  font-weight: 700;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.btnWrapper {
+  text-align: right;
+}
+
+.btn {
+  margin-top: 0.75rem;
+  text-align: right;
+}
