@@ -1,5 +1,12 @@
 {
   "name": "@linen/styles",
   "private": true,
-  "version": "1.0.0"
+  "version": "1.0.0",
+  "exports": {
+    "./colors.scss": "./colors.scss",
+    "./globals.css": "./globals.css",
+    "./highlight.scss": "./highlight.scss",
+    "./nprogress.scss": "./nprogress.scss",
+    "./reset.css": "./reset.css"
+  }
 }

@@ -1,4 +1,4 @@
-@import 'styles/colors.scss';
+@import '@linen/styles/colors.scss';
 
 .toggle {
   align-items: center;
@@ -24,5 +24,5 @@
 }
 
 .suggestions {
-  position: relative
+  position: relative;
 }

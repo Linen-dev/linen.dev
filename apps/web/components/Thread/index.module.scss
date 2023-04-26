@@ -1,4 +1,4 @@
-@import 'styles/colors.scss';
+@import '@linen/styles/colors.scss';
 
 .container {
   background: $color-white;
@@ -93,7 +93,7 @@
 .badge {
   align-items: center;
   justify-content: center;
-  display: flex;;
+  display: flex;
   font-size: 11px;
   text-transform: uppercase;
   color: $color-gray-500;

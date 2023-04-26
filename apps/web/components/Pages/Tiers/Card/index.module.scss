@@ -1,4 +1,4 @@
-@import 'styles/colors.scss';
+@import '@linen/styles/colors.scss';
 
 .card {
   border: 1px solid $color-gray-200;
@@ -46,9 +46,9 @@
 
 .price .length {
   color: $color-gray-600;
-    font-size: 1rem;
-    font-weight: 500;
-    letter-spacing: initial;
-    margin-left: 0.25rem;
-    font-size: 0.875rem;
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: initial;
+  margin-left: 0.25rem;
+  font-size: 0.875rem;
 }

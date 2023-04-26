@@ -1,4 +1,4 @@
-@import 'styles/colors.scss';
+@import '@linen/styles/colors.scss';
 
 .container {
   padding: 1rem;
@@ -17,7 +17,6 @@
     margin-bottom: 1rem;
   }
 }
-
 
 .row {
   display: flex;

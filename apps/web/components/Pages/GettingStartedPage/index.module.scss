@@ -1,4 +1,4 @@
-@import 'styles/colors.scss';
+@import '@linen/styles/colors.scss';
 
 .icon {
   margin: 0 auto;
@@ -14,7 +14,7 @@
 .header {
   color: $color-gray-500;
   text-transform: uppercase;
-  font-size: .75rem;
+  font-size: 0.75rem;
   font-weight: 500;
   letter-spacing: 1.3px;
   margin-bottom: 0.5rem;

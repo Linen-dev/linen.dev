@@ -1,4 +1,4 @@
-@import 'styles/colors.scss';
+@import '@linen/styles/colors.scss';
 
 .summary {
   background: $color-orange-50;
@@ -19,7 +19,8 @@
   padding: 0 0 1rem;
 }
 
-.summary h1, .summary p {
+.summary h1,
+.summary p {
   font-size: 14px;
 }
 

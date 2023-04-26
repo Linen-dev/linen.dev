@@ -1,4 +1,4 @@
-@import 'styles/colors.scss';
+@import '@linen/styles/colors.scss';
 
 .header {
   color: $color-gray-900;
@@ -14,10 +14,14 @@
 
 .header span {
   align-items: center;
-  background-image: linear-gradient(to right, $color-primary 0%, $color-yellow-100 100%);
-  background-repeat: repeat-x; 
-  background-position: 0 100%; 
-  background-size: 100% 2px; 
+  background-image: linear-gradient(
+    to right,
+    $color-primary 0%,
+    $color-yellow-100 100%
+  );
+  background-repeat: repeat-x;
+  background-position: 0 100%;
+  background-size: 100% 2px;
   display: inline-flex;
   justify-content: center;
 }

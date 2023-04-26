@@ -1,6 +1,4 @@
-@import 'styles/colors.scss';
-
-
+@import '@linen/styles/colors.scss';
 
 .button {
   align-items: center;
@@ -53,7 +51,7 @@
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(1,minmax(0,1fr));
+  grid-template-columns: repeat(1, minmax(0, 1fr));
   gap: 1rem;
   padding: 0 1rem;
   max-width: 1440px;
@@ -61,16 +59,16 @@
 
 @media (min-width: 768px) {
   .grid {
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap: 2rem;
-      padding: 0 2rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2rem;
+    padding: 0 2rem;
   }
 }
 
 @media (min-width: 1280px) {
   .grid {
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap: 2rem;
-      padding: 0 2rem;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 2rem;
+    padding: 0 2rem;
   }
 }

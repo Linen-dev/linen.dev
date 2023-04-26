@@ -1,4 +1,4 @@
-@import 'styles/colors.scss';
+@import '@linen/styles/colors.scss';
 
 .header {
   position: fixed;
@@ -33,7 +33,6 @@
 .container::-webkit-scrollbar-thumb:hover {
   background: $color-gray-300;
 }
-
 
 @media (min-width: 1024px) {
   .content {
