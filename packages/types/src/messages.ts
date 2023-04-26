@@ -16,8 +16,8 @@ export interface SerializedMessage {
   attachments: SerializedAttachment[];
   reactions: SerializedReaction[];
   threadId: string;
-  externalId?: string;
-  author?: SerializedUser | null;
+  externalId: string | null;
+  author: SerializedUser | null;
   messageFormat: MessageFormat;
 }
 

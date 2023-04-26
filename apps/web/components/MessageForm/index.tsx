@@ -304,7 +304,7 @@ function MessageForm({
           message={{
             body: postprocess(message, allUsers),
             sentAt: new Date().toISOString(),
-            author: currentUser,
+            author: currentUser || null,
             usersId: currentUser?.id || '1',
             mentions: allUsers,
             attachments: [],
@@ -312,6 +312,7 @@ function MessageForm({
             id: '1',
             threadId: '1',
             messageFormat: MessageFormat.LINEN,
+            externalId: null,
           }}
         />
       )}

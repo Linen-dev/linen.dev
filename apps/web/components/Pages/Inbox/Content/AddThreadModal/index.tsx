@@ -151,6 +151,7 @@ export default function AddThreadModal({
                 reactions: [],
                 id: '1',
                 threadId: '1',
+                externalId: null,
                 messageFormat: MessageFormat.LINEN,
               }}
               currentUser={currentUser}

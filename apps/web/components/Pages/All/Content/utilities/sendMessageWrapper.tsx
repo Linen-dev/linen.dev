@@ -74,6 +74,7 @@ export function sendMessageWrapper({
       attachments: files.map((file) => {
         return { name: file.id, url: file.url };
       }),
+      externalId: null,
       reactions: [],
       threadId,
       messageFormat: MessageFormat.LINEN,

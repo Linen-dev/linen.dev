@@ -42,7 +42,7 @@ export function serializeMessage(
 ): SerializedMessage {
   return {
     id: message.id,
-    externalId: message.externalMessageId || undefined,
+    externalId: message.externalMessageId || null,
     threadId: message.threadId!,
     body: message.body,
     sentAt: message.sentAt.toString(),

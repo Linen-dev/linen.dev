@@ -42,6 +42,7 @@ export function createThreadImitation({
         }),
         reactions: [],
         threadId: id,
+        externalId: null,
         messageFormat: MessageFormat.LINEN,
         author: {
           id: author.id,

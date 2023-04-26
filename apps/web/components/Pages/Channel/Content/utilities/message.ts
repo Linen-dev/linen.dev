@@ -32,6 +32,7 @@ export function createMessageImitation({
     reactions: [],
     threadId,
     messageFormat: MessageFormat.LINEN,
+    externalId: null,
     author: {
       id: author.id,
       externalUserId: author.externalUserId,

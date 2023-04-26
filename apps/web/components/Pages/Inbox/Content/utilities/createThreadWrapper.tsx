@@ -82,6 +82,7 @@ export function createThreadWrapper({
             return { name: file.id, url: file.url };
           }),
           reactions: [],
+          externalId: null,
           threadId: id,
           messageFormat: MessageFormat.LINEN,
           author: {

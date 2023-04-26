@@ -76,6 +76,7 @@ export function sendMessageWrapper({
       }),
       reactions: [],
       threadId,
+      externalId: null,
       messageFormat: MessageFormat.LINEN,
       author: {
         id: currentUser.id,
