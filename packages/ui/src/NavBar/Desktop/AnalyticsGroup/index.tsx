@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import Nav from '@linen/ui/Nav';
+import Nav from '@/Nav';
 import { Permissions, SerializedUser } from '@linen/types';
-import Link from 'components/Link/InternalLink';
 import { FiBarChart } from '@react-icons/all-files/fi/FiBarChart';
 import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
 import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp';
@@ -11,6 +10,7 @@ interface Props {
   currentUrl: string;
   permissions: Permissions;
   paths: { [key: string]: string };
+  Link: (args: any) => JSX.Element;
 }
 
 export default function AnalyticsGroup({
@@ -18,6 +18,7 @@ export default function AnalyticsGroup({
   currentUrl,
   permissions,
   paths,
+  Link,
 }: Props) {
   const [show, toggle] = useState(false);
   if (!currentUser || !permissions.manage) {

@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
-import Nav from '@linen/ui/Nav';
+import Nav from '@/Nav';
 import { Permissions, SerializedUser } from '@linen/types';
 import { FiInbox } from '@react-icons/all-files/fi/FiInbox';
 import { FiLayers } from '@react-icons/all-files/fi/FiLayers';
 import { FiStar } from '@react-icons/all-files/fi/FiStar';
 import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
 import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp';
-import Link from 'components/Link/InternalLink';
 
 interface Props {
   currentUser: SerializedUser;
   currentUrl: string;
   permissions: Permissions;
   paths: { [key: string]: string };
+  Link: (args: any) => JSX.Element;
 }
 
 export default function MenuGroup({
@@ -20,6 +20,7 @@ export default function MenuGroup({
   currentUrl,
   permissions,
   paths,
+  Link,
 }: Props) {
   const [show, toggle] = useState(true);
   return (

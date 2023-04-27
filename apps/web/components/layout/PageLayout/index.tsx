@@ -3,7 +3,7 @@ import axios, { AxiosRequestConfig } from 'axios';
 import { ErrorBoundary } from 'react-error-boundary';
 import Header from '@linen/ui/Header';
 import ErrorFallback from './ErrorFallback';
-import NavBar from 'components/NavBar';
+import NavBar from '@linen/ui/NavBar';
 import SEO, { type SeoProps } from '../SEO';
 import GoogleAnalytics from '../GoogleAnalytics';
 import Favicon from './Favicon';
@@ -15,7 +15,7 @@ import {
   Settings,
 } from '@linen/types';
 import { LinkContext } from '@linen/contexts/Link';
-import { put } from 'utilities/requests';
+import { put, post, archiveChannel } from 'utilities/requests';
 import useMode from '@linen/hooks/mode';
 import styles from './index.module.scss';
 import Link from 'next/link';
@@ -25,6 +25,12 @@ import InternalLink from 'components/Link/InternalLink';
 import { signOut } from '@linen/auth/client';
 import usePath from 'hooks/path';
 import { useRouter } from 'next/router';
+import NewCommunityModal from 'components/Modals/NewCommunityModal';
+import { notify } from 'utilities/notification';
+import NewChannelModal from 'components/Modals/NewChannelModal';
+import { getHomeUrl } from 'utilities/home';
+import Image from 'next/image';
+import NewDmModal from 'components/Modals/NewDmModal';
 
 interface Props {
   className?: string;
@@ -134,6 +140,20 @@ function PageLayout({
           permissions={permissions}
           onDrop={onDrop}
           dms={dms}
+          {...{
+            Link: InternalLink,
+            routerAsPath: router.asPath,
+            usePath,
+            Image,
+            getHomeUrl,
+            NewChannelModal,
+            NewCommunityModal,
+            NewDmModal,
+            archiveChannel,
+            post,
+            put,
+            notify,
+          }}
         />
         <div
           className={

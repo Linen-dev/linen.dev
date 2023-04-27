@@ -5,9 +5,10 @@ import { useState } from 'react';
 import { FiPlus } from '@react-icons/all-files/fi/FiPlus';
 import styles from './index.module.scss';
 import Link from 'components/Link';
-import CommunityLink from 'components/NavBar/Desktop/CommunityLink';
+import CommunityLink from '@linen/ui/CommunityLink';
 import { SerializedAccount } from '@linen/types';
-
+import { getHomeUrl } from 'utilities/home';
+import Image from 'next/image';
 import logo from 'public/images/logo/linen.svg';
 
 type Invite = SerializedAccount & {
@@ -162,6 +163,8 @@ export function GettingStartedPage({
                             `/s/${account.slackDomain || account.discordDomain}`
                           );
                         }}
+                        Image={Image}
+                        getHomeUrl={getHomeUrl}
                       />
                       <div>
                         <div className="text-sm">
@@ -191,6 +194,8 @@ export function GettingStartedPage({
                         event.stopPropagation();
                         acceptInvite(invite);
                       }}
+                      Image={Image}
+                      getHomeUrl={getHomeUrl}
                     />
                     <div>
                       <div className="text-sm">{invite.name || invite.id}</div>

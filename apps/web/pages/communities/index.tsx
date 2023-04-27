@@ -13,9 +13,10 @@ import {
   SerializedAccount,
 } from '@linen/types';
 import { truncate } from '@linen/utilities/string';
-import { getHomeUrl } from 'utilities/home';
 import { trackPageView } from 'utilities/ssr-metrics';
-import CommunityLink from 'components/NavBar/Desktop/CommunityLink';
+import CommunityLink from '@linen/ui/CommunityLink';
+import { getHomeUrl } from 'utilities/home';
+import Image from 'next/image';
 
 interface Props {
   communities: SerializedAccount[];
@@ -111,7 +112,10 @@ export default function Communities({ communities }: Props) {
                     href={getHomeUrl(community)}
                     className={styles.card}
                   >
-                    <CommunityLink community={community} />
+                    <CommunityLink
+                      community={community}
+                      {...{ getHomeUrl, Image }}
+                    />
                     <div className={styles.content}>
                       <h2>{community.name}</h2>
                       {community.description && (

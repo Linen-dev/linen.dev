@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import classNames from 'classnames';
-import Nav from '@linen/ui/Nav';
+import Nav from '@/Nav';
 import { Permissions, SerializedChannel, SerializedUser } from '@linen/types';
 import { Mode } from '@linen/hooks/mode';
 import { FiHash } from '@react-icons/all-files/fi/FiHash';
 import { FiLock } from '@react-icons/all-files/fi/FiLock';
 import { FiPlus } from '@react-icons/all-files/fi/FiPlus';
-import Link from 'components/Link/InternalLink';
-import NewChannelModal from 'components/Modals/NewChannelModal';
 import styles from './index.module.scss';
 import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
 import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp';
@@ -31,6 +29,8 @@ interface Props {
     to: string;
     from: string;
   }): void;
+  Link: (args: any) => JSX.Element;
+  NewChannelModal: (args: any) => JSX.Element;
 }
 
 export default function ChannelsGroup({
@@ -42,6 +42,8 @@ export default function ChannelsGroup({
   permissions,
   onChannelClick,
   onDrop,
+  Link,
+  NewChannelModal,
 }: Props) {
   const [show, toggle] = useState(true);
   const [modal, setModal] = useState(false);

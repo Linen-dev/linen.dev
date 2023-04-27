@@ -41,3 +41,6 @@ yarn-error.log*
 scratch
 dist
 .turbo
+
+packages/vite
+packages/cra

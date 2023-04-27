@@ -1,3 +1,4 @@
+import React from 'react';
 import { useEffect, useState } from 'react';
 import classNames from 'classnames';
 import {
@@ -6,7 +7,6 @@ import {
   SerializedChannel,
   SerializedReadStatus,
 } from '@linen/types';
-import Link from 'components/Link/InternalLink';
 import useWebsockets from '@linen/hooks/websockets';
 import styles from './index.module.scss';
 import { FiSettings } from '@react-icons/all-files/fi/FiSettings';
@@ -15,18 +15,13 @@ import { FiZap } from '@react-icons/all-files/fi/FiZap';
 import { FiUsers } from '@react-icons/all-files/fi/FiUsers';
 import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
 import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp';
-import { useRouter } from 'next/router';
-import usePath from 'hooks/path';
 import { Mode } from '@linen/hooks/mode';
-import Toast from '@linen/ui/Toast';
-import Nav from '@linen/ui/Nav';
+import Toast from '@/Toast';
+import Nav from '@/Nav';
 import debounce from '@linen/utilities/debounce';
-import { post, put } from 'utilities/requests';
-import { notify } from 'utilities/notification';
 import unique from 'lodash.uniq';
-import CommunityLink from './CommunityLink';
+import CommunityLink from '@/CommunityLink';
 import AddCommunityLink from './AddCommunityLink';
-import NewCommunityModal from 'components/Modals/NewCommunityModal';
 import { timestamp } from '@linen/utilities/date';
 import { DMs } from './DMs';
 import useInboxWebsockets from '@linen/hooks/websockets-inbox';
@@ -54,17 +49,19 @@ interface Props {
     to: string;
     from: string;
   }): void;
+  Link: (args: any) => JSX.Element;
+  routerAsPath: string;
+  usePath: (args: { href: string }) => string;
+  getHomeUrl: (args: any) => string;
+  Image: (args: any) => JSX.Element;
+  NewChannelModal: (args: any) => JSX.Element;
+  NewCommunityModal: (args: any) => JSX.Element;
+  NewDmModal: (args: any) => JSX.Element;
+  archiveChannel: (args: any) => Promise<any>;
+  post: (...args: any) => Promise<any>;
+  put: (...args: any) => Promise<any>;
+  notify: (...args: any) => any;
 }
-
-const debouncedReadStatus = debounce(
-  ({ channelIds }: { channelIds: string[] }) =>
-    post('/api/read-status', { channelIds })
-);
-
-const debouncedUpdateReadStatus = debounce(
-  (channelId: string): Promise<SerializedReadStatus> =>
-    put(`/api/read-status/${channelId}`, { timestamp: timestamp() })
-);
 
 export default function DesktopNavBar({
   mode,
@@ -74,8 +71,19 @@ export default function DesktopNavBar({
   permissions,
   dms,
   onDrop,
+  Link,
+  routerAsPath,
+  usePath,
+  Image,
+  getHomeUrl,
+  NewChannelModal,
+  NewCommunityModal,
+  NewDmModal,
+  archiveChannel,
+  post,
+  put,
+  notify,
 }: Props) {
-  const router = useRouter();
   const paths = {
     inbox: usePath({ href: '/inbox' }),
     starred: usePath({ href: '/starred' }),
@@ -93,8 +101,18 @@ export default function DesktopNavBar({
       paths.branding,
       paths.members,
       paths.plans,
-    ].includes(router.asPath);
+    ].includes(routerAsPath);
   };
+
+  const debouncedReadStatus = debounce(
+    ({ channelIds }: { channelIds: string[] }) =>
+      post('/api/read-status', { channelIds })
+  );
+
+  const debouncedUpdateReadStatus = debounce(
+    (channelId: string): Promise<SerializedReadStatus> =>
+      put(`/api/read-status/${channelId}`, { timestamp: timestamp() })
+  );
 
   const currentUser = permissions.user || null;
   const userId = permissions.auth?.id || null;
@@ -178,7 +196,14 @@ export default function DesktopNavBar({
         {currentUser && (
           <>
             {communities?.map((community) => {
-              return <CommunityLink key={community.id} community={community} />;
+              return (
+                <CommunityLink
+                  key={community.id}
+                  community={community}
+                  Image={Image}
+                  getHomeUrl={getHomeUrl}
+                />
+              );
             })}
           </>
         )}
@@ -197,9 +222,10 @@ export default function DesktopNavBar({
         <Nav className={styles.navbar}>
           <MenuGroup
             currentUser={currentUser}
-            currentUrl={router.asPath}
+            currentUrl={routerAsPath}
             permissions={permissions}
             paths={paths}
+            Link={Link}
           />
           <ChannelsGroup
             channelName={channelName}
@@ -215,6 +241,8 @@ export default function DesktopNavBar({
               });
             }}
             onDrop={onDrop}
+            Link={Link}
+            NewChannelModal={NewChannelModal}
           />
           {currentUser && permissions.chat && (
             <DMs
@@ -225,6 +253,9 @@ export default function DesktopNavBar({
                 highlights,
                 permissions,
                 setHighlights,
+                archiveChannel,
+                Link,
+                NewDmModal,
               }}
             />
           )}
@@ -238,22 +269,22 @@ export default function DesktopNavBar({
           {showSettings && permissions.manage && (
             <>
               <Link href="/configurations">
-                <Nav.Item active={paths.configurations === router.asPath}>
+                <Nav.Item active={paths.configurations === routerAsPath}>
                   <FiSettings /> Configurations
                 </Nav.Item>
               </Link>
               <Link href="/branding">
-                <Nav.Item active={paths.branding === router.asPath}>
+                <Nav.Item active={paths.branding === routerAsPath}>
                   <FiSliders /> Branding
                 </Nav.Item>
               </Link>
               <Link href="/members">
-                <Nav.Item active={paths.members === router.asPath}>
+                <Nav.Item active={paths.members === routerAsPath}>
                   <FiUsers /> Members
                 </Nav.Item>
               </Link>
               <Link href="/plans">
-                <Nav.Item active={paths.plans === router.asPath}>
+                <Nav.Item active={paths.plans === routerAsPath}>
                   <FiZap /> Plans
                 </Nav.Item>
               </Link>
@@ -261,9 +292,10 @@ export default function DesktopNavBar({
           )}
           <AnalyticsGroup
             currentUser={currentUser}
-            currentUrl={router.asPath}
+            currentUrl={routerAsPath}
             permissions={permissions}
             paths={paths}
+            Link={Link}
           />
           <PoweredByLinen />
         </Nav>

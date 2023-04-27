@@ -1,7 +1,6 @@
-import NewDmModal from 'components/Modals/NewDmModal';
+import React from 'react';
 import { FiUser } from '@react-icons/all-files/fi/FiUser';
-import Nav from '@linen/ui/Nav';
-import Link from 'components/Link/InternalLink';
+import Nav from '@/Nav';
 import classNames from 'classnames';
 import styles from './index.module.scss';
 import { Permissions, SerializedChannel } from '@linen/types';
@@ -10,7 +9,6 @@ import { FiX } from '@react-icons/all-files/fi/FiX';
 import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp';
 import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
 import { useState } from 'react';
-import { archiveChannel } from 'utilities/requests';
 
 type Props = {
   permissions: Permissions;
@@ -19,6 +17,9 @@ type Props = {
   highlights: string[];
   debouncedUpdateReadStatus: Function;
   setHighlights: Function;
+  NewDmModal: (args: any) => JSX.Element;
+  Link: (args: any) => JSX.Element;
+  archiveChannel: (args: any) => Promise<any>;
 };
 
 function ToggleIcon({
@@ -41,6 +42,9 @@ export function DMs({
   highlights,
   debouncedUpdateReadStatus,
   setHighlights,
+  NewDmModal,
+  Link,
+  archiveChannel,
 }: Props) {
   const [show, toggle] = useState(true);
   const [modal, setModal] = useState(false);
