@@ -1,0 +1,37 @@
+@import '../../colors.scss';
+
+.summary {
+  background: $color-orange-50;
+  border-bottom: 1px solid $color-border;
+  padding: 1rem;
+  margin: 1rem 0;
+}
+
+.summary .description {
+  color: black;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.3px;
+}
+
+.summary .content {
+  padding: 0 0 1rem;
+}
+
+.summary h1,
+.summary p {
+  font-size: 14px;
+}
+
+.summary .answer .header {
+  align-items: center;
+  display: flex;
+  gap: 0.25rem;
+}
+
+.summary .tooltip {
+  cursor: help;
+  color: $color-gray-500;
+  font-size: 11px;
+}

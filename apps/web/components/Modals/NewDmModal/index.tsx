@@ -4,7 +4,7 @@ import { FiX } from '@react-icons/all-files/fi/FiX';
 import { useLinkContext } from '@linen/contexts/Link';
 import CustomRouterPush from 'components/Link/CustomRouterPush';
 import { createDm } from 'utilities/requests';
-import { fetchMentions } from 'components/MessageForm/api';
+import { fetchMentions } from 'utilities/requests';
 import Modal from '@linen/ui/Modal';
 import TextInput from '@linen/ui/TextInput';
 import Toast from '@linen/ui/Toast';

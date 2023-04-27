@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import Layouts from '@linen/ui/Layouts';
 import Pages from '@linen/ui/Pages';
 import Toast from '@linen/ui/Toast';
-import Thread from 'components/Thread';
+import Thread from '@linen/ui/Thread';
 import Empty from './Empty';
 import { sendMessageWrapper } from './utilities/sendMessageWrapper';
 import useKeyboard from '@linen/hooks/keyboard';
@@ -19,8 +19,9 @@ import {
 } from '@linen/types';
 import { addMessageToThread } from './state';
 import { addReactionToThread } from 'utilities/state/reaction';
-import { postReaction } from 'components/Pages/Channel/Content/utilities/http';
 import * as api from 'utilities/requests';
+import Actions from 'components/Actions';
+import JoinChannelLink from 'components/Link/JoinChannelLink';
 
 const { Header, Grid } = Pages.All;
 const { SidebarLayout } = Layouts.Shared;
@@ -118,7 +119,7 @@ export default function Content({
         ...rest,
       };
     });
-    postReaction({
+    api.postReaction({
       communityId: currentCommunity.id,
       messageId,
       type,
@@ -532,6 +533,13 @@ export default function Content({
         right={
           thread && (
             <Thread
+              {...{
+                Actions,
+                fetchMentions: api.fetchMentions,
+                JoinChannelLink,
+                put: api.put,
+                upload: api.upload,
+              }}
               key={thread.id}
               thread={thread}
               channelId={thread.channelId}

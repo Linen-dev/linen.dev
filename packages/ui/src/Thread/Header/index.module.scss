@@ -1,0 +1,54 @@
+@import '../../colors.scss';
+
+.container {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.title {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.header {
+  align-items: center;
+  display: flex;
+  gap: 0.25rem;
+}
+
+.icons {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+}
+
+.expanded {
+  border-bottom: none;
+  padding: 1rem 1rem 0;
+  position: relative;
+}
+
+.expand {
+  display: flex;
+}
+
+.back {
+  cursor: pointer;
+}
+
+.mobile {
+  display: none;
+}
+
+@media screen and (max-width: 1023px) {
+  .desktop {
+    display: none;
+  }
+
+  .mobile {
+    display: block;
+  }
+}

@@ -1,4 +1,4 @@
-import { stripProtocol, normalizeUrl, cleanUpUrl } from './url';
+import { stripProtocol, normalizeUrl, cleanUpUrl, getThreadUrl } from './url';
 
 describe('cleanUpUrl', () => {
   test('clean up customDomain', () => {
@@ -60,5 +60,18 @@ describe('#normalizeUrl', () => {
         'https://avatars.slack.com/avatar.jpg'
       );
     });
+  });
+});
+
+describe('#getThreadUrl', () => {
+  it('returns the url of a thread', () => {
+    const url = getThreadUrl({
+      isSubDomainRouting: false,
+      settings: { communityName: 'linen', prefix: 's' },
+      slug: 'test',
+      incrementId: 1,
+      LINEN_URL: 'https://www.linen.dev',
+    });
+    expect(url).toBe('https://www.linen.dev/s/linen/t/1/test');
   });
 });

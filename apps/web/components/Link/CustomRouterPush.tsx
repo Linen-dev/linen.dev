@@ -1,5 +1,5 @@
 import Router from 'next/router';
-import { CustomLinkHelper } from 'utilities/CustomLinkHelper';
+import { CustomLinkHelper } from '@linen/utilities/custom-link';
 
 export default function CustomRouterPush({
   isSubDomainRouting,

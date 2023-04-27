@@ -17,7 +17,7 @@ import * as api from 'utilities/requests';
 import styles from './index.module.scss';
 import classNames from 'classnames';
 import { Permissions, SerializedUser } from '@linen/types';
-import { fetchMentions } from 'components/MessageForm/api';
+import { fetchMentions } from 'utilities/requests';
 
 interface Props {
   permissions: Permissions;

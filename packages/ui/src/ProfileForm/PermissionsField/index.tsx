@@ -14,7 +14,7 @@ export default function PermissionsField() {
 
   useEffect(() => {
     if (!settings) {
-      fetch('/api/notifications/settings')
+      fetch('/api/notifications/settings') // FIXME
         .then((res) => res.json())
         .then((res) => {
           setSettings(res);
@@ -26,6 +26,7 @@ export default function PermissionsField() {
   const onEmailSettingsChange = async () => {
     const notificationsByEmail = !checkedEmail;
     try {
+      // FIXME
       await fetch('/api/notifications/settings', {
         method: 'PUT',
         headers: {

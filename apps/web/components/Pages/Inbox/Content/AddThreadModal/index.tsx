@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import MessageForm from 'components/MessageForm';
-import Preview from 'components/MessageForm/Preview';
-import { postprocess } from 'components/MessageForm/utilities/message';
-import { fetchMentions } from 'components/MessageForm/api';
+import MessageForm from '@linen/ui/MessageForm';
+import Preview from '@linen/ui/MessagePreview';
+import { postprocess } from '@linen/ast';
+import { fetchMentions } from 'utilities/requests';
 import H3 from '@linen/ui/H3';
 import Field from '@linen/ui/Field';
 import NativeSelect from '@linen/ui/NativeSelect';

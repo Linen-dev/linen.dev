@@ -26,6 +26,7 @@
     "./await-to-js": "./dist/await-to-js.js",
     "./clipboard": "./dist/clipboard.js",
     "./colors": "./dist/colors.js",
+    "./custom-link": "./dist/custom-link.js",
     "./date": "./dist/date.js",
     "./debounce": "./dist/debounce.js",
     "./document": "./dist/document.js",
@@ -55,6 +56,9 @@
       ],
       "colors": [
         "./dist/colors.d.ts"
+      ],
+      "custom-link": [
+        "./dist/custom-link.d.ts"
       ],
       "date": [
         "./dist/date.d.ts"

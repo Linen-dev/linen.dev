@@ -23,10 +23,13 @@
     "@linen/hooks": "*",
     "@linen/types": "*",
     "@linen/utilities": "*",
+    "autosize": "^6.0.1",
     "entities": "^4.4.0",
     "identity-obj-proxy": "^3.0.0",
     "react-emoji-render": "^2.0.1",
-    "react-intersection-observer": "^9.4.0"
+    "react-infinite-scroll-hook": "^4.1.1",
+    "react-intersection-observer": "^9.4.3",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^24.0.1",
@@ -66,6 +69,8 @@
     "./ButtonGroup": "./dist/ButtonGroup/index.js",
     "./ButtonToggle": "./dist/ButtonToggle/index.js",
     "./Card": "./dist/Card/index.js",
+    "./ChannelView": "./dist/ChannelView/index.js",
+    "./ChatLayout": "./dist/ChatLayout/index.js",
     "./Checkbox": "./dist/Checkbox/index.js",
     "./Code": "./dist/Code/index.js",
     "./ColorField": "./dist/ColorField/index.js",
@@ -74,11 +79,14 @@
     "./CommunityLink": "./dist/CommunityLink/index.js",
     "./ConfirmationModal": "./dist/ConfirmationModal/index.js",
     "./Container": "./dist/Container/index.js",
+    "./CopyToClipboardIcon": "./dist/CopyToClipboardIcon/index.js",
     "./DiscordIcon": "./dist/DiscordIcon/index.js",
     "./Dropdown": "./dist/Dropdown/index.js",
     "./EmailField": "./dist/EmailField/index.js",
     "./FadeIn": "./dist/FadeIn/index.js",
     "./Field": "./dist/Field/index.js",
+    "./GridContent": "./dist/GridContent/index.js",
+    "./GridRow": "./dist/GridRow/index.js",
     "./H1": "./dist/H1/index.js",
     "./H2": "./dist/H2/index.js",
     "./H3": "./dist/H3/index.js",
@@ -92,6 +100,8 @@
     "./LinenLogo": "./dist/LinenLogo/index.js",
     "./List": "./dist/List/index.js",
     "./Message": "./dist/Message/index.js",
+    "./MessageForm": "./dist/MessageForm/index.js",
+    "./MessagePreview": "./dist/MessagePreview/index.js",
     "./Modal": "./dist/Modal/index.js",
     "./NativeSelect": "./dist/NativeSelect/index.js",
     "./Nav": "./dist/Nav/index.js",
@@ -120,6 +130,7 @@
     "./Textarea": "./dist/Textarea/index.js",
     "./Th": "./dist/Th/index.js",
     "./Thead": "./dist/Thead/index.js",
+    "./Thread": "./dist/Thread/index.js",
     "./Toast": "./dist/Toast/index.js",
     "./Toggle": "./dist/Toggle/index.js",
     "./Tooltip": "./dist/Tooltip/index.js",
@@ -159,6 +170,12 @@
       "Card": [
         "./dist/Card/index.d.ts"
       ],
+      "ChannelView": [
+        "./dist/ChannelView/index.d.ts"
+      ],
+      "ChatLayout": [
+        "./dist/ChatLayout/index.d.ts"
+      ],
       "Checkbox": [
         "./dist/Checkbox/index.d.ts"
       ],
@@ -183,6 +200,9 @@
       "Container": [
         "./dist/Container/index.d.ts"
       ],
+      "CopyToClipboardIcon": [
+        "./dist/CopyToClipboardIcon/index.d.ts"
+      ],
       "DiscordIcon": [
         "./dist/DiscordIcon/index.d.ts"
       ],
@@ -197,6 +217,12 @@
       ],
       "Field": [
         "./dist/Field/index.d.ts"
+      ],
+      "GridContent": [
+        "./dist/GridContent/index.d.ts"
+      ],
+      "GridRow": [
+        "./dist/GridRow/index.d.ts"
       ],
       "H1": [
         "./dist/H1/index.d.ts"
@@ -236,6 +262,12 @@
       ],
       "Message": [
         "./dist/Message/index.d.ts"
+      ],
+      "MessageForm": [
+        "./dist/MessageForm/index.d.ts"
+      ],
+      "MessagePreview": [
+        "./dist/MessagePreview/index.d.ts"
       ],
       "Modal": [
         "./dist/Modal/index.d.ts"
@@ -320,6 +352,9 @@
       ],
       "Thead": [
         "./dist/Thead/index.d.ts"
+      ],
+      "Thread": [
+        "./dist/Thread/index.d.ts"
       ],
       "Toast": [
         "./dist/Toast/index.d.ts"

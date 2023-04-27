@@ -1,15 +1,17 @@
 import React, { createContext, useContext } from 'react';
 
+type communityType = 'discord' | 'slack' | 'linen';
+
 const Context = createContext({
   isSubDomainRouting: false,
   communityName: '',
-  communityType: '',
+  communityType: 'linen' as communityType,
 });
 
 interface ContextType {
   isSubDomainRouting: boolean;
   communityName: string;
-  communityType: string;
+  communityType: communityType;
 }
 
 interface Props {

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { CustomLinkHelper } from 'utilities/CustomLinkHelper';
+import { CustomLinkHelper } from '@linen/utilities/custom-link';
 
 export default function CustomTableRowLink({
   isSubDomainRouting,

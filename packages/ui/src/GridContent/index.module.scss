@@ -1,0 +1,23 @@
+@import '../colors.scss';
+
+.li {
+  border: 1px solid transparent;
+}
+.li.active {
+  border-top: 1px solid $color-gray-100;
+  border-bottom: 1px solid $color-gray-100;
+}
+
+.mouse {
+  .li:hover {
+    background: $color-gray-50;
+    cursor: pointer;
+  }
+}
+
+.line {
+  margin-top: -0.75rem;
+  position: absolute;
+  width: 100%;
+  z-index: 2;
+}

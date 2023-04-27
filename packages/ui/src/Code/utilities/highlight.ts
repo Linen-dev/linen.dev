@@ -4,6 +4,7 @@ export function highlightCode(input: string): Promise<string> {
   if (!!cache[input]) {
     return cache[input];
   }
+  // FIXME
   const promise = fetch('/api/highlight', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

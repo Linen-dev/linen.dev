@@ -1,0 +1,47 @@
+@import '../../../colors.scss';
+
+.container {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex-grow: 1;
+}
+
+.stripe {
+  background: repeating-linear-gradient(
+    45deg,
+    #fff,
+    #fff 2px,
+    $color-gray-50 2px,
+    $color-gray-50 4px
+  );
+  margin: 1rem;
+  animation-name: opacity-animation;
+  animation-duration: 0.15s;
+}
+
+@keyframes opacity-animation {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.icon {
+  color: $color-gray-900;
+  font-size: 64px;
+  line-height: 1;
+  margin: 0;
+}
+
+.header {
+  color: $color-gray-900;
+  font-size: 24px;
+  font-weight: bold;
+  margin: 0;
+  line-height: 1;
+  user-select: none;
+}

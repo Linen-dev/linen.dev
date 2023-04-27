@@ -1,6 +1,6 @@
 import React from 'react';
 import { SerializedChannel, Settings } from '@linen/types';
-import { CustomLinkHelper } from 'utilities/CustomLinkHelper';
+import { CustomLinkHelper } from '@linen/utilities/custom-link';
 
 export default function Pagination({
   currentChannel,

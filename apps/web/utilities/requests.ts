@@ -1,5 +1,6 @@
-import axios from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 import { qs } from '@linen/utilities/url';
+import debounce from '@linen/utilities/debounce';
 import type {
   SerializedMessage,
   SerializedThread,
@@ -166,3 +167,55 @@ export const deleteUser = ({ ...props }: deleteUserType): Promise<{}> =>
 
 export const deleteAccount = (props: { accountId: string }): Promise<{}> =>
   deleteReq(`/api/accounts/${props.accountId}`);
+
+export const postReaction = debounce(
+  (params: {
+    communityId: string;
+    messageId: string;
+    type: string;
+    action: string;
+  }) => {
+    return post('/api/reactions', params);
+  }
+);
+
+export const mergeThreadsRequest = debounce(
+  (params: { from: string; to: string }) => {
+    return post('/api/merge', params);
+  }
+);
+
+export const moveMessageToThreadRequest = debounce(
+  (params: { messageId: string; threadId: string }) => {
+    return post('/api/move/message/thread', params);
+  }
+);
+
+export const moveMessageToChannelRequest = debounce(
+  (params: { messageId: string; threadId: string }) => {
+    return post('/api/move/message/channel', params);
+  }
+);
+
+export const moveThreadToChannelRequest = debounce(
+  (params: { threadId: string; channelId: string }) => {
+    return post('/api/move/thread/channel', params);
+  }
+);
+
+const debouncedFetchMentions = debounce(
+  (term: string, communityId: string) =>
+    get(`/api/mentions?${qs({ term, communityId })}`),
+  100
+);
+
+export function fetchMentions(term: string, communityId: string) {
+  return debouncedFetchMentions(term, communityId);
+}
+
+export function upload(
+  { communityId, data }: { communityId: string; data: FormData },
+  options: AxiosRequestConfig
+): Promise<any> {
+  return axios.post(`/api/upload?communityId=${communityId}`, data, options);
+}

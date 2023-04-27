@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import classNames from 'classnames';
 import Draggable from './Draggable';
-import { getThreadUrl } from '../Pages/Channel/utilities/url';
+import { getThreadUrl } from '@linen/utilities/url';
 import Toast from '@linen/ui/Toast';
 import Tooltip from '@linen/ui/Tooltip';
 import {
@@ -26,6 +26,7 @@ import { FaVolumeMute } from '@react-icons/all-files/fa/FaVolumeMute';
 import { BiMessageCheck } from '@react-icons/all-files/bi/BiMessageCheck';
 import styles from './index.module.scss';
 import { Mode } from '@linen/hooks/mode';
+import { LINEN_URL } from 'secrets';
 
 interface Props {
   className?: string;
@@ -282,6 +283,7 @@ export default function Actions({
               incrementId: thread.incrementId,
               slug: thread.slug,
               messageId: message.id,
+              LINEN_URL,
             });
             event.stopPropagation();
             event.preventDefault();

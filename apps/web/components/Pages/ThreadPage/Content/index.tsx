@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import Thread from 'components/Thread';
+import Thread from '@linen/ui/Thread';
 import { ThreadState } from '@linen/types';
 import { useUsersContext } from '@linen/contexts/Users';
 import { useJoinContext } from 'contexts/Join';
@@ -14,6 +14,8 @@ import {
   Settings,
 } from '@linen/types';
 import * as api from 'utilities/requests';
+import Actions from 'components/Actions';
+import JoinChannelLink from 'components/Link/JoinChannelLink';
 
 interface Props {
   thread: SerializedThread;
@@ -106,6 +108,13 @@ export default function Content({
   return (
     <div className="w-full">
       <Thread
+        {...{
+          Actions,
+          fetchMentions: api.fetchMentions,
+          JoinChannelLink,
+          put: api.put,
+          upload: api.upload,
+        }}
         thread={thread}
         key={thread.id}
         channelId={currentChannel.id}

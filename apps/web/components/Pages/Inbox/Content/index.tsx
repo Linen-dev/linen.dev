@@ -3,13 +3,13 @@ import Layouts from '@linen/ui/Layouts';
 import Pages from '@linen/ui/Pages';
 import ProgressModal from '@linen/ui/ProgressModal';
 import Toast from '@linen/ui/Toast';
-import Thread from 'components/Thread';
+import Thread from '@linen/ui/Thread';
 import AddThreadModal from './AddThreadModal';
 import ConfigureInboxModal from './ConfigureInboxModal';
 import Empty from './Empty';
 import { sendMessageWrapper } from './utilities/sendMessageWrapper';
 import { createThreadWrapper } from './utilities/createThreadWrapper';
-import { upload } from 'components/MessageForm/api';
+import { upload } from 'utilities/requests';
 import usePolling from '@linen/hooks/polling';
 import useKeyboard from '@linen/hooks/keyboard';
 import { useUsersContext } from '@linen/contexts/Users';
@@ -31,11 +31,12 @@ import {
 import { addMessageToThread } from './state';
 import { defaultConfiguration } from './utilities/inbox';
 import { addReactionToThread } from 'utilities/state/reaction';
-import { postReaction } from 'components/Pages/Channel/Content/utilities/http';
 import * as api from 'utilities/requests';
 import { FiSettings } from '@react-icons/all-files/fi/FiSettings';
 import { InboxConfig } from '../types';
 import { localStorage } from '@linen/utilities/storage';
+import Actions from 'components/Actions';
+import JoinChannelLink from 'components/Link/JoinChannelLink';
 
 const { Header, Grid } = Pages.Inbox;
 const { SidebarLayout } = Layouts.Shared;
@@ -159,7 +160,7 @@ export default function Inbox({
         ...rest,
       };
     });
-    postReaction({
+    api.postReaction({
       communityId: currentCommunity.id,
       messageId,
       type,
@@ -767,6 +768,13 @@ export default function Inbox({
         right={
           thread && (
             <Thread
+              {...{
+                Actions,
+                fetchMentions: api.fetchMentions,
+                JoinChannelLink,
+                put: api.put,
+                upload: api.upload,
+              }}
               key={thread.id}
               thread={thread}
               channelId={thread.channelId}
