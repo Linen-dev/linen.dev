@@ -20,7 +20,7 @@ Join our public community: https://linen.dev/s/linen
 
 ### Core Features:
 
-- **Search engine friendly**: Linen communities have over 50,000 pages indexed on Google with over 10,000,000 search impresssions. Most chat apps are not search engine friendly because they are very JS heavy. We made Linen search engine friendly by offering a sitemap, conditionally rendering a static version of our page to search engines, and using cursor based pagination so pages will be consistant.
+- **Search engine friendly**: Linen communities have over 50,000 pages indexed on Google with over 10,000,000 search impressions. Most chat apps are not search engine friendly because they are very JS heavy. We made Linen search engine friendly by offering a sitemap, conditionally rendering a static version of our page to search engines, and using cursor based pagination so pages will be consistant.
 - **Customer support tooling**: Most communities often become a customer support channel. All of our threads have a open close state. We have a feed where you can browse all open/closed conversations in one place instead of having to worry about which channels and conversations your team have missed.
 - **Async first**: Chat can be very noisy especially with large communities. By having a feed of conversations that you are participating in you don't have to worry about missing messages. We also repurposed @mentions from a notification to a async notification where it shows up in your feed. We replaced it with !mention which will send a push notification to you.
 - **Import communities**: Linen support imports from all of your public Slack/Discord conversations, attachments, emojis, and members.
