@@ -1,15 +1,11 @@
 import { serializeAccount } from '@linen/serializers/account';
-import { prisma } from '@linen/database';
-import {
-  AccountIntegration,
-  AccountType,
-  SerializedAccount,
-} from '@linen/types';
+import { SerializedAccount } from '@linen/types';
 import Layout from 'components/layout/CardLayout';
 import H1 from '@linen/ui/H1';
 import H2 from '@linen/ui/H2';
 import Link from 'components/Link';
 import List from '@linen/ui/List';
+import { getCommunitiesWithName } from 'services/accounts';
 
 interface Props {
   communities: SerializedAccount[];
@@ -50,18 +46,7 @@ export default function Sitemap({ communities }: Props) {
 }
 
 export async function getServerSideProps() {
-  const communities = await prisma.accounts.findMany({
-    where: {
-      type: AccountType.PUBLIC,
-      NOT: {
-        name: null,
-      },
-      OR: [{ syncStatus: 'DONE' }, { integration: AccountIntegration.NONE }],
-    },
-    orderBy: {
-      name: 'asc',
-    },
-  });
+  const communities = await getCommunitiesWithName();
 
   return {
     props: {

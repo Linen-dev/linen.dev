@@ -1,4 +1,4 @@
-import { prisma, users, Prisma } from '@linen/database';
+import { prisma, Prisma, AccountIntegration } from '@linen/database';
 import { stripProtocol } from '@linen/utilities/url';
 import { generateRandomWordSlug } from '@linen/utilities/randomWordSlugs';
 import {
@@ -416,3 +416,69 @@ export const findAccountBySlackTeamId = async (slackTeamId: string) => {
     },
   });
 };
+
+export async function communitiesWithDescription() {
+  return await prisma.accounts.findMany({
+    where: {
+      type: AccountType.PUBLIC,
+      NOT: {
+        name: null,
+        description: null,
+      },
+      OR: [{ syncStatus: 'DONE' }, { integration: AccountIntegration.NONE }],
+    },
+    orderBy: {
+      name: 'asc',
+    },
+  });
+}
+export async function communitiesWithLogo() {
+  return await prisma.accounts.findMany({
+    where: {
+      NOT: [
+        {
+          logoUrl: null,
+        },
+      ],
+      syncStatus: 'DONE',
+    },
+    select: {
+      logoUrl: true,
+      name: true,
+      premium: true,
+      brandColor: true,
+      redirectDomain: true,
+      slackDomain: true,
+      discordServerId: true,
+      discordDomain: true,
+    },
+  });
+}
+
+export async function findAccountsFromAuth(email: string) {
+  return await prisma.auths.findUnique({
+    where: { email },
+    include: {
+      users: {
+        include: {
+          account: true,
+        },
+      },
+    },
+  });
+}
+
+export async function getCommunitiesWithName() {
+  return await prisma.accounts.findMany({
+    where: {
+      type: AccountType.PUBLIC,
+      NOT: {
+        name: null,
+      },
+      OR: [{ syncStatus: 'DONE' }, { integration: AccountIntegration.NONE }],
+    },
+    orderBy: {
+      name: 'asc',
+    },
+  });
+}

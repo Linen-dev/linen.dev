@@ -6,17 +6,13 @@ import styles from './index.module.scss';
 import logo from 'public/images/logo/linen.svg';
 import { AiOutlineSearch } from '@react-icons/all-files/ai/AiOutlineSearch';
 import { serializeAccount } from '@linen/serializers/account';
-import { prisma } from '@linen/database';
-import {
-  AccountIntegration,
-  AccountType,
-  SerializedAccount,
-} from '@linen/types';
+import { SerializedAccount } from '@linen/types';
 import { truncate } from '@linen/utilities/string';
 import { trackPageView } from 'utilities/ssr-metrics';
 import CommunityLink from '@linen/ui/CommunityLink';
 import { getHomeUrl } from 'utilities/home';
 import Image from 'next/image';
+import { communitiesWithDescription } from 'services/accounts';
 
 interface Props {
   communities: SerializedAccount[];
@@ -135,19 +131,7 @@ export default function Communities({ communities }: Props) {
 export async function getServerSideProps(context: any) {
   const track = trackPageView(context);
 
-  const communities = await prisma.accounts.findMany({
-    where: {
-      type: AccountType.PUBLIC,
-      NOT: {
-        name: null,
-        description: null,
-      },
-      OR: [{ syncStatus: 'DONE' }, { integration: AccountIntegration.NONE }],
-    },
-    orderBy: {
-      name: 'asc',
-    },
-  });
+  const communities = await communitiesWithDescription();
   await track.flush();
   return {
     props: {

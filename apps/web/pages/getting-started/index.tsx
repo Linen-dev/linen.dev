@@ -1,10 +1,10 @@
 import { GettingStartedPage } from 'components/Pages/GettingStartedPage';
 import type { NextPageContext } from 'next';
 import Session from 'services/session';
-import { prisma } from '@linen/database';
 import { findInvitesByEmail } from 'services/invites';
 import { trackPageView } from 'utilities/ssr-metrics';
 import { serializeAccount } from '@linen/serializers/account';
+import { findAccountsFromAuth } from 'services/accounts';
 
 export default function CreateCommunity(props: any) {
   return <GettingStartedPage {...props} />;
@@ -50,16 +50,3 @@ const filterAccounts = (e: any) =>
   e.account?.slackDomain ||
   e.accounts?.discordDomain ||
   e.accounts?.slackDomain;
-
-async function findAccountsFromAuth(email: string) {
-  return await prisma.auths.findUnique({
-    where: { email },
-    include: {
-      users: {
-        include: {
-          account: true,
-        },
-      },
-    },
-  });
-}

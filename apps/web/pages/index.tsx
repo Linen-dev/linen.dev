@@ -1,4 +1,3 @@
-import { prisma } from '@linen/database';
 import linenExamplePage from 'public/linen-example-page.png';
 import linenExampleFeed from 'public/linen-example-feed.png';
 import linenExampleSearch from 'public/linen-example-search.svg';
@@ -12,6 +11,7 @@ import FadeIn from '@linen/ui/FadeIn';
 import Head from 'next/head';
 import Footer from 'components/Footer';
 import type { GetServerSidePropsContext } from 'next';
+import { communitiesWithLogo } from 'services/accounts';
 
 const Home = ({ accounts }: Props) => {
   const tiers = [
@@ -496,26 +496,7 @@ type Props = {
 };
 
 export async function getServerSideProps({ res }: GetServerSidePropsContext) {
-  const accounts = await prisma.accounts.findMany({
-    where: {
-      NOT: [
-        {
-          logoUrl: null,
-        },
-      ],
-      syncStatus: 'DONE',
-    },
-    select: {
-      logoUrl: true,
-      name: true,
-      premium: true,
-      brandColor: true,
-      redirectDomain: true,
-      slackDomain: true,
-      discordServerId: true,
-      discordDomain: true,
-    },
-  });
+  const accounts = await communitiesWithLogo();
 
   const goodLookingLogos = accounts.filter(
     (a) =>

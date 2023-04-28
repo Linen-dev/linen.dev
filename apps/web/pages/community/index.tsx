@@ -1,17 +1,16 @@
-import { prisma } from '@linen/database';
 import linenExamplePage from 'public/linen-example-page.png';
 import Image from 'next/image';
 import LinenLogo from '@linen/ui/LinenLogo';
 import YCombinatorLogo from '@linen/ui/YCombinatorLogo';
 import { GoCheck } from '@react-icons/all-files/go/GoCheck';
 import { AiFillGithub } from '@react-icons/all-files/ai/AiFillGithub';
-
 import Link from 'next/link';
 import FadeIn from '@linen/ui/FadeIn';
 import Head from 'next/head';
 import Footer from 'components/Footer';
 import type { GetServerSidePropsContext } from 'next';
 import { trackPageView } from 'utilities/ssr-metrics';
+import { communitiesWithLogo } from 'services/accounts';
 
 const Home = (props: { accounts: Props[] }) => {
   const accounts = props.accounts;
@@ -507,26 +506,7 @@ export async function getServerSideProps({
   res,
 }: GetServerSidePropsContext) {
   const track = trackPageView({ req, res });
-  const accounts = await prisma.accounts.findMany({
-    where: {
-      NOT: [
-        {
-          logoUrl: null,
-        },
-      ],
-      syncStatus: 'DONE',
-    },
-    select: {
-      logoUrl: true,
-      name: true,
-      premium: true,
-      brandColor: true,
-      redirectDomain: true,
-      slackDomain: true,
-      discordServerId: true,
-      discordDomain: true,
-    },
-  });
+  const accounts = await communitiesWithLogo();
 
   const goodLookingLogos = accounts.filter((a) => a.logoUrl?.includes('.svg'));
   // since we use 3 columns we want it to only show numbers divisible by 3
