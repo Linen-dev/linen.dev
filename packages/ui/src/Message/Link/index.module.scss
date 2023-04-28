@@ -1,3 +1,5 @@
+@import '../../colors.scss';
+
 .link {
   hyphens: auto;
   line-break: auto;
@@ -6,8 +8,8 @@
   word-break: break-word;
   word-wrap: break-word;
   text-decoration: none;
+  color: $color-indigo-700;
 }
-
 .link:hover {
   text-decoration: underline;
 }

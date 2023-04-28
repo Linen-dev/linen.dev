@@ -7,21 +7,21 @@ interface Props {
   title: string;
 }
 
-function getTitle (url: string, title: string) {
+function getTitle(url: string, title: string) {
   if (title) {
     if (title.startsWith('mailto:')) {
-      return title.split(':')[1]
+      return title.split(':')[1];
     }
-    return title
+    return title;
   }
 
-  return url.split(':')[1]
+  return url.split(':')[1];
 }
 
 function Mail({ url, title }: Props) {
   return (
     <a
-      className={classNames('text-indigo-700', styles.link)}
+      className={classNames(styles.link)}
       href={url}
       target="_blank"
       rel="noreferrer"

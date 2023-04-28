@@ -1,0 +1,20 @@
+@import '../colors.scss';
+
+.btn {
+  display: flex;
+  border-radius: 0.375rem /* 6px */;
+  border-width: 1px;
+  padding: 0.5rem /* 8px */;
+  justify-content: space-around;
+  border-color: $color-border;
+}
+
+.btnContent {
+  display: flex;
+  gap: 0.5rem /* 8px */;
+  align-items: center;
+}
+
+.whitespaceNowrap {
+  white-space: nowrap;
+}

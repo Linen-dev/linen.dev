@@ -1,5 +1,7 @@
+import classNames from 'classnames';
 import React from 'react';
 import { InView } from 'react-intersection-observer';
+import styles from './index.module.scss';
 
 type FadeDirection = 'up' | 'down' | 'left' | 'right';
 type FadeDelay = 0 | 100 | 200 | 300 | 500 | 700 | 1000;
@@ -7,31 +9,31 @@ type FadeDelay = 0 | 100 | 200 | 300 | 500 | 700 | 1000;
 const getClassNamesByDirection = (direction: FadeDirection) => {
   switch (direction) {
     case 'right':
-      return ['-translate-x-4', 'translate-x-0'];
+      return [styles._translateX4, styles.translateX0];
     case 'left':
-      return ['translate-x-4', 'translate-x-0'];
+      return [styles.translateX4, styles.translateX0];
     case 'down':
-      return ['-translate-y-4', 'translate-y-0'];
+      return [styles._translateY4, styles.translateY0];
     case 'up':
     default:
-      return ['translate-y-4', 'translate-y-0'];
+      return [styles.translateY4, styles.translateY0];
   }
 };
 
 const getClassNameByDelay = (delay: FadeDelay) => {
   switch (delay) {
     case 100:
-      return 'delay-100';
+      return styles.delay100;
     case 200:
-      return 'delay-200';
+      return styles.delay200;
     case 300:
-      return 'delay-300';
+      return styles.delay300;
     case 500:
-      return 'delay-500';
+      return styles.delay500;
     case 700:
-      return 'delay-700';
+      return styles.delay700;
     case 1000:
-      return 'delay-1000';
+      return styles.delay1000;
     default:
       return '';
   }
@@ -57,9 +59,12 @@ const FadeIn = ({
         return (
           <div
             ref={ref}
-            className={`transform transition-all ease-in-out duration-500 ${delayClassName} ${
-              inView ? `opacity-100 ${visible}` : `opacity-0 ${hidden}`
-            }`}
+            className={classNames(delayClassName, styles.transform, {
+              [styles.opacity100]: inView,
+              [visible]: inView,
+              [styles.opacity0]: !inView,
+              [hidden]: !inView,
+            })}
           >
             {children}
           </div>

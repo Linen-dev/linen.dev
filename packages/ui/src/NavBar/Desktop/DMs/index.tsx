@@ -58,7 +58,7 @@ export function DMs({
           <>
             <div className={styles.flex}>
               <FiPlus
-                className="cursor-pointer"
+                className={styles.cursorPointer}
                 onClick={(event) => {
                   event.stopPropagation();
                   setModal(true);
@@ -110,9 +110,12 @@ export function DMs({
             };
 
             return (
-              <div className="group flex" key={`${channel.id}-${index}`}>
+              <div
+                className={classNames('group', styles.flexDiv)}
+                key={`${channel.id}-${index}`}
+              >
                 <Link
-                  className={classNames(styles.item, 'grow')}
+                  className={classNames(styles.item)}
                   onClick={() => {
                     debouncedUpdateReadStatus(channel.id);
                     setHighlights((highlights: any) => {

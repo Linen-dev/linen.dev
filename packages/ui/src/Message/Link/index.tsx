@@ -39,7 +39,7 @@ export default function Link({ url, title, onLoad }: Props) {
 
   return (
     <a
-      className={classNames('text-indigo-700', styles.link, {
+      className={classNames(styles.link, {
         [styles.line]: isHrefInvalid,
       })}
       href={url}

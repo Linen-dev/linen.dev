@@ -1,3 +1,5 @@
+@import '../../../colors.scss';
+
 .link {
   hyphens: auto;
   line-break: auto;
@@ -5,4 +7,5 @@
   text-decoration: underline;
   word-break: break-word;
   word-wrap: break-word;
+  color: $color-indigo-700;
 }

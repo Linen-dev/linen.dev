@@ -87,7 +87,7 @@ function Message({
         );
       case 'italic':
         return (
-          <em className="italic" key={node.cid}>
+          <em className={styles.italic} key={node.cid}>
             {(node as ItalicNode).children.map(render)}
           </em>
         );

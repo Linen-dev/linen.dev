@@ -61,7 +61,7 @@ export default function ChannelsGroup({
           <>
             <div className={styles.flex}>
               <FiPlus
-                className="cursor-pointer"
+                className={styles.cursorPointer}
                 onClick={(event) => {
                   event.stopPropagation();
                   setModal(true);

@@ -15,7 +15,7 @@ export default function BlockCode({ value, placeholder }: Props) {
   const content = decodeHTML(input);
   return (
     <Code
-      className={classNames(styles.code, 'block')}
+      className={classNames(styles.code, styles.block)}
       content={isFormattable(content) ? formatCode(content) : content}
       highlight={!placeholder && isHighlighted(value)}
     />

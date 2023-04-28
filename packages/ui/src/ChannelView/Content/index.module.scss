@@ -37,3 +37,13 @@
   max-width: 52rem;
   width: 100%;
 }
+
+.ulFull > :not([hidden]) ~ :not([hidden]) {
+  --tw-divide-y-reverse: 0;
+  border-top-width: calc(1px * calc(1 - var(--tw-divide-y-reverse)));
+  border-bottom-width: calc(1px * var(--tw-divide-y-reverse));
+}
+
+.ulFull {
+  width: 100%;
+}

@@ -518,7 +518,7 @@ export default function Channel({
                     <Empty />
                   ) : (
                     <div className={styles.full}>
-                      <ul className="divide-y w-full">
+                      <ul className={styles.ulFull}>
                         <Grid
                           {...{ Actions }}
                           threads={threads}

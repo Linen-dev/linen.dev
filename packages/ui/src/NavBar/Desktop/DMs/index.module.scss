@@ -6,6 +6,7 @@
 
 .item {
   display: block;
+  flex-grow: 1;
 }
 
 .justify {
@@ -30,4 +31,12 @@
 .item:hover .archive {
   opacity: 1;
   pointer-events: all;
+}
+
+.cursorPointer {
+  cursor: pointer;
+}
+
+.flexDiv {
+  display: flex;
 }

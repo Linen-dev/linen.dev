@@ -3,6 +3,7 @@ import { capitalize } from '@linen/utilities/string';
 import classNames from 'classnames';
 import DiscordIcon from '../DiscordIcon';
 import SlackIcon from '../SlackIcon';
+import styles from './index.module.scss';
 
 interface CommunityButtonProps {
   communityType: string;
@@ -24,16 +25,13 @@ export default function CommunityButton({
   return (
     <button
       aria-label={`${label}  ${capitalize(communityType)}`}
-      className={classNames(
-        'flex rounded-md border p-2 justify-around border-gray-300',
-        fontSize
-      )}
+      className={classNames(styles.btn, fontSize)}
       type="button"
       onClick={() => onClick(communityType)}
     >
-      <div className="flex gap-2 items-center">
+      <div className={styles.btnContent}>
         <Icon size={iconSize} />
-        <p className="whitespace-nowrap">
+        <p className={styles.whitespaceNowrap}>
           {label} <b>{capitalize(communityType)}</b>
         </p>
       </div>

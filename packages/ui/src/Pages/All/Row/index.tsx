@@ -31,6 +31,7 @@ export default function Row({
       active={active}
       onClick={onClick}
     >
+      {/* this was me? */}
       {/* <Actions
         className={styles.actions}
         thread={thread}

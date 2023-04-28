@@ -47,12 +47,12 @@ export default function Title({ title, state, manage, onSetTitle }: Props) {
   }
   return (
     <div
-      className={classNames(styles.title, 'cursor-pointer')}
+      className={classNames(styles.title, styles.cursorPointer)}
       onClick={() => setMode(Mode.Edit)}
     >
       {mode === Mode.Edit && (
         <TextInput
-          className="text-lg font-bold"
+          className={styles.textInput}
           id={INPUT_ID}
           defaultValue={title || ''}
           onBlur={(event: React.ChangeEvent<HTMLInputElement>) => {
