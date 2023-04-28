@@ -182,7 +182,7 @@ model accounts {
   slackAuthorizations   slackAuthorizations[]
   discordAuthorizations discordAuthorizations[]
   invites               invites[]
-  chat                  ChatType                @default(MANAGERS)
+  chat                  ChatType                @default(MEMBERS)
   integration           AccountIntegration      @default(NONE)
   apiKeys               apiKeys[]
   notifications         notifications[]
@@ -409,6 +409,7 @@ model userThreadStatus {
   remindAt  DateTime?
 
   @@id([userId, threadId])
+  @@index([threadId])
 }
 
 model userStarredThread {
