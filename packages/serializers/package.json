@@ -1,6 +1,7 @@
 {
   "name": "@linen/serializers",
   "version": "1.0.0",
+  "private": true,
   "scripts": {
     "dev": "tsc --watch",
     "prebuild": "node ../scripts/rebuild-package.mjs",

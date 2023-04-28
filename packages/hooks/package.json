@@ -4,6 +4,7 @@
   "description": "react hooks",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "private": true,
   "scripts": {
     "dev": "tsc --watch",
     "prebuild": "node ../scripts/rebuild-package.mjs",
