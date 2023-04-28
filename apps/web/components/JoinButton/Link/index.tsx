@@ -5,7 +5,7 @@ import styles from './index.module.scss';
 interface Props {
   fontColor: string;
   onClick?(event: React.MouseEvent<HTMLAnchorElement>): void;
-  href: string;
+  href?: string;
   children: React.ReactNode;
 }
 

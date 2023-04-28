@@ -1,5 +1,4 @@
 import React from 'react';
-import { useSession } from 'utilities/auth/react';
 import Toast from '@linen/ui/Toast';
 import { useJoinContext } from 'contexts/Join';
 import Link from '../Link';
@@ -7,10 +6,10 @@ import Link from '../Link';
 interface Props {
   fontColor: string;
   accountId: string;
+  status: 'authenticated' | 'loading' | 'unauthenticated';
 }
 
-export default function JoinLinen({ fontColor, accountId }: Props) {
-  const { status } = useSession();
+export default function JoinLinen({ fontColor, accountId, status }: Props) {
   const { startSignUp } = useJoinContext();
 
   const onClick = async (event: React.MouseEvent<HTMLAnchorElement>) => {
@@ -41,12 +40,8 @@ export default function JoinLinen({ fontColor, accountId }: Props) {
   }
 
   return (
-    <Link
-      fontColor={fontColor}
-      href="https://linen.dev/signup"
-      onClick={onClick}
-    >
-      Join Linen
+    <Link fontColor={fontColor} onClick={onClick}>
+      Join Community
     </Link>
   );
 }

@@ -2,8 +2,8 @@ import React from 'react';
 import JoinLinen from './JoinLinen';
 import JoinDiscord from './JoinDiscord';
 import JoinSlack from './JoinSlack';
-import Link from './Link';
 import { ChatType, SerializedAccount, Settings } from '@linen/types';
+import { useSession } from 'utilities/auth/react';
 
 interface Props {
   fontColor: string;
@@ -12,12 +12,17 @@ interface Props {
 }
 
 function JoinButton({ fontColor, currentCommunity, settings }: Props) {
-  if (currentCommunity.premium) {
-    if (!settings.communityInviteUrl || settings.chat === ChatType.MEMBERS) {
-      return (
-        <JoinLinen fontColor={fontColor} accountId={settings.communityId} />
-      );
-    }
+  const { status } = useSession();
+
+  if (status === 'loading') {
+    return <div />;
+  }
+
+  if (
+    currentCommunity.premium &&
+    settings.communityInviteUrl &&
+    settings.chat !== ChatType.MEMBERS
+  ) {
     return settings.communityType === 'discord' ? (
       <JoinDiscord fontColor={fontColor} href={settings.communityInviteUrl} />
     ) : (
@@ -25,14 +30,11 @@ function JoinButton({ fontColor, currentCommunity, settings }: Props) {
     );
   } else {
     return (
-      <>
-        <Link fontColor={fontColor} href="https://linen.dev/signin">
-          Sign In
-        </Link>
-        <Link fontColor={fontColor} href="https://linen.dev/signup">
-          Sign Up
-        </Link>
-      </>
+      <JoinLinen
+        fontColor={fontColor}
+        accountId={settings.communityId}
+        {...{ status }}
+      />
     );
   }
 }
