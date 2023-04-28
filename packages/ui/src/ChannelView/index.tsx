@@ -29,6 +29,7 @@ async function upsertUserThreadStatus(params: {
   reminder: boolean;
   reminderType?: ReminderTypes;
 }) {
+  // FIXME
   return fetch('/api/user-thread-status', {
     method: 'POST',
     body: JSON.stringify(params),
@@ -265,6 +266,7 @@ export default function ChannelView({
       if (!thread) {
         // get full thread from an endpoint and push it to threads
         try {
+          // FIXME
           const thread = await fetch(
             `/api/threads/${threadId}?accountId=${currentCommunity.id}`,
             {
@@ -509,6 +511,7 @@ export default function ChannelView({
   }
 
   async function starThread(threadId: string) {
+    // FIXME
     return fetch('/api/starred', {
       method: 'POST',
       body: JSON.stringify({

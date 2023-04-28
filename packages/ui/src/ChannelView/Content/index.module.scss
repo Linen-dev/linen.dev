@@ -28,12 +28,12 @@
 }
 
 .is-collapsed {
-  visibility: hidden;
-  width: 0%;
+  visibility: hidden !important;
+  width: 0% !important;
 }
 
 .is-expanded {
-  border-left: none;
+  border-left: none !important;
   max-width: 52rem;
   width: 100%;
 }
