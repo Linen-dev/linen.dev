@@ -9,7 +9,7 @@ import NativeSelect from '@linen/ui/NativeSelect';
 import TextInput from '@linen/ui/TextInput';
 import Toast from '@linen/ui/Toast';
 import { useRouter } from 'next/router';
-import { Roles } from '@linen/database';
+import { Roles } from '@linen/types';
 import { FiUser } from '@react-icons/all-files/fi/FiUser';
 import { FiTrash2 } from '@react-icons/all-files/fi/FiTrash2';
 

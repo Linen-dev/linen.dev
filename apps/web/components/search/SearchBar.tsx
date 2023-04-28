@@ -1,7 +1,6 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import Autocomplete from '@linen/ui/Autocomplete';
-import type { messages } from '@linen/database';
 import Suggestion from '@linen/ui/Suggestion';
 import {
   MessageFormat,
@@ -11,7 +10,9 @@ import {
 } from '@linen/types';
 import styles from './index.module.css';
 
-const parseResults = (data: messages[]) => {
+const parseResults = (
+  data: { id?: string; body?: string; threadId?: string }[]
+) => {
   const allIds = new Set();
   return data
     .map((r) => ({ ...r, value: r.body }))

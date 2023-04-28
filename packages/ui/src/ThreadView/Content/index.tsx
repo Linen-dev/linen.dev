@@ -1,11 +1,10 @@
-import { useState, useRef } from 'react';
-import Thread from '@linen/ui/Thread';
-import { ThreadState } from '@linen/types';
+import React, { useState } from 'react';
+import Thread from '@/Thread';
 import { useUsersContext } from '@linen/contexts/Users';
-import { useJoinContext } from 'contexts/Join';
 import { sendMessageWrapper } from './utilities/sendMessageWrapper';
-import Toast from '@linen/ui/Toast';
+import Toast from '@/Toast';
 import {
+  ThreadState,
   Permissions,
   SerializedAccount,
   SerializedChannel,
@@ -13,9 +12,7 @@ import {
   SerializedThread,
   Settings,
 } from '@linen/types';
-import * as api from 'utilities/requests';
-import Actions from 'components/Actions';
-import JoinChannelLink from 'components/Link/JoinChannelLink';
+import styles from './index.module.scss';
 
 interface Props {
   thread: SerializedThread;
@@ -26,6 +23,14 @@ interface Props {
   isSubDomainRouting: boolean;
   settings: Settings;
   permissions: Permissions;
+  useJoinContext(): any;
+  apiUpdateThread(...args: any): Promise<any>;
+  apiFetchMentions(...args: any): Promise<any>;
+  apiPut(...args: any): Promise<any>;
+  apiUpload(...args: any): Promise<any>;
+  JoinChannelLink(...args: any): JSX.Element;
+  Actions(...args: any): JSX.Element;
+  apiCreateMessage(...args: any): Promise<any>;
 }
 
 export default function Content({
@@ -37,6 +42,14 @@ export default function Content({
   isSubDomainRouting,
   settings,
   permissions,
+  useJoinContext,
+  apiUpdateThread,
+  apiFetchMentions,
+  apiPut,
+  apiUpload,
+  JoinChannelLink,
+  Actions,
+  apiCreateMessage,
 }: Props) {
   const [thread, setThread] = useState(initialThread);
   const [allUsers] = useUsersContext();
@@ -44,8 +57,6 @@ export default function Content({
 
   const token = permissions.token || null;
   const currentUser = permissions.user;
-
-  const ref = useRef<HTMLDivElement>(null);
 
   const onThreadMessage = (
     threadId: string,
@@ -86,15 +97,13 @@ export default function Content({
         ...options,
       };
     });
-    return api
-      .updateThread({
-        accountId: settings.communityId,
-        id: thread.id,
-        ...options,
-      })
-      .catch((_) => {
-        Toast.error('Failed to close the thread.');
-      });
+    return apiUpdateThread({
+      accountId: settings.communityId,
+      id: thread.id,
+      ...options,
+    }).catch((_) => {
+      Toast.error('Failed to close the thread.');
+    });
   };
 
   const sendMessage = sendMessageWrapper({
@@ -102,18 +111,19 @@ export default function Content({
     startSignUp,
     currentCommunity,
     allUsers,
-    setThread, // setThread
+    setThread,
+    apiCreateMessage,
   });
 
   return (
-    <div className="w-full">
+    <div className={styles.wrapper}>
       <Thread
         {...{
           Actions,
-          fetchMentions: api.fetchMentions,
+          fetchMentions: apiFetchMentions,
           JoinChannelLink,
-          put: api.put,
-          upload: api.upload,
+          put: apiPut,
+          upload: apiUpload,
         }}
         thread={thread}
         key={thread.id}

@@ -131,6 +131,7 @@
     "./Th": "./dist/Th/index.js",
     "./Thead": "./dist/Thead/index.js",
     "./Thread": "./dist/Thread/index.js",
+    "./ThreadView": "./dist/ThreadView/index.js",
     "./Toast": "./dist/Toast/index.js",
     "./Toggle": "./dist/Toggle/index.js",
     "./Tooltip": "./dist/Tooltip/index.js",
@@ -355,6 +356,9 @@
       ],
       "Thread": [
         "./dist/Thread/index.d.ts"
+      ],
+      "ThreadView": [
+        "./dist/ThreadView/index.d.ts"
       ],
       "Toast": [
         "./dist/Toast/index.d.ts"

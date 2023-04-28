@@ -1,5 +1,4 @@
 import { v4 as uuid } from 'uuid';
-import { StartSignUpFn } from 'contexts/Join';
 import { username } from '@linen/serializers/user';
 import {
   MessageFormat,
@@ -9,7 +8,6 @@ import {
   SerializedUser,
 } from '@linen/types';
 import debounce from '@linen/utilities/debounce';
-import * as api from 'utilities/requests';
 
 const debouncedSendMessage = debounce(
   ({
@@ -19,6 +17,7 @@ const debouncedSendMessage = debounce(
     channelId,
     threadId,
     imitationId,
+    apiCreateMessage,
   }: {
     message: string;
     files: UploadedFile[];
@@ -26,8 +25,9 @@ const debouncedSendMessage = debounce(
     channelId: string;
     threadId: string;
     imitationId: string;
+    apiCreateMessage(...args: any): Promise<any>;
   }) => {
-    return api.createMessage({
+    return apiCreateMessage({
       body: message,
       files,
       accountId: communityId,
@@ -45,12 +45,14 @@ export function sendMessageWrapper({
   currentCommunity,
   allUsers,
   setThread,
+  apiCreateMessage,
 }: {
   currentUser: any;
-  startSignUp?: StartSignUpFn;
+  startSignUp?(...args: any): any;
   currentCommunity: any;
   allUsers: SerializedUser[];
   setThread: Function;
+  apiCreateMessage(...args: any): Promise<any>;
 }) {
   return async ({
     message,
@@ -119,6 +121,7 @@ export function sendMessageWrapper({
       channelId,
       threadId,
       imitationId: imitation.id,
+      apiCreateMessage,
     }).then(
       ({
         message,
