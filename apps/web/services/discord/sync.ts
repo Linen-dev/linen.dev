@@ -96,42 +96,50 @@ export async function discordSync(args: {
   accountId: string;
   fullSync?: boolean;
 }) {
+  const account = await prisma.accounts.findUnique({
+    where: { id: args.accountId },
+    include: {
+      discordAuthorizations: { take: 1, orderBy: { createdAt: 'desc' } },
+    },
+  });
+  if (!account) {
+    throw new Error('account not found');
+  }
   try {
     const crawlType = !args.fullSync ? CrawlType.new_only : CrawlType.historic;
 
-    const account = await prisma.accounts.findUnique({
-      where: { id: args.accountId },
-      include: {
-        discordAuthorizations: { take: 1, orderBy: { createdAt: 'desc' } },
-      },
+    await updateAndNotifySyncStatus({
+      accountId: args.accountId,
+      status: SyncStatus.IN_PROGRESS,
+      accountName: account.name,
+      homeUrl: account.homeUrl,
+      communityUrl: account.communityUrl,
+      pathDomain: account.slackDomain,
     });
-    if (!account) {
-      throw new Error('account not found');
-    }
-
-    await updateAndNotifySyncStatus(
-      args.accountId,
-      SyncStatus.IN_PROGRESS,
-      account.name || account.slackDomain,
-      account.homeUrl,
-      account.communityUrl
-    );
 
     const logger = new Logger(getAccountName(account));
     await syncJob(account, crawlType, decrypt, logger);
 
-    await updateAndNotifySyncStatus(
-      args.accountId,
-      SyncStatus.DONE,
-      account.name || account.slackDomain,
-      account.homeUrl,
-      account.communityUrl
-    );
+    await updateAndNotifySyncStatus({
+      accountId: args.accountId,
+      status: SyncStatus.DONE,
+      accountName: account.name,
+      homeUrl: account.homeUrl,
+      communityUrl: account.communityUrl,
+      pathDomain: account.slackDomain,
+    });
 
     return args;
   } catch (error) {
     // TODO: add error
-    await updateAndNotifySyncStatus(args.accountId, SyncStatus.ERROR);
+    await updateAndNotifySyncStatus({
+      accountId: args.accountId,
+      status: SyncStatus.ERROR,
+      accountName: account.name,
+      homeUrl: account.homeUrl,
+      communityUrl: account.communityUrl,
+      pathDomain: account.slackDomain,
+    });
     throw error;
   }
 }

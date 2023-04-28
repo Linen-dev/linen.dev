@@ -19,22 +19,31 @@ export enum SyncStatus {
   ERROR = 'ERROR',
 }
 
-export async function updateAndNotifySyncStatus(
-  accountId: string,
-  status: SyncStatus,
-  accountName?: string | null,
-  homeUrl?: string | null,
-  communityUrl?: string | null
-) {
+export async function updateAndNotifySyncStatus({
+  accountId,
+  status,
+  accountName,
+  homeUrl,
+  communityUrl,
+  pathDomain,
+}: {
+  accountId: string;
+  status: SyncStatus;
+  accountName?: string | null;
+  homeUrl?: string | null;
+  communityUrl?: string | null;
+  pathDomain: string | null;
+}) {
   await updateAccountSyncStatus(accountId, status);
 
-  await slackNotification(
+  await slackNotification({
     status,
     accountId,
-    accountName || '',
-    homeUrl || '',
-    communityUrl || ''
-  );
+    accountName: accountName || '',
+    homeUrl: homeUrl || '',
+    communityUrl: communityUrl || '',
+    pathDomain,
+  });
   await emailNotification(
     status,
     accountId,
@@ -66,16 +75,30 @@ async function emailNotification(
   }
 }
 
-async function slackNotification(
-  status: SyncStatus,
-  accountId: string,
-  accountName: string,
-  homeUrl: string,
-  communityUrl: string
-) {
+async function slackNotification({
+  status,
+  accountId,
+  accountName,
+  homeUrl,
+  communityUrl,
+  pathDomain,
+}: {
+  status: SyncStatus;
+  accountId: string;
+  accountName: string;
+  homeUrl: string;
+  communityUrl: string;
+  pathDomain: string | null;
+}) {
   try {
     await sendNotification(
-      `Syncing process is ${status} for account: ${accountId}, ${accountName}, ${homeUrl}, ${communityUrl}.`
+      `Syncing process is ${status} for account: ${JSON.stringify({
+        accountId,
+        accountName,
+        homeUrl,
+        communityUrl,
+        url: `https://www.linen.dev/s/${pathDomain}`,
+      })}`
     );
   } catch (e) {
     console.error('Failed to send Slack notification: ', e);

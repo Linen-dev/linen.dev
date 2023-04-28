@@ -46,12 +46,14 @@ export async function slackSyncWithFiles({
     getMemberships,
   } = new SlackFileAdapter(tempFolder);
 
-  await updateAndNotifySyncStatus(
+  await updateAndNotifySyncStatus({
     accountId,
-    SyncStatus.IN_PROGRESS,
-    account.name,
-    account.homeUrl
-  );
+    status: SyncStatus.IN_PROGRESS,
+    accountName: account.name,
+    homeUrl: account.homeUrl,
+    communityUrl: account.communityUrl,
+    pathDomain: account.slackDomain,
+  });
 
   try {
     await syncWrapper({
@@ -70,12 +72,14 @@ export async function slackSyncWithFiles({
       getMemberships,
     });
 
-    await updateAndNotifySyncStatus(
+    await updateAndNotifySyncStatus({
       accountId,
-      SyncStatus.DONE,
-      account.name,
-      account.homeUrl
-    );
+      status: SyncStatus.DONE,
+      accountName: account.name,
+      homeUrl: account.homeUrl,
+      communityUrl: account.communityUrl,
+      pathDomain: account.slackDomain,
+    });
 
     return {
       status: 200,
@@ -84,12 +88,14 @@ export async function slackSyncWithFiles({
   } catch (err) {
     console.error(err);
 
-    await updateAndNotifySyncStatus(
+    await updateAndNotifySyncStatus({
       accountId,
-      SyncStatus.ERROR,
-      account.name,
-      account.homeUrl
-    );
+      status: SyncStatus.ERROR,
+      accountName: account.name,
+      homeUrl: account.homeUrl,
+      communityUrl: account.communityUrl,
+      pathDomain: account.slackDomain,
+    });
 
     throw {
       status: 500,
