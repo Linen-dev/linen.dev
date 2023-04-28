@@ -18,6 +18,7 @@
     "test:coverage": "jest --coverage"
   },
   "dependencies": {
+    "@linen/scripts": "*",
     "@linen/ast": "*",
     "@linen/contexts": "*",
     "@linen/hooks": "*",

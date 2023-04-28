@@ -10,6 +10,7 @@
   },
   "sideEffect": false,
   "dependencies": {
+    "@linen/scripts": "*",
     "@linen/database": "*",
     "@linen/factory": "*",
     "@linen/types": "*",

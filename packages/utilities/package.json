@@ -11,6 +11,7 @@
     "test:watch": "jest --watch"
   },
   "dependencies": {
+    "@linen/scripts": "*",
     "awesome-debounce-promise": "^2.1.0",
     "date-fns": "^2.29.3",
     "entities": "^4.4.0",

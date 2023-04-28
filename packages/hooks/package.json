@@ -11,6 +11,7 @@
     "build": "rm -rf dist && tsc"
   },
   "dependencies": {
+    "@linen/scripts": "*",
     "@types/phoenix": "^1.5.4",
     "phoenix": "^1.6.15",
     "@linen/types": "*"
