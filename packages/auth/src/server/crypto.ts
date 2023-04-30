@@ -7,11 +7,11 @@ import {
 
 const algorithm = 'aes-256-cbc';
 const SECRET = process.env.NEXTAUTH_SECRET!;
-if (!SECRET) {
-  throw new Error('missing secret');
-}
 
 export function encrypt(dataToEncrypt: string): string {
+  if (!SECRET) {
+    throw new Error('missing secret');
+  }
   const salt = randomBytes(16).toString('hex');
   const key = scryptSync(SECRET, salt, 32);
   const iv = Buffer.alloc(16, 0); // Initialization vector.
@@ -22,6 +22,9 @@ export function encrypt(dataToEncrypt: string): string {
 }
 
 export function decrypt(dataToDecrypt: string): string {
+  if (!SECRET) {
+    throw new Error('missing secret');
+  }
   const [salt, encrypted] = dataToDecrypt.split(':');
   const key = scryptSync(SECRET, salt, 32);
   const iv = Buffer.alloc(16, 0); // Initialization vector.

@@ -144,7 +144,7 @@ function PageLayout({
             Link: InternalLink,
             routerAsPath: router.asPath,
             usePath,
-            Image,
+            Image: Image as any,
             getHomeUrl,
             NewChannelModal,
             NewCommunityModal,

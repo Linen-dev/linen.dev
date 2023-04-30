@@ -163,7 +163,7 @@ export function GettingStartedPage({
                             `/s/${account.slackDomain || account.discordDomain}`
                           );
                         }}
-                        Image={Image}
+                        Image={Image as any}
                         getHomeUrl={getHomeUrl}
                       />
                       <div>
@@ -194,7 +194,7 @@ export function GettingStartedPage({
                         event.stopPropagation();
                         acceptInvite(invite);
                       }}
-                      Image={Image}
+                      Image={Image as any}
                       getHomeUrl={getHomeUrl}
                     />
                     <div>

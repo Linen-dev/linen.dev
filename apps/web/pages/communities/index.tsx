@@ -110,7 +110,7 @@ export default function Communities({ communities }: Props) {
                   >
                     <CommunityLink
                       community={community}
-                      {...{ getHomeUrl, Image }}
+                      {...{ getHomeUrl, Image: Image as any }}
                     />
                     <div className={styles.content}>
                       <h2>{community.name}</h2>
