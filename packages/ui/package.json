@@ -24,6 +24,7 @@
     "@linen/hooks": "*",
     "@linen/types": "*",
     "@linen/utilities": "*",
+    "@linen/serializers": "*",
     "autosize": "^6.0.1",
     "entities": "^4.4.0",
     "identity-obj-proxy": "^3.0.0",
