@@ -9,7 +9,13 @@ export default function PoweredByLinen() {
       rel="noreferrer"
       href="https://www.linen.dev"
     >
-      Powered by Linen
+      Powered by
+      <img
+        className={styles.image}
+        src="https://linen.dev/images/logo/linen.png"
+        width={56}
+        height={12}
+      />
     </a>
   );
 }
