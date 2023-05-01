@@ -4,12 +4,13 @@
   border-radius: 32px;
   background-color: transparent;
   border-color: rgba(255, 255, 255, 0.25);
-  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease-in;
+  transition: 0.2s ease  background-color, 0.2s ease color, 0.2s ease-in border-color;
 }
 
 .input:focus {
   background-color: white;
-  border-color: transparent;
+  border-color: white;
+  color: black;
 }
 
 .spin {
@@ -52,5 +53,29 @@
   }
   100% {
     transform: rotate(359deg);
+  }
+}
+
+.overlay {
+  background-color: rgba($color-gray-500, 0.75);
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+  transition-property: opacity;
+  transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  transition-duration: 300ms;
+  opacity: 1;
+  position: fixed;
+  animation: animatedOverlay 0.2s ease-in;
+}
+
+@keyframes animatedOverlay {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
   }
 }

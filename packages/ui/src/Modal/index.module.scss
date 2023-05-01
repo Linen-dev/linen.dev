@@ -19,6 +19,16 @@
   animation: animatedOverlay 0.2s ease-in;
 }
 
+@keyframes animatedOverlay {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
 .container {
   top: 0px;
   right: 0px;
