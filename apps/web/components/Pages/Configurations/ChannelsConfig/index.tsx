@@ -41,7 +41,7 @@ export default function ChannelsConfig({ currentCommunity }: Props) {
         <div className="mt-2 sm:flex sm:items-start sm:justify-between">
           <div className="max-w-xl text-sm text-gray-500">
             <p>
-              Makes all new channels hidden by default even if they are public.
+              Makes all new channels hidden by default even if they are public in Slack or Discord.
             </p>
           </div>
         </div>
