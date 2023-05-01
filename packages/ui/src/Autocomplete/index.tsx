@@ -8,6 +8,7 @@ import NoResults from './NoResults';
 import { pickTextColorBasedOnBgColor } from '@linen/utilities/colors';
 
 export default function Autocomplete({
+  className,
   brandColor,
   fetch,
   onSelect = (any) => {},
@@ -17,6 +18,7 @@ export default function Autocomplete({
   minlength = 3,
   style,
 }: {
+  className?: string;
   brandColor: string;
   fetch: ({
     query,
@@ -195,17 +197,15 @@ export default function Autocomplete({
     return pickTextColorBasedOnBgColor(brandColor, '#f3f4f6', '#111827');
   };
 
-  const fontStyle = {
-    color: fontColor(brandColor),
-  };
-
   return (
     <div
+      className={className}
       style={{
         position: 'relative',
         flex: '1 1 auto',
         zIndex: 100,
         color: fontColor(brandColor),
+        maxWidth: '52rem',
       }}
       onFocus={handleFocus}
       onBlur={handleBlur}
