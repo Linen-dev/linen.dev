@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import useInfiniteScroll from 'react-infinite-scroll-hook';
 import Thread from '@/Thread';
-import { useUsersContext } from '@linen/contexts/Users';
 import Header from './Header';
 import Empty from './Empty';
 import Chat from './Chat';
@@ -125,6 +124,7 @@ interface Props {
   apiCreateThread: (...args: any) => Promise<any>;
   apiCreateMessage: (...args: any) => Promise<any>;
   playNotificationSound: (volume: number) => Promise<void>;
+  useUsersContext(): any;
 }
 
 const UPDATE_READ_STATUS_INTERVAL_IN_MS = 30000;
@@ -175,6 +175,7 @@ export default function Channel({
   apiCreateMessage,
   apiCreateThread,
   playNotificationSound,
+  useUsersContext,
 }: Props) {
   const [collapsed, setCollapsed] = useState(false);
   const [isInfiniteScrollLoading, setInfiniteScrollLoading] = useState(false);
@@ -573,6 +574,7 @@ export default function Channel({
                     uploads={uploads}
                     uploading={uploading}
                     uploadFiles={uploadFiles}
+                    {...{ useUsersContext }}
                   />
                 ) : (
                   <Footer />
@@ -616,6 +618,7 @@ export default function Channel({
                   handleScroll();
                 }
               }}
+              {...{ useUsersContext }}
             />
           )
         }

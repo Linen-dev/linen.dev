@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import Thread from '@/Thread';
-import { useUsersContext } from '@linen/contexts/Users';
 import { sendMessageWrapper } from './utilities/sendMessageWrapper';
 import Toast from '@/Toast';
 import {
@@ -31,6 +30,7 @@ interface Props {
   JoinChannelLink(...args: any): JSX.Element;
   Actions(...args: any): JSX.Element;
   apiCreateMessage(...args: any): Promise<any>;
+  useUsersContext(): any;
 }
 
 export default function Content({
@@ -50,6 +50,7 @@ export default function Content({
   JoinChannelLink,
   Actions,
   apiCreateMessage,
+  useUsersContext,
 }: Props) {
   const [thread, setThread] = useState(initialThread);
   const [allUsers] = useUsersContext();
@@ -124,6 +125,7 @@ export default function Content({
           JoinChannelLink,
           put: apiPut,
           upload: apiUpload,
+          useUsersContext,
         }}
         thread={thread}
         key={thread.id}

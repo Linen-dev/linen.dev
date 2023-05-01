@@ -4,8 +4,6 @@ import Header from './Header';
 import Summary from './Summary';
 import Messages from './Messages';
 import MessageForm from '@/MessageForm';
-// import JoinChannelLink from 'components/Link/JoinChannelLink';
-// import { fetchMentions, upload } from 'utilities/requests';
 import {
   onResolve,
   Permissions,
@@ -19,7 +17,6 @@ import {
 import useThreadWebsockets from '@linen/hooks/websockets-thread';
 import { scrollToBottom } from '@linen/utilities/scroll';
 import styles from './index.module.scss';
-// import { put } from 'utilities/requests';
 import { CustomLinkHelper } from '@linen/utilities/custom-link';
 import PoweredByLinen from '@/PoweredByLinen';
 
@@ -84,6 +81,7 @@ interface Props {
   put: (path: string, data?: {}) => Promise<any>;
   Actions(args: any): JSX.Element;
   JoinChannelLink(args: any): JSX.Element;
+  useUsersContext(): any;
 }
 
 export default function Thread({
@@ -113,6 +111,7 @@ export default function Thread({
   upload,
   Actions,
   JoinChannelLink,
+  useUsersContext,
 }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const [progress, setProgress] = useState(0);
@@ -298,6 +297,7 @@ export default function Thread({
               uploading={uploading}
               uploads={uploads}
               upload={uploadFiles}
+              {...{ useUsersContext }}
             />
           ) : (
             <MessageForm
@@ -322,6 +322,7 @@ export default function Thread({
               uploading={uploading}
               uploads={uploads}
               upload={uploadFiles}
+              {...{ useUsersContext }}
             />
           )}
         </div>

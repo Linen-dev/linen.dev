@@ -26,6 +26,7 @@ interface Props {
   JoinChannelLink(...args: any): JSX.Element;
   Actions(...args: any): JSX.Element;
   apiCreateMessage(...args: any): Promise<any>;
+  useUsersContext(): any;
 }
 
 export default function ThreadView({
@@ -45,6 +46,7 @@ export default function ThreadView({
   apiUpload,
   useJoinContext,
   apiCreateMessage,
+  useUsersContext,
 }: Props) {
   return (
     <div className={styles.wrapper}>
@@ -66,6 +68,7 @@ export default function ThreadView({
           useJoinContext,
           JoinChannelLink,
           apiCreateMessage,
+          useUsersContext,
         }}
       />
     </div>

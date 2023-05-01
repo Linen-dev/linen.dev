@@ -230,6 +230,7 @@ export default function Channel(props: ChannelProps) {
           apiCreateMessage: api.createMessage,
           apiCreateThread: api.createThread,
           playNotificationSound,
+          useUsersContext,
         }}
       />
     </PageLayout>

@@ -32,6 +32,7 @@ interface Props {
   uploading: boolean;
   uploads: UploadedFile[];
   fetchMentions(term: string, communityId: string): any;
+  useUsersContext(): any;
 }
 
 export default function Chat({
@@ -45,6 +46,7 @@ export default function Chat({
   sendMessage,
   uploadFiles,
   fetchMentions,
+  useUsersContext,
 }: Props) {
   const ref = createRef<HTMLDivElement>();
 
@@ -102,6 +104,7 @@ export default function Chat({
         uploading={uploading}
         uploads={uploads}
         upload={uploadFiles}
+        {...{ useUsersContext }}
       />
     </div>
   );

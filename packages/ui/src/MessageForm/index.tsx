@@ -11,7 +11,6 @@ import { getCaretPosition, setCaretPosition } from './utilities/caret';
 import { postprocess } from '@linen/ast';
 import { isWhitespace } from '@linen/utilities/string';
 import { MessageFormat, SerializedUser } from '@linen/types';
-import { useUsersContext } from '@linen/contexts/Users';
 import {
   FILE_SIZE_LIMIT_IN_BYTES,
   getFileSizeErrorMessage,
@@ -34,6 +33,7 @@ interface Props {
   onMessageChange?(message: string): void;
   fetchMentions?(term?: string): Promise<SerializedUser[]>;
   upload?(files: File[]): Promise<any>;
+  useUsersContext(): any;
 }
 
 function isUndefined(character: string | undefined) {
@@ -147,6 +147,7 @@ function MessageForm({
   onMessageChange,
   fetchMentions,
   upload,
+  useUsersContext,
 }: Props) {
   const STORAGE_KEY = `message.draft.${id}`;
   const [message, setMessage] = useState<string>(

@@ -13,6 +13,7 @@ import { useJoinContext } from 'contexts/Join';
 import * as api from 'utilities/requests';
 import Actions from 'components/Actions';
 import JoinChannelLink from 'components/Link/JoinChannelLink';
+import { useUsersContext } from '@linen/contexts/Users';
 
 export interface Props {
   isBot?: boolean;
@@ -83,6 +84,7 @@ export function ThreadPage({
           apiUpdateThread: api.updateThread,
           apiUpload: api.upload,
           apiCreateMessage: api.createMessage,
+          useUsersContext,
         }}
       />
     </PageLayout>

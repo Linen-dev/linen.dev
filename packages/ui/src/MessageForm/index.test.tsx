@@ -5,7 +5,11 @@ import MessageForm from '.';
 describe('MessageForm', () => {
   it('renders a textarea', () => {
     const { getByPlaceholderText } = render(
-      <MessageForm progress={0} uploads={[]} />
+      <MessageForm
+        progress={0}
+        uploads={[]}
+        useUsersContext={() => [[], () => {}]}
+      />
     );
     const textarea = getByPlaceholderText('Add your comment...');
     expect(textarea).toBeInTheDocument();

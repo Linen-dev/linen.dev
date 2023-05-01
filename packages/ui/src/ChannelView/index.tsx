@@ -3,7 +3,6 @@ import Toast from '@/Toast';
 import useWebsockets from '@linen/hooks/websockets';
 import useKeyboard from '@linen/hooks/keyboard';
 import { useViewport } from '@linen/hooks/useViewport';
-import { useUsersContext } from '@linen/contexts/Users';
 import { localStorage } from '@linen/utilities/storage';
 import {
   ReminderTypes,
@@ -78,6 +77,7 @@ export default function ChannelView({
   apiCreateMessage,
   apiCreateThread,
   playNotificationSound,
+  useUsersContext,
 }: {
   settings: Settings;
   channelName: string;
@@ -124,6 +124,7 @@ export default function ChannelView({
   apiCreateThread: (...args: any) => Promise<any>;
   apiCreateMessage: (...args: any) => Promise<any>;
   playNotificationSound: (volume: number) => Promise<void>;
+  useUsersContext(): any;
 }) {
   const viewport = useViewport();
   const [threads, setThreads] = useState<SerializedThread[]>(initialThreads);
@@ -846,6 +847,7 @@ export default function ChannelView({
           apiCreateThread,
           apiCreateMessage,
           playNotificationSound,
+          useUsersContext,
         }}
         key={currentChannel.channelName}
         threads={threads}
