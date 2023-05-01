@@ -220,83 +220,85 @@ export default function DesktopNavBar({
         })}
       >
         <Nav className={styles.navbar}>
-          <MenuGroup
-            currentUser={currentUser}
-            currentUrl={routerAsPath}
-            permissions={permissions}
-            paths={paths}
-            Link={Link}
-          />
-          <ChannelsGroup
-            channelName={channelName}
-            channels={channels}
-            currentUser={currentUser}
-            highlights={highlights}
-            mode={mode}
-            permissions={permissions}
-            onChannelClick={(channelId) => {
-              debouncedUpdateReadStatus(channelId);
-              setHighlights((highlights) => {
-                return highlights.filter((id) => id !== channelId);
-              });
-            }}
-            onDrop={onDrop}
-            Link={Link}
-            NewChannelModal={NewChannelModal}
-          />
-          {currentUser && permissions.chat && (
-            <DMs
-              {...{
-                channelName,
-                debouncedUpdateReadStatus,
-                dms,
-                highlights,
-                permissions,
-                setHighlights,
-                archiveChannel,
-                Link,
-                NewDmModal,
-              }}
+          <div>
+            <MenuGroup
+              currentUser={currentUser}
+              currentUrl={routerAsPath}
+              permissions={permissions}
+              paths={paths}
+              Link={Link}
             />
-          )}
-          {permissions.manage && (
-            <Nav.Group
-              onClick={() => toggleSettings((showSettings) => !showSettings)}
-            >
-              Settings {showSettings ? <FiChevronUp /> : <FiChevronDown />}
-            </Nav.Group>
-          )}
-          {showSettings && permissions.manage && (
-            <>
-              <Link href="/configurations">
-                <Nav.Item active={paths.configurations === routerAsPath}>
-                  <FiSettings /> Configurations
-                </Nav.Item>
-              </Link>
-              <Link href="/branding">
-                <Nav.Item active={paths.branding === routerAsPath}>
-                  <FiSliders /> Branding
-                </Nav.Item>
-              </Link>
-              <Link href="/members">
-                <Nav.Item active={paths.members === routerAsPath}>
-                  <FiUsers /> Members
-                </Nav.Item>
-              </Link>
-              <Link href="/plans">
-                <Nav.Item active={paths.plans === routerAsPath}>
-                  <FiZap /> Plans
-                </Nav.Item>
-              </Link>
-            </>
-          )}
-          <AnalyticsGroup
-            currentUser={currentUser}
-            currentUrl={routerAsPath}
-            permissions={permissions}
-            paths={paths}
-            Link={Link}
-          />
+            <ChannelsGroup
+              channelName={channelName}
+              channels={channels}
+              currentUser={currentUser}
+              highlights={highlights}
+              mode={mode}
+              permissions={permissions}
+              onChannelClick={(channelId) => {
+                debouncedUpdateReadStatus(channelId);
+                setHighlights((highlights) => {
+                  return highlights.filter((id) => id !== channelId);
+                });
+              }}
+              onDrop={onDrop}
+              Link={Link}
+              NewChannelModal={NewChannelModal}
+            />
+            {currentUser && permissions.chat && (
+              <DMs
+                {...{
+                  channelName,
+                  debouncedUpdateReadStatus,
+                  dms,
+                  highlights,
+                  permissions,
+                  setHighlights,
+                  archiveChannel,
+                  Link,
+                  NewDmModal,
+                }}
+              />
+            )}
+            {permissions.manage && (
+              <Nav.Group
+                onClick={() => toggleSettings((showSettings) => !showSettings)}
+              >
+                Settings {showSettings ? <FiChevronUp /> : <FiChevronDown />}
+              </Nav.Group>
+            )}
+            {showSettings && permissions.manage && (
+              <>
+                <Link href="/configurations">
+                  <Nav.Item active={paths.configurations === routerAsPath}>
+                    <FiSettings /> Configurations
+                  </Nav.Item>
+                </Link>
+                <Link href="/branding">
+                  <Nav.Item active={paths.branding === routerAsPath}>
+                    <FiSliders /> Branding
+                  </Nav.Item>
+                </Link>
+                <Link href="/members">
+                  <Nav.Item active={paths.members === routerAsPath}>
+                    <FiUsers /> Members
+                  </Nav.Item>
+                </Link>
+                <Link href="/plans">
+                  <Nav.Item active={paths.plans === routerAsPath}>
+                    <FiZap /> Plans
+                  </Nav.Item>
+                </Link>
+              </>
+            )}
+            <AnalyticsGroup
+              currentUser={currentUser}
+              currentUrl={routerAsPath}
+              permissions={permissions}
+              paths={paths}
+              Link={Link}
+            />
+          </div>
           <PoweredByLinen />
         </Nav>
       </div>

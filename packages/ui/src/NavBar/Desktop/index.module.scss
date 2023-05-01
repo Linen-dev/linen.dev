@@ -50,6 +50,9 @@
   width: 200px;
   padding: 0.5rem 0;
   scrollbar-gutter: stable;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
 }
 
 .navbar::-webkit-scrollbar {
