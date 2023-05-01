@@ -75,17 +75,16 @@ export default function Header({
       >
         <Logo src={logoUrl} alt={`${homeUrl} logo`} />
       </Link>
-      <div className={styles.subContainer}>
-        <div className={styles.searchBar}>
-          <SearchBar
-            brandColor={brandColor}
-            borderColor={borderColor}
-            channels={channels}
-            communityName={settings.communityName}
-            isSubDomainRouting={isSubDomainRouting}
-            communityType={settings.communityType}
-          />
-        </div>
+      <SearchBar
+        className={styles.search}
+        brandColor={brandColor}
+        borderColor={borderColor}
+        channels={channels}
+        communityName={settings.communityName}
+        isSubDomainRouting={isSubDomainRouting}
+        communityType={settings.communityType}
+      />
+      <div className={styles.menu}>
         {permissions.user && permissions.is_member ? (
           <>
             <div className={styles.upgrade}>

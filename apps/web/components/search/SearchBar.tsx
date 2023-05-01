@@ -33,12 +33,14 @@ interface SearchResult {
 }
 
 const SearchBar = ({
+  className,
   brandColor,
   channels = [],
   communityName,
   isSubDomainRouting,
   communityType,
 }: {
+  className?: string;
   brandColor: string;
   borderColor: string;
   channels: SerializedChannel[];
@@ -98,6 +100,7 @@ const SearchBar = ({
 
   return (
     <Autocomplete
+      className={className}
       brandColor={brandColor}
       fetch={fetchResults}
       onSelect={handleSelect}
