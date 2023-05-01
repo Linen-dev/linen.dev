@@ -4,6 +4,7 @@
   border-radius: 32px;
   background-color: transparent;
   border-color: transparent;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .input:focus {
