@@ -21,6 +21,7 @@ import { scrollToBottom } from '@linen/utilities/scroll';
 import styles from './index.module.scss';
 // import { put } from 'utilities/requests';
 import { CustomLinkHelper } from '@linen/utilities/custom-link';
+import PoweredByLinen from '@/PoweredByLinen';
 
 interface Props {
   thread: SerializedThread;
@@ -240,11 +241,7 @@ export default function Thread({
         <div className={styles.footer}>
           <div className={styles.count}>
             <span className={styles.badge}>
-              {!currentUser && (
-                <a className={styles.text} href="https://linen.dev">
-                  Powered by Linen
-                </a>
-              )}
+              {expanded && !currentUser && <PoweredByLinen />}
               {views > 1 && (
                 <div className={styles.count}>
                   Viewed {views} {views === 1 ? 'time' : 'times'}
@@ -256,6 +253,7 @@ export default function Thread({
             <>
               {ChannelButton({ thread, isSubDomainRouting, settings })}
               <JoinChannelLink
+                className={styles.link}
                 href={threadUrl}
                 communityType={settings.communityType}
               />

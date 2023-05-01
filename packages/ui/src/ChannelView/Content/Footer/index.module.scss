@@ -1,28 +1,12 @@
 @import '../../../colors.scss';
 
 .footer {
-  border-top: 1px solid $color-border;
-  padding: 0.25rem 0;
   text-align: center;
 }
 
 .footer a {
   align-items: center;
-  color: $color-gray-500;
   display: flex;
-  font-size: 0.75rem;
-  letter-spacing: 1.3px;
-  line-height: 1.25rem;
-  font-weight: 500;
   justify-content: center;
-  text-transform: uppercase;
-  user-select: none;
-
   width: 100%;
-
-  transition: color 0.2s ease-in, background 0.2s ease-in;
-}
-
-.footer a:hover {
-  color: $color-primary;
 }
