@@ -1,12 +1,11 @@
 import React from 'react';
 import styles from './index.module.scss';
+import PoweredByLinen from '@/PoweredByLinen';
 
 export default function Footer() {
   return (
     <footer className={styles.footer}>
-      <a href="https://linen.dev" target="_blank" rel="noreferrer">
-        Powered by Linen
-      </a>
+      <PoweredByLinen />
     </footer>
   );
 }

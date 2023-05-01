@@ -299,7 +299,7 @@ export default function DesktopNavBar({
               Link={Link}
             />
           </div>
-          <PoweredByLinen />
+          {currentUser && <PoweredByLinen />}
         </Nav>
       </div>
     </div>
