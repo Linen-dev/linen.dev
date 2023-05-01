@@ -27,7 +27,6 @@ function Row({ message, currentUser }: Props) {
             <p className={styles.username}>
               {message.author?.displayName || 'user'}
             </p>
-            <div className={styles.date}>MM/DD/YYYY</div>
           </div>
           <div className={styles.message}>
             <Message
