@@ -1,5 +1,6 @@
 import React from 'react';
 import Avatar from '../Avatar';
+import Badge from '../Badge';
 import Message from '../Message';
 import { SerializedMessage, SerializedUser } from '@linen/types';
 import styles from './index.module.scss';
@@ -13,6 +14,7 @@ interface Props {
 function Row({ message, currentUser }: Props) {
   return (
     <div className={styles.container}>
+      <Badge className={styles.badge}>Preview</Badge>
       <div className={styles.row}>
         <div className={styles.left}>
           <Avatar
@@ -25,7 +27,7 @@ function Row({ message, currentUser }: Props) {
             <p className={styles.username}>
               {message.author?.displayName || 'user'}
             </p>
-            <div className={styles.date}>{format(message.sentAt, 'Pp')}</div>
+            <div className={styles.date}>MM/DD/YYYY</div>
           </div>
           <div className={styles.message}>
             <Message

@@ -8,7 +8,7 @@ import Preview from '../MessagePreview';
 import FileInput from './FileInput';
 import FilesSummary from './FilesSummary';
 import { getCaretPosition, setCaretPosition } from './utilities/caret';
-import { previewable, postprocess } from '@linen/ast';
+import { postprocess } from '@linen/ast';
 import { isWhitespace } from '@linen/utilities/string';
 import { MessageFormat, SerializedUser } from '@linen/types';
 import { useUsersContext } from '@linen/contexts/Users';
@@ -298,7 +298,7 @@ function MessageForm({
           }}
         />
       )}
-      {message && preview && previewable(message) && (
+      {message && preview && (
         <Preview
           currentUser={currentUser}
           message={{
