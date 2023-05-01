@@ -114,6 +114,7 @@
     "./PasswordInput": "./dist/PasswordInput/index.js",
     "./PinIcon": "./dist/PinIcon/index.js",
     "./Portal": "./dist/Portal/index.js",
+    "./PoweredByLinen": "./dist/PoweredByLinen/index.js",
     "./Preview": "./dist/Preview/index.js",
     "./ProfileForm": "./dist/ProfileForm/index.js",
     "./Progress": "./dist/Progress/index.js",
@@ -301,6 +302,9 @@
       ],
       "Portal": [
         "./dist/Portal/index.d.ts"
+      ],
+      "PoweredByLinen": [
+        "./dist/PoweredByLinen/index.d.ts"
       ],
       "Preview": [
         "./dist/Preview/index.d.ts"
