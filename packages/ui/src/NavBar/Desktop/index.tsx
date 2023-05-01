@@ -28,7 +28,7 @@ import useInboxWebsockets from '@linen/hooks/websockets-inbox';
 import MenuGroup from './MenuGroup';
 import ChannelsGroup from './ChannelsGroup';
 import MenuIcon from './MenuIcon';
-import PoweredByLinen from './PoweredByLinen';
+import PoweredByLinen from '@/PoweredByLinen';
 import AnalyticsGroup from './AnalyticsGroup';
 
 interface Props {
