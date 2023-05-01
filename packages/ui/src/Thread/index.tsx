@@ -244,7 +244,7 @@ export default function Thread({
               {expanded && !currentUser && <PoweredByLinen />}
               {views > 1 && (
                 <div className={styles.count}>
-                  Viewed {views} {views === 1 ? 'time' : 'times'}
+                  {views} {views === 1 ? 'View' : 'Views'}
                 </div>
               )}
             </span>
