@@ -16,7 +16,7 @@ export default function NewCommunityModal({ open, close }: Props) {
   return (
     <Modal open={open} close={close} size="md">
       <div className={styles.header}>
-        <H3>New community</H3>
+        <H3>Create New Community</H3>
         <Icon onClick={close}>
           <FiX />
         </Icon>
