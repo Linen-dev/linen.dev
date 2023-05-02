@@ -4,17 +4,17 @@ import Badge from '../Badge';
 import Message from '../Message';
 import { SerializedMessage, SerializedUser } from '@linen/types';
 import styles from './index.module.scss';
-import { format } from '@linen/utilities/date';
 
 interface Props {
   message: SerializedMessage;
   currentUser?: SerializedUser | null;
+  badge?: boolean;
 }
 
-function Row({ message, currentUser }: Props) {
+function Row({ badge, message, currentUser }: Props) {
   return (
     <div className={styles.container}>
-      <Badge className={styles.badge}>Preview</Badge>
+      {badge && <Badge className={styles.badge}>Preview</Badge>}
       <div className={styles.row}>
         <div className={styles.left}>
           <Avatar

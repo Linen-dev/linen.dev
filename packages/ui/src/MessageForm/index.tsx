@@ -315,6 +315,7 @@ function MessageForm({
             messageFormat: MessageFormat.LINEN,
             externalId: null,
           }}
+          badge
         />
       )}
       <form id={id} className={styles.form} onSubmit={handleSend}>
