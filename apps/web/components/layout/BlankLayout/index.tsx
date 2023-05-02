@@ -9,6 +9,8 @@ export default function BlankLayout({ children }: Props) {
     <>
       <div>{children}</div>
       <div id="portal"></div>
+      <div id="modal-portal"></div>
+      <div id="tooltip-portal"></div>
     </>
   );
 }

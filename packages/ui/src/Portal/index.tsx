@@ -3,14 +3,15 @@ import ReactDOM from 'react-dom';
 
 interface Props {
   node?: HTMLElement | null;
+  id?: string;
   children: React.ReactNode;
 }
 
-export default function Portal({ node, children }: Props) {
+export default function Portal({ id, children }: Props) {
   if (typeof window === 'undefined') {
     return null;
   }
-  const root = document.getElementById('portal');
+  const root = document.getElementById(id || 'portal');
   if (!root) {
     return null;
   }
