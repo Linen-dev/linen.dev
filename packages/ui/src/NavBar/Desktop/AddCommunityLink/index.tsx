@@ -9,10 +9,10 @@ interface Props {
 
 export default function AddCommunityLink({ onClick }: Props) {
   return (
-    <div className={styles.link} onClick={onClick}>
-      <Tooltip text="Create New Community">
+    <Tooltip text="Create New Community" position="right">
+      <div className={styles.link} onClick={onClick}>
         <FiPlus />
-      </Tooltip>
-    </div>
+      </div>
+    </Tooltip>
   );
 }

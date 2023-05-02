@@ -21,6 +21,8 @@ export default function SplitLayout({ left, right }: Props) {
         <div className={styles.right}>{right}</div>
       </div>
       <div id="portal"></div>
+      <div id="modal-portal"></div>
+      <div id="tooltip-portal"></div>
     </>
   );
 }

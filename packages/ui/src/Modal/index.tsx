@@ -26,7 +26,7 @@ export default function Modal({
   }
 
   return (
-    <Portal>
+    <Portal id="modal-portal">
       <div className={classNames(styles.modal, className)}>
         <div className={styles.overlay} />
         <div className={styles.container}>
