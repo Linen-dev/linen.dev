@@ -38,6 +38,7 @@ import { getSelectedText } from '@linen/utilities/document';
 import ScrollToBottomIcon from './ScrollToBottomIcon';
 import Row from './Row';
 import ChatLayout from '@/ChatLayout';
+import AddThreadModal from '@/AddThreadModal';
 
 const { SidebarLayout } = Layouts.Shared;
 
@@ -129,6 +130,13 @@ interface Props {
 
 const UPDATE_READ_STATUS_INTERVAL_IN_MS = 30000;
 
+enum ModalView {
+  NONE,
+  ADD_THREAD,
+  MEMBERS,
+  INTEGRATIONS,
+}
+
 export default function Channel({
   threads,
   pinnedThreads,
@@ -192,10 +200,9 @@ export default function Channel({
   const [allUsers] = useUsersContext();
   const { startSignUp } = useJoinContext();
   const { mode } = useMode();
-  const [integrationsModal, setIntegrationsModal] = useState(
-    !!queryIntegration || false
+  const [modal, setModal] = useState<ModalView>(
+    queryIntegration ? ModalView.INTEGRATIONS : ModalView.NONE
   );
-  const [membersModal, setMembersModal] = useState(false);
 
   const currentUser = permissions.user || null;
 
@@ -323,13 +330,17 @@ export default function Channel({
     }
   };
 
-  const handleOpenIntegrations = async () => {
-    setIntegrationsModal(true);
-  };
+  function showIntegrationsModal() {
+    setModal(ModalView.INTEGRATIONS);
+  }
 
-  const handleOpenMembers = async () => {
-    setMembersModal(true);
-  };
+  function showMembersModal() {
+    setModal(ModalView.MEMBERS);
+  }
+
+  function showAddThreadModal() {
+    setModal(ModalView.ADD_THREAD);
+  }
 
   function scrollToIdTop(id: string) {
     const scrollableRoot = scrollableRootRef.current;
@@ -490,8 +501,10 @@ export default function Channel({
                     })}
                     channel={currentChannel}
                     currentUser={currentUser}
-                    handleOpenIntegrations={handleOpenIntegrations}
-                    handleOpenMembers={handleOpenMembers}
+                    permissions={permissions}
+                    onAddClick={showAddThreadModal}
+                    handleOpenIntegrations={showIntegrationsModal}
+                    handleOpenMembers={showMembersModal}
                   >
                     {pinnedThread && (
                       <PinnedThread
@@ -632,13 +645,35 @@ export default function Channel({
       />
       <IntegrationsModal
         permissions={permissions}
-        open={integrationsModal}
-        close={() => setIntegrationsModal(false)}
+        open={modal === ModalView.INTEGRATIONS}
+        close={() => setModal(ModalView.NONE)}
       />
       <MembersModal
         permissions={permissions}
-        open={membersModal}
-        close={() => setMembersModal(false)}
+        open={modal === ModalView.MEMBERS}
+        close={() => setModal(ModalView.NONE)}
+      />
+      <AddThreadModal
+        communityId={currentCommunity.id}
+        currentUser={currentUser}
+        currentChannel={currentChannel}
+        open={modal === ModalView.ADD_THREAD}
+        close={() => setModal(ModalView.NONE)}
+        onSend={({ channelId, title, message }) => {
+          setModal(ModalView.NONE);
+          return sendMessage({
+            message,
+            title,
+            files: uploads,
+            channelId,
+          }).then(() => {
+            setUploads([]);
+          });
+        }}
+        progress={progress}
+        uploading={uploading}
+        uploads={uploads}
+        uploadFiles={uploadFiles}
       />
     </>
   );

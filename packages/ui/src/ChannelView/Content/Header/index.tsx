@@ -8,13 +8,16 @@ import { FiHash } from '@react-icons/all-files/fi/FiHash';
 import { FiMoreVertical } from '@react-icons/all-files/fi/FiMoreVertical';
 import { BsFillGearFill } from '@react-icons/all-files/bs/BsFillGearFill';
 import { FiUsers } from '@react-icons/all-files/fi/FiUsers';
-import { SerializedChannel } from '@linen/types';
+import { FiEdit3 } from '@react-icons/all-files/fi/FiEdit3';
+import { Permissions, SerializedChannel } from '@linen/types';
 
 interface Props {
   className?: string;
   channel: SerializedChannel;
   children: React.ReactNode;
   currentUser?: SerializedUser;
+  permissions: Permissions;
+  onAddClick(): void;
   handleOpenIntegrations(): void;
   handleOpenMembers(): void;
   ShowIntegrationDetail(): JSX.Element;
@@ -25,6 +28,8 @@ export default function Header({
   channel,
   children,
   currentUser,
+  permissions,
+  onAddClick,
   handleOpenIntegrations,
   handleOpenMembers,
   ShowIntegrationDetail,
@@ -51,16 +56,24 @@ export default function Header({
           <FiHash /> {channel.channelName}
           <ShowIntegrationDetail />
         </div>
-        {currentUser && items.length > 0 && (
+        {}
+        {currentUser && (
           <div className={styles.actions}>
-            <Dropdown
-              button={
-                <Icon>
-                  <FiMoreVertical />
-                </Icon>
-              }
-              items={items}
-            />
+            {permissions.chat && (
+              <Icon onClick={onAddClick}>
+                <FiEdit3 />
+              </Icon>
+            )}
+            {items.length > 0 && (
+              <Dropdown
+                button={
+                  <Icon>
+                    <FiMoreVertical />
+                  </Icon>
+                }
+                items={items}
+              />
+            )}
           </div>
         )}
       </div>
