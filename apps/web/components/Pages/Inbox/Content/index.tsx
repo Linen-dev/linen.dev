@@ -4,7 +4,7 @@ import Pages from '@linen/ui/Pages';
 import ProgressModal from '@linen/ui/ProgressModal';
 import Toast from '@linen/ui/Toast';
 import Thread from '@linen/ui/Thread';
-import AddThreadModal from './AddThreadModal';
+import AddThreadModal from '@linen/ui/AddThreadModal';
 import ConfigureInboxModal from './ConfigureInboxModal';
 import Empty from './Empty';
 import { sendMessageWrapper } from './utilities/sendMessageWrapper';

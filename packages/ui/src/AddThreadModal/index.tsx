@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import MessageForm from '@linen/ui/MessageForm';
-import Preview from '@linen/ui/MessagePreview';
+import MessageForm from '@/MessageForm';
+import Preview from '@/MessagePreview';
 import { postprocess } from '@linen/ast';
-import { fetchMentions } from 'utilities/requests';
-import H3 from '@linen/ui/H3';
-import Field from '@linen/ui/Field';
-import NativeSelect from '@linen/ui/NativeSelect';
-import Modal from '@linen/ui/Modal';
-import Icon from '@linen/ui/Icon';
-import TextInput from '@linen/ui/TextInput';
+import { fetchMentions } from './api';
+import H3 from '@/H3';
+import Field from '@/Field';
+import NativeSelect from '@/NativeSelect';
+import Modal from '@/Modal';
+import Icon from '@/Icon';
+import TextInput from '@/TextInput';
 import styles from './index.module.scss';
 import {
   MessageFormat,

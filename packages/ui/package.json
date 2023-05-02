@@ -62,6 +62,7 @@
   },
   "exports": {
     "./Accordion": "./dist/Accordion/index.js",
+    "./AddThreadModal": "./dist/AddThreadModal/index.js",
     "./Alert": "./dist/Alert/index.js",
     "./Autocomplete": "./dist/Autocomplete/index.js",
     "./Avatar": "./dist/Avatar/index.js",
@@ -146,6 +147,9 @@
     "*": {
       "Accordion": [
         "./dist/Accordion/index.d.ts"
+      ],
+      "AddThreadModal": [
+        "./dist/AddThreadModal/index.d.ts"
       ],
       "Alert": [
         "./dist/Alert/index.d.ts"
