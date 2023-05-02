@@ -24,6 +24,7 @@ import { EXAMPLE } from './utilities/message';
 interface Props {
   communityId: string;
   currentUser: SerializedUser;
+  currentChannel?: SerializedChannel;
   channels: SerializedChannel[];
   open: boolean;
   close(): void;
@@ -53,6 +54,7 @@ function findDefaultChannel(channels: SerializedChannel[]): SerializedChannel {
 export default function AddThreadModal({
   communityId,
   currentUser,
+  currentChannel,
   channels,
   open,
   close,
@@ -68,7 +70,7 @@ export default function AddThreadModal({
     return a.channelName.localeCompare(b.channelName);
   });
   const [channelId, setChannelId] = useState<string>(
-    findDefaultChannel(sortedChannels).id
+    currentChannel ? currentChannel.id : findDefaultChannel(sortedChannels).id
   );
   const [title, setTitle] = useState<string>('');
   return (
@@ -78,22 +80,24 @@ export default function AddThreadModal({
           <div className={styles.header}>
             <H3 className={styles.h3}>New Thread</H3>
           </div>
-          <Field>
-            <NativeSelect
-              id="new-thread-channel"
-              label="Channel"
-              options={sortedChannels.map((channel) => ({
-                label: channel.channelName,
-                value: channel.id,
-              }))}
-              icon={<FiHash />}
-              theme="gray"
-              value={channelId}
-              onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
-                setChannelId(event.target.value)
-              }
-            />
-          </Field>
+          {!currentChannel && (
+            <Field>
+              <NativeSelect
+                id="new-thread-channel"
+                label="Channel"
+                options={sortedChannels.map((channel) => ({
+                  label: channel.channelName,
+                  value: channel.id,
+                }))}
+                icon={<FiHash />}
+                theme="gray"
+                value={channelId}
+                onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
+                  setChannelId(event.target.value)
+                }
+              />
+            </Field>
+          )}
           <Field>
             <TextInput
               id="new-thread-title"
