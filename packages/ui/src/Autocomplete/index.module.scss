@@ -1,13 +1,20 @@
 @import '../colors.scss';
 
-.input {
+.container {
+  position: relative;
+  flex: 1 1 auto;
+  z-index: 100;
+  max-width: 52rem;
+}
+
+.container .input {
   border-radius: 32px;
   background-color: transparent;
   border-color: rgba(255, 255, 255, 0.25);
   transition: 0.2s ease  background-color, 0.2s ease color, 0.2s ease-in border-color;
 }
 
-.input:focus {
+.container .input:focus {
   background-color: white;
   border-color: white;
   color: black;

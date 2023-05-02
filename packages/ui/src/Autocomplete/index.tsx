@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useCallback, useState } from 'react';
+import classNames from 'classnames';
 import debounce from '@linen/utilities/debounce';
 import TextInput from '../TextInput';
 import { AiOutlineSearch } from '@react-icons/all-files/ai/AiOutlineSearch';
@@ -199,13 +200,9 @@ export default function Autocomplete({
 
   return (
     <div
-      className={className}
+      className={classNames(styles.container, className)}
       style={{
-        position: 'relative',
-        flex: '1 1 auto',
-        zIndex: 100,
         color: fontColor(brandColor),
-        maxWidth: '52rem',
       }}
       onFocus={handleFocus}
       onBlur={handleBlur}
