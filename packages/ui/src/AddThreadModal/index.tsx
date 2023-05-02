@@ -25,7 +25,7 @@ interface Props {
   communityId: string;
   currentUser: SerializedUser;
   currentChannel?: SerializedChannel;
-  channels: SerializedChannel[];
+  channels?: SerializedChannel[];
   open: boolean;
   close(): void;
   onSend({
@@ -66,9 +66,11 @@ export default function AddThreadModal({
 }: Props) {
   const [message, setMessage] = useState('');
   const [allUsers] = useUsersContext();
-  const sortedChannels = channels.sort((a, b) => {
-    return a.channelName.localeCompare(b.channelName);
-  });
+  const sortedChannels = channels
+    ? channels.sort((a, b) => {
+        return a.channelName.localeCompare(b.channelName);
+      })
+    : [];
   const [channelId, setChannelId] = useState<string>(
     currentChannel ? currentChannel.id : findDefaultChannel(sortedChannels).id
   );

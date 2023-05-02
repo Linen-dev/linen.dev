@@ -39,12 +39,14 @@ export function serializeThread({
 
 export function createThreadImitation({
   message,
+  title,
   author,
   files,
   mentions,
   channel,
 }: {
   message: string;
+  title?: string;
   author: SerializedUser;
   files: UploadedFile[];
   mentions: SerializedUser[];
@@ -97,7 +99,7 @@ export function createThreadImitation({
     incrementId: -1,
     externalThreadId: null,
     slug: null,
-    title: null,
+    title,
     state: ThreadState.OPEN,
     pinned: false,
     resolutionId: null,

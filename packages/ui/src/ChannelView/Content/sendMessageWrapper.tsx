@@ -9,6 +9,7 @@ import { UploadedFile } from '@linen/types';
 const debouncedSendChannelMessage = debounce(
   ({
     message,
+    title,
     files,
     communityId,
     channelId,
@@ -16,6 +17,7 @@ const debouncedSendChannelMessage = debounce(
     apiCreateThread,
   }: {
     message: string;
+    title?: string;
     files: UploadedFile[];
     communityId: string;
     channelId: string;
@@ -24,6 +26,7 @@ const debouncedSendChannelMessage = debounce(
   }) =>
     apiCreateThread({
       accountId: communityId,
+      title,
       body: message,
       files,
       channelId,
@@ -55,10 +58,12 @@ export function sendMessageWrapper({
 }) {
   return async ({
     message,
+    title,
     files,
     channelId,
   }: {
     message: string;
+    title?: string;
     files: UploadedFile[];
     channelId: string;
   }) => {
@@ -84,6 +89,7 @@ export function sendMessageWrapper({
     }
     const imitation: SerializedThread = createThreadImitation({
       message,
+      title,
       mentions: allUsers,
       files,
       author: currentUser,
@@ -99,6 +105,7 @@ export function sendMessageWrapper({
     );
     return debouncedSendChannelMessage({
       message,
+      title,
       files,
       communityId: currentCommunity.id,
       channelId,
