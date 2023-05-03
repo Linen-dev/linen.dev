@@ -332,6 +332,7 @@ model slackAuthorizations {
   userScope       String?
   authedUserId    String?
   userAccessToken String?
+  joinChannel     Boolean  @default(true)
 
   account    accounts? @relation(fields: [accountsId], references: [id])
   accountsId String?

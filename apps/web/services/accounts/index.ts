@@ -320,9 +320,20 @@ export async function findSlackToken(accountId: string) {
 }
 
 export const createSlackAuthorization = async (
-  slackAuthorization: Prisma.slackAuthorizationsCreateManyInput
+  data: Prisma.slackAuthorizationsCreateManyInput
 ) => {
-  return await prisma.slackAuthorizations.create({ data: slackAuthorization });
+  const exist = await prisma.slackAuthorizations.findFirst({
+    where: { accountsId: data.accountsId },
+    orderBy: { createdAt: 'desc' },
+  });
+  if (exist) {
+    return await prisma.slackAuthorizations.update({
+      where: { id: exist.id },
+      data,
+    });
+  } else {
+    return await prisma.slackAuthorizations.create({ data });
+  }
 };
 
 export const updateAccount = async (

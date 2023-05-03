@@ -24,7 +24,7 @@ export async function processChannelCreated(body: SlackEvent) {
     hidden: account.newChannelsConfig === 'HIDDEN',
   });
   const oauth = await findSlackToken(account.id);
-  if (oauth?.accessToken) {
+  if (oauth?.accessToken && oauth?.joinChannel) {
     await joinChannel(event.channel.id, oauth.accessToken);
   }
   return { status: 200, message: 'channel created' };

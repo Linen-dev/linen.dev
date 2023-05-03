@@ -9,6 +9,7 @@ export async function createChannels({
   getSlackChannels,
   joinChannel,
   hideChannels,
+  shouldJoinChannel,
 }: {
   slackTeamId: string;
   token: string;
@@ -16,6 +17,7 @@ export async function createChannels({
   getSlackChannels: Function;
   joinChannel: Function;
   hideChannels: boolean;
+  shouldJoinChannel: boolean;
 }) {
   try {
     const channelsResponse = await getSlackChannels(slackTeamId, token);
@@ -40,7 +42,9 @@ export async function createChannels({
 
     for (let channel of filteredChannels) {
       counter++;
-      await joinChannel(channel.externalChannelId, token);
+      if (shouldJoinChannel) {
+        await joinChannel(channel.externalChannelId, token);
+      }
       // Slack's api can handle bursts
       // so only wait for requests if there are more than 50 messages
       if (counter >= 50) {
@@ -80,6 +84,8 @@ export async function syncChannels({
     getSlackChannels,
     joinChannel,
     hideChannels: account.newChannelsConfig === 'HIDDEN',
+    shouldJoinChannel:
+      account.slackAuthorizations?.find((e) => e)?.joinChannel !== false,
   });
 
   // If channelId is part of parameter only sync the specific channel

@@ -3,7 +3,7 @@ jest.mock('services/slack/api');
 import { syncChannels } from './syncChannels';
 import * as fetch_all_conversations from 'services/slack/api';
 import { create } from '@linen/factory';
-import { accounts, channels, slackAuthorizations } from '@linen/database';
+import { prisma } from '@linen/database';
 import { v4 } from 'uuid';
 
 const CHANNELS_COUNT = 5;
@@ -13,10 +13,7 @@ const externalChannels = Array.from(Array(CHANNELS_COUNT).keys()).map(() => {
 });
 
 describe('slackSync :: syncChannels', () => {
-  let account: accounts & {
-    slackAuthorizations: slackAuthorizations[];
-    channels: channels[];
-  };
+  let accountId: any;
 
   beforeAll(async () => {
     const newAccount = await create('account', {
@@ -35,13 +32,16 @@ describe('slackSync :: syncChannels', () => {
       },
     });
 
-    account = await prisma?.accounts.findUnique({
-      where: { id: newAccount.id },
-      include: { slackAuthorizations: true, channels: true },
-    });
+    accountId = newAccount.id;
   });
 
   test('syncChannels', async () => {
+    const account = await prisma.accounts.findUnique({
+      where: { id: accountId },
+      include: { slackAuthorizations: true, channels: true },
+    });
+    if (!account) throw 'missing account';
+
     const getSlackChannelsSpy = jest
       .spyOn(fetch_all_conversations, 'getSlackChannels')
       .mockReturnValueOnce({
