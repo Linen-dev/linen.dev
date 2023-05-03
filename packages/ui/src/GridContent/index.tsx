@@ -39,6 +39,7 @@ export default function GridContent({
   onClick,
   onDelete,
   onDrop,
+  onEdit,
   onLoad,
   onMute,
   onUnmute,
@@ -62,6 +63,7 @@ export default function GridContent({
   mode?: Mode;
   onClick: (threadId: string) => void;
   onDelete: (messageId: string) => void;
+  onEdit?: (threadId: string) => void;
   onMute?: (threadId: string) => void;
   onUnmute?: (threadId: string) => void;
   onPin: (threadId: string) => void;
@@ -155,6 +157,7 @@ export default function GridContent({
                 mode={mode}
                 onClick={() => onClick(id)}
                 onDelete={onDelete}
+                onEdit={onEdit}
                 onDrop={onDrop}
                 onMute={onMute}
                 onUnmute={onUnmute}

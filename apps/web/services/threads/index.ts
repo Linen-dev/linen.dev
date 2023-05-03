@@ -24,7 +24,6 @@ import unique from 'lodash.uniq';
 import { eventThreadClosed } from 'services/events/eventThreadClosed';
 import { eventThreadReopened } from 'services/events/eventThreadReopened';
 import { eventThreadUpdated } from 'services/events/eventThreadUpdated';
-import { stringify } from 'superjson';
 import { FindThreadsByCursorType, ThreadsWithMessagesFull } from '@linen/types';
 import { anonymizeMessages } from 'utilities/anonymizeMessages';
 import { PAGE_SIZE } from 'secrets';
@@ -94,6 +93,7 @@ class ThreadsServices {
     channelId,
     resolutionId,
     externalThreadId,
+    message: messageBody,
   }: UpdateType) {
     const exist = await prisma.threads.findFirst({
       where: { id, channel: { accountId, id: channelId } },
@@ -102,7 +102,10 @@ class ThreadsServices {
       return null;
     }
     const thread = await prisma.threads.update({
-      include: { channel: { select: { accountId: true } } },
+      include: {
+        channel: { select: { accountId: true } },
+        messages: true,
+      },
       where: { id },
       data: {
         pinned,
@@ -116,7 +119,16 @@ class ThreadsServices {
       },
     });
 
-    console.log(stringify({ if: exist.state !== thread.state, exist, thread }));
+    console.log('UPDATE MESSAGE BODY!', messageBody);
+    if (messageBody) {
+      const messageId = thread.messages[0].id;
+      await prisma.messages.update({
+        where: { id: messageId },
+        data: {
+          body: messageBody,
+        },
+      });
+    }
 
     if (exist.state !== thread.state) {
       if (thread.state === ThreadState.CLOSE) {

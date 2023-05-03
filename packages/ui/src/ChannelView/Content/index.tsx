@@ -39,6 +39,7 @@ import ScrollToBottomIcon from './ScrollToBottomIcon';
 import Row from './Row';
 import ChatLayout from '@/ChatLayout';
 import AddThreadModal from '@/AddThreadModal';
+import EditThreadModal from '@/EditThreadModal';
 
 const { SidebarLayout } = Layouts.Shared;
 
@@ -100,6 +101,17 @@ interface Props {
     type: string;
     active: boolean;
   }): void;
+  editThread({
+    id,
+    message,
+    title,
+    files,
+  }: {
+    id: string;
+    message: string;
+    title: string;
+    files: UploadedFile[];
+  }): Promise<void>;
   updateThread({ state, title }: { state?: ThreadState; title?: string }): void;
   useJoinContext: () => {
     startSignUp?: any;
@@ -133,6 +145,7 @@ const UPDATE_READ_STATUS_INTERVAL_IN_MS = 30000;
 enum ModalView {
   NONE,
   ADD_THREAD,
+  EDIT_THREAD,
   MEMBERS,
   INTEGRATIONS,
 }
@@ -152,6 +165,7 @@ export default function Channel({
   pathCursor,
   setThreads,
   deleteMessage,
+  editThread,
   muteThread,
   unmuteThread,
   pinThread,
@@ -200,9 +214,12 @@ export default function Channel({
   const [allUsers] = useUsersContext();
   const { startSignUp } = useJoinContext();
   const { mode } = useMode();
+  const [editedThreadId, setEditedThreadId] = useState<string>();
   const [modal, setModal] = useState<ModalView>(
     queryIntegration ? ModalView.INTEGRATIONS : ModalView.NONE
   );
+
+  const editedThread = threads.find(({ id }) => id === editedThreadId);
 
   const currentUser = permissions.user || null;
 
@@ -340,6 +357,11 @@ export default function Channel({
 
   function showAddThreadModal() {
     setModal(ModalView.ADD_THREAD);
+  }
+
+  function showEditThreadModal(threadId: string) {
+    setEditedThreadId(threadId);
+    setModal(ModalView.EDIT_THREAD);
   }
 
   function scrollToIdTop(id: string) {
@@ -546,6 +568,7 @@ export default function Channel({
                           currentUser={currentUser}
                           onClick={selectThread}
                           onDelete={deleteMessage}
+                          onEdit={showEditThreadModal}
                           onMute={muteThread}
                           onUnmute={unmuteThread}
                           onPin={pinThread}
@@ -675,6 +698,30 @@ export default function Channel({
         uploads={uploads}
         uploadFiles={uploadFiles}
       />
+      {editedThread && (
+        <EditThreadModal
+          communityId={currentCommunity.id}
+          currentUser={currentUser}
+          currentThread={editedThread}
+          open={modal === ModalView.EDIT_THREAD}
+          close={() => setModal(ModalView.NONE)}
+          onSend={({ title, message }: { title: string; message: string }) => {
+            setModal(ModalView.NONE);
+            return editThread({
+              id: editedThread.id,
+              message,
+              title,
+              files: uploads,
+            }).then(() => {
+              setUploads([]);
+            });
+          }}
+          progress={progress}
+          uploading={uploading}
+          uploads={uploads}
+          uploadFiles={uploadFiles}
+        />
+      )}
     </>
   );
 }

@@ -17,4 +17,5 @@ export type UpdateType = {
   pinned?: boolean;
   resolutionId?: string;
   externalThreadId?: string;
+  message?: string;
 };
