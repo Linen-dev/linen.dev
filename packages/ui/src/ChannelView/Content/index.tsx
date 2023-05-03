@@ -214,12 +214,9 @@ export default function Channel({
   const [allUsers] = useUsersContext();
   const { startSignUp } = useJoinContext();
   const { mode } = useMode();
-  const [editedThreadId, setEditedThreadId] = useState<string>();
+  const [editedThread, setEditedThread] = useState<SerializedThread>();
   const [modal, setModal] = useState<ModalView>(
     queryIntegration ? ModalView.INTEGRATIONS : ModalView.NONE
-  );
-
-  const editedThread = threads.find(({ id }) => id === editedThreadId);
 
   const currentUser = permissions.user || null;
 
@@ -360,7 +357,8 @@ export default function Channel({
   }
 
   function showEditThreadModal(threadId: string) {
-    setEditedThreadId(threadId);
+    const thread = threads.find(({ id }) => id === threadId)
+    setEditedThread(thread);
     setModal(ModalView.EDIT_THREAD);
   }
 
@@ -704,7 +702,10 @@ export default function Channel({
           currentUser={currentUser}
           currentThread={editedThread}
           open={modal === ModalView.EDIT_THREAD}
-          close={() => setModal(ModalView.NONE)}
+          close={() => {
+            setModal(ModalView.NONE)
+            setEditedThread(undefined)
+          }}
           onSend={({ title, message }: { title: string; message: string }) => {
             setModal(ModalView.NONE);
             return editThread({
@@ -714,6 +715,7 @@ export default function Channel({
               files: uploads,
             }).then(() => {
               setUploads([]);
+              setEditedThread(undefined)
             });
           }}
           progress={progress}
