@@ -28,6 +28,7 @@ interface Props {
   mode?: Mode;
   onClick?(): void;
   onDelete?(messageId: string): void;
+  onEdit?(threadId: string): void;
   onLoad?(): void;
   onMute?(threadId: string): void;
   onUnmute?(threadId: string): void;
@@ -73,6 +74,7 @@ export default function ChannelRow({
   mode,
   onClick,
   onDelete,
+  onEdit,
   onDrop,
   onLoad,
   onMute,
@@ -117,6 +119,7 @@ export default function ChannelRow({
         mode={mode}
         drag="thread"
         onDelete={onDelete}
+        onEdit={onEdit}
         onLoad={onLoad}
         onMute={onMute}
         onUnmute={onUnmute}

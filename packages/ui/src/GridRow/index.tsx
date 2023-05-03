@@ -37,6 +37,7 @@ interface Props {
   footer?({ inView }: { inView: boolean }): React.ReactNode;
   onDelete?(messageId: string): void;
   onLoad?(): void;
+  onEdit?(threadId: string): void;
   onMute?(threadId: string): void;
   onUnmute?(threadId: string): void;
   onPin?(threadId: string): void;
@@ -113,6 +114,7 @@ function Row({
   header,
   footer,
   onDelete,
+  onEdit,
   onLoad,
   onMute,
   onUnmute,
@@ -199,6 +201,7 @@ function Row({
             isSubDomainRouting={isSubDomainRouting}
             drag={drag}
             onDelete={onDelete ? () => setModal(ModalView.DELETE) : undefined}
+            onEdit={onEdit}
             onMute={onMute}
             onUnmute={onUnmute}
             onPin={onPin}

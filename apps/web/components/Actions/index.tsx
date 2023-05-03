@@ -20,6 +20,7 @@ import { AiOutlinePaperClip } from '@react-icons/all-files/ai/AiOutlinePaperClip
 import { AiOutlineHighlight } from '@react-icons/all-files/ai/AiOutlineHighlight';
 import { GrDrag } from '@react-icons/all-files/gr/GrDrag';
 import { FiClock } from '@react-icons/all-files/fi/FiClock';
+import { FiEdit } from '@react-icons/all-files/fi/FiEdit';
 import { FiThumbsUp } from '@react-icons/all-files/fi/FiThumbsUp';
 import { FiTrash2 } from '@react-icons/all-files/fi/FiTrash2';
 import { FaVolumeMute } from '@react-icons/all-files/fa/FaVolumeMute';
@@ -55,6 +56,7 @@ interface Props {
     type: string;
     active: boolean;
   }): void;
+  onEdit?(threadId: string): void;
   onRead?(threadId: string): void;
   onRemind?(): void;
   onUnread?(threadId: string): void;
@@ -75,11 +77,11 @@ function hasReaction(
   return !!reaction.users.find(({ id }) => id === userId);
 }
 
-enum ModalView {
-  NONE,
-  REMINDER,
-  DELETE,
-}
+// enum ModalView {
+//   NONE,
+//   REMINDER,
+//   DELETE,
+// }
 
 export default function Actions({
   className,
@@ -92,6 +94,7 @@ export default function Actions({
   mode,
   drag,
   onDelete,
+  onEdit,
   onMute,
   onUnmute,
   onPin,
@@ -102,11 +105,12 @@ export default function Actions({
   onRemind,
   onUnread,
 }: Props) {
-  const [modal, setModal] = useState<ModalView>(ModalView.NONE);
+  // const [modal, setModal] = useState<ModalView>(ModalView.NONE);
   const isReactionActive = hasReaction(message, ':thumbsup:', currentUser?.id);
   const owner = currentUser ? currentUser.id === message.usersId : false;
   const draggable = permissions.manage || owner;
 
+  const isEditVisible = onEdit && currentUser;
   const isReadVisible = false && onRead && currentUser;
   const isUnreadVisible = false && onUnread && currentUser;
   const isRemindVisible = false && onRemind && currentUser;
@@ -125,6 +129,19 @@ export default function Actions({
   return (
     <>
       <ul className={classNames(styles.actions, className)}>
+        {isEditVisible && (
+          <li
+            onClick={(event) => {
+              event.stopPropagation();
+              event.preventDefault();
+              onEdit(thread.id);
+            }}
+          >
+            <Tooltip className={styles.tooltip} text="Edit">
+              <FiEdit />
+            </Tooltip>
+          </li>
+        )}
         {isReadVisible && (
           <li
             onClick={(event) => {

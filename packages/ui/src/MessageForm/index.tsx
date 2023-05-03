@@ -28,6 +28,7 @@ interface Props {
   preview?: boolean;
   sendOnEnter?: boolean;
   message?: string;
+  draft?: boolean;
   onSend?(message: string, files: UploadedFile[]): Promise<any>;
   onSendAndClose?(message: string, files: UploadedFile[]): Promise<any>;
   onMessageChange?(message: string): void;
@@ -135,6 +136,7 @@ function MessageForm({
   id,
   autoFocus,
   currentUser,
+  draft,
   progress,
   uploading,
   uploads,
@@ -149,10 +151,15 @@ function MessageForm({
   upload,
   useUsersContext,
 }: Props) {
+  function getInitialMessage() {
+    if (draft) {
+      return sessionStorage.get(STORAGE_KEY) || initialMessage || '';
+    }
+    return initialMessage || '';
+  }
+
   const STORAGE_KEY = `message.draft.${id}`;
-  const [message, setMessage] = useState<string>(
-    sessionStorage.get(STORAGE_KEY) || initialMessage || ''
-  );
+  const [message, setMessage] = useState<string>(getInitialMessage());
 
   const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState<SerializedUser[]>([]);
@@ -164,9 +171,9 @@ function MessageForm({
 
   useEffect(() => {
     onMessageChange?.(message);
-    sessionStorage.set(STORAGE_KEY, message);
+    draft && sessionStorage.set(STORAGE_KEY, message);
     return () => {
-      sessionStorage.set(STORAGE_KEY, message);
+      draft && sessionStorage.set(STORAGE_KEY, message);
     };
   }, [message]);
 
@@ -412,6 +419,7 @@ function MessageForm({
 MessageForm.defaultProps = {
   sendOnEnter: true,
   preview: true,
+  draft: true,
 };
 
 export default MessageForm;

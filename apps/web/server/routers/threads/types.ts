@@ -31,6 +31,7 @@ export const putSchema = z.object({
   title: z.string().optional(),
   pinned: z.boolean().optional(),
   resolutionId: z.string().uuid().optional(),
+  message: z.string().optional(),
 });
 export type putType = z.infer<typeof putSchema>;
 

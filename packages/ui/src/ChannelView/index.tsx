@@ -14,6 +14,7 @@ import {
   Settings,
   ThreadState,
   Permissions,
+  UploadedFile,
 } from '@linen/types';
 import { ChannelContext } from '@linen/contexts/channel';
 import debounce from '@linen/utilities/debounce';
@@ -780,6 +781,45 @@ export default function ChannelView({
     });
   };
 
+  const editThread = ({
+    id,
+    message,
+    title,
+    files,
+  }: {
+    id: string;
+    message: string;
+    title?: string;
+    files: UploadedFile[];
+  }) => {
+    setThreads((threads) => {
+      return threads.map((thread) => {
+        if (thread.id === id) {
+          const messages = thread.messages;
+          messages[0].body = message;
+          return {
+            ...thread,
+            title,
+            messages,
+          };
+        }
+        return thread;
+      });
+    });
+    return apiUpdateThread({
+      accountId: settings.communityId,
+      id,
+      title,
+      message,
+    })
+      .then(() => {
+        Toast.success('Updated successfully.');
+      })
+      .catch((_) => {
+        Toast.error('Failed to edit the thread.');
+      });
+  };
+
   function onThreadMessage(
     threadId: string,
     message: SerializedMessage,
@@ -875,6 +915,7 @@ export default function ChannelView({
         onRemind={onRemind}
         sendReaction={sendReaction}
         onSelectThread={onSelectThread}
+        editThread={editThread}
         updateThread={updateThread}
         onThreadMessage={onSocket}
         token={token}
