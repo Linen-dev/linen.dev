@@ -27,13 +27,13 @@ export const serializeDm =
         user: Pick<users, 'id' | 'displayName'>;
       }[];
     }
-  ) => {
+  ): channels => {
     const { memberships, ...channel } = dm;
     const user = memberships.find((m) => m.user.id !== me)?.user;
     const hidden = memberships.find((m) => m.user.id === me)?.archived;
-    return serializeChannel({
+    return {
       ...channel,
       channelName: user?.displayName!,
       hidden: hidden || false,
-    });
+    };
   };

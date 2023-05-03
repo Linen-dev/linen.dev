@@ -66,7 +66,7 @@ export async function ssr(
       communities: communities.map(serializeAccount),
       permissions,
       settings,
-      dms,
+      dms: dms.map(serializeChannel),
     },
   };
 }
