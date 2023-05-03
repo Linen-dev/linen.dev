@@ -17,6 +17,7 @@ interface Props {
   currentUser: SerializedUser | null;
   mode?: Mode;
   onDelete?(messageId: string): void;
+  onEdit?(threadId: string, messageId: string): void;
   onResolution?: onResolve;
   onLoad?(): void;
   onReaction?({
@@ -42,6 +43,7 @@ function Messages({
   currentUser,
   mode,
   onDelete,
+  onEdit,
   onLoad,
   onReaction,
   onResolution,
@@ -70,6 +72,7 @@ function Messages({
           mode={mode}
           drag="message"
           onDelete={onDelete}
+          onEdit={onEdit}
           onLoad={onLoad}
           onReaction={onReaction}
           onResolution={onResolution}

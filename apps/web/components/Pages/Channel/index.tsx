@@ -215,6 +215,7 @@ export default function Channel(props: ChannelProps) {
           JoinChannelLink,
           MembersModal,
           apiDeleteMessage: api.deleteMessage,
+          apiUpdateMessage: api.updateMessage,
           apiUpdateThread: api.updateThread,
           apiGetThreads: api.getThreads,
           mergeThreadsRequest: api.mergeThreadsRequest,

@@ -53,5 +53,6 @@ export type messagePostType = z.infer<typeof messagePostSchema>;
 export const messagePutSchema = z.object({
   messageId: z.string().uuid(),
   externalMessageId: z.string().min(1).optional(),
+  body: z.string().optional(),
 });
 export type messagePutType = z.infer<typeof messagePutSchema>;

@@ -262,7 +262,13 @@ export default class MessagesService {
     });
   }
 
-  static async update({ messageId, externalMessageId }: messagePutType) {
+  static async update({ messageId, body, externalMessageId }: messagePutType) {
+    if (body) {
+      return await prisma.messages.update({
+        where: { id: messageId },
+        data: { body },
+      });
+    }
     return await prisma.messages.update({
       where: { id: messageId },
       data: { externalMessageId },

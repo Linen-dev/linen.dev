@@ -19,6 +19,7 @@ import { scrollToBottom } from '@linen/utilities/scroll';
 import styles from './index.module.scss';
 import { CustomLinkHelper } from '@linen/utilities/custom-link';
 import PoweredByLinen from '@/PoweredByLinen';
+import EditMessageModal from '@/EditMessageModal';
 
 interface Props {
   thread: SerializedThread;
@@ -47,6 +48,7 @@ interface Props {
   onClose?(): void;
   onExpandClick?(): void;
   onDelete?(messageId: string): void;
+  onEdit?(threadId: string, messageId: string): void;
   onSend?(): void;
   onMessage(
     threadId: string,
@@ -77,11 +79,17 @@ interface Props {
     },
     options: any
   ): Promise<any>;
+  editMessage({ id, body }: { id: string; body: string }): Promise<void>;
   fetchMentions(term: string, communityId: string): any;
   put: (path: string, data?: {}) => Promise<any>;
   Actions(args: any): JSX.Element;
   JoinChannelLink(args: any): JSX.Element;
   useUsersContext(): any;
+}
+
+enum ModalView {
+  NONE,
+  EDIT_MESSAGE_MODAL,
 }
 
 export default function Thread({
@@ -106,6 +114,7 @@ export default function Thread({
   onReaction,
   onMessage,
   onResolution,
+  editMessage,
   fetchMentions,
   put,
   upload,
@@ -118,6 +127,8 @@ export default function Thread({
   const [uploading, setUploading] = useState(false);
   const [uploads, setUploads] = useState<UploadedFile[]>([]);
   const { id, state, viewCount, incrementId } = thread;
+  const [modal, setModal] = useState<ModalView>(ModalView.NONE);
+  const [editedMessage, setEditedMessage] = useState<SerializedMessage>();
 
   const handleScroll = () =>
     setTimeout(() => scrollToBottom(ref.current as HTMLDivElement), 0);
@@ -134,6 +145,12 @@ export default function Thread({
       }
     }
   }, []);
+
+  function showEditMessageModal(threadId: string, messageId: string) {
+    const message = thread.messages.find(({ id }) => id === messageId);
+    setEditedMessage(message);
+    setModal(ModalView.EDIT_MESSAGE_MODAL);
+  }
 
   useThreadWebsockets({
     id: thread.id,
@@ -205,129 +222,157 @@ export default function Thread({
   const views = viewCount + 1;
 
   return (
-    <div
-      className={classNames(styles.container, { [styles.expanded]: expanded })}
-      ref={ref}
-      onDrop={onDrop}
-    >
-      <Header
-        thread={thread}
-        channelName={channelName}
-        onClose={onClose}
-        onCloseThread={() => updateThread({ state: ThreadState.CLOSE })}
-        expanded={expanded}
-        onExpandClick={onExpandClick}
-        onReopenThread={() => updateThread({ state: ThreadState.OPEN })}
-        onSetTitle={(title) => updateThread({ title })}
-        manage={manage}
-      />{' '}
-      <Summary thread={thread} />
-      <div className={styles.thread}>
-        <Messages
-          {...{ Actions }}
+    <>
+      <div
+        className={classNames(styles.container, {
+          [styles.expanded]: expanded,
+        })}
+        ref={ref}
+        onDrop={onDrop}
+      >
+        <Header
           thread={thread}
-          permissions={permissions}
-          isBot={isBot}
-          isSubDomainRouting={isSubDomainRouting}
-          currentUser={currentUser}
-          settings={settings}
-          onDelete={onDelete}
-          onReaction={onReaction}
-          onLoad={handleScroll}
-          onResolution={onResolution}
-        />
+          channelName={channelName}
+          onClose={onClose}
+          onCloseThread={() => updateThread({ state: ThreadState.CLOSE })}
+          expanded={expanded}
+          onExpandClick={onExpandClick}
+          onReopenThread={() => updateThread({ state: ThreadState.OPEN })}
+          onSetTitle={(title) => updateThread({ title })}
+          manage={manage}
+        />{' '}
+        <Summary thread={thread} />
+        <div className={styles.thread}>
+          <Messages
+            {...{ Actions }}
+            thread={thread}
+            permissions={permissions}
+            isBot={isBot}
+            isSubDomainRouting={isSubDomainRouting}
+            currentUser={currentUser}
+            settings={settings}
+            onDelete={onDelete}
+            onEdit={showEditMessageModal}
+            onReaction={onReaction}
+            onLoad={handleScroll}
+            onResolution={onResolution}
+          />
 
-        <div className={styles.footer}>
-          <div className={styles.count}>
-            <span className={styles.badge}>
-              {expanded && !currentUser && <PoweredByLinen />}
-              {views > 1 && (
-                <div className={styles.count}>
-                  {views} {views === 1 ? 'View' : 'Views'}
-                </div>
-              )}
-            </span>
+          <div className={styles.footer}>
+            <div className={styles.count}>
+              <span className={styles.badge}>
+                {expanded && !currentUser && <PoweredByLinen />}
+                {views > 1 && (
+                  <div className={styles.count}>
+                    {views} {views === 1 ? 'View' : 'Views'}
+                  </div>
+                )}
+              </span>
+            </div>
+            {threadUrl && (
+              <>
+                {ChannelButton({ thread, isSubDomainRouting, settings })}
+                <JoinChannelLink
+                  className={styles.link}
+                  href={threadUrl}
+                  communityType={settings.communityType}
+                />
+              </>
+            )}
           </div>
-          {threadUrl && (
-            <>
-              {ChannelButton({ thread, isSubDomainRouting, settings })}
-              <JoinChannelLink
-                className={styles.link}
-                href={threadUrl}
-                communityType={settings.communityType}
+        </div>
+        {permissions.chat && (
+          <div className={styles.chat}>
+            {manage && state === ThreadState.OPEN ? (
+              <MessageForm
+                id={`thread-message-form-${thread.id}`}
+                currentUser={currentUser}
+                onSend={(message: string, files: UploadedFile[]) => {
+                  onSend?.();
+                  const promise = sendMessage({
+                    message,
+                    files,
+                    channelId,
+                    threadId: id,
+                  }).then(() => {
+                    setUploads([]);
+                  });
+                  handleScroll();
+                  return promise;
+                }}
+                onSendAndClose={(message: string, files: UploadedFile[]) => {
+                  onSend?.();
+                  handleScroll();
+                  return Promise.all([
+                    sendMessage({ message, files, channelId, threadId: id }),
+                    updateThread({ state: ThreadState.CLOSE }),
+                  ]).then(() => {
+                    setUploads([]);
+                  });
+                }}
+                fetchMentions={(term?: string) => {
+                  if (!term) return Promise.resolve([]);
+                  return fetchMentions(term, settings.communityId);
+                }}
+                progress={progress}
+                uploading={uploading}
+                uploads={uploads}
+                upload={uploadFiles}
+                {...{ useUsersContext }}
               />
-            </>
-          )}
-        </div>
+            ) : (
+              <MessageForm
+                id={`thread-message-form-${thread.id}`}
+                currentUser={currentUser}
+                onSend={(message: string, files: UploadedFile[]) => {
+                  onSend?.();
+                  const promise = sendMessage({
+                    message,
+                    files,
+                    channelId,
+                    threadId: id,
+                  });
+                  handleScroll();
+                  return promise;
+                }}
+                fetchMentions={(term?: string) => {
+                  if (!term) return Promise.resolve([]);
+                  return fetchMentions(term, settings.communityId);
+                }}
+                progress={progress}
+                uploading={uploading}
+                uploads={uploads}
+                upload={uploadFiles}
+                {...{ useUsersContext }}
+              />
+            )}
+          </div>
+        )}
       </div>
-      {permissions.chat && (
-        <div className={styles.chat}>
-          {manage && state === ThreadState.OPEN ? (
-            <MessageForm
-              id={`thread-message-form-${thread.id}`}
-              currentUser={currentUser}
-              onSend={(message: string, files: UploadedFile[]) => {
-                onSend?.();
-                const promise = sendMessage({
-                  message,
-                  files,
-                  channelId,
-                  threadId: id,
-                }).then(() => {
-                  setUploads([]);
-                });
-                handleScroll();
-                return promise;
-              }}
-              onSendAndClose={(message: string, files: UploadedFile[]) => {
-                onSend?.();
-                handleScroll();
-                return Promise.all([
-                  sendMessage({ message, files, channelId, threadId: id }),
-                  updateThread({ state: ThreadState.CLOSE }),
-                ]).then(() => {
-                  setUploads([]);
-                });
-              }}
-              fetchMentions={(term?: string) => {
-                if (!term) return Promise.resolve([]);
-                return fetchMentions(term, settings.communityId);
-              }}
-              progress={progress}
-              uploading={uploading}
-              uploads={uploads}
-              upload={uploadFiles}
-              {...{ useUsersContext }}
-            />
-          ) : (
-            <MessageForm
-              id={`thread-message-form-${thread.id}`}
-              currentUser={currentUser}
-              onSend={(message: string, files: UploadedFile[]) => {
-                onSend?.();
-                const promise = sendMessage({
-                  message,
-                  files,
-                  channelId,
-                  threadId: id,
-                });
-                handleScroll();
-                return promise;
-              }}
-              fetchMentions={(term?: string) => {
-                if (!term) return Promise.resolve([]);
-                return fetchMentions(term, settings.communityId);
-              }}
-              progress={progress}
-              uploading={uploading}
-              uploads={uploads}
-              upload={uploadFiles}
-              {...{ useUsersContext }}
-            />
-          )}
-        </div>
+      {currentUser && editedMessage && (
+        <EditMessageModal
+          communityId={settings.communityId}
+          currentUser={currentUser}
+          open={modal === ModalView.EDIT_MESSAGE_MODAL}
+          close={() => {
+            setEditedMessage(undefined);
+            setModal(ModalView.NONE);
+          }}
+          onSend={({ message }) => {
+            setModal(ModalView.NONE);
+            return editMessage({
+              id: editedMessage.id,
+              body: message,
+            });
+          }}
+          currentMessage={editedMessage}
+          progress={progress}
+          uploading={uploading}
+          uploads={uploads}
+          uploadFiles={uploadFiles}
+        />
       )}
-    </div>
+    </>
   );
 }
 
