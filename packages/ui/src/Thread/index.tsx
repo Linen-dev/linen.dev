@@ -79,7 +79,7 @@ interface Props {
     },
     options: any
   ): Promise<any>;
-  editMessage({ id, body }: { id: string; body: string }): Promise<void>;
+  editMessage?({ id, body }: { id: string; body: string }): Promise<void>;
   fetchMentions(term: string, communityId: string): any;
   put: (path: string, data?: {}) => Promise<any>;
   Actions(args: any): JSX.Element;
@@ -147,7 +147,9 @@ export default function Thread({
   }, []);
 
   function showEditMessageModal(threadId: string, messageId: string) {
-    const message = thread.messages.find(({ id }) => id === messageId);
+    const message = thread.messages.find(
+      ({ id }: SerializedMessage) => id === messageId
+    );
     setEditedMessage(message);
     setModal(ModalView.EDIT_MESSAGE_MODAL);
   }
@@ -252,7 +254,7 @@ export default function Thread({
             currentUser={currentUser}
             settings={settings}
             onDelete={onDelete}
-            onEdit={showEditMessageModal}
+            onEdit={editMessage ? showEditMessageModal : undefined}
             onReaction={onReaction}
             onLoad={handleScroll}
             onResolution={onResolution}
@@ -349,7 +351,7 @@ export default function Thread({
           </div>
         )}
       </div>
-      {currentUser && editedMessage && (
+      {currentUser && editMessage && editedMessage && (
         <EditMessageModal
           communityId={settings.communityId}
           currentUser={currentUser}
