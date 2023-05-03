@@ -35,8 +35,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
     const account = await updateAccount(accountId, {
       slackTeamId: body.team.id,
-      name: body.team.name,
-      // slackDomain: communityUrl.replace('https://', '').split('.')[0] as string,
       communityUrl,
       integration: AccountIntegration.SLACK,
     });
