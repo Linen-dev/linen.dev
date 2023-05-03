@@ -1,4 +1,5 @@
-import Channel, { ChannelProps } from 'components/Pages/Channel';
+import { ChannelProps } from '@linen/types';
+import Channel from 'components/Pages/Channel';
 import { GetServerSideProps } from 'next/types';
 import { channelGetServerSideProps } from 'services/ssr/channels';
 import { trackPageView } from 'utilities/ssr-metrics';

@@ -1,11 +1,5 @@
 import PageLayout from 'components/layout/PageLayout';
-import {
-  Permissions,
-  SerializedAccount,
-  SerializedChannel,
-  SerializedThread,
-  Settings,
-} from '@linen/types';
+import { ThreadProps } from '@linen/types';
 import { useRef } from 'react';
 import { buildThreadSeo, buildStructureData } from 'utilities/seo';
 import ThreadView from '@linen/ui/ThreadView';
@@ -14,20 +8,6 @@ import * as api from 'utilities/requests';
 import Actions from 'components/Actions';
 import JoinChannelLink from 'components/Link/JoinChannelLink';
 import { useUsersContext } from '@linen/contexts/Users';
-
-export interface Props {
-  isBot?: boolean;
-  isSubDomainRouting: boolean;
-  permissions: Permissions;
-  communities: SerializedAccount[];
-  thread: SerializedThread;
-  currentChannel: SerializedChannel;
-  currentCommunity: SerializedAccount;
-  channels: SerializedChannel[];
-  threadUrl: string | null;
-  settings: Settings;
-  dms: SerializedChannel[];
-}
 
 export function ThreadPage({
   thread,
@@ -41,7 +21,7 @@ export function ThreadPage({
   settings,
   permissions,
   dms,
-}: Props) {
+}: ThreadProps) {
   const ref = useRef<HTMLDivElement>(null);
 
   return (

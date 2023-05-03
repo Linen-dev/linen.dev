@@ -1,11 +1,12 @@
-import { ThreadPage, Props } from 'components/Pages/ThreadPage';
+import { ThreadProps } from '@linen/types';
+import { ThreadPage } from 'components/Pages/ThreadPage';
 import { GetServerSideProps } from 'next';
 import { threadGetServerSideProps } from 'services/ssr/threads';
 import { trackPageView } from 'utilities/ssr-metrics';
 
 export default ThreadPage;
 
-export const getServerSideProps: GetServerSideProps<Props> = async (
+export const getServerSideProps: GetServerSideProps<ThreadProps> = async (
   context
 ) => {
   const track = trackPageView(context);

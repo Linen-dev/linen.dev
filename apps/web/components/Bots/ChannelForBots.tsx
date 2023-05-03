@@ -1,10 +1,9 @@
 import React from 'react';
 import PageLayout from 'components/layout/PageLayout';
 import { buildChannelSeo } from 'utilities/seo';
-import { SerializedChannel } from '@linen/types';
+import { SerializedChannel, ChannelProps } from '@linen/types';
 import Pagination from 'components/Pagination';
 import Grid from '@linen/ui/GridContent';
-import type { ChannelProps } from '../Pages/Channel';
 import { RowForBots } from './RowForBots';
 
 export default function ChannelForBots({

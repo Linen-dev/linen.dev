@@ -2,14 +2,7 @@
 import { useEffect, useState } from 'react';
 import PageLayout from 'components/layout/PageLayout';
 import { buildChannelSeo } from 'utilities/seo';
-import {
-  Permissions,
-  SerializedAccount,
-  SerializedChannel,
-  SerializedThread,
-  SerializedUser,
-  Settings,
-} from '@linen/types';
+import { SerializedThread, SerializedUser, ChannelProps } from '@linen/types';
 import * as api from 'utilities/requests';
 import { addReaction } from 'utilities/state/reaction';
 import ChannelView from '@linen/ui/ChannelView';
@@ -26,26 +19,6 @@ import JoinChannelLink from 'components/Link/JoinChannelLink';
 import { useJoinContext } from 'contexts/Join';
 import ChannelForBots from 'components/Bots/ChannelForBots';
 import { playNotificationSound } from 'utilities/playNotificationSound';
-
-export interface ChannelProps {
-  settings: Settings;
-  channelName: string;
-  channels: SerializedChannel[];
-  dms: SerializedChannel[];
-  communities: SerializedAccount[];
-  currentChannel: SerializedChannel;
-  currentCommunity: SerializedAccount;
-  threads: SerializedThread[];
-  pinnedThreads: SerializedThread[];
-  isSubDomainRouting: boolean;
-  nextCursor: {
-    next: string | null;
-    prev: string | null;
-  };
-  pathCursor: string | null;
-  isBot: boolean;
-  permissions: Permissions;
-}
 
 export default function Channel(props: ChannelProps) {
   if (props.isBot) {
