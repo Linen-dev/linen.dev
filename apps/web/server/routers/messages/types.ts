@@ -28,3 +28,9 @@ export const deleteSchema = z.object({
   accountId: z.string().uuid(),
 });
 export type deleteType = z.infer<typeof deleteSchema>;
+
+export const putSchema = z.object({
+  id: z.string().uuid(),
+  body: z.string(),
+});
+export type putType = z.infer<typeof putSchema>;

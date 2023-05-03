@@ -1,0 +1,27 @@
+@import '../colors.scss';
+
+.header {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  margin: 0 0 1.5rem;
+}
+
+.h3 {
+  margin: 0;
+  line-height: 1;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.column {
+  padding: 2rem;
+  min-height: 100vh;
+}
+
+.column:nth-child(1) {
+  background: $color-gray-50;
+}

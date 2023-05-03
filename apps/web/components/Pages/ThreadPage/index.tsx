@@ -82,6 +82,7 @@ export function ThreadPage({
           apiFetchMentions: api.fetchMentions,
           apiPut: api.put,
           apiUpdateThread: api.updateThread,
+          apiUpdateMessage: api.updateMessage,
           apiUpload: api.upload,
           apiCreateMessage: api.createMessage,
           useUsersContext,

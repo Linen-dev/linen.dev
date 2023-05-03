@@ -20,6 +20,7 @@ interface Props {
   settings: Settings;
   useJoinContext(): any;
   apiUpdateThread(...args: any): Promise<any>;
+  apiUpdateMessage(...args: any): Promise<any>;
   apiFetchMentions(...args: any): Promise<any>;
   apiPut(...args: any): Promise<any>;
   apiUpload(...args: any): Promise<any>;
@@ -43,6 +44,7 @@ export default function ThreadView({
   apiFetchMentions,
   apiPut,
   apiUpdateThread,
+  apiUpdateMessage,
   apiUpload,
   useJoinContext,
   apiCreateMessage,
@@ -64,6 +66,7 @@ export default function ThreadView({
           apiFetchMentions,
           apiPut,
           apiUpdateThread,
+          apiUpdateMessage,
           apiUpload,
           useJoinContext,
           JoinChannelLink,

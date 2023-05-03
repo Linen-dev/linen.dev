@@ -12,7 +12,7 @@ import {
 } from 'server/exceptions';
 import { Roles } from 'server/middlewares/tenant';
 import MessagesService from 'services/messages';
-import { getType, postType, deleteType } from './types';
+import { getType, postType, deleteType, putType } from './types';
 import { ApiEvent, trackApiEvent } from 'utilities/ssr-metrics';
 
 export class MessagesController {
@@ -90,6 +90,30 @@ export class MessagesController {
     await trackApiEvent({ req, res }, ApiEvent.user_send_message);
 
     res.json(message);
+  }
+
+  static async put(
+    req: AuthedRequestWithTenantAndBody<putType>,
+    res: Response,
+    next: NextFunction
+  ) {
+    const message = await MessagesService.get({
+      id: req.body.id,
+      accountId: req.tenant?.id!,
+    });
+
+    const ownerId = req.tenant_user?.id;
+    const authorId = message?.author?.id;
+
+    if (!ownerId || !authorId || ownerId !== authorId) {
+      return next(new Forbidden('User is not allowed to update this message'));
+    }
+
+    const updated = await MessagesService.update({
+      messageId: req.body.id,
+      body: req.body.body,
+    });
+    return res.json(updated);
   }
 
   static async notImplemented(_: any, _2: any, next: NextFunction) {

@@ -37,7 +37,7 @@ interface Props {
   footer?({ inView }: { inView: boolean }): React.ReactNode;
   onDelete?(messageId: string): void;
   onLoad?(): void;
-  onEdit?(threadId: string): void;
+  onEdit?(threadId: string, messageId: string): void;
   onMute?(threadId: string): void;
   onUnmute?(threadId: string): void;
   onPin?(threadId: string): void;

@@ -58,6 +58,7 @@ export default function ChannelView({
   apiDeleteMessage,
   addReaction,
   apiUpdateThread,
+  apiUpdateMessage,
   Actions,
   IntegrationsModal,
   JoinChannelLink,
@@ -95,6 +96,7 @@ export default function ChannelView({
   isBot: boolean;
   permissions: Permissions;
   apiUpdateThread: (...args: any) => Promise<any>;
+  apiUpdateMessage: (...args: any) => Promise<any>;
   apiDeleteMessage: (...args: any) => Promise<any>;
   addReaction: (...args: any) => any;
   useJoinContext: () => {
@@ -820,6 +822,48 @@ export default function ChannelView({
       });
   };
 
+  const editMessage = ({
+    id: messageId,
+    body,
+  }: {
+    id: string;
+    body: string;
+  }) => {
+    setThreads((threads) => {
+      return threads.map((thread) => {
+        const message = thread.messages.find(
+          ({ id }: SerializedMessage) => id === messageId
+        );
+        if (message) {
+          return {
+            ...thread,
+            messages: thread.messages.map((message: SerializedMessage) => {
+              if (message.id === messageId) {
+                return {
+                  ...message,
+                  body,
+                };
+              }
+              return message;
+            }),
+          };
+        }
+        return thread;
+      });
+    });
+    return apiUpdateMessage({
+      accountId: settings.communityId,
+      id: messageId,
+      body,
+    })
+      .then(() => {
+        Toast.success('Updated successfully.');
+      })
+      .catch((_) => {
+        Toast.error('Failed to edit the message.');
+      });
+  };
+
   function onThreadMessage(
     threadId: string,
     message: SerializedMessage,
@@ -903,6 +947,7 @@ export default function ChannelView({
         currentThreadId={currentThreadId}
         setThreads={setThreads}
         deleteMessage={deleteMessage}
+        editMessage={editMessage}
         muteThread={muteThread}
         unmuteThread={unmuteThread}
         pinThread={pinThread}

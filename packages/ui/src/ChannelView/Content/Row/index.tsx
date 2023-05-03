@@ -28,7 +28,7 @@ interface Props {
   mode?: Mode;
   onClick?(): void;
   onDelete?(messageId: string): void;
-  onEdit?(threadId: string): void;
+  onEdit?(threadId: string, messageId: string): void;
   onLoad?(): void;
   onMute?(threadId: string): void;
   onUnmute?(threadId: string): void;

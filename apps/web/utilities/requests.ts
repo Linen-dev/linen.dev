@@ -114,6 +114,10 @@ export const createMessage = (
 ): Promise<{ message: SerializedMessage; imitationId: string }> =>
   post(`/api/messages`, props);
 
+export const updateMessage = (
+  props: MessagesTypes.putType
+): Promise<SerializedMessage> => put(`/api/messages/${props.id}`, props);
+
 export const createChannel = (
   props: createChannelType
 ): Promise<SerializedChannel> => post(`/api/channels`, props);

@@ -112,6 +112,13 @@ interface Props {
     title: string;
     files: UploadedFile[];
   }): Promise<void>;
+  editMessage({
+    id,
+    body
+  }: {
+    id: string;
+    body: string
+  }): Promise<void>;
   updateThread({ state, title }: { state?: ThreadState; title?: string }): void;
   useJoinContext: () => {
     startSignUp?: any;
@@ -173,6 +180,7 @@ export default function Channel({
   updateThreadResolution,
   readThread,
   unreadThread,
+  editMessage,
   onMessage,
   onDrop,
   onRemind,
@@ -634,6 +642,7 @@ export default function Channel({
               permissions={permissions}
               currentUser={currentUser}
               updateThread={updateThread}
+              editMessage={editMessage}
               onClose={() => onSelectThread(undefined)}
               expanded={collapsed}
               onExpandClick={() => setCollapsed((collapsed) => !collapsed)}

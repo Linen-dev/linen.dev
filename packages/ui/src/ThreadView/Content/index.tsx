@@ -24,6 +24,7 @@ interface Props {
   permissions: Permissions;
   useJoinContext(): any;
   apiUpdateThread(...args: any): Promise<any>;
+  apiUpdateMessage(...args: any): Promise<any>;
   apiFetchMentions(...args: any): Promise<any>;
   apiPut(...args: any): Promise<any>;
   apiUpload(...args: any): Promise<any>;
@@ -44,6 +45,7 @@ export default function Content({
   permissions,
   useJoinContext,
   apiUpdateThread,
+  apiUpdateMessage,
   apiFetchMentions,
   apiPut,
   apiUpload,
@@ -52,7 +54,7 @@ export default function Content({
   apiCreateMessage,
   useUsersContext,
 }: Props) {
-  const [thread, setThread] = useState(initialThread);
+  const [thread, setThread] = useState<SerializedThread>(initialThread);
   const [allUsers] = useUsersContext();
   const { startSignUp } = useJoinContext();
 
@@ -65,7 +67,7 @@ export default function Content({
     messageId: string,
     imitationId: string
   ) => {
-    setThread((thread) => {
+    setThread((thread: SerializedThread) => {
       if (thread.id === threadId) {
         return {
           ...thread,
@@ -92,7 +94,7 @@ export default function Content({
       state: newState || thread.state,
       title: newTitle || thread.title || undefined,
     };
-    setThread((thread) => {
+    setThread((thread: SerializedThread) => {
       return {
         ...thread,
         ...options,
@@ -105,6 +107,34 @@ export default function Content({
     }).catch((_) => {
       Toast.error('Failed to close the thread.');
     });
+  };
+
+  const editMessage = ({ id, body }: { id: string; body: string }) => {
+    setThread((thread: SerializedThread) => {
+      return {
+        ...thread,
+        messages: thread.messages.map((message: SerializedMessage) => {
+          if (message.id === id) {
+            return {
+              ...message,
+              body,
+            };
+          }
+          return message;
+        }),
+      };
+    });
+    return apiUpdateMessage({
+      accountId: settings.communityId,
+      id,
+      body,
+    })
+      .then(() => {
+        Toast.success('Updated successfully.');
+      })
+      .catch((_) => {
+        Toast.error('Failed to update the message.');
+      });
   };
 
   const sendMessage = sendMessageWrapper({
@@ -138,6 +168,7 @@ export default function Content({
         isSubDomainRouting={isSubDomainRouting}
         permissions={permissions}
         updateThread={updateThread}
+        editMessage={editMessage}
         sendMessage={sendMessage}
         token={token}
         onMessage={(threadId, message, messageId, imitationId) => {

@@ -56,7 +56,7 @@ interface Props {
     type: string;
     active: boolean;
   }): void;
-  onEdit?(threadId: string): void;
+  onEdit?(threadId: string, messageId: string): void;
   onRead?(threadId: string): void;
   onRemind?(): void;
   onUnread?(threadId: string): void;
@@ -110,7 +110,8 @@ export default function Actions({
   const owner = currentUser ? currentUser.id === message.usersId : false;
   const draggable = permissions.manage || owner;
 
-  const isEditVisible = onEdit && currentUser;
+  const isEditVisible =
+    onEdit && currentUser && currentUser.id === message.author?.id;
   const isReadVisible = false && onRead && currentUser;
   const isUnreadVisible = false && onUnread && currentUser;
   const isRemindVisible = false && onRemind && currentUser;
@@ -134,7 +135,7 @@ export default function Actions({
             onClick={(event) => {
               event.stopPropagation();
               event.preventDefault();
-              onEdit(thread.id);
+              onEdit(thread.id, message.id);
             }}
           >
             <Tooltip className={styles.tooltip} text="Edit">
