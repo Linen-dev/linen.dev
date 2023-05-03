@@ -15,6 +15,9 @@ Linen is free and offers unlimited message retention you can sign up at Linen.co
 Linen cloud edition: https://linen.dev
 Join our public community: https://linen.dev/s/linen
 
+Development Philosophy
+
+Ship the smallest functioning feature that makes the users' lives better and then iterate.
 
 ### See project roadmap: https://github.com/orgs/Linen-dev/projects/2
 
