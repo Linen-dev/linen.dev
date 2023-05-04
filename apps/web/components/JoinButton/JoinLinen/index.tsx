@@ -2,17 +2,27 @@ import React from 'react';
 import Toast from '@linen/ui/Toast';
 import { useJoinContext } from 'contexts/Join';
 import Link from '../Link';
+import { FiLogIn } from '@react-icons/all-files/fi/FiLogIn';
 
 interface Props {
+  brandColor?: string;
   fontColor: string;
   accountId: string;
   status: 'authenticated' | 'loading' | 'unauthenticated';
 }
 
-export default function JoinLinen({ fontColor, accountId, status }: Props) {
+export default function JoinLinen({
+  brandColor,
+  fontColor,
+  accountId,
+  status,
+}: Props) {
   const { startSignUp } = useJoinContext();
 
-  const onClick = async (event: React.MouseEvent<HTMLAnchorElement>) => {
+  const showModal = async (
+    event: React.MouseEvent<HTMLAnchorElement>,
+    flow: 'signin' | 'signup'
+  ) => {
     event.preventDefault();
     event.stopPropagation();
     if (status === 'authenticated') {
@@ -30,6 +40,7 @@ export default function JoinLinen({ fontColor, accountId, status }: Props) {
       }
     } else if (status === 'unauthenticated') {
       startSignUp?.({
+        flow,
         communityId: accountId,
       });
     }
@@ -40,8 +51,22 @@ export default function JoinLinen({ fontColor, accountId, status }: Props) {
   }
 
   return (
-    <Link fontColor={fontColor} onClick={onClick}>
-      Join Community
-    </Link>
+    <>
+      <Link
+        lighter
+        brandColor={brandColor}
+        fontColor={fontColor}
+        onClick={(event) => showModal(event, 'signin')}
+      >
+        Log in
+      </Link>
+      <Link
+        brandColor={brandColor}
+        fontColor={fontColor}
+        onClick={(event) => showModal(event, 'signup')}
+      >
+        Sign up
+      </Link>
+    </>
   );
 }

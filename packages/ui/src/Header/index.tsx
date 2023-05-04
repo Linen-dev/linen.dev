@@ -114,6 +114,7 @@ export default function Header({
         ) : (
           <>
             <JoinButton
+              brandColor={brandColor}
               fontColor={fontColor}
               currentCommunity={currentCommunity}
               settings={settings}

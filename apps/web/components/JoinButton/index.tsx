@@ -6,12 +6,18 @@ import { ChatType, SerializedAccount, Settings } from '@linen/types';
 import { useSession } from '@linen/auth/client';
 
 interface Props {
+  brandColor?: string;
   fontColor: string;
   currentCommunity: SerializedAccount;
   settings: Settings;
 }
 
-function JoinButton({ fontColor, currentCommunity, settings }: Props) {
+function JoinButton({
+  brandColor,
+  fontColor,
+  currentCommunity,
+  settings,
+}: Props) {
   const { status } = useSession();
 
   if (status === 'loading') {
@@ -24,13 +30,22 @@ function JoinButton({ fontColor, currentCommunity, settings }: Props) {
     settings.chat !== ChatType.MEMBERS
   ) {
     return settings.communityType === 'discord' ? (
-      <JoinDiscord fontColor={fontColor} href={settings.communityInviteUrl} />
+      <JoinDiscord
+        brandColor={brandColor}
+        fontColor={fontColor}
+        href={settings.communityInviteUrl}
+      />
     ) : (
-      <JoinSlack fontColor={fontColor} href={settings.communityInviteUrl} />
+      <JoinSlack
+        brandColor={brandColor}
+        fontColor={fontColor}
+        href={settings.communityInviteUrl}
+      />
     );
   } else {
     return (
       <JoinLinen
+        brandColor={brandColor}
         fontColor={fontColor}
         accountId={settings.communityId}
         {...{ status }}

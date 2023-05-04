@@ -15,6 +15,7 @@ type Props = {
 };
 
 type StartSignUpProps = {
+  flow?: AuthFlow;
   communityId: string;
   onSignIn?: onSignInType;
 };
@@ -52,6 +53,7 @@ export const JoinContext = ({ children }: Props) => {
   }
 
   const startSignUp = async (props: StartSignUpProps) => {
+    setFlow(props.flow || 'signup');
     setOnSignInAction(props.onSignIn);
     setCommunityId(props.communityId);
     const session = await getSession();
@@ -96,8 +98,8 @@ export const JoinContext = ({ children }: Props) => {
   };
 
   const mapText = {
-    signup: 'up',
-    signin: 'in',
+    signup: 'Sign up',
+    signin: 'Log in',
   };
 
   return (
@@ -105,11 +107,11 @@ export const JoinContext = ({ children }: Props) => {
       <Modal open={open} close={onCloseModal}>
         <div className="m-5 text-center">
           <h3 className="text-lg font-medium leading-6 text-gray-900">
-            Join the community
+            {mapText[flow]}
           </h3>
           <div className="mt-5 pb-3">
             <p className="text-sm text-gray-500">
-              Sign {mapText[flow]} to join the community and start to chat
+              {mapText[flow]} to join the community and start to chat
             </p>
           </div>
         </div>
