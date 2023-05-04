@@ -31,14 +31,14 @@
 }
 
 .highlight.lighter {
-  background: $color-tertiary;
-  border: 1px solid $color-tertiary;
+  background: white;
+  border: 1px solid white;
   color: black;
 }
 
 .highlight.lighter:hover {
-  background: rgba($color-tertiary, 0.9);
-  border-color: rgba($color-tertiary, 0.9);
+  background: $color-slate-200;
+  border-color: $color-slate-200;
 }
 
 @media screen and (max-width: 1023px) {

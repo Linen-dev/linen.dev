@@ -8,7 +8,7 @@ import { AiFillGithub } from '@react-icons/all-files/ai/AiFillGithub';
 import { GiFeather } from '@react-icons/all-files/gi/GiFeather';
 import { CgInfinity } from '@react-icons/all-files/cg/CgInfinity';
 import { RiPlantLine } from '@react-icons/all-files/ri/RiPlantLine';
-import { AiOutlineSync } from '@react-icons/all-files/Ai/AiOutlineSync';
+import { AiOutlineSync } from '@react-icons/all-files/ai/AiOutlineSync';
 import { FaMask } from '@react-icons/all-files/fa/FaMask';
 import { BiImport } from '@react-icons/all-files/bi/BiImport';
 import Link from 'next/link';
