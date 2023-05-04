@@ -1,4 +1,5 @@
 import linenExamplePage from 'public/linen-example-page-may-3-2023.png';
+import settingsExamplePage from 'public/settings-page-may-4.png';
 import Image from 'next/image';
 import LinenLogo from '@linen/ui/LinenLogo';
 import YCombinatorLogo from '@linen/ui/YCombinatorLogo';
@@ -192,7 +193,11 @@ const Home = ({ accounts }: Props) => {
           </div>
           <div className="flex justify-center my-20 shadow-lg">
             <FadeIn delay={200}>
-              <Image className="rounded-md" src={linenExamplePage} alt={'YC'} />
+              <Image
+                className="rounded-md"
+                src={linenExamplePage}
+                alt={'example-community'}
+              />
             </FadeIn>
           </div>
         </div>
@@ -200,7 +205,7 @@ const Home = ({ accounts }: Props) => {
         <div className="sm:py-12">
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
             <div className="mx-auto max-w-2xl lg:text-center">
-              <h2 className="text-base font-semibold leading-7 text-indigo-600">
+              <h2 className="text-base font-semibold leading-7 text-blue-600">
                 Open community
               </h2>
               <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
@@ -209,7 +214,7 @@ const Home = ({ accounts }: Props) => {
               <p className="mt-6 text-lg leading-8 text-gray-600">
                 Information gets lost in real-time chat. Linen solves this by
                 letting Google find your content. Our advanced threading model
-                let's you drag and drop messages and threads to reorganize your
+                let you drag and drop messages and threads to reorganize your
                 content.{' '}
               </p>
             </div>
@@ -219,7 +224,7 @@ const Home = ({ accounts }: Props) => {
                   <div key={feature.name} className="flex flex-col">
                     <dt className="flex items-center gap-x-3 text-base font-semibold leading-7 text-gray-900">
                       <feature.icon
-                        className="h-5 w-5 flex-none text-indigo-600"
+                        className="h-5 w-5 flex-none text-blue-600"
                         aria-hidden="true"
                       />
                       {feature.name}
@@ -229,7 +234,7 @@ const Home = ({ accounts }: Props) => {
                       {/* <p className="mt-6">
                         <a
                           href={feature.href}
-                          className="text-sm font-semibold leading-6 text-indigo-600"
+                          className="text-sm font-semibold leading-6 text-blue-600"
                         >
                           Learn more <span aria-hidden="true">→</span>
                         </a>
@@ -242,13 +247,12 @@ const Home = ({ accounts }: Props) => {
           </div>
         </div>
 
-
         <div className="overflow-hidden bg-white py-24 sm:py-32">
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
             <div className="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 sm:gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-2">
               <div className="lg:pr-8 lg:pt-4">
                 <div className="lg:max-w-lg">
-                  <h2 className="text-base font-semibold leading-7 text-indigo-600">
+                  <h2 className="text-base font-semibold leading-7 text-blue-600">
                     Existing communities
                   </h2>
                   <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
@@ -263,7 +267,7 @@ const Home = ({ accounts }: Props) => {
                       <div key={feature.name} className="relative pl-9">
                         <dt className="inline font-semibold text-gray-900">
                           <feature.icon
-                            className="absolute left-1 top-1 h-5 w-5 text-indigo-600"
+                            className="absolute left-1 top-1 h-5 w-5 text-blue-600"
                             aria-hidden="true"
                           />
                           {feature.name}
@@ -274,50 +278,17 @@ const Home = ({ accounts }: Props) => {
                   </dl>
                 </div>
               </div>
-              <img
-                src="https://tailwindui.com/img/component-images/dark-project-app-screenshot.png"
-                alt="Product screenshot"
-                className="w-[48rem] max-w-none rounded-xl shadow-xl ring-1 ring-gray-400/10 sm:w-[57rem] md:-ml-4 lg:-ml-0"
+              <Image
                 width={2432}
                 height={1442}
+                className="w-[48rem] max-w-none rounded-xl shadow-xl ring-1 ring-gray-400/10 sm:w-[57rem] md:-ml-4 lg:-ml-0"
+                src={settingsExamplePage}
+                alt={'example-settings-page'}
               />
             </div>
           </div>
         </div>
 
-        <div className="mt-20 rounded-md">
-          <div className="max-w-7xl mx-auto py-12 px-4 sm:py-16 sm:px-6 lg:px-8 lg:py-20">
-            <div className="max-w-3xl mx-auto text-center">
-              <h2 className="text-base font-semibold leading-7 text-indigo-600 pb-2">
-                Metrics
-              </h2>
-              <h2 className="text-2xl font-extrabold sm:text-4xl">
-                Trusted by the largest communities
-              </h2>
-              <p className="mt-3 text-xl sm:mt-4">
-                Retain your community knowledge and improve your SEO
-              </p>
-            </div>
-            <dl className="mt-10 text-center sm:max-w-3xl sm:mx-auto sm:grid sm:grid-cols-2 sm:gap-8">
-              <div className="flex flex-col mt-10 sm:mt-0">
-                <dt className="order-2 mt-2 text-md leading-6">
-                  Pages indexed by Google
-                </dt>
-                <dd className="order-1 text-xl md:text-4xl font-extrabold ">
-                  50,000+
-                </dd>
-              </div>
-              <div className="flex flex-col mt-10 sm:mt-0">
-                <dt className="order-2 mt-2 text-md leading-6">
-                  Number of search impresssions
-                </dt>
-                <dd className="order-1 text-xl md:text-4xl font-extrabold ">
-                  1,000,000+
-                </dd>
-              </div>
-            </dl>
-          </div>
-        </div>
         <div className="flex flex-col items-center mt-10">
           <h1 className="text-2xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-4xl">
             Featured Communities
@@ -353,7 +324,7 @@ const Home = ({ accounts }: Props) => {
             />
           </div>
           <div className="mx-auto max-w-2xl text-center lg:max-w-4xl">
-            <h2 className="text-base font-semibold leading-7 text-indigo-600">
+            <h2 className="text-base font-semibold leading-7 text-blue-600">
               Pricing
             </h2>
             <p className="mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
@@ -384,7 +355,7 @@ const Home = ({ accounts }: Props) => {
                 <h3
                   id={tier.id}
                   className={classNames(
-                    tier.featured ? 'text-indigo-400' : 'text-indigo-600',
+                    tier.featured ? 'text-blue-400' : 'text-blue-600',
                     'text-base font-semibold leading-7'
                   )}
                 >
@@ -427,7 +398,7 @@ const Home = ({ accounts }: Props) => {
                     <li key={feature} className="flex gap-x-3">
                       <GoCheck
                         className={classNames(
-                          tier.featured ? 'text-indigo-400' : 'text-indigo-600',
+                          tier.featured ? 'text-blue-400' : 'text-blue-600',
                           'h-6 w-5 flex-none'
                         )}
                         aria-hidden="true"
@@ -437,12 +408,12 @@ const Home = ({ accounts }: Props) => {
                   ))}
                 </ul>
                 <a
-                  href={tier.href}
+                  href={'/signup'}
                   aria-describedby={tier.id}
                   className={classNames(
                     tier.featured
-                      ? 'bg-indigo-500 text-white shadow-sm hover:bg-indigo-400 focus-visible:outline-indigo-500'
-                      : 'text-indigo-600 ring-1 ring-inset ring-indigo-200 hover:ring-indigo-300 focus-visible:outline-indigo-600',
+                      ? 'bg-blue-500 text-white shadow-sm hover:bg-blue-400 focus-visible:outline-blue-500'
+                      : 'text-blue-600 ring-1 ring-inset ring-blue-200 hover:ring-blue-300 focus-visible:outline-blue-600',
                     'mt-8 block rounded-md py-2.5 px-3.5 text-center text-sm font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 sm:mt-10'
                   )}
                 >
