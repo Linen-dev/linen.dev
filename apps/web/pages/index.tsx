@@ -290,24 +290,41 @@ const Home = ({ accounts }: Props) => {
         </div>
 
         <div className="flex flex-col items-center mt-10">
+          <h2 className="text-base font-semibold leading-7 text-blue-600">
+            Browse
+          </h2>
           <h1 className="text-2xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-4xl">
-            Featured Communities
+            Find Communities
           </h1>
         </div>
 
-        <div className="flex flex-col md:grid md:grid-cols-2 lg:grid-cols-3 gap-3 mt-10">
-          {accounts.map((a, index) => {
-            return (
-              <CommunityCard
-                url={a.url}
-                communityName={a.name}
-                description="Community"
-                logoUrl={a.logoUrl}
-                brandColor={a.brandColor}
-                key={a.name + index}
-              ></CommunityCard>
-            );
-          })}
+        <div className="flex flex-col justify-center">
+          <div className="flex flex-col md:grid md:grid-cols-2 lg:grid-cols-3 gap-3 mt-10">
+            {accounts.map((a, index) => {
+              return (
+                <CommunityCard
+                  url={a.url}
+                  communityName={a.name}
+                  description="Community"
+                  logoUrl={a.logoUrl}
+                  brandColor={a.brandColor}
+                  key={a.name + index}
+                ></CommunityCard>
+              );
+            })}
+          </div>
+          <div className="mt-3 sm:mt-0 sm:ml-3 py-8 w-full flex items-center justify-center">
+            <button>
+              <a
+                href="https://linen.dev/communities"
+                className="flex items-center justify-center border border-transparent text-base font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 md:py-4 md:text-lg md:px-10"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Browse Community
+              </a>
+            </button>
+          </div>
         </div>
 
         <div className="relative isolate bg-white px-6 py-24 sm:py-32 lg:px-8">
