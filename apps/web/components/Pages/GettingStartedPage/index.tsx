@@ -101,9 +101,6 @@ export function GettingStartedPage({
     <Layout
       left={
         <>
-          {/* <h1 className="text-xl font-bold pb-2 pt-8">
-            Welcome {session?.user?.email}
-          </h1> */}
           <div className="text-center">
             <img
               className={styles.logo}
@@ -113,7 +110,15 @@ export function GettingStartedPage({
             />
             <p className="text-gray-700 mb-4">
               Linen gives your community a home,
-              <br />a place where they can work together.
+              <br />a place where meaningful conversations can happen.
+            </p>
+            <p className="text-gray-700 mb-4">
+              You can also treat it as a public archive,
+              <br />
+              which syncs your conversations from other sources.
+            </p>
+            <p className="text-gray-700 mb-4">
+              <strong>Or both.</strong> It's up to you.
             </p>
             <Button
               rounded="full"
@@ -124,10 +129,11 @@ export function GettingStartedPage({
               <FiPlus />
               Add a free community
             </Button>
-            <p className=" text-gray-700 text-sm mb-2">
-              Alternatively,{' '}
+            <p className="text-gray-700 text-sm mb-2">
+              Any questions before you start?
+              <br />
               <Link className="text-sm" href={`/s/${LINEN_COMMUNITY.domain}`}>
-                join our community
+                Join our community
               </Link>
               .
             </p>
