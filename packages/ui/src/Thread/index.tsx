@@ -260,10 +260,9 @@ export default function Thread({
             onResolution={onResolution}
           />
 
-          <div className={styles.footer}>
+          <div className={styles.info}>
             <div className={styles.count}>
               <span className={styles.badge}>
-                {expanded && !currentUser && <PoweredByLinen />}
                 {views > 1 && (
                   <div className={styles.count}>
                     {views} {views === 1 ? 'View' : 'Views'}
@@ -348,6 +347,11 @@ export default function Thread({
                 {...{ useUsersContext }}
               />
             )}
+          </div>
+        )}
+        {expanded && !currentUser && (
+          <div className={styles.footer}>
+            <PoweredByLinen />
           </div>
         )}
       </div>
