@@ -40,7 +40,7 @@
   background: $color-white;
 }
 
-.footer {
+.info {
   clear: both;
   min-height: 20px;
   display: flex;
@@ -49,7 +49,16 @@
   gap: 0.5rem;
 }
 
-.container.expanded .footer {
+.footer {
+  display: flex;
+  justify-content: center;
+}
+
+.footer > a {
+  width: auto;
+}
+
+.container.expanded .info {
   padding-bottom: 1rem;
 }
 
@@ -74,14 +83,14 @@
     max-width: 100%;
   }
 
-  .footer {
+  .info {
     min-width: 100%;
     width: 100%;
   }
 }
 
 @media (min-width: 768px) {
-  .footer {
+  .info {
     min-width: 360px;
   }
 }
