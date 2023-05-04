@@ -1,11 +1,16 @@
-import linenExamplePage from 'public/linen-example-page.png';
-import linenExampleFeed from 'public/linen-example-feed.png';
-import linenExampleSearch from 'public/linen-example-search.svg';
+import linenExamplePage from 'public/linen-example-page-may-3-2023.png';
+import settingsExamplePage from 'public/settings-page-may-4.png';
 import Image from 'next/image';
 import LinenLogo from '@linen/ui/LinenLogo';
 import YCombinatorLogo from '@linen/ui/YCombinatorLogo';
 import { GoCheck } from '@react-icons/all-files/go/GoCheck';
 import { AiFillGithub } from '@react-icons/all-files/ai/AiFillGithub';
+import { GiFeather } from '@react-icons/all-files/gi/GiFeather';
+import { CgInfinity } from '@react-icons/all-files/cg/CgInfinity';
+import { RiPlantLine } from '@react-icons/all-files/ri/RiPlantLine';
+import { AiOutlineSync } from '@react-icons/all-files/ai/AiOutlineSync';
+import { FaMask } from '@react-icons/all-files/fa/FaMask';
+import { BiImport } from '@react-icons/all-files/bi/BiImport';
 import Link from 'next/link';
 import FadeIn from '@linen/ui/FadeIn';
 import Head from 'next/head';
@@ -13,13 +18,19 @@ import Footer from 'components/Footer';
 import type { GetServerSidePropsContext } from 'next';
 import { communitiesWithLogo } from 'services/accounts';
 
+function classNames(...classes: any) {
+  return classes.filter(Boolean).join(' ');
+}
+
 const Home = ({ accounts }: Props) => {
   const tiers = [
     {
-      name: 'Community Edition',
-      href: '/signup',
+      name: 'Community',
+      id: 'tier-community',
+      href: '#',
       priceMonthly: 'Free',
-      description: 'Free for open source and non profit communities',
+      description:
+        "The perfect plan for non profits and hobbyists who don't need a custom domain",
       features: [
         'Google indexable',
         'Unlimited history retention',
@@ -27,39 +38,74 @@ const Home = ({ accounts }: Props) => {
         'Community support',
         'Import Slack and Discord conversations',
       ],
+      featured: false,
     },
     {
-      name: 'Business Edition',
-      href: 'mailto:help@linen.dev',
-      priceMonthly: 'Contact us',
-      description: 'Improve your SEO and generate organic traffic',
+      name: 'Business',
+      id: 'tier-business',
+      href: '#',
+      priceMonthly: '$150',
+      description: 'Up to 5,000 members with increase of $50/month per 5,000',
       features: [
-        'Host Linen under your custom url/subdomain',
-        'Custom community branding',
-        'SEO benefits',
+        'Google Indexable',
+        'Unlimited history retention',
+        'Branded commmunity',
+        'Private channels',
         'Priority Support',
+        'Custom domain',
+        'Sitemap generation',
       ],
+      featured: true,
     },
   ];
   const features = [
     {
-      name: 'Custom branding',
+      name: 'Lightweight - 500KB',
       description:
-        'Get branded colors and logos of your community or company. Your community should feel like yours and not',
-      // icon: GlobeAltIcon,
+        'Linen is 1000x more lightweight than alternatives. This means that we load faster, use less bandwidth and are more responsive',
+      href: '#',
+      icon: GiFeather,
     },
     {
-      name: 'Host Linen on your own domain',
+      name: 'Unlimited history',
       description:
-        'Get organic SEO traffic from Google. Linen generates a set of long tail keywords. Our largest community has seen over 180,0000 Google impressions',
-      // icon: ScaleIcon,
+        'Move beyond 90 days of history retention. Linen has no limits on history retention for free public communities.',
+      href: '#',
+      icon: CgInfinity,
     },
     {
-      name: 'Analytics tracking',
-      description: 'Add your own analytics tracking to your community ',
-      // icon: BoltIcon,
+      name: 'Grow your community',
+      description:
+        'Linen is Google indexable. This means that your community will show up in search results and you can grow your community organically.',
+      href: 'https://www.google.com/search?q=site%3Alinen.dev',
+      icon: RiPlantLine,
     },
   ];
+
+  const existingCommunityFeatures = [
+    {
+      name: 'Two way real-time sync',
+      description:
+        'You can sync all of your existing conversations from Slack and Discord. This means that any messages that gets sent in Linen will show up in Slack or Discord and vice versa in realtime.',
+      href: '#',
+      icon: AiOutlineSync,
+    },
+    {
+      name: 'Anonymize your users',
+      description:
+        'Linen can anonymize your users with a click of a button. We will hide their names and profile pictures from your community',
+      href: '#',
+      icon: FaMask,
+    },
+    {
+      name: 'Import entire history',
+      description:
+        'You can import your entire community history. Linen will save and publically archive your conversations beyond 90 days. We even can access your Slack history beyond 90 days without upgrading Slack',
+      href: 'https://www.google.com/search?q=site%3Alinen.dev',
+      icon: BiImport,
+    },
+  ];
+
   return (
     <div className="mb-10 pb-10">
       <Head>
@@ -110,16 +156,15 @@ const Home = ({ accounts }: Props) => {
       <main className="mt-10 mx-auto max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28">
         <div className="sm:text-center">
           <h1 className="flex flex-col text-3xl tracking-tight font-extrabold text-gray-900 sm:text-4xl md:text-5xl">
-            <div className="block xl:inline">
-              Google-Searchable and community focused{' '}
+            <div className="space-x-2 content-center">
+              <span>Google-searchable</span>
+              <span className="text-blue-600 xl:inline">Slack alternative</span>
             </div>
-            <div className="block text-blue-600 xl:inline">
-              Slack alternative{' '}
-            </div>
+            <div className="block">for Communities</div>
           </h1>
           <p className="mt-3 text-base text-gray-500 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl ">
-            Sync your Slack and Discord conversations to Linen and get SEO
-            benefits while reducing customer support load
+            Linen is a real-time chat platform built for communities. We SEO
+            friendly while providing a modern chat experience.
           </p>
           <div className="mt-5 sm:mt-8 sm:flex sm:justify-center">
             <div className="rounded-md shadow">
@@ -148,39 +193,99 @@ const Home = ({ accounts }: Props) => {
           </div>
           <div className="flex justify-center my-20 shadow-lg">
             <FadeIn delay={200}>
-              <Image className="rounded-md" src={linenExamplePage} alt={'YC'} />
+              <Image
+                className="rounded-md"
+                src={linenExamplePage}
+                alt={'example-community'}
+              />
             </FadeIn>
           </div>
         </div>
 
-        <div className="bg-blue-700 mt-20 rounded-md">
-          <div className="max-w-7xl mx-auto py-12 px-4 sm:py-16 sm:px-6 lg:px-8 lg:py-20">
-            <div className="max-w-3xl mx-auto text-center">
-              <h2 className="text-2xl font-extrabold text-white sm:text-4xl">
-                Trusted by the largest communities
+        <div className="sm:py-12">
+          <div className="mx-auto max-w-7xl px-6 lg:px-8">
+            <div className="mx-auto max-w-2xl lg:text-center">
+              <h2 className="text-base font-semibold leading-7 text-blue-600">
+                Open community
               </h2>
-              <p className="mt-3 text-xl text-blue-200 sm:mt-4">
-                Retain your community knowledge and improve your SEO
+              <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+                Benefits of a forum and a real-time chat
+              </p>
+              <p className="mt-6 text-lg leading-8 text-gray-600">
+                Information gets lost in real-time chat. Linen solves this by
+                letting Google find your content. Our advanced threading model
+                let you drag and drop messages and threads to reorganize your
+                content.{' '}
               </p>
             </div>
-            <dl className="mt-10 text-center sm:max-w-3xl sm:mx-auto sm:grid sm:grid-cols-2 sm:gap-8">
-              <div className="flex flex-col mt-10 sm:mt-0">
-                <dt className="order-2 mt-2 text-lg leading-6 font-medium text-blue-200">
-                  Pages indexed by Google
-                </dt>
-                <dd className="order-1 text-4xl md:text-5xl font-extrabold text-white">
-                  50,000+
-                </dd>
+            <div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-none">
+              <dl className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-16 lg:max-w-none lg:grid-cols-3">
+                {features.map((feature) => (
+                  <div key={feature.name} className="flex flex-col">
+                    <dt className="flex items-center gap-x-3 text-base font-semibold leading-7 text-gray-900">
+                      <feature.icon
+                        className="h-5 w-5 flex-none text-blue-600"
+                        aria-hidden="true"
+                      />
+                      {feature.name}
+                    </dt>
+                    <dd className="mt-4 flex flex-auto flex-col text-base leading-7 text-gray-600">
+                      <p className="flex-auto">{feature.description}</p>
+                      {/* <p className="mt-6">
+                        <a
+                          href={feature.href}
+                          className="text-sm font-semibold leading-6 text-blue-600"
+                        >
+                          Learn more <span aria-hidden="true">→</span>
+                        </a>
+                      </p> */}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+          </div>
+        </div>
+
+        <div className="overflow-hidden bg-white py-24 sm:py-32">
+          <div className="mx-auto max-w-7xl px-6 lg:px-8">
+            <div className="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 sm:gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-2">
+              <div className="lg:pr-8 lg:pt-4">
+                <div className="lg:max-w-lg">
+                  <h2 className="text-base font-semibold leading-7 text-blue-600">
+                    Existing communities
+                  </h2>
+                  <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+                    Already have a community?
+                  </p>
+                  <p className="mt-6 text-lg leading-8 text-gray-600">
+                    Linen suports two way sync between Slack and Discord so you
+                    can gradually transition your community to Linen.
+                  </p>
+                  <dl className="mt-10 max-w-xl space-y-8 text-base leading-7 text-gray-600 lg:max-w-none">
+                    {existingCommunityFeatures.map((feature) => (
+                      <div key={feature.name} className="relative pl-9">
+                        <dt className="inline font-semibold text-gray-900">
+                          <feature.icon
+                            className="absolute left-1 top-1 h-5 w-5 text-blue-600"
+                            aria-hidden="true"
+                          />
+                          {feature.name}
+                        </dt>{' '}
+                        <dd className="inline">{feature.description}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                </div>
               </div>
-              <div className="flex flex-col mt-10 sm:mt-0">
-                <dt className="order-2 mt-2 text-lg leading-6 font-medium text-blue-200">
-                  Number of search impresssions
-                </dt>
-                <dd className="order-1 text-4xl md:text-5xl font-extrabold text-white">
-                  200,000+
-                </dd>
-              </div>
-            </dl>
+              <Image
+                width={2432}
+                height={1442}
+                className="w-[48rem] max-w-none rounded-xl shadow-xl ring-1 ring-gray-400/10 sm:w-[57rem] md:-ml-4 lg:-ml-0"
+                src={settingsExamplePage}
+                alt={'example-settings-page'}
+              />
+            </div>
           </div>
         </div>
 
@@ -205,242 +310,118 @@ const Home = ({ accounts }: Props) => {
           })}
         </div>
 
-        <div className="relative overflow-hidden pt-16 pb-32">
+        <div className="relative isolate bg-white px-6 py-24 sm:py-32 lg:px-8">
           <div
+            className="absolute inset-x-0 -top-3 -z-10 transform-gpu overflow-hidden px-36 blur-3xl"
             aria-hidden="true"
-            className="absolute inset-x-0 top-0 h-48 bg-gradient-to-b from-gray-100"
-          />
-          <div className="relative">
-            <div className="lg:mx-auto lg:grid lg:max-w-7xl lg:grid-flow-col-dense lg:grid-cols-2 lg:gap-24 lg:px-8">
-              <div className="mx-auto max-w-xl px-4 sm:px-6 lg:mx-0 lg:max-w-none lg:py-16 lg:px-0">
-                <div>
-                  {/* <div>
-                    <span className="flex h-12 w-12 items-center justify-center rounded-md bg-gradient-to-r from-blue-600 to-indigo-600"></span>
-                  </div> */}
-                  <div className="mt-6">
-                    <h2 className="text-3xl font-bold tracking-tight text-gray-900">
-                      Built for community support
-                    </h2>
-                    <p className="mt-4 text-lg text-gray-500">
-                      It is easy to miss conversations in traditional chat apps.
-                      In Linen you can manage all of your conversations from
-                      multiple channels in a single Inbox view. With open/close
-                      states you can view all the conversations that need your
-                      attention in a single page
-                    </p>
-                    <div className="mt-6">
-                      <Link legacyBehavior href="/signup">
-                        <a className="inline-flex rounded-md border border-transparent bg-gradient-to-r from-blue-600 to-indigo-600 bg-origin-border px-4 py-2 text-base font-medium text-white shadow-sm hover:from-blue-700 hover:to-indigo-700">
-                          Get started
-                        </a>
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="mt-12 sm:mt-16 lg:mt-0">
-                <div className="-mr-48 pl-4 sm:pl-6 md:-mr-16 lg:relative lg:m-0 lg:h-full lg:px-0">
-                  <Image
-                    className="w-full rounded-xl shadow-xl ring-1 ring-black ring-opacity-5 lg:absolute lg:left-0 lg:h-full lg:w-auto lg:max-w-none"
-                    src={linenExampleFeed}
-                    alt="Inbox user interface"
-                  />
-                </div>
-              </div>
-            </div>
+          >
+            <div
+              className="mx-auto aspect-[1155/678] w-[72.1875rem] bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30"
+              style={{
+                clipPath:
+                  'polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)',
+              }}
+            />
           </div>
-
-          <div className="mt-24">
-            <div className="lg:mx-auto lg:grid lg:max-w-7xl lg:grid-flow-col-dense lg:grid-cols-2 lg:gap-24 lg:px-8">
-              <div className="mx-auto max-w-xl px-4 sm:px-6 lg:col-start-2 lg:mx-0 lg:max-w-none lg:py-32 lg:px-0">
-                <div>
-                  {/* <div>
-                    <span className="flex h-12 w-12 items-center justify-center rounded-md bg-gradient-to-r from-blue-600 to-indigo-600"></span>
-                  </div> */}
-                  <div className="mt-6">
-                    <h2 className="text-3xl font-bold tracking-tight text-gray-900">
-                      Let Google answers questions and not your team
-                    </h2>
-                    <p className="mt-4 text-lg text-gray-500">
-                      Linen is designed to be search-engine friendly. Most if
-                      not all chat tools are not search-engine friendly or
-                      accessible. Linen is search-engine friendly because we
-                      render a static version of our app to search engines like
-                      Google{' '}
-                    </p>
-                    <div className="mt-6">
-                      <Link legacyBehavior href="/signup">
-                        <a className="inline-flex rounded-md border border-transparent bg-gradient-to-r from-blue-600 to-indigo-600 bg-origin-border px-4 py-2 text-base font-medium text-white shadow-sm hover:from-blue-700 hover:to-indigo-700">
-                          Get started
-                        </a>
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="mt-12 sm:mt-16 lg:col-start-1 lg:mt-0">
-                <div className="-ml-48 pr-4 sm:pr-6 md:-ml-16 lg:relative lg:m-0 lg:h-full lg:px-0">
-                  <Image
-                    className="w-full rounded-xl shadow-xl ring-1 ring-black ring-opacity-5 lg:absolute lg:right-0 lg:h-full lg:w-auto lg:max-w-none"
-                    src={linenExampleSearch}
-                    alt="Customer profile user interface"
-                  />
-                </div>
-              </div>
-            </div>
+          <div className="mx-auto max-w-2xl text-center lg:max-w-4xl">
+            <h2 className="text-base font-semibold leading-7 text-blue-600">
+              Pricing
+            </h2>
+            <p className="mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
+              Upgrade for branded community
+            </p>
           </div>
-        </div>
-        <div className="flex flex-col items-center mt-10">
-          <h1 className="text-2xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-4xl">
-            Premium features
-          </h1>
-        </div>
-
-        <div className="bg-white py-12">
-          <div className="mx-auto max-w-xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
-            <dl className="space-y-10 lg:grid lg:grid-cols-3 lg:gap-8 lg:space-y-0">
-              {features.map((feature) => (
-                <div key={feature.name}>
-                  <dt>
-                    <div className="flex h-12 w-12 items-center justify-center rounded-md bg-indigo-500 text-white">
-                      <GoCheck className="h-6 w-6" aria-hidden="true" />
-                      {/* <feature.icon className="h-6 w-6" aria-hidden="true" /> */}
-                    </div>
-                    <p className="mt-5 text-lg font-medium leading-6 text-gray-900">
-                      {feature.name}
-                    </p>
-                  </dt>
-                  <dd className="mt-2 text-base text-gray-500">
-                    {feature.description}
-                  </dd>
-                </div>
-              ))}
-            </dl>
-          </div>
-        </div>
-
-        <div className="bg-gray-900">
-          <div className="pt-12 sm:pt-16 lg:pt-24">
-            <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
-              <div className="mx-auto max-w-3xl space-y-2 lg:max-w-none">
-                <h2 className="text-xl font-semibold leading-6 text-gray-300">
-                  Pricing
-                </h2>
-                <p className="text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-5xl">
-                  Free and unlimited messages for communities
+          <p className="mx-auto mt-6 max-w-2xl text-center text-lg leading-8 text-gray-600">
+            Hosting your own branded community on your website can boost your
+            online presence through SEO and ease the load on your support team
+            by encouraging members to find answers on Google.{' '}
+          </p>
+          <div className="mx-auto mt-16 grid max-w-lg grid-cols-1 items-center gap-y-6 sm:mt-20 sm:gap-y-0 lg:max-w-4xl lg:grid-cols-2">
+            {tiers.map((tier, tierIdx) => (
+              <div
+                key={tier.id}
+                className={classNames(
+                  tier.featured
+                    ? 'relative bg-gray-900 shadow-2xl'
+                    : 'bg-white/60 sm:mx-8 lg:mx-0',
+                  tier.featured
+                    ? ''
+                    : tierIdx === 0
+                    ? 'rounded-t-3xl sm:rounded-b-none lg:rounded-tr-none lg:rounded-bl-3xl'
+                    : 'sm:rounded-t-none lg:rounded-tr-3xl lg:rounded-bl-none',
+                  'rounded-3xl p-8 ring-1 ring-gray-900/10 sm:p-10'
+                )}
+              >
+                <h3
+                  id={tier.id}
+                  className={classNames(
+                    tier.featured ? 'text-blue-400' : 'text-blue-600',
+                    'text-base font-semibold leading-7'
+                  )}
+                >
+                  {tier.name}
+                </h3>
+                <p className="mt-4 flex items-baseline gap-x-2">
+                  <span
+                    className={classNames(
+                      tier.featured ? 'text-white' : 'text-gray-900',
+                      'text-5xl font-bold tracking-tight'
+                    )}
+                  >
+                    {tier.priceMonthly}
+                  </span>
+                  <span
+                    className={classNames(
+                      tier.featured ? 'text-gray-400' : 'text-gray-500',
+                      'text-base'
+                    )}
+                  >
+                    /month
+                  </span>
                 </p>
-                <p className="text-xl text-gray-300">
-                  Don&apos;t lose your data after 90 days.
+                <p
+                  className={classNames(
+                    tier.featured ? 'text-gray-300' : 'text-gray-600',
+                    'mt-6 text-base leading-7'
+                  )}
+                >
+                  {tier.description}
                 </p>
-              </div>
-            </div>
-          </div>
-          <div className="mt-8 bg-gray-50 pb-12 sm:mt-12 sm:pb-16 lg:mt-16 lg:pb-24">
-            <div className="relative">
-              <div className="absolute inset-0 h-3/4 bg-gray-900" />
-              <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <div className="mx-auto max-w-md space-y-4 lg:grid lg:max-w-5xl lg:grid-cols-2 lg:gap-5 lg:space-y-0">
-                  {tiers.map((tier) => (
-                    <div
-                      key={tier.name}
-                      className="flex flex-col overflow-hidden rounded-lg shadow-lg"
-                    >
-                      <div className="bg-white px-6 py-8 sm:p-10 sm:pb-6">
-                        <div>
-                          <h3
-                            className="inline-flex rounded-full bg-indigo-100 px-4 py-1 text-base font-semibold text-indigo-600"
-                            id={`tier-${tier.name}`}
-                          >
-                            {tier.name}
-                          </h3>
-                        </div>
-                        <div className="mt-4 flex items-baseline text-6xl font-bold tracking-tight">
-                          {tier.priceMonthly}
-                        </div>
-                        <p className="mt-5 text-lg text-gray-500">
-                          {tier.description}
-                        </p>
-                      </div>
-                      <div className="flex flex-1 flex-col justify-between space-y-6 bg-gray-50 px-6 pt-6 pb-8 sm:p-10 sm:pt-6">
-                        <ul role="list" className="space-y-4">
-                          {tier.features.map((feature) => (
-                            <li key={feature} className="flex items-start">
-                              <div className="flex-shrink-0">
-                                <GoCheck className="text-green-500" />
-                              </div>
-                              <p className="ml-3 text-base text-gray-700">
-                                {feature}
-                              </p>
-                            </li>
-                          ))}
-                        </ul>
-                        <div className="rounded-md shadow">
-                          <a
-                            href={tier.href}
-                            className="flex items-center justify-center rounded-md border border-transparent bg-gray-800 px-5 py-3 text-base font-medium text-white hover:bg-gray-900"
-                            aria-describedby="tier-standard"
-                          >
-                            Get started
-                          </a>
-                        </div>
-                      </div>
-                    </div>
+                <ul
+                  role="list"
+                  className={classNames(
+                    tier.featured ? 'text-gray-300' : 'text-gray-600',
+                    'mt-8 space-y-3 text-sm leading-6 sm:mt-10'
+                  )}
+                >
+                  {tier.features.map((feature) => (
+                    <li key={feature} className="flex gap-x-3">
+                      <GoCheck
+                        className={classNames(
+                          tier.featured ? 'text-blue-400' : 'text-blue-600',
+                          'h-6 w-5 flex-none'
+                        )}
+                        aria-hidden="true"
+                      />
+                      {feature}
+                    </li>
                   ))}
-                </div>
+                </ul>
+                <a
+                  href={'/signup'}
+                  aria-describedby={tier.id}
+                  className={classNames(
+                    tier.featured
+                      ? 'bg-blue-500 text-white shadow-sm hover:bg-blue-400 focus-visible:outline-blue-500'
+                      : 'text-blue-600 ring-1 ring-inset ring-blue-200 hover:ring-blue-300 focus-visible:outline-blue-600',
+                    'mt-8 block rounded-md py-2.5 px-3.5 text-center text-sm font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 sm:mt-10'
+                  )}
+                >
+                  Get started today
+                </a>
               </div>
-            </div>
+            ))}
           </div>
-        </div>
-
-        <div className="grid grid-col-1 gap-3 mx-auto text-gray-700 prose prose-lg max-w-4xl mt-10">
-          <LandingH2>
-            Same familiar chat experience with benefits of a forum
-          </LandingH2>
-          <p>
-            Linen is a real time chat app that is designed to have all the
-            benefits of a forum while having the user experience of a chat app.
-            Your community doesn&apos;t have to learn a new user experience
-          </p>
-          <LandingH2>Linen communities are Google searchable</LandingH2>
-          <p>
-            Linen is a realtime chat app that also is Google searchable. syncs
-            all your threads in your public channels and threads to
-            linen.dev/s/community_name. This makes your content available for
-            your community members without requiring a login.
-          </p>
-          <LandingH2>Import your community conversations</LandingH2>
-          <p>
-            You can import your community Linen is free to set up and install.
-            Once you go through the 10 minute setup process and wait for the
-            syncing you will be able to make your community&apos;s threads free
-            of charge.
-          </p>
-          <LandingH2>
-            Generate organic content for your website and domain
-          </LandingH2>
-          <p>
-            The paid edition puts Linen behind your subdomain where you can
-            generate organic SEO friendly content that is relevant for your
-            domain. You will get a 301 redirect from our subdomain to yours to
-            give all the SEO benefits. You also will be able to customize your
-            Linen page with your custom logo and branding.
-          </p>
-          <LandingH2>Scale your community and reduce support burden</LandingH2>
-          <p>
-            Slack/Discord communities are great for chatting and engaging but
-            over time they become overwelming. As a community grows so does the
-            number of repeat questions. As previously a former open source
-            maintainer I wanted to minimize the number of repeat questions and
-            encourage the community to search.
-          </p>
-          <LandingH2>A better experience for your community</LandingH2>
-          <p>
-            Linen is a great way to make your community content more
-            discoverable. No longer do you need to login to your Slack/Discord
-            workspace to view your community&apos;s content. You can link
-            specific conversations in github issues without requiring a sign in
-            to get the context of the issue.
-          </p>
         </div>
       </main>
       <Footer />
