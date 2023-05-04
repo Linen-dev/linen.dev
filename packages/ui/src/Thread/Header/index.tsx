@@ -42,20 +42,20 @@ export default function Header({
       <div className={styles.container}>
         <div className={styles.center}>
           <div className={styles.header}>
-            <div className={styles.mobile}>
-              {onClose && (
+            {onClose && (
+              <div className={styles.mobile}>
                 <Icon onClick={onClose}>
                   <FiChevronLeft />
                 </Icon>
-              )}
-            </div>
-            <div className={styles.desktop}>
-              {onExpandClick && (
+              </div>
+            )}
+            {onExpandClick && (
+              <div className={styles.desktop}>
                 <Icon className={styles.expand} onClick={onExpandClick}>
                   {expanded ? <FiChevronRight /> : <FiChevronLeft />}
                 </Icon>
-              )}
-            </div>
+              </div>
+            )}
             <div>
               <Title
                 title={title}
