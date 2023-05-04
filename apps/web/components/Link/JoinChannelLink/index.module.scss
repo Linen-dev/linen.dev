@@ -1,17 +1,17 @@
 @import '@linen/styles/colors.scss';
 
-.join {
+.link {
   align-items: center;
   color: $color-indigo-700;
   cursor: pointer;
   display: flex;
-  font-size: 12px;
+  font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 1.3px;
   font-weight: 500;
 }
 
-.join:hover {
+.link:hover {
   text-decoration: underline;
 }
 

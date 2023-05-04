@@ -16,13 +16,13 @@ export default function JoinChannelLink({
 }: Props) {
   return (
     <a
-      className={classNames(styles.join, className)}
+      className={classNames(styles.link, className)}
       href={href}
       target="_blank"
       rel="noreferrer"
     >
       <FiExternalLink className={styles.icon} size={18} />
-      {`Join thread in ${communityType === 'discord' ? 'Discord' : 'Slack'}`}
+      {`Join ${communityType === 'discord' ? 'Discord' : 'Slack'}`}
     </a>
   );
 }

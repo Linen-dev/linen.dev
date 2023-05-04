@@ -270,6 +270,8 @@ export default function Thread({
                 )}
               </span>
             </div>
+          </div>
+          <div className={styles.info}>
             {threadUrl && (
               <>
                 {ChannelButton({ thread, isSubDomainRouting, settings })}
@@ -405,10 +407,8 @@ function ChannelButton({
   return (
     <>
       {channelLink && (
-        <a href={CustomLinkHelper(channelLink)} className={styles.badge}>
-          <span className={styles.count}>
-            Back to #{thread.channel?.channelName}
-          </span>
+        <a href={CustomLinkHelper(channelLink)} className={styles.link}>
+          #{thread.channel?.channelName}
         </a>
       )}
     </>
