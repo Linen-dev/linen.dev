@@ -118,7 +118,7 @@ export function GettingStartedPage({
               which syncs your conversations from other sources.
             </p>
             <p className="text-gray-700 mb-4">
-              <strong>Or both.</strong> It's up to you.
+              <strong>Or both.</strong> It&apos;s up to you.
             </p>
             <Button
               rounded="full"
