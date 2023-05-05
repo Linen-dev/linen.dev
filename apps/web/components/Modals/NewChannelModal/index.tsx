@@ -109,7 +109,7 @@ export default function NewChannelModal({ permissions, show, close }: Props) {
             }}
           />
           <span className="text-xs text-gray-500">
-            Be sure to choose an url friendly name.
+            Be sure to choose a url friendly name.
           </span>
           <div className={classNames(styles.toggle, 'py-4')}>
             <label className={classNames(styles.label, styles.enabled)}>
