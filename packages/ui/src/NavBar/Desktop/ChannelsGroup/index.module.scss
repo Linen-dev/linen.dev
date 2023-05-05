@@ -23,3 +23,27 @@
 .cursorPointer {
   cursor: pointer;
 }
+
+.justify {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+.channel {
+  align-items: center;
+  display: flex;
+  gap: 0.25rem;
+}
+
+.archive {
+  font-size: 12px;
+  transition: opacity 0.1s ease-in;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.item:hover .archive {
+  opacity: 1;
+  pointer-events: all;
+}

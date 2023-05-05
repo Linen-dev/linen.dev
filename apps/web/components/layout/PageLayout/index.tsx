@@ -134,6 +134,7 @@ function PageLayout({
       <div className="flex flex-col lg:flex-row">
         <NavBar
           mode={mode}
+          currentCommunity={currentCommunity}
           channels={channels}
           communities={communities}
           channelName={currentChannel?.channelName || ''}

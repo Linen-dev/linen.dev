@@ -9,6 +9,7 @@ import { FiPlus } from '@react-icons/all-files/fi/FiPlus';
 import styles from './index.module.scss';
 import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
 import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp';
+import { FiX } from '@react-icons/all-files/fi/FiX';
 
 interface Props {
   channelName: string;
@@ -18,6 +19,7 @@ interface Props {
   mode: Mode;
   permissions: Permissions;
   onChannelClick(channelId: string): void;
+  onArchiveClick(channelId: string): void;
   onDrop?({
     source,
     target,
@@ -41,6 +43,7 @@ export default function ChannelsGroup({
   mode,
   permissions,
   onChannelClick,
+  onArchiveClick,
   onDrop,
   Link,
   NewChannelModal,
@@ -130,8 +133,26 @@ export default function ChannelsGroup({
                 key={`${channel.channelName}-${index}`}
                 href={`/c/${channel.channelName}`}
               >
-                <Nav.Item active={active} highlighted={highlighted}>
-                  <Icon /> {channel.channelName}
+                <Nav.Item
+                  className={styles.justify}
+                  active={active}
+                  highlighted={highlighted}
+                >
+                  <div className={styles.channel}>
+                    <Icon /> {channel.channelName}
+                  </div>
+                  {permissions.manage && (
+                    <div
+                      className={styles.archive}
+                      onClick={(event) => {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        onArchiveClick(channel.id);
+                      }}
+                    >
+                      <FiX />
+                    </div>
+                  )}
                 </Nav.Item>
               </Link>
             );

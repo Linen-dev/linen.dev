@@ -33,6 +33,7 @@ import AnalyticsGroup from './AnalyticsGroup';
 
 interface Props {
   mode: Mode;
+  currentCommunity: SerializedAccount;
   channels: SerializedChannel[];
   dms: SerializedChannel[];
   channelName: string;
@@ -65,6 +66,7 @@ interface Props {
 
 export default function DesktopNavBar({
   mode,
+  currentCommunity,
   channelName,
   channels,
   communities,
@@ -240,6 +242,9 @@ export default function DesktopNavBar({
                 setHighlights((highlights) => {
                   return highlights.filter((id) => id !== channelId);
                 });
+              }}
+              onArchiveClick={(channelId) => {
+                archiveChannel({ channelId, accountId: currentCommunity.id });
               }}
               onDrop={onDrop}
               Link={Link}

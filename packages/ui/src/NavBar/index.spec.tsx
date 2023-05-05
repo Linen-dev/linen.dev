@@ -6,12 +6,14 @@ import { Mode } from '@linen/hooks/mode';
 
 describe('NavBar', () => {
   it.skip('renders channels', () => {
+    const community = build('account');
     const channel1 = build('channel');
     const channel2 = build('channel');
     const channels = [channel1, channel2];
     const { container } = render(
       <NavBar
         channelName={channel1.channelName}
+        currentCommunity={community}
         channels={channels}
         communities={[]}
         permissions={build('permissions')}
