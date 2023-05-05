@@ -243,8 +243,8 @@ export default function DesktopNavBar({
                   return highlights.filter((id) => id !== channelId);
                 });
               }}
-              onArchiveClick={(channelId) => {
-                archiveChannel({ channelId, accountId: currentCommunity.id });
+              onSettingsClick={(channelId) => {
+                Toast.error('settings are unimplemented');
               }}
               onDrop={onDrop}
               Link={Link}
