@@ -11,6 +11,7 @@ import styles from './index.module.scss';
 
 interface Props {
   mode: Mode;
+  currentCommunity: SerializedAccount;
   channels: SerializedChannel[];
   dms: SerializedChannel[];
   channelName: string;
@@ -43,6 +44,7 @@ interface Props {
 
 export default function NavBar({
   mode,
+  currentCommunity,
   channelName,
   channels,
   communities,
@@ -69,6 +71,7 @@ export default function NavBar({
       <div className={styles.desktop}>
         <DesktopNavBar
           mode={mode}
+          currentCommunity={currentCommunity}
           channels={sortedChannels}
           channelName={channelName}
           communities={communities}
