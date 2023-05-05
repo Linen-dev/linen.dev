@@ -1,0 +1,40 @@
+@import '@linen/styles/colors.scss';
+
+.layout {
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 1024px) {
+  .layout {
+    display: flex;
+    flex-direction: row;
+  }
+}
+
+.container {
+  scrollbar-gutter: stable;
+  justify-content: center;
+  overflow: auto;
+  height: calc(100vh - 54px);
+  width: 100%;
+}
+
+@media (min-width: 1024px) {
+  .container {
+    display: flex;
+  }
+}
+
+.container::-webkit-scrollbar {
+  width: 0.5rem;
+}
+
+.container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.container::-webkit-scrollbar-thumb {
+  background: $color-gray-300;
+  border-radius: 0.25rem;
+}

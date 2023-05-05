@@ -1,0 +1,53 @@
+{
+  "build": {
+    "beforeDevCommand": "BROWSER=none yarn dev",
+    "beforeBuildCommand": "yarn build",
+    "devPath": "http://localhost:3000",
+    "distDir": "../build",
+    "withGlobalTauri": false
+  },
+  "package": {
+    "productName": "linen-app",
+    "version": "0.0.2"
+  },
+  "tauri": {
+    "allowlist": {
+      "all": false,
+      "shell": {
+        "all": false,
+        "open": true
+      }
+    },
+    "bundle": {
+      "active": true,
+      "icon": [
+        "icons/32x32.png",
+        "icons/128x128.png",
+        "icons/128x128@2x.png",
+        "icons/icon.icns",
+        "icons/icon.ico"
+      ],
+      "identifier": "dev.linen.desktop",
+      "targets": "all"
+    },
+    "security": {
+      "csp": null
+    },
+    "updater": {
+      "active": true,
+      "endpoints": ["https://linen-san.ngrok.io/desktop/releases.json"],
+      "dialog": true,
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDMxQzM5MTcwODhCQTk4NkMKUldSc21McUljSkhETWVTc3doWTVtWmNQdmFHN01QdWpJMnN0UnBkZm5yYi92STZ1VHBGYWFiU0UK"
+    },
+    "windows": [
+      {
+        "fullscreen": false,
+        "resizable": true,
+        "title": "linen.dev",
+        "width": 800,
+        "height": 600,
+        "maximized": true
+      }
+    ]
+  }
+}
