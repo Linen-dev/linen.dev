@@ -5,6 +5,8 @@
 yarn install
 # start the database
 cd dev && docker-compose up -d
+# Migrate database
+yarn run db:migrate
 # run apps
 yarn dev
 ```
