@@ -11,6 +11,14 @@ export const createChannelSchema = z.object({
 });
 export type createChannelType = z.infer<typeof createChannelSchema>;
 
+export const updateChannelSchema = z.object({
+  channelName: z.string().regex(patterns.channelName),
+  channelId: z.string().uuid(),
+  accountId: z.string().uuid(),
+  channelPrivate: z.boolean().optional(),
+});
+export type updateChannelType = z.infer<typeof updateChannelSchema>;
+
 export const bulkHideChannelsSchema = z.object({
   channels: z.array(z.object({ id: z.string().uuid(), hidden: z.boolean() })),
   accountId: z.string().uuid(),

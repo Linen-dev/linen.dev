@@ -327,6 +327,7 @@ export default function DesktopNavBar({
           open={modal === ModalView.EDIT_CHANNEL}
           close={() => setModal(ModalView.NONE)}
           channel={editedChannel}
+          currentCommunity={currentCommunity}
         />
       )}
     </div>
