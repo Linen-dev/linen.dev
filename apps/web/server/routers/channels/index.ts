@@ -10,7 +10,7 @@ import {
 } from 'server/exceptions';
 import { v4 } from 'uuid';
 import ChannelsService from 'services/channels';
-import { prisma } from '@linen/database';
+import { prisma, ChannelType } from '@linen/database';
 import {
   AuthedRequestWithTenantAndBody,
   NextFunction,
@@ -21,6 +21,7 @@ import {
   bulkHideChannelsType,
   createChannelSchema,
   createChannelType,
+  updateChannelSchema,
   createDmSchema,
   createDmType,
   getChannelIntegrationsSchema,
@@ -28,6 +29,7 @@ import {
   postChannelIntegrationsType,
   setDefaultChannelSchema,
   setDefaultChannelType,
+  updateChannelType,
   postChannelIntegrationsSchema,
   getChannelMembersSchema,
   getChannelMembersType,
@@ -230,6 +232,28 @@ channelsRouter.post(
       newDefaultChannelId: channelId,
       oldDefaultChannelId: originalChannelId,
       accountId: req.tenant?.id!,
+    });
+    return res.status(200).json({});
+  }
+);
+
+channelsRouter.put(
+  `${prefix}/:channelId`,
+  tenantMiddleware([Roles.ADMIN]),
+  validationMiddleware(updateChannelSchema),
+  async (
+    req: AuthedRequestWithTenantAndBody<updateChannelType>,
+    res: Response,
+    next: NextFunction
+  ) => {
+    await prisma.channels.update({
+      where: { id: req.body.channelId },
+      data: {
+        channelName: req.body.channelName,
+        type: req.body.channelPrivate
+          ? ChannelType.PRIVATE
+          : ChannelType.PUBLIC,
+      },
     });
     return res.status(200).json({});
   }
