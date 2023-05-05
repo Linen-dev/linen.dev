@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { ReminderTypes } from '@linen/types';
 import { soon, tomorrow, nextWeek } from '@linen/utilities/date';
 import { createRemindMeJob, createMarkAllAsReadJob } from 'queue/jobs';
+import { cors, preflight } from 'utilities/cors';
 
 const createSchema = z.object({
   threadIds: z.array(z.string()),
@@ -112,6 +113,11 @@ export default async function handler(
   request: NextApiRequest,
   response: NextApiResponse
 ) {
+  if (request.method === 'OPTIONS') {
+    return preflight(request, response, ['POST']);
+  }
+  cors(request, response);
+
   if (request.method === 'POST') {
     const permissions = await PermissionsService.get({
       request,

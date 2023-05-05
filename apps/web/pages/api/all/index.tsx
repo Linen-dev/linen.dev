@@ -5,6 +5,7 @@ import { prisma } from '@linen/database';
 import { serializeThread } from '@linen/serializers/thread';
 import ChannelsService from 'services/channels';
 import { anonymizeMessages } from 'utilities/anonymizeMessages';
+import { cors, preflight } from 'utilities/cors';
 
 function getPage(page?: number) {
   if (!page || page < 1) {
@@ -118,8 +119,12 @@ export default async function handler(
   request: NextApiRequest,
   response: NextApiResponse
 ) {
+  if (request.method === 'OPTIONS') {
+    return preflight(request, response, ['GET']);
+  }
+  cors(request, response);
   if (request.method === 'GET') {
     return handlers.index(request, response);
   }
-  return response.status(404).json({});
+  return response.status(405).json({});
 }

@@ -13,8 +13,14 @@ import PermissionsService from 'services/permissions';
 import unique from 'lodash.uniq';
 import { serializeUser } from '@linen/serializers/user';
 import { SerializedUser } from '@linen/types';
+import { cors, preflight } from 'utilities/cors';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method === 'OPTIONS') {
+    return preflight(req, res, ['GET']);
+  }
+  cors(req, res);
+
   const query = req.query.query as string;
   const accountId = req.query.account_id as string;
   const limit = req.query.limit as string;

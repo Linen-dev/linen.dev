@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import { prisma } from '@linen/database';
 import { generateHash } from '@linen/utilities/password';
+import { cors, preflight } from 'utilities/cors';
 
 async function create(request: NextApiRequest, response: NextApiResponse) {
   const { password, token }: { password?: string; token?: string } = JSON.parse(
@@ -33,10 +34,15 @@ async function create(request: NextApiRequest, response: NextApiResponse) {
 }
 
 async function handler(request: NextApiRequest, response: NextApiResponse) {
+  if (request.method === 'OPTIONS') {
+    return preflight(request, response, ['POST']);
+  }
+  cors(request, response);
+
   if (request.method === 'POST') {
     return create(request, response);
   }
-  return response.status(404).json({});
+  return response.status(405).json({});
 }
 
 export default handler;

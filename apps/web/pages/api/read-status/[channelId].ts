@@ -4,6 +4,7 @@ import Session from 'services/session';
 import to from '@linen/utilities/await-to-js';
 import { z } from 'zod';
 import { serializeReadStatus } from '@linen/serializers/read-status';
+import { cors, preflight } from 'utilities/cors';
 
 async function put(request: NextApiRequest, response: NextApiResponse) {
   const user = await Session.auth(request, response);
@@ -112,6 +113,10 @@ export default async function handler(
   request: NextApiRequest,
   response: NextApiResponse
 ) {
+  if (request.method === 'OPTIONS') {
+    return preflight(request, response, ['GET', 'PUT']);
+  }
+  cors(request, response);
   if (request.method === 'PUT') {
     return await put(request, response);
   }

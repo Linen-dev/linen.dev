@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import Stripe from 'stripe';
 import PermissionsService from 'services/permissions';
+import { cors, preflight } from 'utilities/cors';
 
 const stripe = new Stripe(process.env.STRIPE_API_KEY!, {
   apiVersion: '2022-11-15',
@@ -108,6 +109,11 @@ export default async function handler(
   request: NextApiRequest,
   response: NextApiResponse
 ) {
+  if (request.method === 'OPTIONS') {
+    return preflight(request, response, ['POST', 'GET']);
+  }
+  cors(request, response);
+
   if (request.method === 'POST') {
     const { communityId, priceId, successUrl, cancelUrl } = request.body;
     if (!communityId || !priceId || !successUrl || !cancelUrl) {
@@ -134,7 +140,10 @@ export default async function handler(
     }
     return response.status(500).json({});
   }
-  const period = request.query.period as string;
-  const { status, data } = await index({ period });
-  return response.status(status).json(data);
+  if (request.method === 'GET') {
+    const period = request.query.period as string;
+    const { status, data } = await index({ period });
+    return response.status(status).json(data);
+  }
+  return response.status(405).end();
 }

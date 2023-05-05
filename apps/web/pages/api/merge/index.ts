@@ -3,6 +3,7 @@ import { prisma } from '@linen/database';
 import Permissions from 'services/permissions';
 import CommunityService from 'services/community';
 import { Permissions as PermissionsType } from '@linen/types';
+import { cors, preflight } from 'utilities/cors';
 
 export async function create({
   from,
@@ -109,6 +110,10 @@ export default async function handler(
   request: NextApiRequest,
   response: NextApiResponse
 ) {
+  if (request.method === 'OPTIONS') {
+    return preflight(request, response, ['POST']);
+  }
+  cors(request, response);
   const { communityId } = request.body;
   const permissions = await Permissions.get({
     request,
@@ -126,5 +131,5 @@ export default async function handler(
     });
     return response.status(status).json(data || {});
   }
-  return response.status(200).json({});
+  return response.status(405).json({});
 }

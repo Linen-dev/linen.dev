@@ -4,6 +4,7 @@ import to from '@linen/utilities/await-to-js';
 import { z } from 'zod';
 import { prisma } from '@linen/database';
 import { serializeReadStatus } from '@linen/serializers/read-status';
+import { preflight, cors } from 'utilities/cors';
 
 async function post(request: NextApiRequest, response: NextApiResponse) {
   const user = await Session.auth(request, response);
@@ -68,6 +69,10 @@ export default async function handler(
   request: NextApiRequest,
   response: NextApiResponse
 ) {
+  if (request.method === 'OPTIONS') {
+    return preflight(request, response, ['POST']);
+  }
+  cors(request, response);
   if (request.method === 'POST') {
     return await post(request, response);
   }

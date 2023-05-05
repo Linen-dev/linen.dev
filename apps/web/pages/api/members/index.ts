@@ -4,6 +4,7 @@ import { findUsersAndInvitesByAccount } from 'services/invites';
 import CommunityService from 'services/community';
 import Permissions from 'services/permissions';
 import { Permissions as PermissionsType } from '@linen/types';
+import { cors, preflight } from 'utilities/cors';
 
 interface MembersType {
   id: string;
@@ -74,12 +75,20 @@ export default async function handler(
   request: NextApiRequest,
   response: NextApiResponse
 ) {
-  const communityId = request.query.communityId as string;
-  const permissions = await Permissions.get({
-    request,
-    response,
-    params: { communityId },
-  });
-  const { status, data } = await index({ communityId, permissions });
-  return response.status(status).json(data || {});
+  if (request.method === 'OPTIONS') {
+    return preflight(request, response, ['GET']);
+  }
+  cors(request, response);
+
+  if (request.method === 'GET') {
+    const communityId = request.query.communityId as string;
+    const permissions = await Permissions.get({
+      request,
+      response,
+      params: { communityId },
+    });
+    const { status, data } = await index({ communityId, permissions });
+    return response.status(status).json(data || {});
+  }
+  return response.status(405).json({});
 }

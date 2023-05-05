@@ -8,6 +8,7 @@ import { generateRandomWordSlug } from '@linen/utilities/randomWordSlugs';
 import { eventSignUp } from 'services/events/eventNewSignUp';
 import { z } from 'zod';
 import { ApiEvent, trackApiEvent } from 'utilities/ssr-metrics';
+import { cors, preflight } from 'utilities/cors';
 
 const createSchema = z.object({
   email: z.string().email(),
@@ -154,6 +155,11 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
 }
 
 async function handler(request: NextApiRequest, response: NextApiResponse) {
+  if (request.method === 'OPTIONS') {
+    return preflight(request, response, ['POST', 'GET', 'PUT']);
+  }
+  cors(request, response);
+
   if (request.method === 'POST') {
     return create(request, response);
   }
@@ -163,7 +169,7 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
   if (request.method === 'GET') {
     return get(request, response);
   }
-  return response.status(404).json({});
+  return response.status(405).json({});
 }
 
 export default handler;

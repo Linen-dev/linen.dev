@@ -1,11 +1,16 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import { prisma } from '@linen/database';
 import PermissionsService from 'services/permissions';
+import { cors, preflight } from 'utilities/cors';
 
 export default async function handler(
   request: NextApiRequest,
   response: NextApiResponse
 ) {
+  if (request.method === 'OPTIONS') {
+    return preflight(request, response, ['GET']);
+  }
+  cors(request, response);
   if (request.method === 'GET') {
     const { communityId } = request.query;
     if (typeof communityId !== 'string') {
@@ -29,5 +34,5 @@ export default async function handler(
       members,
     });
   }
-  return response.status(404).json({});
+  return response.status(405).json({});
 }

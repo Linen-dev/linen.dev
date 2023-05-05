@@ -7,6 +7,7 @@ import {
   normalizeFilename,
   FILE_SIZE_LIMIT_IN_BYTES,
 } from '@linen/utilities/files';
+import { cors, preflight } from 'utilities/cors';
 
 export const config = {
   api: {
@@ -24,6 +25,11 @@ interface File {
 }
 
 async function handler(request: NextApiRequest, response: NextApiResponse) {
+  if (request.method === 'OPTIONS') {
+    return preflight(request, response, ['POST']);
+  }
+  cors(request, response);
+
   if (request.method === 'POST') {
     const permissions = await PermissionsService.get({
       request,
@@ -72,9 +78,8 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
       console.error(exception);
       return response.status(500).json({});
     }
-  } else {
-    return response.status(404).json({});
   }
+  return response.status(405).json({});
 }
 
 export default handler;

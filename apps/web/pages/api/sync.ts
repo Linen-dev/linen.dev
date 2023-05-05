@@ -1,8 +1,14 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { createSyncJob } from 'queue/jobs';
 import PermissionsService from 'services/permissions';
+import { cors, preflight } from 'utilities/cors';
 
 async function handler(request: NextApiRequest, response: NextApiResponse) {
+  if (request.method === 'OPTIONS') {
+    return preflight(request, response, ['GET']);
+  }
+  cors(request, response);
+
   if (!request.query.account_id) {
     return response.status(400).json({});
   }

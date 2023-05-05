@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { acceptInvite } from 'services/invites';
 import PermissionsService from 'services/permissions';
+import { cors, preflight } from 'utilities/cors';
 
 type Props = { communityId: string };
 
@@ -12,6 +13,11 @@ export default async function handler(
   request: NextApiRequest,
   response: NextApiResponse
 ) {
+  if (request.method === 'OPTIONS') {
+    return preflight(request, response, ['POST']);
+  }
+  cors(request, response);
+
   const permissions = await PermissionsService.get({
     request,
     response,

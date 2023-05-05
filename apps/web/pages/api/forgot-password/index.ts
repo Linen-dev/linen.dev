@@ -3,6 +3,7 @@ import ResetPasswordMailer from 'mailers/ResetPasswordMailer';
 import { generateToken } from 'utilities/token';
 import { prisma } from '@linen/database';
 import { getCurrentUrl } from '@linen/utilities/domain';
+import { cors, preflight } from 'utilities/cors';
 
 async function create(request: NextApiRequest, response: NextApiResponse) {
   const { email } = JSON.parse(request.body);
@@ -40,10 +41,14 @@ async function create(request: NextApiRequest, response: NextApiResponse) {
 }
 
 async function handler(request: NextApiRequest, response: NextApiResponse) {
+  if (request.method === 'OPTIONS') {
+    return preflight(request, response, ['POST']);
+  }
+  cors(request, response);
   if (request.method === 'POST') {
     return create(request, response);
   }
-  return response.status(404).json({});
+  return response.status(405).json({});
 }
 
 export default handler;

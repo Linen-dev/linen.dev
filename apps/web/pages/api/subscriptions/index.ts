@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import Stripe from 'stripe';
 import PermissionsService from 'services/permissions';
+import { cors, preflight } from 'utilities/cors';
 
 const stripe = new Stripe(process.env.STRIPE_API_KEY!, {
   apiVersion: '2022-11-15',
@@ -55,17 +56,24 @@ export default async function handler(
   request: NextApiRequest,
   response: NextApiResponse
 ) {
-  const communityId = request.query.communityId as string;
-  const permissions = await PermissionsService.get({
-    request,
-    response,
-    params: {
-      communityId,
-    },
-  });
-  if (!permissions.manage) {
-    return response.status(401).json({});
+  if (request.method === 'OPTIONS') {
+    return preflight(request, response, ['GET']);
   }
-  const { status, data } = await index({ communityId });
-  return response.status(status).json(data);
+  cors(request, response);
+  if (request.method === 'GET') {
+    const communityId = request.query.communityId as string;
+    const permissions = await PermissionsService.get({
+      request,
+      response,
+      params: {
+        communityId,
+      },
+    });
+    if (!permissions.manage) {
+      return response.status(401).json({});
+    }
+    const { status, data } = await index({ communityId });
+    return response.status(status).json(data);
+  }
+  return response.status(405).json({});
 }

@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
 import { getCurrentConfig } from 'config/discord';
 import { z } from 'zod';
+import { cors, preflight } from 'utilities/cors';
 
 const REDIRECT_URI_SLACK =
   process.env.NEXT_PUBLIC_REDIRECT_URI || 'https://linen.dev/api/oauth';
@@ -56,6 +57,11 @@ export default async function handler(
   request: NextApiRequest,
   response: NextApiResponse
 ) {
+  if (request.method === 'OPTIONS') {
+    return preflight(request, response, ['GET']);
+  }
+  cors(request, response);
+
   const schema = z.object({
     community: z.string(),
     accountId: z.string().uuid(),

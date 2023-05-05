@@ -5,6 +5,7 @@ import CommunityService from 'services/community';
 import { serializeThread } from '@linen/serializers/thread';
 import { anonymizeMessages } from 'utilities/anonymizeMessages';
 import { Permissions as PermissionsType } from '@linen/types';
+import { cors, preflight } from 'utilities/cors';
 
 export async function create({
   messageId,
@@ -102,6 +103,10 @@ export default async function handler(
   request: NextApiRequest,
   response: NextApiResponse
 ) {
+  if (request.method === 'OPTIONS') {
+    return preflight(request, response, ['POST']);
+  }
+  cors(request, response);
   if (request.method === 'POST') {
     const { messageId, channelId, communityId } = request.body;
     const permissions = await Permissions.get({
@@ -117,5 +122,5 @@ export default async function handler(
     });
     return response.status(status).json(data || {});
   }
-  return response.status(200).json({});
+  return response.status(405).json({});
 }

@@ -5,6 +5,7 @@ import {
   findInvitesByEmail,
   joinCommunity,
 } from 'services/invites';
+import { cors, preflight } from 'utilities/cors';
 
 type Props = { communityId: string };
 type PostProps = Props & {};
@@ -13,6 +14,11 @@ export default async function handler(
   request: NextApiRequest,
   response: NextApiResponse
 ) {
+  if (request.method === 'OPTIONS') {
+    return preflight(request, response, ['POST']);
+  }
+  cors(request, response);
+
   const { communityId }: PostProps = JSON.parse(request.body);
 
   const permissions = await PermissionsService.get({

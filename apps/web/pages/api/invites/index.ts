@@ -4,6 +4,7 @@ import { createInvitation, updateInvitation } from 'services/invites';
 import PermissionsService from 'services/permissions';
 import { Roles } from '@linen/types';
 import { addHttpsToUrl } from '@linen/utilities/url';
+import { cors, preflight } from 'utilities/cors';
 
 type Props = { communityId: string };
 
@@ -21,6 +22,11 @@ export default async function handler(
   request: NextApiRequest,
   response: NextApiResponse
 ) {
+  if (request.method === 'OPTIONS') {
+    return preflight(request, response, ['POST', 'PUT']);
+  }
+  cors(request, response);
+
   const body = JSON.parse(request.body);
   const permissions = await PermissionsService.get({
     request,

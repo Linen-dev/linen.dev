@@ -6,6 +6,7 @@ import { serializeThread } from '@linen/serializers/thread';
 import ChannelsService, { getDMs } from 'services/channels';
 import { anonymizeMessages } from 'utilities/anonymizeMessages';
 import { SerializedChannel } from '@linen/types';
+import { cors, preflight } from 'utilities/cors';
 
 function getPage(page?: number) {
   if (!page || page < 1) {
@@ -159,9 +160,13 @@ export default async function handler(
   request: NextApiRequest,
   response: NextApiResponse
 ) {
+  if (request.method === 'OPTIONS') {
+    return preflight(request, response, ['POST']);
+  }
+  cors(request, response);
   // using POST to prevent url length limit
   if (request.method === 'POST') {
     return handlers.index(request, response);
   }
-  return response.status(404).json({});
+  return response.status(405).json({});
 }

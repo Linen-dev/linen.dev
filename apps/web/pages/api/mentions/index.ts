@@ -2,11 +2,17 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from '@linen/database';
 import { serializeUser } from '@linen/serializers/user';
 import PermissionsService from 'services/permissions';
+import { cors, preflight } from 'utilities/cors';
 
 export default async function handler(
   request: NextApiRequest,
   response: NextApiResponse
 ) {
+  if (request.method === 'OPTIONS') {
+    return preflight(request, response, ['GET']);
+  }
+  cors(request, response);
+
   if (!request.query.communityId) {
     return response.status(400).end();
   }
