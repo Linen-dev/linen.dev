@@ -9,7 +9,7 @@ import { FiPlus } from '@react-icons/all-files/fi/FiPlus';
 import styles from './index.module.scss';
 import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
 import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp';
-import { FiX } from '@react-icons/all-files/fi/FiX';
+import { FiSettings } from '@react-icons/all-files/fi/FiSettings';
 
 interface Props {
   channelName: string;
@@ -19,7 +19,7 @@ interface Props {
   mode: Mode;
   permissions: Permissions;
   onChannelClick(channelId: string): void;
-  onArchiveClick(channelId: string): void;
+  onSettingsClick(channelId: string): void;
   onDrop?({
     source,
     target,
@@ -43,7 +43,7 @@ export default function ChannelsGroup({
   mode,
   permissions,
   onChannelClick,
-  onArchiveClick,
+  onSettingsClick,
   onDrop,
   Link,
   NewChannelModal,
@@ -147,10 +147,10 @@ export default function ChannelsGroup({
                       onClick={(event) => {
                         event.preventDefault();
                         event.stopPropagation();
-                        onArchiveClick(channel.id);
+                        onSettingsClick(channel.id);
                       }}
                     >
-                      <FiX />
+                      <FiSettings />
                     </div>
                   )}
                 </Nav.Item>
