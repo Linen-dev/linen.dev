@@ -85,6 +85,7 @@
     "./CopyToClipboardIcon": "./dist/CopyToClipboardIcon/index.js",
     "./DiscordIcon": "./dist/DiscordIcon/index.js",
     "./Dropdown": "./dist/Dropdown/index.js",
+    "./EditChannelModal": "./dist/EditChannelModal/index.js",
     "./EditMessageModal": "./dist/EditMessageModal/index.js",
     "./EditThreadModal": "./dist/EditThreadModal/index.js",
     "./EmailField": "./dist/EmailField/index.js",
@@ -218,6 +219,9 @@
       ],
       "Dropdown": [
         "./dist/Dropdown/index.d.ts"
+      ],
+      "EditChannelModal": [
+        "./dist/EditChannelModal/index.d.ts"
       ],
       "EditMessageModal": [
         "./dist/EditMessageModal/index.d.ts"

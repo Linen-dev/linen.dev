@@ -30,6 +30,7 @@ import ChannelsGroup from './ChannelsGroup';
 import MenuIcon from './MenuIcon';
 import PoweredByLinen from '@/PoweredByLinen';
 import AnalyticsGroup from './AnalyticsGroup';
+import EditChannelModal from '@/EditChannelModal';
 
 interface Props {
   mode: Mode;
@@ -62,6 +63,12 @@ interface Props {
   post: (...args: any) => Promise<any>;
   put: (...args: any) => Promise<any>;
   notify: (...args: any) => any;
+}
+
+enum ModalView {
+  NONE,
+  EDIT_CHANNEL,
+  NEW_COMMUNITY,
 }
 
 export default function DesktopNavBar({
@@ -123,7 +130,8 @@ export default function DesktopNavBar({
   const [highlights, setHighlights] = useState<string[]>([]);
   const [collapsed, setCollapsed] = useState(!currentUser);
   const [showSettings, toggleSettings] = useState(isSettingsPath());
-  const [modal, setModal] = useState(false);
+  const [modal, setModal] = useState<ModalView>(ModalView.NONE);
+  const [editedChannel, setEditedChannel] = useState<SerializedChannel>();
 
   const onNewMessage = (payload: any) => {
     if (payload.is_thread) {
@@ -211,8 +219,13 @@ export default function DesktopNavBar({
         )}
         {currentUser && (
           <>
-            <AddCommunityLink onClick={() => setModal(true)} />
-            <NewCommunityModal open={modal} close={() => setModal(false)} />
+            <AddCommunityLink
+              onClick={() => setModal(ModalView.NEW_COMMUNITY)}
+            />
+            <NewCommunityModal
+              open={modal === ModalView.NEW_COMMUNITY}
+              close={() => setModal(ModalView.NONE)}
+            />
           </>
         )}
       </div>
@@ -244,7 +257,9 @@ export default function DesktopNavBar({
                 });
               }}
               onSettingsClick={(channelId) => {
-                Toast.error('settings are unimplemented');
+                const channel = channels.find(({ id }) => id === channelId);
+                setEditedChannel(channel);
+                setModal(ModalView.EDIT_CHANNEL);
               }}
               onDrop={onDrop}
               Link={Link}
@@ -307,6 +322,13 @@ export default function DesktopNavBar({
           {currentUser && <PoweredByLinen />}
         </Nav>
       </div>
+      {editedChannel && (
+        <EditChannelModal
+          open={modal === ModalView.EDIT_CHANNEL}
+          close={() => setModal(ModalView.NONE)}
+          channel={editedChannel}
+        />
+      )}
     </div>
   );
 }
