@@ -6,7 +6,7 @@ import { attachHeaders, login } from '__tests__/pages/api/auth/login';
 import { testApiHandler } from 'next-test-api-route-handler';
 import { auths, prisma } from '@linen/database';
 import handler from 'pages/api/accounts/[[...slug]]';
-import { createAccountType } from './accounts.types';
+import { createAccountType } from '@linen/types';
 import InviteToJoinMailer from 'mailers/InviteToJoinMailer';
 import * as domain from '@linen/utilities/domain';
 

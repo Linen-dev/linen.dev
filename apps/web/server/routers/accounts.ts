@@ -4,17 +4,15 @@ import {
   AuthedRequestWithBody,
   AuthedRequestWithTenantAndBody,
   Response,
+  createAccountSchema,
+  createAccountType,
+  updateAccountSchema,
+  updateAccountType,
 } from '@linen/types';
 import tenantMiddleware, { Roles } from 'server/middlewares/tenant';
 import validationMiddleware from 'server/middlewares/validation';
 import jwtMiddleware from 'server/middlewares/jwt';
 import AccountsService from 'services/accounts';
-import {
-  createAccountSchema,
-  createAccountType,
-  updateAccountSchema,
-  updateAccountType,
-} from './accounts.types';
 import { onError } from 'server/middlewares/error';
 import { ApiEvent, trackApiEvent } from 'utilities/ssr-metrics';
 import { promiseMemoize } from '@linen/utilities/memoize';

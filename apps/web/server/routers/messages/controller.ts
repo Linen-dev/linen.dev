@@ -3,6 +3,10 @@ import {
   NextFunction,
   Response,
   ChatType,
+  getMessageType,
+  postMessageType,
+  deleteMessageType,
+  putMessageType,
 } from '@linen/types';
 import {
   BadRequest,
@@ -12,12 +16,11 @@ import {
 } from 'server/exceptions';
 import { Roles } from 'server/middlewares/tenant';
 import MessagesService from 'services/messages';
-import { getType, postType, deleteType, putType } from './types';
 import { ApiEvent, trackApiEvent } from 'utilities/ssr-metrics';
 
 export class MessagesController {
   static async get(
-    req: AuthedRequestWithTenantAndBody<getType>,
+    req: AuthedRequestWithTenantAndBody<getMessageType>,
     res: Response,
     next: NextFunction
   ) {
@@ -32,7 +35,7 @@ export class MessagesController {
   }
 
   static async delete(
-    req: AuthedRequestWithTenantAndBody<deleteType>,
+    req: AuthedRequestWithTenantAndBody<deleteMessageType>,
     res: Response,
     next: NextFunction
   ) {
@@ -65,7 +68,7 @@ export class MessagesController {
   }
 
   static async post(
-    req: AuthedRequestWithTenantAndBody<postType>,
+    req: AuthedRequestWithTenantAndBody<postMessageType>,
     res: Response,
     next: NextFunction
   ) {
@@ -93,7 +96,7 @@ export class MessagesController {
   }
 
   static async put(
-    req: AuthedRequestWithTenantAndBody<putType>,
+    req: AuthedRequestWithTenantAndBody<putMessageType>,
     res: Response,
     next: NextFunction
   ) {

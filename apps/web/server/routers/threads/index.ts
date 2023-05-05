@@ -3,7 +3,12 @@ import { onError } from 'server/middlewares/error';
 import tenantMiddleware, { Roles } from 'server/middlewares/tenant';
 import validationMiddleware from 'server/middlewares/validation';
 import { ThreadsController } from './controller';
-import { findSchema, getSchema, postSchema, putSchema } from './types';
+import {
+  findThreadSchema,
+  getThreadSchema,
+  postThreadSchema,
+  putThreadSchema,
+} from '@linen/types';
 
 const prefix = '/api/threads';
 
@@ -11,25 +16,25 @@ const threadsRouter = Router()
   .get(
     `${prefix}`,
     tenantMiddleware(),
-    validationMiddleware(findSchema),
+    validationMiddleware(findThreadSchema),
     ThreadsController.find
   )
   .post(
     `${prefix}`,
     tenantMiddleware([Roles.ADMIN, Roles.MEMBER, Roles.OWNER]),
-    validationMiddleware(postSchema),
+    validationMiddleware(postThreadSchema),
     ThreadsController.post
   )
   .get(
     `${prefix}/:id`,
     tenantMiddleware(),
-    validationMiddleware(getSchema),
+    validationMiddleware(getThreadSchema),
     ThreadsController.get
   )
   .put(
     `${prefix}/:id`,
     tenantMiddleware([Roles.ADMIN, Roles.MEMBER, Roles.OWNER]),
-    validationMiddleware(putSchema),
+    validationMiddleware(putThreadSchema),
     ThreadsController.put
   )
   .all(`${prefix}*`, ThreadsController.notImplemented)

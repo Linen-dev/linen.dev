@@ -3,16 +3,19 @@ import {
   NextFunction,
   Response,
   ChatType,
+  findThreadType,
+  getThreadType,
+  postThreadType,
+  putThreadType,
 } from '@linen/types';
 import { Forbidden, NotFound, NotImplemented } from 'server/exceptions';
 import { Roles } from 'server/middlewares/tenant';
 import ThreadsServices from 'services/threads';
-import { findType, getType, postType, putType } from './types';
 import { trackApiEvent, ApiEvent } from 'utilities/ssr-metrics';
 
 export class ThreadsController {
   static async get(
-    req: AuthedRequestWithTenantAndBody<getType>,
+    req: AuthedRequestWithTenantAndBody<getThreadType>,
     res: Response,
     next: NextFunction
   ) {
@@ -26,7 +29,7 @@ export class ThreadsController {
     res.json(thread);
   }
   static async find(
-    req: AuthedRequestWithTenantAndBody<findType>,
+    req: AuthedRequestWithTenantAndBody<findThreadType>,
     res: Response,
     _: NextFunction
   ) {
@@ -37,7 +40,7 @@ export class ThreadsController {
     res.json(threads);
   }
   static async put(
-    req: AuthedRequestWithTenantAndBody<putType>,
+    req: AuthedRequestWithTenantAndBody<putThreadType>,
     res: Response,
     next: NextFunction
   ) {
@@ -69,7 +72,7 @@ export class ThreadsController {
     res.json(thread);
   }
   static async post(
-    req: AuthedRequestWithTenantAndBody<postType>,
+    req: AuthedRequestWithTenantAndBody<postThreadType>,
     res: Response,
     next: NextFunction
   ) {

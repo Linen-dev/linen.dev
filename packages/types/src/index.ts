@@ -10,8 +10,7 @@ export * from './integrations/channels';
 export * from './integrations/messages';
 export * from './integrations/users';
 
-export * from './api/channels';
-export * from './api/users';
+export * from './api';
 
 export * from './patterns';
 export * from './notification';
@@ -38,13 +37,6 @@ export enum Roles {
   OWNER = 'OWNER',
   ADMIN = 'ADMIN',
   MEMBER = 'MEMBER',
-}
-
-export enum ThreadStatus {
-  UNREAD = 'unread',
-  READ = 'read',
-  MUTED = 'muted',
-  REMINDER = 'reminder',
 }
 
 export enum ReminderTypes {

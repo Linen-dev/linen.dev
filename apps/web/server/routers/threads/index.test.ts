@@ -9,9 +9,8 @@ import handler from 'pages/api/threads/[[...slug]]';
 import { attachHeaders } from '__tests__/pages/api/auth/login';
 import { v4 } from 'uuid';
 import { qs } from '@linen/utilities/url';
-import { AccountType, ChatType } from '@linen/types';
+import { AccountType, ChatType, postThreadType } from '@linen/types';
 import mockThreadsServices from 'services/threads';
-import { postType } from './types';
 
 const mockGet = jest.spyOn(mockThreadsServices, 'get');
 
@@ -179,7 +178,7 @@ describe('threads api (internal)', () => {
       mockGet.mockClear();
     });
     test(`POST ${base} => OK`, async () => {
-      const body: postType & { accountId: string } = {
+      const body: postThreadType & { accountId: string } = {
         accountId: store.accountPrivate.id,
         body: v4(),
         channelId: v4(),
@@ -270,7 +269,7 @@ describe('threads api (internal)', () => {
       mockGet.mockClear();
     });
     test(`POST ${base} => Forbidden`, async () => {
-      const body: postType & { accountId: string } = {
+      const body: postThreadType & { accountId: string } = {
         accountId: store.accountPrivate.id,
         body: v4(),
         channelId: v4(),
@@ -340,7 +339,7 @@ describe('threads api (internal)', () => {
       mockGet.mockClear();
     });
     test(`POST ${base} => Forbidden`, async () => {
-      const body: postType & { accountId: string } = {
+      const body: postThreadType & { accountId: string } = {
         accountId: store.accountPrivate.id,
         body: v4(),
         channelId: v4(),
@@ -399,7 +398,7 @@ describe('threads api (internal)', () => {
       mockGet.mockClear();
     });
     test(`POST ${base} => OK`, async () => {
-      const body: postType & { accountId: string } = {
+      const body: postThreadType & { accountId: string } = {
         accountId: store.accountPublic.id,
         body: v4(),
         channelId: v4(),

@@ -3,7 +3,12 @@ import { onError } from 'server/middlewares/error';
 import tenantMiddleware, { Roles } from 'server/middlewares/tenant';
 import validationMiddleware from 'server/middlewares/validation';
 import { MessagesController } from './controller';
-import { getSchema, postSchema, deleteSchema, putSchema } from './types';
+import {
+  getMessageSchema,
+  postMessageSchema,
+  deleteMessageSchema,
+  putMessageSchema,
+} from '@linen/types';
 
 const prefix = '/api/messages';
 
@@ -11,25 +16,25 @@ const messagesRouter = Router()
   .post(
     `${prefix}`,
     tenantMiddleware([Roles.ADMIN, Roles.MEMBER, Roles.OWNER]),
-    validationMiddleware(postSchema),
+    validationMiddleware(postMessageSchema),
     MessagesController.post
   )
   .get(
     `${prefix}/:id`,
     tenantMiddleware(),
-    validationMiddleware(getSchema),
+    validationMiddleware(getMessageSchema),
     MessagesController.get
   )
   .delete(
     `${prefix}/:id`,
     tenantMiddleware([Roles.ADMIN, Roles.MEMBER, Roles.OWNER]),
-    validationMiddleware(deleteSchema),
+    validationMiddleware(deleteMessageSchema),
     MessagesController.delete
   )
   .put(
     `${prefix}/:id`,
     tenantMiddleware([Roles.ADMIN, Roles.MEMBER, Roles.OWNER]),
-    validationMiddleware(putSchema),
+    validationMiddleware(putMessageSchema),
     MessagesController.put
   )
   .all(`${prefix}*`, MessagesController.notImplemented)

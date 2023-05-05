@@ -1,12 +1,12 @@
 import { z } from 'zod';
 
-export const getSchema = z.object({
+export const getMessageSchema = z.object({
   id: z.string().uuid(),
   accountId: z.string().uuid(),
 });
-export type getType = z.infer<typeof getSchema>;
+export type getMessageType = z.infer<typeof getMessageSchema>;
 
-export const postSchema = z.object({
+export const postMessageSchema = z.object({
   accountId: z.string().uuid(),
   channelId: z.string().uuid(),
   threadId: z.string().uuid(),
@@ -21,16 +21,16 @@ export const postSchema = z.object({
     )
     .optional(),
 });
-export type postType = z.infer<typeof postSchema>;
+export type postMessageType = z.infer<typeof postMessageSchema>;
 
-export const deleteSchema = z.object({
+export const deleteMessageSchema = z.object({
   id: z.string().uuid(),
   accountId: z.string().uuid(),
 });
-export type deleteType = z.infer<typeof deleteSchema>;
+export type deleteMessageType = z.infer<typeof deleteMessageSchema>;
 
-export const putSchema = z.object({
+export const putMessageSchema = z.object({
   id: z.string().uuid(),
   body: z.string(),
 });
-export type putType = z.infer<typeof putSchema>;
+export type putMessageType = z.infer<typeof putMessageSchema>;

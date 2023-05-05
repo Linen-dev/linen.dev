@@ -1,3 +1,5 @@
+import { SerializedThread } from './threads';
+
 export type SerializedChannel = {
   id: string;
   channelName: string;
@@ -14,3 +16,11 @@ export enum channelsIntegrationType {
   'EMAIL' = 'EMAIL',
   'LINEAR' = 'LINEAR',
 }
+
+export type channelNextPageType = {
+  threads: SerializedThread[];
+  nextCursor: {
+    next: string | null;
+    prev: string | null;
+  };
+};

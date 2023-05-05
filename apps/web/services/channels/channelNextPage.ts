@@ -1,4 +1,4 @@
-import { SerializedThread } from '@linen/types';
+import { channelNextPageType } from '@linen/types';
 import { shouldThisChannelBeAnonymous } from 'services/channels';
 import { findThreadsByCursor } from 'services/threads';
 import { serializeThread } from '@linen/serializers/thread';
@@ -6,13 +6,6 @@ import { decodeCursor } from 'utilities/cursor';
 import { sortBySentAtAsc } from '@linen/utilities/object';
 import { buildCursor } from 'utilities/buildCursor';
 
-export type channelNextPageType = {
-  threads: SerializedThread[];
-  nextCursor: {
-    next: string | null;
-    prev: string | null;
-  };
-};
 // aka loadMore, it could be asc (gt) or desc (lt)
 // it should return just one cursor, the one to keep loading into same direction
 export async function channelNextPage({

@@ -30,3 +30,10 @@ export enum ThreadState {
   CLOSE = 'CLOSE',
   OPEN = 'OPEN',
 }
+
+export enum ThreadStatus {
+  UNREAD = 'unread',
+  READ = 'read',
+  MUTED = 'muted',
+  REMINDER = 'reminder',
+}
