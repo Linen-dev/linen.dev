@@ -78,13 +78,6 @@ function PageLayout({
   const { mode } = useMode();
   const router = useRouter();
 
-  const uploadAvatar = (data: FormData, options: AxiosRequestConfig) => {
-    return axios.post('/api/profile/avatar', data, options).then(() => {
-      // same as in the comment above, we could make this dynamic by updating the user in the all user's list
-      window.location.reload();
-    });
-  };
-
   return (
     <LinkContext
       context={{
@@ -102,16 +95,18 @@ function PageLayout({
           settings={settings}
           permissions={permissions}
           isSubDomainRouting={isSubDomainRouting}
-          onUpload={uploadAvatar}
           // dep injection
-          InternalLink={InternalLink}
-          JoinButton={JoinButton}
-          Link={Link}
-          SearchBar={SearchBar}
-          routerAsPath={router.asPath}
-          signOut={signOut}
-          usePath={usePath}
-          {...{ put: api.put }}
+          {...{
+            put: api.put,
+            postWithOptions: api.postWithOptions,
+            InternalLink,
+            JoinButton,
+            Link,
+            SearchBar,
+            signOut,
+            usePath,
+            routerAsPath: router.asPath,
+          }}
         />
       </div>
       {seo && <SEO {...seo} />}

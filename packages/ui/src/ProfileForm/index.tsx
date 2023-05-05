@@ -13,8 +13,8 @@ import styles from './index.module.scss';
 
 interface Props {
   currentUser: SerializedUser;
-  onSubmit({ displayName }: { displayName: string }): void;
-  onUpload(data: FormData, options: any): void;
+  onSubmit({ displayName }: { displayName: string }): Promise<void>;
+  onUpload(data: FormData, options: any): Promise<void>;
 }
 
 export default function ProfileForm({

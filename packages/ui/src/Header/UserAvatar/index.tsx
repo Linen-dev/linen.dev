@@ -10,7 +10,7 @@ import styles from './index.module.scss';
 
 interface Props {
   currentUser: SerializedUser;
-  onUpload(data: FormData, options: any): void;
+  postWithOptions(path: string, data: FormData, options: any): Promise<void>;
   signOut: () => void;
   put: (path: string, data?: {}) => Promise<any>;
 }
@@ -22,7 +22,7 @@ enum Mode {
 
 export default function UserAvatar({
   currentUser,
-  onUpload,
+  postWithOptions,
   signOut,
   put,
 }: Props) {
@@ -77,7 +77,14 @@ export default function UserAvatar({
             });
             setMode(Mode.Menu);
           }}
-          onUpload={onUpload}
+          onUpload={async (data: FormData, options: any) => {
+            return postWithOptions('/api/profile/avatar', data, options).then(
+              () => {
+                // same as in the comment above, we could make this dynamic by updating the user in the all user's list
+                window.location.reload();
+              }
+            );
+          }}
         />
       </Modal>
     </>

@@ -26,7 +26,7 @@ describe('Header', () => {
           isSubDomainRouting={false}
           permissions={permissions}
           put={jest.fn()}
-          onUpload={jest.fn()}
+          postWithOptions={jest.fn()}
           InternalLink={Link}
           JoinButton={() => <div>JoinButton</div>}
           Link={Link}
@@ -54,7 +54,7 @@ describe('Header', () => {
           isSubDomainRouting={false}
           permissions={permissions}
           put={jest.fn()}
-          onUpload={jest.fn()}
+          postWithOptions={jest.fn()}
           InternalLink={Link}
           JoinButton={() => <div>JoinButton</div>}
           Link={Link}
