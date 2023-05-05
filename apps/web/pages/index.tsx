@@ -163,7 +163,7 @@ const Home = ({ accounts }: Props) => {
             <div className="block">for Communities</div>
           </h1>
           <p className="mt-3 text-base text-gray-500 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl ">
-            Linen is a real-time chat platform built for communities. We SEO
+            Linen is a real-time chat platform built for communities. We are SEO
             friendly while providing a modern chat experience.
           </p>
           <div className="mt-5 sm:mt-8 sm:flex sm:justify-center">
