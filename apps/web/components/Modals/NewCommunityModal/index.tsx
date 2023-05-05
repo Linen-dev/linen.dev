@@ -1,7 +1,7 @@
 import React from 'react';
-import Icon from '@linen/ui/Icon';
 import Modal from '@linen/ui/Modal';
 import Form from 'components/Pages/Onboarding/Form';
+import Icon from '@linen/ui/Icon';
 import H3 from '@linen/ui/H3';
 import { FiX } from '@react-icons/all-files/fi/FiX';
 import { createAccount } from 'utilities/requests';
