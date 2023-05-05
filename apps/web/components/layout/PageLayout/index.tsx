@@ -162,7 +162,8 @@ function PageLayout({
               styles.container,
               'lg:h-[calc(100vh_-_54px)] lg:w-full',
               'lg:flex',
-              'justify-center h-[calc(100vh_-_54px)] w-full'
+              'justify-center h-[calc(100vh_-_54px)] w-full',
+              'overflow-auto'
             )
           }
           ref={innerRef}
