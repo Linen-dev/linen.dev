@@ -3,8 +3,7 @@ import H3 from '@linen/ui/H3';
 import { FiX } from '@react-icons/all-files/fi/FiX';
 import { useLinkContext } from '@linen/contexts/Link';
 import CustomRouterPush from 'components/Link/CustomRouterPush';
-import { createDm } from 'utilities/requests';
-import { fetchMentions } from 'utilities/requests';
+import { api } from 'utilities/requests';
 import Modal from '@linen/ui/Modal';
 import TextInput from '@linen/ui/TextInput';
 import Toast from '@linen/ui/Toast';
@@ -39,7 +38,7 @@ export default function NewDmModal({
 
       if (!user?.id) return;
 
-      const result = await createDm({
+      const result = await api.createDm({
         accountId: communityId,
         userId: user.id,
       });
@@ -99,7 +98,7 @@ export default function NewDmModal({
             onInput={(e: any) => {
               setVal(e.target.value);
               setUser(null);
-              fetchMentions(e.target.value, communityId).then(setUsers);
+              api.fetchMentions(e.target.value, communityId).then(setUsers);
             }}
           />
 

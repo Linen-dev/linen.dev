@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { get } from 'utilities/requests';
+import { api } from 'utilities/requests';
 import styles from './index.module.scss';
 import { qs } from '@linen/utilities/url';
 
@@ -15,17 +15,19 @@ export default function Content({ communityId }: Props) {
   const [metrics, setMetrics] = useState<Metrics>();
   useEffect(() => {
     let mounted = true;
-    get(
-      `/api/metrics?${qs({
-        communityId,
-      })}`
-    ).then((data) => {
-      setTimeout(() => {
-        if (mounted) {
-          setMetrics(data);
-        }
-      }, 250);
-    });
+    api
+      .get(
+        `/api/metrics?${qs({
+          communityId,
+        })}`
+      )
+      .then((data) => {
+        setTimeout(() => {
+          if (mounted) {
+            setMetrics(data);
+          }
+        }, 250);
+      });
     return () => {
       mounted = false;
     };

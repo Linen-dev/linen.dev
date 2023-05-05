@@ -10,7 +10,7 @@ import { qs } from '@linen/utilities/url';
 import Toast from '@linen/ui/Toast';
 import { useSession } from '@linen/auth/client';
 import { ChannelContext } from '@linen/contexts/channel';
-import * as api from 'utilities/requests';
+import { api } from 'utilities/requests';
 import { FiX } from '@react-icons/all-files/fi/FiX';
 
 interface IntegrationsModalProps {

@@ -20,7 +20,6 @@ interface Props {
   currentCommunity: SerializedAccount;
   isSubDomainRouting: boolean;
   permissions: Permissions;
-  onProfileChange({ displayName }: { displayName: string }): Promise<void>;
   onUpload(data: FormData, options: any): void;
   // dep injection
   SearchBar: (args: any) => JSX.Element;
@@ -30,6 +29,7 @@ interface Props {
   routerAsPath: string;
   signOut: () => void;
   usePath: (args: { href: string }) => string;
+  put: (path: string, data?: {}) => Promise<any>;
 }
 
 function isWhiteColor(color: string) {
@@ -43,7 +43,6 @@ export default function Header({
   currentCommunity,
   isSubDomainRouting,
   permissions,
-  onProfileChange,
   onUpload,
   SearchBar,
   JoinButton,
@@ -52,6 +51,7 @@ export default function Header({
   routerAsPath,
   signOut,
   usePath,
+  put,
 }: Props) {
   const brandColor = currentCommunity.brandColor || '#111827';
   const fontColor = pickTextColorBasedOnBgColor(brandColor, 'white', 'black');
@@ -93,9 +93,9 @@ export default function Header({
               )}
               <UserAvatar
                 currentUser={permissions.user}
-                onProfileChange={onProfileChange}
                 onUpload={onUpload}
                 signOut={signOut}
+                {...{ put }}
               />
             </div>
             <div className={styles.lgHidden}>

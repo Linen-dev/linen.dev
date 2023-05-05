@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Toast from '@linen/ui/Toast';
 import Toggle from '@linen/ui/Toggle';
 import { SerializedAccount } from '@linen/types';
-import * as api from 'utilities/requests';
+import { api } from 'utilities/requests';
 
 interface Props {
   currentCommunity: SerializedAccount;

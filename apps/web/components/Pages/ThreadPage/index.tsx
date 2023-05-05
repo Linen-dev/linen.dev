@@ -4,7 +4,7 @@ import { useRef } from 'react';
 import { buildThreadSeo, buildStructureData } from 'utilities/seo';
 import ThreadView from '@linen/ui/ThreadView';
 import { useJoinContext } from 'contexts/Join';
-import * as api from 'utilities/requests';
+import { api } from 'utilities/requests';
 import Actions from 'components/Actions';
 import JoinChannelLink from 'components/Link/JoinChannelLink';
 import { useUsersContext } from '@linen/contexts/Users';

@@ -8,7 +8,7 @@ import {
 import Toast from '@linen/ui/Toast';
 import Toggle from '@linen/ui/Toggle';
 import styles from './index.module.scss';
-import { getChannelsStats, hideChannels } from 'utilities/requests';
+import { api } from 'utilities/requests';
 import debounce from '@linen/utilities/debounce';
 
 interface Props {
@@ -116,7 +116,7 @@ const useChannelsStats = (accountId: string) => {
   const execute = useCallback(async () => {
     setValue(undefined);
     try {
-      const response = await getChannelsStats({ accountId });
+      const response = await api.getChannelsStats({ accountId });
       setValue(response);
     } catch (error: any) {
       console.error(error);
@@ -137,5 +137,5 @@ const debouncedChannelsVisibilityUpdate = debounce(
   }: {
     communityId: string;
     value: { id: string; hidden: boolean };
-  }) => hideChannels({ accountId: communityId, channels: [value] })
+  }) => api.hideChannels({ accountId: communityId, channels: [value] })
 );

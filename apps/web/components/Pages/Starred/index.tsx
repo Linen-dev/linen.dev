@@ -9,7 +9,7 @@ import {
 } from '@linen/types';
 import debounce from '@linen/utilities/debounce';
 import { localStorage } from '@linen/utilities/storage';
-import * as api from 'utilities/requests';
+import { api } from 'utilities/requests';
 import Content from './Content';
 
 export interface Props {

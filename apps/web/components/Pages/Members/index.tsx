@@ -19,7 +19,7 @@ import {
   Settings,
   Permissions,
 } from '@linen/types';
-import { put, deleteUser } from 'utilities/requests';
+import { api } from 'utilities/requests';
 import ConfirmationModal from '@linen/ui/ConfirmationModal';
 
 export interface Props {
@@ -149,7 +149,7 @@ function RowMember(user: MembersType, communityId: string): JSX.Element {
       if (status === 'ACCEPTED') {
         url = '/api/users';
       }
-      await put(url, {
+      await api.put(url, {
         userId: id,
         inviteId: id,
         role,
@@ -166,12 +166,14 @@ function RowMember(user: MembersType, communityId: string): JSX.Element {
   };
 
   const onDeleteClick = async (user: MembersType) => {
-    await deleteUser({
-      userId: user.id,
-      accountId: communityId,
-    }).then((_) => {
-      window.location.reload();
-    });
+    await api
+      .deleteUser({
+        userId: user.id,
+        accountId: communityId,
+      })
+      .then((_) => {
+        window.location.reload();
+      });
   };
 
   return (

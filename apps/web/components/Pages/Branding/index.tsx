@@ -22,7 +22,7 @@ import {
 } from '@linen/types';
 import { useRouter } from 'next/router';
 import { DNSRecord } from 'services/vercel';
-import * as api from 'utilities/requests';
+import { api } from 'utilities/requests';
 import debounce from '@linen/utilities/debounce';
 import styles from './index.module.scss';
 

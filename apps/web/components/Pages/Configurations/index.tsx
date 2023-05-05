@@ -20,7 +20,7 @@ import UrlsRow from './UrlsRow';
 import CommunityTypeRow from './CommunityTypeRow';
 import CommunityChatRow from './CommunityChatRow';
 import debounce from '@linen/utilities/debounce';
-import * as api from 'utilities/requests';
+import { api } from 'utilities/requests';
 import Toast from '@linen/ui/Toast';
 import RemoveCommunity from './RemoveCommunity';
 import ChannelsConfig from './ChannelsConfig';

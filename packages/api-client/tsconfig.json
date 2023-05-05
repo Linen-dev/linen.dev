@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "moduleResolution": "node",
+    "allowJs": false,
+    "noEmit": false,
+    "strict": true,
+    "esModuleInterop": true,
+    "declaration": true,
+    "declarationDir": "dist",
+    "outDir": "dist",
+    "skipLibCheck": true
+  },
+  "include": ["src"],
+  "exclude": []
+}

@@ -9,7 +9,7 @@ import ConfigureInboxModal from './ConfigureInboxModal';
 import Empty from './Empty';
 import { sendMessageWrapper } from './utilities/sendMessageWrapper';
 import { createThreadWrapper } from './utilities/createThreadWrapper';
-import { upload } from 'utilities/requests';
+import { api } from 'utilities/requests';
 import usePolling from '@linen/hooks/polling';
 import useKeyboard from '@linen/hooks/keyboard';
 import { useUsersContext } from '@linen/contexts/Users';
@@ -31,7 +31,6 @@ import {
 import { addMessageToThread } from './state';
 import { defaultConfiguration } from './utilities/inbox';
 import { addReactionToThread } from 'utilities/state/reaction';
-import * as api from 'utilities/requests';
 import { FiSettings } from '@react-icons/all-files/fi/FiSettings';
 import { InboxConfig } from '../types';
 import { localStorage } from '@linen/utilities/storage';
@@ -409,17 +408,18 @@ export default function Inbox({
     files.forEach((file, index) => {
       data.append(`file-${index}`, file, file.name);
     });
-    return upload(
-      { communityId: settings.communityId, data },
-      {
-        onUploadProgress: (progressEvent: ProgressEvent) => {
-          const percentCompleted = Math.round(
-            (progressEvent.loaded * 100) / progressEvent.total
-          );
-          setProgress(percentCompleted);
-        },
-      }
-    )
+    return api
+      .upload(
+        { communityId: settings.communityId, data },
+        {
+          onUploadProgress: (progressEvent: ProgressEvent) => {
+            const percentCompleted = Math.round(
+              (progressEvent.loaded * 100) / progressEvent.total
+            );
+            setProgress(percentCompleted);
+          },
+        }
+      )
       .then((response) => {
         setUploading(false);
         const { files } = response.data;

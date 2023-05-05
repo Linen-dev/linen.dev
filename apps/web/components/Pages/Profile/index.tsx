@@ -2,18 +2,20 @@ import { signOut, useSession } from '@linen/auth/client';
 import CardLayout from 'components/layout/CardLayout';
 import ProfileForm from '@linen/ui/ProfileForm';
 import axios, { AxiosRequestConfig } from 'axios';
-import { put } from 'utilities/requests';
+import { api } from 'utilities/requests';
 
 export default function Profile() {
   const session = useSession({ required: true });
 
   // dup with apps/web/components/layout/PageLayout/index.tsx
   const updateProfile = ({ displayName }: { displayName: string }) => {
-    return put('/api/profile', {
-      displayName,
-    }).then(() => {
-      window.location.reload();
-    });
+    return api
+      .put('/api/profile', {
+        displayName,
+      })
+      .then(() => {
+        window.location.reload();
+      });
   };
 
   // dup with apps/web/components/layout/PageLayout/index.tsx

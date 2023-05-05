@@ -6,7 +6,7 @@ import ConfirmationModal from '@linen/ui/ConfirmationModal';
 import { Permissions, SerializedUser } from '@linen/types';
 import { ChannelContext } from '@linen/contexts/channel';
 import { ShowUsers } from 'components/Modals/NewChannelModal';
-import { getChannelMembers, updateChannelMembers } from 'utilities/requests';
+import { api } from 'utilities/requests';
 import Toast from '@linen/ui/Toast';
 
 interface MembersModalProps {
@@ -27,10 +27,12 @@ export default function MembersModal({
 
   useEffect(() => {
     if (open && channel && permissions?.accountId) {
-      getChannelMembers({
-        accountId: permissions.accountId,
-        channelId: channel.id,
-      }).then(setUsers);
+      api
+        .getChannelMembers({
+          accountId: permissions.accountId,
+          channelId: channel.id,
+        })
+        .then(setUsers);
     }
   }, [open, permissions, channel]);
 
@@ -52,11 +54,12 @@ export default function MembersModal({
 
   function onUpdateClick() {
     if (channel && permissions?.accountId) {
-      updateChannelMembers({
-        accountId: permissions.accountId,
-        channelId: channel.id,
-        usersId: users.map((u) => u.id),
-      })
+      api
+        .updateChannelMembers({
+          accountId: permissions.accountId,
+          channelId: channel.id,
+          usersId: users.map((u) => u.id),
+        })
         .then(() => {
           close();
         })

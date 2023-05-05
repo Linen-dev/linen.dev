@@ -15,7 +15,7 @@ import {
   Settings,
 } from '@linen/types';
 import { LinkContext } from '@linen/contexts/Link';
-import { put, post, archiveChannel } from 'utilities/requests';
+import { api } from 'utilities/requests';
 import useMode from '@linen/hooks/mode';
 import styles from './index.module.scss';
 import Link from 'next/link';
@@ -78,22 +78,6 @@ function PageLayout({
   const { mode } = useMode();
   const router = useRouter();
 
-  const updateProfile = ({ displayName }: { displayName: string }) => {
-    return put('/api/profile', {
-      displayName,
-    }).then(() => {
-      // Potential improvement:
-      // We could improve the behavior here
-      // by updating the user information live.
-      // It is a bit time consuming because
-      // we would need to make currentUser dynamic
-      // and update user information in all threads we have.
-      // We would need to have a centralized store for users
-      // which we could manipulate.
-      window.location.reload();
-    });
-  };
-
   const uploadAvatar = (data: FormData, options: AxiosRequestConfig) => {
     return axios.post('/api/profile/avatar', data, options).then(() => {
       // same as in the comment above, we could make this dynamic by updating the user in the all user's list
@@ -118,7 +102,6 @@ function PageLayout({
           settings={settings}
           permissions={permissions}
           isSubDomainRouting={isSubDomainRouting}
-          onProfileChange={updateProfile}
           onUpload={uploadAvatar}
           // dep injection
           InternalLink={InternalLink}
@@ -128,6 +111,7 @@ function PageLayout({
           routerAsPath={router.asPath}
           signOut={signOut}
           usePath={usePath}
+          {...{ put: api.put }}
         />
       </div>
       {seo && <SEO {...seo} />}
@@ -150,9 +134,9 @@ function PageLayout({
             NewChannelModal,
             NewCommunityModal,
             NewDmModal,
-            archiveChannel,
-            post,
-            put,
+            archiveChannel: api.archiveChannel,
+            post: api.post,
+            put: api.put,
             notify,
           }}
         />

@@ -10,7 +10,7 @@ import { username } from '@linen/serializers/user';
 import { InboxResponse } from '../../types';
 import { v4 as uuid } from 'uuid';
 import debounce from '@linen/utilities/debounce';
-import * as api from 'utilities/requests';
+import { api } from 'utilities/requests';
 
 const debouncedSendMessage = debounce(
   ({

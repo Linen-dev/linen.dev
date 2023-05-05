@@ -5,7 +5,7 @@ import { useState } from 'react';
 import H3 from '@linen/ui/H3';
 import { FiX } from '@react-icons/all-files/fi/FiX';
 import TextInput from '@linen/ui/TextInput';
-import { deleteAccount } from 'utilities/requests';
+import { api } from 'utilities/requests';
 import Toast from '@linen/ui/Toast';
 
 export default function RemoveCommunity({
@@ -17,7 +17,8 @@ export default function RemoveCommunity({
   const [communityName, setCommunityName] = useState<string>();
 
   async function onRemoveConfirm() {
-    deleteAccount({ accountId: currentCommunity.id })
+    api
+      .deleteAccount({ accountId: currentCommunity.id })
       .then((_) => {
         Toast.success('Your community was put on a queue to be removed');
       })

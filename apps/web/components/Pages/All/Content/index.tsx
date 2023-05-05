@@ -19,7 +19,7 @@ import {
 } from '@linen/types';
 import { addMessageToThread } from './state';
 import { addReactionToThread } from 'utilities/state/reaction';
-import * as api from 'utilities/requests';
+import { api } from 'utilities/requests';
 import Actions from 'components/Actions';
 import JoinChannelLink from 'components/Link/JoinChannelLink';
 

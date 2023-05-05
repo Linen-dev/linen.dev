@@ -3,14 +3,13 @@ import { useEffect, useState } from 'react';
 import PageLayout from 'components/layout/PageLayout';
 import { buildChannelSeo } from 'utilities/seo';
 import { SerializedThread, SerializedUser, ChannelProps } from '@linen/types';
-import * as api from 'utilities/requests';
+import { api } from 'utilities/requests';
 import { addReaction } from 'utilities/state/reaction';
 import ChannelView from '@linen/ui/ChannelView';
 import { createThreadImitation } from '@linen/serializers/thread';
 import { useUsersContext } from '@linen/contexts/Users';
 import { ShowIntegrationDetail } from 'components/Modals/IntegrationsModal';
 import Actions from 'components/Actions';
-import { put, get, fetchMentions, upload } from 'utilities/requests';
 import IntegrationsModal from 'components/Modals/IntegrationsModal';
 import { useRouter } from 'next/router';
 import MembersModal from 'components/Modals/MembersModal';
@@ -182,8 +181,8 @@ export default function Channel(props: ChannelProps) {
           ...props,
           addReaction,
           Actions,
-          fetchMentions,
-          get,
+          fetchMentions: api.fetchMentions,
+          get: api.get,
           IntegrationsModal,
           JoinChannelLink,
           MembersModal,
@@ -196,9 +195,9 @@ export default function Channel(props: ChannelProps) {
           moveMessageToThreadRequest: api.moveMessageToThreadRequest,
           postReaction: api.postReaction,
           Pagination,
-          put,
+          put: api.put,
           ShowIntegrationDetail,
-          upload,
+          upload: api.upload,
           useJoinContext,
           queryIntegration: query.integration,
           apiCreateMessage: api.createMessage,

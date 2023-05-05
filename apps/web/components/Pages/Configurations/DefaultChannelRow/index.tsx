@@ -4,7 +4,7 @@ import { SerializedAccount, SerializedChannel } from '@linen/types';
 import DiscordIcon from '@linen/ui/DiscordIcon';
 import SlackIcon from '@linen/ui/SlackIcon';
 import NativeSelect from '@linen/ui/NativeSelect';
-import * as api from 'utilities/requests';
+import { api } from 'utilities/requests';
 
 interface Props {
   channels: SerializedChannel[];

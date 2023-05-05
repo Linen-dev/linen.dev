@@ -1,7 +1,7 @@
 import { SerializedAccount } from '@linen/types';
 import Toast from '@linen/ui/Toast';
 import TextField from '@linen/ui/TextField';
-import * as api from 'utilities/requests';
+import { api } from 'utilities/requests';
 
 function URLsCard({
   title,

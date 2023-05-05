@@ -13,11 +13,10 @@ import { useLinkContext } from '@linen/contexts/Link';
 import CustomRouterPush from 'components/Link/CustomRouterPush';
 import { patterns } from '@linen/types';
 import unique from 'lodash.uniq';
-import * as api from 'utilities/requests';
+import { api } from 'utilities/requests';
 import styles from './index.module.scss';
 import classNames from 'classnames';
 import { Permissions, SerializedUser } from '@linen/types';
-import { fetchMentions } from 'utilities/requests';
 
 interface Props {
   permissions: Permissions;
@@ -181,7 +180,7 @@ export function ShowUsers({
         autoComplete="off"
         onInput={(e: any) => {
           setVal(e.target.value);
-          fetchMentions(e.target.value, communityId).then(setQuery);
+          api.fetchMentions(e.target.value, communityId).then(setQuery);
         }}
       />
       <Suggestions

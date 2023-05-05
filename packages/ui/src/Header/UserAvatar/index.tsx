@@ -10,9 +10,9 @@ import styles from './index.module.scss';
 
 interface Props {
   currentUser: SerializedUser;
-  onProfileChange({ displayName }: { displayName: string }): Promise<void>;
   onUpload(data: FormData, options: any): void;
   signOut: () => void;
+  put: (path: string, data?: {}) => Promise<any>;
 }
 
 enum Mode {
@@ -22,9 +22,9 @@ enum Mode {
 
 export default function UserAvatar({
   currentUser,
-  onProfileChange,
   onUpload,
   signOut,
+  put,
 }: Props) {
   const userNavigation = [
     {
@@ -62,7 +62,19 @@ export default function UserAvatar({
         <ProfileForm
           currentUser={currentUser}
           onSubmit={async ({ displayName }) => {
-            await onProfileChange({ displayName });
+            await put('/api/profile', {
+              displayName,
+            }).then(() => {
+              // Potential improvement:
+              // We could improve the behavior here
+              // by updating the user information live.
+              // It is a bit time consuming because
+              // we would need to make currentUser dynamic
+              // and update user information in all threads we have.
+              // We would need to have a centralized store for users
+              // which we could manipulate.
+              window.location.reload();
+            });
             setMode(Mode.Menu);
           }}
           onUpload={onUpload}
