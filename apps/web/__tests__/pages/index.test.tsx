@@ -6,7 +6,7 @@ describe('Home', () => {
   it('renders a header', () => {
     const { container } = render(<Home accounts={[]} />);
     expect(container).toHaveTextContent(
-      'Google-Searchable and community focused'
+      'Linen is a real-time chat platform built for communities.'
     );
   });
 });
