@@ -239,7 +239,7 @@ channelsRouter.post(
 
 channelsRouter.put(
   `${prefix}/:channelId`,
-  tenantMiddleware([Roles.ADMIN]),
+  tenantMiddleware([Roles.OWNER, Roles.ADMIN]),
   validationMiddleware(updateChannelSchema),
   async (
     req: AuthedRequestWithTenantAndBody<updateChannelType>,
