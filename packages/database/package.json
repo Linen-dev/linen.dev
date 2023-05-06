@@ -5,7 +5,7 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "with-env": "yarn dotenv -e ../../apps/web/.env",
+    "with-env": "yarn dotenv -e ../../.env",
     "generate": "yarn with-env prisma generate",
     "migrate": "yarn with-env prisma migrate",
     "build": "yarn generate && rm -rf dist && yarn tsc"

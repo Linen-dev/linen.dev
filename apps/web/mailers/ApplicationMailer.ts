@@ -13,10 +13,12 @@ interface Options {
 
 class ApplicationMailer {
   static async send(options: Options) {
-    return transporter.sendMail({
-      ...options,
-      from: NOREPLY_EMAIL,
-    });
+    return transporter
+      .sendMail({
+        ...options,
+        from: NOREPLY_EMAIL,
+      })
+      .catch(() => console.log('it should skip mailing when missing envs'));
   }
 }
 
