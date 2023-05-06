@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "scripts": {
-    "dev": "next dev",
+    "dev": "dotenv -e ../../.env next dev",
     "build": "next build",
     "start": "next start",
     "start:prod": "pm2-runtime --raw \"npm run start\"",

@@ -53,7 +53,7 @@ export const identifyUserSession = ({ req, res }: any) => {
 };
 
 const identifyUrl = ({ req, resolvedUrl }: any) => {
-  const url = `${req.headers.host || req.headers.origin}${
+  const url = `${req.headers?.host || req.headers?.origin || ''}${
     resolvedUrl || req.url
   }`;
   return url;
@@ -86,7 +86,7 @@ export const trackPageView = (context: any) => {
       });
     },
     flush: async () => {
-      transaction.finish();
+      transaction?.finish();
       await postHog?.shutdownAsync();
       await Sentry.flush();
       Sentry.setUser(null);

@@ -18,7 +18,7 @@
     "turbo": "^1.6.3"
   },
   "scripts": {
-    "dev": "yarn turbo run dev --filter web...",
+    "dev": "yarn turbo run dev --filter web",
     "web": "yarn turbo --filter web...",
     "build": "yarn turbo build"
   },
