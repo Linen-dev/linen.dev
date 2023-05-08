@@ -40,6 +40,8 @@ import Row from './Row';
 import ChatLayout from '@/ChatLayout';
 import AddThreadModal from '@/AddThreadModal';
 import EditThreadModal from '@/EditThreadModal';
+import ConfirmationModal from '@/ConfirmationModal';
+import Toast from '@/Toast';
 
 const { SidebarLayout } = Layouts.Shared;
 
@@ -149,6 +151,7 @@ enum ModalView {
   EDIT_THREAD,
   MEMBERS,
   INTEGRATIONS,
+  HIDE_CHANNEL,
 }
 
 export default function Channel({
@@ -355,6 +358,10 @@ export default function Channel({
     setModal(ModalView.MEMBERS);
   }
 
+  function showDeleteChannelModal() {
+    setModal(ModalView.HIDE_CHANNEL);
+  }
+
   function showAddThreadModal() {
     setModal(ModalView.ADD_THREAD);
   }
@@ -528,6 +535,7 @@ export default function Channel({
                     onAddClick={showAddThreadModal}
                     handleOpenIntegrations={showIntegrationsModal}
                     handleOpenMembers={showMembersModal}
+                    onHideChannelClick={showDeleteChannelModal}
                   >
                     {pinnedThread && (
                       <PinnedThread
@@ -699,6 +707,42 @@ export default function Channel({
         uploading={uploading}
         uploads={uploads}
         uploadFiles={uploadFiles}
+      />
+      <ConfirmationModal
+        open={modal === ModalView.HIDE_CHANNEL}
+        close={() => setModal(ModalView.NONE)}
+        title={`Hide #${currentChannel.channelName}`}
+        description={`Are you sure you want to hide the #${currentChannel.channelName} channel? It won't be available to the members of your community anymore.`}
+        onConfirm={() => {
+          console.log('CONFIRM!');
+          setModal(ModalView.NONE);
+          fetch(`/api/channels/hide?accountId=${currentCommunity.id}`, {
+            method: 'POST',
+            body: JSON.stringify({
+              channels: [{ id: currentChannel.id, hidden: true }],
+            }),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          })
+            .then((response) => {
+              console.log('ERROR!');
+              if (!response.ok) {
+                throw new Error();
+              }
+              Toast.success(`#${currentChannel.channelName} is hidden`);
+
+              setTimeout(() => {
+                window.location.href = window.location.href.replace(
+                  new RegExp(`/c/${currentChannel.channelName}`, 'g'),
+                  ''
+                );
+              }, 1000);
+            })
+            .catch(() => {
+              Toast.error('Something went wrong. Please try again.');
+            });
+        }}
       />
       {editedThread && (
         <EditThreadModal

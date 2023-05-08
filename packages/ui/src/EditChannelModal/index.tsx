@@ -85,6 +85,12 @@ export default function EditChannelModal({
       channelName,
     });
   }
+
+  function onDelete(event: React.MouseEvent<HTMLButtonElement>) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
   return (
     <Modal open={open} close={close}>
       <form onSubmit={onSubmit}>
@@ -116,6 +122,9 @@ export default function EditChannelModal({
           checked={channelPrivate}
         />
         <div className="p-2"></div>
+        <Button onClick={onDelete} color="danger">
+          Delete
+        </Button>
         <Button type="submit" disabled={loading}>
           Save
         </Button>
