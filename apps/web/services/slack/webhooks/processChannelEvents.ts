@@ -17,14 +17,14 @@ export async function processChannelCreated(body: SlackEvent) {
   const account = await findAccountIdByExternalId(teamId);
   if (!account)
     return { status: 404, error: 'account not found', metadata: { teamId } };
-  await createChannel({
-    accountId: account.id,
-    name: event.channel.name,
-    externalChannelId: event.channel.id,
-    hidden: account.newChannelsConfig === 'HIDDEN',
-  });
   const oauth = await findSlackToken(account.id);
   if (oauth?.accessToken && oauth?.joinChannel) {
+    await createChannel({
+      accountId: account.id,
+      name: event.channel.name,
+      externalChannelId: event.channel.id,
+      hidden: account.newChannelsConfig === 'HIDDEN',
+    });
     await joinChannel(event.channel.id, oauth.accessToken);
   }
   return { status: 200, message: 'channel created' };

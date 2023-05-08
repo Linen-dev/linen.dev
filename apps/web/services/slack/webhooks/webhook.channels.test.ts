@@ -77,6 +77,10 @@ describe('webhook :: channels', () => {
       const channelsCreateMock = prismaMock.channels.create.mockResolvedValue(
         {} as channels
       );
+      prismaMock.slackAuthorizations.findFirst.mockResolvedValue({
+        accessToken: 'token',
+        joinChannel: true,
+      } as any);
 
       const res = await handleWebhook(channelCreatedEvent);
 
@@ -180,6 +184,10 @@ describe('webhook :: channels', () => {
       const channelsCreateMock = prismaMock.channels.create.mockResolvedValue(
         {} as channels
       );
+      prismaMock.slackAuthorizations.findFirst.mockResolvedValue({
+        accessToken: 'token',
+        joinChannel: true,
+      } as any);
 
       const res = await handleWebhook(channelRenameEvent);
 
