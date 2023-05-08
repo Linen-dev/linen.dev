@@ -11,7 +11,6 @@
   "sideEffect": false,
   "dependencies": {
     "@linen/scripts": "*",
-    "@linen/database": "*",
     "@linen/types": "*",
     "@linen/utilities": "*",
     "@panva/hkdf": "^1.0.4",

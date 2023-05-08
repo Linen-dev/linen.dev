@@ -15,7 +15,6 @@ import { qs } from '@linen/utilities/url';
 import { encrypt, decrypt } from '../crypto';
 import type { Session } from '../../client';
 import type MagicLoginStrategy from 'passport-magic-login';
-import { prisma } from '@linen/database';
 
 class Unauthorized extends Error {
   public status: number;
@@ -50,6 +49,10 @@ type Props = {
   jwtMiddleware: (
     _?: never
   ) => (req: AuthedRequest, res: any, next: NextFunction) => Promise<any>;
+  createSsoSession: (userId: string, encryptedToken: string) => Promise<string>;
+  getSsoSession: (id: string) => Promise<{
+    sessionToken: string;
+  }>;
 };
 
 const onError = (error: any, req: any, res: any, _: any) => {
@@ -67,6 +70,8 @@ export function CreateRouter({
   onGithubLogin,
   onSignOut,
   jwtMiddleware,
+  createSsoSession,
+  getSsoSession,
 }: Props) {
   const authRouter = Router();
 
@@ -90,13 +95,7 @@ export function CreateRouter({
       await onCredentialsLogin(req, res);
 
       if (req.query.sso) {
-        const { id: state } = await prisma.session.create({
-          data: {
-            expires: new Date(Date.now() + 5 * 60 * 60 * 60),
-            sessionToken: encrypt(token),
-            userId: logged_user.id,
-          },
-        });
+        const state = await createSsoSession(logged_user.id, encrypt(token));
         res.status(200).json({ state });
         return res.end();
       }
@@ -264,9 +263,7 @@ export function CreateRouter({
       if (!req.query.state) {
         return next(new Unauthorized());
       }
-      const session = await prisma.session.delete({
-        where: { id: req.query.state },
-      });
+      const session = await getSsoSession(req.query.state);
       if (!session) {
         return next(new Unauthorized());
       }

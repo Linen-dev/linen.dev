@@ -11,6 +11,7 @@ import jwtMiddleware from 'server/middlewares/jwt';
 import { ApiEvent, trackApiEvent } from 'utilities/ssr-metrics';
 import { normalize } from '@linen/utilities/string';
 import { joinCommunityAfterSignIn } from 'services/invites';
+import { createSsoSession, getSsoSession } from 'services/sso';
 
 const prefix = '/api/auth';
 
@@ -66,6 +67,8 @@ const authRouter = CreateRouter({
     await trackApiEvent({ req, res }, ApiEvent.sign_out);
   },
   passport,
+  createSsoSession,
+  getSsoSession,
 });
 authRouter.use(onError);
 
