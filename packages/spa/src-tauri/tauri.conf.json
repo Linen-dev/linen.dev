@@ -30,6 +30,10 @@
       "identifier": "dev.linen.desktop",
       "targets": "all"
     },
+    "systemTray": {
+      "iconPath": "icons/icon.ico",
+      "iconAsTemplate": true
+    },
     "security": {
       "csp": null
     },
