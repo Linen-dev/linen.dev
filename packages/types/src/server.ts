@@ -50,4 +50,5 @@ export type LoggedUser = {
   state?: string;
   displayName?: string;
   profileImageUrl?: string;
+  sso?: string;
 };

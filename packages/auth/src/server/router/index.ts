@@ -113,7 +113,7 @@ export function CreateRouter({
       }
       const logged_user = req.user as LoggedUser;
 
-      const callbackUrl = logged_user.callbackUrl;
+      const callbackUrl = logged_user.callbackUrl || '/';
 
       const token = await signToken({
         id: logged_user.id,
@@ -123,6 +123,12 @@ export function CreateRouter({
       setSessionCookies({ token, req, res });
       // ===
       await onMagicLinkLogin(req, res, logged_user);
+
+      if (logged_user.sso) {
+        const state = await createSsoSession(logged_user.id, encrypt(token));
+        res.redirect(`${callbackUrl}?${qs({ state })}`);
+        return res.end();
+      }
 
       res.redirect(callbackUrl || '/');
     }

@@ -55,6 +55,7 @@ export function magicLinkStrategy({
       const callbackUrl = payload.callbackUrl;
       const state = payload.state;
       const displayName = payload.displayName;
+      const sso = payload.sso;
 
       // Get or create a user with the provided email from the database
       getOrCreateUserWithEmail(payload.destination)
@@ -65,6 +66,7 @@ export function magicLinkStrategy({
             callbackUrl,
             state,
             displayName,
+            sso,
           });
         })
         .catch((err) => {

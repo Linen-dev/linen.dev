@@ -24,7 +24,12 @@ async function signInWithCreds(
 async function signInWithMagicLink(
   email: string,
   csrfToken: string,
-  options: { callbackUrl?: string; displayName?: string; state?: string } = {}
+  options: {
+    callbackUrl?: string;
+    displayName?: string;
+    state?: string;
+    sso?: string;
+  } = {}
 ) {
   return await fetch(`/api/auth/magic-link`, {
     method: 'POST',
@@ -95,6 +100,7 @@ export function onSignInSubmit({
         await signInWithMagicLink(email, csrfToken, {
           callbackUrl,
           state,
+          sso,
         });
         window.location.href = '/verify-request';
       }
