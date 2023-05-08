@@ -6,9 +6,10 @@ import styles from './index.module.scss';
 import { SerializedUser } from '@linen/types';
 import { FiHash } from '@react-icons/all-files/fi/FiHash';
 import { FiMoreVertical } from '@react-icons/all-files/fi/FiMoreVertical';
-import { BsFillGearFill } from '@react-icons/all-files/bs/BsFillGearFill';
+import { FiSettings } from '@react-icons/all-files/fi/FiSettings';
 import { FiUsers } from '@react-icons/all-files/fi/FiUsers';
 import { FiEdit3 } from '@react-icons/all-files/fi/FiEdit3';
+import { FiEyeOff } from '@react-icons/all-files/fi/FiEyeOff';
 import { Permissions, SerializedChannel } from '@linen/types';
 
 interface Props {
@@ -20,6 +21,7 @@ interface Props {
   onAddClick(): void;
   handleOpenIntegrations(): void;
   handleOpenMembers(): void;
+  onHideChannelClick(): void;
   ShowIntegrationDetail(): JSX.Element;
 }
 
@@ -32,12 +34,13 @@ export default function Header({
   onAddClick,
   handleOpenIntegrations,
   handleOpenMembers,
+  onHideChannelClick,
   ShowIntegrationDetail,
 }: Props) {
   const items = [];
   if (channel.type !== 'DM') {
     items.push({
-      icon: <BsFillGearFill />,
+      icon: <FiSettings />,
       label: 'Integrations',
       onClick: handleOpenIntegrations,
     });
@@ -47,6 +50,13 @@ export default function Header({
       icon: <FiUsers />,
       label: 'Members',
       onClick: handleOpenMembers,
+    });
+  }
+  if (permissions.manage) {
+    items.push({
+      icon: <FiEyeOff />,
+      label: 'Hide channel',
+      onClick: onHideChannelClick,
     });
   }
   return (

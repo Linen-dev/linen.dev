@@ -27,7 +27,15 @@ export default function ConfirmationModal({
       <h3 className={styles.header}>{title || 'Confirmation'}</h3>
       <p className={styles.description}>{description || 'Are you sure?'}</p>
       <div className={styles.buttons}>
-        <Button color="blue" onClick={onConfirm} type="button">
+        <Button
+          color="blue"
+          onClick={(event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            onConfirm();
+          }}
+          type="button"
+        >
           {confirm || 'Confirm'}
         </Button>
         <Button color="gray" onClick={close} type="button">

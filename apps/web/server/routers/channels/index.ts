@@ -259,22 +259,6 @@ channelsRouter.put(
   }
 );
 
-channelsRouter.delete(
-  `${prefix}/:channelId`,
-  tenantMiddleware([Roles.OWNER, Roles.ADMIN]),
-  validationMiddleware(updateChannelSchema),
-  async (
-    req: AuthedRequestWithTenantAndBody<updateChannelType>,
-    res: Response,
-    next: NextFunction
-  ) => {
-    await prisma.channels.delete({
-      where: { id: req.body.channelId },
-    });
-    return res.status(200).json({});
-  }
-);
-
 channelsRouter.get(
   `${prefix}/:channelId/members`,
   tenantMiddleware([Roles.ADMIN, Roles.OWNER, Roles.MEMBER]),
