@@ -10,6 +10,7 @@ import { filterMessageType, filterSupportedChannel } from '../utils/filter';
 import type { Message } from 'discord.js';
 import { logger } from '@linen/logger';
 import { linenSdk, findAccountByExternalId } from '../utils/linen';
+import { MessageFormat } from '@linen/types';
 
 export async function onMessageCreate(message: Message) {
   logger.info('onMessageCreate', message);
@@ -94,6 +95,7 @@ export async function onMessageCreate(message: Message) {
       body: parsedMessage.body,
       threadId: linenThread.id,
       mentions,
+      messageFormat: MessageFormat.DISCORD,
     });
   }
   if (threadOrReply === 'thread') {

@@ -25,6 +25,7 @@ export default class MessagesService {
     userId,
     externalMessageId,
     mentions,
+    messageFormat = MessageFormat.LINEN,
   }: {
     body: string;
     files?: UploadedFile[];
@@ -35,6 +36,7 @@ export default class MessagesService {
     userId: string;
     externalMessageId?: string;
     mentions?: { id: string }[];
+    messageFormat?: MessageFormat;
   }) {
     const channel = await prisma.channels.findFirst({
       where: { id: channelId, accountId },
@@ -71,7 +73,7 @@ export default class MessagesService {
             })),
           },
         }),
-        messageFormat: MessageFormat.LINEN,
+        messageFormat,
       } as Prisma.messagesCreateInput,
     };
 

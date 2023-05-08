@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { MessageFormat } from '../messages';
 
 export const messageGetSchema = z.object({
   messageId: z.string().uuid(),
@@ -46,6 +47,9 @@ export const messagePostSchema = z.object({
         id: z.string().uuid(),
       })
     )
+    .optional(),
+  messageFormat: z
+    .enum([MessageFormat.DISCORD, MessageFormat.LINEN, MessageFormat.SLACK])
     .optional(),
 });
 export type messagePostType = z.infer<typeof messagePostSchema>;
