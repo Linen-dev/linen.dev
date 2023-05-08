@@ -5,6 +5,7 @@ import { SerializedChannel, ChannelProps } from '@linen/types';
 import Pagination from 'components/Pagination';
 import Grid from '@linen/ui/GridContent';
 import { RowForBots } from './RowForBots';
+import Row from '@linen/ui/Row';
 
 export default function ChannelForBots({
   threads,
@@ -54,7 +55,7 @@ export default function ChannelForBots({
           onStar={() => {}}
           onReaction={() => {}}
           onDrop={() => {}}
-          Row={RowForBots}
+          Row={RowForBots({ Row })}
         />
         <Pagination
           {...{

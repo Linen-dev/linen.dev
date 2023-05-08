@@ -13,7 +13,7 @@ import {
 import { Mode } from '@linen/hooks/mode';
 import usePriority from '@linen/hooks/priority';
 import styles from './index.module.scss';
-import DefaultRow from '@/ChannelView/Content/Row';
+import DefaultRow from '@/Row';
 
 enum RowType {
   Thread,

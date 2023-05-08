@@ -15,7 +15,7 @@ import { Mode } from '@linen/hooks/mode';
 import { FiMessageCircle } from '@react-icons/all-files/fi/FiMessageCircle';
 import { FiUsers } from '@react-icons/all-files/fi/FiUsers';
 import { FiUser } from '@react-icons/all-files/fi/FiUser';
-import { uniqueUsers } from '../utilities/uniqueUsers';
+import { uniqueUsers } from './utilities/uniqueUsers';
 
 interface Props {
   className?: string;

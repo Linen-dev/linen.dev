@@ -124,6 +124,7 @@
     "./Progress": "./dist/Progress/index.js",
     "./ProgressModal": "./dist/ProgressModal/index.js",
     "./ReminderModal": "./dist/ReminderModal/index.js",
+    "./Row": "./dist/Row/index.js",
     "./SlackIcon": "./dist/SlackIcon/index.js",
     "./Spinner": "./dist/Spinner/index.js",
     "./StickyHeader": "./dist/StickyHeader/index.js",
@@ -336,6 +337,9 @@
       ],
       "ReminderModal": [
         "./dist/ReminderModal/index.d.ts"
+      ],
+      "Row": [
+        "./dist/Row/index.d.ts"
       ],
       "SlackIcon": [
         "./dist/SlackIcon/index.d.ts"
