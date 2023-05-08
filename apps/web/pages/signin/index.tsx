@@ -15,6 +15,7 @@ export async function getServerSideProps(context: NextPageContext) {
       email: context.query.email || '',
       state: context.query.state || null,
       mode: context.query.mode || 'magic',
+      sso: context.query.sso || null,
     },
   };
 }

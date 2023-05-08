@@ -1,11 +1,13 @@
 import { getCsrfToken } from '@linen/auth/client';
+import { qs } from '@linen/utilities/url';
 
 async function signInWithCreds(
   email: string,
   password: string,
-  csrfToken: string
+  csrfToken: string,
+  sso?: string
 ) {
-  return await fetch(`/api/auth/callback/credentials`, {
+  return await fetch(`/api/auth/callback/credentials?${qs({ sso })}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -14,7 +16,7 @@ async function signInWithCreds(
       csrfToken,
     }),
   }).then((r) => {
-    if (r.ok) r.json();
+    if (r.ok) return r.json();
     else throw r.json();
   });
 }
@@ -33,7 +35,7 @@ async function signInWithMagicLink(
       ...options,
     }),
   }).then((r) => {
-    if (r.ok) r.json();
+    if (r.ok) return r.json();
     else throw r.json();
   });
 }
@@ -44,12 +46,14 @@ export function onSignInSubmit({
   callbackUrl,
   onSignIn,
   state,
+  sso,
 }: {
   setError: (arg: string) => void;
   setLoading: (arg: boolean) => void;
   callbackUrl?: string;
   onSignIn?: () => void;
   state?: string;
+  sso?: string;
 }) {
   return async (event: any, mode: SignInMode) => {
     event.preventDefault();
@@ -72,10 +76,18 @@ export function onSignInSubmit({
           return;
         }
 
-        await signInWithCreds(email, password, csrfToken);
+        const signInResponse = await signInWithCreds(
+          email,
+          password,
+          csrfToken,
+          sso
+        );
         if (onSignIn) {
           onSignIn();
         } else {
+          if (sso) {
+            callbackUrl += `?state=${signInResponse.state}`;
+          }
           window.location.href = callbackUrl || '/';
         }
       }

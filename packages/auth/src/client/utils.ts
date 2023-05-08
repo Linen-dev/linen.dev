@@ -69,6 +69,10 @@ export async function fetchData<T = any>(
     const res = await fetch(url, options);
     const data = await res.json();
     if (!res.ok) throw data;
+    if (!!data.token) {
+      setJwtToken(data.token);
+      delete data.token;
+    }
     return Object.keys(data).length > 0 ? data : null; // Return null if data empty
   } catch (error: any) {
     logger.error('CLIENT_FETCH_ERROR', { error: error as Error, url });

@@ -24,6 +24,7 @@ interface SignInProps {
   withLayout?: boolean;
   showSignUp?: (arg: SignInMode) => void;
   onSignIn?: () => void;
+  sso?: string;
 }
 
 function prepareUrl(url?: string) {
@@ -66,6 +67,7 @@ export default function SignIn({
             callbackUrl: redirectUrl,
             onSignIn,
             state,
+            ...props,
           })(e, mode)
         }
       >

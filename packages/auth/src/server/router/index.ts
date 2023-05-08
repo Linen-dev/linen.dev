@@ -13,8 +13,9 @@ import { expireSessionCookies, setSessionCookies } from '../cookies';
 import { createCSRFToken } from '../csrf';
 import { qs } from '@linen/utilities/url';
 import { encrypt, decrypt } from '../crypto';
-import { Session } from '../../client';
+import type { Session } from '../../client';
 import type MagicLoginStrategy from 'passport-magic-login';
+import { prisma } from '@linen/database';
 
 class Unauthorized extends Error {
   public status: number;
@@ -87,6 +88,18 @@ export function CreateRouter({
       setSessionCookies({ token, req, res });
       // ===
       await onCredentialsLogin(req, res);
+
+      if (req.query.sso) {
+        const { id: state } = await prisma.session.create({
+          data: {
+            expires: new Date(Date.now() + 5 * 60 * 60 * 60),
+            sessionToken: encrypt(token),
+            userId: logged_user.id,
+          },
+        });
+        res.status(200).json({ state });
+        return res.end();
+      }
 
       res.status(200).json({ token });
     }
@@ -224,7 +237,7 @@ export function CreateRouter({
       if (!req.session_user) {
         return next(new Unauthorized());
       }
-      await refreshTokenAction(req, res);
+      const { newToken } = await refreshTokenAction(req, res);
       const user = {
         ...req.session_user.users?.find((e: any) => e),
         ...req.session_user,
@@ -239,8 +252,26 @@ export function CreateRouter({
         ...(user?.exp && {
           expires: new Date(user?.exp * 1000).toISOString(),
         }),
+        token: newToken,
       } as Session);
       res.end();
+    }
+  );
+
+  authRouter.get(
+    `${prefix}/sso`,
+    async (req: AuthedRequest, res: Response, next: NextFunction) => {
+      if (!req.query.state) {
+        return next(new Unauthorized());
+      }
+      const session = await prisma.session.delete({
+        where: { id: req.query.state },
+      });
+      if (!session) {
+        return next(new Unauthorized());
+      }
+      res.status(200).json({ token: decrypt(session.sessionToken) });
+      return res.end();
     }
   );
 
