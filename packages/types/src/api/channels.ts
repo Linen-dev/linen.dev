@@ -19,12 +19,6 @@ export const updateChannelSchema = z.object({
 });
 export type updateChannelType = z.infer<typeof updateChannelSchema>;
 
-export const deleteChannelSchema = z.object({
-  channelId: z.string().uuid(),
-  accountId: z.string().uuid(),
-});
-export type deleteChannelType = z.infer<typeof deleteChannelSchema>;
-
 export const bulkHideChannelsSchema = z.object({
   channels: z.array(z.object({ id: z.string().uuid(), hidden: z.boolean() })),
   accountId: z.string().uuid(),

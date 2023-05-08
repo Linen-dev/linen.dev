@@ -358,7 +358,7 @@ export default function Channel({
     setModal(ModalView.MEMBERS);
   }
 
-  function showDeleteChannelModal() {
+  function showHideChannelModal() {
     setModal(ModalView.HIDE_CHANNEL);
   }
 
@@ -535,7 +535,7 @@ export default function Channel({
                     onAddClick={showAddThreadModal}
                     handleOpenIntegrations={showIntegrationsModal}
                     handleOpenMembers={showMembersModal}
-                    onHideChannelClick={showDeleteChannelModal}
+                    onHideChannelClick={showHideChannelModal}
                   >
                     {pinnedThread && (
                       <PinnedThread
@@ -714,7 +714,6 @@ export default function Channel({
         title={`Hide #${currentChannel.channelName}`}
         description={`Are you sure you want to hide the #${currentChannel.channelName} channel? It won't be available to the members of your community anymore.`}
         onConfirm={() => {
-          console.log('CONFIRM!');
           setModal(ModalView.NONE);
           fetch(`/api/channels/hide?accountId=${currentCommunity.id}`, {
             method: 'POST',
@@ -726,7 +725,6 @@ export default function Channel({
             },
           })
             .then((response) => {
-              console.log('ERROR!');
               if (!response.ok) {
                 throw new Error();
               }
