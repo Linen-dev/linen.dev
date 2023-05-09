@@ -1,5 +1,3 @@
-@import '@linen/styles/colors.scss';
-
 .toggle {
   align-items: center;
   display: flex;
@@ -20,7 +18,7 @@
 }
 
 .enabled {
-  color: $color-gray-900;
+  color: var(--color-gray-900);
 }
 
 .suggestions {

@@ -1,7 +1,7 @@
 @import '@linen/styles/colors.scss';
 
 .header {
-  background: white;
+  background: var(--color-background);
   position: fixed;
   width: 100%;
   border-bottom: 1px solid $color-gray-100;

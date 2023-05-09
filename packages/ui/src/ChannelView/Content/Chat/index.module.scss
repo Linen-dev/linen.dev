@@ -1,13 +1,11 @@
-@import '../../../colors.scss';
-
 .chat {
-  background: white;
-  border-top: 1px solid $color-border;
+  background: var(--color-background);
+  border-top: 1px solid var(--color-border);
   padding: 1rem;
 }
 
 .hover {
-  background: $color-gray-50;
+  background: var(--color-gray-50);
 }
 
 .hover * {

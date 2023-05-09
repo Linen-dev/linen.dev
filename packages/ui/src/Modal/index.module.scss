@@ -6,7 +6,7 @@
 }
 
 .overlay {
-  background-color: rgba($color-gray-500, 0.75);
+  background-color: rgba(var(--color-gray-500), 0.75);
   top: 0px;
   right: 0px;
   bottom: 0px;
@@ -56,9 +56,10 @@
 }
 
 .content {
-  background: white;
+  background: var(--color-background);
+  color: var(--color-text);
   border-radius: 0.5rem;
-  box-shadow: 0px 2px 8px -4px rgba($color-gray-700, 0.5);
+  box-shadow: 0px 2px 8px -4px rgba(var(--color-gray-700), 0.5);
   overflow: hidden;
   text-align: left;
   transition-property: all;

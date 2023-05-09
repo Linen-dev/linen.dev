@@ -1,10 +1,8 @@
-@import '../../colors.scss';
-
 .code {
   border-radius: 0.25rem;
-  background: $color-gray-100;
-  border-color: $color-gray-200;
-  color: $color-gray-800;
+  background: var(--color-gray-100);
+  border-color: var(--color-gray-200);
+  color: var(--color-gray-800);
   font-family: monospace;
   font-size: 12px;
   line-height: 1.3;

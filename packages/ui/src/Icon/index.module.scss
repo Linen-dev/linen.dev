@@ -1,11 +1,11 @@
 @import '../colors.scss';
 
 .icon {
-  background: $color-white;
+  background: var(--color-background);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: $color-gray-700;
+  color: var(--color-gray-700);
   cursor: pointer;
   border-radius: 50%;
   height: 32px;
@@ -17,23 +17,23 @@
 
 .icon:focus-visible,
 .icon:hover {
-  background: $color-gray-50;
-  color: black;
-  box-shadow: 0 2px 4px $color-gray-200;
+  background: var(--color-gray-50);
+  color: var(--color-text);
+  box-shadow: 0 2px 4px var(--color-gray-200);
   outline: 0;
 }
 
 .icon:focus-visible {
-  border: 2px solid $color-blue-700;
+  border: 2px solid var(--color-blue-700);
 }
 
 .icon.active {
-  background: $color-green-600;
+  background: var(--color-green-600);
   color: white;
 }
 
 .icon.disabled {
-  color: $color-gray-400;
+  color: var(--color-gray-400);
   cursor: auto;
   box-shadow: none;
   pointer-events: none;

@@ -12,6 +12,7 @@ import { useRouter } from 'next/router';
 import { Roles } from '@linen/types';
 import { FiUser } from '@react-icons/all-files/fi/FiUser';
 import { FiTrash2 } from '@react-icons/all-files/fi/FiTrash2';
+import styles from './index.module.scss';
 
 import {
   SerializedAccount,
@@ -49,7 +50,7 @@ function InviteMember({
   loading: boolean;
 }) {
   return (
-    <form onSubmit={onSubmit}>
+    <form className={styles.form} onSubmit={onSubmit}>
       <Label htmlFor="email">
         Invite
         <br />

@@ -1,7 +1,5 @@
-@import '../../colors.scss';
-
 .subtitle {
-  color: $color-gray-700;
+  color: var(--color-gray-700);
   font-size: 0.75rem;
   line-height: 1rem;
 }

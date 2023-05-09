@@ -4,6 +4,7 @@ import { SerializedAccount, SerializedChannel } from '@linen/types';
 import DiscordIcon from '@linen/ui/DiscordIcon';
 import SlackIcon from '@linen/ui/SlackIcon';
 import NativeSelect from '@linen/ui/NativeSelect';
+import H3 from '@linen/ui/H3';
 import { api } from 'utilities/requests';
 
 interface Props {
@@ -47,9 +48,7 @@ export default function DefaultChannelRow({
   return (
     <div className="flex">
       <div className="grow">
-        <h3 className="text-lg leading-6 font-medium text-gray-900">
-          Default channel
-        </h3>
+        <H3>Default channel</H3>
         <div className="mt-2 sm:flex sm:items-start sm:justify-between">
           <div className="max-w-xl text-sm text-gray-500">
             <p>

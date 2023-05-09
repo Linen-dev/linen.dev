@@ -1,6 +1,7 @@
 import { SerializedAccount } from '@linen/types';
 import Toast from '@linen/ui/Toast';
 import TextField from '@linen/ui/TextField';
+import H3 from '@linen/ui/H3';
 import { api } from 'utilities/requests';
 
 function URLsCard({
@@ -16,9 +17,7 @@ function URLsCard({
     <>
       <div className="flex gap-4">
         <div className="flex-1">
-          <h3 className="text-lg leading-6 font-medium text-gray-900">
-            {title}
-          </h3>
+          <H3>{title}</H3>
           <div className="mt-2 sm:flex sm:items-start sm:justify-between">
             <div className="max-w-xl text-sm text-gray-500">
               <p>{subtitle}</p>

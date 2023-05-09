@@ -1,8 +1,6 @@
-@import '../../colors.scss';
-
 .label {
   align-items: center;
-  color: $color-gray-700;
+  color: var(--color-gray-700);
   border-radius: 0.5rem;
   display: flex;
   font-size: 0.875rem;

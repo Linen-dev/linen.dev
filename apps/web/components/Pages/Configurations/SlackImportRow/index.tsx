@@ -3,6 +3,7 @@ import { usePresignedUpload } from 'next-s3-upload';
 import { useRef, useState } from 'react';
 import { SerializedAccount } from '@linen/types';
 import Toast from '@linen/ui/Toast';
+import H3 from '@linen/ui/H3';
 import { qs } from '@linen/utilities/url';
 
 const fail = () => Toast.error('Something went wrong');
@@ -62,9 +63,7 @@ export default function SlackImportRow({
   return (
     <div className="flex">
       <div className="grow">
-        <h3 className="text-lg leading-6 font-medium text-gray-900">
-          Import conversations from Slack
-        </h3>
+        <H3>Import conversations from Slack</H3>
         <div className="mt-2 sm:flex sm:items-start sm:justify-between">
           <div className="max-w-xl text-sm text-gray-500">
             <p>

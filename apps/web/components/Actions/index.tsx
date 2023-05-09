@@ -14,11 +14,11 @@ import {
   onResolve,
 } from '@linen/types';
 import { copyToClipboard } from '@linen/utilities/clipboard';
-import { GoPin } from '@react-icons/all-files/go/GoPin';
+import { FiMapPin } from '@react-icons/all-files/fi/FiMapPin';
 import { FiStar } from '@react-icons/all-files/fi/FiStar';
-import { AiOutlinePaperClip } from '@react-icons/all-files/ai/AiOutlinePaperClip';
-import { AiOutlineHighlight } from '@react-icons/all-files/ai/AiOutlineHighlight';
-import { GrDrag } from '@react-icons/all-files/gr/GrDrag';
+import { FiPaperclip } from '@react-icons/all-files/fi/FiPaperclip';
+import { FiBookmark } from '@react-icons/all-files/fi/FiBookmark';
+import { FiMove } from '@react-icons/all-files/fi/FiMove';
 import { FiClock } from '@react-icons/all-files/fi/FiClock';
 import { FiEdit } from '@react-icons/all-files/fi/FiEdit';
 import { FiThumbsUp } from '@react-icons/all-files/fi/FiThumbsUp';
@@ -239,7 +239,7 @@ export default function Actions({
             }}
           >
             <Tooltip className={styles.tooltip} text="Pin">
-              <GoPin
+              <FiMapPin
                 className={classNames({ [styles.active]: thread.pinned })}
               />
             </Tooltip>
@@ -271,7 +271,7 @@ export default function Actions({
             }}
           >
             <Tooltip className={styles.tooltip} text="Mark resolution">
-              <AiOutlineHighlight
+              <FiBookmark
                 className={classNames({
                   [styles.active]: thread.resolutionId === message.id,
                 })}
@@ -288,7 +288,7 @@ export default function Actions({
               mode={mode}
             >
               <Tooltip className={styles.tooltip} text="Move">
-                <GrDrag />
+                <FiMove />
               </Tooltip>
             </Draggable>
           </li>
@@ -310,7 +310,7 @@ export default function Actions({
           }}
         >
           <Tooltip className={styles.tooltip} text="URL">
-            <AiOutlinePaperClip />
+            <FiPaperclip />
           </Tooltip>
         </li>
         {isDeleteVisible && (

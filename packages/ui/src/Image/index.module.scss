@@ -1,17 +1,15 @@
-@import '../colors.scss';
-
 .placeholder {
   align-items: center;
-  background: white;
-  border: 1px solid $color-gray-200;
+  background: var(--color-background);
+  border: 1px solid var(--color-gray-200);
   border-radius: 4px;
-  color: $color-gray-400;
+  color: var(--color-gray-400);
   display: flex;
   justify-content: center;
 }
 
 .error {
-  color: $color-gray-400;
+  color: var(--color-gray-400);
   display: flex;
   flex-direction: column;
   font-size: 12px;

@@ -1,9 +1,7 @@
-@import '../../../colors.scss';
-
 .image,
 .placeholder {
-  background-color: white;
-  border: 1px solid $color-gray-200;
+  background-color: var(--color-background);
+  border: 1px solid var(--color-gray-200);
   border-radius: 4px;
   cursor: zoom-in;
   display: inline-block;

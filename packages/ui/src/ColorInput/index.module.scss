@@ -1,7 +1,7 @@
 @import '../colors.scss';
 
 .input {
-  background: white;
+  background: var(--color-background);
   cursor: pointer;
   display: block;
   width: 100%;

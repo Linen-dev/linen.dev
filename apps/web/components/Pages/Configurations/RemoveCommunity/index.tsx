@@ -43,9 +43,7 @@ export default function RemoveCommunity({
         onRemoveConfirm
       )}
       <div className="grow">
-        <h3 className="text-lg leading-6 font-medium text-gray-900">
-          Delete this community
-        </h3>
+        <H3>Delete this community</H3>
         <div className="mt-2 sm:flex sm:items-start sm:justify-between">
           <div className="max-w-xl text-sm text-gray-500">
             <p>

@@ -1,8 +1,6 @@
-@import '../../colors.scss';
-
 .summary {
-  background: $color-orange-50;
-  border-bottom: 1px solid $color-border;
+  background: var(--color-orange-50);
+  border-bottom: 1px solid var(--color-border);
   padding: 1rem;
   margin: 1rem 0;
 }
@@ -32,6 +30,6 @@
 
 .summary .tooltip {
   cursor: help;
-  color: $color-gray-500;
+  color: var(--color-gray-500);
   font-size: 11px;
 }

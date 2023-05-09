@@ -1,5 +1,3 @@
-@import '@linen/styles/colors.scss';
-
 .actions {
   cursor: pointer;
   display: flex;
@@ -12,10 +10,10 @@
 }
 
 .actions li:hover {
-  background: $color-gray-50;
+  background: var(--color-gray-50);
   border-radius: 4px;
 }
 
 .active {
-  color: $color-secondary;
+  color: var(--color-secondary);
 }

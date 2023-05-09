@@ -1,6 +1,5 @@
-@import '../colors.scss';
-
 .container {
+  color: var(--color-text);
   padding: 0 0 1rem 0;
 }
 
@@ -27,7 +26,7 @@
   font-weight: 500;
   font-size: 0.875rem;
   line-height: 1;
-  color: black;
+  color: var(--color-text);
 }
 
 .header {
@@ -39,7 +38,7 @@
 }
 
 .date {
-  color: $color-gray-600;
+  color: var(--color-gray-600);
   font-size: 0.75rem;
 }
 

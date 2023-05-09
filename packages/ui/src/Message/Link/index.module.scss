@@ -1,5 +1,3 @@
-@import '../../colors.scss';
-
 .link {
   hyphens: auto;
   line-break: auto;
@@ -8,7 +6,7 @@
   word-break: break-word;
   word-wrap: break-word;
   text-decoration: none;
-  color: $color-indigo-700;
+  color: var(--color-primary);
 }
 .link:hover {
   text-decoration: underline;
