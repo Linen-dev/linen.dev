@@ -10,12 +10,7 @@ export default function PoweredByLinen() {
       href="https://www.linen.dev"
     >
       Powered by
-      <img
-        className={styles.image}
-        src="https://linen.dev/images/logo/linen.png"
-        width={56}
-        height={12}
-      />
+      <div className={styles.image} />
     </a>
   );
 }

@@ -1,8 +1,6 @@
-@import '../../colors.scss';
-
 .item {
   align-items: center;
-  color: $color-gray-700;
+  color: var(--color-gray-700);
   border-radius: 4px;
   cursor: pointer;
   display: flex;
@@ -16,8 +14,8 @@
   transition: 0.1s ease-in color, 0.1s ease-in background;
 
   &:hover {
-    background: $color-gray-50;
-    color: $color-gray-900;
+    background: var(--color-gray-50);
+    color: var(--color-gray-900);
   }
 }
 
@@ -27,13 +25,13 @@
 
 .active,
 .active:hover {
-  background-color: $color-gray-100;
-  color: $color-gray-900;
+  background-color: var(--color-gray-100);
+  color: var(--color-gray-900);
 }
 
 .highlighted,
 .highlighted:hover {
-  color: black;
+  color: var(--color-text);
   font-weight: 700;
 }
 

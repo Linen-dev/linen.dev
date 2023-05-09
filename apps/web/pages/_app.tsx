@@ -1,3 +1,4 @@
+import '@linen/styles/colors.css';
 import '@linen/styles/reset.css';
 import '@linen/styles/nprogress.scss';
 import '@linen/styles/globals.css';

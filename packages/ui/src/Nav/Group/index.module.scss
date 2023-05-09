@@ -1,8 +1,6 @@
-@import '../../colors.scss';
-
 .group {
   align-items: center;
-  color: $color-gray-500;
+  color: var(--color-gray-500);
   border-radius: 0.25rem;
   display: flex;
   font-size: 0.75rem;
@@ -25,6 +23,6 @@
 }
 
 .action:hover {
-  background-color: $color-gray-50;
-  color: $color-gray-900;
+  background-color: var(--color-gray-50);
+  color: var(--color-gray-900);
 }
