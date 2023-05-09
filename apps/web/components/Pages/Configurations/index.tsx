@@ -128,14 +128,14 @@ export default function ConfigurationsPage({
           }}
         />
         <hr className="my-3" />
-        <CommunityChatRow
+        {/* <CommunityChatRow
           chat={currentCommunity.chat}
           disabled={!currentCommunity.premium}
           onChange={(chat: ChatType) => {
             updateAccount({ communityId: currentCommunity.id, chat });
           }}
         />
-        <hr className="my-3" />
+        <hr className="my-3" /> */}
         <RemoveCommunity currentCommunity={currentCommunity} />
       </div>
     </PageLayout>
