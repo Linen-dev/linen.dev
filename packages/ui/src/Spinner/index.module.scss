@@ -15,7 +15,7 @@
   margin: 2px;
   border: 2px solid $color-gray-700;
   border-radius: 50%;
-  animation: spin 1.2s ease-in infinite;
+  animation: spin 1.2s ease infinite;
   border-color: $color-gray-700 transparent transparent transparent;
 }
 .spinner div:nth-child(1) {

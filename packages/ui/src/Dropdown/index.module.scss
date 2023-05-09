@@ -17,7 +17,7 @@
   white-space: nowrap;
   padding: 0.5rem 1rem;
   font-weight: 500;
-  transition: background 0.1s ease-in, color 0.1s ease-in;
+  transition: background 0.1s ease, color 0.1s ease;
 }
 
 .action:hover {
@@ -35,7 +35,7 @@
   opacity: 0;
   transform: scale(0.9);
   pointer-events: none;
-  transition: opacity 0.1s ease-in, transform 0.1s ease-in;
+  transition: opacity 0.1s ease, transform 0.1s ease;
   overflow: hidden;
 }
 

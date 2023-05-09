@@ -25,7 +25,7 @@
     font-size: 14px;
     font-weight: bold;
     padding: 0.5rem 1rem;
-    transition: 0.1s ease-in color, 0.1s ease-in background;
+    transition: 0.1s ease color, 0.1s ease background;
   }
 
   li a:hover {
@@ -102,7 +102,7 @@
   cursor: pointer;
   display: flex;
   padding: 0.5rem;
-  transition: box-shadow 0.1s ease-in;
+  transition: box-shadow 0.1s ease;
   gap: 0.5rem;
 }
 
