@@ -2,7 +2,7 @@
 
 .checkbox {
   appearance: none;
-  background: $color-gray-200;
+  background: var(--color-gray-200);
   border-radius: 16px;
   cursor: pointer;
   display: flex;
@@ -18,7 +18,7 @@
   width: 44px;
 
   &:after {
-    background: white;
+    background: var(--color-background);
     border-radius: 50%;
     content: '';
     display: block;
@@ -32,7 +32,7 @@
   }
 
   &:checked {
-    background: $color-primary;
+    background: var(--color-primary);
   }
 
   &:checked:after  {

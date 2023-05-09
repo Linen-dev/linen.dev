@@ -1,7 +1,5 @@
-@import '../colors.scss';
-
 .label {
-  color: $color-gray-900;
+  color: var(--color-gray-900);
   display: block;
   font-size: 0.875rem;
   font-weight: 600;

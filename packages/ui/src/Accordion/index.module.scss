@@ -1,7 +1,7 @@
 @import '../colors.scss';
 
 .text {
-  color: $color-gray-700;
+  color: var(--color-gray-700);
   cursor: pointer;
   font-size: 14px;
   margin-bottom: 4px;

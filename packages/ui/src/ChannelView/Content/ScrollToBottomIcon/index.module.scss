@@ -1,5 +1,3 @@
-@import '../../../colors.scss';
-
 .jump {
   bottom: -1px;
   display: block;
@@ -20,9 +18,9 @@
 
 .icon {
   align-items: center;
-  background: white;
-  border: 1px solid $color-border;
-  color: $color-gray-400;
+  background: var(--color-background);
+  border: 1px solid var(--color-border);
+  color: var(--color-gray-400);
   cursor: pointer;
   display: inline-flex;
   justify-content: center;
@@ -36,7 +34,7 @@
     color 0.1s ease-in;
 
   &:hover {
-    background: $color-gray-50;
-    color: $color-gray-700;
+    background: var(--color-gray-100);
+    color: var(--color-gray-700);
   }
 }

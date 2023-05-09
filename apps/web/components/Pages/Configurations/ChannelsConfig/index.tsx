@@ -1,5 +1,6 @@
 import React from 'react';
 import Toast from '@linen/ui/Toast';
+import H3 from '@linen/ui/H3';
 import { SerializedAccount } from '@linen/types';
 import NativeSelect from '@linen/ui/NativeSelect';
 import { api } from 'utilities/requests';
@@ -34,9 +35,7 @@ export default function ChannelsConfig({ currentCommunity }: Props) {
   return (
     <div className="flex">
       <div className="grow">
-        <h3 className="text-lg leading-6 font-medium text-gray-900">
-          Hide new channels
-        </h3>
+        <H3>Hide new channels</H3>
         <div className="mt-2 sm:flex sm:items-start sm:justify-between">
           <div className="max-w-xl text-sm text-gray-500">
             <p>

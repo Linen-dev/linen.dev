@@ -32,6 +32,7 @@
   width: 100%;
   display: block;
   line-height: 18px;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
 
 .select:focus {

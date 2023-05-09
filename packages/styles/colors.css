@@ -238,7 +238,7 @@
   --color-shadow: #cccccc;
   --color-white: #ffffff;
   --color-black: #000000;
-  --color-border: #f3f4f6;;
+  --color-border: #f3f4f6;
   --color-input: #e5e7eb;
   --color-text: #000000;
 }
@@ -258,5 +258,7 @@
 
     --color-background: #111827;
     --color-text: #fff;
+    --color-border: #1f2937;
+    --color-input: #374151;
   }
 }

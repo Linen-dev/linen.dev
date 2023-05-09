@@ -7,6 +7,7 @@ import {
 } from '@linen/types';
 import Toast from '@linen/ui/Toast';
 import Toggle from '@linen/ui/Toggle';
+import H3 from '@linen/ui/H3';
 import styles from './index.module.scss';
 import { api } from 'utilities/requests';
 import debounce from '@linen/utilities/debounce';
@@ -58,9 +59,7 @@ export default function ChannelVisibilityRow({
   return (
     <div className="flex">
       <div className="grow">
-        <h3 className="text-lg leading-6 font-medium text-gray-900">
-          Channels visibility
-        </h3>
+        <H3>Channels visibility</H3>
         <div>
           <div className="text-sm text-gray-500">
             <p>Pick which channels to display or hide.</p>

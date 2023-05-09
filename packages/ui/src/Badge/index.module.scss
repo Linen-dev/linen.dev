@@ -1,10 +1,8 @@
-@import '../colors.scss';
-
 .badge {
   align-items: center;
-  background: $color-indigo-100;
+  background: var(--color-indigo-100);
   border-radius: 9999px;
-  color: $color-indigo-800;
+  color: var(--color-indigo-800);
   display: inline-flex;
   gap: 0.25rem;
   font-size: 0.75rem;
@@ -14,12 +12,12 @@
 }
 
 .badge svg {
-  color: $color-indigo-800;
+  color: var(--color-indigo-800);
   transition: color 0.2s ease-in;
 }
 
 .success {
-  background-color: $color-green-600;
+  background-color: var(--color-green-600);
   color: white;
 }
 
@@ -32,10 +30,10 @@
 }
 
 .action:hover {
-  background: $color-indigo-800;
-  color: $color-white;
+  background: var(--color-indigo-800);
+  color: var(--color-background);
 }
 
 .action:hover svg {
-  color: $color-white;
+  color: var(--color-background);
 }

@@ -1,7 +1,5 @@
-@import '../colors.scss';
-
 .container {
-  background: $color-white;
+  background: var(--color-background);
   min-height: calc(100vh - 54px);
   overflow-y: auto;
   width: 520px;
@@ -16,12 +14,12 @@
 }
 
 .container::-webkit-scrollbar-thumb {
-  background: $color-gray-300;
+  background: var(--color-gray-300);
   border-radius: 0.25rem;
 }
 
 .container::-webkit-scrollbar-thumb:hover {
-  background: $color-gray-300;
+  background: var(--color-gray-300);
 }
 
 .container.expanded {
@@ -37,7 +35,7 @@
 }
 
 .thread {
-  background: $color-white;
+  background: var(--color-background);
 }
 
 .info {
@@ -69,8 +67,8 @@
 }
 
 .chat {
-  background: $color-white;
-  border-top: 1px solid $color-border;
+  background: var(--color-background);
+  border-top: 1px solid var(--color-border);
   bottom: 0;
   padding: 1rem;
   position: sticky;
@@ -111,7 +109,7 @@
   display: flex;
   font-size: 10px;
   text-transform: uppercase;
-  color: $color-gray-500;
+  color: var(--color-gray-500);
   font-weight: 500;
   letter-spacing: 1.3px;
   overflow: hidden;
@@ -119,14 +117,14 @@
 }
 
 .badge .text {
-  background: white;
-  color: $color-gray-400;
+  background: var(--color-background);
+  color: var(--color-gray-400);
   padding: 0.125rem 0.375rem 0.125rem 0.5rem;
   transition: color 0.2s ease-in;
 }
 
 .badge a.text:hover {
-  color: $color-primary;
+  color: var(--color-primary);
 }
 
 .badge .count {
@@ -145,7 +143,7 @@
 
 .link {
   align-items: center;
-  color: $color-indigo-700;
+  color: var(--color-indigo-700);
   cursor: pointer;
   display: flex;
   font-size: 10px;

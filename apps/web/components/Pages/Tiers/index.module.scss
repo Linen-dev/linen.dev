@@ -2,7 +2,7 @@
 
 .button {
   align-items: center;
-  background: white;
+  background: var(--color-background);
   border: 2px solid $color-primary;
   color: $color-gray-900;
   cursor: pointer;
@@ -12,7 +12,7 @@
   width: 100%;
   margin-top: 1.5rem;
   border-radius: 9999px;
-  background: white;
+  background: var(--color-background);
   padding: 0.5rem;
   text-align: center;
   font-weight: 500;

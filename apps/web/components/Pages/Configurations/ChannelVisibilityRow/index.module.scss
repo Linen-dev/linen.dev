@@ -38,10 +38,10 @@
 }
 
 .enabled {
-  color: $color-gray-900;
+  color: var(--color-gray-900);
 }
 
 .disabled {
-  color: $color-gray-400;
+  color: var(--color-gray-400);
   text-decoration: line-through;
 }

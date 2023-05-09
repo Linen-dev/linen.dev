@@ -1,10 +1,8 @@
-@import '../../colors.scss';
-
 .label {
   align-items: center;
-  background: rgb(243, 244, 246);
+  background: var(--color-gray-100);
   border-radius: 28px;
-  color: $color-gray-700;
+  color: var(--color-gray-700);
   cursor: pointer;
   display: flex;
   font-size: 14px;
@@ -16,8 +14,8 @@
 }
 
 .label:hover {
-  background: $color-gray-200;
-  color: $color-gray-900;
+  background: var(--color-gray-200);
+  color: var(--color-gray-900);
 }
 
 .input {

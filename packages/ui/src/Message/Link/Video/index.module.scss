@@ -8,7 +8,7 @@
 
 .placeholder {
   align-items: center;
-  background: white;
+  background: var(--color-background);
   border: 1px solid $color-gray-200;
   border-radius: 0.25rem;
   cursor: pointer;

@@ -1,5 +1,3 @@
-@import '../colors.scss';
-
 .button {
   align-items: center;
   cursor: pointer;
@@ -29,17 +27,17 @@
 }
 
 .white {
-  background: white;
+  background: var(--color-background);
   color: black;
 }
 
 .gray {
-  background: $color-gray-100;
-  color: black;
+  background: var(--color-gray-100);
+  color: var(--color-text);
 
   &:focus-visible,
   &:hover {
-    background: $color-gray-200;
+    background: var(--color-gray-200);
   }
 }
 
@@ -49,33 +47,33 @@
 }
 
 .yellow {
-  background: $color-yellow-600;
+  background: var(--color-yellow-600);
   color: white;
 
   &:focus-visible,
   &:hover {
-    background: $color-yellow-500;
+    background: var(--color-yellow-500);
   }
 }
 
 .blue {
-  background: $color-blue-700;
+  background: var(--color-blue-700);
   color: white;
 
   &:focus-visible,
   &:hover {
-    background: $color-blue-800;
+    background: var(--color-blue-800);
   }
 }
 
 .disabled {
-  background: $color-gray-200;
-  color: black;
+  background: var(--color-gray-200);
+  color: var(--color-text);
   cursor: not-allowed;
 
   &:focus-visible,
   &:hover {
-    background: $color-gray-200;
+    background: var(--color-gray-200);
   }
 }
 
@@ -121,12 +119,12 @@
 }
 
 .danger {
-  background: $color-gray-100;
-  color: black;
+  background: var(--color-gray-100);
+  color: var(--color-text);
 
   &:focus-visible,
   &:hover {
-    background: $color-red-500;
+    background: var(--color-red-600);
     color: white;
   }
 }

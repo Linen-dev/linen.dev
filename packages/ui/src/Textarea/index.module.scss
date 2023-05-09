@@ -1,6 +1,6 @@
-@import '../colors.scss';
-
 .textarea {
+  background: var(--color-background);
+  color: var(--color-text);
   font-size: 0.875rem;
   line-height: 1.25rem;
   padding-top: 0.5rem;
@@ -9,7 +9,7 @@
   padding-right: 0.75rem;
   border-width: 1px;
   border-radius: 0.375rem;
-  border-color: $color-border;
+  border-color: var(--color-border);
   width: 100%;
   display: block;
   transition: 0.2s ease-in border-color;
@@ -17,7 +17,7 @@
 
 .textarea:focus {
   outline: none;
-  border-color: $color-primary;
+  border-color: var(--color-primary);
 }
 
 .textarea[hidden] {

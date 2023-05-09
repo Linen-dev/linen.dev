@@ -1,10 +1,8 @@
-@import '../colors.scss';
-
 .tooltip {
-  background-color: black;
+  background-color: var(--color-text);
   border-radius: 2px;
-  box-shadow: 0 2px 4px $color-gray-200;
-  color: white;
+  box-shadow: 0 2px 4px var(--color-gray-200);
+  color: var(--color-background);
   font-size: 12px;
   font-weight: 600;
   opacity: 1;

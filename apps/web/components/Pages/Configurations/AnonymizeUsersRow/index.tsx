@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Toast from '@linen/ui/Toast';
 import Toggle from '@linen/ui/Toggle';
+import H3 from '@linen/ui/H3';
 import { SerializedAccount } from '@linen/types';
 import { api } from 'utilities/requests';
 
@@ -29,9 +30,7 @@ export default function AnonymizeCard({ currentCommunity }: Props) {
   return (
     <div className="flex">
       <div className="grow">
-        <h3 className="text-lg leading-6 font-medium text-gray-900">
-          Anonymize your users
-        </h3>
+        <H3>Anonymize your users</H3>
         <div className="mt-2 sm:flex sm:items-start sm:justify-between">
           <div className="max-w-xl text-sm text-gray-500">
             Replace your community member&apos;s display name and profile images
