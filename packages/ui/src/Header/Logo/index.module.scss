@@ -11,7 +11,7 @@
 .linen {
   height: 24px;
   width: 108px;
-  transition: opacity 0.1s ease-in, filter 0.1s ease-in;
+  transition: opacity 0.1s ease, filter 0.1s ease;
 }
 
 .linen:hover {

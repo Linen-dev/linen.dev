@@ -11,7 +11,7 @@
   border-radius: 32px;
   background-color: transparent;
   border-color: rgba(255, 255, 255, 0.25);
-  transition: 0.2s ease  background-color, 0.2s ease color, 0.2s ease-in border-color;
+  transition: 0.2s ease  background-color, 0.2s ease color, 0.2s ease border-color;
 }
 
 .container .input:focus {
@@ -75,7 +75,7 @@
   transition-duration: 300ms;
   opacity: 1;
   position: fixed;
-  animation: animatedOverlay 0.2s ease-in;
+  animation: animatedOverlay 0.2s ease;
 }
 
 @keyframes animatedOverlay {

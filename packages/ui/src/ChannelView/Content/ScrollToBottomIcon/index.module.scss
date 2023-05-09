@@ -5,8 +5,8 @@
   left: calc(50% - 24px);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.1s ease-in, background 0.1s ease-in, border 0.1s ease-in,
-    color 0.1s ease-in;
+  transition: opacity 0.1s ease, background 0.1s ease, border 0.1s ease,
+    color 0.1s ease;
   z-index: -1;
 }
 
@@ -30,8 +30,8 @@
   height: 20px;
   width: 48px;
   padding: 3px;
-  transition: opacity 0.1s ease-in, background 0.1s ease-in, border 0.1s ease-in,
-    color 0.1s ease-in;
+  transition: opacity 0.1s ease, background 0.1s ease, border 0.1s ease,
+    color 0.1s ease;
 
   &:hover {
     background: var(--color-gray-100);

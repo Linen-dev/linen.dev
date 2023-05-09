@@ -16,7 +16,7 @@
   transition-duration: 300ms;
   opacity: 1;
   position: fixed;
-  animation: animatedOverlay 0.2s ease-in;
+  animation: animatedOverlay 0.2s ease;
 }
 
 @keyframes animatedOverlay {

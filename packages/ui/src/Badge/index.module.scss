@@ -8,12 +8,12 @@
   font-size: 0.75rem;
   font-weight: 500;
   padding: 0.125rem 0.625rem;
-  transition: background 0.2s ease-in, color 0.2s ease-in;
+  transition: background 0.2s ease, color 0.2s ease;
 }
 
 .badge svg {
   color: var(--color-indigo-800);
-  transition: color 0.2s ease-in;
+  transition: color 0.2s ease;
 }
 
 .success {
