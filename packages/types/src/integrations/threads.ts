@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { MessageFormat } from '../messages';
 
 export const threadPostSchema = z.object({
   channelId: z.string().uuid(),
@@ -13,6 +14,9 @@ export const threadPostSchema = z.object({
         id: z.string().uuid(),
       })
     )
+    .optional(),
+  messageFormat: z
+    .enum([MessageFormat.DISCORD, MessageFormat.LINEN, MessageFormat.SLACK])
     .optional(),
 });
 export type threadPostType = z.infer<typeof threadPostSchema>;

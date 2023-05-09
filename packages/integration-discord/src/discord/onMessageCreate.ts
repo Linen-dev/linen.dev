@@ -107,6 +107,7 @@ export async function onMessageCreate(message: Message) {
       body: parsedMessage.body,
       title: thread.title || undefined,
       mentions,
+      messageFormat: MessageFormat.DISCORD,
     });
   }
 

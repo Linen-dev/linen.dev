@@ -173,6 +173,7 @@ class ThreadsServices {
     sentAt,
     accountId,
     mentions,
+    messageFormat = MessageFormat.LINEN,
   }: {
     authorId: string;
     channelId: string;
@@ -184,6 +185,7 @@ class ThreadsServices {
     sentAt?: Date;
     accountId: string;
     mentions?: { id: string }[];
+    messageFormat?: MessageFormat;
   }) {
     const channel = await prisma.channels.findFirst({
       where: { id: channelId, accountId },
@@ -231,7 +233,7 @@ class ThreadsServices {
                   })),
                 },
               }),
-            messageFormat: MessageFormat.LINEN,
+            messageFormat,
           },
         },
         userThreadStatus: {
