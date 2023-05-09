@@ -1,5 +1,5 @@
 .page {
-  background: #f9fafb;
+  background: var(--color-background);
   min-height: 100vh;
   width: 100%;
   padding-top: 4rem;

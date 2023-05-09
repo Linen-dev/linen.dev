@@ -1,8 +1,9 @@
 .card {
   background: var(--color-background);
   border-radius: 0.25rem;
-  box-shadow: rgb(0 0 0 / 5%) 0px 1px 3px, rgb(0 0 0 / 5%) 0px 20px 25px -5px,
-    rgb(0 0 0 / 4%) 0px 10px 10px -5px;
+  box-shadow: var(--color-border) 0px 1px 3px,
+    var(--color-border) 0px 20px 25px -5px,
+    var(--color-border) 0px 10px 10px -5px;
   max-width: 28rem;
   margin: 0 auto;
 }

@@ -83,7 +83,7 @@ export default function SignIn({
         {mode === 'creds' && (
           <>
             <PasswordField placeholder="Password" id="password" required />
-            <p className="text-xs pt-3 text-gray-700 pb-3">
+            <p className="text-xs pt-3 text-gray-700 dark:text-gray-100 pb-3">
               <a
                 href={`/forgot-password?email=${email || ''}`}
                 className={AnchorCss}
@@ -101,7 +101,7 @@ export default function SignIn({
         <hr className="my-5" />
 
         <div className="flex justify-between">
-          <p className="text-xs text-gray-600">
+          <p className="text-xs text-gray-600 dark:text-gray-50">
             No account? {/* <br /> */}
             <a
               onClick={() => {
@@ -121,7 +121,7 @@ export default function SignIn({
           </p>
           <p className="w-1/3"></p>
           {mode === 'magic' && (
-            <p className="text-xs text-gray-700 pb-3">
+            <p className="text-xs text-gray-700 dark:text-gray-100 pb-3">
               Prefer passwords? {/* <br /> */}
               <a className={AnchorCss} onClick={() => setMode('creds')}>
                 Sign in with credentials
@@ -130,7 +130,7 @@ export default function SignIn({
             </p>
           )}
           {mode === 'creds' && (
-            <p className="text-xs text-gray-700 pb-3">
+            <p className="text-xs text-gray-700 dark:text-gray-100 pb-3">
               Prefer email? {/* <br /> */}
               <a className={AnchorCss} onClick={() => setMode('magic')}>
                 Sign in with email

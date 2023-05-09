@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export default function Privacy() {
   return (
-    <div className="relative py-16 bg-white">
+    <div className="relative py-16">
       <div className="lg:block lg:absolute lg:inset-y-0 lg:h-full lg:w-full">
         <div
           className="relative h-full text-lg max-w-prose mx-auto space-y-4"
