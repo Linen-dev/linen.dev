@@ -80,7 +80,7 @@ interface Props {
     options: any
   ): Promise<any>;
   editMessage?({ id, body }: { id: string; body: string }): Promise<void>;
-  fetchMentions(term: string, communityId: string): any;
+  fetchMentions(term?: string): Promise<SerializedUser[]>;
   put: (path: string, data?: {}) => Promise<any>;
   Actions(args: any): JSX.Element;
   JoinChannelLink(args: any): JSX.Element;
@@ -313,15 +313,11 @@ export default function Thread({
                     setUploads([]);
                   });
                 }}
-                fetchMentions={(term?: string) => {
-                  if (!term) return Promise.resolve([]);
-                  return fetchMentions(term, settings.communityId);
-                }}
                 progress={progress}
                 uploading={uploading}
                 uploads={uploads}
                 upload={uploadFiles}
-                {...{ useUsersContext }}
+                {...{ useUsersContext, fetchMentions }}
               />
             ) : (
               <MessageForm
@@ -338,15 +334,11 @@ export default function Thread({
                   handleScroll();
                   return promise;
                 }}
-                fetchMentions={(term?: string) => {
-                  if (!term) return Promise.resolve([]);
-                  return fetchMentions(term, settings.communityId);
-                }}
                 progress={progress}
                 uploading={uploading}
                 uploads={uploads}
                 upload={uploadFiles}
-                {...{ useUsersContext }}
+                {...{ useUsersContext, fetchMentions }}
               />
             )}
           </div>

@@ -10,6 +10,7 @@ import {
   SerializedMessage,
   SerializedThread,
   Settings,
+  SerializedUser,
 } from '@linen/types';
 import styles from './index.module.scss';
 
@@ -25,7 +26,7 @@ interface Props {
   useJoinContext(): any;
   apiUpdateThread(...args: any): Promise<any>;
   apiUpdateMessage(...args: any): Promise<any>;
-  apiFetchMentions(...args: any): Promise<any>;
+  apiFetchMentions(term?: string): Promise<SerializedUser[]>;
   apiPut(...args: any): Promise<any>;
   apiUpload(...args: any): Promise<any>;
   JoinChannelLink(...args: any): JSX.Element;

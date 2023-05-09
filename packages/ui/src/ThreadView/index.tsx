@@ -4,6 +4,7 @@ import {
   SerializedAccount,
   SerializedChannel,
   SerializedThread,
+  SerializedUser,
   Settings,
 } from '@linen/types';
 import Content from './Content';
@@ -21,7 +22,7 @@ interface Props {
   useJoinContext(): any;
   apiUpdateThread(...args: any): Promise<any>;
   apiUpdateMessage(...args: any): Promise<any>;
-  apiFetchMentions(...args: any): Promise<any>;
+  apiFetchMentions(term?: string): Promise<SerializedUser[]>;
   apiPut(...args: any): Promise<any>;
   apiUpload(...args: any): Promise<any>;
   JoinChannelLink(...args: any): JSX.Element;

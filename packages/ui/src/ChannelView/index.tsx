@@ -118,7 +118,7 @@ export default function ChannelView({
   apiGetThreads: (...args: any) => Promise<any>;
   ShowIntegrationDetail(): JSX.Element;
   Actions(...args: any): JSX.Element;
-  fetchMentions(term: string, communityId: string): any;
+  fetchMentions(term?: string): Promise<SerializedUser[]>;
   JoinChannelLink(...args: any): JSX.Element;
   postReaction(args: any): any;
   mergeThreadsRequest(args: any): any;

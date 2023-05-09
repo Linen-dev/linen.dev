@@ -32,7 +32,7 @@ interface Props {
   onSend?(message: string, files: UploadedFile[]): Promise<any>;
   onSendAndClose?(message: string, files: UploadedFile[]): Promise<any>;
   onMessageChange?(message: string): void;
-  fetchMentions?(term?: string): Promise<SerializedUser[]>;
+  fetchMentions(term?: string): Promise<SerializedUser[]>;
   upload?(files: File[]): Promise<any>;
   useUsersContext(): any;
 }

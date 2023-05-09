@@ -9,6 +9,7 @@ describe('MessageForm', () => {
         progress={0}
         uploads={[]}
         useUsersContext={() => [[], () => {}]}
+        fetchMentions={(args) => Promise.resolve([])}
       />
     );
     const textarea = getByPlaceholderText('Add your comment...');

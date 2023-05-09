@@ -224,11 +224,7 @@ export default class ApiClient {
   );
 
   fetchMentions(term: string, communityId: string) {
-    return debounce(
-      (term: string, communityId: string) =>
-        this.get(`/api/mentions?${qs({ term, communityId })}`),
-      100
-    );
+    return this.get(`/api/mentions?${qs({ term, communityId })}`);
   }
 
   upload(

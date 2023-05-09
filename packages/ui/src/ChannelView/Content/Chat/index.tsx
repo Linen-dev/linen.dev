@@ -31,7 +31,7 @@ interface Props {
   progress: number;
   uploading: boolean;
   uploads: UploadedFile[];
-  fetchMentions(term: string, communityId: string): any;
+  fetchMentions(term?: string): Promise<SerializedUser[]>;
   useUsersContext(): any;
 }
 
@@ -96,15 +96,14 @@ export default function Chat({
             channelId: channelId,
           });
         }}
-        fetchMentions={(term?: string) => {
-          if (!term) return Promise.resolve([]);
-          return fetchMentions(term, communityId);
-        }}
         progress={progress}
         uploading={uploading}
         uploads={uploads}
         upload={uploadFiles}
-        {...{ useUsersContext }}
+        {...{
+          fetchMentions,
+          useUsersContext,
+        }}
       />
     </div>
   );

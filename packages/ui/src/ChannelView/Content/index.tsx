@@ -18,6 +18,7 @@ import {
   SerializedChannel,
   SerializedReadStatus,
   SerializedThread,
+  SerializedUser,
   Settings,
   ThreadState,
   UploadedFile,
@@ -135,7 +136,7 @@ interface Props {
   apiGetThreads: (...args: any) => Promise<any>;
   ShowIntegrationDetail(): JSX.Element;
   Actions(): JSX.Element;
-  fetchMentions(term: string, communityId: string): any;
+  fetchMentions(term?: string): Promise<SerializedUser[]>;
   JoinChannelLink(): JSX.Element;
   apiCreateThread: (...args: any) => Promise<any>;
   apiCreateMessage: (...args: any) => Promise<any>;
@@ -609,7 +610,6 @@ export default function Channel({
                   </>
                 ) : permissions.chat ? (
                   <Chat
-                    {...{ fetchMentions }}
                     communityId={settings.communityId}
                     channelId={currentChannel.id}
                     currentUser={currentUser}
@@ -619,7 +619,7 @@ export default function Channel({
                     uploads={uploads}
                     uploading={uploading}
                     uploadFiles={uploadFiles}
-                    {...{ useUsersContext }}
+                    {...{ fetchMentions, useUsersContext }}
                   />
                 ) : (
                   <Footer />
