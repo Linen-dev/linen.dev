@@ -535,7 +535,10 @@ export default function Content({
             <Thread
               {...{
                 Actions,
-                fetchMentions: api.fetchMentions,
+                fetchMentions: (term?: string) => {
+                  if (!term) return Promise.resolve([]);
+                  return api.fetchMentions(term, currentCommunity.id);
+                },
                 JoinChannelLink,
                 put: api.put,
                 upload: api.upload,
