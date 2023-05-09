@@ -55,17 +55,6 @@ Linen is in it's early stages of development so we are looking for a ton of feed
 
 Our documentation is divided into several sections:
 
-#### Development
+#### Getting Started
 
-- [Monorepo](./docs/monorepo.md)
-- [NextJs](./docs/nextjs.md)
-
-#### Data source
-
-- [Database](./docs/database.md)
-- [Cache](./docs/cache.md)
-
-#### Others
-
-- [Sitemap](./docs/sitemap.md)
-- [SlackBot](./docs/slack-app.md)
+- [Getting Started](./docs/getting-started.md)
