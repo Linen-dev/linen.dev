@@ -59,15 +59,11 @@ export function ThreadPage({
           Actions,
           JoinChannelLink,
           useJoinContext,
-          apiFetchMentions: (term?: string) => {
+          fetchMentions: (term?: string) => {
             if (!term) return Promise.resolve([]);
             return api.fetchMentions(term, currentCommunity.id);
           },
-          apiPut: api.put,
-          apiUpdateThread: api.updateThread,
-          apiUpdateMessage: api.updateMessage,
-          apiUpload: api.upload,
-          apiCreateMessage: api.createMessage,
+          api,
           useUsersContext,
         }}
       />

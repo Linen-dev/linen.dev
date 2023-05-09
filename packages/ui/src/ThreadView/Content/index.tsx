@@ -13,6 +13,7 @@ import {
   SerializedUser,
 } from '@linen/types';
 import styles from './index.module.scss';
+import type { ApiClient } from '@linen/api-client';
 
 interface Props {
   thread: SerializedThread;
@@ -24,15 +25,11 @@ interface Props {
   settings: Settings;
   permissions: Permissions;
   useJoinContext(): any;
-  apiUpdateThread(...args: any): Promise<any>;
-  apiUpdateMessage(...args: any): Promise<any>;
-  apiFetchMentions(term?: string): Promise<SerializedUser[]>;
-  apiPut(...args: any): Promise<any>;
-  apiUpload(...args: any): Promise<any>;
   JoinChannelLink(...args: any): JSX.Element;
   Actions(...args: any): JSX.Element;
-  apiCreateMessage(...args: any): Promise<any>;
   useUsersContext(): any;
+  fetchMentions(term?: string | undefined): Promise<SerializedUser[]>;
+  api: ApiClient;
 }
 
 export default function Content({
@@ -45,15 +42,11 @@ export default function Content({
   settings,
   permissions,
   useJoinContext,
-  apiUpdateThread,
-  apiUpdateMessage,
-  apiFetchMentions,
-  apiPut,
-  apiUpload,
   JoinChannelLink,
   Actions,
-  apiCreateMessage,
   useUsersContext,
+  api,
+  fetchMentions,
 }: Props) {
   const [thread, setThread] = useState<SerializedThread>(initialThread);
   const [allUsers] = useUsersContext();
@@ -101,13 +94,15 @@ export default function Content({
         ...options,
       };
     });
-    return apiUpdateThread({
-      accountId: settings.communityId,
-      id: thread.id,
-      ...options,
-    }).catch((_) => {
-      Toast.error('Failed to close the thread.');
-    });
+    return api
+      .updateThread({
+        accountId: settings.communityId,
+        id: thread.id,
+        ...options,
+      })
+      .catch((_) => {
+        Toast.error('Failed to close the thread.');
+      });
   };
 
   const editMessage = ({ id, body }: { id: string; body: string }) => {
@@ -125,11 +120,12 @@ export default function Content({
         }),
       };
     });
-    return apiUpdateMessage({
-      accountId: settings.communityId,
-      id,
-      body,
-    })
+    return api
+      .updateMessage({
+        accountId: settings.communityId,
+        id,
+        body,
+      })
       .then(() => {
         Toast.success('Updated successfully.');
       })
@@ -144,7 +140,7 @@ export default function Content({
     currentCommunity,
     allUsers,
     setThread,
-    apiCreateMessage,
+    api,
   });
 
   return (
@@ -152,11 +148,10 @@ export default function Content({
       <Thread
         {...{
           Actions,
-          fetchMentions: apiFetchMentions,
           JoinChannelLink,
-          put: apiPut,
-          upload: apiUpload,
           useUsersContext,
+          api,
+          fetchMentions,
         }}
         thread={thread}
         key={thread.id}

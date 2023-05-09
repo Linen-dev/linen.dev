@@ -1,6 +1,5 @@
-import axios, { AxiosRequestConfig } from 'axios';
+import axios, { type AxiosInstance, type AxiosRequestConfig } from 'axios';
 import { qs } from '@linen/utilities/url';
-import debounce from '@linen/utilities/debounce';
 import type {
   SerializedMessage,
   SerializedThread,
@@ -27,11 +26,12 @@ import type {
   deleteMessageType,
   postMessageType,
   putMessageType,
+  UploadedFile,
 } from '@linen/types';
 export { AxiosRequestConfig };
 
 export default class ApiClient {
-  instance;
+  instance: AxiosInstance;
 
   constructor({
     baseURL = '/',
@@ -66,175 +66,169 @@ export default class ApiClient {
     }
   };
 
-  get = (path: string) =>
+  get = <T>(path: string) =>
     this.instance
-      .get(path)
+      .get<T>(path)
       .then((res) => res.data)
       .catch(this.catchError);
 
-  post = (path: string, data = {}) =>
+  post = <T>(path: string, data = {}) =>
     this.instance
-      .post(path, data)
+      .post<T>(path, data)
       .then((res) => res.data)
       .catch(this.catchError);
 
-  postWithOptions = (path: string, data = {}, options: AxiosRequestConfig) =>
+  postWithOptions = <T>(path: string, data = {}, options: AxiosRequestConfig) =>
     this.instance
-      .post(path, data, options)
+      .post<T>(path, data, options)
       .then((res) => res.data)
       .catch(this.catchError);
 
-  patch = (path: string, data = {}) =>
+  patch = <T>(path: string, data = {}) =>
     this.instance
-      .patch(path, data)
+      .patch<T>(path, data)
       .then((res) => res.data)
       .catch(this.catchError);
 
-  put = (path: string, data = {}) =>
+  put = <T>(path: string, data = {}) =>
     this.instance
-      .put(path, data)
+      .put<T>(path, data)
       .then((res) => res.data)
       .catch(this.catchError);
 
   // Delete is a reserved term
-  deleteReq = (path: string) =>
+  deleteReq = <T>(path: string) =>
     this.instance
-      .delete(path)
+      .delete<T>(path)
       .then((res) => res.data)
       .catch(this.catchError);
 
-  getAccounts = () => this.get('/api/accounts');
+  getAccounts = <T>() => this.get<T>('/api/accounts');
 
-  createAccount = (props: createAccountType): Promise<{ id: string }> =>
-    this.post('/api/accounts', props);
+  createAccount = (props: createAccountType) =>
+    this.post<{ id: string }>('/api/accounts', props);
 
-  updateAccount = (props: updateAccountType) =>
-    this.put('/api/accounts', props);
+  updateAccount = <T>(props: updateAccountType) =>
+    this.put<T>('/api/accounts', props);
 
-  getThreads = (props: findThreadType): Promise<channelNextPageType> =>
-    this.get(`/api/threads?${qs(props)}`);
+  getThreads = (props: findThreadType) =>
+    this.get<channelNextPageType>(`/api/threads?${qs(props)}`);
 
-  getThread = ({ id, ...props }: getThreadType): Promise<SerializedThread> =>
-    this.get(`/api/threads/${id}?${qs(props)}`);
+  getThread = ({ id, ...props }: getThreadType) =>
+    this.get<SerializedThread>(`/api/threads/${id}?${qs(props)}`);
 
-  updateThread = (props: putThreadType): Promise<SerializedThread> =>
-    this.put(`/api/threads/${props.id}`, props);
+  updateThread = (props: putThreadType) =>
+    this.put<SerializedThread>(`/api/threads/${props.id}`, props);
 
-  createThread = (
-    props: postThreadType
-  ): Promise<{ thread: SerializedThread; imitationId: string }> =>
-    this.post(`/api/threads`, props);
+  createThread = (props: postThreadType) =>
+    this.post<{ thread: SerializedThread; imitationId: string }>(
+      `/api/threads`,
+      props
+    );
 
-  deleteMessage = (props: deleteMessageType): Promise<{ ok: boolean }> =>
-    this.deleteReq(`/api/messages/${props.id}?accountId=${props.accountId}`);
+  deleteMessage = (props: deleteMessageType) =>
+    this.deleteReq<{ ok: boolean }>(
+      `/api/messages/${props.id}?accountId=${props.accountId}`
+    );
 
-  createMessage = (
-    props: postMessageType
-  ): Promise<{ message: SerializedMessage; imitationId: string }> =>
-    this.post(`/api/messages`, props);
+  createMessage = (props: postMessageType) =>
+    this.post<{ message: SerializedMessage; imitationId: string }>(
+      `/api/messages`,
+      props
+    );
 
-  updateMessage = (props: putMessageType): Promise<SerializedMessage> =>
-    this.put(`/api/messages/${props.id}`, props);
+  updateMessage = (props: putMessageType) =>
+    this.put<SerializedMessage>(`/api/messages/${props.id}`, props);
 
-  createChannel = (props: createChannelType): Promise<SerializedChannel> =>
-    this.post(`/api/channels`, props);
+  createChannel = (props: createChannelType) =>
+    this.post<SerializedChannel>(`/api/channels`, props);
 
-  setDefaultChannel = (props: setDefaultChannelType): Promise<{}> =>
-    this.post(`/api/channels/default`, props);
+  setDefaultChannel = (props: setDefaultChannelType) =>
+    this.post<{}>(`/api/channels/default`, props);
 
-  hideChannels = (props: bulkHideChannelsType): Promise<{}> =>
-    this.post(`/api/channels/hide`, props);
+  hideChannels = (props: bulkHideChannelsType) =>
+    this.post<{}>(`/api/channels/hide`, props);
 
   getChannelIntegrations = ({
     channelId,
     ...props
-  }: getChannelIntegrationsType): Promise<{
-    data: any;
-    type: string;
-    externalId: string;
-  }> => this.get(`/api/channels/${channelId}/integrations?${qs(props)}`);
+  }: getChannelIntegrationsType) =>
+    this.get<{ data: any; type: string; externalId: string }>(
+      `/api/channels/${channelId}/integrations?${qs(props)}`
+    );
 
-  getChannelsStats = (props: {
-    accountId: string;
-  }): Promise<findChannelsWithStats> =>
-    this.get(`/api/channels/stats?${qs(props)}`);
+  getChannelsStats = (props: { accountId: string }) =>
+    this.get<findChannelsWithStats>(`/api/channels/stats?${qs(props)}`);
 
   postChannelIntegrations = ({
     channelId,
     ...props
-  }: postChannelIntegrationsType): Promise<{
-    id: string;
-  }> => this.post(`/api/channels/${channelId}/integrations`, props);
+  }: postChannelIntegrationsType) =>
+    this.post<{ id: string }>(`/api/channels/${channelId}/integrations`, props);
 
-  createDm = (props: createDmType): Promise<SerializedChannel> =>
-    this.post(`/api/channels/dm`, props);
+  createDm = (props: createDmType) =>
+    this.post<SerializedChannel>(`/api/channels/dm`, props);
 
-  archiveChannel = (props: archiveChannelType): Promise<{}> =>
-    this.post(`/api/channels/archive`, props);
+  archiveChannel = (props: archiveChannelType) =>
+    this.post<{}>(`/api/channels/archive`, props);
 
-  getChannelMembers = ({
-    channelId,
-    ...props
-  }: getChannelMembersType): Promise<SerializedUser[]> =>
-    this.get(`/api/channels/${channelId}/members?${qs(props)}`);
+  getChannelMembers = ({ channelId, ...props }: getChannelMembersType) =>
+    this.get<SerializedUser[]>(
+      `/api/channels/${channelId}/members?${qs(props)}`
+    );
 
-  updateChannelMembers = ({
-    channelId,
-    ...props
-  }: putChannelMembersType): Promise<SerializedUser[]> =>
-    this.put(`/api/channels/${channelId}/members`, props);
+  updateChannelMembers = ({ channelId, ...props }: putChannelMembersType) =>
+    this.put<SerializedUser[]>(`/api/channels/${channelId}/members`, props);
 
-  deleteUser = ({ ...props }: deleteUserType): Promise<{}> =>
-    this.deleteReq(`/api/users?${qs(props)}`);
+  deleteUser = (props: deleteUserType) =>
+    this.deleteReq<{}>(`/api/users?${qs(props)}`);
 
-  deleteAccount = (props: { accountId: string }): Promise<{}> =>
-    this.deleteReq(`/api/accounts/${props.accountId}`);
+  deleteAccount = (props: { accountId: string }) =>
+    this.deleteReq<{}>(`/api/accounts/${props.accountId}`);
 
-  postReaction = debounce(
-    (params: {
-      communityId: string;
-      messageId: string;
-      type: string;
-      action: string;
-    }) => {
-      return this.post('/api/reactions', params);
-    }
-  );
+  postReaction = <T>(params: {
+    communityId: string;
+    messageId: string;
+    type: string;
+    action: string;
+  }) => this.post<T>('/api/reactions', params);
 
-  mergeThreadsRequest = debounce((params: { from: string; to: string }) => {
-    return this.post('/api/merge', params);
-  });
+  mergeThreadsRequest = <T>(params: {
+    from: string;
+    to: string;
+    communityId: string;
+  }) => this.post<T>('/api/merge', params);
 
-  moveMessageToThreadRequest = debounce(
-    (params: { messageId: string; threadId: string }) => {
-      return this.post('/api/move/message/thread', params);
-    }
-  );
+  moveMessageToThreadRequest = <T>(params: {
+    messageId: string;
+    threadId: string;
+    communityId: string;
+  }) => this.post<T>('/api/move/message/thread', params);
 
-  moveMessageToChannelRequest = debounce(
-    (params: { messageId: string; threadId: string }) => {
-      return this.post('/api/move/message/channel', params);
-    }
-  );
+  moveMessageToChannelRequest = (params: {
+    messageId: string;
+    channelId: string;
+    communityId: string;
+  }) => this.post<SerializedThread>('/api/move/message/channel', params);
 
-  moveThreadToChannelRequest = debounce(
-    (params: { threadId: string; channelId: string }) => {
-      return this.post('/api/move/thread/channel', params);
-    }
-  );
+  moveThreadToChannelRequest = <T>(params: {
+    threadId: string;
+    channelId: string;
+    communityId: string;
+  }) => this.post<T>('/api/move/thread/channel', params);
 
-  fetchMentions(term: string, communityId: string) {
-    return this.get(`/api/mentions?${qs({ term, communityId })}`);
-  }
+  fetchMentions = (term: string, communityId: string) =>
+    this.get<SerializedUser[]>(`/api/mentions?${qs({ term, communityId })}`);
 
-  upload(
+  upload = (
     { communityId, data }: { communityId: string; data: FormData },
     options: AxiosRequestConfig
-  ): Promise<any> {
-    return this.instance.post(
+  ) =>
+    this.postWithOptions<{ files: UploadedFile[] }>(
       `/api/upload?communityId=${communityId}`,
       data,
       options
     );
-  }
 }
+
+export { type ApiClient };

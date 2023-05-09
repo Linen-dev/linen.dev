@@ -32,5 +32,6 @@ export type deleteMessageType = z.infer<typeof deleteMessageSchema>;
 export const putMessageSchema = z.object({
   id: z.string().uuid(),
   body: z.string(),
+  accountId: z.string().uuid(),
 });
 export type putMessageType = z.infer<typeof putMessageSchema>;

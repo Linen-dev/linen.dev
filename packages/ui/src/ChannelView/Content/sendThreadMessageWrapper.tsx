@@ -1,41 +1,13 @@
 import React from 'react';
-import { SerializedThread } from '@linen/types';
-import { SerializedMessage } from '@linen/types';
-import { SerializedUser } from '@linen/types';
-import { SerializedAccount } from '@linen/types';
+import {
+  SerializedThread,
+  SerializedUser,
+  SerializedAccount,
+  UploadedFile,
+} from '@linen/types';
 import debounce from '@linen/utilities/debounce';
 import { createMessageImitation } from './utilities/message';
-import { UploadedFile } from '@linen/types';
-
-const debouncedSendThreadMessage = debounce(
-  ({
-    message,
-    files,
-    communityId,
-    channelId,
-    threadId,
-    imitationId,
-    apiCreateMessage,
-  }: {
-    message: string;
-    files: UploadedFile[];
-    communityId: string;
-    channelId: string;
-    threadId: string;
-    imitationId: string;
-    apiCreateMessage: (...args: any) => Promise<any>;
-  }) => {
-    return apiCreateMessage({
-      body: message,
-      files,
-      accountId: communityId,
-      channelId,
-      threadId,
-      imitationId,
-    });
-  },
-  100
-);
+import type { ApiClient } from '@linen/api-client';
 
 export function sendThreadMessageWrapper({
   currentUser,
@@ -45,7 +17,7 @@ export function sendThreadMessageWrapper({
   currentThreadId,
   currentCommunity,
   startSignUp,
-  apiCreateMessage,
+  api,
 }: {
   currentUser: SerializedUser | null;
   allUsers: SerializedUser[];
@@ -54,7 +26,7 @@ export function sendThreadMessageWrapper({
   currentThreadId: string | undefined;
   currentCommunity: SerializedAccount;
   startSignUp?: (...args: any) => void;
-  apiCreateMessage: (...args: any) => Promise<any>;
+  api: ApiClient;
 }) {
   return async ({
     message,
@@ -87,7 +59,7 @@ export function sendThreadMessageWrapper({
       });
       return;
     }
-    const imitation: SerializedMessage = createMessageImitation({
+    const imitation = createMessageImitation({
       message,
       threadId,
       files,
@@ -107,46 +79,40 @@ export function sendThreadMessageWrapper({
       });
     });
 
-    return debouncedSendThreadMessage({
-      message,
-      communityId: currentCommunity.id,
+    return debounce(
+      api.createMessage,
+      100
+    )({
+      body: message,
+      accountId: currentCommunity.id,
       files,
       channelId,
       threadId,
       imitationId: imitation.id,
-      apiCreateMessage,
-    }).then(
-      ({
-        message,
-        imitationId,
-      }: {
-        message: SerializedMessage;
-        imitationId: string;
-      }) => {
-        setThreads((threads) => {
-          return threads.map((thread) => {
-            if (thread.id === currentThreadId) {
-              const messageId = message.id;
-              const index = thread.messages.findIndex(
-                (message: SerializedMessage) => message.id === messageId
-              );
-              if (index >= 0) {
-                return thread;
-              }
-              return {
-                ...thread,
-                messages: [
-                  ...thread.messages.filter(
-                    (message: SerializedMessage) => message.id !== imitationId
-                  ),
-                  message,
-                ],
-              };
+    }).then(({ message, imitationId }) => {
+      setThreads((threads) => {
+        return threads.map((thread) => {
+          if (thread.id === currentThreadId) {
+            const messageId = message.id;
+            const index = thread.messages.findIndex(
+              (message) => message.id === messageId
+            );
+            if (index >= 0) {
+              return thread;
             }
-            return thread;
-          });
+            return {
+              ...thread,
+              messages: [
+                ...thread.messages.filter(
+                  (message) => message.id !== imitationId
+                ),
+                message,
+              ],
+            };
+          }
+          return thread;
         });
-      }
-    );
+      });
+    });
   };
 }

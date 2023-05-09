@@ -16,7 +16,7 @@ export default function Content({ communityId }: Props) {
   useEffect(() => {
     let mounted = true;
     api
-      .get(
+      .get<Metrics | undefined>(
         `/api/metrics?${qs({
           communityId,
         })}`

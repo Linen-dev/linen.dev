@@ -217,7 +217,7 @@ function MessageForm({
   useEffect(() => {
     let mounted = true;
     fetchMentions?.(mention)
-      .then((users: SerializedUser[]) => {
+      .then((users) => {
         if (mounted) {
           setUsers(users);
           addUsers(users);

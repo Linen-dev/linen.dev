@@ -20,6 +20,7 @@ import styles from './index.module.scss';
 import { CustomLinkHelper } from '@linen/utilities/custom-link';
 import PoweredByLinen from '@/PoweredByLinen';
 import EditMessageModal from '@/EditMessageModal';
+import type { ApiClient } from '@linen/api-client';
 
 interface Props {
   thread: SerializedThread;
@@ -69,22 +70,12 @@ interface Props {
     active: boolean;
   }): void;
   onResolution?: onResolve;
-  upload(
-    {
-      communityId,
-      data,
-    }: {
-      communityId: string;
-      data: FormData;
-    },
-    options: any
-  ): Promise<any>;
   editMessage?({ id, body }: { id: string; body: string }): Promise<void>;
-  fetchMentions(term?: string): Promise<SerializedUser[]>;
-  put: (path: string, data?: {}) => Promise<any>;
   Actions(args: any): JSX.Element;
   JoinChannelLink(args: any): JSX.Element;
   useUsersContext(): any;
+  fetchMentions(term?: string | undefined): Promise<SerializedUser[]>;
+  api: ApiClient;
 }
 
 enum ModalView {
@@ -115,12 +106,11 @@ export default function Thread({
   onMessage,
   onResolution,
   editMessage,
-  fetchMentions,
-  put,
-  upload,
   Actions,
   JoinChannelLink,
   useUsersContext,
+  api,
+  fetchMentions,
 }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const [progress, setProgress] = useState(0);
@@ -139,9 +129,9 @@ export default function Thread({
 
   useEffect(() => {
     if (incrementId) {
-      put(`/api/count?incrementId=${incrementId}`);
+      api.put(`/api/count?incrementId=${incrementId}`);
       if (currentUser?.id) {
-        put('/api/notifications/mark', { threadId: thread.id });
+        api.put('/api/notifications/mark', { threadId: thread.id });
       }
     }
   }, []);
@@ -183,22 +173,21 @@ export default function Thread({
     files.forEach((file, index) => {
       data.append(`file-${index}`, file, file.name);
     });
-    return upload(
-      { communityId: settings.communityId, data },
-      {
-        onUploadProgress: (progressEvent: ProgressEvent) => {
-          const percentCompleted = Math.round(
-            (progressEvent.loaded * 100) / progressEvent.total
-          );
-          setProgress(percentCompleted);
-        },
-      }
-    )
-      .then((response) => {
+    return api
+      .upload(
+        { communityId: settings.communityId, data },
+        {
+          onUploadProgress: (progressEvent: ProgressEvent) => {
+            const percentCompleted = Math.round(
+              (progressEvent.loaded * 100) / progressEvent.total
+            );
+            setProgress(percentCompleted);
+          },
+        }
+      )
+      .then(({ files }) => {
         setUploading(false);
-        const { files } = response.data;
         setUploads(files);
-        return response;
       })
       .catch((response) => {
         setUploading(false);
@@ -317,7 +306,10 @@ export default function Thread({
                 uploading={uploading}
                 uploads={uploads}
                 upload={uploadFiles}
-                {...{ useUsersContext, fetchMentions }}
+                {...{
+                  useUsersContext,
+                  fetchMentions,
+                }}
               />
             ) : (
               <MessageForm
@@ -338,7 +330,10 @@ export default function Thread({
                 uploading={uploading}
                 uploads={uploads}
                 upload={uploadFiles}
-                {...{ useUsersContext, fetchMentions }}
+                {...{
+                  useUsersContext,
+                  fetchMentions,
+                }}
               />
             )}
           </div>

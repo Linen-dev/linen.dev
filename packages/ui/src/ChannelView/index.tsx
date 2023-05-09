@@ -19,6 +19,8 @@ import {
 import { ChannelContext } from '@linen/contexts/channel';
 import debounce from '@linen/utilities/debounce';
 import { createThreadImitation } from '@linen/serializers/thread';
+import type { ApiClient } from '@linen/api-client';
+
 import Content from './Content';
 
 async function upsertUserThreadStatus(params: {
@@ -55,31 +57,18 @@ export default function ChannelView({
   pathCursor,
   isBot,
   permissions,
-  apiDeleteMessage,
   addReaction,
-  apiUpdateThread,
-  apiUpdateMessage,
   Actions,
   IntegrationsModal,
   JoinChannelLink,
   MembersModal,
   Pagination,
   ShowIntegrationDetail,
-  apiGetThreads,
-  fetchMentions,
-  get,
-  put,
-  upload,
   useJoinContext,
   queryIntegration,
-  mergeThreadsRequest,
-  moveMessageToChannelRequest,
-  moveMessageToThreadRequest,
-  postReaction,
-  apiCreateMessage,
-  apiCreateThread,
   playNotificationSound,
   useUsersContext,
+  api,
 }: {
   settings: Settings;
   channelName: string;
@@ -95,39 +84,20 @@ export default function ChannelView({
   pathCursor: string | null;
   isBot: boolean;
   permissions: Permissions;
-  apiUpdateThread: (...args: any) => Promise<any>;
-  apiUpdateMessage: (...args: any) => Promise<any>;
-  apiDeleteMessage: (...args: any) => Promise<any>;
   addReaction: (...args: any) => any;
   useJoinContext: () => {
     startSignUp?: any;
   };
   queryIntegration?: any;
-  put: (path: string, data?: {}) => Promise<any>;
-  get: (path: string) => Promise<any>;
-  upload(
-    args: {
-      communityId: string;
-      data: FormData;
-    },
-    options: any
-  ): Promise<any>;
   IntegrationsModal: (args: any) => JSX.Element;
   MembersModal: (args: any) => JSX.Element;
   Pagination: (args: any) => JSX.Element;
-  apiGetThreads: (...args: any) => Promise<any>;
   ShowIntegrationDetail(): JSX.Element;
   Actions(...args: any): JSX.Element;
-  fetchMentions(term?: string): Promise<SerializedUser[]>;
   JoinChannelLink(...args: any): JSX.Element;
-  postReaction(args: any): any;
-  mergeThreadsRequest(args: any): any;
-  moveMessageToThreadRequest(args: any): any;
-  moveMessageToChannelRequest(args: any): any;
-  apiCreateThread: (...args: any) => Promise<any>;
-  apiCreateMessage: (...args: any) => Promise<any>;
   playNotificationSound: (volume: number) => Promise<void>;
   useUsersContext(): any;
+  api: ApiClient;
 }) {
   const viewport = useViewport();
   const [threads, setThreads] = useState<SerializedThread[]>(initialThreads);
@@ -396,7 +366,8 @@ export default function ChannelView({
         .filter(Boolean) as SerializedThread[];
     });
 
-    return apiDeleteMessage({ id: messageId, accountId: currentCommunity.id })
+    return api
+      .deleteMessage({ id: messageId, accountId: currentCommunity.id })
       .then((response) => {
         if (response.ok) {
           return;
@@ -505,13 +476,15 @@ export default function ChannelView({
         return pinnedThreads.filter(({ id }) => id !== threadId);
       }
     });
-    return apiUpdateThread({
-      accountId: currentCommunity.id,
-      id: thread.id,
-      pinned: newPinned,
-    }).catch((_) => {
-      Toast.error('Failed to pin the thread.');
-    });
+    return api
+      .updateThread({
+        accountId: currentCommunity.id,
+        id: thread.id,
+        pinned: newPinned,
+      })
+      .catch((_) => {
+        Toast.error('Failed to pin the thread.');
+      });
   }
 
   async function starThread(threadId: string) {
@@ -553,13 +526,15 @@ export default function ChannelView({
       });
     });
 
-    return apiUpdateThread({
-      id: threadId,
-      resolutionId: messageId,
-      accountId: settings.communityId,
-    }).catch((_) => {
-      Toast.error('Failed to mark as resolution');
-    });
+    return api
+      .updateThread({
+        id: threadId,
+        resolutionId: messageId,
+        accountId: settings.communityId,
+      })
+      .catch((_) => {
+        Toast.error('Failed to mark as resolution');
+      });
   }
 
   async function sendReaction({
@@ -584,7 +559,7 @@ export default function ChannelView({
     }
     setThreads(addReactionToThreads);
     setPinnedThreads(addReactionToThreads);
-    postReaction({
+    api.postReaction({
       communityId: currentCommunity.id,
       messageId,
       type,
@@ -624,7 +599,7 @@ export default function ChannelView({
     if (!source || !target) {
       return Promise.resolve();
     }
-    return mergeThreadsRequest({
+    return api.mergeThreadsRequest({
       from: source.id,
       to: target.id,
       communityId: currentCommunity.id,
@@ -673,7 +648,7 @@ export default function ChannelView({
         .filter(Boolean) as SerializedThread[];
     });
 
-    return moveMessageToThreadRequest({
+    return api.moveMessageToThreadRequest({
       messageId,
       threadId,
       communityId: currentCommunity.id,
@@ -727,23 +702,25 @@ export default function ChannelView({
       return result;
     });
 
-    return moveMessageToChannelRequest({
-      messageId,
-      channelId,
-      communityId: currentCommunity.id,
-    }).then((thread: SerializedThread) => {
-      setThreads((threads) => {
-        if (imitation) {
-          return threads.map((current) => {
-            if (current.id === imitation.id) {
-              return thread;
-            }
-            return current;
-          });
-        }
-        return threads;
+    return api
+      .moveMessageToChannelRequest({
+        messageId,
+        channelId,
+        communityId: currentCommunity.id,
+      })
+      .then((thread) => {
+        setThreads((threads) => {
+          if (imitation) {
+            return threads.map((current) => {
+              if (current.id === imitation.id) {
+                return thread;
+              }
+              return current;
+            });
+          }
+          return threads;
+        });
       });
-    });
   };
 
   const updateThread = ({
@@ -774,13 +751,15 @@ export default function ChannelView({
         return thread;
       });
     });
-    return apiUpdateThread({
-      accountId: settings.communityId,
-      id: currentThreadId,
-      ...options,
-    }).catch((_) => {
-      Toast.error('Failed to close the thread.');
-    });
+    return api
+      .updateThread({
+        accountId: settings.communityId,
+        id: currentThreadId,
+        ...options,
+      })
+      .catch((_) => {
+        Toast.error('Failed to close the thread.');
+      });
   };
 
   const editThread = ({
@@ -808,12 +787,13 @@ export default function ChannelView({
         return thread;
       });
     });
-    return apiUpdateThread({
-      accountId: settings.communityId,
-      id,
-      title,
-      message,
-    })
+    return api
+      .updateThread({
+        accountId: settings.communityId,
+        id,
+        title,
+        message,
+      })
       .then(() => {
         Toast.success('Updated successfully.');
       })
@@ -851,11 +831,12 @@ export default function ChannelView({
         return thread;
       });
     });
-    return apiUpdateMessage({
-      accountId: settings.communityId,
-      id: messageId,
-      body,
-    })
+    return api
+      .updateMessage({
+        accountId: settings.communityId,
+        id: messageId,
+        body,
+      })
       .then(() => {
         Toast.success('Updated successfully.');
       })
@@ -916,22 +897,16 @@ export default function ChannelView({
       <Content
         {...{
           Actions,
-          apiGetThreads,
-          fetchMentions,
-          get,
           IntegrationsModal,
           JoinChannelLink,
           MembersModal,
           Pagination,
-          put,
           ShowIntegrationDetail,
-          upload,
           useJoinContext,
           queryIntegration,
-          apiCreateThread,
-          apiCreateMessage,
           playNotificationSound,
           useUsersContext,
+          api,
         }}
         key={currentChannel.channelName}
         threads={threads}

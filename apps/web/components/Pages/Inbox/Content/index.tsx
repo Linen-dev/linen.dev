@@ -420,11 +420,9 @@ export default function Inbox({
           },
         }
       )
-      .then((response) => {
+      .then(({ files }) => {
         setUploading(false);
-        const { files } = response.data;
         setUploads(files);
-        return response;
       })
       .catch((response) => {
         setUploading(false);
@@ -775,8 +773,8 @@ export default function Inbox({
                   return api.fetchMentions(term, currentCommunity.id);
                 },
                 JoinChannelLink,
-                put: api.put,
-                upload: api.upload,
+                api,
+                useUsersContext,
               }}
               key={thread.id}
               thread={thread}
@@ -796,7 +794,6 @@ export default function Inbox({
               onMessage={(threadId, message, messageId, imitationId) => {
                 onThreadMessage(threadId, message, messageId, imitationId);
               }}
-              {...{ useUsersContext }}
             />
           )
         }

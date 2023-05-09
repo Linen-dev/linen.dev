@@ -4,11 +4,11 @@ import {
   SerializedAccount,
   SerializedChannel,
   SerializedThread,
-  SerializedUser,
   Settings,
 } from '@linen/types';
 import Content from './Content';
 import styles from './index.module.scss';
+import type { ApiClient } from '@linen/api-client';
 
 interface Props {
   isBot?: boolean;
@@ -20,15 +20,10 @@ interface Props {
   threadUrl: string | null;
   settings: Settings;
   useJoinContext(): any;
-  apiUpdateThread(...args: any): Promise<any>;
-  apiUpdateMessage(...args: any): Promise<any>;
-  apiFetchMentions(term?: string): Promise<SerializedUser[]>;
-  apiPut(...args: any): Promise<any>;
-  apiUpload(...args: any): Promise<any>;
   JoinChannelLink(...args: any): JSX.Element;
   Actions(...args: any): JSX.Element;
-  apiCreateMessage(...args: any): Promise<any>;
   useUsersContext(): any;
+  api: ApiClient;
 }
 
 export default function ThreadView({
@@ -42,14 +37,9 @@ export default function ThreadView({
   permissions,
   Actions,
   JoinChannelLink,
-  apiFetchMentions,
-  apiPut,
-  apiUpdateThread,
-  apiUpdateMessage,
-  apiUpload,
   useJoinContext,
-  apiCreateMessage,
   useUsersContext,
+  api,
 }: Props) {
   return (
     <div className={styles.wrapper}>
@@ -64,15 +54,14 @@ export default function ThreadView({
         permissions={permissions}
         {...{
           Actions,
-          apiFetchMentions,
-          apiPut,
-          apiUpdateThread,
-          apiUpdateMessage,
-          apiUpload,
           useJoinContext,
           JoinChannelLink,
-          apiCreateMessage,
           useUsersContext,
+          api,
+          fetchMentions: (term?: string) => {
+            if (!term) return Promise.resolve([]);
+            return api.fetchMentions(term, currentCommunity.id);
+          },
         }}
       />
     </div>

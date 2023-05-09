@@ -18,11 +18,11 @@ import {
   SerializedChannel,
   SerializedReadStatus,
   SerializedThread,
-  SerializedUser,
   Settings,
   ThreadState,
   UploadedFile,
 } from '@linen/types';
+import { SerializedMessage } from '@linen/types';
 import {
   scrollToBottom,
   isScrollAtBottom,
@@ -31,7 +31,6 @@ import {
 import useMode from '@linen/hooks/mode';
 import useWebsockets from '@linen/hooks/websockets';
 import styles from './index.module.scss';
-import { SerializedMessage } from '@linen/types';
 import Layouts from '@/Layouts';
 import { timestamp } from '@linen/utilities/date';
 import debounce from '@linen/utilities/debounce';
@@ -43,6 +42,7 @@ import AddThreadModal from '@/AddThreadModal';
 import EditThreadModal from '@/EditThreadModal';
 import ConfirmationModal from '@/ConfirmationModal';
 import Toast from '@/Toast';
+import type { ApiClient } from '@linen/api-client';
 
 const { SidebarLayout } = Layouts.Shared;
 
@@ -121,27 +121,15 @@ interface Props {
     startSignUp?: any;
   };
   queryIntegration?: string;
-  put: (path: string, data?: {}) => Promise<any>;
-  get: (path: string) => Promise<any>;
-  upload(
-    args: {
-      communityId: string;
-      data: FormData;
-    },
-    options: any
-  ): Promise<any>;
   IntegrationsModal: (args: any) => JSX.Element;
   MembersModal: (args: any) => JSX.Element;
   Pagination: (args: any) => JSX.Element;
-  apiGetThreads: (...args: any) => Promise<any>;
   ShowIntegrationDetail(): JSX.Element;
   Actions(): JSX.Element;
-  fetchMentions(term?: string): Promise<SerializedUser[]>;
   JoinChannelLink(): JSX.Element;
-  apiCreateThread: (...args: any) => Promise<any>;
-  apiCreateMessage: (...args: any) => Promise<any>;
   playNotificationSound: (volume: number) => Promise<void>;
   useUsersContext(): any;
+  api: ApiClient;
 }
 
 const UPDATE_READ_STATUS_INTERVAL_IN_MS = 30000;
@@ -189,21 +177,15 @@ export default function Channel({
   // injection
   useJoinContext,
   queryIntegration,
-  get,
-  put,
-  upload,
   IntegrationsModal,
   MembersModal,
   Pagination,
-  apiGetThreads,
   ShowIntegrationDetail,
   Actions,
-  fetchMentions,
   JoinChannelLink,
-  apiCreateMessage,
-  apiCreateThread,
   playNotificationSound,
   useUsersContext,
+  api,
 }: Props) {
   const [collapsed, setCollapsed] = useState(false);
   const [isInfiniteScrollLoading, setInfiniteScrollLoading] = useState(false);
@@ -227,13 +209,14 @@ export default function Channel({
 
   const currentUser = permissions.user || null;
 
-  const debouncedGetReadStatus = debounce(
-    (channelId: string): Promise<SerializedReadStatus> =>
-      get(`/api/read-status/${channelId}`)
+  const debouncedGetReadStatus = debounce((channelId: string) =>
+    api.get<SerializedReadStatus>(`/api/read-status/${channelId}`)
   );
-  const debouncedUpdateReadStatus = debounce(
-    (channelId: string): Promise<SerializedReadStatus> =>
-      put(`/api/read-status/${channelId}`, { timestamp: timestamp() })
+
+  const debouncedUpdateReadStatus = debounce((channelId: string) =>
+    api.put<SerializedReadStatus>(`/api/read-status/${channelId}`, {
+      timestamp: timestamp(),
+    })
   );
 
   useWebsockets({
@@ -255,22 +238,18 @@ export default function Channel({
     let interval: any;
     const channelId = currentChannel.id;
     if (currentUser) {
-      debouncedGetReadStatus(channelId).then(
-        (readStatus: SerializedReadStatus) => {
+      debouncedGetReadStatus(channelId).then((readStatus) => {
+        if (mounted) {
+          setReadStatus(readStatus);
+        }
+      });
+      interval = setInterval(() => {
+        const channelId = currentChannel.id;
+        debouncedUpdateReadStatus(channelId).then((readStatus) => {
           if (mounted) {
             setReadStatus(readStatus);
           }
-        }
-      );
-      interval = setInterval(() => {
-        const channelId = currentChannel.id;
-        debouncedUpdateReadStatus(channelId).then(
-          (readStatus: SerializedReadStatus) => {
-            if (mounted) {
-              setReadStatus(readStatus);
-            }
-          }
-        );
+        });
       }, UPDATE_READ_STATUS_INTERVAL_IN_MS);
     }
     return () => {
@@ -395,7 +374,7 @@ export default function Channel({
     try {
       setInfiniteScrollLoading(true);
       if (cursor[key]) {
-        const data = await apiGetThreads({
+        const data = await api.getThreads({
           channelId: currentChannel.id,
           cursor: cursor[key] || undefined,
           accountId: settings.communityId,
@@ -432,7 +411,7 @@ export default function Channel({
     scrollableRootRef,
     currentCommunity,
     startSignUp,
-    apiCreateThread,
+    api,
   });
 
   const sendThreadMessage = sendThreadMessageWrapper({
@@ -443,7 +422,7 @@ export default function Channel({
     currentThreadId,
     currentCommunity,
     startSignUp,
-    apiCreateMessage,
+    api,
   });
 
   const threadToRender = threads.find(
@@ -475,22 +454,21 @@ export default function Channel({
     files.forEach((file, index) => {
       data.append(`file-${index}`, file, file.name);
     });
-    return upload(
-      { communityId: settings.communityId, data },
-      {
-        onUploadProgress: (progressEvent: ProgressEvent) => {
-          const percentCompleted = Math.round(
-            (progressEvent.loaded * 100) / progressEvent.total
-          );
-          setProgress(percentCompleted);
-        },
-      }
-    )
-      .then((response) => {
+    return api
+      .upload(
+        { communityId: settings.communityId, data },
+        {
+          onUploadProgress: (progressEvent: ProgressEvent) => {
+            const percentCompleted = Math.round(
+              (progressEvent.loaded * 100) / progressEvent.total
+            );
+            setProgress(percentCompleted);
+          },
+        }
+      )
+      .then(({ files }) => {
         setUploading(false);
-        const { files } = response.data;
         setUploads(files);
-        return response;
       })
       .catch((response) => {
         setUploading(false);
@@ -619,7 +597,13 @@ export default function Channel({
                     uploads={uploads}
                     uploading={uploading}
                     uploadFiles={uploadFiles}
-                    {...{ fetchMentions, useUsersContext }}
+                    {...{
+                      fetchMentions: (term?: string) => {
+                        if (!term) return Promise.resolve([]);
+                        return api.fetchMentions(term, currentCommunity.id);
+                      },
+                      useUsersContext,
+                    }}
                   />
                 ) : (
                   <Footer />
@@ -635,7 +619,7 @@ export default function Channel({
         right={
           threadToRender && (
             <Thread
-              {...{ Actions, fetchMentions, JoinChannelLink, put, upload }}
+              {...{ Actions, api, JoinChannelLink }}
               key={threadToRender.id}
               thread={threadToRender}
               channelId={threadToRender.channelId}
@@ -664,7 +648,13 @@ export default function Channel({
                   handleScroll();
                 }
               }}
-              {...{ useUsersContext }}
+              {...{
+                useUsersContext,
+                fetchMentions: (term?: string) => {
+                  if (!term) return Promise.resolve([]);
+                  return api.fetchMentions(term, currentCommunity.id);
+                },
+              }}
             />
           )
         }

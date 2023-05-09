@@ -541,8 +541,8 @@ export default function Content({
                   return api.fetchMentions(term, currentCommunity.id);
                 },
                 JoinChannelLink,
-                put: api.put,
-                upload: api.upload,
+                api,
+                useUsersContext,
               }}
               key={thread.id}
               thread={thread}
@@ -562,7 +562,6 @@ export default function Content({
               onMessage={(threadId, message, messageId, imitationId) => {
                 onThreadMessage(threadId, message, messageId, imitationId);
               }}
-              {...{ useUsersContext }}
             />
           )
         }

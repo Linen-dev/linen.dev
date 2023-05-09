@@ -7,7 +7,6 @@ import {
   Settings,
   AccountType,
   SerializedAccount,
-  ChatType,
 } from '@linen/types';
 import { localStorage } from '@linen/utilities/storage';
 import styles from './index.module.scss';
@@ -18,7 +17,7 @@ import DefaultChannelRow from './DefaultChannelRow';
 import ChannelVisibilityRow from './ChannelVisibilityRow';
 import UrlsRow from './UrlsRow';
 import CommunityTypeRow from './CommunityTypeRow';
-import CommunityChatRow from './CommunityChatRow';
+// import CommunityChatRow from './CommunityChatRow';
 import debounce from '@linen/utilities/debounce';
 import { api } from 'utilities/requests';
 import Toast from '@linen/ui/Toast';
@@ -35,30 +34,7 @@ export interface Props {
   dms: SerializedChannel[];
 }
 
-const updateAccount = debounce(
-  ({
-    communityId,
-    type,
-    chat,
-  }: {
-    communityId: string;
-    type: any;
-    chat: any;
-  }) => {
-    api
-      .updateAccount({
-        accountId: communityId,
-        type,
-        chat,
-      })
-      .then((_) => {
-        Toast.success('Saved successfully!');
-      })
-      .catch(() => {
-        Toast.error('Something went wrong!');
-      });
-  }
-);
+const updateAccount = debounce(api.updateAccount);
 
 export default function ConfigurationsPage({
   channels: initialChannels,
@@ -124,7 +100,13 @@ export default function ConfigurationsPage({
           type={currentCommunity.type}
           disabled={!currentCommunity.premium}
           onChange={(type: AccountType) => {
-            updateAccount({ communityId: currentCommunity.id, type });
+            updateAccount({ accountId: currentCommunity.id, type })
+              .then((_) => {
+                Toast.success('Saved successfully!');
+              })
+              .catch(() => {
+                Toast.error('Something went wrong!');
+              });
           }}
         />
         <hr className="my-3" />

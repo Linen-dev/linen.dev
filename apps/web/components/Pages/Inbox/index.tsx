@@ -4,6 +4,7 @@ import {
   Permissions,
   SerializedAccount,
   SerializedChannel,
+  SerializedThread,
   Settings,
   ThreadState,
 } from '@linen/types';
@@ -39,7 +40,10 @@ const fetchInbox = debounce(
       .filter((config) => config.subscribed)
       .map((config) => config.channelId);
     return api
-      .post('/api/inbox', {
+      .post<{
+        threads: SerializedThread[];
+        total: number;
+      }>('/api/inbox', {
         communityName,
         page,
         limit,

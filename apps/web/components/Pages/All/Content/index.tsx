@@ -540,8 +540,7 @@ export default function Content({
                   return api.fetchMentions(term, currentCommunity.id);
                 },
                 JoinChannelLink,
-                put: api.put,
-                upload: api.upload,
+                api,
               }}
               key={thread.id}
               thread={thread}
