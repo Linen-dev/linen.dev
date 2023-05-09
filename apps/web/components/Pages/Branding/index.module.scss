@@ -4,5 +4,22 @@
   max-height: calc(100vh - 54px);
   overflow-x: hidden;
   overflow-y: scroll;
+}
 
+.description {
+  font-weight: 400;
+  color: var(--color-gray-600);
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+
+.favicon {
+  background-color: var(--color-background);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+  border: 1px solid var(--color-border);
+  width: 34px;
+  height: 34px;
+  padding: 8px;
 }
