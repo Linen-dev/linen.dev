@@ -1,8 +1,6 @@
-@import '../colors.scss';
-
 .link {
   align-items: center;
-  color: black;
+  color: var(--color-text);
   display: flex;
   font-size: 10px;
   letter-spacing: 1.3px;
@@ -20,9 +18,19 @@
 }
 
 .link:hover {
-  color: $color-primary;
+  color: var(--color-primary);
 }
 
 .image {
+  background-image: url(https://linen.dev/images/logo/linen.png);
+  background-size: cover;
   display: block;
+  width: 56px;
+  height: 12px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .image {
+    background-image: url(https://linen.dev/images/logo/white/linen.svg);
+  }
 }

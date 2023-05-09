@@ -3,6 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "exports": {
+    "./colors.css": "./colors.css",
     "./colors.scss": "./colors.scss",
     "./globals.css": "./globals.css",
     "./highlight.scss": "./highlight.scss",
