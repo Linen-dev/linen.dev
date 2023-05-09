@@ -31,7 +31,7 @@ const debouncedUpdateAccount = debounce((params: any) =>
 );
 
 function Description({ children }: { children: React.ReactNode }) {
-  return <div className="text-xs font-normal text-gray-600">{children}</div>;
+  return <div className={styles.description}>{children}</div>;
 }
 
 function PremiumCard({
@@ -368,18 +368,7 @@ export default function Branding({
                   logoUrl={currentCommunity.faviconUrl}
                   preview={({ logoUrl, brandColor }) => {
                     return (
-                      <div
-                        style={{
-                          backgroundColor: 'white',
-                          borderRadius: '4px',
-                          overflow: 'hidden',
-                          marginBottom: '0.5rem',
-                          border: '1px solid #e5e7eb',
-                          width: 34,
-                          height: 34,
-                          padding: '8px',
-                        }}
-                      >
+                      <div className={styles.favicon}>
                         <img
                           src={logoUrl}
                           height="16"

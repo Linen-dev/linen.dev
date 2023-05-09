@@ -24,7 +24,7 @@ interface Props {
 }
 
 function Description({ children }: { children: React.ReactNode }) {
-  return <div className="text-xs font-normal text-gray-600">{children}</div>;
+  return <div className={styles.description}>{children}</div>;
 }
 
 export default function LogoField({

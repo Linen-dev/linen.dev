@@ -1,7 +1,7 @@
 @import '@linen/styles/colors.scss';
 
 .header {
-  color: $color-gray-900;
+  color: var(--color-gray-900);
   font-size: 2.5rem;
   font-weight: bold;
   gap: 0.5rem;
@@ -31,7 +31,7 @@
 }
 
 .description {
-  color: $color-gray-600;
+  color: var(--color-gray-600);
   font-size: 1.125rem;
   line-height: 2rem;
   margin: 24px auto 36px;
