@@ -7,6 +7,7 @@ import Loading from '../components/Loading';
 import { api } from '../fetcher';
 import { mockedAsyncFunction, mockedComponent, mockedContext } from '../mock';
 import { useQuery } from '@tanstack/react-query';
+import { ChannelProps } from '@linen/types';
 
 type ChannelPageProps = {
   communityName: string;
@@ -21,7 +22,9 @@ export default function ChannelPage() {
     queryKey: ['channels', { communityName, channelName, page }],
     queryFn: () =>
       api
-        .get(`/api/ssr/channels?${qs({ communityName, channelName, page })}`)
+        .get<ChannelProps>(
+          `/api/ssr/channels?${qs({ communityName, channelName, page })}`
+        )
         .then((data) => {
           setChannelProps(data, communityName);
           return data;
@@ -58,20 +61,7 @@ function View() {
         settings,
         ...channelProps,
         useUsersContext,
-        get: api.get,
-        put: api.put,
-        apiUpdateMessage: api.updateMessage,
-        fetchMentions: api.fetchMentions,
-        apiDeleteMessage: api.deleteMessage,
-        apiUpdateThread: api.updateThread,
-        apiGetThreads: api.getThreads,
-        mergeThreadsRequest: api.mergeThreadsRequest,
-        moveMessageToChannelRequest: api.moveMessageToChannelRequest,
-        moveMessageToThreadRequest: api.moveMessageToThreadRequest,
-        upload: api.upload,
-        apiCreateThread: api.createThread,
-        apiCreateMessage: api.createMessage,
-        postReaction: api.postReaction,
+        api,
         // TODO:
         addReaction: mockedAsyncFunction,
         Actions: mockedComponent,

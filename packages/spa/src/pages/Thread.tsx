@@ -7,6 +7,7 @@ import Loading from '../components/Loading';
 import { api } from '../fetcher';
 import { mockedComponent, mockedContext } from '../mock';
 import { useQuery } from '@tanstack/react-query';
+import { ThreadProps } from '@linen/types';
 
 type ThreadPageProps = {
   communityName: string;
@@ -21,7 +22,9 @@ export default function ThreadPage() {
     queryKey: ['threads', { communityName, threadId, slug }],
     queryFn: () =>
       api
-        .get(`/api/ssr/threads?${qs({ communityName, threadId, slug })}`)
+        .get<ThreadProps>(
+          `/api/ssr/threads?${qs({ communityName, threadId, slug })}`
+        )
         .then((data) => {
           setThreadsProps(data, communityName);
           return data;
@@ -54,12 +57,7 @@ function View() {
         currentCommunity,
         permissions,
         settings,
-        apiPut: api.put,
-        apiUpdateMessage: api.updateMessage,
-        apiFetchMentions: api.fetchMentions,
-        apiUpdateThread: api.updateThread,
-        apiUpload: api.upload,
-        apiCreateMessage: api.createMessage,
+        api,
         useUsersContext,
         // TODO:
         Actions: mockedComponent,

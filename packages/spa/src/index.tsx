@@ -1,4 +1,4 @@
-import './index.css';
+import '@linen/styles/colors.css';
 import '@linen/styles/reset.css';
 import '@linen/styles/globals.css';
 import '@linen/styles/highlight.scss';
