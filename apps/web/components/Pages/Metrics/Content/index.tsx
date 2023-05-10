@@ -36,11 +36,11 @@ export default function Content({ communityId }: Props) {
   return (
     <div className={styles.container}>
       <dl className="grid grid-cols-1 gap-5 sm:grid-cols-3">
-        <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow border border-2 sm:p-6">
-          <dt className="truncate text-sm font-medium text-gray-500">
+        <div className="overflow-hidden rounded-lg bg-white dark:bg-gray-800 px-4 py-5 shadow border border-2 sm:p-6">
+          <dt className="truncate text-sm font-medium text-gray-500 dark:text-gray-300">
             Total Members
           </dt>
-          <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900 h-10">
+          <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-100 h-10">
             {metrics ? metrics.members : <span>...</span>}
           </dd>
         </div>

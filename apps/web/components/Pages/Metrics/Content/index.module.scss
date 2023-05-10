@@ -1,7 +1,5 @@
-@import '@linen/styles/colors.scss';
-
 .container {
-  background: rgb(243, 244, 246);
-  border-bottom: 1px solid $color-border;
+  background: var(--color-background);
+  border-bottom: 1px solid var(--color-border);
   padding: 2rem 1rem;
 }
