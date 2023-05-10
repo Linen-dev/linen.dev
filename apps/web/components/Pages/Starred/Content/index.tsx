@@ -21,7 +21,6 @@ import { addMessageToThread } from './state';
 import { addReactionToThread } from 'utilities/state/reaction';
 import { postReaction } from '@linen/ast';
 import { api } from 'utilities/requests';
-import Actions from 'components/Actions';
 import JoinChannelLink from 'components/Link/JoinChannelLink';
 
 const { Header, Grid } = Pages.Starred;
@@ -535,7 +534,6 @@ export default function Content({
           thread && (
             <Thread
               {...{
-                Actions,
                 fetchMentions: (term?: string) => {
                   if (!term) return Promise.resolve([]);
                   return api.fetchMentions(term, currentCommunity.id);

@@ -31,7 +31,6 @@ interface Props {
     type: string;
     active: boolean;
   }): void;
-  Actions(args: any): JSX.Element;
 }
 
 function Messages({
@@ -47,7 +46,6 @@ function Messages({
   onLoad,
   onReaction,
   onResolution,
-  Actions,
 }: Props) {
   const { messages } = thread;
   const elements = messages.map((message, index) => {
@@ -57,7 +55,6 @@ function Messages({
     return (
       <div id={message.id} key={`${message.id}`} className={styles.container}>
         <GridRow
-          {...{ Actions }}
           className={classNames(styles.row, {
             [styles.top]: !isPreviousMessageFromSameUser,
           })}

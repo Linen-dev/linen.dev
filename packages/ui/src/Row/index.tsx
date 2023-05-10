@@ -60,7 +60,6 @@ interface Props {
   onRead?(threadId: string): void;
   onRemind?(threadId: string, reminder: ReminderTypes): void;
   onUnread?(threadId: string): void;
-  Actions(): JSX.Element;
 }
 
 export default function ChannelRow({
@@ -86,7 +85,6 @@ export default function ChannelRow({
   onRead,
   onRemind,
   onUnread,
-  Actions,
 }: Props) {
   const { messages } = thread;
   const message = messages[0];
@@ -107,7 +105,6 @@ export default function ChannelRow({
       onDrop={onDrop}
     >
       <GridRow
-        Actions={Actions}
         className={className}
         thread={thread}
         message={message}

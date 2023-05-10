@@ -20,7 +20,6 @@ import { ChannelContext } from '@linen/contexts/channel';
 import debounce from '@linen/utilities/debounce';
 import { createThreadImitation } from '@linen/serializers/thread';
 import type { ApiClient } from '@linen/api-client';
-
 import Content from './Content';
 
 async function upsertUserThreadStatus(params: {
@@ -58,7 +57,6 @@ export default function ChannelView({
   isBot,
   permissions,
   addReaction,
-  Actions,
   IntegrationsModal,
   JoinChannelLink,
   MembersModal,
@@ -93,7 +91,6 @@ export default function ChannelView({
   MembersModal: (args: any) => JSX.Element;
   Pagination: (args: any) => JSX.Element;
   ShowIntegrationDetail(): JSX.Element;
-  Actions(...args: any): JSX.Element;
   JoinChannelLink(...args: any): JSX.Element;
   playNotificationSound: (volume: number) => Promise<void>;
   useUsersContext(): any;
@@ -895,19 +892,16 @@ export default function ChannelView({
   return (
     <ChannelContext.Provider value={currentChannel}>
       <Content
-        {...{
-          Actions,
-          IntegrationsModal,
-          JoinChannelLink,
-          MembersModal,
-          Pagination,
-          ShowIntegrationDetail,
-          useJoinContext,
-          queryIntegration,
-          playNotificationSound,
-          useUsersContext,
-          api,
-        }}
+        IntegrationsModal={IntegrationsModal}
+        JoinChannelLink={JoinChannelLink}
+        MembersModal={MembersModal}
+        Pagination={Pagination}
+        ShowIntegrationDetail={ShowIntegrationDetail}
+        useJoinContext={useJoinContext}
+        queryIntegration={queryIntegration}
+        playNotificationSound={playNotificationSound}
+        useUsersContext={useUsersContext}
+        api={api}
         key={currentChannel.channelName}
         threads={threads}
         pinnedThreads={pinnedThreads}

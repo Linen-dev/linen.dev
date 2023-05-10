@@ -5,7 +5,6 @@ import { localStorage } from '@linen/utilities/storage';
 import InboxView from '@linen/ui/InboxView';
 import { api } from 'utilities/requests';
 import { addReactionToThread } from 'utilities/state/reaction';
-import Actions from 'components/Actions';
 import JoinChannelLink from 'components/Link/JoinChannelLink';
 
 export default function Inbox({
@@ -35,7 +34,7 @@ export default function Inbox({
       dms={dms}
     >
       <InboxView
-        {...{ Actions, JoinChannelLink, addReactionToThread, api }}
+        {...{ JoinChannelLink, addReactionToThread, api }}
         channels={channels}
         currentCommunity={currentCommunity}
         isSubDomainRouting={isSubDomainRouting}

@@ -20,6 +20,7 @@ import {
   onResolve,
 } from '@linen/types';
 import styles from './index.module.scss';
+import Actions from '@/Actions';
 
 interface Props {
   className?: string;
@@ -57,7 +58,6 @@ interface Props {
   onRead?(threadId: string): void;
   onRemind?(threadId: string, reminder: ReminderTypes): void;
   onUnread?(threadId: string): void;
-  Actions(args: any): JSX.Element;
 }
 
 function Left({
@@ -125,7 +125,6 @@ function Row({
   onRead,
   onRemind,
   onUnread,
-  Actions,
 }: Props) {
   const [modal, setModal] = useState<ModalView>(ModalView.NONE);
   const [ref, hover] = useHover<HTMLDivElement>();

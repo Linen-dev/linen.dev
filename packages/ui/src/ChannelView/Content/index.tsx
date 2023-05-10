@@ -125,7 +125,6 @@ interface Props {
   MembersModal: (args: any) => JSX.Element;
   Pagination: (args: any) => JSX.Element;
   ShowIntegrationDetail(): JSX.Element;
-  Actions(): JSX.Element;
   JoinChannelLink(): JSX.Element;
   playNotificationSound: (volume: number) => Promise<void>;
   useUsersContext(): any;
@@ -181,7 +180,6 @@ export default function Channel({
   MembersModal,
   Pagination,
   ShowIntegrationDetail,
-  Actions,
   JoinChannelLink,
   playNotificationSound,
   useUsersContext,
@@ -508,7 +506,7 @@ export default function Channel({
               content={
                 <>
                   <Header
-                    {...{ ShowIntegrationDetail }}
+                    ShowIntegrationDetail={ShowIntegrationDetail}
                     className={classNames(styles.header, {
                       [styles.pinned]: !!pinnedThread,
                     })}
@@ -525,7 +523,6 @@ export default function Channel({
                         onClick={() => selectThread(pinnedThread.id)}
                       >
                         <Row
-                          {...{ Actions }}
                           thread={pinnedThread}
                           permissions={permissions}
                           isSubDomainRouting={isSubDomainRouting}
@@ -548,7 +545,6 @@ export default function Channel({
                     <div className={styles.full}>
                       <ul className={styles.ulFull}>
                         <Grid
-                          {...{ Actions }}
                           threads={threads}
                           permissions={permissions}
                           readStatus={readStatus}
@@ -601,12 +597,10 @@ export default function Channel({
                     uploads={uploads}
                     uploading={uploading}
                     uploadFiles={uploadFiles}
-                    {...{
-                      fetchMentions: (term?: string) => {
-                        if (!term) return Promise.resolve([]);
-                        return api.fetchMentions(term, currentCommunity.id);
-                      },
-                      useUsersContext,
+                    useUsersContext={useUsersContext}
+                    fetchMentions={(term?: string) => {
+                      if (!term) return Promise.resolve([]);
+                      return api.fetchMentions(term, currentCommunity.id);
                     }}
                   />
                 ) : (
@@ -623,7 +617,13 @@ export default function Channel({
         right={
           threadToRender && (
             <Thread
-              {...{ Actions, api, JoinChannelLink }}
+              fetchMentions={(term?: string) => {
+                if (!term) return Promise.resolve([]);
+                return api.fetchMentions(term, currentCommunity.id);
+              }}
+              api={api}
+              JoinChannelLink={JoinChannelLink}
+              useUsersContext={useUsersContext}
               key={threadToRender.id}
               thread={threadToRender}
               channelId={threadToRender.channelId}
@@ -651,13 +651,6 @@ export default function Channel({
                 if (pinned) {
                   handleScroll();
                 }
-              }}
-              {...{
-                useUsersContext,
-                fetchMentions: (term?: string) => {
-                  if (!term) return Promise.resolve([]);
-                  return api.fetchMentions(term, currentCommunity.id);
-                },
               }}
             />
           )

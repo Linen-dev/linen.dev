@@ -49,7 +49,6 @@ export default function GridContent({
   onRead,
   onRemind,
   onUnread,
-  Actions,
   Row = DefaultRow,
 }: {
   threads: SerializedThread[];
@@ -94,7 +93,6 @@ export default function GridContent({
   onRemind?(threaId: string, reminder: ReminderTypes): void;
   onUnread?(threadId: string): void;
   onLoad?(): void;
-  Actions(): JSX.Element;
   Row?(...args: any): JSX.Element;
 }) {
   const rows = [
@@ -143,11 +141,8 @@ export default function GridContent({
               })}
             >
               <Row
-                {...{
-                  incrementId,
-                  slug,
-                }}
-                Actions={Actions}
+                incrementId={incrementId}
+                slug={slug}
                 className={styles.row}
                 thread={thread}
                 permissions={permissions}

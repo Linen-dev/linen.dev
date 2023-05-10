@@ -47,7 +47,6 @@ interface Props {
   permissions: Permissions;
   settings: Settings;
   api: ApiClient;
-  Actions: (props: any) => JSX.Element;
   JoinChannelLink: ({ className, href, communityType }: any) => JSX.Element;
   addReactionToThread: (
     thread: SerializedThread,
@@ -71,7 +70,6 @@ export default function InboxView({
   settings,
   dms,
   api,
-  Actions,
   JoinChannelLink,
   addReactionToThread,
 }: Props) {
@@ -791,15 +789,12 @@ export default function InboxView({
         right={
           thread && (
             <Thread
-              {...{
-                Actions,
-                fetchMentions: (term?: string) => {
-                  if (!term) return Promise.resolve([]);
-                  return api.fetchMentions(term, currentCommunity.id);
-                },
-                JoinChannelLink,
-                api,
-                useUsersContext,
+              JoinChannelLink={JoinChannelLink}
+              api={api}
+              useUsersContext={useUsersContext}
+              fetchMentions={(term?: string) => {
+                if (!term) return Promise.resolve([]);
+                return api.fetchMentions(term, currentCommunity.id);
               }}
               key={thread.id}
               thread={thread}

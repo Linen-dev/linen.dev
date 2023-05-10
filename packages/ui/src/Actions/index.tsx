@@ -1,19 +1,5 @@
-import { useState } from 'react';
+import React from 'react';
 import classNames from 'classnames';
-import Draggable from './Draggable';
-import { getThreadUrl } from '@linen/utilities/url';
-import Toast from '@linen/ui/Toast';
-import Tooltip from '@linen/ui/Tooltip';
-import {
-  Permissions,
-  Settings,
-  SerializedMessage,
-  SerializedThread,
-  SerializedUser,
-  ReminderTypes,
-  onResolve,
-} from '@linen/types';
-import { copyToClipboard } from '@linen/utilities/clipboard';
 import { FiMapPin } from '@react-icons/all-files/fi/FiMapPin';
 import { FiStar } from '@react-icons/all-files/fi/FiStar';
 import { FiPaperclip } from '@react-icons/all-files/fi/FiPaperclip';
@@ -25,9 +11,21 @@ import { FiThumbsUp } from '@react-icons/all-files/fi/FiThumbsUp';
 import { FiTrash2 } from '@react-icons/all-files/fi/FiTrash2';
 import { FaVolumeMute } from '@react-icons/all-files/fa/FaVolumeMute';
 import { BiMessageCheck } from '@react-icons/all-files/bi/BiMessageCheck';
+import { getThreadUrl } from '@linen/utilities/url';
+import { copyToClipboard } from '@linen/utilities/clipboard';
+import Toast from '@/Toast';
+import Tooltip from '@/Tooltip';
+import {
+  Permissions,
+  Settings,
+  SerializedMessage,
+  SerializedThread,
+  SerializedUser,
+  onResolve,
+} from '@linen/types';
+import type { Mode } from '@linen/hooks/mode';
 import styles from './index.module.scss';
-import { Mode } from '@linen/hooks/mode';
-import { LINEN_URL } from 'secrets';
+import Draggable from './Draggable';
 
 interface Props {
   className?: string;
@@ -301,7 +299,7 @@ export default function Actions({
               incrementId: thread.incrementId,
               slug: thread.slug,
               messageId: message.id,
-              LINEN_URL,
+              LINEN_URL: 'https://www.linen.dev',
             });
             event.stopPropagation();
             event.preventDefault();

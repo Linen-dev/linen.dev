@@ -21,7 +21,6 @@ interface Props {
   settings: Settings;
   useJoinContext(): any;
   JoinChannelLink(...args: any): JSX.Element;
-  Actions(...args: any): JSX.Element;
   useUsersContext(): any;
   api: ApiClient;
 }
@@ -35,7 +34,6 @@ export default function ThreadView({
   isSubDomainRouting,
   settings,
   permissions,
-  Actions,
   JoinChannelLink,
   useJoinContext,
   useUsersContext,
@@ -52,16 +50,13 @@ export default function ThreadView({
         isSubDomainRouting={isSubDomainRouting}
         settings={settings}
         permissions={permissions}
-        {...{
-          Actions,
-          useJoinContext,
-          JoinChannelLink,
-          useUsersContext,
-          api,
-          fetchMentions: (term?: string) => {
-            if (!term) return Promise.resolve([]);
-            return api.fetchMentions(term, currentCommunity.id);
-          },
+        useJoinContext={useJoinContext}
+        JoinChannelLink={JoinChannelLink}
+        useUsersContext={useUsersContext}
+        api={api}
+        fetchMentions={(term?: string) => {
+          if (!term) return Promise.resolve([]);
+          return api.fetchMentions(term, currentCommunity.id);
         }}
       />
     </div>

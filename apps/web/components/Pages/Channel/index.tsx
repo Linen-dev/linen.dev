@@ -9,7 +9,6 @@ import ChannelView from '@linen/ui/ChannelView';
 import { createThreadImitation } from '@linen/serializers/thread';
 import { useUsersContext } from '@linen/contexts/Users';
 import { ShowIntegrationDetail } from 'components/Modals/IntegrationsModal';
-import Actions from 'components/Actions';
 import IntegrationsModal from 'components/Modals/IntegrationsModal';
 import { useRouter } from 'next/router';
 import MembersModal from 'components/Modals/MembersModal';
@@ -180,7 +179,6 @@ export default function Channel(props: ChannelProps) {
         {...{
           ...props,
           addReaction,
-          Actions,
           fetchMentions: (term?: string) => {
             if (!term) return Promise.resolve([]);
             return api.fetchMentions(term, currentCommunity.id);

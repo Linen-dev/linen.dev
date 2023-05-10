@@ -5,7 +5,6 @@ import { buildThreadSeo, buildStructureData } from 'utilities/seo';
 import ThreadView from '@linen/ui/ThreadView';
 import { useJoinContext } from 'contexts/Join';
 import { api } from 'utilities/requests';
-import Actions from 'components/Actions';
 import JoinChannelLink from 'components/Link/JoinChannelLink';
 import { useUsersContext } from '@linen/contexts/Users';
 
@@ -47,25 +46,18 @@ export function ThreadPage({
     >
       {buildStructureData({ thread, isSubDomainRouting, settings })}
       <ThreadView
-        {...{
-          currentChannel,
-          currentCommunity,
-          isSubDomainRouting,
-          permissions,
-          settings,
-          thread,
-          threadUrl,
-          isBot,
-          Actions,
-          JoinChannelLink,
-          useJoinContext,
-          fetchMentions: (term?: string) => {
-            if (!term) return Promise.resolve([]);
-            return api.fetchMentions(term, currentCommunity.id);
-          },
-          api,
-          useUsersContext,
-        }}
+        currentChannel={currentChannel}
+        currentCommunity={currentCommunity}
+        isSubDomainRouting={isSubDomainRouting}
+        permissions={permissions}
+        settings={settings}
+        thread={thread}
+        threadUrl={threadUrl}
+        isBot={isBot}
+        JoinChannelLink={JoinChannelLink}
+        useJoinContext={useJoinContext}
+        api={api}
+        useUsersContext={useUsersContext}
       />
     </PageLayout>
   );

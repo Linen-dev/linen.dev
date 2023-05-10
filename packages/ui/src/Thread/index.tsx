@@ -20,6 +20,7 @@ import styles from './index.module.scss';
 import { CustomLinkHelper } from '@linen/utilities/custom-link';
 import PoweredByLinen from '@/PoweredByLinen';
 import EditMessageModal from '@/EditMessageModal';
+import Actions from '@/Actions';
 import type { ApiClient } from '@linen/api-client';
 
 interface Props {
@@ -71,7 +72,6 @@ interface Props {
   }): void;
   onResolution?: onResolve;
   editMessage?({ id, body }: { id: string; body: string }): Promise<void>;
-  Actions(args: any): JSX.Element;
   JoinChannelLink(args: any): JSX.Element;
   useUsersContext(): any;
   fetchMentions(term?: string | undefined): Promise<SerializedUser[]>;
@@ -106,7 +106,6 @@ export default function Thread({
   onMessage,
   onResolution,
   editMessage,
-  Actions,
   JoinChannelLink,
   useUsersContext,
   api,
@@ -231,11 +230,10 @@ export default function Thread({
           onReopenThread={() => updateThread({ state: ThreadState.OPEN })}
           onSetTitle={(title) => updateThread({ title })}
           manage={manage}
-        />{' '}
+        />
         <Summary thread={thread} />
         <div className={styles.thread}>
           <Messages
-            {...{ Actions }}
             thread={thread}
             permissions={permissions}
             isBot={isBot}
@@ -306,10 +304,8 @@ export default function Thread({
                 uploading={uploading}
                 uploads={uploads}
                 upload={uploadFiles}
-                {...{
-                  useUsersContext,
-                  fetchMentions,
-                }}
+                useUsersContext={useUsersContext}
+                fetchMentions={fetchMentions}
               />
             ) : (
               <MessageForm
@@ -330,10 +326,8 @@ export default function Thread({
                 uploading={uploading}
                 uploads={uploads}
                 upload={uploadFiles}
-                {...{
-                  useUsersContext,
-                  fetchMentions,
-                }}
+                useUsersContext={useUsersContext}
+                fetchMentions={fetchMentions}
               />
             )}
           </div>
