@@ -5,6 +5,7 @@ import ErrorPage from './pages/Error';
 import SignIn from './pages/SignIn';
 import RequireAuth from './hoc/RequireAuth';
 import RedirectToLastPageViewed from './components/RedirectToLastPageViewed';
+import InboxPage from './pages/Inbox';
 const ChannelPage = lazy(() => import('./pages/Channel'));
 const ThreadPage = lazy(() => import('./pages/Thread'));
 
@@ -53,6 +54,10 @@ export default function Router() {
                         {
                           path: 't/:threadId/:slug',
                           element: <ThreadPage />,
+                        },
+                        {
+                          path: 'inbox',
+                          element: <InboxPage />,
                         },
                         {
                           path: '',

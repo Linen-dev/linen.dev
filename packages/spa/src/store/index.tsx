@@ -7,6 +7,7 @@ import {
   Permissions,
   ChannelProps,
   ThreadProps,
+  InboxProps,
 } from '@linen/types';
 export { shallow } from 'zustand/shallow';
 
@@ -26,6 +27,8 @@ type channelProps = Pick<
   | 'threads'
 >;
 
+type inboxProps = InboxProps;
+
 interface LinenState {
   currentCommunity: SerializedAccount | undefined;
   communities: SerializedAccount[];
@@ -39,6 +42,8 @@ interface LinenState {
   setChannelProps: (props: ChannelProps, communityName: string) => void;
   threadProps: threadProps | undefined;
   setThreadsProps: (props: ThreadProps, communityName: string) => void;
+  inboxProps: inboxProps | undefined;
+  setInboxProps: (props: InboxProps, communityName: string) => void;
 }
 
 export const useLinenStore = create<LinenState>()(
@@ -97,6 +102,27 @@ export const useLinenStore = create<LinenState>()(
           dms,
           channelName: props.currentChannel.channelName,
           communityName,
+        });
+      },
+      inboxProps: undefined,
+      setInboxProps: (props: InboxProps, communityName: string) => {
+        const {
+          channels,
+          permissions,
+          currentCommunity,
+          settings,
+          communities,
+          dms,
+        } = props;
+        set({
+          channels,
+          permissions,
+          currentCommunity,
+          settings,
+          communities,
+          dms,
+          communityName,
+          inboxProps: props,
         });
       },
     }),

@@ -6,7 +6,7 @@ export async function mockedAsyncFunction() {
   return;
 }
 
-export function mockedFunction() {
+export function mockedFunction(): any {
   return;
 }
 
