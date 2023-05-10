@@ -6,18 +6,20 @@
 }
 
 .icon {
+  color: var(--color-text);
   font-size: 4rem;
   margin: 0 auto;
 }
 
 .header {
+  color: var(--color-text);
   font-size: 1.5rem;
   font-weight: 700;
   margin: 0.5rem 0;
 }
 
 .description {
-  color: $color-gray-700;
+  color: var(--color-gray-700);
   margin: 0;
   font-size: 14px;
 }

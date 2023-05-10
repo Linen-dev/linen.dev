@@ -211,9 +211,13 @@ export default function Autocomplete({
       onKeyDown={handleKeyDown}
       onMouseLeave={() => setActiveResultIndex(-1)}
     >
-      {results.length > 0 && isFocused && (
+      {isFocused && value.length >= minlength && results.length > 0 && (
         <div className={styles.overlay}></div>
       )}
+      {isFocused &&
+        value.length >= minlength &&
+        results.length === 0 &&
+        !isSearching && <div className={styles.overlay}></div>}
       <TextInput
         className={styles.input}
         id="search"
@@ -240,10 +244,17 @@ export default function Autocomplete({
             e.stopPropagation();
             handleSelect();
           }}
-          className={styles.suggestions}
         >
-          {results.length > 0 && <>{renderSuggestions(results)}</>}
-          {results.length === 0 && !isSearching && <NoResults search={value} />}
+          {results.length > 0 && (
+            <div className={styles.suggestions}>
+              {renderSuggestions(results)}
+            </div>
+          )}
+          {results.length === 0 && !isSearching && (
+            <div className={classNames(styles.suggestions)}>
+              <NoResults search={value} />
+            </div>
+          )}
         </div>
       )}
     </div>
