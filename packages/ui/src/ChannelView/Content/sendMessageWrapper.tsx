@@ -88,20 +88,27 @@ export function sendMessageWrapper({
       accountId: currentCommunity.id,
       channelId,
       imitationId: imitation.id,
-    })
-    .then(({ thread, imitationId }) => {
-      setThreads((threads: SerializedThread[]) => {
-        const threadId = thread.id;
-        let index;
-        index = threads.findIndex((thread) => thread.id === threadId);
-        if (index >= 0) {
-          return threads;
-        }
-        return [
-          ...threads.filter((thread) => thread.id !== imitationId),
-          thread,
-        ];
-      });
-    });
+    }).then(
+      ({
+        thread,
+        imitationId,
+      }: {
+        thread: SerializedThread;
+        imitationId: string;
+      }) => {
+        setThreads((threads: SerializedThread[]) => {
+          const threadId = thread.id;
+          let index;
+          index = threads.findIndex((thread) => thread.id === threadId);
+          if (index >= 0) {
+            return threads;
+          }
+          return [
+            ...threads.filter((thread) => thread.id !== imitationId),
+            thread,
+          ];
+        });
+      }
+    );
   };
 }
