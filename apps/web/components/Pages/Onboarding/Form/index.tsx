@@ -106,7 +106,7 @@ export default function Form({ createAccount }: Props) {
         <Label htmlFor="name">
           Name
           <br />
-          <span className="text-xs font-normal text-gray-700">
+          <span className="text-xs font-normal text-gray-700 dark:text-gray-200">
             Letters, spaces and apostrophes.
           </span>
         </Label>
@@ -126,7 +126,7 @@ export default function Form({ createAccount }: Props) {
         <Label htmlFor="slackDomain">
           Path
           <br />
-          <span className="text-xs font-normal text-gray-700">
+          <span className="text-xs font-normal text-gray-700 dark:text-gray-200">
             https://linen.dev/s/
             {suggestion || 'community-path'}
           </span>
@@ -146,7 +146,7 @@ export default function Form({ createAccount }: Props) {
         <Label htmlFor="channelName">
           Channels
           <br />
-          <span className="text-xs font-normal text-gray-700">
+          <span className="text-xs font-normal text-gray-700 dark:text-gray-200">
             Lowercased letters, underscores, numbers and hyphens.
           </span>
         </Label>
@@ -185,7 +185,7 @@ export default function Form({ createAccount }: Props) {
         <Label htmlFor="email">
           Members
           <br />
-          <span className="text-xs font-normal text-gray-700">
+          <span className="text-xs font-normal text-gray-700 dark:text-gray-200">
             Send invitations via email.
           </span>
         </Label>

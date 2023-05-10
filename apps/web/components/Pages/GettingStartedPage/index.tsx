@@ -102,23 +102,10 @@ export function GettingStartedPage({
       left={
         <>
           <div className="text-center">
-            <img
-              className={styles.logo}
-              width={133}
-              height={30}
-              src={logo.src}
-            />
-            <p className="text-gray-700 mb-4">
+            <div className={styles.logo} />
+            <p className="text-gray-700 dark:text-gray-200 mb-4">
               Linen gives your community a home,
               <br />a place where meaningful conversations can happen.
-            </p>
-            <p className="text-gray-700 mb-4">
-              You can also treat it as a public archive,
-              <br />
-              which syncs your conversations from other sources.
-            </p>
-            <p className="text-gray-700 mb-4">
-              <strong>Or both.</strong> It&apos;s up to you.
             </p>
             <Button
               rounded="full"
@@ -129,7 +116,7 @@ export function GettingStartedPage({
               <FiPlus />
               Add a free community
             </Button>
-            <p className="text-gray-700 text-sm mb-2">
+            <p className="text-gray-700 dark:text-gray-200 text-sm mb-2">
               Any questions before you start?
               <br />
               <Link className="text-sm" href={`/s/${LINEN_COMMUNITY.domain}`}>
@@ -176,7 +163,7 @@ export function GettingStartedPage({
                         <div className="text-sm">
                           {account.name || account.id}
                         </div>
-                        <div className="text-xs text-gray-500">{`linen.dev/s/${
+                        <div className="text-xs text-gray-500 dark:text-gray-300">{`linen.dev/s/${
                           account.slackDomain || account.discordDomain
                         }`}</div>
                       </div>
@@ -205,7 +192,7 @@ export function GettingStartedPage({
                     />
                     <div>
                       <div className="text-sm">{invite.name || invite.id}</div>
-                      <div className="text-xs text-gray-500">{`linen.dev/s/${
+                      <div className="text-xs text-gray-500 dark:text-gray-300">{`linen.dev/s/${
                         invite.slackDomain || invite.discordDomain
                       }`}</div>
                     </div>

@@ -10,5 +10,15 @@
 }
 
 .logo {
+  background-image: url(https://linen.dev/images/logo/linen.png);
   margin: 0 auto 1rem;
+  width: 133px;
+  height: 30px;
+  background-size: contain;
+}
+
+@media (prefers-color-scheme: dark) {
+  .logo {
+    background-image: url(https://linen.dev/images/logo/white/linen.svg);
+  }
 }
