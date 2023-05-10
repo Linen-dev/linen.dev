@@ -126,7 +126,7 @@ const Home = ({ accounts }: Props) => {
             </Link>
           </div>
           <a
-            className="hidden sm:flex flex-row items-center mr-4 whitespace-nowrap text-base font-medium text-gray-600 hover:text-gray-900"
+            className="hidden sm:flex flex-row items-center mr-4 whitespace-nowrap text-base font-medium text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
             href="https://github.com/linen-dev/linen.dev"
             target="_blank"
             rel="noreferrer"
