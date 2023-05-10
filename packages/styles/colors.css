@@ -257,7 +257,8 @@
     --color-gray-50: #111827;
 
     --color-background: #111827;
-    --color-text: #fff;
+    /* gray-200 */
+    --color-text: #e5e7eb;
     --color-border: #1f2937;
     --color-input: #374151;
   }
