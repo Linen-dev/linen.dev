@@ -122,9 +122,7 @@ function TableMembers({
           <TextInput
             id="filterByEmail"
             label="Search"
-            {...{
-              onKeyUp: filterByEmail,
-            }}
+            onKeyUp={filterByEmail}
           />
         </div>
       </div>

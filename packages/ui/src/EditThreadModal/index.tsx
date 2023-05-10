@@ -87,7 +87,7 @@ export default function EditThreadModal({
               sendOnEnter={false}
               preview={false}
               message={currentThread.messages[0].body}
-              {...{ useUsersContext }}
+              useUsersContext={useUsersContext}
             />
           </Field>
         </div>

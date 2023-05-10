@@ -267,17 +267,15 @@ export default function DesktopNavBar({
             />
             {currentUser && permissions.chat && (
               <DMs
-                {...{
-                  channelName,
-                  debouncedUpdateReadStatus,
-                  dms,
-                  highlights,
-                  permissions,
-                  setHighlights,
-                  archiveChannel,
-                  Link,
-                  NewDmModal,
-                }}
+                channelName={channelName}
+                debouncedUpdateReadStatus={debouncedUpdateReadStatus}
+                dms={dms}
+                highlights={highlights}
+                permissions={permissions}
+                setHighlights={setHighlights}
+                archiveChannel={archiveChannel}
+                Link={Link}
+                NewDmModal={NewDmModal}
               />
             )}
             {permissions.manage && (

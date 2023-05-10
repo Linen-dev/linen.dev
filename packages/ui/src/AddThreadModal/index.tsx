@@ -135,7 +135,7 @@ export default function AddThreadModal({
               sendOnEnter={false}
               preview={false}
               message={EXAMPLE}
-              {...{ useUsersContext }}
+              useUsersContext={useUsersContext}
             />
           </Field>
         </div>

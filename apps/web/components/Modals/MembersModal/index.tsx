@@ -73,14 +73,12 @@ export default function MembersModal({
     <Modal open={open} close={close} size="md">
       <H3 className="pb-4">Members</H3>
       <ShowUsers
-        {...{
-          communityId: permissions.accountId,
-          channelPrivate: true,
-          users,
-          setUsers,
-          removeUser: showModal,
-          currentUser: permissions.user,
-        }}
+        communityId={permissions.accountId}
+        channelPrivate={true}
+        users={users}
+        setUsers={setUsers}
+        removeUser={showModal}
+        currentUser={permissions.user}
       />
       <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
         <Button color="blue" type="submit" onClick={() => onUpdateClick()}>

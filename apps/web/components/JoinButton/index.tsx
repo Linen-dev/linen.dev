@@ -48,7 +48,7 @@ function JoinButton({
         brandColor={brandColor}
         fontColor={fontColor}
         accountId={settings.communityId}
-        {...{ status }}
+        status={status}
       />
     );
   }

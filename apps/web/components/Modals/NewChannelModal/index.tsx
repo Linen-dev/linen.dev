@@ -101,11 +101,10 @@ export default function NewChannelModal({ permissions, show, close }: Props) {
             disabled={loading}
             required
             placeholder="e.g. javascript"
-            {...{
-              pattern: patterns.channelName.source,
-              title:
-                'Channels name should start with letter and could contain letters, underscore, numbers and hyphens. e.g. announcements',
-            }}
+            pattern={patterns.channelName.source}
+            title={
+              'Channels name should start with letter and could contain letters, underscore, numbers and hyphens. e.g. announcements'
+            }
           />
           <span className="text-xs text-gray-500">
             Be sure to choose a url friendly name.
@@ -125,14 +124,12 @@ export default function NewChannelModal({ permissions, show, close }: Props) {
             />
           </div>
           <ShowUsers
-            {...{
-              communityId: permissions.accountId!,
-              channelPrivate,
-              users,
-              setUsers,
-              removeUser,
-              currentUser: permissions.user,
-            }}
+            communityId={permissions.accountId!}
+            channelPrivate={channelPrivate}
+            users={users}
+            setUsers={setUsers}
+            removeUser={removeUser}
+            currentUser={permissions.user}
           />
         </div>
         <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">

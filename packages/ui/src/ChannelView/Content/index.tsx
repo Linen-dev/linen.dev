@@ -577,12 +577,10 @@ export default function Channel({
                 isPaginationView() ? (
                   <>
                     <Pagination
-                      {...{
-                        currentChannel,
-                        isSubDomainRouting,
-                        settings,
-                        page: pathCursor ? Number(pathCursor) : null,
-                      }}
+                      currentChannel={currentChannel}
+                      isSubDomainRouting={isSubDomainRouting}
+                      settings={settings}
+                      page={pathCursor ? Number(pathCursor) : null}
                     />
                     <Footer />
                   </>

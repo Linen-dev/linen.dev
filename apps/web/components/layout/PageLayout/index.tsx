@@ -96,17 +96,15 @@ function PageLayout({
           permissions={permissions}
           isSubDomainRouting={isSubDomainRouting}
           // dep injection
-          {...{
-            put: api.put,
-            postWithOptions: api.postWithOptions,
-            InternalLink,
-            JoinButton,
-            Link,
-            SearchBar,
-            signOut,
-            usePath,
-            routerAsPath: router.asPath,
-          }}
+          put={api.put}
+          postWithOptions={api.postWithOptions}
+          InternalLink={InternalLink}
+          JoinButton={JoinButton}
+          Link={Link}
+          SearchBar={SearchBar}
+          signOut={signOut}
+          usePath={usePath}
+          routerAsPath={router.asPath}
         />
       </div>
       {seo && <SEO {...seo} />}
@@ -120,20 +118,19 @@ function PageLayout({
           permissions={permissions}
           onDrop={onDrop}
           dms={dms}
-          {...{
-            Link: InternalLink,
-            routerAsPath: router.asPath,
-            usePath,
-            Image: Image as any,
-            getHomeUrl,
-            NewChannelModal,
-            NewCommunityModal,
-            NewDmModal,
-            archiveChannel: api.archiveChannel,
-            post: api.post,
-            put: api.put,
-            notify,
-          }}
+          // injection
+          Link={InternalLink}
+          routerAsPath={router.asPath}
+          usePath={usePath}
+          Image={Image as any}
+          getHomeUrl={getHomeUrl}
+          NewChannelModal={NewChannelModal}
+          NewCommunityModal={NewCommunityModal}
+          NewDmModal={NewDmModal}
+          archiveChannel={api.archiveChannel}
+          post={api.post}
+          put={api.put}
+          notify={notify}
         />
         <div
           className={

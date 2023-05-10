@@ -71,7 +71,7 @@ export default function EditMessageModal({
               sendOnEnter={false}
               preview={false}
               message={currentMessage.body}
-              {...{ useUsersContext }}
+              useUsersContext={useUsersContext}
             />
           </Field>
         </div>

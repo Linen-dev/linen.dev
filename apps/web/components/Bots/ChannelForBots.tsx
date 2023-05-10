@@ -57,12 +57,10 @@ export default function ChannelForBots({
           Row={RowForBots({ Row })}
         />
         <Pagination
-          {...{
-            currentChannel,
-            isSubDomainRouting,
-            settings,
-            page: pathCursor ? Number(pathCursor) : null,
-          }}
+          currentChannel={currentChannel}
+          isSubDomainRouting={isSubDomainRouting}
+          settings={settings}
+          page={pathCursor ? Number(pathCursor) : null}
         />
       </ul>
     </PageLayout>

@@ -176,24 +176,28 @@ export default function Channel(props: ChannelProps) {
       onDrop={onChannelDrop}
     >
       <ChannelView
-        {...{
-          ...props,
-          addReaction,
-          fetchMentions: (term?: string) => {
-            if (!term) return Promise.resolve([]);
-            return api.fetchMentions(term, currentCommunity.id);
-          },
-          api,
-          IntegrationsModal,
-          JoinChannelLink,
-          MembersModal,
-          Pagination,
-          ShowIntegrationDetail,
-          useJoinContext,
-          queryIntegration: query.integration,
-          playNotificationSound,
-          useUsersContext,
-        }}
+        channelName={props.channelName}
+        currentChannel={props.currentChannel}
+        currentCommunity={props.currentCommunity}
+        isBot={props.isBot}
+        isSubDomainRouting={props.isSubDomainRouting}
+        nextCursor={props.nextCursor}
+        pathCursor={props.pathCursor}
+        permissions={props.permissions}
+        pinnedThreads={props.pinnedThreads}
+        settings={props.settings}
+        threads={props.threads}
+        queryIntegration={query.integration}
+        addReaction={addReaction}
+        api={api}
+        IntegrationsModal={IntegrationsModal}
+        JoinChannelLink={JoinChannelLink}
+        MembersModal={MembersModal}
+        Pagination={Pagination}
+        ShowIntegrationDetail={ShowIntegrationDetail}
+        useJoinContext={useJoinContext}
+        playNotificationSound={playNotificationSound}
+        useUsersContext={useUsersContext}
       />
     </PageLayout>
   );

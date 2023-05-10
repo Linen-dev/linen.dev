@@ -532,14 +532,12 @@ export default function Content({
         right={
           thread && (
             <Thread
-              {...{
-                fetchMentions: (term?: string) => {
-                  if (!term) return Promise.resolve([]);
-                  return api.fetchMentions(term, currentCommunity.id);
-                },
-                JoinChannelLink,
-                api,
+              fetchMentions={(term?: string) => {
+                if (!term) return Promise.resolve([]);
+                return api.fetchMentions(term, currentCommunity.id);
               }}
+              JoinChannelLink={JoinChannelLink}
+              api={api}
               key={thread.id}
               thread={thread}
               channelId={thread.channelId}
@@ -558,7 +556,7 @@ export default function Content({
               onMessage={(threadId, message, messageId, imitationId) => {
                 onThreadMessage(threadId, message, messageId, imitationId);
               }}
-              {...{ useUsersContext }}
+              useUsersContext={useUsersContext}
             />
           )
         }

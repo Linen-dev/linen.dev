@@ -34,7 +34,9 @@ export default function Inbox({
       dms={dms}
     >
       <InboxView
-        {...{ JoinChannelLink, addReactionToThread, api }}
+        JoinChannelLink={JoinChannelLink}
+        addReactionToThread={addReactionToThread}
+        api={api}
         channels={channels}
         currentCommunity={currentCommunity}
         isSubDomainRouting={isSubDomainRouting}

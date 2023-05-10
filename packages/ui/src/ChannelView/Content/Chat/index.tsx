@@ -100,10 +100,8 @@ export default function Chat({
         uploading={uploading}
         uploads={uploads}
         upload={uploadFiles}
-        {...{
-          fetchMentions,
-          useUsersContext,
-        }}
+        fetchMentions={fetchMentions}
+        useUsersContext={useUsersContext}
       />
     </div>
   );

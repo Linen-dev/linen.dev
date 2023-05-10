@@ -78,20 +78,19 @@ export default function NavBar({
           permissions={permissions}
           onDrop={onDrop}
           dms={dms}
-          {...{
-            Link,
-            routerAsPath,
-            usePath,
-            Image,
-            getHomeUrl,
-            NewChannelModal,
-            NewCommunityModal,
-            NewDmModal,
-            archiveChannel,
-            post,
-            put,
-            notify,
-          }}
+          // injection
+          Link={Link}
+          routerAsPath={routerAsPath}
+          usePath={usePath}
+          Image={Image}
+          getHomeUrl={getHomeUrl}
+          NewChannelModal={NewChannelModal}
+          NewCommunityModal={NewCommunityModal}
+          NewDmModal={NewDmModal}
+          archiveChannel={archiveChannel}
+          post={post}
+          put={put}
+          notify={notify}
         />
       </div>
     </>

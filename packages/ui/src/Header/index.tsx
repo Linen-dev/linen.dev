@@ -89,12 +89,13 @@ export default function Header({
           <>
             <div className={styles.upgrade}>
               {!currentCommunity.premium && permissions.manage && (
-                <UpgradeButton {...{ InternalLink }} />
+                <UpgradeButton InternalLink={InternalLink} />
               )}
               <UserAvatar
                 currentUser={permissions.user}
                 signOut={signOut}
-                {...{ put, postWithOptions }}
+                put={put}
+                postWithOptions={postWithOptions}
               />
             </div>
             <div className={styles.lgHidden}>
