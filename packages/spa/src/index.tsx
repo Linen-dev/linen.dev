@@ -7,26 +7,17 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import { listenDeepLink } from './di';
-import { setJwtToken } from '@linen/auth/client';
-import { baseLinen } from './config';
+import { handleSignIn } from './utils/handleSignIn';
+import { handleNotificationPermission } from './utils/handleNotificationPermission';
 
 if (typeof window !== 'undefined') {
   listenDeepLink((event) => {
     handleSignIn(new URL(event.payload).search);
   });
-  handleSignIn(window.location.search);
-}
-
-function handleSignIn(urlSearch: string) {
-  const params = new URLSearchParams(urlSearch);
-  const state = params.get('state');
-  if (!!state) {
-    fetch(`${baseLinen}/api/auth/sso?state=${state}`).then(async (response) => {
-      const body = await response.json();
-      setJwtToken(body.token);
-      window.location.href = localStorage.getItem('from') || '/';
-    });
+  if (window?.location?.search) {
+    handleSignIn(window.location.search);
   }
+  handleNotificationPermission();
 }
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(

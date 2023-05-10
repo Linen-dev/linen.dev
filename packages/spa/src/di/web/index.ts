@@ -11,3 +11,14 @@ export const getHomeUrl = (community: SerializedAccount) =>
   `${window.location.origin}/s/${
     community.slackDomain || community.discordDomain
   }`;
+
+export const requestNotificationPermission = async () => {
+  // TODO
+};
+
+export const sendNotification = async (
+  body: string,
+  title: string = 'Linen.dev'
+) => {
+  // TODO
+};

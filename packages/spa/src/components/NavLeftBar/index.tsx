@@ -11,7 +11,7 @@ import { useLinenStore, shallow } from '../../store';
 import { api } from '../../fetcher';
 import Loading from '../Loading';
 import customUsePath from '../../hooks/usePath';
-import { getHomeUrl } from '../../di';
+import { getHomeUrl, sendNotification } from '../../di';
 
 export default function NavLeftBar() {
   const { mode } = useMode();
@@ -69,7 +69,7 @@ export default function NavLeftBar() {
         NewChannelModal: mockedComponent,
         NewCommunityModal: mockedComponent,
         NewDmModal: mockedComponent,
-        notify: mockedFunction,
+        notify: (body: string) => sendNotification(body),
         routerAsPath: mockedRouterAsPath,
         onDrop: mockedFunction,
       }}
