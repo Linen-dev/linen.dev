@@ -9,7 +9,7 @@ export default function Privacy() {
           aria-hidden="true"
         >
           <Link
-            className="text-blue-600 hover:text-blue-800 visited:text-purple-600"
+            className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-600"
             href="/"
             passHref
           >

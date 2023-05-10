@@ -222,14 +222,14 @@ export const TermsAndPolicy = (
     By using the platform, you agree to our{' '}
     <a
       target="_blank"
-      className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-600 visited:text-purple-600"
+      className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-600"
       href="/legal/terms"
     >
       Terms
     </a>{' '}
     and{' '}
     <a
-      className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-600 visited:text-purple-600"
+      className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-600"
       target="_blank"
       href="/legal/privacy"
     >
@@ -239,6 +239,6 @@ export const TermsAndPolicy = (
 );
 
 export const AnchorCss =
-  'cursor-pointer text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-600 visited:text-purple-600';
+  'cursor-pointer text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-600';
 
 export type SignInMode = 'creds' | 'magic';
