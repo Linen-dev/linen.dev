@@ -36,26 +36,24 @@ export default function NavTopBar() {
       <div className={styles.push} />
       <div className={styles.header}>
         <Header
-          {...{
-            channels, // for mobile menu
-            channelName, // for mobile menu
-            signOut,
-            permissions,
-            settings,
-            currentCommunity,
-            // component injection
-            put: api.put,
-            postWithOptions: api.postWithOptions,
-            Link: InternalLink({ communityName }),
-            InternalLink: InternalLink({ communityName }),
-            usePath: customUsePath({ communityName }),
-            // TODO:
-            routerAsPath: mockedRouterAsPath,
-            JoinButton: mockedComponent,
-            SearchBar: mockedComponent,
-            // not sure
-            isSubDomainRouting: false,
-          }}
+          channels={channels}
+          channelName={channelName}
+          signOut={signOut}
+          permissions={permissions}
+          settings={settings}
+          currentCommunity={currentCommunity}
+          // component injection
+          put={api.put}
+          postWithOptions={api.postWithOptions}
+          Link={InternalLink({ communityName })}
+          InternalLink={InternalLink({ communityName })}
+          usePath={customUsePath({ communityName })}
+          // TODO:
+          routerAsPath={mockedRouterAsPath}
+          JoinButton={mockedComponent}
+          SearchBar={mockedComponent}
+          // not sure
+          isSubDomainRouting={false}
         />
       </div>
     </>

@@ -54,26 +54,29 @@ function View() {
 
   return (
     <ChannelView
-      {...{
-        channelName,
-        currentCommunity,
-        permissions,
-        settings,
-        ...channelProps,
-        useUsersContext,
-        api,
-        // TODO:
-        addReaction: mockedAsyncFunction,
-        Actions: mockedComponent,
-        IntegrationsModal: mockedComponent,
-        JoinChannelLink: mockedComponent,
-        MembersModal: mockedComponent,
-        Pagination: mockedComponent,
-        ShowIntegrationDetail: mockedComponent,
-        queryIntegration: 'TODO',
-        useJoinContext: mockedContext,
-        playNotificationSound: mockedAsyncFunction,
-      }}
+      channelName={channelName}
+      currentCommunity={currentCommunity}
+      permissions={permissions}
+      settings={settings}
+      currentChannel={channelProps.currentChannel}
+      isBot={channelProps.isBot}
+      isSubDomainRouting={channelProps.isSubDomainRouting}
+      nextCursor={channelProps.nextCursor}
+      pathCursor={channelProps.pathCursor}
+      pinnedThreads={channelProps.pinnedThreads}
+      threads={channelProps.threads}
+      useUsersContext={useUsersContext}
+      api={api}
+      // TODO:
+      addReaction={mockedAsyncFunction}
+      IntegrationsModal={mockedComponent}
+      JoinChannelLink={mockedComponent}
+      MembersModal={mockedComponent}
+      Pagination={mockedComponent}
+      ShowIntegrationDetail={mockedComponent}
+      queryIntegration={'TODO'}
+      useJoinContext={mockedContext}
+      playNotificationSound={mockedAsyncFunction}
     />
   );
 }

@@ -52,18 +52,19 @@ function View() {
 
   return (
     <ThreadView
-      {...{
-        ...threadProps,
-        currentCommunity,
-        permissions,
-        settings,
-        api,
-        useUsersContext,
-        // TODO:
-        Actions: mockedComponent,
-        JoinChannelLink: mockedComponent,
-        useJoinContext: mockedContext,
-      }}
+      currentChannel={threadProps.currentChannel}
+      isSubDomainRouting={threadProps.isSubDomainRouting}
+      thread={threadProps.thread}
+      threadUrl={threadProps.threadUrl}
+      isBot={threadProps.isBot}
+      currentCommunity={currentCommunity}
+      permissions={permissions}
+      settings={settings}
+      api={api}
+      useUsersContext={useUsersContext}
+      // TODO:
+      JoinChannelLink={mockedComponent}
+      useJoinContext={mockedContext}
     />
   );
 }

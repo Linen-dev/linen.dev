@@ -43,30 +43,28 @@ export default function NavLeftBar() {
 
   return (
     <NavBar
-      {...{
-        currentCommunity,
-        communities,
-        post: api.post,
-        put: api.put,
-        mode,
-        channelName,
-        permissions,
-        channels,
-        dms,
-        archiveChannel: api.archiveChannel,
-        // components injection
-        Image,
-        Link: InternalLink({ communityName }),
-        getHomeUrl,
-        usePath: customUsePath({ communityName }),
-        // TODO:
-        NewChannelModal: mockedComponent,
-        NewCommunityModal: mockedComponent,
-        NewDmModal: mockedComponent,
-        notify: (body: string) => sendNotification(body),
-        routerAsPath: mockedRouterAsPath,
-        onDrop: mockedFunction,
-      }}
+      currentCommunity={currentCommunity}
+      communities={communities}
+      post={api.post}
+      put={api.put}
+      mode={mode}
+      channelName={channelName}
+      permissions={permissions}
+      channels={channels}
+      dms={dms}
+      archiveChannel={api.archiveChannel}
+      // components injection
+      Image={Image}
+      Link={InternalLink({ communityName })}
+      getHomeUrl={getHomeUrl}
+      usePath={customUsePath({ communityName })}
+      notify={(body: string) => sendNotification(body)}
+      // TODO:
+      NewChannelModal={mockedComponent}
+      NewCommunityModal={mockedComponent}
+      NewDmModal={mockedComponent}
+      routerAsPath={mockedRouterAsPath}
+      onDrop={mockedFunction}
     />
   );
 }

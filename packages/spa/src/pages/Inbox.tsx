@@ -42,16 +42,16 @@ function View() {
 
   return (
     <InboxView
-      {...{
-        ...inboxProps,
-        useUsersContext,
-        api,
-        // TODO:
-        Actions: mockedComponent,
-        JoinChannelLink: mockedComponent,
-        useJoinContext: mockedContext,
-        addReactionToThread: mockedFunction,
-      }}
+      channels={inboxProps.channels}
+      currentCommunity={inboxProps.currentCommunity}
+      dms={inboxProps.dms}
+      isSubDomainRouting={inboxProps.isSubDomainRouting}
+      permissions={inboxProps.permissions}
+      settings={inboxProps.settings}
+      api={api}
+      // TODO:
+      JoinChannelLink={mockedComponent}
+      addReactionToThread={mockedFunction}
     />
   );
 }
