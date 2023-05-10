@@ -1,10 +1,16 @@
 @import '@linen/styles/colors.scss';
 
+.logo {
+  background-image: url(https://linen.dev/images/logo/white/linen.svg);
+  height: 24px;
+  width: 108px;
+  background-size: contain;
+}
+
 .header {
-  background: var(--color-background);
+  background: black;
   position: fixed;
   width: 100%;
-  border-bottom: 1px solid $color-gray-100;
 }
 
 .header .nav {
@@ -19,18 +25,19 @@
   gap: 0.5rem;
 
   li a {
+    background: black;
     border-radius: 9999px;
-    border: 1px solid $color-gray-900;
-    color: $color-gray-900;
+    border: 1px solid $color-gray-100;
+    color: $color-gray-100;
     font-size: 14px;
     font-weight: bold;
     padding: 0.5rem 1rem;
-    transition: 0.1s ease color, 0.1s ease background;
+    transition: color 0.2s ease, background 0.2s ease;
   }
 
   li a:hover {
-    background: $color-gray-900;
-    color: $color-white;
+    background: $color-gray-100;
+    color: black;
   }
 }
 
@@ -49,7 +56,7 @@
 }
 
 .banner .h1 {
-  color: $color-gray-900;
+  color: var(--color-gray-900);
   font-size: 32px;
   line-height: 48px;
   font-weight: bold;
@@ -59,12 +66,12 @@
 .underscore {
   background-image: linear-gradient(
     180deg,
-    $color-green-300 0%,
-    $color-green-300 100%
+    var(--color-primary) 0%,
+    var(--color-primary) 100%
   );
   background-position: 0 90%;
   background-repeat: no-repeat;
-  background-size: 100% 0.5rem;
+  background-size: 100% 0.125rem;
   padding: 0;
   position: relative;
 }
@@ -97,8 +104,8 @@
 
 .card {
   align-items: center;
-  border-radius: 8px;
-  box-shadow: 0px 2px 8px -4px rgba($color-gray-700, 0.5);
+  border-radius: 4px;
+  box-shadow: 0 1px 2px var(--color-gray-300);
   cursor: pointer;
   display: flex;
   padding: 0.5rem;
@@ -112,7 +119,7 @@
 }
 
 .card:hover {
-  box-shadow: 0px 4px 24px -4px rgba($color-gray-700, 0.5);
+  box-shadow: 0 1px 4px var(--color-gray-300);
 }
 
 .card h2 {
@@ -125,5 +132,5 @@
 
 .card p {
   font-size: 12px;
-  color: $color-gray-700;
+  color: var(--color-gray-700);
 }

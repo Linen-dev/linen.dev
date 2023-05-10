@@ -26,7 +26,7 @@ export default function Communities({ communities }: Props) {
         <Container>
           <div className={styles.nav}>
             <Link href="/">
-              <img className={styles.image} height={64} src={logo.src} />
+              <div className={styles.logo} />
             </Link>
             <ul>
               <li>
