@@ -15,9 +15,13 @@
 }
 
 .container .input:focus {
-  background-color: white;
-  border-color: white;
-  color: black;
+  background-color: var(--color-background);
+  border-color: var(--color-background);
+  color: var(--color-text);
+}
+
+.active {
+  background-color: var(--color-gray-100);
 }
 
 .spin {
@@ -25,7 +29,7 @@
 }
 
 .suggestions {
-  background-color: white;
+  background-color: var(--color-background);
   overflow: auto;
   max-width: unset;
   border-radius: 4px;
@@ -33,7 +37,6 @@
   top: 40px;
   left: 0;
   right: 0;
-  box-shadow: 2px 3px 7px rgba(0, 0, 0, 0.15);
   max-height: calc(100vh - 200px);
 }
 

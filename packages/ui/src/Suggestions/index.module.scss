@@ -1,4 +1,6 @@
 .container {
+  background-color: var(--color-background);
+  color: var(--color-text);
   position: relative;
 }
 
@@ -7,7 +9,7 @@
   margin: 0;
   font-size: 0.875rem;
   line-height: 1.25rem;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--color-border);
   border-radius: 0.375rem;
   z-index: 10;
   overflow: hidden;
@@ -17,7 +19,7 @@
 }
 
 .suggestion {
-  background-color: white;
+  background-color: var(--color-background);
   position: relative;
   margin: 0;
   user-select: none;
@@ -37,16 +39,16 @@
 }
 
 .name {
-  color: rgb(55, 65, 81);
+  color: var(--color-gray-700);
   margin-left: 0.25rem;
 }
 
 .suggestion.selected,
 .suggestion:hover {
   cursor: pointer;
-  color: white;
+  color: var(--color-background);
   font-weight: 500;
-  background: rgb(79, 70, 229);
+  background: var(--color-primary)
 }
 
 .suggestion.selected:first-child,

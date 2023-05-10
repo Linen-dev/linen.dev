@@ -152,8 +152,10 @@ export default function Autocomplete({
           <div
             key={r.id || idx}
             onMouseEnter={() => setActiveResultIndex(idx)}
+            className={classNames({
+              [styles.active]: activeResultIndex === idx,
+            })}
             style={{
-              backgroundColor: activeResultIndex === idx ? '#f7f9fd' : 'white',
               width: '100%',
             }}
           >
@@ -220,7 +222,7 @@ export default function Autocomplete({
           isSearching ? (
             <AiOutlineLoading className={styles.spin} />
           ) : (
-            <AiOutlineSearch style={{ color: fontColor(brandColor) }} />
+            <AiOutlineSearch />
           )
         }
         placeholder={placeholder}
