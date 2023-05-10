@@ -54,7 +54,7 @@ function InviteMember({
       <Label htmlFor="email">
         Invite
         <br />
-        <span className="text-xs font-normal text-gray-700">
+        <span className="text-xs font-normal text-gray-700 dark:text-gray-200">
           Send invitations via email.
         </span>
       </Label>
@@ -179,7 +179,7 @@ function RowMember(user: MembersType, communityId: string): JSX.Element {
 
   return (
     <li key={user.id} className="mb-2">
-      <div className="border-gray-100 border-solid border rounded-md">
+      <div className="border-gray-100 dark:border-gray-700 border-solid border rounded-md">
         <div className="flex justify-start items-center px-2 py-2 gap-2">
           <Avatar src={user.profileImageUrl} text={user.displayName} />
           <p className="text-sm font-medium truncate">
@@ -190,7 +190,7 @@ function RowMember(user: MembersType, communityId: string): JSX.Element {
               </Badge>
             )}
             <br />
-            <span className="text-xs font-normal text-gray-700">
+            <span className="text-xs font-normal text-gray-700 dark:text-gray-200">
               {user.email}
             </span>
           </p>

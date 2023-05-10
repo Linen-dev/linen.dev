@@ -14,7 +14,7 @@
 }
 
 .grid .left {
-  background: $color-gray-50;
+  background: var(--color-gray-100);
 
   display: flex;
   flex-direction: column;

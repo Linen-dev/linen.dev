@@ -97,7 +97,7 @@ export default function EditChannelModal({
         <Label htmlFor="channelName">
           Name
           {/* <br /> */}
-          {/* <span className="text-xs font-normal text-gray-700">
+          {/* <span className="text-xs font-normal text-gray-700 dark:text-gray-200">
             Letters, spaces and apostrophes.
           </span> */}
         </Label>
