@@ -207,15 +207,9 @@ export default function Channel({
 
   const currentUser = permissions.user || null;
 
-  const debouncedGetReadStatus = debounce((channelId: string) =>
-    api.get<SerializedReadStatus>(`/api/read-status/${channelId}`)
-  );
+  const debouncedGetReadStatus = debounce(api.getReadStatus);
 
-  const debouncedUpdateReadStatus = debounce((channelId: string) =>
-    api.put<SerializedReadStatus>(`/api/read-status/${channelId}`, {
-      timestamp: timestamp(),
-    })
-  );
+  const debouncedUpdateReadStatus = debounce(api.updateReadStatus);
 
   useWebsockets({
     room: `room:lobby:${currentChannel.id}`,
@@ -245,7 +239,7 @@ export default function Channel({
       );
       interval = setInterval(() => {
         const channelId = currentChannel.id;
-        debouncedUpdateReadStatus(channelId).then(
+        debouncedUpdateReadStatus(channelId, timestamp()).then(
           (readStatus: SerializedReadStatus) => {
             if (mounted) {
               setReadStatus(readStatus);
@@ -258,7 +252,7 @@ export default function Channel({
       if (interval) {
         clearInterval(interval);
       }
-      debouncedUpdateReadStatus(channelId);
+      debouncedUpdateReadStatus(channelId, timestamp());
       mounted = false;
     };
   }, [currentChannel]);
@@ -672,6 +666,7 @@ export default function Channel({
         close={() => setModal(ModalView.NONE)}
       />
       <AddThreadModal
+        api={api}
         communityId={currentCommunity.id}
         currentUser={currentUser}
         currentChannel={currentChannel}
@@ -700,19 +695,12 @@ export default function Channel({
         description={`Are you sure you want to hide the #${currentChannel.channelName} channel? It won't be available to the members of your community anymore.`}
         onConfirm={() => {
           setModal(ModalView.NONE);
-          fetch(`/api/channels/hide?accountId=${currentCommunity.id}`, {
-            method: 'POST',
-            body: JSON.stringify({
-              channels: [{ id: currentChannel.id, hidden: true }],
-            }),
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          })
-            .then((response) => {
-              if (!response.ok) {
-                throw new Error();
-              }
+          api
+            .hideChannel({
+              accountId: currentCommunity.id,
+              channelId: currentChannel.id,
+            })
+            .then(() => {
               Toast.success(`#${currentChannel.channelName} is hidden`);
 
               setTimeout(() => {
@@ -729,6 +717,7 @@ export default function Channel({
       />
       {editedThread && (
         <EditThreadModal
+          api={api}
           communityId={currentCommunity.id}
           currentUser={currentUser}
           currentThread={editedThread}

@@ -45,6 +45,7 @@ export default function Profile() {
                 await updateProfile({ displayName });
               }}
               onUpload={uploadAvatar}
+              api={api}
             />
             <div className="flex justify-center">
               <button

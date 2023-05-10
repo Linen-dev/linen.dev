@@ -94,36 +94,33 @@ export default function InboxView({
   const currentUser = permissions.user || null;
   const { communityId, communityName } = settings;
 
-  const fetchInbox = debounce(
-    ({
-      communityName,
-      page,
-      limit,
-      configuration,
-    }: {
-      communityName: string;
-      page: number;
-      limit: number;
-      configuration: InboxConfig;
-    }) => {
-      const channelIds = configuration.channels
-        .filter((config) => config.subscribed)
-        .map((config) => config.channelId);
-      return api
-        .post<{
-          threads: SerializedThread[];
-          total: number;
-        }>('/api/inbox', {
-          communityName,
-          page,
-          limit,
-          channelIds,
-        })
-        .catch(() => {
-          throw new Error('Failed to fetch the inbox.');
-        });
+  const debounceFetchInbox = debounce(api.fetchInbox);
+
+  const fetchInbox = async ({
+    communityName,
+    page,
+    limit,
+    configuration,
+  }: {
+    communityName: string;
+    page: number;
+    limit: number;
+    configuration: InboxConfig;
+  }) => {
+    const channelIds = configuration.channels
+      .filter((config) => config.subscribed)
+      .map((config) => config.channelId);
+    try {
+      return await debounceFetchInbox({
+        communityName,
+        page,
+        limit,
+        channelIds,
+      });
+    } catch {
+      throw new Error('Failed to fetch the inbox.');
     }
-  );
+  };
 
   const fetchThread = (threadId: string) =>
     api.getThread({ id: threadId, accountId: communityId });
@@ -187,32 +184,20 @@ export default function InboxView({
       action: active ? 'decrement' : 'increment',
     });
   }
-
   async function starThread(threadId: string) {
-    return fetch('/api/starred', {
-      method: 'POST',
-      body: JSON.stringify({
-        communityId: currentCommunity.id,
-        threadId,
-      }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then((response) => {
-        if (response.status === 409) {
-          Toast.info('Thread is already starred.');
-        } else if (response.ok) {
-          Toast.success('Starred successfully.');
-          return response.json();
-        } else {
-          throw new Error('Failed to star the thread.');
-        }
+    return api
+      .starThread({ threadId, communityId: currentCommunity.id })
+      .then(() => {
+        Toast.success('Starred successfully.');
       })
       .catch((exception) => {
-        Toast.error(
-          exception?.message || 'Something went wrong. Please try again.'
-        );
+        if (exception.status === 409) {
+          Toast.info('Thread is already starred.');
+        } else {
+          Toast.error(
+            exception?.message || 'Something went wrong. Please try again.'
+          );
+        }
       });
   }
 
@@ -463,18 +448,12 @@ export default function InboxView({
     setMarkAllAsReadProgress(40);
     await new Promise((resolve) => setTimeout(resolve, 1000));
     setMarkAllAsReadProgress(60);
-    await fetch('/api/user-thread-status', {
-      method: 'POST',
-      body: JSON.stringify({
-        communityId: currentCommunity.id,
-        threadIds: [],
-        muted: false,
-        reminder: false,
-        read: true,
-      }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
+    await api.upsertUserThreadStatus({
+      communityId: currentCommunity.id,
+      threadIds: [],
+      muted: false,
+      reminder: false,
+      read: true,
     });
     await new Promise((resolve) => setTimeout(resolve, 1000));
     setMarkAllAsReadProgress(80);
@@ -515,20 +494,15 @@ export default function InboxView({
       }
       return thread;
     });
-    return fetch('/api/user-thread-status', {
-      method: 'POST',
-      body: JSON.stringify({
+    return api
+      .upsertUserThreadStatus({
         communityId: currentCommunity.id,
         threadIds: [threadId],
         muted,
         reminder,
         read,
         reminderType,
-      }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
+      })
       .then(() => {
         return fetchInbox({
           communityName,
@@ -820,6 +794,7 @@ export default function InboxView({
         rightRef={ref}
       />
       <AddThreadModal
+        api={api}
         communityId={currentCommunity.id}
         currentUser={currentUser}
         channels={channels}

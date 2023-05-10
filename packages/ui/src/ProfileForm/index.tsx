@@ -10,17 +10,20 @@ import {
   getFileSizeErrorMessage,
 } from '@linen/utilities/files';
 import styles from './index.module.scss';
+import type { ApiClient } from '@linen/api-client';
 
 interface Props {
   currentUser: SerializedUser;
   onSubmit({ displayName }: { displayName: string }): Promise<void>;
   onUpload(data: FormData, options: any): Promise<void>;
+  api: ApiClient;
 }
 
 export default function ProfileForm({
   currentUser,
   onSubmit,
   onUpload,
+  api,
 }: Props) {
   const [submitting, setSubmitting] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -85,7 +88,7 @@ export default function ProfileForm({
           placeholder="John Doe"
           defaultValue={currentUser.displayName || ''}
         />
-        <PermissionsField />
+        <PermissionsField api={api} />
         <div className={styles.btnWrapper}>
           <Button className={styles.btn} type="submit" disabled={submitting}>
             Save

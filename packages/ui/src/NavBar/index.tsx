@@ -8,6 +8,7 @@ import {
 import DesktopNavBar from './Desktop';
 import { Mode } from '@linen/hooks/mode';
 import styles from './index.module.scss';
+import type { ApiClient } from '@linen/api-client';
 
 interface Props {
   mode: Mode;
@@ -36,9 +37,7 @@ interface Props {
   NewChannelModal: (args: any) => JSX.Element;
   NewCommunityModal: (args: any) => JSX.Element;
   NewDmModal: (args: any) => JSX.Element;
-  archiveChannel: (args: any) => Promise<any>;
-  post: (...args: any) => Promise<any>;
-  put: (...args: any) => Promise<any>;
+  api: ApiClient;
   notify: (...args: any) => any;
 }
 
@@ -59,9 +58,7 @@ export default function NavBar({
   NewChannelModal,
   NewCommunityModal,
   NewDmModal,
-  archiveChannel,
-  post,
-  put,
+  api,
   notify,
 }: Props) {
   const sortedChannels = sortByChannelName(channels);
@@ -87,10 +84,8 @@ export default function NavBar({
           NewChannelModal={NewChannelModal}
           NewCommunityModal={NewCommunityModal}
           NewDmModal={NewDmModal}
-          archiveChannel={archiveChannel}
-          post={post}
-          put={put}
           notify={notify}
+          api={api}
         />
       </div>
     </>

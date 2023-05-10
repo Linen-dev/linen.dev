@@ -128,9 +128,9 @@ export default function Thread({
 
   useEffect(() => {
     if (incrementId) {
-      api.put(`/api/count?incrementId=${incrementId}`);
+      api.threadIncrementView({ incrementId });
       if (currentUser?.id) {
-        api.put('/api/notifications/mark', { threadId: thread.id });
+        api.notificationsMark({ threadId: thread.id });
       }
     }
   }, []);
@@ -340,6 +340,7 @@ export default function Thread({
       </div>
       {currentUser && editMessage && editedMessage && (
         <EditMessageModal
+          api={api}
           communityId={settings.communityId}
           currentUser={currentUser}
           open={modal === ModalView.EDIT_MESSAGE_MODAL}

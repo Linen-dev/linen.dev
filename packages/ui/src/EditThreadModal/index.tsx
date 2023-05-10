@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import MessageForm from '@/MessageForm';
 import Preview from '@/MessagePreview';
 import { postprocess } from '@linen/ast';
-import { fetchMentions } from './api';
 import H3 from '@/H3';
 import Field from '@/Field';
 import Modal from '@/Modal';
@@ -17,6 +16,7 @@ import {
 } from '@linen/types';
 import { FiX } from '@react-icons/all-files/fi/FiX';
 import { useUsersContext } from '@linen/contexts/Users';
+import type { ApiClient } from '@linen/api-client';
 
 interface Props {
   communityId: string;
@@ -29,6 +29,7 @@ interface Props {
   progress: number;
   uploading: boolean;
   uploads: UploadedFile[];
+  api: ApiClient;
 }
 
 export default function EditThreadModal({
@@ -42,6 +43,7 @@ export default function EditThreadModal({
   progress,
   uploading,
   uploads,
+  api,
 }: Props) {
   const [message, setMessage] = useState('');
   const [allUsers] = useUsersContext();
@@ -77,7 +79,7 @@ export default function EditThreadModal({
               }}
               fetchMentions={(term?: string) => {
                 if (!term) return Promise.resolve([]);
-                return fetchMentions(term, communityId);
+                return api.fetchMentions(term, communityId);
               }}
               onMessageChange={(message) => setMessage(message)}
               rows={4}

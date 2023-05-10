@@ -96,8 +96,7 @@ function PageLayout({
           permissions={permissions}
           isSubDomainRouting={isSubDomainRouting}
           // dep injection
-          put={api.put}
-          postWithOptions={api.postWithOptions}
+          api={api}
           InternalLink={InternalLink}
           JoinButton={JoinButton}
           Link={Link}
@@ -127,9 +126,7 @@ function PageLayout({
           NewChannelModal={NewChannelModal}
           NewCommunityModal={NewCommunityModal}
           NewDmModal={NewDmModal}
-          archiveChannel={api.archiveChannel}
-          post={api.post}
-          put={api.put}
+          api={api}
           notify={notify}
         />
         <div

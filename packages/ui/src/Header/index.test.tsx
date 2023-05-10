@@ -25,8 +25,7 @@ describe('Header', () => {
           currentCommunity={currentCommunity}
           isSubDomainRouting={false}
           permissions={permissions}
-          put={jest.fn()}
-          postWithOptions={jest.fn()}
+          api={{} as any}
           InternalLink={Link}
           JoinButton={() => <div>JoinButton</div>}
           Link={Link}
@@ -53,8 +52,7 @@ describe('Header', () => {
           currentCommunity={currentCommunity}
           isSubDomainRouting={false}
           permissions={permissions}
-          put={jest.fn()}
-          postWithOptions={jest.fn()}
+          api={{} as any}
           InternalLink={Link}
           JoinButton={() => <div>JoinButton</div>}
           Link={Link}

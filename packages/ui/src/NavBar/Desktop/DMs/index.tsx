@@ -9,6 +9,7 @@ import { FiX } from '@react-icons/all-files/fi/FiX';
 import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp';
 import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
 import { useState } from 'react';
+import { timestamp } from '@linen/utilities/date';
 
 type Props = {
   permissions: Permissions;
@@ -117,7 +118,7 @@ export function DMs({
                 <Link
                   className={classNames(styles.item)}
                   onClick={() => {
-                    debouncedUpdateReadStatus(channel.id);
+                    debouncedUpdateReadStatus(channel.id, timestamp());
                     setHighlights((highlights: any) => {
                       return highlights.filter((id: any) => id !== channel.id);
                     });

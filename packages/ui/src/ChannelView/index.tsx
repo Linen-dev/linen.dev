@@ -22,26 +22,6 @@ import { createThreadImitation } from '@linen/serializers/thread';
 import type { ApiClient } from '@linen/api-client';
 import Content from './Content';
 
-async function upsertUserThreadStatus(params: {
-  communityId: string;
-  threadIds: string[];
-  muted: boolean;
-  read: boolean;
-  reminder: boolean;
-  reminderType?: ReminderTypes;
-}) {
-  // FIXME
-  return fetch('/api/user-thread-status', {
-    method: 'POST',
-    body: JSON.stringify(params),
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
-}
-
-const debouncedUpserUserThreadStatus = debounce(upsertUserThreadStatus);
-
 const SHORTCUTS_ENABLED = false;
 
 export default function ChannelView({
@@ -106,6 +86,8 @@ export default function ChannelView({
   const [currentThreadId, setCurrentThreadId] = useState<string | undefined>(
     viewport === 'desktop' ? threads[threads.length - 1]?.id : undefined
   );
+
+  const debouncedUpserUserThreadStatus = debounce(api.upsertUserThreadStatus);
 
   const currentUser = permissions.user || null;
   const token = permissions.token || null;
@@ -238,12 +220,10 @@ export default function ChannelView({
         // get full thread from an endpoint and push it to threads
         try {
           // FIXME
-          const thread = await fetch(
-            `/api/threads/${threadId}?accountId=${currentCommunity.id}`,
-            {
-              method: 'GET',
-            }
-          ).then((response) => response.json());
+          const thread = await api.getThread({
+            id: threadId,
+            accountId: currentCommunity.id,
+          });
           setThreads((threads) => [...threads, thread]);
         } catch (exception) {
           if (process.env.NODE_ENV === 'development') {
@@ -485,31 +465,19 @@ export default function ChannelView({
   }
 
   async function starThread(threadId: string) {
-    // FIXME
-    return fetch('/api/starred', {
-      method: 'POST',
-      body: JSON.stringify({
-        communityId: currentCommunity.id,
-        threadId,
-      }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then((response) => {
-        if (response.status === 409) {
-          Toast.info('Thread is already starred.');
-        } else if (response.ok) {
-          Toast.success('Starred successfully.');
-          return response.json();
-        } else {
-          throw new Error('Failed to star the thread.');
-        }
+    return api
+      .starThread({ threadId, communityId: currentCommunity.id })
+      .then(() => {
+        Toast.success('Starred successfully.');
       })
       .catch((exception) => {
-        Toast.error(
-          exception?.message || 'Something went wrong. Please try again.'
-        );
+        if (exception.status === 409) {
+          Toast.info('Thread is already starred.');
+        } else {
+          Toast.error(
+            exception?.message || 'Something went wrong. Please try again.'
+          );
+        }
       });
   }
 

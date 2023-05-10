@@ -5,35 +5,29 @@ import Toast from '@/Toast';
 import Toggle from '@/Toggle';
 import { localStorage } from '@linen/utilities/storage';
 import styles from './index.module.scss';
+import type { ApiClient } from '@linen/api-client';
 
-export default function PermissionsField() {
+export default function PermissionsField({ api }: { api: ApiClient }) {
   const granted = localStorage.get('notification.permission') === 'granted';
   const [checked, setChecked] = useState<boolean>(granted);
-  const [settings, setSettings] = useState();
+  const [settings, setSettings] = useState<{
+    notificationsByEmail: boolean;
+  }>();
   const [checkedEmail, setCheckedEmail] = useState<boolean>(false);
 
   useEffect(() => {
     if (!settings) {
-      fetch('/api/notifications/settings') // FIXME
-        .then((res) => res.json())
-        .then((res) => {
-          setSettings(res);
-          setCheckedEmail(res.notificationsByEmail);
-        });
+      api.notificationSettings().then((res) => {
+        setSettings(res);
+        setCheckedEmail(res.notificationsByEmail);
+      });
     }
   }, []);
 
   const onEmailSettingsChange = async () => {
     const notificationsByEmail = !checkedEmail;
     try {
-      // FIXME
-      await fetch('/api/notifications/settings', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ notificationsByEmail }),
-      });
+      await api.updateNotificationSettings({ notificationsByEmail });
       setCheckedEmail(notificationsByEmail);
     } catch (error) {
       Toast.info('Something went wrong');

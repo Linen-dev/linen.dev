@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import MessageForm from '@/MessageForm';
 import Preview from '@/MessagePreview';
 import { postprocess } from '@linen/ast';
-import { fetchMentions } from './api';
 import H3 from '@/H3';
 import Field from '@/Field';
 import NativeSelect from '@/NativeSelect';
@@ -20,6 +19,7 @@ import { FiHash } from '@react-icons/all-files/fi/FiHash';
 import { FiX } from '@react-icons/all-files/fi/FiX';
 import { useUsersContext } from '@linen/contexts/Users';
 import { EXAMPLE } from './utilities/message';
+import type { ApiClient } from '@linen/api-client';
 
 interface Props {
   communityId: string;
@@ -41,6 +41,7 @@ interface Props {
   progress: number;
   uploading: boolean;
   uploads: UploadedFile[];
+  api: ApiClient;
 }
 
 function findDefaultChannel(channels: SerializedChannel[]): SerializedChannel {
@@ -63,6 +64,7 @@ export default function AddThreadModal({
   progress,
   uploading,
   uploads,
+  api,
 }: Props) {
   const [message, setMessage] = useState('');
   const [allUsers] = useUsersContext();
@@ -124,7 +126,7 @@ export default function AddThreadModal({
               }}
               fetchMentions={(term?: string) => {
                 if (!term) return Promise.resolve([]);
-                return fetchMentions(term, communityId);
+                return api.fetchMentions(term, communityId);
               }}
               onMessageChange={(message) => setMessage(message)}
               rows={4}

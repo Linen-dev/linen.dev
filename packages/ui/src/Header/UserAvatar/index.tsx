@@ -7,12 +7,12 @@ import ProfileForm from '@/ProfileForm';
 import { FiUser } from '@react-icons/all-files/fi/FiUser';
 import { FiLogOut } from '@react-icons/all-files/fi/FiLogOut';
 import styles from './index.module.scss';
+import type { ApiClient } from '@linen/api-client';
 
 interface Props {
   currentUser: SerializedUser;
-  postWithOptions(path: string, data: FormData, options: any): Promise<void>;
   signOut: () => void;
-  put: (path: string, data?: {}) => Promise<any>;
+  api: ApiClient;
 }
 
 enum Mode {
@@ -20,12 +20,7 @@ enum Mode {
   Profile,
 }
 
-export default function UserAvatar({
-  currentUser,
-  postWithOptions,
-  signOut,
-  put,
-}: Props) {
+export default function UserAvatar({ currentUser, signOut, api }: Props) {
   const userNavigation = [
     {
       label: 'Profile',
@@ -61,10 +56,9 @@ export default function UserAvatar({
       <Modal open={mode === Mode.Profile} close={() => setMode(Mode.Menu)}>
         <ProfileForm
           currentUser={currentUser}
+          api={api}
           onSubmit={async ({ displayName }) => {
-            await put('/api/profile', {
-              displayName,
-            }).then(() => {
+            await api.updateProfile({ displayName }).then(() => {
               // Potential improvement:
               // We could improve the behavior here
               // by updating the user information live.
@@ -78,12 +72,10 @@ export default function UserAvatar({
             setMode(Mode.Menu);
           }}
           onUpload={async (data: FormData, options: any) => {
-            return postWithOptions('/api/profile/avatar', data, options).then(
-              () => {
-                // same as in the comment above, we could make this dynamic by updating the user in the all user's list
-                window.location.reload();
-              }
-            );
+            return api.uploadAvatar(data, options).then(() => {
+              // same as in the comment above, we could make this dynamic by updating the user in the all user's list
+              window.location.reload();
+            });
           }}
         />
       </Modal>

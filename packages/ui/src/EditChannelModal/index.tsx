@@ -10,12 +10,14 @@ import { FiHash } from '@react-icons/all-files/fi/FiHash';
 import { FiX } from '@react-icons/all-files/fi/FiX';
 import { SerializedAccount, SerializedChannel } from '@linen/types';
 import styles from './index.module.scss';
+import type { ApiClient } from '@linen/api-client';
 
 interface Props {
   open: boolean;
   close(): void;
   channel: SerializedChannel;
   currentCommunity: SerializedAccount;
+  api: ApiClient;
 }
 
 export default function EditChannelModal({
@@ -23,6 +25,7 @@ export default function EditChannelModal({
   close,
   channel,
   currentCommunity,
+  api,
 }: Props) {
   const [loading, setLoading] = useState(false);
   const [channelPrivate, setChannelPrivate] = useState(
@@ -39,18 +42,8 @@ export default function EditChannelModal({
     channelName: string;
   }) {
     setLoading(true);
-    return fetch(`/api/channels/${channelId}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        accountId,
-        channelId,
-        channelName,
-        channelPrivate,
-      }),
-    })
+    return api
+      .updateChannel({ accountId, channelId, channelName, channelPrivate })
       .then(() => {
         // changing channel name changes the path
         // we'd need to dynamically update it

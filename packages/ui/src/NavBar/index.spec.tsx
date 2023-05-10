@@ -3,6 +3,7 @@ import NavBar from '.';
 import { render } from '@testing-library/react';
 import { build } from '@linen/factory';
 import { Mode } from '@linen/hooks/mode';
+import type { ApiClient } from '@linen/api-client';
 
 describe('NavBar', () => {
   it.skip('renders channels', () => {
@@ -19,6 +20,7 @@ describe('NavBar', () => {
         permissions={build('permissions')}
         mode={Mode.Default}
         dms={[]}
+        api={{} as ApiClient}
         {...{
           archiveChannel: jest.fn(),
           getHomeUrl: jest.fn(),
@@ -28,8 +30,6 @@ describe('NavBar', () => {
           NewCommunityModal: jest.fn(),
           NewDmModal: jest.fn(),
           notify: jest.fn(),
-          post: jest.fn(),
-          put: jest.fn(),
           routerAsPath: '/',
           usePath: jest.fn(),
           onDrop: jest.fn(),

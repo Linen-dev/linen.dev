@@ -5,7 +5,6 @@ import {
   Permissions,
   SerializedAccount,
   SerializedChannel,
-  SerializedReadStatus,
 } from '@linen/types';
 import useWebsockets from '@linen/hooks/websockets';
 import styles from './index.module.scss';
@@ -31,6 +30,7 @@ import MenuIcon from './MenuIcon';
 import PoweredByLinen from '@/PoweredByLinen';
 import AnalyticsGroup from './AnalyticsGroup';
 import EditChannelModal from '@/EditChannelModal';
+import type { ApiClient } from '@linen/api-client';
 
 interface Props {
   mode: Mode;
@@ -59,10 +59,8 @@ interface Props {
   NewChannelModal: (args: any) => JSX.Element;
   NewCommunityModal: (args: any) => JSX.Element;
   NewDmModal: (args: any) => JSX.Element;
-  archiveChannel: (args: any) => Promise<any>;
-  post: (...args: any) => Promise<any>;
-  put: (...args: any) => Promise<any>;
   notify: (...args: any) => any;
+  api: ApiClient;
 }
 
 enum ModalView {
@@ -88,10 +86,8 @@ export default function DesktopNavBar({
   NewChannelModal,
   NewCommunityModal,
   NewDmModal,
-  archiveChannel,
-  post,
-  put,
   notify,
+  api,
 }: Props) {
   const paths = {
     inbox: usePath({ href: '/inbox' }),
@@ -113,15 +109,9 @@ export default function DesktopNavBar({
     ].includes(routerAsPath);
   };
 
-  const debouncedReadStatus = debounce(
-    ({ channelIds }: { channelIds: string[] }) =>
-      post('/api/read-status', { channelIds })
-  );
+  const debouncedReadStatus = debounce(api.postReadStatus);
 
-  const debouncedUpdateReadStatus = debounce(
-    (channelId: string): Promise<SerializedReadStatus> =>
-      put(`/api/read-status/${channelId}`, { timestamp: timestamp() })
-  );
+  const debouncedUpdateReadStatus = debounce(api.updateReadStatus);
 
   const currentUser = permissions.user || null;
   const userId = permissions.auth?.id || null;
@@ -182,7 +172,7 @@ export default function DesktopNavBar({
     let mounted = true;
     if (currentUser) {
       debouncedReadStatus({ channelIds: channels.map(({ id }) => id) }).then(
-        ({ readStatuses }: { readStatuses: SerializedReadStatus[] }) => {
+        ({ readStatuses }) => {
           if (mounted && readStatuses?.length > 0) {
             setHighlights((highlights) => {
               const channelIds = readStatuses
@@ -251,7 +241,7 @@ export default function DesktopNavBar({
               mode={mode}
               permissions={permissions}
               onChannelClick={(channelId) => {
-                debouncedUpdateReadStatus(channelId);
+                debouncedUpdateReadStatus(channelId, timestamp());
                 setHighlights((highlights) => {
                   return highlights.filter((id) => id !== channelId);
                 });
@@ -273,7 +263,7 @@ export default function DesktopNavBar({
                 highlights={highlights}
                 permissions={permissions}
                 setHighlights={setHighlights}
-                archiveChannel={archiveChannel}
+                archiveChannel={api.archiveChannel}
                 Link={Link}
                 NewDmModal={NewDmModal}
               />
@@ -322,6 +312,7 @@ export default function DesktopNavBar({
       </div>
       {editedChannel && (
         <EditChannelModal
+          api={api}
           open={modal === ModalView.EDIT_CHANNEL}
           close={() => setModal(ModalView.NONE)}
           channel={editedChannel}

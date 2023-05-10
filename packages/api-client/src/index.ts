@@ -27,6 +27,8 @@ import type {
   postMessageType,
   putMessageType,
   UploadedFile,
+  SerializedReadStatus,
+  ReminderTypes,
 } from '@linen/types';
 export { AxiosRequestConfig };
 
@@ -126,6 +128,12 @@ export default class ApiClient {
       props
     );
 
+  starThread = (props: { communityId: string; threadId: string }) =>
+    this.post('/api/starred', props);
+
+  threadIncrementView = ({ incrementId }: { incrementId: number }) =>
+    this.put(`/api/count?${qs({ incrementId })}`);
+
   deleteMessage = (props: deleteMessageType) =>
     this.deleteReq<{ ok: boolean }>(
       `/api/messages/${props.id}?accountId=${props.accountId}`
@@ -140,14 +148,47 @@ export default class ApiClient {
   updateMessage = (props: putMessageType) =>
     this.put<SerializedMessage>(`/api/messages/${props.id}`, props);
 
+  highlight = (props: { input: string }) =>
+    this.post<{ output: string }>('/api/highlight', props);
+
   createChannel = (props: createChannelType) =>
     this.post<SerializedChannel>(`/api/channels`, props);
+
+  updateChannel = ({
+    accountId,
+    channelId,
+    channelName,
+    channelPrivate,
+  }: {
+    accountId: string;
+    channelId: string;
+    channelName: string;
+    channelPrivate: boolean;
+  }) =>
+    this.put(`/api/channels/${channelId}`, {
+      accountId,
+      channelId,
+      channelName,
+      channelPrivate,
+    });
 
   setDefaultChannel = (props: setDefaultChannelType) =>
     this.post<{}>(`/api/channels/default`, props);
 
   hideChannels = (props: bulkHideChannelsType) =>
     this.post<{}>(`/api/channels/hide`, props);
+
+  hideChannel = ({
+    accountId,
+    channelId,
+  }: {
+    accountId: string;
+    channelId: string;
+  }) =>
+    this.post<any>(`/api/channels/hide?${qs({ accountId })}`, {
+      channelId,
+      hidden: true,
+    });
 
   getChannelIntegrations = ({
     channelId,
@@ -229,6 +270,74 @@ export default class ApiClient {
       data,
       options
     );
+
+  getReadStatus = (channelId: string) =>
+    this.get<SerializedReadStatus>(`/api/read-status/${channelId}`);
+
+  postReadStatus = ({ channelIds }: { channelIds: string[] }) =>
+    this.post<{ readStatuses: SerializedReadStatus[] }>('/api/read-status', {
+      channelIds,
+    });
+
+  updateReadStatus = (channelId: string, timestamp: number) =>
+    this.put<SerializedReadStatus>(`/api/read-status/${channelId}`, {
+      timestamp,
+    });
+
+  upsertUserThreadStatus = (params: {
+    communityId: string;
+    threadIds: string[];
+    muted: boolean;
+    read: boolean;
+    reminder: boolean;
+    reminderType?: ReminderTypes;
+  }) => this.post('/api/user-thread-status', params);
+
+  notificationsMark = ({ threadId }: { threadId: string }) =>
+    this.put('/api/notifications/mark', { threadId });
+
+  notificationSettings = () =>
+    this.get<{
+      notificationsByEmail: boolean;
+    }>('/api/notifications/settings');
+
+  updateNotificationSettings = ({
+    notificationsByEmail,
+  }: {
+    notificationsByEmail: boolean;
+  }) =>
+    this.put('/api/notifications/settings', {
+      notificationsByEmail,
+    });
+
+  uploadAvatar = (data: FormData, options: AxiosRequestConfig = {}) =>
+    this.postWithOptions('/api/profile/avatar', data, options);
+
+  updateProfile = ({ displayName }: { displayName: string }) =>
+    this.put('/api/profile', {
+      displayName,
+    });
+
+  fetchInbox = ({
+    communityName,
+    page,
+    limit,
+    channelIds,
+  }: {
+    communityName: string;
+    page: number;
+    limit: number;
+    channelIds: string[];
+  }) =>
+    this.post<{
+      threads: SerializedThread[];
+      total: number;
+    }>('/api/inbox', {
+      communityName,
+      page,
+      limit,
+      channelIds,
+    });
 }
 
 export { type ApiClient };

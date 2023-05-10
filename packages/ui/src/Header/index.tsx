@@ -12,6 +12,7 @@ import styles from './index.module.scss';
 import MobileMenu from './MobileMenu';
 import Logo from './Logo';
 import UpgradeButton from './UpgradeButton';
+import type { ApiClient } from '@linen/api-client';
 
 interface Props {
   settings: Settings;
@@ -28,8 +29,7 @@ interface Props {
   routerAsPath: string;
   signOut: () => void;
   usePath: (args: { href: string }) => string;
-  put: (path: string, data?: {}) => Promise<any>;
-  postWithOptions(path: string, data: FormData, options: any): Promise<void>;
+  api: ApiClient;
 }
 
 function isWhiteColor(color: string) {
@@ -50,8 +50,7 @@ export default function Header({
   routerAsPath,
   signOut,
   usePath,
-  put,
-  postWithOptions,
+  api,
 }: Props) {
   const brandColor = currentCommunity.brandColor || '#111827';
   const fontColor = pickTextColorBasedOnBgColor(brandColor, 'white', 'black');
@@ -94,8 +93,7 @@ export default function Header({
               <UserAvatar
                 currentUser={permissions.user}
                 signOut={signOut}
-                put={put}
-                postWithOptions={postWithOptions}
+                api={api}
               />
             </div>
             <div className={styles.lgHidden}>
