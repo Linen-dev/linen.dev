@@ -32,7 +32,7 @@ export default function AnonymizeCard({ currentCommunity }: Props) {
       <div className="grow">
         <H3>Anonymize your users</H3>
         <div className="mt-2 sm:flex sm:items-start sm:justify-between">
-          <div className="max-w-xl text-sm text-gray-500">
+          <div className="max-w-xl text-sm text-gray-500 dark:text-gray-300">
             Replace your community member&apos;s display name and profile images
             with randomly generated words.
           </div>
