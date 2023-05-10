@@ -123,6 +123,7 @@ export const useLinenStore = create<LinenState>()(
           dms,
           communityName,
           inboxProps: props,
+          channelName: undefined,
         });
       },
     }),

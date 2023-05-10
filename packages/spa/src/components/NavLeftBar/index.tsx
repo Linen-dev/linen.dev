@@ -38,13 +38,7 @@ export default function NavLeftBar() {
     shallow
   );
 
-  if (
-    !settings ||
-    !currentCommunity ||
-    !channelName ||
-    !permissions ||
-    !communityName
-  )
+  if (!settings || !currentCommunity || !permissions || !communityName)
     return <Loading />;
 
   return (
