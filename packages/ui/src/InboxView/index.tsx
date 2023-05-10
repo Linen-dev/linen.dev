@@ -1,22 +1,6 @@
-import { useEffect, useState, useRef } from 'react';
-import Layouts from '@linen/ui/Layouts';
-import Pages from '@linen/ui/Pages';
-import ProgressModal from '@linen/ui/ProgressModal';
-import Toast from '@linen/ui/Toast';
-import Thread from '@linen/ui/Thread';
-import AddThreadModal from '@linen/ui/AddThreadModal';
-import ConfigureInboxModal from './ConfigureInboxModal';
-import Empty from './Empty';
-import { sendMessageWrapper } from './utilities/sendMessageWrapper';
-import { createThreadWrapper } from './utilities/createThreadWrapper';
-import { api } from 'utilities/requests';
-import usePolling from '@linen/hooks/polling';
-import useKeyboard from '@linen/hooks/keyboard';
-import { useUsersContext } from '@linen/contexts/Users';
-import useInboxWebsockets from '@linen/hooks/websockets-inbox';
+import React, { useEffect, useState, useRef } from 'react';
 import { BiMessageCheck } from '@react-icons/all-files/bi/BiMessageCheck';
-import type { CommunityPushType } from 'services/push';
-import { manageSelections } from './utilities/selection';
+import { FiSettings } from '@react-icons/all-files/fi/FiSettings';
 import {
   ReminderTypes,
   SerializedChannel,
@@ -27,57 +11,48 @@ import {
   Permissions,
   SerializedAccount,
   UploadedFile,
+  InboxConfig,
+  Selections,
+  InboxResponse,
 } from '@linen/types';
-import { addMessageToThread } from './state';
-import { defaultConfiguration } from './utilities/inbox';
-import { addReactionToThread } from 'utilities/state/reaction';
-import { FiSettings } from '@react-icons/all-files/fi/FiSettings';
-import { InboxConfig } from '../types';
+import type { ApiClient } from '@linen/api-client';
+import usePolling from '@linen/hooks/polling';
+import useKeyboard from '@linen/hooks/keyboard';
+import useInboxWebsockets from '@linen/hooks/websockets-inbox';
+import { useUsersContext } from '@linen/contexts/Users';
 import { localStorage } from '@linen/utilities/storage';
-import Actions from 'components/Actions';
-import JoinChannelLink from 'components/Link/JoinChannelLink';
+import debounce from '@linen/utilities/debounce';
+import Layouts from '@/Layouts';
+import Pages from '@/Pages';
+import ProgressModal from '@/ProgressModal';
+import Toast from '@/Toast';
+import Thread from '@/Thread';
+import AddThreadModal from '@/AddThreadModal';
+import ConfigureInboxModal from './ConfigureInboxModal';
+import Empty from './Empty';
+import { addMessageToThread } from './state';
+import { sendMessageWrapper } from './utilities/sendMessageWrapper';
+import { createThreadWrapper } from './utilities/createThreadWrapper';
+import { manageSelections } from './utilities/selection';
+import { defaultConfiguration } from './utilities/inbox';
 
 const { Header, Grid } = Pages.Inbox;
 const { SidebarLayout } = Layouts.Shared;
 
-interface InboxResponse {
-  threads: SerializedThread[];
-  total: number;
-}
-
-interface Selections {
-  [key: string]: {
-    checked: boolean;
-    index: number;
-  };
-}
-
 interface Props {
-  fetchInbox({
-    communityName,
-    page,
-    limit,
-    configuration,
-  }: {
-    communityName: string;
-    page: number;
-    limit: number;
-    configuration: InboxConfig;
-  }): Promise<InboxResponse>;
-  fetchThread(threadId: string): Promise<SerializedThread>;
-  putThread(
-    threadId: string,
-    options: {
-      state?: ThreadState | undefined;
-      title?: string | undefined;
-    }
-  ): Promise<SerializedThread>;
   channels: SerializedChannel[];
   dms: SerializedChannel[];
   currentCommunity: SerializedAccount;
   isSubDomainRouting: boolean;
   permissions: Permissions;
   settings: Settings;
+  api: ApiClient;
+  Actions: (props: any) => JSX.Element;
+  JoinChannelLink: ({ className, href, communityType }: any) => JSX.Element;
+  addReactionToThread: (
+    thread: SerializedThread,
+    { threadId, messageId, currentUser, type, active }: any
+  ) => SerializedThread;
 }
 
 const LIMIT = 10;
@@ -88,16 +63,17 @@ enum ModalView {
   PROGRESS,
 }
 
-export default function Inbox({
-  fetchInbox,
-  fetchThread,
-  putThread,
+export default function InboxView({
   channels,
   currentCommunity,
   isSubDomainRouting,
   permissions,
   settings,
   dms,
+  api,
+  Actions,
+  JoinChannelLink,
+  addReactionToThread,
 }: Props) {
   const [loading, setLoading] = useState(true);
   const [inbox, setInbox] = useState<InboxResponse>({ threads: [], total: 0 });
@@ -119,6 +95,53 @@ export default function Inbox({
   const token = permissions.token || null;
   const currentUser = permissions.user || null;
   const { communityId, communityName } = settings;
+
+  const fetchInbox = debounce(
+    ({
+      communityName,
+      page,
+      limit,
+      configuration,
+    }: {
+      communityName: string;
+      page: number;
+      limit: number;
+      configuration: InboxConfig;
+    }) => {
+      const channelIds = configuration.channels
+        .filter((config) => config.subscribed)
+        .map((config) => config.channelId);
+      return api
+        .post<{
+          threads: SerializedThread[];
+          total: number;
+        }>('/api/inbox', {
+          communityName,
+          page,
+          limit,
+          channelIds,
+        })
+        .catch(() => {
+          throw new Error('Failed to fetch the inbox.');
+        });
+    }
+  );
+
+  const fetchThread = (threadId: string) =>
+    api.getThread({ id: threadId, accountId: communityId });
+
+  const putThread = (
+    threadId: string,
+    options: {
+      state?: ThreadState | undefined;
+      title?: string | undefined;
+    }
+  ) =>
+    api.updateThread({
+      accountId: communityId,
+      id: threadId,
+      ...options,
+    });
 
   async function sendReaction({
     threadId,
@@ -230,7 +253,7 @@ export default function Inbox({
       });
   }
 
-  const onNewMessage = (payload: CommunityPushType) => {
+  const onNewMessage = (payload: any) => {
     const thread: SerializedThread =
       payload.thread && JSON.parse(payload.thread);
     const message: SerializedMessage =
@@ -616,6 +639,7 @@ export default function Inbox({
     setThread,
     setInbox,
     communityId,
+    api,
   });
 
   const createThread = createThreadWrapper({
@@ -624,6 +648,7 @@ export default function Inbox({
     setThread,
     communityId,
     page,
+    api,
   });
 
   const { isShiftPressed } = useKeyboard(

@@ -8,11 +8,11 @@ import {
   UploadedFile,
 } from '@linen/types';
 import { username } from '@linen/serializers/user';
-import { v4 as uuid } from 'uuid';
 import debounce from '@linen/utilities/debounce';
-import { api } from 'utilities/requests';
-import Toast from '@linen/ui/Toast';
+import { v4 as uuid } from 'uuid';
+import Toast from '@/Toast';
 import MessageSentToast from '../MessageSentToast';
+import type { ApiClient } from '@linen/api-client';
 
 const debouncedCreateThread = debounce(
   ({
@@ -22,6 +22,7 @@ const debouncedCreateThread = debounce(
     communityId,
     channelId,
     imitationId,
+    api,
   }: {
     message: string;
     title?: string;
@@ -29,6 +30,7 @@ const debouncedCreateThread = debounce(
     communityId: string;
     channelId: string;
     imitationId: string;
+    api: ApiClient;
   }) => {
     return api.createThread({
       body: message,
@@ -48,12 +50,14 @@ export function createThreadWrapper({
   setThread,
   communityId,
   page,
+  api,
 }: {
   currentUser: SerializedUser;
   allUsers: SerializedUser[];
   setThread: React.Dispatch<React.SetStateAction<SerializedThread | undefined>>;
   communityId: string;
   page: number;
+  api: ApiClient;
 }) {
   return async ({
     message,
@@ -134,6 +138,7 @@ export function createThreadWrapper({
         communityId,
         channelId: channel.id,
         imitationId: imitation.id,
+        api,
       });
     }
 

@@ -1,11 +1,12 @@
 import { GetServerSideProps } from 'next';
 import { inboxGetServerSideProps } from 'services/ssr/inbox';
-import Inbox, { Props } from 'components/Pages/Inbox';
+import Inbox from 'components/Pages/Inbox';
 import { trackPageView } from 'utilities/ssr-metrics';
+import { InboxProps } from '@linen/types';
 
 export default Inbox;
 
-export const getServerSideProps: GetServerSideProps<Props> = async (
+export const getServerSideProps: GetServerSideProps<InboxProps> = async (
   context
 ) => {
   const track = trackPageView(context);

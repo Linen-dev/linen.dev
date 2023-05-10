@@ -1,76 +1,12 @@
 import { useEffect } from 'react';
 import PageLayout from 'components/layout/PageLayout';
-import {
-  Permissions,
-  SerializedAccount,
-  SerializedChannel,
-  SerializedThread,
-  Settings,
-  ThreadState,
-} from '@linen/types';
-import debounce from '@linen/utilities/debounce';
+import { InboxProps } from '@linen/types';
 import { localStorage } from '@linen/utilities/storage';
-import Content from './Content';
-import { InboxConfig } from './types';
+import InboxView from '@linen/ui/InboxView';
 import { api } from 'utilities/requests';
-
-export interface Props {
-  channels: SerializedChannel[];
-  communities: SerializedAccount[];
-  currentCommunity: SerializedAccount;
-  isSubDomainRouting: boolean;
-  permissions: Permissions;
-  settings: Settings;
-  dms: SerializedChannel[];
-}
-
-const fetchInbox = debounce(
-  ({
-    communityName,
-    page,
-    limit,
-    configuration,
-  }: {
-    communityName: string;
-    page: number;
-    limit: number;
-    configuration: InboxConfig;
-  }) => {
-    const channelIds = configuration.channels
-      .filter((config) => config.subscribed)
-      .map((config) => config.channelId);
-    return api
-      .post<{
-        threads: SerializedThread[];
-        total: number;
-      }>('/api/inbox', {
-        communityName,
-        page,
-        limit,
-        channelIds,
-      })
-      .catch(() => {
-        throw new Error('Failed to fetch the inbox.');
-      });
-  }
-);
-const fetchThread = (accountId: string) => (threadId: string) =>
-  api.getThread({ id: threadId, accountId });
-
-const putThread =
-  (accountId: string) =>
-  (
-    threadId: string,
-    options: {
-      state?: ThreadState | undefined;
-      title?: string | undefined;
-    }
-  ) =>
-    api.updateThread({
-      accountId,
-      id: threadId,
-      ...options,
-    });
+import { addReactionToThread } from 'utilities/state/reaction';
+import Actions from 'components/Actions';
+import JoinChannelLink from 'components/Link/JoinChannelLink';
 
 export default function Inbox({
   channels,
@@ -80,7 +16,7 @@ export default function Inbox({
   permissions,
   settings,
   dms,
-}: Props) {
+}: InboxProps) {
   useEffect(() => {
     localStorage.set('pages.last', {
       communityId: currentCommunity.id,
@@ -98,10 +34,8 @@ export default function Inbox({
       settings={settings}
       dms={dms}
     >
-      <Content
-        fetchInbox={fetchInbox}
-        fetchThread={fetchThread(settings.communityId)}
-        putThread={putThread(settings.communityId)}
+      <InboxView
+        {...{ Actions, JoinChannelLink, addReactionToThread, api }}
         channels={channels}
         currentCommunity={currentCommunity}
         isSubDomainRouting={isSubDomainRouting}

@@ -100,6 +100,7 @@
     "./Header": "./dist/Header/index.js",
     "./Icon": "./dist/Icon/index.js",
     "./Image": "./dist/Image/index.js",
+    "./InboxView": "./dist/InboxView/index.js",
     "./Label": "./dist/Label/index.js",
     "./Layouts": "./dist/Layouts/index.js",
     "./Line": "./dist/Line/index.js",
@@ -263,6 +264,9 @@
       ],
       "Image": [
         "./dist/Image/index.d.ts"
+      ],
+      "InboxView": [
+        "./dist/InboxView/index.d.ts"
       ],
       "Label": [
         "./dist/Label/index.d.ts"

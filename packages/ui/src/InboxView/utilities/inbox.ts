@@ -1,5 +1,8 @@
-import { InboxChannelConfig, InboxConfig } from '../../types';
-import { SerializedChannel } from '@linen/types';
+import {
+  InboxChannelConfig,
+  InboxConfig,
+  SerializedChannel,
+} from '@linen/types';
 import { localStorage } from '@linen/utilities/storage';
 
 export function defaultConfiguration({

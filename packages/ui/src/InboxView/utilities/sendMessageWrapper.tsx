@@ -5,12 +5,12 @@ import {
   SerializedThread,
   SerializedUser,
   UploadedFile,
+  InboxResponse,
 } from '@linen/types';
 import { username } from '@linen/serializers/user';
-import { InboxResponse } from '../../types';
 import { v4 as uuid } from 'uuid';
 import debounce from '@linen/utilities/debounce';
-import { api } from 'utilities/requests';
+import type { ApiClient } from '@linen/api-client';
 
 const debouncedSendMessage = debounce(
   ({
@@ -20,6 +20,7 @@ const debouncedSendMessage = debounce(
     channelId,
     threadId,
     imitationId,
+    api,
   }: {
     message: string;
     files: UploadedFile[];
@@ -27,6 +28,7 @@ const debouncedSendMessage = debounce(
     channelId: string;
     threadId: string;
     imitationId: string;
+    api: ApiClient;
   }) => {
     return api.createMessage({
       body: message,
@@ -46,12 +48,14 @@ export function sendMessageWrapper({
   setThread,
   setInbox,
   communityId,
+  api,
 }: {
   currentUser: SerializedUser;
   allUsers: SerializedUser[];
   setThread: React.Dispatch<React.SetStateAction<SerializedThread | undefined>>;
   setInbox: React.Dispatch<React.SetStateAction<InboxResponse>>;
   communityId: string;
+  api: ApiClient;
 }) {
   return async ({
     message,
@@ -123,6 +127,7 @@ export function sendMessageWrapper({
       channelId,
       threadId,
       imitationId: imitation.id,
+      api,
     }).then(
       ({
         message,

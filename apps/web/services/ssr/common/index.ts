@@ -4,15 +4,10 @@ import CommunityService from 'services/community';
 import PermissionsService from 'services/permissions';
 import { qs } from '@linen/utilities/url';
 import { GetServerSidePropsContext } from 'next';
-import { Permissions } from '@linen/types';
+import { Permissions, validatePermissionsResponse } from '@linen/types';
 import { serializeAccount } from '@linen/serializers/account';
 import { serializeChannel } from '@linen/serializers/channel';
 import { cleanUpUrl } from '@linen/utilities/url';
-
-type validatePermissionsResponse = {
-  redirect: Boolean;
-  error: string;
-};
 
 export async function ssr(
   context: GetServerSidePropsContext,
