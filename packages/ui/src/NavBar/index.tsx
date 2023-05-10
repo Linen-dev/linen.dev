@@ -14,7 +14,7 @@ interface Props {
   currentCommunity: SerializedAccount;
   channels: SerializedChannel[];
   dms: SerializedChannel[];
-  channelName: string;
+  channelName?: string;
   communities: SerializedAccount[];
   permissions: Permissions;
   onDrop?({

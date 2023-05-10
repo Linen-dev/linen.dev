@@ -12,7 +12,7 @@ import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp';
 import { FiSettings } from '@react-icons/all-files/fi/FiSettings';
 
 interface Props {
-  channelName: string;
+  channelName?: string;
   channels: SerializedChannel[];
   currentUser: SerializedUser | null;
   highlights: string[];

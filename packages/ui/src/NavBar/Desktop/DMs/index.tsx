@@ -13,7 +13,7 @@ import { useState } from 'react';
 type Props = {
   permissions: Permissions;
   dms: SerializedChannel[];
-  channelName: string;
+  channelName?: string;
   highlights: string[];
   debouncedUpdateReadStatus: Function;
   setHighlights: Function;
