@@ -238,18 +238,22 @@ export default function Channel({
     let interval: any;
     const channelId = currentChannel.id;
     if (currentUser) {
-      debouncedGetReadStatus(channelId).then((readStatus) => {
-        if (mounted) {
-          setReadStatus(readStatus);
-        }
-      });
-      interval = setInterval(() => {
-        const channelId = currentChannel.id;
-        debouncedUpdateReadStatus(channelId).then((readStatus) => {
+      debouncedGetReadStatus(channelId).then(
+        (readStatus: SerializedReadStatus) => {
           if (mounted) {
             setReadStatus(readStatus);
           }
-        });
+        }
+      );
+      interval = setInterval(() => {
+        const channelId = currentChannel.id;
+        debouncedUpdateReadStatus(channelId).then(
+          (readStatus: SerializedReadStatus) => {
+            if (mounted) {
+              setReadStatus(readStatus);
+            }
+          }
+        );
       }, UPDATE_READ_STATUS_INTERVAL_IN_MS);
     }
     return () => {

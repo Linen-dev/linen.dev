@@ -4,6 +4,7 @@ import {
   SerializedUser,
   SerializedAccount,
   UploadedFile,
+  SerializedMessage,
 } from '@linen/types';
 import debounce from '@linen/utilities/debounce';
 import { createMessageImitation } from './utilities/message';
@@ -89,30 +90,38 @@ export function sendThreadMessageWrapper({
       channelId,
       threadId,
       imitationId: imitation.id,
-    }).then(({ message, imitationId }) => {
-      setThreads((threads) => {
-        return threads.map((thread) => {
-          if (thread.id === currentThreadId) {
-            const messageId = message.id;
-            const index = thread.messages.findIndex(
-              (message) => message.id === messageId
-            );
-            if (index >= 0) {
-              return thread;
+    }).then(
+      ({
+        message,
+        imitationId,
+      }: {
+        message: SerializedMessage;
+        imitationId: string;
+      }) => {
+        setThreads((threads) => {
+          return threads.map((thread) => {
+            if (thread.id === currentThreadId) {
+              const messageId = message.id;
+              const index = thread.messages.findIndex(
+                (message) => message.id === messageId
+              );
+              if (index >= 0) {
+                return thread;
+              }
+              return {
+                ...thread,
+                messages: [
+                  ...thread.messages.filter(
+                    (message) => message.id !== imitationId
+                  ),
+                  message,
+                ],
+              };
             }
-            return {
-              ...thread,
-              messages: [
-                ...thread.messages.filter(
-                  (message) => message.id !== imitationId
-                ),
-                message,
-              ],
-            };
-          }
-          return thread;
+            return thread;
+          });
         });
-      });
-    });
+      }
+    );
   };
 }

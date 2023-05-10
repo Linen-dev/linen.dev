@@ -95,21 +95,31 @@ export function sendMessageWrapper({
       channelId,
       threadId,
       imitationId: imitation.id,
-    }).then(({ message, imitationId }) => {
-      setThread((thread: SerializedThread) => {
-        const messageId = message.id;
-        const index = thread.messages.findIndex((t) => t.id === messageId);
-        if (index >= 0) {
-          return thread;
-        }
-        return {
-          ...thread,
-          messages: [
-            ...thread.messages.filter((message) => message.id !== imitationId),
-            message,
-          ],
-        };
-      });
-    });
+    }).then(
+      ({
+        message,
+        imitationId,
+      }: {
+        message: SerializedMessage;
+        imitationId: string;
+      }) => {
+        setThread((thread: SerializedThread) => {
+          const messageId = message.id;
+          const index = thread.messages.findIndex((t) => t.id === messageId);
+          if (index >= 0) {
+            return thread;
+          }
+          return {
+            ...thread,
+            messages: [
+              ...thread.messages.filter(
+                (message) => message.id !== imitationId
+              ),
+              message,
+            ],
+          };
+        });
+      }
+    );
   };
 }
