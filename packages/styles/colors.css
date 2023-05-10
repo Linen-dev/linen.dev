@@ -241,6 +241,7 @@
   --color-border: #f3f4f6;
   --color-input: #e5e7eb;
   --color-text: #000000;
+  --color-link: #0855f4;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -257,9 +258,9 @@
     --color-gray-50: #111827;
 
     --color-background: #111827;
-    /* gray-200 */
     --color-text: #e5e7eb;
     --color-border: #1f2937;
     --color-input: #374151;
+    --color-link: #60a5fa;
   }
 }

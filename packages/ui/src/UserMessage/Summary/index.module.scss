@@ -1,22 +1,21 @@
-@import '../../colors.scss';
-
 .row {
   align-items: center;
+  background: var(--color-background);
   display: block;
   padding: 0 1rem;
   position: relative;
 }
 
 .row.selected {
-  background-color: $color-gray-100;
+  background-color: var(--color-gray-200);
 }
 
 .row.active {
-  background-color: $color-gray-50;
+  background-color: var(--color-gray-100);
 }
 
 .row:hover {
-  background-color: $color-gray-50;
+  background-color: var(--color-gray-100);
 }
 
 .checkbox {
@@ -36,7 +35,7 @@
 }
 
 .channel {
-  color: $color-gray-500;
+  color: var(--color-gray-500);
 }
 
 .row:last-child {

@@ -1,5 +1,3 @@
-@import '../../colors.scss';
-
 .open {
   font-size: 24px;
 }
@@ -17,7 +15,7 @@
 
 .text,
 .subheader {
-  color: $color-gray-500;
+  color: var(--color-gray-500);
   font-weight: 500;
   font-size: 0.75rem;
   line-height: 1.25rem;
@@ -30,7 +28,7 @@
 }
 
 .close {
-  color: black;
+  color: var(--color-text);
   font-size: 24px;
 }
 
@@ -42,7 +40,7 @@
 
 .link {
   align-items: center;
-  color: $color-gray-700;
+  color: var(--color-gray-700);
   font-size: 0.875rem;
   font-weight: 500;
   display: flex;

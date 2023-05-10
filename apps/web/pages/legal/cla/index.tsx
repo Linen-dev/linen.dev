@@ -20,7 +20,7 @@ You accept and agree to the following terms and conditions for Your present and 
       <div className="lg:block lg:absolute lg:inset-y-0 lg:h-full lg:w-full">
         <div className="relative h-full text-lg max-w-prose mx-auto space-y-4">
           <Link
-            className="text-blue-600 hover:text-blue-800 visited:text-purple-600"
+            className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-600"
             href="/"
             passHref
           >
