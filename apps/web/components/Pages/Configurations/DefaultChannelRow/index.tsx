@@ -50,7 +50,7 @@ export default function DefaultChannelRow({
       <div className="grow">
         <H3>Default channel</H3>
         <div className="mt-2 sm:flex sm:items-start sm:justify-between">
-          <div className="max-w-xl text-sm text-gray-500">
+          <div className="max-w-xl text-sm text-gray-500 dark:text-gray-300">
             <p>
               Select the first channel that gets displayed when a user lands on
               your Linen page.

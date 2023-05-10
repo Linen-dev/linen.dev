@@ -45,7 +45,7 @@ export default function RemoveCommunity({
       <div className="grow">
         <H3>Delete this community</H3>
         <div className="mt-2 sm:flex sm:items-start sm:justify-between">
-          <div className="max-w-xl text-sm text-gray-500">
+          <div className="max-w-xl text-sm text-gray-500 dark:text-gray-300">
             <p>
               Once you delete a community, there is no going back. Please be
               certain.
@@ -89,7 +89,7 @@ function DeleteModal(
             <FiX />
           </div>
         </div>
-        <div className="max-w-xl text-sm text-gray-500">
+        <div className="max-w-xl text-sm text-gray-500 dark:text-gray-300">
           <p>
             Once you delete a community, there is no going back. Please be
             certain.

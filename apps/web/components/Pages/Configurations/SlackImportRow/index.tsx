@@ -65,7 +65,7 @@ export default function SlackImportRow({
       <div className="grow">
         <H3>Import conversations from Slack</H3>
         <div className="mt-2 sm:flex sm:items-start sm:justify-between">
-          <div className="max-w-xl text-sm text-gray-500">
+          <div className="max-w-xl text-sm text-gray-500 dark:text-gray-300">
             <p>
               You can import all your public channel conversations beyond 90
               days from Slack (even on free tier). See instructions on how to

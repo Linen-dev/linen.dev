@@ -19,7 +19,7 @@ function URLsCard({
         <div className="flex-1">
           <H3>{title}</H3>
           <div className="mt-2 sm:flex sm:items-start sm:justify-between">
-            <div className="max-w-xl text-sm text-gray-500">
+            <div className="max-w-xl text-sm text-gray-500 dark:text-gray-300">
               <p>{subtitle}</p>
             </div>
           </div>
