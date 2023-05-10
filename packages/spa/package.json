@@ -8,8 +8,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "tauri": "tauri",
-    "tauri:build": "dotenv -e .env -- tauri build --target aarch64-apple-darwin",
-    "tauri:build:intel": "dotenv -e .env -- tauri build --target x86_64-apple-darwin",
+    "tauri:build": "dotenv -e .env.production -- tauri build --target aarch64-apple-darwin",
+    "tauri:build:intel": "dotenv -e .env.production -- tauri build --target x86_64-apple-darwin",
     "analyze": "source-map-explorer 'build/static/js/*.js'"
   },
   "dependencies": {
