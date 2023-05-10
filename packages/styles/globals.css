@@ -28,15 +28,14 @@ a {
   box-sizing: border-box;
 }
 
-tbody tr:hover {
-  /* background-color: #fafafa !important; */
-  background-color: #f7f9fd !important;
+code {
+  background-color: var(--color-background);
+  padding: 4px 8px;
+  border: 1px solid var(--color-border);
 }
 
-code {
-  background-color: rgb(240, 242, 244);
-  padding: 4px 8px;
-  border: 1px solid rgb(225, 225, 225);
+hr {
+  border-color: var(--color-border);
 }
 
 *[draggable='true'] {
