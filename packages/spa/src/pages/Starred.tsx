@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import InboxView from '@linen/ui/InboxView';
+import StarredView from '@linen/ui/StarredView';
 import { qs } from '@linen/utilities/url';
 import { InboxProps } from '@linen/types';
 import { useLinenStore } from '../store';
@@ -8,12 +8,12 @@ import Loading from '../components/Loading';
 import { api } from '../fetcher';
 import { mockedComponent, mockedFunction } from '../mock';
 
-type InboxPageProps = {
+type StarredPageProps = {
   communityName: string;
 };
 
-export default function InboxPage() {
-  const { communityName } = useParams() as InboxPageProps;
+export default function StarredPage() {
+  const { communityName } = useParams() as StarredPageProps;
   const setInboxProps = useLinenStore((state) => state.setInboxProps);
   const { isLoading, error } = useQuery({
     queryKey: ['inbox', { communityName }],
@@ -40,10 +40,8 @@ function View() {
   if (!inboxProps) return <Loading />;
 
   return (
-    <InboxView
-      channels={inboxProps.channels}
+    <StarredView
       currentCommunity={inboxProps.currentCommunity}
-      dms={inboxProps.dms}
       isSubDomainRouting={inboxProps.isSubDomainRouting}
       permissions={inboxProps.permissions}
       settings={inboxProps.settings}

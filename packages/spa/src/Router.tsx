@@ -1,11 +1,13 @@
-import { lazy } from 'react';
+import { Suspense, lazy } from 'react';
 import { Outlet, createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Layout from './components/Layout';
 import ErrorPage from './pages/Error';
 import SignIn from './pages/SignIn';
 import RequireAuth from './hoc/RequireAuth';
 import RedirectToLastPageViewed from './components/RedirectToLastPageViewed';
-import InboxPage from './pages/Inbox';
+import Loading from './components/Loading';
+const InboxPage = lazy(() => import('./pages/Inbox'));
+const StarredPage = lazy(() => import('./pages/Starred'));
 const ChannelPage = lazy(() => import('./pages/Channel'));
 const ThreadPage = lazy(() => import('./pages/Thread'));
 
@@ -41,27 +43,59 @@ export default function Router() {
                       children: [
                         {
                           path: 'c/:channelName',
-                          element: <ChannelPage />,
+                          element: (
+                            <Suspense fallback={<Loading />}>
+                              <ChannelPage />
+                            </Suspense>
+                          ),
                         },
                         {
                           path: 'c/:channelName/:page',
-                          element: <ChannelPage />,
+                          element: (
+                            <Suspense fallback={<Loading />}>
+                              <ChannelPage />
+                            </Suspense>
+                          ),
                         },
                         {
                           path: 't/:threadId',
-                          element: <ThreadPage />,
+                          element: (
+                            <Suspense fallback={<Loading />}>
+                              <ThreadPage />
+                            </Suspense>
+                          ),
                         },
                         {
                           path: 't/:threadId/:slug',
-                          element: <ThreadPage />,
+                          element: (
+                            <Suspense fallback={<Loading />}>
+                              <ThreadPage />
+                            </Suspense>
+                          ),
                         },
                         {
                           path: 'inbox',
-                          element: <InboxPage />,
+                          element: (
+                            <Suspense fallback={<Loading />}>
+                              <InboxPage />
+                            </Suspense>
+                          ),
+                        },
+                        {
+                          path: 'starred',
+                          element: (
+                            <Suspense fallback={<Loading />}>
+                              <StarredPage />
+                            </Suspense>
+                          ),
                         },
                         {
                           path: '',
-                          element: <ChannelPage />,
+                          element: (
+                            <Suspense fallback={<Loading />}>
+                              <ChannelPage />
+                            </Suspense>
+                          ),
                         },
                       ],
                     },
