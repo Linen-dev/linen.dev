@@ -450,7 +450,7 @@ type Props = {
 };
 
 export async function getServerSideProps({ res }: GetServerSidePropsContext) {
-  const accounts = await communitiesWithDescription({ take: 20 });
+  const accounts = await communitiesWithDescription({ take: 18 });
 
   res.setHeader(
     'Cache-Control',
