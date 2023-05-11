@@ -1,4 +1,4 @@
-import { SerializedMessage, SerializedThread } from '@linen/types';
+import type { SerializedMessage, SerializedThread } from '@linen/types';
 
 export function addMessageToThread(
   thread: SerializedThread | undefined,

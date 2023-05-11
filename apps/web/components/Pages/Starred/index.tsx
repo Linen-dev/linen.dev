@@ -1,16 +1,16 @@
 import { useEffect } from 'react';
 import PageLayout from 'components/layout/PageLayout';
-import {
+import type {
   Permissions,
   SerializedAccount,
   SerializedChannel,
   Settings,
-  ThreadState,
 } from '@linen/types';
-import debounce from '@linen/utilities/debounce';
 import { localStorage } from '@linen/utilities/storage';
 import { api } from 'utilities/requests';
-import Content from './Content';
+import StarredView from '@linen/ui/StarredView';
+import JoinChannelLink from 'components/Link/JoinChannelLink';
+import { addReactionToThread } from 'utilities/state/reaction';
 
 export interface Props {
   channels: SerializedChannel[];
@@ -21,48 +21,6 @@ export interface Props {
   settings: Settings;
   dms: SerializedChannel[];
 }
-
-const fetchData = debounce(
-  ({
-    communityName,
-    page,
-    limit,
-  }: {
-    communityName: string;
-    page: number;
-    limit: number;
-  }) => {
-    return fetch(
-      `/api/starred?communityName=${communityName}&page=${page}&limit=${limit}`,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    )
-      .then((response) => response.json())
-      .catch(() => {
-        throw new Error('Failed to fetch the inbox.');
-      });
-  }
-);
-const fetchThread = (accountId: string) => (threadId: string) =>
-  api.getThread({ id: threadId, accountId });
-
-const putThread =
-  (accountId: string) =>
-  (
-    threadId: string,
-    options: {
-      state?: ThreadState | undefined;
-      title?: string | undefined;
-    }
-  ) =>
-    api.updateThread({
-      accountId,
-      id: threadId,
-      ...options,
-    });
 
 export default function Starred({
   channels,
@@ -90,15 +48,14 @@ export default function Starred({
       settings={settings}
       dms={dms}
     >
-      <Content
-        fetchData={fetchData}
-        fetchThread={fetchThread(settings.communityId)}
-        putThread={putThread(settings.communityId)}
+      <StarredView
+        addReactionToThread={addReactionToThread}
         currentCommunity={currentCommunity}
         isSubDomainRouting={isSubDomainRouting}
         permissions={permissions}
         settings={settings}
-        dms={dms}
+        api={api}
+        JoinChannelLink={JoinChannelLink}
       />
     </PageLayout>
   );

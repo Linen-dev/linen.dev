@@ -71,3 +71,8 @@ export type validatePermissionsResponse = {
   redirect: Boolean;
   error: 'private' | 'forbidden';
 };
+
+export interface StarredResponse {
+  threads: SerializedThread[];
+  total: number;
+}

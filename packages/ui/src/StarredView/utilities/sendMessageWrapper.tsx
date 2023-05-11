@@ -1,44 +1,16 @@
 import React from 'react';
 import {
   MessageFormat,
+  StarredResponse,
   SerializedMessage,
   SerializedThread,
   SerializedUser,
   UploadedFile,
 } from '@linen/types';
 import { username } from '@linen/serializers/user';
-import { DataResponse } from '../../types';
 import { v4 as uuid } from 'uuid';
 import debounce from '@linen/utilities/debounce';
-import { api } from 'utilities/requests';
-
-const debouncedSendMessage = debounce(
-  ({
-    message,
-    files,
-    communityId,
-    channelId,
-    threadId,
-    imitationId,
-  }: {
-    message: string;
-    files: UploadedFile[];
-    communityId: string;
-    channelId: string;
-    threadId: string;
-    imitationId: string;
-  }) => {
-    return api.createMessage({
-      body: message,
-      files,
-      accountId: communityId,
-      channelId,
-      threadId,
-      imitationId,
-    });
-  },
-  100
-);
+import type { ApiClient } from '@linen/api-client';
 
 export function sendMessageWrapper({
   currentUser,
@@ -46,13 +18,17 @@ export function sendMessageWrapper({
   setThread,
   setData,
   communityId,
+  api,
 }: {
   currentUser: SerializedUser;
   allUsers: SerializedUser[];
   setThread: React.Dispatch<React.SetStateAction<SerializedThread | undefined>>;
-  setData: React.Dispatch<React.SetStateAction<DataResponse>>;
+  setData: React.Dispatch<React.SetStateAction<StarredResponse>>;
   communityId: string;
+  api: ApiClient;
 }) {
+  const debouncedSendMessage = debounce(api.createMessage, 100);
+
   return async ({
     message,
     files,
@@ -117,10 +93,10 @@ export function sendMessageWrapper({
     });
 
     return debouncedSendMessage({
-      message,
+      body: message,
       files,
-      communityId,
       channelId,
+      accountId: communityId,
       threadId,
       imitationId: imitation.id,
     }).then(

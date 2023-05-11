@@ -87,8 +87,9 @@ async function getProps(
   };
 }
 
+// reused by inbox, starred
 ssrRouter.get(
-  `${prefix}/inbox`,
+  `${prefix}`,
   validationMiddleware(getSchema, 'query'),
   async (
     req: AuthedRequestWithBody<z.infer<typeof getSchema>>,

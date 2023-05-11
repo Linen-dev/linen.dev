@@ -133,6 +133,7 @@
     "./SearchBar": "./dist/SearchBar/index.js",
     "./SlackIcon": "./dist/SlackIcon/index.js",
     "./Spinner": "./dist/Spinner/index.js",
+    "./StarredView": "./dist/StarredView/index.js",
     "./StickyHeader": "./dist/StickyHeader/index.js",
     "./Suggestion": "./dist/Suggestion/index.js",
     "./Suggestions": "./dist/Suggestions/index.js",
@@ -367,6 +368,9 @@
       ],
       "Spinner": [
         "./dist/Spinner/index.d.ts"
+      ],
+      "StarredView": [
+        "./dist/StarredView/index.d.ts"
       ],
       "StickyHeader": [
         "./dist/StickyHeader/index.d.ts"

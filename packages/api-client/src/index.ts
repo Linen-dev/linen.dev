@@ -30,6 +30,7 @@ import type {
   SerializedReadStatus,
   ReminderTypes,
   SerializedSearchMessage,
+  StarredResponse,
 } from '@linen/types';
 export { AxiosRequestConfig };
 
@@ -106,6 +107,12 @@ export default class ApiClient {
       .then((res) => res.data)
       .catch(this.catchError);
 
+  deleteWithBody = <T>(path: string, data = {}) =>
+    this.instance
+      .delete<T>(path, { data })
+      .then((res) => res.data)
+      .catch(this.catchError);
+
   getAccounts = <T>() => this.get<T>('/api/accounts');
 
   createAccount = (props: createAccountType) =>
@@ -131,6 +138,31 @@ export default class ApiClient {
 
   starThread = (props: { communityId: string; threadId: string }) =>
     this.post('/api/starred', props);
+
+  fetchStarred = ({
+    communityName,
+    page,
+    limit,
+  }: {
+    communityName: string;
+    page: number;
+    limit: number;
+  }) =>
+    this.get<StarredResponse>(
+      `/api/starred?${qs({ communityName, page, limit })}`
+    );
+
+  removeStar = ({
+    communityId,
+    threadId,
+  }: {
+    communityId: string;
+    threadId: string;
+  }) =>
+    this.deleteWithBody('/api/starred', {
+      communityId,
+      threadId,
+    });
 
   threadIncrementView = ({ incrementId }: { incrementId: number }) =>
     this.put(`/api/count?${qs({ incrementId })}`);
