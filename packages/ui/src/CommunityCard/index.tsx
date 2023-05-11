@@ -1,5 +1,5 @@
 import React from 'react';
-import CommunityLink from '@/CommunityLink';
+import CommunityIcon from '@/CommunityIcon';
 import styles from './index.module.scss';
 import { SerializedAccount } from '@linen/types';
 import { truncate } from '@linen/utilities/string';
@@ -43,7 +43,7 @@ export function getHomeText(url: string): string | null {
 function CommunityCard({ community }: { community: SerializedAccount }) {
   return (
     <a href={getHomeUrl(community)} className={styles.card} target="_blank">
-      <CommunityLink community={community} getHomeUrl={getHomeUrl} />
+      <CommunityIcon community={community} />
       <div className={styles.content}>
         <h2>{community.name}</h2>
         {community.description && <p>{truncate(community.description, 160)}</p>}
