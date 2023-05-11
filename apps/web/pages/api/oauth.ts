@@ -4,7 +4,7 @@ import { fetchTeamInfo } from 'services/slack/api';
 import { createSlackAuthorization, updateAccount } from 'services/accounts';
 import { eventNewIntegration } from 'services/events/eventNewIntegration';
 import { AccountIntegration, SerializedAccount } from '@linen/types';
-import { getHomeUrl } from 'utilities/home';
+import { getHomeUrl } from '@linen/utilities/home';
 import { serializeAccount } from '@linen/serializers/account';
 import { prisma } from '@linen/database';
 
