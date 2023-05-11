@@ -441,6 +441,7 @@ export async function communitiesWithLogo() {
     select: {
       logoUrl: true,
       name: true,
+      description: true,
       premium: true,
       brandColor: true,
       redirectDomain: true,
@@ -451,7 +452,7 @@ export async function communitiesWithLogo() {
   });
 }
 
-export async function communitiesWithDescription({ take }: { take?: number }) {
+export async function getCommunitiesWithDescription() {
   return await prisma.accounts.findMany({
     where: {
       type: AccountType.PUBLIC,
@@ -463,7 +464,6 @@ export async function communitiesWithDescription({ take }: { take?: number }) {
     orderBy: {
       name: 'asc',
     },
-    take,
   });
 }
 

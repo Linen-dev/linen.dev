@@ -16,7 +16,7 @@ import FadeIn from '@linen/ui/FadeIn';
 import Head from 'next/head';
 import Footer from 'components/Footer';
 import type { GetServerSidePropsContext } from 'next';
-import { communitiesWithDescription } from 'services/accounts';
+import { getCommunitiesWithDescription } from 'services/accounts';
 import CommunityCard from '@linen/ui/CommunityCard';
 import { serializeAccount } from '@linen/serializers/account';
 import { SerializedAccount } from '@linen/types';
@@ -450,14 +450,14 @@ type Props = {
 };
 
 export async function getServerSideProps({ res }: GetServerSidePropsContext) {
-  const accounts = await communitiesWithDescription({ take: 18 });
+  const accounts = await getCommunitiesWithDescription();
 
   res.setHeader(
     'Cache-Control',
     'public, s-maxage=43200, stale-while-revalidate=86400'
   );
   return {
-    props: { accounts: accounts.map(serializeAccount) },
+    props: { accounts: accounts.slice(0, 18).map(serializeAccount) },
   };
 }
 
