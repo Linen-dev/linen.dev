@@ -3,13 +3,12 @@ import Link from 'next/link';
 import Container from '@linen/ui/Container';
 import TextInput from '@linen/ui/TextInput';
 import styles from './index.module.scss';
-import logo from 'public/images/logo/linen.svg';
 import { AiOutlineSearch } from '@react-icons/all-files/ai/AiOutlineSearch';
 import { serializeAccount } from '@linen/serializers/account';
 import { SerializedAccount } from '@linen/types';
 import { truncate } from '@linen/utilities/string';
 import { trackPageView } from 'utilities/ssr-metrics';
-import CommunityLink from '@linen/ui/CommunityLink';
+import CommunityCard from '@linen/ui/CommunityCard';
 import { getHomeUrl } from 'utilities/home';
 import Image from 'next/image';
 import { communitiesWithDescription } from 'services/accounts';
@@ -99,27 +98,14 @@ export default function Communities({ communities }: Props) {
               })
               .map((community, index) => {
                 return (
-                  <Link
+                  <CommunityCard
                     key={
                       community.name
                         ? `${community.name}-${index}`
                         : `community-${index}`
                     }
-                    href={getHomeUrl(community)}
-                    className={styles.card}
-                  >
-                    <CommunityLink
-                      community={community}
-                      getHomeUrl={getHomeUrl}
-                      Image={Image as any}
-                    />
-                    <div className={styles.content}>
-                      <h2>{community.name}</h2>
-                      {community.description && (
-                        <p>{truncate(community.description, 160)}</p>
-                      )}
-                    </div>
-                  </Link>
+                    community={community}
+                  />
                 );
               })}
           </div>
@@ -132,7 +118,7 @@ export default function Communities({ communities }: Props) {
 export async function getServerSideProps(context: any) {
   const track = trackPageView(context);
 
-  const communities = await communitiesWithDescription();
+  const communities = await communitiesWithDescription({ take: 100 });
   await track.flush();
   return {
     props: {

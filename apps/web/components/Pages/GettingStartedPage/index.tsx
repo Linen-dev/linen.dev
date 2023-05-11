@@ -8,8 +8,6 @@ import Link from 'components/Link';
 import CommunityLink from '@linen/ui/CommunityLink';
 import { SerializedAccount } from '@linen/types';
 import { getHomeUrl } from 'utilities/home';
-import Image from 'next/image';
-import logo from 'public/images/logo/linen.svg';
 
 type Invite = SerializedAccount & {
   inviteId: string;
@@ -156,7 +154,6 @@ export function GettingStartedPage({
                             `/s/${account.slackDomain || account.discordDomain}`
                           );
                         }}
-                        Image={Image as any}
                         getHomeUrl={getHomeUrl}
                       />
                       <div>
@@ -187,7 +184,6 @@ export function GettingStartedPage({
                         event.stopPropagation();
                         acceptInvite(invite);
                       }}
-                      Image={Image as any}
                       getHomeUrl={getHomeUrl}
                     />
                     <div>

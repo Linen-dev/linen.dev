@@ -24,7 +24,6 @@ describe('NavBar', () => {
         {...{
           archiveChannel: jest.fn(),
           getHomeUrl: jest.fn(),
-          Image: jest.fn(),
           Link: jest.fn(),
           NewChannelModal: jest.fn(),
           NewCommunityModal: jest.fn(),
