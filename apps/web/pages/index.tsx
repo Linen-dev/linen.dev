@@ -453,7 +453,36 @@ export async function getServerSideProps({ res }: GetServerSidePropsContext) {
   const accounts = await getCommunitiesWithDescription();
 
   return {
-    props: { accounts: accounts.slice(0, 18).map(serializeAccount) },
+    props: {
+      accounts: accounts
+        .map(serializeAccount)
+        .filter((community) => {
+          // naive way to filter out test communities created by users
+          if (community.name?.toLowerCase()?.includes('test')) {
+            return false;
+          }
+
+          if (!community.description) {
+            return false;
+          }
+
+          return true;
+        })
+        .sort((community) => {
+          if (
+            community.description ||
+            community.logoSquareUrl ||
+            community.brandColor !== '#000000'
+          ) {
+            return -1;
+          }
+          return 1;
+        })
+        .sort((community) => {
+          return community.premium ? -1 : 1;
+        })
+        .slice(0, 18),
+    },
   };
 }
 
