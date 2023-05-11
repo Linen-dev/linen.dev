@@ -452,10 +452,6 @@ type Props = {
 export async function getServerSideProps({ res }: GetServerSidePropsContext) {
   const accounts = await getCommunitiesWithDescription();
 
-  res.setHeader(
-    'Cache-Control',
-    'public, s-maxage=43200, stale-while-revalidate=86400'
-  );
   return {
     props: { accounts: accounts.slice(0, 18).map(serializeAccount) },
   };
