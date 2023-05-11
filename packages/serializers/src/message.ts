@@ -1,14 +1,16 @@
-import {
+import type {
   SerializedAttachment,
   SerializedMessage,
   SerializedUser,
   MessageForSerialization,
+  SerializedSearchMessage,
 } from '@linen/types';
 import { serializeUser } from './user';
 import { serializeReaction } from './reaction';
 import type {
   users,
   mentions,
+  threads,
   messageAttachments,
   messageReactions,
 } from '@linen/database';
@@ -61,5 +63,18 @@ export function serializeMessage(
             typeof reaction.count === 'number' && reaction.count > 0
         )
         ?.map(serializeReaction) || [],
+  };
+}
+
+export function serializeSearchedMessage(
+  message: MessageForSerialization & { threads: threads | null }
+): SerializedSearchMessage {
+  return {
+    ...serializeMessage(message),
+    channelId: message.channelId,
+    thread: {
+      incrementId: message.threads?.incrementId,
+      slug: message.threads?.slug,
+    },
   };
 }

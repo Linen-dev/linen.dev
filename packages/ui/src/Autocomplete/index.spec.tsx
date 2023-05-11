@@ -20,9 +20,9 @@ describe('Autocomplete', () => {
     const { container, getByPlaceholderText } = render(
       <Autocomplete
         brandColor="#fff"
-        fetch={() => Promise.resolve([{ id: 1, name: 'super test' }])}
+        fetch={() => Promise.resolve([{ id: 1, value: 'super test' } as any])}
         onSelect={jest.fn()}
-        renderSuggestion={({ name }) => <div>{name}</div>}
+        renderSuggestion={({ value }) => <div>{value}</div>}
       />
     );
     const input = getByPlaceholderText('Search');
@@ -36,9 +36,9 @@ describe('Autocomplete', () => {
       const { container, getByPlaceholderText, getByText } = render(
         <Autocomplete
           brandColor="#fff"
-          fetch={() => Promise.resolve([{ id: 1, name: 'super test' }])}
+          fetch={() => Promise.resolve([{ id: 1, value: 'super test' } as any])}
           onSelect={onSelect}
-          renderSuggestion={({ name }) => <div>{name}</div>}
+          renderSuggestion={({ value }) => <div>{value}</div>}
         />
       );
       const input = getByPlaceholderText('Search');

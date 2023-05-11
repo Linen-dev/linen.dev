@@ -1,10 +1,11 @@
 import React from 'react';
 import { addHttpsToUrl } from '@linen/utilities/url';
 import { pickTextColorBasedOnBgColor } from '@linen/utilities/colors';
-import {
+import type {
   Permissions,
   SerializedAccount,
   SerializedChannel,
+  SerializedSearchMessage,
   Settings,
 } from '@linen/types';
 import UserAvatar from './UserAvatar';
@@ -13,16 +14,15 @@ import MobileMenu from './MobileMenu';
 import Logo from './Logo';
 import UpgradeButton from './UpgradeButton';
 import type { ApiClient } from '@linen/api-client';
+import SearchBar from '@/SearchBar';
 
 interface Props {
   settings: Settings;
   channels: SerializedChannel[];
   channelName?: string;
   currentCommunity: SerializedAccount;
-  isSubDomainRouting: boolean;
   permissions: Permissions;
   // dep injection
-  SearchBar: (args: any) => JSX.Element;
   JoinButton: (args: any) => JSX.Element;
   Link: any;
   InternalLink: (args: any) => JSX.Element;
@@ -30,6 +30,7 @@ interface Props {
   signOut: () => void;
   usePath: (args: { href: string }) => string;
   api: ApiClient;
+  handleSelect: (message: SerializedSearchMessage) => void;
 }
 
 function isWhiteColor(color: string) {
@@ -41,9 +42,7 @@ export default function Header({
   channels,
   channelName,
   currentCommunity,
-  isSubDomainRouting,
   permissions,
-  SearchBar,
   JoinButton,
   Link,
   InternalLink,
@@ -51,6 +50,7 @@ export default function Header({
   signOut,
   usePath,
   api,
+  handleSelect,
 }: Props) {
   const brandColor = currentCommunity.brandColor || '#111827';
   const fontColor = pickTextColorBasedOnBgColor(brandColor, 'white', 'black');
@@ -77,11 +77,10 @@ export default function Header({
       <SearchBar
         className={styles.search}
         brandColor={brandColor}
-        borderColor={borderColor}
         channels={channels}
-        communityName={settings.communityName}
-        isSubDomainRouting={isSubDomainRouting}
-        communityType={settings.communityType}
+        accountId={settings.communityId}
+        api={api}
+        handleSelect={handleSelect}
       />
       <div className={styles.menu}>
         {permissions.user && permissions.is_member ? (

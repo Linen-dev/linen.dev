@@ -5,4 +5,5 @@ export interface SerializedUser {
   displayName: string | null;
   externalUserId: string | null;
   profileImageUrl: string | null;
+  anonymousAlias?: string | null;
 }

@@ -1,5 +1,4 @@
 import React from 'react';
-import axios, { AxiosRequestConfig } from 'axios';
 import { ErrorBoundary } from 'react-error-boundary';
 import Header from '@linen/ui/Header';
 import ErrorFallback from './ErrorFallback';
@@ -8,10 +7,11 @@ import SEO, { type SeoProps } from '../SEO';
 import GoogleAnalytics from '../GoogleAnalytics';
 import Favicon from './Favicon';
 import classNames from 'classnames';
-import {
+import type {
   Permissions,
   SerializedAccount,
   SerializedChannel,
+  SerializedSearchMessage,
   Settings,
 } from '@linen/types';
 import { LinkContext } from '@linen/contexts/Link';
@@ -19,7 +19,6 @@ import { api } from 'utilities/requests';
 import useMode from '@linen/hooks/mode';
 import styles from './index.module.scss';
 import Link from 'next/link';
-import SearchBar from 'components/search/SearchBar';
 import JoinButton from 'components/JoinButton';
 import InternalLink from 'components/Link/InternalLink';
 import { signOut } from '@linen/auth/client';
@@ -77,6 +76,16 @@ function PageLayout({
   const { mode } = useMode();
   const router = useRouter();
 
+  const handleSelect = ({ thread }: SerializedSearchMessage) => {
+    let path = `/t/${thread.incrementId}/${thread.slug || 'topic'}`;
+    if (!isSubDomainRouting) {
+      path = `/${settings.communityType === 'discord' ? 'd' : 's'}/${
+        settings.communityName
+      }${path}`;
+    }
+    router.push(path);
+  };
+
   return (
     <LinkContext
       context={{
@@ -93,16 +102,15 @@ function PageLayout({
           currentCommunity={currentCommunity}
           settings={settings}
           permissions={permissions}
-          isSubDomainRouting={isSubDomainRouting}
           // dep injection
           api={api}
           InternalLink={InternalLink}
           JoinButton={JoinButton}
           Link={Link}
-          SearchBar={SearchBar}
           signOut={signOut}
           usePath={usePath}
           routerAsPath={router.asPath}
+          handleSelect={handleSelect}
         />
       </div>
       {seo && <SEO {...seo} />}

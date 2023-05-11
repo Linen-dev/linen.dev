@@ -1,9 +1,8 @@
 import React from 'react';
 import CommunityIcon from '@/CommunityIcon';
 import styles from './index.module.scss';
-import { SerializedAccount } from '@linen/types';
+import type { SerializedAccount } from '@linen/types';
 import { truncate } from '@linen/utilities/string';
-
 import { appendProtocol } from '@linen/utilities/url';
 
 const getLinenUrl = () => {
@@ -14,7 +13,7 @@ const getLinenUrl = () => {
   }
 };
 
-export function getHomeUrl(account?: SerializedAccount): string {
+function getHomeUrl(account?: SerializedAccount): string {
   if (!account) {
     return '/';
   }
@@ -28,16 +27,6 @@ export function getHomeUrl(account?: SerializedAccount): string {
     return `${getLinenUrl()}/d/${account.discordServerId}`;
   }
   return '/';
-}
-
-export function getHomeText(url: string): string | null {
-  if (url === '/') {
-    return null;
-  }
-  if (url.startsWith('https://')) {
-    return url.replace('https://', '');
-  }
-  return `linen.dev${url}`;
 }
 
 function CommunityCard({ community }: { community: SerializedAccount }) {

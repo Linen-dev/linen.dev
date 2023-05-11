@@ -1,4 +1,12 @@
-import { channels, messages, mentions, threads, users } from '@linen/database';
+import type {
+  channels,
+  messages,
+  mentions,
+  threads,
+  users,
+} from '@linen/database';
+import type { SerializedMessage } from '@linen/types';
+
 type Messages =
   | (messages & {
       author: users | null;
@@ -57,5 +65,31 @@ export function anonymizeUser(users: users): users {
 export function anonymizeMessagesMentions(messages: Messages[]) {
   return messages.map((message) => {
     return anonymizeMentions(message);
+  });
+}
+
+export function anonymizeSerializedMessages(
+  messages: SerializedMessage[]
+): SerializedMessage[] {
+  return messages.map((message) => {
+    if (message.author) {
+      message.author = {
+        ...message.author,
+        displayName: message.author.anonymousAlias || 'anonymous',
+        username: message.author.anonymousAlias || 'anonymous',
+        profileImageUrl: null,
+      };
+    }
+    if (message.mentions && message.mentions.length) {
+      message.mentions = message.mentions.map((mention) => {
+        return {
+          ...mention,
+          displayName: mention.anonymousAlias || 'anonymous',
+          username: mention.anonymousAlias || 'anonymous',
+          profileImageUrl: null,
+        };
+      });
+    }
+    return message;
   });
 }

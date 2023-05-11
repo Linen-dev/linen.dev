@@ -29,6 +29,7 @@ import type {
   UploadedFile,
   SerializedReadStatus,
   ReminderTypes,
+  SerializedSearchMessage,
 } from '@linen/types';
 export { AxiosRequestConfig };
 
@@ -147,6 +148,13 @@ export default class ApiClient {
 
   updateMessage = (props: putMessageType) =>
     this.put<SerializedMessage>(`/api/messages/${props.id}`, props);
+
+  searchMessages = (props: {
+    query: string;
+    accountId: string;
+    limit: number;
+    offset: number;
+  }) => this.get<SerializedSearchMessage[]>(`/api/search?${qs(props)}`);
 
   highlight = (props: { input: string }) =>
     this.post<{ output: string }>('/api/highlight', props);

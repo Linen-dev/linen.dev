@@ -1,5 +1,5 @@
 import type { users } from '@linen/database';
-import { SerializedUser } from '@linen/types';
+import type { SerializedUser } from '@linen/types';
 
 export function username(displayName: string | null) {
   if (!displayName) {
@@ -16,5 +16,6 @@ export function serializeUser(user: users): SerializedUser {
     externalUserId: user.externalUserId,
     displayName: user.displayName,
     profileImageUrl: user.profileImageUrl,
+    anonymousAlias: user.anonymousAlias,
   };
 }

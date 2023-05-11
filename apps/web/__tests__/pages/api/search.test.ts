@@ -60,7 +60,7 @@ describe('search', () => {
       await testApiHandler({
         handler: handlerSearch,
         url: `/api/search?${qs({
-          account_id: store.account.id,
+          accountId: store.account.id,
           query: 'test',
           limit: 1,
           offset: 0,
@@ -72,9 +72,9 @@ describe('search', () => {
           expect(response.status).toEqual(200);
           const body = await response.json();
           expect(body).toHaveLength(1);
-          expect(body[0].user.displayName).toBe(store.user.anonymousAlias);
-          expect(body[0].user.username).toBe(store.user.anonymousAlias);
-          expect(body[0].user.profileImageUrl).toBe(null);
+          expect(body[0].author.displayName).toBe(store.user.anonymousAlias);
+          expect(body[0].author.username).toBe(store.user.anonymousAlias);
+          expect(body[0].author.profileImageUrl).toBe(null);
         },
       });
     });
@@ -83,7 +83,7 @@ describe('search', () => {
       await testApiHandler({
         handler: handlerSearch,
         url: `/api/search?${qs({
-          account_id: store.account.id,
+          accountId: store.account.id,
           query: 'hello',
           limit: 1,
           offset: 0,
@@ -95,9 +95,9 @@ describe('search', () => {
           expect(response.status).toEqual(200);
           const body = await response.json();
           expect(body).toHaveLength(1);
-          expect(body[0].user.displayName).toBe(store.user.anonymousAlias);
-          expect(body[0].user.username).toBe(store.user.anonymousAlias);
-          expect(body[0].user.profileImageUrl).toBe(null);
+          expect(body[0].author.displayName).toBe(store.user.anonymousAlias);
+          expect(body[0].author.username).toBe(store.user.anonymousAlias);
+          expect(body[0].author.profileImageUrl).toBe(null);
 
           expect(body[0].mentions).toHaveLength(1);
           const mention = body[0].mentions[0];

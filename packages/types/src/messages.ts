@@ -31,3 +31,11 @@ export interface SerializedAttachment {
   url: string;
   name: string;
 }
+
+export type SerializedSearchMessage = SerializedMessage & {
+  channelId: string;
+  thread: {
+    incrementId?: number;
+    slug?: string | null;
+  };
+};

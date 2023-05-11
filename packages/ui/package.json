@@ -10,7 +10,7 @@
   ],
   "scripts": {
     "prebuild": "node ../scripts/rebuild-package.mjs ui && rm -rf dist",
-    "build": "rollup --config rollup.config.js",
+    "build": "rollup --config rollup.config.js --failAfterWarnings",
     "dev": "npm run watch",
     "watch": "rollup --config rollup.config.js --watch",
     "test": "dotenv -e ../../apps/web/.env.test -- jest",
@@ -130,6 +130,7 @@
     "./ProgressModal": "./dist/ProgressModal/index.js",
     "./ReminderModal": "./dist/ReminderModal/index.js",
     "./Row": "./dist/Row/index.js",
+    "./SearchBar": "./dist/SearchBar/index.js",
     "./SlackIcon": "./dist/SlackIcon/index.js",
     "./Spinner": "./dist/Spinner/index.js",
     "./StickyHeader": "./dist/StickyHeader/index.js",
@@ -357,6 +358,9 @@
       ],
       "Row": [
         "./dist/Row/index.d.ts"
+      ],
+      "SearchBar": [
+        "./dist/SearchBar/index.d.ts"
       ],
       "SlackIcon": [
         "./dist/SlackIcon/index.d.ts"

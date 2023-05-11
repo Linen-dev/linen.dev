@@ -1,12 +1,13 @@
 import React, { useEffect, useRef, useCallback, useState } from 'react';
 import classNames from 'classnames';
 import debounce from '@linen/utilities/debounce';
-import TextInput from '../TextInput';
+import TextInput from '@/TextInput';
 import { AiOutlineSearch } from '@react-icons/all-files/ai/AiOutlineSearch';
 import { AiOutlineLoading } from '@react-icons/all-files/ai/AiOutlineLoading';
 import styles from './index.module.scss';
 import NoResults from './NoResults';
 import { pickTextColorBasedOnBgColor } from '@linen/utilities/colors';
+import type { SerializedSearchMessage } from '@linen/types';
 
 export default function Autocomplete({
   className,
@@ -29,8 +30,12 @@ export default function Autocomplete({
     query: string;
     offset: number;
     limit: number;
-  }) => Promise<object[]>;
-  onSelect: (any: any) => any;
+  }) => Promise<
+    (SerializedSearchMessage & {
+      value: string;
+    })[]
+  >;
+  onSelect: (message: SerializedSearchMessage) => void;
   renderSuggestion: (any: any) => any;
   placeholder?: string;
   limit?: number;
@@ -39,7 +44,7 @@ export default function Autocomplete({
 }) {
   const [value, setValue] = useState('');
   const [offset, setOffset] = useState(0);
-  const [results, setResults] = useState([] as object[]);
+  const [results, setResults] = useState<SerializedSearchMessage[]>([]);
   const [isFocused, setFocused] = useState(false);
   const [isSearching, setSearching] = useState(false);
   const [isMounted, setMounted] = useState(false);
@@ -62,7 +67,7 @@ export default function Autocomplete({
     if (value.length >= minlength) {
       setSearching(true);
       debouncedFetch({ query: value, offset, limit })
-        .then((data: object[]) => {
+        .then((data) => {
           if (!isMounted) {
             return;
           }

@@ -1,4 +1,4 @@
-import React, { Children } from 'react';
+import React from 'react';
 import Header from '.';
 import { render } from '@testing-library/react';
 import { build } from '@linen/factory';
@@ -23,16 +23,15 @@ describe('Header', () => {
           settings={settings}
           channels={[]}
           currentCommunity={currentCommunity}
-          isSubDomainRouting={false}
           permissions={permissions}
           api={{} as any}
           InternalLink={Link}
           JoinButton={() => <div>JoinButton</div>}
           Link={Link}
-          SearchBar={() => <div>SearchBar</div>}
           routerAsPath=""
           signOut={jest.fn()}
           usePath={jest.fn()}
+          handleSelect={jest.fn()}
         />
       );
       expect(container).toHaveTextContent('Open user menu');
@@ -50,16 +49,15 @@ describe('Header', () => {
           settings={settings}
           channels={[]}
           currentCommunity={currentCommunity}
-          isSubDomainRouting={false}
           permissions={permissions}
           api={{} as any}
           InternalLink={Link}
           JoinButton={() => <div>JoinButton</div>}
           Link={Link}
-          SearchBar={() => <div>SearchBar</div>}
           routerAsPath=""
           signOut={jest.fn()}
           usePath={jest.fn()}
+          handleSelect={jest.fn()}
         />
       );
       // expect(container).toHaveTextContent('Sign InSign Up');
