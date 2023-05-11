@@ -6,7 +6,6 @@ export const config = {
 };
 
 export default function middleware(request: NextRequest) {
-  console.log('middleware');
   const url = request.nextUrl.clone(); // clone the request url
   const { pathname } = request.nextUrl; // get pathname of request (e.g. /blog-slug)
   const hostname = request.headers.get('host'); // get hostname of request (e.g. demo.vercel.pub)
