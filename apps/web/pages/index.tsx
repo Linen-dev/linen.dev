@@ -16,10 +16,32 @@ import FadeIn from '@linen/ui/FadeIn';
 import Head from 'next/head';
 import Footer from 'components/Footer';
 import type { GetServerSidePropsContext } from 'next';
-import { communitiesWithDescription } from 'services/accounts';
-import CommunityCard from '@linen/ui/CommunityCard';
-import { serializeAccount } from '@linen/serializers/account';
-import { SerializedAccount } from '@linen/types';
+import { communitiesWithLogo } from 'services/accounts';
+
+const CommunityCard = ({
+  url,
+  brandColor,
+  logoUrl,
+}: {
+  url: string;
+  description: string;
+  brandColor: string;
+  logoUrl: string;
+}) => {
+  return (
+    <a
+      className="flex items-center justify-center rounded py-8"
+      style={{
+        backgroundColor: brandColor,
+      }}
+      href={url}
+      target="_blank"
+      rel="noreferrer"
+    >
+      <Image src={logoUrl} alt="Logo" height="100" width="200"></Image>
+    </a>
+  );
+};
 
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(' ');
@@ -303,11 +325,14 @@ const Home = ({ accounts }: Props) => {
 
         <div className="flex flex-col justify-center">
           <div className="flex flex-col md:grid md:grid-cols-2 lg:grid-cols-3 gap-3 mt-10">
-            {accounts.map((community, index) => {
+            {accounts.map((a, index) => {
               return (
                 <CommunityCard
-                  community={community}
-                  key={`community-card-${index}`}
+                  url={a.url}
+                  description="Community"
+                  logoUrl={a.logoUrl}
+                  brandColor={a.brandColor}
+                  key={a.logoUrl + index}
                 ></CommunityCard>
               );
             })}
@@ -446,18 +471,50 @@ const Home = ({ accounts }: Props) => {
 };
 
 type Props = {
-  accounts: SerializedAccount[];
+  accounts: {
+    url: string;
+    communityName: string;
+    description: string;
+    brandColor: string;
+    logoUrl: string;
+  }[];
 };
 
 export async function getServerSideProps({ res }: GetServerSidePropsContext) {
-  const accounts = await communitiesWithDescription({ take: 18 });
+  const accounts = await communitiesWithLogo();
+
+  const goodLookingLogos = accounts.filter(
+    (a) =>
+      !!a.name && !!a.brandColor && !!a.logoUrl && a.logoUrl.includes('.svg')
+  );
+
+  // since we use 3 columns we want it to only show numbers divisible by 3
+  const remainders = goodLookingLogos
+    .slice(0, goodLookingLogos.length - (goodLookingLogos.length % 3))
+    .map((a) => {
+      return {
+        name: a.name,
+        logoUrl: a.logoUrl,
+        brandColor: a.brandColor,
+        url:
+          a.premium && a.redirectDomain
+            ? 'https://' + a.redirectDomain
+            : a.discordDomain
+            ? 'https://linen.dev/d/' + a.discordDomain
+            : 'https://linen.dev/s/' + a.slackDomain,
+        // TODO:remove this once supabase sets up domain to discord.supabase.com
+        ...(a.discordServerId === '839993398554656828' && {
+          url: 'https://839993398554656828.linen.dev',
+        }),
+      };
+    });
 
   res.setHeader(
     'Cache-Control',
     'public, s-maxage=43200, stale-while-revalidate=86400'
   );
   return {
-    props: { accounts: accounts.map(serializeAccount) },
+    props: { accounts: accounts },
   };
 }
 
