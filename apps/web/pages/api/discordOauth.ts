@@ -3,7 +3,7 @@ import request from 'superagent';
 import { AccountIntegration, prisma } from '@linen/database';
 import { eventNewIntegration } from 'services/events/eventNewIntegration';
 import { SerializedAccount } from '@linen/types';
-import { getHomeUrl } from 'utilities/home';
+import { getHomeUrl } from '@linen/utilities/home';
 import { serializeAccount } from '@linen/serializers/account';
 import { getCurrentConfig } from 'config/discord';
 import { createIntegrationDiscord } from 'queue/jobs';

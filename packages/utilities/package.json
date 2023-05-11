@@ -34,6 +34,7 @@
     "./domain": "./dist/domain.js",
     "./event": "./dist/event.js",
     "./files": "./dist/files.js",
+    "./home": "./dist/home.js",
     "./memoize": "./dist/memoize.js",
     "./object": "./dist/object.js",
     "./password": "./dist/password.js",
@@ -78,6 +79,9 @@
       ],
       "files": [
         "./dist/files.d.ts"
+      ],
+      "home": [
+        "./dist/home.d.ts"
       ],
       "memoize": [
         "./dist/memoize.d.ts"

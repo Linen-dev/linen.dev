@@ -1,5 +1,5 @@
 import { SerializedAccount } from '@linen/types';
-import { appendProtocol } from '@linen/utilities/url';
+import { appendProtocol } from './url';
 
 const getLinenUrl = () => {
   if (process.env.NODE_ENV === 'production') {

@@ -6,11 +6,9 @@ import styles from './index.module.scss';
 import { AiOutlineSearch } from '@react-icons/all-files/ai/AiOutlineSearch';
 import { serializeAccount } from '@linen/serializers/account';
 import { SerializedAccount } from '@linen/types';
-import { truncate } from '@linen/utilities/string';
 import { trackPageView } from 'utilities/ssr-metrics';
 import CommunityCard from '@linen/ui/CommunityCard';
-import { getHomeUrl } from 'utilities/home';
-import Image from 'next/image';
+import { getHomeUrl } from '@linen/utilities/home';
 import { communitiesWithDescription } from 'services/accounts';
 
 interface Props {

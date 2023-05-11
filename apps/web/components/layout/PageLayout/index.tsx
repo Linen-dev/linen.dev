@@ -28,7 +28,7 @@ import { useRouter } from 'next/router';
 import NewCommunityModal from 'components/Modals/NewCommunityModal';
 import { notify } from 'utilities/notification';
 import NewChannelModal from 'components/Modals/NewChannelModal';
-import { getHomeUrl } from 'utilities/home';
+import { getHomeUrl } from '@linen/utilities/home';
 import NewDmModal from 'components/Modals/NewDmModal';
 
 interface Props {

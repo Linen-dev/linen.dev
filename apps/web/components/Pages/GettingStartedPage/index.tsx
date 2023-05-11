@@ -7,7 +7,7 @@ import styles from './index.module.scss';
 import Link from 'components/Link';
 import CommunityLink from '@linen/ui/CommunityLink';
 import { SerializedAccount } from '@linen/types';
-import { getHomeUrl } from 'utilities/home';
+import { getHomeUrl } from '@linen/utilities/home';
 
 type Invite = SerializedAccount & {
   inviteId: string;

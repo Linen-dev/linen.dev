@@ -3,7 +3,7 @@ import Session from 'services/session';
 import { prisma } from '@linen/database';
 import { Roles } from '@linen/types';
 import { findAuthByEmail } from 'services/users';
-import { getHomeUrl } from 'utilities/home';
+import { getHomeUrl } from '@linen/utilities/home';
 import { serializeAccount } from '@linen/serializers/account';
 import { acceptInvite, findInvitesByEmail } from 'services/invites';
 
