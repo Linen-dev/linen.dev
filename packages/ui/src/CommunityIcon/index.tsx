@@ -1,6 +1,7 @@
 import { SerializedAccount } from '@linen/types';
 import React from 'react';
 import styles from './index.module.scss';
+import { pickTextColorBasedOnBgColor } from '@linen/utilities/colors';
 
 interface Props {
   community: SerializedAccount;
@@ -25,5 +26,18 @@ export default function CommunityIcon({ community }: Props) {
       />
     );
   }
-  return <div className={styles.icon}>{getLetter(community.name)}</div>;
+  const backgroundColor = community.brandColor || 'black';
+  const fontColor = pickTextColorBasedOnBgColor(
+    backgroundColor,
+    'white',
+    'black'
+  );
+  return (
+    <div
+      className={styles.icon}
+      style={{ color: fontColor, background: backgroundColor }}
+    >
+      {getLetter(community.name)}
+    </div>
+  );
 }
