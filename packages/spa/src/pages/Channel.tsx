@@ -5,9 +5,10 @@ import { qs } from '@linen/utilities/url';
 import { useLinenStore } from '../store';
 import Loading from '../components/Loading';
 import { api } from '../fetcher';
-import { mockedAsyncFunction, mockedComponent, mockedContext } from '../mock';
+import { mockedComponent, mockedContext } from '../mock';
 import { useQuery } from '@tanstack/react-query';
 import { ChannelProps } from '@linen/types';
+import { playNotificationSound } from '../utils/playNotificationSound';
 
 type ChannelPageProps = {
   communityName: string;
@@ -67,6 +68,7 @@ function View() {
       threads={channelProps.threads}
       useUsersContext={useUsersContext}
       api={api}
+      playNotificationSound={playNotificationSound}
       // TODO:
       addReaction={(a) => a}
       IntegrationsModal={mockedComponent}
@@ -76,7 +78,6 @@ function View() {
       ShowIntegrationDetail={mockedComponent}
       queryIntegration={'TODO'}
       useJoinContext={mockedContext}
-      playNotificationSound={mockedAsyncFunction}
     />
   );
 }

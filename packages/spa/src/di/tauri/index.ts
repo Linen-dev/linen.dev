@@ -6,6 +6,7 @@ import {
   sendNotification as tauriSendNotification,
 } from '@tauri-apps/api/notification';
 import { SerializedAccount } from '@linen/types';
+import { playNotificationSound } from '../../utils/playNotificationSound';
 
 export const openExternal = async (url: string) => {
   await open(url);
@@ -39,5 +40,6 @@ export const sendNotification = async (
   let permissionGranted = await isPermissionGranted();
   if (permissionGranted) {
     tauriSendNotification({ title, body });
+    playNotificationSound(0.2);
   }
 };
