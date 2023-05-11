@@ -19,6 +19,7 @@ import type { GetServerSidePropsContext } from 'next';
 import { communitiesWithDescription } from 'services/accounts';
 import CommunityCard from '@linen/ui/CommunityCard';
 import { serializeAccount } from '@linen/serializers/account';
+import { SerializedAccount } from '@linen/types';
 
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(' ');
@@ -306,7 +307,7 @@ const Home = ({ accounts }: Props) => {
               return (
                 <CommunityCard
                   community={community}
-                  key={community.name + index}
+                  key={`community-card-${index}`}
                 ></CommunityCard>
               );
             })}
@@ -445,12 +446,7 @@ const Home = ({ accounts }: Props) => {
 };
 
 type Props = {
-  accounts: {
-    url: string;
-    name: string;
-    logoUrl: string;
-    brandColor: string;
-  }[];
+  accounts: SerializedAccount[];
 };
 
 export async function getServerSideProps({ res }: GetServerSidePropsContext) {

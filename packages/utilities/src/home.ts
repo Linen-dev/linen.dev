@@ -1,4 +1,3 @@
-import { SerializedAccount } from '@linen/types';
 import { appendProtocol } from './url';
 
 const getLinenUrl = () => {
@@ -9,7 +8,7 @@ const getLinenUrl = () => {
   }
 };
 
-export function getHomeUrl(account?: SerializedAccount): string {
+export function getHomeUrl(account?: any): string {
   if (!account) {
     return '/';
   }
