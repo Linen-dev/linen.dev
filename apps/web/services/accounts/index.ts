@@ -459,7 +459,6 @@ export async function communitiesWithDescription({ take }: { take?: number }) {
         name: null,
         description: null,
       },
-      OR: [{ syncStatus: 'DONE' }, { integration: AccountIntegration.NONE }],
     },
     orderBy: {
       name: 'asc',
