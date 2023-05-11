@@ -8,6 +8,7 @@ const config = {
   isNewVersion: true,
   notes: process.argv[2] || `new update`,
   build: true,
+  releaseOrDebug: 'debug',
 };
 
 function cmd(...command) {
@@ -54,14 +55,14 @@ await fs.mkdir(path.resolve(`./.releases/desktop/${version}/darwin-aarch64`), {
 
 const sigSilicon = await fs.readFile(
   path.resolve(
-    './src-tauri/target/aarch64-apple-darwin/release/bundle/macos/linen-app.app.tar.gz.sig'
+    `./src-tauri/target/aarch64-apple-darwin/${config.releaseOrDebug}/bundle/macos/linen-app.app.tar.gz.sig`
   ),
   { encoding: 'utf-8' }
 );
 
 await fs.copyFile(
   path.resolve(
-    `./src-tauri/target/aarch64-apple-darwin/release/bundle/dmg/linen-app_${version}_aarch64.dmg`
+    `./src-tauri/target/aarch64-apple-darwin/${config.releaseOrDebug}/bundle/dmg/linen-app_${version}_aarch64.dmg`
   ),
   path.resolve(
     `./.releases/desktop/${version}/darwin-aarch64/linen-app_${version}_aarch64.dmg`
@@ -70,7 +71,7 @@ await fs.copyFile(
 
 await fs.copyFile(
   path.resolve(
-    './src-tauri/target/aarch64-apple-darwin/release/bundle/macos/linen-app.app.tar.gz'
+    `./src-tauri/target/aarch64-apple-darwin/${config.releaseOrDebug}/bundle/macos/linen-app.app.tar.gz`
   ),
   path.resolve(
     `./.releases/desktop/${version}/darwin-aarch64/linen-app.app.tar.gz`
@@ -87,14 +88,14 @@ await fs.mkdir(path.resolve(`./.releases/desktop/${version}/darwin-x86_64`), {
 
 const sigIntel = await fs.readFile(
   path.resolve(
-    './src-tauri/target/x86_64-apple-darwin/release/bundle/macos/linen-app.app.tar.gz.sig'
+    `./src-tauri/target/x86_64-apple-darwin/${config.releaseOrDebug}/bundle/macos/linen-app.app.tar.gz.sig`
   ),
   { encoding: 'utf-8' }
 );
 
 await fs.copyFile(
   path.resolve(
-    `./src-tauri/target/x86_64-apple-darwin/release/bundle/dmg/linen-app_${version}_x64.dmg`
+    `./src-tauri/target/x86_64-apple-darwin/${config.releaseOrDebug}/bundle/dmg/linen-app_${version}_x64.dmg`
   ),
   path.resolve(
     `./.releases/desktop/${version}/darwin-x86_64/linen-app_${version}_x64.dmg`
@@ -103,7 +104,7 @@ await fs.copyFile(
 
 await fs.copyFile(
   path.resolve(
-    './src-tauri/target/x86_64-apple-darwin/release/bundle/macos/linen-app.app.tar.gz'
+    `./src-tauri/target/x86_64-apple-darwin/${config.releaseOrDebug}/bundle/macos/linen-app.app.tar.gz`
   ),
   path.resolve(
     `./.releases/desktop/${version}/darwin-x86_64/linen-app.app.tar.gz`
