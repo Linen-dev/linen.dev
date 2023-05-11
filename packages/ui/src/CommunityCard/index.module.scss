@@ -6,7 +6,7 @@
   display: flex;
   padding: 1rem;
   transition: box-shadow 0.1s ease;
-  gap: 0.5rem;
+  gap: 1rem;
   min-height: 96px;
   transition: border 0.2s ease;
 }
@@ -21,11 +21,12 @@
 }
 
 .card h2 {
-  font-size: 14px;
-  font-weight: bold;
+  font-size: 12px;
+  font-weight: 500;
   line-height: 16px;
   margin: 0;
   text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .card p {
