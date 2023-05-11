@@ -428,6 +428,29 @@ export const findAccountBySlackTeamId = async (slackTeamId: string) => {
   });
 };
 
+export async function communitiesWithLogo() {
+  return await prisma.accounts.findMany({
+    where: {
+      NOT: [
+        {
+          logoUrl: null,
+        },
+      ],
+      syncStatus: 'DONE',
+    },
+    select: {
+      logoUrl: true,
+      name: true,
+      premium: true,
+      brandColor: true,
+      redirectDomain: true,
+      slackDomain: true,
+      discordServerId: true,
+      discordDomain: true,
+    },
+  });
+}
+
 export async function communitiesWithDescription({ take }: { take?: number }) {
   return await prisma.accounts.findMany({
     where: {
