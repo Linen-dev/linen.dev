@@ -1,13 +1,12 @@
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import InboxView from '@linen/ui/InboxView';
-import { useUsersContext } from '@linen/contexts/Users';
 import { qs } from '@linen/utilities/url';
 import { InboxProps } from '@linen/types';
 import { useLinenStore } from '../store';
 import Loading from '../components/Loading';
 import { api } from '../fetcher';
-import { mockedComponent, mockedContext, mockedFunction } from '../mock';
+import { mockedComponent, mockedFunction } from '../mock';
 
 type InboxPageProps = {
   communityName: string;

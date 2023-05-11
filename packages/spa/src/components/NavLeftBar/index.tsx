@@ -45,14 +45,12 @@ export default function NavLeftBar() {
     <NavBar
       currentCommunity={currentCommunity}
       communities={communities}
-      post={api.post}
-      put={api.put}
+      api={api}
       mode={mode}
       channelName={channelName}
       permissions={permissions}
       channels={channels}
       dms={dms}
-      archiveChannel={api.archiveChannel}
       // components injection
       Image={Image}
       Link={InternalLink({ communityName })}

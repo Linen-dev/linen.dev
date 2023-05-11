@@ -43,8 +43,7 @@ export default function NavTopBar() {
           settings={settings}
           currentCommunity={currentCommunity}
           // component injection
-          put={api.put}
-          postWithOptions={api.postWithOptions}
+          api={api}
           Link={InternalLink({ communityName })}
           InternalLink={InternalLink({ communityName })}
           usePath={customUsePath({ communityName })}

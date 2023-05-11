@@ -68,7 +68,7 @@ function View() {
       useUsersContext={useUsersContext}
       api={api}
       // TODO:
-      addReaction={mockedAsyncFunction}
+      addReaction={(a) => a}
       IntegrationsModal={mockedComponent}
       JoinChannelLink={mockedComponent}
       MembersModal={mockedComponent}
