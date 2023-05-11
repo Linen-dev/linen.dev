@@ -78,7 +78,7 @@ export function serializeSettings(account: accounts): Settings {
     communityInviteUrl: buildInviteUrl(account, communityType),
     communityName: getCommunityName(account),
     name: account.name,
-    brandColor: account.brandColor || '#111827',
+    brandColor: account.brandColor || 'var(--color-navbar)',
     homeUrl: account.homeUrl || 'https://linen.dev',
     docsUrl: account.docsUrl || 'https://linen.dev',
     logoUrl:

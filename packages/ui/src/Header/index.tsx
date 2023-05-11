@@ -52,7 +52,7 @@ export default function Header({
   api,
   handleSelect,
 }: Props) {
-  const brandColor = currentCommunity.brandColor || '#111827';
+  const brandColor = currentCommunity.brandColor || 'var(--color-navbar)';
   const fontColor = pickTextColorBasedOnBgColor(brandColor, 'white', 'black');
   const homeUrl = addHttpsToUrl(settings.homeUrl);
   const logoUrl = addHttpsToUrl(settings.logoUrl);
