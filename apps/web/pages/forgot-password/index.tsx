@@ -42,7 +42,7 @@ export default function ForgotPassword({ email }: Props) {
         <Button type="submit" block disabled={loading}>
           Continue
         </Button>
-        <p className="text-xs  text-gray-700">
+        <p className="text-xs  text-gray-700 dark:text-gray-100">
           Clicking continue will send you a reset password link.
         </p>
       </form>

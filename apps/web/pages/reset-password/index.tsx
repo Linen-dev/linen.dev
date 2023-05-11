@@ -42,7 +42,7 @@ export default function ResetPassword({ token }: Props) {
         <Button type="submit" block>
           Continue
         </Button>
-        <p className="text-xs text-gray-700">
+        <p className="text-xs text-gray-700 dark:text-gray-100">
           Clicking continue will reset your password and redirect you to the
           sign in page.
         </p>
