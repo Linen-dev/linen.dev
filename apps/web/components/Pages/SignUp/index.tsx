@@ -91,7 +91,7 @@ export default function SignUp({
         <hr className="my-5" />
 
         <div className="flex justify-between">
-          <p className="text-xs text-gray-600">
+          <p className="text-xs text-gray-600 dark:text-gray-100">
             Already have an account? {/* <br /> */}
             <a
               onClick={() => {
@@ -112,7 +112,7 @@ export default function SignUp({
           </p>
           <p className="w-1/3"></p>
           {mode === 'creds' && (
-            <p className="text-xs text-gray-600">
+            <p className="text-xs text-gray-600 dark:text-gray-100">
               Prefer email? {/* <br /> */}
               <a
                 onClick={() => {
@@ -133,7 +133,7 @@ export default function SignUp({
             </p>
           )}
           {mode === 'magic' && (
-            <p className="text-xs  text-gray-700 mb-3">
+            <p className="text-xs  text-gray-600 dark:text-gray-100 mb-3">
               Prefer passwords? {/* <br /> */}
               <a
                 onClick={() => {
