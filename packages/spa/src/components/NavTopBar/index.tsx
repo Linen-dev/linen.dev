@@ -50,9 +50,12 @@ export default function NavTopBar() {
           // TODO:
           routerAsPath={mockedRouterAsPath}
           JoinButton={mockedComponent}
-          SearchBar={mockedComponent}
-          // not sure
-          isSubDomainRouting={false}
+          // FIXME: handle this nicely
+          handleSelect={({ thread }) => {
+            window.location.href = `/s/${
+              currentCommunity.slackDomain || currentCommunity.discordDomain
+            }/t/${thread.incrementId}/${thread.slug}`;
+          }}
         />
       </div>
     </>

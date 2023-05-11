@@ -1,7 +1,9 @@
+import { SerializedAccount } from '@linen/types';
+
 let openExternal: (url: string) => void;
 let listenDeepLink: (callback: (...args: any) => any) => Promise<void>;
 let callbackUrl: () => string;
-let getHomeUrl: () => string;
+let getHomeUrl: (community: SerializedAccount) => string;
 let requestNotificationPermission: () => void;
 let sendNotification: (body: string, title?: string) => Promise<void>;
 

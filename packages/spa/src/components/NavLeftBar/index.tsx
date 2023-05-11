@@ -1,7 +1,6 @@
 import NavBar from '@linen/ui/NavBar';
 import useMode from '@linen/hooks/mode';
 import InternalLink from '../InternalLink';
-import Image from '../Image';
 import {
   mockedComponent,
   mockedRouterAsPath,
@@ -52,7 +51,6 @@ export default function NavLeftBar() {
       channels={channels}
       dms={dms}
       // components injection
-      Image={Image}
       Link={InternalLink({ communityName })}
       getHomeUrl={getHomeUrl}
       usePath={customUsePath({ communityName })}
