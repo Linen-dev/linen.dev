@@ -3,19 +3,13 @@ import classNames from 'classnames';
 import styles from './index.module.scss';
 import { SerializedAccount } from '@linen/types';
 import { pickTextColorBasedOnBgColor } from '@linen/utilities/colors';
+import CommunityIcon from '@/CommunityIcon';
 
 interface Props {
   className?: string;
   community: SerializedAccount;
   onClick?(event: React.MouseEvent<HTMLAnchorElement>): void;
   getHomeUrl: (args: any) => string;
-}
-
-function getLetter(name?: string) {
-  if (!name || name.length === 0) {
-    return 'C';
-  }
-  return name.trim().toUpperCase().charAt(0);
 }
 
 export default function CommunityLink({
@@ -45,16 +39,7 @@ export default function CommunityLink({
       }
       onClick={onClick}
     >
-      {community.logoSquareUrl ? (
-        <img
-          src={community.logoSquareUrl}
-          alt={community.description || community.name || 'Community'}
-          width={36}
-          height={36}
-        />
-      ) : (
-        getLetter(community.name)
-      )}
+      <CommunityIcon community={community} />
     </a>
   );
 }
