@@ -20,7 +20,8 @@
   "scripts": {
     "dev": "yarn turbo run dev --filter web",
     "web": "yarn turbo --filter web...",
-    "build": "yarn turbo build"
+    "build": "yarn turbo build",
+    "build:deps": "yarn turbo run build --filter web^..."
   },
   "resolutions": {
     "qs": ">=6.9.7",
