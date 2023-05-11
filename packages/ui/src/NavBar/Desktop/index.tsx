@@ -5,6 +5,7 @@ import {
   Permissions,
   SerializedAccount,
   SerializedChannel,
+  SerializedReadStatus,
 } from '@linen/types';
 import useWebsockets from '@linen/hooks/websockets';
 import styles from './index.module.scss';
@@ -172,7 +173,7 @@ export default function DesktopNavBar({
     let mounted = true;
     if (currentUser) {
       debouncedReadStatus({ channelIds: channels.map(({ id }) => id) }).then(
-        ({ readStatuses }) => {
+        ({ readStatuses }: { readStatuses: SerializedReadStatus[] }) => {
           if (mounted && readStatuses?.length > 0) {
             setHighlights((highlights) => {
               const channelIds = readStatuses
