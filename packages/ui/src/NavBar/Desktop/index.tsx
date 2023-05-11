@@ -56,7 +56,6 @@ interface Props {
   routerAsPath: string;
   usePath: (args: { href: string }) => string;
   getHomeUrl: (args: any) => string;
-  Image: (args: any) => JSX.Element;
   NewChannelModal: (args: any) => JSX.Element;
   NewCommunityModal: (args: any) => JSX.Element;
   NewDmModal: (args: any) => JSX.Element;
@@ -82,7 +81,6 @@ export default function DesktopNavBar({
   Link,
   routerAsPath,
   usePath,
-  Image,
   getHomeUrl,
   NewChannelModal,
   NewCommunityModal,
@@ -201,7 +199,6 @@ export default function DesktopNavBar({
                 <CommunityLink
                   key={community.id}
                   community={community}
-                  Image={Image}
                   getHomeUrl={getHomeUrl}
                 />
               );

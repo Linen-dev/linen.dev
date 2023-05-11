@@ -29,7 +29,6 @@ import NewCommunityModal from 'components/Modals/NewCommunityModal';
 import { notify } from 'utilities/notification';
 import NewChannelModal from 'components/Modals/NewChannelModal';
 import { getHomeUrl } from 'utilities/home';
-import Image from 'next/image';
 import NewDmModal from 'components/Modals/NewDmModal';
 
 interface Props {
@@ -121,7 +120,6 @@ function PageLayout({
           Link={InternalLink}
           routerAsPath={router.asPath}
           usePath={usePath}
-          Image={Image as any}
           getHomeUrl={getHomeUrl}
           NewChannelModal={NewChannelModal}
           NewCommunityModal={NewCommunityModal}

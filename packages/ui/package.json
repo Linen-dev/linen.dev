@@ -81,6 +81,7 @@
     "./ColorField": "./dist/ColorField/index.js",
     "./ColorInput": "./dist/ColorInput/index.js",
     "./CommunityButton": "./dist/CommunityButton/index.js",
+    "./CommunityCard": "./dist/CommunityCard/index.js",
     "./CommunityLink": "./dist/CommunityLink/index.js",
     "./ConfirmationModal": "./dist/ConfirmationModal/index.js",
     "./Container": "./dist/Container/index.js",
@@ -208,6 +209,9 @@
       ],
       "CommunityButton": [
         "./dist/CommunityButton/index.d.ts"
+      ],
+      "CommunityCard": [
+        "./dist/CommunityCard/index.d.ts"
       ],
       "CommunityLink": [
         "./dist/CommunityLink/index.d.ts"

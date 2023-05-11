@@ -8,7 +8,6 @@ interface Props {
   className?: string;
   community: SerializedAccount;
   onClick?(event: React.MouseEvent<HTMLAnchorElement>): void;
-  Image: (args: any) => JSX.Element;
   getHomeUrl: (args: any) => string;
 }
 
@@ -23,7 +22,6 @@ export default function CommunityLink({
   className,
   community,
   onClick,
-  Image,
   getHomeUrl,
 }: Props) {
   const backgroundColor = community.brandColor || 'black';
@@ -48,7 +46,7 @@ export default function CommunityLink({
       onClick={onClick}
     >
       {community.logoSquareUrl ? (
-        <Image
+        <img
           src={community.logoSquareUrl}
           alt={community.description || community.name || 'Community'}
           width={36}
