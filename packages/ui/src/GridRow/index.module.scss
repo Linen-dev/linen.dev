@@ -7,6 +7,7 @@
 
 .resolution {
   background-color: var(--color-green-50);
+  border-radius: 4px;
 
   .badge {
     margin-top: 0.25rem;
@@ -15,6 +16,12 @@
     font-size: 10px;
     font-weight: 400;
     margin-bottom: 1rem;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .resolution {
+    background-color: var(--color-green-700);
   }
 }
 
