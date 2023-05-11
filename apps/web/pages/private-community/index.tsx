@@ -168,7 +168,11 @@ const Home = ({ accounts }: Props) => {
           </p>
           <div className="mt-5 sm:mt-8 sm:flex sm:justify-center">
             <div className="rounded-md shadow">
-              <Link legacyBehavior href="mailto:help@linen.dev?subject=Private Linen communities" passHref>
+              <Link
+                legacyBehavior
+                href="mailto:help@linen.dev?subject=Private Linen communities"
+                passHref
+              >
                 <a className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 md:py-4 md:text-lg md:px-10">
                   Contact Us
                 </a>
@@ -199,7 +203,7 @@ const Home = ({ accounts }: Props) => {
                 Private and Branded
               </h2>
               <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl">
-                It is your space not Slack/Discord's
+                It is your space not Slack/Discord&apos;s
               </p>
               <p className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300 ">
                 Linen is a chat first community platform. Modern communities are
@@ -415,7 +419,9 @@ const Home = ({ accounts }: Props) => {
                   ))}
                 </ul>
                 <a
-                  href={'mailto:help@linen.dev?subject=Private Linen communities'}
+                  href={
+                    'mailto:help@linen.dev?subject=Private Linen communities'
+                  }
                   aria-describedby={tier.id}
                   className={classNames(
                     tier.featured
