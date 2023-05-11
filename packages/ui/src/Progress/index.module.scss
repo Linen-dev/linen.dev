@@ -1,5 +1,3 @@
-@import '../colors.scss';
-
 .progress {
   -webkit-appearance: none;
   appearance: none;
@@ -9,14 +7,14 @@
 }
 
 .progress::-webkit-progress-bar {
-  background-color: $color-gray-100;
+  background-color: var(--color-gray-100);
   border-radius: 4px;
 }
 
 .progress::-webkit-progress-value {
-  background: $color-primary;
-  accent-color: $color-primary;
-  color: $color-primary;
+  background: var(--color-primary);
+  accent-color: var(--color-primary);
+  color: var(--color-primary);
   border-radius: 4px;
   transition: width 0.2s ease;
 }
