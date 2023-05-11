@@ -9,7 +9,7 @@ import { SerializedAccount } from '@linen/types';
 import { trackPageView } from 'utilities/ssr-metrics';
 import CommunityCard from '@linen/ui/CommunityCard';
 import { getHomeUrl } from '@linen/utilities/home';
-import { communitiesWithDescription } from 'services/accounts';
+import { getCommunitiesWithDescription } from 'services/accounts';
 
 interface Props {
   communities: SerializedAccount[];
@@ -116,7 +116,7 @@ export default function Communities({ communities }: Props) {
 export async function getServerSideProps(context: any) {
   const track = trackPageView(context);
 
-  const communities = await communitiesWithDescription({ take: 100 });
+  const communities = await getCommunitiesWithDescription();
   await track.flush();
   return {
     props: {
