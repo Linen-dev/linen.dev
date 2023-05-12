@@ -81,7 +81,7 @@ export default function CommunityIntegration({
           Connect to {capitalize(communityType)} to fetch conversations.
         </Label.Description>
       </Label>
-      <div className="pt-3">
+      <div>
         {newOnboarding ? (
           <div className="flex gap-2">
             <CommunityButton

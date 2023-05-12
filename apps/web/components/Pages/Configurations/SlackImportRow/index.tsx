@@ -79,7 +79,7 @@ export default function SlackImportRow({
           .
         </Label.Description>
       </Label>
-      <div className="pt-3">
+      <div>
         <input
           onChange={handleFileChange}
           ref={ref}
