@@ -1,15 +1,15 @@
 import { Suspense, lazy } from 'react';
 import { Outlet, createBrowserRouter, RouterProvider } from 'react-router-dom';
-import Layout from './components/Layout';
-import ErrorPage from './pages/Error';
-import SignIn from './pages/SignIn';
-import RequireAuth from './hoc/RequireAuth';
-import RedirectToLastPageViewed from './components/RedirectToLastPageViewed';
-import Loading from './components/Loading';
-const InboxPage = lazy(() => import('./pages/Inbox'));
-const StarredPage = lazy(() => import('./pages/Starred'));
-const ChannelPage = lazy(() => import('./pages/Channel'));
-const ThreadPage = lazy(() => import('./pages/Thread'));
+import Layout from '@/components/Layout';
+import ErrorPage from '@/pages/Error';
+import SignIn from '@/pages/SignIn';
+import RequireAuth from '@/hoc/RequireAuth';
+import RedirectToLastPageViewed from '@/components/RedirectToLastPageViewed';
+import Loading from '@/components/Loading';
+const InboxPage = lazy(() => import('@/pages/Inbox'));
+const StarredPage = lazy(() => import('@/pages/Starred'));
+const ChannelPage = lazy(() => import('@/pages/Channel'));
+const ThreadPage = lazy(() => import('@/pages/Thread'));
 
 export default function Router() {
   const isCustomDomain = false;

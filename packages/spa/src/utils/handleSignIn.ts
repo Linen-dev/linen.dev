@@ -1,5 +1,5 @@
 import { setJwtToken } from '@linen/auth/client';
-import { baseLinen } from '../config';
+import { baseLinen } from '@/config';
 
 export function handleSignIn(urlSearch: string) {
   const params = new URLSearchParams(urlSearch);

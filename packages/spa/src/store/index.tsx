@@ -1,5 +1,4 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
 import {
   SerializedAccount,
   SerializedChannel,
@@ -46,89 +45,82 @@ interface LinenState {
   setInboxProps: (props: InboxProps, communityName: string) => void;
 }
 
-export const useLinenStore = create<LinenState>()(
-  persist(
-    (set, get) => ({
-      currentCommunity: undefined,
-      communities: [],
-      communityName: undefined,
+export const useLinenStore = create<LinenState>()((set, get) => ({
+  currentCommunity: undefined,
+  communities: [],
+  communityName: undefined,
+  channelName: undefined,
+  permissions: undefined,
+  settings: undefined,
+  channels: [],
+  dms: [],
+  channelProps: undefined,
+  setChannelProps: (props: ChannelProps, communityName: string) => {
+    const {
+      channels,
+      channelName,
+      permissions,
+      currentCommunity,
+      settings,
+      communities,
+      dms,
+      ...channelProps
+    } = props;
+    set({
+      channelProps,
+      channelName,
+      communityName,
+      permissions,
+      channels,
+      currentCommunity,
+      settings,
+      dms,
+      communities,
+    });
+  },
+  threadProps: undefined,
+  setThreadsProps: (props: ThreadProps, communityName: string) => {
+    const {
+      channels,
+      permissions,
+      currentCommunity,
+      settings,
+      communities,
+      dms,
+      ...threadProps
+    } = props;
+    set({
+      threadProps,
+      channels,
+      permissions,
+      currentCommunity,
+      settings,
+      communities,
+      dms,
+      channelName: props.currentChannel.channelName,
+      communityName,
+    });
+  },
+  inboxProps: undefined,
+  setInboxProps: (props: InboxProps, communityName: string) => {
+    const {
+      channels,
+      permissions,
+      currentCommunity,
+      settings,
+      communities,
+      dms,
+    } = props;
+    set({
+      channels,
+      permissions,
+      currentCommunity,
+      settings,
+      communities,
+      dms,
+      communityName,
+      inboxProps: props,
       channelName: undefined,
-      permissions: undefined,
-      settings: undefined,
-      channels: [],
-      dms: [],
-      channelProps: undefined,
-      setChannelProps: (props: ChannelProps, communityName: string) => {
-        const {
-          channels,
-          channelName,
-          permissions,
-          currentCommunity,
-          settings,
-          communities,
-          dms,
-          ...channelProps
-        } = props;
-        set({
-          channelProps,
-          channelName,
-          communityName,
-          permissions,
-          channels,
-          currentCommunity,
-          settings,
-          dms,
-          communities,
-        });
-      },
-      threadProps: undefined,
-      setThreadsProps: (props: ThreadProps, communityName: string) => {
-        const {
-          channels,
-          permissions,
-          currentCommunity,
-          settings,
-          communities,
-          dms,
-          ...threadProps
-        } = props;
-        set({
-          threadProps,
-          channels,
-          permissions,
-          currentCommunity,
-          settings,
-          communities,
-          dms,
-          channelName: props.currentChannel.channelName,
-          communityName,
-        });
-      },
-      inboxProps: undefined,
-      setInboxProps: (props: InboxProps, communityName: string) => {
-        const {
-          channels,
-          permissions,
-          currentCommunity,
-          settings,
-          communities,
-          dms,
-        } = props;
-        set({
-          channels,
-          permissions,
-          currentCommunity,
-          settings,
-          communities,
-          dms,
-          communityName,
-          inboxProps: props,
-          channelName: undefined,
-        });
-      },
-    }),
-    {
-      name: 'linen-store',
-    }
-  )
-);
+    });
+  },
+}));

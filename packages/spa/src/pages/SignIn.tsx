@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { baseLinen } from '../config';
 import { useLocation } from 'react-router-dom';
-import { callbackUrl, openExternal } from '../di';
+import { baseLinen } from '@/config';
+import { callbackUrl, openExternal } from '@/di';
 import LinenLogo from '@linen/ui/LinenLogo';
 
 export default function SignIn() {

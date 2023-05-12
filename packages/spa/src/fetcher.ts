@@ -1,4 +1,4 @@
-import { baseLinen } from './config';
+import { baseLinen } from '@/config';
 import { getJwtToken } from '@linen/auth/client';
 import ApiClient, { type AxiosRequestConfig } from '@linen/api-client';
 

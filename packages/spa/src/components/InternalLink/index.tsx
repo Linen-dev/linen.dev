@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { baseLinen, pathsToRedirect } from '../../config';
+import { baseLinen, pathsToRedirect } from '@/config';
 
 interface Props {
   className?: string;

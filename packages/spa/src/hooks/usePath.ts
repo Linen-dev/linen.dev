@@ -1,4 +1,4 @@
-import { baseLinen, pathsToRedirect } from '../config';
+import { baseLinen, pathsToRedirect } from '@/config';
 
 export default function usePath({ communityName }: { communityName: string }) {
   return ({ href }: { href: string }) => {

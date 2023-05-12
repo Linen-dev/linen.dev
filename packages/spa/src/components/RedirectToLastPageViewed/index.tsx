@@ -1,4 +1,4 @@
-import { useLinenStore } from '../../store';
+import { useLinenStore } from '@/store';
 import { Navigate } from 'react-router-dom';
 
 export default function RedirectToLastPageViewed() {

@@ -1,16 +1,12 @@
 import NavBar from '@linen/ui/NavBar';
 import useMode from '@linen/hooks/mode';
-import InternalLink from '../InternalLink';
-import {
-  mockedComponent,
-  mockedRouterAsPath,
-  mockedFunction,
-} from '../../mock';
-import { useLinenStore, shallow } from '../../store';
-import { api } from '../../fetcher';
-import Loading from '../Loading';
-import customUsePath from '../../hooks/usePath';
-import { getHomeUrl, sendNotification } from '../../di';
+import InternalLink from '@/components/InternalLink';
+import { mockedComponent, mockedRouterAsPath, mockedFunction } from '@/mock';
+import { useLinenStore, shallow } from '@/store';
+import { api } from '@/fetcher';
+import Loading from '@/components/Loading';
+import customUsePath from '@/hooks/usePath';
+import { getHomeUrl, sendNotification } from '@/di';
 
 export default function NavLeftBar() {
   const { mode } = useMode();

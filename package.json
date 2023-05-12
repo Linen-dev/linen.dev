@@ -21,7 +21,9 @@
     "dev": "yarn turbo run dev --filter web",
     "web": "yarn turbo --filter web...",
     "build": "yarn turbo build",
-    "build:deps": "yarn turbo run build --filter web^..."
+    "build:deps": "yarn turbo run build --filter web^...",
+    "td": "yarn turbo dev --filter",
+    "tb": "yarn turbo build --filter"
   },
   "resolutions": {
     "qs": ">=6.9.7",

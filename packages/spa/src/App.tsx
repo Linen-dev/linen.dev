@@ -1,8 +1,8 @@
 import Toast from '@linen/ui/Toast';
 import { SessionProvider } from '@linen/auth/client';
-import { baseAuth } from './config';
+import { baseAuth } from '@/config';
 import { UsersContext } from '@linen/contexts/Users';
-import Router from './Router';
+import Router from '@/Router';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const queryClient = new QueryClient();

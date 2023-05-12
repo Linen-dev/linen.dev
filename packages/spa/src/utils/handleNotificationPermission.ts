@@ -1,4 +1,4 @@
-import { requestNotificationPermission } from '../di';
+import { requestNotificationPermission } from '@/di';
 
 export function handleNotificationPermission() {
   const isNotifyRequested = !!localStorage.getItem(

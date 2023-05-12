@@ -1,12 +1,12 @@
-import Header from '@linen/ui/Header';
-import InternalLink from '../InternalLink';
 import styles from './index.module.scss';
-import { mockedComponent, mockedRouterAsPath } from '../../mock';
-import { signOut } from '../SignOut';
-import { useLinenStore, shallow } from '../../store';
-import Loading from '../Loading';
-import customUsePath from '../../hooks/usePath';
-import { api } from '../../fetcher';
+import Header from '@linen/ui/Header';
+import InternalLink from '@/components/InternalLink';
+import { signOut } from '@/components/SignOut';
+import Loading from '@/components/Loading';
+import { useLinenStore, shallow } from '@/store';
+import { api } from '@/fetcher';
+import { mockedComponent, mockedRouterAsPath } from '@/mock';
+import customUsePath from '@/hooks/usePath';
 
 export default function NavTopBar() {
   const {

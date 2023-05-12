@@ -1,13 +1,11 @@
 import { useParams } from 'react-router-dom';
 import ThreadView from '@linen/ui/ThreadView';
 import { useUsersContext } from '@linen/contexts/Users';
-import { qs } from '@linen/utilities/url';
-import { useLinenStore } from '../store';
-import Loading from '../components/Loading';
-import { api } from '../fetcher';
-import { mockedComponent, mockedContext } from '../mock';
+import { useLinenStore } from '@/store';
+import Loading from '@/components/Loading';
+import { api } from '@/fetcher';
+import { mockedComponent, mockedContext } from '@/mock';
 import { useQuery } from '@tanstack/react-query';
-import { ThreadProps } from '@linen/types';
 
 type ThreadPageProps = {
   communityName: string;
@@ -21,34 +19,35 @@ export default function ThreadPage() {
   const { isLoading, error } = useQuery({
     queryKey: ['threads', { communityName, threadId, slug }],
     queryFn: () =>
-      api
-        .get<ThreadProps>(
-          `/api/ssr/threads?${qs({ communityName, threadId, slug })}`
-        )
-        .then((data) => {
-          setThreadsProps(data, communityName);
-          return data;
-        }),
+      api.getThreadProps({ communityName, threadId, slug }).then((data) => {
+        setThreadsProps(data, communityName);
+        return data;
+      }),
     enabled: !!communityName && !!threadId,
     retry: false,
   });
 
-  if (!communityName && !threadId) return <Loading />;
-  if (isLoading) return <Loading />;
-  if (error) return <>An error has occurred: {JSON.stringify(error)}</>;
+  if ((!communityName && !threadId) || isLoading) {
+    return <Loading />;
+  }
+  if (error) {
+    return <>An error has occurred: {JSON.stringify(error)}</>;
+  }
   return <View />;
 }
 
 function View() {
-  const threadProps = useLinenStore((state) => state.threadProps);
-  const currentCommunity = useLinenStore((state) => state.currentCommunity);
-  const permissions = useLinenStore((state) => state.permissions);
-  const settings = useLinenStore((state) => state.settings);
+  const { threadProps, currentCommunity, permissions, settings } =
+    useLinenStore((state) => ({
+      threadProps: state.threadProps,
+      currentCommunity: state.currentCommunity,
+      permissions: state.permissions,
+      settings: state.settings,
+    }));
 
-  if (!threadProps) return <Loading />;
-  if (!currentCommunity) return <Loading />;
-  if (!permissions) return <Loading />;
-  if (!settings) return <Loading />;
+  if (!threadProps || !currentCommunity || !permissions || !settings) {
+    return <Loading />;
+  }
 
   return (
     <ThreadView
