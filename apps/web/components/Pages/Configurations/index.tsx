@@ -17,7 +17,6 @@ import DefaultChannelRow from './DefaultChannelRow';
 import ChannelVisibilityRow from './ChannelVisibilityRow';
 import UrlsRow from './UrlsRow';
 import CommunityTypeRow from './CommunityTypeRow';
-// import CommunityChatRow from './CommunityChatRow';
 import debounce from '@linen/utilities/debounce';
 import { api } from 'utilities/requests';
 import Toast from '@linen/ui/Toast';
@@ -110,14 +109,6 @@ export default function ConfigurationsPage({
           }}
         />
         <hr className="my-3" />
-        {/* <CommunityChatRow
-          chat={currentCommunity.chat}
-          disabled={!currentCommunity.premium}
-          onChange={(chat: ChatType) => {
-            updateAccount({ communityId: currentCommunity.id, chat });
-          }}
-        />
-        <hr className="my-3" /> */}
         <RemoveCommunity currentCommunity={currentCommunity} />
       </div>
     </PageLayout>
