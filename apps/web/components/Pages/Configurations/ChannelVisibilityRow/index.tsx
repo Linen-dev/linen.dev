@@ -7,7 +7,7 @@ import {
 } from '@linen/types';
 import Toast from '@linen/ui/Toast';
 import Toggle from '@linen/ui/Toggle';
-import H3 from '@linen/ui/H3';
+import Label from '@linen/ui/Label';
 import styles from './index.module.scss';
 import { api } from 'utilities/requests';
 import debounce from '@linen/utilities/debounce';
@@ -57,55 +57,53 @@ export default function ChannelVisibilityRow({
   }
 
   return (
-    <div className="flex">
-      <div className="grow">
-        <H3>Channels visibility</H3>
-        <div>
-          <div className="text-sm text-gray-500">
-            <p>Pick which channels to display or hide.</p>
-          </div>
-        </div>
-        <div className={styles.toggles}>
-          {!allChannels
-            ? 'Loading...'
-            : allChannels.map((channel) => {
-                const enabled = !channel.hidden;
+    <>
+      <Label htmlFor="channels-visibility">
+        Channels visibility
+        <Label.Description>
+          Pick which channels to display or hide.
+        </Label.Description>
+      </Label>
+      <div className={styles.toggles}>
+        {!allChannels
+          ? 'Loading...'
+          : allChannels.map((channel) => {
+              const enabled = !channel.hidden;
 
-                async function onChannelToggle(checked: boolean, id: string) {
-                  await onChannelsVisibilityChange({ id, hidden: !checked });
-                }
+              async function onChannelToggle(checked: boolean, id: string) {
+                await onChannelsVisibilityChange({ id, hidden: !checked });
+              }
 
-                return (
-                  <div className={styles.toggle} key={channel.id}>
-                    <label
-                      className={classNames(
-                        styles.label,
-                        enabled ? styles.enabled : styles.disabled
-                      )}
-                    >
-                      <Toggle
-                        checked={enabled}
-                        onChange={(checked: boolean) =>
-                          onChannelToggle(checked, channel.id)
-                        }
-                      />
-                      {channel.channelName}{' '}
-                      <label className="text-xs text-gray-400 italic">
-                        {channel.stats}
-                      </label>
-                    </label>
-
-                    <input
-                      type="hidden"
-                      name={channel.id}
-                      value={enabled ? 'true' : 'false'}
+              return (
+                <div className={styles.toggle} key={channel.id}>
+                  <label
+                    className={classNames(
+                      styles.label,
+                      enabled ? styles.enabled : styles.disabled
+                    )}
+                  >
+                    <Toggle
+                      checked={enabled}
+                      onChange={(checked: boolean) =>
+                        onChannelToggle(checked, channel.id)
+                      }
                     />
-                  </div>
-                );
-              })}
-        </div>
+                    {channel.channelName}{' '}
+                    <label className="text-xs text-gray-400 italic">
+                      {channel.stats}
+                    </label>
+                  </label>
+
+                  <input
+                    type="hidden"
+                    name={channel.id}
+                    value={enabled ? 'true' : 'false'}
+                  />
+                </div>
+              );
+            })}
       </div>
-    </div>
+    </>
   );
 }
 
