@@ -300,10 +300,7 @@ const Home = ({ accounts }: Props) => {
             {accounts.map((a, index) => {
               return (
                 <CommunityCard
-                  url={getHomeUrl(a)}
-                  description="Community"
-                  logoUrl={a.logoUrl as string}
-                  brandColor={a.brandColor as string}
+                  community={a}
                   key={(a.name as string) + index}
                 ></CommunityCard>
               );
@@ -444,27 +441,23 @@ const Home = ({ accounts }: Props) => {
   );
 };
 
-const CommunityCard = ({
-  url,
-  brandColor,
-  logoUrl,
-}: {
-  url: string;
-  description: string;
-  brandColor: string;
-  logoUrl: string;
-}) => {
+const CommunityCard = ({ community }: { community: SerializedAccount }) => {
   return (
     <a
       className="flex items-center justify-center rounded py-8"
       style={{
-        backgroundColor: brandColor,
+        backgroundColor: community.brandColor,
       }}
-      href={url}
+      href={getHomeUrl(community)}
       target="_blank"
       rel="noreferrer"
     >
-      <Image src={logoUrl} alt="Logo" height="100" width="200"></Image>
+      <Image
+        src={community.logoUrl as string}
+        alt="Logo"
+        height="100"
+        width="200"
+      ></Image>
     </a>
   );
 };
