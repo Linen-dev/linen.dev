@@ -23,10 +23,6 @@ interface Props {
   }): React.ReactNode;
 }
 
-function Description({ children }: { children: React.ReactNode }) {
-  return <div className={styles.description}>{children}</div>;
-}
-
 export default function LogoField({
   currentCommunity,
   onChange,
@@ -57,7 +53,7 @@ export default function LogoField({
     <>
       <Label htmlFor="logo">
         {header}
-        <Description>{description}</Description>
+        <Label.Description>{description}</Label.Description>
       </Label>
       <FileInput onChange={handleLogoChange} />
 
