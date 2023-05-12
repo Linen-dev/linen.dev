@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Toast from '@linen/ui/Toast';
 import Toggle from '@linen/ui/Toggle';
-import H3 from '@linen/ui/H3';
+import Label from '@linen/ui/Label';
 import { SerializedAccount } from '@linen/types';
 import { api } from 'utilities/requests';
 
@@ -28,21 +28,15 @@ export default function AnonymizeCard({ currentCommunity }: Props) {
   }
 
   return (
-    <div className="flex">
-      <div className="grow">
-        <H3>Anonymize your users</H3>
-        <div className="mt-2 sm:flex sm:items-start sm:justify-between">
-          <div className="max-w-xl text-sm text-gray-500 dark:text-gray-300">
-            Replace your community member&apos;s display name and profile images
-            with randomly generated words.
-          </div>
-        </div>
-      </div>
-      <div className="self-center">
-        <div className="mt-5 sm:mt-0 sm:ml-6 sm:flex-shrink-0 sm:flex sm:items-center">
-          <Toggle checked={enabled} onChange={onChange} />
-        </div>
-      </div>
-    </div>
+    <>
+      <Label htmlFor="anonymize">
+        Anonymize your users
+        <Label.Description>
+          Replace your community member&apos;s display name and profile images
+          with randomly generated words.
+        </Label.Description>
+      </Label>
+      <Toggle checked={enabled} onChange={onChange} />
+    </>
   );
 }
