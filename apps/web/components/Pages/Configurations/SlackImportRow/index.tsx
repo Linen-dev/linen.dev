@@ -3,7 +3,7 @@ import { usePresignedUpload } from 'next-s3-upload';
 import { useRef, useState } from 'react';
 import { SerializedAccount } from '@linen/types';
 import Toast from '@linen/ui/Toast';
-import H3 from '@linen/ui/H3';
+import Label from '@linen/ui/Label';
 import { qs } from '@linen/utilities/url';
 import { FiUploadCloud } from '@react-icons/all-files/fi/FiUploadCloud';
 
@@ -62,28 +62,24 @@ export default function SlackImportRow({
   };
 
   return (
-    <div className="flex">
-      <div className="grow">
-        <H3>Import conversations from Slack</H3>
-        <div className="mt-2 sm:flex sm:items-start sm:justify-between">
-          <div className="max-w-xl text-sm text-gray-500 dark:text-gray-300">
-            <p>
-              You can import all your public channel conversations beyond 90
-              days from Slack (even on free tier). See instructions on how to
-              export it{' '}
-              <a
-                rel="noreferrer"
-                href="https://slack.com/help/articles/201658943-Export-your-workspace-data"
-                target="_blank"
-                className="underline"
-              >
-                here
-              </a>
-            </p>
-          </div>
-        </div>
-      </div>
-      <div className="flex flex-col self-center gap-2">
+    <>
+      <Label htmlFor="integration">
+        Import conversations from Slack
+        <Label.Description>
+          You can import all your public channel conversations beyond 90 days
+          from Slack (even on free tier). See instructions on how to export it{' '}
+          <a
+            rel="noreferrer"
+            href="https://slack.com/help/articles/201658943-Export-your-workspace-data"
+            target="_blank"
+            className="underline"
+          >
+            here
+          </a>
+          .
+        </Label.Description>
+      </Label>
+      <div className="pt-3">
         <input
           onChange={handleFileChange}
           ref={ref}
@@ -96,6 +92,6 @@ export default function SlackImportRow({
           {!loading ? 'Upload' : 'Uploading...'}
         </Button>
       </div>
-    </div>
+    </>
   );
 }
