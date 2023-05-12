@@ -30,10 +30,6 @@ const debouncedUpdateAccount = debounce((params: any) =>
   api.updateAccount(params)
 );
 
-function Description({ children }: { children: React.ReactNode }) {
-  return <div className={styles.description}>{children}</div>;
-}
-
 function PremiumCard({
   children,
   isPremium = false,
@@ -168,10 +164,10 @@ export default function Branding({
               <PremiumCard isPremium={currentCommunity.premium}>
                 <Label htmlFor="description">
                   Description
-                  <Description>
+                  <Label.Description>
                     Few sentences that describe your community. Maximum of 160
                     characters is preferred.
-                  </Description>
+                  </Label.Description>
                 </Label>
                 <TextField
                   placeholder=""
@@ -190,10 +186,10 @@ export default function Branding({
               <PremiumCard isPremium={currentCommunity.premium}>
                 <Label htmlFor="redirectDomain">
                   Custom Domain
-                  <Description>
+                  <Label.Description>
                     Choose the custom url that Linen will live under. i.e
                     linen.yourwebsite.com
-                  </Description>
+                  </Label.Description>
                 </Label>
                 <TextField
                   placeholder="linen.yourwebsite.com or chat.yourwebsite.com"
@@ -214,11 +210,11 @@ export default function Branding({
                   <PremiumCard isPremium={currentCommunity.premium}>
                     <Label htmlFor="dnsRecords">
                       DNS
-                      <Description>
+                      <Label.Description>
                         Subdomain routing setup can be achieved by verifying the
                         ownership of a domain. Copy the TXT and/or CNAME records
                         from below and paste them into your DNS settings.
-                      </Description>
+                      </Label.Description>
                     </Label>
                     <Table>
                       <Thead>
@@ -245,10 +241,10 @@ export default function Branding({
               <PremiumCard isPremium={currentCommunity.premium}>
                 <Label htmlFor="brandColor">
                   Brand Color
-                  <Description>
+                  <Label.Description>
                     Color that matches your brand. We&apos;ll use it for the
                     header background.
-                  </Description>
+                  </Label.Description>
                 </Label>
                 <ColorField
                   id="brandColor"
@@ -391,9 +387,9 @@ export default function Branding({
               >
                 <Label htmlFor="googleAnalyticsId">
                   Google Analytics ID
-                  <Description>
+                  <Label.Description>
                     Enter a valid Analytics Property ID.
-                  </Description>
+                  </Label.Description>
                 </Label>
                 <TextField
                   placeholder="G-XXXXXXX or UA-XXXXXX-X"

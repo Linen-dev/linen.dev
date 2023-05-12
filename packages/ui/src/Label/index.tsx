@@ -8,10 +8,18 @@ interface Props {
   children: React.ReactNode;
 }
 
-export default function Label({ className, htmlFor, children }: Props) {
+function Label({ className, htmlFor, children }: Props) {
   return (
     <label className={classNames(styles.label, className)} htmlFor={htmlFor}>
       {children}
     </label>
   );
 }
+
+function Description({ children }: { children: React.ReactNode }) {
+  return <div className={styles.description}>{children}</div>;
+}
+
+Label.Description = Description;
+
+export default Label;
