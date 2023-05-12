@@ -1,8 +1,9 @@
-import { SerializedAccount } from '@linen/types';
+import React from 'react';
 import Toast from '@linen/ui/Toast';
 import TextField from '@linen/ui/TextField';
-import H3 from '@linen/ui/H3';
+import Label from '@linen/ui/Label';
 import { api } from 'utilities/requests';
+import { SerializedAccount } from '@linen/types';
 
 function URLsCard({
   title,
@@ -15,19 +16,11 @@ function URLsCard({
 }) {
   return (
     <>
-      <div className="flex gap-4">
-        <div className="flex-1">
-          <H3>{title}</H3>
-          <div className="mt-2 sm:flex sm:items-start sm:justify-between">
-            <div className="max-w-xl text-sm text-gray-500 dark:text-gray-300">
-              <p>{subtitle}</p>
-            </div>
-          </div>
-        </div>
-        <div className="flex-1 m-auto">
-          <TextField {...textFieldOptions} />
-        </div>
-      </div>
+      <Label htmlFor={textFieldOptions.id}>
+        {title}
+        <Label.Description>{subtitle}</Label.Description>
+      </Label>
+      <TextField {...textFieldOptions} />
     </>
   );
 }
