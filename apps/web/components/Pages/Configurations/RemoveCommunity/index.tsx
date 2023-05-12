@@ -3,6 +3,7 @@ import { SerializedAccount } from '@linen/types';
 import Modal from '@linen/ui/Modal';
 import { useState } from 'react';
 import H3 from '@linen/ui/H3';
+import Label from '@linen/ui/Label';
 import { FiX } from '@react-icons/all-files/fi/FiX';
 import TextInput from '@linen/ui/TextInput';
 import { api } from 'utilities/requests';
@@ -33,27 +34,15 @@ export default function RemoveCommunity({
   }
 
   return (
-    <div className="flex gap-4">
-      {DeleteModal(
-        open,
-        setOpen,
-        communityName,
-        setCommunityName,
-        currentCommunity,
-        onRemoveConfirm
-      )}
-      <div className="grow">
-        <H3>Delete this community</H3>
-        <div className="mt-2 sm:flex sm:items-start sm:justify-between">
-          <div className="max-w-xl text-sm text-gray-500 dark:text-gray-300">
-            <p>
-              Once you delete a community, there is no going back. Please be
-              certain.
-            </p>
-          </div>
-        </div>
-      </div>
-      <div className="m-auto">
+    <>
+      <Label htmlFor="delete-community">
+        Delete this community
+        <Label.Description>
+          Once you delete a community, there is no going back. Please be
+          careful.
+        </Label.Description>
+      </Label>
+      <>
         <Button
           onClick={() => {
             setOpen(true);
@@ -62,8 +51,16 @@ export default function RemoveCommunity({
         >
           Delete this community
         </Button>
-      </div>
-    </div>
+      </>
+      {DeleteModal(
+        open,
+        setOpen,
+        communityName,
+        setCommunityName,
+        currentCommunity,
+        onRemoveConfirm
+      )}
+    </>
   );
 }
 

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ChatType } from '@linen/types';
-import Row from '../Row';
 import NativeSelect from '@linen/ui/NativeSelect';
+import Label from '@linen/ui/Label';
 import { RiChatCheckLine } from '@react-icons/all-files/ri/RiChatCheckLine';
 import { RiChatDeleteLine } from '@react-icons/all-files/ri/RiChatDeleteLine';
 
@@ -39,30 +39,28 @@ export default function CommunityChatRow({
 }: Props) {
   const [chat, setChat] = useState(initialChat || ChatType.NONE);
   return (
-    <Row
-      header="Community chat"
-      description={description(chat)}
-      action={
-        <>
-          <NativeSelect
-            id="chat"
-            icon={icon(chat)}
-            theme="blue"
-            options={[
-              { label: 'Managers', value: ChatType.MANAGERS },
-              { label: 'Members', value: ChatType.MEMBERS },
-              { label: 'Disabled', value: ChatType.NONE },
-            ]}
-            defaultValue={chat}
-            onChange={(event: React.SyntheticEvent) => {
-              const node = event.target as HTMLSelectElement;
-              const chat = node.value as ChatType;
-              setChat(chat);
-              onChange(chat);
-            }}
-          />
-        </>
-      }
-    />
+    <>
+      <Label htmlFor="community-chat-row">
+        Community chat
+        <Label.Description>{description(chat)}</Label.Description>
+      </Label>
+      <NativeSelect
+        id="chat"
+        icon={icon(chat)}
+        theme="blue"
+        options={[
+          { label: 'Managers', value: ChatType.MANAGERS },
+          { label: 'Members', value: ChatType.MEMBERS },
+          { label: 'Disabled', value: ChatType.NONE },
+        ]}
+        defaultValue={chat}
+        onChange={(event: React.SyntheticEvent) => {
+          const node = event.target as HTMLSelectElement;
+          const chat = node.value as ChatType;
+          setChat(chat);
+          onChange(chat);
+        }}
+      />
+    </>
   );
 }
