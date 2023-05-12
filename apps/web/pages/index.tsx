@@ -16,7 +16,7 @@ import FadeIn from '@linen/ui/FadeIn';
 import Head from 'next/head';
 import Footer from 'components/Footer';
 import type { GetServerSidePropsContext } from 'next';
-import { getCommunitiesWithDescription } from 'services/accounts';
+import { communitiesWithLogo } from 'services/accounts';
 import CommunityCard from '@linen/ui/CommunityCard';
 import { serializeAccount } from '@linen/serializers/account';
 import { SerializedAccount } from '@linen/types';
@@ -450,34 +450,12 @@ type Props = {
 };
 
 export async function getServerSideProps({ res }: GetServerSidePropsContext) {
-  const accounts = await getCommunitiesWithDescription();
+  const accounts = await communitiesWithLogo();
 
   return {
     props: {
       accounts: accounts
         .map(serializeAccount)
-        .filter((community) => {
-          // naive way to filter out test communities created by users
-          if (community.name?.toLowerCase()?.includes('test')) {
-            return false;
-          }
-
-          if (!community.description) {
-            return false;
-          }
-
-          return true;
-        })
-        .sort((community) => {
-          if (
-            community.description ||
-            community.logoSquareUrl ||
-            community.brandColor !== '#000000'
-          ) {
-            return -1;
-          }
-          return 1;
-        })
         .sort((community) => {
           return community.premium ? -1 : 1;
         })

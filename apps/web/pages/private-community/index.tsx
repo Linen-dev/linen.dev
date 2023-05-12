@@ -17,6 +17,9 @@ import Head from 'next/head';
 import Footer from 'components/Footer';
 import type { GetServerSidePropsContext } from 'next';
 import { communitiesWithLogo } from 'services/accounts';
+import { serializeAccount } from '@linen/serializers/account';
+import { getHomeUrl } from '@linen/utilities/home';
+import { SerializedAccount } from '@linen/types';
 
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(' ');
@@ -297,12 +300,11 @@ const Home = ({ accounts }: Props) => {
             {accounts.map((a, index) => {
               return (
                 <CommunityCard
-                  url={a.url}
-                  communityName={a.name}
+                  url={getHomeUrl(a)}
                   description="Community"
-                  logoUrl={a.logoUrl}
-                  brandColor={a.brandColor}
-                  key={a.name + index}
+                  logoUrl={a.logoUrl as string}
+                  brandColor={a.brandColor as string}
+                  key={(a.name as string) + index}
                 ></CommunityCard>
               );
             })}
@@ -442,25 +444,12 @@ const Home = ({ accounts }: Props) => {
   );
 };
 
-interface H2Props {
-  children: React.ReactNode;
-}
-
-function LandingH2({ children }: H2Props) {
-  return (
-    <h2 className="text-1xl tracking-tight font-extrabold text-gray-800 sm:text-2xl pt-2">
-      {children}
-    </h2>
-  );
-}
-
 const CommunityCard = ({
   url,
   brandColor,
   logoUrl,
 }: {
   url: string;
-  communityName: string;
   description: string;
   brandColor: string;
   logoUrl: string;
@@ -481,42 +470,16 @@ const CommunityCard = ({
 };
 
 type Props = {
-  accounts: {
-    url: string;
-    name: string;
-    logoUrl: string;
-    brandColor: string;
-  }[];
+  accounts: SerializedAccount[];
 };
 
 export async function getServerSideProps({ res }: GetServerSidePropsContext) {
   const accounts = await communitiesWithLogo();
 
-  const goodLookingLogos = accounts.filter(
-    (a) =>
-      !!a.name && !!a.brandColor && !!a.logoUrl && a.logoUrl.includes('.svg')
-  );
-
   // since we use 3 columns we want it to only show numbers divisible by 3
-  const remainders = goodLookingLogos
-    .slice(0, goodLookingLogos.length - (goodLookingLogos.length % 3))
-    .map((a) => {
-      return {
-        name: a.name,
-        logoUrl: a.logoUrl,
-        brandColor: a.brandColor,
-        url:
-          a.premium && a.redirectDomain
-            ? 'https://' + a.redirectDomain
-            : a.discordDomain
-            ? 'https://linen.dev/d/' + a.discordDomain
-            : 'https://linen.dev/s/' + a.slackDomain,
-        // TODO:remove this once supabase sets up domain to discord.supabase.com
-        ...(a.discordServerId === '839993398554656828' && {
-          url: 'https://839993398554656828.linen.dev',
-        }),
-      };
-    });
+  const remainders = accounts
+    .slice(0, accounts.length - (accounts.length % 3))
+    .map(serializeAccount);
 
   res.setHeader(
     'Cache-Control',
