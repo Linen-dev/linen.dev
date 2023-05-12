@@ -431,23 +431,14 @@ export const findAccountBySlackTeamId = async (slackTeamId: string) => {
 export async function communitiesWithLogo() {
   return await prisma.accounts.findMany({
     where: {
+      logoUrl: { contains: '.svg' },
       NOT: [
         {
-          logoUrl: null,
+          name: null,
+          brandColor: null,
         },
       ],
       syncStatus: 'DONE',
-    },
-    select: {
-      logoUrl: true,
-      name: true,
-      description: true,
-      premium: true,
-      brandColor: true,
-      redirectDomain: true,
-      slackDomain: true,
-      discordServerId: true,
-      discordDomain: true,
     },
   });
 }
