@@ -18,6 +18,7 @@ interface Props {
   value?: string;
   disabled?: boolean;
   icon?: React.ReactNode;
+  style?: object;
   onChange?(event: React.ChangeEvent<HTMLSelectElement>): void;
   onKeyDown?(event: React.KeyboardEvent<HTMLSelectElement>): void;
   options: Option[];
@@ -38,6 +39,7 @@ function NativeSelect({
   onKeyDown,
   options,
   theme,
+  style,
 }: Props) {
   return (
     <>
@@ -53,6 +55,7 @@ function NativeSelect({
         <select
           className={styles.select}
           id={id}
+          style={style}
           name={id || name}
           required={required}
           defaultValue={defaultValue}

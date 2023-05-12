@@ -4,7 +4,7 @@ import { SerializedAccount, SerializedChannel } from '@linen/types';
 import DiscordIcon from '@linen/ui/DiscordIcon';
 import SlackIcon from '@linen/ui/SlackIcon';
 import NativeSelect from '@linen/ui/NativeSelect';
-import H3 from '@linen/ui/H3';
+import Label from '@linen/ui/Label';
 import { api } from 'utilities/requests';
 
 interface Props {
@@ -46,31 +46,26 @@ export default function DefaultChannelRow({
   }
 
   return (
-    <div className="flex">
-      <div className="grow">
-        <H3>Default channel</H3>
-        <div className="mt-2 sm:flex sm:items-start sm:justify-between">
-          <div className="max-w-xl text-sm text-gray-500 dark:text-gray-300">
-            <p>
-              Select the first channel that gets displayed when a user lands on
-              your Linen page.
-            </p>
-          </div>
-        </div>
-      </div>
-      <div className="self-center">
-        <NativeSelect
-          id="default-channel-integration-select"
-          icon={<CommunityIcon color="#fff" />}
-          theme="blue"
-          defaultValue={selected?.id}
-          onChange={onChange}
-          options={channels?.map((channel) => ({
-            label: channel.channelName,
-            value: channel.id,
-          }))}
-        />
-      </div>
-    </div>
+    <>
+      <Label htmlFor="defaultChannel">
+        Default channel
+        <Label.Description>
+          Select the first channel that gets displayed when a user lands on your
+          Linen page.
+        </Label.Description>
+      </Label>
+      <NativeSelect
+        style={{ width: 'auto' }}
+        id="default-channel-integration-select"
+        icon={<CommunityIcon color="#fff" />}
+        theme="blue"
+        defaultValue={selected?.id}
+        onChange={onChange}
+        options={channels?.map((channel) => ({
+          label: channel.channelName,
+          value: channel.id,
+        }))}
+      />
+    </>
   );
 }
