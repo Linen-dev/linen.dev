@@ -5,6 +5,8 @@ import { useLinenStore } from '@/store';
 import Loading from '@/components/Loading';
 import { api } from '@/fetcher';
 import { mockedComponent, mockedFunction } from '@/mock';
+import { useEffect } from 'react';
+import { localStorage } from '@linen/utilities/storage';
 
 type InboxPageProps = {
   communityName: string;
@@ -24,6 +26,10 @@ export default function InboxPage() {
     retry: false,
     refetchOnWindowFocus: false,
   });
+
+  useEffect(() => {
+    localStorage.set('pages_last', `/s/${communityName}/inbox`);
+  }, [communityName]);
 
   if (!communityName || isLoading) {
     return <Loading />;

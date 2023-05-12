@@ -7,6 +7,8 @@ import { api } from '@/fetcher';
 import { mockedComponent, mockedContext } from '@/mock';
 import { useQuery } from '@tanstack/react-query';
 import { playNotificationSound } from '@/utils/playNotificationSound';
+import { useEffect } from 'react';
+import { localStorage } from '@linen/utilities/storage';
 
 type ChannelPageProps = {
   communityName: string;
@@ -29,6 +31,15 @@ export default function ChannelPage() {
     retry: false,
     refetchOnWindowFocus: false,
   });
+
+  useEffect(() => {
+    localStorage.set(
+      'pages_last',
+      `/s/${communityName}${
+        channelName ? `/c/${channelName}${page ? `/${page}` : ''}` : ''
+      }`
+    );
+  }, [communityName, channelName, page]);
 
   if (!communityName || isLoading) {
     return <Loading />;

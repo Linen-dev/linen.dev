@@ -6,6 +6,8 @@ import Loading from '@/components/Loading';
 import { api } from '@/fetcher';
 import { mockedComponent, mockedContext } from '@/mock';
 import { useQuery } from '@tanstack/react-query';
+import { localStorage } from '@linen/utilities/storage';
+import { useEffect } from 'react';
 
 type ThreadPageProps = {
   communityName: string;
@@ -26,6 +28,10 @@ export default function ThreadPage() {
     enabled: !!communityName && !!threadId,
     retry: false,
   });
+
+  useEffect(() => {
+    localStorage.set('pages_last', `/s/${communityName}/t/${threadId}/${slug}`);
+  }, [communityName, threadId, slug]);
 
   if ((!communityName && !threadId) || isLoading) {
     return <Loading />;

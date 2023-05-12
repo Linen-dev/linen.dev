@@ -12,6 +12,7 @@
     "analyze": "source-map-explorer 'build/static/js/*.js'"
   },
   "dependencies": {
+    "@craco/craco": "^7.1.0",
     "@linen/api-client": "*",
     "@linen/auth": "*",
     "@linen/contexts": "*",
@@ -29,7 +30,6 @@
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.1",
     "classnames": "^2.3.2",
-    "craco": "^0.0.3",
     "dotenv": "^16.0.3",
     "envalid": "^7.3.1",
     "postcss-normalize": "^10.0.1",

@@ -1,15 +1,7 @@
-import { useLinenStore } from '@/store';
 import { Navigate } from 'react-router-dom';
+import { localStorage } from '@linen/utilities/storage';
 
 export default function RedirectToLastPageViewed() {
-  const communityName = useLinenStore((state) => state.communityName);
-  const channelName = useLinenStore((state) => state.channelName);
-
-  return (
-    <Navigate
-      to={`/s/${communityName || 'linen'}${
-        !!channelName ? '/c/' + channelName : ''
-      }`}
-    />
-  );
+  const url = localStorage.get('pages_last');
+  return <Navigate to={url || '/s/linen'} />;
 }
