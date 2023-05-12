@@ -3,33 +3,29 @@ import CommunityIcon from '@/CommunityIcon';
 import styles from './index.module.scss';
 import type { SerializedAccount } from '@linen/types';
 import { truncate } from '@linen/utilities/string';
-import { appendProtocol } from '@linen/utilities/url';
-
-const getLinenUrl = () => {
-  if (process.env.NODE_ENV === 'production') {
-    return 'https://linen.dev';
-  } else {
-    return `http://localhost:${process.env.PORT ?? 3000}`;
-  }
-};
-
-function getHomeUrl(account?: SerializedAccount): string {
-  if (!account) {
-    return '/';
-  }
-  if (account.premium && account.redirectDomain) {
-    return `${appendProtocol(account.redirectDomain)}`;
-  } else if (account.slackDomain) {
-    return `${getLinenUrl()}/s/${account.slackDomain}`;
-  } else if (account.discordDomain) {
-    return `${getLinenUrl()}/d/${account.discordDomain}`;
-  } else if (account.discordServerId) {
-    return `${getLinenUrl()}/d/${account.discordServerId}`;
-  }
-  return '/';
-}
+import { getHomeUrl } from '@linen/utilities/home';
 
 function CommunityCard({ community }: { community: SerializedAccount }) {
+  if (community.logoUrl) {
+    return (
+      <a
+        className={styles.logo}
+        style={{
+          backgroundColor: community.brandColor,
+        }}
+        href={getHomeUrl(community)}
+        target="_blank"
+        rel="noreferrer"
+      >
+        <img
+          src={community.logoUrl as string}
+          alt="Logo"
+          height="50"
+          width="200"
+        />
+      </a>
+    );
+  }
   return (
     <a href={getHomeUrl(community)} className={styles.card} target="_blank">
       <CommunityIcon community={community} />

@@ -1,10 +1,10 @@
 import linenExamplePage from 'public/linen-example-page-may-3-2023.png';
 import settingsExamplePage from 'public/settings-page-may-4.png';
 import Image from 'next/image';
+import CommunityCard from '@linen/ui/CommunityCard';
 import LinenLogo from '@linen/ui/LinenLogo';
 import YCombinatorLogo from '@linen/ui/YCombinatorLogo';
 import { GoCheck } from '@react-icons/all-files/go/GoCheck';
-import { AiFillGithub } from '@react-icons/all-files/ai/AiFillGithub';
 import { GiFeather } from '@react-icons/all-files/gi/GiFeather';
 import { CgInfinity } from '@react-icons/all-files/cg/CgInfinity';
 import { RiPlantLine } from '@react-icons/all-files/ri/RiPlantLine';
@@ -18,7 +18,6 @@ import Footer from 'components/Footer';
 import type { GetServerSidePropsContext } from 'next';
 import { communitiesWithLogo } from 'services/accounts';
 import { serializeAccount } from '@linen/serializers/account';
-import { getHomeUrl } from '@linen/utilities/home';
 import { SerializedAccount } from '@linen/types';
 
 function classNames(...classes: any) {
@@ -438,27 +437,6 @@ const Home = ({ accounts }: Props) => {
       </main>
       <Footer />
     </div>
-  );
-};
-
-const CommunityCard = ({ community }: { community: SerializedAccount }) => {
-  return (
-    <a
-      className="flex items-center justify-center rounded py-8"
-      style={{
-        backgroundColor: community.brandColor,
-      }}
-      href={getHomeUrl(community)}
-      target="_blank"
-      rel="noreferrer"
-    >
-      <Image
-        src={community.logoUrl as string}
-        alt="Logo"
-        height="100"
-        width="200"
-      ></Image>
-    </a>
   );
 };
 
