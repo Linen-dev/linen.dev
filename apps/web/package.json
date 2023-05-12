@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "start:prod": "pm2-runtime --raw \"npm run start\"",
+    "start:prod": "pm2-runtime --raw \"yarn start\"",
     "lint": "next lint",
     "test": "jest --silent",
     "test:watch": "jest --watch",

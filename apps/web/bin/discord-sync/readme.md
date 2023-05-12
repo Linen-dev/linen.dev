@@ -11,7 +11,7 @@ this process should be executed every 6 hours or less
 be sure that your .env file is set up as the .env.example
 
 ```bash
-npm install
+yarn install
 npx ts-node --skip-project bin/discord-sync/index.ts
 ```
 
@@ -20,6 +20,6 @@ there also an option to force a full synchronization (used in edge cases when we
 you need to set a flag at the end of the command, full-sync
 
 ```bash
-npm install
+yarn install
 npx ts-node --skip-project bin/discord-sync/index.ts --full-sync
 ```

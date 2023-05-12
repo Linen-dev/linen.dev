@@ -11,7 +11,7 @@
   "scripts": {
     "prebuild": "node ../scripts/rebuild-package.mjs ui && rm -rf dist",
     "build": "rollup --config rollup.config.js --failAfterWarnings",
-    "dev": "npm run watch",
+    "dev": "yarn watch",
     "watch": "rollup --config rollup.config.js --watch",
     "test": "dotenv -e ../../apps/web/.env.test -- jest",
     "test:watch": "jest --watch",
