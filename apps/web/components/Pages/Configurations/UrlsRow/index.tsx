@@ -82,17 +82,6 @@ export default function URLs({ currentCommunity }: Props) {
           onBlur: (e: any) => onSubmit(e.target),
         }}
       />
-      <hr className="my-3" />
-      <URLsCard
-        title="Community Invitation URL"
-        subtitle="Link to your community invite."
-        textFieldOptions={{
-          placeholder: 'https://yourwebsite.com/community-invite',
-          id: 'communityInviteUrl',
-          defaultValue: currentCommunity.communityInviteUrl || '',
-          onBlur: (e: any) => onSubmit(e.target),
-        }}
-      />
     </>
   );
 }
