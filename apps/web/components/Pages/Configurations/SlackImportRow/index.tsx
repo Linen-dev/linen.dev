@@ -5,6 +5,7 @@ import { SerializedAccount } from '@linen/types';
 import Toast from '@linen/ui/Toast';
 import H3 from '@linen/ui/H3';
 import { qs } from '@linen/utilities/url';
+import { FiUploadCloud } from '@react-icons/all-files/fi/FiUploadCloud';
 
 const fail = () => Toast.error('Something went wrong');
 
@@ -91,7 +92,8 @@ export default function SlackImportRow({
           accept=".zip"
         />
         <Button onClick={openFileDialog} disabled={loading}>
-          {!loading ? 'Upload file' : 'Uploading...'}
+          <FiUploadCloud />
+          {!loading ? 'Upload' : 'Uploading...'}
         </Button>
       </div>
     </div>
