@@ -66,6 +66,7 @@
     "./Actions": "./dist/Actions/index.js",
     "./AddThreadModal": "./dist/AddThreadModal/index.js",
     "./Alert": "./dist/Alert/index.js",
+    "./AllView": "./dist/AllView/index.js",
     "./Autocomplete": "./dist/Autocomplete/index.js",
     "./Avatar": "./dist/Avatar/index.js",
     "./Avatars": "./dist/Avatars/index.js",
@@ -167,6 +168,9 @@
       ],
       "Alert": [
         "./dist/Alert/index.d.ts"
+      ],
+      "AllView": [
+        "./dist/AllView/index.d.ts"
       ],
       "Autocomplete": [
         "./dist/Autocomplete/index.d.ts"

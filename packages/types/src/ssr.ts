@@ -76,3 +76,8 @@ export interface StarredResponse {
   threads: SerializedThread[];
   total: number;
 }
+
+export interface AllResponse {
+  threads: SerializedThread[];
+  total: number;
+}

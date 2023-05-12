@@ -1,74 +1,52 @@
-import { useEffect, useState, useRef } from 'react';
-import Layouts from '@linen/ui/Layouts';
-import Pages from '@linen/ui/Pages';
-import Toast from '@linen/ui/Toast';
-import Thread from '@linen/ui/Thread';
+import React, { useEffect, useState, useRef } from 'react';
+import Layouts from '@/Layouts';
+import Pages from '@/Pages';
+import Toast from '@/Toast';
+import Thread from '@/Thread';
 import Empty from './Empty';
 import { sendMessageWrapper } from './utilities/sendMessageWrapper';
 import useKeyboard from '@linen/hooks/keyboard';
 import { useUsersContext } from '@linen/contexts/Users';
 import {
   ReminderTypes,
-  SerializedChannel,
   SerializedMessage,
   SerializedThread,
   Settings,
   ThreadState,
   Permissions,
   SerializedAccount,
+  AllResponse,
 } from '@linen/types';
 import { addMessageToThread } from './state';
-import { addReactionToThread } from 'utilities/state/reaction';
-import { api } from 'utilities/requests';
-import JoinChannelLink from 'components/Link/JoinChannelLink';
+import debounce from '@linen/utilities/debounce';
+import type { ApiClient } from '@linen/api-client';
 
 const { Header, Grid } = Pages.All;
 const { SidebarLayout } = Layouts.Shared;
 
-interface DataResponse {
-  threads: SerializedThread[];
-  total: number;
-}
-
 interface Props {
-  fetchData({
-    communityName,
-    page,
-    limit,
-  }: {
-    communityName: string;
-    page: number;
-    limit: number;
-  }): Promise<DataResponse>;
-  fetchThread(threadId: string): Promise<SerializedThread>;
-  putThread(
-    threadId: string,
-    options: {
-      state?: ThreadState | undefined;
-      title?: string | undefined;
-    }
-  ): Promise<SerializedThread>;
-  dms: SerializedChannel[];
   currentCommunity: SerializedAccount;
   isSubDomainRouting: boolean;
   permissions: Permissions;
   settings: Settings;
+  api: ApiClient;
+  JoinChannelLink({ className, href, communityType }: any): JSX.Element;
+  addReactionToThread: any;
 }
 
 const LIMIT = 10;
 
-export default function Content({
-  fetchData,
-  fetchThread,
-  putThread,
+export default function AllView({
   currentCommunity,
   isSubDomainRouting,
   permissions,
   settings,
-  dms,
+  api,
+  addReactionToThread,
+  JoinChannelLink,
 }: Props) {
   const [loading, setLoading] = useState(true);
-  const [data, setData] = useState<DataResponse>({ threads: [], total: 0 });
+  const [data, setData] = useState<AllResponse>({ threads: [], total: 0 });
   const [page, setPage] = useState<number>(1);
   const [key, setKey] = useState(0);
   const [thread, setThread] = useState<SerializedThread>();
@@ -78,6 +56,8 @@ export default function Content({
   const token = permissions.token || null;
   const currentUser = permissions.user || null;
   const { communityId, communityName } = settings;
+
+  const fetchData = debounce(api.fetchAll);
 
   async function sendReaction({
     threadId,
@@ -176,27 +156,13 @@ export default function Content({
       return thread;
     });
 
-    return fetch('/api/starred', {
-      method: 'DELETE',
-      body: JSON.stringify({
+    return api
+      .removeStar({
         communityId: currentCommunity.id,
         threadId,
-      }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          throw new Error('Failed to star the thread.');
-        }
       })
       .catch((exception) => {
-        Toast.error(
-          exception?.message || 'Something went wrong. Please try again.'
-        );
+        Toast.error('Failed to star the thread.');
       });
   }
 
@@ -218,7 +184,7 @@ export default function Content({
       page,
       limit: LIMIT,
     })
-      .then((data: DataResponse) => {
+      .then((data) => {
         if (mounted) {
           setLoading(false);
           setData(data);
@@ -278,7 +244,8 @@ export default function Content({
       };
     });
 
-    return putThread(thread.id, options)
+    return api
+      .updateThread({ id: thread.id, accountId: communityId, ...options })
       .then((_) => {
         if (options.state) {
           setKey((key) => key + 1);
@@ -321,20 +288,15 @@ export default function Content({
       }
       return thread;
     });
-    return fetch('/api/user-thread-status', {
-      method: 'POST',
-      body: JSON.stringify({
+    return api
+      .upsertUserThreadStatus({
         communityId: currentCommunity.id,
         threadIds: [threadId],
         muted,
         reminder,
         read,
         reminderType,
-      }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
+      })
       .then(() => {
         return fetchData({
           communityName,
@@ -442,6 +404,7 @@ export default function Content({
     setThread,
     setData,
     communityId,
+    api,
   });
 
   useKeyboard(

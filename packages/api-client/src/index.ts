@@ -34,6 +34,7 @@ import type {
   ChannelProps,
   InboxProps,
   ThreadProps,
+  AllResponse,
 } from '@linen/types';
 export { AxiosRequestConfig };
 
@@ -381,6 +382,16 @@ export default class ApiClient {
       limit,
       channelIds,
     });
+
+  fetchAll = ({
+    communityName,
+    page,
+    limit,
+  }: {
+    communityName: string;
+    page: number;
+    limit: number;
+  }) => this.get<AllResponse>(`/api/all?${qs({ communityName, page, limit })}`);
 
   getChannelProps = ({
     communityName,
