@@ -26,7 +26,7 @@ describe('CommunityTypeCard', () => {
       />
     );
     expect(container).toHaveTextContent(
-      'Your community is currently private. It can be viewed by admins.'
+      'Your community is currently private. It can be viewed by members.'
     );
   });
 
@@ -46,7 +46,7 @@ describe('CommunityTypeCard', () => {
     userEvent.selectOptions(select, [AccountType.PRIVATE]);
     await waitFor(() =>
       expect(container).toHaveTextContent(
-        'Your community is currently private. It can be viewed by admins.'
+        'Your community is currently private. It can be viewed by members.'
       )
     );
     expect(onChange).toHaveBeenCalledWith(AccountType.PRIVATE);
