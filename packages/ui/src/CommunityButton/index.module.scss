@@ -6,7 +6,14 @@
   border-width: 1px;
   padding: 0.5rem /* 8px */;
   justify-content: space-around;
-  border-color: $color-border;
+  border-color: $color-gray-300;
+  transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+}
+
+.btn:hover {
+  background: $color-blue-800;
+  color: white;
+  border-color: $color-blue-800;
 }
 
 .btnContent {

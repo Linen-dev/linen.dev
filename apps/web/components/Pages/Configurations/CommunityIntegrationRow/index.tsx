@@ -1,5 +1,5 @@
 import CommunityButton from '@linen/ui/CommunityButton';
-import H3 from '@linen/ui/H3';
+import Label from '@linen/ui/Label';
 import { capitalize } from '@linen/utilities/string';
 import { qs } from '@linen/utilities/url';
 import { SerializedAccount } from '@linen/types';
@@ -69,56 +69,48 @@ export default function CommunityIntegration({
 
   return (
     <>
-      <div className="flex">
-        <div className="grow">
-          <H3>
-            {capitalize(communityType)} integration
-            {syncStatus && (
-              <>
-                <span className="text-gray-300"> | </span>
-                {syncStatus}
-              </>
-            )}
-          </H3>
-          <div className="mt-2 sm:flex sm:items-start sm:justify-between">
-            <div className="max-w-xl text-sm text-gray-500 dark:text-gray-300">
-              <p>
-                Connect to {capitalize(communityType)} to fetch conversations.
-              </p>
-            </div>
-          </div>
-        </div>
-        <div className="flex flex-col items-center gap-2">
-          {newOnboarding ? (
-            <div className="grid grid-cols-1 gap-4">
-              <CommunityButton
-                communityType={'slack'}
-                label="Connect to"
-                onClick={onClick}
-                iconSize="20"
-              />
-              <CommunityButton
-                communityType={'discord'}
-                label="Connect to"
-                onClick={onClick}
-                iconSize="20"
-              />
-            </div>
-          ) : (
+      <Label htmlFor="integration">
+        {capitalize(communityType)} integration
+        {syncStatus && (
+          <>
+            <span className="text-gray-300"> | </span>
+            {syncStatus}
+          </>
+        )}
+        <Label.Description>
+          Connect to {capitalize(communityType)} to fetch conversations.
+        </Label.Description>
+      </Label>
+      <div className="pt-3">
+        {newOnboarding ? (
+          <div className="flex gap-2">
             <CommunityButton
-              communityType={communityType}
-              label="Reconnect to"
-              onClick={(community) =>
-                integrationAuthorizer(community, currentCommunity.id).then(
-                  ({ url }) => {
-                    window.location.href = url;
-                  }
-                )
-              }
+              communityType={'slack'}
+              label="Connect to"
+              onClick={onClick}
               iconSize="20"
             />
-          )}
-        </div>
+            <CommunityButton
+              communityType={'discord'}
+              label="Connect to"
+              onClick={onClick}
+              iconSize="20"
+            />
+          </div>
+        ) : (
+          <CommunityButton
+            communityType={communityType}
+            label="Reconnect to"
+            onClick={(community) =>
+              integrationAuthorizer(community, currentCommunity.id).then(
+                ({ url }) => {
+                  window.location.href = url;
+                }
+              )
+            }
+            iconSize="20"
+          />
+        )}
       </div>
     </>
   );
