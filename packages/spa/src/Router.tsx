@@ -8,6 +8,7 @@ import RedirectToLastPageViewed from '@/components/RedirectToLastPageViewed';
 import Loading from '@/components/Loading';
 const InboxPage = lazy(() => import('@/pages/Inbox'));
 const StarredPage = lazy(() => import('@/pages/Starred'));
+const AllPage = lazy(() => import('@/pages/All'));
 const ChannelPage = lazy(() => import('@/pages/Channel'));
 const ThreadPage = lazy(() => import('@/pages/Thread'));
 
@@ -86,6 +87,14 @@ export default function Router() {
                           element: (
                             <Suspense fallback={<Loading />}>
                               <StarredPage />
+                            </Suspense>
+                          ),
+                        },
+                        {
+                          path: 'all',
+                          element: (
+                            <Suspense fallback={<Loading />}>
+                              <AllPage />
                             </Suspense>
                           ),
                         },
