@@ -2,7 +2,7 @@
   "build": {
     "beforeDevCommand": "BROWSER=none yarn dev",
     "beforeBuildCommand": "yarn build",
-    "devPath": "http://localhost:3000",
+    "devPath": "http://localhost:3001",
     "distDir": "../build",
     "withGlobalTauri": false
   },
