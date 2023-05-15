@@ -2,9 +2,12 @@
 
 ## Requirements
 
-- node >=16
+- node >=16 (https://github.com/nvm-sh/nvm)
 - docker
 - docker-compose
+- yarn (npm install -g yarn)
+
+> installing node with snapcraft isn't compatible with Prisma, please use NVM instead. 
 
 ## Getting Started
 
@@ -17,21 +20,19 @@ openssl rand -base64 32 # edit the .env file, update NEXTAUTH_SECRET key with th
 source .env
 
 # install dependencies
-yarn
+yarn install
 # start local database
 cd dev
-docker-compose --profile app build
+docker-compose up -d
 cd ..
 # build dependencies
 yarn turbo run build --filter web^...
 
 ## migrate database
-cd packages/database
-yarn migrate dev
-cd ../..
+yarn dotenv -e .env prisma migrate dev
 
 # start the web
-yarn dev
+yarn turbo run dev --filter web
 ```
 
 Only credentials sign-in method enabled by default. To setup github sign-in or magic link sign-in:
