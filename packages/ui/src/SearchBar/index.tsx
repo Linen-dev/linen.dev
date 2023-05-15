@@ -34,7 +34,10 @@ const SearchBar = ({
   api: ApiClient;
   handleSelect: (message: SerializedSearchMessage) => void;
 }) => {
-  const renderSuggestion = (searchResult: SerializedSearchMessage) => {
+  const renderSuggestion = (
+    searchResult: SerializedSearchMessage,
+    active: boolean
+  ) => {
     const { body, channelId, author, mentions, messageFormat } = searchResult;
     const channel = channels.find((c) => c.id === channelId);
     const channelName = channel?.channelName;
@@ -47,6 +50,7 @@ const SearchBar = ({
           user={author!}
           channelName={channelName}
           mentions={mentions}
+          active={active}
         />
       </div>
     );

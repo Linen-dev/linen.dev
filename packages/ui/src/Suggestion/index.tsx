@@ -1,4 +1,5 @@
 import React from 'react';
+import classNames from 'classnames';
 import Avatar from '../Avatar';
 import Message from '../Message';
 import styles from './index.module.scss';
@@ -10,6 +11,7 @@ interface Props {
   mentions: SerializedUser[];
   user?: SerializedUser;
   channelName?: string;
+  active?: boolean;
 }
 
 export default function Suggestion({
@@ -18,9 +20,10 @@ export default function Suggestion({
   mentions,
   user,
   channelName,
+  active,
 }: Props) {
   return (
-    <div className={styles.container}>
+    <div className={classNames(styles.container, { [styles.active]: active })}>
       <div className={styles.header}>
         <Avatar
           size="sm"

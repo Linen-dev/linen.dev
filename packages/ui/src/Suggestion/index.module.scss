@@ -5,6 +5,10 @@
   position: relative;
 }
 
+.active {
+  background-color: var(--color-gray-100);
+}
+
 .header {
   align-items: center;
   display: flex;

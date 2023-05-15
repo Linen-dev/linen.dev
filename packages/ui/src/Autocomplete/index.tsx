@@ -14,7 +14,7 @@ export default function Autocomplete({
   brandColor,
   fetch,
   onSelect = (any) => {},
-  renderSuggestion = (any) => null,
+  renderSuggestion = (any, active) => null,
   placeholder = 'Search',
   limit = 5,
   minlength = 3,
@@ -36,7 +36,7 @@ export default function Autocomplete({
     })[]
   >;
   onSelect: (message: SerializedSearchMessage) => void;
-  renderSuggestion: (any: any) => any;
+  renderSuggestion: (any: any, active: boolean) => any;
   placeholder?: string;
   limit?: number;
   minlength?: number;
@@ -164,7 +164,7 @@ export default function Autocomplete({
               width: '100%',
             }}
           >
-            {renderSuggestion(r)}
+            {renderSuggestion(r, activeResultIndex === idx)}
           </div>
         ))}
         {isLoadMoreVisible && (
