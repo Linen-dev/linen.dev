@@ -3,6 +3,7 @@ import Toast from '@linen/ui/Toast';
 import Layout from 'components/layout/SplitLayout';
 import { useState } from 'react';
 import { FiPlus } from '@react-icons/all-files/fi/FiPlus';
+import { FiFileText } from '@react-icons/all-files/fi/FiFileText';
 import styles from './index.module.scss';
 import Link from 'components/Link';
 import CommunityLink from '@linen/ui/CommunityLink';
@@ -105,15 +106,28 @@ export function GettingStartedPage({
               Linen gives your community a home,
               <br />a place where meaningful conversations can happen.
             </p>
-            <Button
-              rounded="full"
-              weight="bold"
-              size="md"
-              onClick={() => (window.location.href = '/onboarding')}
-            >
-              <FiPlus />
-              Add a free community
-            </Button>
+            <div className={styles.buttons}>
+              <Button
+                rounded="full"
+                weight="bold"
+                size="md"
+                onClick={() => (window.location.href = '/onboarding')}
+              >
+                <FiPlus />
+                Add a free community
+              </Button>
+              <Button
+                rounded="full"
+                weight="bold"
+                size="md"
+                color="white"
+                outlined
+                onClick={() => (window.location.href = '/onboarding')}
+              >
+                <FiFileText />
+                Import your community
+              </Button>
+            </div>
             <p className="text-gray-700 dark:text-gray-200 text-sm mb-2">
               Any questions before you start?
               <br />

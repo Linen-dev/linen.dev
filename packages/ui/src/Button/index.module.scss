@@ -28,7 +28,12 @@
 
 .white {
   background: var(--color-background);
-  color: black;
+  color: var(--color-text);
+
+  &:focus-visible,
+  &:hover {
+    background: var(--color-gray-200);
+  }
 }
 
 .gray {

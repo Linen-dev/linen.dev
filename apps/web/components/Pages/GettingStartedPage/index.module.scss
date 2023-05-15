@@ -49,3 +49,22 @@
   border-radius: 0.25rem;
   display: flex;
 }
+
+.buttons {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+}
+
+.buttons button {
+  display: flex;
+  max-width: 360px;
+  margin: 0 auto 0.5rem;
+}
+
+@media screen and (max-width: 767px) {
+  .buttons {
+    display: block;
+  }
+}
