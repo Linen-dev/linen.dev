@@ -87,12 +87,10 @@ function View() {
       playNotificationSound={playNotificationSound}
       // TODO:
       addReaction={(a) => a}
-      IntegrationsModal={mockedComponent}
       JoinChannelLink={mockedComponent}
       MembersModal={mockedComponent}
       Pagination={mockedComponent}
-      ShowIntegrationDetail={mockedComponent}
-      queryIntegration={'TODO'}
+      queryIntegration={false}
       useJoinContext={mockedContext}
     />
   );
