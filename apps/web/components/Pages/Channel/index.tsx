@@ -8,8 +8,6 @@ import { addReaction } from 'utilities/state/reaction';
 import ChannelView from '@linen/ui/ChannelView';
 import { createThreadImitation } from '@linen/serializers/thread';
 import { useUsersContext } from '@linen/contexts/Users';
-import { ShowIntegrationDetail } from 'components/Modals/IntegrationsModal';
-import IntegrationsModal from 'components/Modals/IntegrationsModal';
 import { useRouter } from 'next/router';
 import MembersModal from 'components/Modals/MembersModal';
 import Pagination from 'components/Pagination';
@@ -190,11 +188,9 @@ export default function Channel(props: ChannelProps) {
         queryIntegration={query.integration}
         addReaction={addReaction}
         api={api}
-        IntegrationsModal={IntegrationsModal}
         JoinChannelLink={JoinChannelLink}
         MembersModal={MembersModal}
         Pagination={Pagination}
-        ShowIntegrationDetail={ShowIntegrationDetail}
         useJoinContext={useJoinContext}
         playNotificationSound={playNotificationSound}
         useUsersContext={useUsersContext}

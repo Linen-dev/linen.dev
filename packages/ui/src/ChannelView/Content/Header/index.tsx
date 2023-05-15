@@ -11,6 +11,8 @@ import { FiUsers } from '@react-icons/all-files/fi/FiUsers';
 import { FiEdit3 } from '@react-icons/all-files/fi/FiEdit3';
 import { FiEyeOff } from '@react-icons/all-files/fi/FiEyeOff';
 import { Permissions, SerializedChannel } from '@linen/types';
+import IntegrationsModalUI from '@/IntegrationsModal';
+import type { ApiClient } from '@linen/api-client';
 
 interface Props {
   className?: string;
@@ -22,7 +24,7 @@ interface Props {
   handleOpenIntegrations(): void;
   handleOpenMembers(): void;
   onHideChannelClick(): void;
-  ShowIntegrationDetail(): JSX.Element;
+  api: ApiClient;
 }
 
 export default function Header({
@@ -35,7 +37,7 @@ export default function Header({
   handleOpenIntegrations,
   handleOpenMembers,
   onHideChannelClick,
-  ShowIntegrationDetail,
+  api,
 }: Props) {
   const items = [];
   if (channel.type !== 'DM') {
@@ -64,7 +66,11 @@ export default function Header({
       <div className={styles.header}>
         <div className={styles.title}>
           <FiHash /> {channel.channelName}
-          <ShowIntegrationDetail />
+          <IntegrationsModalUI.ShowIntegrationDetail
+            api={api}
+            channel={channel}
+            isUserAuthenticated={!!currentUser?.id}
+          />
         </div>
         {}
         {currentUser && (

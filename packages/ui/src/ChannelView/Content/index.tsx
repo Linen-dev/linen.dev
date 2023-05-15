@@ -44,6 +44,7 @@ import EditThreadModal from '@/EditThreadModal';
 import ConfirmationModal from '@/ConfirmationModal';
 import Toast from '@/Toast';
 import type { ApiClient } from '@linen/api-client';
+import IntegrationsModalUI from '@/IntegrationsModal';
 
 const { SidebarLayout } = Layouts.Shared;
 
@@ -122,10 +123,8 @@ interface Props {
     startSignUp?: any;
   };
   queryIntegration?: string;
-  IntegrationsModal: (args: any) => JSX.Element;
   MembersModal: (args: any) => JSX.Element;
   Pagination: (args: any) => JSX.Element;
-  ShowIntegrationDetail(): JSX.Element;
   JoinChannelLink(): JSX.Element;
   playNotificationSound: (volume: number) => Promise<void>;
   useUsersContext(): any;
@@ -177,10 +176,8 @@ export default function Channel({
   // injection
   useJoinContext,
   queryIntegration,
-  IntegrationsModal,
   MembersModal,
   Pagination,
-  ShowIntegrationDetail,
   JoinChannelLink,
   playNotificationSound,
   useUsersContext,
@@ -501,7 +498,6 @@ export default function Channel({
               content={
                 <>
                   <Header
-                    ShowIntegrationDetail={ShowIntegrationDetail}
                     className={classNames(styles.header, {
                       [styles.pinned]: !!pinnedThread,
                     })}
@@ -512,6 +508,7 @@ export default function Channel({
                     handleOpenIntegrations={showIntegrationsModal}
                     handleOpenMembers={showMembersModal}
                     onHideChannelClick={showHideChannelModal}
+                    api={api}
                   >
                     {pinnedThread && (
                       <PinnedThread
@@ -660,10 +657,13 @@ export default function Channel({
           [styles['is-expanded']]: collapsed,
         }}
       />
-      <IntegrationsModal
+
+      <IntegrationsModalUI.IntegrationsModal
         permissions={permissions}
         open={modal === ModalView.INTEGRATIONS}
         close={() => setModal(ModalView.NONE)}
+        api={api}
+        channel={currentChannel}
       />
       <MembersModal
         permissions={permissions}

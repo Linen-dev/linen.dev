@@ -100,7 +100,7 @@ export function getLinenUrl() {
     return `linen-dev-git-${process.env.BRANCH}-linen.vercel.app`.toLowerCase();
   }
   // assume localhost
-  return `localhost:${process.env.PORT ?? 3000}`;
+  return `localhost:${process.env.API_PORT || process.env.PORT || 3000}`;
 }
 
 export function getPushUrlSSR() {
