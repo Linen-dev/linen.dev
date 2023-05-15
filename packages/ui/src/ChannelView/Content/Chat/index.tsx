@@ -27,7 +27,7 @@ interface Props {
     files: UploadedFile[];
     channelId: string;
   }): Promise<void>;
-  uploadFiles(files: File[]): Promise<void>;
+  uploadFiles?(files: File[]): Promise<void>;
   progress: number;
   uploading: boolean;
   uploads: UploadedFile[];
