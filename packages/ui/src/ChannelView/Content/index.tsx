@@ -373,7 +373,7 @@ export default function Channel({
         const data = await api.getThreads({
           channelId: currentChannel.id,
           cursor: cursor[key] || undefined,
-          accountId: settings.communityId,
+          accountId: currentCommunity.id,
         });
         if (!data) return;
         setCursor({ ...cursor, [key]: data?.nextCursor?.[key] });
@@ -452,7 +452,7 @@ export default function Channel({
     });
     return api
       .upload(
-        { communityId: settings.communityId, data },
+        { communityId: currentCommunity.id, data },
         {
           onUploadProgress: (progressEvent: ProgressEvent) => {
             const percentCompleted = Math.round(
@@ -580,7 +580,7 @@ export default function Channel({
                   </>
                 ) : permissions.chat ? (
                   <Chat
-                    communityId={settings.communityId}
+                    communityId={currentCommunity.id}
                     channelId={currentChannel.id}
                     currentUser={currentUser}
                     onDrop={handleDrop}
