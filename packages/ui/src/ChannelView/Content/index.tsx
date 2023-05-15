@@ -12,6 +12,7 @@ import { sendThreadMessageWrapper } from './sendThreadMessageWrapper';
 import { sendMessageWrapper } from './sendMessageWrapper';
 import {
   onResolve,
+  ChatType,
   Permissions,
   ReminderTypes,
   SerializedAccount,
@@ -578,25 +579,31 @@ export default function Channel({
                     />
                     <Footer />
                   </>
-                ) : permissions.chat ? (
-                  <Chat
-                    communityId={currentCommunity.id}
-                    channelId={currentChannel.id}
-                    currentUser={currentUser}
-                    onDrop={handleDrop}
-                    sendMessage={sendMessage}
-                    progress={progress}
-                    uploads={uploads}
-                    uploading={uploading}
-                    uploadFiles={uploadFiles}
-                    useUsersContext={useUsersContext}
-                    fetchMentions={(term?: string) => {
-                      if (!term) return Promise.resolve([]);
-                      return api.fetchMentions(term, currentCommunity.id);
-                    }}
-                  />
                 ) : (
-                  <Footer />
+                  <>
+                    {currentCommunity.chat !== ChatType.NONE && (
+                      <Chat
+                        communityId={currentCommunity.id}
+                        channelId={currentChannel.id}
+                        currentUser={currentUser}
+                        onDrop={handleDrop}
+                        sendMessage={sendMessage}
+                        progress={progress}
+                        uploads={uploads}
+                        uploading={uploading}
+                        uploadFiles={currentUser && uploadFiles}
+                        useUsersContext={useUsersContext}
+                        fetchMentions={(term?: string) => {
+                          if (!currentUser) {
+                            return Promise.resolve([]);
+                          }
+                          if (!term) return Promise.resolve([]);
+                          return api.fetchMentions(term, currentCommunity.id);
+                        }}
+                      />
+                    )}
+                    <Footer />
+                  </>
                 )
               }
             />
