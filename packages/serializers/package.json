@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "tsc --watch",
     "prebuild": "node ../scripts/rebuild-package.mjs",
-    "build": "rm -rf dist && tsc",
+    "build": "rimraf dist && tsc",
     "test": "dotenv -e ../../apps/web/.env.test jest"
   },
   "sideEffect": false,

@@ -6,7 +6,7 @@
   "types": "dist/index.d.ts",
   "private": true,
   "scripts": {
-    "clean": "rm -rf dist",
+    "clean": "rimraf dist",
     "build": "yarn clean && yarn tsc",
     "dev": "yarn tsc --watch",
     "test": "dotenv -e ../../apps/web/.env.test -- jest --passWithNoTests"

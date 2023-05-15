@@ -7,7 +7,7 @@
   "scripts": {
     "generate": "yarn prisma generate",
     "migrate": "yarn prisma migrate",
-    "build": "yarn generate && rm -rf dist && yarn tsc"
+    "build": "yarn generate && rimraf dist && yarn tsc"
   },
   "dependencies": {
     "@prisma/client": "^3.15.2",

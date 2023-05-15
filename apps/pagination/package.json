@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "with-env": "yarn dotenv -e ../web/.env",
-    "build": "rm -rf dist && tsup",
+    "build": "rimraf dist && tsup",
     "test": "jest",
     "dev": "yarn with-env tsx src/index",
     "start": "pm2-runtime --raw \"node dist/index.mjs\""

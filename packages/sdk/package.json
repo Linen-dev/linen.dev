@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "dev": "tsc --watch",
-    "build": "rm -rf dist && tsc"
+    "build": "rimraf dist && tsc"
   },
   "devDependencies": {
     "typescript": "^4.9.3"

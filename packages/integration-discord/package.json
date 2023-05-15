@@ -6,7 +6,7 @@
   "types": "dist/index.d.ts",
   "private": true,
   "scripts": {
-    "clean": "rm -rf dist",
+    "clean": "rimraf dist",
     "build": "yarn clean && yarn tsc",
     "with-env": "yarn dotenv -e ../../apps/web/.env",
     "dev": "tsc --watch",

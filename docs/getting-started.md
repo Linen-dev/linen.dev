@@ -3,9 +3,8 @@
 ## Requirements
 
 - node >=16 (https://github.com/nvm-sh/nvm)
-- docker
-- docker-compose
 - yarn (npm install -g yarn)
+- postgres 13 (or docker and docker-compose) 
 
 > installing node with snapcraft isn't compatible with Prisma, please use NVM instead. 
 
@@ -14,17 +13,22 @@
 ```bash
 # prepare environment variables
 cp apps/web/.env.example .env
+# win: copy apps\web\.env.example .env
+
 # generate secret
 openssl rand -base64 32 # edit the .env file, update NEXTAUTH_SECRET key with the result
+# win: on node, you can use this line: crypto.randomBytes(32).toString('base64')
+
 # export the envs into the shell
 source .env
+# win: skip
 
 # install dependencies
 yarn install
-# start local database
-cd dev
-docker-compose up -d
-cd ..
+
+# skip if you have postgres installed (starting the database)
+cd dev && docker-compose up -d && cd ..
+
 # build dependencies
 yarn turbo run build --filter web^...
 

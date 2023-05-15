@@ -6,8 +6,8 @@
   "types": "dist/index.d.ts",
   "sideEffect": false,
   "scripts": {
-    "dev": "rm -rf dist && yarn tsup --watch",
-    "build": "rm -rf dist && yarn tsup"
+    "dev": "rimraf dist && yarn tsup --watch",
+    "build": "rimraf dist && yarn tsup"
   },
   "dependencies": {
     "@linen/database": "*",

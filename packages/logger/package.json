@@ -4,7 +4,7 @@
   "main": "dist/index.js",
   "private": true,
   "scripts": {
-    "build": "rm -rf dist && tsc"
+    "build": "rimraf dist && tsc"
   },
   "keywords": [],
   "author": "",
