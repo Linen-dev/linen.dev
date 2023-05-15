@@ -66,6 +66,9 @@ export default function Chat({
       onDragEnter={handleDragEnter}
       onDragLeave={handleDragLeave}
       onDrop={(event: React.DragEvent) => {
+        if (!uploadFiles) {
+          return;
+        }
         event.preventDefault();
         const node = ref.current as HTMLElement;
         node.classList.remove(styles.hover);
