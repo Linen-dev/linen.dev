@@ -12,7 +12,12 @@
 }
 
 .container {
-  scrollbar-gutter: stable;
+  display: flex;
+  scrollbar-gutter: auto;
+  overflow: auto;
+  width: 100%;
+  justify-content: center;
+  height: calc(100vh - 54px);
 }
 
 .container::-webkit-scrollbar {

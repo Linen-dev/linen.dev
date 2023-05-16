@@ -135,19 +135,7 @@ function PageLayout({
           api={api}
           notify={notify}
         />
-        <div
-          className={
-            className ||
-            classNames(
-              styles.container,
-              'lg:h-[calc(100vh_-_54px)] lg:w-full',
-              'lg:flex',
-              'justify-center h-[calc(100vh_-_54px)] w-full',
-              'overflow-auto'
-            )
-          }
-          ref={innerRef}
-        >
+        <div className={className || styles.container} ref={innerRef}>
           <ErrorBoundary FallbackComponent={ErrorFallback}>
             {children}
           </ErrorBoundary>
