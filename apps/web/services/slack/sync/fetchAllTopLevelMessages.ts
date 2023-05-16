@@ -15,6 +15,7 @@ import { parseSlackSentAt, tsToSentAt } from '@linen/serializers/sentAt';
 import { findOrCreateThread } from 'services/threads';
 import { slugify } from '@linen/utilities/string';
 import { filterMessages, parseMessage } from './parseMessage';
+import { FetchConversationsTypedFnType } from '../types';
 
 async function saveMessagesTransaction(
   messages: ConversationHistoryMessage[],
@@ -82,15 +83,20 @@ export async function fetchAllTopLevelMessages({
   token,
   fullSync,
   fetchConversationsTyped,
+  oldest,
 }: {
   channel: channels;
   account: AccountWithSlackAuthAndChannels;
   usersInDb: UserMap[];
   token: string;
   fullSync?: boolean | undefined;
-  fetchConversationsTyped: Function;
+  fetchConversationsTyped: FetchConversationsTypedFnType;
+  oldest: string;
 }) {
   const c = channel;
+  if (!c.externalChannelId) {
+    return;
+  }
   if (fullSync) {
     c.externalPageCursor = null;
   }
@@ -110,7 +116,8 @@ export async function fetchAllTopLevelMessages({
       const additionalConversations = await fetchConversationsTyped(
         c.externalChannelId,
         token,
-        nextCursor
+        nextCursor,
+        oldest
       );
 
       const additionalMessages =

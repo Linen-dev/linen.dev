@@ -12,7 +12,11 @@ export async function fetchToken({
   accountId: string;
   fetchTeamInfo: Function;
 }) {
-  const token = account.slackAuthorizations?.shift()?.accessToken || '';
+  const slackAuth = account.slackAuthorizations?.shift();
+
+  const token = slackAuth?.accessToken || '';
+  const syncFrom = slackAuth?.syncFrom || new Date(0);
+  const shouldJoinChannel = slackAuth?.joinChannel !== false;
 
   const teamInfoResponse = await fetchTeamInfo(token);
   const communityUrl = teamInfoResponse?.body?.team?.url;
@@ -20,5 +24,5 @@ export async function fetchToken({
   if (!!domain && !!communityUrl) {
     await updateAccountRedirectDomain(accountId, domain, communityUrl);
   }
-  return token;
+  return { token, syncFrom, shouldJoinChannel };
 }

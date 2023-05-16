@@ -55,7 +55,7 @@
   width: 36px;
 }
 
-.icon.lg  {
+.icon.lg {
   height: 44px;
   width: 44px;
 }
@@ -66,4 +66,9 @@
 
 .icon.lg + .input {
   padding-left: 40px;
+}
+
+.disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
 }

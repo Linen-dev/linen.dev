@@ -1,6 +1,5 @@
 import { SyncStatus, updateAndNotifySyncStatus } from 'services/accounts/sync';
 import { listChannelsAndPersist } from './channels';
-import { CrawlType } from './constrains';
 import { crawlUsers } from './users';
 import { decrypt } from 'utilities/crypto';
 import { getMessages } from './messages';
@@ -13,11 +12,10 @@ async function syncJob(
   account: accounts & {
     discordAuthorizations: discordAuthorizations[];
   },
-  crawlType: CrawlType,
   decodeBotToken: (accessToken: string) => string,
   logger: Logger
 ) {
-  logger.log(`sync stared: ${crawlType}`);
+  logger.log(`sync stared`);
 
   if (!account.discordServerId) {
     throw new Error('discord server id not found');
@@ -27,28 +25,20 @@ async function syncJob(
   }
 
   const discordAuthorizations = account.discordAuthorizations.find(Boolean);
+  const onboardingTimestamp = discordAuthorizations?.syncFrom || new Date(0);
 
-  // for a full sync, aka historic fetch, we should use onboardingTimestamp as new Date(0)
-  // also we need to clean up all channels cursors
-  const onboardingTimestamp = [CrawlType.historic].includes(crawlType)
-    ? new Date(0)
-    : discordAuthorizations?.createdAt || account.createdAt || new Date();
-
-  logger.log(`onboardingTimestamp: ${onboardingTimestamp}`);
+  logger.log(`syncFrom: ${onboardingTimestamp}`);
 
   const token = discordAuthorizations?.customBot
     ? decodeBotToken(discordAuthorizations.accessToken)
     : botV1().PRIVATE_TOKEN;
 
-  // avoid run it on new_only executions
-  if (crawlType === CrawlType.historic) {
-    await crawlUsers({
-      accountId: account.id,
-      serverId: account.discordServerId,
-      token,
-      logger,
-    });
-  }
+  await crawlUsers({
+    accountId: account.id,
+    serverId: account.discordServerId,
+    token,
+    logger,
+  });
 
   const hideChannels = account.newChannelsConfig === 'HIDDEN';
 
@@ -64,7 +54,6 @@ async function syncJob(
   await getActiveThreads({
     serverId: account.discordServerId,
     token,
-    crawlType,
     onboardingTimestamp,
     logger,
   });
@@ -73,14 +62,10 @@ async function syncJob(
     logger.log(`channels found: ${channels.length}`);
     for (const channel of channels) {
       logger.log(channel.channelName + ' channel tasks started');
-      if ([CrawlType.historic, CrawlType.from_onboarding].includes(crawlType)) {
-        // this will force sync all messages until reach onboardingTimestamp,
-        channel.externalPageCursor = null;
-      }
+      channel.externalPageCursor = null;
       await getArchivedThreads({
         channel,
         token,
-        crawlType,
         onboardingTimestamp,
         logger,
       });
@@ -92,10 +77,7 @@ async function syncJob(
   logger.log('sync finished');
 }
 
-export async function discordSync(args: {
-  accountId: string;
-  fullSync?: boolean;
-}) {
+export async function discordSync(args: { accountId: string }) {
   const account = await prisma.accounts.findUnique({
     where: { id: args.accountId },
     include: {
@@ -106,8 +88,6 @@ export async function discordSync(args: {
     throw new Error('account not found');
   }
   try {
-    const crawlType = !args.fullSync ? CrawlType.new_only : CrawlType.historic;
-
     await updateAndNotifySyncStatus({
       accountId: args.accountId,
       status: SyncStatus.IN_PROGRESS,
@@ -118,7 +98,7 @@ export async function discordSync(args: {
     });
 
     const logger = new Logger(getAccountName(account));
-    await syncJob(account, crawlType, decrypt, logger);
+    await syncJob(account, decrypt, logger);
 
     await updateAndNotifySyncStatus({
       accountId: args.accountId,

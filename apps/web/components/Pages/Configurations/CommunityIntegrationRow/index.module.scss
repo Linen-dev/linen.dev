@@ -1,0 +1,38 @@
+.radioWrapper {
+  margin-bottom: 0.5rem;
+  gap: 2rem /* 8px */;
+  @media (min-width: 640px) {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.flexCenter {
+  display: flex;
+  align-items: center;
+}
+
+.radioInput {
+  color: var(--color-blue-700);
+  width: 1rem;
+  height: 1rem;
+  border-color: var(--color-border);
+  background-color: var(--color-background);
+}
+
+.radioLabel {
+  display: block;
+  margin-left: 0.5rem;
+  color: var(--color-text);
+  font-size: 0.75rem;
+  line-height: 1.25rem;
+  font-weight: 500;
+  line-height: 1.5rem;
+}
+
+.radioLabelGroupDate {
+  display: flex;
+  white-space: nowrap;
+  align-items: center;
+  gap: 0.5rem;
+}

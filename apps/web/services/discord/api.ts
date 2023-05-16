@@ -1,5 +1,4 @@
 import { sleep } from '@linen/utilities/promises';
-import { SECONDS } from './constrains';
 import axios from 'axios';
 import { qs } from '@linen/utilities/url';
 import {
@@ -8,6 +7,8 @@ import {
   DiscordArchivedPublicThreads,
   DiscordGuildMember,
 } from '@linen/types';
+
+const SECONDS = 1000;
 
 async function discordApi({
   path,

@@ -27,7 +27,7 @@ process.on('uncaughtException', (error, source) => {
   let accountId = accountIdFlag?.split('=')?.pop();
 
   if (accountId) {
-    await discordSync({ accountId, fullSync });
+    await discordSync({ accountId });
   } else {
     await createJobs();
   }

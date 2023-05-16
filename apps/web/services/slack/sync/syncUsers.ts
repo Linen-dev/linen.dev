@@ -1,10 +1,7 @@
 import { createUser, findUsersByAccountId } from 'services/users';
-import {
-  AccountWithSlackAuthAndChannels,
-  UserMap,
-  UserInfo,
-} from '@linen/types';
+import { AccountWithSlackAuthAndChannels, UserMap } from '@linen/types';
 import { buildUserFromInfo } from '../serializers/buildUserFromInfo';
+import { ListUsersFnType } from '../types';
 
 export async function syncUsers({
   accountId,
@@ -17,12 +14,15 @@ export async function syncUsers({
   token: string;
   account: AccountWithSlackAuthAndChannels;
   skipUsers?: boolean;
-  listUsers: Function;
+  listUsers: ListUsersFnType;
 }) {
   if (!skipUsers) {
     console.log('Syncing users for account: ', accountId);
     const usersListResponse = await listUsers(token);
-    const members: UserInfo[] = usersListResponse.body.members;
+    if (!usersListResponse.body?.members) {
+      return [];
+    }
+    const members = usersListResponse.body.members;
     console.log('members total:', members.length);
 
     let count = members.length;
@@ -34,14 +34,13 @@ export async function syncUsers({
       }
     }
 
-    let userCursor: string | null =
-      usersListResponse?.body?.response_metadata?.next_cursor;
+    let userCursor = usersListResponse?.body?.response_metadata?.next_cursor;
 
     while (!!userCursor) {
       try {
         console.log({ userCursor });
         const usersListResponse = await listUsers(token, userCursor);
-        const additionalMembers: UserInfo[] = usersListResponse?.body?.members;
+        const additionalMembers = usersListResponse?.body?.members;
         if (!!additionalMembers) {
           for (const user of additionalMembers) {
             await createUser(buildUserFromInfo(user, accountId));
@@ -50,7 +49,7 @@ export async function syncUsers({
         userCursor = usersListResponse?.body?.response_metadata?.next_cursor;
       } catch (e) {
         console.error('fetching user failed', (e as Error).message);
-        userCursor = null;
+        userCursor = undefined;
       }
     }
   }

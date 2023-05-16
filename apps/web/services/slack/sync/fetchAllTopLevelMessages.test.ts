@@ -79,6 +79,7 @@ describe('slackSync :: fetchAllTopLevelMessages', () => {
       1,
       externalChannel.id,
       account.slackAuthorizations[0].accessToken,
+      undefined,
       undefined
     );
 

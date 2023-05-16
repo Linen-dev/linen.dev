@@ -1,5 +1,5 @@
 import { createMembership } from 'services/membership';
-import { GetMembershipsFnType } from '../syncWrapper';
+import { GetMembershipsFnType } from '../types';
 
 export async function syncMemberships({
   accountId,

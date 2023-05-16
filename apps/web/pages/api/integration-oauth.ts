@@ -2,13 +2,18 @@ import { NextApiRequest, NextApiResponse } from 'next/types';
 import { getCurrentConfig } from 'config/discord';
 import { z } from 'zod';
 import { cors, preflight } from 'utilities/cors';
+import { prisma } from '@linen/database';
+import PermissionsService from 'services/permissions';
 
 const REDIRECT_URI_SLACK =
   process.env.NEXT_PUBLIC_REDIRECT_URI || 'https://linen.dev/api/oauth';
 const SLACK_CLIENT_ID =
   process.env.NEXT_PUBLIC_SLACK_CLIENT_ID || '1250901093238.3006399856353';
 
-function integrationAuthorizer(community: string, accountId: string) {
+function integrationAuthorizer(
+  community: 'discord' | 'slack',
+  accountId: string
+) {
   switch (community) {
     case 'discord':
       const discord = getCurrentConfig();
@@ -63,12 +68,98 @@ export default async function handler(
   cors(request, response);
 
   const schema = z.object({
-    community: z.string(),
+    community: z.enum(['discord', 'slack']),
     accountId: z.string().uuid(),
+    syncOpt: z.enum(['since-all', 'since-date']).optional(),
+    dateFrom: z.string().optional(),
   });
 
   const body = schema.parse(request.query);
+
+  const permissions = await PermissionsService.get({
+    request,
+    response,
+    params: {
+      communityId: body.accountId,
+    },
+  });
+  if (!permissions.manage) {
+    throw new Error('Unauthorized');
+  }
+
+  if (body.syncOpt === 'since-date' && body.dateFrom) {
+    const syncFrom = new Date(body.dateFrom);
+
+    if (body.community === 'slack') {
+      await handleSlack({ accountId: body.accountId, syncFrom });
+    }
+    if (body.community === 'discord') {
+      await handleDiscord({ accountId: body.accountId, syncFrom });
+    }
+  }
+
   return response.json({
     url: integrationAuthorizer(body.community, body.accountId),
   });
+}
+
+async function handleSlack({
+  accountId,
+  syncFrom,
+}: {
+  accountId: string;
+  syncFrom: Date;
+}) {
+  const auths = await prisma.slackAuthorizations.findFirst({
+    where: { accountsId: accountId },
+    orderBy: { createdAt: 'desc' },
+  });
+  if (auths) {
+    await prisma.slackAuthorizations.update({
+      data: {
+        syncFrom,
+      },
+      where: { id: auths.id },
+    });
+  } else {
+    await prisma.slackAuthorizations.create({
+      data: {
+        accessToken: 'pending',
+        scope: 'pending',
+        botUserId: 'pending',
+        accountsId: accountId,
+        syncFrom,
+      },
+    });
+  }
+}
+
+async function handleDiscord({
+  accountId,
+  syncFrom,
+}: {
+  accountId: string;
+  syncFrom: Date;
+}) {
+  const auths = await prisma.discordAuthorizations.findFirst({
+    where: { accountsId: accountId },
+    orderBy: { createdAt: 'desc' },
+  });
+  if (auths) {
+    await prisma.discordAuthorizations.update({
+      data: {
+        syncFrom,
+      },
+      where: { id: auths.id },
+    });
+  } else {
+    await prisma.discordAuthorizations.create({
+      data: {
+        accountsId: accountId,
+        accessToken: 'pending',
+        scope: 'pending',
+        syncFrom,
+      },
+    });
+  }
 }

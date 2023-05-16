@@ -11,7 +11,7 @@ import type {
   JoinChannelFnType,
   ListUsersFnType,
   ListUsersResponseType,
-} from '../syncWrapper';
+} from '../types';
 import fs from 'fs';
 
 export class SlackFileAdapter {

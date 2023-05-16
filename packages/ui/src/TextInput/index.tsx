@@ -75,6 +75,7 @@ function TextInput({
           className={classNames(styles.input, className, {
             [styles.lg]: size === 'lg',
             [styles.rounded]: rounded === 'full',
+            [styles.disabled]: disabled,
           })}
           type={type}
           id={id}

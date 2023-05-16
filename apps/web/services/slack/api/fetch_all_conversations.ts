@@ -8,7 +8,49 @@ import {
   ConversationRepliesBody,
   ConversationHistoryBody,
 } from '@linen/types';
-import { GetMembershipsFnType } from '../syncWrapper';
+import { GetMembershipsFnType } from '../types';
+import { qs } from '@linen/utilities/url';
+import axios, { AxiosRequestConfig } from 'axios';
+
+interface RetryConfig extends AxiosRequestConfig {
+  retry: number;
+  retryDelay: number;
+}
+const instance = axios.create({ baseURL: 'https://slack.com' });
+instance.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const { config } = error;
+
+    if (!config || !config.retry) {
+      return Promise.reject(error);
+    }
+    config.retry -= 1;
+    const delayRetryRequest = new Promise<void>((resolve) => {
+      setTimeout(() => {
+        console.log('retry the request', config.url);
+        resolve();
+      }, config.retryDelay || 1000);
+    });
+    return delayRetryRequest.then(() => instance(config));
+  }
+);
+
+const callApi = async <T>(url: string, token: string) => {
+  const retryConfig: RetryConfig = {
+    retry: 3,
+    retryDelay: 1000,
+  };
+  return instance
+    .get<T>(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      ...retryConfig,
+    })
+    .then((res) => res.data);
+};
 
 export const fetchConversations = async (
   channel: string,
@@ -30,18 +72,16 @@ export const fetchConversations = async (
 export const fetchConversationsTyped = async (
   channel: string,
   token: string,
-  userCursor: string | null = null
-): Promise<ConversationHistoryBody> => {
-  let url = 'https://slack.com/api/conversations.history?channel=' + channel;
-  if (!!userCursor) {
-    url += '&cursor=' + userCursor;
-  }
+  cursor: string | null = null, // Example "dXNlcjpVMDYxTkZUVDI="
+  oldest: string | null = null // Example "1234567890.123456"
+) => {
+  const url = `/api/conversations.history?${qs({
+    channel,
+    cursor,
+    oldest,
+  })}`;
 
-  const response = await request
-    .get(url)
-    .set('Authorization', 'Bearer ' + token);
-
-  return response.body;
+  return callApi<ConversationHistoryBody>(url, token);
 };
 
 export const fetchMessage = async (

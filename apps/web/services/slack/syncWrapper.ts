@@ -4,75 +4,8 @@ import { syncChannels } from './sync/syncChannels';
 import { syncUsers } from './sync/syncUsers';
 import { fetchAllTopLevelMessages } from './sync/fetchAllTopLevelMessages';
 import { saveAllThreads } from './sync/saveAllThreads';
-import {
-  AccountWithSlackAuthAndChannels,
-  ConversationHistoryBody,
-} from '@linen/types';
 import { syncMemberships } from './sync/membership';
-
-export type FetchTeamInfoResponseType = { body?: { team?: { url?: string } } };
-export type FetchTeamInfoFnType = (
-  token: string
-) => Promise<FetchTeamInfoResponseType>;
-
-export type JoinChannelFnType = (
-  channel: string,
-  token: string
-) => Promise<any>;
-
-export type GetSlackChannelsResponseType = {
-  body?: { channels?: { id: string; name: string }[] };
-};
-export type GetSlackChannelsFnType = (
-  teamId: string,
-  token: string
-) => Promise<GetSlackChannelsResponseType>;
-
-export type ListUsersResponseType = {
-  response_metadata?: { next_cursor?: string };
-  body?: { members?: any[] };
-};
-export type ListUsersFnType = (
-  token: string,
-  userCursor?: string | null
-) => Promise<ListUsersResponseType>;
-
-export type FetchConversationsTypedFnType = (
-  channel: string,
-  token: string,
-  userCursor?: string | null
-) => Promise<ConversationHistoryBody>;
-
-export type GetMembershipsFnType = (
-  channel: string,
-  token: string
-) => Promise<string[]>;
-
-export type FetchRepliesResponseType = { body?: { messages?: any[] } };
-export type FetchRepliesFnType = (
-  threadTs: string,
-  channel: string,
-  token: string
-) => Promise<FetchRepliesResponseType>;
-
-export type SyncWrapperFunctionsTypes = {
-  fetchTeamInfo: FetchTeamInfoFnType;
-  joinChannel: JoinChannelFnType;
-  getSlackChannels: GetSlackChannelsFnType;
-  listUsers: ListUsersFnType;
-  fetchConversationsTyped: FetchConversationsTypedFnType;
-  fetchReplies: FetchRepliesFnType;
-  getMemberships: GetMembershipsFnType;
-};
-
-export interface SyncWrapperTypes extends SyncWrapperFunctionsTypes {
-  account: AccountWithSlackAuthAndChannels;
-  accountId: string;
-  skipUsers: boolean;
-  domain?: string;
-  channelId?: string;
-  fullSync?: boolean;
-}
+import { SyncWrapperTypes } from './types';
 
 export async function syncWrapper({
   account,
@@ -89,12 +22,16 @@ export async function syncWrapper({
   fetchReplies,
   getMemberships,
 }: SyncWrapperTypes) {
-  const token = await fetchToken({
+  const { token, syncFrom, shouldJoinChannel } = await fetchToken({
     account,
     domain,
     accountId,
     fetchTeamInfo,
   });
+  console.log({ token, syncFrom, shouldJoinChannel });
+  const oldest = syncFrom
+    ? Math.floor(syncFrom.getTime() / 1000).toString()
+    : '0';
 
   // create and join channels
   const channels = await syncChannels({
@@ -104,6 +41,7 @@ export async function syncWrapper({
     channelId,
     joinChannel,
     getSlackChannels,
+    shouldJoinChannel,
   });
 
   //paginate and find all the users
@@ -135,6 +73,7 @@ export async function syncWrapper({
       token,
       fullSync,
       fetchConversationsTyped,
+      oldest,
     });
 
     // Save all threads

@@ -19,7 +19,11 @@ describe('slackSync :: fetchToken', () => {
         accountId: account.id,
         fetchTeamInfo: fetch_all_conversations.fetchTeamInfo,
       })
-    ).toBe('token123');
+    ).toStrictEqual({
+      shouldJoinChannel: true,
+      syncFrom: new Date(0),
+      token: 'token123',
+    });
     expect(fetchTeamInfoSpy).toBeCalledTimes(1);
   });
 });

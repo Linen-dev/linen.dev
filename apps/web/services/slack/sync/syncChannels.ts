@@ -1,6 +1,7 @@
 import { AccountWithSlackAuthAndChannels } from '@linen/types';
 import { sleep } from '@linen/utilities/promises';
 import ChannelsService from 'services/channels';
+import { GetSlackChannelsFnType, JoinChannelFnType } from '../types';
 
 export async function createChannels({
   slackTeamId,
@@ -14,25 +15,26 @@ export async function createChannels({
   slackTeamId: string;
   token: string;
   accountId: string;
-  getSlackChannels: Function;
-  joinChannel: Function;
+  getSlackChannels: GetSlackChannelsFnType;
+  joinChannel: JoinChannelFnType;
   hideChannels: boolean;
   shouldJoinChannel: boolean;
 }) {
   try {
     const channelsResponse = await getSlackChannels(slackTeamId, token);
+    if (!channelsResponse.body?.channels) {
+      return [];
+    }
     const channels = await Promise.all(
-      channelsResponse.body.channels.map(
-        (channel: { id: string; name: string }) =>
-          ChannelsService.findOrCreateChannel({
-            externalChannelId: channel.id,
-            channelName: channel.name,
-            accountId,
-            hidden: hideChannels,
-          })
+      channelsResponse.body.channels.map((channel) =>
+        ChannelsService.findOrCreateChannel({
+          externalChannelId: channel.id,
+          channelName: channel.name,
+          accountId,
+          hidden: hideChannels,
+        })
       )
     );
-
     console.log('Joining channels started');
     let sleeping = sleep(60 * 1000);
     let counter = 0;
@@ -42,7 +44,7 @@ export async function createChannels({
 
     for (let channel of filteredChannels) {
       counter++;
-      if (shouldJoinChannel) {
+      if (shouldJoinChannel && channel.externalChannelId) {
         await joinChannel(channel.externalChannelId, token);
       }
       // Slack's api can handle bursts
@@ -69,13 +71,15 @@ export async function syncChannels({
   channelId,
   getSlackChannels,
   joinChannel,
+  shouldJoinChannel,
 }: {
   account: AccountWithSlackAuthAndChannels;
   token: string;
   accountId: string;
   channelId?: string;
-  getSlackChannels: Function;
-  joinChannel: Function;
+  getSlackChannels: GetSlackChannelsFnType;
+  joinChannel: JoinChannelFnType;
+  shouldJoinChannel: boolean;
 }) {
   let channels = await createChannels({
     slackTeamId: account.slackTeamId as string,
@@ -84,8 +88,7 @@ export async function syncChannels({
     getSlackChannels,
     joinChannel,
     hideChannels: account.newChannelsConfig === 'HIDDEN',
-    shouldJoinChannel:
-      account.slackAuthorizations?.find((e) => e)?.joinChannel !== false,
+    shouldJoinChannel,
   });
 
   // If channelId is part of parameter only sync the specific channel

@@ -324,15 +324,16 @@ model messageReactions {
 }
 
 model slackAuthorizations {
-  id              String   @id @default(uuid())
-  createdAt       DateTime @default(now())
+  id              String    @id @default(uuid())
+  createdAt       DateTime  @default(now())
   accessToken     String
   botUserId       String
   scope           String
   userScope       String?
   authedUserId    String?
   userAccessToken String?
-  joinChannel     Boolean  @default(true)
+  joinChannel     Boolean   @default(true)
+  syncFrom        DateTime?
 
   account    accounts? @relation(fields: [accountsId], references: [id])
   accountsId String?
@@ -346,6 +347,7 @@ model discordAuthorizations {
   refreshToken String?
   expiresAt    DateTime?
   customBot    Boolean   @default(false)
+  syncFrom     DateTime?
 
   account accounts? @relation(fields: [accountsId], references: [id])
 

@@ -32,20 +32,36 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       throw new Error('account not found');
     }
 
-    await prisma.$transaction([
-      prisma.accounts.update({
-        where: { id: account.id },
+    await prisma.accounts.update({
+      where: { id: account.id },
+      data: {
+        discordServerId: guild.id,
+        integration: AccountIntegration.DISCORD,
+      },
+    });
+
+    const auths = await prisma.discordAuthorizations.findFirst({
+      where: { accountsId: accountId },
+      orderBy: { createdAt: 'desc' },
+    });
+    if (auths) {
+      await prisma.discordAuthorizations.update({
         data: {
-          discordServerId: guild.id,
-          integration: AccountIntegration.DISCORD,
+          accessToken: encrypt(getCurrentConfig().PRIVATE_TOKEN),
+          scope: getCurrentConfig().PRIVATE_SCOPE,
+          refreshToken: body.refresh_token,
+          expiresAt: new Date(new Date().getTime() + body.expires_in * 1000),
+          customBot: true,
         },
-      }),
-      prisma.discordAuthorizations.deleteMany({
+        where: { id: auths.id },
+      });
+      await prisma.discordAuthorizations.deleteMany({
         where: {
-          accountsId: account.id,
+          id: { not: auths.id },
         },
-      }),
-      prisma.discordAuthorizations.create({
+      });
+    } else {
+      await prisma.discordAuthorizations.create({
         data: {
           accountsId: account.id,
           accessToken: encrypt(getCurrentConfig().PRIVATE_TOKEN),
@@ -54,8 +70,8 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
           expiresAt: new Date(new Date().getTime() + body.expires_in * 1000),
           customBot: true,
         },
-      }),
-    ]);
+      });
+    }
 
     await eventNewIntegration({ accountId });
     await createIntegrationDiscord();

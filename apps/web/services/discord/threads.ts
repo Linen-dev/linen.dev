@@ -5,7 +5,7 @@ import {
   DiscordThread,
 } from '@linen/types';
 import DiscordApi from './api';
-import { CrawlType, LIMIT } from './constrains';
+import { LIMIT } from './constrains';
 import { createMessages } from './messages';
 import { slugify } from '@linen/utilities/string';
 import { parseDiscordSentAt } from '@linen/serializers/sentAt';
@@ -17,13 +17,11 @@ import Logger from './logger';
 export async function getActiveThreads({
   serverId,
   token,
-  crawlType,
   onboardingTimestamp,
   logger,
 }: {
   serverId: string;
   token: string;
-  crawlType: CrawlType;
   onboardingTimestamp: Date;
   logger: Logger;
 }) {
@@ -46,13 +44,18 @@ export async function getActiveThreads({
       logger.error(`thread without channel: ${JSON.stringify(thread)}`);
       continue;
     }
+    if (
+      thread.thread_metadata?.create_timestamp &&
+      onboardingTimestamp > new Date(thread.thread_metadata.create_timestamp)
+    ) {
+      continue;
+    }
     const channel = await ChannelsService.findByExternalId(thread.parent_id);
     if (!channel) {
       logger.error(`channel not found on linen db: ${JSON.stringify(thread)}`);
       continue;
     }
     await processThread({
-      crawlType,
       thread,
       onboardingTimestamp,
       channel,
@@ -66,13 +69,11 @@ export async function getActiveThreads({
 export async function getArchivedThreads({
   channel,
   token,
-  crawlType,
   onboardingTimestamp,
   logger,
 }: {
   channel: channels;
   token: string;
-  crawlType: CrawlType;
   onboardingTimestamp: Date;
   logger: Logger;
 }) {
@@ -102,8 +103,13 @@ export async function getArchivedThreads({
       : null;
 
     for (const thread of response.threads) {
+      if (
+        thread.thread_metadata?.create_timestamp &&
+        onboardingTimestamp > new Date(thread.thread_metadata.create_timestamp)
+      ) {
+        continue;
+      }
       await processThread({
-        crawlType,
         thread,
         onboardingTimestamp,
         channel,
@@ -116,14 +122,12 @@ export async function getArchivedThreads({
 }
 
 async function processThread({
-  crawlType,
   thread,
   onboardingTimestamp,
   channel,
   token,
   logger,
 }: {
-  crawlType: CrawlType;
   thread: DiscordThread;
   onboardingTimestamp: Date;
   channel: channels;
@@ -132,24 +136,10 @@ async function processThread({
 }) {
   let linenThread = await findOrCreateThread(parseThread(thread, channel));
 
-  let lastExternalMessageId: string | undefined;
-  if ([CrawlType.historic, CrawlType.from_onboarding].includes(crawlType)) {
-    // this will force sync all messages until reach onboardingTimestamp,
-    lastExternalMessageId = undefined;
-  } else {
-    if (linenThread.messages.length) {
-      lastExternalMessageId =
-        linenThread.messages.sort(
-          (a, b) => b.sentAt.getTime() - a.sentAt.getTime()
-        )[0].externalMessageId || undefined;
-    }
-  }
-
   const messages = await crawlExistingThread({
     thread: linenThread,
     onboardingTimestamp,
     token,
-    lastExternalMessageId,
     logger,
   });
 
