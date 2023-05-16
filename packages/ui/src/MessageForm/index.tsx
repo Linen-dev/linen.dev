@@ -15,7 +15,7 @@ import {
   FILE_SIZE_LIMIT_IN_BYTES,
   getFileSizeErrorMessage,
 } from '@linen/utilities/files';
-import { sessionStorage } from '@linen/utilities/storage';
+import { memoryStorage } from '@linen/utilities/storage';
 
 interface Props {
   id?: string;
@@ -153,7 +153,7 @@ function MessageForm({
 }: Props) {
   function getInitialMessage() {
     if (draft) {
-      return sessionStorage.get(STORAGE_KEY) || initialMessage || '';
+      return memoryStorage.get(STORAGE_KEY) || initialMessage || '';
     }
     return initialMessage || '';
   }
@@ -171,9 +171,9 @@ function MessageForm({
 
   useEffect(() => {
     onMessageChange?.(message);
-    draft && sessionStorage.set(STORAGE_KEY, message);
+    draft && memoryStorage.set(STORAGE_KEY, message);
     return () => {
-      draft && sessionStorage.set(STORAGE_KEY, message);
+      draft && memoryStorage.set(STORAGE_KEY, message);
     };
   }, [message]);
 

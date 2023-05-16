@@ -28,6 +28,22 @@ class Storage {
     }
   }
 }
+class MemoryStorage {
+  cache: any;
+
+  constructor() {
+    this.cache = {};
+  }
+
+  get(key: string) {
+    return this.cache[key];
+  }
+  set(key: string, input: string | object) {
+    this.cache[key] = input;
+    return input;
+  }
+}
 
 export const localStorage = new Storage('local');
 export const sessionStorage = new Storage('session');
+export const memoryStorage = new MemoryStorage();
