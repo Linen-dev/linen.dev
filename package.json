@@ -19,10 +19,13 @@
     "turbo": "^1.6.3"
   },
   "scripts": {
-    "dev": "yarn turbo run dev --filter web",
     "web": "yarn turbo --filter web...",
-    "build": "yarn turbo build",
+    "dev:web": "yarn turbo run dev --filter web",
+    "dev:spa": "yarn turbo run dev --filter spa",
+    "test:web": "yarn web test",
     "build:deps": "yarn turbo run build --filter web^...",
+    "build:web": "yarn web build",
+    "migrate:db": "yarn dotenv -e .env prisma migrate dev",
     "td": "yarn turbo dev --filter",
     "tb": "yarn turbo build --filter"
   },

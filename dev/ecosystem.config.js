@@ -1,26 +1,24 @@
-require('dotenv').config();
+require('dotenv').config({ path: '../.env' });
 
 module.exports = {
   apps: [
     {
       name: 'nextjs',
       script: 'yarn dev',
-      cwd: '..',
+      cwd: '../apps/web',
       env: {
-        PORT: 80,
+        PORT: process.env.PORT || 3000,
       },
     },
     {
       name: 'queue',
       script: 'npx tsx watch queue/index.ts',
       cwd: '../apps/web',
-      restart_delay: 3000,
     },
     {
       name: 'discord-bots',
       script: 'bash up.sh',
       cwd: '../apps/discord-bots',
-      restart_delay: 3000,
     },
     {
       name: 'push-service',
@@ -37,7 +35,7 @@ module.exports = {
     {
       name: 'https-proxy',
       cwd: '/opt/homebrew/bin/',
-      script: `ngrok http --region=us --hostname=linen-san.ngrok.io 80`,
+      script: `ngrok http --region=us --hostname=${process.env.NGROK_HOSTNAME} 80`,
     },
   ],
 };

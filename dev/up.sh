@@ -1,5 +1,5 @@
 #!/bin/bash 
-
+yarn build:deps
 # Call func function on exit
 trap func exit
 # Declare the function

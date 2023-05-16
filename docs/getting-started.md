@@ -4,9 +4,9 @@
 
 - node >=16 (https://github.com/nvm-sh/nvm)
 - yarn (npm install -g yarn)
-- postgres 13 (or docker and docker-compose) 
+- postgres 13 (or docker and docker-compose)
 
-> installing node with snapcraft isn't compatible with Prisma, please use NVM instead. 
+> installing node with snapcraft isn't compatible with Prisma, please use NVM instead.
 
 ## Getting Started
 
@@ -30,13 +30,13 @@ yarn install
 cd dev && docker-compose up -d && cd ..
 
 # build dependencies
-yarn turbo run build --filter web^...
+yarn build:deps
 
 ## migrate database
-yarn dotenv -e .env prisma migrate dev
+yarn migrate:db
 
 # start the web
-yarn turbo run dev --filter web
+yarn dev:web
 ```
 
 Only credentials sign-in method enabled by default. To setup github sign-in or magic link sign-in:
