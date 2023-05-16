@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next/types';
 import Stripe from 'stripe';
 import PermissionsService from 'services/permissions';
 import { cors, preflight } from 'utilities/cors';
+import { sendNotification } from 'services/slack';
 
 const stripe = new Stripe(process.env.STRIPE_API_KEY!, {
   apiVersion: '2022-11-15',
@@ -136,6 +137,11 @@ export default async function handler(
       cancelUrl,
     });
     if (url) {
+      try {
+        await sendNotification(`User ${email} is being redirected to stripe.`);
+      } catch (exception) {
+        console.error('Failed to send a notification: ', exception);
+      }
       return response.redirect(303, url);
     }
     return response.status(500).json({});
