@@ -50,6 +50,8 @@ export default function Communities({ communities }: Props) {
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
                   setQuery(event.target.value)
                 }
+                size="lg"
+                rounded="full"
               />
             </div>
           </div>

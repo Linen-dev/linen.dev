@@ -22,6 +22,8 @@ interface Props {
   title?: string;
   pattern?: string;
   inputRef?: React.RefObject<HTMLInputElement>;
+  size?: 'md' | 'lg';
+  rounded?: 'sm' | 'full';
   onChange?(event: React.ChangeEvent<HTMLInputElement>): void;
   onInput?(event: React.ChangeEvent<HTMLInputElement>): void;
   onBlur?(event: React.ChangeEvent<HTMLInputElement>): void;
@@ -53,16 +55,27 @@ function TextInput({
   autoFocus,
   title,
   pattern,
+  size,
+  rounded,
   ...rest
 }: Props) {
   return (
     <>
       {label && <Label htmlFor={id}>{label}</Label>}
       <div className={styles.container}>
-        {icon && <div className={styles.icon}>{icon}</div>}
+        {icon && (
+          <div
+            className={classNames(styles.icon, { [styles.lg]: size === 'lg' })}
+          >
+            {icon}
+          </div>
+        )}
         <input
           ref={inputRef}
-          className={classNames(styles.input, className)}
+          className={classNames(styles.input, className, {
+            [styles.lg]: size === 'lg',
+            [styles.rounded]: rounded === 'full',
+          })}
           type={type}
           id={id}
           name={id || name}
@@ -91,6 +104,7 @@ function TextInput({
 
 TextInput.defaultProps = {
   type: 'text',
+  size: 'md',
 };
 
 export default TextInput;
