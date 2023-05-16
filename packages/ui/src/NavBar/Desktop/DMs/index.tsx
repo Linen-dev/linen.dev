@@ -10,6 +10,8 @@ import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp';
 import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
 import { useState } from 'react';
 import { timestamp } from '@linen/utilities/date';
+import NewDmModal from '@/NewDmModal';
+import type { ApiClient } from '@linen/api-client';
 
 type Props = {
   permissions: Permissions;
@@ -18,9 +20,14 @@ type Props = {
   highlights: string[];
   debouncedUpdateReadStatus: Function;
   setHighlights: Function;
-  NewDmModal: (args: any) => JSX.Element;
   Link: (args: any) => JSX.Element;
-  archiveChannel: (args: any) => Promise<any>;
+  api: ApiClient;
+  CustomRouterPush({
+    isSubDomainRouting,
+    path,
+    communityName,
+    communityType,
+  }: any): void;
 };
 
 function ToggleIcon({
@@ -43,9 +50,9 @@ export function DMs({
   highlights,
   debouncedUpdateReadStatus,
   setHighlights,
-  NewDmModal,
   Link,
-  archiveChannel,
+  api,
+  CustomRouterPush,
 }: Props) {
   const [show, toggle] = useState(true);
   const [modal, setModal] = useState(false);
@@ -73,6 +80,8 @@ export function DMs({
               setDms={setDms}
               show={modal}
               close={() => setModal(false)}
+              CustomRouterPush={CustomRouterPush}
+              api={api}
             />
           </>
         )}
@@ -98,7 +107,7 @@ export function DMs({
               const id = channel.id;
               const accountId = permissions.accountId;
               accountId &&
-                archiveChannel({ channelId: id, accountId }).then(() => {
+                api.archiveChannel({ channelId: id, accountId }).then(() => {
                   setDms((dms) => {
                     return dms.map((dm) => {
                       if (dm.id === id) {

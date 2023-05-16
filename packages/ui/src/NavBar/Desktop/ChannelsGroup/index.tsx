@@ -10,6 +10,8 @@ import styles from './index.module.scss';
 import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
 import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp';
 import { FiSettings } from '@react-icons/all-files/fi/FiSettings';
+import NewChannelModal from '@/NewChannelModal';
+import type { ApiClient } from '@linen/api-client';
 
 interface Props {
   channelName?: string;
@@ -32,7 +34,13 @@ interface Props {
     from: string;
   }): void;
   Link: (args: any) => JSX.Element;
-  NewChannelModal: (args: any) => JSX.Element;
+  api: ApiClient;
+  CustomRouterPush({
+    isSubDomainRouting,
+    path,
+    communityName,
+    communityType,
+  }: any): void;
 }
 
 export default function ChannelsGroup({
@@ -46,7 +54,8 @@ export default function ChannelsGroup({
   onSettingsClick,
   onDrop,
   Link,
-  NewChannelModal,
+  api,
+  CustomRouterPush,
 }: Props) {
   const [show, toggle] = useState(true);
   const [modal, setModal] = useState(false);
@@ -77,6 +86,8 @@ export default function ChannelsGroup({
               permissions={permissions}
               show={modal}
               close={() => setModal(false)}
+              CustomRouterPush={CustomRouterPush}
+              api={api}
             />
           </>
         ) : (

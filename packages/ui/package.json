@@ -112,6 +112,7 @@
     "./LinenIcon": "./dist/LinenIcon/index.js",
     "./LinenLogo": "./dist/LinenLogo/index.js",
     "./List": "./dist/List/index.js",
+    "./MembersModal": "./dist/MembersModal/index.js",
     "./Message": "./dist/Message/index.js",
     "./MessageForm": "./dist/MessageForm/index.js",
     "./MessagePreview": "./dist/MessagePreview/index.js",
@@ -119,6 +120,8 @@
     "./NativeSelect": "./dist/NativeSelect/index.js",
     "./Nav": "./dist/Nav/index.js",
     "./NavBar": "./dist/NavBar/index.js",
+    "./NewChannelModal": "./dist/NewChannelModal/index.js",
+    "./NewDmModal": "./dist/NewDmModal/index.js",
     "./Pages": "./dist/Pages/index.js",
     "./Pagination": "./dist/Pagination/index.js",
     "./PasswordField": "./dist/PasswordField/index.js",
@@ -133,6 +136,7 @@
     "./ReminderModal": "./dist/ReminderModal/index.js",
     "./Row": "./dist/Row/index.js",
     "./SearchBar": "./dist/SearchBar/index.js",
+    "./ShowUsers": "./dist/ShowUsers/index.js",
     "./SlackIcon": "./dist/SlackIcon/index.js",
     "./Spinner": "./dist/Spinner/index.js",
     "./StarredView": "./dist/StarredView/index.js",
@@ -308,6 +312,9 @@
       "List": [
         "./dist/List/index.d.ts"
       ],
+      "MembersModal": [
+        "./dist/MembersModal/index.d.ts"
+      ],
       "Message": [
         "./dist/Message/index.d.ts"
       ],
@@ -328,6 +335,12 @@
       ],
       "NavBar": [
         "./dist/NavBar/index.d.ts"
+      ],
+      "NewChannelModal": [
+        "./dist/NewChannelModal/index.d.ts"
+      ],
+      "NewDmModal": [
+        "./dist/NewDmModal/index.d.ts"
       ],
       "Pages": [
         "./dist/Pages/index.d.ts"
@@ -370,6 +383,9 @@
       ],
       "SearchBar": [
         "./dist/SearchBar/index.d.ts"
+      ],
+      "ShowUsers": [
+        "./dist/ShowUsers/index.d.ts"
       ],
       "SlackIcon": [
         "./dist/SlackIcon/index.d.ts"

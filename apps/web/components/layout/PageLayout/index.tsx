@@ -6,7 +6,6 @@ import NavBar from '@linen/ui/NavBar';
 import SEO, { type SeoProps } from '../SEO';
 import GoogleAnalytics from '../GoogleAnalytics';
 import Favicon from './Favicon';
-import classNames from 'classnames';
 import type {
   Permissions,
   SerializedAccount,
@@ -26,9 +25,8 @@ import usePath from 'hooks/path';
 import { useRouter } from 'next/router';
 import NewCommunityModal from 'components/Modals/NewCommunityModal';
 import { notify } from 'utilities/notification';
-import NewChannelModal from 'components/Modals/NewChannelModal';
 import { getHomeUrl } from '@linen/utilities/home';
-import NewDmModal from 'components/Modals/NewDmModal';
+import CustomRouterPush from 'components/Link/CustomRouterPush';
 
 interface Props {
   className?: string;
@@ -129,11 +127,10 @@ function PageLayout({
           routerAsPath={router.asPath}
           usePath={usePath}
           getHomeUrl={getHomeUrl}
-          NewChannelModal={NewChannelModal}
-          NewCommunityModal={NewCommunityModal}
-          NewDmModal={NewDmModal}
           api={api}
           notify={notify}
+          CustomRouterPush={CustomRouterPush}
+          NewCommunityModal={NewCommunityModal}
         />
         <div className={className || styles.container} ref={innerRef}>
           <ErrorBoundary FallbackComponent={ErrorFallback}>

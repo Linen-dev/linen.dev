@@ -9,7 +9,7 @@ import ChannelView from '@linen/ui/ChannelView';
 import { createThreadImitation } from '@linen/serializers/thread';
 import { useUsersContext } from '@linen/contexts/Users';
 import { useRouter } from 'next/router';
-import MembersModal from 'components/Modals/MembersModal';
+import MembersModal from '@linen/ui/MembersModal';
 import Pagination from 'components/Pagination';
 import JoinChannelLink from 'components/Link/JoinChannelLink';
 import { useJoinContext } from 'contexts/Join';

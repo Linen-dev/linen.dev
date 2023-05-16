@@ -33,10 +33,14 @@ interface Props {
   routerAsPath: string;
   usePath: (args: { href: string }) => string;
   getHomeUrl: (args: any) => string;
-  NewChannelModal: (args: any) => JSX.Element;
   NewCommunityModal: (args: any) => JSX.Element;
-  NewDmModal: (args: any) => JSX.Element;
   api: ApiClient;
+  CustomRouterPush({
+    isSubDomainRouting,
+    path,
+    communityName,
+    communityType,
+  }: any): void;
   notify: (...args: any) => any;
 }
 
@@ -53,11 +57,10 @@ export default function NavBar({
   routerAsPath,
   usePath,
   getHomeUrl,
-  NewChannelModal,
   NewCommunityModal,
-  NewDmModal,
   api,
   notify,
+  CustomRouterPush,
 }: Props) {
   const sortedChannels = sortByChannelName(channels);
 
@@ -78,11 +81,10 @@ export default function NavBar({
           routerAsPath={routerAsPath}
           usePath={usePath}
           getHomeUrl={getHomeUrl}
-          NewChannelModal={NewChannelModal}
           NewCommunityModal={NewCommunityModal}
-          NewDmModal={NewDmModal}
           notify={notify}
           api={api}
+          CustomRouterPush={CustomRouterPush}
         />
       </div>
     </>

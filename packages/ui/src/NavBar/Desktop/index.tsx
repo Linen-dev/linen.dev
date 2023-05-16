@@ -56,11 +56,15 @@ interface Props {
   routerAsPath: string;
   usePath: (args: { href: string }) => string;
   getHomeUrl: (args: any) => string;
-  NewChannelModal: (args: any) => JSX.Element;
   NewCommunityModal: (args: any) => JSX.Element;
-  NewDmModal: (args: any) => JSX.Element;
   notify: (...args: any) => any;
   api: ApiClient;
+  CustomRouterPush({
+    isSubDomainRouting,
+    path,
+    communityName,
+    communityType,
+  }: any): void;
 }
 
 enum ModalView {
@@ -82,11 +86,10 @@ export default function DesktopNavBar({
   routerAsPath,
   usePath,
   getHomeUrl,
-  NewChannelModal,
   NewCommunityModal,
-  NewDmModal,
   notify,
   api,
+  CustomRouterPush,
 }: Props) {
   const paths = {
     inbox: usePath({ href: '/inbox' }),
@@ -251,7 +254,8 @@ export default function DesktopNavBar({
               }}
               onDrop={onDrop}
               Link={Link}
-              NewChannelModal={NewChannelModal}
+              api={api}
+              CustomRouterPush={CustomRouterPush}
             />
             {currentUser && permissions.chat && (
               <DMs
@@ -261,9 +265,9 @@ export default function DesktopNavBar({
                 highlights={highlights}
                 permissions={permissions}
                 setHighlights={setHighlights}
-                archiveChannel={api.archiveChannel}
                 Link={Link}
-                NewDmModal={NewDmModal}
+                api={api}
+                CustomRouterPush={CustomRouterPush}
               />
             )}
             {permissions.manage && (

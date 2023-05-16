@@ -7,7 +7,7 @@ export default function CustomRouterPush({
   communityName,
   communityType,
 }: any) {
-  return Router.push(
+  Router.push(
     CustomLinkHelper({ communityType, communityName, isSubDomainRouting, path })
   );
 }

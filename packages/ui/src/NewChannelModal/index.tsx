@@ -1,30 +1,38 @@
-import { useRef, useState } from 'react';
-import H3 from '@linen/ui/H3';
+import React, { useState } from 'react';
 import { FiX } from '@react-icons/all-files/fi/FiX';
-import Button from '@linen/ui/Button';
-import Modal from '@linen/ui/Modal';
-import Label from '@linen/ui/Label';
-import Badge from '@linen/ui/Badge';
-import TextInput from '@linen/ui/TextInput';
-import Toast from '@linen/ui/Toast';
-import Toggle from '@linen/ui/Toggle';
-import Suggestions from '@linen/ui/Suggestions';
 import { useLinkContext } from '@linen/contexts/Link';
-import CustomRouterPush from 'components/Link/CustomRouterPush';
-import { patterns } from '@linen/types';
-import unique from 'lodash.uniq';
-import { api } from 'utilities/requests';
+import { patterns, Permissions, SerializedUser } from '@linen/types';
+import type { ApiClient } from '@linen/api-client';
+import H3 from '@/H3';
+import Button from '@/Button';
+import Modal from '@/Modal';
+import TextInput from '@/TextInput';
+import Toast from '@/Toast';
+import Toggle from '@/Toggle';
 import styles from './index.module.scss';
 import classNames from 'classnames';
-import { Permissions, SerializedUser } from '@linen/types';
+import ShowUsers from '@/ShowUsers';
 
 interface Props {
   permissions: Permissions;
   show: boolean;
   close(): void;
+  api: ApiClient;
+  CustomRouterPush({
+    isSubDomainRouting,
+    path,
+    communityName,
+    communityType,
+  }: any): void;
 }
 
-export default function NewChannelModal({ permissions, show, close }: Props) {
+export default function NewChannelModal({
+  permissions,
+  show,
+  close,
+  api,
+  CustomRouterPush,
+}: Props) {
   const [loading, setLoading] = useState(false);
   const [channelPrivate, setChannelPrivate] = useState(false);
   const { isSubDomainRouting, communityName, communityType } = useLinkContext();
@@ -130,6 +138,7 @@ export default function NewChannelModal({ permissions, show, close }: Props) {
             setUsers={setUsers}
             removeUser={removeUser}
             currentUser={permissions.user}
+            api={api}
           />
         </div>
         <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
@@ -139,81 +148,5 @@ export default function NewChannelModal({ permissions, show, close }: Props) {
         </div>
       </form>
     </Modal>
-  );
-}
-
-export function ShowUsers({
-  communityId,
-  channelPrivate,
-  setUsers,
-  users,
-  removeUser,
-  currentUser,
-}: {
-  communityId: string;
-  channelPrivate: boolean;
-  users: SerializedUser[];
-  setUsers: React.Dispatch<React.SetStateAction<SerializedUser[]>>;
-  removeUser(user: SerializedUser): void;
-  currentUser: SerializedUser;
-}) {
-  const ref = useRef(null);
-  const [query, setQuery] = useState<SerializedUser[]>([]);
-  const [val, setVal] = useState<string>();
-
-  if (!channelPrivate) {
-    return <></>;
-  }
-
-  return (
-    <>
-      <Label htmlFor="userId">Add member</Label>
-      <TextInput
-        inputRef={ref}
-        autoFocus
-        id="userId"
-        name="userId"
-        value={val}
-        autoComplete="off"
-        onInput={(e: any) => {
-          setVal(e.target.value);
-          api.fetchMentions(e.target.value, communityId).then(setQuery);
-        }}
-      />
-      <Suggestions
-        className={styles.suggestions}
-        users={query}
-        onSelect={(user: SerializedUser | null) => {
-          if (user) {
-            setUsers(unique([...users, user]));
-            setVal('');
-            (ref.current as any).focus();
-            setQuery([]);
-          }
-        }}
-      />
-      <span className="text-xs text-gray-500">Type for search users</span>
-
-      {users.length > 0 && (
-        <>
-          <Label htmlFor="members" className="pt-4">
-            Members
-          </Label>
-          <div className="flex flex-wrap pb-2">
-            {users.map((user) => {
-              const props =
-                currentUser.id !== user.id
-                  ? { onClose: () => removeUser(user) }
-                  : {};
-              return (
-                <div className="pr-1 pb-1" key={user.id}>
-                  <Badge {...props}>{user.displayName}</Badge>
-                </div>
-              );
-            })}
-          </div>
-        </>
-      )}
-    </>
   );
 }

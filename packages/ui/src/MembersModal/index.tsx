@@ -1,24 +1,26 @@
 import React, { useContext, useEffect, useState } from 'react';
-import H3 from '@linen/ui/H3';
-import Button from '@linen/ui/Button';
-import Modal from '@linen/ui/Modal';
-import ConfirmationModal from '@linen/ui/ConfirmationModal';
 import { Permissions, SerializedUser } from '@linen/types';
 import { ChannelContext } from '@linen/contexts/channel';
-import { ShowUsers } from 'components/Modals/NewChannelModal';
-import { api } from 'utilities/requests';
-import Toast from '@linen/ui/Toast';
+import type { ApiClient } from '@linen/api-client';
+import H3 from '@/H3';
+import Button from '@/Button';
+import Modal from '@/Modal';
+import ConfirmationModal from '@/ConfirmationModal';
+import Toast from '@/Toast';
+import ShowUsers from '@/ShowUsers';
 
 interface MembersModalProps {
   permissions: Permissions;
   open: boolean;
   close(): void;
+  api: ApiClient;
 }
 
 export default function MembersModal({
   permissions,
   open,
   close,
+  api,
 }: MembersModalProps) {
   const channel = useContext(ChannelContext);
   const [users, setUsers] = useState<SerializedUser[]>([]);
@@ -79,6 +81,7 @@ export default function MembersModal({
         setUsers={setUsers}
         removeUser={showModal}
         currentUser={permissions.user}
+        api={api}
       />
       <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
         <Button color="blue" type="submit" onClick={() => onUpdateClick()}>

@@ -1,15 +1,14 @@
-import { useRef, useState } from 'react';
-import H3 from '@linen/ui/H3';
+import React, { useRef, useState } from 'react';
 import { FiX } from '@react-icons/all-files/fi/FiX';
 import { useLinkContext } from '@linen/contexts/Link';
-import CustomRouterPush from 'components/Link/CustomRouterPush';
-import { api } from 'utilities/requests';
-import Modal from '@linen/ui/Modal';
-import TextInput from '@linen/ui/TextInput';
-import Toast from '@linen/ui/Toast';
-import Button from '@linen/ui/Button';
-import Suggestions from '@linen/ui/Suggestions';
 import { SerializedChannel, SerializedUser } from '@linen/types';
+import type { ApiClient } from '@linen/api-client';
+import H3 from '@/H3';
+import Modal from '@/Modal';
+import TextInput from '@/TextInput';
+import Toast from '@/Toast';
+import Button from '@/Button';
+import Suggestions from '@/Suggestions';
 import styles from './index.module.scss';
 
 export default function NewDmModal({
@@ -17,11 +16,20 @@ export default function NewDmModal({
   setDms,
   show,
   close,
+  api,
+  CustomRouterPush,
 }: {
   communityId: string;
   setDms: React.Dispatch<React.SetStateAction<SerializedChannel[]>>;
   show: boolean;
   close(): void;
+  api: ApiClient;
+  CustomRouterPush({
+    isSubDomainRouting,
+    path,
+    communityName,
+    communityType,
+  }: any): void;
 }) {
   const ref = useRef(null);
   const [loading, setLoading] = useState(false);
