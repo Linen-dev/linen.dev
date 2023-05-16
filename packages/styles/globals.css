@@ -19,6 +19,23 @@ body {
   -webkit-text-size-adjust: 100%;
 }
 
+body::-webkit-scrollbar {
+  width: 0.5rem;
+}
+
+body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+body::-webkit-scrollbar-thumb {
+  background: var(--color-gray-300);
+  border-radius: 0.25rem;
+}
+
+body::-webkit-scrollbar-thumb:hover {
+  background: var(--color-gray-300);
+}
+
 a {
   color: inherit;
   text-decoration: none;
