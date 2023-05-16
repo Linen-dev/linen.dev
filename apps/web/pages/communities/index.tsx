@@ -40,7 +40,7 @@ export default function Communities({ communities }: Props) {
         <Container>
           <div className={styles.banner}>
             <h1 className={styles.h1}>
-              Find your <span className={styles.underscore}>community</span>.
+              Find Your <span className={styles.underscore}>Community</span>
             </h1>
             <div className={styles.search}>
               <TextInput
