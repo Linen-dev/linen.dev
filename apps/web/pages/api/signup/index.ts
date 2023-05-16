@@ -59,7 +59,7 @@ async function create(request: NextApiRequest, response: NextApiResponse) {
       { req: { ...request, user: newAuth }, res: response },
       ApiEvent.sign_up
     );
-    await eventSignUp(newAuth.id, email, newAuth.createdAt);
+    await eventSignUp(newAuth.id, email, newAuth.createdAt, accountId);
   } catch (e) {
     console.error('failed to send: ', e);
   }

@@ -4,10 +4,15 @@ import { sendNotification } from 'services/slack';
 export const eventSignUp = async (
   id: string,
   email: string,
-  createdAt: Date
+  createdAt: Date,
+  accountId?: string
 ) => {
   const promises: Promise<any>[] = [
-    sendNotification('Email created: ' + email),
+    sendNotification(
+      accountId
+        ? `User ${email} signed up and joined community ${accountId}`
+        : `User ${email} signed up`
+    ),
     createUserEvent(id, email, createdAt),
   ];
 
