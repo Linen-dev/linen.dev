@@ -65,6 +65,7 @@
   padding: 1rem;
   position: relative;
   animation: animatedContent 0.1s ease;
+  box-shadow: 0 2px 8px var(--color-gray-300);
 
   @media (min-width: 640px) {
     margin-bottom: 2rem;
