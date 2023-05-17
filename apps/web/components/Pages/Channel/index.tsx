@@ -13,6 +13,7 @@ import MembersModal from 'components/Modals/MembersModal';
 import Pagination from 'components/Pagination';
 import JoinChannelLink from 'components/Link/JoinChannelLink';
 import { useJoinContext } from 'contexts/Join';
+import usePath from 'hooks/path';
 import ChannelForBots from 'components/Bots/ChannelForBots';
 import { playNotificationSound } from 'utilities/playNotificationSound';
 
@@ -194,6 +195,8 @@ export default function Channel(props: ChannelProps) {
         useJoinContext={useJoinContext}
         playNotificationSound={playNotificationSound}
         useUsersContext={useUsersContext}
+        usePath={usePath}
+        useRouter={useRouter}
       />
     </PageLayout>
   );

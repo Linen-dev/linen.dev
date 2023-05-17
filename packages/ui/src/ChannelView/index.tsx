@@ -44,6 +44,8 @@ export default function ChannelView({
   queryIntegration,
   playNotificationSound,
   useUsersContext,
+  usePath,
+  useRouter,
   api,
 }: {
   settings: Settings;
@@ -70,6 +72,8 @@ export default function ChannelView({
   JoinChannelLink(...args: any): JSX.Element;
   playNotificationSound: (volume: number) => Promise<void>;
   useUsersContext(): any;
+  usePath(options: any): any;
+  useRouter(): any;
   api: ApiClient;
 }) {
   const viewport = useViewport();
@@ -863,6 +867,8 @@ export default function ChannelView({
         queryIntegration={queryIntegration}
         playNotificationSound={playNotificationSound}
         useUsersContext={useUsersContext}
+        usePath={usePath}
+        useRouter={useRouter}
         api={api}
         key={currentChannel.channelName}
         threads={threads}
