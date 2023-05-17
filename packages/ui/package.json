@@ -121,7 +121,9 @@
     "./Nav": "./dist/Nav/index.js",
     "./NavBar": "./dist/NavBar/index.js",
     "./NewChannelModal": "./dist/NewChannelModal/index.js",
+    "./NewCommunityModal": "./dist/NewCommunityModal/index.js",
     "./NewDmModal": "./dist/NewDmModal/index.js",
+    "./OnboardingForm": "./dist/OnboardingForm/index.js",
     "./Pages": "./dist/Pages/index.js",
     "./Pagination": "./dist/Pagination/index.js",
     "./PasswordField": "./dist/PasswordField/index.js",
@@ -339,8 +341,14 @@
       "NewChannelModal": [
         "./dist/NewChannelModal/index.d.ts"
       ],
+      "NewCommunityModal": [
+        "./dist/NewCommunityModal/index.d.ts"
+      ],
       "NewDmModal": [
         "./dist/NewDmModal/index.d.ts"
+      ],
+      "OnboardingForm": [
+        "./dist/OnboardingForm/index.d.ts"
       ],
       "Pages": [
         "./dist/Pages/index.d.ts"

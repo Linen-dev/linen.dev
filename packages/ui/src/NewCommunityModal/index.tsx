@@ -1,10 +1,10 @@
 import React from 'react';
-import Modal from '@linen/ui/Modal';
-import Icon from '@linen/ui/Icon';
-import H3 from '@linen/ui/H3';
+import Modal from '@/Modal';
+import Icon from '@/Icon';
+import H3 from '@/H3';
 import { FiX } from '@react-icons/all-files/fi/FiX';
 import styles from './index.module.scss';
-import Form from 'components/Pages/Onboarding/Form';
+import OnboardingForm from '@/OnboardingForm';
 import type { ApiClient } from '@linen/api-client';
 
 interface Props {
@@ -22,7 +22,7 @@ export default function NewCommunityModal({ open, close, api }: Props) {
           <FiX />
         </Icon>
       </div>
-      <Form createAccount={api.createAccount} />
+      <OnboardingForm api={api} />
     </Modal>
   );
 }

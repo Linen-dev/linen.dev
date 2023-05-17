@@ -1,31 +1,23 @@
-import Button from '@linen/ui/Button';
-import Label from '@linen/ui/Label';
-import Badge from '@linen/ui/Badge';
-import TextInput from '@linen/ui/TextInput';
-import Toast from '@linen/ui/Toast';
-import { useState } from 'react';
+import React, { useState } from 'react';
+import Button from '@/Button';
+import Label from '@/Label';
+import Badge from '@/Badge';
+import TextInput from '@/TextInput';
+import Toast from '@/Toast';
 import { patterns } from '@linen/types';
 import { slugify } from '@linen/utilities/string';
 import { FiX } from '@react-icons/all-files/fi/FiX';
 import { FiPlus } from '@react-icons/all-files/fi/FiPlus';
 import { FiHash } from '@react-icons/all-files/fi/FiHash';
 import { FiUser } from '@react-icons/all-files/fi/FiUser';
+import type { ApiClient } from '@linen/api-client';
+import styles from './index.module.scss';
 
 interface Props {
-  createAccount({
-    name,
-    slackDomain,
-    channels,
-    members,
-  }: {
-    name: string;
-    slackDomain: string;
-    channels: string[];
-    members: string[];
-  }): Promise<any>;
+  api: ApiClient;
 }
 
-export default function Form({ createAccount }: Props) {
+export default function OnboardingForm({ api }: Props) {
   const [loading, setLoading] = useState(false);
   const [channels, setChannels] = useState<string[]>([]);
   const [emails, setEmails] = useState<string[]>([]);
@@ -42,7 +34,7 @@ export default function Form({ createAccount }: Props) {
       const name = target.name.value;
       const slackDomain = target.slackDomain.value.toLowerCase();
 
-      const response = await createAccount({
+      const response = await api.createAccount({
         name,
         slackDomain,
         channels,
@@ -106,7 +98,7 @@ export default function Form({ createAccount }: Props) {
         <Label htmlFor="name">
           Name
           <br />
-          <span className="text-xs font-normal text-gray-700 dark:text-gray-200">
+          <span className={styles.subtitle}>
             Letters, spaces and apostrophes.
           </span>
         </Label>
@@ -121,12 +113,12 @@ export default function Form({ createAccount }: Props) {
             setSuggestion(name ? slugify(name) : '');
           }}
         />
-        <div className="p-2"></div>
+        <div className={styles.p2}></div>
 
         <Label htmlFor="slackDomain">
           Path
           <br />
-          <span className="text-xs font-normal text-gray-700 dark:text-gray-200">
+          <span className={styles.subtitle}>
             https://linen.dev/s/
             {suggestion || 'community-path'}
           </span>
@@ -141,19 +133,19 @@ export default function Form({ createAccount }: Props) {
             setSuggestion(e.target.value)
           }
         />
-        <div className="p-2"></div>
+        <div className={styles.p2}></div>
 
         <Label htmlFor="channelName">
           Channels
           <br />
-          <span className="text-xs font-normal text-gray-700 dark:text-gray-200">
+          <span className={styles.subtitle}>
             Lowercased letters, underscores, numbers and hyphens.
           </span>
         </Label>
-        <div className="flex flex-wrap">
+        <div className={styles.flexWrap}>
           {channels?.map((channel) => {
             return (
-              <div className="pr-1 pb-1" key={channel}>
+              <div className={styles.badgeWrapper} key={channel}>
                 <Badge onClick={() => removeChannel(channel)}>
                   <FiHash /> {channel} <FiX />
                 </Badge>
@@ -161,7 +153,7 @@ export default function Form({ createAccount }: Props) {
             );
           })}
         </div>
-        <div className="flex gap-2">
+        <div className={styles.flexGap2}>
           <TextInput
             id="new-channel-onboarding"
             placeholder="general"
@@ -176,23 +168,21 @@ export default function Form({ createAccount }: Props) {
               }
             }}
           />
-          <Button style={{ marginBottom: 0 }} onClick={() => addChannel()}>
+          <Button className={styles.mb0} onClick={() => addChannel()}>
             Add <FiPlus />
           </Button>
         </div>
-        <div className="p-2"></div>
+        <div className={styles.p2}></div>
 
         <Label htmlFor="email">
           Members
           <br />
-          <span className="text-xs font-normal text-gray-700 dark:text-gray-200">
-            Send invitations via email.
-          </span>
+          <span className={styles.subtitle}>Send invitations via email.</span>
         </Label>
-        <div className="flex flex-wrap">
+        <div className={styles.flexWrap}>
           {emails?.map((email) => {
             return (
-              <div className="pr-1 pb-1" key={email}>
+              <div className={styles.badgeWrapper} key={email}>
                 <Badge onClick={() => removeEmail(email)}>
                   <FiUser />
                   {email} <FiX />
@@ -201,7 +191,7 @@ export default function Form({ createAccount }: Props) {
             );
           })}
         </div>
-        <div className="flex w-full gap-2">
+        <div className={styles.flexGap2Full}>
           <TextInput
             id="new-email-onboarding"
             type="email"
@@ -215,14 +205,14 @@ export default function Form({ createAccount }: Props) {
               }
             }}
           />
-          <Button style={{ marginBottom: 0 }} onClick={() => addEmail()}>
+          <Button className={styles.mb0} onClick={() => addEmail()}>
             Add <FiPlus />
           </Button>
         </div>
-        <div className="pb-8"></div>
+        <div className={styles.pb8}></div>
 
         <Button
-          style={{ width: '100% ' }}
+          className={styles.btn}
           type="submit"
           disabled={loading}
           weight="medium"

@@ -23,7 +23,6 @@ import InternalLink from 'components/Link/InternalLink';
 import { signOut } from '@linen/auth/client';
 import usePath from 'hooks/path';
 import { useRouter } from 'next/router';
-import NewCommunityModal from 'components/Modals/NewCommunityModal';
 import { notify } from 'utilities/notification';
 import { getHomeUrl } from '@linen/utilities/home';
 import CustomRouterPush from 'components/Link/CustomRouterPush';
@@ -130,7 +129,6 @@ function PageLayout({
           api={api}
           notify={notify}
           CustomRouterPush={CustomRouterPush}
-          NewCommunityModal={NewCommunityModal}
         />
         <div className={className || styles.container} ref={innerRef}>
           <ErrorBoundary FallbackComponent={ErrorFallback}>

@@ -1,0 +1,43 @@
+.subtitle {
+  color: var(--color-gray-700);
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 400;
+}
+
+.p2 {
+  padding: 0.5rem /* 8px */;
+}
+
+.flexWrap {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.badgeWrapper {
+  padding-right: 0.25rem /* 4px */;
+  padding-bottom: 0.25rem /* 4px */;
+}
+
+.pb8 {
+  padding-bottom: 2rem /* 32px */;
+}
+
+.btn {
+  width: 100%;
+}
+
+.mb0 {
+  margin-bottom: 0;
+}
+
+.flexGap2 {
+  display: flex;
+  gap: 0.5rem /* 8px */;
+}
+
+.flexGap2Full {
+  display: flex;
+  gap: 0.5rem /* 8px */;
+  width: 100%;
+}

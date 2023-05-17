@@ -32,6 +32,7 @@ import PoweredByLinen from '@/PoweredByLinen';
 import AnalyticsGroup from './AnalyticsGroup';
 import EditChannelModal from '@/EditChannelModal';
 import type { ApiClient } from '@linen/api-client';
+import NewCommunityModal from '@/NewCommunityModal';
 
 interface Props {
   mode: Mode;
@@ -56,7 +57,6 @@ interface Props {
   routerAsPath: string;
   usePath: (args: { href: string }) => string;
   getHomeUrl: (args: any) => string;
-  NewCommunityModal: (args: any) => JSX.Element;
   notify: (...args: any) => any;
   api: ApiClient;
   CustomRouterPush({
@@ -86,7 +86,6 @@ export default function DesktopNavBar({
   routerAsPath,
   usePath,
   getHomeUrl,
-  NewCommunityModal,
   notify,
   api,
   CustomRouterPush,
@@ -216,6 +215,7 @@ export default function DesktopNavBar({
             <NewCommunityModal
               open={modal === ModalView.NEW_COMMUNITY}
               close={() => setModal(ModalView.NONE)}
+              api={api}
             />
           </>
         )}

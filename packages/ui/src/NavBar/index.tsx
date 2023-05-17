@@ -33,7 +33,6 @@ interface Props {
   routerAsPath: string;
   usePath: (args: { href: string }) => string;
   getHomeUrl: (args: any) => string;
-  NewCommunityModal: (args: any) => JSX.Element;
   api: ApiClient;
   CustomRouterPush({
     isSubDomainRouting,
@@ -57,7 +56,6 @@ export default function NavBar({
   routerAsPath,
   usePath,
   getHomeUrl,
-  NewCommunityModal,
   api,
   notify,
   CustomRouterPush,
@@ -81,7 +79,6 @@ export default function NavBar({
           routerAsPath={routerAsPath}
           usePath={usePath}
           getHomeUrl={getHomeUrl}
-          NewCommunityModal={NewCommunityModal}
           notify={notify}
           api={api}
           CustomRouterPush={CustomRouterPush}
