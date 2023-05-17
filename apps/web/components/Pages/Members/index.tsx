@@ -284,13 +284,17 @@ export default function Members({
         method: 'POST',
         body: JSON.stringify({ email, communityId: currentCommunity.id, role }),
       });
+      const data = await response.json();
       if (!response.ok) {
-        throw response;
+        if (data.error) {
+          Toast.error(data.error);
+        } else {
+          throw response;
+        }
       } else {
-        console.log(response);
-        // router.reload();
+        router.reload();
       }
-    } catch (error) {
+    } catch (exception) {
       Toast.error('Something went wrong');
     } finally {
       setLoading(false);
