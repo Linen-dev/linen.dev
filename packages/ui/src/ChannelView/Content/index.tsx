@@ -45,6 +45,7 @@ import ConfirmationModal from '@/ConfirmationModal';
 import Toast from '@/Toast';
 import type { ApiClient } from '@linen/api-client';
 import IntegrationsModalUI from '@/IntegrationsModal';
+import { copyToClipboard } from '@linen/utilities/clipboard';
 
 const { SidebarLayout } = Layouts.Shared;
 
@@ -128,6 +129,8 @@ interface Props {
   JoinChannelLink(): JSX.Element;
   playNotificationSound: (volume: number) => Promise<void>;
   useUsersContext(): any;
+  usePath(options: any): any;
+  useRouter(): any;
   api: ApiClient;
 }
 
@@ -181,6 +184,8 @@ export default function Channel({
   JoinChannelLink,
   playNotificationSound,
   useUsersContext,
+  usePath,
+  useRouter,
   api,
 }: Props) {
   const [collapsed, setCollapsed] = useState(false);
@@ -202,6 +207,8 @@ export default function Channel({
   const [modal, setModal] = useState<ModalView>(
     queryIntegration ? ModalView.INTEGRATIONS : ModalView.NONE
   );
+  const membersPath = usePath({ href: '/members' });
+  const router = useRouter();
 
   const currentUser = permissions.user || null;
 
@@ -532,7 +539,19 @@ export default function Channel({
                     />
                   </Header>
                   {threads.length === 0 ? (
-                    <Empty />
+                    <Empty
+                      onInvite={
+                        permissions.manage
+                          ? () => {
+                              router.push(membersPath);
+                            }
+                          : undefined
+                      }
+                      onShare={() => {
+                        copyToClipboard(router.asPath);
+                        Toast.success('Copied to clipboard');
+                      }}
+                    />
                   ) : (
                     <div className={styles.full}>
                       <ul className={styles.ulFull}>

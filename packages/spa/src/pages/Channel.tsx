@@ -92,6 +92,8 @@ function View() {
       Pagination={mockedComponent}
       queryIntegration={false}
       useJoinContext={mockedContext}
+      usePath={() => {}}
+      useRouter={() => {}}
     />
   );
 }

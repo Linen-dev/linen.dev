@@ -11,8 +11,8 @@
     45deg,
     var(--color-background),
     var(--color-background) 2px,
-    var(--color-gray-100) 2px,
-    var(--color-gray-100) 4px
+    var(--color-gray-50) 2px,
+    var(--color-gray-50) 4px
   );
   margin: 1rem;
   animation-name: opacity-animation;
@@ -42,4 +42,25 @@
   margin: 0;
   line-height: 1;
   user-select: none;
+}
+
+.button {
+  align-items: center;
+  background: var(--color-primary);
+  border: 2px solid var(--color-primary);
+  color: white;
+  cursor: pointer;
+  display: flex;
+  font-weight: 500;
+  gap: 0.25rem;
+  padding: 0.5rem 1.5rem;
+  margin-top: 1rem;
+  border-radius: 9999px;
+  transition: background 0.2s ease, color 0.2s ease, border 0.2s ease;
+}
+
+.button:hover {
+  background: var(--color-background);
+  color: var(--color-text);
+  border: 2px solid var(--color-text);
 }
