@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import ChannelView from '@linen/ui/ChannelView';
 import { useUsersContext } from '@linen/contexts/Users';
 import { useLinenStore } from '@/store';
@@ -9,6 +9,7 @@ import { useQuery } from '@tanstack/react-query';
 import { playNotificationSound } from '@/utils/playNotificationSound';
 import { useEffect } from 'react';
 import { localStorage } from '@linen/utilities/storage';
+import customUsePath from '@/hooks/usePath';
 
 type ChannelPageProps = {
   communityName: string;
@@ -51,16 +52,25 @@ export default function ChannelPage() {
 }
 
 function View() {
-  const { channelProps, currentCommunity, permissions, settings, channelName } =
-    useLinenStore((state) => ({
-      channelProps: state.channelProps,
-      currentCommunity: state.currentCommunity,
-      permissions: state.permissions,
-      settings: state.settings,
-      channelName: state.channelName,
-    }));
+  const navigate = useNavigate();
+  const {
+    channelProps,
+    currentCommunity,
+    permissions,
+    settings,
+    channelName,
+    communityName,
+  } = useLinenStore((state) => ({
+    channelProps: state.channelProps,
+    currentCommunity: state.currentCommunity,
+    permissions: state.permissions,
+    settings: state.settings,
+    channelName: state.channelName,
+    communityName: state.communityName,
+  }));
 
   if (
+    !communityName ||
     !channelProps ||
     !currentCommunity ||
     !permissions ||
@@ -85,6 +95,8 @@ function View() {
       useUsersContext={useUsersContext}
       api={api}
       playNotificationSound={playNotificationSound}
+      usePath={customUsePath({ communityName })}
+      routerPush={navigate}
       // TODO:
       addReaction={(a) => a}
       JoinChannelLink={mockedComponent}
@@ -92,8 +104,6 @@ function View() {
       Pagination={mockedComponent}
       queryIntegration={false}
       useJoinContext={mockedContext}
-      usePath={() => {}}
-      useRouter={() => {}}
     />
   );
 }

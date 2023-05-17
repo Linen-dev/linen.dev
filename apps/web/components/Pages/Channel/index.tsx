@@ -34,7 +34,7 @@ export default function Channel(props: ChannelProps) {
     dms,
   } = props;
 
-  const { query } = useRouter();
+  const router = useRouter();
 
   const [allUsers] = useUsersContext();
   const [currentChannel, setCurrentChannel] = useState(initialChannel);
@@ -186,7 +186,7 @@ export default function Channel(props: ChannelProps) {
         pinnedThreads={props.pinnedThreads}
         settings={props.settings}
         threads={props.threads}
-        queryIntegration={query.integration}
+        queryIntegration={router.query.integration}
         addReaction={addReaction}
         api={api}
         JoinChannelLink={JoinChannelLink}
@@ -196,7 +196,7 @@ export default function Channel(props: ChannelProps) {
         playNotificationSound={playNotificationSound}
         useUsersContext={useUsersContext}
         usePath={usePath}
-        useRouter={useRouter}
+        routerPush={router.push}
       />
     </PageLayout>
   );

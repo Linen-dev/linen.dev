@@ -45,7 +45,7 @@ export default function ChannelView({
   playNotificationSound,
   useUsersContext,
   usePath,
-  useRouter,
+  routerPush,
   api,
 }: {
   settings: Settings;
@@ -73,7 +73,7 @@ export default function ChannelView({
   playNotificationSound: (volume: number) => Promise<void>;
   useUsersContext(): any;
   usePath(options: any): any;
-  useRouter(): any;
+  routerPush(path: string): void;
   api: ApiClient;
 }) {
   const viewport = useViewport();
@@ -868,7 +868,7 @@ export default function ChannelView({
         playNotificationSound={playNotificationSound}
         useUsersContext={useUsersContext}
         usePath={usePath}
-        useRouter={useRouter}
+        routerPush={routerPush}
         api={api}
         key={currentChannel.channelName}
         threads={threads}

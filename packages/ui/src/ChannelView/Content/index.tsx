@@ -130,7 +130,7 @@ interface Props {
   playNotificationSound: (volume: number) => Promise<void>;
   useUsersContext(): any;
   usePath(options: any): any;
-  useRouter(): any;
+  routerPush(path: string): void;
   api: ApiClient;
 }
 
@@ -185,7 +185,7 @@ export default function Channel({
   playNotificationSound,
   useUsersContext,
   usePath,
-  useRouter,
+  routerPush,
   api,
 }: Props) {
   const [collapsed, setCollapsed] = useState(false);
@@ -208,7 +208,6 @@ export default function Channel({
     queryIntegration ? ModalView.INTEGRATIONS : ModalView.NONE
   );
   const membersPath = usePath({ href: '/members' });
-  const router = useRouter();
 
   const currentUser = permissions.user || null;
 
@@ -543,7 +542,7 @@ export default function Channel({
                       onInvite={
                         permissions.manage
                           ? () => {
-                              router.push(membersPath);
+                              routerPush(membersPath);
                             }
                           : undefined
                       }
