@@ -6,6 +6,7 @@ import SignIn from '@/pages/SignIn';
 import RequireAuth from '@/hoc/RequireAuth';
 import RedirectToLastPageViewed from '@/components/RedirectToLastPageViewed';
 import Loading from '@/components/Loading';
+import RedirectToLinen from './components/RedirectToLinen';
 const InboxPage = lazy(() => import('@/pages/Inbox'));
 const StarredPage = lazy(() => import('@/pages/Starred'));
 const AllPage = lazy(() => import('@/pages/All'));
@@ -97,6 +98,26 @@ export default function Router() {
                               <AllPage />
                             </Suspense>
                           ),
+                        },
+                        {
+                          path: 'branding',
+                          element: <RedirectToLinen path="/branding" />,
+                        },
+                        {
+                          path: 'configurations',
+                          element: <RedirectToLinen path="/configurations" />,
+                        },
+                        {
+                          path: 'members',
+                          element: <RedirectToLinen path="/members" />,
+                        },
+                        {
+                          path: 'metrics',
+                          element: <RedirectToLinen path="/metrics" />,
+                        },
+                        {
+                          path: 'plans',
+                          element: <RedirectToLinen path="/plans" />,
                         },
                         {
                           path: '',
