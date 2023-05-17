@@ -45,9 +45,21 @@ export default async function handler(
 
   if (request.method === 'POST') {
     const { communityId, email, role }: PostProps = body;
+    const emails = email.split(',').filter(Boolean);
+
+    if (emails.length === 0) {
+      return response.status(400).json({ error: 'Email is invalid' });
+    }
+    for (let i = 0, ilen = emails.length; i < ilen; i += 1) {
+      const temp = emails[i];
+      if (!temp.includes('@') || !temp.includes('.')) {
+        return response.status(400).json({ error: 'Email is invalid' });
+      }
+    }
+
     const { status, message } = await createInvitation({
       accountId: communityId,
-      email,
+      email: emails[0],
       host,
       createdByUserId: permissions.user?.id!,
       role,
