@@ -1,12 +1,10 @@
-@import '../colors.scss';
-
 .modal {
   position: relative;
   z-index: 1000;
 }
 
 .overlay {
-  background-color: rgba($color-gray-500, 0.75);
+  background-color: rgba(var(--color-gray-500), 0.75);
   top: 0px;
   right: 0px;
   bottom: 0px;
@@ -92,7 +90,6 @@
   margin: 0;
   padding: 0;
 }
-
 
 @keyframes animatedOverlay {
   from {

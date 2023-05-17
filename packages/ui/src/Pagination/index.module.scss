@@ -1,5 +1,3 @@
-@import '../colors.scss';
-
 .pagination {
   align-items: center;
   display: flex;
@@ -7,7 +5,7 @@
 
 .count {
   align-content: center;
-  color: $color-gray-700;
+  color: var(--color-gray-700);
   display: flex;
   font-size: 12px;
   font-weight: 400;

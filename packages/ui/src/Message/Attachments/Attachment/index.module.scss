@@ -1,11 +1,9 @@
-@import '../../../colors.scss';
-
 .attachment {
   align-items: center;
-  background-color: $color-gray-50;
-  border: 1px solid $color-gray-200;
+  background-color: var(--color-gray-50);
+  border: 1px solid var(--color-gray-200);
   border-radius: 1rem;
-  color: $color-gray-700;
+  color: var(--color-gray-700);
   display: inline-flex;
   padding: 0.05rem 0.5rem;
   font-size: 0.75rem;

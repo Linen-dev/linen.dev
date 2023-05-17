@@ -1,18 +1,16 @@
-@import '../../../colors.scss';
-
 .item {
   display: block;
 }
 
 .drop {
-  background: $color-blue-50;
+  background: var(--color-blue-50);
   border-radius: 4px;
-  color: $color-gray-900;
+  color: var(--color-gray-900);
 }
 
 .drop > div {
-  background: $color-blue-50;
-  color: $color-gray-900;
+  background: var(--color-blue-50);
+  color: var(--color-gray-900);
 }
 
 .flex {

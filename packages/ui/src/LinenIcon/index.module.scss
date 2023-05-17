@@ -1,5 +1,3 @@
-@import '../colors.scss';
-
 $size: 3px;
 
 .logo {
@@ -25,17 +23,17 @@ $size: 3px;
 
 .line-vertical-one {
   left: $size;
-  background-color: $color-primary;
+  background-color: var(--color-primary);
 }
 
 .line-vertical-two {
   left: $size * 3;
-  background-color: $color-secondary;
+  background-color: var(--color-secondary);
 }
 
 .line-vertical-three {
   left: $size * 5;
-  background-color: $color-tertiary;
+  background-color: var(--color-tertiary);
 }
 
 .line-horizontal {
@@ -47,17 +45,17 @@ $size: 3px;
 
 .line-horizontal-one {
   top: $size * 10;
-  background-color: $color-primary;
+  background-color: var(--color-primary);
 }
 
 .line-horizontal-two {
   top: $size * 8;
-  background-color: $color-secondary;
+  background-color: var(--color-secondary);
 }
 
 .line-horizontal-three {
   top: $size * 6;
-  background-color: $color-tertiary;
+  background-color: var(--color-tertiary);
 }
 
 .line-horizontal-one::after {

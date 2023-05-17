@@ -1,27 +1,30 @@
-@import '../colors.scss';
-
 .icon {
   height: 1.25rem;
   width: 1.25rem;
 }
 
 .green {
-  color: $color-green-400;
+  color: var(--color-green-400);
   animation: fadein 1s;
 }
 
 .red {
-  color: $color-red-400;
+  color: var(--color-red-400);
   animation: fadein 1s;
 }
 
 .blue {
-  color: $color-blue-400;
+  color: var(--color-blue-400);
   animation: fadein 1s;
 }
 
 @keyframes fadein {
-  from {bottom: 0; opacity: 0;}
-  to {bottom: 30px; opacity: 1;}
+  from {
+    bottom: 0;
+    opacity: 0;
+  }
+  to {
+    bottom: 30px;
+    opacity: 1;
+  }
 }
-

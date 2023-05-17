@@ -1,6 +1,4 @@
-@import '../../../colors.scss';
-
 .description {
-  color: $color-gray-500;
+  color: var(--color-gray-500);
   font-size: 12px;
 }

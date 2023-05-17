@@ -1,5 +1,3 @@
-@import '../../../../colors.scss';
-
 .actions {
   cursor: pointer;
   display: flex;
@@ -17,7 +15,7 @@
 }
 
 .active {
-  color: $color-secondary;
+  color: var(--color-secondary);
 }
 
 .actions ul {

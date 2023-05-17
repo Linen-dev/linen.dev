@@ -1,9 +1,7 @@
-@import '../colors.scss';
-
 .button {
   align-items: center;
   border: none;
-  color: $color-gray-700;
+  color: var(--color-gray-700);
   display: flex;
   font-size: 12px;
   gap: 0.25rem;

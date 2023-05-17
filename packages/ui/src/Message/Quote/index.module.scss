@@ -1,8 +1,6 @@
-@import '../../colors.scss';
-
 .quote {
-  background-color: $color-gray-50;
-  border-left: 4px solid $color-gray-200;
+  background-color: var(--color-gray-50);
+  border-left: 4px solid var(--color-gray-200);
   padding: 0.75rem;
   margin: 0.75rem 0;
 }

@@ -1,8 +1,6 @@
-@import '../colors.scss';
-
 .group {
-  background-color: $color-gray-100;
-  border: 1px solid $color-gray-200;
+  background-color: var(--color-gray-100);
+  border: 1px solid var(--color-gray-200);
   border-radius: 0.5rem;
   display: flex;
   align-items: center;

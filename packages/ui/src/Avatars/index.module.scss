@@ -1,5 +1,3 @@
-@import '../colors.scss';
-
 .group {
   display: flex;
   justify-content: left;
@@ -16,8 +14,8 @@
   text-align: center;
   text-transform: lowercase;
   line-height: 32px;
-  background-color: $color-gray-100;
-  color: $color-gray-700;
+  background-color: var(--color-gray-100);
+  color: var(--color-gray-700);
   font-weight: bold;
   font-size: 14px;
   box-shadow: 0 1px 2px #ccc;

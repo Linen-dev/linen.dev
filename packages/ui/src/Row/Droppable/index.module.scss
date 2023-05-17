@@ -1,9 +1,7 @@
-@import '../../colors.scss';
-
 .dragged {
-  background-color: $color-blue-50 !important;
+  background-color: var(--color-blue-50) !important;
 }
 
 .hover {
-  background-color: $color-blue-50;
+  background-color: var(--color-blue-50);
 }

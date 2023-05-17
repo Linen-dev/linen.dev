@@ -1,15 +1,12 @@
-@import '../../../colors.scss';
-
 .video {
   max-width: 100%;
   overflow: hidden;
 }
 
-
 .placeholder {
   align-items: center;
   background: var(--color-background);
-  border: 1px solid $color-gray-200;
+  border: 1px solid var(--color-gray-200);
   border-radius: 0.25rem;
   cursor: pointer;
   display: flex;
@@ -26,10 +23,10 @@
   justify-content: center;
   width: 48px;
   height: 48px;
-  background: $color-red-600;
+  background: var(--color-red-600);
   color: white;
   border-radius: 9999px;
-  box-shadow: 0 2px 16px $color-black;
+  box-shadow: 0 2px 16px var(--color-black);
 }
 
 .play svg {

@@ -1,5 +1,3 @@
-@import '../colors.scss';
-
 .spinner {
   display: inline;
   position: relative;
@@ -13,10 +11,10 @@
   width: 16px;
   height: 16px;
   margin: 2px;
-  border: 2px solid $color-gray-700;
+  border: 2px solid var(--color-gray-700);
   border-radius: 50%;
   animation: spin 1.2s ease infinite;
-  border-color: $color-gray-700 transparent transparent transparent;
+  border-color: var(--color-gray-700) transparent transparent transparent;
 }
 .spinner div:nth-child(1) {
   animation-delay: -0.45s;

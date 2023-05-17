@@ -1,8 +1,6 @@
-@import '../../colors.scss';
-
 .button {
   align-items: center;
-  background: $color-primary;
+  background: var(--color-primary);
   color: white;
   border-radius: 32px;
   display: flex;
@@ -16,5 +14,5 @@
 }
 
 .button:hover {
-  background: rgba($color-primary, 0.9);
+  background: rgba(var(--color-primary), 0.9);
 }
