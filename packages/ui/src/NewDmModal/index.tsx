@@ -72,20 +72,17 @@ export default function NewDmModal({
     <Modal open={show} close={close}>
       <form onSubmit={onSubmit}>
         <div>
-          <div className="flex items-center justify-between">
+          <div className={styles.titleWrapper}>
             <H3>Direct Messages</H3>
 
-            <div
-              className="rounded-md bg-white text-gray-400 hover:text-gray-500 cursor-pointer"
-              onClick={close}
-            >
-              <span className="sr-only">Close</span>
+            <div className={styles.closeBtn} onClick={close}>
+              <span className={styles.srOnly}>Close</span>
               <FiX />
             </div>
           </div>
 
-          <div className="mt-2 mb-8">
-            <p className="text-sm text-gray-500">
+          <div className={styles.descriptionWrapper}>
+            <p className={styles.description}>
               Direct messages (DMs) are smaller conversations that happen
               outside of channels. DMs work well for one-off conversations that
               don&apos;t require an entire channel of people to weigh in, like
@@ -123,9 +120,9 @@ export default function NewDmModal({
             }}
           />
 
-          <span className="text-xs text-gray-500">Type for search users</span>
+          <span className={styles.textXs}>Type for search users</span>
         </div>
-        <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
+        <div className={styles.btnWrapper}>
           <Button color="blue" type="submit" disabled={!user}>
             Open
           </Button>

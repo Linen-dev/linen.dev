@@ -1,6 +1,6 @@
 import React from 'react';
-import Button from '../Button';
-import ButtonGroup from '../ButtonGroup';
+import Button from '@/Button';
+import ButtonGroup from '@/ButtonGroup';
 import styles from './index.module.scss';
 
 interface Option {

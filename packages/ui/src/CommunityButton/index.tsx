@@ -1,8 +1,8 @@
 import React from 'react';
 import { capitalize } from '@linen/utilities/string';
 import classNames from 'classnames';
-import DiscordIcon from '../DiscordIcon';
-import SlackIcon from '../SlackIcon';
+import DiscordIcon from '@/DiscordIcon';
+import SlackIcon from '@/SlackIcon';
 import styles from './index.module.scss';
 
 interface CommunityButtonProps {

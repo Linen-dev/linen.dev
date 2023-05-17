@@ -1,7 +1,7 @@
 import React from 'react';
 import Example from '../Example';
-import Button from '../../../Button';
-import Toast from '../../../Toast';
+import Button from '@/Button';
+import Toast from '@/Toast';
 
 export default function TextareaExample() {
   return (

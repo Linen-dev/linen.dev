@@ -1,0 +1,13 @@
+.pb4 {
+  padding-bottom: 1rem;
+}
+
+.btnWrapper {
+  margin-top: 1.25rem;
+
+  @media (min-width: 640px) {
+    display: flex;
+    margin-top: 1rem;
+    flex-direction: row-reverse;
+  }
+}

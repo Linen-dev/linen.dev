@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import classNames from 'classnames';
-import Portal from '../Portal';
+import Portal from '@/Portal';
 import styles from './index.module.scss';
 
 type ModalProps = {

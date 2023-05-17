@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './index.module.scss';
 import { UploadedFile } from '@linen/types';
 import { copyToClipboard } from '@linen/utilities/clipboard';
-import Toast from '../../Toast';
+import Toast from '@/Toast';
 
 interface Props {
   uploading?: boolean;

@@ -1,5 +1,5 @@
 import React from 'react';
-import Component from '../../../Image';
+import Component from '@/Image';
 import styles from './index.module.scss';
 
 interface Props {

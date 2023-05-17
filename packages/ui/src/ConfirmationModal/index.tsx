@@ -1,6 +1,6 @@
 import React from 'react';
-import Button from '../Button';
-import Modal from '../Modal';
+import Button from '@/Button';
+import Modal from '@/Modal';
 import styles from './index.module.scss';
 
 interface Props {

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import classNames from 'classnames';
 import styles from './index.module.scss';
-import Tooltip from '../../../../Tooltip';
-import ReminderModal from '../../../../ReminderModal';
+import Tooltip from '@/Tooltip';
+import ReminderModal from '@/ReminderModal';
 import { BiMessageCheck } from '@react-icons/all-files/bi/BiMessageCheck';
 import { FaVolumeMute } from '@react-icons/all-files/fa/FaVolumeMute';
 import { FiStar } from '@react-icons/all-files/fi/FiStar';

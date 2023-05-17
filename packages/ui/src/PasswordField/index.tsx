@@ -1,7 +1,7 @@
 import React from 'react';
-import Field from '../Field';
-import Label from '../Label';
-import PasswordInput from '../PasswordInput';
+import Field from '@/Field';
+import Label from '@/Label';
+import PasswordInput from '@/PasswordInput';
 
 interface Props {
   id: string;

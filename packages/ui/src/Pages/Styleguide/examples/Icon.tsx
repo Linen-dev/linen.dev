@@ -1,6 +1,6 @@
 import React from 'react';
 import Example from '../Example';
-import Icon from '../../../Icon';
+import Icon from '@/Icon';
 import { FiEdit3 } from '@react-icons/all-files/fi/FiEdit3';
 import { FiMoreVertical } from '@react-icons/all-files/fi/FiMoreVertical';
 

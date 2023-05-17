@@ -1,5 +1,5 @@
 import React from 'react';
-import Code from '../../Code';
+import Code from '@/Code';
 import { decodeHTML } from '@linen/utilities/string';
 import styles from './index.module.scss';
 

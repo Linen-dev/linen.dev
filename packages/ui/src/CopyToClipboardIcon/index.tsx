@@ -1,6 +1,6 @@
 import React from 'react';
 import { AiOutlinePaperClip } from '@react-icons/all-files/ai/AiOutlinePaperClip';
-import Toast from '../Toast';
+import Toast from '@/Toast';
 import { copyToClipboard } from '@linen/utilities/clipboard';
 
 interface Props {

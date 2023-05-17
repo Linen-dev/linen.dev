@@ -1,3 +1,24 @@
 .suggestions {
   position: relative;
 }
+
+.textXs {
+  color: var(--color-gray-500);
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+
+.pt4 {
+  padding-top: 1rem;
+}
+
+.usersWrapper {
+  display: flex;
+  padding-bottom: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.badgeWrapper {
+  padding-right: 0.25rem;
+  padding-bottom: 0.25rem;
+}

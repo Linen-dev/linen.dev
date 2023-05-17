@@ -1,5 +1,5 @@
 import React from 'react';
-import Message from '../../../Message';
+import Message from '@/Message';
 import Example from '../Example';
 import { MessageFormat } from '@linen/types';
 

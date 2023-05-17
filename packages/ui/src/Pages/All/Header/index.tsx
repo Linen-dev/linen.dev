@@ -1,6 +1,6 @@
 import React from 'react';
-import StickyHeader from '../../../StickyHeader';
-import Pagination from '../../../Pagination';
+import StickyHeader from '@/StickyHeader';
+import Pagination from '@/Pagination';
 import { FiLayers } from '@react-icons/all-files/fi/FiLayers';
 import styles from './index.module.scss';
 

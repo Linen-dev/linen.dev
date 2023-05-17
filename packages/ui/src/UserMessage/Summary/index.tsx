@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import Avatar from '../../Avatar';
+import Avatar from '@/Avatar';
 import { SerializedThread } from '@linen/types';
 import Title from './Title';
 import Description from './Description';

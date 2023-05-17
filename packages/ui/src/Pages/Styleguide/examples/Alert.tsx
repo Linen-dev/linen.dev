@@ -1,6 +1,6 @@
 import React from 'react';
 import Example from '../Example';
-import Alert from '../../../Alert';
+import Alert from '@/Alert';
 
 export default function AlertExample() {
   return (

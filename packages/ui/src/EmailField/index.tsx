@@ -1,5 +1,5 @@
 import React from 'react';
-import TextField from '../TextField';
+import TextField from '@/TextField';
 
 interface Props {
   id: string;

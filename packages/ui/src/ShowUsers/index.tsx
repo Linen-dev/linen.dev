@@ -60,21 +60,21 @@ export default function ShowUsers({
           }
         }}
       />
-      <span className="text-xs text-gray-500">Type for search users</span>
+      <span className={styles.textXs}>Type for search users</span>
 
       {users.length > 0 && (
         <>
-          <Label htmlFor="members" className="pt-4">
+          <Label htmlFor="members" className={styles.pt4}>
             Members
           </Label>
-          <div className="flex flex-wrap pb-2">
+          <div className={styles.usersWrapper}>
             {users.map((user) => {
               const props =
                 currentUser.id !== user.id
                   ? { onClose: () => removeUser(user) }
                   : {};
               return (
-                <div className="pr-1 pb-1" key={user.id}>
+                <div className={styles.badgeWrapper} key={user.id}>
                   <Badge {...props}>{user.displayName}</Badge>
                 </div>
               );

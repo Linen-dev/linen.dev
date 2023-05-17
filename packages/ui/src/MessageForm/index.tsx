@@ -1,10 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import autosize from 'autosize';
 import styles from './index.module.scss';
-import Button from '../Button';
-import Suggestions from '../Suggestions';
-import Toast from '../Toast';
-import Preview from '../MessagePreview';
+import Button from '@/Button';
+import Suggestions from '@/Suggestions';
+import Toast from '@/Toast';
+import Preview from '@/MessagePreview';
 import FileInput from './FileInput';
 import FilesSummary from './FilesSummary';
 import { getCaretPosition, setCaretPosition } from './utilities/caret';

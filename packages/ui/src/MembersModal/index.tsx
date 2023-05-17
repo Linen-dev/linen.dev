@@ -8,6 +8,7 @@ import Modal from '@/Modal';
 import ConfirmationModal from '@/ConfirmationModal';
 import Toast from '@/Toast';
 import ShowUsers from '@/ShowUsers';
+import styles from './index.module.scss';
 
 interface MembersModalProps {
   permissions: Permissions;
@@ -73,7 +74,7 @@ export default function MembersModal({
 
   return (
     <Modal open={open} close={close} size="md">
-      <H3 className="pb-4">Members</H3>
+      <H3 className={styles.pb4}>Members</H3>
       <ShowUsers
         communityId={permissions.accountId}
         channelPrivate={true}
@@ -83,7 +84,7 @@ export default function MembersModal({
         currentUser={permissions.user}
         api={api}
       />
-      <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
+      <div className={styles.btnWrapper}>
         <Button color="blue" type="submit" onClick={() => onUpdateClick()}>
           Update
         </Button>

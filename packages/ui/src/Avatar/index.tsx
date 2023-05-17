@@ -4,7 +4,7 @@ import styles from './index.module.scss';
 import { normalizeUrl } from './utilities/url';
 import { getColor } from './utilities/color';
 import { getLetter } from './utilities/string';
-import preload, { cache } from '../Image/utilities/preload';
+import preload, { cache } from '@/Image/utilities/preload';
 
 interface Props {
   className?: string;

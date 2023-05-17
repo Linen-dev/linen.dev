@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Portal from '../Portal';
+import Portal from '@/Portal';
 import classNames from 'classnames';
 import styles from './index.module.scss';
 

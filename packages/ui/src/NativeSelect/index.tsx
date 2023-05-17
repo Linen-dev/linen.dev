@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import Label from '../Label';
+import Label from '@/Label';
 import styles from './index.module.scss';
 
 interface Option {

@@ -1,6 +1,6 @@
 import React from 'react';
 import Example from '../Example';
-import TextInput from '../../../TextInput';
+import TextInput from '@/TextInput';
 import { AiOutlineSearch } from '@react-icons/all-files/ai/AiOutlineSearch';
 
 export default function TextInputExample() {

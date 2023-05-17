@@ -87,28 +87,21 @@ export default function EditChannelModal({
             <FiX />
           </Icon>
         </div>
-        <Label htmlFor="channelName">
-          Name
-          {/* <br /> */}
-          {/* <span className="text-xs font-normal text-gray-700 dark:text-gray-200">
-            Letters, spaces and apostrophes.
-          </span> */}
-        </Label>
+        <Label htmlFor="channelName">Name</Label>
         <TextInput
           id="channelName"
           required
           type="text"
           icon={<FiHash />}
-          // title="Letters, spaces and apostrophes."
           defaultValue={channel.channelName}
         />
-        <div className="p-2"></div>
+        <div className={styles.p2}></div>
         <Label htmlFor="channelPrivate">Private</Label>
         <Toggle
           onChange={(checked) => setChannelPrivate(checked)}
           checked={channelPrivate}
         />
-        <div className="p-2"></div>
+        <div className={styles.p2}></div>
         <Button type="submit" disabled={loading}>
           Save
         </Button>

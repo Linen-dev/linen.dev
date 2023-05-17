@@ -1,6 +1,6 @@
 import React from 'react';
-import StickyHeader from '../../../StickyHeader';
-import Pagination from '../../../Pagination';
+import StickyHeader from '@/StickyHeader';
+import Pagination from '@/Pagination';
 import { FiStar } from '@react-icons/all-files/fi/FiStar';
 import styles from './index.module.scss';
 

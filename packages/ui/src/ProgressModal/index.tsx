@@ -1,7 +1,7 @@
 import React from 'react';
-import Modal from '../Modal';
-import Button from '../Button';
-import Progress from '../Progress';
+import Modal from '@/Modal';
+import Button from '@/Button';
+import Progress from '@/Progress';
 import styles from './index.module.scss';
 
 interface Props {

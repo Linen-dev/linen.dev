@@ -30,7 +30,7 @@ export default function ConfigureInboxModal({
     <Modal open={open} close={close} size="lg">
       <h2 className={styles.h2}>Inbox</h2>
       {showOptions({ title: 'Channels', channels, configuration, onChange })}
-      <div className="p-2"></div>
+      <div className={styles.p2}></div>
       {showOptions({ title: 'DMs', channels: dms, configuration, onChange })}
     </Modal>
   );

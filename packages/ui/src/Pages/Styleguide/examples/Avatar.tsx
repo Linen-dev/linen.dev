@@ -1,6 +1,6 @@
 import React from 'react';
 import Example from '../Example';
-import Avatar from '../../../Avatar';
+import Avatar from '@/Avatar';
 
 export default function AvatarExample() {
   return (

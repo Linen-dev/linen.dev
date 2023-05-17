@@ -1,5 +1,5 @@
 import React from 'react';
-import Label from '../Label';
+import Label from '@/Label';
 import styles from './index.module.scss';
 
 interface Props {

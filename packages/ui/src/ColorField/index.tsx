@@ -1,7 +1,7 @@
 import React from 'react';
-import Field from '../Field';
-import Label from '../Label';
-import ColorInput from '../ColorInput';
+import Field from '@/Field';
+import Label from '@/Label';
+import ColorInput from '@/ColorInput';
 
 interface Props {
   label?: string;

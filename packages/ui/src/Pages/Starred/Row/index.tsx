@@ -1,5 +1,5 @@
 import React from 'react';
-import UserMessage from '../../../UserMessage/Summary';
+import UserMessage from '@/UserMessage/Summary';
 import { ReminderTypes, SerializedThread } from '@linen/types';
 import Actions from './Actions';
 import styles from './index.module.scss';

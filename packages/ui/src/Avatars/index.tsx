@@ -1,5 +1,5 @@
 import React from 'react';
-import Avatar, { Size } from '../Avatar';
+import Avatar, { Size } from '@/Avatar';
 import styles from './index.module.scss';
 import classNames from 'classnames';
 

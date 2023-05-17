@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { FiClock } from '@react-icons/all-files/fi/FiClock';
-import Button from '../Button';
-import NativeSelect from '../NativeSelect';
-import Modal from '../Modal';
+import Button from '@/Button';
+import NativeSelect from '@/NativeSelect';
+import Modal from '@/Modal';
 import { ReminderTypes } from '@linen/types';
 import styles from './index.module.scss';
 

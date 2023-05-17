@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import classNames from 'classnames';
 import preload from './utilities/preload';
-import Spinner from '../Spinner';
+import Spinner from '@/Spinner';
 import styles from './index.module.scss';
-import Preview from '../Preview';
+import Preview from '@/Preview';
 import { AiOutlineFileImage } from '@react-icons/all-files/ai/AiOutlineFileImage';
 
 interface Props {

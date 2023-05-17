@@ -20,3 +20,64 @@
 .enabled {
   color: var(--color-gray-900);
 }
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.titleWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.closeBtn {
+  background-color: var(--color-background);
+  color: var(--color-gray-400);
+  border-radius: 0.375rem;
+  cursor: pointer;
+
+  :hover {
+    color: var(--color-gray-500);
+  }
+}
+
+.descriptionWrapper {
+  margin-top: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.description {
+  color: var(--color-gray-500);
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.textXs {
+  color: var(--color-gray-500);
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+
+.py4 {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.btnWrapper {
+  margin-top: 1.25rem;
+
+  @media (min-width: 640px) {
+    display: flex;
+    margin-top: 1rem;
+    flex-direction: row-reverse;
+  }
+}

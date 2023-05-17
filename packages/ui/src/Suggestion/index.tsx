@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
-import Avatar from '../Avatar';
-import Message from '../Message';
+import Avatar from '@/Avatar';
+import Message from '@/Message';
 import styles from './index.module.scss';
 import { MessageFormat, SerializedUser } from '@linen/types';
 

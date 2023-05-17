@@ -1,7 +1,7 @@
 import React from 'react';
-import Avatar from '../Avatar';
-import Badge from '../Badge';
-import Message from '../Message';
+import Avatar from '@/Avatar';
+import Badge from '@/Badge';
+import Message from '@/Message';
 import { SerializedMessage, SerializedUser } from '@linen/types';
 import styles from './index.module.scss';
 

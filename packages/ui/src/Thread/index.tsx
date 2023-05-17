@@ -20,7 +20,6 @@ import styles from './index.module.scss';
 import { CustomLinkHelper } from '@linen/utilities/custom-link';
 import PoweredByLinen from '@/PoweredByLinen';
 import EditMessageModal from '@/EditMessageModal';
-import Actions from '@/Actions';
 import type { ApiClient } from '@linen/api-client';
 
 interface Props {

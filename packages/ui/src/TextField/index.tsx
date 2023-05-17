@@ -1,7 +1,7 @@
 import React from 'react';
-import Field from '../Field';
-import Label from '../Label';
-import TextInput from '../TextInput';
+import Field from '@/Field';
+import Label from '@/Label';
+import TextInput from '@/TextInput';
 
 interface Props {
   className?: string;

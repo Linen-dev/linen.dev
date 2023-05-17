@@ -63,7 +63,6 @@ export default function Header({
                 manage={manage}
                 onSetTitle={onSetTitle}
               />
-              {/* <div className="text-gray-600 text-xs ">#{channelName}</div> */}
             </div>
           </div>
         </div>

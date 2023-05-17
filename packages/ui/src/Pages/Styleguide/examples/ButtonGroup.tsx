@@ -1,7 +1,7 @@
 import React from 'react';
 import Example from '../Example';
-import Button from '../../../Button';
-import ButtonGroup from '../../../ButtonGroup';
+import Button from '@/Button';
+import ButtonGroup from '@/ButtonGroup';
 
 export default function ButtonGroupExample() {
   return (

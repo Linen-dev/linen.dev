@@ -1,6 +1,6 @@
 import React from 'react';
 import Example from '../Example';
-import Nav from '../../../Nav';
+import Nav from '@/Nav';
 import { FiInbox } from '@react-icons/all-files/fi/FiInbox';
 import { FiHash } from '@react-icons/all-files/fi/FiHash';
 import { FiBarChart } from '@react-icons/all-files/fi/FiBarChart';

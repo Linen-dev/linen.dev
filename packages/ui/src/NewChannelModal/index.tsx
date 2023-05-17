@@ -85,19 +85,16 @@ export default function NewChannelModal({
     <Modal open={show} close={close}>
       <form onSubmit={onSubmit}>
         <div>
-          <div className="flex items-center justify-between">
+          <div className={styles.titleWrapper}>
             <H3>Create a channel</H3>
 
-            <div
-              className="rounded-md bg-white text-gray-400 hover:text-gray-500 cursor-pointer"
-              onClick={close}
-            >
-              <span className="sr-only">Close</span>
+            <div className={styles.closeBtn} onClick={close}>
+              <span className={styles.srOnly}>Close</span>
               <FiX />
             </div>
           </div>
-          <div className="mt-2 mb-8">
-            <p className="text-sm text-gray-500">
+          <div className={styles.descriptionWrapper}>
+            <p className={styles.description}>
               Channels are where your community communicates. They&apos;re best
               when organized around a topic. e.g. javascript.
             </p>
@@ -114,10 +111,10 @@ export default function NewChannelModal({
               'Channels name should start with letter and could contain letters, underscore, numbers and hyphens. e.g. announcements'
             }
           />
-          <span className="text-xs text-gray-500">
+          <span className={styles.textXs}>
             Be sure to choose a url friendly name.
           </span>
-          <div className={classNames(styles.toggle, 'py-4')}>
+          <div className={classNames(styles.toggle, styles.py4)}>
             <label className={classNames(styles.label, styles.enabled)}>
               <Toggle
                 checked={channelPrivate}
@@ -141,7 +138,7 @@ export default function NewChannelModal({
             api={api}
           />
         </div>
-        <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
+        <div className={styles.btnWrapper}>
           <Button color="blue" type="submit" disabled={loading}>
             Create
           </Button>

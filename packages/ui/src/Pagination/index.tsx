@@ -1,5 +1,5 @@
 import React from 'react';
-import Icon from '../Icon';
+import Icon from '@/Icon';
 import { FiChevronLeft } from '@react-icons/all-files/fi/FiChevronLeft';
 import { FiChevronRight } from '@react-icons/all-files/fi/FiChevronRight';
 import styles from './index.module.scss';
