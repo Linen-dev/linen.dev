@@ -1,7 +1,7 @@
 import NavBar from '@linen/ui/NavBar';
 import useMode from '@linen/hooks/mode';
 import InternalLink from '@/components/InternalLink';
-import { mockedComponent, mockedRouterAsPath, mockedFunction } from '@/mock';
+import { mockedRouterAsPath, mockedFunction } from '@/mock';
 import { useLinenStore, shallow } from '@/store';
 import { api } from '@/fetcher';
 import Loading from '@/components/Loading';
@@ -52,14 +52,13 @@ export default function NavLeftBar() {
       getHomeUrl={getHomeUrl}
       usePath={customUsePath({ communityName })}
       notify={(body: string) => sendNotification(body)}
-      // TODO:
-      NewCommunityModal={mockedComponent}
-      routerAsPath={mockedRouterAsPath}
-      onDrop={mockedFunction}
       CustomRouterPush={CustomRouterPush({
         communityName,
         communityType: settings.communityType,
       })}
+      // TODO:
+      routerAsPath={mockedRouterAsPath}
+      onDrop={mockedFunction}
     />
   );
 }

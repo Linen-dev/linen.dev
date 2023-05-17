@@ -1,15 +1,9 @@
 import Spinner from '@linen/ui/Spinner';
+import styles from './index.module.scss';
 
 export default function Loading() {
   return (
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'center',
-        height: '100vh',
-        alignItems: 'center',
-      }}
-    >
+    <div className={styles.loader}>
       <Spinner />
     </div>
   );

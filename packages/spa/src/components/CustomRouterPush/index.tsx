@@ -14,6 +14,7 @@ export default function CustomRouterPush({
       isSubDomainRouting: false,
       path,
     });
+    // FIXME: handle this nicely
     window.location.href = url;
   };
 }
