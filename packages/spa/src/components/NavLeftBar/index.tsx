@@ -7,6 +7,7 @@ import { api } from '@/fetcher';
 import Loading from '@/components/Loading';
 import customUsePath from '@/hooks/usePath';
 import { getHomeUrl, sendNotification } from '@/di';
+import CustomRouterPush from '@/components/CustomRouterPush';
 
 export default function NavLeftBar() {
   const { mode } = useMode();
@@ -52,11 +53,13 @@ export default function NavLeftBar() {
       usePath={customUsePath({ communityName })}
       notify={(body: string) => sendNotification(body)}
       // TODO:
-      NewChannelModal={mockedComponent}
       NewCommunityModal={mockedComponent}
-      NewDmModal={mockedComponent}
       routerAsPath={mockedRouterAsPath}
       onDrop={mockedFunction}
+      CustomRouterPush={CustomRouterPush({
+        communityName,
+        communityType: settings.communityType,
+      })}
     />
   );
 }
