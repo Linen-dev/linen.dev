@@ -26,6 +26,8 @@ import handlerThreads from 'pages/api/threads/[[...slug]]';
 import { testApiHandler } from 'next-test-api-route-handler';
 import { createCSRFToken } from '@linen/auth/server';
 
+const fakeEmail = () => `${v4()}@linen.dev`;
+
 const acceptInviteMock = jest.spyOn(invitesServices, 'acceptInvite');
 
 const eventNewThreadMock = jest
@@ -80,7 +82,7 @@ describe('invite flow', () => {
       });
       store.channel = await createChannel({ accountId: store.account.id });
       store.owner = await createUser(store.account.id, Roles.OWNER);
-      store.invited = { email: v4() } as any;
+      store.invited = { email: fakeEmail() } as any;
 
       cleanMock();
     });
@@ -125,7 +127,7 @@ describe('invite flow', () => {
       });
       store.channel = await createChannel({ accountId: store.account.id });
       store.owner = await createUser(store.account.id, Roles.OWNER);
-      store.invited = { email: v4() } as any;
+      store.invited = { email: fakeEmail() } as any;
 
       cleanMock();
     });
@@ -160,7 +162,7 @@ describe('invite service', () => {
       const account = await prisma.accounts.create({ data: {} });
       const requester = await prisma.auths.create({
         data: {
-          email: v4(),
+          email: fakeEmail(),
           password: '',
           salt: '',
           account: { connect: { id: account.id } },
@@ -177,7 +179,7 @@ describe('invite service', () => {
       });
       const inviteToUpdate = await prisma.invites.create({
         data: {
-          email: v4(),
+          email: fakeEmail(),
           role: Roles.MEMBER,
           accounts: { connect: { id: account.id } },
           createdBy: { connect: { id: requesterUser.id } },
@@ -229,9 +231,13 @@ async function step1_createInvite(store: storeType) {
 
       // user will receive an signup email
       expect(mockEmail.text).toContain(
-        `${store.domain.origin}/signup?email=${store.invited.email}`
+        `${store.domain.origin}/signup?email=${encodeURIComponent(
+          store.invited.email
+        )}`
       );
-      store.invited.signupLink = `${store.domain.origin}/signup?email=${store.invited.email}`;
+      store.invited.signupLink = `${
+        store.domain.origin
+      }/signup?email=${encodeURIComponent(store.invited.email)}`;
     },
   });
 
