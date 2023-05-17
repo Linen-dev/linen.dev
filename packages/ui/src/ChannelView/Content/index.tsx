@@ -548,7 +548,7 @@ export default function Channel({
                           : undefined
                       }
                       onShare={() => {
-                        copyToClipboard(router.asPath);
+                        copyToClipboard(window.location.href);
                         Toast.success('Copied to clipboard');
                       }}
                     />
