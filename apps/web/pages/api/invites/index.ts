@@ -57,14 +57,20 @@ export default async function handler(
       }
     }
 
-    const { status, message } = await createInvitation({
-      accountId: communityId,
-      email: emails[0],
-      host,
-      createdByUserId: permissions.user?.id!,
-      role,
-    });
-    return response.status(status).json({ message });
+    await Promise.all(
+      emails.map((email) => {
+        return createInvitation({
+          accountId: communityId,
+          email,
+          host,
+          createdByUserId: permissions.user?.id!,
+          role,
+        });
+      })
+    );
+    return response
+      .status(200)
+      .json({ message: `Invitation${emails.length === 1 ? '' : 's'} sent.` });
   }
   if (request.method === 'PUT') {
     const { communityId, role, inviteId }: PutProps = body;
