@@ -12,6 +12,7 @@ import { useRouter } from 'next/router';
 import { Roles } from '@linen/types';
 import { FiUser } from '@react-icons/all-files/fi/FiUser';
 import { FiTrash2 } from '@react-icons/all-files/fi/FiTrash2';
+import { FiSend } from '@react-icons/all-files/fi/FiSend';
 import styles from './index.module.scss';
 
 import {
@@ -55,16 +56,17 @@ function InviteMember({
         Invite
         <br />
         <span className="text-xs font-normal text-gray-700 dark:text-gray-200">
-          Send invitations via email.
+          Send invitations via email. You can enter multiple emails, comma
+          separated.
         </span>
       </Label>
       <div className="flex flex-row gap-2">
         <div className="grow">
           <TextInput
             id="email"
-            type="email"
+            type="text"
             icon={<FiUser />}
-            placeholder="user@domain.com"
+            placeholder="user1@domain.com,user2@domain.com"
             required
           />
         </div>
@@ -80,8 +82,9 @@ function InviteMember({
           />
         </div>
         <div className="shrink">
-          <Button block type="submit" disabled={loading}>
-            {loading ? 'Loading...' : 'Invite member'}
+          <Button type="submit" disabled={loading}>
+            <FiSend />
+            {loading ? 'Loading...' : 'Send'}
           </Button>
         </div>
       </div>
@@ -284,7 +287,8 @@ export default function Members({
       if (!response.ok) {
         throw response;
       } else {
-        router.reload();
+        console.log(response);
+        // router.reload();
       }
     } catch (error) {
       Toast.error('Something went wrong');
