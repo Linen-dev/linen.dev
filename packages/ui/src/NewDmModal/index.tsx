@@ -1,6 +1,5 @@
 import React, { useRef, useState } from 'react';
 import { FiX } from '@react-icons/all-files/fi/FiX';
-import { useLinkContext } from '@linen/contexts/Link';
 import { SerializedChannel, SerializedUser } from '@linen/types';
 import type { ApiClient } from '@linen/api-client';
 import H3 from '@/H3';
@@ -24,20 +23,13 @@ export default function NewDmModal({
   show: boolean;
   close(): void;
   api: ApiClient;
-  CustomRouterPush({
-    isSubDomainRouting,
-    path,
-    communityName,
-    communityType,
-  }: any): void;
+  CustomRouterPush({ path }: { path: string }): void;
 }) {
   const ref = useRef(null);
   const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState<SerializedUser[]>([]);
   const [user, setUser] = useState<SerializedUser | null>();
   const [val, setVal] = useState<string>();
-
-  const { isSubDomainRouting, communityName, communityType } = useLinkContext();
 
   async function onSubmit(e: any) {
     setLoading(true);
@@ -56,9 +48,6 @@ export default function NewDmModal({
       });
       close();
       CustomRouterPush({
-        isSubDomainRouting,
-        communityName,
-        communityType,
         path: `/c/${result.id}`,
       });
     } catch (error) {

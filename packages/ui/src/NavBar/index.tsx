@@ -34,12 +34,7 @@ interface Props {
   usePath: (args: { href: string }) => string;
   getHomeUrl: (args: any) => string;
   api: ApiClient;
-  CustomRouterPush({
-    isSubDomainRouting,
-    path,
-    communityName,
-    communityType,
-  }: any): void;
+  CustomRouterPush({ path }: { path: string }): void;
   notify: (...args: any) => any;
 }
 

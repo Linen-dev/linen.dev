@@ -7,7 +7,7 @@ export default function CustomRouterPush({
   communityName: string;
   communityType: 'discord' | 'slack' | 'linen';
 }) {
-  return ({ path }: any) => {
+  return ({ path }: { path: string }) => {
     const url = CustomLinkHelper({
       communityType,
       communityName,

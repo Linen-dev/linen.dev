@@ -22,12 +22,7 @@ type Props = {
   setHighlights: Function;
   Link: (args: any) => JSX.Element;
   api: ApiClient;
-  CustomRouterPush({
-    isSubDomainRouting,
-    path,
-    communityName,
-    communityType,
-  }: any): void;
+  CustomRouterPush({ path }: { path: string }): void;
 };
 
 function ToggleIcon({

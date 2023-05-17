@@ -41,6 +41,7 @@ export default function OnboardingForm({ api }: Props) {
         members: emails,
       });
       if (response.id) {
+        // FIXME: it only works on nextjs
         window.location.href = `/s/${slackDomain}/configurations`;
       }
     } catch (error: any) {

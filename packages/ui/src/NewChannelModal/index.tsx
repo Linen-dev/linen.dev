@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { FiX } from '@react-icons/all-files/fi/FiX';
-import { useLinkContext } from '@linen/contexts/Link';
 import { patterns, Permissions, SerializedUser } from '@linen/types';
 import type { ApiClient } from '@linen/api-client';
 import H3 from '@/H3';
@@ -18,12 +17,7 @@ interface Props {
   show: boolean;
   close(): void;
   api: ApiClient;
-  CustomRouterPush({
-    isSubDomainRouting,
-    path,
-    communityName,
-    communityType,
-  }: any): void;
+  CustomRouterPush({ path }: { path: string }): void;
 }
 
 export default function NewChannelModal({
@@ -35,7 +29,6 @@ export default function NewChannelModal({
 }: Props) {
   const [loading, setLoading] = useState(false);
   const [channelPrivate, setChannelPrivate] = useState(false);
-  const { isSubDomainRouting, communityName, communityType } = useLinkContext();
   const [users, setUsers] = useState<SerializedUser[]>([permissions.user]);
 
   async function onSubmit(e: any) {
@@ -61,9 +54,6 @@ export default function NewChannelModal({
 
       close();
       CustomRouterPush({
-        isSubDomainRouting,
-        communityName,
-        communityType,
         path: `/c/${channelName}`,
       });
     } catch (error) {

@@ -3,11 +3,21 @@ import { CustomLinkHelper } from '@linen/utilities/custom-link';
 
 export default function CustomRouterPush({
   isSubDomainRouting,
-  path,
   communityName,
   communityType,
-}: any) {
-  Router.push(
-    CustomLinkHelper({ communityType, communityName, isSubDomainRouting, path })
-  );
+}: {
+  isSubDomainRouting: boolean;
+  communityName: string;
+  communityType: 'discord' | 'slack' | 'linen';
+}) {
+  return ({ path }: { path: string }) => {
+    Router.push(
+      CustomLinkHelper({
+        communityType,
+        communityName,
+        isSubDomainRouting,
+        path,
+      })
+    );
+  };
 }

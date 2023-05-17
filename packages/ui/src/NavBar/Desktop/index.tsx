@@ -59,12 +59,7 @@ interface Props {
   getHomeUrl: (args: any) => string;
   notify: (...args: any) => any;
   api: ApiClient;
-  CustomRouterPush({
-    isSubDomainRouting,
-    path,
-    communityName,
-    communityType,
-  }: any): void;
+  CustomRouterPush({ path }: { path: string }): void;
 }
 
 enum ModalView {

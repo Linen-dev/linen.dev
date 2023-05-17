@@ -128,7 +128,11 @@ function PageLayout({
           getHomeUrl={getHomeUrl}
           api={api}
           notify={notify}
-          CustomRouterPush={CustomRouterPush}
+          CustomRouterPush={CustomRouterPush({
+            isSubDomainRouting,
+            communityName: settings.communityName,
+            communityType: settings.communityType,
+          })}
         />
         <div className={className || styles.container} ref={innerRef}>
           <ErrorBoundary FallbackComponent={ErrorFallback}>
