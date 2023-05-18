@@ -1,4 +1,4 @@
-import Layout from '@linen/ui/Layouts/CardLayout';
+import Layout from '@linen/ui/CardLayout';
 import PasswordField from '@linen/ui/PasswordField';
 import Button from '@linen/ui/Button';
 import { NextPageContext } from 'next';

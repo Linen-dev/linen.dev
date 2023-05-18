@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import Layout from '@linen/ui/Layouts/CardLayout';
+import Layout from '@linen/ui/CardLayout';
 import EmailField from '@linen/ui/EmailField';
 import Button from '@linen/ui/Button';
 import Toast from '@linen/ui/Toast';

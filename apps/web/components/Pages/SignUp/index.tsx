@@ -1,4 +1,4 @@
-import CardLayout from '@linen/ui/Layouts/CardLayout';
+import CardLayout from '@linen/ui/CardLayout';
 import { useState } from 'react';
 import Error from 'components/Auth/Error';
 import {
