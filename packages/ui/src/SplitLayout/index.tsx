@@ -1,6 +1,4 @@
 import React from 'react';
-import Link from 'next/link';
-import logo from 'public/images/logo/white/linen.svg';
 import styles from './index.module.scss';
 
 interface Props {
@@ -12,9 +10,9 @@ export default function SplitLayout({ left, right }: Props) {
   return (
     <>
       <header className={styles.header}>
-        <Link href="/">
-          <img width={108} height={24} src={logo.src} />
-        </Link>
+        <a href="/">
+          <img width={108} height={24} src="/images/logo/white/linen.svg" />
+        </a>
       </header>
       <div className={styles.grid}>
         <div className={styles.left}>{left}</div>

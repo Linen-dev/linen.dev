@@ -1,4 +1,5 @@
-import Layout from 'components/layout/SplitLayout';
+import React from 'react';
+import Layout from '@linen/ui/SplitLayout';
 import OnboardingForm from '@linen/ui/OnboardingForm';
 import { api } from 'utilities/requests';
 import styles from './index.module.scss';

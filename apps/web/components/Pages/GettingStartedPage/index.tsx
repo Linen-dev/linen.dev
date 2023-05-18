@@ -1,6 +1,7 @@
+import React from 'react';
 import Button from '@linen/ui/Button';
 import Toast from '@linen/ui/Toast';
-import Layout from 'components/layout/SplitLayout';
+import Layout from '@linen/ui/SplitLayout';
 import { useState } from 'react';
 import { FiPlus } from '@react-icons/all-files/fi/FiPlus';
 import { FiFileText } from '@react-icons/all-files/fi/FiFileText';
