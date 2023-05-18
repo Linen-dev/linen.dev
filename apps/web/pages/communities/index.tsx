@@ -15,8 +15,62 @@ interface Props {
   communities: SerializedAccount[];
 }
 
+function CommunitiesList({
+  communities,
+  query,
+}: {
+  communities: SerializedAccount[];
+  query: string;
+}) {
+  return (
+    <div className={styles.cards}>
+      {communities
+        .filter((community) => {
+          // naive way to filter out test communities created by users
+          if (community.name?.toLowerCase()?.includes('test')) {
+            return false;
+          }
+
+          if (!community.description) {
+            return false;
+          }
+
+          if (getHomeUrl(community) === '/') {
+            return false;
+          }
+
+          if (query) {
+            return (
+              community.name?.toLowerCase().includes(query.toLowerCase()) ||
+              community.description?.toLowerCase().includes(query.toLowerCase())
+            );
+          }
+          return true;
+        })
+        .map((community, index) => {
+          return (
+            <CommunityCard
+              key={
+                community.name
+                  ? `${community.name}-${index}`
+                  : `community-${index}`
+              }
+              community={community}
+            />
+          );
+        })}
+    </div>
+  );
+}
+
 export default function Communities({ communities }: Props) {
   const [query, setQuery] = useState('');
+  const communitiesWithLogo = communities.filter(
+    (community) => community.logoUrl
+  );
+  const communitiesWithoutLogo = communities.filter(
+    (community) => !community.logoUrl
+  );
   return (
     <>
       <header className={styles.header}>
@@ -55,60 +109,8 @@ export default function Communities({ communities }: Props) {
               />
             </div>
           </div>
-          <div className={styles.cards}>
-            {communities
-              .filter((community) => {
-                // naive way to filter out test communities created by users
-                if (community.name?.toLowerCase()?.includes('test')) {
-                  return false;
-                }
-
-                if (!community.description) {
-                  return false;
-                }
-
-                if (getHomeUrl(community) === '/') {
-                  return false;
-                }
-
-                if (query) {
-                  return (
-                    community.name
-                      ?.toLowerCase()
-                      .includes(query.toLowerCase()) ||
-                    community.description
-                      ?.toLowerCase()
-                      .includes(query.toLowerCase())
-                  );
-                }
-                return true;
-              })
-              .sort((community) => {
-                if (
-                  community.description ||
-                  community.logoSquareUrl ||
-                  community.brandColor !== '#000000'
-                ) {
-                  return -1;
-                }
-                return 1;
-              })
-              .sort((community) => {
-                return community.logoUrl ? -1 : 1;
-              })
-              .map((community, index) => {
-                return (
-                  <CommunityCard
-                    key={
-                      community.name
-                        ? `${community.name}-${index}`
-                        : `community-${index}`
-                    }
-                    community={community}
-                  />
-                );
-              })}
-          </div>
+          <CommunitiesList communities={communitiesWithLogo} query={query} />
+          <CommunitiesList communities={communitiesWithoutLogo} query={query} />
         </Container>
       </main>
     </>
