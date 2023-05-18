@@ -1,17 +1,18 @@
 import NavBar from '@linen/ui/NavBar';
 import useMode from '@linen/hooks/mode';
 import InternalLink from '@/components/InternalLink';
-import { mockedRouterAsPath, mockedFunction } from '@/mock';
+import { mockedFunction } from '@/mock';
 import { useLinenStore, shallow } from '@/store';
 import { api } from '@/fetcher';
 import Loading from '@/components/Loading';
 import customUsePath from '@/hooks/usePath';
 import { getHomeUrl, sendNotification } from '@/di';
 import CustomRouterPush from '@/components/CustomRouterPush';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 export default function NavLeftBar() {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const { mode } = useMode();
   const {
@@ -60,8 +61,8 @@ export default function NavLeftBar() {
         communityType: settings.communityType,
         navigate,
       })}
+      routerAsPath={location.pathname}
       // TODO:
-      routerAsPath={mockedRouterAsPath}
       onDrop={mockedFunction}
     />
   );

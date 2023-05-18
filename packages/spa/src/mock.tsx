@@ -13,5 +13,3 @@ export function mockedFunction(): any {
 export function mockedContext() {
   return {};
 }
-
-export const mockedRouterAsPath = 'TODO';

@@ -5,12 +5,14 @@ import { signOut } from '@/components/SignOut';
 import Loading from '@/components/Loading';
 import { useLinenStore, shallow } from '@/store';
 import { api } from '@/fetcher';
-import { mockedComponent, mockedRouterAsPath } from '@/mock';
+import { mockedComponent } from '@/mock';
 import customUsePath from '@/hooks/usePath';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 export default function NavTopBar() {
   const navigate = useNavigate();
+  const location = useLocation();
+
   const {
     channels,
     channelName,
@@ -54,8 +56,8 @@ export default function NavTopBar() {
               `/s/${communityName}/t/${thread.incrementId}/${thread.slug}`
             );
           }}
+          routerAsPath={location.pathname}
           // TODO:
-          routerAsPath={mockedRouterAsPath}
           JoinButton={mockedComponent}
         />
       </div>
