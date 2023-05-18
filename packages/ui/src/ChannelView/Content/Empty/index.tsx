@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import styles from './index.module.scss';
 import { FiMessageSquare } from '@react-icons/all-files/fi/FiMessageSquare';
 import { FiPaperclip } from '@react-icons/all-files/fi/FiPaperclip';
-import { FiUsers } from '@react-icons/all-files/fi/FiUsers';
+import { FiPlus } from '@react-icons/all-files/fi/FiPlus';
 
 interface Props {
   onShare?(): void;
@@ -12,22 +12,28 @@ interface Props {
 
 export default function Empty({ onInvite, onShare }: Props) {
   return (
-    <div className={classNames(styles.container, styles.stripe)}>
-      <div className={styles.icon}>
-        <FiMessageSquare />
+    <div className={styles.container}>
+      <FiMessageSquare className={styles.icon} />
+      <h3 className={styles.header}>No conversations</h3>
+      <p className={styles.description}>
+        Get started by inviting people to the community.
+      </p>
+      <div className={styles.buttons}>
+        {onInvite && (
+          <a className={styles.button} onClick={onInvite}>
+            <FiPlus /> Invite members
+          </a>
+        )}
+        {onShare && (
+          <a
+            className={classNames(styles.button, styles.secondary)}
+            onClick={onShare}
+          >
+            <FiPaperclip />
+            Share the link
+          </a>
+        )}
       </div>
-      <h2 className={styles.header}>Nothing is here.</h2>
-      {onInvite && (
-        <a className={styles.button} onClick={onInvite}>
-          <FiUsers /> Invite members
-        </a>
-      )}
-      {onShare && (
-        <a className={styles.button} onClick={onShare}>
-          <FiPaperclip />
-          Share the link
-        </a>
-      )}
     </div>
   );
 }
