@@ -4,7 +4,7 @@
 }
 
 .overlay {
-  background-color: rgba(var(--color-gray-500), 0.75);
+  background-color: rgba(#6b7280, 0.75);
   top: 0px;
   right: 0px;
   bottom: 0px;
@@ -65,7 +65,6 @@
   padding: 1rem;
   position: relative;
   animation: animatedContent 0.1s ease;
-  box-shadow: 0 2px 8px var(--color-gray-300);
 
   @media (min-width: 640px) {
     margin-bottom: 2rem;
