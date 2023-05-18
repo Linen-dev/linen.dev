@@ -108,6 +108,7 @@
     "./IntegrationsModal": "./dist/IntegrationsModal/index.js",
     "./Label": "./dist/Label/index.js",
     "./Layouts": "./dist/Layouts/index.js",
+    "./Layouts/BlankLayout": "./dist/Layouts/BlankLayout/index.js",
     "./Layouts/CardLayout": "./dist/Layouts/CardLayout/index.js",
     "./Line": "./dist/Line/index.js",
     "./LinenIcon": "./dist/LinenIcon/index.js",
@@ -302,6 +303,9 @@
       ],
       "Layouts": [
         "./dist/Layouts/index.d.ts"
+      ],
+      "Layouts/BlankLayout": [
+        "./dist/Layouts/BlankLayout/index.d.ts"
       ],
       "Layouts/CardLayout": [
         "./dist/Layouts/CardLayout/index.d.ts"
