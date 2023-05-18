@@ -1,4 +1,4 @@
-import Layout from '@linen/ui/Layouts/BlankLayout';
+import Layout from '@linen/ui/BlankLayout';
 import Accordion from '@linen/ui/Accordion';
 import Logo from '@linen/ui/LinenLogo';
 import H1 from '@linen/ui/H1';

@@ -71,10 +71,12 @@
     "./Avatar": "./dist/Avatar/index.js",
     "./Avatars": "./dist/Avatars/index.js",
     "./Badge": "./dist/Badge/index.js",
+    "./BlankLayout": "./dist/BlankLayout/index.js",
     "./Button": "./dist/Button/index.js",
     "./ButtonGroup": "./dist/ButtonGroup/index.js",
     "./ButtonToggle": "./dist/ButtonToggle/index.js",
     "./Card": "./dist/Card/index.js",
+    "./CardLayout": "./dist/CardLayout/index.js",
     "./ChannelView": "./dist/ChannelView/index.js",
     "./ChatLayout": "./dist/ChatLayout/index.js",
     "./Checkbox": "./dist/Checkbox/index.js",
@@ -108,8 +110,6 @@
     "./IntegrationsModal": "./dist/IntegrationsModal/index.js",
     "./Label": "./dist/Label/index.js",
     "./Layouts": "./dist/Layouts/index.js",
-    "./Layouts/BlankLayout": "./dist/Layouts/BlankLayout/index.js",
-    "./Layouts/CardLayout": "./dist/Layouts/CardLayout/index.js",
     "./Line": "./dist/Line/index.js",
     "./LinenIcon": "./dist/LinenIcon/index.js",
     "./LinenLogo": "./dist/LinenLogo/index.js",
@@ -193,6 +193,9 @@
       "Badge": [
         "./dist/Badge/index.d.ts"
       ],
+      "BlankLayout": [
+        "./dist/BlankLayout/index.d.ts"
+      ],
       "Button": [
         "./dist/Button/index.d.ts"
       ],
@@ -204,6 +207,9 @@
       ],
       "Card": [
         "./dist/Card/index.d.ts"
+      ],
+      "CardLayout": [
+        "./dist/CardLayout/index.d.ts"
       ],
       "ChannelView": [
         "./dist/ChannelView/index.d.ts"
@@ -303,12 +309,6 @@
       ],
       "Layouts": [
         "./dist/Layouts/index.d.ts"
-      ],
-      "Layouts/BlankLayout": [
-        "./dist/Layouts/BlankLayout/index.d.ts"
-      ],
-      "Layouts/CardLayout": [
-        "./dist/Layouts/CardLayout/index.d.ts"
       ],
       "Line": [
         "./dist/Line/index.d.ts"
