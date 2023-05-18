@@ -30,7 +30,6 @@ interface Props {
   permissions: Permissions;
   settings: Settings;
   api: ApiClient;
-  JoinChannelLink({ className, href, communityType }: any): JSX.Element;
   addReactionToThread: any;
 }
 
@@ -43,7 +42,6 @@ export default function AllView({
   settings,
   api,
   addReactionToThread,
-  JoinChannelLink,
 }: Props) {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<AllResponse>({ threads: [], total: 0 });
@@ -499,7 +497,6 @@ export default function AllView({
                 if (!term) return Promise.resolve([]);
                 return api.fetchMentions(term, currentCommunity.id);
               }}
-              JoinChannelLink={JoinChannelLink}
               api={api}
               key={thread.id}
               thread={thread}

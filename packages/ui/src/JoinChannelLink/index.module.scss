@@ -1,8 +1,6 @@
-@import '@linen/styles/colors.scss';
-
 .link {
   align-items: center;
-  color: $color-indigo-700;
+  color: var(--color-indigo-700);
   cursor: pointer;
   display: flex;
   font-size: 10px;

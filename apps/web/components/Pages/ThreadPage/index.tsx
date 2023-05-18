@@ -5,7 +5,6 @@ import { buildThreadSeo, buildStructureData } from 'utilities/seo';
 import ThreadView from '@linen/ui/ThreadView';
 import { useJoinContext } from 'contexts/Join';
 import { api } from 'utilities/requests';
-import JoinChannelLink from 'components/Link/JoinChannelLink';
 import { useUsersContext } from '@linen/contexts/Users';
 
 export function ThreadPage({
@@ -54,7 +53,6 @@ export function ThreadPage({
         thread={thread}
         threadUrl={threadUrl}
         isBot={isBot}
-        JoinChannelLink={JoinChannelLink}
         useJoinContext={useJoinContext}
         api={api}
         useUsersContext={useUsersContext}

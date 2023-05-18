@@ -31,7 +31,6 @@ interface Props {
   permissions: Permissions;
   settings: Settings;
   api: ApiClient;
-  JoinChannelLink({ className, href, communityType }: any): JSX.Element;
   addReactionToThread: any;
 }
 
@@ -43,7 +42,6 @@ export default function Content({
   permissions,
   settings,
   api,
-  JoinChannelLink,
   addReactionToThread,
 }: Props) {
   const [loading, setLoading] = useState(true);
@@ -495,7 +493,6 @@ export default function Content({
         right={
           thread && (
             <Thread
-              JoinChannelLink={JoinChannelLink}
               api={api}
               useUsersContext={useUsersContext}
               fetchMentions={(term?: string) => {

@@ -20,7 +20,6 @@ interface Props {
   threadUrl: string | null;
   settings: Settings;
   useJoinContext(): any;
-  JoinChannelLink(...args: any): JSX.Element;
   useUsersContext(): any;
   api: ApiClient;
 }
@@ -34,7 +33,6 @@ export default function ThreadView({
   isSubDomainRouting,
   settings,
   permissions,
-  JoinChannelLink,
   useJoinContext,
   useUsersContext,
   api,
@@ -51,7 +49,6 @@ export default function ThreadView({
         settings={settings}
         permissions={permissions}
         useJoinContext={useJoinContext}
-        JoinChannelLink={JoinChannelLink}
         useUsersContext={useUsersContext}
         api={api}
         fetchMentions={(term?: string) => {

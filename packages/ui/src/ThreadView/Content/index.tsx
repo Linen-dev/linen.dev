@@ -25,7 +25,6 @@ interface Props {
   settings: Settings;
   permissions: Permissions;
   useJoinContext(): any;
-  JoinChannelLink(...args: any): JSX.Element;
   useUsersContext(): any;
   fetchMentions(term?: string | undefined): Promise<SerializedUser[]>;
   api: ApiClient;
@@ -41,7 +40,6 @@ export default function Content({
   settings,
   permissions,
   useJoinContext,
-  JoinChannelLink,
   useUsersContext,
   api,
   fetchMentions,
@@ -144,7 +142,6 @@ export default function Content({
   return (
     <div className={styles.wrapper}>
       <Thread
-        JoinChannelLink={JoinChannelLink}
         useUsersContext={useUsersContext}
         api={api}
         fetchMentions={fetchMentions}

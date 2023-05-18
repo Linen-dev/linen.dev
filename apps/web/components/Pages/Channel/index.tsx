@@ -10,7 +10,6 @@ import { createThreadImitation } from '@linen/serializers/thread';
 import { useUsersContext } from '@linen/contexts/Users';
 import { useRouter } from 'next/router';
 import Pagination from 'components/Pagination';
-import JoinChannelLink from 'components/Link/JoinChannelLink';
 import { useJoinContext } from 'contexts/Join';
 import usePath from 'hooks/path';
 import ChannelForBots from 'components/Bots/ChannelForBots';
@@ -188,7 +187,6 @@ export default function Channel(props: ChannelProps) {
         queryIntegration={router.query.integration}
         addReaction={addReaction}
         api={api}
-        JoinChannelLink={JoinChannelLink}
         Pagination={Pagination}
         useJoinContext={useJoinContext}
         playNotificationSound={playNotificationSound}

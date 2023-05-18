@@ -9,7 +9,6 @@ import type {
 import { localStorage } from '@linen/utilities/storage';
 import { api } from 'utilities/requests';
 import StarredView from '@linen/ui/StarredView';
-import JoinChannelLink from 'components/Link/JoinChannelLink';
 import { addReactionToThread } from 'utilities/state/reaction';
 
 export interface Props {
@@ -55,7 +54,6 @@ export default function Starred({
         permissions={permissions}
         settings={settings}
         api={api}
-        JoinChannelLink={JoinChannelLink}
       />
     </PageLayout>
   );

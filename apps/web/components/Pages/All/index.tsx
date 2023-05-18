@@ -9,7 +9,6 @@ import {
 import { localStorage } from '@linen/utilities/storage';
 import { api } from 'utilities/requests';
 import AllView from '@linen/ui/AllView';
-import JoinChannelLink from 'components/Link/JoinChannelLink';
 import { addReactionToThread } from 'utilities/state/reaction';
 
 export interface Props {
@@ -55,7 +54,6 @@ export default function All({
         settings={settings}
         api={api}
         addReactionToThread={addReactionToThread}
-        JoinChannelLink={JoinChannelLink}
       />
     </PageLayout>
   );

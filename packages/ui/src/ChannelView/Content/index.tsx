@@ -12,7 +12,6 @@ import { sendThreadMessageWrapper } from './sendThreadMessageWrapper';
 import { sendMessageWrapper } from './sendMessageWrapper';
 import {
   onResolve,
-  ChatType,
   Permissions,
   ReminderTypes,
   SerializedAccount,
@@ -126,7 +125,6 @@ interface Props {
   };
   queryIntegration?: string;
   Pagination: (args: any) => JSX.Element;
-  JoinChannelLink(): JSX.Element;
   playNotificationSound: (volume: number) => Promise<void>;
   useUsersContext(): any;
   usePath(options: any): any;
@@ -180,7 +178,6 @@ export default function Channel({
   useJoinContext,
   queryIntegration,
   Pagination,
-  JoinChannelLink,
   playNotificationSound,
   useUsersContext,
   usePath,
@@ -635,7 +632,6 @@ export default function Channel({
                 return api.fetchMentions(term, currentCommunity.id);
               }}
               api={api}
-              JoinChannelLink={JoinChannelLink}
               useUsersContext={useUsersContext}
               key={threadToRender.id}
               thread={threadToRender}

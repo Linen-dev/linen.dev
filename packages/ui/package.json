@@ -108,6 +108,7 @@
     "./Image": "./dist/Image/index.js",
     "./InboxView": "./dist/InboxView/index.js",
     "./IntegrationsModal": "./dist/IntegrationsModal/index.js",
+    "./JoinChannelLink": "./dist/JoinChannelLink/index.js",
     "./Label": "./dist/Label/index.js",
     "./Layouts": "./dist/Layouts/index.js",
     "./Line": "./dist/Line/index.js",
@@ -304,6 +305,9 @@
       ],
       "IntegrationsModal": [
         "./dist/IntegrationsModal/index.d.ts"
+      ],
+      "JoinChannelLink": [
+        "./dist/JoinChannelLink/index.d.ts"
       ],
       "Label": [
         "./dist/Label/index.d.ts"

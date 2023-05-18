@@ -99,7 +99,6 @@ function View() {
       routerPush={navigate}
       // TODO:
       addReaction={(a) => a}
-      JoinChannelLink={mockedComponent}
       Pagination={mockedComponent}
       queryIntegration={false}
       useJoinContext={mockedContext}

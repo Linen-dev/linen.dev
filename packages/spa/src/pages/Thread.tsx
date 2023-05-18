@@ -4,7 +4,7 @@ import { useUsersContext } from '@linen/contexts/Users';
 import { useLinenStore } from '@/store';
 import Loading from '@/components/Loading';
 import { api } from '@/fetcher';
-import { mockedComponent, mockedContext } from '@/mock';
+import { mockedContext } from '@/mock';
 import { useQuery } from '@tanstack/react-query';
 import { localStorage } from '@linen/utilities/storage';
 import { useEffect } from 'react';
@@ -68,7 +68,6 @@ function View() {
       api={api}
       useUsersContext={useUsersContext}
       // TODO:
-      JoinChannelLink={mockedComponent}
       useJoinContext={mockedContext}
     />
   );

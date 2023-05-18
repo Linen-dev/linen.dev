@@ -4,7 +4,7 @@ import InboxView from '@linen/ui/InboxView';
 import { useLinenStore } from '@/store';
 import Loading from '@/components/Loading';
 import { api } from '@/fetcher';
-import { mockedComponent, mockedFunction } from '@/mock';
+import { mockedFunction } from '@/mock';
 import { useEffect } from 'react';
 import { localStorage } from '@linen/utilities/storage';
 
@@ -57,7 +57,6 @@ function View() {
       settings={inboxProps.settings}
       api={api}
       // TODO:
-      JoinChannelLink={mockedComponent}
       addReactionToThread={mockedFunction}
     />
   );

@@ -21,6 +21,7 @@ import { CustomLinkHelper } from '@linen/utilities/custom-link';
 import PoweredByLinen from '@/PoweredByLinen';
 import EditMessageModal from '@/EditMessageModal';
 import type { ApiClient } from '@linen/api-client';
+import JoinChannelLink from '@/JoinChannelLink';
 
 interface Props {
   thread: SerializedThread;
@@ -71,7 +72,6 @@ interface Props {
   }): void;
   onResolution?: onResolve;
   editMessage?({ id, body }: { id: string; body: string }): Promise<void>;
-  JoinChannelLink(args: any): JSX.Element;
   useUsersContext(): any;
   fetchMentions(term?: string | undefined): Promise<SerializedUser[]>;
   api: ApiClient;
@@ -105,7 +105,6 @@ export default function Thread({
   onMessage,
   onResolution,
   editMessage,
-  JoinChannelLink,
   useUsersContext,
   api,
   fetchMentions,

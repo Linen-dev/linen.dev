@@ -47,7 +47,6 @@ interface Props {
   permissions: Permissions;
   settings: Settings;
   api: ApiClient;
-  JoinChannelLink: ({ className, href, communityType }: any) => JSX.Element;
   addReactionToThread: (
     thread: SerializedThread,
     { threadId, messageId, currentUser, type, active }: any
@@ -70,7 +69,6 @@ export default function InboxView({
   settings,
   dms,
   api,
-  JoinChannelLink,
   addReactionToThread,
 }: Props) {
   const [loading, setLoading] = useState(true);
@@ -763,7 +761,6 @@ export default function InboxView({
         right={
           thread && (
             <Thread
-              JoinChannelLink={JoinChannelLink}
               api={api}
               useUsersContext={useUsersContext}
               fetchMentions={(term?: string) => {
