@@ -1,13 +1,13 @@
-$size: 3px;
-
-.container {
-  display: flex;
-  align-items: center;
+.logo {
+  background-image: url(https://linen.dev/images/logo/linen.png);
+  margin: 0 auto 1rem;
+  width: 133px;
+  height: 30px;
+  background-size: contain;
 }
 
-.text {
-  font-weight: 900;
-  font-size: $size * 14;
-  line-height: 1;
-  margin-left: $size * 3;
+@media (prefers-color-scheme: dark) {
+  .logo {
+    background-image: url(https://linen.dev/images/logo/white/linen.svg);
+  }
 }
