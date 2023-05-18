@@ -1,14 +1,15 @@
 import React, { ReactNode } from 'react';
-import Card from '../../Card';
-import LinenLogo from '../../LinenLogo';
+import Card from '../Card';
+import LinenLogo from '../LinenLogo';
 import styles from './index.module.scss';
 
 interface Props {
+  size?: 'md' | 'lg';
   header?: string;
   children?: ReactNode;
 }
 
-const CardLayout = ({ header, children }: Props) => {
+const CardLayout = ({ size, header, children }: Props) => {
   return (
     <>
       <div className={styles.page}>
@@ -17,7 +18,7 @@ const CardLayout = ({ header, children }: Props) => {
             <LinenLogo />
           </a>
         </div>
-        <Card>
+        <Card size={size}>
           <div className={styles.content}>
             {header && <h1 className={styles.header}>{header}</h1>}
             {children}

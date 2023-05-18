@@ -1,8 +1,6 @@
-import Layout from '@linen/ui/BlankLayout';
+import CardLayout from '@linen/ui/CardLayout';
 import Accordion from '@linen/ui/Accordion';
-import Logo from '@linen/ui/LinenLogo';
 import H1 from '@linen/ui/H1';
-import styles from './index.module.scss';
 
 const faqs = [
   {
@@ -66,26 +64,15 @@ const faqs = [
 
 export default function Example() {
   return (
-    <Layout>
-      <div className="mx-auto max-w-2xl py-12 px-4 sm:py-16 sm:px-6 lg:px-8">
-        <div className={styles.container}>
-          <div className="flex justify-center mb-4">
-            <Logo />
-          </div>
-          <H1 className="text-center">Frequently asked questions</H1>
-          <dl className="mt-6 space-y-6 divide-y divide-gray-200">
-            {faqs.map((faq) => (
-              <Accordion
-                key={faq.question}
-                header={faq.question}
-                expanded={false}
-              >
-                {faq.answer}
-              </Accordion>
-            ))}
-          </dl>
-        </div>
-      </div>
-    </Layout>
+    <CardLayout size="lg">
+      <H1 className="text-center">Frequently asked questions</H1>
+      <dl className="mt-6 space-y-6 divide-y divide-gray-200">
+        {faqs.map((faq) => (
+          <Accordion key={faq.question} header={faq.question} expanded={false}>
+            {faq.answer}
+          </Accordion>
+        ))}
+      </dl>
+    </CardLayout>
   );
 }
