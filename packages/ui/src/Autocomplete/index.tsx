@@ -2,8 +2,8 @@ import React, { useEffect, useRef, useCallback, useState } from 'react';
 import classNames from 'classnames';
 import debounce from '@linen/utilities/debounce';
 import TextInput from '@/TextInput';
-import { AiOutlineSearch } from '@react-icons/all-files/ai/AiOutlineSearch';
-import { AiOutlineLoading } from '@react-icons/all-files/ai/AiOutlineLoading';
+import { FiSearch } from '@react-icons/all-files/fi/FiSearch';
+import { FiLoader } from '@react-icons/all-files/fi/FiLoader';
 import styles from './index.module.scss';
 import NoResults from './NoResults';
 import { pickTextColorBasedOnBgColor } from '@linen/utilities/colors';
@@ -227,13 +227,7 @@ export default function Autocomplete({
         className={styles.input}
         id="search"
         inputRef={inputRef}
-        icon={
-          isSearching ? (
-            <AiOutlineLoading className={styles.spin} />
-          ) : (
-            <AiOutlineSearch />
-          )
-        }
+        icon={isSearching ? <FiLoader className={styles.spin} /> : <FiSearch />}
         placeholder={placeholder}
         value={value}
         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {

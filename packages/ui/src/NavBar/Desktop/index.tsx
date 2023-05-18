@@ -22,6 +22,7 @@ import debounce from '@linen/utilities/debounce';
 import unique from 'lodash.uniq';
 import CommunityLink from '@/CommunityLink';
 import AddCommunityLink from './AddCommunityLink';
+import FindCommunityLink from './FindCommunityLink';
 import { timestamp } from '@linen/utilities/date';
 import { DMs } from './DMs';
 import useInboxWebsockets from '@linen/hooks/websockets-inbox';
@@ -33,6 +34,7 @@ import AnalyticsGroup from './AnalyticsGroup';
 import EditChannelModal from '@/EditChannelModal';
 import type { ApiClient } from '@linen/api-client';
 import NewCommunityModal from '@/NewCommunityModal';
+import { FiSearch } from '@react-icons/all-files/fi/FiSearch';
 
 interface Props {
   mode: Mode;
@@ -214,6 +216,7 @@ export default function DesktopNavBar({
             />
           </>
         )}
+        <FindCommunityLink />
       </div>
       <div
         className={classNames(styles.animation, {

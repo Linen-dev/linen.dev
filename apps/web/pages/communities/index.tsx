@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Container from '@linen/ui/Container';
 import TextInput from '@linen/ui/TextInput';
 import styles from './index.module.scss';
-import { AiOutlineSearch } from '@react-icons/all-files/ai/AiOutlineSearch';
+import { FiSearch } from '@react-icons/all-files/fi/FiSearch';
 import { serializeAccount } from '@linen/serializers/account';
 import { SerializedAccount } from '@linen/types';
 import { trackPageView } from 'utilities/ssr-metrics';
@@ -45,7 +45,7 @@ export default function Communities({ communities }: Props) {
             <div className={styles.search}>
               <TextInput
                 id="communities-search"
-                icon={<AiOutlineSearch />}
+                icon={<FiSearch />}
                 placeholder="Search"
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
                   setQuery(event.target.value)
