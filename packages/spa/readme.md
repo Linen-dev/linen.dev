@@ -1,25 +1,21 @@
 ## Build Tauri desktop client
 
-```
+```bash
 yarn install
 
-yarn tarui build:intel
+yarn tauri build:intel
 ```
-
 
 ## Prerequresites
 
 Follow - https://tauri.app/v1/guides/getting-started/prerequisites
 
-
 ### For local development
 
 ```bash
-
 # done in root folder
-yarn turbo run build --filter web^...
-yarn turbo run dev --filter web
-
+yarn build:deps
+yarn dev:web
 
 # Optional set up push service
 
@@ -29,4 +25,4 @@ cp .env.example .env
 yarn tauri dev
 ```
 
-**Note: Email sign in for development mode doesn't work yet, because it requires deep linking. So testing has to be done with username and password sign in
+> Note: Email sign in for development mode doesn't work yet, because it requires deep linking. So testing has to be done with username and password sign in
