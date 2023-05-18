@@ -21,6 +21,7 @@ import debounce from '@linen/utilities/debounce';
 import { createThreadImitation } from '@linen/serializers/thread';
 import type { ApiClient } from '@linen/api-client';
 import Content from './Content';
+import { addReaction } from '@linen/utilities/reaction';
 
 const SHORTCUTS_ENABLED = false;
 
@@ -36,7 +37,6 @@ export default function ChannelView({
   pathCursor,
   isBot,
   permissions,
-  addReaction,
   Pagination,
   useJoinContext,
   queryIntegration,
@@ -60,7 +60,6 @@ export default function ChannelView({
   pathCursor: string | null;
   isBot: boolean;
   permissions: Permissions;
-  addReaction: (...args: any) => any;
   useJoinContext: () => {
     startSignUp?: any;
   };

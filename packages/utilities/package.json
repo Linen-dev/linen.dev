@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@linen/scripts": "*",
+    "@linen/types": "*",
     "awesome-debounce-promise": "^2.1.0",
     "date-fns": "^2.29.3",
     "entities": "^4.4.0",
@@ -40,6 +41,7 @@
     "./password": "./dist/password.js",
     "./promises": "./dist/promises.js",
     "./randomWordSlugs": "./dist/randomWordSlugs.js",
+    "./reaction": "./dist/reaction.js",
     "./scroll": "./dist/scroll.js",
     "./storage": "./dist/storage.js",
     "./string": "./dist/string.js",
@@ -97,6 +99,9 @@
       ],
       "randomWordSlugs": [
         "./dist/randomWordSlugs.d.ts"
+      ],
+      "reaction": [
+        "./dist/reaction.d.ts"
       ],
       "scroll": [
         "./dist/scroll.d.ts"

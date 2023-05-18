@@ -1,4 +1,4 @@
-import { SerializedThread, SerializedUser } from '@linen/types';
+import type { SerializedThread, SerializedUser } from '@linen/types';
 
 export function addReactionToThread(
   thread: SerializedThread,

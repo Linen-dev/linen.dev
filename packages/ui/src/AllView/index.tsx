@@ -20,6 +20,7 @@ import {
 import { addMessageToThread } from './state';
 import debounce from '@linen/utilities/debounce';
 import type { ApiClient } from '@linen/api-client';
+import { addReactionToThread } from '@linen/utilities/reaction';
 
 const { Header, Grid } = Pages.All;
 const { SidebarLayout } = Layouts.Shared;
@@ -30,7 +31,6 @@ interface Props {
   permissions: Permissions;
   settings: Settings;
   api: ApiClient;
-  addReactionToThread: any;
 }
 
 const LIMIT = 10;
@@ -41,7 +41,6 @@ export default function AllView({
   permissions,
   settings,
   api,
-  addReactionToThread,
 }: Props) {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<AllResponse>({ threads: [], total: 0 });

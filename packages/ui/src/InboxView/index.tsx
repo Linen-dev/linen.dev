@@ -35,6 +35,7 @@ import { sendMessageWrapper } from './utilities/sendMessageWrapper';
 import { createThreadWrapper } from './utilities/createThreadWrapper';
 import { manageSelections } from './utilities/selection';
 import { defaultConfiguration } from './utilities/inbox';
+import { addReactionToThread } from '@linen/utilities/reaction';
 
 const { Header, Grid } = Pages.Inbox;
 const { SidebarLayout } = Layouts.Shared;
@@ -47,10 +48,6 @@ interface Props {
   permissions: Permissions;
   settings: Settings;
   api: ApiClient;
-  addReactionToThread: (
-    thread: SerializedThread,
-    { threadId, messageId, currentUser, type, active }: any
-  ) => SerializedThread;
 }
 
 const LIMIT = 10;
@@ -69,7 +66,6 @@ export default function InboxView({
   settings,
   dms,
   api,
-  addReactionToThread,
 }: Props) {
   const [loading, setLoading] = useState(true);
   const [inbox, setInbox] = useState<InboxResponse>({ threads: [], total: 0 });

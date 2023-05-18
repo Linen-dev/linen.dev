@@ -9,7 +9,8 @@
     "jsx": "react",
     "declaration": true,
     "declarationDir": "dist",
-    "outDir": "dist"
+    "outDir": "dist",
+    "skipLibCheck": true
   },
   "include": ["src/*.ts", "src/*.js"],
   "exclude": ["src/*.spec.ts", "src/*.test.ts"]

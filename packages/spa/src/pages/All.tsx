@@ -4,7 +4,6 @@ import AllView from '@linen/ui/AllView';
 import { useLinenStore } from '@/store';
 import Loading from '@/components/Loading';
 import { api } from '@/fetcher';
-import { mockedFunction } from '@/mock';
 import { useEffect } from 'react';
 import { localStorage } from '@linen/utilities/storage';
 
@@ -54,8 +53,6 @@ function View() {
       permissions={inboxProps.permissions}
       settings={inboxProps.settings}
       api={api}
-      // TODO:
-      addReactionToThread={mockedFunction}
     />
   );
 }

@@ -9,7 +9,6 @@ import type {
 import { localStorage } from '@linen/utilities/storage';
 import { api } from 'utilities/requests';
 import StarredView from '@linen/ui/StarredView';
-import { addReactionToThread } from 'utilities/state/reaction';
 
 export interface Props {
   channels: SerializedChannel[];
@@ -48,7 +47,6 @@ export default function Starred({
       dms={dms}
     >
       <StarredView
-        addReactionToThread={addReactionToThread}
         currentCommunity={currentCommunity}
         isSubDomainRouting={isSubDomainRouting}
         permissions={permissions}

@@ -21,6 +21,7 @@ import Thread from '@/Thread';
 import Empty from './Empty';
 import { sendMessageWrapper } from './utilities/sendMessageWrapper';
 import { addMessageToThread } from './state';
+import { addReactionToThread } from '@linen/utilities/reaction';
 
 const { Header, Grid } = Pages.Starred;
 const { SidebarLayout } = Layouts.Shared;
@@ -31,7 +32,6 @@ interface Props {
   permissions: Permissions;
   settings: Settings;
   api: ApiClient;
-  addReactionToThread: any;
 }
 
 const LIMIT = 10;
@@ -42,7 +42,6 @@ export default function Content({
   permissions,
   settings,
   api,
-  addReactionToThread,
 }: Props) {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<StarredResponse>({ threads: [], total: 0 });

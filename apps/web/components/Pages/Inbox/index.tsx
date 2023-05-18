@@ -4,7 +4,6 @@ import { InboxProps } from '@linen/types';
 import { localStorage } from '@linen/utilities/storage';
 import InboxView from '@linen/ui/InboxView';
 import { api } from 'utilities/requests';
-import { addReactionToThread } from 'utilities/state/reaction';
 
 export default function Inbox({
   channels,
@@ -33,7 +32,6 @@ export default function Inbox({
       dms={dms}
     >
       <InboxView
-        addReactionToThread={addReactionToThread}
         api={api}
         channels={channels}
         currentCommunity={currentCommunity}

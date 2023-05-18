@@ -98,7 +98,6 @@ function View() {
       usePath={customUsePath({ communityName })}
       routerPush={navigate}
       // TODO:
-      addReaction={(a) => a}
       Pagination={mockedComponent}
       queryIntegration={false}
       useJoinContext={mockedContext}

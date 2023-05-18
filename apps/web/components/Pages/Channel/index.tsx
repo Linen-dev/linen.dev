@@ -4,7 +4,6 @@ import PageLayout from 'components/layout/PageLayout';
 import { buildChannelSeo } from 'utilities/seo';
 import { SerializedThread, SerializedUser, ChannelProps } from '@linen/types';
 import { api } from 'utilities/requests';
-import { addReaction } from 'utilities/state/reaction';
 import ChannelView from '@linen/ui/ChannelView';
 import { createThreadImitation } from '@linen/serializers/thread';
 import { useUsersContext } from '@linen/contexts/Users';
@@ -185,7 +184,6 @@ export default function Channel(props: ChannelProps) {
         settings={props.settings}
         threads={props.threads}
         queryIntegration={router.query.integration}
-        addReaction={addReaction}
         api={api}
         Pagination={Pagination}
         useJoinContext={useJoinContext}

@@ -9,7 +9,6 @@ import {
 import { localStorage } from '@linen/utilities/storage';
 import { api } from 'utilities/requests';
 import AllView from '@linen/ui/AllView';
-import { addReactionToThread } from 'utilities/state/reaction';
 
 export interface Props {
   channels: SerializedChannel[];
@@ -53,7 +52,6 @@ export default function All({
         permissions={permissions}
         settings={settings}
         api={api}
-        addReactionToThread={addReactionToThread}
       />
     </PageLayout>
   );
