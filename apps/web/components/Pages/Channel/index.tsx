@@ -8,7 +8,6 @@ import ChannelView from '@linen/ui/ChannelView';
 import { createThreadImitation } from '@linen/serializers/thread';
 import { useUsersContext } from '@linen/contexts/Users';
 import { useRouter } from 'next/router';
-import Pagination from 'components/Pagination';
 import { useJoinContext } from 'contexts/Join';
 import usePath from 'hooks/path';
 import ChannelForBots from 'components/Bots/ChannelForBots';
@@ -185,7 +184,6 @@ export default function Channel(props: ChannelProps) {
         threads={props.threads}
         queryIntegration={router.query.integration}
         api={api}
-        Pagination={Pagination}
         useJoinContext={useJoinContext}
         playNotificationSound={playNotificationSound}
         useUsersContext={useUsersContext}

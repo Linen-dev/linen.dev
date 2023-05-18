@@ -129,6 +129,7 @@
     "./OnboardingForm": "./dist/OnboardingForm/index.js",
     "./Pages": "./dist/Pages/index.js",
     "./Pagination": "./dist/Pagination/index.js",
+    "./PaginationNumbers": "./dist/PaginationNumbers/index.js",
     "./PasswordField": "./dist/PasswordField/index.js",
     "./PasswordInput": "./dist/PasswordInput/index.js",
     "./PinIcon": "./dist/PinIcon/index.js",
@@ -368,6 +369,9 @@
       ],
       "Pagination": [
         "./dist/Pagination/index.d.ts"
+      ],
+      "PaginationNumbers": [
+        "./dist/PaginationNumbers/index.d.ts"
       ],
       "PasswordField": [
         "./dist/PasswordField/index.d.ts"

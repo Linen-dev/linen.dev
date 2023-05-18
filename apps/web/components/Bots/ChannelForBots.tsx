@@ -2,10 +2,10 @@ import React from 'react';
 import PageLayout from 'components/layout/PageLayout';
 import { buildChannelSeo } from 'utilities/seo';
 import { SerializedChannel, ChannelProps } from '@linen/types';
-import Pagination from 'components/Pagination';
 import Grid from '@linen/ui/GridContent';
 import { RowForBots } from './RowForBots';
 import Row from '@linen/ui/Row';
+import PaginationNumbers from '@linen/ui/PaginationNumbers';
 
 export default function ChannelForBots({
   threads,
@@ -56,7 +56,7 @@ export default function ChannelForBots({
           onDrop={() => {}}
           Row={RowForBots({ Row })}
         />
-        <Pagination
+        <PaginationNumbers
           currentChannel={currentChannel}
           isSubDomainRouting={isSubDomainRouting}
           settings={settings}

@@ -46,6 +46,7 @@ import type { ApiClient } from '@linen/api-client';
 import IntegrationsModalUI from '@/IntegrationsModal';
 import { copyToClipboard } from '@linen/utilities/clipboard';
 import MembersModal from '@/MembersModal';
+import PaginationNumbers from '@/PaginationNumbers';
 
 const { SidebarLayout } = Layouts.Shared;
 
@@ -124,7 +125,6 @@ interface Props {
     startSignUp?: any;
   };
   queryIntegration?: string;
-  Pagination: (args: any) => JSX.Element;
   playNotificationSound: (volume: number) => Promise<void>;
   useUsersContext(): any;
   usePath(options: any): any;
@@ -177,7 +177,6 @@ export default function Channel({
   // injection
   useJoinContext,
   queryIntegration,
-  Pagination,
   playNotificationSound,
   useUsersContext,
   usePath,
@@ -582,7 +581,7 @@ export default function Channel({
               footer={
                 isPaginationView() ? (
                   <>
-                    <Pagination
+                    <PaginationNumbers
                       currentChannel={currentChannel}
                       isSubDomainRouting={isSubDomainRouting}
                       settings={settings}

@@ -37,7 +37,6 @@ export default function ChannelView({
   pathCursor,
   isBot,
   permissions,
-  Pagination,
   useJoinContext,
   queryIntegration,
   playNotificationSound,
@@ -64,7 +63,6 @@ export default function ChannelView({
     startSignUp?: any;
   };
   queryIntegration?: any;
-  Pagination: (args: any) => JSX.Element;
   playNotificationSound: (volume: number) => Promise<void>;
   useUsersContext(): any;
   usePath(options: any): any;
@@ -855,7 +853,6 @@ export default function ChannelView({
   return (
     <ChannelContext.Provider value={currentChannel}>
       <Content
-        Pagination={Pagination}
         useJoinContext={useJoinContext}
         queryIntegration={queryIntegration}
         playNotificationSound={playNotificationSound}

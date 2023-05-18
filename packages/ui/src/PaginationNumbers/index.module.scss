@@ -1,0 +1,39 @@
+.selectedPage {
+  display: inline-flex;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 1rem;
+  color: var(--color-link);
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 500;
+  align-items: center;
+  border-top-width: 2px;
+  border-color: var(--color-link);
+}
+
+.page {
+  display: inline-flex;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 1rem;
+  color: var(--color-text);
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 500;
+  align-items: center;
+  border-top-width: 2px;
+  border-color: transparent;
+}
+
+.pageHover {
+  :hover {
+    color: var(--color-link);
+    border-color: var(--color-border);
+  }
+}
+
+.wrapper {
+  padding: 1rem;
+  text-align: center;
+}

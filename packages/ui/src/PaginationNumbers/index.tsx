@@ -1,8 +1,10 @@
 import React from 'react';
-import { SerializedChannel, Settings } from '@linen/types';
+import type { SerializedChannel, Settings } from '@linen/types';
 import { CustomLinkHelper } from '@linen/utilities/custom-link';
+import styles from './index.module.scss';
+import classNames from 'classnames';
 
-export default function Pagination({
+export default function PaginationNumbers({
   currentChannel,
   isSubDomainRouting,
   settings,
@@ -30,13 +32,11 @@ export default function Pagination({
         })}
         {...(curr
           ? {
-              className:
-                'inline-flex items-center border-t-2 border-blue-500 px-4 pt-4 text-sm font-medium text-blue-600',
+              className: styles.selectedPage,
               ['aria-current']: 'page',
             }
           : {
-              className:
-                'inline-flex items-center border-t-2 border-transparent px-4 pt-4 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700',
+              className: classNames(styles.page, styles.pageHover),
             })}
       >
         {String(num)}
@@ -47,14 +47,14 @@ export default function Pagination({
   function Latest() {
     return (
       <a
-        key={'latest'}
+        key="latest"
         href={CustomLinkHelper({
           isSubDomainRouting,
           communityName: settings.communityName,
           communityType: settings.communityType,
           path: `/c/${currentChannel.channelName}`,
         })}
-        className="inline-flex items-center border-t-2 border-transparent px-4 pt-4 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700"
+        className={classNames(styles.page, styles.pageHover)}
       >
         {String('Latest')}
       </a>
@@ -62,20 +62,16 @@ export default function Pagination({
   }
 
   function Dots() {
-    return (
-      <span className="inline-flex items-center border-t-2 border-transparent px-4 pt-4 text-sm font-medium text-gray-500">
-        ...
-      </span>
-    );
+    return <span className={styles.page}>...</span>;
   }
 
   return (
     <>
       {currentChannel && currentChannel.pages ? (
-        <div className="text-center p-4">
+        <div className={styles.wrapper}>
           {pagination.items?.map((item) => {
             if (item.type === 'ellipsis') {
-              return <Dots key={'dots'} />;
+              return <Dots key="dots" />;
             }
             return (
               <Page
