@@ -43,6 +43,7 @@ export async function index({
     messages: {
       some: {},
     },
+    lastReplyAt: { not: null },
     channelId: { in: channels.map(({ id }) => id) },
   } as any;
 
