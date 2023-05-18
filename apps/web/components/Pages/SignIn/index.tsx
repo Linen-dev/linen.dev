@@ -1,4 +1,4 @@
-import CardLayout from 'components/layout/CardLayout';
+import CardLayout from '@linen/ui/Layouts/CardLayout';
 import EmailField from '@linen/ui/EmailField';
 import Button from '@linen/ui/Button';
 import { localStorage } from '@linen/utilities/storage';

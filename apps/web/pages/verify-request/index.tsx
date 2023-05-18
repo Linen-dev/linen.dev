@@ -1,4 +1,4 @@
-import Layout from 'components/layout/CardLayout';
+import Layout from '@linen/ui/Layouts/CardLayout';
 import { GoMailRead } from '@react-icons/all-files/go/GoMailRead';
 
 export default function VerifyRequest({}: {}) {
