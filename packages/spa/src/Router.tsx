@@ -6,7 +6,8 @@ import SignIn from '@/pages/SignIn';
 import RequireAuth from '@/hoc/RequireAuth';
 import RedirectToLastPageViewed from '@/components/RedirectToLastPageViewed';
 import Loading from '@/components/Loading';
-import RedirectToLinen from './components/RedirectToLinen';
+import RedirectToLinen from '@/components/RedirectToLinen';
+import RedirectToS from '@/components/RedirectToS';
 const InboxPage = lazy(() => import('@/pages/Inbox'));
 const StarredPage = lazy(() => import('@/pages/Starred'));
 const AllPage = lazy(() => import('@/pages/All'));
@@ -39,6 +40,10 @@ export default function Router() {
                   path: '/',
                   element: <Layout />,
                   children: [
+                    {
+                      path: '/d/*',
+                      element: <RedirectToS />,
+                    },
                     {
                       path: '/s/:communityName',
                       element: <Outlet />,
