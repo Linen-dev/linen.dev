@@ -12,6 +12,8 @@ import { FiFileText } from '@react-icons/all-files/fi/FiFileText';
 import Modal from '@/Modal';
 import styles from './index.module.scss';
 import { Permissions, SerializedChannel } from '@linen/types';
+import { FiStar } from '@react-icons/all-files/fi/FiStar';
+import { FiLayers } from '@react-icons/all-files/fi/FiLayers';
 
 interface Props {
   channels: SerializedChannel[];
@@ -40,6 +42,8 @@ export default function MobileMenu({
 
   const paths = {
     inbox: usePath({ href: '/inbox' }),
+    starred: usePath({ href: '/starred' }),
+    all: usePath({ href: '/all' }),
     metrics: usePath({ href: '/metrics' }),
     configurations: usePath({ href: '/configurations' }),
     branding: usePath({ href: '/branding' }),
@@ -71,6 +75,32 @@ export default function MobileMenu({
                   href="/inbox"
                 >
                   <FiInbox /> Inbox
+                </InternalLink>
+              </li>
+            )}
+            {permissions.starred && (
+              <li>
+                <InternalLink
+                  onClick={close}
+                  className={classNames(styles.link, {
+                    [styles.active]: paths.starred === routerAsPath,
+                  })}
+                  href="/starred"
+                >
+                  <FiStar /> Starred
+                </InternalLink>
+              </li>
+            )}
+            {permissions.user && (
+              <li>
+                <InternalLink
+                  onClick={close}
+                  className={classNames(styles.link, {
+                    [styles.active]: paths.all === routerAsPath,
+                  })}
+                  href="/all"
+                >
+                  <FiLayers /> All
                 </InternalLink>
               </li>
             )}
