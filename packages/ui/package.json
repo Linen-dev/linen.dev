@@ -143,6 +143,7 @@
     "./ShowUsers": "./dist/ShowUsers/index.js",
     "./SlackIcon": "./dist/SlackIcon/index.js",
     "./Spinner": "./dist/Spinner/index.js",
+    "./SplitLayout": "./dist/SplitLayout/index.js",
     "./StarredView": "./dist/StarredView/index.js",
     "./StickyHeader": "./dist/StickyHeader/index.js",
     "./Suggestion": "./dist/Suggestion/index.js",
@@ -408,6 +409,9 @@
       ],
       "Spinner": [
         "./dist/Spinner/index.d.ts"
+      ],
+      "SplitLayout": [
+        "./dist/SplitLayout/index.d.ts"
       ],
       "StarredView": [
         "./dist/StarredView/index.d.ts"
