@@ -94,7 +94,7 @@ export default function Communities({ communities }: Props) {
                 return 1;
               })
               .sort((community) => {
-                return community.premium ? -1 : 1;
+                return community.logoUrl ? -1 : 1;
               })
               .map((community, index) => {
                 return (
