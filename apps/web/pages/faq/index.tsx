@@ -1,6 +1,4 @@
 import CardLayout from '@linen/ui/CardLayout';
-import Accordion from '@linen/ui/Accordion';
-import H1 from '@linen/ui/H1';
 
 const faqs = [
   {
@@ -65,12 +63,19 @@ const faqs = [
 export default function Example() {
   return (
     <CardLayout size="lg">
-      <H1 className="text-center">Frequently asked questions</H1>
-      <dl className="mt-6 space-y-6 divide-y divide-gray-200">
+      <h1 className="text-2xl font-bold leading-10 tracking-tight text-gray-900 dark:text-gray-100 text-center">
+        Frequently asked questions
+      </h1>
+      <dl className="mt-10 space-y-6 divide-y divide-gray-900/10">
         {faqs.map((faq) => (
-          <Accordion key={faq.question} header={faq.question} expanded={false}>
-            {faq.answer}
-          </Accordion>
+          <>
+            <dt className="flex w-full items-start justify-between text-left text-gray-900 dark:text-gray-100 text-base font-semibold leading-7">
+              {faq.question}
+            </dt>
+            <dd className="mt-2 pr-12 text-base leading-7 text-gray-600 dark:text-gray-300">
+              {faq.answer}
+            </dd>
+          </>
         ))}
       </dl>
     </CardLayout>

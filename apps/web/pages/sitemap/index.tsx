@@ -1,6 +1,6 @@
 import { serializeAccount } from '@linen/serializers/account';
 import { SerializedAccount } from '@linen/types';
-import Layout from 'components/layout/CardLayout';
+import Layout from '@linen/ui/CardLayout';
 import H1 from '@linen/ui/H1';
 import H2 from '@linen/ui/H2';
 import Link from 'components/Link';
