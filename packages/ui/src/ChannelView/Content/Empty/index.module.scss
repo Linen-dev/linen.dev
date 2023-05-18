@@ -6,61 +6,66 @@
   flex-grow: 1;
 }
 
-.stripe {
-  background: repeating-linear-gradient(
-    45deg,
-    var(--color-background),
-    var(--color-background) 2px,
-    var(--color-gray-50) 2px,
-    var(--color-gray-50) 4px
-  );
-  margin: 1rem;
-  animation-name: opacity-animation;
-  animation-duration: 0.15s;
-}
-
-@keyframes opacity-animation {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
 .icon {
-  color: var(--color-gray-900);
-  font-size: 64px;
+  color: var(--color-gray-400);
+  font-size: 36px;
   line-height: 1;
   margin: 0;
 }
 
 .header {
   color: var(--color-gray-900);
-  font-size: 24px;
+  font-size: 0.875rem;
+  line-height: 1.25;
   font-weight: bold;
   margin: 0;
-  line-height: 1;
   user-select: none;
+  font-weight: 600;
+  margin-top: 0.5rem;
+}
+
+.description {
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  line-height: 1.25;
+  color: var(--color-gray-500);
+}
+
+.buttons {
+  display: flex;
+  gap: 0.5rem;  
 }
 
 .button {
   align-items: center;
-  background: var(--color-primary);
-  border: 2px solid var(--color-primary);
+  background: var(--color-indigo-600);
+  border: 2px solid var(--color-indigo-600);
   color: white;
   cursor: pointer;
-  display: flex;
-  font-weight: 500;
+  display: inline-flex;
+  font-weight: 600;
   gap: 0.25rem;
-  padding: 0.5rem 1.5rem;
-  margin-top: 1rem;
-  border-radius: 9999px;
+  padding: 0.5rem 0.75rem;
+  margin-top: 1.5rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
   transition: background 0.2s ease, color 0.2s ease, border 0.2s ease;
 }
 
 .button:hover {
+  background: var(--color-indigo-500);
+  border: 2px solid var(--color-indigo-500);
+}
+
+.button.secondary {
   background: var(--color-background);
   color: var(--color-text);
   border: 2px solid var(--color-text);
+}
+
+.button.secondary:hover {
+  background: var(--color-background);
+  border: 2px solid var(--color-indigo-500);
+  color: var(--color-indigo-500);
 }
