@@ -1,7 +1,7 @@
 import React from 'react';
 import Example from '../Example';
 import TextInput from '@/TextInput';
-import { AiOutlineSearch } from '@react-icons/all-files/ai/AiOutlineSearch';
+import { FiSearch } from '@react-icons/all-files/fi/FiSearch';
 
 export default function TextInputExample() {
   return (
@@ -12,7 +12,7 @@ export default function TextInputExample() {
       <Example description="TextInput can have an icon and a placeholder text.">
         <TextInput
           id="text-input-bar"
-          icon={<AiOutlineSearch />}
+          icon={<FiSearch />}
           placeholder="Search"
         />
       </Example>
