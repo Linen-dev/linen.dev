@@ -1,6 +1,6 @@
 .item {
   align-items: center;
-  color: var(--color-gray-700);
+  color: var(--color-text);
   border-radius: 4px;
   cursor: pointer;
   display: flex;
@@ -31,8 +31,8 @@
 
 .highlighted,
 .highlighted:hover {
-  color: var(--color-text);
-  font-weight: 700;
+  color: var(--color-text-bold);
+  font-weight: 800;
 }
 
 @media screen and (max-width: 1023px) {

@@ -241,6 +241,7 @@
   --color-border: #f3f4f6;
   --color-input: #e5e7eb;
   --color-text: #000000;
+  --color-text-bold: #000000;
   --color-link: #0855f4;
   --color-navbar: #111827;
 }
@@ -259,7 +260,8 @@
     --color-gray-50: #18181b;
 
     --color-background: var(--color-gray-50);
-    --color-text: #e5e7eb;
+    --color-text: #d2d4d8;
+    --color-text-bold: #ffffff;
     --color-border: var(--color-gray-100);
     --color-input: var(--color-gray-200);
     --color-link: #60a5fa;
