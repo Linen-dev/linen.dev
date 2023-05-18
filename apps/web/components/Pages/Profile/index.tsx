@@ -1,5 +1,5 @@
 import { signOut, useSession } from '@linen/auth/client';
-import CardLayout from 'components/layout/CardLayout';
+import CardLayout from '@linen/ui/Layouts/CardLayout';
 import ProfileForm from '@linen/ui/ProfileForm';
 import axios, { AxiosRequestConfig } from 'axios';
 import { api } from 'utilities/requests';

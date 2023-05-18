@@ -1,22 +1,21 @@
-import { ReactNode } from 'react';
-import styles from './index.module.css';
-import Card from '@linen/ui/Card';
-import Link from 'next/link';
-import LinenLogo from '@linen/ui/LinenLogo';
+import React, { ReactNode } from 'react';
+import Card from '../../Card';
+import LinenLogo from '../../LinenLogo';
+import styles from './index.module.scss';
 
 interface Props {
   header?: string;
   children?: ReactNode;
 }
 
-const Layout = ({ header, children }: Props) => {
+const CardLayout = ({ header, children }: Props) => {
   return (
     <>
       <div className={styles.page}>
         <div className={styles.logo}>
-          <Link className="text-center" href="/">
+          <a href="/">
             <LinenLogo />
-          </Link>
+          </a>
         </div>
         <Card>
           <div className={styles.content}>
@@ -32,4 +31,4 @@ const Layout = ({ header, children }: Props) => {
   );
 };
 
-export default Layout;
+export default CardLayout;
