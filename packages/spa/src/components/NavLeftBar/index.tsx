@@ -8,8 +8,11 @@ import Loading from '@/components/Loading';
 import customUsePath from '@/hooks/usePath';
 import { getHomeUrl, sendNotification } from '@/di';
 import CustomRouterPush from '@/components/CustomRouterPush';
+import { useNavigate } from 'react-router-dom';
 
 export default function NavLeftBar() {
+  const navigate = useNavigate();
+
   const { mode } = useMode();
   const {
     channels,
@@ -55,6 +58,7 @@ export default function NavLeftBar() {
       CustomRouterPush={CustomRouterPush({
         communityName,
         communityType: settings.communityType,
+        navigate,
       })}
       // TODO:
       routerAsPath={mockedRouterAsPath}

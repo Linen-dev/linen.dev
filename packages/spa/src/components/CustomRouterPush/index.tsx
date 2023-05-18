@@ -1,11 +1,14 @@
 import { CustomLinkHelper } from '@linen/utilities/custom-link';
+import type { NavigateFunction } from 'react-router-dom';
 
 export default function CustomRouterPush({
   communityName,
   communityType,
+  navigate,
 }: {
   communityName: string;
   communityType: 'discord' | 'slack' | 'linen';
+  navigate: NavigateFunction;
 }) {
   return ({ path }: { path: string }) => {
     const url = CustomLinkHelper({
@@ -14,7 +17,6 @@ export default function CustomRouterPush({
       isSubDomainRouting: false,
       path,
     });
-    // FIXME: handle this nicely
-    window.location.href = url;
+    navigate(url);
   };
 }

@@ -7,8 +7,10 @@ import { useLinenStore, shallow } from '@/store';
 import { api } from '@/fetcher';
 import { mockedComponent, mockedRouterAsPath } from '@/mock';
 import customUsePath from '@/hooks/usePath';
+import { useNavigate } from 'react-router-dom';
 
 export default function NavTopBar() {
+  const navigate = useNavigate();
   const {
     channels,
     channelName,
@@ -47,15 +49,14 @@ export default function NavTopBar() {
           Link={InternalLink({ communityName })}
           InternalLink={InternalLink({ communityName })}
           usePath={customUsePath({ communityName })}
+          handleSelect={({ thread }) => {
+            navigate(
+              `/s/${communityName}/t/${thread.incrementId}/${thread.slug}`
+            );
+          }}
           // TODO:
           routerAsPath={mockedRouterAsPath}
           JoinButton={mockedComponent}
-          // FIXME: handle this nicely
-          handleSelect={({ thread }) => {
-            window.location.href = `/s/${
-              currentCommunity.slackDomain || currentCommunity.discordDomain
-            }/t/${thread.incrementId}/${thread.slug}`;
-          }}
         />
       </div>
     </>
