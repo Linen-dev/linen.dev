@@ -38,7 +38,6 @@ export default function ChannelView({
   permissions,
   addReaction,
   JoinChannelLink,
-  MembersModal,
   Pagination,
   useJoinContext,
   queryIntegration,
@@ -67,7 +66,6 @@ export default function ChannelView({
     startSignUp?: any;
   };
   queryIntegration?: any;
-  MembersModal: (args: any) => JSX.Element;
   Pagination: (args: any) => JSX.Element;
   JoinChannelLink(...args: any): JSX.Element;
   playNotificationSound: (volume: number) => Promise<void>;
@@ -861,7 +859,6 @@ export default function ChannelView({
     <ChannelContext.Provider value={currentChannel}>
       <Content
         JoinChannelLink={JoinChannelLink}
-        MembersModal={MembersModal}
         Pagination={Pagination}
         useJoinContext={useJoinContext}
         queryIntegration={queryIntegration}

@@ -32,7 +32,7 @@
 }
 
 .username {
-  color: black;
+  color: var(--color-text);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -48,7 +48,7 @@
   cursor: pointer;
   color: var(--color-background);
   font-weight: 500;
-  background: var(--color-primary)
+  background: var(--color-primary);
 }
 
 .suggestion.selected:first-child,

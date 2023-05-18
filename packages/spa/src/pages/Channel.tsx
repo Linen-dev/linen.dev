@@ -100,7 +100,6 @@ function View() {
       // TODO:
       addReaction={(a) => a}
       JoinChannelLink={mockedComponent}
-      MembersModal={mockedComponent}
       Pagination={mockedComponent}
       queryIntegration={false}
       useJoinContext={mockedContext}

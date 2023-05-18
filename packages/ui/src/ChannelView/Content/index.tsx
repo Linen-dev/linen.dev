@@ -46,6 +46,7 @@ import Toast from '@/Toast';
 import type { ApiClient } from '@linen/api-client';
 import IntegrationsModalUI from '@/IntegrationsModal';
 import { copyToClipboard } from '@linen/utilities/clipboard';
+import MembersModal from '@/MembersModal';
 
 const { SidebarLayout } = Layouts.Shared;
 
@@ -124,7 +125,6 @@ interface Props {
     startSignUp?: any;
   };
   queryIntegration?: string;
-  MembersModal: (args: any) => JSX.Element;
   Pagination: (args: any) => JSX.Element;
   JoinChannelLink(): JSX.Element;
   playNotificationSound: (volume: number) => Promise<void>;
@@ -179,7 +179,6 @@ export default function Channel({
   // injection
   useJoinContext,
   queryIntegration,
-  MembersModal,
   Pagination,
   JoinChannelLink,
   playNotificationSound,
@@ -689,6 +688,7 @@ export default function Channel({
         permissions={permissions}
         open={modal === ModalView.MEMBERS}
         close={() => setModal(ModalView.NONE)}
+        api={api}
       />
       <AddThreadModal
         api={api}
