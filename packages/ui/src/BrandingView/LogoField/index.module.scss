@@ -1,0 +1,23 @@
+.spin {
+  animation: spin-animation 2s infinite;
+}
+
+@keyframes spin-animation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(359deg);
+  }
+}
+
+.image {
+  margin-bottom: 0.5rem /* 8px */;
+  margin-top: 0.5rem /* 8px */;
+  max-height: 15rem /* 240px */;
+}
+
+.text {
+  color: var(--color-gray-700);
+  font-size: 12px;
+}

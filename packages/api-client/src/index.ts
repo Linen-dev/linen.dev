@@ -35,6 +35,7 @@ import type {
   InboxProps,
   ThreadProps,
   AllResponse,
+  DNSRecord,
 } from '@linen/types';
 export { AxiosRequestConfig };
 
@@ -306,11 +307,15 @@ export default class ApiClient {
     this.get<SerializedUser[]>(`/api/mentions?${qs({ term, communityId })}`);
 
   upload = (
-    { communityId, data }: { communityId: string; data: FormData },
+    {
+      communityId,
+      data,
+      type,
+    }: { communityId: string; data: FormData; type: 'logo' | 'attachment' },
     options: AxiosRequestConfig
   ) =>
     this.postWithOptions<{ files: UploadedFile[] }>(
-      `/api/upload?communityId=${communityId}`,
+      `/api/upload?${qs({ communityId, type })}`,
       data,
       options
     );
@@ -421,6 +426,9 @@ export default class ApiClient {
     this.get<ThreadProps>(
       `/api/ssr/threads?${qs({ communityName, threadId, slug })}`
     );
+
+  getDnsSettings = (communityId: string) =>
+    this.get<{ records: DNSRecord[] }>(`/api/dns?${qs({ communityId })}`);
 }
 
 export { type ApiClient };

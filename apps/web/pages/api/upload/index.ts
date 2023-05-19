@@ -8,6 +8,7 @@ import {
   FILE_SIZE_LIMIT_IN_BYTES,
 } from '@linen/utilities/files';
 import { cors, preflight } from 'utilities/cors';
+import { z } from 'zod';
 
 export const config = {
   api: {
@@ -31,10 +32,17 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
   cors(request, response);
 
   if (request.method === 'POST') {
+    const schema = z.object({
+      communityId: z.string(),
+      type: z.enum(['logo', 'attachment']),
+    });
+
+    const parsedReq = schema.parse(request.query);
+
     const permissions = await PermissionsService.get({
       request,
       response,
-      params: request.query,
+      params: { communityId: parsedReq.communityId },
     });
 
     if (!permissions.chat) {
@@ -62,11 +70,14 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
         files.map(async (file) => {
           const buffer = await readFile(file.filepath);
           const name = normalizeFilename(file.originalFilename);
-          return await UploadService.upload({
-            id: name,
-            name,
-            buffer,
-          });
+          return await UploadService.upload(
+            {
+              id: name,
+              name,
+              buffer,
+            },
+            parsedReq.type
+          );
         })
       );
 

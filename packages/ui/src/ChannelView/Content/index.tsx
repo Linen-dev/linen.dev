@@ -451,7 +451,7 @@ export default function Channel({
     });
     return api
       .upload(
-        { communityId: currentCommunity.id, data },
+        { communityId: currentCommunity.id, data, type: 'attachment' },
         {
           onUploadProgress: (progressEvent: ProgressEvent) => {
             const percentCompleted = Math.round(

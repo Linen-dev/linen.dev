@@ -410,7 +410,7 @@ export default function InboxView({
     });
     return api
       .upload(
-        { communityId: settings.communityId, data },
+        { communityId: settings.communityId, data, type: 'attachment' },
         {
           onUploadProgress: (progressEvent: ProgressEvent) => {
             const percentCompleted = Math.round(

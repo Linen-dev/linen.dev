@@ -5,7 +5,7 @@ import Button from '@/Button';
 import Suggestions from '@/Suggestions';
 import Toast from '@/Toast';
 import Preview from '@/MessagePreview';
-import FileInput from './FileInput';
+import FileInput from '@/FileInput';
 import FilesSummary from './FilesSummary';
 import { getCaretPosition, setCaretPosition } from './utilities/caret';
 import { postprocess } from '@linen/ast';

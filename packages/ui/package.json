@@ -72,6 +72,7 @@
     "./Avatars": "./dist/Avatars/index.js",
     "./Badge": "./dist/Badge/index.js",
     "./BlankLayout": "./dist/BlankLayout/index.js",
+    "./BrandingView": "./dist/BrandingView/index.js",
     "./Button": "./dist/Button/index.js",
     "./ButtonGroup": "./dist/ButtonGroup/index.js",
     "./ButtonToggle": "./dist/ButtonToggle/index.js",
@@ -98,6 +99,7 @@
     "./EmailField": "./dist/EmailField/index.js",
     "./FadeIn": "./dist/FadeIn/index.js",
     "./Field": "./dist/Field/index.js",
+    "./FileInput": "./dist/FileInput/index.js",
     "./GridContent": "./dist/GridContent/index.js",
     "./GridRow": "./dist/GridRow/index.js",
     "./H1": "./dist/H1/index.js",
@@ -199,6 +201,9 @@
       "BlankLayout": [
         "./dist/BlankLayout/index.d.ts"
       ],
+      "BrandingView": [
+        "./dist/BrandingView/index.d.ts"
+      ],
       "Button": [
         "./dist/Button/index.d.ts"
       ],
@@ -276,6 +281,9 @@
       ],
       "Field": [
         "./dist/Field/index.d.ts"
+      ],
+      "FileInput": [
+        "./dist/FileInput/index.d.ts"
       ],
       "GridContent": [
         "./dist/GridContent/index.d.ts"

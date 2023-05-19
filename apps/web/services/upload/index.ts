@@ -1,5 +1,9 @@
 import { uploadFile } from 'services/aws/s3';
-import { BUCKET_PREFIX_FOR_ATTACHMENTS, LINEN_STATIC_CDN } from 'secrets';
+import {
+  BUCKET_PREFIX_FOR_ATTACHMENTS,
+  BUCKET_PREFIX_FOR_LOGOS,
+  LINEN_STATIC_CDN,
+} from 'secrets';
 import { v4 } from 'uuid';
 
 interface File {
@@ -9,9 +13,11 @@ interface File {
 }
 
 export default class UploadService {
-  static async upload(file: File) {
+  static async upload(file: File, type: 'logo' | 'attachment' = 'attachment') {
     const path = [
-      BUCKET_PREFIX_FOR_ATTACHMENTS,
+      type === 'attachment'
+        ? BUCKET_PREFIX_FOR_ATTACHMENTS
+        : BUCKET_PREFIX_FOR_LOGOS,
       v4(),
       file.name || 'unknown',
     ].join('/');
