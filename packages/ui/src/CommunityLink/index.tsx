@@ -10,6 +10,7 @@ interface Props {
   community: SerializedAccount;
   onClick?(event: React.MouseEvent<HTMLAnchorElement>): void;
   getHomeUrl: (args: any) => string;
+  selected: boolean;
 }
 
 export default function CommunityLink({
@@ -17,6 +18,7 @@ export default function CommunityLink({
   community,
   onClick,
   getHomeUrl,
+  selected,
 }: Props) {
   const href = getHomeUrl(community);
   if (href === '/') return <></>;
@@ -25,7 +27,9 @@ export default function CommunityLink({
     <Tooltip text={community.name || 'Community'} position="right">
       <a
         href={href}
-        className={classNames(styles.link, className)}
+        className={classNames(styles.link, className, {
+          [styles.selected]: selected,
+        })}
         onClick={onClick}
       >
         <CommunityIcon community={community} />

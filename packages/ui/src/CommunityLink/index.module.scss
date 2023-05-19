@@ -17,3 +17,8 @@
     opacity: 0.75;
   }
 }
+
+.selected {
+  border: 2px solid var(--color-background);
+  outline: var(--color-text) solid 2px;
+}

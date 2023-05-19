@@ -199,6 +199,7 @@ export default function DesktopNavBar({
                   key={community.id}
                   community={community}
                   getHomeUrl={getHomeUrl}
+                  selected={currentCommunity.id === community.id}
                 />
               );
             })}
