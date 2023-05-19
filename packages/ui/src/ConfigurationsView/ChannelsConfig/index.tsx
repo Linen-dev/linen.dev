@@ -1,15 +1,16 @@
 import React from 'react';
-import Toast from '@linen/ui/Toast';
-import Label from '@linen/ui/Label';
+import Toast from '@/Toast';
+import Label from '@/Label';
 import { SerializedAccount } from '@linen/types';
-import NativeSelect from '@linen/ui/NativeSelect';
-import { api } from 'utilities/requests';
+import NativeSelect from '@/NativeSelect';
+import type { ApiClient } from '@linen/api-client';
 
 interface Props {
   currentCommunity: SerializedAccount;
+  api: ApiClient;
 }
 
-export default function ChannelsConfig({ currentCommunity }: Props) {
+export default function ChannelsConfig({ currentCommunity, api }: Props) {
   const onSubmit = (target: { id: string; value: string }) => {
     if (!target.id || !target.value) return;
     if (

@@ -9,6 +9,7 @@ import {
 } from '@linen/utilities/files';
 import { cors, preflight } from 'utilities/cors';
 import { z } from 'zod';
+import { UploadEnumConst } from '@linen/types';
 
 export const config = {
   api: {
@@ -34,7 +35,7 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
   if (request.method === 'POST') {
     const schema = z.object({
       communityId: z.string(),
-      type: z.enum(['logo', 'attachment']),
+      type: z.nativeEnum(UploadEnumConst),
     });
 
     const parsedReq = schema.parse(request.query);
@@ -51,7 +52,13 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
 
     // we could refactor this to use fileWriteStreamHandler and send to s3 directly
     const form = formidable({
-      maxFileSize: FILE_SIZE_LIMIT_IN_BYTES,
+      ...(parsedReq.type === 'slack-import'
+        ? {
+            maxFileSize: FILE_SIZE_LIMIT_IN_BYTES * 1000, // 2gb
+          }
+        : {
+            maxFileSize: FILE_SIZE_LIMIT_IN_BYTES, // 2mb
+          }),
       maxFields: 10,
       keepExtensions: true,
       allowEmptyFiles: false,

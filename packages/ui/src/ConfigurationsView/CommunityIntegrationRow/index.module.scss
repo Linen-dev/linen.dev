@@ -36,3 +36,19 @@
   align-items: center;
   gap: 0.5rem;
 }
+
+.inlineStatus {
+  height: 1.25rem /* 20px */;
+  width: 1.25rem /* 20px */;
+  margin-right: 0.25rem /* 4px */;
+  display: inline;
+}
+
+.textGray300 {
+  color: var(--color-gray-300);
+}
+
+.flexGap2 {
+  display: flex;
+  gap: 0.5rem /* 8px */;
+}

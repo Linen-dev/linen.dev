@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ChatType } from '@linen/types';
-import NativeSelect from '@linen/ui/NativeSelect';
-import Label from '@linen/ui/Label';
+import NativeSelect from '@/NativeSelect';
+import Label from '@/Label';
 import { RiChatCheckLine } from '@react-icons/all-files/ri/RiChatCheckLine';
 import { RiChatDeleteLine } from '@react-icons/all-files/ri/RiChatDeleteLine';
 

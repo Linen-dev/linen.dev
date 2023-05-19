@@ -172,7 +172,7 @@ export default function Thread({
     });
     return api
       .upload(
-        { communityId: settings.communityId, data, type: 'attachment' },
+        { communityId: settings.communityId, data, type: 'attachments' },
         {
           onUploadProgress: (progressEvent: ProgressEvent) => {
             const percentCompleted = Math.round(

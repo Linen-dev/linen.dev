@@ -1,20 +1,22 @@
 import React, { useState } from 'react';
-import Toast from '@linen/ui/Toast';
-import { SerializedAccount, SerializedChannel } from '@linen/types';
-import DiscordIcon from '@linen/ui/DiscordIcon';
-import SlackIcon from '@linen/ui/SlackIcon';
-import NativeSelect from '@linen/ui/NativeSelect';
-import Label from '@linen/ui/Label';
-import { api } from 'utilities/requests';
+import Toast from '@/Toast';
+import type { SerializedAccount, SerializedChannel } from '@linen/types';
+import DiscordIcon from '@/DiscordIcon';
+import SlackIcon from '@/SlackIcon';
+import NativeSelect from '@/NativeSelect';
+import Label from '@/Label';
+import type { ApiClient } from '@linen/api-client';
 
 interface Props {
   channels: SerializedChannel[];
   currentCommunity: SerializedAccount;
+  api: ApiClient;
 }
 
 export default function DefaultChannelRow({
   channels,
   currentCommunity,
+  api,
 }: Props) {
   const [defaultChannel, setDefaultChannel] = useState(
     channels.find((channel) => channel.default)

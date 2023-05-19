@@ -1,3 +1,5 @@
+import { z } from 'zod';
+
 export * from './channels';
 export * from './threads';
 export * from './messages';
@@ -81,3 +83,12 @@ export type ChannelsIntegration = {
 };
 
 export type onResolve = (threadId: string, messageId?: string) => void;
+
+export const UploadEnumConst = {
+  logos: 'logos',
+  attachments: 'attachments',
+  'slack-import': 'slack-import',
+} as const;
+
+const UploadEnum = z.nativeEnum(UploadEnumConst);
+export type UploadEnum = z.infer<typeof UploadEnum>;

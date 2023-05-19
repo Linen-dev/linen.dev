@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { AccountType } from '@linen/types';
-import Label from '@linen/ui/Label';
-import NativeSelect from '@linen/ui/NativeSelect';
+import Label from '@/Label';
+import NativeSelect from '@/NativeSelect';
 import { AiFillEye } from '@react-icons/all-files/ai/AiFillEye';
 import { AiFillEyeInvisible } from '@react-icons/all-files/ai/AiFillEyeInvisible';
 

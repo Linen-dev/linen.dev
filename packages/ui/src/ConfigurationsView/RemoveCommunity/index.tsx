@@ -1,18 +1,21 @@
-import Button from '@linen/ui/Button';
+import Button from '@/Button';
 import { SerializedAccount } from '@linen/types';
-import Modal from '@linen/ui/Modal';
-import { useState } from 'react';
-import H3 from '@linen/ui/H3';
-import Label from '@linen/ui/Label';
+import Modal from '@/Modal';
+import React, { useState } from 'react';
+import H3 from '@/H3';
+import Label from '@/Label';
 import { FiX } from '@react-icons/all-files/fi/FiX';
-import TextInput from '@linen/ui/TextInput';
-import { api } from 'utilities/requests';
-import Toast from '@linen/ui/Toast';
+import TextInput from '@/TextInput';
+import Toast from '@/Toast';
+import type { ApiClient } from '@linen/api-client';
+import styles from './index.module.scss';
 
 export default function RemoveCommunity({
   currentCommunity,
+  api,
 }: {
   currentCommunity: SerializedAccount;
+  api: ApiClient;
 }) {
   const [open, setOpen] = useState(false);
   const [communityName, setCommunityName] = useState<string>();
@@ -52,41 +55,45 @@ export default function RemoveCommunity({
           Delete this community
         </Button>
       </>
-      {DeleteModal(
-        open,
-        setOpen,
-        communityName,
-        setCommunityName,
-        currentCommunity,
-        onRemoveConfirm
-      )}
+      <DeleteModal
+        open={open}
+        setOpen={setOpen}
+        communityName={communityName}
+        setCommunityName={setCommunityName}
+        currentCommunity={currentCommunity}
+        onRemoveConfirm={onRemoveConfirm}
+      />
     </>
   );
 }
 
-function DeleteModal(
-  open: boolean,
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>,
-  communityName: string | undefined,
-  setCommunityName: React.Dispatch<React.SetStateAction<string | undefined>>,
-  currentCommunity: SerializedAccount,
-  onRemoveConfirm: () => Promise<void>
-) {
+function DeleteModal({
+  open,
+  setOpen,
+  communityName,
+  setCommunityName,
+  currentCommunity,
+  onRemoveConfirm,
+}: {
+  open: boolean;
+  setOpen(prop: boolean): void;
+  communityName?: string;
+  setCommunityName(prop?: string): void;
+  currentCommunity: SerializedAccount;
+  onRemoveConfirm: () => Promise<void>;
+}) {
   return (
     <Modal open={open} close={() => setOpen(false)} size="md">
-      <div className="flex flex-col gap-4">
-        <div className="flex items-center justify-between">
+      <div className={styles.modalFlexColumnGap4}>
+        <div className={styles.modalTitle}>
           <H3>Remove Community</H3>
 
-          <div
-            className="rounded-md bg-white text-gray-400 hover:text-gray-500 cursor-pointer"
-            onClick={() => setOpen(false)}
-          >
+          <div className={styles.modalCloseBtn} onClick={() => setOpen(false)}>
             <span className="sr-only">Close</span>
             <FiX />
           </div>
         </div>
-        <div className="max-w-xl text-sm text-gray-500 dark:text-gray-300">
+        <div className={styles.modalDescription}>
           <p>
             Once you delete a community, there is no going back. Please be
             certain.

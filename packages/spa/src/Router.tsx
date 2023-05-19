@@ -15,6 +15,7 @@ const AllPage = lazy(() => import('@/pages/All'));
 const ChannelPage = lazy(() => import('@/pages/Channel'));
 const ThreadPage = lazy(() => import('@/pages/Thread'));
 const BrandingPage = lazy(() => import('@/pages/Branding'));
+const ConfigurationsPage = lazy(() => import('@/pages/Configurations'));
 
 export default function Router() {
   const isCustomDomain = false;
@@ -120,7 +121,15 @@ export default function Router() {
                         },
                         {
                           path: 'configurations',
-                          element: <InProgress />,
+                          element: (
+                            <RequireManagerAuth
+                              children={
+                                <Suspense fallback={<Loading />}>
+                                  <ConfigurationsPage />
+                                </Suspense>
+                              }
+                            />
+                          ),
                         },
                         {
                           path: 'members',

@@ -5,24 +5,28 @@ import {
   findChannelsWithStats,
   SerializedChannel,
 } from '@linen/types';
-import Toast from '@linen/ui/Toast';
-import Toggle from '@linen/ui/Toggle';
-import Label from '@linen/ui/Label';
+import Toast from '@/Toast';
+import Toggle from '@/Toggle';
+import Label from '@/Label';
 import styles from './index.module.scss';
-import { api } from 'utilities/requests';
 import debounce from '@linen/utilities/debounce';
+import type { ApiClient } from '@linen/api-client';
 
 interface Props {
-  onChange: React.Dispatch<React.SetStateAction<SerializedChannel[]>>;
+  onChange(channels: SerializedChannel[]): void;
   currentCommunity: SerializedAccount;
+  api: ApiClient;
 }
 
 export default function ChannelVisibilityRow({
   currentCommunity,
   onChange,
+  api,
 }: Props) {
-  const { data } = useChannelsStats(currentCommunity.id);
+  const { data } = useChannelsStats({ accountId: currentCommunity.id, api });
   const [allChannels, setAllChannels] = useState<findChannelsWithStats>();
+
+  const debouncedChannelsVisibilityUpdate = debounce(api.hideChannels);
 
   useEffect(() => {
     setAllChannels(data);
@@ -51,8 +55,8 @@ export default function ChannelVisibilityRow({
     });
 
     return debouncedChannelsVisibilityUpdate({
-      communityId: currentCommunity.id,
-      value,
+      accountId: currentCommunity.id,
+      channels: [value],
     }).catch(() => Toast.error('Something went wrong. Please try again.'));
   }
 
@@ -89,7 +93,7 @@ export default function ChannelVisibilityRow({
                       }
                     />
                     {channel.channelName}{' '}
-                    <label className="text-xs text-gray-400 italic">
+                    <label className={styles.channelsStats}>
                       {channel.stats}
                     </label>
                   </label>
@@ -107,7 +111,13 @@ export default function ChannelVisibilityRow({
   );
 }
 
-const useChannelsStats = (accountId: string) => {
+const useChannelsStats = ({
+  accountId,
+  api,
+}: {
+  accountId: string;
+  api: ApiClient;
+}) => {
   const [value, setValue] = useState<findChannelsWithStats>();
 
   const execute = useCallback(async () => {
@@ -126,13 +136,3 @@ const useChannelsStats = (accountId: string) => {
 
   return { data: value };
 };
-
-const debouncedChannelsVisibilityUpdate = debounce(
-  ({
-    communityId,
-    value,
-  }: {
-    communityId: string;
-    value: { id: string; hidden: boolean };
-  }) => api.hideChannels({ accountId: communityId, channels: [value] })
-);

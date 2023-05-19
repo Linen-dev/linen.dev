@@ -1,61 +1,46 @@
-import CommunityButton from '@linen/ui/CommunityButton';
-import Label from '@linen/ui/Label';
+import CommunityButton from '@/CommunityButton';
+import Label from '@/Label';
 import { capitalize } from '@linen/utilities/string';
-import { qs } from '@linen/utilities/url';
 import { SerializedAccount } from '@linen/types';
-import Toast from '@linen/ui/Toast';
+import Toast from '@/Toast';
 import { GoCheck } from '@react-icons/all-files/go/GoCheck';
 import { GoAlert } from '@react-icons/all-files/go/GoAlert';
 import { GoInfo } from '@react-icons/all-files/go/GoInfo';
-import { api } from 'utilities/requests';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import styles from './index.module.scss';
-import TextInput from '@linen/ui/TextInput';
+import TextInput from '@/TextInput';
+import type { ApiClient } from '@linen/api-client';
 
 const statusMap: any = {
   NOT_STARTED: (
     <>
-      <GoInfo className="h-5 w-5 mr-1 inline" /> In progress
+      <GoInfo className={styles.inlineStatus} /> In progress
     </>
   ),
   IN_PROGRESS: (
     <>
-      <GoInfo className="h-5 w-5 mr-1 inline" /> In progress
+      <GoInfo className={styles.inlineStatus} /> In progress
     </>
   ),
   DONE: (
     <>
-      <GoCheck color="green" className="h-5 w-5 mr-1 inline" />
+      <GoCheck color="green" className={styles.inlineStatus} />
       Done
     </>
   ),
   ERROR: (
     <>
-      <GoAlert className="h-5 w-5 mr-1 inline" color="red" /> Error
+      <GoAlert className={styles.inlineStatus} color="red" /> Error
     </>
   ),
 };
 
-function integrationAuthorizer({
-  community,
-  accountId,
-  syncOpt,
-  dateFrom,
-}: {
-  community: string;
-  accountId: string;
-  syncOpt?: 'since-all' | 'since-date';
-  dateFrom?: string;
-}): Promise<{ url: string }> {
-  return api.get(
-    `/api/integration-oauth?${qs({ community, accountId, syncOpt, dateFrom })}`
-  );
-}
-
 export default function CommunityIntegration({
   currentCommunity,
+  api,
 }: {
   currentCommunity: SerializedAccount;
+  api: ApiClient;
 }) {
   const [syncOpt, setSyncOpt] = useState<'since-all' | 'since-date'>(
     'since-all'
@@ -73,14 +58,16 @@ export default function CommunityIntegration({
 
     try {
       const { id } = currentCommunity;
-      integrationAuthorizer({
-        community,
-        accountId: id,
-        dateFrom,
-        syncOpt,
-      }).then(({ url }) => {
-        window.location.href = url;
-      });
+      api
+        .integrationAuthorizer({
+          community,
+          accountId: id,
+          dateFrom,
+          syncOpt,
+        })
+        .then(({ url }) => {
+          window.location.href = url;
+        });
     } catch (error) {
       return Toast.error('Something went wrong, please sign in again');
     }
@@ -97,7 +84,7 @@ export default function CommunityIntegration({
         {capitalize(communityType)} integration
         {syncStatus && (
           <>
-            <span className="text-gray-300"> | </span>
+            <span className={styles.textGray300}> | </span>
             {syncStatus}
           </>
         )}
@@ -108,16 +95,20 @@ export default function CommunityIntegration({
       <div>
         {newOnboarding ? (
           <>
-            {SyncOptions(syncOpt, setSyncOpt, setDateFrom)}
-            <div className="flex gap-2">
+            <SyncOptions
+              syncOpt={syncOpt}
+              setSyncOpt={setSyncOpt}
+              setDateFrom={setDateFrom}
+            />
+            <div className={styles.flexGap2}>
               <CommunityButton
-                communityType={'slack'}
+                communityType="slack"
                 label="Connect to"
                 onClick={onClick}
                 iconSize="20"
               />
               <CommunityButton
-                communityType={'discord'}
+                communityType="discord"
                 label="Connect to"
                 onClick={onClick}
                 iconSize="20"
@@ -129,12 +120,14 @@ export default function CommunityIntegration({
             communityType={communityType}
             label="Reconnect to"
             onClick={(community) =>
-              integrationAuthorizer({
-                community,
-                accountId: currentCommunity.id,
-              }).then(({ url }) => {
-                window.location.href = url;
-              })
+              api
+                .integrationAuthorizer({
+                  community,
+                  accountId: currentCommunity.id,
+                })
+                .then(({ url }) => {
+                  window.location.href = url;
+                })
             }
             iconSize="20"
           />
@@ -144,17 +137,21 @@ export default function CommunityIntegration({
   );
 }
 
-function SyncOptions(
-  syncOpt: string,
-  setSyncOpt: React.Dispatch<React.SetStateAction<'since-all' | 'since-date'>>,
-  setDateFrom: React.Dispatch<React.SetStateAction<string | undefined>>
-) {
+function SyncOptions({
+  syncOpt,
+  setSyncOpt,
+  setDateFrom,
+}: {
+  syncOpt: string;
+  setSyncOpt(prop: 'since-all' | 'since-date'): void;
+  setDateFrom(prop: string | undefined): void;
+}) {
   return (
     <div className={styles.radioWrapper}>
-      <div key={'since-all'} className={styles.flexCenter}>
+      <div key="since-all" className={styles.flexCenter}>
         <span className="checkmark"></span>
         <input
-          id={'since-all'}
+          id="since-all"
           name="sync-from"
           type="radio"
           defaultChecked={syncOpt === 'since-all'}
@@ -163,14 +160,14 @@ function SyncOptions(
           }}
           className={styles.radioInput}
         />
-        <label htmlFor={'since-all'} className={styles.radioLabel}>
+        <label htmlFor="since-all" className={styles.radioLabel}>
           Sync all history
         </label>
       </div>
-      <div key={'since-date'} className={styles.flexCenter}>
+      <div key="since-date" className={styles.flexCenter}>
         <span className="checkmark"></span>
         <input
-          id={'since-date'}
+          id="since-date"
           name="sync-from"
           type="radio"
           defaultChecked={syncOpt === 'since-date'}
@@ -179,7 +176,7 @@ function SyncOptions(
           }}
           className={styles.radioInput}
         />
-        <label htmlFor={'since-date'} className={styles.radioLabel}>
+        <label htmlFor="since-date" className={styles.radioLabel}>
           <div className={styles.radioLabelGroupDate}>
             <p>Sync from date</p>
             <TextInput

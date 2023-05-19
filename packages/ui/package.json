@@ -88,6 +88,7 @@
     "./CommunityCard": "./dist/CommunityCard/index.js",
     "./CommunityIcon": "./dist/CommunityIcon/index.js",
     "./CommunityLink": "./dist/CommunityLink/index.js",
+    "./ConfigurationsView": "./dist/ConfigurationsView/index.js",
     "./ConfirmationModal": "./dist/ConfirmationModal/index.js",
     "./Container": "./dist/Container/index.js",
     "./CopyToClipboardIcon": "./dist/CopyToClipboardIcon/index.js",
@@ -248,6 +249,9 @@
       ],
       "CommunityLink": [
         "./dist/CommunityLink/index.d.ts"
+      ],
+      "ConfigurationsView": [
+        "./dist/ConfigurationsView/index.d.ts"
       ],
       "ConfirmationModal": [
         "./dist/ConfirmationModal/index.d.ts"

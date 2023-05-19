@@ -1,15 +1,16 @@
-import { useState } from 'react';
-import Toast from '@linen/ui/Toast';
-import Toggle from '@linen/ui/Toggle';
-import Label from '@linen/ui/Label';
+import React, { useState } from 'react';
+import Toast from '@/Toast';
+import Toggle from '@/Toggle';
+import Label from '@/Label';
 import { SerializedAccount } from '@linen/types';
-import { api } from 'utilities/requests';
+import type { ApiClient } from '@linen/api-client';
 
 interface Props {
   currentCommunity: SerializedAccount;
+  api: ApiClient;
 }
 
-export default function AnonymizeCard({ currentCommunity }: Props) {
+export default function AnonymizeCard({ currentCommunity, api }: Props) {
   const [enabled, setEnabled] = useState(
     currentCommunity.anonymizeUsers || false
   );

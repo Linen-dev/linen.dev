@@ -1,9 +1,10 @@
 import React from 'react';
-import Toast from '@linen/ui/Toast';
-import TextField from '@linen/ui/TextField';
-import Label from '@linen/ui/Label';
-import { api } from 'utilities/requests';
+import Toast from '@/Toast';
+import TextField from '@/TextField';
+import Label from '@/Label';
 import { SerializedAccount } from '@linen/types';
+import type { ApiClient } from '@linen/api-client';
+import styles from './index.module.scss';
 
 function URLsCard({
   title,
@@ -27,9 +28,10 @@ function URLsCard({
 
 interface Props {
   currentCommunity: SerializedAccount;
+  api: ApiClient;
 }
 
-export default function URLs({ currentCommunity }: Props) {
+export default function URLs({ currentCommunity, api }: Props) {
   const onSubmit = (target: { id: string; value: string }) => {
     if (!target.id || !target.value) return;
     if (
@@ -64,7 +66,7 @@ export default function URLs({ currentCommunity }: Props) {
           onBlur: (e: any) => onSubmit(e.target),
         }}
       />
-      <hr className="my-3" />
+      <hr className={styles.my3} />
       <URLsCard
         title="Docs URL"
         subtitle="Link to your documentation."

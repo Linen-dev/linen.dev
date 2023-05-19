@@ -44,7 +44,7 @@ export default function LogoField({
     });
     try {
       const { files: files_1 } = await api.upload(
-        { communityId: currentCommunity.id, data, type: 'logo' },
+        { communityId: currentCommunity.id, data, type: 'logos' },
         {
           onUploadProgress: (progressEvent_1: ProgressEvent) => {
             const percentCompleted = Math.round(

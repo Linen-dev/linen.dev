@@ -1,3 +1,4 @@
+import React from 'react';
 import CommunityTypeCard from '.';
 import { render, waitFor } from '@testing-library/react';
 import { AccountType } from '@linen/types';

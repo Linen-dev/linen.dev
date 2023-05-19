@@ -36,6 +36,7 @@ import type {
   ThreadProps,
   AllResponse,
   DNSRecord,
+  UploadEnum,
 } from '@linen/types';
 export { AxiosRequestConfig };
 
@@ -311,7 +312,11 @@ export default class ApiClient {
       communityId,
       data,
       type,
-    }: { communityId: string; data: FormData; type: 'logo' | 'attachment' },
+    }: {
+      communityId: string;
+      data: FormData;
+      type: UploadEnum;
+    },
     options: AxiosRequestConfig
   ) =>
     this.postWithOptions<{ files: UploadedFile[] }>(
@@ -429,6 +434,34 @@ export default class ApiClient {
 
   getDnsSettings = (communityId: string) =>
     this.get<{ records: DNSRecord[] }>(`/api/dns?${qs({ communityId })}`);
+
+  integrationAuthorizer = ({
+    community,
+    accountId,
+    syncOpt,
+    dateFrom,
+  }: {
+    community: string;
+    accountId: string;
+    syncOpt?: 'since-all' | 'since-date';
+    dateFrom?: string;
+  }) =>
+    this.get<{ url: string }>(
+      `/api/integration-oauth?${qs({
+        community,
+        accountId,
+        syncOpt,
+        dateFrom,
+      })}`
+    );
+
+  startSync = ({
+    account_id,
+    file_location,
+  }: {
+    account_id: string;
+    file_location: string;
+  }) => this.get(`/api/sync?${qs({ account_id, file_location })}`);
 }
 
 export { type ApiClient };

@@ -1,0 +1,16 @@
+.container {
+  background: var(--color-background);
+  color: var(--color-text);
+  padding: 1rem;
+}
+
+.my3 {
+  margin-top: 0.75rem /* 12px */;
+  margin-bottom: 0.75rem /* 12px */;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}

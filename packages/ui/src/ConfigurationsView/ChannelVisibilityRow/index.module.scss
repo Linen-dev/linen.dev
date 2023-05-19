@@ -1,5 +1,3 @@
-@import '@linen/styles/colors.scss';
-
 .toggles {
   display: grid;
   grid-template-columns: 1fr;
@@ -44,4 +42,11 @@
 .disabled {
   color: var(--color-gray-400);
   text-decoration: line-through;
+}
+
+.channelsStats {
+  font-size: 0.75rem /* 12px */;
+  line-height: 1rem /* 16px */;
+  font-style: italic;
+  color: var(--color-gray-400);
 }
