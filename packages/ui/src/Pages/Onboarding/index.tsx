@@ -1,6 +1,6 @@
 import React from 'react';
-import Layout from '@linen/ui/SplitLayout';
-import OnboardingForm from '@linen/ui/OnboardingForm';
+import Layout from '../../SplitLayout';
+import OnboardingForm from '../../OnboardingForm';
 import type { ApiClient } from '@linen/api-client';
 import styles from './index.module.scss';
 
