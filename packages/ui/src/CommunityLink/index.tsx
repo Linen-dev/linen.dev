@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import styles from './index.module.scss';
 import { SerializedAccount } from '@linen/types';
 import CommunityIcon from '@/CommunityIcon';
+import Tooltip from '@/Tooltip';
 
 interface Props {
   className?: string;
@@ -21,12 +22,14 @@ export default function CommunityLink({
   if (href === '/') return <></>;
 
   return (
-    <a
-      href={href}
-      className={classNames(styles.link, className)}
-      onClick={onClick}
-    >
-      <CommunityIcon community={community} />
-    </a>
+    <Tooltip text={community.name || 'Community'} position="right">
+      <a
+        href={href}
+        className={classNames(styles.link, className)}
+        onClick={onClick}
+      >
+        <CommunityIcon community={community} />
+      </a>
+    </Tooltip>
   );
 }
