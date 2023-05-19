@@ -38,8 +38,8 @@
 
 .button {
   align-items: center;
-  background: var(--color-indigo-600);
-  border: 2px solid var(--color-indigo-600);
+  background: var(--color-blue-700);
+  border: 2px solid var(--color-blue-700);
   color: white;
   cursor: pointer;
   display: inline-flex;
@@ -54,8 +54,8 @@
 }
 
 .button:hover {
-  background: var(--color-indigo-500);
-  border: 2px solid var(--color-indigo-500);
+  background: var(--color-blue-800);
+  border: 2px solid var(--color-blue-800);
 }
 
 .button.secondary {
@@ -66,6 +66,6 @@
 
 .button.secondary:hover {
   background: var(--color-background);
-  border: 2px solid var(--color-indigo-500);
-  color: var(--color-indigo-500);
+  border: 2px solid var(--color-blue-800);
+  color: var(--color-blue-800);
 }
