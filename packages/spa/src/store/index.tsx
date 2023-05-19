@@ -43,6 +43,7 @@ interface LinenState {
   setThreadsProps: (props: ThreadProps, communityName: string) => void;
   inboxProps: inboxProps | undefined;
   setInboxProps: (props: InboxProps, communityName: string) => void;
+  setCommunities: (props: SerializedAccount[]) => void;
 }
 
 export const useLinenStore = create<LinenState>()((set, get) => ({
@@ -122,5 +123,8 @@ export const useLinenStore = create<LinenState>()((set, get) => ({
       inboxProps: props,
       channelName: undefined,
     });
+  },
+  setCommunities: (props) => {
+    set({ communities: props });
   },
 }));

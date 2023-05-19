@@ -6,13 +6,15 @@ import SignIn from '@/pages/SignIn';
 import RequireAuth from '@/hoc/RequireAuth';
 import RedirectToLastPageViewed from '@/components/RedirectToLastPageViewed';
 import Loading from '@/components/Loading';
-import RedirectToLinen from '@/components/RedirectToLinen';
+import InProgress from '@/components/InProgress';
 import RedirectToS from '@/components/RedirectToS';
+import RequireManagerAuth from '@/hoc/RequireManagerAuth';
 const InboxPage = lazy(() => import('@/pages/Inbox'));
 const StarredPage = lazy(() => import('@/pages/Starred'));
 const AllPage = lazy(() => import('@/pages/All'));
 const ChannelPage = lazy(() => import('@/pages/Channel'));
 const ThreadPage = lazy(() => import('@/pages/Thread'));
+const BrandingPage = lazy(() => import('@/pages/Branding'));
 
 export default function Router() {
   const isCustomDomain = false;
@@ -106,23 +108,31 @@ export default function Router() {
                         },
                         {
                           path: 'branding',
-                          element: <RedirectToLinen path="/branding" />,
+                          element: (
+                            <RequireManagerAuth
+                              children={
+                                <Suspense fallback={<Loading />}>
+                                  <BrandingPage />
+                                </Suspense>
+                              }
+                            />
+                          ),
                         },
                         {
                           path: 'configurations',
-                          element: <RedirectToLinen path="/configurations" />,
+                          element: <InProgress />,
                         },
                         {
                           path: 'members',
-                          element: <RedirectToLinen path="/members" />,
+                          element: <InProgress />,
                         },
                         {
                           path: 'metrics',
-                          element: <RedirectToLinen path="/metrics" />,
+                          element: <InProgress />,
                         },
                         {
                           path: 'plans',
-                          element: <RedirectToLinen path="/plans" />,
+                          element: <InProgress />,
                         },
                         {
                           path: '',

@@ -12,7 +12,6 @@ export const baseAuth = `${baseLinen}/api/auth`;
 export const pathsToRedirect = [
   '/metrics',
   '/configurations',
-  '/branding',
   '/members',
   '/plans',
 ];
