@@ -130,7 +130,7 @@ export default function AllView({
     return api
       .updateThread({
         id: threadId,
-        resolutionId: messageId,
+        resolutionId: messageId || null,
         accountId: settings.communityId,
       })
       .catch((_) => {

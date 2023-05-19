@@ -29,7 +29,7 @@ export const putThreadSchema = z.object({
   state: z.enum([ThreadState.OPEN, ThreadState.CLOSE]).optional(),
   title: z.string().optional(),
   pinned: z.boolean().optional(),
-  resolutionId: z.string().uuid().optional(),
+  resolutionId: z.string().uuid().optional().nullable(),
   message: z.string().optional(),
 });
 export type putThreadType = z.infer<typeof putThreadSchema>;
