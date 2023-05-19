@@ -15,7 +15,7 @@ export type UpdateType = {
   state?: ThreadState;
   title?: string;
   pinned?: boolean;
-  resolutionId?: string;
+  resolutionId?: string | null;
   externalThreadId?: string;
   message?: string;
 };
