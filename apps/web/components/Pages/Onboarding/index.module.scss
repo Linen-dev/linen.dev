@@ -3,6 +3,21 @@
   width: 26rem;
 }
 
+.header {
+  font-weight: 700;
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  margin-bottom: 1rem;
+}
+
+.right {
+  text-align: center;
+}
+
+.description {
+  color: var(--color-gray-700);
+}
+
 @media screen and (max-width: 1023px) {
   .container {
     width: 100%;
