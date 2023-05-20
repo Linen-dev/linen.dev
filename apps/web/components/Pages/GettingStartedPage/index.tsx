@@ -170,6 +170,7 @@ export function GettingStartedPage({
                           );
                         }}
                         getHomeUrl={getHomeUrl}
+                        selected={false}
                       />
                       <div>
                         <div className="text-sm">
@@ -200,6 +201,7 @@ export function GettingStartedPage({
                         acceptInvite(invite);
                       }}
                       getHomeUrl={getHomeUrl}
+                      selected={false}
                     />
                     <div>
                       <div className="text-sm">{invite.name || invite.id}</div>
