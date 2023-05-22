@@ -10,7 +10,7 @@
     "tauri:build": "dotenv -e .env.production -- tauri build --target aarch64-apple-darwin --debug",
     "tauri:build:intel": "dotenv -e .env.production -- tauri build --target x86_64-apple-darwin --debug",
     "tauri:build:linux": "dotenv -e .env -- tauri build --debug",
-    "analyze": "source-map-explorer 'build/static/js/*.js'"
+    "analyze": "ANALYZE=true craco build"
   },
   "dependencies": {
     "@craco/craco": "^7.1.0",
@@ -64,6 +64,6 @@
     "@tanstack/eslint-plugin-query": "^4.29.4",
     "@tauri-apps/cli": "^1.3.1",
     "dotenv-cli": "^7.2.1",
-    "source-map-explorer": "^2.5.3"
+    "webpack-bundle-analyzer": "^4.8.0"
   }
 }
