@@ -518,6 +518,11 @@ export default class ApiClient {
         communityId,
       })}`
     );
+
+  joinCommunity = ({ communityId }: { communityId: string }) =>
+    this.post('/api/invites/join-button', {
+      communityId,
+    });
 }
 
 export { type ApiClient };

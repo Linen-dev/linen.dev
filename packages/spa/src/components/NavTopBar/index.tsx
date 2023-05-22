@@ -5,13 +5,15 @@ import { signOut } from '@/components/SignOut';
 import Loading from '@/components/Loading';
 import { useLinenStore, shallow } from '@/store';
 import { api } from '@/fetcher';
-import { mockedComponent } from '@/mock';
 import customUsePath from '@/hooks/usePath';
 import { useNavigate, useLocation } from 'react-router-dom';
+import JoinButton from '@linen/ui/JoinButton';
+import { useSession } from '@linen/auth/client';
 
 export default function NavTopBar() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { status } = useSession();
 
   const {
     channels,
@@ -57,8 +59,12 @@ export default function NavTopBar() {
             );
           }}
           routerAsPath={location.pathname}
-          // TODO:
-          JoinButton={mockedComponent}
+          JoinButton={JoinButton({
+            startSignUp: async (_) => {}, // no signups on SPA
+            status,
+            api,
+            reload: () => navigate(0),
+          })}
         />
       </div>
     </>

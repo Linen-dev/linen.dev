@@ -1,14 +1,16 @@
 import React from 'react';
-import Toast from '@linen/ui/Toast';
-import { useJoinContext } from 'contexts/Join';
+import Toast from '@/Toast';
 import Link from '../Link';
-import { FiLogIn } from '@react-icons/all-files/fi/FiLogIn';
+import type { ApiClient } from '@linen/api-client';
 
 interface Props {
   brandColor?: string;
   fontColor: string;
   accountId: string;
   status: 'authenticated' | 'loading' | 'unauthenticated';
+  startSignUp?: (props: any) => Promise<void>;
+  reload(): void;
+  api: ApiClient;
 }
 
 export default function JoinLinen({
@@ -16,38 +18,51 @@ export default function JoinLinen({
   fontColor,
   accountId,
   status,
+  startSignUp,
+  reload,
+  api,
 }: Props) {
-  const { startSignUp } = useJoinContext();
-
   const showModal = async (
     event: React.MouseEvent<HTMLAnchorElement>,
     flow: 'signin' | 'signup'
   ) => {
     event.preventDefault();
     event.stopPropagation();
-    if (status === 'authenticated') {
-      const res = await fetch('/api/invites/join-button', {
-        method: 'post',
-        body: JSON.stringify({
-          communityId: accountId,
-        }),
-      });
-      if (!res.ok) {
-        Toast.info('Something went wrong, please try again');
-      } else {
-        Toast.success('Welcome aboard');
-        window.location.href = window.location.href;
-      }
-    } else if (status === 'unauthenticated') {
-      startSignUp?.({
-        flow,
-        communityId: accountId,
-      });
-    }
+    startSignUp?.({
+      flow,
+      communityId: accountId,
+    });
   };
+
+  async function joinCommunity(
+    event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
+  ) {
+    event.preventDefault();
+    event.stopPropagation();
+    try {
+      await api.joinCommunity({ communityId: accountId });
+      Toast.success('Welcome aboard');
+      reload();
+    } catch (error) {
+      Toast.info('Something went wrong, please try again');
+    }
+  }
 
   if (status === 'loading') {
     return <div />;
+  }
+
+  if (status === 'authenticated') {
+    return (
+      <Link
+        lighter
+        brandColor={brandColor}
+        fontColor={fontColor}
+        onClick={joinCommunity}
+      >
+        Join Community
+      </Link>
+    );
   }
 
   return (

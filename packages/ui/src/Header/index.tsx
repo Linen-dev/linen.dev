@@ -23,7 +23,12 @@ interface Props {
   currentCommunity: SerializedAccount;
   permissions: Permissions;
   // dep injection
-  JoinButton: (args: any) => JSX.Element;
+  JoinButton(props: {
+    brandColor?: string;
+    fontColor: string;
+    currentCommunity: SerializedAccount;
+    settings: Settings;
+  }): JSX.Element;
   Link: any;
   InternalLink: (args: any) => JSX.Element;
   routerAsPath: string;

@@ -18,14 +18,15 @@ import { api } from 'utilities/requests';
 import useMode from '@linen/hooks/mode';
 import styles from './index.module.scss';
 import Link from 'next/link';
-import JoinButton from 'components/JoinButton';
+import JoinButton from '@linen/ui/JoinButton';
 import InternalLink from 'components/Link/InternalLink';
-import { signOut } from '@linen/auth/client';
+import { signOut, useSession } from '@linen/auth/client';
 import usePath from 'hooks/path';
 import { useRouter } from 'next/router';
 import { notify } from 'utilities/notification';
 import { getHomeUrl } from '@linen/utilities/home';
 import CustomRouterPush from 'components/Link/CustomRouterPush';
+import { useJoinContext } from 'contexts/Join';
 
 interface Props {
   className?: string;
@@ -72,6 +73,8 @@ function PageLayout({
   const { googleAnalyticsId, googleSiteVerification } = settings;
   const { mode } = useMode();
   const router = useRouter();
+  const { startSignUp } = useJoinContext();
+  const { status } = useSession();
 
   const handleSelect = ({ thread }: SerializedSearchMessage) => {
     let path = `/t/${thread.incrementId}/${thread.slug || 'topic'}`;
@@ -102,7 +105,12 @@ function PageLayout({
           // dep injection
           api={api}
           InternalLink={InternalLink}
-          JoinButton={JoinButton}
+          JoinButton={JoinButton({
+            startSignUp,
+            status,
+            api,
+            reload: router.reload,
+          })}
           Link={Link}
           signOut={signOut}
           usePath={usePath}

@@ -19,7 +19,7 @@ export default async function handler(
   }
   cors(request, response);
 
-  const { communityId }: PostProps = JSON.parse(request.body);
+  const { communityId }: PostProps = request.body;
 
   const permissions = await PermissionsService.get({
     request,
