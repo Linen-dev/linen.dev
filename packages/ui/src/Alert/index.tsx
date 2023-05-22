@@ -7,6 +7,7 @@ import { FiInfo } from '@react-icons/all-files/fi/FiInfo';
 type AlertType = 'info' | 'danger';
 
 interface Props {
+  className?: string;
   type: AlertType;
   children: React.ReactNode;
 }
@@ -20,10 +21,10 @@ function icon(type: AlertType) {
   }
 }
 
-export default function Alert({ type, children }: Props) {
+export default function Alert({ className, type, children }: Props) {
   return (
     <div
-      className={classNames(styles.alert, {
+      className={classNames(styles.alert, className, {
         [styles.danger]: type === 'danger',
         [styles.info]: type === 'info',
       })}

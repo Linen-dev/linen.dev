@@ -16,17 +16,20 @@ import debounce from '@linen/utilities/debounce';
 import styles from './index.module.scss';
 import type { ApiClient } from '@linen/api-client';
 import { PremiumCard } from './PremiumCard';
+import UpgradeButton from '@/Header/UpgradeButton';
 
 export default function BrandingView({
   reload,
   initialCommunity,
   api,
   setCommunities,
+  InternalLink,
 }: {
   reload(): void;
   initialCommunity: SerializedAccount;
   api: ApiClient;
   setCommunities: React.Dispatch<React.SetStateAction<SerializedAccount[]>>;
+  InternalLink: any;
 }) {
   const [records, setRecords] = useState<DNSRecord[]>();
   const [currentCommunity, setCurrentCommunity] =
@@ -85,6 +88,13 @@ export default function BrandingView({
     <div className={styles.container}>
       <Header />
       <form id="branding-form" onSubmit={onSubmit} className={styles.p3}>
+        {!currentCommunity.premium && (
+          <UpgradeButton
+            className={styles.upgrade}
+            label="Upgrade to Premium"
+            InternalLink={InternalLink}
+          />
+        )}
         <div className={styles.wrapper}>
           <div className={styles.flexCol}>
             <PremiumCard isPremium={currentCommunity.premium}>

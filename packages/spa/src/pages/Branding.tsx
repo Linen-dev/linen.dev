@@ -5,6 +5,7 @@ import Loading from '@/components/Loading';
 import { api } from '@/fetcher';
 import { useEffect } from 'react';
 import { localStorage } from '@linen/utilities/storage';
+import InternalLink from '@/components/InternalLink';
 
 type BrandingPageProps = {
   communityName: string;
@@ -31,6 +32,7 @@ export default function BrandingPage() {
       initialCommunity={inboxProps.currentCommunity}
       api={api}
       setCommunities={setCommunities as any}
+      InternalLink={InternalLink({ communityName })}
     />
   );
 }

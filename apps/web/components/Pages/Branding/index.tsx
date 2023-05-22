@@ -10,6 +10,7 @@ import {
 import { useRouter } from 'next/router';
 import { api } from 'utilities/requests';
 import BrandingView from '@linen/ui/BrandingView';
+import InternalLink from 'components/Link/InternalLink';
 
 export interface Props {
   channels: SerializedChannel[];
@@ -49,6 +50,7 @@ export default function Branding({
         initialCommunity={initialCommunity}
         api={api}
         setCommunities={setCommunities}
+        InternalLink={InternalLink}
       />
     </PageLayout>
   );

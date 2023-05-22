@@ -3,16 +3,16 @@
   background: var(--color-primary);
   color: white;
   border-radius: 32px;
-  display: flex;
+  display: inline-flex;
   font-size: 0.875rem;
   font-weight: 500;
   gap: 0.25rem;
   height: 36px;
   line-height: 36px;
   padding: 0 1rem;
-  transition: background 0.2s ease;
+  transition: background 0.2s ease, color 0.2s ease;
 }
 
 .button:hover {
-  background: rgba(var(--color-primary), 0.9);
+  background: var(--color-blue-800);
 }

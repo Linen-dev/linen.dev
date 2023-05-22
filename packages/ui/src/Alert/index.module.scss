@@ -2,24 +2,24 @@
   align-items: center;
   color: var(--color-black);
   display: flex;
-  font-size: 14px;
+  font-size: 0.875rem;
   gap: 0.5rem;
-  font-weight: 500;
+  font-weight: 400;
   letter-spacing: -0.3px;
   border-radius: 0.25rem;
   padding: 0.75rem 1rem;
 }
 
 .danger {
-  background: var(--color-red-100);
+  background: var(--color-red-50);
   border: 1px solid var(--color-red-700);
-  color: var(--color-red-900);
+  color: var(--color-red-700);
 }
 
 .info {
-  background: var(--color-blue-100);
+  background: var(--color-blue-50);
   border: 1px solid var(--color-blue-700);
-  color: var(--color-blue-900);
+  color: var(--color-blue-700);
 }
 
 .icon {
