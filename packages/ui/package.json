@@ -120,6 +120,7 @@
     "./LinenLogo": "./dist/LinenLogo/index.js",
     "./List": "./dist/List/index.js",
     "./MembersModal": "./dist/MembersModal/index.js",
+    "./MembersView": "./dist/MembersView/index.js",
     "./Message": "./dist/Message/index.js",
     "./MessageForm": "./dist/MessageForm/index.js",
     "./MessagePreview": "./dist/MessagePreview/index.js",
@@ -346,6 +347,9 @@
       ],
       "MembersModal": [
         "./dist/MembersModal/index.d.ts"
+      ],
+      "MembersView": [
+        "./dist/MembersView/index.d.ts"
       ],
       "Message": [
         "./dist/Message/index.d.ts"

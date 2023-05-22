@@ -27,7 +27,7 @@ export default async function handler(
   }
   cors(request, response);
 
-  const body = JSON.parse(request.body);
+  const body = request.body;
   const permissions = await PermissionsService.get({
     request,
     response,

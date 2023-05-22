@@ -222,6 +222,7 @@ async function step1_createInvite(store: storeType) {
           Authorization: `Bearer ${store.owner.token}`,
           Host: store.domain.host,
           Origin: store.domain.origin,
+          'Content-Type': 'application/json',
         },
       });
       expect(response.status).toEqual(200);

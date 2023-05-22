@@ -11,7 +11,7 @@ export * from './integrations/threads';
 export * from './integrations/channels';
 export * from './integrations/messages';
 export * from './integrations/users';
-
+export * from './roles';
 export * from './api';
 
 export * from './patterns';
@@ -34,12 +34,6 @@ export enum AccountIntegration {
   NONE = 'NONE',
   SLACK = 'SLACK',
   DISCORD = 'DISCORD',
-}
-
-export enum Roles {
-  OWNER = 'OWNER',
-  ADMIN = 'ADMIN',
-  MEMBER = 'MEMBER',
 }
 
 export enum ReminderTypes {

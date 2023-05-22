@@ -37,6 +37,7 @@ import type {
   AllResponse,
   DNSRecord,
   UploadEnum,
+  putUserType,
 } from '@linen/types';
 export { AxiosRequestConfig };
 
@@ -462,6 +463,46 @@ export default class ApiClient {
     account_id: string;
     file_location: string;
   }) => this.get(`/api/sync?${qs({ account_id, file_location })}`);
+
+  updateInvite = ({
+    inviteId,
+    role,
+    communityId,
+  }: {
+    inviteId: string;
+    role: string;
+    communityId: string;
+  }) =>
+    this.put('/api/invites', {
+      inviteId,
+      role,
+      communityId,
+    });
+
+  updateUserRole = ({ userId, role, accountId }: putUserType) =>
+    this.put('/api/users', {
+      userId,
+      role,
+      accountId,
+    });
+
+  getMembers = ({ communityId }: { communityId: string }) =>
+    this.get<any>(`/api/members?${qs({ communityId })}`);
+
+  createInvite = ({
+    email,
+    communityId,
+    role,
+  }: {
+    email: string;
+    communityId: string;
+    role: string;
+  }) =>
+    this.post('/api/invites', {
+      email,
+      communityId,
+      role,
+    });
 }
 
 export { type ApiClient };

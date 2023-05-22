@@ -10,6 +10,8 @@ import {
   Roles,
   deleteUserSchema,
   deleteUserType,
+  putUserSchema,
+  putUserType,
 } from '@linen/types';
 import { prisma } from '@linen/database';
 import UsersService from 'services/users';
@@ -40,13 +42,6 @@ usersRouter.get(
     return res.json(users);
   }
 );
-
-const putUserSchema = z.object({
-  accountId: z.string().uuid(),
-  userId: z.string().uuid(),
-  role: z.enum([Roles.ADMIN, Roles.MEMBER, Roles.OWNER]),
-});
-type putUserType = z.infer<typeof putUserSchema>;
 
 usersRouter.put(
   `${prefix}`,
