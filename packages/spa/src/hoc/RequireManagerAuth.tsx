@@ -9,9 +9,10 @@ export default function RequireManagerAuth({
 }: {
   children: JSX.Element;
 }) {
+  const location = useLocation();
   const { communityName } = useParams() as { communityName: string };
   const setInboxProps = useLinenStore((state) => state.setInboxProps);
-  const { isLoading, error } = useQuery({
+  const { isLoading, error, data } = useQuery({
     queryKey: ['inbox', { communityName }],
     queryFn: () =>
       api.getInboxProps({ communityName }).then((data) => {
@@ -23,7 +24,7 @@ export default function RequireManagerAuth({
     refetchOnWindowFocus: false,
   });
 
-  if (!communityName || isLoading) {
+  if (!communityName || isLoading || !data) {
     return <Loading />;
   }
 
@@ -31,17 +32,7 @@ export default function RequireManagerAuth({
     return <>An error has occurred: {JSON.stringify(error)}</>;
   }
 
-  return <Wrapper children={children} />;
-}
-
-function Wrapper({ children }: { children: JSX.Element }) {
-  const location = useLocation();
-  const permissions = useLinenStore((state) => state.permissions);
-
-  if (!permissions) {
-    return <Loading />;
-  }
-  if (!permissions.manage) {
+  if (!data.permissions.manage) {
     return <Navigate to="/signin" state={{ from: location }} replace />;
   }
 

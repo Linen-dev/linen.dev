@@ -9,7 +9,3 @@ export async function mockedAsyncFunction() {
 export function mockedFunction(): any {
   return;
 }
-
-export function mockedContext() {
-  return {};
-}

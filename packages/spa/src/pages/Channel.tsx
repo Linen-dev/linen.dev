@@ -4,7 +4,6 @@ import { useUsersContext } from '@linen/contexts/Users';
 import { useLinenStore } from '@/store';
 import Loading from '@/components/Loading';
 import { api } from '@/fetcher';
-import { mockedContext } from '@/mock';
 import { useQuery } from '@tanstack/react-query';
 import { playNotificationSound } from '@/utils/playNotificationSound';
 import { useEffect } from 'react';
@@ -97,9 +96,9 @@ function View() {
       playNotificationSound={playNotificationSound}
       usePath={customUsePath({ communityName })}
       routerPush={navigate}
+      useJoinContext={() => ({})} // used for sign ups
       // TODO:
       queryIntegration={false}
-      useJoinContext={mockedContext}
     />
   );
 }
