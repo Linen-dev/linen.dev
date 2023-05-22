@@ -1,7 +1,8 @@
 import { SerializedAccount } from '@linen/types';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './index.module.scss';
 import { pickTextColorBasedOnBgColor } from '@linen/utilities/colors';
+import preload from '@/Image/utilities/preload';
 
 interface Props {
   community: SerializedAccount;
@@ -15,7 +16,30 @@ function getLetter(name?: string) {
 }
 
 export default function CommunityIcon({ community }: Props) {
-  if (community.logoSquareUrl) {
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    let mounted = true;
+    setLoaded(false);
+    if (community.logoSquareUrl) {
+      preload(community.logoSquareUrl)
+        .then(() => {
+          if (mounted) {
+            setLoaded(true);
+          }
+        })
+        .catch((exception) => {
+          if (mounted) {
+            setLoaded(false);
+          }
+        });
+    }
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  if (community.logoSquareUrl && loaded) {
     return (
       <img
         className={styles.icon}
