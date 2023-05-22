@@ -84,20 +84,38 @@ function Avatar({
   placeholder,
 }: Props) {
   const [loaded, setLoaded] = useState(false);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     let mounted = true;
     if (src && !placeholder && !loaded) {
-      preload(normalizeUrl(src)).then(() => {
-        if (mounted) {
-          setLoaded(true);
-        }
-      });
+      preload(normalizeUrl(src))
+        .then(() => {
+          if (mounted) {
+            setLoaded(true);
+          }
+        })
+        .catch(() => {
+          if (mounted) {
+            setError(true);
+          }
+        });
     }
     return () => {
       mounted = false;
     };
   }, [loaded, placeholder]);
+
+  if (error) {
+    return (
+      <TextAvatar
+        className={className}
+        text={text}
+        size={size}
+        shadow={shadow}
+      />
+    );
+  }
 
   const preloaded = src && cache[src];
 
