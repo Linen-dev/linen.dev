@@ -1,7 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import { Period } from 'components/Pages/Plans';
-import { SerializedAccount } from '@linen/types';
+import { SerializedAccount, Period } from '@linen/types';
 import { FiCheck } from '@react-icons/all-files/fi/FiCheck';
 import { FiZap } from '@react-icons/all-files/fi/FiZap';
 import Card from './Card';

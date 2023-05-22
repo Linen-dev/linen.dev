@@ -503,6 +503,12 @@ export default class ApiClient {
       communityId,
       role,
     });
+
+  getSubscriptions = ({ communityId }: { communityId: string }) =>
+    this.get<any>(`/api/subscriptions?${qs({ communityId })}`);
+
+  getPlans = ({ period }: { period: 'monthly' | 'yearly' }) =>
+    this.get<any>(`/api/plans?${qs({ period })}`);
 }
 
 export { type ApiClient };

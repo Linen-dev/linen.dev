@@ -2,34 +2,30 @@ import React, { useEffect, useState } from 'react';
 import styles from './index.module.scss';
 import { FiZap } from '@react-icons/all-files/fi/FiZap';
 import { SerializedAccount } from '@linen/types';
-import Table from '@linen/ui/Table';
-import Tbody from '@linen/ui/Tbody';
-import Td from '@linen/ui/Td';
-import Spinner from '@linen/ui/Spinner';
-import Link from 'components/Link';
+import Table from '@/Table';
+import Tbody from '@/Tbody';
+import Td from '@/Td';
+import Spinner from '@/Spinner';
+import type { ApiClient } from '@linen/api-client';
 
 interface Props {
   currentCommunity: SerializedAccount;
+  api: ApiClient;
 }
 
 interface Customer {
   email: string;
 }
 
-export default function ActivePlan({ currentCommunity }: Props) {
+export default function ActivePlan({ currentCommunity, api }: Props) {
   const [loading, setLoading] = useState(true);
   const [customer, setCustomer] = useState<Customer>();
   const [subscription, setSubscription] = useState<any>();
   const [paymentMethod, setPaymentMethod] = useState<any>();
   useEffect(() => {
     setLoading(true);
-    fetch(`/api/subscriptions?communityId=${currentCommunity.id}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then((response) => response.json())
+    api
+      .getSubscriptions({ communityId: currentCommunity.id })
       .then((data) => {
         setLoading(false);
         setCustomer(data.customer);
@@ -100,11 +96,11 @@ export default function ActivePlan({ currentCommunity }: Props) {
               </Table>
 
               <div className={styles.manage}>
-                <Link
+                <a
                   href={`https://billing.stripe.com/p/login/00g9CMchu0ywgVOaEE?prefilled_email=${customer.email}`}
                 >
                   Manage subscription
-                </Link>
+                </a>
               </div>
             </>
           )}

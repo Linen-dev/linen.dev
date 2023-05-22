@@ -1,5 +1,3 @@
-@import '@linen/styles/colors.scss';
-
 .header {
   color: var(--color-gray-900);
   font-size: 2.5rem;
@@ -12,12 +10,12 @@
   text-align: center;
 }
 
-.header span {
+.underline {
   align-items: center;
   background-image: linear-gradient(
     to right,
-    $color-primary 0%,
-    $color-yellow-100 100%
+    var(--color-primary) 0%,
+    var(--color-yellow-100) 100%
   );
   background-repeat: repeat-x;
   background-position: 0 100%;
@@ -39,12 +37,21 @@
   text-align: center;
 }
 
+.period {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
+  gap: 0.5rem;
+  font-size: 11px;
+  color: var(--color-gray-700);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
 .loader {
   margin: 0 auto;
   display: flex;
   justify-content: center;
-}
-
-.manage {
-  text-align: center;
 }

@@ -138,6 +138,7 @@
     "./PasswordField": "./dist/PasswordField/index.js",
     "./PasswordInput": "./dist/PasswordInput/index.js",
     "./PinIcon": "./dist/PinIcon/index.js",
+    "./PlansView": "./dist/PlansView/index.js",
     "./Portal": "./dist/Portal/index.js",
     "./PoweredByLinen": "./dist/PoweredByLinen/index.js",
     "./Preview": "./dist/Preview/index.js",
@@ -165,6 +166,7 @@
     "./Thead": "./dist/Thead/index.js",
     "./Thread": "./dist/Thread/index.js",
     "./ThreadView": "./dist/ThreadView/index.js",
+    "./Tiers": "./dist/Tiers/index.js",
     "./Toast": "./dist/Toast/index.js",
     "./Toggle": "./dist/Toggle/index.js",
     "./Tooltip": "./dist/Tooltip/index.js",
@@ -402,6 +404,9 @@
       "PinIcon": [
         "./dist/PinIcon/index.d.ts"
       ],
+      "PlansView": [
+        "./dist/PlansView/index.d.ts"
+      ],
       "Portal": [
         "./dist/Portal/index.d.ts"
       ],
@@ -482,6 +487,9 @@
       ],
       "ThreadView": [
         "./dist/ThreadView/index.d.ts"
+      ],
+      "Tiers": [
+        "./dist/Tiers/index.d.ts"
       ],
       "Toast": [
         "./dist/Toast/index.d.ts"

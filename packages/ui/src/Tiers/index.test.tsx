@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import Tiers from '.';
-import { Period } from 'components/Pages/Plans';
+import { Period } from '@linen/types';
 
 describe('Tiers', () => {
   it('renders tiers', () => {
@@ -16,7 +16,7 @@ describe('Tiers', () => {
               'Potenti felis, in cras at at ligula nunc.',
               'Orci neque eget pellentesque.',
             ],
-          },
+          } as any,
           {
             name: 'Premium',
             href: '#',
@@ -41,7 +41,9 @@ describe('Tiers', () => {
           },
         ]}
         activePeriod={Period.Monthly}
-        currentCommunity={{ id: '1234', premium: false, syncStatus: 'synced' }}
+        currentCommunity={
+          { id: '1234', premium: false, syncStatus: 'synced' } as any
+        }
       />
     );
     expect(container).toHaveTextContent('Standard');

@@ -15,6 +15,7 @@ import ThreadPage from '@/pages/Thread';
 import BrandingPage from '@/pages/Branding';
 import ConfigurationsPage from '@/pages/Configurations';
 import MembersPage from '@/pages/Members';
+import PlansPage from '@/pages/Plans';
 
 export default function Router() {
   const isCustomDomain = false;
@@ -104,7 +105,9 @@ export default function Router() {
                         },
                         {
                           path: 'plans',
-                          element: <InProgress />,
+                          element: (
+                            <RequireManagerAuth children={<PlansPage />} />
+                          ),
                         },
                         {
                           path: '',

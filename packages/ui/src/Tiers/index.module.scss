@@ -1,10 +1,8 @@
-@import '@linen/styles/colors.scss';
-
 .button {
   align-items: center;
   background: var(--color-background);
-  border: 2px solid $color-primary;
-  color: $color-gray-900;
+  border: 2px solid var(--color-primary);
+  color: var(--color-gray-900);
   cursor: pointer;
   display: flex;
   justify-content: center;
@@ -21,13 +19,13 @@
 
 .button:hover,
 .button.active {
-  background: $color-primary;
-  color: white;
+  background: var(--color-primary);
+  color: var(--color-text);
 }
 
 .button.active:hover {
-  background: rgba($color-primary, 0.9);
-  color: white;
+  background: rgba(var(--color-primary), 0.9);
+  color: var(--color-text);
 }
 
 .list {
@@ -38,7 +36,7 @@
 
 .list li {
   align-items: center;
-  color: $color-gray-600;
+  color: var(--color-gray-600);
   display: flex;
   gap: 0.75rem;
   margin-bottom: 0.75rem;
@@ -46,7 +44,7 @@
 }
 
 .list svg {
-  color: $color-primary;
+  color: var(--color-primary);
 }
 
 .grid {

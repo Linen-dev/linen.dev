@@ -1,7 +1,5 @@
-@import '@linen/styles/colors.scss';
-
 .card {
-  border: 1px solid $color-gray-200;
+  border: 1px solid var(--color-gray-200);
   padding: 31px;
   border-radius: 16px;
   text-align: left;
@@ -11,16 +9,16 @@
   padding: 32px;
   position: relative;
   width: 100%;
-  background-color: white;
+  background-color: var(--color-background);
 }
 
 .card.active {
-  border: 2px solid $color-primary;
+  border: 2px solid var(--color-primary);
   padding: 30px;
 }
 
 .title {
-  color: $color-gray-900;
+  color: var(--color-gray-900);
   font-size: 1.125rem;
   font-weight: 600;
   line-height: 2rem;
@@ -30,7 +28,7 @@
 .description {
   line-height: 1.5rem;
   font-size: 1rem;
-  color: $color-gray-600;
+  color: var(--color-gray-600);
   margin: 1rem 0 0;
   font-size: 0.875rem;
 }
@@ -45,7 +43,7 @@
 }
 
 .price .length {
-  color: $color-gray-600;
+  color: var(--color-gray-600);
   font-size: 1rem;
   font-weight: 500;
   letter-spacing: initial;

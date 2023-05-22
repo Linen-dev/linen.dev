@@ -86,3 +86,8 @@ export const UploadEnumConst = {
 
 const UploadEnum = z.nativeEnum(UploadEnumConst);
 export type UploadEnum = z.infer<typeof UploadEnum>;
+
+export enum Period {
+  Monthly = 'monthly',
+  Yearly = 'yearly',
+}
