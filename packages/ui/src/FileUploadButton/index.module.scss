@@ -1,21 +1,27 @@
 .label {
   align-items: center;
-  background: var(--color-gray-100);
-  border-radius: 28px;
-  color: var(--color-gray-700);
   cursor: pointer;
-  display: flex;
+  display: inline-flex;
   font-size: 14px;
-  height: 28px;
   justify-content: center;
-  line-height: 28px;
-  transition: 0.1s ease background, 0.1s ease color;
-  width: 28px;
-}
+  background: var(--color-blue-700);
+  color: white;
+  font-weight: 500;
+  gap: 0.25rem;
+  -webkit-font-smoothing: antialiased;
+  transition: background 0.2s ease, color 0.2s ease;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-radius: 0.5rem;
 
-.label:hover {
-  background: var(--color-gray-200);
-  color: var(--color-gray-900);
+  &:focus-visible,
+  &:hover {
+    background: var(--color-blue-800);
+  }
 }
 
 .input {
