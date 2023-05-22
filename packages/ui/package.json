@@ -101,6 +101,7 @@
     "./FadeIn": "./dist/FadeIn/index.js",
     "./Field": "./dist/Field/index.js",
     "./FileInput": "./dist/FileInput/index.js",
+    "./FileUploadButton": "./dist/FileUploadButton/index.js",
     "./GridContent": "./dist/GridContent/index.js",
     "./GridRow": "./dist/GridRow/index.js",
     "./H1": "./dist/H1/index.js",
@@ -288,6 +289,9 @@
       ],
       "FileInput": [
         "./dist/FileInput/index.d.ts"
+      ],
+      "FileUploadButton": [
+        "./dist/FileUploadButton/index.d.ts"
       ],
       "GridContent": [
         "./dist/GridContent/index.d.ts"
