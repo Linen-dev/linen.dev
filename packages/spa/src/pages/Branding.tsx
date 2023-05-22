@@ -13,9 +13,10 @@ type BrandingPageProps = {
 
 export default function BrandingPage() {
   const { communityName } = useParams() as BrandingPageProps;
-  const inboxProps = useLinenStore((state) => state.inboxProps);
-  const setCommunities = useLinenStore((state) => state.setCommunities);
-
+  const { inboxProps, setCommunities } = useLinenStore((state) => ({
+    inboxProps: state.inboxProps,
+    setCommunities: state.setCommunities,
+  }));
   const navigate = useNavigate();
 
   useEffect(() => {

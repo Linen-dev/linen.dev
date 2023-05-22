@@ -1,5 +1,4 @@
 import { useParams } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
 import AllView from '@linen/ui/AllView';
 import { useLinenStore } from '@/store';
 import Loading from '@/components/Loading';
@@ -13,34 +12,11 @@ type AllPageProps = {
 
 export default function AllPage() {
   const { communityName } = useParams() as AllPageProps;
-  const setInboxProps = useLinenStore((state) => state.setInboxProps);
-  const { isLoading, error } = useQuery({
-    queryKey: ['inbox', { communityName }],
-    queryFn: () =>
-      api.getInboxProps({ communityName }).then((data) => {
-        setInboxProps(data, communityName);
-        return data;
-      }),
-    enabled: !!communityName,
-    retry: false,
-    refetchOnWindowFocus: false,
-  });
+  const inboxProps = useLinenStore((state) => state.inboxProps);
 
   useEffect(() => {
     localStorage.set('pages_last', `/s/${communityName}/all`);
   }, [communityName]);
-
-  if (!communityName || isLoading) {
-    return <Loading />;
-  }
-  if (error) {
-    return <>An error has occurred: {JSON.stringify(error)}</>;
-  }
-  return <View />;
-}
-
-function View() {
-  const inboxProps = useLinenStore((state) => state.inboxProps);
 
   if (!inboxProps) {
     return <Loading />;
