@@ -1,17 +1,25 @@
 import React from 'react';
 import styles from './index.module.scss';
-import { FiUpload } from '@react-icons/all-files/fi/FiUpload';
+import { FiUploadCloud } from '@react-icons/all-files/fi/FiUploadCloud';
 
 interface Props {
   id: string;
   disabled?: boolean;
   onChange(event: React.ChangeEvent<HTMLInputElement>): void;
+  uploading?: boolean;
+  progress?: number;
 }
 
-export default function FileInput({ id, disabled, onChange }: Props) {
+export default function FileUploadButton({
+  id,
+  disabled,
+  onChange,
+  uploading,
+  progress,
+}: Props) {
   return (
     <label className={styles.label} htmlFor={id}>
-      <FiUpload />
+      <FiUploadCloud /> {!uploading ? 'Upload' : `Uploading... ${progress}%`}
       <input
         className={styles.input}
         type="file"

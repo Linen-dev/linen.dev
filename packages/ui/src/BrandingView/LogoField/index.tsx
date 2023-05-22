@@ -83,13 +83,12 @@ export default function LogoField({
           />
         ))}
 
-      {uploading && (
-        <span className={styles.text}>{`Uploading... ${progress}%`}</span>
-      )}
       <FileUploadButton
         id="logo-upload"
         onChange={onFileChange}
         disabled={!currentCommunity.premium || uploading}
+        uploading={uploading}
+        progress={progress}
       />
     </>
   );
