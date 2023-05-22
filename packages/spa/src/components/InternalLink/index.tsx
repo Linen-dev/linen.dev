@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom';
-import { baseLinen, pathsToRedirect } from '@/config';
 
 interface Props {
   className?: string;
@@ -27,19 +26,6 @@ export default function InternalLink({
     children,
     refresh,
   }: Props) => {
-    if (pathsToRedirect.includes(href)) {
-      return (
-        <a
-          href={`${baseLinen}/s/${communityName}${href}`}
-          className={className}
-          target="_blank"
-          rel="noreferrer"
-        >
-          {children}
-        </a>
-      );
-    }
-
     if (refresh) {
       return (
         <a

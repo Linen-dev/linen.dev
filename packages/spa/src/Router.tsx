@@ -4,7 +4,6 @@ import ErrorPage from '@/pages/Error';
 import SignIn from '@/pages/SignIn';
 import RequireAuth from '@/hoc/RequireAuth';
 import RedirectToLastPageViewed from '@/components/RedirectToLastPageViewed';
-import InProgress from '@/components/InProgress';
 import RedirectToS from '@/components/RedirectToS';
 import RequireManagerAuth from '@/hoc/RequireManagerAuth';
 import InboxPage from '@/pages/Inbox';
@@ -16,6 +15,7 @@ import BrandingPage from '@/pages/Branding';
 import ConfigurationsPage from '@/pages/Configurations';
 import MembersPage from '@/pages/Members';
 import PlansPage from '@/pages/Plans';
+import MetricsPage from './pages/Metrics';
 
 export default function Router() {
   const isCustomDomain = false;
@@ -101,7 +101,9 @@ export default function Router() {
                         },
                         {
                           path: 'metrics',
-                          element: <InProgress />,
+                          element: (
+                            <RequireManagerAuth children={<MetricsPage />} />
+                          ),
                         },
                         {
                           path: 'plans',

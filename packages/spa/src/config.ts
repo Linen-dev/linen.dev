@@ -7,6 +7,3 @@ const env = cleanEnv(process.env, {
 
 export const baseLinen = env.REACT_APP_LINEN_BASE_URL;
 export const baseAuth = `${baseLinen}/api/auth`;
-
-// these paths are been redirect to nextjs web
-export const pathsToRedirect = ['/metrics'];

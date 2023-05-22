@@ -1,7 +1,5 @@
 import { useEffect } from 'react';
 import PageLayout from 'components/layout/PageLayout';
-import Header from './Header';
-import Content from './Content';
 import {
   Permissions,
   SerializedAccount,
@@ -9,6 +7,8 @@ import {
   Settings,
 } from '@linen/types';
 import { localStorage } from '@linen/utilities/storage';
+import MetricsView from '@linen/ui/MetricsView';
+import { api } from 'utilities/requests';
 
 export interface Props {
   channels: SerializedChannel[];
@@ -47,8 +47,7 @@ export default function Metrics({
       className="w-full"
       dms={dms}
     >
-      <Header />
-      <Content communityId={currentCommunity.id} />
+      <MetricsView currentCommunity={currentCommunity} api={api} />
     </PageLayout>
   );
 }

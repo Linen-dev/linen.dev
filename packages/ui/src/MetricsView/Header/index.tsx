@@ -1,4 +1,5 @@
-import StickyHeader from '@linen/ui/StickyHeader';
+import React from 'react';
+import StickyHeader from '@/StickyHeader';
 import { FiBarChart } from '@react-icons/all-files/fi/FiBarChart';
 import styles from './index.module.scss';
 

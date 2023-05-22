@@ -509,6 +509,15 @@ export default class ApiClient {
 
   getPlans = ({ period }: { period: 'monthly' | 'yearly' }) =>
     this.get<any>(`/api/plans?${qs({ period })}`);
+
+  getMetrics = ({ communityId }: { communityId: string }) =>
+    this.get<{
+      members: number;
+    }>(
+      `/api/metrics?${qs({
+        communityId,
+      })}`
+    );
 }
 
 export { type ApiClient };

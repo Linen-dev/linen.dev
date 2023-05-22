@@ -124,6 +124,7 @@
     "./Message": "./dist/Message/index.js",
     "./MessageForm": "./dist/MessageForm/index.js",
     "./MessagePreview": "./dist/MessagePreview/index.js",
+    "./MetricsView": "./dist/MetricsView/index.js",
     "./Modal": "./dist/Modal/index.js",
     "./NativeSelect": "./dist/NativeSelect/index.js",
     "./Nav": "./dist/Nav/index.js",
@@ -361,6 +362,9 @@
       ],
       "MessagePreview": [
         "./dist/MessagePreview/index.d.ts"
+      ],
+      "MetricsView": [
+        "./dist/MetricsView/index.d.ts"
       ],
       "Modal": [
         "./dist/Modal/index.d.ts"
