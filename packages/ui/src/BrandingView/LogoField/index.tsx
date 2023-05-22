@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import Label from '@/Label';
 import { SerializedAccount } from '@linen/types';
 import styles from './index.module.scss';
-import FileInput from '@/FileInput';
+import FileUploadButton from '@/FileUploadButton';
 import type { ApiClient } from '@linen/api-client';
 
 interface Props {
@@ -68,11 +68,6 @@ export default function LogoField({
         {header}
         <Label.Description>{description}</Label.Description>
       </Label>
-      <FileInput
-        id="logo-upload"
-        onChange={onFileChange}
-        disabled={!currentCommunity.premium || uploading}
-      />
 
       {logoUrl &&
         (preview ? (
@@ -91,6 +86,11 @@ export default function LogoField({
       {uploading && (
         <span className={styles.text}>{`Uploading... ${progress}%`}</span>
       )}
+      <FileUploadButton
+        id="logo-upload"
+        onChange={onFileChange}
+        disabled={!currentCommunity.premium || uploading}
+      />
     </>
   );
 }
