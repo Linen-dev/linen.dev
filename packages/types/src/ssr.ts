@@ -81,3 +81,18 @@ export interface AllResponse {
   threads: SerializedThread[];
   total: number;
 }
+
+export type apiGetChannelProps = Pick<
+  ChannelProps,
+  | 'nextCursor'
+  | 'currentChannel'
+  | 'channelName'
+  | 'threads'
+  | 'pinnedThreads'
+  | 'pathCursor'
+>;
+
+export type apiGetThreadProps = Pick<
+  ThreadProps,
+  'thread' | 'currentChannel' | 'threadUrl'
+>;

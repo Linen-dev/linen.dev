@@ -5,6 +5,7 @@ import {
   SerializedAccount,
   AuthedRequestWithBody,
   Response,
+  apiGetThreadProps,
 } from '@linen/types';
 import { serializeThread } from '@linen/serializers/thread';
 import { serializeChannel } from '@linen/serializers/channel';
@@ -101,21 +102,12 @@ ssrRouter.get(
       res.status(404);
       return res.end();
     }
-
-    res.json({
-      token: permissions.token,
-      currentCommunity,
-      channels: [...channels, ...privateChannels].map(serializeChannel),
-      communities: communities.map(serializeAccount),
-      permissions,
-      settings,
-      dms: dms.map(serializeChannel),
+    const props: apiGetThreadProps = {
       thread: serializeThread(thread),
       currentChannel: serializeChannel(currentChannel),
       threadUrl,
-      isSubDomainRouting: false,
-      isBot: false,
-    });
+    };
+    res.json(props);
     res.end();
   }
 );

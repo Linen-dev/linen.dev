@@ -1,19 +1,18 @@
-import { Navigate, useLocation, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import Loading from '@/components/Loading';
 import { useLinenStore } from '@/store';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@/fetcher';
 import HandleError from '@/components/HandleError';
 
-export default function RequireManagerAuth({
+export default function RequireInboxProps({
   children,
 }: {
   children: JSX.Element;
 }) {
-  const location = useLocation();
   const { communityName } = useParams() as { communityName: string };
   const setInboxProps = useLinenStore((state) => state.setInboxProps);
-  const { isLoading, error, data } = useQuery({
+  const { isLoading, error } = useQuery({
     queryKey: ['inbox', { communityName }],
     queryFn: () =>
       api.getInboxProps({ communityName }).then((data) => {
@@ -25,16 +24,12 @@ export default function RequireManagerAuth({
     refetchOnWindowFocus: false,
   });
 
-  if (!communityName || isLoading || !data) {
+  if (!communityName || isLoading) {
     return <Loading />;
   }
 
   if (error) {
     return HandleError(error);
-  }
-
-  if (!data.permissions.manage) {
-    return <Navigate to="/signin" state={{ from: location }} replace />;
   }
 
   return children;

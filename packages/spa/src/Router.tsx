@@ -1,11 +1,15 @@
 import { Outlet, createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Layout from '@/components/Layout';
-import ErrorPage from '@/pages/Error';
-import SignIn from '@/pages/SignIn';
-import RequireAuth from '@/hoc/RequireAuth';
 import RedirectToLastPageViewed from '@/components/RedirectToLastPageViewed';
 import RedirectToS from '@/components/RedirectToS';
-import RequireManagerAuth from '@/hoc/RequireManagerAuth';
+// hoc
+import RequireAuth from '@/hoc/RequireAuth';
+import RequireInboxProps from '@/hoc/RequireInboxProps';
+import RequirePermissionInbox from '@/hoc/RequirePermissionInbox';
+import RequirePermissionManage from '@/hoc/RequirePermissionManage';
+// pages
+import ErrorPage from '@/pages/Error';
+import SignIn from '@/pages/SignIn';
 import InboxPage from '@/pages/Inbox';
 import StarredPage from '@/pages/Starred';
 import AllPage from '@/pages/All';
@@ -15,7 +19,7 @@ import BrandingPage from '@/pages/Branding';
 import ConfigurationsPage from '@/pages/Configurations';
 import MembersPage from '@/pages/Members';
 import PlansPage from '@/pages/Plans';
-import MetricsPage from './pages/Metrics';
+import MetricsPage from '@/pages/Metrics';
 
 export default function Router() {
   const isCustomDomain = false;
@@ -49,7 +53,7 @@ export default function Router() {
                     },
                     {
                       path: '/s/:communityName',
-                      element: <Outlet />,
+                      element: <RequireInboxProps children={<Outlet />} />,
                       children: [
                         {
                           path: 'c/:channelName',
@@ -69,26 +73,36 @@ export default function Router() {
                         },
                         {
                           path: 'inbox',
-                          element: <InboxPage />,
+                          element: (
+                            <RequirePermissionInbox children={<InboxPage />} />
+                          ),
                         },
                         {
                           path: 'starred',
-                          element: <StarredPage />,
+                          element: (
+                            <RequirePermissionInbox
+                              children={<StarredPage />}
+                            />
+                          ),
                         },
                         {
                           path: 'all',
-                          element: <AllPage />,
+                          element: (
+                            <RequirePermissionInbox children={<AllPage />} />
+                          ),
                         },
                         {
                           path: 'branding',
                           element: (
-                            <RequireManagerAuth children={<BrandingPage />} />
+                            <RequirePermissionManage
+                              children={<BrandingPage />}
+                            />
                           ),
                         },
                         {
                           path: 'configurations',
                           element: (
-                            <RequireManagerAuth
+                            <RequirePermissionManage
                               children={<ConfigurationsPage />}
                             />
                           ),
@@ -96,19 +110,23 @@ export default function Router() {
                         {
                           path: 'members',
                           element: (
-                            <RequireManagerAuth children={<MembersPage />} />
+                            <RequirePermissionManage
+                              children={<MembersPage />}
+                            />
                           ),
                         },
                         {
                           path: 'metrics',
                           element: (
-                            <RequireManagerAuth children={<MetricsPage />} />
+                            <RequirePermissionManage
+                              children={<MetricsPage />}
+                            />
                           ),
                         },
                         {
                           path: 'plans',
                           element: (
-                            <RequireManagerAuth children={<PlansPage />} />
+                            <RequirePermissionManage children={<PlansPage />} />
                           ),
                         },
                         {

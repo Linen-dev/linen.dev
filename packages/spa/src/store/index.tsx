@@ -4,27 +4,11 @@ import {
   SerializedChannel,
   Settings,
   Permissions,
-  ChannelProps,
-  ThreadProps,
   InboxProps,
+  apiGetChannelProps,
+  apiGetThreadProps,
 } from '@linen/types';
 export { shallow } from 'zustand/shallow';
-
-type threadProps = Pick<
-  ThreadProps,
-  'currentChannel' | 'isBot' | 'isSubDomainRouting' | 'thread' | 'threadUrl'
->;
-
-type channelProps = Pick<
-  ChannelProps,
-  | 'currentChannel'
-  | 'isBot'
-  | 'isSubDomainRouting'
-  | 'nextCursor'
-  | 'pathCursor'
-  | 'pinnedThreads'
-  | 'threads'
->;
 
 type inboxProps = InboxProps;
 
@@ -37,10 +21,10 @@ interface LinenState {
   settings: Settings | undefined;
   channels: SerializedChannel[];
   dms: SerializedChannel[];
-  channelProps: channelProps | undefined;
-  setChannelProps: (props: ChannelProps, communityName: string) => void;
-  threadProps: threadProps | undefined;
-  setThreadsProps: (props: ThreadProps, communityName: string) => void;
+  channelProps: apiGetChannelProps | undefined;
+  setChannelProps: (props: apiGetChannelProps) => void;
+  threadProps: apiGetThreadProps | undefined;
+  setThreadsProps: (props: apiGetThreadProps) => void;
   inboxProps: inboxProps | undefined;
   setInboxProps: (props: InboxProps, communityName: string) => void;
   setCommunities: (props: SerializedAccount[]) => void;
@@ -57,50 +41,15 @@ export const useLinenStore = create<LinenState>()((set, get) => ({
   channels: [],
   dms: [],
   channelProps: undefined,
-  setChannelProps: (props: ChannelProps, communityName: string) => {
-    const {
-      channels,
-      channelName,
-      permissions,
-      currentCommunity,
-      settings,
-      communities,
-      dms,
-      ...channelProps
-    } = props;
-    set({
-      channelProps,
-      channelName,
-      communityName,
-      permissions,
-      channels,
-      currentCommunity,
-      settings,
-      dms,
-      communities,
-    });
+  setChannelProps: (channelProps: apiGetChannelProps) => {
+    const { channelName } = channelProps;
+    set({ channelProps, channelName });
   },
   threadProps: undefined,
-  setThreadsProps: (props: ThreadProps, communityName: string) => {
-    const {
-      channels,
-      permissions,
-      currentCommunity,
-      settings,
-      communities,
-      dms,
-      ...threadProps
-    } = props;
+  setThreadsProps: (threadProps: apiGetThreadProps) => {
     set({
       threadProps,
-      channels,
-      permissions,
-      currentCommunity,
-      settings,
-      communities,
-      dms,
-      channelName: props.currentChannel.channelName,
-      communityName,
+      channelName: threadProps.currentChannel.channelName,
     });
   },
   inboxProps: undefined,

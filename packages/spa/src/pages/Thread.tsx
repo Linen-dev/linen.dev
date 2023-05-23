@@ -22,7 +22,7 @@ export default function ThreadPage() {
     queryKey: ['threads', { communityName, threadId, slug }],
     queryFn: () =>
       api.getThreadProps({ communityName, threadId, slug }).then((data) => {
-        setThreadsProps(data, communityName);
+        setThreadsProps(data);
         return data;
       }),
     enabled: !!communityName && !!threadId,
@@ -58,10 +58,10 @@ function View() {
   return (
     <ThreadView
       currentChannel={threadProps.currentChannel}
-      isSubDomainRouting={threadProps.isSubDomainRouting}
+      isSubDomainRouting={false}
       thread={threadProps.thread}
       threadUrl={threadProps.threadUrl}
-      isBot={threadProps.isBot}
+      isBot={false}
       currentCommunity={currentCommunity}
       permissions={permissions}
       settings={settings}

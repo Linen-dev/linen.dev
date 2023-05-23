@@ -31,13 +31,13 @@ import type {
   ReminderTypes,
   SerializedSearchMessage,
   StarredResponse,
-  ChannelProps,
   InboxProps,
-  ThreadProps,
   AllResponse,
   DNSRecord,
   UploadEnum,
   putUserType,
+  apiGetChannelProps,
+  apiGetThreadProps,
 } from '@linen/types';
 export { AxiosRequestConfig };
 
@@ -428,7 +428,7 @@ export default class ApiClient {
     channelName?: string;
     page?: string;
   }) =>
-    this.get<ChannelProps>(
+    this.get<apiGetChannelProps>(
       `/api/ssr/channels?${qs({ communityName, channelName, page })}`
     );
 
@@ -444,7 +444,7 @@ export default class ApiClient {
     threadId: string;
     slug?: string;
   }) =>
-    this.get<ThreadProps>(
+    this.get<apiGetThreadProps>(
       `/api/ssr/threads?${qs({ communityName, threadId, slug })}`
     );
 

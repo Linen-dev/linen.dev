@@ -1,14 +1,13 @@
 import { Router } from 'express';
 import { z } from 'zod';
 import {
-  SerializedChannel,
   AuthedRequestWithBody,
   Response,
+  apiGetChannelProps,
 } from '@linen/types';
 import { serializeAccount } from '@linen/serializers/account';
 import { serializeThread } from '@linen/serializers/thread';
 import { serializeChannel } from '@linen/serializers/channel';
-import { serializeSettings } from '@linen/serializers/settings';
 import { sortBySentAtAsc } from '@linen/utilities/object';
 import validationMiddleware from 'server/middlewares/validation';
 import ChannelsService, { getDMs } from 'services/channels';
@@ -17,7 +16,6 @@ import PermissionsService from 'services/permissions';
 import { findThreadsByCursor, findPinnedThreads } from 'services/threads';
 import { decodeCursor } from 'utilities/cursor';
 import { buildCursor } from 'utilities/buildCursor';
-import { NotFound } from 'utilities/response';
 import { channels } from '@linen/database';
 
 const prefix = '/api/ssr/channels';
@@ -63,11 +61,6 @@ ssrRouter.get(
         })
       : [];
 
-    const settings = serializeSettings(community);
-    const communities = !!permissions.auth?.id
-      ? await CommunityService.findByAuthId(permissions.auth.id)
-      : [];
-
     const currentCommunity = serializeAccount(community);
 
     const dms = !!permissions.user?.id
@@ -98,22 +91,13 @@ ssrRouter.get(
       limit: 10,
     });
 
-    const props = {
-      token: permissions.token,
-      currentCommunity,
-      channels: [...channels, ...privateChannels].map(serializeChannel),
-      communities: communities.map(serializeAccount),
-      permissions,
-      settings,
-      dms: dms.map(serializeChannel),
+    const props: apiGetChannelProps = {
       nextCursor,
       currentChannel: serializeChannel(channel),
       channelName: channel.channelName,
       threads: threads.map(serializeThread),
       pinnedThreads: pinnedThreads.map(serializeThread),
       pathCursor: page || null,
-      isSubDomainRouting: false,
-      isBot: false,
     };
     res.json(props);
     res.end();

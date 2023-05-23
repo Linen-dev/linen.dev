@@ -25,7 +25,7 @@ export default function ChannelPage() {
     queryKey: ['channels', { communityName, channelName, page }],
     queryFn: () =>
       api.getChannelProps({ communityName, channelName, page }).then((data) => {
-        setChannelProps(data, communityName);
+        setChannelProps(data);
         return data;
       }),
     enabled: !!communityName,
@@ -86,8 +86,8 @@ function View() {
       permissions={permissions}
       settings={settings}
       currentChannel={channelProps.currentChannel}
-      isBot={channelProps.isBot}
-      isSubDomainRouting={channelProps.isSubDomainRouting}
+      isBot={false}
+      isSubDomainRouting={false}
       nextCursor={channelProps.nextCursor}
       pathCursor={channelProps.pathCursor}
       pinnedThreads={channelProps.pinnedThreads}

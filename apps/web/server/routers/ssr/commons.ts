@@ -13,7 +13,7 @@ import validationMiddleware from 'server/middlewares/validation';
 import ChannelsService, { getDMs } from 'services/channels';
 import CommunityService from 'services/community';
 import PermissionsService from 'services/permissions';
-import { allowInbox } from 'services/ssr/common';
+import { allowAccess } from 'services/ssr/common';
 
 const prefix = '/api/ssr/commons';
 const ssrRouter = Router();
@@ -96,7 +96,7 @@ ssrRouter.get(
     res: Response
   ) => {
     try {
-      const props = await getProps(req, res, allowInbox);
+      const props = await getProps(req, res, allowAccess);
       res.json(props);
     } catch (error: any) {
       res.status(error.status || 500);
