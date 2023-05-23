@@ -13,6 +13,17 @@
   color: var(--color-gray-900);
 }
 
+
+@media (prefers-color-scheme: dark) {
+  .drop {
+    background-color: var(--color-blue-900) !important;
+  }
+
+  .drop > div {
+    background-color: var(--color-blue-900) !important;
+  }
+}
+
 .flex {
   display: flex;
   gap: 0.5rem;

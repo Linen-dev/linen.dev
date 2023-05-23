@@ -2,3 +2,10 @@
 .dragged:hover {
   background-color: var(--color-blue-50) !important;
 }
+
+@media (prefers-color-scheme: dark) {
+  .dragged,
+  .dragged:hover {
+    background-color: var(--color-blue-900) !important;
+  }
+}
