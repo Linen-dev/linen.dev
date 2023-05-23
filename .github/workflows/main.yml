@@ -74,12 +74,7 @@ jobs:
               delete data.scores
               return data;
             }
-            const stats = {
-              performance: build(manifest, 'performance'),
-              accessibility: build(manifest, 'accessibility'),
-              best_practices: build(manifest, 'best-practices'),
-              seo: build(manifest, 'seo'),
-            };
+            const stats = build(manifest, 'performance');
             core.setOutput('manifest', JSON.stringify(stats,null,2));
 
       - name: Post to a Slack channel
