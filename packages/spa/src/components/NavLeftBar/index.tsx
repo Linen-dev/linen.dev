@@ -1,4 +1,4 @@
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import useMode from '@linen/hooks/mode';
 import { useUsersContext } from '@linen/contexts/Users';
 import NavBar from '@linen/ui/NavBar';
@@ -12,7 +12,6 @@ import Loading from '@/components/Loading';
 import CustomRouterPush from '@/components/CustomRouterPush';
 
 export default function NavLeftBar() {
-  const navigate = useNavigate();
   const location = useLocation();
   const { mode } = useMode();
   const {
@@ -66,7 +65,6 @@ export default function NavLeftBar() {
       CustomRouterPush={CustomRouterPush({
         communityName,
         communityType: settings.communityType,
-        navigate,
       })}
       routerAsPath={location.pathname}
       onDrop={
