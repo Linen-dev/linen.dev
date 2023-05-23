@@ -39,7 +39,7 @@ export default async function createLinenCommunity() {
       isAdmin: true,
       isBot: false,
       role: Roles.ADMIN,
-      profileImageUrl: '/images/avatar/example.jpg',
+      profileImageUrl: '/images/avatar/example.png',
     },
   });
   const auth2 = await prisma.auths.create({

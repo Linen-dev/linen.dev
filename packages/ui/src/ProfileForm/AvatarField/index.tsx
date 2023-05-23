@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import Avatar from '@/Avatar';
+import Button from '@/Button';
 import Label from '@/Label';
 import Field from '@/Field';
 import { SerializedUser } from '@linen/types';
 import styles from './index.module.scss';
+import { FiUploadCloud } from '@react-icons/all-files/fi/FiUploadCloud';
 
 interface Props {
   uploading: boolean;
@@ -18,32 +20,34 @@ export default function AvatarField({
   progress,
   onChange,
 }: Props) {
-  // TODO add loading state to the Avatar
+  let ref = useRef<HTMLInputElement>(null);
+  const openFileDialog = () => {
+    if (ref.current) {
+      ref.current.value = '';
+      ref.current?.click();
+    }
+  };
   return (
     <Field>
-      <Label className={styles.label} htmlFor="avatar">
-        Avatar
-        <div className={styles.row}>
-          <Avatar
-            shadow="none"
-            src={user.profileImageUrl}
-            text={user.displayName}
-          />
-          {uploading ? (
-            <span className={styles.text}>{`Uploading... ${progress}%`}</span>
-          ) : (
-            <span className={styles.edit}>Upload</span>
-          )}
+      <div className={styles.row}>
+        <Avatar src={user.profileImageUrl} text={user.displayName} size="xl" />
+        <div>
+          <Button onClick={openFileDialog} disabled={uploading} color="gray">
+            <FiUploadCloud />{' '}
+            {!uploading ? 'Change avatar' : `Uploading... ${progress}%`}
+          </Button>
+          <div className={styles.text}>JPG, GIF or PNG. 2MB max.</div>
         </div>
-        <input
-          className={styles.input}
-          disabled={uploading}
-          type="file"
-          id="avatar"
-          name="avatar"
-          onChange={onChange}
-        />
-      </Label>
+      </div>
+      <input
+        className={styles.input}
+        disabled={uploading}
+        type="file"
+        id="avatar"
+        name="avatar"
+        ref={ref}
+        onChange={onChange}
+      />
     </Field>
   );
 }
