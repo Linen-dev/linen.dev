@@ -7,6 +7,7 @@ import {
   InboxProps,
   apiGetChannelProps,
   apiGetThreadProps,
+  SerializedThread,
 } from '@linen/types';
 export { shallow } from 'zustand/shallow';
 
@@ -20,15 +21,20 @@ interface LinenState {
   permissions: Permissions | undefined;
   settings: Settings | undefined;
   channels: SerializedChannel[];
+  setChannels: (props: SerializedChannel[]) => void;
   dms: SerializedChannel[];
-  channelProps: apiGetChannelProps | undefined;
+  channelProps:
+    | Omit<apiGetChannelProps, 'channelName' | 'currentChannel' | 'threads'>
+    | undefined;
+  currentChannel: SerializedChannel | undefined;
   setChannelProps: (props: apiGetChannelProps) => void;
   threadProps: apiGetThreadProps | undefined;
   setThreadsProps: (props: apiGetThreadProps) => void;
   inboxProps: inboxProps | undefined;
   setInboxProps: (props: InboxProps, communityName: string) => void;
   setCommunities: (props: SerializedAccount[]) => void;
-  setChannels: (props: SerializedChannel[]) => void;
+  threads: SerializedThread[];
+  setThreads: (props: SerializedThread[]) => void;
 }
 
 export const useLinenStore = create<LinenState>()((set, get) => ({
@@ -40,20 +46,22 @@ export const useLinenStore = create<LinenState>()((set, get) => ({
   settings: undefined,
   channels: [],
   dms: [],
+  threads: [],
   channelProps: undefined,
-  setChannelProps: (channelProps: apiGetChannelProps) => {
-    const { channelName } = channelProps;
-    set({ channelProps, channelName });
+  currentChannel: undefined,
+  setChannelProps: (channelProps) => {
+    const { channelName, currentChannel, threads } = channelProps;
+    set({ channelProps, channelName, currentChannel, threads });
   },
   threadProps: undefined,
-  setThreadsProps: (threadProps: apiGetThreadProps) => {
+  setThreadsProps: (threadProps) => {
     set({
       threadProps,
       channelName: threadProps.currentChannel.channelName,
     });
   },
   inboxProps: undefined,
-  setInboxProps: (props: InboxProps, communityName: string) => {
+  setInboxProps: (props, communityName) => {
     const {
       channels,
       permissions,
@@ -79,5 +87,8 @@ export const useLinenStore = create<LinenState>()((set, get) => ({
   },
   setChannels: (props) => {
     set({ channels: props });
+  },
+  setThreads: (props) => {
+    set({ threads: props });
   },
 }));

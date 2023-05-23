@@ -1,19 +1,19 @@
-import NavBar from '@linen/ui/NavBar';
-import useMode from '@linen/hooks/mode';
-import InternalLink from '@/components/InternalLink';
-import { mockedFunction } from '@/mock';
-import { useLinenStore, shallow } from '@/store';
-import { api } from '@/fetcher';
-import Loading from '@/components/Loading';
-import customUsePath from '@/hooks/usePath';
-import { getHomeUrl, sendNotification } from '@/di';
-import CustomRouterPush from '@/components/CustomRouterPush';
 import { useNavigate, useLocation } from 'react-router-dom';
+import useMode from '@linen/hooks/mode';
+import { useUsersContext } from '@linen/contexts/Users';
+import NavBar from '@linen/ui/NavBar';
+import OnChannelDrop from '@linen/ui/OnChannelDrop';
+import { api } from '@/fetcher';
+import { useLinenStore, shallow } from '@/store';
+import { getHomeUrl, sendNotification } from '@/di';
+import customUsePath from '@/hooks/usePath';
+import InternalLink from '@/components/InternalLink';
+import Loading from '@/components/Loading';
+import CustomRouterPush from '@/components/CustomRouterPush';
 
 export default function NavLeftBar() {
   const navigate = useNavigate();
   const location = useLocation();
-
   const { mode } = useMode();
   const {
     channels,
@@ -24,6 +24,9 @@ export default function NavLeftBar() {
     communityName,
     communities,
     dms,
+    currentChannel,
+    threads,
+    setThreads,
   } = useLinenStore(
     (state) => ({
       channels: state.channels,
@@ -34,9 +37,13 @@ export default function NavLeftBar() {
       communityName: state.communityName,
       communities: state.communities,
       dms: state.dms,
+      currentChannel: state.currentChannel,
+      threads: state.threads,
+      setThreads: state.setThreads,
     }),
     shallow
   );
+  const [allUsers] = useUsersContext();
 
   if (!settings || !currentCommunity || !permissions || !communityName)
     return <Loading />;
@@ -62,8 +69,18 @@ export default function NavLeftBar() {
         navigate,
       })}
       routerAsPath={location.pathname}
-      // TODO:
-      onDrop={mockedFunction}
+      onDrop={
+        currentChannel
+          ? OnChannelDrop({
+              setThreads,
+              currentCommunity,
+              api,
+              currentChannel,
+              threads,
+              allUsers,
+            })
+          : () => {}
+      }
     />
   );
 }

@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import ChannelView from '@linen/ui/ChannelView';
 import { useUsersContext } from '@linen/contexts/Users';
-import { useLinenStore } from '@/store';
+import { shallow, useLinenStore } from '@/store';
 import Loading from '@/components/Loading';
 import { api } from '@/fetcher';
 import { useQuery } from '@tanstack/react-query';
@@ -60,14 +60,21 @@ function View() {
     settings,
     channelName,
     communityName,
-  } = useLinenStore((state) => ({
-    channelProps: state.channelProps,
-    currentCommunity: state.currentCommunity,
-    permissions: state.permissions,
-    settings: state.settings,
-    channelName: state.channelName,
-    communityName: state.communityName,
-  }));
+    currentChannel,
+    threads,
+  } = useLinenStore(
+    (state) => ({
+      channelProps: state.channelProps,
+      currentCommunity: state.currentCommunity,
+      permissions: state.permissions,
+      settings: state.settings,
+      channelName: state.channelName,
+      communityName: state.communityName,
+      currentChannel: state.currentChannel,
+      threads: state.threads,
+    }),
+    shallow
+  );
 
   if (
     !communityName ||
@@ -75,7 +82,8 @@ function View() {
     !currentCommunity ||
     !permissions ||
     !settings ||
-    !channelName
+    !channelName ||
+    !currentChannel
   )
     return <Loading />;
 
@@ -85,13 +93,13 @@ function View() {
       currentCommunity={currentCommunity}
       permissions={permissions}
       settings={settings}
-      currentChannel={channelProps.currentChannel}
+      currentChannel={currentChannel}
       isBot={false}
       isSubDomainRouting={false}
       nextCursor={channelProps.nextCursor}
       pathCursor={channelProps.pathCursor}
       pinnedThreads={channelProps.pinnedThreads}
-      threads={channelProps.threads}
+      threads={threads}
       useUsersContext={useUsersContext}
       api={api}
       playNotificationSound={playNotificationSound}

@@ -134,6 +134,7 @@
     "./NewChannelModal": "./dist/NewChannelModal/index.js",
     "./NewCommunityModal": "./dist/NewCommunityModal/index.js",
     "./NewDmModal": "./dist/NewDmModal/index.js",
+    "./OnChannelDrop": "./dist/OnChannelDrop/index.js",
     "./OnboardingForm": "./dist/OnboardingForm/index.js",
     "./Pages": "./dist/Pages/index.js",
     "./Pagination": "./dist/Pagination/index.js",
@@ -394,6 +395,9 @@
       ],
       "NewDmModal": [
         "./dist/NewDmModal/index.d.ts"
+      ],
+      "OnChannelDrop": [
+        "./dist/OnChannelDrop/index.d.ts"
       ],
       "OnboardingForm": [
         "./dist/OnboardingForm/index.d.ts"
