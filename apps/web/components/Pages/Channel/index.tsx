@@ -1,5 +1,9 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { useEffect, useState } from 'react';
+import {
+  useEffect,
+  useState,
+  useLayoutEffect as useClientLayoutEffect,
+} from 'react';
 import PageLayout from 'components/layout/PageLayout';
 import { buildChannelSeo } from 'utilities/seo';
 import { SerializedThread, SerializedUser, ChannelProps } from '@linen/types';
@@ -12,6 +16,10 @@ import { useJoinContext } from 'contexts/Join';
 import usePath from 'hooks/path';
 import ChannelForBots from 'components/Bots/ChannelForBots';
 import { playNotificationSound } from 'utilities/playNotificationSound';
+import { scrollToBottom } from '@linen/utilities/scroll';
+
+const useLayoutEffect =
+  typeof window !== 'undefined' ? useClientLayoutEffect : () => {};
 
 export default function Channel(props: ChannelProps) {
   if (props.isBot) {
@@ -39,6 +47,15 @@ export default function Channel(props: ChannelProps) {
   useEffect(() => {
     setCurrentChannel(initialChannel);
   }, [initialChannel]);
+
+  useLayoutEffect(() => {
+    setThreads(initialThreads);
+
+    const node = document.getElementById('sidebar-layout-left');
+    if (node) {
+      setTimeout(() => scrollToBottom(node), 0);
+    }
+  }, [initialThreads]);
 
   function onChannelDrop({
     source,
@@ -181,7 +198,7 @@ export default function Channel(props: ChannelProps) {
         permissions={props.permissions}
         pinnedThreads={props.pinnedThreads}
         settings={props.settings}
-        threads={props.threads}
+        threads={threads}
         queryIntegration={router.query.integration}
         api={api}
         useJoinContext={useJoinContext}
