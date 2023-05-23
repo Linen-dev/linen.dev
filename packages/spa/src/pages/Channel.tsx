@@ -10,6 +10,7 @@ import { useEffect } from 'react';
 import { localStorage } from '@linen/utilities/storage';
 import customUsePath from '@/hooks/usePath';
 import HandleError from '@/components/HandleError';
+import startSignUp from '@/utils/startSignUp';
 
 type ChannelPageProps = {
   communityName: string;
@@ -105,7 +106,7 @@ function View() {
       playNotificationSound={playNotificationSound}
       usePath={customUsePath({ communityName })}
       routerPush={navigate}
-      useJoinContext={() => ({})} // used for sign ups
+      startSignUp={startSignUp({ permissions, reload: () => navigate(0) })}
       // TODO:
       queryIntegration={false}
     />

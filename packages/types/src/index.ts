@@ -91,3 +91,17 @@ export enum Period {
   Monthly = 'monthly',
   Yearly = 'yearly',
 }
+
+export type StartSignUpProps = {
+  flow?: AuthFlow;
+  communityId: string;
+  onSignIn?: onSignInType;
+};
+export type onSignInType = {
+  run: Function;
+  init: any;
+  params: any;
+};
+export type AuthFlow = 'signup' | 'signin';
+
+export type StartSignUpFn = (props: StartSignUpProps) => any;

@@ -15,6 +15,7 @@ import {
   ThreadState,
   Permissions,
   UploadedFile,
+  StartSignUpProps,
 } from '@linen/types';
 import { ChannelContext } from '@linen/contexts/channel';
 import debounce from '@linen/utilities/debounce';
@@ -37,13 +38,13 @@ export default function ChannelView({
   pathCursor,
   isBot,
   permissions,
-  useJoinContext,
   queryIntegration,
   playNotificationSound,
   useUsersContext,
   usePath,
   routerPush,
   api,
+  startSignUp,
 }: {
   settings: Settings;
   channelName: string;
@@ -59,15 +60,13 @@ export default function ChannelView({
   pathCursor: string | null;
   isBot: boolean;
   permissions: Permissions;
-  useJoinContext: () => {
-    startSignUp?: any;
-  };
   queryIntegration?: any;
   playNotificationSound: (volume: number) => Promise<void>;
   useUsersContext(): any;
   usePath(options: any): any;
   routerPush(path: string): void;
   api: ApiClient;
+  startSignUp: (props: StartSignUpProps) => Promise<void>;
 }) {
   const viewport = useViewport();
   const [threads, setThreads] = useState<SerializedThread[]>(initialThreads);
@@ -853,7 +852,6 @@ export default function ChannelView({
   return (
     <ChannelContext.Provider value={currentChannel}>
       <Content
-        useJoinContext={useJoinContext}
         queryIntegration={queryIntegration}
         playNotificationSound={playNotificationSound}
         useUsersContext={useUsersContext}
@@ -892,6 +890,7 @@ export default function ChannelView({
         onThreadMessage={onSocket}
         token={token}
         pathCursor={pathCursor}
+        startSignUp={startSignUp}
       />
     </ChannelContext.Provider>
   );

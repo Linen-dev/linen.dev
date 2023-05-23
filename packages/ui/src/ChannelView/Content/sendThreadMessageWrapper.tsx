@@ -5,6 +5,7 @@ import {
   SerializedAccount,
   UploadedFile,
   SerializedMessage,
+  StartSignUpProps,
 } from '@linen/types';
 import debounce from '@linen/utilities/debounce';
 import { createMessageImitation } from './utilities/message';
@@ -26,7 +27,7 @@ export function sendThreadMessageWrapper({
   setThreads: React.Dispatch<React.SetStateAction<SerializedThread[]>>;
   currentThreadId: string | undefined;
   currentCommunity: SerializedAccount;
-  startSignUp?: (...args: any) => void;
+  startSignUp: (props: StartSignUpProps) => Promise<void>;
   api: ApiClient;
 }) {
   return async ({
@@ -50,9 +51,11 @@ export function sendThreadMessageWrapper({
             setThreads,
             currentThreadId,
             currentCommunity,
+            api,
           },
           params: {
             message,
+            files,
             channelId,
             threadId,
           },

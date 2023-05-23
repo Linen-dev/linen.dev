@@ -4,7 +4,6 @@ import { SerializedUser, UploadedFile } from '@linen/types';
 import styles from './index.module.scss';
 
 interface Props {
-  communityId: string;
   channelId: string;
   currentUser?: SerializedUser | null;
   onDrop({
@@ -37,7 +36,6 @@ interface Props {
 
 export default function Chat({
   channelId,
-  communityId,
   currentUser,
   progress,
   uploading,

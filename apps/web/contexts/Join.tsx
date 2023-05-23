@@ -5,28 +5,22 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import SignUp from 'pages/signup';
 import SignIn from 'pages/signin';
 import { SignInMode } from 'components/Auth';
+import {
+  AuthFlow,
+  StartSignUpFn,
+  StartSignUpProps,
+  onSignInType,
+} from '@linen/types';
 
 const Context = createContext<{
-  startSignUp?: StartSignUpFn;
-}>({});
+  startSignUp: StartSignUpFn;
+}>({
+  startSignUp: () => {},
+});
 
 type Props = {
   children: React.ReactNode;
 };
-
-type StartSignUpProps = {
-  flow?: AuthFlow;
-  communityId: string;
-  onSignIn?: onSignInType;
-};
-type onSignInType = {
-  run: Function;
-  init: any;
-  params: any;
-};
-type AuthFlow = 'signup' | 'signin';
-
-export type StartSignUpFn = (props: StartSignUpProps) => any;
 
 export const JoinContext = ({ children }: Props) => {
   const [open, setOpen] = useState(false);

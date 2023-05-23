@@ -39,7 +39,7 @@ export default function Channel(props: ChannelProps) {
   } = props;
 
   const router = useRouter();
-
+  const { startSignUp } = useJoinContext();
   const [allUsers] = useUsersContext();
   const [currentChannel, setCurrentChannel] = useState(initialChannel);
   const [threads, setThreads] = useState<SerializedThread[]>(initialThreads);
@@ -99,7 +99,7 @@ export default function Channel(props: ChannelProps) {
         threads={threads}
         queryIntegration={router.query.integration}
         api={api}
-        useJoinContext={useJoinContext}
+        startSignUp={startSignUp}
         playNotificationSound={playNotificationSound}
         useUsersContext={useUsersContext}
         usePath={usePath}

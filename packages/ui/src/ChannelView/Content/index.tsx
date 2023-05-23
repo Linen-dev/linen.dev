@@ -19,6 +19,7 @@ import {
   SerializedReadStatus,
   SerializedThread,
   Settings,
+  StartSignUpProps,
   ThreadState,
   UploadedFile,
 } from '@linen/types';
@@ -121,15 +122,13 @@ interface Props {
   }): Promise<void>;
   editMessage({ id, body }: { id: string; body: string }): Promise<void>;
   updateThread({ state, title }: { state?: ThreadState; title?: string }): void;
-  useJoinContext: () => {
-    startSignUp?: any;
-  };
   queryIntegration?: string;
   playNotificationSound: (volume: number) => Promise<void>;
   useUsersContext(): any;
   usePath(options: any): any;
   routerPush(path: string): void;
   api: ApiClient;
+  startSignUp: (props: StartSignUpProps) => Promise<void>;
 }
 
 const UPDATE_READ_STATUS_INTERVAL_IN_MS = 30000;
@@ -175,13 +174,13 @@ export default function Channel({
   onThreadMessage,
   sendReaction,
   // injection
-  useJoinContext,
   queryIntegration,
   playNotificationSound,
   useUsersContext,
   usePath,
   routerPush,
   api,
+  startSignUp,
 }: Props) {
   const [collapsed, setCollapsed] = useState(false);
   const [isInfiniteScrollLoading, setInfiniteScrollLoading] = useState(false);
@@ -196,7 +195,6 @@ export default function Channel({
   const [uploading, setUploading] = useState(false);
   const [uploads, setUploads] = useState<UploadedFile[]>([]);
   const [allUsers] = useUsersContext();
-  const { startSignUp } = useJoinContext();
   const { mode } = useMode();
   const [editedThread, setEditedThread] = useState<SerializedThread>();
   const [modal, setModal] = useState<ModalView>(
@@ -593,7 +591,6 @@ export default function Channel({
                   <>
                     {!currentCommunity.communityInviteUrl && (
                       <Chat
-                        communityId={currentCommunity.id}
                         channelId={currentChannel.id}
                         currentUser={currentUser}
                         onDrop={handleDrop}

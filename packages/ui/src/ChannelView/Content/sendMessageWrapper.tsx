@@ -4,6 +4,7 @@ import {
   SerializedUser,
   SerializedAccount,
   UploadedFile,
+  StartSignUpProps,
 } from '@linen/types';
 import { scrollToBottom } from '@linen/utilities/scroll';
 import debounce from '@linen/utilities/debounce';
@@ -28,7 +29,7 @@ export function sendMessageWrapper({
   setThreads: any;
   scrollableRootRef: any;
   currentCommunity: SerializedAccount;
-  startSignUp?: (...args: any) => void;
+  startSignUp: (props: StartSignUpProps) => Promise<void>;
   api: ApiClient;
 }) {
   return async ({
@@ -50,12 +51,17 @@ export function sendMessageWrapper({
           init: {
             allUsers,
             currentChannel,
+            setUploads,
             setThreads,
             scrollableRootRef,
             currentCommunity,
+            startSignUp,
+            api,
           },
           params: {
             message,
+            title,
+            files,
             channelId,
           },
         },
