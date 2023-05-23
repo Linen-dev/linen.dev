@@ -9,6 +9,7 @@ import { playNotificationSound } from '@/utils/playNotificationSound';
 import { useEffect } from 'react';
 import { localStorage } from '@linen/utilities/storage';
 import customUsePath from '@/hooks/usePath';
+import HandleError from '@/components/HandleError';
 
 type ChannelPageProps = {
   communityName: string;
@@ -45,7 +46,7 @@ export default function ChannelPage() {
     return <Loading />;
   }
   if (error) {
-    return <>An error has occurred: {JSON.stringify(error)}</>;
+    return HandleError(error);
   }
   return <View />;
 }

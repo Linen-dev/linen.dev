@@ -81,7 +81,10 @@ ssrRouter.get(
       [...channels, ...dms, ...privateChannels],
       channelName
     );
-    if (!channel) return NotFound();
+    if (!channel) {
+      res.status(404);
+      return res.end();
+    }
 
     const { nextCursor, threads } = await getThreads({
       channelId: channel.id,

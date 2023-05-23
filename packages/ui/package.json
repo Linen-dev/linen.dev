@@ -98,6 +98,7 @@
     "./EditMessageModal": "./dist/EditMessageModal/index.js",
     "./EditThreadModal": "./dist/EditThreadModal/index.js",
     "./EmailField": "./dist/EmailField/index.js",
+    "./Error": "./dist/Error/index.js",
     "./FadeIn": "./dist/FadeIn/index.js",
     "./Field": "./dist/Field/index.js",
     "./FileInput": "./dist/FileInput/index.js",
@@ -285,6 +286,9 @@
       ],
       "EmailField": [
         "./dist/EmailField/index.d.ts"
+      ],
+      "Error": [
+        "./dist/Error/index.d.ts"
       ],
       "FadeIn": [
         "./dist/FadeIn/index.d.ts"

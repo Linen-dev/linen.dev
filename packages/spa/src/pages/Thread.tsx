@@ -7,6 +7,7 @@ import { api } from '@/fetcher';
 import { useQuery } from '@tanstack/react-query';
 import { localStorage } from '@linen/utilities/storage';
 import { useEffect } from 'react';
+import HandleError from '@/components/HandleError';
 
 type ThreadPageProps = {
   communityName: string;
@@ -36,7 +37,7 @@ export default function ThreadPage() {
     return <Loading />;
   }
   if (error) {
-    return <>An error has occurred: {JSON.stringify(error)}</>;
+    return HandleError(error);
   }
   return <View />;
 }

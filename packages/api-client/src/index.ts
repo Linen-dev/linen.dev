@@ -41,6 +41,18 @@ import type {
 } from '@linen/types';
 export { AxiosRequestConfig };
 
+class HttpError extends Error {
+  status: number = 0;
+  error: string = '';
+  description: string | undefined;
+  constructor(status: number, error: string, description?: string) {
+    super();
+    this.status = status;
+    this.error = error;
+    this.description = description;
+  }
+}
+
 export default class ApiClient {
   instance: AxiosInstance;
 
@@ -65,15 +77,18 @@ export default class ApiClient {
 
   catchError = (e: { response: any }) => {
     const { response } = e;
-    console.error(e);
     if (!response || response.status >= 500) {
-      throw new Error('An internal error occurred. Please try again');
+      throw new HttpError(
+        500,
+        'InternalServerError',
+        'An internal error occurred. Please try again'
+      );
     } else {
-      if (response.data?.message?.includes('missing or invalid')) {
-        throw new Error('Request failed: incomplete data.');
-      } else {
-        throw new Error(response.data?.message || e);
-      }
+      throw new HttpError(
+        response.status,
+        response.statusText,
+        response.data?.message
+      );
     }
   };
 

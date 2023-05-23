@@ -3,6 +3,7 @@ import Loading from '@/components/Loading';
 import { useLinenStore } from '@/store';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@/fetcher';
+import HandleError from '@/components/HandleError';
 
 export default function RequireManagerAuth({
   children,
@@ -29,7 +30,7 @@ export default function RequireManagerAuth({
   }
 
   if (error) {
-    return <>An error has occurred: {JSON.stringify(error)}</>;
+    return HandleError(error);
   }
 
   if (!data.permissions.manage) {
