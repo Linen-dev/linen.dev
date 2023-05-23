@@ -116,7 +116,7 @@ export default function DesktopNavBar({
   const token = permissions.token || null;
 
   const [highlights, setHighlights] = useState<string[]>([]);
-  const [collapsed, setCollapsed] = useState(!currentUser);
+  const [collapsed, setCollapsed] = useState(!userId);
   const [showSettings, toggleSettings] = useState(isSettingsPath());
   const [modal, setModal] = useState<ModalView>(ModalView.NONE);
   const [editedChannel, setEditedChannel] = useState<SerializedChannel>();
@@ -191,7 +191,7 @@ export default function DesktopNavBar({
     <div className={styles.container}>
       <div className={styles.switch}>
         <MenuIcon onClick={() => setCollapsed((collapsed) => !collapsed)} />
-        {currentUser && (
+        {userId && (
           <>
             {communities?.map((community) => {
               return (
@@ -205,7 +205,7 @@ export default function DesktopNavBar({
             })}
           </>
         )}
-        {currentUser && (
+        {userId && (
           <>
             <AddCommunityLink
               onClick={() => setModal(ModalView.NEW_COMMUNITY)}
