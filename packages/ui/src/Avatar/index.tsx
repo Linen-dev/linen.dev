@@ -15,7 +15,7 @@ interface Props {
   placeholder?: boolean;
 }
 
-export type Size = 'sm' | 'md';
+export type Size = 'sm' | 'md' | 'xl';
 export type Shadow = 'none' | 'sm';
 
 function dimensions(size?: Size) {

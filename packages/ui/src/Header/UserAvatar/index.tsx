@@ -53,7 +53,11 @@ export default function UserAvatar({ currentUser, signOut, api }: Props) {
         }
         items={userNavigation}
       />
-      <Modal open={mode === Mode.Profile} close={() => setMode(Mode.Menu)}>
+      <Modal
+        open={mode === Mode.Profile}
+        close={() => setMode(Mode.Menu)}
+        size="lg"
+      >
         <ProfileForm
           currentUser={currentUser}
           api={api}
