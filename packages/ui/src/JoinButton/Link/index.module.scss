@@ -10,8 +10,7 @@
 .highlight {
   align-items: center;
   background: var(--color-primary);
-  border: 1px solid var(--color-primary);
-  color: var(--color-text);
+  color: white;
   border-radius: 32px;
   display: flex;
   font-size: 0.875rem;
@@ -24,19 +23,16 @@
 }
 
 .highlight:hover {
-  background: rgba(var(--color-primary), 0.9);
-  border-color: rgba(var(--color-primary), 0.9);
+  background: var(--color-blue-800);
 }
 
 .highlight.lighter {
   background: var(--color-background);
-  border: 1px solid var(--color-border);
   color: var(--color-text);
 }
 
 .highlight.lighter:hover {
-  background: var(--color-slate-200);
-  border-color: var(--color-slate-200);
+  background: var(--color-gray-100);
 }
 
 @media screen and (max-width: 1023px) {
