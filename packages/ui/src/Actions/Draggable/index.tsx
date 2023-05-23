@@ -31,13 +31,12 @@ export default function Draggable({
       document.getElementById('drag-image') || document.createElement('div');
     node.id = 'drag-image';
     node.style.position = 'absolute';
-    node.style.background = '#0855f4';
-    node.style.borderRadius = '4px';
+    node.style.background = '#1d4ed8';
     node.style.boxShadow = '0 3px 5px #ccc';
     node.style.color = 'white';
     node.style.display = 'flex';
     node.style.alignItems = 'center';
-    node.style.fontWeight = 'bold';
+    node.style.fontWeight = '500';
     node.style.fontSize = '14px';
     node.style.padding = '0.5rem 1rem';
     node.style.left = '-999px';

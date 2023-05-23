@@ -1,7 +1,10 @@
-.dragged {
+.hover > div {
   background-color: var(--color-blue-50) !important;
 }
 
-.hover {
-  background-color: var(--color-blue-50);
+
+@media (prefers-color-scheme: dark) {
+  .hover > div {
+    background-color: var(--color-blue-900) !important;
+  }
 }
