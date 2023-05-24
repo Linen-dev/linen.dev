@@ -42,7 +42,11 @@ type Props = {
   magicLinkStrategy: MagicLoginStrategy;
   githubSignIn: (state?: string) => any;
   prefix: string;
-  onCredentialsLogin: (req: Request, res: Response) => Promise<void>;
+  onCredentialsLogin: (
+    req: Request,
+    res: Response,
+    user: User
+  ) => Promise<void>;
   onMagicLinkLogin: (req: Request, res: Response, user: User) => Promise<void>;
   onGithubLogin: (req: Request, res: Response, user: User) => Promise<void>;
   onSignOut: (req: Request, res: Response) => Promise<void>;
@@ -92,7 +96,7 @@ export function CreateRouter({
       // persist cookies for SSR
       setSessionCookies({ token, req, res });
       // ===
-      await onCredentialsLogin(req, res);
+      await onCredentialsLogin(req, res, logged_user);
 
       if (req.query.sso) {
         const state = await createSsoSession(logged_user.id, encrypt(token));

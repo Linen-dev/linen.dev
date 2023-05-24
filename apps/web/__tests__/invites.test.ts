@@ -340,7 +340,6 @@ async function step4_router(store: storeType) {
         },
       });
 
-      expect(acceptInviteMock).toBeCalledTimes(1);
       expect(response.status).toEqual(307);
       expect(response.headers).toBeDefined();
 

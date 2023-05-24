@@ -3,7 +3,7 @@ import { login } from '__tests__/pages/api/auth/login';
 import { create } from '@linen/factory';
 
 export async function createUser(accountId: string, role: string) {
-  const creds = { email: v4(), password: v4() };
+  const creds = { email: v4() + '@linen.dev', password: v4() };
   const auth = await create('auth', { ...creds });
   const user = await create('user', {
     accountsId: accountId,

@@ -10,8 +10,20 @@ import {
 import jwtMiddleware from 'server/middlewares/jwt';
 import { ApiEvent, trackApiEvent } from 'utilities/ssr-metrics';
 import { normalize } from '@linen/utilities/string';
-import { joinCommunityAfterSignIn } from 'services/invites';
+import {
+  acceptInvite,
+  findInvitesByEmail,
+  joinCommunityAfterSignIn,
+} from 'services/invites';
 import { createSsoSession, getSsoSession } from 'services/sso';
+
+async function acceptInvites(userEmail: string) {
+  // accept invites
+  const invites = await findInvitesByEmail(userEmail);
+  for (const invite of invites) {
+    await acceptInvite(invite.id, userEmail).catch(console.error);
+  }
+}
 
 const prefix = '/api/auth';
 
@@ -22,15 +34,14 @@ const authRouter = CreateRouter({
   loginPassport,
   magicLink,
   magicLinkStrategy,
-  onCredentialsLogin: async (req, res) => {
+  onCredentialsLogin: async (req, res, user) => {
+    await acceptInvites(user.email);
     await trackApiEvent({ req, res }, ApiEvent.sign_in, {
       provider: 'credentials',
     });
   },
   onGithubLogin: async (req, res, user) => {
-    await trackApiEvent({ req, res }, ApiEvent.sign_in, {
-      provider: 'github',
-    });
+    await acceptInvites(user.email);
     if (user.state) {
       // join community
       await joinCommunityAfterSignIn({
@@ -44,14 +55,14 @@ const authRouter = CreateRouter({
         profileImageUrl: user.profileImageUrl,
       });
     }
+    await trackApiEvent({ req, res }, ApiEvent.sign_in, {
+      provider: 'github',
+    });
   },
   onMagicLinkLogin: async (req, res, user) => {
-    await trackApiEvent({ req, res }, ApiEvent.sign_in, {
-      provider: 'magic-link',
-    });
     const state = user.state;
     const displayName = normalize(user.displayName || user.email);
-
+    await acceptInvites(user.email);
     if (state) {
       // join community
       await joinCommunityAfterSignIn({
@@ -62,6 +73,9 @@ const authRouter = CreateRouter({
         displayName,
       });
     }
+    await trackApiEvent({ req, res }, ApiEvent.sign_in, {
+      provider: 'magic-link',
+    });
   },
   onSignOut: async (req, res) => {
     await trackApiEvent({ req, res }, ApiEvent.sign_out);
