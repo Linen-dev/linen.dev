@@ -4,6 +4,7 @@ import { InboxProps } from '@linen/types';
 import { localStorage } from '@linen/utilities/storage';
 import InboxView from '@linen/ui/InboxView';
 import { api } from 'utilities/requests';
+import { useUsersContext } from '@linen/contexts/Users';
 
 export default function Inbox({
   channels,
@@ -39,6 +40,7 @@ export default function Inbox({
         permissions={permissions}
         settings={settings}
         dms={dms}
+        useUsersContext={useUsersContext}
       />
     </PageLayout>
   );

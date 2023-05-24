@@ -14,12 +14,12 @@ import {
   InboxConfig,
   Selections,
   InboxResponse,
+  SerializedUser,
 } from '@linen/types';
 import type { ApiClient } from '@linen/api-client';
 import usePolling from '@linen/hooks/polling';
 import useKeyboard from '@linen/hooks/keyboard';
 import useInboxWebsockets from '@linen/hooks/websockets-inbox';
-import { useUsersContext } from '@linen/contexts/Users';
 import { localStorage } from '@linen/utilities/storage';
 import debounce from '@linen/utilities/debounce';
 import Layouts from '@/Layouts';
@@ -48,6 +48,7 @@ interface Props {
   permissions: Permissions;
   settings: Settings;
   api: ApiClient;
+  useUsersContext: () => [SerializedUser[], any];
 }
 
 const LIMIT = 10;
@@ -66,6 +67,7 @@ export default function InboxView({
   settings,
   dms,
   api,
+  useUsersContext,
 }: Props) {
   const [loading, setLoading] = useState(true);
   const [inbox, setInbox] = useState<InboxResponse>({ threads: [], total: 0 });

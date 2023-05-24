@@ -6,7 +6,6 @@ import Thread from '@/Thread';
 import Empty from './Empty';
 import { sendMessageWrapper } from './utilities/sendMessageWrapper';
 import useKeyboard from '@linen/hooks/keyboard';
-import { useUsersContext } from '@linen/contexts/Users';
 import {
   ReminderTypes,
   SerializedMessage,
@@ -16,6 +15,7 @@ import {
   Permissions,
   SerializedAccount,
   AllResponse,
+  SerializedUser,
 } from '@linen/types';
 import { addMessageToThread } from './state';
 import debounce from '@linen/utilities/debounce';
@@ -31,6 +31,7 @@ interface Props {
   permissions: Permissions;
   settings: Settings;
   api: ApiClient;
+  useUsersContext: () => [SerializedUser[], any];
 }
 
 const LIMIT = 10;
@@ -41,6 +42,7 @@ export default function AllView({
   permissions,
   settings,
   api,
+  useUsersContext,
 }: Props) {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<AllResponse>({ threads: [], total: 0 });

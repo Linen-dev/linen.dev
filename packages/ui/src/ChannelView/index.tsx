@@ -62,7 +62,7 @@ export default function ChannelView({
   permissions: Permissions;
   queryIntegration?: any;
   playNotificationSound: (volume: number) => Promise<void>;
-  useUsersContext(): any;
+  useUsersContext: () => [SerializedUser[], any];
   usePath(options: any): any;
   routerPush(path: string): void;
   api: ApiClient;

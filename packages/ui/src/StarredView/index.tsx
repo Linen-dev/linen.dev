@@ -8,10 +8,10 @@ import type {
   Permissions,
   SerializedAccount,
   StarredResponse,
+  SerializedUser,
 } from '@linen/types';
 import type { ApiClient } from '@linen/api-client';
 import useKeyboard from '@linen/hooks/keyboard';
-import { useUsersContext } from '@linen/contexts/Users';
 import debounce from '@linen/utilities/debounce';
 import { postReaction } from '@linen/ast';
 import Layouts from '@/Layouts';
@@ -32,6 +32,7 @@ interface Props {
   permissions: Permissions;
   settings: Settings;
   api: ApiClient;
+  useUsersContext: () => [SerializedUser[], any];
 }
 
 const LIMIT = 10;
@@ -42,6 +43,7 @@ export default function Content({
   permissions,
   settings,
   api,
+  useUsersContext,
 }: Props) {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<StarredResponse>({ threads: [], total: 0 });

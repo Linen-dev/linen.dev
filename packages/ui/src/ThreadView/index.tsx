@@ -4,6 +4,7 @@ import {
   SerializedAccount,
   SerializedChannel,
   SerializedThread,
+  SerializedUser,
   Settings,
 } from '@linen/types';
 import Content from './Content';
@@ -20,7 +21,7 @@ interface Props {
   threadUrl: string | null;
   settings: Settings;
   useJoinContext(): any;
-  useUsersContext(): any;
+  useUsersContext: () => [SerializedUser[], any];
   api: ApiClient;
 }
 

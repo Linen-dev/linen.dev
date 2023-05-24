@@ -5,6 +5,7 @@ import Loading from '@/components/Loading';
 import { api } from '@/fetcher';
 import { useEffect } from 'react';
 import { localStorage } from '@linen/utilities/storage';
+import { useUsersContext } from '@linen/contexts/Users';
 
 type AllPageProps = {
   communityName: string;
@@ -29,6 +30,7 @@ export default function AllPage() {
       permissions={inboxProps.permissions}
       settings={inboxProps.settings}
       api={api}
+      useUsersContext={useUsersContext}
     />
   );
 }

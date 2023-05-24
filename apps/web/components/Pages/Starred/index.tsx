@@ -9,6 +9,7 @@ import type {
 import { localStorage } from '@linen/utilities/storage';
 import { api } from 'utilities/requests';
 import StarredView from '@linen/ui/StarredView';
+import { useUsersContext } from '@linen/contexts/Users';
 
 export interface Props {
   channels: SerializedChannel[];
@@ -52,6 +53,7 @@ export default function Starred({
         permissions={permissions}
         settings={settings}
         api={api}
+        useUsersContext={useUsersContext}
       />
     </PageLayout>
   );
