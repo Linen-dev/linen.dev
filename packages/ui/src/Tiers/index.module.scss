@@ -17,15 +17,16 @@
   transition: 0.2s ease background, 0.2s ease color;
 }
 
-.button:hover,
 .button.active {
   background: var(--color-primary);
-  color: var(--color-text);
+  color: white;
 }
 
+.button:hover,
 .button.active:hover {
-  background: rgba(var(--color-primary), 0.9);
-  color: var(--color-text);
+  background: var(--color-blue-800);
+  border: 2px solid var(--color-blue-800);
+  color: white;
 }
 
 .list {
