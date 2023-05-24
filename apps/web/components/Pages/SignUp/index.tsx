@@ -25,6 +25,7 @@ export interface SignUpProps {
   withLayout: boolean;
   showSignIn?: (mode: SignInMode) => void;
   onSignIn?: () => void;
+  sso?: string;
 }
 
 export default function SignUp({
@@ -34,6 +35,7 @@ export default function SignUp({
   withLayout = true,
   showSignIn,
   onSignIn,
+  sso,
   ...props
 }: SignUpProps) {
   const [mode, setMode] = useState<SignInMode>(props.mode || 'magic');
@@ -53,8 +55,15 @@ export default function SignUp({
           state,
           onSignIn,
           callbackUrl,
+          sso,
         })
-      : onSignUpWithMagicLink({ setError, setLoading, callbackUrl, state });
+      : onSignUpWithMagicLink({
+          setError,
+          setLoading,
+          callbackUrl,
+          state,
+          sso,
+        });
 
   return (
     <Layout header="Sign Up">
@@ -102,6 +111,7 @@ export default function SignUp({
                     state,
                     email,
                     mode: 'creds',
+                    sso,
                   })}`;
               }}
               className={AnchorCss}
@@ -123,6 +133,7 @@ export default function SignUp({
                       state,
                       email,
                       mode: 'magic',
+                      sso,
                     })}`;
                 }}
                 className={AnchorCss}
@@ -143,6 +154,7 @@ export default function SignUp({
                       callbackUrl,
                       email,
                       mode: 'creds',
+                      sso,
                     })}`;
                 }}
                 className={AnchorCss}

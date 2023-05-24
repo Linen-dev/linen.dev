@@ -122,11 +122,13 @@ export function onSignUpWithMagicLink({
   setLoading,
   callbackUrl,
   state,
+  sso,
 }: {
   setError: (arg: string) => void;
   setLoading: (arg: boolean) => void;
   callbackUrl?: string;
   state?: string;
+  sso?: string;
 }) {
   return async (event: any) => {
     event.preventDefault();
@@ -147,6 +149,7 @@ export function onSignUpWithMagicLink({
         callbackUrl,
         displayName,
         state,
+        sso,
       });
       window.location.href = '/verify-request';
     } catch (error: any) {
@@ -163,12 +166,14 @@ export function onSignUpWithCredsSubmit({
   state,
   onSignIn,
   callbackUrl,
+  sso,
 }: {
   setError: (arg: string) => void;
   setLoading: (arg: boolean) => void;
   state?: string;
   onSignIn?: () => void;
   callbackUrl?: string;
+  sso?: string;
 }) {
   return async (event: any) => {
     event.preventDefault();
@@ -203,7 +208,15 @@ export function onSignUpWithCredsSubmit({
 
       const csrfToken = form?.csrfToken?.value || (await getCsrfToken());
 
-      await signInWithCreds(email, password, csrfToken);
+      const signInResponse = await signInWithCreds(
+        email,
+        password,
+        csrfToken,
+        sso
+      );
+      if (sso) {
+        callbackUrl += `?state=${signInResponse.state}`;
+      }
       if (onSignIn) {
         onSignIn();
       } else {

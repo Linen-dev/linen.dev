@@ -43,3 +43,5 @@ export const sendNotification = async (
     playNotificationSound(0.2);
   }
 };
+
+export const buildOrigin = (path: string) => 'linenapp://' + path;

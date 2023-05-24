@@ -22,3 +22,6 @@ export const sendNotification = async (
 ) => {
   // TODO
 };
+
+export const buildOrigin = (path: string) =>
+  `${window.location.origin}/${path}`;

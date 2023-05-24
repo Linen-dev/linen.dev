@@ -20,6 +20,7 @@ import ConfigurationsPage from '@/pages/Configurations';
 import MembersPage from '@/pages/Members';
 import PlansPage from '@/pages/Plans';
 import MetricsPage from '@/pages/Metrics';
+import SignUp from '@/pages/SignUp';
 
 export default function Router() {
   const isCustomDomain = false;
@@ -30,6 +31,11 @@ export default function Router() {
         {
           path: '/signin',
           element: <SignIn />,
+          errorElement: <ErrorPage />,
+        },
+        {
+          path: '/signup',
+          element: <SignUp />,
           errorElement: <ErrorPage />,
         },
 
