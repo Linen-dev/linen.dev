@@ -1,4 +1,5 @@
 import React from 'react';
+import classNames from 'classnames';
 import { addHttpsToUrl } from '@linen/utilities/url';
 import { pickTextColorBasedOnBgColor } from '@linen/utilities/colors';
 import type {
@@ -36,6 +37,7 @@ interface Props {
   usePath: (args: { href: string }) => string;
   api: ApiClient;
   handleSelect: (message: SerializedSearchMessage) => void;
+  logoClassName?: string;
 }
 
 function isWhiteColor(color: string) {
@@ -56,6 +58,7 @@ export default function Header({
   usePath,
   api,
   handleSelect,
+  logoClassName,
 }: Props) {
   const brandColor = currentCommunity.brandColor || 'var(--color-navbar)';
   const fontColor = pickTextColorBasedOnBgColor(brandColor, 'white', 'black');
@@ -72,7 +75,7 @@ export default function Header({
       }}
     >
       <Link
-        className={styles.logo}
+        className={classNames(styles.logo, logoClassName)}
         href={homeUrl || '/'}
         passHref
         target="_blank"
