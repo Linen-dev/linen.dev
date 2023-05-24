@@ -150,7 +150,7 @@ export async function slackChatSync({
     let body = text;
     mentions.forEach((mention) => {
       body = body.replace(
-        mention.usersId,
+        `@${mention.usersId}`,
         mention.users.displayName || mention.users.id
       );
     });
