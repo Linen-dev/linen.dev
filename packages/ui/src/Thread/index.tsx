@@ -255,11 +255,9 @@ export default function Thread({
                 )}
               </span>
             </div>
-          </div>
-          <div className={styles.info}>
+            {ChannelButton({ thread, isSubDomainRouting, settings })}
             {threadUrl && (
               <>
-                {ChannelButton({ thread, isSubDomainRouting, settings })}
                 <JoinChannelLink
                   className={styles.link}
                   href={threadUrl}
