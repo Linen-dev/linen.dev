@@ -8,6 +8,7 @@ import {
   threads,
   users,
   prisma,
+  mentions,
 } from '@linen/database';
 import request from 'superagent';
 
@@ -113,7 +114,16 @@ export async function slackChatSync({
 
   const message = await prisma.messages.findUnique({
     where: { id: messageId },
-    include: { author: true, threads: true, attachments: true },
+    include: {
+      author: true,
+      threads: true,
+      attachments: true,
+      mentions: {
+        include: {
+          users: true,
+        },
+      },
+    },
   });
   if (!message) {
     return 'message not found';
@@ -128,8 +138,27 @@ export async function slackChatSync({
   const token = slackToken.accessToken;
   const externalChannelId = channel.externalChannelId!;
 
+  // to get best matching format
+  // it would be better to parse the message and
+  // stringify it to the slack format
+  // we don't have a slack stringifier yet due to time constraints
+  // so let's make a naive id replace
+  function replaceMentionsWithDisplayName(text: string, mentions: any[]) {
+    if (!mentions || mentions.length === 0) {
+      return text;
+    }
+    let body = text;
+    mentions.forEach((mention) => {
+      body = body.replace(
+        mention.usersId,
+        mention.users.displayName || mention.users.id
+      );
+    });
+    return body;
+  }
+
   const body = [
-    message.body,
+    replaceMentionsWithDisplayName(message.body, message.mentions),
     ...message.attachments.map((a) => a.internalUrl),
   ].join('\n');
 
