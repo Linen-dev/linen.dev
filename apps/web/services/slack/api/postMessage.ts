@@ -3,14 +3,11 @@ import {
   channels,
   channelsIntegration,
   discordAuthorizations,
-  messages,
   slackAuthorizations,
-  threads,
-  users,
   prisma,
-  mentions,
 } from '@linen/database';
 import request from 'superagent';
+import { replaceMentionsWithDisplayName } from './utilities/mentions';
 
 type AuthorUser = {
   username: string;
@@ -137,24 +134,6 @@ export async function slackChatSync({
 
   const token = slackToken.accessToken;
   const externalChannelId = channel.externalChannelId!;
-
-  // to get best matching format
-  // it would be better to parse the message and
-  // stringify it to the slack format
-  // we don't have a slack stringifier yet due to time constraints
-  // so let's make a naive id replace
-  function replaceMentionsWithDisplayName(text: string, mentions: any[]) {
-    if (!mentions || mentions.length === 0) {
-      return text;
-    }
-    let body = text;
-    mentions.forEach((mention) => {
-      if (mention.users.displayName) {
-        body = body.replace(`@${mention.usersId}`, mention.users.displayName);
-      }
-    });
-    return body;
-  }
 
   const body = [
     replaceMentionsWithDisplayName(message.body, message.mentions),
