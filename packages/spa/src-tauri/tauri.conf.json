@@ -52,10 +52,11 @@
       {
         "fullscreen": false,
         "resizable": true,
-        "title": "linen.dev",
+        "title": "",
         "width": 800,
         "height": 600,
-        "maximized": true
+        "maximized": true,
+        "titleBarStyle": "overlay"
       }
     ]
   }

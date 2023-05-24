@@ -48,6 +48,7 @@ export default function NavTopBar() {
           permissions={permissions}
           settings={settings}
           currentCommunity={currentCommunity}
+          logoClassName={styles.logo}
           // component injection
           api={api}
           Link={InternalLink({ communityName })}
