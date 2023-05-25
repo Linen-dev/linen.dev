@@ -140,7 +140,12 @@ export default function SignIn({
           )}
         </div>
         <div className="my-5"></div>
-        <GitHubButton flow="sign-in" callbackUrl={callbackUrl} state={state} />
+        <GitHubButton
+          flow="sign-in"
+          callbackUrl={callbackUrl}
+          state={state}
+          sso={props.sso}
+        />
       </form>
     </Layout>
   );

@@ -166,7 +166,12 @@ export default function SignUp({
           )}
         </div>
         <div className="my-5"></div>
-        <GitHubButton flow="sign-up" callbackUrl={callbackUrl} state={state} />
+        <GitHubButton
+          flow="sign-up"
+          callbackUrl={callbackUrl}
+          state={state}
+          sso={sso}
+        />
       </form>
     </Layout>
   );

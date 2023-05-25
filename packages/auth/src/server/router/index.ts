@@ -152,6 +152,9 @@ export function CreateRouter({
           const decryptedState = decrypt(state);
           const parsedState = JSON.parse(decryptedState);
 
+          if (parsedState.sso) {
+            return next();
+          }
           if (parsedState.origin) {
             // delete origin from state
             const state = JSON.stringify({
@@ -177,7 +180,7 @@ export function CreateRouter({
         }
 
         let callbackUrl = '/'; // page redirect
-
+        let sso;
         const logged_user = req.user as LoggedUser;
 
         const state = req.query.state;
@@ -191,6 +194,8 @@ export function CreateRouter({
           if (parsedState.state) {
             logged_user.state = parsedState.state;
           }
+
+          sso = parsedState.sso;
         }
 
         const token = await signToken({
@@ -202,6 +207,12 @@ export function CreateRouter({
         // ===
 
         await onGithubLogin(req, res, logged_user);
+
+        if (!!sso) {
+          const state = await createSsoSession(logged_user.id, encrypt(token));
+          res.redirect(`${callbackUrl}?${qs({ state })}`);
+          return res.end();
+        }
 
         return res.redirect(callbackUrl);
       }
@@ -226,6 +237,7 @@ export function CreateRouter({
         callbackUrl: req.query.callbackUrl,
         state: req.query.state,
         origin: req.query.origin,
+        sso: req.query.sso,
       });
       const encryptedState = encrypt(state);
       return githubSignIn(encryptedState)(req, res, next);

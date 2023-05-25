@@ -6,10 +6,12 @@ export default function GitHubButton({
   flow,
   callbackUrl,
   state,
+  sso,
 }: {
   flow: 'sign-in' | 'sign-up';
   callbackUrl?: string;
   state?: string;
+  sso?: string;
 }) {
   return (
     <Button
@@ -20,6 +22,7 @@ export default function GitHubButton({
           callbackUrl,
           state,
           origin: window.location.origin,
+          sso,
         })}`;
       }}
       color="black"
