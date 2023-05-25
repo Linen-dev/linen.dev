@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { baseLinen } from '@/config';
-import { callbackUrl, openExternal } from '@/di';
+import di from '@/di';
 import LinenLogo from '@linen/ui/LinenLogo';
 
 export default function SignIn() {
@@ -41,8 +41,8 @@ export default function SignIn() {
 }
 
 function redirectToSignIn() {
-  openExternal(
-    `${baseLinen}/signin?sso=1&callbackUrl=${encodeURI(callbackUrl())}`
+  di.openExternal(
+    `${baseLinen}/signin?sso=1&callbackUrl=${encodeURI(di.callbackUrl())}`
   );
 }
 

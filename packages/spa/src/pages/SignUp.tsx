@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { baseLinen } from '@/config';
 import LinenLogo from '@linen/ui/LinenLogo';
 import { qs } from '@linen/utilities/url';
-import { openExternal, buildOrigin } from '@/di';
+import di from '@/di';
 import { cleanUpStorage } from '@linen/auth/client';
 
 export default function SignUp() {
@@ -38,8 +38,8 @@ export default function SignUp() {
 function redirectToSignUp(params: any) {
   const query = {
     sso: 1,
-    callbackUrl: encodeURI(`${buildOrigin('signin')}`),
+    callbackUrl: encodeURI(`${di.buildExternalOrigin('signin')}`),
     ...params,
   };
-  openExternal(`${baseLinen}/signup?${qs(query)}`);
+  di.openExternal(`${baseLinen}/signup?${qs(query)}`);
 }

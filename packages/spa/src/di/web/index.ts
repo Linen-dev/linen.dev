@@ -1,27 +1,32 @@
-import { SerializedAccount } from '@linen/types';
+import type { SerializedAccount } from '@linen/types';
+import type { DI } from '@/di/types';
 
-export const openExternal = async (url: string) => {
-  window.location.href = url;
+const Web: DI = {
+  openExternal: async (url: string) => {
+    window.location.href = url;
+  },
+  listenDeepLink: async (callback: (...args: any) => any) => {},
+
+  buildExternalOrigin: (path: string) => `${window.location.origin}/${path}`,
+
+  callbackUrl: () => window.location.href,
+
+  getHomeUrl: (community: SerializedAccount) =>
+    `${window.location.origin}/s/${
+      community.slackDomain || community.discordDomain
+    }`,
+
+  requestNotificationPermission: async () => {
+    // TODO
+  },
+
+  sendNotification: async (body: string, title: string = 'Linen.dev') => {
+    // TODO
+  },
+
+  buildInternalUrl: (path: string) => {
+    return `/${path}`;
+  },
 };
-export const listenDeepLink = async (callback: (...args: any) => any) => {};
 
-export const callbackUrl = () => window.location.href;
-
-export const getHomeUrl = (community: SerializedAccount) =>
-  `${window.location.origin}/s/${
-    community.slackDomain || community.discordDomain
-  }`;
-
-export const requestNotificationPermission = async () => {
-  // TODO
-};
-
-export const sendNotification = async (
-  body: string,
-  title: string = 'Linen.dev'
-) => {
-  // TODO
-};
-
-export const buildOrigin = (path: string) =>
-  `${window.location.origin}/${path}`;
+export default Web;

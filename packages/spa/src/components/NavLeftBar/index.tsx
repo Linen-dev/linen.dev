@@ -5,7 +5,7 @@ import NavBar from '@linen/ui/NavBar';
 import OnChannelDrop from '@linen/ui/OnChannelDrop';
 import { api } from '@/fetcher';
 import { useLinenStore, shallow } from '@/store';
-import { getHomeUrl, sendNotification } from '@/di';
+import di from '@/di';
 import customUsePath from '@/hooks/usePath';
 import InternalLink from '@/components/InternalLink';
 import Loading from '@/components/Loading';
@@ -59,9 +59,9 @@ export default function NavLeftBar() {
       dms={dms}
       // components injection
       Link={InternalLink({ communityName })}
-      getHomeUrl={getHomeUrl}
+      getHomeUrl={di.getHomeUrl}
       usePath={customUsePath({ communityName })}
-      notify={(body: string) => sendNotification(body)}
+      notify={(body: string) => di.sendNotification(body)}
       CustomRouterPush={CustomRouterPush({
         communityName,
         communityType: settings.communityType,

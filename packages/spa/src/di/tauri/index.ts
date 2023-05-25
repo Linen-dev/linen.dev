@@ -3,45 +3,51 @@ import { listen } from '@tauri-apps/api/event';
 import {
   isPermissionGranted,
   requestPermission,
-  sendNotification as tauriSendNotification,
+  sendNotification,
 } from '@tauri-apps/api/notification';
-import { SerializedAccount } from '@linen/types';
-import { playNotificationSound } from '../../utils/playNotificationSound';
+import type { SerializedAccount } from '@linen/types';
+import { playNotificationSound } from '@/utils/playNotificationSound';
+import type { DI } from '@/di/types';
 
-export const openExternal = async (url: string) => {
-  await open(url);
+const Tauri: DI = {
+  openExternal: async (url: string) => {
+    await open(url);
+  },
+
+  listenDeepLink: async (callback: (...args: any) => any) => {
+    await listen('scheme-request-received', callback);
+  },
+
+  buildExternalOrigin: (path: string) => 'linenapp://' + path,
+
+  callbackUrl: () => 'linenapp://signin',
+
+  getHomeUrl: (community: SerializedAccount) =>
+    `/s/${community.slackDomain || community.discordDomain}`,
+
+  requestNotificationPermission: async () => {
+    let permissionGranted = await isPermissionGranted();
+    if (!permissionGranted) {
+      const permission = await requestPermission();
+      permissionGranted = permission === 'granted';
+      localStorage.setItem(
+        'linen.tauri.permissionRequested',
+        String(permissionGranted)
+      );
+    }
+  },
+
+  sendNotification: async (body: string, title: string = 'Linen.dev') => {
+    let permissionGranted = await isPermissionGranted();
+    if (permissionGranted) {
+      sendNotification({ title, body });
+      playNotificationSound(0.2);
+    }
+  },
+
+  buildInternalUrl: (path: string) => {
+    return `/${path}`;
+  },
 };
 
-export const listenDeepLink = async (callback: (...args: any) => any) => {
-  await listen('scheme-request-received', callback);
-};
-
-export const callbackUrl = () => 'linenapp://signin';
-
-export const getHomeUrl = (community: SerializedAccount) =>
-  `/s/${community.slackDomain || community.discordDomain}`;
-
-export const requestNotificationPermission = async () => {
-  let permissionGranted = await isPermissionGranted();
-  if (!permissionGranted) {
-    const permission = await requestPermission();
-    permissionGranted = permission === 'granted';
-    localStorage.setItem(
-      'linen.tauri.permissionRequested',
-      String(permissionGranted)
-    );
-  }
-};
-
-export const sendNotification = async (
-  body: string,
-  title: string = 'Linen.dev'
-) => {
-  let permissionGranted = await isPermissionGranted();
-  if (permissionGranted) {
-    tauriSendNotification({ title, body });
-    playNotificationSound(0.2);
-  }
-};
-
-export const buildOrigin = (path: string) => 'linenapp://' + path;
+export default Tauri;
