@@ -8,7 +8,7 @@
   },
   "package": {
     "productName": "linen-app",
-    "version": "0.0.9"
+    "version": "0.0.10"
   },
   "tauri": {
     "allowlist": {
@@ -56,7 +56,7 @@
         "width": 800,
         "height": 600,
         "maximized": true,
-        "titleBarStyle": "overlay"
+        "titleBarStyle": "Overlay"
       }
     ]
   }
