@@ -5,7 +5,7 @@ import PoweredByLinen from '@/PoweredByLinen';
 export default function Footer() {
   return (
     <footer className={styles.footer}>
-      <PoweredByLinen />
+      <PoweredByLinen className={styles.text} />
     </footer>
   );
 }
