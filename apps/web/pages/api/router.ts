@@ -3,7 +3,7 @@ import Session from 'services/session';
 import { prisma } from '@linen/database';
 import { Roles } from '@linen/types';
 import { findAuthByEmail } from 'services/users';
-import { getHomeUrl } from '@linen/utilities/home';
+import { getHomeRedirectUrl } from '@linen/utilities/home';
 import { serializeAccount } from '@linen/serializers/account';
 import { acceptInvite, findInvitesByEmail } from 'services/invites';
 
@@ -49,7 +49,7 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
 
     const account = serializeAccount(user.account);
 
-    const url = getHomeUrl(account);
+    const url = getHomeRedirectUrl(account);
 
     if (account.id === communityId) {
       if (channelId) {
