@@ -20,6 +20,7 @@ import { communitiesWithLogo } from 'services/accounts';
 import CommunityCard from '@linen/ui/CommunityCard';
 import { serializeAccount } from '@linen/serializers/account';
 import { SerializedAccount } from '@linen/types';
+import styles from './index.module.scss';
 
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(' ');
@@ -119,12 +120,12 @@ const Home = ({ accounts }: Props) => {
         />
       </Head>
 
-      <div className="max-w-rxl mx-auto px-2 sm:px-6">
-        <div className="flex justify-between items-center border-b-2 border-gray-100 dark:border-gray-700 py-2 md:justify-start md:space-x-10">
+      <div className="max-w-rxl mx-auto px-4 sm:px-6">
+        <div className="flex justify-between items-center border-b-2 border-gray-100 dark:border-gray-700 py-4 md:justify-start md:space-x-10">
           <div className="flex justify-start lg:w-0 lg:flex-1">
             <Link legacyBehavior href="/" passHref>
               <a>
-                <LinenLogo />
+                <LinenLogo className={styles.logo} />
               </a>
             </Link>
           </div>
@@ -141,13 +142,13 @@ const Home = ({ accounts }: Props) => {
           </a>
           <div className="flex items-center justify-end md:flex-1 lg:w-0">
             <Link legacyBehavior href="/signin" passHref>
-              <a className="mr-4 whitespace-nowrap text-base font-medium text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100">
+              <a className="whitespace-nowrap text-base font-medium text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100">
                 Sign in
               </a>
             </Link>
-            <div className="hidden md:block">
+            <div className="hidden md:block ml-8">
               <Link legacyBehavior href="/signup" passHref>
-                <a className="ml-4 whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-blue-600 hover:bg-blue-700">
+                <a className="whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-blue-600 hover:bg-blue-700">
                   Get Started
                 </a>
               </Link>
@@ -316,7 +317,7 @@ const Home = ({ accounts }: Props) => {
             <button>
               <a
                 href="https://linen.dev/communities"
-                className="flex items-center justify-center border border-transparent text-base font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 md:py-4 md:text-lg md:px-10"
+                className="flex items-center justify-center border border-transparent text-base font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 py-4 text-lg px-10"
                 target="_blank"
                 rel="noreferrer"
               >
