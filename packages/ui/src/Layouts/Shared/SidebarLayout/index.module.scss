@@ -3,14 +3,10 @@
   color: var(--color-text);
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 54px);
+  height: 100%;
   overflow: auto;
   position: relative;
-  width: 100vw;
-
-  @media (min-width: 1024px) {
-    width: 100%;
-  }
+  width: 100%;
 }
 
 .left::-webkit-scrollbar {
