@@ -585,7 +585,7 @@ export default function Channel({
                       settings={settings}
                       page={pathCursor ? Number(pathCursor) : null}
                     />
-                    <Footer />
+                    {!currentUser && <Footer />}
                   </>
                 ) : (
                   <>
@@ -609,7 +609,7 @@ export default function Channel({
                         }}
                       />
                     )}
-                    <Footer />
+                    {!currentUser && <Footer />}
                   </>
                 )
               }
