@@ -204,6 +204,46 @@ export default function Channel({
 
   const currentUser = permissions.user || null;
 
+  async function loadMore(next: boolean = false) {
+    const key = next ? 'next' : 'prev';
+    const dir = next ? 'bottom' : 'top';
+    if (isInfiniteScrollLoading) return;
+    if (!cursor[key]) return;
+    try {
+      setInfiniteScrollLoading(true);
+      if (cursor[key]) {
+        const data = await api.getThreads({
+          channelId: currentChannel.id,
+          cursor: cursor[key] || undefined,
+          accountId: currentCommunity.id,
+        });
+        if (!data) return;
+        setCursor({ ...cursor, [key]: data?.nextCursor?.[key] });
+        if (next) {
+          setThreads((threads) => [...threads, ...data.threads]);
+        } else {
+          setThreads((threads) => [...data.threads, ...threads]);
+        }
+      }
+
+      const index = dir === 'top' ? 0 : threads.length;
+      const id = threads[index].id;
+      setTimeout(() => {
+        scrollToIdTop(id);
+        setInfiniteScrollLoading(false);
+      }, 10);
+    } catch (err) {
+      setError({ ...error, [key]: err });
+      setInfiniteScrollLoading(false);
+    }
+  }
+
+  async function loadMoreNext() {
+    return loadMore(true);
+  }
+  const debouncedLoadMore = debounce(loadMore);
+  const debouncedLoadMoreNext = debounce(loadMoreNext);
+
   const debouncedGetReadStatus = debounce(api.getReadStatus);
 
   const debouncedUpdateReadStatus = debounce(api.updateReadStatus);
@@ -290,16 +330,16 @@ export default function Channel({
   const [infiniteTopRef, { rootRef: topRootRef }] = useInfiniteScroll({
     loading: isInfiniteScrollLoading,
     hasNextPage: !!cursor.prev,
-    onLoadMore: loadMore,
-    disabled: !!error?.prev || !cursor.prev,
+    onLoadMore: debouncedLoadMore,
+    disabled: !!error?.prev || !cursor.prev || isInfiniteScrollLoading,
     rootMargin: '0px 0px 0px 0px',
   });
 
   const [infiniteBottomRef, { rootRef: bottomRootRef }] = useInfiniteScroll({
     loading: isInfiniteScrollLoading,
     hasNextPage: !!cursor.next,
-    onLoadMore: loadMoreNext,
-    disabled: !!error?.next || !cursor.next,
+    onLoadMore: debouncedLoadMoreNext,
+    disabled: !!error?.next || !cursor.next || isInfiniteScrollLoading,
     rootMargin: '0px 0px 0px 0px',
   });
 
@@ -348,51 +388,13 @@ export default function Channel({
   function scrollToIdTop(id: string) {
     const scrollableRoot = scrollableRootRef.current;
     if (scrollableRoot) {
-      setTimeout(() => {
-        const node = document.getElementById(id);
-        if (node) {
-          node.scrollIntoView();
-          scrollableRoot.scrollTop =
-            scrollableRoot.scrollTop - scrollableRoot.offsetTop;
-        }
-      }, 0);
-    }
-  }
-
-  async function loadMore(next: boolean = false) {
-    const key = next ? 'next' : 'prev';
-    const dir = next ? 'bottom' : 'top';
-    if (isInfiniteScrollLoading) return;
-    if (!cursor[key]) return;
-    try {
-      setInfiniteScrollLoading(true);
-      if (cursor[key]) {
-        const data = await api.getThreads({
-          channelId: currentChannel.id,
-          cursor: cursor[key] || undefined,
-          accountId: currentCommunity.id,
-        });
-        if (!data) return;
-        setCursor({ ...cursor, [key]: data?.nextCursor?.[key] });
-        if (next) {
-          setThreads((threads) => [...threads, ...data.threads]);
-        } else {
-          setThreads((threads) => [...data.threads, ...threads]);
-        }
+      const node = document.getElementById(id);
+      if (node) {
+        node.scrollIntoView();
+        scrollableRoot.scrollTop =
+          scrollableRoot.scrollTop - scrollableRoot.offsetTop;
       }
-
-      const index = dir === 'top' ? 0 : threads.length;
-      const id = threads[index].id;
-      scrollToIdTop(id);
-    } catch (err) {
-      setError({ ...error, [key]: err });
-    } finally {
-      setInfiniteScrollLoading(false);
     }
-  }
-
-  async function loadMoreNext() {
-    loadMore(true);
   }
 
   const sendMessage = sendMessageWrapper({
