@@ -47,6 +47,16 @@ export function rewrite({
   pathname: string;
   url: NextURL;
 }) {
+  function isLocalIpAddress(hostname: string | null) {
+    if (!hostname) {
+      return false;
+    }
+    return hostname.startsWith('192.168.1.');
+  }
+  if (isLocalIpAddress(hostname)) {
+    return;
+  }
+
   if (pathname === '/sitemap.xml') {
     return {
       rewrite: `${LINEN_STATIC_CDN}/sitemap/${cleanLinenHost(
