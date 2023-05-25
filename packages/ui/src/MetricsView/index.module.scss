@@ -1,7 +1,7 @@
 .container {
   background: var(--color-background);
   color: var(--color-text);
-  max-height: calc(100vh - 54px);
+  max-height: calc(100dvh - 54px);
   overflow-x: hidden;
   overflow-y: scroll;
   width: 100%;
