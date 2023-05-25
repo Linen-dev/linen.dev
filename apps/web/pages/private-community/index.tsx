@@ -309,7 +309,7 @@ const Home = ({ accounts }: Props) => {
             <button>
               <a
                 href="https://linen.dev/communities"
-                className="flex items-center justify-center border border-transparent text-base font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 md:py-4 md:text-lg md:px-10"
+                className="flex items-center justify-center border border-transparent text-base font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 py-4 text-lg px-10"
                 target="_blank"
                 rel="noreferrer"
               >
