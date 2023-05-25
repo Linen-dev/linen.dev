@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import Toast from '@/Toast';
 import useWebsockets from '@linen/hooks/websockets';
 import useKeyboard from '@linen/hooks/keyboard';
-import { useViewport } from '@linen/hooks/useViewport';
 import { localStorage } from '@linen/utilities/storage';
 import {
   ReminderTypes,
@@ -68,16 +67,13 @@ export default function ChannelView({
   api: ApiClient;
   startSignUp: (props: StartSignUpProps) => Promise<void>;
 }) {
-  const viewport = useViewport();
   const [threads, setThreads] = useState<SerializedThread[]>(initialThreads);
   const [pinnedThreads, setPinnedThreads] =
     useState<SerializedThread[]>(initialPinnedThreads);
   const [currentChannel, setCurrentChannel] = useState(initialChannel);
   const [allUsers] = useUsersContext();
 
-  const [currentThreadId, setCurrentThreadId] = useState<string | undefined>(
-    viewport === 'desktop' ? threads[threads.length - 1]?.id : undefined
-  );
+  const [currentThreadId, setCurrentThreadId] = useState<string | undefined>();
 
   const debouncedUpserUserThreadStatus = debounce(api.upsertUserThreadStatus);
 
@@ -86,10 +82,7 @@ export default function ChannelView({
 
   useEffect(() => {
     setThreads(initialThreads);
-    if (viewport === 'desktop') {
-      setCurrentThreadId(initialThreads[initialThreads.length - 1]?.id);
-    }
-  }, [initialThreads, viewport]);
+  }, [initialThreads]);
 
   useEffect(() => {
     setPinnedThreads(initialPinnedThreads);
