@@ -308,7 +308,7 @@ export default function DesktopNavBar({
               Link={Link}
             />
           </div>
-          {currentUser && <PoweredByLinen />}
+          {!currentUser && <PoweredByLinen />}
         </Nav>
       </div>
       {editedChannel && (
