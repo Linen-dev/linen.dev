@@ -36,6 +36,10 @@ body::-webkit-scrollbar-thumb:hover {
   background: var(--color-gray-300);
 }
 
+body {
+  overscroll-behavior: none;
+}
+
 a {
   color: inherit;
   text-decoration: none;
