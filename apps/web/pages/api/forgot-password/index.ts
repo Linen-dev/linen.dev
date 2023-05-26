@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next/types';
 import ResetPasswordMailer from 'mailers/ResetPasswordMailer';
 import { generateToken } from 'utilities/token';
 import { prisma } from '@linen/database';
-import { getCurrentUrl } from '@linen/utilities/domain';
+import { getHostFromHeaders } from '@linen/utilities/domain';
 import { cors, preflight } from 'utilities/cors';
 
 async function create(request: NextApiRequest, response: NextApiResponse) {
@@ -29,7 +29,7 @@ async function create(request: NextApiRequest, response: NextApiResponse) {
 
     await ResetPasswordMailer.send({
       to: email,
-      host: getCurrentUrl(request),
+      host: getHostFromHeaders(request.headers),
       token,
     });
   } catch (exception) {

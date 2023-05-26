@@ -1,4 +1,4 @@
-import { getCurrentUrl } from '@linen/utilities/domain';
+import { getHostFromHeaders } from '@linen/utilities/domain';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { createInvitation, updateInvitation } from 'services/invites';
 import PermissionsService from 'services/permissions';
@@ -39,9 +39,8 @@ export default async function handler(
     return response.status(401).json({});
   }
 
-  const host = addHttpsToUrl(
-    request.headers.origin || request.headers.host || getCurrentUrl(request)
-  );
+  const host = addHttpsToUrl(getHostFromHeaders(request.headers));
+  console.log('request.headers', request.headers);
 
   if (request.method === 'POST') {
     const { communityId, email, role }: PostProps = body;

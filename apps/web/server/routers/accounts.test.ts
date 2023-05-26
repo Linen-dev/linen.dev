@@ -12,7 +12,7 @@ import * as domain from '@linen/utilities/domain';
 
 const host = 'http://localhost';
 jest.mock('services/customerIo/trackEvents');
-jest.spyOn(domain, 'getCurrentUrl').mockReturnValue(host);
+jest.spyOn(domain, 'getHostFromHeaders').mockReturnValue(host);
 const mockSend = jest.spyOn(InviteToJoinMailer, 'send').mockImplementation();
 const random = () => 's' + (Math.random() + 1).toString(36).substring(2);
 const randomEmail = () => random() + '@' + random() + '.com';

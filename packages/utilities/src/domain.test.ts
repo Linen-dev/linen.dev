@@ -1,12 +1,27 @@
 import {
-  getCurrentUrl,
+  getHostFromHeaders,
   isSubdomainbasedRouting,
   isSubdomainNotAllowed,
 } from './domain';
 
-describe('#getCurrentUrl', () => {
-  it('returns http://localhost:3000 in local env', () => {
-    expect(getCurrentUrl()).toBe(process.env.NEXTAUTH_URL);
+describe('#getHostFromHeaders', () => {
+  it('returns NEXTAUTH_URL', () => {
+    expect(getHostFromHeaders()).toBe(process.env.NEXTAUTH_URL);
+  });
+
+  it('when request is from desktop, it returns NEXTAUTH_URL', () => {
+    expect(
+      getHostFromHeaders({
+        origin: 'tauri://localhost',
+      })
+    ).toBe(process.env.NEXTAUTH_URL);
+  });
+  it('returns localhost', () => {
+    expect(
+      getHostFromHeaders({
+        host: 'localhost',
+      })
+    ).toBe('localhost');
   });
 });
 

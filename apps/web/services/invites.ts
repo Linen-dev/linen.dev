@@ -6,7 +6,7 @@ import PermissionsService from './permissions';
 import { Unauthorized } from 'server/exceptions';
 import { serializeEmail } from '@linen/serializers/email';
 import unique from 'lodash.uniq';
-import { getCurrentUrl } from '@linen/utilities/domain';
+import { getHostFromHeaders } from '@linen/utilities/domain';
 
 export async function createInvitation({
   createdByUserId,
@@ -345,7 +345,7 @@ export async function inviteNewMembers({
         createdByUserId: ownerUser.id,
         email,
         accountId,
-        host: getCurrentUrl(),
+        host: getHostFromHeaders(),
         role: Roles.MEMBER,
       });
     }

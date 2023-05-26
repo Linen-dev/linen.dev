@@ -13,11 +13,24 @@ export function isLinenDomain(host?: string) {
   );
 }
 
-export function getCurrentUrl(request?: any) {
+export function getHostFromHeaders(headers?: {
+  host?: string;
+  origin?: string;
+}) {
+  if (process.env.NODE_ENV === 'development') {
+    return `localhost:${process.env.PORT ?? 3000}`;
+  }
+  if (
+    headers?.origin?.startsWith('tauri://') ||
+    headers?.origin?.startsWith('linenapp://')
+  ) {
+    return process.env.NEXTAUTH_URL || 'www.linen.dev';
+  }
   return (
+    headers?.origin ||
+    headers?.host ||
     process.env.NEXTAUTH_URL ||
-    request?.headers?.origin ||
-    'http://localhost:3000'
+    'www.linen.dev'
   );
 }
 
