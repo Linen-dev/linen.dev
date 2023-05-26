@@ -187,6 +187,7 @@ export default function Channel({
   const [isLeftScrollAtBottom, setIsLeftScrollAtBottom] = useState(true);
   const [readStatus, setReadStatus] = useState<SerializedReadStatus>();
   const scrollableRootRef = useRef<HTMLDivElement | null>(null);
+  const lastScrollDistanceToBottomRef = useRef<number>();
   const rightRef = useRef<HTMLDivElement>(null);
   const leftBottomRef = useRef<HTMLDivElement>(null);
   const [cursor, setCursor] = useState(nextCursor);
@@ -203,6 +204,12 @@ export default function Channel({
   const membersPath = usePath({ href: '/members' });
 
   const currentUser = permissions.user || null;
+
+  useEffect(() => {
+    if (!isInfiniteScrollLoading) {
+      scrollDown();
+    }
+  }, [isInfiniteScrollLoading]);
 
   async function loadMore(next: boolean = false) {
     const key = next ? 'next' : 'prev';
@@ -226,12 +233,7 @@ export default function Channel({
         }
       }
 
-      const index = dir === 'top' ? 0 : threads.length;
-      const id = threads[index].id;
-      setTimeout(() => {
-        scrollToIdTop(id);
-        setInfiniteScrollLoading(false);
-      }, 10);
+      setInfiniteScrollLoading(false);
     } catch (err) {
       setError({ ...error, [key]: err });
       setInfiniteScrollLoading(false);
@@ -360,6 +362,8 @@ export default function Channel({
     const rootNode = scrollableRootRef.current;
     if (rootNode) {
       setIsLeftScrollAtBottom(isScrollAtBottom(rootNode));
+      const scrollDistanceToBottom = rootNode.scrollHeight - rootNode.scrollTop;
+      lastScrollDistanceToBottomRef.current = scrollDistanceToBottom;
     }
   };
 
@@ -385,15 +389,13 @@ export default function Channel({
     setModal(ModalView.EDIT_THREAD);
   }
 
-  function scrollToIdTop(id: string) {
+  function scrollDown() {
     const scrollableRoot = scrollableRootRef.current;
+    const lastScrollDistanceToBottom =
+      lastScrollDistanceToBottomRef.current ?? 0;
     if (scrollableRoot) {
-      const node = document.getElementById(id);
-      if (node) {
-        node.scrollIntoView();
-        scrollableRoot.scrollTop =
-          scrollableRoot.scrollTop - scrollableRoot.offsetTop;
-      }
+      scrollableRoot.scrollTop =
+        scrollableRoot.scrollHeight - lastScrollDistanceToBottom;
     }
   }
 
