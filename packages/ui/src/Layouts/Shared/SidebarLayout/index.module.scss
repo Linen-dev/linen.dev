@@ -7,6 +7,8 @@
   overflow: auto;
   position: relative;
   width: 100%;
+  scroll-behavior: auto;
+  overscroll-behavior: none;
 }
 
 .left::-webkit-scrollbar {

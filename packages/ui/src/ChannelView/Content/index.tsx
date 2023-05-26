@@ -1,5 +1,12 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  useLayoutEffect as useClientLayoutEffect,
+} from 'react';
 import useInfiniteScroll from 'react-infinite-scroll-hook';
+import NProgress from 'nprogress';
 import Thread from '@/Thread';
 import Header from './Header';
 import Empty from './Empty';
@@ -48,6 +55,11 @@ import IntegrationsModalUI from '@/IntegrationsModal';
 import { copyToClipboard } from '@linen/utilities/clipboard';
 import MembersModal from '@/MembersModal';
 import PaginationNumbers from '@/PaginationNumbers';
+import { useViewport } from '@linen/hooks/useViewport';
+import Spinner from '@/Spinner';
+
+const useLayoutEffect =
+  typeof window !== 'undefined' ? useClientLayoutEffect : () => {};
 
 const { SidebarLayout } = Layouts.Shared;
 
@@ -185,6 +197,7 @@ export default function Channel({
   const [collapsed, setCollapsed] = useState(false);
   const [isInfiniteScrollLoading, setInfiniteScrollLoading] = useState(false);
   const [isLeftScrollAtBottom, setIsLeftScrollAtBottom] = useState(true);
+  const [isScrolling, setIsScrolling] = useState(true);
   const [readStatus, setReadStatus] = useState<SerializedReadStatus>();
   const scrollableRootRef = useRef<HTMLDivElement | null>(null);
   const lastScrollDistanceToBottomRef = useRef<number>();
@@ -202,19 +215,23 @@ export default function Channel({
     queryIntegration ? ModalView.INTEGRATIONS : ModalView.NONE
   );
   const membersPath = usePath({ href: '/members' });
+  const viewport = useViewport();
 
   const currentUser = permissions.user || null;
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!isInfiniteScrollLoading) {
       scrollDown();
+      setTimeout(() => setIsScrolling(false), 10);
+      viewport === 'mobile' && NProgress.done();
+    } else {
+      viewport === 'mobile' && NProgress.start();
     }
-  }, [isInfiniteScrollLoading]);
+  }, [viewport, isInfiniteScrollLoading]);
 
   async function loadMore(next: boolean = false) {
     const key = next ? 'next' : 'prev';
-    const dir = next ? 'bottom' : 'top';
-    if (isInfiniteScrollLoading) return;
+    if (isInfiniteScrollLoading || isScrolling) return;
     if (!cursor[key]) return;
     try {
       setInfiniteScrollLoading(true);
@@ -224,15 +241,16 @@ export default function Channel({
           cursor: cursor[key] || undefined,
           accountId: currentCommunity.id,
         });
-        if (!data) return;
-        setCursor({ ...cursor, [key]: data?.nextCursor?.[key] });
-        if (next) {
-          setThreads((threads) => [...threads, ...data.threads]);
-        } else {
-          setThreads((threads) => [...data.threads, ...threads]);
+        if (data) {
+          setCursor({ ...cursor, [key]: data?.nextCursor?.[key] });
+          if (next) {
+            setThreads((threads) => [...threads, ...data.threads]);
+          } else {
+            setThreads((threads) => [...data.threads, ...threads]);
+          }
         }
       }
-
+      setIsScrolling(true);
       setInfiniteScrollLoading(false);
     } catch (err) {
       setError({ ...error, [key]: err });
@@ -243,8 +261,6 @@ export default function Channel({
   async function loadMoreNext() {
     return loadMore(true);
   }
-  const debouncedLoadMore = debounce(loadMore);
-  const debouncedLoadMoreNext = debounce(loadMoreNext);
 
   const debouncedGetReadStatus = debounce(api.getReadStatus);
 
@@ -329,20 +345,25 @@ export default function Channel({
     handleLeftScroll();
   }
 
+  const rootMargin =
+    viewport === 'desktop' ? '640px 0px 640px 0px' : '0px 0px 0px 0px';
+
   const [infiniteTopRef, { rootRef: topRootRef }] = useInfiniteScroll({
-    loading: isInfiniteScrollLoading,
+    loading: isInfiniteScrollLoading || isScrolling,
     hasNextPage: !!cursor.prev,
-    onLoadMore: debouncedLoadMore,
-    disabled: !!error?.prev || !cursor.prev || isInfiniteScrollLoading,
-    rootMargin: '0px 0px 0px 0px',
+    onLoadMore: loadMore,
+    disabled: !!error?.prev || !cursor.prev || isScrolling,
+    rootMargin,
+    delayInMs: 0,
   });
 
   const [infiniteBottomRef, { rootRef: bottomRootRef }] = useInfiniteScroll({
-    loading: isInfiniteScrollLoading,
+    loading: isInfiniteScrollLoading || isScrolling,
     hasNextPage: !!cursor.next,
-    onLoadMore: debouncedLoadMoreNext,
-    disabled: !!error?.next || !cursor.next || isInfiniteScrollLoading,
-    rootMargin: '0px 0px 0px 0px',
+    onLoadMore: loadMoreNext,
+    disabled: !!error?.next || !cursor.next || isScrolling,
+    rootMargin,
+    delayInMs: 0,
   });
 
   useEffect(() => {
@@ -389,13 +410,13 @@ export default function Channel({
     setModal(ModalView.EDIT_THREAD);
   }
 
-  function scrollDown() {
+  function scrollDown(offset = 0) {
     const scrollableRoot = scrollableRootRef.current;
     const lastScrollDistanceToBottom =
       lastScrollDistanceToBottomRef.current ?? 0;
     if (scrollableRoot) {
       scrollableRoot.scrollTop =
-        scrollableRoot.scrollHeight - lastScrollDistanceToBottom;
+        scrollableRoot.scrollHeight - lastScrollDistanceToBottom + offset;
     }
   }
 
@@ -488,7 +509,9 @@ export default function Channel({
               [styles['is-empty']]: threads.length === 0,
             })}
           >
-            {cursor?.prev && !error?.prev && <div ref={infiniteTopRef}></div>}
+            {cursor?.prev && !error?.prev && !isScrolling && (
+              <div ref={infiniteTopRef}></div>
+            )}
             <ChatLayout
               onDrop={(event: React.DragEvent) => {
                 event.preventDefault();
@@ -618,7 +641,9 @@ export default function Channel({
                 )
               }
             />
-            {cursor.next && !error?.next && <div ref={infiniteBottomRef}></div>}
+            {cursor.next && !error?.next && !isScrolling && (
+              <div ref={infiniteBottomRef}></div>
+            )}
             <div ref={leftBottomRef}></div>
           </div>
         }
