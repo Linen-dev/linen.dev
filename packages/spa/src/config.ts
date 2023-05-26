@@ -1,8 +1,10 @@
-import { cleanEnv, url } from 'envalid';
+import { cleanEnv, str, url } from 'envalid';
 
-const env = cleanEnv(process.env, {
+export const env = cleanEnv(process.env, {
   REACT_APP_LINEN_BASE_URL: url(),
   REACT_APP_PUSH_SERVICE_URL: url(),
+  REACT_APP_PUBLIC_POSTHOG_KEY: str({ default: '' }),
+  REACT_APP_PUBLIC_POSTHOG_HOST: str({ default: '' }),
 });
 
 export const baseLinen = env.REACT_APP_LINEN_BASE_URL;

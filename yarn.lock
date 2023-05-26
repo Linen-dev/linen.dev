@@ -12264,6 +12264,14 @@ posthog-js@^1.57.2:
     fflate "^0.4.1"
     rrweb-snapshot "^1.1.14"
 
+posthog-js@^1.58.0:
+  version "1.58.0"
+  resolved "https://registry.yarnpkg.com/posthog-js/-/posthog-js-1.58.0.tgz#02a626abd2f428f2c1d8ef972df509f159deea72"
+  integrity sha512-PpH/MwjwV6UHDsv78xFvteEWYgY3O/HTKBnotzmkNCDWgsKzNr978B1AKzgtBU2GzBsnwUfuK+u2O6mxRzFSWw==
+  dependencies:
+    fflate "^0.4.1"
+    rrweb-snapshot "^1.1.14"
+
 posthog-node@^2.6.0:
   version "2.6.0"
   resolved "https://registry.yarnpkg.com/posthog-node/-/posthog-node-2.6.0.tgz#63665d85806a20ea023ea6ce9ac4e114e082a351"
