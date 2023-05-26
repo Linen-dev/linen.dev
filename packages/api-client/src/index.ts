@@ -78,17 +78,19 @@ export default class ApiClient {
   catchError = (e: { response: any }) => {
     const { response } = e;
     if (!response || response.status >= 500) {
-      throw new HttpError(
+      const error = new HttpError(
         500,
         'InternalServerError',
         'An internal error occurred. Please try again'
       );
+      console.error(error);
     } else {
-      throw new HttpError(
+      const error = new HttpError(
         response.status,
         response.statusText,
         response.data?.message
       );
+      console.error(error);
     }
   };
 
