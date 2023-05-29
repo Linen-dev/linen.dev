@@ -15,22 +15,6 @@ export function getHomeUrl(account?: any): string {
   if (account.premium && account.redirectDomain) {
     return `${appendProtocol(account.redirectDomain)}`;
   } else if (account.slackDomain) {
-    return `/s/${account.slackDomain}`;
-  } else if (account.discordDomain) {
-    return `/d/${account.discordDomain}`;
-  } else if (account.discordServerId) {
-    return `/d/${account.discordServerId}`;
-  }
-  return '/';
-}
-
-export function getHomeRedirectUrl(account?: any): string {
-  if (!account) {
-    return '/';
-  }
-  if (account.premium && account.redirectDomain) {
-    return `${appendProtocol(account.redirectDomain)}`;
-  } else if (account.slackDomain) {
     return `${getLinenUrl()}/s/${account.slackDomain}`;
   } else if (account.discordDomain) {
     return `${getLinenUrl()}/d/${account.discordDomain}`;

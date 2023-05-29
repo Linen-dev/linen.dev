@@ -4,7 +4,7 @@ import { fetchTeamInfo } from 'services/slack/api';
 import { createSlackAuthorization, updateAccount } from 'services/accounts';
 import { eventNewIntegration } from 'services/events/eventNewIntegration';
 import { AccountIntegration, SerializedAccount } from '@linen/types';
-import { getHomeRedirectUrl } from '@linen/utilities/home';
+import { getHomeUrl } from '@linen/utilities/home';
 import { serializeAccount } from '@linen/serializers/account';
 import { prisma } from '@linen/database';
 
@@ -53,9 +53,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
     await eventNewIntegration({ accountId });
 
-    const url = getHomeRedirectUrl(
-      serializeAccount(account) as SerializedAccount
-    );
+    const url = getHomeUrl(serializeAccount(account) as SerializedAccount);
     return res.redirect(`${url}/configurations`);
   } catch (error) {
     console.error(error);
@@ -65,9 +63,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         id: accountId,
       },
     });
-    const url = getHomeRedirectUrl(
-      serializeAccount(account) as SerializedAccount
-    );
+    const url = getHomeUrl(serializeAccount(account) as SerializedAccount);
     return res.redirect(`${url}/configurations?error=1`);
   }
 }
