@@ -41,15 +41,13 @@ import type {
 } from '@linen/types';
 export { AxiosRequestConfig };
 
-class HttpError extends Error {
+export class HttpError extends Error {
   status: number = 0;
-  error: string = '';
-  description: string | undefined;
-  constructor(status: number, error: string, description?: string) {
-    super();
+  details: string | undefined;
+  constructor(status: number, message: string, details?: string) {
+    super(message);
     this.status = status;
-    this.error = error;
-    this.description = description;
+    this.details = details;
   }
 }
 
