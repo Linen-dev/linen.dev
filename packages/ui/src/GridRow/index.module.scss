@@ -3,6 +3,15 @@
   color: var(--color-text);
   padding: 1rem;
   width: 100%;
+  transition: background 0.2s ease;
+
+  &:hover {
+    background: var(--color-gray-50);
+
+    @media (prefers-color-scheme: dark) {
+      background: var(--color-gray-100);
+    }
+  }
 }
 
 .resolution {
