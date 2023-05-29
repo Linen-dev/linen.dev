@@ -10,16 +10,13 @@
 }
 
 .header {
-  font-size: 0.675rem;
-  font-weight: 700;
-  padding: 0 0 0.25rem 0;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 0 0 0.75rem 0;
   word-wrap: break-word;
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1px;
-  margin-left: calc(36px + 0.75rem);
 }
 
 .check {
