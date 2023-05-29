@@ -84,6 +84,7 @@ export default class ApiClient {
         'An internal error occurred. Please try again'
       );
       console.error(error);
+      throw error;
     } else {
       const error = new HttpError(
         response.status,
@@ -91,6 +92,7 @@ export default class ApiClient {
         response.data?.message
       );
       console.error(error);
+      throw error;
     }
   };
 
