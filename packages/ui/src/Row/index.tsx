@@ -10,11 +10,13 @@ import {
   SerializedUser,
   ReminderTypes,
   onResolve,
+  ThreadState,
 } from '@linen/types';
 import { Mode } from '@linen/hooks/mode';
 import { FiMessageCircle } from '@react-icons/all-files/fi/FiMessageCircle';
 import { FiUsers } from '@react-icons/all-files/fi/FiUsers';
 import { FiUser } from '@react-icons/all-files/fi/FiUser';
+import { FiCheck } from '@react-icons/all-files/fi/FiCheck';
 import { uniqueUsers } from './utilities/uniqueUsers';
 
 interface Props {
@@ -128,7 +130,25 @@ export default function ChannelRow({
         onRemind={onRemind}
         onUnread={onUnread}
         header={
-          thread.title && <div className={styles.header}>{thread.title}</div>
+          <>
+            {thread.title ? (
+              <div className={styles.header}>
+                {thread.title}
+                {thread.state === ThreadState.CLOSE && (
+                  <FiCheck className={styles.check} />
+                )}
+              </div>
+            ) : (
+              <>
+                {thread.state === ThreadState.CLOSE && (
+                  <div className={styles.header}>
+                    Untitled
+                    <FiCheck className={styles.check} />
+                  </div>
+                )}
+              </>
+            )}
+          </>
         }
         footer={({ inView }) =>
           messages.length > 1 && (
