@@ -27,6 +27,12 @@ class Storage {
       return null;
     }
   }
+
+  remove(key: string) {
+    try {
+      window[`${this.type}Storage`].removeItem(key);
+    } catch (exception) {}
+  }
 }
 class MemoryStorage {
   cache: any;
