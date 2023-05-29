@@ -9,12 +9,19 @@ import App from '@/App';
 import di from '@/di';
 import { handleSignIn } from '@/utils/handleSignIn';
 import { handleNotificationPermission } from '@/utils/handleNotificationPermission';
+const hasWindow = typeof window !== 'undefined';
 
-if (typeof window !== 'undefined') {
-  di.listenDeepLink((event) => {
-    handleSignIn(new URL(event.payload).search);
-  });
-  if (window?.location?.search) {
+di.listenDeepLink((event) => {
+  if (!!event.payload) {
+    const url = new URL(event.payload);
+    if (hasWindow) {
+      window.location.href = url.pathname + url.search;
+    }
+  }
+});
+
+if (hasWindow) {
+  if (window.location.search) {
     handleSignIn(window.location.search);
   }
   handleNotificationPermission();

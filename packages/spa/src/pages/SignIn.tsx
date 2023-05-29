@@ -1,16 +1,24 @@
 import { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useSearchParams } from 'react-router-dom';
 import { baseLinen } from '@/config';
 import di from '@/di';
 import LinenLogo from '@linen/ui/LinenLogo';
+import { handleSignIn } from '@/utils/handleSignIn';
 
 export default function SignIn() {
   const location = useLocation();
+  const [searchParams] = useSearchParams();
   const [from] = useState(() => {
     let from = location.state?.from?.pathname || '/';
     localStorage.setItem('from', from);
     return from;
   });
+
+  useEffect(() => {
+    if (searchParams.has('state')) {
+      handleSignIn(searchParams.toString());
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     let timerId = setTimeout(() => redirectToSignIn(), 1000);
