@@ -78,7 +78,7 @@ export default function AddThreadModal({
   );
   const [title, setTitle] = useState<string>('');
   return (
-    <Modal open={open} close={close} fullscreen>
+    <Modal open={open} close={close} size="xl">
       <div className={styles.grid}>
         <div className={styles.column}>
           <div className={styles.header}>

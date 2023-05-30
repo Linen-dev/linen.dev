@@ -56,7 +56,7 @@
 .content {
   background: var(--color-background);
   color: var(--color-text);
-  border-radius: 0.5rem;
+  border-radius: 0.25rem;
   overflow: hidden;
   text-align: left;
   transition-property: all;
@@ -82,7 +82,18 @@
   }
 }
 
-.fullscreen {
+.content.xl {
+  border-radius: 0;
+  padding: 0;
+  max-width: 100%;
+
+  @media (min-width: 640px) {
+    border-radius: 0.25rem;
+    max-width: 90%;
+  }
+}
+
+.full {
   border-radius: 0;
   min-height: 100vh;
   width: 100%;

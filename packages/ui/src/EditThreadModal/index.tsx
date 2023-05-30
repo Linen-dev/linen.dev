@@ -49,7 +49,7 @@ export default function EditThreadModal({
   const [allUsers] = useUsersContext();
   const [title, setTitle] = useState<string>(currentThread.title || '');
   return (
-    <Modal open={open} close={close} fullscreen>
+    <Modal open={open} close={close} size="xl">
       <div className={styles.grid}>
         <div className={styles.column}>
           <div className={styles.header}>
