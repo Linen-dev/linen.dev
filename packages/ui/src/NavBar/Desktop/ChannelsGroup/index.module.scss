@@ -45,6 +45,22 @@
   gap: 0.25rem;
 }
 
+.channel::before {
+  background-color: var(--color-text);
+  content: '';
+  mask-size: contain;
+  width: 14px;
+  height: 14px;
+}
+
+.channel.lock::before {
+  mask-image: url('/icons/lock.svg');
+}
+
+.channel.hash::before {
+  mask-image: url('/icons/hash.svg');
+}
+
 .archive {
   font-size: 12px;
   transition: opacity 0.1s ease;
