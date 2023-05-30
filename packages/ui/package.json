@@ -10,9 +10,9 @@
   ],
   "scripts": {
     "prebuild": "node ../scripts/rebuild-package.mjs ui && rimraf dist",
-    "build": "rollup --config rollup.config.js --failAfterWarnings",
+    "build": "rollup --config rollup.config.mjs --failAfterWarnings",
     "dev": "yarn watch",
-    "watch": "rollup --config rollup.config.js --watch",
+    "watch": "rollup --config rollup.config.mjs --watch",
     "test": "dotenv -e ../../apps/web/.env.test -- jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage"
@@ -48,7 +48,7 @@
     "postcss": "^8.4.24",
     "rollup": "^3.19.1",
     "rollup-plugin-peer-deps-external": "^2.2.4",
-    "rollup-plugin-postcss": "^4.0.2",
+    "rollup-plugin-postcss-modules": "^2.1.1",
     "rollup-plugin-visualizer": "^5.9.0",
     "sass": "^1.59.3",
     "ts-jest": "^29.0.5",
