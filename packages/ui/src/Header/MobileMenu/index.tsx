@@ -58,7 +58,7 @@ export default function MobileMenu({
         style={{ color: fontColor }}
         onClick={open}
       />
-      <Modal open={show} close={close} fullscreen>
+      <Modal open={show} close={close} size="full">
         <div className={styles.content}>
           <div className={styles.header}>
             <div className={styles.text}>Menu</div>

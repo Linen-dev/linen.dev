@@ -47,7 +47,7 @@ export default function EditMessageModal({
   const [message, setMessage] = useState('');
   const [allUsers] = useUsersContext();
   return (
-    <Modal open={open} close={close} fullscreen>
+    <Modal open={open} close={close} size="xl">
       <div className={styles.grid}>
         <div className={styles.column}>
           <div className={styles.header}>

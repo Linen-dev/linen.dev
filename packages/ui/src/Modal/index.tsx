@@ -8,8 +8,7 @@ type ModalProps = {
   open: boolean;
   close: (value: boolean) => void;
   children: any;
-  fullscreen?: boolean;
-  size?: 'md' | 'lg';
+  size?: 'md' | 'lg' | 'xl' | 'full';
 };
 
 export default function Modal({
@@ -17,7 +16,6 @@ export default function Modal({
   open,
   close,
   children,
-  fullscreen,
   size,
 }: ModalProps) {
   const ref = useRef(null);
@@ -41,8 +39,9 @@ export default function Modal({
           >
             <div
               className={classNames(styles.content, {
-                [styles.fullscreen]: fullscreen,
+                [styles.full]: size === 'full',
                 [styles.lg]: size === 'lg',
+                [styles.xl]: size === 'xl',
               })}
             >
               <div>{children}</div>
