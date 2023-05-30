@@ -130,25 +130,7 @@ export default function ChannelRow({
         onRemind={onRemind}
         onUnread={onUnread}
         header={
-          <>
-            {thread.title ? (
-              <div className={styles.header}>
-                {thread.title}
-                {thread.state === ThreadState.CLOSE && (
-                  <FiCheck className={styles.check} />
-                )}
-              </div>
-            ) : (
-              <>
-                {thread.state === ThreadState.CLOSE && (
-                  <div className={styles.header}>
-                    Untitled
-                    <FiCheck className={styles.check} />
-                  </div>
-                )}
-              </>
-            )}
-          </>
+          thread.title && <div className={styles.header}>{thread.title}</div>
         }
         footer={({ inView }) =>
           messages.length > 1 && (
@@ -166,6 +148,11 @@ export default function ChannelRow({
                 <li className={styles.info}>
                   {messages.length - 1} <FiMessageCircle />
                 </li>
+                {thread.state === ThreadState.CLOSE && (
+                  <li className={styles.info}>
+                    <FiCheck className={styles.check} />
+                  </li>
+                )}
               </ul>
             </div>
           )
