@@ -3,8 +3,6 @@ import classNames from 'classnames';
 import Nav from '@/Nav';
 import { Permissions, SerializedChannel, SerializedUser } from '@linen/types';
 import { Mode } from '@linen/hooks/mode';
-import { FiHash } from '@react-icons/all-files/fi/FiHash';
-import { FiLock } from '@react-icons/all-files/fi/FiLock';
 import { FiPlus } from '@react-icons/all-files/fi/FiPlus';
 import styles from './index.module.scss';
 import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
@@ -125,8 +123,6 @@ export default function ChannelsGroup({
             const active = channel.channelName === channelName;
             const highlighted = !active && count > 0;
 
-            const Icon = channel.type === 'PRIVATE' ? FiLock : FiHash;
-
             return (
               <Link
                 className={classNames(styles.item, {
@@ -144,8 +140,13 @@ export default function ChannelsGroup({
                   active={active}
                   highlighted={highlighted}
                 >
-                  <div className={styles.channel}>
-                    <Icon /> {channel.channelName}
+                  <div
+                    className={classNames(styles.channel, {
+                      [styles.lock]: channel.type === 'PRIVATE',
+                      [styles.hash]: channel.type === 'PUBLIC',
+                    })}
+                  >
+                    {channel.channelName}
                   </div>
                   {permissions.manage && (
                     <div
