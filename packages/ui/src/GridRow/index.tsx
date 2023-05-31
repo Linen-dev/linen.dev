@@ -35,6 +35,7 @@ interface Props {
   mode?: Mode;
   drag: 'thread' | 'message';
   header?: React.ReactNode;
+  info?: React.ReactNode;
   footer?({ inView }: { inView: boolean }): React.ReactNode;
   onDelete?(messageId: string): void;
   onLoad?(): void;
@@ -112,6 +113,7 @@ function Row({
   mode,
   drag,
   header,
+  info,
   footer,
   onDelete,
   onEdit,
@@ -161,6 +163,7 @@ function Row({
                 {message.author?.displayName || 'user'}
               </p>
               {format(message.sentAt, 'Pp')}
+              {info}
             </div>
           )}
           <div
