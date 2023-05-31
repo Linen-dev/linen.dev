@@ -74,8 +74,8 @@ export default function App(props: AppProps) {
       </Head>
 
       <Toast.ToastContext
-        containerStyle={{ bottom: '2rem', left: '2rem' }}
-        position="bottom-left"
+        containerStyle={{ top: '4rem', right: '1rem' }}
+        position="top-right"
       />
       <JoinContext>
         <UsersContext>

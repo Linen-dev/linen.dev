@@ -92,3 +92,17 @@
   background: var(--color-gray-50);
   color: var(--color-gray-900);
 }
+
+.toast {
+  align-items: center;
+  display: flex;
+  gap: 0.25rem;
+}
+
+.channel {
+  color: var(--color-blue-400);
+}
+
+.icon {
+  cursor: pointer;
+}

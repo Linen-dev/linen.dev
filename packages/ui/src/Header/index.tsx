@@ -16,9 +16,6 @@ import Logo from './Logo';
 import UpgradeButton from './UpgradeButton';
 import type { ApiClient } from '@linen/api-client';
 import SearchBar from '@/SearchBar';
-import EventEmitter from '@linen/utilities/event';
-import { FiInfo } from '@react-icons/all-files/fi/FiInfo';
-import { FiX } from '@react-icons/all-files/fi/FiX';
 
 interface Props {
   settings: Settings;
@@ -63,37 +60,11 @@ export default function Header({
   handleSelect,
   logoClassName,
 }: Props) {
-  const [lastMentionChannel, setLastMentionChannel] =
-    useState<SerializedChannel>();
   const brandColor = currentCommunity.brandColor || 'var(--color-navbar)';
   const fontColor = pickTextColorBasedOnBgColor(brandColor, 'white', 'black');
   const homeUrl = addHttpsToUrl(settings.homeUrl);
   const logoUrl = addHttpsToUrl(settings.logoUrl);
   const borderColor = isWhiteColor(brandColor) ? '#e5e7eb' : brandColor;
-
-  useEffect(() => {
-    const handler = (channel: SerializedChannel) => {
-      setLastMentionChannel(channel);
-    };
-
-    EventEmitter.on('mention:new', handler);
-    return () => {
-      EventEmitter.off('mention:new', handler);
-    };
-  }, []);
-
-  useEffect(() => {
-    const handler = (channel: SerializedChannel) => {
-      if (lastMentionChannel && lastMentionChannel.id === channel.id) {
-        setLastMentionChannel(undefined);
-      }
-    };
-
-    EventEmitter.on('navbar:channel:clicked', handler);
-    return () => {
-      EventEmitter.off('navbar:channel:clicked', handler);
-    };
-  }, [lastMentionChannel]);
 
   return (
     <div
@@ -123,18 +94,6 @@ export default function Header({
       <div className={styles.menu}>
         {permissions.user && permissions.is_member ? (
           <>
-            {lastMentionChannel && (
-              <div
-                className={styles.mention}
-                style={{ color: fontColor }}
-                onClick={() => setLastMentionChannel(undefined)}
-              >
-                <InternalLink href={`/c/${lastMentionChannel.channelName}`}>
-                  You were mentioned in #{lastMentionChannel.channelName}
-                </InternalLink>
-                <FiX />
-              </div>
-            )}
             <div className={styles.upgrade}>
               {!currentCommunity.premium && permissions.manage && (
                 <UpgradeButton InternalLink={InternalLink} />
