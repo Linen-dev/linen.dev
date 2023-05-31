@@ -7,8 +7,8 @@
     "withGlobalTauri": false
   },
   "package": {
-    "productName": "linen-app",
-    "version": "0.0.10"
+    "productName": "Linen",
+    "version": "0.0.11"
   },
   "tauri": {
     "allowlist": {
