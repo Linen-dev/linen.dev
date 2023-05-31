@@ -27,6 +27,9 @@
 }
 
 @media (min-width: 1024px) {
+  .menu {
+    gap: 1rem;
+  }
   .search {
     display: block;
   }
@@ -47,5 +50,24 @@
 @media (min-width: 1024px) {
   .lgHidden {
     display: none;
+  }
+}
+
+.mention {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .mention {
+    align-items: center;
+    cursor: pointer;
+    display: flex;
+    gap: 0.25rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+
+  .mention:hover {
+    text-decoration: underline;
   }
 }
