@@ -35,6 +35,7 @@ import EditChannelModal from '@/EditChannelModal';
 import type { ApiClient } from '@linen/api-client';
 import NewCommunityModal from '@/NewCommunityModal';
 import EventEmitter from '@linen/utilities/event';
+import { FiX } from '@react-icons/all-files/fi/FiX';
 
 interface Props {
   mode: Mode;
@@ -144,10 +145,24 @@ export default function DesktopNavBar({
         (channel) => channel.id === payload.channel_id
       );
       if (channel && channel.id !== currentChannel?.id) {
-        const text = `You were mentioned in #${channel.channelName}`;
-        Toast.info(text);
-        notify(text);
-        EventEmitter.emit('mention:new', channel);
+        Toast.info(
+          ({ id }: { id: string }) => (
+            <div className={styles.toast}>
+              You were mentioned in{' '}
+              <a
+                className={styles.channel}
+                href={`${getHomeUrl(currentCommunity)}/c/${
+                  channel.channelName
+                }`}
+              >
+                #{channel.channelName}
+              </a>
+              <FiX className={styles.icon} onClick={() => Toast.dismiss(id)} />
+            </div>
+          ),
+          { duration: Infinity }
+        );
+        notify(`You were mentioned in #${channel.channelName}`);
 
         setHighlights((highlights) => {
           return [...highlights, payload.channel_id];

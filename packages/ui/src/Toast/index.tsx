@@ -26,25 +26,28 @@ const style = {
 
 const Toast = {
   success(message: any, options?: Options) {
-    toast.success(message, {
+    return toast.success(message, {
       style,
       icon: icons.success,
       ...options,
     });
   },
   error(message: any, options?: Options) {
-    toast.error(message, {
+    return toast.error(message, {
       style,
       icon: icons.error,
       ...options,
     });
   },
   info(message: any, options?: Options) {
-    toast.success(message, {
+    return toast.success(message, {
       style,
       icon: icons.info,
       ...options,
     });
+  },
+  dismiss(id: string) {
+    toast.dismiss(id);
   },
   ToastContext: Toaster,
 };
