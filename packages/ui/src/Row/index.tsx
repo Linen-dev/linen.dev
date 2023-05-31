@@ -132,6 +132,11 @@ export default function ChannelRow({
         header={
           thread.title && <div className={styles.header}>{thread.title}</div>
         }
+        info={
+          thread.state === ThreadState.CLOSE && (
+            <FiCheck className={styles.check} />
+          )
+        }
         footer={({ inView }) =>
           messages.length > 1 && (
             <div className={styles.footer}>
@@ -148,11 +153,6 @@ export default function ChannelRow({
                 <li className={styles.info}>
                   {messages.length - 1} <FiMessageCircle />
                 </li>
-                {thread.state === ThreadState.CLOSE && (
-                  <li className={styles.info}>
-                    <FiCheck className={styles.check} />
-                  </li>
-                )}
               </ul>
             </div>
           )
