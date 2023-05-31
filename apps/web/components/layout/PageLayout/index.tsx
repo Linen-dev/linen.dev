@@ -123,6 +123,7 @@ function PageLayout({
         <NavBar
           mode={mode}
           currentCommunity={currentCommunity}
+          currentChannel={currentChannel}
           channels={channels}
           communities={communities}
           channelName={currentChannel?.channelName || ''}

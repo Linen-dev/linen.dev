@@ -67,7 +67,7 @@
     font-weight: 500;
   }
 
-  .mention:hover {
+  .mention > :first-child:hover {
     text-decoration: underline;
   }
 }
