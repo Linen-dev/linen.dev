@@ -13,6 +13,7 @@ import type { ApiClient } from '@linen/api-client';
 interface Props {
   mode: Mode;
   currentCommunity: SerializedAccount;
+  currentChannel?: SerializedChannel;
   channels: SerializedChannel[];
   dms: SerializedChannel[];
   channelName?: string;
@@ -41,6 +42,7 @@ interface Props {
 export default function NavBar({
   mode,
   currentCommunity,
+  currentChannel,
   channelName,
   channels,
   communities,
@@ -63,6 +65,7 @@ export default function NavBar({
         <DesktopNavBar
           mode={mode}
           currentCommunity={currentCommunity}
+          currentChannel={currentChannel}
           channels={sortedChannels}
           channelName={channelName}
           communities={communities}

@@ -50,6 +50,7 @@ export default function NavLeftBar() {
   return (
     <NavBar
       currentCommunity={currentCommunity}
+      currentChannel={currentChannel}
       communities={communities}
       api={api}
       mode={mode}

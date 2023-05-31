@@ -39,6 +39,7 @@ import EventEmitter from '@linen/utilities/event';
 interface Props {
   mode: Mode;
   currentCommunity: SerializedAccount;
+  currentChannel?: SerializedChannel;
   channels: SerializedChannel[];
   dms: SerializedChannel[];
   channelName?: string;
@@ -73,6 +74,7 @@ enum ModalView {
 export default function DesktopNavBar({
   mode,
   currentCommunity,
+  currentChannel,
   channelName,
   channels,
   communities,
@@ -141,13 +143,19 @@ export default function DesktopNavBar({
       const channel = channels.find(
         (channel) => channel.id === payload.channel_id
       );
-      if (channel) {
+      if (channel && channel.id !== currentChannel?.id) {
         const text = `You were mentioned in #${channel.channelName}`;
         Toast.info(text);
         notify(text);
-        EventEmitter.emit('mention:new', { channel });
+        EventEmitter.emit('mention:new', channel);
+
+        setHighlights((highlights) => {
+          return [...highlights, payload.channel_id];
+        });
+        return; // do not highlight if it's a mention for current channel
       }
     }
+
     setHighlights((highlights) => {
       return [...highlights, payload.channel_id];
     });
@@ -258,6 +266,8 @@ export default function DesktopNavBar({
               mode={mode}
               permissions={permissions}
               onChannelClick={(channelId) => {
+                const channel = channels.find(({ id }) => id === channelId);
+                EventEmitter.emit('navbar:channel:clicked', channel);
                 debouncedUpdateReadStatus(channelId, timestamp());
                 setHighlights((highlights) => {
                   return highlights.filter((id) => id !== channelId);

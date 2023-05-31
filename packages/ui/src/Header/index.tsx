@@ -18,6 +18,7 @@ import type { ApiClient } from '@linen/api-client';
 import SearchBar from '@/SearchBar';
 import EventEmitter from '@linen/utilities/event';
 import { FiInfo } from '@react-icons/all-files/fi/FiInfo';
+import { FiX } from '@react-icons/all-files/fi/FiX';
 
 interface Props {
   settings: Settings;
@@ -62,7 +63,8 @@ export default function Header({
   handleSelect,
   logoClassName,
 }: Props) {
-  const [mentionChannel, setMentionChannel] = useState<string>();
+  const [lastMentionChannel, setLastMentionChannel] =
+    useState<SerializedChannel>();
   const brandColor = currentCommunity.brandColor || 'var(--color-navbar)';
   const fontColor = pickTextColorBasedOnBgColor(brandColor, 'white', 'black');
   const homeUrl = addHttpsToUrl(settings.homeUrl);
@@ -70,8 +72,8 @@ export default function Header({
   const borderColor = isWhiteColor(brandColor) ? '#e5e7eb' : brandColor;
 
   useEffect(() => {
-    const handler = ({ channel }: { channel: SerializedChannel }) => {
-      setMentionChannel(channel.channelName);
+    const handler = (channel: SerializedChannel) => {
+      setLastMentionChannel(channel);
     };
 
     EventEmitter.on('mention:new', handler);
@@ -79,6 +81,19 @@ export default function Header({
       EventEmitter.off('mention:new', handler);
     };
   }, []);
+
+  useEffect(() => {
+    const handler = (channel: SerializedChannel) => {
+      if (lastMentionChannel && lastMentionChannel.id === channel.id) {
+        setLastMentionChannel(undefined);
+      }
+    };
+
+    EventEmitter.on('navbar:channel:clicked', handler);
+    return () => {
+      EventEmitter.off('navbar:channel:clicked', handler);
+    };
+  }, [lastMentionChannel]);
 
   return (
     <div
@@ -108,17 +123,16 @@ export default function Header({
       <div className={styles.menu}>
         {permissions.user && permissions.is_member ? (
           <>
-            {mentionChannel && (
+            {lastMentionChannel && (
               <div
+                className={styles.mention}
                 style={{ color: fontColor }}
-                onClick={() => setMentionChannel(undefined)}
+                onClick={() => setLastMentionChannel(undefined)}
               >
-                <InternalLink
-                  className={styles.mention}
-                  href={`/c/${mentionChannel}`}
-                >
-                  <FiInfo /> You were mentioned in #{mentionChannel}
+                <InternalLink href={`/c/${lastMentionChannel.channelName}`}>
+                  You were mentioned in #{lastMentionChannel.channelName}
                 </InternalLink>
+                <FiX />
               </div>
             )}
             <div className={styles.upgrade}>
