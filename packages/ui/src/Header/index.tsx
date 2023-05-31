@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import classNames from 'classnames';
 import { addHttpsToUrl } from '@linen/utilities/url';
 import { pickTextColorBasedOnBgColor } from '@linen/utilities/colors';
@@ -16,6 +16,8 @@ import Logo from './Logo';
 import UpgradeButton from './UpgradeButton';
 import type { ApiClient } from '@linen/api-client';
 import SearchBar from '@/SearchBar';
+import EventEmitter from '@linen/utilities/event';
+import { FiInfo } from '@react-icons/all-files/fi/FiInfo';
 
 interface Props {
   settings: Settings;
@@ -60,11 +62,24 @@ export default function Header({
   handleSelect,
   logoClassName,
 }: Props) {
+  const [mentionChannel, setMentionChannel] = useState<string>();
   const brandColor = currentCommunity.brandColor || 'var(--color-navbar)';
   const fontColor = pickTextColorBasedOnBgColor(brandColor, 'white', 'black');
   const homeUrl = addHttpsToUrl(settings.homeUrl);
   const logoUrl = addHttpsToUrl(settings.logoUrl);
   const borderColor = isWhiteColor(brandColor) ? '#e5e7eb' : brandColor;
+
+  useEffect(() => {
+    const handler = ({ channel }: { channel: SerializedChannel }) => {
+      setMentionChannel(channel.channelName);
+    };
+
+    EventEmitter.on('mention:new', handler);
+    return () => {
+      EventEmitter.off('mention:new', handler);
+    };
+  }, []);
+
   return (
     <div
       className={styles.container}
@@ -93,6 +108,19 @@ export default function Header({
       <div className={styles.menu}>
         {permissions.user && permissions.is_member ? (
           <>
+            {mentionChannel && (
+              <div
+                style={{ color: fontColor }}
+                onClick={() => setMentionChannel(undefined)}
+              >
+                <InternalLink
+                  className={styles.mention}
+                  href={`/c/${mentionChannel}`}
+                >
+                  <FiInfo /> You were mentioned in #{mentionChannel}
+                </InternalLink>
+              </div>
+            )}
             <div className={styles.upgrade}>
               {!currentCommunity.premium && permissions.manage && (
                 <UpgradeButton InternalLink={InternalLink} />
