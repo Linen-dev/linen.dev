@@ -152,6 +152,19 @@ export default function DesktopNavBar({
     });
   };
 
+  // useEffect(() => {
+  //   let mounted = true;
+  //   setTimeout(() => {
+  //     onNewMessage({
+  //       mention_type: 'signal',
+  //       channel_id: channels[0].id,
+  //     });
+  //   }, 1000);
+  //   return () => {
+  //     mounted = false;
+  //   };
+  // }, []);
+
   useWebsockets({
     room: userId && `user:${userId}`,
     permissions,
