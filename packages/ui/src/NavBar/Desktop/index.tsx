@@ -34,7 +34,7 @@ import AnalyticsGroup from './AnalyticsGroup';
 import EditChannelModal from '@/EditChannelModal';
 import type { ApiClient } from '@linen/api-client';
 import NewCommunityModal from '@/NewCommunityModal';
-import { FiSearch } from '@react-icons/all-files/fi/FiSearch';
+import EventEmitter from '@linen/utilities/event';
 
 interface Props {
   mode: Mode;
@@ -145,6 +145,7 @@ export default function DesktopNavBar({
         const text = `You were mentioned in #${channel.channelName}`;
         Toast.info(text);
         notify(text);
+        EventEmitter.emit('mention:new', { channel });
       }
     }
     setHighlights((highlights) => {
@@ -165,6 +166,9 @@ export default function DesktopNavBar({
   //   };
   // }, []);
 
+  // the logic for connecting to websockets should be moved to the top level container
+  // after connecting, we could use an internal event bus to pass to those events
+  // and manage the logic in internal components
   useWebsockets({
     room: userId && `user:${userId}`,
     permissions,
