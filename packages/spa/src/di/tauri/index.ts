@@ -1,5 +1,5 @@
 import { open } from '@tauri-apps/api/shell';
-import { listen } from '@tauri-apps/api/event';
+import { TauriEvent, emit, listen } from '@tauri-apps/api/event';
 import { appWindow } from '@tauri-apps/api/window';
 import {
   isPermissionGranted,
@@ -63,6 +63,10 @@ const Tauri: DI = {
 
   buildInternalUrl: (path: string) => {
     return `/${path}`;
+  },
+
+  checkForUpdate: async () => {
+    await emit(TauriEvent.CHECK_UPDATE);
   },
 };
 

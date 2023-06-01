@@ -27,6 +27,7 @@ const Web: DI = {
   buildInternalUrl: (path: string) => {
     return `/${path}`;
   },
+  checkForUpdate: async () => {},
 };
 
 export default Web;

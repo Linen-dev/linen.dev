@@ -10,4 +10,5 @@ export type DI = {
   buildExternalOrigin: (path: string) => string;
   buildInternalUrl: (path: string) => string;
   setTitleBarListeners: () => void;
+  checkForUpdate: () => Promise<void>;
 };

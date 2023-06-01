@@ -12,6 +12,7 @@ import di from '@/di';
 import { handleSignIn } from '@/utils/handleSignIn';
 import { handleNotificationPermission } from '@/utils/handleNotificationPermission';
 const hasWindow = typeof window !== 'undefined';
+const sixHours = 1000 * 60 * 60 * 6;
 
 di.listenDeepLink((event) => {
   if (!!event.payload) {
@@ -28,6 +29,7 @@ if (hasWindow) {
   }
   handleNotificationPermission();
   di.setTitleBarListeners();
+  setInterval(() => di.checkForUpdate(), sixHours);
 }
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
