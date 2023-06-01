@@ -11,10 +11,10 @@
   height: var(--push-height);
 }
 
-.logo {
+.hiddenLogo {
+  visibility: hidden;
+}
+
+.visibleLogo {
   visibility: visible;
-  margin-top: 15px;
-  img {
-    height: 16px;
-  }
 }

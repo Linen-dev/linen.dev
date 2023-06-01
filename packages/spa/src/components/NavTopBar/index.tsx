@@ -10,6 +10,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import JoinButton from '@linen/ui/JoinButton';
 import TitleBar from '@/components/TitleBar';
 import { useSession } from '@linen/auth/client';
+import { isTauri } from '@/di';
 
 export default function NavTopBar() {
   const navigate = useNavigate();
@@ -39,7 +40,7 @@ export default function NavTopBar() {
     <>
       <div className={styles.push} />
       <div className={styles.header}>
-        <TitleBar currentCommunity={currentCommunity} />
+        {isTauri() && <TitleBar currentCommunity={currentCommunity} />}
         <Header
           channels={channels}
           channelName={channelName}
@@ -47,7 +48,7 @@ export default function NavTopBar() {
           permissions={permissions || ({} as any)}
           settings={settings || mockSettings}
           currentCommunity={currentCommunity || mockAccount}
-          logoClassName={styles.logo}
+          logoClassName={isTauri() ? styles.hiddenLogo : styles.visibleLogo}
           // component injection
           api={api}
           Link={communityName ? InternalLink({ communityName }) : () => {}}
