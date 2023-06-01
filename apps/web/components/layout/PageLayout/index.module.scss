@@ -4,11 +4,11 @@
   left: 0;
   width: 100%;
   z-index: 1000;
-  height: 54px;
+  height: var(--header-height);
 }
 
 .push {
-  height: 54px;
+  height: var(--push-height);
 }
 
 .container {
@@ -17,7 +17,7 @@
   overflow: auto;
   width: 100%;
   justify-content: center;
-  height: calc(100dvh - 54px);
+  height: calc(100dvh - var(--push-height));
 }
 
 .container::-webkit-scrollbar {

@@ -66,3 +66,9 @@ hr {
 *[draggable='true']:active {
   cursor: grabbing;
 }
+
+:root {
+  --titlebar-height: 0px;
+  --header-height: 54px;
+  --push-height: 54px;
+}
