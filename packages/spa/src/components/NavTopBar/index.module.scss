@@ -1,6 +1,6 @@
 .header {
   position: fixed;
-  top: var(--titlebar-height);
+  top: 0;
   left: 0;
   width: 100%;
   z-index: 1000;
@@ -12,5 +12,9 @@
 }
 
 .logo {
-  visibility: hidden;
+  visibility: visible;
+  margin-top: 15px;
+  img {
+    height: 16px;
+  }
 }

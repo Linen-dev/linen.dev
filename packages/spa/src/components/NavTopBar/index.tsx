@@ -37,9 +37,9 @@ export default function NavTopBar() {
 
   return (
     <>
-      <TitleBar currentCommunity={currentCommunity} />
       <div className={styles.push} />
       <div className={styles.header}>
+        <TitleBar currentCommunity={currentCommunity} />
         <Header
           channels={channels}
           channelName={channelName}

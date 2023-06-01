@@ -18,7 +18,7 @@ export default function TitleBar({ currentCommunity }: Props) {
       data-tauri-drag-region
       className={styles.titlebar}
       style={{
-        backgroundColor: brandColor,
+        // backgroundColor: brandColor,
         color: fontColor,
       }}
     >
