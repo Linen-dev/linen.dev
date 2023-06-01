@@ -8,6 +8,7 @@ import { api } from '@/fetcher';
 import customUsePath from '@/hooks/usePath';
 import { useNavigate, useLocation } from 'react-router-dom';
 import JoinButton from '@linen/ui/JoinButton';
+import TitleBar from '@/components/TitleBar';
 import { useSession } from '@linen/auth/client';
 
 export default function NavTopBar() {
@@ -39,6 +40,7 @@ export default function NavTopBar() {
 
   return (
     <>
+      <TitleBar currentCommunity={currentCommunity} />
       <div className={styles.push} />
       <div className={styles.header}>
         <Header
@@ -48,7 +50,6 @@ export default function NavTopBar() {
           permissions={permissions}
           settings={settings}
           currentCommunity={currentCommunity}
-          logoClassName={styles.logo}
           // component injection
           api={api}
           Link={InternalLink({ communityName })}

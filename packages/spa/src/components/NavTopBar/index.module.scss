@@ -1,6 +1,6 @@
 .header {
   position: fixed;
-  top: 0;
+  top: var(--titlebar-height);
   left: 0;
   width: 100%;
   z-index: 1000;
@@ -8,7 +8,7 @@
 }
 
 .push {
-  height: var(--header-height);
+  height: var(--push-height);
 }
 
 .logo {

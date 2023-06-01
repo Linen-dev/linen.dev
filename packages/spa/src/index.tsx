@@ -1,6 +1,7 @@
 import '@linen/styles/colors.css';
 import '@linen/styles/reset.css';
 import '@linen/styles/globals.css';
+import '@linen/styles/desktop.css';
 import '@linen/styles/highlight.scss';
 import '@linen/ui/index.css';
 import React from 'react';
@@ -25,6 +26,7 @@ if (hasWindow) {
     handleSignIn(window.location.search);
   }
   handleNotificationPermission();
+  di.setTitleBarListeners();
 }
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(

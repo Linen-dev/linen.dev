@@ -19,6 +19,17 @@
       },
       "notification": {
         "all": true
+      },
+      "window": {
+        "all": false,
+        "close": true,
+        "hide": true,
+        "show": true,
+        "maximize": true,
+        "minimize": true,
+        "unmaximize": true,
+        "unminimize": true,
+        "startDragging": true
       }
     },
     "bundle": {
@@ -56,7 +67,7 @@
         "width": 800,
         "height": 600,
         "maximized": true,
-        "titleBarStyle": "Overlay"
+        "decorations": false
       }
     ]
   }
