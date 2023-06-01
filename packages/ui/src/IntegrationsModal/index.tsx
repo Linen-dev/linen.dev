@@ -36,7 +36,7 @@ function IntegrationsModal({
   const [team, setTeam] = useState<any>();
 
   useEffect(() => {
-    channel &&
+    channel?.id &&
       api
         .getChannelIntegrations({
           channelId: channel.id,
@@ -275,6 +275,7 @@ function ShowIntegrationDetail({
   useEffect(() => {
     isUserAuthenticated &&
       channel &&
+      channel.id &&
       api
         .getChannelIntegrations({
           channelId: channel.id,

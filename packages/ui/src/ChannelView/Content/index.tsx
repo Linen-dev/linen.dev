@@ -294,20 +294,23 @@ export default function Channel({
       );
       interval = setInterval(() => {
         const channelId = currentChannel.id;
-        debouncedUpdateReadStatus(channelId, timestamp()).then(
-          (readStatus: SerializedReadStatus) => {
-            if (mounted) {
-              setReadStatus(readStatus);
+        channelId &&
+          debouncedUpdateReadStatus(channelId, timestamp()).then(
+            (readStatus: SerializedReadStatus) => {
+              if (mounted) {
+                setReadStatus(readStatus);
+              }
             }
-          }
-        );
+          );
       }, UPDATE_READ_STATUS_INTERVAL_IN_MS);
     }
     return () => {
       if (interval) {
         clearInterval(interval);
       }
-      debouncedUpdateReadStatus(channelId, timestamp());
+      currentUser &&
+        channelId &&
+        debouncedUpdateReadStatus(channelId, timestamp());
       mounted = false;
     };
   }, [currentChannel]);

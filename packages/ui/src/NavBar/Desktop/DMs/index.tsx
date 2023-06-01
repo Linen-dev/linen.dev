@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { FiUser } from '@react-icons/all-files/fi/FiUser';
 import Nav from '@/Nav';
 import classNames from 'classnames';
@@ -52,6 +52,10 @@ export function DMs({
   const [show, toggle] = useState(true);
   const [modal, setModal] = useState(false);
   const [dms, setDms] = useState(initialDms);
+
+  useEffect(() => {
+    setDms(initialDms);
+  }, [initialDms]);
 
   return (
     <>

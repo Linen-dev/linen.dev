@@ -1,11 +1,11 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import BrandingView from '@linen/ui/BrandingView';
 import { useLinenStore } from '@/store';
-import Loading from '@/components/Loading';
 import { api } from '@/fetcher';
 import { useEffect } from 'react';
 import { localStorage } from '@linen/utilities/storage';
 import InternalLink from '@/components/InternalLink';
+import { mockAccount } from '@/mocks';
 
 type BrandingPageProps = {
   communityName: string;
@@ -23,14 +23,10 @@ export default function BrandingPage() {
     localStorage.set('pages_last', `/s/${communityName}/branding`);
   }, [communityName]);
 
-  if (!inboxProps) {
-    return <Loading />;
-  }
-
   return (
     <BrandingView
       reload={() => navigate(0)}
-      initialCommunity={inboxProps.currentCommunity}
+      initialCommunity={inboxProps?.currentCommunity || mockAccount}
       api={api}
       setCommunities={setCommunities as any}
       InternalLink={InternalLink({ communityName })}

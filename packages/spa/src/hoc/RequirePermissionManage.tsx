@@ -1,4 +1,3 @@
-import Loading from '@/components/Loading';
 import { useLinenStore } from '@/store';
 import HandleError from '@/components/HandleError';
 
@@ -9,11 +8,7 @@ export default function RequirePermissionManage({
 }) {
   const inboxProps = useLinenStore((state) => state.inboxProps);
 
-  if (!inboxProps) {
-    return <Loading />;
-  }
-
-  if (!inboxProps.permissions.manage) {
+  if (!inboxProps?.permissions.manage) {
     return HandleError({ status: 403 });
   }
 

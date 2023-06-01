@@ -31,6 +31,7 @@ describe('NavBar', () => {
           routerAsPath: '/',
           usePath: jest.fn(),
           onDrop: jest.fn(),
+          CustomLink: jest.fn(),
         }}
       />
     );

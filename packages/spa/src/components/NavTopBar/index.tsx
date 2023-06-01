@@ -2,7 +2,7 @@ import styles from './index.module.scss';
 import Header from '@linen/ui/Header';
 import InternalLink from '@/components/InternalLink';
 import { signOut } from '@/components/SignOut';
-import Loading from '@/components/Loading';
+import { mockAccount, mockSettings } from '@/mocks';
 import { useLinenStore, shallow } from '@/store';
 import { api } from '@/fetcher';
 import customUsePath from '@/hooks/usePath';
@@ -35,9 +35,6 @@ export default function NavTopBar() {
     shallow
   );
 
-  if (!communityName || !settings || !currentCommunity || !permissions)
-    return <Loading />;
-
   return (
     <>
       <TitleBar currentCommunity={currentCommunity} />
@@ -47,14 +44,21 @@ export default function NavTopBar() {
           channels={channels}
           channelName={channelName}
           signOut={signOut}
-          permissions={permissions}
-          settings={settings}
-          currentCommunity={currentCommunity}
+          permissions={permissions || ({} as any)}
+          settings={settings || mockSettings}
+          currentCommunity={currentCommunity || mockAccount}
+          logoClassName={styles.logo}
           // component injection
           api={api}
-          Link={InternalLink({ communityName })}
-          InternalLink={InternalLink({ communityName })}
-          usePath={customUsePath({ communityName })}
+          Link={communityName ? InternalLink({ communityName }) : () => {}}
+          InternalLink={
+            communityName ? InternalLink({ communityName }) : () => <></>
+          }
+          usePath={
+            communityName
+              ? customUsePath({ communityName })
+              : ({ href }) => href
+          }
           handleSelect={({ thread }) => {
             navigate(
               `/s/${communityName}/t/${thread.incrementId}/${thread.slug}`

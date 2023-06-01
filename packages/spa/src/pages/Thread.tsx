@@ -2,12 +2,13 @@ import { useParams } from 'react-router-dom';
 import ThreadView from '@linen/ui/ThreadView';
 import { useUsersContext } from '@linen/contexts/Users';
 import { useLinenStore } from '@/store';
-import Loading from '@/components/Loading';
 import { api } from '@/fetcher';
 import { useQuery } from '@tanstack/react-query';
 import { localStorage } from '@linen/utilities/storage';
 import { useEffect } from 'react';
 import HandleError from '@/components/HandleError';
+import { useLoading } from '@/components/Loading';
+import { mockAccount, mockSettings } from '@/mocks';
 
 type ThreadPageProps = {
   communityName: string;
@@ -18,6 +19,7 @@ type ThreadPageProps = {
 export default function ThreadPage() {
   const { communityName, threadId, slug } = useParams() as ThreadPageProps;
   const setThreadsProps = useLinenStore((state) => state.setThreadsProps);
+  const [setLoading] = useLoading();
   const { isLoading, error } = useQuery({
     queryKey: ['threads', { communityName, threadId, slug }],
     queryFn: () =>
@@ -30,12 +32,13 @@ export default function ThreadPage() {
   });
 
   useEffect(() => {
+    setLoading(isLoading);
+  }, [isLoading, setLoading]);
+
+  useEffect(() => {
     localStorage.set('pages_last', `/s/${communityName}/t/${threadId}/${slug}`);
   }, [communityName, threadId, slug]);
 
-  if ((!communityName && !threadId) || isLoading) {
-    return <Loading />;
-  }
   if (error) {
     return HandleError(error);
   }
@@ -51,20 +54,16 @@ function View() {
       settings: state.settings,
     }));
 
-  if (!threadProps || !currentCommunity || !permissions || !settings) {
-    return <Loading />;
-  }
-
   return (
     <ThreadView
-      currentChannel={threadProps.currentChannel}
+      currentChannel={threadProps?.currentChannel || ({} as any)}
       isSubDomainRouting={false}
-      thread={threadProps.thread}
-      threadUrl={threadProps.threadUrl}
+      thread={threadProps?.thread || ({} as any)}
+      threadUrl={threadProps?.threadUrl || 'loading'}
       isBot={false}
-      currentCommunity={currentCommunity}
-      permissions={permissions}
-      settings={settings}
+      currentCommunity={currentCommunity || mockAccount}
+      permissions={permissions || ({} as any)}
+      settings={settings || mockSettings}
       api={api}
       useUsersContext={useUsersContext}
       useJoinContext={() => ({})} // used for sign ups

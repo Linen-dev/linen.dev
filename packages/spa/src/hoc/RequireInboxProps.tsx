@@ -1,15 +1,17 @@
 import { useParams } from 'react-router-dom';
-import Loading from '@/components/Loading';
 import { useLinenStore } from '@/store';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@/fetcher';
 import HandleError from '@/components/HandleError';
+import { useEffect } from 'react';
+import { useLoading } from '@/components/Loading';
 
 export default function RequireInboxProps({
   children,
 }: {
   children: JSX.Element;
 }) {
+  const [setLoading] = useLoading();
   const { communityName } = useParams() as { communityName: string };
   const setInboxProps = useLinenStore((state) => state.setInboxProps);
   const { isLoading, error } = useQuery({
@@ -24,9 +26,9 @@ export default function RequireInboxProps({
     refetchOnWindowFocus: false,
   });
 
-  if (!communityName || isLoading) {
-    return <Loading />;
-  }
+  useEffect(() => {
+    setLoading(isLoading);
+  }, [isLoading, setLoading]);
 
   if (error) {
     return HandleError(error);

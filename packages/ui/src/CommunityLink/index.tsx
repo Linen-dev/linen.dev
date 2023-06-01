@@ -9,8 +9,14 @@ interface Props {
   className?: string;
   community: SerializedAccount;
   onClick?(event: React.MouseEvent<HTMLAnchorElement>): void;
-  getHomeUrl: (args: any) => string;
+  getHomeUrl: (community: SerializedAccount) => string;
   selected: boolean;
+  CustomLink?: (props: {
+    href: string;
+    className: string;
+    onClick: ((event: React.MouseEvent<HTMLAnchorElement>) => void) | undefined;
+    children: JSX.Element;
+  }) => JSX.Element;
 }
 
 export default function CommunityLink({
@@ -19,21 +25,34 @@ export default function CommunityLink({
   onClick,
   getHomeUrl,
   selected,
+  CustomLink,
 }: Props) {
   const href = getHomeUrl(community);
   if (href === '/') return <></>;
 
   return (
     <Tooltip text={community.name || 'Community'} position="right">
-      <a
-        href={href}
-        className={classNames(styles.link, className, {
-          [styles.selected]: selected,
-        })}
-        onClick={onClick}
-      >
-        <CommunityIcon community={community} />
-      </a>
+      {CustomLink ? (
+        <CustomLink
+          href={href}
+          className={classNames(styles.link, className, {
+            [styles.selected]: selected,
+          })}
+          onClick={onClick}
+        >
+          <CommunityIcon community={community} />
+        </CustomLink>
+      ) : (
+        <a
+          href={href}
+          className={classNames(styles.link, className, {
+            [styles.selected]: selected,
+          })}
+          onClick={onClick}
+        >
+          <CommunityIcon community={community} />
+        </a>
+      )}
     </Tooltip>
   );
 }

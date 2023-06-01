@@ -33,10 +33,16 @@ interface Props {
   Link: (args: any) => JSX.Element;
   routerAsPath: string;
   usePath: (args: { href: string }) => string;
-  getHomeUrl: (args: any) => string;
+  getHomeUrl: (community: SerializedAccount) => string;
   api: ApiClient;
   CustomRouterPush({ path }: { path: string }): void;
   notify: (...args: any) => any;
+  CustomLink?: (props: {
+    href: string;
+    className: string;
+    onClick: ((event: React.MouseEvent<HTMLAnchorElement>) => void) | undefined;
+    children: JSX.Element;
+  }) => JSX.Element;
 }
 
 export default function NavBar({
@@ -56,6 +62,7 @@ export default function NavBar({
   api,
   notify,
   CustomRouterPush,
+  CustomLink,
 }: Props) {
   const sortedChannels = sortByChannelName(channels);
 
@@ -80,6 +87,7 @@ export default function NavBar({
           notify={notify}
           api={api}
           CustomRouterPush={CustomRouterPush}
+          CustomLink={CustomLink}
         />
       </div>
     </>

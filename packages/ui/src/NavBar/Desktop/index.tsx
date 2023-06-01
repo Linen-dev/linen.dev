@@ -60,10 +60,16 @@ interface Props {
   Link: (args: any) => JSX.Element;
   routerAsPath: string;
   usePath: (args: { href: string }) => string;
-  getHomeUrl: (args: any) => string;
+  getHomeUrl: (community: SerializedAccount) => string;
   notify: (...args: any) => any;
   api: ApiClient;
   CustomRouterPush({ path }: { path: string }): void;
+  CustomLink?: (props: {
+    href: string;
+    className: string;
+    onClick: ((event: React.MouseEvent<HTMLAnchorElement>) => void) | undefined;
+    children: JSX.Element;
+  }) => JSX.Element;
 }
 
 enum ModalView {
@@ -89,6 +95,7 @@ export default function DesktopNavBar({
   notify,
   api,
   CustomRouterPush,
+  CustomLink,
 }: Props) {
   const paths = {
     inbox: usePath({ href: '/inbox' }),
@@ -119,7 +126,7 @@ export default function DesktopNavBar({
   const token = permissions.token || null;
 
   const [highlights, setHighlights] = useState<string[]>([]);
-  const [collapsed, setCollapsed] = useState(!userId);
+  const [collapsed, setCollapsed] = useState(false);
   const [showSettings, toggleSettings] = useState(isSettingsPath());
   const [modal, setModal] = useState<ModalView>(ModalView.NONE);
   const [editedChannel, setEditedChannel] = useState<SerializedChannel>();
@@ -240,6 +247,7 @@ export default function DesktopNavBar({
                   community={community}
                   getHomeUrl={getHomeUrl}
                   selected={currentCommunity.id === community.id}
+                  CustomLink={CustomLink}
                 />
               );
             })}
@@ -283,7 +291,8 @@ export default function DesktopNavBar({
               onChannelClick={(channelId) => {
                 const channel = channels.find(({ id }) => id === channelId);
                 EventEmitter.emit('navbar:channel:clicked', channel);
-                debouncedUpdateReadStatus(channelId, timestamp());
+                currentUser &&
+                  debouncedUpdateReadStatus(channelId, timestamp());
                 setHighlights((highlights) => {
                   return highlights.filter((id) => id !== channelId);
                 });

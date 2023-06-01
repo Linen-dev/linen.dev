@@ -5,6 +5,7 @@ import { UsersContext } from '@linen/contexts/Users';
 import Router from '@/Router';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { PostHogProvider } from 'posthog-js/react';
+import { LoadingContext } from '@/components/Loading';
 
 const queryClient = new QueryClient();
 
@@ -23,7 +24,9 @@ function App() {
               containerStyle={{ top: '4rem', right: '1rem' }}
               position="top-right"
             />
-            <Router />
+            <LoadingContext>
+              <Router />
+            </LoadingContext>
           </UsersContext>
         </SessionProvider>
       </QueryClientProvider>

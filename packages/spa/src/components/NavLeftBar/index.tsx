@@ -1,4 +1,4 @@
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import useMode from '@linen/hooks/mode';
 import { useUsersContext } from '@linen/contexts/Users';
 import NavBar from '@linen/ui/NavBar';
@@ -8,8 +8,8 @@ import { useLinenStore, shallow } from '@/store';
 import di from '@/di';
 import customUsePath from '@/hooks/usePath';
 import InternalLink from '@/components/InternalLink';
-import Loading from '@/components/Loading';
 import CustomRouterPush from '@/components/CustomRouterPush';
+import { mockAccount } from '@/mocks';
 
 export default function NavLeftBar() {
   const location = useLocation();
@@ -44,32 +44,35 @@ export default function NavLeftBar() {
   );
   const [allUsers] = useUsersContext();
 
-  if (!settings || !currentCommunity || !permissions || !communityName)
-    return <Loading />;
-
   return (
     <NavBar
-      currentCommunity={currentCommunity}
+      currentCommunity={currentCommunity || mockAccount}
       currentChannel={currentChannel}
       communities={communities}
       api={api}
       mode={mode}
       channelName={channelName}
-      permissions={permissions}
+      permissions={permissions || ({} as any)}
       channels={channels}
       dms={dms}
       // components injection
-      Link={InternalLink({ communityName })}
+      Link={communityName ? InternalLink({ communityName }) : () => <></>}
       getHomeUrl={di.getHomeUrl}
-      usePath={customUsePath({ communityName })}
+      usePath={
+        communityName ? customUsePath({ communityName }) : ({ href }) => href
+      }
       notify={(body: string) => di.sendNotification(body)}
-      CustomRouterPush={CustomRouterPush({
-        communityName,
-        communityType: settings.communityType,
-      })}
+      CustomRouterPush={
+        communityName && settings
+          ? CustomRouterPush({
+              communityName,
+              communityType: settings.communityType,
+            })
+          : () => {}
+      }
       routerAsPath={location.pathname}
       onDrop={
-        currentChannel
+        currentChannel && currentCommunity
           ? OnChannelDrop({
               setThreads,
               currentCommunity,
@@ -80,6 +83,11 @@ export default function NavLeftBar() {
             })
           : () => {}
       }
+      CustomLink={({ href, className, onClick, children }) => (
+        <Link to={href} onClick={onClick} className={className}>
+          {children}
+        </Link>
+      )}
     />
   );
 }

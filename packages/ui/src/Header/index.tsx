@@ -102,6 +102,7 @@ export default function Header({
                 currentUser={permissions.user}
                 signOut={signOut}
                 api={api}
+                key={permissions?.user?.id}
               />
             </div>
             <div className={styles.lgHidden}>

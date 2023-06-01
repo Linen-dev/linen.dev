@@ -12,9 +12,7 @@ const Web: DI = {
   callbackUrl: () => window.location.href,
 
   getHomeUrl: (community: SerializedAccount) =>
-    `${window.location.origin}/s/${
-      community.slackDomain || community.discordDomain
-    }`,
+    `/s/${community.slackDomain || community.discordDomain}`,
 
   setTitleBarListeners() {},
 

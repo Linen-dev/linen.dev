@@ -2,7 +2,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import ChannelView from '@linen/ui/ChannelView';
 import { useUsersContext } from '@linen/contexts/Users';
 import { shallow, useLinenStore } from '@/store';
-import Loading from '@/components/Loading';
 import { api } from '@/fetcher';
 import { useQuery } from '@tanstack/react-query';
 import { playNotificationSound } from '@/utils/playNotificationSound';
@@ -11,6 +10,8 @@ import { localStorage } from '@linen/utilities/storage';
 import customUsePath from '@/hooks/usePath';
 import HandleError from '@/components/HandleError';
 import startSignUp from '@/utils/startSignUp';
+import { useLoading } from '@/components/Loading';
+import { mockAccount, mockSettings } from '@/mocks';
 
 type ChannelPageProps = {
   communityName: string;
@@ -21,6 +22,7 @@ type ChannelPageProps = {
 export default function ChannelPage() {
   const { communityName, channelName, page } = useParams() as ChannelPageProps;
   const setChannelProps = useLinenStore((state) => state.setChannelProps);
+  const [setLoading] = useLoading();
 
   const { isLoading, error } = useQuery({
     queryKey: ['channels', { communityName, channelName, page }],
@@ -35,6 +37,10 @@ export default function ChannelPage() {
   });
 
   useEffect(() => {
+    setLoading(isLoading);
+  }, [isLoading, setLoading]);
+
+  useEffect(() => {
     localStorage.set(
       'pages_last',
       `/s/${communityName}${
@@ -43,9 +49,6 @@ export default function ChannelPage() {
     );
   }, [communityName, channelName, page]);
 
-  if (!communityName || isLoading) {
-    return <Loading />;
-  }
   if (error) {
     return HandleError(error);
   }
@@ -77,36 +80,29 @@ function View() {
     shallow
   );
 
-  if (
-    !communityName ||
-    !channelProps ||
-    !currentCommunity ||
-    !permissions ||
-    !settings ||
-    !channelName ||
-    !currentChannel
-  )
-    return <Loading />;
-
   return (
     <ChannelView
-      channelName={channelName}
-      currentCommunity={currentCommunity}
-      permissions={permissions}
-      settings={settings}
-      currentChannel={currentChannel}
+      channelName={channelName || 'loading'}
+      currentCommunity={currentCommunity || mockAccount}
+      permissions={permissions || ({} as any)}
+      settings={settings || mockSettings}
+      currentChannel={currentChannel || ({} as any)}
       isBot={false}
       isSubDomainRouting={false}
-      nextCursor={channelProps.nextCursor}
-      pathCursor={channelProps.pathCursor}
-      pinnedThreads={channelProps.pinnedThreads}
+      nextCursor={channelProps?.nextCursor || ({} as any)}
+      pathCursor={channelProps?.pathCursor || ({} as any)}
+      pinnedThreads={channelProps?.pinnedThreads || ({} as any)}
       threads={threads}
       useUsersContext={useUsersContext}
       api={api}
       playNotificationSound={playNotificationSound}
-      usePath={customUsePath({ communityName })}
+      usePath={communityName ? customUsePath({ communityName }) : () => {}}
       routerPush={navigate}
-      startSignUp={startSignUp({ permissions, reload: () => navigate(0) })}
+      startSignUp={
+        permissions
+          ? startSignUp({ permissions, reload: () => navigate(0) })
+          : async () => {}
+      }
       // TODO:
       queryIntegration={false}
     />

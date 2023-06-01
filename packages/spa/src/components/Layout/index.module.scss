@@ -11,7 +11,7 @@
 }
 
 .container {
-  scrollbar-gutter: stable;
+  scrollbar-gutter: auto;
   justify-content: center;
   overflow: auto;
   height: calc(100dvh - var(--push-height));
