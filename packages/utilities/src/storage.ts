@@ -48,6 +48,9 @@ class MemoryStorage {
     this.cache[key] = input;
     return input;
   }
+  remove(key: string) {
+    delete this.cache[key];
+  }
 }
 
 export const localStorage = new Storage('local');
