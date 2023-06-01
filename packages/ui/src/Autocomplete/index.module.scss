@@ -77,14 +77,17 @@
   opacity: 1;
   position: fixed;
   animation: animatedOverlay 0.2s ease;
+  backdrop-filter: blur(4px);
 }
 
 @keyframes animatedOverlay {
   from {
     opacity: 0;
+    backdrop-filter: blur(0px);
   }
 
   to {
     opacity: 1;
+    backdrop-filter: blur(4px);
   }
 }
