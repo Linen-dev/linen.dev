@@ -4,11 +4,11 @@
   left: 0;
   width: 100%;
   z-index: 1000;
-  height: 54px;
+  height: var(--header-height);
 }
 
 .push {
-  height: 54px;
+  height: var(--header-height);
 }
 
 .logo {

@@ -1,6 +1,6 @@
 .container {
   background: var(--color-background);
-  min-height: calc(100dvh - 54px);
+  min-height: calc(100dvh - var(--push-height));
   overflow-y: auto;
   width: 520px;
 }

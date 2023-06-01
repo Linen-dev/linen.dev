@@ -17,7 +17,7 @@
 .header .nav {
   align-items: center;
   display: flex;
-  height: 54px;
+  height: var(--header-height);
   justify-content: space-between;
 }
 
@@ -49,7 +49,7 @@
 }
 
 .main {
-  padding-top: 64px + 54px;
+  padding-top: calc(64px + var(--header-height));
 }
 
 .banner {

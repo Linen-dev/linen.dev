@@ -14,7 +14,7 @@
   scrollbar-gutter: stable;
   justify-content: center;
   overflow: auto;
-  height: calc(100dvh - 54px);
+  height: calc(100dvh - var(--push-height));
   width: 100%;
 }
 
