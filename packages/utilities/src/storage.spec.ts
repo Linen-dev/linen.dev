@@ -25,5 +25,7 @@ describe('#memoryStorage', () => {
     expect(memoryStorage.get('foo')).toEqual('bar');
     memoryStorage.set('foo', 'baz');
     expect(memoryStorage.get('foo')).toEqual('baz');
+    memoryStorage.remove('foo');
+    expect(memoryStorage.get('foo')).toEqual(undefined);
   });
 });
