@@ -16,6 +16,8 @@ const Web: DI = {
       community.slackDomain || community.discordDomain
     }`,
 
+  setTitleBarListeners() {},
+
   requestNotificationPermission: async () => {
     // TODO
   },

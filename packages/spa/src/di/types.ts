@@ -9,4 +9,5 @@ export type DI = {
   sendNotification: (body: string, title?: string) => Promise<void>;
   buildExternalOrigin: (path: string) => string;
   buildInternalUrl: (path: string) => string;
+  setTitleBarListeners: () => void;
 };

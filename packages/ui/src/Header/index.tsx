@@ -71,7 +71,7 @@ export default function Header({
       className={styles.container}
       style={{
         backgroundColor: brandColor,
-        borderBottom: `1px solid ${borderColor}`,
+        borderBottom: `1px solid ${brandColor}`,
         borderTop: `1px solid ${brandColor}`,
       }}
     >

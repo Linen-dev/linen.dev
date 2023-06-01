@@ -5,6 +5,7 @@
   "exports": {
     "./colors.css": "./colors.css",
     "./colors.scss": "./colors.scss",
+    "./desktop.css": "./desktop.css",
     "./globals.css": "./globals.css",
     "./highlight.scss": "./highlight.scss",
     "./nprogress.scss": "./nprogress.scss",
