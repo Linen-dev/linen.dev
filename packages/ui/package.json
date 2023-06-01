@@ -35,6 +35,7 @@
     "uuid": "^9.0.0"
   },
   "devDependencies": {
+    "@linen/rollup-plugin-scss-modules": "*",
     "@rollup/plugin-commonjs": "^24.0.1",
     "@rollup/plugin-node-resolve": "^15.0.1",
     "@rollup/plugin-typescript": "^11.0.0",
@@ -48,7 +49,6 @@
     "postcss": "^8.4.24",
     "rollup": "^3.19.1",
     "rollup-plugin-peer-deps-external": "^2.2.4",
-    "rollup-plugin-postcss-modules": "^2.1.1",
     "rollup-plugin-visualizer": "^5.9.0",
     "sass": "^1.59.3",
     "ts-jest": "^29.0.5",
