@@ -19,6 +19,5 @@
 }
 
 .selected {
-  border: 2px solid var(--color-background);
-  outline: var(--color-text) solid 2px;
+  box-shadow: 0 0 0 1pt var(--color-background), 0 0 0 3pt var(--color-text);
 }
