@@ -4,8 +4,8 @@
 extern crate objc;
 
 use tauri::{ Manager, WindowEvent };
-use window_ext::{ WindowExt, ToolbarThickness };
-mod window_ext;
+// use window_ext::{ WindowExt, ToolbarThickness };
+// mod window_ext;
 
 fn main() {
     // macOS "App Nap" periodically pauses our app when it's in the background.
@@ -18,8 +18,8 @@ fn main() {
         ::default()
         .setup(|app| {
             let handle = app.handle();
-            let win = app.get_window("main").unwrap();
-            win.set_transparent_titlebar(ToolbarThickness::Thick);
+            // let win = app.get_window("main").unwrap();
+            // win.set_transparent_titlebar(ToolbarThickness::Thick);
 
             tauri_plugin_deep_link
                 ::register("linenapp", move |request| {
