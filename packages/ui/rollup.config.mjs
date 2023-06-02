@@ -1,7 +1,7 @@
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import typescript from '@rollup/plugin-typescript';
-import postcss from 'rollup-plugin-postcss-modules';
+import scss from '@linen/rollup-plugin-scss-modules';
 import external from 'rollup-plugin-peer-deps-external';
 import { visualizer } from 'rollup-plugin-visualizer';
 import glob from 'glob';
@@ -30,11 +30,7 @@ export default {
       tsconfig: './tsconfig.json',
     }),
     resolve(),
-    postcss({
-      extract: true,
-      modules: true,
-      use: ['sass'],
-    }),
+    scss(),
     commonjs(),
     external(),
     process.env.ANALYZE && visualizer(),

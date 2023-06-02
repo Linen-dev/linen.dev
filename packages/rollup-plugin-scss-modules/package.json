@@ -1,0 +1,16 @@
+{
+  "name": "@linen/rollup-plugin-scss-modules",
+  "version": "1.0.0",
+  "description": "Rollup plugin scss modules",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "dependencies": {
+    "postcss": "^8.4.24",
+    "postcss-modules": "^6.0.0",
+    "rollup-pluginutils": "^2.8.2",
+    "sass": "^1.62.1"
+  }
+}
