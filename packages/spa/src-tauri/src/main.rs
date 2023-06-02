@@ -1,28 +1,26 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use tauri::Manager;
-use tauri::SystemTray;
-use tauri::{ CustomMenuItem, SystemTrayMenu, SystemTrayMenuItem, SystemTrayEvent };
+#[cfg(target_os = "macos")]
+extern crate objc;
+
+use tauri::{ Manager, WindowEvent };
+use window_ext::{ WindowExt, ToolbarThickness };
+mod window_ext;
 
 fn main() {
-    let quit = CustomMenuItem::new("quit".to_string(), "Quit");
-    let hide = CustomMenuItem::new("hide".to_string(), "Hide");
-    let show = CustomMenuItem::new("show".to_string(), "Show");
-
-    let tray_menu = SystemTrayMenu::new()
-        .add_item(quit)
-        .add_native_item(SystemTrayMenuItem::Separator)
-        .add_item(show)
-        .add_item(hide);
-
-    let tray = SystemTray::new().with_menu(tray_menu);
+    // macOS "App Nap" periodically pauses our app when it's in the background.
+    // We need to prevent that so our intervals are not interrupted.
+    #[cfg(target_os = "macos")]
+    macos_app_nap::prevent();
 
     tauri_plugin_deep_link::prepare("dev.linen.desktop");
     tauri::Builder
         ::default()
-        .system_tray(tray)
         .setup(|app| {
             let handle = app.handle();
+            let win = app.get_window("main").unwrap();
+            win.set_transparent_titlebar(ToolbarThickness::Thick);
+
             tauri_plugin_deep_link
                 ::register("linenapp", move |request| {
                     dbg!(&request);
@@ -37,44 +35,31 @@ fn main() {
 
             Ok(())
         })
-        .on_window_event(|event| {
-            match event.event() {
-                tauri::WindowEvent::CloseRequested { api, .. } => {
-                    event.window().hide().unwrap();
+        .on_window_event(|e| {
+            match e.event() {
+                WindowEvent::CloseRequested { api, .. } => {
+                    e.window().minimize().unwrap();
                     api.prevent_close();
-                }
-                _ => {}
-            }
-        })
-        .on_system_tray_event(|app, event| {
-            match event {
-                SystemTrayEvent::MenuItemClick { id, .. } => {
-                    match id.as_str() {
-                        "quit" => {
-                            std::process::exit(0);
-                        }
-                        "hide" => {
-                            let window = app.get_window("main").unwrap();
-                            window.hide().unwrap();
-                        }
-                        "show" => {
-                            let window = app.get_window("main").unwrap();
-                            window.show().unwrap();
-                        }
-                        _ => {}
-                    }
                 }
                 _ => {}
             }
         })
         .build(tauri::generate_context!())
         .expect("error while running tauri application")
-        .run(|_app_handle, event| {
-            match event {
+        .run(|_app_handle, e| {
+            match e {
                 tauri::RunEvent::ExitRequested { api, .. } => {
                     api.prevent_exit();
                 }
+                tauri::RunEvent::WindowEvent { event, .. } => {
+                    match event {
+                        tauri::WindowEvent::CloseRequested { api, .. } => {
+                            api.prevent_close();
+                        }
+                        _ => {}
+                    }
+                }
                 _ => {}
             }
-        })
+        });
 }

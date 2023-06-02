@@ -8,7 +8,7 @@
   },
   "package": {
     "productName": "Linen",
-    "version": "0.0.12"
+    "version": "0.0.13"
   },
   "tauri": {
     "allowlist": {
@@ -44,10 +44,6 @@
       "identifier": "dev.linen.desktop",
       "targets": "all"
     },
-    "systemTray": {
-      "iconPath": "icons/icon.ico",
-      "iconAsTemplate": true
-    },
     "security": {
       "csp": null
     },
@@ -67,7 +63,7 @@
         "width": 800,
         "height": 600,
         "maximized": true,
-        "decorations": false
+        "titleBarStyle": "Overlay"
       }
     ]
   }
