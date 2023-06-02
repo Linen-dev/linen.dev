@@ -70,6 +70,7 @@ export default function NavBar({
     <>
       <div className={styles.desktop}>
         <DesktopNavBar
+          key={permissions.user?.id}
           mode={mode}
           currentCommunity={currentCommunity}
           currentChannel={currentChannel}
