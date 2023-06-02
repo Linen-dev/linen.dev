@@ -35,6 +35,7 @@ interface Props {
   fetchMentions(term?: string): Promise<SerializedUser[]>;
   upload?(files: File[]): Promise<any>;
   useUsersContext(): any;
+  mentions?: SerializedUser[];
 }
 
 function isUndefined(character: string | undefined) {
@@ -150,6 +151,7 @@ function MessageForm({
   fetchMentions,
   upload,
   useUsersContext,
+  mentions = [],
 }: Props) {
   function getInitialMessage() {
     if (draft) {
@@ -163,11 +165,12 @@ function MessageForm({
 
   const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState<SerializedUser[]>([]);
-  const [allUsers, addUsers] = useUsersContext();
+  const [contextUsers, addUsers] = useUsersContext();
   const [position, setPosition] = useState(0);
   const ref = useRef(null);
   const mode = getMode(message, position);
   const mention = getMention(message, position);
+  const allUsers = [...contextUsers, ...mentions];
 
   useEffect(() => {
     onMessageChange?.(message);
@@ -420,6 +423,7 @@ MessageForm.defaultProps = {
   sendOnEnter: true,
   preview: true,
   draft: true,
+  mentions: [],
 };
 
 export default MessageForm;
