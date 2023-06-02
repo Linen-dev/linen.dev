@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import MessageForm from '@/MessageForm';
 import Preview from '@/MessagePreview';
-import { postprocess } from '@linen/ast';
+import { preprocess, postprocess } from '@linen/ast';
 import H3 from '@/H3';
 import Field from '@/Field';
 import Modal from '@/Modal';
@@ -46,7 +46,9 @@ export default function EditThreadModal({
   api,
 }: Props) {
   const [message, setMessage] = useState('');
-  const [allUsers] = useUsersContext();
+  const [users] = useUsersContext();
+  const currentMessage = currentThread.messages[0];
+  const allUsers = [...users, ...currentMessage.mentions];
   const [title, setTitle] = useState<string>(currentThread.title || '');
   return (
     <Modal open={open} close={close} size="xl">
@@ -88,8 +90,9 @@ export default function EditThreadModal({
               uploads={uploads}
               sendOnEnter={false}
               preview={false}
-              message={currentThread.messages[0].body}
+              message={preprocess(currentMessage.body, allUsers)}
               useUsersContext={useUsersContext}
+              mentions={currentMessage.mentions}
             />
           </Field>
         </div>

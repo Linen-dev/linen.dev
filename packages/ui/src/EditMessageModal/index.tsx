@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import MessageForm from '@/MessageForm';
 import Preview from '@/MessagePreview';
-import { postprocess } from '@linen/ast';
+import { preprocess, postprocess } from '@linen/ast';
 import H3 from '@/H3';
 import Field from '@/Field';
 import Modal from '@/Modal';
@@ -45,7 +45,8 @@ export default function EditMessageModal({
   api,
 }: Props) {
   const [message, setMessage] = useState('');
-  const [allUsers] = useUsersContext();
+  const [users] = useUsersContext();
+  const allUsers = [...users, ...currentMessage.mentions];
   return (
     <Modal open={open} close={close} size="xl">
       <div className={styles.grid}>
@@ -72,8 +73,9 @@ export default function EditMessageModal({
               uploads={uploads}
               sendOnEnter={false}
               preview={false}
-              message={currentMessage.body}
+              message={preprocess(currentMessage.body, allUsers)}
               useUsersContext={useUsersContext}
+              mentions={currentMessage.mentions}
             />
           </Field>
         </div>
