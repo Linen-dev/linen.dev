@@ -37,6 +37,10 @@ yarn migrate:db
 
 # start the web
 yarn dev:web
+
+# For hot-reloading in frontend development
+# Open in a separate terminal
+cd packages/ui && yarn dev
 ```
 
 Only credentials sign-in method enabled by default. To setup github sign-in or magic link sign-in:
