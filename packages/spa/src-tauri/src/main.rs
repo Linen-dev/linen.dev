@@ -35,10 +35,20 @@ fn main() {
 
             Ok(())
         })
-        .on_window_event(|e| {
-            match e.event() {
+        .on_window_event(|event| {
+            match event.event() {
                 WindowEvent::CloseRequested { api, .. } => {
-                    e.window().minimize().unwrap();
+                    #[allow(unused_unsafe)]
+                    #[cfg(not(target_os = "macos"))]
+                    {
+                        event.window().hide().unwrap();
+                    }
+
+                    #[allow(unused_unsafe)]
+                    #[cfg(target_os = "macos")]
+                    unsafe {
+                        tauri::AppHandle::hide(&event.window().app_handle()).unwrap();
+                    }
                     api.prevent_close();
                 }
                 _ => {}
@@ -50,14 +60,6 @@ fn main() {
             match e {
                 tauri::RunEvent::ExitRequested { api, .. } => {
                     api.prevent_exit();
-                }
-                tauri::RunEvent::WindowEvent { event, .. } => {
-                    match event {
-                        tauri::WindowEvent::CloseRequested { api, .. } => {
-                            api.prevent_close();
-                        }
-                        _ => {}
-                    }
                 }
                 _ => {}
             }
