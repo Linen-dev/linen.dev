@@ -10,6 +10,7 @@ import CommunityIntegrationRow from './CommunityIntegrationRow';
 import SlackImportRow from './SlackImportRow';
 import AnonymizeUsersRow from './AnonymizeUsersRow';
 import DefaultChannelRow from './DefaultChannelRow';
+import ChannelOrderRow from './ChannelOrderRow';
 import ChannelVisibilityRow from './ChannelVisibilityRow';
 import UrlsRow from './UrlsRow';
 import CommunityTypeRow from './CommunityTypeRow';
@@ -58,6 +59,13 @@ export default function ConfigurationsView({
         <ChannelVisibilityRow
           currentCommunity={currentCommunity}
           onChange={setChannels}
+          api={api}
+        />
+        <hr className={styles.my3} />
+        <ChannelOrderRow
+          currentCommunity={currentCommunity}
+          onChange={setChannels}
+          channels={channels}
           api={api}
         />
         <hr className={styles.my3} />

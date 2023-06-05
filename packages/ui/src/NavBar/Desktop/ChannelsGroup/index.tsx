@@ -100,16 +100,20 @@ export default function ChannelsGroup({
             function handleDrop(event: React.DragEvent) {
               const id = channel.id;
               const text = event.dataTransfer.getData('text');
-              const data = JSON.parse(text);
-              if (data.id === id) {
-                return event.stopPropagation();
+              try {
+                const data = JSON.parse(text);
+                if (data.id === id) {
+                  return event.stopPropagation();
+                }
+                return onDrop?.({
+                  source: data.source,
+                  target: 'channel',
+                  from: data.id,
+                  to: id,
+                });
+              } catch (exception) {
+                return false;
               }
-              return onDrop?.({
-                source: data.source,
-                target: 'channel',
-                from: data.id,
-                to: id,
-              });
             }
 
             function handleDragEnter(event: React.DragEvent) {
@@ -117,6 +121,14 @@ export default function ChannelsGroup({
             }
 
             function handleDragLeave(event: React.DragEvent) {
+              if (
+                event.relatedTarget &&
+                event.currentTarget.contains(
+                  event.relatedTarget as HTMLDivElement
+                )
+              ) {
+                return false;
+              }
               event.currentTarget.classList.remove(styles.drop);
             }
 

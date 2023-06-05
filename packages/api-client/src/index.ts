@@ -5,6 +5,7 @@ import type {
   SerializedThread,
   createChannelType,
   bulkHideChannelsType,
+  bulkReorderChannelsType,
   setDefaultChannelType,
   SerializedChannel,
   getChannelIntegrationsType,
@@ -241,6 +242,9 @@ export default class ApiClient {
 
   hideChannels = (props: bulkHideChannelsType) =>
     this.post<{}>(`/api/channels/hide`, props);
+
+  reorderChannels = (props: bulkReorderChannelsType) =>
+    this.post<{}>(`/api/channels/reorder`, props);
 
   hideChannel = ({
     accountId,

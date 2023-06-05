@@ -8,6 +8,7 @@ export type SerializedChannel = {
   accountId: string | null;
   pages: number | null;
   stats?: string;
+  displayOrder: number;
   type?: 'DM' | 'PUBLIC' | 'PRIVATE' | null;
 };
 

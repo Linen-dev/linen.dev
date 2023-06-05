@@ -1,5 +1,4 @@
 import React from 'react';
-import { sortByChannelName } from './utilities';
 import {
   Permissions,
   SerializedAccount,
@@ -64,7 +63,7 @@ export default function NavBar({
   CustomRouterPush,
   CustomLink,
 }: Props) {
-  const sortedChannels = sortByChannelName(channels);
+  const sortedChannels = channels.sort((channel) => channel.displayOrder);
 
   return (
     <>

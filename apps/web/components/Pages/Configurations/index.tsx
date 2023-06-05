@@ -30,7 +30,7 @@ export default function ConfigurationsPage({
   dms,
 }: Props) {
   const [channels, setChannels] = useState<SerializedChannel[]>(
-    initialChannels.sort((a, b) => a.channelName.localeCompare(b.channelName))
+    initialChannels.sort((a) => a.displayOrder)
   );
 
   useEffect(() => {
