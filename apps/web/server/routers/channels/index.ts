@@ -19,6 +19,8 @@ import {
   archiveChannelType,
   bulkHideChannelsSchema,
   bulkHideChannelsType,
+  bulkReorderChannelsSchema,
+  bulkReorderChannelsType,
   createChannelSchema,
   createChannelType,
   updateChannelSchema,
@@ -211,6 +213,24 @@ channelsRouter.post(
   ) => {
     const { channels } = req.body;
     await ChannelsService.updateChannelsVisibility({
+      channels,
+      accountId: req.tenant?.id!,
+    });
+    return res.status(200).json({});
+  }
+);
+
+channelsRouter.post(
+  `${prefix}/reorder`,
+  tenantMiddleware([Roles.ADMIN, Roles.OWNER]),
+  validationMiddleware(bulkReorderChannelsSchema),
+  async (
+    req: AuthedRequestWithTenantAndBody<bulkReorderChannelsType>,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const { channels } = req.body;
+    await ChannelsService.reorder({
       channels,
       accountId: req.tenant?.id!,
     });
