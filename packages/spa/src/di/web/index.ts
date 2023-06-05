@@ -28,6 +28,10 @@ const Web: DI = {
     return `/${path}`;
   },
   checkForUpdate: async () => {},
+
+  isDarwin: async () => {
+    return false;
+  },
 };
 
 export default Web;

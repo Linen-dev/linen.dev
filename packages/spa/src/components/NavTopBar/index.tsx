@@ -10,12 +10,14 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import JoinButton from '@linen/ui/JoinButton';
 import TitleBar from '@/components/TitleBar';
 import { useSession } from '@linen/auth/client';
-import { isTauri } from '@/di';
+import di from '@/di';
+import { useEffect, useState } from 'react';
 
 export default function NavTopBar() {
   const navigate = useNavigate();
   const location = useLocation();
   const { status } = useSession();
+  const [showLogo, setShowLogo] = useState(true);
 
   const {
     channels,
@@ -36,11 +38,15 @@ export default function NavTopBar() {
     shallow
   );
 
+  useEffect(() => {
+    di.isDarwin().then(setShowLogo);
+  }, []);
+
   return (
     <>
       <div className={styles.push} />
       <div className={styles.header}>
-        {isTauri() && <TitleBar currentCommunity={currentCommunity} />}
+        {showLogo && <TitleBar currentCommunity={currentCommunity} />}
         <Header
           channels={channels}
           channelName={channelName}
@@ -48,7 +54,7 @@ export default function NavTopBar() {
           permissions={permissions || ({} as any)}
           settings={settings || mockSettings}
           currentCommunity={currentCommunity || mockAccount}
-          logoClassName={isTauri() ? styles.hiddenLogo : styles.visibleLogo}
+          logoClassName={showLogo ? styles.hiddenLogo : styles.visibleLogo}
           // component injection
           api={api}
           Link={communityName ? InternalLink({ communityName }) : () => {}}

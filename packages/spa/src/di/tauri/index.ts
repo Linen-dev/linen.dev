@@ -9,6 +9,7 @@ import {
 import type { SerializedAccount } from '@linen/types';
 import { playNotificationSound } from '@/utils/playNotificationSound';
 import type { DI } from '@/di/types';
+import { type } from '@tauri-apps/api/os';
 
 const Tauri: DI = {
   openExternal: async (url: string) => {
@@ -67,6 +68,11 @@ const Tauri: DI = {
 
   checkForUpdate: async () => {
     await emit(TauriEvent.CHECK_UPDATE);
+  },
+
+  isDarwin: async () => {
+    const osType = await type();
+    return osType === 'Darwin';
   },
 };
 

@@ -11,4 +11,5 @@ export type DI = {
   buildInternalUrl: (path: string) => string;
   setTitleBarListeners: () => void;
   checkForUpdate: () => Promise<void>;
+  isDarwin: () => Promise<boolean>;
 };
