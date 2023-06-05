@@ -54,6 +54,9 @@ class ChannelsService {
           accountId: communityId,
           type: ChannelType.PUBLIC,
         },
+        orderBy: {
+          displayOrder: 'asc',
+        },
       })
       .then((channels) =>
         channels.map(({ threads, _count, ...rest }) => {

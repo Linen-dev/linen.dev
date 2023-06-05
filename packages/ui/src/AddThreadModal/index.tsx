@@ -69,8 +69,8 @@ export default function AddThreadModal({
   const [message, setMessage] = useState('');
   const [allUsers] = useUsersContext();
   const sortedChannels = channels
-    ? channels.sort((a, b) => {
-        return a.channelName.localeCompare(b.channelName);
+    ? channels.sort((a) => {
+        return a.displayOrder;
       })
     : [];
   const [channelId, setChannelId] = useState<string>(

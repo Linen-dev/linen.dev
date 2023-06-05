@@ -44,7 +44,13 @@ export default function Droppable({
     setHover(true);
   }
 
-  function handleDragLeave() {
+  function handleDragLeave(event: React.DragEvent) {
+    if (
+      event.relatedTarget &&
+      event.currentTarget.contains(event.relatedTarget as HTMLDivElement)
+    ) {
+      return false;
+    }
     setHover(false);
   }
 
@@ -52,16 +58,20 @@ export default function Droppable({
     setHover(false);
     const text = event.dataTransfer.getData('text');
     if (text) {
-      const data = JSON.parse(text);
-      if (data.id === id) {
-        return event.stopPropagation();
+      try {
+        const data = JSON.parse(text);
+        if (data.id === id) {
+          return event.stopPropagation();
+        }
+        return onDrop?.({
+          source: data.source,
+          target: 'thread',
+          from: data.id,
+          to: id,
+        });
+      } catch (exception) {
+        return false;
       }
-      return onDrop?.({
-        source: data.source,
-        target: 'thread',
-        from: data.id,
-        to: id,
-      });
     }
   }
 

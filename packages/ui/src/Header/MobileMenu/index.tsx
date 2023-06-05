@@ -158,7 +158,7 @@ export default function MobileMenu({
             )}
             <li className={styles.subheader}>Channels</li>
             {channels
-              .sort((a, b) => a.channelName.localeCompare(b.channelName))
+              .sort((a) => a.displayOrder)
               .map((channel, index) => {
                 return (
                   <li key={channel.channelName + index}>

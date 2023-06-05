@@ -1,0 +1,40 @@
+.items {
+  display: grid;
+  grid-template-columns: 1fr;
+  margin-top: 0.5rem;
+}
+
+@media (min-width: 768px) {
+  .items {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1440px) {
+  .items {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.item {
+  align-items: center;
+  display: flex;
+  padding: 0.25rem 0;
+}
+
+.item:last-child {
+  margin-bottom: 0;
+}
+
+.label {
+  align-items: center;
+  cursor: grab;
+  display: flex;
+  font-size: 14px;
+  gap: 0.25rem;
+  font-weight: 500;
+}
+
+.drop {
+  background: var(--color-blue-50);
+}

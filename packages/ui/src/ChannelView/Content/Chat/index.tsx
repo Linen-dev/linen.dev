@@ -76,13 +76,17 @@ export default function Chat({
         }
         const text = event.dataTransfer.getData('text');
         if (text) {
-          const data = JSON.parse(text);
-          onDrop({
-            source: data.source,
-            target: 'channel',
-            from: data.id,
-            to: channelId,
-          });
+          try {
+            const data = JSON.parse(text);
+            onDrop({
+              source: data.source,
+              target: 'channel',
+              from: data.id,
+              to: channelId,
+            });
+          } catch (exception) {
+            return false;
+          }
         }
       }}
       ref={ref}
