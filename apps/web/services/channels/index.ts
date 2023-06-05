@@ -159,6 +159,28 @@ class ChannelsService {
     ]);
   }
 
+  static async reorder({
+    channels,
+    accountId,
+  }: {
+    channels: Partial<channels>[];
+    accountId: string;
+  }) {
+    return await prisma.$transaction(
+      channels.map(({ id, displayOrder }) =>
+        prisma.channels.updateMany({
+          where: {
+            id,
+            accountId,
+          },
+          data: {
+            displayOrder,
+          },
+        })
+      )
+    );
+  }
+
   static async updateCursor(channelId: string, cursor?: string | null) {
     if (cursor) {
       await prisma.channels.update({
