@@ -253,6 +253,14 @@ channelsRouter.put(
         type: req.body.channelPrivate
           ? ChannelType.PRIVATE
           : ChannelType.PUBLIC,
+        ...(req.body.channelPrivate && {
+          memberships: {
+            createMany: {
+              skipDuplicates: true,
+              data: [{ usersId: req.tenant_user?.id! }],
+            },
+          },
+        }),
       },
     });
     return res.status(200).json({});
