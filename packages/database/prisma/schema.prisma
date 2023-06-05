@@ -116,6 +116,7 @@ model channels {
   createdAt           DateTime              @default(now())
   updatedAt           DateTime?             @updatedAt
   archived            Boolean               @default(false)
+  displayOrder        Int?
 
   @@unique([externalChannelId])
   @@index([accountId])
