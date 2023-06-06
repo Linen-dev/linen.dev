@@ -11,26 +11,24 @@ import App from '@/App';
 import di from '@/di';
 import { handleSignIn } from '@/utils/handleSignIn';
 import { handleNotificationPermission } from '@/utils/handleNotificationPermission';
-const hasWindow = typeof window !== 'undefined';
 const minutes30 = 1000 * 60 * 30;
 
 di.listenDeepLink((event) => {
   if (!!event.payload || !!event.payload.url) {
     const url = new URL(event.payload.url || event.payload);
-    if (hasWindow) {
+    const params = new URLSearchParams(url.toString());
+    const state = params.get('state');
+    if (state) {
+      handleSignIn(state);
+    } else {
       window.location.href = url.pathname + url.search + url.hash;
     }
   }
 });
 
-if (hasWindow) {
-  if (window.location.search) {
-    handleSignIn(window.location.search);
-  }
-  handleNotificationPermission();
-  di.setTitleBarListeners();
-  setInterval(() => di.checkForUpdate(), minutes30);
-}
+handleNotificationPermission();
+di.setTitleBarListeners();
+setInterval(() => di.checkForUpdate(), minutes30);
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>

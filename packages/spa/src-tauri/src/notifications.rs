@@ -1,3 +1,4 @@
+#[cfg(target_os = "macos")]
 use tauri::Manager;
 use serde::{ Serialize, Deserialize };
 
@@ -51,7 +52,9 @@ impl Instance {
 
         match result {
             Ok(response) => {
+                println!("{:#?}", response);
                 match response {
+                    #[cfg(target_os = "macos")]
                     mac_notification_sys::NotificationResponse::ActionButton(action_name) => {
                         if action_name == "Open" {
                             println!("Clicked on open");
@@ -62,6 +65,7 @@ impl Instance {
                                 .unwrap();
                         }
                     }
+                    #[cfg(target_os = "macos")]
                     mac_notification_sys::NotificationResponse::Click => {
                         println!("Clicked on the notification itself");
                         app_handle

@@ -1,6 +1,6 @@
 {
   "build": {
-    "beforeDevCommand": "BROWSER=none yarn dev",
+    "beforeDevCommand": "cross-env BROWSER=none yarn dev",
     "beforeBuildCommand": "yarn build",
     "devPath": "http://localhost:3001",
     "distDir": "../build",
