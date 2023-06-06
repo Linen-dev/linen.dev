@@ -17,6 +17,9 @@ class ChannelsService {
         type: ChannelType.PUBLIC,
         hidden: false,
       },
+      orderBy: {
+        displayOrder: 'asc',
+      },
     });
   }
 

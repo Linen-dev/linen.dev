@@ -16,6 +16,7 @@ export default function createChannel(options?: Partial<channels>): channels {
     type: 'PUBLIC',
     createdAt: new Date(),
     updatedAt: null,
+    displayOrder: 0,
     ...options,
   };
 }

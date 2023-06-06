@@ -24,9 +24,8 @@ export default function ChannelOrderRow({
     debounce(api.reorderChannels),
     []
   );
-  const [channels, setChannels] = useState<SerializedChannel[]>(
-    initialChannels.sort((channel) => channel.displayOrder)
-  );
+  const [channels, setChannels] =
+    useState<SerializedChannel[]>(initialChannels);
 
   const onDragStart = (event: React.DragEvent) => {
     const node = event.target as HTMLDivElement;
@@ -91,6 +90,8 @@ export default function ChannelOrderRow({
             displayOrder: index,
           };
         });
+
+        onChange(reorderedChannels);
 
         debouncedReorderChannels({
           accountId: currentCommunity.id,

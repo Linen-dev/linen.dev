@@ -29,9 +29,8 @@ export default function ConfigurationsPage({
   isSubDomainRouting,
   dms,
 }: Props) {
-  const [channels, setChannels] = useState<SerializedChannel[]>(
-    initialChannels.sort((a) => a.displayOrder)
-  );
+  const [channels, setChannels] =
+    useState<SerializedChannel[]>(initialChannels);
 
   useEffect(() => {
     localStorage.set('pages.last', {
