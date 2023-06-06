@@ -61,7 +61,7 @@ interface Props {
   routerAsPath: string;
   usePath: (args: { href: string }) => string;
   getHomeUrl: (community: SerializedAccount) => string;
-  notify: (...args: any) => any;
+  notify: (body: string, href: string) => void;
   api: ApiClient;
   CustomRouterPush({ path }: { path: string }): void;
   CustomLink?: (props: {
@@ -152,16 +152,14 @@ export default function DesktopNavBar({
         (channel) => channel.id === payload.channel_id
       );
       if (channel && channel.id !== currentChannel?.id) {
+        const href = `${getHomeUrl(currentCommunity)}/c/${
+          channel.channelName
+        }#${payload.thread_id}`;
         Toast.info(
           ({ id }: { id: string }) => (
             <div className={styles.toast}>
               You were mentioned in{' '}
-              <a
-                className={styles.channel}
-                href={`${getHomeUrl(currentCommunity)}/c/${
-                  channel.channelName
-                }`}
-              >
+              <a className={styles.channel} href={href}>
                 #{channel.channelName}
               </a>
               <FiX className={styles.icon} onClick={() => Toast.dismiss(id)} />
@@ -169,7 +167,7 @@ export default function DesktopNavBar({
           ),
           { duration: Infinity }
         );
-        notify(`You were mentioned in #${channel.channelName}`);
+        notify(`You were mentioned in #${channel.channelName}`, href);
 
         setHighlights((highlights) => {
           return [...highlights, payload.channel_id];

@@ -2,12 +2,16 @@
 
 #[cfg(target_os = "macos")]
 extern crate objc;
+use notifications::{ Instance, NotificationPayload };
 
 use tauri::{ Manager, WindowEvent };
 // use window_ext::{ WindowExt, ToolbarThickness };
 // mod window_ext;
+mod notifications;
 
 fn main() {
+    let ctx = tauri::generate_context!();
+    Instance::init(&ctx.config().tauri.bundle.identifier);
     // macOS "App Nap" periodically pauses our app when it's in the background.
     // We need to prevent that so our intervals are not interrupted.
     #[cfg(target_os = "macos")]
@@ -35,6 +39,7 @@ fn main() {
 
             Ok(())
         })
+        .invoke_handler(tauri::generate_handler![custom_notification])
         .on_window_event(|event| {
             match event.event() {
                 WindowEvent::CloseRequested { api, .. } => {
@@ -54,7 +59,7 @@ fn main() {
                 _ => {}
             }
         })
-        .build(tauri::generate_context!())
+        .build(ctx)
         .expect("error while running tauri application")
         .run(|_app_handle, e| {
             match e {
@@ -64,4 +69,9 @@ fn main() {
                 _ => {}
             }
         });
+}
+
+#[tauri::command]
+async fn custom_notification(app_handle: tauri::AppHandle, payload: NotificationPayload) {
+    Instance::notification(app_handle, payload);
 }

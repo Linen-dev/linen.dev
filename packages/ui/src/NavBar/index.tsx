@@ -35,7 +35,7 @@ interface Props {
   getHomeUrl: (community: SerializedAccount) => string;
   api: ApiClient;
   CustomRouterPush({ path }: { path: string }): void;
-  notify: (...args: any) => any;
+  notify: (body: string, href: string) => void;
   CustomLink?: (props: {
     href: string;
     className: string;

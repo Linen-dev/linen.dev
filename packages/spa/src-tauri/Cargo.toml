@@ -22,6 +22,7 @@ tauri-plugin-deep-link = "0.1.1"
 macos-app-nap = "0.0"
 cocoa = "0.24.1"
 objc = "0.2.7"
+mac-notification-sys = { git = "https://github.com/h4llow3En/mac-notification-sys", rev = "7ab3864527698472224671093e581d4d1880851f" }
 
 [features]
 # this feature is used for production builds or when `devPath` points to the filesystem

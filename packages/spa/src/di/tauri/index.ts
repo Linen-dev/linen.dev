@@ -4,12 +4,13 @@ import { appWindow } from '@tauri-apps/api/window';
 import {
   isPermissionGranted,
   requestPermission,
-  sendNotification,
 } from '@tauri-apps/api/notification';
 import type { SerializedAccount } from '@linen/types';
 import { playNotificationSound } from '@/utils/playNotificationSound';
 import type { DI } from '@/di/types';
 import { type } from '@tauri-apps/api/os';
+import { invoke } from '@tauri-apps/api/tauri';
+import { buildTauriDeepLink } from '@/utils/buildTauriDeepLink';
 
 const Tauri: DI = {
   openExternal: async (url: string) => {
@@ -54,12 +55,14 @@ const Tauri: DI = {
     }
   },
 
-  sendNotification: async (body: string, title: string = 'Linen.dev') => {
-    let permissionGranted = await isPermissionGranted();
-    if (permissionGranted) {
-      sendNotification({ title, body });
-      playNotificationSound(0.2);
-    }
+  sendNotification: async (body: string, callback: string) => {
+    invoke('custom_notification', {
+      payload: {
+        body,
+        callback: buildTauriDeepLink(callback),
+      },
+    });
+    playNotificationSound(0.2);
   },
 
   buildInternalUrl: (path: string) => {

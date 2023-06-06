@@ -8,7 +8,7 @@ import { localStorage } from '@linen/utilities/storage';
 import { useEffect } from 'react';
 import HandleError from '@/components/HandleError';
 import { useLoading } from '@/components/Loading';
-import { mockAccount, mockSettings } from '@/mocks';
+import { mockAccount, mockSettings, mockThread } from '@/mocks';
 
 type ThreadPageProps = {
   communityName: string;
@@ -56,9 +56,10 @@ function View() {
 
   return (
     <ThreadView
+      key={threadProps?.thread.id}
       currentChannel={threadProps?.currentChannel || ({} as any)}
       isSubDomainRouting={false}
-      thread={threadProps?.thread || ({} as any)}
+      thread={threadProps?.thread || mockThread}
       threadUrl={threadProps?.threadUrl || 'loading'}
       isBot={false}
       currentCommunity={currentCommunity || mockAccount}

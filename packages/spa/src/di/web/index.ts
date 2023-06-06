@@ -20,7 +20,7 @@ const Web: DI = {
     // TODO
   },
 
-  sendNotification: async (body: string, title: string = 'Linen.dev') => {
+  sendNotification: async (body: string, callback: string) => {
     // TODO
   },
 

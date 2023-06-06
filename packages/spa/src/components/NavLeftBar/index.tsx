@@ -61,7 +61,7 @@ export default function NavLeftBar() {
       usePath={
         communityName ? customUsePath({ communityName }) : ({ href }) => href
       }
-      notify={(body: string) => di.sendNotification(body)}
+      notify={di.sendNotification}
       CustomRouterPush={
         communityName && settings
           ? CustomRouterPush({

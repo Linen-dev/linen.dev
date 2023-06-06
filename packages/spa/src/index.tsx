@@ -15,8 +15,8 @@ const hasWindow = typeof window !== 'undefined';
 const minutes30 = 1000 * 60 * 30;
 
 di.listenDeepLink((event) => {
-  if (!!event.payload) {
-    const url = new URL(event.payload);
+  if (!!event.payload || !!event.payload.url) {
+    const url = new URL(event.payload.url || event.payload);
     if (hasWindow) {
       window.location.href = url.pathname + url.search;
     }
