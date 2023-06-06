@@ -157,23 +157,21 @@ export default function MobileMenu({
               </li>
             )}
             <li className={styles.subheader}>Channels</li>
-            {channels
-              .sort((a) => a.displayOrder)
-              .map((channel, index) => {
-                return (
-                  <li key={channel.channelName + index}>
-                    <InternalLink
-                      className={classNames(styles.link, {
-                        [styles.active]: channel.channelName === channelName,
-                      })}
-                      onClick={close}
-                      href={`/c/${channel.channelName}`}
-                    >
-                      <FiHash /> {channel.channelName}
-                    </InternalLink>
-                  </li>
-                );
-              })}
+            {channels.map((channel, index) => {
+              return (
+                <li key={channel.channelName + index}>
+                  <InternalLink
+                    className={classNames(styles.link, {
+                      [styles.active]: channel.channelName === channelName,
+                    })}
+                    onClick={close}
+                    href={`/c/${channel.channelName}`}
+                  >
+                    <FiHash /> {channel.channelName}
+                  </InternalLink>
+                </li>
+              );
+            })}
 
             {permissions.manage && (
               <li className={styles.subheader}>Analytics</li>

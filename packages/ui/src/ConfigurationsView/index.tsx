@@ -32,6 +32,7 @@ export default function ConfigurationsView({
   api: ApiClient;
 }) {
   const updateAccount = debounce(api.updateAccount);
+  const key = channels.map(({ id }) => id).join();
 
   return (
     <div className={styles.wrapper}>
@@ -51,21 +52,24 @@ export default function ConfigurationsView({
         <AnonymizeUsersRow currentCommunity={currentCommunity} api={api} />
         <hr className={styles.my3} />
         <DefaultChannelRow
+          key={`default-row-${key}`}
           channels={channels}
           currentCommunity={currentCommunity}
           api={api}
-        />
-        <hr className={styles.my3} />
-        <ChannelVisibilityRow
-          currentCommunity={currentCommunity}
-          onChange={setChannels}
-          api={api}
+          defaultChannel={channels.find((channel) => channel.default)}
         />
         <hr className={styles.my3} />
         <ChannelOrderRow
           currentCommunity={currentCommunity}
           onChange={setChannels}
           channels={channels}
+          api={api}
+        />
+        <hr className={styles.my3} />
+        <ChannelVisibilityRow
+          key={`channel-visibility-${key}`}
+          currentCommunity={currentCommunity}
+          onChange={setChannels}
           api={api}
         />
         <hr className={styles.my3} />

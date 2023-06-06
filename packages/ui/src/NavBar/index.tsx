@@ -63,8 +63,6 @@ export default function NavBar({
   CustomRouterPush,
   CustomLink,
 }: Props) {
-  const sortedChannels = channels.sort((channel) => channel.displayOrder);
-
   return (
     <>
       <div className={styles.desktop}>
@@ -73,7 +71,7 @@ export default function NavBar({
           mode={mode}
           currentCommunity={currentCommunity}
           currentChannel={currentChannel}
-          channels={sortedChannels}
+          channels={channels}
           channelName={channelName}
           communities={communities}
           permissions={permissions}

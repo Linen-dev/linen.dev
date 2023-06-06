@@ -10,6 +10,7 @@ import type { ApiClient } from '@linen/api-client';
 interface Props {
   channels: SerializedChannel[];
   currentCommunity: SerializedAccount;
+  defaultChannel?: SerializedChannel;
   api: ApiClient;
 }
 
@@ -17,11 +18,9 @@ export default function DefaultChannelRow({
   channels,
   currentCommunity,
   api,
+  defaultChannel: initialChannel,
 }: Props) {
-  const [defaultChannel, setDefaultChannel] = useState(
-    channels.find((channel) => channel.default)
-  );
-  const [selected, setSelected] = useState(defaultChannel);
+  const [defaultChannel, setDefaultChannel] = useState(initialChannel);
 
   const CommunityIcon =
     currentCommunity.communityType === 'discord' ? DiscordIcon : SlackIcon;
@@ -40,7 +39,6 @@ export default function DefaultChannelRow({
         })
         .then((_) => {
           setDefaultChannel(channelSelected);
-          setSelected(channelSelected);
           Toast.success('Saved successfully!');
         })
         .catch(() => Toast.error('Something went wrong'));
@@ -61,7 +59,7 @@ export default function DefaultChannelRow({
         id="default-channel-integration-select"
         icon={<CommunityIcon color="#fff" />}
         theme="blue"
-        defaultValue={selected?.id}
+        defaultValue={defaultChannel?.id}
         onChange={onChange}
         options={channels?.map((channel) => ({
           label: channel.channelName,

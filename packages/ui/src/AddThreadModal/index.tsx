@@ -56,7 +56,7 @@ export default function AddThreadModal({
   communityId,
   currentUser,
   currentChannel,
-  channels,
+  channels = [],
   open,
   close,
   onSend,
@@ -68,13 +68,8 @@ export default function AddThreadModal({
 }: Props) {
   const [message, setMessage] = useState('');
   const [allUsers] = useUsersContext();
-  const sortedChannels = channels
-    ? channels.sort((a) => {
-        return a.displayOrder;
-      })
-    : [];
   const [channelId, setChannelId] = useState<string>(
-    currentChannel ? currentChannel.id : findDefaultChannel(sortedChannels).id
+    currentChannel ? currentChannel.id : findDefaultChannel(channels).id
   );
   const [title, setTitle] = useState<string>('');
   return (
@@ -89,7 +84,7 @@ export default function AddThreadModal({
               <NativeSelect
                 id="new-thread-channel"
                 label="Channel"
-                options={sortedChannels.map((channel) => ({
+                options={channels.map((channel) => ({
                   label: channel.channelName,
                   value: channel.id,
                 }))}

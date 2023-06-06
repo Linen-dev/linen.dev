@@ -48,7 +48,7 @@ export async function index({
     : [];
 
   const channelsMap = [...channels, ...dms, ...privateChannels].reduce(
-    (prev, curr) => {
+    (prev: any, curr: any) => {
       return {
         ...prev,
         [curr.id]: curr,
