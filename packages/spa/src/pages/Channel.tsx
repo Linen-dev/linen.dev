@@ -1,11 +1,11 @@
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import ChannelView from '@linen/ui/ChannelView';
 import { useUsersContext } from '@linen/contexts/Users';
 import { shallow, useLinenStore } from '@/store';
 import { api } from '@/fetcher';
 import { useQuery } from '@tanstack/react-query';
 import { playNotificationSound } from '@/utils/playNotificationSound';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { localStorage } from '@linen/utilities/storage';
 import customUsePath from '@/hooks/usePath';
 import HandleError from '@/components/HandleError';
@@ -57,6 +57,11 @@ export default function ChannelPage() {
 
 function View() {
   const navigate = useNavigate();
+  const [selectedThreadId, setSelectedThreadId] = useState<
+    string | undefined
+  >();
+  let location = useLocation();
+
   const {
     channelProps,
     currentCommunity,
@@ -79,6 +84,12 @@ function View() {
     }),
     shallow
   );
+
+  useEffect(() => {
+    setSelectedThreadId(
+      location.hash ? location.hash.split('#').join('') : undefined
+    );
+  }, [location.hash]);
 
   return (
     <ChannelView
@@ -105,6 +116,7 @@ function View() {
       }
       // TODO:
       queryIntegration={false}
+      selectedThreadId={selectedThreadId}
     />
   );
 }

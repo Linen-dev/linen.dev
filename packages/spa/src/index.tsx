@@ -18,7 +18,7 @@ di.listenDeepLink((event) => {
   if (!!event.payload || !!event.payload.url) {
     const url = new URL(event.payload.url || event.payload);
     if (hasWindow) {
-      window.location.href = url.pathname + url.search;
+      window.location.href = url.pathname + url.search + url.hash;
     }
   }
 });

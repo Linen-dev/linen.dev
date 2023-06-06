@@ -44,6 +44,7 @@ export default function ChannelView({
   routerPush,
   api,
   startSignUp,
+  selectedThreadId,
 }: {
   settings: Settings;
   channelName: string;
@@ -66,6 +67,7 @@ export default function ChannelView({
   routerPush(path: string): void;
   api: ApiClient;
   startSignUp: (props: StartSignUpProps) => Promise<void>;
+  selectedThreadId?: string;
 }) {
   const [threads, setThreads] = useState<SerializedThread[]>(initialThreads);
   const [pinnedThreads, setPinnedThreads] =
@@ -79,6 +81,10 @@ export default function ChannelView({
 
   const currentUser = permissions.user || null;
   const token = permissions.token || null;
+
+  useEffect(() => {
+    setCurrentThreadId(selectedThreadId);
+  }, [selectedThreadId]);
 
   useEffect(() => {
     setThreads(initialThreads);
