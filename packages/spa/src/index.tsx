@@ -16,7 +16,7 @@ const minutes30 = 1000 * 60 * 30;
 di.listenDeepLink((event) => {
   if (!!event.payload || !!event.payload.url) {
     const url = new URL(event.payload.url || event.payload);
-    const params = new URLSearchParams(url.toString());
+    const params = url.searchParams;
     const state = params.get('state');
     if (state) {
       handleSignIn(state);
