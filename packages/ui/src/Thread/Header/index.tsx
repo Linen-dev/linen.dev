@@ -43,7 +43,7 @@ export default function Header({
         <div className={styles.center}>
           <div className={styles.header}>
             {onClose && (
-              <div className={styles.mobile}>
+              <div className={classNames({ [styles.mobile]: !!onExpandClick })}>
                 <Icon onClick={onClose}>
                   <FiChevronLeft />
                 </Icon>
@@ -52,7 +52,7 @@ export default function Header({
             {onExpandClick && (
               <div className={styles.desktop}>
                 <Icon className={styles.expand} onClick={onExpandClick}>
-                  {expanded ? <FiChevronRight /> : <FiChevronLeft />}
+                  <FiChevronLeft />
                 </Icon>
               </div>
             )}
