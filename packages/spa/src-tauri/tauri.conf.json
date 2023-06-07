@@ -45,7 +45,7 @@
         "icons/icon.ico"
       ],
       "identifier": "dev.linen.desktop",
-      "targets": "all"
+      "targets": ["deb", "appimage", "msi", "app", "dmg", "updater"]
     },
     "security": {
       "csp": null
