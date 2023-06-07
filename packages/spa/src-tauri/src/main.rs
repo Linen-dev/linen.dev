@@ -12,10 +12,10 @@ mod notifications;
 fn main() {
     let ctx = tauri::generate_context!();
     Instance::init(&ctx.config().tauri.bundle.identifier);
-    // macOS "App Nap" periodically pauses our app when it's in the background.
-    // We need to prevent that so our intervals are not interrupted.
-    #[cfg(target_os = "macos")]
-    macos_app_nap::prevent();
+    // // macOS "App Nap" periodically pauses our app when it's in the background.
+    // // We need to prevent that so our intervals are not interrupted.
+    // #[cfg(target_os = "macos")]
+    // macos_app_nap::prevent();
 
     tauri_plugin_deep_link::prepare("dev.linen.desktop");
     tauri::Builder
