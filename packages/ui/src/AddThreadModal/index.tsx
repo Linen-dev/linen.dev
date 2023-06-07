@@ -113,7 +113,7 @@ export default function AddThreadModal({
           </Field>
           <Field>
             <MessageForm
-              id="inbox-message-form"
+              id="new-thread-message-form"
               currentUser={currentUser}
               onSend={(message: string) => {
                 setTitle('');

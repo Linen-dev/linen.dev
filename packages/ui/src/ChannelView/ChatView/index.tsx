@@ -8,7 +8,7 @@ import React, {
 import useInfiniteScroll from 'react-infinite-scroll-hook';
 import NProgress from 'nprogress';
 import Thread from '@/Thread';
-import Header from './Header';
+import Header from '../Header';
 import Empty from './Empty';
 import Chat from './Chat';
 import Grid from '@/GridContent';
