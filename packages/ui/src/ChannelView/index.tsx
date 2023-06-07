@@ -20,7 +20,7 @@ import { ChannelContext } from '@linen/contexts/channel';
 import debounce from '@linen/utilities/debounce';
 import { createThreadImitation } from '@linen/serializers/thread';
 import type { ApiClient } from '@linen/api-client';
-import Content from './Content';
+import ChatView from './ChatView';
 import { addReaction } from '@linen/utilities/reaction';
 
 const SHORTCUTS_ENABLED = false;
@@ -850,7 +850,7 @@ export default function ChannelView({
 
   return (
     <ChannelContext.Provider value={currentChannel}>
-      <Content
+      <ChatView
         queryIntegration={queryIntegration}
         playNotificationSound={playNotificationSound}
         useUsersContext={useUsersContext}
