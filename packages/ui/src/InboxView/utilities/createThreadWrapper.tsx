@@ -108,6 +108,7 @@ export function createThreadWrapper({
         accountId: null,
         pages: null,
         displayOrder: 0,
+        viewType: 'CHAT',
       },
       channelId: channel.id,
       hidden: false,
