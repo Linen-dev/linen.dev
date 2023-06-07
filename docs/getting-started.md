@@ -6,28 +6,30 @@
 - yarn (npm install -g yarn)
 - postgres 13 (or docker and docker-compose)
 
-> installing node with snapcraft isn't compatible with Prisma, please use NVM instead.
+> linux: installing node with snapcraft isn't compatible with Prisma, please use NVM instead.
 
 ## Getting Started
+
+you will need at minimum one secret: [how to generate a secret](#how-to-generate-a-secret)
 
 ```bash
 # prepare environment variables
 cp apps/web/.env.example .env
-# win: copy apps\web\.env.example .env
+# windows: copy apps\web\.env.example .env
 
-# generate secret
-openssl rand -base64 32 # edit the .env file, update NEXTAUTH_SECRET key with the result
-# win: on node, you can use this line: crypto.randomBytes(32).toString('base64')
+# create a new secret, open the .env file, update NEXTAUTH_SECRET key with the new secret
 
-# export the envs into the shell
-source .env
-# win: skip
+# optional (for push notifications)
+# create another secret, open the .env file, update PUSH_SERVICE_KEY key with the new secret
 
 # install dependencies
 yarn install
 
 # skip if you have postgres installed (starting the database)
-cd dev && docker-compose up -d && cd ..
+cd dev
+# windows-only: set COMPOSE_CONVERT_WINDOWS_PATHS=1
+docker-compose up -d
+cd ..
 
 # build dependencies
 yarn build:deps
@@ -40,11 +42,70 @@ yarn dev:web
 
 # For hot-reloading in frontend development
 # Open in a separate terminal
-cd packages/ui && yarn dev
+yarn tf ui dev
 ```
 
-Only credentials sign-in method enabled by default. To setup github sign-in or magic link sign-in:
-// TODO: steps to setup github signin and magic link
+_"tf" is just a shortcut for "turbo --filter"_
+
+> Only credentials sign-in method enabled by default. To setup github sign-in or magic link sign-in...TODO
+
+## How to generate a secret
+
+```bash
+# macos/linux
+openssl rand -base64 32
+
+# windows
+# on powershell or cdm, type 'node' and hit enter, node should be open now.
+node
+# type and hit enter
+require('crypto').randomBytes(32).toString('base64');
+# ctrl-c twice for close node
+```
+
+## Testing
+
+**!important: be sure to run getting started steps first**
+
+```bash
+## migrate database
+yarn migrate:test:db
+# test command
+yarn tf web... test
+```
+
+_the "..." after "web" is used to run same command over all dependencies_
+
+### Testing with push notifications
+
+Install Elixir: https://elixir-lang.org/install.html
+
+> windows: you may need to use cmd instead of powershell
+
+```bash
+# if the web service is already running, use another terminal
+
+# go to push service folder
+cd apps
+cd push_service
+
+# create a .env file with:
+MIX_ENV=prod
+AUTH_SERVICE_URL=http://localhost:3000
+PUSH_SERVICE_KEY= # must be the same secret as defined on .env on root folder
+SECRET_KEY_BASE= # generate a new secret
+
+# install deps
+mix local.hex --force
+mix local.rebar --force
+mix deps.get
+# start the server
+npx dotenv -e .env -- mix phx.server
+# you should see an output similar to:
+# <time> [info] Access PushServiceWeb.Endpoint at https://example.com
+
+# restart the web service (yarn dev:web)
+```
 
 ## (Optional) Local domain redirect testing
 

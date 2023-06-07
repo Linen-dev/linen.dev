@@ -1,0 +1,3 @@
+CREATE USER linentest WITH PASSWORD 'linentest' CREATEDB;
+CREATE DATABASE linentest;
+GRANT ALL PRIVILEGES ON DATABASE linentest TO linentest;

@@ -26,8 +26,10 @@
     "build:deps": "yarn turbo run build --filter web^...",
     "build:web": "yarn web build",
     "migrate:db": "yarn dotenv -e .env prisma migrate dev",
+    "migrate:test:db": "yarn dotenv -e ./apps/web/.env.test prisma migrate dev",
     "td": "yarn turbo dev --filter",
-    "tb": "yarn turbo build --filter"
+    "tb": "yarn turbo build --filter",
+    "tf": "yarn turbo --filter"
   },
   "resolutions": {
     "qs": ">=6.9.7",

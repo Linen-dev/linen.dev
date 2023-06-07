@@ -1,9 +1,12 @@
 ## Build Tauri desktop client
 
 ```bash
+# done in root folder
 yarn install
+yarn build:deps
 
-yarn tauri build:intel
+cd packages/spa
+yarn tauri build
 ```
 
 ## Prerequresites
@@ -22,6 +25,7 @@ yarn dev:web
 # in another terminal
 cd packages/spa
 cp .env.example .env
+# windows: copy .env.example .env
 yarn tauri dev
 ```
 
