@@ -22,6 +22,7 @@ import { createThreadImitation } from '@linen/serializers/thread';
 import type { ApiClient } from '@linen/api-client';
 import ChatView from './ChatView';
 import { addReaction } from '@linen/utilities/reaction';
+import ForumView from './ForumView';
 
 const SHORTCUTS_ENABLED = false;
 
@@ -850,7 +851,8 @@ export default function ChannelView({
 
   return (
     <ChannelContext.Provider value={currentChannel}>
-      {currentChannel.viewType === 'CHAT' && (
+      {currentChannel.viewType === 'CHAT' && <ForumView />}
+      {currentChannel.viewType === 'FORUM' && (
         <ChatView
           queryIntegration={queryIntegration}
           playNotificationSound={playNotificationSound}
