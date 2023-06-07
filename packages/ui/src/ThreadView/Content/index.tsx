@@ -14,6 +14,7 @@ import {
 } from '@linen/types';
 import styles from './index.module.scss';
 import type { ApiClient } from '@linen/api-client';
+import { CustomLinkHelper } from '@linen/utilities/custom-link';
 
 interface Props {
   thread: SerializedThread;
@@ -161,6 +162,18 @@ export default function Content({
         token={token}
         onMessage={(threadId, message, messageId, imitationId) => {
           onThreadMessage(threadId, message, messageId, imitationId);
+        }}
+        onClose={() => {
+          if (thread.channel) {
+            window.location.href = CustomLinkHelper({
+              isSubDomainRouting,
+              communityName: settings.communityName,
+              communityType: settings.communityType,
+              path: `/c/${thread.channel.channelName}${
+                thread.page ? `/${thread.page}` : ''
+              }#${thread.id}`,
+            });
+          }
         }}
         expanded
       />

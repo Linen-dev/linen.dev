@@ -381,7 +381,6 @@ function ChannelButton({
         }#${thread.id}`,
       }
     : null;
-
   return (
     <>
       {channelLink && (
