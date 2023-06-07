@@ -104,7 +104,18 @@ export default function Channel(props: ChannelProps) {
         useUsersContext={useUsersContext}
         usePath={usePath}
         routerPush={router.push}
+        selectedThreadId={getSelectedThreadId(initialThreads)}
       />
     </PageLayout>
   );
+}
+
+function getSelectedThreadId(initialThreads: SerializedThread[]) {
+  if (typeof window !== 'undefined' && window.location.hash) {
+    const hash = window.location.hash.split('#').join('');
+    if (hash && initialThreads.map(({ id }) => id).includes(hash)) {
+      return hash;
+    }
+  }
+  return;
 }
