@@ -117,9 +117,15 @@ model channels {
   updatedAt           DateTime?             @updatedAt
   archived            Boolean               @default(false)
   displayOrder        Int?
+  viewType            ChannelViewType       @default(CHAT)
 
   @@unique([externalChannelId])
   @@index([accountId])
+}
+
+enum ChannelViewType {
+  CHAT
+  FORUM
 }
 
 enum ChannelType {

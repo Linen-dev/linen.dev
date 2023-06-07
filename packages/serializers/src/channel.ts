@@ -16,6 +16,7 @@ export function serializeChannel(
     pages: channel.pages,
     type: channel.type,
     displayOrder: channel.displayOrder || 0,
+    viewType: channel.viewType,
   };
 }
 

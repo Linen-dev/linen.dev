@@ -9,6 +9,7 @@ export type SerializedChannel = {
   pages: number | null;
   stats?: string;
   displayOrder: number;
+  viewType: 'CHAT' | 'FORUM';
   type?: 'DM' | 'PUBLIC' | 'PRIVATE' | null;
 };
 

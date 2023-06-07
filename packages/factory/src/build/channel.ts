@@ -17,6 +17,7 @@ export default function createChannel(options?: Partial<channels>): channels {
     createdAt: new Date(),
     updatedAt: null,
     displayOrder: 0,
+    viewType: 'CHAT',
     ...options,
   };
 }
