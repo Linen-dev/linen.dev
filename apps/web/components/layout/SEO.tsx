@@ -25,10 +25,6 @@ export default function SEO({
       />
       <meta name="robots" content={`${noIndex ? 'no' : ''}index,follow`} />
 
-      {/* Twitter */}
-      <meta name="twitter:card" content="summary_large_image" key="twcard" />
-      <meta name="twitter:creator" content="@linen_dev" key="linen_dev" />
-
       {/* Open Graph */}
       <meta name="og:url" property="og:url" content={url} key="ogurl" />
       <meta name="og:image" property="og:image" content={image} key="ogimage" />

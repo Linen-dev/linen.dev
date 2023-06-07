@@ -71,6 +71,14 @@ export default function App(props: AppProps) {
           name="google-site-verification"
           content="PQcYPgLYmDXcT1ORhCBmPiwKISJnj1UCEbZpQXQPiVU"
         />
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary_large_image" key="twcard" />
+        <meta name="twitter:creator" content="@linen_dev" key="linen_dev" />
+        <meta
+          name="twitter:image"
+          content="https://static.main.linendev.com/logos/logo63448d11-cc57-4c35-8b16-5064ebae803c.png"
+          key="twimage"
+        />
       </Head>
 
       <Toast.ToastContext
