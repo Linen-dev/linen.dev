@@ -851,7 +851,15 @@ export default function ChannelView({
 
   return (
     <ChannelContext.Provider value={currentChannel}>
-      {currentChannel.viewType === 'CHAT' && <ForumView />}
+      {currentChannel.viewType === 'CHAT' && (
+        <ForumView
+          currentCommunity={currentCommunity}
+          currentUser={currentUser}
+          currentChannel={currentChannel}
+          permissions={permissions}
+          api={api}
+        />
+      )}
       {currentChannel.viewType === 'FORUM' && (
         <ChatView
           queryIntegration={queryIntegration}

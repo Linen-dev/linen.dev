@@ -17,13 +17,13 @@ import type { ApiClient } from '@linen/api-client';
 interface Props {
   className?: string;
   channel: SerializedChannel;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   currentUser?: SerializedUser;
   permissions: Permissions;
-  onAddClick(): void;
-  handleOpenIntegrations(): void;
-  handleOpenMembers(): void;
-  onHideChannelClick(): void;
+  onAddClick?(): void;
+  handleOpenIntegrations?(): void;
+  handleOpenMembers?(): void;
+  onHideChannelClick?(): void;
   api: ApiClient;
 }
 
@@ -40,21 +40,21 @@ export default function Header({
   api,
 }: Props) {
   const items = [];
-  if (channel.type !== 'DM') {
+  if (channel.type !== 'DM' && handleOpenIntegrations) {
     items.push({
       icon: <FiSettings />,
       label: 'Integrations',
       onClick: handleOpenIntegrations,
     });
   }
-  if (channel.type === 'PRIVATE') {
+  if (channel.type === 'PRIVATE' && handleOpenMembers) {
     items.push({
       icon: <FiUsers />,
       label: 'Members',
       onClick: handleOpenMembers,
     });
   }
-  if (permissions.manage) {
+  if (permissions.manage && onHideChannelClick) {
     items.push({
       icon: <FiEyeOff />,
       label: 'Hide channel',
@@ -75,7 +75,7 @@ export default function Header({
         {}
         {currentUser && (
           <div className={styles.actions}>
-            {permissions.chat && (
+            {permissions.chat && onAddClick && (
               <Icon onClick={onAddClick}>
                 <FiEdit3 />
               </Icon>
