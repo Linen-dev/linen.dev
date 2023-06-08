@@ -578,6 +578,7 @@ export default function Channel({
                     <div className={styles.full}>
                       <ul className={styles.ulFull}>
                         <Grid
+                          currentChannel={currentChannel}
                           threads={threads}
                           permissions={permissions}
                           readStatus={readStatus}

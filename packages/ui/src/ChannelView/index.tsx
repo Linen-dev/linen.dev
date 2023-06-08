@@ -851,7 +851,7 @@ export default function ChannelView({
 
   return (
     <ChannelContext.Provider value={currentChannel}>
-      {currentChannel.viewType === 'CHAT' && (
+      {currentChannel.viewType === 'FORUM' && (
         <ForumView
           queryIntegration={queryIntegration}
           playNotificationSound={playNotificationSound}
@@ -894,7 +894,7 @@ export default function ChannelView({
           startSignUp={startSignUp}
         />
       )}
-      {currentChannel.viewType === 'FORUM' && (
+      {currentChannel.viewType === 'CHAT' && (
         <ChatView
           queryIntegration={queryIntegration}
           playNotificationSound={playNotificationSound}
