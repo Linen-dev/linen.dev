@@ -1,5 +1,7 @@
-import React, { createRef } from 'react';
+import React, { createRef, useState } from 'react';
 import MessageForm from '@/MessageForm';
+import TextInput from '@/TextInput';
+import Field from '@/Field';
 import { SerializedUser, UploadedFile } from '@linen/types';
 import styles from './index.module.scss';
 
@@ -46,6 +48,7 @@ export default function Chat({
   fetchMentions,
   useUsersContext,
 }: Props) {
+  const [title, setTitle] = useState('');
   const ref = createRef<HTMLDivElement>();
 
   function handleDragEnter() {
@@ -91,23 +94,39 @@ export default function Chat({
       }}
       ref={ref}
     >
-      <MessageForm
-        id={`channel-message-form-${channelId}`}
-        currentUser={currentUser}
-        onSend={(message: string, files: UploadedFile[]) => {
-          return sendMessage({
-            message,
-            files,
-            channelId: channelId,
-          });
-        }}
-        progress={progress}
-        uploading={uploading}
-        uploads={uploads}
-        upload={uploadFiles}
-        fetchMentions={fetchMentions}
-        useUsersContext={useUsersContext}
-      />
+      <Field>
+        <TextInput
+          id="channel-title"
+          placeholder="Add your title..."
+          value={title}
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+            setTitle(event.target.value)
+          }
+          onKeyUp={(event: React.KeyboardEvent<HTMLInputElement>) => {
+            event.stopPropagation();
+            event.preventDefault();
+          }}
+        />
+      </Field>
+      <Field>
+        <MessageForm
+          id={`channel-message-form-${channelId}`}
+          currentUser={currentUser}
+          onSend={(message: string, files: UploadedFile[]) => {
+            return sendMessage({
+              message,
+              files,
+              channelId: channelId,
+            });
+          }}
+          progress={progress}
+          uploading={uploading}
+          uploads={uploads}
+          upload={uploadFiles}
+          fetchMentions={fetchMentions}
+          useUsersContext={useUsersContext}
+        />
+      </Field>
     </div>
   );
 }
