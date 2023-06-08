@@ -31,11 +31,7 @@ import {
   UploadedFile,
 } from '@linen/types';
 import { SerializedMessage } from '@linen/types';
-import {
-  scrollToTop,
-  isScrollAtBottom,
-  isInViewport,
-} from '@linen/utilities/scroll';
+import { scrollToTop } from '@linen/utilities/scroll';
 import useMode from '@linen/hooks/mode';
 import useWebsockets from '@linen/hooks/websockets';
 import styles from './index.module.scss';
@@ -194,11 +190,9 @@ export default function Channel({
 }: Props) {
   const [collapsed, setCollapsed] = useState(false);
   const [isInfiniteScrollLoading, setInfiniteScrollLoading] = useState(false);
-  const [isLeftScrollAtBottom, setIsLeftScrollAtBottom] = useState(true);
   const [isScrolling, setIsScrolling] = useState(true);
   const [readStatus, setReadStatus] = useState<SerializedReadStatus>();
   const scrollableRootRef = useRef<HTMLDivElement | null>(null);
-  const lastScrollDistanceToBottomRef = useRef<number>();
   const rightRef = useRef<HTMLDivElement>(null);
   const leftBottomRef = useRef<HTMLDivElement>(null);
   const [cursor, setCursor] = useState(nextCursor);
@@ -269,11 +263,8 @@ export default function Channel({
     permissions,
     onNewMessage(payload: any) {
       playNotificationSound(0.2);
-      const pinned = isLeftScrollAtBottom;
       onThreadMessage(payload);
-      if (pinned) {
-        setTimeout(() => handleScroll(), 0);
-      }
+      // scroll by msg height
     },
   });
 
@@ -316,15 +307,6 @@ export default function Channel({
     scrollToTop(scrollableRootRef.current as HTMLElement);
   }
 
-  function handleLeftScroll() {
-    if (
-      isLeftScrollAtBottom ||
-      isInViewport(leftBottomRef.current as HTMLElement)
-    ) {
-      setTimeout(() => handleScroll, 0);
-    }
-  }
-
   async function selectThread(threadId: string) {
     const text = getSelectedText();
     if (text) {
@@ -342,7 +324,6 @@ export default function Channel({
     if (isLastThread) {
       setTimeout(() => handleScroll(), 0);
     }
-    handleLeftScroll();
   }
 
   const rootMargin =
@@ -374,15 +355,6 @@ export default function Channel({
     },
     [topRootRef, bottomRootRef]
   );
-
-  const handleRootScroll = () => {
-    const rootNode = scrollableRootRef.current;
-    if (rootNode) {
-      setIsLeftScrollAtBottom(isScrollAtBottom(rootNode));
-      const scrollDistanceToBottom = rootNode.scrollHeight - rootNode.scrollTop;
-      lastScrollDistanceToBottomRef.current = scrollDistanceToBottom;
-    }
-  };
 
   function showIntegrationsModal() {
     setModal(ModalView.INTEGRATIONS);
@@ -447,7 +419,6 @@ export default function Channel({
     to: string;
   }) => {
     onDrop({ source, target, from, to });
-    handleLeftScroll();
   };
 
   function uploadFiles(files: File[]) {
@@ -628,7 +599,6 @@ export default function Channel({
           </div>
         }
         leftRef={leftRef}
-        onLeftScroll={handleRootScroll}
         right={
           threadToRender && (
             <Thread
@@ -657,14 +627,11 @@ export default function Channel({
               onReaction={sendReaction}
               token={token}
               onSend={() => {
-                handleLeftScroll();
+                handleScroll();
               }}
               onMessage={(threadId, message, messageId, imitationId) => {
-                const pinned = isLeftScrollAtBottom;
                 onMessage(threadId, message, messageId, imitationId);
-                if (pinned) {
-                  handleScroll();
-                }
+                // scroll by msg height?
               }}
             />
           )

@@ -6,7 +6,7 @@ import {
   UploadedFile,
   StartSignUpProps,
 } from '@linen/types';
-import { scrollToBottom } from '@linen/utilities/scroll';
+import { scrollToTop } from '@linen/utilities/scroll';
 import debounce from '@linen/utilities/debounce';
 import { createThreadImitation } from '@linen/serializers/thread';
 import type { ApiClient } from '@linen/api-client';
@@ -80,10 +80,7 @@ export function sendMessageWrapper({
     setThreads((threads: SerializedThread[]) => {
       return [...threads, imitation];
     });
-    setTimeout(
-      () => scrollToBottom(scrollableRootRef.current as HTMLElement),
-      0
-    );
+    setTimeout(() => scrollToTop(scrollableRootRef.current as HTMLElement), 0);
     return debounce(
       api.createThread,
       100
