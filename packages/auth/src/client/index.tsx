@@ -475,11 +475,9 @@ export function SessionProvider(props: SessionProviderProps) {
   }, [props.refetchOnWindowFocus]);
 
   const isOnline = useOnline();
-  // TODO: Flip this behavior in next major version
-  const shouldRefetch = refetchWhenOffline !== false || isOnline;
 
   React.useEffect(() => {
-    if (refetchInterval && shouldRefetch) {
+    if (refetchInterval && isOnline) {
       const refetchIntervalTimer = setInterval(() => {
         if (__LINEN_AUTH._session) {
           __LINEN_AUTH._getSession({ event: 'poll' });
@@ -487,7 +485,7 @@ export function SessionProvider(props: SessionProviderProps) {
       }, refetchInterval * 1000);
       return () => clearInterval(refetchIntervalTimer);
     }
-  }, [refetchInterval, shouldRefetch]);
+  }, [refetchInterval, isOnline]);
 
   const value: any = React.useMemo(
     () => ({
