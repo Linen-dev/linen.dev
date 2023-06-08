@@ -32,7 +32,7 @@ import {
 } from '@linen/types';
 import { SerializedMessage } from '@linen/types';
 import {
-  scrollToBottom,
+  scrollToTop,
   isScrollAtBottom,
   isInViewport,
 } from '@linen/utilities/scroll';
@@ -43,7 +43,6 @@ import Layouts from '@/Layouts';
 import { timestamp } from '@linen/utilities/date';
 import debounce from '@linen/utilities/debounce';
 import { getSelectedText } from '@linen/utilities/document';
-import ScrollToBottomIcon from './ScrollToBottomIcon';
 import Row from '@/Row';
 import ChatLayout from '@/ChatLayout';
 import AddThreadModal from '@/AddThreadModal';
@@ -220,7 +219,6 @@ export default function Channel({
 
   useLayoutEffect(() => {
     if (!isInfiniteScrollLoading) {
-      scrollDown();
       setTimeout(() => setIsScrolling(false), 10);
       viewport === 'mobile' && NProgress.done();
     } else {
@@ -243,9 +241,9 @@ export default function Channel({
         if (data) {
           setCursor({ ...cursor, [key]: data?.nextCursor?.[key] });
           if (next) {
-            setThreads((threads) => [...threads, ...data.threads]);
-          } else {
             setThreads((threads) => [...data.threads, ...threads]);
+          } else {
+            setThreads((threads) => [...threads, ...data.threads]);
           }
         }
       }
@@ -315,7 +313,7 @@ export default function Channel({
   }, [currentChannel]);
 
   function handleScroll() {
-    scrollToBottom(scrollableRootRef.current as HTMLElement);
+    scrollToTop(scrollableRootRef.current as HTMLElement);
   }
 
   function handleLeftScroll() {
@@ -352,15 +350,6 @@ export default function Channel({
 
   const [infiniteTopRef, { rootRef: topRootRef }] = useInfiniteScroll({
     loading: isInfiniteScrollLoading || isScrolling,
-    hasNextPage: !!cursor.prev,
-    onLoadMore: loadMore,
-    disabled: !!error?.prev || !cursor.prev || isScrolling,
-    rootMargin,
-    delayInMs: 0,
-  });
-
-  const [infiniteBottomRef, { rootRef: bottomRootRef }] = useInfiniteScroll({
-    loading: isInfiniteScrollLoading || isScrolling,
     hasNextPage: !!cursor.next,
     onLoadMore: loadMoreNext,
     disabled: !!error?.next || !cursor.next || isScrolling,
@@ -368,9 +357,14 @@ export default function Channel({
     delayInMs: 0,
   });
 
-  useEffect(() => {
-    handleScroll();
-  }, []);
+  const [infiniteBottomRef, { rootRef: bottomRootRef }] = useInfiniteScroll({
+    loading: isInfiniteScrollLoading || isScrolling,
+    hasNextPage: !!cursor.prev,
+    onLoadMore: loadMore,
+    disabled: !!error?.prev || !cursor.prev || isScrolling,
+    rootMargin,
+    delayInMs: 0,
+  });
 
   const leftRef = useCallback(
     (node: HTMLDivElement) => {
@@ -410,16 +404,6 @@ export default function Channel({
     const thread = threads.find(({ id }) => id === threadId);
     setEditedThread(thread);
     setModal(ModalView.EDIT_THREAD);
-  }
-
-  function scrollDown(offset = 0) {
-    const scrollableRoot = scrollableRootRef.current;
-    const lastScrollDistanceToBottom =
-      lastScrollDistanceToBottomRef.current ?? 0;
-    if (scrollableRoot) {
-      scrollableRoot.scrollTop =
-        scrollableRoot.scrollHeight - lastScrollDistanceToBottom + offset;
-    }
   }
 
   const sendMessage = sendMessageWrapper({
@@ -511,7 +495,7 @@ export default function Channel({
               [styles['is-empty']]: threads.length === 0,
             })}
           >
-            {cursor?.prev && !error?.prev && !isScrolling && (
+            {cursor?.next && !error?.next && !isScrolling && (
               <div ref={infiniteTopRef}></div>
             )}
             <ChatLayout
@@ -574,10 +558,6 @@ export default function Channel({
                         />
                       </PinnedThread>
                     )}
-                    <ScrollToBottomIcon
-                      show={!isLeftScrollAtBottom && threads.length > 0}
-                      onClick={handleScroll}
-                    />
                   </Header>
                   {threads.length === 0 ? (
                     <Empty
@@ -597,6 +577,7 @@ export default function Channel({
                     <div className={styles.full}>
                       <ul className={styles.ulFull}>
                         <Grid
+                          currentChannel={currentChannel}
                           threads={threads}
                           permissions={permissions}
                           readStatus={readStatus}
@@ -618,7 +599,6 @@ export default function Channel({
                           onRemind={onRemind}
                           onUnread={unreadThread}
                           onDrop={handleDrop}
-                          onLoad={handleLeftScroll}
                         />
                       </ul>
                     </div>
@@ -641,7 +621,7 @@ export default function Channel({
                 )
               }
             />
-            {cursor.next && !error?.next && !isScrolling && (
+            {cursor.prev && !error?.prev && !isScrolling && (
               <div ref={infiniteBottomRef}></div>
             )}
             <div ref={leftBottomRef}></div>

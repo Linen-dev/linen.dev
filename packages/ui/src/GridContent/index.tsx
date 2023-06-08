@@ -5,6 +5,7 @@ import {
   Permissions,
   Priority,
   ReminderTypes,
+  SerializedChannel,
   SerializedReadStatus,
   SerializedThread,
   SerializedUser,
@@ -27,6 +28,7 @@ interface RowItem {
 }
 
 export default function GridContent({
+  currentChannel,
   threads,
   permissions,
   readStatus,
@@ -51,6 +53,7 @@ export default function GridContent({
   onUnread,
   Row = DefaultRow,
 }: {
+  currentChannel: SerializedChannel;
   threads: SerializedThread[];
   permissions: Permissions;
   readStatus?: SerializedReadStatus;
@@ -114,6 +117,9 @@ export default function GridContent({
   ].filter(Boolean) as RowItem[];
 
   const sorted = rows.sort((a, b) => {
+    if (currentChannel.viewType === 'FORUM') {
+      return b.timestamp - a.timestamp;
+    }
     return a.timestamp - b.timestamp;
   });
   const { priority } = usePriority();

@@ -50,7 +50,9 @@ export default function Channel(props: ChannelProps) {
 
   useLayoutEffect(() => {
     setThreads(initialThreads);
-
+    if (currentChannel.viewType === 'FORUM') {
+      return;
+    }
     const node = document.getElementById('sidebar-layout-left');
     if (node) {
       setTimeout(() => scrollToBottom(node), 0);
