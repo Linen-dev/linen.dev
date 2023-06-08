@@ -21,7 +21,7 @@
     "start:queue": "pm2-runtime --raw \"npx tsx queue/index.ts\""
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.312.0",
+    "@aws-sdk/client-s3": "^3.348.0",
     "@linen/api-client": "*",
     "@linen/ast": "*",
     "@linen/auth": "*",
