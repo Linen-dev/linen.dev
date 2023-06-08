@@ -8,7 +8,7 @@ import {
   Roles,
 } from '@linen/types';
 import { v4 } from 'uuid';
-import { createAccountEvent } from 'services/customerIo/trackEvents';
+import { eventNewCommunity } from 'services/events/eventNewCommunity';
 import unique from 'lodash.uniq';
 import { replaceS3byCDN } from 'utilities/replaceS3byCDN';
 import { createRemoveCommunityJob } from 'queue/jobs';
@@ -75,7 +75,7 @@ export default class AccountsService {
       });
       const ownerUser = users?.shift();
 
-      await createAccountEvent(email, id);
+      await eventNewCommunity({ email, id, slackDomain });
 
       return { status: 200, id, ownerUser };
     } catch (error: any) {
