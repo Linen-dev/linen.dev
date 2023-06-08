@@ -9,6 +9,7 @@ import { eventSignUp } from 'services/events/eventNewSignUp';
 import { z } from 'zod';
 import { ApiEvent, trackApiEvent } from 'utilities/ssr-metrics';
 import { cors, preflight } from 'utilities/cors';
+import { eventUserJoin } from 'services/events/eventUserJoin';
 
 const createSchema = z.object({
   email: z.string().email(),
@@ -83,24 +84,20 @@ async function joinCommunity({
     where: { id: accountId },
   });
   if (account && account.type === AccountType.PUBLIC) {
-    await prisma.auths.update({
-      where: { id: newAuthId },
+    const newUser = await prisma.users.create({
       data: {
-        accountId,
-        users: {
-          create: {
-            isAdmin: false,
-            isBot: false,
-            accountsId: accountId,
-            displayName: normalize(
-              displayName || email.split('@').shift() || email
-            ),
-            anonymousAlias: generateRandomWordSlug(),
-            role: Roles.MEMBER,
-          },
-        },
+        isAdmin: false,
+        isBot: false,
+        accountsId: accountId,
+        displayName: normalize(
+          displayName || email.split('@').shift() || email
+        ),
+        anonymousAlias: generateRandomWordSlug(),
+        role: Roles.MEMBER,
+        authsId: newAuthId,
       },
     });
+    await eventUserJoin({ userId: newUser.id });
   }
 }
 

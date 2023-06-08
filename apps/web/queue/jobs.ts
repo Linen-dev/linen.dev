@@ -37,6 +37,7 @@ export const QUEUE_CRAWL_GOOGLE_STATS = 'google-stats';
 export const QUEUE_SITEMAP = 'sitemap';
 export const QUEUE_INTEGRATION_DISCORD = 'integration-discord';
 export const QUEUE_REMOVE_COMMUNITY = 'remove-community';
+export const QUEUE_USER_JOIN = 'user-join';
 
 export async function createWebhookJob(payload: SlackEvent) {
   const worker = await WorkerSingleton.getInstance();
@@ -136,4 +137,11 @@ export async function createRemoveCommunityJob(accountId: string) {
       runAt,
     }
   );
+}
+
+export async function createUserJoinJob(payload: any) {
+  const worker = await WorkerSingleton.getInstance();
+  return await worker.addJob(QUEUE_USER_JOIN, payload, {
+    maxAttempts: 1,
+  });
 }

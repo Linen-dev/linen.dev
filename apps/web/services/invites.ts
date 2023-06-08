@@ -7,6 +7,7 @@ import { Unauthorized } from 'server/exceptions';
 import { serializeEmail } from '@linen/serializers/email';
 import unique from 'lodash.uniq';
 import { getHostFromHeaders } from '@linen/utilities/domain';
+import { eventUserJoin } from './events/eventUserJoin';
 
 export async function createInvitation({
   createdByUserId,
@@ -188,6 +189,7 @@ export async function acceptInvite(id: string, email: string) {
 
   await prisma.invites.update({ where: { id }, data: { status: 'ACCEPTED' } });
 
+  await eventUserJoin({ userId: newUser.id });
   return newUser;
 }
 
@@ -267,7 +269,7 @@ async function createUser({
   displayName: string;
   profileImageUrl?: string;
 }) {
-  await prisma.users.create({
+  const user = await prisma.users.create({
     data: {
       isAdmin: false,
       isBot: false,
@@ -279,6 +281,7 @@ async function createUser({
       profileImageUrl,
     },
   });
+  await eventUserJoin({ userId: user.id });
 }
 
 async function findUser(accountId: string, authId: string) {
