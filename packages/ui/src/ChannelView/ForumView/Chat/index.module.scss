@@ -1,0 +1,19 @@
+.chat {
+  background: var(--color-background);
+  border-top: 1px solid var(--color-border);
+  padding: 1rem;
+}
+
+.hover {
+  background: var(--color-gray-50);
+}
+
+.hover * {
+  pointer-events: none;
+}
+
+@media screen and (max-width: 767px) {
+  .chat {
+    padding: 0.5rem 1rem;
+  }
+}

@@ -853,11 +853,45 @@ export default function ChannelView({
     <ChannelContext.Provider value={currentChannel}>
       {currentChannel.viewType === 'CHAT' && (
         <ForumView
-          currentCommunity={currentCommunity}
-          currentUser={currentUser}
-          currentChannel={currentChannel}
-          permissions={permissions}
+          queryIntegration={queryIntegration}
+          playNotificationSound={playNotificationSound}
+          useUsersContext={useUsersContext}
+          usePath={usePath}
+          routerPush={routerPush}
           api={api}
+          key={currentChannel.channelName}
+          threads={threads}
+          pinnedThreads={pinnedThreads}
+          currentChannel={currentChannel}
+          currentCommunity={currentCommunity}
+          settings={settings}
+          channelName={channelName}
+          isSubDomainRouting={isSubDomainRouting}
+          nextCursor={nextCursor}
+          isBot={isBot}
+          permissions={permissions}
+          currentThreadId={currentThreadId}
+          setThreads={setThreads}
+          deleteMessage={deleteMessage}
+          editMessage={editMessage}
+          muteThread={muteThread}
+          unmuteThread={unmuteThread}
+          pinThread={pinThread}
+          starThread={starThread}
+          updateThreadResolution={updateThreadResolution}
+          readThread={readThread}
+          unreadThread={unreadThread}
+          onMessage={onThreadMessage}
+          onDrop={onThreadDrop}
+          onRemind={onRemind}
+          sendReaction={sendReaction}
+          onSelectThread={onSelectThread}
+          editThread={editThread}
+          updateThread={updateThread}
+          onThreadMessage={onSocket}
+          token={token}
+          pathCursor={pathCursor}
+          startSignUp={startSignUp}
         />
       )}
       {currentChannel.viewType === 'FORUM' && (
