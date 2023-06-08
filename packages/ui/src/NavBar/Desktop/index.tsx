@@ -147,11 +147,12 @@ export default function DesktopNavBar({
         return; // skip own messages
       }
     }
+    // add more data to payload would help to send notification even if is browsing another community
     if (payload.mention_type === 'signal') {
       const channel = channels.find(
         (channel) => channel.id === payload.channel_id
       );
-      if (channel && channel.id !== currentChannel?.id) {
+      if (channel) {
         const href = `${getHomeUrl(currentCommunity)}/c/${
           channel.channelName
         }#${payload.thread_id}`;
