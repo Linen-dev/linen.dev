@@ -195,8 +195,10 @@ function MessageForm({
       .then(() => {
         setLoading(false);
       })
-      .catch(() => {
-        Toast.error('Something went wrong. Please try again.');
+      .catch((exception: any) => {
+        Toast.error(
+          exception?.message || 'Something went wrong. Please try again.'
+        );
         setLoading(false);
       });
     setMessage('');
