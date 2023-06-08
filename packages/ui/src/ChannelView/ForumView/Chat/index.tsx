@@ -23,10 +23,12 @@ interface Props {
     message,
     files,
     channelId,
+    title,
   }: {
     message: string;
     files: UploadedFile[];
     channelId: string;
+    title: string;
   }): Promise<void>;
   uploadFiles?(files: File[]): Promise<void>;
   progress: number;
@@ -113,8 +115,10 @@ export default function Chat({
           id={`channel-message-form-${channelId}`}
           currentUser={currentUser}
           onSend={(message: string, files: UploadedFile[]) => {
+            setTitle('');
             return sendMessage({
               message,
+              title,
               files,
               channelId: channelId,
             });
