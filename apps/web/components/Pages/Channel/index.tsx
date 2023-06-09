@@ -6,7 +6,11 @@ import {
 } from 'react';
 import PageLayout from 'components/layout/PageLayout';
 import { buildChannelSeo } from 'utilities/seo';
-import { SerializedThread, ChannelProps } from '@linen/types';
+import {
+  SerializedChannel,
+  SerializedThread,
+  ChannelProps,
+} from '@linen/types';
 import { api } from 'utilities/requests';
 import ChannelView from '@linen/ui/ChannelView';
 import OnChannelDrop from '@linen/ui/OnChannelDrop';
@@ -107,14 +111,21 @@ export default function Channel(props: ChannelProps) {
         useUsersContext={useUsersContext}
         usePath={usePath}
         routerPush={router.push}
-        selectedThreadId={getSelectedThreadId(initialThreads)}
+        selectedThreadId={getSelectedThreadId(currentChannel, initialThreads)}
       />
     </PageLayout>
   );
 }
 
-function getSelectedThreadId(initialThreads: SerializedThread[]) {
-  if (typeof window !== 'undefined' && window.location.hash) {
+function getSelectedThreadId(
+  currentChannel: SerializedChannel,
+  initialThreads: SerializedThread[]
+) {
+  if (
+    currentChannel.viewType === 'CHAT' &&
+    typeof window !== 'undefined' &&
+    window.location.hash
+  ) {
     const hash = window.location.hash.split('#').join('');
     if (hash && initialThreads.map(({ id }) => id).includes(hash)) {
       return hash;

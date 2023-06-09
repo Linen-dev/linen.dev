@@ -1,15 +1,27 @@
 .container {
   min-height: 100%;
   height: 100%;
+  width: 100%;
+}
+
+@media screen and (min-width: 1200px) {
+  .container {
+    width: 52rem;
+    margin: 0 auto;
+  }
 }
 
 .pinned {
   padding-bottom: 0;
 }
 
+.header {
+  padding-bottom: 1rem;
+}
+
 @media screen and (max-width: 767px) {
   .header {
-    display: none;
+    display: block;
   }
 }
 
