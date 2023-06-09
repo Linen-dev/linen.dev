@@ -16,6 +16,7 @@
 }
 
 .header {
+  border-bottom: none;
   padding-bottom: 1rem;
 }
 
@@ -23,6 +24,12 @@
   .header {
     display: block;
   }
+}
+
+.grid > li {
+  border: 1px solid var(--color-gray-300);
+  border-radius: 0.25rem;
+  margin: 0.5rem 1rem;
 }
 
 .full {

@@ -28,6 +28,7 @@ interface RowItem {
 }
 
 export default function GridContent({
+  className,
   currentChannel,
   threads,
   permissions,
@@ -53,6 +54,7 @@ export default function GridContent({
   onUnread,
   Row = DefaultRow,
 }: {
+  className?: string;
   currentChannel: SerializedChannel;
   threads: SerializedThread[];
   permissions: Permissions;
@@ -126,7 +128,9 @@ export default function GridContent({
 
   return (
     <div
-      className={classNames({ [styles.mouse]: priority === Priority.MOUSE })}
+      className={classNames(className, {
+        [styles.mouse]: priority === Priority.MOUSE,
+      })}
     >
       {sorted.map((item, index) => {
         const last = index === sorted.length - 1;

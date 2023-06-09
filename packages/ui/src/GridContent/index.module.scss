@@ -1,5 +1,7 @@
 .li {
+  background: var(--color-background);
   border: 1px solid var(--color-background);
+  color: var(--color-text);
 }
 .li.active {
   border-top: 1px solid var(--color-gray-100);
@@ -10,6 +12,10 @@
   .li:hover {
     background: var(--color-gray-50);
     cursor: pointer;
+
+    @media (prefers-color-scheme: dark) {
+      background: var(--color-gray-100);
+    }
   }
 }
 
