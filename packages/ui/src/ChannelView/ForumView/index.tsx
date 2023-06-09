@@ -319,6 +319,7 @@ export default function Channel({
     if (!currentThread) {
       return;
     }
+    setCollapsed(true);
     onSelectThread(currentThread.id);
     const isLastThread = currentThread.id === threads[threads.length - 1].id;
     if (isLastThread) {
@@ -618,9 +619,14 @@ export default function Channel({
               currentUser={currentUser}
               updateThread={updateThread}
               editMessage={editMessage}
-              onClose={() => onSelectThread(undefined)}
+              onClose={() => {
+                onSelectThread(undefined);
+              }}
               expanded={collapsed}
-              onExpandClick={() => setCollapsed((collapsed) => !collapsed)}
+              onExpandClick={() => {
+                setCollapsed((collapsed) => !collapsed);
+                onSelectThread(undefined);
+              }}
               onResolution={updateThreadResolution}
               sendMessage={sendThreadMessage}
               onDelete={deleteMessage}
