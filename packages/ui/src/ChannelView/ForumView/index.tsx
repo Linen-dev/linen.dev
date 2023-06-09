@@ -321,10 +321,7 @@ export default function Channel({
     }
     setCollapsed(true);
     onSelectThread(currentThread.id);
-    const isLastThread = currentThread.id === threads[threads.length - 1].id;
-    if (isLastThread) {
-      setTimeout(() => handleScroll(), 0);
-    }
+    // routerPush(membersPath);
   }
 
   const rootMargin =
@@ -549,6 +546,7 @@ export default function Channel({
                     <div className={styles.full}>
                       <ul className={styles.ulFull}>
                         <Grid
+                          className={styles.grid}
                           currentChannel={currentChannel}
                           threads={threads}
                           permissions={permissions}
