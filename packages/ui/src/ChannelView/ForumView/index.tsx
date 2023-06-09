@@ -478,56 +478,40 @@ export default function Channel({
               }}
               content={
                 <>
-                  {/* <Header
-                    className={classNames(styles.header, {
-                      [styles.pinned]: !!pinnedThread,
-                    })}
-                    channel={currentChannel}
-                    currentUser={currentUser}
-                    permissions={permissions}
-                    onAddClick={showAddThreadModal}
-                    handleOpenIntegrations={showIntegrationsModal}
-                    handleOpenMembers={showMembersModal}
-                    onHideChannelClick={showHideChannelModal}
-                    api={api}
-                  > */}
-                    {!currentCommunity.communityInviteUrl && (
-                      <Chat
-                        channelId={currentChannel.id}
+                  {!currentCommunity.communityInviteUrl && (
+                    <Chat
+                      channelId={currentChannel.id}
+                      currentUser={currentUser}
+                      onDrop={handleDrop}
+                      sendMessage={sendMessage}
+                      progress={progress}
+                      uploads={uploads}
+                      uploading={uploading}
+                      uploadFiles={currentUser && uploadFiles}
+                      useUsersContext={useUsersContext}
+                      fetchMentions={(term?: string) => {
+                        if (!currentUser) {
+                          return Promise.resolve([]);
+                        }
+                        if (!term) return Promise.resolve([]);
+                        return api.fetchMentions(term, currentCommunity.id);
+                      }}
+                    />
+                  )}
+                  {pinnedThread && (
+                    <PinnedThread onClick={() => selectThread(pinnedThread.id)}>
+                      <Row
+                        thread={pinnedThread}
+                        permissions={permissions}
+                        isSubDomainRouting={isSubDomainRouting}
+                        settings={settings}
                         currentUser={currentUser}
-                        onDrop={handleDrop}
-                        sendMessage={sendMessage}
-                        progress={progress}
-                        uploads={uploads}
-                        uploading={uploading}
-                        uploadFiles={currentUser && uploadFiles}
-                        useUsersContext={useUsersContext}
-                        fetchMentions={(term?: string) => {
-                          if (!currentUser) {
-                            return Promise.resolve([]);
-                          }
-                          if (!term) return Promise.resolve([]);
-                          return api.fetchMentions(term, currentCommunity.id);
-                        }}
+                        onDelete={deleteMessage}
+                        onPin={pinThread}
+                        onReaction={sendReaction}
                       />
-                    )}
-                    {pinnedThread && (
-                      <PinnedThread
-                        onClick={() => selectThread(pinnedThread.id)}
-                      >
-                        <Row
-                          thread={pinnedThread}
-                          permissions={permissions}
-                          isSubDomainRouting={isSubDomainRouting}
-                          settings={settings}
-                          currentUser={currentUser}
-                          onDelete={deleteMessage}
-                          onPin={pinThread}
-                          onReaction={sendReaction}
-                        />
-                      </PinnedThread>
-                    )}
-                  {/* </Header> */}
+                    </PinnedThread>
+                  )}
                   {threads.length === 0 ? (
                     <Empty
                       onInvite={
