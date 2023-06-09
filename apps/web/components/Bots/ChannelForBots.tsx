@@ -41,6 +41,7 @@ export default function ChannelForBots({
     >
       <ul className="divide-y w-full">
         <Grid
+          currentChannel={currentChannel}
           threads={threads}
           permissions={permissions}
           isSubDomainRouting={isSubDomainRouting}
