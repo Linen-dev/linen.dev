@@ -478,7 +478,7 @@ export default function Channel({
               }}
               content={
                 <>
-                  <Header
+                  {/* <Header
                     className={classNames(styles.header, {
                       [styles.pinned]: !!pinnedThread,
                     })}
@@ -490,7 +490,7 @@ export default function Channel({
                     handleOpenMembers={showMembersModal}
                     onHideChannelClick={showHideChannelModal}
                     api={api}
-                  >
+                  > */}
                     {!currentCommunity.communityInviteUrl && (
                       <Chat
                         channelId={currentChannel.id}
@@ -527,7 +527,7 @@ export default function Channel({
                         />
                       </PinnedThread>
                     )}
-                  </Header>
+                  {/* </Header> */}
                   {threads.length === 0 ? (
                     <Empty
                       onInvite={
