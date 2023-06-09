@@ -43,6 +43,7 @@ export default function Channel(props: ChannelProps) {
   const [allUsers] = useUsersContext();
   const [currentChannel, setCurrentChannel] = useState(initialChannel);
   const [threads, setThreads] = useState<SerializedThread[]>(initialThreads);
+  const { viewType } = currentChannel;
 
   useEffect(() => {
     setCurrentChannel(initialChannel);
@@ -50,14 +51,14 @@ export default function Channel(props: ChannelProps) {
 
   useLayoutEffect(() => {
     setThreads(initialThreads);
-    if (currentChannel.viewType === 'FORUM') {
+    if (viewType === 'FORUM') {
       return;
     }
     const node = document.getElementById('sidebar-layout-left');
     if (node) {
       setTimeout(() => scrollToBottom(node), 0);
     }
-  }, [initialThreads]);
+  }, [initialThreads, viewType]);
 
   return (
     <PageLayout
