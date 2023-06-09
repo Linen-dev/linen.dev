@@ -27,7 +27,7 @@ export default function Header({
   dropdown,
 }: Props) {
   return (
-    <StickyHeader>
+    <StickyHeader className={styles.header}>
       <div className={styles.container}>
         <div>
           <StickyHeader.Title>

@@ -12,7 +12,7 @@ interface Props {
 
 export default function Header({ page, total, onPageChange }: Props) {
   return (
-    <StickyHeader>
+    <StickyHeader className={styles.header}>
       <div className={styles.container}>
         <div>
           <StickyHeader.Title>
