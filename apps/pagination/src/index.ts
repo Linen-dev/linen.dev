@@ -1,17 +1,18 @@
 import { buildPages } from './buildPages';
 import { prisma } from '@linen/database';
 import PQueue from 'p-queue';
+import { logger } from './log';
 
 const queue = new PQueue({ concurrency: 5 });
 
 // @ts-ignore
 queue.on('error', (error) => {
-  console.error('error', error);
+  logger.error('error', error);
 });
 
 // @ts-ignore
 queue.on('completed', (result) => {
-  console.error('completed', result);
+  logger.info('completed', result);
 });
 
 (async () => {

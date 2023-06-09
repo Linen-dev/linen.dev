@@ -5,7 +5,7 @@
   "main": "dist/index.mjs",
   "private": true,
   "scripts": {
-    "with-env": "yarn dotenv -e ../web/.env",
+    "with-env": "yarn dotenv -e ../../.env",
     "build": "rimraf dist && tsup",
     "test": "jest",
     "dev": "yarn with-env tsx src/index",
@@ -14,6 +14,7 @@
   "dependencies": {
     "@linen/database": "*",
     "@linen/factory": "*",
+    "@linen/logger": "*",
     "p-queue": "^7.3.3",
     "pm2": "^5.2.2"
   },
