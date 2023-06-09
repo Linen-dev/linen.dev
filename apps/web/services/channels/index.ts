@@ -4,7 +4,11 @@ import {
   ChannelType,
   prisma,
 } from '@linen/database';
-import { findChannelsWithStats, channelPutIntegrationType } from '@linen/types';
+import {
+  findChannelsWithStats,
+  channelPutIntegrationType,
+  ChannelViewType,
+} from '@linen/types';
 import { formatDistance } from '@linen/utilities/date';
 import { serializeChannel, serializeDm } from '@linen/serializers/channel';
 import { v4 } from 'uuid';
@@ -201,11 +205,13 @@ class ChannelsService {
     channelName,
     externalChannelId,
     hidden,
+    viewType,
   }: {
     accountId: string;
     channelName: string;
     externalChannelId: string;
     hidden?: boolean;
+    viewType?: ChannelViewType;
   }) {
     const channel = await prisma.channels.findFirst({
       where: {
@@ -223,6 +229,7 @@ class ChannelsService {
           where: { id: channel.id },
           data: {
             externalChannelId,
+            viewType,
           },
         });
       }
@@ -232,6 +239,7 @@ class ChannelsService {
           where: { id: channel.id },
           data: {
             channelName: channelName.toLowerCase(),
+            viewType,
           },
         });
       }
@@ -244,6 +252,7 @@ class ChannelsService {
         channelName: channelName.toLowerCase(),
         externalChannelId,
         hidden,
+        viewType,
       },
     });
   }
@@ -396,12 +405,14 @@ class ChannelsService {
     accountId,
     usersId = [],
     ownerId,
+    viewType,
   }: {
     externalChannelId: string;
     channelName: string;
     accountId: string;
     ownerId: string;
     usersId: string[] | undefined;
+    viewType?: ChannelViewType;
   }) {
     const members = [ownerId, ...usersId].map((u) => ({
       usersId: u,
@@ -420,6 +431,7 @@ class ChannelsService {
             data: members,
           },
         },
+        viewType,
       },
     });
   }
@@ -511,11 +523,13 @@ export async function createChannel({
   accountId,
   externalChannelId,
   hidden,
+  viewType,
 }: {
   name: string;
   accountId: string;
   externalChannelId: string;
   hidden?: boolean;
+  viewType?: ChannelViewType;
 }) {
   const exists = await prisma.channels.findUnique({
     where: {
@@ -531,6 +545,7 @@ export async function createChannel({
       accountId,
       externalChannelId,
       hidden,
+      viewType,
     },
   });
 }

@@ -132,7 +132,8 @@ channelsRouter.post(
     res: Response,
     next: NextFunction
   ) => {
-    const { channelName, slackChannelId, channelPrivate, usersId } = req.body;
+    const { channelName, slackChannelId, channelPrivate, usersId, viewType } =
+      req.body;
 
     // TODO: move to services
     const result = await prisma.channels.findFirst({
@@ -153,6 +154,7 @@ channelsRouter.post(
         accountId: req.tenant?.id!,
         ownerId: req.tenant_user?.id!,
         usersId,
+        viewType,
       });
       return res.status(200).json(serializeChannel(channel));
     }
@@ -161,6 +163,7 @@ channelsRouter.post(
       externalChannelId: slackChannelId || v4(),
       channelName,
       accountId: req.tenant?.id!,
+      viewType,
     });
     return res.status(200).json(serializeChannel(channel));
   }

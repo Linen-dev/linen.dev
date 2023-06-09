@@ -1,16 +1,24 @@
 import React, { useState } from 'react';
 import { FiX } from '@react-icons/all-files/fi/FiX';
-import { patterns, Permissions, SerializedUser } from '@linen/types';
+import {
+  patterns,
+  Permissions,
+  SerializedUser,
+  ChannelViewType,
+} from '@linen/types';
 import type { ApiClient } from '@linen/api-client';
 import H3 from '@/H3';
 import Button from '@/Button';
 import Modal from '@/Modal';
+import Field from '@/Field';
 import TextInput from '@/TextInput';
+import NativeSelect from '@/NativeSelect';
 import Toast from '@/Toast';
 import Toggle from '@/Toggle';
 import styles from './index.module.scss';
 import classNames from 'classnames';
 import ShowUsers from '@/ShowUsers';
+import Label from '@/Label';
 
 interface Props {
   permissions: Permissions;
@@ -29,6 +37,7 @@ export default function NewChannelModal({
 }: Props) {
   const [loading, setLoading] = useState(false);
   const [channelPrivate, setChannelPrivate] = useState(false);
+  const [viewType, setViewType] = useState<ChannelViewType>('CHAT');
   const [users, setUsers] = useState<SerializedUser[]>([permissions.user]);
 
   async function onSubmit(e: any) {
@@ -43,12 +52,14 @@ export default function NewChannelModal({
           accountId: permissions.accountId!,
           channelName,
           channelPrivate: true,
+          viewType,
           usersId: users.map((u) => u.id),
         });
       } else {
         await api.createChannel({
           accountId: permissions.accountId!,
           channelName,
+          viewType,
         });
       }
 
@@ -89,21 +100,44 @@ export default function NewChannelModal({
               when organized around a topic. e.g. javascript.
             </p>
           </div>
-          <TextInput
-            autoFocus
-            id="channelName"
-            label="Channel name"
-            disabled={loading}
-            required
-            placeholder="e.g. javascript"
-            pattern={patterns.channelName.source}
-            title={
-              'Channels name should start with letter and could contain letters, underscore, numbers and hyphens. e.g. announcements'
-            }
-          />
-          <span className={styles.textXs}>
-            Be sure to choose a url friendly name.
-          </span>
+          <Field>
+            <Label htmlFor="channelName">
+              Channel name
+              <Label.Description>
+                Be sure to choose a url friendly name.
+              </Label.Description>
+            </Label>
+            <TextInput
+              autoFocus
+              id="channelName"
+              disabled={loading}
+              required
+              placeholder="e.g. javascript"
+              pattern={patterns.channelName.source}
+              title={
+                'Channels name should start with letter and could contain letters, underscore, numbers and hyphens. e.g. announcements'
+              }
+            />
+          </Field>
+          <Field>
+            <Label htmlFor="viewType">
+              Channel view
+              <Label.Description>
+                Choose how the channel is going to be displayed.
+              </Label.Description>
+            </Label>
+            <NativeSelect
+              id="viewType"
+              options={[
+                { label: 'Chat', value: 'CHAT' },
+                { label: 'Forum', value: 'FORUM' },
+              ]}
+              defaultValue={viewType}
+              onChange={(event) =>
+                setViewType(event.target.value as ChannelViewType)
+              }
+            />
+          </Field>
           <div className={classNames(styles.toggle, styles.py4)}>
             <label className={classNames(styles.label, styles.enabled)}>
               <Toggle
