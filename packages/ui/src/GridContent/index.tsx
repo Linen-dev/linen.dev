@@ -173,6 +173,7 @@ export default function GridContent({
                 onRemind={onRemind}
                 onUnread={onUnread}
                 onLoad={onLoad}
+                viewType={currentChannel.viewType}
               />
             </li>
           );

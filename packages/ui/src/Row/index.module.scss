@@ -3,6 +3,8 @@
   display: flex;
   position: relative;
   width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .container[draggable='true']:active {
@@ -44,4 +46,11 @@
   align-items: center;
   display: flex;
   gap: 0.125rem;
+}
+
+.upvotes {
+  color: var(--color-gray-600);
+  font-size: 12px;
+  font-weight: 500;
+
 }

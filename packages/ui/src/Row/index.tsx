@@ -11,12 +11,18 @@ import {
   ReminderTypes,
   onResolve,
   ThreadState,
+  ChannelViewType,
 } from '@linen/types';
 import { Mode } from '@linen/hooks/mode';
 import { FiMessageCircle } from '@react-icons/all-files/fi/FiMessageCircle';
 import { FiUsers } from '@react-icons/all-files/fi/FiUsers';
 import { FiUser } from '@react-icons/all-files/fi/FiUser';
 import { FiCheck } from '@react-icons/all-files/fi/FiCheck';
+// import { BiSolidUpvote } from '@react-icons/all-files/bi/biSolidUpvote';
+import { AiOutlineUp } from '@react-icons/all-files/Ai/AiOutlineUp';
+import { AiOutlineDown } from '@react-icons/all-files/Ai/AiOutlineDown';
+// AiOutlineUp
+// import { BiSolidDownvote} from '@react-icons/all-files/Bi/BiSolidDownvote';
 import { uniqueUsers } from './utilities/uniqueUsers';
 
 interface Props {
@@ -62,6 +68,7 @@ interface Props {
   onRead?(threadId: string): void;
   onRemind?(threadId: string, reminder: ReminderTypes): void;
   onUnread?(threadId: string): void;
+  viewType: ChannelViewType;
 }
 
 export default function ChannelRow({
@@ -87,6 +94,7 @@ export default function ChannelRow({
   onRead,
   onRemind,
   onUnread,
+  viewType,
 }: Props) {
   const { messages } = thread;
   const message = messages[0];
@@ -138,8 +146,15 @@ export default function ChannelRow({
           )
         }
         footer={({ inView }) =>
-          messages.length > 1 && (
+          viewType === 'FORUM' ? (
             <div className={styles.footer}>
+              <button>
+                <AiOutlineUp />
+              </button>
+              <span>{1}</span>
+              <button>
+                <AiOutlineDown />
+              </button>
               <Avatars
                 size="sm"
                 users={avatars}
@@ -155,9 +170,29 @@ export default function ChannelRow({
                 </li>
               </ul>
             </div>
+          ) : (
+            avatarFooter(inView)
           )
         }
       />
     </Droppable>
   );
+
+  function avatarFooter(inView: boolean): React.ReactNode {
+    return (
+      messages.length > 1 && (
+        <div className={styles.footer}>
+          <Avatars size="sm" users={avatars} placeholder={!inView || isBot} />
+          <ul className={styles.list}>
+            <li className={styles.info}>
+              {authors.length} {authors.length > 1 ? <FiUsers /> : <FiUser />}
+            </li>
+            <li className={styles.info}>
+              {messages.length - 1} <FiMessageCircle />
+            </li>
+          </ul>
+        </div>
+      )
+    );
+  }
 }
