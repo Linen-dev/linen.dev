@@ -13,6 +13,8 @@ export type SerializedChannel = {
   type?: 'DM' | 'PUBLIC' | 'PRIVATE' | null;
 };
 
+export type ChannelViewType = 'CHAT' | 'FORUM';
+
 export enum channelsIntegrationType {
   'GITHUB' = 'GITHUB',
   'EMAIL' = 'EMAIL',

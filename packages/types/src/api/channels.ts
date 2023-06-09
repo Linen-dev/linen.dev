@@ -1,5 +1,9 @@
 import { z } from 'zod';
-import { channelsIntegrationType, SerializedChannel } from '../channels';
+import {
+  channelsIntegrationType,
+  SerializedChannel,
+  ChannelViewType,
+} from '../channels';
 import { patterns } from '../patterns';
 
 export const createChannelSchema = z.object({
@@ -8,6 +12,7 @@ export const createChannelSchema = z.object({
   slackChannelId: z.string().optional(),
   channelPrivate: z.boolean().optional(),
   usersId: z.array(z.string().uuid()).optional(),
+  viewType: z.enum(['CHAT', 'FORUM']).optional(),
 });
 export type createChannelType = z.infer<typeof createChannelSchema>;
 
