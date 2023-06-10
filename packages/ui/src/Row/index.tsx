@@ -18,7 +18,8 @@ import { FiMessageCircle } from '@react-icons/all-files/fi/FiMessageCircle';
 import { FiUsers } from '@react-icons/all-files/fi/FiUsers';
 import { FiUser } from '@react-icons/all-files/fi/FiUser';
 import { FiCheck } from '@react-icons/all-files/fi/FiCheck';
-// import { BiSolidUpvote } from '@react-icons/all-files/bi/biSolidUpvote';
+import { BiUpvote } from '@react-icons/all-files/bi/BiUpvote';
+import { BiDownvote } from '@react-icons/all-files/bi/BiDownvote';
 import { AiOutlineUp } from '@react-icons/all-files/Ai/AiOutlineUp';
 import { AiOutlineDown } from '@react-icons/all-files/Ai/AiOutlineDown';
 // AiOutlineUp
@@ -114,6 +115,31 @@ export default function ChannelRow({
       onClick={onClick}
       onDrop={onDrop}
     >
+      {viewType === 'FORUM' && (
+        // <div className={styles.upvotes}>
+        //   <div className={styles.icon}>
+        //     {/* <BiUpvote className={styles.icon} /> */}
+        //     <BiUpvote />
+        //   </div>
+        //   <span>{1}</span>
+        //   <div className={styles.icon}>
+        //     {/* <BiDownvote className={styles.icon} /> */}
+        //     <BiDownvote />
+        //   </div>
+        // </div>
+        <div className={styles.upvotes}>
+          <div className={styles.icon}>
+            {/* <BiUpvote className={styles.icon} /> */}
+            <AiOutlineUp />
+          </div>
+          <span>{1}</span>
+          <div className={styles.icon}>
+            {/* <BiDownvote className={styles.icon} /> */}
+            <AiOutlineDown />
+          </div>
+        </div>
+      )}
+
       <GridRow
         className={className}
         thread={thread}
@@ -146,15 +172,8 @@ export default function ChannelRow({
           )
         }
         footer={({ inView }) =>
-          viewType === 'FORUM' ? (
+          messages.length > 1 && (
             <div className={styles.footer}>
-              <button>
-                <AiOutlineUp />
-              </button>
-              <span>{1}</span>
-              <button>
-                <AiOutlineDown />
-              </button>
               <Avatars
                 size="sm"
                 users={avatars}
@@ -170,29 +189,9 @@ export default function ChannelRow({
                 </li>
               </ul>
             </div>
-          ) : (
-            avatarFooter(inView)
           )
         }
       />
     </Droppable>
   );
-
-  function avatarFooter(inView: boolean): React.ReactNode {
-    return (
-      messages.length > 1 && (
-        <div className={styles.footer}>
-          <Avatars size="sm" users={avatars} placeholder={!inView || isBot} />
-          <ul className={styles.list}>
-            <li className={styles.info}>
-              {authors.length} {authors.length > 1 ? <FiUsers /> : <FiUser />}
-            </li>
-            <li className={styles.info}>
-              {messages.length - 1} <FiMessageCircle />
-            </li>
-          </ul>
-        </div>
-      )
-    );
-  }
 }
