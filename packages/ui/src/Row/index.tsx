@@ -18,12 +18,8 @@ import { FiMessageCircle } from '@react-icons/all-files/fi/FiMessageCircle';
 import { FiUsers } from '@react-icons/all-files/fi/FiUsers';
 import { FiUser } from '@react-icons/all-files/fi/FiUser';
 import { FiCheck } from '@react-icons/all-files/fi/FiCheck';
-import { BiUpvote } from '@react-icons/all-files/bi/BiUpvote';
-import { BiDownvote } from '@react-icons/all-files/bi/BiDownvote';
 import { AiOutlineUp } from '@react-icons/all-files/Ai/AiOutlineUp';
 import { AiOutlineDown } from '@react-icons/all-files/Ai/AiOutlineDown';
-// AiOutlineUp
-// import { BiSolidDownvote} from '@react-icons/all-files/Bi/BiSolidDownvote';
 import { uniqueUsers } from './utilities/uniqueUsers';
 
 interface Props {
@@ -116,27 +112,14 @@ export default function ChannelRow({
       onDrop={onDrop}
     >
       {viewType === 'FORUM' && (
-        // <div className={styles.upvotes}>
-        //   <div className={styles.icon}>
-        //     {/* <BiUpvote className={styles.icon} /> */}
-        //     <BiUpvote />
-        //   </div>
-        //   <span>{1}</span>
-        //   <div className={styles.icon}>
-        //     {/* <BiDownvote className={styles.icon} /> */}
-        //     <BiDownvote />
-        //   </div>
-        // </div>
         <div className={styles.upvotes}>
-          <div className={styles.icon}>
-            {/* <BiUpvote className={styles.icon} /> */}
+          <button className={styles.icon}>
             <AiOutlineUp />
-          </div>
+          </button>
           <span>{1}</span>
-          <div className={styles.icon}>
-            {/* <BiDownvote className={styles.icon} /> */}
+          <button className={styles.icon}>
             <AiOutlineDown />
-          </div>
+          </button>
         </div>
       )}
 
