@@ -37,6 +37,8 @@ import {
   getChannelMembersType,
   putChannelMembersSchema,
   putChannelMembersType,
+  leaveChannelSchema,
+  leaveChannelType,
 } from '@linen/types';
 import { serializeChannel } from '@linen/serializers/channel';
 import { serialize } from 'superjson';
@@ -375,6 +377,39 @@ channelsRouter.put(
       }));
 
     return res.json({});
+  }
+);
+
+channelsRouter.post(
+  `${prefix}/:channelId/leave`,
+  tenantMiddleware([Roles.ADMIN, Roles.OWNER, Roles.MEMBER]),
+  validationMiddleware(leaveChannelSchema),
+  async (
+    req: AuthedRequestWithTenantAndBody<leaveChannelType>,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const channel = await prisma.channels.findFirst({
+      where: {
+        accountId: req.tenant?.id,
+        id: req.body.channelId,
+        memberships: { some: { usersId: req.tenant_user?.id! } },
+      },
+    });
+
+    if (channel) {
+      await prisma.memberships.delete({
+        where: {
+          usersId_channelsId: {
+            channelsId: req.body.channelId,
+            usersId: req.tenant_user?.id!,
+          },
+        },
+      });
+      return res.json({ ok: true });
+    }
+
+    return res.json({ ok: false });
   }
 );
 

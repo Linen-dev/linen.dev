@@ -40,6 +40,7 @@ import type {
   apiGetChannelProps,
   apiGetThreadProps,
   ChannelViewType,
+  leaveChannelType,
 } from '@linen/types';
 export { AxiosRequestConfig };
 
@@ -292,6 +293,9 @@ export default class ApiClient {
 
   updateChannelMembers = ({ channelId, ...props }: putChannelMembersType) =>
     this.put<SerializedUser[]>(`/api/channels/${channelId}/members`, props);
+
+  leaveChannel = ({ channelId, ...props }: leaveChannelType) =>
+    this.post<{ ok: boolean }>(`/api/channels/${channelId}/leave`, props);
 
   deleteUser = (props: deleteUserType) =>
     this.deleteReq<{}>(`/api/users?${qs(props)}`);

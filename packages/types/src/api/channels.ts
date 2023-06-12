@@ -95,3 +95,9 @@ export const putChannelMembersSchema = z.object({
 export type putChannelMembersType = z.infer<typeof putChannelMembersSchema>;
 
 export type findChannelsWithStats = (SerializedChannel & { stats: string })[];
+
+export const leaveChannelSchema = z.object({
+  channelId: z.string().uuid(),
+  accountId: z.string().uuid(),
+});
+export type leaveChannelType = z.infer<typeof leaveChannelSchema>;
