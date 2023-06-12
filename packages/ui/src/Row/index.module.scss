@@ -56,10 +56,21 @@
   background: var(--color-gray-100);
   color: var(--color-gray-700);
   padding: 0 2rem;
-  font-weight: 500;
-  pointer-events: none;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.left.positive {
+  background: var(--color-green-600);
+  color: white;
+}
+
+.left.negative {
+  background: var(--color-red-600);
+  color: white;
 }
 
 .left .icon {
   cursor: pointer;
+  font-size: 18px;
 }

@@ -8,6 +8,7 @@ import { FiMove } from '@react-icons/all-files/fi/FiMove';
 import { FiClock } from '@react-icons/all-files/fi/FiClock';
 import { FiEdit } from '@react-icons/all-files/fi/FiEdit';
 import { FiThumbsUp } from '@react-icons/all-files/fi/FiThumbsUp';
+import { FiThumbsDown } from '@react-icons/all-files/fi/FiThumbsDown';
 import { FiTrash2 } from '@react-icons/all-files/fi/FiTrash2';
 import { FaVolumeMute } from '@react-icons/all-files/fa/FaVolumeMute';
 import { BiMessageCheck } from '@react-icons/all-files/bi/BiMessageCheck';
@@ -104,7 +105,12 @@ export default function Actions({
   onUnread,
 }: Props) {
   // const [modal, setModal] = useState<ModalView>(ModalView.NONE);
-  const isReactionActive = hasReaction(message, ':thumbsup:', currentUser?.id);
+  const isThumbsUpActive = hasReaction(message, ':thumbsup:', currentUser?.id);
+  const isThumbsDownActive = hasReaction(
+    message,
+    ':thumbsdown:',
+    currentUser?.id
+  );
   const owner = currentUser ? currentUser.id === message.usersId : false;
   const draggable = permissions.manage || owner;
 
@@ -215,14 +221,36 @@ export default function Actions({
                 threadId: thread.id,
                 messageId: message.id,
                 type: ':thumbsup:',
-                active: isReactionActive,
+                active: isThumbsUpActive,
               });
             }}
           >
             <Tooltip className={styles.tooltip} text="Like">
               <FiThumbsUp
                 className={classNames({
-                  [styles.active]: isReactionActive,
+                  [styles.active]: isThumbsUpActive,
+                })}
+              />
+            </Tooltip>
+          </li>
+        )}
+        {isReactionVisible && (
+          <li
+            onClick={(event) => {
+              event.stopPropagation();
+              event.preventDefault();
+              onReaction({
+                threadId: thread.id,
+                messageId: message.id,
+                type: ':thumbsdown:',
+                active: isThumbsDownActive,
+              });
+            }}
+          >
+            <Tooltip className={styles.tooltip} text="Dislike">
+              <FiThumbsDown
+                className={classNames({
+                  [styles.active]: isThumbsDownActive,
                 })}
               />
             </Tooltip>
