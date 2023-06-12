@@ -1,4 +1,5 @@
 import React from 'react';
+import classNames from 'classnames';
 import Droppable from './Droppable';
 import Avatars from '@/Avatars';
 import GridRow from '@/GridRow';
@@ -8,6 +9,8 @@ import {
   Settings,
   SerializedThread,
   SerializedUser,
+  SerializedMessage,
+  SerializedReaction,
   ReminderTypes,
   onResolve,
   ThreadState,
@@ -66,6 +69,23 @@ interface Props {
   onUnread?(threadId: string): void;
 }
 
+function hasReaction(
+  message: SerializedMessage,
+  type: string,
+  userId?: string
+): boolean {
+  if (!userId) {
+    return false;
+  }
+  const reaction = message.reactions.find(
+    (reaction: SerializedReaction) => reaction.type === type
+  );
+  if (!reaction) {
+    return false;
+  }
+  return !!reaction.users.find(({ id }: SerializedUser) => id === userId);
+}
+
 export default function ChannelRow({
   className,
   thread,
@@ -101,72 +121,117 @@ export default function ChannelRow({
       text: a.displayName,
     }));
 
+  const upvotes = message.reactions.find(
+    (reaction: SerializedReaction) => reaction.type === ':thumbsup:'
+  ) || { count: 0 };
+  const downvotes = message.reactions.find(
+    (reaction: SerializedReaction) => reaction.type === ':thumbsdown:'
+  ) || { count: 0 };
+  const votes = upvotes.count - downvotes.count;
+  const isThumbsUpActive = hasReaction(message, ':thumbsup:', currentUser?.id);
+  const isThumbsDownActive = hasReaction(
+    message,
+    ':thumbsdown:',
+    currentUser?.id
+  );
+
   return (
-    <Droppable
-      id={thread.id}
-      className={styles.container}
-      onClick={onClick}
-      onDrop={onDrop}
-    >
-      {thread.channel.viewType === 'FORUM' && (
-        <div className={styles.left}>
-          <FiChevronUp className={styles.icon} />
-          0
-          <FiChevronDown className={styles.icon} />
+    <>
+      {thread?.channel?.viewType === 'FORUM' && onReaction && (
+        <div
+          className={classNames(styles.left, {
+            [styles.positive]: votes > 0,
+            [styles.negative]: votes < 0,
+          })}
+        >
+          <FiChevronUp
+            onClick={(event) => {
+              event.stopPropagation();
+              event.preventDefault();
+              onReaction({
+                threadId: thread.id,
+                messageId: message.id,
+                type: ':thumbsup:',
+                active: isThumbsUpActive,
+              });
+            }}
+            className={styles.icon}
+          />
+          {votes}
+          <FiChevronDown
+            onClick={(event) => {
+              event.stopPropagation();
+              event.preventDefault();
+              onReaction({
+                threadId: thread.id,
+                messageId: message.id,
+                type: ':thumbsdown:',
+                active: isThumbsDownActive,
+              });
+            }}
+            className={styles.icon}
+          />
         </div>
       )}
-      <GridRow
-        className={className}
-        thread={thread}
-        message={message}
-        isSubDomainRouting={isSubDomainRouting}
-        isBot={isBot}
-        settings={settings}
-        permissions={permissions}
-        currentUser={currentUser}
-        mode={mode}
-        drag="thread"
-        onDelete={onDelete}
-        onEdit={onEdit}
-        onLoad={onLoad}
-        onMute={onMute}
-        onUnmute={onUnmute}
-        onPin={onPin}
-        onStar={onStar}
-        onResolution={onResolution}
-        onReaction={onReaction}
-        onRead={onRead}
-        onRemind={onRemind}
-        onUnread={onUnread}
-        header={
-          thread.title && <div className={styles.header}>{thread.title}</div>
-        }
-        info={
-          thread.state === ThreadState.CLOSE && (
-            <FiCheck className={styles.check} />
-          )
-        }
-        footer={({ inView }) =>
-          messages.length > 1 && (
-            <div className={styles.footer}>
-              <Avatars
-                size="sm"
-                users={avatars}
-                placeholder={!inView || isBot}
-              />
-              <ul className={styles.list}>
-                <li className={styles.info}>
-                  {authors.length}{' '}
-                  {authors.length > 1 ? <FiUsers /> : <FiUser />}
-                </li>
-                <li className={styles.info}>
-                  {messages.length - 1} <FiMessageCircle />
-                </li>
-              </ul>
-            </div>
-          )
-        }
-      />
-    </Droppable>
+      <Droppable
+        id={thread.id}
+        className={styles.container}
+        onClick={onClick}
+        onDrop={onDrop}
+      >
+        <GridRow
+          className={className}
+          thread={thread}
+          message={message}
+          isSubDomainRouting={isSubDomainRouting}
+          isBot={isBot}
+          settings={settings}
+          permissions={permissions}
+          currentUser={currentUser}
+          mode={mode}
+          drag="thread"
+          onDelete={onDelete}
+          onEdit={onEdit}
+          onLoad={onLoad}
+          onMute={onMute}
+          onUnmute={onUnmute}
+          onPin={onPin}
+          onStar={onStar}
+          onResolution={onResolution}
+          onReaction={onReaction}
+          onRead={onRead}
+          onRemind={onRemind}
+          onUnread={onUnread}
+          header={
+            thread.title && <div className={styles.header}>{thread.title}</div>
+          }
+          info={
+            thread.state === ThreadState.CLOSE && (
+              <FiCheck className={styles.check} />
+            )
+          }
+          footer={({ inView }) =>
+            messages.length > 1 && (
+              <div className={styles.footer}>
+                <Avatars
+                  size="sm"
+                  users={avatars}
+                  placeholder={!inView || isBot}
+                />
+                <ul className={styles.list}>
+                  <li className={styles.info}>
+                    {authors.length}{' '}
+                    {authors.length > 1 ? <FiUsers /> : <FiUser />}
+                  </li>
+                  <li className={styles.info}>
+                    {messages.length - 1} <FiMessageCircle />
+                  </li>
+                </ul>
+              </div>
+            )
+          }
+        />
+      </Droppable>
+    </>
   );
 }
