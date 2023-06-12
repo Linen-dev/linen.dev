@@ -1,0 +1,36 @@
+.action {
+  align-items: center;
+  cursor: pointer;
+  display: flex;
+  font-size: 14px;
+  gap: 0.5rem;
+  white-space: nowrap;
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+  transition: background 0.1s ease, color 0.1s ease;
+}
+
+.action:hover {
+  background: var(--color-gray-100);
+}
+
+.menu {
+  background: var(--color-background);
+  position: absolute;
+  border-radius: 0.375rem;
+  margin-top: 0.5rem;
+  transform-origin: top right;
+  box-shadow: 0 2px 8px var(--color-gray-300);
+  opacity: 0;
+  transform: scale(0.9);
+  pointer-events: none;
+  transition: opacity 0.1s ease, transform 0.1s ease;
+  overflow: hidden;
+  z-index: 2;
+}
+
+.menu.open {
+  transform: scale(1);
+  opacity: 1;
+  pointer-events: all;
+}

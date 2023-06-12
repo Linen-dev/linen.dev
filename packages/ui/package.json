@@ -92,6 +92,7 @@
     "./ConfigurationsView": "./dist/ConfigurationsView/index.js",
     "./ConfirmationModal": "./dist/ConfirmationModal/index.js",
     "./Container": "./dist/Container/index.js",
+    "./ContextMenu": "./dist/ContextMenu/index.js",
     "./CopyToClipboardIcon": "./dist/CopyToClipboardIcon/index.js",
     "./DiscordIcon": "./dist/DiscordIcon/index.js",
     "./Dropdown": "./dist/Dropdown/index.js",
@@ -268,6 +269,9 @@
       ],
       "Container": [
         "./dist/Container/index.d.ts"
+      ],
+      "ContextMenu": [
+        "./dist/ContextMenu/index.d.ts"
       ],
       "CopyToClipboardIcon": [
         "./dist/CopyToClipboardIcon/index.d.ts"
