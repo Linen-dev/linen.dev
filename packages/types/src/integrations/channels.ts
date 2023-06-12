@@ -33,5 +33,6 @@ export const channelFindOrCreateSchema = z.object({
   channelName: z.string(),
   externalChannelId: z.string(),
   hidden: z.boolean().optional(),
+  members: z.array(z.string().uuid()).optional(),
 });
 export type channelFindOrCreateType = z.infer<typeof channelFindOrCreateSchema>;

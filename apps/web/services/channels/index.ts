@@ -223,12 +223,14 @@ class ChannelsService {
     externalChannelId,
     hidden,
     viewType,
+    members,
   }: {
     accountId: string;
     channelName: string;
     externalChannelId: string;
     hidden?: boolean;
     viewType?: ChannelViewType;
+    members?: string[];
   }) {
     const channel = await prisma.channels.findFirst({
       where: {
@@ -270,6 +272,18 @@ class ChannelsService {
         externalChannelId,
         hidden,
         viewType,
+        ...(members?.length
+          ? {
+              memberships: {
+                createMany: {
+                  skipDuplicates: true,
+                  data: members.map((m) => {
+                    return { usersId: m };
+                  }),
+                },
+              },
+            }
+          : {}),
       },
     });
   }

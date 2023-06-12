@@ -166,6 +166,7 @@ channelsRouter.post(
       channelName,
       accountId: req.tenant?.id!,
       viewType,
+      members: [req.tenant_user?.id!],
     });
     return res.status(200).json(serializeChannel(channel));
   }
