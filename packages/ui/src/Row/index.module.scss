@@ -53,24 +53,26 @@
   display: flex;
   justify-content: center;
   flex-direction: column;
-  background: var(--color-gray-100);
   color: var(--color-gray-700);
-  padding: 0 2rem;
+  padding: 0 1rem;
   font-weight: 700;
   font-size: 16px;
 }
 
 .left.positive {
-  background: var(--color-green-600);
-  color: white;
+  color: var(--color-green-600);
 }
 
 .left.negative {
-  background: var(--color-red-600);
-  color: white;
+  color: var(--color-red-600);
 }
 
 .left .icon {
   cursor: pointer;
-  font-size: 18px;
+  font-size: 20px;
+}
+
+.left .icon:hover {
+  border-width: 1px;
+  border-radius: 0.25rem;
 }
