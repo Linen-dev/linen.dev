@@ -10,7 +10,6 @@ import unique from 'lodash.uniq';
 
 export default function ShowUsers({
   communityId,
-  channelPrivate,
   setUsers,
   users,
   removeUser,
@@ -18,7 +17,6 @@ export default function ShowUsers({
   api,
 }: {
   communityId: string;
-  channelPrivate: boolean;
   users: SerializedUser[];
   setUsers: React.Dispatch<React.SetStateAction<SerializedUser[]>>;
   removeUser(user: SerializedUser): void;
@@ -28,10 +26,6 @@ export default function ShowUsers({
   const ref = useRef(null);
   const [query, setQuery] = useState<SerializedUser[]>([]);
   const [val, setVal] = useState<string>();
-
-  if (!channelPrivate) {
-    return <></>;
-  }
 
   return (
     <>
@@ -71,7 +65,7 @@ export default function ShowUsers({
             {users.map((user) => {
               const props =
                 currentUser.id !== user.id
-                  ? { onClose: () => removeUser(user) }
+                  ? { onClick: () => removeUser(user) }
                   : {};
               return (
                 <div className={styles.badgeWrapper} key={user.id}>

@@ -156,7 +156,6 @@ export default function NewChannelModal({
           </div>
           <ShowUsers
             communityId={permissions.accountId!}
-            channelPrivate={channelPrivate}
             users={users}
             setUsers={setUsers}
             removeUser={removeUser}

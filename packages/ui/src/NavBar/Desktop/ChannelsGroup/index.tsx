@@ -10,6 +10,15 @@ import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp';
 import { FiSettings } from '@react-icons/all-files/fi/FiSettings';
 import NewChannelModal from '@/NewChannelModal';
 import type { ApiClient } from '@linen/api-client';
+import { FiUsers } from '@react-icons/all-files/fi/FiUsers';
+import { FiEyeOff } from '@react-icons/all-files/fi/FiEyeOff';
+import { ContextMenu, useContextMenu } from '@/ContextMenu';
+import { FiEdit } from '@react-icons/all-files/fi/FiEdit';
+import ConfirmationModal from '@/ConfirmationModal';
+import IntegrationsModalUI from '@/IntegrationsModal';
+import MembersModal from '@/MembersModal';
+import Toast from '@/Toast';
+import { FiLogOut } from '@react-icons/all-files/fi/FiLogOut';
 
 interface Props {
   channelName?: string;
@@ -36,6 +45,15 @@ interface Props {
   CustomRouterPush({ path }: { path: string }): void;
 }
 
+enum ModalView {
+  NONE,
+  MEMBERS,
+  INTEGRATIONS,
+  HIDE_CHANNEL,
+  LEAVE_CHANNEL,
+  NEW_CHANNEL,
+}
+
 export default function ChannelsGroup({
   channelName,
   channels,
@@ -51,7 +69,59 @@ export default function ChannelsGroup({
   CustomRouterPush,
 }: Props) {
   const [show, toggle] = useState(true);
-  const [modal, setModal] = useState(false);
+  const [modal, setModal] = useState<ModalView>(ModalView.NONE);
+  const { clicked, setClicked, points, setPoints, setContext, context } =
+    useContextMenu<SerializedChannel>();
+
+  const items: {
+    icon: JSX.Element;
+    label: string;
+    onClick: (context: SerializedChannel) => void;
+  }[] = [
+    ...(permissions.manage
+      ? [
+          {
+            icon: <FiEdit />,
+            label: 'Edit channel',
+            onClick: (context: SerializedChannel) =>
+              onSettingsClick(context.id),
+          },
+          {
+            icon: <FiSettings />,
+            label: 'Integrations',
+            onClick: (context: SerializedChannel) => {
+              setModal(ModalView.INTEGRATIONS);
+            },
+          },
+          {
+            icon: <FiUsers />,
+            label: 'Members',
+            onClick: (context: SerializedChannel) => {
+              setModal(ModalView.MEMBERS);
+            },
+          },
+        ]
+      : []),
+    ...(permissions.user
+      ? [
+          {
+            icon: <FiEyeOff />,
+            label: 'Hide channel',
+            onClick: (context: SerializedChannel) => {
+              setModal(ModalView.HIDE_CHANNEL);
+            },
+          },
+          {
+            icon: <FiLogOut />,
+            label: 'Leave channel',
+            onClick: (context: SerializedChannel) => {
+              setModal(ModalView.LEAVE_CHANNEL);
+            },
+          },
+        ]
+      : []),
+  ];
+
   return (
     <>
       <Nav.Group
@@ -69,7 +139,7 @@ export default function ChannelsGroup({
                 className={styles.cursorPointer}
                 onClick={(event) => {
                   event.stopPropagation();
-                  setModal(true);
+                  setModal(ModalView.NEW_CHANNEL);
                 }}
               />
               {show ? <FiChevronUp /> : <FiChevronDown />}
@@ -77,8 +147,8 @@ export default function ChannelsGroup({
 
             <NewChannelModal
               permissions={permissions}
-              show={modal}
-              close={() => setModal(false)}
+              show={modal === ModalView.NEW_CHANNEL}
+              close={() => setModal(ModalView.NONE)}
               CustomRouterPush={CustomRouterPush}
               api={api}
             />
@@ -136,46 +206,127 @@ export default function ChannelsGroup({
             const highlighted = !active && count > 0;
 
             return (
-              <Link
-                className={classNames(styles.item, {
-                  [styles.dropzone]: mode === Mode.Drag,
-                })}
-                onDragEnter={handleDragEnter}
-                onDragLeave={handleDragLeave}
-                onDrop={handleDrop}
-                onClick={() => onChannelClick(channel.id)}
+              <div
                 key={`${channel.channelName}-${index}`}
-                href={`/c/${channel.channelName}`}
+                onContextMenu={(e: any) => {
+                  e.preventDefault();
+                  setClicked(true);
+                  setPoints({
+                    x: e.pageX,
+                    y: e.pageY,
+                  });
+                  setContext(channel);
+                }}
               >
-                <Nav.Item
-                  className={styles.justify}
-                  active={active}
-                  highlighted={highlighted}
+                <Link
+                  className={classNames(styles.item, {
+                    [styles.dropzone]: mode === Mode.Drag,
+                  })}
+                  onDragEnter={handleDragEnter}
+                  onDragLeave={handleDragLeave}
+                  onDrop={handleDrop}
+                  onClick={() => onChannelClick(channel.id)}
+                  href={`/c/${channel.channelName}`}
                 >
-                  <div
-                    className={classNames(styles.channel, {
-                      [styles.lock]: channel.type === 'PRIVATE',
-                      [styles.hash]: channel.type === 'PUBLIC',
-                    })}
+                  <Nav.Item
+                    className={styles.justify}
+                    active={active}
+                    highlighted={highlighted}
                   >
-                    {channel.channelName}
-                  </div>
-                  {permissions.manage && (
                     <div
-                      className={styles.archive}
-                      onClick={(event) => {
-                        event.preventDefault();
-                        event.stopPropagation();
-                        onSettingsClick(channel.id);
-                      }}
+                      className={classNames(styles.channel, {
+                        [styles.lock]: channel.type === 'PRIVATE',
+                        [styles.hash]: channel.type === 'PUBLIC',
+                      })}
                     >
-                      <FiSettings />
+                      {channel.channelName}
                     </div>
-                  )}
-                </Nav.Item>
-              </Link>
+                  </Nav.Item>
+                </Link>
+              </div>
             );
           })}
+        </>
+      )}
+      {clicked && (
+        <ContextMenu
+          top={points.y}
+          left={points.x}
+          items={items}
+          context={context}
+        />
+      )}
+      {context && (
+        <>
+          <IntegrationsModalUI.IntegrationsModal
+            permissions={permissions}
+            open={modal === ModalView.INTEGRATIONS}
+            close={() => setModal(ModalView.NONE)}
+            api={api}
+            channel={context}
+          />
+          <MembersModal
+            permissions={permissions}
+            open={modal === ModalView.MEMBERS}
+            close={() => setModal(ModalView.NONE)}
+            api={api}
+            channel={context}
+          />
+          <ConfirmationModal
+            open={modal === ModalView.HIDE_CHANNEL}
+            close={() => setModal(ModalView.NONE)}
+            title={`Hide #${context.channelName}`}
+            description={`Are you sure you want to hide the #${context.channelName} channel? It won't be available to the members of your community anymore.`}
+            onConfirm={() => {
+              setModal(ModalView.NONE);
+
+              api
+                .hideChannel({
+                  accountId: context.accountId!,
+                  channelId: context.id,
+                })
+                .then(() => {
+                  Toast.success(`#${context.channelName} is hidden`);
+
+                  setTimeout(() => {
+                    window.location.href = window.location.href.replace(
+                      new RegExp(`/c/${context.channelName}`, 'g'),
+                      ''
+                    );
+                  }, 1000);
+                })
+                .catch(() => {
+                  Toast.error('Something went wrong. Please try again.');
+                });
+            }}
+          />
+          <ConfirmationModal
+            open={modal === ModalView.LEAVE_CHANNEL}
+            close={() => setModal(ModalView.NONE)}
+            title={`Leave #${context.channelName}`}
+            description={`Are you sure you want to leave the #${context.channelName} channel?`}
+            onConfirm={() => {
+              setModal(ModalView.NONE);
+              api
+                .leaveChannel({
+                  accountId: context.accountId!,
+                  channelId: context.id,
+                })
+                .then(() => {
+                  Toast.success(`Leave #${context.channelName} successful`);
+
+                  setTimeout(() => {
+                    window.location.href = window.location.href.replace(
+                      new RegExp(`/c/${context.channelName}`, 'g'),
+                      ''
+                    );
+                  }, 1000);
+                })
+                .catch(() => {
+                  Toast.error('Something went wrong. Please try again.');
+                });
+            }}
+          />
         </>
       )}
     </>

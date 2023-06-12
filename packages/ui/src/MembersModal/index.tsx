@@ -1,6 +1,5 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { Permissions, SerializedUser } from '@linen/types';
-import { ChannelContext } from '@linen/contexts/channel';
+import React, { useEffect, useState } from 'react';
+import { Permissions, SerializedChannel, SerializedUser } from '@linen/types';
 import type { ApiClient } from '@linen/api-client';
 import H3 from '@/H3';
 import Button from '@/Button';
@@ -15,6 +14,7 @@ interface MembersModalProps {
   open: boolean;
   close(): void;
   api: ApiClient;
+  channel: SerializedChannel;
 }
 
 export default function MembersModal({
@@ -22,8 +22,8 @@ export default function MembersModal({
   open,
   close,
   api,
+  channel,
 }: MembersModalProps) {
-  const channel = useContext(ChannelContext);
   const [users, setUsers] = useState<SerializedUser[]>([]);
   const [modal, setModal] = useState(false);
   const [user, setUser] = useState<SerializedUser>();
@@ -77,7 +77,6 @@ export default function MembersModal({
       <H3 className={styles.pb4}>Members</H3>
       <ShowUsers
         communityId={permissions.accountId}
-        channelPrivate={true}
         users={users}
         setUsers={setUsers}
         removeUser={showModal}

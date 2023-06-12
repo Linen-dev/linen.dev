@@ -48,15 +48,11 @@ import Row from '@/Row';
 import ChatLayout from '@/ChatLayout';
 import AddThreadModal from '@/AddThreadModal';
 import EditThreadModal from '@/EditThreadModal';
-import ConfirmationModal from '@/ConfirmationModal';
 import Toast from '@/Toast';
 import type { ApiClient } from '@linen/api-client';
-import IntegrationsModalUI from '@/IntegrationsModal';
 import { copyToClipboard } from '@linen/utilities/clipboard';
-import MembersModal from '@/MembersModal';
 import PaginationNumbers from '@/PaginationNumbers';
 import { useViewport } from '@linen/hooks/useViewport';
-import Spinner from '@/Spinner';
 
 const useLayoutEffect =
   typeof window !== 'undefined' ? useClientLayoutEffect : () => {};
@@ -149,9 +145,6 @@ enum ModalView {
   NONE,
   ADD_THREAD,
   EDIT_THREAD,
-  MEMBERS,
-  INTEGRATIONS,
-  HIDE_CHANNEL,
 }
 
 export default function Channel({
@@ -211,9 +204,7 @@ export default function Channel({
   const [allUsers] = useUsersContext();
   const { mode } = useMode();
   const [editedThread, setEditedThread] = useState<SerializedThread>();
-  const [modal, setModal] = useState<ModalView>(
-    queryIntegration ? ModalView.INTEGRATIONS : ModalView.NONE
-  );
+  const [modal, setModal] = useState<ModalView>(ModalView.NONE);
   const membersPath = usePath({ href: '/members' });
   const viewport = useViewport();
 
@@ -391,18 +382,6 @@ export default function Channel({
     }
   };
 
-  function showIntegrationsModal() {
-    setModal(ModalView.INTEGRATIONS);
-  }
-
-  function showMembersModal() {
-    setModal(ModalView.MEMBERS);
-  }
-
-  function showHideChannelModal() {
-    setModal(ModalView.HIDE_CHANNEL);
-  }
-
   function showAddThreadModal() {
     setModal(ModalView.ADD_THREAD);
   }
@@ -534,9 +513,6 @@ export default function Channel({
                     currentUser={currentUser}
                     permissions={permissions}
                     onAddClick={showAddThreadModal}
-                    handleOpenIntegrations={showIntegrationsModal}
-                    handleOpenMembers={showMembersModal}
-                    onHideChannelClick={showHideChannelModal}
                     api={api}
                   >
                     {pinnedThread && (
@@ -702,19 +678,6 @@ export default function Channel({
         }}
       />
 
-      <IntegrationsModalUI.IntegrationsModal
-        permissions={permissions}
-        open={modal === ModalView.INTEGRATIONS}
-        close={() => setModal(ModalView.NONE)}
-        api={api}
-        channel={currentChannel}
-      />
-      <MembersModal
-        permissions={permissions}
-        open={modal === ModalView.MEMBERS}
-        close={() => setModal(ModalView.NONE)}
-        api={api}
-      />
       <AddThreadModal
         api={api}
         communityId={currentCommunity.id}
@@ -738,33 +701,7 @@ export default function Channel({
         uploads={uploads}
         uploadFiles={uploadFiles}
       />
-      <ConfirmationModal
-        open={modal === ModalView.HIDE_CHANNEL}
-        close={() => setModal(ModalView.NONE)}
-        title={`Hide #${currentChannel.channelName}`}
-        description={`Are you sure you want to hide the #${currentChannel.channelName} channel? It won't be available to the members of your community anymore.`}
-        onConfirm={() => {
-          setModal(ModalView.NONE);
-          api
-            .hideChannel({
-              accountId: currentCommunity.id,
-              channelId: currentChannel.id,
-            })
-            .then(() => {
-              Toast.success(`#${currentChannel.channelName} is hidden`);
 
-              setTimeout(() => {
-                window.location.href = window.location.href.replace(
-                  new RegExp(`/c/${currentChannel.channelName}`, 'g'),
-                  ''
-                );
-              }, 1000);
-            })
-            .catch(() => {
-              Toast.error('Something went wrong. Please try again.');
-            });
-        }}
-      />
       {editedThread && (
         <EditThreadModal
           api={api}
