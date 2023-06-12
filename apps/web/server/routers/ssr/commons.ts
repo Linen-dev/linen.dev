@@ -8,12 +8,10 @@ import {
 } from '@linen/types';
 import { serializeAccount } from '@linen/serializers/account';
 import { serializeChannel } from '@linen/serializers/channel';
-import { serializeSettings } from '@linen/serializers/settings';
 import validationMiddleware from 'server/middlewares/validation';
-import ChannelsService, { getDMs } from 'services/channels';
 import CommunityService from 'services/community';
 import PermissionsService from 'services/permissions';
-import { allowAccess } from 'services/ssr/common';
+import { allowAccess, fetchCommon } from 'services/ssr/common';
 
 const prefix = '/api/ssr/commons';
 const ssrRouter = Router();
@@ -52,27 +50,14 @@ async function getProps(
     throw { status: 500 };
   }
 
-  const channels = await ChannelsService.find(community.id);
-  const privateChannels = !!permissions.user?.id
-    ? await ChannelsService.findPrivates({
-        accountId: community.id,
-        userId: permissions.user.id,
-      })
-    : [];
-
-  const settings = serializeSettings(community);
-  const communities = !!permissions.auth?.id
-    ? await CommunityService.findByAuthId(permissions.auth.id)
-    : [];
-
-  const currentCommunity = serializeAccount(community);
-
-  const dms = !!permissions.user?.id
-    ? await getDMs({
-        accountId: currentCommunity.id,
-        userId: permissions.user.id,
-      })
-    : [];
+  const {
+    channels,
+    communities,
+    currentCommunity,
+    dms,
+    privateChannels,
+    settings,
+  } = await fetchCommon(permissions, community);
 
   return {
     token: permissions.token,

@@ -49,7 +49,7 @@ function findDefaultChannel(channels: SerializedChannel[]): SerializedChannel {
   if (channel) {
     return channel;
   }
-  return channels[0];
+  return channels?.[0];
 }
 
 export default function AddThreadModal({
@@ -69,7 +69,7 @@ export default function AddThreadModal({
   const [message, setMessage] = useState('');
   const [allUsers] = useUsersContext();
   const [channelId, setChannelId] = useState<string>(
-    currentChannel ? currentChannel.id : findDefaultChannel(channels).id
+    currentChannel ? currentChannel.id : findDefaultChannel(channels)?.id
   );
   const [title, setTitle] = useState<string>('');
   return (

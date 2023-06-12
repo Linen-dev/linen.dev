@@ -5,18 +5,17 @@ import {
   Response,
   apiGetChannelProps,
 } from '@linen/types';
-import { serializeAccount } from '@linen/serializers/account';
 import { serializeThread } from '@linen/serializers/thread';
 import { serializeChannel } from '@linen/serializers/channel';
 import { sortBySentAtAsc } from '@linen/utilities/object';
 import validationMiddleware from 'server/middlewares/validation';
-import ChannelsService, { getDMs } from 'services/channels';
 import CommunityService from 'services/community';
 import PermissionsService from 'services/permissions';
 import { findThreadsByCursor, findPinnedThreads } from 'services/threads';
 import { decodeCursor } from 'utilities/cursor';
 import { buildCursor } from 'utilities/buildCursor';
 import { channels } from '@linen/database';
+import { fetchCommon } from 'services/ssr/common';
 
 const prefix = '/api/ssr/channels';
 const ssrRouter = Router();
@@ -53,22 +52,8 @@ ssrRouter.get(
       return res.end();
     }
 
-    const channels = await ChannelsService.find(community.id);
-    const privateChannels = !!permissions.user?.id
-      ? await ChannelsService.findPrivates({
-          accountId: community.id,
-          userId: permissions.user.id,
-        })
-      : [];
-
-    const currentCommunity = serializeAccount(community);
-
-    const dms = !!permissions.user?.id
-      ? await getDMs({
-          accountId: currentCommunity.id,
-          userId: permissions.user.id,
-        })
-      : [];
+    const { channels, currentCommunity, dms, privateChannels } =
+      await fetchCommon(permissions, community);
 
     const channel = findChannelOrDefault(
       [...channels, ...dms, ...privateChannels],

@@ -8,6 +8,7 @@ import { Permissions, validatePermissionsResponse } from '@linen/types';
 import { serializeAccount } from '@linen/serializers/account';
 import { serializeChannel } from '@linen/serializers/channel';
 import { cleanUpUrl } from '@linen/utilities/url';
+import type { accounts } from '@linen/database';
 
 export async function ssr(
   context: GetServerSidePropsContext,
@@ -31,7 +32,39 @@ export async function ssr(
     };
   }
 
-  const channels = await ChannelsService.find(community.id);
+  const {
+    currentCommunity,
+    channels,
+    privateChannels,
+    communities,
+    settings,
+    dms,
+  } = await fetchCommon(permissions, community);
+
+  return {
+    props: {
+      token: permissions.token,
+      currentCommunity,
+      channels: [...channels, ...privateChannels].map(serializeChannel),
+      communities: communities.map(serializeAccount),
+      permissions,
+      settings,
+      dms: dms.map(serializeChannel),
+    },
+  };
+}
+
+export async function fetchCommon(
+  permissions: Permissions,
+  community: accounts
+) {
+  const channels = !!permissions.user?.id
+    ? await ChannelsService.findJoined({
+        accountId: community.id,
+        userId: permissions.user.id,
+      })
+    : await ChannelsService.find(community.id);
+
   const privateChannels = !!permissions.user?.id
     ? await ChannelsService.findPrivates({
         accountId: community.id,
@@ -52,17 +85,13 @@ export async function ssr(
         userId: permissions.user.id,
       })
     : [];
-
   return {
-    props: {
-      token: permissions.token,
-      currentCommunity,
-      channels: [...channels, ...privateChannels].map(serializeChannel),
-      communities: communities.map(serializeAccount),
-      permissions,
-      settings,
-      dms: dms.map(serializeChannel),
-    },
+    currentCommunity,
+    channels,
+    privateChannels,
+    communities,
+    settings,
+    dms,
   };
 }
 

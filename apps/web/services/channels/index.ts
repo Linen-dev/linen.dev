@@ -44,6 +44,23 @@ class ChannelsService {
     });
   }
 
+  static async findJoined({
+    accountId,
+    userId,
+  }: {
+    accountId: string;
+    userId: string;
+  }): Promise<channels[]> {
+    return prisma.channels.findMany({
+      where: {
+        accountId,
+        type: ChannelType.PUBLIC,
+        hidden: false,
+        memberships: { some: { usersId: userId } },
+      },
+    });
+  }
+
   static async findWithStats(
     communityId: string
   ): Promise<findChannelsWithStats> {

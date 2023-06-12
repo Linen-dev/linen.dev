@@ -214,8 +214,9 @@ export default function DesktopNavBar({
 
   useEffect(() => {
     let mounted = true;
-    if (currentUser) {
-      debouncedReadStatus({ channelIds: channels.map(({ id }) => id) }).then(
+    const channelIds = channels.map(({ id }) => id);
+    if (currentUser && channelIds.length) {
+      debouncedReadStatus({ channelIds }).then(
         ({ readStatuses }: { readStatuses: SerializedReadStatus[] }) => {
           if (mounted && readStatuses?.length > 0) {
             setHighlights((highlights) => {
