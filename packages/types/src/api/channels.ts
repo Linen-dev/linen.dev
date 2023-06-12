@@ -21,6 +21,7 @@ export const updateChannelSchema = z.object({
   channelId: z.string().uuid(),
   accountId: z.string().uuid(),
   channelPrivate: z.boolean().optional(),
+  viewType: z.enum(['CHAT', 'FORUM']).optional(),
 });
 export type updateChannelType = z.infer<typeof updateChannelSchema>;
 

@@ -15,6 +15,7 @@ import TextInput from '@/TextInput';
 import NativeSelect from '@/NativeSelect';
 import Toast from '@/Toast';
 import Toggle from '@/Toggle';
+import { FiHash } from '@react-icons/all-files/fi/FiHash';
 import styles from './index.module.scss';
 import classNames from 'classnames';
 import ShowUsers from '@/ShowUsers';
@@ -114,6 +115,7 @@ export default function NewChannelModal({
               required
               placeholder="e.g. javascript"
               pattern={patterns.channelName.source}
+              icon={<FiHash />}
               title={
                 'Channels name should start with letter and could contain letters, underscore, numbers and hyphens. e.g. announcements'
               }

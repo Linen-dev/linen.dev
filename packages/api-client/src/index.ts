@@ -39,6 +39,7 @@ import type {
   putUserType,
   apiGetChannelProps,
   apiGetThreadProps,
+  ChannelViewType,
 } from '@linen/types';
 export { AxiosRequestConfig };
 
@@ -224,17 +225,20 @@ export default class ApiClient {
     channelId,
     channelName,
     channelPrivate,
+    viewType,
   }: {
     accountId: string;
     channelId: string;
     channelName: string;
     channelPrivate: boolean;
+    viewType: ChannelViewType;
   }) =>
     this.put(`/api/channels/${channelId}`, {
       accountId,
       channelId,
       channelName,
       channelPrivate,
+      viewType,
     });
 
   setDefaultChannel = (props: setDefaultChannelType) =>

@@ -284,6 +284,7 @@ channelsRouter.put(
             },
           },
         }),
+        viewType: req.body.viewType,
       },
     });
     return res.status(200).json({});

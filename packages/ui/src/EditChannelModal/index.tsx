@@ -4,11 +4,18 @@ import Label from '@/Label';
 import H3 from '@/H3';
 import Button from '@/Button';
 import TextInput from '@/TextInput';
+import Field from '@/Field';
 import Icon from '@/Icon';
+import NativeSelect from '@/NativeSelect';
 import Toggle from '@/Toggle';
 import { FiHash } from '@react-icons/all-files/fi/FiHash';
 import { FiX } from '@react-icons/all-files/fi/FiX';
-import { SerializedAccount, SerializedChannel } from '@linen/types';
+import {
+  patterns,
+  ChannelViewType,
+  SerializedAccount,
+  SerializedChannel,
+} from '@linen/types';
 import styles from './index.module.scss';
 import type { ApiClient } from '@linen/api-client';
 
@@ -28,6 +35,7 @@ export default function EditChannelModal({
   api,
 }: Props) {
   const [loading, setLoading] = useState(false);
+  const [viewType, setViewType] = useState<ChannelViewType>(channel.viewType);
   const [channelPrivate, setChannelPrivate] = useState(
     channel.type === 'PRIVATE'
   );
@@ -36,14 +44,22 @@ export default function EditChannelModal({
     accountId,
     channelId,
     channelName,
+    viewType,
   }: {
     accountId: string;
     channelId: string;
     channelName: string;
+    viewType: ChannelViewType;
   }) {
     setLoading(true);
     return api
-      .updateChannel({ accountId, channelId, channelName, channelPrivate })
+      .updateChannel({
+        accountId,
+        channelId,
+        channelName,
+        channelPrivate,
+        viewType,
+      })
       .then(() => {
         // changing channel name changes the path
         // we'd need to dynamically update it
@@ -51,12 +67,10 @@ export default function EditChannelModal({
         // to other users to update the channel name dynamically
         // otherwise they'll get a 404 on the previous channel name
         setLoading(false);
-        if (channel.channelName !== channelName) {
-          window.location.href = window.location.href.replace(
-            `/${channel.channelName}`,
-            `/${channelName}`
-          );
-        }
+        window.location.href = window.location.href.replace(
+          `/${channel.channelName}`,
+          `/${channelName}`
+        );
         close();
       })
       .catch(() => {
@@ -76,6 +90,7 @@ export default function EditChannelModal({
       accountId: currentCommunity.id,
       channelId: channel.id,
       channelName,
+      viewType,
     });
   }
   return (
@@ -87,14 +102,42 @@ export default function EditChannelModal({
             <FiX />
           </Icon>
         </div>
-        <Label htmlFor="channelName">Name</Label>
-        <TextInput
-          id="channelName"
-          required
-          type="text"
-          icon={<FiHash />}
-          defaultValue={channel.channelName}
-        />
+        <Field>
+          <Label htmlFor="channelName">
+            Channel name
+            <Label.Description>
+              Be sure to choose a url friendly name.
+            </Label.Description>
+          </Label>
+          <TextInput
+            id="channelName"
+            required
+            type="text"
+            placeholder="e.g. javascript"
+            pattern={patterns.channelName.source}
+            icon={<FiHash />}
+            defaultValue={channel.channelName}
+          />
+        </Field>
+        <Field>
+          <Label htmlFor="viewType">
+            Channel view
+            <Label.Description>
+              Choose how the channel is going to be displayed.
+            </Label.Description>
+          </Label>
+          <NativeSelect
+            id="viewType"
+            options={[
+              { label: 'Chat', value: 'CHAT' },
+              { label: 'Forum', value: 'FORUM' },
+            ]}
+            defaultValue={viewType}
+            onChange={(event) =>
+              setViewType(event.target.value as ChannelViewType)
+            }
+          />
+        </Field>
         <div className={styles.p2}></div>
         <Label htmlFor="channelPrivate">Private</Label>
         <Toggle
