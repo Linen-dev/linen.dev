@@ -19,6 +19,21 @@
   }
 }
 
+.forum {
+  .li {
+    border: none;
+    border-bottom: 1px solid var(--color-gray-200);
+  }
+
+  .li:first-child {
+    margin-top: 1rem;
+  }
+
+  .li:last-child {
+    border-bottom: none;
+  }
+}
+
 .line {
   margin-top: -0.75rem;
   position: absolute;

@@ -103,6 +103,7 @@ export async function index({
         },
         orderBy: { sentAt: 'asc' },
       },
+      channel: true,
     },
     orderBy: { lastReplyAt: 'desc' },
     take: limit,

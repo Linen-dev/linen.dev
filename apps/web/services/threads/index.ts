@@ -351,6 +351,7 @@ export async function findThreadsByCursor({
         },
         orderBy: { sentAt: 'asc' },
       },
+      channel: true,
     },
     ...(!!sort && { orderBy: { sentAt: sort } }),
   });

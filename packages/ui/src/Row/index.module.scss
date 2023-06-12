@@ -45,3 +45,21 @@
   display: flex;
   gap: 0.125rem;
 }
+
+.left {
+  align-self: stretch;
+  align-items: center;
+  cursor: normal;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  background: var(--color-gray-100);
+  color: var(--color-gray-700);
+  padding: 0 2rem;
+  font-weight: 500;
+  pointer-events: none;
+}
+
+.left .icon {
+  cursor: pointer;
+}
