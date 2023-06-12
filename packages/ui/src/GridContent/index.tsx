@@ -130,6 +130,7 @@ export default function GridContent({
     <div
       className={classNames(className, {
         [styles.mouse]: priority === Priority.MOUSE,
+        [styles.forum]: currentChannel.viewType === 'FORUM',
       })}
     >
       {sorted.map((item, index) => {

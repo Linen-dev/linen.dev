@@ -18,6 +18,8 @@ import { FiUsers } from '@react-icons/all-files/fi/FiUsers';
 import { FiUser } from '@react-icons/all-files/fi/FiUser';
 import { FiCheck } from '@react-icons/all-files/fi/FiCheck';
 import { uniqueUsers } from './utilities/uniqueUsers';
+import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
+import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp';
 
 interface Props {
   className?: string;
@@ -106,6 +108,13 @@ export default function ChannelRow({
       onClick={onClick}
       onDrop={onDrop}
     >
+      {thread.channel.viewType === 'FORUM' && (
+        <div className={styles.left}>
+          <FiChevronUp className={styles.icon} />
+          0
+          <FiChevronDown className={styles.icon} />
+        </div>
+      )}
       <GridRow
         className={className}
         thread={thread}
