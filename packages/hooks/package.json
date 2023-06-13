@@ -30,7 +30,10 @@
     "./polling": "./dist/polling.js",
     "./priority": "./dist/priority.js",
     "./resize": "./dist/resize.js",
+    "./useAsync": "./dist/useAsync.js",
+    "./useAsyncFn": "./dist/useAsyncFn.js",
     "./useMedia": "./dist/useMedia.js",
+    "./useMounted": "./dist/useMounted.js",
     "./useViewport": "./dist/useViewport.js",
     "./utils": "./dist/utils.js",
     "./websockets-inbox": "./dist/websockets-inbox.js",
@@ -60,8 +63,17 @@
       "resize": [
         "./dist/resize.d.ts"
       ],
+      "useAsync": [
+        "./dist/useAsync.d.ts"
+      ],
+      "useAsyncFn": [
+        "./dist/useAsyncFn.d.ts"
+      ],
       "useMedia": [
         "./dist/useMedia.d.ts"
+      ],
+      "useMounted": [
+        "./dist/useMounted.d.ts"
       ],
       "useViewport": [
         "./dist/useViewport.d.ts"
