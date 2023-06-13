@@ -27,11 +27,36 @@ export function addReactionToThread(
           const reaction = message.reactions.find(
             (reaction) => reaction.type === type
           );
+
           if (!reaction) {
             return {
               ...message,
               reactions: [
-                ...message.reactions,
+                ...message.reactions
+                  .map((reaction) => {
+                    if (
+                      (type === ':thumbsup:' &&
+                        reaction.type === ':thumbsdown:') ||
+                      (type === ':thumbsdown:' &&
+                        reaction.type === ':thumbsup:')
+                    ) {
+                      const userIds = reaction.users.map(({ id }) => id);
+                      if (userIds.includes(currentUser.id)) {
+                        if (reaction.count === 1) {
+                          return null;
+                        }
+                        return {
+                          ...reaction,
+                          count: reaction.count - 1,
+                          users: reaction.users.filter(
+                            ({ id }) => id !== currentUser.id
+                          ),
+                        };
+                      }
+                    }
+                    return reaction;
+                  })
+                  .filter(Boolean),
                 { type, count: 1, users: [currentUser] },
               ],
             };
@@ -65,16 +90,36 @@ export function addReactionToThread(
 
           return {
             ...message,
-            reactions: message.reactions.map((reaction) => {
-              if (reaction.type === type) {
-                return {
-                  type,
-                  count: reaction.count + 1,
-                  users: [...reaction.users, currentUser],
-                };
-              }
-              return reaction;
-            }),
+            reactions: message.reactions
+              .map((reaction) => {
+                if (
+                  (type === ':thumbsup:' && reaction.type === ':thumbsdown:') ||
+                  (type === ':thumbsdown:' && reaction.type === ':thumbsup:')
+                ) {
+                  const userIds = reaction.users.map(({ id }) => id);
+                  if (userIds.includes(currentUser.id)) {
+                    if (reaction.count === 1) {
+                      return null;
+                    }
+                    return {
+                      ...reaction,
+                      count: reaction.count - 1,
+                      users: reaction.users.filter(
+                        ({ id }) => id !== currentUser.id
+                      ),
+                    };
+                  }
+                }
+                if (reaction.type === type) {
+                  return {
+                    type,
+                    count: reaction.count + 1,
+                    users: [...reaction.users, currentUser],
+                  };
+                }
+                return reaction;
+              })
+              .filter(Boolean),
           };
         }
         return message;
