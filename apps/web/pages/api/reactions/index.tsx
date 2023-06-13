@@ -81,6 +81,42 @@ async function create(request: NextApiRequest, response: NextApiResponse) {
     });
   }
 
+  // We'd like to use reactions and a way to upvote or downvote threads.
+  // We might introduce a dedicated db table in the future,
+  // but for now we want to make the first version as simple as possible.
+  if (type === ':thumbsup:' || type === ':thumbsdown:') {
+    const action = type === ':thumbsup:' ? ':thumbsdown:' : ':thumbsup:';
+    const reaction = await prisma.messageReactions.findFirst({
+      where: {
+        messagesId: messageId,
+        name: action,
+      },
+    });
+    if (reaction && reaction.users && Array.isArray(reaction.users)) {
+      if (reaction.users.includes(userId)) {
+        if (reaction.count === 1) {
+          await prisma.messageReactions.deleteMany({
+            where: {
+              messagesId: messageId,
+              name: action,
+            },
+          });
+        } else {
+          await prisma.messageReactions.updateMany({
+            where: {
+              messagesId: messageId,
+              name: action,
+            },
+            data: {
+              count: { decrement: 1 },
+              users: reaction.users.filter((id) => id !== userId),
+            },
+          });
+        }
+      }
+    }
+  }
+
   return response.status(200).json({});
 }
 

@@ -1,4 +1,9 @@
-import type { SerializedThread, SerializedUser } from '@linen/types';
+import type {
+  SerializedMessage,
+  SerializedReaction,
+  SerializedThread,
+  SerializedUser,
+} from '@linen/types';
 
 export function addReactionToThread(
   thread: SerializedThread,
@@ -15,7 +20,7 @@ export function addReactionToThread(
     type: string;
     active: boolean;
   }
-) {
+): SerializedThread {
   if (!thread) {
     return thread;
   }
@@ -32,7 +37,7 @@ export function addReactionToThread(
             return {
               ...message,
               reactions: [
-                ...message.reactions
+                ...(message.reactions
                   .map((reaction) => {
                     if (
                       (type === ':thumbsup:' &&
@@ -56,7 +61,7 @@ export function addReactionToThread(
                     }
                     return reaction;
                   })
-                  .filter(Boolean),
+                  .filter(Boolean) as SerializedReaction[]),
                 { type, count: 1, users: [currentUser] },
               ],
             };
@@ -119,7 +124,7 @@ export function addReactionToThread(
                 }
                 return reaction;
               })
-              .filter(Boolean),
+              .filter(Boolean) as SerializedReaction[],
           };
         }
         return message;
