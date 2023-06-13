@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
-import { prisma } from '@linen/database';
+import { Prisma, prisma } from '@linen/database';
 import PermissionsService from 'services/permissions';
 import { cors, preflight } from 'utilities/cors';
 
@@ -48,15 +48,27 @@ async function create(request: NextApiRequest, response: NextApiResponse) {
     },
   });
 
+  const userId = permissions.user.id;
+
   if (!reaction) {
     await prisma.messageReactions.create({
       data: {
         messagesId: messageId,
         name: type,
         count: 1,
+        users: [userId as Prisma.JsonValue] as Prisma.JsonArray,
       },
     });
   } else {
+    let { users } = reaction;
+    if (users && Array.isArray(users)) {
+      if (action === 'increment' && !users.includes(userId)) {
+        users = [...users, userId];
+      } else if (users.includes(userId)) {
+        users = users.filter((id) => id !== userId);
+      }
+    }
+
     await prisma.messageReactions.updateMany({
       where: {
         messagesId: messageId,
@@ -64,6 +76,7 @@ async function create(request: NextApiRequest, response: NextApiResponse) {
       },
       data: {
         count: action === 'increment' ? { increment: 1 } : { decrement: 1 },
+        users: users as Prisma.JsonArray,
       },
     });
   }
