@@ -53,7 +53,7 @@
     "updater": {
       "active": true,
       "endpoints": [
-        "https://github.com/Linen-dev/tauri/releases/latest/download/latest.json"
+        "https://github.com/Linen-dev/desktop-client/releases/latest/download/latest.json"
       ],
       "dialog": true,
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDMxQzM5MTcwODhCQTk4NkMKUldSc21McUljSkhETWVTc3doWTVtWmNQdmFHN01QdWpJMnN0UnBkZm5yYi92STZ1VHBGYWFiU0UK"
