@@ -9,7 +9,7 @@ cd packages/spa
 yarn tauri build
 ```
 
-## Prerequresites
+## Prerequisites
 
 Follow - https://tauri.app/v1/guides/getting-started/prerequisites
 
@@ -30,3 +30,9 @@ yarn tauri dev
 ```
 
 > Note: Email sign in for development mode doesn't work yet, because it requires deep linking. So testing has to be done with username and password sign in
+
+### release
+
+- bump up the version on packages/spa/src-tauri/tauri.conf.json (line 11) and push it to main
+- go to https://github.com/Linen-dev/desktop-client/actions/workflows/main.yml and hit the "run workflow"
+- after the workflow finishes go to https://github.com/Linen-dev/desktop-client/releases
