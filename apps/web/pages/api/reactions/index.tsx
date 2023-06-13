@@ -76,7 +76,7 @@ async function create(request: NextApiRequest, response: NextApiResponse) {
       },
       data: {
         count: action === 'increment' ? { increment: 1 } : { decrement: 1 },
-        users: users as Prisma.JsonArray,
+        users: (users || []) as Prisma.JsonArray,
       },
     });
   }
