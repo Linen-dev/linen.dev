@@ -105,12 +105,9 @@ export default function Actions({
   onUnread,
 }: Props) {
   // const [modal, setModal] = useState<ModalView>(ModalView.NONE);
+  const viewType = thread.channel?.viewType;
+  const isForumView = viewType === 'FORUM';
   const isThumbsUpActive = hasReaction(message, ':thumbsup:', currentUser?.id);
-  const isThumbsDownActive = hasReaction(
-    message,
-    ':thumbsdown:',
-    currentUser?.id
-  );
   const owner = currentUser ? currentUser.id === message.usersId : false;
   const draggable = permissions.manage || owner;
 
@@ -124,6 +121,7 @@ export default function Actions({
   const isPinVisible = onPin && permissions.manage;
   const isStarVisible = onStar && permissions.starred;
   const isReactionVisible = onReaction && currentUser;
+  const isThumbsUpVisible = isReactionVisible && !isForumView;
   const isResolutionVisible = onResolution && currentUser;
   const isDragVisible = currentUser && draggable;
   const isDeleteVisible =
@@ -212,7 +210,7 @@ export default function Actions({
             </Tooltip>
           </li>
         )}
-        {isReactionVisible && (
+        {isThumbsUpVisible && (
           <li
             onClick={(event) => {
               event.stopPropagation();
@@ -229,28 +227,6 @@ export default function Actions({
               <FiThumbsUp
                 className={classNames({
                   [styles.active]: isThumbsUpActive,
-                })}
-              />
-            </Tooltip>
-          </li>
-        )}
-        {isReactionVisible && (
-          <li
-            onClick={(event) => {
-              event.stopPropagation();
-              event.preventDefault();
-              onReaction({
-                threadId: thread.id,
-                messageId: message.id,
-                type: ':thumbsdown:',
-                active: isThumbsDownActive,
-              });
-            }}
-          >
-            <Tooltip className={styles.tooltip} text="Dislike">
-              <FiThumbsDown
-                className={classNames({
-                  [styles.active]: isThumbsDownActive,
                 })}
               />
             </Tooltip>
