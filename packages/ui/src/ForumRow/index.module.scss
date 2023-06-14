@@ -45,3 +45,40 @@
   display: flex;
   gap: 0.125rem;
 }
+
+.left {
+  align-self: stretch;
+  align-items: center;
+  cursor: normal;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  color: var(--color-gray-700);
+  padding: 0 1rem;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.left.positive {
+  color: var(--color-green-600);
+}
+
+.left.negative {
+  color: var(--color-red-600);
+}
+
+.left .icon {
+  cursor: pointer;
+  font-size: 20px;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
+  transition: border-color 0.2s ease;
+}
+
+.left .icon.active {
+  border: 1px solid var(--color-gray-200);
+}
+
+.left .icon:hover {
+  border: 1px solid var(--color-gray-300);
+}
