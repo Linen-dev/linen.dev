@@ -4,7 +4,7 @@
 }
 
 .fade {
-  mask-image: linear-gradient(180deg, #fff 50%, transparent);
+  mask-image: linear-gradient(180deg, #fff 70%, transparent);
 }
 
 .container {
@@ -12,6 +12,7 @@
   position: relative;
   width: 100%;
   max-height: 320px;
+  padding-right: 1rem
 }
 
 .container[draggable='true']:active {
@@ -85,7 +86,7 @@
 }
 
 .left .icon.active {
-  border: 1px solid var(--color-gray-200);
+  border: 1px solid var(--color-gray-300);
 }
 
 .left .icon:hover {
