@@ -1631,10 +1631,7 @@ dependencies = [
 name = "linen-app"
 version = "1.0.0"
 dependencies = [
- "cocoa",
  "mac-notification-sys 0.5.6 (git+https://github.com/h4llow3En/mac-notification-sys?rev=7ab3864527698472224671093e581d4d1880851f)",
- "macos-app-nap",
- "objc",
  "serde",
  "serde_json",
  "tauri",
@@ -1711,17 +1708,6 @@ dependencies = [
  "objc-foundation",
  "objc_id",
  "time",
-]
-
-[[package]]
-name = "macos-app-nap"
-version = "0.0.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9701bd74bcff7fb5f9bff8ff4930a889a55f9cccc8a0dfc4c51ea08b786f0c6a"
-dependencies = [
- "cc",
- "cocoa-foundation",
- "objc",
 ]
 
 [[package]]

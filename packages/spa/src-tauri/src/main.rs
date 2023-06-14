@@ -1,21 +1,14 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 #[cfg(target_os = "macos")]
-extern crate objc;
 use notifications::{ Instance, NotificationPayload };
 
 use tauri::{ Manager, WindowEvent };
-// use window_ext::{ WindowExt, ToolbarThickness };
-// mod window_ext;
 mod notifications;
 
 fn main() {
     let ctx = tauri::generate_context!();
     Instance::init(&ctx.config().tauri.bundle.identifier);
-    // // macOS "App Nap" periodically pauses our app when it's in the background.
-    // // We need to prevent that so our intervals are not interrupted.
-    // #[cfg(target_os = "macos")]
-    // macos_app_nap::prevent();
 
     tauri_plugin_deep_link::prepare("dev.linen.desktop");
     tauri::Builder
@@ -23,7 +16,6 @@ fn main() {
         .setup(|app| {
             let handle = app.handle();
             let win = app.get_window("main").unwrap();
-            // win.set_transparent_titlebar(ToolbarThickness::Thick);
 
             #[cfg(not(target_os = "macos"))]
             win.set_title("Linen").unwrap();
@@ -47,12 +39,6 @@ fn main() {
         .on_window_event(|event| {
             match event.event() {
                 WindowEvent::CloseRequested { api, .. } => {
-                    // #[allow(unused_unsafe)]
-                    // #[cfg(not(target_os = "macos"))]
-                    // {
-                    //     event.window().hide().unwrap();
-                    // }
-
                     #[allow(unused_unsafe)]
                     #[cfg(target_os = "macos")]
                     unsafe {
