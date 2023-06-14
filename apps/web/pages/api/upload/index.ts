@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next/types';
 import formidable from 'formidable';
 import { readFile } from 'fs/promises';
 import UploadService from 'services/upload';
-import PermissionsService from 'services/permissions';
+// import PermissionsService from 'services/permissions';
 import {
   normalizeFilename,
   FILE_SIZE_LIMIT_IN_BYTES,
@@ -40,15 +40,15 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
 
     const parsedReq = schema.parse(request.query);
 
-    const permissions = await PermissionsService.get({
-      request,
-      response,
-      params: { communityId: parsedReq.communityId },
-    });
+    // const permissions = await PermissionsService.get({
+    //   request,
+    //   response,
+    //   params: { communityId: parsedReq.communityId },
+    // });
 
-    if (!permissions.chat) {
-      return response.status(401).json({});
-    }
+    // if (!permissions.chat) {
+    //   return response.status(401).json({});
+    // }
 
     // we could refactor this to use fileWriteStreamHandler and send to s3 directly
     const form = formidable({
