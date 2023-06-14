@@ -618,11 +618,12 @@ export default function Channel({
               updateThread={updateThread}
               editMessage={editMessage}
               onClose={() => {
+                setCollapsed(false);
                 onSelectThread(undefined);
               }}
               expanded={collapsed}
               onExpandClick={() => {
-                setCollapsed((collapsed) => !collapsed);
+                setCollapsed(false);
                 onSelectThread(undefined);
               }}
               onResolution={updateThreadResolution}
