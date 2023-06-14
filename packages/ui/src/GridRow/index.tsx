@@ -176,7 +176,19 @@ function Row({
               text={message.body}
               format={message.messageFormat}
               mentions={message.mentions}
-              reactions={message.reactions}
+              reactions={message.reactions
+                .filter((reaction) => {
+                  if (thread.channel?.viewType === 'FORUM') {
+                    if (
+                      reaction.type === ':thumbsup:' ||
+                      reaction.type === ':thumbsdown:'
+                    ) {
+                      return null;
+                    }
+                  }
+                  return reaction;
+                })
+                .filter(Boolean)}
               attachments={message.attachments}
               currentUser={currentUser}
               onLoad={onLoad}
