@@ -136,7 +136,11 @@ export default function ChannelRow({
   );
 
   return (
-    <>
+    <div
+      className={classNames(styles.main, {
+        [styles.fade]: message.body.length > 280,
+      })}
+    >
       {thread?.channel?.viewType === 'FORUM' && onReaction && (
         <div
           className={classNames(styles.left, {
@@ -236,6 +240,6 @@ export default function ChannelRow({
           }
         />
       </Droppable>
-    </>
+    </div>
   );
 }
