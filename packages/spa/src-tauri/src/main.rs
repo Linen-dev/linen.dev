@@ -1,8 +1,6 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-#[cfg(target_os = "macos")]
 use notifications::{ Instance, NotificationPayload };
-
 use tauri::{ Manager, WindowEvent };
 mod notifications;
 
