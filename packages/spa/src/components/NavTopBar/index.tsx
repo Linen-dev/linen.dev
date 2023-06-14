@@ -48,6 +48,7 @@ export default function NavTopBar() {
       <div className={styles.header}>
         {showLogo && <TitleBar currentCommunity={currentCommunity} />}
         <Header
+          key={settings?.communityId}
           channels={channels}
           channelName={channelName}
           signOut={signOut}
