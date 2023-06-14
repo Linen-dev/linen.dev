@@ -50,6 +50,12 @@ export default function App(props: AppProps) {
     router.events.on('routeChangeStart', handleStart);
     router.events.on('routeChangeComplete', handleStop);
     router.events.on('routeChangeError', handleStop);
+    router.beforePopState(({ options }: { options: any }) => {
+      if (options?._preventNextJSReload) {
+        return false;
+      }
+      return true;
+    });
 
     return () => {
       router.events.off('routeChangeStart', handleStart);

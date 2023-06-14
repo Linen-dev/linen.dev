@@ -333,9 +333,30 @@ export default function Channel({
           ? 'http://localhost:3000'
           : 'https://www.linen.dev',
     });
-    window.history.pushState(window.history.state, '', url);
+    window.history.pushState(
+      {
+        ...window.history.state,
+        options: {
+          ...window.history.state.options,
+          _preventNextJSReload: false,
+        },
+      },
+      '',
+      url
+    );
     window.onpopstate = (event) => {
       event.preventDefault();
+      window.history.pushState(
+        {
+          ...window.history.state,
+          options: {
+            ...window.history.state.options,
+            _preventNextJSReload: true,
+          },
+        },
+        '',
+        window.history.state.url
+      );
       setCollapsed(false);
       onSelectThread(undefined);
     };
