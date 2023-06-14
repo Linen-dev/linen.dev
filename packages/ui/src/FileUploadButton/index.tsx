@@ -8,6 +8,7 @@ interface Props {
   onChange(event: React.ChangeEvent<HTMLInputElement>): void;
   uploading?: boolean;
   progress?: number;
+  accept: string;
 }
 
 export default function FileUploadButton({
@@ -16,6 +17,7 @@ export default function FileUploadButton({
   onChange,
   uploading,
   progress,
+  accept,
 }: Props) {
   return (
     <label className={styles.label} htmlFor={id}>
@@ -28,6 +30,7 @@ export default function FileUploadButton({
         onChange={onChange}
         multiple
         disabled={disabled}
+        accept={accept}
       />
     </label>
   );

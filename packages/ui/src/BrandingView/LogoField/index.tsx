@@ -7,6 +7,7 @@ import FileUploadButton from '@/FileUploadButton';
 import type { ApiClient } from '@linen/api-client';
 
 interface Props {
+  id: string;
   currentCommunity: SerializedAccount;
   onChange(url: string): void;
   logoUrl?: string;
@@ -23,6 +24,7 @@ interface Props {
 }
 
 export default function LogoField({
+  id,
   currentCommunity,
   onChange,
   logoUrl,
@@ -84,11 +86,12 @@ export default function LogoField({
         ))}
 
       <FileUploadButton
-        id="logo-upload"
+        id={id}
         onChange={onFileChange}
         disabled={!currentCommunity.premium || uploading}
         uploading={uploading}
         progress={progress}
+        accept="image/*"
       />
     </>
   );

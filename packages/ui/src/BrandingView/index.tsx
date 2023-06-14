@@ -223,6 +223,7 @@ export default function BrandingView({
             <hr className={styles.my5} />
             <PremiumCard isPremium={currentCommunity.premium}>
               <LogoField
+                id="logoUrl"
                 header="Logo"
                 description="Logo of your brand."
                 currentCommunity={currentCommunity}
@@ -259,6 +260,7 @@ export default function BrandingView({
             <hr className={styles.my5} />
             <PremiumCard isPremium={currentCommunity.premium}>
               <LogoField
+                id="logoSquareUrl"
                 header="Logo Square"
                 description="Squared version of your logo that is going to be displayed in the navigation bar."
                 currentCommunity={currentCommunity}
@@ -297,6 +299,7 @@ export default function BrandingView({
             <hr className={styles.my5} />
             <PremiumCard isPremium={currentCommunity.premium}>
               <LogoField
+                id="faviconUrl"
                 header="Favicon"
                 description="An icon associated with your website, displayed in the address bar of a browser."
                 currentCommunity={currentCommunity}
