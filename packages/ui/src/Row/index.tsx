@@ -155,7 +155,9 @@ export default function ChannelRow({
                 active: isThumbsUpActive,
               });
             }}
-            className={styles.icon}
+            className={classNames(styles.icon, {
+              [styles.active]: isThumbsUpActive,
+            })}
           />
           {votes}
           <FiChevronDown
@@ -169,7 +171,9 @@ export default function ChannelRow({
                 active: isThumbsDownActive,
               });
             }}
-            className={styles.icon}
+            className={classNames(styles.icon, {
+              [styles.active]: isThumbsDownActive,
+            })}
           />
         </div>
       )}

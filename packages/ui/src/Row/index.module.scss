@@ -70,9 +70,15 @@
 .left .icon {
   cursor: pointer;
   font-size: 20px;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
+  transition: border-color 0.2s ease;
+}
+
+.left .icon.active {
+  border: 1px solid var(--color-gray-200);
 }
 
 .left .icon:hover {
-  border-width: 1px;
-  border-radius: 0.25rem;
+  border: 1px solid var(--color-gray-300);
 }
