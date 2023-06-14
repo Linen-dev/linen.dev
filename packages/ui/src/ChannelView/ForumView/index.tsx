@@ -52,6 +52,7 @@ import { copyToClipboard } from '@linen/utilities/clipboard';
 import MembersModal from '@/MembersModal';
 import PaginationNumbers from '@/PaginationNumbers';
 import { useViewport } from '@linen/hooks/useViewport';
+import { getThreadUrl } from '@linen/utilities/url';
 
 const useLayoutEffect =
   typeof window !== 'undefined' ? useClientLayoutEffect : () => {};
@@ -322,7 +323,22 @@ export default function Channel({
     }
     setCollapsed(true);
     onSelectThread(currentThread.id);
-    // routerPush(membersPath);
+    const url = getThreadUrl({
+      isSubDomainRouting,
+      settings,
+      incrementId: currentThread.incrementId,
+      slug: currentThread.slug,
+      LINEN_URL:
+        process.env.NODE_ENV === 'development'
+          ? 'http://localhost:3000'
+          : 'https://www.linen.dev',
+    });
+    window.history.pushState(window.history.state, '', url);
+    window.onpopstate = (event) => {
+      event.preventDefault();
+      setCollapsed(false);
+      onSelectThread(undefined);
+    };
   }
 
   const rootMargin =
