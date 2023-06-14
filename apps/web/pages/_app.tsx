@@ -40,7 +40,6 @@ export default function App(props: AppProps) {
     }
 
     const handleStart = (url: string) => {
-      console.log(`Loading: ${url}`);
       NProgress.start();
     };
     const handleStop = () => {

@@ -297,17 +297,19 @@ export default function Actions({
         )}
         <li
           onClick={(event) => {
-            const text = getThreadUrl({
+            const url = getThreadUrl({
               isSubDomainRouting,
               settings,
               incrementId: thread.incrementId,
               slug: thread.slug,
               messageId: message.id,
-              LINEN_URL: 'https://www.linen.dev',
+              LINEN_URL: process.env.DEVELOPMENT
+                ? 'http://localhost:3000'
+                : 'https://www.linen.dev',
             });
             event.stopPropagation();
             event.preventDefault();
-            copyToClipboard(text);
+            copyToClipboard(url);
             Toast.success('Copied to clipboard');
           }}
         >
