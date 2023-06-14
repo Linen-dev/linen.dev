@@ -8,7 +8,7 @@
   },
   "package": {
     "productName": "Linen",
-    "version": "0.0.15"
+    "version": "0.0.16"
   },
   "tauri": {
     "allowlist": {
