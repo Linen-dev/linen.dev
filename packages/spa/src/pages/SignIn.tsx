@@ -15,8 +15,9 @@ export default function SignIn() {
   });
 
   useEffect(() => {
-    if (searchParams.has('state')) {
-      handleSignIn(searchParams.toString());
+    const state = searchParams.get('state');
+    if (state) {
+      handleSignIn(state);
     }
   }, [searchParams]);
 
