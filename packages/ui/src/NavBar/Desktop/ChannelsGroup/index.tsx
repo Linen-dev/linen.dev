@@ -104,13 +104,13 @@ export default function ChannelsGroup({
       : []),
     ...(permissions.user
       ? [
-          {
-            icon: <FiEyeOff />,
-            label: 'Hide channel',
-            onClick: (context: SerializedChannel) => {
-              setModal(ModalView.HIDE_CHANNEL);
-            },
-          },
+          // {
+          //   icon: <FiEyeOff />,
+          //   label: 'Hide channel',
+          //   onClick: (context: SerializedChannel) => {
+          //     setModal(ModalView.HIDE_CHANNEL);
+          //   },
+          // },
           {
             icon: <FiLogOut />,
             label: 'Leave channel',
