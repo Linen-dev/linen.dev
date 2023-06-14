@@ -204,8 +204,8 @@ export default function Thread({
   const manage = permissions.manage || isThreadCreator(currentUser, thread);
 
   useEffect(() => {
-    permissions.chat && handleScroll();
-  }, []);
+    permissions.chat && thread.channel?.viewType !== 'FORUM' && handleScroll();
+  }, [permissions, thread]);
 
   const views = viewCount + 1;
 
