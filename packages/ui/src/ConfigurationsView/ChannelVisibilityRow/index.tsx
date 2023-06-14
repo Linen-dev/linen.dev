@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import classNames from 'classnames';
 import {
   SerializedAccount,
@@ -13,30 +13,23 @@ import debounce from '@linen/utilities/debounce';
 import type { ApiClient } from '@linen/api-client';
 
 interface Props {
-  onChange(channels: SerializedChannel[]): void;
+  allChannels?: findChannelsWithStats;
   currentCommunity: SerializedAccount;
   api: ApiClient;
+  setChannels: (props: SerializedChannel[]) => void;
+  channels: SerializedChannel[];
 }
 
 export default function ChannelVisibilityRow({
   currentCommunity,
-  onChange,
   api,
+  ...props
 }: Props) {
-  const { data } = useChannelsStats({ accountId: currentCommunity.id, api });
-  const [allChannels, setAllChannels] = useState<findChannelsWithStats>();
+  const [allChannels, setAllChannels] = useState<
+    findChannelsWithStats | undefined
+  >(props.allChannels);
 
   const debouncedChannelsVisibilityUpdate = debounce(api.hideChannels);
-
-  useEffect(() => {
-    setAllChannels(data);
-  }, [data]);
-
-  useEffect(() => {
-    if (allChannels) {
-      onChange(allChannels.filter((c) => !c.hidden));
-    }
-  }, [allChannels, onChange]);
 
   async function onChannelsVisibilityChange(value: {
     id: string;
@@ -53,6 +46,18 @@ export default function ChannelVisibilityRow({
         return channel;
       });
     });
+
+    props.setChannels(
+      props.channels.map((channel) => {
+        if (channel.id === value.id) {
+          return {
+            ...channel,
+            hidden: value.hidden,
+          };
+        }
+        return channel;
+      })
+    );
 
     return debouncedChannelsVisibilityUpdate({
       accountId: currentCommunity.id,
@@ -92,10 +97,17 @@ export default function ChannelVisibilityRow({
                         onChannelToggle(checked, channel.id)
                       }
                     />
-                    {channel.channelName}{' '}
-                    <label className={styles.channelsStats}>
-                      {channel.stats}
-                    </label>
+                    <div
+                      className={classNames(styles.channel, {
+                        [styles.lock]: channel.type === 'PRIVATE',
+                        [styles.hash]: channel.type === 'PUBLIC',
+                      })}
+                    >
+                      {channel.channelName}
+                      <label className={styles.channelsStats}>
+                        {channel.stats}
+                      </label>
+                    </div>
                   </label>
 
                   <input
@@ -110,29 +122,3 @@ export default function ChannelVisibilityRow({
     </>
   );
 }
-
-const useChannelsStats = ({
-  accountId,
-  api,
-}: {
-  accountId: string;
-  api: ApiClient;
-}) => {
-  const [value, setValue] = useState<findChannelsWithStats>();
-
-  const execute = useCallback(async () => {
-    setValue(undefined);
-    try {
-      const response = await api.getChannelsStats({ accountId });
-      setValue(response);
-    } catch (error: any) {
-      console.error(error);
-    }
-  }, [accountId]);
-
-  useEffect(() => {
-    execute();
-  }, [execute]);
-
-  return { data: value };
-};

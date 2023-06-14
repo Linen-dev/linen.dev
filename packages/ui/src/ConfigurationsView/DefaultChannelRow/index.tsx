@@ -8,9 +8,8 @@ import Label from '@/Label';
 import type { ApiClient } from '@linen/api-client';
 
 interface Props {
-  channels: SerializedChannel[];
+  channels?: SerializedChannel[];
   currentCommunity: SerializedAccount;
-  defaultChannel?: SerializedChannel;
   api: ApiClient;
 }
 
@@ -18,16 +17,17 @@ export default function DefaultChannelRow({
   channels,
   currentCommunity,
   api,
-  defaultChannel: initialChannel,
 }: Props) {
-  const [defaultChannel, setDefaultChannel] = useState(initialChannel);
+  const [defaultChannel, setDefaultChannel] = useState(
+    channels?.find((c) => c.default)
+  );
 
   const CommunityIcon =
     currentCommunity.communityType === 'discord' ? DiscordIcon : SlackIcon;
 
   async function onChange(event: React.ChangeEvent<HTMLSelectElement>) {
     const id = event.currentTarget.value;
-    const channelSelected = channels.find(
+    const channelSelected = channels?.find(
       (channel) => channel.id === id
     ) as SerializedChannel;
     if (channelSelected && channelSelected.id !== defaultChannel?.id) {
@@ -43,6 +43,10 @@ export default function DefaultChannelRow({
         })
         .catch(() => Toast.error('Something went wrong'));
     }
+  }
+
+  if (!channels) {
+    return <>Loading...</>;
   }
 
   return (

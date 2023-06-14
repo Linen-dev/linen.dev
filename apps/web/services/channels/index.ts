@@ -76,7 +76,7 @@ class ChannelsService {
         },
         where: {
           accountId: communityId,
-          type: ChannelType.PUBLIC,
+          type: { not: ChannelType.DM },
         },
         orderBy: {
           displayOrder: 'asc',

@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 import ConfigurationsView from '@linen/ui/ConfigurationsView';
-import { useLinenStore } from '@/store';
+import { shallow, useLinenStore } from '@/store';
 import { api } from '@/fetcher';
 import { useEffect } from 'react';
 import { localStorage } from '@linen/utilities/storage';
@@ -12,10 +12,14 @@ type ConfigurationsPageProps = {
 
 export default function ConfigurationsPage() {
   const { communityName } = useParams() as ConfigurationsPageProps;
-  const { inboxProps, setChannels } = useLinenStore((state) => ({
-    inboxProps: state.inboxProps,
-    setChannels: state.setChannels,
-  }));
+  const { inboxProps, setChannels, channels } = useLinenStore(
+    (state) => ({
+      inboxProps: state.inboxProps,
+      setChannels: state.setChannels,
+      channels: state.channels,
+    }),
+    shallow
+  );
 
   useEffect(() => {
     localStorage.set('pages_last', `/s/${communityName}/configurations`);
@@ -23,7 +27,7 @@ export default function ConfigurationsPage() {
 
   return (
     <ConfigurationsView
-      channels={inboxProps?.channels || []}
+      channels={channels}
       currentCommunity={inboxProps?.currentCommunity || mockAccount}
       api={api}
       setChannels={setChannels}

@@ -50,3 +50,25 @@
   font-style: italic;
   color: var(--color-gray-400);
 }
+
+.channel {
+  align-items: center;
+  display: flex;
+  gap: 0.25rem;
+}
+
+.channel::before {
+  background-color: var(--color-text);
+  content: '';
+  mask-size: contain;
+  width: 14px;
+  height: 14px;
+}
+
+.channel.lock::before {
+  mask-image: url('https://www.linen.dev/icons/lock.svg');
+}
+
+.channel.hash::before {
+  mask-image: url('https://www.linen.dev/icons/hash.svg');
+}

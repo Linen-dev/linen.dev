@@ -5,27 +5,27 @@ import Label from '@/Label';
 import styles from './index.module.scss';
 import debounce from '@linen/utilities/debounce';
 import type { ApiClient } from '@linen/api-client';
-import { FiHash } from '@react-icons/all-files/fi/FiHash';
 
 interface Props {
-  onChange(channels: SerializedChannel[]): void;
+  setChannels: (props: SerializedChannel[]) => void;
   currentCommunity: SerializedAccount;
+  allChannels?: SerializedChannel[];
   channels: SerializedChannel[];
   api: ApiClient;
 }
 
 export default function ChannelOrderRow({
   currentCommunity,
-  onChange,
-  channels: initialChannels,
   api,
+  ...props
 }: Props) {
   const debouncedReorderChannels = useCallback(
     debounce(api.reorderChannels),
     []
   );
-  const [channels, setChannels] =
-    useState<SerializedChannel[]>(initialChannels);
+  const [channels, setChannels] = useState<SerializedChannel[]>(
+    props.allChannels || []
+  );
 
   const onDragStart = (event: React.DragEvent) => {
     const node = event.target as HTMLDivElement;
@@ -68,46 +68,58 @@ export default function ChannelOrderRow({
     const to = node.getAttribute('data-id');
     event.currentTarget.classList.remove(styles.drop);
     setChannels((channels) => {
-      const fromIndex = channels.findIndex((channel) => channel.id === from);
-      const toIndex = channels.findIndex((channel) => channel.id === to);
-      if (fromIndex >= 0 && toIndex >= 0) {
-        const channelFrom = channels[fromIndex];
-        const channelTo = channels[toIndex];
-        const reorderedChannels = channels.map((channel, index) => {
-          if (channel.id === from) {
-            return {
-              ...channelTo,
-              displayOrder: index,
-            };
-          } else if (channel.id === to) {
-            return {
-              ...channelFrom,
-              displayOrder: index,
-            };
-          }
+      const reorderedChannels = reorderChannels(channels, from, to);
+      debouncedReorderChannels({
+        accountId: currentCommunity.id,
+        channels: reorderedChannels.map(({ channelName, id, displayOrder }) => {
+          // console.log(channelName);
+          return { id, displayOrder };
+        }),
+      });
+      return reorderedChannels;
+    });
+
+    setUserChannels(from, to);
+  };
+
+  function reorderChannels(
+    channels: SerializedChannel[],
+    from: string,
+    to: string | null
+  ): SerializedChannel[] {
+    const fromIndex = channels.findIndex((channel) => channel.id === from);
+    const toIndex = channels.findIndex((channel) => channel.id === to);
+    if (fromIndex >= 0 && toIndex >= 0) {
+      const channelFrom = channels[fromIndex];
+      const channelTo = channels[toIndex];
+      return channels.map((channel, index) => {
+        if (channelTo && channel.id === from) {
           return {
-            ...channel,
+            ...channelTo,
             displayOrder: index,
           };
-        });
+        } else if (channelFrom && channel.id === to) {
+          return {
+            ...channelFrom,
+            displayOrder: index,
+          };
+        }
+        return {
+          ...channel,
+          displayOrder: index,
+        };
+      });
+    }
+    return channels;
+  }
 
-        onChange(reorderedChannels);
+  function setUserChannels(from: string, to: string | null) {
+    props.setChannels(reorderChannels(props.channels, from, to));
+  }
 
-        debouncedReorderChannels({
-          accountId: currentCommunity.id,
-          channels: reorderedChannels.map(
-            ({ channelName, id, displayOrder }) => {
-              console.log(channelName);
-              return { id, displayOrder };
-            }
-          ),
-        });
-
-        return reorderedChannels;
-      }
-      return channels;
-    });
-  };
+  if (!props.channels) {
+    return <>Loading...</>;
+  }
 
   return (
     <>
@@ -133,8 +145,17 @@ export default function ChannelOrderRow({
               onDrop={onDrop}
             >
               <label className={classNames(styles.label)}>
-                <FiHash />
-                {channel.channelName}
+                <span className={styles.channelNumber}>
+                  {channel.displayOrder + 1}
+                </span>
+                <div
+                  className={classNames(styles.channel, {
+                    [styles.lock]: channel.type === 'PRIVATE',
+                    [styles.hash]: channel.type === 'PUBLIC',
+                  })}
+                >
+                  {channel.channelName}
+                </div>
               </label>
             </div>
           );

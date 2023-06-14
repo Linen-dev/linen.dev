@@ -1,18 +1,10 @@
 .items {
-  display: grid;
-  grid-template-columns: 1fr;
   margin-top: 0.5rem;
 }
 
 @media (min-width: 768px) {
   .items {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (min-width: 1440px) {
-  .items {
-    grid-template-columns: repeat(4, 1fr);
+    column-count: 2;
   }
 }
 
@@ -37,4 +29,33 @@
 
 .drop {
   background: var(--color-blue-50);
+}
+
+.channel {
+  align-items: center;
+  display: flex;
+  gap: 0.25rem;
+}
+
+.channel::before {
+  background-color: var(--color-text);
+  content: '';
+  mask-size: contain;
+  width: 14px;
+  height: 14px;
+}
+
+.channel.lock::before {
+  mask-image: url('https://www.linen.dev/icons/lock.svg');
+}
+
+.channel.hash::before {
+  mask-image: url('https://www.linen.dev/icons/hash.svg');
+}
+
+.channelNumber {
+  font-size: 0.75rem /* 12px */;
+  line-height: 1rem /* 16px */;
+  font-style: italic;
+  color: var(--color-gray-400);
 }

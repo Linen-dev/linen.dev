@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Header from './Header';
 import {
-  SerializedChannel,
+  findChannelsWithStats,
   AccountType,
   SerializedAccount,
+  SerializedChannel,
 } from '@linen/types';
 import styles from './index.module.scss';
 import CommunityIntegrationRow from './CommunityIntegrationRow';
@@ -19,20 +20,31 @@ import Toast from '@/Toast';
 import RemoveCommunity from './RemoveCommunity';
 import ChannelsConfig from './ChannelsConfig';
 import type { ApiClient } from '@linen/api-client';
+import useAsync from '@linen/hooks/useAsync';
 
 export default function ConfigurationsView({
   currentCommunity,
-  channels,
-  setChannels,
   api,
+  ...props
 }: {
   currentCommunity: SerializedAccount;
   channels: SerializedChannel[];
-  setChannels(channels: SerializedChannel[]): void;
+  setChannels: (props: SerializedChannel[]) => void;
   api: ApiClient;
 }) {
   const updateAccount = debounce(api.updateAccount);
-  const key = channels.map(({ id }) => id).join();
+  const [channels, setChannels] = useState<findChannelsWithStats>();
+  useAsync(
+    () =>
+      api
+        .getChannelsStats({
+          accountId: currentCommunity.id,
+        })
+        .then(setChannels),
+    [currentCommunity.id]
+  );
+
+  const key = channels?.map(({ id }) => id).join();
 
   return (
     <div className={styles.wrapper}>
@@ -56,21 +68,24 @@ export default function ConfigurationsView({
           channels={channels}
           currentCommunity={currentCommunity}
           api={api}
-          defaultChannel={channels.find((channel) => channel.default)}
         />
         <hr className={styles.my3} />
         <ChannelOrderRow
           currentCommunity={currentCommunity}
-          onChange={setChannels}
-          channels={channels}
+          key={`order-row-${key}`}
+          allChannels={channels}
           api={api}
+          channels={props.channels}
+          setChannels={props.setChannels}
         />
         <hr className={styles.my3} />
         <ChannelVisibilityRow
           key={`channel-visibility-${key}`}
           currentCommunity={currentCommunity}
-          onChange={setChannels}
+          allChannels={channels}
           api={api}
+          channels={props.channels}
+          setChannels={props.setChannels}
         />
         <hr className={styles.my3} />
         <ChannelsConfig currentCommunity={currentCommunity} api={api} />

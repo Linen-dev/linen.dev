@@ -62,7 +62,9 @@ async function getProps(
   return {
     token: permissions.token,
     currentCommunity,
-    channels: [...channels, ...privateChannels].map(serializeChannel),
+    channels: [...channels, ...privateChannels]
+      .map(serializeChannel)
+      .sort((a, b) => a.displayOrder - b.displayOrder),
     communities: communities.map(serializeAccount),
     permissions,
     settings,

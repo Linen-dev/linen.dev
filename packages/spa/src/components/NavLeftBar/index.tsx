@@ -53,7 +53,7 @@ export default function NavLeftBar() {
       mode={mode}
       channelName={channelName}
       permissions={permissions || ({} as any)}
-      channels={channels}
+      channels={channels.filter((c) => !c.hidden)}
       dms={dms}
       // components injection
       Link={communityName ? InternalLink({ communityName }) : () => <></>}
