@@ -102,7 +102,7 @@ export default function Tiers({
         price="Custom"
       >
         <a
-          href="mailto:support@linen.dev?subject=Linen Enterprise"
+          href="mailto:help@linen.dev?subject=Linen Enterprise"
           className={styles.button}
         >
           Contact us

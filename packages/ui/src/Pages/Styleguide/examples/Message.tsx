@@ -170,7 +170,7 @@ export default function MessageExample() {
         />
       </Example>
       {/* <Example description="Renders mailto links">
-        <Message text="Contact us: mailto:support@linen.dev!" format={MessageFormat.LINEN} />
+        <Message text="Contact us: mailto:help@linen.dev!" format={MessageFormat.LINEN} />
       </Example> */}
       <Example description="Renders inline code blocks.">
         <Message
