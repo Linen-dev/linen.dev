@@ -1,5 +1,6 @@
 import React from 'react';
-import Droppable from './Droppable';
+import classNames from 'classnames';
+import Droppable from '../Row/Droppable';
 import Avatars from '@/Avatars';
 import GridRow from '@/GridRow';
 import styles from './index.module.scss';
@@ -8,6 +9,8 @@ import {
   Settings,
   SerializedThread,
   SerializedUser,
+  SerializedMessage,
+  SerializedReaction,
   ReminderTypes,
   onResolve,
   ThreadState,
@@ -17,7 +20,9 @@ import { FiMessageCircle } from '@react-icons/all-files/fi/FiMessageCircle';
 import { FiUsers } from '@react-icons/all-files/fi/FiUsers';
 import { FiUser } from '@react-icons/all-files/fi/FiUser';
 import { FiCheck } from '@react-icons/all-files/fi/FiCheck';
-import { uniqueUsers } from './utilities/uniqueUsers';
+import { uniqueUsers } from '../Row/utilities/uniqueUsers';
+import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
+import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp';
 
 interface Props {
   className?: string;
@@ -64,7 +69,24 @@ interface Props {
   onUnread?(threadId: string): void;
 }
 
-export default function Row({
+function hasReaction(
+  message: SerializedMessage,
+  type: string,
+  userId?: string
+): boolean {
+  if (!userId) {
+    return false;
+  }
+  const reaction = message.reactions.find(
+    (reaction: SerializedReaction) => reaction.type === type
+  );
+  if (!reaction) {
+    return false;
+  }
+  return !!reaction.users.find(({ id }: SerializedUser) => id === userId);
+}
+
+export default function ChannelRow({
   className,
   thread,
   permissions,
@@ -99,8 +121,62 @@ export default function Row({
       text: a.displayName,
     }));
 
+  const upvotes = message.reactions.find(
+    (reaction: SerializedReaction) => reaction.type === ':thumbsup:'
+  ) || { count: 0 };
+  const downvotes = message.reactions.find(
+    (reaction: SerializedReaction) => reaction.type === ':thumbsdown:'
+  ) || { count: 0 };
+  const votes = upvotes.count - downvotes.count;
+  const isThumbsUpActive = hasReaction(message, ':thumbsup:', currentUser?.id);
+  const isThumbsDownActive = hasReaction(
+    message,
+    ':thumbsdown:',
+    currentUser?.id
+  );
+
   return (
     <>
+      {thread?.channel?.viewType === 'FORUM' && onReaction && (
+        <div
+          className={classNames(styles.left, {
+            [styles.positive]: votes > 0,
+            [styles.negative]: votes < 0,
+          })}
+        >
+          <FiChevronUp
+            onClick={(event) => {
+              event.stopPropagation();
+              event.preventDefault();
+              onReaction({
+                threadId: thread.id,
+                messageId: message.id,
+                type: ':thumbsup:',
+                active: isThumbsUpActive,
+              });
+            }}
+            className={classNames(styles.icon, {
+              [styles.active]: isThumbsUpActive,
+            })}
+          />
+          {votes}
+          <FiChevronDown
+            onClick={(event) => {
+              event.stopPropagation();
+              event.preventDefault();
+              onReaction({
+                threadId: thread.id,
+                messageId: message.id,
+                type: ':thumbsdown:',
+                active: isThumbsDownActive,
+              });
+            }}
+            className={classNames(styles.icon, {
+              [styles.active]: isThumbsDownActive,
+            })}
+          />
+        </div>
+      )}
       <Droppable
         id={thread.id}
         className={styles.container}
