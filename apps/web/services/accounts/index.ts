@@ -36,8 +36,8 @@ export default class AccountsService {
       const channelsToInsert = unique(['default', ...(channels || [])]);
 
       const displayName = email.split('@').shift() || email;
-      const { id, users } = await prisma.accounts.create({
-        select: { id: true, users: true },
+      const newAccount = await prisma.accounts.create({
+        select: { id: true, users: true, channels: true },
         data: {
           name,
           slackDomain: slackDomain?.toLowerCase(),
@@ -64,20 +64,30 @@ export default class AccountsService {
           },
           channels: {
             createMany: {
-              data: channelsToInsert.map((c) => ({
+              data: channelsToInsert.map((c, i) => ({
                 ...(c === 'default' && { default: true }),
                 channelName: c.toLowerCase(),
                 externalChannelId: v4(),
+                displayOrder: i,
               })),
             },
           },
         },
       });
-      const ownerUser = users?.shift();
 
-      await eventNewCommunity({ email, id, slackDomain });
+      const ownerUser = newAccount.users?.shift();
 
-      return { status: 200, id, ownerUser };
+      if (newAccount.channels.length && ownerUser?.id)
+        await prisma.memberships.createMany({
+          data: newAccount.channels.map((c) => ({
+            channelsId: c.id,
+            usersId: ownerUser.id,
+          })),
+        });
+
+      await eventNewCommunity({ email, id: newAccount.id, slackDomain });
+
+      return { status: 200, id: newAccount.id, ownerUser };
     } catch (error: any) {
       if (
         error.code === 'P2002' &&
