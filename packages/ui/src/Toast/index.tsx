@@ -4,6 +4,7 @@ import { Toaster, toast } from 'react-hot-toast';
 import { FiCheckSquare } from '@react-icons/all-files/fi/FiCheckSquare';
 import { FiInfo } from '@react-icons/all-files/fi/FiInfo';
 import { FiAlertTriangle } from '@react-icons/all-files/fi/FiAlertTriangle';
+import { FiAlertCircle } from '@react-icons/all-files/fi/FiAlertCircle';
 import styles from './index.module.scss';
 
 interface Options {
@@ -14,6 +15,7 @@ const icons = {
   success: <FiCheckSquare className={classNames(styles.icon, styles.green)} />,
   error: <FiAlertTriangle className={classNames(styles.icon, styles.red)} />,
   info: <FiInfo className={classNames(styles.icon, styles.blue)} />,
+  warning: <FiAlertCircle className={classNames(styles.icon, styles.red)} />,
 };
 
 const style = {
@@ -43,6 +45,13 @@ const Toast = {
     return toast.success(message, {
       style,
       icon: icons.info,
+      ...options,
+    });
+  },
+  warning(message: any, options?: Options) {
+    return toast.error(message, {
+      style,
+      icon: icons.warning,
       ...options,
     });
   },

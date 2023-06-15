@@ -1,4 +1,5 @@
 import React from 'react';
+import classNames from 'classnames';
 import Droppable from './Droppable';
 import Avatars from '@/Avatars';
 import GridRow from '@/GridRow';
@@ -18,6 +19,9 @@ import { FiUsers } from '@react-icons/all-files/fi/FiUsers';
 import { FiUser } from '@react-icons/all-files/fi/FiUser';
 import { FiCheck } from '@react-icons/all-files/fi/FiCheck';
 import { uniqueUsers } from './utilities/uniqueUsers';
+import { getUserMentions } from './utilities/mentions';
+import { FiAtSign } from '@react-icons/all-files/fi/FiAtSign';
+import { FiAlertCircle } from '@react-icons/all-files/fi/FiAlertCircle';
 
 interface Props {
   className?: string;
@@ -99,6 +103,14 @@ export default function Row({
       text: a.displayName,
     }));
 
+  const userMentions = getUserMentions({ currentUser, thread });
+  const userMentionCount = userMentions.filter(
+    (mention) => mention === 'user'
+  ).length;
+  const signalMentionCount = userMentions.filter(
+    (mention) => mention === 'signal'
+  ).length;
+
   return (
     <>
       <Droppable
@@ -154,6 +166,20 @@ export default function Row({
                   <li className={styles.info}>
                     {messages.length - 1} <FiMessageCircle />
                   </li>
+                  {userMentionCount > 0 && (
+                    <li className={styles.info}>
+                      {userMentionCount} <FiAtSign />
+                    </li>
+                  )}
+                  {signalMentionCount > 0 && (
+                    <li
+                      className={classNames(styles.info, {
+                        [styles.signal]: userMentions.includes('signal'),
+                      })}
+                    >
+                      {signalMentionCount} <FiAlertCircle />
+                    </li>
+                  )}
                 </ul>
               </div>
             )
