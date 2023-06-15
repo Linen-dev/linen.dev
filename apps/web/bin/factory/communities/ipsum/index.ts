@@ -35,29 +35,36 @@ export default async function createIpsumCommunity() {
     },
   });
 
-  const user2 = await prisma.users.findFirst({
+  const auth2 = await prisma.auths.findFirst({
     where: {
-      displayName: 'Emil',
+      email: 'emil@linen.dev',
     },
   });
-  if (user2) {
-    await prisma.users.create({
-      data: {
-        displayName: 'John',
-        accountsId: community.id,
-        authsId: user2.authsId,
-        isAdmin: true,
-        isBot: false,
-        role: Roles.ADMIN,
-      },
-    });
-  }
+  const user2 = await prisma.users.create({
+    data: {
+      displayName: 'Emil',
+      accountsId: community.id,
+      authsId: auth2!.id,
+      isAdmin: true,
+      isBot: false,
+      role: Roles.ADMIN,
+    },
+  });
+
+  const users = [user1, user2];
 
   const channel1 = await prisma.channels.create({
     data: {
       accountId: community.id,
       channelName: 'general',
     },
+  });
+
+  await prisma.memberships.createMany({
+    data: users.map((user) => ({
+      channelsId: channel1.id,
+      usersId: user.id,
+    })),
   });
 
   await prisma.threads.create({
@@ -83,6 +90,13 @@ export default async function createIpsumCommunity() {
       accountId: community.id,
       channelName: 'bugs',
     },
+  });
+
+  await prisma.memberships.createMany({
+    data: users.map((user) => ({
+      channelsId: channel2.id,
+      usersId: user.id,
+    })),
   });
 
   await prisma.threads.create({
