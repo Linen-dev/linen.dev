@@ -191,18 +191,18 @@ export default function DesktopNavBar({
     });
   };
 
-  useEffect(() => {
-    let mounted = true;
-    setTimeout(() => {
-      onNewMessage({
-        mention_type: 'signal',
-        channel_id: channels[0].id,
-      });
-    }, 1000);
-    return () => {
-      mounted = false;
-    };
-  }, []);
+  // useEffect(() => {
+  //   let mounted = true;
+  //   setTimeout(() => {
+  //     onNewMessage({
+  //       mention_type: 'signal',
+  //       channel_id: channels[0].id,
+  //     });
+  //   }, 1000);
+  //   return () => {
+  //     mounted = false;
+  //   };
+  // }, []);
 
   // the logic for connecting to websockets should be moved to the top level container
   // after connecting, we could use an internal event bus to pass to those events
