@@ -96,6 +96,9 @@ export default async function createLinenCommunity() {
       role: Roles.ADMIN,
     },
   });
+
+  const users = [user1, user2, user3, user4];
+
   const bot = await prisma.users.create({
     data: {
       displayName: 'aws-deployment',
@@ -110,6 +113,13 @@ export default async function createLinenCommunity() {
       accountId: community.id,
       channelName: 'general',
     },
+  });
+
+  await prisma.memberships.createMany({
+    data: users.map((user) => ({
+      channelsId: channel1.id,
+      usersId: user.id,
+    })),
   });
   // Thread with a reaction
   await prisma.threads.create({
@@ -486,6 +496,13 @@ export default async function createLinenCommunity() {
     },
   });
 
+  await prisma.memberships.createMany({
+    data: users.map((user) => ({
+      channelsId: channel2.id,
+      usersId: user.id,
+    })),
+  });
+
   await prisma.threads.create({
     data: {
       channelId: channel2.id,
@@ -518,6 +535,13 @@ export default async function createLinenCommunity() {
       accountId: community.id,
       channelName: 'blog',
     },
+  });
+
+  await prisma.memberships.createMany({
+    data: users.map((user) => ({
+      channelsId: channel3.id,
+      usersId: user.id,
+    })),
   });
 
   // Blog post
@@ -567,6 +591,13 @@ export default async function createLinenCommunity() {
     },
   });
 
+  await prisma.memberships.createMany({
+    data: users.map((user) => ({
+      channelsId: channel4.id,
+      usersId: user.id,
+    })),
+  });
+
   // Markdown documentation
   await prisma.threads.create({
     data: {
@@ -593,6 +624,13 @@ export default async function createLinenCommunity() {
       accountId: community.id,
       channelName: 'notifications',
     },
+  });
+
+  await prisma.memberships.createMany({
+    data: users.map((user) => ({
+      channelsId: channel5.id,
+      usersId: user.id,
+    })),
   });
 
   await prisma.threads.create({
@@ -647,6 +685,13 @@ export default async function createLinenCommunity() {
     },
   });
 
+  await prisma.memberships.createMany({
+    data: users.map((user) => ({
+      channelsId: channel6.id,
+      usersId: user.id,
+    })),
+  });
+
   [...(Array(999).keys() as any)].map(async (index) => {
     const number = 999 - index;
     const sentAt = `2022-12-15T09:01:00.${pad(number.toString(), 3)}Z`;
@@ -680,6 +725,13 @@ export default async function createLinenCommunity() {
     },
   });
 
+  await prisma.memberships.createMany({
+    data: users.map((user) => ({
+      channelsId: channel7.id,
+      usersId: user.id,
+    })),
+  });
+
   [...(Array(999).keys() as any)].map(async (index) => {
     const number = 999 - index;
     const sentAt = `2022-12-15T09:01:00.${pad(number.toString(), 3)}Z`;
@@ -711,4 +763,21 @@ export default async function createLinenCommunity() {
       channelName: `team-${index + 1}`,
     })),
   });
+
+  const channels = await prisma.channels.findMany({
+    where: {
+      channelName: {
+        startsWith: 'team-',
+      },
+    },
+  });
+
+  for await (const channel of channels) {
+    await prisma.memberships.createMany({
+      data: users.map((user) => ({
+        channelsId: channel.id,
+        usersId: user.id,
+      })),
+    });
+  }
 }

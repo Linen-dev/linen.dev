@@ -24,7 +24,7 @@ export default async function createDolorCommunity() {
       accountId: community.id,
     },
   });
-  await prisma.users.create({
+  const user1 = await prisma.users.create({
     data: {
       displayName: 'John',
       accountsId: community.id,
@@ -35,29 +35,36 @@ export default async function createDolorCommunity() {
     },
   });
 
-  const user2 = await prisma.users.findFirst({
+  const auth2 = await prisma.auths.findFirst({
     where: {
-      displayName: 'Emil',
+      email: 'emil@linen.dev',
     },
   });
 
-  if (user2) {
-    await prisma.users.create({
-      data: {
-        displayName: 'John',
-        accountsId: community.id,
-        authsId: user2.authsId,
-        isAdmin: true,
-        isBot: false,
-        role: Roles.ADMIN,
-      },
-    });
-  }
+  const user2 = await prisma.users.create({
+    data: {
+      displayName: 'Emil',
+      accountsId: community.id,
+      authsId: auth2!.id,
+      isAdmin: true,
+      isBot: false,
+      role: Roles.ADMIN,
+    },
+  });
 
-  await prisma.channels.create({
+  const users = [user1, user2].filter(Boolean);
+
+  const channel1 = await prisma.channels.create({
     data: {
       accountId: community.id,
       channelName: 'general',
     },
+  });
+
+  await prisma.memberships.createMany({
+    data: users.map((user: any) => ({
+      channelsId: channel1.id,
+      usersId: user.id,
+    })),
   });
 }
