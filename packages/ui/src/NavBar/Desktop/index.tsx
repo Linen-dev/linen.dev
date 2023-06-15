@@ -36,6 +36,7 @@ import type { ApiClient } from '@linen/api-client';
 import NewCommunityModal from '@/NewCommunityModal';
 import EventEmitter from '@linen/utilities/event';
 import { FiX } from '@react-icons/all-files/fi/FiX';
+import { localStorage } from '@linen/utilities/storage';
 
 interface Props {
   mode: Mode;
@@ -156,7 +157,7 @@ export default function DesktopNavBar({
         const href = `/c/${channel.channelName}${
           payload.thread_id ? `#${payload.thread_id}` : ''
         }`;
-        Toast.info(
+        Toast.warning(
           ({ id }: { id: string }) => (
             <div className={styles.toast}>
               You were mentioned in{' '}
@@ -190,18 +191,18 @@ export default function DesktopNavBar({
     });
   };
 
-  // useEffect(() => {
-  //   let mounted = true;
-  //   setTimeout(() => {
-  //     onNewMessage({
-  //       mention_type: 'signal',
-  //       channel_id: channels[0].id,
-  //     });
-  //   }, 1000);
-  //   return () => {
-  //     mounted = false;
-  //   };
-  // }, []);
+  useEffect(() => {
+    let mounted = true;
+    setTimeout(() => {
+      onNewMessage({
+        mention_type: 'signal',
+        channel_id: channels[0].id,
+      });
+    }, 1000);
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   // the logic for connecting to websockets should be moved to the top level container
   // after connecting, we could use an internal event bus to pass to those events
