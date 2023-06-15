@@ -153,14 +153,22 @@ export default function DesktopNavBar({
         (channel) => channel.id === payload.channel_id
       );
       if (channel) {
-        const href = `${getHomeUrl(currentCommunity)}/c/${
-          channel.channelName
-        }#${payload.thread_id}`;
+        const href = `/c/${channel.channelName}${
+          payload.thread_id ? `#${payload.thread_id}` : ''
+        }`;
         Toast.info(
           ({ id }: { id: string }) => (
             <div className={styles.toast}>
               You were mentioned in{' '}
-              <a className={styles.channel} href={href}>
+              <a
+                className={styles.channel}
+                href={`${getHomeUrl(currentCommunity)}${href}`}
+                onClick={(event) => {
+                  event.preventDefault();
+                  CustomRouterPush({ path: href });
+                  Toast.dismiss(id);
+                }}
+              >
                 #{channel.channelName}
               </a>
               <FiX className={styles.icon} onClick={() => Toast.dismiss(id)} />
