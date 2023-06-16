@@ -3,22 +3,22 @@ import classNames from 'classnames';
 import Nav from '@/Nav';
 import { Permissions, SerializedChannel, SerializedUser } from '@linen/types';
 import { Mode } from '@linen/hooks/mode';
-import { FiPlus } from '@react-icons/all-files/fi/FiPlus';
 import styles from './index.module.scss';
-import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
-import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp';
-import { FiSettings } from '@react-icons/all-files/fi/FiSettings';
 import NewChannelModal from '@/NewChannelModal';
 import type { ApiClient } from '@linen/api-client';
+import { FiPlus } from '@react-icons/all-files/fi/FiPlus';
+import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
+import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp';
+import { FiSearch } from '@react-icons/all-files/fi/FiSearch';
+import { FiSettings } from '@react-icons/all-files/fi/FiSettings';
 import { FiUsers } from '@react-icons/all-files/fi/FiUsers';
-import { FiEyeOff } from '@react-icons/all-files/fi/FiEyeOff';
-import { ContextMenu, useContextMenu } from '@/ContextMenu';
+import { FiLogOut } from '@react-icons/all-files/fi/FiLogOut';
 import { FiEdit } from '@react-icons/all-files/fi/FiEdit';
+import { ContextMenu, useContextMenu } from '@/ContextMenu';
 import ConfirmationModal from '@/ConfirmationModal';
 import IntegrationsModalUI from '@/IntegrationsModal';
 import MembersModal from '@/MembersModal';
 import Toast from '@/Toast';
-import { FiLogOut } from '@react-icons/all-files/fi/FiLogOut';
 
 interface Props {
   channelName?: string;
@@ -52,6 +52,7 @@ enum ModalView {
   HIDE_CHANNEL,
   LEAVE_CHANNEL,
   NEW_CHANNEL,
+  FIND_CHANNEL,
 }
 
 export default function ChannelsGroup({
@@ -130,32 +131,30 @@ export default function ChannelsGroup({
         }}
       >
         Channels
-        {currentUser &&
-        !!permissions.channel_create &&
-        !!permissions.accountId ? (
-          <>
-            <div className={styles.flex}>
+        <div className={styles.flex}>
+          {/* {currentUser && (
+            <FiSearch
+              onClick={(event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                setModal(ModalView.FIND_CHANNEL);
+              }}
+            />
+          )} */}
+          {currentUser &&
+            !!permissions.channel_create &&
+            !!permissions.accountId && (
               <FiPlus
                 className={styles.cursorPointer}
                 onClick={(event) => {
+                  event.preventDefault();
                   event.stopPropagation();
                   setModal(ModalView.NEW_CHANNEL);
                 }}
               />
-              {show ? <FiChevronUp /> : <FiChevronDown />}
-            </div>
-
-            <NewChannelModal
-              permissions={permissions}
-              show={modal === ModalView.NEW_CHANNEL}
-              close={() => setModal(ModalView.NONE)}
-              CustomRouterPush={CustomRouterPush}
-              api={api}
-            />
-          </>
-        ) : (
-          <>{show ? <FiChevronUp /> : <FiChevronDown />}</>
-        )}
+            )}
+          {show ? <FiChevronUp /> : <FiChevronDown />}
+        </div>
       </Nav.Group>
       {show && (
         <>
@@ -248,6 +247,13 @@ export default function ChannelsGroup({
           })}
         </>
       )}
+      <NewChannelModal
+        permissions={permissions}
+        show={modal === ModalView.NEW_CHANNEL}
+        close={() => setModal(ModalView.NONE)}
+        CustomRouterPush={CustomRouterPush}
+        api={api}
+      />
       {clicked && (
         <ContextMenu
           top={points.y}
