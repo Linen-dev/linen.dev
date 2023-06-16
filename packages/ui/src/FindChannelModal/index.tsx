@@ -1,113 +1,94 @@
-import React, { useState } from 'react';
-import { FiX } from '@react-icons/all-files/fi/FiX';
-import {
-  patterns,
-  Permissions,
-  SerializedUser,
-  ChannelViewType,
-} from '@linen/types';
+import React, { useEffect, useState } from 'react';
+import { SerializedAccount, SerializedChannel, patterns } from '@linen/types';
 import type { ApiClient } from '@linen/api-client';
 import H3 from '@/H3';
-import Button from '@/Button';
 import Modal from '@/Modal';
-import Field from '@/Field';
 import TextInput from '@/TextInput';
-import NativeSelect from '@/NativeSelect';
 import Toast from '@/Toast';
-import Toggle from '@/Toggle';
 import { FiHash } from '@react-icons/all-files/fi/FiHash';
+import { FiX } from '@react-icons/all-files/fi/FiX';
 import styles from './index.module.scss';
-import classNames from 'classnames';
-import ShowUsers from '@/ShowUsers';
-import Label from '@/Label';
 
 interface Props {
-  permissions: Permissions;
+  currentCommunity: SerializedAccount;
   show: boolean;
   close(): void;
   api: ApiClient;
+  channels: SerializedChannel[];
   CustomRouterPush({ path }: { path: string }): void;
 }
 
 export default function FindChannelModal({
-  permissions,
+  currentCommunity,
   show,
   close,
   api,
   CustomRouterPush,
+  channels: initialChannels,
 }: Props) {
-  const [loading, setLoading] = useState(false);
-  const [channelPrivate, setChannelPrivate] = useState(false);
-  const [viewType, setViewType] = useState<ChannelViewType>('CHAT');
-  const [users, setUsers] = useState<SerializedUser[]>([permissions.user]);
+  const [query, setQuery] = useState('');
+  const [channels, setChannels] =
+    useState<SerializedChannel[]>(initialChannels);
 
-  async function onSubmit(e: any) {
-    setLoading(true);
-    try {
-      e.preventDefault();
-      const form = e.target;
-      const channelName = form.channelName.value;
+  useEffect(() => {
+    let mounted = true;
 
-      if (channelPrivate) {
-        await api.createChannel({
-          accountId: permissions.accountId!,
-          channelName,
-          channelPrivate: true,
-          viewType,
-          usersId: users.map((u) => u.id),
+    setTimeout(() => {
+      api
+        .getChannels({
+          accountId: currentCommunity.id,
+        })
+        .then(({ channels }: { channels: SerializedChannel[] }) => {
+          if (mounted) {
+            setChannels(channels);
+          }
         });
-      } else {
-        await api.createChannel({
-          accountId: permissions.accountId!,
-          channelName,
-          viewType,
-        });
-      }
+    }, 200);
 
-      close();
-      CustomRouterPush({
-        path: `/c/${channelName}`,
-      });
-    } catch (error) {
-      Toast.error('Something went wrong');
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  function onPrivateToggle(checked: boolean) {
-    setChannelPrivate(checked);
-  }
-
-  function removeUser(user: SerializedUser) {
-    setUsers((users) => users.filter((u) => u.id !== user.id));
-  }
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   return (
-    <Modal open={show} close={close}>
-      <form onSubmit={onSubmit}>
-        <div className={styles.title}>
-          <H3>Find a channel</H3>
+    <Modal open={show} close={close} position="top">
+      <div className={styles.title}>
+        <H3>Find a channel</H3>
 
-          <div className={styles.close} onClick={close}>
-            <FiX />
-          </div>
+        <div className={styles.close} onClick={close}>
+          <FiX />
         </div>
-        <Field>
-          <TextInput
-            autoFocus
-            id="channelName"
-            disabled={loading}
-            required
-            placeholder="e.g. javascript"
-            pattern={patterns.channelName.source}
-            icon={<FiHash />}
-            title={
-              'Channels name should start with letter and could contain letters, underscore, numbers and hyphens. e.g. announcements'
-            }
-          />
-        </Field>
-      </form>
+      </div>
+      <TextInput
+        autoFocus
+        id="channelName"
+        required
+        placeholder="e.g. javascript"
+        pattern={patterns.channelName.source}
+        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+          setQuery(event.target.value);
+        }}
+        icon={<FiHash />}
+      />
+      {channels.length > 0 && (
+        <ul>
+          {channels
+            .filter((channel) => {
+              if (query) {
+                const name = channel.channelName;
+                return name.includes(query);
+              }
+              return true;
+            })
+            .map((channel) => {
+              return (
+                <li className={styles.li}>
+                  <FiHash /> {channel.channelName}
+                </li>
+              );
+            })}
+        </ul>
+      )}
     </Modal>
   );
 }

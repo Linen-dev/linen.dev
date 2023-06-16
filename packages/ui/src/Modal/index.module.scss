@@ -38,6 +38,24 @@
   overflow-y: auto;
   position: fixed;
   z-index: 10;
+  scrollbar-gutter: stable;
+}
+
+.container::-webkit-scrollbar {
+  width: 0.5rem;
+}
+
+.container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.container::-webkit-scrollbar-thumb {
+  background: var(--color-gray-300);
+  border-radius: 0.25rem;
+}
+
+.container::-webkit-scrollbar-thumb:hover {
+  background: var(--color-gray-300);
 }
 
 .center {
@@ -46,6 +64,11 @@
   justify-content: center;
   min-height: 100%;
   padding: 0;
+}
+
+.top {
+  align-items: flex-start;
+  justify-content: center;
 }
 
 .hidden {

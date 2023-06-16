@@ -129,7 +129,7 @@ channelsRouter.post(
 channelsRouter.get(
   `${prefix}`,
   tenantMiddleware([Roles.ADMIN, Roles.OWNER, Roles.MEMBER]),
-  validationMiddleware(createChannelSchema),
+  validationMiddleware(getChannelsSchema),
   async (
     req: AuthedRequestWithTenantAndBody<createChannelType>,
     res: Response
@@ -142,7 +142,7 @@ channelsRouter.get(
 channelsRouter.post(
   `${prefix}`,
   tenantMiddleware([Roles.ADMIN, Roles.OWNER]),
-  validationMiddleware(getChannelsSchema),
+  validationMiddleware(createChannelSchema),
   async (
     req: AuthedRequestWithTenantAndBody<createChannelType>,
     res: Response,

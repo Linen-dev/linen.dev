@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
 import classNames from 'classnames';
 import Nav from '@/Nav';
-import { Permissions, SerializedChannel, SerializedUser } from '@linen/types';
+import {
+  Permissions,
+  SerializedAccount,
+  SerializedChannel,
+  SerializedUser,
+} from '@linen/types';
 import { Mode } from '@linen/hooks/mode';
 import styles from './index.module.scss';
 import NewChannelModal from '@/NewChannelModal';
@@ -25,6 +30,7 @@ interface Props {
   channelName?: string;
   channels: SerializedChannel[];
   currentUser: SerializedUser | null;
+  currentCommunity: SerializedAccount;
   highlights: string[];
   mode: Mode;
   permissions: Permissions;
@@ -60,6 +66,7 @@ export default function ChannelsGroup({
   channelName,
   channels,
   currentUser,
+  currentCommunity,
   highlights,
   mode,
   permissions,
@@ -250,20 +257,26 @@ export default function ChannelsGroup({
       )}
       {currentUser && (
         <>
-          <FindChannelModal
-            permissions={permissions}
-            show={modal === ModalView.FIND_CHANNEL}
-            close={() => setModal(ModalView.NONE)}
-            CustomRouterPush={CustomRouterPush}
-            api={api}
-          />
-          <NewChannelModal
-            permissions={permissions}
-            show={modal === ModalView.NEW_CHANNEL}
-            close={() => setModal(ModalView.NONE)}
-            CustomRouterPush={CustomRouterPush}
-            api={api}
-          />
+          {modal === ModalView.FIND_CHANNEL && (
+            <FindChannelModal
+              show
+              currentCommunity={currentCommunity}
+              close={() => setModal(ModalView.NONE)}
+              CustomRouterPush={CustomRouterPush}
+              api={api}
+              channels={channels}
+            />
+          )}
+
+          {modal === ModalView.NEW_CHANNEL && (
+            <NewChannelModal
+              show
+              permissions={permissions}
+              close={() => setModal(ModalView.NONE)}
+              CustomRouterPush={CustomRouterPush}
+              api={api}
+            />
+          )}
         </>
       )}
 

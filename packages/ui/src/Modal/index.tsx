@@ -9,6 +9,7 @@ type ModalProps = {
   close: (value: boolean) => void;
   children: any;
   size?: 'md' | 'lg' | 'xl' | 'full';
+  position?: 'center' | 'top';
 };
 
 export default function Modal({
@@ -17,6 +18,7 @@ export default function Modal({
   close,
   children,
   size,
+  position,
 }: ModalProps) {
   const ref = useRef(null);
   if (!open) {
@@ -29,7 +31,9 @@ export default function Modal({
         <div className={styles.overlay} />
         <div className={styles.container}>
           <div
-            className={styles.center}
+            className={classNames(styles.center, {
+              [styles.top]: position === 'top',
+            })}
             onClick={(event) => {
               if (event.target === ref.current) {
                 close(true);

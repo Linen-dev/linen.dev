@@ -41,6 +41,7 @@ import type {
   apiGetThreadProps,
   ChannelViewType,
   leaveChannelType,
+  getChannelsType,
 } from '@linen/types';
 export { AxiosRequestConfig };
 
@@ -270,6 +271,9 @@ export default class ApiClient {
     this.get<{ data: any; type: string; externalId: string }>(
       `/api/channels/${channelId}/integrations?${qs(props)}`
     );
+
+  getChannels = (props: { accountId: string }) =>
+    this.get<getChannelsType>(`/api/channels?${qs(props)}`);
 
   getChannelsStats = (props: { accountId: string }) =>
     this.get<findChannelsWithStats>(`/api/channels/stats?${qs(props)}`);

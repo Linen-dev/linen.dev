@@ -28,9 +28,7 @@ export function getUserMentions({
     const parse = parsers[message.messageFormat];
     if (parse) {
       const tree = parse(message.body);
-      let found = false;
       walk(tree, (node: any) => {
-        console.log(node);
         if (node.type === 'signal' && node.id === userId) {
           mentions.push('signal');
         } else if (node.type === 'user' && node.id === userId) {

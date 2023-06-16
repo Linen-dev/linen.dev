@@ -15,3 +15,25 @@
     color: var(--color-gray-500);
   }
 }
+
+.li {
+  align-items: center;
+  display: flex;
+  gap: 0.25rem;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-gray-700);
+  cursor: pointer;
+  margin-bottom: 0.25rem;
+  border: 1px solid var(--color-gray-200);
+  padding: 0.375rem 0.5rem;
+  border-radius: 0.375rem;
+}
+
+.li:first-child {
+  margin-top: 0.5rem;
+}
+
+.li:last-child {
+  margin-bottom: 0;
+}
