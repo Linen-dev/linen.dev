@@ -26,6 +26,7 @@ import {
   updateChannelSchema,
   createDmSchema,
   createDmType,
+  getChannelsSchema,
   getChannelIntegrationsSchema,
   getChannelIntegrationsType,
   postChannelIntegrationsType,
@@ -125,10 +126,23 @@ channelsRouter.post(
   }
 );
 
+channelsRouter.get(
+  `${prefix}`,
+  tenantMiddleware([Roles.ADMIN, Roles.OWNER, Roles.MEMBER]),
+  validationMiddleware(createChannelSchema),
+  async (
+    req: AuthedRequestWithTenantAndBody<createChannelType>,
+    res: Response
+  ) => {
+    const channels = await ChannelsService.find(req.tenant?.id!);
+    return res.status(200).json({ channels: channels.map(serializeChannel) });
+  }
+);
+
 channelsRouter.post(
   `${prefix}`,
   tenantMiddleware([Roles.ADMIN, Roles.OWNER]),
-  validationMiddleware(createChannelSchema),
+  validationMiddleware(getChannelsSchema),
   async (
     req: AuthedRequestWithTenantAndBody<createChannelType>,
     res: Response,
