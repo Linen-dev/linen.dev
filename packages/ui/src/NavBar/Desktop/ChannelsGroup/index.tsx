@@ -5,6 +5,7 @@ import { Permissions, SerializedChannel, SerializedUser } from '@linen/types';
 import { Mode } from '@linen/hooks/mode';
 import styles from './index.module.scss';
 import NewChannelModal from '@/NewChannelModal';
+import FindChannelModal from '@/FindChannelModal';
 import type { ApiClient } from '@linen/api-client';
 import { FiPlus } from '@react-icons/all-files/fi/FiPlus';
 import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
@@ -132,7 +133,7 @@ export default function ChannelsGroup({
       >
         Channels
         <div className={styles.flex}>
-          {/* {currentUser && (
+          {currentUser && (
             <FiSearch
               onClick={(event) => {
                 event.preventDefault();
@@ -140,7 +141,7 @@ export default function ChannelsGroup({
                 setModal(ModalView.FIND_CHANNEL);
               }}
             />
-          )} */}
+          )}
           {currentUser &&
             !!permissions.channel_create &&
             !!permissions.accountId && (
@@ -247,13 +248,25 @@ export default function ChannelsGroup({
           })}
         </>
       )}
-      <NewChannelModal
-        permissions={permissions}
-        show={modal === ModalView.NEW_CHANNEL}
-        close={() => setModal(ModalView.NONE)}
-        CustomRouterPush={CustomRouterPush}
-        api={api}
-      />
+      {currentUser && (
+        <>
+          <FindChannelModal
+            permissions={permissions}
+            show={modal === ModalView.FIND_CHANNEL}
+            close={() => setModal(ModalView.NONE)}
+            CustomRouterPush={CustomRouterPush}
+            api={api}
+          />
+          <NewChannelModal
+            permissions={permissions}
+            show={modal === ModalView.NEW_CHANNEL}
+            close={() => setModal(ModalView.NONE)}
+            CustomRouterPush={CustomRouterPush}
+            api={api}
+          />
+        </>
+      )}
+
       {clicked && (
         <ContextMenu
           top={points.y}
