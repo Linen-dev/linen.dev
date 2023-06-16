@@ -293,6 +293,7 @@ export default function DesktopNavBar({
             <ChannelsGroup
               channelName={channelName}
               channels={channels}
+              currentCommunity={currentCommunity}
               currentUser={currentUser}
               highlights={highlights}
               mode={mode}
