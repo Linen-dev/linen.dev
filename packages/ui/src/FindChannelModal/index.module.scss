@@ -1,0 +1,17 @@
+.title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.close {
+  background-color: var(--color-background);
+  color: var(--color-gray-400);
+  border-radius: 0.375rem;
+  cursor: pointer;
+
+  :hover {
+    color: var(--color-gray-500);
+  }
+}

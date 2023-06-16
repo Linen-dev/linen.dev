@@ -105,6 +105,7 @@
     "./Field": "./dist/Field/index.js",
     "./FileInput": "./dist/FileInput/index.js",
     "./FileUploadButton": "./dist/FileUploadButton/index.js",
+    "./FindChannelModal": "./dist/FindChannelModal/index.js",
     "./ForumRow": "./dist/ForumRow/index.js",
     "./GridContent": "./dist/GridContent/index.js",
     "./GridRow": "./dist/GridRow/index.js",
@@ -308,6 +309,9 @@
       ],
       "FileUploadButton": [
         "./dist/FileUploadButton/index.d.ts"
+      ],
+      "FindChannelModal": [
+        "./dist/FindChannelModal/index.d.ts"
       ],
       "ForumRow": [
         "./dist/ForumRow/index.d.ts"
