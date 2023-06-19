@@ -10,7 +10,7 @@ interface Props {
 }
 
 export const LoadingContext = ({ children }: Props) => {
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     if (loading) {

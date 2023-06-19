@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Outlet, createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Layout from '@/components/Layout';
 import RedirectToLastPageViewed from '@/components/RedirectToLastPageViewed';
@@ -21,9 +22,22 @@ import MembersPage from '@/pages/Members';
 import PlansPage from '@/pages/Plans';
 import MetricsPage from '@/pages/Metrics';
 import SignUp from '@/pages/SignUp';
+import ForgotPassword from '@/pages/ForgotPassword';
+import ResetPassword from '@/pages/ResetPassword';
+import VerifyRequest from '@/pages/VerifyRequest';
+// utils
+import { handleSignIn } from '@/utils/handleSignIn';
 
 export default function Router() {
   const isCustomDomain = false;
+
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    const state = url.searchParams.get('state');
+    if (state) {
+      handleSignIn(state);
+    }
+  }, []);
 
   return (
     <RouterProvider
@@ -36,6 +50,21 @@ export default function Router() {
         {
           path: '/signup',
           element: <SignUp />,
+          errorElement: <ErrorPage />,
+        },
+        {
+          path: '/forgot-password',
+          element: <ForgotPassword />,
+          errorElement: <ErrorPage />,
+        },
+        {
+          path: '/reset-password',
+          element: <ResetPassword />,
+          errorElement: <ErrorPage />,
+        },
+        {
+          path: '/verify-request',
+          element: <VerifyRequest />,
           errorElement: <ErrorPage />,
         },
 

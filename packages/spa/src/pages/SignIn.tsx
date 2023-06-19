@@ -1,61 +1,43 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useSearchParams } from 'react-router-dom';
-import { baseLinen } from '@/config';
+import Auth from '@linen/ui/Auth';
 import di from '@/di';
-import LinenLogo from '@linen/ui/LinenLogo';
-import { handleSignIn } from '@/utils/handleSignIn';
+import { SignInMode } from '@linen/types';
+import { env } from '@/config';
 
 export default function SignIn() {
   const location = useLocation();
   const [searchParams] = useSearchParams();
+  const [callbackUrl, setCallbackUrl] = useState<string>();
+  const [mode, setMode] = useState<SignInMode>(() => {
+    return (searchParams.get('mode') as SignInMode) || 'creds';
+  });
   const [from] = useState(() => {
-    let from = location.state?.from?.pathname || '/';
+    let from: string = location.state?.from?.pathname || '/s/linen';
     localStorage.setItem('from', from);
     return from;
   });
 
   useEffect(() => {
-    const state = searchParams.get('state');
-    if (state) {
-      handleSignIn(state);
-    }
-  }, [searchParams]);
-
-  useEffect(() => {
-    let timerId = setTimeout(() => redirectToSignIn(), 1000);
-    return () => {
-      clearTimeout(timerId);
-    };
-  }, []);
+    setCallbackUrl(mode === 'magic' ? di.buildExternalOrigin(from) : from);
+  }, [mode, from]);
 
   return (
-    <div className="flex flex-col items-center gap-10 justify-center min-h-screen">
-      <LinenLogo />
-
-      <p>You must sign in to view the page at {from}</p>
-
-      <button
-        type="submit"
-        onClick={handleSubmit}
-        className="rounded bg-indigo-50 px-2 py-1 text-xs font-semibold text-blue-600 shadow-sm hover:bg-blue-100"
-      >
-        SignIn
-      </button>
-
-      <a href="/" className="px-2 py-1 text-xs font-semibold text-blue-600">
-        Back Home
-      </a>
-    </div>
+    <Auth.SignIn
+      key={callbackUrl}
+      mode={mode}
+      setMode={setMode}
+      withLayout
+      sso="1"
+      callbackUrl={callbackUrl}
+      origin={di.buildExternalOrigin('/')}
+      redirectFn={(e) => {
+        const url = new URL(e, env.REACT_APP_LINEN_BASE_URL);
+        if (url.searchParams.has('callbackUrl')) {
+          url.searchParams.set('callbackUrl', di.buildExternalOrigin(from));
+        }
+        di.openExternal(url.toString());
+      }}
+    />
   );
-}
-
-function redirectToSignIn() {
-  di.openExternal(
-    `${baseLinen}/signin?sso=1&callbackUrl=${encodeURI(di.callbackUrl())}`
-  );
-}
-
-function handleSubmit(event: any) {
-  event.preventDefault();
-  redirectToSignIn();
 }

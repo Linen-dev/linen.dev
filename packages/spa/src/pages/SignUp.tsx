@@ -1,45 +1,43 @@
-import { useEffect } from 'react';
-import { baseLinen } from '@/config';
-import LinenLogo from '@linen/ui/LinenLogo';
-import { qs } from '@linen/utilities/url';
+import { env } from '@/config';
 import di from '@/di';
-import { cleanUpStorage } from '@linen/auth/client';
+import { SignInMode } from '@linen/types';
+import Auth from '@linen/ui/Auth';
+import { useEffect, useState } from 'react';
+import { useLocation, useSearchParams } from 'react-router-dom';
 
 export default function SignUp() {
-  useEffect(() => {
-    cleanUpStorage();
-    let params: any = {};
-    new URLSearchParams(window.location.search).forEach((v, k) => {
-      params[k] = v;
-    });
+  const location = useLocation();
+  const [searchParams] = useSearchParams();
+  const [callbackUrl, setCallbackUrl] = useState<string>();
+  const [mode, setMode] = useState<SignInMode>(() => {
+    return (searchParams.get('mode') as SignInMode) || 'creds';
+  });
+  const [from] = useState(() => {
+    let from: string = location.state?.from?.pathname || '/s/linen';
+    localStorage.setItem('from', from);
+    return from;
+  });
 
-    let timerId = setTimeout(() => redirectToSignUp(params), 1000);
-    return () => {
-      clearTimeout(timerId);
-    };
-  }, []);
+  useEffect(() => {
+    setCallbackUrl(mode === 'magic' ? di.buildExternalOrigin(from) : from);
+  }, [mode, from]);
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        minHeight: '100vh',
-        gap: '2.5rem',
+    <Auth.SignUp
+      key={callbackUrl}
+      mode={mode}
+      setMode={setMode}
+      withLayout
+      sso="1"
+      callbackUrl={callbackUrl}
+      origin={di.buildExternalOrigin('/')}
+      redirectFn={(e) => {
+        const url = new URL(e, env.REACT_APP_LINEN_BASE_URL);
+        if (url.searchParams.has('callbackUrl')) {
+          url.searchParams.set('callbackUrl', di.buildExternalOrigin(from));
+        }
+        di.openExternal(url.toString());
       }}
-    >
-      <LinenLogo />
-    </div>
+    />
   );
-}
-
-function redirectToSignUp(params: any) {
-  const query = {
-    sso: 1,
-    callbackUrl: encodeURI(`${di.buildExternalOrigin('signin')}`),
-    ...params,
-  };
-  di.openExternal(`${baseLinen}/signup?${qs(query)}`);
 }
