@@ -244,7 +244,7 @@ channelsRouter.post(
 
 channelsRouter.post(
   `${prefix}/join`,
-  tenantMiddleware([Roles.ADMIN, Roles.OWNER]),
+  tenantMiddleware([Roles.ADMIN, Roles.OWNER, Roles.MEMBER]),
   validationMiddleware(joinChannelSchema),
   async (
     req: AuthedRequestWithTenantAndBody<joinChannelType>,
