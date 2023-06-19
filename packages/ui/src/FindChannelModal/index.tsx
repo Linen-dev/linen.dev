@@ -5,8 +5,10 @@ import H3 from '@/H3';
 import Modal from '@/Modal';
 import TextInput from '@/TextInput';
 import Toast from '@/Toast';
+import { FiPlus } from '@react-icons/all-files/fi/FiPlus';
 import { FiHash } from '@react-icons/all-files/fi/FiHash';
 import { FiX } from '@react-icons/all-files/fi/FiX';
+import { FiLogOut } from '@react-icons/all-files/fi/FiLogOut';
 import styles from './index.module.scss';
 
 interface Props {
@@ -27,6 +29,7 @@ export default function FindChannelModal({
   channels: initialChannels,
 }: Props) {
   const [query, setQuery] = useState('');
+  const visibleChannelIds = initialChannels.map(({ id }) => id);
   const [channels, setChannels] =
     useState<SerializedChannel[]>(initialChannels);
 
@@ -80,10 +83,76 @@ export default function FindChannelModal({
               }
               return true;
             })
+            .sort((channel) =>
+              visibleChannelIds.includes(channel.id) ? 1 : -1
+            )
             .map((channel) => {
+              const { id } = channel;
               return (
                 <li className={styles.li}>
-                  <FiHash /> {channel.channelName}
+                  <div className={styles.flex}>
+                    <FiHash /> {channel.channelName}
+                  </div>
+                  {visibleChannelIds.includes(id) ? (
+                    <div
+                      className={styles.flex}
+                      onClick={() => {
+                        api
+                          .leaveChannel({
+                            accountId: currentCommunity.id,
+                            channelId: channel.id,
+                          })
+                          .then(() => {
+                            Toast.success(
+                              `Leave #${channel.channelName} successful`
+                            );
+
+                            setTimeout(() => {
+                              window.location.href =
+                                window.location.href.replace(
+                                  new RegExp(`/c/${channel.channelName}`, 'g'),
+                                  ''
+                                );
+                            }, 1000);
+                          })
+                          .catch(() => {
+                            Toast.error(
+                              'Something went wrong. Please try again.'
+                            );
+                          });
+                      }}
+                    >
+                      <FiLogOut />
+                      <a>Leave</a>
+                    </div>
+                  ) : (
+                    <div
+                      className={styles.flex}
+                      onClick={() => {
+                        // TODO implement the api
+                        api
+                          .joinChannel({
+                            accountId: currentCommunity.id,
+                            channelId: channel.id,
+                          })
+                          .then(() => {
+                            Toast.success(
+                              `Join #${channel.channelName} successful`
+                            );
+
+                            close();
+                          })
+                          .catch(() => {
+                            Toast.error(
+                              'Something went wrong. Please try again.'
+                            );
+                          });
+                      }}
+                    >
+                      <FiPlus />
+                      <a>Join</a>
+                    </div>
+                  )}
                 </li>
               );
             })}
