@@ -1,5 +1,6 @@
 import { getCsrfToken } from '@linen/auth/client';
 import { qs } from '@linen/utilities/url';
+import { SignInMode } from '@linen/types';
 
 async function signInWithCreds(
   email: string,
@@ -229,29 +230,3 @@ export function onSignUpWithCredsSubmit({
     }
   };
 }
-
-export const TermsAndPolicy = (
-  <p className="text-xs text-gray-600 dark:text-gray-50">
-    By using the platform, you agree to our{' '}
-    <a
-      target="_blank"
-      className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-600"
-      href="/legal/terms"
-    >
-      Terms
-    </a>{' '}
-    and{' '}
-    <a
-      className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-600"
-      target="_blank"
-      href="/legal/privacy"
-    >
-      Privacy Policy.
-    </a>
-  </p>
-);
-
-export const AnchorCss =
-  'cursor-pointer text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-600';
-
-export type SignInMode = 'creds' | 'magic';

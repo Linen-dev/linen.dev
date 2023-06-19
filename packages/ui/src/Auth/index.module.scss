@@ -1,0 +1,66 @@
+.forgotPass {
+  font-size: 0.75rem /* 12px */;
+  line-height: 1rem /* 16px */;
+  padding-top: 0.75rem /* 12px */;
+  color: var(--color-gray-700);
+  padding-bottom: 0.75rem /* 12px */;
+}
+
+.smallTextGray700 {
+  font-size: 0.75rem /* 12px */;
+  line-height: 1rem /* 16px */;
+  color: var(--color-gray-700);
+  padding-bottom: 0.75rem /* 12px */;
+}
+
+.hr {
+  margin-top: 1.25rem /* 20px */;
+  margin-bottom: 1.25rem /* 20px */;
+}
+
+.flexJustifyContent {
+  display: flex;
+  justify-content: space-between;
+}
+
+.noAccount {
+  font-size: 0.75rem /* 12px */;
+  line-height: 1rem /* 16px */;
+  color: var(--color-gray-600);
+}
+
+.w1_3 {
+  width: 33.333333%;
+}
+
+.anchorCss {
+  cursor: pointer;
+  color: var(--color-link);
+}
+
+.pb3 {
+  padding-bottom: 0.75rem /* 12px */;
+}
+
+.textCenter {
+  text-align: center;
+}
+
+.verifyIcon {
+  display: flex;
+  margin: auto;
+  margin-bottom: 1.25rem /* 20px */;
+  font-size: 3rem /* 48px */;
+  line-height: 1;
+  vertical-align: middle;
+}
+
+.verifyCard {
+  display: flex;
+  vertical-align: middle;
+  text-align: center;
+  flex-direction: row;
+  justify-content: center;
+  padding-top: 0.75rem /* 12px */;
+  padding-bottom: 0.75rem /* 12px */;
+}

@@ -105,3 +105,5 @@ export type onSignInType = {
 export type AuthFlow = 'signup' | 'signin';
 
 export type StartSignUpFn = (props: StartSignUpProps) => any;
+
+export type SignInMode = 'creds' | 'magic';

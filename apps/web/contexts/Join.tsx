@@ -4,12 +4,12 @@ import { getSession } from '@linen/auth/client';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import SignUp from 'pages/signup';
 import SignIn from 'pages/signin';
-import { SignInMode } from 'components/Auth';
 import {
   AuthFlow,
   StartSignUpFn,
   StartSignUpProps,
   onSignInType,
+  SignInMode,
 } from '@linen/types';
 
 const Context = createContext<{

@@ -1,9 +1,9 @@
 import { createCSRFToken } from '@linen/auth/server';
 import type { NextPageContext } from 'next';
-import SignUp from 'components/Pages/SignUp';
+import Auth from '@linen/ui/Auth';
 import { trackPageView } from 'utilities/ssr-metrics';
 
-export default SignUp;
+export default Auth.SignUp;
 
 export async function getServerSideProps(context: NextPageContext) {
   await trackPageView(context).flush();
