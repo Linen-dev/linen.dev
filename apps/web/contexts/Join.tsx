@@ -11,6 +11,7 @@ import {
   onSignInType,
   SignInMode,
 } from '@linen/types';
+import LinenLogo from '@linen/ui/LinenLogo';
 
 const Context = createContext<{
   startSignUp: StartSignUpFn;
@@ -99,16 +100,14 @@ export const JoinContext = ({ children }: Props) => {
   return (
     <Context.Provider value={{ startSignUp }}>
       <Modal open={open} close={onCloseModal}>
-        <div className="m-5 text-center">
-          <h3 className="text-lg font-medium leading-6 text-gray-900">
-            {mapText[flow]}
-          </h3>
-          <div className="mt-5 pb-3">
-            <p className="text-sm text-gray-500">
-              {mapText[flow]} to join the community and start to chat
-            </p>
-          </div>
+        <div className="text-center">
+          <LinenLogo />
+
+          <p className="text-sm text-gray-500">
+            {mapText[flow]} to join the community and start to chat
+          </p>
         </div>
+        <div style={{ padding: '0.5rem' }}></div>
         {flow === 'signup' && (
           <SignUp
             mode={mode}
