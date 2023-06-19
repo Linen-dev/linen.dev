@@ -139,9 +139,9 @@ export async function createRemoveCommunityJob(accountId: string) {
   );
 }
 
-export async function createUserJoinJob(payload: any) {
-  const worker = await WorkerSingleton.getInstance();
-  return await worker.addJob(QUEUE_USER_JOIN, payload, {
-    maxAttempts: 1,
-  });
-}
+// export async function createUserJoinJob(payload: any) {
+//   const worker = await WorkerSingleton.getInstance();
+//   return await worker.addJob(QUEUE_USER_JOIN, payload, {
+//     maxAttempts: 1,
+//   });
+// }

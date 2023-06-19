@@ -198,8 +198,10 @@ export function onSignUpWithCredsSubmit({
           email: String(email).toLowerCase(),
           password,
           ...(!!state && {
-            displayName: form.displayName.value,
             accountId: state,
+          }),
+          ...(!!form.displayName.value && {
+            displayName: form.displayName.value,
           }),
         }),
       });

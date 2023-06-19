@@ -1,12 +1,7 @@
-import { JobHelpers } from 'graphile-worker';
-import { TaskInterface } from 'queue';
+// import { TaskInterface } from 'queue';
 import { ChannelType, prisma } from '@linen/database';
 
-export const userJoinTask: TaskInterface = async (
-  payload: { userId: string },
-  helpers: JobHelpers
-) => {
-  helpers.logger.info(JSON.stringify(payload));
+export const userJoinTask = async (payload: { userId: string }) => {
   const user = await prisma.users.findUnique({
     where: { id: payload.userId },
     include: { auth: true, account: true },

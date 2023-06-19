@@ -1,4 +1,5 @@
-import { createUserJoinJob } from 'queue/jobs';
+// import { createUserJoinJob } from 'queue/jobs';
+import { userJoinTask } from 'queue/tasks/user-join';
 
 export type UserJoin = {
   userId: string;
@@ -6,7 +7,6 @@ export type UserJoin = {
 
 export async function eventUserJoin(event: UserJoin) {
   await Promise.allSettled([
-    // it should dispatch messages to our queue system
-    createUserJoinJob(event),
+    userJoinTask(event), // run it synchronously
   ]);
 }
