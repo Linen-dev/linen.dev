@@ -40,6 +40,8 @@ import {
   putChannelMembersType,
   leaveChannelSchema,
   leaveChannelType,
+  joinChannelSchema,
+  joinChannelType,
 } from '@linen/types';
 import { serializeChannel } from '@linen/serializers/channel';
 import { serialize } from 'superjson';
@@ -235,6 +237,24 @@ channelsRouter.post(
     await ChannelsService.updateChannelsVisibility({
       channels,
       accountId: req.tenant?.id!,
+    });
+    return res.status(200).json({});
+  }
+);
+
+channelsRouter.post(
+  `${prefix}/join`,
+  tenantMiddleware([Roles.ADMIN, Roles.OWNER]),
+  validationMiddleware(joinChannelSchema),
+  async (
+    req: AuthedRequestWithTenantAndBody<joinChannelType>,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const { channelId } = req.body;
+    await ChannelsService.joinChannel({
+      channelId,
+      userId: req.tenant_user?.id!,
     });
     return res.status(200).json({});
   }

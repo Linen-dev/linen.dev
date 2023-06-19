@@ -36,6 +36,8 @@ interface Props {
   permissions: Permissions;
   onChannelClick(channelId: string): void;
   onSettingsClick(channelId: string): void;
+  onJoinChannel(channel: SerializedChannel): void;
+  onLeaveChannel(channel: SerializedChannel): void;
   onDrop?({
     source,
     target,
@@ -73,6 +75,8 @@ export default function ChannelsGroup({
   onChannelClick,
   onSettingsClick,
   onDrop,
+  onJoinChannel,
+  onLeaveChannel,
   Link,
   api,
   CustomRouterPush,
@@ -264,6 +268,8 @@ export default function ChannelsGroup({
               close={() => setModal(ModalView.NONE)}
               CustomRouterPush={CustomRouterPush}
               api={api}
+              onJoinChannel={onJoinChannel}
+              onLeaveChannel={onLeaveChannel}
               channels={channels}
             />
           )}

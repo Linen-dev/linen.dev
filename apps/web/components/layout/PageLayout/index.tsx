@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import Header from '@linen/ui/Header';
 import ErrorFallback from './ErrorFallback';
@@ -69,7 +69,9 @@ function PageLayout({
   dms,
   onDrop,
 }: Props) {
-  const channels = initialChannels.filter((c: SerializedChannel) => !c.hidden);
+  const [channels, setChannels] = useState(
+    initialChannels.filter((c: SerializedChannel) => !c.hidden)
+  );
   const { googleAnalyticsId, googleSiteVerification } = settings;
   const { mode } = useMode();
   const router = useRouter();
@@ -84,6 +86,20 @@ function PageLayout({
       }${path}`;
     }
     router.push(path);
+  };
+
+  const onJoinChannel = (channel: SerializedChannel) => {
+    setChannels((channels) => {
+      return [channel, ...channels].sort((a, b) =>
+        a.displayOrder > b.displayOrder ? 1 : -1
+      );
+    });
+  };
+
+  const onLeaveChannel = (channel: SerializedChannel) => {
+    setChannels((channels) => {
+      return channels.filter(({ id }) => id !== channel.id);
+    });
   };
 
   return (
@@ -137,6 +153,8 @@ function PageLayout({
           getHomeUrl={getHomeUrl}
           api={api}
           notify={notify}
+          onJoinChannel={onJoinChannel}
+          onLeaveChannel={onLeaveChannel}
           CustomRouterPush={CustomRouterPush({
             isSubDomainRouting,
             communityName: settings.communityName,

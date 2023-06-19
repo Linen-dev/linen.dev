@@ -264,6 +264,17 @@ export default class ApiClient {
       hidden: true,
     });
 
+  joinChannel = ({
+    accountId,
+    channelId,
+  }: {
+    accountId: string;
+    channelId: string;
+  }) =>
+    this.post<any>(`/api/channels/join?${qs({ accountId })}`, {
+      channelId,
+    });
+
   getChannelIntegrations = ({
     channelId,
     ...props

@@ -112,6 +112,7 @@ export default async function createLinenCommunity() {
     data: {
       accountId: community.id,
       channelName: 'general',
+      displayOrder: 0,
     },
   });
 
@@ -493,6 +494,7 @@ export default async function createLinenCommunity() {
     data: {
       accountId: community.id,
       channelName: 'ideas',
+      displayOrder: 1,
     },
   });
 
@@ -534,6 +536,7 @@ export default async function createLinenCommunity() {
     data: {
       accountId: community.id,
       channelName: 'blog',
+      displayOrder: 2,
     },
   });
 
@@ -588,6 +591,7 @@ export default async function createLinenCommunity() {
     data: {
       accountId: community.id,
       channelName: 'docs',
+      displayOrder: 3,
     },
   });
 
@@ -623,6 +627,7 @@ export default async function createLinenCommunity() {
     data: {
       accountId: community.id,
       channelName: 'notifications',
+      displayOrder: 4,
     },
   });
 
@@ -682,6 +687,7 @@ export default async function createLinenCommunity() {
       accountId: community.id,
       channelName: 'pagination',
       pages: 100,
+      displayOrder: 5,
     },
   });
 
@@ -722,6 +728,7 @@ export default async function createLinenCommunity() {
       channelName: 'forum',
       pages: 100,
       viewType: 'FORUM',
+      displayOrder: 6,
     },
   });
 
@@ -761,6 +768,7 @@ export default async function createLinenCommunity() {
     data: [...(Array(20).keys() as any)].map((index) => ({
       accountId: community.id,
       channelName: `team-${index + 1}`,
+      displayOrder: 8 + index,
     })),
   });
 

@@ -43,3 +43,11 @@
   display: flex;
   gap: 0.25rem;
 }
+
+.spinner {
+  align-items: center;
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  padding: 1rem 0 2rem;
+}
