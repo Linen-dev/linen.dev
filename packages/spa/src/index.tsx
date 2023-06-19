@@ -27,7 +27,6 @@ di.listenDeepLink((event) => {
 });
 
 handleNotificationPermission();
-di.setTitleBarListeners();
 setInterval(() => di.checkForUpdate(), minutes30);
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(

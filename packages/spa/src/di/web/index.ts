@@ -7,14 +7,13 @@ const Web: DI = {
   },
   listenDeepLink: async (callback: (...args: any) => any) => {},
 
-  buildExternalOrigin: (path: string) => `${window.location.origin}/${path}`,
+  buildExternalOrigin: (path: string) =>
+    new URL(path, window.location.origin).toString(),
 
   callbackUrl: () => window.location.href,
 
   getHomeUrl: (community: SerializedAccount) =>
     `/s/${community.slackDomain || community.discordDomain}`,
-
-  setTitleBarListeners() {},
 
   requestNotificationPermission: async () => {
     // TODO

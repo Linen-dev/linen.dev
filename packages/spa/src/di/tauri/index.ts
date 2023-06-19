@@ -1,6 +1,5 @@
 import { open } from '@tauri-apps/api/shell';
 import { TauriEvent, emit, listen } from '@tauri-apps/api/event';
-import { appWindow } from '@tauri-apps/api/window';
 import {
   isPermissionGranted,
   requestPermission,
@@ -20,24 +19,10 @@ const Tauri: DI = {
     await listen('scheme-request-received', callback);
   },
 
-  setTitleBarListeners() {
-    document.addEventListener('click', (event) => {
-      console.log(event);
-      const node = event?.target as HTMLElement;
-      const id = node?.id;
-      if (id === 'titlebar-minimize' || id === 'titlebar-minimize-img') {
-        appWindow.minimize();
-      } else if (id === 'titlebar-maximize' || id === 'titlebar-maximize-img') {
-        appWindow.toggleMaximize();
-      } else if (id === 'titlebar-close' || id === 'titlebar-close-img') {
-        appWindow.close();
-      }
-    });
-  },
+  buildExternalOrigin: (path: string) =>
+    new URL(path, 'linenapp://localhost').toString(),
 
-  buildExternalOrigin: (path: string) => 'linenapp://' + path,
-
-  callbackUrl: () => 'linenapp://signin',
+  callbackUrl: () => new URL('signin', 'linenapp://localhost').toString(),
 
   getHomeUrl: (community: SerializedAccount) =>
     `/s/${community.slackDomain || community.discordDomain}`,

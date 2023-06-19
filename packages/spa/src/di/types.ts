@@ -9,7 +9,6 @@ export type DI = {
   sendNotification: (body: string, callback: string) => Promise<void>;
   buildExternalOrigin: (path: string) => string;
   buildInternalUrl: (path: string) => string;
-  setTitleBarListeners: () => void;
   checkForUpdate: () => Promise<void>;
   isDarwin: () => Promise<boolean>;
 };
