@@ -1,14 +1,12 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use notifications::{ Instance, NotificationPayload };
 use tauri::{ Manager, WindowEvent };
-mod notifications;
 
 fn main() {
     let ctx = tauri::generate_context!();
-    Instance::init(&ctx.config().tauri.bundle.identifier);
 
     tauri_plugin_deep_link::prepare("dev.linen.desktop");
+
     tauri::Builder
         ::default()
         .setup(|app| {
@@ -33,7 +31,7 @@ fn main() {
 
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![custom_notification])
+        .invoke_handler(tauri::generate_handler![])
         .on_window_event(|event| {
             match event.event() {
                 WindowEvent::CloseRequested { api, .. } => {
@@ -59,9 +57,4 @@ fn main() {
                 _ => {}
             }
         });
-}
-
-#[tauri::command]
-async fn custom_notification(app_handle: tauri::AppHandle, payload: NotificationPayload) {
-    Instance::notification(app_handle, payload);
 }

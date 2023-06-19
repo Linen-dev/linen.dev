@@ -68,6 +68,7 @@
     "./AddThreadModal": "./dist/AddThreadModal/index.js",
     "./Alert": "./dist/Alert/index.js",
     "./AllView": "./dist/AllView/index.js",
+    "./Auth": "./dist/Auth/index.js",
     "./Autocomplete": "./dist/Autocomplete/index.js",
     "./Avatar": "./dist/Avatar/index.js",
     "./Avatars": "./dist/Avatars/index.js",
@@ -107,6 +108,7 @@
     "./FileUploadButton": "./dist/FileUploadButton/index.js",
     "./FindChannelModal": "./dist/FindChannelModal/index.js",
     "./ForumRow": "./dist/ForumRow/index.js",
+    "./GitHubButton": "./dist/GitHubButton/index.js",
     "./GridContent": "./dist/GridContent/index.js",
     "./GridRow": "./dist/GridRow/index.js",
     "./H1": "./dist/H1/index.js",
@@ -198,6 +200,9 @@
       ],
       "AllView": [
         "./dist/AllView/index.d.ts"
+      ],
+      "Auth": [
+        "./dist/Auth/index.d.ts"
       ],
       "Autocomplete": [
         "./dist/Autocomplete/index.d.ts"
@@ -315,6 +320,9 @@
       ],
       "ForumRow": [
         "./dist/ForumRow/index.d.ts"
+      ],
+      "GitHubButton": [
+        "./dist/GitHubButton/index.d.ts"
       ],
       "GridContent": [
         "./dist/GridContent/index.d.ts"

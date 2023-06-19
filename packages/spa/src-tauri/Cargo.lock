@@ -1631,9 +1631,6 @@ dependencies = [
 name = "linen-app"
 version = "1.0.0"
 dependencies = [
- "mac-notification-sys 0.5.6 (git+https://github.com/h4llow3En/mac-notification-sys?rev=7ab3864527698472224671093e581d4d1880851f)",
- "serde",
- "serde_json",
  "tauri",
  "tauri-build",
  "tauri-plugin-deep-link",
@@ -1690,18 +1687,6 @@ name = "mac-notification-sys"
 version = "0.5.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3e72d50edb17756489e79d52eb146927bec8eba9dd48faadf9ef08bca3791ad5"
-dependencies = [
- "cc",
- "dirs-next",
- "objc-foundation",
- "objc_id",
- "time",
-]
-
-[[package]]
-name = "mac-notification-sys"
-version = "0.5.6"
-source = "git+https://github.com/h4llow3En/mac-notification-sys?rev=7ab3864527698472224671093e581d4d1880851f#7ab3864527698472224671093e581d4d1880851f"
 dependencies = [
  "cc",
  "dirs-next",
@@ -1866,7 +1851,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2bfa211d18e360f08e36c364308f394b5eb23a6629150690e109a916dc6f610e"
 dependencies = [
  "log",
- "mac-notification-sys 0.5.6 (registry+https://github.com/rust-lang/crates.io-index)",
+ "mac-notification-sys",
  "serde",
  "tauri-winrt-notification",
  "zbus",
