@@ -31,6 +31,12 @@ export const bulkHideChannelsSchema = z.object({
 });
 export type bulkHideChannelsType = z.infer<typeof bulkHideChannelsSchema>;
 
+export const joinChannelSchema = z.object({
+  channelId: z.string().uuid(),
+  accountId: z.string().uuid(),
+});
+export type joinChannelType = z.infer<typeof joinChannelSchema>;
+
 export const bulkReorderChannelsSchema = z.object({
   channels: z.array(
     z.object({ id: z.string().uuid(), displayOrder: z.number() })

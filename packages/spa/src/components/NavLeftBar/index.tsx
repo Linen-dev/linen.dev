@@ -10,6 +10,7 @@ import customUsePath from '@/hooks/usePath';
 import InternalLink from '@/components/InternalLink';
 import CustomRouterPush from '@/components/CustomRouterPush';
 import { mockAccount } from '@/mocks';
+import { SerializedChannel } from '@linen/types';
 
 export default function NavLeftBar() {
   const location = useLocation();
@@ -43,6 +44,8 @@ export default function NavLeftBar() {
     shallow
   );
   const [allUsers] = useUsersContext();
+
+  function onJoinChannel(channel: SerializedChannel) {}
 
   return (
     <NavBar
@@ -88,6 +91,7 @@ export default function NavLeftBar() {
           {children}
         </Link>
       )}
+      onJoinChannel={onJoinChannel}
     />
   );
 }

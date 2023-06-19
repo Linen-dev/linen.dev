@@ -36,6 +36,8 @@ interface Props {
   api: ApiClient;
   CustomRouterPush({ path }: { path: string }): void;
   notify: (body: string, href: string) => void;
+  onJoinChannel(channel: SerializedChannel): void;
+  onLeaveChannel(channel: SerializedChannel): void;
   CustomLink?: (props: {
     href: string;
     className: string;
@@ -60,6 +62,8 @@ export default function NavBar({
   getHomeUrl,
   api,
   notify,
+  onJoinChannel,
+  onLeaveChannel,
   CustomRouterPush,
   CustomLink,
 }: Props) {
@@ -83,6 +87,8 @@ export default function NavBar({
           usePath={usePath}
           getHomeUrl={getHomeUrl}
           notify={notify}
+          onJoinChannel={onJoinChannel}
+          onLeaveChannel={onLeaveChannel}
           api={api}
           CustomRouterPush={CustomRouterPush}
           CustomLink={CustomLink}

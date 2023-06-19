@@ -36,7 +36,6 @@ import type { ApiClient } from '@linen/api-client';
 import NewCommunityModal from '@/NewCommunityModal';
 import EventEmitter from '@linen/utilities/event';
 import { FiX } from '@react-icons/all-files/fi/FiX';
-import { localStorage } from '@linen/utilities/storage';
 
 interface Props {
   mode: Mode;
@@ -63,6 +62,8 @@ interface Props {
   usePath: (args: { href: string }) => string;
   getHomeUrl: (community: SerializedAccount) => string;
   notify: (body: string, href: string) => void;
+  onJoinChannel(channel: SerializedChannel): void;
+  onLeaveChannel(channel: SerializedChannel): void;
   api: ApiClient;
   CustomRouterPush({ path }: { path: string }): void;
   CustomLink?: (props: {
@@ -94,6 +95,8 @@ export default function DesktopNavBar({
   usePath,
   getHomeUrl,
   notify,
+  onJoinChannel,
+  onLeaveChannel,
   api,
   CustomRouterPush,
   CustomLink,
@@ -312,6 +315,8 @@ export default function DesktopNavBar({
                 setEditedChannel(channel);
                 setModal(ModalView.EDIT_CHANNEL);
               }}
+              onJoinChannel={onJoinChannel}
+              onLeaveChannel={onLeaveChannel}
               onDrop={onDrop}
               Link={Link}
               api={api}

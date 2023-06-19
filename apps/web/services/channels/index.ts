@@ -208,6 +208,21 @@ class ChannelsService {
     );
   }
 
+  static async joinChannel({
+    channelId,
+    userId,
+  }: {
+    channelId: string;
+    userId: string;
+  }) {
+    await prisma.memberships.create({
+      data: {
+        usersId: userId,
+        channelsId: channelId,
+      },
+    });
+  }
+
   static async updateCursor(channelId: string, cursor?: string | null) {
     if (cursor) {
       await prisma.channels.update({

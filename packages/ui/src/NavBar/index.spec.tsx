@@ -32,6 +32,7 @@ describe('NavBar', () => {
           usePath: jest.fn(),
           onDrop: jest.fn(),
           CustomLink: jest.fn(),
+          onJoinChannel: jest.fn(),
         }}
       />
     );
