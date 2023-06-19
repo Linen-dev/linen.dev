@@ -21,12 +21,12 @@ import {
   QUEUE_SITEMAP,
   QUEUE_INTEGRATION_DISCORD,
   QUEUE_REMOVE_COMMUNITY,
-  QUEUE_USER_JOIN,
+  // QUEUE_USER_JOIN,
 } from './jobs';
 import { sitemap } from './tasks/sitemap';
 import { discordIntegration } from './tasks/discord-integration';
 import { removeCommunity } from './tasks/remove-community';
-import { userJoinTask } from './tasks/user-join';
+// import { userJoinTask } from './tasks/user-join';
 
 export type TaskInterface = (
   payload: any,
@@ -57,7 +57,7 @@ async function runWorker() {
       [QUEUE_SITEMAP]: sitemap,
       [QUEUE_INTEGRATION_DISCORD]: discordIntegration,
       [QUEUE_REMOVE_COMMUNITY]: removeCommunity,
-      [QUEUE_USER_JOIN]: userJoinTask,
+      // [QUEUE_USER_JOIN]: userJoinTask,
     },
     parsedCronItems: parseCronItems([
       {
