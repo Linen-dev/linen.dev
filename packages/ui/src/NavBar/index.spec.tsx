@@ -33,6 +33,7 @@ describe('NavBar', () => {
           onDrop: jest.fn(),
           CustomLink: jest.fn(),
           onJoinChannel: jest.fn(),
+          onLeaveChannel: jest.fn(),
         }}
       />
     );

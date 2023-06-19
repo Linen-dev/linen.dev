@@ -27,6 +27,7 @@ export default function NavLeftBar() {
     currentChannel,
     threads,
     setThreads,
+    setChannels,
   } = useLinenStore(
     (state) => ({
       channels: state.channels,
@@ -40,12 +41,22 @@ export default function NavLeftBar() {
       currentChannel: state.currentChannel,
       threads: state.threads,
       setThreads: state.setThreads,
+      setChannels: state.setChannels,
     }),
     shallow
   );
   const [allUsers] = useUsersContext();
 
-  function onJoinChannel(channel: SerializedChannel) {}
+  function onJoinChannel(channel: SerializedChannel) {
+    setChannels(
+      [...channels, channel].sort((a, b) =>
+        a.displayOrder > b.displayOrder ? 1 : -1
+      )
+    );
+  }
+  function onLeaveChannel(channel: SerializedChannel) {
+    setChannels(channels.filter(({ id }) => id !== channel.id));
+  }
 
   return (
     <NavBar
@@ -92,6 +103,7 @@ export default function NavLeftBar() {
         </Link>
       )}
       onJoinChannel={onJoinChannel}
+      onLeaveChannel={onLeaveChannel}
     />
   );
 }
