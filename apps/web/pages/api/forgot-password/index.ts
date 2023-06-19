@@ -6,7 +6,7 @@ import { getHostFromHeaders } from '@linen/utilities/domain';
 import { cors, preflight } from 'utilities/cors';
 
 async function create(request: NextApiRequest, response: NextApiResponse) {
-  const { email } = JSON.parse(request.body);
+  const { email, origin } = JSON.parse(request.body);
 
   if (!email) {
     return response.status(400).json({ error: 'Email is required' });
@@ -29,7 +29,7 @@ async function create(request: NextApiRequest, response: NextApiResponse) {
 
     await ResetPasswordMailer.send({
       to: email,
-      host: getHostFromHeaders(request.headers),
+      host: origin || getHostFromHeaders(request.headers),
       token,
     });
   } catch (exception) {
