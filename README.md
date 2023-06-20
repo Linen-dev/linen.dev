@@ -58,3 +58,7 @@ Our documentation is divided into several sections:
 #### Developers Docs
 
 - [Getting Started](./docs/getting-started.md)
+
+### Destkop client releases
+
+https://github.com/Linen-dev/desktop-client/releases
