@@ -100,19 +100,19 @@ class ChannelsService {
       );
   }
 
-  static async setDefaultChannel({
-    newDefaultChannelId,
-    oldDefaultChannelId,
+  static async setDefaultChannels({
+    newDefaultChannelIds,
+    oldDefaultChannelIds,
     accountId,
   }: {
-    newDefaultChannelId: string;
-    oldDefaultChannelId?: string;
+    newDefaultChannelIds: string[];
+    oldDefaultChannelIds?: string[];
     accountId: string;
   }) {
     const transactions = [
       prisma.channels.updateMany({
         where: {
-          id: newDefaultChannelId,
+          id: { in: newDefaultChannelIds },
           accountId,
         },
         data: {
@@ -121,11 +121,11 @@ class ChannelsService {
         },
       }),
     ];
-    if (oldDefaultChannelId) {
+    if (oldDefaultChannelIds && oldDefaultChannelIds.length > 1) {
       transactions.push(
         prisma.channels.updateMany({
           where: {
-            id: oldDefaultChannelId,
+            id: { in: oldDefaultChannelIds },
             accountId,
           },
           data: {

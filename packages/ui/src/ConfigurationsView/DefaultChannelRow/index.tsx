@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import Toast from '@/Toast';
 import type { SerializedAccount, SerializedChannel } from '@linen/types';
-import DiscordIcon from '@/DiscordIcon';
-import SlackIcon from '@/SlackIcon';
 import NativeSelect from '@/NativeSelect';
 import Label from '@/Label';
 import type { ApiClient } from '@linen/api-client';
+import { FiHash } from '@react-icons/all-files/fi/FiHash';
 
 interface Props {
   channels?: SerializedChannel[];
@@ -19,26 +18,23 @@ export default function DefaultChannelRow({
   api,
 }: Props) {
   const [defaultChannel, setDefaultChannel] = useState(
-    channels?.find((c) => c.default)
+    channels?.find((channel) => channel.default)
   );
-
-  const CommunityIcon =
-    currentCommunity.communityType === 'discord' ? DiscordIcon : SlackIcon;
 
   async function onChange(event: React.ChangeEvent<HTMLSelectElement>) {
     const id = event.currentTarget.value;
-    const channelSelected = channels?.find(
+    const selectedChannel = channels?.find(
       (channel) => channel.id === id
     ) as SerializedChannel;
-    if (channelSelected && channelSelected.id !== defaultChannel?.id) {
+    if (selectedChannel && selectedChannel.id !== defaultChannel?.id) {
       return api
         .setDefaultChannel({
           accountId: currentCommunity.id,
-          channelId: channelSelected?.id,
+          channelId: selectedChannel?.id,
           originalChannelId: defaultChannel?.id,
         })
         .then((_) => {
-          setDefaultChannel(channelSelected);
+          setDefaultChannel(selectedChannel);
           Toast.success('Saved successfully!');
         })
         .catch(() => Toast.error('Something went wrong'));
@@ -61,7 +57,7 @@ export default function DefaultChannelRow({
       <NativeSelect
         style={{ width: 'auto' }}
         id="default-channel-integration-select"
-        icon={<CommunityIcon color="#fff" />}
+        icon={<FiHash color="#fff" />}
         theme="blue"
         defaultValue={defaultChannel?.id}
         onChange={onChange}
