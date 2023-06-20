@@ -30,8 +30,8 @@ import {
   getChannelIntegrationsSchema,
   getChannelIntegrationsType,
   postChannelIntegrationsType,
-  setDefaultChannelSchema,
-  setDefaultChannelType,
+  setDefaultChannelsSchema,
+  setDefaultChannelsType,
   updateChannelType,
   postChannelIntegrationsSchema,
   getChannelMembersSchema,
@@ -281,15 +281,15 @@ channelsRouter.post(
 channelsRouter.post(
   `${prefix}/default`,
   tenantMiddleware([Roles.ADMIN, Roles.OWNER]),
-  validationMiddleware(setDefaultChannelSchema),
+  validationMiddleware(setDefaultChannelsSchema),
   async (
-    req: AuthedRequestWithTenantAndBody<setDefaultChannelType>,
+    req: AuthedRequestWithTenantAndBody<setDefaultChannelsType>,
     res: Response,
     next: NextFunction
   ) => {
-    const { channelId } = req.body;
+    const { channelIds } = req.body;
     await ChannelsService.setDefaultChannels({
-      channelIds: [channelId],
+      channelIds,
       accountId: req.tenant?.id!,
     });
     return res.status(200).json({});

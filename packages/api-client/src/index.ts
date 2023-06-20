@@ -6,7 +6,7 @@ import type {
   createChannelType,
   bulkHideChannelsType,
   bulkReorderChannelsType,
-  setDefaultChannelType,
+  setDefaultChannelsType,
   SerializedChannel,
   getChannelIntegrationsType,
   postChannelIntegrationsType,
@@ -243,7 +243,7 @@ export default class ApiClient {
       viewType,
     });
 
-  setDefaultChannel = (props: setDefaultChannelType) =>
+  setDefaultChannel = (props: setDefaultChannelsType) =>
     this.post<{}>(`/api/channels/default`, props);
 
   hideChannels = (props: bulkHideChannelsType) =>
