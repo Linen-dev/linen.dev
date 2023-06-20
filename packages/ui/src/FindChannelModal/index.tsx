@@ -4,6 +4,7 @@ import type { ApiClient } from '@linen/api-client';
 import H3 from '@/H3';
 import Modal from '@/Modal';
 import TextInput from '@/TextInput';
+import Button from '@/Button';
 import Toast from '@/Toast';
 import Spinner from '@/Spinner';
 import { FiPlus } from '@react-icons/all-files/fi/FiPlus';
@@ -65,7 +66,7 @@ export default function FindChannelModal({
   }, []);
 
   return (
-    <Modal open={show} close={close} position="top">
+    <Modal open={show} close={close} position="top" size="lg">
       <div className={styles.title}>
         <H3>Find a channel</H3>
 
@@ -106,8 +107,9 @@ export default function FindChannelModal({
                         <FiHash /> {channel.channelName}
                       </div>
                       {visibleChannelIds.includes(id) ? (
-                        <div
-                          className={styles.flex}
+                        <Button
+                          color="danger"
+                          size="xs"
                           onClick={() => {
                             api
                               .leaveChannel({
@@ -128,11 +130,11 @@ export default function FindChannelModal({
                           }}
                         >
                           <FiLogOut />
-                          <a>Leave</a>
-                        </div>
+                          Leave
+                        </Button>
                       ) : (
-                        <div
-                          className={styles.flex}
+                        <Button
+                          size="xs"
                           onClick={() => {
                             // TODO implement the api
                             api
@@ -154,8 +156,8 @@ export default function FindChannelModal({
                           }}
                         >
                           <FiPlus />
-                          <a>Join</a>
-                        </div>
+                          Join
+                        </Button>
                       )}
                     </li>
                   );
