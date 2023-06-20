@@ -76,6 +76,47 @@ yarn tf web... test
 
 _the "..." after "web" is used to run same command over all dependencies_
 
+# Desktop client
+
+## Build Tauri desktop client
+
+```bash
+# done in root folder
+yarn install
+yarn build:deps
+
+cd packages/spa
+yarn tauri build
+```
+
+## Prerequisites
+
+Follow - https://tauri.app/v1/guides/getting-started/prerequisites
+
+### For local development
+
+```bash
+# done in root folder
+yarn build:deps
+yarn dev:web
+
+# Optional set up push service
+
+# in another terminal
+cd packages/spa
+cp .env.example .env
+# windows: copy .env.example .env
+yarn tauri dev
+```
+
+> Note: Email sign in for development mode doesn't work yet, because it requires deep linking. So testing has to be done with username and password sign in
+
+### Release
+
+- bump up the version on packages/spa/src-tauri/tauri.conf.json (line 11) and push it to main
+- go to https://github.com/Linen-dev/desktop-client/actions/workflows/main.yml and hit the "run workflow"
+- after the workflow finishes go to https://github.com/Linen-dev/desktop-client/releases
+
 ### Testing with push notifications
 
 Install Elixir: https://elixir-lang.org/install.html
@@ -114,3 +155,4 @@ npx dotenv -e .env -- mix phx.server
 3. pick subdomain i.e kam-test.ngrok.io
 4. Update dev database to have the redirect url `update accounts set "redirectDomain"='kam-test.ngrok.io' where id = '9677cb41-033e-4c1a-9ae5-ef178606cad3';` - replace with your subdomain that you chose
 5. run ngrok tunnel `ngrok http --region=us --hostname=kam-test.ngrok.io 3000`
+

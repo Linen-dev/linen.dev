@@ -31,6 +31,8 @@ Ship the smallest functioning feature that makes the users' lives better and the
 - **Private communities**: In addition to public communities we also support private communities that require a password login to access the content. We use this feature for internal team discussions.
 - **Move threads and messages**: Linen let's you drag and drop messages and merge them into a single thread as well as move threads between channels.
 - **Discord Forum Support**: Linen will sync Discord and make the search engine friendly
+- **Private Channels**: Channels that are invite only within the community
+- **Direct messages**: Direct messages within the community
 
 ### Roadmap:
 
@@ -38,8 +40,6 @@ Ship the smallest functioning feature that makes the users' lives better and the
 - **Improved search**: Currently search is done via full text search with postgres. There are a lot more improvements to be made here we are considering hosting a separate search service
 - **Desktop/Mobile client**: We want to support a desktop and mobile client for Linen so you can get push notifications for when there are urgent things.
 - **Botting**: We want to support botting and automation where you can build and add your custom bots
-- **Private Channels**: Channels that are invite only within the community
-- **Direct messages**: Direct messages within the community
 
 ## Feedback:
 
@@ -55,6 +55,6 @@ Linen is in it's early stages of development so we are looking for a ton of feed
 
 Our documentation is divided into several sections:
 
-#### Getting Started
+#### Developers Docs
 
 - [Getting Started](./docs/getting-started.md)
