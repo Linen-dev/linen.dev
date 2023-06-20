@@ -24,9 +24,8 @@
   color: var(--color-gray-700);
   cursor: pointer;
   margin-bottom: 0.25rem;
-  border: 1px solid var(--color-gray-200);
-  padding: 0.375rem 0.5rem;
-  border-radius: 0.375rem;
+  border-bottom: 1px solid var(--color-gray-200);
+  padding: 0.5rem 0.75rem;
   justify-content: space-between;
 }
 
@@ -36,6 +35,10 @@
 
 .li:last-child {
   margin-bottom: 0;
+}
+
+.li button {
+  margin: 0;
 }
 
 .flex {
