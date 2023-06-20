@@ -53,6 +53,7 @@ import type { ApiClient } from '@linen/api-client';
 import { copyToClipboard } from '@linen/utilities/clipboard';
 import PaginationNumbers from '@/PaginationNumbers';
 import { useViewport } from '@linen/hooks/useViewport';
+import MessageFormJoinLinen from '@/MessageFormJoinLinen';
 
 const useLayoutEffect =
   typeof window !== 'undefined' ? useClientLayoutEffect : () => {};
@@ -596,7 +597,15 @@ export default function Channel({
                   </>
                 ) : (
                   <>
-                    {!currentCommunity.communityInviteUrl && (
+                    {!currentUser && !currentCommunity.communityInviteUrl && (
+                      <MessageFormJoinLinen
+                        api={api}
+                        currentCommunity={currentCommunity}
+                        settings={settings}
+                        startSignUp={startSignUp}
+                      />
+                    )}
+                    {currentUser && !currentCommunity.communityInviteUrl && (
                       <Chat
                         channelId={currentChannel.id}
                         currentUser={currentUser}
