@@ -244,6 +244,7 @@
   --color-text-bold: #000000;
   --color-link: #0855f4;
   --color-navbar: #111827;
+  --color-flash: var(--color-blue-200);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -266,5 +267,6 @@
     --color-input: var(--color-gray-200);
     --color-link: #60a5fa;
     --color-navbar: var(--color-gray-100);
+    --color-flash: var(--color-blue-700);
   }
 }
