@@ -49,7 +49,7 @@ const faqs = [
   {
     question: 'Why does my Discord content is not being synced?',
     answer: `
-    For Discord we sync on an hourly basis. We're working on making that near real time soon. If you are not seeing content after 24 hours please contact us at help@linen.dev
+    Make sure the Linen bot has the same permissions as your users that can access the channel
     `,
   },
   {
