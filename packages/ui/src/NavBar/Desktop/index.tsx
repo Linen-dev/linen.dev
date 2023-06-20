@@ -160,7 +160,7 @@ export default function DesktopNavBar({
         const href = `/c/${channel.channelName}${
           payload.thread_id ? `#${payload.thread_id}` : ''
         }`;
-        Toast.warning(
+        Toast.info(
           ({ id }: { id: string }) => (
             <div className={styles.toast}>
               You were mentioned in{' '}
@@ -185,7 +185,23 @@ export default function DesktopNavBar({
         setHighlights((highlights) => {
           return [...highlights, payload.channel_id];
         });
-        return; // do not highlight if it's a mention for current channel
+
+        if (payload.thread_id) {
+          const id = payload.thread_id;
+          const node = document.getElementById(id);
+          if (node && typeof node.animate === 'function') {
+            node.animate(
+              [
+                { background: 'var(--color-flash)' },
+                { background: 'transparent' },
+              ],
+              {
+                duration: 1000,
+                easing: 'ease',
+              }
+            );
+          }
+        }
       }
     }
 
@@ -199,6 +215,7 @@ export default function DesktopNavBar({
   //   setTimeout(() => {
   //     onNewMessage({
   //       mention_type: 'signal',
+  //       thread_id: 'd3df8848-1f8a-4902-ab57-d8cb534938b8',
   //       channel_id: channels[0].id,
   //     });
   //   }, 1000);
