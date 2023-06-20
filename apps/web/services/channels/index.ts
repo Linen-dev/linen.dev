@@ -101,18 +101,25 @@ class ChannelsService {
   }
 
   static async setDefaultChannels({
-    newDefaultChannelIds,
-    oldDefaultChannelIds,
+    channelIds,
     accountId,
   }: {
-    newDefaultChannelIds: string[];
-    oldDefaultChannelIds?: string[];
+    channelIds: string[];
     accountId: string;
   }) {
+    const channels = await prisma.channels.findMany({
+      where: {
+        accountId,
+      },
+      select: {
+        id: true,
+        default: true,
+      },
+    });
     const transactions = [
       prisma.channels.updateMany({
         where: {
-          id: { in: newDefaultChannelIds },
+          id: { in: channelIds },
           accountId,
         },
         data: {
@@ -120,20 +127,20 @@ class ChannelsService {
           hidden: false,
         },
       }),
+      prisma.channels.updateMany({
+        where: {
+          id: {
+            in: channels
+              .map(({ id }) => id)
+              .filter((id) => !channelIds.includes(id)),
+          },
+          accountId,
+        },
+        data: {
+          default: false,
+        },
+      }),
     ];
-    if (oldDefaultChannelIds && oldDefaultChannelIds.length > 1) {
-      transactions.push(
-        prisma.channels.updateMany({
-          where: {
-            id: { in: oldDefaultChannelIds },
-            accountId,
-          },
-          data: {
-            default: false,
-          },
-        })
-      );
-    }
     await prisma.$transaction(transactions);
     return { status: 200 };
   }

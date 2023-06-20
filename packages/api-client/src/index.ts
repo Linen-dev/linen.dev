@@ -243,7 +243,7 @@ export default class ApiClient {
       viewType,
     });
 
-  setDefaultChannels = (props: setDefaultChannelType) =>
+  setDefaultChannel = (props: setDefaultChannelType) =>
     this.post<{}>(`/api/channels/default`, props);
 
   hideChannels = (props: bulkHideChannelsType) =>

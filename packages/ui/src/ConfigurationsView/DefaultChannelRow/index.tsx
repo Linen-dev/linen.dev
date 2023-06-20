@@ -31,7 +31,6 @@ export default function DefaultChannelRow({
         .setDefaultChannel({
           accountId: currentCommunity.id,
           channelId: selectedChannel?.id,
-          originalChannelId: defaultChannel?.id,
         })
         .then((_) => {
           setDefaultChannel(selectedChannel);
