@@ -1,4 +1,9 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  useLayoutEffect as useClientLayoutEffect,
+} from 'react';
 import autosize from 'autosize';
 import styles from './index.module.scss';
 import Button from '@/Button';
@@ -15,7 +20,10 @@ import {
   FILE_SIZE_LIMIT_IN_BYTES,
   getFileSizeErrorMessage,
 } from '@linen/utilities/files';
-import { memoryStorage } from '@linen/utilities/storage';
+import { localStorage } from '@linen/utilities/storage';
+
+const useLayoutEffect =
+  typeof window !== 'undefined' ? useClientLayoutEffect : () => {};
 
 interface Props {
   id?: string;
@@ -153,15 +161,10 @@ function MessageForm({
   useUsersContext,
   mentions = [],
 }: Props) {
-  function getInitialMessage() {
-    if (draft) {
-      return memoryStorage.get(STORAGE_KEY) || initialMessage || '';
-    }
-    return initialMessage || '';
-  }
-
-  const STORAGE_KEY = `message.draft.${id}`;
-  const [message, setMessage] = useState<string>(getInitialMessage());
+  const STORAGE_KEY = currentUser
+    ? `message.draft.${id}.user.${currentUser.id}`
+    : `message.draft.${id}`;
+  const [message, setMessage] = useState<string>(initialMessage || '');
 
   const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState<SerializedUser[]>([]);
@@ -172,11 +175,20 @@ function MessageForm({
   const mention = getMention(message, position);
   const allUsers = [...contextUsers, ...mentions];
 
+  useLayoutEffect(() => {
+    if (draft) {
+      const message = localStorage.get(STORAGE_KEY);
+      if (message) {
+        setMessage(message);
+      }
+    }
+  }, [draft]);
+
   useEffect(() => {
     onMessageChange?.(message);
-    draft && memoryStorage.set(STORAGE_KEY, message);
+    draft && localStorage.set(STORAGE_KEY, message);
     return () => {
-      draft && memoryStorage.set(STORAGE_KEY, message);
+      draft && localStorage.set(STORAGE_KEY, message);
     };
   }, [message]);
 
