@@ -287,20 +287,11 @@ channelsRouter.post(
     res: Response,
     next: NextFunction
   ) => {
-    const { channelId, originalChannelId } = req.body;
-    const params: {
-      newDefaultChannelIds: string[];
-      oldDefaultChannelIds: string[];
-      accountId: string;
-    } = {
-      newDefaultChannelIds: [channelId],
-      oldDefaultChannelIds: [],
+    const { channelId } = req.body;
+    await ChannelsService.setDefaultChannels({
+      channelIds: [channelId],
       accountId: req.tenant?.id!,
-    };
-    if (originalChannelId) {
-      params.oldDefaultChannelIds.push(originalChannelId);
-    }
-    await ChannelsService.setDefaultChannels(params);
+    });
     return res.status(200).json({});
   }
 );
