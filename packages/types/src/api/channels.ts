@@ -45,11 +45,11 @@ export const bulkReorderChannelsSchema = z.object({
 });
 export type bulkReorderChannelsType = z.infer<typeof bulkReorderChannelsSchema>;
 
-export const setDefaultChannelSchema = z.object({
+export const setDefaultChannelsSchema = z.object({
   accountId: z.string().uuid(),
-  channelId: z.string().uuid(),
+  channelIds: z.array(z.string().uuid()),
 });
-export type setDefaultChannelType = z.infer<typeof setDefaultChannelSchema>;
+export type setDefaultChannelsType = z.infer<typeof setDefaultChannelsSchema>;
 
 export const getChannelsSchema = z.object({
   accountId: z.string().uuid(),
