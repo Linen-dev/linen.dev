@@ -603,6 +603,7 @@ export default function Channel({
                         currentCommunity={currentCommunity}
                         settings={settings}
                         startSignUp={startSignUp}
+                        isAuthenticated={!!permissions.auth?.id}
                       />
                     )}
                     {currentUser && !currentCommunity.communityInviteUrl && (

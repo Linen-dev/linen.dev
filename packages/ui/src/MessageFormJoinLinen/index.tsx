@@ -11,6 +11,7 @@ interface Props {
   api: ApiClient;
   currentCommunity: SerializedAccount;
   settings: Settings;
+  isAuthenticated: boolean;
 }
 
 function MessageFormJoinLinen({
@@ -18,10 +19,11 @@ function MessageFormJoinLinen({
   startSignUp,
   currentCommunity,
   settings,
+  isAuthenticated,
 }: Props) {
   const Btn = JoinButton({
     startSignUp,
-    status: 'unauthenticated',
+    status: isAuthenticated ? 'authenticated' : 'unauthenticated',
     api,
     reload: () => window.location.reload(),
   });
