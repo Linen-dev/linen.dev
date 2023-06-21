@@ -20,9 +20,9 @@ const Tauri: DI = {
   },
 
   buildExternalOrigin: (path: string) =>
-    new URL(path, 'linenapp://localhost').toString(),
+    `linenapp://localhost${path.startsWith('/') ? path : `/${path}`}`,
 
-  callbackUrl: () => new URL('signin', 'linenapp://localhost').toString(),
+  callbackUrl: () => 'linenapp://localhost/signin',
 
   getHomeUrl: (community: SerializedAccount) =>
     `/s/${community.slackDomain || community.discordDomain}`,
