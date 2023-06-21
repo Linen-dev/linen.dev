@@ -1,0 +1,88 @@
+name: Release
+on:
+  workflow_dispatch: # manual trigger
+    inputs:
+      release_message:
+        description: 'Message to show in the update dialog'
+        type: string
+        required: true
+        default: |
+          Linen Desktop client Official release. (Built with Tauri and Rust)
+
+          Mac - Beta
+          Windows - Beta
+          Linux - Alpha
+
+          See https://github.com/Linen-dev/linen.dev/issues?q=is%3Aissue+is%3Aopen+label%3Adesktop for more open issues.
+        
+env: 
+  RELEASE_MESSAGE: ${{ inputs.release_message }} 
+  
+jobs:
+  release:
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [macos-latest, ubuntu-20.04, windows-latest]
+    runs-on: ${{ matrix.platform }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install dependencies (ubuntu only)
+        if: matrix.platform == 'ubuntu-20.04'
+        # You can remove libayatana-appindicator3-dev if you don't use the system tray feature.
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev librsvg2-dev
+
+      - name: Rust setup
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Rust cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: './packages/spa/src-tauri -> target'
+
+      - name: Sync node version and setup cache
+        uses: actions/setup-node@v3
+        with:
+          node-version: 'lts/*'
+          cache: 'yarn' # Set this to npm, yarn or pnpm.
+
+      - name: Install frontend dependencies
+        # If you don't have `beforeBuildCommand` configured you may want to build your frontend here too.
+        run: |
+          yarn config set network-timeout 300000 -g
+          yarn install
+          yarn build:deps
+
+      - name: Build the app
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # updater
+          TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
+          TAURI_KEY_PASSWORD: ${{ secrets.TAURI_KEY_PASSWORD }}
+          # apple
+          ENABLE_CODE_SIGNING: ${{ secrets.APPLE_CERTIFICATE }}
+          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
+          # app specific
+          REACT_APP_PUSH_SERVICE_URL: ${{ vars.REACT_APP_PUSH_SERVICE_URL }}
+          REACT_APP_LINEN_BASE_URL: ${{ vars.REACT_APP_LINEN_BASE_URL }}
+          REACT_APP_PUBLIC_POSTHOG_KEY: ${{ vars.REACT_APP_PUBLIC_POSTHOG_KEY }}
+          REACT_APP_PUBLIC_POSTHOG_HOST: ${{ vars.REACT_APP_PUBLIC_POSTHOG_HOST }}
+        with:
+          tagName: 'v__VERSION__'
+          releaseName: 'v__VERSION__' 
+          releaseBody: ${{ env.RELEASE_MESSAGE }}
+          releaseDraft: false
+          prerelease: false
+          projectPath: './packages/spa'
