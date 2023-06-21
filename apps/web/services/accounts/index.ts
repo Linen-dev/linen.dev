@@ -65,7 +65,7 @@ export default class AccountsService {
           channels: {
             createMany: {
               data: channelsToInsert.map((c, i) => ({
-                ...(c === 'default' && { default: true }),
+                default: true,
                 channelName: c.toLowerCase(),
                 externalChannelId: v4(),
                 displayOrder: i,
