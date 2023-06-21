@@ -556,7 +556,7 @@ export async function shouldThisChannelBeAnonymous(channelId: string) {
 export async function hideEmptyChannels(accountId: string) {
   const channels = await prisma.channels.findMany({
     include: { _count: true },
-    where: { accountId },
+    where: { accountId, channelName: { not: 'default' } },
   });
   const promise = channels
     .map(async (channel) => {
