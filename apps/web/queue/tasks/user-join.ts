@@ -13,6 +13,7 @@ export const userJoinTask = async (payload: { userId: string }) => {
       where: {
         accountId: user.account.id,
         hidden: false,
+        default: true,
         type: ChannelType.PUBLIC,
       },
     });
