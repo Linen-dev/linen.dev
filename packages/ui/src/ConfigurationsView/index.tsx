@@ -68,6 +68,19 @@ export default function ConfigurationsView({
           channels={channels}
           currentCommunity={currentCommunity}
           api={api}
+          onChange={({ id, checked }) =>
+            setChannels((channels) => {
+              if (!channels) {
+                return [];
+              }
+              return channels.map((channel) => {
+                if (channel.id === id) {
+                  return { ...channel, default: checked };
+                }
+                return channel;
+              });
+            })
+          }
         />
         <hr className={styles.my3} />
         <ChannelOrderRow

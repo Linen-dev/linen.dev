@@ -1,43 +1,47 @@
-import React, { useState } from 'react';
+import React, { useCallback } from 'react';
+import classNames from 'classnames';
 import Toast from '@/Toast';
+import Toggle from '@/Toggle';
 import type { SerializedAccount, SerializedChannel } from '@linen/types';
-import NativeSelect from '@/NativeSelect';
 import Label from '@/Label';
 import type { ApiClient } from '@linen/api-client';
-import { FiHash } from '@react-icons/all-files/fi/FiHash';
+import styles from './index.module.scss';
+import debounce from '@linen/utilities/debounce';
 
 interface Props {
   channels?: SerializedChannel[];
   currentCommunity: SerializedAccount;
   api: ApiClient;
+  onChange({ id, checked }: { id: string; checked: boolean }): void;
 }
 
 export default function DefaultChannelRow({
   channels,
   currentCommunity,
   api,
+  onChange,
 }: Props) {
-  const [defaultChannel, setDefaultChannel] = useState(
-    channels?.find((channel) => channel.default)
+  const debouncedSetDefaultChannels = useCallback(
+    debounce(api.setDefaultChannels),
+    []
   );
 
-  async function onChange(event: React.ChangeEvent<HTMLSelectElement>) {
-    const id = event.currentTarget.value;
-    const selectedChannel = channels?.find(
-      (channel) => channel.id === id
-    ) as SerializedChannel;
-    if (selectedChannel && selectedChannel.id !== defaultChannel?.id) {
-      return api
-        .setDefaultChannel({
-          accountId: currentCommunity.id,
-          channelIds: [selectedChannel?.id],
-        })
-        .then((_) => {
-          setDefaultChannel(selectedChannel);
-          Toast.success('Saved successfully!');
-        })
-        .catch(() => Toast.error('Something went wrong'));
+  async function onToggle({ id, checked }: { id: string; checked: boolean }) {
+    if (!channels) {
+      return;
     }
+    onChange({ id, checked });
+    return debouncedSetDefaultChannels({
+      accountId: currentCommunity.id,
+      channelIds: channels
+        .filter((channel) => {
+          if (channel.id === id) {
+            return checked;
+          }
+          return channel.default;
+        })
+        .map(({ id }) => id),
+    }).catch(() => Toast.error('Something went wrong. Please try again.'));
   }
 
   if (!channels) {
@@ -47,24 +51,50 @@ export default function DefaultChannelRow({
   return (
     <>
       <Label htmlFor="defaultChannel">
-        Default channel
+        Default channels
         <Label.Description>
-          Select the first channel that gets displayed when a user lands on your
-          Linen page.
+          Select channels which are shown to new members.
         </Label.Description>
       </Label>
-      <NativeSelect
-        style={{ width: 'auto' }}
-        id="default-channel-integration-select"
-        icon={<FiHash color="#fff" />}
-        theme="blue"
-        defaultValue={defaultChannel?.id}
-        onChange={onChange}
-        options={channels?.map((channel) => ({
-          label: channel.channelName,
-          value: channel.id,
-        }))}
-      />
+      <div className={styles.toggles}>
+        {!channels
+          ? 'Loading...'
+          : channels.map((channel) => {
+              const enabled = channel.default;
+
+              return (
+                <div className={styles.toggle} key={channel.id}>
+                  <label
+                    className={classNames(
+                      styles.label,
+                      enabled ? styles.enabled : styles.disabled
+                    )}
+                  >
+                    <Toggle
+                      checked={enabled}
+                      onChange={(checked: boolean) =>
+                        onToggle({ id: channel.id, checked })
+                      }
+                    />
+                    <div
+                      className={classNames(styles.channel, {
+                        [styles.lock]: channel.type === 'PRIVATE',
+                        [styles.hash]: channel.type === 'PUBLIC',
+                      })}
+                    >
+                      {channel.channelName}
+                    </div>
+                  </label>
+
+                  <input
+                    type="hidden"
+                    name={channel.id}
+                    value={enabled ? 'true' : 'false'}
+                  />
+                </div>
+              );
+            })}
+      </div>
     </>
   );
 }

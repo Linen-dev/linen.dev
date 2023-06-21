@@ -1,0 +1,74 @@
+.toggles {
+  display: grid;
+  grid-template-columns: 1fr;
+  margin-top: 0.5rem;
+}
+
+@media (min-width: 768px) {
+  .toggles {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1440px) {
+  .toggles {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.toggle {
+  align-items: center;
+  display: flex;
+  margin-bottom: 0.25rem;
+}
+
+.toggle:last-child {
+  margin-bottom: 0;
+}
+
+.label {
+  align-items: center;
+  cursor: pointer;
+  display: flex;
+  font-size: 14px;
+  gap: 0.25rem;
+  font-weight: 500;
+}
+
+.enabled {
+  color: var(--color-gray-900);
+}
+
+.disabled {
+  color: var(--color-gray-400);
+  text-decoration: line-through;
+}
+
+.channelsStats {
+  font-size: 0.75rem /* 12px */;
+  line-height: 1rem /* 16px */;
+  font-style: italic;
+  color: var(--color-gray-400);
+}
+
+.channel {
+  align-items: center;
+  display: flex;
+  gap: 0.25rem;
+}
+
+.channel::before {
+  background-color: var(--color-text);
+  content: '';
+  mask-size: contain;
+  width: 14px;
+  height: 14px;
+}
+
+.channel.lock::before {
+  mask-image: url('https://www.linen.dev/icons/lock.svg');
+}
+
+.channel.hash::before {
+  mask-image: url('https://www.linen.dev/icons/hash.svg');
+}
