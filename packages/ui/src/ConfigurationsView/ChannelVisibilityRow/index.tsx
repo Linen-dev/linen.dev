@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import classNames from 'classnames';
 import {
   SerializedAccount,
@@ -29,7 +29,10 @@ export default function ChannelVisibilityRow({
     findChannelsWithStats | undefined
   >(props.allChannels);
 
-  const debouncedChannelsVisibilityUpdate = debounce(api.hideChannels);
+  const debouncedChannelsVisibilityUpdate = useCallback(
+    debounce(api.hideChannels),
+    []
+  );
 
   async function onChannelsVisibilityChange(value: {
     id: string;
