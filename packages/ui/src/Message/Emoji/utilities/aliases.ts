@@ -11,8 +11,18 @@ export default {
   done: '✅',
   pants: '👖',
   squirrel: '🐿️',
-  // it would be nice to support gif, jpg, png emojis
+  // it would be nice to support gif, jpg, png and svg emojis
   partyparrot: '🦜',
   charmander: '🔥',
   java: '☕',
+  slack: 'S',
+  discord: 'D',
+  github: 'G',
+  jira: 'J',
+  // we should either support custom emojis per community or hide them
+  'airbyte-100': '💯',
+  'airbyte-fire': '🔥',
+  meow_party: '🎉',
+  'octavia-hmm': '🤔',
+  'octavia-hello': '👋',
 };
