@@ -18,13 +18,14 @@ interface Props {
   active?: boolean;
 }
 
-function Reaction({ type, count, active }: Props) {
-  const alias = (ALIASES as { [key: string]: string })[type];
+function Reaction({ type: initialType, count, active }: Props) {
+  const alias = (ALIASES as { [key: string]: string })[initialType];
+  const type = normalizeText(initialType);
 
   if (UNSUPPORTED_EMOJIS.includes(type)) {
     return (
       <div className={styles.reaction} title={type}>
-        {normalizeText(type)} {count}
+        {type} {count}
       </div>
     );
   }
@@ -40,7 +41,7 @@ function Reaction({ type, count, active }: Props) {
       className={classNames(styles.reaction, { [styles.active]: active })}
       title={type}
     >
-      <Emoji text={normalizeText(type)} /> {count}
+      <Emoji text={type} /> {count}
     </div>
   );
 }
