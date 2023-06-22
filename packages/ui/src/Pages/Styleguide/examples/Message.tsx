@@ -153,7 +153,7 @@ export default function MessageExample() {
       <Example description="Renders emojis.">
         <Message text="Hello, world! 😃" format={MessageFormat.LINEN} />
         <Message
-          text="Hello, world! :thumbsup: :+1::skin-tone-2:"
+          text="Hello, world! :thumbsup: :thumbsdown: :+1::skin-tone-2:"
           format={MessageFormat.SLACK}
         />
       </Example>
@@ -165,6 +165,7 @@ export default function MessageExample() {
           text="Hello!"
           reactions={[
             { type: ':thumbsup:', count: 1, users: [] },
+            { type: ':thumbsdown:', count: 1, users: [] },
             { type: ':shame:', count: 1, users: [] },
             { type: '+1::skin-tone-2', count: 4, users: [] },
             { type: '+1', count: 4, users: [] },
@@ -172,6 +173,32 @@ export default function MessageExample() {
             { type: 'the_horns', count: 2, users: [] },
           ]}
           format={MessageFormat.LINEN}
+        />
+        <Message
+          text="Hello!"
+          reactions={[
+            { type: ':thumbsup:', count: 1, users: [] },
+            { type: ':thumbsdown:', count: 1, users: [] },
+            { type: ':shame:', count: 1, users: [] },
+            { type: '+1::skin-tone-2', count: 4, users: [] },
+            { type: '+1', count: 4, users: [] },
+            { type: 'partyparrot', count: 2, users: [] },
+            { type: 'the_horns', count: 2, users: [] },
+          ]}
+          format={MessageFormat.SLACK}
+        />
+        <Message
+          text="Hello!"
+          reactions={[
+            { type: ':thumbsup:', count: 1, users: [] },
+            { type: ':thumbsdown:', count: 1, users: [] },
+            { type: ':shame:', count: 1, users: [] },
+            { type: '+1::skin-tone-2', count: 4, users: [] },
+            { type: '+1', count: 4, users: [] },
+            { type: 'partyparrot', count: 2, users: [] },
+            { type: 'the_horns', count: 2, users: [] },
+          ]}
+          format={MessageFormat.DISCORD}
         />
       </Example>
       {/* <Example description="Renders channels.">

@@ -6,13 +6,6 @@ interface Props {
   text?: string;
 }
 
-function unwrap(text: string) {
-  if (text.startsWith(':') && text.endsWith(':')) {
-    return text.slice(1, text.length - 1);
-  }
-  return text;
-}
-
 export default function Emoji({ text }: Props) {
   if (!text) {
     return null;
