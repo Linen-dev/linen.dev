@@ -18,6 +18,8 @@ module.exports = {
     {
       name: 'discord-bots',
       script: 'bash up.sh',
+      id: 'xd0123',
+      // radio
       cwd: '../apps/discord-bots',
     },
     {
