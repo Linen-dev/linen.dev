@@ -154,7 +154,19 @@ export default function MessageExample() {
         <Message text="Hello, world! 😃" format={MessageFormat.LINEN} />
       </Example>
       <Example description="Renders mentions.">
-        <Message text="Hey, @uid1234 !" format={MessageFormat.LINEN} />
+        <Message text="Hey, @uid1234!" format={MessageFormat.LINEN} />
+      </Example>
+      <Example description="Renders reactions.">
+        <Message
+          text="Hello!"
+          reactions={[
+            { type: ':thumbsup:', count: 1, users: [] },
+            { type: ':shame:', count: 1, users: [] },
+            { type: '+1::skin-tone-2', count: 4, users: [] },
+            { type: '+1', count: 4, users: [] },
+          ]}
+          format={MessageFormat.LINEN}
+        />
       </Example>
       {/* <Example description="Renders channels.">
         <Message text="Hey, #general !" format={MessageFormat.LINEN} />
