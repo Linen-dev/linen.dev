@@ -152,6 +152,10 @@ export default function MessageExample() {
       </Example>
       <Example description="Renders emojis.">
         <Message text="Hello, world! 😃" format={MessageFormat.LINEN} />
+        <Message
+          text="Hello, world! :thumbsup: :+1::skin-tone-2:"
+          format={MessageFormat.SLACK}
+        />
       </Example>
       <Example description="Renders mentions.">
         <Message text="Hey, @uid1234!" format={MessageFormat.LINEN} />
@@ -164,6 +168,8 @@ export default function MessageExample() {
             { type: ':shame:', count: 1, users: [] },
             { type: '+1::skin-tone-2', count: 4, users: [] },
             { type: '+1', count: 4, users: [] },
+            { type: 'partyparrot', count: 2, users: [] },
+            { type: 'the_horns', count: 2, users: [] },
           ]}
           format={MessageFormat.LINEN}
         />
