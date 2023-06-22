@@ -1,22 +1,42 @@
 import React from 'react';
-import { toArray } from 'react-emoji-render';
+import data from '@emoji-mart/data';
+import ALIASES from './utilities/aliases';
 
 interface Props {
   text?: string;
+}
+
+function unwrap(text: string) {
+  if (text.startsWith(':') && text.endsWith(':')) {
+    return text.slice(1, text.length - 1);
+  }
+  return text;
 }
 
 export default function Emoji({ text }: Props) {
   if (!text) {
     return null;
   }
-  return (
-    <>
-      {toArray(text).reduce((previous, current: any) => {
-        if (typeof current === 'string') {
-          return previous + current;
+  if (text.startsWith(':') && text.endsWith(':')) {
+    const name = text.slice(1, text.length - 1);
+    const alias = (ALIASES as { [key: string]: string })[name];
+    if (alias) {
+      return <>{alias}</>;
+    }
+    const { aliases, emojis }: any = data;
+    if (name.includes('::')) {
+      const [id, tone] = name.split('::');
+      if (tone.startsWith('skin-tone-')) {
+        const index = Number(tone[tone.length - 1]);
+        const emoji = emojis[id]?.skins[index]?.native;
+        if (emoji) {
+          return emoji;
         }
-        return previous + current.props.children;
-      }, '')}
-    </>
-  );
+      }
+    }
+    const id = aliases[name] || name;
+    const emoji = emojis[id]?.skins[0]?.native;
+    return <>{emoji || text}</>;
+  }
+  return <>{text}</>;
 }

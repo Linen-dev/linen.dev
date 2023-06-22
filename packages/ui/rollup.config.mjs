@@ -1,6 +1,7 @@
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import typescript from '@rollup/plugin-typescript';
+import json from '@rollup/plugin-json';
 import scss from '@linen/rollup-plugin-scss-modules';
 import external from 'rollup-plugin-peer-deps-external';
 import { visualizer } from 'rollup-plugin-visualizer';
@@ -31,6 +32,7 @@ export default {
     }),
     resolve(),
     scss(),
+    json(),
     commonjs(),
     external(),
     process.env.ANALYZE && visualizer(),
