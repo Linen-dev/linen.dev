@@ -51,11 +51,11 @@ Ship the smallest functioning feature that makes the users' lives better and the
 
 ### How to contribute
 
-1. Stars on GitHub: If you are a fan of Linen and our mission don't foget to Star our repo! 🌟
-2. Improve documentation: We are constantly  Good documentation is imperative to the success of any project. You can make our documents the best they need to be by improving their quality or adding new ones.
-3. Give feedback: We are constantly looking for feedback. Please share how you use Linen, what painpoints you have or things that bother you with other tools. If you have the time or capacity schedule a call with Kam to talk about painpoints/past experience with other tools. We are constantly in the look out for high quality long form feedback or insights based on your experience.
-4. Share Linen: Sharing Linen's blog posts, Github repo on social media and other platform really helps us get the word out.
-5. Contribute to codebase: Feel free to pick up features and bugs labeled "help wanted". Make sure you comment on the github issue first and claim it to reduce duplicate work. We will try our best to merge your PRs.
+1. **Stars on GitHub**: If you are a fan of Linen and our mission don't foget to Star our repo! 🌟
+2. **Improve documentation**: Documentation is important for any open source project. Feel free to document any thing around developer setup, features and common questions that you find that we are missing
+3. **Give feedback**: We are constantly looking for feedback. Please share how you use Linen, what painpoints you have or things that bother you with other tools. If you have the time or capacity schedule a call with Kam to talk about painpoints/past experience with other tools. We are constantly in the look out for high quality long form feedback or insights based on your experience.
+4. **Share Linen**: Sharing Linen's blog posts, Github repo on social media and other platform really helps us get the word out.
+5. **Contribute to codebase**: Feel free to pick up features and bugs labeled "help wanted". Make sure you comment on the github issue first and claim it to reduce duplicate work. We will try our best to merge your PRs.
 
 #### Developers Docs
 
