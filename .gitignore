@@ -13,6 +13,7 @@ coverage
 # next.js
 .next/
 out/
+sandbox/
 
 packages/cli/secret/
 
