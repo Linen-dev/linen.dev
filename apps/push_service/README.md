@@ -41,4 +41,4 @@ How service works:
 ```
 
 5. Based on who has subscribed to the channel id it broadcasts to all the clients that are connected to it
-6. Client recieves the new message and rerenders the new element in channel or inbox.
+6. Client receives the new message and rerenders the new element in channel or inbox.
