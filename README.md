@@ -51,7 +51,7 @@ Ship the smallest functioning feature that makes the users' lives better and the
 
 ### How to contribute
 
-- [Contributing][contributing]
+- [Contributing](./CONTRIBUTING.md)
 
 #### Developers Docs
 
