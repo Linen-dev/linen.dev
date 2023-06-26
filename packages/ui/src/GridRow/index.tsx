@@ -23,6 +23,21 @@ import {
 import styles from './index.module.scss';
 import Actions from '@/Actions';
 
+function hasReaction(
+  message: SerializedMessage,
+  type: string,
+  userId?: string
+): boolean {
+  if (!userId) {
+    return false;
+  }
+  const reaction = message.reactions.find((reaction) => reaction.type === type);
+  if (!reaction) {
+    return false;
+  }
+  return !!reaction.users.find(({ id }) => id === userId);
+}
+
 interface Props {
   className?: string;
   thread: SerializedThread;
@@ -260,7 +275,7 @@ function Row({
           }}
         />
       )}
-      {onReaction && (
+      {onReaction && currentUser && (
         <EmojiPickerModal
           open={modal === ModalView.EMOJI_PICKER}
           close={() => {
@@ -274,7 +289,7 @@ function Row({
               threadId: thread.id,
               messageId: message.id,
               type,
-              active: true,
+              active: hasReaction(message, type, currentUser.id),
             });
             setModal(ModalView.NONE);
           }}
