@@ -8,7 +8,7 @@ import { FiMove } from '@react-icons/all-files/fi/FiMove';
 import { FiClock } from '@react-icons/all-files/fi/FiClock';
 import { FiEdit } from '@react-icons/all-files/fi/FiEdit';
 import { FiThumbsUp } from '@react-icons/all-files/fi/FiThumbsUp';
-import { FiThumbsDown } from '@react-icons/all-files/fi/FiThumbsDown';
+import { FiSmile } from '@react-icons/all-files/fi/FiSmile';
 import { FiTrash2 } from '@react-icons/all-files/fi/FiTrash2';
 import { FaVolumeMute } from '@react-icons/all-files/fa/FaVolumeMute';
 import { BiMessageCheck } from '@react-icons/all-files/bi/BiMessageCheck';
@@ -44,6 +44,7 @@ interface Props {
   onPin?(threadId: string): void;
   onStar?(threadId: string): void;
   onResolution?: onResolve;
+  onEmoji?(): void;
   onReaction?({
     threadId,
     messageId,
@@ -99,6 +100,7 @@ export default function Actions({
   onPin,
   onStar,
   onResolution,
+  onEmoji,
   onReaction,
   onRead,
   onRemind,
@@ -121,6 +123,7 @@ export default function Actions({
   const isPinVisible = onPin && permissions.manage;
   const isStarVisible = onStar && permissions.starred;
   const isReactionVisible = onReaction && currentUser;
+  const isEmojiVisible = onEmoji && currentUser;
   const isThumbsUpVisible = isReactionVisible && !isForumView;
   const isResolutionVisible = onResolution && currentUser;
   const isDragVisible = currentUser && draggable;
@@ -229,6 +232,19 @@ export default function Actions({
                   [styles.active]: isThumbsUpActive,
                 })}
               />
+            </Tooltip>
+          </li>
+        )}
+        {isEmojiVisible && (
+          <li
+            onClick={(event) => {
+              event.stopPropagation();
+              event.preventDefault();
+              onEmoji();
+            }}
+          >
+            <Tooltip className={styles.tooltip} text="Like">
+              <FiSmile />
             </Tooltip>
           </li>
         )}
