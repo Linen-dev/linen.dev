@@ -1,5 +1,16 @@
 # Linen.dev
 
+## Linen folder structure
+
+Linen is a mono repo with multiple apps and packages in the same place.
+
+Since we have multiple applications like Desktop client and a server rendered app. We share the UI code between them with the packages/ui folder.
+
+The apps folder contains all the applications and each app imports the UI code from packages/ui.
+- web: Next.js server rendered app - along with backend apis
+- desktop: Tauri desktop client
+- push_service: Push notification server built with Phoneix and Elixir
+
 ## Requirements
 
 - node >=16 (https://github.com/nvm-sh/nvm)
