@@ -70,6 +70,7 @@
     "./AddThreadModal": "./dist/AddThreadModal/index.js",
     "./Alert": "./dist/Alert/index.js",
     "./AllView": "./dist/AllView/index.js",
+    "./ApiKeysModal": "./dist/ApiKeysModal/index.js",
     "./Auth": "./dist/Auth/index.js",
     "./Autocomplete": "./dist/Autocomplete/index.js",
     "./Avatar": "./dist/Avatar/index.js",
@@ -205,6 +206,9 @@
       ],
       "AllView": [
         "./dist/AllView/index.d.ts"
+      ],
+      "ApiKeysModal": [
+        "./dist/ApiKeysModal/index.d.ts"
       ],
       "Auth": [
         "./dist/Auth/index.d.ts"

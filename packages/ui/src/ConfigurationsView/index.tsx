@@ -21,6 +21,7 @@ import RemoveCommunity from './RemoveCommunity';
 import ChannelsConfig from './ChannelsConfig';
 import type { ApiClient } from '@linen/api-client';
 import useAsync from '@linen/hooks/useAsync';
+import ApiKeys from './ApiKeys';
 
 export default function ConfigurationsView({
   currentCommunity,
@@ -118,6 +119,8 @@ export default function ConfigurationsView({
               });
           }}
         />
+        <hr className={styles.my3} />
+        <ApiKeys currentCommunity={currentCommunity} />
         <hr className={styles.my3} />
         <RemoveCommunity currentCommunity={currentCommunity} api={api} />
       </div>

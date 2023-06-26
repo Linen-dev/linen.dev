@@ -1,0 +1,12 @@
+.header {
+  font-weight: 700;
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.gap {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem !important;
+}
