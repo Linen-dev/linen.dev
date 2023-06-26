@@ -5,10 +5,11 @@ import { appendProtocol } from '@linen/utilities/url';
 import { getIntegrationUrl } from '@linen/utilities/domain';
 import { stringify } from 'superjson';
 
-const linenSdk = new LinenSdk(
-  process.env.INTERNAL_API_KEY!,
-  appendProtocol(getIntegrationUrl())
-);
+const linenSdk = new LinenSdk({
+  apiKey: process.env.INTERNAL_API_KEY!,
+  type: 'internal',
+  linenUrl: appendProtocol(getIntegrationUrl()),
+});
 
 export async function processEmailIntegration(
   {

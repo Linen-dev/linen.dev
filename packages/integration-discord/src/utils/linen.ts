@@ -26,10 +26,11 @@ export type LinenMessage = {
   externalMessageId: string;
 };
 
-export const linenSdk = new LinenSdk(
-  env.INTERNAL_API_KEY,
-  appendProtocol(getIntegrationUrl())
-);
+export const linenSdk = new LinenSdk({
+  apiKey: env.INTERNAL_API_KEY,
+  type: 'internal',
+  linenUrl: appendProtocol(getIntegrationUrl()),
+});
 
 export async function findAccountByExternalId(externalId: string) {
   return await prisma.accounts.findFirst({

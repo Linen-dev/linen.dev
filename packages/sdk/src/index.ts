@@ -37,10 +37,19 @@ export default class Api {
       .then((res) => res.data)
       .catch(this.catchError);
 
-  constructor(apiKey: string, linenUrl: string = 'https://main.linendev.com') {
+  constructor({
+    apiKey,
+    type = 'external',
+    linenUrl = 'https://main.linendev.com',
+  }: {
+    apiKey: string;
+    type?: 'internal' | 'external';
+    linenUrl?: string;
+  }) {
+    const key = type === 'internal' ? 'x-api-internal' : 'x-api-key';
     this.instance = axios.create({
       baseURL: `${linenUrl}`,
-      headers: { 'x-api-internal': apiKey },
+      headers: { [key]: apiKey },
     });
   }
 
