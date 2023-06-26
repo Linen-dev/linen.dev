@@ -15,6 +15,8 @@ export default function EmojiPicker({ onSelect }: Props) {
         return response.json();
       }}
       onEmojiSelect={onSelect}
+      previewPosition="none"
+      searchPosition="none"
     />
   );
 }
