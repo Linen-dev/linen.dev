@@ -6,6 +6,7 @@ import Badge from '@/Badge';
 import Message from '@/Message';
 import ConfirmationModal from '@/ConfirmationModal';
 import ReminderModal from '@/ReminderModal';
+import EmojiPickerModal from '@/EmojiPickerModal';
 import { format } from '@linen/utilities/date';
 import { FiCheck } from '@react-icons/all-files/fi/FiCheck';
 import { Mode } from '@linen/hooks/mode';
@@ -98,6 +99,7 @@ enum ModalView {
   NONE,
   REMINDER,
   DELETE,
+  EMOJI_PICKER,
 }
 
 function Row({
@@ -221,7 +223,9 @@ function Row({
             onPin={onPin}
             onStar={onStar}
             onResolution={onResolution}
-            onReaction={onReaction}
+            onEmoji={
+              onReaction ? () => setModal(ModalView.EMOJI_PICKER) : undefined
+            }
             onRead={onRead}
             onRemind={onRemind ? () => setModal(ModalView.REMINDER) : undefined}
             onUnread={onUnread}
@@ -252,6 +256,26 @@ function Row({
           }}
           onConfirm={() => {
             onDelete(message.id);
+            setModal(ModalView.NONE);
+          }}
+        />
+      )}
+      {onReaction && (
+        <EmojiPickerModal
+          open={modal === ModalView.EMOJI_PICKER}
+          close={() => {
+            setModal(ModalView.NONE);
+          }}
+          onSelect={(emoji: any) => {
+            const type = Array.isArray(emoji.shortcodes)
+              ? emoji.shortcodes[0]
+              : emoji.shortcodes;
+            onReaction({
+              threadId: thread.id,
+              messageId: message.id,
+              type,
+              active: true,
+            });
             setModal(ModalView.NONE);
           }}
         />

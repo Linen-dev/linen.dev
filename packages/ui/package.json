@@ -103,6 +103,8 @@
     "./EditMessageModal": "./dist/EditMessageModal/index.js",
     "./EditThreadModal": "./dist/EditThreadModal/index.js",
     "./EmailField": "./dist/EmailField/index.js",
+    "./EmojiPicker": "./dist/EmojiPicker/index.js",
+    "./EmojiPickerModal": "./dist/EmojiPickerModal/index.js",
     "./Error": "./dist/Error/index.js",
     "./FadeIn": "./dist/FadeIn/index.js",
     "./Field": "./dist/Field/index.js",
@@ -302,6 +304,12 @@
       ],
       "EmailField": [
         "./dist/EmailField/index.d.ts"
+      ],
+      "EmojiPicker": [
+        "./dist/EmojiPicker/index.d.ts"
+      ],
+      "EmojiPickerModal": [
+        "./dist/EmojiPickerModal/index.d.ts"
       ],
       "Error": [
         "./dist/Error/index.d.ts"
