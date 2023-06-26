@@ -7,7 +7,6 @@ import { FiBookmark } from '@react-icons/all-files/fi/FiBookmark';
 import { FiMove } from '@react-icons/all-files/fi/FiMove';
 import { FiClock } from '@react-icons/all-files/fi/FiClock';
 import { FiEdit } from '@react-icons/all-files/fi/FiEdit';
-import { FiThumbsUp } from '@react-icons/all-files/fi/FiThumbsUp';
 import { FiSmile } from '@react-icons/all-files/fi/FiSmile';
 import { FiTrash2 } from '@react-icons/all-files/fi/FiTrash2';
 import { FaVolumeMute } from '@react-icons/all-files/fa/FaVolumeMute';
@@ -77,12 +76,6 @@ function hasReaction(
   return !!reaction.users.find(({ id }) => id === userId);
 }
 
-// enum ModalView {
-//   NONE,
-//   REMINDER,
-//   DELETE,
-// }
-
 export default function Actions({
   className,
   thread,
@@ -109,7 +102,6 @@ export default function Actions({
   // const [modal, setModal] = useState<ModalView>(ModalView.NONE);
   const viewType = thread.channel?.viewType;
   const isForumView = viewType === 'FORUM';
-  const isThumbsUpActive = hasReaction(message, ':thumbsup:', currentUser?.id);
   const owner = currentUser ? currentUser.id === message.usersId : false;
   const draggable = permissions.manage || owner;
 
@@ -122,9 +114,7 @@ export default function Actions({
   const isOnmuteVisible = false && onUnmute && currentUser;
   const isPinVisible = onPin && permissions.manage;
   const isStarVisible = onStar && permissions.starred;
-  const isReactionVisible = onReaction && currentUser;
   const isEmojiVisible = onEmoji && currentUser;
-  const isThumbsUpVisible = isReactionVisible && !isForumView;
   const isResolutionVisible = onResolution && currentUser;
   const isDragVisible = currentUser && draggable;
   const isDeleteVisible =
@@ -213,28 +203,6 @@ export default function Actions({
             </Tooltip>
           </li>
         )}
-        {isThumbsUpVisible && (
-          <li
-            onClick={(event) => {
-              event.stopPropagation();
-              event.preventDefault();
-              onReaction({
-                threadId: thread.id,
-                messageId: message.id,
-                type: ':thumbsup:',
-                active: isThumbsUpActive,
-              });
-            }}
-          >
-            <Tooltip className={styles.tooltip} text="Like">
-              <FiThumbsUp
-                className={classNames({
-                  [styles.active]: isThumbsUpActive,
-                })}
-              />
-            </Tooltip>
-          </li>
-        )}
         {isEmojiVisible && (
           <li
             onClick={(event) => {
@@ -243,7 +211,7 @@ export default function Actions({
               onEmoji();
             }}
           >
-            <Tooltip className={styles.tooltip} text="Like">
+            <Tooltip className={styles.tooltip} text="Emoji">
               <FiSmile />
             </Tooltip>
           </li>
