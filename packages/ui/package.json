@@ -18,6 +18,7 @@
     "test:coverage": "jest --coverage"
   },
   "dependencies": {
+    "@emoji-mart/react": "^1.1.1",
     "@linen/api-client": "*",
     "@linen/ast": "*",
     "@linen/contexts": "*",
