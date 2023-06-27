@@ -45,6 +45,7 @@ interface Props {
   attachments?: SerializedAttachment[];
   currentUser?: SerializedUser | null;
   placeholder?: boolean;
+  onLinkClick?(event: React.MouseEvent<HTMLAnchorElement>): void;
   onLoad?(): void;
 }
 
@@ -66,6 +67,7 @@ function Message({
   attachments,
   currentUser,
   placeholder,
+  onLinkClick,
   onLoad,
 }: Props) {
   if (text === '' && noAttachment(attachments)) {
@@ -153,6 +155,7 @@ function Message({
             key={node.cid}
             url={(node as LinkNode).url}
             title={(node as LinkNode).title}
+            onClick={onLinkClick}
             onLoad={onLoad}
           />
         );

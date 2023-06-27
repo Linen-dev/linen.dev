@@ -67,7 +67,7 @@ describe('#getThreadUrl', () => {
   it('returns the url of a thread', () => {
     const url = getThreadUrl({
       isSubDomainRouting: false,
-      settings: { communityName: 'linen', prefix: 's' },
+      settings: { communityName: 'linen' },
       slug: 'test',
       incrementId: 1,
       LINEN_URL: 'https://www.linen.dev',

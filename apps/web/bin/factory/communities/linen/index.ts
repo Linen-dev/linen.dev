@@ -149,6 +149,26 @@ export default async function createLinenCommunity() {
       },
     },
   });
+  // Thread with a link to the archive
+  await prisma.threads.create({
+    data: {
+      channelId: channel1.id,
+      sentAt: new Date().getTime(),
+      lastReplyAt: new Date('2021-12-09T08:41:00.000Z').getTime(),
+      externalThreadId: '1234567890.123456',
+      messages: {
+        create: [
+          {
+            channelId: channel1.id,
+            body: 'https://foo.slack.com/archives/C01AB34CDEF/p1234567890123456',
+            usersId: user3.id,
+            sentAt: '2021-12-09T08:41:00.000Z',
+            messageFormat: MessageFormat.LINEN,
+          },
+        ],
+      },
+    },
+  });
   // Thread with inline code blocks
   await prisma.threads.create({
     data: {

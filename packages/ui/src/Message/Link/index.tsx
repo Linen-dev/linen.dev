@@ -10,10 +10,11 @@ import Mail from './Mail';
 interface Props {
   url: string;
   title: string;
+  onClick?(event: React.MouseEvent<HTMLAnchorElement>): void;
   onLoad?(): void;
 }
 
-export default function Link({ url, title, onLoad }: Props) {
+export default function Link({ url, title, onClick, onLoad }: Props) {
   if (isImage(url)) {
     return (
       <Accordion header={title}>
@@ -46,6 +47,7 @@ export default function Link({ url, title, onLoad }: Props) {
       title={isHrefInvalid ? 'Invalid link' : ''}
       rel="noreferrer ugc"
       target={isExternalLink ? '_blank' : undefined}
+      onClick={onClick}
     >
       {title}
     </a>
