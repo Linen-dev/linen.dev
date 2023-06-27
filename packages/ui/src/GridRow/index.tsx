@@ -22,6 +22,7 @@ import {
 } from '@linen/types';
 import styles from './index.module.scss';
 import Actions from '@/Actions';
+import { getThreadUrl } from '@linen/utilities/url';
 
 function hasReaction(
   message: SerializedMessage,
@@ -36,6 +37,16 @@ function hasReaction(
     return false;
   }
   return !!reaction.users.find(({ id }) => id === userId);
+}
+function isArchiveUrl(input: string): boolean {
+  const url = new URL(input);
+  if (
+    url.hostname.endsWith('.slack.com') &&
+    url.pathname.startsWith('/archives/')
+  ) {
+    return true;
+  }
+  return false;
 }
 
 interface Props {
@@ -151,6 +162,39 @@ function Row({
   const top = !isPreviousMessageFromSameUser;
   const resolution = thread.resolutionId === message.id;
 
+  function onLinkClick(event: React.MouseEvent<HTMLAnchorElement>) {
+    const url = event.currentTarget.href;
+    if (isArchiveUrl(url)) {
+      event.stopPropagation();
+      event.preventDefault();
+      fetch('/api/link', {
+        method: 'POST',
+        body: JSON.stringify({
+          url,
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+        .then((response) => response.json())
+        .then(({ incrementId }) => {
+          if (incrementId) {
+            window.location.href = getThreadUrl({
+              isSubDomainRouting,
+              settings,
+              incrementId,
+              LINEN_URL:
+                process.env.NODE_ENV === 'development'
+                  ? 'http://localhost:3000'
+                  : 'https://www.linen.dev',
+            });
+          } else {
+            window.location.href = url;
+          }
+        });
+    }
+  }
+
   return (
     <div
       ref={ref}
@@ -208,6 +252,7 @@ function Row({
                 .filter(Boolean)}
               attachments={message.attachments}
               currentUser={currentUser}
+              onLinkClick={onLinkClick}
               onLoad={onLoad}
               placeholder={!inView}
             />
