@@ -250,7 +250,12 @@ export default function ChannelsGroup({
                         [styles.hash]: channel.type === 'PUBLIC',
                       })}
                     >
-                      {channel.channelName}
+                      <span
+                        title={channel.channelName}
+                        style={{ overflow: 'hidden' }}
+                      >
+                        {channel.channelName}
+                      </span>
                     </div>
                   </Nav.Item>
                 </Link>
