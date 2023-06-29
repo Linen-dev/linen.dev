@@ -58,6 +58,7 @@ export default async function createSitCommunity() {
     data: {
       accountId: community.id,
       channelName: 'general',
+      default: true,
     },
   });
 

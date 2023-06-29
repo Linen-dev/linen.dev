@@ -113,6 +113,7 @@ export default async function createLinenCommunity() {
       accountId: community.id,
       channelName: 'general',
       displayOrder: 0,
+      default: true,
     },
   });
 
@@ -515,6 +516,7 @@ export default async function createLinenCommunity() {
       accountId: community.id,
       channelName: 'ideas',
       displayOrder: 1,
+      default: true,
     },
   });
 
