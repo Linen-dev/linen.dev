@@ -1,14 +1,16 @@
 'use strict';
 import AWS from 'aws-sdk';
-import { simpleParser, ParsedMail } from 'mailparser';
-import axios, { Axios } from 'axios';
+import { simpleParser } from 'mailparser';
+import axios from 'axios';
+
 const s3 = new AWS.S3();
 const ssm = new AWS.SSM();
-const BUCKET = process.env.BUCKET!;
-const URL = process.env.URL!;
-const STAGE = process.env.STAGE!;
+const BUCKET = process.env.BUCKET;
+const URL = process.env.URL;
+const STAGE = process.env.STAGE;
 
-let cacheInstance: Axios;
+let cacheInstance;
+
 async function buildAxios() {
   if (cacheInstance) {
     return cacheInstance;
@@ -44,8 +46,8 @@ module.exports.handler = async function (event, context, callback) {
     const data = await s3.getObject(req).promise();
     console.log('Raw email:\n' + data.Body);
 
-    const parsed = await new Promise<ParsedMail>((res, rej) => {
-      simpleParser(data.Body as any, (err, success) => {
+    const parsed = await new Promise((res, rej) => {
+      simpleParser(data.Body, (err, success) => {
         if (err) rej(err);
         res(success);
       });

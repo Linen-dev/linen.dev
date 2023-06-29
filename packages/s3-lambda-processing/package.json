@@ -5,7 +5,7 @@
   "main": "index.js",
   "private": true,
   "scripts": {
-    "build": "esbuild src/index.ts --bundle --outfile=index.js --platform=node --external:aws-sdk --minify"
+    "build": "esbuild src/index.js --bundle --outfile=index.js --platform=node --external:aws-sdk --minify"
   },
   "keywords": [],
   "author": "",
