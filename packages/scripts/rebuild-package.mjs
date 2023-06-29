@@ -1,4 +1,5 @@
 import fs from 'fs/promises';
+import { EOL } from 'os';
 import { extname } from 'path';
 
 const isUI = process.argv.find((a) => a.startsWith('ui'));
@@ -33,4 +34,4 @@ if (isUI) {
   packageJson.exports['./index.css'] = `./dist/index.css`;
 }
 
-await fs.writeFile('package.json', JSON.stringify(packageJson, null, 2));
+await fs.writeFile('package.json', JSON.stringify(packageJson, null, 2) + EOL);

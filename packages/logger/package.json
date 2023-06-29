@@ -13,6 +13,6 @@
     "winston": "^3.8.2"
   },
   "devDependencies": {
-    "typescript": "^5.0.2"
+    "typescript": "^5.1.3"
   }
 }

@@ -23,6 +23,7 @@
     "build:web": "yarn web build",
     "migrate:db": "yarn dotenv -e .env prisma migrate dev",
     "migrate:test:db": "yarn dotenv -e ./apps/web/.env.test prisma migrate dev",
+    "build:all": "yarn turbo build --filter '!s3'",
     "td": "yarn turbo dev --filter",
     "tb": "yarn turbo build --filter",
     "tf": "yarn turbo --filter"

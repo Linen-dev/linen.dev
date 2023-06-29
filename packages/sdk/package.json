@@ -9,7 +9,7 @@
     "build": "rimraf dist && tsc"
   },
   "devDependencies": {
-    "typescript": "^4.9.3"
+    "typescript": "^5.1.3"
   },
   "dependencies": {
     "@linen/types": "*",

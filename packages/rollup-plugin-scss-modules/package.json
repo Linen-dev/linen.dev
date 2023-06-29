@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "Rollup plugin scss modules",
   "main": "index.js",
-  "scripts": {},
   "author": "",
   "dependencies": {
     "postcss": "^8.4.24",
