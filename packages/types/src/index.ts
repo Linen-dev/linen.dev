@@ -101,6 +101,7 @@ export type onSignInType = {
   run: Function;
   init: any;
   params: any;
+  redirectUrl?: string;
 };
 export type AuthFlow = 'signup' | 'signin';
 
