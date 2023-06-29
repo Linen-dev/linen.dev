@@ -51,7 +51,7 @@ export const JoinContext = ({ children }: Props) => {
     setFlow(props.flow || 'signup');
     setOnSignInAction(props.onSignIn);
     setCommunityId(props.communityId);
-    setCallbackUrl(props.onSignIn.redirectUrl || window.location.href);
+    setCallbackUrl(props.onSignIn?.redirectUrl || window.location.href);
     const session = await getSession();
     if (session) {
       const res = await join(props);
