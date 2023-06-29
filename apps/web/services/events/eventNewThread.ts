@@ -4,6 +4,7 @@ import { resolvePush } from 'services/push';
 import { eventNewMentions } from './eventNewMentions';
 import { notificationListener } from 'services/notifications';
 import ChannelsService from 'services/channels';
+import { matrixNewThread } from 'services/matrix';
 
 interface MentionNode {
   type: string;
@@ -53,6 +54,7 @@ export async function eventNewThread({
     eventNewMentions({ mentions, mentionNodes, channelId, threadId }),
     notificationListener({ ...event, communityId, mentions }),
     ...resolvePush({ channel, userId, event, communityId }),
+    matrixNewThread(event),
   ];
 
   if (channel?.type === ChannelType.DM) {
