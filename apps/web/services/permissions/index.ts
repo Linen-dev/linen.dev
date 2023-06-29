@@ -58,6 +58,7 @@ export default class PermissionsService {
             id: user.id,
             username: user.displayName,
             authsId: user.authsId,
+            accountsId: user.accountsId,
             displayName: user.displayName,
             externalUserId: user.externalUserId,
             profileImageUrl: user.profileImageUrl,

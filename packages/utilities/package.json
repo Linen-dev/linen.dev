@@ -37,6 +37,7 @@
     "./files": "./dist/files.js",
     "./home": "./dist/home.js",
     "./memoize": "./dist/memoize.js",
+    "./number": "./dist/number.js",
     "./object": "./dist/object.js",
     "./password": "./dist/password.js",
     "./promises": "./dist/promises.js",
@@ -87,6 +88,9 @@
       ],
       "memoize": [
         "./dist/memoize.d.ts"
+      ],
+      "number": [
+        "./dist/number.d.ts"
       ],
       "object": [
         "./dist/object.d.ts"
