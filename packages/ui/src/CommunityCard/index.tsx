@@ -1,15 +1,22 @@
 import React from 'react';
+import classNames from 'classnames';
 import CommunityIcon from '@/CommunityIcon';
 import styles from './index.module.scss';
 import type { SerializedAccount } from '@linen/types';
 import { truncate } from '@linen/utilities/string';
 import { getHomeUrl } from '@linen/utilities/home';
 
-function CommunityCard({ community }: { community: SerializedAccount }) {
+function CommunityCard({
+  className,
+  community,
+}: {
+  className?: string;
+  community: SerializedAccount;
+}) {
   if (community.logoUrl) {
     return (
       <a
-        className={styles.logo}
+        className={classNames(styles.logo, className)}
         style={{
           backgroundColor: community.brandColor,
         }}
@@ -27,7 +34,11 @@ function CommunityCard({ community }: { community: SerializedAccount }) {
     );
   }
   return (
-    <a href={getHomeUrl(community)} className={styles.card} target="_blank">
+    <a
+      href={getHomeUrl(community)}
+      className={classNames(styles.card, className)}
+      target="_blank"
+    >
       <CommunityIcon community={community} />
       <div className={styles.content}>
         <h2>{community.name}</h2>

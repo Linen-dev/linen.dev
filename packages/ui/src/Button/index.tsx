@@ -18,7 +18,7 @@ interface Props {
     | 'disabled'
     | 'black'
     | 'danger';
-  rounded?: 'lg' | 'full';
+  rounded?: 'lg' | 'md' | 'full';
   size?: 'md' | 'sm' | 'xs';
   weight?: 'bold' | 'medium' | 'normal';
   outlined?: boolean;
@@ -50,6 +50,7 @@ const Button = ({
         [styles.medium]: weight === 'medium',
         [styles.bold]: weight === 'bold',
         [styles['rounded-lg']]: rounded === 'lg',
+        [styles['rounded-md']]: rounded === 'md',
         [styles['rounded-full']]: rounded === 'full',
         [styles.md]: size === 'md',
         [styles.sm]: size === 'sm',

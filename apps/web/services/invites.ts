@@ -282,6 +282,7 @@ async function createUser({
     },
   });
   await eventUserJoin({ userId: user.id });
+  return user;
 }
 
 async function findUser(accountId: string, authId: string) {
@@ -323,11 +324,24 @@ export async function joinCommunityAfterSignIn({
   }
   const exist = await findUser(communityId, authId);
   if (!exist) {
-    await createUser({
+    const user = await createUser({
       accountId: communityId,
       authId,
       displayName,
       profileImageUrl,
+    });
+    const channels = await prisma.channels.findMany({
+      where: {
+        accountId: communityId,
+        default: true,
+      },
+    });
+    await prisma.memberships.createMany({
+      skipDuplicates: true,
+      data: channels.map((c) => ({
+        channelsId: c.id,
+        usersId: user.id,
+      })),
     });
   }
   await checkoutTenant(authId, communityId);

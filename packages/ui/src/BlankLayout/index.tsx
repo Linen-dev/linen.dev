@@ -1,13 +1,14 @@
 import React from 'react';
 
 interface Props {
+  className?: string;
   children: React.ReactNode;
 }
 
-export default function BlankLayout({ children }: Props) {
+export default function BlankLayout({ className, children }: Props) {
   return (
     <>
-      <div>{children}</div>
+      <div className={className}>{children}</div>
       <div id="portal"></div>
       <div id="modal-portal"></div>
       <div id="tooltip-portal"></div>
