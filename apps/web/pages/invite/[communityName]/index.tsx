@@ -102,22 +102,29 @@ export const getServerSideProps = async (
   if (!community) {
     return { notFound: true };
   }
+
+  // we could show a better page, e.g. saying that you need to contact the admin
+  // directly so they can contact you
+  if (community.type === 'PRIVATE') {
+    return { notFound: true };
+  }
+
   const membersCount = await prisma.users.count({
     where: { accountsId: community.id, authsId: { not: null } },
   });
   const permissions = await PermissionsService.for(context);
 
-  // const isMember =
-  //   permissions.user && permissions.user.accountsId === community.id;
+  const isMember =
+    permissions.user && permissions.user.accountsId === community.id;
 
-  // if (isMember) {
-  //   return {
-  //     redirect: {
-  //       destination: getHomeUrl(community),
-  //       permanent: false,
-  //     },
-  //   };
-  // }
+  if (isMember) {
+    return {
+      redirect: {
+        destination: getHomeUrl(community),
+        permanent: false,
+      },
+    };
+  }
 
   return {
     props: {
