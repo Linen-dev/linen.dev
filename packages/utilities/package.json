@@ -3,11 +3,10 @@
   "private": true,
   "version": "1.0.0",
   "scripts": {
-    "with-env": "yarn dotenv -e ../../apps/web/.env.test",
     "prebuild": "node ../scripts/rebuild-package.mjs",
     "build": "rimraf dist && tsc",
     "dev": "tsc --watch",
-    "test": "yarn with-env jest",
+    "test": "jest",
     "test:watch": "jest --watch"
   },
   "dependencies": {

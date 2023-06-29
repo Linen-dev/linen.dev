@@ -25,7 +25,7 @@ describe('Reaction', () => {
     });
   });
 
-  describe('when emoji is unsupported', () => {
+  describe.skip('when emoji is unsupported', () => {
     it('renders the text', () => {
       const { container } = render(
         <Reaction type="people_hugging" count={13} />

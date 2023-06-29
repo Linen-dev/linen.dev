@@ -1,5 +1,16 @@
 import { auths, prisma } from '@linen/database';
-import { generateHash, generateSalt } from '@linen/utilities/password';
+import { createHmac, randomBytes } from 'crypto';
+
+// dup from utilities to avoid circular dependency
+function generateSalt(): string {
+  return randomBytes(16).toString('hex');
+}
+// dup from utilities to avoid circular dependency
+function generateHash(password: string, salt: string): string {
+  const hash = createHmac('sha512', salt);
+  hash.update(password);
+  return hash.digest('hex');
+}
 
 export default function createAuth(options?: Partial<auths>): Promise<auths> {
   const password = options?.password || 'password';

@@ -5,16 +5,16 @@ import {
 } from './domain';
 
 describe('#getHostFromHeaders', () => {
-  it('returns NEXTAUTH_URL', () => {
-    expect(getHostFromHeaders()).toBe(process.env.NEXTAUTH_URL);
+  it('returns www.linen.dev', () => {
+    expect(getHostFromHeaders()).toBe('www.linen.dev');
   });
 
-  it('when request is from desktop, it returns NEXTAUTH_URL', () => {
+  it('when request is from desktop, it returns www.linen.dev', () => {
     expect(
       getHostFromHeaders({
         origin: 'tauri://localhost',
       })
-    ).toBe(process.env.NEXTAUTH_URL);
+    ).toBe('www.linen.dev');
   });
   it('returns localhost', () => {
     expect(
