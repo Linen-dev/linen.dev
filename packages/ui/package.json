@@ -132,6 +132,7 @@
     "./LinenIcon": "./dist/LinenIcon/index.js",
     "./LinenLogo": "./dist/LinenLogo/index.js",
     "./List": "./dist/List/index.js",
+    "./MatrixView": "./dist/MatrixView/index.js",
     "./MembersModal": "./dist/MembersModal/index.js",
     "./MembersView": "./dist/MembersView/index.js",
     "./Message": "./dist/Message/index.js",
@@ -392,6 +393,9 @@
       ],
       "List": [
         "./dist/List/index.d.ts"
+      ],
+      "MatrixView": [
+        "./dist/MatrixView/index.d.ts"
       ],
       "MembersModal": [
         "./dist/MembersModal/index.d.ts"
