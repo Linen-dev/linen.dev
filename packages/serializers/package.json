@@ -6,7 +6,7 @@
     "dev": "tsc --watch",
     "prebuild": "node ../scripts/rebuild-package.mjs",
     "build": "rimraf dist && tsc",
-    "test": "dotenv -e ../../apps/web/.env.test jest"
+    "test": "jest"
   },
   "sideEffect": false,
   "dependencies": {
@@ -14,7 +14,8 @@
     "@linen/database": "*",
     "@linen/factory": "*",
     "@linen/types": "*",
-    "@linen/utilities": "*"
+    "@linen/utilities": "*",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@types/jest": "^29.5.1",

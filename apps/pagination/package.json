@@ -13,7 +13,6 @@
   },
   "dependencies": {
     "@linen/database": "*",
-    "@linen/factory": "*",
     "@linen/logger": "*",
     "p-queue": "^7.3.3",
     "pm2": "^5.2.2"

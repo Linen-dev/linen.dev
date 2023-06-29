@@ -9,7 +9,6 @@
   "dependencies": {
     "@linen/database": "*",
     "@linen/types": "*",
-    "@linen/utilities": "*",
     "jest": "^29.4.1"
   },
   "devDependencies": {

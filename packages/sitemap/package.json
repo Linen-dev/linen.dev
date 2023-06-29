@@ -16,7 +16,6 @@
   "license": "ISC",
   "dependencies": {
     "@linen/database": "*",
-    "@linen/factory": "*",
     "sitemap": "^7.1.1",
     "zlib": "^1.0.5"
   },

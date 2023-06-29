@@ -10,12 +10,8 @@
     "apps/*"
   ],
   "dependencies": {
-    "@types/phoenix": "^1.5.4",
-    "@types/react": "^18.0.25",
-    "dotenv": "^16.0.3",
-    "phoenix": "^1.6.15",
+    "dotenv-cli": "^7.2.1",
     "rimraf": "^5.0.0",
-    "sass": "^1.56.1",
     "turbo": "^1.6.3"
   },
   "scripts": {
@@ -36,6 +32,8 @@
     "jsonwebtoken": ">=9.0.0",
     "vm2": ">=3.9.18",
     "yaml": ">=2.2.2",
-    "nth-check": ">=2.0.1"
+    "nth-check": ">=2.0.1",
+    "semver": ">=7.5.2",
+    "underscore": ">=1.12.1"
   }
 }
