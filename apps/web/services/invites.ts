@@ -243,6 +243,22 @@ export async function findInvitesByEmail(
   });
 }
 
+async function createChannelMemberships(accountId: string, userId: string) {
+  const channels = await prisma.channels.findMany({
+    where: {
+      accountId: accountId,
+      default: true,
+    },
+  });
+  await prisma.memberships.createMany({
+    skipDuplicates: true,
+    data: channels.map((c) => ({
+      channelsId: c.id,
+      usersId: userId,
+    })),
+  });
+}
+
 export async function joinCommunity(
   email: string,
   accountId: string,
@@ -254,8 +270,9 @@ export async function joinCommunity(
     return { data: 'user already belongs to tenant' };
   }
   const displayName = normalize(email.split('@').shift() || email);
-  await createUser({ accountId, authId, displayName });
+  const record = await createUser({ accountId, authId, displayName });
   await checkoutTenant(authId, accountId);
+  await createChannelMemberships(accountId, record.id);
 }
 
 async function createUser({
@@ -330,19 +347,7 @@ export async function joinCommunityAfterSignIn({
       displayName,
       profileImageUrl,
     });
-    const channels = await prisma.channels.findMany({
-      where: {
-        accountId: communityId,
-        default: true,
-      },
-    });
-    await prisma.memberships.createMany({
-      skipDuplicates: true,
-      data: channels.map((c) => ({
-        channelsId: c.id,
-        usersId: user.id,
-      })),
-    });
+    await createChannelMemberships(communityId, user.id);
   }
   await checkoutTenant(authId, communityId);
 }

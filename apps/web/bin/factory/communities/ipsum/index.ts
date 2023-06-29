@@ -57,6 +57,7 @@ export default async function createIpsumCommunity() {
     data: {
       accountId: community.id,
       channelName: 'general',
+      default: true,
     },
   });
 
