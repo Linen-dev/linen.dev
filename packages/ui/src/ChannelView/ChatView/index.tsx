@@ -50,7 +50,6 @@ import AddThreadModal from '@/AddThreadModal';
 import EditThreadModal from '@/EditThreadModal';
 import Toast from '@/Toast';
 import type { ApiClient } from '@linen/api-client';
-import { copyToClipboard } from '@linen/utilities/clipboard';
 import PaginationNumbers from '@/PaginationNumbers';
 import { useViewport } from '@linen/hooks/useViewport';
 import MessageFormJoinLinen from '@/MessageFormJoinLinen';
@@ -107,6 +106,7 @@ interface Props {
     from: string;
     to: string;
   }): void;
+  onShare(): void;
   sendReaction({
     threadId,
     messageId,
@@ -174,6 +174,7 @@ export default function Channel({
   editMessage,
   onMessage,
   onDrop,
+  onShare,
   onRemind,
   onSelectThread,
   updateThread,
@@ -546,10 +547,7 @@ export default function Channel({
                             }
                           : undefined
                       }
-                      onShare={() => {
-                        copyToClipboard(window.location.href);
-                        Toast.success('Copied to clipboard');
-                      }}
+                      onShare={onShare}
                     />
                   ) : (
                     <div className={styles.full}>

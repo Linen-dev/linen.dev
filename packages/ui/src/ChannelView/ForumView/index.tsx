@@ -106,6 +106,7 @@ interface Props {
     from: string;
     to: string;
   }): void;
+  onShare(): void;
   sendReaction({
     threadId,
     messageId,
@@ -173,6 +174,7 @@ export default function Channel({
   editMessage,
   onMessage,
   onDrop,
+  onShare,
   onRemind,
   onSelectThread,
   updateThread,
@@ -556,10 +558,7 @@ export default function Channel({
                             }
                           : undefined
                       }
-                      onShare={() => {
-                        copyToClipboard(window.location.href);
-                        Toast.success('Copied to clipboard');
-                      }}
+                      onShare={onShare}
                     />
                   ) : (
                     <div className={styles.full}>

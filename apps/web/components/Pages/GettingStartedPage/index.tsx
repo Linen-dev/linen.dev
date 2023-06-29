@@ -58,7 +58,12 @@ export function GettingStartedPage({
         throw join;
       }
 
-      openTenant(invite.id, `/s/${invite.slackDomain || invite.discordDomain}`);
+      openTenant(
+        invite.id,
+        `/s/${
+          invite.slackDomain || invite.discordDomain || invite.discordServerId
+        }`
+      );
     } catch (error) {
       if (DEVELOPMENT) {
         console.error({ error });
@@ -177,7 +182,9 @@ export function GettingStartedPage({
                           {account.name || account.id}
                         </div>
                         <div className="text-xs text-gray-500 dark:text-gray-300">{`linen.dev/s/${
-                          account.slackDomain || account.discordDomain
+                          account.slackDomain ||
+                          account.discordDomain ||
+                          account.discordServerId
                         }`}</div>
                       </div>
                     </div>

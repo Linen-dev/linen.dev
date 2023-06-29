@@ -50,7 +50,7 @@ export default function InvitePage({
       />
       <Card className={styles.card}>
         <p>
-          You're invited to be part of
+          You&apos;re invited to be part of
           <br />
           <strong>{currentCommunity.name}</strong>
           <br />
@@ -113,18 +113,6 @@ export const getServerSideProps = async (
     where: { accountsId: community.id, authsId: { not: null } },
   });
   const permissions = await PermissionsService.for(context);
-
-  const isMember =
-    permissions.user && permissions.user.accountsId === community.id;
-
-  if (isMember) {
-    return {
-      redirect: {
-        destination: getHomeUrl(community),
-        permanent: false,
-      },
-    };
-  }
 
   return {
     props: {

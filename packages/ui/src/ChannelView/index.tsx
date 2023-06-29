@@ -22,6 +22,7 @@ import { createThreadImitation } from '@linen/serializers/thread';
 import type { ApiClient } from '@linen/api-client';
 import ChatView from './ChatView';
 import { addReaction } from '@linen/utilities/reaction';
+import { copyToClipboard } from '@linen/utilities/clipboard';
 import ForumView from './ForumView';
 
 const SHORTCUTS_ENABLED = false;
@@ -849,6 +850,28 @@ export default function ChannelView({
     }
   }
 
+  function onShare() {
+    if (
+      currentCommunity.type === 'PRIVATE' ||
+      currentCommunity.redirectDomain
+    ) {
+      copyToClipboard(window.location.href);
+    } else {
+      const url =
+        process.env.NODE_ENV === 'development'
+          ? 'http://localhost:3000'
+          : 'https://www.linen.dev';
+      copyToClipboard(
+        `${url}/invite/${
+          currentCommunity.slackDomain ||
+          currentCommunity.discordDomain ||
+          currentCommunity.discordServerId
+        }`
+      );
+    }
+    Toast.success('Copied to clipboard');
+  }
+
   return (
     <ChannelContext.Provider value={currentChannel}>
       {currentChannel.viewType === 'FORUM' && (
@@ -883,6 +906,7 @@ export default function ChannelView({
           unreadThread={unreadThread}
           onMessage={onThreadMessage}
           onDrop={onThreadDrop}
+          onShare={onShare}
           onRemind={onRemind}
           sendReaction={sendReaction}
           onSelectThread={onSelectThread}
@@ -926,6 +950,7 @@ export default function ChannelView({
           unreadThread={unreadThread}
           onMessage={onThreadMessage}
           onDrop={onThreadDrop}
+          onShare={onShare}
           onRemind={onRemind}
           sendReaction={sendReaction}
           onSelectThread={onSelectThread}
