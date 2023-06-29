@@ -5,6 +5,7 @@ const parsers = {
   [MessageFormat.LINEN]: parse.linen,
   [MessageFormat.SLACK]: parse.slack,
   [MessageFormat.DISCORD]: parse.discord,
+  [MessageFormat.MATRIX]: parse.linen,
 };
 
 export function getUserMentions({

@@ -42,6 +42,11 @@ import type {
   ChannelViewType,
   leaveChannelType,
   getChannelsType,
+  matrixGetAllType,
+  matrixPostType,
+  matrixPutType,
+  matrixDeleteType,
+  integrationMatrixType,
 } from '@linen/types';
 export { AxiosRequestConfig };
 
@@ -567,6 +572,20 @@ export default class ApiClient {
     this.post('/api/invites/join-button', {
       communityId,
     });
+
+  getIntegrationMatrix = (params: matrixGetAllType) =>
+    this.get<integrationMatrixType[]>(`/api/config/matrix?${qs(params)}`);
+
+  createIntegrationMatrix = (params: matrixPostType) =>
+    this.post<{ ok: boolean; id: string }>(`/api/config/matrix`, params);
+
+  updateIntegrationMatrix = ({ id, ...params }: matrixPutType) =>
+    this.put<{ ok: boolean; id: string }>(`/api/config/matrix/${id}`, params);
+
+  deleteIntegrationMatrix = ({ id, accountId }: matrixDeleteType) =>
+    this.deleteReq<{ ok: boolean; id: string }>(
+      `/api/config/matrix/${id}?${qs({ accountId })}`
+    );
 }
 
 export { type ApiClient };

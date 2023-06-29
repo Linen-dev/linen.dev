@@ -1,10 +1,11 @@
 import { SerializedUser } from './users';
 
-export type MessageFormat = 'DISCORD' | 'SLACK' | 'LINEN';
+export type MessageFormat = 'DISCORD' | 'SLACK' | 'LINEN' | 'MATRIX';
 export const MessageFormat = {
   DISCORD: 'DISCORD' as MessageFormat,
   SLACK: 'SLACK' as MessageFormat,
   LINEN: 'LINEN' as MessageFormat,
+  MATRIX: 'MATRIX' as MessageFormat,
 };
 
 export interface SerializedMessage {

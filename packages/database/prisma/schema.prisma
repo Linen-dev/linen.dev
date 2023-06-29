@@ -44,6 +44,7 @@ enum MessageFormat {
   DISCORD
   SLACK
   LINEN
+  MATRIX
 }
 
 model threads {
@@ -193,6 +194,7 @@ model accounts {
   integration           AccountIntegration      @default(NONE)
   apiKeys               apiKeys[]
   notifications         notifications[]
+  integrationMatrix     integrationMatrix[]
 
   @@unique([redirectDomain])
   @@unique([slackDomain])
@@ -359,6 +361,17 @@ model discordAuthorizations {
   account accounts? @relation(fields: [accountsId], references: [id])
 
   accountsId String?
+}
+
+model integrationMatrix {
+  id          String    @id @default(uuid())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime? @updatedAt
+  matrixUrl   String
+  matrixToken String?
+  enabled     Boolean   @default(true)
+  account     accounts? @relation(fields: [accountsId], references: [id], onDelete: Cascade)
+  accountsId  String?
 }
 
 model verificationToken {
