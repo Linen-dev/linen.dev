@@ -1,0 +1,17 @@
+matrix:
+  domain: matrix.example.com
+  homeserverUrl: http://localhost:8008
+
+bridge:
+  port: 9000
+
+linen:
+  # required: apiKey generated on https://www.linen.dev
+  apikey: c0d3cc97c7d9283db9a68361d86a
+  
+  # optional: used for development, defaults to https://main.linendev.com (production)
+  # domain: http://localhost:3000
+
+webhook: 
+  port: 9001
+  apikey: f2929df50217cda47332b70948ebf
