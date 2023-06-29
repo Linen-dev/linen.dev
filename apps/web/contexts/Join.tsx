@@ -85,7 +85,7 @@ export const JoinContext = ({ children }: Props) => {
     })?.({
       ...onSignInAction?.params,
     });
-    window.location.href = window.location.href;
+    window.location.href = onSignInAction?.redirectUrl || window.location.href;
   }
 
   const onCloseModal = () => {

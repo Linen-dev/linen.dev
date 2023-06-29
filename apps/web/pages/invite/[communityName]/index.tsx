@@ -58,7 +58,7 @@ export default function InvitePage({
             <FiUsers /> {formatNumber(membersCount)}
           </span>
         </p>
-        {permissions.user ? (
+        {permissions.auth ? (
           <Button
             color="blue"
             size="md"
@@ -77,6 +77,12 @@ export default function InvitePage({
             onClick={() => {
               startSignUp({
                 communityId: currentCommunity.id,
+                onSignIn: {
+                  run() {},
+                  init: {},
+                  params: {},
+                  redirectUrl: getHomeUrl(currentCommunity),
+                },
               });
             }}
           >
