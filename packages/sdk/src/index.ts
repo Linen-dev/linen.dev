@@ -53,6 +53,10 @@ export default class Api {
     });
   }
 
+  whoAmI(): Promise<{ accountId: string } | null> {
+    return this.get(`/api/integrations/me`);
+  }
+
   // channels ----
 
   getChannel(
