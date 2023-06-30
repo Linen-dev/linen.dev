@@ -33,6 +33,19 @@ interface Props {
   }): void;
 }
 
+function isUserActive(
+  author: SerializedUser | null,
+  currentUser: SerializedUser | null
+) {
+  if (!author) {
+    return false;
+  }
+  if (author.id === currentUser?.id) {
+    return true;
+  }
+  return false;
+}
+
 function Messages({
   thread,
   permissions,
@@ -52,6 +65,7 @@ function Messages({
     const previousMessage = messages[index - 1];
     const isPreviousMessageFromSameUser =
       previousMessage && previousMessage.usersId === message.usersId;
+
     return (
       <div id={message.id} key={`${message.id}`} className={styles.container}>
         <GridRow
@@ -60,6 +74,7 @@ function Messages({
           })}
           thread={thread}
           message={message}
+          isUserActive={isUserActive(message?.author, currentUser)}
           isBot={isBot}
           isPreviousMessageFromSameUser={isPreviousMessageFromSameUser}
           permissions={permissions}

@@ -53,6 +53,7 @@ interface Props {
   className?: string;
   thread: SerializedThread;
   message: SerializedMessage;
+  isUserActive?: boolean;
   isBot?: boolean;
   isPreviousMessageFromSameUser?: boolean;
   isSubDomainRouting: boolean;
@@ -94,12 +95,14 @@ function Left({
   isBot,
   hover,
   inView,
+  isUserActive,
 }: {
   top: boolean;
   message: SerializedMessage;
   isBot?: boolean;
   hover?: boolean;
   inView: boolean;
+  isUserActive?: boolean;
 }) {
   if (top) {
     return (
@@ -108,6 +111,7 @@ function Left({
         src={message.author?.profileImageUrl}
         text={message.author?.displayName}
         placeholder={!inView || isBot}
+        active={isUserActive}
       />
     );
   }
@@ -132,6 +136,7 @@ function Row({
   className,
   thread,
   message,
+  isUserActive,
   isBot,
   isPreviousMessageFromSameUser,
   isSubDomainRouting,
@@ -216,6 +221,7 @@ function Row({
           isBot={isBot}
           hover={hover}
           inView={inView}
+          isUserActive={isUserActive}
         />
         <div className={styles.content}>
           {top && (
