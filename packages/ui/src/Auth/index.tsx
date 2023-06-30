@@ -146,13 +146,15 @@ function SignIn({
             No account? {/* <br /> */}
             <a
               onClick={() => {
-                if (showSignUp) showSignUp?.(mode);
-                else
+                if (showSignUp) {
+                  showSignUp?.(mode);
+                } else {
                   window.location.href = `/signup?${qs({
                     callbackUrl,
                     email,
                     mode,
                   })}`;
+                }
               }}
               className={styles.anchorCss}
             >
@@ -298,8 +300,9 @@ function SignUp({
             Already have an account? {/* <br /> */}
             <a
               onClick={() => {
-                if (showSignIn) showSignIn?.(mode);
-                else
+                if (showSignIn) {
+                  showSignIn?.(mode);
+                } else {
                   window.location.href = `/signin?${qs({
                     callbackUrl,
                     state,
@@ -307,6 +310,7 @@ function SignUp({
                     mode: 'creds',
                     sso,
                   })}`;
+                }
               }}
               className={styles.anchorCss}
             >
