@@ -1,17 +1,3 @@
-.avatar {
-  display: flex;
-  align-items: center;
-  border-radius: 50%;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  width: 36px;
-  min-width: 36px;
-  height: 36px;
-  line-height: 36px;
-  user-select: none;
-}
-
 .image {
   border-radius: 50%;
   display: block;
@@ -20,6 +6,7 @@
   min-width: 36px;
   width: 36px;
   object-fit: cover;
+  position: relative;
 }
 
 .placeholder {
@@ -37,12 +24,29 @@
   background-color: var(--color-primary);
   font-weight: 500;
   font-size: 16px;
+  position: relative;
   text-transform: uppercase;
   user-select: none;
 }
 
 .shadow {
   box-shadow: 0 1px 2px var(--color-gray-300);
+}
+
+.active {
+  position: relative;
+}
+
+.active::after {
+  content: '';
+  position: absolute;
+  height: 0.5625rem;
+  width: 0.5625rem;
+  bottom: 0;
+  right: 0;
+  background: var(--color-green-500);
+  box-shadow: 0 0 0 2px var(--color-background);
+  border-radius: 9999px;
 }
 
 .sm {
