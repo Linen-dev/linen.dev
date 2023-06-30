@@ -21,16 +21,12 @@ const registrationFile = `linen-registration.yaml`;
 const cli = new Cli({
   registrationPath: registrationFile,
   generateRegistration: function (reg, callback) {
-    const config = cli.getConfig() as IConfig | null;
-    if (!config) {
-      throw Error('Config not ready');
-    }
     reg.setId(AppServiceRegistration.generateToken());
     reg.setHomeserverToken(AppServiceRegistration.generateToken());
     reg.setAppServiceToken(AppServiceRegistration.generateToken());
     reg.setSenderLocalpart('linen');
-    reg.addRegexPattern('users', `@linen_*.*:${config.matrix.domain}`, true);
-    reg.addRegexPattern('aliases', `#*.*:${config.matrix.domain}`, false);
+    reg.addRegexPattern('users', '@linen_*.*', true);
+    reg.addRegexPattern('aliases', '#*.*', false);
     callback(reg);
   },
   bridgeConfig: { defaults: {}, schema: 'config.yaml' },
@@ -92,11 +88,11 @@ const cli = new Cli({
     });
 
     app.listen(config.webhook.port, () => {
-      log.debug('Linen-side listening on port', config.webhook.port);
+      log.info('Linen-side listening on port', config.webhook.port);
     });
 
     bridge.run(config.bridge.port);
-    log.debug('Matrix-side listening on port', config.bridge.port);
+    log.info('Matrix-side listening on port', config.bridge.port);
   },
 });
 
