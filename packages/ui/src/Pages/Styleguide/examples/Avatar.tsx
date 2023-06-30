@@ -13,6 +13,13 @@ export default function AvatarExample() {
       <Example description="Avatars can have images." inline>
         <Avatar src="https://static.main.linendev.com/logos/logo05dab315-0b75-415b-aca4-f56a1867f045.png" />
       </Example>
+      <Example description="Avatar can show if the user is active." inline>
+        <Avatar text="a" active />
+        <Avatar
+          src="https://static.main.linendev.com/logos/logo05dab315-0b75-415b-aca4-f56a1867f045.png"
+          active
+        />
+      </Example>
     </Example>
   );
 }
