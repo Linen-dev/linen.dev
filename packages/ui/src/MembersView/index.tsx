@@ -246,19 +246,55 @@ export default function MembersView({
     };
   }, []);
 
+  const validateEmail = (emailString: string): boolean => {
+    // Regular expression pattern to validate email addresses
+    const emailPattern = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
+
+    // Split the email string by commas
+    const emails = emailString.split(',');
+
+    for (let i = 0; i < emails.length; i++) {
+      const email = emails[i].trim(); // Remove leading/trailing whitespace
+
+      if (!emailPattern.test(email)) {
+        return false; // Invalid email address
+      }
+    }
+
+    return true; // All email addresses are valid
+  };
+
   async function createInvite(event: any) {
     event.preventDefault();
     setLoading(true);
     try {
       const form = event.target;
-      const email = form.email.value;
+      const emailList = form.email.value;
       const role = form.role.value;
-      await api.createInvite({
-        email,
-        role,
-        communityId: currentCommunity.id,
-      });
-      routerReload();
+
+      const alreadyInvitedUserEmails = users.map((user) => user.email);
+      const emails = emailList.split(',');
+
+      // Discard already invited email address
+      const uniqueEmails = emails.filter(
+        (email: string) => !alreadyInvitedUserEmails.includes(email)
+      );
+
+      // If user provide single or multiple emails which is already invited
+      if (uniqueEmails?.length === 0) {
+        Toast.error('Provided email is already invited');
+        return;
+        // Else if validate unique emails and if it is valid, call the invite api
+      } else if (validateEmail(uniqueEmails.join(','))) {
+        await api.createInvite({
+          email: uniqueEmails.join(','),
+          role,
+          communityId: currentCommunity.id,
+        });
+        routerReload();
+      } else {
+        Toast.error('Please enter valid email format');
+      }
     } catch (exception) {
       Toast.error('Something went wrong');
     } finally {
