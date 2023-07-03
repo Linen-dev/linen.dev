@@ -24,6 +24,7 @@ import {
   // QUEUE_USER_JOIN,
 } from './jobs';
 import { sitemap } from './tasks/sitemap';
+import { pagination, schedulePaginationJob } from './tasks/pagination';
 import { discordIntegration } from './tasks/discord-integration';
 import { removeCommunity } from './tasks/remove-community';
 import { discordBot, scheduleDiscordBotJob } from './tasks/discord-bot';
@@ -61,6 +62,8 @@ async function runWorker() {
       // [QUEUE_USER_JOIN]: userJoinTask,
       discordBot,
       scheduleDiscordBotJob,
+      pagination,
+      schedulePaginationJob,
     },
     parsedCronItems: parseCronItems([
       {
@@ -103,6 +106,15 @@ async function runWorker() {
         identifier: 'scheduleDiscordBotJob',
         pattern: '* * * * *',
         task: 'scheduleDiscordBotJob',
+        options: {
+          maxAttempts: 1,
+          backfillPeriod: 0,
+        },
+      },
+      {
+        identifier: 'schedulePaginationJob',
+        pattern: '*/30 * * * *',
+        task: 'schedulePaginationJob',
         options: {
           maxAttempts: 1,
           backfillPeriod: 0,

@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "target": "ES6",
+    "target": "es5",
     "moduleResolution": "node",
-    "allowJs": true,
+    "allowJs": false,
     "noEmit": false,
     "strict": true,
     "esModuleInterop": true,
@@ -11,6 +11,5 @@
     "outDir": "dist",
     "skipLibCheck": true
   },
-  "include": ["src"],
-  "exclude": ["src/*.test.ts"]
+  "include": ["src"]
 }

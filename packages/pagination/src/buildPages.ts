@@ -1,15 +1,9 @@
-import { prisma } from '@linen/database';
+import { prisma, accounts } from '@linen/database';
 import { logger } from './log';
 
 const PAGE_SIZE = 30;
 
-export async function buildPages(accountId: string) {
-  const account = await prisma.accounts.findUnique({
-    where: { id: accountId },
-  });
-
-  if (!account) return 'not found';
-
+export async function buildPages(account: accounts) {
   const channels = await prisma.channels.findMany({
     where: { accountId: account.id },
   });

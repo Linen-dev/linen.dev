@@ -1,0 +1,23 @@
+{
+  "name": "@linen/pagination",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "private": true,
+  "scripts": {
+    "build": "rimraf dist && tsc",
+    "test": "jest --passWithNoTests",
+    "dev": "tsc --watch"
+  },
+  "dependencies": {
+    "@linen/database": "*",
+    "@linen/logger": "*"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "dotenv-cli": "^7.2.1",
+    "typescript": "^5.1.3"
+  }
+}
