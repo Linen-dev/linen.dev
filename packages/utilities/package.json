@@ -33,6 +33,7 @@
     "./debounce": "./dist/debounce.js",
     "./document": "./dist/document.js",
     "./domain": "./dist/domain.js",
+    "./email": "./dist/email.js",
     "./event": "./dist/event.js",
     "./files": "./dist/files.js",
     "./home": "./dist/home.js",
@@ -75,6 +76,9 @@
       ],
       "domain": [
         "./dist/domain.d.ts"
+      ],
+      "email": [
+        "./dist/email.d.ts"
       ],
       "event": [
         "./dist/event.d.ts"
