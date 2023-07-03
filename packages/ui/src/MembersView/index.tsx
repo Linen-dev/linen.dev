@@ -15,6 +15,7 @@ import styles from './index.module.scss';
 import ConfirmationModal from '@/ConfirmationModal';
 import type { ApiClient } from '@linen/api-client';
 import classNames from 'classnames';
+import { isEmailValid } from '@linen/utilities/email';
 
 interface MembersType {
   id: string;
@@ -246,61 +247,42 @@ export default function MembersView({
     };
   }, []);
 
-  const validateEmail = (emailString: string): boolean => {
-    // Regular expression pattern to validate email addresses
-    const emailPattern = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
-
-    // Split the email string by commas
-    const emails = emailString.split(',');
-
-    for (let i = 0; i < emails.length; i++) {
-      const email = emails[i].trim(); // Remove leading/trailing whitespace
-
-      if (!emailPattern.test(email)) {
-        return false; // Invalid email address
-      }
-    }
-
-    return true; // All email addresses are valid
-  };
-
-  async function createInvite(event: any) {
+  const createInvite = async (event: any) => {
     event.preventDefault();
     setLoading(true);
     try {
       const form = event.target;
-      const emailList = form.email.value;
+      const emails = form.email.value.split(',');
       const role = form.role.value;
-
-      const alreadyInvitedUserEmails = users.map((user) => user.email);
-      const emails = emailList.split(',');
-
-      // Discard already invited email address
-      const uniqueEmails = emails.filter(
-        (email: string) => !alreadyInvitedUserEmails.includes(email)
+      const existingEmails = users.map((user) => user.email);
+      const usedEmails = emails.filter((email: string) =>
+        existingEmails.includes(email)
       );
 
-      // If user provide single or multiple emails which is already invited
-      if (uniqueEmails?.length === 0) {
-        Toast.error('Provided email is already invited');
-        return;
-        // Else if validate unique emails and if it is valid, call the invite api
-      } else if (validateEmail(uniqueEmails.join(','))) {
-        await api.createInvite({
-          email: uniqueEmails.join(','),
-          role,
-          communityId: currentCommunity.id,
-        });
-        routerReload();
-      } else {
-        Toast.error('Please enter valid email format');
+      if (usedEmails.length > 0) {
+        return Toast.error(
+          `Provided ${
+            usedEmails.length === 1 ? 'email is' : 'emails are'
+          } already used: ${usedEmails.join(', ')}`
+        );
       }
+
+      if (!isEmailValid(emails.join(','))) {
+        return Toast.error('Please enter a valid email');
+      }
+
+      await api.createInvite({
+        email: emails.join(','),
+        role,
+        communityId: currentCommunity.id,
+      });
+      routerReload();
     } catch (exception) {
       Toast.error('Something went wrong');
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   const onChangeMember = async (id: string, role: any, status: string) => {
     try {
