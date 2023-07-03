@@ -3,8 +3,6 @@ RUN apt-get update && apt-get install -y openssl
 WORKDIR /app
 RUN yarn global add turbo
 COPY . .
-RUN turbo prune --scope="@linen/discord-bots" --docker
-RUN turbo prune --scope="@linen/pagination" --docker
 RUN turbo prune --scope="@linen/web" --docker
 RUN turbo prune --scope="@linen/spa" --docker
 
@@ -17,7 +15,7 @@ COPY --from=builder /app/out/yarn.lock ./yarn.lock
 RUN yarn install
 COPY --from=builder /app/out/full/ .
 COPY turbo.json turbo.json
-RUN yarn turbo run build --filter='!s3'
+RUN yarn turbo run build --filter='!s3-lambda-processing'
 
 FROM public.ecr.aws/docker/library/node:18 AS runner
 RUN apt-get update && apt-get install -y openssl

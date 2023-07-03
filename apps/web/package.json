@@ -4,9 +4,10 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build:next": "next build",
+    "build": "run-p build:**",
     "start": "next start",
-    "start:prod": "pm2-runtime --raw \"yarn start\"",
+    "start:prod": "pm2-runtime start ecosystem.config.js",
     "lint": "next lint",
     "test": "jest --silent",
     "test:watch": "jest --watch",
@@ -19,7 +20,8 @@
     "start:maintenance-script": "npx tsx bin/maintenance/index.ts",
     "start:build-pagination": "pm2-runtime --raw \"npx tsx bin/build-page-field-on-threads/index.ts\"",
     "dev:queue": "npx tsx watch queue/index.ts",
-    "start:queue": "pm2-runtime --raw \"npx tsx queue/index.ts\""
+    "build:queue": "npx tsup queue/index.ts --target es6 --clean --minify --sourcemap",
+    "start:queue": "node dist/index.js"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.348.0",
@@ -116,6 +118,8 @@
     "jest-mock-extended": "^2.0.7",
     "lint-staged": "^12.5.0",
     "next-test-api-route-handler": "^3.1.7",
+    "npm-run-all": "^4.1.5",
+    "tsup": "^6.7.0",
     "prettier": "2.7.1",
     "ts-node": "^10.9.1",
     "tsconfig-paths": "^4.1.0",
