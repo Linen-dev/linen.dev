@@ -26,6 +26,7 @@ import {
 import { sitemap } from './tasks/sitemap';
 import { discordIntegration } from './tasks/discord-integration';
 import { removeCommunity } from './tasks/remove-community';
+import { discordBot, scheduleDiscordBotJob } from './tasks/discord-bot';
 // import { userJoinTask } from './tasks/user-join';
 
 export type TaskInterface = (
@@ -40,7 +41,7 @@ async function runWorker() {
       dbUrl: process.env.DATABASE_URL,
       cert: process.env.RDS_CERTIFICATE,
     }),
-    concurrency: 5,
+    concurrency: 10,
     noHandleSignals: false,
     pollInterval: 1000,
     taskList: {
@@ -58,6 +59,8 @@ async function runWorker() {
       [QUEUE_INTEGRATION_DISCORD]: discordIntegration,
       [QUEUE_REMOVE_COMMUNITY]: removeCommunity,
       // [QUEUE_USER_JOIN]: userJoinTask,
+      discordBot,
+      scheduleDiscordBotJob,
     },
     parsedCronItems: parseCronItems([
       {
@@ -95,6 +98,15 @@ async function runWorker() {
         },
         task: QUEUE_SITEMAP,
         identifier: QUEUE_SITEMAP,
+      },
+      {
+        identifier: 'scheduleDiscordBotJob',
+        pattern: '* * * * *',
+        task: 'scheduleDiscordBotJob',
+        options: {
+          maxAttempts: 1,
+          backfillPeriod: 0,
+        },
       },
     ]),
   });

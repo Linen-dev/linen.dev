@@ -21,7 +21,7 @@ import {
 import { Client, Events, GatewayIntentBits } from 'discord.js';
 import { logger } from '@linen/logger';
 
-function initializeBot() {
+function initializeBot(botId: number, callback: () => void) {
   const bot = new Client({
     intents: [
       GatewayIntentBits.Guilds,
@@ -33,10 +33,11 @@ function initializeBot() {
   });
 
   bot.on(Events.ClientReady, () => {
-    logger.info('Ready!', { bot: env.BOT });
+    logger.info('Ready!', { bot: botId });
   });
 
   bot.on(Events.ShardDisconnect, () => {
+    callback();
     process.exit(1);
   });
 
@@ -66,7 +67,7 @@ function initializeBot() {
   bot.on(Events.GuildMemberRemove, onGuildMemberRemove);
   bot.on(Events.GuildMemberUpdate, onGuildMemberUpdate);
 
-  bot.login(getToken(env.BOT));
+  bot.login(getToken(botId));
 }
 
 export { initializeBot };
