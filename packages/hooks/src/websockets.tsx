@@ -7,10 +7,19 @@ interface Props {
   room?: string | null;
   token: string | null;
   permissions: Permissions;
+  onPresenceState?(payload: any): void;
+  onPresenceDiff?(payload: any): void;
   onNewMessage(payload: any): void;
 }
 
-function useWebsockets({ room, token, permissions, onNewMessage }: Props) {
+function useWebsockets({
+  room,
+  token,
+  permissions,
+  onNewMessage,
+  onPresenceState,
+  onPresenceDiff,
+}: Props) {
   const [channel, setChannel] = useState<Channel>();
   const [connected, setConnected] = useState<boolean>(false);
   useEffect(() => {
@@ -36,6 +45,12 @@ function useWebsockets({ room, token, permissions, onNewMessage }: Props) {
           setConnected(false);
         });
       channel.on('new_msg', onNewMessage);
+      if (onPresenceState) {
+        channel.on('presence_state', onPresenceState);
+      }
+      if (onPresenceDiff) {
+        channel.on('presence_diff', onPresenceDiff);
+      }
 
       return () => {
         setConnected(false);
@@ -47,9 +62,17 @@ function useWebsockets({ room, token, permissions, onNewMessage }: Props) {
   }, []);
 
   useEffect(() => {
+    if (onPresenceState) {
+      channel?.off('presence_state');
+      channel?.on('presence_state', onPresenceState);
+    }
+    if (onPresenceDiff) {
+      channel?.off('presence_diff');
+      channel?.on('presence_diff', onPresenceDiff);
+    }
     channel?.off('new_msg');
     channel?.on('new_msg', onNewMessage);
-  }, [room, onNewMessage]);
+  }, [room, onNewMessage, onPresenceState, onPresenceDiff]);
 
   return { connected, channel };
 }

@@ -1,6 +1,8 @@
 defmodule PushServiceWeb.RoomChannel do
   use Phoenix.Channel
 
+  alias PushServiceWeb.Presence
+
   def join("room:lobby:" <> channel_id, _params, socket) do
     current_user = socket.assigns[:current_user]
 
@@ -24,6 +26,7 @@ defmodule PushServiceWeb.RoomChannel do
            "thread_id" => thread_id
          }) do
       {:ok} ->
+        send(self(), :after_join)
         {:ok, assign(socket, :thread_id, thread_id)}
 
       {_} ->
@@ -68,6 +71,16 @@ defmodule PushServiceWeb.RoomChannel do
       broadcast!(socket, "new_msg", %{})
     end
 
+    {:noreply, socket}
+  end
+
+  def handle_info(:after_join, socket) do
+    {:ok, _} =
+      Presence.track(socket, socket.assigns[:current_user], %{
+        online_at: inspect(System.system_time(:second))
+      })
+
+    push(socket, "presence_state", Presence.list(socket))
     {:noreply, socket}
   end
 end
