@@ -15,6 +15,7 @@ interface Props {
   isBot?: boolean;
   isSubDomainRouting: boolean;
   currentUser: SerializedUser | null;
+  activeUsers?: string[];
   mode?: Mode;
   onDelete?(messageId: string): void;
   onEdit?(threadId: string, messageId: string): void;
@@ -33,14 +34,18 @@ interface Props {
   }): void;
 }
 
-function isUserActive(
+function isAuthorActive(
   author: SerializedUser | null,
-  currentUser: SerializedUser | null
+  currentUser: SerializedUser | null,
+  activeUsers?: string[]
 ) {
   if (!author) {
     return false;
   }
   if (author.id === currentUser?.id) {
+    return true;
+  }
+  if (author.authsId && activeUsers?.includes(author.authsId)) {
     return true;
   }
   return false;
@@ -53,6 +58,7 @@ function Messages({
   isBot,
   isSubDomainRouting,
   currentUser,
+  activeUsers,
   mode,
   onDelete,
   onEdit,
@@ -74,7 +80,11 @@ function Messages({
           })}
           thread={thread}
           message={message}
-          isUserActive={isUserActive(message?.author, currentUser)}
+          isUserActive={isAuthorActive(
+            message?.author,
+            currentUser,
+            activeUsers
+          )}
           isBot={isBot}
           isPreviousMessageFromSameUser={isPreviousMessageFromSameUser}
           permissions={permissions}

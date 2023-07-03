@@ -116,6 +116,7 @@ export default function Thread({
   const { id, state, viewCount, incrementId } = thread;
   const [modal, setModal] = useState<ModalView>(ModalView.NONE);
   const [editedMessage, setEditedMessage] = useState<SerializedMessage>();
+  const [activeUsers, setActiveUsers] = useState<string[]>([]);
 
   const handleScroll = () =>
     setTimeout(() => scrollToBottom(ref.current as HTMLDivElement), 0);
@@ -145,9 +146,24 @@ export default function Thread({
     id: thread.id,
     token,
     permissions,
-    onMessage(message, messageId, imitationId) {
+    onMessage(
+      message: SerializedMessage,
+      messageId: string,
+      imitationId: string
+    ) {
       onMessage(thread.id, message, messageId, imitationId);
       handleScroll();
+    },
+    onPresenceState(state: any) {
+      const users = Object.keys(state);
+      setActiveUsers(users);
+    },
+    onPresenceDiff(state: any) {
+      setActiveUsers((users) => {
+        const joins = Object.keys(state.joins);
+        const leaves = Object.keys(state.leaves);
+        return [...joins, ...users.filter((id) => !leaves.includes(id))];
+      });
     },
   });
 
@@ -237,6 +253,7 @@ export default function Thread({
             isBot={isBot}
             isSubDomainRouting={isSubDomainRouting}
             currentUser={currentUser}
+            activeUsers={activeUsers}
             settings={settings}
             onDelete={onDelete}
             onEdit={editMessage ? showEditMessageModal : undefined}

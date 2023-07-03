@@ -12,6 +12,7 @@ defmodule PushService.Application do
       PushServiceWeb.Telemetry,
       # Start the PubSub system
       {Phoenix.PubSub, name: PushService.PubSub},
+      PushServiceWeb.Presence,
       # Start the Endpoint (http/https)
       PushServiceWeb.Endpoint
       # Start a worker by calling: PushService.Worker.start_link(arg)
