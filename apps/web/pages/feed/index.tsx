@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import BlankLayout from '@linen/ui/BlankLayout';
 import styles from './index.module.scss';
 import Row from '@linen/ui/Row';
@@ -21,14 +21,41 @@ interface Props {
 export default function Feed({
   permissions,
   threads: initialThreads,
-  settings,
+  settings: initialSettings,
 }: Props) {
+  const [skip, setSkip] = useState(10);
   const [loading, setLoading] = useState(false);
   const [threads, setThreads] = useState<SerializedThread[]>(initialThreads);
+  const [settings, setSettings] = useState<Settings[]>(initialSettings);
   function onLoadMore() {
     setLoading(true);
-    setTimeout(() => {
-      setThreads((threads) => [...threads, ...threads.slice(0, 10)]);
+    setTimeout(async () => {
+      await fetch(`/api/feed?skip=${skip}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      })
+        .then((response) => response.json())
+        .then(
+          ({
+            threads: newThreads,
+            settings: newSettings,
+          }: {
+            threads: SerializedThread[];
+            settings: Settings[];
+          }) => {
+            setThreads((threads) => [...threads, ...newThreads]);
+            setSettings((settings) => {
+              const settingsIds = settings.map(
+                (setting) => setting.communityId
+              );
+              const settingsToAdd = newSettings.filter(
+                (setting) => !settingsIds.includes(setting.communityId)
+              );
+              return [...settings, ...settingsToAdd];
+            });
+          }
+        );
+      setSkip((skip) => skip + 10);
       setLoading(false);
     }, 200);
   }
@@ -47,7 +74,7 @@ export default function Feed({
         <LinenLogo className={styles.logo} />
         <main className={styles.main}>
           <header className={styles.header}>
-            <FiHash /> Trending
+            <FiHash /> Feed
           </header>
           {threads.map((thread) => {
             const setting = settings.find(
@@ -55,6 +82,7 @@ export default function Feed({
             ) as Settings;
             return (
               <Row
+                key={thread.id}
                 thread={thread}
                 permissions={permissions}
                 currentUser={null}
