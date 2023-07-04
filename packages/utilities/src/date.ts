@@ -19,6 +19,10 @@ export function tomorrow() {
   return add(new Date(), { days: 1 });
 }
 
+export function yesterday() {
+  return sub(new Date(), { days: 1 });
+}
+
 export function nextWeek() {
   return add(new Date(), { days: 7 });
 }
