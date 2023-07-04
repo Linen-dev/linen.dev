@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next/types';
 import { prisma } from '@linen/database';
 import { serializeThread } from '@linen/serializers/thread';
 import { serializeSettings } from '@linen/serializers/settings';
+import { lastWeek } from '@linen/utilities/date';
 
 export async function index({ skip }: { skip: number }) {
   const threads = await prisma.threads.findMany({
@@ -11,6 +12,7 @@ export async function index({ skip }: { skip: number }) {
           type: 'PUBLIC',
         },
       },
+      lastReplyAt: { gt: lastWeek().getTime() },
     },
     include: {
       messages: {
