@@ -22,8 +22,9 @@
   display: flex;
   padding: 0.75rem 1rem;
   font-weight: 500;
-  font-size: 1rem;
+  font-size: 0.875rem;
   position: sticky;
+  gap: 0.25rem;
   top: 0;
   background: var(--color-background);
   z-index: 2;
