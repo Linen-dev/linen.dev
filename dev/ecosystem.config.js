@@ -35,7 +35,7 @@ module.exports = {
     {
       name: 'https-proxy',
       cwd: '/opt/homebrew/bin/',
-      script: `ngrok http --region=us --hostname=${process.env.NGROK_HOSTNAME} 80`,
+      script: `ngrok http --region=us --hostname=${process.env.NGROK_HOSTNAME} 3000`,
     },
   ],
 };
