@@ -15,6 +15,15 @@ const getDiscordAccessToken = async (code: string) => {
     },
   };
 };
+const getCurrentConfig = () => ({
+  PUBLIC_REDIRECT_URI: v4(),
+  PUBLIC_CLIENT_ID: v4(),
+  PRIVATE_TOKEN: v4(),
+  PRIVATE_CLIENT_SECRET: v4(),
+  PRIVATE_SCOPE: v4(),
+  scope: [],
+  permissions: v4(),
+});
 
 describe('newDiscordIntegration', () => {
   const store = {
@@ -36,9 +45,10 @@ describe('newDiscordIntegration', () => {
       createIntegrationDiscord,
       eventNewIntegration,
       getDiscordAccessToken,
+      getCurrentConfig,
     });
-    const auths = await prisma.discordAuthorizations.findMany({});
-    // console.log('auths.length', auths.length);
+    const auths = await prisma.discordAuthorizations.findMany();
+    console.log('auths.length', auths.length);
     expect(auths.length).toBeGreaterThan(0);
 
     // new integration with account2
@@ -47,6 +57,7 @@ describe('newDiscordIntegration', () => {
       createIntegrationDiscord,
       eventNewIntegration,
       getDiscordAccessToken,
+      getCurrentConfig,
     });
     // redo integration with account2
     await newDiscordIntegration({
@@ -54,9 +65,10 @@ describe('newDiscordIntegration', () => {
       createIntegrationDiscord,
       eventNewIntegration,
       getDiscordAccessToken,
+      getCurrentConfig,
     });
     const auths2 = await prisma.discordAuthorizations.findMany({});
-    // console.log('auths2.length', auths2.length);
+    console.log('auths2.length', auths2.length);
     expect(auths2.length).toBeGreaterThan(auths.length);
 
     // expect to have 1 row for account1
@@ -80,6 +92,7 @@ describe('newDiscordIntegration', () => {
       createIntegrationDiscord,
       eventNewIntegration,
       getDiscordAccessToken,
+      getCurrentConfig,
     });
     expect(url).toBe('https://www.linen.dev/500?error=account-not-found');
   });

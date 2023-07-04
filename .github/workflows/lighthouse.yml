@@ -1,9 +1,10 @@
-name: Lighthouse CI
+name: Lighthouse
 
 on:
-  push:
-    branches:
-      - 'main'
+  workflow_run:
+    workflows: [Deployment]
+    types: [completed]
+    branches: [main]
 
 jobs:
   lighthouse:

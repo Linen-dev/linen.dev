@@ -32,14 +32,17 @@ export default function Passport({
     sendEmail,
   });
   passport.use(magicStrategy);
-  passport.use(
-    githubStrategy({
-      authServerUrl,
-      clientID: githubClientID,
-      clientSecret: githubClientSecret,
-      getOrCreateUserWithEmail,
-    })
-  );
+
+  if (!!githubClientID && !!githubClientSecret) {
+    passport.use(
+      githubStrategy({
+        authServerUrl,
+        clientID: githubClientID,
+        clientSecret: githubClientSecret,
+        getOrCreateUserWithEmail,
+      })
+    );
+  }
 
   const loginPassport = passport.authenticate('local', {
     session: false,
@@ -52,12 +55,14 @@ export default function Passport({
   });
 
   const githubSignIn = (state?: string) =>
-    passport.authenticate('github', {
-      session: false,
-      failWithError: true,
-      scope: ['user:email'],
-      state,
-    });
+    !!githubClientID && !!githubClientSecret
+      ? passport.authenticate('github', {
+          session: false,
+          failWithError: true,
+          scope: ['user:email'],
+          state,
+        })
+      : () => {};
 
   return {
     passport,

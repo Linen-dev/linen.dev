@@ -5,7 +5,7 @@ import * as discord from 'services/discord/getDiscordAccessToken';
 import { SerializedAccount } from '@linen/types';
 import { getHomeUrl } from '@linen/utilities/home';
 import { serializeAccount } from '@linen/serializers/account';
-import { getCurrentConfig } from 'config/discord';
+import * as discordConfig from 'config/discord';
 import { encrypt } from 'utilities/crypto';
 
 export async function newDiscordIntegration({
@@ -13,11 +13,21 @@ export async function newDiscordIntegration({
   getDiscordAccessToken = discord.getDiscordAccessToken,
   eventNewIntegration = integration.eventNewIntegration,
   createIntegrationDiscord = jobs.createIntegrationDiscord,
+  getCurrentConfig = discordConfig.getCurrentConfig,
 }: {
   query: any;
   getDiscordAccessToken?(code: string): Promise<{ body: any }>;
   eventNewIntegration?(event: integration.NewMessageEvent): Promise<void>;
   createIntegrationDiscord?(): Promise<any>;
+  getCurrentConfig?: () => {
+    PUBLIC_REDIRECT_URI: string;
+    PUBLIC_CLIENT_ID: string;
+    PRIVATE_TOKEN: string;
+    PRIVATE_CLIENT_SECRET: string;
+    PRIVATE_SCOPE: string;
+    scope: string[];
+    permissions: string;
+  };
 }) {
   const code = query.code;
   const accountId = query.state;
