@@ -12,6 +12,13 @@ export default class FeedService {
             type: 'PUBLIC',
           },
         },
+        messages: {
+          none: {
+            author: {
+              isBot: true,
+            },
+          },
+        },
         lastReplyAt: { gt: yesterday().getTime() },
       },
       include: {
