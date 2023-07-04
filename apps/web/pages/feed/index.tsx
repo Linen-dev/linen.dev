@@ -16,7 +16,7 @@ interface Props {
   settings: Settings[];
 }
 
-const TAKE = 16;
+const TAKE = 12;
 
 export default function Feed({
   permissions,
@@ -28,6 +28,7 @@ export default function Feed({
   const [more, setMore] = useState(true);
   const [threads, setThreads] = useState<SerializedThread[]>(initialThreads);
   const [settings, setSettings] = useState<Settings[]>(initialSettings);
+
   async function onLoadMore() {
     setLoading(true);
     fetch(`/api/feed?skip=${skip}&take=${TAKE}`, {
