@@ -25,37 +25,33 @@ export default function Feed({
   const [loading, setLoading] = useState(false);
   const [threads, setThreads] = useState<SerializedThread[]>(initialThreads);
   const [settings, setSettings] = useState<Settings[]>(initialSettings);
-  function onLoadMore() {
+  async function onLoadMore() {
     setLoading(true);
-    setTimeout(async () => {
-      await fetch(`/api/feed?skip=${skip}`, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-      })
-        .then((response) => response.json())
-        .then(
-          ({
-            threads: newThreads,
-            settings: newSettings,
-          }: {
-            threads: SerializedThread[];
-            settings: Settings[];
-          }) => {
-            setThreads((threads) => [...threads, ...newThreads]);
-            setSettings((settings) => {
-              const settingsIds = settings.map(
-                (setting) => setting.communityId
-              );
-              const settingsToAdd = newSettings.filter(
-                (setting) => !settingsIds.includes(setting.communityId)
-              );
-              return [...settings, ...settingsToAdd];
-            });
-          }
-        );
-      setSkip((skip) => skip + 10);
-      setLoading(false);
-    }, 200);
+    await fetch(`/api/feed?skip=${skip}`, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    })
+      .then((response) => response.json())
+      .then(
+        ({
+          threads: newThreads,
+          settings: newSettings,
+        }: {
+          threads: SerializedThread[];
+          settings: Settings[];
+        }) => {
+          setThreads((threads) => [...threads, ...newThreads]);
+          setSettings((settings) => {
+            const settingsIds = settings.map((setting) => setting.communityId);
+            const settingsToAdd = newSettings.filter(
+              (setting) => !settingsIds.includes(setting.communityId)
+            );
+            return [...settings, ...settingsToAdd];
+          });
+        }
+      );
+    setSkip((skip) => skip + 10);
+    setLoading(false);
   }
 
   const [sentryRef] = useInfiniteScroll({
@@ -64,7 +60,7 @@ export default function Feed({
     onLoadMore,
     disabled: loading,
     rootMargin: '0px 0px 960px 0px',
-    delayInMs: 100,
+    delayInMs: 0,
   });
   return (
     <BlankLayout>
