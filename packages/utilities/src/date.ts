@@ -1,6 +1,7 @@
 import formatDate from 'date-fns/format';
 import utilFormatDistance from 'date-fns/formatDistance';
 import add from 'date-fns/add';
+import sub from 'date-fns/sub';
 
 export function format(date: string, pattern: string = 'p'): string {
   return formatDate(new Date(date), pattern);
@@ -20,6 +21,10 @@ export function tomorrow() {
 
 export function nextWeek() {
   return add(new Date(), { days: 7 });
+}
+
+export function lastWeek() {
+  return sub(new Date(), { days: 7 });
 }
 
 export function formatDistance(date: string): string {
