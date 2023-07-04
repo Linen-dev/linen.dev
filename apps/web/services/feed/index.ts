@@ -12,6 +12,7 @@ export default class FeedService {
         },
         channel: {
           account: {
+            anonymizeUsers: false,
             type: 'PUBLIC',
           },
         },
