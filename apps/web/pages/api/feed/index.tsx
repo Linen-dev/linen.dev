@@ -1,51 +1,14 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
-import { prisma } from '@linen/database';
-import { serializeThread } from '@linen/serializers/thread';
-import { serializeSettings } from '@linen/serializers/settings';
-import { lastWeek } from '@linen/utilities/date';
+import FeedService from 'services/feed';
 
 export async function index({ skip }: { skip: number }) {
-  const threads = await prisma.threads.findMany({
-    where: {
-      channel: {
-        account: {
-          type: 'PUBLIC',
-        },
-      },
-      lastReplyAt: { gt: lastWeek().getTime() },
-    },
-    include: {
-      messages: {
-        include: {
-          author: true,
-          mentions: {
-            include: {
-              users: true,
-            },
-          },
-          reactions: true,
-          attachments: true,
-        },
-        orderBy: { sentAt: 'asc' },
-      },
-      channel: true,
-    },
-    orderBy: { lastReplyAt: 'desc' },
-    skip: skip || 0,
-    take: 10,
-  });
-
-  const accounts = await prisma.accounts.findMany({
-    where: {
-      id: { in: threads.map((thread) => thread.channel.accountId) as string[] },
-    },
-  });
+  const { threads, settings } = await FeedService.get({ skip });
 
   return {
     status: 200,
     data: {
-      threads: threads.map(serializeThread),
-      settings: accounts.map(serializeSettings),
+      threads,
+      settings,
     },
   };
 }
