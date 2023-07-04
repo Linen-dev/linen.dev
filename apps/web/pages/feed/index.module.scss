@@ -1,0 +1,46 @@
+.background {
+  box-sizing: border-box;
+}
+
+.main {
+  background: var(--color-background);
+  width: 100%;
+  margin: 0 auto;
+}
+
+@media screen and (min-width: 768px) {
+  .main {
+    width: 600px;
+    border-left: 1px solid var(--color-gray-100);
+    border-right: 1px solid var(--color-gray-100);
+  }
+}
+
+.header {
+  align-items: center;
+  border-bottom: 1px solid var(--color-gray-100);
+  display: flex;
+  padding: 0.75rem 1rem;
+  font-weight: 500;
+  font-size: 1rem;
+  position: sticky;
+  top: 0;
+  background: var(--color-background);
+  z-index: 2;
+}
+
+.logo {
+  display: none;
+}
+
+@media screen and (min-width: 768px) {
+  .logo {
+    display: block;
+    margin: 0;
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    height: 20px;
+    width: 90px;
+  }
+}
