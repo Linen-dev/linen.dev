@@ -8,9 +8,10 @@ export default class FeedService {
     const threads = await prisma.threads.findMany({
       where: {
         messageCount: {
-          gte: 2,
+          gte: 3,
         },
         channel: {
+          type: 'PUBLIC',
           account: {
             anonymizeUsers: false,
             type: 'PUBLIC',
