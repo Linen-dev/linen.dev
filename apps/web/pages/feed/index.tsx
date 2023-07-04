@@ -16,18 +16,21 @@ interface Props {
   settings: Settings[];
 }
 
+const TAKE = 16;
+
 export default function Feed({
   permissions,
   threads: initialThreads,
   settings: initialSettings,
 }: Props) {
-  const [skip, setSkip] = useState(10);
+  const [skip, setSkip] = useState(TAKE);
   const [loading, setLoading] = useState(false);
+  const [more, setMore] = useState(true);
   const [threads, setThreads] = useState<SerializedThread[]>(initialThreads);
   const [settings, setSettings] = useState<Settings[]>(initialSettings);
   async function onLoadMore() {
     setLoading(true);
-    await fetch(`/api/feed?skip=${skip}`, {
+    fetch(`/api/feed?skip=${skip}&take=${TAKE}`, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
     })
@@ -40,6 +43,9 @@ export default function Feed({
           threads: SerializedThread[];
           settings: Settings[];
         }) => {
+          setLoading(false);
+          setSkip((skip) => skip + TAKE);
+          setMore(newThreads.length > 0);
           setThreads((threads) => [...threads, ...newThreads]);
           setSettings((settings) => {
             const settingsIds = settings.map((setting) => setting.communityId);
@@ -50,16 +56,14 @@ export default function Feed({
           });
         }
       );
-    setSkip((skip) => skip + 10);
-    setLoading(false);
   }
 
   const [sentryRef] = useInfiniteScroll({
     loading,
-    hasNextPage: true,
+    hasNextPage: more,
     onLoadMore,
     disabled: loading,
-    rootMargin: '0px 0px 960px 0px',
+    rootMargin: '0px 0px 320px 0px',
     delayInMs: 0,
   });
   return (
@@ -97,7 +101,7 @@ export const getServerSideProps = async (
 ) => {
   const [permissions, { threads, settings }] = await Promise.all([
     PermissionsService.for(context),
-    FeedService.get({ skip: 0 }),
+    FeedService.get({ skip: 0, take: TAKE }),
   ]);
 
   return {

@@ -4,7 +4,7 @@ import { serializeThread } from '@linen/serializers/thread';
 import { serializeSettings } from '@linen/serializers/settings';
 
 export default class FeedService {
-  static async get({ skip }: { skip: number }) {
+  static async get({ skip, take }: { skip: number; take: number }) {
     const threads = await prisma.threads.findMany({
       where: {
         messageCount: {
@@ -42,7 +42,7 @@ export default class FeedService {
         channel: true,
       },
       orderBy: { lastReplyAt: 'desc' },
-      take: 10,
+      take,
       skip,
     });
 
