@@ -1,5 +1,5 @@
 import { prisma } from '@linen/database';
-import { lastWeek } from '@linen/utilities/date';
+import { yesterday } from '@linen/utilities/date';
 import { serializeThread } from '@linen/serializers/thread';
 import { serializeSettings } from '@linen/serializers/settings';
 
@@ -12,7 +12,7 @@ export default class FeedService {
             type: 'PUBLIC',
           },
         },
-        lastReplyAt: { gt: lastWeek().getTime() },
+        lastReplyAt: { gt: yesterday().getTime() },
       },
       include: {
         messages: {
