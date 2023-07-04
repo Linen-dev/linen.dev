@@ -4,7 +4,6 @@ import { resolve } from 'path';
 import { EnumChangefreq, SitemapAndIndexStream, SitemapStream } from 'sitemap';
 import { finished } from 'node:stream/promises';
 import { UrlType, AccountType } from './types';
-import { filterThreads, sortThreads } from '../config';
 
 export async function buildCustomDomainSitemap(
   workDir: string,
@@ -33,10 +32,8 @@ export async function buildCustomDomainSitemap(
     )
   );
 
-  for (const thread of threads.sort(sortThreads)) {
-    if (filterThreads(thread)) {
-      sms.write(thread);
-    }
+  for (const thread of threads) {
+    sms.write(thread);
   }
 
   for (const channel of account.channels) {

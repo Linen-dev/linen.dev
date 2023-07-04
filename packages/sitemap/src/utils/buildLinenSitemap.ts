@@ -4,7 +4,7 @@ import { resolve } from 'path';
 import { EnumChangefreq, SitemapAndIndexStream, SitemapStream } from 'sitemap';
 import { finished } from 'node:stream/promises';
 import { UrlType, AccountType } from './types';
-import { filterThreads, linenDomain, sortThreads } from '../config';
+import { linenDomain } from '../config';
 
 export async function buildLinenSitemap(
   workDir: string,
@@ -31,10 +31,8 @@ export async function buildLinenSitemap(
     createWriteStream(resolve(workDir, `./sitemap/${linenDomain}/sitemap.xml`))
   );
 
-  for (const thread of sitemapFree.sort(sortThreads)) {
-    if (filterThreads(thread)) {
-      sms.write(thread);
-    }
+  for (const thread of sitemapFree) {
+    sms.write(thread);
   }
 
   for (const [_, account] of Object.entries(accountsFree)) {
@@ -44,22 +42,6 @@ export async function buildLinenSitemap(
         priority: 1.0,
         changefreq: EnumChangefreq.DAILY,
       });
-    }
-  }
-
-  for (const [_, account] of Object.entries(accountsFree)) {
-    for (const channel of account.channels) {
-      if (channel.pages) {
-        for (let idx = channel.pages; idx > 0; idx--) {
-          sms.write({
-            url: encodeURI(
-              `${account.pathDomain}/c/${channel.channelName}/${idx}`
-            ),
-            priority: 0.5,
-            changefreq: EnumChangefreq.NEVER,
-          });
-        }
-      }
     }
   }
 

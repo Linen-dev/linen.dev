@@ -9,7 +9,8 @@
     "clean": "rimraf dist",
     "build": "yarn clean && yarn tsc",
     "dev": "yarn tsc --watch",
-    "test": "dotenv -e ../../apps/web/.env.test -- jest --passWithNoTests"
+    "test": "dotenv -e ../../apps/web/.env.test -- jest --passWithNoTests",
+    "local": "dotenv -e ../../apps/web/.env tsx src/run-local.ts"
   },
   "keywords": [],
   "author": "",

@@ -1,17 +1,12 @@
 import { prisma } from '@linen/database';
 import { UrlType, ChannelType } from './types';
-import {
-  batchSize,
-  bodyLengthHighPriority,
-  bodyLengthLimit,
-  lastIncrementId,
-} from '../config';
+import { batchSize, bodyLengthLimit } from '../config';
 
 export async function getThreads(channels: Record<string, ChannelType>) {
   const sitemapPremium: Record<string, UrlType[]> = {};
   const sitemapFree: UrlType[] = [];
 
-  let incrementId = lastIncrementId.valueOf();
+  let sentAt = BigInt(0);
   console.time('query-threads');
   do {
     const threads = await prisma.threads.findMany({
@@ -21,6 +16,7 @@ export async function getThreads(channels: Record<string, ChannelType>) {
             sentAt: true,
             body: true,
             author: { select: { isBot: true } },
+            reactions: { select: { count: true } },
           },
           orderBy: { sentAt: 'asc' },
         },
@@ -30,9 +26,10 @@ export async function getThreads(channels: Record<string, ChannelType>) {
         sentAt: true,
         viewCount: true,
         messageCount: true,
+        firstManagerReplyAt: true,
       },
-      where: { incrementId: { lt: incrementId }, hidden: false },
-      orderBy: { incrementId: 'desc' },
+      where: { sentAt: { gt: sentAt }, hidden: false },
+      orderBy: { sentAt: 'asc' },
       take: batchSize,
     });
 
@@ -56,15 +53,14 @@ export async function getThreads(channels: Record<string, ChannelType>) {
             lastmodISO: new Date(
               thread.messages.pop()?.sentAt || Number(thread.sentAt)
             ).toISOString(),
-            priority:
-              body.length >= bodyLengthHighPriority
-                ? 1.0
-                : thread.messageCount > 5 && thread.viewCount > 0
-                ? 0.9
-                : thread.messageCount > 1
-                ? 0.8
-                : 0.7,
           };
+
+          const reactions = thread.messages.reduce(
+            (prev, curr) =>
+              prev + curr.reactions.reduce((p, c) => p + (c.count || 0), 0),
+            0
+          );
+
           if (account.customDomain) {
             // premium
             if (!sitemapPremium[account.id]) {
@@ -72,8 +68,25 @@ export async function getThreads(channels: Record<string, ChannelType>) {
             }
             sitemapPremium[account.id].push(t);
           } else {
-            // pathDomain
-            sitemapFree.push({ ...t, url: account.pathDomain + t.url });
+            if (
+              // trend: threads with more than 100 visits
+              thread.viewCount >= 100 ||
+              // contentful: threads with characters >= 2000
+              body.length >= 2000 ||
+              // popular: threads with reactions>10 replies>2 characters>500
+              (reactions > 10 &&
+                thread.messages.length >= 3 &&
+                body.length >= 500) ||
+              // reliable: threads where managers replied + replies >= 3
+              (!!thread.firstManagerReplyAt && thread.messages.length >= 3) ||
+              // collective: threads with replies >= 10
+              thread.messages.length >= 10
+            ) {
+              sitemapFree.push({
+                ...t,
+                url: account.pathDomain + t.url,
+              });
+            }
           }
         }
       }
@@ -81,8 +94,8 @@ export async function getThreads(channels: Record<string, ChannelType>) {
 
     console.timeLog('query-threads');
     if (threads.length === batchSize) {
-      incrementId = threads[batchSize - 1].incrementId;
-      console.log('incrementId', incrementId);
+      sentAt = threads[batchSize - 1].sentAt;
+      console.log('sentAt', sentAt);
     } else {
       break;
     }

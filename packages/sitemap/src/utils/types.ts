@@ -14,5 +14,5 @@ export type ChannelType = {
 export type UrlType = {
   url: string;
   lastmodISO: string;
-  priority: number;
+  priority?: number;
 };

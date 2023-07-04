@@ -29,8 +29,10 @@ export async function build(
   }: { sitemapPremium: Record<string, UrlType[]>; sitemapFree: UrlType[] } =
     await getThreads(channels);
 
-  const workDir = resolve(os.tmpdir(), Date.now().toString());
-  // const workDir = resolve('./sitemap', Date.now().toString()); // run-local
+  const workDir = resolve(
+    process.env.RUN_LOCAL ? './sitemap' : os.tmpdir(),
+    Date.now().toString()
+  );
   await fs.mkdir(workDir, { recursive: true });
 
   for (let [accountId, threads] of Object.entries(sitemapPremium)) {
