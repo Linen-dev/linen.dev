@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer';
 import transport from './transport';
-import { NOREPLY_EMAIL } from 'secrets';
+import { NOREPLY_EMAIL } from 'config';
 
 const transporter = nodemailer.createTransport(transport);
 

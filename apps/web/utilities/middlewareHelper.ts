@@ -1,6 +1,6 @@
 import { NextURL } from 'next/dist/server/web/next-url';
 import { isSubdomainbasedRouting } from '@linen/utilities/domain';
-import { LINEN_STATIC_CDN } from 'secrets';
+import { LINEN_STATIC_CDN } from 'config';
 
 export const getCommunityName = (isProd: boolean, hostname: string | null) => {
   if (isProd) {

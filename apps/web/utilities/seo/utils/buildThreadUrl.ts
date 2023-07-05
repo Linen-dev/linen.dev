@@ -1,5 +1,5 @@
 import { SerializedThread, Settings } from '@linen/types';
-import { LINEN_URL } from 'secrets';
+import { LINEN_URL } from 'config';
 
 export function buildUrl(
   isSubDomainRouting: boolean,

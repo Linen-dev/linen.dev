@@ -1,5 +1,5 @@
 import { uploadFile } from 'services/aws/s3';
-import { BUCKET_PREFIX_FOR_ATTACHMENTS, LINEN_STATIC_CDN } from 'secrets';
+import { BUCKET_PREFIX_FOR_ATTACHMENTS, LINEN_STATIC_CDN } from 'config';
 import { messages, prisma } from '@linen/database';
 import { MessageFile, ConversationHistoryMessage } from '@linen/types';
 import { fetchFile } from '../api';

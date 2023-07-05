@@ -1,4 +1,4 @@
-import { SlackAppIds } from 'secrets';
+import { SlackAppIds } from 'config';
 import type {
   SlackMessageEvent,
   ConversationHistoryMessage,

@@ -26,7 +26,7 @@ import { eventThreadReopened } from 'services/events/eventThreadReopened';
 import { eventThreadUpdated } from 'services/events/eventThreadUpdated';
 import { FindThreadsByCursorType, ThreadsWithMessagesFull } from '@linen/types';
 import { anonymizeMessages } from 'utilities/anonymizeMessages';
-import { PAGE_SIZE } from 'secrets';
+import { PAGE_SIZE } from 'config';
 
 class ThreadsServices {
   static async updateMetrics({

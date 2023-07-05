@@ -1,4 +1,4 @@
-import { LINEN_STATIC_CDN, S3_UPLOAD_BUCKET } from 'secrets';
+import { LINEN_STATIC_CDN, S3_UPLOAD_BUCKET } from 'config';
 
 export function replaceS3byCDN(url: string | undefined) {
   try {

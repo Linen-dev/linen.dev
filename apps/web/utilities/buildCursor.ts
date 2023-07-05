@@ -1,6 +1,6 @@
 import { ThreadsWithMessagesFull } from '@linen/types';
 import { encodeCursor } from 'utilities/cursor';
-import { PAGE_SIZE } from 'secrets';
+import { PAGE_SIZE } from 'config';
 
 // TODO: Add unit test to this function
 

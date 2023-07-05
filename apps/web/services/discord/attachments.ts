@@ -2,7 +2,7 @@ import { channels } from '@linen/database';
 import { slugify } from '@linen/utilities/string';
 import axios from 'axios';
 import path from 'path';
-import { BUCKET_PREFIX_FOR_ATTACHMENTS, LINEN_STATIC_CDN } from 'secrets';
+import { BUCKET_PREFIX_FOR_ATTACHMENTS, LINEN_STATIC_CDN } from 'config';
 import { uploadFile } from 'services/aws/s3';
 import { DiscordAttachments } from '@linen/types';
 import { v4 as random } from 'uuid';

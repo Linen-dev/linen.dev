@@ -4,7 +4,7 @@ import {
   BUCKET_PREFIX_FOR_ATTACHMENTS,
   BUCKET_PREFIX_FOR_LOGOS,
   BUCKET_PREFIX_FOR_SLACK_IMPORT,
-} from 'secrets';
+} from 'config';
 import { v4 } from 'uuid';
 import type { UploadEnum } from '@linen/types';
 

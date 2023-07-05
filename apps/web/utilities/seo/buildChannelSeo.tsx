@@ -1,5 +1,5 @@
 import { SerializedChannel, Settings } from '@linen/types';
-import { LINEN_URL } from 'secrets';
+import { LINEN_URL } from 'config';
 import { SerializedAccount } from '@linen/types';
 
 export function buildChannelSeo({
