@@ -37,7 +37,8 @@ export async function getThreads(channels: Record<string, ChannelType>) {
       if (
         channels[thread.channelId] && // skip, channel not in the list
         thread.messages.length && // skip, thread without messages
-        !thread.messages[0].author?.isBot // skip, messages from bot or missing user
+        !!thread.messages[0].author && // skip messages from unknown user (missing userId)
+        !thread.messages[0].author.isBot // skip, messages from bot or missing user
       ) {
         const body = thread.messages
           .map((m) => m.body)
