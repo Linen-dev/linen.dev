@@ -2,13 +2,17 @@ import { NextApiRequest, NextApiResponse } from 'next/types';
 import FeedService from 'services/feed';
 
 export async function index({ skip, take }: { skip: number; take: number }) {
-  const { threads, settings } = await FeedService.get({ skip, take });
+  const { threads, settings, communities } = await FeedService.get({
+    skip,
+    take,
+  });
 
   return {
     status: 200,
     data: {
       threads,
       settings,
+      communities,
     },
   };
 }
