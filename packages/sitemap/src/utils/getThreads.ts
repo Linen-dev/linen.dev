@@ -1,4 +1,4 @@
-import { prisma } from '@linen/database';
+import { prisma, Prisma } from '@linen/database';
 import { UrlType, ChannelType } from './types';
 import { batchSize, bodyLengthLimit } from '../config';
 
@@ -32,6 +32,17 @@ export async function getThreads(channels: Record<string, ChannelType>) {
       orderBy: { sentAt: 'asc' },
       take: batchSize,
     });
+
+    const searchKeywords = await prisma.$queryRaw<
+      { incrementId: number; searchKeywords: number }[]
+    >`
+    select t."incrementId",
+    sum( length(m.textsearchable_index_col) ) as "searchKeywords"
+    from threads t 
+    left join messages m on t.id = m."threadId" 
+    where t."incrementId" in (${Prisma.join(threads.map((t) => t.incrementId))})
+    group by t."incrementId"
+      `;
 
     threads.forEach((thread) => {
       if (
@@ -72,11 +83,15 @@ export async function getThreads(channels: Record<string, ChannelType>) {
             }
             sitemapPremium[account.id].push(t);
           } else {
+            const keywords =
+              searchKeywords.find((t) => t.incrementId === thread.incrementId)
+                ?.searchKeywords || 0;
+
             if (
+              // contentful: threads with characters >= 2000 + skip dup words
+              (body.length >= 2000 && keywords > 25) ||
               // trend: threads with more than 100 visits
               thread.viewCount >= 100 ||
-              // contentful: threads with characters >= 2000
-              body.length >= 2000 ||
               // popular: threads with reactions>10 replies>2 characters>500
               (reactions > 10 &&
                 thread.messages.length >= 3 &&
@@ -96,10 +111,13 @@ export async function getThreads(channels: Record<string, ChannelType>) {
       }
     });
 
-    console.timeLog('query-threads');
     if (threads.length === batchSize) {
       sentAt = threads[batchSize - 1].sentAt;
-      console.log('sentAt', sentAt);
+      // skip logging all
+      if (Number(sentAt) % 10 === 0) {
+        console.timeLog('query-threads');
+        console.log('sentAt', sentAt);
+      }
     } else {
       break;
     }
