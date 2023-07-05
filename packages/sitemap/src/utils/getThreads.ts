@@ -39,7 +39,10 @@ export async function getThreads(channels: Record<string, ChannelType>) {
         thread.messages.length && // skip, thread without messages
         !thread.messages[0].author?.isBot // skip, messages from bot or missing user
       ) {
-        const body = thread.messages.map((m) => m.body).join('');
+        const body = thread.messages
+          .map((m) => m.body)
+          .join(' ')
+          .replace(/\s+/g, ' '); // clean up dup space
         if (
           body.length > bodyLengthLimit // skip, threads with less than 50 characters
         ) {
