@@ -1,10 +1,15 @@
 import React, { useState } from 'react';
 import BlankLayout from '@linen/ui/BlankLayout';
+import CommunityCard from '@linen/ui/CommunityCard';
 import styles from './index.module.scss';
 import Row from '@linen/ui/Row';
 import { GetServerSidePropsContext } from 'next';
-import { Permissions, SerializedThread, Settings } from '@linen/types';
-import { FiHash } from '@react-icons/all-files/fi/FiHash';
+import {
+  Permissions,
+  SerializedAccount,
+  SerializedThread,
+  Settings,
+} from '@linen/types';
 import LinenLogo from '@linen/ui/LinenLogo';
 import useInfiniteScroll from 'react-infinite-scroll-hook';
 import FeedService from 'services/feed';
@@ -14,6 +19,7 @@ interface Props {
   permissions: Permissions;
   threads: SerializedThread[];
   settings: Settings[];
+  communities: SerializedAccount[];
 }
 
 const TAKE = 12;
@@ -22,12 +28,15 @@ export default function Feed({
   permissions,
   threads: initialThreads,
   settings: initialSettings,
+  communities: initialCommunities,
 }: Props) {
   const [skip, setSkip] = useState(TAKE);
   const [loading, setLoading] = useState(false);
   const [more, setMore] = useState(true);
   const [threads, setThreads] = useState<SerializedThread[]>(initialThreads);
   const [settings, setSettings] = useState<Settings[]>(initialSettings);
+  const [communities, setCommunities] =
+    useState<SerializedAccount[]>(initialCommunities);
 
   async function onLoadMore() {
     setLoading(true);
@@ -40,20 +49,29 @@ export default function Feed({
         ({
           threads: newThreads,
           settings: newSettings,
+          communities: newCommunities,
         }: {
           threads: SerializedThread[];
           settings: Settings[];
+          communities: SerializedAccount[];
         }) => {
           setLoading(false);
           setSkip((skip) => skip + TAKE);
           setMore(newThreads.length > 0);
           setThreads((threads) => [...threads, ...newThreads]);
           setSettings((settings) => {
-            const settingsIds = settings.map((setting) => setting.communityId);
+            const ids = settings.map((setting) => setting.communityId);
             const settingsToAdd = newSettings.filter(
-              (setting) => !settingsIds.includes(setting.communityId)
+              (setting) => !ids.includes(setting.communityId)
             );
             return [...settings, ...settingsToAdd];
+          });
+          setCommunities((communities) => {
+            const ids = communities.map((community) => community.id);
+            const communitiesToAdd = newCommunities.filter(
+              (community) => !ids.includes(community.id)
+            );
+            return [...communities, ...communitiesToAdd];
           });
         }
       );
@@ -93,7 +111,17 @@ export default function Feed({
           })}
           <div ref={sentryRef} />
         </main>
-        <div className={styles.right}></div>
+        <div className={styles.right}>
+          {communities.map((community) => {
+            return (
+              <CommunityCard
+                key={community.id}
+                className={styles.card}
+                community={community}
+              />
+            );
+          })}
+        </div>
       </div>
     </BlankLayout>
   );
@@ -102,7 +130,7 @@ export default function Feed({
 export const getServerSideProps = async (
   context: GetServerSidePropsContext
 ) => {
-  const [permissions, { threads, settings }] = await Promise.all([
+  const [permissions, { threads, settings, communities }] = await Promise.all([
     PermissionsService.for(context),
     FeedService.get({ skip: 0, take: TAKE }),
   ]);
@@ -112,6 +140,7 @@ export const getServerSideProps = async (
       permissions,
       threads,
       settings,
+      communities,
     },
   };
 };

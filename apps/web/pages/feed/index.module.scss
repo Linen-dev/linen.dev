@@ -17,7 +17,7 @@
   width: 100%;
 }
 
-@media screen and (min-width: 768px) {
+@media screen and (min-width: 1024px) {
   .center {
     width: 600px;
     border-left: 1px solid var(--color-gray-100);
@@ -43,7 +43,7 @@
     display: flex;
     justify-content: center;
     margin: 0;
-    height: 90px;
+    height: 96px;
     background: var(--color-gray-50);
     border-radius: 4px;
     gap: 0.375rem;
@@ -56,8 +56,8 @@
     color: var(--color-primary);
   }
   .logo > div {
-    height: 20px;
-    width: 90px;
+    height: 25px;
+    width: 112px;
     margin: 0;
   }
   .center {
@@ -71,4 +71,9 @@
     max-width: 268px;
     padding: 1rem;
   }
+}
+
+.card img {
+  width: 100px;
+  height: 25px;
 }
