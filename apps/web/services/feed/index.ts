@@ -17,6 +17,7 @@ export default class FeedService {
             anonymizeUsers: false,
             type: 'PUBLIC',
           },
+          archived: false,
         },
         messages: {
           none: {
