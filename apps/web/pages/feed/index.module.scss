@@ -77,3 +77,11 @@
   width: 100px;
   height: 25px;
 }
+
+.card {
+  margin-bottom: 1rem;
+}
+
+.card:last-child {
+  margin-bottom: 0;
+}
