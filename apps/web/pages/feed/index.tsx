@@ -69,12 +69,13 @@ export default function Feed({
   });
   return (
     <BlankLayout>
-      <div className={styles.background}>
-        <LinenLogo className={styles.logo} />
-        <main className={styles.main}>
-          <header className={styles.header}>
-            <FiHash /> Feed
-          </header>
+      <div className={styles.grid}>
+        <div className={styles.left}>
+          <div className={styles.logo}>
+            <LinenLogo /> <small>Feed</small>
+          </div>
+        </div>
+        <main className={styles.center}>
           {threads.map((thread) => {
             const setting = settings.find(
               (setting) => setting.communityId === thread.channel?.accountId
@@ -92,6 +93,7 @@ export default function Feed({
           })}
           <div ref={sentryRef} />
         </main>
+        <div className={styles.right}></div>
       </div>
     </BlankLayout>
   );
