@@ -69,7 +69,7 @@ export async function fetchCommon(
         accountId: community.id,
         userId: permissions.user.id,
       })
-    : [];
+    : publicChannels;
 
   const privateChannels = !!permissions.user?.id
     ? await ChannelsService.findPrivates({
