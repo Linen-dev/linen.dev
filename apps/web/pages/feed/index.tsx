@@ -16,6 +16,7 @@ import PermissionsService from 'services/permissions';
 import Nav from '@linen/ui/Nav';
 import { FiHash } from '@react-icons/all-files/fi/FiHash';
 import { getHomeUrl } from '@linen/utilities/home';
+import { getThreadUrl } from '@linen/utilities/url';
 
 interface Props {
   permissions: Permissions;
@@ -99,7 +100,7 @@ export default function Feed({
               <Nav.Group>Communities</Nav.Group>
               {communities.slice(0, 20).map((community) => {
                 return (
-                  <a href={getHomeUrl(community)}>
+                  <a href={getHomeUrl(community)} key={community.id}>
                     <Nav.Item>
                       <FiHash />
                       {community.name}
@@ -118,15 +119,27 @@ export default function Feed({
             const setting = settings.find(
               (setting) => setting.communityId === thread.channel?.accountId
             ) as Settings;
+            const url = getThreadUrl({
+              isSubDomainRouting: false,
+              settings: setting,
+              incrementId: thread.incrementId,
+              slug: thread.slug,
+              LINEN_URL: process.env.DEVELOPMENT
+                ? 'http://localhost:3000'
+                : 'https://www.linen.dev',
+            });
             return (
-              <Row
-                key={thread.id}
-                thread={thread}
-                permissions={permissions}
-                currentUser={null}
-                isSubDomainRouting={false}
-                settings={setting}
-              />
+              <a href={url} target="_blank" key={thread.id} rel="noreferrer">
+                <Row
+                  className={styles.row}
+                  thread={thread}
+                  permissions={permissions}
+                  currentUser={null}
+                  isSubDomainRouting={false}
+                  settings={setting}
+                  showActions={false}
+                />
+              </a>
             );
           })}
           <div ref={sentryRef} />
@@ -149,7 +162,7 @@ export default function Feed({
                 messages and threads to reorganize your content.
               </small>
             </p>
-            <a href="https://linen.dev" target="_blank">
+            <a href="https://linen.dev" target="_blank" rel="noreferrer">
               Read more
             </a>
           </div>

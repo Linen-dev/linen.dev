@@ -32,6 +32,7 @@ interface Props {
   settings: Settings;
   currentUser: SerializedUser | null;
   mode?: Mode;
+  showActions?: boolean;
   onClick?(): void;
   onDelete?(messageId: string): void;
   onEdit?(threadId: string, messageId: string): void;
@@ -77,6 +78,7 @@ export default function Row({
   settings,
   currentUser,
   mode,
+  showActions,
   onClick,
   onDelete,
   onEdit,
@@ -130,6 +132,7 @@ export default function Row({
           currentUser={currentUser}
           mode={mode}
           drag="thread"
+          showActions={showActions}
           onDelete={onDelete}
           onEdit={onEdit}
           onLoad={onLoad}
