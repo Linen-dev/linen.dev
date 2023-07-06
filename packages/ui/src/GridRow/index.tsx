@@ -64,6 +64,7 @@ interface Props {
   drag: 'thread' | 'message';
   header?: React.ReactNode;
   info?: React.ReactNode;
+  showActions?: boolean;
   footer?({ inView }: { inView: boolean }): React.ReactNode;
   onDelete?(messageId: string): void;
   onLoad?(): void;
@@ -147,6 +148,7 @@ function Row({
   drag,
   header,
   info,
+  showActions,
   footer,
   onDelete,
   onEdit,
@@ -272,7 +274,7 @@ function Row({
           </div>
         </div>
       </div>
-      {hover && (
+      {hover && showActions && (
         <div className={styles.actions}>
           <Actions
             thread={thread}
@@ -349,5 +351,9 @@ function Row({
     </div>
   );
 }
+
+Row.defaultProps = {
+  showActions: true,
+};
 
 export default Row;

@@ -135,3 +135,15 @@
 .card:last-child {
   margin-bottom: 0;
 }
+
+.row {
+  border-bottom: 1px solid var(--color-gray-100);
+}
+
+.row:last-child {
+  border-bottom: none;
+}
+
+.row:hover {
+  background: var(--color-gray-50);
+}
