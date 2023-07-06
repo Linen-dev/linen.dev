@@ -3,23 +3,16 @@ import BlankLayout from '@linen/ui/BlankLayout';
 import styles from './index.module.scss';
 import Row from '@linen/ui/Row';
 import { GetServerSidePropsContext } from 'next';
-import {
-  Permissions,
-  SerializedAccount,
-  SerializedThread,
-  Settings,
-} from '@linen/types';
+import { SerializedAccount, SerializedThread, Settings } from '@linen/types';
 import LinenLogo from '@linen/ui/LinenLogo';
 import useInfiniteScroll from 'react-infinite-scroll-hook';
 import FeedService from 'services/feed';
-import PermissionsService from 'services/permissions';
 import Nav from '@linen/ui/Nav';
 import { FiHash } from '@react-icons/all-files/fi/FiHash';
 import { getHomeUrl } from '@linen/utilities/home';
 import { getThreadUrl } from '@linen/utilities/url';
 
 interface Props {
-  permissions: Permissions;
   threads: SerializedThread[];
   settings: Settings[];
   communities: SerializedAccount[];
@@ -28,7 +21,6 @@ interface Props {
 const TAKE = 12;
 
 export default function Feed({
-  permissions,
   threads: initialThreads,
   settings: initialSettings,
   communities: initialCommunities,
@@ -100,7 +92,12 @@ export default function Feed({
               <Nav.Group>Communities</Nav.Group>
               {communities.slice(0, 20).map((community) => {
                 return (
-                  <a href={getHomeUrl(community)} key={community.id}>
+                  <a
+                    href={getHomeUrl(community)}
+                    key={community.id}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
                     <Nav.Item>
                       <FiHash />
                       {community.name}
@@ -133,7 +130,6 @@ export default function Feed({
                 <Row
                   className={styles.row}
                   thread={thread}
-                  permissions={permissions}
                   currentUser={null}
                   isSubDomainRouting={false}
                   settings={setting}
@@ -156,10 +152,10 @@ export default function Feed({
             <h2>Forum and a real-time chat</h2>
             <p>
               <small>
-                Benefits of a forum and a real-time chat Information gets lost
-                in real-time chat. Linen solves this by letting Google find your
-                content. Our advanced threading model let you drag and drop
-                messages and threads to reorganize your content.
+                Information gets lost in real-time chat. Linen solves this by
+                letting Google find your content. Our advanced threading model
+                let you drag and drop messages and threads to reorganize your
+                content.
               </small>
             </p>
             <a href="https://linen.dev" target="_blank" rel="noreferrer">
@@ -175,14 +171,13 @@ export default function Feed({
 export const getServerSideProps = async (
   context: GetServerSidePropsContext
 ) => {
-  const [permissions, { threads, settings, communities }] = await Promise.all([
-    PermissionsService.for(context),
-    FeedService.get({ skip: 0, take: TAKE }),
-  ]);
+  const { threads, settings, communities } = await FeedService.get({
+    skip: 0,
+    take: TAKE,
+  });
 
   return {
     props: {
-      permissions,
       threads,
       settings,
       communities,
