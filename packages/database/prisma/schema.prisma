@@ -74,6 +74,8 @@ model threads {
   firstManagerReplyAt BigInt?
   userThreadStatus    userThreadStatus[]
 
+  lastActivityAt BigInt @default(0)
+
   notifications     notifications[]
   page              Int?
   userStarredThread userStarredThread[]

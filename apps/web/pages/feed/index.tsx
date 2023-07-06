@@ -72,7 +72,7 @@ export default function Feed() {
     delayInMs: 0,
   });
   return (
-    <BlankLayout>
+    <BlankLayout className={styles.layout}>
       <div className={styles.grid}>
         <div className={styles.left}>
           <div className={styles.sticky}>

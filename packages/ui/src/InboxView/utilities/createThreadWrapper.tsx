@@ -75,6 +75,7 @@ export function createThreadWrapper({
       id,
       sentAt: new Date().toISOString(),
       lastReplyAt: new Date().toISOString(),
+      lastActivityAt: new Date().toISOString(),
       messages: [
         {
           id: uuid(),
