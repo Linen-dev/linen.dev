@@ -6,10 +6,12 @@
 
 .left {
   display: none;
+  position: relative;
 }
 
 .right {
   display: none;
+  position: relative;
 }
 
 .center {
@@ -27,6 +29,64 @@
 
 .logo {
   display: none;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  margin: 0;
+  height: 96px;
+  background: var(--color-gray-50);
+  border-radius: 4px;
+  gap: 0.375rem;
+  position: relative;
+}
+.logo small {
+  position: relative;
+  top: -8px;
+  font-size: 0.675rem;
+  color: var(--color-primary);
+}
+.logo > div {
+  height: 25px;
+  width: 112px;
+  margin: 0;
+}
+
+.right .sticky {
+  background: var(--color-gray-50);
+  border-radius: 4px;
+  padding: 1rem;
+}
+
+.right .sticky h1,
+.right .sticky h2 {
+  font-weight: 500;
+  font-size: 1rem;
+}
+
+.right .sticky h2 {
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+}
+
+.right .sticky {
+  color: var(--color-gray-700);
+}
+
+.right .sticky a {
+  color: var(--color-blue-700);
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.right .sticky a:hover {
+  color: var(--color-blue-800);
+}
+
+@media screen and (max-width: 1023px) {
+.center .logo {
+  display: flex;
+}
 }
 
 @media screen and (min-width: 1024px) {
@@ -38,27 +98,17 @@
     padding: 1rem;
     text-align: right;
   }
-  .logo {
-    align-items: center;
+  .left .sticky,
+  .right .sticky {
+    position: sticky;
+    top: 1rem;
+    left: 0;
+  }
+  .left .logo {
     display: flex;
-    justify-content: center;
-    margin: 0;
-    height: 96px;
-    background: var(--color-gray-50);
-    border-radius: 4px;
-    gap: 0.375rem;
-    position: relative;
   }
-  .logo small {
-    position: relative;
-    top: -8px;
-    font-size: 0.675rem;
-    color: var(--color-primary);
-  }
-  .logo > div {
-    height: 25px;
-    width: 112px;
-    margin: 0;
+  .center .logo {
+    display: none;
   }
   .center {
     display: inline-block;
