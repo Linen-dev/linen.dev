@@ -9,6 +9,7 @@ import handler from 'pages/api/accounts/[[...slug]]';
 import { createAccountType } from '@linen/types';
 import InviteToJoinMailer from 'mailers/InviteToJoinMailer';
 import * as domain from '@linen/utilities/domain';
+import { config } from 'config';
 
 const host = 'http://localhost';
 jest.mock('services/customerIo/trackEvents');
@@ -91,7 +92,9 @@ describe('accounts endpoints', () => {
           newAccount?.channels.find((i) => i.channelName === body.channels?.[0])
         ).toBeDefined();
         expect(
-          newAccount?.channels.find((i) => i.channelName === 'default')
+          newAccount?.channels.find(
+            (i) => i.channelName === config.channel.defaultName
+          )
         ).toBeDefined();
       },
     });

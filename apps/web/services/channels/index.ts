@@ -12,6 +12,7 @@ import {
 import { formatDistance } from '@linen/utilities/date';
 import { serializeChannel, serializeDm } from '@linen/serializers/channel';
 import { v4 } from 'uuid';
+import { config } from 'config';
 
 class ChannelsService {
   static async find(communityId: string): Promise<channels[]> {
@@ -556,7 +557,7 @@ export async function shouldThisChannelBeAnonymous(channelId: string) {
 export async function hideEmptyChannels(accountId: string) {
   const channels = await prisma.channels.findMany({
     include: { _count: true },
-    where: { accountId, channelName: { not: 'default' } },
+    where: { accountId, channelName: { not: config.channel.defaultName } },
   });
   const promise = channels
     .map(async (channel) => {

@@ -17,3 +17,9 @@ export const S3_UPLOAD_BUCKET = process.env.S3_UPLOAD_BUCKET;
 export const LINEN_URL = 'https://www.linen.dev';
 
 export const PAGE_SIZE = 30;
+
+export const config = {
+  channel: {
+    defaultName: 'main',
+  },
+};

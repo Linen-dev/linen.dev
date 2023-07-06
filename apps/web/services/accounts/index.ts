@@ -13,6 +13,7 @@ import unique from 'lodash.uniq';
 import { replaceS3byCDN } from 'utilities/replaceS3byCDN';
 import { createRemoveCommunityJob } from 'queue/jobs';
 import { sendNotification } from 'services/slack';
+import { config } from 'config';
 
 export default class AccountsService {
   static async create({
@@ -33,7 +34,10 @@ export default class AccountsService {
     }
 
     try {
-      const channelsToInsert = unique(['default', ...(channels || [])]);
+      const channelsToInsert = unique([
+        config.channel.defaultName,
+        ...(channels || []),
+      ]);
 
       const displayName = email.split('@').shift() || email;
       const newAccount = await prisma.accounts.create({
