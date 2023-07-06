@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import BlankLayout from '@linen/ui/BlankLayout';
-import CommunityCard from '@linen/ui/CommunityCard';
 import styles from './index.module.scss';
 import Row from '@linen/ui/Row';
 import { GetServerSidePropsContext } from 'next';
@@ -14,6 +13,9 @@ import LinenLogo from '@linen/ui/LinenLogo';
 import useInfiniteScroll from 'react-infinite-scroll-hook';
 import FeedService from 'services/feed';
 import PermissionsService from 'services/permissions';
+import Nav from '@linen/ui/Nav';
+import { FiHash } from '@react-icons/all-files/fi/FiHash';
+import { getHomeUrl } from '@linen/utilities/home';
 
 interface Props {
   permissions: Permissions;
@@ -82,18 +84,36 @@ export default function Feed({
     hasNextPage: more,
     onLoadMore,
     disabled: loading,
-    rootMargin: '0px 0px 320px 0px',
+    rootMargin: '0px 0px 640px 0px',
     delayInMs: 0,
   });
   return (
     <BlankLayout>
       <div className={styles.grid}>
         <div className={styles.left}>
-          <div className={styles.logo}>
-            <LinenLogo /> <small>Feed</small>
+          <div className={styles.sticky}>
+            <div className={styles.logo}>
+              <LinenLogo /> <small>Feed</small>
+            </div>
+            <Nav>
+              <Nav.Group>Communities</Nav.Group>
+              {communities.slice(0, 20).map((community) => {
+                return (
+                  <a href={getHomeUrl(community)}>
+                    <Nav.Item>
+                      <FiHash />
+                      {community.name}
+                    </Nav.Item>
+                  </a>
+                );
+              })}
+            </Nav>
           </div>
         </div>
         <main className={styles.center}>
+          <div className={styles.logo}>
+            <LinenLogo /> <small>Feed</small>
+          </div>
           {threads.map((thread) => {
             const setting = settings.find(
               (setting) => setting.communityId === thread.channel?.accountId
@@ -112,15 +132,27 @@ export default function Feed({
           <div ref={sentryRef} />
         </main>
         <div className={styles.right}>
-          {communities.map((community) => {
-            return (
-              <CommunityCard
-                key={community.id}
-                className={styles.card}
-                community={community}
-              />
-            );
-          })}
+          <div className={styles.sticky}>
+            <h1>What is Linen?</h1>
+            <p>
+              <small>
+                Linen is a real-time chat platform built for communities. We are
+                SEO friendly while providing a modern chat experience.
+              </small>
+            </p>
+            <h2>Forum and a real-time chat</h2>
+            <p>
+              <small>
+                Benefits of a forum and a real-time chat Information gets lost
+                in real-time chat. Linen solves this by letting Google find your
+                content. Our advanced threading model let you drag and drop
+                messages and threads to reorganize your content.
+              </small>
+            </p>
+            <a href="https://linen.dev" target="_blank">
+              Read more
+            </a>
+          </div>
         </div>
       </div>
     </BlankLayout>
