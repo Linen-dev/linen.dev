@@ -31,7 +31,7 @@ interface Props {
   className?: string;
   thread: SerializedThread;
   message: SerializedMessage;
-  permissions: Permissions;
+  permissions?: Permissions;
   settings: Settings;
   isSubDomainRouting: boolean;
   currentUser: SerializedUser | null;
@@ -103,7 +103,7 @@ export default function Actions({
   const viewType = thread.channel?.viewType;
   const isForumView = viewType === 'FORUM';
   const owner = currentUser ? currentUser.id === message.usersId : false;
-  const draggable = permissions.manage || owner;
+  const draggable = !!permissions?.manage || owner;
 
   const isEditVisible =
     onEdit && currentUser && currentUser.id === message.author?.id;
@@ -112,15 +112,15 @@ export default function Actions({
   const isRemindVisible = false && onRemind && currentUser;
   const isMuteVisible = false && onMute && currentUser;
   const isOnmuteVisible = false && onUnmute && currentUser;
-  const isPinVisible = onPin && permissions.manage;
-  const isStarVisible = onStar && permissions.starred;
+  const isPinVisible = onPin && !!permissions?.manage;
+  const isStarVisible = onStar && !!permissions?.starred;
   const isEmojiVisible = onEmoji && currentUser;
   const isResolutionVisible = onResolution && currentUser;
   const isDragVisible = currentUser && draggable;
   const isDeleteVisible =
     onDelete &&
     currentUser &&
-    (permissions.manage || currentUser.id === message.usersId);
+    (!!permissions?.manage || currentUser.id === message.usersId);
 
   return (
     <>

@@ -26,7 +26,7 @@ import { FiAlertCircle } from '@react-icons/all-files/fi/FiAlertCircle';
 interface Props {
   className?: string;
   thread: SerializedThread;
-  permissions: Permissions;
+  permissions?: Permissions;
   isBot?: boolean;
   isSubDomainRouting: boolean;
   settings: Settings;

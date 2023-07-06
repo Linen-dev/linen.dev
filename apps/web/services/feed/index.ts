@@ -18,6 +18,7 @@ export default class FeedService {
             type: 'PUBLIC',
           },
           archived: false,
+          hidden: false,
         },
         messages: {
           none: {
@@ -27,6 +28,7 @@ export default class FeedService {
           },
         },
         lastReplyAt: { gt: yesterday().getTime() },
+        hidden: false,
       },
       include: {
         messages: {

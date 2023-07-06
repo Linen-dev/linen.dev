@@ -58,7 +58,7 @@ interface Props {
   isPreviousMessageFromSameUser?: boolean;
   isSubDomainRouting: boolean;
   settings: Settings;
-  permissions: Permissions;
+  permissions?: Permissions;
   currentUser: SerializedUser | null;
   mode?: Mode;
   drag: 'thread' | 'message';
