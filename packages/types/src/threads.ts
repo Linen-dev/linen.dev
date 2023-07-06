@@ -18,6 +18,7 @@ export interface SerializedThread {
   firstManagerReplyAt?: string | null;
   sentAt: string;
   lastReplyAt: string;
+  lastActivityAt: string;
   messages: SerializedMessage[];
   channel: SerializedChannel | null;
   resolutionId?: string | null;

@@ -11,6 +11,7 @@ export default function createThread(options?: Partial<threads>): threads {
     messageCount: 2,
     sentAt: BigInt(100),
     lastReplyAt: BigInt(100),
+    lastActivityAt: BigInt(0),
     channelId: '1',
     title: 'this is a title',
     hidden: false,

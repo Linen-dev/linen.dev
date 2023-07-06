@@ -50,7 +50,7 @@ export default class FeedService {
           },
         },
       },
-      orderBy: { lastReplyAt: 'desc' },
+      orderBy: [{ lastActivityAt: 'desc' }, { lastReplyAt: 'desc' }],
       take,
       skip,
     });
