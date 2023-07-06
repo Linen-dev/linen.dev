@@ -1,39 +1,26 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import BlankLayout from '@linen/ui/BlankLayout';
 import styles from './index.module.scss';
 import Row from '@linen/ui/Row';
-import { GetServerSidePropsContext } from 'next';
 import { SerializedAccount, SerializedThread, Settings } from '@linen/types';
 import LinenLogo from '@linen/ui/LinenLogo';
 import useInfiniteScroll from 'react-infinite-scroll-hook';
-import FeedService from 'services/feed';
 import Nav from '@linen/ui/Nav';
 import { FiHash } from '@react-icons/all-files/fi/FiHash';
 import { getHomeUrl } from '@linen/utilities/home';
 import { getThreadUrl } from '@linen/utilities/url';
 
-interface Props {
-  threads: SerializedThread[];
-  settings: Settings[];
-  communities: SerializedAccount[];
-}
-
 const TAKE = 12;
 
-export default function Feed({
-  threads: initialThreads,
-  settings: initialSettings,
-  communities: initialCommunities,
-}: Props) {
-  const [skip, setSkip] = useState(TAKE);
+export default function Feed() {
+  const [skip, setSkip] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [more, setMore] = useState(true);
-  const [threads, setThreads] = useState<SerializedThread[]>(initialThreads);
-  const [settings, setSettings] = useState<Settings[]>(initialSettings);
-  const [communities, setCommunities] =
-    useState<SerializedAccount[]>(initialCommunities);
+  const [more, setMore] = useState(false);
+  const [threads, setThreads] = useState<SerializedThread[]>([]);
+  const [settings, setSettings] = useState<Settings[]>([]);
+  const [communities, setCommunities] = useState<SerializedAccount[]>([]);
 
-  async function onLoadMore() {
+  async function fetchFeed() {
     setLoading(true);
     fetch(`/api/feed?skip=${skip}&take=${TAKE}`, {
       method: 'GET',
@@ -52,7 +39,6 @@ export default function Feed({
         }) => {
           setLoading(false);
           setSkip((skip) => skip + TAKE);
-          setMore(newThreads.length > 0);
           setThreads((threads) => [...threads, ...newThreads]);
           setSettings((settings) => {
             const ids = settings.map((setting) => setting.communityId);
@@ -68,15 +54,20 @@ export default function Feed({
             );
             return [...communities, ...communitiesToAdd];
           });
+          setMore(newThreads.length > 0);
         }
       );
   }
 
+  useEffect(() => {
+    fetchFeed();
+  }, []);
+
   const [sentryRef] = useInfiniteScroll({
     loading,
     hasNextPage: more,
-    onLoadMore,
-    disabled: loading,
+    onLoadMore: fetchFeed,
+    disabled: loading || !more || threads.length % TAKE !== 0,
     rootMargin: '0px 0px 640px 0px',
     delayInMs: 0,
   });
@@ -167,20 +158,3 @@ export default function Feed({
     </BlankLayout>
   );
 }
-
-export const getServerSideProps = async (
-  context: GetServerSidePropsContext
-) => {
-  const { threads, settings, communities } = await FeedService.get({
-    skip: 0,
-    take: TAKE,
-  });
-
-  return {
-    props: {
-      threads,
-      settings,
-      communities,
-    },
-  };
-};
