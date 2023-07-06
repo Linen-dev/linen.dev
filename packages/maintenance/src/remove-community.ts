@@ -1,6 +1,5 @@
-import { cleanUp } from 'queue/tasks/remove-community';
+import { cleanUp } from '@linen/web/queue/tasks/remove-community';
 import { config } from 'dotenv';
-import { Logger } from 'graphile-worker';
 
 function logFactory(scope: any) {
   return (level: any, message: any, meta: any) => {
@@ -8,10 +7,10 @@ function logFactory(scope: any) {
   };
 }
 
-const logger = new Logger(logFactory);
-
-config();
+config({ path: '../../apps/web/.env' });
 
 console.log(process.env.DATABASE_URL);
+
+const logger: any = () => {};
 
 cleanUp('account-uuid', logger).catch(console.error);

@@ -1,3 +1,5 @@
+// ts-node -P tsconfig.commonjs.json bin/import-users/index.ts
+
 import Papa from 'papaparse';
 import fs from 'fs';
 import { Prisma, Roles, prisma } from '@linen/database';

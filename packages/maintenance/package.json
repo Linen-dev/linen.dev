@@ -1,0 +1,19 @@
+{
+  "name": "maintenance",
+  "version": "1.0.0",
+  "scripts": {},
+  "keywords": [],
+  "author": "Sandro de Souza",
+  "license": "ISC",
+  "dependencies": {
+    "@linen/database": "*",
+    "@linen/utilities": "*",
+    "@linen/web": "*",
+    "dotenv": "^16.3.1",
+    "p-queue": "^7.3.4",
+    "papaparse": "^5.4.1",
+    "tsx": "^3.12.7",
+    "typescript": "^5.1.6",
+    "uuid": "^9.0.0"
+  }
+}

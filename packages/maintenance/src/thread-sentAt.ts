@@ -1,3 +1,9 @@
+// ### migration :: build threads sentAt field
+
+// ```
+// npx ts-node -P tsconfig.commonjs.json bin/thread-sentAt/index.ts
+// ```
+
 import { prisma } from '@linen/database';
 
 async function run() {
