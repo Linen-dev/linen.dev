@@ -52,11 +52,16 @@ ssrRouter.get(
       return res.end();
     }
 
-    const { channels, currentCommunity, dms, privateChannels } =
-      await fetchCommon(permissions, community);
+    const {
+      currentCommunity,
+      privateChannels,
+      dmChannels,
+      joinedChannels,
+      publicChannels,
+    } = await fetchCommon(permissions, community);
 
     const channel = findChannelOrDefault(
-      [...channels, ...dms, ...privateChannels],
+      [...joinedChannels, ...dmChannels, ...privateChannels, ...publicChannels],
       channelName
     );
     if (!channel) {

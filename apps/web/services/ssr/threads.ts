@@ -27,7 +27,7 @@ export async function threadGetServerSideProps(
       return NotFound();
     }
 
-    const { channels, currentCommunity, dms, settings } = props;
+    const { channels, currentCommunity, dms, settings, publicChannels } = props;
 
     const threadId = context.params?.threadId as string;
     const communityName = context.params?.communityName as string;
@@ -68,7 +68,7 @@ export async function threadGetServerSideProps(
 
     const threadUrl: string | null = getThreadUrl(thread, currentCommunity);
 
-    const currentChannel = [...channels, ...dms].find(
+    const currentChannel = [...channels, ...dms, ...publicChannels].find(
       (c) => c.id === thread.channel?.id
     )!;
 

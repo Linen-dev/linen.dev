@@ -50,8 +50,13 @@ ssrRouter.get(
       return res.end();
     }
 
-    const { channels, currentCommunity, dms, privateChannels } =
-      await fetchCommon(permissions, community);
+    const {
+      currentCommunity,
+      privateChannels,
+      dmChannels,
+      joinedChannels,
+      publicChannels,
+    } = await fetchCommon(permissions, community);
 
     const id = parseInt(threadId);
     if (!id) {
@@ -73,9 +78,12 @@ ssrRouter.get(
 
     const threadUrl: string | null = getThreadUrl(thread, currentCommunity);
 
-    const currentChannel = [...channels, ...dms, ...privateChannels].find(
-      (c) => c.id === thread.channel?.id
-    )!;
+    const currentChannel = [
+      ...joinedChannels,
+      ...dmChannels,
+      ...privateChannels,
+      ...publicChannels,
+    ].find((c) => c.id === thread.channel?.id)!;
 
     if (!currentChannel) {
       res.status(404);

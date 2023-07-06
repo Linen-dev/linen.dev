@@ -30,14 +30,17 @@ export async function channelGetServerSideProps(
     return NotFound();
   }
 
-  const { channels, currentCommunity, settings, dms } = props;
+  const { channels, currentCommunity, settings, dms, publicChannels } = props;
 
   const isCrawler = isBot(context?.req?.headers?.['user-agent'] || '');
   const communityName = context.params?.communityName as string;
   const channelName = context.params?.channelName as string;
   const page = context.params?.page as string | undefined;
 
-  const channel = findChannelOrDefault([...channels, ...dms], channelName);
+  const channel = findChannelOrDefault(
+    [...channels, ...dms, ...publicChannels],
+    channelName
+  );
   if (!channel) return NotFound();
 
   if (

@@ -34,24 +34,26 @@ export async function ssr(
 
   const {
     currentCommunity,
-    channels,
     privateChannels,
     communities,
     settings,
-    dms,
+    dmChannels,
+    joinedChannels,
+    publicChannels,
   } = await fetchCommon(permissions, community);
 
   return {
     props: {
       token: permissions.token,
       currentCommunity,
-      channels: [...channels, ...privateChannels]
+      publicChannels: publicChannels.map(serializeChannel),
+      channels: [...joinedChannels, ...privateChannels]
         .map(serializeChannel)
         .sort((a, b) => a.displayOrder - b.displayOrder),
       communities: communities.map(serializeAccount),
       permissions,
       settings,
-      dms: dms.map(serializeChannel),
+      dms: dmChannels.map(serializeChannel),
     },
   };
 }
@@ -60,12 +62,14 @@ export async function fetchCommon(
   permissions: Permissions,
   community: accounts
 ) {
-  const channels = !!permissions.user?.id
+  const publicChannels = await ChannelsService.find(community.id);
+
+  const joinedChannels = !!permissions.user?.id
     ? await ChannelsService.findJoined({
         accountId: community.id,
         userId: permissions.user.id,
       })
-    : await ChannelsService.find(community.id);
+    : [];
 
   const privateChannels = !!permissions.user?.id
     ? await ChannelsService.findPrivates({
@@ -81,19 +85,21 @@ export async function fetchCommon(
 
   const currentCommunity = serializeAccount(community);
 
-  const dms = !!permissions.user?.id
+  const dmChannels = !!permissions.user?.id
     ? await getDMs({
         accountId: currentCommunity.id,
         userId: permissions.user.id,
       })
     : [];
+
   return {
     currentCommunity,
-    channels,
+    publicChannels,
+    joinedChannels,
     privateChannels,
     communities,
     settings,
-    dms,
+    dmChannels,
   };
 }
 

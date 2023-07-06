@@ -51,24 +51,24 @@ async function getProps(
   }
 
   const {
-    channels,
     communities,
     currentCommunity,
-    dms,
     privateChannels,
     settings,
+    dmChannels,
+    joinedChannels,
   } = await fetchCommon(permissions, community);
 
   return {
     token: permissions.token,
     currentCommunity,
-    channels: [...channels, ...privateChannels]
+    channels: [...joinedChannels, ...privateChannels]
       .map(serializeChannel)
       .sort((a, b) => a.displayOrder - b.displayOrder),
     communities: communities.map(serializeAccount),
     permissions,
     settings,
-    dms: dms.map(serializeChannel),
+    dms: dmChannels.map(serializeChannel),
     isSubDomainRouting: false,
     isBot: false,
   };
