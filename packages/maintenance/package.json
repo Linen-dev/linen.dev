@@ -9,9 +9,12 @@
     "@linen/database": "*",
     "@linen/utilities": "*",
     "@linen/web": "*",
+    "axios": "^0.27.2",
     "dotenv": "^16.3.1",
+    "envalid": "^7.3.1",
     "p-queue": "^7.3.4",
     "papaparse": "^5.4.1",
+    "sharp": "^0.32.1",
     "tsx": "^3.12.7",
     "typescript": "^5.1.6",
     "uuid": "^9.0.0"

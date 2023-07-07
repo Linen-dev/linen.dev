@@ -68,6 +68,7 @@ const getMimeType = (ext: string) => {
     '.mov': 'video/quicktime',
     '.pdf': 'application/pdf',
     '.ppt': 'application/vnd.ms-powerpoint',
+    '.png': 'image/png',
     '.rar': 'application/x-rar-compressed',
     '.rtf': 'application/rtf',
     '.svg': 'image/svg+xml',
