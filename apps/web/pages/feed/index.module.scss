@@ -147,3 +147,16 @@
 .row:hover {
   background: var(--color-gray-50);
 }
+
+.subheader {
+  align-items: center;
+  display: flex;
+  gap: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.subheader:hover {
+  text-decoration: underline;
+}

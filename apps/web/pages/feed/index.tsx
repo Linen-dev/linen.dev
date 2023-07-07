@@ -104,6 +104,9 @@ export default function Feed() {
             <LinenLogo /> <small>Feed</small>
           </div>
           {threads.map((thread) => {
+            const community = communities.find(
+              (community) => community.id === thread.channel?.accountId
+            ) as SerializedAccount;
             const setting = settings.find(
               (setting) => setting.communityId === thread.channel?.accountId
             ) as Settings;
@@ -125,6 +128,18 @@ export default function Feed() {
                   isSubDomainRouting={false}
                   settings={setting}
                   showActions={false}
+                  subheader={
+                    <a
+                      href={getHomeUrl(community)}
+                      key={community.id}
+                      target="_blank"
+                      rel="noreferrer"
+                      className={styles.subheader}
+                    >
+                      <FiHash />
+                      {community.name}
+                    </a>
+                  }
                 />
               </a>
             );
