@@ -3,10 +3,12 @@ import { yesterday } from '@linen/utilities/date';
 import { serializeThread } from '@linen/serializers/thread';
 import { serializeAccount } from '@linen/serializers/account';
 import { serializeSettings } from '@linen/serializers/settings';
+import memoize from 'p-memoize';
+import ExpiryMap from 'expiry-map';
 
-export default class FeedService {
-  static async get({ skip, take }: { skip: number; take: number }) {
-    const threads = await prisma.threads.findMany({
+const fetch = memoize(
+  ({ skip, take }: { skip: number; take: number }) => {
+    return prisma.threads.findMany({
       where: {
         messageCount: {
           gte: 3,
@@ -54,6 +56,18 @@ export default class FeedService {
       take,
       skip,
     });
+  },
+  {
+    cache: new ExpiryMap(180000),
+    cacheKey(params) {
+      return JSON.stringify(params);
+    },
+  }
+);
+
+export default class FeedService {
+  static async get({ skip, take }: { skip: number; take: number }) {
+    const threads = await fetch({ skip, take });
 
     let accounts: accountsType[] = [];
     let ids: string[] = [];
