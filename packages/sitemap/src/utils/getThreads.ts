@@ -6,7 +6,7 @@ export async function getThreads(channels: Record<string, ChannelType>) {
   const sitemapPremium: Record<string, UrlType[]> = {};
   const sitemapFree: UrlType[] = [];
 
-  let sentAt = BigInt(0);
+  let incrementId = 0;
   console.time('query-threads');
   do {
     const threads = await prisma.threads.findMany({
@@ -28,8 +28,8 @@ export async function getThreads(channels: Record<string, ChannelType>) {
         messageCount: true,
         firstManagerReplyAt: true,
       },
-      where: { sentAt: { gt: sentAt }, hidden: false },
-      orderBy: { sentAt: 'asc' },
+      where: { incrementId: { gt: incrementId }, hidden: false },
+      orderBy: { incrementId: 'asc' },
       take: batchSize,
     });
 
@@ -112,11 +112,11 @@ export async function getThreads(channels: Record<string, ChannelType>) {
     });
 
     if (threads.length === batchSize) {
-      sentAt = threads[batchSize - 1].sentAt;
+      incrementId = threads[batchSize - 1].incrementId;
       // skip logging all
-      if (Number(sentAt) % 10 === 0) {
+      if (Number(incrementId) % 10 === 0) {
         console.timeLog('query-threads');
-        console.log('sentAt', sentAt);
+        console.log('incrementId', incrementId);
       }
     } else {
       break;
