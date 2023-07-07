@@ -13,19 +13,19 @@ interface Props {
 function Code({ className, content, highlight, inline }: Props): JSX.Element {
   const [highlighted, setHighlighted] = useState<any>();
 
-  useEffect(() => {
-    let mounted = true;
-    if (highlight && !highlighted) {
-      highlightCode(content).then((output) => {
-        if (mounted) {
-          setHighlighted(output);
-        }
-      });
-    }
-    return () => {
-      mounted = false;
-    };
-  }, [highlight, highlighted]);
+  // useEffect(() => {
+  //   let mounted = true;
+  //   if (highlight && !highlighted) {
+  //     highlightCode(content).then((output) => {
+  //       if (mounted) {
+  //         setHighlighted(output);
+  //       }
+  //     });
+  //   }
+  //   return () => {
+  //     mounted = false;
+  //   };
+  // }, [highlight, highlighted]);
 
   if (!highlight) {
     return (

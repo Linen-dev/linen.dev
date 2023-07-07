@@ -26,10 +26,10 @@ cleanEnv(process.env, {
 const random = () => (Math.random() + 1).toString(36).substring(2);
 
 async function run() {
-  await fs.mkdir('.local', { recursive: true });
+  await fs.mkdir('.local/attach', { recursive: true });
 
   let last = await fs
-    .readFile(`.local/last`, { encoding: 'utf-8' })
+    .readFile(`.local/attach/last`, { encoding: 'utf-8' })
     .catch((e) => {
       return new Date().toISOString();
     });
@@ -98,7 +98,7 @@ async function run() {
       if (!image) {
         console.log('removing...');
         await fs.appendFile(
-          `.local/removed`,
+          `.local/attach/removed`,
           attachment.messages?.channel.accountId! + os.EOL
         );
         // we will delete it, user can recovery it if hit sync again
@@ -144,7 +144,7 @@ async function run() {
     }
 
     last = attachments[attachments.length - 1].createdAt.toISOString();
-    await fs.writeFile(`.local/last`, last);
+    await fs.writeFile(`.local/attach/last`, last);
   } while (true);
 }
 
