@@ -82,12 +82,10 @@ model threads {
 
   @@unique([externalThreadId])
   @@unique([incrementId])
-  @@index([channelId])
   @@index([channelId, sentAt])
   @@index([channelId, sentAt, hidden])
   @@index([channelId, hidden, state, lastReplyAt])
   @@index([channelId, page])
-  @@index([sentAt])
 }
 
 enum ThreadState {
