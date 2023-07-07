@@ -33,6 +33,7 @@ interface Props {
   currentUser: SerializedUser | null;
   mode?: Mode;
   showActions?: boolean;
+  subheader?: React.ReactNode;
   onClick?(): void;
   onDelete?(messageId: string): void;
   onEdit?(threadId: string, messageId: string): void;
@@ -79,6 +80,7 @@ export default function Row({
   currentUser,
   mode,
   showActions,
+  subheader,
   onClick,
   onDelete,
   onEdit,
@@ -148,6 +150,7 @@ export default function Row({
           header={
             thread.title && <div className={styles.header}>{thread.title}</div>
           }
+          subheader={subheader}
           info={
             thread.state === ThreadState.CLOSE && (
               <FiCheck className={styles.check} />

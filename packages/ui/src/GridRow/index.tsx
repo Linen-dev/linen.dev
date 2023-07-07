@@ -63,6 +63,7 @@ interface Props {
   mode?: Mode;
   drag: 'thread' | 'message';
   header?: React.ReactNode;
+  subheader?: React.ReactNode;
   info?: React.ReactNode;
   showActions?: boolean;
   footer?({ inView }: { inView: boolean }): React.ReactNode;
@@ -147,6 +148,7 @@ function Row({
   mode,
   drag,
   header,
+  subheader,
   info,
   showActions,
   footer,
@@ -231,7 +233,7 @@ function Row({
               <p className={styles.username}>
                 {message.author?.displayName || 'user'}
               </p>
-              {format(message.sentAt, 'Pp')}
+              {subheader || format(message.sentAt, 'Pp')}
               {info}
             </div>
           )}
