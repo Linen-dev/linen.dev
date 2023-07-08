@@ -44,6 +44,7 @@ export default function AvatarField({
         disabled={uploading}
         type="file"
         id="avatar"
+        accept=".jpg,.gif,.png"
         name="avatar"
         ref={ref}
         onChange={onChange}
