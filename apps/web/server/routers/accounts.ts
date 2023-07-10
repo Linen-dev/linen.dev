@@ -63,7 +63,10 @@ accountsRouter.post(
   async (req: AuthedRequestWithBody<createAccountType>, res: Response) => {
     const { status, ...data } = await AccountsService.create({
       email: req.session_user?.email!,
-      ...req.body,
+      channels: req.body.channels,
+      description: req.body.description,
+      name: req.body.name,
+      slackDomain: req.body.slackDomain,
     });
     if (status === 200) {
       try {

@@ -10,6 +10,8 @@ interface Props {
   label?: string;
   hidden?: boolean;
   onChange?: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  rows?: number;
+  maxLength?: number;
 }
 
 function Textarea({
@@ -19,6 +21,8 @@ function Textarea({
   defaultValue,
   label,
   hidden,
+  rows = 6,
+  maxLength,
   onChange,
 }: Props) {
   return (
@@ -31,8 +35,9 @@ function Textarea({
         defaultValue={defaultValue}
         name={name}
         hidden={hidden}
-        rows={6}
+        rows={rows}
         onChange={onChange}
+        maxLength={maxLength}
       ></textarea>
     </>
   );

@@ -12,6 +12,7 @@ import { FiHash } from '@react-icons/all-files/fi/FiHash';
 import { FiUser } from '@react-icons/all-files/fi/FiUser';
 import type { ApiClient } from '@linen/api-client';
 import styles from './index.module.scss';
+import Textarea from '@/Textarea';
 
 interface Props {
   api: ApiClient;
@@ -30,14 +31,17 @@ export default function OnboardingForm({ api }: Props) {
       const target = e.target as typeof e.target & {
         name: { value: string };
         slackDomain: { value: string };
+        description: { value: string };
       };
       const name = target.name.value;
       const slackDomain = target.slackDomain.value.toLowerCase();
+      const description = target.description.value;
 
       const response = await api.createAccount({
         name,
         slackDomain,
         channels,
+        description,
         members: emails,
       });
       if (response.id) {
@@ -113,6 +117,21 @@ export default function OnboardingForm({ api }: Props) {
             const name = event.target.value;
             setSuggestion(name ? slugify(name) : '');
           }}
+        />
+        <div className={styles.p2}></div>
+
+        <Label htmlFor="description">
+          Description
+          <br />
+          <span className={styles.subtitle}>
+            Short description about your community
+          </span>
+        </Label>
+        <Textarea
+          id="description"
+          name="description"
+          rows={2}
+          maxLength={500}
         />
         <div className={styles.p2}></div>
 

@@ -20,14 +20,14 @@ export default class AccountsService {
     email,
     name,
     slackDomain,
+    description,
     channels = [],
-    members = [],
   }: {
     email: string;
     name?: string;
+    description?: string;
     slackDomain?: string;
     channels?: string[];
-    members?: string[];
   }) {
     if (!email) {
       return { status: 401 };
@@ -44,6 +44,7 @@ export default class AccountsService {
         select: { id: true, users: true, channels: true },
         data: {
           name,
+          description: description?.substring(0, 500),
           slackDomain: slackDomain?.toLowerCase(),
           auths: {
             connect: {

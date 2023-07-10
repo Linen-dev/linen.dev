@@ -4,6 +4,7 @@ import { AccountType, ChatType } from '../accounts';
 
 export const createAccountSchema = z.object({
   name: z.string().regex(patterns.communityName).optional(),
+  description: z.string().max(500).optional(),
   slackDomain: z.string().regex(patterns.communityPath).optional(),
   channels: z.string().regex(patterns.channelName).array().optional(),
   members: z.string().email().array().optional(),
