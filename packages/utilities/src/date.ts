@@ -2,6 +2,7 @@ import formatDate from 'date-fns/format';
 import utilFormatDistance from 'date-fns/formatDistance';
 import add from 'date-fns/add';
 import sub from 'date-fns/sub';
+import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 
 export function format(date: string, pattern: string = 'p'): string {
   return formatDate(new Date(date), pattern);
@@ -33,4 +34,8 @@ export function lastWeek() {
 
 export function formatDistance(date: string): string {
   return utilFormatDistance(new Date(), new Date(date));
+}
+
+export function timeAgo(date: string) {
+  return formatDistanceToNow(new Date(date), { addSuffix: true });
 }
