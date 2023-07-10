@@ -20,8 +20,7 @@
     "start:maintenance-script": "npx tsx bin/maintenance/index.ts",
     "start:build-pagination": "pm2-runtime --raw \"npx tsx bin/build-page-field-on-threads/index.ts\"",
     "dev:queue": "npx tsx watch queue/index.ts",
-    "build:queue": "npx tsup queue/index.ts --target es6 --clean --minify --sourcemap",
-    "start:queue": "node dist/index.js"
+    "build:queue": "npx tsup --entry.queue queue/index.ts --entry.discord queue/tasks/discord-bot.ts --entry.pagination queue/tasks/pagination.ts --target es6 --clean --minify --sourcemap"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.348.0",

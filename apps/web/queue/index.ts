@@ -24,10 +24,8 @@ import {
   // QUEUE_USER_JOIN,
 } from './jobs';
 import { sitemap } from './tasks/sitemap';
-import { pagination, schedulePaginationJob } from './tasks/pagination';
 import { discordIntegration } from './tasks/discord-integration';
 import { removeCommunity } from './tasks/remove-community';
-import { discordBot, scheduleDiscordBotJob } from './tasks/discord-bot';
 // import { userJoinTask } from './tasks/user-join';
 
 export type TaskInterface = (
@@ -60,10 +58,6 @@ async function runWorker() {
       [QUEUE_INTEGRATION_DISCORD]: discordIntegration,
       [QUEUE_REMOVE_COMMUNITY]: removeCommunity,
       // [QUEUE_USER_JOIN]: userJoinTask,
-      discordBot,
-      scheduleDiscordBotJob,
-      pagination,
-      schedulePaginationJob,
     },
     parsedCronItems: parseCronItems([
       {
@@ -101,24 +95,6 @@ async function runWorker() {
         },
         task: QUEUE_SITEMAP,
         identifier: QUEUE_SITEMAP,
-      },
-      {
-        identifier: 'scheduleDiscordBotJob',
-        pattern: '* * * * *',
-        task: 'scheduleDiscordBotJob',
-        options: {
-          maxAttempts: 1,
-          backfillPeriod: 0,
-        },
-      },
-      {
-        identifier: 'schedulePaginationJob',
-        pattern: '*/30 * * * *',
-        task: 'schedulePaginationJob',
-        options: {
-          maxAttempts: 1,
-          backfillPeriod: 0,
-        },
       },
     ]),
   });
