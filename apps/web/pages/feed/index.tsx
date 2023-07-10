@@ -43,6 +43,11 @@ function Communities({ communities }: { communities: SerializedAccount[] }) {
   );
 }
 
+const FEED_URL =
+  process.env.NODE_ENV === 'production'
+    ? 'https://static.main.linendev.com/api/feed'
+    : '/api/feed';
+
 export default function Feed() {
   const [modal, setModal] = useState<ModalView>(ModalView.NONE);
   const [skip, setSkip] = useState(0);
@@ -55,7 +60,7 @@ export default function Feed() {
 
   async function fetchFeed() {
     setLoading(true);
-    fetch(`/api/feed?skip=${skip}&take=${TAKE}`, {
+    fetch(`${FEED_URL}?skip=${skip}&take=${TAKE}`, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
     })
