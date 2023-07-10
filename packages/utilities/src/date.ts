@@ -36,6 +36,8 @@ export function formatDistance(date: string): string {
   return utilFormatDistance(new Date(), new Date(date));
 }
 
-export function timeAgo(date: string) {
-  return formatDistanceToNow(new Date(date), { addSuffix: true });
+export function timeAgo(date: string | number) {
+  return formatDistanceToNow(typeof date === 'number' ? date : new Date(date), {
+    addSuffix: true,
+  });
 }

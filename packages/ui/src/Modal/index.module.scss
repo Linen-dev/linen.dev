@@ -18,6 +18,10 @@
   backdrop-filter: blur(4px);
 }
 
+.overlay.full {
+  background-color: white;
+}
+
 @keyframes animatedOverlay {
   from {
     opacity: 0;
