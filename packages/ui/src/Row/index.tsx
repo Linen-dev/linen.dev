@@ -116,7 +116,11 @@ export default function Row({
   ).length;
 
   return (
-    <>
+    <div
+      className={classNames(styles.main, {
+        [styles.fade]: message.body.length > 280,
+      })}
+    >
       <Droppable
         id={thread.id}
         className={styles.container}
@@ -192,6 +196,6 @@ export default function Row({
           }
         />
       </Droppable>
-    </>
+    </div>
   );
 }
