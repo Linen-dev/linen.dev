@@ -22,7 +22,7 @@ interface Props {
 
 function isLinenLogo(src: string): boolean {
   return (
-    src === 'https://static.main.linendev.com/linen-white-logo.svg' ||
+    src === 'https://static.main.linendev.com/logos/linen-white-logo.svg' ||
     src.startsWith('https://static.main.linendev.com/logos/linen-white-logo')
   );
 }

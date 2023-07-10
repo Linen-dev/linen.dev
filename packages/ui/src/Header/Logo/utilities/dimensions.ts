@@ -1,13 +1,13 @@
 // naively hardcoing image widths to prevent layout shifts on page loads
 // we should remove this as soon as we migrate image names with dimensions
 export function getImageWidthByUrl(src: string) {
-  if (src === 'https://static.main.linendev.com/growthbook_logo.svg') {
+  if (src === 'https://static.main.linendev.com/logos/growthbook_logo.svg') {
     return 131;
   }
   if (src === 'https://static.main.linendev.com/logos/cerbos-logo.svg') {
     return 82;
   }
-  if (src === 'https://static.main.linendev.com/pulumi-logo.svg') {
+  if (src === 'https://static.main.linendev.com/logos/pulumi-logo.svg') {
     return 96;
   }
   if (
@@ -17,7 +17,8 @@ export function getImageWidthByUrl(src: string) {
     return 82;
   }
   if (
-    src === 'https://static.main.linendev.com/platform-engineering-logo.svg'
+    src ===
+    'https://static.main.linendev.com/logos/platform-engineering-logo.svg'
   ) {
     return 90;
   }
@@ -27,22 +28,24 @@ export function getImageWidthByUrl(src: string) {
   ) {
     return 103;
   }
-  if (src === 'https://static.main.linendev.com/questdb-logo.svg') {
+  if (src === 'https://static.main.linendev.com/logos/questdb-logo.svg') {
     return 99;
   }
-  if (src === 'https://static.main.linendev.com/orchest-logo.svg') {
+  if (src === 'https://static.main.linendev.com/logos/orchest-logo.svg') {
     return 112;
   }
-  if (src === 'https://static.main.linendev.com/signoz-logo.svg') {
+  if (src === 'https://static.main.linendev.com/logos/signoz-logo.svg') {
     return 96;
   }
-  if (src === 'https://static.main.linendev.com/prefect-logo.svg') {
+  if (src === 'https://static.main.linendev.com/logos/prefect-logo.svg') {
     return 94;
   }
   if (src === 'https://static.main.linendev.com/logos/acryl-logo.svg') {
     return 88;
   }
-  if (src === 'https://static.main.linendev.com/luna-sec-white-logo.svg') {
+  if (
+    src === 'https://static.main.linendev.com/logos/luna-sec-white-logo.svg'
+  ) {
     return 93;
   }
   if (src === 'https://static.main.linendev.com/logos/kotlin-logo.svg') {
@@ -51,13 +54,15 @@ export function getImageWidthByUrl(src: string) {
   if (src === 'https://static.main.linendev.com/logos/calcom-logo.svg') {
     return 110;
   }
-  if (src === 'https://static.main.linendev.com/efabless-logo.svg') {
+  if (src === 'https://static.main.linendev.com/logos/efabless-logo.svg') {
     return 64;
   }
-  if (src === 'https://static.main.linendev.com/infracost-logo.svg') {
+  if (src === 'https://static.main.linendev.com/logos/infracost-logo.svg') {
     return 118;
   }
-  if (src === 'https://static.main.linendev.com/future-of-coding-logo.svg') {
+  if (
+    src === 'https://static.main.linendev.com/logos/future-of-coding-logo.svg'
+  ) {
     return 140;
   }
   if (
@@ -78,7 +83,9 @@ export function getImageWidthByUrl(src: string) {
   ) {
     return 31;
   }
-  if (src === 'https://static.main.linendev.com/flyte_lockup_on_dark.png') {
+  if (
+    src === 'https://static.main.linendev.com/logos/flyte_lockup_on_dark.png'
+  ) {
     return 73;
   }
   if (
@@ -94,7 +101,8 @@ export function getImageWidthByUrl(src: string) {
     return 96;
   }
   if (
-    src === 'https://static.main.linendev.com/netsuiteprofessionals-logo.png'
+    src ===
+    'https://static.main.linendev.com/logos/netsuiteprofessionals-logo.png'
   ) {
     return 72;
   }
@@ -110,7 +118,7 @@ export function getImageWidthByUrl(src: string) {
   ) {
     return 92;
   }
-  if (src === 'https://static.main.linendev.com/airbyte-logo.png') {
+  if (src === 'https://static.main.linendev.com/logos/airbyte-logo.png') {
     return 88;
   }
   return undefined;

@@ -2,7 +2,7 @@
 
 <p>
   <a href="https://linen.dev/">
-    <img alt="linen-dev" src="https://d2mu86a8belxbg.cloudfront.net/logos/linen-black-logo.svg" width="108">
+    <img alt="linen-dev" src="https://static.main.linendev.com/logos/linen-black-logo.svg" width="108">
   </a>
 </p>
 

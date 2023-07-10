@@ -10,7 +10,7 @@ export interface SeoProps {
 
 export default function SEO({
   description,
-  image = 'https://static.main.linendev.com/linen-black-logo.svg',
+  image = 'https://static.main.linendev.com/logos/linen-black-logo.svg',
   url,
   noIndex = false,
   title = 'Linen Community',
