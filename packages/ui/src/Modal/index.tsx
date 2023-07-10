@@ -28,7 +28,11 @@ export default function Modal({
   return (
     <Portal id="modal-portal">
       <div className={classNames(styles.modal, className)}>
-        <div className={styles.overlay} />
+        <div
+          className={classNames(styles.overlay, {
+            [styles.full]: size === 'full',
+          })}
+        />
         <div className={styles.container}>
           <div
             className={classNames(styles.center, {

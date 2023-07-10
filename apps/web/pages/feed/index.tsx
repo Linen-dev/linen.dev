@@ -5,21 +5,53 @@ import Row from '@linen/ui/Row';
 import { SerializedAccount, SerializedThread, Settings } from '@linen/types';
 import LinenLogo from '@linen/ui/LinenLogo';
 import useInfiniteScroll from 'react-infinite-scroll-hook';
+import Modal from '@linen/ui/Modal';
 import Nav from '@linen/ui/Nav';
 import { FiHash } from '@react-icons/all-files/fi/FiHash';
 import { getHomeUrl } from '@linen/utilities/home';
 import { getThreadUrl } from '@linen/utilities/url';
 import { timeAgo } from '@linen/utilities/date';
+import { FiMenu } from '@react-icons/all-files/fi/FiMenu';
 
 const TAKE = 12;
 
+enum ModalView {
+  NONE,
+  MENU,
+}
+
+function Communities({ communities }: { communities: SerializedAccount[] }) {
+  return (
+    <>
+      <Nav.Group>Communities</Nav.Group>
+      {communities.map((community) => {
+        return (
+          <a
+            href={getHomeUrl(community)}
+            key={community.id}
+            target="_blank"
+            rel="noreferrer"
+          >
+            <Nav.Item>
+              <FiHash />
+              {community.name}
+            </Nav.Item>
+          </a>
+        );
+      })}
+    </>
+  );
+}
+
 export default function Feed() {
+  const [modal, setModal] = useState<ModalView>(ModalView.NONE);
   const [skip, setSkip] = useState(0);
   const [loading, setLoading] = useState(false);
   const [more, setMore] = useState(false);
   const [threads, setThreads] = useState<SerializedThread[]>([]);
   const [settings, setSettings] = useState<Settings[]>([]);
   const [communities, setCommunities] = useState<SerializedAccount[]>([]);
+  const close = () => setModal(ModalView.NONE);
 
   async function fetchFeed() {
     setLoading(true);
@@ -81,28 +113,21 @@ export default function Feed() {
               <LinenLogo /> <small>Feed</small>
             </div>
             <Nav>
-              <Nav.Group>Communities</Nav.Group>
-              {communities.slice(0, 20).map((community) => {
-                return (
-                  <a
-                    href={getHomeUrl(community)}
-                    key={community.id}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    <Nav.Item>
-                      <FiHash />
-                      {community.name}
-                    </Nav.Item>
-                  </a>
-                );
-              })}
+              <Communities communities={communities.slice(0, 20)} />
             </Nav>
           </div>
         </div>
         <main className={styles.center}>
           <div className={styles.logo}>
             <LinenLogo /> <small>Feed</small>
+            <FiMenu
+              className={styles.menu}
+              onClick={(event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                setModal(ModalView.MENU);
+              }}
+            />
           </div>
           <div className={styles.description}>
             <p>
@@ -193,6 +218,12 @@ export default function Feed() {
           </div>
         </div>
       </div>
+      <Modal open={modal === ModalView.MENU} close={close} size="full">
+        <div className={styles.modal}>
+          <FiMenu className={styles.menu} onClick={close} />
+          <Communities communities={communities} />
+        </div>
+      </Modal>
     </BlankLayout>
   );
 }

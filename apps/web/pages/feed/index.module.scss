@@ -93,6 +93,17 @@
   text-align: center;
 }
 
+.menu {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+.modal {
+  padding: 0.7rem 0.5rem;
+}
+
 @media screen and (max-width: 1023px) {
 .center .logo {
   display: flex;
