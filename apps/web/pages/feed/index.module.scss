@@ -76,15 +76,21 @@
   color: var(--color-gray-700);
 }
 
-.right .sticky a {
+.link {
   color: var(--color-blue-700);
-  font-size: 0.875rem;
-  font-weight: 500;
   transition: color 0.2s ease;
 }
 
-.right .sticky a:hover {
+.link:hover {
   color: var(--color-blue-800);
+}
+
+.description {
+  display: block;
+  border-bottom: 1px solid var(--color-gray-100);
+  color: var(--color-gray-700);
+  padding: 1rem;
+  text-align: center;
 }
 
 @media screen and (max-width: 1023px) {
@@ -124,6 +130,9 @@
     min-width: 268px;
     max-width: 268px;
     padding: 1rem;
+  }
+  .description {
+    display: none;
   }
 }
 
