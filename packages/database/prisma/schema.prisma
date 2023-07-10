@@ -197,6 +197,7 @@ model accounts {
   apiKeys               apiKeys[]
   notifications         notifications[]
   integrationMatrix     integrationMatrix[]
+  accountTag            accountTag[]
 
   @@unique([redirectDomain])
   @@unique([slackDomain])
@@ -211,6 +212,14 @@ enum AccountIntegration {
   NONE
   SLACK
   DISCORD
+}
+
+model accountTag {
+  account   accounts @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  accountId String
+  tag       String
+
+  @@unique([accountId, tag])
 }
 
 enum ChatType {
