@@ -9,6 +9,7 @@ import Nav from '@linen/ui/Nav';
 import { FiHash } from '@react-icons/all-files/fi/FiHash';
 import { getHomeUrl } from '@linen/utilities/home';
 import { getThreadUrl } from '@linen/utilities/url';
+import { timeAgo } from '@linen/utilities/date';
 
 const TAKE = 12;
 
@@ -129,16 +130,18 @@ export default function Feed() {
                   settings={setting}
                   showActions={false}
                   subheader={
-                    <a
-                      href={getHomeUrl(community)}
-                      key={community.id}
-                      target="_blank"
-                      rel="noreferrer"
-                      className={styles.subheader}
-                    >
-                      <FiHash />
-                      {community.name}
-                    </a>
+                    <>
+                      {timeAgo(Number(thread.lastReplyAt))}
+                      <a
+                        href={getHomeUrl(community)}
+                        key={community.id}
+                        target="_blank"
+                        rel="noreferrer"
+                        className={styles.subheader}
+                      >
+                        #{community.name}
+                      </a>
+                    </>
                   }
                 />
               </a>
