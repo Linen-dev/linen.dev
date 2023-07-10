@@ -104,6 +104,21 @@ export default function Feed() {
           <div className={styles.logo}>
             <LinenLogo /> <small>Feed</small>
           </div>
+          <div className={styles.description}>
+            <p>
+              <small>
+                Linen is a chat platform built for communities.{' '}
+                <a
+                  className={styles.link}
+                  href="https://linen.dev"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Read more
+                </a>
+              </small>
+            </p>
+          </div>
           {threads.map((thread) => {
             const community = communities.find(
               (community) => community.id === thread.channel?.accountId
@@ -167,7 +182,12 @@ export default function Feed() {
                 content.
               </small>
             </p>
-            <a href="https://linen.dev" target="_blank" rel="noreferrer">
+            <a
+              className={styles.link}
+              href="https://linen.dev"
+              target="_blank"
+              rel="noreferrer"
+            >
               Read more
             </a>
           </div>
