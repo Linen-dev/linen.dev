@@ -161,7 +161,12 @@
 }
 
 .row {
-  border-bottom: 1px solid var(--color-gray-100);
+  border-top: 1px solid var(--color-gray-100);
+  display: block;
+}
+
+.row:first-child {
+  border-top: none;
 }
 
 .row:hover {
