@@ -149,49 +149,56 @@ export default function Feed() {
               </small>
             </p>
           </div>
-          {threads.map((thread) => {
-            const community = communities.find(
-              (community) => community.id === thread.channel?.accountId
-            ) as SerializedAccount;
-            const setting = settings.find(
-              (setting) => setting.communityId === thread.channel?.accountId
-            ) as Settings;
-            const url = getThreadUrl({
-              isSubDomainRouting: false,
-              settings: setting,
-              incrementId: thread.incrementId,
-              slug: thread.slug,
-              LINEN_URL: process.env.DEVELOPMENT
-                ? 'http://localhost:3000'
-                : 'https://www.linen.dev',
-            });
-            return (
-              <a href={url} target="_blank" key={thread.id} rel="noreferrer">
-                <Row
+          <div>
+            {threads.map((thread) => {
+              const community = communities.find(
+                (community) => community.id === thread.channel?.accountId
+              ) as SerializedAccount;
+              const setting = settings.find(
+                (setting) => setting.communityId === thread.channel?.accountId
+              ) as Settings;
+              const url = getThreadUrl({
+                isSubDomainRouting: false,
+                settings: setting,
+                incrementId: thread.incrementId,
+                slug: thread.slug,
+                LINEN_URL: process.env.DEVELOPMENT
+                  ? 'http://localhost:3000'
+                  : 'https://www.linen.dev',
+              });
+              return (
+                <a
                   className={styles.row}
-                  thread={thread}
-                  currentUser={null}
-                  isSubDomainRouting={false}
-                  settings={setting}
-                  showActions={false}
-                  subheader={
-                    <>
-                      {timeAgo(Number(thread.lastReplyAt))}
-                      <a
-                        href={getHomeUrl(community)}
-                        key={community.id}
-                        target="_blank"
-                        rel="noreferrer"
-                        className={styles.subheader}
-                      >
-                        #{community.name}
-                      </a>
-                    </>
-                  }
-                />
-              </a>
-            );
-          })}
+                  href={url}
+                  target="_blank"
+                  key={thread.id}
+                  rel="noreferrer"
+                >
+                  <Row
+                    thread={thread}
+                    currentUser={null}
+                    isSubDomainRouting={false}
+                    settings={setting}
+                    showActions={false}
+                    subheader={
+                      <>
+                        {timeAgo(Number(thread.lastReplyAt))}
+                        <a
+                          href={getHomeUrl(community)}
+                          key={community.id}
+                          target="_blank"
+                          rel="noreferrer"
+                          className={styles.subheader}
+                        >
+                          #{community.name}
+                        </a>
+                      </>
+                    }
+                  />
+                </a>
+              );
+            })}
+          </div>
           <div ref={sentryRef} />
         </main>
         <div className={styles.right}>
