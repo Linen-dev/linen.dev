@@ -27,5 +27,6 @@ export const updateAccountSchema = z.object({
   type: z.enum([AccountType.PRIVATE, AccountType.PUBLIC]).optional(),
   chat: z.enum([ChatType.MANAGERS, ChatType.MEMBERS, ChatType.NONE]).optional(),
   newChannelsConfig: z.enum(['HIDDEN', 'NOT_HIDDEN']).optional(),
+  tags: z.array(z.string()).optional(),
 });
 export type updateAccountType = z.infer<typeof updateAccountSchema>;

@@ -97,6 +97,7 @@ accountsRouter.put(
     const { status, ...data } = await AccountsService.update({
       accountId,
       params: req.body,
+      tags: req.body.tags,
     });
     res.status(status).json(data);
     res.end();

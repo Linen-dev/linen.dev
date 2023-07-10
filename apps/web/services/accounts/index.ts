@@ -123,6 +123,7 @@ export default class AccountsService {
   static async update({
     params,
     accountId,
+    tags,
   }: {
     params: {
       description?: string;
@@ -141,6 +142,7 @@ export default class AccountsService {
       newChannelsConfig?: string;
     };
     accountId: string;
+    tags?: string[];
   }) {
     const account = await getAccountById(accountId);
     if (!account) {
@@ -195,6 +197,16 @@ export default class AccountsService {
         where: { id: account.id },
         data,
       });
+
+      if (tags && tags.length) {
+        await prisma.accountTag.deleteMany({
+          where: { accountId: account.id },
+        });
+        await prisma.accountTag.createMany({
+          data: tags.map((tag) => ({ accountId: account.id, tag })),
+          skipDuplicates: true,
+        });
+      }
 
       return { status: 200, record };
     } catch (exception: unknown) {
