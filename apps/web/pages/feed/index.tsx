@@ -9,13 +9,11 @@ import Modal from '@linen/ui/Modal';
 import Nav from '@linen/ui/Nav';
 import { FiHash } from '@react-icons/all-files/fi/FiHash';
 import { getHomeUrl } from '@linen/utilities/home';
-import { getThreadUrl } from '@linen/utilities/url';
+import { getThreadUrl, qs } from '@linen/utilities/url';
 import { timeAgo } from '@linen/utilities/date';
 import { FiMenu } from '@react-icons/all-files/fi/FiMenu';
 import { signOut, useSession } from '@linen/auth/client';
 import Link from 'next/link';
-
-const TAKE = 12;
 
 enum ModalView {
   NONE,
@@ -49,7 +47,7 @@ const FEED_URL = '/api/feed';
 
 export default function Feed() {
   const [modal, setModal] = useState<ModalView>(ModalView.NONE);
-  const [skip, setSkip] = useState(0);
+  const [cursor, setCursor] = useState<string>();
   const [loading, setLoading] = useState(false);
   const [more, setMore] = useState(false);
   const [threads, setThreads] = useState<SerializedThread[]>([]);
@@ -60,7 +58,7 @@ export default function Feed() {
 
   async function fetchFeed() {
     setLoading(true);
-    fetch(`${FEED_URL}?skip=${skip}&take=${TAKE}`, {
+    fetch(`${FEED_URL}?${qs({ cursor })}`, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
     })
@@ -70,13 +68,15 @@ export default function Feed() {
           threads: newThreads,
           settings: newSettings,
           communities: newCommunities,
+          cursor,
         }: {
           threads: SerializedThread[];
           settings: Settings[];
           communities: SerializedAccount[];
+          cursor: string | null;
         }) => {
           setLoading(false);
-          setSkip((skip) => skip + TAKE);
+          setCursor(cursor || undefined);
           setThreads((threads) => [...threads, ...newThreads]);
           setSettings((settings) => {
             const ids = settings.map((setting) => setting.communityId);
@@ -92,7 +92,7 @@ export default function Feed() {
             );
             return [...communities, ...communitiesToAdd];
           });
-          setMore(newThreads.length > 0);
+          setMore(!!cursor);
         }
       );
   }
@@ -105,7 +105,7 @@ export default function Feed() {
     loading,
     hasNextPage: more,
     onLoadMore: fetchFeed,
-    disabled: loading || !more || threads.length % TAKE !== 0,
+    disabled: loading || !more,
     rootMargin: '0px 0px 640px 0px',
     delayInMs: 0,
   });
