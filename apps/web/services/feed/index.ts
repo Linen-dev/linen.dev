@@ -1,5 +1,5 @@
 import { accounts as accountsType, prisma } from '@linen/database';
-import { daysAgo } from '@linen/utilities/date';
+import { yesterday } from '@linen/utilities/date';
 import { serializeThread } from '@linen/serializers/thread';
 import { serializeAccount } from '@linen/serializers/account';
 import { serializeSettings } from '@linen/serializers/settings';
@@ -33,7 +33,7 @@ const fetch = memoize(
                 },
               },
             },
-            lastReplyAt: { gt: daysAgo(3).getTime() },
+            lastReplyAt: { gt: yesterday().getTime() },
             hidden: false,
           },
           PRODUCTION
