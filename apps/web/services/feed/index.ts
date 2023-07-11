@@ -10,32 +10,27 @@ const fetch = memoize(
   ({ skip, take }: { skip: number; take: number }) => {
     return prisma.threads.findMany({
       where: {
-        OR: [
-          {
-            messageCount: {
-              gte: 3,
-            },
-            channel: {
-              type: 'PUBLIC',
-              account: {
-                anonymizeUsers: false,
-                type: 'PUBLIC',
-              },
-              archived: false,
-              hidden: false,
-            },
-            messages: {
-              none: {
-                author: {
-                  isBot: true,
-                },
-              },
-            },
-            lastReplyAt: { gt: yesterday().getTime() },
-            hidden: false,
+        messageCount: {
+          gte: 3,
+        },
+        channel: {
+          type: 'PUBLIC',
+          account: {
+            anonymizeUsers: false,
+            type: 'PUBLIC',
           },
-          { channelId: 'b876a398-be14-4b2f-970d-835a9e61b3d4' },
-        ],
+          archived: false,
+          hidden: false,
+        },
+        messages: {
+          none: {
+            author: {
+              isBot: true,
+            },
+          },
+        },
+        lastReplyAt: { gt: yesterday().getTime() },
+        hidden: false,
       },
       include: {
         messages: {
