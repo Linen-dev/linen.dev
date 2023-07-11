@@ -22,4 +22,14 @@ export const config = {
   channel: {
     defaultName: 'main',
   },
+  linen: {
+    squareLogo:
+      'https://static.main.linendev.com/logos/logo05dab315-0b75-415b-aca4-f56a1867f045.png',
+    communityId: '09011dac-952f-4796-8892-4ea29038f5a1',
+    feedChannelId: 'b876a398-be14-4b2f-970d-835a9e61b3d4',
+    bot: {
+      externalId: 'linen-bot',
+      displayName: 'LinenBot',
+    },
+  },
 };
