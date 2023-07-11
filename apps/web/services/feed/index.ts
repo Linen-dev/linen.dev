@@ -6,8 +6,6 @@ import { serializeSettings } from '@linen/serializers/settings';
 import memoize from 'p-memoize';
 import ExpiryMap from 'expiry-map';
 
-const PRODUCTION = process.env.NODE_ENV === 'production';
-
 const fetch = memoize(
   ({ skip, take }: { skip: number; take: number }) => {
     return prisma.threads.findMany({
@@ -36,14 +34,7 @@ const fetch = memoize(
             lastReplyAt: { gt: yesterday().getTime() },
             hidden: false,
           },
-          PRODUCTION
-            ? { channelId: 'b876a398-be14-4b2f-970d-835a9e61b3d4' }
-            : {
-                channel: {
-                  channelName: 'feed',
-                  account: { slackDomain: 'linen' },
-                },
-              },
+          { channelId: 'b876a398-be14-4b2f-970d-835a9e61b3d4' },
         ],
       },
       include: {
