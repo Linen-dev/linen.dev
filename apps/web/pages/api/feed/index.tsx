@@ -2,10 +2,9 @@ import { NextApiRequest, NextApiResponse } from 'next/types';
 import FeedService from 'services/feed';
 import { cors, preflight } from 'utilities/cors';
 
-export async function index({ skip, take }: { skip: number; take: number }) {
-  const { threads, settings, communities } = await FeedService.get({
-    skip,
-    take,
+export async function index({ lastReplyAt }: { lastReplyAt?: number }) {
+  const { threads, settings, communities, cursor } = await FeedService.get({
+    lastReplyAt,
   });
 
   return {
@@ -14,6 +13,7 @@ export async function index({ skip, take }: { skip: number; take: number }) {
       threads,
       settings,
       communities,
+      cursor,
     },
   };
 }
@@ -26,13 +26,16 @@ export default async function handler(
     return preflight(request, response, ['GET']);
   }
   cors(request, response);
-  const skip = Number(request.query.skip);
-  const take = Number(request.query.take);
-  const { status, data } = await index({ skip, take });
+  const lastReplyAt = !!request.query.cursor
+    ? Number(request.query.cursor)
+    : undefined;
+  const { status, data } = await index({ lastReplyAt });
 
-  response.setHeader(
-    'Cache-Control',
-    'max-age=60, stale-while-revalidate=86400'
-  );
+  if (process.env.NODE_ENV === 'production') {
+    response.setHeader(
+      'Cache-Control',
+      'max-age=60, stale-while-revalidate=86400'
+    );
+  }
   return response.status(status).json(data);
 }

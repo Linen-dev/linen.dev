@@ -5,14 +5,20 @@ import { serializeAccount } from '@linen/serializers/account';
 import { serializeSettings } from '@linen/serializers/settings';
 import memoize from 'p-memoize';
 import ExpiryMap from 'expiry-map';
+import { config } from 'config';
 
 const fetch = memoize(
-  ({ skip, take }: { skip: number; take: number }) => {
+  ({ lastReplyAt }: { lastReplyAt?: number }) => {
     return prisma.threads.findMany({
       where: {
-        messageCount: {
-          gte: 3,
-        },
+        OR: [
+          { channelId: config.linen.feedChannelId },
+          {
+            messageCount: {
+              gte: 3,
+            },
+          },
+        ],
         channel: {
           type: 'PUBLIC',
           account: {
@@ -22,14 +28,11 @@ const fetch = memoize(
           archived: false,
           hidden: false,
         },
-        messages: {
-          none: {
-            author: {
-              isBot: true,
-            },
-          },
+        lastReplyAt: {
+          ...(!!lastReplyAt
+            ? { lt: lastReplyAt }
+            : { gt: yesterday().getTime() }),
         },
-        lastReplyAt: { gt: yesterday().getTime() },
         hidden: false,
       },
       include: {
@@ -52,9 +55,11 @@ const fetch = memoize(
           },
         },
       },
-      orderBy: [{ lastActivityAt: 'desc' }, { lastReplyAt: 'desc' }],
-      take,
-      skip,
+      orderBy: [
+        // { lastActivityAt: 'desc' },
+        { lastReplyAt: 'desc' },
+      ],
+      take: 12,
     });
   },
   {
@@ -66,24 +71,39 @@ const fetch = memoize(
 );
 
 export default class FeedService {
-  static async get({ skip, take }: { skip: number; take: number }) {
-    const threads = await fetch({ skip, take });
-
+  static async get({ lastReplyAt }: { lastReplyAt?: number }) {
     let accounts: accountsType[] = [];
     let ids: string[] = [];
 
-    threads.forEach((thread) => {
-      const { account } = thread.channel;
-      if (account && !ids.includes(account.id)) {
-        ids.push(account.id);
-        accounts.push(account);
-      }
-    });
+    const queryResult = await fetch({ lastReplyAt });
+
+    const threads = queryResult
+      // we filter threads with messages from bots here instead of through query
+      .filter((thread) =>
+        thread.messages.every(
+          (m) => !m.author?.isBot || m.author.externalUserId === 'linen-bot'
+        )
+      )
+      .map((thread) => {
+        const { account } = thread.channel;
+        if (account && !ids.includes(account.id)) {
+          ids.push(account.id);
+          accounts.push(account);
+        }
+        return serializeThread(thread);
+      });
+
+    let cursor;
+    try {
+      // using queryResult because it was not filtered on code
+      cursor = queryResult[queryResult.length - 1].lastReplyAt?.toString();
+    } catch (error) {}
 
     return {
-      threads: threads.map(serializeThread),
+      threads,
       settings: accounts.map(serializeSettings),
       communities: accounts.map(serializeAccount),
+      cursor,
     };
   }
 }
