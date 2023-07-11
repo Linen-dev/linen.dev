@@ -99,7 +99,7 @@ export default function Feed() {
 
   useEffect(() => {
     fetchFeed();
-  }, [fetchFeed]);
+  }, []);
 
   const [sentryRef] = useInfiniteScroll({
     loading,
