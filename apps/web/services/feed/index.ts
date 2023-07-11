@@ -6,31 +6,45 @@ import { serializeSettings } from '@linen/serializers/settings';
 import memoize from 'p-memoize';
 import ExpiryMap from 'expiry-map';
 
+const PRODUCTION = process.env.NODE_ENV === 'production';
+
 const fetch = memoize(
   ({ skip, take }: { skip: number; take: number }) => {
     return prisma.threads.findMany({
       where: {
-        messageCount: {
-          gte: 3,
-        },
-        channel: {
-          type: 'PUBLIC',
-          account: {
-            anonymizeUsers: false,
-            type: 'PUBLIC',
-          },
-          archived: false,
-          hidden: false,
-        },
-        messages: {
-          none: {
-            author: {
-              isBot: true,
+        OR: [
+          {
+            messageCount: {
+              gte: 3,
             },
+            channel: {
+              type: 'PUBLIC',
+              account: {
+                anonymizeUsers: false,
+                type: 'PUBLIC',
+              },
+              archived: false,
+              hidden: false,
+            },
+            messages: {
+              none: {
+                author: {
+                  isBot: true,
+                },
+              },
+            },
+            lastReplyAt: { gt: daysAgo(3).getTime() },
+            hidden: false,
           },
-        },
-        lastReplyAt: { gt: daysAgo(3).getTime() },
-        hidden: false,
+          PRODUCTION
+            ? { channelId: 'b876a398-be14-4b2f-970d-835a9e61b3d4' }
+            : {
+                channel: {
+                  channelName: 'feed',
+                  account: { slackDomain: 'linen' },
+                },
+              },
+        ],
       },
       include: {
         messages: {
