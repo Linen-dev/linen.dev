@@ -12,6 +12,8 @@ import { getHomeUrl } from '@linen/utilities/home';
 import { getThreadUrl } from '@linen/utilities/url';
 import { timeAgo } from '@linen/utilities/date';
 import { FiMenu } from '@react-icons/all-files/fi/FiMenu';
+import { signOut, useSession } from '@linen/auth/client';
+import Link from 'next/link';
 
 const TAKE = 12;
 
@@ -43,7 +45,10 @@ function Communities({ communities }: { communities: SerializedAccount[] }) {
   );
 }
 
-const FEED_URL = '/api/feed';
+const FEED_URL =
+  process.env.NODE_ENV === 'production'
+    ? 'https://static.main.linendev.com/api/feed'
+    : '/api/feed';
 
 export default function Feed() {
   const [modal, setModal] = useState<ModalView>(ModalView.NONE);
@@ -54,6 +59,7 @@ export default function Feed() {
   const [settings, setSettings] = useState<Settings[]>([]);
   const [communities, setCommunities] = useState<SerializedAccount[]>([]);
   const close = () => setModal(ModalView.NONE);
+  const session = useSession();
 
   async function fetchFeed() {
     setLoading(true);
@@ -96,7 +102,7 @@ export default function Feed() {
 
   useEffect(() => {
     fetchFeed();
-  }, []);
+  }, [fetchFeed]);
 
   const [sentryRef] = useInfiniteScroll({
     loading,
@@ -200,6 +206,33 @@ export default function Feed() {
         </main>
         <div className={styles.right}>
           <div className={styles.sticky}>
+            <div className={styles.actions}>
+              {session.status === 'authenticated' ? (
+                <>
+                  <Link className={styles.link} href="/s/linen/c/feed">
+                    Post
+                  </Link>
+                  <a className={styles.link} onClick={() => signOut()}>
+                    Sign out
+                  </a>
+                </>
+              ) : (
+                <>
+                  <Link
+                    className={styles.link}
+                    href="/signin?callbackUrl=/feed"
+                  >
+                    Log in
+                  </Link>
+                  <Link
+                    className={styles.link}
+                    href="/signup?callbackUrl=/feed"
+                  >
+                    Sign up
+                  </Link>
+                </>
+              )}
+            </div>
             <h1>What is Linen?</h1>
             <p>
               <small>
