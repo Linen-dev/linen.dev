@@ -29,5 +29,10 @@ export default async function handler(
   const skip = Number(request.query.skip);
   const take = Number(request.query.take);
   const { status, data } = await index({ skip, take });
+
+  response.setHeader(
+    'Cache-Control',
+    'max-age=60, stale-while-revalidate=86400'
+  );
   return response.status(status).json(data);
 }
