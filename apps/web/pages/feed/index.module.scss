@@ -4,6 +4,10 @@
   justify-content: center;
 }
 
+.grid small {
+  font-size: 0.8rem;
+}
+
 .left {
   display: none;
   position: relative;
@@ -76,7 +80,7 @@
   color: var(--color-blue-700);
   cursor: pointer;
   transition: color 0.2s ease;
-  font-size: 0.875rem;
+  font-size: 0.8rem;
 }
 
 .link:hover {
@@ -184,4 +188,5 @@
 .actions {
   display: flex;
   justify-content: space-between;
+  margin-bottom: 0.25rem;
 }
