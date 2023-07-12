@@ -201,18 +201,9 @@ export default function Feed() {
             })}
           </div>
           <div ref={sentryRef} />
-          <RowSkeleton />
-          <RowSkeleton />
-          <RowSkeleton />
-          <RowSkeleton />
-          <RowSkeleton />
-          <RowSkeleton />
-          <RowSkeleton />
-          <RowSkeleton />
-          <RowSkeleton />
-          <RowSkeleton />
-          <RowSkeleton />
-          <RowSkeleton />
+          {[...Array(36)].map((_, index) => (
+            <RowSkeleton key={`row-skeleton-${index}`} />
+          ))}
         </main>
         <div className={styles.right}>
           <div className={styles.sticky}>

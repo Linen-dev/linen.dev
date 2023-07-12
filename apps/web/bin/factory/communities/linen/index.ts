@@ -774,7 +774,7 @@ export default async function createLinenCommunity() {
           create: [
             {
               channelId: channel7.id,
-              body: `Thread ${index}`,
+              body: `Forum thread ${index}`,
               usersId: user1.id,
               sentAt,
               messageFormat: MessageFormat.LINEN,
@@ -784,6 +784,63 @@ export default async function createLinenCommunity() {
         page: Math.ceil(number / 10),
       },
     });
+  });
+
+  const channel8 = await prisma.channels.create({
+    data: {
+      accountId: community.id,
+      channelName: 'feed',
+      pages: 100,
+      displayOrder: 6,
+      type: 'PUBLIC',
+    },
+  });
+
+  [...(Array(999).keys() as any)].map(async (index) => {
+    const number = 999 - index;
+    const timestamp = new Date().getTime() - index;
+    await prisma.threads.create({
+      data: {
+        title: `Title ${index}`,
+        channelId: channel8.id,
+        sentAt: timestamp,
+        lastReplyAt: timestamp,
+        messageCount: 3,
+        messages: {
+          create: [
+            {
+              channelId: channel8.id,
+              body: `Feed thread ${index}/1`,
+              usersId: user1.id,
+              sentAt: new Date(timestamp).toISOString(),
+              messageFormat: MessageFormat.LINEN,
+            },
+            {
+              channelId: channel8.id,
+              body: `Feed thread ${index}/2`,
+              usersId: user1.id,
+              sentAt: new Date(timestamp + 1).toISOString(),
+              messageFormat: MessageFormat.LINEN,
+            },
+            {
+              channelId: channel8.id,
+              body: `Feed thread ${index}/3`,
+              usersId: user1.id,
+              sentAt: new Date(timestamp + 2).toISOString(),
+              messageFormat: MessageFormat.LINEN,
+            },
+          ],
+        },
+        page: Math.ceil(number / 10),
+      },
+    });
+  });
+
+  await prisma.memberships.createMany({
+    data: users.map((user) => ({
+      channelsId: channel8.id,
+      usersId: user.id,
+    })),
   });
 
   await prisma.channels.createMany({
