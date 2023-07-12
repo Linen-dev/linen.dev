@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './index.module.scss';
 
 interface Props {
-  onClick(): void;
+  onClick(event: React.MouseEvent<HTMLDivElement>): void;
   children: React.ReactNode;
 }
 
