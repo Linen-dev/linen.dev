@@ -60,14 +60,21 @@ export default class FeedService {
 
     const queryResult = await fetch({ lastReplyAt });
 
-    const threads = queryResult.map((thread) => {
-      const { account } = thread.channel;
-      if (account && !ids.includes(account.id)) {
-        ids.push(account.id);
-        accounts.push(account);
-      }
-      return serializeThread(thread);
-    });
+    const threads = queryResult
+      // we filter threads with messages from bots here instead of through query
+      .filter((thread) =>
+        thread.messages.every(
+          (m) => !m.author?.isBot || m.author.externalUserId === 'linen-bot'
+        )
+      )
+      .map((thread) => {
+        const { account } = thread.channel;
+        if (account && !ids.includes(account.id)) {
+          ids.push(account.id);
+          accounts.push(account);
+        }
+        return serializeThread(thread);
+      });
 
     let cursor;
     try {
@@ -95,13 +102,13 @@ export default class FeedService {
             messageCount: {
               gte: 3,
             },
-            messages: {
-              none: {
-                author: {
-                  isBot: true,
-                },
-              },
-            },
+            // messages: {
+            //   none: {
+            //     author: {
+            //       isBot: true,
+            //     },
+            //   },
+            // },
           },
         ],
         channel: {
