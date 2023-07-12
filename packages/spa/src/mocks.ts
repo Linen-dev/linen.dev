@@ -39,7 +39,6 @@ export const mockThread: SerializedThread = {
   id: '',
   incrementId: 0,
   lastReplyAt: '',
-  lastActivityAt: '',
   messageCount: 0,
   messages: [
     {

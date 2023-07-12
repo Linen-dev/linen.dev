@@ -73,8 +73,7 @@ model threads {
   firstUserReplyAt    BigInt?
   firstManagerReplyAt BigInt?
   userThreadStatus    userThreadStatus[]
-
-  lastActivityAt BigInt @default(0)
+  feed                Boolean            @default(false)
 
   notifications     notifications[]
   page              Int?
@@ -86,6 +85,8 @@ model threads {
   @@index([channelId, sentAt, hidden])
   @@index([channelId, hidden, state, lastReplyAt])
   @@index([channelId, page])
+  @@index([sentAt])
+  @@index([feed, lastReplyAt])
 }
 
 enum ThreadState {

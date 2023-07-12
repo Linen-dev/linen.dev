@@ -100,7 +100,7 @@ async function createThread({
   await prisma.threads.create({
     data: {
       sentAt: new Date().getTime(),
-      lastActivityAt: new Date().getTime(),
+      feed: true,
       lastReplyAt: new Date().getTime(),
       channel: { connect: { id: channelId } },
       messages: {

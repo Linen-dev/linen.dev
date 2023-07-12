@@ -32,7 +32,6 @@ export function serializeThread({
     ...thread,
     sentAt: thread.sentAt.toString(),
     lastReplyAt: thread.lastReplyAt?.toString() || thread.sentAt.toString(),
-    lastActivityAt: thread.lastActivityAt.toString(),
     channel: thread.channel ? serializeChannel(thread.channel) : null,
     messages: serializeMessages(thread.messages),
   };
@@ -58,7 +57,6 @@ export function createThreadImitation({
     id,
     sentAt: new Date().toISOString(),
     lastReplyAt: new Date().toISOString(),
-    lastActivityAt: new Date().toISOString(),
     messages: [
       {
         id: 'imitation-message-id',

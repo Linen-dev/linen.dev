@@ -26,6 +26,7 @@ import {
 import { sitemap } from './tasks/sitemap';
 import { discordIntegration } from './tasks/discord-integration';
 import { removeCommunity } from './tasks/remove-community';
+import { buildFeed, createFeedJob } from './tasks/build-feed';
 // import { userJoinTask } from './tasks/user-join';
 
 export type TaskInterface = (
@@ -58,6 +59,7 @@ async function runWorker() {
       [QUEUE_INTEGRATION_DISCORD]: discordIntegration,
       [QUEUE_REMOVE_COMMUNITY]: removeCommunity,
       // [QUEUE_USER_JOIN]: userJoinTask,
+      buildFeed,
     },
     parsedCronItems: parseCronItems([
       {
@@ -98,6 +100,7 @@ async function runWorker() {
       },
     ]),
   });
+  await createFeedJob(runner.addJob);
   await runner.promise;
 }
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import BlankLayout from '@linen/ui/BlankLayout';
 import styles from './index.module.scss';
 import Row from '@linen/ui/Row';
@@ -53,7 +53,7 @@ export default function Feed() {
   const [modal, setModal] = useState<ModalView>(ModalView.NONE);
   const [cursor, setCursor] = useState<string>();
   const [loading, setLoading] = useState(false);
-  const [more, setMore] = useState(false);
+  const [more, setMore] = useState(true);
   const [threads, setThreads] = useState<SerializedThread[]>([]);
   const [settings, setSettings] = useState<Settings[]>([]);
   const [communities, setCommunities] = useState<SerializedAccount[]>([]);
@@ -204,9 +204,10 @@ export default function Feed() {
             })}
           </div>
           <div ref={sentryRef} />
-          {[...Array(36)].map((_, index) => (
-            <RowSkeleton key={`row-skeleton-${index}`} />
-          ))}
+          {more &&
+            [...Array(5)].map((_, index) => (
+              <RowSkeleton key={`row-skeleton-${index}`} />
+            ))}
         </main>
         <div className={styles.right}>
           <div className={styles.sticky}>
