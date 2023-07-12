@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { BiMessageCheck } from '@react-icons/all-files/bi/BiMessageCheck';
 import { FiSettings } from '@react-icons/all-files/fi/FiSettings';
 import {
@@ -90,8 +90,6 @@ export default function InboxView({
   const currentUser = permissions.user || null;
   const { communityId, communityName } = settings;
 
-  const debounceFetchInbox = debounce(api.fetchInbox);
-
   const fetchInbox = async ({
     communityName,
     page,
@@ -107,7 +105,7 @@ export default function InboxView({
       .filter((config) => config.subscribed)
       .map((config) => config.channelId);
     try {
-      return await debounceFetchInbox({
+      return await api.fetchInbox({
         communityName,
         page,
         limit,
@@ -117,6 +115,8 @@ export default function InboxView({
       throw new Error('Failed to fetch the inbox.');
     }
   };
+
+  const debouncedFetchInbox = useCallback(debounce(fetchInbox), []);
 
   const fetchThread = (threadId: string) =>
     api.getThread({ id: threadId, accountId: communityId });
@@ -326,7 +326,7 @@ export default function InboxView({
   const [polling] = usePolling(
     {
       fetch(): any {
-        return fetchInbox({
+        return debouncedFetchInbox({
           communityName,
           page,
           configuration,
@@ -500,7 +500,7 @@ export default function InboxView({
         reminderType,
       })
       .then(() => {
-        return fetchInbox({
+        return debouncedFetchInbox({
           communityName,
           page,
           configuration,

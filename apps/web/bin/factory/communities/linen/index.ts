@@ -763,7 +763,7 @@ export default async function createLinenCommunity() {
 
   [...(Array(999).keys() as any)].map(async (index) => {
     const number = 999 - index;
-    const sentAt = `2022-12-15T09:01:00.${pad(number.toString(), 3)}Z`;
+    const sentAt = `2022-12-15T08:02:00.${pad(number.toString(), 3)}Z`;
     await prisma.threads.create({
       data: {
         title: `Title ${index}`,
