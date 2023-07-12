@@ -68,10 +68,20 @@ export default function Component({
           alt={alt || src}
           width={width}
           height={height}
-          onClick={() => setPreview(true)}
+          onClick={(event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            setPreview(true);
+          }}
         />
         {preview && (
-          <Preview onClick={() => setPreview(false)}>
+          <Preview
+            onClick={(event) => {
+              event.preventDefault();
+              event.stopPropagation();
+              setPreview(false);
+            }}
+          >
             <img src={src} />
           </Preview>
         )}
