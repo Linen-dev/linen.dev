@@ -13813,19 +13813,20 @@ postgres@^3.3.1:
   resolved "https://registry.yarnpkg.com/postgres/-/postgres-3.3.5.tgz#8431605aae2112759d50e362fc08759165455677"
   integrity sha512-+JD93VELV9gHkqpV5gdL5/70HdGtEw4/XE1S4BC8f1mcPmdib3K5XsKVbnR1XcAyC41zOnifJ+9YRKxdIsXiUw==
 
-posthog-js@^1.57.2:
-  version "1.68.5"
-  resolved "https://registry.yarnpkg.com/posthog-js/-/posthog-js-1.68.5.tgz#2cca51de69450b3bdeb6709178d8272c71e10df3"
-  integrity sha512-EqQuIX0k564T2fhmzQK2Gcb8s/XRhHTpk6JOeGtJV7lpMI8Hffe+gGjGHcqIc4RoOg3LjAGYNHj6XgN+QPggLg==
+posthog-js@^1.70.2:
+  version "1.70.2"
+  resolved "https://registry.yarnpkg.com/posthog-js/-/posthog-js-1.70.2.tgz#b93ba832851a807a2867df89d0cfc359f603c1a3"
+  integrity sha512-tp3FpdndxjH4g8gGubwepDy2HdNPog4+R04N7+I/xZNRnhWhshmqsufLKE2UT0ocHI686XXDMIDzJrtWRTUXPw==
   dependencies:
     fflate "^0.4.1"
 
-posthog-node@^2.6.0:
-  version "2.6.0"
-  resolved "https://registry.npmjs.org/posthog-node/-/posthog-node-2.6.0.tgz"
-  integrity sha512-/BiFw/jwdP0uJSRAIoYqLoBTjZ612xv74b1L/a3T/p1nJVL8e0OrHuxbJW56c6WVW/IKm9gBF/zhbqfaz0XgJQ==
+posthog-node@^3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/posthog-node/-/posthog-node-3.1.1.tgz#f92c44a871552c9bfb98bf4cc8fd326d36af6cbd"
+  integrity sha512-OUSYcnLHbzvY/dxNsbUGoYuTZz5XNx48BkfiCkOIJZMFvot5VPQ0KWEjX+kzYxEwHeXbjW9plqsOVcYCYfidgg==
   dependencies:
     axios "^0.27.0"
+    rusha "^0.8.14"
 
 prebuild-install@^7.1.1:
   version "7.1.1"
@@ -14740,6 +14741,11 @@ run-series@^1.1.8:
   version "1.1.9"
   resolved "https://registry.npmjs.org/run-series/-/run-series-1.1.9.tgz"
   integrity sha512-Arc4hUN896vjkqCYrUXquBFtRZdv1PfLbTYP71efP6butxyQ0kWpiNJyAgsxscmQg1cqvHY32/UCBzXedTpU2g==
+
+rusha@^0.8.14:
+  version "0.8.14"
+  resolved "https://registry.yarnpkg.com/rusha/-/rusha-0.8.14.tgz#a977d0de9428406138b7bb90d3de5dcd024e2f68"
+  integrity sha512-cLgakCUf6PedEu15t8kbsjnwIFFR2D4RfL+W3iWFJ4iac7z4B0ZI8fxy4R3J956kAI68HclCFGL8MPoUVC3qVA==
 
 rxjs@^7.5.5:
   version "7.5.7"
