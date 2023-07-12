@@ -6,7 +6,7 @@ module.exports = {
     },
     {
       name: 'queue',
-      script: 'node dist/queue.js',
+      script: 'yarn tsx queue/index.ts',
     },
     {
       name: 'bot1',
