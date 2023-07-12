@@ -33,6 +33,7 @@
     "emoji-mart": "^5.5.2",
     "entities": "^4.4.0",
     "identity-obj-proxy": "^3.0.0",
+    "react-content-loader": "^6.2.1",
     "react-infinite-scroll-hook": "^4.1.1",
     "react-intersection-observer": "^9.4.3",
     "uuid": "^9.0.0"
@@ -167,6 +168,7 @@
     "./ProgressModal": "./dist/ProgressModal/index.js",
     "./ReminderModal": "./dist/ReminderModal/index.js",
     "./Row": "./dist/Row/index.js",
+    "./RowSkeleton": "./dist/RowSkeleton/index.js",
     "./SearchBar": "./dist/SearchBar/index.js",
     "./ShowUsers": "./dist/ShowUsers/index.js",
     "./SlackIcon": "./dist/SlackIcon/index.js",
@@ -492,6 +494,9 @@
       ],
       "Row": [
         "./dist/Row/index.d.ts"
+      ],
+      "RowSkeleton": [
+        "./dist/RowSkeleton/index.d.ts"
       ],
       "SearchBar": [
         "./dist/SearchBar/index.d.ts"
