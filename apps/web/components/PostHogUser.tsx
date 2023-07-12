@@ -8,7 +8,9 @@ function PostHogUser() {
 
   useEffect(() => {
     if (session.status === 'authenticated' && session.data.user?.id) {
-      posthog?.identify(session.data.user.id);
+      posthog?.identify(session.data.user.id, {
+        email: session.data.user.email,
+      });
     }
   }, [posthog, session]);
 

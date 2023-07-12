@@ -18,27 +18,24 @@ import { UsersContext } from '@linen/contexts/Users';
 import PostHogUser from 'components/PostHogUser';
 import { PostHogProvider } from 'posthog-js/react';
 
-const POSTHOG_API_KEY = process.env.NEXT_PUBLIC_POSTHOG_API_KEY!;
+if (
+  typeof window !== 'undefined' &&
+  !!process.env.NEXT_PUBLIC_POSTHOG_API_KEY
+) {
+  posthog.init(process.env.NEXT_PUBLIC_POSTHOG_API_KEY, {
+    api_host: '/ph' || 'https://app.posthog.com',
+    loaded: (posthog) => {
+      if (process.env.NODE_ENV === 'development') posthog.debug();
+    },
+  });
+}
+
 export default function App(props: AppProps) {
   const router = useRouter();
 
   const { Component, pageProps } = props;
 
   useEffect(() => {
-    if (!!POSTHOG_API_KEY && typeof window !== 'undefined') {
-      posthog.init(POSTHOG_API_KEY, {
-        api_host: '/ph' || 'https://app.posthog.com',
-        autocapture: true,
-        loaded: (posthog) => {
-          if (process.env.NODE_ENV === 'development') {
-            posthog.opt_out_capturing();
-          } else if (posthog.has_opted_out_capturing()) {
-            posthog.opt_in_capturing();
-          }
-        },
-      });
-    }
-
     const handleStart = (url: string) => {
       NProgress.start();
     };
