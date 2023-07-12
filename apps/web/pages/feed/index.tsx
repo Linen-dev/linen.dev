@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import BlankLayout from '@linen/ui/BlankLayout';
 import styles from './index.module.scss';
 import Row from '@linen/ui/Row';
+import RowSkeleton from '@linen/ui/RowSkeleton';
 import { SerializedAccount, SerializedThread, Settings } from '@linen/types';
 import LinenLogo from '@linen/ui/LinenLogo';
 import useInfiniteScroll from 'react-infinite-scroll-hook';
@@ -110,7 +111,7 @@ export default function Feed() {
     delayInMs: 0,
   });
   return (
-    <BlankLayout className={styles.layout}>
+    <BlankLayout>
       <div className={styles.grid}>
         <div className={styles.left}>
           <div className={styles.sticky}>
@@ -200,6 +201,18 @@ export default function Feed() {
             })}
           </div>
           <div ref={sentryRef} />
+          <RowSkeleton />
+          <RowSkeleton />
+          <RowSkeleton />
+          <RowSkeleton />
+          <RowSkeleton />
+          <RowSkeleton />
+          <RowSkeleton />
+          <RowSkeleton />
+          <RowSkeleton />
+          <RowSkeleton />
+          <RowSkeleton />
+          <RowSkeleton />
         </main>
         <div className={styles.right}>
           <div className={styles.sticky}>
