@@ -136,11 +136,7 @@ export default function ChannelRow({
   );
 
   return (
-    <div
-      className={classNames(styles.main, {
-        [styles.fade]: message.body.length > 280,
-      })}
-    >
+    <>
       {thread?.channel?.viewType === 'FORUM' && onReaction && (
         <div
           className={classNames(styles.left, {
@@ -196,6 +192,7 @@ export default function ChannelRow({
           settings={settings}
           permissions={permissions}
           currentUser={currentUser}
+          truncate={message.body.length > 280}
           mode={mode}
           drag="thread"
           onDelete={onDelete}
@@ -240,6 +237,6 @@ export default function ChannelRow({
           }
         />
       </Droppable>
-    </div>
+    </>
   );
 }

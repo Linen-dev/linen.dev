@@ -66,6 +66,7 @@ interface Props {
   subheader?: React.ReactNode;
   info?: React.ReactNode;
   showActions?: boolean;
+  truncate?: boolean;
   footer?({ inView }: { inView: boolean }): React.ReactNode;
   onDelete?(messageId: string): void;
   onLoad?(): void;
@@ -151,6 +152,7 @@ function Row({
   subheader,
   info,
   showActions,
+  truncate,
   footer,
   onDelete,
   onEdit,
@@ -244,6 +246,9 @@ function Row({
             })}
           >
             <Message
+              className={classNames({
+                [styles.truncate]: truncate,
+              })}
               text={message.body}
               format={message.messageFormat}
               mentions={message.mentions}

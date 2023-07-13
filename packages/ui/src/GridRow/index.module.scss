@@ -89,6 +89,12 @@
   padding: 0.25rem 0;
 }
 
+.truncate {
+  mask-image: linear-gradient(180deg, #fff 80%, transparent);
+  max-height: 320px;
+  overflow: hidden;
+}
+
 .actions {
   display: flex;
   background: var(--color-background);
