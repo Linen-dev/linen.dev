@@ -125,10 +125,11 @@ export default async function handler(
       response,
       params: { communityId },
     });
-    if (!permissions.manage) {
+    if (!permissions.auth || !permissions.manage) {
       return response.status(401).end();
     }
-    const email = permissions.auth?.email || permissions.user.email;
+
+    const email = permissions.auth.email;
     const url = await create({
       communityId,
       email,
