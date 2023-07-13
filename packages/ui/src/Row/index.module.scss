@@ -3,16 +3,11 @@
   width: 100%;
 }
 
-.fade {
-  mask-image: linear-gradient(180deg, #fff 70%, transparent);
-}
 
 .container {
   display: flex;
   position: relative;
-  max-height: 320px;
   width: 100%;
-  overflow: hidden;
 }
 
 .container[draggable='true']:active {

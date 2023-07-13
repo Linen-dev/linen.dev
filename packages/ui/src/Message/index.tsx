@@ -1,4 +1,5 @@
 import React from 'react';
+import classNames from 'classnames';
 import Text from './Text';
 import Mention from './Mention';
 import Link from './Link';
@@ -37,6 +38,7 @@ import {
 } from '@linen/ast/parse/types';
 
 interface Props {
+  className?: string;
   text: string;
   format: MessageFormat;
   truncate?: any;
@@ -61,6 +63,7 @@ function noAttachment(attachments?: SerializedAttachment[]) {
 }
 
 function Message({
+  className,
   text,
   format,
   mentions,
@@ -167,7 +170,7 @@ function Message({
   }
 
   return (
-    <div className={styles.message}>
+    <div className={classNames(styles.message, className)}>
       {render(tree)}
       <Attachments attachments={attachments} onLoad={onLoad} />
       <Reactions reactions={reactions} currentUser={currentUser} />
