@@ -1,4 +1,4 @@
-[![Chat on - Linen](https://img.shields.io/badge/Chat_on-Linen-blue)](https://linen.dev/s/linen)
+[![Chat on - Linen](https://img.shields.io/badge/Chat_on-Linen-blue)](https://linen.dev/invite/linen)
 
 <p>
   <a href="https://linen.dev/">
