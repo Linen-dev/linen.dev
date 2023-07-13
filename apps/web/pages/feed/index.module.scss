@@ -171,6 +171,10 @@
   border-top: none;
 }
 
+.row:last-child {
+  border-bottom: 1px solid var(--color-gray-100);
+}
+
 .row:hover {
   background: var(--color-gray-50);
 }
