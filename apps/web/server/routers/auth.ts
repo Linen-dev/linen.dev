@@ -61,7 +61,9 @@ const authRouter = CreateRouter({
   },
   onMagicLinkLogin: async (req, res, user) => {
     const state = user.state;
-    const displayName = normalize(user.displayName || user.email);
+    const displayName = normalize(
+      user.displayName || user.email.split('@').shift() || user.email
+    );
     await acceptInvites(user.email);
     if (state) {
       // join community
