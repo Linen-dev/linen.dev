@@ -21,7 +21,7 @@ Join our public community: https://linen.dev/s/linen
 
 Ship the smallest functioning feature that makes the users' lives better and then iterate.
 
-### See project roadmap: https://github.com/orgs/Linen-dev/projects/2
+### See project [roadmap](https://github.com/orgs/Linen-dev/projects/2)
 
 ### Core Features:
 
