@@ -214,8 +214,8 @@ export default function Feed() {
             <div className={styles.actions}>
               {session.status === 'authenticated' ? (
                 <>
-                  <Link className={styles.link} href="/s/linen/c/feed">
-                    Post
+                  <Link className={styles.link} href="/getting-started">
+                    Get started
                   </Link>
                   <a className={styles.link} onClick={() => signOut()}>
                     Sign out
