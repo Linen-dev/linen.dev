@@ -128,7 +128,7 @@ export default async function handler(
     if (!permissions.manage) {
       return response.status(401).end();
     }
-    const email = permissions.user.email;
+    const email = permissions.auth?.email || permissions.user.email;
     const url = await create({
       communityId,
       email,
