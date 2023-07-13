@@ -170,6 +170,7 @@ function PageLayout({
       <div id="portal"></div>
       <div id="modal-portal"></div>
       <div id="tooltip-portal"></div>
+      <div id="preview-portal"></div>
       <Favicon url={currentCommunity.faviconUrl} />
       <GoogleAnalytics
         googleAnalyticsId={googleAnalyticsId}
