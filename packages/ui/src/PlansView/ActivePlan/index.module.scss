@@ -46,3 +46,13 @@
 .manage {
   text-align: center;
 }
+
+.manage a {
+  color: var(--color-blue-700);
+  transition: color 0.2s ease;
+}
+
+.manage:hover a {
+  color: var(--color-blue-800);
+  text-decoration: underline;
+}
