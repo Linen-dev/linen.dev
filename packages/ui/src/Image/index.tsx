@@ -4,6 +4,7 @@ import preload from './utilities/preload';
 import Spinner from '@/Spinner';
 import styles from './index.module.scss';
 import Preview from '@/Preview';
+import Portal from '@/Portal';
 import { AiOutlineFileImage } from '@react-icons/all-files/ai/AiOutlineFileImage';
 
 interface Props {
@@ -72,18 +73,26 @@ export default function Component({
             event.preventDefault();
             event.stopPropagation();
             setPreview(true);
+            if (document.body) {
+              document.body.classList.add(styles.overflow);
+            }
           }}
         />
         {preview && (
-          <Preview
-            onClick={(event) => {
-              event.preventDefault();
-              event.stopPropagation();
-              setPreview(false);
-            }}
-          >
-            <img src={src} />
-          </Preview>
+          <Portal id="preview-portal">
+            <Preview
+              onClick={(event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                setPreview(false);
+                if (document.body) {
+                  document.body.classList.remove(styles.overflow);
+                }
+              }}
+            >
+              <img src={src} />
+            </Preview>
+          </Portal>
         )}
       </div>
     );
