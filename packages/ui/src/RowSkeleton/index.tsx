@@ -5,7 +5,10 @@ import styles from './index.module.scss';
 export default function RowSkeleton() {
   return (
     <div className={styles.skeleton}>
-      <Facebook />
+      <Facebook
+        backgroundColor="var(--color-gray-100)"
+        foregroundColor="var(--color-gray-200)"
+      />
     </div>
   );
 }
