@@ -6,6 +6,7 @@ on:
       - 'docs/**'
       - 'dev/**'
       - '**.md'
+      - 'packages/maintenance/**'
 
 env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
