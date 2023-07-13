@@ -1,5 +1,6 @@
 // import { TaskInterface } from 'queue';
 import { ChannelType, prisma } from '@linen/database';
+import { notifyChannels } from 'services/channels/userJoined';
 
 export const userJoinTask = async (payload: { userId: string }) => {
   const user = await prisma.users.findUnique({
@@ -9,7 +10,7 @@ export const userJoinTask = async (payload: { userId: string }) => {
 
   if (user && user.auth && user.account) {
     const channels = await prisma.channels.findMany({
-      select: { id: true },
+      select: { id: true, channelName: true },
       where: {
         accountId: user.account.id,
         hidden: false,
@@ -28,6 +29,7 @@ export const userJoinTask = async (payload: { userId: string }) => {
         }),
         skipDuplicates: true,
       });
+      await notifyChannels(user, channels);
     }
   }
 };
