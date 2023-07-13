@@ -40,7 +40,6 @@ export default async function handler(
   }
 
   const host = addHttpsToUrl(getHostFromHeaders(request.headers));
-  console.log('request.headers', request.headers);
 
   if (request.method === 'POST') {
     const { communityId, email, role }: PostProps = body;

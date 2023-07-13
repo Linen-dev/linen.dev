@@ -7,7 +7,8 @@
 
 export const isEmailValid = (emailString: string): boolean => {
   // Regular expression pattern to validate email addresses
-  const emailPattern = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
+  const emailPattern =
+    /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
 
   // Split the email string by commas
   const emails = emailString.split(',');
