@@ -20,7 +20,9 @@ export async function notifyChannels(
   const linenBot = await findOrCreateLinenBot(user.account.id);
   const jobs = [];
   for (const channel of channels) {
-    jobs.push(notifyChannel(channel, linenBot, displayName));
+    if (channel.id !== config.linen.feedChannelId) {
+      jobs.push(notifyChannel(channel, linenBot, displayName));
+    }
   }
   await Promise.allSettled(jobs);
 }
@@ -39,7 +41,8 @@ async function notifyChannel(
   if (
     lastThread &&
     lastThread.messages.length &&
-    lastThread.messages[0].usersId === linenBot.id
+    lastThread.messages[0].usersId === linenBot.id &&
+    lastThread.messages[0].body.startsWith('Welcome')
   ) {
     let body = processMessage(lastThread.messages[0].body, displayName);
     await prisma.messages.update({
