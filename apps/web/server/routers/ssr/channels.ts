@@ -152,7 +152,10 @@ function findChannelOrGetLandingChannel(
       (c) => c.channelName === channelName || c.id === channelName
     );
   }
-  const defaultChannel = channels.find((c) => c.landing);
+  const landingChannel = channels.find((c) => c.landing);
+  if (landingChannel) return landingChannel;
+
+  const defaultChannel = channels.find((c) => c.default);
   if (defaultChannel) return defaultChannel;
 
   return channels[0];
