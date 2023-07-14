@@ -37,7 +37,7 @@ export async function channelGetServerSideProps(
   const channelName = context.params?.channelName as string;
   const page = context.params?.page as string | undefined;
 
-  const channel = findChannelOrDefault(
+  const channel = findChannelOrGetLandingChannel(
     [...channels, ...dms, ...publicChannels],
     channelName
   );
@@ -160,7 +160,7 @@ async function getThreads({
   return { nextCursor, threads };
 }
 
-function findChannelOrDefault(
+function findChannelOrGetLandingChannel(
   channels: SerializedChannel[],
   channelName: string
 ) {
@@ -169,7 +169,7 @@ function findChannelOrDefault(
       (c) => c.channelName === channelName || c.id === channelName
     );
   }
-  const defaultChannel = channels.find((c) => c.default);
+  const defaultChannel = channels.find((c) => c.landing);
   if (defaultChannel) return defaultChannel;
 
   return channels[0];

@@ -105,6 +105,7 @@ export function createThreadWrapper({
         channelName: channel.channelName,
         hidden: channel.hidden,
         default: channel.default,
+        landing: channel.landing,
         accountId: null,
         pages: null,
         displayOrder: 0,

@@ -15,7 +15,7 @@ interface Props {
   onChange({ id, checked }: { id: string; checked: boolean }): void;
 }
 
-export default function DefaultChannelRow({
+export default function DefaultChannelsRow({
   channels,
   currentCommunity,
   api,

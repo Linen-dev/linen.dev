@@ -4,6 +4,7 @@ export type SerializedChannel = {
   id: string;
   channelName: string;
   default: boolean;
+  landing: boolean;
   hidden: boolean;
   accountId: string | null;
   pages: number | null;

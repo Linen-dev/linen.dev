@@ -60,7 +60,7 @@ ssrRouter.get(
       publicChannels,
     } = await fetchCommon(permissions, community);
 
-    const channel = findChannelOrDefault(
+    const channel = findChannelOrGetLandingChannel(
       [...joinedChannels, ...dmChannels, ...privateChannels, ...publicChannels],
       channelName
     );
@@ -143,13 +143,16 @@ async function getThreads({
   return { nextCursor, threads };
 }
 
-function findChannelOrDefault(channels: channels[], channelName?: string) {
+function findChannelOrGetLandingChannel(
+  channels: channels[],
+  channelName?: string
+) {
   if (channelName) {
     return channels.find(
       (c) => c.channelName === channelName || c.id === channelName
     );
   }
-  const defaultChannel = channels.find((c) => c.default);
+  const defaultChannel = channels.find((c) => c.landing);
   if (defaultChannel) return defaultChannel;
 
   return channels[0];
