@@ -106,6 +106,7 @@ model channels {
   accountId          String?
   hidden             Boolean       @default(false)
   default            Boolean       @default(false)
+  landing            Boolean       @default(false)
   externalPageCursor String?
   memberships        memberships[]
   readStatus         readStatus[]
