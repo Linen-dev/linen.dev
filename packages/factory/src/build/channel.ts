@@ -7,6 +7,7 @@ export default function createChannel(options?: Partial<channels>): channels {
     externalChannelId: 'S1',
     accountId: 'A1',
     hidden: false,
+    landing: false,
     default: false,
     externalPageCursor: null,
     lastPageBuildAt: null,

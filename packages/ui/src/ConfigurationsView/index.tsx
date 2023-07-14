@@ -10,7 +10,7 @@ import styles from './index.module.scss';
 import CommunityIntegrationRow from './CommunityIntegrationRow';
 import SlackImportRow from './SlackImportRow';
 import AnonymizeUsersRow from './AnonymizeUsersRow';
-import DefaultChannelRow from './DefaultChannelRow';
+import DefaultChannelsRow from './DefaultChannelsRow';
 import ChannelOrderRow from './ChannelOrderRow';
 import ChannelVisibilityRow from './ChannelVisibilityRow';
 import UrlsRow from './UrlsRow';
@@ -64,12 +64,12 @@ export default function ConfigurationsView({
         )}
         <AnonymizeUsersRow currentCommunity={currentCommunity} api={api} />
         <hr className={styles.my3} />
-        <DefaultChannelRow
+        <DefaultChannelsRow
           key={`default-row-${key}`}
           channels={channels}
           currentCommunity={currentCommunity}
           api={api}
-          onChange={({ id, checked }) =>
+          onChange={({ id, checked }: { id: string; checked: boolean }) =>
             setChannels((channels) => {
               if (!channels) {
                 return [];
