@@ -32,6 +32,8 @@ import {
   postChannelIntegrationsType,
   setDefaultChannelsSchema,
   setDefaultChannelsType,
+  setLandingChannelSchema,
+  setLandingChannelType,
   updateChannelType,
   postChannelIntegrationsSchema,
   getChannelMembersSchema,
@@ -290,6 +292,24 @@ channelsRouter.post(
     const { channelIds } = req.body;
     await ChannelsService.setDefaultChannels({
       channelIds,
+      accountId: req.tenant?.id!,
+    });
+    return res.status(200).json({});
+  }
+);
+
+channelsRouter.post(
+  `${prefix}/landing`,
+  tenantMiddleware([Roles.ADMIN, Roles.OWNER]),
+  validationMiddleware(setLandingChannelSchema),
+  async (
+    req: AuthedRequestWithTenantAndBody<setLandingChannelType>,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const { channelId } = req.body;
+    await ChannelsService.setLandingChannel({
+      channelId,
       accountId: req.tenant?.id!,
     });
     return res.status(200).json({});
