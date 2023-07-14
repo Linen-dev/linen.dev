@@ -41,7 +41,7 @@ interface Props {
   className?: string;
   text: string;
   format: MessageFormat;
-  truncate?: any;
+  truncate?: boolean;
   mentions?: SerializedUser[];
   reactions?: SerializedReaction[];
   attachments?: SerializedAttachment[];
@@ -66,6 +66,7 @@ function Message({
   className,
   text,
   format,
+  truncate,
   mentions,
   reactions,
   attachments,
@@ -171,7 +172,13 @@ function Message({
 
   return (
     <div className={classNames(styles.message, className)}>
-      {render(tree)}
+      <div
+        className={classNames({
+          [styles.truncate]: truncate,
+        })}
+      >
+        {render(tree)}
+      </div>
       <Attachments attachments={attachments} onLoad={onLoad} />
       <Reactions reactions={reactions} currentUser={currentUser} />
     </div>

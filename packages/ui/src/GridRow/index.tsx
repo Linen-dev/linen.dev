@@ -246,11 +246,9 @@ function Row({
             })}
           >
             <Message
-              className={classNames({
-                [styles.truncate]: truncate,
-              })}
               text={message.body}
               format={message.messageFormat}
+              truncate={truncate}
               mentions={message.mentions}
               reactions={message.reactions
                 .filter((reaction) => {
