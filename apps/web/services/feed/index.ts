@@ -61,10 +61,14 @@ export default class FeedService {
     const queryResult = await fetch({ lastReplyAt });
 
     const threads = queryResult
-      // we filter threads with messages from bots here instead of through query
       .filter((thread) =>
         thread.messages.every(
-          (m) => !m.author?.isBot || m.author.externalUserId === 'linen-bot'
+          (m) =>
+            // we filter threads with messages from bots here instead of through query
+            !m.author?.isBot ||
+            // except linenBot messages from feed channel
+            (m.author.externalUserId === config.linen.bot.externalId &&
+              thread.channelId === config.linen.feedChannelId)
         )
       )
       .map((thread) => {
