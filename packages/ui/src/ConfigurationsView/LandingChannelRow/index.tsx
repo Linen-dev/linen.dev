@@ -13,6 +13,17 @@ interface Props {
   onChange(id: string): void;
 }
 
+function getInitialChannel(channels?: SerializedChannel[]) {
+  if (!channels || channels.length === 0) {
+    return;
+  }
+  return (
+    channels.find((channel) => channel.landing) ||
+    channels.find((channel) => channel.default) ||
+    channels[0]
+  );
+}
+
 export default function LandingChannelRow({
   channels,
   currentCommunity,
@@ -20,7 +31,7 @@ export default function LandingChannelRow({
   onChange,
 }: Props) {
   const [landingChannel, setLandingChannel] = useState(
-    channels?.find((channel) => channel.landing)
+    getInitialChannel(channels)
   );
 
   async function handleChange(event: React.ChangeEvent<HTMLSelectElement>) {
