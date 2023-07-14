@@ -146,6 +146,35 @@ class ChannelsService {
     return { status: 200 };
   }
 
+  static async setLandingChannel({
+    channelId,
+    accountId,
+  }: {
+    channelId: string;
+    accountId: string;
+  }) {
+    await prisma.$transaction([
+      prisma.channels.updateMany({
+        where: {
+          accountId,
+        },
+        data: {
+          landing: false,
+        },
+      }),
+      prisma.channels.updateMany({
+        where: {
+          accountId,
+          id: channelId,
+        },
+        data: {
+          landing: true,
+        },
+      }),
+    ]);
+    return { status: 200 };
+  }
+
   static async updateChannelsVisibility({
     channels,
     accountId,

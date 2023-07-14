@@ -51,6 +51,12 @@ export const setDefaultChannelsSchema = z.object({
 });
 export type setDefaultChannelsType = z.infer<typeof setDefaultChannelsSchema>;
 
+export const setLandingChannelSchema = z.object({
+  accountId: z.string().uuid(),
+  channelId: z.string().uuid(),
+});
+export type setLandingChannelType = z.infer<typeof setLandingChannelSchema>;
+
 export const getChannelsSchema = z.object({
   accountId: z.string().uuid(),
 });
