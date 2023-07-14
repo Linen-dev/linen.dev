@@ -34,7 +34,7 @@ export default async function handler(
   if (process.env.NODE_ENV === 'production') {
     response.setHeader(
       'Cache-Control',
-      'max-age=60, stale-while-revalidate=86400'
+      'max-age=1, stale-while-revalidate=86400'
     );
   }
   return response.status(status).json(data);
