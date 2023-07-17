@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import classNames from 'classnames';
 import { SerializedAccount, Period } from '@linen/types';
 import { FiCheck } from '@react-icons/all-files/fi/FiCheck';
 import { FiZap } from '@react-icons/all-files/fi/FiZap';
 import Card from './Card';
+import Toast from '@/Toast';
 import styles from './index.module.scss';
 
 interface Tier {
@@ -43,10 +44,37 @@ export default function Tiers({
   tiers,
   activePeriod,
 }: Props) {
+  const [loading, setLoading] = useState(false);
   return (
     <div className={styles.grid}>
       {tiers.map((tier) => {
         const active = tier.name === 'Vici';
+
+        const onSubmit = (event: any) => {
+          event.preventDefault();
+          event.stopPropagation();
+          setLoading(true);
+          fetch('/api/plans', {
+            method: 'POST',
+            body: JSON.stringify({
+              communityId: currentCommunity.id,
+              priceId: tier.priceId,
+              successUrl: window.location.href,
+              cancelUrl: window.location.href,
+            }),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          })
+            .then((response) => response.json())
+            .then(({ redirectUrl }) => (window.location = redirectUrl))
+            .catch(() => {
+              Toast.error('Something went wrong. Please try again later.');
+            })
+            .finally(() => {
+              setLoading(false);
+            });
+        };
         return (
           <Card
             key={tier.name}
@@ -56,33 +84,17 @@ export default function Tiers({
             period={activePeriod}
             active={active}
           >
-            <form method="POST" action="/api/plans">
-              <input
-                type="hidden"
-                name="communityId"
-                value={currentCommunity.id}
-              />
-              <input type="hidden" name="priceId" value={tier.priceId} />
-              <input
-                type="hidden"
-                name="successUrl"
-                value={window && window.location.href}
-              />
-              <input
-                type="hidden"
-                name="cancelUrl"
-                value={window && window.location.href}
-              />
-              <button
-                type="submit"
-                className={classNames(styles.button, {
-                  [styles.active]: active,
-                })}
-              >
-                {active && <FiZap />}
-                Buy plan
-              </button>
-            </form>
+            <button
+              type="submit"
+              className={classNames(styles.button, {
+                [styles.active]: active,
+              })}
+              onClick={onSubmit}
+              disabled={loading}
+            >
+              {active && <FiZap />}
+              Buy plan
+            </button>
             <div>
               <ul className={styles.list}>
                 {tier.features.map((feature) => (
