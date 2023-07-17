@@ -12,7 +12,10 @@ import type { accounts } from '@linen/database';
 
 export async function ssr(
   context: GetServerSidePropsContext,
-  validatePermissions: (permissions: Permissions) => validatePermissionsResponse
+  validatePermissions: (
+    permissions: Permissions
+  ) => validatePermissionsResponse,
+  isBot: boolean = false
 ) {
   const community = await CommunityService.find(context.params);
   if (!community) {
@@ -40,7 +43,7 @@ export async function ssr(
     dmChannels,
     joinedChannels,
     publicChannels,
-  } = await fetchCommon(permissions, community);
+  } = await fetchCommon(permissions, community, isBot);
 
   return {
     props: {
@@ -60,9 +63,10 @@ export async function ssr(
 
 export async function fetchCommon(
   permissions: Permissions,
-  community: accounts
+  community: accounts,
+  isBot: boolean = false
 ) {
-  const publicChannels = await ChannelsService.find(community.id);
+  const publicChannels = await ChannelsService.find(community.id, isBot);
 
   const joinedChannels = !!permissions.user?.id
     ? await ChannelsService.findJoined({

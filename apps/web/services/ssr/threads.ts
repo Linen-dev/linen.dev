@@ -17,7 +17,13 @@ export async function threadGetServerSideProps(
   isSubdomainbasedRouting: boolean
 ) {
   try {
-    const { props, notFound, ...rest } = await ssr(context, allowAccess);
+    const isCrawler = isBot(context?.req?.headers?.['user-agent'] || '');
+
+    const { props, notFound, ...rest } = await ssr(
+      context,
+      allowAccess,
+      isCrawler
+    );
 
     if (rest.redirect) {
       return RedirectTo(rest.location);
@@ -47,8 +53,6 @@ export async function threadGetServerSideProps(
     if (thread?.channel?.accountId !== currentCommunity.id) {
       throw new Error('Thread not found');
     }
-
-    const isCrawler = isBot(context?.req?.headers?.['user-agent'] || '');
 
     if (
       shouldRedirectToDomain({

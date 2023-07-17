@@ -20,7 +20,13 @@ export async function channelGetServerSideProps(
   context: GetServerSidePropsContext,
   isSubdomainbasedRouting: boolean
 ) {
-  const { props, notFound, ...rest } = await ssr(context, allowAccess);
+  const isCrawler = isBot(context?.req?.headers?.['user-agent'] || '');
+
+  const { props, notFound, ...rest } = await ssr(
+    context,
+    allowAccess,
+    isCrawler
+  );
 
   if (rest.redirect) {
     return RedirectTo(rest.location);
@@ -32,7 +38,6 @@ export async function channelGetServerSideProps(
 
   const { channels, currentCommunity, settings, dms, publicChannels } = props;
 
-  const isCrawler = isBot(context?.req?.headers?.['user-agent'] || '');
   const communityName = context.params?.communityName as string;
   const channelName = context.params?.channelName as string;
   const page = context.params?.page as string | undefined;
