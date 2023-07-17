@@ -53,7 +53,7 @@ export async function index({ period }: { period: string }) {
   return { status: 200, data: { plans: plans } };
 }
 
-async function findOrCreateCustomer(communityId: string) {
+async function findOrCreateCustomer(communityId: string, email: string) {
   const { data } = await stripe.customers.search({
     query: `metadata["communityId"]:"${communityId}"`,
   });
@@ -62,7 +62,9 @@ async function findOrCreateCustomer(communityId: string) {
     data[0] ||
     (await stripe.customers.create({
       name: `CUSTOMER ${communityId}`,
+      email,
       metadata: {
+        email,
         communityId,
       },
     }))
@@ -82,11 +84,10 @@ export async function create({
   successUrl: string;
   cancelUrl: string;
 }) {
-  const customer = await findOrCreateCustomer(communityId);
+  const customer = await findOrCreateCustomer(communityId, email);
 
   const session = await stripe.checkout.sessions.create({
     mode: 'subscription',
-    customer_email: email,
     line_items: [
       {
         price: priceId,
@@ -98,6 +99,7 @@ export async function create({
     },
     metadata: {
       communityId,
+      email,
     },
     success_url: `${successUrl}?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: cancelUrl,
@@ -143,7 +145,7 @@ export default async function handler(
       } catch (exception) {
         console.error('Failed to send a notification: ', exception);
       }
-      return response.redirect(303, url);
+      return response.status(200).json({ redirectUrl: url });
     }
     return response.status(500).json({});
   }
