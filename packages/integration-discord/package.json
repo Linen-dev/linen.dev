@@ -23,8 +23,7 @@
     "@linen/types": "*",
     "@linen/utilities": "*",
     "discord.js": "^14.8.0",
-    "envalid": "^7.3.1",
-    "pm2": "^5.3.0"
+    "envalid": "^7.3.1"
   },
   "devDependencies": {
     "@types/jest": "^29.5.1",
