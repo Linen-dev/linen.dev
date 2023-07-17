@@ -12,7 +12,6 @@ import { AiOutlineSync } from '@react-icons/all-files/ai/AiOutlineSync';
 import { FaMask } from '@react-icons/all-files/fa/FaMask';
 import { BiImport } from '@react-icons/all-files/bi/BiImport';
 import Link from 'next/link';
-import FadeIn from '@linen/ui/FadeIn';
 import Head from 'next/head';
 import Footer from 'components/Footer';
 import type { GetServerSidePropsContext } from 'next';
@@ -21,6 +20,10 @@ import CommunityCard from '@linen/ui/CommunityCard';
 import { serializeAccount } from '@linen/serializers/account';
 import { SerializedAccount } from '@linen/types';
 import styles from './index.module.scss';
+
+export const config = {
+  unstable_runtimeJS: false,
+};
 
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(' ');
@@ -218,13 +221,11 @@ const Home = ({ accounts }: Props) => {
             <YCombinatorLogo />
           </div>
           <div className="flex justify-center my-20 shadow-lg">
-            <FadeIn delay={200}>
-              <Image
-                className="rounded-md"
-                src={linenExamplePage}
-                alt={'example-community'}
-              />
-            </FadeIn>
+            <Image
+              className="rounded-md"
+              src={linenExamplePage}
+              alt={'example-community'}
+            />
           </div>
         </div>
 

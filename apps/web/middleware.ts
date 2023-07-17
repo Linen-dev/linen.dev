@@ -17,7 +17,12 @@ export default function middleware(request: NextRequest) {
     return NextResponse.rewrite(url.toString());
   }
 
-  const res = rewrite({ hostname, pathname, url });
+  const res = rewrite({
+    hostname,
+    pathname,
+    url,
+    userAgent: request.headers.get('user-agent'),
+  });
 
   if (res && !!res.rewrite) {
     return NextResponse.rewrite(res.rewrite);

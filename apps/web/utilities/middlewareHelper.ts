@@ -1,6 +1,7 @@
 import { NextURL } from 'next/dist/server/web/next-url';
 import { isSubdomainbasedRouting } from '@linen/utilities/domain';
 import { LINEN_STATIC_CDN } from 'config';
+import { isBot as isBotFn } from 'next/dist/server/web/spec-extension/user-agent';
 
 export const getCommunityName = (isProd: boolean, hostname: string | null) => {
   if (isProd) {
@@ -38,14 +39,20 @@ function isTopLevelPathname(pathname: string) {
 const cleanLinenHost = (hostname: string) =>
   hostname.indexOf('linen.dev') > -1 ? 'www.linen.dev' : hostname;
 
+const isBotOrLighthouse = (userAgent: string) => {
+  return userAgent.indexOf('Chrome-Lighthouse') > -1 || isBotFn(userAgent);
+};
+
 export function rewrite({
   hostname,
   pathname,
   url,
+  userAgent,
 }: {
   hostname: string | null;
   pathname: string;
   url: NextURL;
+  userAgent: string | null;
 }) {
   function isLocalIpAddress(hostname: string | null) {
     if (!hostname) {
@@ -70,6 +77,11 @@ export function rewrite({
         hostname || 'linen.dev'
       )}/robots.txt`,
     };
+  }
+
+  if (pathname.startsWith('/s/') && isBotOrLighthouse(userAgent || '')) {
+    url.pathname = url.pathname.replace('/s/', '/ssr/');
+    return { rewrite: url.toString() };
   }
 
   if (!isSubdomainbasedRouting(hostname || '')) {
