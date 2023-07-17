@@ -12,9 +12,10 @@ interface Props {
   users: AvatarType[];
   size?: Size;
   placeholder?: boolean;
+  isBot: boolean;
 }
 
-export default function Avatars({ users, size, placeholder }: Props) {
+export default function Avatars({ users, size, placeholder, isBot }: Props) {
   if (users.length === 0) {
     return <></>;
   }
@@ -34,6 +35,7 @@ export default function Avatars({ users, size, placeholder }: Props) {
               size={size}
               placeholder={placeholder}
               shadow="sm"
+              isBot={isBot}
             />
           </div>
         ))}
@@ -57,6 +59,7 @@ export default function Avatars({ users, size, placeholder }: Props) {
             size={size}
             placeholder={placeholder}
             shadow="sm"
+            isBot={isBot}
           />
         </div>
       ))}

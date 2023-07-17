@@ -6,9 +6,10 @@ interface Props {
   src: string;
   alt?: string;
   onLoad?(): void;
+  isBot?: boolean;
 }
 
-export default function Image({ src, alt, onLoad }: Props) {
+export default function Image({ src, alt, onLoad, isBot }: Props) {
   return (
     <Component
       className={styles.image}
@@ -17,6 +18,7 @@ export default function Image({ src, alt, onLoad }: Props) {
       src={src}
       alt={alt}
       onLoad={onLoad}
+      isBot={isBot}
     />
   );
 }

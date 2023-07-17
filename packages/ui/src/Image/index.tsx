@@ -14,6 +14,7 @@ interface Props {
   width?: number;
   alt?: string;
   onLoad?(): void;
+  isBot?: boolean;
 }
 
 export default function Component({
@@ -23,6 +24,7 @@ export default function Component({
   width: initialWidth,
   alt,
   onLoad,
+  isBot,
 }: Props) {
   const [width, setWidth] = useState(initialWidth || 0);
   const [height, setHeight] = useState(initialHeight || 0);
@@ -59,6 +61,10 @@ export default function Component({
   useEffect(() => {
     loaded && onLoad?.();
   }, [loaded]);
+
+  if (isBot) {
+    return <img className={className} src={src} alt={alt || src} />;
+  }
 
   if (loaded) {
     return (

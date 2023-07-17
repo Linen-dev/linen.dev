@@ -49,6 +49,7 @@ interface Props {
   placeholder?: boolean;
   onLinkClick?(event: React.MouseEvent<HTMLAnchorElement>): void;
   onLoad?(): void;
+  isBot?: boolean;
 }
 
 const parsers = {
@@ -74,6 +75,7 @@ function Message({
   placeholder,
   onLinkClick,
   onLoad,
+  isBot = false,
 }: Props) {
   if (text === '' && noAttachment(attachments)) {
     text = 'message has been deleted';
@@ -179,7 +181,7 @@ function Message({
       >
         {render(tree)}
       </div>
-      <Attachments attachments={attachments} onLoad={onLoad} />
+      <Attachments attachments={attachments} onLoad={onLoad} isBot={isBot} />
       <Reactions reactions={reactions} currentUser={currentUser} />
     </div>
   );

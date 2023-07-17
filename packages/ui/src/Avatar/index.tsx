@@ -89,7 +89,8 @@ function Avatar({
   shadow,
   placeholder,
   active,
-}: Props) {
+  isBot,
+}: Props & { isBot?: boolean }) {
   const preloaded = !!src && !!cache[src];
   const [loaded, setLoaded] = useState(preloaded);
   const [error, setError] = useState(false);
@@ -113,6 +114,27 @@ function Avatar({
       mounted = false;
     };
   }, [loaded, placeholder]);
+
+  if (isBot) {
+    return !!src ? (
+      <ImageAvatar
+        className={className}
+        text={text}
+        size={size}
+        shadow={shadow}
+        src={src}
+        active={active}
+      />
+    ) : (
+      <TextAvatar
+        className={className}
+        text={text}
+        size={size}
+        shadow={shadow}
+        active={active}
+      />
+    );
+  }
 
   if (error) {
     return (

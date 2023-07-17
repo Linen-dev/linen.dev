@@ -102,7 +102,7 @@ function Left({
 }: {
   top: boolean;
   message: SerializedMessage;
-  isBot?: boolean;
+  isBot: boolean;
   hover?: boolean;
   inView: boolean;
   isUserActive?: boolean;
@@ -115,6 +115,7 @@ function Left({
         text={message.author?.displayName}
         placeholder={!inView || isBot}
         active={isUserActive}
+        isBot={isBot}
       />
     );
   }
@@ -140,7 +141,7 @@ function Row({
   thread,
   message,
   isUserActive,
-  isBot,
+  isBot = false,
   isPreviousMessageFromSameUser,
   isSubDomainRouting,
   currentUser,
@@ -268,6 +269,7 @@ function Row({
               onLinkClick={onLinkClick}
               onLoad={onLoad}
               placeholder={!inView}
+              isBot={isBot}
             />
             {resolution && (
               <Badge className={styles.badge} type="success">

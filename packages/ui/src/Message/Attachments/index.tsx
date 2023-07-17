@@ -8,9 +8,10 @@ import Image from '../Link/Image';
 interface Props {
   attachments?: SerializedAttachment[];
   onLoad?(): void;
+  isBot: boolean;
 }
 
-function Attachments({ attachments, onLoad }: Props) {
+function Attachments({ attachments, onLoad, isBot }: Props) {
   if (!attachments || attachments.length === 0) {
     return null;
   }
@@ -22,6 +23,7 @@ function Attachments({ attachments, onLoad }: Props) {
             key={attachment.url + index}
             src={attachment.url}
             onLoad={onLoad}
+            isBot={isBot}
           />
         ) : (
           <Attachment key={attachment.url + index} attachment={attachment} />

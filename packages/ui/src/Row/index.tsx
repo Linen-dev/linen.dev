@@ -74,7 +74,7 @@ export default function Row({
   className,
   thread,
   permissions,
-  isBot,
+  isBot = false,
   isSubDomainRouting,
   settings,
   currentUser,
@@ -164,6 +164,7 @@ export default function Row({
                   size="sm"
                   users={avatars}
                   placeholder={!inView || isBot}
+                  isBot={isBot}
                 />
                 <ul className={styles.list}>
                   <li className={styles.info}>
