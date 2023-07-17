@@ -176,7 +176,7 @@ function Message({
     <div className={classNames(styles.message, className)}>
       <div
         className={classNames({
-          [styles.truncate]: truncate,
+          [styles.truncate]: isBot ? false : truncate,
         })}
       >
         {render(tree)}
