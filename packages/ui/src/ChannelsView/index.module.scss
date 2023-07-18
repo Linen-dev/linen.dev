@@ -48,6 +48,13 @@
     font-size: 0.75rem;
     line-height: 1rem;
     padding: 0.75rem 1.5rem;
+    vertical-align: middle;
+
+    small {
+      font-weight: 400;
+      font-size: 0.75rem;
+      text-transform: none;
+    }
   }
 
   td {
