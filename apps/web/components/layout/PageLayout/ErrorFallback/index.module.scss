@@ -11,7 +11,7 @@
 
 @media screen and (min-width: 768px) and (max-width: 1023px) {
   .container {
-    min-height: calc(100vh - 102px);
+    min-height: calc(100dvh - 102px);
   }
 }
 
