@@ -3,9 +3,12 @@ import PageLayout from 'components/layout/PageLayout';
 import { buildChannelSeo } from 'utilities/seo';
 import { SerializedChannel, ChannelProps } from '@linen/types';
 import Grid from '@linen/ui/GridContent';
-import { RowForBots } from './RowForBots';
+import { RowForBots } from '../RowForBots';
 import Row from '@linen/ui/Row';
 import PaginationNumbers from '@linen/ui/PaginationNumbers';
+import { FiHash } from '@react-icons/all-files/fi/FiHash';
+import styles from './index.module.scss';
+import { CustomLinkHelper } from '@linen/utilities/custom-link';
 
 export default function ChannelForBots({
   threads,
@@ -63,6 +66,25 @@ export default function ChannelForBots({
           settings={settings}
           page={pathCursor ? Number(pathCursor) : null}
         />
+        <div className={styles.list}>
+          {channels.map((channel) => {
+            return (
+              <a
+                key={channel.id}
+                className={styles.link}
+                href={CustomLinkHelper({
+                  isSubDomainRouting,
+                  communityName: settings.communityName,
+                  communityType: settings.communityType,
+                  path: `/c/${channel.channelName}`,
+                })}
+              >
+                <FiHash />
+                {channel.channelName}
+              </a>
+            );
+          })}
+        </div>
       </ul>
     </PageLayout>
   );

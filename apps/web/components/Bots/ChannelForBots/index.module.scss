@@ -1,0 +1,16 @@
+.list {
+  display: flex;
+  width: 100%;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+  padding-top: 1rem;
+}
+
+.link {
+  align-items: center;
+  color: var(--color-gray-700);
+  font-size: 0.875rem;
+  display: flex;
+  outline: none;
+}
