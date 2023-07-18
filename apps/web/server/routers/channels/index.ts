@@ -138,7 +138,7 @@ channelsRouter.get(
     req: AuthedRequestWithTenantAndBody<createChannelType>,
     res: Response
   ) => {
-    const channels = await ChannelsService.find(req.tenant?.id!);
+    const channels = await ChannelsService.findPublic(req.tenant?.id!);
     return res.status(200).json({ channels: channels.map(serializeChannel) });
   }
 );

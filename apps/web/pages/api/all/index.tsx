@@ -30,7 +30,7 @@ export async function index({
   }
 
   const page = getPage(params.page);
-  const channels = await ChannelsService.find(community.id);
+  const channels = await ChannelsService.findPublic(community.id);
 
   if (!params.limit) {
     return { status: 400 };

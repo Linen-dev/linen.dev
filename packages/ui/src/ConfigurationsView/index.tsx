@@ -11,7 +11,6 @@ import CommunityIntegrationRow from './CommunityIntegrationRow';
 import SlackImportRow from './SlackImportRow';
 import AnonymizeUsersRow from './AnonymizeUsersRow';
 import DefaultChannelsRow from './DefaultChannelsRow';
-import LandingChannelRow from './LandingChannelRow';
 import ChannelOrderRow from './ChannelOrderRow';
 import ChannelVisibilityRow from './ChannelVisibilityRow';
 import UrlsRow from './UrlsRow';
@@ -80,27 +79,6 @@ export default function ConfigurationsView({
                   return { ...channel, default: checked };
                 }
                 return channel;
-              });
-            })
-          }
-        />
-        <hr className={styles.my3} />
-        <LandingChannelRow
-          key={`landing-row-${key}`}
-          channels={channels}
-          currentCommunity={currentCommunity}
-          api={api}
-          onChange={(id: string) =>
-            setChannels((channels) => {
-              if (!channels) {
-                return [];
-              }
-              return channels.map((channel) => {
-                if (channel.id === id) {
-                  return { ...channel, landing: true };
-                } else {
-                  return { ...channel, landing: false };
-                }
               });
             })
           }

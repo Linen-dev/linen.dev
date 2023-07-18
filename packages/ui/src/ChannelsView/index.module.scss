@@ -3,3 +3,62 @@
   flex-direction: column;
   width: 100%;
 }
+
+.wrapper ul {
+  list-style: none;
+  border: 1px solid var(--color-border);
+}
+
+.content {
+  padding: 1rem;
+}
+
+.item {
+  align-items: center;
+  color: var(--color-gray-900);
+  display: flex;
+  font-size: 14px;
+  gap: 0.25rem;
+  font-weight: 500;
+}
+
+.item:first-child {
+  margin-top: 0;
+}
+
+.item:last-child {
+  margin-bottom: 0;
+}
+
+.table {
+  width: 100%;
+
+  thead {
+    background: var(--color-gray-50);
+    text-transform: uppercase;
+    font-weight: bold;
+
+    th {
+      text-align: left;
+    }
+  }
+
+  th {
+    color: var(--color-gray-700);
+    font-size: 0.75rem;
+    line-height: 1rem;
+    padding: 0.75rem 1.5rem;
+  }
+
+  td {
+    border-bottom: 1px solid var(--color-gray-200);
+    color: var(--color-gray-500);
+    padding: 1rem 1.5rem;
+    font-size: 14px;
+  }
+}
+
+.my3 {
+  margin-top: 0.75rem;
+  margin-bottom: 0.75rem;
+}

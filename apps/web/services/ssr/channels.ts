@@ -14,7 +14,9 @@ import {
 import { z } from 'zod';
 import { buildCursor } from 'utilities/buildCursor';
 import { sortBySentAtAsc } from '@linen/utilities/object';
-import { ssr, allowAccess } from 'services/ssr/common';
+import { ssr, allowAccess, allowManagers } from 'services/ssr/common';
+import ChannelsService from 'services/channels';
+import { serializeChannel } from '@linen/serializers/channel';
 
 export async function channelGetServerSideProps(
   context: GetServerSidePropsContext,
@@ -202,4 +204,29 @@ function parsePage(page: string): number | undefined {
   } catch (error) {
     return undefined;
   }
+}
+
+export async function getChannelsSettingsServerSideProps(
+  context: GetServerSidePropsContext,
+  isSubDomainRouting: boolean
+) {
+  const { props, notFound, ...rest } = await ssr(context, allowManagers);
+
+  if (rest.redirect) {
+    return RedirectTo(rest.location);
+  }
+
+  if (notFound || !props) {
+    return NotFound();
+  }
+
+  const channels = await ChannelsService.find(props.currentCommunity.id);
+
+  return {
+    props: {
+      ...props,
+      channels: channels.map(serializeChannel),
+      isSubDomainRouting,
+    },
+  };
 }
