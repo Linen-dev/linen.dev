@@ -250,68 +250,25 @@ export default class AccountsService {
   }
 
   static async showcase(showFreeTier: boolean = false) {
-    const premium = await prisma.accounts
-      .findMany({
-        select: { redirectDomain: true },
-        where: {
-          premium: true,
-          redirectDomain: { not: null },
-          type: 'PUBLIC',
-          channels: { some: { hidden: false } },
-        },
-      })
-      .then((rows) => rows.map((row) => 'https://' + row.redirectDomain));
+    const accounts = await prisma.$queryRaw<
+      { redirectDomain?: string; slackDomain: string }[]
+    >`
+    select a."redirectDomain" , a."slackDomain" from accounts a 
+    join channels c on a.id = c."accountId" 
+    where c."default" is true
+    and (a."redirectDomain" is not null or a."slackDomain" is not null)
+    and c.pages is not null
+    and c."type" = 'PUBLIC'
+    and c.hidden is false
+    and a."type" = 'PUBLIC'
+    and (a.premium is true or c.pages >= 250)
+    group by a.id`;
 
-    const premiumWithoutDomain = await prisma.accounts
-      .findMany({
-        select: { slackDomain: true, discordDomain: true },
-        where: {
-          premium: true,
-          redirectDomain: null,
-          OR: [
-            { slackDomain: { not: null } },
-            { discordDomain: { not: null } },
-          ],
-          type: 'PUBLIC',
-          channels: { some: { hidden: false } },
-        },
-      })
-      .then((rows) =>
-        rows.map(
-          (row) =>
-            'https://www.linen.dev' +
-            (!!row.slackDomain
-              ? `/s/${row.slackDomain}`
-              : `/d/${row.discordDomain}`)
-        )
-      );
-
-    const freeTier = showFreeTier
-      ? await prisma.accounts
-          .findMany({
-            select: { slackDomain: true, discordDomain: true },
-            where: {
-              premium: false,
-              OR: [
-                { slackDomain: { not: null } },
-                { discordDomain: { not: null } },
-              ],
-              type: 'PUBLIC',
-              channels: { some: { pages: { gt: 250 }, hidden: false } },
-            },
-          })
-          .then((rows) =>
-            rows.map(
-              (row) =>
-                'https://www.linen.dev' +
-                (!!row.slackDomain
-                  ? `/s/${row.slackDomain}`
-                  : `/d/${row.discordDomain}`)
-            )
-          )
-      : [];
-
-    return [...premium, ...premiumWithoutDomain, ...freeTier];
+    return accounts.map((row) =>
+      row.redirectDomain
+        ? `https://${row.redirectDomain}`
+        : `https://www.linen.dev/s/${row.slackDomain}`
+    );
   }
 }
 

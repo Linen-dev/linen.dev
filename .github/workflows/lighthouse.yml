@@ -1,10 +1,7 @@
 name: Lighthouse
 
 on:
-  workflow_run:
-    workflows: [Deployment]
-    types: [completed]
-    branches: [main]
+  workflow_dispatch: 
 
 jobs:
   lighthouse:
