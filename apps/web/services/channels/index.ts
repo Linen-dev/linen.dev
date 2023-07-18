@@ -15,10 +15,7 @@ import { v4 } from 'uuid';
 import { config } from 'config';
 
 class ChannelsService {
-  static async find(
-    communityId: string,
-    isBot: boolean = false
-  ): Promise<channels[]> {
+  static async find(communityId: string): Promise<channels[]> {
     return prisma.channels.findMany({
       where: {
         accountId: communityId,
@@ -32,7 +29,10 @@ class ChannelsService {
     });
   }
 
-  static async findPublic(communityId: string): Promise<channels[]> {
+  static async findPublic(
+    communityId: string,
+    isBot: boolean = false
+  ): Promise<channels[]> {
     return prisma.channels.findMany({
       where: {
         accountId: communityId,
