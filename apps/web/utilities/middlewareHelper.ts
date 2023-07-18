@@ -94,6 +94,12 @@ export function rewrite({
   if (!isTopLevelPathname(pathname) && communityName !== '') {
     url.pathname = `/s/${communityName}${pathname}`;
     url.searchParams.append('customDomain', '1');
+
+    if (isBotOrLighthouse(userAgent || '')) {
+      url.pathname = url.pathname.replace('/s/', '/ssr/');
+      return { rewrite: url.toString() };
+    }
+
     return { rewrite: url.toString() };
   }
 
