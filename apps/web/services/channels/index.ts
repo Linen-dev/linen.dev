@@ -22,6 +22,20 @@ class ChannelsService {
     return prisma.channels.findMany({
       where: {
         accountId: communityId,
+        type: {
+          in: [ChannelType.PUBLIC, ChannelType.PRIVATE],
+        },
+      },
+      orderBy: {
+        displayOrder: 'asc',
+      },
+    });
+  }
+
+  static async findPublic(communityId: string): Promise<channels[]> {
+    return prisma.channels.findMany({
+      where: {
+        accountId: communityId,
         type: ChannelType.PUBLIC,
         hidden: false,
         ...(isBot ? { threads: { some: {} } } : {}),

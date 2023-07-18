@@ -33,7 +33,7 @@ export async function index({
   }
 
   const page = getPage(params.page);
-  const channels = await ChannelsService.find(community.id);
+  const channels = await ChannelsService.findPublic(community.id);
   const dms = !!currentUserId
     ? await getDMs({
         accountId: community.id,

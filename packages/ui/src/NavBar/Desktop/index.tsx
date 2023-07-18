@@ -118,6 +118,7 @@ export default function DesktopNavBar({
     return [
       paths.configurations,
       paths.branding,
+      paths.channels,
       paths.members,
       paths.plans,
     ].includes(routerAsPath);

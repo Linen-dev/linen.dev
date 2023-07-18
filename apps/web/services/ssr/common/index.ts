@@ -66,7 +66,7 @@ export async function fetchCommon(
   community: accounts,
   isBot: boolean = false
 ) {
-  const publicChannels = await ChannelsService.find(community.id, isBot);
+  const publicChannels = await ChannelsService.findPublic(community.id, isBot);
 
   const joinedChannels = !!permissions.user?.id
     ? await ChannelsService.findJoined({
