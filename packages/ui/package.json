@@ -88,6 +88,7 @@
     "./Card": "./dist/Card/index.js",
     "./CardLayout": "./dist/CardLayout/index.js",
     "./ChannelView": "./dist/ChannelView/index.js",
+    "./ChannelsView": "./dist/ChannelsView/index.js",
     "./ChatLayout": "./dist/ChatLayout/index.js",
     "./Checkbox": "./dist/Checkbox/index.js",
     "./Code": "./dist/Code/index.js",
@@ -254,6 +255,9 @@
       ],
       "ChannelView": [
         "./dist/ChannelView/index.d.ts"
+      ],
+      "ChannelsView": [
+        "./dist/ChannelsView/index.d.ts"
       ],
       "ChatLayout": [
         "./dist/ChatLayout/index.d.ts"
