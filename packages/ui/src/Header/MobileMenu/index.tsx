@@ -47,6 +47,7 @@ export default function MobileMenu({
     metrics: usePath({ href: '/metrics' }),
     configurations: usePath({ href: '/configurations' }),
     branding: usePath({ href: '/branding' }),
+    channels: usePath({ href: '/channels' }),
     members: usePath({ href: '/members' }),
     plans: usePath({ href: '/plans' }),
   };
@@ -127,6 +128,19 @@ export default function MobileMenu({
                   href="/branding"
                 >
                   <FiSliders /> Branding
+                </InternalLink>
+              </li>
+            )}
+            {permissions.manage && (
+              <li>
+                <InternalLink
+                  onClick={close}
+                  className={classNames(styles.link, {
+                    [styles.active]: paths.channels === routerAsPath,
+                  })}
+                  href="/channels"
+                >
+                  <FiHash /> Channels
                 </InternalLink>
               </li>
             )}

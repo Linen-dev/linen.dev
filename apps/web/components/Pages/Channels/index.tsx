@@ -8,7 +8,7 @@ import {
 } from '@linen/types';
 import { localStorage } from '@linen/utilities/storage';
 import { api } from 'utilities/requests';
-import ConfigurationsView from '@linen/ui/ConfigurationsView';
+import ChannelsView from '@linen/ui/ChannelsView';
 
 export interface Props {
   channels: SerializedChannel[];
@@ -20,7 +20,7 @@ export interface Props {
   dms: SerializedChannel[];
 }
 
-export default function ConfigurationsPage({
+export default function ChannelsPage({
   channels: initialChannels,
   currentCommunity,
   communities,
@@ -35,7 +35,7 @@ export default function ConfigurationsPage({
   useEffect(() => {
     localStorage.set('pages.last', {
       communityId: currentCommunity.id,
-      page: 'configurations',
+      page: 'channels',
     });
   }, [currentCommunity]);
 
@@ -49,7 +49,7 @@ export default function ConfigurationsPage({
       isSubDomainRouting={isSubDomainRouting}
       dms={dms}
     >
-      <ConfigurationsView
+      <ChannelsView
         currentCommunity={currentCommunity}
         channels={channels}
         setChannels={setChannels}

@@ -15,6 +15,7 @@ import { FiZap } from '@react-icons/all-files/fi/FiZap';
 import { FiUsers } from '@react-icons/all-files/fi/FiUsers';
 import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
 import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp';
+import { FiHash } from '@react-icons/all-files/fi/FiHash';
 import { Mode } from '@linen/hooks/mode';
 import Toast from '@/Toast';
 import Nav from '@/Nav';
@@ -108,6 +109,7 @@ export default function DesktopNavBar({
     metrics: usePath({ href: '/metrics' }),
     configurations: usePath({ href: '/configurations' }),
     branding: usePath({ href: '/branding' }),
+    channels: usePath({ href: '/channels' }),
     members: usePath({ href: '/members' }),
     plans: usePath({ href: '/plans' }),
   };
@@ -369,6 +371,11 @@ export default function DesktopNavBar({
                 <Link href="/branding">
                   <Nav.Item active={paths.branding === routerAsPath}>
                     <FiSliders /> Branding
+                  </Nav.Item>
+                </Link>
+                <Link href="/channels">
+                  <Nav.Item active={paths.channels === routerAsPath}>
+                    <FiHash /> Channels
                   </Nav.Item>
                 </Link>
                 <Link href="/members">
