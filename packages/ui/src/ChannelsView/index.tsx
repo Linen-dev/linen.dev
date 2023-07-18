@@ -5,6 +5,7 @@ import Toggle from '@/Toggle';
 import Tooltip from '@/Tooltip';
 import NativeSelect from '@/NativeSelect';
 import LandingChannelRow from './LandingChannelRow';
+import Toast from '@/Toast';
 import { SerializedAccount, SerializedChannel } from '@linen/types';
 import { FiHash } from '@react-icons/all-files/fi/FiHash';
 import type { ApiClient } from '@linen/api-client';
@@ -68,6 +69,10 @@ export default function ChannelsView({
                 <small>How members see this channel</small>
               </th>
               <th>
+                Visibility <br />
+                <small>Can members access this channel</small>
+              </th>
+              <th>
                 Default
                 <br />
                 <small>Joined by new members</small>
@@ -76,10 +81,6 @@ export default function ChannelsView({
                 Landing
                 <br />
                 <small>First channel a new member sees</small>
-              </th>
-              <th>
-                Visibility <br />
-                <small>Can members access this channel</small>
               </th>
             </tr>
           </thead>
@@ -147,6 +148,58 @@ export default function ChannelsView({
                 </td>
                 <td>
                   <Toggle
+                    checked={!channel.hidden}
+                    onChange={(checked) => {
+                      setChannels((channels: SerializedChannel[]) => {
+                        const result = channels.map((c: SerializedChannel) => {
+                          if (c.id === channel.id) {
+                            const hidden = !checked;
+                            if (hidden) {
+                              return {
+                                ...c,
+                                default: false,
+                                landing: false,
+                                hidden,
+                              };
+                            } else {
+                              return {
+                                ...c,
+                                hidden,
+                              };
+                            }
+                          }
+                          return c;
+                        });
+
+                        const hasDefault = result.find(
+                          (channel) => channel.default
+                        );
+
+                        if (!hasDefault) {
+                          Toast.error(
+                            'You need at least one default channel. Select a different default channel first'
+                          );
+                          return channels;
+                        }
+
+                        const hasLanding = result.find(
+                          (channel) => channel.landing
+                        );
+
+                        if (!hasLanding) {
+                          Toast.error(
+                            'You need to have a landing channel. Select a different landing channel first'
+                          );
+                          return channels;
+                        }
+
+                        return result;
+                      });
+                    }}
+                  />
+                </td>
+                <td>
+                  <Toggle
                     checked={channel.default}
                     onChange={(checked) => {
                       setChannels((channels: SerializedChannel[]) => {
@@ -171,22 +224,18 @@ export default function ChannelsView({
                         const hasDefault = result.find(
                           (channel) => channel.default
                         );
+                        if (!hasDefault) {
+                          Toast.error('You need at least one default channel');
+                          return channels;
+                        }
                         const hasLanding = result.find(
                           (channel) => channel.landing
                         );
-                        if (!hasLanding && hasDefault) {
-                          const defaultIndex = result.findIndex(
-                            (channel) => channel.default
+                        if (!hasLanding) {
+                          Toast.error(
+                            'You need to have a landing channel. Select a different landing channel first'
                           );
-                          return result.map((channel, index) => {
-                            if (index === defaultIndex) {
-                              return {
-                                ...channel,
-                                landing: true,
-                              };
-                            }
-                            return channel;
-                          });
+                          return channels;
                         }
                         return result;
                       });
@@ -199,34 +248,23 @@ export default function ChannelsView({
                     onChange={(checked) => {
                       setChannels((channels: SerializedChannel[]) => {
                         return channels.map((c: SerializedChannel) => {
+                          if (c.landing && !checked) {
+                            Toast.error(
+                              'You need to have a landing channel. Select a different landing channel first'
+                            );
+                            return c;
+                          }
                           if (checked) {
                             if (c.id === channel.id) {
                               return {
                                 ...c,
+                                default: true,
                                 landing: true,
                               };
                             }
                             return {
                               ...c,
                               landing: false,
-                            };
-                          }
-                          return c;
-                        });
-                      });
-                    }}
-                  />
-                </td>
-                <td>
-                  <Toggle
-                    checked={!channel.hidden}
-                    onChange={(checked) => {
-                      setChannels((channels: SerializedChannel[]) => {
-                        return channels.map((c: SerializedChannel) => {
-                          if (c.id === channel.id) {
-                            return {
-                              ...c,
-                              hidden: !checked,
                             };
                           }
                           return c;
