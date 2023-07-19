@@ -232,21 +232,30 @@ export default class ApiClient {
     accountId,
     channelId,
     channelName,
+    channelDefault,
     channelPrivate,
     viewType,
+    landing,
+    hidden,
   }: {
     accountId: string;
     channelId: string;
     channelName: string;
     channelPrivate: boolean;
     viewType: ChannelViewType;
+    channelDefault?: boolean;
+    landing?: boolean;
+    hidden?: boolean;
   }) =>
     this.put(`/api/channels/${channelId}`, {
       accountId,
       channelId,
       channelName,
       channelPrivate,
+      channelDefault,
       viewType,
+      landing,
+      hidden,
     });
 
   setDefaultChannels = (props: setDefaultChannelsType) =>
