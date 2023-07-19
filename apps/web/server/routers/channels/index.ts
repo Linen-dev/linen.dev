@@ -321,29 +321,39 @@ channelsRouter.put(
   tenantMiddleware([Roles.OWNER, Roles.ADMIN]),
   validationMiddleware(updateChannelSchema),
   async (
-    req: AuthedRequestWithTenantAndBody<updateChannelType>,
-    res: Response,
+    request: AuthedRequestWithTenantAndBody<updateChannelType>,
+    response: Response,
     next: NextFunction
   ) => {
+    const {
+      channelId,
+      channelName,
+      channelDefault,
+      channelPrivate,
+      viewType,
+      landing,
+      hidden,
+    } = request.body;
     await prisma.channels.update({
-      where: { id: req.body.channelId },
+      where: { id: channelId },
       data: {
-        channelName: req.body.channelName,
-        type: req.body.channelPrivate
-          ? ChannelType.PRIVATE
-          : ChannelType.PUBLIC,
-        ...(req.body.channelPrivate && {
+        channelName,
+        type: channelPrivate ? ChannelType.PRIVATE : ChannelType.PUBLIC,
+        ...(channelPrivate && {
           memberships: {
             createMany: {
               skipDuplicates: true,
-              data: [{ usersId: req.tenant_user?.id! }],
+              data: [{ usersId: request.tenant_user?.id! }],
             },
           },
         }),
-        viewType: req.body.viewType,
+        viewType,
+        default: channelDefault,
+        landing,
+        hidden,
       },
     });
-    return res.status(200).json({});
+    return response.status(200).json({});
   }
 );
 

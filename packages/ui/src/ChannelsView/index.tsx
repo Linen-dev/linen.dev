@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import Header from './Header';
 import Label from '@/Label';
 import Toggle from '@/Toggle';
@@ -24,36 +24,25 @@ export default function ChannelsView({
   setChannels,
   api,
 }: Props) {
-  const key = channels?.map(({ id }) => id).join();
+  const debouncedUpdateChannel = useCallback(
+    (channel: SerializedChannel) =>
+      api.updateChannel({
+        accountId: currentCommunity.id,
+        channelId: channel.id,
+        channelName: channel.channelName,
+        channelDefault: channel.default,
+        channelPrivate: channel.type === 'PRIVATE',
+        viewType: channel.viewType,
+        landing: channel.landing,
+        hidden: channel.hidden,
+      }),
+    [currentCommunity]
+  );
+
   return (
     <div className={styles.wrapper}>
       <Header />
       <div className={styles.content}>
-        {/* <LandingChannelRow
-          key={`landing-row-${key}`}
-          channels={channels}
-          currentCommunity={currentCommunity}
-          api={api}
-          onChange={(id: string) =>
-            setChannels((channels: SerializedChannel[]) => {
-              return channels.map((channel: SerializedChannel) => {
-                if (channel.id === id) {
-                  return { ...channel, landing: true };
-                } else {
-                  return { ...channel, landing: false };
-                }
-              });
-            })
-          }
-        /> */}
-        {/* <hr className={styles.my3} />
-        <Label htmlFor="channels">
-          Channels
-          <Label.Description>
-            Drag and drop channels to define the order, decide which ones are
-            shown to new members or hidden to everyone.
-          </Label.Description>
-        </Label> */}
         <table className={styles.table}>
           <thead>
             <tr>
