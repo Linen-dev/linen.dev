@@ -12,7 +12,7 @@ type ConfigurationsPageProps = {
 
 export default function ConfigurationsPage() {
   const { communityName } = useParams() as ConfigurationsPageProps;
-  const { inboxProps, setChannels, channels } = useLinenStore(
+  const { inboxProps } = useLinenStore(
     (state) => ({
       inboxProps: state.inboxProps,
       setChannels: state.setChannels,
@@ -27,10 +27,8 @@ export default function ConfigurationsPage() {
 
   return (
     <ConfigurationsView
-      channels={channels}
       currentCommunity={inboxProps?.currentCommunity || mockAccount}
       api={api}
-      setChannels={setChannels}
     />
   );
 }

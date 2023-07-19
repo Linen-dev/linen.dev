@@ -6,6 +6,7 @@ import Toast from '@/Toast';
 import TextField from '@/TextField';
 import { SerializedAccount, SerializedChannel } from '@linen/types';
 import { FiHash } from '@react-icons/all-files/fi/FiHash';
+import debounce from '@linen/utilities/debounce';
 import type { ApiClient } from '@linen/api-client';
 import styles from './index.module.scss';
 
@@ -23,7 +24,7 @@ export default function ChannelsView({
   api,
 }: Props) {
   const debouncedUpdateChannel = useCallback(
-    (channel: SerializedChannel) =>
+    debounce((channel: SerializedChannel) =>
       api.updateChannel({
         accountId: currentCommunity.id,
         channelId: channel.id,
@@ -33,9 +34,103 @@ export default function ChannelsView({
         viewType: channel.viewType,
         landing: channel.landing,
         hidden: channel.hidden,
-      }),
+      })
+    ),
     [currentCommunity]
   );
+  const debouncedReorderChannels = useCallback(
+    debounce(api.reorderChannels),
+    []
+  );
+
+  const onDragStart = (event: React.DragEvent) => {
+    const node = event.target as HTMLDivElement;
+    if (node) {
+      const id = node.getAttribute('data-id');
+      if (id) {
+        event.dataTransfer.setData('text', id);
+        node.classList.add(styles.dragged);
+      }
+    }
+  };
+
+  const onDragEnd = (event: React.DragEvent) => {
+    const node = event.target as HTMLDivElement;
+    node.classList.remove(styles.dragged);
+  };
+
+  function onDragOver(event: React.DragEvent) {
+    event.preventDefault();
+    return false;
+  }
+
+  function onDragEnter(event: React.DragEvent) {
+    event.currentTarget.classList.add(styles.drop);
+  }
+
+  function onDragLeave(event: React.DragEvent) {
+    if (
+      event.relatedTarget &&
+      event.currentTarget.contains(event.relatedTarget as HTMLDivElement)
+    ) {
+      return false;
+    }
+    event.currentTarget.classList.remove(styles.drop);
+  }
+
+  const onDrop = (event: React.DragEvent) => {
+    const node = event.currentTarget;
+    const from = event.dataTransfer.getData('text');
+    const to = node.getAttribute('data-id');
+    event.currentTarget.classList.remove(styles.drop);
+    setChannels((channels: SerializedChannel[]) => {
+      const reorderedChannels = reorderChannels(channels, from, to);
+      debouncedReorderChannels({
+        accountId: currentCommunity.id,
+        channels: reorderedChannels.map(({ id, displayOrder }) => {
+          return { id, displayOrder };
+        }),
+      });
+      return reorderedChannels;
+    });
+
+    setUserChannels(from, to);
+  };
+
+  function reorderChannels(
+    channels: SerializedChannel[],
+    from: string,
+    to: string | null
+  ): SerializedChannel[] {
+    const fromIndex = channels.findIndex((channel) => channel.id === from);
+    const toIndex = channels.findIndex((channel) => channel.id === to);
+    if (fromIndex >= 0 && toIndex >= 0) {
+      const channelFrom = channels[fromIndex];
+      const channelTo = channels[toIndex];
+      return channels.map((channel, index) => {
+        if (channelTo && channel.id === from) {
+          return {
+            ...channelTo,
+            displayOrder: index,
+          };
+        } else if (channelFrom && channel.id === to) {
+          return {
+            ...channelFrom,
+            displayOrder: index,
+          };
+        }
+        return {
+          ...channel,
+          displayOrder: index,
+        };
+      });
+    }
+    return channels;
+  }
+
+  function setUserChannels(from: string, to: string | null) {
+    setChannels(reorderChannels(channels, from, to));
+  }
 
   return (
     <div className={styles.wrapper}>
@@ -73,7 +168,17 @@ export default function ChannelsView({
           </thead>
           <tbody>
             {channels.map((channel) => (
-              <tr key={channel.channelName}>
+              <tr
+                key={channel.channelName}
+                data-id={channel.id}
+                draggable
+                onDragStart={onDragStart}
+                onDragEnter={onDragEnter}
+                onDragOver={onDragOver}
+                onDragLeave={onDragLeave}
+                onDragEnd={onDragEnd}
+                onDrop={onDrop}
+              >
                 <td>
                   <div className={styles.item}>
                     <FiHash />{' '}
