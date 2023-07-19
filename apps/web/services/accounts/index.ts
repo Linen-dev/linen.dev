@@ -213,7 +213,7 @@ export default class AccountsService {
       if (this.isRedirectDomainNotUniqueError(exception)) {
         return {
           status: 400,
-          error: 'Redirect domain is already in use',
+          message: 'Custom domain is already in use',
         };
       }
     }
