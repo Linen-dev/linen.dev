@@ -1,3 +1,7 @@
+# What is Linen
+
+Linen is a Google searchable communities platform. We support two way syncs with different communities like Slack/Discord and now Matrix.
+
 # Getting Started
 
 In this guide we will setup the bridge connected to your homeserver. This guide will walk through the most common settings, other options are documented in the `config.sample.yaml` file.
@@ -98,3 +102,4 @@ If you want to host this bridge on a different server than your homeserver, you 
 - [ ] deletions
 - [ ] datastore
 - [ ] queue
+- [ ] historic sync
