@@ -24,8 +24,10 @@ if (
 ) {
   posthog.init(process.env.NEXT_PUBLIC_POSTHOG_API_KEY, {
     api_host: '/ph' || 'https://app.posthog.com',
+    autocapture: true,
     loaded: (posthog) => {
       if (process.env.NODE_ENV === 'development') posthog.debug();
+      if (posthog.has_opted_out_capturing()) posthog.opt_in_capturing();
     },
   });
 }
