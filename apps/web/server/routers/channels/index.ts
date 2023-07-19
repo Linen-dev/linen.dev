@@ -326,7 +326,6 @@ channelsRouter.put(
     next: NextFunction
   ) => {
     const {
-      accountId,
       channelId,
       channelName,
       channelDefault,
@@ -337,7 +336,7 @@ channelsRouter.put(
     } = request.body;
     if (landing === true) {
       await ChannelsService.setLandingChannel({
-        accountId,
+        accountId: request.tenant?.id!,
         channelId,
       });
     }
