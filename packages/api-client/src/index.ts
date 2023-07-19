@@ -149,6 +149,11 @@ export default class ApiClient {
 
   getAccounts = <T>() => this.get<T>('/api/accounts');
 
+  validateDomain = (props: { domain: string; accountId: string }) =>
+    this.get<{ ok: boolean; cause?: string }>(
+      `/api/accounts/validate-domain?${qs(props)}`
+    );
+
   createAccount = (props: createAccountType) =>
     this.post<{ id: string }>('/api/accounts', props);
 

@@ -163,31 +163,32 @@ enum channelsIntegrationType {
 }
 
 model accounts {
-  id                     String      @id @default(uuid())
-  createdAt              DateTime    @default(now())
-  type                   AccountType @default(PUBLIC)
-  name                   String?
-  description            String?
-  slackDomain            String?
-  discordDomain          String?
-  discordServerId        String?
-  channels               channels[]
-  slackTeamId            String?
-  communityInviteUrl     String?
-  redirectDomain         String?
-  communityUrl           String?
-  syncStatus             String      @default("NOT_STARTED")
-  brandColor             String?
-  homeUrl                String?
-  docsUrl                String?
-  logoUrl                String?
-  logoSquareUrl          String?
-  faviconUrl             String?
-  premium                Boolean     @default(false)
-  googleAnalyticsId      String?
-  googleSiteVerification String?
-  anonymizeUsers         Boolean     @default(false)
-  newChannelsConfig      String      @default("NOT_HIDDEN")
+  id                      String      @id @default(uuid())
+  createdAt               DateTime    @default(now())
+  type                    AccountType @default(PUBLIC)
+  name                    String?
+  description             String?
+  slackDomain             String?
+  discordDomain           String?
+  discordServerId         String?
+  channels                channels[]
+  slackTeamId             String?
+  communityInviteUrl      String?
+  redirectDomain          String?
+  communityUrl            String?
+  syncStatus              String      @default("NOT_STARTED")
+  brandColor              String?
+  homeUrl                 String?
+  docsUrl                 String?
+  logoUrl                 String?
+  logoSquareUrl           String?
+  faviconUrl              String?
+  premium                 Boolean     @default(false)
+  googleAnalyticsId       String?
+  googleSiteVerification  String?
+  anonymizeUsers          Boolean     @default(false)
+  newChannelsConfig       String      @default("NOT_HIDDEN")
+  redirectDomainPropagate Boolean?
 
   auths                 auths[]
   users                 users[]

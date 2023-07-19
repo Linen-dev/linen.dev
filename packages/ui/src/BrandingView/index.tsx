@@ -17,6 +17,8 @@ import styles from './index.module.scss';
 import type { ApiClient } from '@linen/api-client';
 import { PremiumCard } from './PremiumCard';
 import UpgradeButton from '@/Header/UpgradeButton';
+import Button from '@/Button';
+import Spinner from '@/Spinner';
 
 export default function BrandingView({
   reload,
@@ -43,11 +45,14 @@ export default function BrandingView({
       currentCommunity.premium &&
       currentCommunity.redirectDomain
     ) {
-      api.getDnsSettings(currentCommunity.id).then((response) => {
-        if (mounted && response && response.records) {
-          setRecords(response.records);
-        }
-      });
+      api
+        .getDnsSettings(currentCommunity.id)
+        .then((response) => {
+          if (mounted && response && response.records) {
+            setRecords(response.records);
+          }
+        })
+        .catch((_) => {});
     }
     return () => {
       mounted = false;
@@ -59,15 +64,11 @@ export default function BrandingView({
     if (!form) {
       return;
     }
-    const redirectDomain = stripProtocol(
-      form.redirectDomain.value
-    ).toLowerCase();
     const googleAnalyticsId = form.googleAnalyticsId?.value;
     const brandColor = form.brandColor.value;
     const description = form.description.value;
     const params = {
       description,
-      redirectDomain,
       brandColor,
       googleAnalyticsId,
       ...options,
@@ -75,8 +76,8 @@ export default function BrandingView({
     return debouncedUpdateAccount({
       accountId: currentCommunity.id,
       ...params,
-    }).catch((error: Error) => {
-      Toast.error(error?.message || 'Something went wrong!');
+    }).catch((error: any) => {
+      Toast.error(error.details || error.message || 'Something went wrong!');
     });
   };
 
@@ -137,8 +138,8 @@ export default function BrandingView({
                 }
                 disabled={!currentCommunity.premium}
                 readOnly={!currentCommunity.premium}
-                onChange={() => updateAccount()}
               />
+              <DomainStatus currentCommunity={currentCommunity} api={api} />
             </PremiumCard>
             <hr className={styles.my5} />
             {currentCommunity.premium && records && records.length > 0 && (
@@ -356,6 +357,73 @@ export default function BrandingView({
           </div>
         </div>
       </form>
+    </div>
+  );
+}
+
+function DomainStatus({
+  currentCommunity,
+  api,
+}: {
+  currentCommunity: SerializedAccount;
+  api: ApiClient;
+}) {
+  const [statusText, setStatusText] = useState<string>(
+    currentCommunity.redirectDomainPropagate
+      ? 'Custom domain is working.'
+      : 'Custom domain is not working.'
+  );
+  const [statusColor, setStatusColor] = useState<'green' | 'red'>(
+    currentCommunity.redirectDomainPropagate ? 'green' : 'red'
+  );
+  const [loading, setLoading] = useState(false);
+
+  const validateDomain = async () => {
+    const form = document.getElementById('branding-form') as HTMLFormElement;
+    if (!form) {
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const domain = stripProtocol(form.redirectDomain.value).toLowerCase();
+
+      await api.updateAccount({
+        accountId: currentCommunity.id,
+        redirectDomain: domain,
+      });
+
+      const result = await api.validateDomain({
+        domain,
+        accountId: currentCommunity.id,
+      });
+
+      if (result.ok) {
+        setStatusColor('green');
+        setStatusText('Custom domain is working.');
+      } else {
+        setStatusColor('red');
+        setStatusText(result.cause || 'Invalid, try again later.');
+      }
+    } catch (error: any) {
+      setStatusColor('red');
+      setStatusText(error.details || 'Something went wrong.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className={styles.domainValidationWrapper}>
+      <span
+        className={styles.domainValidationResult}
+        style={{ color: statusColor }}
+      >
+        {loading ? <Spinner /> : statusText}
+      </span>
+      <Button onClick={() => validateDomain()} disabled={loading}>
+        Validate domain
+      </Button>
     </div>
   );
 }

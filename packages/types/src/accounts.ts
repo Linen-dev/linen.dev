@@ -58,6 +58,7 @@ export interface SerializedAccount {
   chat: ChatType | null;
   communityUrl?: string;
   newChannelsConfig: string;
+  redirectDomainPropagate?: boolean;
 }
 
 export interface Permissions {

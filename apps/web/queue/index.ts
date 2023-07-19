@@ -28,6 +28,7 @@ import { discordIntegration } from './tasks/discord-integration';
 import { removeCommunity } from './tasks/remove-community';
 import { buildFeed, createFeedJob } from './tasks/build-feed';
 // import { userJoinTask } from './tasks/user-join';
+import { checkPropagation } from './tasks/custom-domain-propagate';
 
 export type TaskInterface = (
   payload: any,
@@ -60,8 +61,18 @@ async function runWorker() {
       [QUEUE_REMOVE_COMMUNITY]: removeCommunity,
       // [QUEUE_USER_JOIN]: userJoinTask,
       buildFeed,
+      checkPropagation,
     },
     parsedCronItems: parseCronItems([
+      {
+        pattern: '0 */2 * * *', // every 2 hours
+        options: {
+          queueName: 'checkPropagation',
+          backfillPeriod: 0,
+        },
+        task: 'checkPropagation',
+        identifier: 'checkPropagation',
+      },
       {
         pattern: '00 3 * * *',
         options: {
@@ -101,6 +112,7 @@ async function runWorker() {
     ]),
   });
   await createFeedJob(runner.addJob);
+  await runner.addJob('checkPropagation');
   await runner.promise;
 }
 

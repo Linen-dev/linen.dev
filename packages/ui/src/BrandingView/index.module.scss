@@ -44,3 +44,14 @@
 .mb5 {
   margin-bottom: 1.25rem /* 20px */;
 }
+
+.domainValidationWrapper {
+  gap: 0.5rem;
+}
+
+.domainValidationResult {
+  font-size: small;
+  font-style: italic;
+  display: flex;
+  margin: 0.5rem 0;
+}

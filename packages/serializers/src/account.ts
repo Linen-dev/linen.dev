@@ -50,6 +50,7 @@ export function serializeAccount(account?: any): SerializedAccount {
     chat,
     communityUrl,
     newChannelsConfig,
+    redirectDomainPropagate,
   } = account;
 
   const communityType = identifyCommunity(account);
@@ -80,5 +81,6 @@ export function serializeAccount(account?: any): SerializedAccount {
     chat,
     communityUrl,
     newChannelsConfig,
+    redirectDomainPropagate,
   };
 }
