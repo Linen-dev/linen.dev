@@ -40,7 +40,11 @@ const cleanLinenHost = (hostname: string) =>
   hostname.indexOf('linen.dev') > -1 ? 'www.linen.dev' : hostname;
 
 const isBotOrLighthouse = (userAgent: string) => {
-  return userAgent.indexOf('Chrome-Lighthouse') > -1 || isBotFn(userAgent);
+  return (
+    userAgent.indexOf('Chrome-Lighthouse') > -1 ||
+    userAgent.indexOf('Google-InspectionTool') > -1 ||
+    isBotFn(userAgent)
+  );
 };
 
 export function rewrite({
