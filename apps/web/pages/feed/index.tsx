@@ -241,22 +241,23 @@ export default function Feed() {
             <h1>What is Linen?</h1>
             <p>
               <small>
-                Linen is a real-time chat platform built for communities. We are
-                SEO friendly while providing a modern chat experience.
+                Linen is a search-engine friendly community platform. We offer
+                two way integrations with existing Slack/Discord communities and
+                make those conversations Google-searchable.
               </small>
             </p>
-            <h2>Forum and a real-time chat</h2>
+            <h2>What is this page?</h2>
             <p>
               <small>
-                Information gets lost in real-time chat. Linen solves this by
-                letting Google find your content. Our advanced threading model
-                let you drag and drop messages and threads to reorganize your
-                content.
+                This page aggregates conversations from across all types of
+                communities into a single feed. This way,
+                we can showcase interesting content/discussions in different
+                communities.
               </small>
             </p>
             <a
               className={styles.link}
-              href="https://linen.dev"
+              href="https://linen.dev/landing"
               target="_blank"
               rel="noreferrer"
             >
