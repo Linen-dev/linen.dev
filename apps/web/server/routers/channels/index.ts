@@ -326,6 +326,7 @@ channelsRouter.put(
     next: NextFunction
   ) => {
     const {
+      accountId,
       channelId,
       channelName,
       channelDefault,
@@ -334,6 +335,12 @@ channelsRouter.put(
       landing,
       hidden,
     } = request.body;
+    if (landing === true) {
+      await ChannelsService.setLandingChannel({
+        accountId,
+        channelId,
+      });
+    }
     await prisma.channels.update({
       where: { id: channelId },
       data: {
