@@ -21,7 +21,7 @@ export interface Props {
 }
 
 export default function ConfigurationsPage({
-  channels: initialChannels,
+  channels,
   currentCommunity,
   communities,
   settings,
@@ -29,9 +29,6 @@ export default function ConfigurationsPage({
   isSubDomainRouting,
   dms,
 }: Props) {
-  const [channels, setChannels] =
-    useState<SerializedChannel[]>(initialChannels);
-
   useEffect(() => {
     localStorage.set('pages.last', {
       communityId: currentCommunity.id,
@@ -49,12 +46,7 @@ export default function ConfigurationsPage({
       isSubDomainRouting={isSubDomainRouting}
       dms={dms}
     >
-      <ConfigurationsView
-        currentCommunity={currentCommunity}
-        channels={channels}
-        setChannels={setChannels}
-        api={api}
-      />
+      <ConfigurationsView currentCommunity={currentCommunity} api={api} />
     </PageLayout>
   );
 }

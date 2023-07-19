@@ -23,7 +23,6 @@ export const updateChannelSchema = z.object({
   channelPrivate: z.boolean().optional(),
   channelDefault: z.boolean().optional(),
   hidden: z.boolean().optional(),
-  default: z.boolean().optional(),
   landing: z.boolean().optional(),
   viewType: z.enum(['CHAT', 'FORUM']).optional(),
 });

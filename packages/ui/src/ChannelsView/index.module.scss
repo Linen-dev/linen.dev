@@ -69,3 +69,11 @@
   margin-top: 0.75rem;
   margin-bottom: 0.75rem;
 }
+
+.drop {
+  background: var(--color-blue-50);
+}
+
+.dragged {
+  cursor: move;
+}
