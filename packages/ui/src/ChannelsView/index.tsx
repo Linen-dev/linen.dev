@@ -12,6 +12,7 @@ import styles from './index.module.scss';
 import { FiEye } from '@react-icons/all-files/fi/FiEye';
 import { FiEyeOff } from '@react-icons/all-files/fi/FiEyeOff';
 import { GrDrag } from '@react-icons/all-files/gr/GrDrag';
+import { move } from '@linen/utilities/array';
 
 interface Props {
   currentCommunity: SerializedAccount;
@@ -108,20 +109,7 @@ export default function ChannelsView({
     const fromIndex = channels.findIndex((channel) => channel.id === from);
     const toIndex = channels.findIndex((channel) => channel.id === to);
     if (fromIndex >= 0 && toIndex >= 0) {
-      const channelFrom = channels[fromIndex];
-      const channelTo = channels[toIndex];
-      return channels.map((channel, index) => {
-        if (channelTo && channel.id === from) {
-          return {
-            ...channelTo,
-            displayOrder: index,
-          };
-        } else if (channelFrom && channel.id === to) {
-          return {
-            ...channelFrom,
-            displayOrder: index,
-          };
-        }
+      return move(channels, fromIndex, toIndex).map((channel, index) => {
         return {
           ...channel,
           displayOrder: index,
