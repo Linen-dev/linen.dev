@@ -23,25 +23,10 @@ import { prisma } from '@linen/database';
 const prefix = '/api/accounts';
 const accountsRouter = Router();
 
-async function _findCommunities(includeFreeTier: boolean = false) {
-  const data = await AccountsService.showcase(includeFreeTier);
-  const urls = await Promise.all(
-    data.map(async (url) =>
-      fetch(url, { method: 'HEAD' })
-        .then((r) => (r.ok ? url : null))
-        .catch((_) => null)
-    )
-  );
-  return urls.filter((e) => !!e);
-}
-
-const findCommunities = promiseMemoize(_findCommunities);
-
 accountsRouter.get(
   `${prefix}/showcase`,
   async (req: AuthedRequest, res: Response) => {
-    const { includeFreeTier } = req.query;
-    res.json(await findCommunities(!!includeFreeTier));
+    res.json(await AccountsService.showcase());
     res.end();
   }
 );

@@ -251,9 +251,14 @@ export default class AccountsService {
 
   static async showcase(showFreeTier: boolean = false) {
     const accounts = await prisma.$queryRaw<
-      { redirectDomain?: string; slackDomain: string }[]
+      {
+        redirectDomain?: string;
+        slackDomain: string;
+        redirectDomainPropagate?: boolean;
+      }[]
     >`
-    select a."redirectDomain" , a."slackDomain" from accounts a 
+    select a."redirectDomain" , a."slackDomain", a."redirectDomainPropagate" 
+    from accounts a 
     join channels c on a.id = c."accountId" 
     where c."default" is true
     and (a."redirectDomain" is not null or a."slackDomain" is not null)
@@ -265,7 +270,7 @@ export default class AccountsService {
     group by a.id`;
 
     return accounts.map((row) =>
-      row.redirectDomain
+      row.redirectDomainPropagate
         ? `https://${row.redirectDomain}`
         : `https://www.linen.dev/s/${row.slackDomain}`
     );
