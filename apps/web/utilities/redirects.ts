@@ -45,7 +45,8 @@ export function shouldRedirectToDomain({
     account.premium &&
     !!account.redirectDomain &&
     communityName !== account.redirectDomain &&
-    !isSubdomainbasedRouting
+    !isSubdomainbasedRouting &&
+    account.redirectDomainPropagate
   );
 }
 
