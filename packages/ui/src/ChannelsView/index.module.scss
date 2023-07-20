@@ -31,6 +31,7 @@
 }
 
 .table {
+  border-collapse: collapse;
   width: 100%;
 
   thead {
@@ -57,8 +58,19 @@
     }
   }
 
+  tbody tr {
+    border-top: 1px solid var(--color-gray-200);
+
+    &:first-child {
+      border-top: 1px solid transparent;
+    }
+
+    &.highlighted {
+      border-top: 1px solid var(--color-primary);
+    }
+  }
+
   td {
-    border-bottom: 1px solid var(--color-gray-200);
     color: var(--color-gray-500);
     padding: 1rem 1.5rem;
     font-size: 14px;
