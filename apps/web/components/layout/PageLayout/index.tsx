@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import Header from '@linen/ui/Header';
 import ErrorFallback from './ErrorFallback';
@@ -77,6 +77,10 @@ function PageLayout({
   const router = useRouter();
   const { startSignUp } = useJoinContext();
   const { status } = useSession();
+
+  useEffect(() => {
+    setChannels(initialChannels.filter((c: SerializedChannel) => !c.hidden));
+  }, [initialChannels]);
 
   const handleSelect = ({ thread }: SerializedSearchMessage) => {
     let path = `/t/${thread.incrementId}/${thread.slug || 'topic'}`;
