@@ -12,25 +12,10 @@ import Script from 'next/script';
 import { useEffect } from 'react';
 import { SessionProvider } from '@linen/auth/client';
 import Toast from '@linen/ui/Toast';
-import posthog from 'posthog-js';
 import { JoinContext } from 'contexts/Join';
 import { UsersContext } from '@linen/contexts/Users';
 import PostHogUser from 'components/PostHogUser';
-import { PostHogProvider } from 'posthog-js/react';
-
-if (
-  typeof window !== 'undefined' &&
-  !!process.env.NEXT_PUBLIC_POSTHOG_API_KEY
-) {
-  posthog.init(process.env.NEXT_PUBLIC_POSTHOG_API_KEY, {
-    api_host: '/ph' || 'https://app.posthog.com',
-    autocapture: true,
-    loaded: (posthog) => {
-      if (process.env.NODE_ENV === 'development') posthog.debug();
-      if (posthog.has_opted_out_capturing()) posthog.opt_in_capturing();
-    },
-  });
-}
+import 'utilities/posthog';
 
 export default function App(props: AppProps) {
   const router = useRouter();
@@ -42,7 +27,7 @@ export default function App(props: AppProps) {
       NProgress.start();
     };
     const handleStop = () => {
-      posthog?.capture('$pageview');
+      (window as any).posthog?.capture('$pageview');
       NProgress.done();
     };
 
@@ -91,10 +76,8 @@ export default function App(props: AppProps) {
       />
       <JoinContext>
         <UsersContext>
-          <PostHogProvider client={posthog}>
-            <PostHogUser />
-            <Component {...pageProps} />
-          </PostHogProvider>
+          <PostHogUser />
+          <Component {...pageProps} />
         </UsersContext>
       </JoinContext>
       <Script
