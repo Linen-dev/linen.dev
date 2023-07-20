@@ -15,7 +15,7 @@ import { z } from 'zod';
 import { buildCursor } from 'utilities/buildCursor';
 import { sortBySentAtAsc } from '@linen/utilities/object';
 import { ssr, allowAccess, allowManagers } from 'services/ssr/common';
-import ChannelsService from 'services/channels';
+import { ChannelType, prisma } from '@linen/database';
 import { serializeChannel } from '@linen/serializers/channel';
 
 export async function channelGetServerSideProps(
@@ -220,13 +220,35 @@ export async function getChannelsSettingsServerSideProps(
     return NotFound();
   }
 
-  const channels = await ChannelsService.find(props.currentCommunity.id);
+  const channels = await prisma.channels.findMany({
+    where: {
+      accountId: props.currentCommunity.id,
+      type: {
+        in: [ChannelType.PUBLIC, ChannelType.PRIVATE],
+      },
+    },
+    include: {
+      _count: { select: { threads: true, memberships: true } },
+    },
+    orderBy: {
+      displayOrder: 'asc',
+    },
+  });
+
+  const counts = channels.map((channel) => {
+    return {
+      channelId: channel.id,
+      threadsCount: channel._count.threads,
+      usersCount: channel._count.memberships,
+    };
+  });
 
   return {
     props: {
       ...props,
       channels: channels.map(serializeChannel),
       isSubDomainRouting,
+      counts,
     },
   };
 }

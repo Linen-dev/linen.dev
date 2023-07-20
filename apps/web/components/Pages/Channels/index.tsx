@@ -10,11 +10,18 @@ import { localStorage } from '@linen/utilities/storage';
 import { api } from 'utilities/requests';
 import ChannelsView from '@linen/ui/ChannelsView';
 
+interface Counts {
+  channelId: string;
+  usersCount: number;
+  threadsCount: number;
+}
+
 export interface Props {
   channels: SerializedChannel[];
   currentCommunity: SerializedAccount;
   communities: SerializedAccount[];
   permissions: Permissions;
+  counts: Counts[];
   settings: Settings;
   isSubDomainRouting: boolean;
   dms: SerializedChannel[];
@@ -25,6 +32,7 @@ export default function ChannelsPage({
   currentCommunity,
   communities,
   settings,
+  counts,
   permissions,
   isSubDomainRouting,
   dms,
@@ -54,6 +62,7 @@ export default function ChannelsPage({
         channels={channels}
         setChannels={setChannels}
         api={api}
+        counts={counts}
       />
     </PageLayout>
   );
