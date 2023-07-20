@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import Header from './Header';
 import Toggle from '@/Toggle';
 import NativeSelect from '@/NativeSelect';
@@ -27,6 +27,7 @@ export default function ChannelsView({
   setChannels,
   api,
 }: Props) {
+  const [currentId, setCurrentId] = useState('');
   const debouncedUpdateChannel = useCallback(
     debounce((channel: SerializedChannel) =>
       api.updateChannel({
@@ -52,7 +53,7 @@ export default function ChannelsView({
     if (node) {
       const id = node.getAttribute('data-id');
       if (id) {
-        event.dataTransfer.setData('text', id);
+        setCurrentId(id);
         node.classList.add(styles.dragged);
       }
     }
@@ -69,7 +70,14 @@ export default function ChannelsView({
   }
 
   function onDragEnter(event: React.DragEvent) {
-    event.currentTarget.classList.add(styles.drop);
+    const id = event.currentTarget.getAttribute('data-id');
+    if (id === currentId) {
+      return;
+    }
+    const row = event.currentTarget.closest('tr');
+    if (row) {
+      row.classList.add(styles.highlighted);
+    }
   }
 
   function onDragLeave(event: React.DragEvent) {
@@ -79,14 +87,20 @@ export default function ChannelsView({
     ) {
       return false;
     }
-    event.currentTarget.classList.remove(styles.drop);
+    const row = event.currentTarget.closest('tr');
+    if (row) {
+      row.classList.remove(styles.highlighted);
+    }
   }
 
   const onDrop = (event: React.DragEvent) => {
     const node = event.currentTarget;
-    const from = event.dataTransfer.getData('text');
+    const from = currentId;
     const to = node.getAttribute('data-id');
-    event.currentTarget.classList.remove(styles.drop);
+    const row = event.currentTarget.closest('tr');
+    if (row) {
+      row.classList.remove(styles.highlighted);
+    }
     setChannels((channels: SerializedChannel[]) => {
       const reorderedChannels = reorderChannels(channels, from, to);
       debouncedReorderChannels({
@@ -99,6 +113,7 @@ export default function ChannelsView({
     });
 
     setUserChannels(from, to);
+    setCurrentId('');
   };
 
   function reorderChannels(
