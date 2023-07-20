@@ -11,6 +11,7 @@ import type { ApiClient } from '@linen/api-client';
 import styles from './index.module.scss';
 import { FiEye } from '@react-icons/all-files/fi/FiEye';
 import { FiEyeOff } from '@react-icons/all-files/fi/FiEyeOff';
+import { GrDrag } from '@react-icons/all-files/gr/GrDrag';
 
 interface Props {
   currentCommunity: SerializedAccount;
@@ -141,6 +142,7 @@ export default function ChannelsView({
         <table className={styles.table}>
           <thead>
             <tr>
+              <th>NR</th>
               <th>Channel Name</th>
               <th>
                 Visibility <br />
@@ -169,18 +171,23 @@ export default function ChannelsView({
             </tr>
           </thead>
           <tbody>
-            {channels.map((channel) => (
-              <tr
-                key={channel.channelName}
-                data-id={channel.id}
-                draggable
-                onDragStart={onDragStart}
-                onDragEnter={onDragEnter}
-                onDragOver={onDragOver}
-                onDragLeave={onDragLeave}
-                onDragEnd={onDragEnd}
-                onDrop={onDrop}
-              >
+            {channels.map((channel, index) => (
+              <tr key={channel.channelName}>
+                <td
+                  draggable
+                  onDragStart={onDragStart}
+                  data-id={channel.id}
+                  onDragEnter={onDragEnter}
+                  onDragOver={onDragOver}
+                  onDragLeave={onDragLeave}
+                  onDragEnd={onDragEnd}
+                  onDrop={onDrop}
+                >
+                  <div className={styles.position}>
+                    <GrDrag />
+                    {index + 1}
+                  </div>
+                </td>
                 <td>
                   <div className={styles.item}>
                     <FiHash />{' '}
