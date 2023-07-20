@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { AccountType } from '@linen/types';
 import Label from '@/Label';
 import NativeSelect from '@/NativeSelect';
-import { AiFillEye } from '@react-icons/all-files/ai/AiFillEye';
-import { AiFillEyeInvisible } from '@react-icons/all-files/ai/AiFillEyeInvisible';
+import { FiEye } from '@react-icons/all-files/fi/FiEye';
+import { FiEyeOff } from '@react-icons/all-files/fi/FiEyeOff';
 
 interface Props {
   type: AccountType;
@@ -23,9 +23,9 @@ function description(type: AccountType) {
 function icon(type: AccountType) {
   switch (type) {
     case AccountType.PUBLIC:
-      return <AiFillEye />;
+      return <FiEye />;
     case AccountType.PRIVATE:
-      return <AiFillEyeInvisible />;
+      return <FiEyeOff />;
   }
 }
 

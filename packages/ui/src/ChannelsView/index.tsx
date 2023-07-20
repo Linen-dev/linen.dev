@@ -9,6 +9,8 @@ import { FiHash } from '@react-icons/all-files/fi/FiHash';
 import debounce from '@linen/utilities/debounce';
 import type { ApiClient } from '@linen/api-client';
 import styles from './index.module.scss';
+import { FiEye } from '@react-icons/all-files/fi/FiEye';
+import { FiEyeOff } from '@react-icons/all-files/fi/FiEyeOff';
 
 interface Props {
   currentCommunity: SerializedAccount;
@@ -360,6 +362,7 @@ export default function ChannelsView({
                       { value: 'PUBLIC', label: 'Public' },
                       { value: 'PRIVATE', label: 'Private' },
                     ]}
+                    icon={channel.type === 'PRIVATE' ? <FiEyeOff /> : <FiEye />}
                     defaultValue={channel.type || ''}
                     style={{ width: 'auto' }}
                     onChange={(event) => {
@@ -391,7 +394,7 @@ export default function ChannelsView({
                       { value: 'CHAT', label: 'Chat' },
                       { value: 'FORUM', label: 'Forum' },
                     ]}
-                    defaultValue={channel.viewType || ''}
+                    defaultValue={channel.viewType}
                     style={{ width: 'auto' }}
                     onChange={(event) => {
                       event.preventDefault();
