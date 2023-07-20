@@ -324,6 +324,11 @@ export default function ChannelsView({
                           'You need to set the channel as default first. Otherwise first time users will not see it'
                         );
                       }
+                      if (channel.landing && !checked) {
+                        return Toast.error(
+                          'Please choose a different landing channel.'
+                        );
+                      }
                       debouncedUpdateChannel({
                         ...channel,
                         landing: checked,
