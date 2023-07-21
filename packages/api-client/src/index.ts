@@ -160,6 +160,9 @@ export default class ApiClient {
   updateAccount = <T>(props: updateAccountType) =>
     this.put<T>('/api/accounts', props);
 
+  syncAccount = (props: { accountId: string }) =>
+    this.post<{ ok: boolean }>('/api/accounts/sync', props);
+
   getThreads = (props: findThreadType) =>
     this.get<channelNextPageType>(`/api/threads?${qs(props)}`);
 

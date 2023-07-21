@@ -52,3 +52,17 @@
   display: flex;
   gap: 0.5rem /* 8px */;
 }
+
+.discordModalContent {
+  gap: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.sync {
+  color: var(--color-gray-300);
+  font-style: italic;
+  font-size: small;
+  cursor: pointer;
+  text-decoration: underline;
+}

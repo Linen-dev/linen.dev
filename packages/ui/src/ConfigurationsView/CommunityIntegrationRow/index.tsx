@@ -6,10 +6,15 @@ import Toast from '@/Toast';
 import { GoCheck } from '@react-icons/all-files/go/GoCheck';
 import { GoAlert } from '@react-icons/all-files/go/GoAlert';
 import { GoInfo } from '@react-icons/all-files/go/GoInfo';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './index.module.scss';
 import TextInput from '@/TextInput';
 import type { ApiClient } from '@linen/api-client';
+import Modal from '@/Modal';
+import Button from '@/Button';
+import H2 from '@/H2';
+import Spinner from '@/Spinner';
+import Checkbox from '@/Checkbox';
 
 const statusMap: any = {
   NOT_STARTED: (
@@ -46,6 +51,20 @@ export default function CommunityIntegration({
     'since-all'
   );
   const [dateFrom, setDateFrom] = useState<string>();
+  const [discordModalOpen, setDiscordModalOpen] = useState(false);
+
+  useEffect(() => {
+    handleDiscordSync();
+  }, []);
+
+  function handleDiscordSync() {
+    const params = new URL(window.location.toString()).searchParams;
+    const showDiscordInstructions = params.get('discord');
+    if (showDiscordInstructions === 'sync') {
+      setDiscordModalOpen(true);
+    }
+  }
+
   const newOnboarding = !currentCommunity.communityType;
   const communityType = currentCommunity.communityType
     ? currentCommunity.communityType
@@ -89,7 +108,15 @@ export default function CommunityIntegration({
           </>
         )}
         <Label.Description>
-          Connect to {capitalize(communityType)} to fetch conversations.
+          Connect to {capitalize(communityType)} to fetch conversations.{' '}
+          {communityType === 'discord' && (
+            <span
+              className={styles.sync}
+              onClick={() => setDiscordModalOpen(true)}
+            >
+              Sync instructions
+            </span>
+          )}
         </Label.Description>
       </Label>
       <div>
@@ -133,6 +160,12 @@ export default function CommunityIntegration({
           />
         )}
       </div>
+      <DiscordSync
+        open={discordModalOpen}
+        close={() => setDiscordModalOpen(false)}
+        api={api}
+        accountId={currentCommunity.id}
+      />
     </>
   );
 }
@@ -192,5 +225,76 @@ function SyncOptions({
         </label>
       </div>
     </div>
+  );
+}
+
+function DiscordSync({
+  open,
+  close,
+  api,
+  accountId,
+}: {
+  open: boolean;
+  close(): void;
+  api: ApiClient;
+  accountId: string;
+}) {
+  const [loading, setLoading] = useState(false);
+  const [agreed, setAgreed] = useState(false);
+
+  async function startSyncJob() {
+    setLoading(true);
+    try {
+      await api.syncAccount({ accountId });
+      Toast.success('Sync task initialized');
+    } catch (error) {
+      Toast.error('Something went wrong, please contact support');
+    } finally {
+      setLoading(false);
+      close();
+    }
+  }
+
+  return (
+    <Modal
+      open={open}
+      close={() => {
+        close();
+        setLoading(false);
+      }}
+    >
+      <div className={styles.discordModalContent}>
+        <H2>Discord Sync Setup</H2>
+
+        <span>
+          Discord communities typically have a permission system in place,
+          granting specific privileges and functions to users within their
+          servers.
+        </span>
+
+        <span>
+          Certain permissions are automatically assigned to users once they
+          engage with the community onboarding process. However, LinenBot is not
+          able to interact with the onboarding process.
+        </span>
+
+        <span>
+          In order for Linen to effectively sync Discord data, it is essential
+          to manually assign the appropriate permissions to the LinenBot.
+        </span>
+
+        <span>
+          <Checkbox
+            onChange={(e) => setAgreed(e.currentTarget.checked)}
+            checked={agreed}
+          />{' '}
+          I confirm that the appropriate role has been assigned to LinenBot.
+        </span>
+
+        <Button onClick={() => startSyncJob()} disabled={!agreed}>
+          Sync {loading && <Spinner />}
+        </Button>
+      </div>
+    </Modal>
   );
 }

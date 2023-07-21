@@ -1,5 +1,4 @@
 import { AccountIntegration, prisma } from '@linen/database';
-import * as integration from 'services/events/eventNewIntegration';
 import * as jobs from 'queue/jobs';
 import * as discord from 'services/discord/getDiscordAccessToken';
 import { SerializedAccount } from '@linen/types';
@@ -11,13 +10,11 @@ import { encrypt } from 'utilities/crypto';
 export async function newDiscordIntegration({
   query,
   getDiscordAccessToken = discord.getDiscordAccessToken,
-  eventNewIntegration = integration.eventNewIntegration,
   createIntegrationDiscord = jobs.createIntegrationDiscord,
   getCurrentConfig = discordConfig.getCurrentConfig,
 }: {
   query: any;
   getDiscordAccessToken?(code: string): Promise<{ body: any }>;
-  eventNewIntegration?(event: integration.NewMessageEvent): Promise<void>;
   createIntegrationDiscord?(): Promise<any>;
   getCurrentConfig?: () => {
     PUBLIC_REDIRECT_URI: string;
@@ -95,10 +92,9 @@ export async function newDiscordIntegration({
       });
     }
 
-    await eventNewIntegration({ accountId });
     await createIntegrationDiscord();
 
-    return `${url}/configurations`;
+    return `${url}/configurations?discord=sync`;
   } catch (error) {
     console.error(error);
     return `${url}/configurations?error=1`;

@@ -2,6 +2,7 @@ import { Router } from 'express';
 import {
   AuthedRequest,
   AuthedRequestWithBody,
+  AuthedRequestWithTenant,
   AuthedRequestWithTenantAndBody,
   Response,
   createAccountSchema,
@@ -15,10 +16,10 @@ import jwtMiddleware from 'server/middlewares/jwt';
 import AccountsService from 'services/accounts';
 import { onError } from 'server/middlewares/error';
 import { ApiEvent, trackApiEvent } from 'utilities/ssr-metrics';
-import { promiseMemoize } from '@linen/utilities/memoize';
 import { inviteNewMembers } from 'services/invites';
 import axios from 'axios';
 import { prisma } from '@linen/database';
+import { eventNewIntegration } from 'services/events/eventNewIntegration';
 
 const prefix = '/api/accounts';
 const accountsRouter = Router();
@@ -131,6 +132,16 @@ accountsRouter.get(
       cause:
         'Custom domain is not yet propagated or misconfigured, try again later or contact Linen support',
     });
+  }
+);
+
+accountsRouter.post(
+  `${prefix}/sync`,
+  tenantMiddleware([Roles.OWNER, Roles.ADMIN]),
+  async (req: AuthedRequestWithTenant, res: Response) => {
+    await eventNewIntegration({ accountId: req.tenant?.id! });
+    res.status(200).json({ ok: true });
+    res.end();
   }
 );
 
