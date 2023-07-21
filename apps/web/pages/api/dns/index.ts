@@ -30,6 +30,7 @@ export async function index({
   );
 
   if (response.error) {
+    console.error(response.error);
     return { status: 500 };
   }
 

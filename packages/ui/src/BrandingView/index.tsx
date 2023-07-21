@@ -45,19 +45,23 @@ export default function BrandingView({
       currentCommunity.premium &&
       currentCommunity.redirectDomain
     ) {
-      api
-        .getDnsSettings(currentCommunity.id)
-        .then((response) => {
-          if (mounted && response && response.records) {
-            setRecords(response.records);
-          }
-        })
-        .catch((_) => {});
+      dnsSettings(mounted);
     }
     return () => {
       mounted = false;
     };
   }, []);
+
+  function dnsSettings(mounted: boolean) {
+    api
+      .getDnsSettings(currentCommunity.id)
+      .then((response) => {
+        if (mounted && response && response.records) {
+          setRecords(response.records);
+        }
+      })
+      .catch((_) => {});
+  }
 
   const updateAccount = async (options?: any) => {
     const form = document.getElementById('branding-form') as HTMLFormElement;
@@ -139,7 +143,11 @@ export default function BrandingView({
                 disabled={!currentCommunity.premium}
                 readOnly={!currentCommunity.premium}
               />
-              <DomainStatus currentCommunity={currentCommunity} api={api} />
+              <DomainStatus
+                currentCommunity={currentCommunity}
+                api={api}
+                dnsSettings={dnsSettings}
+              />
             </PremiumCard>
             <hr className={styles.my5} />
             {currentCommunity.premium && records && records.length > 0 && (
@@ -364,9 +372,11 @@ export default function BrandingView({
 function DomainStatus({
   currentCommunity,
   api,
+  dnsSettings,
 }: {
   currentCommunity: SerializedAccount;
   api: ApiClient;
+  dnsSettings(mounted: boolean): void;
 }) {
   const [statusText, setStatusText] = useState<string>(
     currentCommunity.redirectDomainPropagate
@@ -388,10 +398,14 @@ function DomainStatus({
       setLoading(true);
       const domain = stripProtocol(form.redirectDomain.value).toLowerCase();
 
-      await api.updateAccount({
-        accountId: currentCommunity.id,
-        redirectDomain: domain,
-      });
+      if (domain !== currentCommunity.redirectDomain) {
+        await api.updateAccount({
+          accountId: currentCommunity.id,
+          redirectDomain: domain,
+        });
+        dnsSettings(true);
+        currentCommunity.redirectDomain = domain;
+      }
 
       const result = await api.validateDomain({
         domain,
