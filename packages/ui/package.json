@@ -179,6 +179,7 @@
     "./StickyHeader": "./dist/StickyHeader/index.js",
     "./Suggestion": "./dist/Suggestion/index.js",
     "./Suggestions": "./dist/Suggestions/index.js",
+    "./Tab": "./dist/Tab/index.js",
     "./Table": "./dist/Table/index.js",
     "./Tbody": "./dist/Tbody/index.js",
     "./Td": "./dist/Td/index.js",
@@ -528,6 +529,9 @@
       ],
       "Suggestions": [
         "./dist/Suggestions/index.d.ts"
+      ],
+      "Tab": [
+        "./dist/Tab/index.d.ts"
       ],
       "Table": [
         "./dist/Table/index.d.ts"

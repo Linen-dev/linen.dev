@@ -1,0 +1,10 @@
+.tab {
+  border-bottom: 2px solid transparent;
+  color: var(--color-gray-700);
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.active {
+  border-bottom: 2px solid var(--color-primary);
+}
