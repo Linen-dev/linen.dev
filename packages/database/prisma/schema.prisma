@@ -78,6 +78,7 @@ model threads {
   notifications     notifications[]
   page              Int?
   userStarredThread userStarredThread[]
+  robotsMetaTag     String?
 
   @@unique([externalThreadId])
   @@unique([incrementId])

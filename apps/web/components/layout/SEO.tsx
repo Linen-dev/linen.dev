@@ -4,16 +4,16 @@ export interface SeoProps {
   description: string;
   image?: string;
   url: string;
-  noIndex?: boolean;
   title: string;
+  robotsMetaTag?: string | null;
 }
 
 export default function SEO({
   description,
   image = 'https://static.main.linendev.com/logos/linen-black-logo.svg',
   url,
-  noIndex = false,
   title = 'Linen Community',
+  robotsMetaTag,
 }: SeoProps) {
   return (
     <Head>
@@ -23,7 +23,7 @@ export default function SEO({
         content={description || title}
         key="description"
       />
-      <meta name="robots" content={`${noIndex ? 'no' : ''}index,follow`} />
+      <meta name="robots" content={robotsMetaTag || 'all'} />
 
       {/* Open Graph */}
       <meta name="og:url" property="og:url" content={url} key="ogurl" />

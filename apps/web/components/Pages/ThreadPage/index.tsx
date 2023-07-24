@@ -22,16 +22,22 @@ export function ThreadPage({
 }: ThreadProps) {
   const ref = useRef<HTMLDivElement>(null);
 
+  const seo = buildThreadSeo({
+    isSubDomainRouting,
+    channelName: currentChannel.channelName,
+    settings,
+    thread,
+  });
+
   return (
     <PageLayout
       key={thread.id}
       seo={{
-        ...buildThreadSeo({
-          isSubDomainRouting,
-          channelName: currentChannel.channelName,
-          settings,
-          thread,
-        }),
+        description: seo.description,
+        title: seo.title,
+        url: seo.url,
+        image: seo.image,
+        robotsMetaTag: seo.robotsMetaTag,
       }}
       currentChannel={currentChannel}
       channels={channels}

@@ -24,6 +24,13 @@ export interface SerializedThread {
   page: number | null;
   question?: string | null;
   answer?: string | null;
+  robotsMetaTag?:
+    | 'all'
+    | 'none'
+    | 'noindex,nofollow'
+    | 'noindex'
+    | 'nofollow'
+    | null;
 }
 
 export enum ThreadState {

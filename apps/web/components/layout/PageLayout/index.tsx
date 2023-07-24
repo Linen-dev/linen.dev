@@ -138,7 +138,15 @@ function PageLayout({
           handleSelect={handleSelect}
         />
       </div>
-      {seo && <SEO {...seo} />}
+      {seo && (
+        <SEO
+          description={seo.description}
+          image={seo.image}
+          url={seo.url}
+          title={seo.title}
+          robotsMetaTag={seo.robotsMetaTag}
+        />
+      )}
       <div className="flex flex-col lg:flex-row">
         <NavBar
           mode={mode}

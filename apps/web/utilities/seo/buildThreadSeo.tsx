@@ -36,5 +36,6 @@ export function buildThreadSeo({
     description: cleanBody.slice(0, 200),
     image: settings.logoUrl,
     url,
+    robotsMetaTag: thread.robotsMetaTag,
   };
 }

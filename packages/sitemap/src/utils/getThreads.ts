@@ -44,7 +44,9 @@ export async function getThreads(channels: Record<string, ChannelType>) {
     group by t."incrementId"
       `;
 
-    threads.forEach((thread) => {
+    const discardedThreads = threads.map((thread) => {
+      const account = channels[thread.channelId]?.account;
+
       if (
         channels[thread.channelId] && // skip, channel not in the list
         thread.messages.length && // skip, thread without messages
@@ -58,7 +60,6 @@ export async function getThreads(channels: Record<string, ChannelType>) {
         if (
           body.length > bodyLengthLimit // skip, threads with less than 50 characters
         ) {
-          const account = channels[thread.channelId].account;
           const t = {
             url: encodeURI(
               `/t/${thread.incrementId}/${(
@@ -90,26 +91,53 @@ export async function getThreads(channels: Record<string, ChannelType>) {
             if (
               // contentful: threads with characters >= 2000 + skip dup words
               (body.length >= 2000 && keywords > 25) ||
-              // trend: threads with more than 100 visits
-              thread.viewCount >= 100 ||
-              // popular: threads with reactions>10 replies>2 characters>500
-              (reactions > 10 &&
+              // trend: threads with more than 1 visit(s)
+              thread.viewCount >= 1 ||
+              // popular: threads with reactions>5 replies>=3 characters>400
+              (reactions > 5 &&
                 thread.messages.length >= 3 &&
-                body.length >= 500) ||
-              // reliable: threads where managers replied + replies >= 3
-              (!!thread.firstManagerReplyAt && thread.messages.length >= 3) ||
-              // collective: threads with replies >= 10
-              thread.messages.length >= 10
+                body.length >= 400) ||
+              // reliable: threads where managers replied + replies >= 2
+              (!!thread.firstManagerReplyAt && thread.messages.length >= 2) ||
+              // collective: threads with replies >= 5
+              thread.messages.length >= 5
             ) {
               sitemapFree.push({
                 ...t,
                 url: account.pathDomain + t.url,
               });
+            } else {
+              // this means that threads is not gone to be used
+              return thread;
             }
           }
+        } else {
+          // this means that threads is not gone to be used
+          return thread;
         }
+      } else {
+        if (!!account?.customDomain) {
+          return;
+        }
+        // this means that threads is not gone to be used
+        return thread;
       }
     });
+
+    const discardedThreadsIds = discardedThreads
+      .filter((e) => e)
+      .map((e) => e?.incrementId!);
+
+    if (discardedThreadsIds.length) {
+      await prisma.threads.updateMany({
+        where: {
+          incrementId: {
+            in: discardedThreadsIds,
+          },
+        },
+        data: { robotsMetaTag: 'noindex' },
+      });
+    }
 
     if (threads.length === batchSize) {
       incrementId = threads[batchSize - 1].incrementId;
