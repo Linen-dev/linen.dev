@@ -13,7 +13,11 @@ async function getFiles(dir: string): Promise<string | string[]> {
 }
 
 export async function uploadDir(
-  uploadFile: (args: { Key: string; Body: any }) => Promise<any>,
+  uploadFile: (args: {
+    Key: string;
+    Body: any;
+    CacheControl?: string;
+  }) => Promise<any>,
   s3Path: string
 ) {
   const files = (await getFiles(s3Path)) as string[];
@@ -21,6 +25,7 @@ export async function uploadDir(
     uploadFile({
       Key: path.relative(s3Path, filePath),
       Body: createReadStream(filePath),
+      CacheControl: 'max-age=86400',
     })
   );
   return Promise.all(uploads);

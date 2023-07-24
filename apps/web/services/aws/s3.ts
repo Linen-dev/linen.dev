@@ -3,9 +3,13 @@ import {
   PutObjectCommand,
   DeleteObjectsCommand,
   type PutObjectCommandInput,
+  CopyObjectCommand,
+  ListObjectsV2Command,
 } from '@aws-sdk/client-s3';
 import path from 'path';
 import { awsCredentials } from './credentials';
+
+export { CopyObjectCommand, ListObjectsV2Command };
 
 declare global {
   // eslint-disable-next-line no-var
@@ -18,15 +22,23 @@ if (process.env.NODE_ENV !== 'production') global.s3Client = s3Client;
 
 const Bucket = process.env.S3_UPLOAD_BUCKET as string;
 
-export type UploadFileInput = Pick<PutObjectCommandInput, 'Key' | 'Body'>;
+export type UploadFileInput = Pick<
+  PutObjectCommandInput,
+  'Key' | 'Body' | 'CacheControl'
+>;
 
-export async function uploadFile({ Key, Body }: UploadFileInput) {
+export async function uploadFile({
+  Key,
+  Body,
+  CacheControl = 'max-age=15557000, stale-if-error=31536000',
+}: UploadFileInput) {
   try {
     const command = new PutObjectCommand({
       Bucket,
       Key,
       Body,
       ContentType: getMimeType(path.extname(Key!)),
+      CacheControl,
     });
     return await s3Client.send(command);
   } catch (error) {

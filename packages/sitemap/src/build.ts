@@ -11,7 +11,11 @@ import { buildLinenSitemap } from './utils/buildLinenSitemap';
 import { linenDomain } from './config';
 
 export async function build(
-  uploadFile: (args: { Key: string; Body: any }) => Promise<any>
+  uploadFile: (args: {
+    Key: string;
+    Body: any;
+    CacheControl?: string;
+  }) => Promise<any>
 ) {
   const {
     channels,
