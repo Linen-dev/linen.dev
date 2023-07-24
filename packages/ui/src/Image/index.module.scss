@@ -1,6 +1,7 @@
 .image {
   transform: scale(1);
   transition: transform 0.2s ease;
+  user-select: none;
 }
 
 .image:hover {
@@ -35,4 +36,8 @@
 
 .overflow {
   overflow: hidden;
+}
+
+.preview {
+  user-select: none;
 }

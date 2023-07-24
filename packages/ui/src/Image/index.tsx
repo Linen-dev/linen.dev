@@ -96,7 +96,7 @@ export default function Component({
                 }
               }}
             >
-              <img src={src} />
+              <img className={styles.preview} src={src} />
             </Preview>
           </Portal>
         )}
