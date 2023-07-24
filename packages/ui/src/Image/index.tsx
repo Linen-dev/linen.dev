@@ -70,7 +70,7 @@ export default function Component({
     return (
       <div>
         <img
-          className={className}
+          className={classNames(styles.image, className)}
           src={src}
           alt={alt || src}
           width={width}

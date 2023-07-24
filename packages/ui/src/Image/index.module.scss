@@ -1,3 +1,12 @@
+.image {
+  transform: scale(1);
+  transition: transform 0.2s ease;
+}
+
+.image:hover {
+  transform: scale(1.05);
+}
+
 .placeholder {
   align-items: center;
   background: var(--color-background);
