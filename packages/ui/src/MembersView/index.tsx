@@ -11,11 +11,14 @@ import { Roles, SerializedAccount } from '@linen/types';
 import { FiUser } from '@react-icons/all-files/fi/FiUser';
 import { FiTrash2 } from '@react-icons/all-files/fi/FiTrash2';
 import { FiSend } from '@react-icons/all-files/fi/FiSend';
+import { FiPaperclip } from '@react-icons/all-files/fi/FiPaperclip';
 import styles from './index.module.scss';
 import ConfirmationModal from '@/ConfirmationModal';
 import type { ApiClient } from '@linen/api-client';
 import classNames from 'classnames';
 import { isEmailValid } from '@linen/utilities/email';
+import Tabs from '@/Tabs';
+import { copyToClipboard } from '@linen/utilities/clipboard';
 
 interface MembersType {
   id: string;
@@ -26,6 +29,11 @@ interface MembersType {
   profileImageUrl: string | null;
 }
 
+enum Tab {
+  Email = 'email',
+  Link = 'link',
+}
+
 function InviteMember({
   onSubmit,
   loading,
@@ -34,44 +42,46 @@ function InviteMember({
   loading: boolean;
 }) {
   return (
-    <form className={styles.form} onSubmit={onSubmit}>
-      <Label htmlFor="email">
-        Invite
-        <br />
-        <span className={styles.subtitle}>
-          Send invitations via email. You can enter multiple emails, comma
-          separated.
-        </span>
-      </Label>
-      <div className={styles.flexRowGap2}>
-        <div className={styles.grow}>
-          <TextInput
-            id="email"
-            type="text"
-            icon={<FiUser />}
-            placeholder="user1@domain.com,user2@domain.com"
-            required
-          />
+    <>
+      <form className={styles.form} onSubmit={onSubmit}>
+        <Label htmlFor="email">
+          Invite
+          <br />
+          <span className={styles.subtitle}>
+            Send invitations via email. You can enter multiple emails, comma
+            separated.
+          </span>
+        </Label>
+        <div className={styles.flexRowGap2}>
+          <div className={styles.grow}>
+            <TextInput
+              id="email"
+              type="text"
+              icon={<FiUser />}
+              placeholder="user1@domain.com,user2@domain.com"
+              required
+            />
+          </div>
+          <div className={styles.shrink}>
+            <NativeSelect
+              id="role"
+              icon={<FiUser />}
+              theme="blue"
+              options={[
+                { label: 'Member', value: Roles.MEMBER },
+                { label: 'Admin', value: Roles.ADMIN },
+              ]}
+            />
+          </div>
+          <div className={styles.shrink}>
+            <Button type="submit" disabled={loading}>
+              <FiSend />
+              {loading ? 'Loading...' : 'Send'}
+            </Button>
+          </div>
         </div>
-        <div className={styles.shrink}>
-          <NativeSelect
-            id="role"
-            icon={<FiUser />}
-            theme="blue"
-            options={[
-              { label: 'Member', value: Roles.MEMBER },
-              { label: 'Admin', value: Roles.ADMIN },
-            ]}
-          />
-        </div>
-        <div className={styles.shrink}>
-          <Button type="submit" disabled={loading}>
-            <FiSend />
-            {loading ? 'Loading...' : 'Send'}
-          </Button>
-        </div>
-      </div>
-    </form>
+      </form>
+    </>
   );
 }
 
@@ -232,6 +242,25 @@ export default function MembersView({
 }) {
   const [users, setUsers] = useState<MembersType[]>([]);
   const [loading, setLoading] = useState(false);
+  const [tab, setTab] = useState(Tab.Email);
+  const tabs = [
+    {
+      header: 'Invite by email',
+      id: Tab.Email,
+      active: tab === Tab.Email,
+      onClick() {
+        setTab(Tab.Email);
+      },
+    },
+    {
+      header: 'Invite by link',
+      id: Tab.Link,
+      active: tab === Tab.Link,
+      onClick() {
+        setTab(Tab.Link);
+      },
+    },
+  ];
 
   useEffect(() => {
     let mounted = true;
@@ -315,16 +344,54 @@ export default function MembersView({
       });
   };
 
+  function getShareUrl() {
+    const url =
+      process.env.NODE_ENV === 'development'
+        ? 'http://localhost:3000'
+        : 'https://www.linen.dev';
+    return `${url}/invite/${
+      currentCommunity.slackDomain ||
+      currentCommunity.discordDomain ||
+      currentCommunity.discordServerId
+    }`;
+  }
+
+  function onShare() {
+    const url = getShareUrl();
+    copyToClipboard(url);
+    Toast.success('Copied to clipboard');
+  }
+
   return (
     <div className={styles.container}>
       <Header />
-      <div className={styles.p3}>
-        <InviteMember onSubmit={createInvite} loading={loading} />
-        <TableMembers
-          users={users}
-          onChangeMember={onChangeMember}
-          onDeleteMember={onDeleteMember}
-        />
+      <div className={styles.content}>
+        <Tabs items={tabs} />
+        {tab === Tab.Email && (
+          <>
+            <InviteMember onSubmit={createInvite} loading={loading} />
+            <TableMembers
+              users={users}
+              onChangeMember={onChangeMember}
+              onDeleteMember={onDeleteMember}
+            />
+          </>
+        )}
+        {tab === Tab.Link && (
+          <>
+            <TextInput
+              className={styles.input}
+              id="community-invite-url"
+              type="text"
+              defaultValue={getShareUrl()}
+              readOnly
+            />
+            <Button onClick={onShare}>
+              <FiPaperclip />
+              Copy the link
+            </Button>
+          </>
+        )}
       </div>
     </div>
   );

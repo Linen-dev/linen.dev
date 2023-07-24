@@ -12,8 +12,8 @@
   color: var(--color-text);
 }
 
-.p3 {
-  padding: 0.75rem /* 12px */;
+.content {
+  padding: 0 1rem;
 }
 
 .subtitle {
@@ -105,4 +105,8 @@
 
 .itemsCenter {
   align-items: center;
+}
+
+.input {
+  margin-bottom: 1rem;
 }

@@ -4,15 +4,16 @@ import styles from './index.module.scss';
 
 interface Props {
   active?: boolean;
+  id: string;
   header: React.ReactNode;
-  onClick(): void;
+  onClick(id: string): void;
 }
 
-export default function Tab({ active, header, onClick }: Props) {
+export default function Tab({ active, id, header, onClick }: Props) {
   return (
     <div
       className={classNames(styles.tab, { [styles.active]: active })}
-      onClick={onClick}
+      onClick={() => onClick(id)}
     >
       {header}
     </div>
