@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Thread from '@/Thread';
+import Breadcrumb from './Breadcrumb';
 import { sendMessageWrapper } from './utilities/sendMessageWrapper';
 import Toast from '@/Toast';
 import {
@@ -176,6 +177,13 @@ export default function Content({
           }
         }}
         expanded
+        breadcrumb={
+          <Breadcrumb
+            thread={thread}
+            isSubDomainRouting={isSubDomainRouting}
+            settings={settings}
+          />
+        }
       />
     </div>
   );

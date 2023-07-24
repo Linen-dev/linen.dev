@@ -75,6 +75,7 @@ interface Props {
   useUsersContext(): any;
   fetchMentions(term?: string | undefined): Promise<SerializedUser[]>;
   api: ApiClient;
+  breadcrumb?: React.ReactNode;
 }
 
 enum ModalView {
@@ -108,6 +109,7 @@ export default function Thread({
   useUsersContext,
   api,
   fetchMentions,
+  breadcrumb,
 }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const [progress, setProgress] = useState(0);
@@ -244,6 +246,7 @@ export default function Thread({
           onReopenThread={() => updateThread({ state: ThreadState.OPEN })}
           onSetTitle={(title) => updateThread({ title })}
           manage={manage}
+          breadcrumb={breadcrumb}
         />
         <Summary thread={thread} />
         <div className={styles.thread}>
@@ -272,7 +275,7 @@ export default function Thread({
                 )}
               </span>
             </div>
-            {ChannelButton({ thread, isSubDomainRouting, settings })}
+            {/* {ChannelButton({ thread, isSubDomainRouting, settings })} */}
             {threadUrl && (
               <>
                 <JoinChannelLink
@@ -374,36 +377,6 @@ export default function Thread({
           uploads={uploads}
           uploadFiles={uploadFiles}
         />
-      )}
-    </>
-  );
-}
-
-function ChannelButton({
-  thread,
-  settings,
-  isSubDomainRouting,
-}: {
-  thread: SerializedThread;
-  settings: Settings;
-  isSubDomainRouting: boolean;
-}) {
-  const channelLink = thread.channel
-    ? {
-        isSubDomainRouting,
-        communityName: settings.communityName,
-        communityType: settings.communityType,
-        path: `/c/${thread.channel.channelName}${
-          thread.page ? `/${thread.page}` : ''
-        }#${thread.id}`,
-      }
-    : null;
-  return (
-    <>
-      {channelLink && (
-        <a href={CustomLinkHelper(channelLink)} className={styles.link}>
-          #{thread.channel?.channelName}
-        </a>
       )}
     </>
   );
