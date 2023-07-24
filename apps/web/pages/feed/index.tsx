@@ -118,9 +118,11 @@ export default function Feed() {
       <div className={styles.grid}>
         <div className={styles.left}>
           <div className={styles.sticky}>
-            <div className={styles.logo}>
-              <LinenLogo /> <small>Feed</small>
-            </div>
+            <a href="/landing" target='_blank'>
+              <div className={styles.logo}>
+                <LinenLogo /> <small>Feed</small>
+              </div>
+            </a>
             <Nav>
               <Communities communities={communities.slice(0, 20)} />
             </Nav>
