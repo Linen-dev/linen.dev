@@ -181,6 +181,7 @@
     "./Suggestions": "./dist/Suggestions/index.js",
     "./Tab": "./dist/Tab/index.js",
     "./Table": "./dist/Table/index.js",
+    "./Tabs": "./dist/Tabs/index.js",
     "./Tbody": "./dist/Tbody/index.js",
     "./Td": "./dist/Td/index.js",
     "./TextField": "./dist/TextField/index.js",
@@ -535,6 +536,9 @@
       ],
       "Table": [
         "./dist/Table/index.d.ts"
+      ],
+      "Tabs": [
+        "./dist/Tabs/index.d.ts"
       ],
       "Tbody": [
         "./dist/Tbody/index.d.ts"

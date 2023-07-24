@@ -1,10 +1,19 @@
 .tab {
   border-bottom: 2px solid transparent;
-  color: var(--color-gray-700);
+  color: var(--color-gray-500);
+  cursor: pointer;
   font-weight: 500;
   font-size: 14px;
+  padding: 1rem 0.25rem;
+  width: auto;
 }
 
-.active {
+.tab:hover {
+  border-bottom: 2px solid var(--color-gray-200);
+  color: var(--color-gray-700);
+}
+
+.tab.active {
   border-bottom: 2px solid var(--color-primary);
+  color: var(--color-primary);
 }

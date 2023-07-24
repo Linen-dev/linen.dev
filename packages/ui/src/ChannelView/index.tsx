@@ -851,24 +851,17 @@ export default function ChannelView({
   }
 
   function onShare() {
-    if (
-      currentCommunity.type === 'PRIVATE' ||
-      currentCommunity.redirectDomain
-    ) {
-      copyToClipboard(window.location.href);
-    } else {
-      const url =
-        process.env.NODE_ENV === 'development'
-          ? 'http://localhost:3000'
-          : 'https://www.linen.dev';
-      copyToClipboard(
-        `${url}/invite/${
-          currentCommunity.slackDomain ||
-          currentCommunity.discordDomain ||
-          currentCommunity.discordServerId
-        }`
-      );
-    }
+    const url =
+      process.env.NODE_ENV === 'development'
+        ? 'http://localhost:3000'
+        : 'https://www.linen.dev';
+    copyToClipboard(
+      `${url}/invite/${
+        currentCommunity.slackDomain ||
+        currentCommunity.discordDomain ||
+        currentCommunity.discordServerId
+      }`
+    );
     Toast.success('Copied to clipboard');
   }
 
