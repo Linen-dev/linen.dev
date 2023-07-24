@@ -14,6 +14,7 @@ interface Props {
   channelName: string;
   manage: boolean;
   expanded?: boolean;
+  breadcrumb?: React.ReactNode;
   onClose?(): void;
   onCloseThread(): void;
   onExpandClick?(): void;
@@ -21,11 +22,44 @@ interface Props {
   onSetTitle(title: string): void;
 }
 
+function Navigation({
+  breadcrumb,
+  onClose,
+  onExpandClick,
+}: {
+  breadcrumb?: React.ReactNode;
+  onClose?(): void;
+  onExpandClick?(): void;
+}) {
+  if (breadcrumb) {
+    return <>{breadcrumb}</>;
+  }
+  return (
+    <>
+      {onClose && (
+        <div className={classNames({ [styles.mobile]: !!onExpandClick })}>
+          <Icon onClick={onClose}>
+            <FiChevronLeft />
+          </Icon>
+        </div>
+      )}
+      {onExpandClick && (
+        <div className={styles.desktop}>
+          <Icon className={styles.expand} onClick={onExpandClick}>
+            <FiChevronLeft />
+          </Icon>
+        </div>
+      )}
+    </>
+  );
+}
+
 export default function Header({
   thread,
   channelName,
   manage,
   expanded,
+  breadcrumb,
   onClose,
   onCloseThread,
   onExpandClick,
@@ -42,20 +76,11 @@ export default function Header({
       <div className={styles.container}>
         <div className={styles.center}>
           <div className={styles.header}>
-            {onClose && (
-              <div className={classNames({ [styles.mobile]: !!onExpandClick })}>
-                <Icon onClick={onClose}>
-                  <FiChevronLeft />
-                </Icon>
-              </div>
-            )}
-            {onExpandClick && (
-              <div className={styles.desktop}>
-                <Icon className={styles.expand} onClick={onExpandClick}>
-                  <FiChevronLeft />
-                </Icon>
-              </div>
-            )}
+            <Navigation
+              breadcrumb={breadcrumb}
+              onClose={onClose}
+              onExpandClick={onExpandClick}
+            />
             <div>
               <Title
                 title={title}
