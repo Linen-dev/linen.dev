@@ -28,7 +28,12 @@ function findMentions(tree) {
   return nodes.map((node) => node);
 }
 
+function findUrls(tree) {
+  return unique(findByType(tree, 'url').map((node) => node.value));
+}
+
 module.exports = {
+  urls: findUrls,
   usersIds: findUserIds,
   mentions: findMentions,
 };

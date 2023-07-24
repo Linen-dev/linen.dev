@@ -1,5 +1,28 @@
 const find = require('.');
 
+describe('#find.urls', () => {
+  it('returns urls from given tree', () => {
+    const tree = {
+      type: 'root',
+      children: [
+        {
+          type: 'url',
+          value: 'https://foo.bar',
+        },
+        {
+          type: 'url',
+          value: 'https://baz.qux',
+        },
+        {
+          type: 'url',
+          value: 'https://foo.bar',
+        },
+      ],
+    };
+    expect(find.urls(tree)).toEqual(['https://foo.bar', 'https://baz.qux']);
+  });
+});
+
 describe('#find.usersIds', () => {
   it('returns user ids from given tree', () => {
     const tree = {
