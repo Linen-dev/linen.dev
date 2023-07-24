@@ -252,9 +252,8 @@ export default function Feed() {
             <p>
               <small>
                 This page aggregates conversations from across all types of
-                communities into a single feed. This way,
-                we can showcase interesting content/discussions in different
-                communities.
+                communities into a single feed. This way, we can showcase
+                interesting content/discussions in different communities.
               </small>
             </p>
             <a
