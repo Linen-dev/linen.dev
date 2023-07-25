@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import classNames from 'classnames';
 import GridRow from '@/GridRow';
+import ImagePreview from '@/ImagePreview';
 import { SerializedThread } from '@linen/types';
 import { SerializedUser } from '@linen/types';
 import { Settings, onResolve } from '@linen/types';
 import { Permissions } from '@linen/types';
 import { Mode } from '@linen/hooks/mode';
 import styles from './index.module.scss';
+import { getImageUrls } from './utilities/thread';
 
 interface Props {
   thread: SerializedThread;
@@ -66,7 +68,10 @@ function Messages({
   onReaction,
   onResolution,
 }: Props) {
+  const [preview, setPreview] = useState<string | null>(null);
+  const images = getImageUrls(thread);
   const { messages } = thread;
+
   const elements = messages.map((message, index) => {
     const previousMessage = messages[index - 1];
     const isPreviousMessageFromSameUser =
@@ -98,12 +103,24 @@ function Messages({
           onLoad={onLoad}
           onReaction={onReaction}
           onResolution={onResolution}
+          onImageClick={(src) => setPreview(src)}
         />
       </div>
     );
   });
 
-  return <div>{elements}</div>;
+  return (
+    <div>
+      {elements}
+      {preview && (
+        <ImagePreview
+          current={preview}
+          images={images}
+          onClick={() => setPreview(null)}
+        />
+      )}
+    </div>
+  );
 }
 
 export default Messages;

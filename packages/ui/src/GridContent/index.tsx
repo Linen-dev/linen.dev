@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import classNames from 'classnames';
 import Line from '@/Line';
 import {
@@ -15,6 +15,8 @@ import { Mode } from '@linen/hooks/mode';
 import usePriority from '@linen/hooks/priority';
 import styles from './index.module.scss';
 import DefaultRow from '@/Row';
+import ImagePreview from '@/ImagePreview';
+import { getImageUrls } from './utilities/threads';
 
 enum RowType {
   Thread,
@@ -100,6 +102,8 @@ export default function GridContent({
   onLoad?(): void;
   Row?(...args: any): JSX.Element;
 }) {
+  const [preview, setPreview] = useState<string | null>(null);
+  const images = getImageUrls(threads);
   const rows = [
     readStatus &&
       !readStatus.read && {
@@ -125,6 +129,10 @@ export default function GridContent({
     return a.timestamp - b.timestamp;
   });
   const { priority } = usePriority();
+
+  function onImageClick(src: string) {
+    setPreview(src);
+  }
 
   return (
     <div
@@ -174,11 +182,19 @@ export default function GridContent({
                 onRemind={onRemind}
                 onUnread={onUnread}
                 onLoad={onLoad}
+                onImageClick={onImageClick}
               />
             </li>
           );
         }
       })}
+      {preview && (
+        <ImagePreview
+          current={preview}
+          images={images}
+          onClick={() => setPreview(null)}
+        />
+      )}
     </div>
   );
 }

@@ -67,6 +67,7 @@ interface Props {
   onRead?(threadId: string): void;
   onRemind?(threadId: string, reminder: ReminderTypes): void;
   onUnread?(threadId: string): void;
+  onImageClick?(src: string): void;
 }
 
 function hasReaction(
@@ -109,6 +110,7 @@ export default function ChannelRow({
   onRead,
   onRemind,
   onUnread,
+  onImageClick,
 }: Props) {
   const { messages } = thread;
   const message = messages[0];
@@ -207,6 +209,7 @@ export default function ChannelRow({
           onRead={onRead}
           onRemind={onRemind}
           onUnread={onUnread}
+          onImageClick={onImageClick}
           header={
             thread.title && <div className={styles.header}>{thread.title}</div>
           }
