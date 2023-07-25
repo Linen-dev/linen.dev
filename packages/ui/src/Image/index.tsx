@@ -3,8 +3,7 @@ import classNames from 'classnames';
 import preload from './utilities/preload';
 import Spinner from '@/Spinner';
 import styles from './index.module.scss';
-import Preview from '@/Preview';
-import Portal from '@/Portal';
+import ImagePreview from '@/ImagePreview';
 import { AiOutlineFileImage } from '@react-icons/all-files/ai/AiOutlineFileImage';
 
 interface Props {
@@ -80,28 +79,18 @@ export default function Component({
           onClick={(event) => {
             event.preventDefault();
             event.stopPropagation();
-            onClick?.(src);
-            setPreview(true);
-            if (document.body) {
-              document.body.classList.add(styles.overflow);
+            if (onClick) {
+              onClick(src);
+            } else {
+              setPreview(true);
+              if (document.body) {
+                document.body.classList.add(styles.overflow);
+              }
             }
           }}
         />
         {preview && (
-          <Portal id="preview-portal">
-            <Preview
-              onClick={(event) => {
-                event.preventDefault();
-                event.stopPropagation();
-                setPreview(false);
-                if (document.body) {
-                  document.body.classList.remove(styles.overflow);
-                }
-              }}
-            >
-              <img className={styles.preview} src={src} />
-            </Preview>
-          </Portal>
+          <ImagePreview src={src} onClick={() => setPreview(false)} />
         )}
       </div>
     );
