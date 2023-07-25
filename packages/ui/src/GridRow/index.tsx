@@ -7,6 +7,7 @@ import Message from '@/Message';
 import ConfirmationModal from '@/ConfirmationModal';
 import ReminderModal from '@/ReminderModal';
 import EmojiPickerModal from '@/EmojiPickerModal';
+import ImagePreview from '@/ImagePreview';
 import { format } from '@linen/utilities/date';
 import { FiCheck } from '@react-icons/all-files/fi/FiCheck';
 import { Mode } from '@linen/hooks/mode';
@@ -168,6 +169,8 @@ function Row({
   onRemind,
   onUnread,
 }: Props) {
+  const [preview, setPreview] = useState(false);
+  const [image, setImage] = useState('');
   const [modal, setModal] = useState<ModalView>(ModalView.NONE);
   const [ref, hover] = useHover<HTMLDivElement>();
   const { ref: inViewRef, inView } = useInView();
@@ -205,6 +208,11 @@ function Row({
           }
         });
     }
+  }
+
+  function onImageClick(src: string) {
+    setPreview(true);
+    setImage(src);
   }
 
   return (
@@ -267,6 +275,7 @@ function Row({
               attachments={message.attachments}
               currentUser={currentUser}
               onLinkClick={onLinkClick}
+              onImageClick={onImageClick}
               onLoad={onLoad}
               placeholder={!inView}
               isBot={isBot}
@@ -354,6 +363,9 @@ function Row({
             setModal(ModalView.NONE);
           }}
         />
+      )}
+      {preview && (
+        <ImagePreview src={image} onClick={() => setPreview(false)} />
       )}
     </div>
   );

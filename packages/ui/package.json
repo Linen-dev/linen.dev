@@ -127,6 +127,7 @@
     "./Header": "./dist/Header/index.js",
     "./Icon": "./dist/Icon/index.js",
     "./Image": "./dist/Image/index.js",
+    "./ImagePreview": "./dist/ImagePreview/index.js",
     "./InboxView": "./dist/InboxView/index.js",
     "./IntegrationsModal": "./dist/IntegrationsModal/index.js",
     "./JoinButton": "./dist/JoinButton/index.js",
@@ -374,6 +375,9 @@
       ],
       "Image": [
         "./dist/Image/index.d.ts"
+      ],
+      "ImagePreview": [
+        "./dist/ImagePreview/index.d.ts"
       ],
       "InboxView": [
         "./dist/InboxView/index.d.ts"
