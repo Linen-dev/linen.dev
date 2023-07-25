@@ -7,7 +7,6 @@ import Message from '@/Message';
 import ConfirmationModal from '@/ConfirmationModal';
 import ReminderModal from '@/ReminderModal';
 import EmojiPickerModal from '@/EmojiPickerModal';
-import ImagePreview from '@/ImagePreview';
 import { format } from '@linen/utilities/date';
 import { FiCheck } from '@react-icons/all-files/fi/FiCheck';
 import { Mode } from '@linen/hooks/mode';
@@ -24,7 +23,6 @@ import {
 import styles from './index.module.scss';
 import Actions from '@/Actions';
 import { getThreadUrl } from '@linen/utilities/url';
-import { getImageUrls } from './utilities/message';
 
 function hasReaction(
   message: SerializedMessage,
@@ -92,6 +90,7 @@ interface Props {
   onRead?(threadId: string): void;
   onRemind?(threadId: string, reminder: ReminderTypes): void;
   onUnread?(threadId: string): void;
+  onImageClick?(src: string): void;
 }
 
 function Left({
@@ -169,14 +168,13 @@ function Row({
   onRead,
   onRemind,
   onUnread,
+  onImageClick,
 }: Props) {
-  const [preview, setPreview] = useState<string | null>();
   const [modal, setModal] = useState<ModalView>(ModalView.NONE);
   const [ref, hover] = useHover<HTMLDivElement>();
   const { ref: inViewRef, inView } = useInView();
   const top = !isPreviousMessageFromSameUser;
   const resolution = thread.resolutionId === message.id;
-  const images = getImageUrls(message);
 
   function onLinkClick(event: React.MouseEvent<HTMLAnchorElement>) {
     const url = event.currentTarget.href;
@@ -209,10 +207,6 @@ function Row({
           }
         });
     }
-  }
-
-  function onImageClick(src: string) {
-    setPreview(src);
   }
 
   return (
@@ -362,13 +356,6 @@ function Row({
             });
             setModal(ModalView.NONE);
           }}
-        />
-      )}
-      {preview && (
-        <ImagePreview
-          current={preview}
-          images={images}
-          onClick={() => setPreview(null)}
         />
       )}
     </div>

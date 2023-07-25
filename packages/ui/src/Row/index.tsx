@@ -68,6 +68,7 @@ interface Props {
   onRead?(threadId: string): void;
   onRemind?(threadId: string, reminder: ReminderTypes): void;
   onUnread?(threadId: string): void;
+  onImageClick?(src: string): void;
 }
 
 export default function Row({
@@ -95,6 +96,7 @@ export default function Row({
   onRead,
   onRemind,
   onUnread,
+  onImageClick,
 }: Props) {
   const { messages } = thread;
   const message = messages[0];
@@ -148,6 +150,7 @@ export default function Row({
           onRead={onRead}
           onRemind={onRemind}
           onUnread={onUnread}
+          onImageClick={onImageClick}
           header={
             thread.title && <div className={styles.header}>{thread.title}</div>
           }
