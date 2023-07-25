@@ -11,14 +11,21 @@ interface Props {
   url: string;
   title: string;
   onClick?(event: React.MouseEvent<HTMLAnchorElement>): void;
+  onImageClick?(src: string): void;
   onLoad?(): void;
 }
 
-export default function Link({ url, title, onClick, onLoad }: Props) {
+export default function Link({
+  url,
+  title,
+  onClick,
+  onImageClick,
+  onLoad,
+}: Props) {
   if (isImage(url)) {
     return (
       <Accordion header={title}>
-        <Image src={url} onLoad={onLoad} />
+        <Image src={url} onLoad={onLoad} onClick={onImageClick} />
       </Accordion>
     );
   }

@@ -14,6 +14,7 @@ interface Props {
   width?: number;
   alt?: string;
   onLoad?(): void;
+  onClick?(src: string): void;
   isBot?: boolean;
 }
 
@@ -24,6 +25,7 @@ export default function Component({
   width: initialWidth,
   alt,
   onLoad,
+  onClick,
   isBot,
 }: Props) {
   const [width, setWidth] = useState(initialWidth || 0);
@@ -78,6 +80,7 @@ export default function Component({
           onClick={(event) => {
             event.preventDefault();
             event.stopPropagation();
+            onClick?.(src);
             setPreview(true);
             if (document.body) {
               document.body.classList.add(styles.overflow);

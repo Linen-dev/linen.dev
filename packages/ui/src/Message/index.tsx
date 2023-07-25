@@ -48,6 +48,7 @@ interface Props {
   currentUser?: SerializedUser | null;
   placeholder?: boolean;
   onLinkClick?(event: React.MouseEvent<HTMLAnchorElement>): void;
+  onImageClick?(src: string): void;
   onLoad?(): void;
   isBot?: boolean;
 }
@@ -74,6 +75,7 @@ function Message({
   currentUser,
   placeholder,
   onLinkClick,
+  onImageClick,
   onLoad,
   isBot = false,
 }: Props) {
@@ -163,6 +165,7 @@ function Message({
             url={(node as LinkNode).url}
             title={(node as LinkNode).title}
             onClick={onLinkClick}
+            onImageClick={onImageClick}
             onLoad={onLoad}
           />
         );
