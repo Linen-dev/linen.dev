@@ -184,7 +184,12 @@ function Message({
       >
         {render(tree)}
       </div>
-      <Attachments attachments={attachments} onLoad={onLoad} isBot={isBot} />
+      <Attachments
+        attachments={attachments}
+        onLoad={onLoad}
+        onImageClick={onImageClick}
+        isBot={isBot}
+      />
       <Reactions reactions={reactions} currentUser={currentUser} />
     </div>
   );

@@ -83,9 +83,6 @@ export default function Component({
               onClick(src);
             } else {
               setPreview(true);
-              if (document.body) {
-                document.body.classList.add(styles.overflow);
-              }
             }
           }}
         />
