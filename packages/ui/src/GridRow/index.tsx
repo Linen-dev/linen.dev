@@ -24,6 +24,7 @@ import {
 import styles from './index.module.scss';
 import Actions from '@/Actions';
 import { getThreadUrl } from '@linen/utilities/url';
+import { getImageUrls } from './utilities/message';
 
 function hasReaction(
   message: SerializedMessage,
@@ -169,13 +170,13 @@ function Row({
   onRemind,
   onUnread,
 }: Props) {
-  const [preview, setPreview] = useState(false);
-  const [image, setImage] = useState('');
+  const [preview, setPreview] = useState<string | null>();
   const [modal, setModal] = useState<ModalView>(ModalView.NONE);
   const [ref, hover] = useHover<HTMLDivElement>();
   const { ref: inViewRef, inView } = useInView();
   const top = !isPreviousMessageFromSameUser;
   const resolution = thread.resolutionId === message.id;
+  const images = getImageUrls(message);
 
   function onLinkClick(event: React.MouseEvent<HTMLAnchorElement>) {
     const url = event.currentTarget.href;
@@ -211,8 +212,7 @@ function Row({
   }
 
   function onImageClick(src: string) {
-    setPreview(true);
-    setImage(src);
+    setPreview(src);
   }
 
   return (
@@ -366,9 +366,9 @@ function Row({
       )}
       {preview && (
         <ImagePreview
-          current={image}
-          images={[image]}
-          onClick={() => setPreview(false)}
+          current={preview}
+          images={images}
+          onClick={() => setPreview(null)}
         />
       )}
     </div>
