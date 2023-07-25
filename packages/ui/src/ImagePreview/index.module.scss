@@ -6,3 +6,51 @@
   user-select: none;
   box-shadow: 0 0 1rem rgba(0, 0, 0, 0.25);
 }
+
+.options {
+  background: white;
+  align-items: center;
+  display: inline-flex;
+  list-style-type: none;
+  position: absolute;
+  bottom: 1rem;
+  margin: auto;
+  border-radius: 0.25rem;
+  overflow: hidden;
+  box-shadow: 0 0 1rem rgba(0, 0, 0, 0.25);
+  font-size: 0.875rem;
+  font-weight: 500;
+  user-select: none;
+  cursor: default;
+}
+
+.options div {
+  background: white;
+  color: black;
+  cursor: pointer;
+  align-items: center;
+  display: flex;
+  padding: 0.5rem;
+  gap: 0.25rem;
+  transition: color 0.2s ease, background 0.2s ease;
+}
+
+.download a {
+  align-items: center;
+  display: flex;
+  font-size: 0.875rem;
+  font-weight: 500;
+  background: white;
+  box-shadow: 0 0 1rem rgba(0, 0, 0, 0.25);
+  border-radius: 0.25rem;
+  color: black;
+  cursor: pointer;
+  align-items: center;
+  display: flex;
+  padding: 0.5rem;
+  gap: 0.25rem;
+  transition: color 0.2s ease, background 0.2s ease;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+}
