@@ -406,6 +406,42 @@ export default async function createLinenCommunity() {
     },
   });
 
+  // Thread with an attachment and images
+  await prisma.threads.create({
+    data: {
+      channelId: channel1.id,
+      sentAt: new Date().getTime(),
+      lastReplyAt: new Date('2021-12-14T09:01:01.005Z').getTime(),
+      messages: {
+        create: [
+          {
+            channelId: channel1.id,
+            body: 'we need to fix the channel view too http://localhost:3000/linen-example-page.png and avatars http://localhost:3000/linen-example-avatar.png',
+            usersId: user3.id,
+            sentAt: '2021-12-14T09:01:01.005Z',
+            messageFormat: MessageFormat.LINEN,
+            attachments: {
+              create: [
+                {
+                  name: 'feed.png',
+                  sourceUrl: 'http://localhost:3000/linen-example-feed.png',
+                  internalUrl: 'http://localhost:3000/linen-example-feed.png',
+                  externalId: '1234',
+                },
+                {
+                  name: 'test.png',
+                  sourceUrl: 'http://localhost:3000/linen-example-test.png',
+                  internalUrl: 'http://localhost:3000/linen-example-test.png',
+                  externalId: '5678',
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  });
+
   // Thread with many messages
   await prisma.threads.create({
     data: {
