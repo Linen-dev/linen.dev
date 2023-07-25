@@ -16,9 +16,6 @@
     "db:migrate": "npx prisma generate && npx prisma migrate dev",
     "db:migrate:test": "dotenv -e .env.test -- npx prisma generate && npx prisma migrate dev",
     "db:seed": "ts-node --skip-project bin/seed.ts",
-    "start:discord-sync": "pm2-runtime --raw \"npx tsx bin/discord-sync/index.ts\"",
-    "start:maintenance-script": "npx tsx bin/maintenance/index.ts",
-    "start:build-pagination": "pm2-runtime --raw \"npx tsx bin/build-page-field-on-threads/index.ts\"",
     "dev:queue": "npx tsx watch queue/index.ts",
     "build:queue": "npx tsup --entry.queue queue/index.ts --entry.discord queue/tasks/discord-bot.ts --entry.pagination queue/tasks/pagination.ts --target es6 --clean --minify --sourcemap"
   },
