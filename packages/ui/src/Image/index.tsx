@@ -90,7 +90,11 @@ export default function Component({
           }}
         />
         {preview && (
-          <ImagePreview src={src} onClick={() => setPreview(false)} />
+          <ImagePreview
+            current={src}
+            images={[src]}
+            onClick={() => setPreview(false)}
+          />
         )}
       </div>
     );

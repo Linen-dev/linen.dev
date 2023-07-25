@@ -365,7 +365,11 @@ function Row({
         />
       )}
       {preview && (
-        <ImagePreview src={image} onClick={() => setPreview(false)} />
+        <ImagePreview
+          current={image}
+          images={[image]}
+          onClick={() => setPreview(false)}
+        />
       )}
     </div>
   );
