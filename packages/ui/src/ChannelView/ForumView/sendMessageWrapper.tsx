@@ -18,7 +18,7 @@ export function sendMessageWrapper({
   scrollableRootRef,
   currentCommunity,
   startSignUp,
-  createMessage,
+  createThread,
 }: {
   currentUser: SerializedUser | null;
   allUsers: SerializedUser[];
@@ -28,7 +28,7 @@ export function sendMessageWrapper({
   scrollableRootRef: any;
   currentCommunity: SerializedAccount;
   startSignUp: (props: StartSignUpProps) => Promise<void>;
-  createMessage: any;
+  createThread: any;
 }) {
   return async ({
     message,
@@ -54,7 +54,7 @@ export function sendMessageWrapper({
             scrollableRootRef,
             currentCommunity,
             startSignUp,
-            createMessage,
+            createThread,
           },
           params: {
             message,
@@ -79,7 +79,7 @@ export function sendMessageWrapper({
       return [...threads, imitation];
     });
     setTimeout(() => scrollToTop(scrollableRootRef.current as HTMLElement), 0);
-    return createMessage({
+    return createThread({
       body: message,
       title,
       files,
