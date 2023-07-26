@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import {
   SerializedThread,
   SerializedUser,
@@ -7,9 +7,7 @@ import {
   SerializedMessage,
   StartSignUpProps,
 } from '@linen/types';
-import debounce from '@linen/utilities/debounce';
 import { createMessageImitation } from './utilities/message';
-import type { ApiClient } from '@linen/api-client';
 
 export function sendThreadMessageWrapper({
   currentUser,
@@ -19,7 +17,7 @@ export function sendThreadMessageWrapper({
   currentThreadId,
   currentCommunity,
   startSignUp,
-  api,
+  createThread,
 }: {
   currentUser: SerializedUser | null;
   allUsers: SerializedUser[];
@@ -28,7 +26,7 @@ export function sendThreadMessageWrapper({
   currentThreadId: string | undefined;
   currentCommunity: SerializedAccount;
   startSignUp: (props: StartSignUpProps) => Promise<void>;
-  api: ApiClient;
+  createThread: any;
 }) {
   return async ({
     message,
@@ -51,7 +49,7 @@ export function sendThreadMessageWrapper({
             setThreads,
             currentThreadId,
             currentCommunity,
-            api,
+            createThread,
           },
           params: {
             message,
@@ -82,11 +80,7 @@ export function sendThreadMessageWrapper({
         return thread;
       });
     });
-    const debouncedCreateThread = useCallback(
-      debounce(api.createMessage, 100),
-      []
-    );
-    return debouncedCreateThread({
+    return createThread({
       body: message,
       accountId: currentCommunity.id,
       files,

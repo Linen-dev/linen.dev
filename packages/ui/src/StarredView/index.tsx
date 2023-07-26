@@ -397,13 +397,18 @@ export default function Content({
     });
   }
 
+  const debouncedSendMessage = useCallback(
+    debounce(api.createMessage, 100),
+    []
+  );
+
   const sendMessage = sendMessageWrapper({
     currentUser,
     allUsers,
     setThread,
     setData,
     communityId,
-    api,
+    createMessage: debouncedSendMessage,
   });
 
   useKeyboard(

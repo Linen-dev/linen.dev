@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import { v4 as uuid } from 'uuid';
 import { username } from '@linen/serializers/user';
 import {
@@ -8,8 +7,6 @@ import {
   SerializedThread,
   SerializedUser,
 } from '@linen/types';
-import debounce from '@linen/utilities/debounce';
-import type { ApiClient } from '@linen/api-client';
 
 export function sendMessageWrapper({
   currentUser,
@@ -17,14 +14,14 @@ export function sendMessageWrapper({
   currentCommunity,
   allUsers,
   setThread,
-  api,
+  createMessage,
 }: {
   currentUser: any;
   startSignUp?(...args: any): any;
   currentCommunity: any;
   allUsers: SerializedUser[];
   setThread: Function;
-  api: ApiClient;
+  createMessage: any;
 }) {
   return async ({
     message,
@@ -46,6 +43,7 @@ export function sendMessageWrapper({
             currentCommunity,
             allUsers,
             setThread,
+            createMessage,
           },
           params: {
             message,
@@ -86,12 +84,7 @@ export function sendMessageWrapper({
       };
     });
 
-    const debouncedCreateMessage = useCallback(
-      debounce(api.createMessage, 100),
-      []
-    );
-
-    return debouncedCreateMessage({
+    return createMessage({
       body: message,
       files,
       accountId: currentCommunity.id,

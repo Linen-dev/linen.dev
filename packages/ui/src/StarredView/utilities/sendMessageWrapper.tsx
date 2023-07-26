@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import {
   MessageFormat,
   StarredResponse,
@@ -9,8 +9,6 @@ import {
 } from '@linen/types';
 import { username } from '@linen/serializers/user';
 import { v4 as uuid } from 'uuid';
-import debounce from '@linen/utilities/debounce';
-import type { ApiClient } from '@linen/api-client';
 
 export function sendMessageWrapper({
   currentUser,
@@ -18,20 +16,15 @@ export function sendMessageWrapper({
   setThread,
   setData,
   communityId,
-  api,
+  createMessage,
 }: {
   currentUser: SerializedUser;
   allUsers: SerializedUser[];
   setThread: React.Dispatch<React.SetStateAction<SerializedThread | undefined>>;
   setData: React.Dispatch<React.SetStateAction<StarredResponse>>;
   communityId: string;
-  api: ApiClient;
+  createMessage: any;
 }) {
-  const debouncedSendMessage = useCallback(
-    debounce(api.createMessage, 100),
-    []
-  );
-
   return async ({
     message,
     files,
@@ -95,7 +88,7 @@ export function sendMessageWrapper({
       };
     });
 
-    return debouncedSendMessage({
+    return createMessage({
       body: message,
       files,
       channelId,

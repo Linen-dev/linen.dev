@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import Thread from '@/Thread';
 import Breadcrumb from './Breadcrumb';
 import { sendMessageWrapper } from './utilities/sendMessageWrapper';
@@ -16,6 +16,7 @@ import {
 import styles from './index.module.scss';
 import type { ApiClient } from '@linen/api-client';
 import { CustomLinkHelper } from '@linen/utilities/custom-link';
+import debounce from '@linen/utilities/debounce';
 
 interface Props {
   thread: SerializedThread;
@@ -132,13 +133,18 @@ export default function Content({
       });
   };
 
+  const debouncedCreateMessage = useCallback(
+    debounce(api.createMessage, 100),
+    []
+  );
+
   const sendMessage = sendMessageWrapper({
     currentUser: permissions.is_member ? currentUser : null,
     startSignUp,
     currentCommunity,
     allUsers,
     setThread,
-    api,
+    createMessage: debouncedCreateMessage,
   });
 
   return (
