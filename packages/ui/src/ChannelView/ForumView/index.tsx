@@ -402,7 +402,7 @@ export default function Channel({
     setModal(ModalView.EDIT_THREAD);
   }
 
-  const debouncedCreateMessage = useCallback(
+  const debouncedCreateThread = useCallback(
     debounce(api.createThread, 100),
     []
   );
@@ -416,10 +416,10 @@ export default function Channel({
     scrollableRootRef,
     currentCommunity,
     startSignUp,
-    createMessage: debouncedCreateMessage,
+    createThread: debouncedCreateThread,
   });
 
-  const debouncedCreateThread = useCallback(
+  const debouncedCreateMessage = useCallback(
     debounce(api.createMessage, 100),
     []
   );
@@ -432,7 +432,7 @@ export default function Channel({
     currentThreadId,
     currentCommunity,
     startSignUp,
-    createThread: debouncedCreateThread,
+    createMessage: debouncedCreateMessage,
   });
 
   const threadToRender = threads.find(
