@@ -8,6 +8,7 @@
   border: 1px solid var(--color-gray-200);
   border-radius: 0.25rem;
   overflow: hidden;
+  user-select: none;
 }
 
 .input::-webkit-color-swatch-wrapper {

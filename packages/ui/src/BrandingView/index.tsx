@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import Header from './Header';
 import TextField from '@/TextField';
 import ColorField from '@/ColorField';
@@ -36,7 +36,7 @@ export default function BrandingView({
   const [records, setRecords] = useState<DNSRecord[]>();
   const [currentCommunity, setCurrentCommunity] =
     useState<SerializedAccount>(initialCommunity);
-  const debouncedUpdateAccount = debounce(api.updateAccount);
+  const debouncedUpdateAccount = useCallback(debounce(api.updateAccount), []);
 
   useEffect(() => {
     let mounted = true;
