@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import {
   AllResponse,
   MessageFormat,
@@ -9,8 +9,6 @@ import {
 } from '@linen/types';
 import { username } from '@linen/serializers/user';
 import { v4 as uuid } from 'uuid';
-import debounce from '@linen/utilities/debounce';
-import type { ApiClient } from '@linen/api-client';
 
 export function sendMessageWrapper({
   currentUser,
@@ -18,20 +16,15 @@ export function sendMessageWrapper({
   setThread,
   setData,
   communityId,
-  api,
+  createMessage,
 }: {
   currentUser: SerializedUser;
   allUsers: SerializedUser[];
   setThread: React.Dispatch<React.SetStateAction<SerializedThread | undefined>>;
   setData: React.Dispatch<React.SetStateAction<AllResponse>>;
   communityId: string;
-  api: ApiClient;
+  createMessage: any;
 }) {
-  const debouncedSendMessage = useCallback(
-    debounce(api.createMessage, 100),
-    []
-  );
-
   return async ({
     message,
     files,
@@ -95,52 +88,62 @@ export function sendMessageWrapper({
       };
     });
 
-    return debouncedSendMessage({
+    return createMessage({
       body: message,
       files,
       accountId: communityId,
       channelId,
       threadId,
       imitationId: imitation.id,
-    }).then(({ message, imitationId }) => {
-      setThread((thread: any) => {
-        if (!thread) {
-          return;
-        }
-        if (thread.id === threadId) {
+    }).then(
+      ({
+        message,
+        imitationId,
+      }: {
+        message: SerializedMessage;
+        imitationId: string;
+      }) => {
+        setThread((thread: any) => {
+          if (!thread) {
+            return;
+          }
+          if (thread.id === threadId) {
+            return {
+              ...thread,
+              messages: thread.messages.map((current: SerializedMessage) => {
+                if (current.id === imitationId) {
+                  return message;
+                }
+                return current;
+              }),
+            };
+          }
+
+          return thread;
+        });
+
+        setData((data) => {
           return {
-            ...thread,
-            messages: thread.messages.map((current: SerializedMessage) => {
-              if (current.id === imitationId) {
-                return message;
+            ...data,
+            threads: data.threads.map((thread) => {
+              if (thread.id === threadId) {
+                return {
+                  ...thread,
+                  messages: thread.messages.map(
+                    (current: SerializedMessage) => {
+                      if (current.id === imitationId) {
+                        return message;
+                      }
+                      return current;
+                    }
+                  ),
+                };
               }
-              return current;
+              return thread;
             }),
           };
-        }
-
-        return thread;
-      });
-
-      setData((data) => {
-        return {
-          ...data,
-          threads: data.threads.map((thread) => {
-            if (thread.id === threadId) {
-              return {
-                ...thread,
-                messages: thread.messages.map((current: SerializedMessage) => {
-                  if (current.id === imitationId) {
-                    return message;
-                  }
-                  return current;
-                }),
-              };
-            }
-            return thread;
-          }),
-        };
-      });
-    });
+        });
+      }
+    );
   };
 }
