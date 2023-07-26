@@ -13,10 +13,13 @@ type BrandingPageProps = {
 
 export default function BrandingPage() {
   const { communityName } = useParams() as BrandingPageProps;
-  const { inboxProps, setCommunities } = useLinenStore((state) => ({
-    inboxProps: state.inboxProps,
-    setCommunities: state.setCommunities,
-  }));
+  const { inboxProps, setCommunities, setCurrentCommunity } = useLinenStore(
+    (state) => ({
+      inboxProps: state.inboxProps,
+      setCommunities: state.setCommunities,
+      setCurrentCommunity: state.setCurrentCommunity,
+    })
+  );
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -26,7 +29,8 @@ export default function BrandingPage() {
   return (
     <BrandingView
       reload={() => navigate(0)}
-      initialCommunity={inboxProps?.currentCommunity || mockAccount}
+      currentCommunity={inboxProps?.currentCommunity || mockAccount}
+      setCurrentCommunity={setCurrentCommunity as any}
       api={api}
       setCommunities={setCommunities as any}
       InternalLink={InternalLink({ communityName })}

@@ -22,20 +22,20 @@ import Spinner from '@/Spinner';
 
 export default function BrandingView({
   reload,
-  initialCommunity,
   api,
+  currentCommunity,
+  setCurrentCommunity,
   setCommunities,
   InternalLink,
 }: {
   reload(): void;
-  initialCommunity: SerializedAccount;
+  currentCommunity: SerializedAccount;
   api: ApiClient;
+  setCurrentCommunity: React.Dispatch<React.SetStateAction<SerializedAccount>>;
   setCommunities: React.Dispatch<React.SetStateAction<SerializedAccount[]>>;
   InternalLink: any;
 }) {
   const [records, setRecords] = useState<DNSRecord[]>();
-  const [currentCommunity, setCurrentCommunity] =
-    useState<SerializedAccount>(initialCommunity);
   const debouncedUpdateAccount = useCallback(debounce(api.updateAccount), []);
 
   useEffect(() => {

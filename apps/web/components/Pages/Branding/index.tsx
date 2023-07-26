@@ -32,13 +32,15 @@ export default function Branding({
   dms,
 }: Props) {
   const router = useRouter();
+  const [currentCommunity, setCurrentCommunity] =
+    useState<SerializedAccount>(initialCommunity);
   const [communities, setCommunities] =
     useState<SerializedAccount[]>(initialCommunities);
   return (
     <PageLayout
       channels={channels}
       communities={communities}
-      currentCommunity={initialCommunity}
+      currentCommunity={currentCommunity}
       permissions={permissions}
       settings={settings}
       isSubDomainRouting={isSubDomainRouting}
@@ -47,8 +49,9 @@ export default function Branding({
     >
       <BrandingView
         reload={router.reload}
-        initialCommunity={initialCommunity}
+        currentCommunity={currentCommunity}
         api={api}
+        setCurrentCommunity={setCurrentCommunity}
         setCommunities={setCommunities}
         InternalLink={InternalLink}
       />
