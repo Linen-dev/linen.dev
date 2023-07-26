@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import type {
   ReminderTypes,
   SerializedMessage,
@@ -57,7 +57,7 @@ export default function Content({
   const currentUser = permissions.user || null;
   const { communityId, communityName } = settings;
 
-  const fetchData = debounce(api.fetchStarred);
+  const fetchData = useCallback(debounce(api.fetchStarred), []);
 
   async function sendReaction({
     threadId,

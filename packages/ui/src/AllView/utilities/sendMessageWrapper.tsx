@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import {
   AllResponse,
   MessageFormat,
@@ -27,7 +27,10 @@ export function sendMessageWrapper({
   communityId: string;
   api: ApiClient;
 }) {
-  const debouncedSendMessage = debounce(api.createMessage, 100);
+  const debouncedSendMessage = useCallback(
+    debounce(api.createMessage, 100),
+    []
+  );
 
   return async ({
     message,

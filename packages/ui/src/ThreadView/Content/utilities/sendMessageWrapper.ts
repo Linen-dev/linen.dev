@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import { v4 as uuid } from 'uuid';
 import { username } from '@linen/serializers/user';
 import {
@@ -85,10 +86,12 @@ export function sendMessageWrapper({
       };
     });
 
-    return debounce(
-      api.createMessage,
-      100
-    )({
+    const debouncedCreateMessage = useCallback(
+      debounce(api.createMessage, 100),
+      []
+    );
+
+    return debouncedCreateMessage({
       body: message,
       files,
       accountId: currentCommunity.id,

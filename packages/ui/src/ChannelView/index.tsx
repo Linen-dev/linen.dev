@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import Toast from '@/Toast';
 import useWebsockets from '@linen/hooks/websockets';
 import useKeyboard from '@linen/hooks/keyboard';
@@ -79,7 +79,10 @@ export default function ChannelView({
 
   const [currentThreadId, setCurrentThreadId] = useState<string | undefined>();
 
-  const debouncedUpserUserThreadStatus = debounce(api.upsertUserThreadStatus);
+  const debouncedUpserUserThreadStatus = useCallback(
+    debounce(api.upsertUserThreadStatus),
+    []
+  );
 
   const currentUser = permissions.user || null;
   const token = permissions.token || null;

@@ -10,6 +10,7 @@ import { scrollToTop } from '@linen/utilities/scroll';
 import debounce from '@linen/utilities/debounce';
 import { createThreadImitation } from '@linen/serializers/thread';
 import type { ApiClient } from '@linen/api-client';
+import { useCallback } from 'react';
 
 export function sendMessageWrapper({
   currentUser,
@@ -81,10 +82,11 @@ export function sendMessageWrapper({
       return [...threads, imitation];
     });
     setTimeout(() => scrollToTop(scrollableRootRef.current as HTMLElement), 0);
-    return debounce(
-      api.createThread,
-      100
-    )({
+    const debouncedCreateThread = useCallback(
+      debounce(api.createThread, 100),
+      []
+    );
+    return debouncedCreateThread({
       body: message,
       title,
       files,

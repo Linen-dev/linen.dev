@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import Layouts from '@/Layouts';
 import Pages from '@/Pages';
 import Toast from '@/Toast';
@@ -56,7 +56,7 @@ export default function AllView({
   const currentUser = permissions.user || null;
   const { communityId, communityName } = settings;
 
-  const fetchData = debounce(api.fetchAll);
+  const fetchData = useCallback(debounce(api.fetchAll), []);
 
   async function sendReaction({
     threadId,

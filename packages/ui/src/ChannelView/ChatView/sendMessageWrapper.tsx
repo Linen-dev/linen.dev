@@ -1,3 +1,4 @@
+import React, { useCallback } from 'react';
 import {
   SerializedChannel,
   SerializedThread,
@@ -84,10 +85,11 @@ export function sendMessageWrapper({
       () => scrollToBottom(scrollableRootRef.current as HTMLElement),
       0
     );
-    return debounce(
-      api.createThread,
-      100
-    )({
+    const debouncedCreateThread = useCallback(
+      debounce(api.createThread, 100),
+      []
+    );
+    return debouncedCreateThread({
       body: message,
       title,
       files,

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import {
   SerializedThread,
   SerializedUser,
@@ -82,11 +82,11 @@ export function sendThreadMessageWrapper({
         return thread;
       });
     });
-
-    return debounce(
-      api.createMessage,
-      100
-    )({
+    const debouncedCreateThread = useCallback(
+      debounce(api.createMessage, 100),
+      []
+    );
+    return debouncedCreateThread({
       body: message,
       accountId: currentCommunity.id,
       files,
