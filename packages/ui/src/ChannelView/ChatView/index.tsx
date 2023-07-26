@@ -255,9 +255,12 @@ export default function Channel({
     return loadMore(true);
   }
 
-  const debouncedGetReadStatus = debounce(api.getReadStatus);
+  const debouncedGetReadStatus = useCallback(debounce(api.getReadStatus), []);
 
-  const debouncedUpdateReadStatus = debounce(api.updateReadStatus);
+  const debouncedUpdateReadStatus = useCallback(
+    debounce(api.updateReadStatus),
+    []
+  );
 
   useWebsockets({
     room: `room:lobby:${currentChannel.id}`,

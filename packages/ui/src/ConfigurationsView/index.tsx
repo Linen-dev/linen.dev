@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback } from 'react';
 import Header from './Header';
 import { AccountType, SerializedAccount } from '@linen/types';
 import styles from './index.module.scss';
@@ -21,7 +21,7 @@ export default function ConfigurationsView({
   currentCommunity: SerializedAccount;
   api: ApiClient;
 }) {
-  const updateAccount = debounce(api.updateAccount);
+  const updateAccount = useCallback(debounce(api.updateAccount), []);
 
   return (
     <div className={styles.wrapper}>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useEffect, useState } from 'react';
 import classNames from 'classnames';
 import {
@@ -124,9 +124,12 @@ export default function DesktopNavBar({
     ].includes(routerAsPath);
   };
 
-  const debouncedReadStatus = debounce(api.postReadStatus);
+  const debouncedReadStatus = useCallback(debounce(api.postReadStatus), []);
 
-  const debouncedUpdateReadStatus = debounce(api.updateReadStatus);
+  const debouncedUpdateReadStatus = useCallback(
+    debounce(api.updateReadStatus),
+    []
+  );
 
   const currentUser = permissions.user || null;
   const userId = permissions.auth?.id || null;
