@@ -402,6 +402,11 @@ export default function Channel({
     setModal(ModalView.EDIT_THREAD);
   }
 
+  const debouncedCreateMessage = useCallback(
+    debounce(api.createThread, 100),
+    []
+  );
+
   const sendMessage = sendMessageWrapper({
     currentUser: permissions.is_member ? currentUser : null,
     allUsers,
@@ -411,8 +416,13 @@ export default function Channel({
     scrollableRootRef,
     currentCommunity,
     startSignUp,
-    api,
+    createMessage: debouncedCreateMessage,
   });
+
+  const debouncedCreateThread = useCallback(
+    debounce(api.createMessage, 100),
+    []
+  );
 
   const sendThreadMessage = sendThreadMessageWrapper({
     currentUser: permissions.is_member ? currentUser : null,
@@ -422,7 +432,7 @@ export default function Channel({
     currentThreadId,
     currentCommunity,
     startSignUp,
-    api,
+    createThread: debouncedCreateThread,
   });
 
   const threadToRender = threads.find(

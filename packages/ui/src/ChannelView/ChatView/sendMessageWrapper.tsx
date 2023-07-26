@@ -1,4 +1,3 @@
-import React, { useCallback } from 'react';
 import {
   SerializedChannel,
   SerializedThread,
@@ -8,9 +7,7 @@ import {
   StartSignUpProps,
 } from '@linen/types';
 import { scrollToBottom } from '@linen/utilities/scroll';
-import debounce from '@linen/utilities/debounce';
 import { createThreadImitation } from '@linen/serializers/thread';
-import type { ApiClient } from '@linen/api-client';
 
 export function sendMessageWrapper({
   currentUser,
@@ -21,7 +18,7 @@ export function sendMessageWrapper({
   scrollableRootRef,
   currentCommunity,
   startSignUp,
-  api,
+  createMessage,
 }: {
   currentUser: SerializedUser | null;
   allUsers: SerializedUser[];
@@ -31,7 +28,7 @@ export function sendMessageWrapper({
   scrollableRootRef: any;
   currentCommunity: SerializedAccount;
   startSignUp: (props: StartSignUpProps) => Promise<void>;
-  api: ApiClient;
+  createMessage: any;
 }) {
   return async ({
     message,
@@ -57,7 +54,7 @@ export function sendMessageWrapper({
             scrollableRootRef,
             currentCommunity,
             startSignUp,
-            api,
+            createMessage,
           },
           params: {
             message,
@@ -85,11 +82,7 @@ export function sendMessageWrapper({
       () => scrollToBottom(scrollableRootRef.current as HTMLElement),
       0
     );
-    const debouncedCreateThread = useCallback(
-      debounce(api.createThread, 100),
-      []
-    );
-    return debouncedCreateThread({
+    return createMessage({
       body: message,
       title,
       files,

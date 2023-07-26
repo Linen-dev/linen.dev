@@ -19,7 +19,7 @@ export function sendThreadMessageWrapper({
   currentThreadId,
   currentCommunity,
   startSignUp,
-  api,
+  createThread,
 }: {
   currentUser: SerializedUser | null;
   allUsers: SerializedUser[];
@@ -28,7 +28,7 @@ export function sendThreadMessageWrapper({
   currentThreadId: string | undefined;
   currentCommunity: SerializedAccount;
   startSignUp: (props: StartSignUpProps) => Promise<void>;
-  api: ApiClient;
+  createThread: any;
 }) {
   return async ({
     message,
@@ -51,7 +51,7 @@ export function sendThreadMessageWrapper({
             setThreads,
             currentThreadId,
             currentCommunity,
-            api,
+            createThread,
           },
           params: {
             message,
@@ -83,10 +83,7 @@ export function sendThreadMessageWrapper({
       });
     });
 
-    return debounce(
-      api.createMessage,
-      100
-    )({
+    return createThread({
       body: message,
       accountId: currentCommunity.id,
       files,
