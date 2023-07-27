@@ -2,7 +2,7 @@ import React from 'react';
 import Attachment from './Attachment';
 import { SerializedAttachment } from '@linen/types';
 import styles from './index.module.scss';
-import { isImage } from '../Link/utilities';
+import { isImage } from '@linen/utilities/files';
 import Image from '../Link/Image';
 
 interface Props {

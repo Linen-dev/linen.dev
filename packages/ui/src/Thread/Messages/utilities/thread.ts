@@ -1,4 +1,4 @@
-import { isImage } from '@/Message/Link/utilities';
+import { isImage } from '@linen/utilities/files';
 import { MessageFormat, SerializedThread } from '@linen/types';
 import unique from 'lodash.uniq';
 import { find, parse } from '@linen/ast';
