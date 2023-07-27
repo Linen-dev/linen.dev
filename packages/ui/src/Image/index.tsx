@@ -39,10 +39,8 @@ export default function Component({
     preload(src)
       .then((image: HTMLImageElement) => {
         if (mounted) {
-          const width = image.naturalWidth;
-          const height = image.naturalHeight;
-          setWidth(width);
-          setHeight(height);
+          setWidth((width) => width || image.naturalWidth);
+          setHeight((height) => height || image.naturalHeight);
           setLoaded(true);
         }
       })

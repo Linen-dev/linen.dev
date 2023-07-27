@@ -29,5 +29,9 @@ describe('#calculateDimensions', () => {
       width: 155,
       height: 289,
     });
+    expect(calculateDimensions({ width: 2950, height: 1678 })).toEqual({
+      width: 368,
+      height: 209,
+    });
   });
 });
