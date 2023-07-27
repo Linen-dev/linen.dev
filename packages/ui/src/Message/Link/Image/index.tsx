@@ -1,6 +1,7 @@
 import React from 'react';
 import Component from '@/Image';
 import styles from './index.module.scss';
+import { getImageDimensionsFromUrl } from '@linen/utilities/files';
 
 interface Props {
   src: string;
@@ -11,11 +12,12 @@ interface Props {
 }
 
 export default function Image({ src, alt, onLoad, onClick, isBot }: Props) {
+  const dimensions = getImageDimensionsFromUrl(src);
   return (
     <Component
       className={styles.image}
-      height={200}
-      width={200}
+      width={dimensions?.width || 200}
+      height={dimensions?.height || 200}
       src={src}
       alt={alt}
       onLoad={onLoad}
