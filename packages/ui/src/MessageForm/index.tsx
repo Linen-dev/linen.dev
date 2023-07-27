@@ -257,7 +257,7 @@ function MessageForm({
       node.value = '';
     }
   };
-  const uploadFiles = (files: File[]) => {
+  function uploadFiles(files: File[]) {
     if (!upload) {
       return;
     }
@@ -270,6 +270,7 @@ function MessageForm({
           return Promise.reject();
         }
       }
+
       if (!message) {
         setMessage(files.map((file) => file.name).join(', '));
       }
@@ -277,7 +278,7 @@ function MessageForm({
         clearFileInput();
       });
     }
-  };
+  }
 
   const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(event.target.files || []);

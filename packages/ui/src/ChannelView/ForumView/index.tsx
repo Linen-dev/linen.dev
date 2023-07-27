@@ -8,7 +8,6 @@ import React, {
 import useInfiniteScroll from 'react-infinite-scroll-hook';
 import NProgress from 'nprogress';
 import Thread from '@/Thread';
-import Header from '../Header';
 import Empty from './Empty';
 import Chat from './Chat';
 import Grid from '@/GridContent';
@@ -44,12 +43,8 @@ import Row from '@/Row';
 import ChatLayout from '@/ChatLayout';
 import AddThreadModal from '@/AddThreadModal';
 import EditThreadModal from '@/EditThreadModal';
-import ConfirmationModal from '@/ConfirmationModal';
-import Toast from '@/Toast';
+import { getFormData } from '@linen/utilities/files';
 import type { ApiClient } from '@linen/api-client';
-import IntegrationsModalUI from '@/IntegrationsModal';
-import { copyToClipboard } from '@linen/utilities/clipboard';
-import MembersModal from '@/MembersModal';
 import PaginationNumbers from '@/PaginationNumbers';
 import { useViewport } from '@linen/hooks/useViewport';
 import { getThreadUrl } from '@linen/utilities/url';
@@ -455,14 +450,11 @@ export default function Channel({
     onDrop({ source, target, from, to });
   };
 
-  function uploadFiles(files: File[]) {
+  async function uploadFiles(files: File[]) {
     setProgress(0);
     setUploading(true);
     setUploads([]);
-    const data = new FormData();
-    files.forEach((file, index) => {
-      data.append(`file-${index}`, file, file.name);
-    });
+    const data = await getFormData(files);
     return api
       .upload(
         { communityId: currentCommunity.id, data, type: 'attachments' },

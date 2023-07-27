@@ -17,3 +17,12 @@ export function isImage(name: string): boolean {
   }
   return SUPPORTED_EXTENSIONS.includes(extension.toLowerCase());
 }
+
+export async function getFormData(files: File[]) {
+  const data = new FormData();
+  for (let index = 0, length = files.length; index < length; index++) {
+    const file = files[index];
+    data.append(`file-${index}`, file, file.name);
+  }
+  return data;
+}
