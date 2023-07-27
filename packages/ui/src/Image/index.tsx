@@ -74,6 +74,7 @@ export default function Component({
           alt={alt || src}
           width={width}
           height={height}
+          style={{ height, width }}
           onClick={(event) => {
             event.preventDefault();
             event.stopPropagation();
