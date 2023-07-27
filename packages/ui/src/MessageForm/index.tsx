@@ -270,6 +270,9 @@ function MessageForm({
           return Promise.reject();
         }
       }
+      if (!message) {
+        setMessage(files.map((file) => file.name).join(', '));
+      }
       return upload(files).finally(() => {
         clearFileInput();
       });
