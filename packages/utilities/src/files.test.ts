@@ -18,6 +18,11 @@ describe('getImageDimensionsFromUrl', () => {
       expect(
         getImageDimensionsFromUrl('https://foo.com/bar_800x600.png')
       ).toEqual({ width: 800, height: 600 });
+      expect(
+        getImageDimensionsFromUrl(
+          'https://static.main.linendev.com/attachments/aa282d12-f7ed-4e08-8fe3-1a03c941a409/Screenshot_2023-07-27_at_12.15.19_2950x1678.png'
+        )
+      ).toEqual({ width: 2950, height: 1678 });
     });
   });
 
