@@ -7,3 +7,13 @@ export function getFileSizeErrorMessage(filename: string) {
 export function normalizeFilename(filename: string) {
   return filename.replace(/\s|\/|&|"|'|`|>|<|\(|\)|\[|\]|;|:/g, '_');
 }
+
+const SUPPORTED_EXTENSIONS = ['png', 'jpg', 'jpeg', 'gif'];
+
+export function isImage(name: string): boolean {
+  const extension = name.split('.').pop();
+  if (!extension) {
+    return false;
+  }
+  return SUPPORTED_EXTENSIONS.includes(extension.toLowerCase());
+}

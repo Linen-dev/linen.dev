@@ -264,6 +264,7 @@ function MessageForm({
     if (files.length > 0) {
       for (let index = 0, length = files.length; index < length; index += 1) {
         const file = files[index];
+        console.log(file);
         if (file.size > FILE_SIZE_LIMIT_IN_BYTES) {
           clearFileInput();
           Toast.error(getFileSizeErrorMessage(file.name));

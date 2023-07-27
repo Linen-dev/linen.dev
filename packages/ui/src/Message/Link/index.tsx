@@ -1,11 +1,12 @@
 import React from 'react';
 import classNames from 'classnames';
 import styles from './index.module.scss';
-import { isImage, isVideo, isUrlValid, isMail } from './utilities';
+import { isVideo, isUrlValid, isMail } from './utilities';
 import Accordion from '@/Accordion';
 import Image from './Image';
 import Video from './Video';
 import Mail from './Mail';
+import { isImage } from '@linen/utilities/files';
 
 interface Props {
   url: string;
