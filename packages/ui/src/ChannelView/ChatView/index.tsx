@@ -48,7 +48,7 @@ import Row from '@/Row';
 import ChatLayout from '@/ChatLayout';
 import AddThreadModal from '@/AddThreadModal';
 import EditThreadModal from '@/EditThreadModal';
-import Toast from '@/Toast';
+import { getFormData } from '@linen/utilities/files';
 import type { ApiClient } from '@linen/api-client';
 import PaginationNumbers from '@/PaginationNumbers';
 import { useViewport } from '@linen/hooks/useViewport';
@@ -461,14 +461,11 @@ export default function Channel({
     handleLeftScroll();
   };
 
-  function uploadFiles(files: File[]) {
+  async function uploadFiles(files: File[]) {
     setProgress(0);
     setUploading(true);
     setUploads([]);
-    const data = new FormData();
-    files.forEach((file, index) => {
-      data.append(`file-${index}`, file, file.name);
-    });
+    const data = await getFormData(files);
     return api
       .upload(
         { communityId: currentCommunity.id, data, type: 'attachments' },

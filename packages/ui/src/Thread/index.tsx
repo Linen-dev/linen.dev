@@ -17,7 +17,7 @@ import {
 import useThreadWebsockets from '@linen/hooks/websockets-thread';
 import { scrollToBottom } from '@linen/utilities/scroll';
 import styles from './index.module.scss';
-import { CustomLinkHelper } from '@linen/utilities/custom-link';
+import { getFormData } from '@linen/utilities/files';
 import PoweredByLinen from '@/PoweredByLinen';
 import EditMessageModal from '@/EditMessageModal';
 import type { ApiClient } from '@linen/api-client';
@@ -180,14 +180,11 @@ export default function Thread({
     return currentUser.id === creator.id;
   }
 
-  const uploadFiles = (files: File[]) => {
+  async function uploadFiles(files: File[]) {
     setProgress(0);
     setUploading(true);
     setUploads([]);
-    const data = new FormData();
-    files.forEach((file, index) => {
-      data.append(`file-${index}`, file, file.name);
-    });
+    const data = await getFormData(files);
     return api
       .upload(
         { communityId: settings.communityId, data, type: 'attachments' },
@@ -208,7 +205,7 @@ export default function Thread({
         setUploading(false);
         return response;
       });
-  };
+  }
 
   const onDrop = (event: React.DragEvent) => {
     event.preventDefault();

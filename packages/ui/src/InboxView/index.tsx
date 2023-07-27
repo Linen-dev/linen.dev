@@ -36,6 +36,7 @@ import { createThreadWrapper } from './utilities/createThreadWrapper';
 import { manageSelections } from './utilities/selection';
 import { defaultConfiguration } from './utilities/inbox';
 import { addReactionToThread } from '@linen/utilities/reaction';
+import { getFormData } from '@linen/utilities/files';
 
 const { Header, Grid } = Pages.Inbox;
 const { SidebarLayout } = Layouts.Shared;
@@ -402,14 +403,11 @@ export default function InboxView({
       });
   };
 
-  function uploadFiles(files: File[]) {
+  async function uploadFiles(files: File[]) {
     setProgress(0);
     setUploading(true);
     setUploads([]);
-    const data = new FormData();
-    files.forEach((file, index) => {
-      data.append(`file-${index}`, file, file.name);
-    });
+    const data = await getFormData(files);
     return api
       .upload(
         { communityId: settings.communityId, data, type: 'attachments' },
