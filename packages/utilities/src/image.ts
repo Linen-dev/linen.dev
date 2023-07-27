@@ -6,6 +6,9 @@ export async function getImageDimensions(
     var image = new Image();
 
     image.onload = function () {
+      if (!image.width || !image.height) {
+        return reject(new Error(`Image is empty ${file.name}`));
+      }
       resolve({
         width: image.width,
         height: image.height,
