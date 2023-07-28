@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import Header from './Header';
+import Radio from '@/Radio';
 import Toggle from '@/Toggle';
 import NativeSelect from '@/NativeSelect';
 import Toast from '@/Toast';
@@ -339,7 +340,7 @@ export default function ChannelsView({
                     />
                   </td>
                   <td>
-                    <Toggle
+                    <Radio
                       checked={channel.landing}
                       onChange={(checked) => {
                         if (channel.landing && !checked) {

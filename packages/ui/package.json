@@ -168,6 +168,7 @@
     "./ProfileForm": "./dist/ProfileForm/index.js",
     "./Progress": "./dist/Progress/index.js",
     "./ProgressModal": "./dist/ProgressModal/index.js",
+    "./Radio": "./dist/Radio/index.js",
     "./ReminderModal": "./dist/ReminderModal/index.js",
     "./Row": "./dist/Row/index.js",
     "./RowSkeleton": "./dist/RowSkeleton/index.js",
@@ -498,6 +499,9 @@
       ],
       "ProgressModal": [
         "./dist/ProgressModal/index.d.ts"
+      ],
+      "Radio": [
+        "./dist/Radio/index.d.ts"
       ],
       "ReminderModal": [
         "./dist/ReminderModal/index.d.ts"

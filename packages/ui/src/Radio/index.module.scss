@@ -1,0 +1,40 @@
+.radio {
+  appearance: none;
+  background: var(--color-gray-200);
+  border-radius: 16px;
+  cursor: pointer;
+  display: flex;
+  height: 24px;
+  margin: 0;
+  min-width: 24px;
+  outline: none;
+  padding: 0;
+  position: relative;
+  outline: none;
+  transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  user-select: none;
+  width: 24px;
+
+  &:after {
+    background: var(--color-background);
+    border-radius: 50%;
+    content: '';
+    display: block;
+    height: 18px;
+    left: 3px;
+    position: absolute;
+    top: 3px;
+    border: 2px solid var(--color-background);
+    transition: background 0.2s ease, opacity 0.2s ease;
+    width: 18px;
+  }
+
+  &:checked {
+    background: var(--color-primary);
+  }
+
+  &:checked:after {
+    background: var(--color-primary);
+    border: 2px solid var(--color-background);
+  }
+}
