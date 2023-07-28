@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import BlankLayout from '@linen/ui/BlankLayout';
 import styles from './index.module.scss';
 import Row from '@linen/ui/Row';
@@ -15,6 +15,7 @@ import { timeAgo } from '@linen/utilities/date';
 import { FiMenu } from '@react-icons/all-files/fi/FiMenu';
 import { signOut, useSession } from '@linen/auth/client';
 import Link from 'next/link';
+import { NextPageContext } from 'next';
 
 enum ModalView {
   NONE,
@@ -44,19 +45,35 @@ function Communities({ communities }: { communities: SerializedAccount[] }) {
   );
 }
 
+const FEED_PRODUCTION_URL = 'https://static.main.linendev.com/api/feed';
+const FEED_DEVELOPMENT_URL = 'http://localhost:3000/api/feed';
+
 const FEED_URL =
   process.env.NODE_ENV === 'production'
-    ? 'https://static.main.linendev.com/api/feed'
-    : '/api/feed';
+    ? FEED_PRODUCTION_URL
+    : FEED_DEVELOPMENT_URL;
 
-export default function Feed() {
+interface Props {
+  threads: SerializedThread[];
+  settings: Settings[];
+  communities: SerializedAccount[];
+  cursor: string | null;
+}
+
+export default function Feed({
+  threads: initialThreads,
+  settings: initialSettings,
+  communities: initialCommunities,
+  cursor: initialCursor,
+}: Props) {
   const [modal, setModal] = useState<ModalView>(ModalView.NONE);
-  const [cursor, setCursor] = useState<string>();
+  const [cursor, setCursor] = useState<string | null>(initialCursor);
   const [loading, setLoading] = useState(false);
-  const [more, setMore] = useState(true);
-  const [threads, setThreads] = useState<SerializedThread[]>([]);
-  const [settings, setSettings] = useState<Settings[]>([]);
-  const [communities, setCommunities] = useState<SerializedAccount[]>([]);
+  const [more, setMore] = useState(!!cursor);
+  const [threads, setThreads] = useState<SerializedThread[]>(initialThreads);
+  const [settings, setSettings] = useState<Settings[]>(initialSettings);
+  const [communities, setCommunities] =
+    useState<SerializedAccount[]>(initialCommunities);
   const close = () => setModal(ModalView.NONE);
   const session = useSession();
 
@@ -80,7 +97,7 @@ export default function Feed() {
           cursor: string | null;
         }) => {
           setLoading(false);
-          setCursor(cursor || undefined);
+          setCursor(cursor || null);
           setThreads((threads) => [...threads, ...newThreads]);
           setSettings((settings) => {
             const ids = settings.map((setting) => setting.communityId);
@@ -101,10 +118,6 @@ export default function Feed() {
       );
   }
 
-  useEffect(() => {
-    fetchFeed();
-  }, []);
-
   const [sentryRef] = useInfiniteScroll({
     loading,
     hasNextPage: more,
@@ -118,7 +131,7 @@ export default function Feed() {
       <div className={styles.grid}>
         <div className={styles.left}>
           <div className={styles.sticky}>
-            <a href="/landing" target='_blank'>
+            <a href="/landing" target="_blank">
               <div className={styles.logo}>
                 <LinenLogo /> <small>Feed</small>
               </div>
@@ -168,40 +181,43 @@ export default function Feed() {
                 settings: setting,
                 incrementId: thread.incrementId,
                 slug: thread.slug,
-                LINEN_URL: process.env.DEVELOPMENT
-                  ? 'http://localhost:3000'
-                  : 'https://www.linen.dev',
+                LINEN_URL:
+                  process.env.NODE_ENV === 'production'
+                    ? 'https://www.linen.dev'
+                    : 'http://localhost:3000',
               });
               return (
-                <a
-                  className={styles.row}
-                  href={url}
-                  target="_blank"
-                  key={thread.id}
-                  rel="noreferrer"
-                >
-                  <Row
-                    thread={thread}
-                    currentUser={null}
-                    isSubDomainRouting={false}
-                    settings={setting}
-                    showActions={false}
-                    subheader={
-                      <>
-                        {timeAgo(Number(thread.lastReplyAt))}
-                        <a
-                          href={getHomeUrl(community)}
-                          key={community.id}
-                          target="_blank"
-                          rel="noreferrer"
-                          className={styles.subheader}
-                        >
-                          #{community.name}
-                        </a>
-                      </>
-                    }
-                  />
-                </a>
+                <div className={styles.wrapper} key={thread.id}>
+                  <a
+                    className={styles.overlay}
+                    href={url}
+                    target="_blank"
+                    rel="noreferrer"
+                  ></a>
+                  <div className={styles.row}>
+                    <Row
+                      thread={thread}
+                      currentUser={null}
+                      isSubDomainRouting={false}
+                      settings={setting}
+                      showActions={false}
+                      subheader={
+                        <>
+                          {timeAgo(Number(thread.lastReplyAt))}
+                          <a
+                            href={getHomeUrl(community)}
+                            target="_blank"
+                            rel="noreferrer"
+                            key={community.id}
+                            className={styles.subheader}
+                          >
+                            #{community.name}
+                          </a>
+                        </>
+                      }
+                    />
+                  </div>
+                </div>
               );
             })}
           </div>
@@ -275,4 +291,22 @@ export default function Feed() {
       </Modal>
     </BlankLayout>
   );
+}
+
+export async function getServerSideProps(_: NextPageContext) {
+  try {
+    const response = await fetch(FEED_URL, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    });
+    const data = await response.json();
+    const { threads, settings, communities, cursor = null } = data;
+    return {
+      props: { threads, settings, communities, cursor },
+    };
+  } catch (exception) {
+    return {
+      props: { threads: [], settings: [], communities: [], cursor: null },
+    };
+  }
 }

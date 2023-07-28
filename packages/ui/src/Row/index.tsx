@@ -118,85 +118,83 @@ export default function Row({
   ).length;
 
   return (
-    <>
-      <Droppable
-        id={thread.id}
-        className={styles.container}
-        onClick={onClick}
-        onDrop={onDrop}
-      >
-        <GridRow
-          className={className}
-          thread={thread}
-          message={message}
-          isSubDomainRouting={isSubDomainRouting}
-          isBot={isBot}
-          settings={settings}
-          permissions={permissions}
-          currentUser={currentUser}
-          mode={mode}
-          drag="thread"
-          showActions={showActions}
-          truncate={message.body.length > 280}
-          onDelete={onDelete}
-          onEdit={onEdit}
-          onLoad={onLoad}
-          onMute={onMute}
-          onUnmute={onUnmute}
-          onPin={onPin}
-          onStar={onStar}
-          onResolution={onResolution}
-          onReaction={onReaction}
-          onRead={onRead}
-          onRemind={onRemind}
-          onUnread={onUnread}
-          onImageClick={onImageClick}
-          header={
-            thread.title && <div className={styles.header}>{thread.title}</div>
-          }
-          subheader={subheader}
-          info={
-            thread.state === ThreadState.CLOSE && (
-              <FiCheck className={styles.check} />
-            )
-          }
-          footer={({ inView }) =>
-            messages.length > 1 && (
-              <div className={styles.footer}>
-                <Avatars
-                  size="sm"
-                  users={avatars}
-                  placeholder={!inView || isBot}
-                  isBot={isBot}
-                />
-                <ul className={styles.list}>
+    <Droppable
+      id={thread.id}
+      className={styles.container}
+      onClick={onClick}
+      onDrop={onDrop}
+    >
+      <GridRow
+        className={className}
+        thread={thread}
+        message={message}
+        isSubDomainRouting={isSubDomainRouting}
+        isBot={isBot}
+        settings={settings}
+        permissions={permissions}
+        currentUser={currentUser}
+        mode={mode}
+        drag="thread"
+        showActions={showActions}
+        truncate={message.body.length > 280}
+        onDelete={onDelete}
+        onEdit={onEdit}
+        onLoad={onLoad}
+        onMute={onMute}
+        onUnmute={onUnmute}
+        onPin={onPin}
+        onStar={onStar}
+        onResolution={onResolution}
+        onReaction={onReaction}
+        onRead={onRead}
+        onRemind={onRemind}
+        onUnread={onUnread}
+        onImageClick={onImageClick}
+        header={
+          thread.title && <div className={styles.header}>{thread.title}</div>
+        }
+        subheader={subheader}
+        info={
+          thread.state === ThreadState.CLOSE && (
+            <FiCheck className={styles.check} />
+          )
+        }
+        footer={({ inView }) =>
+          messages.length > 1 && (
+            <div className={styles.footer}>
+              <Avatars
+                size="sm"
+                users={avatars}
+                placeholder={!inView || isBot}
+                isBot={isBot}
+              />
+              <ul className={styles.list}>
+                <li className={styles.info}>
+                  {authors.length}{' '}
+                  {authors.length > 1 ? <FiUsers /> : <FiUser />}
+                </li>
+                <li className={styles.info}>
+                  {messages.length - 1} <FiMessageCircle />
+                </li>
+                {userMentionCount > 0 && (
                   <li className={styles.info}>
-                    {authors.length}{' '}
-                    {authors.length > 1 ? <FiUsers /> : <FiUser />}
+                    {userMentionCount} <FiAtSign />
                   </li>
-                  <li className={styles.info}>
-                    {messages.length - 1} <FiMessageCircle />
+                )}
+                {signalMentionCount > 0 && (
+                  <li
+                    className={classNames(styles.info, {
+                      [styles.signal]: userMentions.includes('signal'),
+                    })}
+                  >
+                    {signalMentionCount} <FiAlertCircle />
                   </li>
-                  {userMentionCount > 0 && (
-                    <li className={styles.info}>
-                      {userMentionCount} <FiAtSign />
-                    </li>
-                  )}
-                  {signalMentionCount > 0 && (
-                    <li
-                      className={classNames(styles.info, {
-                        [styles.signal]: userMentions.includes('signal'),
-                      })}
-                    >
-                      {signalMentionCount} <FiAlertCircle />
-                    </li>
-                  )}
-                </ul>
-              </div>
-            )
-          }
-        />
-      </Droppable>
-    </>
+                )}
+              </ul>
+            </div>
+          )
+        }
+      />
+    </Droppable>
   );
 }
