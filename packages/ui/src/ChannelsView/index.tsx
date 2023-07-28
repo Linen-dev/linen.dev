@@ -342,16 +342,6 @@ export default function ChannelsView({
                     <Toggle
                       checked={channel.landing}
                       onChange={(checked) => {
-                        if (channel.hidden) {
-                          return Toast.error(
-                            'You need to make the channel visible first. Otherwise noone will be able to see it'
-                          );
-                        }
-                        if (!channel.default) {
-                          return Toast.error(
-                            'You need to set the channel as default first. Otherwise first time users will not see it'
-                          );
-                        }
                         if (channel.landing && !checked) {
                           return Toast.error(
                             'Please choose a different landing channel.'
@@ -360,6 +350,8 @@ export default function ChannelsView({
                         debouncedUpdateChannel({
                           ...channel,
                           landing: checked,
+                          default: true,
+                          hidden: false,
                         });
                         setChannels((channels: SerializedChannel[]) => {
                           return channels.map((c: SerializedChannel) => {
@@ -368,6 +360,8 @@ export default function ChannelsView({
                                 return {
                                   ...c,
                                   landing: true,
+                                  default: true,
+                                  hidden: false,
                                 };
                               }
                               return {
