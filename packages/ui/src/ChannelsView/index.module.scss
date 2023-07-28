@@ -66,8 +66,16 @@
     }
 
     &.highlighted {
-      border-top: 1px solid var(--color-primary);
+      background: var(--color-blue-50);
+      cursor: move;
+
+      @media (prefers-color-scheme: dark) {
+        background: var(--color-blue-900);
+      }
     }
+
+
+
   }
 
   td {
