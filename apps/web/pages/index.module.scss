@@ -162,21 +162,40 @@
   margin-bottom: 0;
 }
 
-.row {
+.wrapper {
   border-top: 1px solid var(--color-gray-100);
   display: block;
+  position: relative;
 }
 
-.row:first-child {
+.wrapper:first-child {
   border-top: none;
 }
 
-.row:last-child {
+.wrapper:last-child {
   border-bottom: 1px solid var(--color-gray-100);
 }
 
-.row:hover {
+.wrapper:hover {
   background: var(--color-gray-50);
+}
+
+.wrapper .overlay {
+  position: absolute;
+  left:0;
+  top:0;
+  bottom:0;
+  right:0;
+}
+
+.wrapper .row {
+  position:relative;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.wrapper .row a {
+  pointer-events: all;
 }
 
 .subheader {
