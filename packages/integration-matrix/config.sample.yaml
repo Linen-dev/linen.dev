@@ -9,7 +9,7 @@ linen:
   # required: apiKey generated on https://www.linen.dev
   apikey: c0d3cc97c7d9283db9a68361d86a
   
-  # optional: used for development, defaults to https://main.linendev.com (production)
+  # optional: used for development, defaults to https://www.linen.dev (production)
   # domain: http://localhost:3000
 
 webhook: 

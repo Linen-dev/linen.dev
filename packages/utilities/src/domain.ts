@@ -77,23 +77,7 @@ export function isSubdomainNotAllowed(host: string) {
 }
 
 export function getIntegrationUrl() {
-  if (process.env.NODE_ENV === 'test') {
-    return '';
-  }
-  if (process.env.BRANCH === 'main') {
-    return `main.linendev.com`;
-  }
-  if (process.env.VERCEL_GIT_COMMIT_REF === 'main') {
-    return `main.linendev.com`;
-  }
-  if (process.env.VERCEL_URL) {
-    return `${process.env.VERCEL_GIT_COMMIT_REF}.linendev.com`.toLowerCase();
-  }
-  if (process.env.BRANCH) {
-    return `${process.env.BRANCH}.linendev.com`.toLowerCase();
-  }
-  // assume localhost
-  return `localhost:${process.env.PORT ?? 3000}`;
+  return getLinenUrl();
 }
 
 export function getLinenUrl() {
@@ -101,10 +85,10 @@ export function getLinenUrl() {
     return '';
   }
   if (process.env.BRANCH === 'main') {
-    return `linen.dev`;
+    return `www.linen.dev`;
   }
   if (process.env.VERCEL_GIT_COMMIT_REF === 'main') {
-    return `linen.dev`;
+    return `www.linen.dev`;
   }
   if (process.env.VERCEL_URL) {
     return `${process.env.VERCEL_URL}`;

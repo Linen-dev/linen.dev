@@ -40,7 +40,7 @@ export default class Api {
   constructor({
     apiKey,
     type = 'external',
-    linenUrl = 'https://main.linendev.com',
+    linenUrl = 'https://www.linen.dev',
   }: {
     apiKey: string;
     type?: 'internal' | 'external';
