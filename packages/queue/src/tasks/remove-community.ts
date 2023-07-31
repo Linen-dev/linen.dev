@@ -99,6 +99,11 @@ export async function cleanUp(accountId: string, logger: Logger) {
   });
   logger.info(`discordCount ${discordCount.count}`);
 
+  const apiKeys = await prisma.apiKeys.deleteMany({
+    where: { accountId: accountId },
+  });
+  logger.info(`apiKeys ${apiKeys.count}`);
+
   const accountCount = await prisma.accounts.delete({
     where: { id: accountId },
   });
