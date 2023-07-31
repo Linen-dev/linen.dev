@@ -1,5 +1,5 @@
 import type { JobHelpers, AddJobFunction } from 'graphile-worker';
-import FeedService from 'services/feed';
+import FeedService from '@linen/web/services/feed';
 
 const delay = 1000 * 60 * 5;
 

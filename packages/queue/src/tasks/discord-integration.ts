@@ -1,5 +1,5 @@
 import type { JobHelpers } from 'graphile-worker';
-import { getAllBots } from 'config/discord';
+import { getAllBots } from '@linen/web/config/discord';
 import { cleanUpIntegrations } from '@linen/integration-discord';
 
 export const discordIntegration = async (payload: any, helpers: JobHelpers) => {

@@ -1,11 +1,10 @@
 import type { JobHelpers, Logger } from 'graphile-worker';
-import type { TaskInterface } from 'queue';
 import { prisma, messageAttachments } from '@linen/database';
-import { deleteFiles } from 'services/aws/s3';
-import { sendNotification } from 'services/slack';
-import AccountsService from 'services/accounts';
+import { deleteFiles } from '@linen/web/services/aws/s3';
+import { sendNotification } from '@linen/web/services/slack';
+import AccountsService from '@linen/web/services/accounts';
 
-export const removeCommunity: TaskInterface = async (
+export const removeCommunity = async (
   payload: { accountId: string },
   helpers: JobHelpers
 ) => {

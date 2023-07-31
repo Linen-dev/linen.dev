@@ -1,5 +1,5 @@
 import { prisma } from '@linen/database';
-import { push } from 'services/push';
+import { push } from '@linen/web/services/push';
 
 interface Payload {
   threadId: string;

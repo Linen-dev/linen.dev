@@ -3,8 +3,7 @@ RUN apt-get update && apt-get install -y openssl
 WORKDIR /app
 RUN yarn global add turbo
 COPY . .
-RUN turbo prune --scope="@linen/web" --docker
-RUN turbo prune --scope="@linen/spa" --docker
+RUN turbo prune --scope="@linen/queue" --docker
 
 FROM public.ecr.aws/docker/library/node:18 AS installer
 RUN apt-get update && apt-get install -y openssl
@@ -15,7 +14,7 @@ COPY --from=builder /app/out/yarn.lock ./yarn.lock
 RUN yarn install
 COPY --from=builder /app/out/full/ .
 COPY turbo.json turbo.json
-RUN yarn turbo run build --filter='!s3-lambda-processing'
+RUN yarn turbo run build --filter='@linen/queue'
 
 FROM public.ecr.aws/docker/library/node:18 AS runner
 RUN apt-get update && apt-get install -y openssl

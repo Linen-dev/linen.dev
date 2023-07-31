@@ -10,30 +10,25 @@ import { webhook } from './tasks/webhook';
 import { slugify } from './tasks/slugify';
 import { updateMessagesCount } from './tasks/update-messages-count';
 import { crawlGoogleResults } from './tasks/google-results';
-import {
-  QUEUE_1_NEW_EVENT,
-  QUEUE_2_SEND_EMAIL,
-  QUEUE_CRAWL_GOOGLE_STATS,
-  QUEUE_MAINTENANCE_MESSAGE_COUNT,
-  QUEUE_MAINTENANCE_SLUGIFY,
-  QUEUE_REMIND_ME_LATER,
-  QUEUE_MARK_ALL_AS_READ,
-  QUEUE_SITEMAP,
-  QUEUE_INTEGRATION_DISCORD,
-  QUEUE_REMOVE_COMMUNITY,
-  // QUEUE_USER_JOIN,
-} from './jobs';
 import { sitemap } from './tasks/sitemap';
 import { discordIntegration } from './tasks/discord-integration';
 import { removeCommunity } from './tasks/remove-community';
 import { buildFeed, createFeedJob } from './tasks/build-feed';
-// import { userJoinTask } from './tasks/user-join';
 import { checkPropagation } from './tasks/custom-domain-propagate';
 
 export type TaskInterface = (
   payload: any,
   helpers: JobHelpers
 ) => Promise<void>;
+
+const QUEUE_1_NEW_EVENT = 'notification-new-event';
+const QUEUE_2_SEND_EMAIL = 'notification-send-email';
+const QUEUE_REMIND_ME_LATER = 'remind-me-later-queue';
+const QUEUE_MARK_ALL_AS_READ = 'mark-all-as-read-queue';
+const QUEUE_MAINTENANCE_MESSAGE_COUNT = 'update-message-count';
+const QUEUE_CRAWL_GOOGLE_STATS = 'google-stats';
+const QUEUE_INTEGRATION_DISCORD = 'integration-discord';
+const QUEUE_REMOVE_COMMUNITY = 'remove-community';
 
 async function runWorker() {
   await downloadCert();
@@ -50,16 +45,15 @@ async function runWorker() {
       [QUEUE_2_SEND_EMAIL]: emailNotificationTask as any,
       [QUEUE_REMIND_ME_LATER]: reminderMeLaterTask as any,
       [QUEUE_MARK_ALL_AS_READ]: markAllAsReadTask as any,
-      ['two-way-sync']: twoWaySync,
-      ['sync']: sync,
-      ['webhook']: webhook,
-      [QUEUE_MAINTENANCE_SLUGIFY]: slugify,
       [QUEUE_MAINTENANCE_MESSAGE_COUNT]: updateMessagesCount,
       [QUEUE_CRAWL_GOOGLE_STATS]: crawlGoogleResults,
-      [QUEUE_SITEMAP]: sitemap,
       [QUEUE_INTEGRATION_DISCORD]: discordIntegration,
-      [QUEUE_REMOVE_COMMUNITY]: removeCommunity,
-      // [QUEUE_USER_JOIN]: userJoinTask,
+      [QUEUE_REMOVE_COMMUNITY]: removeCommunity as any,
+      ['two-way-sync']: twoWaySync,
+      sync,
+      webhook,
+      slugify,
+      sitemap,
       buildFeed,
       checkPropagation,
     },
@@ -76,11 +70,11 @@ async function runWorker() {
       {
         pattern: '00 3 * * *',
         options: {
-          queueName: QUEUE_MAINTENANCE_SLUGIFY,
+          queueName: 'slugify',
           backfillPeriod: 0,
         },
-        task: QUEUE_MAINTENANCE_SLUGIFY,
-        identifier: QUEUE_MAINTENANCE_SLUGIFY,
+        task: 'slugify',
+        identifier: 'slugify',
       },
       {
         pattern: '00 3 * * *',
@@ -103,11 +97,11 @@ async function runWorker() {
       {
         pattern: '0 0 * * *',
         options: {
-          queueName: QUEUE_SITEMAP,
+          queueName: 'sitemap',
           backfillPeriod: 0,
         },
-        task: QUEUE_SITEMAP,
-        identifier: QUEUE_SITEMAP,
+        task: 'sitemap',
+        identifier: 'sitemap',
       },
     ]),
   });

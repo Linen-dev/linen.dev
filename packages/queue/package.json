@@ -1,0 +1,30 @@
+{
+  "name": "@linen/queue",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "npx tsx watch src/index.ts",
+    "build": "node build.mjs",
+    "postbuild": "tsc",
+    "start:prod": "pm2-runtime start ecosystem.config.js"
+  },
+  "keywords": [],
+  "author": "Sandro de Souza",
+  "license": "ISC",
+  "dependencies": {
+    "@linen/database": "*",
+    "@linen/integration-discord": "*",
+    "@linen/integration-email": "*",
+    "@linen/integration-github": "*",
+    "@linen/integration-linear": "*",
+    "@linen/pagination": "*",
+    "@linen/sitemap": "*",
+    "@linen/utilities": "*",
+    "@linen/types": "*",
+    "@linen/web": "*",
+    "axios": "^0.27.2",
+    "graphile-worker": "^0.13.0",
+    "typescript": "^5.1.3"
+  }
+}

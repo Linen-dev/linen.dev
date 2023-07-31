@@ -1,6 +1,6 @@
 import { prisma } from '@linen/database';
 import type { JobHelpers, Logger } from 'graphile-worker';
-import { slackChatSync } from 'services/slack/api/postMessage';
+import { slackChatSync } from '@linen/web/services/slack/api/postMessage';
 import { processGithubIntegration } from '@linen/integration-github';
 import { processEmailIntegration } from '@linen/integration-email';
 import { processLinearIntegration } from '@linen/integration-linear';

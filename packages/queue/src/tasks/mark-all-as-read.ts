@@ -1,4 +1,4 @@
-import UserThreadStatusService from 'services/user-thread-status';
+import UserThreadStatusService from '@linen/web/services/user-thread-status';
 
 interface Payload {
   userId: string;

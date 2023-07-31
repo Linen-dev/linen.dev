@@ -1,5 +1,5 @@
 import { task } from '@linen/sitemap';
-import { uploadFile } from 'services/aws/s3';
+import { uploadFile } from '@linen/web/services/aws/s3';
 import { type JobHelpers } from 'graphile-worker';
 import util from 'util';
 
