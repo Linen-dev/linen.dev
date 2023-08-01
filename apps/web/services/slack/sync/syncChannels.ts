@@ -72,6 +72,7 @@ export async function syncChannels({
   getSlackChannels,
   joinChannel,
   shouldJoinChannel,
+  fullSync,
 }: {
   account: AccountWithSlackAuthAndChannels;
   token: string;
@@ -80,6 +81,7 @@ export async function syncChannels({
   getSlackChannels: GetSlackChannelsFnType;
   joinChannel: JoinChannelFnType;
   shouldJoinChannel: boolean;
+  fullSync?: boolean;
 }) {
   let channels = await createChannels({
     slackTeamId: account.slackTeamId as string,
@@ -98,5 +100,10 @@ export async function syncChannels({
       channels = [channel];
     }
   }
+
+  if (fullSync) {
+    await ChannelsService.setCursorNull({ accountId: account.id });
+  }
+
   return channels;
 }

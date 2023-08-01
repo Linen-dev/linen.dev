@@ -42,6 +42,7 @@ export async function syncWrapper({
     joinChannel,
     getSlackChannels,
     shouldJoinChannel,
+    fullSync,
   });
 
   //paginate and find all the users

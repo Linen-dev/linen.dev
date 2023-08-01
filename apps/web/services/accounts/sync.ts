@@ -90,7 +90,11 @@ function identifySyncType(
   throw 'authorization missing';
 }
 
-export async function syncJob({ account_id, file_location }: SyncJobType) {
+export async function syncJob({
+  account_id,
+  file_location,
+  fullSync,
+}: SyncJobType) {
   const accountId = account_id;
   const fileLocation = file_location;
 
@@ -110,7 +114,7 @@ export async function syncJob({ account_id, file_location }: SyncJobType) {
 
   await syncFunction({
     accountId,
-    fullSync: true, // discord only
+    fullSync,
     fileLocation,
   });
 }

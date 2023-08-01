@@ -557,6 +557,13 @@ class ChannelsService {
       where: { id: channelId },
     });
   }
+
+  static async setCursorNull({ accountId }: { accountId: string }) {
+    await prisma.channels.updateMany({
+      where: { accountId },
+      data: { externalPageCursor: null },
+    });
+  }
 }
 
 export default ChannelsService;

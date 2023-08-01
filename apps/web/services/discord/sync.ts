@@ -7,14 +7,21 @@ import { getActiveThreads, getArchivedThreads } from './threads';
 import Logger from './logger';
 import { accounts, discordAuthorizations, prisma } from '@linen/database';
 import { botV1 } from 'config/discord';
+import ChannelsService from 'services/channels';
 
-async function syncJob(
+async function syncJob({
+  account,
+  decodeBotToken,
+  fullSync,
+  logger,
+}: {
   account: accounts & {
     discordAuthorizations: discordAuthorizations[];
-  },
-  decodeBotToken: (accessToken: string) => string,
-  logger: Logger
-) {
+  };
+  decodeBotToken: (accessToken: string) => string;
+  logger: Logger;
+  fullSync?: boolean;
+}) {
   logger.log(`sync stared`);
 
   if (!account.discordServerId) {
@@ -50,6 +57,10 @@ async function syncJob(
     hideChannels,
   });
 
+  if (fullSync) {
+    await ChannelsService.setCursorNull({ accountId: account.id });
+  }
+
   // active threads are global (not channel specific)
   await getActiveThreads({
     serverId: account.discordServerId,
@@ -77,7 +88,12 @@ async function syncJob(
   logger.log('sync finished');
 }
 
-export async function discordSync(args: { accountId: string }) {
+export async function discordSync({
+  ...args
+}: {
+  accountId: string;
+  fullSync?: boolean;
+}) {
   const account = await prisma.accounts.findUnique({
     where: { id: args.accountId },
     include: {
@@ -98,7 +114,13 @@ export async function discordSync(args: { accountId: string }) {
     });
 
     const logger = new Logger(getAccountName(account));
-    await syncJob(account, decrypt, logger);
+
+    await syncJob({
+      account,
+      decodeBotToken: decrypt,
+      logger,
+      fullSync: args.fullSync,
+    });
 
     await updateAndNotifySyncStatus({
       accountId: args.accountId,

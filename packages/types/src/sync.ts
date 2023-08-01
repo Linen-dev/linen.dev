@@ -1,6 +1,7 @@
 export type SyncJobType = {
   account_id: string;
   file_location?: string;
+  fullSync?: boolean;
 };
 
 export type TwoWaySyncEvent =
