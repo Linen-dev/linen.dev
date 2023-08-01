@@ -1,14 +1,13 @@
 import type { JobHelpers, AddJobFunction } from 'graphile-worker';
 import FeedService from '@linen/web/services/feed';
+import { Logger } from '../helpers/logger';
 
 const delay = 1000 * 60 * 5;
 
-export const buildFeed = async (payload: any, helpers: JobHelpers) => {
-  helpers.logger.info('buildFeed started');
+export const buildFeed = async (_: any, helpers: JobHelpers) => {
   const start = Date.now();
   await FeedService.mark();
   const timeTaken = Date.now() - start;
-  helpers.logger.info('buildFeed finished in ' + timeTaken + ' milliseconds');
   await createFeedJob(helpers.addJob, {
     runAt: new Date(Date.now() + delay + timeTaken),
   });

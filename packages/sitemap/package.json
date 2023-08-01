@@ -16,6 +16,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@linen/types": "*",
     "@linen/database": "*",
     "sitemap": "^7.1.1",
     "zlib": "^1.0.5"

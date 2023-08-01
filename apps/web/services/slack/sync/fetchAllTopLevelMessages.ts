@@ -5,6 +5,7 @@ import {
   UserMap,
   MessageFormat,
   ConversationHistoryMessage,
+  Logger,
 } from '@linen/types';
 import { getBotUserId } from './getBotUserId';
 import { processReactions } from './reactions';
@@ -21,10 +22,11 @@ async function saveMessagesTransaction(
   messages: ConversationHistoryMessage[],
   channelId: string,
   users: UserMap[],
-  token: string
+  token: string,
+  logger: Logger
 ) {
   if (!messages.length) return;
-  console.log('Starting to save messages: ', new Date());
+  logger.log({ 'saveMessagesTransaction startAt': new Date() });
 
   for (const m of messages) {
     const thread = await findOrCreateThread({
@@ -71,10 +73,10 @@ async function saveMessagesTransaction(
     });
     await Promise.all([
       processReactions(m, message),
-      processAttachments(m, message, token),
+      processAttachments(m, message, token, logger),
     ]);
   }
-  console.log('Finished saving messages', new Date());
+  logger.log({ 'saveMessagesTransaction finishedAt': new Date() });
 }
 
 export async function fetchAllTopLevelMessages({
@@ -84,6 +86,7 @@ export async function fetchAllTopLevelMessages({
   fullSync,
   fetchConversationsTyped,
   oldest,
+  logger,
 }: {
   channel: channels;
   account: AccountWithSlackAuthAndChannels;
@@ -92,6 +95,7 @@ export async function fetchAllTopLevelMessages({
   fullSync?: boolean | undefined;
   fetchConversationsTyped: FetchConversationsTypedFnType;
   oldest: string;
+  logger: Logger;
 }) {
   const c = channel;
   if (!c.externalChannelId) {
@@ -100,18 +104,18 @@ export async function fetchAllTopLevelMessages({
   if (fullSync) {
     c.externalPageCursor = null;
   }
-  console.log('Syncing channel: ', c.channelName);
+  logger.log({ 'Syncing channel': c.channelName });
   let nextCursor = c.externalPageCursor || undefined;
   let firstLoop = true;
   if (nextCursor === 'completed') {
-    console.log('channel completed syncing: ', c.channelName);
+    logger.log({ 'channel completed syncing': c.channelName });
     return;
   }
   let retries = 0;
 
   //fetch all messages by paginating
   while (!!nextCursor || firstLoop) {
-    console.log('Messages cursor: ', nextCursor);
+    logger.log({ 'Messages cursor': nextCursor });
     try {
       const additionalConversations = await fetchConversationsTyped(
         c.externalChannelId,
@@ -124,25 +128,31 @@ export async function fetchAllTopLevelMessages({
         additionalConversations.messages
           ?.filter(filterMessages)
           .map(parseMessage) || [];
-      console.log('messages.length', additionalMessages.length);
+      logger.log({ 'messages.length': additionalMessages.length });
       //save all messages
-      await saveMessagesTransaction(additionalMessages, c.id, usersInDb, token);
+      await saveMessagesTransaction(
+        additionalMessages,
+        c.id,
+        usersInDb,
+        token,
+        logger
+      );
       nextCursor = additionalConversations.response_metadata?.next_cursor;
 
       // save cursor in database so don't have
       //to refetch same conversation if script fails
       !!nextCursor && (await updateNextPageCursor(c.id, nextCursor));
     } catch (e) {
-      console.log('fetching messages failed', (e as Error).message, e);
+      logger.warn({ 'fetching messages failed': (e as Error).message || e });
       await sleep(10000);
       retries += 1;
       if (retries > 3) {
         nextCursor = undefined;
-        console.error(e);
+        logger.error({ error: e });
       }
     }
     firstLoop = false;
   }
   await updateNextPageCursor(c.id, 'completed');
-  console.log('channel completed syncing: ', c.channelName);
+  logger.log({ 'channel completed syncing': c.channelName });
 }

@@ -8,7 +8,7 @@ import {
 } from '@linen/database';
 import { discordSync } from 'services/discord/sync';
 import { slackSyncWithFiles } from 'services/slack/syncWithFiles';
-import { SyncJobType } from '@linen/types';
+import { Logger, SyncJobType } from '@linen/types';
 
 export enum SyncStatus {
   IN_PROGRESS = 'IN_PROGRESS',
@@ -94,7 +94,8 @@ export async function syncJob({
   account_id,
   file_location,
   fullSync,
-}: SyncJobType) {
+  logger,
+}: SyncJobType & { logger: Logger }) {
   const accountId = account_id;
   const fileLocation = file_location;
 
@@ -116,5 +117,6 @@ export async function syncJob({
     accountId,
     fullSync,
     fileLocation,
+    logger,
   });
 }

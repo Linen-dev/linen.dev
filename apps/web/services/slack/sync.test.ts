@@ -11,6 +11,7 @@ describe('slackSync', () => {
       expect(
         slackSync({
           accountId: 'notExist',
+          logger: console,
         })
       ).rejects.toThrowError('Account not found');
       expect(accountsFindUniqueMock).toHaveBeenCalledWith({

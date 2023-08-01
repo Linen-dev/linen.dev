@@ -9,13 +9,15 @@ import { getAccountsAndChannels } from './utils/getAccountsAndChannels';
 import { buildCustomDomainSitemap } from './utils/buildCustomDomainSitemap';
 import { buildLinenSitemap } from './utils/buildLinenSitemap';
 import { linenDomain } from './config';
+import { Logger } from '@linen/types';
 
 export async function build(
   uploadFile: (args: {
     Key: string;
     Body: any;
     CacheControl?: string;
-  }) => Promise<any>
+  }) => Promise<any>,
+  logger: Logger
 ) {
   const {
     channels,
@@ -25,13 +27,13 @@ export async function build(
     channels: Record<string, ChannelType>;
     accountsPremium: Record<string, AccountType>;
     accountsFree: Record<string, AccountType>;
-  } = await getAccountsAndChannels();
+  } = await getAccountsAndChannels(logger);
 
   const {
     sitemapPremium,
     sitemapFree,
   }: { sitemapPremium: Record<string, UrlType[]>; sitemapFree: UrlType[] } =
-    await getThreads(channels);
+    await getThreads(channels, logger);
 
   const workDir = resolve(
     process.env.RUN_LOCAL ? './sitemap' : os.tmpdir(),
@@ -41,13 +43,13 @@ export async function build(
 
   for (let [accountId, threads] of Object.entries(sitemapPremium)) {
     const account = accountsPremium[accountId];
-    await buildCustomDomainSitemap(workDir, account, threads);
-    await buildRobots(account.customDomain, workDir).catch(console.error);
+    await buildCustomDomainSitemap(workDir, account, threads, logger);
+    await buildRobots(account.customDomain, workDir).catch(logger.error);
   }
 
-  await buildLinenSitemap(workDir, sitemapFree, accountsFree);
-  await buildRobots(linenDomain, workDir).catch(console.error);
+  await buildLinenSitemap(workDir, sitemapFree, accountsFree, logger);
+  await buildRobots(linenDomain, workDir).catch(logger.error);
 
   const result = await uploadDir(uploadFile, resolve(workDir));
-  console.log('files uploaded', result.length);
+  logger.log({ 'files uploaded': result.length });
 }

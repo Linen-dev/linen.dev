@@ -1,4 +1,4 @@
-import { AccountWithSlackAuthAndChannels } from '@linen/types';
+import { AccountWithSlackAuthAndChannels, Logger } from '@linen/types';
 import { sleep } from '@linen/utilities/promises';
 import ChannelsService from 'services/channels';
 import { GetSlackChannelsFnType, JoinChannelFnType } from '../types';
@@ -11,6 +11,7 @@ export async function createChannels({
   joinChannel,
   hideChannels,
   shouldJoinChannel,
+  logger,
 }: {
   slackTeamId: string;
   token: string;
@@ -19,6 +20,7 @@ export async function createChannels({
   joinChannel: JoinChannelFnType;
   hideChannels: boolean;
   shouldJoinChannel: boolean;
+  logger: Logger;
 }) {
   try {
     const channelsResponse = await getSlackChannels(slackTeamId, token);
@@ -35,7 +37,7 @@ export async function createChannels({
         })
       )
     );
-    console.log('Joining channels started');
+    logger.log({ 'Joining channels': 'started' });
     let sleeping = sleep(60 * 1000);
     let counter = 0;
     const filteredChannels = channels.filter(
@@ -55,11 +57,11 @@ export async function createChannels({
         sleeping = sleep(60 * 1000);
       }
     }
-    console.log('Joining channels ended');
+    logger.log({ 'Joining channels': 'finished' });
 
     return channels;
   } catch (e) {
-    console.error('Error creating Channels:', e);
+    logger.error({ 'Error creating Channels': e });
     return [];
   }
 }
@@ -73,6 +75,7 @@ export async function syncChannels({
   joinChannel,
   shouldJoinChannel,
   fullSync,
+  logger,
 }: {
   account: AccountWithSlackAuthAndChannels;
   token: string;
@@ -82,6 +85,7 @@ export async function syncChannels({
   joinChannel: JoinChannelFnType;
   shouldJoinChannel: boolean;
   fullSync?: boolean;
+  logger: Logger;
 }) {
   let channels = await createChannels({
     slackTeamId: account.slackTeamId as string,
@@ -91,6 +95,7 @@ export async function syncChannels({
     joinChannel,
     hideChannels: account.newChannelsConfig === 'HIDDEN',
     shouldJoinChannel,
+    logger,
   });
 
   // If channelId is part of parameter only sync the specific channel

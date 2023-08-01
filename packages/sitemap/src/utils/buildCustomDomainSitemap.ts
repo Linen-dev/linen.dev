@@ -4,11 +4,13 @@ import { resolve } from 'path';
 import { EnumChangefreq, SitemapAndIndexStream, SitemapStream } from 'sitemap';
 import { finished } from 'node:stream/promises';
 import { UrlType, AccountType } from './types';
+import { Logger } from '@linen/types';
 
 export async function buildCustomDomainSitemap(
   workDir: string,
   account: AccountType,
-  threads: UrlType[]
+  threads: UrlType[],
+  logger: Logger
 ) {
   await fs.mkdir(`${workDir}/sitemap/${account.customDomain}`, {
     recursive: true,
@@ -57,5 +59,5 @@ export async function buildCustomDomainSitemap(
 
   sms.end();
   await finished(sms);
-  console.log('finished', account.customDomain);
+  logger.log({ finished: account.customDomain });
 }

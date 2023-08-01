@@ -8,6 +8,7 @@ import {
 } from '@linen/database';
 import request from 'superagent';
 import { replaceMentionsWithDisplayName } from './utilities/mentions';
+import { Logger } from '@linen/types';
 
 type AuthorUser = {
   username: string;
@@ -20,11 +21,13 @@ async function postMessage({
   externalChannelId,
   body,
   user,
+  logger,
 }: {
   token: string;
   externalChannelId: string;
   body: string;
   user?: AuthorUser;
+  logger: Logger;
 }) {
   try {
     const url = 'https://slack.com/api/chat.postMessage';
@@ -40,7 +43,7 @@ async function postMessage({
     return res.body;
   } catch (err: any) {
     // err.message, err.response
-    console.error(err.response, err.message);
+    logger.error({ response: err.response, message: err.message });
     throw err;
   }
 }
@@ -51,12 +54,14 @@ async function postReply({
   externalThreadId,
   body,
   user,
+  logger,
 }: {
   token: string;
   externalChannelId: string;
   externalThreadId: string;
   body: string;
   user?: AuthorUser;
+  logger: Logger;
 }) {
   try {
     const url = 'https://slack.com/api/chat.postMessage';
@@ -73,7 +78,7 @@ async function postReply({
     return res.body;
   } catch (err: any) {
     // err.message, err.response
-    console.error(err.response, err.message);
+    logger.error({ response: err.response, message: err.message });
     throw err;
   }
 }
@@ -84,6 +89,7 @@ export async function slackChatSync({
   messageId,
   isThread,
   isReply,
+  logger,
 }: {
   channel:
     | channels & {
@@ -99,8 +105,9 @@ export async function slackChatSync({
   messageId: string;
   isThread?: boolean;
   isReply?: boolean;
+  logger: Logger;
 }) {
-  console.log({ threadId, messageId });
+  logger.log({ threadId, messageId });
   // check if has enough permissions
   const slackToken = channel.account?.slackAuthorizations.find((s) =>
     isAllowToSendMessages(s)
@@ -157,6 +164,7 @@ export async function slackChatSync({
       externalChannelId,
       user,
       messageId: message.id,
+      logger,
     });
   }
 
@@ -168,6 +176,7 @@ export async function slackChatSync({
       externalChannelId,
       user,
       externalThreadId: message.threads.externalThreadId,
+      logger,
     });
   }
 }
@@ -179,6 +188,7 @@ async function newReply({
   externalChannelId,
   user,
   externalThreadId,
+  logger,
 }: {
   messageId: string;
   token: string;
@@ -186,6 +196,7 @@ async function newReply({
   externalChannelId: string;
   user: AuthorUser | undefined;
   externalThreadId: string | null;
+  logger: Logger;
 }) {
   if (!externalThreadId) {
     throw 'thread external id is missing from message';
@@ -197,6 +208,7 @@ async function newReply({
     externalChannelId,
     externalThreadId,
     user,
+    logger,
   });
   if (response.ok && response.message && response.message.ts) {
     await prisma.messages.update({
@@ -205,7 +217,7 @@ async function newReply({
     });
     return 'reply sent';
   }
-  console.error({ response });
+  logger.error({ response });
   throw 'something went wrong';
 }
 
@@ -216,6 +228,7 @@ async function newThread({
   externalChannelId,
   user,
   messageId,
+  logger,
 }: {
   threadId: string | undefined;
   token: string;
@@ -223,6 +236,7 @@ async function newThread({
   externalChannelId: string;
   user: AuthorUser | undefined;
   messageId: string;
+  logger: Logger;
 }) {
   const thread = await prisma.threads.findUnique({ where: { id: threadId } });
   if (!thread) {
@@ -234,6 +248,7 @@ async function newThread({
     body,
     externalChannelId,
     user,
+    logger,
   });
   if (response.ok && response.message && response.message.ts) {
     await prisma.threads.update({
@@ -246,7 +261,7 @@ async function newThread({
     });
     return 'thread created';
   }
-  console.error({ response });
+  logger.error({ response });
   throw 'something went wrong';
 }
 

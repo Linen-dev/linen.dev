@@ -2,23 +2,25 @@ import {
   SlackMessageReactionRemovedEvent,
   SlackMessageReactionAddedEvent,
   SlackEvent,
+  Logger,
 } from '@linen/types';
 import { Prisma, prisma } from '@linen/database';
 import { findChannelWithAccountByExternalId } from 'services/channels';
 
 async function processMessageReactionEvent(
   event: SlackMessageReactionAddedEvent | SlackMessageReactionRemovedEvent,
-  teamId: string
+  teamId: string,
+  logger: Logger
 ) {
   const channelId = event.item.channel;
   const channel = await findChannelWithAccountByExternalId(channelId, teamId);
 
   if (channel === null) {
-    console.error('Channel does not exist in db ');
+    logger.error({ 'Channel not found': channelId });
     return { status: 403, error: 'Channel not found', metadata: { channelId } };
   }
   if (channel.account === null) {
-    console.error('Account does not exist in db ');
+    logger.error({ 'Account not found': teamId });
     return { status: 403, error: 'Account not found', metadata: { teamId } };
   }
 
@@ -51,17 +53,20 @@ async function processMessageReactionEvent(
     where: whereClause,
   });
 
-  // console.log('reaction', reaction);
+  // logger.log('reaction', reaction);
 
   return { reaction, whereClause, message };
 }
 
-export async function processMessageReactionAddedEvent(body: SlackEvent) {
+export async function processMessageReactionAddedEvent(
+  body: SlackEvent,
+  logger: Logger
+) {
   const event = body.event as SlackMessageReactionAddedEvent;
   const teamId = body.team_id;
 
   const { error, status, reaction, whereClause, message } =
-    await processMessageReactionEvent(event, teamId);
+    await processMessageReactionEvent(event, teamId, logger);
 
   if (error) {
     return { error, status };
@@ -94,12 +99,15 @@ export async function processMessageReactionAddedEvent(body: SlackEvent) {
 
   return { status: 200, message: 'Reaction added' };
 }
-export async function processMessageReactionRemovedEvent(body: SlackEvent) {
+export async function processMessageReactionRemovedEvent(
+  body: SlackEvent,
+  logger: Logger
+) {
   const event = body.event as SlackMessageReactionRemovedEvent;
   const teamId = body.team_id;
 
   const { error, status, reaction, whereClause } =
-    await processMessageReactionEvent(event, teamId);
+    await processMessageReactionEvent(event, teamId, logger);
 
   if (error) {
     return { error, status };

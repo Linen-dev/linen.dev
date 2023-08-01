@@ -1,13 +1,17 @@
 import { prisma, Prisma } from '@linen/database';
 import { UrlType, ChannelType } from './types';
 import { batchSize, bodyLengthLimit } from '../config';
+import { Logger } from '@linen/types';
 
-export async function getThreads(channels: Record<string, ChannelType>) {
+export async function getThreads(
+  channels: Record<string, ChannelType>,
+  logger: Logger
+) {
   const sitemapPremium: Record<string, UrlType[]> = {};
   const sitemapFree: UrlType[] = [];
 
   let incrementId = 0;
-  console.time('query-threads');
+  logger.time('query-threads');
   do {
     const threads = await prisma.threads.findMany({
       select: {
@@ -143,13 +147,13 @@ export async function getThreads(channels: Record<string, ChannelType>) {
       incrementId = threads[batchSize - 1].incrementId;
       // skip logging all
       if (Number(incrementId) % 10 === 0) {
-        console.timeLog('query-threads');
-        console.log('incrementId', incrementId);
+        logger.timeLog('query-threads');
+        logger.log({ incrementId });
       }
     } else {
       break;
     }
   } while (true);
-  console.timeEnd('query-threads');
+  logger.timeEnd('query-threads');
   return { sitemapPremium, sitemapFree };
 }

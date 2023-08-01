@@ -1,4 +1,5 @@
 import { prisma } from '@linen/database';
+import { Logger } from '../helpers/logger';
 import { push } from '@linen/web/services/push';
 
 interface Payload {
@@ -7,10 +8,14 @@ interface Payload {
 }
 
 export async function reminderMeLaterTask(payload: Payload, helpers: any) {
+  const logger = new Logger(helpers.logger);
+
+  await task(payload, logger);
+}
+
+async function task(payload: Payload, logger: Logger) {
   const { threadId, userId } = payload;
-  helpers.logger.info(
-    `Setting remind me later for thread ${threadId}, user ${userId}`
-  );
+  logger.info({ 'Setting remind me later for thread': threadId, user: userId });
   const status = await prisma.userThreadStatus.findFirst({
     where: {
       threadId,
@@ -44,7 +49,7 @@ export async function reminderMeLaterTask(payload: Payload, helpers: any) {
         });
       } catch (exception) {}
 
-      helpers.logger.info(`Push websocket for thread ${threadId}`);
+      logger.info({ 'Push websocket for thread': threadId });
     }
   }
 }

@@ -5,6 +5,7 @@ import {
   UserMap,
   MessageFormat,
   ConversationHistoryMessage,
+  Logger,
 } from '@linen/types';
 import { slugify } from '@linen/utilities/string';
 import { processReactions } from './reactions';
@@ -18,7 +19,8 @@ async function saveMessagesSynchronous(
   messages: ConversationHistoryMessage[],
   channelId: string,
   users: UserMap[],
-  token: string
+  token: string,
+  logger: Logger
 ) {
   const threadHead = messages[0];
   if (threadHead.ts === threadHead.thread_ts) {
@@ -89,7 +91,7 @@ async function saveMessagesSynchronous(
     }
     await Promise.all([
       processReactions(m, message),
-      processAttachments(m, message, token),
+      processAttachments(m, message, token, logger),
     ]);
   }
 }
@@ -99,17 +101,19 @@ export async function saveAllThreads({
   token,
   usersInDb,
   fetchReplies,
+  logger,
 }: {
   channel: channels;
   token: string;
   usersInDb: UserMap[];
   fetchReplies: Function;
+  logger: Logger;
 }) {
-  console.log('syncing threads', channel?.channelName);
+  logger.log({ 'syncing threads': channel?.channelName });
 
   let cursor = 0;
   do {
-    console.log('cursor', cursor);
+    logger.log({ cursor });
     const threads = await findThreadsByChannel({
       channelId: channel.id,
       cursor,
@@ -117,7 +121,7 @@ export async function saveAllThreads({
     });
 
     if (!threads?.length) break;
-    console.log('threads.length', threads.length);
+    logger.log({ 'threads.length': threads.length });
 
     await Promise.all(
       threads.map(async (thread) => {
@@ -129,27 +133,27 @@ export async function saveAllThreads({
               token
             ),
             sleepSeconds: 30,
+            logger,
           });
           const replyMessages: ConversationHistoryMessage[] =
             replies?.body?.messages?.filter(filterMessages).map(parseMessage) ||
             [];
 
-          console.log(
-            thread.externalThreadId,
-            thread.messageCount,
-            'replyMessages.length',
-            replyMessages?.length
-          );
+          logger.log({
+            [`${thread.externalThreadId}`]: thread.messageCount,
+            'replyMessages.length': replyMessages?.length,
+          });
           if (replyMessages && replyMessages.length) {
             await saveMessagesSynchronous(
               replyMessages,
               thread.channelId,
               usersInDb,
-              token
+              token,
+              logger
             );
           }
         } catch (e: any) {
-          console.error(e.message || e);
+          logger.error(e.message || e);
         }
       })
     );
@@ -157,5 +161,5 @@ export async function saveAllThreads({
     cursor = Number(threads?.[threads?.length - 1]?.sentAt);
   } while (true);
 
-  console.log('finish sync threads', channel?.channelName);
+  logger.log({ 'finish sync threads': channel?.channelName });
 }

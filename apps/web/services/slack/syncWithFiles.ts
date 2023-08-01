@@ -7,6 +7,7 @@ import StreamZip from 'node-stream-zip';
 import { tmpdir } from 'os';
 import fs from 'fs';
 import { v4 } from 'uuid';
+import { Logger } from '@linen/types';
 
 export async function slackSyncWithFiles({
   accountId,
@@ -15,6 +16,7 @@ export async function slackSyncWithFiles({
   fullSync,
   skipUsers = false,
   fileLocation,
+  logger,
 }: {
   accountId: string;
   channelId?: string;
@@ -22,8 +24,9 @@ export async function slackSyncWithFiles({
   fullSync?: boolean | undefined;
   skipUsers?: boolean;
   fileLocation?: string;
+  logger: Logger;
 }) {
-  console.log(new Date(), { fullSync });
+  logger.log({ startAt: new Date(), fullSync });
 
   if (!fileLocation) throw 'missing files location';
 
@@ -70,6 +73,7 @@ export async function slackSyncWithFiles({
       joinChannel,
       listUsers,
       getMemberships,
+      logger,
     });
 
     await updateAndNotifySyncStatus({
@@ -86,7 +90,7 @@ export async function slackSyncWithFiles({
       body: {},
     };
   } catch (err) {
-    console.error(err);
+    logger.error({ err });
 
     await updateAndNotifySyncStatus({
       accountId,
@@ -102,7 +106,7 @@ export async function slackSyncWithFiles({
       error: String(err),
     };
   } finally {
-    console.log('sync finished at', new Date());
+    logger.log({ 'sync finished at': new Date() });
   }
 }
 

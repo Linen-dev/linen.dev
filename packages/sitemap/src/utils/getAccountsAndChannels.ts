@@ -1,8 +1,9 @@
 import { channels, prisma } from '@linen/database';
 import { ChannelType, AccountType } from './types';
+import { Logger } from '@linen/types';
 
-export async function getAccountsAndChannels() {
-  console.time('query-accounts');
+export async function getAccountsAndChannels(logger: Logger) {
+  logger.time('query-accounts');
 
   // filter channels with at least 25 threads
   // filter introductions channels
@@ -83,6 +84,6 @@ export async function getAccountsAndChannels() {
     });
   });
 
-  console.timeEnd('query-accounts');
+  logger.timeEnd('query-accounts');
   return { channels, accountsPremium, accountsFree };
 }

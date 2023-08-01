@@ -1,8 +1,10 @@
+import { Logger } from '../helpers/logger';
 import { handleWebhook } from '@linen/web/services/slack/webhooks';
 import { type JobHelpers } from 'graphile-worker';
 
 export const webhook = async (payload: any, helpers: JobHelpers) => {
-  helpers.logger.info(JSON.stringify(payload));
-  const result = await handleWebhook(payload);
-  helpers.logger.info(JSON.stringify(result));
+  const logger = new Logger(helpers.logger);
+  logger.info(payload);
+  const result = await handleWebhook(payload, logger);
+  logger.info({ result });
 };

@@ -1,23 +1,25 @@
 import { prisma } from '@linen/database';
-import type { JobHelpers, Logger } from 'graphile-worker';
+import type { JobHelpers } from 'graphile-worker';
 import { slackChatSync } from '@linen/web/services/slack/api/postMessage';
 import { processGithubIntegration } from '@linen/integration-github';
 import { processEmailIntegration } from '@linen/integration-email';
 import { processLinearIntegration } from '@linen/integration-linear';
 import { processDiscordIntegration } from '@linen/integration-discord';
 import { TwoWaySyncType } from '@linen/types';
+import { Logger } from '../helpers/logger';
 
 export async function twoWaySync(payload: any, helpers: JobHelpers) {
-  helpers.logger.info(JSON.stringify(payload));
-  const result = await twoWaySyncJob(payload, helpers.logger);
-  helpers.logger.info(JSON.stringify(result));
+  const logger = new Logger(helpers.logger);
+  logger.info(payload);
+  const result = await twoWaySyncJob(payload, logger);
+  logger.info(result);
 }
 
 async function twoWaySyncJob(
   { channelId, messageId, threadId, id, event }: TwoWaySyncType,
   logger: Logger
 ) {
-  logger.info(JSON.stringify(event));
+  logger.info({ event });
 
   const channel = await prisma.channels.findFirst({
     where: {
@@ -85,6 +87,7 @@ async function twoWaySyncJob(
       messageId: messageId!,
       isThread: event === 'newThread',
       isReply: event === 'newMessage',
+      logger,
     });
   }
   // check if is discord

@@ -23,7 +23,7 @@ export * from './discord';
 export * from './partialTypes';
 export * from './server';
 export * from './vercel';
-
+export * from './logger';
 /*
   This package redefines enums from `schema.prisma`.
   Ideally this package should be considered as a source of truth

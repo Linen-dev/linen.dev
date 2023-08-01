@@ -1,8 +1,7 @@
-import { DiscordChannel } from '@linen/types';
+import { DiscordChannel, Logger } from '@linen/types';
 import DiscordApi from './api';
 import to from '@linen/utilities/await-to-js';
 import ChannelsService from 'services/channels';
-import Logger from './logger';
 import { slugify } from '@linen/utilities/string';
 import { channels } from '@linen/database';
 
@@ -24,12 +23,14 @@ export async function listChannelsAndPersist({
   logger: Logger;
   hideChannels: boolean;
 }) {
-  logger.log('listChannelsAndPersist >> started');
+  logger.log({ listChannelsAndPersist: 'started' });
   const [err, channels] = await to(
     DiscordApi.getDiscordChannels({ serverId, token })
   );
   if (err) {
-    logger.error(`listChannelsAndPersist >> finished with error: ${err}`);
+    logger.error({
+      listChannelsAndPersist: err,
+    });
     return;
   }
   try {
@@ -44,23 +45,16 @@ export async function listChannelsAndPersist({
         );
         channelPromises.push(newChannel);
       } catch (error) {
-        logger.error(
-          `listChannelsAndPersist >> failure: ${JSON.stringify({
-            error,
-            channel,
-          })}`
-        );
+        logger.error({ listChannelsAndPersist: error, channel });
       }
     }
 
     return channelPromises;
   } catch (error) {
-    logger.error(
-      `listChannelsAndPersist >> finished with error: ${JSON.stringify(error)}`
-    );
+    logger.error({ listChannelsAndPersist: error });
     return;
   } finally {
-    logger.log('listChannelsAndPersist >> finished');
+    logger.log({ listChannelsAndPersist: 'finished' });
   }
 }
 

@@ -1,13 +1,20 @@
 import { prisma } from '@linen/database';
+import { Logger } from '../helpers/logger';
 import axios from 'axios';
 import type { JobHelpers } from 'graphile-worker';
 
-export const checkPropagation = async (_: any, { logger }: JobHelpers) => {
+export const checkPropagation = async (_: any, helpers: JobHelpers) => {
+  const logger = new Logger(helpers.logger);
+
+  await task(logger);
+};
+
+async function task(logger: Logger) {
   const domains = await prisma.accounts.findMany({
     select: { id: true, redirectDomain: true, redirectDomainPropagate: true },
     where: { redirectDomain: { not: null } },
   });
-  logger.info('domains: ' + domains.length);
+  logger.info({ domains: domains.length });
 
   const promises = domains.map(async (account) => {
     if (account.redirectDomain) {
@@ -32,4 +39,4 @@ export const checkPropagation = async (_: any, { logger }: JobHelpers) => {
     }
   });
   await Promise.allSettled(promises);
-};
+}

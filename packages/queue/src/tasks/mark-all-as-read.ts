@@ -1,3 +1,4 @@
+import { Logger } from '../helpers/logger';
 import UserThreadStatusService from '@linen/web/services/user-thread-status';
 
 interface Payload {
@@ -5,9 +6,8 @@ interface Payload {
 }
 
 export async function markAllAsReadTask({ userId }: Payload, helpers: any) {
-  helpers.logger.info(`Started marking all threads as read for user ${userId}`);
+  const logger = new Logger(helpers.logger);
+  logger.info({ 'Started marking all threads as read for user': userId });
   await UserThreadStatusService.markAllAsRead({ userId });
-  helpers.logger.info(
-    `Finished marking all threads as read for user ${userId}`
-  );
+  logger.info({ 'Finished marking all threads as read for user': userId });
 }

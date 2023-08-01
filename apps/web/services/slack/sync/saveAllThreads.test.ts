@@ -79,6 +79,7 @@ describe('slackSync :: saveAllThreads', () => {
       usersInDb: [],
       token: account.slackAuthorizations[0].accessToken,
       fetchReplies: fetch_all_conversations.fetchReplies,
+      logger: console,
     });
 
     expect(findThreadsWithOnlyOneMessageMock).toBeCalledTimes(2);

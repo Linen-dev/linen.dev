@@ -60,6 +60,7 @@ describe('slackSync :: syncChannels', () => {
       getSlackChannels: fetch_all_conversations.getSlackChannels,
       joinChannel: fetch_all_conversations.joinChannel,
       shouldJoinChannel: true,
+      logger: console,
     });
     expect(response).toMatchObject(
       externalChannels.map((e) => ({

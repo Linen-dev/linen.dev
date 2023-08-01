@@ -1,11 +1,13 @@
 import { notificationListenerType } from '@linen/types';
+import { Logger } from '../helpers/logger';
 import { handleNewEvent } from '@linen/web/services/notifications';
 
 export async function processNewEventTask(
   payload: notificationListenerType,
   helpers: any
 ): Promise<any> {
-  helpers.logger.info(JSON.stringify(helpers.job));
+  const logger = new Logger(helpers.logger);
+  logger.info(helpers.job);
   const result = await handleNewEvent(payload);
-  helpers.logger.info(JSON.stringify(result));
+  logger.info({ result });
 }

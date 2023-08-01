@@ -6,6 +6,7 @@ import { fetchAllTopLevelMessages } from './sync/fetchAllTopLevelMessages';
 import { saveAllThreads } from './sync/saveAllThreads';
 import { syncMemberships } from './sync/membership';
 import { SyncWrapperTypes } from './types';
+import { Logger } from '@linen/types';
 
 export async function syncWrapper({
   account,
@@ -21,14 +22,15 @@ export async function syncWrapper({
   fetchConversationsTyped,
   fetchReplies,
   getMemberships,
-}: SyncWrapperTypes) {
+  logger,
+}: SyncWrapperTypes & { logger: Logger }) {
   const { token, syncFrom, shouldJoinChannel } = await fetchToken({
     account,
     domain,
     accountId,
     fetchTeamInfo,
   });
-  console.log({ token, syncFrom, shouldJoinChannel });
+  logger.log({ token, syncFrom, shouldJoinChannel });
   const oldest = syncFrom
     ? Math.floor(syncFrom.getTime() / 1000).toString()
     : '0';
@@ -43,6 +45,7 @@ export async function syncWrapper({
     getSlackChannels,
     shouldJoinChannel,
     fullSync,
+    logger,
   });
 
   //paginate and find all the users
@@ -52,6 +55,7 @@ export async function syncWrapper({
     account,
     skipUsers,
     listUsers,
+    logger,
   });
 
   for (const channel of channels) {
@@ -75,12 +79,13 @@ export async function syncWrapper({
       fullSync,
       fetchConversationsTyped,
       oldest,
+      logger,
     });
 
     // Save all threads
     // only fetch threads with single message
     // There will be edge cases where not all the threads are sync'd if you cancel the script
-    await saveAllThreads({ channel, token, usersInDb, fetchReplies });
+    await saveAllThreads({ channel, token, usersInDb, fetchReplies, logger });
   }
 
   await hideEmptyChannels(accountId);

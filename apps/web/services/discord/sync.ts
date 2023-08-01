@@ -4,10 +4,10 @@ import { crawlUsers } from './users';
 import { decrypt } from 'utilities/crypto';
 import { getMessages } from './messages';
 import { getActiveThreads, getArchivedThreads } from './threads';
-import Logger from './logger';
 import { accounts, discordAuthorizations, prisma } from '@linen/database';
 import { botV1 } from 'config/discord';
 import ChannelsService from 'services/channels';
+import { Logger } from '@linen/types';
 
 async function syncJob({
   account,
@@ -22,7 +22,7 @@ async function syncJob({
   logger: Logger;
   fullSync?: boolean;
 }) {
-  logger.log(`sync stared`);
+  logger.log({ sync: 'stared' });
 
   if (!account.discordServerId) {
     throw new Error('discord server id not found');
@@ -34,7 +34,7 @@ async function syncJob({
   const discordAuthorizations = account.discordAuthorizations.find(Boolean);
   const onboardingTimestamp = discordAuthorizations?.syncFrom || new Date(0);
 
-  logger.log(`syncFrom: ${onboardingTimestamp}`);
+  logger.log({ onboardingTimestamp });
 
   const token = discordAuthorizations?.customBot
     ? decodeBotToken(discordAuthorizations.accessToken)
@@ -70,9 +70,9 @@ async function syncJob({
   });
 
   if (channels?.length) {
-    logger.log(`channels found: ${channels.length}`);
+    logger.log({ 'channels found': channels.length });
     for (const channel of channels) {
-      logger.log(channel.channelName + ' channel tasks started');
+      logger.log({ [channel.channelName]: 'channel tasks started' });
       channel.externalPageCursor = null;
       await getArchivedThreads({
         channel,
@@ -81,18 +81,20 @@ async function syncJob({
         logger,
       });
       await getMessages({ channel, onboardingTimestamp, token, logger });
-      logger.log(channel.channelName + ' channel tasks finished');
+      logger.log({ [channel.channelName]: 'channel tasks finished' });
     }
   }
 
-  logger.log('sync finished');
+  logger.log({ sync: 'finished' });
 }
 
 export async function discordSync({
+  logger,
   ...args
 }: {
   accountId: string;
   fullSync?: boolean;
+  logger: Logger;
 }) {
   const account = await prisma.accounts.findUnique({
     where: { id: args.accountId },
@@ -113,7 +115,7 @@ export async function discordSync({
       pathDomain: account.slackDomain,
     });
 
-    const logger = new Logger(getAccountName(account));
+    logger.setPrefix(getAccountName(account));
 
     await syncJob({
       account,

@@ -72,6 +72,7 @@ describe('slackSync :: fetchAllTopLevelMessages', () => {
       usersInDb: [],
       token: account.slackAuthorizations[0].accessToken,
       fetchConversationsTyped: fetch_all_conversations.fetchConversationsTyped,
+      logger: console,
     });
 
     expect(fetchConversationsTypedMock).toHaveBeenCalledTimes(1);

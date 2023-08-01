@@ -12,7 +12,12 @@ import {
   Prisma,
   slackAuthorizations,
 } from '@linen/database';
-import { MessageFormat, SlackEvent, SlackMessageEvent } from '@linen/types';
+import {
+  Logger,
+  MessageFormat,
+  SlackEvent,
+  SlackMessageEvent,
+} from '@linen/types';
 import { findUser, createUser } from 'services/users';
 import { parseSlackSentAt, tsToSentAt } from '@linen/serializers/sentAt';
 import { findChannelWithAccountByExternalId } from 'services/channels';
@@ -51,19 +56,19 @@ const findOrCreateUserFromUserInfo = async (
   return user;
 };
 
-export async function processMessageEvent(body: SlackEvent) {
+export async function processMessageEvent(body: SlackEvent, logger: Logger) {
   const event = body.event as SlackMessageEvent;
   const channelId = event.channel;
   const teamId = body.team_id;
   const channel = await findChannelWithAccountByExternalId(channelId, teamId);
 
   if (channel === null) {
-    console.error('Channel does not exist in db ');
+    logger.error({ 'Channel not found': channelId });
     return { status: 404, error: 'Channel not found', metadata: { channelId } };
   }
 
   if (channel.account === null) {
-    console.error('Account does not exist in db ');
+    logger.error({ 'Account not found': teamId });
     return { status: 404, error: 'Account not found', metadata: { teamId } };
   }
 
@@ -77,15 +82,15 @@ export async function processMessageEvent(body: SlackEvent) {
     event.subtype &&
     event.subtype === 'message_deleted'
   ) {
-    message = await deleteMessage(channel, parseMessage(event));
+    message = await deleteMessage(channel, parseMessage(event), logger);
   } else if (
     event.type === 'message' &&
     event.subtype &&
     event.subtype === 'message_changed'
   ) {
-    message = await changeMessage(channel, parseMessage(event));
+    message = await changeMessage(channel, parseMessage(event), logger);
   } else {
-    message = await addMessage(channel, parseMessage(event));
+    message = await addMessage(channel, parseMessage(event), logger);
   }
 
   return {
@@ -99,7 +104,8 @@ async function addMessage(
   channel: channels & {
     account: (accounts & { slackAuthorizations: slackAuthorizations[] }) | null;
   },
-  event: SlackMessageEvent
+  event: SlackMessageEvent,
+  logger: Logger
 ) {
   const thread_ts = event.thread_ts || event.ts;
   const thread = await findOrCreateThread({
@@ -156,7 +162,8 @@ async function addMessage(
         files: event.files,
       } as any,
       message,
-      accessToken
+      accessToken,
+      logger
     );
   }
 
@@ -204,7 +211,8 @@ async function deleteMessage(
   channel: channels & {
     account: (accounts & { slackAuthorizations: slackAuthorizations[] }) | null;
   },
-  event: SlackMessageEvent
+  event: SlackMessageEvent,
+  logger: Logger
 ) {
   if (event.deleted_ts) {
     const message = await findMessageByChannelIdAndTs(
@@ -216,7 +224,10 @@ async function deleteMessage(
         await deleteMessageFromThread(message.id, message.threadId);
       }
     } catch (error) {
-      console.warn('Message not found!', channel.id, event.deleted_ts);
+      logger.warn({
+        'Message not found': event.deleted_ts,
+        channelId: channel.id,
+      });
     }
   }
 
@@ -227,7 +238,8 @@ async function changeMessage(
   channel: channels & {
     account: (accounts & { slackAuthorizations: slackAuthorizations[] }) | null;
   },
-  event: SlackMessageEvent
+  event: SlackMessageEvent,
+  logger: Logger
 ) {
   // First remove previous message
   if (event.previous_message) {
@@ -238,13 +250,16 @@ async function changeMessage(
     try {
       message && (await deleteMessageWithMentions(message.id));
     } catch (error) {
-      console.warn('Message not found!', channel.id, event.deleted_ts);
+      logger.warn({
+        'Message not found': event.deleted_ts,
+        channelId: channel.id,
+      });
     }
   }
 
   let message = {};
   if (event.message) {
-    message = await addMessage(channel, parseMessage(event.message));
+    message = await addMessage(channel, parseMessage(event.message), logger);
   }
 
   return message;

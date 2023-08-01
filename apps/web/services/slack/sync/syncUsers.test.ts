@@ -46,6 +46,7 @@ describe('slackSync :: syncUsers', () => {
       accountId: account.id,
       token: account.slackAuthorizations[0].accessToken,
       listUsers: fetch_all_conversations.listUsers,
+      logger: console,
     });
     expect(response).toMatchObject([internalUser]);
 

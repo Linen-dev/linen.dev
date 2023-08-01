@@ -1,3 +1,5 @@
+import { Logger } from '@linen/types';
+
 /**
  * useful helper to retry promises that may fail, usually requests to discord and slack API
  *
@@ -14,11 +16,13 @@ export async function retryPromise({
   promise,
   retries = 3,
   skipOn = [404, 403, 401],
+  logger,
 }: {
   promise: Promise<any>;
   retries?: number;
   skipOn?: number[];
   sleepSeconds?: number;
+  logger: Logger;
 }) {
   let attempts = 0;
   let lastError;
@@ -28,12 +32,14 @@ export async function retryPromise({
       return await promise;
     } catch (error: any) {
       if (skipOn.includes(error?.status)) {
-        console.error('Skip retry due error status:', error.status);
+        logger.error({ cause: `Skip retry due error status: ${error.status}` });
         throw error;
       }
       const sleepSeconds = jitter(attempts);
       lastError = error;
-      log(error, sleepSeconds);
+      logger.error({
+        cause: `retry promise in :: ${sleepSeconds} seconds :: ${error.message} ${error.status}`,
+      });
       await sleep(sleepSeconds * 1000);
     }
   }
@@ -41,16 +47,6 @@ export async function retryPromise({
 }
 
 export const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
-
-const log = (error: any, retry: number) => {
-  console.error(
-    'retry promise in ::',
-    retry,
-    'seconds ::',
-    error.message,
-    error.status
-  );
-};
 
 const random_between = (min: number, max: number) =>
   Math.floor(Math.random() * (max - min + 1)) + min;

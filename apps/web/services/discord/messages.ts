@@ -1,5 +1,5 @@
 import { channels, threads, users, prisma } from '@linen/database';
-import { DiscordMessage, MessageFormat } from '@linen/types';
+import { DiscordMessage, Logger, MessageFormat } from '@linen/types';
 import { findUsers, getMentions, getUsersInMessages } from './users';
 import { LIMIT } from './constrains';
 import { slugify } from '@linen/utilities/string';
@@ -8,7 +8,6 @@ import ChannelsService from 'services/channels';
 import { upsertThreadByExternalId } from 'services/threads';
 import DiscordApi from './api';
 import to from '@linen/utilities/await-to-js';
-import Logger from './logger';
 import { handleAttachments } from './attachments';
 
 export async function getMessages({
@@ -22,7 +21,7 @@ export async function getMessages({
   token: string;
   logger: Logger;
 }) {
-  logger.log('getMessages >> started');
+  logger.log({ getMessages: 'started' });
   const { cursor } = await crawlChannel({
     channel,
     onboardingTimestamp,
@@ -34,7 +33,7 @@ export async function getMessages({
   if (cursor) {
     await ChannelsService.updateCursor(channel.id, cursor);
   }
-  logger.log('getMessages >> finished');
+  logger.log({ getMessages: 'finished' });
 }
 
 async function crawlChannel({
@@ -80,7 +79,7 @@ async function crawlChannel({
       })
     );
     if (err) {
-      logger.error(`crawlChannel failure: ${err}`);
+      logger.error({ crawlChannel: err });
       break;
     }
     const messages = response as DiscordMessage[];
@@ -130,7 +129,7 @@ export async function processMessagesChunk({
   messagesChunk: DiscordMessage[];
   logger: Logger;
 }) {
-  logger.log(`processMessagesChunk >> started: ${messagesChunk.length}`);
+  logger.log({ processMessagesChunk: messagesChunk.length });
   for (const message of messagesChunk) {
     if (!filterKnownMessagesTypes(message)) {
       continue;
@@ -153,7 +152,7 @@ export async function processMessagesChunk({
       logger
     );
   }
-  logger.log('processMessagesChunk >> finished');
+  logger.log({ processMessagesChunk: 'finished' });
 }
 
 async function parseThreadFromMessage(messageParsed: {
@@ -281,12 +280,10 @@ async function upsertMessage(
       },
     });
   } catch (error: any) {
-    logger.error(
-      `${JSON.stringify({
-        error: error.message || error.error || error,
-        toInsert,
-      })}`
-    );
+    logger.error({
+      error: error.message || error.error || error,
+      toInsert,
+    });
   }
 }
 

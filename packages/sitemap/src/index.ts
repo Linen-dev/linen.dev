@@ -1,4 +1,5 @@
 import { build } from './build';
+import { Logger } from '@linen/types';
 
 export async function task(
   uploadFile: (args: {
@@ -6,7 +7,7 @@ export async function task(
     Body: any;
     CacheControl?: string;
   }) => Promise<any>,
-  _: any
+  logger: Logger
 ) {
-  await build(uploadFile);
+  await build(uploadFile, logger);
 }

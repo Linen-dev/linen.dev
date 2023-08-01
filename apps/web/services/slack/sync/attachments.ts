@@ -1,7 +1,7 @@
 import { uploadFile } from 'services/aws/s3';
 import { BUCKET_PREFIX_FOR_ATTACHMENTS, LINEN_STATIC_CDN } from 'config';
 import { messages, prisma } from '@linen/database';
-import { MessageFile, ConversationHistoryMessage } from '@linen/types';
+import { MessageFile, ConversationHistoryMessage, Logger } from '@linen/types';
 import { fetchFile } from '../api';
 import path from 'path';
 import { v4 as random } from 'uuid';
@@ -10,13 +10,14 @@ import { slugify } from '@linen/utilities/string';
 export async function processAttachments(
   m: ConversationHistoryMessage,
   message: messages,
-  token: string
+  token: string,
+  logger: Logger
 ) {
   const promises = [];
 
   let files: Record<string, string>;
   if (m.files) {
-    files = await processLinks(m.files, token, message.channelId);
+    files = await processLinks(m.files, token, message.channelId, logger);
   }
 
   if (m.files && m.files.length) {
@@ -46,13 +47,13 @@ export async function processAttachments(
               update: serializedFile,
             })
             .catch((error) => {
-              console.error('attachment failure', error);
+              logger.error({ 'attachment failure': error });
             });
         })
     );
   }
   return await Promise.all(promises).catch((error) => {
-    console.error(error);
+    logger.error(error);
   });
 }
 
@@ -66,19 +67,20 @@ export async function processAttachments(
 async function processLinks(
   files: MessageFile[],
   token: string,
-  channelId: string
+  channelId: string,
+  logger: Logger
 ): Promise<Record<string, string>> {
   if (!files || !files.length) return {};
 
-  return (await Promise.all(files.map(processLink(token, channelId)))).reduce(
-    arrayToMap,
-    {}
-  );
+  return (
+    await Promise.all(files.map(processLink(token, channelId, logger)))
+  ).reduce(arrayToMap, {});
 }
 
 function processLink(
   token: string,
-  channelId: string
+  channelId: string,
+  logger: Logger
 ): (file: MessageFile) => Promise<{ fileId?: string; internalUrl?: string }> {
   return async function (file: MessageFile) {
     if (!file.url_private) return {};
@@ -102,7 +104,7 @@ function processLink(
         internalUrl: [LINEN_STATIC_CDN, s3Key].join('/'),
       };
     } catch (error) {
-      console.error(error);
+      logger.error({ error });
       return {};
     }
   };

@@ -3,13 +3,13 @@ import {
   DiscordMessage,
   DiscordAuthor,
   DiscordGuildMember,
+  Logger,
 } from '@linen/types';
 import { generateRandomWordSlug } from '@linen/utilities/randomWordSlugs';
 import { LIMIT } from './constrains';
 import DiscordApi from './api';
 import to from '@linen/utilities/await-to-js';
 import UsersService from 'services/users';
-import Logger from './logger';
 import { toObject } from '@linen/utilities/object';
 
 // helper for messages
@@ -49,7 +49,7 @@ export async function crawlUsers({
   token: string;
   logger: Logger;
 }) {
-  logger.log('crawlUsers >> started');
+  logger.log({ crawlUsers: 'started' });
   let hasMore = true;
   let after;
   do {
@@ -57,21 +57,21 @@ export async function crawlUsers({
       DiscordApi.getDiscordUsers({ limit: LIMIT, serverId, token, after })
     );
     if (err) {
-      logger.error(`crawlUsers >> finished with failure: ${err}`);
+      logger.error({ crawlUsers: err });
       return;
     }
     const users = response as DiscordGuildMember[];
     await Promise.all(
       users.map((u) => parseUser(u, accountId)).map(UsersService.upsertUser)
     );
-    logger.log(`users found: ${users.length}`);
+    logger.log({ usersFound: users.length });
     if (users.length) {
       after = users.pop()?.user?.id;
     } else {
       hasMore = false;
     }
   } while (hasMore);
-  logger.log('crawlUsers >> finished');
+  logger.log({ crawlUsers: 'finished' });
 }
 
 const parseUser = (guildMember: DiscordGuildMember, accountId: string) => {

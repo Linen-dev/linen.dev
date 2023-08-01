@@ -1,5 +1,5 @@
 import { createUser, findUsersByAccountId } from 'services/users';
-import { AccountWithSlackAuthAndChannels, UserMap } from '@linen/types';
+import { AccountWithSlackAuthAndChannels, Logger, UserMap } from '@linen/types';
 import { buildUserFromInfo } from '../serializers/buildUserFromInfo';
 import { ListUsersFnType } from '../types';
 
@@ -9,28 +9,30 @@ export async function syncUsers({
   account,
   skipUsers,
   listUsers,
+  logger,
 }: {
   accountId: string;
   token: string;
   account: AccountWithSlackAuthAndChannels;
   skipUsers?: boolean;
   listUsers: ListUsersFnType;
+  logger: Logger;
 }) {
   if (!skipUsers) {
-    console.log('Syncing users for account: ', accountId);
+    logger.log({ 'Syncing users for account': accountId });
     const usersListResponse = await listUsers(token);
     if (!usersListResponse.body?.members) {
       return [];
     }
     const members = usersListResponse.body.members;
-    console.log('members total:', members.length);
+    logger.log({ 'members total': members.length });
 
     let count = members.length;
     for (const user of members) {
       await createUser(buildUserFromInfo(user, accountId));
       count--;
       if (count % 50 === 0) {
-        console.log('members left:', count);
+        logger.log({ 'members left': count });
       }
     }
 
@@ -38,7 +40,7 @@ export async function syncUsers({
 
     while (!!userCursor) {
       try {
-        console.log({ userCursor });
+        logger.log({ userCursor });
         const usersListResponse = await listUsers(token, userCursor);
         const additionalMembers = usersListResponse?.body?.members;
         if (!!additionalMembers) {
@@ -48,7 +50,7 @@ export async function syncUsers({
         }
         userCursor = usersListResponse?.body?.response_metadata?.next_cursor;
       } catch (e) {
-        console.error('fetching user failed', (e as Error).message);
+        logger.error({ 'fetching user failed': (e as Error).message || e });
         userCursor = undefined;
       }
     }

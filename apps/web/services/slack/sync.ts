@@ -10,6 +10,7 @@ import {
   getMemberships,
 } from './api';
 import { syncWrapper } from './syncWrapper';
+import { Logger } from '@linen/types';
 
 export async function slackSync({
   accountId,
@@ -17,14 +18,16 @@ export async function slackSync({
   domain,
   fullSync,
   skipUsers = false,
+  logger,
 }: {
   accountId: string;
   channelId?: string;
   domain?: string;
   fullSync?: boolean | undefined;
   skipUsers?: boolean;
+  logger: Logger;
 }) {
-  console.log(new Date(), { fullSync });
+  logger.log({ startAt: new Date(), fullSync });
 
   const account = await findAccountById(accountId);
 
@@ -34,6 +37,8 @@ export async function slackSync({
   if (!account.slackTeamId) {
     throw new Error('slackTeamId not found');
   }
+
+  logger.setPrefix(account.slackDomain || account.name || account.id);
 
   await updateAndNotifySyncStatus({
     accountId,
@@ -59,6 +64,7 @@ export async function slackSync({
       joinChannel,
       listUsers,
       getMemberships,
+      logger,
     });
 
     await updateAndNotifySyncStatus({
@@ -74,8 +80,8 @@ export async function slackSync({
       status: 200,
       body: {},
     };
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    logger.error({ error });
 
     await updateAndNotifySyncStatus({
       accountId,
@@ -88,9 +94,9 @@ export async function slackSync({
 
     throw {
       status: 500,
-      error: String(err),
+      error: String(error),
     };
   } finally {
-    console.log('sync finished at', new Date());
+    logger.log({ finishedAt: new Date() });
   }
 }

@@ -5,11 +5,13 @@ import { EnumChangefreq, SitemapAndIndexStream, SitemapStream } from 'sitemap';
 import { finished } from 'node:stream/promises';
 import { UrlType, AccountType } from './types';
 import { linenDomain } from '../config';
+import { Logger } from '@linen/types';
 
 export async function buildLinenSitemap(
   workDir: string,
   sitemapFree: UrlType[],
-  accountsFree: Record<string, AccountType>
+  accountsFree: Record<string, AccountType>,
+  logger: Logger
 ) {
   await fs.mkdir(`${workDir}/sitemap/${linenDomain}`, {
     recursive: true,
@@ -47,5 +49,5 @@ export async function buildLinenSitemap(
 
   sms.end();
   await finished(sms);
-  console.log('finished', linenDomain);
+  logger.log({ finished: linenDomain });
 }
