@@ -1,9 +1,19 @@
 import { type JobHelpers } from 'graphile-worker';
 import { prisma } from '@linen/database';
+import { KeepAlive } from '../helpers/keep-alive';
 
 const batchSize = 1000;
 
 export const updateMessagesCount = async (_: any, helpers: JobHelpers) => {
+  const keepAlive = new KeepAlive(helpers);
+  keepAlive.start();
+
+  await task();
+
+  keepAlive.end();
+};
+
+async function task() {
   let incrementId = 999999999;
   console.time('thread-messages-count');
   do {
@@ -47,4 +57,4 @@ export const updateMessagesCount = async (_: any, helpers: JobHelpers) => {
     }
   } while (true);
   console.timeEnd('thread-messages-count');
-};
+}
