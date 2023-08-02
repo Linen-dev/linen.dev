@@ -81,6 +81,7 @@ export function createThreadImitation({
           profileImageUrl: author.profileImageUrl,
           externalUserId: author.externalUserId,
           authsId: null,
+          role: author.role,
         },
       },
     ],

@@ -7,9 +7,7 @@ import {
   SerializedMessage,
   StartSignUpProps,
 } from '@linen/types';
-import debounce from '@linen/utilities/debounce';
 import { createMessageImitation } from './utilities/message';
-import type { ApiClient } from '@linen/api-client';
 
 export function sendThreadMessageWrapper({
   currentUser,

@@ -40,6 +40,7 @@ export function createMessageImitation({
       displayName: author.displayName,
       profileImageUrl: author.profileImageUrl,
       authsId: null,
+      role: author.role,
     },
   };
 }
