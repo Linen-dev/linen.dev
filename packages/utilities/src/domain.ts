@@ -84,20 +84,16 @@ export function getLinenUrl() {
   if (process.env.NODE_ENV === 'test') {
     return '';
   }
-  if (process.env.BRANCH === 'main') {
-    return `www.linen.dev`;
-  }
-  if (process.env.VERCEL_GIT_COMMIT_REF === 'main') {
-    return `www.linen.dev`;
+  if (process.env.BRANCH && process.env.BRANCH !== 'main') {
+    return `linen-dev-git-${process.env.BRANCH}-linen.vercel.app`.toLowerCase();
   }
   if (process.env.VERCEL_URL) {
     return `${process.env.VERCEL_URL}`;
   }
-  if (process.env.BRANCH) {
-    return `linen-dev-git-${process.env.BRANCH}-linen.vercel.app`.toLowerCase();
+  if (process.env.NODE_ENV !== 'production') {
+    return `localhost:${process.env.API_PORT || process.env.PORT || 3000}`;
   }
-  // assume localhost
-  return `localhost:${process.env.API_PORT || process.env.PORT || 3000}`;
+  return `www.linen.dev`;
 }
 
 export function getPushUrlSSR() {
