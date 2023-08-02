@@ -37,7 +37,7 @@ export default function Suggestion({
           )}
         </div>
       </div>
-      <Message text={body} format={format} mentions={mentions} />
+      <Message text={body} author={user} format={format} mentions={mentions} />
     </div>
   );
 }
