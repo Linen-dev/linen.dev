@@ -20,11 +20,14 @@
     "@linen/integration-linear": "*",
     "@linen/pagination": "*",
     "@linen/sitemap": "*",
-    "@linen/utilities": "*",
     "@linen/types": "*",
+    "@linen/utilities": "*",
     "@linen/web": "*",
     "axios": "^0.27.2",
-    "graphile-worker": "^0.13.0",
+    "graphile-worker": "^0.13.0"
+  },
+  "devDependencies": {
+    "tsx": "^3.12.7",
     "typescript": "^5.1.3"
   }
 }

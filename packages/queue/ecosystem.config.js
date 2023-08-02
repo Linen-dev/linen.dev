@@ -2,19 +2,19 @@ module.exports = {
   apps: [
     {
       name: 'queue',
-      script: 'node dist/index.js',
+      script: 'yarn tsx ./src/index.ts',
     },
     {
       name: 'bot1',
-      script: 'node dist/discord-bot.js bot=1',
+      script: 'yarn tsx ./src/discord-bot.ts bot=1',
     },
     {
       name: 'bot2',
-      script: 'node dist/discord-bot.js bot=2',
+      script: 'yarn tsx ./src/discord-bot.ts bot=2',
     },
     {
       name: 'pagination',
-      script: 'node dist/pagination.js',
+      script: 'yarn tsx ./src/pagination.ts',
       restart_delay: 1000 * 60 * 30,
     },
   ],
