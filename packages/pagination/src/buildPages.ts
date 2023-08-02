@@ -1,5 +1,4 @@
 import { prisma, accounts } from '@linen/database';
-import { logger } from './log';
 
 const PAGE_SIZE = 30;
 
@@ -43,7 +42,7 @@ export async function buildPages(account: accounts) {
         // latest, nothing to do
         keepLoop = false;
       }
-      logger.info(
+      console.info(
         `${account.name || account.id} > ${channel.channelName || channel.id}`,
         { threads: threads.length, page, keepLoop }
       );
@@ -60,7 +59,7 @@ export async function cleanUp(accountId?: string) {
   });
 
   for (const account of accounts) {
-    logger.info(`${account.name || account.id}`);
+    console.info(`${account.name || account.id}`);
 
     await prisma.threads.updateMany({
       data: { page: null },

@@ -1,4 +1,4 @@
-import { TwoWaySyncType } from '@linen/types';
+import { Logger, TwoWaySyncType } from '@linen/types';
 import {
   findAccountById,
   findChannelById,
@@ -11,42 +11,42 @@ import { getTokenByIntegration } from './utils/token';
 import { Routes } from 'discord.js';
 import { discordChannelType, nonce } from './utils/constrains';
 import { getClient } from './utils/rest';
-import { logger } from '@linen/logger';
 
 export async function processDiscordIntegration({
   event,
   channelId,
   messageId,
   threadId,
-}: TwoWaySyncType) {
+  logger,
+}: TwoWaySyncType & { logger: Logger }) {
   if (!channelId || !messageId || !threadId) {
     return 'missing ids';
   }
 
   const channel = await findChannelById(channelId);
   if (!channel) {
-    logger.warn('channel not found');
+    logger.warn({ cause: 'channel not found' });
     return;
   }
   if (!channel.accountId) {
-    logger.warn('channel does not have account');
+    logger.warn({ cause: 'channel does not have account' });
     return;
   }
 
   if (!channel.externalChannelId) {
-    logger.warn('channel does not have external id');
+    logger.warn({ cause: 'channel does not have external id' });
     return;
   }
 
   const account = await findAccountById(channel.accountId);
   if (!account) {
-    logger.warn('account not found');
+    logger.warn({ cause: 'account not found' });
     return;
   }
 
   const integration = await findIntegrationByAccountId(account.id);
   if (!integration) {
-    logger.warn('account does not have discord integration');
+    logger.warn({ cause: 'account does not have discord integration' });
     return;
   }
 
@@ -54,11 +54,11 @@ export async function processDiscordIntegration({
 
   const thread = await findThreadWithMessage(threadId);
   if (!thread) {
-    logger.warn('thread not found');
+    logger.warn({ cause: 'thread not found' });
     return;
   }
   if (!thread.messages.length) {
-    logger.warn('thread without messages');
+    logger.warn({ cause: 'thread without messages' });
     return;
   }
 
@@ -66,7 +66,7 @@ export async function processDiscordIntegration({
     ? thread.messages.find((m) => m.id === messageId)
     : thread.messages.shift();
   if (!message) {
-    logger.warn('message not found in thread');
+    logger.warn({ cause: 'message not found in thread' });
     return;
   }
 
@@ -100,7 +100,7 @@ export async function processDiscordIntegration({
 
     case 'newMessage':
       if (!thread.externalThreadId) {
-        logger.warn('thread does not have external id');
+        logger.warn({ cause: 'thread does not have external id' });
         return;
       }
       if (message.externalMessageId) {

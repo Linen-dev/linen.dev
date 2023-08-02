@@ -11,7 +11,6 @@ import type {
   GuildMember,
   PartialGuildMember,
 } from 'discord.js';
-import { logger } from '@linen/logger';
 
 export { onMessageCreate } from './onMessageCreate';
 export { onMessageDelete } from './onMessageDelete';
@@ -22,57 +21,57 @@ export { onThreadCreate } from './onThreadCreate';
 export async function onMessageReactionAdd(
   reaction: MessageReaction | PartialMessageReaction
 ) {
-  logger.info('onMessageReactionAdd', reaction);
+  console.info('onMessageReactionAdd', reaction);
 }
 
 export async function onMessageReactionRemove(
   reaction: MessageReaction | PartialMessageReaction
 ) {
-  logger.info('onMessageReactionRemove', reaction);
+  console.info('onMessageReactionRemove', reaction);
 }
 
 export async function onMessageReactionRemoveAll(
   message: Message<boolean> | PartialMessage
 ) {
-  logger.info('onMessageReactionRemoveAll', message);
+  console.info('onMessageReactionRemoveAll', message);
 }
 
 export async function onMessageReactionRemoveEmoji(
   reaction: MessageReaction | PartialMessageReaction
 ) {
-  logger.info('onMessageReactionRemoveEmoji', reaction);
+  console.info('onMessageReactionRemoveEmoji', reaction);
 }
 
 export async function onChannelCreate(channel: NonThreadGuildBasedChannel) {
-  logger.info('onChannelCreate', channel);
+  console.info('onChannelCreate', channel);
 }
 
 export async function onChannelUpdate(
   channel: DMChannel | NonThreadGuildBasedChannel
 ) {
-  logger.info('onChannelUpdate', channel);
+  console.info('onChannelUpdate', channel);
 }
 
 export async function onThreadDelete(thread: AnyThreadChannel<boolean>) {
-  logger.info('onThreadDelete', thread);
+  console.info('onThreadDelete', thread);
 }
 
 export async function onUserUpdate(user: User | PartialUser) {
-  logger.info('onUserUpdate', user);
+  console.info('onUserUpdate', user);
 }
 
 export async function onGuildMemberAdd(member: GuildMember) {
-  logger.info('onGuildMemberAdd', member);
+  console.info('onGuildMemberAdd', member);
 }
 
 export async function onGuildMemberRemove(
   member: GuildMember | PartialGuildMember
 ) {
-  logger.info('onGuildMemberRemove', member);
+  console.info('onGuildMemberRemove', member);
 }
 
 export async function onGuildMemberUpdate(
   member: GuildMember | PartialGuildMember
 ) {
-  logger.info('onGuildMemberUpdate', member);
+  console.info('onGuildMemberUpdate', member);
 }

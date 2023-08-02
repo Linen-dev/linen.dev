@@ -1,5 +1,4 @@
 import type { Message, PartialMessage } from 'discord.js';
-import { logger } from '@linen/logger';
 import { nonce } from '../utils/constrains';
 import { parseChannelAndThread } from '../utils/parse';
 import {
@@ -7,46 +6,55 @@ import {
   findAccountByExternalId,
   findChannelByAccountIdAndExternalId,
 } from '../utils/linen';
+import { Logger } from '../utils/logger';
 
-export async function onMessageDelete(message: Message | PartialMessage) {
-  logger.info('onMessageDelete', message);
+export function onMessageDelete(botId: number) {
+  return async (message: Message | PartialMessage) => {
+    const logger = new Logger(botId, 'onMessageDelete', message.id);
 
-  if (message.nonce === nonce) {
-    logger.warn('message from linen');
-    return;
-  }
+    try {
+      logger.info({ message });
 
-  if (!message.guildId) {
-    logger.warn('message does not have guild id');
-    return;
-  }
+      if (message.nonce === nonce) {
+        logger.warn({ cause: 'message from linen' });
+        return;
+      }
 
-  const linenAccount = await findAccountByExternalId(message.guildId);
-  if (!linenAccount) {
-    logger.warn('account not found');
-    return;
-  }
+      if (!message.guildId) {
+        logger.warn({ cause: 'message does not have guild id' });
+        return;
+      }
 
-  let { channel } = await parseChannelAndThread(message);
+      const linenAccount = await findAccountByExternalId(message.guildId);
+      if (!linenAccount) {
+        logger.warn({ cause: 'account not found' });
+        return;
+      }
 
-  if (!channel) {
-    logger.warn('channel not found');
-    return;
-  }
-  const linenChannel = await findChannelByAccountIdAndExternalId({
-    accountId: linenAccount.id,
-    externalChannelId: channel.externalChannelId,
-  });
+      let { channel } = await parseChannelAndThread(message);
 
-  if (!linenChannel) {
-    logger.warn('channel not found on linen');
-    return;
-  }
+      if (!channel) {
+        logger.warn({ cause: 'channel not found' });
+        return;
+      }
+      const linenChannel = await findChannelByAccountIdAndExternalId({
+        accountId: linenAccount.id,
+        externalChannelId: channel.externalChannelId,
+      });
 
-  await deleteMessage({
-    channelId: linenChannel.id,
-    externalMessageId: message.id,
-  });
+      if (!linenChannel) {
+        logger.warn({ cause: 'channel not found on linen' });
+        return;
+      }
 
-  logger.info('onMessageDelete success');
+      await deleteMessage({
+        channelId: linenChannel.id,
+        externalMessageId: message.id,
+      });
+
+      logger.info({ info: 'success' });
+    } catch (error) {
+      logger.error({ error });
+    }
+  };
 }

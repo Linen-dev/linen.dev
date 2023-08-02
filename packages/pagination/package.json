@@ -10,8 +10,7 @@
     "dev": "tsc --watch"
   },
   "dependencies": {
-    "@linen/database": "*",
-    "@linen/logger": "*"
+    "@linen/database": "*"
   },
   "keywords": [],
   "author": "",

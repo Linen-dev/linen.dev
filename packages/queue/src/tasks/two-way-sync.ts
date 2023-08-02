@@ -101,6 +101,7 @@ async function twoWaySyncJob(
       threadId,
       id,
       event,
+      logger,
     });
   }
 

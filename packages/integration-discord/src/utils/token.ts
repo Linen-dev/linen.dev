@@ -1,6 +1,5 @@
 import { discordAuthorizations } from '@linen/database';
 import env from './config';
-import { logger } from '@linen/logger';
 
 export const getTokenByIntegration = (integration: discordAuthorizations) => {
   if (!integration.customBot) {
@@ -17,7 +16,6 @@ export const getTokenByIntegration = (integration: discordAuthorizations) => {
 };
 
 export const getToken = (bot: number) => {
-  logger.info({ bot });
   switch (bot) {
     case 2:
       return env.DISCORD_TOKEN_2;

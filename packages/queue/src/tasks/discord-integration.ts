@@ -10,6 +10,6 @@ export const discordIntegration = async (payload: any, helpers: JobHelpers) => {
 
   const bots = getAllBots();
   for (const bot of bots) {
-    await cleanUpIntegrations(bot.PRIVATE_TOKEN, bot.botNum);
+    await cleanUpIntegrations(bot.PRIVATE_TOKEN, bot.botNum, logger);
   }
 };

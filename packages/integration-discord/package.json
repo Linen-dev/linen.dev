@@ -18,7 +18,6 @@
   "license": "ISC",
   "dependencies": {
     "@linen/database": "*",
-    "@linen/logger": "*",
     "@linen/sdk": "*",
     "@linen/types": "*",
     "@linen/utilities": "*",
