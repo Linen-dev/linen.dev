@@ -42,10 +42,10 @@ export async function buildPages(account: accounts) {
         // latest, nothing to do
         keepLoop = false;
       }
-      console.info(
-        `${account.name || account.id} > ${channel.channelName || channel.id}`,
-        { threads: threads.length, page, keepLoop }
-      );
+      // console.info(
+      //   `${account.name || account.id} > ${channel.channelName || channel.id}`,
+      //   { threads: threads.length, page, keepLoop }
+      // );
     } while (keepLoop);
   }
   return account.name || account.id;
@@ -59,7 +59,7 @@ export async function cleanUp(accountId?: string) {
   });
 
   for (const account of accounts) {
-    console.info(`${account.name || account.id}`);
+    // console.info(`${account.name || account.id}`);
 
     await prisma.threads.updateMany({
       data: { page: null },
