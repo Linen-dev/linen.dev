@@ -8,6 +8,7 @@ import {
 import Session from '../session';
 import { findAccountByPath } from 'services/accounts';
 import { findAuthByEmail } from 'services/users';
+import { serializeUser } from '@linen/serializers/user';
 
 type Request = GetServerSidePropsContext['req'] | NextApiRequest;
 type Response = GetServerSidePropsContext['res'] | NextApiResponse;
@@ -53,17 +54,7 @@ export default class PermissionsService {
           }
         : null,
       token: token || null,
-      user: user
-        ? {
-            id: user.id,
-            username: user.displayName,
-            authsId: user.authsId,
-            accountsId: user.accountsId,
-            displayName: user.displayName,
-            externalUserId: user.externalUserId,
-            profileImageUrl: user.profileImageUrl,
-          }
-        : null,
+      user: user ? serializeUser(user) : null,
     };
     return permissions;
   }

@@ -1,4 +1,4 @@
-import { SerializedUser } from '@linen/types';
+import { Roles, SerializedUser } from '@linen/types';
 
 export default function createUser(options?: object): SerializedUser {
   return {
@@ -8,6 +8,7 @@ export default function createUser(options?: object): SerializedUser {
     displayName: 'John Doe',
     profileImageUrl: 'https://foo.com/assets/images/john_doe.svg',
     externalUserId: null,
+    role: Roles.MEMBER,
     ...options,
   };
 }
