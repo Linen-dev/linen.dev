@@ -31,6 +31,7 @@ function Row({ badge, message, currentUser }: Props) {
           <div className={styles.message}>
             <Message
               text={message.body}
+              author={message.author}
               format={message.messageFormat}
               mentions={message.mentions}
               reactions={message.reactions}
