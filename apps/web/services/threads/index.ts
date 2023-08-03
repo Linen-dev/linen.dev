@@ -18,7 +18,7 @@ import {
   UploadedFile,
 } from '@linen/types';
 import { v4 as uuid } from 'uuid';
-import { eventNewThread } from 'services/events';
+import { eventNewThread } from 'services/events/eventNewThread';
 import { parse, find } from '@linen/ast';
 import unique from 'lodash.uniq';
 import { eventThreadClosed } from 'services/events/eventThreadClosed';
@@ -273,6 +273,7 @@ class ThreadsServices {
       mentionNodes,
       thread: JSON.stringify(serializedThread),
       userId: authorId,
+      isLinenMessage: messageFormat === MessageFormat.LINEN,
     });
 
     return serializedThread;

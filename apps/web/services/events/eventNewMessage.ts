@@ -26,6 +26,7 @@ export type NewMessageEvent = {
   communityId: string;
   message: string;
   userId?: string;
+  isLinenMessage: boolean;
 };
 
 export async function eventNewMessage({
@@ -38,6 +39,7 @@ export async function eventNewMessage({
   communityId,
   message,
   userId,
+  isLinenMessage,
 }: NewMessageEvent) {
   const event = {
     channelId,
@@ -52,21 +54,30 @@ export async function eventNewMessage({
   const channel = await ChannelsService.getChannelAndMembersWithAuth(channelId);
 
   const promises: Promise<any>[] = [
-    createTwoWaySyncJob({ ...event, event: 'newMessage', id: messageId }),
-    ThreadsServices.updateMetrics({ messageId, threadId }),
-    UserThreadStatusService.markAsUnread(threadId, userId),
-    UserThreadStatusService.markAsUnmutedForMentionedUsers(
-      threadId,
-      mentions.map((mention) => mention.usersId)
-    ),
     eventNewMentions({ mentions, mentionNodes, channelId, threadId }),
     notificationListener({ ...event, communityId, mentions }),
     ...resolvePush({ channel, userId, event, communityId }),
-    matrixNewMessage(event),
   ];
 
-  if (channel?.type === ChannelType.DM) {
-    promises.push(ChannelsService.unarchiveChannel({ channelId: channel.id }));
+  if (isLinenMessage) {
+    promises.push(
+      ...[
+        createTwoWaySyncJob({ ...event, event: 'newMessage', id: messageId }),
+        matrixNewMessage(event),
+        ThreadsServices.updateMetrics({ messageId, threadId }),
+        UserThreadStatusService.markAsUnread(threadId, userId),
+        UserThreadStatusService.markAsUnmutedForMentionedUsers(
+          threadId,
+          mentions.map((mention) => mention.usersId)
+        ),
+      ]
+    );
+    if (channel?.type === ChannelType.DM) {
+      promises.push(
+        ChannelsService.unarchiveChannel({ channelId: channel.id })
+      );
+    }
   }
+
   await Promise.allSettled(promises);
 }

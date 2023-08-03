@@ -21,7 +21,7 @@ import {
 import { findUser, createUser } from 'services/users';
 import { parseSlackSentAt, tsToSentAt } from '@linen/serializers/sentAt';
 import { findChannelWithAccountByExternalId } from 'services/channels';
-import { eventNewMessage, eventNewThread } from 'services/events';
+import { eventNewMessage } from 'services/events/eventNewMessage';
 import {
   processAttachments,
   getSlackBot,
@@ -32,6 +32,7 @@ import {
 import { serializeMessage } from '@linen/serializers/message';
 import { serializeThread } from '@linen/serializers/thread';
 import { filterMessages, parseMessage } from 'services/slack/sync/parseMessage';
+import { eventNewThread } from 'services/events/eventNewThread';
 
 const findOrCreateUserFromUserInfo = async (
   externalUserId: string,
@@ -187,6 +188,7 @@ async function addMessage(
       mentionNodes: [],
       thread: JSON.stringify(serializedThread),
       userId: user?.id,
+      isLinenMessage: false,
     });
   } else if (!!event.thread_ts && event.ts !== event.thread_ts) {
     // is a reply
@@ -201,6 +203,7 @@ async function addMessage(
       mentionNodes: [],
       message: JSON.stringify(serializedMessage),
       userId: user?.id,
+      isLinenMessage: false,
     });
   }
 

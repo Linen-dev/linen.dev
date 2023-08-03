@@ -24,6 +24,7 @@ type NewThreadEvent = {
   communityId: string;
   thread: string;
   userId?: string;
+  isLinenMessage: boolean;
 };
 
 export async function eventNewThread({
@@ -36,6 +37,7 @@ export async function eventNewThread({
   communityId,
   thread,
   userId,
+  isLinenMessage,
 }: NewThreadEvent) {
   const event = {
     channelId,
@@ -50,15 +52,23 @@ export async function eventNewThread({
   const channel = await ChannelsService.getChannelAndMembersWithAuth(channelId);
 
   const promises: Promise<any>[] = [
-    createTwoWaySyncJob({ ...event, event: 'newThread', id: messageId }),
     eventNewMentions({ mentions, mentionNodes, channelId, threadId }),
     notificationListener({ ...event, communityId, mentions }),
     ...resolvePush({ channel, userId, event, communityId }),
-    matrixNewThread(event),
   ];
 
-  if (channel?.type === ChannelType.DM) {
-    promises.push(ChannelsService.unarchiveChannel({ channelId: channel.id }));
+  if (isLinenMessage) {
+    promises.push(
+      ...[
+        createTwoWaySyncJob({ ...event, event: 'newThread', id: messageId }),
+        matrixNewThread(event),
+      ]
+    );
+    if (channel?.type === ChannelType.DM) {
+      promises.push(
+        ChannelsService.unarchiveChannel({ channelId: channel.id })
+      );
+    }
   }
 
   await Promise.allSettled(promises);

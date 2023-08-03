@@ -1,6 +1,6 @@
 import { serializeMessage } from '@linen/serializers/message';
 import { find, parse } from '@linen/ast';
-import { eventNewMessage } from 'services/events';
+import { eventNewMessage } from 'services/events/eventNewMessage';
 import { Prisma, prisma } from '@linen/database';
 import {
   messageFindResponseType,
@@ -142,6 +142,7 @@ export default class MessagesService {
       mentionNodes,
       message: JSON.stringify(serializedMessage),
       userId,
+      isLinenMessage: messageFormat === MessageFormat.LINEN,
     });
 
     return {
