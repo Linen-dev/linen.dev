@@ -36,6 +36,8 @@ export async function slackSyncWithFiles({
     throw { status: 404, error: 'Account not found' };
   }
 
+  logger.setPrefix(account.slackDomain || account.name || account.id);
+
   const file = await getFileFromS3(fileLocation);
   const tempFolder = await extractIntoTemp(file);
 
