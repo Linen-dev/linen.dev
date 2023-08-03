@@ -294,6 +294,7 @@ class ChannelsService {
     hidden,
     viewType,
     members,
+    type,
   }: {
     accountId: string;
     channelName: string;
@@ -301,6 +302,7 @@ class ChannelsService {
     hidden?: boolean;
     viewType?: ChannelViewType;
     members?: string[];
+    type?: ChannelType;
   }) {
     const channel = await prisma.channels.findFirst({
       where: {
@@ -319,6 +321,7 @@ class ChannelsService {
           data: {
             externalChannelId,
             viewType,
+            type,
           },
         });
       }
@@ -328,7 +331,6 @@ class ChannelsService {
           where: { id: channel.id },
           data: {
             channelName: channelName.toLowerCase(),
-            viewType,
           },
         });
       }
@@ -342,6 +344,7 @@ class ChannelsService {
         externalChannelId,
         hidden,
         viewType,
+        type,
         ...(members?.length
           ? {
               memberships: {

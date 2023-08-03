@@ -2,6 +2,7 @@ import { AccountWithSlackAuthAndChannels, Logger } from '@linen/types';
 import { sleep } from '@linen/utilities/promises';
 import ChannelsService from 'services/channels';
 import { GetSlackChannelsFnType, JoinChannelFnType } from '../types';
+import { ChannelType } from '@linen/database';
 
 export async function createChannels({
   slackTeamId,
@@ -34,6 +35,7 @@ export async function createChannels({
           channelName: channel.name,
           accountId,
           hidden: hideChannels,
+          ...(channel.is_private ? { type: ChannelType.PRIVATE } : {}),
         })
       )
     );

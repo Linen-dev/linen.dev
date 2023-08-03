@@ -16,6 +16,8 @@ export async function slackSyncWithFiles({
   fullSync,
   fileLocation,
   logger,
+  getFileFromS3 = thisGetFileFromS3,
+  extractIntoTemp = thisExtractIntoTemp,
 }: {
   accountId: string;
   channelId?: string;
@@ -23,6 +25,8 @@ export async function slackSyncWithFiles({
   fullSync?: boolean | undefined;
   fileLocation?: string;
   logger: Logger;
+  getFileFromS3?(fileLocation: string): Promise<unknown>;
+  extractIntoTemp?(file: any): Promise<string>;
 }) {
   logger.log({ startAt: new Date(), fullSync });
 
@@ -109,7 +113,7 @@ export async function slackSyncWithFiles({
   }
 }
 
-async function getFileFromS3(fileLocation: string) {
+async function thisGetFileFromS3(fileLocation: string) {
   return new Promise(async (res, rej) => {
     try {
       const target = tmpdir() + '/' + v4();
@@ -129,7 +133,7 @@ async function getFileFromS3(fileLocation: string) {
   });
 }
 
-async function extractIntoTemp(file: any) {
+async function thisExtractIntoTemp(file: any) {
   const target = tmpdir() + '/' + v4();
   const zip = new StreamZip.async({ file });
   fs.mkdirSync(target, { recursive: true });

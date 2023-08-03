@@ -15,7 +15,7 @@ export type JoinChannelFnType = (
 ) => Promise<any>;
 
 export type GetSlackChannelsResponseType = {
-  body?: { channels?: { id: string; name: string }[] };
+  body?: { channels?: { id: string; name: string; is_private?: boolean }[] };
 };
 export type GetSlackChannelsFnType = (
   teamId: string,

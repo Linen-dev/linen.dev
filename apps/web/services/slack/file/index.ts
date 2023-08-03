@@ -46,13 +46,22 @@ export class SlackFileAdapter {
     teamId: string,
     token: string
   ): Promise<GetSlackChannelsResponseType> => {
-    const channelsFile = this._readParseFile('channels.json') as any[];
-    this.channelsMap = channelsFile.reduce(
+    const privateChannels: any[] = await new Promise((res, _) => {
+      try {
+        res(this._readParseFile('groups.json'));
+      } catch (error) {
+        console.error('%j', error);
+        res([]);
+      }
+    });
+    const channelsFile: any[] = this._readParseFile('channels.json');
+    const channelsList = [...channelsFile, ...privateChannels];
+    this.channelsMap = channelsList.reduce(
       (prev, curr) => ({ ...prev, [curr.id]: curr.name }),
       {}
     );
     return {
-      body: { channels: channelsFile },
+      body: { channels: channelsList },
     };
   };
 
@@ -60,8 +69,17 @@ export class SlackFileAdapter {
     channelId: string,
     token: string
   ): Promise<string[]> => {
-    const channelsFile = this._readParseFile('channels.json') as any[];
-    return channelsFile.find((f) => f.id === channelId)?.members;
+    const privateChannels: any[] = await new Promise((res, _) => {
+      try {
+        res(this._readParseFile('groups.json'));
+      } catch (error) {
+        console.error('%j', error);
+        res([]);
+      }
+    });
+    const channelsFile: any[] = this._readParseFile('channels.json');
+    const channelsList = [...channelsFile, ...(privateChannels || [])];
+    return channelsList.find((f) => f.id === channelId)?.members;
   };
 
   joinChannel: JoinChannelFnType = async (channel: string, token: string) => {};
