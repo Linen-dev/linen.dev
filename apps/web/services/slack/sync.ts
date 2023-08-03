@@ -17,14 +17,12 @@ export async function slackSync({
   channelId,
   domain,
   fullSync,
-  skipUsers = false,
   logger,
 }: {
   accountId: string;
   channelId?: string;
   domain?: string;
   fullSync?: boolean | undefined;
-  skipUsers?: boolean;
   logger: Logger;
 }) {
   logger.log({ startAt: new Date(), fullSync });
@@ -55,7 +53,6 @@ export async function slackSync({
       domain,
       accountId,
       channelId,
-      skipUsers,
       fullSync,
       fetchConversationsTyped,
       fetchReplies,

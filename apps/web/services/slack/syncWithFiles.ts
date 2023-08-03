@@ -14,7 +14,6 @@ export async function slackSyncWithFiles({
   channelId,
   domain,
   fullSync,
-  skipUsers = false,
   fileLocation,
   logger,
 }: {
@@ -22,7 +21,6 @@ export async function slackSyncWithFiles({
   channelId?: string;
   domain?: string;
   fullSync?: boolean | undefined;
-  skipUsers?: boolean;
   fileLocation?: string;
   logger: Logger;
 }) {
@@ -66,7 +64,6 @@ export async function slackSyncWithFiles({
       domain,
       accountId,
       channelId,
-      skipUsers,
       fullSync,
       fetchConversationsTyped,
       fetchReplies,

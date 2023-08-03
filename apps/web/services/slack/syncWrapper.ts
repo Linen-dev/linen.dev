@@ -13,7 +13,6 @@ export async function syncWrapper({
   domain,
   accountId,
   channelId,
-  skipUsers,
   fullSync,
   fetchTeamInfo,
   joinChannel,
@@ -53,7 +52,7 @@ export async function syncWrapper({
     accountId,
     token,
     account,
-    skipUsers,
+    fullSync,
     listUsers,
     logger,
   });

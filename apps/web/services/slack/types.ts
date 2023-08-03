@@ -65,7 +65,6 @@ export type SyncWrapperFunctionsTypes = {
 export interface SyncWrapperTypes extends SyncWrapperFunctionsTypes {
   account: AccountWithSlackAuthAndChannels;
   accountId: string;
-  skipUsers: boolean;
   domain?: string;
   channelId?: string;
   fullSync?: boolean;

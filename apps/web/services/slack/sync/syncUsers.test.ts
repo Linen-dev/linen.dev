@@ -47,6 +47,7 @@ describe('slackSync :: syncUsers', () => {
       token: account.slackAuthorizations[0].accessToken,
       listUsers: fetch_all_conversations.listUsers,
       logger: console,
+      fullSync: true,
     });
     expect(response).toMatchObject([internalUser]);
 

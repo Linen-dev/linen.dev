@@ -7,18 +7,18 @@ export async function syncUsers({
   accountId,
   token,
   account,
-  skipUsers,
+  fullSync,
   listUsers,
   logger,
 }: {
   accountId: string;
   token: string;
   account: AccountWithSlackAuthAndChannels;
-  skipUsers?: boolean;
+  fullSync?: boolean;
   listUsers: ListUsersFnType;
   logger: Logger;
 }) {
-  if (!skipUsers) {
+  if (fullSync) {
     logger.log({ 'Syncing users for account': accountId });
     const usersListResponse = await listUsers(token);
     if (!usersListResponse.body?.members) {
