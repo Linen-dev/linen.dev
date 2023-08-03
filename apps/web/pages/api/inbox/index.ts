@@ -5,7 +5,7 @@ import { prisma } from '@linen/database';
 import { serializeThread } from '@linen/serializers/thread';
 import ChannelsService, { getDMs } from 'services/channels';
 import { anonymizeMessages } from 'utilities/anonymizeMessages';
-import { SerializedChannel } from '@linen/types';
+import { AnonymizeType, SerializedChannel } from '@linen/types';
 import { cors, preflight } from 'utilities/cors';
 
 function getPage(page?: number) {
@@ -121,7 +121,10 @@ export async function index({
       threads: threads
         .map((thread) => {
           if (community.anonymizeUsers) {
-            return anonymizeMessages(thread);
+            return anonymizeMessages(
+              thread,
+              community.anonymize as AnonymizeType
+            );
           }
           return { ...thread, channel: channelsMap[thread.channelId] };
         })

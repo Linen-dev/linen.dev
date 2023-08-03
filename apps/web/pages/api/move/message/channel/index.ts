@@ -6,6 +6,7 @@ import { serializeThread } from '@linen/serializers/thread';
 import { anonymizeMessages } from 'utilities/anonymizeMessages';
 import { Permissions as PermissionsType } from '@linen/types';
 import { cors, preflight } from 'utilities/cors';
+import { AnonymizeType } from '@linen/types';
 
 export async function create({
   messageId,
@@ -91,7 +92,9 @@ export async function create({
     return {
       status: 200,
       data: serializeThread(
-        community.anonymizeUsers ? anonymizeMessages(thread) : thread
+        community.anonymizeUsers
+          ? anonymizeMessages(thread, community.anonymize as AnonymizeType)
+          : thread
       ),
     };
   } else {

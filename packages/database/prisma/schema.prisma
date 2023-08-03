@@ -163,10 +163,16 @@ enum channelsIntegrationType {
   LINEAR
 }
 
+enum AnonymizeType {
+  NONE
+  MEMBERS
+  ALL
+}
+
 model accounts {
-  id                      String      @id @default(uuid())
-  createdAt               DateTime    @default(now())
-  type                    AccountType @default(PUBLIC)
+  id                      String        @id @default(uuid())
+  createdAt               DateTime      @default(now())
+  type                    AccountType   @default(PUBLIC)
   name                    String?
   description             String?
   slackDomain             String?
@@ -177,18 +183,19 @@ model accounts {
   communityInviteUrl      String?
   redirectDomain          String?
   communityUrl            String?
-  syncStatus              String      @default("NOT_STARTED")
+  syncStatus              String        @default("NOT_STARTED")
   brandColor              String?
   homeUrl                 String?
   docsUrl                 String?
   logoUrl                 String?
   logoSquareUrl           String?
   faviconUrl              String?
-  premium                 Boolean     @default(false)
+  premium                 Boolean       @default(false)
   googleAnalyticsId       String?
   googleSiteVerification  String?
-  anonymizeUsers          Boolean     @default(false)
-  newChannelsConfig       String      @default("NOT_HIDDEN")
+  anonymizeUsers          Boolean       @default(false)
+  anonymize               AnonymizeType @default(NONE)
+  newChannelsConfig       String        @default("NOT_HIDDEN")
   redirectDomainPropagate Boolean?
 
   auths                 auths[]

@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { patterns } from '../patterns';
 import { AccountType, ChatType } from '../accounts';
+import { AnonymizeType } from '..';
 
 export const createAccountSchema = z.object({
   name: z.string().regex(patterns.communityName).optional(),
@@ -23,6 +24,9 @@ export const updateAccountSchema = z.object({
   brandColor: z.string().optional(),
   googleAnalyticsId: z.string().optional(),
   anonymizeUsers: z.boolean().optional(),
+  anonymize: z
+    .enum([AnonymizeType.ALL, AnonymizeType.MEMBERS, AnonymizeType.NONE])
+    .optional(),
   communityInviteUrl: z.string().url().or(z.literal('')).optional(),
   type: z.enum([AccountType.PRIVATE, AccountType.PUBLIC]).optional(),
   chat: z.enum([ChatType.MANAGERS, ChatType.MEMBERS, ChatType.NONE]).optional(),

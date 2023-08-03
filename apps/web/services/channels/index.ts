@@ -606,9 +606,12 @@ export async function shouldThisChannelBeAnonymous(channelId: string) {
           some: { id: channelId },
         },
       },
-      select: { anonymizeUsers: true },
+      select: { anonymize: true, anonymizeUsers: true },
     })
-    .then((account) => account?.anonymizeUsers);
+    .then((account) => ({
+      anonymize: account?.anonymize,
+      anonymizeUsers: account?.anonymizeUsers,
+    }));
 }
 
 export async function hideEmptyChannels(accountId: string) {

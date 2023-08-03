@@ -42,6 +42,12 @@ export enum ReminderTypes {
   NEXT_WEEK = 'next-week',
 }
 
+export enum AnonymizeType {
+  NONE = 'NONE',
+  MEMBERS = 'MEMBERS',
+  ALL = 'ALL',
+}
+
 export enum Priority {
   MOUSE,
   KEYBOARD,

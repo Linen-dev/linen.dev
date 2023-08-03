@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import Toast from '@/Toast';
 import Toggle from '@/Toggle';
 import Label from '@/Label';
-import { SerializedAccount } from '@linen/types';
+import NativeSelect from '@/NativeSelect';
+import { SerializedAccount, AnonymizeType } from '@linen/types';
 import type { ApiClient } from '@linen/api-client';
 
 interface Props {
@@ -11,19 +12,19 @@ interface Props {
 }
 
 export default function AnonymizeCard({ currentCommunity, api }: Props) {
-  const [enabled, setEnabled] = useState(
-    currentCommunity.anonymizeUsers || false
-  );
+  const [anonymize, setAnonymize] = useState(currentCommunity.anonymize);
 
-  async function onChange(toggle: boolean) {
+  async function onChange(type: AnonymizeType) {
     api
       .updateAccount({
         accountId: currentCommunity.id,
-        anonymizeUsers: toggle,
+        anonymize: type,
+        anonymizeUsers:
+          type === AnonymizeType.MEMBERS || type === AnonymizeType.ALL,
       })
       .then((_) => {
         Toast.success('Saved successfully!');
-        setEnabled(toggle);
+        setAnonymize(type);
       })
       .catch(() => Toast.error('Something went wrong!'));
   }
@@ -37,7 +38,30 @@ export default function AnonymizeCard({ currentCommunity, api }: Props) {
           with randomly generated words.
         </Label.Description>
       </Label>
-      <Toggle checked={enabled} onChange={onChange} />
+      <NativeSelect
+        id="anonymize"
+        defaultValue={anonymize}
+        options={[
+          {
+            label: 'None',
+            value: AnonymizeType.NONE,
+          },
+          {
+            label: 'Members',
+            value: AnonymizeType.MEMBERS,
+          },
+          {
+            label: 'All',
+            value: AnonymizeType.ALL,
+          },
+        ]}
+        theme="blue"
+        style={{ width: 'auto' }}
+        onChange={(event) => {
+          const type = event.target.value as AnonymizeType;
+          onChange(type);
+        }}
+      />
     </>
   );
 }

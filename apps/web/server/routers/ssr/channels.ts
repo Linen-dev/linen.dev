@@ -16,6 +16,7 @@ import { decodeCursor } from 'utilities/cursor';
 import { buildCursor } from 'utilities/buildCursor';
 import { channels } from '@linen/database';
 import { fetchCommon } from 'services/ssr/common';
+import { AnonymizeType } from '@linen/types';
 
 const prefix = '/api/ssr/channels';
 const ssrRouter = Router();
@@ -71,12 +72,14 @@ ssrRouter.get(
 
     const { nextCursor, threads } = await getThreads({
       channelId: channel.id,
+      anonymize: currentCommunity.anonymize,
       anonymizeUsers: currentCommunity.anonymizeUsers || false,
       page,
     });
 
     const pinnedThreads = await findPinnedThreads({
       channelIds: [channel.id],
+      anonymize: currentCommunity.anonymize,
       anonymizeUsers: currentCommunity.anonymizeUsers,
       limit: 10,
     });
@@ -97,10 +100,12 @@ ssrRouter.get(
 async function getThreads({
   channelId,
   anonymizeUsers,
+  anonymize,
   page,
 }: {
   channelId: string;
   anonymizeUsers: boolean;
+  anonymize: AnonymizeType;
   page?: string;
 }) {
   if (!!page) {
@@ -108,6 +113,7 @@ async function getThreads({
       await findThreadsByCursor({
         channelIds: [channelId],
         page: parsePage(page),
+        anonymize,
         anonymizeUsers,
       })
     ).sort(sortBySentAtAsc);
@@ -129,6 +135,7 @@ async function getThreads({
       sentAt,
       sort,
       direction,
+      anonymize,
       anonymizeUsers,
     })
   ).sort(sortBySentAtAsc);
