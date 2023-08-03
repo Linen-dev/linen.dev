@@ -14,6 +14,7 @@ import { getMentionedUsers } from './getMentionedUsers';
 import { parseSlackSentAt, tsToSentAt } from '@linen/serializers/sentAt';
 import { filterMessages, parseMessage } from './parseMessage';
 import { getBotUserId } from './getBotUserId';
+import { updateNextPageCursor } from 'services/channels';
 
 async function saveMessagesSynchronous(
   messages: ConversationHistoryMessage[],
@@ -109,11 +110,28 @@ export async function saveAllThreads({
   fetchReplies: Function;
   logger: Logger;
 }) {
-  logger.log({ 'syncing threads': channel?.channelName });
+  const channelName = channel.channelName;
 
   let cursor = 0;
+  if (channel.externalPageCursor) {
+    if (channel.externalPageCursor === 'completed') {
+      logger.log({
+        channelName,
+        syncing: 'skipped. externalPageCursor=completed',
+      });
+      return;
+    }
+    try {
+      let { threadCursor } = JSON.parse(channel.externalPageCursor);
+      if (threadCursor && !isNaN(threadCursor)) {
+        cursor = threadCursor;
+      }
+    } catch (error) {}
+  }
+
+  logger.log({ channelName, 'syncingAllThreads startedAt': new Date() });
   do {
-    logger.log({ cursor });
+    logger.log({ channelName, cursor });
     const threads = await findThreadsByChannel({
       channelId: channel.id,
       cursor,
@@ -121,7 +139,11 @@ export async function saveAllThreads({
     });
 
     if (!threads?.length) break;
-    logger.log({ 'threads.length': threads.length });
+
+    logger.log({
+      channelName,
+      'saveAllThreadsTransaction startedAt': new Date(),
+    });
 
     await Promise.all(
       threads.map(async (thread) => {
@@ -138,10 +160,10 @@ export async function saveAllThreads({
             replies?.body?.messages?.filter(filterMessages).map(parseMessage) ||
             [];
 
-          logger.log({
-            [`${thread.externalThreadId}`]: thread.messageCount,
-            'replyMessages.length': replyMessages?.length,
-          });
+          // logger.log({
+          //   [`${thread.externalThreadId}`]: thread.messageCount,
+          //   'replyMessages.length': replyMessages?.length,
+          // });
           if (replyMessages && replyMessages.length) {
             await saveMessagesSynchronous(
               replyMessages,
@@ -158,7 +180,16 @@ export async function saveAllThreads({
     );
 
     cursor = Number(threads?.[threads?.length - 1]?.sentAt);
+    await updateNextPageCursor(
+      channel.id,
+      JSON.stringify({ threadCursor: cursor })
+    );
+    logger.log({
+      channelName,
+      'saveAllThreadsTransaction finishedAt': new Date(),
+    });
   } while (true);
 
-  logger.log({ 'finish sync threads': channel?.channelName });
+  await updateNextPageCursor(channel.id, 'completed');
+  logger.log({ channelName, 'syncingAllThreads finishedAt': new Date() });
 }

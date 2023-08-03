@@ -18,15 +18,23 @@ import { slugify } from '@linen/utilities/string';
 import { filterMessages, parseMessage } from './parseMessage';
 import { FetchConversationsTypedFnType } from '../types';
 
-async function saveMessagesTransaction(
-  messages: ConversationHistoryMessage[],
-  channelId: string,
-  users: UserMap[],
-  token: string,
-  logger: Logger
-) {
+async function saveMessagesTransaction({
+  messages,
+  channelId,
+  users,
+  token,
+  logger,
+  channelName,
+}: {
+  messages: ConversationHistoryMessage[];
+  channelId: string;
+  users: UserMap[];
+  token: string;
+  logger: Logger;
+  channelName: string;
+}) {
   if (!messages.length) return;
-  logger.log({ 'saveMessagesTransaction startAt': new Date() });
+  logger.log({ channelName, 'saveMessagesTransaction startedAt': new Date() });
 
   for (const m of messages) {
     const thread = await findOrCreateThread({
@@ -76,7 +84,7 @@ async function saveMessagesTransaction(
       processAttachments(m, message, token, logger),
     ]);
   }
-  logger.log({ 'saveMessagesTransaction finishedAt': new Date() });
+  logger.log({ channelName, 'saveMessagesTransaction finishedAt': new Date() });
 }
 
 export async function fetchAllTopLevelMessages({
@@ -104,18 +112,40 @@ export async function fetchAllTopLevelMessages({
   if (fullSync) {
     c.externalPageCursor = null;
   }
-  logger.log({ 'Syncing channel': c.channelName });
+  const channelName = c.channelName;
   let nextCursor = c.externalPageCursor || undefined;
   let firstLoop = true;
   if (nextCursor === 'completed') {
-    logger.log({ 'channel completed syncing': c.channelName });
+    logger.log({
+      channelName,
+      syncing: 'skipped. externalPageCursor=completed',
+    });
     return;
+  }
+
+  if (c.externalPageCursor) {
+    try {
+      let { channelCursor, threadCursor } = JSON.parse(c.externalPageCursor);
+      // if threadCursor exist, it means that save-all-thread step (next step) was interrupted
+      if (channelCursor === 'completed' || !!threadCursor) {
+        logger.log({
+          channelName,
+          syncingTopLevel: 'skipped. channelCursor=completed',
+        });
+        return;
+      }
+      nextCursor = channelCursor;
+    } catch (error) {}
   }
   let retries = 0;
 
+  logger.log({
+    channelName,
+    'syncingTopLevel startedAt': new Date(),
+  });
   //fetch all messages by paginating
   while (!!nextCursor || firstLoop) {
-    logger.log({ 'Messages cursor': nextCursor });
+    logger.log({ channelName, nextCursor });
     try {
       const additionalConversations = await fetchConversationsTyped(
         c.externalChannelId,
@@ -128,22 +158,29 @@ export async function fetchAllTopLevelMessages({
         additionalConversations.messages
           ?.filter(filterMessages)
           .map(parseMessage) || [];
-      logger.log({ 'messages.length': additionalMessages.length });
       //save all messages
-      await saveMessagesTransaction(
-        additionalMessages,
-        c.id,
-        usersInDb,
+      await saveMessagesTransaction({
+        messages: additionalMessages,
+        channelId: c.id,
+        users: usersInDb,
         token,
-        logger
-      );
+        logger,
+        channelName,
+      });
       nextCursor = additionalConversations.response_metadata?.next_cursor;
 
       // save cursor in database so don't have
       //to refetch same conversation if script fails
-      !!nextCursor && (await updateNextPageCursor(c.id, nextCursor));
+      !!nextCursor &&
+        (await updateNextPageCursor(
+          c.id,
+          JSON.stringify({ channelCursor: nextCursor })
+        ));
     } catch (e) {
-      logger.warn({ 'fetching messages failed': (e as Error).message || e });
+      logger.warn({
+        channelName,
+        'fetching messages failed': (e as Error).message || e,
+      });
       await sleep(10000);
       retries += 1;
       if (retries > 3) {
@@ -153,6 +190,9 @@ export async function fetchAllTopLevelMessages({
     }
     firstLoop = false;
   }
-  await updateNextPageCursor(c.id, 'completed');
-  logger.log({ 'channel completed syncing': c.channelName });
+  await updateNextPageCursor(
+    c.id,
+    JSON.stringify({ channelCursor: 'completed' })
+  );
+  logger.log({ channelName, 'syncingTopLevel finishedAt': new Date() });
 }

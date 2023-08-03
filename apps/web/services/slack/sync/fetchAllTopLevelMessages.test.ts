@@ -161,7 +161,7 @@ describe('slackSync :: fetchAllTopLevelMessages', () => {
 
     expect(channelsUpdateMock).toHaveBeenNthCalledWith(1, {
       data: {
-        externalPageCursor: 'completed',
+        externalPageCursor: '{"channelCursor":"completed"}',
       },
       where: {
         id: internalChannel.id,
