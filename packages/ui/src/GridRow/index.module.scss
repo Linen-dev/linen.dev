@@ -109,3 +109,10 @@
 .drag {
   pointer-events: none;
 }
+
+.role {
+  background: var(--color-green-500);
+  color: var(--color-white);
+  border-radius: 0.25rem;
+  padding: 0.125rem;
+}
