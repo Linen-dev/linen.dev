@@ -41,7 +41,6 @@ interface Props {
   className?: string;
   text: string;
   format: MessageFormat;
-  author?: SerializedUser | null;
   truncate?: boolean;
   mentions?: SerializedUser[];
   reactions?: SerializedReaction[];
