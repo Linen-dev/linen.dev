@@ -36,6 +36,9 @@ export function filterMessages<
     return false;
   }
   if (message.subtype && message.subtype === 'bot_message') {
+    if (message.text?.includes('has joined the channel')) {
+      return false;
+    }
     return isNotLinenBot(message);
   }
   if (!!message.app_id && !!message.message?.app_id) {
