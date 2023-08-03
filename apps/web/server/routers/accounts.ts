@@ -20,6 +20,8 @@ import { inviteNewMembers } from 'services/invites';
 import axios from 'axios';
 import { prisma } from '@linen/database';
 import { eventNewIntegration } from 'services/events/eventNewIntegration';
+import { createPresignedUrl } from 'services/aws/s3';
+import { LINEN_STATIC_CDN } from 'config';
 
 const prefix = '/api/accounts';
 const accountsRouter = Router();
@@ -141,6 +143,18 @@ accountsRouter.post(
   async (req: AuthedRequestWithTenant, res: Response) => {
     await eventNewIntegration({ accountId: req.tenant?.id! });
     res.status(200).json({ ok: true });
+    res.end();
+  }
+);
+
+accountsRouter.get(
+  `${prefix}/slack-import`,
+  tenantMiddleware([Roles.OWNER, Roles.ADMIN]),
+  async (req: AuthedRequestWithTenant, res: Response) => {
+    const name = new Date().toISOString();
+    const key = `slack-import/${req.tenant?.id!}/${name}.zip`;
+    const url = await createPresignedUrl({ key });
+    res.status(200).json({ url, fileUrl: `${LINEN_STATIC_CDN}/${key}` });
     res.end();
   }
 );

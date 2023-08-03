@@ -122,6 +122,12 @@ export default class ApiClient {
       .then((res) => res.data)
       .catch(this.catchError);
 
+  putWithOptions = <T>(path: string, data = {}, options: AxiosRequestConfig) =>
+    this.instance
+      .put<T>(path, data, options)
+      .then((res) => res.data)
+      .catch(this.catchError);
+
   patch = <T>(path: string, data = {}) =>
     this.instance
       .patch<T>(path, data)

@@ -8,6 +8,7 @@ import {
 } from '@aws-sdk/client-s3';
 import path from 'path';
 import { awsCredentials } from './credentials';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 export { CopyObjectCommand, ListObjectsV2Command };
 
@@ -99,4 +100,10 @@ const getMimeType = (ext: string) => {
     '.7z': 'application/x-7z-compressed',
   };
   return mimes[ext] || 'application/octet-stream';
+};
+
+export const createPresignedUrl = ({ key }: { key: string }) => {
+  const command = new PutObjectCommand({ Bucket, Key: key });
+  // @ts-ignore
+  return getSignedUrl(s3Client, command, { expiresIn: 1800 });
 };

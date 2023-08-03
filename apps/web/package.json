@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.348.0",
+    "@aws-sdk/s3-request-presigner": "^3.383.0",
     "@linen/api-client": "*",
     "@linen/ast": "*",
     "@linen/auth": "*",

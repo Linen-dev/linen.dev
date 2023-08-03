@@ -6,6 +6,7 @@ import Label from '@/Label';
 import { FiUploadCloud } from '@react-icons/all-files/fi/FiUploadCloud';
 import type { ApiClient } from '@linen/api-client';
 import styles from './index.module.scss';
+import { qs } from '@linen/utilities/url';
 
 export default function SlackImportRow({
   currentCommunity,
@@ -25,29 +26,33 @@ export default function SlackImportRow({
   };
 
   const onFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(event.target.files || []);
+    if (!event.target.files?.length) return;
+
+    const file = event.target.files.item(0);
+    if (!file) return;
+
     setProgress(0);
     setUploading(true);
-    const data = new FormData();
-    files.forEach((file, index) => {
-      data.append(`file-${index}`, file, file.name);
-    });
+
     try {
-      const { files: files_1 } = await api.upload(
-        { communityId: currentCommunity.id, data, type: 'slack-import' },
-        {
-          onUploadProgress: (progressEvent_1: ProgressEvent) => {
-            const percentCompleted = Math.round(
-              (progressEvent_1.loaded * 100) / progressEvent_1.total
-            );
-            setProgress(percentCompleted);
-          },
-        }
+      const { url, fileUrl } = await api.get<{ url: string; fileUrl: string }>(
+        `/api/accounts/slack-import?${qs({ accountId: currentCommunity.id })}`
       );
+      await api.putWithOptions(url, file, {
+        headers: {
+          'Content-Length': new Blob([file]).size,
+        },
+        onUploadProgress: (progressEvent_1: ProgressEvent) => {
+          const percentCompleted = Math.round(
+            (progressEvent_1.loaded * 100) / progressEvent_1.total
+          );
+          setProgress(percentCompleted);
+        },
+      });
       setUploading(false);
       await api.startSync({
         account_id: currentCommunity.id,
-        file_location: files_1[0].url,
+        file_location: fileUrl,
       });
       Toast.success('Import process initiated');
     } catch (response) {
