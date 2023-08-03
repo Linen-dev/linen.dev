@@ -6,6 +6,7 @@ import { serializeThread } from '@linen/serializers/thread';
 import ChannelsService from 'services/channels';
 import { anonymizeMessages } from 'utilities/anonymizeMessages';
 import { cors, preflight } from 'utilities/cors';
+import { AnonymizeType } from '@linen/types';
 
 function getPage(page?: number) {
   if (!page || page < 1) {
@@ -89,7 +90,10 @@ export async function index({
       threads: threads
         .map((thread) => {
           if (community.anonymizeUsers) {
-            return anonymizeMessages(thread);
+            return anonymizeMessages(
+              thread,
+              community.anonymize as AnonymizeType
+            );
           }
           return thread;
         })

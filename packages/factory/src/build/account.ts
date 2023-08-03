@@ -1,4 +1,5 @@
-import { accounts, AccountType } from '@linen/database';
+import { accounts } from '@linen/database';
+import { AccountType, AnonymizeType } from '@linen/types';
 
 export default function createAccount(options?: Partial<accounts>): accounts {
   return {
@@ -21,6 +22,7 @@ export default function createAccount(options?: Partial<accounts>): accounts {
     googleAnalyticsId: null,
     googleSiteVerification: null,
     anonymizeUsers: false,
+    anonymize: AnonymizeType.NONE,
     premium: false,
     chat: 'NONE',
     integration: 'NONE',

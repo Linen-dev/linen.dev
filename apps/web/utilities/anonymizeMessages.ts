@@ -6,6 +6,8 @@ import type {
   users,
 } from '@linen/database';
 import type { SerializedMessage } from '@linen/types';
+import { Roles } from '@linen/types';
+import { AnonymizeType } from '@linen/types';
 
 type Messages =
   | (messages & {
@@ -31,57 +33,86 @@ type ThreadWithMessages = threads & {
   channel?: channels;
 };
 
-export function anonymizeMessages(thread: ThreadWithMessages) {
+export function anonymizeMessages(
+  thread: ThreadWithMessages,
+  anonymize: AnonymizeType
+) {
   if (thread) {
     thread.messages = thread.messages.map((message) => {
       if (message.author) {
-        message.author = anonymizeUser(message.author);
+        message.author = anonymizeUser(message.author, anonymize);
       }
 
-      return anonymizeMentions(message);
+      return anonymizeMentions(message, anonymize);
     });
   }
   return thread;
 }
 
-function anonymizeMentions(message: Messages): any {
+function anonymizeMentions(message: Messages, anonymize: AnonymizeType): any {
   if (message.mentions) {
     message.mentions = message.mentions.map((mention) => {
-      mention.users && (mention.users = anonymizeUser(mention.users));
+      if (mention.users) {
+        return {
+          ...mention,
+          users: anonymizeUser(mention.users, anonymize),
+        };
+      }
       return mention;
     });
   }
   return message;
 }
 
-export function anonymizeUser(users: users): users {
+function anonymizeUser(user: users, anonymize: AnonymizeType): users {
+  const isAdminOrOwner = user.role === Roles.ADMIN || user.role === Roles.OWNER;
+  console.log(user, anonymize);
+  if (isAdminOrOwner && anonymize === AnonymizeType.MEMBERS) {
+    return user;
+  }
   return {
-    ...users,
-    displayName: users.anonymousAlias || 'anonymous',
+    ...user,
+    displayName: user.anonymousAlias || 'anonymous',
     profileImageUrl: null,
   };
 }
 
-export function anonymizeMessagesMentions(messages: Messages[]) {
+export function anonymizeMessagesMentions(
+  messages: Messages[],
+  anonymize: AnonymizeType
+) {
   return messages.map((message) => {
-    return anonymizeMentions(message);
+    return anonymizeMentions(message, anonymize);
   });
 }
 
 export function anonymizeSerializedMessages(
-  messages: SerializedMessage[]
+  messages: SerializedMessage[],
+  anonymize: AnonymizeType
 ): SerializedMessage[] {
   return messages.map((message) => {
     if (message.author) {
-      message.author = {
-        ...message.author,
-        displayName: message.author.anonymousAlias || 'anonymous',
-        username: message.author.anonymousAlias || 'anonymous',
-        profileImageUrl: null,
-      };
+      const isAdminOrOwner =
+        message.author.role === Roles.ADMIN ||
+        message.author.role === Roles.OWNER;
+      if (isAdminOrOwner && anonymize === AnonymizeType.MEMBERS) {
+        // noop
+      } else {
+        message.author = {
+          ...message.author,
+          displayName: message.author.anonymousAlias || 'anonymous',
+          username: message.author.anonymousAlias || 'anonymous',
+          profileImageUrl: null,
+        };
+      }
     }
     if (message.mentions && message.mentions.length) {
-      message.mentions = message.mentions.map((mention) => {
+      message.mentions = message.mentions.map((mention: any) => {
+        const isAdminOrOwner =
+          mention.role === Roles.ADMIN || mention.role === Roles.OWNER;
+        if (isAdminOrOwner && anonymize === AnonymizeType.MEMBERS) {
+          return mention;
+        }
         return {
           ...mention,
           displayName: mention.anonymousAlias || 'anonymous',

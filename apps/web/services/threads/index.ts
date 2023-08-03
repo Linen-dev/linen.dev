@@ -24,7 +24,11 @@ import unique from 'lodash.uniq';
 import { eventThreadClosed } from 'services/events/eventThreadClosed';
 import { eventThreadReopened } from 'services/events/eventThreadReopened';
 import { eventThreadUpdated } from 'services/events/eventThreadUpdated';
-import { FindThreadsByCursorType, ThreadsWithMessagesFull } from '@linen/types';
+import {
+  AnonymizeType,
+  FindThreadsByCursorType,
+  ThreadsWithMessagesFull,
+} from '@linen/types';
 import { anonymizeMessages } from 'utilities/anonymizeMessages';
 import { PAGE_SIZE } from 'config';
 
@@ -313,11 +317,13 @@ export async function findThreadsByCursor({
   limit = PAGE_SIZE,
   direction,
   anonymizeUsers = false,
+  anonymize,
   page,
 }: {
   channelIds: string[];
   limit?: number;
   anonymizeUsers?: boolean;
+  anonymize: AnonymizeType;
   page?: number;
 } & FindThreadsByCursorType): Promise<ThreadsWithMessagesFull[]> {
   if (!channelIds.length) {
@@ -357,7 +363,11 @@ export async function findThreadsByCursor({
     ...(!!sort && { orderBy: { sentAt: sort } }),
   });
   return (
-    anonymizeUsers ? threads.map(anonymizeMessages) : threads
+    anonymizeUsers
+      ? threads.map((thread) =>
+          anonymizeMessages(thread, anonymize as AnonymizeType)
+        )
+      : threads
   ) as ThreadsWithMessagesFull[];
 }
 
@@ -442,10 +452,12 @@ export const findThreadsByChannel = ({
 export async function findPinnedThreads({
   channelIds,
   limit = 3,
+  anonymize,
   anonymizeUsers = false,
 }: {
   channelIds: string[];
   limit?: number;
+  anonymize: AnonymizeType;
   anonymizeUsers?: boolean;
 }): Promise<ThreadsWithMessagesFull[]> {
   if (!channelIds.length) {
@@ -478,7 +490,9 @@ export async function findPinnedThreads({
     },
   });
   return (
-    anonymizeUsers ? threads.map(anonymizeMessages) : threads
+    anonymizeUsers
+      ? threads.map((thread) => anonymizeMessages(thread, anonymize))
+      : threads
   ) as ThreadsWithMessagesFull[];
 }
 
@@ -522,7 +536,7 @@ const findThreadWithMessages = async ({
         },
         channel: {
           include: {
-            account: { select: { anonymizeUsers: true } },
+            account: { select: { anonymize: true, anonymizeUsers: true } },
           },
         },
       },
@@ -530,7 +544,7 @@ const findThreadWithMessages = async ({
     .then((thread) => {
       const account = thread?.channel.account;
       if (thread && account?.anonymizeUsers) {
-        return anonymizeMessages(thread);
+        return anonymizeMessages(thread, account.anonymize as AnonymizeType);
       }
       return thread;
     });

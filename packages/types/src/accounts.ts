@@ -1,3 +1,5 @@
+import { AnonymizeType } from '.';
+
 export enum ChatType {
   NONE = 'NONE',
   MANAGERS = 'MANAGERS',
@@ -50,6 +52,7 @@ export interface SerializedAccount {
   syncStatus: string;
   communityType: CommunityType | null;
   anonymizeUsers?: boolean;
+  anonymize: AnonymizeType;
   hasAuth?: boolean;
   slackDomain?: string;
   discordDomain?: string;

@@ -5,6 +5,7 @@ import PermissionsService from 'services/permissions';
 import { cors, preflight } from 'utilities/cors';
 import { serializeSearchedMessage } from '@linen/serializers/message';
 import { z } from 'zod';
+import { AnonymizeType } from '@linen/types';
 
 const schema = z.object({
   query: z.string().min(1),
@@ -28,7 +29,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
   const account = await prisma.accounts.findUnique({
     where: { id: accountId },
-    select: { anonymizeUsers: true, type: true },
+    select: { anonymizeUsers: true, anonymize: true, type: true },
   });
 
   if (!account) {
@@ -84,7 +85,10 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     .then((messages) => messages.map(serializeSearchedMessage))
     .then((messages) => {
       if (!!account?.anonymizeUsers) {
-        return anonymizeSerializedMessages(messages);
+        return anonymizeSerializedMessages(
+          messages,
+          account.anonymize as AnonymizeType
+        );
       } else {
         return messages;
       }

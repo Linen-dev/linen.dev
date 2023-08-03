@@ -3,7 +3,7 @@ import { NotFound } from 'utilities/response';
 import { findThreadsByCursor, findPinnedThreads } from 'services/threads';
 import { serializeThread } from '@linen/serializers/thread';
 import { decodeCursor } from 'utilities/cursor';
-import { SerializedChannel } from '@linen/types';
+import { AnonymizeType, SerializedChannel } from '@linen/types';
 import { isBot } from 'next/dist/server/web/spec-extension/user-agent';
 import { RedirectTo } from 'utilities/response';
 import {
@@ -91,6 +91,7 @@ export async function channelGetServerSideProps(
 
   const { nextCursor, threads } = await getThreads({
     channelId: channel.id,
+    anonymize: currentCommunity.anonymize,
     anonymizeUsers: currentCommunity.anonymizeUsers || false,
     page,
   });
@@ -98,6 +99,7 @@ export async function channelGetServerSideProps(
   const pinnedThreads = !isCrawler
     ? await findPinnedThreads({
         channelIds: [channel.id],
+        anonymize: currentCommunity.anonymize,
         anonymizeUsers: currentCommunity.anonymizeUsers,
         limit: 10,
       })
@@ -120,10 +122,12 @@ export async function channelGetServerSideProps(
 
 async function getThreads({
   channelId,
+  anonymize,
   anonymizeUsers,
   page,
 }: {
   channelId: string;
+  anonymize: AnonymizeType;
   anonymizeUsers: boolean;
   page?: string;
 }) {
@@ -132,6 +136,7 @@ async function getThreads({
       await findThreadsByCursor({
         channelIds: [channelId],
         page: parsePage(page),
+        anonymize,
         anonymizeUsers,
       })
     ).sort(sortBySentAtAsc);
@@ -153,6 +158,7 @@ async function getThreads({
       sentAt,
       sort,
       direction,
+      anonymize,
       anonymizeUsers,
     })
   ).sort(sortBySentAtAsc);

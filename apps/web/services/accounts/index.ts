@@ -4,6 +4,7 @@ import { generateRandomWordSlug } from '@linen/utilities/randomWordSlugs';
 import {
   AccountType,
   AccountWithSlackAuthAndChannels,
+  AnonymizeType,
   ChatType,
   Roles,
 } from '@linen/types';
@@ -136,6 +137,7 @@ export default class AccountsService {
       brandColor?: string;
       googleAnalyticsId?: string;
       anonymizeUsers?: boolean;
+      anonymize?: AnonymizeType;
       communityInviteUrl?: string;
       type?: AccountType;
       chat?: ChatType;
@@ -157,6 +159,7 @@ export default class AccountsService {
       brandColor,
       googleAnalyticsId,
       anonymizeUsers,
+      anonymize,
       communityInviteUrl,
       type,
       chat,
@@ -172,6 +175,7 @@ export default class AccountsService {
       homeUrl,
       docsUrl,
       anonymizeUsers,
+      anonymize,
       communityInviteUrl,
       chat,
       newChannelsConfig,
