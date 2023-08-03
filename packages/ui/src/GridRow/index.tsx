@@ -250,7 +250,6 @@ function Row({
           >
             <Message
               text={message.body}
-              author={message.author}
               format={message.messageFormat}
               truncate={truncate}
               mentions={message.mentions}
